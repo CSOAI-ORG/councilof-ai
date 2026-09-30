@@ -1,0 +1,85 @@
+{
+  "card": {
+    "as_of": "2026-09-29T17:09:12Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.ledger-head/0.1",
+      "ledger": "withdrawals-mill-cards",
+      "authority_for": "signed mill cards withdrawn from use",
+      "served_url": "https://councilof.ai/interop/mill-cards-signed/WITHDRAWN.jsonl",
+      "http_status": 200,
+      "not_a_grade": true,
+      "bytes_sha256": "6abd1c3e625a58bc6333d69750df9b7ea5234ec0984e926fb30909a1fb82322e",
+      "n_bytes": 51602,
+      "entries": 58,
+      "head_id": "e4f0e8f32085aa6bb78a828b56df789dc5a3098f5102ede048e3a8aab6645a16",
+      "by_correction": {
+        "C-2026-0914-01": 44,
+        "C-2026-0924-03": 14
+      },
+      "ids_sha256": "e2e40582542a77618176c86931f99778e9b359a1e56d9ec447488de327ead973",
+      "admitted": 0,
+      "admitted_rule": "a withdrawn card is never counted as an admitted measurement",
+      "state": "PROBED"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "f0b65a7ed549aa7a9923668e5466892ae7f3bacd29d8efec2203730c44939cdf",
+    "sig_ed25519": "ef7a0966e2a65aa00854d92b5b3b133549af224136eeda60b21930b964d9da4b5744c742748095e5395c1f737a2a3ecc6375b119c11d3cac562b6ef08c25e70b",
+    "source_urls": [
+      "https://councilof.ai/interop/mill-cards-signed/WITHDRAWN.jsonl"
+    ],
+    "subject": "Ledger head: withdrawals-mill-cards (served bytes, digest and count at one read)",
+    "surface": "public.notice",
+    "tags": [
+      "ledger-head",
+      "withdrawals-mill-cards",
+      "ledger-heads-2026-09"
+    ],
+    "unmeasured": [
+      "whether any entry is correct; this atom commits to the served bytes and their head only"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "7afb0545aa6e6857a89802a4d0d717b20b793118130205ce8c5c8b627cf89f65",
+    "6735e190fdb507d4986796ec4df080bfd35e04c87cdca75a6c32aaa180d3df40",
+    "d52c97e1f487b0ee25422d3cd86c79d5990467c7139dff917ec0c41309c75e96",
+    "8d85e2775bc85b49031deab846bf28dcab6c68c4a24c6ca6b4e2ea8357afe764",
+    "970e30cd0671222bfbb7ec52e6ac0eb129a030eccd001f39209bbd16cc739f63",
+    "c27731acda42c2c58166f28a9e16574466182441c1b79622c93810a8fc7940b2",
+    "df5244699a9b34de127533c6b74135a9167a20de063c02d0ba8369e792f96853",
+    "d1c02817beff607edf0656f2d1166e816631ecd0620ebb7bbb382944c506e4ac",
+    "b00ef8f13cf4a29dca9594807e9751885752ba0ce07d4e503cff5c1fc80d8b52"
+  ]
+}

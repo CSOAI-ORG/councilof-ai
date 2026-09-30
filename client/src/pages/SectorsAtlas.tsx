@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 // SectorsAtlas - maps the full CASA / CSOAI sector taxonomy onto the OS. Every sector
-// resolves to its binding frameworks and the MEOK-law layers that reach it. Pick a
+// resolves to its binding frameworks and the jurisdiction layers that reach it. Pick a
 // domain, click a sector, see what governs it - the 47-industry classifier made visible.
 
 type Sector = { name: string; frameworks: string[]; tier: "High" | "Limited" | "Minimal" };
@@ -112,7 +112,7 @@ export default function SectorsAtlas() {
                     </div>
                     <div className="mt-3 flex flex-wrap gap-2 text-sm">
                       <a href="/try" className="font-bold text-emerald-700 hover:text-emerald-600">Ask the Council -&gt;</a>
-                      <a href="/meok-law" className="font-semibold text-emerald-700 hover:text-emerald-600">Law by jurisdiction -&gt;</a>
+                      <a href="/law" className="font-semibold text-emerald-700 hover:text-emerald-600">Law by jurisdiction -&gt;</a>
                       <a href="/temples" className="font-semibold text-emerald-700 hover:text-emerald-600">Framework temples -&gt;</a>
                     </div>
                   </div>

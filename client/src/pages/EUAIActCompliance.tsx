@@ -1,10 +1,9 @@
-import {useState, useEffect } from "react";
+import {useState } from "react";
 import { ChevronDown, CheckCircle, AlertCircle, Shield, Zap, Users, TrendingUp } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 export default function EUAIActCompliance() {
-  useEffect(() => { document.title = "EUAIActCompliance | CSOAI"; }, []);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
 
   const keyRequirements = [

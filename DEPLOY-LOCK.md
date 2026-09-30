@@ -51,23 +51,6 @@ See [Disable automatic deployments](https://developers.cloudflare.com/pages/conf
 - **To deploy:** commit to `master` (or PR → merge). The GHA `Build + deploy site` workflow is the only
   writer. If you must hotfix, fix-forward through the repo; never `wrangler pages deploy` this project.
 
-## Emergency break-glass lane — account-level CI outage only
-
-A direct Pages write remains prohibited during normal operation. One narrow emergency exception is allowed only when **all** of the following are true:
-
-1. GitHub Actions is unavailable at the account/platform level, not merely failing a repository check.
-2. The outage is recorded in a public repository issue with the exact API error and current master SHA.
-3. The owner has explicitly authorised completing the production release.
-4. The deploy is from a clean checkout of the exact current master commit.
-5. The full gated build has passed locally, including capability/OpenAPI, evidence, regulatory, redirect, sitemap, wallet-secret, TypeScript and Pages size gates.
-6. scripts/review/pages-release-target.mjs (or an equivalent read-only Cloudflare project/production-branch check when CI secrets are unavailable) confirms project councilof-ai and production branch master.
-7. The same dist/client tree is deployed with wrangler pages deploy using project councilof-ai and branch master.
-8. Immediate apex + councilof-ai.pages.dev readback is performed, followed by a delayed anti-clobber readback. Any mismatch fails closed and is recorded.
-9. The emergency release receipt, master SHA, deployed artifact hashes and readback result are published back to the repository issue/release.
-10. The exception ends as soon as GitHub Actions is restored; normal deployments return to the single GHA writer.
-
-This is a **break-glass continuity path**, not a second routine writer. It exists so an external CI-account suspension cannot make the governed production surface permanently unavailable while preserving the same build, target and readback controls.
-
 ## If the guard is RED
 1. Run `node scripts/drift-guard.mjs` to see which invariant drifted.
 2. It almost always means a direct `wrangler pages deploy` (or a Pages Git Vite build) landed. Re-run

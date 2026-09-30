@@ -116,7 +116,7 @@ function Cta({ href, label, secondary }: { href: string; label: string; secondar
     <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
       <Link
         href={href}
-        className="inline-flex items-center justify-center rounded-xl bg-emerald-600 px-6 py-3.5 text-sm font-extrabold text-white transition-colors hover:bg-emerald-700"
+        className="inline-flex items-center justify-center rounded-xl bg-emerald-700 px-6 py-3.5 text-sm font-extrabold text-white transition-colors hover:bg-emerald-800"
       >
         {label}
       </Link>
@@ -275,7 +275,7 @@ function Body({ children }: { children: ReactNode }) {
 function Limits({ children }: { children: ReactNode }) {
   return (
     <div className="measure mt-6 rounded-2xl border border-gray-200 bg-gray-50/70 p-5">
-      <p className="t-kicker text-gray-500">What this does not prove</p>
+      <p className="t-kicker text-gray-600">What this does not prove</p>
       <div className="mt-2 space-y-2 text-[14px] leading-[1.65] text-gray-600">{children}</div>
     </div>
   );
@@ -321,7 +321,7 @@ function Independence() {
         // was landing a front-door reader on a page carrying the "reference / archive" banner.
         href="/dashboard?task=pricing-overview&tab=measured"
         label="How the free rail works"
-        secondary={{ href: "/about", label: "Who we are" }}
+        secondary={{ href: "/about/", label: "Who we are" }}
       />
     </HeavyBand>
   );
@@ -428,7 +428,7 @@ function VerifyYourself() {
                 key={s.n}
                 className="flex h-full flex-col gap-3 rounded-2xl border border-gray-200 bg-gray-50/70 p-5 sm:p-6"
               >
-                <span className="font-mono text-2xl font-black tabular-nums text-emerald-500">{s.n}</span>
+                <span className="font-mono text-2xl font-black tabular-nums text-emerald-700">{s.n}</span>
                 <div>
                   <h3 className="text-lg font-extrabold leading-snug text-gray-900">{s.h}</h3>
                   <p className="mt-1.5 text-[14px] leading-relaxed text-gray-600 sm:text-[15px]">{s.d}</p>
@@ -516,7 +516,7 @@ function OwnErrors() {
           {latest.map((c) => (
             <li key={c.id} className="rounded-xl border border-gray-200 bg-white p-3">
               <span className="font-mono text-[11px] font-bold text-emerald-700">{c.id}</span>
-              <span className="ml-2 text-[11px] text-gray-400">{c.date}</span>
+              <span className="ml-2 text-[11px] text-gray-600">{c.date}</span>
               {/* Excerpts removed: what_was_wrong may quote retired counts (e.g. "14-slot", 
                   "13 measured of 14"). Show id/date only; full content at /refutation-ledger. */}
             </li>
@@ -577,7 +577,7 @@ function LivingLaw() {
                 key={`${e.date}-${e.instrument}`}
                 className="flex items-start gap-3 rounded-xl border border-gray-200 bg-white/80 p-3"
               >
-                <span className="shrink-0 rounded-lg bg-emerald-600 px-2.5 py-1 font-mono text-[11px] font-black text-white">
+                <span className="shrink-0 rounded-lg bg-emerald-700 px-2.5 py-1 font-mono text-[11px] font-black text-white">
                   {e.date}
                 </span>
                 <span className="text-[13px] leading-relaxed text-gray-700">
@@ -588,7 +588,7 @@ function LivingLaw() {
           </ul>
         </>
       )}
-      <Cta href="/eu-ai-act" label="What is coming, and when" secondary={{ href: "/contact?arm=run", label: "Enquire about a scoped run" }} />
+      <Cta href="/eu-ai-act" label="What is coming, and when" secondary={{ href: "/contact/?arm=run", label: "Enquire about a scoped run" }} />
     </HeavyBand>
   );
 }

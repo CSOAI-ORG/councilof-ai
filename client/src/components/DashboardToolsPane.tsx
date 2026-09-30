@@ -90,7 +90,7 @@ export default function DashboardToolsPane() {
             public-root reads and Merkle-inclusion checks. Verification remains
             free.
           </p>
-          <p className="mt-2 break-words font-mono text-[10px] leading-relaxed text-emerald-900/65">
+          <p className="mt-2 break-words font-mono text-[10px] leading-relaxed text-emerald-900/85">
             {FREE_TOOLS.join(" · ")}
           </p>
         </article>

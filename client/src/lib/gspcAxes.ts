@@ -14,6 +14,8 @@
 // NO number. `quotable()` is the structural guard — panels ask it rather than
 // deciding for themselves, so a surface cannot render a score an axis has not earned.
 
+import { boardRunDates } from "./boardRunDates";
+import { leaderLabel } from "../../../functions/_lib/leaderLabel";
 import { BOARD_COUNT_OBSERVED } from "./boardCount";
 
 export type AxisStatus = "MEASURED" | "UNMEASURED" | "DRAFT" | "SPEC" | "PLANNED";
@@ -72,7 +74,7 @@ export const AXES: Axis[] = [
   { axis: "governance", bench: "GovBench", n: 237, macro_f1: 0.705, accuracy: 0.7, unparsed_rate: 0.0386, status: "MEASURED",
     colour: "#34d399", lng: 4.37, lat: 50.84, seat: "Brussels", instrument: "EU AI Act (Reg. 2024/1689)",
     task: "EU AI Act risk-tier classification",
-    note: "v2 bank: 237 public items (+102 held back privately), imported 2026-08-05 from the AI Act Evaluation Benchmark (NCSR 'Demokritos', arXiv:2603.09435, CC-BY-4.0). The tuned governance specialist leads AND the lead is separ", dataset: "csoai/gspc-gov" },
+    note: "v2 bank: 237 items, imported 2026-08-05 from the 339 scenarios of the AI Act Evaluation Benchmark (NCSR 'Demokritos', arXiv:2603.09435, CC-BY-4.0). The other 102 are not graded here and are not a private held-out set: all 339 are public upstream. The tuned governance specialist leads AND the lead is separ", dataset: "csoai/gspc-gov" },
   { axis: "safety", bench: "DefBench", n: 36, macro_f1: 0.944, accuracy: 0.944, unparsed_rate: 0.0541, status: "MEASURED",
     colour: "#f87171", lng: -0.12, lat: 51.5, seat: "London", instrument: "UK AI Safety Institute",
     task: "calibrated refusal on paired requests",
@@ -104,7 +106,7 @@ export const AXES: Axis[] = [
   { axis: "cross-reality", bench: "XRAIV", n: 32, macro_f1: 0.803, accuracy: 0.812, unparsed_rate: 0.0247, status: "MEASURED",
     colour: "#a78bfa", lng: -1.26, lat: 51.75, seat: "Oxford", instrument: "EU AI Act, applied to agent conduct",
     task: "autonomous agent action authority (PROCEED / CONFIRM / REFUSE)",
-    note: "A base model leads on points; TIE (p=0.065 — the closest near-miss on the board, still not separated at p<0.05). Bank: 32 scored (public + held-out split per the bank card).", dataset: "csoai/gspc-xr" },
+    note: "A base model leads on points; TIE (p=0.065 — the closest near-miss on the board, still not separated at p<0.05). Bank: 32 scored items, all public in csoai/gspc-xr items.jsonl (33 rows: the 32 items and 1 canary). The bank card lists one public split; there is no held-out split (C-2026-0929-02).", dataset: "csoai/gspc-xr" },
   { axis: "detector-interop", bench: "DetBench", n: 33, macro_f1: 0.855, accuracy: 0.879, unparsed_rate: 0.1754, status: "MEASURED",
     colour: "#38bdf8", lng: 4.9, lat: 50.85, seat: "Brussels", instrument: "EU Code of Practice — interoperability due 2 Feb 2027",
     task: "cross-detector watermark interoperability matrix",
@@ -259,11 +261,13 @@ export function inLaneFacts(row: InLaneAxis): {
     typeof row.fleet_mean === "number" && Number.isFinite(row.fleet_mean)
       ? `fleet mean ${row.fleet_mean}`
       : null;
+  // Tracker row 10: "leader" only when separation SEPARATED the row; otherwise "top observed (not separated)".
+  const label = leaderLabel(row.separation);
   const leaderLine =
     typeof row.accuracy === "number" && Number.isFinite(row.accuracy) && row.leader
-      ? `leader ${row.leader} ${row.accuracy}`
+      ? `${label} ${row.leader} ${row.accuracy}`
       : typeof row.accuracy === "number" && Number.isFinite(row.accuracy)
-        ? `leader ${row.accuracy}`
+        ? `${label} ${row.accuracy}`
         : null;
   return {
     separation: sep,
@@ -405,7 +409,7 @@ export async function fetchAxes(signal?: AbortSignal): Promise<Omit<AxesState, "
     return {
       axes: merged,
       source: "wire",
-      measuredOn: j?.measured_on?.date ?? j?.measured_on ?? MEASURED_ON.date,
+      measuredOn: (j?.measured_on && typeof j.measured_on === "object" ? boardRunDates(j) : null) ?? j?.measured_on?.date ?? j?.measured_on ?? MEASURED_ON.date,
       issuer: j?.issuer,
       doi: j?.doi,
       publicCount: publicCount || undefined,

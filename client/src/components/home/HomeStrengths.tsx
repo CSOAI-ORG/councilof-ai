@@ -109,7 +109,7 @@ function Tile({ card }: { card: Card }) {
       data-strength={card.n}
       data-proof-live={card.proof.live}
     >
-      <span className="font-mono text-sm font-black tabular-nums text-emerald-600 dark:text-emerald-400">
+      <span className="font-mono text-sm font-black tabular-nums text-emerald-700 dark:text-emerald-400">
         {card.n}
       </span>
       <h3 className="text-xl font-black leading-tight tracking-tight text-foreground sm:text-[1.375rem]">

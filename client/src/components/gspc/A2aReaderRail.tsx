@@ -21,7 +21,22 @@ type A2aDoc = {
   as_of?: string | null;
   counts?: Record<string, number>;
   rows?: A2aRow[];
+  // What GET /api/a2a actually serves today: the A2A JSON-RPC door's own description.
+  protocolVersion?: string;
+  skills?: unknown[];
 };
+
+/**
+ * The door describes itself and carries no census: no n, no rows[]. Printing
+ * "census rows: UNCHECKABLE" for that document read as a failed census; the
+ * truth is that no census is published on this door. Returns the named skill
+ * count when the payload is the JSON-RPC description, else null.
+ */
+export function a2aDoorWithoutCensus(doc: A2aDoc): { protocolVersion: string; skills: number } | null {
+  if (typeof doc.n === "number" || Array.isArray(doc.rows)) return null;
+  if (typeof doc.protocolVersion !== "string" || !Array.isArray(doc.skills)) return null;
+  return { protocolVersion: doc.protocolVersion, skills: doc.skills.length };
+}
 
 type Wire =
   | { state: "loading" }
@@ -97,6 +112,31 @@ export default function A2aReaderRail({
   }
 
   const doc = wire.doc;
+  const door = a2aDoorWithoutCensus(doc);
+  if (door) {
+    return (
+      <section
+        className={`rounded-lg border border-slate-200 bg-slate-50 p-4 ${className}`}
+        data-testid="rail-a2a"
+      >
+        <h3 className="text-sm font-semibold text-slate-800">{heading}</h3>
+        <p className="mt-1 text-xs text-slate-700" data-testid="rail-a2a-no-census">
+          NO CENSUS PUBLISHED — <a className="underline" href="/api/a2a">GET /api/a2a</a>{" "}
+          is this site&apos;s A2A v{door.protocolVersion} JSON-RPC door. It names{" "}
+          <strong className="text-slate-900">{door.skills}</strong> skills in its own{" "}
+          <code>skills[]</code> and carries no census rows, so no A2A census is shown.
+          UNMEASURED, not zero · writes_board: <code>false</code> · as_of: <code>not published by the door</code>
+        </p>
+        <p className="mt-2 text-[11px] text-slate-600">
+          Implementation is not measurement. The door&apos;s own card:{" "}
+          <a className="underline" href="/.well-known/agent-card.json">
+            /.well-known/agent-card.json
+          </a>
+          .
+        </p>
+      </section>
+    );
+  }
   const counts = Object.entries(doc.counts ?? {});
   return (
     <section

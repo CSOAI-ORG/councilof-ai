@@ -137,7 +137,7 @@ export default function Distribution() {
   }, []);
 
   return (
-    <main data-testid="distribution-page">
+    <section data-testid="distribution-page">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(PAGE_LD) }} />
 
       <section className="surface-ink section-y">
@@ -250,6 +250,6 @@ export default function Distribution() {
           </div>
         </div>
       </section>
-    </main>
+    </section>
   );
 }

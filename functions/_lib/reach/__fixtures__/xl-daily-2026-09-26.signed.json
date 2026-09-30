@@ -1,0 +1,56 @@
+{
+ "schema": "csoai.signed-run/0.1",
+ "payload": {
+  "schema": "csoai.signed-artifact/0.1",
+  "artifact": {
+   "path": "hf://datasets/csoai/cross-ledger-supply/xl-daily/2026-09-26/v2/xl-daily-2026-09-26.json",
+   "sha256": "6acf5f9e976e790efef2ce459e0cc47e1234443ce4b198ce45840ec29a8238e1",
+   "schema": "csoai.cross-ledger-xl-daily/0.1",
+   "as_of": "2026-09-26T06:33:22Z"
+  },
+  "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+  "not_a_grade": "The signature proves these bytes were signed by the board key on the date below; it does not prove any claim inside beyond what the record's own instruments measured. An on-chain supply read is not AUM, NAV, ownership, redeemability, reserves or compliance.",
+  "frame_n": 280,
+  "k": 56,
+  "n_selected": 58,
+  "n_assets_read": 21,
+  "n_deployments": 113,
+  "evidence_kinds": {
+   "OPERATOR_API": 52,
+   "STATE_PROOF_VERIFIED": 40,
+   "UNCHECKABLE": 12,
+   "STATE_PROOF_RECORDED": 9
+  },
+  "parity_states": {
+   "UNCHECKABLE": 16,
+   "CONSISTENT": 4,
+   "INCONSISTENT": 1
+  },
+  "n_parity_findings_inconsistent": 1,
+  "n_parity_not_a_supply_claim": 3,
+  "n_files_pinned_inside": 70,
+  "changes_state": "BASELINE",
+  "version": "v2",
+  "correction": "C-2026-0926-06",
+  "supersedes_sha256": "b02851fcbc8ea5ad6460c6c847e8af9eaec74d36a09121989590dc180a5d700d"
+ },
+ "signature": {
+  "did": "did:web:csoai.org#board-attestation-1",
+  "alg": "Ed25519",
+  "sig_ed25519": "59237076d631eee880d4a855259800a66be1ea25e601951cb18e6e4854616a901ba7bdb7f6ef62a92bc8cb95637f6e095917c96010329cea6391374159efdd05",
+  "payload_sha256": "9bd224a3c6049fab69c34ace542df0d9f1535d8c98c3736cb7ea4c6c3d00e746",
+  "canonical": "JSON.stringify of key-sorted object, UTF-8 (functions/_lib/cardSign.ts canonicalBytes)",
+  "signer_auth": "pod-token",
+  "signed_at": "2026-09-26T15:40:33.648Z"
+ },
+ "local_verification": {
+  "did_document": "https://csoai.org/.well-known/did.json",
+  "result": "VERIFIES",
+  "altered_input_controls": {
+   "trailing byte appended": "rejected (control holds)",
+   "artifact sha256 altered": "rejected (control holds)",
+   "signature bit flipped": "rejected (control holds)"
+  }
+ },
+ "verify": "canonicalise payload (keys sorted, no whitespace, UTF-8); sha256 must equal signature.payload_sha256; payload.artifact.sha256 must equal sha256 of the record file; verify sig_ed25519 (hex) with the #board-attestation-1 Ed25519 key in https://csoai.org/.well-known/did.json"
+}

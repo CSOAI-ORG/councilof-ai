@@ -7,7 +7,12 @@ Handles three card shapes:
                   (sha256(canonical body) == id, Ed25519 under the DID key)
   public-root-card  Ed25519 over canonical {did, schema, surface, as_of, sha256}
   csoai-certificate sha256(canon(payload)) == certificate_id, Ed25519 over canon(payload)
-                  under issuer_did — PHASE3 C.3
+                  under issuer_did — PHASE3 C.3. LEGACY: the paid issuer that produced this shape
+                  (functions/api/paddle-webhook.ts) is withdrawn; kept so any historical object
+                  still checks. New records are csoai.completion-record/0.1 (below).
+  completion-record csoai.completion-record/0.1 (Open Badges 3.0 / VC 2.0, eddsa-jcs-2022) —
+                  delegated whole to tools/verify/completion_record_verify.py (proof, profile
+                  schema, reproduced == published, pseudonymous subject, Bitstring Status List).
 
 Then it asks the two published Merkle roots whether they carry this card:
   card-root  /interop/card-root-*.json (csoai.card-root/1). leaf = sha256(canonical WHOLE card,
@@ -389,7 +394,21 @@ def main(argv=None) -> int:
     ap.add_argument("--require-ots", action="store_true")
     ap.add_argument("--json", action="store_true")
     ap.add_argument("--github-output", action="store_true", help="append signature/inclusion/ots/tamper outputs to $GITHUB_OUTPUT")
+    ap.add_argument("--status-list", help="completion records only: status list credential file/URL")
+    ap.add_argument("--allow-test", action="store_true", help="completion records only: exit 0 for a VALID TEST record")
     a = ap.parse_args(argv)
+    # A completion record is not a card: no Merkle root commits to it and its proof is a W3C Data
+    # Integrity proof, so it gets its own verifier rather than a card verdict it cannot earn.
+    try:
+        peek = json.loads(fetch(a.card))
+    except Exception:
+        peek = None
+    if isinstance(peek, dict) and "OpenBadgeCredential" in (peek.get("type") or []):
+        import completion_record_verify as crv
+        fwd = [a.card, "--did", a.did] + (["--status-list", a.status_list] if a.status_list else []) \
+            + (["--allow-test"] if a.allow_test else []) + (["--tamper-control"] if a.tamper_control else []) \
+            + (["--json"] if a.json else [])
+        return crv.main(fwd)
     code, r = run(a)
 
     if a.github_output and os.environ.get("GITHUB_OUTPUT"):

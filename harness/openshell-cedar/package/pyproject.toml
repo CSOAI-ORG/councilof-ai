@@ -1,0 +1,39 @@
+# SPDX-License-Identifier: Apache-2.0
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "csoai-openshell-harness"
+version = "0.1.0"
+description = "Independent open example: compare an OpenShell sandbox policy with what an observer records, and translate the policy to Cedar. UNMEASURED when inconclusive."
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.9"
+authors = [{ name = "CSOAI Ltd", email = "nicholas@csoai.org" }]
+dependencies = ["PyYAML>=6", "cryptography>=42"]
+keywords = ["openshell", "cedar", "ocsf", "sandbox", "policy", "measurement"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Operating System :: OS Independent",
+  "Topic :: Security",
+  "Development Status :: 3 - Alpha",
+]
+
+[project.urls]
+Homepage = "https://councilof.ai"
+Source = "https://huggingface.co/datasets/csoai/councilof-ai-mirror"
+
+[project.scripts]
+csoai-openshell-compare = "csoai_openshell_harness.adapter:main"
+csoai-openshell-declared-observed = "csoai_openshell_harness.declared_observed:main"
+csoai-openshell-to-cedar = "csoai_openshell_harness.translate:main"
+csoai-openshell-cedar-roundtrip = "csoai_openshell_harness.roundtrip:main"
+csoai-openshell-observe = "csoai_openshell_harness.ocsf_observer:main"
+
+[tool.setuptools]
+packages = ["csoai_openshell_harness"]
+package-dir = { "" = "src" }
+
+[tool.setuptools.package-data]
+csoai_openshell_harness = ["NOTICE"]

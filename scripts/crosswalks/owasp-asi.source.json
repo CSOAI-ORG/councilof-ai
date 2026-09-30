@@ -1,0 +1,404 @@
+{
+  "schema": "csoai.crosswalk-source/0.1",
+  "id": "owasp-asi",
+  "title": "OWASP Agentic Top 10 and MCP Top 10: what we measure",
+  "page": "/crosswalks/owasp-asi/",
+  "json": "/crosswalks/owasp-asi.json",
+  "edited": "2026-09-27",
+  "statements": [
+    "This is a map of what Council of AI measures against each OWASP item. It is not a compliance claim about anyone, including us.",
+    "OWASP has not reviewed or endorsed this mapping. It is our own editorial work.",
+    "Measuring evidence that bears on an item does not certify anything. A DIRECT or PARTIAL row says what one check observed, on the date and population stated, and nothing about whether any system is safe.",
+    "NOT MEASURED means none of our checks observes evidence for that item. It is a gap in our coverage, not a finding about any system."
+  ],
+  "strength_scale": {
+    "DIRECT": "The check observes, on live systems, a condition the OWASP item names as an instance of the risk. It observes that condition only within the population and date stated.",
+    "PARTIAL": "The check observes something that bears on the item but not the risk condition itself: a precondition, one layer, a declared-versus-served mismatch, or a model's answers to written scenarios about it.",
+    "NOT_MEASURED": "None of our checks observes evidence for this item."
+  },
+  "item_strength_rule": "An item takes the strongest strength among its rows. An item with no rows is NOT_MEASURED. A model-comparison bank counts for an item only when the bank's stated task targets it; a bank that touches the item in one or two questions is noted but not counted.",
+  "references": [
+    {
+      "id": "owasp-asi-2026",
+      "short": "OWASP ASI Top 10",
+      "title": "OWASP Top 10 for Agentic Applications for 2026",
+      "publisher": "OWASP GenAI Security Project, Agentic Security Initiative",
+      "version": "2026",
+      "document_date": "December 2025",
+      "published": "2025-12-09",
+      "status": "Released",
+      "licence": "CC BY-SA 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "urls": {
+        "resource": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/",
+        "announcement": "https://genai.owasp.org/2025/12/09/owasp-top-10-for-agentic-applications-the-benchmark-for-agentic-security-in-the-age-of-autonomous-ai/",
+        "pdf": "https://genai.owasp.org/download/52117/?tmstv=1765059207"
+      },
+      "fetched": {
+        "at": "2026-09-27T04:25:00Z",
+        "from": "pdf",
+        "pdf_sha256": "a2db94cd00b08e0b3a5e5b619afe024bdbcd74503111085705e4f3dd886fcb5c",
+        "pdf_bytes": 1274186,
+        "pdf_pages": 57,
+        "method": "IDs and titles read from the PDF's table of contents with pdftotext; the cover reads 'Version 2026, December 2025' and the licence page reads 'CC BY-SA 4.0'."
+      },
+      "title_notes": {
+        "ASI02": "The announcement page shortens this to 'Tool Misuse'. The PDF title is used here.",
+        "ASI05": "The announcement page gives 'Unexpected Code Execution' without '(RCE)'. The PDF title is used here."
+      },
+      "attribution": "ASI IDs and titles are reproduced unchanged from the OWASP Top 10 for Agentic Applications for 2026, OWASP GenAI Security Project, licensed CC BY-SA 4.0. No OWASP description text is reproduced or adapted; the rationale text is ours.",
+      "items": [
+        { "id": "ASI01", "title": "Agent Goal Hijack" },
+        { "id": "ASI02", "title": "Tool Misuse and Exploitation" },
+        { "id": "ASI03", "title": "Identity and Privilege Abuse" },
+        { "id": "ASI04", "title": "Agentic Supply Chain Vulnerabilities" },
+        { "id": "ASI05", "title": "Unexpected Code Execution (RCE)" },
+        { "id": "ASI06", "title": "Memory & Context Poisoning" },
+        { "id": "ASI07", "title": "Insecure Inter-Agent Communication" },
+        { "id": "ASI08", "title": "Cascading Failures" },
+        { "id": "ASI09", "title": "Human-Agent Trust Exploitation" },
+        { "id": "ASI10", "title": "Rogue Agents" }
+      ]
+    },
+    {
+      "id": "owasp-mcp-top10-2025",
+      "short": "OWASP MCP Top 10",
+      "title": "OWASP MCP Top 10",
+      "publisher": "OWASP MCP Top 10 project (OWASP Foundation)",
+      "version": "2025 (item IDs carry the suffix :2025)",
+      "document_date": null,
+      "published": null,
+      "status": "Beta. The project road map says it is in Phase 3, 'Beta Release and Pilot Testing', with the next release planned for October 2026.",
+      "licence": "CC BY-NC-SA 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "licence_note": "The project page links CC BY-NC-SA 4.0 and, in the same sentence, calls it the Attribution-ShareAlike licence. We follow the linked licence, which is the stricter one.",
+      "urls": {
+        "project": "https://github.com/OWASP/www-project-mcp-top-10",
+        "index_pinned": "https://github.com/OWASP/www-project-mcp-top-10/blob/22aff0d08e10f3d74564a40a68c0fe642fba8eeb/index.md",
+        "index_raw": "https://raw.githubusercontent.com/OWASP/www-project-mcp-top-10/main/index.md"
+      },
+      "fetched": {
+        "at": "2026-09-27T04:43:00Z",
+        "from": "index.md on the main branch",
+        "index_commit": "22aff0d08e10f3d74564a40a68c0fe642fba8eeb",
+        "index_commit_date": "2026-07-29T13:53:54Z",
+        "index_sha256": "4d65ec4917c33b9196b2bc7d15c89935c2084509dbbadf2ec4debf9dcfac7ded",
+        "method": "IDs and titles read from the 'Top 10' list in index.md."
+      },
+      "attribution": "MCP IDs and titles are reproduced unchanged from the OWASP MCP Top 10 (beta), licensed CC BY-NC-SA 4.0. No OWASP description text is reproduced or adapted. This page is free to read and is not sold.",
+      "items": [
+        { "id": "MCP01:2025", "title": "Token Mismanagement & Secret Exposure" },
+        { "id": "MCP02:2025", "title": "Privilege Escalation via Scope Creep" },
+        { "id": "MCP03:2025", "title": "Tool Poisoning" },
+        { "id": "MCP04:2025", "title": "Software Supply Chain Attacks & Dependency Tampering" },
+        { "id": "MCP05:2025", "title": "Command Injection & Execution" },
+        { "id": "MCP06:2025", "title": "Intent Flow Subversion" },
+        { "id": "MCP07:2025", "title": "Insufficient Authentication & Authorization" },
+        { "id": "MCP08:2025", "title": "Lack of Audit and Telemetry" },
+        { "id": "MCP09:2025", "title": "Shadow MCP Servers" },
+        { "id": "MCP10:2025", "title": "Context Injection & Over-Sharing" }
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "id": "effect-binding",
+      "name": "Effect binding (server probe)",
+      "family": "gspc-axis",
+      "kind": "deterministic-facts",
+      "axis": "effect-binding",
+      "observes": "Calls a read-only tool on live third-party MCP servers with one extra argument the call was not authorised to carry, and records whether the server's boundary refuses it. It sees the boundary, not whether any backend used the argument. Servers that demand credentials are recorded as uncheckable and never probed.",
+      "live": ["/api/gspc?axis=effect-binding", "/interop/effect-binding-server-probe-2026-09-22.signed.json", "/axis/effect-binding"],
+      "observed_from": { "kind": "effect-binding-probe", "file": "public/interop/effect-binding-server-probe-2026-09-22.json" }
+    },
+    {
+      "id": "contract-parity.TOOLS",
+      "name": "MCP contract parity: TOOLS",
+      "family": "census",
+      "kind": "census-check",
+      "observes": "For each MCP endpoint where two or more public surfaces (registry entry, mcp.json, server card, x402 manifest, live tools/list) state its tools, whether they agree. INCONSISTENT means two public statements disagree, not which one is true.",
+      "live": ["/measurement-capsules/v0.2/contract_parity/record.json", "/evidence/mcp-contract-parity/"],
+      "observed_from": { "kind": "contract-parity", "dimension": "TOOLS", "file": "public/measurement-capsules/v0.2/contract_parity/record.json" }
+    },
+    {
+      "id": "contract-parity.VERSION",
+      "name": "MCP contract parity: VERSION",
+      "family": "census",
+      "kind": "census-check",
+      "observes": "Whether the server version stated on each public surface agrees with the version the live endpoint reports.",
+      "live": ["/measurement-capsules/v0.2/contract_parity/record.json", "/evidence/mcp-contract-parity/"],
+      "observed_from": { "kind": "contract-parity", "dimension": "VERSION", "file": "public/measurement-capsules/v0.2/contract_parity/record.json" }
+    },
+    {
+      "id": "contract-parity.PROTOCOL",
+      "name": "MCP contract parity: PROTOCOL",
+      "family": "census",
+      "kind": "census-check",
+      "observes": "Whether the MCP protocol version a server declares agrees with the version it negotiates on a live initialize call.",
+      "live": ["/measurement-capsules/v0.2/contract_parity/record.json", "/evidence/mcp-contract-parity/"],
+      "observed_from": { "kind": "contract-parity", "dimension": "PROTOCOL", "file": "public/measurement-capsules/v0.2/contract_parity/record.json" }
+    },
+    {
+      "id": "contract-parity.AUTH",
+      "name": "MCP contract parity: AUTH",
+      "family": "census",
+      "kind": "census-check",
+      "observes": "Whether the authentication a server declares on its public surfaces agrees with what its live endpoint requires.",
+      "live": ["/measurement-capsules/v0.2/contract_parity/record.json", "/evidence/mcp-contract-parity/"],
+      "observed_from": { "kind": "contract-parity", "dimension": "AUTH", "file": "public/measurement-capsules/v0.2/contract_parity/record.json" }
+    },
+    {
+      "id": "contract-parity.PAYMENT",
+      "name": "MCP contract parity: PAYMENT",
+      "family": "census",
+      "kind": "census-check",
+      "observes": "Whether the payment terms a server declares on its public surfaces agree with each other and with its live payment challenge.",
+      "live": ["/measurement-capsules/v0.2/contract_parity/record.json", "/evidence/mcp-contract-parity/"],
+      "observed_from": { "kind": "contract-parity", "dimension": "PAYMENT", "file": "public/measurement-capsules/v0.2/contract_parity/record.json" }
+    },
+    {
+      "id": "agent-card-signature",
+      "name": "A2A agent-card signature verification",
+      "family": "census",
+      "kind": "census-check",
+      "observes": "Fetches the agent cards listed in a public A2A registry and, for each card that carries a signature, verifies it against the key the card declares, under the card's declared protocol version. Cards served without a signature are counted but not verified.",
+      "live": ["/measurement-capsules/v0.2/a2a_card/record.json"],
+      "observed_from": { "kind": "a2a-card", "file": "public/measurement-capsules/v0.2/a2a_card/record.json" }
+    },
+    {
+      "id": "tool-drift",
+      "name": "MCP tool drift",
+      "family": "census",
+      "kind": "census-check",
+      "observes": "For each MCP endpoint observed at two independent times, whether the tools it advertised are the same. It compares names, and descriptions and input schemas where both observations recorded them. A change is a recorded difference, never a finding of malice.",
+      "live": ["/measurement-capsules/v0.2/tool_drift/record.json"],
+      "observed_from": { "kind": "tool-drift", "file": "public/measurement-capsules/v0.2/tool_drift/record.json" }
+    },
+    {
+      "id": "x402-door-conformance",
+      "name": "x402 door conformance",
+      "family": "census",
+      "kind": "census-check",
+      "observes": "Whether the x402 payment challenge each of our own published payment doors returns has the documented shape. It is a check of our own endpoints, and it is not proof of delivery or settlement.",
+      "live": ["/interop/x402-door-conformance-2026-09/report.json", "/interop/x402-door-conformance-2026-09/card-x402-door-conformance-summary-unsigned.json"],
+      "observed_from": { "kind": "x402-doors", "file": "public/interop/x402-door-conformance-2026-09/card-x402-door-conformance-summary-unsigned.json" }
+    },
+    {
+      "id": "gspc.conformance",
+      "name": "Conformance axis (MCPBench)",
+      "family": "gspc-axis",
+      "kind": "model-comparison",
+      "axis": "conformance",
+      "observes": "A fleet of models reads written descriptions of MCP tools and judges whether each one breaks its declared contract, for example a tool annotated read-only that deletes files. Graded against fixed labels on a frozen bank.",
+      "live": ["/api/gspc?axis=conformance"]
+    },
+    {
+      "id": "gspc.cross-reality",
+      "name": "Cross-reality axis (XRAIV)",
+      "family": "gspc-axis",
+      "kind": "model-comparison",
+      "axis": "cross-reality",
+      "observes": "A fleet of models decides whether an autonomous agent should proceed, ask for confirmation or refuse before an action, such as overwriting a file it did not create. Graded against fixed labels on a frozen bank.",
+      "live": ["/api/gspc?axis=cross-reality"]
+    },
+    {
+      "id": "gspc.jail",
+      "name": "Jail axis (GoldBank-Detector)",
+      "family": "gspc-axis",
+      "kind": "model-comparison",
+      "axis": "jail",
+      "observes": "A fleet of models, used as a guard, classifies code cells as sandbox-escape attempts (for example spawning a shell) or benign. Graded against a frozen gold bank.",
+      "live": ["/api/gspc?axis=jail"]
+    },
+    {
+      "id": "gspc.swarm",
+      "name": "Swarm axis (SwarmBench v2b)",
+      "family": "gspc-axis",
+      "kind": "model-comparison",
+      "axis": "swarm",
+      "observes": "A fleet of models answers written questions on multi-agent coordination safety, such as injected instructions spreading between agents or a worker impersonating an orchestrator. Answers are keyword-graded on a frozen bank.",
+      "live": ["/api/gspc?axis=swarm"]
+    },
+    {
+      "id": "gspc.affect",
+      "name": "Affect axis (AffectBench)",
+      "family": "gspc-axis",
+      "kind": "model-comparison",
+      "axis": "affect",
+      "observes": "A fleet of models responds to scenarios involving manipulation of, disclosure to and vulnerability of a human user. Graded against fixed labels on a frozen bank.",
+      "live": ["/api/gspc?axis=affect"]
+    }
+  ],
+  "crosswalks": [
+    {
+      "reference": "owasp-asi-2026",
+      "items": [
+        {
+          "id": "ASI01",
+          "rows": [],
+          "note": "Nothing we run injects instructions through content, tools or retrieved data and then watches whether an agent's goal changes. The safety axis measures refusal of direct requests, which is not resistance to goal hijack."
+        },
+        {
+          "id": "ASI02",
+          "rows": [
+            { "check": "effect-binding", "strength": "PARTIAL", "rationale": "A tool boundary that accepts an argument the call was not authorised to carry is a precondition for over-scoped tool use. The probe sees the boundary only, not any agent misusing the tool or any backend acting on the argument." },
+            { "check": "gspc.conformance", "strength": "PARTIAL", "rationale": "Measures whether models recognise a tool that breaks its declared contract. These are written scenarios, not a deployed agent using tools." },
+            { "check": "gspc.cross-reality", "strength": "PARTIAL", "rationale": "Measures whether models ask for confirmation before consequential actions, one of the ways tool misuse happens. These are written scenarios, not a deployed agent." }
+          ]
+        },
+        {
+          "id": "ASI03",
+          "rows": [
+            { "check": "effect-binding", "strength": "PARTIAL", "rationale": "Whether authorisation binds to the request a server executes is part of enforcing least privilege. The probe reaches only servers that answer anonymous callers, so it says nothing about delegated or inherited credentials." },
+            { "check": "contract-parity.AUTH", "strength": "PARTIAL", "rationale": "A server whose declared authentication disagrees with what its live endpoint requires states its identity requirements inconsistently. That is not an observed privilege escalation." },
+            { "check": "agent-card-signature", "strength": "PARTIAL", "rationale": "Impersonation through unverified agent descriptors is one route to this risk. The census observes which descriptors verify; it does not observe any agent trusting one." }
+          ]
+        },
+        {
+          "id": "ASI04",
+          "rows": [
+            { "check": "tool-drift", "strength": "PARTIAL", "rationale": "Tool definitions that change after adoption are how a tampered component reaches an agent. The check records change between two observations, never malice, and compares names only where descriptions were not recorded." },
+            { "check": "contract-parity.TOOLS", "strength": "PARTIAL", "rationale": "A live tool list that differs from the published one means the component in use is not the one described. A mismatch is not evidence of tampering." },
+            { "check": "contract-parity.VERSION", "strength": "PARTIAL", "rationale": "A version that disagrees across surfaces weakens the provenance of the component. Disagreement is not compromise." }
+          ]
+        },
+        {
+          "id": "ASI05",
+          "rows": [
+            { "check": "gspc.jail", "strength": "PARTIAL", "rationale": "Measures how well models used as a guard flag code that spawns a shell or escapes a sandbox. It measures one detection layer on a frozen bank, not whether any agent executes code." }
+          ]
+        },
+        {
+          "id": "ASI06",
+          "rows": [],
+          "note": "Nothing we run writes to an agent's memory or retrieved context and then reads back its later behaviour. The swarm bank has two questions on shared-memory poisoning; under the counting rule that does not make it evidence for this item."
+        },
+        {
+          "id": "ASI07",
+          "rows": [
+            { "check": "agent-card-signature", "strength": "DIRECT", "rationale": "This item names forged agent descriptors and lists signed agent cards as a mitigation. The census fetches live agent cards and verifies each signature against the key the card declares, so an unverifiable descriptor is observed directly. It covers descriptor authenticity only, not message encryption, replay or routing." },
+            { "check": "contract-parity.PROTOCOL", "strength": "PARTIAL", "rationale": "A declared protocol version that differs from the one negotiated live is the kind of mismatch that protocol pinning guards against. A mismatch is not a downgrade attack." },
+            { "check": "gspc.swarm", "strength": "PARTIAL", "rationale": "Model answers to written questions on impersonation and unverifiable claims between agents. These are answers, not observed traffic between agents." }
+          ]
+        },
+        {
+          "id": "ASI08",
+          "rows": [
+            { "check": "gspc.swarm", "strength": "PARTIAL", "rationale": "Includes questions on injected instructions spreading between agents, supervisors that fail open and agents spawning agents without limit. These are model answers on a frozen bank; no system is run until it fails." }
+          ]
+        },
+        {
+          "id": "ASI09",
+          "rows": [
+            { "check": "gspc.affect", "strength": "PARTIAL", "rationale": "Measures model responses where a person could be manipulated or exposed. It does not observe whether people over-trust a deployed agent." }
+          ]
+        },
+        {
+          "id": "ASI10",
+          "rows": [],
+          "note": "Nothing we run watches an agent over time for behaviour that departs from its purpose without an attacker. The jail bank classifies code cells; it does not observe an agent."
+        }
+      ]
+    },
+    {
+      "reference": "owasp-mcp-top10-2025",
+      "items": [
+        {
+          "id": "MCP01:2025",
+          "rows": [],
+          "note": "We do not scan servers, logs or model memory for exposed secrets or token lifetimes."
+        },
+        {
+          "id": "MCP02:2025",
+          "rows": [
+            { "check": "effect-binding", "strength": "PARTIAL", "rationale": "A boundary that does not refuse an unauthorised argument is weak scope enforcement at one point in time. Scope creep is change over time, which this single run does not observe." },
+            { "check": "tool-drift", "strength": "PARTIAL", "rationale": "A tool set that grows between two observations is how scope creeps. The check records change at name granularity and does not judge the privileges a new tool carries." }
+          ]
+        },
+        {
+          "id": "MCP03:2025",
+          "rows": [
+            { "check": "tool-drift", "strength": "PARTIAL", "rationale": "Records whether advertised tools changed between two observations. A change is not poisoning, and unchanged names do not rule it out." },
+            { "check": "contract-parity.TOOLS", "strength": "PARTIAL", "rationale": "Records whether the live tool list matches what the server publishes elsewhere. It does not read tool descriptions for injected instructions." },
+            { "check": "gspc.conformance", "strength": "PARTIAL", "rationale": "Measures whether models recognise tools that act outside their declared contract, on written scenarios." }
+          ]
+        },
+        {
+          "id": "MCP04:2025",
+          "rows": [
+            { "check": "contract-parity.VERSION", "strength": "PARTIAL", "rationale": "Records version disagreement between a server's published surfaces and its live endpoint. It does not inspect dependencies." }
+          ]
+        },
+        {
+          "id": "MCP05:2025",
+          "rows": [
+            { "check": "gspc.jail", "strength": "PARTIAL", "rationale": "Measures how well models used as a guard flag code that executes shell commands. It does not test any server for injection." }
+          ]
+        },
+        {
+          "id": "MCP06:2025",
+          "rows": [],
+          "note": "Nothing we run plants instructions in retrieved context and watches whether an agent's intent changes."
+        },
+        {
+          "id": "MCP07:2025",
+          "rows": [
+            { "check": "effect-binding", "strength": "DIRECT", "rationale": "This item is servers failing to enforce access control during interactions. The probe calls live servers with an argument the call was not authorised to carry and records whether the boundary refuses it, so a boundary that accepts it is that condition observed. Only servers that answer anonymous callers are probed, and backend use of the argument is not observed." },
+            { "check": "contract-parity.AUTH", "strength": "PARTIAL", "rationale": "Records whether a server's declared authentication agrees with what its live endpoint requires. A disagreement is inconsistent disclosure, not a bypass." }
+          ]
+        },
+        {
+          "id": "MCP08:2025",
+          "rows": [],
+          "note": "We do not observe the logs or telemetry any server keeps."
+        },
+        {
+          "id": "MCP09:2025",
+          "rows": [],
+          "note": "Shadow servers are, by definition, outside the public registries our census reads."
+        },
+        {
+          "id": "MCP10:2025",
+          "rows": [],
+          "note": "Nothing we run shares context across sessions, users or agents and looks for leakage."
+        }
+      ]
+    }
+  ],
+  "unmapped": [
+    { "check": "contract-parity.PAYMENT", "reason": "Payment-term consistency bears on no item in either list." },
+    { "check": "x402-door-conformance", "reason": "It checks the shape of our own payment challenges, which bears on no item in either list." },
+    { "axis": "governance", "reason": "EU AI Act risk-tier classification; no agentic threat surface." },
+    { "axis": "safety", "reason": "Refusal of direct requests. No injected or indirect instruction is present, so it is not evidence about goal hijack." },
+    { "axis": "provenance", "reason": "Survival of synthetic-content marking; not an agentic risk in either list." },
+    { "axis": "continuity", "reason": "Post-quantum status of cryptographic assumptions; not an agentic risk in either list." },
+    { "axis": "openness", "reason": "Licence reasoning against intended use; not an agentic risk in either list." },
+    { "axis": "machinery-conformity", "reason": "Classification under the EU Machinery Regulation; not an agentic risk in either list." },
+    { "axis": "care", "reason": "Harm-avoidance trade-offs in paired conduct scenarios; bears on no single item closely enough to state." },
+    { "axis": "detector-interop", "reason": "Cross-detector watermark interoperability; not an agentic risk in either list." },
+    { "axis": "art5-safeguard", "reason": "Whether models refuse to build practices the EU AI Act prohibits, such as subliminal manipulation. That is refusal to build a manipulative system, not an agent exploiting a person's trust, so it is not counted for ASI09." },
+    { "axis": "provenance-controls", "reason": "On-chain issuer control facts for tokenised assets; not an agentic risk." },
+    { "axis": "reserve-attestation", "reason": "Issuer reserve-attestation disclosure; not an agentic risk." },
+    { "axis": "regulatory-framework", "reason": "Whether an issuer's governing regime is declared; not an agentic risk." },
+    { "axis": "distribution-integrity", "reason": "Token supply and holder facts; not an agentic risk." },
+    { "axis": "custody-disclosure", "reason": "Whether a custodian and auditor are named; not an agentic risk." },
+    { "axis": "ai-adoption-components", "reason": "Cited public statistics; not a measurement of any system." },
+    { "axis": "labour-components", "reason": "Cited public statistics; not a measurement of any system." },
+    { "axis": "humanoid-labour-index", "reason": "Vendor deployment disclosures; not an agentic risk." }
+  ],
+  "capsule_adapters": [
+    { "adapter": "contract_parity", "carries": ["contract-parity.TOOLS", "contract-parity.VERSION", "contract-parity.PROTOCOL", "contract-parity.AUTH", "contract-parity.PAYMENT"], "record": "/measurement-capsules/v0.2/contract_parity/record.json" },
+    { "adapter": "a2a_card", "carries": ["agent-card-signature"], "record": "/measurement-capsules/v0.2/a2a_card/record.json" },
+    { "adapter": "tool_drift", "carries": ["tool-drift"], "record": "/measurement-capsules/v0.2/tool_drift/record.json" },
+    { "adapter": "cross_ledger", "carries": [], "record": "/measurement-capsules/v0.2/cross_ledger/record.json", "reason": "Tokenised-asset supply across ledgers; bears on no item." },
+    { "adapter": "mill_cross_runtime", "carries": [], "record": "/measurement-capsules/v0.2/index.json", "reason": "Whether a model's measured result reproduces on a second runtime; bears on no item." },
+    { "adapter": "public_signals", "carries": [], "record": "/measurement-capsules/v0.2/public_signals/record.json", "reason": "Outside signals about CSOAI itself; bears on no item." },
+    { "adapter": "self_parity", "carries": [], "record": "/measurement-capsules/v0.2/self_parity/record.json", "reason": "What outside indexes say about our own offerings; bears on no item." }
+  ],
+  "prior_art": [
+    { "where": "/owasp-agentic/", "what": "Maps ASI01 to ASI10 to the practices we apply to our own signing, keys and publishing. It describes our own controls, not measurements of other systems, and it predates the census checks used here." },
+    { "where": "/owasp-asi/", "what": "Despite its address, maps our axes to the OWASP AI Exchange, a different OWASP document. It does not use the ASI list." },
+    { "where": "measurement/owasp-asi/asi-gspc-axis-map.json", "what": "An internal axis-only map from 14 September 2026 with no strength grades. It relates jail to ASI10, cross-reality to ASI03 and art5-safeguard to ASI09; this crosswalk does not count those, for the reasons given on each check or in the unmapped list." }
+  ],
+  "live_check_rule": "Counts shown beside each census check are read by the generator from the committed record files named in the JSON, with their as_of. GSPC axes carry no count here; follow the live link."
+}

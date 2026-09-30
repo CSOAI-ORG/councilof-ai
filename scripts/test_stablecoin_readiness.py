@@ -113,6 +113,26 @@ class StablecoinReadinessTruthTest(unittest.TestCase):
         with self.assertRaises(AssertionError):
             validate(changed)
 
+    def test_asset_specific_doors_are_read_from_the_door_registry(self) -> None:
+        doors = json.loads((Path(".") / "functions" / "api" / "_wrapper_asset_doors.json").read_text())["doors"]
+        ids = {str(d["stablecoin_index_id"]) for d in doors}
+        with_door = [row for row in self.document["assets"] if row.get("x402_door")]
+        self.assertEqual(ids, {row["id"] for row in with_door})
+        self.assertEqual(len(with_door), self.document["coverage"]["asset_specific_x402_doors"])
+        self.assertEqual(0, self.document["coverage"]["asset_specific_x402_settlements_verified"])
+        for row in with_door:
+            # a declared door is not a settlement: every reader keys "settled" off this substring
+            self.assertIn("NO_ASSET_SETTLEMENT_VERIFIED", row["x402_door_state"])
+        changed = copy.deepcopy(self.document)
+        del next(row for row in changed["assets"] if row.get("x402_door"))["x402_door"]
+        with self.assertRaises(AssertionError):
+            validate(changed)
+
+    def test_no_amount_is_typed_on_the_public_surface(self) -> None:
+        rendered = json.dumps(self.document)
+        self.assertNotIn("campaign_amount", rendered)
+        self.assertNotRegex(rendered, r"\b0\.01 USDC\b")
+
     def test_absence_from_a_register_is_unchecked_never_not_registered(self) -> None:
         rendered = json.dumps(self.document)
         for word in ("NOT_REGISTERED", "UNREGISTERED", "NOT_LISTED"):

@@ -124,7 +124,7 @@
       "description": "Webhook notifications when a tracked regulation, deadline or published measurement changes, with the event schema and delivery guarantees documented."
     },
     "/models": {
-      "title": "AI model registry & scoreboard | CSOAI",
+      "title": "AI model registry — runs read from the board | Council of AI",
       "description": "Model-comparison runs from the living GSPC board. Counts and axis families are read from the board endpoint; an absent public leader never reclassifies a row."
     },
     "/plans": {
@@ -137,7 +137,7 @@
     },
     "/arena-scoreboard": {
       "title": "Signed Per-Axis Leaderboard | CSOAI",
-      "description": "The signed per-axis leaderboard: models ranked on each GSPC axis from Ed25519-signed cards, with the verification path beside every row. Empty cells stay empty."
+      "description": "A signed historical arena artefact (29 Aug 2026): per-axis pass rates, not Elo and not a current ranking. Most axes read 0.0 because of a keyword-grader defect."
     },
     "/leaderboard": {
       "title": "The AI Governance Leaderboard — sorted by the axis you care about | Council of AI",
@@ -150,6 +150,14 @@
     "/connect-gspc": {
       "title": "Connect GSPC to your AI — every platform | CSOAI",
       "description": "Copy-paste configs that add the GSPC measurement server to Claude, Cursor, ChatGPT, Gemini, Grok, Perplexity and others over MCP, OpenAPI or function calling."
+    },
+    "/connect": {
+      "title": "Connect an agent: MCP, A2A and HTTP | Council of AI",
+      "description": "Connect Claude, Cursor or any MCP or A2A client: the free read-only MCP door, the full MCP endpoint, the A2A agent card and an offline verifier."
+    },
+    "/connect/claude": {
+      "title": "Use Council of AI in Claude: connector setup | Council of AI",
+      "description": "Add the free, read-only Council of AI connector to Claude: the connector URL, what each tool answers, example prompts, limits, privacy and support."
     },
     "/connect-ai": {
       "title": "Connect GSPC to your AI — every platform | CSOAI",
@@ -164,7 +172,7 @@
       "description": "Signed measurement findings mapped to the EU AI Act provisions they touch, with model, axis, run date and verification path. Withdrawn pending review."
     },
     "/findings": {
-      "title": "Regulation Findings — every signed finding, mapped to its regulator | CSOAI",
+      "title": "Signed findings, mapped to their regulators | Council of AI",
       "description": "Every signed (model, axis) finding joined to the regulator and fine band it maps to, with the card behind each row. Read from the published findings index."
     },
     "/gspc-gap-map": {
@@ -462,12 +470,12 @@
       "description": "Sign in to your CSOAI workspace: your Council assistant, saved measurements and evidence tools in one place. Public boards and verification need no account."
     },
     "/dashboard": {
-      "title": "Council OS | Council of AI",
-      "description": "Council OS: the workspace over the GSPC board, signed cards, regulation map and evidence tools. Empty values stay unmeasured; numbers are read from source."
+      "title": "Dashboard — board, cards and evidence | Council of AI",
+      "description": "The Council of AI dashboard: the GSPC board, signed cards, attestations and the corrections ledger. Empty values stay unmeasured; numbers are read from source."
     },
     "/os": {
-      "title": "Council OS | Council of AI",
-      "description": "Council OS: the workspace over the GSPC board, signed cards, regulation map and evidence tools. Empty values stay unmeasured; numbers are read from source."
+      "title": "Council OS workspace | Council of AI",
+      "description": "Council OS, the workspace over the GSPC board, signed cards, regulation map and evidence tools. Empty values stay unmeasured; every number is read from source."
     },
     "/enterprise": {
       "title": "Enterprise | CSOAI",
@@ -706,8 +714,8 @@
       "description": "Propose a bounded experiment, dataset or reproducibility study that strengthens an existing GSPC instrument. Scope and terms are set before work starts."
     },
     "/charter": {
-      "title": "Partnership charter | Council of AI",
-      "description": "The CSOAI partnership charter: the articles, schedules and parts that state how the body measures, signs, corrects and refuses and what partners agree to."
+      "title": "Charter | Council of AI",
+      "description": "Where the operational charter lives: the machine-readable charter, its sha256 and the append-only amendment log. The 52-Article charter is historical."
     },
     "/comparison": {
       "title": "Why organisations use Council of AI | CSOAI",
@@ -948,6 +956,74 @@
     "/texas-ai-act": {
       "title": "Texas Responsible AI Governance Act (TRAIGA) | CSOAI",
       "description": "Texas TRAIGA explained: what the statute requires, who it binds, the effective dates and enforcement and what CSOAI measures against it, with sources."
+    },
+    "/corrections": {
+      "title": "Corrections ledger | Council of AI",
+      "description": "Every published thing Council of AI (CSOAI Ltd) got wrong: what was wrong, how it was caught and the fix, dated. Read live from GET /api/corrections."
+    },
+    "/census": {
+      "title": "The CSOAI-census crawler | Council of AI",
+      "description": "What the CSOAI-census crawler does (public GETs and MCP discovery, never a tool call), the datasets it feeds, and how to ask for a re-check or opt out."
+    },
+    "/state": {
+      "title": "State of the Agent Internet | Council of AI",
+      "description": "The stable address for CSOAI's State of the Agent Internet: the latest edition, earlier ones and the signed numbers behind each. Measurement, not endorsement."
+    },
+    "/state/2026-09": {
+      "title": "State of the Agent Internet: September 2026 | Council of AI",
+      "description": "What public agent catalogues, cards, payment doors and ledgers let a third party check, measured by CSOAI on 26 Sep 2026. Aggregate figures, each one signed."
+    },
+    "/verify-server": {
+      "title": "Verify a server: signed measurements | Council of AI",
+      "description": "Paste an MCP server, A2A agent or x402 endpoint URL to see every signed measurement Council of AI holds about it, and re-check each one in your browser."
+    },
+    "/crosswalks/owasp-asi": {
+      "title": "OWASP Agentic Top 10 crosswalk: what we measure | Council of AI",
+      "description": "Which Council of AI checks observe evidence for each OWASP ASI and MCP Top 10 item, how directly, with live data. Not a compliance claim; not endorsed by OWASP."
+    },
+    "/mechanism": {
+      "title": "The open measurement mechanism | Council of AI",
+      "description": "Any public claim, measured against frozen published rules, recorded as a signed capsule anyone can verify free. Coverage by instrument and jurisdiction."
+    },
+    "/independence": {
+      "title": "Independence and conflicts of interest | Council of AI",
+      "description": "Who runs CSOAI Ltd, what is not yet published about its funding, how many of our signed cards measure our own models, and who holds the signing keys."
+    },
+    "/measurement-capsules": {
+      "title": "Measurement Capsules: signed, checkable records | Council of AI",
+      "description": "What a measurement capsule is, what kinds Council of AI measures today, the signed daily index and its public anchors, and how to verify any capsule yourself."
+    },
+    "/spec/signed-receipts": {
+      "title": "signed-receipts/v1 specification (A2A extension) | Council of AI",
+      "description": "Canonical home of signed-receipts/v1: a did:web key-trust convention for A2A card signing plus signed task-outcome receipts, with reference code."
+    },
+    "/interop/a2a-jcs-2026-09-27": {
+      "title": "A2A TCK RFC 8785 vectors: our results, 27 Sep 2026 | Council of AI",
+      "description": "Our agent-card census verifier against the A2A TCK RFC 8785 vectors: results, the failure classes we found, and whether any census verdict changes."
+    },
+    "/research/cross-hardware-reproducibility": {
+      "title": "Cross-hardware reproducibility of LLM evaluation results | Council of AI",
+      "description": "Preprint and open dataset: the same model, prompts and settings re-run on a second GPU runtime and compared item by item. Check every number yourself."
+    },
+    "/measurements/disclosure-completeness": {
+      "title": "Disclosure completeness of public AI benchmark artifacts | Council of AI",
+      "description": "What four public AI benchmark artifacts state about themselves: logs pointers, dates, sample sizes, publication lag, declared context length. Signed records."
+    },
+    "/measurements/x402-activity": {
+      "title": "Wash-adjusted x402 activity | Council of AI",
+      "description": "Of the USDC payments reaching x402 Bazaar-listed payees on Base in one UTC day, how many came from distinct outside wallets. Signed daily record."
+    },
+    "/measurements/disclosure-lag/2026-09-gemini-evaluation": {
+      "title": "Disclosure lag: Gemini cyber evaluation | Council of AI",
+      "description": "The dated public record of the May 2026 access to three outside systems during a Gemini cyber evaluation, and the days between each dated event."
+    },
+    "/measurements/disclosure-lag/2026-09-medicare-agent": {
+      "title": "Disclosure lag: Medicare statistics portal | Council of AI",
+      "description": "The dated public record of the June 2026 agent access to Australia's Medicare statistics portal, and the days between each dated event. Signed."
+    },
+    "/gspc-console": {
+      "title": "GSPC console — every published score | Council of AI",
+      "description": "Every published model-by-test-bank score, read live from /api/findings. A dash means UNMEASURED; third-party models sit in a separate table."
     }
   },
   "components": {
@@ -1108,8 +1184,8 @@
       "description": "Early access to Council of AI training in AI safety analysis, frameworks and incident review. Completion attests training was done, not that a system conforms."
     },
     "EI3": {
-      "title": "EI3 emotional-intelligence substrate | Council of AI",
-      "description": "EI3, a measurable emotional-intelligence substrate for AI: concern density as care-token frequency normalised by total tokens, formula cited and audit-friendly."
+      "title": "EI3: not a Council of AI measurement | Council of AI",
+      "description": "EI3 described an emotional-intelligence substrate built by a separate business. Council of AI hosts no system; EI3 is UNMEASURED and has no result here."
     },
     "OsEnter": {
       "title": "Enter Council OS | Council of AI",
@@ -1352,7 +1428,7 @@
       "description": "Council Minds, the cognition and voice layer of the OS: how the assistant reasons, speaks and listens, what runs locally, and what is still a design not live."
     },
     "ModelRegistry": {
-      "title": "AI model registry & scoreboard | CSOAI",
+      "title": "AI model registry — runs read from the board | Council of AI",
       "description": "Model-comparison runs from the living GSPC board. Counts and axis families are read from the board endpoint; an absent public leader never reclassifies a row."
     },
     "ModelFindings": {
@@ -1392,8 +1468,8 @@
       "description": "The semantic layer for AI governance: how systems, provisions, measurements and evidence are named and related, so tools and readers use the same words."
     },
     "OsRoute": {
-      "title": "Council OS | Council of AI",
-      "description": "Council OS: the workspace over the GSPC board, signed cards, regulation map and evidence tools. Empty values stay unmeasured; numbers are read from source."
+      "title": "Council OS workspace | Council of AI",
+      "description": "Council OS, the workspace over the GSPC board, signed cards, regulation map and evidence tools. Empty values stay unmeasured; every number is read from source."
     },
     "WhyCSOAI": {
       "title": "Why Council of AI | Council of AI",
@@ -1584,12 +1660,16 @@
       "description": "The live GSPC board. Every measured cell has n and a confidence interval where honest; UNMEASURED is reported, never hidden. Counts come from the endpoint."
     },
     "Dashboard": {
-      "title": "Council OS | Council of AI",
-      "description": "Council OS: the workspace over the GSPC board, signed cards, regulation map and evidence tools. Empty values stay unmeasured; numbers are read from source."
+      "title": "Dashboard — board, cards and evidence | Council of AI",
+      "description": "The Council of AI dashboard: the GSPC board, signed cards, attestations and the corrections ledger. Empty values stay unmeasured; numbers are read from source."
     },
     "Blog": {
       "title": "Blog | CSOAI",
       "description": "The CSOAI blog: articles on AI measurement, the EU AI Act and governance evidence, each with its author, date and the sources it cites where it has them."
+    },
+    "JurisdictionEngine": {
+      "title": "Jurisdiction engine: AI law by place | Council of AI",
+      "description": "Pick a place and read the stack of AI rules that apply there, from city to nation and bloc, and how each layer cross-references the next. Reference, not advice."
     }
   }
 }

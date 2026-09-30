@@ -72,7 +72,7 @@ export default function EstateIndex() {
     : [];
 
   return (
-    <main className="mx-auto max-w-5xl px-5 py-12">
+    <section className="mx-auto max-w-5xl px-5 py-12">
       <h1 className="text-3xl font-semibold tracking-tight">Estate index</h1>
       <p className="mt-3 max-w-2xl text-base leading-relaxed text-neutral-600 dark:text-neutral-300">
         Everything we hold, wherever it lives, written down once and committed to a single root.
@@ -245,6 +245,6 @@ export default function EstateIndex() {
           </p>
         </>
       )}
-    </main>
+    </section>
   );
 }

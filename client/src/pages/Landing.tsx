@@ -434,8 +434,8 @@ export default function Landing() {
               <Link href="/watchdog-signup">
                 <span className="hover:text-foreground transition cursor-pointer">Careers</span>
               </Link>
-              <a href="https://github.com/CSOAI-ORG" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition">
-                GitHub
+              <a href="https://huggingface.co/datasets/csoai/councilof-ai-source" title="Source mirror on Hugging Face. The GitHub org CSOAI-ORG is temporarily unavailable." target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition">
+                Source (HF mirror)
               </a>
             </div>
             <p className="text-sm text-muted-foreground">

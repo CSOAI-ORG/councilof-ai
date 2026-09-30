@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 """corrections-watch: the daily re-check behind "Corrections that did not travel".
 
-Runs on the pod. No GitHub anywhere in the loop: the row set is READ from the Hugging Face mirror
-(v0.2, never edited), every cited page is re-fetched with a browser user-agent, the stale string
-and the corrected string are looked for verbatim in the served bytes, and the result is uploaded
-back to the mirror under public/interop/corrections-watch/ (one dated file per day + latest.json).
+Runs on oracle-micro-2 (cron 10 6 * * *). No GitHub anywhere in the loop: the row set is READ from the
+Hugging Face mirror (v0.2, never edited), every cited page is re-fetched with a browser user-agent, the stale
+string and the corrected string are looked for verbatim in the served bytes, and the result is published to
+the PUBLIC evidence dataset under public/interop/corrections-watch/ (one dated file per day + latest.json):
+    https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/public/interop/corrections-watch/
+A copy of the same files goes to the mirror as well. Every public link to the results points at the evidence
+dataset, never at the mirror (the mirror was private from 29 Sep 2026 and anonymous readers got 401).
 
     corrections-watch.py                 # fetch, probe, write, upload
     corrections-watch.py --no-upload     # fetch, probe, write only (dry)
@@ -24,13 +27,19 @@ from pathlib import Path
 import requests
 
 MIRROR = "https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/"
-REPO_ID = "csoai/councilof-ai-mirror"
+REPO_ID = "csoai/councilof-ai-mirror"            # copy only; its visibility has changed (private 29 Sep 2026)
+PUBLIC_REPO_ID = "csoai/councilof-ai-evidence"   # public; THE home of the results and of every public link to them
 V02_PATH = "public/interop/corrections-that-did-not-travel-2026-09-17-v0.2.json"
 V03_PATH = "public/interop/corrections-that-did-not-travel-2026-09-22-v0.3.json"
 FOLDER = "public/interop/corrections-watch"
+PUBLIC_RESULTS = f"https://huggingface.co/datasets/{PUBLIC_REPO_ID}/resolve/main/{FOLDER}/"
 NOTIFICATION_DATE = dt.date(2026, 9, 17)
 SCHEMA = "csoai.corrections-watch/0.1"
-UNSIGNED_REASON = "The board signer runs as OIDC inside GitHub Actions, disabled account-wide."
+# 2026-09-28 (lane L1): moved from the 3090 pod (no HF token there since the transfer-mode restart, rc=3 from 25 Sep) to
+# oracle-micro-2, which holds the board-sign pod token. Each dated file is signed via POST /api/board-sign (pod caller
+# token, venturi_capsule.py sign) and OTS-stamped BEFORE upload; a signing failure uploads nothing and exits 1.
+VC = os.path.expanduser("~/lanes/venturi-capsule-20260926/venturi_capsule.py")
+SIGNER = "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)"
 UA = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,application/pdf;q=0.9,*/*;q=0.8",
@@ -109,20 +118,32 @@ def sha256(b):
 
 
 def hf_token():
+    """HF write token: $HF_TOKEN, else ~/.secrets/hf_token (Oracle), else the pod key helper. Never printed."""
+    if os.environ.get("HF_TOKEN"):
+        return os.environ["HF_TOKEN"].strip() or None
+    try:
+        return Path(os.path.expanduser("~/.secrets/hf_token")).read_text().strip() or None
+    except Exception:
+        pass
     try:
         out = subprocess.run([sys.executable, "/workspace/tools/csoai_keys.py", "--key", "HF_TOKEN"],
                              capture_output=True, text=True, timeout=30)
-        tok = out.stdout.strip()
-        return tok or None
+        return out.stdout.strip() or None
     except Exception:
         return None
 
 
 def fetch(url):
-    """One GET with a browser UA. Returns (response|None, error|None, elapsed_s)."""
+    """One GET with a browser UA. Returns (response|None, error|None, elapsed_s).
+    The HF token is attached ONLY for our own mirror (private since 29 Sep); never for probed pages."""
     t = time.time()
+    headers = dict(UA)
+    if url.startswith(MIRROR):
+        tok = hf_token()
+        if tok:
+            headers["Authorization"] = f"Bearer {tok}"
     try:
-        r = requests.get(url, headers=UA, timeout=TIMEOUT, allow_redirects=True)
+        r = requests.get(url, headers=headers, timeout=TIMEOUT, allow_redirects=True)
         return r, None, round(time.time() - t, 2)
     except Exception as e:
         return None, f"{type(e).__name__}: {str(e)[:200]}", round(time.time() - t, 2)
@@ -340,13 +361,14 @@ def main():
     doc = {
         "schema": SCHEMA,
         "kind": "measured",
-        "signed": False,
-        "unsigned_reason": UNSIGNED_REASON,
+        "signed": True,
+        "signature": {"sidecar": "<run_date>.signed.json (latest.signed.json is the same sidecar: latest.json is byte-identical)",
+                      "signer": SIGNER, "ots": "<run_date>.json.ots"},
         "title": "Corrections watch: daily re-check of the pages in 'Corrections that did not travel'",
         "run_date": today.isoformat(),
         "started_at": started,
         "generated_at": utcnow(),
-        "run_host": {"kind": "RunPod pod", "hostname": socket.gethostname(), "scheduler": "/workspace/lanes/loops/scheduler.sh (daily 06:00Z)"},
+        "run_host": {"kind": "Oracle VM", "hostname": socket.gethostname(), "scheduler": "cron 10 6 * * * ~/lanes/corrections-watch-oracle-20260928/run.sh"},
         "source": {
             "rows_from": MIRROR + V02_PATH, "v02_sha256": sha256(v02_bytes), "v02_as_of": v02.get("as_of"),
             "v03": MIRROR + V03_PATH, "v03_sha256": v03_sha,
@@ -387,22 +409,51 @@ def main():
         f.write(json.dumps({"run_date": today.isoformat(), "generated_at": doc["generated_at"], "totals": totals,
                             "hf_total_hits": hf_drop["total_hits"], "controls": controls.get("verdict")}) + "\n")
     print("WROTE", dated, "and", latest, "| totals:", json.dumps(totals))
+    signed = outdir / f"{today.isoformat()}.signed.json"
+    s = subprocess.run([sys.executable, VC, "sign", "--file", str(dated), "--artifact-path", f"{FOLDER}/{today.isoformat()}.json"],
+                       capture_output=True, text=True, timeout=120)
+    if s.returncode != 0 or not signed.exists():
+        doc["signed"] = False; doc.pop("signature", None)
+        doc["unsigned_reason"] = f"board-sign failed at {utcnow()} (rc={s.returncode}); nothing uploaded"
+        payload = json.dumps(doc, indent=1, ensure_ascii=False) + "\n"
+        dated.write_text(payload, encoding="utf-8"); latest.write_text(payload, encoding="utf-8")
+        print("ABORT sign failed rc=%d: %s" % (s.returncode, s.stderr[-300:])); return 1
+    o = subprocess.run([sys.executable, VC, "ots", "--file", str(dated)], capture_output=True, text=True, timeout=180)
+    (outdir / "latest.signed.json").write_bytes(signed.read_bytes())
+    print("SIGNED", signed.name, "ots=" + ("STAMPED" if o.returncode == 0 else f"FAILED rc={o.returncode}"))
 
     if a.no_upload:
         print("NO-UPLOAD requested"); return 0
     tok = hf_token()
     if not tok:
-        print("UNCHECKABLE no HF token from csoai_keys.py; files stay on /workspace"); return 3
+        print("UNCHECKABLE no HF token ($HF_TOKEN, ~/.secrets/hf_token, csoai_keys.py); files stay in", outdir); return 3
     from huggingface_hub import HfApi, CommitOperationAdd
     api = HfApi(token=tok)
     ops = [CommitOperationAdd(path_in_repo=f"{FOLDER}/{today.isoformat()}.json", path_or_fileobj=str(dated)),
-           CommitOperationAdd(path_in_repo=f"{FOLDER}/latest.json", path_or_fileobj=str(latest))]
+           CommitOperationAdd(path_in_repo=f"{FOLDER}/{today.isoformat()}.signed.json", path_or_fileobj=str(signed)),
+           CommitOperationAdd(path_in_repo=f"{FOLDER}/latest.json", path_or_fileobj=str(latest)),
+           CommitOperationAdd(path_in_repo=f"{FOLDER}/latest.signed.json", path_or_fileobj=str(outdir / "latest.signed.json"))]
+    if (outdir / f"{today.isoformat()}.json.ots").exists():
+        ops.append(CommitOperationAdd(path_in_repo=f"{FOLDER}/{today.isoformat()}.json.ots",
+                                      path_or_fileobj=str(outdir / f"{today.isoformat()}.json.ots")))
     readme = Path(__file__).with_name("corrections-watch-README.md")
     if readme.is_file():
         ops.append(CommitOperationAdd(path_in_repo=f"{FOLDER}/README.md", path_or_fileobj=str(readme)))
-    info = api.create_commit(repo_id=REPO_ID, repo_type="dataset", operations=ops,
-                             commit_message=f"corrections-watch {today.isoformat()}: {totals['stale_still_served']}/{totals['rows_measured']} stale still served; hf DROP hits {hf_drop['total_hits']}")
-    print("UPLOADED", info.commit_url if hasattr(info, "commit_url") else info)
+    msg = f"corrections-watch {today.isoformat()}: {totals['stale_still_served']}/{totals['rows_measured']} stale still served; hf DROP hits {hf_drop['total_hits']}"
+    # 2026-09-29 (FU-2): the public evidence dataset is where the results live and where every public link points.
+    # It is written FIRST; if it fails the run fails (rc=4) and says so. The mirror copy is secondary: a failure
+    # there is reported on its own line and does not hide a successful public publication.
+    try:
+        pinfo = api.create_commit(repo_id=PUBLIC_REPO_ID, repo_type="dataset", operations=ops, commit_message=msg)
+    except Exception as e:
+        print("ABORT public upload failed:", type(e).__name__, str(e)[:200]); return 4
+    print("UPLOADED", pinfo.commit_url if hasattr(pinfo, "commit_url") else pinfo, "| read:", PUBLIC_RESULTS + "latest.json")
+    try:
+        mops = [CommitOperationAdd(path_in_repo=o.path_in_repo, path_or_fileobj=o.path_or_fileobj) for o in ops]
+        info = api.create_commit(repo_id=REPO_ID, repo_type="dataset", operations=mops, commit_message=msg)
+        print("MIRRORED", info.commit_url if hasattr(info, "commit_url") else info)
+    except Exception as e:
+        print("MIRROR-COPY-FAILED", type(e).__name__, str(e)[:200])
     return 0
 
 

@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 /**
  * UK AI Bill Landing Page
  * Framework-specific landing page for UK AI regulation
@@ -7,7 +6,6 @@ import { useEffect } from "react";
 import { FrameworkLandingPage } from './FrameworkLandingPage';
 
 export default function UKAIBillPage() {
-  useEffect(() => { document.title = "UKAIBill | CSOAI"; }, []);
   return (
     <FrameworkLandingPage
       frameworkId="uk-ai-bill"

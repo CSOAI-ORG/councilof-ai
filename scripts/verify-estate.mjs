@@ -18,9 +18,10 @@
  *
  * WHAT A PASS DOES NOT MEAN — printed by the script itself, because a verifier that oversells its
  * own result is worse than none. One key signs every card, so a pass proves CUSTODY, not
- * independence: it shows CSOAI signed these bytes, not that anyone else agrees with them. The root
- * is signed and not anchored, so a pass proves WHO and not WHEN. And signature validity is not
- * measurement correctness.
+ * independence: it shows CSOAI signed these bytes, not that anyone else agrees with them. The root's
+ * WHEN comes from its witness record (/interop/root-witness-latest.json: a Rekor entry re-fetched and
+ * matched here, and an OTS stamp reported as stated). And signature validity is not measurement
+ * correctness.
  */
 import { createHash, createPublicKey, verify as edVerify } from "node:crypto";
 import { readFileSync } from "node:fs";
@@ -284,16 +285,52 @@ for (const name of ["arena_scoreboard", "eat_compliance_board"]) {
 // is how the two drift, and the artefact already tells a reader exactly what to run.
 console.log(`Rule B gspc-board.signed    : run scripts/gspc-board-verify.mjs (its own published verifier)`);
 
-// ---- the anchor question, answered honestly ---------------------------------------------------
-const anchored = ["ots", "opentimestamps", "anchor", "rekor"].some((k) => JSON.stringify(root).toLowerCase().includes(`"${k}`));
-console.log(`root anchored to a timechain  : ${anchored ? "yes" : "NO — signed, not anchored"}`);
+// ---- the anchor question, answered from the witness record -----------------------------------
+// Until 2026-09-28 this looked for a key named ots/rekor/anchor INSIDE root.json and printed
+// "NO — signed, not anchored" when there was none. The root never carries its own witnesses; they
+// are published beside it at /interop/root-witness-latest.json. The line under-claimed a root that
+// was in the Rekor transparency log (logIndex 2981565650, 28 Sep) and OTS-stamped. Now: the record
+// must name the sha256 of the root.json bytes fetched here; the Rekor entry is fetched from
+// rekor.sigstore.dev and must hash the same six-field preimage verified above; OTS is reported as
+// the record states it — a stamp is Bitcoin evidence only once it carries a block attestation.
+let rekorWitnessed = false;
+let whenLine = "NO — no witness record names these root.json bytes";
+try {
+  const rootBytes = Buffer.from(await (await fetch(`${SITE}/root.json`, { headers: UA })).arrayBuffer());
+  const served = createHash("sha256").update(rootBytes).digest("hex");
+  const w = await getJSON(`${SITE}/interop/root-witness-latest.json`);
+  if (w?.artifact?.sha256 !== served) {
+    whenLine = `NO — the witness record names ${String(w?.artifact?.sha256).slice(0, 12)}…, the served root is ${served.slice(0, 12)}…`;
+  } else {
+    const rk = w.witnesses?.rekor;
+    const ots = w.witnesses?.ots;
+    let rekorPart = "no Rekor entry";
+    if (rk?.logIndex != null) {
+      const ent = await getJSON(`https://rekor.sigstore.dev/api/v1/log/entries?logIndex=${rk.logIndex}`);
+      const e = Object.values(ent)[0];
+      const body = JSON.parse(Buffer.from(e.body, "base64").toString("utf8"));
+      const want = createHash("sha256").update(rootPre).digest("hex");
+      rekorWitnessed = body?.spec?.data?.hash?.value === want;
+      rekorPart = rekorWitnessed
+        ? `Rekor logIndex ${rk.logIndex}, integrated ${new Date(e.integratedTime * 1000).toISOString()} (entry hashes the signed preimage)`
+        : `Rekor logIndex ${rk.logIndex} does NOT hash this root's signed preimage`;
+      if (!rekorWitnessed) fail("root witness: Rekor entry does not match the root preimage");
+    }
+    whenLine = `${rekorPart}; OTS ${ots?.status ?? "none"}`;
+  }
+} catch (e) {
+  whenLine = `UNCHECKABLE — ${e.message}`;
+}
+console.log(`root witnessed (WHEN)         : ${whenLine}`);
 
 console.log(`
 what a pass here does NOT establish
   · ${byKey.size === 1
       ? "one key signs every card, so this proves CUSTODY, not independence"
       : `${byKey.size} keys sign these cards; that is separation of keys, not of parties`}
-  · the root is signed and not anchored, so this proves WHO and not WHEN
+  · ${rekorWitnessed
+      ? "a transparency-log entry dates the root's signed statement; it does not date or vouch for any leaf"
+      : "the root is signed and no witness was confirmed here, so this proves WHO and not WHEN"}
   · signature validity is not measurement correctness`);
 
 console.log(failures ? `\n✗ ${failures} check(s) failed.` : `\n✓ all checks passed.`);

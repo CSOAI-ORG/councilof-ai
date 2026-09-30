@@ -1,0 +1,1430 @@
+{
+ "as_of": "2026-09-26T10:34:15Z",
+ "built_at": "2026-09-26T11:25:00Z",
+ "doctrine": "Measurement, not endorsement. No score, ranking or approval of any company, service or operator.",
+ "external_context_not_ours": [
+  {
+   "source": "Visa and Artemis, Agentic Payments from the Ground Up (July 2026)",
+   "url": "https://www.visa.com/en-us/thought-leadership/innovation/agentic-payments-from-the-ground-up"
+  },
+  {
+   "source": "TRM Labs, Who's Actually Paying? Measuring AI Agent Payments Onchain (9 Sep 2026)",
+   "url": "https://www.trmlabs.com/trm-tech-blog/whos-actually-paying-measuring-ai-agent-payments-onchain"
+  }
+ ],
+ "ledgers_by_evidence_level": {
+  "OPERATOR_API": [
+   "aptos",
+   "bsc",
+   "ethereum",
+   "hedera",
+   "hyperevm",
+   "mantle",
+   "monad",
+   "near",
+   "plasma",
+   "plume",
+   "polygon",
+   "solana",
+   "stellar",
+   "sui",
+   "ton",
+   "tron",
+   "unichain",
+   "xlayer",
+   "xrpl",
+   "zksync"
+  ],
+  "STATE_PROOF_RECORDED": [
+   "avalanche",
+   "cronos",
+   "kaia",
+   "kava",
+   "tempo",
+   "xrplevm"
+  ],
+  "STATE_PROOF_VERIFIED": [
+   "abcore",
+   "arbitrum",
+   "base",
+   "bsc",
+   "celo",
+   "ethereum",
+   "ink",
+   "linea",
+   "mantle",
+   "morph",
+   "noble",
+   "optimism",
+   "polygon",
+   "robinhood",
+   "sonic",
+   "unichain"
+  ],
+  "UNCHECKABLE": [
+   "aptos",
+   "arbitrum",
+   "avalanche",
+   "base",
+   "sei",
+   "worldchain"
+  ]
+ },
+ "measurement_index": {
+  "batches": [
+   {
+    "adapter": "a2a_card",
+    "merkle_root": "bf12f4ad340a11a14ecbd359ba90b3aaebb36bb75bcf9e11f433148441bae436",
+    "n": 33,
+    "record_sha256": "180a16f838f33372e1e6345fb272d7b3427a55dacee5571c34a6947a116cc6b6",
+    "signature": "VERIFIES"
+   },
+   {
+    "adapter": "contract_parity",
+    "merkle_root": "70403984d857b7b167d0010608f79c5407bc8642435eb72e7644c83918b1a788",
+    "n": 9148,
+    "record_sha256": "1b9186699b27ac5bc13c4b211f7a5f1317aee96e0c85c27668ac21b9214af357",
+    "signature": "VERIFIES"
+   },
+   {
+    "adapter": "cross_ledger",
+    "merkle_root": "a6e3fd14b1cc68072d919bfc59565161e59c492f97c775bbebefd48705770bf9",
+    "n": 353,
+    "record_sha256": "ace6cbe3697ed1f6715ea2f921eaad07c82cab795fb86609a3d16b3c956465df",
+    "signature": "VERIFIES"
+   },
+   {
+    "adapter": "mill_cross_runtime",
+    "merkle_root": "5ae00c1f4c2ed290fb91206f29372d0df3e61478c568d4797855502e751ebff6",
+    "n": 14,
+    "record_sha256": "32ece857c94062f41a03aad9e269532cdbe5dc0a576ed20110edc4ecacb0468d",
+    "signature": "VERIFIES"
+   },
+   {
+    "adapter": "mill_cross_runtime",
+    "merkle_root": "78226433e9e433b311e067ee56fcbaf415f6dc57301254f3bb4922a0b8053cf6",
+    "n": 140,
+    "record_sha256": "422fa6377b274bab095e8e875f67d087a275417c14c90a4c4e4cedb56ca9a5ff",
+    "signature": "VERIFIES"
+   },
+   {
+    "adapter": "public_signals",
+    "merkle_root": "ef67f71508192f08f1aedb00276592ee81e85661e7c3421bec036d4e7b9adb42",
+    "n": 118,
+    "record_sha256": "abbcec606003f5eab774c6990f32b6c95c4eca692e5467c5e987fe5d426c8690",
+    "signature": "VERIFIES"
+   },
+   {
+    "adapter": "self_parity",
+    "merkle_root": "53d5c6b23a13c464546d31ab18abcf1fae3990961019fc2443748d62922acf3a",
+    "n": 138,
+    "record_sha256": "57d697af67fc40fc4ce206aec5407e1e6873684ae7e4387cb3a06c125a700337",
+    "signature": "VERIFIES"
+   },
+   {
+    "adapter": "tool_drift",
+    "merkle_root": "fd0f514e03dd825698a3eab57d33431b09e62e442f85c7592db50f2371e9d2df",
+    "n": 3240,
+    "record_sha256": "a7a13dab161631d0557726fd64c0dee82bd0b95cb54e2749d96aaddc93fef473",
+    "signature": "VERIFIES"
+   }
+  ],
+  "board_signature": "VERIFIES",
+  "index_root": "85533b833d36f8a4165da34206ee6e39f7434c646c8a2c381d251391ceec366d",
+  "index_root_rule": "RFC 6962 Merkle Tree Hash over the sorted capsule_id leaves of all batches: leaf = SHA-256(0x00 || id), node = SHA-256(0x01 || left || right)",
+  "n_batches": 8,
+  "n_capsules": 13184,
+  "published": "not yet: the index and its capsule batches are held on the measuring host; the root is given so that a later publication can be checked against it",
+  "root_over_batch_merkle_roots": "aba3b220f3fc7cc6b056e1620b8cc5f40d282b1841af39856e2152c8349cf5ef",
+  "schema": "csoai.measurement-capsule-index/0.2",
+  "sha256": "ee3d921750d40456eb58ed24d2a9ba141d6fc1d16510ddd338166c4f5620b72a",
+  "signed_at": "2026-09-26T10:34:15.836Z",
+  "timestamp": "OpenTimestamps: pending calendar commitment at build time, not yet in Bitcoin"
+ },
+ "numbers": {
+  "a2a.0x_VERIFIED": {
+   "recompute": "canonicalisation_rule x sig_state",
+   "source": "a2a_v0_1_1_rows",
+   "value": 5,
+   "what": "0.x cards that verify"
+  },
+  "a2a.0x_cards": {
+   "recompute": "rows by canonicalisation_rule",
+   "source": "a2a_v0_1_1_rows",
+   "value": 8,
+   "what": "signed cards judged under 0.x rules (no canonicalisation step defined)"
+  },
+  "a2a.0x_differ_under_1x": {
+   "recompute": "record.signatures.declared_0x_where_1x_rules_give_another_verdict",
+   "source": "a2a_v0_1_1",
+   "value": 3,
+   "what": "0.x cards that would get another verdict under 1.x rules"
+  },
+  "a2a.1x_FAILED": {
+   "recompute": "canonicalisation_rule x sig_state",
+   "source": "a2a_v0_1_1_rows",
+   "value": 7,
+   "what": "1.x cards FAILED"
+  },
+  "a2a.1x_UNCHECKABLE": {
+   "recompute": "canonicalisation_rule x sig_state",
+   "source": "a2a_v0_1_1_rows",
+   "value": 10,
+   "what": "1.x cards UNCHECKABLE"
+  },
+  "a2a.1x_VERIFIED": {
+   "recompute": "canonicalisation_rule x sig_state",
+   "source": "a2a_v0_1_1_rows",
+   "value": 8,
+   "what": "1.x cards VERIFIED"
+  },
+  "a2a.1x_cards": {
+   "recompute": "rows by canonicalisation_rule",
+   "source": "a2a_v0_1_1_rows",
+   "value": 25,
+   "what": "signed cards judged under A2A 1.x rules (spec 8.4.3)"
+  },
+  "a2a.FAILED": {
+   "recompute": "rows with sig_state FAILED",
+   "source": "a2a_v0_1_1_rows",
+   "value": 8,
+   "what": "signed cards FAILED under the rules of the spec version they declare (v0.1.1)"
+  },
+  "a2a.UNCHECKABLE": {
+   "recompute": "rows with sig_state UNCHECKABLE",
+   "source": "a2a_v0_1_1_rows",
+   "value": 12,
+   "what": "signed cards UNCHECKABLE under the rules of the spec version they declare (v0.1.1)"
+  },
+  "a2a.VERIFIED": {
+   "recompute": "rows with sig_state VERIFIED",
+   "source": "a2a_v0_1_1_rows",
+   "value": 13,
+   "what": "signed cards VERIFIED under the rules of the spec version they declare (v0.1.1)"
+  },
+  "a2a.census_listings": {
+   "recompute": "rows in cards.v0.1.1.jsonl.gz",
+   "source": "a2a_v0_1_1_rows",
+   "value": 443,
+   "what": "A2A registry listings read by the card census (25 Sep)"
+  },
+  "a2a.failed_verify_served": {
+   "recompute": "record.signatures.failed_that_verify_under_a_non_spec_serialisation",
+   "source": "a2a_v0_1_1",
+   "value": 6,
+   "what": "FAILED cards that verify only over the card as served, defaults included"
+  },
+  "a2a.listed": {
+   "recompute": "record.population.frame_sources.a2aregistry.rows_read",
+   "source": "mcp_census_v0_2_1",
+   "value": 445,
+   "what": "A2A registry listings (26 Sep frame)"
+  },
+  "a2a.no_key": {
+   "recompute": "record.signatures.uncheckable_reasons",
+   "source": "a2a_v0_1_1",
+   "value": 9,
+   "what": "UNCHECKABLE cards that point to no key at all"
+  },
+  "a2a.served": {
+   "recompute": "rows with state CARD_SERVED",
+   "source": "a2a_v0_1_1_rows",
+   "value": 422,
+   "what": "listings that served an agent card"
+  },
+  "a2a.signed": {
+   "recompute": "rows with sig_state other than NO_SIGNATURES",
+   "source": "a2a_v0_1_1_rows",
+   "value": 33,
+   "what": "served cards that carry a signature"
+  },
+  "a2a.v01_FAILED": {
+   "recompute": "v0.1 rows with sig_state FAILED",
+   "source": "a2a_v0_1",
+   "value": 3,
+   "what": "signed cards FAILED in the superseded v0.1 record"
+  },
+  "a2a.v01_UNCHECKABLE": {
+   "recompute": "v0.1 rows with sig_state UNCHECKABLE",
+   "source": "a2a_v0_1",
+   "value": 12,
+   "what": "signed cards UNCHECKABLE in the superseded v0.1 record"
+  },
+  "a2a.v01_VERIFIED": {
+   "recompute": "v0.1 rows with sig_state VERIFIED",
+   "source": "a2a_v0_1",
+   "value": 18,
+   "what": "signed cards VERIFIED in the superseded v0.1 record"
+  },
+  "census.AUTH_REQUIRED": {
+   "recompute": "rows with state AUTH_REQUIRED",
+   "source": "mcp_census_v0_2_rows",
+   "value": 4948,
+   "what": "endpoints in state AUTH_REQUIRED"
+  },
+  "census.MCP_ERROR": {
+   "recompute": "rows with state MCP_ERROR",
+   "source": "mcp_census_v0_2_rows",
+   "value": 65,
+   "what": "endpoints in state MCP_ERROR"
+  },
+  "census.NOT_MCP": {
+   "recompute": "rows with state NOT_MCP",
+   "source": "mcp_census_v0_2_rows",
+   "value": 1411,
+   "what": "endpoints in state NOT_MCP"
+  },
+  "census.RESPONDED": {
+   "recompute": "rows with state RESPONDED",
+   "source": "mcp_census_v0_2_rows",
+   "value": 13087,
+   "what": "endpoints in state RESPONDED"
+  },
+  "census.SSE_ENDPOINT_ONLY": {
+   "recompute": "rows with state SSE_ENDPOINT_ONLY",
+   "source": "mcp_census_v0_2_rows",
+   "value": 144,
+   "what": "endpoints in state SSE_ENDPOINT_ONLY"
+  },
+  "census.TIMEOUT": {
+   "recompute": "rows with state TIMEOUT",
+   "source": "mcp_census_v0_2_rows",
+   "value": 212,
+   "what": "endpoints in state TIMEOUT"
+  },
+  "census.UNREACHABLE": {
+   "recompute": "rows with state UNREACHABLE",
+   "source": "mcp_census_v0_2_rows",
+   "value": 1259,
+   "what": "endpoints in state UNREACHABLE"
+  },
+  "census.modern_protocol": {
+   "recompute": "record.protocol_version.era_prober_0.2.modern",
+   "source": "mcp_census_v0_2_1",
+   "value": 392,
+   "what": "26 Sep responders that answered the 2026-07-28 protocol request"
+  },
+  "census.na_robots": {
+   "recompute": "record.not_attempted_by_reason (robots.txt rows)",
+   "source": "mcp_census_v0_2_1",
+   "value": 934,
+   "what": "not contacted because robots.txt disallowed it or could not be read"
+  },
+  "census.na_templated": {
+   "recompute": "record.not_attempted_by_reason",
+   "source": "mcp_census_v0_2_1",
+   "value": 123,
+   "what": "not contacted because the listed URL is a template"
+  },
+  "census.not_attempted": {
+   "recompute": "rows with state NOT_ATTEMPTED",
+   "source": "mcp_census_v0_2_rows",
+   "value": 1070,
+   "what": "endpoints not contacted, each with a reason"
+  },
+  "census.observed": {
+   "recompute": "rows whose state is not NOT_ATTEMPTED",
+   "source": "mcp_census_v0_2_rows",
+   "value": 21126,
+   "what": "endpoints with an observed state"
+  },
+  "census.population": {
+   "recompute": "rows in results.v0.2.public.jsonl.gz",
+   "source": "mcp_census_v0_2_1",
+   "value": 22196,
+   "what": "remote endpoints listed by the MCP registry or the Docker catalogue"
+  },
+  "census.responded_new": {
+   "recompute": "record.protocol_version.era_prober_0.2 (modern + legacy)",
+   "source": "mcp_census_v0_2_1",
+   "value": 7282,
+   "what": "26 Sep responders"
+  },
+  "census.rows_new": {
+   "recompute": "record.rows_by_observation",
+   "source": "mcp_census_v0_2_1",
+   "value": 10039,
+   "what": "endpoints contacted on 26 Sep"
+  },
+  "census.rows_reused": {
+   "recompute": "record.rows_by_observation",
+   "source": "mcp_census_v0_2_1",
+   "value": 11087,
+   "what": "endpoints whose observed state is carried from the 25 Sep runs (under 48 h old)"
+  },
+  "cp.AUTH.compared": {
+   "recompute": "AUTH CONSISTENT + INCONSISTENT",
+   "source": "cp_v0_1_2_rows",
+   "value": 933,
+   "what": "endpoints where two or more surfaces speak to AUTH"
+  },
+  "cp.AUTH.inconsistent": {
+   "recompute": "AUTH INCONSISTENT",
+   "source": "cp_v0_1_2_rows",
+   "value": 5,
+   "what": "endpoints INCONSISTENT on AUTH"
+  },
+  "cp.PAYMENT.compared": {
+   "recompute": "PAYMENT CONSISTENT + INCONSISTENT",
+   "source": "cp_v0_1_2_rows",
+   "value": 116,
+   "what": "endpoints where two or more surfaces speak to PAYMENT"
+  },
+  "cp.PAYMENT.inconsistent": {
+   "recompute": "PAYMENT INCONSISTENT",
+   "source": "cp_v0_1_2_rows",
+   "value": 4,
+   "what": "endpoints INCONSISTENT on PAYMENT"
+  },
+  "cp.PROTOCOL.compared": {
+   "recompute": "PROTOCOL CONSISTENT + INCONSISTENT",
+   "source": "cp_v0_1_2_rows",
+   "value": 492,
+   "what": "endpoints where two or more surfaces speak to PROTOCOL"
+  },
+  "cp.PROTOCOL.inconsistent": {
+   "recompute": "PROTOCOL INCONSISTENT",
+   "source": "cp_v0_1_2_rows",
+   "value": 33,
+   "what": "endpoints INCONSISTENT on PROTOCOL"
+  },
+  "cp.TOOLS.compared": {
+   "recompute": "TOOLS CONSISTENT + INCONSISTENT",
+   "source": "cp_v0_1_2_rows",
+   "value": 1127,
+   "what": "endpoints where two or more surfaces speak to TOOLS"
+  },
+  "cp.TOOLS.inconsistent": {
+   "recompute": "TOOLS INCONSISTENT",
+   "source": "cp_v0_1_2_rows",
+   "value": 219,
+   "what": "endpoints INCONSISTENT on TOOLS"
+  },
+  "cp.VERSION.compared": {
+   "recompute": "VERSION CONSISTENT + INCONSISTENT",
+   "source": "cp_v0_1_2_rows",
+   "value": 5807,
+   "what": "endpoints where two or more surfaces speak to VERSION"
+  },
+  "cp.VERSION.inconsistent": {
+   "recompute": "VERSION INCONSISTENT",
+   "source": "cp_v0_1_2_rows",
+   "value": 2644,
+   "what": "endpoints INCONSISTENT on VERSION"
+  },
+  "cp.any": {
+   "recompute": "rows with any dimension INCONSISTENT",
+   "source": "cp_v0_1_2_rows",
+   "value": 2764,
+   "what": "endpoints with at least one dimension where two public statements disagree"
+  },
+  "cp.any_v01": {
+   "recompute": "record.endpoints_with_any_inconsistent",
+   "source": "cp_v0_1",
+   "value": 2778,
+   "what": "same count in the superseded v0.1 record"
+  },
+  "cp.any_v011": {
+   "recompute": "record.endpoints_with_any_inconsistent",
+   "source": "cp_v0_1_1",
+   "value": 2768,
+   "what": "same count in the superseded v0.1.1 record"
+  },
+  "cp.live_0_1_0": {
+   "recompute": "INCONSISTENT VERSION rows by live.server_version",
+   "source": "cp_v0_1_2_rows",
+   "value": 382,
+   "what": "VERSION contradictions whose live value is 0.1.0"
+  },
+  "cp.live_1_0_0": {
+   "recompute": "INCONSISTENT VERSION rows by live.server_version",
+   "source": "cp_v0_1_2_rows",
+   "value": 514,
+   "what": "VERSION contradictions whose live value is 1.0.0"
+  },
+  "cp.non_version": {
+   "recompute": "rows with an INCONSISTENT dimension other than VERSION",
+   "source": "cp_v0_1_2_rows",
+   "value": 256,
+   "what": "endpoints inconsistent on tools, auth, protocol or payment"
+  },
+  "cp.reg_vs_live": {
+   "recompute": "record.version_namespaces.registry_version_vs_live_serverinfo.differ",
+   "source": "cp_v0_1_2",
+   "value": 2632,
+   "what": "VERSION contradictions between the registry server.version and the live serverInfo.version"
+  },
+  "cp.rows": {
+   "recompute": "rows in rows.v0.1.2.jsonl.gz",
+   "source": "cp_v0_1_2_rows",
+   "value": 5828,
+   "what": "endpoints in the contract-parity plan, all attempted"
+  },
+  "cp.unread_surface": {
+   "recompute": "record.run.read_gaps.endpoints_with_an_unread_surface",
+   "source": "cp_v0_1_2",
+   "value": 247,
+   "what": "endpoints with a surface that did not answer (why the run is PARTIAL)"
+  },
+  "cp.v124_129.inconsistent": {
+   "recompute": "VERSION state",
+   "source": "cp_v0_1_2_rows",
+   "value": 243,
+   "what": "of those, VERSION INCONSISTENT"
+  },
+  "cp.v124_129.rows": {
+   "recompute": "live.server_version prefix 1.24.-1.29.",
+   "source": "cp_v0_1_2_rows",
+   "value": 251,
+   "what": "endpoints whose live version is between 1.24.x and 1.29.x"
+  },
+  "cp.v127.hosts": {
+   "recompute": "distinct host",
+   "source": "cp_v0_1_2_rows",
+   "value": 14,
+   "what": "distinct hosts among them"
+  },
+  "cp.v127.inconsistent": {
+   "recompute": "VERSION state",
+   "source": "cp_v0_1_2_rows",
+   "value": 42,
+   "what": "of those, VERSION INCONSISTENT"
+  },
+  "cp.v127.reg_versions": {
+   "recompute": "registry claims on those rows",
+   "source": "cp_v0_1_2_rows",
+   "value": 9,
+   "what": "distinct registry versions they contradict"
+  },
+  "cp.v127.rows": {
+   "recompute": "rows with live.server_version == 1.27.0",
+   "source": "cp_v0_1_2_rows",
+   "value": 43,
+   "what": "endpoints whose live serverInfo.version is 1.27.0"
+  },
+  "cp.version_only": {
+   "recompute": "rows whose INCONSISTENT set is exactly {VERSION}",
+   "source": "cp_v0_1_2_rows",
+   "value": 2508,
+   "what": "endpoints inconsistent on VERSION only"
+  },
+  "docker.endpoints": {
+   "recompute": "record.population.frame_sources.docker-mcp-registry.distinct_endpoints",
+   "source": "mcp_census_v0_2_1",
+   "value": 77,
+   "what": "distinct remote endpoints the Docker catalogue lists"
+  },
+  "docker.entries": {
+   "recompute": "record.population.frame_sources.docker-mcp-registry.rows_read",
+   "source": "mcp_census_v0_2_1",
+   "value": 328,
+   "what": "Docker MCP catalogue entries"
+  },
+  "erc.DECLARES_ENDPOINT": {
+   "recompute": "state DECLARES_ENDPOINT",
+   "source": "erc8004_agents_rows",
+   "value": 13210,
+   "what": "agent ids that declare an MCP, A2A or web endpoint"
+  },
+  "erc.NOT_FETCHED": {
+   "recompute": "state NOT_FETCHED",
+   "source": "erc8004_agents_rows",
+   "value": 231014,
+   "what": "agent ids whose file was not fetched (outside the plan, or refused)"
+  },
+  "erc.NO_ENDPOINT": {
+   "recompute": "state NO_ENDPOINT",
+   "source": "erc8004_agents_rows",
+   "value": 187513,
+   "what": "registration files that declare no MCP, A2A or web endpoint"
+  },
+  "erc.NO_URI": {
+   "recompute": "state NO_URI",
+   "source": "erc8004_agents_rows",
+   "value": 52469,
+   "what": "agent ids with no registration URI at all"
+  },
+  "erc.URI_UNREACHABLE": {
+   "recompute": "state URI_UNREACHABLE",
+   "source": "erc8004_agents_rows",
+   "value": 13788,
+   "what": "registration URIs that could not be read"
+  },
+  "erc.a2a_attempted": {
+   "recompute": "record.declared_endpoint_probes.a2a.n_attempted",
+   "source": "erc8004",
+   "value": 4389,
+   "what": "distinct declared A2A endpoints contacted"
+  },
+  "erc.a2a_not_found": {
+   "recompute": "probe-a2a rows NOT_FOUND",
+   "source": "erc8004",
+   "value": 3407,
+   "what": "declared A2A endpoints with no card at the well-known path"
+  },
+  "erc.a2a_served": {
+   "recompute": "probe-a2a rows CARD_SERVED",
+   "source": "erc8004",
+   "value": 886,
+   "what": "declared A2A endpoints that served a card"
+  },
+  "erc.a2a_signed": {
+   "recompute": "probe-a2a sig_state",
+   "source": "erc8004",
+   "value": 5,
+   "what": "served cards with a signature"
+  },
+  "erc.a2a_verified": {
+   "recompute": "probe-a2a sig_state VERIFIED",
+   "source": "erc8004",
+   "value": 4,
+   "what": "of those, verified"
+  },
+  "erc.agents": {
+   "recompute": "rows in agents.jsonl.gz",
+   "source": "erc8004_agents_rows",
+   "value": 505635,
+   "what": "agent ids registered on the ERC-8004 identity registry on three chains"
+  },
+  "erc.base": {
+   "recompute": "rows by chain",
+   "source": "erc8004_agents_rows",
+   "value": 95776,
+   "what": "agent ids on base"
+  },
+  "erc.bsc": {
+   "recompute": "rows by chain",
+   "source": "erc8004_agents_rows",
+   "value": 358401,
+   "what": "agent ids on bsc"
+  },
+  "erc.ethereum": {
+   "recompute": "rows by chain",
+   "source": "erc8004_agents_rows",
+   "value": 51458,
+   "what": "agent ids on ethereum"
+  },
+  "erc.mcp_NOT_MCP": {
+   "recompute": "probe-mcp rows NOT_MCP",
+   "source": "erc8004",
+   "value": 1092,
+   "what": "declared MCP endpoints that answered but not as MCP"
+  },
+  "erc.mcp_RESPONDED": {
+   "recompute": "probe-mcp rows RESPONDED",
+   "source": "erc8004",
+   "value": 580,
+   "what": "declared MCP endpoints that answered as MCP"
+  },
+  "erc.mcp_UNREACHABLE": {
+   "recompute": "probe-mcp rows UNREACHABLE",
+   "source": "erc8004",
+   "value": 393,
+   "what": "declared MCP endpoints unreachable"
+  },
+  "erc.mcp_attempted": {
+   "recompute": "record.declared_endpoint_probes.mcp.n_attempted",
+   "source": "erc8004",
+   "value": 2113,
+   "what": "declared MCP endpoints contacted"
+  },
+  "erc.mcp_planned": {
+   "recompute": "record.declared_endpoint_probes.mcp.n_planned",
+   "source": "erc8004",
+   "value": 2144,
+   "what": "distinct declared MCP endpoints planned for a probe"
+  },
+  "erc.plan": {
+   "recompute": "record.plan.n_plan",
+   "source": "erc8004",
+   "value": 101127,
+   "what": "agents in the top-20% plan whose registration files were fetched"
+  },
+  "hf.spaces_listed": {
+   "recompute": "record.population.frame_sources.hf-spaces.rows_read",
+   "source": "mcp_census_v0_2_1",
+   "value": 10858,
+   "what": "Hugging Face Spaces tagged mcp-server (26 Sep frame)"
+  },
+  "hfsp.BUILD_ERROR": {
+   "recompute": "rows with state BUILD_ERROR",
+   "source": "hf_spaces_rows",
+   "value": 759,
+   "what": "Spaces reported as build error"
+  },
+  "hfsp.PAUSED": {
+   "recompute": "rows with state PAUSED",
+   "source": "hf_spaces_rows",
+   "value": 1251,
+   "what": "Spaces reported as paused"
+  },
+  "hfsp.RESPONDED": {
+   "recompute": "rows with state RESPONDED",
+   "source": "hf_spaces_rows",
+   "value": 2232,
+   "what": "Spaces that answered MCP initialize"
+  },
+  "hfsp.RUNTIME_ERROR": {
+   "recompute": "rows with state RUNTIME_ERROR",
+   "source": "hf_spaces_rows",
+   "value": 3059,
+   "what": "Spaces reported as runtime error"
+  },
+  "hfsp.SLEEPING": {
+   "recompute": "rows with state SLEEPING",
+   "source": "hf_spaces_rows",
+   "value": 3008,
+   "what": "Spaces reported as sleeping"
+  },
+  "hfsp.SSE": {
+   "recompute": "rows with state SSE_ENDPOINT_ONLY",
+   "source": "hf_spaces_rows",
+   "value": 401,
+   "what": "Spaces that offered only legacy SSE"
+  },
+  "hfsp.contacted": {
+   "recompute": "total minus not contacted",
+   "source": "hf_spaces_rows",
+   "value": 2658,
+   "what": "Spaces contacted (Hub stage RUNNING)"
+  },
+  "hfsp.not_contacted": {
+   "recompute": "rows whose state is a Hub runtime stage",
+   "source": "hf_spaces_rows",
+   "value": 8164,
+   "what": "Spaces not contacted because the Hub reported them not running"
+  },
+  "hfsp.total": {
+   "recompute": "rows in data/spaces.jsonl.gz",
+   "source": "hf_spaces_rows",
+   "value": 10822,
+   "what": "Spaces covered (25 Sep)"
+  },
+  "index.batches": {
+   "recompute": "batches",
+   "source": "index",
+   "value": 8,
+   "what": "capsule batches in the index"
+  },
+  "index.capsules": {
+   "recompute": "union of capsule ids over all batches",
+   "source": "index",
+   "value": 13184,
+   "what": "measurement capsules under the index root"
+  },
+  "m1.aggregate_only": {
+   "recompute": "REPRODUCED_AGGREGATE_ONLY",
+   "source": "mill_batch1",
+   "value": 2,
+   "what": "reproduced the score only"
+  },
+  "m1.cards": {
+   "recompute": "capsules",
+   "source": "mill_batch1",
+   "value": 14,
+   "what": "signed cards re-run on a second runtime (one model)"
+  },
+  "m1.grade_differ": {
+   "recompute": "items - grade_equal_items",
+   "source": "mill_batch1",
+   "value": 14,
+   "what": "item grades that differed"
+  },
+  "m1.items": {
+   "recompute": "sum differential.n_items",
+   "source": "mill_batch1",
+   "value": 887,
+   "what": "items compared"
+  },
+  "m1.itemwise": {
+   "recompute": "REPRODUCED_ITEMWISE",
+   "source": "mill_batch1",
+   "value": 5,
+   "what": "reproduced item by item"
+  },
+  "m1.not": {
+   "recompute": "NOT_REPRODUCED",
+   "source": "mill_batch1",
+   "value": 7,
+   "what": "did not reproduce"
+  },
+  "m1.raw_differ": {
+   "recompute": "raw_output_differing_item_ids",
+   "source": "mill_batch1",
+   "value": 60,
+   "what": "raw outputs that differed"
+  },
+  "m2.aggregate_only": {
+   "recompute": "REPRODUCED_AGGREGATE_ONLY",
+   "source": "mill_batch2",
+   "value": 9,
+   "what": "cards that reproduced the score only"
+  },
+  "m2.axes": {
+   "recompute": "distinct axis",
+   "source": "mill_batch2_parity_summary",
+   "value": 14,
+   "what": "axes in batch 2"
+  },
+  "m2.cards": {
+   "recompute": "capsules",
+   "source": "mill_batch2",
+   "value": 140,
+   "what": "signed cards re-run on a second runtime"
+  },
+  "m2.grade_equal": {
+   "recompute": "sum differential.grade_equal_items",
+   "source": "mill_batch2",
+   "value": 8624,
+   "what": "item grades equal on both runtimes"
+  },
+  "m2.grade_equal_pct": {
+   "recompute": "grade_equal / items",
+   "source": "mill_batch2",
+   "value": "97.2",
+   "what": "item grades equal, per cent"
+  },
+  "m2.items": {
+   "recompute": "sum differential.n_items",
+   "source": "mill_batch2",
+   "value": 8870,
+   "what": "items compared"
+  },
+  "m2.itemwise": {
+   "recompute": "REPRODUCED_ITEMWISE",
+   "source": "mill_batch2",
+   "value": 49,
+   "what": "cards with the same grade on every item"
+  },
+  "m2.models": {
+   "recompute": "distinct model",
+   "source": "mill_batch2_parity_summary",
+   "value": 10,
+   "what": "models in batch 2"
+  },
+  "m2.not": {
+   "recompute": "NOT_REPRODUCED",
+   "source": "mill_batch2",
+   "value": 82,
+   "what": "cards that did not reproduce"
+  },
+  "m2.raw_equal": {
+   "recompute": "sum raw_eq",
+   "source": "mill_batch2_parity_summary",
+   "value": 7404,
+   "what": "raw outputs byte-equal on both runtimes"
+  },
+  "m2.repeat_not_identical": {
+   "recompute": "repeat_raw_eq not n/n",
+   "source": "mill_batch2_parity_summary",
+   "value": 20,
+   "what": "model-axis pairs where a same-runtime repeat was not byte-identical"
+  },
+  "m2.rule_met": {
+   "recompute": "REPRODUCED_ITEMWISE with declared.counts == observed.counts; equals the dry run",
+   "source": "mill_batch2",
+   "value": 46,
+   "what": "cards meeting the item-level rule (same counts and same grade on every item)"
+  },
+  "m2.rule_met_n30": {
+   "recompute": "dry-run rows meeting the rule with n >= 30",
+   "source": "mill_batch2_admission",
+   "value": 37,
+   "what": "of those, cards with at least 30 graded items, released for quoting"
+  },
+  "own.endpoints": {
+   "recompute": "rows with own_estate true",
+   "source": "mcp_census_v0_2_rows",
+   "value": 40,
+   "what": "registry endpoints under our own names"
+  },
+  "own.unreachable": {
+   "recompute": "own_estate rows with state UNREACHABLE",
+   "source": "mcp_census_v0_2_rows",
+   "value": 39,
+   "what": "of those, unreachable"
+  },
+  "ps.external": {
+   "recompute": "summary.by_self_or_external",
+   "source": "public_signals",
+   "value": 15,
+   "what": "signals from outside"
+  },
+  "ps.measured": {
+   "recompute": "summary.by_state",
+   "source": "public_signals",
+   "value": 103,
+   "what": "of those, measured"
+  },
+  "ps.mixed": {
+   "recompute": "summary.by_self_or_external",
+   "source": "public_signals",
+   "value": 43,
+   "what": "signals where ours and others' cannot be separated"
+  },
+  "ps.self": {
+   "recompute": "summary.by_self_or_external",
+   "source": "public_signals",
+   "value": 50,
+   "what": "signals that are our own activity"
+  },
+  "ps.signals": {
+   "recompute": "summary.n_signals",
+   "source": "public_signals",
+   "value": 118,
+   "what": "public signals about ourselves recorded daily"
+  },
+  "registry.endpoints": {
+   "recompute": "record.population.frame_sources.mcp-registry.distinct_endpoints",
+   "source": "mcp_census_v0_2_1",
+   "value": 22151,
+   "what": "distinct remote endpoints those registry entries list"
+  },
+  "registry.entries": {
+   "recompute": "record.population.frame_sources.mcp-registry.rows_read",
+   "source": "mcp_census_v0_2_1",
+   "value": 36134,
+   "what": "official MCP registry entries read (latest versions), read to its end"
+  },
+  "registry.entries_prev": {
+   "recompute": "record.population.vs_2026-09-25_frame",
+   "source": "mcp_census_v0_2_1",
+   "value": 35873,
+   "what": "registry entries in the 25 Sep read"
+  },
+  "smithery.declared": {
+   "recompute": "record.population.frame_sources.smithery.reason ('declared totalCount=17268')",
+   "source": "mcp_census_v0_2_1",
+   "value": 17268,
+   "what": "Smithery's own declared total"
+  },
+  "smithery.distinct": {
+   "recompute": "record.population.frame_sources.smithery.reason ('500 rows served, 264 distinct')",
+   "source": "mcp_census_v0_2_1",
+   "value": 264,
+   "what": "distinct Smithery entries the anonymous API served (PARTIAL)"
+  },
+  "sp.CONSISTENT": {
+   "recompute": "state CONSISTENT",
+   "source": "self_parity",
+   "value": 37,
+   "what": "cells CONSISTENT"
+  },
+  "sp.INCONSISTENT": {
+   "recompute": "state INCONSISTENT",
+   "source": "self_parity",
+   "value": 8,
+   "what": "cells INCONSISTENT"
+  },
+  "sp.NOT_DECLARED": {
+   "recompute": "state NOT_DECLARED",
+   "source": "self_parity",
+   "value": 1,
+   "what": "cells NOT_DECLARED"
+  },
+  "sp.NOT_LISTED": {
+   "recompute": "state NOT_LISTED",
+   "source": "self_parity",
+   "value": 55,
+   "what": "cells NOT_LISTED"
+  },
+  "sp.UNCHECKABLE": {
+   "recompute": "state UNCHECKABLE",
+   "source": "self_parity",
+   "value": 37,
+   "what": "cells UNCHECKABLE"
+  },
+  "sp.cells": {
+   "recompute": "capsules",
+   "source": "self_parity",
+   "value": 138,
+   "what": "cells: our offerings x the indexes that could list them"
+  },
+  "sp.tools": {
+   "recompute": "INCONSISTENT tools cells",
+   "source": "self_parity",
+   "value": 1,
+   "what": "directory tool list that differs from what our MCP server serves"
+  },
+  "sp.version": {
+   "recompute": "INCONSISTENT version cells",
+   "source": "self_parity",
+   "value": 1,
+   "what": "registry package version that lags the package index"
+  },
+  "sp.x402_url": {
+   "recompute": "INCONSISTENT x402 cells",
+   "source": "self_parity",
+   "value": 6,
+   "what": "our x402 listings whose listed URL query string differs from our manifest"
+  },
+  "x402.answered_402": {
+   "recompute": "rows with status 402",
+   "source": "x402_snapshot_2026_09_26",
+   "value": 1636,
+   "what": "hosts that answered HTTP 402"
+  },
+  "x402.cdp": {
+   "recompute": "indexes.cdp.resources",
+   "source": "x402_summary_2026_09_26",
+   "value": 17548,
+   "what": "resources in one index (read complete)"
+  },
+  "x402.conformant": {
+   "recompute": "rows with conformant true",
+   "source": "x402_snapshot_2026_09_26",
+   "value": 477,
+   "what": "hosts fully conformant (402 + header + v2 body + Bazaar block)"
+  },
+  "x402.conformant_pct": {
+   "recompute": "headline.conformant_pct",
+   "source": "x402_summary_2026_09_26",
+   "value": "17.58",
+   "what": "conformant share of hosts, per cent"
+  },
+  "x402.header": {
+   "recompute": "headline.carried_payment_required_header",
+   "source": "x402_summary_2026_09_26",
+   "value": 1527,
+   "what": "hosts that sent a PAYMENT-REQUIRED header"
+  },
+  "x402.header_only": {
+   "recompute": "header_v2_bazaar_not_body",
+   "source": "x402_summary_2026_09_26",
+   "value": 1013,
+   "what": "hosts that pass on the header but not in the body"
+  },
+  "x402.hosts": {
+   "recompute": "rows in the snapshot",
+   "source": "x402_snapshot_2026_09_26",
+   "value": 2713,
+   "what": "distinct hosts across both public x402 Bazaar indexes"
+  },
+  "x402.hosts_added": {
+   "recompute": "hosts_added",
+   "source": "x402_diff_2026_09_26",
+   "value": 26,
+   "what": "hosts added"
+  },
+  "x402.hosts_dropped": {
+   "recompute": "hosts_dropped",
+   "source": "x402_diff_2026_09_26",
+   "value": 48,
+   "what": "hosts dropped"
+  },
+  "x402.lost_conformance": {
+   "recompute": "lost_conformance",
+   "source": "x402_diff_2026_09_26",
+   "value": 4,
+   "what": "lost conformance"
+  },
+  "x402.newly_conformant": {
+   "recompute": "newly_conformant",
+   "source": "x402_diff_2026_09_26",
+   "value": 3,
+   "what": "newly conformant"
+  },
+  "x402.payai": {
+   "recompute": "indexes.payai.resources",
+   "source": "x402_summary_2026_09_26",
+   "value": 6909,
+   "what": "resources in the other index (read complete)"
+  },
+  "x402.prev_conformant": {
+   "recompute": "conformant_previous",
+   "source": "x402_diff_2026_09_26",
+   "value": 470,
+   "what": "conformant the day before"
+  },
+  "x402.prev_hosts": {
+   "recompute": "previous_hosts",
+   "source": "x402_diff_2026_09_26",
+   "value": 2735,
+   "what": "hosts the day before"
+  },
+  "x402.unreachable": {
+   "recompute": "rows with no status",
+   "source": "x402_snapshot_2026_09_26",
+   "value": 19,
+   "what": "hosts unreachable"
+  },
+  "x402.v2": {
+   "recompute": "headline.x402_version_2",
+   "source": "x402_summary_2026_09_26",
+   "value": 555,
+   "what": "hosts that declared x402Version 2 in the body"
+  },
+  "xl.OPERATOR_API": {
+   "recompute": "deployments with evidence_kind OPERATOR_API",
+   "source": "xl_daily",
+   "value": 52,
+   "what": "deployments read at evidence level OPERATOR_API"
+  },
+  "xl.OPERATOR_API.ledgers": {
+   "recompute": "distinct ledger",
+   "source": "xl_daily",
+   "value": 20,
+   "what": "distinct ledgers at evidence level OPERATOR_API"
+  },
+  "xl.STATE_PROOF_RECORDED": {
+   "recompute": "deployments with evidence_kind STATE_PROOF_RECORDED",
+   "source": "xl_daily",
+   "value": 9,
+   "what": "deployments read at evidence level STATE_PROOF_RECORDED"
+  },
+  "xl.STATE_PROOF_RECORDED.ledgers": {
+   "recompute": "distinct ledger",
+   "source": "xl_daily",
+   "value": 6,
+   "what": "distinct ledgers at evidence level STATE_PROOF_RECORDED"
+  },
+  "xl.STATE_PROOF_VERIFIED": {
+   "recompute": "deployments with evidence_kind STATE_PROOF_VERIFIED",
+   "source": "xl_daily",
+   "value": 40,
+   "what": "deployments read at evidence level STATE_PROOF_VERIFIED"
+  },
+  "xl.STATE_PROOF_VERIFIED.ledgers": {
+   "recompute": "distinct ledger",
+   "source": "xl_daily",
+   "value": 16,
+   "what": "distinct ledgers at evidence level STATE_PROOF_VERIFIED"
+  },
+  "xl.UNCHECKABLE": {
+   "recompute": "deployments with evidence_kind UNCHECKABLE",
+   "source": "xl_daily",
+   "value": 12,
+   "what": "deployments read at evidence level UNCHECKABLE"
+  },
+  "xl.UNCHECKABLE.ledgers": {
+   "recompute": "distinct ledger",
+   "source": "xl_daily",
+   "value": 6,
+   "what": "distinct ledgers at evidence level UNCHECKABLE"
+  },
+  "xl.assets_wired": {
+   "recompute": "len(assets)",
+   "source": "xl_daily",
+   "value": 21,
+   "what": "selected assets with an issuer list reader wired"
+  },
+  "xl.deployments": {
+   "recompute": "len(deployments)",
+   "source": "xl_daily",
+   "value": 113,
+   "what": "issuer-listed deployments read"
+  },
+  "xl.f.deprecated": {
+   "recompute": "parity.findings_inconsistent kind",
+   "source": "xl_daily",
+   "value": 3,
+   "what": "deployments an issuer lists as deprecated that still show issued supply"
+  },
+  "xl.f.unlisted": {
+   "recompute": "parity.findings_inconsistent kind",
+   "source": "xl_daily",
+   "value": 1,
+   "what": "contracts on a ledger the issuer does not list, at a listed address, answering with the product symbol"
+  },
+  "xl.frame": {
+   "recompute": "selection.frame_n",
+   "source": "xl_daily",
+   "value": 280,
+   "what": "tokenised-asset candidates with a positive value in the public value sources"
+  },
+  "xl.k": {
+   "recompute": "selection.k",
+   "source": "xl_daily",
+   "value": 56,
+   "what": "top fifth selected to read first"
+  },
+  "xl.list_permissioned": {
+   "recompute": "PERMISSIONED_NOT_READABLE",
+   "source": "xl_daily",
+   "value": 3,
+   "what": "assets on private, permissioned ledgers: nothing a third party can read"
+  },
+  "xl.list_read": {
+   "recompute": "assets.issuer_list_state READ",
+   "source": "xl_daily",
+   "value": 14,
+   "what": "assets whose issuer publishes a readable deployment list"
+  },
+  "xl.list_unavailable": {
+   "recompute": "ISSUER_LIST_UNAVAILABLE",
+   "source": "xl_daily",
+   "value": 1,
+   "what": "assets with no public deployment list"
+  },
+  "xl.list_uncheckable": {
+   "recompute": "UNCHECKABLE",
+   "source": "xl_daily",
+   "value": 3,
+   "what": "assets whose list page could not be read"
+  },
+  "xl.parity.CONSISTENT": {
+   "recompute": "parity.asset_states",
+   "source": "xl_daily",
+   "value": 4,
+   "what": "assets whose issuer claims vs ledgers are CONSISTENT"
+  },
+  "xl.parity.INCONSISTENT": {
+   "recompute": "parity.asset_states",
+   "source": "xl_daily",
+   "value": 2,
+   "what": "assets whose issuer claims vs ledgers are INCONSISTENT"
+  },
+  "xl.parity.UNCHECKABLE": {
+   "recompute": "parity.asset_states",
+   "source": "xl_daily",
+   "value": 15,
+   "what": "assets whose issuer claims vs ledgers are UNCHECKABLE"
+  },
+  "xl.unmeasured": {
+   "recompute": "len(unmeasured_selected)",
+   "source": "xl_daily",
+   "value": 41,
+   "what": "selected assets not read (no issuer-list reader wired): UNMEASURED"
+  }
+ },
+ "page": "https://councilof.ai/state/2026-09/",
+ "producer": {
+  "build": "scripts/state-report/build_numbers.py",
+  "derive": "scripts/state-report/derive.py (run read-only on the measuring host; streams every row file)",
+  "derived_output_sha256": "c90e8f9b854ac85d34c410e7ea0591a1210956c8c1c2516d270edd622cbee033"
+ },
+ "publisher": "CSOAI Ltd (Council of AI), registered in England and Wales, no. 16939677",
+ "schema": "csoai.state-report-numbers/0.1",
+ "sources": {
+  "a2a_v0_1": {
+   "board_signature": "VERIFIES",
+   "path": "census-universes-publish-2026-09-25/a2a/record.json",
+   "public_copy": "https://huggingface.co/datasets/csoai/a2a-card-census/blob/main/record.json",
+   "sha256": "b290b53d05912d8b3a5913c7e73e693f40cc71be8e0432c4626643c6d662176c",
+   "signature_pins_this_sha256": true,
+   "signed_at": "2026-09-25T08:22:33.567Z",
+   "what": "A2A signed agent-card census, record v0.1 (superseded, kept)"
+  },
+  "a2a_v0_1_1": {
+   "board_signature": "VERIFIES",
+   "path": "cp-fix-20260926/a2a-corr/out/record.v0.1.1.json",
+   "public_copy": "https://huggingface.co/datasets/csoai/a2a-card-census/blob/main/record.v0.1.1.json",
+   "sha256": "4a2b46bb42aa727363ca04d8a2cc21ed76b50a4c6937a62f80d6fcfda191af91",
+   "signature_pins_this_sha256": true,
+   "signed_at": "2026-09-26T04:06:22.149Z",
+   "what": "A2A signed agent-card census, record v0.1.1 (correction)"
+  },
+  "a2a_v0_1_1_rows": {
+   "path": "cp-fix-20260926/a2a-corr/out/data/cards.v0.1.1.jsonl.gz",
+   "public_copy": "https://huggingface.co/datasets/csoai/a2a-card-census/blob/main/data/cards.v0.1.1.jsonl.gz",
+   "sha256": "93f9865008531a9cb5c44bc8c8d32a1bf1dc775c4e3ec9880128f13c6ab2791c",
+   "what": "A2A card census v0.1.1 rows, one per registry listing"
+  },
+  "cp_v0_1": {
+   "board_signature": "VERIFIES",
+   "path": "contract-parity-2026-09-25/record/record.json",
+   "public_copy": "https://huggingface.co/datasets/csoai/mcp-contract-parity/blob/main/record.json",
+   "sha256": "45e3fd63fc98ad251a4f9fe5fdb705ed7fbc28321d5c205d10114a21730cc323",
+   "signature_pins_this_sha256": true,
+   "signed_at": "2026-09-25T12:25:41.808Z",
+   "what": "MCP contract parity, record v0.1 (superseded, kept)"
+  },
+  "cp_v0_1_1": {
+   "board_signature": "VERIFIES",
+   "path": "cp-fix-20260926/record/record.v0.1.1.json",
+   "public_copy": "https://huggingface.co/datasets/csoai/mcp-contract-parity/blob/main/record.v0.1.1.json",
+   "sha256": "9cd02be424bf608d41f40522e48188f5a9ef4d13c8de6e28023b20a941fd4ef8",
+   "signature_pins_this_sha256": true,
+   "signed_at": "2026-09-26T02:21:40.535Z",
+   "what": "MCP contract parity, record v0.1.1 (superseded, kept)"
+  },
+  "cp_v0_1_2": {
+   "board_signature": "VERIFIES",
+   "path": "cp-fix-20260926/v012/rec/record.v0.1.2.json",
+   "public_copy": "https://huggingface.co/datasets/csoai/mcp-contract-parity/blob/main/record.v0.1.2.json",
+   "sha256": "5a9bedff1b6facbd9e19a1db1282b37fb6cedd9bf6c7dd14aeeeff387eae77ed",
+   "signature_pins_this_sha256": true,
+   "signed_at": "2026-09-26T07:32:39.698Z",
+   "what": "MCP contract parity, record v0.1.2 (correction)"
+  },
+  "cp_v0_1_2_rows": {
+   "path": "cp-fix-20260926/v012/rec/rows.v0.1.2.jsonl.gz",
+   "public_copy": "https://huggingface.co/datasets/csoai/mcp-contract-parity/blob/main/rows.v0.1.2.jsonl.gz",
+   "sha256": "8fb15bcbb83db1ae6a61945c2f870a16d27adcc751c059439e63d8e910730492",
+   "what": "MCP contract parity v0.1.2 rows, one per endpoint"
+  },
+  "erc8004": {
+   "board_signature": "VERIFIES",
+   "path": "stage/erc8004-agent-census/record.json",
+   "public_copy": "https://huggingface.co/datasets/csoai/erc8004-agent-census/blob/main/record.json",
+   "sha256": "60bd9728f22159351feb71ccd6e0c01faab582f0ccf661415e36f339e52d2538",
+   "signature_pins_this_sha256": true,
+   "signed_at": "2026-09-26T05:31:49.737Z",
+   "what": "ERC-8004 agent census, record 26 Sep 2026"
+  },
+  "erc8004_agents_rows": {
+   "path": "stage/erc8004-agent-census/agents.jsonl.gz",
+   "public_copy": "https://huggingface.co/datasets/csoai/erc8004-agent-census/blob/main/agents.jsonl.gz",
+   "sha256": "eafd6b18313df16a139114347f136afc527d7c349f01e7c348a436657e9b6995",
+   "what": "ERC-8004 agent rows, one per registered agent id"
+  },
+  "hf_spaces": {
+   "board_signature": "VERIFIES",
+   "path": "census-universes-publish-2026-09-25/hf/record.json",
+   "public_copy": "https://huggingface.co/datasets/csoai/hf-mcp-spaces-census/blob/main/record.json",
+   "sha256": "53022d26ca321b291ca5578b3b318ef645ecf1e4343b13320ebc91642abb906e",
+   "signature_pins_this_sha256": true,
+   "signed_at": "2026-09-25T08:22:30.245Z",
+   "what": "Hugging Face Spaces tagged mcp-server, record of 25 Sep 2026"
+  },
+  "hf_spaces_rows": {
+   "path": "census-universes-publish-2026-09-25/hf/data/spaces.jsonl.gz",
+   "public_copy": "https://huggingface.co/datasets/csoai/hf-mcp-spaces-census/blob/main/data/spaces.jsonl.gz",
+   "sha256": "7b9bb0d630444a41f5757499f14e096e0fb37431c69aed6ebbc2aa0ba415088c",
+   "what": "Hugging Face Spaces rows, one per Space"
+  },
+  "index": {
+   "board_signature": "VERIFIES",
+   "path": "measurement-index-v0.2-2026-09-26.json",
+   "public_copy": null,
+   "sha256": "ee3d921750d40456eb58ed24d2a9ba141d6fc1d16510ddd338166c4f5620b72a",
+   "signature_pins_this_sha256": true,
+   "signed_at": "2026-09-26T10:34:15.836Z",
+   "what": "Measurement-capsule index v0.2 (26 Sep 2026): one signed root over every capsule batch"
+  },
+  "mcp_census_v0_2_1": {
+   "board_signature": "VERIFIES",
+   "path": "census-v0.2-2026-09-26/pub/record.v0.2.1.json",
+   "public_copy": "https://huggingface.co/datasets/csoai/mcp-remote-census/blob/main/record.v0.2.1.json",
+   "sha256": "3155502aa629a3e0e8dd0240862933e475cc2afaf3417d03c0efa314d139c4bd",
+   "signature_pins_this_sha256": true,
+   "signed_at": "2026-09-26T07:33:47.357Z",
+   "what": "Remote MCP endpoint census, record v0.2.1 (corrected label; counts identical to v0.2)"
+  },
+  "mcp_census_v0_2_rows": {
+   "path": "census-v0.2-2026-09-26/pub/results.v0.2.public.jsonl.gz",
+   "public_copy": "https://huggingface.co/datasets/csoai/mcp-remote-census/blob/main/results.v0.2.public.jsonl.gz",
+   "sha256": "a9b644a17e116c1c6f12c4ecacbb013bab62b3d04f5e84f4715578406984fc70",
+   "what": "Remote MCP endpoint census v0.2 rows, one per endpoint"
+  },
+  "mcp_census_v0_2_superseded": {
+   "board_signature": "VERIFIES",
+   "path": "census-v0.2-2026-09-26/pub/record.v0.2.json",
+   "public_copy": "https://huggingface.co/datasets/csoai/mcp-remote-census/blob/main/record.v0.2.json",
+   "sha256": "a18447e5bb27decbc7d20c1542994811f47dee94b4650faed7b231af5c5d72bd",
+   "signature_pins_this_sha256": true,
+   "signed_at": "2026-09-26T07:04:34.530Z",
+   "what": "Remote MCP endpoint census, record v0.2 (superseded, kept)"
+  },
+  "mill_batch1": {
+   "board_signature": "VERIFIES",
+   "path": "measurement-capsules-v0.2-2026-09-26-mill_cross_runtime/record.json",
+   "public_copy": null,
+   "sha256": "32ece857c94062f41a03aad9e269532cdbe5dc0a576ed20110edc4ecacb0468d",
+   "signature_pins_this_sha256": true,
+   "signed_at": "2026-09-26T06:20:12.622Z",
+   "what": "Cross-runtime reproduction, batch 1 (one model, 14 cards)"
+  },
+  "mill_batch2": {
+   "board_signature": "VERIFIES",
+   "path": "measurement-capsules-v0.2-2026-09-26-mill_cross_runtime-batch2/record.json",
+   "public_copy": null,
+   "sha256": "422fa6377b274bab095e8e875f67d087a275417c14c90a4c4e4cedb56ca9a5ff",
+   "signature_pins_this_sha256": true,
+   "signed_at": "2026-09-26T10:33:45.092Z",
+   "what": "Cross-runtime reproduction, batch 2 (10 models x 14 axes)"
+  },
+  "mill_batch2_admission": {
+   "path": "mill-kaggle-batch2-2026-09-26/admission-dryrun.txt.gz",
+   "public_copy": null,
+   "sha256": "20a0210e39d54dcbaa4067c0f7a8c5241a915df78ed7edbae6d53c03820f2ccf",
+   "what": "Cross-runtime batch 2, item-level rule dry run"
+  },
+  "mill_batch2_parity_summary": {
+   "path": "mill-kaggle-batch2-2026-09-26/parity-summary.json",
+   "public_copy": null,
+   "sha256": "a3bd67a4fd119a4c5f0ec2190c2dde0aff1064bcdeb25c0d4961e541055d4e59",
+   "what": "Cross-runtime batch 2, per-card item comparison"
+  },
+  "public_signals": {
+   "board_signature": "VERIFIES",
+   "path": "public-signals/2026-09-26/record.json",
+   "public_copy": null,
+   "sha256": "7c23af1cea95c58d99a2eff2928c5637f38057d238d1b44e49fb8832460f81b0",
+   "signature_pins_this_sha256": true,
+   "signed_at": "2026-09-26T08:31:57.056Z",
+   "what": "Public signals about ourselves, 26 Sep 2026"
+  },
+  "self_parity": {
+   "board_signature": "VERIFIES",
+   "path": "self-parity/2026-09-26/record.json",
+   "public_copy": null,
+   "sha256": "a2f205ca43d096ec0e9f621d8e0dcda2bd2d8040b39ff277ef7ae50fa9de4dfe",
+   "signature_pins_this_sha256": true,
+   "signed_at": "2026-09-26T05:46:23.225Z",
+   "what": "Self-parity: how external indexes list our own offerings, 26 Sep 2026"
+  },
+  "tool_drift": {
+   "board_signature": "VERIFIES",
+   "path": "measurement-capsules-v0.2-2026-09-26-tool_drift/record.json",
+   "public_copy": null,
+   "sha256": "a7a13dab161631d0557726fd64c0dee82bd0b95cb54e2749d96aaddc93fef473",
+   "signature_pins_this_sha256": true,
+   "signed_at": "2026-09-26T06:53:20.454Z",
+   "what": "Tool-list drift between two observations (capsule batch)"
+  },
+  "x402_diff_2026_09_26": {
+   "path": "flywheel/x402/diff-2026-09-26.json",
+   "public_copy": null,
+   "sha256": "ff101ce3705cf1ee1ae3284f572cec4d7e9cc92889b6c68a9a0aa2aa7a35cbd9",
+   "what": "x402 day-on-day diff 25 to 26 Sep 2026"
+  },
+  "x402_release_2026_09_25": {
+   "board_signature": "VERIFIES",
+   "path": "flywheel/x402/release-2026-09-25.json",
+   "public_copy": null,
+   "sha256": "0d84f400f17a0d771e557d51a5a2edd0674d05c617e23f73d4d5c87db1bae1f4",
+   "signature_pins_this_sha256": true,
+   "signed_at": "2026-09-25T11:32:26.082Z",
+   "what": "x402 Bazaar conformance, daily release 25 Sep 2026"
+  },
+  "x402_release_2026_09_26": {
+   "board_signature": "VERIFIES",
+   "path": "flywheel/x402/release-2026-09-26.json",
+   "public_copy": "https://huggingface.co/datasets/csoai/x402-bazaar-conformance/blob/main/release-2026-09-26.json",
+   "sha256": "4e7635ae398be274371ee48a81f7cb1def46c13ef01742e830bbea93b8c13a0b",
+   "signature_pins_this_sha256": true,
+   "signed_at": "2026-09-26T01:11:11.344Z",
+   "what": "x402 Bazaar conformance, daily release 26 Sep 2026"
+  },
+  "x402_snapshot_2026_09_26": {
+   "path": "flywheel/x402/snapshots/conformance-2026-09-26.jsonl",
+   "public_copy": "https://huggingface.co/datasets/csoai/x402-bazaar-conformance/blob/main/snapshots/conformance-2026-09-26.jsonl",
+   "sha256": "5faccd86a679f1407da1926e11fba5e98f9e1367f494f56b48f3978369f92853",
+   "what": "x402 Bazaar conformance snapshot, one row per host"
+  },
+  "x402_summary_2026_09_26": {
+   "path": "flywheel/x402/summary-2026-09-26.json",
+   "public_copy": "https://huggingface.co/datasets/csoai/x402-bazaar-conformance/blob/main/summary-2026-09-26.json",
+   "sha256": "4705777f34e72bf935b19398dca486ad252212531ede84d963086087f6d2e3cd",
+   "what": "x402 Bazaar conformance summary 26 Sep 2026"
+  },
+  "xl_daily": {
+   "board_signature": "VERIFIES",
+   "path": "xl-daily/2026-09-26/xl-daily-2026-09-26.json",
+   "public_copy": "https://huggingface.co/datasets/csoai/cross-ledger-supply/blob/main/xl-daily/2026-09-26/xl-daily-2026-09-26.json",
+   "sha256": "b02851fcbc8ea5ad6460c6c847e8af9eaec74d36a09121989590dc180a5d700d",
+   "signature_pins_this_sha256": true,
+   "signed_at": "2026-09-26T06:44:44.913Z",
+   "what": "Cross-ledger daily read of tokenised assets, 26 Sep 2026"
+  }
+ },
+ "title": "State of the Agent Internet: September 2026",
+ "what_this_is": "Every number on the page, each with the record it was recomputed from (path and sha256 on the measuring host, board signature state, and a public copy where one exists).",
+ "what_this_is_not": [
+  "not a grade, ranking or endorsement of any service, operator, issuer or model",
+  "not a population total across catalogues (one catalogue was read only in part)",
+  "not a statement about which of two disagreeing public statements is true",
+  "not a statement about reserves, backing, redeemability or ownership of any asset"
+ ]
+}

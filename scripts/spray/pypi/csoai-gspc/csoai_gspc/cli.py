@@ -50,7 +50,11 @@ def _verify(args) -> int:
         with open(args.card, encoding="utf-8") as fh:
             card = json.load(fh)
     else:
-        card = fetch_card(args.card)
+        try:
+            card = fetch_card(args.card)
+        except ValueError as exc:  # not a full 64-hex id: say so, no traceback, no network call
+            print(f"UNCHECKABLE — {exc}", file=sys.stderr)
+            return 2
     v = verify_card(card, pinned_key() if not args.key else args.key)
     print(v)
     return 0 if v.state == VALID else 1

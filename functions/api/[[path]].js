@@ -185,6 +185,11 @@ async function proofGet(request) {
   });
 }
 
+// The /api 404 names the real doors. /api/mcp is the census of OTHER people's MCP servers, so it is
+// labelled as that and never offered as ours.
+export const NOT_FOUND_HINT =
+  "Public API description: /openapi.json. Ask: GET /api/chat lists its skins. MCP server: /mcp/free (free, read-only). Board: /api/gspc. /api/mcp is a census of other MCP servers, not ours.";
+
 export async function onRequest(context) {
   const p = context.params && Array.isArray(context.params.path)
     ? context.params.path.join("/")
@@ -196,7 +201,7 @@ export async function onRequest(context) {
     {
       error: "not_found",
       path: p ? `/api/${p}` : "/api",
-      hint: "See the MCP registry entry io.github.CSOAI-ORG/gspc for live endpoints, or /api/mcp for the server catalogue.",
+      hint: NOT_FOUND_HINT,
     },
     404,
   );

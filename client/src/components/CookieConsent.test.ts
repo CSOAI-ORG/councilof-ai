@@ -8,6 +8,7 @@ const launcher = readFileSync(
   resolve(here, "lobby/CouncilLobby.tsx"),
   "utf8",
 );
+const footer = readFileSync(resolve(here, "Footer.tsx"), "utf8");
 
 function layer(source: string): number {
   const match = source.match(/z-\[(\d+)\]/);
@@ -30,30 +31,26 @@ function fixedClass(source: string): string {
   return m[1];
 }
 
-describe("cookie consent and the global workspace launcher", () => {
-  it("keeps the launcher above the notice in paint order", () => {
-    expect(layer(consent)).toBeLessThan(layer(launcher));
+describe("cookie consent, with no floating launcher over it", () => {
+  it("has no fixed workspace pill left to overlap the notice", () => {
+    // 27 Sep 2026 (ux-unify): the "Open workspace" pill was removed — it sat over the
+    // banner and page content and duplicated "Council OS" in the site header. Read the
+    // attribute, not the file: a comment mentioning "fixed" must not satisfy this.
+    expect(launcher).not.toMatch(/className="fixed /);
+    expect(launcher).not.toMatch(/data-council-global-launcher/);
+    expect(launcher).toMatch(/return null;/);
+  });
+
+  it("keeps the notice on its own explicit layer", () => {
+    expect(layer(consent)).toBeGreaterThan(0);
+    expect(fixedClass(consent)).toContain("fixed");
     expect(consent).toContain('aria-label="Cookie consent"');
   });
 
-  it("does not pin the launcher to a fixed bottom edge any more", () => {
-    // Measured /products at 1280x800 on 2026-09-06: `bottom-5` put the 158.34px
-    // pill 19.5px into the banner and over 98.34px of "Accept analytics".
-    expect(fixedClass(launcher)).not.toMatch(/\bbottom-\d/);
-    expect(fixedClass(launcher)).toContain("fixed");
-  });
-
-  it("lifts the launcher by the banner's own published height", () => {
-    expect(launcher).toContain("var(--cookie-banner-h");
-    // and falls back to flush-bottom when there is no banner
-    expect(launcher).toMatch(/var\(--cookie-banner-h,\s*0px\)/);
-  });
-
-  it("agrees on the variable name across BOTH files", () => {
-    // The one failure this pairing has: rename it on one side and the lift
-    // silently stops working, with no error anywhere.
+  it("agrees on the banner-height variable with the footer that clears it", () => {
+    // Rename it on one side and the footer's last line silently hides under the banner.
     const declared = consent.match(/BANNER_H_VAR\s*=\s*"([^"]+)"/)?.[1];
-    const consumed = launcher.match(/var\((--[a-z-]+),/)?.[1];
+    const consumed = footer.match(/var\((--[a-z-]+),/)?.[1];
     expect(declared).toBe("--cookie-banner-h");
     expect(consumed).toBe(declared);
   });

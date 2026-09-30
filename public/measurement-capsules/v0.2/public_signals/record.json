@@ -1,0 +1,52 @@
+{
+ "schema": "csoai.measurement-capsule-batch/0.2",
+ "as_of": "2026-09-26T07:18:49Z",
+ "capsule_schema": "csoai.measurement-capsule/0.2",
+ "adapter": "public_signals",
+ "kind": "measurement.public_signal",
+ "n_capsules": 118,
+ "states": {
+  "MEASURED": 103,
+  "PARTIAL": 3,
+  "UNCHECKABLE": 12
+ },
+ "merkle_root": "ef67f71508192f08f1aedb00276592ee81e85661e7c3421bec036d4e7b9adb42",
+ "merkle": "RFC 6962 Merkle Tree Hash over the capsule_id leaves (32 bytes each) sorted ascending: leaf = SHA-256(0x00 || capsule_id), node = SHA-256(0x01 || left || right); for n > 1 leaves the split is at k = the largest power of two smaller than n (RFC 6962 section 2.1), so no leaf is promoted or duplicated; one leaf = its leaf hash; empty = SHA-256 of the empty string",
+ "canonicalisation": {
+  "rule": "JSON, object keys sorted, no insignificant whitespace, UTF-8, non-ASCII unescaped; every capsule's bytes are checked byte-equal to its RFC 8785 (JCS) serialisation at build and at verify",
+  "jcs_byte_equal": "118/118",
+  "checked_with": "rfc8785 0.1.4 (independent RFC 8785 implementation)"
+ },
+ "capsules_file": {
+  "path": "capsules.jsonl.gz",
+  "sha256": "5d8a0c632c0158116f2973c4256afc6bb03fc18957dab72eed75ce9e284ce770",
+  "bytes": 19788,
+  "uncompressed_sha256": "77d7156c1b741168c73b2209f62f302661fdc7510b7073042c6093192ba6f8ce",
+  "uncompressed_bytes": 189296,
+  "format": "gzip (mtime 0, no filename, level 9) of canonical JSON lines sorted by capsule_id"
+ },
+ "authority_state": "NONE: measurement only; this capsule grants and records no execution authority",
+ "what_this_is": "Public signals and traction: one capsule per outside signal about CSOAI (package downloads, Hugging Face, index listings, x402 non-self payers, data generated, search presence, citations), each with its source URL, response sha256, state and self_or_external class.",
+ "what_this_is_not": "Not a traction claim. SELF and MIXED_UNSEPARABLE capsules are never traction; UNCHECKABLE is never 0.",
+ "source": {
+  "record": "/evac-bulk/public-signals/2026-09-26/record.json",
+  "record_sha256": "7c23af1cea95c58d99a2eff2928c5637f38057d238d1b44e49fb8832460f81b0",
+  "date": "2026-09-26",
+  "schema": "csoai.public-signals/0.1",
+  "n_signals": 118,
+  "previous_record_sha256": null,
+  "changes_sha256": "80a84ccd2cccb95db1811dae9e7505b5ebe75e992809c94920b75914b95512c3"
+ },
+ "capsules_by_state": {
+  "MEASURED": 103,
+  "UNCHECKABLE": 12,
+  "PARTIAL": 3
+ },
+ "capsules_by_self_or_external": {
+  "EXTERNAL": 15,
+  "SELF": 50,
+  "NOT_APPLICABLE": 10,
+  "MIXED_UNSEPARABLE": 43
+ },
+ "private_until": "owner approves publication"
+}

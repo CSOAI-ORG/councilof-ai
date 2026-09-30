@@ -148,7 +148,10 @@ print(len(errs)); [print(e) for e in errs[:5]]; sys.exit(1 if errs else 0)`);
     }
     rec(id, "name", doc.name === name, doc.name);
     rec(id, "version == live", doc.version === WANT_VERSION, doc.version);
-    rec(id, "remote == door", doc.remotes?.[0]?.url === DOOR && doc.remotes[0].type === "streamable-http", doc.remotes?.[0]?.url);
+    // the domain name carries the door with one trailing slash (the bare URL is held by the github name)
+    const wantRemote = (dist.distribution.find((r) => r.id === id) || {}).remote_url || DOOR;
+    rec(id, wantRemote === DOOR ? "remote == door" : "remote == door + trailing slash (declared remote_url)",
+      wantRemote.replace(/\/$/, "") === DOOR && doc.remotes?.[0]?.url === wantRemote && doc.remotes[0].type === "streamable-http", doc.remotes?.[0]?.url);
     const fl = doc._meta["io.modelcontextprotocol.registry/publisher-provided"]["ai.councilof/fleet"];
     rec(id, "fleet names == locked", sameList([...fl.free, ...fl.paid], EXPECT_TOOLS), `${fl.free.length}+${fl.paid.length}`);
   }
@@ -157,20 +160,23 @@ print(len(errs)); [print(e) for e in errs[:5]]; sys.exit(1 if errs else 0)`);
     if (OFFLINE) { rec(id, "registry isLatest", null, "offline"); continue; }
     let latest = null, why = "";
     try {
-      const r = await fetch(`https://registry.modelcontextprotocol.io/v0/servers?search=${encodeURIComponent(name)}`, { signal: AbortSignal.timeout(20000) });
-      const d = await r.json();
+      // /versions answers in <1 s; ?search= took 20-40 s from the pod (2026-09-28) and timed out as a FAIL.
+      const r = await fetch(`https://registry.modelcontextprotocol.io/v0/servers/${encodeURIComponent(name)}/versions`, { signal: AbortSignal.timeout(30000) });
+      const d = r.status === 404 ? { servers: [] } : await r.json();
       const hit = (d.servers || []).filter((x) => x.server?.name === name)
         .find((x) => x._meta?.["io.modelcontextprotocol.registry/official"]?.isLatest);
       latest = hit ? hit.server.version : "ABSENT";
     } catch (e) { why = `UNREACHABLE (${e.name})`; }
-    if (id === "mcp-registry-github") rec(id, "registry isLatest == live server version (nothing to publish)", latest === WANT_VERSION, latest ?? why);
-    else rec(id, "registry state recorded (not yet registered is expected)", latest !== null, latest === "ABSENT" ? "ABSENT — not registered; owner step" : latest ?? why);
+    if (id === "mcp-registry-github") rec(id, "registry isLatest recorded (deprecated alias: nothing new is published under it)", latest !== null, latest ?? why);
+    else rec(id, "registry isLatest == source server version", latest === WANT_VERSION, `registry ${latest ?? why} / source ${WANT_VERSION}`);
   }
   // the domain variant must not declare an npm package whose mcpName names the other namespace
   const dom = readJson("distribution/mcp-registry/ai.councilof-gspc/server.json");
   rec("mcp-registry-domain", "remote-only (no npm package bound to another namespace)", !dom.packages, dom.packages ? "has packages" : "remote-only");
   const npmName = readJson("mcp/gspc-server/package.json").mcpName;
-  rec("mcp-registry-github", "npm package mcpName == registry name", npmName === dist.registry_names.github, npmName);
+  // Owner ruling 2026-09-26: the canonical name is the domain one; io.github.CSOAI-ORG/gspc is its deprecated alias.
+  rec("mcp-registry-domain", "npm package source mcpName == the canonical registry name", npmName === dist.registry_names.canonical && dist.registry_names.canonical === dist.registry_names.domain, npmName);
+  rec("mcp-registry-github", "the GitHub-namespace name is declared the deprecated alias", dist.registry_names.deprecated_alias === dist.registry_names.github, dist.registry_names.deprecated_alias);
 }
 
 // ── 3. plugins (structural: the three manifests agree) ──────────────────────────────────────
@@ -199,11 +205,18 @@ print(len(errs)); [print(e) for e in errs[:5]]; sys.exit(1 if errs else 0)`);
 }
 
 // ── 4. form-value targets (Claude connector, OpenAI app) ────────────────────────────────────
-for (const [id, p, urlKey] of [["claude-connector", "distribution/claude/connector.json", "server_url"], ["openai-app", "distribution/openai/app.json", "mcp_server_url"]]) {
+// The Claude connector lists the FREE door (Anthropic Software Directory Policy 4.A: no software that
+// transfers money or crypto), so its expected URL and tools are the free door's; the OpenAI app keeps
+// the full door.
+const EXPECT_FREE = lock ? [...lock.free] : caps.filter((c) => c.payment === "free").map((c) => c.id);
+for (const [id, p, urlKey, wantUrl, wantTools] of [
+  ["claude-connector", "distribution/claude/connector.json", "server_url", `${DOOR}/free`, EXPECT_FREE],
+  ["openai-app", "distribution/openai/app.json", "mcp_server_url", DOOR, EXPECT_TOOLS],
+]) {
   const d = readJson(p);
   const names = d.tools.map((t) => t.name);
-  rec(id, "server url == door, auth none", d[urlKey] === DOOR && /none/.test(d.authentication), d[urlKey]);
-  rec(id, "tools == locked, tool_count == array length", sameList(names, EXPECT_TOOLS) && d.tool_count === names.length, `${names.length}`);
+  rec(id, `server url == ${wantUrl === DOOR ? "door" : "free door"}, auth none`, d[urlKey] === wantUrl && /none/.test(d.authentication), d[urlKey]);
+  rec(id, `tools == locked${wantTools === EXPECT_FREE ? " free" : ""}, tool_count == array length`, sameList(names, wantTools) && d.tool_count === names.length, `${names.length}`);
   rec(id, "server_version == live", d.server_version === WANT_VERSION, d.server_version);
   rec(id, "status says NOT SUBMITTED", /NOT SUBMITTED/.test(d.status), d.status);
 }
@@ -325,8 +338,14 @@ assert a["state"]=="LIVE" and b["state"]=="ABSENT" and a["doctrine_sha256"]=="${
   rec("well-known-server-card", "stdio pin == npm package version", sc.endpoints.mcp.stdio.endsWith("@" + npmV) && mj.servers[0].stdio.endsWith("@" + npmV), sc.endpoints.mcp.stdio);
   rec("well-known-server-card", "mcp.json registry version == live; tools == locked",
     mj.servers[0].registry.version === WANT_VERSION && sameList(mj.measured.tools, EXPECT_TOOLS) && mj.measured.total_tools === EXPECT_TOOLS.length, mj.servers[0].registry.version);
-  const staleWords = /\beight free\b|\btwelve\b|No 23rd axis/i;
-  rec("well-known-server-card", "no stale fleet prose (eight free / twelve / No 23rd axis)", !staleWords.test(scText) && !staleWords.test(JSON.stringify(mj)), "clean");
+  // Stale fleet prose = any count word that is not the locked one ("eight free", "twelve tools" were
+  // the old fleets). Derived from the lock, so a fleet change cannot turn the current count "stale".
+  const W = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve",
+    "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"];
+  const nFree = caps.filter((c) => c.payment === "free").length;
+  const others = (n) => W.filter((_, i) => i !== n).join("|");
+  const staleWords = new RegExp(`\\b(?:${others(nFree)}) free\\b|\\b(?:${others(EXPECT_TOOLS.length)}) (?:MCP )?tools\\b|No 23rd axis`, "i");
+  rec("well-known-server-card", "no stale fleet prose (a count word other than the locked fleet's / No 23rd axis)", !staleWords.test(scText) && !staleWords.test(JSON.stringify(mj)), "clean");
 }
 
 // ── 11. brand-gate, certif, price — over EVERY output ───────────────────────────────────────
@@ -352,7 +371,9 @@ const allOutputs = manifest.files.map((f) => f.path).concat(["distribution/MANIF
 
   // (c) certif: every occurrence must be negated in the same clause, or inside quoted third-party
   //     text; affirmative use fails. (d) no public price.
-  const NEG = /\b(not|never|no|nor|without|non)\b|n't|explicitly_not/i;
+  // not_a_ / not_an_: a snake_case negation key (not_a_certification), which the server card now
+  // carries in each tool output schema since it renders the full tools[] (fix #24).
+  const NEG = /\b(not|never|no|nor|without|non)\b|n't|explicitly_not|\bnot_an?_/i;
   const affirmative = [], negated = [];
   const prices = [];
   // A JSON string under a negation key (explicitly_not, does_not_establish, claim_boundary) is a
@@ -382,6 +403,50 @@ const allOutputs = manifest.files.map((f) => f.path).concat(["distribution/MANIF
   rec("*", "no affirmative 'certif' (negations allowed, listed)", affirmative.length === 0,
     affirmative.length ? affirmative.slice(0, 3).join(" | ") : `0 affirmative · ${negated.length} negated`);
   rec("*", "no public price", prices.length === 0, prices.slice(0, 3).join(" | ") || "0");
+
+  // (e) every README-like output points at the data, the corrections ledger and free verification
+  const I = dist.identity;
+  const readmes = allOutputs.filter((p) => /(README|readme|SKILL|GEMINI)\.md$/.test(p));
+  const noLinks = readmes.filter((p) => { const t = read(p); return ![I.board, I.corrections, I.verify_page].every((u) => t.includes(u)); });
+  rec("*", "every README carries data + corrections ledger + verify links", readmes.length > 0 && noLinks.length === 0,
+    noLinks.join(", ") || `${readmes.length} README-like files`);
+
+  // (f) published summaries carry no axis count and no retracted phrase (30 Sep 2026). A summary is
+  //     frozen into a registry, a package page or a directory row for months; the board's count
+  //     moves (13 → 14 → 22 → 23), so a typed "23-axis" or "13 axes" there goes stale the day the
+  //     board changes. Retracted phrases are the ones a correction withdrew or the doctrine forbids
+  //     in public copy. Every description/summary/short_description/about string in every output,
+  //     plus the plugin and registry descriptions, is scanned. The regexes are exported below and
+  //     proven non-vacuous by the self-check that follows.
+  const AXIS_COUNT = /\b\d+[\s-]+ax(?:is|es)\b|\b(?:thirteen|fourteen|twenty(?:-| )?(?:two|three))[\s-]+ax(?:is|es)\b/i;
+  const RETRACTED = /public leader scores?|own fine-tunes?|\bLayer O\b|Harness X|Eunomia|Pontius|Venturi|No 23rd axis|model fleets/i;
+  const SUMMARY_KEY = /^(description|summary|short_description|shortDescription|about|title|tagline)$/;
+  const selfTest = AXIS_COUNT.test("the 23-axis board") && AXIS_COUNT.test("13 axes") && !AXIS_COUNT.test("per-axis rows")
+    && RETRACTED.test("9 public leader scores") && !RETRACTED.test("Layer 0 trust floor");
+  rec("*", "summary scan self-test (the patterns match their targets and spare 'per-axis' and 'Layer 0')", selfTest, selfTest ? "ok" : "a pattern is vacuous");
+  const summaryHits = [];
+  const scanSummaries = (p, node, key) => {
+    if (typeof node === "string") {
+      if (key && SUMMARY_KEY.test(key) && (AXIS_COUNT.test(node) || RETRACTED.test(node))) summaryHits.push(`${p} ${key}: ${node.slice(0, 80)}`);
+      return;
+    }
+    if (Array.isArray(node)) return node.forEach((v) => scanSummaries(p, v, key));
+    if (node && typeof node === "object") for (const [k, v] of Object.entries(node)) scanSummaries(p, v, k);
+  };
+  let scanned = 0;
+  for (const p of allOutputs) {
+    if (!p.endsWith(".json")) continue;
+    scanned++;
+    scanSummaries(p, JSON.parse(read(p)), null);
+  }
+  for (const p of allOutputs.filter((x) => /\.(ya?ml|toml)$/.test(x))) {
+    scanned++;
+    for (const m of read(p).matchAll(/^\s*(description|summary|short_description|title)\s*[:=]\s*(.+)$/gm)) {
+      if (AXIS_COUNT.test(m[2]) || RETRACTED.test(m[2])) summaryHits.push(`${p} ${m[1]}: ${m[2].slice(0, 80)}`);
+    }
+  }
+  rec("*", "no published summary carries an axis count or a retracted phrase", scanned > 0 && summaryHits.length === 0,
+    summaryHits.length ? summaryHits.slice(0, 4).join(" | ") : `${scanned} summary-bearing outputs clean`);
 }
 
 // ── report ──────────────────────────────────────────────────────────────────────────────────

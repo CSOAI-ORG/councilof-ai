@@ -10,13 +10,16 @@ export const AXES_A: AxisScore[] = [
     fleet_mean: 0.490, mean_harm: 0.510, cvar05_harm: 0.8728,
     macro_f1: 0.705, unparsed_rate: 0.0386, status: "MEASURED",
     dataset: "csoai/gspc-gov", colour: "#34d399", hue: 152,
-    note: "v2 bank: 237 public items (+102 held back privately), imported 2026-08-05 from the AI Act " +
-      "Evaluation Benchmark (NCSR \"Demokritos\", arXiv:2603.09435, CC-BY-4.0). In the original run our " +
+    note: "v2 bank: 237 items, imported 2026-08-05 from the 339 scenarios of the AI Act Evaluation " +
+      "Benchmark (NCSR \"Demokritos\", arXiv:2603.09435, CC-BY-4.0). The other 102 scenarios are not " +
+      "graded here, and they are not a private held-out set: all 339 are public in the upstream " +
+      "scenarios.json (github.com/davidath/ai-act-evaluation-benchmark). No held-out slice backs this " +
+      "axis (C-2026-0929-02). In the original run our " +
       "own tuned governance specialist held the point lead, and that lead was separated from the best " +
       "base model, mistral:7b (McNemar p=0.0086). That is an in-lane result on our own model, not a " +
-      "public ranking: the public board does not rank our own models, carries no leader for this axis, " +
-      "publishes no separation determination for it and does not count it in totals.separated_leads " +
-      "(C-2026-0915-01). The fleet mean is 0.490: EU AI Act tiering is hard for " +
+      "public ranking: the public board does not rank our own models and does not count it in " +
+      "totals.separated_leads (C-2026-0915-01). The public leader and determination on this axis come " +
+      "only from the external-only re-rank of the published per-item rows (2026-09-27). The fleet mean is 0.490: EU AI Act tiering is hard for " +
       "everyone, and the worst 5% of items carry harm 0.873 (CVaR, n=237) — the tail is real.",
   },
   {

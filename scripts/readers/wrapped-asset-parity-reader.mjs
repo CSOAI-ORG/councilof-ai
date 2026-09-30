@@ -22,32 +22,33 @@
  * addresses are the bridges' own published contracts; a reader can verify each one.
  *
  * Usage: node scripts/readers/wrapped-asset-parity-reader.mjs [--json] [--out <file>] [--stage <dir>]
- * Env:   EVM_RPC_<CHAIN> overrides a default endpoint (recorded, never silent), same as
- *        evm-erc20-reader.mjs. eth.llamarpc.com answered HTTP 525 on 2026-09-13 and publicnode
- *        refused pinned-block reads without a token on 2026-09-15, so the Ethereum default is drpc.
+ * Env:   EVM_RPC_<CHAIN> puts one endpoint AHEAD of the ordered list (recorded, never silent), same
+ *        as evm-erc20-reader.mjs.
+ *
+ * RPC (0.2.0, 2026-09-28): each chain reads an ORDERED list of keyless endpoints from
+ * functions/api/_evm_rpcs.json — the file the /api/wrapper door reads, so the free ledger and the
+ * paid card pin blocks the same way. A block is pinned only when one operator reports it under the
+ * `finalized` tag and a DIFFERENT operator (registrable domain) returns the same hash at that
+ * height. No `latest` fallback: a chain that cannot be pinned leaves its pairs UNMEASURED. Each
+ * eth_call falls through the list on any error (rate limits included).
  */
 
 import { createHash } from "node:crypto";
-import { writeFileSync } from "node:fs";
-import { normalizeAtomicAmount, rpcCall } from "./evm-erc20-reader.mjs";
+import { readFileSync, writeFileSync } from "node:fs";
+import { normalizeAtomicAmount } from "./evm-erc20-reader.mjs";
 
 export const SCHEMA = "csoai.wrapped-asset-parity/0.1";
-export const READER_REVISION = "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1";
+export const READER_REVISION = "scripts/readers/wrapped-asset-parity-reader.mjs@0.2.0";
+export const FINALITY = "RPC_FINALIZED_TAG_HASH_MATCHED_BY_SECOND_OPERATOR_NOT_INDEPENDENTLY_PROVEN_FINAL";
 
-export const CHAINS = {
-  // publicnode now refuses pinned-block eth_call without a personal token ("Archive requests require
-  // a personal token", 2026-09-15); eth.drpc.org answered the same finalized-block read keyless.
-  ethereum: { rpc: "https://eth.drpc.org", chainId: 1 },
-  base: { rpc: "https://mainnet.base.org", chainId: 8453 },
-  optimism: { rpc: "https://mainnet.optimism.io", chainId: 10 },
-  arbitrum: { rpc: "https://arb1.arbitrum.io/rpc", chainId: 42161 },
-  // polygon-rpc.com answers 401 without a key since 2026-09; publicnode is keyless.
-  polygon: { rpc: "https://polygon-bor-rpc.publicnode.com", chainId: 137 },
+/** Ordered keyless endpoints per chain — the same bytes functions/api/wrapper.ts imports. */
+export const RPC_LIST = JSON.parse(readFileSync(new URL("../../functions/api/_evm_rpcs.json", import.meta.url), "utf8"));
+export const CHAINS = Object.fromEntries(
+  Object.entries(RPC_LIST.chains).map(([name, c]) => [name, { chainId: c.chainId, rpcs: [...c.rpcs], rpc: c.rpcs[0] }]),
+);
 
-    "zksync-era": { rpc: "https://mainnet.era.zksync.io", chainId: 324 },
-  // Flare C-chain public RPC (keyless), for FXRP (FAssets).
-  flare: { rpc: "https://flare-api.flare.network/ext/C/rpc", chainId: 14 },
-};
+/** The operator behind an endpoint: its registrable domain. Two URLs on one domain are one operator. */
+export const operatorOf = (url) => new URL(url).hostname.split(".").slice(-2).join(".");
 
 const SEL = { totalSupply: "0x18160ddd", balanceOf: "0x70a08231", decimals: "0x313ce567" };
 
@@ -400,34 +401,79 @@ const pad32 = (addr) => addr.toLowerCase().replace(/^0x/, "").padStart(64, "0");
 
 function endpoint(chain) {
   const cfg = CHAINS[chain];
-  const used = process.env[`EVM_RPC_${chain.toUpperCase()}`] || cfg.rpc;
-  return { used, substituted: used !== cfg.rpc, default: cfg.rpc, chainId: cfg.chainId };
+  const override = process.env[`EVM_RPC_${chain.toUpperCase().replace(/-/g, "_")}`] || null;
+  const rpcs = override ? [override, ...cfg.rpcs.filter((u) => u !== override)] : cfg.rpcs;
+  return { used: rpcs[0], rpcs, substituted: !!override && override !== cfg.rpc, default: cfg.rpc, chainId: cfg.chainId };
 }
 
-/** One pinned block per chain per run, so every read in a record shares a height. */
-async function pinBlock(rpc) {
-  try {
-    const b = await rpcCall(rpc, "eth_getBlockByNumber", ["finalized", false]);
-    if (b?.number && b?.hash) return { number: parseInt(b.number, 16), hex: b.number, hash: b.hash, timestamp: parseInt(b.timestamp, 16), finality: "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL" };
-  } catch { /* fall through */ }
-  const hex = await rpcCall(rpc, "eth_blockNumber", []);
-  const b = await rpcCall(rpc, "eth_getBlockByNumber", [hex, false]);
-  return { number: parseInt(hex, 16), hex, hash: b.hash, timestamp: parseInt(b.timestamp, 16), finality: "RPC_LATEST_NOT_INDEPENDENTLY_PROVEN_FINAL" };
+/** JSON-RPC with a timeout and an HTTP status check, so a hung or rate-limited endpoint falls through. */
+async function rpcCall(url, method, params) {
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "User-Agent": "csoai-wrapper-parity/0.2 (+https://councilof.ai)" },
+    body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }),
+    signal: AbortSignal.timeout(10000),
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const json = await res.json();
+  if (json.error) throw new Error(`RPC error: ${json.error.message}`);
+  if (json.result === undefined || json.result === null) throw new Error("RPC empty result");
+  return json.result;
 }
 
-async function call(rpc, to, data, blockHex) {
-  // Public endpoints rate-limit bursts; one paced retry is allowed, then the read is
-  // UNMEASURED with the error recorded. A retry never changes what the chain answers.
-  let raw;
-  for (let attempt = 0; attempt < 3; attempt++) {
-    try { raw = await rpcCall(rpc, "eth_call", [{ to, data }, blockHex]); break; }
-    catch (e) { if (attempt === 2 || !/rate limit|429/i.test(String(e))) throw e; await new Promise((r) => setTimeout(r, 2000 * (attempt + 1))); }
+/**
+ * One pinned block per chain per run, so every read in a record shares a height: the first endpoint
+ * (list order) that reports a `finalized` block, confirmed by the first endpoint of a DIFFERENT
+ * operator returning the same hash at that height. Throws on no finalized block, a disagreement, or
+ * no second operator — the chain's pairs are then UNMEASURED. Never falls back to `latest`.
+ */
+async function pinBlock(ep) {
+  const tried = [];
+  let first = null;
+  for (const url of ep.rpcs) {
+    try {
+      const b = await rpcCall(url, "eth_getBlockByNumber", ["finalized", false]);
+      if (!b?.number || !b?.hash) throw new Error("finalized block without number/hash");
+      first = { b, url }; break;
+    } catch (e) { tried.push(`${operatorOf(url)}: ${String((e && e.message) || e)}`); }
   }
-  if (!raw || raw === "0x") throw new Error(`empty eth_call result from ${to}`);
-  // Pace public endpoints: a burst of pins + reads across twelve pairs trips mainnet.base.org's
-  // limiter (seen 2026-09-13, usdc:base UNMEASURED); 200 ms between calls keeps it honest.
-  await new Promise((r) => setTimeout(r, 200));
-  return { raw, value: BigInt(raw), raw_sha256: sha256(raw) };
+  if (!first) throw new Error(`no operator reported a finalized block (${tried.join("; ")})`);
+  const op1 = operatorOf(first.url);
+  const height = parseInt(first.b.number, 16);
+  for (const url of ep.rpcs) {
+    if (operatorOf(url) === op1) continue;
+    let b2;
+    try { b2 = await rpcCall(url, "eth_getBlockByNumber", [first.b.number, false]); }
+    catch (e) { tried.push(`${operatorOf(url)} (hash check): ${String((e && e.message) || e)}`); continue; }
+    if (!b2?.hash) { tried.push(`${operatorOf(url)} (hash check): block without hash`); continue; }
+    if (b2.hash.toLowerCase() !== first.b.hash.toLowerCase())
+      throw new Error(`block-hash disagreement at ${height} — ${op1} ${first.b.hash}, ${operatorOf(url)} ${b2.hash}`);
+    return { number: height, hex: first.b.number, hash: first.b.hash, timestamp: parseInt(first.b.timestamp, 16), finality: FINALITY, operators: [op1, operatorOf(url)], rpc: first.url };
+  }
+  throw new Error(`no second operator confirmed the hash of finalized block ${height} (${tried.join("; ")})`);
+}
+
+async function call(ep, pin, to, data) {
+  // Start with the endpoint that pinned the block, then fall through the list; one paced retry per
+  // endpoint on a rate limit. A retry never changes what the chain answers.
+  const order = [pin.rpc, ...ep.rpcs.filter((u) => u !== pin.rpc)];
+  const tried = [];
+  for (const url of order) {
+    let raw;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try { raw = await rpcCall(url, "eth_call", [{ to, data }, pin.hex]); break; }
+      catch (e) {
+        if (attempt === 1 || !/rate limit|429/i.test(String(e))) { tried.push(`${operatorOf(url)}: ${String((e && e.message) || e)}`); raw = undefined; break; }
+        await new Promise((r) => setTimeout(r, 2000));
+      }
+    }
+    if (!raw || raw === "0x") { if (raw === "0x") tried.push(`${operatorOf(url)}: empty eth_call result`); continue; }
+    // Pace public endpoints: a burst of pins + reads across the roster trips mainnet.base.org's
+    // limiter (seen 2026-09-13, usdc:base UNMEASURED); 200 ms between calls keeps it honest.
+    await new Promise((r) => setTimeout(r, 200));
+    return { raw, value: BigInt(raw), raw_sha256: sha256(raw), operator: operatorOf(url), url };
+  }
+  throw new Error(`eth_call to ${to} failed on every endpoint (${tried.join("; ")})`);
 }
 
 /** Ratio as a decimal string with 6 places, computed in BigInt — no float in the record. */
@@ -444,8 +490,8 @@ export async function readPair(entry, pins) {
   const c = CHAINS[entry.canonical.chain] ? endpoint(entry.canonical.chain) : null;
   const rec = {
     id: entry.id,
-    wrapped: { ...entry.wrapped, chainId: w.chainId, endpoint: w.used, endpoint_substituted: w.substituted, block: pins[entry.wrapped.chain] },
-    canonical: c ? { ...entry.canonical, chainId: c.chainId, endpoint: c.used, endpoint_substituted: c.substituted, block: pins[entry.canonical.chain] } : { ...entry.canonical, chainId: null, endpoint: null, endpoint_substituted: false, block: null },
+    wrapped: { ...entry.wrapped, chainId: w.chainId, endpoint: pins[entry.wrapped.chain]?.rpc ?? w.used, endpoint_substituted: w.substituted, block: pins[entry.wrapped.chain] },
+    canonical: c ? { ...entry.canonical, chainId: c.chainId, endpoint: pins[entry.canonical.chain]?.rpc ?? c.used, endpoint_substituted: c.substituted, block: pins[entry.canonical.chain] } : { ...entry.canonical, chainId: null, endpoint: null, endpoint_substituted: false, block: null },
     backing_model: entry.backing_model,
     escrow: entry.escrow, escrow_name: entry.escrow_name,
     note: entry.note || null,
@@ -454,13 +500,13 @@ export async function readPair(entry, pins) {
     error: null,
   };
   try {
-    const dec = await call(w.used, entry.wrapped.address, SEL.decimals, pins[entry.wrapped.chain].hex);
+    const dec = await call(w, pins[entry.wrapped.chain], entry.wrapped.address, SEL.decimals);
     const decimals = Number(dec.value);
-    const ts = await call(w.used, entry.wrapped.address, SEL.totalSupply, pins[entry.wrapped.chain].hex);
-    rec.reads.wrapped_total_supply = { query: "totalSupply()", raw: ts.raw, raw_sha256: ts.raw_sha256, atomic: ts.value.toString(), normalized: normalizeAtomicAmount(ts.value.toString(), decimals), decimals };
+    const ts = await call(w, pins[entry.wrapped.chain], entry.wrapped.address, SEL.totalSupply);
+    rec.reads.wrapped_total_supply = { query: "totalSupply()", operator: ts.operator, raw: ts.raw, raw_sha256: ts.raw_sha256, atomic: ts.value.toString(), normalized: normalizeAtomicAmount(ts.value.toString(), decimals), decimals };
     if (entry.backing_model === "escrow") {
-      const eb = await call(c.used, entry.canonical.address, SEL.balanceOf + pad32(entry.escrow), pins[entry.canonical.chain].hex);
-      rec.reads.escrow_balance = { query: `balanceOf(${entry.escrow})`, raw: eb.raw, raw_sha256: eb.raw_sha256, atomic: eb.value.toString(), normalized: normalizeAtomicAmount(eb.value.toString(), decimals), decimals };
+      const eb = await call(c, pins[entry.canonical.chain], entry.canonical.address, SEL.balanceOf + pad32(entry.escrow));
+      rec.reads.escrow_balance = { query: `balanceOf(${entry.escrow})`, operator: eb.operator, raw: eb.raw, raw_sha256: eb.raw_sha256, atomic: eb.value.toString(), normalized: normalizeAtomicAmount(eb.value.toString(), decimals), decimals };
       rec.escrow_over_wrapped = ratioString(eb.value, ts.value);
       rec.state = "ESCROW_PARITY_READ";
     } else if (entry.backing_model === "native") {
@@ -481,13 +527,13 @@ export async function readAll(roster = ROSTER) {
   const chains = [...new Set(roster.flatMap((r) => [r.wrapped.chain, r.canonical.chain]))].filter((ch) => CHAINS[ch]);
   const pins = {};
   for (const ch of chains) {
-    try { pins[ch] = await pinBlock(endpoint(ch).used); }
+    try { pins[ch] = await pinBlock(endpoint(ch)); }
     catch (e) { pins[ch] = { error: String((e && e.message) || e) }; }
   }
   const records = [];
   for (const entry of roster) {
     if (pins[entry.wrapped.chain]?.error || (CHAINS[entry.canonical.chain] && pins[entry.canonical.chain]?.error)) {
-      records.push({ id: entry.id, backing_model: entry.backing_model, state: "UNMEASURED", error: "block pin failed", wrapped: entry.wrapped, canonical: entry.canonical });
+      records.push({ id: entry.id, backing_model: entry.backing_model, state: "UNMEASURED", error: `block pin failed: ${pins[entry.wrapped.chain]?.error || pins[entry.canonical.chain]?.error}`, wrapped: entry.wrapped, canonical: entry.canonical });
       continue;
     }
     records.push(await readPair(entry, pins));
@@ -502,7 +548,7 @@ export async function readAll(roster = ROSTER) {
     as_of: new Date().toISOString(),
     attests: "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
     states: { ESCROW_PARITY_READ: "both reads succeeded at the pinned blocks; a read, not a measurement (the card doctrine reserves MEASURED for graded banks and refuses it on point-in-time cards)", UNCHECKABLE_NATIVE_ISSUANCE: "natively issued on the destination chain; no escrow exists; supply read, no ratio claimed", INDEXED_CUSTODIAL: "reserve held by a custodian off-chain or on another ledger; supply read; no reserve readable from here; no ratio claimed", UNMEASURED: "a read failed; error recorded; nothing inferred" },
-    terms_boundary: "Public RPC endpoints, no API key. Endpoint substitutions are recorded per read.",
+    terms_boundary: "Public RPC endpoints, no API key, in the order functions/api/_evm_rpcs.json lists them. A block is pinned only when a second operator confirms its finalized hash. Endpoint substitutions are recorded per read.",
     correction_link: "https://github.com/CSOAI-ORG/councilof-ai/issues",
     license: "CC-BY-4.0 (Council of AI, CSOAI Ltd 16939677, councilof.ai)",
     pins,

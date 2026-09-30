@@ -1,0 +1,702 @@
+{
+  "runner": "python/run_python.py",
+  "implementation": {
+    "rfc8785": "csoai_impls:arena_canon",
+    "card-signing-input": "csoai_impls:arena_sign"
+  },
+  "refusal": [
+    "builtins:ValueError",
+    "builtins:TypeError"
+  ],
+  "corpusDigest": "29b3f2c5a9c2e6b07dc7e925b13c81563e2efd407a62ce05df513fca04e9361c",
+  "specCommit": "19598c4",
+  "targets": {
+    "rfc8785": {
+      "vectors": 53,
+      "passed": 51,
+      "failed": 2,
+      "outcomes": {
+        "pass": 51,
+        "diverged": 2,
+        "refused": 0,
+        "accepted": 0,
+        "errored": 0
+      }
+    },
+    "card-signing-input": {
+      "vectors": 57,
+      "passed": 55,
+      "failed": 2,
+      "outcomes": {
+        "pass": 55,
+        "diverged": 2,
+        "refused": 0,
+        "accepted": 0,
+        "errored": 0
+      }
+    }
+  },
+  "targetsNotRun": {},
+  "results": [
+    {
+      "target": "rfc8785",
+      "id": "A3-001",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A3-002",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A3-003",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A3-004",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A3-005",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A3-006",
+      "outcome": "diverged",
+      "detail": "got b'{\"b\\xef\\xbc\\x81key\":2,\"b\\xf0\\x9f\\x98\\x80key\":1}' want b'{\"b\\xf0\\x9f\\x98\\x80key\":1,\"b\\xef\\xbc\\x81key\":2}'"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A3-007",
+      "outcome": "diverged",
+      "detail": "got b'{\"x\\xee\\x80\\x80end\":2,\"x\\xf0\\x90\\x80\\x80end\":1}' want b'{\"x\\xf0\\x90\\x80\\x80end\":1,\"x\\xee\\x80\\x80end\":2}'"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A3-008",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A3-009",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A3-010",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A3-REJECT-011",
+      "outcome": "pass",
+      "detail": "refused: UnicodeEncodeError"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A3-REJECT-012",
+      "outcome": "pass",
+      "detail": "refused: UnicodeEncodeError"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-001",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-002",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-003",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-004",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-005",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-006",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-007",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-008",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-009",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-010",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-011",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-012",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-REJECT-013",
+      "outcome": "pass",
+      "detail": "refused: UnicodeEncodeError"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-REJECT-014",
+      "outcome": "pass",
+      "detail": "refused: UnicodeEncodeError"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-REJECT-015",
+      "outcome": "pass",
+      "detail": "refused: UnicodeEncodeError"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-001",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-002",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-003",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-004",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-005",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-006",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-007",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-008",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-009",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-010",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-011",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-012",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-013",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-014",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-015",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-REJECT-016",
+      "outcome": "pass",
+      "detail": "refused: ValueError"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-REJECT-017",
+      "outcome": "pass",
+      "detail": "refused: ValueError"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-REJECT-018",
+      "outcome": "pass",
+      "detail": "refused: ValueError"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A6-001",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A6-002",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A6-003",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A6-004",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A6-005",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A6-006",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A6-007",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A6-008",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A2-001",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A2-002",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A2-REJECT-003",
+      "outcome": "pass",
+      "detail": "refused: not this card's signing bytes"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A2-REJECT-004",
+      "outcome": "pass",
+      "detail": "refused: not this card's signing bytes"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A3-001",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A3-002",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A3-003",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A3-004",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A3-005",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A3-006",
+      "outcome": "diverged",
+      "detail": "got b'{\"b\\xef\\xbc\\x81key\":2,\"b\\xf0\\x9f\\x98\\x80key\":1}' want b'{\"b\\xf0\\x9f\\x98\\x80key\":1,\"b\\xef\\xbc\\x81key\":2}'"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A3-007",
+      "outcome": "diverged",
+      "detail": "got b'{\"x\\xee\\x80\\x80end\":2,\"x\\xf0\\x90\\x80\\x80end\":1}' want b'{\"x\\xf0\\x90\\x80\\x80end\":1,\"x\\xee\\x80\\x80end\":2}'"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A3-008",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A3-009",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A3-010",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A3-REJECT-011",
+      "outcome": "pass",
+      "detail": "refused: UnicodeEncodeError"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A3-REJECT-012",
+      "outcome": "pass",
+      "detail": "refused: UnicodeEncodeError"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-001",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-002",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-003",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-004",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-005",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-006",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-007",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-008",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-009",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-010",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-011",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-012",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-REJECT-013",
+      "outcome": "pass",
+      "detail": "refused: UnicodeEncodeError"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-REJECT-014",
+      "outcome": "pass",
+      "detail": "refused: UnicodeEncodeError"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-REJECT-015",
+      "outcome": "pass",
+      "detail": "refused: UnicodeEncodeError"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-001",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-002",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-003",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-004",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-005",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-006",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-007",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-008",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-009",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-010",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-011",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-012",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-013",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-014",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-015",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-REJECT-016",
+      "outcome": "pass",
+      "detail": "refused: ValueError"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-REJECT-017",
+      "outcome": "pass",
+      "detail": "refused: ValueError"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-REJECT-018",
+      "outcome": "pass",
+      "detail": "refused: ValueError"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A6-001",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A6-002",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A6-003",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A6-004",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A6-005",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A6-006",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A6-007",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A6-008",
+      "outcome": "pass",
+      "detail": "ok"
+    }
+  ]
+}

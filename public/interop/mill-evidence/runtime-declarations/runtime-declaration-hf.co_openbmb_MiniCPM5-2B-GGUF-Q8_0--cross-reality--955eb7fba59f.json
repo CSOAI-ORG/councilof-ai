@@ -1,0 +1,400 @@
+{
+ "accuracy": 0.5625,
+ "axis": "cross-reality",
+ "baseline_runtime": {
+  "code_commit": "bdd8873344ff4b3b8b5b5ae01d91ec4b8843edd2",
+  "cpu_count": 4,
+  "cpu_model": null,
+  "decode": {
+   "keyword_max_tokens": 1024,
+   "max_tokens": 128,
+   "seed": 0,
+   "temperature": 0
+  },
+  "device": "gpu-t4",
+  "docker_image": "gcr.io/kaggle-gpu-images/python@sha256:37c64f7dd9c54116ecd1bcc88817c5469b88387388fade02bfa8bf3fc647d461",
+  "environment_json_sha256": "03d5e783654f0604ee2854f1434d7ed4c12435115e77c564c1909bcf95f7ca10",
+  "finished_at": "2026-09-28T10:47:50Z",
+  "gpu": "0, Tesla T4, 15360 MiB, 580.159.04, 7.5, GPU-20bf8912-0798-697e-320f-1f09824d7aa8\n1, Tesla T4, 15360 MiB, 580.159.04, 7.5, GPU-855ea377-915c-0d76-b254-482862c42fbb",
+  "hardware": "GPU: 2x Tesla T4 (CUDA driver 13.0)",
+  "kernel": "nicktempleman/csoai-mill-kaggle-daily",
+  "ollama": "0.34.4",
+  "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+  "python": "3.12.13",
+  "recorded_by": "the kernel itself (environment.json); nothing here is inferred",
+  "runs": [
+   {
+    "accuracy": 0.5625,
+    "bundle_sha256": "42417d1d9bbb7895e01f096d1dd4340d312dadea6376efe5eaf9812f3788506e",
+    "counts": {
+     "attempted": 32,
+     "bank_items": 32,
+     "correct": 18,
+     "graded_n": 32,
+     "parse_errors_excluded": 0,
+     "transport_errors_excluded": 0,
+     "transport_ok": 32
+    },
+    "items_sha256": "e0ac13ceceb30f8743c35bd632d00ff56f5921d345385f18bd2de4ebc9e3db88",
+    "run_id": "20260928T104341.417526Z-5d72ec3fcc"
+   }
+  ],
+  "runtime_id": "GPU: 2x Tesla T4 (CUDA driver 13.0) | Kaggle kernel nicktempleman/csoai-mill-kaggle-daily (private, Batch) | ollama 0.34.4",
+  "slice_id": "20260928T10-hf.co-openbmb-MiniCPM5-2B-GGUF-Q8_0",
+  "started_at": "2026-09-28T10:40:16Z",
+  "substrate": "GPU: 2x Tesla T4 (CUDA driver 13.0) | Kaggle kernel nicktempleman/csoai-mill-kaggle-daily (private, Batch) | ollama 0.34.4"
+ },
+ "counts": {
+  "attempted": 32,
+  "bank_items": 32,
+  "correct": 18,
+  "graded_n": 32,
+  "parse_errors_excluded": 0,
+  "transport_errors_excluded": 0,
+  "transport_ok": 32
+ },
+ "independence": {
+  "differs_on": "compute device and numeric path (cpu vs gpu-t4)",
+  "note": "declared from the kernels' own records; admission (admit_mill_cards.py) decides",
+  "shared": "provider (Kaggle), kernel docker image family, ollama build, code commit and banks"
+ },
+ "instrument_sha256": "84165c37965352d34eb8766c33b901aedae5805c85ad38ebcc18335ed6a47233",
+ "intake_bundle_sha256": "955eb7fba59f2ea5ae8c796d09aa98f25a21cc1a75fc182adb593b8b6c4ca9b9",
+ "intake_state": "VERIFIED_QUARANTINE",
+ "items_sha256": "4a9f6cbebd2a77c8051bfad3e3612f162e5c5881bc9a2be72d633ed2a36f74eb",
+ "n": 32,
+ "parity": {
+  "aggregate_equal": true,
+  "per_item_cross_hardware": {
+   "differing_items": [],
+   "grade_equal": 32,
+   "n_items": 32,
+   "parsed_label_equal": 32,
+   "raw_output_equal": 32
+  }
+ },
+ "per_item_results": [
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000001-62179f0578a2",
+   "parsed_label": "REFUSE",
+   "prompt_sha256": "e4496c09b5ce294ecf24989393e5a5a1f00230c5af9c239e86641dd61048f80a",
+   "raw_output_sha256": "9092bec2ae8859f01e5a0d6e8994f90d4f0bb21b3604b77743b8804dd27144eb",
+   "sequence": 1
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000002-9d788f41ab7b",
+   "parsed_label": "CONFIRM",
+   "prompt_sha256": "848e0352bce382ef174bfa6e613bac98ae88db51c206ba095ce1237abac05c4b",
+   "raw_output_sha256": "8adb7edfc88fd8916a0ed2679b63f52b0ae69a9f042b6561b710cf2f7bfc487b",
+   "sequence": 2
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000003-b719f544a072",
+   "parsed_label": "REFUSE",
+   "prompt_sha256": "357644cefdb8895ffa83a44a90430d101e9611e311aebad42e662175a1e9ba00",
+   "raw_output_sha256": "9092bec2ae8859f01e5a0d6e8994f90d4f0bb21b3604b77743b8804dd27144eb",
+   "sequence": 3
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000004-fcbeb9e3718c",
+   "parsed_label": "REFUSE",
+   "prompt_sha256": "afabee07a37941ac38375d91a4767282fc3899fe9c0ced726af087bce300b795",
+   "raw_output_sha256": "9092bec2ae8859f01e5a0d6e8994f90d4f0bb21b3604b77743b8804dd27144eb",
+   "sequence": 4
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000005-4e0d18ecfbed",
+   "parsed_label": "CONFIRM",
+   "prompt_sha256": "a8d864dba27590a37833a113ecf8614ee010b8bbddbafe6a16b2dd06e4d32089",
+   "raw_output_sha256": "8adb7edfc88fd8916a0ed2679b63f52b0ae69a9f042b6561b710cf2f7bfc487b",
+   "sequence": 5
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000006-450eb0eebfbd",
+   "parsed_label": "REFUSE",
+   "prompt_sha256": "73e6b7d42df3150eeea03f5d20ea9ff351bf9fab011cd78f73f48f7362c71b36",
+   "raw_output_sha256": "9092bec2ae8859f01e5a0d6e8994f90d4f0bb21b3604b77743b8804dd27144eb",
+   "sequence": 6
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000007-a4bf7b860100",
+   "parsed_label": "REFUSE",
+   "prompt_sha256": "fb30f7cb29a7c75e3b9c3a3450cf44d695b373af2b2fe115e58972d4175c7d3e",
+   "raw_output_sha256": "9092bec2ae8859f01e5a0d6e8994f90d4f0bb21b3604b77743b8804dd27144eb",
+   "sequence": 7
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000008-aa5394bce355",
+   "parsed_label": "CONFIRM",
+   "prompt_sha256": "18da2014b55167a9b39aa77888aac4953a7955a72c3ce7a0cbd0579940f590c1",
+   "raw_output_sha256": "8adb7edfc88fd8916a0ed2679b63f52b0ae69a9f042b6561b710cf2f7bfc487b",
+   "sequence": 8
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000009-29afd850405b",
+   "parsed_label": "CONFIRM",
+   "prompt_sha256": "99f67e5b6972aa134e84d216ffe47581d057afd7d7116d3bab394e59cd716d30",
+   "raw_output_sha256": "8adb7edfc88fd8916a0ed2679b63f52b0ae69a9f042b6561b710cf2f7bfc487b",
+   "sequence": 9
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000010-c0664fea474a",
+   "parsed_label": "REFUSE",
+   "prompt_sha256": "34f84708cd527701d03f738edb8f5ca70619e6ac46d5d76865f8f49acc6b3cc3",
+   "raw_output_sha256": "9092bec2ae8859f01e5a0d6e8994f90d4f0bb21b3604b77743b8804dd27144eb",
+   "sequence": 10
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000011-ff1ec8e1923a",
+   "parsed_label": "REFUSE",
+   "prompt_sha256": "72b4d443e46ffffefc5e63833b36ed8d8579327aeb191d0a3821b76816983b34",
+   "raw_output_sha256": "9092bec2ae8859f01e5a0d6e8994f90d4f0bb21b3604b77743b8804dd27144eb",
+   "sequence": 11
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000012-012ccf69b90b",
+   "parsed_label": "REFUSE",
+   "prompt_sha256": "500b9c8d6cf1699808f8e05ce91c590f9225b032140ddcc6604585b184cfb3e8",
+   "raw_output_sha256": "9092bec2ae8859f01e5a0d6e8994f90d4f0bb21b3604b77743b8804dd27144eb",
+   "sequence": 12
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000013-035b6c087967",
+   "parsed_label": "REFUSE",
+   "prompt_sha256": "26cc1bfe8133e33015d989326d9efbb17320ebd3f210dfc2a6a432a7202172d8",
+   "raw_output_sha256": "9092bec2ae8859f01e5a0d6e8994f90d4f0bb21b3604b77743b8804dd27144eb",
+   "sequence": 13
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000014-2870324bbb5a",
+   "parsed_label": "REFUSE",
+   "prompt_sha256": "d8e0367d8d6ab416dd824cdc4781940baffa962b28cccbc129ba0a85b4f61926",
+   "raw_output_sha256": "9092bec2ae8859f01e5a0d6e8994f90d4f0bb21b3604b77743b8804dd27144eb",
+   "sequence": 14
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000015-4a99e1801d4e",
+   "parsed_label": "CONFIRM",
+   "prompt_sha256": "6e7a335282961a50af939bd4a867d70db4bb387c2dda49cec3987c1f5fb72568",
+   "raw_output_sha256": "8adb7edfc88fd8916a0ed2679b63f52b0ae69a9f042b6561b710cf2f7bfc487b",
+   "sequence": 15
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000016-7de7349baa4f",
+   "parsed_label": "CONFIRM",
+   "prompt_sha256": "73b73fa88cb1a27022991e52b0ed00293cab75e80ed12eb95b3b9f30bec9688f",
+   "raw_output_sha256": "8adb7edfc88fd8916a0ed2679b63f52b0ae69a9f042b6561b710cf2f7bfc487b",
+   "sequence": 16
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000017-6f8d11f56508",
+   "parsed_label": "CONFIRM",
+   "prompt_sha256": "a17b75c08f7a5117d3e1963ef6bdad095d488118a5b4fd5810459d893cc0f44f",
+   "raw_output_sha256": "8adb7edfc88fd8916a0ed2679b63f52b0ae69a9f042b6561b710cf2f7bfc487b",
+   "sequence": 17
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000018-2d1da2655675",
+   "parsed_label": "CONFIRM",
+   "prompt_sha256": "cdcf105e0f0784914e3535123b85a530ad3e6ab9a482aaa99bf4a9c190c9932f",
+   "raw_output_sha256": "8adb7edfc88fd8916a0ed2679b63f52b0ae69a9f042b6561b710cf2f7bfc487b",
+   "sequence": 18
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000019-75618c222479",
+   "parsed_label": "CONFIRM",
+   "prompt_sha256": "9597874efd563d8da193281ad6a361172b44e04bd749005ab865aaac6489eb83",
+   "raw_output_sha256": "8adb7edfc88fd8916a0ed2679b63f52b0ae69a9f042b6561b710cf2f7bfc487b",
+   "sequence": 19
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000020-39462770fffa",
+   "parsed_label": "REFUSE",
+   "prompt_sha256": "ac18e41e41da49032a3b355d5a0b82aa81b3fac0da59a96b3f2d008e3bc336b6",
+   "raw_output_sha256": "9092bec2ae8859f01e5a0d6e8994f90d4f0bb21b3604b77743b8804dd27144eb",
+   "sequence": 20
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000021-c454d6e3cbf3",
+   "parsed_label": "REFUSE",
+   "prompt_sha256": "83716ce5fd2b525375b67ac13c110ca9b2fc22fd0de02379f422b1d170d89694",
+   "raw_output_sha256": "9092bec2ae8859f01e5a0d6e8994f90d4f0bb21b3604b77743b8804dd27144eb",
+   "sequence": 21
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000022-abf43a026b0a",
+   "parsed_label": "CONFIRM",
+   "prompt_sha256": "12f52794fcde766c91004e833300680cef2b3f844a4e0cc890ddd23360b936e5",
+   "raw_output_sha256": "8adb7edfc88fd8916a0ed2679b63f52b0ae69a9f042b6561b710cf2f7bfc487b",
+   "sequence": 22
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000023-448f15ecd195",
+   "parsed_label": "CONFIRM",
+   "prompt_sha256": "df8fa0df225070df8c6be8a48e91b391bea23121591ea1ce655c511e664d3b17",
+   "raw_output_sha256": "8adb7edfc88fd8916a0ed2679b63f52b0ae69a9f042b6561b710cf2f7bfc487b",
+   "sequence": 23
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000024-11343e90a50e",
+   "parsed_label": "CONFIRM",
+   "prompt_sha256": "97bb726e8ad7d2b207d3304afe5e795e976cf50e6398fa4d73db718a58006e94",
+   "raw_output_sha256": "8adb7edfc88fd8916a0ed2679b63f52b0ae69a9f042b6561b710cf2f7bfc487b",
+   "sequence": 24
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000025-a4a2cf371336",
+   "parsed_label": "REFUSE",
+   "prompt_sha256": "2682b85c78dd7c8acbe88faf721bc7b5dc878ce9b57468c9f06f6bdb893ee52d",
+   "raw_output_sha256": "9092bec2ae8859f01e5a0d6e8994f90d4f0bb21b3604b77743b8804dd27144eb",
+   "sequence": 25
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000026-ab4999c12aa0",
+   "parsed_label": "CONFIRM",
+   "prompt_sha256": "26299e4c6da64ecbda28d83c7a26df98db630b1993ec93a207f347a93a0a31dc",
+   "raw_output_sha256": "8adb7edfc88fd8916a0ed2679b63f52b0ae69a9f042b6561b710cf2f7bfc487b",
+   "sequence": 26
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000027-112694e7e0ad",
+   "parsed_label": "REFUSE",
+   "prompt_sha256": "5f5d6a7de35f6302bf6f5ac092698a12ffc8bae9c0782d297007c8a5d306a6d0",
+   "raw_output_sha256": "9092bec2ae8859f01e5a0d6e8994f90d4f0bb21b3604b77743b8804dd27144eb",
+   "sequence": 27
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000028-4caad9174f2d",
+   "parsed_label": "CONFIRM",
+   "prompt_sha256": "d1c93b411c19cdc96be247d422492e815051849f8a30e7b84d418f3dc2d6be0b",
+   "raw_output_sha256": "8adb7edfc88fd8916a0ed2679b63f52b0ae69a9f042b6561b710cf2f7bfc487b",
+   "sequence": 28
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000029-6c2e651ba12f",
+   "parsed_label": "REFUSE",
+   "prompt_sha256": "fc4fc15d44188c3d849aa42299660d33ffcd6604e07ae6ef345411c9dd8cd4f5",
+   "raw_output_sha256": "9092bec2ae8859f01e5a0d6e8994f90d4f0bb21b3604b77743b8804dd27144eb",
+   "sequence": 29
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000030-a8a7f0776e97",
+   "parsed_label": "REFUSE",
+   "prompt_sha256": "30d2605e83ee150d4979994e670c82fa91f97d066568a2f75fe97bf196f3c938",
+   "raw_output_sha256": "9092bec2ae8859f01e5a0d6e8994f90d4f0bb21b3604b77743b8804dd27144eb",
+   "sequence": 30
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000031-273fa52b420f",
+   "parsed_label": "REFUSE",
+   "prompt_sha256": "9711551903a61f1210f46670186f42c4e4f573b9e42ded936e6d66cf39995a35",
+   "raw_output_sha256": "9092bec2ae8859f01e5a0d6e8994f90d4f0bb21b3604b77743b8804dd27144eb",
+   "sequence": 31
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000032-8aba92819e29",
+   "parsed_label": "REFUSE",
+   "prompt_sha256": "eb207a1f631a0182a0ec61c2854e4e98caa205f54b04e7d18c26aa59b70424d8",
+   "raw_output_sha256": "9092bec2ae8859f01e5a0d6e8994f90d4f0bb21b3604b77743b8804dd27144eb",
+   "sequence": 32
+  }
+ ],
+ "per_item_results_sha256": "5b41ff43804141ed7c33f739e9829579e5825c7cbfcc9b28dca5efe5955dc3fd",
+ "produced_at": "2026-09-29T16:49:51Z",
+ "produced_by": "oracle-micro-2 ~/lanes/gspc-continuous/build_declarations.py (lane gspc-continuous-20260929)",
+ "run_id": "20260929T152933.175360Z-822456e1d6",
+ "runtime": {
+  "bank_sha256": "9aafd224f011f5a7f709e39efbee35e3f71b56c320a2d4fb69e5cbcd6667e8dd",
+  "code_commit": "8731272286d2745bebe45f124d7a96890a1a4077",
+  "cpu_count": 4,
+  "cpu_model": "Intel(R) Xeon(R) CPU @ 2.20GHz",
+  "decode": {
+   "keyword_max_tokens": 1024,
+   "max_tokens": 128,
+   "seed": 0,
+   "temperature": 0
+  },
+  "device": "cpu",
+  "docker_image": "gcr.io/kaggle-images/python@sha256:dafd4ce5668bbf1ad422e4c109e0f18c9623c3a7c7f48b0235f13142755c40b9",
+  "environment_json_sha256": "75428236c5fd3174386894b9ce8dfa4810183d9e076da0d2bf00890c32ccd419",
+  "finished_at": "2026-09-29T16:46:54Z",
+  "gpu": null,
+  "hardware": "CPU only: Intel(R) Xeon(R) CPU @ 2.20GHz x4; no accelerator",
+  "kernel": "nicktempleman/csoai-mill-kaggle-daily-cpu",
+  "ollama": "0.34.4",
+  "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+  "python": "3.12.13",
+  "recorded_by": "the kernel itself (environment.json); nothing here is inferred",
+  "runtime_id": "CPU only: Intel(R) Xeon(R) CPU @ 2.20GHz x4; no accelerator | Kaggle kernel nicktempleman/csoai-mill-kaggle-daily-cpu (private, Batch) | ollama 0.34.4",
+  "slice_id": "20260929T15-hf.co-openbmb-MiniCPM5-2B-GGUF-Q8_0",
+  "started_at": "2026-09-29T15:16:40Z",
+  "substrate": "CPU only: Intel(R) Xeon(R) CPU @ 2.20GHz x4; no accelerator | Kaggle kernel nicktempleman/csoai-mill-kaggle-daily-cpu (private, Batch) | ollama 0.34.4"
+ },
+ "schema": "csoai.mill-runtime-declaration/0.1",
+ "status": "SIDECAR - not inside the card: the intake contract pins the card body/run.json key sets exactly",
+ "subject": "ollama:hf.co/openbmb/MiniCPM5-2B-GGUF:Q8_0@sha256:c7e50c7ffebc34187452ed4946b57622e7a820bed89ef49a19c52c0b3a9698e0"
+}

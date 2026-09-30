@@ -219,9 +219,9 @@ export default function ToolCommons() {
       </section>
 
       <section className="mx-auto max-w-4xl px-6 py-8">
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {matches.map((m: any) => (
-            <div key={`${m.server}:${m.name}`} className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-4">
+            <div key={`${m.server}:${m.name}`} className="min-w-0 rounded-2xl border border-emerald-500/20 bg-[#05140d] p-4">
               <div className="flex items-center justify-between gap-2">
                 <div className="truncate font-mono text-sm font-bold text-emerald-100">{m.name}</div>
                 <span className="shrink-0 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold text-emerald-300">{m.status || "probed"}</span>
@@ -230,11 +230,11 @@ export default function ToolCommons() {
               <div className="mt-1 font-mono text-[11px] text-emerald-300/60">{m.server}</div>
               {m.server_endpoint && (
                 <div className="mt-3 flex items-center gap-2">
-                  <code className="flex-1 truncate rounded-lg bg-black/40 px-2.5 py-1.5 text-[11px] text-emerald-300/80">{m.server_endpoint}</code>
+                  <code className="min-w-0 flex-1 truncate rounded-lg bg-black/40 px-2.5 py-1.5 text-[11px] text-emerald-300/80">{m.server_endpoint}</code>
                   <button onClick={() => copy(m.server_endpoint, m.name)} className="shrink-0 rounded-lg bg-emerald-500 px-2.5 py-1.5 text-[11px] font-bold text-[#03110b] hover:bg-emerald-400">{copied === m.name ? "Copied" : "Copy"}</button>
                 </div>
               )}
-              {m.last_probed && <div className="mt-2 text-[10px] text-emerald-300/50">last probed {m.last_probed}</div>}
+              {m.last_probed && <div className="mt-2 text-[10px] text-emerald-300/70">last probed {m.last_probed}</div>}
             </div>
           ))}
         </div>

@@ -24,8 +24,11 @@
  *   *PushNotificationConfig -> PushNotificationNotSupportedError (-32003).
  *   GetExtendedAgentCard    -> UnsupportedOperationError (-32004): extendedAgentCard is false.
  *   anything else           -> -32601.
- *   A2A-Version other than 1.0 -> VersionNotSupportedError (-32009). The 0.3 method names
- *   (`message/send`) get the same error with the fix named, not a bare -32601.
+ *   A2A-Version other than 1.0 -> VersionNotSupportedError (-32009), EXCEPT the 0.3 wire shape:
+ *   a 0.3 method name (`message/send`, `tasks/get`, ...) with no A2A-Version header or a 0.x one
+ *   is served through a compatibility shim (2026-09-29) — 0.3 parts ({kind:"text"|"data"}) are
+ *   mapped onto the v1.0 handler and the answer comes back as a 0.3 Message ({kind:"message",
+ *   role:"agent"}). Most A2A SDK clients in the wild still speak 0.3, and they were all refused.
  *
  * WHAT IT IS NOT
  *   Not a task runner, not streaming, not signed-receipts/v1: no receipt is attached until a
@@ -33,6 +36,10 @@
  *   is actually emitted. Measurement, not certification: every reply carries the register text
  *   and nothing ranked. Numbers are derived at request time, never typed here.
  */
+
+import { DOCTRINE, measurementIndex, serverEvidence, verifyCapsule } from "../_lib/measurementCapsule";
+import { executePlan, routeIntent, type Plan } from "../_lib/talkRouter";
+import { recordUsage } from "../_lib/usage";
 
 type Json = Record<string, unknown>;
 
@@ -72,7 +79,9 @@ export const A2A_ERROR = {
 // can read the contract before sending anything.
 export const METHODS: Record<string, string> = {
   SendMessage:
-    "answered with a Message from one explicit {skill,input} selector; every card skill routes to a fixed, free, " +
+    "answered with a Message from one explicit {skill,input} selector, or from one plain-text Part that the shared " +
+    "deterministic router (functions/_lib/talkRouter.ts, also behind POST /api/chat and POST /api/agui/run) places on a " +
+    "POST /mcp tool, quoting that tool's output with a citation; text it cannot place is refused. Every card skill routes to a fixed, free, " +
     "same-origin handler. The set is the skills array on this response - read it rather than a number: this " +
     "string once named a smaller figure than SKILL_IDS actually held, and scripts/capability-registry.mjs --check " +
     "now fails on any skill count typed into this file.",
@@ -88,6 +97,58 @@ export const METHODS: Record<string, string> = {
   GetExtendedAgentCard: "UnsupportedOperationError -32004 (extendedAgentCard is false)",
 };
 
+/**
+ * The A2A 0.3 method names and the v1.0 method each is served as. Used only when the request has
+ * no A2A-Version header or a 0.x one (the 0.3 wire shape); a request that declares 1.0 must use
+ * the 1.0 names.
+ */
+export const V03_METHODS: Record<string, string> = {
+  "message/send": "SendMessage",
+  "message/stream": "SendStreamingMessage",
+  "tasks/get": "GetTask",
+  "tasks/cancel": "CancelTask",
+  "tasks/resubscribe": "SubscribeToTask",
+  "tasks/pushNotificationConfig/set": "CreateTaskPushNotificationConfig",
+  "tasks/pushNotificationConfig/get": "GetTaskPushNotificationConfig",
+  "tasks/pushNotificationConfig/list": "ListTaskPushNotificationConfigs",
+  "tasks/pushNotificationConfig/delete": "DeleteTaskPushNotificationConfig",
+  "agent/getAuthenticatedExtendedCard": "GetExtendedAgentCard",
+};
+const isLegacyVersionHeader = (v: string): boolean => v === "" || /^0\.[23](\.\d+)*$/.test(v);
+
+/** 0.3 Message -> v1.0 Message: parts {kind:"text",text} -> {text}, {kind:"data",data} -> {data}. */
+export function v03MessageToV1(m: Json): Json {
+  const parts = Array.isArray(m.parts)
+    ? m.parts.map((raw) => {
+        const p = record(raw);
+        if (!p) return raw;
+        const { kind, metadata: _metadata, ...rest } = p;
+        if (kind === "text") return { text: rest.text };
+        if (kind === "data") return { data: rest.data };
+        if (kind === "file") {
+          const f = record(rest.file);
+          return str(f?.uri) ? { url: f?.uri } : { raw: f?.bytes ?? null };
+        }
+        return rest;
+      })
+    : m.parts;
+  const { kind: _kind, role, ...rest } = m;
+  return { ...rest, role: role === "user" ? "ROLE_USER" : role === "agent" ? "ROLE_AGENT" : role, parts };
+}
+
+/** v1.0 Message -> 0.3 Message, so a 0.3 client can read the answer it asked for. */
+export function v1MessageTo03(m: Json): Json {
+  const parts = Array.isArray(m.parts)
+    ? m.parts.map((raw) => {
+        const p = record(raw) ?? {};
+        if ("text" in p) return { kind: "text", text: p.text };
+        if ("data" in p) return { kind: "data", data: p.data };
+        return { kind: "data", data: p };
+      })
+    : [];
+  return { kind: "message", messageId: m.messageId, contextId: m.contextId, role: "agent", parts };
+}
+
 const record = (v: unknown): Json | null =>
   v && typeof v === "object" && !Array.isArray(v) ? (v as Json) : null;
 const str = (v: unknown): string | null => (typeof v === "string" && v ? v : null);
@@ -96,18 +157,29 @@ const numOrNull = (v: unknown): number | null => (typeof v === "number" && Numbe
 export const SKILL_IDS = [
   "gspc-board",
   "east-west-crosswalk",
-  "measured-badge",
+  "card-status-link",
   "benchmark-quality-register",
   "article50-detect",
   "eu-ai-act-screen",
   "x402-discovery",
   "estate-index",
+  "measurement-capsules",
+  "server-evidence",
 ] as const;
 type SkillId = (typeof SKILL_IDS)[number];
 const SKILL_ID_SET = new Set<string>(SKILL_IDS);
+/**
+ * Former skill ids a caller may still send. Not on the card and not in SKILL_IDS (the card and the
+ * router stay equal as sets); resolved to the current id before routing so an old integration keeps
+ * working. 30 Sep 2026: "measured-badge" → "card-status-link" — the doctrine has no mark, badge or
+ * grade, and the skill returns a card-bound state and a link, not a badge of approval.
+ */
+export const LEGACY_SKILL_IDS: Readonly<Record<string, SkillId>> = { "measured-badge": "card-status-link" };
 
 type SkillSelection = { skill: SkillId; input: Json };
 type CapabilityHelp = { kind: "CAPABILITY_HELP" };
+/** A plain-text question the shared router places on one of the /mcp tools (2026-09-29). */
+type TalkSelection = { kind: "TALK"; text: string; plan: Plan };
 
 class SourceError extends Error {
   constructor(
@@ -275,7 +347,26 @@ const exactKeys = (input: Json, required: string[], optional: string[] = []): bo
     && Object.keys(input).every((key) => allowed.has(key));
 };
 
-function parseSkillSelection(message: Json): SkillSelection | CapabilityHelp | string {
+/**
+ * A greeting or capability question — the whole message, not a substring, so a sentence that
+ * merely contains "hi" never selects anything. Punctuation and case are ignored.
+ */
+const GREETING_WORDS = ["hello", "hi", "hey", "greetings", "good morning", "good afternoon", "good evening", "help"];
+const CAPABILITY_QUESTIONS = ["what can you do", "what do you do", "what are your skills", "what are your capabilities", "capabilities", "skills", "list skills"];
+export const GREETING_EXAMPLES = "hello, hi, hey, help, what can you do?";
+export function isCapabilityGreeting(text: string): boolean {
+  const t = text.toLowerCase().replace(/[^a-z ]+/g, " ").replace(/\s+/g, " ").trim();
+  if (!t) return false;
+  const tail = (rest: string) => rest === "" || rest === "there" || CAPABILITY_QUESTIONS.includes(rest);
+  if (CAPABILITY_QUESTIONS.includes(t)) return true;
+  for (const g of GREETING_WORDS) {
+    if (t === g) return true;
+    if (t.startsWith(`${g} `) && tail(t.slice(g.length + 1))) return true;
+  }
+  return false;
+}
+
+function parseSkillSelection(message: Json): SkillSelection | CapabilityHelp | TalkSelection | string {
   const parts = Array.isArray(message.parts) ? message.parts : [];
   if (parts.length !== 1) {
     return "exactly one Part is required; additional semantic parts are not ignored";
@@ -290,12 +381,19 @@ function parseSkillSelection(message: Json): SkillSelection | CapabilityHelp | s
   if (semanticKeys[0] === "text") {
     const text = str(part.text)?.trim().replace(/\s+/g, " ").toLowerCase();
     if (text === "board") return { skill: "gspc-board", input: {} };
-    // A2A directory task probes send this generic greeting. Answer with the
+    // A2A directory task probes and first-contact agents send a greeting. Answer with the
     // declared capability contract, never with a measurement or a guessed skill.
-    if (text === "hello, what can you do?" || text === "what can you do?" || text === "help") {
-      return { kind: "CAPABILITY_HELP" };
-    }
-    return "structured Part.data {skill,input} is required (text accepts only board or a capability-help greeting)";
+    // Until 2026-09-26 only three exact strings qualified, so a bare "hello" got
+    // INVALID_SKILL_SELECTOR while the error text itself said greetings were accepted.
+    if (text !== undefined && isCapabilityGreeting(text)) return { kind: "CAPABILITY_HELP" };
+    // ALL other text goes through the SAME deterministic router as POST /api/chat: a question that
+    // names something a /mcp tool answers (the board, an axis, a card id, a server) is answered by
+    // that tool in-process. Text it cannot place is answered with a result that says so and lists
+    // what it can answer (state NO_TOOL_MATCHED) — never a guessed skill, never a measurement.
+    // Until 2026-09-29 that case was a -32602 error, which a2aregistry.org recorded against this
+    // agent as "Returning errors when contacted by users".
+    const raw = str(part.text)?.trim() ?? "";
+    return { kind: "TALK", text: raw, plan: routeIntent(raw) };
   }
   if (semanticKeys[0] !== "data") {
     return `Part.${semanticKeys[0]} is not supported; use structured Part.data {skill,input}`;
@@ -303,7 +401,8 @@ function parseSkillSelection(message: Json): SkillSelection | CapabilityHelp | s
   const selector = record(part.data);
   if (!selector) return "Part.data must be an object containing {skill,input}";
   if (!exactKeys(selector, ["skill", "input"])) return "selector must contain exactly {skill,input}";
-  const skill = str(selector.skill);
+  const asked = str(selector.skill);
+  const skill = asked && Object.prototype.hasOwnProperty.call(LEGACY_SKILL_IDS, asked) ? LEGACY_SKILL_IDS[asked] : asked;
   if (!skill || !SKILL_ID_SET.has(skill)) return `unknown skill; choose one of: ${SKILL_IDS.join(", ")}`;
   const input = record(selector.input);
   if (!input) return "selector.input must be an object";
@@ -318,11 +417,11 @@ function validateSkillInput(selection: SkillSelection): string | null {
   if (["gspc-board", "east-west-crosswalk", "benchmark-quality-register", "x402-discovery", "estate-index"].includes(skill)) {
     return Object.keys(input).length === 0 ? null : `${skill} input must be an empty object`;
   }
-  if (skill === "measured-badge") {
-    if (!exactKeys(input, ["card", "subject"])) return "measured-badge input requires exactly card and subject";
-    if (!/^[0-9a-f]{64}$/i.test(str(input.card) ?? "")) return "measured-badge card must be a 64-hex signed-card hash";
+  if (skill === "card-status-link") {
+    if (!exactKeys(input, ["card", "subject"])) return "card-status-link input requires exactly card and subject";
+    if (!/^[0-9a-f]{64}$/i.test(str(input.card) ?? "")) return "card-status-link card must be a 64-hex signed-card hash";
     if (!/^[^\s/@]+\/[^\s@]+@[0-9a-f]{40}(?:[0-9a-f]{24})?$/i.test(str(input.subject) ?? "")) {
-      return "measured-badge subject must be owner/model@40-or-64-hex-immutable-revision";
+      return "card-status-link subject must be owner/model@40-or-64-hex-immutable-revision";
     }
     return null;
   }
@@ -341,6 +440,23 @@ function validateSkillInput(selection: SkillSelection): string | null {
     if (!system || system.trim().length < 8 || system.length > 4_000) {
       return "eu-ai-act-screen system must be 8 to 4000 characters";
     }
+    return null;
+  }
+  // The measurement-capsule readers: the same module (functions/_lib/measurementCapsule.ts) as the
+  // MCP tools measurement_index / verify_capsule / server_evidence, so the doors cannot disagree.
+  if (skill === "measurement-capsules") {
+    if (exactKeys(input, ["op"]) && input.op === "index") return null;
+    if (exactKeys(input, ["op", "capsule_json"]) && input.op === "verify") {
+      const c = input.capsule_json;
+      if (typeof c === "string" ? c.length > 0 && c.length <= 262_144 : !!record(c)) return null;
+      return "measurement-capsules capsule_json must be the capsule's JSON text (<= 256 KiB) or an object";
+    }
+    return 'measurement-capsules input is {"op":"index"} or {"op":"verify","capsule_json":<capsule JSON text or object>}';
+  }
+  if (skill === "server-evidence") {
+    if (!exactKeys(input, ["endpoint_url"])) return "server-evidence input requires exactly endpoint_url";
+    const u = str(input.endpoint_url);
+    if (!u || u.length > 2_048) return "server-evidence endpoint_url must be a non-empty string of at most 2048 characters";
     return null;
   }
   return "unsupported skill";
@@ -472,6 +588,22 @@ async function invokeSkill(selection: SkillSelection, origin: string): Promise<{
   data: unknown;
 }> {
   const { skill, input } = selection;
+  if (skill === "measurement-capsules" || skill === "server-evidence") {
+    const payload =
+      skill === "server-evidence"
+        ? await serverEvidence(origin, input.endpoint_url)
+        : input.op === "verify"
+          ? await verifyCapsule(origin, input.capsule_json)
+          : await measurementIndex(origin);
+    return {
+      text: [
+        `${skill}: ${String(payload.state)} — re-derived by this router from the static measurement-capsule files on ${origin}/measurement-capsules/ (ids, Merkle inclusion and the index signature are recomputed, not relayed).`,
+        `Doctrine: ${DOCTRINE}. States only; no verdict, score or ranking.`,
+        REGISTER,
+      ].join("\n"),
+      data: { state: payload.state, skill, as_of: new Date().toISOString(), doctrine: DOCTRINE, register: REGISTER, payload },
+    };
+  }
   if (skill === "gspc-board") {
     const board = await deriveBoard(origin);
     return { text: boardText(board), data: { ...board, skill } };
@@ -484,7 +616,7 @@ async function invokeSkill(selection: SkillSelection, origin: string): Promise<{
     case "east-west-crosswalk":
       path = "/api/cross";
       break;
-    case "measured-badge": {
+    case "card-status-link": {
       const query = new URLSearchParams({
         format: "json",
         card: String(input.card),
@@ -563,6 +695,34 @@ async function sendMessage(id: unknown, params: unknown, origin: string): Promis
   if (typeof selection === "string") {
     return rpcError(id, A2A_ERROR.INVALID_PARAMS, selection, "INVALID_SKILL_SELECTOR", {
       field: "params.message.parts",
+    });
+  }
+  if ("kind" in selection && selection.kind === "TALK") {
+    const t = await executePlan(selection.plan, origin);
+    return reply(id, {
+      result: {
+        message: {
+          messageId: crypto.randomUUID(),
+          contextId: str(message.contextId) ?? crypto.randomUUID(),
+          role: "ROLE_AGENT",
+          parts: [
+            { text: t.answer, mediaType: "text/plain" },
+            {
+              data: {
+                kind: t.grounded ? "GROUNDED_TOOL_ANSWER" : t.kind === "needs_input" ? "NEEDS_INPUT" : "NO_TOOL_MATCHED",
+                state: t.grounded ? "grounded" : t.kind === "needs_input" ? "needs_input" : "unknown",
+                intent: t.intent,
+                label: t.label,
+                answered_by: t.answered_by,
+                citations: t.citations,
+                tool_calls: t.tool_calls,
+                register: REGISTER,
+              },
+              mediaType: "application/json",
+            },
+          ],
+        },
+      },
     });
   }
   if ("kind" in selection) {
@@ -653,7 +813,8 @@ export const onRequestGet: PagesFunction = async (context) => {
     // sentence on this endpoint states how many there are.
     skills: [...SKILL_IDS],
     version_rule:
-      "Send `A2A-Version: 1.0`. Per A2A v1.0, an absent or empty header means 0.3, which this interface does not serve; it returns VersionNotSupportedError -32009. The 0.3 method names such as message/send are also unsupported.",
+      "Send `A2A-Version: 1.0`. Per A2A v1.0, an absent or empty header means 0.3. A v1.0 method name sent as 0.3 returns VersionNotSupportedError -32009. The 0.3 wire shape itself is served: a 0.3 method name (message/send, tasks/get, ...) with no header or a 0.x one is mapped onto the 1.0 handler and answered as a 0.3 Message; a request that declares 1.0 must use the 1.0 names.",
+    compat_0_3: Object.keys(V03_METHODS),
     tasks: "none kept — every SendMessage answers with a Message, so GetTask can only ever say TaskNotFound",
     register: REGISTER,
     example: {
@@ -672,8 +833,7 @@ export const onRequestGet: PagesFunction = async (context) => {
   return new Response(JSON.stringify(body, null, 2), { status: 200, headers: HEADERS });
 };
 
-export const onRequestPost: PagesFunction = async (context) => {
-  const { request } = context;
+export async function handlePost(request: Request): Promise<Response> {
   const origin = new URL(request.url).origin;
 
   let parsed: unknown;
@@ -702,6 +862,10 @@ export const onRequestPost: PagesFunction = async (context) => {
   }
 
   const requested = (request.headers.get("a2a-version") ?? "").trim();
+  // The 0.3 wire shape: a 0.3 method name with no version header (or a 0.x one).
+  if (isLegacyVersionHeader(requested) && Object.prototype.hasOwnProperty.call(V03_METHODS, method)) {
+    return serveV03(id, method, req.params, origin);
+  }
   if (!requested) {
     return rpcError(
       id,
@@ -730,12 +894,16 @@ export const onRequestPost: PagesFunction = async (context) => {
     );
   }
 
+  return dispatchV1(id, method, req.params, origin);
+}
+
+async function dispatchV1(id: unknown, method: string, params: unknown, origin: string): Promise<Response> {
   switch (method) {
     case "SendMessage":
-      return sendMessage(id, req.params, origin);
+      return sendMessage(id, params, origin);
     case "GetTask":
     case "CancelTask": {
-      const taskId = str(record(req.params)?.id) ?? null;
+      const taskId = str(record(params)?.id) ?? null;
       return rpcError(id, A2A_ERROR.TASK_NOT_FOUND, "task not found: this agent keeps no task store; every SendMessage answers with a Message", "TASK_NOT_FOUND", { taskId });
     }
     case "ListTasks":
@@ -751,4 +919,47 @@ export const onRequestPost: PagesFunction = async (context) => {
       }
       return rpcError(id, A2A_ERROR.METHOD_NOT_FOUND, `method not found: ${method}`, "METHOD_NOT_FOUND", { method, known: Object.keys(METHODS) });
   }
+}
+
+/**
+ * Serve a 0.3-shaped request through the v1.0 handler. The request message is mapped to v1.0,
+ * the SAME dispatch answers it, and a Message result is mapped back to the 0.3 shape (the 0.3
+ * `result` of message/send is the Message itself). Errors keep their JSON-RPC codes, which 0.3
+ * and 1.0 share.
+ */
+async function serveV03(id: unknown, method: string, params: unknown, origin: string): Promise<Response> {
+  const p = record(params);
+  let v1Params: unknown = params;
+  if (method === "message/send" || method === "message/stream") {
+    const m = record(p?.message);
+    const normalized = m && !str(m.messageId) ? { ...m, messageId: crypto.randomUUID() } : m;
+    v1Params = normalized ? { message: v03MessageToV1(normalized) } : {};
+  }
+  const res = await dispatchV1(id, V03_METHODS[method], v1Params, origin);
+  const body = record(await res.json()) ?? {};
+  const result = record(body.result);
+  const message = record(result?.message);
+  const out = message ? { ...body, result: v1MessageTo03(message) } : body;
+  return new Response(JSON.stringify(out, null, 2), {
+    status: res.status,
+    headers: { ...HEADERS, "a2a-version": "0.3", "x-a2a-compat": "0.3 request served by the 1.0 handler" },
+  });
+}
+
+export const onRequestPost: PagesFunction = async (context) => {
+  const res = await handlePost(context.request);
+  // Aggregate usage (functions/_lib/usage.ts): wire shape + ok / error code. No text, no caller id.
+  const ctx = context as unknown as { request: Request; env?: unknown; waitUntil?: (p: Promise<unknown>) => void };
+  if (ctx.env && ctx.waitUntil) {
+    const shape = res.headers.get("a2a-version") === "0.3" ? "v0.3" : "v1.0";
+    ctx.waitUntil(
+      res.clone().json()
+        .then((j) => {
+          const code = (record(record(j)?.error) ?? {}).code;
+          recordUsage(ctx, "a2a_outcome", `${shape}_${typeof code === "number" ? `error${code}` : "ok"}`);
+        })
+        .catch(() => undefined),
+    );
+  }
+  return res;
 };

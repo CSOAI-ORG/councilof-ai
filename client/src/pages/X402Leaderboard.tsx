@@ -72,10 +72,14 @@ export default function X402Leaderboard() {
     <div className="min-h-screen bg-slate-950 text-slate-100 px-6 py-10">
       <div className="max-w-5xl mx-auto">
         <p className="font-mono text-xs uppercase tracking-widest text-emerald-400">
-          Measurement, never certification
+          ARCHIVE · measurement, never certification
         </p>
         <h1 className="mt-3 text-4xl font-bold">x402 Conformance Board</h1>
         <p className="mt-4 max-w-3xl text-slate-300">{board.definition}</p>
+        <p className="mt-3 max-w-3xl text-sm text-slate-400">
+          An archived observation from {board.observed_at}, not a live read. Amounts are not shown on this page:
+          an amount appears only inside each door&apos;s own 402 challenge, which you can request yourself.
+        </p>
 
         <section className="mt-10 rounded-lg border border-slate-800 bg-slate-900/40 p-6">
           <h2 className="text-xl font-semibold mb-2">Observed doors</h2>
@@ -89,7 +93,7 @@ export default function X402Leaderboard() {
                   <th className="py-2 pr-3">Accepts</th>
                   <th className="py-2 pr-3">Network</th>
                   <th className="py-2 pr-3">Asset</th>
-                  <th className="py-2 pr-3">Atomic amount</th>
+                  <th className="py-2 pr-3">Amount in challenge</th>
                   <th className="py-2 pr-3">Bazaar</th>
                 </tr>
               </thead>
@@ -101,7 +105,7 @@ export default function X402Leaderboard() {
                     <td className="py-2 pr-3">{r.accepts_count}</td>
                     <td className="py-2 pr-3 font-mono text-xs">{r.network ?? "—"}</td>
                     <td className="py-2 pr-3">{r.asset ?? "—"}</td>
-                    <td className="py-2 pr-3 font-mono">{r.amount_atomic ?? "—"}</td>
+                    <td className="py-2 pr-3">{r.amount_atomic !== null && r.amount_atomic !== undefined ? "stated" : "absent"}</td>
                     <td className="py-2 pr-3">{r.bazaar_extension ? "PASS" : "MISSING"}</td>
                   </tr>
                 ))}

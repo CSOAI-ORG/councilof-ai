@@ -821,7 +821,7 @@ export default function ToolRunner({
                               {meta.label}
                             </span>
                             <code
-                              className={`block truncate text-[9px] ${selected ? "text-emerald-50/70" : "text-slate-500"}`}
+                              className={`block truncate text-[9px] ${selected ? "text-emerald-50/90" : "text-slate-500"}`}
                             >
                               {tool.name}
                             </code>

@@ -1,0 +1,52 @@
+{
+ "schema": "csoai.measurement-capsule-batch/0.2",
+ "as_of": "2026-09-26T06:16:32Z",
+ "capsule_schema": "csoai.measurement-capsule/0.2",
+ "adapter": "mill_cross_runtime",
+ "kind": "measurement.cross_runtime_reproduction",
+ "n_capsules": 14,
+ "states": {
+  "NOT_REPRODUCED": 7,
+  "REPRODUCED_AGGREGATE_ONLY": 2,
+  "REPRODUCED_ITEMWISE": 5
+ },
+ "merkle_root": "5ae00c1f4c2ed290fb91206f29372d0df3e61478c568d4797855502e751ebff6",
+ "merkle": "RFC 6962 Merkle Tree Hash over the capsule_id leaves (32 bytes each) sorted ascending: leaf = SHA-256(0x00 || capsule_id), node = SHA-256(0x01 || left || right); for n > 1 leaves the split is at k = the largest power of two smaller than n (RFC 6962 section 2.1), so no leaf is promoted or duplicated; one leaf = its leaf hash; empty = SHA-256 of the empty string",
+ "canonicalisation": {
+  "rule": "JSON, object keys sorted, no insignificant whitespace, UTF-8, non-ASCII unescaped; every capsule's bytes are checked byte-equal to its RFC 8785 (JCS) serialisation at build and at verify",
+  "jcs_byte_equal": "14/14",
+  "checked_with": "rfc8785 0.1.4 (independent RFC 8785 implementation)"
+ },
+ "capsules_file": {
+  "path": "capsules.jsonl.gz",
+  "sha256": "a8dc6d18a2835c8bead883b17c5a71257da40faf63381bce2f0f98e6ab366c8d",
+  "bytes": 8040,
+  "uncompressed_sha256": "b5357a158c7b1fbbdde5aab2ca80c90e5e331dadaeceed4e0ac23e3606d4eed7",
+  "uncompressed_bytes": 42857,
+  "format": "gzip (mtime 0, no filename, level 9) of canonical JSON lines sorted by capsule_id"
+ },
+ "authority_state": "NONE: measurement only; this capsule grants and records no execution authority",
+ "what_this_is": "Cross-runtime reproduction of signed mill cards: same model digest, instrument and bank on two runtimes.",
+ "what_this_is_not": "Not a grade of the model or of any runtime vendor. It measures whether each card's result survived a change of runtime, item by item.",
+ "source": {
+  "declarations_dir": "/evac-bulk/mill-kaggle-nemo-2026-09-26/decl",
+  "declarations": 14,
+  "declarations_sha256": {
+   "runtime-declaration-affect.json": "ff07c6fd37df1ab0dbe6dda926be8265b96711b8c66fccf7aa28999547eee199",
+   "runtime-declaration-art5-safeguard.json": "adad38a4a6ca59542ed9ab73d62123ce9ea5c911fdc6e38f6e92a9dae9106c76",
+   "runtime-declaration-care.json": "bc0e67cf15bbf7bfd16d9f6b822a5e6399fc386be1b5aec81eef8f5af8c11f9c",
+   "runtime-declaration-conformance.json": "39e1f5f825da1f0ac9033b8b3542d6bf471d876d28eedf5c116888134d6eeaf2",
+   "runtime-declaration-continuity.json": "6aa7a57890d8870cf496ecd01518127aa6c9c4dcf6592da9c9cad24319a75fb2",
+   "runtime-declaration-cross-reality.json": "30b04d0f63d49a1acfc253c950838c986505e5e0aee09c392a422a908bddb4eb",
+   "runtime-declaration-detector-interop.json": "3de85cad100ce89381e0d4f04092d47a73603e2d3aa36a80293fc9fe50ece829",
+   "runtime-declaration-governance.json": "a3f9b0a897714679277d41f313221c370796ddfbb06048cd348ee17032fda4f6",
+   "runtime-declaration-jail.json": "b884fffdc8713beb0be28ff9bee1e867b84f51150c58883b11d84ede3e451f0b",
+   "runtime-declaration-machinery-conformity.json": "03b9f444afc405bb2b7445ab2096a6b9f093c16def017a2f6ea201bef86dd183",
+   "runtime-declaration-openness.json": "7fe30789eca5fb6937fab12c34328b6bee85466f3e86f71e3b5660613c82b3be",
+   "runtime-declaration-provenance.json": "12cd2e663a36c07867c0202dd4274729d331a9b15660cd8561fd504e80985b2c",
+   "runtime-declaration-safety.json": "d18580a942dbe3933139613b8db181b4fece83313231edbde9808645ea167b91",
+   "runtime-declaration-swarm.json": "c868b3070cb9d8325be18bd27407ca1a621b8a6c74bafd65202917fb403050d7"
+  }
+ },
+ "private_until": "owner approves publication"
+}

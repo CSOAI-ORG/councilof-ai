@@ -20,9 +20,12 @@ anywhere but a one-hour local cache of the public index.
 
 ## Load unpacked (developer mode)
 
-1. `git clone https://github.com/CSOAI-ORG/councilof-ai` (or use an existing checkout).
+1. Download <https://councilof.ai/downloads/gspc-verify-0.1.1.zip> and unzip it into a folder
+   (or use an existing checkout of this repository: the folder is `extensions/chrome-gspc-verify/`).
+   The zip is rebuilt from this folder by `python3 scripts/build-extension-zip.py`, and
+   `tests/test_extension_zip.py` fails if the published bytes drift from it.
 2. Open `chrome://extensions`, switch on **Developer mode** (top right).
-3. **Load unpacked** → choose the folder `extensions/chrome-gspc-verify/`.
+3. **Load unpacked** → choose the unzipped folder (the one holding `manifest.json`).
 4. Pin the action; click it for the board and the verify box. Open any
    `https://huggingface.co/<org>/<model>` page for the badge (bottom-right).
 

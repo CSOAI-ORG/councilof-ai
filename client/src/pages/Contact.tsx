@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Mail, Phone, MapPin, Clock, Send } from 'lucide-react';
+import { Mail, MapPin, Clock, Send } from 'lucide-react';
+import PlainEmail, { CONTACT_MAILBOX } from '@/components/PlainEmail';
+import { enquiryPreset, prepareContactEmail } from '@/lib/pilotEnquiry';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -13,22 +15,13 @@ export default function Contact() {
   });
 
   useEffect(() => {
-    document.title = 'Contact Us - CSOAI';
-    const arm = new URLSearchParams(window.location.search).get("arm");
-    const subjects: Record<string, string> = {
-      ledger: "Ledger enquiry",
-      data: "Data enquiry",
-      run: "Run / re-attest enquiry",
-    };
-    if (arm && subjects[arm]) {
-      setFormData((prev) => ({
-        ...prev,
-        subject: subjects[arm],
-        message:
-          prev.message ||
-          `Enquiry for the ${arm} arm. Verify stays free. A grade is never sold.`,
-      }));
-    }
+    document.title = 'Contact — Council of AI';
+    const preset = enquiryPreset(window.location.search);
+    if (preset) setFormData((prev) => ({
+      ...prev,
+      subject: prev.subject || preset.subject,
+      message: prev.message || preset.message,
+    }));
   }, []);
 
   const fadeInUp = {
@@ -37,15 +30,10 @@ export default function Contact() {
     transition: { duration: 0.6 },
   };
 
+  const emailDraft = prepareContactEmail(formData);
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // This form has no backend endpoint — it opens the visitor's email client with a
-    // prefilled message to contact@csoai.org instead of silently dropping the submission.
-    const subject = encodeURIComponent(formData.subject || 'Website inquiry');
-    const body = encodeURIComponent(
-      `Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`
-    );
-    window.location.href = `mailto:contact@csoai.org?subject=${subject}&body=${body}`;
+    if (emailDraft.mailto) window.location.href = emailDraft.mailto;
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -54,18 +42,8 @@ export default function Contact() {
   };
 
   const contactInfo = [
-    {
-      icon: Mail,
-      title: 'Email',
-      value: 'contact@csoai.org',
-      link: 'mailto:contact@csoai.org',
-    },
-    {
-      icon: Phone,
-      title: 'Enterprise Sales',
-      value: 'enterprise@csoai.org',
-      link: 'mailto:enterprise@csoai.org',
-    },
+    // The mailbox card renders <PlainEmail /> below (plain text, not edge-obfuscated), so it is
+    // not in this list. The sales-desk card was removed 2026-09-26: one mailbox.
     {
       icon: MapPin,
       title: 'Address',
@@ -89,25 +67,34 @@ export default function Contact() {
   ];
 
   return (
-    <div className="w-full bg-white">
+    <div className="w-full bg-background text-foreground">
       {/* Hero Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-green-50 to-white">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-muted">
         <div className="max-w-4xl mx-auto text-center">
-          <motion.div {...fadeInUp}>
-            <h1 className="text-lg sm:text-xl md:text-2xl sm:text-3xl md:text-4xl md:text-4xl font-bold mb-6 text-gray-900">
-              Get in Touch
-            </h1>
-            <p className="text-xl text-gray-600">
-              Have questions or want to learn more about CSOAI? We'd love to hear from you.
-            </p>
-          </motion.div>
+          {/* Plain markup, not a motion wrapper: the heading must be visible in the prerendered
+              HTML, where an initial opacity of 0 hid it from readers without JavaScript. */}
+          <h1 className="text-3xl md:text-4xl font-bold mb-6 text-foreground">
+            Contact Council of AI (CSOAI Ltd)
+          </h1>
+          <p className="text-xl text-muted-foreground">
+            One mailbox for measurement requests, evidence questions, disputes and press:{' '}
+            <PlainEmail className="font-semibold text-green-700 underline" />. Say what you want
+            measured or checked, and link the record if there is one.
+          </p>
         </div>
       </section>
 
       {/* Contact Info Cards */}
       <section className="py-20 px-4 sm:px-6 lg:px-4 sm:px-6 md:px-8">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+            <Card className="h-full p-6 text-center">
+              <div className="bg-green-100 w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <Mail className="h-6 w-6 text-green-600" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Email</h3>
+              <p className="text-gray-600"><PlainEmail /></p>
+            </Card>
             {contactInfo.map((info, index) => (
               <motion.a
                 key={info.title}
@@ -130,14 +117,16 @@ export default function Contact() {
           {/* Contact Form */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <motion.div {...fadeInUp}>
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-8 text-gray-900">Send us a Message</h2>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-8 text-foreground">Prepare your enquiry</h2>
+              <p className="mb-6 text-sm leading-6 text-muted-foreground">Start with a public link or a non-confidential description. Do not include credentials or private customer records.</p>
               <form onSubmit={handleSubmit} className="space-y-6" data-testid="contact-form">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="contact-name" className="block text-sm font-medium text-gray-700 mb-2">
                     Name
                   </label>
                   <input
                     type="text"
+                    id="contact-name"
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
@@ -147,11 +136,12 @@ export default function Contact() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="contact-email" className="block text-sm font-medium text-gray-700 mb-2">
                     Email
                   </label>
                   <input
                     type="email"
+                    id="contact-email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
@@ -161,11 +151,12 @@ export default function Contact() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="contact-subject" className="block text-sm font-medium text-gray-700 mb-2">
                     Subject
                   </label>
                   <input
                     type="text"
+                    id="contact-subject"
                     name="subject"
                     value={formData.subject}
                     onChange={handleChange}
@@ -175,10 +166,11 @@ export default function Contact() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="contact-message" className="block text-sm font-medium text-gray-700 mb-2">
                     Message
                   </label>
                   <textarea
+                    id="contact-message"
                     name="message"
                     value={formData.message}
                     onChange={handleChange}
@@ -188,15 +180,20 @@ export default function Contact() {
                     data-testid="contact-message-input"
                   />
                 </div>
-                <Button type="submit" size="lg" className="w-full bg-green-600 hover:bg-green-700" data-testid="contact-submit-button">
+                <Button type="submit" size="lg" className="w-full bg-primary hover:bg-brand-institutional" data-testid="contact-submit-button">
                   <Send className="h-4 w-4 mr-2" />
-                  Send Message
+                  {emailDraft.mailto ? "Open email draft" : "Copy draft below"}
                 </Button>
-                <p className="text-xs text-gray-500">
-                  This form opens your email client with the message prefilled, addressed to
-                  contact@csoai.org — there is no silent backend, and nothing you type here is
-                  stored by this site.
+                <p className="text-xs text-muted-foreground">
+                  This form opens your email client when the draft fits safely in an email link. There is no silent backend, and nothing you type here is stored by this site.
                 </p>
+                {!emailDraft.mailto && <p role="status" className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">This draft is too long or cannot be encoded safely for an email link. Copy the full text below into your email app.</p>}
+                <details open={!emailDraft.mailto} className="rounded-lg border border-border bg-card p-4">
+                  <summary className="min-h-11 cursor-pointer py-2 font-semibold text-primary">Copy enquiry instead</summary>
+                  <label htmlFor="contact-copy-draft" className="mt-3 block text-sm font-medium">Email draft to copy</label>
+                  <textarea id="contact-copy-draft" readOnly value={emailDraft.copyText} rows={8} data-testid="contact-copy-draft" className="mt-2 w-full rounded-lg border border-input bg-background p-3 text-sm leading-6 text-foreground" />
+                  <p className="mt-2 text-sm text-muted-foreground">This copy area stays in this page. Copying does not save, send, book or pay for work.</p>
+                </details>
               </form>
             </motion.div>
 
@@ -213,24 +210,25 @@ export default function Contact() {
                   <p className="text-gray-600 mb-3">
                     Enterprise and demo inquiries go straight to{' '}
                     <a
-                      href="mailto:enterprise@csoai.org?subject=Demo%20request%20%E2%80%94%20CSOAI%20master%20walkthrough"
+                      href={`mailto:${CONTACT_MAILBOX}?subject=Demo%20request%20%E2%80%94%20CSOAI%20master%20walkthrough`}
                       className="text-green-700 hover:text-green-600 font-semibold"
                     >
-                      enterprise@csoai.org
+                      {CONTACT_MAILBOX}
                     </a>{' '}
                     — read on working days, Europe/London. No response-time target is published
                     here because none is measured.
                   </p>
                   <p className="text-gray-600 mb-4">
                     The demo is 30 minutes and covers three things: the instrument (how CSOAI
-                    measures AI-governance compliance), the arena (how systems are compared and
+                    measures AI systems against published governance provisions — a measurement,
+                    not a compliance finding), the arena (how systems are compared and
                     scored), and the provisions of interest to you — tell us your sector and we
                     walk those first.
                   </p>
                   {/* A link, not a button inside a link: one control per action. */}
-                  <Button asChild size="lg" className="w-full bg-green-600 hover:bg-green-700">
+                  <Button asChild size="lg" className="w-full bg-primary hover:bg-brand-institutional">
                     <a
-                      href="mailto:enterprise@csoai.org?subject=Demo%20request%20%E2%80%94%20CSOAI%20master%20walkthrough"
+                      href={`mailto:${CONTACT_MAILBOX}?subject=Demo%20request%20%E2%80%94%20CSOAI%20master%20walkthrough`}
                       data-testid="book-demo-button"
                     >
                       <Mail className="h-4 w-4 mr-2" />

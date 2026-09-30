@@ -7,23 +7,39 @@
       "name": "csoai-gspc-mcp",
       "display_name": "GSPC Measurement Tools",
       "url": "https://councilof.ai/mcp",
-      "fallback_url": "https://csoai.org/mcp",
+      "version": "1.4.3",
       "stdio": "npx -y csoai-gspc-mcp@0.2.2",
-      "dead_worker": "https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp is 404; not a door. Do not invent a new worker.",
       "auth_required": false,
       "registry": {
-        "name": "io.github.CSOAI-ORG/gspc",
-        "version": "1.4.2",
-        "url": "https://registry.modelcontextprotocol.io"
-      }
+        "name": "ai.councilof/gspc",
+        "version": "1.4.3",
+        "url": "https://registry.modelcontextprotocol.io",
+        "deprecated_alias": "io.github.CSOAI-ORG/gspc"
+      },
+      "free_url": "https://councilof.ai/mcp/free",
+      "free_tools": [
+        "board_totals",
+        "get_axis",
+        "verify_card",
+        "list_cards",
+        "get_root",
+        "get_card",
+        "verify_inclusion",
+        "x402_trust",
+        "mcp_trust",
+        "measurement_index",
+        "verify_capsule",
+        "server_evidence"
+      ],
+      "free_tool_names_sha256": "64fcfc150e8164eeb2ffadcd8378d10cd72e305efce52f1dfd317c43763c0974"
     }
   ],
   "catalogue": "https://councilof.ai/mcp",
   "gspc_board": "https://councilof.ai/api/gspc",
   "server_card": "https://councilof.ai/.well-known/mcp/server-card.json",
   "measured": {
-    "total_tools": 13,
-    "free_tools": 9,
+    "total_tools": 16,
+    "free_tools": 12,
     "metered_tools": 4,
     "server_count": 1,
     "tools": [
@@ -36,12 +52,19 @@
       "verify_inclusion",
       "x402_trust",
       "mcp_trust",
+      "measurement_index",
+      "verify_capsule",
+      "server_evidence",
       "commission_card",
       "art50_marking_evidence",
       "rwa_evidence",
       "receipts_batch"
     ],
-    "note": "POST /mcp tools/list: nine free readers plus four x402-metered evidence tools. mill-tool `measure` is dropped. witness_hash remains quarantined and is not advertised. MCP Registry server 1.4.2 points here. A listing does not prove paid settlement or delivery."
+    "tool_counts": "12 free tools at /mcp/free; 16 at /mcp (12 free + 4 metered). The npm package is versioned separately.",
+    "note": "POST /mcp tools/list: twelve free readers plus four x402-metered evidence tools. witness_hash remains quarantined and is not advertised. MCP Registry server 1.4.3 points here. A listing does not prove paid settlement or delivery.",
+    "tool_names_sha256": "4d5671a50bf129615aaa82ef56a0382c1fd85c2781d41cef1b65f3e48a7b0134",
+    "tool_names_sha256_rule": "sha256 of the tool names from tools/list, sorted, joined by \"\\n\" (UTF-8)",
+    "derived_from": "tools/list of https://councilof.ai/mcp: functions/mcp/gspc-tools.json + paid-tools.json"
   },
   "planted": {
     "tools": [
@@ -54,13 +77,16 @@
       "verify_inclusion",
       "x402_trust",
       "mcp_trust",
+      "measurement_index",
+      "verify_capsule",
+      "server_evidence",
       "commission_card",
       "art50_marking_evidence",
       "rwa_evidence",
       "receipts_batch"
     ],
     "url": "https://councilof.ai/mcp",
-    "note": "The product door: nine free readers plus four x402-metered evidence tools. Public-root trio is VALID / INVALID / UNCHECKABLE, never a GSPC grade. No jail run from MCP. mill-tool `measure` dropped."
+    "note": "The product door: twelve free readers plus four x402-metered evidence tools. The public-root readers answer VALID / INVALID / NOT_IN_THIS_CORPUS / UNCHECKABLE, never a GSPC grade. No jail run from MCP."
   },
   "provider": {
     "name": "CSOAI Ltd",
@@ -71,5 +97,5 @@
     "source": "docs/DOCTRINE.md",
     "human_page": "https://councilof.ai/doctrine/"
   },
-  "generated_by": "scripts/harness-x/render.mjs (derived fields: servers[0].stdio, servers[0].registry, measured.*, planted.*, doctrine)"
+  "generated_by": "scripts/harness-x/render.mjs — the whole document, from council-os/distribution.json (identity), mcp/gspc-server/server.json (version), functions/mcp/gspc-tools.json + paid-tools.json (tools, as tools/list serves them) and docs/DOCTRINE.md (doctrine hash). Do not hand-edit; re-render."
 }

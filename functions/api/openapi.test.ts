@@ -11,8 +11,13 @@ import { OPENAPI_SPEC, onRequestGet } from "./openapi.json";
 const ROOT = resolve(__dirname, "../..");
 
 function resolvesToBytes(p: string): boolean {
-  if (p === "/api/gspc") return existsSync(resolve(ROOT, "functions/api/gspc.ts"));
-  if (p === "/api/proof") return existsSync(resolve(ROOT, "functions/api/proof.ts"));
+  if (p.startsWith("/api/") && !p.includes("{")) {
+    const rel = p.slice("/api/".length);
+    return (
+      existsSync(resolve(ROOT, "functions/api/" + rel + ".ts")) ||
+      existsSync(resolve(ROOT, "functions/api/" + rel + "/index.ts"))
+    );
+  }
   if (p === "/signed/cards/{id}.json") return existsSync(resolve(ROOT, "public/signed/cards"));
   return existsSync(resolve(ROOT, "public" + p));
 }

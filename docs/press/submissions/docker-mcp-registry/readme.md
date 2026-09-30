@@ -8,7 +8,7 @@ as the source in `mcp/gspc-server/`.
 
 ## Tools
 
-Nine free tools require no account, key or payment:
+Twelve free tools require no account, key or payment:
 
 - `board_totals` — read live board totals with their source kind and `as_of` date.
 - `get_axis` — read one axis row, including sample size, interval and MEASURED/UNMEASURED state.
@@ -19,6 +19,9 @@ Nine free tools require no account, key or payment:
 - `verify_inclusion` — check whether a SHA-256 is included in the public root.
 - `x402_trust` — read the latest measured x402 catalog-trust snapshot.
 - `mcp_trust` — read the latest measured MCP catalog-trust snapshot.
+- `measurement_index` — read the board-signed measurement-capsule index: batch roots, states, anchor states.
+- `verify_capsule` — recompute one capsule's id and its Merkle inclusion under the signed index.
+- `server_evidence` — every published capsule about one endpoint URL; an unknown URL is NOT_MEASURED.
 
 Four optional x402-metered evidence tools are also discoverable:
 
@@ -39,7 +42,7 @@ preview modes; a commission does not.
 ## Connect
 
 After Docker approves the listing, add **Council of AI GSPC** from Docker Desktop's MCP Toolkit to
-an MCP profile, enable it, and run `tools/list`. Dynamic discovery must return the exact thirteen
+an MCP profile, enable it, and run `tools/list`. Dynamic discovery must return the exact sixteen
 names above. Until then, any streamable-HTTP MCP client can connect directly to
 `https://councilof.ai/mcp`; there is no Docker image or second runtime to install for this remote
 entry.

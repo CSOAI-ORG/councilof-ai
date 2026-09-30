@@ -1,7 +1,7 @@
 /**
  * GET /api/claims/register — the register of every subject we maintain public claims on.
  *
- * Specification: https://councilof.ai/spec/claim-maintenance/v0.1/ (CC0 1.0), §7.5.
+ * Specification: https://councilof.ai/spec/claim-maintenance/v0.2/ (CC0 1.0), §7.5.
  *
  * ONE SET OF BYTES. The register is generated from the registry files on disk by
  * scripts/claim-maintenance-register.mjs, committed to public/spec/claim-maintenance/register.json,
@@ -26,8 +26,8 @@ const HEADERS = {
   "content-type": "application/json; charset=utf-8",
   "cache-control": "public, max-age=300",
   "access-control-allow-origin": "*",
-  link: '<https://councilof.ai/spec/claim-maintenance/v0.1/>; rel="describedby"; type="text/html"',
-  "x-claim-maintenance-spec": "https://councilof.ai/spec/claim-maintenance/v0.1/",
+  link: '<https://councilof.ai/spec/claim-maintenance/v0.2/>; rel="describedby"; type="text/html"',
+  "x-claim-maintenance-spec": "https://councilof.ai/spec/claim-maintenance/v0.2/",
 };
 
 const json = (body: unknown, status = 200) =>

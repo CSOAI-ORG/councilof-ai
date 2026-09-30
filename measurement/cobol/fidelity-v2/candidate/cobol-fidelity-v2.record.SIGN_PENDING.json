@@ -1,0 +1,64 @@
+{
+ "held": "HELD for the owner: signing makes this a record under the board key; where it is published (not on the board: it has no axis) is an owner decision. Nothing here has been signed, published or sent.",
+ "how_to_sign": "owner-gated: after the integrator lands lane/cobol-v2-20260928, on a host holding the board-sign caller token, python3 -c \"import json,sys; sys.path.insert(0,'scripts/arena'); import board_sign as b; c=json.load(open('<this file>')); print(json.dumps(b.sign_payload(c['sign_payload'], '<token file>')))\" \u2014 board_sign verifies the returned signature against the DID document before it is used.",
+ "schema": "csoai.record-candidate/0",
+ "sign_payload": {
+  "corpus_check": {
+   "mustfail_refused": 19,
+   "offset_checks": 250,
+   "ok": true,
+   "published_vector_checks": 19,
+   "values_equal": 310
+  },
+  "corpus_version": 2,
+  "counts": {
+   "compared_fields": 329,
+   "copybooks": 66,
+   "decoder_configurations": 7,
+   "rdw_files": 6,
+   "records": 87,
+   "result_rows": 2153
+  },
+  "decoders": [
+   "aws_mdu git 5fc427629e51b87d4c6310860cac6f93c0eb756c",
+   "cobolio 0.1.5",
+   "coboljsonifier 1.0.8",
+   "cobrix 2.11.1",
+   "jrecord JRecord 0.93.3",
+   "jrecord_cb2xml cb2xml 1.01.08",
+   "wilcoyay_cbp git 82ebbec9ba4c117a39e0ac3225cf910a576c3bdc"
+  ],
+  "kind": "csoai.measurement-record/cobol-decoder-fidelity",
+  "lane": "cobol-v2-20260928",
+  "licence_corpus": "CC0-1.0",
+  "measures": "what each decoder emitted for COBOL record bytes whose meaning is known by construction",
+  "not": "not a certification, rating, ranking, grade or score of any decoder",
+  "self": "cobol-bridge-mcp UNMEASURED (no decode path); sister product, not ranked",
+  "sha256": {
+   "corpus/expected.json": "c182c602c89b5b6d9c95f4bd6f82f11a4e1b2dc58ca72486767cef5c1ceec0cd",
+   "corpus_tree": "2835838f5c1e11e2867be7b35573e7c6a750c303bdf50c91f9521f2f6cb075f1",
+   "decoders.json": "c386374501312bf33acd4da8e905d8daa42ffa549e30954c7dadb7b3636b9f9c",
+   "results.jsonl": "3859bb3798d8b84526e80e6241dd28c40426345e1ce101c50e9857af36c257cf",
+   "work/verify_vectors.json": "0a8463f339125a9bc4b94e807a0a643dd79aa56a574273a6bec57fd73d312471"
+  },
+  "unmeasured_rdw": [
+   "cobolio",
+   "coboljsonifier",
+   "wilcoyay_cbp"
+  ],
+  "v1_rows_byte_identical": true,
+  "verdicts": {
+   "ERROR": 232,
+   "FLAGGED": 2,
+   "MATCH": 1105,
+   "MISMATCH": 497,
+   "REJECTED": 137,
+   "UNSUPPORTED": 180
+  }
+ },
+ "sign_payload_canonical_bytes": 1499,
+ "sign_payload_sha256": "0b6f1457f9b0a8d750f61f49d0d44a3710ba17713496cd8ca7e5a3e97a39a8e7",
+ "signature": null,
+ "signer_intended": "did:web:csoai.org#board-attestation-1",
+ "state": "SIGN_PENDING"
+}

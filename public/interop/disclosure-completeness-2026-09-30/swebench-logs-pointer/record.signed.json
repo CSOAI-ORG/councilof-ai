@@ -1,0 +1,43 @@
+{
+ "schema": "csoai.signed-run/0.1",
+ "payload": {
+  "schema": "csoai.signed-artifact/0.1",
+  "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+  "not_a_grade": "The signature proves these bytes were signed by the board key on the date below; it does not prove any claim inside beyond what the record's own sources and instruments show.",
+  "artifact": {
+   "path": "/interop/disclosure-completeness-2026-09-30/swebench-logs-pointer/record.json",
+   "sha256": "0c662e719dae86eda972026cac7ee7bc272a096da0b6f2185d429c806bdece45",
+   "schema": "csoai.disclosure-completeness-record/0.1",
+   "as_of": "2026-09-29T15:37:50Z"
+  },
+  "answer": "287 of 323 entries state a logs pointer. Whether those pointers resolve is UNMEASURED: no pointer was requested.",
+  "inputs_digest_sha256": "1617c1965d7179648f67a87112abac68c9a66f50ba7738448c0c93faabb09772",
+  "kind": "measurement.disclosure_completeness",
+  "method_code_sha256": "2f431f315f804ecd6943f21c6dd814a5f0bd0d7d8056d198a41ac5d2e88caaf6",
+  "n_inputs": 2,
+  "publication": "PUBLISHED on councilof.ai under /interop/disclosure-completeness-2026-09-30/swebench-logs-pointer/",
+  "record_id": "swebench-logs-pointer-2026-09-30",
+  "set": "disclosure-completeness-2026-09-30",
+  "source": "SWE-bench leaderboards (leaderboards.json)"
+ },
+ "signature": {
+  "did": "did:web:csoai.org#board-attestation-1",
+  "alg": "Ed25519",
+  "sig_ed25519": "c4519b90824b93507d14b8977342f5f1e333aa2d093407832cff3ab4f04d72c3bcaf6bbf5394ecc57e2e6fde4ff1e59fce158a314779678cc235fa2910ec8305",
+  "payload_sha256": "b55088bd0803925b18c2c01575ec7a5d20b110b2fa83a6edee9e422fecaf194d",
+  "signer_auth": "pod-token",
+  "signed_at": "2026-09-30T03:12:40.629Z",
+  "canonical": "JSON, keys sorted, no whitespace, UTF-8, non-ASCII unescaped"
+ },
+ "local_verification": {
+  "did_document": "https://csoai.org/.well-known/did.json",
+  "key_x": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA",
+  "result": "VERIFIES",
+  "altered_preimage_controls": {
+   "trailing byte appended to the record": "rejected (control holds)",
+   "artifact sha256 altered in the payload": "rejected (control holds)",
+   "signature bit flipped": "rejected (control holds)"
+  }
+ },
+ "verify": "canonicalise payload (JSON, keys sorted, no whitespace, UTF-8); sha256 must equal signature.payload_sha256; payload.artifact.sha256 must equal sha256 of the record's bytes; verify sig_ed25519 (hex) with the #board-attestation-1 Ed25519 key in https://csoai.org/.well-known/did.json"
+}

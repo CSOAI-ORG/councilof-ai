@@ -3,19 +3,19 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Axes deep — Council of AI</title>
+<title>The GSPC axes in depth — scope and discipline | Council of AI</title>
 <meta name="robots" content="index,follow" />
-<meta name="description" content="CSOAI — axes deep on the AI measurement board. Measurement, not certification." />
+<meta name="description" content="A reference for each GSPC axis: its scope, what is MEASURED, the discipline behind it and its lane. Read live from the board. Measurement, not certification." />
 <link rel="canonical" href="https://councilof.ai/axes-deep" />
-<meta property="og:title" content="Axes deep — Council of AI" />
-<meta property="og:description" content="CSOAI — axes deep on the AI measurement board. Measurement, not certification." />
+<meta property="og:title" content="The GSPC axes in depth — scope and discipline | Council of AI" />
+<meta property="og:description" content="A reference for each GSPC axis: its scope, what is MEASURED, the discipline behind it and its lane. Read live from the board. Measurement, not certification." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://councilof.ai/axes-deep" />
 <meta property="og:image" content="https://councilof.ai/og-default.png" />
 <meta property="og:site_name" content="CSOAI Ltd" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Axes deep — Council of AI" />
-<meta name="twitter:description" content="CSOAI — axes deep on the AI measurement board. Measurement, not certification." />
+<meta name="twitter:title" content="The GSPC axes in depth — scope and discipline | Council of AI" />
+<meta name="twitter:description" content="A reference for each GSPC axis: its scope, what is MEASURED, the discipline behind it and its lane. Read live from the board. Measurement, not certification." />
 <meta name="twitter:image" content="https://councilof.ai/og-default.png" />
 <meta name="theme-color" content="#16a34a" />
 <script type="application/ld+json">
@@ -408,7 +408,7 @@
       const acc = a.accuracy != null ? `acc=${a.accuracy}` : "";
       const lid = b.totals?.public_count || "live count: GET /api/gspc";
       const live = lid.match(/(\d+)\s+axis/i)?.[1] ?? "22";
-      return `<a class="axis" href="https://councilof.ai/axis/${slug}.html">
+      return `<a class="axis" href="https://councilof.ai/axis/${slug}">
         <h3>${slug}</h3>
         <p>${familyDesc(slug, a.family, a.kind)}</p>
         <p class="meta">n=${n}${acc ? ' <span class="sep">·</span> ' + acc : ''}${sep ? ' <span class="sep">·</span> ' + sep : ''}</p>
@@ -485,14 +485,14 @@
       <a href="/api/gspc">Live board</a>
       <a href="/gspc-verify">Verifier</a>
       <a href="/pay">Pay with MetaMask</a>
-      <a href="/.well-known/">Discovery</a>
+      <a href="/llms.txt">Discovery</a>
       <a href="/workbench-paper">Workbench paper</a>
     </div>
     <div class="footer-col">
       <h4>Company</h4>
       <a href="https://csoai.org">csoai.org</a>
       <a href="https://huggingface.co/csoai">HuggingFace</a>
-      <a href="https://github.com/CSOAI-ORG/councilof-ai">GitHub</a>
+      <a href="https://huggingface.co/datasets/csoai/councilof-ai-source" title="Source mirror on Hugging Face. The GitHub org CSOAI-ORG is temporarily unavailable.">Source (HF mirror)</a>
       <a href="/.well-known/did.json">DID</a>
       <a href="https://x.com/csoai_org">X / Twitter</a>
     </div>

@@ -1,0 +1,224 @@
+{
+ "answer": "287 of 323 entries state a logs pointer. Whether those pointers resolve is UNMEASURED: no pointer was requested.",
+ "as_of": "2026-09-29T15:37:50Z",
+ "as_of_meaning": "the newest fetch time among the pinned inputs; the measurement reads those bytes and nothing later",
+ "computed_at": "2026-09-30T02:48:46Z",
+ "doctrine": "A disclosure-completeness or lag measurement of a public artifact. It counts what the artifact states about itself. It does not rank, grade or compare the models or platforms listed inside it, and it is not a certification. UNMEASURED stays UNMEASURED.",
+ "headline": {
+  "entries": 323,
+  "logs_pointer_resolves": "UNMEASURED",
+  "logs_pointer_stated": 287,
+  "per_leaderboard": {
+   "Lite": {
+    "entries": 84,
+    "logs_pointer_stated": 81
+   },
+   "Multilingual": {
+    "entries": 13,
+    "logs_pointer_stated": 13
+   },
+   "Multimodal": {
+    "entries": 22,
+    "logs_pointer_stated": 0
+   },
+   "Test": {
+    "entries": 24,
+    "logs_pointer_stated": 24
+   },
+   "Verified": {
+    "entries": 180,
+    "logs_pointer_stated": 169
+   }
+  },
+  "share_logs_stated": {
+   "denominator": 323,
+   "numerator": 287,
+   "value": 0.888545
+  }
+ },
+ "kind": "measurement.disclosure_completeness",
+ "licence": {
+  "note": "The upstream licence is stated by a catalogue as CC-BY-NC-4.0 and the GitHub licence field reads NOASSERTION. Only our counts and the upstream's own entry identifiers are published here.",
+  "our_record": "CC-BY-4.0 (Council of AI, CSOAI Ltd)",
+  "upstream": {
+   "basis": "catalog claim; GitHub licence field below",
+   "github_license_field": "NOASSERTION",
+   "id": "CC-BY-NC-4.0 (claimed)",
+   "note": "NC: only our measurement and a pointer are published, never their rows"
+  }
+ },
+ "measurement": {
+  "candidate_id": "swebench.logs_pointer_share-a3805db874fa3277",
+  "inputs": [
+   {
+    "bytes": 6703,
+    "fetched_at": "2026-09-29T15:37:50Z",
+    "sha256": "e3ff52e4858d28f9fe9d6ad54c893d7a12e5579eec849f5adc25391c6781eed6",
+    "source_id": "github-repo:SWE-bench/swe-bench.github.io"
+   },
+   {
+    "bytes": 4091442,
+    "fetched_at": "2026-09-29T15:11:32Z",
+    "sha256": "83cd949a9582f4dd68b0a07148cd86ff0eae6a05b0f2d2298a8f3717baf89d2d",
+    "source_id": "swebench-com--benchmark-platform"
+   }
+  ],
+  "inputs_digest_sha256": "1617c1965d7179648f67a87112abac68c9a66f50ba7738448c0c93faabb09772",
+  "measure": "swebench.logs_pointer_share",
+  "method": {
+   "code": "adapters.py",
+   "code_sha256": "2f431f315f804ecd6943f21c6dd814a5f0bd0d7d8056d198a41ac5d2e88caaf6",
+   "description": "Per leaderboard in leaderboards.json: entries whose 'logs' field is a non-empty string, over all entries. Absent field and empty string are counted separately."
+  },
+  "result": {
+   "all_entries": {
+    "entries": 323,
+    "logs_pointer_stated": 287,
+    "share_logs_stated": {
+     "denominator": 323,
+     "numerator": 287,
+     "value": 0.888545
+    }
+   },
+   "per_leaderboard": [
+    {
+     "entries": 84,
+     "entries_without_logs_pointer": [
+      "20241028_agentless-1.5_gpt4o",
+      "20250113_OrcaLoca",
+      "20250214_agentless_lite_o3_mini"
+     ],
+     "leaderboard": "Lite",
+     "logs_field_absent": 0,
+     "logs_pointer_empty": 3,
+     "logs_pointer_stated": 81,
+     "share_logs_stated": {
+      "denominator": 84,
+      "numerator": 81,
+      "value": 0.964286
+     },
+     "trajs_pointer_stated": 65
+    },
+    {
+     "entries": 13,
+     "entries_without_logs_pointer": [],
+     "leaderboard": "Multilingual",
+     "logs_field_absent": 0,
+     "logs_pointer_empty": 0,
+     "logs_pointer_stated": 13,
+     "share_logs_stated": {
+      "denominator": 13,
+      "numerator": 13,
+      "value": 1.0
+     },
+     "trajs_pointer_stated": 13
+    },
+    {
+     "entries": 22,
+     "entries_without_logs_pointer": [
+      "20241006_Agentless_claude3.5",
+      "20241006_Agentless_gpt4o",
+      "20241006_RAG_claude3.5",
+      "20241006_RAG_gpt4o",
+      "20241006_SWE-agent_JS_claude3.5",
+      "20241006_SWE-agent_JS_gpt4o",
+      "20241006_SWE-agent_M_claude3.5",
+      "20241006_SWE-agent_M_gpt4o",
+      "20241006_SWE-agent_claude3.5",
+      "20241006_SWE-agent_gpt4o",
+      "20250226_agentless_lite_claude3.5",
+      "20250311_zencoder",
+      "20250325_globant_codefixer_agent",
+      "20250401_zencoder",
+      "20250509_OpenHands-Versa_claude3.7",
+      "20250528_OpenHands-Versa-claude4",
+      "20250531_GUIRepair_gpt41",
+      "20250531_GUIRepair_gpt4o",
+      "20250531_GUIRepair_o4mini",
+      "20250611_Refact_Agent_claude-4-sonnet",
+      "20250701_GUIRepair_o3",
+      "20251117_codefuse_pycfuse_svr"
+     ],
+     "leaderboard": "Multimodal",
+     "logs_field_absent": 0,
+     "logs_pointer_empty": 22,
+     "logs_pointer_stated": 0,
+     "share_logs_stated": {
+      "denominator": 22,
+      "numerator": 0,
+      "value": 0.0
+     },
+     "trajs_pointer_stated": 0
+    },
+    {
+     "entries": 24,
+     "entries_without_logs_pointer": [],
+     "leaderboard": "Test",
+     "logs_field_absent": 0,
+     "logs_pointer_empty": 0,
+     "logs_pointer_stated": 24,
+     "share_logs_stated": {
+      "denominator": 24,
+      "numerator": 24,
+      "value": 1.0
+     },
+     "trajs_pointer_stated": 14
+    },
+    {
+     "entries": 180,
+     "entries_without_logs_pointer": [
+      "20250122_autocoderover-v2.1-claude-3-5-sonnet-20241022",
+      "20260217_mini-v2.0.0_claude-4-5-haiku-high",
+      "20260217_mini-v2.0.0_claude-4-5-opus-high",
+      "20260217_mini-v2.0.0_claude-4-5-sonnet-high",
+      "20260217_mini-v2.0.0_deepseek-3-2-high",
+      "20260217_mini-v2.0.0_gemini-3-flash-high",
+      "20260217_mini-v2.0.0_glm-5-high",
+      "20260217_mini-v2.0.0_gpt-5-2-high",
+      "20260217_mini-v2.0.0_gpt-5-mini",
+      "20260217_mini-v2.0.0_kimi-k2-5-high",
+      "20260217_mini-v2.0.0_minimax-2-5-high"
+     ],
+     "leaderboard": "Verified",
+     "logs_field_absent": 0,
+     "logs_pointer_empty": 11,
+     "logs_pointer_stated": 169,
+     "share_logs_stated": {
+      "denominator": 180,
+      "numerator": 169,
+      "value": 0.938889
+     },
+     "trajs_pointer_stated": 169
+    }
+   ]
+  },
+  "unmeasured": [
+   "whether each stated logs pointer (s3://...) actually resolves: not requested (retrievability UNMEASURED; this measures the declared pointer only)"
+  ]
+ },
+ "publication": "PUBLISHED on councilof.ai; signed by did:web:csoai.org#board-attestation-1 (record.signed.json beside this file)",
+ "question": "Of the entries in SWE-bench's published leaderboards.json, how many state a pointer to their evaluation logs?",
+ "recompute": {
+  "code": "../method/adapters.py",
+  "code_sha256": "2f431f315f804ecd6943f21c6dd814a5f0bd0d7d8056d198a41ac5d2e88caaf6",
+  "inputs_availability": "The input bytes are not republished here (upstream licences differ). The upstream URLs are named in source.urls; if the upstream has changed since as_of, its bytes will no longer match the pinned sha256 and the recompute cannot be run from the live URL.",
+  "rule": "Fetch or supply the input bytes whose sha256 values are pinned in measurement.inputs; run verify.py --recompute <dir of blobs named by sha256>; it re-runs the named measure in method/adapters.py and compares with measurement.result field for field.",
+  "verify_script": "../verify.py"
+ },
+ "record_id": "swebench-logs-pointer-2026-09-30",
+ "republished": "Counts, and the entry folder names that state no logs pointer. None of the upstream rows, scores or resolved rates are republished.",
+ "schema": "csoai.disclosure-completeness-record/0.1",
+ "set": "disclosure-completeness-2026-09-30",
+ "source": {
+  "name": "SWE-bench leaderboards (leaderboards.json)",
+  "publisher": "SWE-bench",
+  "urls": [
+   "https://raw.githubusercontent.com/SWE-bench/swe-bench.github.io/master/data/leaderboards.json",
+   "https://www.swebench.com/"
+  ]
+ },
+ "title": "SWE-bench leaderboard entries: how many state a logs pointer",
+ "unmeasured": [
+  "whether each stated logs pointer (s3://...) actually resolves: not requested (retrievability UNMEASURED; this measures the declared pointer only)"
+ ]
+}

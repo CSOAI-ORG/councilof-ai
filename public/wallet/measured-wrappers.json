@@ -1,0 +1,389 @@
+{
+  "schema": "csoai.wallet-measured-wrappers/0.1",
+  "name": "SovX wrapped-asset measurements: measured wrappers",
+  "description": "Wrapped and bridged tokens that SovX wrapped-asset measurements have read, each with its current measurement state and the date of that state. A listing is not an endorsement or a recommendation. A state is not a rating, an attestation or a statement about reserves: it records what was read at a pinned block.",
+  "token_list": "https://councilof.ai/wallet/measured-wrappers.tokenlist.json",
+  "token_list_sha256": "9f89a8b6ea98648658cf65174b8d2f1683edc4085b837d6e81e42a4355d790b1",
+  "token_list_schema": {
+    "source": "npm @uniswap/token-lists@1.0.0-beta.35 dist/tokenlist.schema.json (MIT)",
+    "sha256": "064bf8208896d7f5d7e2e6bebadb75176a144df4028cf554230e008b45e1667c"
+  },
+  "extension_note": "The token-list schema caps extension strings at 42 characters, so extensions.caip19 carries the three CAIP-19 parts (chain_id, asset_namespace, asset_reference) and extensions.evidence is a short link to the ledger record. The full CAIP-19 strings and URLs are here.",
+  "source_ledger": {
+    "url": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json",
+    "latest": "https://councilof.ai/interop/wrapped-asset-parity-latest.json",
+    "as_of": "2026-09-14T10:51:51.468Z",
+    "sha256": "39283889353388c211c347250c41c664b3bb72e54fb366be231a3df59949fe4f",
+    "license": "CC-BY-4.0 (Council of AI, CSOAI Ltd 16939677, councilof.ai)"
+  },
+  "state_definitions": {
+    "ESCROW_PARITY_READ": "both reads succeeded at the pinned blocks; a read, not a measurement (the card doctrine reserves MEASURED for graded banks and refuses it on point-in-time cards)",
+    "UNCHECKABLE_NATIVE_ISSUANCE": "natively issued on the destination chain; no escrow exists; supply read, no ratio claimed",
+    "INDEXED_CUSTODIAL": "reserve held by a custodian off-chain or on another ledger; supply read; no reserve readable from here; no ratio claimed",
+    "UNMEASURED": "a read failed; error recorded; nothing inferred"
+  },
+  "counts": {
+    "listed": 21,
+    "ledger_records": 24,
+    "not_listed": 2
+  },
+  "tokens": [
+    {
+      "caip19": "eip155:1/erc20:0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+      "chainId": 1,
+      "chain": "ethereum",
+      "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+      "symbol": "WBTC",
+      "decimals": 8,
+      "state": "INDEXED_CUSTODIAL",
+      "as_of": "2026-09-14T10:51:51.468Z",
+      "records": [
+        "wbtc:ethereum"
+      ],
+      "evidence": "https://councilof.ai/w/wbtc:ethereum",
+      "ledger": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json",
+      "live_preview": "https://councilof.ai/api/wrapper/caip19/eip155:1/erc20:0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599"
+    },
+    {
+      "caip19": "eip155:1/erc20:0x39fBBABf11738317a448031930706cd3e612e1B9",
+      "chainId": 1,
+      "chain": "ethereum",
+      "address": "0x39fBBABf11738317a448031930706cd3e612e1B9",
+      "symbol": "wXRP",
+      "decimals": 18,
+      "state": "INDEXED_CUSTODIAL",
+      "as_of": "2026-09-14T10:51:51.468Z",
+      "records": [
+        "wxrp:ethereum"
+      ],
+      "evidence": "https://councilof.ai/w/wxrp:ethereum",
+      "ledger": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json",
+      "live_preview": "https://councilof.ai/api/wrapper/caip19/eip155:1/erc20:0x39fBBABf11738317a448031930706cd3e612e1B9"
+    },
+    {
+      "caip19": "eip155:1/erc20:0x7712c34205737192402172409a8F7ccef8aA2AEc",
+      "chainId": 1,
+      "chain": "ethereum",
+      "address": "0x7712c34205737192402172409a8F7ccef8aA2AEc",
+      "symbol": "BUIDL",
+      "decimals": 6,
+      "state": "INDEXED_CUSTODIAL",
+      "as_of": "2026-09-14T10:51:51.468Z",
+      "records": [
+        "buidl:ethereum"
+      ],
+      "evidence": "https://councilof.ai/w/buidl:ethereum",
+      "ledger": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json",
+      "live_preview": "https://councilof.ai/api/wrapper/caip19/eip155:1/erc20:0x7712c34205737192402172409a8F7ccef8aA2AEc"
+    },
+    {
+      "caip19": "eip155:1/erc20:0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf",
+      "chainId": 1,
+      "chain": "ethereum",
+      "address": "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf",
+      "symbol": "cbBTC",
+      "decimals": 8,
+      "state": "INDEXED_CUSTODIAL",
+      "as_of": "2026-09-14T10:51:51.468Z",
+      "records": [
+        "cbbtc:ethereum"
+      ],
+      "evidence": "https://councilof.ai/w/cbbtc:ethereum",
+      "ledger": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json",
+      "live_preview": "https://councilof.ai/api/wrapper/caip19/eip155:1/erc20:0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf"
+    },
+    {
+      "caip19": "eip155:10/erc20:0x01bFF41798a0BcF287b996046Ca68b395DbC1071",
+      "chainId": 10,
+      "chain": "optimism",
+      "address": "0x01bFF41798a0BcF287b996046Ca68b395DbC1071",
+      "symbol": "USDT0",
+      "decimals": 6,
+      "state": "UNCHECKABLE_NATIVE_ISSUANCE",
+      "as_of": "2026-09-14T10:51:51.468Z",
+      "records": [
+        "usdt0:optimism"
+      ],
+      "evidence": "https://councilof.ai/w/usdt0:optimism",
+      "ledger": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json",
+      "live_preview": "https://councilof.ai/api/wrapper/caip19/eip155:10/erc20:0x01bFF41798a0BcF287b996046Ca68b395DbC1071"
+    },
+    {
+      "caip19": "eip155:10/erc20:0x7F5c764cBc14f9669B88837ca1490cCa17c31607",
+      "chainId": 10,
+      "chain": "optimism",
+      "address": "0x7F5c764cBc14f9669B88837ca1490cCa17c31607",
+      "symbol": "USDC.e",
+      "decimals": 6,
+      "state": "ESCROW_PARITY_READ",
+      "as_of": "2026-09-14T10:51:51.468Z",
+      "records": [
+        "usdc.e:optimism"
+      ],
+      "evidence": "https://councilof.ai/w/usdc.e:optimism",
+      "ledger": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json",
+      "live_preview": "https://councilof.ai/api/wrapper/caip19/eip155:10/erc20:0x7F5c764cBc14f9669B88837ca1490cCa17c31607"
+    },
+    {
+      "caip19": "eip155:10/erc20:0x94b008aA00579c1307B0EF2c499aD98a8ce58e58",
+      "chainId": 10,
+      "chain": "optimism",
+      "address": "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58",
+      "symbol": "USDT",
+      "decimals": 6,
+      "state": "ESCROW_PARITY_READ",
+      "as_of": "2026-09-14T10:51:51.468Z",
+      "records": [
+        "usdt:optimism"
+      ],
+      "evidence": "https://councilof.ai/w/usdt:optimism",
+      "ledger": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json",
+      "live_preview": "https://councilof.ai/api/wrapper/caip19/eip155:10/erc20:0x94b008aA00579c1307B0EF2c499aD98a8ce58e58"
+    },
+    {
+      "caip19": "eip155:10/erc20:0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
+      "chainId": 10,
+      "chain": "optimism",
+      "address": "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
+      "symbol": "DAI",
+      "decimals": 18,
+      "state": "ESCROW_PARITY_READ",
+      "as_of": "2026-09-14T10:51:51.468Z",
+      "records": [
+        "dai:optimism"
+      ],
+      "evidence": "https://councilof.ai/w/dai:optimism",
+      "ledger": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json",
+      "live_preview": "https://councilof.ai/api/wrapper/caip19/eip155:10/erc20:0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1"
+    },
+    {
+      "caip19": "eip155:14/erc20:0xAd552A648C74D49E10027AB8a618A3ad4901c5bE",
+      "chainId": 14,
+      "chain": "flare",
+      "address": "0xAd552A648C74D49E10027AB8a618A3ad4901c5bE",
+      "symbol": "FXRP",
+      "decimals": 6,
+      "state": "INDEXED_CUSTODIAL",
+      "as_of": "2026-09-14T10:51:51.468Z",
+      "records": [
+        "fxrp:flare"
+      ],
+      "evidence": "https://councilof.ai/w/fxrp:flare",
+      "ledger": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json",
+      "live_preview": "https://councilof.ai/api/wrapper/caip19/eip155:14/erc20:0xAd552A648C74D49E10027AB8a618A3ad4901c5bE"
+    },
+    {
+      "caip19": "eip155:137/erc20:0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+      "chainId": 137,
+      "chain": "polygon",
+      "address": "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+      "symbol": "USDC.e",
+      "decimals": 6,
+      "state": "ESCROW_PARITY_READ",
+      "as_of": "2026-09-14T10:51:51.468Z",
+      "records": [
+        "usdc.e:polygon"
+      ],
+      "evidence": "https://councilof.ai/w/usdc.e:polygon",
+      "ledger": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json",
+      "live_preview": "https://councilof.ai/api/wrapper/caip19/eip155:137/erc20:0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174"
+    },
+    {
+      "caip19": "eip155:137/erc20:0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
+      "chainId": 137,
+      "chain": "polygon",
+      "address": "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
+      "symbol": "DAI",
+      "decimals": 18,
+      "state": "ESCROW_PARITY_READ",
+      "as_of": "2026-09-14T10:51:51.468Z",
+      "records": [
+        "dai:polygon"
+      ],
+      "evidence": "https://councilof.ai/w/dai:polygon",
+      "ledger": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json",
+      "live_preview": "https://councilof.ai/api/wrapper/caip19/eip155:137/erc20:0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063"
+    },
+    {
+      "caip19": "eip155:137/erc20:0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      "chainId": 137,
+      "chain": "polygon",
+      "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      "symbol": "USDT",
+      "decimals": 6,
+      "state": "UNCHECKABLE_NATIVE_ISSUANCE",
+      "as_of": "2026-09-14T10:51:51.468Z",
+      "records": [
+        "usdt:polygon"
+      ],
+      "evidence": "https://councilof.ai/w/usdt:polygon",
+      "ledger": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json",
+      "live_preview": "https://councilof.ai/api/wrapper/caip19/eip155:137/erc20:0xc2132D05D31c914a87C6611C10748AEb04B58e8F"
+    },
+    {
+      "caip19": "eip155:8453/erc20:0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb",
+      "chainId": 8453,
+      "chain": "base",
+      "address": "0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb",
+      "symbol": "DAI",
+      "decimals": 18,
+      "state": "ESCROW_PARITY_READ",
+      "as_of": "2026-09-14T10:51:51.468Z",
+      "records": [
+        "dai:base"
+      ],
+      "evidence": "https://councilof.ai/w/dai:base",
+      "ledger": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json",
+      "live_preview": "https://councilof.ai/api/wrapper/caip19/eip155:8453/erc20:0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb"
+    },
+    {
+      "caip19": "eip155:8453/erc20:0x7e0AEdc93d9f898bE835A44BFcA3842E52416B82",
+      "chainId": 8453,
+      "chain": "base",
+      "address": "0x7e0AEdc93d9f898bE835A44BFcA3842E52416B82",
+      "symbol": "JPMD",
+      "decimals": 2,
+      "state": "INDEXED_CUSTODIAL",
+      "as_of": "2026-09-14T10:51:51.468Z",
+      "records": [
+        "jpmd:base"
+      ],
+      "evidence": "https://councilof.ai/w/jpmd:base",
+      "ledger": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json",
+      "live_preview": "https://councilof.ai/api/wrapper/caip19/eip155:8453/erc20:0x7e0AEdc93d9f898bE835A44BFcA3842E52416B82"
+    },
+    {
+      "caip19": "eip155:8453/erc20:0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "chainId": 8453,
+      "chain": "base",
+      "address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "symbol": "USDC",
+      "decimals": 6,
+      "state": "UNCHECKABLE_NATIVE_ISSUANCE",
+      "as_of": "2026-09-14T10:51:51.468Z",
+      "records": [
+        "usdc:base"
+      ],
+      "evidence": "https://councilof.ai/w/usdc:base",
+      "ledger": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json",
+      "live_preview": "https://councilof.ai/api/wrapper/caip19/eip155:8453/erc20:0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
+    },
+    {
+      "caip19": "eip155:8453/erc20:0xcb585250f852C6c6bf90434AB21A00f02833a4af",
+      "chainId": 8453,
+      "chain": "base",
+      "address": "0xcb585250f852C6c6bf90434AB21A00f02833a4af",
+      "symbol": "cbXRP",
+      "decimals": 6,
+      "state": "INDEXED_CUSTODIAL",
+      "as_of": "2026-09-14T10:51:51.468Z",
+      "records": [
+        "cbxrp:base"
+      ],
+      "evidence": "https://councilof.ai/w/cbxrp:base",
+      "ledger": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json",
+      "live_preview": "https://councilof.ai/api/wrapper/caip19/eip155:8453/erc20:0xcb585250f852C6c6bf90434AB21A00f02833a4af"
+    },
+    {
+      "caip19": "eip155:8453/erc20:0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf",
+      "chainId": 8453,
+      "chain": "base",
+      "address": "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf",
+      "symbol": "cbBTC",
+      "decimals": 8,
+      "state": "INDEXED_CUSTODIAL",
+      "as_of": "2026-09-14T10:51:51.468Z",
+      "records": [
+        "cbbtc:base"
+      ],
+      "evidence": "https://councilof.ai/w/cbbtc:base",
+      "ledger": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json",
+      "live_preview": "https://councilof.ai/api/wrapper/caip19/eip155:8453/erc20:0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf"
+    },
+    {
+      "caip19": "eip155:8453/erc20:0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA",
+      "chainId": 8453,
+      "chain": "base",
+      "address": "0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA",
+      "symbol": "USDbC",
+      "decimals": 6,
+      "state": "ESCROW_PARITY_READ",
+      "as_of": "2026-09-14T10:51:51.468Z",
+      "records": [
+        "usdbc:base"
+      ],
+      "evidence": "https://councilof.ai/w/usdbc:base",
+      "ledger": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json",
+      "live_preview": "https://councilof.ai/api/wrapper/caip19/eip155:8453/erc20:0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA"
+    },
+    {
+      "caip19": "eip155:42161/erc20:0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+      "chainId": 42161,
+      "chain": "arbitrum",
+      "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+      "symbol": "USDC",
+      "decimals": 6,
+      "state": "UNCHECKABLE_NATIVE_ISSUANCE",
+      "as_of": "2026-09-14T10:51:51.468Z",
+      "records": [
+        "usdc:arbitrum"
+      ],
+      "evidence": "https://councilof.ai/w/usdc:arbitrum",
+      "ledger": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json",
+      "live_preview": "https://councilof.ai/api/wrapper/caip19/eip155:42161/erc20:0xaf88d065e77c8cC2239327C5EDb3A432268e5831"
+    },
+    {
+      "caip19": "eip155:42161/erc20:0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+      "chainId": 42161,
+      "chain": "arbitrum",
+      "address": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+      "symbol": "USDT/USDT0",
+      "decimals": 6,
+      "state": "UNCHECKABLE_NATIVE_ISSUANCE",
+      "as_of": "2026-09-14T10:51:51.468Z",
+      "records": [
+        "usdt:arbitrum",
+        "usdt0:arbitrum"
+      ],
+      "evidence": "https://councilof.ai/w/usdt:arbitrum",
+      "ledger": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json",
+      "live_preview": "https://councilof.ai/api/wrapper/caip19/eip155:42161/erc20:0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9"
+    },
+    {
+      "caip19": "eip155:42161/erc20:0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8",
+      "chainId": 42161,
+      "chain": "arbitrum",
+      "address": "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8",
+      "symbol": "USDC.e",
+      "decimals": 6,
+      "state": "ESCROW_PARITY_READ",
+      "as_of": "2026-09-14T10:51:51.468Z",
+      "records": [
+        "usdc.e:arbitrum"
+      ],
+      "evidence": "https://councilof.ai/w/usdc.e:arbitrum",
+      "ledger": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json",
+      "live_preview": "https://councilof.ai/api/wrapper/caip19/eip155:42161/erc20:0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8"
+    }
+  ],
+  "not_listed": [
+    {
+      "id": "weth:arbitrum",
+      "caip19": "eip155:42161/erc20:0x82AF49448D82B08CD7c12bE3b9395c0e72f16154",
+      "ledger_state": "UNMEASURED",
+      "reason": "no contract code at this address on this chain at the pinned block, per two operators; the ledger record reads an address that holds no token",
+      "evidence": "https://councilof.ai/wallet/decimals-reads-2026-09-28.json"
+    },
+    {
+      "id": "usdc:zksync-era",
+      "caip19": "eip155:324/erc20:0x1D17cbcF0D6D143135aE9C6B21c1Fc6d80C59E3e",
+      "ledger_state": "UNMEASURED",
+      "reason": "no contract code at this address on this chain at the pinned block, per two operators; the ledger record reads an address that holds no token",
+      "evidence": "https://councilof.ai/wallet/decimals-reads-2026-09-28.json"
+    }
+  ],
+  "producer": "scripts/wallet/build_measured_wrappers_tokenlist.py",
+  "license": "CC-BY-4.0 (Council of AI, CSOAI Ltd 16939677, councilof.ai)",
+  "token_list_version": "1.0.0",
+  "timestamp": "2026-09-28T22:17:22Z"
+}

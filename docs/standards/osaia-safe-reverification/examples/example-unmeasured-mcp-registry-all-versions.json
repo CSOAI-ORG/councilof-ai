@@ -1,0 +1,62 @@
+{
+  "profile": "safe-reverification/0.1-draft",
+  "record_id": "csoai:safe-rv:2026-09-25:mcp-registry:all-versions-population",
+  "issuer": "https://councilof.ai",
+  "issued_at": "2026-09-25T06:14:08Z",
+  "finding": {
+    "kind": "measurement",
+    "finding_ref": null,
+    "disclosure_tier": "public",
+    "summary": "Worked example of UNMEASURED. After the correction, the size of the MCP registry counted in (name, version) pairs, the unit the withdrawn figure used, has not been measured. The record says so instead of filling the gap."
+  },
+  "claim": {
+    "claim_id": "mcp-registry/population/name-version-pairs",
+    "claim_type": "population_count",
+    "statement": "The MCP registry held N (name, version) pairs on 25 Sep 2026.",
+    "subject": {
+      "identifier": "https://registry.modelcontextprotocol.io/v0/servers",
+      "scheme": "url"
+    },
+    "scope": "All versions. The latest-version count (35,873, EXHAUSTED) is a different unit and is not a substitute."
+  },
+  "dependencies": [
+    {"dep_id": "registry", "kind": "external_service", "name": "MCP registry list endpoint, all versions", "version": null, "digest": null,
+     "uri": "https://registry.modelcontextprotocol.io/v0/servers", "observed_at": null, "state": "UNAVAILABLE"}
+  ],
+  "test": {
+    "method_id": "census/frame.py registry walk, all versions",
+    "method_version": null,
+    "procedure": "Not run.",
+    "procedure_digest": null,
+    "reproduction": "not_reproducible",
+    "substitutions": [],
+    "declared_failure_modes": [],
+    "noise_floor": null
+  },
+  "negative_control": {
+    "kind": "none",
+    "expected": "FAIL",
+    "observed": "NOT_RUN",
+    "negatives_observed": null,
+    "denominator": null
+  },
+  "result": {
+    "state": "UNMEASURED",
+    "measured_at": null,
+    "reason": "No all-versions walk was run. Every latest-version server is one (name, version) pair, so the population is at least 35,873; that is a floor, not a total, and it is not reported as N.",
+    "read_state": "NOT_READ",
+    "n": null,
+    "denominator": null,
+    "evidence": []
+  },
+  "remediation": {"state": "NOT_STARTED", "reference": null, "retest_record_id": null},
+  "watch": {
+    "triggers": [],
+    "retest_bound": {"max_latency": "P30D", "max_attempts": 1, "on_exhausted": "MARK_UNMEASURED"},
+    "state": "NOT_WATCHED",
+    "last_checked_at": null
+  },
+  "limits": [
+    "UNMEASURED means no measurement was made. It is not zero, not unknown-but-probably-fine, and not an estimate."
+  ]
+}

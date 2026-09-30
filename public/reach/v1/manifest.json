@@ -1,0 +1,103 @@
+{
+ "schema": "csoai.reach-index/0.1",
+ "what_this_is": "A compact, sharded copy of signed census records, so the entity pages under /mcp-servers/ and /x402/ can be rendered at request time. Every value is copied from the records named here; nothing is re-measured.",
+ "what_this_is_not": "Not a grade, ranking, rating or endorsement of any server, and says nothing about security, quality or safety.",
+ "producer": "scripts/reach/build-reach-index.mjs",
+ "built_at": "2026-09-27T04:42:16.079Z",
+ "shard_rule": "sha256(lower-case host), first hex digit; 16 shards",
+ "sources": {
+  "contract_parity": {
+   "dataset": "csoai/mcp-contract-parity",
+   "record": "record.v0.1.2.json",
+   "record_url": "https://huggingface.co/datasets/csoai/mcp-contract-parity/blob/main/record.v0.1.2.json",
+   "signed": "record.v0.1.2.signed.json",
+   "signed_url": "https://huggingface.co/datasets/csoai/mcp-contract-parity/blob/main/record.v0.1.2.signed.json",
+   "record_sha256": "5a9bedff1b6facbd9e19a1db1282b37fb6cedd9bf6c7dd14aeeeff387eae77ed",
+   "signature": "VERIFIES",
+   "signature_payload_sha256": "54af1df09502faa849335d41a77a0f10ecaa48c109544f97bfc390fc0103a458",
+   "schema": "csoai.mcp-contract-parity/0.1.2",
+   "as_of": "2026-09-25T12:24:52Z",
+   "files": {
+    "rows.v0.1.2.jsonl.gz": "8fb15bcbb83db1ae6a61945c2f870a16d27adcc751c059439e63d8e910730492"
+   }
+  },
+  "census_population": {
+   "dataset": "csoai/mcp-remote-census",
+   "record": "record.v0.2.1.json",
+   "record_url": "https://huggingface.co/datasets/csoai/mcp-remote-census/blob/main/record.v0.2.1.json",
+   "signed": "record.v0.2.1.signed.json",
+   "signed_url": "https://huggingface.co/datasets/csoai/mcp-remote-census/blob/main/record.v0.2.1.signed.json",
+   "record_sha256": "3155502aa629a3e0e8dd0240862933e475cc2afaf3417d03c0efa314d139c4bd",
+   "signature": "VERIFIES",
+   "signature_payload_sha256": "67120bed88a05dfb2493ffcf99fdaea3173599926f7074258375fe4f394b8cb2",
+   "schema": "csoai.mcp-remote-census/0.2.1",
+   "as_of": "2026-09-26T05:57:36Z",
+   "files": {
+    "results.v0.2.public.jsonl.gz": "a9b644a17e116c1c6f12c4ecacbb013bab62b3d04f5e84f4715578406984fc70"
+   }
+  },
+  "census_daily": {
+   "dataset": "csoai/mcp-remote-census",
+   "record": "record.2026-09-27.json",
+   "record_url": "https://huggingface.co/datasets/csoai/mcp-remote-census/blob/main/record.2026-09-27.json",
+   "signed": "record.2026-09-27.signed.json",
+   "signed_url": "https://huggingface.co/datasets/csoai/mcp-remote-census/blob/main/record.2026-09-27.signed.json",
+   "record_sha256": "3926bb8a28937881ef534e84041f23481dfcd6cb3894e4f21c4004b62cee5418",
+   "signature": "VERIFIES",
+   "signature_payload_sha256": "9647cf5a0f56f756f713fd4f023c173aaef8f6ac4b9cd97a32f7b7155600679c",
+   "schema": "csoai.mcp-remote-census/weekly-0.1",
+   "as_of": "2026-09-27T03:18:10Z",
+   "files": {
+    "probe/results.public.2026-09-27.jsonl.gz": "3d98232cc3a0ebee08592c205450bb0304a8970bf932455d840443b21f7372e2",
+    "probe/not_attempted.2026-09-27.jsonl.gz": "4cb56efc21028b8c5911d6da8262c1f8500bf96c413a2824a1db88173ccde6cb"
+   }
+  },
+  "probe_exclusions": {
+   "path": "scripts/census/probe-exclusions.json",
+   "sha256": "32a246335fa203631c2aeaca0d22c4451b9d509b759f3e3b674a617a67a16e75",
+   "entries": 0
+  },
+  "capsules": {
+   "path": "/measurement-capsules/v0.2/endpoints/",
+   "note": "capsule counts per endpoint, read from the committed signed capsule shards"
+  },
+  "x402_census": {
+   "path": "/interop/x402-census/index.json",
+   "cards": "/interop/x402-census-cards/"
+  }
+ },
+ "types": {
+  "mcp-servers": {
+   "hosts": 5311,
+   "endpoints": 5824,
+   "excluded": {
+    "operator_endpoints": 0,
+    "robots_endpoints": 4
+   },
+   "opt_out_rule": "an endpoint in scripts/census/probe-exclusions.json, or one a census run did not attempt because robots.txt disallowed CSOAI-census or could not be read, has no page"
+  },
+  "x402": {
+   "census_hosts": 104
+  }
+ },
+ "files": {
+  "mcp/0.json": "ec710d0827b5eb7f70fb77e70133b1d824c3c8bcbfa4f240ad815c22bafb5f83",
+  "mcp/1.json": "c13ad48d286c472368d4e00b65cd507c9359bd4348e49ab8f189866435097876",
+  "mcp/2.json": "075641fc7f0b42c4ff82f58061cf8993bf7d5375b147d3f807e4a2dec54f03f9",
+  "mcp/3.json": "066f38ddbef815dda11c6c46bfee0ef69ebadf1648a885e44e84cba4423f65b3",
+  "mcp/4.json": "ef1541ab458d1314cf862245cdede190a0c5a6606a8e1fc0778feabd73995010",
+  "mcp/5.json": "8d7d19e54d541c20417a2e6f3833645a5a41ff1b312b867da075561c4321dd1d",
+  "mcp/6.json": "4bf1207ab2759bd79c3729c45619b53508c6f12635e89d5e409dca4ad6a5cb2e",
+  "mcp/7.json": "513aad660906517e9fc80c7b3ba2b953e8db1a53e3d6851407808eb2db460331",
+  "mcp/8.json": "52316e06eb3f0e9393c665155afa3f445d912b1807c92d5f505b2f9849d69f1f",
+  "mcp/9.json": "f3bbece6a25272e039945f961ec1c67936cc759e39cebf5d0146eceb9ed8efed",
+  "mcp/a.json": "99122bd095ec477cf43c17e4c71f90caf108b774ab33254752dea0c1cad6f69c",
+  "mcp/b.json": "fecc9347be6f5bec8cab41172d8787f06c36053ef922b78faae300b44def8a0f",
+  "mcp/c.json": "34c4045eceedb802b49599f68f8eb00973581117234bc9becbd04d67f3dc176e",
+  "mcp/d.json": "b8a8e9bd3ee4b04e41b425b27e84886b6a88ec30109a5c7815d12d1ccd69313a",
+  "mcp/e.json": "808bd76faece78b4189b850ffde2e51293d88fdf5c1793d71a3cdb70d1a249b6",
+  "mcp/f.json": "d4e94429d039e2977f558352e58c1d80bfe9be6da5c651402f76ab2236f3ec04",
+  "mcp/list.json": "1c1b64f48506befa326d5f61e3ca44b5ec312a7f1396e1ae96dd82ff04892f8b",
+  "x402-census.json": "1667b75893d0fdcd63020222582a8a8b114e740e226c45c829e0afd7c3bee27a"
+ }
+}

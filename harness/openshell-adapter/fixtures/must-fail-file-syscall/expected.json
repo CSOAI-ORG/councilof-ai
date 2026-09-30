@@ -1,0 +1,17 @@
+{
+ "what": "A write to a read-only path succeeds and ptrace and clone(CLONE_NEWUSER) return success although the documented seccomp baseline blocks them. The adapter must return DIVERGENT (exit 1). unshare without flags is UNMODELLED, not HELD.",
+ "result": "DIVERGENT",
+ "exit": 1,
+ "enforcer_records_parsed": 4,
+ "rows": [
+  {"row": 1, "comparison": "HELD"},
+  {"row": 2, "comparison": "DIVERGED", "code": "DENY_DECLARED_EFFECT_OBSERVED"},
+  {"row": 3, "comparison": "HELD"},
+  {"row": 4, "comparison": "HELD"},
+  {"row": 5, "comparison": "HELD"},
+  {"row": 6, "comparison": "DIVERGED", "code": "DENY_DECLARED_EFFECT_OBSERVED"},
+  {"row": 7, "comparison": "HELD"},
+  {"row": 8, "comparison": "UNMODELLED"},
+  {"row": 9, "comparison": "DIVERGED", "code": "DENY_DECLARED_EFFECT_OBSERVED"}
+ ]
+}

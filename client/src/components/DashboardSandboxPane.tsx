@@ -1,7 +1,7 @@
 /**
  * DashboardSandboxPane — code interpreter sandbox.
  *
- * Every sandbox result is signed + attested.
+ * NOT MOUNTED. /api/sandbox answers 503 (no sandbox runtime); nothing here is signed or attested.
  */
 
 import { useState } from "react";
@@ -26,7 +26,7 @@ export default function DashboardSandboxPane() {
         <CardHeader>
           <CardTitle>Sandbox</CardTitle>
           <p className="text-sm text-muted-foreground">
-            Code interpreter sandbox. Every result is signed + attested.
+            Code interpreter sandbox: not running. /api/sandbox answers 503, so no result is produced, signed or attested.
           </p>
         </CardHeader>
         <CardContent>

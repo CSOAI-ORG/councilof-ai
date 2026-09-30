@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useLanguage } from '@/hooks/useLanguage';
 import { SUPPORTED_LANGUAGES } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
@@ -7,7 +6,6 @@ import { Globe, MapPin, DollarSign } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function RegionSettings() {
-  useEffect(() => { document.title = "RegionSettings | CSOAI"; }, []);
   const { language, currency, region, changeLanguage, supportedLanguages } = useLanguage();
 
   const handleLanguageChange = (langCode: string) => {

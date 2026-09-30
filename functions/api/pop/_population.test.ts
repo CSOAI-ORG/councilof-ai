@@ -5,7 +5,7 @@ import { resolve } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { POPULATIONS, POPULATION_IDS, otsStateFromBytes, pyDumpsSortedIndent1, claimRegistryCompact } from "../_population";
 import { onRequestGet as door, SKU } from "../_population_door";
-import { onRequestGet as eunomia } from "../eunomia-data";
+import { onRequestGet as eunomia } from "../signed-data-feed";
 import { onRequestGet as xrplReader } from "../xrpl";
 import { onRequestGet as manifest } from "../../.well-known/x402.json";
 import { onRequestGet as catalog } from "../x402";
@@ -251,6 +251,17 @@ describe("free preview — every reading is derived from the artifact bytes", ()
     }
     expect(b.state).toBe("INDEXED");
     expect(b.n).toBe(claims);
+    expect(b.n_unit).toMatch(/all published registry versions/);
+    expect(b.head.historical_published_claim_rows).toBe(b.n);
+    const supersededIds = new Set(
+      rows
+        .map((r) => (r.supersedes as Record<string, unknown> | null)?.registry_id)
+        .filter((x): x is string => typeof x === "string" && x.length > 0),
+    );
+    const liveRows = rows.filter((r) => !supersededIds.has(String(r.registry_id ?? "")));
+    const liveClaims = liveRows.reduce((n, r) => n + Number(r.claims ?? 0), 0);
+    expect(b.head.current_live_claim_rows).toBe(liveClaims);
+    expect(b.head.current_live_registry_count).toBe(liveRows.length);
     const path = "/claims/" + files[0];
     const raw = readFileSync(resolve(PUBLIC, "." + path));
     const file = JSON.parse(raw.toString("utf8"));
@@ -288,7 +299,7 @@ describe("free preview — every reading is derived from the artifact bytes", ()
 describe("the 402 challenge", () => {
   it("is path-scoped, carries extensions.bazaar without queryParams, names the population and its as_of, and prices like the existing doors", async () => {
     stubDisk();
-    const ref = await (await call(eunomia, ctx("/api/eunomia-data?feed=1"))).json() as { accepts: Record<string, unknown>[] };
+    const ref = await (await call(eunomia, ctx("/api/signed-data-feed?feed=1"))).json() as { accepts: Record<string, unknown>[] };
     const refAccept = ref.accepts[0] as { amount: string; payTo: string; csoai_pricing: { normal_amount_atomic: string; pricing_basis: string } };
     for (const id of EXPECTED_IDS) {
       const r = await call(door, ctx(`/api/pop/${id}`));
@@ -305,9 +316,13 @@ describe("the 402 challenge", () => {
       expect(ext.bazaar.schema.properties.input.properties).not.toHaveProperty("queryParams");
       const entry = POPULATIONS.find((p) => p.id === id)!;
       const pv = await preview(id);
-      expect(resource.description).toContain(entry.title);
-      if (pv.as_of) expect(resource.description).toContain(pv.as_of);
-      expect(resource.description).toContain(`state ${pv.state}`);
+      // The description is the canonical text every surface carries (x402-descriptions.json); the
+      // live reading — title, as_of, state — rides beside it in csoai.reading_sentence.
+      expect(resource.description).toBe((descriptions as Record<string, string>)[`pop_${id}`]);
+      const sentence = String((b.csoai as Record<string, unknown>).reading_sentence);
+      expect(sentence).toContain(entry.title);
+      if (pv.as_of) expect(sentence).toContain(pv.as_of);
+      expect(sentence).toContain(`state ${pv.state}`);
       const accepts = b.accepts as typeof ref.accepts;
       const a = accepts[0] as typeof refAccept & { resource: string };
       expect(a.resource).toBe(`${ORIGIN}/api/pop/${id}`);
@@ -320,18 +335,19 @@ describe("the 402 challenge", () => {
       expect(typeof csoai.deliverable).toBe("string");
       expect((csoai.preview as { n: unknown }).n).toBe(pv.n);
       expect(JSON.stringify(b)).not.toMatch(/\$\s?\d/);
-      // x402scan drops a door whose PAYMENT-REQUIRED header exceeds 16 KiB.
-      expect(r.headers.get("payment-required")!.length, `${id} header`).toBeLessThan(16 * 1024);
+      // x402scan drops a door whose PAYMENT-REQUIRED header exceeds 16 KiB; common proxies drop one
+      // over 4–8 KiB. The rail's budget is 4 KiB (PAYMENT_REQUIRED_HEADER_BUDGET).
+      expect(r.headers.get("payment-required")!.length, `${id} header`).toBeLessThan(4 * 1024);
     }
     expect(SKU).toEqual({ skuId: "issuance", tier: "reserve" });
   });
 
-  it("still 402s when every artifact is unreadable, saying so in the description", async () => {
+  it("still 402s when every artifact is unreadable, saying so in csoai.reading_sentence", async () => {
     stubDisk(undefined, { nothing: true });
     const r = await call(door, ctx("/api/pop/stablecoins"));
     expect(r.status).toBe(402);
-    const b = (await r.json()) as { resource: { description: string }; extensions: { bazaar: unknown } };
-    expect(b.resource.description).toMatch(/UNMEASURED/);
+    const b = (await r.json()) as { resource: { description: string }; extensions: { bazaar: unknown }; csoai: { reading_sentence: string } };
+    expect(b.csoai.reading_sentence).toMatch(/UNMEASURED/);
     expect(b.extensions.bazaar).toBeTruthy();
   });
 

@@ -1,0 +1,88 @@
+{
+  "card": {
+    "as_of": "2026-09-29T17:09:12Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.ledger-head/0.1",
+      "ledger": "claim-maintenance-register",
+      "authority_for": "claim state per maintained subject",
+      "served_url": "https://councilof.ai/api/claims/register",
+      "http_status": 200,
+      "not_a_grade": true,
+      "bytes_sha256": "beadf7001f83662c4d2bd5da5c0c733323163eff726497b7267a90ae9a47ac57",
+      "n_bytes": 43593,
+      "entries": 6,
+      "subjects": 28,
+      "head_digest": "b6212a8da5550ce2b0443ab20416156cf5ed4746115e74aa4079861a9f0b8a6a",
+      "last_update": "2026-09-25T11:08:49Z",
+      "registries": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2:LIVE",
+        "claimreg-ai-assurance-and-settlement-2026-09-23:SUPERSEDED",
+        "claimreg-hiring-platforms-2026-09-24-rev2:LIVE",
+        "claimreg-hiring-platforms-2026-09-24:SUPERSEDED",
+        "claimreg-ondo-chainlink-2026-09-22-rev2:LIVE",
+        "claimreg-ondo-chainlink-2026-09-22:SUPERSEDED"
+      ],
+      "state": "PROBED"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "c528c934a94d370b38b5415d61c5e867af9ff4f44147dc08f786abbc91271b4f",
+    "sig_ed25519": "6da61f2b1f96ae6621f1cad1f4ed440a8b011a3867db16b13012df6cc5129f066963c1d728301e4a1f486c81737c5e4ea7db7a3f6544d53cd0b32e3068709102",
+    "source_urls": [
+      "https://councilof.ai/api/claims/register"
+    ],
+    "subject": "Ledger head: claim-maintenance-register (served bytes, digest and count at one read)",
+    "surface": "public.notice",
+    "tags": [
+      "ledger-head",
+      "claim-maintenance-register",
+      "ledger-heads-2026-09"
+    ],
+    "unmeasured": [
+      "whether any entry is correct; this atom commits to the served bytes and their head only"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "de1306057ec779b34a313ffcd671e71788d3120550092f0e146d12acb29f80b5",
+    "77101ab5666342df1c5ce96a2928adfeb3d2ddc567f29b5c9abe0319c4cff782",
+    "adcadc85ba9dd7203e03805d028ddf4801ea78f66d7b898162c72a9416f4905c",
+    "8d85e2775bc85b49031deab846bf28dcab6c68c4a24c6ca6b4e2ea8357afe764",
+    "970e30cd0671222bfbb7ec52e6ac0eb129a030eccd001f39209bbd16cc739f63",
+    "c27731acda42c2c58166f28a9e16574466182441c1b79622c93810a8fc7940b2",
+    "df5244699a9b34de127533c6b74135a9167a20de063c02d0ba8369e792f96853",
+    "d1c02817beff607edf0656f2d1166e816631ecd0620ebb7bbb382944c506e4ac",
+    "b00ef8f13cf4a29dca9594807e9751885752ba0ce07d4e503cff5c1fc80d8b52"
+  ]
+}

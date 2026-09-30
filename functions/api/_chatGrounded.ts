@@ -4,6 +4,7 @@ import {
 } from "./_chatCanon";
 import { ART5, ART5_CUES, why } from "./_chatArt5";
 import { lobbyGround } from "./_chatLobby";
+import { executePlan, HELP_TEXT, routeIntent } from "../_lib/talkRouter";
 
 interface Env { SOV_GATE_URL?: string; SOV_GATE_TOKEN?: string }
 
@@ -135,7 +136,7 @@ async function grounded(q: string, origin: string): Promise<string | null> {
       (canon.countGrammar ? `${canon.countGrammar}\n\n` : "") +
       `Quote both numbers or quote the smaller one — the larger counts slots, not measurements. ` +
       `A published slot exists so the gap is visible; it is not evidence of anything having been measured. ` +
-      `Jail is MEASURED; a TIE is not a separated leader.\n\n` +
+      `Jail is MEASURED; its separation is UNTESTED, and an untested lead is not a separated leader.\n\n` +
       `${canon.jailNote}\n\n` +
       `The ${mAxes.length} measured:\n` +
       mAxes.map(row).join("\n") +
@@ -237,6 +238,30 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   // It is now board-relative and lives inside grounded(), immediately after the board
   // is fetched — the earliest point at which it has anything true to compare against.
   // Prefer published board canon over SOV LIVE (sales-blocker fix)
+  // TOOL ROUTING FIRST (2026-09-29). A question one of the /mcp tools answers is answered BY that
+  // tool, called in-process (functions/_lib/talkRouter.ts, shared with the A2A text path and
+  // /api/agui/run): the reply quotes the tool's output, cites tool + record id + URL, and carries
+  // the tool's own state label. Before this, "is <server> trustworthy" came back `ungrounded`
+  // although mcp_trust and server_evidence answer it. Only a question the router cannot place
+  // falls through to the published-facts rules below (Article 5 screen, method, pricing, lobby).
+  const plan = routeIntent(question);
+  if (plan.kind !== "help") {
+    const t = await executePlan(plan, origin);
+    return reply(
+      t.answer,
+      t.grounded ? "tool output - deterministic routing - same handlers as POST /mcp" : "router - no tool called",
+      t.grounded ? "grounded" : t.kind,
+      {
+        answered_by: t.answered_by,
+        router: "deterministic keyword/entity routing (no model chooses or authors)",
+        intent: t.intent,
+        label: t.label,
+        citations: t.citations,
+        tool_calls: t.tool_calls,
+      },
+    );
+  }
+
   const g = await grounded(question, origin);
   if (g) return reply(g, "grounded in published measurement - deterministic - recomputable", "grounded");
 
@@ -262,6 +287,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
 
   return reply(
     `I could not ground an answer from published measurement.\n\n` +
+    `${HELP_TEXT}\n\n` +
     "Try a **named board axis**, **EU AI Act Article 5**, **GET /api/gspc**, **pricing**, **get measured**, or the **measurement method**.\n\n" +
     `Named axes: ${named || "see GET /api/gspc"}.\n\n` +
     "I will not invent a number or a legal opinion.",

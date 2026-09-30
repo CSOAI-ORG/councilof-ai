@@ -53,10 +53,11 @@ type Wire =
   | { state: "live"; doc: ArchiveIndex };
 
 const METHOD_URL =
-  "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md";
+  "https://huggingface.co/datasets/csoai/councilof-ai-source/blob/main/source/docs/PROVABLE-ARCHIVE-METHOD.md";
 
 function short(h?: string | null, n = 10): string {
-  return h ? `${h.slice(0, n)}…` : "—";
+  // A null hash in the record prints as "none" — the record says there is none; a dash reads as blank.
+  return h ? `${h.slice(0, n)}…` : "none";
 }
 
 function groupOf(subject: string): string {
@@ -143,10 +144,10 @@ function ArchiveTable({ doc }: { doc: ArchiveIndex }) {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
-        <span>index as of {doc.as_of || "—"}</span>
+        <span>index as of {doc.as_of || "UNCHECKABLE"}</span>
         <span>{subjects.length} subjects</span>
-        <span>{doc.roots_indexed ?? "—"} roots indexed</span>
-        <span>{doc.roots_witnessed ?? "—"} roots witnessed</span>
+        <span>{doc.roots_indexed ?? "UNCHECKABLE"} roots indexed</span>
+        <span>{doc.roots_witnessed ?? "UNCHECKABLE"} roots witnessed</span>
       </div>
       {[...groups.entries()].map(([g, rows]) => (
         <div key={g} className="space-y-1">
@@ -176,9 +177,9 @@ function ArchiveTable({ doc }: { doc: ArchiveIndex }) {
                         </a>
                       </td>
                       <td className="py-1 pr-3">{s.n}</td>
-                      <td className="py-1 pr-3">{s.first_as_of || "—"}</td>
-                      <td className="py-1 pr-3">{s.last_as_of || "—"}</td>
-                      <td className="py-1 pr-3 font-mono">{l.block ?? "—"}</td>
+                      <td className="py-1 pr-3">{s.first_as_of || "UNCHECKABLE"}</td>
+                      <td className="py-1 pr-3">{s.last_as_of || "UNCHECKABLE"}</td>
+                      <td className="py-1 pr-3 font-mono">{l.block ?? "none"}</td>
                       <td className="py-1 pr-3 font-mono">
                         {l.eip1186_proof_sha256 ? (
                           <a
@@ -190,7 +191,7 @@ function ArchiveTable({ doc }: { doc: ArchiveIndex }) {
                             {short(l.eip1186_proof_sha256)}
                           </a>
                         ) : (
-                          "—"
+                          "none"
                         )}
                       </td>
                       <td className="py-1 pr-3 font-mono" title={l.root_merkle || ""}>

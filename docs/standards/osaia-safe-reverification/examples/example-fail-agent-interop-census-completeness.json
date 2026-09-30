@@ -1,0 +1,94 @@
+{
+  "profile": "safe-reverification/0.1-draft",
+  "record_id": "csoai:safe-rv:2026-09-25:agent-interop-census:mcp-registry-completeness",
+  "issuer": "https://councilof.ai",
+  "issued_at": "2026-09-25T06:14:08Z",
+  "supersedes": [
+    {
+      "record_id": "hf:csoai/agent-interop-census@cc1dcf041b9a1f61807e434759bd700be3007b2d:totals.json",
+      "sha256": "f182eea52439a65a34de375d87711bf8ad70fbcf158ddf2bb96a7a7a13825b4f",
+      "uri": "https://huggingface.co/datasets/csoai/agent-interop-census/resolve/cc1dcf041b9a1f61807e434759bd700be3007b2d/totals.json",
+      "reason": "Published mcp_registry_enumeration_complete: true after reading 2 pages. The original bytes remain at this revision and still say true; the correction is a new revision beside them, not an edit."
+    }
+  ],
+  "finding": {
+    "kind": "public_claim",
+    "finding_ref": null,
+    "disclosure_tier": "public",
+    "summary": "Worked example of a correction. Our own dataset declared a complete enumeration of the MCP registry from a 2-page, 100-entry read. The claim is re-tested, found false, and superseded; the producer is fixed so that the same input now fails closed."
+  },
+  "claim": {
+    "claim_id": "agent-interop-census/mcp_registry_enumeration_complete",
+    "claim_type": "population_count",
+    "statement": "The read behind mcp_registry_unique_entries = 100 enumerated the whole MCP registry (mcp_registry_enumeration_complete = true).",
+    "subject": {
+      "identifier": "https://huggingface.co/datasets/csoai/agent-interop-census/resolve/cc1dcf041b9a1f61807e434759bd700be3007b2d/totals.json",
+      "scheme": "huggingface-dataset-revision"
+    },
+    "scope": "Whether the 14 Sep 2026 read was complete. Not the size of the registry in (name, version) pairs, which is carried as a separate UNMEASURED record."
+  },
+  "dependencies": [
+    {"dep_id": "published-totals", "kind": "dataset", "name": "totals.json as published", "version": "cc1dcf041b9a1f61807e434759bd700be3007b2d",
+     "digest": {"alg": "sha256", "value": "f182eea52439a65a34de375d87711bf8ad70fbcf158ddf2bb96a7a7a13825b4f"},
+     "uri": "https://huggingface.co/datasets/csoai/agent-interop-census/resolve/cc1dcf041b9a1f61807e434759bd700be3007b2d/totals.json", "observed_at": "2026-09-25T10:54:55Z", "state": "PINNED"},
+    {"dep_id": "collector-v1", "kind": "tool", "name": "scripts/census/collect-mcp-registry.py (as run on 14 Sep)", "version": null, "digest": null, "uri": null, "observed_at": null, "state": "UNAVAILABLE"},
+    {"dep_id": "registry", "kind": "external_service", "name": "MCP registry list endpoint, version=latest", "version": null, "digest": null,
+     "uri": "https://registry.modelcontextprotocol.io/v0/servers", "observed_at": "2026-09-25T05:54:00Z", "state": "UNPINNED",
+     "otel": {"url.full": "https://registry.modelcontextprotocol.io/v0/servers"}},
+    {"dep_id": "frame-read", "kind": "dataset", "name": "census frame page set, 359 pages", "version": null,
+     "digest": {"alg": "sha256", "value": "60482de9b0b1121b6532d24721d2f2911393816466427bb734d11c5333d52ffb"},
+     "uri": "https://huggingface.co/datasets/csoai/agent-interop-census/resolve/c466fb8d4ad605b9238a2046cacaba7a96e3bea2/census-frame-2026-09-25/summary.json", "observed_at": "2026-09-25T05:54:00Z", "state": "PINNED"}
+  ],
+  "test": {
+    "method_id": "census/frame.py registry walk with fail-closed read_state",
+    "method_version": "census-frame lane 2026-09-25",
+    "procedure": "Walk the registry list endpoint with version=latest until nextCursor is absent; count a response as a page only if HTTP 200, complete JSON, servers[] and metadata{} are present; any other response stops the walk as PARTIAL.",
+    "procedure_digest": null,
+    "reproduction": "re_execution",
+    "substitutions": ["registry: the 14 Sep registry state was not preserved and cannot be replayed; the 25 Sep state was read instead", "collector-v1: kept no response bodies, so whether page 2 was an error object or an empty page cannot be recovered"],
+    "declared_failure_modes": ["A registry that returns a well-formed page without nextCursor before its real end would still read as EXHAUSTED; the frame cannot detect a truncating upstream."],
+    "noise_floor": null
+  },
+  "negative_control": {
+    "kind": "designed_to_fail",
+    "description": "The published legacy totals document, which carries no read_state, is fed to the fixed gate walk_read_state(); it must come back PARTIAL. An error object in place of a page must end the walk as PARTIAL, not as the end of the registry (test_frame.py CensusReadState and RegistryWalk.test_error_object_is_not_an_end).",
+    "expected": "FAIL",
+    "observed": "FAIL",
+    "negatives_observed": 2,
+    "denominator": 2
+  },
+  "result": {
+    "state": "FAIL",
+    "measured_at": "2026-09-25T05:54:00Z",
+    "reason": "The fixed walk read 359 pages, every one valid, to an upstream end: 35,873 latest-version servers (read_state EXHAUSTED). A 2-page, 100-entry read was therefore not complete. No ratio is stated because the published figure counted (name, version) pairs and the new figure counts latest-version servers.",
+    "read_state": "EXHAUSTED",
+    "n": 35873,
+    "denominator": null,
+    "evidence": [
+      {"name": "CORRECTION.md", "uri": "https://huggingface.co/datasets/csoai/agent-interop-census/resolve/fdb15f00ecda72e11e2aee35037a577a3dedbf6f/CORRECTION.md",
+       "digest": {"alg": "sha256", "value": "63c0d78505692c4538a71da7d5b4e816ff957fad55aee1e4cd0804d19218830e"}},
+      {"name": "totals.json as corrected (enumeration_complete false)", "uri": "https://huggingface.co/datasets/csoai/agent-interop-census/resolve/fdb15f00ecda72e11e2aee35037a577a3dedbf6f/totals.json",
+       "digest": {"alg": "sha256", "value": "8f9816deadb2fa4f47d9149adde60a3de1057a3161f046a1de3c41abc90c0e20"}},
+      {"name": "census frame summary", "uri": "https://huggingface.co/datasets/csoai/agent-interop-census/resolve/c466fb8d4ad605b9238a2046cacaba7a96e3bea2/census-frame-2026-09-25/summary.json",
+       "digest": {"alg": "sha256", "value": "dc805ad447ede96f266538e028243531084b9dd5662cea937a30d845a244ce4c"}}
+    ]
+  },
+  "remediation": {
+    "state": "APPLIED",
+    "reference": "Collector and builder fixed to fail closed (census-frame lane); dataset corrected at HF revision fdb15f00ecda72e11e2aee35037a577a3dedbf6f. Republishing the dataset from the fixed builder has not happened, so the state is APPLIED, not VERIFIED_BY_RETEST.",
+    "retest_record_id": null
+  },
+  "watch": {
+    "triggers": [
+      {"dep_id": "registry", "on": "age_exceeds", "max_age": "P7D"}
+    ],
+    "retest_bound": {"max_latency": "P7D", "max_attempts": 3, "on_exhausted": "MARK_STALE"},
+    "state": "NOT_WATCHED",
+    "last_checked_at": "2026-09-25T10:54:55Z"
+  },
+  "limits": [
+    "This record says a published completeness claim was false. It says nothing about the quality of any listed server.",
+    "The correction is carried by Hugging Face git revisions and a correction note; neither this record nor the correction note is board-signed.",
+    "The 14 Sep failure cannot be replayed; the finding rests on a later re-execution against a registry that has grown since."
+  ]
+}

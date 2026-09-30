@@ -1,0 +1,78 @@
+{
+  "schema": "csoai.wallet-decimals-reads/0.1",
+  "read_at": "2026-09-28T22:15:29Z",
+  "purpose": "decimals() for ledger records that do not carry it, so a token list can name them; contract metadata, not a measurement",
+  "ledger": "/interop/wrapped-asset-parity-latest.json",
+  "ledger_as_of": "2026-09-14T10:51:51.468Z",
+  "rule_code": "when decimals() fails, eth_getCode at the same block from two different operators; code_bytes 0 from both means no contract at that address",
+  "rule": "keyless endpoints from functions/api/_evm_rpcs.json in order; finalized block confirmed by a second operator; eth_call at that block; a failed read is recorded with its error and the record stays out of the token list",
+  "producer": "scripts/wallet/read_wallet_decimals.py",
+  "reads": [
+    {
+      "id": "weth:arbitrum",
+      "chain": "arbitrum",
+      "chainId": 42161,
+      "address": "0x82aF49448D82B08cD7C12Be3B9395C0e72f16154",
+      "block": {
+        "number": 509837814,
+        "hex": "0x1e6381f6",
+        "hash": "0x4370847fa0b27d88315733196f4364e1de44af2a4accc555ff9d4de79da7e8f1",
+        "timestamp": 1790632874,
+        "finality": "RPC_FINALIZED_TAG_HASH_MATCHED_BY_SECOND_OPERATOR_NOT_INDEPENDENTLY_PROVEN_FINAL",
+        "operators": [
+          "arbitrum.io",
+          "1rpc.io"
+        ]
+      },
+      "error": "arbitrum.io/hash: not a decimals value: 0x; arbitrum.io/number: not a decimals value: 0x; 1rpc.io/hash: not a decimals value: 0x; 1rpc.io/number: not a decimals value: 0x; drpc.org/hash: HTTP Error 400: Bad Request; drpc.org/number: HTTP Error 400: Bad Request; publicnode.com/hash: RPC error: historical state d48843dc79d434056ee756a99845f40436366e69dce1d90997f090f8f83e6088 is not available; publicnode.com/number: HTTP Error 403: Forbidden",
+      "code_at_block": [
+        {
+          "operator": "arbitrum.io",
+          "block_tag": "hash",
+          "code_bytes": 0,
+          "raw_sha256": "a54942c8e365f3784f38b8d437f9d708290db60738b00cdcfb934c32d1be97f3"
+        },
+        {
+          "operator": "1rpc.io",
+          "block_tag": "hash",
+          "code_bytes": 0,
+          "raw_sha256": "a54942c8e365f3784f38b8d437f9d708290db60738b00cdcfb934c32d1be97f3"
+        }
+      ],
+      "finding": "no contract code at this address on this chain at the pinned block, per two operators; the ledger record reads an address that holds no token"
+    },
+    {
+      "id": "usdc:zksync-era",
+      "chain": "zksync-era",
+      "chainId": 324,
+      "address": "0x1d17CBcF0D6D143135aE9C6B21C1fC6D80C59e3E",
+      "block": {
+        "number": 72256157,
+        "hex": "0x44e8a9d",
+        "hash": "0xea0b3289210e5e9c3bd28ca1579d562b302f5338d92979b5b57b4276f25a91ae",
+        "timestamp": 1790619829,
+        "finality": "RPC_FINALIZED_TAG_HASH_MATCHED_BY_SECOND_OPERATOR_NOT_INDEPENDENTLY_PROVEN_FINAL",
+        "operators": [
+          "zksync.io",
+          "drpc.org"
+        ]
+      },
+      "error": "zksync.io/hash: not a decimals value: 0x; zksync.io/number: not a decimals value: 0x; drpc.org/hash: not a decimals value: 0x; drpc.org/number: not a decimals value: 0x; 1rpc.io/hash: not a decimals value: 0x; 1rpc.io/number: not a decimals value: 0x",
+      "code_at_block": [
+        {
+          "operator": "zksync.io",
+          "block_tag": "hash",
+          "code_bytes": 0,
+          "raw_sha256": "a54942c8e365f3784f38b8d437f9d708290db60738b00cdcfb934c32d1be97f3"
+        },
+        {
+          "operator": "drpc.org",
+          "block_tag": "hash",
+          "code_bytes": 0,
+          "raw_sha256": "a54942c8e365f3784f38b8d437f9d708290db60738b00cdcfb934c32d1be97f3"
+        }
+      ],
+      "finding": "no contract code at this address on this chain at the pinned block, per two operators; the ledger record reads an address that holds no token"
+    }
+  ]
+}

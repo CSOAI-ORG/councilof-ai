@@ -2,8 +2,8 @@
   "schema": "openapi/3.0.0",
   "info": {
     "title": "Council of AI (CSOAI)",
-    "version": "1.0.0",
-    "description": "AI governance + measurement substrate. 22-axis GSPC. x402 paid attestations.",
+    "version": "1.1.0",
+    "description": "AI governance and measurement substrate. Living GSPC board (read axis counts from /api/gspc and /api/state; none is frozen here); free card verification; x402 evidence services.",
     "contact": {
       "name": "Nicholas Templeman",
       "url": "https://councilof.ai/"
@@ -18,91 +18,180 @@
       "description": "Council OS API"
     }
   ],
+  "x-canonical-openapi": "https://councilof.ai/api/openapi.json",
+  "x-compatibility-note": "Legacy compatibility manifest. Prefer /api/openapi.json for current public read surfaces. This file must not freeze board counts or invent routes.",
   "paths": {
-    "/x402": {
-      "get": {
-        "summary": "The x402 paid attestation catalog",
-        "operationId": "getX402Catalog",
-        "responses": {
-          "200": {
-            "description": "x402 catalog"
-          }
-        }
-      }
-    },
     "/gspc": {
       "get": {
-        "summary": "The 22-axis GSPC board",
+        "summary": "Read the living GSPC board",
         "operationId": "getGspcBoard",
         "responses": {
           "200": {
-            "description": "GSPC board"
+            "description": "GSPC board; axis totals are derived from the returned axis array"
           }
         }
       }
     },
     "/state": {
       "get": {
-        "summary": "The live state counters",
+        "summary": "Read public operational state",
         "operationId": "getState",
         "responses": {
           "200": {
-            "description": "State"
+            "description": "Public state with explicit measured/indexed/operational boundaries"
           }
         }
       }
     },
-    "/learn-loop": {
-      "post": {
-        "summary": "Emit a 3KB signed card from an end-user interaction",
-        "operationId": "postLearnLoop",
+    "/x402": {
+      "get": {
+        "summary": "Read the x402 catalogue",
+        "operationId": "getX402Catalog",
         "responses": {
           "200": {
-            "description": "Card emitted"
-          }
-        }
-      }
-    },
-    "/measure": {
-      "post": {
-        "summary": "Run a 22-axis measurement on a model",
-        "operationId": "postMeasure",
-        "responses": {
-          "200": {
-            "description": "Measurement"
+            "description": "x402 catalogue; a listing or challenge is not proof of settlement"
           }
         }
       }
     },
     "/verify": {
+      "get": {
+        "summary": "Read card-verification instructions",
+        "operationId": "getVerifyInstructions",
+        "responses": {
+          "200": {
+            "description": "Verification instructions"
+          }
+        }
+      },
       "post": {
-        "summary": "Verify any signed card",
+        "summary": "Verify a posted signed measurement record",
         "operationId": "postVerify",
         "responses": {
           "200": {
-            "description": "Verification"
-          }
-        }
-      }
-    },
-    "/anchor": {
-      "post": {
-        "summary": "Anchor any signed card to OTS pending stamp",
-        "operationId": "postAnchor",
-        "responses": {
-          "200": {
-            "description": "Anchor"
+            "description": "VALID, INVALID, or UNCHECKABLE verification result"
+          },
+          "400": {
+            "description": "Unreadable or unsupported verification input"
           }
         }
       }
     },
     "/report": {
-      "post": {
-        "summary": "File a correction report",
-        "operationId": "postReport",
+      "get": {
+        "summary": "Read derived axis reports",
+        "operationId": "getAxisReport",
         "responses": {
           "200": {
-            "description": "Report"
+            "description": "Existing derived axis report or report index"
+          },
+          "400": {
+            "description": "Bad report query"
+          },
+          "404": {
+            "description": "No report exists for the requested subject/axis pair"
+          }
+        }
+      }
+    },
+    "/measurement/fresh-capsule": {
+      "get": {
+        "summary": "Request a fresh bounded MCP measurement capsule",
+        "operationId": "getFreshCapsule",
+        "parameters": [
+          {
+            "name": "endpoint",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          {
+            "name": "dimension",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "TOOLS",
+                "VERSION",
+                "PROTOCOL"
+              ]
+            }
+          },
+          {
+            "name": "preview",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Free preview or delivered fresh capsule, depending on request state"
+          },
+          "402": {
+            "description": "x402 payment challenge for a metered delivery"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/claims/register": {
+      "get": {
+        "summary": "Claim Maintenance register — evidence states, never a score",
+        "operationId": "getClaimMaintenanceRegister",
+        "responses": {
+          "200": {
+            "description": "Claim Maintenance register"
+          }
+        }
+      }
+    },
+    "/corrections": {
+      "get": {
+        "summary": "Public corrections ledger — append history of CSOAI defects and fixes",
+        "operationId": "getCorrections",
+        "responses": {
+          "200": {
+            "description": "Corrections ledger"
+          }
+        }
+      }
+    },
+    "/claims/events": {
+      "get": {
+        "summary": "Append-only Claim Maintenance event feed — verified hash chain, never a score or verdict",
+        "operationId": "getClaimEvents",
+        "responses": {
+          "200": {
+            "description": "Claim-event feed"
+          },
+          "503": {
+            "description": "Feed/head/signature verification failed"
+          }
+        }
+      }
+    },
+    "/claims/events/head": {
+      "get": {
+        "summary": "Signed verified head for the Claim Maintenance event feed",
+        "operationId": "getClaimEventsHead",
+        "responses": {
+          "200": {
+            "description": "Verified claim-event head"
+          },
+          "503": {
+            "description": "Feed/head/signature verification failed"
           }
         }
       }
@@ -110,20 +199,17 @@
   },
   "tags": [
     {
-      "name": "x402",
-      "description": "x402 paid attestation"
-    },
-    {
       "name": "gspc",
-      "description": "22-axis GSPC measurement"
-    },
-    {
-      "name": "anchor",
-      "description": "OTS / Rekor / EAS anchoring"
+      "description": "Living GSPC measurement board; counts come from the response"
     },
     {
       "name": "verify",
-      "description": "Card verification"
+      "description": "Free measurement-card verification"
+    },
+    {
+      "name": "x402",
+      "description": "Machine-readable evidence catalogue and metered delivery rail"
     }
-  ]
+  ],
+  "x-csoai-boundary": "Public OpenAPI action descriptor. Publication here does not establish installation, acceptance, endorsement, or availability inside any third-party host."
 }

@@ -59,7 +59,9 @@ describe("/api/summary — shape (network is mocked)", () => {
     expect(body.canonical_artifacts.board).toMatch(/\/api\/gspc/);
     expect(body.canonical_artifacts.root).toMatch(/\/root\.json/);
     expect(body.canonical_artifacts.verification_cli).toContain("csoai_verify");
-    expect(body.canonical_artifacts.corrections_ledger).toContain("refutation-ledger");
+    // The ledger is /corrections/; /refutation-ledger is a page of experiments (audit 2026-09-28 #12).
+    expect(body.canonical_artifacts.corrections_ledger).toBe("https://councilof.ai/corrections/");
+    expect(JSON.stringify(body)).not.toMatch(/@councilof\.ai/);
   });
 
   it("states the doctrine explicitly", async () => {

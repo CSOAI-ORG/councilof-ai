@@ -1,0 +1,43 @@
+{
+ "schema": "csoai.effect-binding.server-probe-list/0.1",
+ "what": "Servers named by hand for the effect-binding server probe (ADR-002, board slot 23), in addition to the frozen, shuffled 2026-09-22 bank. Probe code: scripts/effect-binding/probe_listed.py.",
+ "rules": [
+  "An entry here is not part of the signed 2026-09-22 run (n = 261) and is never merged into its denominators.",
+  "The scope for every entry is unauthenticated initialize and tools/list. No tool is called, so no entry can receive an effect-binding verdict from this list alone: effect_binding_status stays UNMEASURED until a dated run with the full instrument and its own n.",
+  "A listing is not adoption, and a probe result says nothing about any relationship with the operator.",
+  "An operator can opt out: scripts/census/probe-exclusions.json is honoured before any request."
+ ],
+ "entries": [
+  {
+   "id": "cuda-docs-remote-mcp",
+   "registry_name": "com.nvidia.ngc.nsight.copilot.api/cuda-docs",
+   "registry_title": "NVIDIA CUDA Docs",
+   "registry_version": "2026.2.1",
+   "endpoint": "https://api.copilot.nsight.ngc.nvidia.com/mcp/cuda-docs",
+   "transport": "streamable-http",
+   "registry_read": {
+    "url": "https://registry.modelcontextprotocol.io/v0/servers?search=cuda-docs&limit=20",
+    "read_at": "2026-09-29T15:56:01Z",
+    "sha256": "d500e3fdcf842920f61218a2c6609be68110bf1816ee5c500e19095311c07139",
+    "status": "active, isLatest true (version 2026.2.1, published 2026-07-23T05:25:36Z)",
+    "note": "same bytes as an earlier read the same day"
+   },
+   "in_frozen_bank_2026_09_22": false,
+   "in_frozen_bank_check": "0 case-insensitive matches for 'nvidia' in the 2026-09-22 run artifact (sha256 e7083086...)",
+   "scope": "unauthenticated initialize + tools/list",
+   "effect_binding_status": "UNMEASURED",
+   "added": "2026-09-29",
+   "why_named": "a remote MCP endpoint listed in the official MCP Registry, named in the 2026-09-29 research wedges as reachable without an account; the first probe (below) found that it is not",
+   "last_probe": {
+    "at": "2026-09-29T15:56:36Z",
+    "state": "AUTH_REQUIRED",
+    "http_status": 401,
+    "what_was_sent": "GET /robots.txt (404), then one POST initialize, answered 401; nothing else was sent",
+    "record": "public/interop/effect-binding-listed-probe-2026-09-29.json",
+    "record_sha256": "e72a5f79be232bb5d07a1e062d36d8d26e318900007e55d96f599c8de0ec8df1",
+    "reading": "the endpoint does not answer an anonymous initialize; it is listed in the registry as a remote, but reaching it needs credentials this probe does not use",
+    "list_sha256_note": "the record's list_sha256 is of this list before registry_read.read_at was updated and this last_probe block was added"
+   }
+  }
+ ]
+}

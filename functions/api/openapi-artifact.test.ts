@@ -19,6 +19,7 @@ import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import descriptions from "./x402-descriptions.json";
+import { onRequestGet as renderManifest } from "../.well-known/x402.json";
 
 const ROOT = resolve(__dirname, "../..");
 const read = (p: string) => JSON.parse(readFileSync(resolve(ROOT, p), "utf8"));
@@ -119,13 +120,58 @@ describe("the paid operations are exactly the doors in /.well-known/x402.json", 
   });
 });
 
+/**
+ * THE SOURCE, NOT THE FIXTURE (2026-09-28). The block above compares the document with
+ * scripts/fixtures/x402scan/well_known_x402.json. That fixture was a hand-refreshed copy of the
+ * live manifest; it froze at 21 doors while functions/.well-known/x402.json.ts grew to 25, both
+ * sides of the comparison agreed with each other, and x402scan refused the four missing doors as
+ * notInSpec. This block renders the manifest from the function that serves it — the list the
+ * live route returns — and compares the paid operations with THAT, door by door and method by method.
+ */
+describe("the paid operations are exactly the resources the live manifest function renders", () => {
+  const rendered = async () => {
+    const r = await (renderManifest as unknown as (c: unknown) => Promise<Response>)({
+      request: new Request("https://councilof.ai/.well-known/x402.json"),
+      env: {},
+      params: {},
+    });
+    return (await r.json()) as { resources: { url: string; method?: string }[] };
+  };
+
+  it("same (path, method) pairs — never one more, never one fewer", async () => {
+    const man = await rendered();
+    const want = man.resources.map((r) => `${(r.method ?? "GET").toUpperCase()} ${pathOf(r.url)}`).sort();
+    const have = paid().map(({ path, method }) => `${method.toUpperCase()} ${path}`).sort();
+    expect(have).toEqual(want);
+    expect(want.length).toBeGreaterThanOrEqual(25);
+  });
+
+  it("the committed fixture is what the function renders (build_openapi.py re-renders it)", async () => {
+    const man = await rendered();
+    expect(wellKnown.resources.map((r: { url: string }) => r.url)).toEqual(man.resources.map((r) => r.url));
+  });
+
+  it("names the doors x402scan refused as notInSpec on 2026-09-28", () => {
+    const have = new Set(paid().map(({ path }) => path));
+    for (const p of ["/api/measurement/fresh-capsule", "/api/ras/mcp-probe", "/api/ras/x402-check", "/api/ras/supply"]) {
+      expect(have.has(p), p).toBe(true);
+    }
+  });
+});
+
 describe("the free surface is declared, not probed", () => {
-  it("does not override explicit access contracts with a generic public classification", () => {
+  it("every operation without x-payment-info declares its security — none is left for a scanner to probe", () => {
     for (const { path, method, op } of ops()) {
       if (op["x-payment-info"]) continue;
+      expect(op.security, `${method} ${path} is unclassified`).toBeDefined();
       const codes = Object.keys(op.responses);
+      if (codes.includes("401")) continue; // a reviewed bearer contract, checked below
       if (codes.length === 1 && codes[0] === "200") expect(op.security, `${method} ${path}`).toEqual([]);
-      else if (!codes.includes("401")) expect(op.security, `${method} ${path} (${codes.join("/")}) must stay unclassified`).toBeUndefined();
+      else {
+        // a facade: no credential either, and its lifecycle marker says it is not a public read
+        expect(op.security, `${method} ${path} (${codes.join("/")})`).toEqual([]);
+        expect(typeof op["x-csoai-lifecycle"], `${method} ${path} (${codes.join("/")}) needs its lifecycle marker`).toBe("string");
+      }
     }
   });
 
@@ -161,7 +207,7 @@ describe("the free surface is declared, not probed", () => {
     expect(op.responses["404"]).toBeTruthy();
     expect(op.responses["200"]).toBeUndefined();
     expect(op["x-csoai-lifecycle"]).toBe("DOOR_CLOSED");
-    expect(op.security).toBeUndefined();
+    expect(op.security).toEqual([]);
   });
 });
 
@@ -191,13 +237,13 @@ describe("producer and pre-check agree with the committed bytes", () => {
   it("python3 scripts/build_openapi.py --check exits 0", () => {
     const out = execFileSync("python3", [resolve(ROOT, "scripts/build_openapi.py"), "--check"], { cwd: ROOT, stdio: "pipe" }).toString();
     expect(out).toMatch(/matches its producer/);
-  });
+  }, 180_000);
   it("python3 scripts/build_openapi.py --selftest proves --check can go red", () => {
     const out = execFileSync("python3", [resolve(ROOT, "scripts/build_openapi.py"), "--selftest"], { cwd: ROOT, stdio: "pipe" }).toString();
     expect(out).toMatch(/can go red/);
-  });
+  }, 180_000);
   it("x402scan_precheck.py --file public/openapi.json exits 0", () => {
     const out = execFileSync("python3", [resolve(ROOT, "scripts/grants/x402scan_precheck.py"), "--file", "public/openapi.json"], { cwd: ROOT, stdio: "pipe" }).toString();
     expect(out).toMatch(/every required condition holds/);
-  });
+  }, 60_000);
 });

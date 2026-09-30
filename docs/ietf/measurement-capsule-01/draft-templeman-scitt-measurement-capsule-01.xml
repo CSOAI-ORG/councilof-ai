@@ -1,0 +1,1347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <?xml-stylesheet type="text/xsl" href="rfc2629.xslt" ?>
+  <!-- -01 SKELETON, work in progress; built by make_skeleton.py from the posted -00 XML. Not for upload until every bracketed placeholder is filled from live artefacts. -->
+
+
+<!DOCTYPE rfc  [
+  <!ENTITY nbsp    "&#160;">
+  <!ENTITY zwsp   "&#8203;">
+  <!ENTITY nbhy   "&#8209;">
+  <!ENTITY wj     "&#8288;">
+
+]>
+
+
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" ipr="trust200902" docName="draft-templeman-scitt-measurement-capsule-01" category="exp" submissionType="IETF" tocDepth="1" tocInclude="true" sortRefs="true" symRefs="true">
+  <front>
+    <title abbrev="SCITT Measurement Capsules">Declared-versus-Observed Measurement Capsules: A Profile for Third-Party Measurement Statements in SCITT</title>
+
+    <author fullname="Nicholas Templeman">
+      <organization>Council of AI (CSOAI Ltd)</organization>
+      <address>
+        <postal>
+          <city>London</city>
+          <country>United Kingdom</country>
+        </postal>
+        <email>nicholas@csoai.org</email>
+      </address>
+    </author>
+
+    <date year="2026"/>
+
+    <area>Security</area>
+    
+    <keyword>SCITT</keyword> <keyword>transparency</keyword> <keyword>measurement</keyword> <keyword>agents</keyword>
+
+    <abstract>
+
+
+<?line 85?>
+
+<t>This document defines the measurement capsule: a small, deterministic
+JSON record in which a party that is neither the subject of a claim nor
+a participant in the action it concerns records what the subject
+declared, what the measuring party observed, and the difference between
+the two. A capsule carries digests of its evidence, a measurement state
+in which "could not be checked" is a first-class outcome, and no
+decision, approval or authorisation. Capsules are identified by the
+SHA-256 of their JCS serialisation and batched under an RFC 9162 Merkle
+Tree Hash. The document describes their registration as SCITT Signed
+Statements (RFC 9943), how they refer to rather than restate receipts
+issued under other profiles, its encoding as a COSE_Sign1 Signed
+Statement with test vectors, and one implementation, including where it
+does not yet match this profile.</t>
+
+
+
+    </abstract>
+
+
+
+  </front>
+
+  <middle>
+
+
+<?line 100?>
+
+<section anchor="introduction"><name>Introduction</name>
+
+<t>Several individual drafts define receipts for automated actions.
+<xref target="I-D.schrock-ep-authorization-receipts"/> binds an enrolled approver key
+to one canonical action before execution;
+<xref target="I-D.marques-asqav-compliance-receipts"/> profiles signed action
+receipts, including decision receipts carrying a policy digest;
+<xref target="I-D.sahu-agent-action-receipts"/> defines signed, hash-chained action
+receipts and <xref target="I-D.noa-scitt-ai-agent-receipt"/> carries such receipts as
+SCITT Signed Statements; <xref target="I-D.hopley-x402-compliance-receipt"/> records
+categorical screening outcomes in agentic-payment flows; and
+<xref target="I-D.farley-acta-signed-receipts"/> defines signed decision receipts
+for access control at the MCP transport layer. These readings
+are the author's; corrections from their authors will be adopted.</t>
+
+<t>Those receipts are issued by a party in the path of the action and
+answer "was this permitted, and by whom?". They are not designed to
+answer a different question: does what a subject publicly declares
+about itself (a protocol version in a registry, a signing key in an
+agent card, a token's deployments, an evaluation result) match what an
+unaffiliated reader can observe?</t>
+
+<t>A measurement capsule records one such comparison. It differs from an
+action receipt in three ways. First, its Issuer is neither the subject
+nor a participant in the action, and it grants no authority; where the
+Issuer measures itself, the capsule should say so. Second, it carries the
+declaration, the observation and an explicit differential, and its state
+may be UNCHECKABLE, which is never recorded as a pass, a failure, a zero
+or an absence. Third, it may reference a receipt issued under another
+profile by digest (<xref target="effect-reference"/>) but never copies its outcome,
+so an approver's receipt and an independent measurement of the same
+effect can sit in one Transparency Service without either restating the
+other.</t>
+
+<t>The closest work, <xref target="I-D.dogru-cedulon-decision-profile"/>, reconciles a
+decider's signed Decision Records against an authenticated extract of
+effects; a capsule records one comparison and draws no conclusion about
+any decision. <xref target="I-D.mih-sokolov-scitt-payload-binding"/> specifies declared
+canonicalisation and typed digest references for Signed Statements;
+<spanx style="verb">capsule_id</spanx> (<xref target="canon"/>) is its derived identifier under algorithm <spanx style="verb">jcs</spanx>
+with the exclusion set {<spanx style="verb">capsule_id</spanx>}.</t>
+
+<t>This document profiles content, not the SCITT architecture. The terms
+Issuer, Signed Statement, Transparency Service and Receipt are used as
+defined in <xref target="RFC9943"/>, and registration follows
+<xref target="I-D.ietf-scitt-scrapi"/> unchanged. The author's organisation does not
+operate a Transparency Service. The document is Experimental because
+its requirements on decision fields and UNCHECKABLE (<xref target="states"/>) have
+not been shown useful by more than one implementation (<xref target="experiment"/>).</t>
+
+</section>
+<section anchor="conventions-and-definitions"><name>Conventions and Definitions</name>
+
+<t>The key words "<bcp14>MUST</bcp14>", "<bcp14>MUST NOT</bcp14>", "<bcp14>REQUIRED</bcp14>", "<bcp14>SHALL</bcp14>", "<bcp14>SHALL
+NOT</bcp14>", "<bcp14>SHOULD</bcp14>", "<bcp14>SHOULD NOT</bcp14>", "<bcp14>RECOMMENDED</bcp14>", "<bcp14>NOT RECOMMENDED</bcp14>",
+"<bcp14>MAY</bcp14>", and "<bcp14>OPTIONAL</bcp14>" in this document are to be interpreted as
+described in BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when, they
+appear in all capitals, as shown here.</t>
+
+<?line -18?>
+
+<dl>
+  <dt>Declared:</dt>
+  <dd>
+    <t>What the subject, or a registry or manifest speaking for it, states
+about a claim, as read from bytes the measurer retrieved.</t>
+  </dd>
+  <dt>Observed:</dt>
+  <dd>
+    <t>What the measurer read from a source other than the declaring one: a
+live protocol exchange, a ledger's state, a signature verification or
+a rerun on different hardware.</t>
+  </dd>
+  <dt>Differential:</dt>
+  <dd>
+    <t>The structured difference between the two. It is data, not a
+judgement: "these two statements disagree" does not say which is
+true.</t>
+  </dd>
+  <dt>Measurer:</dt>
+  <dd>
+    <t>The Issuer of a capsule; neither the subject nor a participant in the
+action the claim concerns, except in a self-measurement, which the
+capsule <bcp14>SHOULD</bcp14> mark as such.</t>
+  </dd>
+  <dt>Evidence ladder:</dt>
+  <dd>
+    <t>An ordered vocabulary recording how strong an observation is, as
+distinct from what it found: STATE_PROOF_VERIFIED (a proof checked
+against a block header's state commitment, the header not checked
+against consensus), STATE_PROOF_RECORDED (kept, did not verify),
+OPERATOR_API (an operator's answer, no proof), UNCHECKABLE and
+REJECTED (an identity check did not pass). A label <bcp14>MUST NOT</bcp14> be upgraded; an
+Issuer <bcp14>MUST</bcp14> refuse to build a capsule from a source record whose label
+claims more than its evidence shows.</t>
+  </dd>
+</dl>
+
+</section>
+<section anchor="capsule"><name>The Capsule</name>
+
+<t>A capsule is a JSON object <xref target="RFC8259"/> with the structure below, in CDDL
+<xref target="RFC8610"/> using the <spanx style="verb">.cat</spanx> control of <xref target="RFC9165"/>. The inner structure
+of the open maps depends on <spanx style="verb">kind</spanx>.</t>
+
+<figure title="Capsule structure" anchor="fig-capsule"><sourcecode type="cddl"><![CDATA[
+capsule = {
+  "schema": "csoai.measurement-capsule/0.2",
+  "kind": tstr .regexp "measurement\\.[a-z0-9_]+",
+  "subject_id": tstr,
+  "claim": { "statement": tstr, * tstr => any },
+  "declared": open-map,
+  "observed": open-map,
+  "differential": open-map,
+  "sources": sources,
+  "measurement_state": tstr .size (1..64),
+  "authority_state": authority-none,
+  "effect_reference": effect-reference / null,
+  "observed_at": tdate,
+  "correction_pointer": correction-pointer / null,
+  "limitations": [* tstr],
+  ? "runtime_declared": open-map,
+  ? "runtime_observed": open-map,
+  "capsule_id": sha256-hex
+}
+open-map = { * tstr => any }
+sources = { * tstr => source-value }
+source-value = digest / null / [* source-value] / sources
+digest = tstr .regexp "(sha256:)?[0-9a-f]{40,128}"
+sha256-hex = tstr .regexp "[0-9a-f]{64}"
+authority-none = "NONE: measurement only; this capsule grants"
+                 .cat " and records no execution authority"
+effect-reference = { "profile": tstr, "statement_digest": digest,
+  ? "transparency_service": tstr, ? "entry_id": tstr, * tstr => any }
+correction-pointer = { "record_schema": tstr, "record_version": tstr,
+  "record_sha256": digest, "supersedes_record_sha256": digest / null,
+  "from": any, "to": any, ? ("why" / "cause"): tstr, * tstr => any }
+]]></sourcecode></figure>
+
+<t><spanx style="verb">kind</spanx> fixes the inner structure of the open maps and the vocabulary
+of <spanx style="verb">measurement_state</spanx>. <spanx style="verb">subject_id</spanx> is an identifier (an endpoint URL,
+<spanx style="verb">asset:product:ledger:address</spanx>), not a resolvable reference.
+<spanx style="verb">claim.statement</spanx> can be true or false of the subject. <spanx style="verb">differential</spanx>
+<bcp14>SHOULD</bcp14> name the items that differ, not only a count. <spanx style="verb">sources</spanx> holds
+digests of the artefacts the capsule was derived from (signed source
+record, fetched documents, responses, proofs, commits) and <bcp14>MUST NOT</bcp14>
+carry evidence bytes, URLs or free text; any other value makes the
+capsule invalid. <spanx style="verb">authority_state</spanx> is the only member whose name
+concerns authority, with one permitted value. <spanx style="verb">observed_at</spanx> is the time
+of the observation, not of the build. <spanx style="verb">limitations</spanx> states what the
+measurement does not show; a capsule <bcp14>SHOULD</bcp14> carry at least one, and it
+is covered by <spanx style="verb">capsule_id</spanx>. In <spanx style="verb">runtime_declared</spanx> and
+<spanx style="verb">runtime_observed</spanx> (reproducibility claims), values not recorded at the
+time are <spanx style="verb">UNRECORDED</spanx>, never omitted or inferred.</t>
+
+<t>The implementation's seven kinds, not registered here, compare: an MCP
+endpoint's registry, <spanx style="verb">mcp.json</spanx>, server-card and payment-manifest
+declarations with its live <spanx style="verb">initialize</spanx> and <spanx style="verb">tools/list</spanx> answer
+(<spanx style="verb">contract_parity</spanx>); an agent card's signatures with their verification
+under its declared protocol version (<spanx style="verb">a2a_card_signature</spanx>); an issuer's
+list of a tokenised asset's deployments with each ledger's state
+(<spanx style="verb">cross_ledger_supply</spanx>); external indexes' listings of the measurer's
+own offerings with its live bytes (<spanx style="verb">self_parity</spanx>); a signed evaluation
+result with a re-run on a second runtime
+(<spanx style="verb">cross_runtime_reproduction</spanx>); and an endpoint's advertised tools at
+two times (<spanx style="verb">tool_drift</spanx>). The seventh, <spanx style="verb">public_signal</spanx>, records one
+reading of a public counter and is observation-only (<xref target="open-issues"/>).</t>
+
+</section>
+<section anchor="canon"><name>Canonicalisation and Identifier</name>
+
+<t><spanx style="verb">capsule_id</spanx> is the SHA-256 digest, as 64 lowercase hexits, of the JSON
+Canonicalization Scheme (JCS) <xref target="RFC8785"/> serialisation of the capsule
+with <spanx style="verb">capsule_id</spanx> removed. Issuers <bcp14>MUST NOT</bcp14> place non-finite numbers or
+integers whose magnitude exceeds 2^53 in a capsule; such quantities
+(token supplies in base units are the common case) <bcp14>MUST</bcp14> be carried as
+strings. Issuers <bcp14>SHOULD</bcp14> avoid floating-point values.</t>
+
+<t>A capsule file stores each capsule as exactly its JCS bytes, so that a
+verifier can recompute <spanx style="verb">capsule_id</spanx> from the stored line.</t>
+
+</section>
+<section anchor="merkle"><name>Batches, Merkle Root and Index</name>
+
+<t>A batch is a capsule file and a batch record that commits to it. The
+capsule file holds one capsule per line, each followed by a single LF,
+sorted by <spanx style="verb">capsule_id</spanx>, with no duplicates.</t>
+
+<t>The batch Merkle root is the Merkle Tree Hash of <xref target="RFC9162"/>, Section
+2.1.1, with SHA-256, over the <spanx style="verb">capsule_id</spanx> values as 32-byte strings
+sorted in ascending byte order. Sorting makes the root a commitment to a
+set: reordering the file does not change it, so a changed root always
+means changed membership or content. Inclusion of one capsule is shown
+by an RFC 9162 audit path (Section 2.1.3), which existing tooling can
+verify.</t>
+
+<t>The batch record is a JSON object carrying at least <spanx style="verb">schema</spanx>, <spanx style="verb">as_of</spanx>,
+<spanx style="verb">kind</spanx>, <spanx style="verb">n_capsules</spanx>, per-state counts, <spanx style="verb">merkle_root</spanx>, the construction
+in words, the capsule file's SHA-256 and <spanx style="verb">authority_state</spanx>. It <bcp14>SHOULD</bcp14>
+state its inclusion rule and count, by reason, the source rows the rule
+excluded (for example, a dimension on which only one public surface
+spoke, where nothing was compared), so a reader sees what was not
+measured.</t>
+
+<t>An index lists each batch's record digest, root, count, signature state
+and timestamp state, and carries two roots under the same rule: one over
+the union of all <spanx style="verb">capsule_id</spanx> values (a duplicate across batches is an
+error) and one over the batch roots. The index is signed and
+timestamped. The implementation also chains daily indexes: each names
+the previous day's index by SHA-256 and root and states the number of
+days without an index.</t>
+
+</section>
+<section anchor="registration"><name>Registration as a SCITT Signed Statement</name>
+
+<t>A batch record or an index is registered as the payload of a
+COSE_Sign1 message <xref target="RFC9052"/>, tagged 18. Capsules are not
+registered one by one: a capsule reaches the log through the batch root
+that commits to it (<xref target="merkle"/>).</t>
+
+<section anchor="cose-headers"><name>Protected Header</name>
+
+<t>The protected header is a map in the core deterministic encoding of
+<xref target="RFC8949" section="4.2.1"/>. It carries:</t>
+
+<ul>
+  <li>alg (1): -19, Ed25519 <xref target="RFC9864"/>, with an Ed25519 key
+  <xref target="RFC8032"/>. The polymorphic EdDSA identifier (-8), which
+  <xref target="RFC9864"/> deprecates, <bcp14>MUST NOT</bcp14> be used.</li>
+  <li>kid (4): the UTF-8 bytes of the signing key's verification method, a
+  DID URL <xref target="DID-WEB"/>. <xref target="RFC9943"/> requires kid when
+  neither x5t nor x5chain is present.</li>
+  <li>CWT Claims (15) <xref target="RFC9597"/>: iss (1), the Issuer's DID;
+  sub (2), the batch's <tt>kind</tt>, or the fixed string
+  <tt>measurement-capsule-index</tt> for an index; iat (6), the signing
+  time.</li>
+  <li>With an attached payload: content type (3), one of the media types in
+  <xref target="iana"/>. The payload is the JCS serialisation of the
+  record.</li>
+  <li>With a COSE Hash Envelope <xref target="RFC9995"/>: payload_hash_alg
+  (258) set to -16 (SHA-256), payload_preimage_content_type (259) set to the
+  media type, and optionally payload_location (260). The payload is the
+  32-byte SHA-256 of the record's JCS serialisation. Content type (3)
+  <bcp14>MUST NOT</bcp14> be present, as <xref target="RFC9995"/> requires;
+  -00 of this document said otherwise.</li>
+</ul>
+
+<t>The unprotected header is empty when the statement is signed. Receipts
+obtained later are carried under label 394, as in <xref target="RFC9943"/>.</t>
+
+</section>
+<section anchor="cose-verify"><name>Signing and Verification</name>
+
+<t>The Issuer signs the Sig_structure <tt>["Signature1", protected, h'', payload]</tt>
+of <xref target="RFC9052" section="4.4"/>. A verifier decodes the message,
+rejects a protected header that is not deterministically encoded, rebuilds
+the Sig_structure, and verifies the signature under the key that kid
+resolves to. For an attached payload it then checks that the payload is
+exactly the JCS serialisation of the record it parses to; for a hash
+envelope, that the SHA-256 of the retrieved record equals the payload.</t>
+
+<t>A COSE statement is a new artefact over unchanged content. The capsule
+identifiers, batch roots and index roots it commits to do not change, and
+the JSON signatures an implementation already published over the same
+records stay verifiable; the two are published side by side.
+<xref target="test-vectors"/> gives vectors for both encodings.</t>
+
+<t>[STATUS AT POSTING, READ LIVE: which records carry a COSE_Sign1
+statement and under which key; "none" if the Issuer's signing service
+cannot yet sign a Sig_structure.]</t>
+
+</section>
+</section>
+<section anchor="receipts"><name>Receipts</name>
+
+<t>Registration follows <xref target="I-D.ietf-scitt-scrapi"/>. The Receipt is
+a COSE Receipt <xref target="RFC9942"/> whose verifiable data structure is set
+by the Transparency Service; for a service built on CCF it is the profile in
+<xref target="I-D.ietf-scitt-receipts-ccf-profile"/>. Inclusion of one capsule
+is shown in two steps: capsule to batch root by an RFC 9162 audit path under
+the Issuer's tree, then batch record or index to the log by the Receipt.</t>
+
+<t>A Receipt shows that the Transparency Service registered the statement
+at a time. It does not show that any measurement in it is correct.</t>
+
+<t>[STATUS AT POSTING, FILLED ONLY FROM A RECEIPT THAT EXISTS: the
+Transparency Service and its operator; whether the operator is a party
+other than the Issuer; the registered statement's SHA-256; the entry
+identifier; the Receipt's SHA-256; and the verifiers that checked it. If no
+Receipt has been obtained, this paragraph says so and nothing more.]</t>
+
+</section>
+<section anchor="states"><name>Measurement States and the Absence of Decisions</name>
+
+<t><spanx style="verb">measurement_state</spanx> is one string from a vocabulary defined per kind.
+The vocabularies in use, with the family each state belongs to (agreement,
+verification, reproduction, reading, and absence and inability), are listed
+in <xref target="vocabularies"/>. For every kind:</t>
+
+<t><list style="symbols">
+  <t>UNCHECKABLE and each absence-and-inability state <bcp14>MUST</bcp14> be recorded as
+such and <bcp14>MUST NOT</bcp14> be mapped to a pass, failure, zero or omission; a
+capsule <bcp14>MUST</bcp14> be issued for it when the batch's inclusion rule covers
+the subject.</t>
+  <t>A state asserting absence (such as NOT_LISTED) <bcp14>MUST</bcp14> be used only where
+the read that established it was complete; a partial read yields
+UNCHECKABLE, and a total <bcp14>MUST NOT</bcp14> be recorded over a partial read.</t>
+  <t>INCONSISTENT says two statements disagree, not which is true, and a
+state <bcp14>MUST NOT</bcp14> be stronger than its evidence.</t>
+</list></t>
+
+<section anchor="no-authority"><name>No decision or authorisation field</name>
+
+<t>A capsule <bcp14>MUST NOT</bcp14> carry a decision about any party's action. Apart from
+<spanx style="verb">authority_state</spanx>, no member at any depth may be named <spanx style="verb">decision</spanx>,
+<spanx style="verb">allow</spanx>, <spanx style="verb">allowed</spanx>, <spanx style="verb">allowlist</spanx>, <spanx style="verb">hold</spanx>, <spanx style="verb">reject</spanx>, <spanx style="verb">approve</spanx>,
+<spanx style="verb">approved</spanx>, <spanx style="verb">approval</spanx>, <spanx style="verb">admit</spanx>, <spanx style="verb">admission</spanx>, <spanx style="verb">authority</spanx>,
+<spanx style="verb">authorization</spanx>, <spanx style="verb">authorisation</spanx>, <spanx style="verb">permit</spanx>, <spanx style="verb">permission</spanx>, <spanx style="verb">grant</spanx>,
+<spanx style="verb">enforce</spanx>, <spanx style="verb">enforcement</spanx>, <spanx style="verb">action</spanx>, <spanx style="verb">recommended_action</spanx>, <spanx style="verb">gate</spanx> or
+<spanx style="verb">gate_result</spanx>, or an inflection of these; and no string value at any
+depth may be exactly <spanx style="verb">ALLOW</spanx>, <spanx style="verb">HOLD</spanx>, <spanx style="verb">REJECT</spanx>, <spanx style="verb">DENY</spanx>, <spanx style="verb">APPROVE</spanx>,
+<spanx style="verb">APPROVED</spanx>, <spanx style="verb">ADMIT</spanx>, <spanx style="verb">ADMITTED</spanx>, <spanx style="verb">BLOCK</spanx>, <spanx style="verb">PERMIT</spanx> or <spanx style="verb">GRANT</spanx>.</t>
+
+<t>The rule exists so that a capsule cannot be consumed as a gate; an
+allow or deny outcome comes from the party holding that authority. The
+implementation enforces it at construction and verification (renaming a
+source's <spanx style="verb">verdict</spanx> field to <spanx style="verb">agreement</spanx>, for example). A denylist is
+incomplete (REFER, an outcome in <xref target="I-D.hopley-x402-compliance-receipt"/>,
+is not on it); it is a floor, and a per-kind allowlist of member names
+is an open issue.</t>
+
+</section>
+<section anchor="effect-reference"><name>Effect reference</name>
+
+<t><spanx style="verb">effect_reference</spanx>, when not null, names a Signed Statement issued under
+another profile about the same effect: the profile and revision (for
+example <spanx style="verb">draft-schrock-ep-authorization-receipts-13</spanx>), the digest of the
+statement, and optionally where it can be retrieved. The digest <bcp14>MUST</bcp14> be
+computed over the octets as registered, since a re-encoded statement has
+a different digest under the same signature
+<xref target="I-D.templeman-scitt-framing-space"/>. The referenced statement's fields,
+in particular its outcome, are not copied. The implementation has not
+yet populated this member, so this composition is a proposal, not a
+report.</t>
+
+</section>
+</section>
+<section anchor="corrections"><name>Corrections and Supersession</name>
+
+<t>A capsule is never edited; any change produces a different capsule. A
+correction is a new capsule, in a new batch, whose <spanx style="verb">correction_pointer</spanx>
+records the schema, version and SHA-256 of the source record in which
+the change was made, the SHA-256 of the record it supersedes, the state
+before (<spanx style="verb">from</spanx>) and after (<spanx style="verb">to</spanx>), and the reason, with the fixing commit
+where there was one. The superseded capsule remains valid and
+retrievable. A change of canonicalisation or Merkle construction changes
+identifiers and roots without changing any measurement, and <bcp14>MUST</bcp14> be
+published as a new batch, leaving earlier batches in place.</t>
+
+</section>
+<section anchor="privacy"><name>Privacy Considerations</name>
+
+<t><spanx style="verb">sources</spanx> carries only digests; the evidence stays with whoever holds
+it. A digest of a public document is meant to be re-identifiable. A
+digest of a non-public, low-entropy artefact can be recovered by
+guessing, so Issuers <bcp14>SHOULD NOT</bcp14> place one in <spanx style="verb">sources</spanx> without blinding,
+which the implementation does not provide; its sources are all public
+or its own records.</t>
+
+<t><spanx style="verb">subject_id</spanx> can identify a service run by one person. Issuers <bcp14>SHOULD</bcp14>
+measure only surfaces published for machine consumption, <bcp14>SHOULD NOT</bcp14> send
+credentials or go beyond discovery (the MCP measurements stop at
+<spanx style="verb">initialize</spanx> and <spanx style="verb">tools/list</spanx>), and <bcp14>SHOULD</bcp14> offer subjects a route to
+request correction or exclusion. Registration is append-only, so a
+capsule registered in error can be superseded but not withdrawn;
+Issuers <bcp14>SHOULD</bcp14> review batches before registering them.</t>
+
+</section>
+<section anchor="security"><name>Security Considerations</name>
+
+<t>A valid signature on a batch record shows only that the holder of the
+key signed those bytes, not that any value is correct, that the
+instrument is sound or that the subject agrees with the measurement. A
+verifier <bcp14>SHOULD</bcp14> recompute every <spanx style="verb">capsule_id</spanx>, the batch root, the
+record and file digests and the signature, and <bcp14>SHOULD</bcp14> reject a batch in
+which any capsule carries a forbidden member or value.</t>
+
+<t>The implementation signs with one Ed25519 key, held by a signing service
+reached by an authenticated request; it is not a threshold key and no
+claim is made about hardware protection. Compromise of the key or of the
+request credential allows valid signatures over false records,
+including a re-signed chain of daily indexes. Such a rewrite is
+detectable only against an anchor dated before it (a Bitcoin-attested
+timestamp, a Rekor entry or a Receipt), so verifiers <bcp14>SHOULD</bcp14> check
+anchors as well as signatures. The key is published through <spanx style="verb">did:web</spanx>,
+so its authenticity rests on DNS and the Web PKI; retired verification
+methods <bcp14>SHOULD</bcp14> remain resolvable.</t>
+
+<t>An OpenTimestamps calendar commitment shows only that calendars
+received a digest; only a proof upgraded to a Bitcoin attestation dates
+the bytes. SHA-1 Git commit identifiers in <spanx style="verb">sources</spanx> are locators on
+which no integrity claim rests.</t>
+
+<t>The measurer reads from one location at one time, and surfaces that
+should agree may be read hours apart (recorded in <spanx style="verb">limitations</spanx>). A
+VERIFIED card signature does not show who controls the key. A measurer
+chooses what to measure, and a batch of subjects likely to disagree
+would be accurate capsule by capsule and misleading in aggregate; hence
+the inclusion rule in batch records, and consumers <bcp14>SHOULD NOT</bcp14> aggregate
+state counts across batches with different inclusion rules.</t>
+
+</section>
+<section anchor="iana"><name>IANA Considerations</name>
+
+<t>This document has no IANA actions. It uses three media types in the
+vendor tree, <tt>application/vnd.csoai.measurement-capsule+json</tt>,
+<tt>application/vnd.csoai.measurement-capsule-batch+json</tt> and
+<tt>application/vnd.csoai.measurement-capsule-index+json</tt>, which can be
+registered without IETF action. [STATUS AT POSTING: whether they have been
+registered.] Their names are open issue 4.</t>
+
+</section>
+<section anchor="implementation"><name>Implementation Status</name>
+
+<t>This section records the status of known implementations at the time
+of posting, following <xref target="RFC7942"/>. RFC Editor: please remove
+this section before publication.</t>
+
+<t>CSOAI measurement capsule builder (Council of AI, contact
+nicholas@csoai.org). Every count, root, commit and URL in this section is
+read from the live artefacts on the day of posting and given with the
+time of reading; none is carried over from -00.</t>
+
+<ul>
+  <li>Index: schema, number of capsules, batches and kinds, index root,
+  and where the files are published. [READ LIVE]</li>
+  <li>COSE: see <xref target="cose-verify"/>. [READ LIVE]</li>
+  <li>Receipt: see <xref target="receipts"/>. [READ LIVE]</li>
+  <li>Anchors: the OpenTimestamps <xref target="OTS"/> state of each
+  record's proof (calendar commitment or Bitcoin attestation) and the Rekor
+  <xref target="REKOR"/> log indexes. Neither is a SCITT Transparency
+  Service or issues Receipts. [READ LIVE]</li>
+  <li>Capsules by kind and state, the number of self-measurements, and
+  the number carrying a correction pointer or an effect reference.
+  [READ LIVE]</li>
+  <li>Test vectors: <xref target="test-vectors"/>, with a generator and a
+  checker on a second code path (cbor2, rfc8785 and the RFC 9162
+  Section 2.1.3.2 inclusion check). The checker is written by the same
+  organisation, so it is not the independent implementation the
+  experiment asks for. [URL WHEN PUBLISHED]</li>
+</ul>
+
+</section>
+<section anchor="experiment"><name>The Experiment</name>
+
+<t>The experiment asks whether an unaffiliated, authority-free
+declared-versus-observed record is useful alongside actor-issued
+receipts in a SCITT deployment. It is judged by four outcomes: (1) an
+implementation written by another party from this text recomputes the
+identifiers and roots of a published batch; (2) a batch is registered
+with a Transparency Service operated by another party and its Receipt
+is verified by a third; (3) a capsule carries an <spanx style="verb">effect_reference</spanx> to a
+Signed Statement from a different Issuer; (4) the open issues are
+resolved and published as corrections without loss of existing batches.
+If none occurs within two revisions, the author will withdraw the draft.</t>
+
+</section>
+<section anchor="open-issues"><name>Open Issues</name>
+
+<t>(1) COSE_Sign1 encoding: specified in this revision
+(<xref target="registration"/>). (2) The superseded <tt>capsule_id</tt> in
+<tt>correction_pointer</tt>: open. (3) A per-kind allowlist of member names
+in place of the denylist: open; <xref target="vocabularies"/> lists state
+vocabularies only. (4) Neutral names for the <tt>csoai.</tt>-prefixed
+identifiers and media types: open; a rename changes every identifier and
+would be published as new batches. (5) Blinded digests for non-public
+sources: open. (6) Whether observation-only kinds belong here: open.
+(7) An explicit self-measurement member: open. (8) Transparency Services
+differ in the Issuer identities their registration policies accept (for
+example did:x509 rather than did:web); which forms a measurer needs is
+open.</t>
+
+</section>
+
+</middle>
+
+  <back>
+
+
+<references title='References' anchor="sec-combined-references">
+
+    <references title='Normative References' anchor="sec-normative-references">
+
+
+
+<reference anchor="RFC8032">
+  <front>
+    <title>Edwards-Curve Digital Signature Algorithm (EdDSA)</title>
+    <author fullname="S. Josefsson" initials="S." surname="Josefsson"/>
+    <author fullname="I. Liusvaara" initials="I." surname="Liusvaara"/>
+    <date month="January" year="2017"/>
+    
+  </front>
+  <seriesInfo name="RFC" value="8032"/>
+  <seriesInfo name="DOI" value="10.17487/RFC8032"/>
+</reference>
+
+<reference anchor="RFC8259">
+  <front>
+    <title>The JavaScript Object Notation (JSON) Data Interchange Format</title>
+    <author fullname="T. Bray" initials="T." role="editor" surname="Bray"/>
+    <date month="December" year="2017"/>
+    
+  </front>
+  <seriesInfo name="STD" value="90"/>
+  <seriesInfo name="RFC" value="8259"/>
+  <seriesInfo name="DOI" value="10.17487/RFC8259"/>
+</reference>
+
+<reference anchor="RFC8610">
+  <front>
+    <title>Concise Data Definition Language (CDDL): A Notational Convention to Express Concise Binary Object Representation (CBOR) and JSON Data Structures</title>
+    <author fullname="H. Birkholz" initials="H." surname="Birkholz"/>
+    <author fullname="C. Vigano" initials="C." surname="Vigano"/>
+    <author fullname="C. Bormann" initials="C." surname="Bormann"/>
+    <date month="June" year="2019"/>
+    
+  </front>
+  <seriesInfo name="RFC" value="8610"/>
+  <seriesInfo name="DOI" value="10.17487/RFC8610"/>
+</reference>
+
+<reference anchor="RFC8785">
+  <front>
+    <title>JSON Canonicalization Scheme (JCS)</title>
+    <author fullname="A. Rundgren" initials="A." surname="Rundgren"/>
+    <author fullname="B. Jordan" initials="B." surname="Jordan"/>
+    <author fullname="S. Erdtman" initials="S." surname="Erdtman"/>
+    <date month="June" year="2020"/>
+    
+  </front>
+  <seriesInfo name="RFC" value="8785"/>
+  <seriesInfo name="DOI" value="10.17487/RFC8785"/>
+</reference>
+
+<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8949.xml"/>
+<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9942.xml"/>
+<reference anchor="RFC9995">
+  <front>
+    <title>CBOR Object Signing and Encryption (COSE) Hash Envelope</title>
+    <author fullname="O. Steele" initials="O." surname="Steele"/>
+    <author fullname="S. Lasker" initials="S." surname="Lasker"/>
+    <author fullname="H. Birkholz" initials="H." surname="Birkholz"/>
+    <date month="July" year="2026"/>
+    
+  </front>
+  <seriesInfo name="RFC" value="9995"/>
+  <seriesInfo name="DOI" value="10.17487/RFC9995"/>
+</reference>
+<reference anchor="RFC9052">
+  <front>
+    <title>CBOR Object Signing and Encryption (COSE): Structures and Process</title>
+    <author fullname="J. Schaad" initials="J." surname="Schaad"/>
+    <date month="August" year="2022"/>
+    
+  </front>
+  <seriesInfo name="STD" value="96"/>
+  <seriesInfo name="RFC" value="9052"/>
+  <seriesInfo name="DOI" value="10.17487/RFC9052"/>
+</reference>
+
+<reference anchor="RFC9864">
+  <front>
+    <title>Fully-Specified Algorithms for JSON Object Signing and Encryption (JOSE) and CBOR Object Signing and Encryption (COSE)</title>
+    <author fullname="M.B. Jones" initials="M.B." surname="Jones"/>
+    <author fullname="O. Steele" initials="O." surname="Steele"/>
+    <date month="October" year="2025"/>
+    
+  </front>
+  <seriesInfo name="RFC" value="9864"/>
+  <seriesInfo name="DOI" value="10.17487/RFC9864"/>
+</reference>
+
+<reference anchor="RFC9162">
+  <front>
+    <title>Certificate Transparency Version 2.0</title>
+    <author fullname="B. Laurie" initials="B." surname="Laurie"/>
+    <author fullname="E. Messeri" initials="E." surname="Messeri"/>
+    <author fullname="R. Stradling" initials="R." surname="Stradling"/>
+    <date month="December" year="2021"/>
+    
+  </front>
+  <seriesInfo name="RFC" value="9162"/>
+  <seriesInfo name="DOI" value="10.17487/RFC9162"/>
+</reference>
+
+<reference anchor="RFC9165">
+  <front>
+    <title>Additional Control Operators for the Concise Data Definition Language (CDDL)</title>
+    <author fullname="C. Bormann" initials="C." surname="Bormann"/>
+    <date month="December" year="2021"/>
+    
+  </front>
+  <seriesInfo name="RFC" value="9165"/>
+  <seriesInfo name="DOI" value="10.17487/RFC9165"/>
+</reference>
+
+<reference anchor="RFC9597">
+  <front>
+    <title>CBOR Web Token (CWT) Claims in COSE Headers</title>
+    <author fullname="T. Looker" initials="T." surname="Looker"/>
+    <author fullname="M.B. Jones" initials="M.B." surname="Jones"/>
+    <date month="June" year="2024"/>
+    
+  </front>
+  <seriesInfo name="RFC" value="9597"/>
+  <seriesInfo name="DOI" value="10.17487/RFC9597"/>
+</reference>
+
+<reference anchor="RFC9943">
+  <front>
+    <title>An Architecture for Trustworthy and Transparent Digital Supply Chains</title>
+    <author fullname="H. Birkholz" initials="H." surname="Birkholz"/>
+    <author fullname="A. Delignat-Lavaud" initials="A." surname="Delignat-Lavaud"/>
+    <author fullname="C. Fournet" initials="C." surname="Fournet"/>
+    <author fullname="Y. Deshpande" initials="Y." surname="Deshpande"/>
+    <author fullname="S. Lasker" initials="S." surname="Lasker"/>
+    <date month="June" year="2026"/>
+    
+  </front>
+  <seriesInfo name="RFC" value="9943"/>
+  <seriesInfo name="DOI" value="10.17487/RFC9943"/>
+</reference>
+
+<reference anchor="RFC2119">
+  <front>
+    <title>Key words for use in RFCs to Indicate Requirement Levels</title>
+    <author fullname="S. Bradner" initials="S." surname="Bradner"/>
+    <date month="March" year="1997"/>
+    
+  </front>
+  <seriesInfo name="BCP" value="14"/>
+  <seriesInfo name="RFC" value="2119"/>
+  <seriesInfo name="DOI" value="10.17487/RFC2119"/>
+</reference>
+
+<reference anchor="RFC8174">
+  <front>
+    <title>Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words</title>
+    <author fullname="B. Leiba" initials="B." surname="Leiba"/>
+    <date month="May" year="2017"/>
+    
+  </front>
+  <seriesInfo name="BCP" value="14"/>
+  <seriesInfo name="RFC" value="8174"/>
+  <seriesInfo name="DOI" value="10.17487/RFC8174"/>
+</reference>
+
+
+
+
+    </references>
+
+    <references title='Informative References' anchor="sec-informative-references">
+
+
+
+<reference anchor="RFC7942">
+  <front>
+    <title>Improving Awareness of Running Code: The Implementation Status Section</title>
+    <author fullname="Y. Sheffer" initials="Y." surname="Sheffer"/>
+    <author fullname="A. Farrel" initials="A." surname="Farrel"/>
+    <date month="July" year="2016"/>
+    
+  </front>
+  <seriesInfo name="BCP" value="205"/>
+  <seriesInfo name="RFC" value="7942"/>
+  <seriesInfo name="DOI" value="10.17487/RFC7942"/>
+</reference>
+
+<xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.farley-acta-signed-receipts.xml"/>
+<xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-scitt-receipts-ccf-profile.xml"/>
+
+
+<reference anchor="I-D.ietf-scitt-scrapi">
+   <front>
+      <title>Supply Chain Integrity, Transparency, and Trust (SCITT) Reference APIs</title>
+      <author fullname="Henk Birkholz" initials="H." surname="Birkholz">
+         <organization>Fraunhofer SIT</organization>
+      </author>
+      <author fullname="Jon Geater" initials="J." surname="Geater">
+         <organization>Bowball Technologies Ltd</organization>
+      </author>
+      <author fullname="Antoine Delignat-Lavaud" initials="A." surname="Delignat-Lavaud">
+         <organization>Microsoft Research</organization>
+      </author>
+      <date day="26" month="June" year="2026"/>
+      
+   </front>
+   <seriesInfo name="Internet-Draft" value="draft-ietf-scitt-scrapi-11"/>
+   
+</reference>
+
+
+<reference anchor="I-D.mih-sokolov-scitt-payload-binding">
+   <front>
+      <title>Canonicalization Declaration for SCITT Signed Statements</title>
+      <author fullname="Steven Mih" initials="S." surname="Mih">
+         <organization>Action State Group, Inc.</organization>
+      </author>
+      <author fullname="Anton Sokolov" initials="A." surname="Sokolov">
+         <organization>Tyche Institute</organization>
+      </author>
+      <date day="12" month="September" year="2026"/>
+      
+   </front>
+   <seriesInfo name="Internet-Draft" value="draft-mih-sokolov-scitt-payload-binding-05"/>
+   
+</reference>
+
+
+<reference anchor="I-D.schrock-ep-authorization-receipts">
+   <front>
+      <title>Authorization Receipts for High-Risk Agent Actions</title>
+      <author fullname="Iman Schrock" initials="I." surname="Schrock">
+         <organization>EMILIA Protocol, Inc.</organization>
+      </author>
+      <date day="12" month="September" year="2026"/>
+      
+   </front>
+   <seriesInfo name="Internet-Draft" value="draft-schrock-ep-authorization-receipts-13"/>
+   
+</reference>
+
+
+<reference anchor="I-D.marques-asqav-compliance-receipts">
+   <front>
+      <title>Compliance Profile of Signed Action Receipts for AI Agents</title>
+      <author fullname="João André Gomes Marques" initials="J. A. G." surname="Marques">
+         <organization>Asqav</organization>
+      </author>
+      <date day="21" month="September" year="2026"/>
+      
+   </front>
+   <seriesInfo name="Internet-Draft" value="draft-marques-asqav-compliance-receipts-09"/>
+   
+</reference>
+
+
+<reference anchor="I-D.sahu-agent-action-receipts">
+   <front>
+      <title>Signed, Hash-Chained Action Receipts for AI Agents</title>
+      <author fullname="Nancy sahu" initials="N." surname="sahu">
+         <organization>kriya native</organization>
+      </author>
+      <date day="16" month="August" year="2026"/>
+      
+   </front>
+   <seriesInfo name="Internet-Draft" value="draft-sahu-agent-action-receipts-00"/>
+   
+</reference>
+
+
+<reference anchor="I-D.hopley-x402-compliance-receipt" target="https://datatracker.ietf.org/doc/html/draft-hopley-x402-compliance-receipt-02">
+  <front>
+    <title>Categorical Compliance Screening Receipt Format for Agentic-Payment Flows</title>
+    <author initials="C." surname="Hopley" fullname="Christopher Hopley">
+      <organization></organization>
+    </author>
+    <date year="2026" month="May" day="25"/>
+  </front>
+  <seriesInfo name="Internet-Draft" value="draft-hopley-x402-compliance-receipt-02"/>
+</reference>
+
+
+
+<reference anchor="I-D.noa-scitt-ai-agent-receipt">
+   <front>
+      <title>A SCITT Profile for AI-Agent Action Receipts</title>
+      <author fullname="Tora Toraman" initials="T." surname="Toraman">
+         <organization>NordenSoft</organization>
+      </author>
+      <date day="14" month="August" year="2026"/>
+      
+   </front>
+   <seriesInfo name="Internet-Draft" value="draft-noa-scitt-ai-agent-receipt-01"/>
+   
+</reference>
+
+
+<reference anchor="I-D.dogru-cedulon-decision-profile" target="https://datatracker.ietf.org/doc/html/draft-dogru-cedulon-decision-profile-03">
+  <front>
+    <title>Cedulon Decision Profile: Reconciling an Agent's Decisions Against Its Effects</title>
+    <author initials="E. C." surname="Dogru" fullname="Emek Can Dogru">
+      <organization></organization>
+    </author>
+    <date year="2026" month="September" day="06"/>
+  </front>
+  <seriesInfo name="Internet-Draft" value="draft-dogru-cedulon-decision-profile-03"/>
+</reference>
+
+
+
+<reference anchor="I-D.templeman-scitt-framing-space">
+   <front>
+      <title>Measuring the CBOR Framing Space of COSE_Sign1 Data-Hash Pre-images</title>
+      <author fullname="Nicholas Templeman" initials="N." surname="Templeman">
+         <organization>Council of AI (CSOAI Ltd)</organization>
+      </author>
+      <date day="4" month="September" year="2026"/>
+      
+   </front>
+   <seriesInfo name="Internet-Draft" value="draft-templeman-scitt-framing-space-00"/>
+   
+</reference>
+
+
+<reference anchor="DID-WEB" target="https://w3c-ccg.github.io/did-method-web/">
+  <front>
+    <title>did:web Method Specification</title>
+    <author >
+      <organization>W3C Credentials Community Group</organization>
+    </author>
+    <date year="n.d."/>
+  </front>
+</reference>
+<reference anchor="OTS" target="https://opentimestamps.org/">
+  <front>
+    <title>OpenTimestamps</title>
+    <author >
+      <organization>OpenTimestamps</organization>
+    </author>
+    <date year="n.d."/>
+  </front>
+</reference>
+<reference anchor="REKOR" target="https://docs.sigstore.dev/logging/overview/">
+  <front>
+    <title>Rekor</title>
+    <author >
+      <organization>Sigstore</organization>
+    </author>
+    <date year="n.d."/>
+  </front>
+</reference>
+
+
+    </references>
+
+</references>
+
+
+<?line 566?>
+
+<section anchor="test-vectors"><name>Test Vectors</name>
+
+<t>These vectors are synthetic. The signing key is the TEST 1 key of
+<xref target="RFC8032" section="7.1"/>, whose secret is published there, so
+nothing it signs means anything. Subjects are under <tt>.example</tt>, and
+source digests are SHA-256 values of labelled placeholder strings. The
+full vectors, their generator and a checker that shares no code with the
+generator are published at [URL WHEN PUBLISHED] (vectors.json, SHA-256
+[VECTORS SHA-256 AT POSTING]).</t>
+
+<t>Public key (hex): d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a. kid: <tt>did:web:measurer.example#test-key-1</tt>.</t>
+
+<section anchor="tv-capsule"><name>One Capsule</name>
+
+<t>The first of five capsules, as its JCS bytes. Line breaks are added for
+display only; the bytes contain none.</t>
+
+<artwork><![CDATA[
+{"authority_state":"NONE: measurement only; this capsule grants and
+records no execution authority","capsule_id":"790c6908bf69e6863301aa
+6cdb922ef2f51e37cc8bd6374da261bf5a39a0ae4d","claim":{"statement":"th
+e protocol version a registry entry declares for this endpoint
+equals the version the endpoint returns from initialize"},"correctio
+n_pointer":null,"declared":{"protocol_version":"2025-06-18","surface
+":"registry"},"differential":{"differs":["protocol_version"]},"effec
+t_reference":null,"kind":"measurement.contract_parity","limitations"
+:["the registry entry and the endpoint were read 40 seconds apart
+from one location"],"measurement_state":"INCONSISTENT","observed":{"
+exchange":"initialize","protocol_version":"2025-11-25"},"observed_at
+":"2026-09-25T12:00:00Z","schema":"csoai.measurement-capsule/0.2","s
+ources":{"initialize_response":"62e37c1818f25a0bd931d75c9e1da28b262d
+50afd980c39172165ab6ed34fa07","registry_entry":"bc012a010624de5fe157
+b48c4c8222b82d1a326374a44c67a428ad25f836d387"},"subject_id":"https:/
+/mcp-a.example/mcp"}
+]]></artwork>
+
+<t>capsule_id (SHA-256 of the JCS bytes without <tt>capsule_id</tt>):</t>
+<artwork><![CDATA[
+790c6908bf69e6863301aa6cdb922ef2f51e37cc8bd6374da261bf5a39a0ae4d
+]]></artwork>
+
+</section>
+<section anchor="tv-batch"><name>Batch and Audit Path</name>
+
+<t>Five capsule_id leaves, sorted ascending:</t>
+<artwork><![CDATA[
+790c6908bf69e6863301aa6cdb922ef2f51e37cc8bd6374da261bf5a39a0ae4d
+7933cc6a2b3daa915e651da0e70bbb558640763062e08bbf831e8cc7946c7570
+97e3e57263664c1f980664c73da0aad987daf292552b5d9f0e87b594d2dcde8a
+bd7cef2dd9f66b6140ab03cfd4a3958aa5e91f8e54df9533de27a9e891f541a1
+c79034f8eb5e79924077a6a18530cd6033547230f373d0340d2ceeae0b09ae62
+]]></artwork>
+
+<t>RFC 9162 Merkle Tree Hash (SHA-256):</t>
+<artwork><![CDATA[
+609d0f628fd70eeefd53d834333af8efa4d12b6e536f28f421f2cad18063b092
+]]></artwork>
+
+<t>Audit path for leaf index 2 of 5, verifiable with
+<xref target="RFC9162" section="2.1.3.2"/>:</t>
+<artwork><![CDATA[
+ec8bb44e799ff3af50b4e5fb250f5090689b7e30d54a44ff92378e45607624d9
+015d548669d37c398fa2c86502caa5edf42fde88c502e2df194feb3b3634128f
+2726cbfb4f5551190f1c834055f1db56334cfe62ed55db73c4dee7233dbbafcb
+]]></artwork>
+
+<t>SHA-256 of the batch record's JCS bytes:</t>
+<artwork><![CDATA[
+77c6996d9794b8defcf4e885470c7138fe78c0cd16ec63b6b6497cae8e8af975
+]]></artwork>
+
+</section>
+<section anchor="tv-cose"><name>COSE_Sign1 with an Attached Payload</name>
+
+<t>Protected header (EDN, then the deterministic encoding in hex):</t>
+<artwork><![CDATA[
+{1: -19, 3: "application/vnd.csoai.measurement-capsule-batch+json",
+4: 'did:web:measurer.example#test-key-1', 15: {1:
+"did:web:measurer.example", 2: "measurement.contract_parity", 6:
+1790000000}}
+
+a401320378346170706c69636174696f6e2f766e642e63736f61692e6d656173
+7572656d656e742d63617073756c652d62617463682b6a736f6e045823646964
+3a7765623a6d656173757265722e6578616d706c6523746573742d6b65792d31
+0fa30178186469643a7765623a6d656173757265722e6578616d706c6502781b
+6d6561737572656d656e742e636f6e74726163745f706172697479061a6ab13b
+80
+]]></artwork>
+<t>Signature over the Sig_structure:</t>
+<artwork><![CDATA[
+cec79a49b8eb0fbebaccbe7a907029257e33838e8fab950f91699b2ef0c9a02a
+907fe789805f552f75763dbcdc881be034661c039375bfcf039bed630b666b06
+]]></artwork>
+
+</section>
+<section anchor="tv-hash-envelope"><name>COSE_Sign1 with a Hash Envelope</name>
+
+<t>Protected header (EDN, then hex). Label 3 is absent.</t>
+<artwork><![CDATA[
+{1: -19, 4: 'did:web:measurer.example#test-key-1', 15: {1:
+"did:web:measurer.example", 2: "measurement.contract_parity", 6:
+1790000000}, 258: -16, 259:
+"application/vnd.csoai.measurement-capsule-batch+json", 260:
+"https://measurer.example/batches/contract_parity/record.json"}
+
+a601320458236469643a7765623a6d656173757265722e6578616d706c652374
+6573742d6b65792d310fa30178186469643a7765623a6d656173757265722e65
+78616d706c6502781b6d6561737572656d656e742e636f6e74726163745f7061
+72697479061a6ab13b801901022f19010378346170706c69636174696f6e2f76
+6e642e63736f61692e6d6561737572656d656e742d63617073756c652d626174
+63682b6a736f6e190104783c68747470733a2f2f6d656173757265722e657861
+6d706c652f626174636865732f636f6e74726163745f7061726974792f726563
+6f72642e6a736f6e
+]]></artwork>
+<t>Payload (SHA-256 of the batch record's JCS bytes) and signature:</t>
+<artwork><![CDATA[
+77c6996d9794b8defcf4e885470c7138fe78c0cd16ec63b6b6497cae8e8af975
+
+4e09a643366cabff54914397ef7389b6f53d2706bdaee6aca2fdd6c0361e284e
+b7e1da1f2ab986c0bd09127f2de6b07ccf61cf28ba5600b18778558418d5c504
+]]></artwork>
+
+</section>
+<section anchor="tv-controls"><name>Controls</name>
+
+<t>Each control is built to be rejected and names the one rule it breaks.
+A verifier counts a control only when it is rejected for that rule. For
+each rule, relaxing that rule alone in the checker changes the result of
+the control that names it and of no other vector.</t>
+
+<table>
+<thead><tr><th>Control</th><th>Rule</th><th>Why it is rejected</th></tr></thead>
+<tbody>
+<tr><td>N1-forbidden-member</td><td>no-authority-member</td><td>a member named decision is forbidden at any depth</td></tr>
+<tr><td>N2-source-not-a-digest</td><td>sources-digest-only</td><td>sources carries a URL where only digests are allowed</td></tr>
+<tr><td>N3-stored-line-not-jcs</td><td>stored-bytes-are-jcs</td><td>the stored line is indented JSON, so it is not the JCS bytes the identifier covers</td></tr>
+<tr><td>N4-payload-byte-flipped</td><td>cose-signature</td><td>one payload byte of V3 changed; the signature no longer verifies</td></tr>
+<tr><td>N5-hash-envelope-with-label-3</td><td>rfc9995-no-label-3</td><td>RFC 9995: label 3 (content_type) MUST NOT be present with a hash envelope payload</td></tr>
+<tr><td>N6-duplicated-last-leaf</td><td>leaf-set-no-duplicates</td><td>the leaf list repeats its last member; its root differs from V2 and n no longer equals n_capsules</td></tr>
+</tbody>
+</table>
+
+</section>
+</section>
+<section anchor="vocabularies"><name>State Vocabularies</name>
+
+<t>[GENERATED AT BUILD from the implementation's vocabulary file: for each
+kind, each state, its family and a one-line meaning. Not written by hand,
+so that the text and the implementation cannot drift apart.]</t>
+
+</section>
+<section anchor="changes"><name>Changes from -00</name>
+
+<ul>
+  <li>Specified the COSE_Sign1 encoding: header parameters, deterministic
+  encoding, what is signed and how it is verified.</li>
+  <li>Corrected the hash envelope rule: content type (3) is absent and the
+  media type goes in label 259, as RFC 9995 requires.</li>
+  <li>Registration is per batch record and index, not per capsule.</li>
+  <li>Added the Receipts section, and moved RFC 9995 to the normative
+  references; added RFC 8949 and RFC 9942.</li>
+  <li>Added test vectors and controls.</li>
+  <li>Moved the state vocabularies to a generated appendix.</li>
+  <li>Implementation Status is re-read from live artefacts; no figure is
+  carried over.</li>
+  <li>Added the MCP access-decision receipt draft to the survey in the
+  introduction, and open issue 8.</li>
+  <li>[REFERENCES: re-read each cited draft's current revision on the day
+  of posting.]</li>
+</ul>
+
+</section>
+<section numbered="false" anchor="acknowledgments"><name>Acknowledgments</name>
+
+<t>The drafts cited in the introduction sharpened the distinction this
+document draws. Any mischaracterisation of them is the author's.</t>
+
+</section>
+
+
+  </back>
+
+<!-- ##markdown-source:
+H4sIAAAAAAAAA51961bjSJbu/3iKONSPNDO2uZNgprqOC8gquknIAbJr1erp
+g4UlYzWy5FbIkG5W9rPMs5wnO/vbe0dIMs6qnpN/kHWJy459+fYlInu9nqnS
+KksGduMsGWdRmcS956R0C9e7fnBJ+ZzE9mMSuUWZzJK8sqfR3C2yxA3s0H4q
+i0maJXZSlPZumpZx71NUVsvW+7dVVPGVs2lub08v7u42TPTwUCbP1CX/Xtv+
+homLcR7NaGBxGU2qHrUyz5JZlPfcOK2q3qz+qDeWj3rb22ZM3T0W5XJgky9z
+4xYPs9S5tMir5Zyauji/+2DSeTmwVblw1e729vH2rqFJRwN7m4wXZVotzVOy
+fCnKeGBsTwaMi6qMcjenN/PxEr8b3eNn9IgpGldFeXwfZUVOnS0TZ+YpNWOr
+Yiw/+TJO5tV0YHfolyvKqkwmzj91y1n900SLalqUGAc9snayyDKhyFU6nhZZ
+5OydJwq/UJSPUZ7+I6povgN7WizycZrZYmKHF7ZzentNfy6reJPfJRoSjS6L
+PC7k4zG9XoFun/O0okX/U5o/xsWMn1EPaTawuXb7v8euiNI+dWdMXpQz6vA5
+wTxvPpwebe/t+svdg2N/ebiz7S/fHx3o5fH2gX/3+Ohw31/uHO7Wl+Hdg+P3
+/vJ4f29gTJpPVvp+f7wfvjw+5i8vemf9NKkmyjRuXEayJHgwS6c9VzwVWfGs
+z+fRMiuiuPeQ5jHN37/oxtOyGD/1knlP1kSJ3CuTcZLOKxdajMq/LxLXi9zf
+o+feuKDVSaN8nLx50UXTRY+ZpheN1zY1LWhll70v+9u7axoa8Lp4yT0Vpk/H
+UUbL7t+1t+MySXKah72Rr+wHphgL7BCdp2MS2SUL3oeseCGpQ7OB7/ifsNzp
+tExdVcynSWl/5qHp4zQndj3tN2/GNJyB3d3ePextH/R2D/gm6ZI0cVg03/BF
+XiVlnlS9Mwi4l/PfnnePxJVnHpWPCX0zraq5G2xtUZcRiej4KSl5vcGcW6RB
+tqbVLNv611sG5fMiUnaIUl2jBtXxRlw8loveOIkXJOm9OBmnUDG9uejDlbWR
+t+yZvuW15gCLUkBCsUBRLgvyzoUXHd2JiLqVvSDleT6ZJOPqNxbofJY8kfak
+jjC45uKc97E+9e3m8hz3tg//R8vz21Pvbe/9fy/Pv9IyiL9qCCZlNCMS9kg7
+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
+N/8PP7Gf2/9oAAA=
+
+-->
+
+</rfc>
+

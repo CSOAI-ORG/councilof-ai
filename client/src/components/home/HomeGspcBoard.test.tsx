@@ -192,7 +192,8 @@ describe("HomeGspcBoard (mocked /api/gspc)", () => {
     expect(html).toContain("rendered directly here; Hugging Face is a distribution mirror");
     expect(html).not.toContain("This page embeds it and does not redraw it");
     expect(html).not.toContain("gspc-governance-leaderboard");
-    expect(html.match(/href="\/api\/gspc"/g)).toHaveLength(1);
+    // Two doors to the same endpoint: the header link and the summary tiles' as_of source line.
+    expect(html.match(/href="\/api\/gspc"/g)).toHaveLength(2);
   });
 
   it("shows 9 axes and a Load more derived from the array; expanded shows every axis", () => {
@@ -320,6 +321,28 @@ describe("HomeGspcBoard (mocked /api/gspc)", () => {
     expect(html).toContain("Board is unreachable right now. Empty stays empty.");
     expect(html).not.toContain("data-axis-row=");
     expect(html).not.toContain("<iframe");
+  });
+
+  it("summary tiles say UNCHECKABLE on a dead board — never a count of nothing", () => {
+    const html = renderToStaticMarkup(<HomeGspcBoard data={null} error="offline" />);
+    const tiles = html.slice(html.indexOf('aria-label="Live board summary"'), html.indexOf('data-testid="gspc-tiles-as-of"'));
+    expect(tiles).toContain("UNCHECKABLE");
+    // Every tile value is a word; not one is a bare 0 manufactured from an empty axis array.
+    expect(tiles).not.toMatch(/tracking-tight[^"]*">0</);
+    expect(tiles).not.toContain("0 TIE");
+    expect(html).toContain("as_of: <strong");
+    expect(html).toContain("UNCHECKABLE — the board was not read on this load");
+  });
+
+  it("summary tiles carry the payload's own measured_on.date and a source link", () => {
+    const html = renderToStaticMarkup(
+      <HomeGspcBoard data={{ ...payload, measured_on: { date: "behavioural axes 2026-08-12" } }} />,
+    );
+    const stamp = html.slice(html.indexOf('data-testid="gspc-tiles-as-of"'));
+    expect(stamp).toContain("behavioural axes 2026-08-12");
+    expect(stamp).toContain('href="/api/gspc"');
+    const noStamp = renderToStaticMarkup(<HomeGspcBoard data={{ ...payload, measured_on: undefined }} />);
+    expect(noStamp).toContain("UNCHECKABLE — the payload carries no measured_on.date");
   });
 
   it("renders the Hub feed as a separate interactive measured-model table", () => {

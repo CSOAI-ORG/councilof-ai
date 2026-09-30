@@ -1,0 +1,87 @@
+{
+  "card": {
+    "as_of": "2026-09-30T05:04:55Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.xrpl-identity-state-matrix/0.1",
+      "status": "PROBED",
+      "matrix_sha256": "9fa8ac7545a1143160f9ac328e5ce096f154169245f82eb0356506672390080f",
+      "n_identities": 16,
+      "n_changed": 12,
+      "field_state_counts": {
+        "OBSERVED": 121,
+        "UNMEASURED": 80
+      },
+      "ledger_index": 107330229,
+      "observed_at": "2026-09-30T05:04:55Z",
+      "rule": "issuer-account facts, source-reported market values, independently derived supply/holder results, deployment, reserve claim, attestation and controls stay separate",
+      "matrix_url": "https://councilof.ai/interop/xrpl-16-state-matrix/matrix.json"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "78172635a819fa51aba9d367e6b74ca2114fe3eb56227d19f2be198b55435d58",
+    "sig_ed25519": "15a9585c9907a6106dbec5686cb1a18d0d30191b01563b2d7940149fce686e7bab7e26608b06a209cd8e4bc2f7c89dbef819efe740ccb009139e1f78f4c6230f",
+    "source_urls": [
+      "https://s1.ripple.com:51234/",
+      "https://xrpl.fi/api/metrics",
+      "https://councilof.ai/interop/xrpl-16-state-matrix/matrix.json"
+    ],
+    "subject": "XRPL 16-identity state matrix refresh",
+    "surface": "public.notice",
+    "tags": [
+      "xrpl",
+      "identity-state-matrix",
+      "xrpl-16-state-matrix"
+    ],
+    "unmeasured": [
+      "supply",
+      "holders",
+      "chain_deployment",
+      "reserve_claim",
+      "attestation",
+      "cross_chain_deployments"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "dc871389ad2cd3ecb1eb3b5705b1c0ac0c676b7b5243c03f45d44bb08f9e2db7",
+    "da5ab197b94c043f6f87208f39619e1533983b3ac3f0e6cb49de24ca295f7356",
+    "691f72a15ec69ed32dee9b6b182098b35289905fb144b1731ed34eb451ecd2b8",
+    "1624875978cf9bb28b08dd8e629cfe8f0cbac0e4e02d5dcb8513af61de1c49b7",
+    "299b0a28394729de103640dc12760d080d882ebc843001320701afbc32d02565",
+    "d1a61eee0e69a4e35250a58a68aaf09f94391c40dad0be58b8a2527dba6788be",
+    "9ca129791984b04a6315e53580c547bd4080048abe37a75060bb86da8c01a70d",
+    "457943a0f789190e0d5ea98b9e888bfffd8b64df5d99058396adfaaac56d0292",
+    "efb4b6c1aa23358f73bceed2062221949f1506ec09c8393c5da7bee0c485b97d"
+  ]
+}

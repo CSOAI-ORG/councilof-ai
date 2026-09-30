@@ -1,0 +1,28 @@
+cases per class {'float-random-bits': 199925, 'float-decade': 259, 'int-beyond-2^53': 8, 'string-codepoint': 37, 'key-order-astral': 1}
+== probe {'float-random-bits': 1952, 'float-decade': 13, 'int-beyond-2^53': 7}
+    float-random-bits 1.3355731926399844e+19 ours b'13355731926399844352' ref b'13355731926399844000'
+    float-random-bits -1.0023771520500278e+17 ours b'-100237715205002784' ref b'-100237715205002780'
+    float-random-bits -6.147300447958981e-05 ours b'-0.000061' ref b'-0.00006147300447958981'
+    float-random-bits -1.3347231014205052e+20 ours b'-133472310142050516992' ref b'-133472310142050520000'
+    float-random-bits -4.063187547118203e+16 ours b'-40631875471182032' ref b'-40631875471182030'
+    float-random-bits 6.619437120713566e+20 ours b'661943712071356645376' ref b'661943712071356600000'
+    float-decade 1.5e-06 ours b'0.000002' ref b'0.0000015'
+    float-decade 2.4999999999999998e-06 ours b'0.000002' ref b'0.0000024999999999999998'
+    float-decade 1.2499999999999999e-06 ours b'0.000001' ref b'0.0000012499999999999999'
+    float-decade 3.14159e-06 ours b'0.000003' ref b'0.00000314159'
+    float-decade 9.999e-06 ours b'0.00001' ref b'0.000009999'
+    float-decade 1.5000000000000002e-05 ours b'0.000015' ref b'0.000015000000000000002'
+    int-beyond-2^53 9007199254740992 ours b'9007199254740992' ref REFUSE:IntegerDomainError
+    int-beyond-2^53 9007199254740993 ours b'9007199254740993' ref REFUSE:IntegerDomainError
+    int-beyond-2^53 1000000000000000000000 ours b'1000000000000000000000' ref REFUSE:IntegerDomainError
+    int-beyond-2^53 1000000000000000000001 ours b'1000000000000000000001' ref REFUSE:IntegerDomainError
+    int-beyond-2^53 -9007199254740993 ours b'-9007199254740993' ref REFUSE:IntegerDomainError
+    int-beyond-2^53 10000000000000000000000 ours b'10000000000000000000000' ref REFUSE:IntegerDomainError
+== arena {'int-beyond-2^53': 7, 'key-order-astral': 1}
+    int-beyond-2^53 9007199254740992 ours b'9007199254740992' ref REFUSE:IntegerDomainError
+    int-beyond-2^53 9007199254740993 ours b'9007199254740993' ref REFUSE:IntegerDomainError
+    int-beyond-2^53 1000000000000000000000 ours b'1000000000000000000000' ref REFUSE:IntegerDomainError
+    int-beyond-2^53 1000000000000000000001 ours b'1000000000000000000001' ref REFUSE:IntegerDomainError
+    int-beyond-2^53 -9007199254740993 ours b'-9007199254740993' ref REFUSE:IntegerDomainError
+    int-beyond-2^53 10000000000000000000000 ours b'10000000000000000000000' ref REFUSE:IntegerDomainError
+    key-order-astral {'😀': 1, '！': 2, '\ue000': 3} ours b'{"\xee\x80\x80":3,"\xef\xbc\x81":2,"\xf0\x9f\x98\x80":1}' ref b'{"\xf0\x9f\x98\x80":1,"\xee\x80\x80":3,"\xef\xbc\x81":2}'

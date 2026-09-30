@@ -1,0 +1,66 @@
+{
+ "schema": "csoai.signed-run/0.1",
+ "payload": {
+  "schema": "csoai.signed-artifact/0.1",
+  "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+  "not_a_grade": "The signature proves these bytes were signed by the board key on the date below; it does not prove any claim inside beyond what the record's own sources and instruments show.",
+  "artifact": {
+   "path": "measurements/disclosure-lag/2026-09-gemini-evaluation/record.json",
+   "sha256": "4a9d8ed026964fb0074beb407994134bb96bca9842fed4b63c72292dd0161535",
+   "schema": "csoai.measurement-capsule-batch/0.2",
+   "as_of": "2026-09-28T06:15:44Z"
+  },
+  "kind": "measurement.disclosure_lag",
+  "capsule_id": "2b0ef157869f3a3e7614cc208815fd67fe5463f0822f874e4587d6fa257a846e",
+  "subject_id": "incident.2026-05.gemini-cyber-evaluation.outside-system-access",
+  "intervals_days": {
+   "incident_to_vendor_notified": [
+    31,
+    91
+   ],
+   "vendor_notified_to_public_disclosure": [
+    49,
+    79
+   ],
+   "incident_to_public_disclosure": [
+    110,
+    140
+   ],
+   "vendor_notified_to_affected_entities_notified": null,
+   "vendor_notified_to_authorities_notified": null,
+   "press_inquiry_to_public_disclosure": null,
+   "incident_to_activity_stopped": null
+  },
+  "interval_states": {
+   "incident_to_vendor_notified": "REPORTED_RANGE",
+   "vendor_notified_to_public_disclosure": "REPORTED_RANGE",
+   "incident_to_public_disclosure": "REPORTED_RANGE",
+   "vendor_notified_to_affected_entities_notified": "UNMEASURED",
+   "vendor_notified_to_authorities_notified": "UNMEASURED",
+   "press_inquiry_to_public_disclosure": "UNMEASURED",
+   "incident_to_activity_stopped": "UNMEASURED"
+  },
+  "n_sources": 10,
+  "publication": "PRIVATE: OWNER-APPROVE required before any publication"
+ },
+ "signature": {
+  "did": "did:web:csoai.org#board-attestation-1",
+  "alg": "Ed25519",
+  "sig_ed25519": "b5bdad7fc48533d039d1da98043d3229cdcfe9dc7e7caf6b2a797f57a214fdfbb90cde711988bb0d59d103d309f2cbfd7bb642a198ab01f5d4163441fae9570a",
+  "payload_sha256": "f527dd489ddd149b470d6aa742f210cb99e2ed7856a3a8907f909365d4b860f6",
+  "signer_auth": "pod-token",
+  "signed_at": "2026-09-28T06:35:59.443Z",
+  "canonical": "JSON, keys sorted, no whitespace, UTF-8, non-ASCII unescaped"
+ },
+ "local_verification": {
+  "did_document": "https://csoai.org/.well-known/did.json",
+  "key_x": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA",
+  "result": "VERIFIES",
+  "altered_preimage_controls": {
+   "trailing byte appended to the record": "rejected (control holds)",
+   "artifact sha256 altered in the payload": "rejected (control holds)",
+   "signature bit flipped": "rejected (control holds)"
+  }
+ },
+ "verify": "canonicalise payload (JSON, keys sorted, no whitespace, UTF-8); sha256 must equal signature.payload_sha256; payload.artifact.sha256 must equal sha256 of the record's bytes; verify sig_ed25519 (hex) with the #board-attestation-1 Ed25519 key in https://csoai.org/.well-known/did.json"
+}

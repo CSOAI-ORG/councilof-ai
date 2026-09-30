@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { FOCUS, MEASURE, PRIMARY, SP, TYPE } from "./glass";
+import { leaderLabel } from "../../../../functions/_lib/leaderLabel";
 import { CopyBlock, PaneHead, WireNotice } from "./paneKit";
 import { quotableWire, stateWord, useBoardWire, useSignalCards } from "./boardWire";
 import { badgeSnippet, cardSnippet, CARD_EMBED_HEIGHT, CARD_EMBED_WIDTH } from "@/lib/embedSnippet";
@@ -131,7 +132,7 @@ export default function LobbyEmbedPane({
                     {quotableWire(chosen) ? (
                       <>
                         {" "}
-                        — the leader is{" "}
+                        — the {leaderLabel(chosen.separation)} is{" "}
                         <span className="font-mono text-[11.5px]">{chosen.leader ?? "not published"}</span>
                         {chosen.separation === "TIE"
                           ? ". A tie means the point-estimate lead is not a measured advantage; the badge says so."

@@ -1,40 +1,40 @@
 {
   "capability_counts": {
     "audience": {
-      "agent": 189,
-      "both": 25
+      "agent": 211,
+      "both": 28
     },
     "kind": {
-      "a2a_skill": 8,
-      "http": 178,
-      "mcp_tool": 13,
+      "a2a_skill": 10,
+      "http": 198,
+      "mcp_tool": 16,
       "population_door": 10,
       "well_known": 5
     },
     "lifecycle": {
       "DOOR_CLOSED": 1,
-      "LIVE": 179,
+      "LIVE": 201,
       "METHOD_NOT_ALLOWED": 1,
       "NOT_IMPLEMENTED": 13,
       "QUARANTINED_PRE_RELEASE": 15,
-      "RETIRED": 5
+      "RETIRED": 8
     },
     "payment": {
-      "free": 189,
-      "free_preview_then_x402": 15,
+      "free": 203,
+      "free_preview_then_x402": 20,
       "not_sold": 1,
-      "x402": 9
+      "x402": 15
     },
     "surfaces": {
-      "a2a": 8,
-      "llms": 67,
-      "mcp": 13,
-      "nav": 22,
-      "openapi": 176
+      "a2a": 10,
+      "llms": 79,
+      "mcp": 16,
+      "nav": 25,
+      "openapi": 168
     },
-    "total": 214
+    "total": 239
   },
-  "content_id": "16dc98deca05a2ee614973f38b792f499e806294ca68a045170bee26e540f24f",
+  "content_id": "eb36ae8dc5171875ea28fcc968a2653eca4e135158dcfacaed0609e2a683d633",
   "kind": "public-observation-projection",
   "laws": [
     "listing or discovery is not measurement, certification, endorsement, or compliance",
@@ -45,43 +45,43 @@
   ],
   "private_eat_state": "NOT_INCLUDED_IN_PUBLIC_INDEX",
   "public_observations": {
-    "a2a_skills": 8,
-    "corrections": 66,
+    "a2a_skills": 10,
+    "corrections": 86,
     "distinct_nonself_payers": 1,
     "gspc_axes": 23,
     "gspc_measured_axes": 23,
     "gspc_unmeasured_axes": 0,
-    "mcp_free_tools": 9,
+    "mcp_free_tools": 12,
     "mcp_paid_tools": 4,
     "nonself_settlements": 1,
     "x402_mode": "live",
-    "x402_resources": 21
+    "x402_resources": 28
   },
   "schema": "csoai.eat-flywheel-public/0.2",
-  "source_commit": "57d64a9fbc5d9f1e0a3428f6dd824687c2a0f016",
+  "source_commit": "bd1563d27c265bd2409dca7c5175ae4fd66b814a",
   "source_observations": {
     "a2a": {
-      "bytes": 13018,
+      "bytes": 15872,
       "content_type": "application/a2a+json",
-      "sha256": "b6474156e927483e5e156780f2e0fbd82f12e86d7efd25edc22be597a73aed19",
+      "sha256": "fd9d2e84d3a03142123384564ebc0edc4c0e4fb30c79d12c49f995b04d3abfe7",
       "status": 200,
       "url": "https://councilof.ai/.well-known/agent-card.json"
     },
     "corrections": {
-      "bytes": 109485,
+      "bytes": 220211,
       "content_type": "application/json",
       "excluded_volatile_fields": [
         "signature_check.checked_at"
       ],
       "semantic_hash_scope": "JSON body excluding signature_check.checked_at only",
-      "semantic_sha256": "280d39428efe816d5bb13ccbcbff0fc47585d1db1f0ec28f7d18fa24fb88c0ce",
+      "semantic_sha256": "cbf8b85b2059013052e5ce7ce885b356a71642780fac01fb73152e9a78d5e26d",
       "status": 200,
       "url": "https://councilof.ai/api/corrections"
     },
     "gspc": {
-      "bytes": 72650,
+      "bytes": 120218,
       "content_type": "application/json; charset=utf-8",
-      "sha256": "be45a7ed47dc7f43a0ab83b75d3ce60909f918ecf386af7c11a78c0d5a708cca",
+      "sha256": "13222a4d2ebb56d695a2ba75baccb2773878a76d231741289afcd4155ff542f3",
       "status": 200,
       "url": "https://councilof.ai/api/gspc"
     },
@@ -107,16 +107,16 @@
       "url": "https://councilof.ai/api/revenue"
     },
     "state": {
-      "bytes": 41214,
+      "bytes": 68325,
       "content_type": "application/json; charset=utf-8",
-      "sha256": "af1f451fadeb87985b6d156f4745b3440b48b901ad5d3ba2f9a6225e1bff2d60",
+      "sha256": "4bda1d861a2abe8bb6506ec8c67a3bd74bb0514b42aee9888f6678c0e15fa217",
       "status": 200,
       "url": "https://councilof.ai/api/state"
     },
     "x402": {
-      "bytes": 27501,
+      "bytes": 135976,
       "content_type": "application/json; charset=utf-8",
-      "sha256": "358cf6bcf418faf8b19e85f47c3c4128e7567a5ef1160e4b141272d06d1f84a9",
+      "sha256": "d07b1a16a21e49ec69ff1a5bc1bb57c4980152b356e70ef78df7bb993e63d2c5",
       "status": 200,
       "url": "https://councilof.ai/.well-known/x402.json"
     }

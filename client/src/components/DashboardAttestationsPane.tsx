@@ -4,7 +4,7 @@ import {
   BOARD_KEY_ID,
   classifyQuery,
   corpusBoundary,
-  HOW_TO_VERIFY,
+  howToVerifyLinks,
   latestCorrections,
   latestSignedCards,
   ledgerSignatureState,
@@ -505,8 +505,8 @@ export default function DashboardAttestationsPane() {
           <h2 className="text-base font-semibold">How to verify yourself</h2>
           <p className="mt-1 text-xs text-muted-foreground">Free, offline, no account. Each link is a file you can fetch or a command you can run.</p>
           <ul className="mt-3 grid grid-cols-1 gap-1.5 text-xs md:grid-cols-2">
-            {HOW_TO_VERIFY.map((l) => (
-              <li key={l.href}>
+            {howToVerifyLinks(r?.card_sha256).map((l) => (
+              <li key={l.label}>
                 <a href={l.href} className="underline underline-offset-2 hover:text-foreground" target="_blank" rel="noreferrer noopener">
                   {l.label}
                 </a>

@@ -1,0 +1,54 @@
+{
+ "schema": "csoai.signed-run/0.1",
+ "payload": {
+  "schema": "csoai.signed-artifact/0.1",
+  "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+  "not_a_grade": "The signature proves these bytes were signed by the board key on the date below; it does not prove any claim inside beyond what the record's own sources and instruments show.",
+  "artifact": {
+   "path": "measurements/disclosure-lag/2026-09-medicare-agent/record.json",
+   "sha256": "59f2c0fa7a751e18659b6838163e49d66daec3c5e71fa40b8ad4c13d2d7c8324",
+   "schema": "csoai.measurement-capsule-batch/0.2",
+   "as_of": "2026-09-26T15:13:55Z"
+  },
+  "kind": "measurement.disclosure_lag",
+  "capsule_id": "da98441541f2947df0d2732ce3f40f5ee6afbdb2d436f646fef4d2649b0551dc",
+  "subject_id": "incident.2026-06.au-medicare-statistics-portal.agent-access",
+  "intervals_days": {
+   "incident_to_authority_notified": 84,
+   "incident_to_public_disclosure": 98,
+   "incident_to_vendor_discovered": [
+    44,
+    74
+   ],
+   "vendor_discovered_to_authority_notified": [
+    10,
+    40
+   ],
+   "authority_notified_to_public_disclosure": 14,
+   "authority_notified_to_acsc": 5,
+   "incident_to_activity_stopped": null
+  },
+  "n_sources": 15,
+  "publication": "PRIVATE: OWNER-APPROVE required before any publication"
+ },
+ "signature": {
+  "did": "did:web:csoai.org#board-attestation-1",
+  "alg": "Ed25519",
+  "sig_ed25519": "2772ca4ed491885fe7875b206a98cc2290f0bc11e7394d3fdc78a3d2c513e49df16950274918b7db0e405693949d04d40589337f2fa298a1cf77b85ec031b20e",
+  "payload_sha256": "ff49ea60859059680d886870d583656d52d8fe46dd49709ce64b91999300271a",
+  "signer_auth": "pod-token",
+  "signed_at": "2026-09-26T15:19:03.909Z",
+  "canonical": "JSON, keys sorted, no whitespace, UTF-8, non-ASCII unescaped"
+ },
+ "local_verification": {
+  "did_document": "https://csoai.org/.well-known/did.json",
+  "key_x": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA",
+  "result": "VERIFIES",
+  "altered_preimage_controls": {
+   "trailing byte appended to the record": "rejected (control holds)",
+   "artifact sha256 altered in the payload": "rejected (control holds)",
+   "signature bit flipped": "rejected (control holds)"
+  }
+ },
+ "verify": "canonicalise payload (JSON, keys sorted, no whitespace, UTF-8); sha256 must equal signature.payload_sha256; payload.artifact.sha256 must equal sha256 of the record's bytes; verify sig_ed25519 (hex) with the #board-attestation-1 Ed25519 key in https://csoai.org/.well-known/did.json"
+}

@@ -58,10 +58,10 @@ export const REACH_SURFACES: ReachSurface[] = [
   },
   {
     id: "zenodo",
-    label: "Zenodo DOI",
-    href: "https://doi.org/10.5281/zenodo.21991104",
+    label: "Zenodo DOI (unavailable)",
+    href: "/interop/zenodo-status.json",
     kind: "Archive",
-    note: "doi from live GET /api/gspc. External archival anchor we do not control.",
+    note: "DOI 10.5281/zenodo.21991104 from live GET /api/gspc. Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending.",
   },
 ];
 

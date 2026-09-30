@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link, useSearch } from "wouter";
-import { Search, ExternalLink, ShieldCheck, Boxes, Layers, ArrowRight, Github, Terminal, Cloud, Plug, KeyRound } from "lucide-react";
+import { Search, ExternalLink, ShieldCheck, Boxes, Layers, ArrowRight, Github, Terminal, Plug } from "lucide-react";
 import registry from "@/data/mcpRegistry.json";
 
 type Server = {
@@ -24,7 +24,7 @@ const CATEGORIES = (registry.categories as { name: string; count: number }[]) ||
 const FRAMEWORKS = (registry.frameworkCounts as { name: string; count: number }[]) || [];
 
 export default function MCPRegistry() {
-  useEffect(() => { document.title = `MCP Fleet — ${registry.total}+ AI Governance Tools | CSOAI`; }, []);
+  useEffect(() => { document.title = `MCP server catalogue — ${registry.total} entries | CSOAI`; }, []);
   const searchString = useSearch();
   const params = new URLSearchParams(searchString);
   const [query, setQuery] = useState("");
@@ -44,23 +44,15 @@ export default function MCPRegistry() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* EU AI Act urgency banner */}
-      <div className="bg-rose-600 text-white text-sm">
-        <div className="container max-w-6xl py-2.5 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center">
-          <span className="font-semibold">⏱ EU AI Act GPAI obligations are live (2 Aug 2026).</span>
-          <span className="text-rose-100">Get audit-ready with the fleet —</span>
-          <a href="/contact" className="underline font-medium hover:text-white">
-            book a free 15-min diagnostic →
-          </a>
-        </div>
-      </div>
+      {/* 2026-09-26: the EU AI Act urgency banner (a free diagnostic call and an "audit-ready"
+          promise) was removed — this page is a catalogue, not a sales funnel. */}
 
       {/* Hero */}
       <div className="bg-gradient-to-br from-white via-emerald-50 to-emerald-100 text-gray-900 py-20">
         <div className="container max-w-5xl">
           <Badge className="mb-6 bg-emerald-500/20 text-emerald-700 border-emerald-500/30">A2A Substrate</Badge>
           <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-            The <span className="text-emerald-600">{registry.total}-MCP</span> Governance Fleet
+            MCP server catalogue
           </h1>
           <p className="text-xl text-gray-700 leading-relaxed max-w-3xl mb-8">
             This registry catalogues Model Context Protocol servers for governance, safety and agent infrastructure.
@@ -85,13 +77,8 @@ export default function MCPRegistry() {
             </div>
           </div>
 
-          {/* Self-serve developer path */}
+          {/* Developer path. The "Get a free API key" signup button was removed 2026-09-26. */}
           <div className="flex flex-wrap gap-3 mt-8">
-            <Link href="/signup?source=mcp-api-key">
-              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">
-                <KeyRound className="mr-2 h-4 w-4" aria-hidden="true" /> Get a free API key
-              </Button>
-            </Link>
             <Link href="/api-docs">
               <Button size="lg" variant="outline" className="border-emerald-300 text-emerald-700 hover:bg-emerald-50">
                 Read the API docs
@@ -131,8 +118,10 @@ export default function MCPRegistry() {
       {/* How they run */}
       <div className="border-b bg-gray-50">
         <div className="container max-w-5xl py-8">
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Three ways to run any MCP</h2>
-          <div className="grid sm:grid-cols-3 gap-4">
+          {/* The third way, a hosted gateway on another business's domain, was removed 2026-09-26:
+              CSOAI measures; it does not sell or host another company's gateway. */}
+          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Two ways to run an MCP</h2>
+          <div className="grid sm:grid-cols-2 gap-4">
             <div className="flex items-start gap-3">
               <Terminal className="h-5 w-5 text-emerald-600 mt-0.5 shrink-0" />
               <div>
@@ -145,13 +134,6 @@ export default function MCPRegistry() {
               <div>
                 <p className="font-semibold text-sm">Smithery</p>
                 <code className="text-xs text-gray-500">npx @smithery/cli install &lt;name&gt;</code>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <Cloud className="h-5 w-5 text-emerald-600 mt-0.5 shrink-0" />
-              <div>
-                <p className="font-semibold text-sm">Hosted gateway</p>
-                <code className="text-xs text-gray-500">api.meok.ai/v1/&lt;slug&gt;/&lt;tool&gt;</code>
               </div>
             </div>
           </div>
@@ -195,9 +177,9 @@ export default function MCPRegistry() {
           {filtered.map((s) => (
             <Card key={s.slug} className="p-5 flex flex-col border hover:border-emerald-400 hover:shadow-md transition-all">
               <div className="flex items-start justify-between gap-2 mb-2">
-                <Link href={`/mcp/${s.slug}`}>
-                  <h3 className="font-bold text-base leading-tight hover:text-emerald-600 cursor-pointer">{s.name}</h3>
-                </Link>
+                {/* 2026-09-28: no /mcp/<slug> link. /mcp/* is the MCP server's Pages Function, which
+                    answers 404 for every catalogue slug, so each card linked twice to a dead page. */}
+                <h3 className="font-bold text-base leading-tight">{s.name}</h3>
                 {s.builtInHouse && <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 text-[10px] shrink-0">In-house</Badge>}
               </div>
               <p className="text-sm text-gray-600 leading-relaxed flex-1">{s.description}</p>
@@ -208,11 +190,6 @@ export default function MCPRegistry() {
                 ))}
               </div>
               <div className="mt-4 flex items-center justify-between">
-                <Link href={`/mcp/${s.slug}`}>
-                  <span className="inline-flex items-center gap-1 text-sm font-medium text-emerald-600 hover:text-emerald-700 cursor-pointer">
-                    Details <ArrowRight className="h-3.5 w-3.5" />
-                  </span>
-                </Link>
                 <a
                   href={s.url}
                   target="_blank"
@@ -231,40 +208,24 @@ export default function MCPRegistry() {
         )}
       </div>
 
-      {/* Revenue CTA */}
-      <div className="bg-gradient-to-br from-slate-900 to-emerald-900 text-white py-20">
-        <div className="container max-w-4xl text-center">
-          <h2 className="text-4xl font-bold mb-6">Put the full fleet to work</h2>
-          <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-            Use the registry to discover {registry.total} entries. Availability, authentication, audit trails and
-            signed outputs are capabilities to verify per endpoint; the catalogue does not imply one live gateway or
-            uniform behavior across every entry.
+      {/* Verify before relying on an entry. Replaced the "Revenue CTA" (Enterprise custom dev + SLA,
+          free 15-min diagnostic, enterprise lobby) on 2026-09-26. */}
+      <div className="border-t bg-gray-50 py-14">
+        <div className="container max-w-4xl">
+          <h2 className="text-2xl font-bold mb-4">Before you rely on an entry</h2>
+          <p className="text-gray-700 leading-relaxed max-w-3xl">
+            A catalogue row is a pointer, not a measurement. Availability, authentication and signed outputs are
+            properties to check per endpoint; this list does not imply one live gateway or uniform behaviour across
+            entries. Verification is free and needs no account.
           </p>
-          <div className="grid sm:grid-cols-2 gap-4 max-w-xl mx-auto mb-8 text-left">
-            <div className="bg-white/10 rounded-xl p-5 border border-white/10">
-              <p className="text-sm text-emerald-300 font-semibold">Full MCP suite</p>
-              <p className="text-sm text-gray-300 mt-1">Governance-tool catalogue with per-endpoint status and framework metadata</p>
-            </div>
-            <div className="bg-white/10 rounded-xl p-5 border border-white/10">
-              <p className="text-sm text-emerald-300 font-semibold">Enterprise</p>
-              <p className="text-sm text-gray-300 mt-1">Custom dev + SLA + dedicated support</p>
-            </div>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="/contact">
+          <div className="flex flex-wrap gap-3 mt-6">
+            <Link href="/gspc-verify">
               <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">
-                Book a free 15-min EU AI Act diagnostic <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </a>
-            <Link href="/dashboard?task=pricing-overview&tab=measured">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-                How the free rail works
+                Verify a signed record <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
-            <Link href="/dashboard?task=enterprise-start&tab=measured">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-                Enterprise lobby
-              </Button>
+            <Link href="/api-docs">
+              <Button size="lg" variant="outline">Read the API docs</Button>
             </Link>
           </div>
         </div>

@@ -11,9 +11,10 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import {
-  CANONICAL_AXIS_COUNT,
   GSPC_LEARNING_PATHS,
+  buildLearningPaths,
   deriveLearningProgress,
+  type GspcLearningPath,
   type LearningStageId,
 } from "@/data/gspc-learning-paths";
 import { boardAxisLabel } from "@/components/home/HomeGspcBoard";
@@ -68,6 +69,14 @@ export function learningScenarioUrl(axis: string, hostname?: string): string {
   return local ? `https://councilof.ai${path}` : path;
 }
 
+/** The live board: the roster of axes the practice paths are built from. */
+export function learningBoardUrl(hostname?: string): string {
+  const local = hostname === "127.0.0.1" || hostname === "localhost";
+  return local ? "https://councilof.ai/api/gspc" : "/api/gspc";
+}
+
+type RosterState = "READING" | "LIVE" | "FREEZE";
+
 const STAGE_HELP: Record<LearningStageId, string> = {
   learn:
     "Read the instrument and the live regulatory pointers before answering.",
@@ -111,6 +120,17 @@ function badgeTone(value: string): string {
 }
 
 export default function DashboardLearningPane() {
+  // The roster comes from the live board; the committed freeze is only the fallback, so the
+  // path count below is derived from whichever roster is actually shown, never typed.
+  const [livePaths, setLivePaths] = useState<readonly GspcLearningPath[] | null>(null);
+  const [rosterState, setRosterState] = useState<RosterState>("READING");
+  const paths = livePaths ?? GSPC_LEARNING_PATHS;
+  const rosterLabel =
+    rosterState === "LIVE"
+      ? "one per axis on the live board"
+      : rosterState === "READING"
+        ? "reading the live board…"
+        : "from the committed board freeze; the live board could not be read";
   const [axisId, setAxisId] = useState(GSPC_LEARNING_PATHS[0]?.axis.id ?? "");
   const [query, setQuery] = useState("");
   const [completedByAxis, setCompletedByAxis] = useState<
@@ -124,12 +144,13 @@ export default function DashboardLearningPane() {
   const [scenarioNote, setScenarioNote] = useState("Reading current sources…");
 
   const selected =
-    GSPC_LEARNING_PATHS.find((path) => path.axis.id === axisId) ??
-    GSPC_LEARNING_PATHS[0];
+    paths.find((path) => path.axis.id === axisId) ?? paths[0];
+  const selectedAxisId = selected?.axis.id;
   const progress = selected
     ? deriveLearningProgress(
         selected.axis.id,
         completedByAxis[selected.axis.id] ?? [],
+        paths,
       )
     : null;
   const activeStage = selected?.stages.find(
@@ -139,24 +160,46 @@ export default function DashboardLearningPane() {
 
   const visiblePaths = useMemo(() => {
     const needle = query.trim().toLowerCase();
-    if (!needle) return GSPC_LEARNING_PATHS;
-    return GSPC_LEARNING_PATHS.filter((path) =>
+    if (!needle) return paths;
+    return paths.filter((path) =>
       [path.axis.id, path.axis.bench, path.axis.task, path.axis.family]
         .join(" ")
         .toLowerCase()
         .includes(needle),
     );
-  }, [query]);
+  }, [query, paths]);
 
   useEffect(() => {
-    if (!selected) return;
+    const controller = new AbortController();
+    fetch(
+      learningBoardUrl(
+        typeof window === "undefined" ? undefined : window.location.hostname,
+      ),
+      { headers: { accept: "application/json" }, signal: controller.signal },
+    )
+      .then(async (response) => {
+        if (!response.ok) throw new Error(`Board HTTP ${response.status}`);
+        const roster = buildLearningPaths(await response.json());
+        if (!roster.length) throw new Error("The live board returned no axes.");
+        setLivePaths(roster);
+        setRosterState("LIVE");
+      })
+      .catch(() => {
+        if (controller.signal.aborted) return;
+        setRosterState("FREEZE");
+      });
+    return () => controller.abort();
+  }, []);
+
+  useEffect(() => {
+    if (!selectedAxisId) return;
     const controller = new AbortController();
     setScenario(null);
     setScenarioState("READING");
     setScenarioNote("Reading current sources…");
     fetch(
       learningScenarioUrl(
-        selected.axis.id,
+        selectedAxisId,
         typeof window === "undefined" ? undefined : window.location.hostname,
       ),
       {
@@ -181,7 +224,7 @@ export default function DashboardLearningPane() {
           );
         }
         const row = body.scenarios?.[0] ?? null;
-        if (!row || row.axis !== selected.axis.id) {
+        if (!row || row.axis !== selectedAxisId) {
           throw new Error("No exact scenario was returned for this axis.");
         }
         setScenario(row);
@@ -197,7 +240,7 @@ export default function DashboardLearningPane() {
         setScenarioNote(error instanceof Error ? error.message : String(error));
       });
     return () => controller.abort();
-  }, [selected]);
+  }, [selectedAxisId]);
 
   function completeStage() {
     if (!selected || !progress?.activeStageId) return;
@@ -286,8 +329,13 @@ export default function DashboardLearningPane() {
             itself.
           </p>
           <div className="mt-4 hidden flex-wrap items-center justify-center gap-2 text-[10px] font-semibold uppercase tracking-wide sm:flex">
-            <span className="rounded-full border border-emerald-700/20 bg-emerald-50 px-2.5 py-1 text-emerald-900">
-              {CANONICAL_AXIS_COUNT} canonical paths
+            <span
+              className="rounded-full border border-emerald-700/20 bg-emerald-50 px-2.5 py-1 text-emerald-900"
+              title={rosterLabel}
+              data-testid="learning-roster-count"
+              data-roster={rosterState}
+            >
+              {paths.length} canonical paths · {rosterState === "LIVE" ? "live board" : rosterState === "READING" ? "reading board" : "board freeze"}
             </span>
             <span className="rounded-full border border-slate-700/15 bg-white px-2.5 py-1 text-slate-700">
               session-only progress
@@ -296,6 +344,18 @@ export default function DashboardLearningPane() {
               human review required
             </span>
           </div>
+          <p className="mx-auto mt-3 max-w-2xl text-[11px] leading-relaxed text-muted-foreground sm:text-xs">
+            Practice completes nothing by itself. A module is complete when you
+            reproduce a published measurement and your result matches it:{" "}
+            <a
+              href="/academy/exercises/"
+              className="font-semibold text-emerald-800 underline underline-offset-2"
+              data-testid="learning-exercises-link"
+            >
+              Academy exercises
+            </a>
+            .
+          </p>
         </header>
 
         <div className="mt-8 grid gap-5 lg:grid-cols-[minmax(15rem,0.72fr)_minmax(0,2fr)]">
@@ -316,7 +376,7 @@ export default function DashboardLearningPane() {
               onChange={(event) => setAxisId(event.target.value)}
               className="mt-2 h-11 w-full rounded-xl border border-border bg-background px-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/15"
             >
-              {GSPC_LEARNING_PATHS.map((path, index) => (
+              {paths.map((path, index) => (
                 <option key={path.axis.id} value={path.axis.id}>
                   {String(index + 1).padStart(2, "0")} · {boardAxisLabel(path.axis.id)} ·{" "}
                   {completedByAxis[path.axis.id]?.length ?? 0}/{path.stages.length}
@@ -324,7 +384,7 @@ export default function DashboardLearningPane() {
               ))}
             </select>
             <p className="mt-2 px-1 text-[11px] text-muted-foreground">
-              {CANONICAL_AXIS_COUNT} canonical paths. The selected lesson opens directly below.
+              {paths.length} canonical paths ({rosterLabel}). The selected lesson opens directly below.
             </p>
           </div>
           <aside

@@ -152,7 +152,7 @@ export const STORY: Slide[] = [
       { tag: "pain", text: "AI assurance you’re simply told to take on faith" },
       { tag: "benefit", text: "People set the tests and can challenge any result" },
       { tag: "usp", text: "Every judgement is a fixed rule a human can inspect — never a hidden model" },
-      { tag: "usp", text: "AI is measured against a published human baseline — not just against other AI" },
+      { tag: "usp", text: "Where a human arm exists, it is shown beside the models on the same tasks — and marked UNMEASURED where none does" },
     ],
     href: "/dashboard?tab=board",
     cta: "See how it’s judged",

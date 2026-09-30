@@ -40,6 +40,9 @@ const KIND_SENTENCE = {
 };
 
 function evidenceLine(r) {
+  // A row recorded as no longer resolving (status_note, e.g. the Zenodo 410 of 29 Sep 2026) prints its
+  // evidence as text beside the note, never as a working link.
+  if (r.evidence_kind === "public_url" && r.status_note) return `${r.evidence} (${r.status_note})`;
   return r.evidence_kind === "public_url" ? `<${r.evidence}>` : `private evidence (${r.evidence_kind.replace("_", " ")}): ${r.evidence}`;
 }
 

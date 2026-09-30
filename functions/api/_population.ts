@@ -69,6 +69,8 @@ export type PopulationEntry = {
   population: string;
   /** Tags for the 402 (≤5, ≤32 chars each). */
   tags: string[];
+  /** Optional wording for the count in the 402's live sentence; `n` is always the reading's own. */
+  countPhrase?: (n: number, unit: string) => string;
   read: (io: Io, full: boolean) => Promise<Reading>;
 };
 
@@ -660,8 +662,12 @@ const layer0: PopulationEntry = {
 
 const corrections: PopulationEntry = {
   id: "corrections",
-  title: "Corrections ledger, full history",
-  population: "one row per published correction in the estate's own ledger — what was wrong, how it was caught, the fix, dated — the same source object the free GET /api/corrections serves",
+  // Not "full history" (public audit 2026-09-28, fix #29): the slice is exactly the entries the
+  // free GET /api/corrections serves, packaged with a per-entry digest. The count is the ledger's
+  // length at request time, never typed.
+  title: "Corrections ledger",
+  population: "one row per published correction in the estate's own ledger — what was wrong, how it was caught, the fix, dated — the same entries as free /api/corrections, packaged with per-entry digests",
+  countPhrase: (n) => `the same ${n} entries as free /api/corrections, packaged with per-entry digests`,
   tags: ["population", "corrections", "ledger", "x402"],
   read: async (_io, full) => {
     const unit = "correction entries in the source-maintained ledger";
@@ -689,7 +695,7 @@ const corrections: PopulationEntry = {
         last_date: dates.length ? dates[dates.length - 1] : null,
         reached_the_public_true: reachedPublic,
         entries_with_detected_at: withDetected,
-        free_endpoint: "/api/corrections serves the whole ledger free and stays free; this door meters the assembled full-history slice with per-entry content digests",
+        free_endpoint: "/api/corrections serves the same entries free and stays free; this door packages them with per-entry content digests",
         identification: "an entry is a fact about the estate's own history, never a claim about anyone else; ids are the ledger's own",
       },
     };
@@ -721,7 +727,7 @@ export function registryPathsFromIndex(value: unknown): string[] {
     if (!isObj(item) || typeof item.url !== "string") throw new Error("Registry URL is missing");
     if (item.schema !== undefined && !["csoai.claim-registry/0.1", "csoai.claim-registry/0.2", "csoai.claim-registry/0.3"].includes(String(item.schema))) throw new Error("Unsupported registry schema");
     const u = new URL(item.url, "https://councilof.ai");
-    if (u.origin !== "https://councilof.ai" || u.username || u.password || u.search || u.hash || u.pathname.length > 220 || !/^\/claims\/[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*\.json$/.test(u.pathname))
+    if (u.origin !== "https://councilof.ai" || u.username || u.password || u.search || u.hash || u.pathname.length > 220 || !/^\/claims\/[a-z0-9]+(?:-[a-z0-9]+)*\.json$/.test(u.pathname))
       throw new Error("Registry URL is outside the public claim-registry scope");
     paths.add(u.pathname);
   }
@@ -733,7 +739,7 @@ const claimWatch: PopulationEntry = {
   population: "one row per published claim registry (a vendor's public claims captured, hashed, source-cited, each with a measurement plan), with the file's digest, its digest-reproducibility and its .ots state read from bytes",
   tags: ["population", "claims", "watch", "registry", "x402"],
   read: async (io, full) => {
-    const unit = "claims captured across the published registries";
+    const unit = "claim rows across all published registry versions, including superseded historical versions";
     const rows: Record<string, unknown>[] = [];
     const source: string[] = [];
     const unmeasured: string[] = [];
@@ -837,6 +843,11 @@ const claimWatch: PopulationEntry = {
       registries.map((r) => (isObj(r.supersedes) ? str((r.supersedes as Record<string, unknown>).registry_id) : null))
         .filter((x): x is string => !!x),
     );
+    const liveRegistries = registries.filter((r) => {
+      const id = str(r.registry_id);
+      return !id || !superseded.has(id);
+    });
+    const liveN = liveRegistries.reduce((a, r) => a + (r.claims as number), 0);
     const measured = stateTotals["CLAIM_MEASURED"] || 0;
     const stillCaptured = stateTotals["CLAIM_CAPTURED"] || 0;
     const notMeasured = (stateTotals["UNMEASURED"] || 0) + (stateTotals["UNCHECKABLE"] || 0);
@@ -849,11 +860,14 @@ const claimWatch: PopulationEntry = {
       reason: null,
       unmeasured: [
         ...unmeasured,
-        `${measured} of ${n} claim rows across the published registries are CLAIM_MEASURED, ${stillCaptured} remain CLAIM_CAPTURED and ${notMeasured} are UNMEASURED or UNCHECKABLE — counted from the served bytes at request time, not typed here. A measured claim carries its method, window, denominator and sources. No claim of falsity is made about any entry.`,
+        `${measured} of ${n} historical claim rows across all published registry versions are CLAIM_MEASURED, ${stillCaptured} remain CLAIM_CAPTURED and ${notMeasured} are UNMEASURED or UNCHECKABLE. ${liveN} claim rows are in the current non-superseded registry set. Counts are derived from served bytes at request time. A measured claim carries its method, window, denominator and sources. No claim of falsity is made about any entry.`,
       ],
       head: {
         registries,
-        claim_states_across_registries: stateTotals,
+        historical_published_claim_rows: n,
+        current_live_claim_rows: liveN,
+        current_live_registry_count: liveRegistries.length,
+        claim_states_across_all_published_registry_versions: stateTotals,
         superseded_registry_ids: [...superseded],
         supersession_rule: "a superseding registry is a new file; the prior bytes are never edited and both remain served",
         identification: "a claim is a sentence captured verbatim from the vendor's public page or API at the registry's created_utc, typed by kind, with the plan by which it could be measured; the file bytes are served unchanged and never edited",

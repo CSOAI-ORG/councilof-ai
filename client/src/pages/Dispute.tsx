@@ -1,10 +1,17 @@
 import { useEffect } from "react";
 import { Link } from "wouter";
 
-// /dispute — appeals & dispute resolution. Charter Article 18 made public:
-// every decision is reviewable; a measurement body with no appeal path is a
-// court with no defence counsel (GAP-E2E HM.0). Boundary #7: an allegation is
-// not a verdict — it is measured before it is answered (PRODUCT-E2E HU.5).
+// /dispute — appeals & dispute resolution: every decision is reviewable; a measurement body
+// with no appeal path is a court with no defence counsel (GAP-E2E HM.0). An allegation is not a
+// verdict — it is measured before it is answered (PRODUCT-E2E HU.5).
+//
+// Public copy carries no internal labels (audit 2026-09-28 #30): "Charter Article 18" is not the
+// Article 18 the live /charter/ page shows, and "Boundary #7" is defined nowhere public.
+// Contact is contact@csoai.org, the address the footer uses: councilof.ai publishes no MX record,
+// so a @councilof.ai address cannot receive mail (audit #2). The ledger is /corrections/, not
+// /refutation-ledger (a page of experiments); the verifier is /gspc-verify/, not the board JSON
+// (audit #12). Two paths, not one: an instrument run is re-run, and a disclosure-lag or claim
+// record is re-read against the primary source you send (audit #13).
 
 const PATH = [
   {
@@ -25,7 +32,9 @@ const PATH = [
   {
     step: "4",
     title: "No dead ends",
-    body: "At least one level of internal review above the original decision, decided by an arbiter who did not make it. External judicial review is never closed off. Power must be checked — including ours.",
+    // OWNER_REVIEW (2026-09-26): no independent or separate arbiter exists today. Do not reintroduce
+    // arbiter wording until one is appointed and named on this page.
+    body: "Today the owner of CSOAI Ltd reviews every dispute; there is no independent arbiter yet, and we do not claim one. Every outcome, including a rejection, is entered in the public corrections ledger. External judicial review is never closed off.",
   },
 ];
 
@@ -36,12 +45,14 @@ const STANDING = [
   "Any AI system subject to a published result — the instrument measures everyone, including the people selling it",
 ];
 
+const DISPUTE_EMAIL = "contact@csoai.org";
+
 const GUARANTEES = [
   "Notice — a clear explanation of the decision, the reasoning, and the evidence",
   "A hearing — written arguments, evidence, and a response to opposing arguments",
-  "A neutral arbiter — no conflict of interest, expertise in the relevant axis",
   "A reasoned decision — findings of fact, application of the instrument, clear outcome",
-  "Further appeal — at least one internal level, and the external courts are never closed",
+  "A public record — the outcome is entered in the corrections ledger at /corrections",
+  "The courts — external judicial review is never closed off",
 ];
 
 const LEDGER_LD = {
@@ -64,7 +75,7 @@ export default function Dispute() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(LEDGER_LD) }} />
       <div className="mx-auto max-w-3xl px-5 py-14">
         <p className="text-xs font-semibold uppercase tracking-widest text-emerald-700">
-          Appeals &amp; dispute resolution · Charter Article 18
+          Appeals &amp; dispute resolution
         </p>
         <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
           A measurement you can contest is a measurement you can trust.
@@ -73,13 +84,15 @@ export default function Dispute() {
           Every published result on this estate is reviewable. Power must be checked —
           including the power of the measurer. If you contest a card, a board cell, or an
           instrument run, this is the path. It costs nothing, it is open to anyone with
-          standing, and the answer is always a re-measurement, never a defence.
+          standing, and the answer is always a re-measurement or a re-reading of the source,
+          never a defence.
         </p>
 
         <div className="mt-8 rounded-xl border border-emerald-200 bg-emerald-50 p-5 text-sm text-emerald-900">
-          <strong>Boundary #7, stated plainly:</strong> an allegation is not a verdict. A
-          dispute is not answered with an assertion — it is answered by re-running the
-          frozen instrument and publishing the result. We measure first, we decide after.
+          <strong>Stated plainly:</strong> an allegation is not a verdict. A dispute is not
+          answered with an assertion — it is answered by re-running the frozen instrument, or by
+          re-reading the primary source, and publishing the result. We measure first, we decide
+          after.
         </div>
 
         <h2 className="mt-10 text-xl font-bold">The path</h2>
@@ -117,8 +130,8 @@ export default function Dispute() {
           record stays — history is append-only — and the correction is a new signed record
           on the same surface, linked to the one it supersedes. The corrections ledger is
           public at{" "}
-          <Link href="/refutation-ledger" className="text-emerald-700 underline">
-            /refutation-ledger
+          <Link href="/corrections/" className="text-emerald-700 underline">
+            /corrections
           </Link>
           : it opens with our own errors, and it grows when a dispute shows we were wrong.
         </p>
@@ -126,7 +139,7 @@ export default function Dispute() {
         <h2 className="mt-10 text-xl font-bold">How to raise one</h2>
         <p className="mt-3 leading-relaxed text-slate-700">
           Disputes run through the same intake as everything else on this estate — via{" "}
-          <Link href="/contact" className="text-emerald-700 underline">
+          <Link href="/contact/" className="text-emerald-700 underline">
             /contact
           </Link>
           , citing the card hash or board cell you contest. There is no fee, no account, and
@@ -138,17 +151,34 @@ export default function Dispute() {
           <h3 className="font-bold">Direct dispute contact</h3>
           <p className="mt-2 text-sm leading-relaxed text-slate-600">
             Email{" "}
-            <a href="mailto:disputes@councilof.ai" className="text-emerald-700 underline font-medium">
-              disputes@councilof.ai
+            <a href={`mailto:${DISPUTE_EMAIL}?subject=Dispute`} className="text-emerald-700 underline font-medium">
+              {DISPUTE_EMAIL}
             </a>{" "}
-            with the card hash, board cell, or instrument run you contest. Include your name,
-            organisation (if applicable), and the specific claim you are raising.
+            with the card hash, board cell, instrument run or record you contest. Include your
+            name, organisation (if applicable), and the specific claim you are raising.
           </p>
           <div className="mt-4 rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-900">
             <strong>Response SLA:</strong> acknowledgement within 3 business days. Reasoned
             decision within 20 business days of receipt. If we need more time (complex
             measurement re-runs), we tell you before day 20 and give a revised date.
           </div>
+        </div>
+
+        <div className="mt-8 rounded-xl border border-slate-200 bg-white p-5" data-testid="dispute-primary-source">
+          <h3 className="font-bold">Named in a disclosure-lag or claim record?</h3>
+          <p className="mt-2 text-sm leading-relaxed text-slate-600">
+            Some records do not come from an instrument run: a disclosure-lag measurement or a claim
+            record reads what was published, where and when. Send the primary source (URL and date)
+            to{" "}
+            <a href={`mailto:${DISPUTE_EMAIL}?subject=Primary%20source`} className="text-emerald-700 underline font-medium">
+              {DISPUTE_EMAIL}
+            </a>
+            . We re-read it, move the row to PRIMARY if it qualifies, and log the outcome in the{" "}
+            <Link href="/corrections/" className="text-emerald-700 underline">
+              corrections ledger
+            </Link>
+            .
+          </p>
         </div>
 
         <div className="mt-8 rounded-xl border border-slate-200 bg-white p-5">
@@ -158,8 +188,8 @@ export default function Dispute() {
             same scoring code, same seed discipline. The re-run is published as a new signed record
             on the same surface as the original. If the re-run differs, the correction supersedes
             (never deletes) the original. The corrections ledger at{" "}
-            <Link href="/refutation-ledger" className="text-emerald-700 underline">
-              /refutation-ledger
+            <Link href="/corrections/" className="text-emerald-700 underline">
+              /corrections
             </Link>{" "}
             records every correction, starting with our own.
           </p>
@@ -167,8 +197,11 @@ export default function Dispute() {
 
         <div className="mt-12 rounded-xl border border-emerald-200 bg-emerald-50 p-5 text-sm text-emerald-900">
           Even guardians need guardians. The instrument measures everyone, including the
-          people selling it — verify any card free at{" "}
-          <code>GET councilof.ai/api/gspc</code>, no account, no key.
+          people selling it — verify any signed card free at{" "}
+          <Link href="/gspc-verify/" className="underline">
+            /gspc-verify
+          </Link>
+          , in your own browser, no account, no key.
         </div>
       </div>
     </div>

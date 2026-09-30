@@ -1,0 +1,24 @@
+{
+ "schema": "csoai.ots-state/0.1",
+ "file": "cross-ledger-benji-2026-09-25.json",
+ "sha256": "51ec46fbe5ab0d30d0a68ed35bb63ee48517a08a9f7cc4b751b415c9544fed77",
+ "ots_file": "cross-ledger-benji-2026-09-25.json.ots",
+ "ots_sha256": "2aea2fbf9e7085166ac4da1060b05542b76a5bca200754e67b1e107ab4124d61",
+ "stamped_utc": "2026-09-25T11:22:34Z",
+ "calendars_accepted": [
+  "https://alice.btc.calendar.opentimestamps.org",
+  "https://bob.btc.calendar.opentimestamps.org",
+  "https://finney.calendar.eternitywall.com"
+ ],
+ "calendars_failed": {},
+ "proof_parses": true,
+ "proof_binds_to_file_digest": true,
+ "attestations": [
+  "PendingAttestation",
+  "PendingAttestation",
+  "PendingAttestation"
+ ],
+ "state": "PENDING_CALENDAR_COMMITMENT",
+ "state_meaning": "Calendars accepted this digest and promised future Bitcoin inclusion. This is NOT a Bitcoin attestation and is not described as one. It becomes one only after `ots upgrade` returns a BitcoinBlockHeaderAttestation and `ots verify` checks it against the chain.",
+ "signing_is_separate": "the .signed.json says WHO attests to these bytes; this proof, once upgraded, says WHEN they existed."
+}

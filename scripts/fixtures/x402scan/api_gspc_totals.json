@@ -21,8 +21,8 @@
       }
     },
     "comparison_axes": 14,
-    "count_grammar": "23 axes are on the board and every one carries a measurement — no declared slot is empty. Both counts are DERIVED from the axis array, never typed; if a future slot is added with no run behind it, this line separates the two again on its own. A measurement is not a separated leader: 0 of 14 model-comparison axes separated a leader · 2 TIE · 12 UNTESTED. A point-estimate lead is not a measured advantage, and UNTESTED is not a tie.",
-    "externally_led_axes": 3,
+    "count_grammar": "23 axes are on the board and every one carries a measurement — no declared slot is empty. Both counts are DERIVED from the axis array, never typed; if a future slot is added with no run behind it, this line separates the two again on its own. A measurement is not a separated leader: 0 of 14 model-comparison axes separated a leader · 8 TIE · 6 UNTESTED. A point-estimate lead is not a measured advantage, and UNTESTED is not a tie.",
+    "externally_led_axes": 9,
     "fact_runs": 9,
     "financial_run_attestations": {
       "content_addressed_unsigned": 7,
@@ -47,8 +47,8 @@
     "items_note": "items sums each axis's n. Financial-axis n values count issuer accounts, public series, or frozen vendor URLs as declared on each row — not bank items. Unmeasured slots contribute 0 because nothing was measured. Read items as 'rows behind the board', not as a single comparable sample.",
     "license": "CC-BY-4.0",
     "license_note": "Board data is CC-BY-4.0 (attribute: Council of AI, CSOAI Ltd 16939677, councilof.ai). Our own valve-2 bench-card flagged the payload's missing licence field — fixed same day.",
-    "lid": "23 axes measured · 14 model fleets · 0 separated leaders · 3 public leader scores · 9 fact runs · TIE is TIE · not a certificate.",
-    "mean_accuracy": 0.66,
+    "lid": "23 axes measured · 14 model fleets · 0 separated leaders · 9 public leader scores · 9 fact runs · TIE is TIE · not a certificate.",
+    "mean_accuracy": 0.6505,
     "mean_fleet_mean": 0.5447,
     "mean_harm": 0.4877,
     "mean_macro_f1": 0.944,
@@ -67,16 +67,16 @@
       "art5-safeguard",
       "affect"
     ],
-    "own_model_exclusion_note": "Own council-specialist models were removed from the public per-axis leaders on 8 of the 14 model-comparison axes (governance, provenance, continuity, conformance, openness, care, art5-safeguard, affect); 3 axes carry an external public leader. A neutral measurement body does not rank its own models against the vendors it measures. This changes leader attribution and the separation/mean tallies (which are over externally-led axes only), NOT measured_axes: every axis still carries a measurement, so the measured count is unchanged. The excluded models' signed cards are untouched — measurement happened; it is simply not published as a public ranking of our own model.",
+    "own_model_exclusion_note": "Own council-specialist models were removed from the public per-axis leaders on 8 of the 14 model-comparison axes (governance, provenance, continuity, conformance, openness, care, art5-safeguard, affect); 9 axes carry an external public leader. A neutral measurement body does not rank its own models against the vendors it measures. This changes leader attribution and the separation/mean tallies (which are over externally-led axes only), NOT measured_axes: every axis still carries a measurement, so the measured count is unchanged. The excluded models' signed cards are untouched — measurement happened; it is simply not published as a public ranking of our own model.",
     "public_count": "23 axis · 23 measured",
-    "public_leader_count": 3,
+    "public_leader_count": 9,
     "quotable_axes": 23,
     "separated_leads": 0,
-    "separation_public_count": "0 of 14 model-comparison axes separated a leader · 2 TIE · 12 UNTESTED",
+    "separation_public_count": "0 of 14 model-comparison axes separated a leader · 8 TIE · 6 UNTESTED",
     "separation_public_count_note": "Read with public_count, never instead of it. measured_axes counts axis with a RUN behind them; it is not a count of axis with a separated leader. SEPARATED, TIE and UNTESTED are three states and none is folded into another. Derived from the axis array, never typed. The same three numbers appear below as separated_leads / ties / untested_separations and in limitations[0]; there is one derivation.",
     "separation_scope_note": "Separation asks whether a leader's lead over a fleet is statistically real, so it applies only to the model-comparison axes. The financial axes have no fleet and no leader: they are not counted as untested, because no separation test is applicable to them.",
     "sweep_note": "Swept 2026-08-26 under ADR-001. The 8 financial/domain axis were ruled in on 2026-08-24 but were absent from this payload until the sweep, so this endpoint reported 14 — the un-swept state. All 8 now carry published deterministic-facts run artifacts. Today 23 of 23 axis on the board carry a run behind them: 14 model-comparison and 9 deterministic-fact axes. The fact axes carry no accuracy and no leader — measured is not the same as scored. 2 run artifacts carry an Ed25519 signature; 7 are content-addressed but unsigned. No signature is inferred from a content_id.",
-    "ties": 2,
+    "ties": 8,
     "uncarded_leader_note": "The public per-axis leader was removed on 3 of the 14 model-comparison axes (machinery-conformity, cross-reality, detector-interop) whose named leader was an external model carrying NO signed per-model card in the public card index (/signed/card_index.json). The board's promise is that every named leader links to the Ed25519 card behind it; where no such card exists, no leader or accuracy is asserted rather than invented. Each of these axes stays MEASURED — the fleet aggregate (fleet_mean) is a real measurement — so measured_axes is unchanged; only the unverifiable leader claim is dropped. public_leader_state=NO_SIGNED_CARD on each. This changes leader attribution and the separation/mean tallies (over carded, externally-led axes only), NOT the measured count.",
     "uncarded_leaders_dropped": 3,
     "uncarded_leaders_dropped_axes": [
@@ -85,6 +85,6 @@
       "detector-interop"
     ],
     "unmeasured_axes": 0,
-    "untested_separations": 12
+    "untested_separations": 6
   }
 }

@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 
 const page = readFileSync(resolve(__dirname, "Stablecoins.tsx"), "utf8");
 const view = readFileSync(resolve(__dirname, "../components/StablecoinReadinessView.tsx"), "utf8");
+const relation = readFileSync(resolve(__dirname, "../components/StablecoinCorpusRelation.tsx"), "utf8");
 const app = readFileSync(resolve(__dirname, "../App.tsx"), "utf8");
 const nav = readFileSync(resolve(__dirname, "../components/HeaderNav.tsx"), "utf8");
 const library = readFileSync(resolve(__dirname, "../data/library-ia.ts"), "utf8");
@@ -40,7 +41,7 @@ describe("/stablecoins public evidence landing", () => {
   });
 
   it("keeps every displayed total evidence-derived and indexed distinct from measured", () => {
-    expect(page + view).not.toMatch(/\b(?:425|424|1640|211)\b/);
+    expect(page + view + relation).not.toMatch(/\b(?:425|424|1640|211|302|283|123)\b/);
     expect(readiness.assets).toHaveLength(readiness.coverage.indexed_assets);
     expect(readiness.coverage.deeply_measured_assets).toBe(
       readiness.assets.filter((asset: { measurement: { state: string } }) =>
@@ -50,5 +51,18 @@ describe("/stablecoins public evidence landing", () => {
     expect(readiness.coverage.deeply_measured_assets).toBeLessThan(
       readiness.coverage.indexed_assets,
     );
+  });
+
+  it("separates readiness, the supply read and parity (corpus_relation) and adds the cross-ledger section", () => {
+    expect(page).toContain("<StablecoinCorpusRelation />");
+    expect(relation).toContain('id="corpus_relation"');
+    expect(relation).toContain("corpus_relation: {CORPUS_RELATION.relation}");
+    expect(relation).toContain('id="cross-ledger"');
+    expect(relation).toMatch(/Cross-ledger reads/);
+    for (const id of ["readiness", "supply_read", "parity"]) expect(relation).toContain(`id="${id}"`);
+    // a figure that cannot be read is shown as UNMEASURED with no fallback number
+    expect(relation).toContain("No fallback figure is shown.");
+    expect(page).toContain('const CROSS_LEDGER = "/api/xl";');
+    expect(page).toContain("contentUrl: `https://councilof.ai${CROSS_LEDGER}`");
   });
 });

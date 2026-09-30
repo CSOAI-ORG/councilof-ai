@@ -47,6 +47,23 @@ const FICTIONAL_AI_SYSTEM = {
   users: '500,000 monthly active users',
 };
 
+// 2026-09-26: every figure on this page is scripted. The label sits next to the number, not
+// only in the banner, so a reader (or an answer engine) arriving mid-page cannot lift one as
+// a measurement.
+const HAS_FIGURE = /\d/;
+function Illustrative({ text }: { text: string }) {
+  return (
+    <>
+      {text}
+      {HAS_FIGURE.test(text) && (
+        <span className="ml-1.5 whitespace-nowrap rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-amber-800">
+          illustrative, not a measurement
+        </span>
+      )}
+    </>
+  );
+}
+
 const PHASES: PhaseData[] = [
   {
     phase: 'PLAN',
@@ -69,7 +86,7 @@ const PHASES: PhaseData[] = [
       '🤖 Designed council (simulation, not a live vote) — analysis: "High-risk medical AI system requires enhanced oversight under EU AI Act Article 6"',
       '🔍 Bias Detection: "Recommend demographic fairness audit across age, gender, ethnicity, and socioeconomic factors"',
       '📊 Risk Priority: "Focus on diagnostic accuracy disparities (Critical), data privacy (High), and explainability (High)"',
-      '✅ Compliance Gap: "HIPAA compliance verified. EU AI Act conformity assessment required before deployment in EU"',
+      '✅ Gap note: "HIPAA controls documented. EU AI Act conformity assessment required before deployment in EU"',
     ],
     risks: [
       'Diagnostic bias leading to health disparities',
@@ -139,7 +156,7 @@ const PHASES: PhaseData[] = [
     councilRecommendations: [
       '📊 Performance Analysis: "Overall accuracy: 94.2% (target: 95%). Demographic parity achieved: max difference 3.8%"',
       '⚠️ Incident Review: "23 reports analyzed. 3 critical (misdiagnosis), 8 high (bias concerns), 12 medium (UX issues)"',
-      '🎯 Compliance Status: "EU AI Act: 89% compliant (2 gaps identified). HIPAA: 100% compliant. NIST AI RMF: Aligned"',
+      '🎯 Gap review: "EU AI Act: 2 gaps identified against the reference text. HIPAA and NIST AI RMF: no gaps listed in this script"',
       '💡 Improvement Areas: "Accuracy below target for rare diseases. Explainability scores low for complex cases"',
     ],
     risks: [
@@ -268,7 +285,7 @@ export default function PDCASimulator() {
                 <p className="text-sm text-gray-600 mb-2">
                   <strong>Scale:</strong>
                 </p>
-                <p className="text-gray-900">{FICTIONAL_AI_SYSTEM.users}</p>
+                <p className="text-gray-900"><Illustrative text={FICTIONAL_AI_SYSTEM.users} /></p>
               </div>
             </div>
           </CardContent>
@@ -328,7 +345,7 @@ export default function PDCASimulator() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-700">{currentPhase.scenario}</p>
+              <p className="text-gray-700"><Illustrative text={currentPhase.scenario} /></p>
             </CardContent>
           </Card>
 
@@ -345,7 +362,7 @@ export default function PDCASimulator() {
                 {currentPhase.tasks.map((task, index) => (
                   <li key={index} className="flex items-start gap-2 text-gray-700">
                     <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span>{task}</span>
+                    <span><Illustrative text={task} /></span>
                   </li>
                 ))}
               </ul>
@@ -369,7 +386,7 @@ export default function PDCASimulator() {
                 {currentPhase.councilRecommendations.map((rec, index) => (
                   <div key={index} className="flex items-start gap-3 bg-white p-4 rounded-lg">
                     <Lightbulb className="h-5 w-5 text-yellow-500 flex-shrink-0 mt-0.5" />
-                    <p className="text-gray-700">{rec}</p>
+                    <p className="text-gray-700"><Illustrative text={rec} /></p>
                   </div>
                 ))}
               </div>
@@ -390,7 +407,7 @@ export default function PDCASimulator() {
                   {currentPhase.risks.map((risk, index) => (
                     <li key={index} className="flex items-start gap-2 text-gray-700">
                       <AlertTriangle className="h-5 w-5 text-orange-600 flex-shrink-0 mt-0.5" />
-                      <span>{risk}</span>
+                      <span><Illustrative text={risk} /></span>
                     </li>
                   ))}
                 </ul>
@@ -410,7 +427,7 @@ export default function PDCASimulator() {
               <ul className="space-y-2">
                 {currentPhase.outcomes.map((outcome, index) => (
                   <li key={index} className="text-gray-700">
-                    {outcome}
+                    <Illustrative text={outcome} />
                   </li>
                 ))}
               </ul>
@@ -453,8 +470,8 @@ export default function PDCASimulator() {
                   PDCA Cycle Complete! 🎉
                 </h3>
                 <p className="text-gray-700 mb-6">
-                  You've successfully walked through a complete SOAI-PDCA cycle. HealthBot AI is now
-                  safer, more compliant, and ready for the next iteration of continuous improvement.
+                  You've walked through one scripted SOAI-PDCA cycle for a fictional system. Nothing
+                  here was measured; a real system's figures come from a measured run.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Button size="lg" variant="outline" onClick={handleReset}>

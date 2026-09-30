@@ -48,6 +48,7 @@ export type LobbyTabId =
   | "swift"
   | "verify"
   | "cards"
+  | "claims"
   | "state"
   | "archive"
   | "attestations"
@@ -219,6 +220,14 @@ export const LOBBY_TABS: LobbyTab[] = [
     path: "",
     kind: "native",
     cues: /\b(signed cards?|card index|published cards?|browse cards?|measurement cards?)\b/i,
+  },
+  {
+    id: "claims",
+    label: "Claim maintenance",
+    blurb:
+      "Public claim registers, dependency-aware re-checks, correction history, and the live maintenance schedule.",
+    path: "/claim-maintenance",
+    cues: /\b(claim maintenance|maintain (?:a )?claim|claim dependencies|what changed|recheck claim|re-check claim)\b/i,
   },
   {
     id: "state",
@@ -762,72 +771,116 @@ export function routesIn(group: LobbyRouteGroup): LobbyRoute[] {
 }
 
 /**
- * The OS destinations that have a standalone URL — the DSH sidebar links to
- * `tab.path`, so a pane with no page of its own (Home, Play, and the native
- * workflow panes, which carry `path: ""`) cannot appear there. That is honest:
- * they exist only inside the OS. Software is excluded because it IS this surface.
+ * Council OS navigation: SEVEN plainly named sections, one sidebar, no second tab strip.
+ *
+ * 27 Sep 2026 (ux-unify). The shell used to show three navigations at once — a 13-item
+ * sidebar whose entries overlapped ("Verify", "Evidence", "Evidence index"), a pill strip
+ * of five more modes above the composer, and an empty right rail. A first-time reader
+ * could not tell which of the three was the real one. Now:
+ *
+ *  - the sidebar lists SECTIONS, never more than seven;
+ *  - a section with several panes shows them as a sub-tab row at the top of the canvas,
+ *    so Verify + Evidence pack + Evidence index are one place: "Verify & evidence";
+ *  - every pane id is unchanged, so every `/dashboard?tab=<id>` link, old door and chat
+ *    command keeps resolving to the same pane.
+ *
+ * A pane that is in no section (cards, state, archive, attestations, embed, harness …)
+ * stays reachable from "Everything A–Z" (`explore`) and from the chat bar.
  */
 export type DashboardNavGroupId =
-  "start" | "work" | "govern";
+  | "ask"
+  | "scores"
+  | "verify"
+  | "arena"
+  | "tools"
+  | "oversight"
+  | "request";
 
 export type DashboardNavGroup = {
   id: DashboardNavGroupId;
+  /** The sidebar label — plain English, no internal codenames. */
   label: string;
+  /** One sentence a first-time reader understands. */
+  description: string;
+  /** Section panes in display order; the first is where the sidebar link lands. */
   tabs: LobbyTab[];
 };
 
 const DASHBOARD_NAV_DEFINITION: {
   id: DashboardNavGroupId;
   label: string;
+  description: string;
   tabs: { id: LobbyTabId; label: string }[];
 }[] = [
   {
-    id: "start",
-    label: "Start",
+    id: "ask",
+    label: "Ask",
+    description:
+      "Ask a question and get an answer drawn only from published evidence.",
+    tabs: [{ id: "home", label: "Ask the Council" }],
+  },
+  {
+    id: "scores",
+    label: "Scores",
+    description: "How measured AI models score on each published test.",
     tabs: [
-      { id: "home", label: "Ask" },
-      { id: "measured", label: "Requests" },
-      { id: "verify", label: "Verify" },
+      { id: "board", label: "Live board" },
+      { id: "results", label: "Benchmark results" },
+      { id: "models", label: "Model registry" },
+      { id: "matrix", label: "Regulation matrix" },
     ],
   },
   {
-    id: "work",
-    label: "Work",
+    id: "verify",
+    label: "Verify & evidence",
+    description:
+      "Check a signed record yourself, and see the evidence behind every score.",
     tabs: [
-      { id: "board", label: "GSPC board" },
+      { id: "verify", label: "Check a record" },
+      { id: "claims", label: "Claim maintenance" },
+      { id: "evidence", label: "Evidence pack" },
       { id: "evidence-index", label: "Evidence index" },
-      { id: "swift", label: "SWIFT · x402" },
-      { id: "evidence", label: "Evidence" },
-      { id: "tools", label: "Improve" },
+    ],
+  },
+  {
+    id: "arena",
+    label: "Arena & learning",
+    description:
+      "Replay recorded model rounds, learn how each test works, and practise.",
+    tabs: [
+      { id: "space", label: "Model arena" },
       { id: "learn", label: "Learning" },
+      { id: "play", label: "Games" },
+    ],
+  },
+  {
+    id: "tools",
+    label: "Tools & connections",
+    description:
+      "Connect your own AI tools, and browse everything this workspace can open.",
+    tabs: [
+      { id: "tools", label: "MCP tools" },
+      { id: "fabric", label: "Connections" },
+      { id: "swift", label: "Payments (x402)" },
+      { id: "explore", label: "Everything A–Z" },
+    ],
+  },
+  {
+    id: "oversight",
+    label: "Standards & watchdog",
+    description:
+      "The standards each test maps to, and public reports of AI incidents.",
+    tabs: [
+      { id: "standards", label: "Standards" },
       { id: "watchdog", label: "Watchdog" },
     ],
   },
-  // A "Tools" group naming memory / files / sandbox / operator / atlas was added here on
-  // 2026-09-05 and removed the same day, because none of those five ids exists in LOBBY_TABS.
-  // DASHBOARD_NAV_GROUPS resolves each id through LOBBY_TABS.find(...) and .filter(Boolean), so
-  // every one of them resolved to null: the group rendered EMPTY and the five panes were
-  // unreachable. The type errors it raised ("memory" is not assignable to LobbyTabId, and four
-  // more) were TypeScript correctly reporting a dangling reference, not noise to be widened away
-  // — adding the ids to the union would have silenced the checker and left the group just as
-  // empty at runtime.
-  //
-  // THE COMPONENTS ARE NOT DELETED. client/src/components/Dashboard{Memory,Files,Sandbox,
-  // Operator,Atlas}Pane.tsx all exist and are intact — they are simply referenced by nothing
-  // (checked: zero imports across client/src). To land the feature, each pane needs, in order:
-  //   1. a LOBBY_TABS entry — id, label, blurb, path, cues, like every other tab above;
-  //   2. the id added to LobbyTabId (and "tools" to DashboardNavGroupId) — after step 1, not
-  //      instead of it;
-  //   3. a route so the path resolves, and the pane component actually imported;
-  //   4. the path in PRIMARY_PATHS, or the page ships flagged as archived.
-  // Restoring this group before those four exist reproduces exactly the state removed here.
   {
-    id: "govern",
-    label: "Govern",
-    tabs: [
-      { id: "standards", label: "Standards" },
-      { id: "fabric", label: "Connections" },
-    ],
+    id: "request",
+    label: "Request a measurement",
+    description:
+      "Ask for your AI system to be measured. Checking a record stays free.",
+    tabs: [{ id: "measured", label: "Request a measurement" }],
   },
 ];
 
@@ -835,6 +888,7 @@ export const DASHBOARD_NAV_GROUPS: DashboardNavGroup[] =
   DASHBOARD_NAV_DEFINITION.map((group) => ({
     id: group.id,
     label: group.label,
+    description: group.description,
     tabs: group.tabs
       .map(({ id, label }) => {
         const tab = LOBBY_TABS.find((candidate) => candidate.id === id);
@@ -843,7 +897,7 @@ export const DASHBOARD_NAV_GROUPS: DashboardNavGroup[] =
       .filter((tab): tab is LobbyTab => Boolean(tab)),
   }));
 
-/** The intentionally small permanent rail. Every other destination remains in All tools. */
+/** Every pane that has a place in a section (the sidebar link or a section sub-tab). */
 export const DASHBOARD_TABS: LobbyTab[] = DASHBOARD_NAV_GROUPS.flatMap(
   (group) => group.tabs,
 );
@@ -852,28 +906,24 @@ export function isDashboardTab(tab: LobbyTab): boolean {
   return DASHBOARD_TABS.some((candidate) => candidate.id === tab.id);
 }
 
+/** Panes outside every section still belong to one, for the section title and catalogue. */
 const DASHBOARD_HIDDEN_GROUPS: Record<string, DashboardNavGroupId> = {
-  archive: "work",
-  state: "work",
-  embed: "work",
-  cards: "work",
-  attestations: "work",
-  claimguard: "work",
-  results: "work",
-  models: "work",
-  matrix: "govern",
-  art50: "govern",
-  leaderboard: "work",
-  ras: "work",
-  terminal: "work",
-  console: "work",
-  harness: "work",
-  space: "work",
-  play: "work",
-  explore: "work",
-  products: "work",
-  library: "work",
-  workbench: "work",
+  archive: "verify",
+  state: "verify",
+  cards: "verify",
+  attestations: "verify",
+  claimguard: "verify",
+  embed: "tools",
+  harness: "tools",
+  terminal: "tools",
+  products: "tools",
+  library: "tools",
+  workbench: "tools",
+  xrpl: "tools",
+  console: "scores",
+  leaderboard: "scores",
+  art50: "oversight",
+  ras: "request",
 };
 
 export function dashboardNavGroupOf(id: string): DashboardNavGroup | null {
@@ -881,7 +931,9 @@ export function dashboardNavGroupOf(id: string): DashboardNavGroup | null {
     group.tabs.some((tab) => tab.id === id),
   );
   if (direct) return direct;
-  const hidden = DASHBOARD_HIDDEN_GROUPS[id as LobbyTabId];
+  const hidden = Object.prototype.hasOwnProperty.call(DASHBOARD_HIDDEN_GROUPS, id)
+    ? DASHBOARD_HIDDEN_GROUPS[id]
+    : undefined;
   return hidden
     ? DASHBOARD_NAV_GROUPS.find((group) => group.id === hidden) || null
     : null;
@@ -902,5 +954,7 @@ export function normalizeLobbyTabId(id: string): string {
     x402: "swift",
     "x402-doors": "swift",
   };
-  return aliases[value] || value || "home";
+  return Object.prototype.hasOwnProperty.call(aliases, value)
+    ? aliases[value]
+    : value || "home";
 }

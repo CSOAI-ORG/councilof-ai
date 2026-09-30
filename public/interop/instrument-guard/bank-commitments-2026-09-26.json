@@ -1,0 +1,909 @@
+{
+ "schema": "councilof.ai/instrument-commitments/1",
+ "as_of": "2026-09-26T13:51:06Z",
+ "issuer": "CSOAI Ltd (Council of AI)",
+ "policy": "docs/operations/INSTRUMENT-GUARD-POLICY.md",
+ "private_store": "hf:csoai/private-calibration (private, access-controlled); content not published",
+ "establishes": [
+  "That on this date CSOAI held bank files with exactly these sha256 digests.",
+  "That on this date CSOAI held, per listed bank, a canary set and held-out/public slices whose digests are these; any later disclosure can be checked against them.",
+  "Which of each bank's graded items were already readable by a stranger (public HF csoai/gspc-* files fetched anonymously, and the repository at master) when this record was made."
+ ],
+ "doesNotEstablish": [
+  "The content of any bank, slice or canary.",
+  "That any model is or is not contaminated. That is the contamination probe's job, per model.",
+  "That an item marked private has never been seen by anyone outside CSOAI; only that it was not found in the public sources named here."
+ ],
+ "exposure_method": {
+  "unit": "graded item (expected/target non-null; canary rows excluded)",
+  "public_sources": [
+   "2504 JSON/JSONL files across public huggingface.co/datasets/csoai/gspc-* (anonymous fetch) plus gspc-normalized parquet rows",
+   "councilof-ai repository tree at master (git grep, fixed strings)",
+   "secondary check of the PRIVATE/PARTIAL banks only: 1,946 files across the other 68 public huggingface.co/datasets/csoai/* datasets (anonymous; 8 files over 8 MB skipped): 0 prompts found"
+  ],
+  "match": "NFKC/whitespace/dash-normalised exact or substring match of the prompt (HF); 40-char ASCII window fixed-string match (repo)",
+  "repo_master": "7585f47856afb568dcfe3169e088b790b2db9d98"
+ },
+ "rotation_epoch": {
+  "epoch_id": "E2026-09-26",
+  "created": "2026-09-26T13:51:06Z",
+  "rotate_by": "2026-12-25",
+  "heldout_fraction": 0.3,
+  "min_heldout": 30,
+  "epoch_key_commitment_sha256": "acb31350f6ba04df644da45a80153367b679f1b923ce5e47e3e632990bdc1551",
+  "membership": "HMAC-SHA256(epoch_key, bank_id||0x00||sha256(canonical(row)))[:8]/2^64 < fraction; only never-public, never-retired items are eligible"
+ },
+ "private_manifest_sha256": "e9aa02055195282d8238677ebb03a03b008175c9d72d8823a59069384e39a900",
+ "leakscan": {
+  "digest": "sha256('csoai-canary-leakscan/v1:' + lower(token))",
+  "token_shapes": [
+   "UUIDv4",
+   "XXXX-XXXX-XXXX base32 code phrase"
+  ],
+  "gate": "scripts/canary-leak-gate.mjs"
+ },
+ "exposure_counts": {
+  "PUBLIC": 11,
+  "CONTENT_PUBLIC": 12,
+  "PRIVATE": 10,
+  "PARTIAL": 1
+ },
+ "banks": [
+  {
+   "bank_id": "gspc-accountability",
+   "aliases": [],
+   "bank_sha256": "1698d48ef38cf1b0fbd7ad64821b2bff1153dea375ab3b155e06c04ff62f84a5",
+   "rows": 30,
+   "graded": 30,
+   "items_public": 30,
+   "items_private": 0,
+   "exposure": "PUBLIC",
+   "exact_bytes_public_at": [
+    "repo:public/interop/banks/gspc-accountability.jsonl"
+   ],
+   "heldout": {
+    "state": "HELDOUT_INELIGIBLE",
+    "reason": "every graded item is already public"
+   }
+  },
+  {
+   "bank_id": "gspc-affect",
+   "aliases": [],
+   "bank_sha256": "c64a5986bf807127c047344178262fade96dfaf856f555aa8bc1b79e0cee252a",
+   "rows": 41,
+   "graded": 41,
+   "items_public": 41,
+   "items_private": 0,
+   "exposure": "CONTENT_PUBLIC",
+   "exact_bytes_public_at": [],
+   "heldout": {
+    "state": "HELDOUT_INELIGIBLE",
+    "reason": "every graded item is already public"
+   }
+  },
+  {
+   "bank_id": "gspc-agi",
+   "aliases": [],
+   "bank_sha256": "f963e3c739c7d75bf4750d3638f2b9aad7a161f8043f8e353224d29af17718d5",
+   "rows": 36,
+   "graded": 36,
+   "items_public": 36,
+   "items_private": 0,
+   "exposure": "CONTENT_PUBLIC",
+   "exact_bytes_public_at": [],
+   "heldout": {
+    "state": "HELDOUT_INELIGIBLE",
+    "reason": "every graded item is already public"
+   }
+  },
+  {
+   "bank_id": "gspc-art5",
+   "aliases": [],
+   "bank_sha256": "bdb7c0e8b7adb31f1e240b4e0c722bb18a7fb9c6eef60682bdea72a583ccf299",
+   "rows": 36,
+   "graded": 36,
+   "items_public": 36,
+   "items_private": 0,
+   "exposure": "CONTENT_PUBLIC",
+   "exact_bytes_public_at": [],
+   "heldout": {
+    "state": "HELDOUT_INELIGIBLE",
+    "reason": "every graded item is already public"
+   }
+  },
+  {
+   "bank_id": "gspc-asi",
+   "aliases": [],
+   "bank_sha256": "25dd6a72ac5ad661c33d74a72da54ab9ac7d282de9d388085de20161b1f90b20",
+   "rows": 33,
+   "graded": 33,
+   "items_public": 33,
+   "items_private": 0,
+   "exposure": "CONTENT_PUBLIC",
+   "exact_bytes_public_at": [],
+   "heldout": {
+    "state": "HELDOUT_INELIGIBLE",
+    "reason": "every graded item is already public"
+   }
+  },
+  {
+   "bank_id": "gspc-bank",
+   "aliases": [],
+   "bank_sha256": "a61380279d3d291d94ae6b07de96d0119d32b4640fb1ecaaed100e53b1d9cf55",
+   "rows": 36,
+   "graded": 36,
+   "items_public": 0,
+   "items_private": 36,
+   "exposure": "PRIVATE",
+   "exact_bytes_public_at": [],
+   "heldout": {
+    "state": "HELDOUT_INSUFFICIENT",
+    "n": 12,
+    "slice_sha256": "002e946f3f0f0edfb7070cdec6b27a92251c161e55e7affac22c2e4806bce9af",
+    "file_sha256": "196ab801e8a4e2098daba957de852b99ba6adb6ae51bbfd9fdfb7da53e87d43e"
+   },
+   "public_slice": {
+    "n": 24,
+    "slice_sha256": "439c3e167f92f69043ebb3a1bcdda4c684e907c3af616275674898449736444f",
+    "published": false
+   },
+   "canary_set": {
+    "k": 8,
+    "commitment_sha256": "0b4d6f5339f4418821150c15ae00a6d979e7e34e61b31ae8de32659ba34d4453",
+    "leakscan_digests": [
+     "29f181b5e07494d668d4438d1fdead3f668e6af165c0ea77a8fb1bef248a29d4",
+     "39532525d758af0a135cf58f88f24a49c3c3bef24ac2db1921a7a5348becafd2",
+     "399b01615d587b75a0ec88a1796446614e0896c10ffc87c64a47164d9a8be008",
+     "5f561aeebd2182914061889c8523065b14b2c246ebd400efe119aee09dfcc118",
+     "5fb30f3d9b5a55b2e1beaa93dfcf6235f20587b869530b7296a0e7bb0aa45737",
+     "6117ff74879311db013caded1c7a13eef077f967c2acefe1f3e2ce2d41f56b2a",
+     "7b4acf046c5e347b073b4678d88b6ac871125055e03c6bed6bf4c42f87de182a",
+     "85d7a234c399c1b7677813b0158807e03f036a1012b2b5637aff27f6d7cd64fa",
+     "9556b98cacfe733a4da51a1e21e41b89986e30fde4619d7413f984d302925222",
+     "a6593d21c80f7a500aa9ba5aee2b3cf179f34eca8cac67d8dc7a66d26b3cd514",
+     "a72e90f0560a1aff4b5b3b1558df01b43bec1b545fec17a8ca2209aed036de0f",
+     "ae625f09856e57210ae8332ee89a0fe0c7a3bf160113d104e4062044b93d4be4",
+     "b644334dd2e7548d8c75889d7898a4f060a4bf201aed7740f832079820983daf",
+     "c640b84a377e11c18f3d3a02ee83c6552ce82b76b798981518f5472485da6a71",
+     "c78f1e155baefa168878732405b5076035314e12aa9deba067c140f1b966bb35",
+     "e8ec5c2dbde966484c19fc5ea3d9f03923fc1100b407caadf1b1f8ff72c10902"
+    ]
+   }
+  },
+  {
+   "bank_id": "gspc-bond",
+   "aliases": [],
+   "bank_sha256": "12f256aa92165e1bdcb69d67fbf1c7a4c0e3a646b010f8b494fed722756cfbd7",
+   "rows": 36,
+   "graded": 36,
+   "items_public": 0,
+   "items_private": 36,
+   "exposure": "PRIVATE",
+   "exact_bytes_public_at": [],
+   "heldout": {
+    "state": "HELDOUT_INSUFFICIENT",
+    "n": 7,
+    "slice_sha256": "12a7916c4f7bb2d5d3370bf05d401210d39f947e359217f192df5dbc7f93a68b",
+    "file_sha256": "3b24a58fef0b1f0b48c7eae7c759f7dc0413658fdddf0cb482d140b47cc06d76"
+   },
+   "public_slice": {
+    "n": 29,
+    "slice_sha256": "f7cafc6240aec76045b85b9dfc9bf1be1a92ee8c98f33fe0cfd0079f39d7c208",
+    "published": false
+   },
+   "canary_set": {
+    "k": 8,
+    "commitment_sha256": "13c54301c7f7a3beeda4c8c864a1367ed0c9f9e917737f7be61bc984aadaa4f0",
+    "leakscan_digests": [
+     "0e32cabd029fa65bb2361529029edf8a296d2a9538542f68450a2ece29c94ca0",
+     "15ff49deae7d1b931aa1f3832732f313c7ea476894d3e35e02488ca1a5e68c8d",
+     "189b398ba5477d9692ef5d31ae6829d7235b5201726b6173bce4ad9d68e28215",
+     "1e3b8736348107854d5194577a6cea671a0d7fa05183c7a2ff4da90bfcdda1ab",
+     "292e3f28a668fe546e3b054d1260f4747668b1414ec1b418f242c4e210d48efd",
+     "5601b98e85c066e6dc0195cc8aade77b0fe8444d0b19ba0434b9fb04a79ab1a8",
+     "60a5a6bd97fa61b56eec4e288a252770f23fb99d5481bec1430423f0b3816e0e",
+     "6a0b0d70e4c1945148c52c5f09c7e7b0128d84393db698c1790371612415ecb9",
+     "6a57617421254e33f45b3f763e6af0f17b29aca0b05d5aa44e5e593b1ca671bd",
+     "6b16d0a1f2757a8fa04534512d6606e176dce2ea113c29f49f164e1120f7291b",
+     "911efbdd44bf9aee4a0fe2f5806903c238cf97759099adb6714bd35ae3922d02",
+     "91695b6773d991b7789dc671e7a1faf3a47b2bf399f522b9f73cc0274d220f2c",
+     "93d8d42e6a76713c279c129e22f0a17ba74dc97c655c9597c9a7fd9d7fd0c697",
+     "99629ecd9d10aff0512d5d1fca9c0d22ec230ce169406d767b37389490025e07",
+     "d1aceff21642bd854fa31b85842a608113c9bb21b5d968f731191711516d2271",
+     "fb73ba8f587dad7dbc42758a0ba1504b6b55e213a9e8cf64618e6eef92cc2472"
+    ]
+   }
+  },
+  {
+   "bank_id": "gspc-care",
+   "aliases": [],
+   "bank_sha256": "cee5e47a31f1db6c117a0b2f4a4c026f9ebe267c28106e4901ea44189de1767e",
+   "rows": 199,
+   "graded": 199,
+   "items_public": 199,
+   "items_private": 0,
+   "exposure": "CONTENT_PUBLIC",
+   "exact_bytes_public_at": [],
+   "heldout": {
+    "state": "HELDOUT_INELIGIBLE",
+    "reason": "every graded item is already public"
+   }
+  },
+  {
+   "bank_id": "gspc-continuity",
+   "aliases": [],
+   "bank_sha256": "3fc926facac8f5efdf9e44cb3d53050f4c1290aa5a3f7745f7a88432d322b7d3",
+   "rows": 30,
+   "graded": 30,
+   "items_public": 30,
+   "items_private": 0,
+   "exposure": "PUBLIC",
+   "exact_bytes_public_at": [
+    "repo:public/interop/banks/gspc-continuity.jsonl"
+   ],
+   "heldout": {
+    "state": "HELDOUT_INELIGIBLE",
+    "reason": "every graded item is already public"
+   }
+  },
+  {
+   "bank_id": "gspc-creativity",
+   "aliases": [],
+   "bank_sha256": "0fb281d0afaf883c2327758b3f6ac3d4b39d2b6407f2403ed0764b0dcd500041",
+   "rows": 30,
+   "graded": 30,
+   "items_public": 30,
+   "items_private": 0,
+   "exposure": "PUBLIC",
+   "exact_bytes_public_at": [
+    "repo:public/interop/banks/gspc-creativity.jsonl"
+   ],
+   "heldout": {
+    "state": "HELDOUT_INELIGIBLE",
+    "reason": "every graded item is already public"
+   }
+  },
+  {
+   "bank_id": "gspc-cross-border",
+   "aliases": [],
+   "bank_sha256": "f978ad476103240d5ac90c5334383eef8e4559a086ce5260517599fea7aa42e0",
+   "rows": 36,
+   "graded": 36,
+   "items_public": 0,
+   "items_private": 36,
+   "exposure": "PRIVATE",
+   "exact_bytes_public_at": [],
+   "heldout": {
+    "state": "HELDOUT_INSUFFICIENT",
+    "n": 8,
+    "slice_sha256": "b57f03ae258d7d357c1c7fbc29f721acf994cc3f3e0f4e8b4e860c8d5c504035",
+    "file_sha256": "9baaff06c7c62507a082cf3ce953e03c06dc12df015c77f79190d0c8f434bdf8"
+   },
+   "public_slice": {
+    "n": 28,
+    "slice_sha256": "2fb434a1821b46b0d4069fa1e8c073e88266308574c1fde111e54d92bff3312a",
+    "published": false
+   },
+   "canary_set": {
+    "k": 8,
+    "commitment_sha256": "900f32f25af1a5b5790ce84d2b110e6f20f62d653cc5c65911011caab8a2c262",
+    "leakscan_digests": [
+     "0211f0fcbbfb45b6b76149efc1866b0add1b4711d03ac7bfaa9e48bf01705420",
+     "02f99c63137d8dda0e1a4f174dac1d04e7523a571b75f74e3f03fc5ed580a308",
+     "046508761bcbbfa219c2ddfb54be6176a09d0a8143a4f3342ba674097f79e616",
+     "1f34b4efaa60b4b0ba4d317836762b9a71f3b4dc79199a2c036ce72a409cf82f",
+     "1fe3a0ab3fe192ff2f73dc88ec0fd6d6878fb930407f96093b1b112c0bddaa33",
+     "2414fe0ae26eae84b14af7bf4eac0b05a5af2549a46e78a88c3e8564e3da4969",
+     "353dd7b9b11edcf3b1154fb3a82cd49166efb0fafe925a334853360904ab07d8",
+     "3fb71226dc3860863eb42730b7038f89ab00cf50b5c462590d00b0a9af958a0e",
+     "55489722b9ab8c2625341768c8057e0d4c04604478e3f6a34b2c6e12052a5615",
+     "6665b3863d2dd9029eb24bae597a70ce3ed4ec9409e06de3ccbf74c450e22900",
+     "89d993ef180ed6c2f9dd350a78ecf51f581aa5d84cfbfc30e70355805fe5c286",
+     "8fb5554e01c12d0728dd67bab1690c6797e628088f07c935a4fc56ccb0bc66f9",
+     "9c812c08e71a8696f2b8adf8ca4866124f88c1219430f04b7ac9a970ff8ce645",
+     "a10d3856d0eb3862fc58bd784496a4f70dfecccf7247c32f1910c885d00a88bb",
+     "c63f2168951d55d0bd5f10f53e86dd53824a53f013c4b8b7011c83a1d108146e",
+     "f320b8b96ac471bc31e84c51fe626e347f06ee91474d931575476cf70a243aca"
+    ]
+   }
+  },
+  {
+   "bank_id": "gspc-det",
+   "aliases": [],
+   "bank_sha256": "d75e96802d9eb9df1c42ea46ce55c577879d0d78d199b1c612c2b14685d62c8e",
+   "rows": 33,
+   "graded": 33,
+   "items_public": 33,
+   "items_private": 0,
+   "exposure": "CONTENT_PUBLIC",
+   "exact_bytes_public_at": [],
+   "heldout": {
+    "state": "HELDOUT_INELIGIBLE",
+    "reason": "every graded item is already public"
+   }
+  },
+  {
+   "bank_id": "gspc-efficiency",
+   "aliases": [],
+   "bank_sha256": "bdacd1a5603cf0402faafee3c37d0c5199eead0b72e80ce84b21c4aa78baef6d",
+   "rows": 30,
+   "graded": 30,
+   "items_public": 30,
+   "items_private": 0,
+   "exposure": "PUBLIC",
+   "exact_bytes_public_at": [
+    "repo:public/interop/banks/gspc-efficiency.jsonl"
+   ],
+   "heldout": {
+    "state": "HELDOUT_INELIGIBLE",
+    "reason": "every graded item is already public"
+   }
+  },
+  {
+   "bank_id": "gspc-equity",
+   "aliases": [],
+   "bank_sha256": "4b0a96819690f0ee654ce672cb4e0eb3f88296e5564830238435b7ddfb59221d",
+   "rows": 36,
+   "graded": 36,
+   "items_public": 0,
+   "items_private": 36,
+   "exposure": "PRIVATE",
+   "exact_bytes_public_at": [],
+   "heldout": {
+    "state": "HELDOUT_INSUFFICIENT",
+    "n": 12,
+    "slice_sha256": "1e6553e4e1895f439b7a65d91ea6383254c86b094f54701d0b264e405ab98f0a",
+    "file_sha256": "1e7a1c088096c1ef5f783245929f5339c8350e06c897c8277afb684be06a74ce"
+   },
+   "public_slice": {
+    "n": 24,
+    "slice_sha256": "5524cce31fb1924b40067bd40c17d8ebce972fa8e23a473afe6ced01f736a53d",
+    "published": false
+   },
+   "canary_set": {
+    "k": 8,
+    "commitment_sha256": "9554897657bb9bec4fc20f9250fc4fce5aa80a349b8e4b69d25956a17d11080f",
+    "leakscan_digests": [
+     "059f53cba444fcf5f831a49f898c6e094d5a4188c1ce90ee2122ed1f22d2774a",
+     "49ce465ec099a2917f13320310e254bda2ce06f06d05ab565c80462d4f1a4dd9",
+     "52910764e6bffdfd5908535021b4f93b5fbfdff6d2e3e859a3cfd19d4bee9eaf",
+     "678f5c90379a082a3a2df543fe2359d2a08b4e85d25c40eb8cdef4078ca2ebf7",
+     "6ee52843b760de27e8ebf3a3e996afa89e3c8615a2360424f6c2fed1105e26c3",
+     "6f8f24bedada483793f0bd0dc01a16fe909a1e01e237158bd8e2d7a5c4443292",
+     "8705aea6bad59a0e269d4e7b46333c13b416928b3eb304e46385555983992fce",
+     "8b1827fde24c906442512614a698003a08bbd69adfac16f5638e763310ed0356",
+     "90518ebcff4a289476efb450a601e82e79177c14ab826dc8c65b67e66f91a6e3",
+     "955f0f29f097599a97c16ba7aefde3959309d2d3fab19693b8a3486115df35e5",
+     "99a32b449607d590d1b66084d6c8445d8d097fa603b5053b20f8cfac7f26aaa1",
+     "a2a2dc22ab103d3ccee28b5385620118ea14b6427e19f22995c6053168532113",
+     "aba95d2d7a2839ded53b5f91f3dbbd7ee2f8887f2d8fa9f15effe925e00ad7fa",
+     "b60f1542fd0f99c90e8a66308429850b50dd873fd26327374f1fff2bb9031949",
+     "e605b1e56a96fd93e65edaa568295c947d78ace9ac20a23249caef4a9e22c55a",
+     "ff471f5a3fba2296c0a29c44cc227c49af8678d6eff3bdea9a8d1baa79bb3d50"
+    ]
+   }
+  },
+  {
+   "bank_id": "gspc-fairness",
+   "aliases": [],
+   "bank_sha256": "e0db4c0856fb444a3d1078e8b163e86f5f04a6e397b1c34d5dfaf3d5e0ec7e13",
+   "rows": 30,
+   "graded": 30,
+   "items_public": 30,
+   "items_private": 0,
+   "exposure": "PUBLIC",
+   "exact_bytes_public_at": [
+    "repo:public/interop/banks/gspc-fairness.jsonl"
+   ],
+   "heldout": {
+    "state": "HELDOUT_INELIGIBLE",
+    "reason": "every graded item is already public"
+   }
+  },
+  {
+   "bank_id": "gspc-gov",
+   "aliases": [],
+   "bank_sha256": "b93f9808f01416737a5944fec0ab8c3eda1dbba808daf7dda33a516b0cd61997",
+   "rows": 237,
+   "graded": 237,
+   "items_public": 237,
+   "items_private": 0,
+   "exposure": "CONTENT_PUBLIC",
+   "exact_bytes_public_at": [],
+   "heldout": {
+    "state": "HELDOUT_INELIGIBLE",
+    "reason": "every graded item is already public"
+   }
+  },
+  {
+   "bank_id": "gspc-human-vs-ai",
+   "aliases": [],
+   "bank_sha256": "a2ed38550cf9dd456cef914cb13ffe4c254fd8677f85000f0ee5bf4aa80fb8da",
+   "rows": 30,
+   "graded": 30,
+   "items_public": 30,
+   "items_private": 0,
+   "exposure": "PUBLIC",
+   "exact_bytes_public_at": [
+    "repo:public/interop/banks/gspc-human-vs-ai.jsonl"
+   ],
+   "heldout": {
+    "state": "HELDOUT_INELIGIBLE",
+    "reason": "every graded item is already public"
+   }
+  },
+  {
+   "bank_id": "gspc-index",
+   "aliases": [],
+   "bank_sha256": "3a007ddfe6386cfc4ae1f13dfcd3425735984273655b2a048eef4d7fc33543aa",
+   "rows": 36,
+   "graded": 36,
+   "items_public": 0,
+   "items_private": 36,
+   "exposure": "PRIVATE",
+   "exact_bytes_public_at": [],
+   "heldout": {
+    "state": "HELDOUT_INSUFFICIENT",
+    "n": 13,
+    "slice_sha256": "290321d8e14ea11449bf737dc125627a6fd68c1dabb8ec3d684516454e6f20d2",
+    "file_sha256": "5c1e2b27f3bbe9abbe6752420109b47af4b050745a53ad28b6c1d35ad8df0c38"
+   },
+   "public_slice": {
+    "n": 23,
+    "slice_sha256": "4e4c93dfb90690b10f71b919b623a22a3969e3b47921b65198e7b5e3c7fb3c98",
+    "published": false
+   },
+   "canary_set": {
+    "k": 8,
+    "commitment_sha256": "a904b4045a426d327566b5dc420eaa977a4edfc364b26e41a775b5dc1153aedc",
+    "leakscan_digests": [
+     "14042f7bf255080ab5b2314cbda388a616d39117542c9e9017ddcad03f845c93",
+     "2ad895f7d62528741d86cddc129c60efad0a628ac3a748621f79085767d1ad16",
+     "33e41781bcd131433fa7c230095ce13a6df150e2f43e082d28b9c962994d8c3f",
+     "34cbf51adbc1fda9158d155bbf27289ea9f5c0b6991cde7fc347fefb107cf48a",
+     "3602112ef09b2038eba10c25f9e50fa25dd840d93f991865bbade65e5e5f7d9c",
+     "37a9196d564e41291430541f4f4cc9a8ef5e2ff7939154adf98e05f4cddcf421",
+     "407805ea9eb742af05c8f516226375cafb208a16e2e7c921dd8017489c8e6b06",
+     "5698803ddfdd968676ba570c7de1fa6710944934a7ab455cdad58a53c9d4cd65",
+     "741f6459acc5dc6bc823ee02abcf69f71b427c8d7bc891f6ced5a2d5e9f37c54",
+     "7e5d6c60b808f9557eb1121e2f8d7369b87a255b6f3e66e4724045f69b2bad24",
+     "848f32020882e545f808036af91b6aabf3b6683160ea7e2a76e1daa1ecaa5f42",
+     "89e6e0591279e7c1004ee9938d7446c42b4c735512e79528cf55d3ed5cea457c",
+     "d3cd01947333cc9ae087e0cdfa0d78331d941667893d8690d3a38cafc7f72804",
+     "d4320cbac23cc599683a45163f60082c399eb0e83f13acd62b5703005dfe8f02",
+     "e159932abfbba23d5fc34c048ece4ac9cc21cc5172644fd0d415cb0cc5fe647d",
+     "e81a7a11544a261d9e72040f7164a093c0adf5f1fb22b8fbe49dc2e8113f9f9d"
+    ]
+   }
+  },
+  {
+   "bank_id": "gspc-insurance",
+   "aliases": [],
+   "bank_sha256": "b7053608cb978871ace8be993898de0ee90765631dff3ec56303846fb9f75057",
+   "rows": 36,
+   "graded": 36,
+   "items_public": 0,
+   "items_private": 36,
+   "exposure": "PRIVATE",
+   "exact_bytes_public_at": [],
+   "heldout": {
+    "state": "HELDOUT_INSUFFICIENT",
+    "n": 5,
+    "slice_sha256": "25dda3b6c07851d89a128d8a046ce488344764646febad7b91436ff935e93ec2",
+    "file_sha256": "6f5000e38628e2baddfbad94c43a832d3a9307f38dceebfff89cbce3ea80ebd3"
+   },
+   "public_slice": {
+    "n": 31,
+    "slice_sha256": "93bcfeffe27fdf91c990f4c4ca67e662388d0da2c472914dca9b184564bef159",
+    "published": false
+   },
+   "canary_set": {
+    "k": 8,
+    "commitment_sha256": "82a6bae158dc77989db7c6e839be4851e0e72b5bcb9f7bb65a74405146403c07",
+    "leakscan_digests": [
+     "09b9852a5404fa1fb7243ba4a93b404956afbe326f26c7a4dfb8d1b6301ceb66",
+     "2afe2de765d6a0b94fca17e388ad597167d390f1895df7d746d887ff9199609a",
+     "2b6c2ec72df3536cda1338123a6f2d8873d9b653869ed6949cf1a8684767911d",
+     "4b1e71ac5e6850043ca59490ce05486da7f54c84a8cb2428985041bf688e379d",
+     "4dabc236041bc4d3f70b4d9b62fc6f5dc71285cba460cd28d59e94bb963ddd30",
+     "565fa1777a8084884245d07f8675aa9d9ebe797571877c2a2fd2d939494a4789",
+     "6440efa32fe02bf06bce99e6be52a5bffbc798f3e91e3a32fb4f13f75b76a339",
+     "801c649811ec486595d28159a1f9df89a34332771cb7efccb67fec7c0612d1a2",
+     "8673e4c92aff87387b2825139c4b041b58773cc6a0a0737dc309e227215c5a99",
+     "9dcad98828439e3d4b0f3490a67c540b03c7c8eca85b7129bb7cb80917569a46",
+     "c03e283c2a14417293acb0fa3c87cb1269e8b8eb2646963a1e9f86b6e54d444b",
+     "c3c5102bd0296d26a543197ba1ea042bd2b2154026e49e89ba8d218453226739",
+     "c5c308e0892c35f6ec765249ad83125808aa49b6a26559cc4104317d0093f563",
+     "d74cec9a1e270e64d0cf4ed1e26a18336d61b67863c8c7c89c5efd4305d524dc",
+     "f7f286a4487d5b71da55129893c766690d650bca173f58bddb9e3e8458e7f63f",
+     "f9a0f3313971d5128d3e4073e89cf40970abd87b8e41b4e8de201921ecb6acf9"
+    ]
+   }
+  },
+  {
+   "bank_id": "gspc-jail-sandbox-escape-20260922",
+   "aliases": [
+    "gspc-jail"
+   ],
+   "bank_sha256": "0b45b620f2277c364275420f812e9415698e3b8bf0b105a7bbb4c2b2627d0f4a",
+   "rows": 71,
+   "graded": 71,
+   "items_public": 71,
+   "items_private": 0,
+   "exposure": "PUBLIC",
+   "exact_bytes_public_at": [
+    "hf:csoai__gspc-jail-goldbank__samples.jsonl"
+   ],
+   "heldout": {
+    "state": "HELDOUT_INELIGIBLE",
+    "reason": "every graded item is already public"
+   }
+  },
+  {
+   "bank_id": "gspc-jail-v2-fam58",
+   "aliases": [],
+   "bank_sha256": "c22a51f64825d0729001811febff39afb8434b13fd00ff880f23017186f03060",
+   "rows": 32,
+   "graded": 32,
+   "items_public": 0,
+   "items_private": 32,
+   "exposure": "PRIVATE",
+   "exact_bytes_public_at": [],
+   "heldout": {
+    "state": "HELDOUT_INSUFFICIENT",
+    "n": 10,
+    "slice_sha256": "80cad6894ca4d332dbae42ee68084f92728eb5969b8b930b3ed373b34a764d3a",
+    "file_sha256": "1965d36b686ec6d17d6e77408bfe4eea51dce8caafdb97b1b5824fa24c96d1b0"
+   },
+   "public_slice": {
+    "n": 22,
+    "slice_sha256": "bedebd89cd8c2b3d8d0edd3fe460c68e8c4f3d84168a5901dc059b4dc8156a07",
+    "published": false
+   },
+   "canary_set": {
+    "k": 8,
+    "commitment_sha256": "9063b1cf7fa7b681125e29bca6546e57592c3be136f11bf1a5412767e9207b42",
+    "leakscan_digests": [
+     "3386352e211c741d83f95c9d07924d4f560ce7ce17bc7a4d7ae7b6df5155cbae",
+     "3928bfe5629dcc6a09819e17a514a50a88e8dd11b17b4086028a2dfdf4a4c6f4",
+     "4ebd3182b5dc2243a4107c9cab0537256705849e452146cae72ccdf81823b305",
+     "8197048bd28737646b512463f8529ded3d3ec008575f4a8334c062408ad8fd8e",
+     "8c1420726e60da7fc9ed9898fc5d9adac162af86d797e6c399b49f9dc3bd1f88",
+     "94f9c4d2e2679fc64c90ee206f66e14286a31c73b5879535cc8006c266c25897",
+     "9a59315333250bdb17c197eb8140b30c782ee7b5c16e0e1c3c8146498a9921c4",
+     "b07b7669c3342c299ba92281befd29fbd678fe17416e03cf35d941a45be29a27",
+     "b5a97d2d4e6b7cf4376fe877d6fcf9c311060e01c74c2b00af4680fd3d477be3",
+     "baa2c3b46fe3912e8a90b6c487d7f6b5dcfe5e536d8b9ee01f3b6ee041abad42",
+     "c7651375d9e3d26cdfd9a5493d04c250ef441585a4bf068cda1e12f5359b0b2b",
+     "d5f1b0ba109a458b23a501790b1c22b94b5159d77fabc5ce3dcde46e7047b8b1",
+     "d8510e224b57d9c2d31dc8d140c5d2e81078bfad7fded82510959c4dd66c6b6d",
+     "d8a973b10ccba3c407a9770dfe1ca90bd8880b95c370e4d67f9c5737e832e1a2",
+     "ec0e553bc140a8bf8c07819231a029cbef1aef1652c42f8edf7c7b14543a04e1",
+     "fe3832e9b8ea6f9315528fcc42d1bc7957f5e53f11a946d4cc7584d298e385d2"
+    ]
+   }
+  },
+  {
+   "bank_id": "gspc-jail-v2",
+   "aliases": [],
+   "bank_sha256": "d7465e84c1f8554cb724da3dc05c82f0deb99e1db3ef4a3cc90682bcd1421d41",
+   "rows": 72,
+   "graded": 72,
+   "items_public": 1,
+   "items_private": 71,
+   "exposure": "PARTIAL",
+   "exact_bytes_public_at": [],
+   "heldout": {
+    "state": "HELDOUT_INSUFFICIENT",
+    "n": 21,
+    "slice_sha256": "f01de12fed6aa5ed06b1623c2c7d8aa03b7b46cfdc39b1c6b86254f1e8fd85d9",
+    "file_sha256": "568d91c5e2e5e9fd0988aa0132c9d324fa0074ec76204ef26fb2d1a588a1b845"
+   },
+   "public_slice": {
+    "n": 51,
+    "slice_sha256": "beca9884965d75b94109767da9dbe90ffb83b7b711050d8caec4b235608da619",
+    "published": false
+   },
+   "canary_set": {
+    "k": 8,
+    "commitment_sha256": "258d211f5bee0a6606535de298a00c793372d49a625349cab46fae104177991c",
+    "leakscan_digests": [
+     "0a10468e9ca9aa10e02923d9a0aab18a32189b17b5c2953a22d26ed6d5a330f7",
+     "0c0398489c178282602a629322eed86c326700c36388b92518907c5bf7cbf569",
+     "1fbf272946cd36e1e9136182c4b5bc1818ea9bf352f70ca2e7fc22b40d682298",
+     "27253549c759305740c090e8d6aa1d382c1f7cc1ff1ff6316d51d6fe4c6b5a81",
+     "3064ec2b8546301db2d2b61815a44b4104cd4355a5c3c8b8a229b9f440896c94",
+     "4564577f41895fd4ad35e769a647030aed06451c18030bd3f2ba17e10c5033bf",
+     "5b2d18f10eb9800b6156f1914924b1bb2a0a2213a339dc3defcdf91856888525",
+     "5d4c45616377eea12b2b8907ab83d0ce867ce4b40b7fb48889e856f905da7a28",
+     "5e6aba52b174a8c9419c07394be4336d0b40adc75a303af1a5e95dc6ad536598",
+     "5f03532f6ce5b002d0f7f3d803b854a3b94a52de10d5aa3b7a0fa3b2e870b67e",
+     "782af1cefbedfed885b4901610187232428bcab52f1e38876580cc21635fe054",
+     "7e047d3f2561614272319d88f213eb2724dd6e8c4eabc597c09438dfa2b97d9c",
+     "8214c811640b3a66d90035b1d61997bdfcb15e0fed453654b04cdcaea7fca24b",
+     "83d40c66f830ae0d5d5eb2d3e0a47e7d6a612fcc17b0f8c7ce7528764f73eb51",
+     "df100f51a85b08773cd0a5a3efdbf3789e23947fe03f78bb17e60c69c14de344",
+     "fe5741dbaa8318343cece26512e07fcbc470a8696f27d30ea1ed1c135aab7a78"
+    ]
+   }
+  },
+  {
+   "bank_id": "gspc-mach",
+   "aliases": [],
+   "bank_sha256": "ab0b40f2336e81703e3c17e9988b88a3b0d4bf3a441aa7c3c53b038a6398a434",
+   "rows": 33,
+   "graded": 33,
+   "items_public": 33,
+   "items_private": 0,
+   "exposure": "CONTENT_PUBLIC",
+   "exact_bytes_public_at": [],
+   "heldout": {
+    "state": "HELDOUT_INELIGIBLE",
+    "reason": "every graded item is already public"
+   }
+  },
+  {
+   "bank_id": "gspc-mcp",
+   "aliases": [],
+   "bank_sha256": "dc494ae6d1cb8abe3fe9a9424a2b37631a3d15ebdde000b7a0409a67c757420f",
+   "rows": 35,
+   "graded": 35,
+   "items_public": 35,
+   "items_private": 0,
+   "exposure": "CONTENT_PUBLIC",
+   "exact_bytes_public_at": [],
+   "heldout": {
+    "state": "HELDOUT_INELIGIBLE",
+    "reason": "every graded item is already public"
+   }
+  },
+  {
+   "bank_id": "gspc-operational",
+   "aliases": [],
+   "bank_sha256": "4fbd6f7b9ae642ed150109f7a4c7ff1d12b76611c4b283d661ff0cf6a420837d",
+   "rows": 36,
+   "graded": 36,
+   "items_public": 0,
+   "items_private": 36,
+   "exposure": "PRIVATE",
+   "exact_bytes_public_at": [],
+   "heldout": {
+    "state": "HELDOUT_INSUFFICIENT",
+    "n": 12,
+    "slice_sha256": "a608347a48479675d4ce8fabbf8ac9203608cefe58199a7dbeba899c002d6e51",
+    "file_sha256": "efadcaa644bcace7c3a56ca4e13c6fe5f623ac7bdc86c9ffe4af7adedaee653f"
+   },
+   "public_slice": {
+    "n": 24,
+    "slice_sha256": "7cdce32a3b8a6432e2a9c95c93b359f049ecbd4d68deea6ee11f1ad504e9a9cc",
+    "published": false
+   },
+   "canary_set": {
+    "k": 8,
+    "commitment_sha256": "059219815fdaaafe52237e76c36960b2a8516ac3887b1cc8cc2c8274c1420b80",
+    "leakscan_digests": [
+     "09a64b2e546466a805a06ed7d3a04e4fe25f46567bc283b19c344abdc2b28a56",
+     "10094421e835e7fce0425c06c6e10a85dd8bddff343b8ad56476c8ab9c316870",
+     "196adcd240a191fa753bfeda9f9290f27f79424394a6ddcaf41d27f91ebb09e9",
+     "2365eb88fc45c64766850dfc1e1cae3fcc760290affb9128f8792ef0955edd57",
+     "396ff4d82ed46d34782289fdc3fb71beb424e2108502479b03cc77cbe8ab6f13",
+     "3bc444a696eb196c38dd52caff9dc3fbc604b4b6f42460c5558531db8cf00e2a",
+     "3bc4481a824e24738ff905e9d0feb11afae9ec94fc690b075a80f7a9d15ef727",
+     "3cb4f64b94b38fec7c3a47fc837de1adc4faf9dcfd144d3d55065280bd2c0916",
+     "5d071d0394dcdb1f77285ade15b2366a94ef3cddc5303731e893cafe3188912d",
+     "694c35927c74544a933a23b7f5585629c134443e44f5507bdadc2e623495ace7",
+     "9c7c4ab9ffd4dce1baa31a4dad6cb089f076efc38c627315504f24c360759862",
+     "b28578c151ac6b830d551a4937f16df82a0ce2dadaae566e64984e0426695749",
+     "b9019a991f2a38e114d53c32388766c8a61bc7f5a82d6c30b425ee277f308941",
+     "caa8fce58ff133d06a67cbe5c15b0c4a4551da2f191de46feb1d4396f1d8433c",
+     "d03abbb2e9ccc1e0dec528d29d4b28e08087bcf44a13b71a34491cbb1a89da83",
+     "d2a1a9a231b72689d8040838648cc3bb5e457a0afa5aa8fabf382d9ccffa92ae"
+    ]
+   }
+  },
+  {
+   "bank_id": "gspc-oss",
+   "aliases": [],
+   "bank_sha256": "644dc6de897896a88e90b8954abfa08d49b0e774f6270f30a9bf28b0831179ec",
+   "rows": 32,
+   "graded": 32,
+   "items_public": 32,
+   "items_private": 0,
+   "exposure": "CONTENT_PUBLIC",
+   "exact_bytes_public_at": [],
+   "heldout": {
+    "state": "HELDOUT_INELIGIBLE",
+    "reason": "every graded item is already public"
+   }
+  },
+  {
+   "bank_id": "gspc-prv",
+   "aliases": [],
+   "bank_sha256": "5da9b25954ec575b1e86bca8306bd0cd6758161428717d60ac648dc52c8317d2",
+   "rows": 32,
+   "graded": 32,
+   "items_public": 32,
+   "items_private": 0,
+   "exposure": "CONTENT_PUBLIC",
+   "exact_bytes_public_at": [],
+   "heldout": {
+    "state": "HELDOUT_INELIGIBLE",
+    "reason": "every graded item is already public"
+   }
+  },
+  {
+   "bank_id": "gspc-relative",
+   "aliases": [],
+   "bank_sha256": "0202302c5163cf8cef1fd87caeb47e56339bd9707c5cf5919464fb3efd251170",
+   "rows": 36,
+   "graded": 36,
+   "items_public": 0,
+   "items_private": 36,
+   "exposure": "PRIVATE",
+   "exact_bytes_public_at": [],
+   "heldout": {
+    "state": "HELDOUT_INSUFFICIENT",
+    "n": 6,
+    "slice_sha256": "1a9b2f619d9c090ed43588ea809d1134738c7fdcd8e784411945b88446a5e9b1",
+    "file_sha256": "2bc5e53d8a778a62ae660828b6e3ec81266ff5b2ffe38a595281a17f092a6ba5"
+   },
+   "public_slice": {
+    "n": 30,
+    "slice_sha256": "2186d6ec3873ffea71673c105a257050926c0f503c2de59ff67b418ac55877c8",
+    "published": false
+   },
+   "canary_set": {
+    "k": 8,
+    "commitment_sha256": "7ac616aee87f3068aea2f53f44d8a7a148e365296290ada7bba21d76df9d7c66",
+    "leakscan_digests": [
+     "0ca63ae546f153785d6ec0ea911cd5911dd0c47d9466ed1e352cd3ddb9c2a64e",
+     "25199aff4c09c220dc740dd93bce252d65bc9e61ce649ca1a9208ef8eecf5f63",
+     "489348dc26d42c9f4481a1421644f1f7fcdbce4e4e2138d7766433de0978aac2",
+     "4f8520d5cee3834ab72b79c32a40abc14e8a457377321a75bbda8f455f16d5c2",
+     "5809b84337fd963e7698c72ea9aac4593e5e162eeeef6a66576d4495f4eced0d",
+     "5f653f8a3c54c430e0e60a6ef7c7e2ff70c88fc4d431c6a40c49f21002465e55",
+     "63cf3cb51d451b5a06487fa8bba830f375f5451c88fcc7ae5b1da83d6a91101c",
+     "7e6dc654c5fc56ac62479fce06b82cc3bb3a728760a7788baa32582b0e7a33f7",
+     "a987bdabc34eadddfdc89d3736851143d0d031b315462f11c847d0d7674f3c05",
+     "b8e29a5f338be80d6a0983d6fb5f20babc1381fbcf23b9145dc0c1122340947d",
+     "ba318425da475e2de6906f6d18049a5852ef60cf09517ccb6ad82b76b60fc964",
+     "c374d9f70e75a55be69603e01924cf16da87e03f1935c5df05f4b12b023a5d1c",
+     "e4d58b458d2f0007e9b875e26d18e3261d0e6eb64edc1517e3b1168ea7833a54",
+     "e9e9f47db450985e770fbdcf7f0b7f8eee5b13f4cc419c21f2067172c705d82d",
+     "ebd415d35f6720d9845ffbf5d8512fc64eb8e7a1848bb25cc820e5a9676b877f",
+     "f17aedf363d3dab59b61f7001e3e6b817db9eff7e5cbca2392d0edea7277b265"
+    ]
+   }
+  },
+  {
+   "bank_id": "gspc-safety",
+   "aliases": [],
+   "bank_sha256": "fa25fd3ae6873f87f67257e850fafbbec1784e29b3303bc3b20d0105926cf533",
+   "rows": 30,
+   "graded": 30,
+   "items_public": 30,
+   "items_private": 0,
+   "exposure": "PUBLIC",
+   "exact_bytes_public_at": [
+    "repo:public/interop/banks/gspc-safety.jsonl"
+   ],
+   "heldout": {
+    "state": "HELDOUT_INELIGIBLE",
+    "reason": "every graded item is already public"
+   }
+  },
+  {
+   "bank_id": "gspc-slot15",
+   "aliases": [],
+   "bank_sha256": "ce88808daedbff7f67b31dcc9dd66b0705d1b218f94a09d03e1ccf27ec75f9fc",
+   "rows": 30,
+   "graded": 30,
+   "items_public": 0,
+   "items_private": 30,
+   "exposure": "PRIVATE",
+   "exact_bytes_public_at": [],
+   "heldout": {
+    "state": "HELDOUT_INSUFFICIENT",
+    "n": 9,
+    "slice_sha256": "69f82d0587cc6db6881c308dad5c94abe8e9c961d6551af4415d8d3cab12b8fa",
+    "file_sha256": "8da00689a61fa366b0c9e03ca1bf627d4e0643b0b5f22aa3c2923b41a1a11f3c"
+   },
+   "public_slice": {
+    "n": 21,
+    "slice_sha256": "8e97f820f88a525ef44ffe92d7b3ea5e0f32eb266b73f6bf551afebe8d5dfc38",
+    "published": false
+   },
+   "canary_set": {
+    "k": 8,
+    "commitment_sha256": "b6a8645c130ac3b8732a82e95c8e8f3a7997e4c58b264b3dcc433d601caaa306",
+    "leakscan_digests": [
+     "037f242e860af109ab7d8743156eb25f50b47a098e4c477f2cc71635b2fb4b56",
+     "05f4fe151ea55ffc8adf231c88225432245fe743228f72de1443c1527a2fb889",
+     "1a855380c5f9459334e1112985ab0c63e45f6d2ef85b226720f9568276c43ce1",
+     "1fc431028ad845eb77ef6e40fe85e97590b5ac3961f1158479c5b939a8fce238",
+     "3ec3268a2c6e0337c36f547387d581b2ee4bbb67036a9fd852d2a4cfcb285604",
+     "407cad8b9894d162fea7b898b95ee6eda0bbcb6058b4c8ada24213a6d7f82dc9",
+     "50d442a665b204e18dba5f48c89ac31c5e3427fb5f6980cd05352b943120a5da",
+     "5a3456ce842a3e8e0e9fac706c23718d45cb8f47cfa51f1c7de86438cf335079",
+     "62bac352f61047830c5702843e35015494fe5fbfe46466f963bd90d32d713fbe",
+     "8c6381d7eced3dfc0a28c3c14a60de35faea6120ff0eaef9befccb5358a02370",
+     "900bdfadc7fcf481ff45831e16e4458b527fef8142a13b5dd61f143cff41d67a",
+     "c00a2354eeea2e3c5e8393f50f5c96e3292fc7c6d638bc0532c46cdab12d3841",
+     "ec84a52153da82aff9757cbf335451321f4a05e3857f1c3ce68147c5bdee6cc5",
+     "f13fe0ba160992b9c588d824e031cb16e6a8b06b719c8a4f967b7fb78c9b7729",
+     "f58ceeafd399bce5ee77dc14647b6ba7c10914dbb19fb96916d611308aeef771",
+     "fd4f6bf6068ba7f2803afc2c0ef13cd5b961499d602a7165dc192b33c87ccb5e"
+    ]
+   }
+  },
+  {
+   "bank_id": "gspc-sovereignty",
+   "aliases": [],
+   "bank_sha256": "dfae3b7825a689041e437d1e38c1adb7ebe62b76d76ec547bff4031bdcec6a47",
+   "rows": 30,
+   "graded": 30,
+   "items_public": 30,
+   "items_private": 0,
+   "exposure": "PUBLIC",
+   "exact_bytes_public_at": [
+    "repo:public/interop/banks/gspc-sovereignty.jsonl"
+   ],
+   "heldout": {
+    "state": "HELDOUT_INELIGIBLE",
+    "reason": "every graded item is already public"
+   }
+  },
+  {
+   "bank_id": "gspc-swarm",
+   "aliases": [
+    "gspc-swarm-candidates-v2"
+   ],
+   "bank_sha256": "ab318986d684ebf8a46682a5b82ad7594b1bbd01f7acb25a50e94a3d868076a1",
+   "rows": 37,
+   "graded": 37,
+   "items_public": 37,
+   "items_private": 0,
+   "exposure": "PUBLIC",
+   "exact_bytes_public_at": [
+    "hf:csoai__gspc-estate__evidence__bank-swarm-ab318986d684.jsonl",
+    "repo:public/interop/mill-evidence/bank-swarm-ab318986d684.jsonl"
+   ],
+   "heldout": {
+    "state": "HELDOUT_INELIGIBLE",
+    "reason": "every graded item is already public"
+   }
+  },
+  {
+   "bank_id": "gspc-transparency",
+   "aliases": [],
+   "bank_sha256": "1d25b1a920bd4230154d896542ec4e89762157f94fd178ceaa024dfcbb327047",
+   "rows": 30,
+   "graded": 30,
+   "items_public": 30,
+   "items_private": 0,
+   "exposure": "PUBLIC",
+   "exact_bytes_public_at": [
+    "repo:public/interop/banks/gspc-transparency.jsonl"
+   ],
+   "heldout": {
+    "state": "HELDOUT_INELIGIBLE",
+    "reason": "every graded item is already public"
+   }
+  },
+  {
+   "bank_id": "gspc-xr",
+   "aliases": [],
+   "bank_sha256": "9aafd224f011f5a7f709e39efbee35e3f71b56c320a2d4fb69e5cbcd6667e8dd",
+   "rows": 32,
+   "graded": 32,
+   "items_public": 32,
+   "items_private": 0,
+   "exposure": "CONTENT_PUBLIC",
+   "exact_bytes_public_at": [],
+   "heldout": {
+    "state": "HELDOUT_INELIGIBLE",
+    "reason": "every graded item is already public"
+   }
+  }
+ ]
+}

@@ -1,7 +1,7 @@
 {
   "name": "Council of AI — Measurement Agent",
   "description": "Independent AI-governance MEASUREMENT body. Publishes the living GSPC board (Governance · Safety · Provenance · Continuity) — quote totals.lid and totals.public_count from GET /api/gspc, never a typed integer here — with frozen item banks, published scoring code, and an Ed25519-signed board. Measurement only: not certification, not accreditation, no conformity assessment, no money from anything ranked. A2A v1.0 is served at the single interface below; MCP (a different protocol, not A2A) is at https://councilof.ai/mcp.",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "provider": {
     "organization": "CSOAI Ltd",
     "url": "https://councilof.ai"
@@ -77,16 +77,16 @@
       ]
     },
     {
-      "id": "measured-badge",
-      "name": "Measured Badge",
-      "description": "A global-board README link plus a card-bound status badge. The global board never becomes a model score. A model-specific score may render only from a VALID signed cell that names the exact subject and immutable revision; otherwise the subject is UNMEASURED or UNSIGNED.",
+      "id": "card-status-link",
+      "name": "Card status link",
+      "description": "A global-board README link plus a card-bound status link: the state of one signed card for one exact subject, never a mark or a grade. The global board never becomes a model score. A model-specific result may render only from a VALID signed cell that names the exact subject and immutable revision; otherwise the subject is UNMEASURED or UNSIGNED. Former id measured-badge is still accepted.",
       "tags": [
         "measurement",
         "governance",
         "verification"
       ],
       "examples": [
-        "SendMessage with Part.data {\"skill\":\"measured-badge\",\"input\":{\"card\":\"<64-hex-signed-card-sha256>\",\"subject\":\"owner/model@<40-or-64-hex-revision>\"}}",
+        "SendMessage with Part.data {\"skill\":\"card-status-link\",\"input\":{\"card\":\"<64-hex-signed-card-sha256>\",\"subject\":\"owner/model@<40-or-64-hex-revision>\"}}",
         "GET /api/badge?card=<signed-card-sha256>&subject=<url-encoded-owner/model@commit-sha>"
       ]
     },
@@ -173,6 +173,37 @@
         "GET https://councilof.ai/interop/master-consolidation-2026-09-16.json.ots",
         "GET https://councilof.ai/estate/"
       ]
+    },
+    {
+      "id": "measurement-capsules",
+      "name": "Measurement capsules: index and verify (free)",
+      "description": "Read the latest signed measurement-capsule index, or verify one capsule. {\"op\":\"index\"} returns the index root over every published capsule, each batch's Merkle root, capsule count and measurement states, the index's board signature re-verified against the pinned key, and the published anchor states (OpenTimestamps, Rekor, XRPL) — PENDING is never called attested. {\"op\":\"verify\",\"capsule_json\":...} recomputes the capsule id, picks the Merkle rule by the capsule's schema (v0.2: RFC 6962 with domain separation) and returns the audit path against the batch root the signed index names: INCLUDED, NOT_INCLUDED, ID_MISMATCH, UNCHECKABLE or NOT_PUBLISHED. The same module as the MCP tools measurement_index and verify_capsule. Verification is free forever. Measurement, not endorsement: no verdict, score or ranking.",
+      "tags": [
+        "measurement",
+        "merkle",
+        "verification",
+        "provenance"
+      ],
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"measurement-capsules\",\"input\":{\"op\":\"index\"}}",
+        "SendMessage with Part.data {\"skill\":\"measurement-capsules\",\"input\":{\"op\":\"verify\",\"capsule_json\":\"<the capsule's JSON text>\"}}",
+        "GET https://councilof.ai/measurement-capsules/latest.json"
+      ]
+    },
+    {
+      "id": "server-evidence",
+      "name": "Server evidence: every capsule about one endpoint (free)",
+      "description": "Trust per server, not totals. Every published measurement capsule about ONE endpoint URL across all batches: MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A agent-card signature state, self-parity cells for CSOAI's own doors, and later adapters such as tool drift. Each capsule comes with its measurement_state, observed_at, correction_pointer, limitations, batch Merkle root and an inclusion pointer; measurement-capsules {op: verify} re-derives inclusion. Read from a static per-endpoint shard keyed by sha256 of the normalised URL. An endpoint with no capsule is NOT_MEASURED with an empty list, never an error and never a clean bill. The same module as the MCP tool server_evidence. Measurement, not endorsement.",
+      "tags": [
+        "measurement",
+        "mcp",
+        "a2a",
+        "per-server",
+        "evidence"
+      ],
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"server-evidence\",\"input\":{\"endpoint_url\":\"https://example.com/mcp\"}}"
+      ]
     }
   ],
   "catalogUrl": "https://councilof.ai/interop/surface-catalog.json",
@@ -183,5 +214,11 @@
     "conformity-assessment",
     "legal-determination",
     "enforcement"
+  ],
+  "signatures": [
+    {
+      "protected": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2NhcmQtYXR0ZXN0YXRpb24tMiIsInR5cCI6IkpPU0UifQ",
+      "signature": "-Vw48pD1wCKQ2Tb3cc6c95um_AScvzvtjRdUZFPjZhD8Prp_Vc6o6uptn0V8nzNfw-iDVPMInmfOeQYZF-p4Dw"
+    }
   ]
 }

@@ -25,7 +25,7 @@ const observations: CapabilityRailObservation[] = [
   rail("gspc-board", "RUNTIME_OBSERVED"),
   rail("mcp-tools", "RUNTIME_OBSERVED"),
   rail("a2a-runtime", "UNREACHABLE", "HTTP 404"),
-  rail("a2ui-renderer", "UNCHECKABLE", "no published runtime endpoint"),
+  rail("a2ui-renderer", "RUNTIME_OBSERVED"),
   rail("agui-gspc-state", "RUNTIME_OBSERVED"),
   rail("regulation-feed", "RUNTIME_OBSERVED"),
   rail("xrpl-reader", "RUNTIME_OBSERVED"),

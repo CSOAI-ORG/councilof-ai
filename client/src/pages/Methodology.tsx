@@ -3,6 +3,8 @@ import { ANCHORING_CLAIM } from "../data/anchoringClaim";
 import { Link } from "wouter";
 import { SpectrumView } from "@/components/gspc/SpectrumView";
 import { setMetaDescription } from "@/lib/utils";
+import MomentumStrip from "@/components/momentum/MomentumStrip";
+import MomentumMethodNote from "@/components/momentum/MomentumMethodNote";
 
 /**
  * /methodology — how the instrument works.
@@ -87,9 +89,15 @@ export default function Methodology() {
             behavioural axis today; two describe checks whose rails are not yet built, and the
             table says which is which rather than presenting all five as live.
           </p>
-          <div className="mt-4 overflow-x-auto rounded-2xl border border-emerald-500/20 bg-[#05140d]">
+          <div
+            className="mt-4 overflow-x-auto rounded-2xl border border-emerald-500/20 bg-[#05140d] focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+            tabIndex={0}
+            role="region"
+            aria-label="The five deterministic predicates (scrolls sideways)"
+          >
             {/* min-w so the overflow-x-auto wrapper scrolls on a phone instead
-                of crushing "PREDICATE" to one character per line. */}
+                of crushing "PREDICATE" to one character per line. tabIndex + a named
+                region so a keyboard user can reach and scroll it too. */}
             <table className="w-full min-w-[40rem] text-[13px]">
               <thead>
                 <tr className="border-b border-emerald-500/20 text-left font-mono text-[11px] uppercase tracking-wider text-emerald-100/60">
@@ -104,13 +112,14 @@ export default function Methodology() {
                   <tr key={p.name} className="border-b border-emerald-500/10 last:border-0">
                     {/* Identifiers and file:line pointers must never break
                         mid-token ("actor/transcript.py:L" / "42" reads as two
-                        different pointers); the prose column keeps wrapping. */}
+                        different pointers); the prose columns keep wrapping, but at a readable
+                        min width: without one a phone crushed them to a letter per line. */}
                     <td className="whitespace-nowrap px-4 py-3">
                       <code className="font-mono text-emerald-300">{p.name}</code>
                     </td>
-                    <td className="px-4 py-3 text-emerald-100/80">{p.checks}</td>
+                    <td className="min-w-[14rem] px-4 py-3 text-emerald-100/80">{p.checks}</td>
                     <td className="whitespace-nowrap px-4 py-3 text-emerald-100/60">{p.verdict}</td>
-                    <td className="px-4 py-3 text-[12px] leading-relaxed text-emerald-100/60">
+                    <td className="min-w-[14rem] px-4 py-3 text-[12px] leading-relaxed text-emerald-100/60">
                       {p.status}
                     </td>
                   </tr>
@@ -271,6 +280,10 @@ export default function Methodology() {
           </p>
         </section>
 
+        <MomentumStrip variant="panel" title="The record behind this method, counted live" ids={["board", "corrections", "signed_cards", "zenodo_board_snapshot"]} />
+
+        <MomentumMethodNote />
+
         {/* HONESTY DISCLOSURE */}
         <section className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6">
           <h2 className="text-2xl font-bold text-emerald-50">What this methodology does not claim</h2>
@@ -280,10 +293,15 @@ export default function Methodology() {
               Not exhaustive — the great majority of the provision × axis grid has no field
               measurement in any known benchmark, ours included. The grid, its derivation and the
               current unmeasured fraction are at{" "}
-              <Link href="/gspc-gap-map" className="text-emerald-300 hover:underline">the gap map</Link>,
+              <Link href="/gspc-gap-map" className="text-emerald-300 underline underline-offset-2">the gap map</Link>,
               which computes both numbers rather than restating them here.
             </li>
             <li>Not LLM-as-judge. Every verdict is a deterministic predicate.</li>
+            <li>
+              Not independent of what it measures. We build some of the models we measure, and we publish our own
+              results. How many signed cards measure our own models, and how they are kept off the public board:{" "}
+              <Link href="/independence/" className="text-emerald-300 underline underline-offset-2">independence and conflicts of interest</Link>.
+            </li>
             <li>
               Not &quot;verified authentic&quot;. The chain is sha256 hash-linked for
               tamper-evidence; authorship is carried by the signed card, which is under a kilobyte and carries nine fields — not the sample size or interval, which live on the board. {ANCHORING_CLAIM}{" "}
@@ -302,6 +320,15 @@ export default function Methodology() {
           </Link>
           <Link href="/refutation-ledger" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
             Read the refutation ledger →
+          </Link>
+          <Link href="/independence/" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
+            Independence and conflicts of interest →
+          </Link>
+          <Link href="/crosswalks/owasp-asi/" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
+            OWASP Agentic Top 10: what we measure →
+          </Link>
+          <Link href="/mechanism/" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
+            The open measurement mechanism and its coverage →
           </Link>
         </div>
       </div>

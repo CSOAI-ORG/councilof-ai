@@ -1,0 +1,37 @@
+{
+ "schema": "csoai.signed-run/0.1",
+ "payload": {
+  "schema": "csoai.signed-artifact/0.1",
+  "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+  "not_a_grade": "The signature proves these bytes were signed by the board key on the date below; it does not prove any claim inside beyond what the record's own sources and instruments show.",
+  "artifact": {
+   "path": "measurements/x402-activity/context.json",
+   "sha256": "393eaf525f03cf6eb6c3a001b23f6579e4a27965079b9a194f8024da40844caa",
+   "schema": "csoai.x402-activity-context/0.1",
+   "as_of": "2026-09-26T15:20:31Z"
+  },
+  "kind": "measurement.x402_activity.context",
+  "n_items": 4,
+  "note": "other parties findings quoted verbatim; not CSOAI measurements"
+ },
+ "signature": {
+  "did": "did:web:csoai.org#board-attestation-1",
+  "alg": "Ed25519",
+  "sig_ed25519": "b45a458e50a84e8ec28b7cd4dafbb2c9ae9697a275d5d0844417a79a1fd5e1121fff2e96167b881da0a9cef2537641cc109914b6e9e5fe26259a68e624290f0f",
+  "payload_sha256": "eb3b1097f0eec323bb3dbb66747afe219301e590535b45d0d60b9fbb0f8070fd",
+  "signer_auth": "pod-token",
+  "signed_at": "2026-09-26T15:24:06.575Z",
+  "canonical": "JSON, keys sorted, no whitespace, UTF-8, non-ASCII unescaped"
+ },
+ "local_verification": {
+  "did_document": "https://csoai.org/.well-known/did.json",
+  "key_x": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA",
+  "result": "VERIFIES",
+  "altered_preimage_controls": {
+   "trailing byte appended to the record": "rejected (control holds)",
+   "artifact sha256 altered in the payload": "rejected (control holds)",
+   "signature bit flipped": "rejected (control holds)"
+  }
+ },
+ "verify": "canonicalise payload (JSON, keys sorted, no whitespace, UTF-8); sha256 must equal signature.payload_sha256; payload.artifact.sha256 must equal sha256 of the record's bytes; verify sig_ed25519 (hex) with the #board-attestation-1 Ed25519 key in https://csoai.org/.well-known/did.json"
+}

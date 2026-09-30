@@ -6,6 +6,15 @@ number was still being served on 2026-09-17. On that day the page owners were to
 `../corrections-that-did-not-travel-2026-09-22-v0.3.json`). This folder turns "still stale" into a
 measured quantity: how many days, per page, since notification.
 
+## Where the files are
+
+The public home of these files is the evidence dataset:
+https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/public/interop/corrections-watch/latest.json
+(and `<date>.json`, `<date>.signed.json`, `<date>.json.ots` beside it). Link there. A copy also goes to
+`csoai/councilof-ai-mirror` at the same paths; that dataset was private from 29 Sep 2026, so a link into it
+can answer 401. The two source files named above (v0.2 and v0.3) are held in the mirror at
+`public/interop/`, not in the evidence dataset.
+
 ## What a reader sees
 
 - `YYYY-MM-DD.json` — one file per run day. Never edited after the day; a re-run on the same day
@@ -56,6 +65,22 @@ a CDN, geo or login variant may serve different bytes elsewhere; this loop canno
 notification. Fifteen rows is the whole population, not a sample, and nothing here generalises
 beyond these fifteen pages.
 
-`signed: false`. The board signer runs as OIDC inside GitHub Actions, disabled account-wide. The
-files are produced on a RunPod pod by `/workspace/lanes/loops/corrections-watch.py` and uploaded
-with `huggingface_hub`; no GitHub is in the loop. v0.2 and v0.3 are read, never written.
+## Signing
+
+From 2026-09-28 each dated file is `signed: true`. It is signed by `did:web:csoai.org#board-attestation-1`
+through `POST https://councilof.ai/api/board-sign` (pod caller token). The detached signature is
+`<date>.signed.json` (`latest.signed.json` is the same sidecar, because `latest.json` is byte-identical), and
+the file is OpenTimestamps-stamped as `<date>.json.ots` before upload. If signing fails, nothing is uploaded.
+To check a file: the sidecar's `payload.artifact.sha256` must equal the sha256 of the dated file's bytes, and
+`signature.sig_ed25519` must verify over the canonical payload under the key in
+`https://csoai.org/.well-known/did.json`.
+
+**Correction (2026-09-28).** The files dated 2026-09-23 and 2026-09-24 say `signed: false` with
+`unsigned_reason: "The board signer runs as OIDC inside GitHub Actions, disabled account-wide."` That reason
+was not true when they were written: from 2026-09-22 08:06Z the board signer also accepted the pod caller
+token, the path used from 2026-09-28. The 2026-09-22 file (written 06:00Z, before that change) says the same,
+and was accurate when written. All three files stay byte-for-byte as uploaded and stay unsigned; this note is
+the correction. No file was uploaded for 2026-09-25, 2026-09-26 or 2026-09-27.
+
+The files are produced by `corrections-watch.py` on a CSOAI-operated host and uploaded with
+`huggingface_hub`; no GitHub is in the loop. v0.2 and v0.3 are read, never written.

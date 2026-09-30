@@ -20,6 +20,7 @@
  *   {{SEPARATED_LEADS}} {{TIES}} {{UNTESTED_SEPARATIONS}} {{COMPARISON_AXES}}  GET /api/gspc -> totals.*
  *   {{DISTRIBUTION_SECTION}}                                          public/interop/distribution-latest.json
  *   {{OTS_SECTION}}                                                   public/interop/ots/manifest.json
+ *   {{EVIDENCE_RECORDS_SECTION}}                                      public/evidence/published-records.json (scripts/pubbus)
  *   {{DATED_MILL_ROOT_LINE}}                                          public/interop/card-root-latest.json -> immutable root bytes
  *
  * The separation fields were the exception that mattered most. Both files said "N axes measured"
@@ -287,6 +288,42 @@ keeps advancing these, so read the manifest for a fresher count rather than quot
 `;
 }
 
+// Signed evidence records — derived from the publication bus manifest, on disk.
+//
+// scripts/pubbus/pubbus.mjs writes public/evidence/published-records.json when it publishes a
+// page for a signed record (after verifying the signature). This section names each record's
+// CURRENT page, its own as_of and read state, and where its bytes and signature live. It prints
+// no count of records: the manifest is the list, and a count typed here would be one more number
+// nothing retires. These records are evidence linked from the board, never board axes.
+function evidenceRecordsSection() {
+  const f = "public/evidence/published-records.json";
+  if (!fs.existsSync(p(f))) {
+    return "No signed evidence record page is published yet (public/evidence/published-records.json is absent).\n";
+  }
+  const m = readJSON(f);
+  if (m.schema !== "csoai.pubbus-manifest/0.1" || !Array.isArray(m.records)) {
+    throw new Error("published-records.json is not csoai.pubbus-manifest/0.1 — refusing to describe it");
+  }
+  const lines = [];
+  for (const r of m.records) {
+    const cur = (r.versions || []).find((v) => v.state === "CURRENT");
+    if (!cur) continue;
+    lines.push(
+      `- ${r.title}: ${SITE}${cur.page} (as_of ${cur.as_of}; read_state ${cur.read_state ?? "not stated by the record"}; ` +
+      `signature ${cur.signature.state} under ${cur.signature.did}; timestamp ${cur.ots.state}). ` +
+      `Record bytes: ${cur.record_url} (sha256 ${cur.record_sha256}).`,
+    );
+  }
+  return `Derived at generation from ${SITE}/evidence/published-records.json (same bytes on disk at
+public/evidence/published-records.json, schema ${m.schema}). Each page shows the record's own numbers
+verbatim with its stated limits, and a verify-it-yourself block (POST ${SITE}/api/verify with the
+signed document; free). Census and probe records are EVIDENCE: they are never counted into the GSPC
+board, whose totals stay GET ${SITE}/api/gspc. A superseded version stays published and says so.
+
+${lines.join("\n")}
+`;
+}
+
 // A direct immutable link for machine readers, derived from the same pointer the
 // browser card panel checks. Keep the pointer as the moving entry point.
 function datedMillRootLine() {
@@ -312,7 +349,19 @@ function datedMillRootLine() {
   const proofDigest = createHash("sha256").update(proof).digest("hex");
   const auditUrl = rootUrl.replace(/\.json$/, ".header-audit.json");
   const auditPath = p(`public${auditUrl}`);
-  let proofState = "Read its .ots sidecar: calendar-only receipts remain pending, while BitcoinBlockHeaderAttestation paths require independent block-header and chain checks. No local Bitcoin full-node validation is claimed.";
+  // No public-header audit for this root: state what the PROOF BYTES carry, read from the OTS manifest row
+  // whose sha256_of_proof equals these bytes (ots_manifest_rebuild.py parses every proof). Never a frozen
+  // "calendar-only" sentence: that froze a Bitcoin-attested proof as pending (llms-txt-derived.test.ts).
+  const otsRow = (readJSON("public/interop/ots/manifest.json").proofs || [])
+    .find((row) => row.path === proofUrl && row.sha256_of_proof === proofDigest);
+  let proofState;
+  if (otsRow && otsRow.state === "BITCOIN") {
+    proofState = `Its .ots sidecar (SHA-256 ${proofDigest}) carries a BitcoinBlockHeaderAttestation, as parsed from the proof bytes into ${SITE}/interop/ots/manifest.json. No public-header audit is published for this root, so the block header is not independently corroborated here; this is not local Bitcoin full-node chain validation or verification of individual card measurements.`;
+  } else if (otsRow && otsRow.state === "PENDING") {
+    proofState = `Its .ots sidecar (SHA-256 ${proofDigest}) is calendar-pending: a submitted request, not evidence of a time, until a Bitcoin attestation is added. This is not local Bitcoin full-node chain validation.`;
+  } else {
+    throw new Error(`mill-card root proof ${proofUrl} (sha256 ${proofDigest}) has no matching row in public/interop/ots/manifest.json; rebuild the manifest`);
+  }
   if (fs.existsSync(auditPath)) {
     const audit = readJSON(`public${auditUrl}`);
     const rows = Array.isArray(audit.public_header_evidence) ? audit.public_header_evidence : [];
@@ -354,6 +403,7 @@ function render(tmpl, t, snapshotJson, corpora, axisDoors, axisDeep) {
     SEPARATED_LEADS: t.separated_leads, TIES: t.ties,
     UNTESTED_SEPARATIONS: t.untested_separations, COMPARISON_AXES: t.comparison_axes,
     DISTRIBUTION_SECTION: distributionSection(), OTS_SECTION: otsSection(),
+    EVIDENCE_RECORDS_SECTION: evidenceRecordsSection(),
     DATED_MILL_ROOT_LINE: datedMillRootLine(),
     ...(() => {
       const m = mcpCounts();

@@ -4,41 +4,115 @@ import { resolve } from "node:path";
 
 const R = (p: string) => JSON.parse(readFileSync(resolve(__dirname, "../..", p), "utf8"));
 const card = R("public/.well-known/agent-card.json");
+const did = R("public/.well-known/did.json");
 const jwsInput = R("public/interop/agent-card-jws-input.json");
+// #card-attestation-2 (added 2026-09-27, owner-approved rotation) signs the agent card: the private half of
+// #card-attestation-1 is not held where the card is signed. #card-attestation-1 stays published and is NOT
+// revoked — the signed card index (335 cards) verifies under it.
+const CARD_KID = "did:web:csoai.org#card-attestation-2";
+const BOARD_KIDS = ["did:web:csoai.org#board-attestation-1", "did:web:csoai.org#gspc-board-22axis-2026", "did:web:csoai.org#estate-chain-1"];
 
 // RFC 8785 JCS for the shape this card actually has: objects, arrays, strings, booleans.
-// Verified byte-identical against scripts/adapters/agent_card_jws.py's own JCS output before
-// this test was trusted — a canonicaliser that disagrees with the signer is worse than none.
+// Array.prototype.sort() orders keys by UTF-16 code units, which is what RFC 8785 §3.2.3 requires.
+// This is the THIRD canonicaliser (after scripts/adapters/agent_card_jws.py and the independent
+// scripts/verify_agent_card_jws.py); the three must agree on the committed card's bytes.
 const sortDeep = (v: unknown): unknown =>
   Array.isArray(v) ? v.map(sortDeep)
   : v && typeof v === "object" ? Object.fromEntries(Object.keys(v as object).sort().map((k) => [k, sortDeep((v as Record<string, unknown>)[k])]))
   : v;
 const b64u = (s: string) => Buffer.from(s, "utf8").toString("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 
+// A2A §8.4.1 rule 1 / §8.4.3 step 3 — remove default values per proto3 field presence
+// (specification/a2a.proto @ a2aproject/A2A 72b3761b). R REQUIRED, O `optional`, M message, P plain.
+type Presence = Record<string, [string, string?]>;
+const FIELDS: Record<string, Presence> = {
+  AgentCard: { name: ["R"], description: ["R"], supportedInterfaces: ["R", "AgentInterface"], provider: ["M", "AgentProvider"],
+    version: ["R"], documentationUrl: ["O"], capabilities: ["R", "AgentCapabilities"], defaultInputModes: ["R"],
+    defaultOutputModes: ["R"], skills: ["R", "AgentSkill"], signatures: ["P"], iconUrl: ["O"] },
+  AgentProvider: { url: ["R"], organization: ["R"] },
+  AgentCapabilities: { streaming: ["O"], pushNotifications: ["O"], extensions: ["P", "AgentExtension"], extendedAgentCard: ["O"] },
+  AgentExtension: { uri: ["P"], description: ["P"], required: ["P"], params: ["M"] },
+  AgentSkill: { id: ["R"], name: ["R"], description: ["R"], tags: ["R"], examples: ["P"], inputModes: ["P"], outputModes: ["P"] },
+  AgentInterface: { url: ["R"], protocolBinding: ["R"], tenant: ["P"], protocolVersion: ["R"] },
+};
+const isDefault = (v: unknown) =>
+  v === false || v === "" || v === 0 || (Array.isArray(v) && v.length === 0)
+  || (!!v && typeof v === "object" && !Array.isArray(v) && Object.keys(v as object).length === 0);
+const stripDefaults = (o: Record<string, unknown>, msg = "AgentCard"): Record<string, unknown> => {
+  const out: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(o)) {
+    const f = FIELDS[msg][k];
+    if (!f) { out[k] = v; continue; }            // non-proto field: kept as served
+    if (f[0] === "P" && isDefault(v)) continue;
+    const sub = f[1];
+    out[k] = sub && Array.isArray(v) ? v.map((e) => (e && typeof e === "object" ? stripDefaults(e as Record<string, unknown>, sub) : e))
+      : sub && v && typeof v === "object" ? stripDefaults(v as Record<string, unknown>, sub)
+      : v;
+  }
+  return out;
+};
+const payloadJson = (c: Record<string, unknown>) => {
+  const { signatures: _drop, ...body } = c;
+  return JSON.stringify(sortDeep(stripDefaults(body)));
+};
+
 describe("the agent card's signing input describes the card that is actually served", () => {
-  it("payload_b64u is JCS(card minus signatures) of the CURRENT card", () => {
+  it("§8.4.1 default removal reproduces the specification's own worked example", () => {
+    const original = { name: "Example Agent", description: "", capabilities: { streaming: false, pushNotifications: false, extensions: [] }, skills: [] };
+    expect(payloadJson(original)).toBe('{"capabilities":{"pushNotifications":false,"streaming":false},"description":"","name":"Example Agent","skills":[]}');
+  });
+
+  it("payload_b64u is JCS(card minus signatures, defaults removed) of the CURRENT card", () => {
     // WHY THIS EXISTS. The card was edited and this input was never regenerated: on 2026-09-05
     // the served card advertised csoai-gspc-mcp@0.2.1 and "seven free readers plus four
     // x402-metered evidence tools" while the committed signing input still described 0.1.0 and
     // an older badge skill. Nothing called the generator, so nothing noticed. Signing that input
     // would have produced a signature over a card nobody serves — the worst possible outcome for
     // an artifact whose whole purpose is to let a stranger trust the card without asking us.
-    const { signatures: _drop, ...payloadObj } = card as Record<string, unknown>;
-    expect(b64u(JSON.stringify(sortDeep(payloadObj)))).toBe(jwsInput.payload_b64u);
+    expect(b64u(payloadJson(card))).toBe(jwsInput.payload_b64u);
+    // and the removal is not vacuous here: every extension carries `"required": false`
+    expect(jwsInput.default_values_removed.some((p: string) => p.endsWith(".required"))).toBe(true);
+    expect(Buffer.from(jwsInput.payload_b64u, "base64url").toString("utf8")).not.toContain('"required":false');
   });
 
   it("signing_input_sha256 and byte length match the recomputed input", async () => {
     const { createHash } = await import("node:crypto");
-    const { signatures: _drop, ...payloadObj } = card as Record<string, unknown>;
-    const si = Buffer.from(`${jwsInput.protected_b64u}.${b64u(JSON.stringify(sortDeep(payloadObj)))}`, "utf8");
+    const si = Buffer.from(`${jwsInput.protected_b64u}.${b64u(payloadJson(card))}`, "utf8");
     expect(createHash("sha256").update(si).digest("hex")).toBe(jwsInput.signing_input_sha256);
     expect(si.length).toBe(jwsInput.signing_input_bytes);
   });
 
-  it("nothing is claimed to be signed: the card carries no signature", () => {
-    expect(card.signatures).toBeUndefined();
-    expect(jwsInput.note).toMatch(/NO_LAPTOP_SIGN/);
+  it("the signing input names #card-attestation-2 and never a board key", () => {
     expect(jwsInput.alg).toBe("EdDSA");
+    expect(jwsInput.kid).toBe(CARD_KID);
+    const hdr = JSON.parse(Buffer.from(jwsInput.protected_b64u, "base64url").toString("utf8"));
+    expect(hdr).toEqual({ alg: "EdDSA", kid: CARD_KID, typ: "JOSE" });
+    for (const b of BOARD_KIDS) expect(jwsInput.kid).not.toBe(b);
+  });
+
+  it("a signed card verifies (Node crypto, did.json key); an unsigned card says so and claims nothing", async () => {
+    const { createPublicKey, verify } = await import("node:crypto");
+    const sigs = (card.signatures ?? []) as Array<{ protected: string; signature: string }>;
+    if (sigs.length === 0) {
+      expect(jwsInput.state).toBe("UNSIGNED");
+      expect(jwsInput.note).toMatch(/^UNSIGNED — awaiting the private half of did:web:csoai\.org#card-attestation-2/);
+      return;
+    }
+    expect(jwsInput.state).toBe("SIGNED");
+    const payload = b64u(payloadJson(card));
+    for (const s of sigs) {
+      const hdr = JSON.parse(Buffer.from(s.protected, "base64url").toString("utf8"));
+      expect(hdr.kid, "the agent card is signed by the card key, not the board key").toBe(CARD_KID);
+      expect(did.assertionMethod).toContain(hdr.kid);
+      const vm = did.verificationMethod.find((m: { id: string }) => m.id === hdr.kid);
+      const key = createPublicKey({ key: { kty: "OKP", crv: "Ed25519", x: vm.publicKeyJwk.x }, format: "jwk" });
+      const msg = Buffer.from(`${s.protected}.${payload}`, "ascii");
+      const sig = Buffer.from(s.signature, "base64url");
+      expect(verify(null, msg, key, sig), "the served card's signature does not verify").toBe(true);
+      // tamper control: one byte of the signed content changed must fail
+      const tampered = Buffer.from(`${s.protected}.${b64u(payloadJson({ ...card, description: `X${String(card.description).slice(1)}` }))}`, "ascii");
+      expect(verify(null, tampered, key, sig)).toBe(false);
+    }
   });
 
   it("the A2A extension the estate publishes is discoverable FROM the card", () => {

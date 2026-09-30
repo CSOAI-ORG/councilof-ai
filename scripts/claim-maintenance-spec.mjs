@@ -154,6 +154,14 @@ const descriptionFor = (version) =>
   "makes about itself — captured verbatim, hashed, timestamped, re-read on a schedule, and measured " +
   `only where public evidence can settle it. Specification ${version} by Council of AI. CC0.`;
 
+// Availability of the archival deposit (29 Sep 2026). Zenodo blocked the account that held these
+// deposits and every record on it answers HTTP 410. The DOI stays: it is the permanent name and may
+// resolve again. What must not stay is a LINK presenting it as available, so when deposit.json
+// carries availability.state === "UNAVAILABLE" the DOI is printed as an identifier, the notice is
+// printed beside it, and nothing links to the dead record. [zenodo-410]
+const depositUnavailable = (d) => Boolean(d && d.availability && d.availability.state === "UNAVAILABLE");
+const depositNotice = (d) => (depositUnavailable(d) ? String(d.availability.notice) : "");
+
 function page({ version, bodyHtml, toc, mdName, mdDigest, date, deposit }) {
   const canonical = `${BASE}/spec/claim-maintenance/${version}/`;
   const DESCRIPTION = descriptionFor(version);
@@ -196,13 +204,15 @@ function page({ version, bodyHtml, toc, mdName, mdDigest, date, deposit }) {
     },
     isBasedOn: `${canonical}${mdName}`,
     mainEntityOfPage: canonical,
-    ...(deposit
+    ...(deposit && !depositUnavailable(deposit)
       ? {
           identifier: deposit.doi_url,
           sameAs: [deposit.doi_url, deposit.record_url],
           archivedAt: deposit.record_url,
         }
-      : {}),
+      : deposit
+        ? { identifier: deposit.doi }
+        : {}),
   };
   return `<!doctype html>
 <html lang="en">
@@ -258,7 +268,8 @@ ${bodyHtml}
 <footer>
 Council of AI (CSOAI Ltd, UK Companies House 16939677). This specification is dedicated to the public domain under CC0 1.0 Universal — adopt it without asking us.
 Source of record: <a href="${mdName}">${esc(mdName)}</a>, SHA-256 <code>${mdDigest}</code>.
-${deposit ? `<br>Archived with a persistent identifier we do not control: <a href="${deposit.doi_url}">${esc(deposit.doi)}</a> (all versions: <a href="${deposit.concept_doi_url}">${esc(deposit.concept_doi)}</a>). A DOI makes a document citable and permanent; it does not make it right.` : ""}
+${deposit && !depositUnavailable(deposit) ? `<br>Archived with a persistent identifier we do not control: <a href="${deposit.doi_url}">${esc(deposit.doi)}</a> (all versions: <a href="${deposit.concept_doi_url}">${esc(deposit.concept_doi)}</a>). A DOI makes a document citable and permanent; it does not make it right.` : ""}
+${depositUnavailable(deposit) ? `<br>Archival deposit: DOI ${esc(deposit.doi)} (all versions: ${esc(deposit.concept_doi)}). <strong>${esc(depositNotice(deposit))}</strong> The document of record above is the deposited file, byte for byte: its SHA-256 is the one the deposit recorded. Status: <a href="https://councilof.ai/interop/zenodo-status.json">/interop/zenodo-status.json</a>.` : ""}
 </footer>
 </div>
 </body>
@@ -322,6 +333,14 @@ for (const version of versions()) {
               concept_doi: deposit.concept_doi,
               archived_at: deposit.record_url,
               archive_repository: deposit.repository,
+              ...(depositUnavailable(deposit)
+                ? {
+                    doi_status: "UNAVAILABLE",
+                    doi_status_note: depositNotice(deposit),
+                    doi_status_checked_at: deposit.availability.checked_at,
+                    doi_status_url: "https://councilof.ai/interop/zenodo-status.json",
+                  }
+                : {}),
             }
           : {}),
         states: ["CLAIM_CAPTURED", "CLAIM_MEASURED", "UNMEASURED", "UNCHECKABLE"],
@@ -372,6 +391,7 @@ stage(
           status: v === latest ? "current" : "superseded",
           url: spec.canonical_url,
           doi: spec.doi ?? null,
+          ...(spec.doi_status ? { doi_status: spec.doi_status, doi_status_note: spec.doi_status_note } : {}),
           document_sha256: spec.document_sha256,
         };
       }),
@@ -393,7 +413,7 @@ stage(
       (v) =>
         `<tr><td><a href="${esc(v.url)}">v${esc(v.version)}</a></td><td>${esc(v.date)}</td>` +
         `<td>${esc(v.status)}</td>` +
-        `<td>${v.doi ? `<a href="https://doi.org/${esc(v.doi)}">${esc(v.doi)}</a>` : "&mdash;"}</td>` +
+        `<td>${v.doi && v.doi_status === "UNAVAILABLE" ? `${esc(v.doi)}<br><small>${esc(v.doi_status_note)}</small>` : v.doi ? `<a href="https://doi.org/${esc(v.doi)}">${esc(v.doi)}</a>` : "&mdash;"}</td>` +
         `<td><code>${esc(v.document_sha256)}</code></td></tr>`,
     )
     .join("\n");

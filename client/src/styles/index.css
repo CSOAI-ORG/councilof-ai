@@ -63,7 +63,11 @@ html[data-coai-dashboard-shell="1"] [data-council-global-launcher] {
   --color-gray-200: oklch(0.90 0 0);
   --color-gray-300: oklch(0.82 0 0);
   --color-gray-400: oklch(0.73 0 0);
-  --color-gray-500: oklch(0.63 0 0);
+  /* 500 was oklch(0.63) = #898989: 3.49:1 on white and 3.3:1 on the page canvas, below WCAG AA
+     for the small secondary text it carries in 388 text-gray-500 uses (card notes, <dt> labels, "of 16",
+     "read from:" provenance lines). 0.55 is Tailwind's own 500 lightness and clears 4.5:1 on
+     white, #fafaf7 and gray-50. Hue and every other step are unchanged. */
+  --color-gray-500: oklch(0.55 0 0);
   --color-gray-600: oklch(0.45 0 0);
   --color-gray-700: oklch(0.35 0 0);
   --color-gray-800: oklch(0.25 0 0);
@@ -260,6 +264,17 @@ html[data-coai-dashboard-shell="1"] [data-council-global-launcher] {
     word-break: break-word;
   }
 
+  /* Whole-word sizing for a table that sits in its own scroller. word-break:break-word on <html>
+     keeps a long hash or URL from widening a page, but inside a table it lets auto layout crush a
+     column to a single glyph: at 390px "100.0%" rendered as "100 / .0%", n=237 as "2 / 3 / 7",
+     "Average" as "AV / ER / AG / E" (/board/models, /gspc/<axis>, /stablecoins, /memberships).
+     A table that is the direct child of a scroll container cannot widen the page — it scrolls
+     inside its box — so there it sizes from whole words. Any table outside a scroller keeps the
+     inherited rule. Base layer: a table can opt back out with a [word-break:break-word] utility. */
+  :is(.overflow-x-auto, .overflow-auto, .overflow-x-scroll) > table {
+    word-break: normal;
+  }
+
   /* WCAG AA focus states — generous, consistent, no browser default ring */
   :focus-visible {
     outline: 2px solid var(--primary);
@@ -451,7 +466,9 @@ html[data-coai-dashboard-shell="1"] [data-council-global-launcher] {
   }
   /* Eyebrow / kicker. */
   .t-kicker {
-    font-size: 0.6875rem;
+    /* 11px -> 12px: the kicker is the first words on most bands; nothing on a public page
+       is set below 12px (audit 2026-09-30 #6). */
+    font-size: 0.75rem;
     line-height: 1.2;
     font-weight: 700;
     text-transform: uppercase;
@@ -605,3 +622,53 @@ html[data-coai-dashboard-shell="1"] [data-council-global-launcher] {
 /* Council OS shell: a product page mounted as a Dashboard pane drops its marketing
    hero art (data-pane-hide) — the shell is the chrome, calm and unbranded. */
 .coai-pane [data-pane-hide] { display: none; }
+
+/* ── Text floor: nothing below 12px (audit 2026-09-30 #6) ────────────────────────────────
+   Measured live: 1,310 visible text nodes under 12px across the 12 top journeys (kickers at
+   11px, board column heads at 9px, dashboard labels at 10px), from ~515 files using arbitrary
+   sub-12px sizes. Rewriting 515 files would collide with every lane that touches them, so the
+   floor is enforced once, here. It is unlayered (it beats the utilities layer), which is why the
+   desktop half skips any element that also carries a responsive text-size (sm:/md:/lg:/xl:
+   text-…): those must keep their own larger step at their breakpoint. Below 640px no such
+   variant is active, so the floor applies to every sub-12px size. text-xs (12px) is the floor. */
+@media (max-width: 639.98px) {
+  .text-\[8px\],
+  .text-\[9px\],
+  .text-\[9\.5px\],
+  .text-\[10px\],
+  .text-\[10\.5px\],
+  .text-\[11px\],
+  .text-\[11\.5px\],
+  .text-\[0\.6rem\],
+  .text-\[0\.65rem\],
+  .text-\[0\.68rem\],
+  .text-\[0\.7rem\],
+  .text-\[0\.72rem\] { font-size: 0.75rem; }
+}
+@media (min-width: 640px) {
+  .text-\[8px\]:not([class*="sm:text-"]):not([class*="md:text-"]):not([class*="lg:text-"]):not([class*="xl:text-"]),
+  .text-\[9px\]:not([class*="sm:text-"]):not([class*="md:text-"]):not([class*="lg:text-"]):not([class*="xl:text-"]),
+  .text-\[9\.5px\]:not([class*="sm:text-"]):not([class*="md:text-"]):not([class*="lg:text-"]):not([class*="xl:text-"]),
+  .text-\[10px\]:not([class*="sm:text-"]):not([class*="md:text-"]):not([class*="lg:text-"]):not([class*="xl:text-"]),
+  .text-\[10\.5px\]:not([class*="sm:text-"]):not([class*="md:text-"]):not([class*="lg:text-"]):not([class*="xl:text-"]),
+  .text-\[11px\]:not([class*="sm:text-"]):not([class*="md:text-"]):not([class*="lg:text-"]):not([class*="xl:text-"]),
+  .text-\[11\.5px\]:not([class*="sm:text-"]):not([class*="md:text-"]):not([class*="lg:text-"]):not([class*="xl:text-"]),
+  .text-\[0\.6rem\]:not([class*="sm:text-"]):not([class*="md:text-"]):not([class*="lg:text-"]):not([class*="xl:text-"]),
+  .text-\[0\.65rem\]:not([class*="sm:text-"]):not([class*="md:text-"]):not([class*="lg:text-"]):not([class*="xl:text-"]),
+  .text-\[0\.68rem\]:not([class*="sm:text-"]):not([class*="md:text-"]):not([class*="lg:text-"]):not([class*="xl:text-"]),
+  .text-\[0\.7rem\]:not([class*="sm:text-"]):not([class*="md:text-"]):not([class*="lg:text-"]):not([class*="xl:text-"]),
+  .text-\[0\.72rem\]:not([class*="sm:text-"]):not([class*="md:text-"]):not([class*="lg:text-"]):not([class*="xl:text-"]) { font-size: 0.75rem; }
+  .sm\:text-\[10px\]:not([class*="md:text-"]):not([class*="lg:text-"]):not([class*="xl:text-"]),
+  .sm\:text-\[10\.5px\]:not([class*="md:text-"]):not([class*="lg:text-"]):not([class*="xl:text-"]),
+  .sm\:text-\[11px\]:not([class*="md:text-"]):not([class*="lg:text-"]):not([class*="xl:text-"]),
+  .sm\:text-\[11\.5px\]:not([class*="md:text-"]):not([class*="lg:text-"]):not([class*="xl:text-"]) { font-size: 0.75rem; }
+}
+
+/* ── Offscreen bands skip layout and paint until they approach the viewport ──────────────
+   For long prerendered pages (the home page is ~24,000px on a phone): the first paint no
+   longer lays out 20 screens nobody has scrolled to. contain-intrinsic-size keeps the
+   scrollbar honest; `auto` remembers the real height once rendered. */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}

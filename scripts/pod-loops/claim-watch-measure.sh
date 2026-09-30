@@ -30,6 +30,13 @@ set -u
 
 [ "${1:-}" = "--now" ] || { log claim-watch-measure "REFUSED no --now (the scheduler owns the stamp)"; exit 0; }
 
+# RETIRED 2026-09-29 (lane ledgers-20260929; C-2026-0929-07). Claim-maintenance re-checks have
+# ONE scheduler: scripts/claims/maintenance_due.py inside the daily claim-watch job (cron 50 7 * * *), which covers
+# every LIVE registry on the registry's own signed read date and day 7/30/90. This weekly loop's scheduler was
+# stopped from 2026-09-28 and its 09-28 read never ran. Running it too would be a second scheduler; it now exits.
+log claim-watch-measure "RETIRED: re-checks run from scripts/claims/maintenance_due.py (one scheduler); nothing done"
+exit 0
+
 WORK=$LANES/claim-watch
 REPO_SRC=${CLAIM_WATCH_REPO:-/workspace/git/councilof-ai.git}
 # Default to master. Until the lane lands, CLAIM_WATCH_REF names the branch that carries

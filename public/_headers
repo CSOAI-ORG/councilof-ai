@@ -54,10 +54,25 @@
   Content-Type: application/json
   Access-Control-Allow-Origin: *
 
+# AI Catalog (ai-catalog.io, spec 1.0, Level 2): typed index of our MCP, A2A, AG-UI, chat and dataset doors.
+/.well-known/ai-catalog.json
+  Content-Type: application/ai-catalog+json
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=3600
+
 # A2A v1.0 agent card (RFC 8615, N5-13)
+# 29 Sep 2026: the card's signed "doi" field names a Zenodo record that answers HTTP 410 (account
+# blocked by Zenodo; appeal pending). The card is JWS-signed over every field, so its bytes are not
+# edited; the status travels here, in the serving layer, and in /interop/zenodo-status.json.
 /.well-known/agent-card.json
   Content-Type: application/a2a+json
   Cache-Control: public, max-age=3600
+  X-CSOAI-DOI-Status: 10.5281/zenodo.21991104 UNAVAILABLE - Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending.
+  Link: <https://councilof.ai/interop/zenodo-status.json>; rel="describedby"; type="application/json"
+
+/.well-known/agent.json
+  X-CSOAI-DOI-Status: 10.5281/zenodo.21991104 UNAVAILABLE - Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending.
+  Link: <https://councilof.ai/interop/zenodo-status.json>; rel="describedby"; type="application/json"
 
 # The 12 per-tool A2A cards (merged #1883) — same media type as the org card.
 # Verified 2026-09-12: all 12 served application/json before this rule.
@@ -74,13 +89,26 @@
   Content-Type: text/plain; charset=utf-8
   Cache-Control: no-cache, must-revalidate
 
-# The original MPC bytes remain verifiable but are not current: their signed
-# summary overstates financial-run signatures and preserves unscoped historical
-# leader notes. Keep the bytes untouched and make the relying-party state visible
-# at the HTTP boundary as well as in the adjacent status document.
+# The 2026-09-02 MPC bytes remain verifiable but are not current: superseded on
+# 2026-09-25 by a dated freeze of the 23-slot board (single key #board-attestation-1).
+# Their signed summary also overstates financial-run signatures and custody separation.
+# Keep the bytes untouched and make the relying-party state visible at the HTTP
+# boundary as well as in the adjacent status document.
 /signed/gspc-board.signed.json
-  X-CSOAI-Artifact-State: SUPERSEDED_KNOWN_CLAIM_DEFECT
-  Link: </signed/gspc-board.status.json>; rel="status", </api/gspc>; rel="current"
+  X-CSOAI-Artifact-State: SUPERSEDED_BY
+  Link: </signed/gspc-board.status.json>; rel="status", </signed/gspc-board.2026-09-25.signed.json>; rel="successor-version", </api/gspc>; rel="current"
+  Cache-Control: no-cache, must-revalidate
+
+# The dated freeze. Its bytes never change; whether it is still current is decided per
+# request by /api/state (board.live_derivation_crosscheck.signed_snapshot_agrees).
+/signed/gspc-board.2026-09-25.signed.json
+  X-CSOAI-Artifact-State: SUPERSEDED_BY
+  Link: </signed/gspc-board.2026-09-25.status.json>; rel="status", </signed/gspc-board.signed.json>; rel="predecessor-version", </signed/gspc-board.2026-09-29.signed.json>; rel="successor-version", </api/gspc>; rel="current"
+  Cache-Control: no-cache, must-revalidate
+
+# The dated freeze of 2026-09-29 (jail separation UNTESTED, C-2026-0929-02).
+/signed/gspc-board.2026-09-29.signed.json
+  Link: </signed/gspc-board.2026-09-29.status.json>; rel="status", </signed/gspc-board.2026-09-25.signed.json>; rel="predecessor-version", </api/gspc>; rel="current"
   Cache-Control: no-cache, must-revalidate
 
 # The generated human indexes for the evidence tree (scripts/generate-signed-index.mjs).
@@ -112,6 +140,16 @@
 /interop/*.ots
   Content-Type: application/octet-stream
   Content-Disposition: attachment
+
+# Measurement capsules: the data folder and the embeddable card are read from other sites (the
+# /embed/measurement-capsules.js card fetches latest.json and the index cross-origin). Pages already
+# answers ACAO * on static assets; these rules make it explicit so it cannot silently change. One rule
+# per path family, never a splat plus an exact path (the /interop/*.py duplicate-value lesson).
+/measurement-capsules/*
+  Access-Control-Allow-Origin: *
+
+/embed/*
+  Access-Control-Allow-Origin: *
 
 # SCITT key-discovery document (key publication only — NOT a transparency service)
 /.well-known/scitt-keys

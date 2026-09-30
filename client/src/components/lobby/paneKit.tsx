@@ -95,7 +95,7 @@ export function CopyBlock({ text, label }: { text: string; label: string }) {
           </button>
         </span>
       </div>
-      <pre className="mt-2 max-h-80 overflow-auto rounded-xl border border-slate-900/10 bg-slate-50 p-4 font-mono text-[11.5px] leading-relaxed text-slate-800">
+      <pre tabIndex={0} className="mt-2 max-h-80 overflow-auto rounded-xl border border-slate-900/10 bg-slate-50 p-4 font-mono text-[11.5px] leading-relaxed text-slate-800">
         <code>{text}</code>
       </pre>
     </div>

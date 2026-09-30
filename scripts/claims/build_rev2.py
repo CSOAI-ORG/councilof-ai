@@ -67,7 +67,7 @@ def build_records(run: Path, prior: dict) -> list[dict]:
         r = {
             "id": cid, "subject": subj, "text": orig["text"], "type": orig["type"],
             "state_before": orig["state"], "state": state, "state_rule": STATE_RULES[state],
-            "measurement_plan_from_rev1": orig.get("measurement_plan_from_rev1", orig.get("measurement_plan")),
+            "measurement_plan_from_rev1": orig["measurement_plan"],
             "method": method, "window": window, "denominator": denominator,
             "measurement": measurement, "sources": sources, "does_not_prove": does_not_prove,
         }

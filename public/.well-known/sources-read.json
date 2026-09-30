@@ -1,0 +1,1064 @@
+{
+ "schema": "csoai.sources-read/0.1",
+ "title": "Sources we read",
+ "as_of": "2026-09-30T06:03:13Z",
+ "subject": "councilof.ai (CSOAI Ltd, Council of AI)",
+ "note": "Public registers, feeds, ledgers and benchmark data that our reader fetches with read-only requests. CONNECTED means a live public read returned the data we parse (sha256 recorded); it never means the source lists, uses or endorses us. AUTH_REQUIRED means a key or account we have not requested. BLOCKED means the source refuses outside callers or its robots.txt disallows the path. UNMEASURED means we could not see, not that the source is absent. We store hashes and our own measurements, never a copy of a third party's records.",
+ "sources_total": 103,
+ "counts_by_state": {
+  "DISCOVERED": 8,
+  "QUALIFIED": 2,
+  "READY": 0,
+  "AUTH_REQUIRED": 6,
+  "BUILDING": 0,
+  "CONNECTED": 84,
+  "PUBLISHED": 0,
+  "SUBMITTED": 0,
+  "UNDER_REVIEW": 0,
+  "ACCEPTED": 0,
+  "REJECTED": 0,
+  "BLOCKED": 3,
+  "STALE": 0,
+  "NEEDS_UPDATE": 0,
+  "UNSUPPORTED": 0
+ },
+ "measured": 84,
+ "unmeasured": 19,
+ "event_chain": {
+  "events": 490,
+  "head": "25a871c221b1f396eb901be725f888da6a243bd88467bcf43dde2472406a1c97",
+  "hash": "sha256 over canonical JSON, prev_hash chained"
+ },
+ "sources": [
+  {
+   "source": "src_agentic_market",
+   "name": "Coinbase CDP (x402 Bazaar and Agentic.Market)",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:13Z",
+   "evidence_hash": "05be4c0c115c699dfb144c70af04099d434d21640ec28cd3296a4eb80e40d298",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_aider_chat",
+   "name": "Aider LLM Leaderboards (polyglot)",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:14Z",
+   "evidence_hash": "85a50b25953512d18ba4bb0c23c0b8e626fcf9a5b52d287644b8a0b44b9535de",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_aiid_graphql",
+   "name": "AI Incident Database GraphQL API",
+   "state": "BLOCKED",
+   "as_of": "2026-09-30T05:27:31Z",
+   "evidence_hash": "20391fc02b072ae3f510a64e83e8ca8d6d2ad35ec8aa182315ce530467249962",
+   "presence": "UNMEASURED",
+   "access": "refused",
+   "licence": "site terms: personal, revocable licence"
+  },
+  {
+   "source": "src_aiid_snapshots",
+   "name": "AI Incident Database weekly snapshots",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-30T05:27:31Z",
+   "evidence_hash": "7a3877ee7a63b267eaabd2c86cceb945bfac34c4abec6580cd19e2474516af64",
+   "presence": "UNMEASURED",
+   "access": "keyless",
+   "licence": "site terms: personal, revocable licence"
+  },
+  {
+   "source": "src_berkeley_edu",
+   "name": "BFCL (gorilla.cs.berkeley.edu/data_overall.csv)",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:14Z",
+   "evidence_hash": "ede5081a24bc5ac7f9b3b09a52af6bcfcd35aa0f1709239fed979db77a8159a6",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_bigcode_bench_github_io",
+   "name": "BigCodeBench",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:14Z",
+   "evidence_hash": "f7f17a58a6fe83c4de166ddd5e74c0bb4e850c6003b64209a47900c08c5e18e2",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_ca_aia",
+   "name": "Canada Algorithmic Impact Assessments (open.canada.ca CKAN API)",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:03Z",
+   "evidence_hash": "00ef0fdb999a7fff56f75678060d11c59b1b8b548d3d89fdb79dc60fc2714c36",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "Open Government Licence - Canada"
+  },
+  {
+   "source": "src_canopii_dev",
+   "name": "Canopii MCP Security Index",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:14Z",
+   "evidence_hash": "8af8ca9c92fb52226a30ebb948c84fa88a313843dd7b43f76f87288ad82dd8fd",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_chainlink_rdd",
+   "name": "Chainlink reference-data directory (feed registry JSON)",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-30T05:27:31Z",
+   "evidence_hash": "10ea593692b38fa056c1e6c8346f978626dd687908ef06ce08a98d20ed5695f0",
+   "presence": "UNMEASURED",
+   "access": "keyless",
+   "licence": "not located from primary pages"
+  },
+  {
+   "source": "src_circle_usdc_addresses",
+   "name": "Circle USDC contract addresses page (issuer-listed ids)",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:11Z",
+   "evidence_hash": "eb372d7bc79723b8ba156075c5c5161bac70ead38e618499c2ec4532c800ef0f",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "issuer web pages"
+  },
+  {
+   "source": "src_civitai_api",
+   "name": "Civitai public REST API",
+   "state": "BLOCKED",
+   "as_of": "2026-09-30T05:27:31Z",
+   "evidence_hash": "27d1a79a0fd8697daf5e3a87025c8da9754d7f091d120079c7c30bba90bd90c8",
+   "presence": "UNMEASURED",
+   "access": "refused",
+   "licence": "ToS not readable from the UK"
+  },
+  {
+   "source": "src_cline_bot",
+   "name": "Cline MCP Marketplace",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:14Z",
+   "evidence_hash": "e5f7ad133a213ca674a6266b2c1246bc51818b02479e1d5c04ac72eb61741a69",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_codabench_org",
+   "name": "Codabench",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:14Z",
+   "evidence_hash": "04d6efb56cf7391efdb010579af9ed87db5094031b772c5a318e3709cf92e30a",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_companies_house_streaming",
+   "name": "Companies House streaming API",
+   "state": "AUTH_REQUIRED",
+   "as_of": "2026-09-30T05:27:31Z",
+   "evidence_hash": "1905306795c8731dcdf08b4705fcf42a3d3647d9e1b5c1989dce5d1e1bd943e0",
+   "presence": "UNMEASURED",
+   "access": "key or account",
+   "licence": "provider terms"
+  },
+  {
+   "source": "src_crossref_api",
+   "name": "Crossref REST API",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-30T05:27:31Z",
+   "evidence_hash": "9c231894e0b843265d7c502b7b53432194207678a8283c36c9805806c3914d17",
+   "presence": "UNMEASURED",
+   "access": "keyless",
+   "licence": "not located from primary pages"
+  },
+  {
+   "source": "src_databricks_com",
+   "name": "Databricks Marketplace",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:18Z",
+   "evidence_hash": "37cba0f1e8f55c630dfef388b1cc8d000f4482ea61c0940d1268940a18440363",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_datacite_api",
+   "name": "DataCite REST API (metadata search)",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-30T05:27:31Z",
+   "evidence_hash": "19843589984ca123defc3938202b2e9304cc15043bd4acc22820a632fbcc619c",
+   "presence": "UNMEASURED",
+   "access": "keyless",
+   "licence": "not located from primary pages"
+  },
+  {
+   "source": "src_decodingtrust_github_io",
+   "name": "DecodingTrust",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:19Z",
+   "evidence_hash": "34d71fc11952117dbe5ef64a6a4ab7d274fd86c8a988fd6b22424db2a04e1d06",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_docker_com",
+   "name": "Docker MCP Catalog hub.docker.com/mcp",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:19Z",
+   "evidence_hash": "9d50522f279e7ac81323798462ec1627a56b877c215892166796de55b4dcc7d5",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_ec_presscorner_rss",
+   "name": "European Commission Press Corner RSS",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:05Z",
+   "evidence_hash": "147ae27f4bdb60df85433a525b6b8f0eb05f59a74c6619abc3b2b66d522dca29",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "CC BY 4.0 for EU-owned content"
+  },
+  {
+   "source": "src_epoch_ai",
+   "name": "Epoch AI Benchmarking Hub",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:19Z",
+   "evidence_hash": "6937140a285d729be48054fdfc8f3c7dcc2b9307aa0b24545ecffb3e0146e9e6",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "CC-BY-4.0"
+  },
+  {
+   "source": "src_eqty_anchor_schema",
+   "name": "EQTY integrity anchor.rs (HCS anchor location schema)",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:13Z",
+   "evidence_hash": "67d6e4710160be48ef9053ca08343257532a3d69db141464b4b26091c835be03",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "Apache-2.0"
+  },
+  {
+   "source": "src_eqty_policy_plane_decl",
+   "name": "EQTY policy-plane AICertificates (declared HCS anchors)",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:12Z",
+   "evidence_hash": "effabcaaaff10eda45783813560974fc3ca3b6e35b0f1abf6d11c68f8d1e8ac1",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "Apache-2.0"
+  },
+  {
+   "source": "src_eu_ted_search",
+   "name": "EU TED notices search API (notices mentioning AI, by month)",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T04:04:25Z",
+   "evidence_hash": "43959039ad07eff6dc39e66cf66a52078f7193f3d6f23064e85e5e7b107f1c63",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "freely reusable, commercial or non-commercial"
+  },
+  {
+   "source": "src_eurlex_sparql",
+   "name": "EUR-Lex / Cellar SPARQL endpoint",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-30T05:27:31Z",
+   "evidence_hash": "f8e6024d8d3fbb0e859f1b73b74e415ed71ee32eecb895d15a022c1084a28720",
+   "presence": "UNMEASURED",
+   "access": "keyless",
+   "licence": "not located from primary pages"
+  },
+  {
+   "source": "src_eval_ai",
+   "name": "EvalAI",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:20Z",
+   "evidence_hash": "43eb289ab25ecd0e524d9f3d6b5b13c623ea86560dc7e5ca4fff7859497ce331",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_fedai_2025_inventory",
+   "name": "US Federal AI Use-Case Inventory 2025 (OMB, CSV on GitHub)",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:29:55Z",
+   "evidence_hash": "a62721202ca4b110ce3c53ffdb688d05ad27a35971a7afda4f1179b2493e31d0",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "no licence file"
+  },
+  {
+   "source": "src_franklin_benji_contracts",
+   "name": "Franklin Templeton BENJI contracts page (issuer-listed ids)",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:11Z",
+   "evidence_hash": "448cd47616700a7cc1751b5d99c2be9b65b328fce8fd4884a8b7dbb42f6094b9",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "issuer web pages"
+  },
+  {
+   "source": "src_github_ai",
+   "name": "GitHub Models catalog",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:20Z",
+   "evidence_hash": "19d8c9921b99c82d78c985136a5e28f6382011641fb6160c0c1a7573a402ea66",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_github_com_crowdstrike_mcpscanner",
+   "name": "CrowdStrike mcpscanner",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:21Z",
+   "evidence_hash": "88bcbec634b867a266a02d8b586d323692925119969476605ea68b50f65aed8c",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_github_com_dhyabi2_open_402",
+   "name": "open-402 registry",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:21Z",
+   "evidence_hash": "d627859f0f83ef509b6fceab554b4e2b46fa55eef80a0353ff6f9cd6fbe8d0e6",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_github_com_eleutherai_lm_evaluation_harness",
+   "name": "EleutherAI lm-evaluation-harness",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:22Z",
+   "evidence_hash": "b0a1e311f0203c7e410b873665ec310cdfd671676674035118110183a644c27e",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_github_com_haustorium12_gold_402",
+   "name": "gold-402 directory",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:22Z",
+   "evidence_hash": "4e62d37555e225b487919189f8ba41d3573a417481da8264b0d92f2b537aaa3d",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_github_com_huggingface_lighteval",
+   "name": "HF lighteval",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:23Z",
+   "evidence_hash": "4c4e193538169f4dc3d5ebff90ba1ccdd5b20a9b0c00a910e5cdbd6cc0aead53",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_github_com_invariantlabs_ai_mcp_scan",
+   "name": "Snyk agent-scan (formerly Invariant mcp-scan)",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:24Z",
+   "evidence_hash": "70a71650b3926e607f2ef4bdfc98507bb228153de9b30784f97ba9bdd5575013",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_github_com_lm_sys_fastchat",
+   "name": "MT-Bench (FastChat llm_judge)",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:26Z",
+   "evidence_hash": "33bdc4aef27180a0a38dd7edfb67d6dff31355da6473b0b0125777974ebe8156",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_github_com_lmarena_arena_hard_auto",
+   "name": "Arena-Hard-Auto",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:27Z",
+   "evidence_hash": "422da1d3eb29600d93a44e09db18dd2cf461ffbb7b1aa3df87bc3507882734c8",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_github_com_mcp",
+   "name": "GitHub MCP registry (github.com/mcp)",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:27Z",
+   "evidence_hash": "dc1fee49b4815d576d82ee1224b3686b95b53c6b056f5c441167ea6003f24605",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_github_com_punkpeye_awesome_mcp_servers",
+   "name": "awesome-mcp-servers (punkpeye)",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:29Z",
+   "evidence_hash": "86e1898becee0e0d4722787c561377b8886c58603469e2427055daa1a4a40070",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_github_com_saagpatel_mcp_trust",
+   "name": "MCP Trust Registry (github saagpatel/mcp-trust)",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:29Z",
+   "evidence_hash": "34f863b18d96d7e8e3fd5dbbf63e2cf39e5ff66f32ff196a83a303d6c7896d22",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_github_com_sierra_research_tau2_bench",
+   "name": "tau-bench / tau2-bench",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:30Z",
+   "evidence_hash": "ea9642ee85be6c13ecc345bac75daf8e5216b58e58c32047385be6bab38460a7",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_github_com_thudm_agentbench",
+   "name": "AgentBench",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:31Z",
+   "evidence_hash": "6c46e0e7f478768f317f84233d1b9cbb7685ca0166f29d4897890aeaa8251575",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_github_com_vectara_hallucination_leaderboard",
+   "name": "Vectara Hallucination Leaderboard (HHEM)",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:33Z",
+   "evidence_hash": "5a6e59b9bae407dc5f420829dcf058fedc3c01e1080403a4b59ee3e64b2a4100",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_github_com_vouch_protocol_vouch",
+   "name": "Vouch Agent Trust Index (vouch-protocol/vouch \u2026/ati-data.ts)",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:34Z",
+   "evidence_hash": "4ad70f0a5c734b587394ca20d075ad317268fe36dd18bf6b46af44608be0e0a3",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_govinfo_api",
+   "name": "govinfo API",
+   "state": "AUTH_REQUIRED",
+   "as_of": "2026-09-30T05:27:31Z",
+   "evidence_hash": "8896210992435e501aaf875915d71e1d1ee8283ccd2d6037fea4f287bb335477",
+   "presence": "UNMEASURED",
+   "access": "key or account",
+   "licence": "provider terms"
+  },
+  {
+   "source": "src_govinfo_rss",
+   "name": "govinfo RSS feeds",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-30T05:27:31Z",
+   "evidence_hash": "5a11120c34bb903048ff1d80e643a9c0b553171c81fb05287177652796cca7bc",
+   "presence": "UNMEASURED",
+   "access": "keyless",
+   "licence": "not located from primary pages"
+  },
+  {
+   "source": "src_govuk_aisi_feed",
+   "name": "GOV.UK AI Security Institute Atom feed",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:04Z",
+   "evidence_hash": "542a71cc1aafdf4f938899ba8b9f5b40862cc579451e373b3c4d6059163b4632",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "Open Government Licence v3.0"
+  },
+  {
+   "source": "src_govuk_dsit_feed",
+   "name": "GOV.UK DSIT Atom feed",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:05Z",
+   "evidence_hash": "c47ac326404e3bd454fe9862b377dd3a5a1c2812556b7eb9825df1fc8b31c09d",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "Open Government Licence v3.0"
+  },
+  {
+   "source": "src_harmbench_org",
+   "name": "HarmBench",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:35Z",
+   "evidence_hash": "a351f2c4d53eda6a1ecebaf3e140784d493efadb588339596b3926fa1b464515",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_hedera_hcs_submit",
+   "name": "Hedera Consensus Service: submit a message (write path)",
+   "state": "AUTH_REQUIRED",
+   "as_of": "2026-09-30T05:27:31Z",
+   "evidence_hash": "4c0b090c69fc6c85141aedea5719eb22fd83b8b36ded31ba87c44f90627feeff",
+   "presence": "UNMEASURED",
+   "access": "funded account",
+   "licence": "public ledger"
+  },
+  {
+   "source": "src_hedera_mirror_hcs",
+   "name": "Hedera public mirror node: HCS messages and transactions",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:11Z",
+   "evidence_hash": "1915f29fbd80eddbaeccc552a74551647808a1a5840975a4eb8b4f26b7d62bd2",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "public ledger data via the Hedera public mirror node"
+  },
+  {
+   "source": "src_hedera_mirror_tokens",
+   "name": "Hedera public mirror node: tokens API (issuer-listed ids and name searches)",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:10Z",
+   "evidence_hash": "77204353d92ed223494e91d0b6f1a0424d165f0b9be8a9bcbffbc3dde107ccfe",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "public ledger data via the Hedera public mirror node"
+  },
+  {
+   "source": "src_hf_model_config",
+   "name": "Hugging Face model config.json files (bench ingest)",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:31:00Z",
+   "evidence_hash": "3a2a26ded679375b7928ddeca59764df7cea83220c1961035f6d6e232659e9ce",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "per-model licence"
+  },
+  {
+   "source": "src_hf_model_info",
+   "name": "Hugging Face model API (model info, bench ingest)",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:59Z",
+   "evidence_hash": "7b5b16318f3e69446dcaf1c5792aac6b13aaebd7b2192dcfc07d5be51c194e76",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "per-model licence"
+  },
+  {
+   "source": "src_huggingface_co",
+   "name": "Hugging Face API (daily papers probe)",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:35Z",
+   "evidence_hash": "fb8564b3ccba4699ae0d4eabb481b0aea193318e7157daae5de65300c3aedc44",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_huggingface_co_allenai_reward_bench",
+   "name": "RewardBench",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:36Z",
+   "evidence_hash": "32792b28b9a782c1701d2b6ddbbcbc37cbc6f851672e594faabf91052dd4b2d4",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_huggingface_co_bigcode_bigcode_models_leaderboard",
+   "name": "BigCode Models Leaderboard",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:38Z",
+   "evidence_hash": "4adf21b04bfb368acc75d70a7a9ab1d1219bb39ccbb18c91658e098e37546ea6",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_huggingface_co_evaleval_eee_datastore",
+   "name": "Every Eval Ever (HF evaleval/EEE_datastore)",
+   "state": "CONNECTED",
+   "as_of": "2026-09-29T15:10:42Z",
+   "evidence_hash": "c48c5a23760d95d001c0fbd9e77b5c6f3917a0ed8b2eb2584e62e27f9f939cec",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_huggingface_co_gaia_benchmark_leaderboard",
+   "name": "GAIA Leaderboard",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:40Z",
+   "evidence_hash": "8bdf087c3a20b704dfa131584a3aaa18d76ade2a0868e87180776bc147e3e3c3",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_huggingface_co_mteb_leaderboard",
+   "name": "MTEB Leaderboard",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:40Z",
+   "evidence_hash": "5675829cb6027f41516948d85b5750568af9167de1460f1adfea3f1197e0f930",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_huggingface_co_open_llm_leaderboard_open_llm_leaderboard",
+   "name": "Open LLM Leaderboard",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:40Z",
+   "evidence_hash": "45ff884d697194065654f8ed03aa585a39898e7e1ec5fa482486e4c8f36fcea9",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_ibm_com",
+   "name": "IBM watsonx Orchestrate agent catalog",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:40Z",
+   "evidence_hash": "414aab3060f1a13dccd8372d01218e0c16d5d5fa8c055a7daca63d96170d0877",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_jailbreakbench_github_io",
+   "name": "JailbreakBench",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:41Z",
+   "evidence_hash": "7f5ea09d3a7c9ac7b74991db246a214140c9b9bedc859d26feb5e04af3ce84db",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_kaggle_com",
+   "name": "Kaggle Models",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:41Z",
+   "evidence_hash": "a50b4219aea9d116e1bff7a47a06e822779bf9f4e5e028e99932c55dd62494dc",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_langchain_com",
+   "name": "LangChain Hub",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:42Z",
+   "evidence_hash": "f4d522214dcf429ab67be9493c947b4dcfc3d43facda64d430e432d6a4d44c31",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_livebench_ai",
+   "name": "LiveBench",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:42Z",
+   "evidence_hash": "6b50b0aea49cb8ecc6bc4efed86a8294d9fd562ff866b72fef0e650c4f8308f8",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_livecodebench_github_io",
+   "name": "LiveCodeBench",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:42Z",
+   "evidence_hash": "96179c86bd7f6ced585fe4b7727d0ffe5315b344e43b42e76e3ea984f058adae",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_llm_stats_com",
+   "name": "LLM-Stats",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:44Z",
+   "evidence_hash": "f7c8ecea93b6894144285130a42c24da3ec43f31f55067ba85e7ec12455111cd",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_lmarena_leaderboard",
+   "name": "LMArena leaderboard dataset (Hugging Face, per-arena parquet files)",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:57Z",
+   "evidence_hash": "09adc4523647f63c2f0501d556284d8c3d01c3a4681e9b827e418237861074da",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "CC-BY-4.0"
+  },
+  {
+   "source": "src_mcp_universe_github_io",
+   "name": "MCP-Universe",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:45Z",
+   "evidence_hash": "175ac1263bc3ce4040c325706a693bd2144bb76bc01306e93609fe2c0f72e271",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_mcpmark_ai",
+   "name": "MCPMark / MCP-Universe / MCP-Bench",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:46Z",
+   "evidence_hash": "b1355727fb25c1d3f9d3cb41cd8ea5a2d6617867b4b125d08f1b0ddc15bd86c4",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_mcptoplist_com",
+   "name": "MCP Toplist (BIFF-AI) mcptoplist.com",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:46Z",
+   "evidence_hash": "52e19c5cb4495aa7363d6c2360860b8db70ab283a8116fb4ceb7b42a775c84d1",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_mlcommons_org",
+   "name": "MLCommons AILuminate",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:47Z",
+   "evidence_hash": "fb897e3ad8c1706d4696c18ccef72e3b2af8cee7debc6c40a644f7724678ea2f",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_modelcontextprotocol_io",
+   "name": "Official MCP Registry registry.modelcontextprotocol.io",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:47Z",
+   "evidence_hash": "f095c3be945779297aaf2e41e85ac0fee21f557d2b1ecf26464bf7382a51e821",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_n8n_templates",
+   "name": "n8n templates (template search API)",
+   "state": "BLOCKED",
+   "as_of": "2026-09-30T05:27:31Z",
+   "evidence_hash": "2f3ec5ebd24ab2d3f672ff2ce33111473dcdd67e8e8080b0618a9cea553b283d",
+   "presence": "UNMEASURED",
+   "access": "refused",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_nl_algoritmeregister",
+   "name": "Dutch Algoritmeregister (algoritmes.overheid.nl CSV download)",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:29:56Z",
+   "evidence_hash": "bee9b58328f21e96ff74c3ce37d2792db19df5e46d9d672dc7614f8e072b9bdf",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "text reuse permitted unless an item states otherwise"
+  },
+  {
+   "source": "src_npm_changes",
+   "name": "npm registry _changes feed",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-30T05:27:31Z",
+   "evidence_hash": "cb31072f73e2e9f8ae5fa65c9c18a4c3c6c8de1745622d83731d844e99114ff1",
+   "presence": "UNMEASURED",
+   "access": "keyless",
+   "licence": "not located from primary pages"
+  },
+  {
+   "source": "src_nvidia_com",
+   "name": "NVIDIA NGC",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:48Z",
+   "evidence_hash": "3c353e294b4b9deb1e9ae296a703f0f364dfb7fabc8a9f94554ea9d9fb9bb7c7",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_oecd_ai",
+   "name": "OECD.AI policy database",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:48Z",
+   "evidence_hash": "cf574b43d195b6c3321f78912836da5b91a935a22d1d2dded3b8c6f85a506dad",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_openalex_api",
+   "name": "OpenAlex API (use at scale)",
+   "state": "AUTH_REQUIRED",
+   "as_of": "2026-09-30T05:27:31Z",
+   "evidence_hash": "90209d1882eb9fb70eca1ef55c5d3dca9aa83d2ae756d4aaca1b8b051d22f368",
+   "presence": "UNMEASURED",
+   "access": "key or account",
+   "licence": "provider terms"
+  },
+  {
+   "source": "src_opencompass_org_cn",
+   "name": "OpenCompass (OpenVLM.json)",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-30T05:28:23Z",
+   "evidence_hash": "e3cd6c68fd4fb0cc81a7d89ae04f740a46ad773942921af2e5a82f1eedbb9de0",
+   "presence": "UNMEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_openml_org",
+   "name": "OpenML",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:49Z",
+   "evidence_hash": "f68e6b04319b1cf02e17222b49378c9718ab92a66dbb891d12007dcb38ad5a13",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_openrouter_ai",
+   "name": "OpenRouter",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:49Z",
+   "evidence_hash": "b381dd66c77442958889a88920f115d42d0abf041671a28e3c73bafc0537509a",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "API terms"
+  },
+  {
+   "source": "src_oracle_com",
+   "name": "Oracle OCI GenAI model list",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:49Z",
+   "evidence_hash": "74d4261728119459efe6d1a8d565bea25ac51e47f93f42d466260f517d1f8c7c",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_outshift_io",
+   "name": "Cisco AI Catalog / AGNTCY Agent Directory",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:50Z",
+   "evidence_hash": "eb1c0d2cb74d780c6458db259481fe1bd4bc81940c2508b733bbc366fc02f13e",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_payai_network",
+   "name": "PayAI facilitator.payai.network",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:50Z",
+   "evidence_hash": "aaa89833d3f629acefd4d3f3c7acf92776b6b03adb326e04dbdd0e89c4c8ab11",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_pypi_rss",
+   "name": "PyPI RSS feeds",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-30T05:27:31Z",
+   "evidence_hash": "4ed90e495ab48fbf14e5c4bd893372a8d030926455530465e911641ed14530c7",
+   "presence": "UNMEASURED",
+   "access": "keyless",
+   "licence": "not located from primary pages"
+  },
+  {
+   "source": "src_pyth_hermes",
+   "name": "Pyth Hermes price-feed API",
+   "state": "AUTH_REQUIRED",
+   "as_of": "2026-09-30T05:27:31Z",
+   "evidence_hash": "7eabfa06b34c96285055d9a13b9dfbd07f647c71f17d6cb40297815d499fc241",
+   "presence": "UNMEASURED",
+   "access": "key or account",
+   "licence": "provider terms"
+  },
+  {
+   "source": "src_redhat_com",
+   "name": "Red Hat Ecosystem Catalog",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:51Z",
+   "evidence_hash": "9fd97d8709379127238b9138e81045380937a7ea0e3b942a3645e31c7506c8c6",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_regulations_gov_api",
+   "name": "regulations.gov API",
+   "state": "AUTH_REQUIRED",
+   "as_of": "2026-09-30T05:27:31Z",
+   "evidence_hash": "4c326c44c70d8a6c2a62b681d68b657f11c5723ccab07466e93ee25dbc5de14c",
+   "presence": "UNMEASURED",
+   "access": "key or account",
+   "licence": "provider terms"
+  },
+  {
+   "source": "src_sec_edgar_fts",
+   "name": "SEC EDGAR full-text search (10-K filings mentioning AI, by quarter)",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T04:04:00Z",
+   "evidence_hash": "919cec0aeca8c075627bb3cf00ea42ea9c7b7309ac499999d0511ce3aa921c14",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "SEC public data"
+  },
+  {
+   "source": "src_smithery_ai",
+   "name": "Smithery smithery.ai",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:53Z",
+   "evidence_hash": "fdca2e97be68e2006510deac6f206173a3855603fb75f6849145789ec1f76546",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_splunk_com",
+   "name": "Splunkbase",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:53Z",
+   "evidence_hash": "823b9df46d69204748d0a1aee21b061c0ce7343ab82521ef8550e8d0b3611fee",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_stanford_edu",
+   "name": "HELM (GCS crfm-helm-public)",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:53Z",
+   "evidence_hash": "fb7522558eb60ae574ac0402d50cf239498b1013f0d845b021b2291fdb738419",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_swebench_com",
+   "name": "SWE-bench",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:53Z",
+   "evidence_hash": "83cd949a9582f4dd68b0a07148cd86ff0eae6a05b0f2d2298a8f3717baf89d2d",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "CC-BY-NC-4.0"
+  },
+  {
+   "source": "src_tatsu_lab_github_io",
+   "name": "AlpacaEval 2.0",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:53Z",
+   "evidence_hash": "0dda7e76be503db139500b4e6344ef9ad5c887b92fa118773c71bd9758424ca5",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_tbench_ai",
+   "name": "Terminal-Bench",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:55Z",
+   "evidence_hash": "1d523ad884109655297fb681e8c1047fe4c4ee21a4824d82af118b1a57eb19c8",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_uk_atrs",
+   "name": "UK Algorithmic Transparency Records (GOV.UK search API)",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:03Z",
+   "evidence_hash": "47391a0e8d74ac932c61f81c72646c039a3a48710211c6ff0599df648a476852",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "Open Government Licence v3.0"
+  },
+  {
+   "source": "src_ukgovernmentbeis_github_io",
+   "name": "Inspect Evals (inspect_evals register)",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:56Z",
+   "evidence_hash": "09be251189302cd08e1f4954bf7f8cab65a3ffeca26a409464a9930bda894d03",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  },
+  {
+   "source": "src_us_federal_register",
+   "name": "US Federal Register API (documents matching 'artificial intelligence')",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:04Z",
+   "evidence_hash": "3fc98a39fdaf7404334e0d1ad5f3f19a3694c6fe6596f2e1aa5a625d81ccdbad",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "U.S. federal publication"
+  },
+  {
+   "source": "src_us_usaspending",
+   "name": "USASpending award search API (awards mentioning AI, by fiscal year)",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-30T05:27:27Z",
+   "evidence_hash": "215b7d8c27d3a5e3250067a58393a2a3b826d0d6d18be0e8210d8b74817ff7e0",
+   "presence": "UNMEASURED",
+   "access": "keyless",
+   "licence": "API code CC0-1.0"
+  },
+  {
+   "source": "src_usdt0_deployments",
+   "name": "USDT0 issuer deployments page (issuer-listed token ids)",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:11Z",
+   "evidence_hash": "64a4cb4211758aef969ef908355c8a0822b525c179035f781cb799ec26a0989d",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "issuer web pages"
+  },
+  {
+   "source": "src_webarena_dev",
+   "name": "WebArena",
+   "state": "CONNECTED",
+   "as_of": "2026-09-30T05:30:57Z",
+   "evidence_hash": "27372f19d482d1cf5a285ed3461a4c1b2a383945e424d6658acc48ee512cdc31",
+   "presence": "MEASURED",
+   "access": "keyless",
+   "licence": "UNRECORDED"
+  }
+ ]
+}

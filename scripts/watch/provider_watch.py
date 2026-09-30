@@ -12,7 +12,11 @@ What it does, once a day (GHA provider-watch.yml) or on dispatch:
        length, HTTP status, etag / last-modified, content-type, final URL,
        fetched_at.  Never the content.  Not one line of it.
     4. diff = the normalised sha256 differs from the previous OK capture of
-       the same target.  Emit one card-v0 public.notice leaf per change
+       the same target AND the same new normalised sha256 is seen on a second
+       OK capture at least 10 minutes later (two-fetch confirmation, adopted
+       29 Sep 2026 from the harness router: false-change rate 0.000 vs 0.931
+       naive).  Seen once = UNCONFIRMED: recorded, never a diff, last_ok kept.
+       Emit one card-v0 public.notice leaf per confirmed change
        (kind csoai.diff.provider-terms/0.1, <= 3072 bytes canonical) and one
        daily summary leaf.  Leaves are UNSIGNED here; scripts/adapters/
        provider_diff.py hands them to scripts/publish_public_root.py, which
@@ -91,6 +95,13 @@ KIND_FIRST = "FIRST_CAPTURE"
 KIND_UNCHANGED = "UNCHANGED"
 KIND_CHANGED = "CHANGED"
 KIND_BYTES_ONLY = "BYTES_ONLY"  # raw bytes moved, normalised text did not (scripts/nonces/whitespace)
+KIND_UNCONFIRMED = "UNCONFIRMED"  # a new normalised hash seen on one OK capture only; not a change (yet)
+
+# change-detection winner (harness-router-20260929, gated_fetchok_2fetch): fetch_ok = 2xx + non-empty body whose
+# sha256 is not the empty-string hash (capture() already makes anything else UNKNOWN/UNCHECKABLE); a change needs the
+# same new hash on two OK captures >= CONFIRM_MIN_GAP_S apart.
+EMPTY_SHA256 = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+CONFIRM_MIN_GAP_S = 600
 
 # Signs of an anti-bot interstitial. We record UNCHECKABLE and stop; we never "solve" it.
 _CHALLENGE_MARKERS = (
@@ -319,6 +330,35 @@ def capture(target: dict[str, str], fetch: Fetcher, robots: RobotsCache, fetched
     return rec
 
 
+def _gap_s(a: str | None, b: str | None) -> float | None:
+    try:
+        fa = datetime.strptime(a, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+        fb = datetime.strptime(b, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+    except (TypeError, ValueError):
+        return None
+    return (fb - fa).total_seconds()
+
+
+def confirm(kind: str | None, pending: dict[str, Any] | None, cap: dict[str, Any]) -> tuple[str | None, dict[str, Any] | None]:
+    """Two-fetch confirmation over classify()'s kind. Returns (kind, pending to store).
+    CHANGED stands only when `pending` holds the same norm_sha256, first seen >= CONFIRM_MIN_GAP_S before this capture;
+    otherwise it is UNCONFIRMED and the candidate is (re)stored with its FIRST-seen time. A capture that is not OK keeps
+    the pending candidate untouched (a failed fetch is never evidence either way); UNCHANGED/BYTES_ONLY clear it."""
+    if kind is None:
+        return None, pending
+    if kind != KIND_CHANGED:
+        return kind, None
+    same = bool(pending) and pending.get("norm_sha256") == cap.get("norm_sha256")
+    gap = _gap_s(pending.get("first_seen_at"), cap.get("fetched_at")) if same else None
+    if same and gap is not None and gap >= CONFIRM_MIN_GAP_S:
+        return KIND_CHANGED, None
+    return KIND_UNCONFIRMED, {
+        "norm_sha256": cap["norm_sha256"], "bytes_sha256": cap["bytes_sha256"],
+        "first_seen_at": pending["first_seen_at"] if same else cap["fetched_at"],
+        "n_seen": int(pending.get("n_seen") or 1) + 1 if same else 1,
+    }
+
+
 def classify(prev_ok: dict[str, Any] | None, new: dict[str, Any]) -> str | None:
     """Diff kind for an OK capture against the previous OK capture; None when new is not OK."""
     if new.get("state") != STATE_OK:
@@ -526,6 +566,7 @@ def run_once(
     run = {
         "run_at": run_at, "n_targets": len(targets), "ok": 0, "unchanged": 0, "changed": 0, "bytes_only": 0,
         "first": 0, "uncheckable": 0, "unknown": 0, "changed_ids": [], "uncheckable_ids": [], "unknown_ids": [], "leaves": [],
+        "unconfirmed": 0, "unconfirmed_ids": [],
     }
     last_host = None
     for t in targets:
@@ -540,7 +581,11 @@ def run_once(
         entry["url"] = t["url"]
         prev_ok = entry.get("last_ok")
         prev_latest = entry.get("latest")
-        kind = classify(prev_ok, cap)
+        kind, pending = confirm(classify(prev_ok, cap), entry.get("pending"), cap)
+        if pending is None:
+            entry.pop("pending", None)
+        else:
+            entry["pending"] = pending
         leaf_name = None
         if cap["state"] == STATE_OK:
             run["ok"] += 1
@@ -550,6 +595,9 @@ def run_once(
                 run["unchanged"] += 1
             elif kind == KIND_BYTES_ONLY:
                 run["bytes_only"] += 1
+            elif kind == KIND_UNCONFIRMED:
+                run["unconfirmed"] += 1
+                run["unconfirmed_ids"].append(t["id"])
             elif kind == KIND_CHANGED:
                 run["changed"] += 1
                 run["changed_ids"].append(t["id"])
@@ -574,7 +622,7 @@ def run_once(
         if kind != KIND_UNCHANGED or transition:
             entry["history"].append(_event(kind or cap["state"], cap, prev_ok, leaf_name))
         entry["latest"] = cap
-        if cap["state"] == STATE_OK:
+        if cap["state"] == STATE_OK and kind != KIND_UNCONFIRMED:  # an unconfirmed capture never becomes the baseline
             entry["last_ok"] = {k: cap[k] for k in ("fetched_at", "bytes_sha256", "norm_sha256", "byte_length", "etag", "last_modified", "http_status")}
         entry["n_runs"] = int(entry.get("n_runs") or 0) + 1
         log(f"{t['id']:<32} {cap['state']:<12} http={cap['http_status']} robots={cap['robots']} kind={kind or '-'} {cap.get('reason') or ''}")

@@ -79,6 +79,26 @@ const PAID_TOOLS = PAID_TOOLS_PATH ? JSON.parse(readFileSync(PAID_TOOLS_PATH, "u
 const PAID_BY_NAME = new Map(PAID_TOOLS.map((t) => [t.name, t]));
 const TOOLS = [...FREE_TOOLS, ...PAID_TOOLS];
 
+/**
+ * Axis names: ONE alias table shared with the HTTP door (functions/mcp/axis-aliases.json) and the
+ * Python client. `governance`, `GOV` and `gspc-governance` name the same axis on every surface.
+ */
+const ALIASES_PATH = firstExisting([
+  "../../functions/mcp/axis-aliases.json", // repo checkout: the canonical file
+  "./axis-aliases.json", // npm package: the byte-identical pack-time copy
+]);
+const AXIS_TABLE = ALIASES_PATH ? JSON.parse(readFileSync(ALIASES_PATH, "utf8")).axes : {};
+const AXIS_CANON = new Map();
+for (const [canonical, aliases] of Object.entries(AXIS_TABLE)) {
+  AXIS_CANON.set(canonical.toLowerCase(), canonical);
+  for (const a of aliases) AXIS_CANON.set(String(a).toLowerCase(), canonical);
+}
+function canonicalAxis(name) {
+  const k = String(name ?? "").trim().toLowerCase();
+  return AXIS_CANON.get(k) ?? k;
+}
+const sameAxis = (a, b) => canonicalAxis(a) === canonicalAxis(b);
+
 const VERIFIER_PATH = firstExisting([
   "../../public/signed/verify-card.mjs", // repo checkout: the canonical file
   "./verify-card.mjs", // npm package: the byte-identical pack-time copy
@@ -163,8 +183,9 @@ async function boardTotals() {
 }
 
 async function getAxis(args) {
-  const wanted = String(args.axis ?? "").trim().toLowerCase();
-  if (!wanted) return { state: "BAD_INPUT", error: "pass an axis name, e.g. governance" };
+  const asked = String(args.axis ?? "").trim();
+  if (!asked) return { state: "BAD_INPUT", error: "pass an axis name, e.g. governance" };
+  const wanted = canonicalAxis(asked);
   let d;
   try {
     d = await fetchJson("/api/gspc");
@@ -172,11 +193,11 @@ async function getAxis(args) {
     return unreachable("/api/gspc", e);
   }
   const rows = d.axes ?? [];
-  const row = rows.find((r) => String(r.axis ?? "").toLowerCase() === wanted);
+  const row = rows.find((r) => sameAxis(r.axis, wanted));
   if (!row) {
     return {
       state: "NOT_ON_BOARD",
-      axis: wanted,
+      axis: asked,
       note: "This name is not a row on the live board. That is a fact about the board, not a verdict about the subject.",
       board_carries: rows.map((r) => r.axis),
       as_of: { board_measured_on: d.measured_on ?? null, fetched_at: new Date().toISOString() },
@@ -186,6 +207,7 @@ async function getAxis(args) {
   return {
     state: "LIVE",
     axis: row.axis,
+    ...(asked.toLowerCase() !== String(row.axis).toLowerCase() ? { resolved_from: asked } : {}),
     family: row.family ?? null,
     status: row.status ?? null,
     measured,
@@ -211,12 +233,43 @@ async function getAxis(args) {
   };
 }
 
-/** Coerce whatever the caller passed into a card object, or say why we could not. */
+/** A 64-hex card id: a signed-card-index `card` field, and a public-root leaf's sha256. */
+const CARD_ID_RE = /^[0-9a-f]{64}$/;
+const signedCardPath = (id) => `/signed/cards/${id}.json`;
+/** Absolute card_url for a signed-card-index row: its own card_url when it carries one. */
+function signedCardUrl(row) {
+  const own = typeof row.card_url === "string" ? row.card_url : null;
+  if (own) return own.startsWith("/") ? `${ORIGIN}${own}` : own;
+  const id = typeof row.card === "string" ? row.card.toLowerCase() : "";
+  return CARD_ID_RE.test(id) ? `${ORIGIN}${signedCardPath(id)}` : null;
+}
+
+/**
+ * Coerce whatever the caller passed into a card object, or say why we could not. A bare 64-hex
+ * card id resolves to the signed body at /signed/cards/{id}.json (same rule as the HTTP door,
+ * functions/mcp/_handlers.ts).
+ */
 async function coerceCard(raw) {
   if (raw && typeof raw === "object") return { card: raw };
   if (typeof raw !== "string")
-    return { error: "pass the card as an object, a JSON string, or a councilof.ai / csoai.org URL" };
+    return { error: "pass the card as an object, a JSON string, a councilof.ai / csoai.org URL, or a 64-hex card id" };
   const s = raw.trim();
+  if (CARD_ID_RE.test(s.toLowerCase())) {
+    const id = s.toLowerCase();
+    const url = `${ORIGIN}${signedCardPath(id)}`;
+    try {
+      const r = await fetch(url, { headers: { accept: "application/json" }, signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) });
+      if (r.status === 404)
+        return {
+          error: `no signed card body at ${url} (HTTP 404): this id is not in the signed card index. If it is a public-root leaf, use get_card or verify_inclusion.`,
+          resolved: { id, url },
+        };
+      if (!r.ok) return { error: `card fetch returned HTTP ${r.status} for ${url}`, resolved: { id, url } };
+      return { card: await r.json(), resolved: { id, url } };
+    } catch (e) {
+      return { error: `card fetch failed for ${url}: ${e.message}`, resolved: { id, url } };
+    }
+  }
   if (/^https?:\/\//i.test(s)) {
     if (!FETCHABLE_ORIGINS.some((o) => s.startsWith(o)))
       return {
@@ -234,26 +287,31 @@ async function coerceCard(raw) {
   try {
     return { card: JSON.parse(s) };
   } catch {
-    return { error: "the string is neither valid JSON nor a councilof.ai / csoai.org URL" };
+    return { error: "the string is neither valid JSON, a councilof.ai / csoai.org URL, nor a 64-hex card id" };
   }
 }
 
 async function verifyCardTool(args) {
-  const { card, error } = await coerceCard(args.card ?? args.record ?? args.json ?? args.url ?? args.input);
-  if (error) return { state: "UNCHECKABLE", reason: error, not_a_certification: true };
+  const { card, error, resolved } = await coerceCard(args.card ?? args.record ?? args.json ?? args.url ?? args.input);
+  if (error) return { state: "UNCHECKABLE", reason: error, ...(resolved ? { resolved_from: resolved } : {}), not_a_certification: true };
   const v = await verifyCard(card);
+  const id = v.id ?? card?.id ?? null;
+  // A card fetched by id must BE that id; otherwise nothing was judged about the id asked for.
+  const mismatch = resolved && typeof id === "string" && id !== resolved.id
+    ? `the file at ${resolved.url} carries id ${id}, not the requested ${resolved.id}` : null;
   return {
-    state: v.state, // VALID | INVALID | UNCHECKABLE — three verdicts, never two
-    id: v.id ?? card?.id ?? null,
+    state: mismatch ? "UNCHECKABLE" : v.state, // VALID | INVALID | UNCHECKABLE — three verdicts, never two
+    id,
+    ...(resolved ? { resolved_from: resolved } : {}),
     axis: v.axis ?? null,
-    reason: v.reason ?? null,
+    reason: mismatch ?? v.reason ?? null,
     rule: `${ORIGIN}/signed/HOW-TO-VERIFY.md`,
     pinned_key: "did:web:csoai.org#card-attestation-1",
     not_a_certification: true,
     note:
-      v.state === "VALID"
+      !mismatch && v.state === "VALID"
         ? "The body reproduces its own id and the signature verifies under the published card-attestation key. This is a verified measurement card — not a certification of anything."
-        : v.state === "INVALID"
+        : !mismatch && v.state === "INVALID"
           ? "This card fails the published rule for the stated reason. INVALID is a positive finding, distinct from UNCHECKABLE."
           : "The check could not be completed. 'Could not check' is a different claim from 'forged'.",
   };
@@ -279,14 +337,24 @@ async function listCards(args) {
       packaged_at: idx.packaged_at ?? null,
       pubkey: idx.pubkey ?? null,
     };
-    const wanted = args.axis ? String(args.axis).toLowerCase() : null;
+    const wanted = args.axis ? canonicalAxis(args.axis) : null;
     const limit = Number.isInteger(args.limit) ? args.limit : 10;
+    if (wanted) {
+      const matched = [...new Set(rows.map((r) => String(r.axis ?? "")).filter((a) => sameAxis(a, wanted)))].sort();
+      out.axis_query = {
+        asked: String(args.axis),
+        canonical: wanted,
+        spellings: AXIS_TABLE[wanted] ? [wanted, ...AXIS_TABLE[wanted]] : [wanted],
+        index_names_matched: matched,
+        note: "rows whose index axis name resolves to the same axis under functions/mcp/axis-aliases.json; each row keeps the index's own spelling",
+      };
+    }
     out.rows = rows
-      .filter((r) => !wanted || String(r.axis ?? "").toLowerCase() === wanted)
+      .filter((r) => !wanted || sameAxis(r.axis, wanted))
       .slice()
       .sort((a, b) => String(b.ts ?? "").localeCompare(String(a.ts ?? "")))
       .slice(0, limit)
-      .map((r) => ({ card: r.card, axis: r.axis, ts: r.ts, signed: r.signed }));
+      .map((r) => ({ card: r.card, card_url: signedCardUrl(r), axis: r.axis, ts: r.ts, signed: r.signed }));
   } catch (e) {
     out.index = unreachable("/signed/card_index.json", e);
   }
@@ -322,11 +390,20 @@ async function getRoot() {
   }
 }
 
+/**
+ * get_card reads the public-root card-v0 leaves only; the signed card index is a separate corpus
+ * with zero id overlap (council-os/CARD-CORPORA.md). A signed-index id is NOT_IN_THIS_CORPUS,
+ * never INVALID; INVALID needs both the index and the live root's inclusion endpoint to say no.
+ * Same rule as functions/mcp/_board.ts getCardTool.
+ */
+const NOT_IN_THIS_CORPUS_REASON = "This id is in the signed card index, not the public root. Use verify_card.";
+
 async function getCard(args) {
   const sha = String(args.sha256 || "").trim().toLowerCase();
-  if (!/^[0-9a-f]{64}$/.test(sha)) {
+  if (!CARD_ID_RE.test(sha)) {
     return { state: "UNCHECKABLE", reason: "sha256 must be 64 hex", not_a_certification: true };
   }
+  const source = `${ORIGIN}/cards/${sha.slice(0, 16)}.json`;
   try {
     const d = await fetchJson(`/cards/${sha.slice(0, 16)}.json`);
     const card = d.card || d;
@@ -334,7 +411,7 @@ async function getCard(args) {
     return {
       state: match ? "VALID" : "INVALID",
       sha256: sha,
-      source: `${ORIGIN}/cards/${sha.slice(0, 16)}.json`,
+      source,
       surface: card.surface ?? null,
       unmeasured: card.unmeasured ?? [],
       sig_ed25519: card.sig_ed25519 ?? null,
@@ -342,18 +419,41 @@ async function getCard(args) {
       not_gspc: true,
     };
   } catch (e) {
-    if (e && e.status === 404) {
-      return {
-        state: "INVALID",
-        sha256: sha,
-        reason: "not a leaf of the live root",
-        source: `${ORIGIN}/cards/${sha.slice(0, 16)}.json`,
-        not_a_certification: true,
-        not_gspc: true,
-      };
+    if (!(e && e.status === 404)) {
+      return { ...unreachable(`/cards/${sha.slice(0, 16)}.json`, e), state: "UNCHECKABLE", sha256: sha };
     }
-    return { ...unreachable(`/cards/${sha.slice(0, 16)}.json`, e), state: "UNCHECKABLE", sha256: sha };
   }
+  const base = { sha256: sha, source, not_a_certification: true, not_gspc: true };
+  let row;
+  try {
+    const idx = await fetchJson("/signed/card_index.json");
+    row = (Array.isArray(idx.cards) ? idx.cards : []).find((r) => String(r.card ?? "").toLowerCase() === sha);
+  } catch (e) {
+    return { ...base, state: "UNCHECKABLE", reason: `no public-root wrapper at ${source} (HTTP 404), and the signed card index could not be read to rule it out (${e.message}). Could not check is not INVALID.` };
+  }
+  if (row) {
+    return {
+      ...base,
+      state: "NOT_IN_THIS_CORPUS",
+      reason: NOT_IN_THIS_CORPUS_REASON,
+      corpus: "signed_card_index",
+      card_url: signedCardUrl(row),
+      next: { tool: "verify_card", arguments: { card: sha } },
+      note: "The public-root leaves and the signed card index are separate sets with no id in common. This tool reads the public-root leaves only, so this answer says which set the id belongs to, not whether the card verifies.",
+    };
+  }
+  let inRoot;
+  try {
+    const p = await fetchJson(`/api/proof?sha=${sha}`);
+    inRoot = p.kind === "inclusion" ? true : p.error === "not_found" ? false : null;
+  } catch (e) {
+    inRoot = e && e.status === 404 ? false : null;
+  }
+  if (inRoot === true)
+    return { ...base, state: "UNCHECKABLE", reason: `a leaf of the live root, but its wrapper at ${source} answered HTTP 404. The leaf is included; its body could not be fetched. Use verify_inclusion for the proof.` };
+  if (inRoot === null)
+    return { ...base, state: "UNCHECKABLE", reason: `no public-root wrapper at ${source} (HTTP 404), and the live root's inclusion endpoint could not be read. Could not check is not INVALID.` };
+  return { ...base, state: "INVALID", reason: "not a leaf of the live root, and not in the signed card index" };
 }
 
 async function verifyInclusion(args) {
@@ -383,6 +483,22 @@ async function verifyInclusion(args) {
  * canonical measured artefact; this package delegates to it instead of
  * copying counts or manufacturing a trust verdict locally.
  */
+/** partial = the snapshot says so OR its enumeration did not complete (a cap is not completion). Mirrors functions/mcp/_board.ts partialOf. */
+function partialOf(d) {
+  const e = d.enumeration ?? {};
+  if (d.partial === true) return { partial: true, partial_reason: String(e.stop_reason ?? "the snapshot marks itself partial") };
+  if (e.complete === false) {
+    const seen = e.rows_with_remote ?? e.registry_rows_seen;
+    return {
+      partial: true,
+      partial_reason: `enumeration incomplete: ${String(e.stop_reason ?? "stopped early")}${
+        e.unique_hosts != null && seen != null ? ` (${e.unique_hosts} hosts probed of ${seen} registry rows with a remote)` : ""
+      }`,
+    };
+  }
+  return { partial: false, partial_reason: null };
+}
+
 async function mcpTrust() {
   const path = "/interop/mcp-trust/latest.json";
   try {
@@ -392,9 +508,11 @@ async function mcpTrust() {
       source: `${ORIGIN}${path}`,
       kind: d.kind ?? null,
       as_of: d.as_of ?? null,
-      partial: d.partial ?? false,
+      // A cap-limited read is PARTIAL — read from the enumeration, not only the flag (2026-09-26).
+      ...partialOf(d),
       enumeration: d.enumeration ?? null,
       counts: d.counts ?? null,
+      headline: d.headline ?? null,
       diff: d.diff ?? null,
       not_a_certification: true,
     };
@@ -418,6 +536,56 @@ async function x402Trust() {
     };
   } catch (e) {
     return { ...unreachable(path, e), state: "UNREACHABLE" };
+  }
+}
+
+/* ------------------------------------------------- measurement-capsule readers */
+
+/**
+ * measurement_index, verify_capsule and server_evidence are answered by the door's own /mcp
+ * (functions/_lib/measurementCapsule.ts): this package forwards the call and returns the door's
+ * structuredContent unchanged, so the two implementations cannot disagree about a capsule. The door
+ * re-derives everything it returns (capsule ids, Merkle inclusion, the index signature against the
+ * pinned key). If the door cannot be reached the answer is UNREACHABLE — never a guess, never
+ * NOT_MEASURED (which is a statement about the index, not about the connection).
+ */
+const MEASUREMENT_DOCTRINE = "measurement, not endorsement";
+
+async function doorTool(name, args) {
+  const url = `${ORIGIN}/mcp`;
+  try {
+    const r = await fetch(url, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        accept: "application/json, text/event-stream",
+        "MCP-Protocol-Version": "2025-03-26",
+      },
+      body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/call", params: { name, arguments: args } }),
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    });
+    if (!r.ok) throw new Error(`POST ${url} returned HTTP ${r.status}`);
+    const text = await r.text();
+    const ct = r.headers.get("content-type") || "";
+    let msg;
+    if (ct.includes("text/event-stream")) {
+      const frames = text
+        .replace(/\r\n/g, "\n")
+        .split(/\n\n/)
+        .map((e) => e.split("\n").filter((l) => l.startsWith("data:")).map((l) => l.slice(5).trim()).join("\n"))
+        .filter(Boolean);
+      msg = JSON.parse(frames[frames.length - 1]);
+    } else msg = JSON.parse(text);
+    const sc = msg?.result?.structuredContent;
+    if (!sc || typeof sc !== "object") throw new Error(msg?.error?.message || "the door returned no structuredContent");
+    return { ...sc, answered_by: url };
+  } catch (e) {
+    return {
+      state: "UNREACHABLE",
+      doctrine: MEASUREMENT_DOCTRINE,
+      reason: `the door that answers ${name} could not be reached: ${e instanceof Error ? e.message : String(e)}`,
+      source: url,
+    };
   }
 }
 
@@ -660,11 +828,18 @@ const HANDLERS = {
   verify_inclusion: verifyInclusion,
   x402_trust: x402Trust,
   mcp_trust: mcpTrust,
+  measurement_index: (a) => doorTool("measurement_index", a),
+  verify_capsule: (a) => doorTool("verify_capsule", a),
+  server_evidence: (a) => doorTool("server_evidence", a),
 };
 
 /* ----------------------------------------------------------------- transport */
 
-const SUPPORTED_PROTOCOLS = ["2024-11-05", "2025-03-26", "2025-06-18"];
+// Oldest first; the LAST entry is the latest this server speaks. An unknown requested version is
+// answered with the latest (MCP lifecycle: "the server MUST respond with another protocol version
+// it supports. This SHOULD be the latest version supported"), not the oldest as it was until
+// 2026-09-26. README.md "stdio" lists exactly this array (tools-match-door.test.ts checks it).
+const SUPPORTED_PROTOCOLS = ["2024-11-05", "2025-03-26", "2025-06-18", "2025-11-25"];
 
 function send(msg) {
   process.stdout.write(JSON.stringify(msg) + "\n");
@@ -698,13 +873,19 @@ function summaryLine(name, payload) {
     case "get_root":
       return `${payload.state ?? "?"} — public-root merkle ${(String(payload.merkle_root || "")).slice(0, 16) || "none"}. Not GSPC.`;
     case "get_card":
-      return `${payload.state ?? "?"} — card-v0 leaf ${String(payload.sha256 || "").slice(0, 16) || "?"}.`;
+      return payload.reason
+        ? `${payload.state ?? "?"} — ${payload.reason}`
+        : `${payload.state ?? "?"} — card-v0 leaf ${String(payload.sha256 || "").slice(0, 16) || "?"}.`;
     case "verify_inclusion":
       return `${payload.state ?? "?"} — inclusion against live merkle.`;
     case "x402_trust":
       return `${payload.state ?? "?"} — ${payload.headline || "catalog trust counts"}.`;
     case "mcp_trust":
       return `${payload.state ?? "?"} — MCP handshake census${payload.partial ? " (partial round)" : ""}.`;
+    case "measurement_index":
+    case "verify_capsule":
+    case "server_evidence":
+      return `${payload.state ?? "?"}${payload.reason ? " — " + payload.reason : ""} (${MEASUREMENT_DOCTRINE}).`;
     case "commission_card":
     case "art50_marking_evidence":
     case "rwa_evidence":
@@ -724,7 +905,7 @@ async function handle(msg) {
   if (method === "initialize") {
     const asked = params?.protocolVersion;
     return reply(id, {
-      protocolVersion: SUPPORTED_PROTOCOLS.includes(asked) ? asked : "2024-11-05",
+      protocolVersion: SUPPORTED_PROTOCOLS.includes(asked) ? asked : SUPPORTED_PROTOCOLS[SUPPORTED_PROTOCOLS.length - 1],
       capabilities: { tools: {} },
       serverInfo: { name: "csoai-gspc-mcp", version: VERSION },
     });
@@ -739,6 +920,24 @@ async function handle(msg) {
     if (!fn) return replyError(id, -32602, `unknown tool: ${name}`);
     try {
       const payload = await fn(params?.arguments ?? {});
+      // x402 MCP transport (x402-foundation/x402 specs/transports-v2/mcp.md): a payment challenge is
+      // a tool result with isError:true whose structuredContent IS the PaymentRequired object and
+      // whose content[0].text is that object as JSON. Same shape as the HTTP door
+      // (functions/mcp/_paid.ts). Payment is still read only from the x_payment argument.
+      if (payload?.status === "PAYMENT_REQUIRED") {
+        const pr = payload.payment_required && typeof payload.payment_required === "object" && !Array.isArray(payload.payment_required)
+          ? payload.payment_required
+          : {};
+        const sc = { ...pr, ...payload };
+        return reply(id, {
+          content: [
+            { type: "text", text: JSON.stringify(sc) },
+            { type: "text", text: summaryLine(name, payload) },
+          ],
+          structuredContent: sc,
+          isError: true,
+        });
+      }
       return reply(id, {
         content: [{ type: "text", text: `${summaryLine(name, payload)}\n\n${JSON.stringify(payload, null, 2)}` }],
         structuredContent: payload,

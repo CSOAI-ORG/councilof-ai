@@ -110,12 +110,12 @@ const CAPABILITIES: Capability[] = [
       "A finished walk is not a finished grade. The count is listings observed, not models scored. Do not stamp MEASURED on the queue.",
   },
   {
-    name: "RunPod AG-UI wire",
-    status: "not-yet",
+    name: "AG-UI + A2UI agent surfaces",
+    status: "available",
     what:
-      "The measurement node speaks AG-UI on port 8785. Council OS reaches it only through GET /api/agui/* when AGUI_WIRE_URL is set on Cloudflare Pages.",
+      "POST /api/agui/run streams the shared deterministic Council OS router, GET /api/agui/gspc-state projects the living GSPC state, and /api/a2ui exposes the same grounded state as an A2UI v1.0 Candidate surface.",
     limit:
-      "This site currently answers agui_wire_unconfigured. A pod being up is not a measurement. The 2026-08-22 inventory IPs are stale and are not quoted here.",
+      "The optional external RunPod AGUI_WIRE_URL is a separate provider wire and may still be unconfigured. A pod being up is not a measurement, and A2UI Candidate support is not a conformance or endorsement claim.",
   },
   {
     name: "Grokbot terminal functions",

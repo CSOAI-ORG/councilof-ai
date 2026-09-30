@@ -88,6 +88,9 @@ const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 // One line reused everywhere a fleet is described; the numbers are array lengths.
 const FLEET = `${tools.length} tools (${free.length} free, ${paid.length} x402-metered)`;
 const STANCE = "Measurement only: a card is evidence, never a grade, mark or endorsement. Verification is free.";
+// Every README-like output points at the data, the corrections ledger and free verification.
+// check.mjs requires it offline; parity_live.py requires it of every LIVE copy.
+const LINKS = `Data: ${ID.board} · Corrections ledger: ${ID.corrections} (JSON: ${ID.corrections_api}) · Verify a card, free: ${ID.verify_page}`;
 
 // ── emit ────────────────────────────────────────────────────────────────────────────────────
 const outputs = new Map(); // rel → text
@@ -118,6 +121,11 @@ emit("distribution/mcp-registry/io.github.CSOAI-ORG-gspc/server.json", j({
   packages: [{ registryType: "npm", identifier: NPM_ID, version: NPM_VERSION, transport: { type: "stdio" } }],
   _meta: regMeta,
 }));
+// The domain name's remote is the door with a trailing slash: the bare URL is registered under the
+// io.github name and the registry refuses one remote URL under two names (distribution.json explains).
+const domainRow = dist.distribution.find((r) => r.id === "mcp-registry-domain") || {};
+const DOMAIN_REMOTE = domainRow.remote_url || ID.door;
+if (DOMAIN_REMOTE.replace(/\/$/, "") !== ID.door) throw new Error(`mcp-registry-domain remote_url ${DOMAIN_REMOTE} is not the door ${ID.door}`);
 emit("distribution/mcp-registry/ai.councilof-gspc/server.json", j({
   $schema: mcpServer.$schema,
   name: dist.registry_names.domain,
@@ -125,7 +133,7 @@ emit("distribution/mcp-registry/ai.councilof-gspc/server.json", j({
   description: regDescription,
   version: REMOTE_VERSION,
   websiteUrl: ID.website,
-  remotes: [{ type: "streamable-http", url: ID.door }],
+  remotes: [{ type: "streamable-http", url: DOMAIN_REMOTE }],
   _meta: regMeta,
 }));
 
@@ -141,12 +149,17 @@ const pluginCore = {
 };
 emit("distribution/plugin/.mcp.json", j({ mcpServers: { [PLUGIN]: { type: "http", url: ID.door } } }));
 emit("distribution/plugin/.claude-plugin/plugin.json", j({ ...pluginCore, mcpServers: "./.mcp.json" }));
-emit("distribution/plugin/.claude-plugin/marketplace.json", j({
+const claudeMarketplace = j({
   name: "council-of-ai",
   owner: { name: ID.publisher, email: ID.email },
   metadata: { description: "Council of AI — Layer 0 measurement tools.", version: REMOTE_VERSION },
   plugins: [{ name: PLUGIN, source: "./", description: pluginCore.description, version: REMOTE_VERSION, license: "Apache-2.0", homepage: ID.website }],
-}));
+});
+emit("distribution/plugin/.claude-plugin/marketplace.json", claudeMarketplace);
+// The same bytes, served at https://councilof.ai/.claude-plugin/marketplace.json (ONE-PRODUCT-PLAN lane 2).
+// Its plugin source is "./", which resolves only when the marketplace is added from a git host;
+// until a public one carries distribution/plugin, the working install is the free MCP door.
+emit("public/.claude-plugin/marketplace.json", claudeMarketplace);
 emit("distribution/plugin/.cursor-plugin/plugin.json", j({
   ...pluginCore,
   mcpServers: "./.mcp.json",
@@ -184,6 +197,8 @@ Rules for answers:
 3. UNMEASURED and UNREACHABLE are answers, not errors. Never fill an empty cell.
 4. ${STANCE}
 
+${LINKS}
+
 ${doctrineFooter()}
 `);
 emit("distribution/plugin/README.md", `# ${PLUGIN} — Council of AI plugin (Claude Code, Cursor, Grok)
@@ -201,21 +216,29 @@ and ship the same skill (\`skills/gspc/SKILL.md\`). Server version ${REMOTE_VERS
 
 ${STANCE}
 
+${LINKS}
+
 Licence: Apache-2.0. ${doctrineFooter()}
 `);
 
 // ── 3. Claude connectors directory ──────────────────────────────────────────────────────────
-const connectorTools = tools.map((t) => ({ name: t.id, payment: t.payment, read_only: t.payment === "free" }));
+// The directory listing points at the FREE door (${ID.door}/free), never at ${ID.door}: Anthropic
+// Software Directory Policy 4.A excludes software that transfers money or crypto unless Anthropic
+// permits it in writing, and the metered tools settle USDC. functions/mcp/[[path]].ts serves the free
+// door from the same definitions, filtered; its tools are exactly the `free` capabilities here.
+const FREE_DOOR = `${ID.door}/free`;
+const connectorTools = free.map((t) => ({ name: t.id, payment: t.payment, read_only: true }));
 emit("distribution/claude/connector.json", j({
   form: "Claude connectors directory — remote MCP server",
   status: "PREPARED — NOT SUBMITTED",
   name: ID.short_name,
-  server_url: ID.door,
+  server_url: FREE_DOOR,
   transport: "streamable-http",
   authentication: "none",
-  description: `${FLEET} over the public GSPC board: read totals and axis rows, retrieve and verify Ed25519-signed measurement cards. ${STANCE}`,
+  description: `Council of AI's ${word(free.length)} free read-only tools over the public GSPC board: read totals and axis rows, retrieve and verify Ed25519-signed measurement cards and capsules. No payment tool is served at this address. ${STANCE}`,
   company: { name: ID.publisher, company_number: ID.company_number, jurisdiction: ID.jurisdiction, website: ID.website },
   contact_email: ID.email,
+  documentation_url: `${ID.website}/connect/claude/`,
   privacy_policy_url: ID.privacy,
   terms_url: ID.terms,
   support_url: ID.support,
@@ -224,9 +247,11 @@ emit("distribution/claude/connector.json", j({
   tools: connectorTools,
   tool_count: connectorTools.length,
   example_prompts: [
-    "What does the GSPC board say right now? Quote public_count exactly.",
-    "Verify this Council of AI measurement card: <paste card JSON>.",
-    "Show me the GSPC axis row for provenance.",
+    "What does the Council of AI measurement board show right now? How many axes are measured?",
+    "Show me the Council of AI safety axis: sample size, accuracy and interval.",
+    "Verify this Council of AI signed measurement card: https://councilof.ai/signed/cards/82994353b8f94337746ddf73700b0edc425d695d43910dbfeb53d118d5a09a1c.json",
+    "Has Council of AI published any measurements about the MCP server at https://councilof.ai/mcp? What was checked?",
+    "In Council of AI's latest census of public MCP servers, how many answered a correct handshake?",
   ],
   doctrine: DOCTRINE,
 }));
@@ -254,6 +279,8 @@ When you answer from these tools:
 2. Card verification has three states — VALID, INVALID, UNCHECKABLE. "Could not check" is never "forged".
 3. UNMEASURED and UNREACHABLE are first-class answers. Never fill an empty cell.
 4. ${STANCE}
+
+${LINKS}
 
 ${doctrineFooter()}
 `);
@@ -297,17 +324,29 @@ const PY_TOOL_DESC =
   `Read the live Council of AI GSPC board (${ID.board}). With no axis, returns the board totals verbatim; ` +
   "with an axis name, returns that one axis row. Quote totals.public_count exactly as printed; never add or re-derive a count. " +
   "If the board cannot be fetched the state is UNREACHABLE and no number is returned. " + STANCE;
-const pyBoard = `"""Shared reader: the live GSPC board through csoai-gspc. Generated by scripts/harness-x/render.mjs."""
+// VERIFICATION IS THE CORE PROMISE AND IT IS FREE (2026-09-26): until then every adapter exposed
+// gspc_board alone and told the reader to go and call csoai_gspc.verify_card themselves.
+const PY_VERIFY_DESC =
+  "Verify one Council of AI signed measurement card — free, always. Pass card_id (the card's full 64-hex id; " +
+  "it is fetched from https://councilof.ai/signed/cards/<id>.json) or card (the card JSON). Returns VALID (the body " +
+  "reproduces its id and the Ed25519 signature verifies under the pinned did:web:csoai.org#card-attestation-1 key), " +
+  "INVALID with the reason, or UNCHECKABLE (the check could not complete — never read that as forged). " + STANCE;
+const pyBoard = `"""Shared reader: the live GSPC board and free card verification through csoai-gspc. Generated by scripts/harness-x/render.mjs."""
 from __future__ import annotations
 
-from typing import Optional
+import json
+from typing import Optional, Union
 
-from csoai_gspc import BOARD_URL, fetch_board, get_axis, totals
+from csoai_gspc import BOARD_URL, fetch_board, fetch_card, get_axis, totals
+from csoai_gspc import verify_card as _verify_card
 
 DOCTRINE_SHA256 = "${DOCTRINE.sha256}"
 DOCTRINE_SOURCE = "${DOCTRINE.source}"
 TOOL_NAME = "gspc_board"
 TOOL_DESCRIPTION = ${JSON.stringify(PY_TOOL_DESC)}
+VERIFY_TOOL_NAME = "verify_card"
+VERIFY_TOOL_DESCRIPTION = ${JSON.stringify(PY_VERIFY_DESC)}
+RULE_URL = "https://councilof.ai/signed/HOW-TO-VERIFY.md"
 
 
 def read_board(axis: Optional[str] = None) -> dict:
@@ -323,9 +362,34 @@ def read_board(axis: Optional[str] = None) -> dict:
     if row is None:
         return {**base, "state": "ABSENT", "axis": axis}
     return {**base, "state": "LIVE", "axis_row": row}
+
+
+def read_verify(card_id: Optional[str] = None, card: Optional[Union[dict, str]] = None) -> dict:
+    """Verify one signed card. Three outcomes only: VALID, INVALID (with the reason), UNCHECKABLE."""
+    base = {"rule": RULE_URL, "doctrine_sha256": DOCTRINE_SHA256}
+    try:
+        if card is not None:
+            obj = json.loads(card) if isinstance(card, str) else card
+        elif card_id:
+            obj = fetch_card(card_id)  # ValueError for anything but a full 64-hex id, before any network
+        else:
+            return {**base, "state": "UNCHECKABLE", "reason": "pass card_id (64 hex) or card (the card JSON)"}
+    except ValueError as exc:  # a malformed id or card JSON: could not check, did not fail
+        return {**base, "state": "UNCHECKABLE", "reason": str(exc)}
+    except Exception as exc:  # network, HTTP: could not check — never a verdict
+        return {**base, "state": "UNCHECKABLE", "reason": f"could not fetch the card: {type(exc).__name__}"}
+    if not isinstance(obj, dict):
+        return {**base, "state": "UNCHECKABLE", "reason": "the card is not a JSON object"}
+    v = _verify_card(obj)  # pins did:web:csoai.org#card-attestation-1 from the published DID document
+    return {**base, "state": v.state, "reason": v.reason, "card_id": v.card_id}
 `;
 const pyInput = `class GSPCBoardInput(BaseModel):
-    axis: Optional[str] = Field(default=None, description="Axis name for one board row; omit for the board totals.")
+    axis: Optional[str] = Field(default=None, description="Axis name or alias (case-insensitive, e.g. governance or gov) for one board row; omit for the board totals.")
+
+
+class VerifyCardInput(BaseModel):
+    card_id: Optional[str] = Field(default=None, description="The card's full id: 64 hex characters.")
+    card: Optional[Union[dict, str]] = Field(default=None, description="Alternatively the card JSON (object or string).")
 `;
 const pyProject = ({ name, desc, deps, pkgs, kw, py = "3.9" }) => `[build-system]
 requires = ["setuptools>=68"]
@@ -360,18 +424,22 @@ packages = [${pkgs.map((p) => JSON.stringify(p)).join(", ")}]
 const pyReadme = ({ name, title, usage }) => `# ${name}
 
 ${title} — a thin wrapper over [\`csoai-gspc\`](https://pypi.org/project/csoai-gspc/) (${pyClientVersion}+), the
-reader for Council of AI's live GSPC board (${ID.board}). One tool: \`gspc_board\`.
+reader for Council of AI's live GSPC board (${ID.board}). Two tools: \`gspc_board\` (the live board) and
+\`verify_card\` (free signed-card verification — VALID / INVALID / UNCHECKABLE).
 
 \`\`\`python
 ${usage}
 \`\`\`
 
-The tool returns one of three states: \`LIVE\` (totals or the axis row, verbatim from the board),
-\`ABSENT\` (no axis by that name), \`UNREACHABLE\` (the board could not be fetched — no cached or
+\`gspc_board\` returns one of three states: \`LIVE\` (totals or the axis row, verbatim from the board),
+\`ABSENT\` (no axis by that name or alias), \`UNREACHABLE\` (the board could not be fetched — no cached or
 invented number is ever returned). ${STANCE}
 
-For signed-card verification (VALID / INVALID / UNCHECKABLE) use \`csoai_gspc.verify_card\` directly,
-or the remote MCP server at ${ID.door} (${FLEET}).
+\`verify_card\` takes \`card_id\` (the full 64-hex id) or \`card\` (the JSON) and returns \`VALID\`,
+\`INVALID\` with the reason, or \`UNCHECKABLE\` — "could not check" is never "forged". It is free, always.
+The same verdicts are served by the remote MCP server at ${ID.door}.
+
+${LINKS}
 
 Licence: Apache-2.0. ${doctrineFooter()}
 Generated by \`scripts/harness-x/render.mjs\` — do not hand-edit.
@@ -383,19 +451,19 @@ emit("distribution/python/langchain-csoai/pyproject.toml", pyProject({
 }));
 emit("distribution/python/langchain-csoai/README.md", pyReadme({
   name: "langchain-csoai", title: "LangChain tool for the Council of AI GSPC board",
-  usage: "from langchain_csoai import GSPCBoardTool\n\ntool = GSPCBoardTool()\nprint(tool.invoke({}))                    # board totals\nprint(tool.invoke({\"axis\": \"provenance\"}))  # one axis row",
+  usage: "from langchain_csoai import GSPCBoardTool, VerifyCardTool\n\ntool = GSPCBoardTool()\nprint(tool.invoke({}))                    # board totals\nprint(tool.invoke({\"axis\": \"provenance\"}))  # one axis row\nprint(VerifyCardTool().invoke({\"card_id\": \"acf6bf0356123632758bf6c98c83d81c7a8392c3b111b311317c516cc65133a4\"}))  # free: VALID / INVALID / UNCHECKABLE",
 }));
 emit("distribution/python/langchain-csoai/LICENSE", APACHE);
 emit("distribution/python/langchain-csoai/langchain_csoai/_board.py", pyBoard);
 emit("distribution/python/langchain-csoai/langchain_csoai/tools.py", `"""LangChain BaseTool for the GSPC board. Generated by scripts/harness-x/render.mjs."""
 from __future__ import annotations
 
-from typing import Optional, Type
+from typing import Optional, Type, Union
 
 from langchain_core.tools import BaseTool
 from pydantic import BaseModel, Field
 
-from ._board import TOOL_DESCRIPTION, TOOL_NAME, read_board
+from ._board import TOOL_DESCRIPTION, TOOL_NAME, VERIFY_TOOL_DESCRIPTION, VERIFY_TOOL_NAME, read_board, read_verify
 
 
 ${pyInput}
@@ -407,13 +475,22 @@ class GSPCBoardTool(BaseTool):
 
     def _run(self, axis: Optional[str] = None, run_manager=None) -> dict:  # noqa: ARG002
         return read_board(axis)
+
+
+class VerifyCardTool(BaseTool):
+    name: str = VERIFY_TOOL_NAME
+    description: str = VERIFY_TOOL_DESCRIPTION
+    args_schema: Type[BaseModel] = VerifyCardInput
+
+    def _run(self, card_id: Optional[str] = None, card: Optional[Union[dict, str]] = None, run_manager=None) -> dict:  # noqa: ARG002
+        return read_verify(card_id, card)
 `);
 emit("distribution/python/langchain-csoai/langchain_csoai/__init__.py", `"""langchain-csoai — LangChain tool for the Council of AI GSPC board."""
-from ._board import DOCTRINE_SHA256, read_board
-from .tools import GSPCBoardInput, GSPCBoardTool
+from ._board import DOCTRINE_SHA256, read_board, read_verify
+from .tools import GSPCBoardInput, GSPCBoardTool, VerifyCardInput, VerifyCardTool
 
 __version__ = "${AV}"
-__all__ = ["GSPCBoardTool", "GSPCBoardInput", "read_board", "DOCTRINE_SHA256", "__version__"]
+__all__ = ["GSPCBoardTool", "GSPCBoardInput", "VerifyCardTool", "VerifyCardInput", "read_board", "read_verify", "DOCTRINE_SHA256", "__version__"]
 `);
 // llama-index-tools-csoai
 const LI = "distribution/python/llama-index-tools-csoai";
@@ -423,7 +500,7 @@ emit(`${LI}/pyproject.toml`, pyProject({
 }));
 emit(`${LI}/README.md`, pyReadme({
   name: "llama-index-tools-csoai", title: "LlamaIndex tool spec for the Council of AI GSPC board",
-  usage: "from llama_index.tools.csoai import CSOAIGSPCToolSpec\n\ntools = CSOAIGSPCToolSpec().to_tool_list()\nprint(tools[0].call())  # board totals",
+  usage: "from llama_index.tools.csoai import CSOAIGSPCToolSpec\n\ntools = CSOAIGSPCToolSpec().to_tool_list()  # gspc_board, verify_card\nprint(tools[0].call())  # board totals\nprint(tools[1].call(card_id=\"acf6bf0356123632758bf6c98c83d81c7a8392c3b111b311317c516cc65133a4\"))  # free verification",
 }));
 emit(`${LI}/LICENSE`, APACHE);
 emit(`${LI}/llama_index/tools/csoai/_board.py`, pyBoard);
@@ -434,23 +511,27 @@ from typing import Optional
 
 from llama_index.core.tools.tool_spec.base import BaseToolSpec
 
-from ._board import TOOL_DESCRIPTION, read_board
+from ._board import TOOL_DESCRIPTION, VERIFY_TOOL_DESCRIPTION, read_board, read_verify
 
 
 class CSOAIGSPCToolSpec(BaseToolSpec):
-    spec_functions = ["gspc_board"]
+    spec_functions = ["gspc_board", "verify_card"]
 
     def gspc_board(self, axis: Optional[str] = None) -> dict:
         return read_board(axis)
 
+    def verify_card(self, card_id: Optional[str] = None, card: Optional[dict] = None) -> dict:
+        return read_verify(card_id, card)
+
     gspc_board.__doc__ = TOOL_DESCRIPTION
+    verify_card.__doc__ = VERIFY_TOOL_DESCRIPTION
 `);
 emit(`${LI}/llama_index/tools/csoai/__init__.py`, `"""llama-index-tools-csoai — LlamaIndex tool spec for the Council of AI GSPC board."""
-from ._board import DOCTRINE_SHA256, read_board
+from ._board import DOCTRINE_SHA256, read_board, read_verify
 from .base import CSOAIGSPCToolSpec
 
 __version__ = "${AV}"
-__all__ = ["CSOAIGSPCToolSpec", "read_board", "DOCTRINE_SHA256", "__version__"]
+__all__ = ["CSOAIGSPCToolSpec", "read_board", "read_verify", "DOCTRINE_SHA256", "__version__"]
 `);
 // crewai-csoai
 emit("distribution/python/crewai-csoai/pyproject.toml", pyProject({
@@ -460,19 +541,19 @@ emit("distribution/python/crewai-csoai/pyproject.toml", pyProject({
 }));
 emit("distribution/python/crewai-csoai/README.md", pyReadme({
   name: "crewai-csoai", title: "CrewAI tool for the Council of AI GSPC board",
-  usage: "from crewai import Agent\nfrom crewai_csoai import GSPCBoardTool\n\nanalyst = Agent(role=\"Analyst\", goal=\"Quote the GSPC board\", backstory=\"...\", tools=[GSPCBoardTool()])",
+  usage: "from crewai import Agent\nfrom crewai_csoai import GSPCBoardTool, VerifyCardTool\n\nanalyst = Agent(role=\"Analyst\", goal=\"Quote the GSPC board and verify its cards\", backstory=\"...\", tools=[GSPCBoardTool(), VerifyCardTool()])",
 }));
 emit("distribution/python/crewai-csoai/LICENSE", APACHE);
 emit("distribution/python/crewai-csoai/crewai_csoai/_board.py", pyBoard);
 emit("distribution/python/crewai-csoai/crewai_csoai/tools.py", `"""CrewAI BaseTool for the GSPC board. Generated by scripts/harness-x/render.mjs."""
 from __future__ import annotations
 
-from typing import Optional, Type
+from typing import Optional, Type, Union
 
 from crewai.tools import BaseTool
 from pydantic import BaseModel, Field
 
-from ._board import TOOL_DESCRIPTION, TOOL_NAME, read_board
+from ._board import TOOL_DESCRIPTION, TOOL_NAME, VERIFY_TOOL_DESCRIPTION, VERIFY_TOOL_NAME, read_board, read_verify
 
 
 ${pyInput}
@@ -484,13 +565,22 @@ class GSPCBoardTool(BaseTool):
 
     def _run(self, axis: Optional[str] = None) -> dict:
         return read_board(axis)
+
+
+class VerifyCardTool(BaseTool):
+    name: str = VERIFY_TOOL_NAME
+    description: str = VERIFY_TOOL_DESCRIPTION
+    args_schema: Type[BaseModel] = VerifyCardInput
+
+    def _run(self, card_id: Optional[str] = None, card: Optional[Union[dict, str]] = None) -> dict:
+        return read_verify(card_id, card)
 `);
 emit("distribution/python/crewai-csoai/crewai_csoai/__init__.py", `"""crewai-csoai — CrewAI tool for the Council of AI GSPC board."""
-from ._board import DOCTRINE_SHA256, read_board
-from .tools import GSPCBoardInput, GSPCBoardTool
+from ._board import DOCTRINE_SHA256, read_board, read_verify
+from .tools import GSPCBoardInput, GSPCBoardTool, VerifyCardInput, VerifyCardTool
 
 __version__ = "${AV}"
-__all__ = ["GSPCBoardTool", "GSPCBoardInput", "read_board", "DOCTRINE_SHA256", "__version__"]
+__all__ = ["GSPCBoardTool", "GSPCBoardInput", "VerifyCardTool", "VerifyCardInput", "read_board", "read_verify", "DOCTRINE_SHA256", "__version__"]
 `);
 
 // ── 7. TypeScript/ESM adapters (Vercel AI SDK, Mastra) over the /mcp door + @csoai/layer0 ───
@@ -581,6 +671,8 @@ through \`Layer0.governed()\` (gate → run → attest). \`@csoai/layer0\` is an
 
 States: \`LIVE\`, \`ERROR\` (the door answered with a JSON-RPC error), \`UNREACHABLE\` (no number is returned).
 ${STANCE}
+
+${LINKS}
 
 Licence: Apache-2.0. ${doctrineFooter()}
 Generated by \`scripts/harness-x/render.mjs\` — do not hand-edit.
@@ -694,6 +786,8 @@ ${toolLines(paid)}
 measurement is correct, current or complete. UNMEASURED, UNREACHABLE and UNCHECKABLE are first-class states.
 ${STANCE} No tool determines legal compliance.
 
+${LINKS}
+
 Operator: ${ID.publisher}, UK Companies House ${ID.company_number}. ${doctrineFooter()}
 `);
 
@@ -722,6 +816,8 @@ three-state card verify (VALID / INVALID / UNCHECKABLE). The canonical remote se
 ${ID.door}; this Space is a mirror door, not a second authority. The board GET is the authority.
 
 ${STANCE}
+
+${LINKS}
 
 Licence: Apache-2.0. ${doctrineFooter()}
 Generated by \`scripts/harness-x/render.mjs\` — do not hand-edit.
@@ -790,64 +886,189 @@ if __name__ == "__main__":
     demo.launch(mcp_server=True)
 `);
 
-// ── 10. Well-known descriptors: regenerate DERIVED fields only ──────────────────────────────
-// The rest of each document is owned by the file itself (provider, licence, DOI, discovery);
-// the fields below are the ones that drifted, so they are now rendered from source every time.
+// ── 10. Well-known descriptors: BOTH DOCUMENTS RENDERED WHOLE ───────────────────────────────
+// public/.well-known/mcp/server-card.json and public/.well-known/mcp.json are generated here in
+// full, from ONE set of sources (public audit 2026-09-28, fix #24):
+//   identity   council-os/distribution.json identity + registry_names
+//   version    mcp/gspc-server/server.json version (the MCP Registry's isLatest; check.mjs reads the
+//              registry live) — and functions/mcp/[[path]].ts MCP_HTTP_SERVER_VERSION must equal it
+//   tools      functions/mcp/gspc-tools.json + paid-tools.json, exactly what tools/list serves
+//   doctrine   docs/DOCTRINE.md, by hash
+// Until then only some fields were rendered and the rest were whatever the file last held, which
+// is how the audit found a server card with a four-name axis list, no tools[] and no version, and
+// an mcp.json with a stale registry version, an internal worker note and a fallback URL
+// (https://csoai.org/mcp) that answers POST with a 308. Nothing in either file is hand-edited now.
+//
+// THE TOOL NAMES, COUNTS AND DIGESTS COME FROM WHAT tools/list SERVES (2026-09-28), not from the
+// registry: functions/mcp/[[path]].ts lists gspc-tools.json then paid-tools.json on /mcp, and
+// gspc-tools.json alone on /mcp/free. The contract-parity instrument (scripts/census/contract-parity.py)
+// compares exactly these fields with a live tools/list. The registry must name the same fleet; if it
+// does not, this render refuses rather than publish either version. The digest is the instrument's
+// own: sha256 of the sorted tool names joined by "\n".
+const SERVED_FREE_DEFS = readJson("functions/mcp/gspc-tools.json").tools;
+const SERVED_PAID_DEFS = readJson("functions/mcp/paid-tools.json").tools;
+const SERVED_FREE = SERVED_FREE_DEFS.map((t) => t.name);
+const SERVED_PAID = SERVED_PAID_DEFS.map((t) => t.name);
+const SERVED = [...SERVED_FREE, ...SERVED_PAID];
+const namesSha = (names) => sha256([...names].sort().join("\n"));
+const NAMES_SHA_RULE = 'sha256 of the tool names from tools/list, sorted, joined by "\\n" (UTF-8)';
+if (SERVED.join(",") !== toolNames.join(",") || SERVED_FREE.join(",") !== free.map((t) => t.id).join(",")) {
+  console.error(
+    "harness-x render: REFUSED — council-os/capabilities.json mcp_tool entries and the served definitions " +
+    `(functions/mcp/gspc-tools.json + paid-tools.json) name different fleets.\n  registry: ${toolNames.join(",")}\n  served:   ${SERVED.join(",")}`);
+  process.exit(2);
+}
+// The HTTP runtime answers initialize with MCP_HTTP_SERVER_VERSION; the documents state REMOTE_VERSION.
+// Two numbers for one server is the drift this section exists to stop, so a mismatch refuses.
+const HTTP_VERSION = /export const MCP_HTTP_SERVER_VERSION = "([^"]+)"/.exec(read("functions/mcp/[[path]].ts"))?.[1];
+if (HTTP_VERSION !== REMOTE_VERSION) {
+  console.error(
+    `harness-x render: REFUSED — functions/mcp/[[path]].ts MCP_HTTP_SERVER_VERSION is ${HTTP_VERSION ?? "(absent)"}, ` +
+    `mcp/gspc-server/server.json version is ${REMOTE_VERSION}. initialize and the discovery documents must state one version.`);
+  process.exit(2);
+}
+const SERVER_NAME = "csoai-gspc-mcp"; // serverInfo.name, as initialize answers it
 const stdio = `npx -y ${NPM_ID}@${NPM_VERSION}`;
 const fleetProse = `${word(free.length)} free readers plus ${word(paid.length)} x402-metered evidence tools`;
-{
-  const rel = "public/.well-known/mcp/server-card.json";
-  const card = readJson(rel);
-  card.description =
-    "Independent AI-governance measurement body. Publishes the GSPC board (Governance · Safety · Provenance · Continuity). " +
-    "Quote totals.public_count from GET /api/gspc — do not type a count here. Frozen item banks, published scoring code, measurement board. " +
-    "Measurement only: not certification, not accreditation, no conformity assessment. " +
-    `MCP registry ${dist.registry_names.github} server ${REMOTE_VERSION}. POST /mcp lists ${fleetProse}; witness_hash is quarantined on HTTP. mill-tool \`measure\` dropped.`;
-  card.endpoints.mcp.stdio = stdio;
-  card.endpoints.mcp.note =
-    `Live door is ${ID.door} (GET 200). HTTP tools/list is ${word(tools.length)}: ${fleetProse}. witness_hash is quarantined and not advertised. ` +
-    `Worker https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp is 404; not a door. Registry server ${REMOTE_VERSION}. mill-tool \`measure\` dropped.`;
-  card.capabilities.tools = toolNames;
-  card.capabilities.total_tools = tools.length;
-  card.capabilities.free_tools = free.length;
-  card.capabilities.metered_tools = paid.length;
-  card.doctrine = DOCTRINE;
-  card.generated_by = "scripts/harness-x/render.mjs (derived fields: description, endpoints.mcp.stdio, endpoints.mcp.note, capabilities.*, doctrine)";
-  emit(rel, j(card));
-}
-{
-  const rel = "public/.well-known/mcp.json";
-  const m = readJson(rel);
-  m.servers[0].stdio = stdio;
-  m.servers[0].registry.name = dist.registry_names.github;
-  m.servers[0].registry.version = REMOTE_VERSION;
-  m.measured.total_tools = tools.length;
-  m.measured.free_tools = free.length;
-  m.measured.metered_tools = paid.length;
-  m.measured.tools = toolNames;
-  m.measured.note =
-    `POST /mcp tools/list: ${fleetProse}. mill-tool \`measure\` is dropped. witness_hash remains quarantined and is not advertised. ` +
-    `MCP Registry server ${REMOTE_VERSION} points here. A listing does not prove paid settlement or delivery.`;
-  m.planted.tools = toolNames;
-  m.planted.note =
-    `The product door: ${fleetProse}. Public-root trio is VALID / INVALID / UNCHECKABLE, never a GSPC grade. ` +
-    "No jail run from MCP. mill-tool `measure` dropped.";
-  m.doctrine = DOCTRINE;
-  m.generated_by = "scripts/harness-x/render.mjs (derived fields: servers[0].stdio, servers[0].registry, measured.*, planted.*, doctrine)";
-  emit(rel, j(m));
-}
+// The one tool-count sentence the site, /mcp and these documents share (fix #19). Array lengths.
+const TOOL_COUNTS = `${SERVED_FREE.length} free tools at /mcp/free; ${SERVED.length} at /mcp ` +
+  `(${SERVED_FREE.length} free + ${SERVED_PAID.length} metered). The npm package is versioned separately.`;
+const WELL_KNOWN_GENERATOR =
+  "scripts/harness-x/render.mjs — the whole document, from council-os/distribution.json (identity), " +
+  "mcp/gspc-server/server.json (version), functions/mcp/gspc-tools.json + paid-tools.json (tools, as tools/list serves them) " +
+  "and docs/DOCTRINE.md (doctrine hash). Do not hand-edit; re-render.";
+const provider = { name: ID.publisher, url: ID.website, company_number: ID.company_number, jurisdiction: ID.jurisdiction };
+emit("public/.well-known/mcp/server-card.json", j({
+  schema_version: "2024-11-05",
+  name: SERVER_NAME,
+  display_name: ID.display_name,
+  version: REMOTE_VERSION,
+  serverInfo: { name: SERVER_NAME, title: ID.display_name, version: REMOTE_VERSION },
+  description:
+    "Independent AI-governance measurement body. Publishes the GSPC measurement board: quote totals.public_count from GET /api/gspc, never a typed count. " +
+    "Frozen item banks and published scoring code. Measurement only: not certification, not accreditation, no conformity assessment. " +
+    `MCP registry ${dist.registry_names.canonical} server ${REMOTE_VERSION} (${dist.registry_names.deprecated_alias} is its deprecated alias). ${TOOL_COUNTS}`,
+  icon_url: ID.icon,
+  provider,
+  transport: { type: "streamable-http", url: ID.door },
+  endpoints: {
+    mcp: {
+      primary: ID.door,
+      current: ID.door,
+      stdio,
+      note: `Live door is ${ID.door} (GET 200). HTTP tools/list is ${word(SERVED.length)}: ${fleetProse}. witness_hash is quarantined and not advertised. Registry server ${REMOTE_VERSION}.`,
+      free: FREE_DOOR,
+      free_note:
+        `${FREE_DOOR} serves the ${word(free.length)} free readers only, from the same definitions and handlers as ${ID.door}: ` +
+        "no payment tool and no payment text. It is the address for chat clients and directories that list no payment software.",
+    },
+    gspc_board: {
+      url: ID.board,
+      method: "GET",
+      description: "Live GSPC board. Per-axis n, leader, Wilson interval, separation (SEPARATED/TIE). Quote totals.public_count. Empty cells stay empty. Ties are ties. No auth required.",
+    },
+  },
+  capabilities: {
+    tools: SERVED,
+    total_tools: SERVED.length,
+    free_tools: SERVED_FREE.length,
+    metered_tools: SERVED_PAID.length,
+    tool_counts: TOOL_COUNTS,
+    streaming: false,
+    auth_required: false,
+    tool_names_sha256: namesSha(SERVED),
+    free_door_tool_names: SERVED_FREE,
+    free_door_tool_names_sha256: namesSha(SERVED_FREE),
+    tool_names_sha256_rule: NAMES_SHA_RULE,
+    derived_from: `tools/list of ${ID.door} (functions/mcp/gspc-tools.json + paid-tools.json) and of ${FREE_DOOR} (gspc-tools.json)`,
+  },
+  // The full definitions tools/list serves on /mcp, in its order: name, title, description, input and
+  // output schema, annotations. The first twelve are the /mcp/free list.
+  tools: [...SERVED_FREE_DEFS, ...SERVED_PAID_DEFS],
+  authentication: { required: false, note: "Public MCP — initialize and tools/list require no Authorization header." },
+  license: "CC-BY-4.0",
+  doi: "10.5281/zenodo.21991104",
+  // 29 Sep 2026: the Zenodo record answers HTTP 410 (account blocked by Zenodo; appeal pending).
+  // The identifier stays; this says it does not resolve. Same block GET /api/gspc serves.
+  doi_status: "UNAVAILABLE",
+  doi_status_note: "Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending.",
+  doi_status_since: "2026-09-29T15:47Z",
+  doi_status_url: "https://councilof.ai/interop/zenodo-status.json",
+  doi_alternative: { url: "https://councilof.ai/methodology/", relation: "the live methodology page; not the deposit's bytes" },
+  explicitly_not: ["certification", "accreditation", "conformity-assessment", "legal-determination", "enforcement"],
+  discovery: { well_known_mcp: `${ID.website}/.well-known/mcp.json`, agent_card: `${ID.website}/.well-known/agent-card.json` },
+  doctrine: DOCTRINE,
+  generated_by: WELL_KNOWN_GENERATOR,
+}));
+emit("public/.well-known/mcp.json", j({
+  schema_version: "2026-07-28",
+  name: "csoai",
+  description:
+    "Council of AI measurement tools exposed over MCP. Independent AI-governance measurement body — not certification, not accreditation. " +
+    "Live board: GET /api/gspc (quote totals.public_count).",
+  servers: [
+    {
+      name: SERVER_NAME,
+      display_name: "GSPC Measurement Tools",
+      url: ID.door,
+      version: REMOTE_VERSION,
+      stdio,
+      auth_required: false,
+      registry: {
+        name: dist.registry_names.canonical,
+        version: REMOTE_VERSION,
+        url: "https://registry.modelcontextprotocol.io",
+        deprecated_alias: dist.registry_names.deprecated_alias,
+      },
+      free_url: FREE_DOOR,
+      free_tools: SERVED_FREE,
+      free_tool_names_sha256: namesSha(SERVED_FREE),
+    },
+  ],
+  catalogue: ID.door,
+  gspc_board: ID.board,
+  server_card: `${ID.website}/.well-known/mcp/server-card.json`,
+  measured: {
+    total_tools: SERVED.length,
+    free_tools: SERVED_FREE.length,
+    metered_tools: SERVED_PAID.length,
+    server_count: 1,
+    tools: SERVED,
+    tool_counts: TOOL_COUNTS,
+    note:
+      `POST /mcp tools/list: ${fleetProse}. witness_hash remains quarantined and is not advertised. ` +
+      `MCP Registry server ${REMOTE_VERSION} points here. A listing does not prove paid settlement or delivery.`,
+    tool_names_sha256: namesSha(SERVED),
+    tool_names_sha256_rule: NAMES_SHA_RULE,
+    derived_from: `tools/list of ${ID.door}: functions/mcp/gspc-tools.json + paid-tools.json`,
+  },
+  planted: {
+    tools: SERVED,
+    url: ID.door,
+    note:
+      `The product door: ${fleetProse}. The public-root readers answer VALID / INVALID / NOT_IN_THIS_CORPUS / UNCHECKABLE, never a GSPC grade. ` +
+      "No jail run from MCP.",
+  },
+  provider: { name: ID.publisher, url: ID.website },
+  doctrine: DOCTRINE,
+  generated_by: WELL_KNOWN_GENERATOR,
+}));
 
 // ── 11. SUBMIT.md ───────────────────────────────────────────────────────────────────────────
+const rowsById0 = Object.fromEntries(dist.distribution.map((r) => [r.id, r]));
+const PY_ORDER = `Publish csoai-gspc ${pyClientVersion} to PyPI first: this package requires csoai-gspc>=${pyClientVersion}, and \`scripts/harness-x/parity_live.py\` reports that floor uninstallable until it is there. (The floor also keeps out 0.2.20260928, a snapshot release cut on 2026-09-28 from pre-2026-09-26 client code; gspc-spray.py now refuses a package source older than the one PyPI serves.)`;
+const PY_NO_REUSE = `The source version is ${AV}. PyPI and npm refuse to re-upload a version, so any content change moves adapter_version; parity_live.py flags a live version whose bytes the source no longer produces.`;
 const STEPS = {
   "mcp-registry-github": [
-    "Nothing to do while the live registry isLatest equals this file's version (check.mjs compares both).",
-    "When the version moves: `mcp-publisher login github` (device flow, as a CSOAI-ORG member), then `mcp-publisher publish distribution/mcp-registry/io.github.CSOAI-ORG-gspc/server.json`.",
-    "npm `csoai-gspc-mcp` must already carry `mcpName: io.github.CSOAI-ORG/gspc` at the declared version (it does at 0.2.2).",
+    "DEPRECATED ALIAS. The canonical name is the domain one (mcp-registry-domain). Owner step: deprecate this name in the registry (`mcp-publisher login github` as a CSOAI-ORG member, then set its status to deprecated). Publish no new versions under it.",
+    "This file stays rendered so the deprecation has the descriptor it names; check.mjs still compares its version with the registry's isLatest.",
+    "npm `csoai-gspc-mcp` 0.2.2 carries `mcpName: io.github.CSOAI-ORG/gspc` (the deprecated alias); the package source now carries `mcpName: ai.councilof/gspc`, so the next npm release binds the package to the canonical name.",
   ],
   "mcp-registry-domain": [
     "`mcp-publisher login http --domain councilof.ai --private-key <64-hex Ed25519 seed>` — the key whose public half is served at /.well-known/mcp-registry-auth.",
     "`mcp-publisher publish distribution/mcp-registry/ai.councilof-gspc/server.json`.",
-    "Owner decision first: a second registry name for the same door is a duplicate listing; keep both, or later deprecate one.",
+    "CANONICAL NAME (owner ruling 2026-09-26). The live entry is remote-only; add the npm package to it only after an npm release that carries `mcpName: ai.councilof/gspc`.",
+    `The remote is \`${DOMAIN_REMOTE}\` (the door plus one slash): the bare door is registered under the io.github name and the registry refuses one remote URL under two names. Publish a version above the registry's current isLatest; registry versions are immutable.`,
   ],
   "claude-plugin": [
     "Create a public repo on CouncilofAI-CSOAI (not CSOAI-ORG); copy distribution/plugin/ to its root.",
@@ -871,14 +1092,16 @@ const STEPS = {
     "Custom GPT Actions need no review: Import from URL → the openapi_actions URL.",
   ],
   "pypi-langchain-csoai": [
+    PY_ORDER,
     "`cd distribution/python/langchain-csoai && python -m build && twine upload dist/*` with an owner PyPI API token.",
-    "Name is unclaimed on PyPI as of 2026-09-25.",
+    PY_NO_REUSE,
   ],
   "pypi-llama-index-tools-csoai": [
+    PY_ORDER,
     "`cd distribution/python/llama-index-tools-csoai && python -m build && twine upload dist/*` (owner token).",
     "Optional LlamaHub: PR to run-llama/llama_index from an unflagged account.",
   ],
-  "pypi-crewai-csoai": ["`cd distribution/python/crewai-csoai && python -m build && twine upload dist/*` (owner token)."],
+  "pypi-crewai-csoai": [PY_ORDER, "`cd distribution/python/crewai-csoai && python -m build && twine upload dist/*` (owner token).", PY_NO_REUSE],
   "npm-ai-sdk-gspc": [
     "`cd distribution/npm/ai-sdk-gspc && npm publish --access public` with a granular token that has Bypass 2FA (the account is WebAuthn-only).",
     "The @csoai scope must exist and the token must be able to publish to it.",
@@ -889,7 +1112,8 @@ const STEPS = {
     "Run their `task validate -- --name csoai-gspc` locally, then open the PR. Supersedes docs/press/submissions/docker-mcp-registry/.",
   ],
   "hf-space": [
-    "`huggingface-cli upload csoai/gspc-mcp distribution/hf-space/csoai-gspc-mcp . --repo-type space` with an owner HF write token (creates the Space if absent).",
+    PY_ORDER.replace("this package requires", "the Space's requirements.txt requires"),
+    `\`huggingface-cli upload ${rowsById0["hf-space"].space_id} distribution/hf-space/csoai-gspc-mcp . --repo-type space\` with an owner HF write token. The live Space is ${rowsById0["hf-space"].space_id}; never upload to csoai/gspc-mcp, which is the static GSPC-MCP axis printer.`,
   ],
   "well-known-server-card": ["Merge this lane; the next deploy serves the regenerated files."],
 };
@@ -908,6 +1132,8 @@ Remote server version: ${REMOTE_VERSION} (from \`mcp/gspc-server/server.json\`; 
 Fleet: ${FLEET}. Doctrine sha256 \`${DOCTRINE.sha256}\`.
 
 Before any step: \`node scripts/harness-x/render.mjs --check && node scripts/harness-x/check.mjs\`.
+After any step: \`python3 scripts/harness-x/parity_live.py\` reads every live channel in \`published_channels\` and says
+CONSISTENT / INCONSISTENT (quoting source and live) / UNCHECKABLE (staged daily: \`scripts/pod-loops/harness-x-parity.sh\`).
 
 | id | format | licence | channel | approver |
 |---|---|---|---|---|

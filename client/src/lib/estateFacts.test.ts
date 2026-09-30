@@ -11,18 +11,20 @@ import { ESTATE_FACTS_OBSERVED, estateFactsFromPayload } from "./estateFacts";
 
 describe("estateFacts derives, never types", () => {
   it("the committed derivation is the committed artifact, dated by the artifact", () => {
-    const cf = chainFacts as { as_of: string; bodies: { published: number; verified_valid: number } };
+    const cf = chainFacts as { as_of: string; bodies: { published: number; verified_valid: number; verified_at: string } };
     expect(ESTATE_FACTS_OBSERVED.live).toBe(false);
     expect(ESTATE_FACTS_OBSERVED.bodiesPublished).toBe(cf.bodies.published);
     expect(ESTATE_FACTS_OBSERVED.bodiesValid).toBe(cf.bodies.verified_valid);
-    expect(ESTATE_FACTS_OBSERVED.asOf).toBe(cf.as_of);
+    // Dated by the verification run, not by card_index.json's creation date (audit 2026-09-28 #17).
+    expect(ESTATE_FACTS_OBSERVED.asOf).toBe(cf.bodies.verified_at);
+    expect(cf.bodies.verified_at).not.toBe(cf.as_of);
     expect(ESTATE_FACTS_OBSERVED.verifiedSentence).toContain(`${cf.bodies.published} signed measurement cards`);
   });
 
   it("a non-live rendering carries its provenance and date in the same sentence", () => {
     const note = ESTATE_FACTS_OBSERVED.provenanceNote;
     expect(note).toContain("committed derivation");
-    expect(note).toContain((chainFacts as { as_of: string }).as_of.slice(0, 10));
+    expect(note).toContain((chainFacts as { bodies: { verified_at: string } }).bodies.verified_at.slice(0, 10));
     expect(note).toContain("GET /api/state wins");
   });
 

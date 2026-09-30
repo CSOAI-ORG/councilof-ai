@@ -12,8 +12,7 @@
         "pricing_basis": "PROMO_EXISTING_DATA",
         "product_id": "csoai.product.issuance",
         "sku_id": "issuance",
-        "starts_at": "2026-09-11T00:00:00Z",
-        "tier": "reserve"
+        "starts_at": "2026-09-11T00:00:00Z"
       },
       "description": "Inclusion proof bundle for leaves available in the last published Merkle root, with leaf hashes, indexes, proof paths, the Merkle root and signed card count. Not a grade.",
       "extra": {
@@ -32,14 +31,14 @@
     }
   ],
   "csoai": {
-    "bazaar_note": "Listing is free; CDP indexes after first settled payment. Live catalog status is UNCHECKABLE until a facilitator settle exists (and CDP EXTENSION-RESPONSES / #2112).",
+    "bazaar_note": "A qualifying settlement may trigger Bazaar catalog processing; it can remain processing or be rejected. Catalog inclusion requires separate public readback.",
     "catalog": "https://councilof.ai/api/x402",
-    "deliverable": "one inclusion proof for the given leaf against the signed public root, with the root and the path — verification of it stays free forever",
+    "deliverable": "Available inclusion proofs for the last published signed public root: leaf hashes, indexes, paths, Merkle root and card count. The full root signature envelope is free at /root.json, and a single inclusion proof is free at /api/proof?sha=<64-hex>.",
     "free": {
       "one_inclusion": "/api/proof?sha=<64-hex>"
     },
     "free_preview": "/api/proof?sha=<64-hex>",
-    "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+    "lid": "23 axes measured · 14 model fleets · 0 separated leaders · 9 public leader scores · 9 fact runs · TIE is TIE · not a certificate.",
     "never": [
       "grade",
       "rank",
@@ -55,7 +54,7 @@
       "signed": true,
       "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
       "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
-      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run scripts/verify_receipt.py to do it without us."
+      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run the same-site https://councilof.ai/verifier/verify_receipt.py checker. Default mode reads the public DID document; saved-key replay can be offline. Signature validity is not proof of settlement."
     },
     "per": "proof-bundle",
     "schema": "csoai.public-root-proof/0.1",
@@ -150,7 +149,7 @@
           {
             "acceptIndex": 0,
             "format": "jws",
-            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9wcm9vZiIsInNjaGVtZSI6ImV4YWN0IiwidmFsaWRVbnRpbCI6MTc5MDA5MzAzMiwidmVyc2lvbiI6MX0.vMaW2oj5mnGVL0fgceOHQ0pEWbqzoHUoy2ll5w9qyAaAsXzGs-YkDK8OLx6vr3ScYOvJGh-Di3pHsg_TEESeBg"
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9wcm9vZj9idW5kbGU9MSIsInNjaGVtZSI6ImV4YWN0IiwidmFsaWRVbnRpbCI6MTc5MDU3MjQ4OSwidmVyc2lvbiI6MX0.sGrh2tfWzALkct_tbIApBlz-Yef9U4bGivT0w6kNiKi_ugKd5MHGMfXypWsRkz06xfZxdkXdfeTp18kZi-jbCg"
           }
         ]
       },

@@ -373,7 +373,7 @@ def badge_row(f: dict) -> str:
         f"[![PyPI csoai-gspc](https://img.shields.io/pypi/v/csoai-gspc?style=flat-square&color={GREEN}&label=PyPI%20csoai--gspc)](https://pypi.org/project/csoai-gspc/)",
         f"[![npm csoai-gspc-mcp](https://img.shields.io/npm/v/csoai-gspc-mcp?style=flat-square&color={GREEN}&label=npm%20csoai--gspc--mcp)](https://www.npmjs.com/package/csoai-gspc-mcp)",
         f"[![DOI {ZENODO_METHOD_CONCEPT}](https://zenodo.org/badge/DOI/{ZENODO_METHOD_CONCEPT}.svg)](https://doi.org/{ZENODO_METHOD_CONCEPT})",
-        f"[![License MIT](https://img.shields.io/badge/license-MIT-{GREEN}?style=flat-square)](https://github.com/{OWNER}/councilof-ai/blob/master/LICENSE)",
+        f"[![License MIT](https://img.shields.io/badge/license-MIT-{GREEN}?style=flat-square)](https://huggingface.co/datasets/csoai/councilof-ai-source/blob/main/source/LICENSE)",
     ])
 
 
@@ -507,7 +507,7 @@ WHO_WE_ARE = (
 
 
 def derived_line(f: dict) -> str:
-    return (f"_derived {f['derived']} by [`scripts/github/org-readme.py`](https://github.com/{OWNER}/councilof-ai/blob/master/scripts/github/org-readme.py) — "
+    return (f"_derived {f['derived']} by [`scripts/github/org-readme.py`](https://huggingface.co/datasets/csoai/councilof-ai-source/blob/main/source/scripts/github/org-readme.py) — "
             "every number on this page is read live from the URLs in that script; if this page and the API disagree, the API is right._")
 
 

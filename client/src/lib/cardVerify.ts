@@ -89,9 +89,13 @@ const FLOAT_FIELDS = new Set(["accuracy", "ci_low", "ci_high", "recall", "precis
 export const CARD_KEY_ID = "did:web:csoai.org#card-attestation-1";
 export const BOARD_KEY_ID = "did:web:csoai.org#board-attestation-1";
 
-/** Offline pins for the two measurement-card generations rendered in Council OS. */
+/** The card key added on rotation (27 Sep 2026); #card-attestation-1 stays published and pinned. */
+export const CARD_KEY_2_ID = "did:web:csoai.org#card-attestation-2";
+
+/** Offline pins for the measurement-card keys rendered in Council OS (functions/_lib/cardVerify.ts pins the same). */
 const PINNED_DID_KEYS: Record<string, string> = {
   [CARD_KEY_ID]: "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+  [CARD_KEY_2_ID]: "2cfab90cdb6cbb059bf931c6517ac9ff410937d4185280083bafbdf29b61bbba",
   [BOARD_KEY_ID]: "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
 };
 

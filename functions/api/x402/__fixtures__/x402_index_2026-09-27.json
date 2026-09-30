@@ -1,0 +1,93 @@
+{
+ "payload": {
+  "schema": "csoai.x402-index/0.1",
+  "date": "2026-09-27",
+  "as_of": "2026-09-27T01:11:37Z",
+  "census": {
+   "schema": "csoai.x402-bazaar-conformance/0.2",
+   "as_of": "2026-09-27T01:11:37Z",
+   "date": "2026-09-27",
+   "method": "One GET per DISTINCT HOST listed in either public x402 Bazaar (Coinbase CDP, PayAI), using the first resource that index advertises for that host. Conformant = HTTP 402 AND a PAYMENT-REQUIRED response header AND x402Version 2 in the body AND an extensions.bazaar block. Identifiable UA, 12s timeout, 24 concurrent. Nothing signed, nothing paid, no door settled.",
+   "indexes": {
+    "cdp": {
+     "resources": 17591,
+     "reported_total": 17591,
+     "complete": true
+    },
+    "payai": {
+     "resources": 6941,
+     "reported_total": 6941,
+     "complete": true
+    }
+   },
+   "resources_listed_without_scheme": {
+    "cdp": 0,
+    "payai": 0
+   },
+   "hosts_distinct": 2722,
+   "hosts_probed": 2722,
+   "partial": false,
+   "rule_note": "x402_version and has_bazaar_extension are read from the BODY, as the 2026-09-05 snapshot did; header_x402_version / header_has_bazaar_extension carry the PAYMENT-REQUIRED header's own reading. header_v2_bazaar_not_body counts doors that pass in the header only.",
+   "header_v2_bazaar_not_body": 1023,
+   "headline": {
+    "conformant": 477,
+    "conformant_pct": 17.52,
+    "answered_402": 1645,
+    "unreachable": 16,
+    "carried_payment_required_header": 1537,
+    "x402_version_2": 554,
+    "carried_bazaar_extension": 594
+   },
+   "by_index": {
+    "cdp": {
+     "hosts": 1815,
+     "conformant": 355
+    },
+    "payai": {
+     "hosts": 697,
+     "conformant": 77
+    },
+    "cdp+payai": {
+     "hosts": 210,
+     "conformant": 45
+    }
+   },
+   "status_distribution": {
+    "402": 1645,
+    "404": 462,
+    "405": 290,
+    "200": 119,
+    "308": 60,
+    "400": 44,
+    "401": 28,
+    "None": 16,
+    "204": 16,
+    "403": 11,
+    "502": 6,
+    "503": 5,
+    "530": 4,
+    "406": 4,
+    "410": 4,
+    "422": 3,
+    "500": 2,
+    "415": 2,
+    "526": 1
+   },
+   "elapsed_s": 372.7,
+   "not": "a seller's honesty, product quality, price, or whether a door would deliver after payment. Measurement, not certification.",
+   "producer": "scripts/census/x402-bazaar-conformance.py (councilof-ai), run by the daily census job on the estate's measuring host"
+  },
+  "pins": {
+   "summary-2026-09-27.json": "5ed2c6488776af15ddce5ecb16ed000458999732123920b06d28aa5ea1c578e4",
+   "release-2026-09-27.json": "461b7e359dc5e191a9e757f9843a603483f61aa13232224bcc8b1c78460c3b2a",
+   "release-2026-09-27.signed.json#payload_sha256": "0e23688860403ab2453678f42f85848ca578e3baa499b6aac00ce186822ddbfb"
+  },
+  "dataset": "https://huggingface.co/datasets/csoai/x402-bazaar-conformance",
+  "reading_note": "census.method's 'Nothing signed' describes the probe run: nothing was paid or settled. This leaf is the board signature over that run's published summary. The two index frames (cdp, payai) overlap by host; never add them."
+ },
+ "sha256": "6bfa6ac7bacf7c87e2774886585d799f9d3507c433efb6412893934a874ac122",
+ "sig_ed25519": "e531591e8738660d3ac38601bf4d049b6ee5b02b086911ea1c0ce769361a8cffbbc86b546b966e75bfcc9354e8f34e5aff5c8de9e7456162cd01fa6c7f76de0c",
+ "did": "did:web:csoai.org#board-attestation-1",
+ "signed_at": "2026-09-27T06:50:01.051Z",
+ "verify": "POST this leaf to https://councilof.ai/api/verify, or read https://councilof.ai/api/x402/index"
+}

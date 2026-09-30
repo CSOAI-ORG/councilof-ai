@@ -43,6 +43,17 @@ export default function ResearchTransparency() {
         </div>
       </section>
 
+      <section aria-label="Preprints" className="mx-auto max-w-4xl px-6 pt-10">
+        <a href="/research/cross-hardware-reproducibility/" className="block rounded-2xl border border-emerald-400/40 bg-emerald-500/10 p-5 hover:bg-emerald-500/20">
+          <span className="block font-mono text-[11px] uppercase tracking-[3px] text-emerald-200">Preprint · September 2026</span>
+          <span className="mt-1 block text-[15px] font-bold text-emerald-50">Same model, same prompts, different answers</span>
+          <span className="mt-1 block text-[13px] leading-relaxed text-emerald-100/90">
+            Item-level cross-hardware reproducibility of LLM evaluation results: the same models, prompts and settings re-run on a
+            second GPU runtime and compared item by item, with the full per-item dataset and an offline verifier.
+          </span>
+        </a>
+      </section>
+
       <section className="mx-auto max-w-4xl px-6 py-10 space-y-4">
         <Finding title="Lineage diversity beats topology shape" verdict="CONFIRMED" tone="confirmed">
           <p>Across three independent measurement passes, diverse model lineages (e.g. Qwen + Llama + DeepSeek + Gemma + Mistral) consistently outperformed identical-lineage configurations of the same size on a governance-quality battery. The gap between diverse and identical configurations was roughly 6× larger than the gap between different topology shapes (ring vs. pyramid vs. triangle). Practical upshot: which models you combine matters far more than how you arrange them.</p>

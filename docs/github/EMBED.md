@@ -38,7 +38,7 @@ A README cannot run the AG-UI cards — GitHub executes no script inside Markdow
 Council OS chat surface cannot live there. What can reach a GitHub user is the MCP server:
 Copilot (VS Code, JetBrains, Copilot coding agent) can add it from the official registry.
 
-- Registry: <https://registry.modelcontextprotocol.io> — server `io.github.CSOAI-ORG/gspc`
+- Registry: <https://registry.modelcontextprotocol.io> — server `ai.councilof/gspc` (deprecated alias `io.github.CSOAI-ORG/gspc`)
 - npm (stdio): `csoai-gspc-mcp` — `npx -y csoai-gspc-mcp`
 - Remote (streamable HTTP): `https://councilof.ai/mcp`
 

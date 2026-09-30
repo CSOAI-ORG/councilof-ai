@@ -1,4 +1,6 @@
-import {captureBoardReference,finishBoardReference} from './surface/render-board-reference.mjs';
+import {resolveBoardReference,finishBoardReference} from './surface/render-board-reference.mjs';
+import {commitBoard} from './surface/commit-board.mjs';
+import {guardRenderedBoard} from './surface/board-render-guard.mjs';
 import { parseRenderRequest, validateOfflineOrigin, allowOfflineRequest, snapshotFailure } from "./surface/prerender-io.mjs";
 /* prerender.mjs — turn a Vite SPA build into real HTML files, one per route.
  *
@@ -60,6 +62,7 @@ import http from "node:http";
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync, unlinkSync, copyFileSync } from "node:fs";
 import { join, extname, dirname } from "node:path";
 import { execFileSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 import { rewriteCanonical } from "./surface/canonical-url.mjs";
 import { loadRouteHeads, rewriteHead } from "./surface/route-title.mjs";
 
@@ -90,33 +93,27 @@ const PROD_ORIGIN = arg("prod-origin", "https://councilof.ai");
 // stop; skipping the snapshot leaves the SPA shell, which hydrates on the
 // live host. Added 2026-09-09 after #1847 blocked every master deploy.
 const CLIENT_ONLY_FUNCTION_ROUTES = new Set([
-  // /pay reads /.well-known/x402.json, every door's 402, /api/x402-listing, /api/x402-listing-402index
-  // and /api/door-settles — all Functions.
-  "/pay",
-  "/pay/",
-  "/assess",
-  "/assess/",
-  "/assessment",
-  "/mcp-tools",
+  // Routes that still ship the bare SPA shell. Twelve sitemap routes used to be here — /corrections,
+  // /pay, /assess, /assessment, /tool-commons, /countdown, /art50, /rlusd, /status, /receipt,
+  // /stablewatch, /health-inventory — and a reader without JavaScript, a crawler or an agent got a
+  // page that said "This page needs JavaScript" and nothing else (audit 2026-09-28 #11). Their data
+  // reads go through the proxy below (/api/* and /signed/* are fetched from DATA_ORIGIN), so they
+  // are snapshotted like every other route now; a snapshot that bakes a fetch failure is still
+  // refused by snapshotFailure(). Only routes that are not in the sitemap remain client-only, plus:
+  // /tool-commons, whose ToolRunner lists tools with a JSON-RPC POST to /mcp. The render proxy
+  // forwards only /api/, /signed/ and /.well-known/ reads, as GETs, so that call fails in the
+  // render browser and the snapshot is refused as BAKED-FETCH-FAILURE (measured 2026-09-29).
   "/tool-commons",
+  "/tool-commons/",
+  // /corrections is snapshotted again from 2026-09-30 (owner goal, journey A: a reader without
+  // JavaScript, a crawler or an agent got an 11 KB shell with no entries). Its ledger read goes
+  // through the /api/ proxy like every other route; a snapshot that bakes a fetch failure is still
+  // refused by snapshotFailure().
+  "/mcp-tools",
   "/pricing",
   "/sovereign-pricing",
-  "/countdown",
-  "/countdown/",
-  "/art50",
-  "/art50/",
-  "/rlusd",
-  "/rlusd/",
   "/proof",
   "/proof/",
-  "/status",
-  "/status/",
-  "/receipt",
-  "/receipt/",
-  "/stablewatch",
-  "/stablewatch/",
-  "/health-inventory",
-  "/health-inventory/",
 ]);
 // The origin the /api/ and /signed/ PROXY reads from, which is NOT the same question as the
 // canonical host above. Until 2026-09-05 one flag answered both, and that coupling is what made
@@ -197,6 +194,38 @@ function discover() {
     "/dashboard", "/login", "/start", "/about", "/insurers",
     "/privacy-policy", "/firewall-charter", "/gspc-verify", "/gspc-arena",
     "/embed", "/white-label",
+    "/corrections", "/census",
+    // State of the Agent Internet: the stable address + dated editions (2026-09-26).
+    "/state", "/state/2026-09",
+    // Wash-adjusted x402 activity (2026-09-26): figures render from the signed record.
+    "/measurements/x402-activity",
+    // Disclosure-lag measurement (owner-approved 2026-09-27): figures render from the signed record.
+    "/measurements/disclosure-lag/2026-09-medicare-agent",
+    // Second disclosure-lag measurement (owner-approved 2026-09-28): figures render from the signed record.
+    "/measurements/disclosure-lag/2026-09-gemini-evaluation",
+    // Disclosure completeness of public benchmark artifacts (2026-09-30): figures render from the newest signed set.
+    "/measurements/disclosure-completeness",
+    // /verify-server — per-server evidence lookup (2026-09-26); the shell carries the doctrine and form.
+    "/verify-server",
+    // /measurement-capsules — the human page for the capsule index (2026-09-26); the folder holds only data.
+    "/measurement-capsules",
+    // /research/cross-hardware-reproducibility — the preprint + dataset page (2026-09-27); figures read from the dataset.
+    "/research/cross-hardware-reproducibility",
+    // /spec/signed-receipts — the signed-receipts/v1 spec (React; its SPEC.md is static beside it) (2026-09-27).
+    "/spec/signed-receipts",
+    // /interop/a2a-jcs-2026-09-27 — A2A TCK JCS vector results; counts read from the runner records (2026-09-27).
+    "/interop/a2a-jcs-2026-09-27",
+    // /independence: disclosure page (2026-09-27); its counts must be in the snapshot, not only after JS.
+    "/independence",
+    // /crosswalks/owasp-asi: the mapping rows must be in the snapshot, not only after JS (2026-09-27).
+    "/crosswalks/owasp-asi",
+    // /mechanism: the coverage tables must be in the snapshot, not only after JS (2026-09-27).
+    "/mechanism",
+    // /connect/claude: connector documentation for /mcp/free (2026-09-27); a directory reviewer and an
+    // answer engine must read the setup, tool list and prompts without running JS.
+    "/connect/claude",
+    // /connect: the connector hub (2026-09-30); the doors and commands must be readable without JS.
+    "/connect",
     "/challenge",
     // The alliance claim map: 123 rows rendered from the registry. Without a snapshot a
     // crawler cold-loading it gets the shell, and the map is the one thing worth citing here.
@@ -234,6 +263,11 @@ function discover() {
     "/gspc/provenance-controls", "/gspc/reserve-attestation", "/gspc/regulatory-framework",
     "/gspc/distribution-integrity", "/gspc/custody-disclosure", "/gspc/ai-economy-index",
     "/gspc/human-labour-index", "/gspc/humanoid-labour-index",
+    // Axes the live board serves that this list never caught up with (2026-09-28): the axis
+    // table on every /gspc/<axis> page links all 23 rows, and these three answered HTTP 404 —
+    // effect-binding (slot 23, ADR-002) and the two index slots renamed to their component-fact
+    // ids (C-2026-0826-05). The retired ids above stay listed so inbound links keep resolving.
+    "/gspc/effect-binding", "/gspc/ai-adoption-components", "/gspc/labour-components",
     // Sitemap-listed routes that fell through to the homepage shell (E2E RETEST #2):
     // both have real pages in App.tsx but were never in the snapshot queue.
     "/badge",
@@ -315,6 +349,9 @@ function discover() {
       // /games/ruler — THE RULER. React-only; snapshot it so a cold load reads the page and its
       // standing "nothing is sent" notice rather than the SPA shell.
       "/games/ruler",
+      // /gspc-console — the GSPC console left public/gspc-console.html for the site shell
+      // (27 Sep 2026). Snapshot it so a cold load reads the tables, not the SPA shell.
+      "/gspc-console",
   ];
   for (const p of MUST) found.add(p);
 
@@ -501,8 +538,24 @@ function restampShellAssetTags(capturedHtml, shellHtml) {
 
 const shell = readFileSync(join(DIST, "index.html"), "utf8");
 // Freeze one validated full-board response for every headline in this renderer run.
+//
+// THE BOARD OF THIS COMMIT, NOT OF WHICHEVER DEPLOY IS LIVE (28 Sep 2026). This used to freeze
+// DATA_ORIGIN's /api/gspc — the board of the deployment serving production at that moment, which
+// is the previous deploy at best and, on 28 Sep, one pushed from outside this pipeline (f8747b3e,
+// source ee8ff86, on neither the mirror nor GitHub). Deploy 44340409 therefore baked "2 tied,
+// 12 untested" into its pages while its own /api/gspc said 8 TIE · 6 UNTESTED, and the next deploy
+// baked 8 again. Now the commit's own functions/api/gspc.ts is run offline and is the authority;
+// the live bytes are served only when they are the same board (then they carry a real signature),
+// otherwise the commit's bytes are served unsigned. A failure to compute the commit's board fails
+// the run: there is no remembered board to fall back to.
 const BOARD_REFERENCE = 'prerender-board-reference.json';
-const frozenBoard = await captureBoardReference(DIST,new URL('/api/gspc',DATA_ORIGIN).href,BOARD_REFERENCE);
+const REPO_ROOT = fileURLToPath(new URL('..', import.meta.url));
+const commitGspc = await commitBoard(REPO_ROOT).catch((e) => { console.error(`prerender: this commit's /api/gspc could not be computed — ${e?.message || e}`); process.exit(1); });
+if (commitGspc.status !== 200) { console.error(`prerender: this commit's /api/gspc answered HTTP ${commitGspc.status}`); process.exit(1); }
+const board = await resolveBoardReference(DIST,new URL('/api/gspc',DATA_ORIGIN).href,BOARD_REFERENCE,{commitRaw:commitGspc.raw});
+const frozenBoard = board.raw;
+const boardFromCommit = board.served_from !== 'LIVE_ORIGIN_SAME_BOARD_AS_COMMIT';
+console.log(`board: served ${board.served_from} (live origin: ${board.live_relation})`);
 
 // Every non-2xx or unreachable response the data proxy saw, so a failed run can name its cause
 // instead of leaving 19 identical BAKED-FETCH-FAILURE lines and no explanation.
@@ -514,6 +567,13 @@ const srv = http.createServer((q, r) => {
   const p = parsed.pathname;
   if(p==='/api/gspc'&&!new URL(q.url,'http://render.invalid').search) {
     r.writeHead(200,{'content-type':'application/json','cache-control':'no-store'});r.end(q.method==='HEAD'?undefined:frozenBoard);return;
+  }
+  // ?axis= views: when the live origin serves a different board, answer them from this commit too.
+  if(p==='/api/gspc'&&boardFromCommit) {
+    commitBoard(REPO_ROOT,new URL(q.url,'http://render.invalid').search).then(({status,contentType,raw})=>{
+      r.writeHead(status,{'content-type':contentType,'cache-control':'no-store'});r.end(q.method==='HEAD'?undefined:raw);
+    }).catch(()=>{r.writeHead(502);r.end();});
+    return;
   }
   const f = join(DIST, p);
   try {
@@ -528,7 +588,7 @@ const srv = http.createServer((q, r) => {
   // at load would snapshot with "fetch failed" baked into its static HTML (the
   // 2026-08-25 /gspc-scoreboard defect). Proxy them to production so snapshots capture
   // the real board state.
-  if (p.startsWith("/api/") || p.startsWith("/signed/")) {
+  if (parsed.dataPath) {
     fetch(parsed.target, {signal: AbortSignal.timeout(12000)}).then(async res => {
       const body = Buffer.from(await res.arrayBuffer());
       if (!res.ok) dataMiss.push(`${res.status} ${p}`);
@@ -904,8 +964,17 @@ if (dups.length) {
   console.log(`\nDuplicate <title> across routes — react-helmet is not firing before the snapshot:`);
   dups.slice(0, 5).forEach(([t, v]) => console.log(`  ${v.length}×  "${t.slice(0, 60)}"`));
 }
+// THE PAGES AGREE WITH THE BOARD THEY WERE RENDERED FROM. Checked before any report is written, so
+// a disagreeing build leaves no report and fails (scripts/surface/board-render-guard.mjs).
+const boardGuard = guardRenderedBoard(DIST, results, frozenBoard);
+console.log(`\nboard-render-guard: ${boardGuard.checked} pages checked — ${boardGuard.violations.length} disagreement(s) with the served board`);
+if (boardGuard.violations.length) {
+  for (const v of boardGuard.violations.slice(0, 40)) console.error(`  ${v.route}  [${v.rule}] "${v.found}"  (${v.mismatch})`);
+  console.error(`board-render-guard FAILED: prerendered pages print separation figures the board payload does not carry. No report written.`);
+  process.exit(1);
+}
 writeFileSync("prerender-report.json", JSON.stringify(results, null, 1));
 finishBoardReference(BOARD_REFERENCE,'prerender-report.json');
-writeFileSync("prerender-context.json", JSON.stringify({observed_at:new Date().toISOString(),mode:OFFLINE_REVIEW?'PRIVATE_OFFLINE_REVIEW':'CONFIGURED_DATA_ORIGIN',data_origin:DATA_ORIGIN,route_count:results.length,production_verified:false,external_browser_requests:OFFLINE_REVIEW?'BLOCKED':'NOT_MEASURED'},null,2));
+writeFileSync("prerender-context.json", JSON.stringify({observed_at:new Date().toISOString(),mode:OFFLINE_REVIEW?'PRIVATE_OFFLINE_REVIEW':'CONFIGURED_DATA_ORIGIN',data_origin:DATA_ORIGIN,board_served_from:board.served_from,board_live_relation:board.live_relation,board_pages_checked:boardGuard.checked,route_count:results.length,production_verified:false,external_browser_requests:OFFLINE_REVIEW?'BLOCKED':'NOT_MEASURED'},null,2));
 console.log(`\nwrote prerender-report.json`);
 console.log(`Ship only if THIN is small and you have looked at every route in it.`);

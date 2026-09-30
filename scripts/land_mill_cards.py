@@ -166,22 +166,15 @@ def _sha256(raw: bytes) -> str:
     return hashlib.sha256(raw).hexdigest()
 
 
-def land_runpod_evidence(wrap: dict, staged: Path, evidence_dir: Path,
-                         bank_allowlist: Path | None) -> str | None:
-    """Admit a pod card by the intake receipt beside it. Returns a reject reason or None.
+def runpod_receipt_reason(wrap: dict, raw: bytes, bank_allowlist: Path | None) -> str | None:
+    """The intake-receipt checks of land_runpod_evidence as a pure function; None iff they pass.
 
-    Every check is against bytes at hand — nothing is trusted because of where it sits:
-    the receipt must be VERIFIED_QUARANTINE and bind this card id, run id, items digest,
-    axis/subject/n/accuracy; the current bank allowlist must be the one the run was verified
-    against and must list the run's bank; items.jsonl beside the card must hash to the pinned
-    digest. Only the receipt (hashes, no model output) is copied into the evidence dir.
+    Split out on 2026-09-26 so scripts/admit_mill_cards.py applies exactly this landing
+    gate's receipt checks rather than a copy that could drift. Reads the allowlist; writes
+    nothing.
     """
     body = wrap.get("body") or {}
     pod = body.get("compute_evidence") or {}
-    receipt_path = staged / "verification.json"
-    if receipt_path.is_symlink() or not receipt_path.is_file():
-        return "pod card without its intake receipt (verification.json) beside it"
-    raw = receipt_path.read_bytes()
     try:
         receipt = json.loads(raw)
     except Exception as error:  # noqa: BLE001
@@ -211,6 +204,29 @@ def land_runpod_evidence(wrap: dict, staged: Path, evidence_dir: Path,
         return f"bank allowlist unreadable ({type(error).__name__})"
     if (body.get("axis"), pod.get("bank_sha256")) not in banks:
         return "bank digest not in the allowlist for this axis"
+    return None
+
+
+def land_runpod_evidence(wrap: dict, staged: Path, evidence_dir: Path,
+                         bank_allowlist: Path | None) -> str | None:
+    """Admit a pod card by the intake receipt beside it. Returns a reject reason or None.
+
+    Every check is against bytes at hand — nothing is trusted because of where it sits:
+    the receipt must be VERIFIED_QUARANTINE and bind this card id, run id, items digest,
+    axis/subject/n/accuracy; the current bank allowlist must be the one the run was verified
+    against and must list the run's bank (runpod_receipt_reason); items.jsonl beside the card
+    must hash to the pinned digest. Only the receipt (hashes, no model output) is copied into
+    the evidence dir.
+    """
+    pod = (wrap.get("body") or {}).get("compute_evidence") or {}
+    receipt_path = staged / "verification.json"
+    if receipt_path.is_symlink() or not receipt_path.is_file():
+        return "pod card without its intake receipt (verification.json) beside it"
+    raw = receipt_path.read_bytes()
+    why = runpod_receipt_reason(wrap, raw, bank_allowlist)
+    if why:
+        return why
+    receipt = json.loads(raw)
     items = staged / "items.jsonl"
     if items.is_symlink() or not items.is_file():
         return "items.jsonl absent beside the pod card"

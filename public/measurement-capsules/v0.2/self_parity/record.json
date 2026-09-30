@@ -1,0 +1,49 @@
+{
+ "schema": "csoai.measurement-capsule-batch/0.2",
+ "as_of": "2026-09-26T06:19:48Z",
+ "capsule_schema": "csoai.measurement-capsule/0.2",
+ "adapter": "self_parity",
+ "kind": "measurement.self_parity",
+ "n_capsules": 138,
+ "states": {
+  "CONSISTENT": 37,
+  "INCONSISTENT": 8,
+  "NOT_DECLARED": 1,
+  "NOT_LISTED": 55,
+  "UNCHECKABLE": 37
+ },
+ "merkle_root": "53d5c6b23a13c464546d31ab18abcf1fae3990961019fc2443748d62922acf3a",
+ "merkle": "RFC 6962 Merkle Tree Hash over the capsule_id leaves (32 bytes each) sorted ascending: leaf = SHA-256(0x00 || capsule_id), node = SHA-256(0x01 || left || right); for n > 1 leaves the split is at k = the largest power of two smaller than n (RFC 6962 section 2.1), so no leaf is promoted or duplicated; one leaf = its leaf hash; empty = SHA-256 of the empty string",
+ "canonicalisation": {
+  "rule": "JSON, object keys sorted, no insignificant whitespace, UTF-8, non-ASCII unescaped; every capsule's bytes are checked byte-equal to its RFC 8785 (JCS) serialisation at build and at verify",
+  "jcs_byte_equal": "138/138",
+  "checked_with": "rfc8785 0.1.4 (independent RFC 8785 implementation)"
+ },
+ "capsules_file": {
+  "path": "capsules.jsonl.gz",
+  "sha256": "dc703838bd4c5e9db443f23e54d972343d5c9fdcaf258397472194c5e8267c64",
+  "bytes": 21624,
+  "uncompressed_sha256": "8fa14c345020c6bceeb44a3c30c1c8d5d7bf2323cafb83e88b57fc2df9898bf1",
+  "uncompressed_bytes": 254402,
+  "format": "gzip (mtime 0, no filename, level 9) of canonical JSON lines sorted by capsule_id"
+ },
+ "authority_state": "NONE: measurement only; this capsule grants and records no execution authority",
+ "what_this_is": "Self-parity: what external indexes list about CSOAI's own offerings vs our live bytes, one capsule per (index, offering) cell and per own-surface check.",
+ "what_this_is_not": "Not a ranking of any index. NOT_LISTED is a state, not an error.",
+ "source": {
+  "record": "/evac-bulk/self-parity/2026-09-26/record.json",
+  "record_sha256": "a2f205ca43d096ec0e9f621d8e0dcda2bd2d8040b39ff277ef7ae50fa9de4dfe",
+  "record_signature": "VERIFIES",
+  "record_signature_payload_sha256": "d6eb7d1951cb8eab89317098f5c1d9a780ae49479c609072ed615eb4f9efe58d",
+  "date": "2026-09-26",
+  "schema": "csoai.self-parity/0.1"
+ },
+ "capsules_by_state": {
+  "CONSISTENT": 37,
+  "INCONSISTENT": 8,
+  "NOT_LISTED": 55,
+  "UNCHECKABLE": 37,
+  "NOT_DECLARED": 1
+ },
+ "private_until": "owner approves publication"
+}

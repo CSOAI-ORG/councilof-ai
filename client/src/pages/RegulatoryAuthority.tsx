@@ -1,11 +1,9 @@
-import { useEffect } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowRight, CheckCircle2, Globe, Shield, Zap } from "lucide-react";
 
 export default function RegulatoryAuthority() {
-  useEffect(() => { document.title = "RegulatoryAuthority | CSOAI"; }, []);
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}

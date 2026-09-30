@@ -201,25 +201,25 @@ export default function PersonaEvidence({
             <a className="text-emerald-800 underline" href="/signed/HOW-TO-VERIFY.md">
               /signed/HOW-TO-VERIFY.md
             </a>{" "}
-            <span className="text-emerald-900/70">— the four commands, start here</span>
+            <span className="text-emerald-800">— the four commands, start here</span>
           </li>
           <li>
             <a className="text-emerald-800 underline" href="/signed/card_index.json">
               /signed/card_index.json
             </a>{" "}
-            <span className="text-emerald-900/70">— the signed index of published cards</span>
+            <span className="text-emerald-800">— the signed index of published cards</span>
           </li>
           <li>
             <a className="text-emerald-800 underline" href="/.well-known/did.json">
               /.well-known/did.json
             </a>{" "}
-            <span className="text-emerald-900/70">— the key to pin against</span>
+            <span className="text-emerald-800">— the key to pin against</span>
           </li>
           <li>
             <a className="text-emerald-800 underline" href="/gspc-verify">
               /gspc-verify
             </a>{" "}
-            <span className="text-emerald-900/70">
+            <span className="text-emerald-800">
               — recompute the replay chain in your browser, no account
             </span>
           </li>

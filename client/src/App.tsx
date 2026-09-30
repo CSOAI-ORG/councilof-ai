@@ -7,6 +7,8 @@ import { useEffect, useLayoutEffect, lazy, Suspense } from "react";
 import { applyHead, resolveHead } from "./lib/seoHead";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { SectionLoader } from "./components/PageLoader";
+// Keeps the prerendered page on screen while the first route chunk loads (CLS 0.33 -> ~0; see file).
+import PrerenderedMainFallback from "./components/PrerenderedMainFallback";
 const Registers = lazy(() => import("./pages/Registers"));
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -47,6 +49,7 @@ import { SkipNavigation } from "./components/SkipNavigation";
 const Landing = lazy(() => import("./pages/Landing"));
 const CouncilLobby = lazy(() => import("./components/lobby/CouncilLobby"));
 const EUActChecklist = lazy(() => import("./pages/EUActChecklist"));
+const GspcConsole = lazy(() => import("./pages/GspcConsole"));
 const GpaiObligations = lazy(() => import("./pages/GpaiObligations"));
 const Penalties = lazy(() => import("./pages/Penalties"));
 const NistVsEuAct = lazy(() => import("./pages/NistVsEuAct"));
@@ -190,6 +193,35 @@ const Library = lazy(() => import("./pages/Library"));
 const Honesty = lazy(() => import("./pages/Honesty"));
 // /memberships — where we take part, every row from public/interop/memberships.json with its evidence.
 const Memberships = lazy(() => import("./pages/Memberships"));
+// /corrections — the corrections ledger (GET /api/corrections) as its own page. Was a 308 to a dashboard tab.
+const Corrections = lazy(() => import("./pages/Corrections"));
+// /census — what the CSOAI-census crawler does; its user agent links here.
+const Census = lazy(() => import("./pages/Census"));
+// /state — State of the Agent Internet: stable address (latest edition) + dated editions.
+// Every figure on a dated edition is read from its board-signed numbers.json (scripts/state-report/).
+const StateIndex = lazy(() => import("./pages/StateIndex"));
+const StateReport202609 = lazy(() => import("./pages/StateReport202609"));
+// /measurements/x402-activity — wash-adjusted x402 activity; every figure from the signed daily record.
+const X402Activity = lazy(() => import("./pages/X402Activity"));
+// /measurements/disclosure-lag/2026-09-medicare-agent — dated public record and the days between its events (owner-approved 2026-09-27).
+const DisclosureLagMedicareAgent = lazy(() => import("./pages/DisclosureLagMedicareAgent"));
+// /measurements/disclosure-lag/2026-09-gemini-evaluation — second disclosure-lag record (owner-approved 2026-09-28).
+const DisclosureLagGeminiEvaluation = lazy(() => import("./pages/DisclosureLagGeminiEvaluation"));
+// /measurements/disclosure-completeness — what public benchmark artifacts state about themselves; signed dated record sets (lane L2, 2026-09-30).
+const DisclosureCompleteness = lazy(() => import("./pages/DisclosureCompleteness"));
+const VerifyServer = lazy(() => import("./pages/VerifyServer"));
+const MeasurementCapsules = lazy(() => import("./pages/MeasurementCapsules"));
+const CrossHardwareReproducibility = lazy(() => import("./pages/CrossHardwareReproducibility"));
+// /spec/signed-receipts — canonical home of the A2A extension spec signed-receipts/v1 (2026-09-27).
+const SignedReceiptsSpec = lazy(() => import("./pages/SignedReceiptsSpec"));
+// /interop/a2a-jcs-2026-09-27 — our canonicalisers against the A2A TCK RFC 8785 vectors (2026-09-27).
+const A2aJcs20260927 = lazy(() => import("./pages/A2aJcs20260927"));
+// /independence: who runs CSOAI, funding (not yet published), own-model counts, keys, how to challenge.
+const Independence = lazy(() => import("./pages/Independence"));
+// /crosswalks/owasp-asi: OWASP ASI01-ASI10 and MCP Top 10 against the checks we run (DIRECT / PARTIAL / NOT MEASURED).
+const CrosswalkOwaspAsi = lazy(() => import("./pages/CrosswalkOwaspAsi"));
+// /mechanism: the open measurement mechanism in five steps, with coverage of the frozen provision corpus.
+const Mechanism = lazy(() => import("./pages/Mechanism"));
 // /reach — the WHOLE funnel, including the four stages that carry no number and the
 // reason each one carries none. The home page and the footer show the two stages a stranger can
 // use; this is the one click behind them, and it is where the commercial stages live.
@@ -247,7 +279,8 @@ const SOAIPDCAFramework = lazy(() => import("./pages/SOAIPDCAFramework"));
 const PDCASimulator = lazy(() => import("./pages/PDCASimulator"));
 const EnterpriseDashboard = lazy(() => import("./pages/EnterpriseDashboard"));
 const ProsperityFund = lazy(() => import("./pages/ProsperityFund"));
-const Charter = lazy(() => import("./pages/Charter"));
+// /charter renders a pointer to the operational charter; pages/Charter.tsx (52-Article, historical) is unrouted.
+const OperationalCharter = lazy(() => import("./pages/OperationalCharter"));
 const PublicWatchdog = lazy(() => import("./pages/PublicWatchdog"));
 const GovernmentDashboard = lazy(() => import("./pages/GovernmentDashboard"));
 const MaternalCovenant = lazy(() => import("./pages/MaternalCovenant"));
@@ -294,7 +327,7 @@ const RelevanceMap = lazy(() => import("./pages/RelevanceMap"));
 const Temples = lazy(() => import("./pages/Temples"));
 const Playbooks = lazy(() => import("./pages/Playbooks"));
 const Dragonfly = lazy(() => import("./pages/Dragonfly"));
-const MeokLaw = lazy(() => import("./pages/MeokLaw"));
+const JurisdictionEngine = lazy(() => import("./pages/JurisdictionEngine"));
 const HiveModel = lazy(() => import("./pages/HiveModel"));
 const Services = lazy(() => import("./pages/Services"));
 const HowItWorks = lazy(() => import("./pages/HowItWorks"));
@@ -303,6 +336,10 @@ const Signals = lazy(() => import("./pages/Signals"));
 const SignedMillBatch20260924 = lazy(() => import("./pages/SignedMillBatch20260924"));
 const RegionsMap = lazy(() => import("./pages/RegionsMap"));
 const ConnectGSPC = lazy(() => import("./pages/ConnectGSPC"));
+// /connect/claude: connector documentation for the free MCP door /mcp/free (Claude connector directory, 2026-09-27).
+const ConnectClaude = lazy(() => import("./pages/ConnectClaude"));
+// /connect: the connector hub (2026-09-30) — replaced a "temporarily withdrawn" notice on the MCP/A2A setup journey.
+const ConnectHub = lazy(() => import("./pages/ConnectHub"));
 const CouncilHub = lazy(() => import("./pages/CouncilHub"));
 const Compare = lazy(() => import("./pages/Compare"));
 const Fedramp = lazy(() => import("./pages/Fedramp"));
@@ -419,6 +456,12 @@ function normPath(p: string) {
 
 function App() {
   const [location] = useLocation();
+  // Subscribed, not read from window: the top-level `embed=1` strip below changes ONLY the
+  // query string (the pathname stays /dashboard/), and useLocation does not re-render on a
+  // search-only navigation. Reading window.location.search left App rendering the strip's
+  // <Redirect> (null) forever — every /os?embed=1&lobby=… panel URL opened directly was a
+  // blank page (28 Sep 2026, phone viewport, live).
+  const search = useOsSearch();
   const path = normPath(location);
   const proofHost =
     typeof window !== "undefined" &&
@@ -440,6 +483,7 @@ function App() {
   if (
     [
       "/ag-ui",
+      "/a2ui",
       "/chat",
       "/console",
       "/council-os",
@@ -488,7 +532,7 @@ function App() {
   // copied panel URL opened directly must converge on the canonical workspace
   // with full navigation and account controls. Genuine iframes retain the hint.
   if (path === "/dashboard" && typeof window !== "undefined") {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(search);
     let topLevel = true;
     try {
       topLevel = window.self === window.top;
@@ -550,7 +594,7 @@ function App() {
                 <ArchivedBanner />
                 <main id="main-content" className="flex-1" role="main" aria-label="Main content" tabIndex={-1}>
                   <MainLandmarkContext.Provider value={true}>
-                  <Suspense fallback={<div role="status" aria-label="Loading the page" className="flex min-h-[60vh] items-center justify-center bg-background"><SectionLoader /></div>}><Switch>
+                  <Suspense fallback={<PrerenderedMainFallback />}><Switch>
                   <Route path="/" component={HomeVerify} />
                   <Route path="/home-v2" component={ContentReviewNotice} />
                   <Route path="/home-v3" component={NewHomeV3} />
@@ -645,6 +689,22 @@ function App() {
                   <Route path="/library/:sector" component={Library} />
                   <Route path="/honesty" component={Honesty} />
                   <Route path="/memberships" component={Memberships} />
+                  <Route path="/corrections" component={Corrections} />
+                  <Route path="/census" component={Census} />
+                  <Route path="/state" component={StateIndex} />
+                  <Route path="/state/2026-09" component={StateReport202609} />
+                  <Route path="/measurements/x402-activity" component={X402Activity} />
+                  <Route path="/measurements/disclosure-lag/2026-09-medicare-agent" component={DisclosureLagMedicareAgent} />
+                  <Route path="/measurements/disclosure-lag/2026-09-gemini-evaluation" component={DisclosureLagGeminiEvaluation} />
+                  <Route path="/measurements/disclosure-completeness" component={DisclosureCompleteness} />
+                  <Route path="/verify-server" component={VerifyServer} />
+                  <Route path="/measurement-capsules" component={MeasurementCapsules} />
+                  <Route path="/research/cross-hardware-reproducibility" component={CrossHardwareReproducibility} />
+                  <Route path="/spec/signed-receipts" component={SignedReceiptsSpec} />
+                  <Route path="/interop/a2a-jcs-2026-09-27" component={A2aJcs20260927} />
+                  <Route path="/independence" component={Independence} />
+                  <Route path="/crosswalks/owasp-asi" component={CrosswalkOwaspAsi} />
+                  <Route path="/mechanism" component={Mechanism} />
                   <Route path="/reach" component={Reach} />
                   <Route path="/dispute" component={Dispute} />
                   <Route path="/east-west" component={EastWest} />
@@ -695,6 +755,7 @@ function App() {
                   <Route path="/claims-register" component={ClaimsRegister} />
                   <Route path="/distribution-integrity" component={DistributionIntegrity} />
                   <Route path="/gspc-verify" component={GSPCVerify} />
+                  <Route path="/gspc-console" component={GspcConsole} />
                   <Route path="/lookup">{() => <Redirect to="/gspc-verify" />}</Route>
                   <Route path="/embed" component={EmbedPage} />
                   <Route path="/white-label" component={EmbedPage} />
@@ -708,6 +769,7 @@ function App() {
                   <Route path="/regulator/:id" component={ContentReviewNotice} />
                   <Route path="/arena-scoreboard" component={ArenaScoreboard} />
                   <Route path="/ag-ui">{() => <Redirect to="/dashboard?tab=home" />}</Route>
+                  <Route path="/a2ui">{() => <Redirect to="/dashboard?tab=home" />}</Route>
                   <Route path="/chat">{() => <Redirect to="/dashboard?tab=home" />}</Route>
                   {/* Direct: /leaderboard itself redirects into the Dashboard, so this used to hop twice. */}
                   <Route path="/rankings">{() => <Redirect to="/dashboard?tab=board" />}</Route>
@@ -756,7 +818,7 @@ function App() {
                   <Route path="/eunomia-crosswalk" component={EunomiaCrosswalk} />
                   <Route path="/eunomia-indices" component={EunomiaIndices} />
                   <Route path="/careers" component={Careers} />
-                  <Route path="/charter" component={Charter} />
+                  <Route path="/charter" component={OperationalCharter} />
                   <Route path="/maternal-covenant" component={MaternalCovenant} />
                   <Route path="/covenant" component={MaternalCovenant} />
                   <Route path="/why-csoai" component={WhyCSOAI} />
@@ -815,9 +877,9 @@ function App() {
                   <Route path="/temples" component={Temples} />
                   <Route path="/playbooks" component={Playbooks} />
                   <Route path="/dragonfly" component={Dragonfly} />
-                  <Route path="/csoai-law" component={MeokLaw} />
-                  <Route path="/meok-law" component={MeokLaw} />
-                  <Route path="/law" component={MeokLaw} />
+                  <Route path="/csoai-law" component={JurisdictionEngine} />
+                  <Route path="/meok-law" component={JurisdictionEngine} />
+                  <Route path="/law" component={JurisdictionEngine} />
                   <Route path="/hive-model" component={HiveModel} />
                   <Route path="/services" component={Services} />
                   <Route path="/how" component={HowItWorks} />
@@ -859,7 +921,8 @@ function App() {
                   <Route path="/colorado-ai-act">{() => <UsStateAct state="colorado" />}</Route>
                   <Route path="/texas-ai-act">{() => <UsStateAct state="texas" />}</Route>
                   <Route path="/california-ai-law">{() => <UsStateAct state="california" />}</Route>
-                  <Route path="/connect" component={ContentReviewNotice} />
+                  <Route path="/connect" component={ConnectHub} />
+                  <Route path="/connect/claude" component={ConnectClaude} />
                   <Route path="/connect-gspc" component={ConnectGSPC} />
                   <Route path="/connect-ai" component={ConnectGSPC} />
                   <Route path="/sovereign">{() => <Redirect to="/me" />}</Route>

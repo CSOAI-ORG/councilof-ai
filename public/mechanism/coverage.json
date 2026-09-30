@@ -1,0 +1,1550 @@
+{
+  "schema": "csoai.mechanism-coverage/0.1",
+  "id": "mechanism-coverage",
+  "title": "Open measurement mechanism: coverage of the frozen provision corpus",
+  "url": "https://councilof.ai/mechanism/",
+  "json": "https://councilof.ai/mechanism/coverage.json",
+  "edited": "2026-09-27",
+  "generated_from": {
+    "path": "scripts/mechanism/coverage.source.json",
+    "sha256": "96dca499a4fb466c65bb985bf910ba838d89fffbd7ecf478ca111f0a8e2438ea",
+    "producer": "scripts/mechanism/build-coverage.mjs"
+  },
+  "statements": [
+    "This report counts what the published data holds. Every number in it is derived by scripts/mechanism/build-coverage.mjs from committed files; none is typed.",
+    "A provision marked PREDICATE has a deterministic check whose result a stranger can re-run. It is a measurement of one observable the provision names, not a finding that anyone complies with or breaches it.",
+    "A provision marked RELATED_MEASURE is one that a measured board axis points to as relevant. The pointer is informative: the axis does not test the provision.",
+    "HASH_ONLY means the provision is in the frozen manifest as an identifier and a SHA-256, and nothing tests it. The source text bytes behind those hashes were not recovered, so the manifest is not an inspectable legal corpus.",
+    "Measurement, not certification. No compliance label, endorsement or regulator relationship is stated or implied."
+  ],
+  "hierarchy": [
+    {
+      "level": "authority",
+      "label": "Authority",
+      "means": "Who makes or enforces the rule. Held as a source-and-routing record; a record is not a relationship with the authority and not a live regulator API."
+    },
+    {
+      "level": "instrument",
+      "label": "Instrument",
+      "means": "The law, framework or standard, named by its official identifier (CELEX for EU acts)."
+    },
+    {
+      "level": "version",
+      "label": "Version",
+      "means": "Which text of the instrument was frozen. Today the manifest pins each provision by a SHA-256 of normalised text; the source bytes that produced those hashes were not recovered."
+    },
+    {
+      "level": "provision",
+      "label": "Provision",
+      "means": "One addressable unit of the instrument (an article, or an id the manifest assigns), with its frozen hash."
+    },
+    {
+      "level": "obligation",
+      "label": "Obligation",
+      "means": "A single duty cut out of a provision, with its conditions. No obligation register exists yet."
+    },
+    {
+      "level": "applicability",
+      "label": "Applicability",
+      "means": "Whether the obligation applies to a given system. Not determined here: every authority record says applicability needs review by the party concerned."
+    },
+    {
+      "level": "crosswalks",
+      "label": "Crosswalks",
+      "means": "Rows elsewhere that map this instrument to another framework or to a measured axis."
+    },
+    {
+      "level": "evidence_requirement",
+      "label": "Evidence requirement",
+      "means": "What bytes a test needs to see. Stated per predicate below."
+    },
+    {
+      "level": "test",
+      "label": "Test / profile",
+      "means": "A deterministic predicate (PREDICATE) or a measured axis that points to the provision (RELATED_MEASURE)."
+    },
+    {
+      "level": "watcher",
+      "label": "Watcher",
+      "means": "Something that polls the authority and expires the mapping when the text changes. Read from the manifest's own watcher field."
+    }
+  ],
+  "corpus": {
+    "manifest": "/interop/frozen-provision-hashes.json",
+    "manifest_sha256": "e43c9bd52adeeda96b67a3ae63700c44f0aae3a44c74a0dac46fbed5f8008788",
+    "corpus_root": "37e2e10d53feaa9e12097f45113e1234510be0ca471e1a0848f5805db3e367c7",
+    "corpus_root_recomputes": true,
+    "root_algorithm": "sha256(concat(sorted(provision_id + provision_sha256)))",
+    "provisions": 417,
+    "instruments": 6,
+    "frozen_at": "2026-08-12T05:22:20.629949+00:00",
+    "state": "HASH_MANIFEST_VERIFIED_SOURCE_BYTES_UNRESOLVED",
+    "source_database_state": "NOT_RECOVERED",
+    "watcher": "NOT BUILT — local corpus only; no authority is polled",
+    "limitation": "The public manifest proves the 417 identifiers, their frozen hashes and their aggregate root. It does not include the exact normalized source-text bytes needed to regenerate each per-provision hash, and no authority watcher was active when it was frozen."
+  },
+  "recovered_counts": [
+    {
+      "what": "provision hashes",
+      "value": 417,
+      "derived_from": "public/interop/frozen-provision-hashes.json · anchors",
+      "inventory_says": 417
+    },
+    {
+      "what": "authority-routing records",
+      "value": 17,
+      "derived_from": "public/interop/regulatory-inventory.json · authority_adapters.length",
+      "inventory_says": 17
+    },
+    {
+      "what": "crosswalk assets",
+      "value": 25,
+      "derived_from": "public/interop/regulatory-inventory.json · crosswalk_assets.length",
+      "inventory_says": 25
+    },
+    {
+      "what": "instruments with provisions in the manifest",
+      "value": 6,
+      "derived_from": "public/interop/frozen-provision-hashes.json · distinct CELEX ids",
+      "inventory_says": 6
+    }
+  ],
+  "totals": {
+    "PREDICATE": 1,
+    "RELATED_MEASURE": 12,
+    "CROSSWALK_ONLY": 0,
+    "HASH_ONLY": 404
+  },
+  "instruments": [
+    {
+      "celex": "32024R1689",
+      "name": "EU AI Act",
+      "long": "Regulation (EU) 2024/1689",
+      "jurisdiction": "EU",
+      "source_url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+      "provisions": 126,
+      "ids_positive": 113,
+      "ids_negative": 13,
+      "by_status": {
+        "PREDICATE": 1,
+        "RELATED_MEASURE": 12,
+        "CROSSWALK_ONLY": 0,
+        "HASH_ONLY": 113
+      },
+      "levels": {
+        "authority": {
+          "state": "ROUTING_RECORD",
+          "record": "eu-ai-act-2024-1689",
+          "authority": "European Commission / national competent authorities",
+          "binding_type": "BINDING_LAW"
+        },
+        "instrument": {
+          "state": "NAMED",
+          "id": "CELEX 32024R1689"
+        },
+        "version": {
+          "state": "HASH_MANIFEST_VERIFIED_SOURCE_BYTES_UNRESOLVED",
+          "frozen_at": "2026-08-12T05:22:20.629949+00:00",
+          "source_bytes": "NOT_RECOVERED"
+        },
+        "provision": {
+          "state": "HASHED",
+          "n": 126
+        },
+        "obligation": {
+          "state": "NO_REGISTER",
+          "n": 0
+        },
+        "applicability": {
+          "state": "APPLICABILITY_REVIEW_REQUIRED"
+        },
+        "crosswalks": {
+          "rows": 34,
+          "sources": [
+            "client/src/data/regulator-crosswalk.json",
+            "public/crosswalk/east-west-v1.json",
+            "public/interop/gpai-art12-pact-iaw/gpai-art12-pact-gspc-crosswalk.json"
+          ]
+        },
+        "evidence_requirement": {
+          "n": 1
+        },
+        "test": {
+          "predicate": 1,
+          "related_measure": 12
+        },
+        "watcher": {
+          "state": "NOT BUILT — local corpus only; no authority is polled"
+        }
+      },
+      "crosswalk_regulator": "eu-ai-act"
+    },
+    {
+      "celex": "32016R0679",
+      "name": "GDPR",
+      "long": "Regulation (EU) 2016/679",
+      "jurisdiction": "EU",
+      "source_url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj",
+      "provisions": 99,
+      "ids_positive": 99,
+      "ids_negative": 0,
+      "by_status": {
+        "PREDICATE": 0,
+        "RELATED_MEASURE": 0,
+        "CROSSWALK_ONLY": 0,
+        "HASH_ONLY": 99
+      },
+      "levels": {
+        "authority": {
+          "state": "ROUTING_RECORD",
+          "record": "eu-gdpr-2016-679",
+          "authority": "National data-protection authorities / EDPB",
+          "binding_type": "BINDING_LAW"
+        },
+        "instrument": {
+          "state": "NAMED",
+          "id": "CELEX 32016R0679"
+        },
+        "version": {
+          "state": "HASH_MANIFEST_VERIFIED_SOURCE_BYTES_UNRESOLVED",
+          "frozen_at": "2026-08-12T05:22:20.629949+00:00",
+          "source_bytes": "NOT_RECOVERED"
+        },
+        "provision": {
+          "state": "HASHED",
+          "n": 99
+        },
+        "obligation": {
+          "state": "NO_REGISTER",
+          "n": 0
+        },
+        "applicability": {
+          "state": "APPLICABILITY_REVIEW_REQUIRED"
+        },
+        "crosswalks": {
+          "rows": 0,
+          "sources": []
+        },
+        "evidence_requirement": {
+          "n": 0
+        },
+        "test": {
+          "predicate": 0,
+          "related_measure": 0
+        },
+        "watcher": {
+          "state": "NOT BUILT — local corpus only; no authority is polled"
+        }
+      },
+      "crosswalk_regulator": null
+    },
+    {
+      "celex": "32024R2847",
+      "name": "Cyber Resilience Act",
+      "long": "Regulation (EU) 2024/2847",
+      "jurisdiction": "EU",
+      "source_url": "https://eur-lex.europa.eu/eli/reg/2024/2847/oj",
+      "provisions": 71,
+      "ids_positive": 71,
+      "ids_negative": 0,
+      "by_status": {
+        "PREDICATE": 0,
+        "RELATED_MEASURE": 0,
+        "CROSSWALK_ONLY": 0,
+        "HASH_ONLY": 71
+      },
+      "levels": {
+        "authority": {
+          "state": "NO_RECORD"
+        },
+        "instrument": {
+          "state": "NAMED",
+          "id": "CELEX 32024R2847"
+        },
+        "version": {
+          "state": "HASH_MANIFEST_VERIFIED_SOURCE_BYTES_UNRESOLVED",
+          "frozen_at": "2026-08-12T05:22:20.629949+00:00",
+          "source_bytes": "NOT_RECOVERED"
+        },
+        "provision": {
+          "state": "HASHED",
+          "n": 71
+        },
+        "obligation": {
+          "state": "NO_REGISTER",
+          "n": 0
+        },
+        "applicability": {
+          "state": "NO_RECORD"
+        },
+        "crosswalks": {
+          "rows": 0,
+          "sources": []
+        },
+        "evidence_requirement": {
+          "n": 0
+        },
+        "test": {
+          "predicate": 0,
+          "related_measure": 0
+        },
+        "watcher": {
+          "state": "NOT BUILT — local corpus only; no authority is polled"
+        }
+      },
+      "crosswalk_regulator": null
+    },
+    {
+      "celex": "32022R2554",
+      "name": "DORA",
+      "long": "Regulation (EU) 2022/2554",
+      "jurisdiction": "EU",
+      "source_url": "https://eur-lex.europa.eu/eli/reg/2022/2554/oj",
+      "provisions": 64,
+      "ids_positive": 64,
+      "ids_negative": 0,
+      "by_status": {
+        "PREDICATE": 0,
+        "RELATED_MEASURE": 0,
+        "CROSSWALK_ONLY": 0,
+        "HASH_ONLY": 64
+      },
+      "levels": {
+        "authority": {
+          "state": "NO_RECORD"
+        },
+        "instrument": {
+          "state": "NAMED",
+          "id": "CELEX 32022R2554"
+        },
+        "version": {
+          "state": "HASH_MANIFEST_VERIFIED_SOURCE_BYTES_UNRESOLVED",
+          "frozen_at": "2026-08-12T05:22:20.629949+00:00",
+          "source_bytes": "NOT_RECOVERED"
+        },
+        "provision": {
+          "state": "HASHED",
+          "n": 64
+        },
+        "obligation": {
+          "state": "NO_REGISTER",
+          "n": 0
+        },
+        "applicability": {
+          "state": "NO_RECORD"
+        },
+        "crosswalks": {
+          "rows": 0,
+          "sources": []
+        },
+        "evidence_requirement": {
+          "n": 0
+        },
+        "test": {
+          "predicate": 0,
+          "related_measure": 0
+        },
+        "watcher": {
+          "state": "NOT BUILT — local corpus only; no authority is polled"
+        }
+      },
+      "crosswalk_regulator": null
+    },
+    {
+      "celex": "32022L2555",
+      "name": "NIS2",
+      "long": "Directive (EU) 2022/2555",
+      "jurisdiction": "EU",
+      "source_url": "https://eur-lex.europa.eu/eli/dir/2022/2555/oj",
+      "provisions": 46,
+      "ids_positive": 46,
+      "ids_negative": 0,
+      "by_status": {
+        "PREDICATE": 0,
+        "RELATED_MEASURE": 0,
+        "CROSSWALK_ONLY": 0,
+        "HASH_ONLY": 46
+      },
+      "levels": {
+        "authority": {
+          "state": "NO_RECORD"
+        },
+        "instrument": {
+          "state": "NAMED",
+          "id": "CELEX 32022L2555"
+        },
+        "version": {
+          "state": "HASH_MANIFEST_VERIFIED_SOURCE_BYTES_UNRESOLVED",
+          "frozen_at": "2026-08-12T05:22:20.629949+00:00",
+          "source_bytes": "NOT_RECOVERED"
+        },
+        "provision": {
+          "state": "HASHED",
+          "n": 46
+        },
+        "obligation": {
+          "state": "NO_REGISTER",
+          "n": 0
+        },
+        "applicability": {
+          "state": "NO_RECORD"
+        },
+        "crosswalks": {
+          "rows": 0,
+          "sources": []
+        },
+        "evidence_requirement": {
+          "n": 0
+        },
+        "test": {
+          "predicate": 0,
+          "related_measure": 0
+        },
+        "watcher": {
+          "state": "NOT BUILT — local corpus only; no authority is polled"
+        }
+      },
+      "crosswalk_regulator": null
+    },
+    {
+      "celex": "32022L2464",
+      "name": "CSRD",
+      "long": "Directive (EU) 2022/2464",
+      "jurisdiction": "EU",
+      "source_url": "https://eur-lex.europa.eu/eli/dir/2022/2464/oj",
+      "provisions": 11,
+      "ids_positive": 11,
+      "ids_negative": 0,
+      "by_status": {
+        "PREDICATE": 0,
+        "RELATED_MEASURE": 0,
+        "CROSSWALK_ONLY": 0,
+        "HASH_ONLY": 11
+      },
+      "levels": {
+        "authority": {
+          "state": "NO_RECORD"
+        },
+        "instrument": {
+          "state": "NAMED",
+          "id": "CELEX 32022L2464"
+        },
+        "version": {
+          "state": "HASH_MANIFEST_VERIFIED_SOURCE_BYTES_UNRESOLVED",
+          "frozen_at": "2026-08-12T05:22:20.629949+00:00",
+          "source_bytes": "NOT_RECOVERED"
+        },
+        "provision": {
+          "state": "HASHED",
+          "n": 11
+        },
+        "obligation": {
+          "state": "NO_REGISTER",
+          "n": 0
+        },
+        "applicability": {
+          "state": "NO_RECORD"
+        },
+        "crosswalks": {
+          "rows": 0,
+          "sources": []
+        },
+        "evidence_requirement": {
+          "n": 0
+        },
+        "test": {
+          "predicate": 0,
+          "related_measure": 0
+        },
+        "watcher": {
+          "state": "NOT BUILT — local corpus only; no authority is polled"
+        }
+      },
+      "crosswalk_regulator": null
+    }
+  ],
+  "provisions_touched": [
+    {
+      "provision_id": "32024R1689:5",
+      "provision_sha256": "8433d9f8d20a038af749eea977e67dfe0cce05c64742369f9e96c9c3e67c69bb",
+      "instrument": "EU AI Act",
+      "article": "5",
+      "status": "RELATED_MEASURE",
+      "predicates": [],
+      "related_axes": [
+        "care",
+        "jail",
+        "safety"
+      ],
+      "related": [
+        {
+          "axis": "safety",
+          "obligation": "Article 5 — prohibited manipulative / harmful AI practices",
+          "relation": "relevant-to",
+          "source": "client/src/data/regulator-crosswalk.json"
+        },
+        {
+          "axis": "care",
+          "obligation": "Article 5(1)(b) — exploitation of vulnerabilities of persons",
+          "relation": "relevant-to",
+          "source": "client/src/data/regulator-crosswalk.json"
+        },
+        {
+          "axis": "jail",
+          "obligation": "Article 5 — circumvention of prohibited-practice safeguards",
+          "relation": "relevant-to",
+          "source": "client/src/data/regulator-crosswalk.json"
+        }
+      ],
+      "crosswalk_rows": []
+    },
+    {
+      "provision_id": "32024R1689:6",
+      "provision_sha256": "3502efed4d31908373736c3feb7c1690b0a6ad0610ab89bff132b69331c4a2a3",
+      "instrument": "EU AI Act",
+      "article": "6",
+      "status": "RELATED_MEASURE",
+      "predicates": [],
+      "related_axes": [
+        "governance"
+      ],
+      "related": [
+        {
+          "axis": "governance",
+          "obligation": "Article 6 — classification of high-risk AI systems (Annex III)",
+          "relation": "relevant-to",
+          "source": "client/src/data/regulator-crosswalk.json"
+        }
+      ],
+      "crosswalk_rows": []
+    },
+    {
+      "provision_id": "32024R1689:8",
+      "provision_sha256": "d97bbf79c73c2a0b0b6798c8bf3f5969e52e3f0dc89bb7a64a2f38ac6110c39a",
+      "instrument": "EU AI Act",
+      "article": "8",
+      "status": "RELATED_MEASURE",
+      "predicates": [],
+      "related_axes": [
+        "safety"
+      ],
+      "related": [
+        {
+          "axis": "safety",
+          "obligation": "Annex III high-risk safety obligations (Arts 8–15)",
+          "relation": "relevant-to",
+          "source": "client/src/data/regulator-crosswalk.json"
+        }
+      ],
+      "crosswalk_rows": []
+    },
+    {
+      "provision_id": "32024R1689:9",
+      "provision_sha256": "1985fa349934bd61a93834128deabe2d93e7c3a59475431b888c744af71cf97e",
+      "instrument": "EU AI Act",
+      "article": "9",
+      "status": "RELATED_MEASURE",
+      "predicates": [],
+      "related_axes": [
+        "governance",
+        "safety"
+      ],
+      "related": [
+        {
+          "axis": "governance",
+          "obligation": "Article 9 — risk-management system for high-risk AI",
+          "relation": "relevant-to",
+          "source": "client/src/data/regulator-crosswalk.json"
+        },
+        {
+          "axis": "safety",
+          "obligation": "Annex III high-risk safety obligations (Arts 8–15)",
+          "relation": "relevant-to",
+          "source": "client/src/data/regulator-crosswalk.json"
+        }
+      ],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 9",
+          "mapped_to": "Risk management"
+        }
+      ]
+    },
+    {
+      "provision_id": "32024R1689:10",
+      "provision_sha256": "97a44b22228a6a494167563752a487080dd428b544fbdffcf012c1705695f68e",
+      "instrument": "EU AI Act",
+      "article": "10",
+      "status": "RELATED_MEASURE",
+      "predicates": [],
+      "related_axes": [
+        "safety"
+      ],
+      "related": [
+        {
+          "axis": "safety",
+          "obligation": "Annex III high-risk safety obligations (Arts 8–15)",
+          "relation": "relevant-to",
+          "source": "client/src/data/regulator-crosswalk.json"
+        }
+      ],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 10",
+          "mapped_to": "Data governance"
+        }
+      ]
+    },
+    {
+      "provision_id": "32024R1689:11",
+      "provision_sha256": "1c5469788cd00c211eeb08c92738593b10e76c178d7fc9395160163765f77da0",
+      "instrument": "EU AI Act",
+      "article": "11",
+      "status": "RELATED_MEASURE",
+      "predicates": [],
+      "related_axes": [
+        "conformance",
+        "safety"
+      ],
+      "related": [
+        {
+          "axis": "safety",
+          "obligation": "Annex III high-risk safety obligations (Arts 8–15)",
+          "relation": "relevant-to",
+          "source": "client/src/data/regulator-crosswalk.json"
+        },
+        {
+          "axis": "conformance",
+          "obligation": "Article 11 + Annex IV — technical documentation",
+          "relation": "relevant-to",
+          "source": "client/src/data/regulator-crosswalk.json"
+        }
+      ],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 11",
+          "mapped_to": "Documentation & records"
+        }
+      ]
+    },
+    {
+      "provision_id": "32024R1689:12",
+      "provision_sha256": "8a789f38ba029d9f2c7cb0b97c76152b4759a1af3a26f31cbed863f67dac703d",
+      "instrument": "EU AI Act",
+      "article": "12",
+      "status": "RELATED_MEASURE",
+      "predicates": [],
+      "related_axes": [
+        "art5-safeguard",
+        "care",
+        "continuity",
+        "detector-interop",
+        "governance",
+        "provenance",
+        "safety"
+      ],
+      "related": [
+        {
+          "axis": "safety",
+          "obligation": "Annex III high-risk safety obligations (Arts 8–15)",
+          "relation": "relevant-to",
+          "source": "client/src/data/regulator-crosswalk.json"
+        },
+        {
+          "axis": "provenance",
+          "obligation": "Article 12",
+          "relation": "related_measure",
+          "source": "public/interop/gpai-art12-pact-iaw/gpai-art12-pact-gspc-crosswalk.json"
+        },
+        {
+          "axis": "continuity",
+          "obligation": "Article 12",
+          "relation": "related_measure",
+          "source": "public/interop/gpai-art12-pact-iaw/gpai-art12-pact-gspc-crosswalk.json"
+        },
+        {
+          "axis": "detector-interop",
+          "obligation": "Article 12",
+          "relation": "related_measure",
+          "source": "public/interop/gpai-art12-pact-iaw/gpai-art12-pact-gspc-crosswalk.json"
+        },
+        {
+          "axis": "governance",
+          "obligation": "Article 12",
+          "relation": "related_measure",
+          "source": "public/interop/gpai-art12-pact-iaw/gpai-art12-pact-gspc-crosswalk.json"
+        },
+        {
+          "axis": "art5-safeguard",
+          "obligation": "Article 12",
+          "relation": "related_measure",
+          "source": "public/interop/gpai-art12-pact-iaw/gpai-art12-pact-gspc-crosswalk.json"
+        },
+        {
+          "axis": "care",
+          "obligation": "Article 12",
+          "relation": "related_measure",
+          "source": "public/interop/gpai-art12-pact-iaw/gpai-art12-pact-gspc-crosswalk.json"
+        }
+      ],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 12",
+          "mapped_to": "Documentation & records"
+        }
+      ]
+    },
+    {
+      "provision_id": "32024R1689:13",
+      "provision_sha256": "adc974984b0a9b7d23ca7ee49668d3c661d36b8c1182721c6ca2b4d8a997e8a9",
+      "instrument": "EU AI Act",
+      "article": "13",
+      "status": "RELATED_MEASURE",
+      "predicates": [],
+      "related_axes": [
+        "conformance",
+        "safety"
+      ],
+      "related": [
+        {
+          "axis": "safety",
+          "obligation": "Annex III high-risk safety obligations (Arts 8–15)",
+          "relation": "relevant-to",
+          "source": "client/src/data/regulator-crosswalk.json"
+        },
+        {
+          "axis": "conformance",
+          "obligation": "Article 13 — transparency & provision of information to deployers",
+          "relation": "relevant-to",
+          "source": "client/src/data/regulator-crosswalk.json"
+        }
+      ],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 13",
+          "mapped_to": "Transparency & disclosure"
+        }
+      ]
+    },
+    {
+      "provision_id": "32024R1689:14",
+      "provision_sha256": "40be5fa70658fb847635eccc61d47b16999573cc99b36b699bc0a732c75574dd",
+      "instrument": "EU AI Act",
+      "article": "14",
+      "status": "RELATED_MEASURE",
+      "predicates": [],
+      "related_axes": [
+        "safety",
+        "swarm"
+      ],
+      "related": [
+        {
+          "axis": "safety",
+          "obligation": "Annex III high-risk safety obligations (Arts 8–15)",
+          "relation": "relevant-to",
+          "source": "client/src/data/regulator-crosswalk.json"
+        },
+        {
+          "axis": "swarm",
+          "obligation": "Article 14 — human oversight",
+          "relation": "relevant-to",
+          "source": "client/src/data/regulator-crosswalk.json"
+        }
+      ],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 14",
+          "mapped_to": "Human oversight"
+        }
+      ]
+    },
+    {
+      "provision_id": "32024R1689:15",
+      "provision_sha256": "3ec8c22f288b643eaacf29252df55f3e665fec5897dad2bb8dbea5a711636995",
+      "instrument": "EU AI Act",
+      "article": "15",
+      "status": "RELATED_MEASURE",
+      "predicates": [],
+      "related_axes": [
+        "continuity",
+        "jail",
+        "safety"
+      ],
+      "related": [
+        {
+          "axis": "safety",
+          "obligation": "Annex III high-risk safety obligations (Arts 8–15)",
+          "relation": "relevant-to",
+          "source": "client/src/data/regulator-crosswalk.json"
+        },
+        {
+          "axis": "continuity",
+          "obligation": "Article 15 — accuracy, robustness & cybersecurity",
+          "relation": "relevant-to",
+          "source": "client/src/data/regulator-crosswalk.json"
+        },
+        {
+          "axis": "jail",
+          "obligation": "Article 15 — robustness & cybersecurity against manipulation",
+          "relation": "relevant-to",
+          "source": "client/src/data/regulator-crosswalk.json"
+        }
+      ],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 15",
+          "mapped_to": "Security & resilience"
+        }
+      ]
+    },
+    {
+      "provision_id": "32024R1689:50",
+      "provision_sha256": "7acac08345151e9d00babc21ffbc91af3768c7043288f3cbbedd3c838e10d22c",
+      "instrument": "EU AI Act",
+      "article": "50",
+      "status": "PREDICATE",
+      "predicates": [
+        "art50-marking-evidence"
+      ],
+      "related_axes": [
+        "provenance"
+      ],
+      "related": [
+        {
+          "axis": "provenance",
+          "obligation": "Article 50 — transparency & marking of AI-generated content",
+          "relation": "relevant-to",
+          "source": "client/src/data/regulator-crosswalk.json"
+        }
+      ],
+      "crosswalk_rows": []
+    },
+    {
+      "provision_id": "32024R1689:53",
+      "provision_sha256": "74c1adf00052f52b3de3b01ec66ecd47838d141b71fb5e0c2a8f3bcc5b423719",
+      "instrument": "EU AI Act",
+      "article": "53",
+      "status": "RELATED_MEASURE",
+      "predicates": [],
+      "related_axes": [
+        "openness"
+      ],
+      "related": [
+        {
+          "axis": "openness",
+          "obligation": "Article 53 — GPAI provider transparency & documentation",
+          "relation": "relevant-to",
+          "source": "client/src/data/regulator-crosswalk.json"
+        }
+      ],
+      "crosswalk_rows": []
+    },
+    {
+      "provision_id": "32024R1689:55",
+      "provision_sha256": "5f536599dee43623e07422294f38dde7e4fd901436779644cbec24d9087c2e7a",
+      "instrument": "EU AI Act",
+      "article": "55",
+      "status": "RELATED_MEASURE",
+      "predicates": [],
+      "related_axes": [
+        "continuity"
+      ],
+      "related": [
+        {
+          "axis": "continuity",
+          "obligation": "Article 55 — GPAI systemic-risk obligations",
+          "relation": "relevant-to",
+          "source": "client/src/data/regulator-crosswalk.json"
+        }
+      ],
+      "crosswalk_rows": []
+    }
+  ],
+  "unresolved_references": [
+    {
+      "source": "client/src/data/regulator-crosswalk.json",
+      "text": "Article 6 — classification of high-risk AI systems (Annex III)",
+      "reference": "Annex III"
+    },
+    {
+      "source": "client/src/data/regulator-crosswalk.json",
+      "text": "Annex III high-risk safety obligations (Arts 8–15)",
+      "reference": "Annex III"
+    },
+    {
+      "source": "client/src/data/regulator-crosswalk.json",
+      "text": "Article 11 + Annex IV — technical documentation",
+      "reference": "Annex IV"
+    }
+  ],
+  "jurisdictions": [
+    {
+      "id": "EU",
+      "label": "European Union / EEA",
+      "state": "IN_FROZEN_CORPUS",
+      "frozen_provisions": 417,
+      "instruments_in_corpus": [
+        "EU AI Act",
+        "GDPR",
+        "Cyber Resilience Act",
+        "DORA",
+        "NIS2",
+        "CSRD"
+      ],
+      "predicate_provisions": 1,
+      "related_measure_provisions": 12,
+      "authority_records": [
+        {
+          "id": "eu-ai-act-2024-1689",
+          "binding_type": "BINDING_LAW",
+          "output_mode": "APPLICABILITY_REVIEW_REQUIRED"
+        },
+        {
+          "id": "eu-gpai-code-2025",
+          "binding_type": "VOLUNTARY_FRAMEWORK",
+          "output_mode": "ALIGNMENT_ONLY"
+        },
+        {
+          "id": "eu-gdpr-2016-679",
+          "binding_type": "BINDING_LAW",
+          "output_mode": "APPLICABILITY_REVIEW_REQUIRED"
+        }
+      ],
+      "east_west_rows": 7,
+      "prose_pages": [
+        {
+          "path": "/eu-ai-act/",
+          "component": "EUAIActGuide",
+          "cites_frozen_provision_ids": 0
+        }
+      ]
+    },
+    {
+      "id": "UK",
+      "label": "United Kingdom",
+      "state": "ROUTING_RECORD_ONLY",
+      "frozen_provisions": 0,
+      "instruments_in_corpus": [],
+      "predicate_provisions": 0,
+      "related_measure_provisions": 0,
+      "authority_records": [
+        {
+          "id": "uk-data-protection",
+          "binding_type": "BINDING_LAW",
+          "output_mode": "APPLICABILITY_REVIEW_REQUIRED"
+        },
+        {
+          "id": "uk-consumer-protection",
+          "binding_type": "BINDING_LAW",
+          "output_mode": "APPLICABILITY_REVIEW_REQUIRED"
+        }
+      ],
+      "east_west_rows": 5,
+      "prose_pages": [
+        {
+          "path": "/uk-ai-regulation/",
+          "component": "JurisdictionAct",
+          "cites_frozen_provision_ids": 0
+        },
+        {
+          "path": "/compliance/uk-ai-bill/",
+          "component": "UKAIBillCompliance",
+          "cites_frozen_provision_ids": 0
+        },
+        {
+          "path": "/frameworks/uk-ai-bill/",
+          "component": "UKAIBill",
+          "cites_frozen_provision_ids": 0
+        }
+      ]
+    },
+    {
+      "id": "US-FED",
+      "label": "United States (federal, incl. NIST)",
+      "state": "ROUTING_RECORD_ONLY",
+      "frozen_provisions": 0,
+      "instruments_in_corpus": [],
+      "predicate_provisions": 0,
+      "related_measure_provisions": 0,
+      "authority_records": [
+        {
+          "id": "us-ftc-act-section-5",
+          "binding_type": "BINDING_LAW",
+          "output_mode": "APPLICABILITY_REVIEW_REQUIRED"
+        },
+        {
+          "id": "us-nist-ai-rmf-1",
+          "binding_type": "VOLUNTARY_FRAMEWORK",
+          "output_mode": "ALIGNMENT_ONLY"
+        }
+      ],
+      "east_west_rows": 0,
+      "prose_pages": [
+        {
+          "path": "/us-ai-regulation/",
+          "component": "JurisdictionAct",
+          "cites_frozen_provision_ids": 0
+        }
+      ]
+    },
+    {
+      "id": "US-CA",
+      "label": "California",
+      "state": "PROSE_PAGES_ONLY",
+      "frozen_provisions": 0,
+      "instruments_in_corpus": [],
+      "predicate_provisions": 0,
+      "related_measure_provisions": 0,
+      "authority_records": [],
+      "east_west_rows": 0,
+      "prose_pages": [
+        {
+          "path": "/california-ai-law/",
+          "component": "UsStateAct",
+          "cites_frozen_provision_ids": 0
+        }
+      ]
+    },
+    {
+      "id": "US-CO",
+      "label": "Colorado",
+      "state": "PROSE_PAGES_ONLY",
+      "frozen_provisions": 0,
+      "instruments_in_corpus": [],
+      "predicate_provisions": 0,
+      "related_measure_provisions": 0,
+      "authority_records": [],
+      "east_west_rows": 0,
+      "prose_pages": [
+        {
+          "path": "/colorado-ai-act/",
+          "component": "UsStateAct",
+          "cites_frozen_provision_ids": 0
+        }
+      ]
+    },
+    {
+      "id": "US-TX",
+      "label": "Texas",
+      "state": "PROSE_PAGES_ONLY",
+      "frozen_provisions": 0,
+      "instruments_in_corpus": [],
+      "predicate_provisions": 0,
+      "related_measure_provisions": 0,
+      "authority_records": [],
+      "east_west_rows": 0,
+      "prose_pages": [
+        {
+          "path": "/texas-ai-act/",
+          "component": "UsStateAct",
+          "cites_frozen_provision_ids": 0
+        }
+      ]
+    },
+    {
+      "id": "US-IL",
+      "label": "Illinois",
+      "state": "CROSSWALK_ROWS_ONLY",
+      "frozen_provisions": 0,
+      "instruments_in_corpus": [],
+      "predicate_provisions": 0,
+      "related_measure_provisions": 0,
+      "authority_records": [],
+      "east_west_rows": 4,
+      "prose_pages": []
+    },
+    {
+      "id": "CA",
+      "label": "Canada",
+      "state": "ROUTING_RECORD_ONLY",
+      "frozen_provisions": 0,
+      "instruments_in_corpus": [],
+      "predicate_provisions": 0,
+      "related_measure_provisions": 0,
+      "authority_records": [
+        {
+          "id": "canada-pipeda",
+          "binding_type": "BINDING_LAW",
+          "output_mode": "APPLICABILITY_REVIEW_REQUIRED"
+        }
+      ],
+      "east_west_rows": 0,
+      "prose_pages": [
+        {
+          "path": "/canada-aida/",
+          "component": "JurisdictionAct",
+          "cites_frozen_provision_ids": 0
+        },
+        {
+          "path": "/compliance/canada-ai-act/",
+          "component": "CanadaAIActCompliance",
+          "cites_frozen_provision_ids": 0
+        },
+        {
+          "path": "/frameworks/canada-ai-act/",
+          "component": "CanadaAIAct",
+          "cites_frozen_provision_ids": 0
+        }
+      ]
+    },
+    {
+      "id": "CN",
+      "label": "China",
+      "state": "ROUTING_RECORD_ONLY",
+      "frozen_provisions": 0,
+      "instruments_in_corpus": [],
+      "predicate_provisions": 0,
+      "related_measure_provisions": 0,
+      "authority_records": [
+        {
+          "id": "china-generative-ai-interim-measures",
+          "binding_type": "BINDING_LAW",
+          "output_mode": "APPLICABILITY_REVIEW_REQUIRED"
+        }
+      ],
+      "east_west_rows": 4,
+      "prose_pages": [
+        {
+          "path": "/china-ai-law/",
+          "component": "JurisdictionAct",
+          "cites_frozen_provision_ids": 0
+        },
+        {
+          "path": "/compliance/tc260/",
+          "component": "TC260Compliance",
+          "cites_frozen_provision_ids": 0
+        }
+      ]
+    },
+    {
+      "id": "JP",
+      "label": "Japan",
+      "state": "ROUTING_RECORD_ONLY",
+      "frozen_provisions": 0,
+      "instruments_in_corpus": [],
+      "predicate_provisions": 0,
+      "related_measure_provisions": 0,
+      "authority_records": [
+        {
+          "id": "japan-ai-guidelines-business-1",
+          "binding_type": "VOLUNTARY_FRAMEWORK",
+          "output_mode": "ALIGNMENT_ONLY"
+        }
+      ],
+      "east_west_rows": 0,
+      "prose_pages": []
+    },
+    {
+      "id": "SG",
+      "label": "Singapore",
+      "state": "ROUTING_RECORD_ONLY",
+      "frozen_provisions": 0,
+      "instruments_in_corpus": [],
+      "predicate_provisions": 0,
+      "related_measure_provisions": 0,
+      "authority_records": [
+        {
+          "id": "singapore-agentic-ai-mgf",
+          "binding_type": "VOLUNTARY_FRAMEWORK",
+          "output_mode": "ALIGNMENT_ONLY"
+        }
+      ],
+      "east_west_rows": 0,
+      "prose_pages": [
+        {
+          "path": "/singapore-ai-governance/",
+          "component": "JurisdictionAct",
+          "cites_frozen_provision_ids": 0
+        }
+      ]
+    },
+    {
+      "id": "KR",
+      "label": "South Korea",
+      "state": "ROUTING_RECORD_ONLY",
+      "frozen_provisions": 0,
+      "instruments_in_corpus": [],
+      "predicate_provisions": 0,
+      "related_measure_provisions": 0,
+      "authority_records": [
+        {
+          "id": "korea-ai-basic-act",
+          "binding_type": "BINDING_LAW",
+          "output_mode": "APPLICABILITY_REVIEW_REQUIRED"
+        }
+      ],
+      "east_west_rows": 0,
+      "prose_pages": [
+        {
+          "path": "/south-korea-ai-act/",
+          "component": "JurisdictionAct",
+          "cites_frozen_provision_ids": 0
+        }
+      ]
+    },
+    {
+      "id": "IN",
+      "label": "India",
+      "state": "ROUTING_RECORD_ONLY",
+      "frozen_provisions": 0,
+      "instruments_in_corpus": [],
+      "predicate_provisions": 0,
+      "related_measure_provisions": 0,
+      "authority_records": [
+        {
+          "id": "india-ai-governance-guidelines",
+          "binding_type": "REGULATORY_GUIDANCE",
+          "output_mode": "GUIDANCE_ALIGNMENT_ONLY"
+        }
+      ],
+      "east_west_rows": 0,
+      "prose_pages": []
+    },
+    {
+      "id": "BR",
+      "label": "Brazil",
+      "state": "ROUTING_RECORD_ONLY",
+      "frozen_provisions": 0,
+      "instruments_in_corpus": [],
+      "predicate_provisions": 0,
+      "related_measure_provisions": 0,
+      "authority_records": [
+        {
+          "id": "brazil-lgpd",
+          "binding_type": "BINDING_LAW",
+          "output_mode": "APPLICABILITY_REVIEW_REQUIRED"
+        }
+      ],
+      "east_west_rows": 0,
+      "prose_pages": []
+    },
+    {
+      "id": "AU",
+      "label": "Australia",
+      "state": "ROUTING_RECORD_ONLY",
+      "frozen_provisions": 0,
+      "instruments_in_corpus": [],
+      "predicate_provisions": 0,
+      "related_measure_provisions": 0,
+      "authority_records": [
+        {
+          "id": "australia-privacy-act",
+          "binding_type": "BINDING_LAW",
+          "output_mode": "APPLICABILITY_REVIEW_REQUIRED"
+        }
+      ],
+      "east_west_rows": 0,
+      "prose_pages": [
+        {
+          "path": "/compliance/australia-ai-governance/",
+          "component": "AustraliaAIGovernanceCompliance",
+          "cites_frozen_provision_ids": 0
+        },
+        {
+          "path": "/frameworks/australia-ai/",
+          "component": "AustraliaAIGovernance",
+          "cites_frozen_provision_ids": 0
+        }
+      ]
+    },
+    {
+      "id": "ZA",
+      "label": "South Africa",
+      "state": "ROUTING_RECORD_ONLY",
+      "frozen_provisions": 0,
+      "instruments_in_corpus": [],
+      "predicate_provisions": 0,
+      "related_measure_provisions": 0,
+      "authority_records": [
+        {
+          "id": "south-africa-popia",
+          "binding_type": "BINDING_LAW",
+          "output_mode": "APPLICABILITY_REVIEW_REQUIRED"
+        }
+      ],
+      "east_west_rows": 0,
+      "prose_pages": []
+    },
+    {
+      "id": "COE",
+      "label": "Council of Europe treaty parties",
+      "state": "ROUTING_RECORD_ONLY",
+      "frozen_provisions": 0,
+      "instruments_in_corpus": [],
+      "predicate_provisions": 0,
+      "related_measure_provisions": 0,
+      "authority_records": [
+        {
+          "id": "coe-ai-framework-convention-225",
+          "binding_type": "TREATY",
+          "output_mode": "RATIFICATION_AND_IMPLEMENTATION_REVIEW_REQUIRED"
+        }
+      ],
+      "east_west_rows": 0,
+      "prose_pages": []
+    }
+  ],
+  "frameworks_outside_corpus": [
+    {
+      "id": "nist-ai-rmf",
+      "name": "NIST AI RMF 1.0",
+      "kind": "voluntary-framework-no-fine",
+      "frozen_provisions": 0,
+      "authority_record": "us-nist-ai-rmf-1",
+      "axis_pointers": 12,
+      "axes_pointing": [
+        "care",
+        "conformance",
+        "continuity",
+        "governance",
+        "jail",
+        "openness",
+        "provenance",
+        "safety",
+        "swarm"
+      ],
+      "files": [
+        "public/interop/nist-airmf-gspc-crosswalk.json"
+      ],
+      "page": "/crosswalks/"
+    },
+    {
+      "id": "iso-42001",
+      "name": "ISO/IEC 42001:2023",
+      "kind": "management-standard-no-fine",
+      "frozen_provisions": 0,
+      "authority_record": null,
+      "axis_pointers": 0,
+      "axes_pointing": [],
+      "files": [],
+      "page": "/crosswalks/"
+    },
+    {
+      "id": "owasp-asi",
+      "name": "OWASP Top 10 for Agentic Applications (2026)",
+      "kind": "security-taxonomy-no-fine",
+      "frozen_provisions": 0,
+      "authority_record": null,
+      "axis_pointers": 11,
+      "axes_pointing": [
+        "care",
+        "conformance",
+        "continuity",
+        "governance",
+        "jail",
+        "openness",
+        "provenance",
+        "safety",
+        "swarm"
+      ],
+      "files": [
+        "public/crosswalks/owasp-asi.json"
+      ],
+      "page": "/crosswalks/owasp-asi/"
+    }
+  ],
+  "predicates": [
+    {
+      "id": "art50-marking-evidence",
+      "name": "Article 50 marking evidence",
+      "celex": "32024R1689",
+      "article": "50",
+      "scope": "Paragraph 2 only: whether a generated file carries a machine-readable mark that named methods detect, at the time of the check.",
+      "deterministic": "C2PA manifest-store presence, assertion hashes, the c2pa.hash.data hard binding and the COSE_Sign1 claim signature under the leaf's own key; IPTC DigitalSourceType read from XMP.",
+      "not_measured": "C2PA chain trust (no trust list is bundled), SynthID and other keyed watermarks, the open-source DWT-DCT detector and text watermarks. The response lists each with its reason.",
+      "evidence_requirement": "The file's bytes (an https URL we fetch, or the bytes posted), up to 20 MiB, or a C2PA manifest on its own.",
+      "result_wording": "Results read \"marking not detected by method X\"; never absent, compliant or non-compliant.",
+      "binding_today": "The check quotes the verbatim Article 50(2) text with its SHA-256. It does not yet cite the frozen provision id.",
+      "code": [
+        "functions/api/art50/marking-evidence.ts",
+        "functions/_lib/c2pa.ts",
+        "functions/_lib/art50Law.ts"
+      ],
+      "free_route": "/api/art50/marking-evidence?url=https://example.com/image.png&preview=1",
+      "provision_id": "32024R1689:50"
+    }
+  ],
+  "capsule_adapters": [
+    {
+      "batch": "a2a_card",
+      "adapter": "a2a_card",
+      "kind": "measurement.a2a_card_signature",
+      "capsule_schema": "csoai.measurement-capsule/0.2",
+      "n_capsules": 33,
+      "capsules_binding_a_provision": 0,
+      "provision_ids_bound": [],
+      "owasp_checks": [
+        "agent-card-signature"
+      ],
+      "owasp_items": [
+        "ASI03 PARTIAL",
+        "ASI07 DIRECT"
+      ],
+      "record": "/measurement-capsules/v0.2/a2a_card/record.json"
+    },
+    {
+      "batch": "contract_parity",
+      "adapter": "contract_parity",
+      "kind": "measurement.contract_parity",
+      "capsule_schema": "csoai.measurement-capsule/0.2",
+      "n_capsules": 9148,
+      "capsules_binding_a_provision": 0,
+      "provision_ids_bound": [],
+      "owasp_checks": [
+        "contract-parity.TOOLS",
+        "contract-parity.VERSION",
+        "contract-parity.PROTOCOL",
+        "contract-parity.AUTH",
+        "contract-parity.PAYMENT"
+      ],
+      "owasp_items": [
+        "ASI03 PARTIAL",
+        "ASI04 PARTIAL",
+        "ASI07 PARTIAL",
+        "MCP03:2025 PARTIAL",
+        "MCP04:2025 PARTIAL",
+        "MCP07:2025 PARTIAL"
+      ],
+      "record": "/measurement-capsules/v0.2/contract_parity/record.json"
+    },
+    {
+      "batch": "cross_ledger",
+      "adapter": "cross_ledger",
+      "kind": "measurement.cross_ledger_supply",
+      "capsule_schema": "csoai.measurement-capsule/0.2",
+      "n_capsules": 353,
+      "capsules_binding_a_provision": 0,
+      "provision_ids_bound": [],
+      "owasp_checks": [],
+      "owasp_items": [],
+      "record": "/measurement-capsules/v0.2/cross_ledger/record.json"
+    },
+    {
+      "batch": "mill_cross_runtime-5ae00c1f4c2e",
+      "adapter": "mill_cross_runtime",
+      "kind": "measurement.cross_runtime_reproduction",
+      "capsule_schema": "csoai.measurement-capsule/0.2",
+      "n_capsules": 14,
+      "capsules_binding_a_provision": 0,
+      "provision_ids_bound": [],
+      "owasp_checks": [],
+      "owasp_items": [],
+      "record": "/measurement-capsules/v0.2/mill_cross_runtime-5ae00c1f4c2e/record.json"
+    },
+    {
+      "batch": "mill_cross_runtime-78226433e9e4",
+      "adapter": "mill_cross_runtime",
+      "kind": "measurement.cross_runtime_reproduction",
+      "capsule_schema": "csoai.measurement-capsule/0.2",
+      "n_capsules": 140,
+      "capsules_binding_a_provision": 0,
+      "provision_ids_bound": [],
+      "owasp_checks": [],
+      "owasp_items": [],
+      "record": "/measurement-capsules/v0.2/mill_cross_runtime-78226433e9e4/record.json"
+    },
+    {
+      "batch": "public_signals",
+      "adapter": "public_signals",
+      "kind": "measurement.public_signal",
+      "capsule_schema": "csoai.measurement-capsule/0.2",
+      "n_capsules": 118,
+      "capsules_binding_a_provision": 0,
+      "provision_ids_bound": [],
+      "owasp_checks": [],
+      "owasp_items": [],
+      "record": "/measurement-capsules/v0.2/public_signals/record.json"
+    },
+    {
+      "batch": "self_parity",
+      "adapter": "self_parity",
+      "kind": "measurement.self_parity",
+      "capsule_schema": "csoai.measurement-capsule/0.2",
+      "n_capsules": 138,
+      "capsules_binding_a_provision": 0,
+      "provision_ids_bound": [],
+      "owasp_checks": [],
+      "owasp_items": [],
+      "record": "/measurement-capsules/v0.2/self_parity/record.json"
+    },
+    {
+      "batch": "tool_drift",
+      "adapter": "tool_drift",
+      "kind": "measurement.tool_drift",
+      "capsule_schema": "csoai.measurement-capsule/0.2",
+      "n_capsules": 3240,
+      "capsules_binding_a_provision": 0,
+      "provision_ids_bound": [],
+      "owasp_checks": [
+        "tool-drift"
+      ],
+      "owasp_items": [
+        "ASI04 PARTIAL",
+        "MCP02:2025 PARTIAL",
+        "MCP03:2025 PARTIAL"
+      ],
+      "record": "/measurement-capsules/v0.2/tool_drift/record.json"
+    }
+  ],
+  "routes_today": [
+    {
+      "id": "verify-server",
+      "name": "Look up an endpoint",
+      "how": "Paste an MCP server, A2A agent or x402 endpoint URL at /verify-server/. It shows every published capsule about it and re-checks each one in your browser.",
+      "link": "/verify-server/",
+      "is": "free, no account",
+      "is_not": "It only shows what the public censuses already measured. It does not start a new measurement."
+    },
+    {
+      "id": "registries",
+      "name": "Be in a public registry the censuses read",
+      "how": "The census capsules read public listings: MCP servers in the public registries the MCP census reads (contract parity, tool drift) and signed agent cards listed in the a2aregistry census. A listed endpoint is read when that census next runs.",
+      "link": "/measurement-capsules/",
+      "is": "free, permissionless",
+      "is_not": "No date is promised, and being measured is not being endorsed."
+    },
+    {
+      "id": "art50-preview",
+      "name": "Article 50(2) marking check on one file",
+      "how": "GET /api/art50/marking-evidence?url=<https URL>&preview=1 runs the deterministic marking check on the file and returns the result unsigned.",
+      "link": "/api/art50/marking-evidence?url=https://example.com/image.png&preview=1",
+      "is": "free preview, same measurement as the signed pack",
+      "is_not": "Not a legal opinion on Article 50. A signed pack is a separate commissioned route."
+    },
+    {
+      "id": "mcp-tools",
+      "name": "Agents: the MCP server",
+      "how": "POST https://councilof.ai/mcp, tools measurement_index, verify_capsule and server_evidence.",
+      "link": "/measurement-capsules/",
+      "is": "free, no key",
+      "is_not": "Read and verify only."
+    },
+    {
+      "id": "dispute",
+      "name": "Contest a published result",
+      "how": "The dispute route re-runs the frozen instrument and publishes the re-run as a new signed record.",
+      "link": "/dispute/",
+      "is": "free",
+      "is_not": "An allegation is measured, not argued."
+    }
+  ],
+  "not_open_today": [
+    {
+      "id": "evidence-intake",
+      "what": "POST /api/evidence-intake, which would queue a candidate record for operator review.",
+      "why": "It returns WRITER_AUTH_UNAVAILABLE: no public writer is configured, so nothing submitted there is stored."
+    },
+    {
+      "id": "claim-form",
+      "what": "A form to submit an arbitrary written claim for measurement.",
+      "why": "None exists. A claim is measured today only when it is one of the kinds an instrument above reads."
+    }
+  ]
+}

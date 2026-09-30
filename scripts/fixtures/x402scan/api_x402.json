@@ -10,7 +10,9 @@
     "https://councilof.ai/api/receipts/batch?from=<iso>&preview=1",
     "https://councilof.ai/receipts/root-history.json",
     "https://councilof.ai/api/commissions",
-    "https://councilof.ai/methodology"
+    "https://councilof.ai/methodology",
+    "https://councilof.ai/api/verify?record_url=<https-councilof-record-url>",
+    "https://councilof.ai/api/x402/index"
   ],
   "invariants": {
     "financial_firewall": "No token, credit, or cash-settled index. Attestation is not tokenisation and confers no ownership.",
@@ -19,7 +21,7 @@
     "no_public_price": "Amounts appear only in a 402 challenge.",
     "recomputable_for_free": "Every artefact is independently recomputable; a buyer pays for issuance, assembly and a durable independent signature — not for the answer."
   },
-  "lid": "23 axes measured · 14 model fleets · 0 separated leaders · 3 public leader scores · 9 fact runs · TIE is TIE · not a certificate.",
+  "lid": "23 axes measured · 14 model fleets · 0 separated leaders · 9 public leader scores · 9 fact runs · TIE is TIE · not a certificate.",
   "mcp": {
     "free_tools": [
       "board_totals",
@@ -30,9 +32,12 @@
       "get_card",
       "verify_inclusion",
       "x402_trust",
-      "mcp_trust"
+      "mcp_trust",
+      "measurement_index",
+      "verify_capsule",
+      "server_evidence"
     ],
-    "how": "tools/call without x_payment → the route's 402 challenge as structuredContent (accepts[], PAYMENT-REQUIRED); pay from your wallet; call again with x_payment. Payment travels as the x_payment ARGUMENT and this door sets the X-PAYMENT header itself, so carrying a paid tool is a packaging choice, never a property of the transport. Every paid tool is measurement, not certification — no tool carries or awards a trust label of any kind. The catalogue (tools/list) is free.",
+    "how": "tools/call without x_payment → the route's 402 challenge per the x402 MCP transport (isError:true; structuredContent carries x402Version, accepts[], resource); pay from your wallet; call again with x_payment. Payment travels as the x_payment ARGUMENT and this door sets the X-PAYMENT header itself, so carrying a paid tool is a packaging choice, never a property of the transport. Every paid tool is measurement, not certification — no tool carries or awards a trust label of any kind. The catalogue (tools/list) is free.",
     "paid_tools": [
       {
         "name": "commission_card",
@@ -207,6 +212,23 @@
       "resource": "https://councilof.ai/api/wrapper/changes?id=<wrapped-symbol:chain>"
     },
     {
+      "deliverable": "One csoai.measurement-capsule/0.2: the endpoint's own discovery documents vs its live initialize + tools/list answer for one dimension, CONSISTENT / INCONSISTENT / UNCHECKABLE, sha256 of every read, board signature pinning the capsule id. Read before settle.",
+      "free_preview": "https://councilof.ai/api/measurement/fresh-capsule?endpoint=<https-mcp-url>&dimension=TOOLS&preview=1",
+      "free_preview_note": "the same measurement, unsigned and without source digests; verification (MCP verify_capsule, server_evidence) stays free",
+      "id": "fresh_capsule",
+      "name": "Fresh measurement capsule (one MCP endpoint, one claim)",
+      "never": [
+        "a rating",
+        "a guarantee",
+        "a verdict",
+        "a rank",
+        "an endorsement",
+        "a certificate",
+        "a call beyond the discovery boundary"
+      ],
+      "resource": "https://councilof.ai/api/measurement/fresh-capsule?endpoint=<https-mcp-url>&dimension=<TOOLS|VERSION|PROTOCOL>"
+    },
+    {
       "deliverable": "A signed card recording whether named methods detected a machine-readable mark in one named output at one time.",
       "free_preview": "https://councilof.ai/api/art50/marking-evidence?url=<https-output-url>&preview=1",
       "free_preview_note": "the same point-in-time detection is returned unsigned before purchase",
@@ -253,6 +275,52 @@
         "https://councilof.ai/receipts/root-history.json"
       ],
       "resource": "https://councilof.ai/api/receipts/batch?from=<iso>&to=<iso>"
+    },
+    {
+      "deliverable": "MCP discovery probe receipt — one live read-only discovery of a public https MCP endpoint (server/discover, else initialize + tools/list; no tool is ever called): state, requested vs negotiated protocol version, tool count and tool-names sha256, Ed25519-signed. A probe, not a grade.",
+      "free_preview": "https://councilof.ai/evidence/mcp-remote-census/",
+      "id": "ras_mcp_probe",
+      "name": "MCP discovery probe (per endpoint)",
+      "never": [
+        "a tool call",
+        "a grade",
+        "a rank",
+        "a safety judgement",
+        "a certificate",
+        "a board cell"
+      ],
+      "resource": "https://councilof.ai/api/ras/mcp-probe?url=<https-mcp-endpoint>",
+      "verify_free": "https://councilof.ai/api/verify"
+    },
+    {
+      "daily_index_free": "https://councilof.ai/api/x402/index",
+      "deliverable": "x402 challenge conformance receipt — one live GET of a public x402 resource scored by the daily census rule (HTTP 402, PAYMENT-REQUIRED header, x402Version 2 and extensions.bazaar in the body), Ed25519-signed. A non-conformant result is delivered as found.",
+      "free_preview": "https://councilof.ai/api/x402/index",
+      "id": "ras_x402_check",
+      "name": "x402 challenge conformance check (per resource)",
+      "never": [
+        "a payment to the target",
+        "a judgement of the seller",
+        "a grade",
+        "a certificate"
+      ],
+      "resource": "https://councilof.ai/api/ras/x402-check?url=<https-x402-resource>",
+      "verify_free": "https://councilof.ai/api/verify"
+    },
+    {
+      "deliverable": "Token supply read receipt — one fresh totalSupply() read of an issuer-listed EVM deployment (USDC, address parsed from the issuer page on the request); on Ethereum the EIP-1186 storage proof is checked against the block stateRoot, elsewhere it is labelled OPERATOR_API. Not a reserve attestation.",
+      "free_preview": "https://councilof.ai/evidence/cross-ledger-usdc/",
+      "id": "ras_supply",
+      "name": "Token supply read with state proof (per deployment)",
+      "never": [
+        "a reserve attestation",
+        "a proof of backing",
+        "a rate",
+        "a grade",
+        "a certificate"
+      ],
+      "resource": "https://councilof.ai/api/ras/supply?asset=<USDC>&ledger=<evm-ledger-on-issuer-list>",
+      "verify_free": "https://councilof.ai/api/verify"
     },
     {
       "deliverable": "Stablecoin universe slice — every asset the frozen discovery index catalogues, with each reader's per-chain deployment reads and every unmeasured asset's own reason. Assets, never supply; a read, not a reserve attestation.",

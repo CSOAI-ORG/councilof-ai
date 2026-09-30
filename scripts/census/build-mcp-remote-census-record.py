@@ -40,6 +40,11 @@ not omissions; nothing here says a server is safe, good, or endorsed.
 import argparse, base64, collections, datetime, gzip, hashlib, io, json, os, pathlib, subprocess, sys
 import urllib.request
 
+# The How-to-cite / corrections / verification block every public csoai/* card carries (lane L5, 28 Sep 2026)
+# has ONE producer, scripts/hf/cite_block.py; the card below passes through it so a rebuild keeps the block.
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "hf"))
+from cite_block import apply as cite_apply  # noqa: E402
+
 SCHEMA = "csoai.mcp-remote-census/0.1"
 RECORD_PATH = "/interop/mcp-remote-census-2026-09-25/record.json"
 HF_REPO = "csoai/mcp-remote-census"
@@ -733,6 +738,7 @@ commitment, not a Bitcoin attestation**. It proves nothing about time until it i
 
 Data: CC-BY-4.0. Cite as: Council of AI (CSOAI), *Remote MCP endpoint census, measured read 2026-09-25*, {HF_REPO}.
 """
+    md = cite_apply(md, HF_REPO)
     (stage / "README.md").write_text(md)
     for n in ("record.json", "record.signed.json", "record.json.ots", "record.ots.json"):
         (stage / n).write_bytes((out / n).read_bytes())

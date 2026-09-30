@@ -40,12 +40,12 @@ export default function Agents() {
           {RIVALS.map((r) => (
             <div key={r.n} className="rounded-2xl border border-gray-200 p-5">
               <div className="font-bold text-gray-900">{r.n}</div>
-              <p className="mt-1 text-sm text-gray-500">{r.c}</p>
+              <p className="mt-1 text-sm text-gray-600">{r.c}</p>
             </div>
           ))}
         </div>
         <div className="mt-8 flex flex-wrap gap-3">
-          <a href="/try" className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">Watch the Council decide -&gt;</a>
+          <a href="/try" className="rounded-xl bg-emerald-700 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-800">Watch the Council decide -&gt;</a>
           <a href="/dragonfly" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">The 4-Wing architecture -&gt;</a>
           <a href="/compare" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">Full comparison -&gt;</a>
         </div>

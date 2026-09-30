@@ -22,6 +22,8 @@ import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { ChevronRight } from "lucide-react";
 import AttestationDeepDive, { type DeepDiveKind } from "./AttestationDeepDive";
+import { boardRunDates } from "@/lib/boardRunDates";
+import { verifyBoardStamp, type StampCheck } from "@/lib/verifyBoardStamp";
 
 interface SiteAttestation {
   attests?: string;
@@ -45,6 +47,10 @@ interface LivingStamp {
   signer?: string;
   signature?: string;
   unverifiable_note?: string;
+  tracked_as?: string;
+  preimage?: unknown;
+  public_key_x?: string;
+  superseded?: { verifiable?: boolean; verification_state?: string; reproduction_attempts?: number };
 }
 
 interface BoardTotals {
@@ -68,6 +74,7 @@ interface InLaneAxis {
   separation?: string;
   fleet_mean?: number;
   status?: string;
+  n_note?: string;
 }
 
 interface BoardAttestationProps {
@@ -83,6 +90,7 @@ interface BoardAttestationProps {
     };
     totals?: BoardTotals;
     measured_in_lane?: InLaneAxis[];
+    axes?: unknown[];
   } | null;
   variant?: "light" | "dark";
   showProgress?: boolean;
@@ -94,6 +102,16 @@ function truncateSig(sig: string | undefined, len = 16): string {
   if (!sig) return "—";
   if (sig.length <= len * 2) return sig;
   return `${sig.slice(0, len)}…${sig.slice(-8)}`;
+}
+
+/** The usable-item floor an in-lane axis must reach before it can be signed onto the board. */
+const N_FLOOR = 30;
+
+/** "Aug 2026" from an ISO timestamp, or null. */
+function stampMonth(iso: string | undefined): string | null {
+  if (!iso) return null;
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime()) ? null : d.toLocaleDateString("en-GB", { month: "short", year: "numeric", timeZone: "UTC" });
 }
 
 function formatDate(iso: string | undefined): string {
@@ -117,6 +135,19 @@ export default function BoardAttestation({
   compact = false,
 }: BoardAttestationProps) {
   const [deepDive, setDeepDive] = useState<{ kind: DeepDiveKind; extra?: any } | null>(null);
+  const [stampCheck, setStampCheck] = useState<StampCheck | "checking" | null>(null);
+  const runStampCheck = async () => {
+    const st = data?.measured_on?.living_stamp;
+    if (!st) return;
+    setStampCheck("checking");
+    try {
+      const r = await fetch("/.well-known/did.json", { headers: { accept: "application/json" } });
+      if (!r.ok) throw new Error(`the DID document answered HTTP ${r.status}`);
+      setStampCheck(await verifyBoardStamp(st, await r.json()));
+    } catch (e) {
+      setStampCheck({ state: "UNCHECKABLE", reason: (e as Error).message || "the DID document could not be read" });
+    }
+  };
   const [drift, setDrift] = useState<{ status?: string; note?: string } | null>(null);
 
   useEffect(() => {
@@ -129,7 +160,8 @@ export default function BoardAttestation({
   const dark = variant === "dark";
   const att = data?.site_attestation;
   const stamp = data?.measured_on?.living_stamp;
-  const measuredOnDate = data?.measured_on?.date;
+  // measured_on.date, completed with any run it does not name (effect-binding), read from the axes.
+  const measuredOnDate = boardRunDates(data);
   const goldRun = stamp?.gold_run;
   const totals = data?.totals;
   const inLane = data?.measured_in_lane;
@@ -143,7 +175,7 @@ export default function BoardAttestation({
   const bgCls = dark ? "bg-[#05140d]" : "bg-white";
   const textMuted = dark ? "text-emerald-100/70" : "text-gray-600";
   const textPrimary = dark ? "text-emerald-50" : "text-gray-900";
-  const labelCls = `text-[11px] font-bold uppercase tracking-wider ${dark ? "text-emerald-300/60" : "text-emerald-700/70"}`;
+  const labelCls = `text-[11px] font-bold uppercase tracking-wider ${dark ? "text-emerald-300/60" : "text-emerald-700"}`;
   const hoverCls = `cursor-pointer transition-all hover:scale-[1.01] hover:shadow-md ${dark ? "hover:border-emerald-400/40" : "hover:border-emerald-500/40"}`;
   const clickHintCls = `ml-auto shrink-0 ${dark ? "text-emerald-400/50" : "text-emerald-600/40"}`;
 
@@ -203,23 +235,6 @@ export default function BoardAttestation({
             )}
           </button>
 
-          {/* XRPL Ledger Height */}
-          <button
-            onClick={() => setDeepDive({ kind: "xrpl" })}
-            className={`rounded-lg border ${borderCls} p-3 text-left ${hoverCls}`}
-          >
-            <div className="flex items-center">
-              <p className={`text-[10px] uppercase tracking-wide ${textMuted}`}>XRPL Ledger Height</p>
-              <ChevronRight className={`h-3 w-3 ${clickHintCls}`} />
-            </div>
-            <p className={`mt-1 text-[12px] font-semibold ${dark ? "text-amber-300" : "text-amber-700"}`}>
-              /api/xrpl is a reader
-            </p>
-            <p className={`mt-1 text-[10px] ${textMuted}`}>
-              Living catalogue is GET /root.json — unsigned leaves, NO_LAPTOP_SIGN.
-              Live locked 16, same merkle. Not a GSPC grade. Not MEASURED. Not DEVNET.
-            </p>
-          </button>
         </div>
 
         {/* Signer / Verification Method */}
@@ -263,29 +278,79 @@ export default function BoardAttestation({
               </p>
             )}
             <p className={`mt-1 text-[11px] ${dark ? "text-sky-200/70" : "text-sky-900/80"}`}>
-              These run dates are weeks old. Freshness is labelled; the board is not re-stamped from this UI.
+              These are the dates the runs were made, not the date you loaded this page. The board is not re-stamped from this page.
             </p>
           </div>
         )}
 
-        {/* Living Stamp Warning */}
-        {stamp && (
-          <div className={`mt-3 rounded-lg border ${dark ? "border-amber-500/30 bg-amber-900/20" : "border-amber-300 bg-amber-50"} p-3`}>
-            <p className={`text-[10px] uppercase tracking-wide ${dark ? "text-amber-300/80" : "text-amber-700"}`}>
-              Living Stamp — {stamp.verification_state || "UNVERIFIABLE"}
-            </p>
-            <p className={`mt-1 text-[11px] ${dark ? "text-amber-200/70" : "text-amber-800"}`}>
-              {stamp.unverifiable_note
-                ? stamp.unverifiable_note.slice(0, 200) + (stamp.unverifiable_note.length > 200 ? "…" : "")
-                : "Do not treat this as a valid attestation. Check site_attestation instead."}
-            </p>
-            {stamp.updated && (
-              <p className={`mt-1 text-[10px] ${textMuted}`}>
-                Stamp dated: {formatDate(stamp.updated)}
+        {/* Board stamp. The label is read from the stamp's own published state, never assumed
+            (audit 2026-09-28 #22): until then a stamp published as SIGNED and verifiable printed
+            "Living Stamp — SIGNED" directly above a fallback line, written for the older v0.1
+            stamp, saying "Do not treat this as a valid attestation". The current stamp
+            (csoai.gspc-living/0.2) verifies — Ed25519 over canonical(preimage) under
+            #board-attestation-1, checked on 2026-09-28 — and the reader can re-run that check
+            here; the result is never baked into a prerendered page. The v0.1 stamp it superseded
+            does not reproduce. Its ledger entry is C-2026-0826-08b; the payload's tracked_as says
+            C-2026-0826-08, which is the fingerprint entry, and the payload is signed, so it is not
+            edited here. */}
+        {stamp && (() => {
+          const declared = stamp.verifiable === true && stamp.verification_state === "SIGNED";
+          const when = stampMonth(stamp.gold_run ?? stamp.updated);
+          const oldFails = stamp.superseded?.verifiable === false;
+          const failed = !!stampCheck && stampCheck !== "checking" && stampCheck.state === "INVALID";
+          const tone = declared && !failed
+            ? { box: dark ? "border-emerald-500/30 bg-emerald-900/20" : "border-emerald-300 bg-emerald-50", head: dark ? "text-emerald-300/80" : "text-emerald-800", body: dark ? "text-emerald-100/75" : "text-emerald-900" }
+            : { box: dark ? "border-amber-500/30 bg-amber-900/20" : "border-amber-300 bg-amber-50", head: dark ? "text-amber-300/80" : "text-amber-700", body: dark ? "text-amber-200/70" : "text-amber-800" };
+          return (
+            <div className={`mt-3 rounded-lg border ${tone.box} p-3`} data-testid="board-stamp">
+              <p className={`text-[11px] font-semibold ${tone.head}`}>
+                {declared
+                  ? `Board stamp${when ? ` (${when})` : ""}: signed, and published as verifiable`
+                  : `Board stamp${when ? ` (${when})` : ""}: signed but not reproducible`}
               </p>
-            )}
-          </div>
-        )}
+              <p className={`mt-1 text-[12px] ${tone.body}`}>
+                {declared ? (
+                  <>
+                    Ed25519 under <code>{stamp.signer ?? "did:web:csoai.org#board-attestation-1"}</code> over the
+                    preimage published with it; the rule is <code>sig_input</code> in the{" "}
+                    <a href="/api/gspc" className="underline">board JSON</a>. It dates the
+                    run{stamp.gold_run ? ` of ${formatDate(stamp.gold_run)}` : ""}; it is not a re-measurement.
+                  </>
+                ) : (
+                  <>No published bytes reproduce this signature. Rely on the board&apos;s site_attestation instead.</>
+                )}
+                {(oldFails || !declared) && (
+                  <>
+                    {" "}
+                    {declared ? "The stamp it replaced (v0.1) was signed but is not reproducible" : "See"} —{" "}
+                    <a href="/corrections/#C-2026-0826-08b" className="underline">C-2026-0826-08b</a> in the corrections ledger.
+                  </>
+                )}
+              </p>
+              {declared && (
+                <div className="mt-2 flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => void runStampCheck()}
+                    disabled={stampCheck === "checking"}
+                    className={`min-h-[36px] rounded-md border px-3 text-[12px] font-semibold ${dark ? "border-emerald-400/40 text-emerald-100 hover:bg-emerald-500/15" : "border-emerald-600/40 text-emerald-800 hover:bg-emerald-50"}`}
+                    data-testid="board-stamp-check"
+                  >
+                    {stampCheck === "checking" ? "Checking…" : "Check it in this browser"}
+                  </button>
+                  {stampCheck && stampCheck !== "checking" && (
+                    <span className={`text-[12px] ${tone.body}`} role="status" data-testid="board-stamp-result">
+                      <strong>{stampCheck.state}</strong>
+                      {stampCheck.state === "VALID"
+                        ? ` — the signature verifies under the key read from /.well-known/did.json just now.`
+                        : ` — ${stampCheck.reason}.`}
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })()}
       </div>
 
       {/* PROGRESS VISUALIZATION */}
@@ -433,9 +498,16 @@ export default function BoardAttestation({
                   </div>
                 )}
                 {axis.separation === "UNTESTED" && (
-                  <p className={`mt-2 text-[10px] ${dark ? "text-amber-300/70" : "text-amber-700"}`}>
-                    Path to signed: needs n≥30 + 4-way separation test + keystone
+                  // Read from the row (audit 2026-09-28 #22): "needs n≥30" printed beside n=35. The
+                  // floor is stated as met or not from n; per-model n can be lower, so n_note travels.
+                  <p className={`mt-2 text-[11px] ${dark ? "text-amber-300/70" : "text-amber-700"}`}>
+                    {typeof axis.n === "number" && axis.n >= N_FLOOR
+                      ? `Path to signed: n=${axis.n} meets the n≥${N_FLOOR} floor; still needs a 4-way separation test + keystone`
+                      : `Path to signed: needs n≥${N_FLOOR}${typeof axis.n === "number" ? ` (has ${axis.n})` : ""} + 4-way separation test + keystone`}
                   </p>
+                )}
+                {axis.separation === "UNTESTED" && axis.n_note && (
+                  <p className={`mt-1 text-[11px] ${textMuted}`}>{axis.n_note}</p>
                 )}
                 <ChevronRight className={`absolute right-3 top-1/2 -translate-y-1/2 h-3 w-3 ${clickHintCls} opacity-0 group-hover:opacity-100`} />
               </button>
@@ -454,7 +526,9 @@ export default function BoardAttestation({
               <ChevronRight className={`h-3 w-3 ${clickHintCls}`} />
             </div>
             <ul className={`mt-2 text-[11px] ${textMuted} space-y-1`}>
-              <li>• n ≥ 30 usable items (current: {inLane.map(a => a.n ?? 0).join(", ") || "—"})</li>
+              <li>
+                • n ≥ {N_FLOOR} usable items — {inLane.map((a) => `${a.axis} n=${a.n ?? "—"}${typeof a.n === "number" && a.n >= N_FLOOR ? " (met)" : " (not met)"}`).join(", ") || "—"}
+              </li>
               <li>• 4-way separation test (McNemar on discordant items)</li>
               <li>• Keystone attestation (Ed25519 over canonical JSON)</li>
               <li>• Board gate reconciliation (owner-gated)</li>
@@ -466,6 +540,25 @@ export default function BoardAttestation({
           </button>
         </div>
       )}
+
+      {/* TECHNICAL NOTES — collapsed (audit 2026-09-28 #22). The XRPL reader note is true and
+          stays published, but it is not part of the first check a stranger makes. */}
+      <details className={`border-t ${borderCls} pt-4`} data-testid="board-technical-notes">
+        <summary className={`cursor-pointer text-[12px] font-semibold ${dark ? "text-emerald-300" : "text-emerald-800"}`}>
+          Technical notes
+        </summary>
+        <div className={`mt-3 space-y-2 text-[12px] leading-relaxed ${textMuted}`}>
+          <p>
+            <strong className={textPrimary}>XRPL.</strong> <code>/api/xrpl</code> is a reader of the public root at{" "}
+            <a href="/root.json" className="underline">GET /root.json</a>: it reports issued-asset coverage against the
+            same Merkle root and writes nothing to the board. The root&apos;s leaves are not individually signed. It is not a GSPC grade, not a MEASURED axis and not a devnet record.{" "}
+            <button type="button" onClick={() => setDeepDive({ kind: "xrpl" })} className="underline">
+              Open the XRPL trace
+            </button>
+            .
+          </p>
+        </div>
+      </details>
 
       {/* LINKS */}
       {!compact && (

@@ -38,6 +38,11 @@ STAGED_DIRS = (
     # Layer 0 liveness (2026-09-14): one PROBED atom per public-root run about the trust floor
     # itself (DID key, root, Rekor/OTS, release gate) from scripts/readers/layer0_liveness_reader.py.
     "layer0-liveness-2026-09",
+    # Ledger heads (2026-09-29, lane ledgers-20260929): one PROBED atom per public ledger (corrections,
+    # fix receipts, withdrawals, claim-maintenance register and re-checks, corrections-watch, Layer O
+    # presence, receipt chain) from scripts/readers/ledger_heads_reader.py --stage. The head digest of
+    # every ledger becomes a leaf of the ONE root. Admission/signing unchanged.
+    "ledger-heads-2026-09",
 )
 SURFACE = "public.notice"
 CARD_SCHEMA = "https://councilof.ai/schema/card-v0.json"

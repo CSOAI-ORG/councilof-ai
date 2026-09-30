@@ -1,0 +1,191 @@
+{
+  "profile": "safe-reverification/0.1-draft",
+  "record_id": "csoai:safe-rv:2026-09-25:a2a-card-census:integrity",
+  "issuer": "https://councilof.ai",
+  "issued_at": "2026-09-25T10:53:22Z",
+  "finding": {
+    "kind": "measurement",
+    "finding_ref": null,
+    "disclosure_tier": "public",
+    "summary": "Worked example. The public A2A agent-card census record published on Hugging Face is checked for origin, integrity and time of existence by a procedure anyone can run."
+  },
+  "claim": {
+    "claim_id": "a2a-card-census/record.json/origin-and-integrity",
+    "claim_type": "artifact_integrity",
+    "statement": "The record.json served by the Hugging Face dataset csoai/a2a-card-census at revision c6331de14886d72bf3e0ac7026055d80431cce82 has sha256 b290b53d...176c, and that digest is inside a payload that verifies under did:web:csoai.org#board-attestation-1.",
+    "subject": {
+      "identifier": "https://huggingface.co/datasets/csoai/a2a-card-census/resolve/c6331de14886d72bf3e0ac7026055d80431cce82/record.json",
+      "scheme": "huggingface-dataset-revision"
+    },
+    "scope": "Origin and integrity of these bytes only. Not the accuracy of the census, not the behaviour of any agent it lists, not the trustworthiness of the signer."
+  },
+  "dependencies": [
+    {
+      "dep_id": "record",
+      "kind": "dataset",
+      "name": "csoai/a2a-card-census record.json",
+      "version": "c6331de14886d72bf3e0ac7026055d80431cce82",
+      "digest": {
+        "alg": "sha256",
+        "value": "b290b53d05912d8b3a5913c7e73e693f40cc71be8e0432c4626643c6d662176c"
+      },
+      "uri": "https://huggingface.co/datasets/csoai/a2a-card-census/resolve/main/record.json",
+      "observed_at": "2026-09-25T10:53:22Z",
+      "state": "PINNED"
+    },
+    {
+      "dep_id": "rows",
+      "kind": "dataset",
+      "name": "data/cards.jsonl.gz",
+      "version": null,
+      "digest": {
+        "alg": "sha256",
+        "value": "9d5eaf5bb0866aa16521f1b95064091ce9914d4f957ca75ef273063e4ee4f160"
+      },
+      "uri": "https://huggingface.co/datasets/csoai/a2a-card-census/resolve/main/data/cards.jsonl.gz",
+      "observed_at": null,
+      "state": "PINNED"
+    },
+    {
+      "dep_id": "census-signature",
+      "kind": "other",
+      "name": "record.signed.json (csoai.signed-run/0.1 envelope, Ed25519)",
+      "version": null,
+      "digest": {
+        "alg": "sha256",
+        "value": "c90d82f8b727b07f63f15fc667d42775417e245bdda1aa91bcd82cfac9efe228"
+      },
+      "uri": "https://huggingface.co/datasets/csoai/a2a-card-census/resolve/main/record.signed.json",
+      "observed_at": "2026-09-25T10:53:22Z",
+      "state": "PINNED"
+    },
+    {
+      "dep_id": "signing-key",
+      "kind": "workload_identity",
+      "name": "did:web:csoai.org#board-attestation-1",
+      "version": null,
+      "digest": null,
+      "uri": "https://csoai.org/.well-known/did.json",
+      "observed_at": "2026-09-25T10:53:22Z",
+      "state": "UNPINNED"
+    },
+    {
+      "dep_id": "verifier",
+      "kind": "tool",
+      "name": "verify_safe_evidence.py",
+      "version": "0.1-draft",
+      "digest": {
+        "alg": "sha256",
+        "value": "214de04fd68db7b08d0d70f79bf9e5498746596f51c6a542869c0352a2e427b7"
+      },
+      "uri": null,
+      "observed_at": null,
+      "state": "PINNED"
+    },
+    {
+      "dep_id": "ots-calendars",
+      "kind": "external_service",
+      "name": "OpenTimestamps calendars alice, bob, finney",
+      "version": null,
+      "digest": null,
+      "uri": "https://opentimestamps.org/",
+      "observed_at": "2026-09-25T10:53:22Z",
+      "state": "UNPINNED"
+    },
+    {
+      "dep_id": "block-header-source",
+      "kind": "external_service",
+      "name": "Esplora API (blockstream.info)",
+      "version": null,
+      "digest": null,
+      "uri": "https://blockstream.info/api",
+      "observed_at": "2026-09-25T10:53:22Z",
+      "state": "UNPINNED"
+    }
+  ],
+  "test": {
+    "method_id": "safe-rv/verify-signed-record",
+    "method_version": "0.1-draft",
+    "procedure": "python3 verify_safe_evidence.py https://huggingface.co/datasets/csoai/a2a-card-census/resolve/main",
+    "procedure_digest": {
+      "alg": "sha256",
+      "value": "214de04fd68db7b08d0d70f79bf9e5498746596f51c6a542869c0352a2e427b7"
+    },
+    "reproduction": "re_execution",
+    "substitutions": [],
+    "declared_failure_modes": [
+      "The DID document is fetched live: a key rotated or replaced at csoai.org would change what verifies; the key is not pinned by this record.",
+      "Check 7 trusts one public block explorer for the block header; `ots verify` against a local Bitcoin node is stronger.",
+      "Canonicalisation is key-sorted compact JSON; a payload containing floats would need a stated number encoding."
+    ],
+    "noise_floor": "Not applicable: the checks are exact byte and signature comparisons."
+  },
+  "negative_control": {
+    "kind": "designed_to_fail",
+    "description": "Three altered inputs run through the same checks in the same run: a trailing byte appended to the signed preimage, the artifact digest replaced with zeros, and one bit flipped in record.json.",
+    "expected": "FAIL",
+    "observed": "FAIL",
+    "negatives_observed": 3,
+    "denominator": 3
+  },
+  "result": {
+    "state": "PASS",
+    "measured_at": "2026-09-25T10:53:22Z",
+    "reason": "Checks 1-4 hold and all three altered inputs were rejected. The stored .ots proof binds to the record digest and holds three pending calendar commitments; on request the calendars returned Bitcoin attestations at heights 968527 and 968533, and both commitments matched those block headers' merkle roots as served by blockstream.info. OpenTimestamps state as published: PENDING_CALENDAR_COMMITMENT; as re-checked: upgrade available, not stored.",
+    "read_state": null,
+    "n": null,
+    "denominator": null,
+    "evidence": [
+      {
+        "name": "census payload_sha256 (the digest the Ed25519 signature covers)",
+        "uri": "https://huggingface.co/datasets/csoai/a2a-card-census/resolve/main/record.signed.json",
+        "digest": {
+          "alg": "sha256",
+          "value": "c90d82f8b727b07f63f15fc667d42775417e245bdda1aa91bcd82cfac9efe228"
+        }
+      },
+      {
+        "name": "record.json.ots (as published, pending)",
+        "uri": "https://huggingface.co/datasets/csoai/a2a-card-census/resolve/main/record.json.ots",
+        "digest": {
+          "alg": "sha256",
+          "value": "dec8cc0c938bbd716a94cc2ca1a9a06c835136db74379b67e2c2628f288fa0fe"
+        }
+      }
+    ]
+  },
+  "remediation": {
+    "state": "NONE_REQUIRED",
+    "reference": null,
+    "retest_record_id": null
+  },
+  "watch": {
+    "triggers": [
+      {
+        "dep_id": "record",
+        "on": "digest_change"
+      },
+      {
+        "dep_id": "census-signature",
+        "on": "digest_change"
+      },
+      {
+        "dep_id": "signing-key",
+        "on": "becomes_unavailable"
+      }
+    ],
+    "retest_bound": {
+      "max_latency": "P1D",
+      "max_attempts": 3,
+      "on_exhausted": "MARK_STALE"
+    },
+    "state": "NOT_WATCHED",
+    "last_checked_at": "2026-09-25T10:53:22Z"
+  },
+  "limits": [
+    "A signature proves who signed these bytes, not that anything in them is true.",
+    "This re-verification record is itself UNSIGNED and unregistered: it is an example of the shape. The signature it checks is the census record's, carried in the csoai.signed-run/0.1 envelope, not a COSE or DSSE envelope.",
+    "No watcher is running on this record today, so watch.state is NOT_WATCHED rather than CURRENT.",
+    "The published .ots file still holds pending commitments; the Bitcoin attestation was fetched on request and has not been written back."
+  ]
+}

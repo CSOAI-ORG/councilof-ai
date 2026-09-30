@@ -1,0 +1,39 @@
+{
+ "schema": "csoai.signed-run/0.1",
+ "payload": {
+  "schema": "csoai.signed-artifact/0.1",
+  "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+  "not_a_grade": "The signature proves these bytes were signed by the board key; it does not prove any claim beyond what the capsules' own instruments measured.",
+  "artifact": {
+   "path": "measurement-capsules/v0.2/mill_cross_runtime/record.json",
+   "sha256": "32ece857c94062f41a03aad9e269532cdbe5dc0a576ed20110edc4ecacb0468d",
+   "schema": "csoai.measurement-capsule-batch/0.2",
+   "as_of": "2026-09-26T06:16:32Z"
+  },
+  "merkle_root": "5ae00c1f4c2ed290fb91206f29372d0df3e61478c568d4797855502e751ebff6",
+  "n_capsules": 14,
+  "states": {
+   "NOT_REPRODUCED": 7,
+   "REPRODUCED_AGGREGATE_ONLY": 2,
+   "REPRODUCED_ITEMWISE": 5
+  },
+  "capsules_sha256": "a8dc6d18a2835c8bead883b17c5a71257da40faf63381bce2f0f98e6ab366c8d",
+  "adapter": "mill_cross_runtime",
+  "kind": "measurement.cross_runtime_reproduction"
+ },
+ "signature": {
+  "did": "did:web:csoai.org#board-attestation-1",
+  "alg": "Ed25519",
+  "sig_ed25519": "e768824afd6a9a15e292b87d23532d472c0ce5eaf1b3f4df6db25dcfb0c4a55a57d403793f0784179076a4c5292c8843daeb6e11aaffab01381094701ae6430e",
+  "payload_sha256": "538eb82a6a6481ad0af0401cf206948c3672f93b0f847b4154136ce7c6f98de4",
+  "signed_at": "2026-09-26T06:20:12.622Z"
+ },
+ "local_verification": {
+  "result": "VERIFIES",
+  "altered_preimage_controls": {
+   "trailing byte": "rejected (control holds)",
+   "record sha altered": "rejected (control holds)",
+   "merkle root altered": "rejected (control holds)"
+  }
+ }
+}

@@ -79,12 +79,12 @@ export const EMBED_SNIPPET = `<script src="https://councilof.ai/embed.js"
 export const MCP_SNIPPET = `{
   "mcpServers": {
     "gspc": {
-      "url": "https://councilof.ai/mcp"
+      "url": "https://councilof.ai/mcp/free"
     }
   }
 }`;
 
-export const PLUGIN_SNIPPET = "grok plugin install CSOAI-ORG/councilof-ai#plugins/gspc";
+export const PLUGIN_SNIPPET = "claude mcp add --transport http council-of-ai https://councilof.ai/mcp/free";
 
 export const NPM_SNIPPET = "npx -y csoai-gspc-mcp";
 
@@ -169,7 +169,7 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     kind: "registry",
     href: "https://councilof.ai/.well-known/mcp.json",
     plant: "Layer-0 discovery. Agents fetch this, they do not scrape HTML.",
-    note: "Official registry id io.github.CSOAI-ORG/gspc v1.0.3.",
+    note: "Official registry id ai.councilof/gspc (deprecated alias io.github.CSOAI-ORG/gspc).",
     snippet: "https://councilof.ai/.well-known/mcp.json",
   },
   {
@@ -179,17 +179,17 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     kind: "registry",
     href: "https://registry.modelcontextprotocol.io",
     plant: "The one public MCP index we already occupy.",
-    note: "io.github.CSOAI-ORG/gspc. Do not invent a second first-party server.",
-    snippet: "io.github.CSOAI-ORG/gspc",
+    note: "ai.councilof/gspc; io.github.CSOAI-ORG/gspc is its deprecated alias, not a second first-party server.",
+    snippet: "ai.councilof/gspc",
   },
   {
     id: "plugin-gspc",
-    title: "Grok / Cursor plugin",
+    title: "Claude / Cursor plugin",
     status: "planted",
     kind: "receipt",
-    href: "https://github.com/CSOAI-ORG/councilof-ai/tree/master/plugins/gspc",
-    plant: "Hosts that install from GitHub source. Consent first. No --trust until accepted.",
-    note: "Same seven tools as HTTP /mcp. Does not harvest chats or mint regulation scores.",
+    href: "https://councilof.ai/.claude-plugin/marketplace.json",
+    plant: "The plugin manifest is published on councilof.ai. A marketplace install also needs a public git host for the plugin source, which is unavailable while GitHub is dark, so the working line today is the free MCP door below.",
+    note: "The plugin points at the HTTP /mcp door. Does not harvest chats or mint regulation scores.",
     snippet: PLUGIN_SNIPPET,
   },
   {
@@ -257,9 +257,9 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     title: "Methodology DOI",
     status: "planted",
     kind: "discovery",
-    href: "https://doi.org/10.5281/zenodo.21991104",
+    href: "https://councilof.ai/interop/zenodo-status.json",
     plant: "Papers, notebooks and grant packs that must cite the instrument.",
-    note: "Citation snapshot. Not a mutable working board.",
+    note: "Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending. The identifier is kept; live methodology: https://councilof.ai/methodology/.",
     snippet: "10.5281/zenodo.21991104",
   },
   {
@@ -425,16 +425,16 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     title: "Zenodo cohort snapshot",
     status: "next",
     kind: "discovery",
-    href: "https://doi.org/10.5281/zenodo.21991104",
+    href: "https://councilof.ai/interop/zenodo-status.json",
     plant: "Dated eligibility manifest + methods once the census is signed.",
-    note: "Methodology DOI is already planted. The 2,200-subject snapshot is not.",
+    note: "The methodology DOI's Zenodo record is unavailable since 29 Sep 2026 (account blocked by Zenodo; appeal pending). The 2,200-subject snapshot is not deposited.",
   },
   {
     id: "ghcr-harness",
     title: "GHCR harness pin",
     status: "next",
     kind: "compute",
-    href: "https://github.com/CSOAI-ORG/councilof-ai",
+    href: "https://huggingface.co/datasets/csoai/councilof-ai-source",
     plant: "Signed container digest for strangers who rerun a card.",
     note: "Do not attach self-hosted GPU runners to public pull requests.",
   },
@@ -489,7 +489,7 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     title: "Plugin as a telemetry collector",
     status: "do-not",
     kind: "receipt",
-    href: "https://github.com/CSOAI-ORG/councilof-ai/tree/master/plugins/gspc",
+    href: "https://huggingface.co/datasets/csoai/councilof-ai-source/tree/main/source/plugins/gspc",
     plant: "Never. The plugin reads the public board.",
     note: "No chat bodies, no silent regulation scoring, no 23rd axis.",
   },

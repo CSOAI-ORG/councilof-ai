@@ -1,0 +1,42 @@
+{
+ "schema": "csoai.measurement-publication/0.1",
+ "as_of": "2026-09-26T14:19:28Z",
+ "what_this_is": "The publication state of one day's measurement index. The index's signed bytes cannot change; they were written with private_until = 'owner approves publication' before the owner approved. This record says that approval was given and where the same bytes are published.",
+ "what_this_is_not": "Not a grade, ranking, admission or approval of anything the index measures.",
+ "date": "2026-09-26",
+ "index_file": "measurement-index-v0.2-2026-09-26.json",
+ "index_sha256": "ee3d921750d40456eb58ed24d2a9ba141d6fc1d16510ddd338166c4f5620b72a",
+ "index_root": "85533b833d36f8a4165da34206ee6e39f7434c646c8a2c381d251391ceec366d",
+ "index_schema": "csoai.measurement-capsule-index/0.2",
+ "index_signed_payload_sha256": "9f60d6365a335128425570deca35a91e6e6ce929077a6e4baa56b0a982e13800",
+ "index_field_superseded": {
+  "private_until": "owner approves publication",
+  "reads_as": "not yet approved; superseded by this record, the index bytes unchanged"
+ },
+ "publication": {
+  "state": "PUBLIC",
+  "approved": "2026-09-26",
+  "approved_by": "owner",
+  "approval_evidence": "owner approval given in the Claude Code session on 2026-09-26 and recorded at 13:38:15Z (~/.config/csoai/approvals/measurement-index-hf-publish.APPROVED on the measurement host, recorded by the coordinator session)"
+ },
+ "published_at": [
+  {
+   "url": "https://councilof.ai/measurement-capsules/v0.2/index.json",
+   "sha256_at_check": "ee3d921750d40456eb58ed24d2a9ba141d6fc1d16510ddd338166c4f5620b72a",
+   "checked_at": "2026-09-26T14:19:27Z",
+   "same_bytes": true
+  },
+  {
+   "url": "https://huggingface.co/datasets/csoai/evidence-index/resolve/8be939c53bf973d944d7f0a187162d45a95597c8/measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.json",
+   "sha256_at_check": "ee3d921750d40456eb58ed24d2a9ba141d6fc1d16510ddd338166c4f5620b72a",
+   "checked_at": "2026-09-26T14:19:28Z",
+   "same_bytes": true
+  }
+ ],
+ "signed_fields": [
+  "date",
+  "index_sha256",
+  "index_root",
+  "publication"
+ ]
+}

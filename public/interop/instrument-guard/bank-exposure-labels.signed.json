@@ -1,0 +1,121 @@
+{
+  "schema": "csoai.signed-run/0.1",
+  "payload": {
+    "schema": "csoai.bank-exposure-labels-signed/0.1",
+    "kind": "label",
+    "as_of": "2026-09-27T02:09:21Z",
+    "artifact": {
+      "path": "/interop/instrument-guard/bank-exposure-labels.json",
+      "sha256": "e81270bd4eba4ab45d227e9b41690ee4e504b9ec88d06814906d560c2b03981b",
+      "bytes": 1002256
+    },
+    "label_field": "bank_exposure",
+    "commitments_records": [
+      {
+        "file": "bank-commitments-2026-09-26.json",
+        "sha256": "b71768ceee756d14dd3211ca08fa44749d783b667fc83acd6a75149846fbc1b6"
+      },
+      {
+        "file": "bank-commitments-2026-09-27.json",
+        "sha256": "f97f68ec1220ffa3d1cb933ad9a86d72ed3d51b99f38ce6c1d38e4d58f7239f8"
+      }
+    ],
+    "cards_labelled": 2825,
+    "live_cards": 1372,
+    "by_label": {
+      "PARTLY_PUBLIC_BANK": 17,
+      "PRIVATE_BANK": 33,
+      "PUBLIC_BANK": 1405,
+      "UNPINNED": 1370
+    },
+    "by_axis": {
+      "affect": {
+        "live_cards": 106,
+        "PUBLIC_BANK": 36,
+        "UNPINNED": 70
+      },
+      "art5-safeguard": {
+        "live_cards": 101,
+        "PUBLIC_BANK": 33,
+        "UNPINNED": 68
+      },
+      "care": {
+        "live_cards": 106,
+        "PUBLIC_BANK": 34,
+        "UNPINNED": 72
+      },
+      "conformance": {
+        "live_cards": 157,
+        "PUBLIC_BANK": 33,
+        "UNPINNED": 124
+      },
+      "continuity": {
+        "live_cards": 103,
+        "PUBLIC_BANK": 40,
+        "UNPINNED": 63
+      },
+      "cross-reality": {
+        "live_cards": 103,
+        "PUBLIC_BANK": 38,
+        "UNPINNED": 65
+      },
+      "detector-interop": {
+        "live_cards": 104,
+        "PUBLIC_BANK": 40,
+        "UNPINNED": 64
+      },
+      "governance": {
+        "live_cards": 104,
+        "PUBLIC_BANK": 63,
+        "UNPINNED": 41
+      },
+      "jail": {
+        "live_cards": 17,
+        "PUBLIC_BANK": 10,
+        "UNPINNED": 7
+      },
+      "machinery-conformity": {
+        "live_cards": 100,
+        "PUBLIC_BANK": 36,
+        "UNPINNED": 64
+      },
+      "openness": {
+        "live_cards": 107,
+        "PUBLIC_BANK": 33,
+        "UNPINNED": 74
+      },
+      "provenance": {
+        "live_cards": 99,
+        "PUBLIC_BANK": 35,
+        "UNPINNED": 64
+      },
+      "safety": {
+        "live_cards": 105,
+        "PUBLIC_BANK": 69,
+        "UNPINNED": 36
+      },
+      "swarm": {
+        "live_cards": 60,
+        "PUBLIC_BANK": 12,
+        "UNPINNED": 48
+      }
+    },
+    "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token; the PKCS8 never left Cloudflare)",
+    "not_a_grade": "A label: which bank each card pins and whether its items were public. It changes no score and no card byte."
+  },
+  "signature": {
+    "did": "did:web:csoai.org#board-attestation-1",
+    "alg": "Ed25519",
+    "sig_ed25519": "645b191ba95f889272ad2aeb7663d984e0d50e4d0c7f01676f6f0b32bf2611e76e0ea3d1ed5ead6e182647f8b464025d52fc51f861051b5c536b089ec7554f06",
+    "payload_sha256": "3a32a66a2f6c8119717c364781f1a6609ba9801a020b26feb326d6594968769d",
+    "canonical": "JSON.stringify of key-sorted object, UTF-8 (functions/_lib/cardSign.ts canonicalBytes)",
+    "signer_auth": "pod-token",
+    "signed_at": "2026-09-27T02:09:34.259Z"
+  },
+  "tamper_controls": {
+    "altered_payload": "does not verify",
+    "altered_signature": "does not verify",
+    "altered_record_bytes": "sha256 no longer matches the pinned digest"
+  },
+  "verify": "canonicalise payload as above, sha256 must equal signature.payload_sha256, verify sig_ed25519 (hex) with the #board-attestation-1 key in https://csoai.org/.well-known/did.json; then sha256 the record bytes and compare with payload.artifact.sha256"
+}

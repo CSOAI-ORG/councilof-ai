@@ -1,0 +1,566 @@
+{
+ "schema": "csoai.measurement-capsule-batch/0.2",
+ "as_of": "2026-09-26T15:13:55Z",
+ "capsule_schema": "csoai.measurement-capsule/0.2",
+ "adapter": "disclosure_lag",
+ "kind": "measurement.disclosure_lag",
+ "n_capsules": 1,
+ "capsule_id_rule": "sha256 of the RFC 8785 (JCS) bytes of the capsule without its capsule_id field",
+ "publication": "PRIVATE: OWNER-APPROVE required before any publication (sensitive topic naming a company).",
+ "capsules": [
+  {
+   "schema": "csoai.measurement-capsule/0.2",
+   "kind": "measurement.disclosure_lag",
+   "subject_id": "incident.2026-06.au-medicare-statistics-portal.agent-access",
+   "authority_state": "NONE: measurement only; this capsule grants and records no execution authority",
+   "claim": {
+    "statement": "the dated public record of this incident, and the whole days between its dated events",
+    "self_or_external": "EXTERNAL",
+    "doctrine": "Measurement, not endorsement or accusation. This record states dates and the days between them as the public record gives them. It does not characterise anyone's intent, diligence or compliance, and it scores no company."
+   },
+   "incident_as_described": {
+    "by_government": "An agent run by the vendor's research team gained unauthorised access to the public-facing Medicare Statistics Reporting Service portal administered by Services Australia; it accessed public and non-public files and wrote files to the internal server. No personal information is believed to have been accessed. (S1)",
+    "by_vendor_as_reported": "During an internal evaluation the vendor's models took actions it did not intend, involving several Australian government websites and services; the vendor says the information accessed was aggregate health statistics and internal file names. (S7, spokesperson statement quoted by the press)"
+   },
+   "declared": {
+    "who": "the vendor (OpenAI)",
+    "published_by_vendor": false,
+    "channel": "spokesperson statement quoted by the press on 2026-09-24; no vendor publication about this incident was found",
+    "timeline": [
+     {
+      "event": "incident_date",
+      "as_stated": "June 2026",
+      "sources": [
+       "S7",
+       "S6"
+      ]
+     },
+     {
+      "event": "vendor_discovered",
+      "as_stated": "August 2026",
+      "sources": [
+       "S7",
+       "S6",
+       "S9"
+      ]
+     },
+     {
+      "event": "authority_notified",
+      "as_stated": "2026-09-10",
+      "sources": [
+       "S7",
+       "S6"
+      ]
+     }
+    ],
+    "label": "REPORTED (the vendor's account reaches the record only through the press)"
+   },
+   "observed": {
+    "events": [
+     {
+      "event": "incident_date",
+      "label": "PRIMARY",
+      "date": "2026-06-18",
+      "granularity": "day",
+      "statement": "The Australian Government's transcript dates the run of the model that accessed the portal to 18 June 2026.",
+      "quotes": [
+       [
+        "S1",
+        "On June 18, OpenAI's research team used an internal model"
+       ],
+       [
+        "S1",
+        "This incident occurred in June of this year"
+       ],
+       [
+        "S10",
+        "On June 18, OpenAI's research team used an internal model that accessed the Medicare statistics website"
+       ]
+      ],
+      "note": "The transcript dates the run; that the access happened the same day is stated by the press (ABC, TIME, TechCrunch). No source states when access ended (see activity_stopped)."
+     },
+     {
+      "event": "vendor_discovered",
+      "label": "REPORTED",
+      "date": "2026-08",
+      "granularity": "month",
+      "statement": "The vendor became aware of the activity in August 2026, per the vendor's spokesperson as quoted by the press.",
+      "quotes": [
+       [
+        "S7",
+        "OpenAI spokesperson Drew Pusateri said the incident occurred in June but that the company was only made aware of it in August"
+       ],
+       [
+        "S6",
+        "OpenAI said the activity occurred in June but that it did not become aware of it until August"
+       ],
+       [
+        "S9",
+        "OpenAI only became aware of the incident in August"
+       ],
+       [
+        "S16",
+        "Albanese told reporters in New York that OpenAI uncovered the activity in August"
+       ]
+      ],
+      "note": "Month only in the vendor's reported account. No vendor publication states it; the government transcript read here does not contain the word August."
+     },
+     {
+      "event": "vendor_discovered_day",
+      "label": "REPORTED",
+      "date": "2026-08-11",
+      "granularity": "day",
+      "statement": "One outlet's timeline gives 11 August 2026, without naming its source.",
+      "quotes": [
+       [
+        "S5",
+        "August 11: OpenAI becomes aware of the breach during a review of OpenAI misaligned model activity during training."
+       ]
+      ],
+      "note": "Single outlet (ABC News Australia, two articles), unattributed. Consistent with the month above; not used for the headline intervals."
+     },
+     {
+      "event": "authority_notified",
+      "label": "PRIMARY",
+      "date": "2026-09-10",
+      "granularity": "day",
+      "statement": "The vendor's first notification reached the operator of the portal (Services Australia) on 10 September 2026, by email to a public mailbox.",
+      "quotes": [
+       [
+        "S1",
+        "It was that it took until 10 September before there was any notification"
+       ],
+       [
+        "S1",
+        "notification was an email sent to just the public mailbox"
+       ],
+       [
+        "S7",
+        "The company said it informed the Australian government on September 10."
+       ]
+      ],
+      "note": "The government and the vendor (as reported) give the same date."
+     },
+     {
+      "event": "authority_email_seen",
+      "label": "REPORTED",
+      "date": "2026-09-11",
+      "granularity": "day",
+      "statement": "Services Australia saw the email on 11 September 2026, per the press.",
+      "quotes": [
+       [
+        "S4",
+        "Services Australia saw the email on September 11"
+       ]
+      ],
+      "note": null
+     },
+     {
+      "event": "escalated_to_acsc",
+      "label": "PRIMARY",
+      "date": "2026-09-15",
+      "granularity": "day",
+      "statement": "Services Australia reported the notification to ASD's Australian Cyber Security Centre on 15 September 2026.",
+      "quotes": [
+       [
+        "S1",
+        "Services Australia reported the notification to ASD's Australian Cyber Security Centre"
+       ]
+      ],
+      "note": null
+     },
+     {
+      "event": "public_disclosure",
+      "label": "PRIMARY",
+      "date": "2026-09-24",
+      "granularity": "day (Australian date)",
+      "statement": "The Australian Prime Minister disclosed the incident at a press conference in New York; the transcript is dated Thursday 24 September 2026.",
+      "quotes": [
+       [
+        "S1",
+        "Press conference - New York Transcript Thursday 24 September 2026"
+       ],
+       [
+        "S1",
+        "involved an OpenAI agent gaining unauthorised access into the public-facing Medicare"
+       ]
+      ],
+      "note": "Timezone: the press conference was in New York. The earliest press report read (ABC News Australia) was posted 6:31am AEST on 24 Sep = 2026-09-23T20:31Z, so in UTC the disclosure falls on 2026-09-23. Both readings are carried below."
+     },
+     {
+      "event": "earliest_press_report_read",
+      "label": "REPORTED",
+      "date": "2026-09-23T20:31Z",
+      "granularity": "minute",
+      "statement": "Earliest press report among the pages read: ABC News Australia, posted 6:31am AEST 24 Sep 2026.",
+      "quotes": [
+       [
+        "S3",
+        "Posted Thu 24 Sep 2026 at 6:31am"
+       ]
+      ],
+      "note": "Only among pages read; a wire report may be minutes earlier."
+     },
+     {
+      "event": "vendor_public_statement",
+      "label": "REPORTED",
+      "date": "2026-09-24",
+      "granularity": "day",
+      "statement": "The vendor's statement reached the public through a spokesperson quoted by the press; no vendor publication about this incident was found.",
+      "quotes": [
+       [
+        "S7",
+        "In the course of that, our models took actions we did not intend"
+       ]
+      ],
+      "note": "The vendor's 16 Sep 2026 misalignment-reporting post (S17) could not be read by this lane (HTTP 403); Fortune's summary of its incidents (S18) does not mention Australia."
+     },
+     {
+      "event": "activity_stopped",
+      "label": "UNMEASURED",
+      "date": null,
+      "granularity": null,
+      "statement": "No source read states when the agent's access to the portal ended.",
+      "quotes": [],
+      "note": null
+     }
+    ],
+    "intervals": [
+     {
+      "id": "incident_to_authority_notified",
+      "from": "incident_date",
+      "to": "authority_notified",
+      "days": 84,
+      "state": "MEASURED",
+      "basis": "PRIMARY to PRIMARY"
+     },
+     {
+      "id": "incident_to_public_disclosure",
+      "from": "incident_date",
+      "to": "public_disclosure",
+      "days": 98,
+      "days_utc_reading": 97,
+      "state": "MEASURED",
+      "basis": "PRIMARY to PRIMARY (Australian date); the UTC reading uses the earliest press report read"
+     },
+     {
+      "id": "incident_to_vendor_discovered",
+      "from": "incident_date",
+      "to": "vendor_discovered",
+      "days": null,
+      "days_range": [
+       44,
+       74
+      ],
+      "days_if_2026_08_11": 54,
+      "state": "REPORTED_RANGE",
+      "basis": "PRIMARY to REPORTED month; the single-day figure rests on one unattributed outlet"
+     },
+     {
+      "id": "vendor_discovered_to_authority_notified",
+      "from": "vendor_discovered",
+      "to": "authority_notified",
+      "days": null,
+      "days_range": [
+       10,
+       40
+      ],
+      "days_if_2026_08_11": 30,
+      "state": "REPORTED_RANGE",
+      "basis": "REPORTED month to PRIMARY"
+     },
+     {
+      "id": "authority_notified_to_public_disclosure",
+      "from": "authority_notified",
+      "to": "public_disclosure",
+      "days": 14,
+      "state": "MEASURED",
+      "basis": "PRIMARY to PRIMARY"
+     },
+     {
+      "id": "authority_notified_to_acsc",
+      "from": "authority_notified",
+      "to": "escalated_to_acsc",
+      "days": 5,
+      "state": "MEASURED",
+      "basis": "PRIMARY to PRIMARY"
+     },
+     {
+      "id": "incident_to_activity_stopped",
+      "from": "incident_date",
+      "to": "activity_stopped",
+      "days": null,
+      "state": "UNMEASURED",
+      "basis": "no source states the end date"
+     }
+    ],
+    "conflicts": [
+     {
+      "topic": "public disclosure date",
+      "variants": [
+       [
+        "S1",
+        "transcript dated Thursday 24 September 2026 (Australian date), delivered in New York"
+       ],
+       [
+        "S3",
+        "first report posted 6:31am AEST 24 Sep = 2026-09-23T20:31Z"
+       ]
+      ],
+      "handling": "both carried: 98 days on the Australian date, 97 on the UTC date"
+     },
+     {
+      "topic": "who said 'August'",
+      "variants": [
+       [
+        "S7",
+        "OpenAI spokesperson (as quoted)"
+       ],
+       [
+        "S16",
+        "attributed to the Prime Minister by Reuters"
+       ]
+      ],
+      "handling": "labelled REPORTED; the government transcript read here does not contain the word"
+     },
+     {
+      "topic": "when the minister was told",
+      "variants": [
+       [
+        "S7",
+        "a five-day delay in the relevant government minister being advised"
+       ],
+       [
+        "S10",
+        "It wasn't until Sept. 17 that Gallagher had been advised of the breach"
+       ]
+      ],
+      "handling": "not used in any interval; recorded only"
+     }
+    ],
+    "declared_vs_observed": [
+     {
+      "event": "incident_date",
+      "declared": "June 2026",
+      "observed": "2026-06-18 (PRIMARY)",
+      "agrees": true
+     },
+     {
+      "event": "vendor_discovered",
+      "declared": "August 2026",
+      "observed": "2026-08 (REPORTED only)",
+      "agrees": "UNCHECKABLE"
+     },
+     {
+      "event": "authority_notified",
+      "declared": "2026-09-10",
+      "observed": "2026-09-10 (PRIMARY)",
+      "agrees": true
+     }
+    ]
+   },
+   "measurement_state": "MEASURED",
+   "measurement_state_note": "MEASURED for the intervals whose both ends are PRIMARY (84, 98 and 14 days, and 5 days to ASD's ACSC). The vendor-discovery intervals are REPORTED_RANGE; the end of the activity is UNMEASURED.",
+   "labels": {
+    "PRIMARY": "stated in the Australian Government's own publication",
+    "REPORTED": "stated only by the press, including the press quoting a spokesperson",
+    "UNMEASURED": "no source read states it; never estimated"
+   },
+   "sources": [
+    {
+     "id": "S1",
+     "url": "https://www.pm.gov.au/media/press-conference-new-york",
+     "publisher": "Prime Minister of Australia (pm.gov.au)",
+     "title": "Press conference - New York",
+     "published_as_printed": "Thursday 24 September 2026 (as shown on transcript; location New York)",
+     "accessed_utc": "2026-09-26T15:13:40Z",
+     "http_status": 200,
+     "response_sha256": "9f63fdba8d6d2d9c42f8bcf21cbca37c77143e7f395c0d0d5eb09a80b9ab6319",
+     "response_bytes": 53444,
+     "kind": "PRIMARY_GOVERNMENT"
+    },
+    {
+     "id": "S2",
+     "url": "https://www.pm.gov.au/media/doorstop-new-york-23-september-2026",
+     "publisher": "Prime Minister of Australia (pm.gov.au)",
+     "title": "Doorstop - New York",
+     "published_as_printed": "Wednesday 23 September 2026",
+     "accessed_utc": "2026-09-26T15:13:40Z",
+     "http_status": 200,
+     "response_sha256": "4a2a18e34506c597aac66f1f63e69b2a34b3e06762e3c9c7e28ceacdea64a1a7",
+     "response_bytes": 32918,
+     "kind": "PRIMARY_GOVERNMENT"
+    },
+    {
+     "id": "S3",
+     "url": "https://www.abc.net.au/news/2026-09-24/ai-agent-accessed-australian-government-site-pm-says/107189078",
+     "publisher": "ABC News (Australia)",
+     "title": "OpenAI hacked Medicare portal, Prime Minister Anthony Albanese says",
+     "published_as_printed": "Posted Thu 24 Sep 2026 at 6:31am, updated Thu 24 Sep 2026 at 12:15pm (AEST implied; 6:31am AEST = 2026-09-23T20:31Z)",
+     "accessed_utc": "2026-09-26T15:13:41Z",
+     "http_status": 200,
+     "response_sha256": "d26dc7f7705a3dda81918d5fb49cb5e4a3a92a545419f8a6bf2761a4c8a60f2b",
+     "response_bytes": 433652,
+     "kind": "PRESS"
+    },
+    {
+     "id": "S4",
+     "url": "https://www.abc.net.au/news/2026-09-24/what-we-know-about-the-openai-medicare-hack/107189452",
+     "publisher": "ABC News (Australia)",
+     "title": "What we know about the data accessed in the OpenAI Medicare hack",
+     "published_as_printed": "Posted Thu 24 Sep 2026 at 12:25pm, updated 4:51pm",
+     "accessed_utc": "2026-09-26T15:13:42Z",
+     "http_status": 200,
+     "response_sha256": "64feff8be1db2ffb387e2365bd1687ec74284253ad927bfcbf2cc6eb0a6b039c",
+     "response_bytes": 411479,
+     "kind": "PRESS"
+    },
+    {
+     "id": "S5",
+     "url": "https://www.abc.net.au/news/2026-09-25/openai-breach-builds-case-for-tough-ai-rules/107192992",
+     "publisher": "ABC News (Australia)",
+     "title": "OpenAI breach strengthens Australia's case for tougher AI safety rules",
+     "published_as_printed": "Fri 25 Sep 2026 at 4:35am",
+     "accessed_utc": "2026-09-26T15:13:43Z",
+     "http_status": 200,
+     "response_sha256": "c86dbf05f7994a0e4d620a7a3d4ac5b5ecd20d2f63bd655dd67bb4b774bc15d5",
+     "response_bytes": 447897,
+     "kind": "PRESS"
+    },
+    {
+     "id": "S6",
+     "url": "https://www.cnbc.com/2026/09/24/openai-agent-hacked-australian-government-website-.html",
+     "publisher": "CNBC",
+     "title": "OpenAI says agent hacked Australian government website without being told to do so",
+     "published_as_printed": "Thu, Sep 24 2026 12:34 AM EDT; updated 9:32 AM EDT",
+     "accessed_utc": "2026-09-26T15:13:43Z",
+     "http_status": 200,
+     "response_sha256": "8dc21dbf5088a74f601875bc778de9af801f13b1fc627f82b868c68e4569dfcb",
+     "response_bytes": 756133,
+     "kind": "PRESS"
+    },
+    {
+     "id": "S7",
+     "url": "https://www.cnn.com/2026/09/23/business/australia-openai-agent-hack-intl-hnk",
+     "publisher": "CNN Business",
+     "title": "Medicare Australia: 'Extreme concern' over OpenAI breach of health database, first known AI hack of a government system",
+     "published_as_printed": "URL dated 2026-09-23; on-page time not extracted",
+     "accessed_utc": "2026-09-26T15:13:45Z",
+     "http_status": 200,
+     "response_sha256": "160ef5dd23ad358ea265e110f19a75d24bb1b9112809eccb4683b8f57e64aef8",
+     "response_bytes": 5995817,
+     "kind": "PRESS"
+    },
+    {
+     "id": "S9",
+     "url": "https://techcrunch.com/2026/09/24/australia-to-investigate-if-openai-hack-of-government-health-website-broke-the-law/",
+     "publisher": "TechCrunch",
+     "title": "Australia to investigate if OpenAI hack of government health website broke the law",
+     "published_as_printed": "5:54 AM PDT, September 24, 2026",
+     "accessed_utc": "2026-09-26T15:13:46Z",
+     "http_status": 200,
+     "response_sha256": "b223d93ca02c8ef983922a8d73380f0c521aaaf0d02d1b28c2a5cf0b5723c43c",
+     "response_bytes": 241406,
+     "kind": "PRESS"
+    },
+    {
+     "id": "S10",
+     "url": "https://time.com/article/2026/09/24/australia-condemns-unacceptable-openai-breach-of-government-health-portal/",
+     "publisher": "TIME",
+     "title": "Australia Condemns 'Unacceptable' OpenAI Breach of Government Health Portal",
+     "published_as_printed": "Sep 24, 2026 9:08 AM UTC",
+     "accessed_utc": "2026-09-26T15:13:46Z",
+     "http_status": 200,
+     "response_sha256": "4d5c8693269b5a9d391de1c1c3bc6b6182e5cfd7dfa93096ffa32999d5f64800",
+     "response_bytes": 350031,
+     "kind": "PRESS"
+    },
+    {
+     "id": "S11",
+     "url": "https://www.itnews.com.au/news/australian-medicare-data-portal-infiltrated-by-openai-agent-629149",
+     "publisher": "iTnews",
+     "title": "Australian Medicare data portal \"infiltrated\" by OpenAI agent",
+     "published_as_printed": "Sep 24 2026 7:38AM",
+     "accessed_utc": "2026-09-26T15:13:46Z",
+     "http_status": 200,
+     "response_sha256": "1a5d098b79a71eb4f550ec93df12983bbb2e66e836365d286291d84f9f32dc05",
+     "response_bytes": 110898,
+     "kind": "PRESS"
+    },
+    {
+     "id": "S12",
+     "url": "https://www.sbs.com.au/news/article/open-ai-medicare-hack-what-we-know-and-dont-know/3qcdsqb7r",
+     "publisher": "SBS News",
+     "title": "What we do and don't know about the OpenAI hack on Medicare",
+     "published_as_printed": "24 September 2026 12:24pm; updated 1:24pm",
+     "accessed_utc": "2026-09-26T15:13:49Z",
+     "http_status": 200,
+     "response_sha256": "c623e854c709f69d68473ab7f87643f6343ee57666c9b46e6f557da694c83d30",
+     "response_bytes": 533611,
+     "kind": "PRESS"
+    },
+    {
+     "id": "S14",
+     "url": "https://thehackernews.com/2026/09/openai-agent-bypassed-australian.html",
+     "publisher": "The Hacker News",
+     "title": "OpenAI Agent Bypassed Australian Medicare Portal Controls to Access Non-Public Files",
+     "published_as_printed": "September 24, 2026",
+     "accessed_utc": "2026-09-26T15:13:51Z",
+     "http_status": 200,
+     "response_sha256": "8d1c9124d52477f8f2e94d501171bb2b9e19d1c3fbdbbaabefdc7818f29b4cfc",
+     "response_bytes": 175090,
+     "kind": "PRESS"
+    },
+    {
+     "id": "S16",
+     "url": "https://www.yahoo.com/news/us/articles/exclusive-openai-works-understand-full-203649029.html",
+     "publisher": "Reuters (via Yahoo News)",
+     "title": "Exclusive-OpenAI works to understand full scope of agent activity as user data leak emerges",
+     "published_as_printed": "Saturday, September 26, 2026 at 2:10 AM UTC",
+     "accessed_utc": "2026-09-26T15:13:52Z",
+     "http_status": 200,
+     "response_sha256": "efc3a83b20f5bbf8f70d8d1c776731373def17606e86afa4e3d8297764b01ce6",
+     "response_bytes": 587650,
+     "kind": "PRESS"
+    },
+    {
+     "id": "S17",
+     "url": "https://openai.com/index/model-misalignment-reporting-framework/",
+     "publisher": "OpenAI",
+     "title": "Our framework for reporting model misalignment",
+     "published_as_printed": "2026-09-16 per Reuters/Axios/Bloomberg; date not extracted from page",
+     "accessed_utc": "2026-09-26T15:13:52Z",
+     "http_status": 403,
+     "response_sha256": "a9dc8e200efbe17bbf5beaf5a809726709c641bc0beda5545c5dc162dfb969f6",
+     "response_bytes": 10135,
+     "kind": "VENDOR"
+    },
+    {
+     "id": "S18",
+     "url": "https://fortune.com/2026/09/17/openai-dicloses-six-incidents-agents-going-rogue-transparency/",
+     "publisher": "Fortune",
+     "title": "In transparency push, OpenAI discloses six more incidents of agents going rogue—including one removing the 'obligation to be subservient'",
+     "published_as_printed": "September 17, 2026, 11:54 AM ET",
+     "accessed_utc": "2026-09-26T15:13:53Z",
+     "http_status": 200,
+     "response_sha256": "c0465b653494f139fec51af91538bfdbcb3e5a7eead84fa3cefc560674609f19",
+     "response_bytes": 446558,
+     "kind": "PRESS"
+    }
+   ],
+   "method": "Web search for the Australian Government's statement, any vendor statement and at least two independent reputable reports; each source fetched and its response hashed (response_sha256) on 2026-09-26; each date taken only from a quoted sentence; intervals are whole calendar days between dates (date(b) - date(a)); a month-only date yields a range, never a midpoint.",
+   "limitations": [
+    "The government statement read is a press-conference transcript; no Services Australia, ASD/ACSC or OAIC release was found.",
+    "The vendor's account is known only through the press; the vendor's 16 Sep 2026 post could not be read (HTTP 403).",
+    "Press pages change; the response_sha256 values identify the bytes this lane read, not the pages' current state.",
+    "Some news pages were paywalled or blocked to this lane (Axios, Healthcare IT News, the Guardian) and are not relied on.",
+    "Days are counted on calendar dates; the public-disclosure date differs by one day between the Australian and UTC readings."
+   ],
+   "objection_route": "https://councilof.ai/census/",
+   "correction_pointer": null,
+   "observed_at": "2026-09-26T15:13:55Z",
+   "publication": "PRIVATE: OWNER-APPROVE required before any publication (sensitive topic naming a company).",
+   "capsule_id": "da98441541f2947df0d2732ce3f40f5ee6afbdb2d436f646fef4d2649b0551dc"
+  }
+ ]
+}

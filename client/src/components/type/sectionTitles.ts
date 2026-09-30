@@ -35,7 +35,7 @@ export const SECTION_TITLES: Record<string, RotatingTitle> = {
   },
   humanBaseline: {
     before: "Measured against",
-    words: ["a published human baseline", "other models", "the law it must meet"],
+    words: ["the same tasks humans sat", "other models", "the law it must meet"],
     after: "— not against a vibe.",
   },
   independence: {

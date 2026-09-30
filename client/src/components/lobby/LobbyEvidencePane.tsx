@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { FOCUS, MEASURE, PRIMARY, SP, TYPE } from "./glass";
+import { leaderLabel } from "../../../../functions/_lib/leaderLabel";
 import { Check, CopyBlock, Field, PaneHead, WireNotice } from "./paneKit";
 import {
   determined,
@@ -75,7 +76,7 @@ function AxisRow({
         <span className={`mt-1 block ${TYPE.fine}`}>{a.task || "—"}</span>
         {quotableWire(a) && (
           <span className="mt-1 block font-mono text-[11.5px] tabular-nums text-emerald-800">
-            leader {(a.accuracy! * 100).toFixed(1)}
+            {leaderLabel(a.separation)} {(a.accuracy! * 100).toFixed(1)}
             {a.interval
               ? ` · 95% [${(a.interval[0] * 100).toFixed(1)}, ${(a.interval[1] * 100).toFixed(1)}]`
               : " · no interval published"}

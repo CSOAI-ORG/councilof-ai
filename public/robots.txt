@@ -48,8 +48,36 @@ Disallow: /api/
 # rest of /api/ excluded while allowing crawlers to read the board and its
 # documented query-string filters.
 Allow: /api/gspc
+# AGENT-FACING ENDPOINTS — ALLOWED (26 September 2026). `Disallow: /api/` above also
+# blocked the endpoints this estate publishes FOR agents: the x402 catalogue, the A2A
+# interface, the MCP catalogue, the self-description (/api/state), the OpenAPI document,
+# the signed card store and the public root. A well-behaved agent that honours robots.txt
+# was told to stay away from exactly the doors it was invited to. Under RFC 9309 the
+# longest matching rule wins, so each Allow below overrides the shorter Disallow for its
+# own path; the rest of /api/ stays excluded. The Content-Signal above is unchanged:
+# ai-train=no still applies to everything these paths serve.
+Allow: /api/x402
+Allow: /api/a2a
+Allow: /api/mcp
+Allow: /api/state
+Allow: /api/openapi.json
+Allow: /api/cards
+Allow: /api/root
+# The canonical RSS feed (named at the top of this file) is listed in the sitemap, but
+# `Disallow: /api/` told crawlers not to fetch it at all (found 2026-09-28).
+Allow: /api/feed.xml
+# Cloudflare rewrites every e-mail address into a /cdn-cgi/l/email-protection link that answers
+# 404 to a crawler; on 2026-09-28 that dead link sat on 303 of the 443 sitemap pages.
+Disallow: /cdn-cgi/
 Disallow: /*?*utm_
 Allow: /
+
+# The same Content-Signal line is repeated in EVERY named group below (26 September 2026).
+# Under RFC 9309 a crawler that finds a group naming it reads ONLY that group and never
+# falls back to `*`. So GPTBot, ClaudeBot, CCBot and the rest, each with a group of its own,
+# never saw the `ai-train=no` reservation stated in the `*` group. The Allow and Disallow
+# lines of every group are unchanged; only the signal is added. The test in
+# functions/api/robots-agent-paths.test.ts fails if any group is missing it.
 
 # ---------------------------------------------------------------------------
 # Answer engines and AI search crawlers — ALLOWED.
@@ -63,37 +91,40 @@ Allow: /
 # Each appears exactly once. No agent below is repeated anywhere in this file.
 # ---------------------------------------------------------------------------
 
-User-agent: ClaudeBot
-Allow: /
-
 User-agent: Claude-SearchBot
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Allow: /
 
 User-agent: Claude-User
-Allow: /
-
-User-agent: GPTBot
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Allow: /
 
 User-agent: OAI-SearchBot
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Allow: /
 
 User-agent: ChatGPT-User
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Allow: /
 
 User-agent: PerplexityBot
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Allow: /
 
 User-agent: Perplexity-User
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Allow: /
 
 User-agent: Google-Extended
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Allow: /
 
 User-agent: Applebot-Extended
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Allow: /
 
 User-agent: meta-externalagent
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Allow: /
 
 # ---------------------------------------------------------------------------
@@ -104,22 +135,45 @@ Allow: /
 # because nothing here is cited back to a reader.
 # ---------------------------------------------------------------------------
 
+# TRAINING CRAWLERS — DISALLOWED, AS THE EDGE ALREADY REFUSES THEM (29 September 2026).
+# Until this date the file said `Allow: /` to GPTBot and ClaudeBot while the edge answered
+# them 403 on /, /llms.txt and /api/gspc (UA matrix, 29 Sep 10:04Z; CCBot, Bytespider and
+# Amazonbot also 403). A file that states one policy while the site enforces another is the
+# declared-versus-observed mismatch this estate measures in others. The file now states what
+# the edge does. Their user-initiated and search agents (Claude-User, Claude-SearchBot,
+# ChatGPT-User, OAI-SearchBot) are separate agents, are answered 200, and stay allowed above.
+# functions/api/robots-agent-paths.test.ts holds the observed matrix and fails on a mismatch.
+
+User-agent: GPTBot
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
+Disallow: /
+
+User-agent: ClaudeBot
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
+Disallow: /
+
 User-agent: CCBot
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Disallow: /
 
 User-agent: Bytespider
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Disallow: /
 
 User-agent: Amazonbot
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Disallow: /
 
 User-agent: Diffbot
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Disallow: /
 
 User-agent: omgili
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Disallow: /
 
 User-agent: Timpibot
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Disallow: /
 
 # ---------------------------------------------------------------------------
@@ -149,3 +203,7 @@ Disallow: /
 # ---------------------------------------------------------------------------
 
 Sitemap: https://councilof.ai/sitemap.xml
+# The sitemap index names /sitemap.xml above plus one Function-generated sitemap per measured-entity
+# type (MCP servers, A2A agent cards, x402, tokenised-asset deployments, daily notes). Entities whose
+# operator opted out, or whose robots.txt refuses CSOAI-census, are not in any of them.
+Sitemap: https://councilof.ai/sitemaps/index.xml

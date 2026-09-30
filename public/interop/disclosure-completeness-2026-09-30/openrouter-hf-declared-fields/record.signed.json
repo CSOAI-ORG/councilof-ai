@@ -1,0 +1,43 @@
+{
+ "schema": "csoai.signed-run/0.1",
+ "payload": {
+  "schema": "csoai.signed-artifact/0.1",
+  "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+  "not_a_grade": "The signature proves these bytes were signed by the board key on the date below; it does not prove any claim inside beyond what the record's own sources and instruments show.",
+  "artifact": {
+   "path": "/interop/disclosure-completeness-2026-09-30/openrouter-hf-declared-fields/record.json",
+   "sha256": "a84a16101ef288863053044517472bde4205b7104bd66affa3468c9574dc10d3",
+   "schema": "csoai.disclosure-completeness-record/0.1",
+   "as_of": "2026-09-29T15:32:22Z"
+  },
+  "answer": "Of 178 OpenRouter models naming a Hugging Face repository, the declared context length agrees on 105, differs on 56 (both values named) and is UNMEASURED on 17. Licence agreement is UNMEASURED on 178: OpenRouter's model list declares no licence field.",
+  "inputs_digest_sha256": "45e5b54295bb2ec3caf3611ca5828b8b59b38d83b2ed05503aee00099348b7f0",
+  "kind": "measurement.declared_field_agreement",
+  "method_code_sha256": "2f431f315f804ecd6943f21c6dd814a5f0bd0d7d8056d198a41ac5d2e88caaf6",
+  "n_inputs": 299,
+  "publication": "PUBLISHED on councilof.ai under /interop/disclosure-completeness-2026-09-30/openrouter-hf-declared-fields/",
+  "record_id": "openrouter-hf-declared-fields-2026-09-30",
+  "set": "disclosure-completeness-2026-09-30",
+  "source": "OpenRouter /api/v1/models, and each named Hugging Face repository's config.json and model info"
+ },
+ "signature": {
+  "did": "did:web:csoai.org#board-attestation-1",
+  "alg": "Ed25519",
+  "sig_ed25519": "e308628501daf11574e412678366423a23a2a4669dae8b267d270a27ee8e9736d6edf3a3ea873af0a788e22d8dc5079e55059e278add0539e14889b85d937008",
+  "payload_sha256": "d4324618246c7bf2f57fc017cf22761bce6ff81886da969c37afdf4e644aea05",
+  "signer_auth": "pod-token",
+  "signed_at": "2026-09-30T03:12:36.640Z",
+  "canonical": "JSON, keys sorted, no whitespace, UTF-8, non-ASCII unescaped"
+ },
+ "local_verification": {
+  "did_document": "https://csoai.org/.well-known/did.json",
+  "key_x": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA",
+  "result": "VERIFIES",
+  "altered_preimage_controls": {
+   "trailing byte appended to the record": "rejected (control holds)",
+   "artifact sha256 altered in the payload": "rejected (control holds)",
+   "signature bit flipped": "rejected (control holds)"
+  }
+ },
+ "verify": "canonicalise payload (JSON, keys sorted, no whitespace, UTF-8); sha256 must equal signature.payload_sha256; payload.artifact.sha256 must equal sha256 of the record's bytes; verify sig_ed25519 (hex) with the #board-attestation-1 Ed25519 key in https://csoai.org/.well-known/did.json"
+}

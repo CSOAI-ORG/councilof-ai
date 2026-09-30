@@ -1,3 +1,4 @@
+import { boardRunDates } from "@/lib/boardRunDates";
 import { useEffect, useState } from "react";
 
 /**
@@ -151,9 +152,10 @@ export async function fetchBoard(signal?: AbortSignal): Promise<WireBoard> {
       note: w.note ? str(w.note) : undefined,
     }));
 
+  // measured_on.date completed with runs it does not name (effect-binding), audit 2026-09-28 #18.
   const measuredOn = typeof j?.measured_on === "string"
     ? j.measured_on
-    : str(j?.measured_on?.date);
+    : (boardRunDates(j) ?? str(j?.measured_on?.date));
 
   return {
     axes: rows,

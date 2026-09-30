@@ -171,7 +171,7 @@ export default function GspcVsAiluminate() {
             <li>Only the GHA publisher signs; the importer emits unsigned queue artefacts.</li>
           </ul>
           <div className="mt-5 flex flex-wrap gap-4">
-            <a href="https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/interop/AILUMINATE-IMPORTER-SPEC.md"
+            <a href="https://huggingface.co/datasets/csoai/councilof-ai-source/blob/main/source/docs/interop/AILUMINATE-IMPORTER-SPEC.md"
                className="text-emerald-300 underline-offset-2 hover:underline">
               Importer spec v0.2
             </a>

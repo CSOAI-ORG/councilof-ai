@@ -23,6 +23,14 @@ CANDIDATES_REL = Path("public/interop/stablecoin-universe-2026-09/discovery-cand
 # Documentary regulatory-register block (#017). Built by scripts/build_regulatory_register_baseline.py
 # from hash-pinned register files; absence from a register is UNCHECKED, never "not registered".
 REG_BASELINE_REL = Path("public/interop/regulatory-register-baseline-2026-09-14.json")
+# Per-asset x402 doors (/api/wrapper/asset/<asset>) — the registry the door, the manifest and the
+# catalogue read. An asset with an entry here has an asset-specific door DECLARED in this repository;
+# a settlement through it is a separate fact and stays unverified until one is read.
+ASSET_DOORS_REL = Path("functions/api/_wrapper_asset_doors.json")
+GENERIC_DOOR_STATE = "GENERIC_EXISTING_DATA_DOOR_NO_ASSET_SETTLEMENT_VERIFIED"
+# Keeps the substring NO_ASSET_SETTLEMENT_VERIFIED on purpose: every reader tests for it
+# (client/src/lib/stablecoinReadiness.ts, scripts/build_stablecoin_promotion_queue.py).
+ASSET_DOOR_STATE = "ASSET_SPECIFIC_DOOR_DECLARED_NO_ASSET_SETTLEMENT_VERIFIED"
 REGISTERS = ("esma_mica_interim_emt", "nydfs_greenlist")
 REGISTER_STATES = {
     "esma_mica_interim_emt": {"TOKEN_WHITE_PAPER_LISTED", "ISSUER_LISTED_TOKEN_NOT_NAMED", "UNCHECKED"},
@@ -144,6 +152,7 @@ def build(repo: Path) -> dict[str, Any]:
     reg_by_asset: dict[tuple[str, str], dict[str, Any]] = {
         (row["asset_id"], row["register"]): row for row in reg_baseline["token_map"]
     }
+    asset_doors = {str(d["stablecoin_index_id"]): d for d in load(repo / ASSET_DOORS_REL)["doors"]}
     index_sha = sha256(index_path)
     root_hashes = set(root.get("card_sha256") or [])
     commitment_path, commitment = find_index_commitment(repo, index_sha, root_hashes)
@@ -212,9 +221,11 @@ def build(repo: Path) -> dict[str, Any]:
             },
             "a2a_discovery_state": "GENERIC_CATALOG_ONLY_NO_ASSET_SKILL",
             "mcp_discovery_state": "GENERIC_CATALOG_ONLY_NO_ASSET_TOOL",
-            "x402_door_state": "GENERIC_EXISTING_DATA_DOOR_NO_ASSET_SETTLEMENT_VERIFIED",
+            "x402_door_state": ASSET_DOOR_STATE if str(source_row["id"]) in asset_doors else GENERIC_DOOR_STATE,
             "regulatory_status": regulatory_status(str(source_row["id"]), reg_by_asset),
         }
+        if str(source_row["id"]) in asset_doors:
+            row["x402_door"] = f"https://councilof.ai/api/wrapper/asset/{asset_doors[str(source_row['id'])]['asset']}"
         if str(source_row.get("symbol") or "").upper() == "RLUSD":
             row["measurement"] = {
                 "state": "MEASURED",
@@ -266,7 +277,7 @@ def build(repo: Path) -> dict[str, Any]:
             ),
             "asset_specific_a2a_skills": 0,
             "asset_specific_mcp_tools": 0,
-            "asset_specific_x402_doors": 0,
+            "asset_specific_x402_doors": sum(1 for row in assets if row["x402_door_state"] == ASSET_DOOR_STATE),
             "asset_specific_x402_settlements_verified": 0,
             "post_freeze_discovery_candidates": len(candidates.get("candidates") or []),
             "regulatory_register_rows": {
@@ -280,7 +291,7 @@ def build(repo: Path) -> dict[str, Any]:
         "cost": {
             "metadata_index_build_usd": 0,
             "readiness_build_usd": 0,
-            "x402_campaign": "0.01 USDC only for eligible existing-data SKUs; fresh compute excluded",
+            "x402_campaign": "eligible existing-data SKUs only; fresh compute excluded; the amount lives only in each door's 402 challenge",
         },
         "shared_evidence": {
             "index_commitment": common_index_proof,
@@ -311,10 +322,10 @@ def build(repo: Path) -> dict[str, Any]:
                 "state": "GENERIC_EXISTING_DATA_DOOR_DECLARED",
                 "endpoint": "https://councilof.ai/api/request-attestation",
                 "sku": "request_attestation:per_request",
-                "campaign_amount_atomic_usdc": "10000",
-                "campaign_amount_usdc": "0.01",
+                "amount": "in the 402 challenge only — never typed on a public surface",
                 "fresh_compute_excluded": True,
-                "asset_specific_doors": 0,
+                "asset_specific_doors": sum(1 for row in assets if row["x402_door_state"] == ASSET_DOOR_STATE),
+                "asset_specific_door_registry": ASSET_DOORS_REL.as_posix(),
                 "asset_specific_settlements_verified": 0,
             },
         },
@@ -392,7 +403,8 @@ def validate(document: dict[str, Any]) -> None:
         assert row["index_commitment_state"] == expected_index_commitment_state
         assert row["a2a_discovery_state"] == "GENERIC_CATALOG_ONLY_NO_ASSET_SKILL"
         assert row["mcp_discovery_state"] == "GENERIC_CATALOG_ONLY_NO_ASSET_TOOL"
-        assert row["x402_door_state"] == "GENERIC_EXISTING_DATA_DOOR_NO_ASSET_SETTLEMENT_VERIFIED"
+        assert row["x402_door_state"] in (GENERIC_DOOR_STATE, ASSET_DOOR_STATE)
+        assert (row["x402_door_state"] == ASSET_DOOR_STATE) == ("x402_door" in row)
         if row["measurement"]["state"] == "UNMEASURED":
             assert row["measurement"]["depth"] == "NONE"
             assert row["signature_state"] == "NO_ASSET_MEASUREMENT_SIGNATURE"

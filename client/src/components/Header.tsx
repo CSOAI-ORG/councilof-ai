@@ -18,7 +18,11 @@ import { PRIMARY_LINKS, navigation } from '@/components/HeaderNav';
 export { HOME_NAV, ARCHIVE_NAV } from '@/components/HeaderNav';
 
 // SPA hops keep this header mounted: it lives above the router in App.tsx.
-export function Header() {
+// ONE header for the whole site (ux-unify, 27 Sep 2026): Council OS renders this same
+// component with `inApp` instead of a second, darker top bar of its own. `inApp` only
+// overrides the "OS owns the viewport" rule; an embedded (framed) view still hides it,
+// because DashboardLayout never mounts it there.
+export function Header({ inApp = false }: { inApp?: boolean } = {}) {
   const [location] = useLocation();
   const { user, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -78,10 +82,10 @@ export function Header() {
   const loginlessVerify =
     location === '/gspc-verify' || location.startsWith('/gspc-verify/');
 
-  if (hideChrome) return null;
+  if (hideChrome && !inApp) return null;
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-emerald-950/10 bg-white/[0.94] shadow-[0_10px_35px_rgba(6,21,15,0.06)] backdrop-blur-xl">
+    <header data-site-header="" className="sticky top-0 z-50 w-full shrink-0 border-b border-emerald-950/10 bg-white/[0.94] shadow-[0_10px_35px_rgba(6,21,15,0.06)] backdrop-blur-xl">
       <nav id="navigation" className="container mx-auto px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
         <div className="flex h-14 items-center justify-between sm:h-16">
           <a href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
@@ -238,9 +242,7 @@ export function Header() {
               </>
             ) : (
               <>
-                {!loginlessVerify && (
-                  <Button asChild variant="ghost" size="sm" className="text-muted-foreground font-medium"><Link href="/login">Sign In</Link></Button>
-                )}
+                {/* 2026-09-26: "Sign In" left the main nav (newcomer audit). /login still exists. */}
                 <Button asChild size="sm" className="rounded-xl bg-emerald-700 font-semibold text-white shadow-sm hover:bg-emerald-800"><Link href="/assess">Request attestation</Link></Button>
               </>
             )}
@@ -312,9 +314,6 @@ export function Header() {
                   </>
                 ) : (
                   <>
-                    {!loginlessVerify && (
-                      <Button asChild variant="outline" className="w-full"><a href="/login" onClick={() => setMobileMenuOpen(false)}>Sign In</a></Button>
-                    )}
                     <Button asChild className="w-full bg-emerald-600 hover:bg-emerald-700"><a href="/assess" onClick={() => setMobileMenuOpen(false)}>Request attestation</a></Button>
                   </>
                 )}

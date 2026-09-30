@@ -1,0 +1,40 @@
+{
+ "schema": "csoai.signed-run/0.1",
+ "payload": {
+  "schema": "csoai.signed-artifact/0.1",
+  "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+  "not_a_grade": "The signature proves these bytes were signed by the board key; it does not prove any claim beyond what the capsules' own instruments measured.",
+  "artifact": {
+   "path": "measurement-capsules/v0.2/publication/2026-09-26.json",
+   "sha256": "effd4713967cff6e03e548f752c87cbb7405a869f15871b00ac92c950201a804",
+   "schema": "csoai.measurement-publication/0.1",
+   "as_of": "2026-09-26T14:19:28Z"
+  },
+  "chain": {
+   "date": "2026-09-26",
+   "index_sha256": "ee3d921750d40456eb58ed24d2a9ba141d6fc1d16510ddd338166c4f5620b72a",
+   "index_root": "85533b833d36f8a4165da34206ee6e39f7434c646c8a2c381d251391ceec366d",
+   "publication": {
+    "state": "PUBLIC",
+    "approved": "2026-09-26",
+    "approved_by": "owner",
+    "approval_evidence": "owner approval given in the Claude Code session on 2026-09-26 and recorded at 13:38:15Z (~/.config/csoai/approvals/measurement-index-hf-publish.APPROVED on the measurement host, recorded by the coordinator session)"
+   }
+  }
+ },
+ "signature": {
+  "did": "did:web:csoai.org#board-attestation-1",
+  "alg": "Ed25519",
+  "sig_ed25519": "57519f38f1996d53ac92354d7bb41f9be6ca4de6a507bbf25d62f44f213c4a24eab48832fdcc6a04e74b5e7941315745ef0fc31e13fddd1829ce175ccaf25e06",
+  "payload_sha256": "b62e72b9809fb71486eeb68e00ce82856eda23464445253e00e628ee4cb9b445",
+  "signed_at": "2026-09-26T14:19:28.445Z"
+ },
+ "local_verification": {
+  "result": "VERIFIES",
+  "altered_preimage_controls": {
+   "trailing byte": "rejected (control holds)",
+   "record sha altered": "rejected (control holds)",
+   "index sha altered": "rejected (control holds)"
+  }
+ }
+}

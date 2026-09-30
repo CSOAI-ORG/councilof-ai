@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import urllib.request
 from dataclasses import dataclass
 
@@ -121,10 +122,26 @@ def verify_card(card: dict, pinned: str | None = None) -> Verdict:
     )
 
 
+_CARD_ID = re.compile(r"^[0-9a-f]{64}$")
+
+
 def fetch_card(card_id_hex: str, timeout: float = 30.0) -> dict:
-    """Fetch one published card by its id."""
+    """Fetch one published card by its full id: 64 lowercase hex characters (sha256 of the body).
+
+    Raises ``ValueError`` for anything else, before any network call. An abbreviated id such as
+    ``"acf6bf03…65133a4"`` used to reach urllib and die with ``UnicodeEncodeError: 'ascii' codec
+    can't encode character '…'`` — the README's own quickstart did exactly that until 0.2.20260926.
+    """
+    if not isinstance(card_id_hex, str):
+        raise ValueError(f"card id must be a string of 64 hex characters, got {type(card_id_hex).__name__}")
+    cid = card_id_hex.strip().lower()
+    if not _CARD_ID.match(cid):
+        hint = " (it looks abbreviated — use the full id, not a …-shortened one)" if "…" in cid or "..." in cid else ""
+        raise ValueError(
+            f"card id must be 64 hex characters (the card's sha256); got {len(cid)} characters{hint}: {card_id_hex!r}"
+        )
     req = urllib.request.Request(
-        CARD_URL.format(card_id=card_id_hex),
+        CARD_URL.format(card_id=cid),
         headers={"User-Agent": _UA, "Accept": "application/json"},
     )
     with urllib.request.urlopen(req, timeout=timeout) as r:

@@ -145,9 +145,9 @@ export const PUBLIC_RECORDS: readonly PublicRecord[] = [
     name: "Open infrastructure",
     category: "Public hosting",
     status: "Source and datasets public",
-    detail: "The site source is on GitHub and the frozen banks and hub cards are on Hugging Face under the csoai organisation.",
-    href: "https://github.com/CSOAI-ORG/councilof-ai",
-    linkLabel: "GitHub repository (the exact source)",
+    detail: "The site source is mirrored on Hugging Face while the GitHub org is temporarily unavailable. The frozen banks and hub cards are on Hugging Face under the csoai organisation too.",
+    href: "https://huggingface.co/datasets/csoai/councilof-ai-source",
+    linkLabel: "Source mirror on Hugging Face (MIT)",
     proof: { kind: "public", note: "Hosting is public; hosting is not adoption, review or endorsement." },
   },
 ] as const;

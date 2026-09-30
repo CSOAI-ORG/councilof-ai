@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { offlineEvmFetch } from "./__fixtures__/offline-evm-fetch";
 import { onRequestGet as manifest } from "../.well-known/x402.json";
 
 /**
@@ -63,9 +64,7 @@ describe("every manifest door issues a payment challenge from its own handler", 
     // challenge it issues, not on whether that asset is reachable from CI.
     // A NEW Response per call. Returning one shared object consumes its body on the first read
     // and every later door sees "Body is unusable" — which looks like a door defect and is not.
-    const fetchSpy = vi.spyOn(globalThis, "fetch").mockImplementation(async () =>
-      new Response(JSON.stringify({}), { status: 200, headers: { "content-type": "application/json" } }),
-    );
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockImplementation(offlineEvmFetch);
     const failures: string[] = [];
     try {
       for (const r of resources) {

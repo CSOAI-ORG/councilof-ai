@@ -45,6 +45,13 @@ node scripts/facts-gate.mjs public 2>&1 | tail -40 | grep -qE "^facts-gate OK" \
   || { echo "  ✖ facts-gate: a claim in public/ contradicts facts.json"; \
        node scripts/facts-gate.mjs public 2>&1 | grep -E "FILE|TEXT|WHY" | head -12; fail=1; }
 
+# ADDED 2026-09-26. Private canaries (harness/instrument-guard) must never reach a public
+# surface; the repo is public too, so the source dirs are scanned, not just public/.
+# Exit 2 (no commitments record) blocks as well: an unread list is not a clean scan.
+canary_out=$(node scripts/canary-leak-gate.mjs --selftest 2>&1 \
+  && node scripts/canary-leak-gate.mjs public docs harness measurement 2>&1) \
+  || { echo "  ✖ canary-leak-gate — its verdict:"; printf '%s\n' "$canary_out" | tail -8 | sed 's/^/      /'; fail=1; }
+
 node scripts/brand-gate.mjs public >/dev/null 2>&1 \
   || { echo "  ✖ brand-gate: a forbidden display string is in public/"; \
        node scripts/brand-gate.mjs public 2>&1 | tail -8; fail=1; }
@@ -81,5 +88,5 @@ if [ "$fail" -ne 0 ]; then
   echo "  Emergency bypass: git push --no-verify"
   exit 1
 fi
-echo "  ✓ wallet-credential-gate + facts-gate + brand-gate + price-gate clean"
+echo "  ✓ wallet-credential-gate + facts-gate + brand-gate + canary-leak-gate + price-gate clean"
 exit 0

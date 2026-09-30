@@ -19,6 +19,9 @@ import { fileURLToPath } from "node:url";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SELFTEST = process.argv.includes("--selftest");
+// A rule marked `held: true` is built and self-tested but only REPORTS until the owner rules on it.
+const ENFORCE_HELD = process.argv.includes("--enforce-held") || process.env.BRAND_GATE_ENFORCE_HELD === "1";
+const heldHits = [];
 const DIST = path.resolve(REPO, (process.argv[2] && !process.argv[2].startsWith("--")) ? process.argv[2] : "dist/client");
 
 
@@ -28,6 +31,13 @@ const DIST = path.resolve(REPO, (process.argv[2] && !process.argv[2].startsWith(
 // TUI 4 weekend checklist — every ship, rendered copy:
 //   certify / CSOAI Certified / sov33 / Inspect model-judge / 2410 stickers /
 //   GPAI Code signature / rank-for-sale / 2 Nov 2026 cliff / MEASURED-INDEX-v0.1.
+// The corrections ledger page is the retraction-history page: every entry states what we published
+// and got wrong, so some entries necessarily quote the withdrawn string (a priced string, the
+// withdrawn index sticker, a third-party signatory count). It is prerendered with its entries from
+// 2026-09-30 (owner goal, journey A: a no-JS reader got an empty shell). Exactly this one built
+// path is exempt, and only from the three rules its entries quote; every other page, and every
+// other rule on this page, is still enforced (the selftest pins both).
+const CORRECTIONS_LEDGER_PAGE = /^\/corrections\/index\.html$/;
 const RULES = [
   {
     id: "retracted_fault_tolerance",
@@ -55,7 +65,12 @@ const RULES = [
     // sov3 / sov33 / sov34 (and hyphenated variants like sov33-dist-c3), SOVOS,
     // dorado, cibola — internal names, never public. Caught live on /benchmarks
     // 2026-08-25 because this class was missing from the gate.
-    pattern: /\bsovos\b|\bsov3\d*(?:-[a-z0-9-]+)?\b|\bdorado\b|\bcibola\b/i,
+    // venturi / pontius / laputa (added 2026-09-28, lane codename-hygiene): internal architecture
+    // names (the outside-in measurement engine, the bridge fabric, and one more). No trailing \b,
+    // so venturi_capsule and CamelCase joins are caught too. Public copy says "measurement capsule",
+    // "wrapped-asset measurements". "SovX" is NOT here: the owner made it a public product name for
+    // the wrapped-asset measurements on 2026-09-28 (15:30Z ruling); the selftest pins that.
+    pattern: /\bsovos\b|\bsov3\d*(?:-[a-z0-9-]+)?\b|\bdorado\b|\bcibola\b|\bventuri|\bpontius|\blaputa/i,
     why: "Internal codename on a public surface. Use the public-canon name (Council / the fine-tune's neutral description).",
   },
   {
@@ -96,6 +111,7 @@ const RULES = [
     // A page may DISCLOSE the no-pricing rule ("we never charge £/$ per anything") near the hit.
     nearAllow: /free\s+forever|never\s+(?:sold|charge|priced)|no\s+pricing|not\s+for\s+sale|a\s+grade\s+is\s+never/i,
     why: 'HO.2: no pricing on public surfaces — verification is free forever, a grade is never sold. Remove the amount.',
+    allowOn: /^\/corrections\/index\.html$/, // CORRECTIONS_LEDGER_PAGE (inlined: RULES is evaluated standalone)
   },
   {
     id: "internal_strategy_codename",
@@ -107,6 +123,7 @@ const RULES = [
     pattern: /signed the GPAI Code|GPAI Code of Practice signator|we (?:have )?signed (?:the )?GPAI Code/i,
     nearAllow: /do not sign|not a signator|we do not sign|not sign the GPAI/i,
     why: "We are not a GPAI Code signatory. Transparency CoP (detection/marking tool) only, if signed. C2PA remains planned until CR-012 is live.",
+    allowOn: /^\/corrections\/index\.html$/, // CORRECTIONS_LEDGER_PAGE (inlined: RULES is evaluated standalone)
   },
   {
     id: "certify_claim",
@@ -118,6 +135,20 @@ const RULES = [
     pattern: /\bget certified\b|\bwe certify\b|\bcertified by CSOAI\b|\bCSOAI certif/i,
     nearAllow: /we certify nothing|do not certify|does not certify|never certify|certify nothing|not certify|no such mark|issues no certif|misrepresent.{0,40}certif|certificate shop|training record/i,
     why: 'Measurement credential, never certification. Do not offer "get certified".',
+  },
+  {
+    id: "certificate_term",
+    // HELD 2026-09-28 (owner ruling pending): CSOAI issues no certificates; the Academy's record is
+    // a "completion record" (csoai.completion-record/0.1). While `held` is set this rule REPORTS and
+    // never fails the build. To enforce: delete `held: true`, or run with --enforce-held /
+    // BRAND_GATE_ENFORCE_HELD=1 to see what would fail first.
+    held: true,
+    pattern: /\bcertificates?\b/i,
+    // Negations and retirement notices are disclosure, not an offer. The technical senses of the
+    // word (PKI, TLS, X.509, C2PA signing certificates, certificate transparency) are not ours to ban.
+    nearAllow: /\bnot\s+(?:a\s+|an\s+)?certificates?\b|\bno\s+certificates?\b|\bnever\s+(?:issues?\s+)?(?:a\s+)?certificates?\b|issues?\s+no\s+certificates?|withdrawn|retired|legacy|superseded|completion record|x\.?509|\btls\b|\bssl\b|\bpki\b|signing certificate|code[\s-]signing|c2pa|certificate transparency|root certificate|leaf certificate|certificate chain|self[\s-]signed|\bmtls\b|\bacme\b|let'?s encrypt/i,
+    allowOn: /certificate-verification|verify-certificate|(^|\/)certificates(\/|\.html|$)|refutation|corrections/i,
+    why: 'CSOAI issues no certificates. The Academy issues free "completion records" (csoai.completion-record/0.1).',
   },
   {
     id: "rank_for_sale",
@@ -160,6 +191,7 @@ const RULES = [
     pattern: /MEASURED-INDEX-v0\.1/i,
     nearAllow: /over-claim|overclaim|superseded|C-2026-0826-05|withdrawn|do not restore|correction/i,
     why: "C-2026-0826-05: MEASURED-INDEX-v0.1 is withdrawn. Board GET /api/gspc is UNMEASURED until a new card. Do not restore the sticker.",
+    allowOn: /^\/corrections\/index\.html$/, // CORRECTIONS_LEDGER_PAGE (inlined: RULES is evaluated standalone)
   },
   {
     id: "infra_leak",
@@ -170,7 +202,7 @@ const RULES = [
   },
 ];
 
-const PATH_BANNED = /\b(sovos|sov3\d*|dorado|cibola|ceasai)\b/i;
+const PATH_BANNED = /\b(sovos|sov3\d*|dorado|cibola|ceasai)\b|\b(venturi|pontius|laputa)/i;
 
 /** The distribution catalogues: a confirmed list of package names and the measurement over it. */
 const DISTRIBUTION_CATALOGUE = /^\/interop\/(footprint-packages|distribution-(latest|\d{4}-\d{2}-\d{2}))\.json$/;
@@ -289,8 +321,23 @@ if (SELFTEST) {
     ["retracted_fault_tolerance", "the 33-agent BFT council", "the retraction of the BFT claim is in the refutation ledger"],
     ["sovereign_brand", "Project: Sovereign Signed-Card Anchor", null],
     ["internal_codenames", "PixiJS + SOV3 substrate", null],
+    ["internal_codenames", "the Venturi throat seals one capsule per event", null],
+    ["internal_codenames", "venturi_capsule.py build --adapter operations", null],
+    ["internal_codenames", "Pontius carries admitted evidence across rails", null],
+    ["internal_codenames", "Laputa", null],
+    ["pricing_leak", "$0.005/card", "/corrections/index.html"],
+    ["gpai_code_signature", "GPAI Code of Practice signatory", "/corrections/index.html"],
+    ["measured_index_sticker", "MEASURED-INDEX-v0.1", "/corrections/index.html"],
   ];
   let bad = 0;
+  // The corrections-ledger exemption is one built path, never a prefix or a lookalike.
+  for (const id of ["pricing_leak", "gpai_code_signature", "measured_index_sticker"]) {
+    const r = RULES.find((x) => x.id === id);
+    if (!r || !r.allowOn || r.allowOn.source !== CORRECTIONS_LEDGER_PAGE.source) { console.error(`\u2716 selftest: rule "${id}" allowOn is not exactly the corrections ledger page`); bad++; }
+  }
+  for (const p of ["/pricing/index.html", "/corrections-archive/index.html", "/x/corrections/index.html", "/corrections/other.html", "/index.html"]) {
+    if (CORRECTIONS_LEDGER_PAGE.test(p)) { console.error(`\u2716 selftest: corrections exemption leaks to ${p}`); bad++; }
+  }
   for (const [id, mustCatch, mustAllow] of CASES) {
     const rule = RULES.find((r) => r.id === id);
     if (!rule) { console.error(`\u2716 selftest: rule "${id}" no longer exists`); bad++; continue; }
@@ -300,6 +347,22 @@ if (SELFTEST) {
     if (mustAllow && rule.allowOn && !rule.allowOn.test(mustAllow)) {
       console.error(`\u2716 selftest: rule "${id}" no longer allows its documented exemption`); bad++;
     }
+  }
+  // Public names the gate must never catch. "SovX" is the owner-approved public product name for the
+  // wrapped-asset measurements (ruling 2026-09-28 15:30Z); a codename rule that swallowed it would strip
+  // an approved name at integration. The neutral names already in public copy must pass too.
+  for (const ok of ["SovX wrapped-asset measurements", "SovX", "measurement capsule", "wrapped-asset parity ledger"]) {
+    for (const rule of RULES) {
+      if (new RegExp(rule.pattern.source, rule.pattern.flags).test(ok)) {
+        console.error(`\u2716 selftest: rule "${rule.id}" catches the public name ${JSON.stringify(ok)}`); bad++;
+      }
+    }
+    if (PATH_BANNED.test(ok) || PATH_BANNED.test("/" + ok.toLowerCase().replace(/\s+/g, "-") + "/")) {
+      console.error(`\u2716 selftest: PATH_BANNED catches the public name ${JSON.stringify(ok)}`); bad++;
+    }
+  }
+  if (!PATH_BANNED.test("/interop/venturi-capsule-index.json") || !publicJsonCodenameHit("/interop/x.json", JSON.stringify({ schema: "csoai.venturi-capsule/0.1" }))) {
+    console.error("\u2716 selftest: path/JSON sweep no longer catches venturi"); bad++;
   }
   // The JSON display sweep is a gate in its own right, so it proves itself the same way:
   // it must CATCH the badge copy that actually shipped, and must PASS the negation keys,
@@ -370,6 +433,19 @@ if (SELFTEST) {
     const h = jsonDisplayHits(obj, rel);
     if (h.length) {
       console.error(`\u2716 selftest: json display sweep now FAILS copy that must ship: ${JSON.stringify(obj)} -> [${h[0].rule}]`); bad++;
+    }
+  }
+  // The held certificate rule must catch an offer and pass a negation, a retirement notice and a
+  // technical sense of the word — exercised through the same window logic the scan uses.
+  {
+    const rule = RULES.find((r) => r.id === "certificate_term");
+    const trips = (t) => { const m = rule.pattern.exec(t); if (!m) return false; const w = t.slice(Math.max(0, m.index - 90), m.index + m[0].length + 90); return !rule.nearAllow.test(w); };
+    if (!rule || !rule.held) { console.error("\u2716 selftest: certificate_term missing or no longer held"); bad++; }
+    else {
+      for (const t of ["Get your AI governance certificate today", "Download your certificate"])
+        if (!trips(t)) { console.error(`\u2716 selftest: certificate_term no longer catches ${JSON.stringify(t)}`); bad++; }
+      for (const t of ["This is not a certificate.", "CSOAI issues no certificates.", "This legacy certificate page is withdrawn.", "signed with a C2PA signing certificate", "an X.509 certificate chain"])
+        if (trips(t)) { console.error(`\u2716 selftest: certificate_term now fails copy that must ship: ${JSON.stringify(t)}`); bad++; }
     }
   }
   if (bad) { console.error(`\u2716 brand-gate selftest FAILED (${bad})`); process.exit(1); }
@@ -509,7 +585,7 @@ for (const file of walk(DIST)) {
       const window = text.slice(Math.max(0, idx - 90), idx + m[0].length + 90);
       if (rule.nearAllow && rule.nearAllow.test(window)) continue; // disclosure, not assertion
       const ctx = text.slice(Math.max(0, idx - 40), idx + 50).trim();
-      failures.push({ rel, rule: rule.id, why: rule.why, hit: m[0], ctx });
+      (rule.held && !ENFORCE_HELD ? heldHits : failures).push({ rel, rule: rule.id, why: rule.why, hit: m[0], ctx });
       break; // one report per rule per file is enough
     }
   }
@@ -537,10 +613,18 @@ for (const jf of walkAll(DIST)) {
   let parsed;
   try { parsed = JSON.parse(fs.readFileSync(jf, "utf8")); } catch { continue; }
   for (const h of jsonDisplayHits(parsed, jrel)) {
-    failures.push({ rel: jrel + " -> " + h.at, rule: h.rule, why: h.why, hit: h.hit, ctx: h.ctx });
+    const held = RULES.find((r) => r.id === h.rule)?.held && !ENFORCE_HELD;
+    (held ? heldHits : failures).push({ rel: jrel + " -> " + h.at, rule: h.rule, why: h.why, hit: h.hit, ctx: h.ctx });
   }
 }
 
+if (heldHits.length) {
+  // Reported, not failed: these rules await an owner ruling (see `held` on the rule).
+  const byRule = {};
+  for (const h of heldHits) byRule[h.rule] = (byRule[h.rule] || 0) + 1;
+  console.warn(`⚠ brand-gate HELD rules (not enforced): ${Object.entries(byRule).map(([k, v]) => `${k} ${v}`).join(", ")} — first hits:`);
+  for (const h of heldHits.slice(0, 15)) console.warn(`    ${h.rel}  [${h.rule}] "${h.hit}"  …${h.ctx}…`);
+}
 if (failures.length) {
   console.error(`\n✖ brand-gate: ${failures.length} forbidden DISPLAY string(s) in rendered output:\n`);
   for (const f of failures) {

@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useState } from 'react';
 import { trpc } from '@/lib/trpc';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,7 +17,6 @@ const REGIONAL_FRAMEWORKS = [
 ];
 
 export default function RegionalAnalytics() {
-  useEffect(() => { document.title = "RegionalAnalytics | CSOAI"; }, []);
   const [selectedRegion, setSelectedRegion] = useState<number | undefined>();
   const [selectedCourse, setSelectedCourse] = useState<number | undefined>();
 

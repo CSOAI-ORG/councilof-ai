@@ -10,14 +10,41 @@
  * slot count. Do not type a fake MEASURED count. Cite live GET /api/gspc totals.
  */
 
+// Whole-store verification facts, derived by scripts/derive-chain-facts.mjs from every card body
+// with the published verifier — the same file /api/state → card_chain reads. Only its as_of is
+// printed here; the count is read at /api/state, so this note never carries a second copy of it.
+import chainFacts from "../../public/signed/chain-facts.json";
+import { PINNED_ANCHORS, b64ToBytes, bytesToHex } from "../_lib/cardVerify";
+
 interface CardIndexEntry {
   card: string;
   axis: string;
   ts?: string;
   signed: boolean;
   kid?: string | null;
+  pubkey?: string | null;
   title?: string;
 }
+
+/**
+ * Is a signing key one did:web:csoai.org publishes? Decided against the verifier's PINNED set
+ * (functions/_lib/cardVerify.ts), never a live fetch. A signature under a key the DID does not
+ * publish is self-consistent only: anyone can mint a key and sign. Added 2026-09-28 after the
+ * signature-coverage audit found cards.signed counting the cross-border card, whose inline key
+ * (8f9a00a2…, the living-board signer) is not in did.json, beside 335 cards whose key is.
+ */
+const pinnedKid = (hex: string | null | undefined): string | null => {
+  const h = (hex || "").toLowerCase();
+  return (h && PINNED_ANCHORS.find((a) => a.hex === h)?.id) || null;
+};
+const b64KeyHex = (b64: unknown): string | null => {
+  if (typeof b64 !== "string" || !b64) return null;
+  try {
+    return bytesToHex(b64ToBytes(b64));
+  } catch {
+    return null;
+  }
+};
 
 export const onRequestGet: PagesFunction = async ({ request }) => {
   const host = new URL(request.url).host;
@@ -95,7 +122,11 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
     .slice()
     .sort((a, b) => (b.ts || "").localeCompare(a.ts || ""));
   const count = cards.length;
+  // The date of the verification run (derive-chain-facts bodies.verified_at), not card_index.json's
+  // creation date, which is what chain-facts.as_of names (audit 2026-09-28 #17).
+  const chainAsOf = (chainFacts as any)?.bodies?.verified_at ?? (chainFacts as any)?.as_of ?? "unknown";
   const signed = cards.filter((c) => c.signed).length;
+  const signedUnderDidKey = cards.filter((c) => c.signed && pinnedKid(c.pubkey)).length;
 
   // A present signature is not a checkable one. board_living.json's stamp was marked
   // UNVERIFIABLE on 2026-08-26 (it does not reproduce under any published rule; see the
@@ -113,11 +144,22 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
       }
     : { present: false, signer: board.signer };
 
+  const crossBorderKeyHex = b64KeyHex(crossBorder?.signature?.pubkey);
+  const crossBorderKid = pinnedKid(crossBorderKeyHex);
   const crossBorderEntry = crossBorder
     ? {
         card: "cross-border-card",
         axis: "cross-border",
         signed: !!crossBorder.signature?.sig,
+        signer_pubkey_hex: crossBorderKeyHex,
+        signer_in_did: !!crossBorderKid,
+        signer_kid: crossBorderKid,
+        anchoring: crossBorderKid ? "ANCHORED" : "UNANCHORED",
+        anchoring_note: crossBorderKid
+          ? `The inline key is ${crossBorderKid}, published in did:web:csoai.org.`
+          : "The inline signing key is not a verificationMethod of did:web:csoai.org, so this signature cannot be " +
+            "checked against the published trust root, whatever it verifies under. signed=true means a signature " +
+            "is carried, not that it verifies under a published key.",
         title: crossBorder.title || "One signed measurement, every regime mapped",
         schema: crossBorder.schema || "csoai.east-west-card/1",
         content_id: crossBorder.content_id,
@@ -159,6 +201,11 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
     cards: {
       count: count + (crossBorderEntry ? 1 : 0),
       signed: signed + (crossBorderEntry?.signed ? 1 : 0),
+      signed_under_did_key: signedUnderDidKey + (crossBorderEntry?.signed && crossBorderKid ? 1 : 0),
+      signed_under_did_key_note:
+        "signed counts entries that carry a signature; signed_under_did_key counts those whose signing key " +
+        "is one did:web:csoai.org publishes (pinned set in functions/_lib/cardVerify.ts). The difference is " +
+        "signatures that cannot be checked against the published trust root.",
       list: crossBorderEntry ? [crossBorderEntry, ...cards.slice(0, 99)] : cards.slice(0, 100),
       full_count_hint: count + (crossBorderEntry ? 1 : 0),
     },
@@ -169,9 +216,15 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
       "not reproduce under any published rule and its signer is not in did.json). This index's measurement pack is " +
       "14 behavioural + see GET /api/gspc for the living board. This index carries " +
       `${count} signed measurement cards — DERIVED from card_index.json on every request, never typed. ` +
-      "Separately, board_living.json records that the 150-card subset it checked verifies 150/150 against " +
-      "did:web:csoai.org#card-attestation-1. That check has not been re-run across the whole index, so no " +
-      "verdict is stated here for the cards outside that subset: unchecked is not failed. " +
-      "See /signed/HOW-TO-VERIFY.md.",
+      "WHICH CORPUS: these are the signed card index (/signed/card_index.json, corpus 3 of the three in " +
+      "council-os/CARD-CORPORA.md). They are not the public-root Merkle leaves (/root.json → card_count) " +
+      "and not the card wrappers on disk (/cards-bundle.json → card_count); the corpora share no " +
+      "identifiers and are never added. WHAT WAS CHECKED: the whole published card store was verified " +
+      "under did:web:csoai.org#card-attestation-1 — read the count at /api/state → " +
+      "card_chain.bodies_verified_valid (kind measured: each id recomputed from its canonical body and its " +
+      `Ed25519 signature checked by /signed/verify-card.mjs; as_of ${chainAsOf}). The 150/150 ` +
+      "recorded in board_living.json was an earlier check of a 150-card subset of this same chain, not a " +
+      "second corpus and not a ratio over it. A card added after that as_of carries no verdict until the " +
+      "check is re-run: unchecked is not failed. See /signed/HOW-TO-VERIFY.md.",
   });
 };

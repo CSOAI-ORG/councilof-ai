@@ -1,0 +1,48 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "public.notice",
+ "subject": "Ledger head: fix-receipts (served bytes, digest and count at one read)",
+ "as_of": "2026-09-29T17:09:12Z",
+ "source_urls": [
+  "https://councilof.ai/interop/fix-receipts/fix-receipt-chain.jsonl"
+ ],
+ "payload": {
+  "kind": "csoai.ledger-head/0.1",
+  "ledger": "fix-receipts",
+  "authority_for": "before/after readings that a fix held",
+  "served_url": "https://councilof.ai/interop/fix-receipts/fix-receipt-chain.jsonl",
+  "http_status": 200,
+  "not_a_grade": true,
+  "bytes_sha256": "0ac79959b0b871fef9c3d010e12d6c6ae393b14c1a2afe05c0f6db55f7481fb4",
+  "n_bytes": 20424,
+  "entries": 3,
+  "links": 4,
+  "head_id": "FR-2026-0923-03",
+  "head_digest": "b87efddc1acb2ee8c8f2727c3b37f9123df9d1ae4cc3074a36427c02b7aff454",
+  "last_update": "2026-09-23T05:35:00Z",
+  "verdicts": {
+   "PARTIAL": 1,
+   "VERIFIED_FIX": 2
+  },
+  "corrections_refs": [
+   "C-2026-0917-02",
+   "C-2026-0920-01",
+   "D-FIX-2026-0923-01"
+  ],
+  "ids": [
+   "FR-2026-0923-01",
+   "FR-2026-0923-02",
+   "FR-2026-0923-03"
+  ],
+  "state": "PROBED"
+ },
+ "sha256": "e3af7c5cc0fd143f4d50bdf1b0ef2829e5817db5452036849585f1a98b9b1053",
+ "unmeasured": [
+  "whether any entry is correct; this atom commits to the served bytes and their head only"
+ ],
+ "tags": [
+  "ledger-head",
+  "fix-receipts",
+  "ledger-heads-2026-09"
+ ]
+}

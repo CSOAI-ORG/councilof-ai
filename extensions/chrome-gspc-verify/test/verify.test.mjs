@@ -87,6 +87,18 @@ describe("DID-anchored mill cards (no pubkey; `did` names board-attestation-1)",
       expect(v.pinnedBy).toBe("did:web:csoai.org#board-attestation-1");
       expect(v.notes.join(" ")).toMatch(/PINNED in this verifier/);
     }
+    // ~2,800 cards, each a real Ed25519 verify: 20-30 s on a shared 8-vCPU pod, so the
+    // 5 s default timed this out and read like a verifier failure. The bound is explicit.
+  }, 180_000);
+  it("a card naming the rotated #card-attestation-2 is CHECKED, never turned away as unpinned", async () => {
+    // Pinned in the shared verifier since 2026-09-28 (functions/_lib/cardVerify.card-key-2.test.ts).
+    // A card-attestation-1 body re-labelled with the key-2 DID must be compared under key 2 and
+    // fail; before the regenerated twin it came back UNCHECKABLE ("not among the keys pinned").
+    const { pubkey, ...legacy } = readJson(path.join(CARDS, readdirSync(CARDS).filter((f) => f.endsWith(".json")).sort()[0]));
+    expect(typeof pubkey).toBe("string");
+    const v = await verifyOffline({ ...legacy, did: "did:web:csoai.org#card-attestation-2" });
+    expect(v.pinnedBy).toBe("did:web:csoai.org#card-attestation-2");
+    expect(v.state).toBe(STATES.INVALID);
   });
   it("the signed body's own status is surfaced (bytes decide, not the index)", async () => {
     const v = await verifyOffline(readJson(path.join(MILL, files[0])));
@@ -119,6 +131,9 @@ describe("shapes that are not measurement cards", () => {
     const v = await verifyOffline(wrapper);
     expect(v.state).toBe(STATES.UNCHECKABLE);
     expect(v.notes[0]).toMatch(/Unwrapped/);
+    // CSOAI publishes this shape; the reason must not say otherwise (it did until 2026-09-28).
+    expect(v.reason).not.toMatch(/not a shape CSOAI publishes/);
+    expect(v.reason).toMatch(/Public-root card leaf/);
   });
   it("an unsigned estate envelope is UNCHECKABLE (hash only, nothing to verify against)", async () => {
     const v = await verifyOffline({ content_id: "00".repeat(32), kind: "x" });
