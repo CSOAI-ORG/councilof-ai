@@ -1,0 +1,95 @@
+{
+ "schema": "csoai.safe-pack-appendix/0.1",
+ "as_of": "2026-09-30T17:00:00Z",
+ "title": "Installable today: the SAFE evidence fabric as packages anyone can install",
+ "appendix_to": {
+  "pack": "docs/standards/osaia-safe-evidence-pack",
+  "freeze_json_sha256": "855164ee8402f81281ea214226e1e3bc2a5ba808d35430347d9ce4d8d128ecd9",
+  "sha256sums_sha256": "f869e917c61265edc69eebb3b331d9ae60f407a8af349b5f5e8996892a09a0ce",
+  "rule": "The frozen pack is not edited. This appendix is a separate record beside it and adds nothing to the pack's SHA256SUMS."
+ },
+ "artefacts": [
+  {
+   "channel": "PyPI",
+   "project": "csoai-evidence-fabric",
+   "version": "0.1.0",
+   "file": "csoai_evidence_fabric-0.1.0-py3-none-any.whl",
+   "sha256": "2ce998fce818a126497f908ce61939eaad8cabc20668eac49b16a171a3641d5f",
+   "url": "https://pypi.org/project/csoai-evidence-fabric/0.1.0/"
+  },
+  {
+   "channel": "PyPI",
+   "project": "csoai-evidence-fabric",
+   "version": "0.1.0",
+   "file": "csoai_evidence_fabric-0.1.0.tar.gz",
+   "sha256": "eb4774850266a8602945fc9fd7209ab0121bbca6b23ff26e4b8c4f14e700320b",
+   "url": "https://pypi.org/project/csoai-evidence-fabric/0.1.0/"
+  },
+  {
+   "channel": "PyPI",
+   "project": "llama-stack-provider-csoai",
+   "version": "0.1.0",
+   "file": "llama_stack_provider_csoai-0.1.0-py3-none-any.whl",
+   "sha256": "a2eac5b5189e0abf6248ace331e096c16a0e761a08b0863b6eeaf14a5282337a",
+   "url": "https://pypi.org/project/llama-stack-provider-csoai/0.1.0/"
+  },
+  {
+   "channel": "PyPI",
+   "project": "llama-stack-provider-csoai",
+   "version": "0.1.0",
+   "file": "llama_stack_provider_csoai-0.1.0.tar.gz",
+   "sha256": "f4b8b722bfabff914d75a5b31fc96ae31813fbb269dbc4adaaf491f4b065495a",
+   "url": "https://pypi.org/project/llama-stack-provider-csoai/0.1.0/"
+  },
+  {
+   "channel": "PyPI",
+   "project": "nat-csoai-evidence",
+   "version": "0.1.0",
+   "file": "nat_csoai_evidence-0.1.0-py3-none-any.whl",
+   "sha256": "e356ce5ea8bbe365308bdb9f99acde74acf6deead9fec819dab9a9f721e87957",
+   "url": "https://pypi.org/project/nat-csoai-evidence/0.1.0/"
+  },
+  {
+   "channel": "PyPI",
+   "project": "nat-csoai-evidence",
+   "version": "0.1.0",
+   "file": "nat_csoai_evidence-0.1.0.tar.gz",
+   "sha256": "a6fa92d781f5e9547c34196d6ac48416293a870459b220acd088601c3dace10a",
+   "url": "https://pypi.org/project/nat-csoai-evidence/0.1.0/"
+  },
+  {
+   "channel": "Helm",
+   "project": "llama-stack-csoai-eval",
+   "version": "0.1.0",
+   "file": "llama-stack-csoai-eval-0.1.0.tgz",
+   "sha256": "e6718d9fc7202f47c5f1593ee9d53ceaec6f828dfedcc1f8595181fd4bb2f162",
+   "url": "https://councilof.ai/helm/llama-stack-csoai-eval-0.1.0.tgz",
+   "repo": "https://councilof.ai/helm/"
+  },
+  {
+   "channel": "councilof.ai",
+   "project": "csoai-verify",
+   "version": "0.1.0",
+   "file": "csoai-verify.mjs",
+   "sha256": "18eb4d41521d0a200413dfc353953b7c551368c6e97a1c7101f7e21c0d75253d",
+   "url": "https://councilof.ai/lib/csoai-verify.mjs",
+   "npm": "package csoai-verify prepared, not published: publishing needs the owner's npm token"
+  }
+ ],
+ "tested": {
+  "csoai-evidence-fabric": "clean venv, Python 3.9 and 3.12: the packaged renderers reproduce all 7 canonical golden files byte for byte; an UNMEASURED event carrying a number is refused by 5/5 renderers; verify returns VALID on a signed fixture and rejects 3/3 tamper controls",
+  "llama-stack-provider-csoai": "clean venv, llama-stack 0.7.3 (mcp 1.30.0): llama stack run, then POST benchmark and job, returned CONSISTENT, DIVERGENT, UNMEASURED, INVALID, UNVERIFIABLE_KEY",
+  "nat-csoai-evidence": "clean venv, nvidia-nat 1.9.0 with the [eval] extra: nat eval --skip_workflow returned the same five results with average_score None",
+  "llama-stack-csoai-eval": "helm lint --strict; rendered; the container start command installed the provider from PyPI and served a job outside Kubernetes",
+  "csoai-verify.mjs": "node --test against the built file: the SAFE pack FREEZE.signed.json is VALID; a one-byte record edit, a one-nibble signature edit and an unpinned key are rejected"
+ },
+ "not_measured": [
+  "No artefact has been installed on a live OpenShift, Kubernetes, Falcon, Splunk, AI Defense or Foundry tenant.",
+  "No official marketplace or directory lists any of these artefacts.",
+  "The Helm chart carries no provenance (.prov) signature yet; its sha256 is in index.yaml and in this signed record."
+ ],
+ "licence": {
+  "code": "Apache-2.0",
+  "text": "CC-BY-4.0"
+ }
+}
