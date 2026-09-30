@@ -4,7 +4,6 @@
   "probe_method": "JSON-RPC 2.0 over HTTPS POST: initialize -> tools/list, MCP protocolVersion 2024-11-05. A server counts as reachable only if initialize returned a JSON-RPC result.",
   "probe_host": "pod",
   "targets_file": "scripts/mcp-targets.json",
-  "probe_scope": "PRE-DEPLOY STAND-IN: every https://councilof.ai/* target was answered by https://83671987.councilof-ai.pages.dev (this branch's build, served locally or as a Pages preview), NOT by the live door; see `contacted` on each such server. Re-run scripts/mcp-probe.mjs without --door-origin after the deploy and commit the live observation.",
   "honesty_contract": [
     "last_probed is written ONLY by a probe that returned. If nothing answered it is null. No code path synthesises it.",
     "tools_count is derived from the length of the probed tools array. A catalogue's asserted tool count is never used as tools_count.",
@@ -28,8 +27,8 @@
         "probe_state": "UNVERIFIABLE from any machine that has not checked out gspc-os. Probe with scripts/mcp-stdio-probe.py on a host where the repo exists; commit its output before citing any number from it."
       }
     ],
-    "started": "2026-09-30T10:57:56.701Z",
-    "finished": "2026-09-30T10:57:58.563Z"
+    "started": "2026-09-30T17:20:48.135Z",
+    "finished": "2026-09-30T17:20:50.056Z"
   },
   "servers": [
     {
@@ -40,10 +39,10 @@
       "role": "primary",
       "alias_of": null,
       "status": "reachable",
-      "last_probed": "2026-09-30T10:57:57.886Z",
+      "last_probed": "2026-09-30T17:20:49.606Z",
       "http_status": 200,
       "protocol_version": "2024-11-05",
-      "server_version": "1.4.3",
+      "server_version": "1.4.4",
       "tools_count": 19,
       "tools": [
         {
@@ -167,9 +166,7 @@
       "error": null,
       "declared_by": "/.well-known/mcp/server-card.json -> endpoints.mcp.primary",
       "catalogue_source": null,
-      "catalogue_claim": null,
-      "contacted": "https://83671987.councilof-ai.pages.dev/mcp",
-      "stand_in_for": "https://councilof.ai/mcp"
+      "catalogue_claim": null
     },
     {
       "id": "csoai-gspc-mcp-fallback",
@@ -179,11 +176,11 @@
       "role": "fallback",
       "alias_of": "csoai-gspc-mcp",
       "status": "reachable",
-      "last_probed": "2026-09-30T10:57:58.426Z",
+      "last_probed": "2026-09-30T17:20:49.879Z",
       "http_status": 200,
       "protocol_version": "2024-11-05",
-      "server_version": "1.4.3",
-      "tools_count": 16,
+      "server_version": "1.4.4",
+      "tools_count": 19,
       "tools": [
         {
           "name": "board_totals",
@@ -258,6 +255,18 @@
           ]
         },
         {
+          "name": "evidence_bundle_preview",
+          "description": "For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject: the obligation record, its counsel-gate status and the already-signed measurement cards that are relevant to it (count plus the first cards, each with its verify link), read live from https://councilof.ai/api/evidence-bundle. Relevant-to is never a determination: no answer says satisfied or not satisfied, and zero relevant cards is answered EMPTY, never as an error and never as a clean bill. Article 53 output is evidence for review, not a legal determination. Evidence for obligation work — not a conformity assessment, certification, audit opinion or compliance determination; grants no status. Measurement, not certification. Verification of any card is free at https://councilof.ai/gspc-verify.",
+          "required_args": [
+            "obligation"
+          ]
+        },
+        {
+          "name": "route",
+          "description": "GSPC Route (free, decide-only). Applies YOUR policy and the fixed GSPC floor to a candidate set and returns the chosen candidate, the basis of the choice and an unsigned route record (csoai.evidence-event/0.1, profile csoai.route-evidence/0.1). Candidates are the GSPC MCP tools by default, or ones you declare: your models, your local GPU, MCP tools, A2A agents, x402 resources. Policy is Cedar: presets read-only, local-only, eu-only, no-unmeasured, plus forbid_providers and allow_kinds; anything the router does not understand grants nothing. For the quality axis you name it reads the live board (https://councilof.ai/api/gspc). Routing is not ranking: a choice is called a separated leader only when the board separated that comparison; otherwise it is TIE or UNTESTED and your tie_break decides. A candidate the board holds no number for is UNTESTED, never 0. Sponsor, bid and placement fields are ignored. The task text is hashed, never stored. Nothing is executed, called or charged; mode execute answers NOT_ENABLED. Measurement, not certification.",
+          "required_args": []
+        },
+        {
           "name": "commission_card",
           "description": "PAID (x402). Commission one signed card-v0 receipt (surface ras.commission) for a named subject on the frozen bank via https://councilof.ai/api/request-attestation. Re-serves every signed measurement card already on file for the subject; a payment never mints a MEASURED cell (fresh_run stays UNMEASURED until a published run exists). Without x_payment the tool returns the 402 challenge (accepts[] with asset, amount, payTo) plus a free preview of the cards already on file. Measurement, not certification — never a rank, a grade or a certificate. Verification stays free.",
           "required_args": [
@@ -282,6 +291,13 @@
           "required_args": [
             "from"
           ]
+        },
+        {
+          "name": "evidence_bundle",
+          "description": "PAID (x402). An evidence bundle for ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject via https://councilof.ai/api/evidence-bundle: OSCAL 1.1.0 assessment-results assembled only from already-signed measurement cards (each with its card bytes and Merkle inclusion proof), plus one manifest card-v0, signed when the signing key is present. Observations are relevant-to the obligation, never satisfied or not satisfied; zero relevant cards ships as an empty bundle, and the free preview says so first (preview=true here, or the free tool evidence_bundle_preview). Article 53 output is evidence for review, not a legal determination. Evidence for obligation work — not a conformity assessment, certification, audit opinion or compliance determination; grants no status. Measurement, not certification. Without x_payment the tool returns the 402 challenge, which is the only place terms appear. Verification of any card is free at https://councilof.ai/gspc-verify.",
+          "required_args": [
+            "obligation"
+          ]
         }
       ],
       "error": null,
@@ -297,10 +313,10 @@
       "role": "alias",
       "alias_of": "csoai-gspc-mcp",
       "status": "reachable",
-      "last_probed": "2026-09-30T10:57:58.524Z",
+      "last_probed": "2026-09-30T17:20:49.998Z",
       "http_status": 200,
       "protocol_version": "2024-11-05",
-      "server_version": "1.4.3",
+      "server_version": "1.4.4",
       "tools_count": 19,
       "tools": [
         {
@@ -424,9 +440,7 @@
       "error": null,
       "declared_by": "/.well-known/mcp/server-card.json -> endpoints.mcp.current",
       "catalogue_source": null,
-      "catalogue_claim": null,
-      "contacted": "https://83671987.councilof-ai.pages.dev/mcp",
-      "stand_in_for": "https://councilof.ai/mcp"
+      "catalogue_claim": null
     },
     {
       "id": "csoai-gspc-mcp-stdio",
@@ -436,7 +450,7 @@
       "role": "stdio",
       "alias_of": null,
       "status": "reachable",
-      "last_probed": "2026-09-30T10:57:58.563Z",
+      "last_probed": "2026-09-30T17:20:50.056Z",
       "http_status": null,
       "protocol_version": "2024-11-05",
       "server_version": "0.2.2",
