@@ -4,5 +4,6 @@
  */
 export { route, routeSummary, boardAxis, NOT_ENABLED } from "../../functions/_lib/route/route";
 export { buildCandidates } from "../../functions/_lib/route/candidates";
+export { ardListingSource, ARD_LISTINGS } from "../../functions/_lib/route/discovery";
 export { callerPolicy, renderCedar, cedarEntity, CEDAR_SCHEMA, FLOOR_CEDAR } from "../../functions/_lib/route/policy";
 export { computeEventId } from "../../functions/_lib/route/evidence";
