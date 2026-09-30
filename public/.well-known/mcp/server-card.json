@@ -8,7 +8,7 @@
     "title": "Council of AI — GSPC Measurement Tools",
     "version": "1.4.3"
   },
-  "description": "Independent AI-governance measurement body. Publishes the GSPC measurement board: quote totals.public_count from GET /api/gspc, never a typed count. Frozen item banks and published scoring code. Measurement only: not certification, not accreditation, no conformity assessment. MCP registry ai.councilof/gspc server 1.4.3 (io.github.CSOAI-ORG/gspc is its deprecated alias). 12 free tools at /mcp/free; 16 at /mcp (12 free + 4 metered). The npm package is versioned separately.",
+  "description": "Independent AI-governance measurement body. Publishes the GSPC measurement board: quote totals.public_count from GET /api/gspc, never a typed count. Frozen item banks and published scoring code. Measurement only: not certification, not accreditation, no conformity assessment. MCP registry ai.councilof/gspc server 1.4.3 (io.github.CSOAI-ORG/gspc is its deprecated alias). 13 free tools at /mcp/free; 17 at /mcp (13 free + 4 metered). The npm package is versioned separately.",
   "icon_url": "https://councilof.ai/csoai-icon.svg",
   "provider": {
     "name": "CSOAI Ltd",
@@ -24,10 +24,10 @@
     "mcp": {
       "primary": "https://councilof.ai/mcp",
       "current": "https://councilof.ai/mcp",
-      "stdio": "npx -y csoai-gspc-mcp@0.2.2",
-      "note": "Live door is https://councilof.ai/mcp (GET 200). HTTP tools/list is sixteen: twelve free readers plus four x402-metered evidence tools. witness_hash is quarantined and not advertised. Registry server 1.4.3.",
+      "stdio": "npx -y csoai-gspc-mcp@0.2.3",
+      "note": "Live door is https://councilof.ai/mcp (GET 200). HTTP tools/list is seventeen: thirteen free readers plus four x402-metered evidence tools. witness_hash is quarantined and not advertised. Registry server 1.4.3.",
       "free": "https://councilof.ai/mcp/free",
-      "free_note": "https://councilof.ai/mcp/free serves the twelve free readers only, from the same definitions and handlers as https://councilof.ai/mcp: no payment tool and no payment text. It is the address for chat clients and directories that list no payment software."
+      "free_note": "https://councilof.ai/mcp/free serves the thirteen free readers only, from the same definitions and handlers as https://councilof.ai/mcp: no payment tool and no payment text. It is the address for chat clients and directories that list no payment software."
     },
     "gspc_board": {
       "url": "https://councilof.ai/api/gspc",
@@ -49,18 +49,19 @@
       "measurement_index",
       "verify_capsule",
       "server_evidence",
+      "claim_reactions",
       "commission_card",
       "art50_marking_evidence",
       "rwa_evidence",
       "receipts_batch"
     ],
-    "total_tools": 16,
-    "free_tools": 12,
+    "total_tools": 17,
+    "free_tools": 13,
     "metered_tools": 4,
-    "tool_counts": "12 free tools at /mcp/free; 16 at /mcp (12 free + 4 metered). The npm package is versioned separately.",
+    "tool_counts": "13 free tools at /mcp/free; 17 at /mcp (13 free + 4 metered). The npm package is versioned separately.",
     "streaming": false,
     "auth_required": false,
-    "tool_names_sha256": "4d5671a50bf129615aaa82ef56a0382c1fd85c2781d41cef1b65f3e48a7b0134",
+    "tool_names_sha256": "6bd71ce297f40c3bd5939f12685a54688190c053725c62d2e08d143c0ecc97bc",
     "free_door_tool_names": [
       "board_totals",
       "get_axis",
@@ -73,9 +74,10 @@
       "mcp_trust",
       "measurement_index",
       "verify_capsule",
-      "server_evidence"
+      "server_evidence",
+      "claim_reactions"
     ],
-    "free_door_tool_names_sha256": "64fcfc150e8164eeb2ffadcd8378d10cd72e305efce52f1dfd317c43763c0974",
+    "free_door_tool_names_sha256": "2f6e1de06758f4f407cf9d960936193c930bfac99037f581c9a2f2f6933f6c4f",
     "tool_names_sha256_rule": "sha256 of the tool names from tools/list, sorted, joined by \"\\n\" (UTF-8)",
     "derived_from": "tools/list of https://councilof.ai/mcp (functions/mcp/gspc-tools.json + paid-tools.json) and of https://councilof.ai/mcp/free (gspc-tools.json)"
   },
@@ -930,6 +932,99 @@
           },
           "reason": {
             "type": "string"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      }
+    },
+    {
+      "name": "claim_reactions",
+      "title": "Read claim-maintenance reactions",
+      "description": "Read the claim-maintenance reaction projection from the signed, verified append-only claim-event feed. This is a read-only view: evidence freshness is NOT_EVALUATED, and a suggested recheck is not executed. It does not decide truth, create a GSPC measurement, admit evidence, correct or withdraw a claim, sign, anchor, publish, or pay. A LIVE result means the source feed verifies; it does not mean the claims are true or current. Measurement, not certification.",
+      "annotations": {
+        "title": "Read claim-maintenance reactions",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "since": {
+            "type": "integer",
+            "minimum": -1,
+            "default": -1,
+            "description": "Exclusive event-sequence cursor. Omit for the full projection."
+          }
+        },
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "enum": [
+              "LIVE",
+              "BAD_INPUT",
+              "UNREACHABLE"
+            ]
+          },
+          "schema": {
+            "type": "string",
+            "const": "csoai.claim-reactions/0.1"
+          },
+          "source": {
+            "type": "string"
+          },
+          "source_verification": {
+            "type": "string",
+            "enum": [
+              "VERIFIES"
+            ]
+          },
+          "source_as_of": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "evidence_freshness": {
+            "type": "string",
+            "const": "NOT_EVALUATED"
+          },
+          "authority_state": {
+            "type": "string"
+          },
+          "since_exclusive": {
+            "type": "integer"
+          },
+          "n_events": {
+            "type": "integer"
+          },
+          "n_recheck_required": {
+            "type": "integer"
+          },
+          "n_source_retry_required": {
+            "type": "integer"
+          },
+          "n_counter_reaction_required": {
+            "type": "integer"
+          },
+          "reactions": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "does_not_prove": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         },
         "required": [

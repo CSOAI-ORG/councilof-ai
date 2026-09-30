@@ -1,6 +1,6 @@
 # Council of AI GSPC (Layer 0)
 
-The `gspc` MCP server (https://councilof.ai/mcp, server 1.4.3) exposes 16 tools (12 free, 4 x402-metered).
+The `gspc` MCP server (https://councilof.ai/mcp, server 1.4.3) exposes 17 tools (13 free, 4 x402-metered).
 
 Free:
 - `board_totals` — Live GSPC board totals from https://councilof.ai/api/gspc.
@@ -15,6 +15,7 @@ Free:
 - `measurement_index` — Read the latest signed measurement-capsule index published at https://councilof.ai/measurement-capsules/latest.json: the index root over every capsule, each batch (adapter, kind, capsule count, measurement states, batch Merkle root, record sha256, record signature and OpenTimestamps state), the index's own board signature re-verified here against the pinned did:web:csoai.org#board-attestation-1 key, and the anchor states published beside it (OpenTimestamps, Rekor, XRPL) — PENDING is never called attested.
 - `verify_capsule` — Verify one measurement capsule.
 - `server_evidence` — Trust per server, not totals: every published measurement capsule about ONE endpoint URL across all batches — MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A card-signature state, self-parity cells for CSOAI's own doors, and any later adapter (e.g.
+- `claim_reactions` — Read the same signed-feed-verified claim-reaction projection shown to people.
 
 x402-metered:
 - `commission_card` — Commission one signed card-v0 receipt (surface ras.commission) for a named subject on the frozen bank via https://councilof.ai/api/request-attestation.

@@ -31,6 +31,42 @@ export const OPENAPI_SPEC = {
   },
   servers: [{ url: "https://councilof.ai" }],
   paths: {
+    "/api/claims/events": {
+      get: {
+        operationId: "getClaimEvents",
+        summary: "Read the verified append-only claim-event feed",
+        description:
+          "Returns JSONL only if the committed event bytes and signed daily head verify. Events describe recorded observations and workflow states; they are not findings about a claim. ?since is an inclusive sequence cursor. Re-derive the feed head independently using the linked recipe.",
+        parameters: [
+          { name: "since", in: "query", required: false, schema: { type: "integer", minimum: 0 }, description: "Inclusive event sequence cursor." },
+        ],
+        responses: { "200": { description: "Verified application/x-ndjson feed." }, "400": { description: "Malformed cursor." }, "503": { description: "Feed or signature did not verify; partial bytes are not returned." } },
+      },
+    },
+    "/api/claims/events/head": {
+      get: {
+        operationId: "getClaimEventsHead",
+        summary: "Read the signed claim-event feed head and verification checks",
+        description: "Returns the parsed and raw signed head with the route's verification checks and a command to re-derive it independently. Integrity is not a truth or freshness verdict about maintained claims.",
+        responses: { "200": { description: "Verified signed feed head." }, "503": { description: "Head did not verify." } },
+      },
+    },
+    "/api/claims/reactions": {
+      get: {
+        operationId: "getClaimReactions",
+        summary: "Read the verified claim-maintenance reaction projection",
+        description:
+          "Returns a read-only projection of the signed, verified claim-event feed. It may suggest a bounded recheck or counter-reaction, but does not execute either, decide truth, admit a GSPC measurement, sign, anchor, publish or pay. evidence_freshness is NOT_EVALUATED. A LIVE state means the source feed verifies, not that claims are true or current.",
+        parameters: [
+          { name: "since", in: "query", required: false, schema: { type: "integer", minimum: -1 }, description: "Exclusive event-sequence cursor; omit for the full projection." },
+        ],
+        responses: {
+          "200": { description: "Verified reaction projection." },
+          "400": { description: "Malformed cursor." },
+          "503": { description: "Source verification or projection unavailable; no cached result substituted." },
+        },
+      },
+    },
     "/api/gspc": {
       get: {
         operationId: "getBoard",

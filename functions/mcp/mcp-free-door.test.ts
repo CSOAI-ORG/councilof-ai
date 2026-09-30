@@ -68,7 +68,7 @@ beforeEach(() => {
 });
 afterEach(() => vi.unstubAllGlobals());
 
-describe("/mcp/free serves exactly the twelve free tools", () => {
+describe("/mcp/free serves exactly the free tool manifest", () => {
   it("routes /mcp and /mcp/free (with or without a trailing slash) and nothing else", () => {
     expect(doorFor("/mcp")).toBe("full");
     expect(doorFor("/mcp/")).toBe("full");
@@ -78,11 +78,11 @@ describe("/mcp/free serves exactly the twelve free tools", () => {
     expect(doorFor("/mcp/free/x")).toBeNull();
   });
 
-  it("tools/list returns the twelve free definitions, by name and in order, with their titles and annotations", async () => {
+  it("tools/list returns the free definitions, by name and in order, with their titles and annotations", async () => {
     const { response, message } = await rpc("/mcp/free", "tools/list");
     expect(response.status).toBe(200);
     const tools = message.result!.tools!;
-    expect(FREE_NAMES).toHaveLength(12);
+    expect(FREE_NAMES).toHaveLength(13);
     expect(tools.map((t) => t.name)).toEqual(FREE_NAMES);
     expect(tools).toEqual((FREE as { tools: Tool[] }).tools);
     for (const t of tools) {

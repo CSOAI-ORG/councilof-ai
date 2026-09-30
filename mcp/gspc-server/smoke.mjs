@@ -74,7 +74,7 @@ notify("notifications/initialized");
 const list = await rpc("tools/list");
 const names = list.result.tools.map((t) => t.name);
 console.log(`tools: ${names.join(", ")}`);
-const thirteen = [
+const seventeen = [
   "board_totals",
   "get_axis",
   "verify_card",
@@ -84,12 +84,16 @@ const thirteen = [
   "verify_inclusion",
   "x402_trust",
   "mcp_trust",
+  "measurement_index",
+  "verify_capsule",
+  "server_evidence",
+  "claim_reactions",
   "commission_card",
   "art50_marking_evidence",
   "rwa_evidence",
   "receipts_batch",
 ];
-expect("tools/list is the canonical thirteen names (9 free + 4 metered)", names.join(","), thirteen.join(","));
+expect("tools/list is the canonical seventeen names (13 free + 4 metered)", names.join(","), seventeen.join(","));
 
 // ---- live tools ----
 const totals = await rpc("tools/call", { name: "board_totals", arguments: {} });

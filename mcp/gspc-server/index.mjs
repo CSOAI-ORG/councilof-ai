@@ -831,6 +831,7 @@ const HANDLERS = {
   measurement_index: (a) => doorTool("measurement_index", a),
   verify_capsule: (a) => doorTool("verify_capsule", a),
   server_evidence: (a) => doorTool("server_evidence", a),
+  claim_reactions: (a) => doorTool("claim_reactions", a),
 };
 
 /* ----------------------------------------------------------------- transport */

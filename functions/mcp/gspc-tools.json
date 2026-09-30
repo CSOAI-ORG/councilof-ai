@@ -1,11 +1,11 @@
 {
   "schema": "csoai.gspc-mcp-tools/1",
-  "note": "ONE source of tool definitions for the GSPC MCP tools, shared by the stdio server (mcp/gspc-server/index.mjs) and the HTTP endpoint (functions/mcp/[[path]].ts) so the two surfaces cannot drift. Display text uses 'axis', never the plural \u2014 owner language ruling; code identifiers are exempt.",
+  "note": "ONE source of tool definitions for the GSPC MCP tools, shared by the stdio server (mcp/gspc-server/index.mjs) and the HTTP endpoint (functions/mcp/[[path]].ts) so the two surfaces cannot drift. Display text uses 'axis', never the plural — owner language ruling; code identifiers are exempt.",
   "tools": [
     {
       "name": "board_totals",
       "title": "Live GSPC board totals",
-      "description": "Live GSPC board totals from https://councilof.ai/api/gspc. Returns the slot count and the measured count as two labelled numbers WITH their kind \u2014 a slot is a declared position on the board, a measurement is a real run behind it; the two are never summed and never swapped \u2014 plus the board's separation line, and as_of dates for the board and for this fetch. Compact by default; pass detail \"full\" for the long-form count grammar, the per-family counts and the board's full measured_on block. We measure, never certify. If the board cannot be fetched the answer is a distinct UNREACHABLE state: no cached number is ever presented as live.",
+      "description": "Live GSPC board totals from https://councilof.ai/api/gspc. Returns the slot count and the measured count as two labelled numbers WITH their kind — a slot is a declared position on the board, a measurement is a real run behind it; the two are never summed and never swapped — plus the board's separation line, and as_of dates for the board and for this fetch. Compact by default; pass detail \"full\" for the long-form count grammar, the per-family counts and the board's full measured_on block. We measure, never certify. If the board cannot be fetched the answer is a distinct UNREACHABLE state: no cached number is ever presented as live.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -78,7 +78,7 @@
     {
       "name": "get_axis",
       "title": "One GSPC board axis",
-      "description": "One axis row from the live GSPC board at https://councilof.ai/api/gspc \u2014 every axis the board carries, behavioural and financial families alike, addressed by the axis id exactly as the board spells it: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer \u2014 a declared slot with no run behind it, published so the gap is visible \u2014 never an error and never a zero. Never a certification.",
+      "description": "One axis row from the live GSPC board at https://councilof.ai/api/gspc — every axis the board carries, behavioural and financial families alike, addressed by the axis id exactly as the board spells it: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -149,7 +149,7 @@
     {
       "name": "verify_card",
       "title": "Verify a signed measurement card (free)",
-      "description": "Verify a signed gspc.measurement-card under the published rule (https://councilof.ai/signed/HOW-TO-VERIFY.md): recompute the id from the canonical body bytes, then check the Ed25519 signature under a key PINNED in this verifier and published in the did:web:csoai.org DID document: #card-attestation-1 (the card key of the signed card index) or #card-attestation-2 (the card key added on rotation, 27 Sep 2026; a card names the key it was signed under), plus the board key for the cards it signed. pinned_key in the result names the key that matched. A card that carries its own key proves only that the file is self-consistent \u2014 anyone can alter a body and sign it with a key they just generated \u2014 so an inline key outside the pinned set is reported INVALID, and a DID key reference outside it UNCHECKABLE. Three verdicts, never two: VALID, INVALID (with the reason), or UNCHECKABLE when the check could not be completed \u2014 'could not check' is a different claim from 'forged'. Accepts the card as a JSON object, a JSON string, a councilof.ai / csoai.org URL, or a 64-hex card id (the record id shown on the site and the card field of list_cards), which resolves to https://councilof.ai/signed/cards/{id}.json. Never a certification.",
+      "description": "Verify a signed gspc.measurement-card under the published rule (https://councilof.ai/signed/HOW-TO-VERIFY.md): recompute the id from the canonical body bytes, then check the Ed25519 signature under a key PINNED in this verifier and published in the did:web:csoai.org DID document: #card-attestation-1 (the card key of the signed card index) or #card-attestation-2 (the card key added on rotation, 27 Sep 2026; a card names the key it was signed under), plus the board key for the cards it signed. pinned_key in the result names the key that matched. A card that carries its own key proves only that the file is self-consistent — anyone can alter a body and sign it with a key they just generated — so an inline key outside the pinned set is reported INVALID, and a DID key reference outside it UNCHECKABLE. Three verdicts, never two: VALID, INVALID (with the reason), or UNCHECKABLE when the check could not be completed — 'could not check' is a different claim from 'forged'. Accepts the card as a JSON object, a JSON string, a councilof.ai / csoai.org URL, or a 64-hex card id (the record id shown on the site and the card field of list_cards), which resolves to https://councilof.ai/signed/cards/{id}.json. Never a certification.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -272,7 +272,7 @@
     {
       "name": "list_cards",
       "title": "List signed card index rows",
-      "description": "The published signed-card index (https://councilof.ai/signed/card_index.json): what the index declares (n_cards) and how many rows it actually carries, reported next to \u2014 never reconciled with \u2014 the count the card store endpoint (https://councilof.ai/api/cards) reports for itself. Two labelled numbers from two surfaces; if they disagree, this tool shows the disagreement rather than picking one. Optional filters return recent rows: axis, limit. Each row carries card_url, the signed body; pass it, or the row's 64-hex card id, to verify_card.",
+      "description": "The published signed-card index (https://councilof.ai/signed/card_index.json): what the index declares (n_cards) and how many rows it actually carries, reported next to — never reconciled with — the count the card store endpoint (https://councilof.ai/api/cards) reports for itself. Two labelled numbers from two surfaces; if they disagree, this tool shows the disagreement rather than picking one. Optional filters return recent rows: axis, limit. Each row carries card_url, the signed body; pass it, or the row's 64-hex card id, to verify_card.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -541,7 +541,7 @@
     {
       "name": "x402_trust",
       "title": "x402 catalog trust snapshot",
-      "description": "GET the latest x402 catalog trust snapshot: counts of how many catalogued x402 resources open a correct 402 challenge vs how many are phantom on the wire. Counts only by doctrine \u2014 host details withheld; a 402 is NOT delivery; measurement, never certification.",
+      "description": "GET the latest x402 catalog trust snapshot: counts of how many catalogued x402 resources open a correct 402 challenge vs how many are phantom on the wire. Counts only by doctrine — host details withheld; a 402 is NOT delivery; measurement, never certification.",
       "inputSchema": {
         "type": "object",
         "properties": {},
@@ -592,7 +592,7 @@
     {
       "name": "mcp_trust",
       "title": "MCP handshake census snapshot",
-      "description": "GET the latest MCP handshake trust snapshot (https://councilof.ai/interop/mcp-trust/latest.json): counts of how many internet-facing MCP servers answer a correct initialize handshake, how many respond with an auth challenge, and how many are unreachable. Counts only by doctrine \u2014 host details withheld by design. A partial round or a cap change is disclosed in the snapshot. Measurement, never certification. Three states: VALID (fetched), UNREACHABLE (could not fetch), UNCHECKABLE (body unreadable).",
+      "description": "GET the latest MCP handshake trust snapshot (https://councilof.ai/interop/mcp-trust/latest.json): counts of how many internet-facing MCP servers answer a correct initialize handshake, how many respond with an auth challenge, and how many are unreachable. Counts only by doctrine — host details withheld by design. A partial round or a cap change is disclosed in the snapshot. Measurement, never certification. Three states: VALID (fetched), UNREACHABLE (could not fetch), UNCHECKABLE (body unreadable).",
       "inputSchema": {
         "type": "object",
         "properties": {},
@@ -619,7 +619,7 @@
           },
           "partial": {
             "type": "boolean",
-            "description": "true whenever the enumeration did not complete \u2014 a cap-limited read is partial"
+            "description": "true whenever the enumeration did not complete — a cap-limited read is partial"
           },
           "partial_reason": {
             "type": [
@@ -660,7 +660,7 @@
     {
       "name": "measurement_index",
       "title": "Measurement-capsule index",
-      "description": "Read the latest signed measurement-capsule index published at https://councilof.ai/measurement-capsules/latest.json: the index root over every capsule, each batch (adapter, kind, capsule count, measurement states, batch Merkle root, record sha256, record signature and OpenTimestamps state), the index's own board signature re-verified here against the pinned did:web:csoai.org#board-attestation-1 key, and the anchor states published beside it (OpenTimestamps, Rekor, XRPL) \u2014 PENDING is never called attested. States only: measurement, not endorsement; no verdict, score or ranking. NOT_PUBLISHED when no index is served; UNREACHABLE when the source could not be fetched.",
+      "description": "Read the latest signed measurement-capsule index published at https://councilof.ai/measurement-capsules/latest.json: the index root over every capsule, each batch (adapter, kind, capsule count, measurement states, batch Merkle root, record sha256, record signature and OpenTimestamps state), the index's own board signature re-verified here against the pinned did:web:csoai.org#board-attestation-1 key, and the anchor states published beside it (OpenTimestamps, Rekor, XRPL) — PENDING is never called attested. States only: measurement, not endorsement; no verdict, score or ranking. NOT_PUBLISHED when no index is served; UNREACHABLE when the source could not be fetched.",
       "annotations": {
         "title": "Measurement-capsule index",
         "readOnlyHint": true,
@@ -731,7 +731,7 @@
     {
       "name": "verify_capsule",
       "title": "Verify one measurement capsule",
-      "description": "Verify one measurement capsule. Pass capsule_json as the capsule's JSON TEXT (exact: number lexemes are kept) or as an object. Recomputes capsule_id (sha256 of the canonical JSON without capsule_id), picks the rule by the capsule's schema (csoai.measurement-capsule/0.2: RFC 6962 Merkle with 0x00/0x01 domain separation; the superseded v0.1 capsule schema: the v0.1 rule), finds the published batch of the same kind, recomputes that batch's root from its published leaves, and returns the audit path of this capsule against the root named by the signed index. States: INCLUDED, NOT_INCLUDED, ID_MISMATCH, UNCHECKABLE, NOT_PUBLISHED. Verifying is free forever. It proves the bytes were published and bound; what they measured is the capsule's own measurement_state and limitations \u2014 measurement, not endorsement.",
+      "description": "Verify one measurement capsule. Pass capsule_json as the capsule's JSON TEXT (exact: number lexemes are kept) or as an object. Recomputes capsule_id (sha256 of the canonical JSON without capsule_id), picks the rule by the capsule's schema (csoai.measurement-capsule/0.2: RFC 6962 Merkle with 0x00/0x01 domain separation; the superseded v0.1 capsule schema: the v0.1 rule), finds the published batch of the same kind, recomputes that batch's root from its published leaves, and returns the audit path of this capsule against the root named by the signed index. States: INCLUDED, NOT_INCLUDED, ID_MISMATCH, UNCHECKABLE, NOT_PUBLISHED. Verifying is free forever. It proves the bytes were published and bound; what they measured is the capsule's own measurement_state and limitations — measurement, not endorsement.",
       "annotations": {
         "title": "Verify one measurement capsule",
         "readOnlyHint": true,
@@ -797,7 +797,7 @@
     {
       "name": "server_evidence",
       "title": "Every published capsule about one endpoint",
-      "description": "Trust per server, not totals: every published measurement capsule about ONE endpoint URL across all batches \u2014 MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A card-signature state, self-parity cells for CSOAI's own doors, and any later adapter (e.g. tool drift) \u2014 each with its measurement_state, observed_at, correction_pointer, limitations, batch Merkle root and an inclusion pointer (verify_capsule re-derives inclusion). Read from a static per-endpoint shard keyed by sha256 of the normalised URL. An endpoint with no capsule answers NOT_MEASURED with an empty list \u2014 never an error and never a clean bill. No verdict, score or ranking: measurement, not endorsement.",
+      "description": "Trust per server, not totals: every published measurement capsule about ONE endpoint URL across all batches — MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A card-signature state, self-parity cells for CSOAI's own doors, and any later adapter (e.g. tool drift) — each with its measurement_state, observed_at, correction_pointer, limitations, batch Merkle root and an inclusion pointer (verify_capsule re-derives inclusion). Read from a static per-endpoint shard keyed by sha256 of the normalised URL. An endpoint with no capsule answers NOT_MEASURED with an empty list — never an error and never a clean bill. No verdict, score or ranking: measurement, not endorsement.",
       "annotations": {
         "title": "Every published capsule about one endpoint",
         "readOnlyHint": true,
@@ -852,6 +852,99 @@
           },
           "reason": {
             "type": "string"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      }
+    },
+    {
+      "name": "claim_reactions",
+      "title": "Read claim-maintenance reactions",
+      "description": "Read the claim-maintenance reaction projection from the signed, verified append-only claim-event feed. This is a read-only view: evidence freshness is NOT_EVALUATED, and a suggested recheck is not executed. It does not decide truth, create a GSPC measurement, admit evidence, correct or withdraw a claim, sign, anchor, publish, or pay. A LIVE result means the source feed verifies; it does not mean the claims are true or current. Measurement, not certification.",
+      "annotations": {
+        "title": "Read claim-maintenance reactions",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "since": {
+            "type": "integer",
+            "minimum": -1,
+            "default": -1,
+            "description": "Exclusive event-sequence cursor. Omit for the full projection."
+          }
+        },
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "enum": [
+              "LIVE",
+              "BAD_INPUT",
+              "UNREACHABLE"
+            ]
+          },
+          "schema": {
+            "type": "string",
+            "const": "csoai.claim-reactions/0.1"
+          },
+          "source": {
+            "type": "string"
+          },
+          "source_verification": {
+            "type": "string",
+            "enum": [
+              "VERIFIES"
+            ]
+          },
+          "source_as_of": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "evidence_freshness": {
+            "type": "string",
+            "const": "NOT_EVALUATED"
+          },
+          "authority_state": {
+            "type": "string"
+          },
+          "since_exclusive": {
+            "type": "integer"
+          },
+          "n_events": {
+            "type": "integer"
+          },
+          "n_recheck_required": {
+            "type": "integer"
+          },
+          "n_source_retry_required": {
+            "type": "integer"
+          },
+          "n_counter_reaction_required": {
+            "type": "integer"
+          },
+          "reactions": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "does_not_prove": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         },
         "required": [

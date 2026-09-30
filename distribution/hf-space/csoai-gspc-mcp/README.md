@@ -17,7 +17,7 @@ tags:
 
 A thin Gradio app over [`csoai-gspc`](https://pypi.org/project/csoai-gspc/) (0.2.20260928.1+) with `mcp_server=True`:
 three functions become MCP tools at `/gradio_api/mcp/sse` — board totals, one axis row, and a
-three-state card verify (VALID / INVALID / UNCHECKABLE). The canonical remote server with 16 tools (12 free, 4 x402-metered) is
+three-state card verify (VALID / INVALID / UNCHECKABLE). The canonical remote server with 17 tools (13 free, 4 x402-metered) is
 https://councilof.ai/mcp; this Space is a mirror door, not a second authority. The board GET is the authority.
 
 Measurement only: a card is evidence, never a grade, mark or endorsement. Verification is free.

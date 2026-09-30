@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "ai.councilof/gspc",
   "title": "Council of AI GSPC",
-  "description": "16 HTTP tools (12 free, 4 x402). GSPC board + Ed25519 + trust counts. Measure, never certify.",
+  "description": "17 HTTP tools (13 free, 4 x402). GSPC board, signed evidence and claim-maintenance reactions. Measure, never certify.",
   "repository": {
     "url": "https://github.com/CSOAI-ORG/councilof-ai",
     "source": "github",
@@ -20,10 +20,11 @@
     {
       "registryType": "npm",
       "identifier": "csoai-gspc-mcp",
-      "version": "0.2.2",
+      "version": "0.2.3",
       "transport": {
         "type": "stdio"
-      }
+      },
+      "runtimeHint": "npx -y csoai-gspc-mcp@0.2.3"
     }
   ]
 }

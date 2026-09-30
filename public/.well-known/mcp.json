@@ -8,7 +8,7 @@
       "display_name": "GSPC Measurement Tools",
       "url": "https://councilof.ai/mcp",
       "version": "1.4.3",
-      "stdio": "npx -y csoai-gspc-mcp@0.2.2",
+      "stdio": "npx -y csoai-gspc-mcp@0.2.3",
       "auth_required": false,
       "registry": {
         "name": "ai.councilof/gspc",
@@ -29,17 +29,18 @@
         "mcp_trust",
         "measurement_index",
         "verify_capsule",
-        "server_evidence"
+        "server_evidence",
+        "claim_reactions"
       ],
-      "free_tool_names_sha256": "64fcfc150e8164eeb2ffadcd8378d10cd72e305efce52f1dfd317c43763c0974"
+      "free_tool_names_sha256": "2f6e1de06758f4f407cf9d960936193c930bfac99037f581c9a2f2f6933f6c4f"
     }
   ],
   "catalogue": "https://councilof.ai/mcp",
   "gspc_board": "https://councilof.ai/api/gspc",
   "server_card": "https://councilof.ai/.well-known/mcp/server-card.json",
   "measured": {
-    "total_tools": 16,
-    "free_tools": 12,
+    "total_tools": 17,
+    "free_tools": 13,
     "metered_tools": 4,
     "server_count": 1,
     "tools": [
@@ -55,14 +56,15 @@
       "measurement_index",
       "verify_capsule",
       "server_evidence",
+      "claim_reactions",
       "commission_card",
       "art50_marking_evidence",
       "rwa_evidence",
       "receipts_batch"
     ],
-    "tool_counts": "12 free tools at /mcp/free; 16 at /mcp (12 free + 4 metered). The npm package is versioned separately.",
-    "note": "POST /mcp tools/list: twelve free readers plus four x402-metered evidence tools. witness_hash remains quarantined and is not advertised. MCP Registry server 1.4.3 points here. A listing does not prove paid settlement or delivery.",
-    "tool_names_sha256": "4d5671a50bf129615aaa82ef56a0382c1fd85c2781d41cef1b65f3e48a7b0134",
+    "tool_counts": "13 free tools at /mcp/free; 17 at /mcp (13 free + 4 metered). The npm package is versioned separately.",
+    "note": "POST /mcp tools/list: thirteen free readers plus four x402-metered evidence tools. witness_hash remains quarantined and is not advertised. MCP Registry server 1.4.3 points here. A listing does not prove paid settlement or delivery.",
+    "tool_names_sha256": "6bd71ce297f40c3bd5939f12685a54688190c053725c62d2e08d143c0ecc97bc",
     "tool_names_sha256_rule": "sha256 of the tool names from tools/list, sorted, joined by \"\\n\" (UTF-8)",
     "derived_from": "tools/list of https://councilof.ai/mcp: functions/mcp/gspc-tools.json + paid-tools.json"
   },
@@ -80,13 +82,14 @@
       "measurement_index",
       "verify_capsule",
       "server_evidence",
+      "claim_reactions",
       "commission_card",
       "art50_marking_evidence",
       "rwa_evidence",
       "receipts_batch"
     ],
     "url": "https://councilof.ai/mcp",
-    "note": "The product door: twelve free readers plus four x402-metered evidence tools. The public-root readers answer VALID / INVALID / NOT_IN_THIS_CORPUS / UNCHECKABLE, never a GSPC grade. No jail run from MCP."
+    "note": "The product door: thirteen free readers plus four x402-metered evidence tools. The public-root readers answer VALID / INVALID / NOT_IN_THIS_CORPUS / UNCHECKABLE, never a GSPC grade. No jail run from MCP."
   },
   "provider": {
     "name": "CSOAI Ltd",

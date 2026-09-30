@@ -18,6 +18,7 @@ export type ClaimReaction = {
   subject_sealed_id: string | null;
   claim_ref: string | null;
   event_state: string | null;
+  evidence_freshness: "NOT_EVALUATED";
   reaction_state: ReactionState;
   reason: string;
   recommended_checks: string[];
@@ -35,27 +36,29 @@ function planFor(row: Row, previousRecorded: string | undefined): ClaimReaction 
   const kind = str(row.kind);
 
   let reaction_state: ReactionState = "NO_CHANGE";
-  let reason = "The event records no claim-state change that requires a bounded re-check.";
+  let reason = "No re-check trigger is recorded. This is not a claim that the evidence is fresh.";
 
+  // Correction and withdrawal must outrank SIGNED: a signature is delivery integrity,
+  // not permission to suppress a later correction/review signal.
   if (kind === "atoms" && row.baseline === true) {
     reaction_state = "BASELINE_ONLY";
     reason = "This atoms event establishes a baseline; a baseline is not evidence of a later change.";
-  } else if (objectState === "SIGNED") {
-    reaction_state = "DELIVERY_RECEIPT";
-    reason = "The event records a signed delivery state; signing is a receipt, not a new finding.";
   } else if (
     change === "CORRECTED" ||
     change === "QUARANTINED" ||
+    change === "WITHDRAWN" ||
     (recorded && previousRecorded !== undefined && recorded !== previousRecorded)
   ) {
     reaction_state = "RECHECK_REQUIRED";
-    reason =
-      change === "CORRECTED" || change === "QUARANTINED"
-        ? "The event change_state is " + change + "; affected dependencies require bounded re-verification."
-        : "The recorded claim state changed from " + previousRecorded + " to " + recorded + "; affected dependencies require bounded re-verification.";
+    reason = change === "CORRECTED" || change === "QUARANTINED" || change === "WITHDRAWN"
+      ? `The event change_state is ${change}; affected dependencies require bounded re-verification.`
+      : `The recorded claim state changed from ${previousRecorded} to ${recorded}; affected dependencies require bounded re-verification.`;
   } else if (objectState === "FETCH_FAILED" || change === "UNCONFIRMED" || objectState === "UNCONFIRMED") {
     reaction_state = "SOURCE_RETRY_REQUIRED";
     reason = "The source observation did not complete strongly enough to support a change finding.";
+  } else if (objectState === "SIGNED") {
+    reaction_state = "DELIVERY_RECEIPT";
+    reason = "The event records a signed delivery state; signing is a receipt, not a new finding.";
   }
 
   const challenge = reaction_state === "RECHECK_REQUIRED" || reaction_state === "SOURCE_RETRY_REQUIRED";
@@ -65,6 +68,7 @@ function planFor(row: Row, previousRecorded: string | undefined): ClaimReaction 
     subject_sealed_id: str(row.subject_sealed_id),
     claim_ref: str(row.claim),
     event_state: change ?? objectState,
+    evidence_freshness: "NOT_EVALUATED",
     reaction_state,
     reason,
     recommended_checks: challenge
@@ -84,8 +88,7 @@ function planFor(row: Row, previousRecorded: string | undefined): ClaimReaction 
             "preserve conflicting or insufficient evidence instead of forcing a verdict",
           ]
         : [],
-      boundary:
-        "Counter-reaction challenges the proposed re-check path; it does not decide whether the maintained claim is true or false.",
+      boundary: "Counter-reaction challenges the proposed re-check path; it does not decide whether the maintained claim is true or false.",
     },
   };
 }
@@ -99,7 +102,7 @@ export function deriveClaimReactions(lines: string[], since = -1): ClaimReaction
     const claim = str(row.claim);
     const subject = str(row.subject_sealed_id);
     const recorded = str(row.recorded_state);
-    const key = claim && claim !== "*" ? (subject ?? "unknown") + ":" + claim : null;
+    const key = claim && claim !== "*" ? `${subject ?? "unknown"}:${claim}` : null;
     const prior = key ? previous.get(key) : undefined;
     const seq = Number.isInteger(row.seq) ? Number(row.seq) : -1;
     if (seq > since) out.push(planFor(row, prior));

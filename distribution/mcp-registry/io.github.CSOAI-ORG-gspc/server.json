@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.CSOAI-ORG/gspc",
   "title": "Council of AI GSPC",
-  "description": "16 tools (12 free, 4 x402-metered): GSPC board, evidence, Ed25519 card verify. Measurement only.",
+  "description": "17 tools (13 free, 4 x402-metered): GSPC board, evidence, Ed25519 card verify. Measurement only.",
   "repository": {
     "url": "https://github.com/CSOAI-ORG/councilof-ai",
     "source": "github",
@@ -20,7 +20,7 @@
     {
       "registryType": "npm",
       "identifier": "csoai-gspc-mcp",
-      "version": "0.2.2",
+      "version": "0.2.3",
       "transport": {
         "type": "stdio"
       }
@@ -46,7 +46,8 @@
           "mcp_trust",
           "measurement_index",
           "verify_capsule",
-          "server_evidence"
+          "server_evidence",
+          "claim_reactions"
         ],
         "paid": [
           "commission_card",

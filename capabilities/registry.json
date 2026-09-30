@@ -2853,6 +2853,19 @@
       "payment": "free"
     },
     {
+      "id": "claim_reactions",
+      "protocols": [
+        "mcp"
+      ],
+      "title": "claim_reactions",
+      "description": "Read the same signed-feed-verified claim-reaction projection shown to people. This read-only projection records bounded recheck and counter-reaction suggestions; evidence freshness remains NOT_EVALUATED. It does not decide truth, execute a recheck, create or admit a GSPC measurement, correct or withdraw claims, sign, anchor, publish, or pay. A LIVE response says the event feed verifies, not that the claim is true or current. Measurement, not certification.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "both",
+      "payment": "free"
+    },
+    {
       "id": "receipts_batch",
       "protocols": [
         "mcp"
@@ -3110,6 +3123,45 @@
       "method": "GET",
       "lifecycle": "LIVE",
       "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-claims-reactions",
+      "protocols": [
+        "http"
+      ],
+      "title": "Claim-maintenance reactions",
+      "description": "Read-only projection of the signed, verified claim-event feed. May suggest a recheck and counter-reaction; evidence_freshness is NOT_EVALUATED. Does not execute checks, decide truth, admit GSPC measurements, sign, anchor, publish or pay. A verified source feed is not proof that a claim is true or current.",
+      "endpoint": "/api/claims/reactions",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "both",
+      "payment": "free"
+    },
+    {
+      "id": "api-claims-events",
+      "protocols": [
+        "http"
+      ],
+      "title": "Claim-maintenance event feed",
+      "description": "Read the append-only claim-event feed only when its bytes, signed head and pinned board signature verify. JSONL lines preserve the hash chain; ?since is an inclusive line sequence. An event is not a claim finding. No score, rank, admission or automated external action is produced.",
+      "endpoint": "/api/claims/events",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "both",
+      "payment": "free"
+    },
+    {
+      "id": "api-claims-events-head",
+      "protocols": [
+        "http"
+      ],
+      "title": "Signed claim-event feed head",
+      "description": "Read the signed head for the append-only claim-event feed. Verification establishes integrity of the published feed head, not truth or freshness of any maintained claim.",
+      "endpoint": "/api/claims/events/head",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "both",
       "payment": "free"
     }
   ]

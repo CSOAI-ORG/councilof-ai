@@ -5,7 +5,7 @@
  * #19. /connect-gspc/ said "Seven free read-only tools" and "13 tools", the home page 16,
  * /connect/claude/ 12 and npm 0.2.2 "eight free readers" — for two doors. Every surface that states
  * a count now either derives it from the files tools/list serves or carries the one sentence:
- *   "12 free tools at /mcp/free; 16 at /mcp (12 free + 4 metered). The npm package is versioned separately."
+ *   "13 free tools at /mcp/free; 17 at /mcp (13 free + 4 metered). The npm package is versioned separately."
  * with every number an array length.
  *
  * #24. /.well-known/mcp/server-card.json had no tools[] and no version and named four axes;
@@ -43,8 +43,8 @@ describe("#19 one tool-count sentence, every number derived", () => {
   it("with today's fleet it reads exactly the audit's sentence", () => {
     // The fleet lock (tool-fleet.lock.json) is 12 + 4; if the fleet changes, the lock changes in the
     // same commit and this literal is the one line to update.
-    if (nFree === 12 && nPaid === 4) {
-      expect(EXPECTED).toBe("12 free tools at /mcp/free; 16 at /mcp (12 free + 4 metered). The npm package is versioned separately.");
+    if (nFree === 13 && nPaid === 4) {
+      expect(EXPECTED).toBe("13 free tools at /mcp/free; 17 at /mcp (13 free + 4 metered). The npm package is versioned separately.");
     }
   });
 

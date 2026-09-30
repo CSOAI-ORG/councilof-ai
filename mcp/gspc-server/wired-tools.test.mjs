@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Drive the shipped stdio server: tools/list must be exactly the names that
- * tools/call actually runs — the twelve free tools and the four x402-metered ones.
+ * tools/call actually runs — the free readers and the four x402-metered ones.
  * A listed tool that does not run, or a running tool that is not listed, fails here.
  * Spawns index.mjs — not a reimplementation.
  */
@@ -23,6 +23,7 @@ const FREE = [
   "measurement_index",
   "verify_capsule",
   "server_evidence",
+  "claim_reactions",
 ];
 const PAID = [
   "commission_card",
@@ -60,6 +61,11 @@ const routeServer = createServer((req, res) => {
       axes: [{ axis: "governance", family: "governance", status: "MEASURED", n: 1 }],
     });
   }
+  if (url.pathname === "/api/claims/reactions") return answer(res, 200, {
+    state: "LIVE", schema: "csoai.claim-reactions/0.1", source_verification: "VERIFIES",
+    evidence_freshness: "NOT_EVALUATED", authority_state: "NONE", n_events: 0,
+    n_counter_reaction_required: 0, reactions: [],
+  });
   if (url.pathname === "/signed/card_index.json") return answer(res, 200, { n_cards: 0, cards: [] });
   if (url.pathname === "/api/cards") return answer(res, 200, { cards: { count: 0, signed: 0 } });
   if (url.pathname === "/root.json") return answer(res, 200, { kind: "public-root", card_count: 0, merkle_root: "0".repeat(64) });
@@ -77,7 +83,9 @@ const routeServer = createServer((req, res) => {
       const m = JSON.parse(body);
       const name = m.params?.name;
       const sc =
-        name === "server_evidence"
+        name === "claim_reactions"
+          ? { state: "LIVE", schema: "csoai.claim-reactions/0.1", source_verification: "VERIFIES", evidence_freshness: "NOT_EVALUATED", authority_state: "NONE", n_events: 0, n_counter_reaction_required: 0, reactions: [] }
+          : name === "server_evidence"
           ? { state: "NOT_MEASURED", doctrine: "measurement, not endorsement", capsules: [], n_capsules: 0 }
           : name === "verify_capsule"
             ? { state: "UNCHECKABLE", doctrine: "measurement, not endorsement", reason: "fixture" }
@@ -166,6 +174,7 @@ const freeCalls = {
   measurement_index: {},
   verify_capsule: { capsule_json: "{}" },
   server_evidence: { endpoint_url: "https://nobody.example/mcp" },
+  claim_reactions: {},
 };
 const freeResults = new Map();
 for (const name of FREE) {
@@ -196,6 +205,8 @@ check(
     typeof mcpTrust?.headline === "string" && mcpTrust.headline.length > 0 &&
     mcpTrust?.not_a_certification === true,
 );
+
+check("claim_reactions accepts a verified read-only projection from the HTTP door", freeResults.get("claim_reactions")?.result?.structuredContent?.state === "LIVE" && freeResults.get("claim_reactions")?.result?.structuredContent?.evidence_freshness === "NOT_EVALUATED");
 
 const evidence = freeResults.get("server_evidence")?.result?.structuredContent;
 check(

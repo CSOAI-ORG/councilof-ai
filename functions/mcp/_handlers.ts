@@ -126,6 +126,10 @@ function sharedToolSummary(
       return `${payload.state ?? "?"} — ${(payload.headline as string) || "catalog trust counts"}.`;
     case "mcp_trust":
       return `${payload.state ?? "?"} — MCP handshake census${payload.partial ? " (partial round)" : ""}.`;
+    case "claim_reactions":
+      return payload.state === "LIVE"
+        ? `LIVE verified claim-reaction projection — ${payload.n_events ?? 0} event(s); freshness is ${payload.evidence_freshness ?? "not evaluated"}. No action is executed.`
+        : `${payload.state ?? "UNREACHABLE"} — claim-reaction projection is unavailable; no cached result is substituted.`;
     default:
       return name;
   }
@@ -155,9 +159,13 @@ export async function sharedToolResult(
                 ? await verifyInclusionTool(origin, args)
                 : name === "x402_trust"
                   ? await x402TrustTool(origin)
-                  : name === "mcp_trust"
-                    ? await mcpTrustTool(origin)
+                : name === "mcp_trust"
+                  ? await mcpTrustTool(origin)
+                  : name === "claim_reactions"
+                    ? await claimReactionsTool(args, origin)
                     : await verifyCardThreeState(args, origin);
+  const isError = (payload as Record<string, unknown>).state === "UNREACHABLE" ||
+    (payload as Record<string, unknown>).state === "BAD_INPUT";
   return {
     content: [
       {
@@ -166,8 +174,32 @@ export async function sharedToolResult(
       },
     ],
     structuredContent: payload,
-    isError: false,
+    isError,
   } as McpToolResult;
+}
+
+/**
+ * Read the same verified HTTP projection served to the human dashboard. This adapter does not
+ * recompute, admit, recheck, sign, anchor, publish, or pay; it only transports one existing record.
+ */
+async function claimReactionsTool(args: Record<string, unknown>, origin: string) {
+  const rawSince = args.since;
+  const since = rawSince === undefined ? -1 : rawSince;
+  if (typeof since !== "number" || !Number.isInteger(since) || since < -1) {
+    return { state: "BAD_INPUT", error: "since must be an integer event sequence >= -1" };
+  }
+  const url = new URL("/api/claims/reactions", origin);
+  if (since !== -1) url.searchParams.set("since", String(since));
+  try {
+    const response = await fetch(url, { headers: { accept: "application/json" } });
+    const payload = await response.json() as Record<string, unknown>;
+    if (!response.ok || payload.state !== "LIVE" || payload.schema !== "csoai.claim-reactions/0.1" || payload.source_verification !== "VERIFIES") {
+      return { state: "UNREACHABLE", error: "reaction_projection_not_verified", http_status: response.status, observed_state: payload.state ?? null };
+    }
+    return payload;
+  } catch {
+    return { state: "UNREACHABLE", error: "reaction_projection_unreachable" };
+  }
 }
 
 export async function handleSharedTool(

@@ -100,6 +100,8 @@ type Register = {
   subjects?: SubjectRow[];
   disclosures?: Array<{ registry_id: string; quoted: string; disclosure: string }>;
 };
+type Reaction = { event_seq: number; observed_at: string | null; claim_ref: string | null; reaction_state: string; reason: string; evidence_freshness: string; counter_reaction: { required: boolean } };
+type ReactionProjection = { state: "LIVE" | "UNREACHABLE" | "BAD_INPUT"; source_as_of?: string | null; evidence_freshness?: string; n_events?: number; n_counter_reaction_required?: number; reactions?: Reaction[] };
 
 const day = (iso: string | null | undefined) => (iso ? String(iso).slice(0, 10) : null);
 
@@ -113,6 +115,7 @@ function Code({ children }: { children: string }) {
 
 export default function ClaimMaintenance() {
   const [reg, setReg] = useState<Register | null | undefined>(undefined);
+  const [reactionProjection, setReactionProjection] = useState<ReactionProjection | null | undefined>(undefined);
 
   useEffect(() => {
     const ac = new AbortController();
@@ -128,6 +131,9 @@ export default function ClaimMaintenance() {
       .catch(() => read(REGISTER_STATIC))
       .then((j) => setReg(j as Register))
       .catch(() => setReg(null));
+    read("/api/claims/reactions")
+      .then((j) => setReactionProjection(j as ReactionProjection))
+      .catch(() => setReactionProjection({ state: "UNREACHABLE" }));
     return () => ac.abort();
   }, []);
 
@@ -232,6 +238,47 @@ export default function ClaimMaintenance() {
           wish existed. A small register that grows is worth more than a padded one.
           {asOf && <> This page is showing the register as of <span className="font-mono">{asOf}</span>.</>}
         </p>
+
+        <section aria-labelledby="reaction-loop" className="mt-7 rounded-2xl border border-emerald-200 bg-emerald-50 p-5 sm:p-6">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <h3 id="reaction-loop" className="text-lg font-bold text-slate-900">Live reaction loop</h3>
+              <p className="mt-1 max-w-2xl text-sm leading-6 text-slate-700">
+                A verified event feed produces bounded recheck suggestions and a counter-reaction. It does not run the checks or make findings.
+              </p>
+            </div>
+            <a className="rounded-lg border border-emerald-700 px-3 py-2 text-sm font-semibold text-emerald-900 underline-offset-2 hover:underline" href="/api/claims/reactions">Open reaction data</a>
+          </div>
+          <p className="mt-3 text-xs text-slate-600">
+            Agent interface: <a className="font-mono underline" href="/connect-gspc/">connect to the GSPC MCP server</a> and call <code className="font-mono">claim_reactions</code>. It reads this same record; it cannot trigger a paid request.
+          </p>
+          {reactionProjection === undefined && <p className="mt-4 text-sm text-slate-600" role="status">Reading the verified event feed…</p>}
+          {reactionProjection?.state === "LIVE" && (
+            <>
+              <dl className="mt-4 grid grid-cols-2 gap-3 sm:max-w-lg">
+                <div className="rounded-xl border border-emerald-100 bg-white px-3 py-2"><dt className="text-xs text-slate-600">Events in view</dt><dd className="mt-1 text-xl font-bold tabular-nums text-slate-900">{reactionProjection.n_events ?? "—"}</dd></div>
+                <div className="rounded-xl border border-emerald-100 bg-white px-3 py-2"><dt className="text-xs text-slate-600">Counter-checks requested</dt><dd className="mt-1 text-xl font-bold tabular-nums text-slate-900">{reactionProjection.n_counter_reaction_required ?? "—"}</dd></div>
+              </dl>
+              <p className="mt-3 text-xs text-slate-600">
+                Feed verifies{reactionProjection.source_as_of ? ` as of ${reactionProjection.source_as_of}` : ""}. Evidence freshness is {reactionProjection.evidence_freshness ?? "NOT_EVALUATED"}; the view never admits a measurement or publishes a correction.
+              </p>
+              {(reactionProjection.reactions ?? []).some((r) => r.counter_reaction.required) && (
+                <ul className="mt-4 space-y-2" aria-label="Recent recheck suggestions">
+                  {(reactionProjection.reactions ?? []).filter((r) => r.counter_reaction.required).slice(-3).reverse().map((r) => (
+                    <li key={r.event_seq} className="rounded-lg border border-emerald-100 bg-white px-3 py-2 text-sm">
+                      <span className="font-semibold text-slate-900">{r.reaction_state}</span>{" "}
+                      <span className="font-mono text-xs text-slate-600">event {r.event_seq}{r.claim_ref ? ` · ${r.claim_ref}` : ""}</span>
+                      <p className="mt-1 text-slate-700">{r.reason}</p>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </>
+          )}
+          {reactionProjection?.state !== undefined && reactionProjection.state !== "LIVE" && (
+            <p className="mt-4 text-sm text-amber-900" role="status">The live verified feed is unavailable right now. No cached reaction count is shown.</p>
+          )}
+        </section>
 
         {reg === undefined && <p className="mt-5 text-sm text-slate-500">Reading the live register…</p>}
         {reg === null && (
