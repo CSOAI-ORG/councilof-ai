@@ -1,0 +1,16 @@
+{
+  "name": "csoai-verify",
+  "version": "0.1.0",
+  "description": "Offline verifier for CSOAI board-signed records (Ed25519 + sha256, no dependencies, no network). Returns VALID / INVALID / UNVERIFIABLE_KEY; VALID shows who signed the bytes, not that a claim is true.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": { ".": { "types": "./dist/csoai-verify.d.ts", "default": "./dist/csoai-verify.mjs" } },
+  "main": "./dist/csoai-verify.mjs",
+  "types": "./dist/csoai-verify.d.ts",
+  "files": ["dist/csoai-verify.mjs", "dist/csoai-verify.d.ts", "README.md", "LICENSE"],
+  "sideEffects": false,
+  "homepage": "https://councilof.ai/connect/",
+  "keywords": ["ed25519", "verify", "did", "evidence", "palantir-aip-evals", "offline"],
+  "author": "CSOAI Ltd",
+  "scripts": { "build": "node build.mjs", "test": "node --test test.mjs", "prepublishOnly": "node build.mjs && node --test test.mjs" }
+}

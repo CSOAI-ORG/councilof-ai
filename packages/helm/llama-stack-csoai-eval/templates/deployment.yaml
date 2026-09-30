@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "csoai.fullname" . }}
+  labels: {{- include "csoai.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {{- include "csoai.selector" . | nindent 6 }}
+  template:
+    metadata:
+      labels: {{- include "csoai.selector" . | nindent 8 }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+    spec:
+      securityContext: {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: llama-stack
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext: {{- toYaml .Values.securityContext | nindent 12 }}
+          command: ["sh", "-c"]
+          args:
+            - pip install --no-cache-dir --user --disable-pip-version-check "$PROVIDER_REQUIREMENT" && exec llama stack run /config/run.yaml
+          env:
+            - name: PROVIDER_REQUIREMENT
+              value: {{ .Values.provider.requirement | quote }}
+            - name: HOME
+              value: /work
+            - name: PYTHONUSERBASE
+              value: /work/.local
+            - name: PATH
+              value: /work/.local/bin:/usr/local/bin:/usr/bin:/bin
+            - name: CSOAI_DID_JSON
+              value: /config/did.json
+            - name: SQLITE_STORE_DIR
+              value: /work/state
+            - name: TMPDIR
+              value: /work/tmp
+          ports:
+            - name: http
+              containerPort: 8321
+          readinessProbe:
+            httpGet: {path: /v1/health, port: http}
+            periodSeconds: 10
+            failureThreshold: 30
+          livenessProbe:
+            httpGet: {path: /v1/health, port: http}
+            initialDelaySeconds: 300
+            periodSeconds: 30
+          resources: {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - {name: config, mountPath: /config, readOnly: true}
+            - {name: work, mountPath: /work}
+            {{- if .Values.bundles.existingClaim }}
+            - {name: bundles, mountPath: /data/bundles, readOnly: true}
+            {{- end }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "csoai.fullname" . }}
+        - name: work
+          emptyDir: {}
+        {{- if .Values.bundles.existingClaim }}
+        - name: bundles
+          persistentVolumeClaim:
+            claimName: {{ .Values.bundles.existingClaim }}
+            readOnly: true
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity: {{- toYaml . | nindent 8 }}
+      {{- end }}

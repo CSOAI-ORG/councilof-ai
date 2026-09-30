@@ -1,0 +1,5 @@
+include README.md LICENSE run.yaml
+recursive-include fixtures *.json *.jsonl *.py
+recursive-include providers.d *.yaml
+recursive-include tests *.py
+global-exclude __pycache__ *.pyc .tmp

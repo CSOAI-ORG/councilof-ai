@@ -6,6 +6,7 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { useLiveJson } from "./useLiveJson";
+import NextSteps from "./NextSteps";
 
 type Entry = {
   id?: string;
@@ -27,7 +28,16 @@ function clip(s: string | undefined, n: number): string {
 export default function CorrectionsPane() {
   const read = useLiveJson<Ledger>("/api/corrections");
   const [shown, setShown] = useState(8);
-  const entries = read.state === "ok" && Array.isArray(read.data.corrections) ? read.data.corrections : [];
+  const [windowDays, setWindowDays] = useState<number | null>(null);
+  const [by, setBy] = useState<string | null>(null);
+  const all = read.state === "ok" && Array.isArray(read.data.corrections) ? read.data.corrections : [];
+  const byValues = [...new Set(all.map((e) => e.detected_by).filter((x): x is string => Boolean(x)))].slice(0, 4);
+  const cutoff = windowDays === null ? null : Date.now() - windowDays * 86_400_000;
+  const entries = all.filter(
+    (e) => (by === null || e.detected_by === by) && (cutoff === null || (e.date ? Date.parse(e.date) >= cutoff : false)),
+  );
+  const chip = (on: boolean) =>
+    `inline-flex min-h-9 items-center rounded-full border px-3 text-xs font-semibold ${on ? "border-emerald-800 bg-emerald-800 text-white" : "border-border bg-card text-foreground hover:border-emerald-700/50"}`;
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-8 sm:py-8" data-testid="corrections-pane">
       <p className="t-kicker text-emerald-800">Corrections</p>
@@ -44,19 +54,40 @@ export default function CorrectionsPane() {
           <span className="sr-only">Reading the corrections ledger</span>
         </div>
       ) : read.state === "error" ? (
-        <p role="alert" className="mt-6 rounded-2xl border border-amber-500/60 bg-amber-50 p-4 text-sm text-amber-950" data-testid="corrections-error">
-          The ledger is unread right now ({read.error}). Nothing is shown in its place.{" "}
-          <a className="font-bold underline underline-offset-2" href="/api/corrections">
-            Read GET /api/corrections directly
-          </a>
-          .
-        </p>
+        <div role="alert" className="mt-6 rounded-2xl border border-amber-500/60 bg-amber-50 p-4 text-sm text-amber-950" data-testid="corrections-error">
+          <p>
+            The ledger is unread right now ({read.error}). Nothing is shown in its place.{" "}
+            <a className="font-bold underline underline-offset-2" href="/api/corrections">
+              Read GET /api/corrections directly
+            </a>
+            .
+          </p>
+          <button type="button" onClick={read.retry} className="mt-3 inline-flex min-h-11 items-center rounded-xl bg-emerald-800 px-4 text-sm font-bold text-white hover:bg-emerald-900">
+            Try again
+          </button>
+        </div>
       ) : entries.length === 0 ? (
         <p className="mt-6 rounded-2xl border border-dashed border-border p-5 text-sm text-muted-foreground">The ledger answered with no entries.</p>
       ) : (
         <>
-          <p className="mt-5 text-sm text-muted-foreground" data-testid="corrections-summary">
-            <span className="font-mono text-base font-black text-foreground">{entries.length}</span> entries · ledger signature{" "}
+          <div className="mt-5 flex flex-wrap items-center gap-2" role="group" aria-label="Filter the ledger" data-testid="corrections-filters">
+            {([null, 7, 30] as const).map((d) => (
+              <button key={String(d)} type="button" aria-pressed={windowDays === d} onClick={() => setWindowDays(d)} className={chip(windowDays === d)}>
+                {d === null ? "All time" : `Last ${d} days`}
+              </button>
+            ))}
+            <span className="mx-1 h-5 w-px bg-border" aria-hidden="true" />
+            <button type="button" aria-pressed={by === null} onClick={() => setBy(null)} className={chip(by === null)}>
+              Anyone
+            </button>
+            {byValues.map((b) => (
+              <button key={b} type="button" aria-pressed={by === b} onClick={() => setBy(b)} className={chip(by === b)}>
+                {b}
+              </button>
+            ))}
+          </div>
+          <p className="mt-3 text-sm text-muted-foreground" data-testid="corrections-summary">
+            <span className="font-mono text-base font-black text-foreground">{entries.length}</span> of {all.length} entries · ledger signature{" "}
             <span className="font-mono font-bold text-foreground">{read.data.signature_state ?? "not stated"}</span>
             {read.data.signature_check?.checked_at ? ` (checked ${read.data.signature_check.checked_at})` : ""} · source GET /api/corrections
           </p>
@@ -100,6 +131,16 @@ export default function CorrectionsPane() {
             </a>
           </div>
         </>
+      )}
+      {read.state === "loading" ? null : (
+      <NextSteps
+        testId="corrections-next"
+        steps={[
+          { href: "/dashboard?tab=claims", title: "See what we keep re-checking", body: "Claim maintenance: the claims re-read on a schedule, and what changed." },
+          { href: "/dispute/", title: "Ask for a correction", body: "Contest anything we published; a dispute is answered by re-measuring." },
+          { href: "/dashboard?tab=verify", title: "Check a record yourself", body: "A superseded record still verifies; its replacement is named." },
+        ]}
+      />
       )}
     </div>
   );

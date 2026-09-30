@@ -788,6 +788,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Financial Axes"
  },
  {
+  "path": "/financial-catalog",
+  "comp": "EunomiaCatalog",
+  "title": "Eunomia Catalog"
+ },
+ {
   "path": "/findings",
   "comp": "FindingsExplorer",
   "title": "Findings Explorer"

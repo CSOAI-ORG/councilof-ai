@@ -6,9 +6,20 @@ build-backend = "setuptools.build_meta"
 name = "nat-csoai-evidence"
 version = "0.1.0"
 description = "NeMo Agent Toolkit evaluator: verify a CSOAI signed evidence batch offline and report each event's state (CONSISTENT / DIVERGENT / UNMEASURED ...), never a grade."
+readme = "README.md"
 license = {text = "Apache-2.0"}
-requires-python = ">=3.11"
-dependencies = ["nvidia-nat-core>=1.9", "nvidia-nat-eval>=1.9", "cryptography>=41"]
+requires-python = ">=3.11,<3.14"
+authors = [{name = "CSOAI Ltd"}]
+keywords = ["nemo-agent-toolkit", "nat", "evaluator", "evidence", "ed25519", "opentelemetry"]
+classifiers = ["License :: OSI Approved :: Apache Software License", "Programming Language :: Python :: 3.11", "Programming Language :: Python :: 3.12", "Topic :: Security"]
+dependencies = ["nvidia-nat-core>=1.9,<2", "nvidia-nat-eval>=1.9,<2", "cryptography>=41"]
+
+[project.optional-dependencies]
+eval = ["nvidia-nat-eval[full]>=1.9,<2", "langchain-core>=0.3"]   # the nat eval command; nvidia-nat-eval 1.9.0 imports langchain_core without declaring it
+
+[project.urls]
+Homepage = "https://councilof.ai/connect/"
+"Signing key (DID)" = "https://csoai.org/.well-known/did.json"
 
 [project.entry-points.'nat.components']
 nat_csoai_evidence = "nat_csoai_evidence.register"

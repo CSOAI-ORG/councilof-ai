@@ -170,6 +170,8 @@ def structure_main(path):
 
 def flip(b, i=None):
     b = bytearray(b)
+    if not b:  # an empty input has no byte to flip; one appended byte is the smallest edit
+        return b"\x00"
     i = len(b) // 2 if i is None else i
     b[i] ^= 0x01
     return bytes(b)
