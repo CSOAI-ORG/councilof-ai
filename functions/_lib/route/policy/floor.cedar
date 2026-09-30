@@ -1,7 +1,7 @@
 // GSPC Route floor policy. Fixed, published, forbid-only. Rendered by functions/_lib/route/policy.ts.
 @id("floor:effect-binding-divergent")
 forbid (principal, action == Action::"route", resource)
-when { resource.census_effect_binding == "DIVERGENT" };
+when { resource.census_effect_binding == "DIVERGENT" && !context.allow_divergent_effect_binding };
 
 @id("floor:destructive-needs-confirm")
 forbid (principal, action == Action::"route", resource)

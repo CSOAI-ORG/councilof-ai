@@ -3281,7 +3281,7 @@
       "path": "/api/usage",
       "method": "GET",
       "name": "Usage",
-      "description": "GET /api/usage \u2014 daily counts of what callers did at the agent doors (MCP initialize client names, tool calls, A2A outcomes, chat and AG-UI states); aggregate only, no IP or text; our own monitors excluded by name; kind measured, a lower bound; never revenue.",
+      "description": "GET /api/usage — daily counts of what callers did at the agent doors (MCP initialize client names, tool calls, A2A outcomes, chat and AG-UI states); aggregate only, no IP or text; our own monitors excluded by name; kind measured, a lower bound; never revenue.",
       "description_state": "DOCUMENTED",
       "audience": "agent",
       "lifecycle": "LIVE",
@@ -7142,6 +7142,57 @@
         "safe": true
       },
       "source": "functions/.well-known/x402.json.ts"
+    },
+    {
+      "id": "api-route-execute-get",
+      "kind": "http",
+      "path": "/api/route/execute",
+      "method": "GET",
+      "name": "GSPC Route execution door (GET)",
+      "description": "GET /api/route/execute describes the execution door: phases 1-4 of the 30 Sep 2026 owner ruling, the request body and the receipt key did:web:csoai.org#route-attestation-1. Not a ranking or a grade.",
+      "description_state": "DOCUMENTED",
+      "audience": "both",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [
+        "csoai.route-evidence/0.1"
+      ],
+      "surfaces": [],
+      "probe": {
+        "method": "GET",
+        "request": "/api/route/execute",
+        "expect_status": [
+          200
+        ],
+        "safe": true
+      },
+      "source": "functions/api/route/execute.ts"
+    },
+    {
+      "id": "api-route-execute-post",
+      "kind": "http",
+      "path": "/api/route/execute",
+      "method": "POST",
+      "name": "GSPC Route execution (POST)",
+      "description": "POST /api/route/execute runs the route decision and then at most one call to the chosen MCP tool. The edge calls only verified read-only tools. Caller credentials are refused and stay client-side. A first-party x402 tool is paid only against its observed challenge, confirmed by sha256. Every outcome returns a receipt signed under did:web:csoai.org#route-attestation-1. Nothing is logged or stored. Not a grade.",
+      "description_state": "DOCUMENTED",
+      "audience": "both",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [
+        "csoai.route-evidence/0.1"
+      ],
+      "surfaces": [],
+      "probe": {
+        "method": "POST",
+        "request": "/api/route/execute",
+        "expect_status": [
+          200
+        ],
+        "safe": false,
+        "unsafe_reason": "POST calls a third-party MCP tool; the daily loop reads only"
+      },
+      "source": "functions/api/route/execute.ts"
     }
   ]
 }
