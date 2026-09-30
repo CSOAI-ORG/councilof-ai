@@ -1,0 +1,158 @@
+{
+  "name": "ai.councilof/gspc",
+  "version": "1.4.4",
+  "schema_version": "1.1.0",
+  "description": "Dated AI measurements and signed evidence over MCP. Read-only tools: read the GSPC board and one axis, verify a signed measurement card or capsule, check Merkle inclusion, list published measurements about an endpoint. Every answer carries its state (VALID, INVALID, UNCHECKABLE, UNMEASURED). Free verification; never certification.",
+  "authors": [
+    "Council of AI"
+  ],
+  "created_at": "2026-09-30T17:00:00Z",
+  "skills": [
+    {
+      "id": 71002,
+      "name": "ai_ml_engineering/model_evaluation/agent_evaluation"
+    },
+    {
+      "id": 71001,
+      "name": "ai_ml_engineering/model_evaluation/llm_evaluation"
+    }
+  ],
+  "domains": [
+    {
+      "id": 11107,
+      "name": "technology/artificial_intelligence/ai_agents"
+    },
+    {
+      "id": 405,
+      "name": "trust_and_safety/risk_management"
+    }
+  ],
+  "locators": [
+    {
+      "type": "url",
+      "urls": [
+        "https://councilof.ai/mcp/free"
+      ],
+      "annotations": {
+        "role": "MCP endpoint, free read-only tools"
+      }
+    },
+    {
+      "type": "url",
+      "urls": [
+        "https://councilof.ai/mcp"
+      ],
+      "annotations": {
+        "role": "MCP endpoint, full door (free + x402-metered tools)"
+      }
+    },
+    {
+      "type": "url",
+      "urls": [
+        "https://councilof.ai/api/gspc"
+      ],
+      "annotations": {
+        "role": "GSPC board, live JSON"
+      }
+    }
+  ],
+  "annotations": {
+    "doctrine": "https://councilof.ai/doctrine/",
+    "doctrine_sha256": "845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a",
+    "stance": "measurement, not certification; UNMEASURED is reported as UNMEASURED",
+    "attribution": "Council of AI (CSOAI Ltd, company 16939677); signer did:web:csoai.org#board-attestation-1",
+    "extends": "AGNTCY lane draft proposals/ai.councilof.gspc.oasf.draft.json (lane agntcy-catalog-20260928, HELD); read, never edited",
+    "catalog": "https://councilof.ai/.well-known/ai-catalog.json",
+    "ard": "https://councilof.ai/ard/v1/agents"
+  },
+  "modules": [
+    {
+      "name": "integration/mcp",
+      "id": 202,
+      "data": {
+        "name": "ai.councilof/gspc",
+        "description": "Dated AI measurements and signed evidence over MCP. Free verification; never certification.",
+        "connections": [
+          {
+            "type": "streamable-http",
+            "url": "https://councilof.ai/mcp/free"
+          }
+        ],
+        "mcp_data": {
+          "name": "ai.councilof/gspc",
+          "title": "Council of AI GSPC",
+          "description": "Dated AI measurements and signed evidence over MCP. Free verification; never certification.",
+          "version": "1.4.4",
+          "websiteUrl": "https://councilof.ai",
+          "remotes": [
+            {
+              "type": "streamable-http",
+              "url": "https://councilof.ai/mcp/free"
+            },
+            {
+              "type": "streamable-http",
+              "url": "https://councilof.ai/mcp"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "core/evaluation",
+      "id": 102,
+      "annotations": {
+        "event_schema": "csoai.evidence-event/0.1",
+        "renderer": "packages/evidence-fabric/render/oasf_eval.py",
+        "not_a_grade": "No overall_rating or overall_scores: dated evidence with states, never a grade or certification"
+      },
+      "data": {
+        "referred_evaluations": [
+          {
+            "created_at": "2026-09-30T17:00:00Z",
+            "publisher": {
+              "name": "CSOAI Ltd (Council of AI)",
+              "version": "gspc 1.4.4",
+              "url": "https://councilof.ai"
+            },
+            "datasets": [
+              {
+                "name": "GSPC board (signed, live)",
+                "url": "https://councilof.ai/api/gspc",
+                "metadata": [
+                  {
+                    "name": "signature",
+                    "value": "Ed25519 did:web:csoai.org#board-attestation-1"
+                  },
+                  {
+                    "name": "unmeasured_rule",
+                    "value": "UNMEASURED carries value null; never a number"
+                  }
+                ]
+              },
+              {
+                "name": "Corrections ledger (signed)",
+                "url": "https://councilof.ai/api/corrections",
+                "metadata": [
+                  {
+                    "name": "rule",
+                    "value": "a correction is a new record naming the replaced one by sha256"
+                  }
+                ]
+              },
+              {
+                "name": "Evidence-event schema",
+                "url": "https://councilof.ai/spec/evidence-event/v0.1",
+                "metadata": [
+                  {
+                    "name": "states",
+                    "value": "CONSISTENT DIVERGENT PARTIAL UNMEASURED UNCHECKABLE NOT_DISCRIMINATING"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
