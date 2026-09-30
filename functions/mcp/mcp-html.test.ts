@@ -38,7 +38,9 @@ describe("GET /mcp answers a browser with a page and everything else with the di
     expect(html).toMatch(/<title>[^<]+<\/title>/);
     expect(html.match(/<h1[\s>]/g)).toHaveLength(1);
     expect(html).toContain('property="og:title"');
-    expect(html).toContain("claude mcp add gspc -- npx -y csoai-gspc-mcp");
+    // The page carries the one default line (the free door), and labels npx as the lighter stdio package.
+    expect(html).toContain("claude mcp add --transport http council-of-ai https://councilof.ai/mcp/free");
+    expect(html).toMatch(/npx -y csoai-gspc-mcp \(stdio-lite \d+\.\d+\.x: fewer tools/);
     expect(html).not.toMatch(/\$\s?\d/);
   });
 });

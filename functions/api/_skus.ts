@@ -96,7 +96,7 @@ export const SKUS: Record<string, Sku> = {
     unit: "1 card issued (1 subject × 1 frozen probe × 1 timestamp)",
     sells: "issuance",
     prices: {
-      // The estate already ships $0.02/unit (eunomia-data.ts) — the anchor atom.
+      // The estate already ships $0.02/unit (signed-data-feed.ts) — the anchor atom.
       reserve: band(0.02, [0.02, 0.1], "X402_PRICE_ISSUANCE_RESERVE_USD"),
       // A fresh model-behaviour run carries real fleet GPU cost.
       fresh_run: band(0.5, [0.5, 5.0], "X402_PRICE_ISSUANCE_FRESH_USD"),

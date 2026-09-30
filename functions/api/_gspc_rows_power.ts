@@ -8,7 +8,7 @@ export const ROWS_POWER = {
   "peritem_sha256": "0d8dacfbe7384a5d2f6a83e7455482ab75f935366bbb6e18da61cfdac8890dec",
   "alpha": 0.05,
   "power": 0.8,
-  "method": "Minimum detectable effect (MDE): the smallest accuracy difference between the leader and the best base model that the board's exact two-sided McNemar test (p<0.05) detects with 80% probability, given the axis's paired items and its observed discordance rate (the share of paired items on which exactly one of the two models is right). Exact binomial enumeration with the same test body, not a normal approximation; rounded up to 0.001. Our own models are removed before ranking, as for separation. NOT_REACHABLE means no difference up to the observed discordance reaches 80% power, so there is no MDE to state; UNDEFINED means no paired item is discordant, so the test has nothing to count.",
+  "method": "Minimum detectable effect (MDE): the smallest accuracy difference between the leader and the best base model that the board's exact two-sided McNemar test (p<0.05) detects with 80% probability, given the axis's paired items and its observed discordance rate (the share of paired items on which exactly one of the two models is right). Exact binomial enumeration with the same test body, not a normal approximation; rounded up to 0.001. Our own models are removed before comparison, as for separation. NOT_REACHABLE means no difference up to the observed discordance reaches 80% power, so there is no MDE to state; UNDEFINED means no paired item is discordant, so the test has nothing to count.",
   "fleet": {
     "models_in_rows": 19,
     "base_count": 6,
@@ -23,7 +23,7 @@ export const ROWS_POWER = {
     "own_count": 13,
     "other_count": 0,
     "other_models": [],
-    "rule": "Counted from the model ids present in the published rows. Base models are ranked; CSOAI's own fine-tunes are excluded before ranking and never counted in a comparison."
+    "rule": "Counted from the model ids present in the published rows. Base models are compared; our own models (system-prompt overlays on stock base models, not trained weights) are excluded before comparison and never counted in a comparison."
   },
   "producer": "scripts/gspc_separation_from_rows.py --power",
   "signed": false,

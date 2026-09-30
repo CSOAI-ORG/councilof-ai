@@ -131,8 +131,8 @@ export const onRequestGet: PagesFunction<{
       {
         id: "data_feed",
         name: "Signed data feed (assembly + cadence)",
-        resource: u("/api/eunomia-data?feed=1"),
-        free_preview: u("/api/eunomia-data"),
+        resource: u("/api/signed-data-feed?feed=1"),
+        free_preview: u("/api/signed-data-feed"),
         deliverable: DATA_FEED_DESCRIPTION,
         never: ["scores as a product", "a ranking", "a rating"],
         also: { proof_bundle: u("/api/proof?bundle=1"), one_inclusion_free: u("/api/proof?sha=<64-hex>") },

@@ -334,10 +334,10 @@
       ]
     },
     {
-      "id": "measured-badge",
+      "id": "card-status-link",
       "kind": "a2a_skill",
-      "name": "Measured Badge",
-      "description": "A global-board README link plus a card-bound status badge. The global board never becomes a model score. A model-specific score may render only from a VALID signed cell that names the exact subject and immutable revision; otherwise the subject is UNMEASURED or UNSIGNED.",
+      "name": "Card status link",
+      "description": "A global-board README link plus a card-bound status link: the state of one signed card for one exact subject, never a mark or a grade. The global board never becomes a model score. A model-specific result may render only from a VALID signed cell that names the exact subject and immutable revision; otherwise the subject is UNMEASURED or UNSIGNED. Former id measured-badge is still accepted.",
       "description_state": "DOCUMENTED",
       "audience": "agent",
       "lifecycle": "LIVE",
@@ -362,7 +362,7 @@
         "verification"
       ],
       "examples": [
-        "SendMessage with Part.data {\"skill\":\"measured-badge\",\"input\":{\"card\":\"<64-hex-signed-card-sha256>\",\"subject\":\"owner/model@<40-or-64-hex-revision>\"}}",
+        "SendMessage with Part.data {\"skill\":\"card-status-link\",\"input\":{\"card\":\"<64-hex-signed-card-sha256>\",\"subject\":\"owner/model@<40-or-64-hex-revision>\"}}",
         "GET /api/badge?card=<signed-card-sha256>&subject=<url-encoded-owner/model@commit-sha>"
       ]
     },
@@ -1240,6 +1240,79 @@
       "source": "functions/api/challenge.ts"
     },
     {
+      "id": "api-claims-events",
+      "kind": "http",
+      "path": "/api/claims/events",
+      "method": "GET",
+      "name": "Claims events",
+      "description": "GET /api/claims/events — the claim-event feed: append-only, hash-chained JSONL.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [],
+      "probe": {
+        "method": "GET",
+        "request": "/api/claims/events",
+        "expect_status": [
+          200
+        ],
+        "safe": true
+      },
+      "source": "functions/api/claims/events/index.ts"
+    },
+    {
+      "id": "api-claims-events-head",
+      "kind": "http",
+      "path": "/api/claims/events/head",
+      "method": "GET",
+      "name": "Claims events head",
+      "description": "GET /api/claims/events/head — the signed daily head of the claim-event feed, with this door's own verification of it against the committed feed bytes.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [],
+      "probe": {
+        "method": "GET",
+        "request": "/api/claims/events/head",
+        "expect_status": [
+          200
+        ],
+        "safe": true
+      },
+      "source": "functions/api/claims/events/head.ts"
+    },
+    {
+      "id": "api-chat",
+      "kind": "http",
+      "path": "/api/chat",
+      "method": "GET",
+      "name": "Chat (descriptor)",
+      "description": "GET /api/chat: a descriptor, not a 404. It names the one grounded answerer (Ask the Council) and every skin it is served through (chat, MCP, A2A, AG-UI, A2UI), each with its method and address. POST /api/chat asks the question.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [
+        "csoai.chat-skins/0.1"
+      ],
+      "surfaces": [
+        "openapi"
+      ],
+      "probe": {
+        "method": "GET",
+        "request": "/api/chat",
+        "expect_status": [
+          200
+        ],
+        "safe": true
+      },
+      "source": "functions/api/chat.ts"
+    },
+    {
       "id": "api-chat-post",
       "kind": "http",
       "path": "/api/chat",
@@ -2013,18 +2086,18 @@
       "source": "functions/api/eu-ai-act.ts"
     },
     {
-      "id": "api-eunomia-data",
+      "id": "api-signed-data-feed",
       "kind": "http",
-      "path": "/api/eunomia-data",
+      "path": "/api/signed-data-feed",
       "method": "GET",
-      "name": "Eunomia data",
+      "name": "Signed data feed",
       "description": "Signed derivative data feed: the signed streams already on the public root, assembled into one document per request. Carries the signals index, the first-fine watch feed, the root and the card index, each block with its own signature and key id and its as_of read from the file. States: each stream as signed, or UNCHECKABLE where its signature cannot be checked. Data only; verification is free and every stream is public at its own URL.",
       "description_state": "DOCUMENTED",
       "audience": "agent",
       "lifecycle": "LIVE",
       "payment": "x402",
       "schema_refs": [
-        "csoai.eunomia-data/0.2"
+        "csoai.signed-data-feed/0.2"
       ],
       "surfaces": [
         "openapi",
@@ -2032,28 +2105,28 @@
       ],
       "probe": {
         "method": "GET",
-        "request": "/api/eunomia-data?feed=1",
+        "request": "/api/signed-data-feed?feed=1",
         "expect_status": [
           402
         ],
         "safe": true
       },
-      "source": "functions/api/eunomia-data.ts",
+      "source": "functions/api/signed-data-feed.ts",
       "paid_for": "assembly"
     },
     {
-      "id": "api-eunomia-data-post",
+      "id": "api-signed-data-feed-post",
       "kind": "http",
-      "path": "/api/eunomia-data",
+      "path": "/api/signed-data-feed",
       "method": "POST",
-      "name": "Eunomia data (POST)",
+      "name": "Signed data feed (POST)",
       "description": "Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored.",
       "description_state": "DOCUMENTED",
       "audience": "both",
       "lifecycle": "LIVE",
       "payment": "free",
       "schema_refs": [
-        "csoai.eunomia-data/0.2"
+        "csoai.signed-data-feed/0.2"
       ],
       "surfaces": [
         "llms",
@@ -2061,14 +2134,14 @@
       ],
       "probe": {
         "method": "POST",
-        "request": "/api/eunomia-data",
+        "request": "/api/signed-data-feed",
         "expect_status": [
           200
         ],
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
-      "source": "functions/api/eunomia-data.ts"
+      "source": "functions/api/signed-data-feed.ts"
     },
     {
       "id": "api-evidence-bundle",
@@ -4430,6 +4503,35 @@
         "safe": true
       },
       "source": "functions/api/router.ts"
+    },
+    {
+      "id": "api-rulings",
+      "kind": "http",
+      "path": "/api/rulings",
+      "method": "GET",
+      "name": "Rulings",
+      "description": "GET /api/rulings — every signed ruling record (csoai.ruling/0.1) with its signature state, read-only. A ruling decides which rule applies or whether a rule output is served; it never sets a measured state.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [
+        "csoai.ruling-attestation/0.1",
+        "csoai.rulings-index-attestation/0.1",
+        "csoai.rulings-response/0.1"
+      ],
+      "surfaces": [
+        "openapi"
+      ],
+      "probe": {
+        "method": "GET",
+        "request": "/api/rulings",
+        "expect_status": [
+          200
+        ],
+        "safe": true
+      },
+      "source": "functions/api/rulings.ts"
     },
     {
       "id": "api-rwa-evidence",

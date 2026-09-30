@@ -3,6 +3,7 @@
 // Scores are verbatim — nothing invented. Split into private modules for deploy only.
 
 import type { AxisScore } from "./_gspc_types";
+import { axisCountLine } from "./_boardCounts";
 import { METHODOLOGY_LIVE_URL, zenodoDoiStatus } from "../_lib/zenodoStatus";
 import { MEASURED_ON } from "./_gspc_types";
 import { AXES_A } from "./_gspc_axes_a";
@@ -323,14 +324,14 @@ const applyRowsSeparation = (a: PublicAxis): RowsAxis => {
       "Exact McNemar on the discordant items, leader vs the best base model, rule fixed 2026-08-13: " +
       "p<0.05 is SEPARATED, anything else is a TIE. Wilson 95% intervals are annotation only. Computed " +
       "by scripts/gspc_separation_from_rows.py from the published per-item rows with our own models " +
-      "removed from the fleet before ranking.",
+      "removed from the fleet before comparison.",
     separation_sentence: r.sentence ?? "",
     separation_evidence: {
       source: ROWS_SOURCE,
       file: r.file,
       file_sha256: r.sha256,
       peritem_sha256: ROWS_SEPARATION.peritem_sha256,
-      fleet: "6 base models; CSOAI's own fine-tunes removed before ranking",
+      fleet: "6 base models; our own prompt overlays on stock base models removed before comparison",
       leader: { model: t.leader.model, k: t.leader.k, n: t.leader.n, accuracy: t.leader.accuracy, wilson95: [t.leader.interval[0], t.leader.interval[1]] },
       next_best: { model: t.runner_up.model, k: t.runner_up.k, n: t.runner_up.n, accuracy: t.runner_up.accuracy, wilson95: [t.runner_up.interval[0], t.runner_up.interval[1]] },
       paired_items: t.paired_items,
@@ -365,7 +366,7 @@ const applyRowsSeparation = (a: PublicAxis): RowsAxis => {
       `${t.runner_up.k}/${t.runner_up.n}, both read from the published per-item rows. ` +
       (r.determination === "TIE" ? "A TIE is not a win: the point-estimate lead is not a measured advantage. " : "") +
       `${cardNote}.` +
-      (ownExcluded ? " Our own council specialist is excluded from this public ranking." : ""),
+      (ownExcluded ? " Our own council specialist is excluded from this public comparison." : ""),
   };
 };
 
@@ -393,9 +394,18 @@ export const boardLidFromAxes = (axes: typeof AXES): string => {
   const facts = measured.filter((a) => a.kind === "deterministic-facts");
   const measuredComparisons = comparisons.filter((a) => a.status === "MEASURED");
   const separated = measuredComparisons.filter((a) => a.separation === "SEPARATED").length;
-  const publicLeaders = measuredComparisons.filter((a) => typeof a.leader === "string").length;
-  return `${measured.length} axes measured · ${comparisons.length} model fleets · ${separated} separated leaders · ` +
-    `${publicLeaders} public leader scores · ${facts.length} fact runs · TIE is TIE · not a certificate.`;
+  const ties = measuredComparisons.filter((a) => a.separation === "TIE").length;
+  const untested = measuredComparisons.filter((a) => a.separation === "UNTESTED").length;
+  // Owner-gated (HELD): the word appears only once the state is enabled, as in separation_public_count.
+  const underpowered = measuredComparisons.filter((a) => (a.separation as string | undefined) === "UNDERPOWERED").length;
+  // Comparison wording (30 Sep 2026, producer-truth lane): the lid used to say "N separated leaders ·
+  // M public leader scores" beside "0 separated", which reads as a ranking the separation test does not
+  // support. It now states the comparison states themselves — the same three (or four) numbers as
+  // totals.separation_public_count — and no count of "leaders". public_leader_count stays a totals field.
+  return `${measured.length} ${measured.length === 1 ? "axis" : "axes"} measured · ${comparisons.length} model comparisons: ` +
+    `${separated} separated · ${ties} TIE · ` +
+    (UNDERPOWERED_STATE.enabled ? `${underpowered} UNDERPOWERED · ` : "") +
+    `${untested} UNTESTED · ${facts.length} fact runs · TIE is TIE · not a certificate.`;
 };
 
 export const currentBoardLid = (): string => boardLidFromAxes(publicView(AXES));
@@ -678,14 +688,14 @@ export const onRequestGet: PagesFunction = async (context) => {
         // Retained for consumers that read it. Under the swept canon we quote only
         // what we measured, so quotable_axes == measured_axes by construction.
         quotable_axes: measured,
-        public_count: `${selected.length} axis · ${measured} measured`,
+        public_count: axisCountLine(selected.length, measured),
         // Quote this BESIDE public_count. measured counts axis that carry a run; it has
         // never been a count of axis that can tell two models apart, and until now the
         // payload had no field that said so at the point the count is read.
         separation_public_count: separationPublicCount,
         separation_public_count_note:
-          "Read with public_count, never instead of it. measured_axes counts axis with a RUN behind " +
-          "them; it is not a count of axis with a separated leader. SEPARATED, TIE and UNTESTED are " +
+          "Read with public_count, never instead of it. measured_axes counts axes with a RUN behind " +
+          "them; it is not a count of axes with a separated result. SEPARATED, TIE and UNTESTED are " +
           "three states and none is folded into another. Derived from the axis array, never typed. " +
           "The same three numbers appear below as separated_leads / ties / untested_separations and " +
           "in limitations[0]; there is one derivation.",
@@ -712,7 +722,7 @@ export const onRequestGet: PagesFunction = async (context) => {
           },
           financial: {
             ...financialFamilyBlock(bySelectedFamily("financial").axes, bySelectedFamily("financial").measured),
-            note: "The 8 financial/domain axis (ADR-001), all MEASURED as deterministic-facts runs — " +
+            note: "The 8 financial/domain axes (ADR-001), all MEASURED as deterministic-facts runs — " +
               "issuer-account flags read off the public ledger (financial n=16 on the live XRPL " +
               "reader; provenance-controls n=6) and public statistical series, graded by rule with no " +
               "model, no fleet and no judgement. None of the eight is a model comparison, so none has " +
@@ -724,10 +734,10 @@ export const onRequestGet: PagesFunction = async (context) => {
           },
         },
         sweep_note:
-          "Swept 2026-08-26 under ADR-001. The 8 financial/domain axis were ruled in on 2026-08-24 but " +
+          "Swept 2026-08-26 under ADR-001. The 8 financial/domain axes were ruled in on 2026-08-24 but " +
           "were absent from this payload until the sweep, so this endpoint reported 14 — the un-swept " +
           "state. All 8 now carry published deterministic-facts run artifacts. Today " +
-          `${measured} of ${selected.length} axis on the board carry a run behind them: ` +
+          `${measured} of ${selected.length} axes on the board carry a run behind them: ` +
           `${comparisonSlots.length} model-comparison and ${factRuns.filter((a) => a.status === "MEASURED").length} deterministic-fact ` +
           "axes. The fact axes carry no accuracy and no leader — measured is not the same as scored. " +
           `${signedFactRuns.length} run artifact${signedFactRuns.length === 1 ? "" : "s"} ` +
@@ -781,11 +791,12 @@ export const onRequestGet: PagesFunction = async (context) => {
           `Own council-specialist models were removed from the public per-axis leaders on ` +
           `${ownLedExcludedAxes.length} of the ${cmp.length} model-comparison axes (${ownLedExcludedAxes.join(", ") || "none"}); ` +
           `${externallyLedAxes.length} axes carry an external public leader. A neutral measurement body ` +
-          `does not rank its own models against the vendors it measures. This changes leader attribution ` +
+          `does not compare its own models against the vendors it measures. This changes leader attribution ` +
           `and the separation/mean tallies (which are over externally-led axes only), NOT measured_axes: ` +
           `every axis still carries a measurement, so the measured count is unchanged. The excluded models' ` +
-          `signed cards are untouched — measurement happened; it is simply not published as a public ranking ` +
-          `of our own model.`,
+          `signed cards are untouched — measurement happened; it is simply not published as a public comparison ` +
+          `of our own model. The excluded models are system-prompt overlays on stock base models, ` +
+          `not trained weights (C-2026-0930-11).`,
         // ── uncarded-leader drop (2026-09-01) ────────────────────────────────
         // External leaders with NO signed per-model card are removed from the public leader
         // slots. A named leader that cannot be linked to the Ed25519 card behind it breaks the
@@ -829,7 +840,16 @@ export const onRequestGet: PagesFunction = async (context) => {
       signed_record: "/interop/gspc-peritem-rows-2026-08-12.signed.json",
       producer: ROWS_SEPARATION.producer,
       rule: ROWS_SEPARATION.rule,
-      own_model_exclusion: ROWS_SEPARATION.own_model_exclusion,
+      // The signed record's own_model_exclusion calls our models "fine-tunes". They are system-prompt
+      // overlays on stock base models (C-2026-0930-11). The signed bytes stay as signed; the served
+      // sentence is corrected here and names the correction, so a reader of both sees why they differ.
+      own_model_exclusion:
+        "Our own models (sov6-*-v3-light in the rows; council-*-v3-light on the board) are prompt overlays " +
+        "on stock base models (system prompts, not trained weights). They are removed before comparison. " +
+        "Base fleet of 6.",
+      own_model_exclusion_correction:
+        "C-2026-0930-11: the signed record (signed_record) words this as fine-tunes; that word was wrong. " +
+        "The signed bytes are unchanged; this sentence supersedes it.",
       publication_rule: ROWS_SEPARATION.publication_rule,
       frozen_manifests_note: ROWS_SEPARATION.frozen_manifests_note,
       decided_axes: rowsDecided.map((a) => ({
@@ -860,7 +880,7 @@ export const onRequestGet: PagesFunction = async (context) => {
     banked_axes_resolvable: bankResolved.length,
     banked_axes_unresolvable: bankUnresolvable.map((a) => a.axis),
     bank_note:
-      `${bankResolved.length} of the ${banked.length} axis carrying a frozen bank resolve to a ` +
+      `${bankResolved.length} of the ${banked.length} axes carrying a frozen bank resolve to a ` +
       "dataset_url built as bank_host + the axis's bare <owner>/<name> slug, so a stranger can " +
       "retrieve the split without knowing where we host it. Any axis whose slug does not parse " +
       "carries dataset_url: null with dataset_url_state UNRESOLVABLE and is named in " +

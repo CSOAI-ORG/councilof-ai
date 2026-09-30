@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { A2A_ERROR, A2A_PROTOCOL_VERSION, GREETING_EXAMPLES, SKILL_IDS, isCapabilityGreeting, onRequestGet, onRequestPost } from "./a2a";
+import { A2A_ERROR, A2A_PROTOCOL_VERSION, GREETING_EXAMPLES, LEGACY_SKILL_IDS, SKILL_IDS, isCapabilityGreeting, onRequestGet, onRequestPost } from "./a2a";
 
 const LID =
   "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.";
@@ -382,12 +382,12 @@ describe("POST /api/a2a — seven explicit skill routes", () => {
     expect(json.error.message).toMatch(/redirected \(302\)/i);
   });
 
-  it("routes measured-badge with only an encoded immutable subject and card hash", async () => {
+  it("routes card-status-link with only an encoded immutable subject and card hash", async () => {
     const fetchMock = vi.fn(async () => Response.json({ measured: true }));
     vi.stubGlobal("fetch", fetchMock);
     const card = "a".repeat(64);
     const subject = `owner/model@${"b".repeat(40)}`;
-    const { json } = await callSkill("measured-badge", { card, subject });
+    const { json } = await callSkill("card-status-link", { card, subject });
     expect(json.error).toBeUndefined();
     const [url, init] = fetchMock.mock.calls[0];
     const parsed = new URL(url);
@@ -396,6 +396,16 @@ describe("POST /api/a2a — seven explicit skill routes", () => {
     expect(parsed.searchParams.get("card")).toBe(card);
     expect(parsed.searchParams.get("subject")).toBe(subject);
     expect(init.method).toBe("GET");
+  });
+
+  it("the former id measured-badge still routes (legacy alias), and is not on the card or in SKILL_IDS", async () => {
+    const fetchMock = vi.fn(async () => Response.json({ measured: true }));
+    vi.stubGlobal("fetch", fetchMock);
+    const { json } = await callSkill("measured-badge", { card: "a".repeat(64), subject: `owner/model@${"b".repeat(40)}` });
+    expect(json.error).toBeUndefined();
+    expect(new URL(fetchMock.mock.calls[0][0]).pathname).toBe("/api/badge");
+    expect((SKILL_IDS as readonly string[]).includes("measured-badge")).toBe(false);
+    expect(LEGACY_SKILL_IDS["measured-badge"]).toBe("card-status-link");
   });
 
   it("never forwards caller authorization, cookies, or payment headers", async () => {
@@ -442,7 +452,7 @@ describe("POST /api/a2a — seven explicit skill routes", () => {
       { data: { skill: "gspc-board", input: {} } },
       { data: { skill: "x402-discovery", input: {} } },
     ])).json.error.code).toBe(A2A_ERROR.INVALID_PARAMS);
-    expect((await callSkill("measured-badge", { card: "abc", subject: "owner/model@main" })).json.error.code)
+    expect((await callSkill("card-status-link", { card: "abc", subject: "owner/model@main" })).json.error.code)
       .toBe(A2A_ERROR.INVALID_PARAMS);
     expect((await callSkill("east-west-crosswalk", { url: "https://example.com" })).json.error.code)
       .toBe(A2A_ERROR.INVALID_PARAMS);

@@ -9,6 +9,10 @@ const wk = JSON.parse(fs.readFileSync("public/.well-known/index.json", "utf8"));
 test("ChatGPT action descriptor is bounded to implemented public routes", () => {
   const paths = Object.keys(plugin.paths).sort();
   assert.deepEqual(paths, [
+    "/claims/events",
+    "/claims/events/head",
+    "/claims/register",
+    "/corrections",
     "/gspc",
     "/measurement/fresh-capsule",
     "/report",
@@ -17,7 +21,7 @@ test("ChatGPT action descriptor is bounded to implemented public routes", () => 
     "/x402",
   ]);
   for (const missing of ["/measure", "/anchor", "/learn-loop"]) assert.equal(plugin.paths[missing], undefined);
-  assert.match(plugin.info.description, /23-axis/);
+  assert.doesNotMatch(plugin.info.description, /\b\d+-axis\b/i); // counts come from /api/gspc, never frozen here (contract-convergence)
   assert.match(plugin["x-csoai-boundary"], /does not establish installation/);
 });
 

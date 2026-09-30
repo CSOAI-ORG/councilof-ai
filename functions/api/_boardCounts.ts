@@ -13,6 +13,15 @@ export interface BoardCounts {
 }
 
 /**
+ * The one count line: "23 axes · 23 measured". Plural by grammar ("1 axis", "2 axes"). Every
+ * surface that composes the line (GET /api/gspc, /api/state, /api/badge, AG-UI, A2UI) calls
+ * this, so the wording cannot drift between them. Before 30 Sep 2026 it read "23 axis".
+ */
+export const axisWord = (n: number): string => (n === 1 ? "axis" : "axes");
+export const axisCountLine = (axes: number, measured: number): string =>
+  `${axes} ${axisWord(axes)} · ${measured} measured`;
+
+/**
  * The one counter used by both GET /api/gspc and GET /api/state.
  *
  * Counts are derived from axis rows. A slot is not silently promoted to a
@@ -33,13 +42,13 @@ export function deriveBoardCounts(axes: readonly AxisScore[]): BoardCounts {
     axes: axes.length,
     measured_axes: measured,
     unmeasured_axes: unmeasured,
-    public_count: `${axes.length} axis · ${measured} measured`,
+    public_count: axisCountLine(axes.length, measured),
     count_grammar:
       unmeasured === 0
-        ? `${axes.length} axis are on the board and every one carries a measurement — no ` +
+        ? `${axes.length} ${axes.length === 1 ? "axis is" : "axes are"} on the board and every one carries a measurement — no ` +
           `declared slot is empty. Both counts are DERIVED from the axis array, never typed; if a ` +
           `future slot is added with no run behind it, this line separates the two again on its own.`
-        : `${axes.length} axis are on the board; ${measured} of them carry a measurement and ` +
+        : `${axes.length} ${axes.length === 1 ? "axis is" : "axes are"} on the board; ${measured} of them carry a measurement and ` +
           `${unmeasured} are declared slots with no run behind them. The larger number counts slots, ` +
           `the smaller counts measurements — quote both or quote the smaller. A published slot exists ` +
           `so the gap is visible; it is not evidence of anything having been measured.`,
@@ -51,7 +60,7 @@ export function deriveBoardCounts(axes: readonly AxisScore[]): BoardCounts {
       financial: {
         ...byFamily("financial"),
         note:
-          "The 8 financial/domain axis (ADR-001), all MEASURED as deterministic-facts runs — " +
+          "The 8 financial/domain axes (ADR-001), all MEASURED as deterministic-facts runs — " +
           "issuer-account flags read off the public ledger (financial n=16 on the live XRPL " +
           "reader; provenance-controls n=6) and public statistical series, graded by rule with no " +
           "model, no fleet and no judgement. None of the eight is a model comparison, so none has " +

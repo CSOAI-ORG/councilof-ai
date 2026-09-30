@@ -18,4 +18,12 @@ describe("x402 conformance snapshot truth", () => {
     expect(board.summary.doors_conforming).toBe(conforming.length);
     expect(new Set(board.doors.map((door) => door.url)).size).toBe(board.doors.length);
   });
+
+  it("the page never prints an amount: the column states presence only (30 Sep 2026)", async () => {
+    const { readFileSync } = await import("node:fs");
+    const src = readFileSync(new URL("./X402Leaderboard.tsx", import.meta.url), "utf8");
+    expect(src).not.toMatch(/\{r\.amount_atomic \?\? /);
+    expect(src).not.toMatch(/Atomic amount/);
+    expect(src).toMatch(/ARCHIVE/);
+  });
 });

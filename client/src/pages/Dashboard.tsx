@@ -52,20 +52,36 @@ interface DashboardStats {
   cards?: { count: number; signed: number };
 }
 
-/** The estate census, read live. It is deliberately a SEPARATE query from the dashboard stats:
- *  the census is not a dashboard statistic, it is an inventory, and conflating the two is how a
- *  reader comes to believe an inventory count is a measurement count. */
-async function fetchEstateIndex(): Promise<{
-  merkle_root: string;
-  entries: { value: number | null };
-  bytes_leaves: { value: number | null };
-  record_leaves: { value: number | null };
-  signed: boolean;
-} | null> {
+type StateFact<T = unknown> = { value?: T; kind?: string; source?: string; as_of?: string | null; note?: string };
+type LedgerRow = { key?: string; count?: number | null; detail?: Record<string, unknown>; state?: string; last_update?: string | null };
+type LiveState = {
+  public_count?: StateFact<string>;
+  estate_index?: {
+    merkle_root: string;
+    entries: StateFact<number | null>;
+    bytes_leaves: StateFact<number | null>;
+    record_leaves: StateFact<number | null>;
+    signed: boolean;
+  };
+  claims_register?: { rows_total?: StateFact<number> };
+  ledgers?: {
+    corrections_in_this_deploy?: { count?: number; head_id?: string | null };
+    claim_maintenance?: {
+      state?: string;
+      run_at?: string | null;
+      counts?: Record<string, number> | null;
+      checks?: Array<{ registry_id: string; check: string; due: string; outcome: string }>;
+      event_chain?: { authority?: string; verify?: string; as_of?: string | null; lines?: number | null; head_seq?: number | null; last_at?: string | null; bytes_sha256?: string | null; subjects?: number | null };
+    };
+    ledgers?: LedgerRow[];
+  };
+};
+
+/** One derived state read for the operator view. Underlying ledgers and registers remain their own authorities. */
+async function fetchLiveState(): Promise<LiveState | null> {
   const r = await fetch("/api/state");
   if (!r.ok) return null;
-  const s = await r.json();
-  return s?.estate_index ?? null;
+  return r.json();
 }
 
 async function fetchDashboardStats(): Promise<DashboardStats> {
@@ -88,6 +104,9 @@ const quickActions = [
   { label: "Request measurement", href: "/assess", icon: FileCheck },
   { label: "Open Council chat", href: "/dashboard?tab=home", icon: Users },
   { label: "Check Watchdog", href: "/dashboard?tab=watchdog", icon: Eye },
+  { label: "Claim Maintenance", href: "/claim-maintenance/", icon: RefreshCw },
+  { label: "Claim events", href: "/api/claims/events", icon: RefreshCw },
+  { label: "Claims register", href: "/claims-register", icon: FileCheck },
 ];
 
 export default function Dashboard() {
@@ -99,9 +118,9 @@ export default function Dashboard() {
     staleTime: 30_000,
   });
 
-  const { data: estateIndex } = useQuery({
-    queryKey: ["estate-index"],
-    queryFn: fetchEstateIndex,
+  const { data: liveState, refetch: refetchLiveState } = useQuery({
+    queryKey: ["live-state"],
+    queryFn: fetchLiveState,
     staleTime: 60_000,
   });
 
@@ -111,6 +130,14 @@ export default function Dashboard() {
   const pdcaStats = stats?.pdca;
   const gspcStats = stats?.gspc;
   const cardStats = stats?.cards;
+  const estateIndex = liveState?.estate_index;
+  const ledgerState = liveState?.ledgers;
+  const correctionsLedger = ledgerState?.corrections_in_this_deploy;
+  const recheckState = ledgerState?.claim_maintenance;
+  const eventChain = recheckState?.event_chain;
+  const maintainedRegister = ledgerState?.ledgers?.find((row) => row.key === "claim-maintenance-register");
+  const maintainedSubjects =
+    typeof maintainedRegister?.detail?.subjects === "number" ? maintainedRegister.detail.subjects : null;
 
   // Calculate real metrics
   const metrics = [
@@ -146,6 +173,36 @@ export default function Dashboard() {
       bgColor: "bg-slate-50",
       description:
         "Every artefact we hold, under one unsigned Merkle root. Finding an artefact is not measuring it, and the two leaf counts are never added together.",
+    },
+    {
+      title: "Maintained subjects",
+      value: maintainedSubjects?.toString() ?? "—",
+      change: recheckState?.state ? `recheck ledger ${recheckState.state}` : "recheck ledger unavailable",
+      changeType: "neutral",
+      icon: RefreshCw,
+      color: "text-emerald-700",
+      bgColor: "bg-emerald-50",
+      description: "Subjects in the maintained-claim register; presence is not a finding or endorsement",
+    },
+    {
+      title: "Claim-event chain",
+      value: eventChain?.lines?.toString() ?? "—",
+      change: eventChain?.head_seq != null ? `head ${eventChain.head_seq} · ${eventChain.subjects ?? "—"} subjects` : "event head unavailable",
+      changeType: "neutral",
+      icon: RefreshCw,
+      color: "text-cyan-700",
+      bgColor: "bg-cyan-50",
+      description: "Append-only Claim Maintenance event history; signed head verifies chain integrity",
+    },
+    {
+      title: "Published corrections",
+      value: correctionsLedger?.count?.toString() ?? "—",
+      change: correctionsLedger?.head_id ? `head ${correctionsLedger.head_id}` : "ledger unavailable",
+      changeType: "neutral",
+      icon: AlertTriangle,
+      color: "text-amber-700",
+      bgColor: "bg-amber-50",
+      description: "Append history of CSOAI defects and fixes",
     },
     {
       title: "Watchdog Reports",
@@ -201,7 +258,7 @@ export default function Dashboard() {
               variant="outline"
               size="sm"
               aria-label="Refresh dashboard"
-              onClick={() => refetch()}
+              onClick={() => { refetch(); refetchLiveState(); }}
               disabled={isLoading}
             >
               {isLoading ? (
@@ -249,9 +306,9 @@ export default function Dashboard() {
               note: "Indexed is not measured",
             },
             {
-              label: "Operating rule",
-              value: "Measure · sign · verify",
-              note: "Never certification",
+              label: "Claim maintenance",
+              value: maintainedSubjects != null ? `${maintainedSubjects} maintained subjects` : "—",
+              note: correctionsLedger?.count != null ? `${correctionsLedger.count} corrections published` : "Corrections ledger unavailable",
             },
           ].map((signal) => (
             <div key={signal.label} className="border-white/10 p-4 sm:border-r sm:p-5 xl:last:border-r-0">
@@ -260,6 +317,33 @@ export default function Dashboard() {
               <p className="mt-1 text-xs text-emerald-100/55">{signal.note}</p>
             </div>
           ))}
+        </section>
+
+        <section aria-labelledby="evidence-flywheel" className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-700">Single-source evidence flywheel</p>
+              <h3 id="evidence-flywheel" className="mt-1 text-xl font-bold text-slate-950">Capture → recheck → measure → correct → quote</h3>
+            </div>
+            <Link href="/claim-maintenance/" className="text-sm font-semibold text-emerald-800 underline underline-offset-4">Open Claim Maintenance</Link>
+          </div>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+            {[
+              ["Capture", "/api/claims/register", maintainedSubjects != null ? `${maintainedSubjects} maintained subjects` : "Register readback unavailable"],
+              ["Recheck", "/api/claims/events", recheckState?.counts ? `${recheckState.counts.CHANGED_CONFIRMED ?? 0} changed · ${recheckState.counts.FETCH_FAILED ?? 0} not read (FETCH_FAILED) · ${eventChain?.lines ?? "—"} chained events` : "Recheck ledger unavailable"],
+              ["Measure", "/api/gspc", liveState?.public_count?.value ?? "Board unavailable"],
+              ["Correct", "/api/corrections", correctionsLedger?.count != null ? `${correctionsLedger.count} ledger entries` : "Ledger unavailable"],
+              ["Quote", "/api/state", "Derived state by field name"],
+            ].map(([stage, href, note]) => (
+              <a key={stage} href={href} className="rounded-xl border border-slate-200 bg-slate-50 p-4 hover:border-emerald-300 hover:bg-emerald-50/50">
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-emerald-800">{stage}</p>
+                <p className="mt-2 text-sm font-semibold text-slate-900">{note}</p>
+              </a>
+            ))}
+          </div>
+          <p className="mt-4 text-xs leading-5 text-slate-600">
+            Each card links to the authority for that record type. Claim-event integrity is independently exposed at <a className="font-semibold text-emerald-800 underline underline-offset-4" href="/api/claims/events/head">the signed event head</a>. The dashboard is a derived view; it is not a second registry, ledger, scheduler or measurement engine.
+          </p>
         </section>
 
         {/* Metrics Grid */}

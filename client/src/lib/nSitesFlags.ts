@@ -84,7 +84,7 @@ export const MCP_SNIPPET = `{
   }
 }`;
 
-export const PLUGIN_SNIPPET = "grok plugin install CSOAI-ORG/councilof-ai#plugins/gspc";
+export const PLUGIN_SNIPPET = "claude mcp add --transport http council-of-ai https://councilof.ai/mcp/free";
 
 export const NPM_SNIPPET = "npx -y csoai-gspc-mcp";
 
@@ -184,12 +184,12 @@ export const NSITES_FLAGS: NSiteFlag[] = [
   },
   {
     id: "plugin-gspc",
-    title: "Grok / Cursor plugin",
+    title: "Claude / Cursor plugin",
     status: "planted",
     kind: "receipt",
-    href: "https://huggingface.co/datasets/csoai/councilof-ai-source/tree/main/source/plugins/gspc",
-    plant: "Hosts that install from source (the Hugging Face mirror while GitHub is unavailable). Consent first. No --trust until accepted.",
-    note: "Same seven tools as HTTP /mcp. Does not harvest chats or mint regulation scores.",
+    href: "https://councilof.ai/.claude-plugin/marketplace.json",
+    plant: "The plugin manifest is published on councilof.ai. A marketplace install also needs a public git host for the plugin source, which is unavailable while GitHub is dark, so the working line today is the free MCP door below.",
+    note: "The plugin points at the HTTP /mcp door. Does not harvest chats or mint regulation scores.",
     snippet: PLUGIN_SNIPPET,
   },
   {

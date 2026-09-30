@@ -1,12 +1,13 @@
 {
  "schema": "csoai.layer-o-presence/0.1",
- "as_of": "2026-09-30T03:32:50Z",
+ "title": "Distribution presence",
+ "as_of": "2026-09-30T06:10:51Z",
  "subject": "councilof.ai (CSOAI Ltd, Council of AI)",
- "note": "Where our artifacts appear, read live with GET-only adapters. A state is never set from memory: PUBLISHED/ACCEPTED need a live read that shows the artifact; UNMEASURED means we could not see, not that it is absent. Listing by a catalog is that catalog's act, not an endorsement.",
- "surfaces_total": 164,
+ "note": "Where our artifacts appear, read live with GET-only adapters. A state is never set from memory: PUBLISHED/ACCEPTED need a live read that shows the artifact; UNMEASURED means we could not see, not that it is absent. Listing by a catalog is that catalog's act, not an endorsement. This file lists where our artifacts appear; it does not list the sources we read.",
+ "surfaces_total": 159,
  "counts_by_state": {
-  "DISCOVERED": 49,
-  "QUALIFIED": 53,
+  "DISCOVERED": 46,
+  "QUALIFIED": 51,
   "READY": 0,
   "AUTH_REQUIRED": 5,
   "BUILDING": 0,
@@ -22,10 +23,10 @@
   "UNSUPPORTED": 21
  },
  "measured": 70,
- "unmeasured": 94,
+ "unmeasured": 89,
  "event_chain": {
-  "events": 292,
-  "head": "d195c28d510c8f793ee6ebb394e5bfd3b0aa10556a9b700d875aaf44c499b40f",
+  "events": 492,
+  "head": "9da78430ebf5963ed801ce209cb181ebdf3949712ed9f9285b9db076b380f963",
   "hash": "sha256 over canonical JSON, prev_hash chained"
  },
  "surfaces": [
@@ -34,8 +35,8 @@
    "name": "A2A Registry (a2aregistry.org)",
    "class": "agent_directory",
    "state": "PUBLISHED",
-   "as_of": "2026-09-30T03:31:53Z",
-   "evidence_hash": "29260f0c85f7e108b19641c29988cd206d6a233e0aa8d74faab1941ce1be20eb",
+   "as_of": "2026-09-30T05:29:20Z",
+   "evidence_hash": "e2b1e45c139d6b915d9d900299713f9e24edf0ce09a9a7ff1ab243b53282585c",
    "presence": "MEASURED",
    "observed": 1
   },
@@ -74,7 +75,7 @@
    "name": "Own /.well-known/ai-catalog.json (AI Catalog 1.0 / ARD)",
    "class": "identity_discovery",
    "state": "PUBLISHED",
-   "as_of": "2026-09-30T03:31:53Z",
+   "as_of": "2026-09-30T05:29:20Z",
    "evidence_hash": "ec5fbfc1ac2bc3a60b80b7a5d87370cd66ed954462d6b53b847779c1f46d42bd",
    "presence": "MEASURED",
    "observed": 1
@@ -94,7 +95,7 @@
    "name": "awesome-mcp-servers (punkpeye)",
    "class": "mcp_catalog",
    "state": "QUALIFIED",
-   "as_of": "2026-09-30T03:31:49Z",
+   "as_of": "2026-09-30T05:29:18Z",
    "evidence_hash": "86e1898becee0e0d4722787c561377b8886c58603469e2427055daa1a4a40070",
    "presence": "MEASURED",
    "observed": 0
@@ -114,8 +115,8 @@
    "name": "Cline MCP Marketplace",
    "class": "mcp_catalog",
    "state": "QUALIFIED",
-   "as_of": "2026-09-30T03:31:50Z",
-   "evidence_hash": "64e07b322f3948df0c77845227b256a5cd3c5a2e7a7925e340ba5eb1439f04a1",
+   "as_of": "2026-09-30T05:29:18Z",
+   "evidence_hash": "e5f7ad133a213ca674a6266b2c1246bc51818b02479e1d5c04ac72eb61741a69",
    "presence": "MEASURED",
    "observed": 0
   },
@@ -124,7 +125,7 @@
    "name": "Docker MCP Catalog",
    "class": "mcp_catalog",
    "state": "QUALIFIED",
-   "as_of": "2026-09-30T03:31:49Z",
+   "as_of": "2026-09-30T05:29:18Z",
    "evidence_hash": "9d50522f279e7ac81323798462ec1627a56b877c215892166796de55b4dcc7d5",
    "presence": "MEASURED",
    "observed": 0
@@ -154,8 +155,8 @@
    "name": "GitHub MCP registry (github.com/mcp)",
    "class": "mcp_catalog",
    "state": "QUALIFIED",
-   "as_of": "2026-09-30T03:31:51Z",
-   "evidence_hash": "416faea1e834d296d86d10c419af281c555e5ba2c1255a7ffeda95df60b82524",
+   "as_of": "2026-09-30T05:29:19Z",
+   "evidence_hash": "ca8911da332e034914120417b3f777c471e320e2d8f93f87f459bda22e4643d2",
    "presence": "MEASURED",
    "observed": 0
   },
@@ -164,8 +165,8 @@
    "name": "Glama MCP directory",
    "class": "mcp_catalog",
    "state": "PUBLISHED",
-   "as_of": "2026-09-30T03:31:49Z",
-   "evidence_hash": "303d56dc60818aea996cda6b85c50ae5cded6cb494f6ae0c6c1547052ee82eb2",
+   "as_of": "2026-09-30T05:29:17Z",
+   "evidence_hash": "c047cdad8bbfbbffd5db14de918b82e0eb57f3e2d6c0baba17380d36057230ed",
    "presence": "MEASURED",
    "observed": 1
   },
@@ -194,8 +195,8 @@
    "name": "Hugging Face datasets (csoai)",
    "class": "model_data_hub",
    "state": "PUBLISHED",
-   "as_of": "2026-09-30T03:32:10Z",
-   "evidence_hash": "cf4b433ec209fbbfcef57a9300b373221db4077737f6f6b56e8c787fc1bd5424",
+   "as_of": "2026-09-30T05:29:30Z",
+   "evidence_hash": "21f6f817891fc97cdc79d52f17e17cceae24db59d8ca3a1d4ba62160544c965b",
    "presence": "MEASURED",
    "observed": 134
   },
@@ -204,7 +205,7 @@
    "name": "Hugging Face mcp-server tag (Spaces)",
    "class": "mcp_catalog",
    "state": "PUBLISHED",
-   "as_of": "2026-09-30T03:31:51Z",
+   "as_of": "2026-09-30T05:29:19Z",
    "evidence_hash": "0fc370bc83f94e387c3083c496ce113f002f2c0300925b0651f1e29bbbb07074",
    "presence": "MEASURED",
    "observed": 2
@@ -214,7 +215,7 @@
    "name": "Hugging Face models (csoai)",
    "class": "model_data_hub",
    "state": "PUBLISHED",
-   "as_of": "2026-09-30T03:32:12Z",
+   "as_of": "2026-09-30T05:29:32Z",
    "evidence_hash": "d75384106492071ff4f5784bec34eb7cf02b25f805a5289e156ba3def24ab2f1",
    "presence": "MEASURED",
    "observed": 2
@@ -224,7 +225,7 @@
    "name": "Hugging Face Spaces (csoai)",
    "class": "model_data_hub",
    "state": "PUBLISHED",
-   "as_of": "2026-09-30T03:32:11Z",
+   "as_of": "2026-09-30T05:29:31Z",
    "evidence_hash": "6a86978c73b900e0b8579e02c4b3de27bd51a64fd7a8134e8bfa39bcbda74254",
    "presence": "MEASURED",
    "observed": 39
@@ -244,7 +245,7 @@
    "name": "Internet Archive (Save Page Now)",
    "class": "citation_archive",
    "state": "PUBLISHED",
-   "as_of": "2026-09-30T03:32:30Z",
+   "as_of": "2026-09-30T05:29:47Z",
    "evidence_hash": "b325144dab46de5043ddee7367f84cd39f3c8311fa99d7b718da95c4ad0ade26",
    "presence": "MEASURED",
    "observed": 10
@@ -254,10 +255,10 @@
    "name": "Kaggle datasets (nicktempleman)",
    "class": "model_data_hub",
    "state": "PUBLISHED",
-   "as_of": "2026-09-30T03:32:12Z",
-   "evidence_hash": "5e2a77e2414fc0946a48a9f5f3b3a04275f236933ac80221037089bd7947342b",
+   "as_of": "2026-09-30T05:29:32Z",
+   "evidence_hash": "6b4c5cba0691a9d22979edd18d12f2434fd5603081fac6823ee0deebf76b6f0e",
    "presence": "MEASURED",
-   "observed": 120
+   "observed": 131
   },
   {
    "surface": "kaggle_models",
@@ -271,21 +272,21 @@
   },
   {
    "surface": "living_board_hf",
-   "name": "Layer O living board (Hugging Face)",
+   "name": "distribution presence living board (Hugging Face)",
    "class": "model_data_hub",
    "state": "PUBLISHED",
-   "as_of": "2026-09-29T06:10:10Z",
-   "evidence_hash": "f2b42eba9ca31fc7e8fccc1b7ee80dcece0587d5f7bbf2af3c6f330cab55272e",
+   "as_of": "2026-09-30T06:10:12Z",
+   "evidence_hash": "8673fa6ba2e2afaec54e582ad48f7f5848f28d333aef0169c05c53872b014106",
    "presence": "MEASURED",
    "observed": 1
   },
   {
    "surface": "living_board_kaggle",
-   "name": "Layer O living board (Kaggle)",
+   "name": "distribution presence living board (Kaggle)",
    "class": "model_data_hub",
    "state": "PUBLISHED",
-   "as_of": "2026-09-29T06:10:42Z",
-   "evidence_hash": "82f1822e654dc8ef455d139272bae7a1e0d9000dccbb855d27ece698f946fcba",
+   "as_of": "2026-09-30T06:10:49Z",
+   "evidence_hash": "fed91a23e2a179f8f8246cc41f1cabbdb129d8a450649b5dc504ccba79c00ab2",
    "presence": "MEASURED",
    "observed": 1
   },
@@ -294,8 +295,8 @@
    "name": "LobeHub MCP",
    "class": "mcp_catalog",
    "state": "PUBLISHED",
-   "as_of": "2026-09-30T03:31:50Z",
-   "evidence_hash": "f95fd2a079b8acf05b2e0cbdc70a255017955f3088111cc7155cefbd62ae770e",
+   "as_of": "2026-09-30T05:29:18Z",
+   "evidence_hash": "3cc17cbb3d991d28eadbcae77bbe11c06d960596721d764ba51e7c8cb9eb840a",
    "presence": "MEASURED",
    "observed": 20
   },
@@ -304,7 +305,7 @@
    "name": "Official MCP Registry",
    "class": "mcp_catalog",
    "state": "PUBLISHED",
-   "as_of": "2026-09-30T03:31:46Z",
+   "as_of": "2026-09-30T05:28:40Z",
    "evidence_hash": "958026d1707dae67098c511f5c4953630d524ec0d1c1b82a9876fd0a322347d4",
    "presence": "MEASURED",
    "observed": 3
@@ -324,8 +325,8 @@
    "name": "MCP Toplist",
    "class": "mcp_catalog",
    "state": "PUBLISHED",
-   "as_of": "2026-09-30T03:31:51Z",
-   "evidence_hash": "ff453c3ebd2d8c214dd10b9d5ad93303e2141234724b97e8409bc1a7169233ab",
+   "as_of": "2026-09-30T05:29:19Z",
+   "evidence_hash": "279697dc3a44789be6835b37504c0585591221955013f0a33475cc99a141ffaf",
    "presence": "MEASURED",
    "observed": 1
   },
@@ -371,10 +372,10 @@
   },
   {
    "surface": "npm",
-   "name": "npm (Harness X packages)",
+   "name": "npm (Council of AI tools packages)",
    "class": "package_registry",
    "state": "PUBLISHED",
-   "as_of": "2026-09-30T03:32:24Z",
+   "as_of": "2026-09-30T05:29:43Z",
    "evidence_hash": "a570c3390bf7b6554571cb4ada77629feeae82906e416646ccf678a08bd6d73f",
    "presence": "MEASURED",
    "observed": 2
@@ -516,16 +517,6 @@
    "state": "QUALIFIED",
    "as_of": "2026-09-29T06:29:03Z",
    "evidence_hash": "1dc3d0cde1fc466cf2e8dd7a4f3c018eac6f7809ca099f42f9dd47ffc8507d86",
-   "presence": "UNMEASURED",
-   "observed": null
-  },
-  {
-   "surface": "ns_blackhoodie_com",
-   "name": "blackhoodie.com",
-   "class": "audit_target",
-   "state": "DISCOVERED",
-   "as_of": "2026-09-29T07:05:27Z",
-   "evidence_hash": "c5b89d6186180d931a61b485ddbe2a96e344c25b023dadd0b2f92bae5a38b2f6",
    "presence": "UNMEASURED",
    "observed": null
   },
@@ -680,16 +671,6 @@
    "observed": null
   },
   {
-   "surface": "ns_defcon_org",
-   "name": "defcon.org",
-   "class": "audit_target",
-   "state": "DISCOVERED",
-   "as_of": "2026-09-29T07:06:04Z",
-   "evidence_hash": "c630649c847c910a0a749d47de69828f42e37e2f91571c838ca39dd36df37129",
-   "presence": "UNMEASURED",
-   "observed": null
-  },
-  {
    "surface": "ns_defillama_com",
    "name": "DefiLlama - DeFi Dashboard & Crypto Analytics",
    "class": "community",
@@ -836,16 +817,6 @@
    "state": "QUALIFIED",
    "as_of": "2026-09-29T06:08:06Z",
    "evidence_hash": "72b3683b874599f33b64f67969844c4d9d6644fc7d190fd8803bfc1899dd094c",
-   "presence": "UNMEASURED",
-   "observed": null
-  },
-  {
-   "surface": "ns_ieee_org",
-   "name": "ieee.org",
-   "class": "audit_target",
-   "state": "DISCOVERED",
-   "as_of": "2026-09-29T07:07:04Z",
-   "evidence_hash": "917618453d12eae37131c6a0713c731ee2ec265acf2f9361d665d1fe548b8661",
    "presence": "UNMEASURED",
    "observed": null
   },
@@ -1190,16 +1161,6 @@
    "observed": 0
   },
   {
-   "surface": "ns_schneier_com",
-   "name": "Schneier on Security -",
-   "class": "audit_target",
-   "state": "QUALIFIED",
-   "as_of": "2026-09-29T07:08:03Z",
-   "evidence_hash": "2232ac3c05fd70185df0920961bfbfb16254f58132935ef7b6738a7daf23dbff",
-   "presence": "UNMEASURED",
-   "observed": null
-  },
-  {
    "surface": "ns_semanticscholar_org",
    "name": "Semantic Scholar | AI-Powered Research Tool",
    "class": "citation_archive",
@@ -1256,16 +1217,6 @@
    "state": "UNSUPPORTED",
    "as_of": "2026-09-29T06:07:03Z",
    "evidence_hash": "1f9152a03d8fd98d4f1830363ca44f3a8ed3b0d1d89e146fa0cbad16de84d48d",
-   "presence": "UNMEASURED",
-   "observed": null
-  },
-  {
-   "surface": "ns_undp_org",
-   "name": "Home | United Nations Development Programme",
-   "class": "audit_target",
-   "state": "QUALIFIED",
-   "as_of": "2026-09-29T07:09:04Z",
-   "evidence_hash": "f8bbafc453e811d270d4adbfb3f4e614b78ef909bb7f034191c581609db00dc3",
    "presence": "UNMEASURED",
    "observed": null
   },
@@ -1354,7 +1305,7 @@
    "name": "Academy exercises (reproduce a published measurement)",
    "class": "other",
    "state": "PUBLISHED",
-   "as_of": "2026-09-30T03:32:48Z",
+   "as_of": "2026-09-30T05:29:54Z",
    "evidence_hash": "90a77b413f73c227c1985efbc929a6d8427039c39260276700a71f10fa6fa2de",
    "presence": "MEASURED",
    "observed": 1
@@ -1364,7 +1315,7 @@
    "name": "Humans vs AI: ARC-AGI-2 paired arm (115 tasks)",
    "class": "other",
    "state": "PUBLISHED",
-   "as_of": "2026-09-30T03:32:49Z",
+   "as_of": "2026-09-30T05:29:55Z",
    "evidence_hash": "929c3df5350765834dc44896ee534b8b93861897550dd9b667ab3d6e3aa940ca",
    "presence": "MEASURED",
    "observed": 1
@@ -1381,10 +1332,10 @@
   },
   {
    "surface": "pypi",
-   "name": "PyPI (Harness X packages)",
+   "name": "PyPI (Council of AI tools packages)",
    "class": "package_registry",
    "state": "PUBLISHED",
-   "as_of": "2026-09-30T03:32:21Z",
+   "as_of": "2026-09-30T05:29:40Z",
    "evidence_hash": "c20fe0bfc899f78753b1e2d395c643b23a30d150f4b0762967feffdd843b4340",
    "presence": "MEASURED",
    "observed": 3
@@ -1394,7 +1345,7 @@
    "name": "Smithery",
    "class": "mcp_catalog",
    "state": "PUBLISHED",
-   "as_of": "2026-09-30T03:31:49Z",
+   "as_of": "2026-09-30T05:29:17Z",
    "evidence_hash": "12474e1086953e42099f516e0c7cb3030af76b340bfadeb5085195e6a13f3671",
    "presence": "MEASURED",
    "observed": 2
@@ -1554,7 +1505,7 @@
    "name": "Wikidata",
    "class": "citation_archive",
    "state": "PUBLISHED",
-   "as_of": "2026-09-30T03:32:47Z",
+   "as_of": "2026-09-30T05:29:54Z",
    "evidence_hash": "0ac9322ec04f64f1571f49be566ee7d7a826c82ccd050e54b95ea9edd25c576c",
    "presence": "MEASURED",
    "observed": 1
@@ -1564,8 +1515,8 @@
    "name": "402 Index",
    "class": "payment_index",
    "state": "NEEDS_UPDATE",
-   "as_of": "2026-09-30T03:31:53Z",
-   "evidence_hash": "83b8ba799ea898aea8baa9e0ba1de666005b6c36876e9f3f3f8dfc3026bed348",
+   "as_of": "2026-09-30T05:29:20Z",
+   "evidence_hash": "6f3c7ba8d24bfc008c8eaab71ad90bc211f36c291ddb53b19fb8ced8b9c18412",
    "presence": "MEASURED",
    "observed": 30
   },
@@ -1574,17 +1525,17 @@
    "name": "agent-tools.cloud",
    "class": "payment_index",
    "state": "PUBLISHED",
-   "as_of": "2026-09-30T03:32:01Z",
-   "evidence_hash": "1a24ed6cac0b9ff53d8641bb5d8855872c778e4a6d990b39f92d110dfc916750",
+   "as_of": "2026-09-30T05:29:24Z",
+   "evidence_hash": "e0aed3524bf022dc27023b886fe09586db37761e67cdaca4821c65105382a510",
    "presence": "MEASURED",
-   "observed": 24
+   "observed": 29
   },
   {
    "surface": "x402_agentic_market",
    "name": "agentic.market",
    "class": "payment_index",
    "state": "QUALIFIED",
-   "as_of": "2026-09-30T03:32:05Z",
+   "as_of": "2026-09-30T05:29:28Z",
    "evidence_hash": "129d14e1c5c08bfd2807760399e04cd70149d93c2a7edb7b9dec1351b1af39fe",
    "presence": "MEASURED",
    "observed": 0
@@ -1594,7 +1545,7 @@
    "name": "Coinbase CDP Bazaar",
    "class": "payment_index",
    "state": "AUTH_REQUIRED",
-   "as_of": "2026-09-30T03:32:05Z",
+   "as_of": "2026-09-30T05:29:27Z",
    "evidence_hash": "aa5599ab6e8760fdbef65495f5f2a8ef6f6f0bd0d0132ab5eeb166874ba8e878",
    "presence": "MEASURED",
    "observed": 0
@@ -1604,7 +1555,7 @@
    "name": "gold-402 directory",
    "class": "payment_index",
    "state": "ACCEPTED",
-   "as_of": "2026-09-30T03:32:07Z",
+   "as_of": "2026-09-30T05:29:29Z",
    "evidence_hash": "4e62d37555e225b487919189f8ba41d3573a417481da8264b0d92f2b537aaa3d",
    "presence": "MEASURED",
    "observed": 1
@@ -1614,8 +1565,8 @@
    "name": "x402 List",
    "class": "payment_index",
    "state": "PUBLISHED",
-   "as_of": "2026-09-30T03:32:03Z",
-   "evidence_hash": "4106123fd6095a09d5919c565bad89fcc53cf4e9aaa36b39a36d5c19c385d977",
+   "as_of": "2026-09-30T05:29:26Z",
+   "evidence_hash": "a0aee9f58c5d09bfec05f9999d841579c4a7bc5a8a6ba47cb650a5f7aa8a8124",
    "presence": "MEASURED",
    "observed": 2
   },
@@ -1624,7 +1575,7 @@
    "name": "open-402 registry",
    "class": "payment_index",
    "state": "PUBLISHED",
-   "as_of": "2026-09-30T03:32:10Z",
+   "as_of": "2026-09-30T05:29:30Z",
    "evidence_hash": "d627859f0f83ef509b6fceab554b4e2b46fa55eef80a0353ff6f9cd6fbe8d0e6",
    "presence": "MEASURED",
    "observed": 1
@@ -1634,7 +1585,7 @@
    "name": "PayAI facilitator discovery",
    "class": "payment_index",
    "state": "PUBLISHED",
-   "as_of": "2026-09-30T03:32:05Z",
+   "as_of": "2026-09-30T05:29:27Z",
    "evidence_hash": "6ec39d375ac81e77548f7cd04fa2ac409d7acf0b8ae24a852f336bbdbc091c77",
    "presence": "MEASURED",
    "observed": 6
@@ -1644,7 +1595,7 @@
    "name": "x402 Endpoint (x402jp)",
    "class": "payment_index",
    "state": "PUBLISHED",
-   "as_of": "2026-09-30T03:32:07Z",
+   "as_of": "2026-09-30T05:29:29Z",
    "evidence_hash": "92345ed6a031f343b4016a19e2a5bb53ec2110a578bdef0e71a571f7ba7a8738",
    "presence": "MEASURED",
    "observed": 1
@@ -1654,8 +1605,8 @@
    "name": "x402scan",
    "class": "payment_index",
    "state": "PUBLISHED",
-   "as_of": "2026-09-30T03:31:55Z",
-   "evidence_hash": "c2b5612ceae87e23fbcb71f781f91378aa1fab5b8f001cf28610a5d654a8913a",
+   "as_of": "2026-09-30T05:29:22Z",
+   "evidence_hash": "85b109357498e973fcc59bedafb6b08e8d22eb5e9b33f4963d7de70575ef283d",
    "presence": "MEASURED",
    "observed": 98
   },
@@ -1664,7 +1615,7 @@
    "name": "Zenodo (DOIs)",
    "class": "citation_archive",
    "state": "QUALIFIED",
-   "as_of": "2026-09-30T03:32:29Z",
+   "as_of": "2026-09-30T05:29:47Z",
    "evidence_hash": "1580d7d43c52048dd8d8ab383b304f642306f98140c32c8defbbca305d4dda6b",
    "presence": "MEASURED",
    "observed": 0

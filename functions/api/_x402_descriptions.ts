@@ -48,7 +48,7 @@ export const DESCRIPTION_KEY_BY_PATH: Record<string, string> = {
   "/api/free-door": "free_door",
   "/api/request-attestation": "request_attestation",
   "/api/evidence-bundle": "evidence_bundle",
-  "/api/eunomia-data": "data_feed",
+  "/api/signed-data-feed": "data_feed",
   "/api/proof": "proof_bundle",
   "/api/rwa/evidence": "rwa_evidence",
   "/api/wrapper": "wrapper",

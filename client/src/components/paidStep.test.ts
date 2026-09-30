@@ -14,7 +14,7 @@ const here = dirname(fileURLToPath(import.meta.url));
 describe("paid-step pointer (shipped Footer + catalog doors)", () => {
   it("names the live catalog and the $0.02 feed door, never a price", () => {
     expect(PAID_STEP_HREF).toBe("/api/x402");
-    expect(PAID_STEP_FEED).toBe("/api/eunomia-data?feed=1");
+    expect(PAID_STEP_FEED).toBe("/api/signed-data-feed?feed=1");
     expect(PAID_STEP_COMMISSION).toBe("/api/request-attestation");
     expect(PAID_STEP_LINE.toLowerCase()).toMatch(/verification is free/);
     expect(PAID_STEP_LINE).toMatch(/commission_card/);
