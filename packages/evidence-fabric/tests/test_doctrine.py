@@ -5,7 +5,7 @@ the first run (guard absent) is recorded failing in receipts/F0.json."""
 import copy, json, os
 import pytest
 import event as E
-from render import ocsf, otel, sarif, intoto, ecs_hec, w3c_acr01
+from render import ocsf, otel, sarif, intoto, ecs_hec, w3c_acr01, oasf_eval
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 EVS = E.read_jsonl(os.path.join(HERE, "fixtures", "events.jsonl"))
@@ -17,6 +17,7 @@ RENDERERS = {
     "intoto": intoto.statement,
     "ecs_hec": ecs_hec.hec,
     "w3c_acr01": w3c_acr01.event_record,
+    "oasf_eval": oasf_eval.single,
 }
 
 
