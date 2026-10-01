@@ -1,0 +1,278 @@
+{
+  "as_of": "2026-10-01T03:43:11Z",
+  "authority": "institutional rail identity and dependency catalogue; state comes only from the event ledger",
+  "rails": [
+    {
+      "class": "tokenized_assets",
+      "dependencies": [],
+      "id": "ondo-tokenized-assets",
+      "initial_state": "DISCOVERED",
+      "jurisdictions": [
+        "global"
+      ],
+      "name": "Ondo tokenized asset rails",
+      "owner": "Ondo"
+    },
+    {
+      "class": "interoperability",
+      "dependencies": [],
+      "id": "chainlink-ccip-2",
+      "initial_state": "DISCOVERED",
+      "jurisdictions": [
+        "global"
+      ],
+      "name": "Chainlink CCIP 2.0",
+      "owner": "Chainlink"
+    },
+    {
+      "class": "orchestration",
+      "dependencies": [],
+      "id": "chainlink-cre-institutional",
+      "initial_state": "DISCOVERED",
+      "jurisdictions": [
+        "global"
+      ],
+      "name": "Chainlink CRE institutional orchestration",
+      "owner": "Chainlink"
+    },
+    {
+      "class": "market_data",
+      "dependencies": [
+        "stellar-network"
+      ],
+      "id": "chainlink-stellar-data-feeds",
+      "initial_state": "DISCOVERED",
+      "jurisdictions": [
+        "global"
+      ],
+      "name": "Chainlink Data Feeds on Stellar",
+      "owner": "Chainlink"
+    },
+    {
+      "class": "interoperability",
+      "dependencies": [
+        "chainlink-ccip-2",
+        "stellar-network"
+      ],
+      "id": "chainlink-stellar-ccip",
+      "initial_state": "DISCOVERED",
+      "jurisdictions": [
+        "global"
+      ],
+      "name": "Chainlink CCIP on Stellar",
+      "owner": "Chainlink"
+    },
+    {
+      "class": "ledger_network",
+      "dependencies": [],
+      "id": "canton-global-synchronizer",
+      "initial_state": "DISCOVERED",
+      "jurisdictions": [
+        "global"
+      ],
+      "name": "Canton Global Synchronizer",
+      "owner": "Canton Network"
+    },
+    {
+      "class": "network_economics",
+      "dependencies": [
+        "canton-global-synchronizer"
+      ],
+      "id": "canton-tbar",
+      "initial_state": "DISCOVERED",
+      "jurisdictions": [
+        "global"
+      ],
+      "name": "Canton Traffic-Based App Rewards",
+      "owner": "Canton Network"
+    },
+    {
+      "class": "ledger_network",
+      "dependencies": [],
+      "id": "stellar-network",
+      "initial_state": "DISCOVERED",
+      "jurisdictions": [
+        "global"
+      ],
+      "name": "Stellar network institutional rail",
+      "owner": "Stellar Development Foundation"
+    },
+    {
+      "class": "tokenized_assets",
+      "dependencies": [
+        "stellar-network"
+      ],
+      "id": "stellar-institutional-assets",
+      "initial_state": "DISCOVERED",
+      "jurisdictions": [
+        "global"
+      ],
+      "name": "Institutional tokenized assets on Stellar",
+      "owner": "multiple"
+    },
+    {
+      "class": "collateral_market_infrastructure",
+      "dependencies": [],
+      "id": "dtcc-collateral-appchain",
+      "initial_state": "DISCOVERED",
+      "jurisdictions": [
+        "US",
+        "global"
+      ],
+      "name": "DTCC Collateral AppChain",
+      "owner": "DTCC"
+    },
+    {
+      "class": "bank_messaging_settlement_orchestration",
+      "dependencies": [],
+      "id": "swift-tokenized-ledger",
+      "initial_state": "DISCOVERED",
+      "jurisdictions": [
+        "global"
+      ],
+      "name": "Swift shared ledger for tokenized value",
+      "owner": "Swift"
+    },
+    {
+      "class": "bank_middleware",
+      "dependencies": [
+        "swift-tokenized-ledger"
+      ],
+      "id": "ibm-haven-swift",
+      "initial_state": "DISCOVERED",
+      "jurisdictions": [
+        "global"
+      ],
+      "name": "IBM Digital Asset Haven - Swift integration",
+      "owner": "IBM"
+    },
+    {
+      "class": "ledger_software",
+      "dependencies": [],
+      "id": "lfdt-besu",
+      "initial_state": "DISCOVERED",
+      "jurisdictions": [
+        "global"
+      ],
+      "name": "LF Decentralized Trust Hyperledger Besu",
+      "owner": "LF Decentralized Trust"
+    },
+    {
+      "class": "institutional_settlement_network",
+      "dependencies": [],
+      "id": "circle-arc",
+      "initial_state": "DISCOVERED",
+      "jurisdictions": [
+        "global"
+      ],
+      "name": "Circle Arc",
+      "owner": "Circle"
+    },
+    {
+      "class": "wholesale_tokenized_money",
+      "dependencies": [],
+      "id": "bis-agora",
+      "initial_state": "DISCOVERED",
+      "jurisdictions": [
+        "multi-jurisdiction"
+      ],
+      "name": "BIS Project Agora",
+      "owner": "BIS Innovation Hub and participating central banks"
+    },
+    {
+      "class": "tokenized_deposit_infrastructure",
+      "dependencies": [],
+      "id": "hkma-ensembletx",
+      "initial_state": "DISCOVERED",
+      "jurisdictions": [
+        "Hong Kong"
+      ],
+      "name": "HKMA EnsembleTX",
+      "owner": "HKMA"
+    },
+    {
+      "class": "sovereign_digital_bonds",
+      "dependencies": [
+        "hkma-ensembletx"
+      ],
+      "id": "hkma-digital-green-bonds",
+      "initial_state": "DISCOVERED",
+      "jurisdictions": [
+        "Hong Kong"
+      ],
+      "name": "Hong Kong Digital Green Bonds",
+      "owner": "HKSAR Government and HKMA"
+    },
+    {
+      "class": "regulatory_market_infrastructure",
+      "dependencies": [],
+      "id": "mas-tokenisation",
+      "initial_state": "DISCOVERED",
+      "jurisdictions": [
+        "Singapore"
+      ],
+      "name": "MAS institutional tokenisation initiatives",
+      "owner": "Monetary Authority of Singapore"
+    },
+    {
+      "class": "securities_regulation",
+      "dependencies": [],
+      "id": "sec-tokenisation",
+      "initial_state": "DISCOVERED",
+      "jurisdictions": [
+        "US"
+      ],
+      "name": "SEC tokenization regulatory actions",
+      "owner": "US SEC"
+    },
+    {
+      "class": "derivatives_regulation",
+      "dependencies": [],
+      "id": "cftc-digital-assets",
+      "initial_state": "DISCOVERED",
+      "jurisdictions": [
+        "US"
+      ],
+      "name": "CFTC digital-asset market infrastructure actions",
+      "owner": "US CFTC"
+    },
+    {
+      "class": "cash_settlement_market_infrastructure",
+      "dependencies": [
+        "canton-global-synchronizer"
+      ],
+      "id": "lseg-dish-canton",
+      "initial_state": "DISCOVERED",
+      "jurisdictions": [
+        "UK",
+        "global"
+      ],
+      "name": "LSEG Digital Settlement House on Canton",
+      "owner": "LSEG"
+    },
+    {
+      "class": "tokenized_deposits",
+      "dependencies": [],
+      "id": "citi-token-services",
+      "initial_state": "DISCOVERED",
+      "jurisdictions": [
+        "multi-jurisdiction"
+      ],
+      "name": "Citi Token Services",
+      "owner": "Citi"
+    },
+    {
+      "class": "stablecoin_settlement_network",
+      "dependencies": [],
+      "id": "visa-stablecoin-settlement",
+      "initial_state": "DISCOVERED",
+      "jurisdictions": [
+        "global"
+      ],
+      "name": "Visa institutional stablecoin settlement rail",
+      "owner": "Visa"
+    }
+  ],
+  "schema": "csoai.institutional-rail-catalog/0.1",
+  "state_rule": "Every rail begins DISCOVERED. Only a ledger event backed by named evidence may advance it."
+}
