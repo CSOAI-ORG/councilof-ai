@@ -29,4 +29,28 @@ describe("obligation map — SKU-2 assembles against real obligations, never det
     expect(isRelevant(card, "", OBLIGATIONS["article-50"])).toBe(false); // no keyword: absent subject does not rescue it
     expect(isRelevant(card, "claude", OBLIGATIONS["article-53"])).toBe(false);
   });
+
+  it("article-50 relevance is about marking, not any card that says 'disclosure' (2026-09-30)", () => {
+    const a50 = OBLIGATIONS["article-50"];
+    const base = { sha256: "b".repeat(64), did: null, as_of: null, proof_len: 3 };
+    // Real subjects/tags from the 2026-09-30 corpus: 80 of 93 obligation-wide hits matched on "disclosure" alone.
+    const custody = { ...base, subject: "GSPC custody-disclosure UNMEASURED coverage", surface: "public.notice", tags: ["coverage:UNMEASURED", "not-a-grade", "no-composite"] };
+    const bank = {
+      ...base,
+      subject: "Circle disclosure page facts: 43 attestation PDF links, term hits, cadence — PROBED",
+      surface: "public.notice",
+      tags: ["eater:xrpl-swift", "axis:reserve-attestation", "axis:custody-disclosure", "axis:regulatory-framework"],
+    };
+    const reserveTransparency = { ...base, subject: "Issuer reserve transparency report", surface: "public.notice", tags: [] };
+    expect(isRelevant(custody, "", a50)).toBe(false);
+    expect(isRelevant(bank, "", a50)).toBe(false);
+    expect(isRelevant(reserveTransparency, "", a50)).toBe(false);
+    // What stays: cards whose own subject/surface/tags name Article 50 marking or agent disclosure.
+    const marking = { ...base, subject: "Anthropic — art50_marking: bytes changed 2026-09-12", surface: "public.notice", tags: ["provider-diff", "surface:art50_marking"] };
+    const census = { ...base, subject: "Art 50 generator content-marking census", surface: "public.notice", tags: ["public-notice", "art50", "marking-census"] };
+    const agent = { ...base, subject: "agent disclosure probe", surface: "agent.disclosure", tags: [] };
+    expect(isRelevant(marking, "", a50)).toBe(true);
+    expect(isRelevant(census, "", a50)).toBe(true);
+    expect(isRelevant(agent, "", a50)).toBe(true);
+  });
 });

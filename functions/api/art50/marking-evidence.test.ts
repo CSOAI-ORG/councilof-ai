@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { onRequestGet as get, onRequestPost as post, KIND, SURFACE } from "./marking-evidence";
-import { ART50_2_TEXT } from "../../_lib/art50Law";
+import { ART50_2_TEXT, ART111_4_TEXT } from "../../_lib/art50Law";
 import { verifyLeaf } from "../../_lib/cardSign";
 import { ESTATE_PAY_TO } from "../_x402_config";
 
@@ -62,7 +62,7 @@ describe("free preview (?preview=1) — the full measurement, unsigned", () => {
     expect(JSON.stringify(b)).not.toMatch(FORBIDDEN);
   });
 
-  it("carries the verbatim Article 50(2) text, its sha256, the EUR-Lex URL, the dates and the Art 99(4) ceiling", async () => {
+  it("carries the verbatim Article 50(2) text, its sha256, the EUR-Lex URLs and the dates with their verbatim basis — and no fine ceiling", async () => {
     stubFetch();
     const b = await (await get(ctx(`${EP}?preview=1&url=https://cdn.example/plain.png`))).json();
     expect(b.law.text).toBe(ART50_2_TEXT);
@@ -70,8 +70,20 @@ describe("free preview (?preview=1) — the full measurement, unsigned", () => {
     const sha = [...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(ART50_2_TEXT)))].map((x) => x.toString(16).padStart(2, "0")).join("");
     expect(b.law.text_sha256).toBe(sha);
     expect(b.law.sources.eur_lex).toBe("https://eur-lex.europa.eu/eli/reg/2024/1689/oj/eng");
+    expect(b.law.sources.eur_lex_2026_1744).toBe("https://eur-lex.europa.eu/eli/reg/2026/1744/oj/eng");
     expect(b.law.dates).toMatchObject({ applies_from: "2026-08-02", pre_existing_systems_until: "2026-12-02" });
-    expect(b.law.fine_ceiling).toMatchObject({ ceiling_eur: 15_000_000, ceiling_turnover_pct: 3 });
+    // The 2 Dec date rests on the OJ text (Art 111(4), added by 2026/1744 Art 1(39)(b)), never on a
+    // Commission FAQ nobody re-read. The verbatim words ride along so the scope is the law's, not ours.
+    expect(b.law.dates.pre_existing_basis).toBe(
+      "Article 111(4), Regulation (EU) 2024/1689, as added by Regulation (EU) 2026/1744 Article 1(39)(b) (OJ L, 24.7.2026; in force 27 July 2026)",
+    );
+    expect(b.law.dates.pre_existing_text).toBe(ART111_4_TEXT);
+    expect(ART111_4_TEXT).toMatch(/placed on the market before 2 August 2026 shall take the necessary steps in order to comply with Article 50\(2\) by 2 December 2026\.$/);
+    expect(b.law.sources.commission_faq).toBeUndefined();
+    expect(JSON.stringify(b.law)).not.toMatch(/FAQ|owner brief|not re-read/i);
+    // No penalty figure beside a detection result (dropped 2026-09-30; Art 99(6)/(6a) make any single figure incomplete).
+    expect(b.law.fine_ceiling).toBeUndefined();
+    expect(JSON.stringify(b)).not.toMatch(/15[ ,.]?000[ ,.]?000|99\(4\)|turnover/);
   });
 
   it("POST raw bytes of the non-C2PA sample: 'marking not detected by method …', never 'absent'", async () => {
@@ -208,6 +220,9 @@ describe("x402 rail — price only inside the 402", () => {
     expect(b.card.payload.payment).toMatchObject({ mode: "x402", transaction: "0xtx" });
     expect(b.card.source_urls).toContain("https://basescan.org/tx/0xtx");
     expect(b.card.source_urls).toContain("https://eur-lex.europa.eu/eli/reg/2024/1689/oj/eng");
+    expect(b.card.source_urls).toContain("https://eur-lex.europa.eu/eli/reg/2026/1744/oj/eng");
+    expect(b.card.payload.law).toMatchObject({ pre_existing_until: "2026-12-02", pre_existing_basis: expect.stringMatching(/^Art 111\(4\).*2026\/1744 Art 1\(39\)\(b\)$/) });
+    expect(b.card.payload.law.fine_ceiling).toBeUndefined();
     expect(b.card.sig_ed25519).toBeNull();
     expect(b.card.unmeasured).toEqual(expect.arrayContaining(["root_inclusion", "sig_ed25519", "watermark.synthid", "c2pa.chain-trust"]));
     expect(b.bytes).toBeLessThanOrEqual(3072);
@@ -229,7 +244,8 @@ describe("invoice rail — ?commissioned_by=<org>&invoice=gbp", () => {
     expect(b.invoice.amount).toBeNull();
     expect(b.invoice.issuer).toMatch(/16939677/);
     expect(b.card.payload.statements).toContain("marking not detected by method c2pa.manifest-store");
-    expect(b.card.payload.law.fine_ceiling).toMatch(/15,000,000|3%/);
+    expect(b.card.payload.law.fine_ceiling).toBeUndefined();
+    expect(b.card.payload.law.pre_existing_basis).toMatch(/Art 111\(4\)/);
     expect(b.bytes).toBeLessThanOrEqual(3072);
     const s = JSON.stringify(b);
     expect(s).not.toMatch(FORBIDDEN);

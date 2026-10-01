@@ -116,21 +116,21 @@ export default function LobbyArt50Pane({ onOpenRoute }: { onOpenRoute?: (path: s
       </PaneHead>
 
       <section className="mt-5 rounded-xl border border-slate-900/10 bg-white/80 px-4 py-3.5">
-        <p className={TYPE.section}>The dates and the ceiling — quoted, not interpreted</p>
+        <p className={TYPE.section}>The dates — quoted, not interpreted</p>
         <ul className={`mt-2 space-y-1 ${MEASURE} text-[13px] leading-relaxed text-slate-800`}>
           <li>
             <strong>Applies from 2 August 2026</strong> — Article 113, Regulation (EU) 2024/1689.
           </li>
           <li>
-            <strong>Systems already on the market before that date: to 2 December 2026</strong> — Commission FAQ on the AI Act.
-          </li>
-          <li>
-            <strong>Article 99(4)(g):</strong> up to EUR 15 000 000 or 3 % of total worldwide annual turnover, whichever is higher.
+            <strong>2 December 2026</strong> — Article 111(4), Regulation (EU) 2024/1689, added by Regulation (EU) 2026/1744:
+            “Providers of AI systems, including general-purpose AI systems, generating synthetic audio, image, video or
+            text content, that have been placed on the market before 2 August 2026 shall take the necessary steps in
+            order to comply with Article 50(2) by 2 December 2026.”
           </li>
         </ul>
         <p className={`mt-2 ${TYPE.fine}`}>
-          The pack carries the verbatim Article 50(2) text, its SHA-256 and the EUR-Lex link, so a reader checks the
-          words themselves.
+          The pack carries the verbatim Article 50(2) text, its SHA-256 and the EUR-Lex links, so a reader checks the
+          words themselves. It quotes no penalty figure: what applies to a given provider is a question for its counsel.
         </p>
       </section>
 

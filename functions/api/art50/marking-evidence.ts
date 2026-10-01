@@ -4,7 +4,8 @@
  * ONE QUESTION, MEASURED BY BYTES: does this generative output carry a machine-readable mark that
  * the named methods can DETECT, right now? The answer is a point-in-time measurement, signed
  * (Ed25519, did:web:csoai.org#board-attestation-1) and timestamped, beside the verbatim Article
- * 50(2) text (hash + EUR-Lex URL) and the Article 99(4) fine ceiling. It is an independently
+ * 50(2) text (hash + EUR-Lex URL) and the dates it turns on, each with its verbatim basis (no fine
+ * ceiling since 2026-09-30 — see functions/_lib/art50Law.ts). It is an independently
  * signed, timestamped measurement. It is not a conformity opinion, not a guarantee, and it is
  * never described as legal evidence — a self-signed card is admissible but carries no presumption.
  *
@@ -236,7 +237,7 @@ async function leafPayload(m: Measurement, fetched_at: string, payment: Record<s
       url: ART50_SOURCES.eur_lex,
       applies_from: ART50_DATES.applies_from,
       pre_existing_until: ART50_DATES.pre_existing_systems_until,
-      fine_ceiling: "Art 99(4)(g): up to EUR 15,000,000 or 3% worldwide annual turnover, whichever higher",
+      pre_existing_basis: "Art 111(4) Reg (EU) 2024/1689, added by Reg (EU) 2026/1744 Art 1(39)(b)",
     },
     ...(payment ? { payment } : {}),
     lid: CSOAI_LID,
@@ -432,7 +433,7 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
     surface: SURFACE,
     subject: m.subject.sha256 ? `sha256:${m.subject.sha256}` : (m.subject.url ?? "unknown"),
     as_of: fetched_at,
-    source_urls: [resourceUrl, ...(m.subject.url ? [m.subject.url] : []), ART50_SOURCES.eur_lex, ...(tx ? [`https://basescan.org/tx/${tx}`] : [])],
+    source_urls: [resourceUrl, ...(m.subject.url ? [m.subject.url] : []), ART50_SOURCES.eur_lex, ART50_SOURCES.eur_lex_2026_1744, ...(tx ? [`https://basescan.org/tx/${tx}`] : [])],
     payload,
     leaf,
     tags: [`rail:${payment.mode}`, `sku:${SKU}`, "article-50"],

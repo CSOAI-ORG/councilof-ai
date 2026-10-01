@@ -33,8 +33,13 @@ export const OBLIGATIONS: Record<string, Obligation> = {
     obligation: "Article 50 — provider transparency + synthetic-content marking (machine-readable & detectable)",
     regulator: "eu-ai-act",
     statutory_maximum:
-      "up to €15,000,000 or 3% of worldwide annual turnover (EU AI Act Art. 99) — confirm exact figure with counsel",
-    keywords: ["article 50", "art50", "art 50", "disclosure", "transparency", "provenance", "c2pa", "watermark", "synthetic", "marking", "agent.disclosure"],
+      "up to €15,000,000 or 3% of worldwide annual turnover, whichever is higher (EU AI Act Art 99(4)(g)); for SMEs (Art 99(6)) " +
+      "and SMCs (Art 99(6a), inserted by Reg (EU) 2026/1744) whichever is lower — confirm exact figure with counsel",
+    // No bare "disclosure" / "transparency" (2026-09-30): "disclosure" alone pulled 80 of the 93
+    // cards an obligation-wide request returned — 60 "GSPC custody-disclosure UNMEASURED coverage"
+    // notices and 20 bank / stablecoin disclosure-page cards, none about Article 50. Every card left
+    // (13 on the 2026-09-30 corpus) carries art50 / marking in its own subject or tags.
+    keywords: ["article 50", "art50", "art 50", "provenance", "c2pa", "watermark", "synthetic", "marking", "agent.disclosure"],
     existing_pack: "/packs/eu-article-50",
     counsel_confirmed: true,
     honesty: null,
