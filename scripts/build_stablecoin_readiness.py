@@ -89,27 +89,50 @@ def find_index_commitment(repo: Path, index_sha: str, root_hashes: set[str]) -> 
     return rooted[0]
 
 
-def latest_rooted_rlusd(repo: Path, root_hashes: set[str]) -> tuple[Path, dict[str, Any]]:
-    candidates: list[tuple[str, Path, dict[str, Any]]] = []
+def rooted_xrpl_asset_measurements(
+    repo: Path, root_hashes: set[str], index_assets: list[dict[str, Any]]
+) -> dict[str, tuple[Path, dict[str, Any]]]:
+    """Return qualified current-root XRPL measurements keyed by frozen asset id.
+
+    Qualification is deliberately conservative: the card must be signed, included in
+    the current root, describe an XRPL Stablecoin asset state, and its symbol must map
+    to exactly one frozen-index row that explicitly lists XRPL. Ambiguous symbols,
+    XRPL cards absent from the frozen 425, and same-symbol rows with no XRPL deployment
+    remain UNMEASURED. When several qualifying cards exist for one asset, the latest
+    recorded card wins without changing the signed historical bytes.
+    """
+    by_symbol: dict[str, list[dict[str, Any]]] = {}
+    for row in index_assets:
+        by_symbol.setdefault(str(row.get("symbol") or "").upper(), []).append(row)
+
+    candidates: dict[str, list[tuple[str, Path, dict[str, Any]]]] = {}
     for path in sorted((repo / CARDS_REL).glob("*.json")):
         try:
             body = card_body(load(path))
         except (OSError, ValueError):
             continue
         payload = body.get("payload") or {}
-        digest = body.get("sha256")
+        symbol = str(payload.get("symbol") or "").upper()
         if (
-            payload.get("symbol") == "RLUSD"
-            and body.get("surface") == "xrpl.asset.state"
-            and isinstance(body.get("sig_ed25519"), str)
-            and digest in root_hashes
+            body.get("surface") != "xrpl.asset.state"
+            or payload.get("asset_class") != "Stablecoin"
+            or not isinstance(body.get("sig_ed25519"), str)
+            or not body.get("sig_ed25519")
+            or body.get("sha256") not in root_hashes
+            or not symbol
         ):
-            candidates.append((str(body.get("as_of") or ""), path, body))
-    if not candidates:
-        raise SystemExit("no signed, current-root-included XRPL RLUSD card found")
-    _, path, body = max(candidates, key=lambda row: row[0])
-    return path, body
+            continue
+        matches = [row for row in by_symbol.get(symbol, []) if "XRPL" in (row.get("chains") or [])]
+        if len(matches) != 1:
+            continue
+        asset_id = str(matches[0]["id"])
+        candidates.setdefault(asset_id, []).append((str(body.get("as_of") or ""), path, body))
 
+    qualified: dict[str, tuple[Path, dict[str, Any]]] = {}
+    for asset_id, rows in candidates.items():
+        _, path, body = max(rows, key=lambda row: row[0])
+        qualified[asset_id] = (path, body)
+    return qualified
 
 def witness_state_token(status: Any, *, ots: bool = False) -> str:
     """Return the public row-state token derived from a witness status.
@@ -160,8 +183,7 @@ def build(repo: Path) -> dict[str, Any]:
     if commitment_sha not in root_hashes:
         raise SystemExit("stablecoin index commitment is signed but absent from the current public root")
 
-    rlusd_path, rlusd = latest_rooted_rlusd(repo, root_hashes)
-    rlusd_payload = rlusd.get("payload") or {}
+    xrpl_measurements = rooted_xrpl_asset_measurements(repo, root_hashes, index["assets"])
     rekor = ((witness.get("witnesses") or {}).get("rekor") or {})
     ots = ((witness.get("witnesses") or {}).get("ots") or {})
     current_index_commitment_state = index_commitment_state(rekor.get("status"), ots.get("status"))
@@ -226,14 +248,18 @@ def build(repo: Path) -> dict[str, Any]:
         }
         if str(source_row["id"]) in asset_doors:
             row["x402_door"] = f"https://councilof.ai/api/wrapper/asset/{asset_doors[str(source_row['id'])]['asset']}"
-        if str(source_row.get("symbol") or "").upper() == "RLUSD":
+        measured_card = xrpl_measurements.get(str(source_row["id"]))
+        if measured_card:
+            measurement_path, measurement_card = measured_card
+            measurement_payload = measurement_card.get("payload") or {}
             row["measurement"] = {
                 "state": "MEASURED",
                 "depth": "PARTIAL_ONE_CHAIN_XRPL",
                 "freshness": "AS_OF_RECORDED_CARD",
-                "as_of": rlusd.get("as_of"),
-                "evidence_urls": [f"https://councilof.ai/cards/{rlusd_path.name}"],
+                "as_of": measurement_card.get("as_of"),
+                "evidence_urls": [f"https://councilof.ai/cards/{measurement_path.name}"],
                 "measured_chains": ["XRPL"],
+                "match_rule": "UNIQUE_FROZEN_SYMBOL_WITH_XRPL_DEPLOYMENT",
                 "unmeasured_scope": "Other listed deployments and a current cross-chain aggregate are not established by this card.",
             }
             row["signature_state"] = "ASSET_MEASUREMENT_SIGNED_ED25519"
@@ -243,12 +269,13 @@ def build(repo: Path) -> dict[str, Any]:
                 "state": "SEMANTIC_REVIEW_REQUIRED",
                 "supersedes": [],
                 "note": (
-                    "The rooted card labels its source field as holders. Repository evidence does not establish "
-                    "the separately reported 4,074 trustline correction, so this catalog does not repeat it."
+                    "The rooted XRPL card carries a reader-labelled holder field. This catalog withholds that "
+                    "field because repository evidence does not contain a complete paginated account_lines "
+                    "traversal establishing a holder count."
                 ),
             }
             row["measurement"]["reported_fields"] = {
-                "supply": rlusd_payload.get("supply"),
+                "supply": measurement_payload.get("supply"),
                 "holders_source_label": None,
                 "holders_state": "WITHHELD_UNVERIFIED_SOURCE_LABEL",
                 "holders_note": (
@@ -378,9 +405,8 @@ def validate(document: dict[str, Any]) -> None:
     assert coverage["indexed_assets"] == len(assets)
     assert coverage["indexed_chain_deployments"] == sum(row["chain_deployment_count"] for row in assets)
     measured = [row for row in assets if row["measurement"]["state"] == "MEASURED"]
-    assert coverage["deeply_measured_assets"] == len(measured) == 1
-    assert coverage["unmeasured_assets"] == len(assets) - len(measured) == 424
-    assert measured[0]["symbol"] == "RLUSD"
+    assert coverage["deeply_measured_assets"] == len(measured)
+    assert coverage["unmeasured_assets"] == len(assets) - len(measured)
     proof = document["shared_evidence"]["index_commitment"]
     expected_index_commitment_state = index_commitment_state(
         (proof.get("rekor") or {}).get("state"),
@@ -411,6 +437,15 @@ def validate(document: dict[str, Any]) -> None:
             assert row["root_state"] == "NO_ASSET_MEASUREMENT_IN_CURRENT_ROOT"
             assert row["anchor_state"] == "NO_ASSET_MEASUREMENT_ANCHOR"
         else:
+            assert row["measurement"]["depth"] == "PARTIAL_ONE_CHAIN_XRPL"
+            assert row["measurement"]["measured_chains"] == ["XRPL"]
+            assert row["measurement"]["match_rule"] == "UNIQUE_FROZEN_SYMBOL_WITH_XRPL_DEPLOYMENT"
+            assert "XRPL" in row["chains"]
+            assert sum(str(peer["symbol"]).upper() == str(row["symbol"]).upper() for peer in assets) == 1
+            assert len(row["measurement"]["evidence_urls"]) == 1
+            assert row["measurement"]["evidence_urls"][0].startswith("https://councilof.ai/cards/")
+            assert row["signature_state"] == "ASSET_MEASUREMENT_SIGNED_ED25519"
+            assert row["root_state"] == "ASSET_MEASUREMENT_IN_CURRENT_ROOT"
             assert row["anchor_state"] == expected_measured_anchor_state
     validate_regulatory(document)
 

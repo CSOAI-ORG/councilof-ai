@@ -9,9 +9,11 @@ from pathlib import Path
 from build_stablecoin_readiness import (
     INDEX_REL,
     OUTPUT_REL,
+    ROOT_REL,
     WITNESS_REL,
     index_commitment_state,
     measured_asset_anchor_state,
+    rooted_xrpl_asset_measurements,
     validate,
 )
 
@@ -42,6 +44,17 @@ if __name__ == "__main__":
         "every indexed row must derive its index commitment state from the current root witness"
     )
     measured_rows = [row for row in document["assets"] if row["measurement"]["state"] == "MEASURED"]
+    source_index = json.loads((repo / INDEX_REL).read_text())
+    current_root = json.loads((repo / ROOT_REL).read_text())
+    expected_measurements = rooted_xrpl_asset_measurements(
+        repo, set(current_root.get("card_sha256") or []), source_index["assets"]
+    )
+    assert {row["id"] for row in measured_rows} == set(expected_measurements), (
+        "MEASURED rows must equal the signed, current-root, uniquely matched XRPL stablecoin evidence set"
+    )
+    for row in measured_rows:
+        expected_path, _ = expected_measurements[row["id"]]
+        assert row["measurement"]["evidence_urls"] == [f"https://councilof.ai/cards/{expected_path.name}"]
     expected_anchor_state = measured_asset_anchor_state(
         ((witness.get("witnesses") or {}).get("rekor") or {}).get("status"),
         w_ots.get("status"),
@@ -50,4 +63,9 @@ if __name__ == "__main__":
         "measured asset root-anchor state must derive from the current root witness"
     )
     assert document["shared_discovery"]["x402"]["fresh_compute_excluded"] is True
-    print("stablecoin readiness truth gate: PASS — 425 indexed, 1 measured, 424 unmeasured")
+    print(
+        "stablecoin readiness truth gate: PASS — "
+        f"{document['coverage']['indexed_assets']} indexed, "
+        f"{document['coverage']['deeply_measured_assets']} measured, "
+        f"{document['coverage']['unmeasured_assets']} unmeasured"
+    )

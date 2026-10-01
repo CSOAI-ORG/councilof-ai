@@ -1,0 +1,53 @@
+{
+  "schema": "csoai.ietf-audit-live-readback/0.1",
+  "fetched_at_utc": "2026-10-01T08:10:28Z",
+  "endpoints": {
+    "gspc": {
+      "url": "https://councilof.ai/api/gspc",
+      "http_status": 200,
+      "bytes": 130496,
+      "sha256": "a7782d9a9f3334a9d5ea5952504a0c3d7c8fd6b8850673dbb8064ef1ac05ea24"
+    },
+    "root": {
+      "url": "https://councilof.ai/root.json",
+      "http_status": 200,
+      "bytes": 25513,
+      "sha256": "f1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e"
+    },
+    "witness": {
+      "url": "https://councilof.ai/interop/root-witness-latest.json",
+      "http_status": 200,
+      "bytes": 4578,
+      "sha256": "a3febfa2d43d1c105bb19524f73e2da4eef399927e0739ca1dcbe5cdf4491569"
+    },
+    "corrections": {
+      "url": "https://councilof.ai/api/corrections",
+      "http_status": 200,
+      "bytes": 233582,
+      "sha256": "d2924d05e8b0eb91f7938ce3041dfb256428eab73c7675ffcb4a7234048cb401"
+    }
+  },
+  "observed": {
+    "gspc_axes": 23,
+    "gspc_measured_axes": 23,
+    "public_root_card_count": 319,
+    "public_root_merkle_root": "47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d",
+    "public_root_as_of": "2026-09-30T05:05:34Z",
+    "corrections_count": 89,
+    "corrections_signature_state": "VALID",
+    "rekor_status": "WITNESSED",
+    "rekor_log_index": 3012420819,
+    "ots_status": "CONFIRMED_BITCOIN",
+    "ots_bitcoin_blocks": [
+      969264,
+      969266,
+      969288,
+      969296
+    ]
+  },
+  "boundary": [
+    "Point-in-time readback only; re-fetch live endpoints before citing changing counts.",
+    "Measurement is not certification or legal compliance.",
+    "Bitcoin timestamping proves existence of exact bytes by a block, not correctness of their contents."
+  ]
+}
