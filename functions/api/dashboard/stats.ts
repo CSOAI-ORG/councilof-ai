@@ -56,6 +56,10 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
 
   const measuredAxes = num(gspcSrc, (v) => v?.totals?.measured_axes);
   const quotableAxes = num(gspcSrc, (v) => v?.totals?.quotable_axes);
+  const lastRunAt =
+    gspcSrc.ok && typeof gspc?.measured_on?.living_stamp?.gold_run === "string"
+      ? gspc.measured_on.living_stamp.gold_run
+      : null;
   // /api/cards includes the separately published cross-border card in its living
   // registry totals. This dashboard tile is labelled as the signed measurement
   // card index, so keep that other corpus out of both numbers.
@@ -113,6 +117,8 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
       gspc: {
         measured_axes: measuredAxes,
         quotable_axes: quotableAxes,
+        // Source run time, not this endpoint response time: reading the board does not re-run it.
+        last_run_at: lastRunAt,
         public_count: gspc?.totals?.public_count ?? null,
         separated_leads: gspc?.totals?.separated_leads ?? null,
       },
