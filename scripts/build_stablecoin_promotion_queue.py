@@ -18,6 +18,11 @@ INDEX_REL = Path("public/interop/stablecoin-universe-2026-09/index.json")
 READINESS_REL = Path("public/interop/stablecoin-universe-2026-09/readiness.json")
 DEEP_REL = Path("public/interop/stablecoin-deep-2026-09/deep.json")
 SOURCES_REL = Path("public/interop/stablecoin-deep-2026-09/sources.json")
+COHORT1_REL = Path("tui2-measurements/tui2-cohort-2026-09-12.json")
+REPLAY_RELS = (
+    Path("tui2-measurements/tui2-cohort2-2026-09-12.json"),
+    Path("tui2-measurements/tui2-cohort3-2026-09-12.json"),
+)
 OUTPUT_REL = Path("public/interop/stablecoin-universe-2026-09/promotion-queue.json")
 
 
@@ -25,11 +30,27 @@ def load(path: Path) -> Any:
     return json.loads(path.read_text())
 
 
-def _next_action(*, measured: bool, anchored: bool, source_registered: bool, deep_state: str, issuer_site: bool) -> str:
+def _next_action(
+    *,
+    measured: bool,
+    anchored: bool,
+    source_registered: bool,
+    deep_state: str,
+    issuer_site: bool,
+    replay_stage_ready: bool = False,
+    replay_identity_hold: bool = False,
+    prior_probe_replay_needed: bool = False,
+) -> str:
     if measured and anchored:
         return "PUBLISH_ASSET_SPECIFIC_PROTOCOL_DOORS"
     if measured:
         return "SIGN_ROOT_WITNESS_ANCHOR"
+    if replay_stage_ready:
+        return "STAGE_REPLAYED_MEASUREMENT"
+    if replay_identity_hold:
+        return "RECONCILE_REPLAY_IDENTITY"
+    if prior_probe_replay_needed:
+        return "REPLAY_EXISTING_MEASUREMENT_AT_RECORDED_HEIGHT"
     if deep_state == "DEEP_PROBED":
         return "BUILD_REPRODUCIBLE_CHAIN_MEASUREMENT"
     if source_registered:
@@ -52,6 +73,59 @@ CADENCE_STALE_AFTER_DAYS = {
 }
 
 
+def _prior_probe_ids(repo: Path) -> set[str]:
+    doc = load(repo / COHORT1_REL)
+    return {
+        str(row["stablecoin_registry_id"])
+        for row in (doc.get("measurements") or [])
+        if row.get("stablecoin_registry_id") is not None
+        and row.get("measurement_state") in ("OBSERVED", "MEASURED")
+    }
+
+
+def _replay_evidence(repo: Path, index_rows: dict[str, dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+    out: dict[str, list[dict[str, Any]]] = {}
+    for rel in REPLAY_RELS:
+        doc = load(repo / rel)
+        for row in doc.get("measurements") or []:
+            asset_id = str(row.get("stablecoin_registry_id") or "")
+            indexed = index_rows.get(asset_id)
+            reasons: list[str] = []
+            if indexed is None:
+                reasons.append("NOT_IN_FROZEN_INDEX")
+            elif str(indexed.get("symbol") or "").casefold() != str(row.get("subject") or "").casefold():
+                reasons.append("SUBJECT_SYMBOL_MISMATCH")
+            if row.get("measurement_state") != "OBSERVED":
+                reasons.append("NOT_OBSERVED")
+            if row.get("replay_scope") != "PINNED_BLOCK_ETH_CALL_RERUN_MATCHED":
+                reasons.append("NO_PINNED_REPLAY_MATCH")
+            if not str(row.get("replay_result") or "").startswith("REPRODUCIBLE"):
+                reasons.append("NOT_REPRODUCIBLE")
+            identity = row.get("onchain_verification") or {}
+            if identity and identity.get("match") is not True:
+                reasons.append("ONCHAIN_IDENTITY_MISMATCH")
+            if row.get("address_source_agreement") not in ("AGREE", "SINGLE_SOURCE"):
+                reasons.append("ADDRESS_SOURCE_UNQUALIFIED")
+            if not row.get("block_hash"):
+                reasons.append("NO_BLOCK_HASH")
+            out.setdefault(asset_id, []).append({
+                "state": "QUALIFIED_FOR_STAGING" if not reasons else "HOLD",
+                "hold_reasons": reasons,
+                "evidence_file": str(rel),
+                "subject": row.get("subject"),
+                "chain": row.get("chain"),
+                "contract": row.get("contract"),
+                "block": row.get("finalized_block"),
+                "block_hash": row.get("block_hash"),
+                "replay_result": row.get("replay_result"),
+                "replay_scope": row.get("replay_scope"),
+                "replayed_at": row.get("replayed_at"),
+                "address_source_agreement": row.get("address_source_agreement"),
+                "onchain_identity_match": identity.get("match") if identity else None,
+            })
+    return out
+
+
 def build(repo: Path) -> dict[str, Any]:
     index = load(repo / INDEX_REL)
     readiness = load(repo / READINESS_REL)
@@ -62,6 +136,8 @@ def build(repo: Path) -> dict[str, Any]:
     readiness_rows = {str(row["id"]): row for row in readiness.get("assets") or []}
     deep_rows = {str(row["id"]): row for row in deep.get("rows") or []}
     sources = {str(row["id"]): row for row in sources_doc.get("sources") or []}
+    prior_probe_ids = _prior_probe_ids(repo)
+    replay_by_id = _replay_evidence(repo, index_rows)
 
     ordered = sorted(
         index_rows.values(),
@@ -93,6 +169,18 @@ def build(repo: Path) -> dict[str, Any]:
         settled = "SETTLEMENT_VERIFIED" in str(ready.get("x402_door_state") or "") and (
             "NO_ASSET_SETTLEMENT_VERIFIED" not in str(ready.get("x402_door_state") or "")
         )
+        replay_rows = replay_by_id.get(asset_id) or []
+        replay_qualified = [item for item in replay_rows if item["state"] == "QUALIFIED_FOR_STAGING"]
+        replay_holds = [item for item in replay_rows if item["state"] == "HOLD"]
+        prerequisites_ready = source_registered and deep_state == "DEEP_PROBED" and not measured
+        replay_stage_ready = prerequisites_ready and bool(replay_qualified)
+        replay_identity_hold = prerequisites_ready and not replay_qualified and bool(replay_holds)
+        prior_probe_replay_needed = (
+            prerequisites_ready
+            and asset_id in prior_probe_ids
+            and not replay_stage_ready
+            and not replay_identity_hold
+        )
         rows.append({
             "rank": rank,
             "id": asset_id,
@@ -112,6 +200,9 @@ def build(repo: Path) -> dict[str, Any]:
                 "witnessed": witnessed,
                 "anchored": anchored,
                 "asset_specific_x402_settled": settled,
+                "replay_stage_ready": replay_stage_ready,
+                "replay_identity_hold": replay_identity_hold,
+                "prior_probe_replay_needed": prior_probe_replay_needed,
             },
             "primary_source": source.get("attestation_page"),
             "source_registration": {
@@ -128,12 +219,24 @@ def build(repo: Path) -> dict[str, Any]:
                 f"https://councilof.ai/interop/stablecoin-deep-2026-09/{deep_row.get('mirror')}"
                 if deep_row.get("mirror") else None
             ),
+            "replay_evidence": {
+                "qualified_readings": replay_qualified,
+                "held_readings": replay_holds,
+                "prior_probe_recorded": asset_id in prior_probe_ids,
+                "truth_rule": (
+                    "QUALIFIED_FOR_STAGING is replay evidence only; it does not become MEASURED "
+                    "until the asset measurement is staged, signed, current-root included and admitted."
+                ),
+            },
             "next_action": _next_action(
                 measured=measured,
                 anchored=anchored,
                 source_registered=source_registered,
                 deep_state=deep_state,
                 issuer_site=issuer_site_registered,
+                replay_stage_ready=replay_stage_ready,
+                replay_identity_hold=replay_identity_hold,
+                prior_probe_replay_needed=prior_probe_replay_needed,
             ),
             "measurement_contract": {
                 "supply": "one reproducible reader per reported chain at an exact block or ledger",
@@ -157,6 +260,9 @@ def build(repo: Path) -> dict[str, Any]:
         "witnessed": sum(row["states"]["witnessed"] for row in rows),
         "anchored": sum(row["states"]["anchored"] for row in rows),
         "asset_specific_x402_settled": sum(row["states"]["asset_specific_x402_settled"] for row in rows),
+        "replay_stage_ready": sum(row["states"]["replay_stage_ready"] for row in rows),
+        "replay_identity_hold": sum(row["states"]["replay_identity_hold"] for row in rows),
+        "prior_probe_replay_needed": sum(row["states"]["prior_probe_replay_needed"] for row in rows),
     }
     # Stale/missing-source signals, derived once here from the deep pack.
     stale = missing_date = missing_auditor = 0
@@ -221,6 +327,7 @@ def validate(document: dict[str, Any]) -> None:
     for key in (
         "primary_source_registered", "deep_probed", "measured", "signed", "rooted",
         "witnessed", "anchored", "asset_specific_x402_settled",
+        "replay_stage_ready", "replay_identity_hold", "prior_probe_replay_needed",
     ):
         state_key = "deep_probe" if key == "deep_probed" else key
         expected = sum(
@@ -232,7 +339,25 @@ def validate(document: dict[str, Any]) -> None:
         states = row["states"]
         assert states["indexed"] is True
         if states["measured"]:
-            assert row["next_action"] != "BUILD_REPRODUCIBLE_CHAIN_MEASUREMENT"
+            assert row["next_action"] not in (
+                "BUILD_REPRODUCIBLE_CHAIN_MEASUREMENT",
+                "STAGE_REPLAYED_MEASUREMENT",
+                "REPLAY_EXISTING_MEASUREMENT_AT_RECORDED_HEIGHT",
+                "RECONCILE_REPLAY_IDENTITY",
+            )
+        replay = row["replay_evidence"]
+        if states["replay_stage_ready"]:
+            assert row["next_action"] == "STAGE_REPLAYED_MEASUREMENT"
+            assert replay["qualified_readings"]
+            assert states["measured"] is False
+        if states["replay_identity_hold"]:
+            assert row["next_action"] == "RECONCILE_REPLAY_IDENTITY"
+            assert not replay["qualified_readings"] and replay["held_readings"]
+            assert states["measured"] is False
+        if states["prior_probe_replay_needed"]:
+            assert row["next_action"] == "REPLAY_EXISTING_MEASUREMENT_AT_RECORDED_HEIGHT"
+            assert replay["prior_probe_recorded"] is True
+            assert states["measured"] is False
         if states["anchored"]:
             assert states["measured"] and states["signed"] and states["rooted"] and states["witnessed"]
         if not states["primary_source_registered"]:
