@@ -2,18 +2,96 @@
   "schema": "csoai.gspc-pontius-constitutional-boundary/0.1",
   "status": "CANDIDATE_NOT_EFFECTIVE",
   "created_date": "2026-10-01",
-  "source_commit": "497536c2b92fe11774166debd603ffb5206b1fac",
   "purpose": "Prevent architectural drift: GSPC is the constitutional ecosystem; Pontius is a bounded interoperability plane under GSPC and Layer O.",
-  "precedent": {"published_charter": "public/reports/constitutional-harness-charter-2026-09-28.json", "rewrite_historical_record": false},
-  "gspc": {"role": "constitutional_measurement_evidence_interoperability_ecosystem", "never_implies": ["execution authority","signing authority","publication authority","payment authority","regulatory authority","buyer acceptance"]},
-  "layer_o": {"role": "constitutional policy and evidence envelope", "parent": "GSPC", "self_grants_effects": false},
-  "pontius": {"role": "bounded interoperability and interchange plane", "parent": "GSPC", "governed_by": ["GSPC","Layer O"], "connectors": ["MCP","A2A","x402","SWIFT","DLT/blockchain","data spaces","legacy/COBOL"]},
-  "pontius_authority": {"measurement": false, "admission": false, "execution": false, "settlement": false, "signing": false, "publication": false, "regulatory_determination": false},
-  "venturi": {"role": "outside-in discovery, observation and measurement intake", "parent": "GSPC"},
-  "harness_x": {"role": "adapter and connector factory for the canonical evidence contract", "parent": "GSPC"},
-  "sovspace": {"role": "dependency, history and corrections projection", "parent": "GSPC", "canonical_authority": false},
-  "signals": {"role": "outward discovery and index projection", "parent": "GSPC", "canonical_authority": false},
-  "external_reference_patterns": {"pontus_x": {"authority_over_csoai": false}, "ecb_pontes": {"authority_over_csoai": false}},
-  "invariants": ["GSPC_CONTAINS_INTEROPERABILITY_GOVERNANCE","PONTIUS_IS_SUBORDINATE_TO_GSPC_AND_LAYER_O","TRANSPORT_NEVER_GRANTS_MEASUREMENT_OR_ADMISSION","CONNECTION_NEVER_GRANTS_EXECUTION_OR_SETTLEMENT","PAYMENT_NEVER_GRANTS_MEASUREMENT_OR_ACCEPTANCE","EXTERNAL_ECOSYSTEM_STATUS_NEVER_GRANTS_CSOAI_AUTHORITY","CORRECTIONS_APPEND_AND_SUPERSEDE_NEVER_REWRITE_HISTORY"],
-  "owner_gate": {"effective": false, "production_signing": false, "anchoring": false, "publication": false, "funds": false, "irreversible_action": false, "requires_explicit_owner_authorization": true}
+  "precedent": {
+    "published_charter": "public/reports/constitutional-harness-charter-2026-09-28.json",
+    "rewrite_historical_record": false
+  },
+  "gspc": {
+    "role": "constitutional_measurement_evidence_interoperability_ecosystem",
+    "never_implies": [
+      "execution authority",
+      "signing authority",
+      "publication authority",
+      "payment authority",
+      "regulatory authority",
+      "buyer acceptance"
+    ]
+  },
+  "layer_o": {
+    "role": "constitutional policy and evidence envelope",
+    "parent": "GSPC",
+    "self_grants_effects": false
+  },
+  "pontius": {
+    "role": "bounded interoperability and interchange plane",
+    "parent": "GSPC",
+    "governed_by": [
+      "GSPC",
+      "Layer O"
+    ],
+    "connectors": [
+      "MCP",
+      "A2A",
+      "x402",
+      "SWIFT",
+      "DLT/blockchain",
+      "data spaces",
+      "legacy/COBOL"
+    ]
+  },
+  "pontius_authority": {
+    "measurement": false,
+    "admission": false,
+    "execution": false,
+    "settlement": false,
+    "signing": false,
+    "publication": false,
+    "regulatory_determination": false
+  },
+  "venturi": {
+    "role": "outside-in discovery, observation and measurement intake",
+    "parent": "GSPC"
+  },
+  "harness_x": {
+    "role": "adapter and connector factory for the canonical evidence contract",
+    "parent": "GSPC"
+  },
+  "sovspace": {
+    "role": "dependency, history and corrections projection",
+    "parent": "GSPC",
+    "canonical_authority": false
+  },
+  "signals": {
+    "role": "outward discovery and index projection",
+    "parent": "GSPC",
+    "canonical_authority": false
+  },
+  "external_reference_patterns": {
+    "pontus_x": {
+      "authority_over_csoai": false
+    },
+    "ecb_pontes": {
+      "authority_over_csoai": false
+    }
+  },
+  "invariants": [
+    "GSPC_CONTAINS_INTEROPERABILITY_GOVERNANCE",
+    "PONTIUS_IS_SUBORDINATE_TO_GSPC_AND_LAYER_O",
+    "TRANSPORT_NEVER_GRANTS_MEASUREMENT_OR_ADMISSION",
+    "CONNECTION_NEVER_GRANTS_EXECUTION_OR_SETTLEMENT",
+    "PAYMENT_NEVER_GRANTS_MEASUREMENT_OR_ACCEPTANCE",
+    "EXTERNAL_ECOSYSTEM_STATUS_NEVER_GRANTS_CSOAI_AUTHORITY",
+    "CORRECTIONS_APPEND_AND_SUPERSEDE_NEVER_REWRITE_HISTORY"
+  ],
+  "owner_gate": {
+    "effective": false,
+    "production_signing": false,
+    "anchoring": false,
+    "publication": false,
+    "funds": false,
+    "irreversible_action": false,
+    "requires_explicit_owner_authorization": true
+  },
+  "base_canonical_commit": "82d9621f70045cebeebc02c1a4073dc1ebe54a74"
 }
