@@ -361,8 +361,16 @@ def validate(document: dict[str, Any]) -> None:
         if states["anchored"]:
             assert states["measured"] and states["signed"] and states["rooted"] and states["witnessed"]
         if not states["primary_source_registered"]:
-            assert row["next_action"] in ("REGISTER_PRIMARY_SOURCES", "REVIEW_ISSUER_SITE_FOR_ATTESTATION")
-            assert row["next_action"] == "REVIEW_ISSUER_SITE_FOR_ATTESTATION" or not states["issuer_site_registered"]
+            if states["measured"]:
+                expected = (
+                    "PUBLISH_ASSET_SPECIFIC_PROTOCOL_DOORS"
+                    if states["anchored"]
+                    else "SIGN_ROOT_WITNESS_ANCHOR"
+                )
+                assert row["next_action"] == expected
+            else:
+                assert row["next_action"] in ("REGISTER_PRIMARY_SOURCES", "REVIEW_ISSUER_SITE_FOR_ATTESTATION")
+                assert row["next_action"] == "REVIEW_ISSUER_SITE_FOR_ATTESTATION" or not states["issuer_site_registered"]
         reg = row["source_registration"]
         assert reg["state"] in ("ATTESTATION_PAGE_REGISTERED", "ISSUER_SITE_REGISTERED", "NO_SOURCE_LOCATED")
         if reg["state"] == "NO_SOURCE_LOCATED":

@@ -37,20 +37,32 @@ class StablecoinPromotionQueueTest(unittest.TestCase):
             counts["asset_specific_x402_settled"],
         )
 
-    def test_rlusd_action_tracks_current_anchor_state(self) -> None:
-        row = next(row for row in self.document["rows"] if row["symbol"] == "RLUSD")
-        self.assertTrue(row["states"]["measured"])
-        expected = (
-            "PUBLISH_ASSET_SPECIFIC_PROTOCOL_DOORS"
-            if row["states"]["anchored"]
-            else "SIGN_ROOT_WITNESS_ANCHOR"
-        )
-        self.assertEqual(expected, row["next_action"])
+    def test_measured_actions_track_current_anchor_state(self) -> None:
+        rows = [row for row in self.document["rows"] if row["states"]["measured"]]
+        self.assertEqual({"RLUSD", "USDC", "EURCV"}, {row["symbol"] for row in rows})
+        for row in rows:
+            expected = (
+                "PUBLISH_ASSET_SPECIFIC_PROTOCOL_DOORS"
+                if row["states"]["anchored"]
+                else "SIGN_ROOT_WITNESS_ANCHOR"
+            )
+            self.assertEqual(expected, row["next_action"])
 
-    def test_unregistered_assets_never_skip_source_registration(self) -> None:
+    def test_unregistered_unmeasured_assets_never_skip_source_registration(self) -> None:
         rows = [row for row in self.document["rows"] if not row["states"]["primary_source_registered"]]
         self.assertEqual(406, len(rows))
-        self.assertTrue(all(row["next_action"] == "REVIEW_ISSUER_SITE_FOR_ATTESTATION" for row in rows))
+        pending = [row for row in rows if not row["states"]["measured"]]
+        measured = [row for row in rows if row["states"]["measured"]]
+        self.assertEqual(405, len(pending))
+        self.assertTrue(all(row["next_action"] == "REVIEW_ISSUER_SITE_FOR_ATTESTATION" for row in pending))
+        self.assertEqual(["EURCV"], [row["symbol"] for row in measured])
+        for row in measured:
+            expected = (
+                "PUBLISH_ASSET_SPECIFIC_PROTOCOL_DOORS"
+                if row["states"]["anchored"]
+                else "SIGN_ROOT_WITNESS_ANCHOR"
+            )
+            self.assertEqual(expected, row["next_action"])
 
     def test_every_row_carries_a_source_registration_state(self) -> None:
         states = {"ATTESTATION_PAGE_REGISTERED", "ISSUER_SITE_REGISTERED", "NO_SOURCE_LOCATED"}
@@ -87,17 +99,17 @@ class StablecoinPromotionQueueTest(unittest.TestCase):
         ):
             self.assertIsInstance(signals[key], int)
             self.assertGreaterEqual(signals[key], 0)
-        self.assertEqual(406, signals["issuer_site_only_pending_review"])
+        self.assertEqual(405, signals["issuer_site_only_pending_review"])
         self.assertEqual(signals["no_source_located"], self.document["counts"]["no_source_located"])
 
     def test_replay_backlog_is_split_by_actual_evidence_state(self) -> None:
         counts = self.document["counts"]
         actions = self.document["next_action_counts"]
         self.assertEqual(9, counts["replay_stage_ready"])
-        self.assertEqual(6, counts["prior_probe_replay_needed"])
+        self.assertEqual(5, counts["prior_probe_replay_needed"])
         self.assertEqual(1, counts["replay_identity_hold"])
         self.assertEqual(9, actions["STAGE_REPLAYED_MEASUREMENT"])
-        self.assertEqual(6, actions["REPLAY_EXISTING_MEASUREMENT_AT_RECORDED_HEIGHT"])
+        self.assertEqual(5, actions["REPLAY_EXISTING_MEASUREMENT_AT_RECORDED_HEIGHT"])
         self.assertEqual(1, actions["RECONCILE_REPLAY_IDENTITY"])
         self.assertEqual(1, actions["BUILD_REPRODUCIBLE_CHAIN_MEASUREMENT"])
 
