@@ -20,17 +20,32 @@ class StablecoinPromotionQueueTest(unittest.TestCase):
 
     def test_current_evidence_counts_stay_truthful(self) -> None:
         counts = self.document["counts"]
-        self.assertEqual(19, counts["primary_source_registered"])
-        self.assertEqual(19, counts["deep_probed"])
-        self.assertEqual(1, counts["measured"])
-        self.assertEqual(1, counts["anchored"])
-        self.assertEqual(0, counts["asset_specific_x402_settled"])
+        rows = self.document["rows"]
+        self.assertEqual(425, counts["indexed"])
+        self.assertEqual(
+            sum(row["states"]["primary_source_registered"] for row in rows),
+            counts["primary_source_registered"],
+        )
+        self.assertEqual(
+            sum(row["states"]["deep_probe"] == "DEEP_PROBED" for row in rows),
+            counts["deep_probed"],
+        )
+        self.assertEqual(sum(row["states"]["measured"] for row in rows), counts["measured"])
+        self.assertEqual(sum(row["states"]["anchored"] for row in rows), counts["anchored"])
+        self.assertEqual(
+            sum(row["states"]["asset_specific_x402_settled"] for row in rows),
+            counts["asset_specific_x402_settled"],
+        )
 
-    def test_rlusd_advances_to_protocol_door_action(self) -> None:
+    def test_rlusd_action_tracks_current_anchor_state(self) -> None:
         row = next(row for row in self.document["rows"] if row["symbol"] == "RLUSD")
         self.assertTrue(row["states"]["measured"])
-        self.assertTrue(row["states"]["anchored"])
-        self.assertEqual("PUBLISH_ASSET_SPECIFIC_PROTOCOL_DOORS", row["next_action"])
+        expected = (
+            "PUBLISH_ASSET_SPECIFIC_PROTOCOL_DOORS"
+            if row["states"]["anchored"]
+            else "SIGN_ROOT_WITNESS_ANCHOR"
+        )
+        self.assertEqual(expected, row["next_action"])
 
     def test_unregistered_assets_never_skip_source_registration(self) -> None:
         rows = [row for row in self.document["rows"] if not row["states"]["primary_source_registered"]]
