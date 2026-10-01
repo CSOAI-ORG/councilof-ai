@@ -5,15 +5,15 @@
   "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
   "not_a_grade": "The signature proves these bytes were signed by the board key; it does not prove any claim beyond what the capsules' own instruments measured.",
   "artifact": {
-   "path": "measurement-capsules/v0.2/index/2026-09-30.json",
-   "sha256": "c96b94b988df4ea029a6516ddc1fc7c65ed4e712b3833b475b20bee2e32277ef",
+   "path": "measurement-capsules/v0.2/index/2026-10-01.json",
+   "sha256": "657ec68566de144fb22dc7bc8e9f7c8f74808ba718ac3d8c48450cfafa8d6851",
    "schema": "csoai.measurement-capsule-index/0.3",
-   "as_of": "2026-09-30T08:18:22Z"
+   "as_of": "2026-10-01T08:11:31Z"
   },
-  "index_root": "6760518bfff7149f6f552075527640432f7200c2986476bf8b5f8685caf7b693",
-  "root_over_batch_merkle_roots": "195eae7926bead60969a2838a75a9e5b1c780cbd3330d781e8f9332520abd37c",
+  "index_root": "9631cc00b91ce9d1e37e517851eab126be6ca1a4dc6b66a26d86352aada5b562",
+  "root_over_batch_merkle_roots": "15b7250af130c143180263045c9b1e95635cf6560a086e3141cea459ca8a7e6f",
   "n_batches": 10,
-  "n_capsules_total": 10979,
+  "n_capsules_total": 10737,
   "batches": [
    [
     "a2a_card",
@@ -24,8 +24,8 @@
    [
     "claim_watch",
     1,
-    "44ec4b9730196fc357c7e20f7a330027cbfa0a9ad38077015b8f13cc67b76869",
-    "3fdbf6cc820fa40f7606792fc0db7492c227b5e5f5152d88fece3a0cbcedf4a9"
+    "5e6440b6f9fbccdc2dca66aff3c79c02f649ccb56cd795d0f043b651dd50c32e",
+    "1647b07db74e3b3569367c4423d80fd7b42c52ae287fb0078786e7acc12f9ce2"
    ],
    [
     "contract_parity",
@@ -36,8 +36,8 @@
    [
     "cross_ledger",
     383,
-    "4d1a955e12833786393c04473064299ad54464c0a0dd1ba4e5794a62f52de892",
-    "67107098348dd2e1568fc3198c042969a455e854a669d9bd43c70dd1c24fa682"
+    "7a51896104b0123d93e556a3c9196957e2d1258fff83a6ad4be4937facedd271",
+    "ca622361ef1e0e7b706d12f1986158ab8e1737086df0d68d53d065bdc143f504"
    ],
    [
     "mill_cross_runtime",
@@ -53,21 +53,21 @@
    ],
    [
     "operations",
-    479,
-    "63d1e261f6d2e384823e2563ecf89377496f02cfd9426d669dc0dba97eaf6b51",
-    "ceeb69de3df39518a53c2b955add283f0496169262ea9bafd0ad202916fc014d"
+    236,
+    "8d41a82a2651efc9c068a957b38d86782ca004f6f159668c32b7960fe91efadc",
+    "f599e7d9e37383a69f549b9f1ab5d61266841c957c644ef049b7b849223806b1"
    ],
    [
     "public_signals",
-    118,
-    "80a2d12efb54ff01aa150680639df8326b0cf3c5e5cb7ef5662f0d95d37718ec",
-    "8767d3d5f402e429dccce4ad96d056dcecc2d28a8e171f2ed3850ca8469a41e9"
+    119,
+    "f11087f060aa4d61f5fd1c40537c0ae9c358ff17466fc205972c37ad1c145ec1",
+    "0c522265a7bc175851be38287deb507fca9e5ba4341476ec3403408b5c5a0d3d"
    ],
    [
     "self_parity",
     166,
-    "3d5d0faab68c43303c493b80f1e78b16cb9540dc9ed05bad82e8152b52f5a53d",
-    "df18985070be64a74df767b5356b76aa67f9277baa8c485ee3166de65369f51a"
+    "8a3d29edf648ca85401c8ec45dbf3a2793a48b0a41e3780b1fd9f840985ed6a9",
+    "33fa38ec7539a251f667a7d346466a19378356b792fff8a01bd3d2430f64810f"
    ],
    [
     "tool_drift",
@@ -77,11 +77,11 @@
    ]
   ],
   "chain": {
-   "date": "2026-09-30",
-   "chain_seq": 4,
-   "prev_date": "2026-09-29",
-   "prev_index_sha256": "fb56321561f16362c83d8eaaf9320083bb2ac96fa466f4d560625639cc08b332",
-   "prev_index_root": "5ce9511e9554cef6d92d166af08f9bae0b5149655fa555e2025a505ed9af06df",
+   "date": "2026-10-01",
+   "chain_seq": 5,
+   "prev_date": "2026-09-30",
+   "prev_index_sha256": "c96b94b988df4ea029a6516ddc1fc7c65ed4e712b3833b475b20bee2e32277ef",
+   "prev_index_root": "6760518bfff7149f6f552075527640432f7200c2986476bf8b5f8685caf7b693",
    "gap_days": 0,
    "supersedes_sha256": null
   }
@@ -89,9 +89,9 @@
  "signature": {
   "did": "did:web:csoai.org#board-attestation-1",
   "alg": "Ed25519",
-  "sig_ed25519": "61da95c1dcb341412421261e4fd875a78e11196f4639cb6636d513b65bbca65f73818abd52b594ec3926296b802443a3798c3c851a6f3e9fcb7cf6dea3cc7105",
-  "payload_sha256": "7f955626118fee533f3cea960ec66fe30b9cce8dda8b3f2aac3d01ad29df7add",
-  "signed_at": "2026-09-30T08:18:27.746Z"
+  "sig_ed25519": "1eef1eccaa76354d4c52c39a46499d8010ed999f29b66a6268abe5ef4db084f6f5e0a0b6790033bc2391332bc2f7e4e0b77edc24a1112b3d867b76de347ffa01",
+  "payload_sha256": "933a383963faf21207a21743785b5ec6aa1422631a3ed0b9bd8520314460e2f0",
+  "signed_at": "2026-10-01T08:11:32.035Z"
  },
  "local_verification": {
   "result": "VERIFIES",
