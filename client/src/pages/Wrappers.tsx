@@ -15,7 +15,7 @@ const PAGE_DESCRIPTION =
 const PAGE_LD = {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  name: "Wrapped-asset parity ledger",
+  name: "Wrappers",
   description: PAGE_DESCRIPTION,
   url: CANONICAL,
   mainEntity: {
@@ -28,8 +28,8 @@ const PAGE_LD = {
     license: "https://creativecommons.org/licenses/by/4.0/",
     creator: { "@type": "Organization", name: "CSOAI Ltd", url: "https://councilof.ai/" },
     distribution: [
-      { "@type": "DataDownload", name: "Wrapped-asset parity ledger (JSON)", encodingFormat: "application/json", contentUrl: `https://councilof.ai${LEDGER}` },
-      { "@type": "DataDownload", name: "Wrapped-asset parity ledger (Hugging Face dataset)", encodingFormat: "application/jsonl", contentUrl: HF_DATASET },
+      { "@type": "DataDownload", name: "Wrappers (JSON)", encodingFormat: "application/json", contentUrl: `https://councilof.ai${LEDGER}` },
+      { "@type": "DataDownload", name: "Wrappers (Hugging Face dataset)", encodingFormat: "application/jsonl", contentUrl: HF_DATASET },
     ],
     variableMeasured: ["wrapped total supply", "escrow balance", "escrow over wrapped ratio", "parity state"],
   },
@@ -111,11 +111,11 @@ export default function Wrappers() {
         <meta name="description" content={PAGE_DESCRIPTION} />
         <meta name="robots" content="index,follow" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="Wrapped-asset parity ledger | Council of AI" />
+        <meta property="og:title" content="Wrappers | Council of AI" />
         <meta property="og:description" content={PAGE_DESCRIPTION} />
         <meta property="og:url" content={CANONICAL} />
         <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content="Wrapped-asset parity ledger | Council of AI" />
+        <meta name="twitter:title" content="Wrappers | Council of AI" />
         <meta name="twitter:description" content={PAGE_DESCRIPTION} />
         <script type="application/ld+json">{JSON.stringify(PAGE_LD)}</script>
       </Helmet>
