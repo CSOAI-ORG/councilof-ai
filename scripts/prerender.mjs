@@ -93,6 +93,9 @@ const PROD_ORIGIN = arg("prod-origin", "https://councilof.ai");
 // stop; skipping the snapshot leaves the SPA shell, which hydrates on the
 // live host. Added 2026-09-09 after #1847 blocked every master deploy.
 const CLIENT_ONLY_FUNCTION_ROUTES = new Set([
+  // /pay-all reads /.well-known/x402.json, every door's 402 and /api/x402-listing — all Functions.
+  "/pay-all",
+  "/pay-all/",
   // Routes that still ship the bare SPA shell. Twelve sitemap routes used to be here — /corrections,
   // /pay, /assess, /assessment, /tool-commons, /countdown, /art50, /rlusd, /status, /receipt,
   // /stablewatch, /health-inventory — and a reader without JavaScript, a crawler or an agent got a

@@ -205,6 +205,7 @@ const EXCLUDE_EXACT = new Set([
   "/start",
   "/onboard",
   "/me",
+  "/pay-all", // owner wallet sweep; the buyer-facing /pay.html owns discovery
   "/my-applications",
   "/my-courses",
   "/api-keys",

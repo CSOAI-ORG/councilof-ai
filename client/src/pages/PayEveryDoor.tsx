@@ -44,7 +44,7 @@ import {
 } from "@/lib/payEveryDoor";
 
 /**
- * /pay — pay every x402 door of the estate from the owner's own wallet, one click each.
+ * /pay-all — pay every x402 door of the estate from the owner's own wallet, one click each.
  *
  * WHY. A successful settle can create a facilitator record used by settlement-based
  * discovery. The 402 Index is a separate directory with its own listing and health state.
@@ -654,7 +654,7 @@ export default function PayEveryDoor() {
 
       {selected ? (
         <p className="mt-4 text-[12px] text-slate-700" data-testid="pay-deep-link">
-          Showing one door from the link. <Link href="/pay" className="underline underline-offset-2">Show every door</Link>
+          Showing one door from the link. <Link href="/pay-all" className="underline underline-offset-2">Show every door</Link>
         </p>
       ) : wanted && doors ? (
         <p className="mt-4 text-[12px] text-amber-800" data-testid="pay-deep-link">

@@ -87,9 +87,9 @@ const challenge = challengeFromPaymentRequired({
 
 const strip = (src: string) => src.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
 
-describe("/pay ships clean copy", () => {
+describe("/pay-all ships clean copy", () => {
   const page = renderToStaticMarkup(
-    <Router ssrPath="/pay">
+    <Router ssrPath="/pay-all">
       <PayEveryDoor />
     </Router>,
   );
@@ -338,7 +338,7 @@ describe("the status column: three cells per door, each from its own reader", ()
 
 describe("Settle all is the monthly heartbeat, on one page", () => {
   const page = renderToStaticMarkup(
-    <Router ssrPath="/pay">
+    <Router ssrPath="/pay-all">
       <PayEveryDoor />
     </Router>,
   );
@@ -377,25 +377,23 @@ describe("Settle all is the monthly heartbeat, on one page", () => {
   });
 });
 
-describe("/pay is wired like every other current page", () => {
+describe("/pay-all is wired like every other current page", () => {
   it("has the route, the PRIMARY_PATHS entry, the manifest row, the head entry and a prerendered snapshot", () => {
-    expect(appSource).toContain('<Route path="/pay" component={PayEveryDoor} />');
-    expect(PRIMARY_PATHS.has("/pay")).toBe(true);
-    expect(ROUTE_MANIFEST.some((r) => r.path === "/pay" && r.comp === "PayEveryDoor")).toBe(true);
-    const head = ROUTE_HEAD["/pay"];
+    expect(appSource).toContain('<Route path="/pay-all" component={PayEveryDoor} />');
+    expect(PRIMARY_PATHS.has("/pay-all")).toBe(true);
+    expect(ROUTE_MANIFEST.some((r) => r.path === "/pay-all" && r.comp === "PayEveryDoor")).toBe(true);
+    const head = ROUTE_HEAD["/pay-all"];
     expect(head).toBeTruthy();
     expect(head.title.length).toBeLessThanOrEqual(TITLE_MAX);
     expect(head.description.length).toBeGreaterThanOrEqual(DESCRIPTION_MIN);
     expect(head.description.length).toBeLessThanOrEqual(DESCRIPTION_MAX);
     for (const re of BANNED) expect(`${head.title} ${head.description}`).not.toMatch(re);
-    // /pay is prerendered now (audit 2026-09-28 #11): its data reads go through the prerender proxy,
-    // so a reader without JavaScript gets the page, not a shell.
-    expect(prerenderSource).not.toMatch(/CLIENT_ONLY_FUNCTION_ROUTES = new Set\(\[[^\]]*?"\/pay",/);
+    expect(prerenderSource).toMatch(/CLIENT_ONLY_FUNCTION_ROUTES = new Set\(\[[\s\S]*?"\/pay-all",/);
   });
 
   it("deep-links one door with ?door= and explains a door the manifest does not declare", () => {
     const one = renderToStaticMarkup(
-      <Router ssrPath="/pay" ssrSearch={`door=${encodeURIComponent(doors[1].url)}`}>
+      <Router ssrPath="/pay-all" ssrSearch={`door=${encodeURIComponent(doors[1].url)}`}>
         <PayEveryDoor />
       </Router>,
     );
