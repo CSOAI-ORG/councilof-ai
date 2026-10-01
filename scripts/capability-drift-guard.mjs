@@ -87,7 +87,17 @@ export function observed({ openapi, mcp, agentCard }) {
 }
 
 export function diff(exp, obs) {
-  const httpMissing = [...exp.http.keys()].filter((x) => !obs.http.has(x));
+  // x402 doors publish ONE method per door (the one the manifest names —
+  // build_openapi.py). The handlers still export POST as an alias of GET
+  // (onRequestPost = onRequestGet). That alias is real and registered, but
+  // the discovery document must not list it as a second payable verb. Treat
+  // "POST /path" as served when "GET /path" is published at the same lifecycle.
+  const postAliasOfPublishedGet = (key) => {
+    if (!key.startsWith("POST ")) return false;
+    const get = "GET " + key.slice(5);
+    return obs.http.has(get) && exp.http.has(get) && obs.http.get(get) === exp.http.get(get);
+  };
+  const httpMissing = [...exp.http.keys()].filter((x) => !obs.http.has(x) && !postAliasOfPublishedGet(x));
   const httpExtra = [...obs.http.keys()].filter((x) => !exp.http.has(x));
   const lifecycle = [...exp.http.entries()]
     .filter(([key, state]) => obs.http.has(key) && obs.http.get(key) !== state)
@@ -101,6 +111,7 @@ export function diff(exp, obs) {
       missing: httpMissing,
       extra: httpExtra,
       lifecycle,
+      post_aliases: [...exp.http.keys()].filter(postAliasOfPublishedGet),
       ok: httpMissing.length === 0 && httpExtra.length === 0 && lifecycle.length === 0,
     },
   };
