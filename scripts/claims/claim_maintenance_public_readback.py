@@ -14,6 +14,15 @@ STATIC = [
     "/spec/claim-maintenance/priority-root.json",
     "/spec/claim-maintenance/reaction-index.json",
 ]
+CLOSURE_STATIC = [
+    "/evidence-manifest.json",
+    "/claims/maintenance/latest-receipt.json",
+    "/claims/claimreg-ondo-chainlink-maintenance-20260928T023900Z.json",
+    "/claims/claimreg-ondo-chainlink-maintenance-20260928T023900Z.signed.json",
+    "/claims/claimreg-ondo-chainlink-maintenance-20260928T023900Z.json.ots",
+    "/claims/claimreg-ondo-chainlink-maintenance-20260928T023900Z.signed.json.ots",
+    "/claims/maintenance/ots-upgrade-20261001.json",
+]
 API = ["/api/claims/events", "/api/claims/events/head", "/api/corrections"]
 
 def sha256(data: bytes) -> str:
@@ -45,7 +54,7 @@ def main() -> int:
     origin = args.origin.rstrip("/")
     errors, checks, bodies = [], [], {}
 
-    for path in ["/claim-maintenance/"] + STATIC + API:
+    for path in ["/claim-maintenance/"] + STATIC + CLOSURE_STATIC + API:
         try:
             st, final, headers, body = fetch(origin + path)
             checks.append({"path": path, "status": st, "bytes": len(body), "sha256": sha256(body)})
@@ -60,7 +69,7 @@ def main() -> int:
         except Exception as exc:
             errors.append(f"{path}:fetch:{type(exc).__name__}:{exc}")
 
-    for path in STATIC:
+    for path in STATIC + CLOSURE_STATIC:
         if path in bodies:
             local = (PUBLIC / path.lstrip("/")).read_bytes()
             if bodies[path] != local:
@@ -119,6 +128,32 @@ def main() -> int:
                 errors.append("corrections:schema")
         except Exception as exc:
             errors.append(f"corrections:parse:{type(exc).__name__}:{exc}")
+
+    # The 1 Oct OTS upgrade receipt is the authority for the stronger detached
+    # proof bytes. It explicitly stops at block-header attestations; this gate
+    # must never silently promote that to independent Bitcoin-chain verification.
+    ots_receipt_body = bodies.get("/claims/maintenance/ots-upgrade-20261001.json")
+    if ots_receipt_body:
+        try:
+            ots_receipt = json.loads(ots_receipt_body)
+            if ots_receipt.get("state") != "BITCOIN_ATTESTATION_PRESENT_UNVERIFIED_CHAIN":
+                errors.append("ots-upgrade:state-boundary")
+            proof_rows = ots_receipt.get("proofs", [])
+            if len(proof_rows) != 2:
+                errors.append("ots-upgrade:proof-count")
+            for row in proof_rows:
+                path = row.get("path")
+                expected = row.get("sha256_after")
+                if path not in CLOSURE_STATIC or not isinstance(expected, str):
+                    errors.append(f"ots-upgrade:bad-row:{path}")
+                    continue
+                body = bodies.get(path)
+                if body is None:
+                    errors.append(f"ots-upgrade:missing-live-proof:{path}")
+                elif sha256(body) != expected:
+                    errors.append(f"ots-upgrade:proof-byte-drift:{path}")
+        except Exception as exc:
+            errors.append(f"ots-upgrade:parse:{type(exc).__name__}:{exc}")
 
     out = {
         "schema": "csoai.claim-maintenance-public-readback/2.0",
