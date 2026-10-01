@@ -394,8 +394,8 @@ export default function GSPCVerify() {
               <code>pubkey</code> on the card.
             </li>
             <li>
-              It does not contact a server. Verification is local; you bring the records and
-              the WebCrypto implementation in your browser.
+              The record you paste is not sent to a server for verification. Your browser may
+              retrieve published public-key metadata; it runs the cryptographic check locally.
             </li>
             <li>
               It does not assert that a model is &quot;safe&quot;, &quot;compliant&quot;, or
