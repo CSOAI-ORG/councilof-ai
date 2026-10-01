@@ -1,0 +1,24 @@
+{
+  "schema": "csoai.signed-artifact/0.1",
+  "payload": {
+    "schema": "csoai.signed-artifact/0.1",
+    "artifact": {
+      "path": "/interop/signals/root-binding.json",
+      "sha256": "93ad05a0f9e5cee88916ee9653dfff0ca3c0cbb0588707497a45bc1bb4a23711",
+      "bytes": 1056,
+      "schema": "csoai.signals-root-binding/0.1",
+      "as_of": "2026-10-01T15:25:49Z"
+    },
+    "record_id": null,
+    "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+    "what_this_proves": "these bytes were signed by the board key at this time; not a grade, not an endorsement, and no claim about any third party named in the artifact"
+  },
+  "sig_ed25519": "2d328244bc7a3a4b01eccb97b3f1c7648b13ed2a1d87bfdee6bcea77235518076046696883feb2ccb9c7425decda69d9e2a859832554a91d420605cf1c06480f",
+  "sig_encoding": "hex",
+  "key": "did:web:csoai.org#board-attestation-1",
+  "key_source": "https://csoai.org/.well-known/did.json",
+  "verified_locally": true,
+  "failing_control_rejected": true,
+  "signed_utc": "2026-10-01T15:37:32Z",
+  "verify_with": "canonical JSON (sort_keys, separators=(',',':')) of .payload, Ed25519 over those exact bytes"
+}
