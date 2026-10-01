@@ -82,15 +82,28 @@ def discover_endpoints() -> list[dict]:
     """
     api_dir = REPO / "functions" / "api"
     endpoints = []
-    for f in sorted(api_dir.glob("*.ts")):
-        # Convert filename → URL path
-        name = f.stem
-        path = f"/api/{name}"
-        # Private helpers and test modules are not HTTP doors. The old literal
-        # "_*" comparison never matched `_foo`, and leaked `witness.test` into
-        # generated catalogues as though it were a deployable endpoint.
-        if name == "[[path]]" or name.startswith("_") or name.endswith(".test"):
+    for f in sorted(api_dir.rglob("*.ts")):
+        rel = f.relative_to(api_dir)
+        route_parts = list(rel.with_suffix("").parts)
+
+        # Private helpers, tests, and dynamic catch-all routes are not stable
+        # public OpenAPI doors. Fixed nested handlers ARE public doors and must
+        # not disappear merely because they live below functions/api/.
+        if (
+            rel.name.endswith(".test.ts")
+            or any(part.startswith("_") for part in route_parts)
+            or any("[" in part or "]" in part for part in route_parts)
+        ):
             continue
+
+        # Cloudflare Pages Functions index.ts owns its directory route:
+        # functions/api/receipts/index.ts -> /api/receipts.
+        if route_parts and route_parts[-1] == "index":
+            route_parts = route_parts[:-1]
+        if not route_parts:
+            continue
+        path = "/api/" + "/".join(route_parts)
+
         # Read the file
         text = f.read_text(errors="ignore")
         methods = []
