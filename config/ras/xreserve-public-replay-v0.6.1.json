@@ -1,0 +1,21 @@
+{
+  "schema": "csoai.ras-xreserve-public-replay/0.6.1",
+  "mode": "READ_ONLY",
+  "source_rpc": "https://ethereum-rpc.publicnode.com",
+  "source_domain": 0,
+  "source_transaction": "0xd1ad545d00f14e8ccba3c325366933a3391e049ea0a2a9327f2688c3851a33f8",
+  "event_log_index": 1128,
+  "expected_xreserve_contract": "0x8888888199b2df864bf678259607d6d5ebb4e3ce",
+  "expected_remote_domain": 10003,
+  "expected_remote_chain": "Stacks",
+  "forbidden_relabel": {"domain": 10003, "chain": "Canton"},
+  "circle_info_url": "https://xreserve-api.circle.com/v1/info",
+  "circle_attestation_base": "https://xreserve-api.circle.com/v1/attestations/",
+  "domain_reference_url": "https://developers.circle.com/xreserve/references/supported-blockchains-and-domains",
+  "upstream_derivation": {
+    "repo": "https://github.com/digital-asset/xreserve-deposits",
+    "commit": "5ba8d85afbbaccddbc8bed0715f2edbd95124583",
+    "tool": "deposit-intent-hash/deriveDepositIntentHash.ts"
+  },
+  "authority": {"measurement": false, "execution": false, "settlement": false, "signing": false, "publication": false}
+}
