@@ -216,11 +216,18 @@ def deploy_and_verify(day: str, as_of: str, expected: bytes, candidate: str, dep
             raise RuntimeError("master advanced before deploy; no stale candidate will be published")
         # The ref is pinned to candidate, so a master movement between this
         # check and the publisher's fetch cannot silently change its source.
-        output = run("bash", str(LOOPS / "deploy-prod.sh"), deploy_ref, timeout=1800)
+        proc = subprocess.run(("bash", str(LOOPS / "deploy-prod.sh"), deploy_ref),
+                              text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=1800)
+        output = proc.stdout
+        if proc.returncode == 75:
+            stamp(f"WAIT deploy lock attempt={deploy_attempt+1}")
+            time.sleep(45)
+            continue
+        if proc.returncode:
+            raise RuntimeError(f"guarded deploy failed ({proc.returncode}): {output[-1600:]}")
         if "DEPLOYED:" in output and "=== done" in output:
             break
-        stamp(f"WAIT deploy lock attempt={deploy_attempt+1}")
-        time.sleep(45)
+        raise RuntimeError("guarded deploy returned success without a deployment receipt")
     else:
         raise RuntimeError("no successful guarded deployment after three attempts")
     current = run("git", f"--git-dir={BARE}", "rev-parse", "refs/heads/master").strip()
