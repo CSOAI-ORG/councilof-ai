@@ -188,9 +188,47 @@ class SeriesAndHumanoid(unittest.TestCase):
         self.assertEqual(g["three_state"], "FAIL")
 
     def test_humanoid_pass_dated_count(self):
-        g = grade_humanoid(200, "In 2025 we deployed 40 robots to BMW.", "OK")
+        g = grade_humanoid(200, "<p>In 2025 we deployed 40 robots to BMW.</p>", "OK")
         self.assertEqual(g["three_state"], "PASS")
         self.assertTrue(g["dated_deployment_count_published"])
+        # A PASS must carry the sentence it was read from, or a stranger cannot
+        # check it on the page. That is the whole difference from the 2026-09-07 run.
+        self.assertEqual(g["evidence"]["count_phrase"], "40 robots")
+        self.assertIn("deployed", g["evidence"]["quote"])
+
+
+class HumanoidFalsePassControl(unittest.TestCase):
+    """grade_humanoid's side of the 2026-09-07 false PASS.
+
+    The detector itself is controlled in scripts/test_humanoid_dated_count.py,
+    against the real bytes of the page and the three markup leaks. What is checked
+    here is the row grade_humanoid publishes: a PASS must carry the sentence it was
+    read from, and an unreachable page must never be reported as an absence.
+    """
+
+    FIXTURE = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        "fixtures", "humanoid", "sanctuary-ai-2026-09-17-excerpt.html")
+
+    def test_real_sanctuary_bytes_are_graded_fail_with_a_reason(self):
+        with open(self.FIXTURE, encoding="utf-8") as f:
+            g = grade_humanoid(200, f.read(), "OK")
+        self.assertEqual(g["three_state"], "FAIL")
+        self.assertFalse(g["dated_deployment_count_published"])
+        self.assertIsNone(g["evidence"])
+        self.assertIn("visible text", g["reason"])
+
+    def test_a_pass_row_carries_the_sentence_it_was_read_from(self):
+        g = grade_humanoid(200, "<p>In March 2026 Agility delivered 40 robots to GXO.</p>", "OK")
+        self.assertEqual(g["three_state"], "PASS")
+        self.assertEqual(g["evidence"]["count_phrase"], "40 robots")
+        self.assertIn("delivered", g["evidence"]["quote"])
+        self.assertIsNone(g["reason"])
+
+    def test_unreachable_says_it_never_looked(self):
+        g = grade_humanoid(0, "", "UNREACHABLE")
+        self.assertEqual(g["three_state"], "UNCHECKABLE")
+        self.assertIn("never observed", g["reason"])
 
 
 class RiskStaysUnmeasured(unittest.TestCase):

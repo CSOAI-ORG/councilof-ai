@@ -1,13 +1,13 @@
 {
  "schema": "csoai.financial-measure-run/0.4",
  "axis": "regulatory-framework",
- "as_of": "2026-09-07T11:30:35Z",
+ "as_of": "2026-09-17T12:58:11Z",
  "n": 16,
  "n_unit": "issuer accounts (not bank items)",
  "status": "MEASURED",
  "risk_verdict": "UNMEASURED",
  "three_state": "PASS / FAIL / UNCHECKABLE per fact. UNREACHABLE page => UNCHECKABLE, never FAIL.",
- "producer": "scripts/grade_financial_ledgers.py",
+ "producer": "scripts/gspc_financial_facts.py (invoked from grade_financial_ledgers.py --gspc-facts)",
  "honesty": "Facts MEASURED from this run's fetches. Risk/compliance/quality UNMEASURED. Not a rating, not advice, not an endorsement. No model, no accuracy, no leader. C-2026-0826-05: do not restore MEASURED-INDEX-v0.1.",
  "measured": [
   {
@@ -194,5 +194,5 @@
   "UNCHECKABLE": 9
  },
  "rubric": "Governing regime declared and confirmable on a retrieved URL? Never compliance.",
- "content_id": "bcb3522c63b071b1e710d71beb08345bf02d7d658a167b2d49dfbae85cf3985f"
+ "content_id": "e88123d9b154f33941982699ce80da8b83ac4183a6a0f62f7e53de932f5e054b"
 }

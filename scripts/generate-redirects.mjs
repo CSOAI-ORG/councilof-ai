@@ -123,6 +123,8 @@ const EXISTING = [
   "/sovereign-space /gspc-arena            308",
   "/simulate       /gspc-arena             308",
   "/sovereign-town /gspc-arena?view=towns  308",
+  "/sov-town-lab   /gspc-arena?view=towns  308",
+  "/sov-towns      /gspc-arena?view=towns  308",
   "/towns          /gspc-arena?view=towns  308",
   "/globe          /globe3d.html           308",
   "/byzantine            /council   308",

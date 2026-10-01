@@ -71,7 +71,14 @@ export async function makeFeedManifest(reads:Reads,origin:string){
   offline_verifier:origin+'/verifier/verify_feed_delivery.mjs'};
 }
 export async function requestRecord(request:Request){return {method:request.method,target_sha256:await sha256Hex(new TextEncoder().encode(request.method+'\n'+request.url)),preimage:'UTF-8(method + LF + Request.url)',signed:false};}
+export function feedPayloadBytes(body:unknown):Uint8Array{
+ return new TextEncoder().encode(JSON.stringify(body,null,2));
+}
+export async function feedPayloadEvidence(body:unknown){
+ const raw=feedPayloadBytes(body);
+ return {response_sha256:await sha256Hex(raw),response_bytes:raw.length};
+}
 export async function feedJson(body:unknown,status=200,extra:Record<string,string>={}){
- const raw=new TextEncoder().encode(JSON.stringify(body,null,2));
- return new Response(raw,{status,headers:{'content-type':'application/json; charset=utf-8','cache-control':'no-store, no-transform','access-control-allow-origin':'*','access-control-expose-headers':'x-csoai-payload-sha256, x-csoai-feed-sha256, x-payment-response, payment-response',...extra,'x-csoai-payload-sha256':await sha256Hex(raw)}});
+ const raw=feedPayloadBytes(body);
+ return new Response(raw,{status,headers:{'content-type':'application/json; charset=utf-8','cache-control':'no-store, no-transform','access-control-allow-origin':'*','access-control-expose-headers':'x-csoai-payload-sha256, x-csoai-feed-sha256, x-csoai-delivery-record-state, x-payment-response, payment-response',...extra,'x-csoai-payload-sha256':await sha256Hex(raw)}});
 }

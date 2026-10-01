@@ -1,0 +1,24 @@
+{
+  "schema": "csoai.institutional-rails-watch-universe/0.1",
+  "as_of": "2026-10-01",
+  "rule": "This is the bounded institutional-rails watch universe. Expected rail presence measures catalogue coverage only; it does not prove deployment, measurement completeness, or global deduplication.",
+  "targets": [
+    {"id":"ondo","label":"Ondo","scope":"core","expected_rail_ids":["ondo-tokenized-assets"]},
+    {"id":"chainlink","label":"Chainlink","scope":"core","expected_rail_ids":["chainlink-ccip-2","chainlink-cre-institutional","chainlink-stellar-data-feeds","chainlink-stellar-ccip"]},
+    {"id":"canton","label":"Canton","scope":"core","expected_rail_ids":["canton-global-synchronizer","canton-tbar"]},
+    {"id":"stellar","label":"Stellar","scope":"core","expected_rail_ids":["stellar-network","stellar-institutional-assets"]},
+    {"id":"dtcc","label":"DTCC","scope":"core","expected_rail_ids":["dtcc-collateral-appchain"]},
+    {"id":"swift","label":"Swift","scope":"core","expected_rail_ids":["swift-tokenized-ledger"]},
+    {"id":"ibm-digital-asset-haven","label":"IBM Digital Asset Haven","scope":"core","expected_rail_ids":["ibm-haven-swift"]},
+    {"id":"lfdt-besu","label":"LF Decentralized Trust / Hyperledger Besu","scope":"core","expected_rail_ids":["lfdt-besu"]},
+    {"id":"circle-arc","label":"Circle Arc","scope":"core","expected_rail_ids":["circle-arc"]},
+    {"id":"sec","label":"US SEC","scope":"core","expected_rail_ids":["sec-tokenisation"]},
+    {"id":"cftc","label":"US CFTC","scope":"core","expected_rail_ids":["cftc-digital-assets"]},
+    {"id":"hkma","label":"HKMA","scope":"core","expected_rail_ids":["hkma-ensembletx","hkma-digital-green-bonds"]},
+    {"id":"mas","label":"MAS","scope":"core","expected_rail_ids":["mas-tokenisation"]},
+    {"id":"bis","label":"BIS","scope":"core","expected_rail_ids":["bis-agora"]},
+    {"id":"lseg","label":"LSEG","scope":"adjacent","expected_rail_ids":["lseg-dish-canton"]},
+    {"id":"citi","label":"Citi","scope":"adjacent","expected_rail_ids":["citi-token-services"]},
+    {"id":"visa","label":"Visa","scope":"adjacent","expected_rail_ids":["visa-stablecoin-settlement"]}
+  ]
+}

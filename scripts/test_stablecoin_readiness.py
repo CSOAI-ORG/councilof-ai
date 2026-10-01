@@ -12,6 +12,7 @@ from build_stablecoin_readiness import (
     find_index_commitment,
     index_commitment_state,
     measured_asset_anchor_state,
+    rooted_stablecoin_probes,
     rooted_xrpl_asset_measurements,
     validate,
 )
@@ -27,9 +28,19 @@ class StablecoinReadinessTruthTest(unittest.TestCase):
         self.assertEqual(425, self.document["coverage"]["indexed_assets"])
         source_index = json.loads((Path(".") / "public/interop/stablecoin-universe-2026-09/index.json").read_text())
         current_root = json.loads((Path(".") / "public/root.json").read_text())
-        expected = rooted_xrpl_asset_measurements(Path(".").resolve(), set(current_root.get("card_sha256") or []), source_index["assets"])
+        root_hashes = set(current_root.get("card_sha256") or [])
+        expected = rooted_xrpl_asset_measurements(Path(".").resolve(), root_hashes, source_index["assets"])
+        expected_probes = rooted_stablecoin_probes(Path(".").resolve(), root_hashes, source_index["assets"])
         self.assertEqual(len(expected), self.document["coverage"]["deeply_measured_assets"])
         self.assertEqual(425 - len(expected), self.document["coverage"]["unmeasured_assets"])
+        self.assertEqual(len(expected_probes), self.document["coverage"]["signed_rooted_probe_assets"])
+        probed_rows = [row for row in self.document["assets"] if row["probe"]["state"] == "PROBED_SIGNED_ROOTED"]
+        self.assertEqual(set(expected_probes), {row["id"] for row in probed_rows})
+        self.assertEqual(
+            sum(row["measurement"]["state"] == "UNMEASURED" for row in probed_rows),
+            self.document["coverage"]["signed_rooted_probe_only_assets"],
+        )
+        self.assertTrue(all(row["probe"]["attestation_state"] == "UNMEASURED" for row in probed_rows))
         measured_symbols = {row["symbol"] for row in self.document["assets"] if row["measurement"]["state"] == "MEASURED"}
         self.assertTrue({"RLUSD", "USDC", "EURCV"}.issubset(measured_symbols))
         witness = json.loads((Path(".") / "public/interop/root-witness-latest.json").read_text())
@@ -39,6 +50,16 @@ class StablecoinReadinessTruthTest(unittest.TestCase):
         self.assertEqual(1, self.document["coverage"]["post_freeze_discovery_candidates"])
         self.assertEqual("USBDC", self.document["discovery_candidates"][0]["symbol"])
         self.assertEqual("UNMEASURED", self.document["discovery_candidates"][0]["measurement_state"])
+
+
+    def test_rooted_probe_never_promotes_measurement(self) -> None:
+        probed = [row for row in self.document["assets"] if row["probe"]["state"] == "PROBED_SIGNED_ROOTED"]
+        self.assertTrue(probed)
+        probe_only = [row for row in probed if row["measurement"]["state"] == "UNMEASURED"]
+        self.assertTrue(probe_only)
+        self.assertTrue(all(row["signature_state"] == "NO_ASSET_MEASUREMENT_SIGNATURE" for row in probe_only))
+        self.assertTrue(all(row["root_state"] == "NO_ASSET_MEASUREMENT_IN_CURRENT_ROOT" for row in probe_only))
+        self.assertTrue(all("A signed/rooted probe remains UNMEASURED" in row["probe"]["claim_boundary"] for row in probe_only))
 
     def test_row_witness_states_are_derived_from_shared_evidence(self) -> None:
         proof = self.document["shared_evidence"]["index_commitment"]

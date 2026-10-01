@@ -134,6 +134,55 @@ def rooted_xrpl_asset_measurements(
         qualified[asset_id] = (path, body)
     return qualified
 
+
+def rooted_stablecoin_probes(
+    repo: Path, root_hashes: set[str], index_assets: list[dict[str, Any]]
+) -> dict[str, tuple[Path, dict[str, Any]]]:
+    """Return signed/current-root stablecoin probe cards keyed by frozen asset id.
+
+    These cards are deliberately NOT measurements. Qualification requires the signed
+    card itself to say PROBED + UNMEASURED and to bind an exact frozen registry id.
+    The function exposes already-published evidence without upgrading its claim state.
+    """
+    index_by_id = {str(row["id"]): row for row in index_assets}
+    candidates: dict[str, list[tuple[str, Path, dict[str, Any]]]] = {}
+    for path in sorted((repo / CARDS_REL).glob("*.json")):
+        try:
+            body = card_body(load(path))
+        except (OSError, ValueError):
+            continue
+        payload = body.get("payload") or {}
+        identity = str(payload.get("subject_identity") or "")
+        prefix = "defillama-stablecoin:"
+        if not identity.startswith(prefix):
+            continue
+        asset_id = identity[len(prefix):]
+        source_row = index_by_id.get(asset_id)
+        if source_row is None:
+            continue
+        if (
+            body.get("surface") != "public.notice"
+            or payload.get("kind") != "csoai.stablecoin-cohort.reading/v1"
+            or payload.get("state") != "PROBED"
+            or payload.get("attestation_state") != "UNMEASURED"
+            or str(payload.get("stablecoin_registry_id") or "") != asset_id
+            or str(payload.get("subject_symbol") or "").upper() != str(source_row.get("symbol") or "").upper()
+            or not isinstance(payload.get("chain_readings"), list)
+            or not payload.get("chain_readings")
+            or not isinstance(body.get("sig_ed25519"), str)
+            or not body.get("sig_ed25519")
+            or body.get("sha256") not in root_hashes
+        ):
+            continue
+        candidates.setdefault(asset_id, []).append((str(body.get("as_of") or ""), path, body))
+
+    qualified: dict[str, tuple[Path, dict[str, Any]]] = {}
+    for asset_id, rows in candidates.items():
+        _, path, body = max(rows, key=lambda row: row[0])
+        qualified[asset_id] = (path, body)
+    return qualified
+
+
 def witness_state_token(status: Any, *, ots: bool = False) -> str:
     """Return the public row-state token derived from a witness status.
 
@@ -184,6 +233,7 @@ def build(repo: Path) -> dict[str, Any]:
         raise SystemExit("stablecoin index commitment is signed but absent from the current public root")
 
     xrpl_measurements = rooted_xrpl_asset_measurements(repo, root_hashes, index["assets"])
+    rooted_probes = rooted_stablecoin_probes(repo, root_hashes, index["assets"])
     rekor = ((witness.get("witnesses") or {}).get("rekor") or {})
     ots = ((witness.get("witnesses") or {}).get("ots") or {})
     current_index_commitment_state = index_commitment_state(rekor.get("status"), ots.get("status"))
@@ -232,6 +282,10 @@ def build(repo: Path) -> dict[str, Any]:
                 "freshness": "NOT_APPLICABLE",
                 "evidence_urls": [],
             },
+            "probe": {
+                "state": "NONE",
+                "evidence_urls": [],
+            },
             "signature_state": "NO_ASSET_MEASUREMENT_SIGNATURE",
             "root_state": "NO_ASSET_MEASUREMENT_IN_CURRENT_ROOT",
             "anchor_state": "NO_ASSET_MEASUREMENT_ANCHOR",
@@ -248,6 +302,23 @@ def build(repo: Path) -> dict[str, Any]:
         }
         if str(source_row["id"]) in asset_doors:
             row["x402_door"] = f"https://councilof.ai/api/wrapper/asset/{asset_doors[str(source_row['id'])]['asset']}"
+        probe_card = rooted_probes.get(str(source_row["id"]))
+        if probe_card:
+            probe_path, probe_body = probe_card
+            probe_payload = probe_body.get("payload") or {}
+            readings = probe_payload.get("chain_readings") or []
+            row["probe"] = {
+                "state": "PROBED_SIGNED_ROOTED",
+                "attestation_state": "UNMEASURED",
+                "as_of": probe_body.get("as_of"),
+                "evidence_urls": [f"https://councilof.ai/cards/{probe_path.name}"],
+                "observed_chains": sorted({str(reading.get("chain") or "") for reading in readings if reading.get("chain")}),
+                "replay_results": sorted({str(reading.get("replay_result") or "UNKNOWN") for reading in readings}),
+                "signature_state": "SIGNED_ED25519",
+                "root_state": "CURRENT_ROOT_INCLUDED",
+                "claim_boundary": "A signed/rooted probe remains UNMEASURED; root inclusion authenticates the probe record, not measurement qualification.",
+            }
+
         measured_card = xrpl_measurements.get(str(source_row["id"]))
         if measured_card:
             measurement_path, measurement_card = measured_card
@@ -286,6 +357,11 @@ def build(repo: Path) -> dict[str, Any]:
         assets.append(row)
 
     measured = sum(row["measurement"]["state"] == "MEASURED" for row in assets)
+    rooted_probe_count = sum(row["probe"]["state"] == "PROBED_SIGNED_ROOTED" for row in assets)
+    rooted_probe_only_count = sum(
+        row["probe"]["state"] == "PROBED_SIGNED_ROOTED" and row["measurement"]["state"] == "UNMEASURED"
+        for row in assets
+    )
     return {
         "schema": "csoai.stablecoin-readiness/v1",
         "as_of": index["observed_at"],
@@ -296,6 +372,8 @@ def build(repo: Path) -> dict[str, Any]:
             "distinct_asset_reported_chains": len({chain for row in assets for chain in row["chains"]}),
             "deeply_measured_assets": measured,
             "unmeasured_assets": len(assets) - measured,
+            "signed_rooted_probe_assets": rooted_probe_count,
+            "signed_rooted_probe_only_assets": rooted_probe_only_count,
             "asset_measurements_signed": measured,
             "asset_measurements_current_root_included": measured,
             "asset_measurements_rekor_witnessed_via_root": measured if rekor.get("status") == "WITNESSED" else 0,
@@ -358,6 +436,7 @@ def build(repo: Path) -> dict[str, Any]:
         },
         "truth_rules": [
             "INDEXED is not MEASURED.",
+            "A signed, current-root PROBED card remains UNMEASURED when its own attestation_state says UNMEASURED.",
             "A signed index commitment is not an asset measurement signature.",
             "Root inclusion is not an external-chain anchor.",
             "An OpenTimestamps pending calendar attestation is not a Bitcoin timestamp.",
@@ -405,8 +484,12 @@ def validate(document: dict[str, Any]) -> None:
     assert coverage["indexed_assets"] == len(assets)
     assert coverage["indexed_chain_deployments"] == sum(row["chain_deployment_count"] for row in assets)
     measured = [row for row in assets if row["measurement"]["state"] == "MEASURED"]
+    probed = [row for row in assets if row["probe"]["state"] == "PROBED_SIGNED_ROOTED"]
+    probe_only = [row for row in probed if row["measurement"]["state"] == "UNMEASURED"]
     assert coverage["deeply_measured_assets"] == len(measured)
     assert coverage["unmeasured_assets"] == len(assets) - len(measured)
+    assert coverage["signed_rooted_probe_assets"] == len(probed)
+    assert coverage["signed_rooted_probe_only_assets"] == len(probe_only)
     proof = document["shared_evidence"]["index_commitment"]
     expected_index_commitment_state = index_commitment_state(
         (proof.get("rekor") or {}).get("state"),
@@ -431,6 +514,16 @@ def validate(document: dict[str, Any]) -> None:
         assert row["mcp_discovery_state"] == "GENERIC_CATALOG_ONLY_NO_ASSET_TOOL"
         assert row["x402_door_state"] in (GENERIC_DOOR_STATE, ASSET_DOOR_STATE)
         assert (row["x402_door_state"] == ASSET_DOOR_STATE) == ("x402_door" in row)
+        if row["probe"]["state"] == "NONE":
+            assert row["probe"]["evidence_urls"] == []
+        else:
+            assert row["probe"]["state"] == "PROBED_SIGNED_ROOTED"
+            assert row["probe"]["attestation_state"] == "UNMEASURED"
+            assert row["probe"]["signature_state"] == "SIGNED_ED25519"
+            assert row["probe"]["root_state"] == "CURRENT_ROOT_INCLUDED"
+            assert row["probe"]["observed_chains"]
+            assert len(row["probe"]["evidence_urls"]) == 1
+            assert row["probe"]["evidence_urls"][0].startswith("https://councilof.ai/cards/")
         if row["measurement"]["state"] == "UNMEASURED":
             assert row["measurement"]["depth"] == "NONE"
             assert row["signature_state"] == "NO_ASSET_MEASUREMENT_SIGNATURE"

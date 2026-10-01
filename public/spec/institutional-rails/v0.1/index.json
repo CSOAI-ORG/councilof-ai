@@ -1,0 +1,88 @@
+{
+  "change_types": [
+    "BLOCKER_CHANGED",
+    "CORRECTION",
+    "DEADLINE",
+    "EVIDENCE_ADDED",
+    "SCOPE_CHANGE",
+    "STATE_ADVANCE"
+  ],
+  "event_statuses": [
+    "OBSERVED",
+    "SCHEDULED"
+  ],
+  "hard_boundaries": [
+    "reachability is not subject measurement",
+    "proposal is not deployment",
+    "merge or release is not deployment",
+    "deployment is not live use",
+    "live use is not a transaction",
+    "transaction is not settlement",
+    "settlement is not legal finality",
+    "settlement or finality is not proof of delivery or acceptance"
+  ],
+  "name": "Institutional Financial Rail Evidence State Model",
+  "orthogonal_states": {
+    "acceptance": [
+      "UNMEASURED",
+      "OBSERVED",
+      "NOT_APPLICABLE"
+    ],
+    "market_effect": "UNMEASURED unless separately evidenced; no price or market reaction is implied by a rail transition.",
+    "regulatory_action": "Registration, exemption, approval, consultation, order or enforcement is recorded independently from operational maturity."
+  },
+  "schema": "csoai.institutional-rail-state-model/0.1",
+  "states": [
+    {
+      "meaning": "Named in the bounded catalogue. Nothing else is inferred.",
+      "rank": 0,
+      "state": "DISCOVERED"
+    },
+    {
+      "meaning": "A proposal, consultation, announced integration, or stated intent exists.",
+      "rank": 1,
+      "state": "PROPOSED"
+    },
+    {
+      "meaning": "Relevant implementation code exists. Merge, release, deployment and use remain separate.",
+      "rank": 2,
+      "state": "CODED"
+    },
+    {
+      "meaning": "Canonical code was merged or a release was published. Deployment is not inferred.",
+      "rank": 3,
+      "state": "MERGED_RELEASED"
+    },
+    {
+      "meaning": "Named network, contract, participant or launch configuration is evidenced.",
+      "rank": 4,
+      "state": "CONFIGURED"
+    },
+    {
+      "meaning": "Infrastructure is evidenced in the target environment. General availability is not inferred.",
+      "rank": 5,
+      "state": "DEPLOYED"
+    },
+    {
+      "meaning": "The rail or product is evidenced as available for use. Transaction activity is not inferred.",
+      "rank": 6,
+      "state": "LIVE"
+    },
+    {
+      "meaning": "At least one transaction is evidenced. Settlement is not inferred.",
+      "rank": 7,
+      "state": "TRANSACTED"
+    },
+    {
+      "meaning": "Settlement completion is evidenced for the bounded event. Legal finality is not inferred.",
+      "rank": 8,
+      "state": "SETTLED"
+    },
+    {
+      "meaning": "A legal or operational finality basis is evidenced for the bounded event.",
+      "rank": 9,
+      "state": "FINAL"
+    }
+  ],
+  "version": "0.1"
+}

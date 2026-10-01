@@ -13,6 +13,7 @@ from build_stablecoin_readiness import (
     WITNESS_REL,
     index_commitment_state,
     measured_asset_anchor_state,
+    rooted_stablecoin_probes,
     rooted_xrpl_asset_measurements,
     validate,
 )
@@ -46,15 +47,27 @@ if __name__ == "__main__":
     measured_rows = [row for row in document["assets"] if row["measurement"]["state"] == "MEASURED"]
     source_index = json.loads((repo / INDEX_REL).read_text())
     current_root = json.loads((repo / ROOT_REL).read_text())
-    expected_measurements = rooted_xrpl_asset_measurements(
-        repo, set(current_root.get("card_sha256") or []), source_index["assets"]
-    )
+    root_hashes = set(current_root.get("card_sha256") or [])
+    expected_measurements = rooted_xrpl_asset_measurements(repo, root_hashes, source_index["assets"])
+    expected_probes = rooted_stablecoin_probes(repo, root_hashes, source_index["assets"])
     assert {row["id"] for row in measured_rows} == set(expected_measurements), (
         "MEASURED rows must equal the signed, current-root, uniquely matched XRPL stablecoin evidence set"
     )
     for row in measured_rows:
         expected_path, _ = expected_measurements[row["id"]]
         assert row["measurement"]["evidence_urls"] == [f"https://councilof.ai/cards/{expected_path.name}"]
+    probed_rows = [row for row in document["assets"] if row["probe"]["state"] == "PROBED_SIGNED_ROOTED"]
+    assert {row["id"] for row in probed_rows} == set(expected_probes), (
+        "PROBED_SIGNED_ROOTED rows must equal signed, current-root stablecoin cohort probe cards"
+    )
+    for row in probed_rows:
+        expected_path, expected_card = expected_probes[row["id"]]
+        assert row["probe"]["evidence_urls"] == [f"https://councilof.ai/cards/{expected_path.name}"]
+        assert (expected_card.get("payload") or {}).get("attestation_state") == "UNMEASURED"
+    assert document["coverage"]["signed_rooted_probe_assets"] == len(expected_probes)
+    assert document["coverage"]["signed_rooted_probe_only_assets"] == sum(
+        row["measurement"]["state"] == "UNMEASURED" for row in probed_rows
+    )
     expected_anchor_state = measured_asset_anchor_state(
         ((witness.get("witnesses") or {}).get("rekor") or {}).get("status"),
         w_ots.get("status"),

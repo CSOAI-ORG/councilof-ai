@@ -1,0 +1,36 @@
+{
+  "as_of": "2026-09-24",
+  "commercial_boundary": "No payer, partner, member, measured entity or contributor may purchase silence, a better outcome, or removal of correction history.",
+  "process": [
+    "record the observed change",
+    "identify dependent claims and work units in SovSpace",
+    "mark affected claims stale where dependency semantics require it",
+    "run bounded re-verification through GSPC/Venturi",
+    "publish confirmed/superseded/corrected state",
+    "retain full correction history and evidence links"
+  ],
+  "schema": "csoai.governance.correction-policy/0.1",
+  "states": [
+    "CURRENT",
+    "STALE",
+    "REVERIFYING",
+    "CONFIRMED",
+    "SUPERSEDED",
+    "CORRECTED",
+    "WITHDRAWN",
+    "UNMEASURED",
+    "DISPUTED"
+  ],
+  "triggers": [
+    "authority or delegation changes",
+    "identity or registry lifecycle changes",
+    "skill/resource digest changes",
+    "runtime, policy, sandbox or toolset changes",
+    "source or ontology dependency changes",
+    "evaluation method or version changes",
+    "security finding or scan state changes",
+    "payment/facilitator/quote semantics changes",
+    "new contrary evidence",
+    "upstream correction or withdrawal"
+  ]
+}

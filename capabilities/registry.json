@@ -1,6 +1,6 @@
 {
   "schema": "councilof.ai/capability-registry/1",
-  "note": "GENERATED VIEW of council-os/capabilities.json — do not hand-edit. Seeded from the live doors on 2026-09-04, this file was itself a second registry and aged: it recorded 67 http paths, 12 MCP tools and 5 A2A skills, and carried a typed `counts` block. It is now rendered by scripts/capability-render.mjs legacy so scripts/capability-drift-guard.mjs keeps working against one source of truth. No count is stored here; derive by counting `capabilities`.",
+  "note": "GENERATED VIEW of council-os/capabilities.json \u2014 do not hand-edit. Seeded from the live doors on 2026-09-04, this file was itself a second registry and aged: it recorded 67 http paths, 12 MCP tools and 5 A2A skills, and carried a typed `counts` block. It is now rendered by scripts/capability-render.mjs legacy so scripts/capability-drift-guard.mjs keeps working against one source of truth. No count is stored here; derive by counting `capabilities`.",
   "superseded_by": "council-os/capabilities.json",
   "seeded_from_live_doors": "2026-09-04",
   "generated_by": "scripts/capability-render.mjs legacy",
@@ -24,7 +24,7 @@
         "a2a"
       ],
       "title": "Benchmark-quality register",
-      "description": "Signed register of what third-party AI benchmarks disclose about their own process integrity. Deterministic predicates only — no language model judges. Records are unsolicited; nothing on the register is certification or endorsement.",
+      "description": "Signed register of what third-party AI benchmarks disclose about their own process integrity. Deterministic predicates only \u2014 no language model judges. Records are unsolicited; nothing on the register is certification or endorsement.",
       "endpoint": null,
       "method": "POST",
       "lifecycle": "LIVE",
@@ -37,7 +37,7 @@
         "a2a"
       ],
       "title": "East-West crosswalk & cross-border card",
-      "description": "One signed GSPC measurement mapped across EU, UK, US, Illinois, and China GB/T alignment surfaces. Crosswalk v1 JSON, cross-border signed card, and stranger verify at /gspc-verify. Measurement only — determination stays with authorities.",
+      "description": "One signed GSPC measurement mapped across EU, UK, US, Illinois, and China GB/T alignment surfaces. Crosswalk v1 JSON, cross-border signed card, and stranger verify at /gspc-verify. Measurement only \u2014 determination stays with authorities.",
       "endpoint": null,
       "method": "POST",
       "lifecycle": "LIVE",
@@ -102,7 +102,7 @@
         "a2a"
       ],
       "title": "x402 discovery + free door",
-      "description": "Agents discover paid artefact rails via GET https://councilof.ai/.well-known/x402.json (mode is reported from runtime env, Base eip155:8453, USDC; amounts from challenge only — no invent price). Catalog GET /api/x402. Free door GET /api/free-door amount 0 settles and charges nothing — proves the rail. Living board GET /api/gspc. Verification stays free at /gspc-verify. payTo is merchant receive, never the signer. Self-settle proves the rail; stranger revenue is separate (do not invent buyers). Coming—Paddle not live. No card-processor invent. Measurement, never certification. Signed offers and receipts are conditional: a 402 carries extensions['offer-receipt'].info.offers[] only when BOARD_SIGN_KEY_PKCS8_B64 is provisioned and an accepts[] entry can be committed; otherwise csoai.offer_receipt names the gap. A signed receipt appears in the X-PAYMENT-RESPONSE SettlementResponse only after facilitator-confirmed settlement when the facilitator names a payer and the board key is available; otherwise receiptGap states why no signed receipt was attached. Emitted signatures use format jws, alg EdDSA, kid did:web:csoai.org#board-attestation-1. Verify one without trusting us: POST it to /api/receipts/verify, or run scripts/verify_receipt.py against https://csoai.org/.well-known/did.json. Your own receipts: GET /api/receipts?payer=0x... (status UNRECORDED means no store is bound on that deployment, never that you did not pay). No eip712 is emitted — the edge has no secp256k1 signer.",
+      "description": "Agents discover paid artefact rails via GET https://councilof.ai/.well-known/x402.json (mode is reported from runtime env, Base eip155:8453, USDC; amounts from challenge only \u2014 no invent price). Catalog GET /api/x402. Free door GET /api/free-door amount 0 settles and charges nothing \u2014 proves the rail. Living board GET /api/gspc. Verification stays free at /gspc-verify. payTo is merchant receive, never the signer. Self-settle proves the rail; stranger revenue is separate (do not invent buyers). Coming\u2014Paddle not live. No card-processor invent. Measurement, never certification. Signed offers and receipts are conditional: a 402 carries extensions['offer-receipt'].info.offers[] only when BOARD_SIGN_KEY_PKCS8_B64 is provisioned and an accepts[] entry can be committed; otherwise csoai.offer_receipt names the gap. A signed receipt appears in the X-PAYMENT-RESPONSE SettlementResponse only after facilitator-confirmed settlement when the facilitator names a payer and the board key is available; otherwise receiptGap states why no signed receipt was attached. Emitted signatures use format jws, alg EdDSA, kid did:web:csoai.org#board-attestation-1. Verify one without trusting us: POST it to /api/receipts/verify, or run scripts/verify_receipt.py against https://csoai.org/.well-known/did.json. Your own receipts: GET /api/receipts?payer=0x... (status UNRECORDED means no store is bound on that deployment, never that you did not pay). No eip712 is emitted \u2014 the edge has no secp256k1 signer.",
       "endpoint": null,
       "method": "POST",
       "lifecycle": "LIVE",
@@ -115,7 +115,7 @@
         "a2a"
       ],
       "title": "Measurement capsules: index and verify (free)",
-      "description": "Read the latest signed measurement-capsule index, or verify one capsule. {\"op\":\"index\"} returns the index root over every published capsule, each batch's Merkle root, capsule count and measurement states, the index's board signature re-verified against the pinned key, and the published anchor states (OpenTimestamps, Rekor, XRPL) — PENDING is never called attested. {\"op\":\"verify\",\"capsule_json\":...} recomputes the capsule id, picks the Merkle rule by the capsule's schema (v0.2: RFC 6962 with domain separation) and returns the audit path against the batch root the signed index names: INCLUDED, NOT_INCLUDED, ID_MISMATCH, UNCHECKABLE or NOT_PUBLISHED. The same module as the MCP tools measurement_index and verify_capsule. Verification is free forever. Measurement, not endorsement: no verdict, score or ranking.",
+      "description": "Read the latest signed measurement-capsule index, or verify one capsule. {\"op\":\"index\"} returns the index root over every published capsule, each batch's Merkle root, capsule count and measurement states, the index's board signature re-verified against the pinned key, and the published anchor states (OpenTimestamps, Rekor, XRPL) \u2014 PENDING is never called attested. {\"op\":\"verify\",\"capsule_json\":...} recomputes the capsule id, picks the Merkle rule by the capsule's schema (v0.2: RFC 6962 with domain separation) and returns the audit path against the batch root the signed index names: INCLUDED, NOT_INCLUDED, ID_MISMATCH, UNCHECKABLE or NOT_PUBLISHED. The same module as the MCP tools measurement_index and verify_capsule. Verification is free forever. Measurement, not endorsement: no verdict, score or ranking.",
       "endpoint": null,
       "method": "POST",
       "lifecycle": "LIVE",
@@ -167,7 +167,7 @@
         "http"
       ],
       "title": "A2a",
-      "description": "POST /api/a2a — the A2A v1.0 JSON-RPC binding that /.well-known/agent-card.json points at.",
+      "description": "POST /api/a2a \u2014 the A2A v1.0 JSON-RPC binding that /.well-known/agent-card.json points at.",
       "endpoint": "/api/a2a",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -180,7 +180,7 @@
         "http"
       ],
       "title": "A2a (POST)",
-      "description": "POST /api/a2a — the A2A v1.0 JSON-RPC binding that /.well-known/agent-card.json points at.",
+      "description": "POST /api/a2a \u2014 the A2A v1.0 JSON-RPC binding that /.well-known/agent-card.json points at.",
       "endpoint": "/api/a2a",
       "method": "POST",
       "lifecycle": "LIVE",
@@ -193,7 +193,7 @@
         "http"
       ],
       "title": "Action jobs",
-      "description": "/api/action-jobs — bounded, durable action-intent ledger staging.",
+      "description": "/api/action-jobs \u2014 bounded, durable action-intent ledger staging.",
       "endpoint": "/api/action-jobs",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -206,7 +206,7 @@
         "http"
       ],
       "title": "Action jobs (PATCH)",
-      "description": "/api/action-jobs — bounded, durable action-intent ledger staging.",
+      "description": "/api/action-jobs \u2014 bounded, durable action-intent ledger staging.",
       "endpoint": "/api/action-jobs",
       "method": "PATCH",
       "lifecycle": "LIVE",
@@ -219,7 +219,7 @@
         "http"
       ],
       "title": "Action jobs (POST)",
-      "description": "/api/action-jobs — bounded, durable action-intent ledger staging.",
+      "description": "/api/action-jobs \u2014 bounded, durable action-intent ledger staging.",
       "endpoint": "/api/action-jobs",
       "method": "POST",
       "lifecycle": "LIVE",
@@ -258,7 +258,7 @@
         "http"
       ],
       "title": "Arena scoreboard",
-      "description": "Historical arena artefact (signed 29 Aug 2026): per-axis pass rates, not Elo. Most axes read 0.0 because of a keyword-grader defect, so it is not a measurement of the models; kept for provenance. HEAD must not 404 when GET is 200 — probes and MCP hosts send HEAD first.",
+      "description": "Historical arena artefact (signed 29 Aug 2026): per-axis pass rates, not Elo. Most axes read 0.0 because of a keyword-grader defect, so it is not a measurement of the models; kept for provenance. HEAD must not 404 when GET is 200 \u2014 probes and MCP hosts send HEAD first.",
       "endpoint": "/api/arena/scoreboard",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -284,7 +284,7 @@
         "http"
       ],
       "title": "Art50 marking evidence (POST)",
-      "description": "/api/art50/marking-evidence — the Article 50 marking-evidence pack.",
+      "description": "/api/art50/marking-evidence \u2014 the Article 50 marking-evidence pack.",
       "endpoint": "/api/art50/marking-evidence",
       "method": "POST",
       "lifecycle": "LIVE",
@@ -297,7 +297,7 @@
         "http"
       ],
       "title": "Article50",
-      "description": "POST /api/article50 — issues an Article 50 passport (free tier, HMAC-signed). GET /api/article50?verify=1&... — re-verifies a signature, statelessly.",
+      "description": "POST /api/article50 \u2014 issues an Article 50 passport (free tier, HMAC-signed). GET /api/article50?verify=1&... \u2014 re-verifies a signature, statelessly.",
       "endpoint": "/api/article50",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -310,7 +310,7 @@
         "http"
       ],
       "title": "Article50 (POST)",
-      "description": "POST /api/article50 — issues an Article 50 passport (free tier, HMAC-signed). GET /api/article50?verify=1&... — re-verifies a signature, statelessly.",
+      "description": "POST /api/article50 \u2014 issues an Article 50 passport (free tier, HMAC-signed). GET /api/article50?verify=1&... \u2014 re-verifies a signature, statelessly.",
       "endpoint": "/api/article50",
       "method": "POST",
       "lifecycle": "LIVE",
@@ -323,7 +323,7 @@
         "http"
       ],
       "title": "Assess",
-      "description": "POST /api/assess — a deterministic, text-only EU AI Act screening helper.",
+      "description": "POST /api/assess \u2014 a deterministic, text-only EU AI Act screening helper.",
       "endpoint": "/api/assess",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -336,7 +336,7 @@
         "http"
       ],
       "title": "Assess key",
-      "description": "GET /api/assess/key — the verification half of the signed assessment. AssessTool's copy tells readers to fetch the public key from here and check the signature themselves; until now the path didn't exist. Returns the Ed25519 public key derived from the same secret the signer uses — or an honest 404 when no key is provisioned, never a made-up key.",
+      "description": "GET /api/assess/key \u2014 the verification half of the signed assessment. AssessTool's copy tells readers to fetch the public key from here and check the signature themselves; until now the path didn't exist. Returns the Ed25519 public key derived from the same secret the signer uses \u2014 or an honest 404 when no key is provisioned, never a made-up key.",
       "endpoint": "/api/assess/key",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -349,7 +349,7 @@
         "http"
       ],
       "title": "Assess (POST)",
-      "description": "POST /api/assess — a deterministic, text-only EU AI Act screening helper.",
+      "description": "POST /api/assess \u2014 a deterministic, text-only EU AI Act screening helper.",
       "endpoint": "/api/assess",
       "method": "POST",
       "lifecycle": "LIVE",
@@ -362,7 +362,7 @@
         "http"
       ],
       "title": "Atlas",
-      "description": "atlas — retired until its response can be derived from current evidence.",
+      "description": "atlas \u2014 retired until its response can be derived from current evidence.",
       "endpoint": "/api/atlas",
       "method": "GET",
       "lifecycle": "RETIRED",
@@ -375,7 +375,7 @@
         "http"
       ],
       "title": "Atlas (POST)",
-      "description": "atlas — retired until its response can be derived from current evidence.",
+      "description": "atlas \u2014 retired until its response can be derived from current evidence.",
       "endpoint": "/api/atlas",
       "method": "POST",
       "lifecycle": "RETIRED",
@@ -388,7 +388,7 @@
         "http"
       ],
       "title": "Axis register",
-      "description": "GET /api/axis-register — the GSPC axis register (canonical scored rows).",
+      "description": "GET /api/axis-register \u2014 the GSPC axis register (canonical scored rows).",
       "endpoint": "/api/axis-register",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -414,7 +414,7 @@
         "http"
       ],
       "title": "Bank complete",
-      "description": "/api/bank-complete — evidence-derived reader for the bank × chain × stablecoin census. Data is embedded at build time (zero-drift with public/interop/bank-registry.json).",
+      "description": "/api/bank-complete \u2014 evidence-derived reader for the bank \u00d7 chain \u00d7 stablecoin census. Data is embedded at build time (zero-drift with public/interop/bank-registry.json).",
       "endpoint": "/api/bank-complete",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -440,7 +440,7 @@
         "http"
       ],
       "title": "Board sign (POST)",
-      "description": "POST /api/board-sign — two callers, one key. Signs a card-v0 payload with Pages secret BOARD_SIGN_KEY_PKCS8_B64. The PKCS8 never leaves Cloudflare. Never logs the key. Not a grade.",
+      "description": "POST /api/board-sign \u2014 two callers, one key. Signs a card-v0 payload with Pages secret BOARD_SIGN_KEY_PKCS8_B64. The PKCS8 never leaves Cloudflare. Never logs the key. Not a grade.",
       "endpoint": "/api/board-sign",
       "method": "POST",
       "lifecycle": "LIVE",
@@ -453,7 +453,7 @@
         "http"
       ],
       "title": "Body state",
-      "description": "/api/body-state — live route reporting the retired GitHub Actions run-history source; no current workflow timestamps.",
+      "description": "/api/body-state \u2014 live route reporting the retired GitHub Actions run-history source; no current workflow timestamps.",
       "endpoint": "/api/body-state",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -466,7 +466,7 @@
         "http"
       ],
       "title": "Cards",
-      "description": "GET /api/cards — live signed-measurement surface (G4 fix).",
+      "description": "GET /api/cards \u2014 live signed-measurement surface (G4 fix).",
       "endpoint": "/api/cards",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -479,7 +479,7 @@
         "http"
       ],
       "title": "Certificate schema",
-      "description": "certificate-schema — withdrawn; the record is csoai.completion-record/0.1.",
+      "description": "certificate-schema \u2014 withdrawn; the record is csoai.completion-record/0.1.",
       "endpoint": "/api/certificate-schema",
       "method": "GET",
       "lifecycle": "RETIRED",
@@ -518,7 +518,7 @@
         "http"
       ],
       "title": "Claims events",
-      "description": "GET /api/claims/events — the claim-event feed: append-only, hash-chained JSONL.",
+      "description": "GET /api/claims/events \u2014 the claim-event feed: append-only, hash-chained JSONL.",
       "endpoint": "/api/claims/events",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -531,8 +531,21 @@
         "http"
       ],
       "title": "Claims events head",
-      "description": "GET /api/claims/events/head — the signed daily head of the claim-event feed, with this door's own verification of it against the committed feed bytes.",
+      "description": "GET /api/claims/events/head \u2014 the signed daily head of the claim-event feed, with this door's own verification of it against the committed feed bytes.",
       "endpoint": "/api/claims/events/head",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-claims-reactions",
+      "protocols": [
+        "http"
+      ],
+      "title": "Claims reactions",
+      "description": "GET /api/claims/reactions \u2014 deterministic read-only Reaction / Counter-Reaction projection derived only from the verified append-only claim-event feed.",
+      "endpoint": "/api/claims/reactions",
       "method": "GET",
       "lifecycle": "LIVE",
       "audience": "agent",
@@ -570,7 +583,7 @@
         "http"
       ],
       "title": "Checkout (POST)",
-      "description": "POST /api/checkout — public door is closed.",
+      "description": "POST /api/checkout \u2014 public door is closed.",
       "endpoint": "/api/checkout",
       "method": "POST",
       "lifecycle": "LIVE",
@@ -596,7 +609,7 @@
         "http"
       ],
       "title": "Claim watch request (POST)",
-      "description": "POST /api/claims/watch-request — a person asks for a subject to be re-checked monthly. A request for review, not a schedule: stored verbatim in KV (LEADS) for a person to accept into the claim-maintenance register or decline; answered NOT_RECORDED (503) when no store is bound, never a pretend success. Requires confirmed: true (the GSPC evidence panel sends it only after a Confirm click). Nothing is measured, scheduled, charged, signed or published by it.",
+      "description": "POST /api/claims/watch-request \u2014 a person asks for a subject to be re-checked monthly. A request for review, not a schedule: stored verbatim in KV (LEADS) for a person to accept into the claim-maintenance register or decline; answered NOT_RECORDED (503) when no store is bound, never a pretend success. Requires confirmed: true (the GSPC evidence panel sends it only after a Confirm click). Nothing is measured, scheduled, charged, signed or published by it.",
       "endpoint": "/api/claims/watch-request",
       "method": "POST",
       "lifecycle": "LIVE",
@@ -622,7 +635,7 @@
         "http"
       ],
       "title": "Commission queue",
-      "description": "GET /api/commission-queue — mill-visible QUEUED intents.",
+      "description": "GET /api/commission-queue \u2014 mill-visible QUEUED intents.",
       "endpoint": "/api/commission-queue",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -635,7 +648,7 @@
         "http"
       ],
       "title": "Commissions",
-      "description": "GET /api/commissions — the open commission queue, read from the same store that holds the settlements (REVENUE_KV, `ras:<receipt sha>` records written by /api/request-attestation).",
+      "description": "GET /api/commissions \u2014 the open commission queue, read from the same store that holds the settlements (REVENUE_KV, `ras:<receipt sha>` records written by /api/request-attestation).",
       "endpoint": "/api/commissions",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -661,7 +674,7 @@
         "http"
       ],
       "title": "Compute",
-      "description": "GET /api/compute — probe surface for the two-machine wire.",
+      "description": "GET /api/compute \u2014 probe surface for the two-machine wire.",
       "endpoint": "/api/compute",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -674,7 +687,7 @@
         "http"
       ],
       "title": "Contact (POST)",
-      "description": "POST /api/contact — the contact form. Fields stored verbatim when KV (LEADS) is bound; honest `stored:false` + fallback address when not. Nothing inferred, nothing forwarded to third parties.",
+      "description": "POST /api/contact \u2014 the contact form. Fields stored verbatim when KV (LEADS) is bound; honest `stored:false` + fallback address when not. Nothing inferred, nothing forwarded to third parties.",
       "endpoint": "/api/contact",
       "method": "POST",
       "lifecycle": "LIVE",
@@ -713,7 +726,7 @@
         "http"
       ],
       "title": "Corpus watch status",
-      "description": "GET /api/corpus-watch/status — serves the watcher heartbeat JSON with register-honest semantics.",
+      "description": "GET /api/corpus-watch/status \u2014 serves the watcher heartbeat JSON with register-honest semantics.",
       "endpoint": "/api/corpus-watch/status",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -739,7 +752,7 @@
         "http"
       ],
       "title": "Counters",
-      "description": "GET /api/counters — Wave-1 public-utility counters (EXP 005), derived from artifacts.",
+      "description": "GET /api/counters \u2014 Wave-1 public-utility counters (EXP 005), derived from artifacts.",
       "endpoint": "/api/counters",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -752,7 +765,7 @@
         "http"
       ],
       "title": "Coverage",
-      "description": "GET /api/coverage — one machine-readable lifecycle view over the estate.",
+      "description": "GET /api/coverage \u2014 one machine-readable lifecycle view over the estate.",
       "endpoint": "/api/coverage",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -765,7 +778,7 @@
         "http"
       ],
       "title": "Coverage truth",
-      "description": "GET /api/coverage-truth — distiguish indexed, runnable, measured, signed.",
+      "description": "GET /api/coverage-truth \u2014 distiguish indexed, runnable, measured, signed.",
       "endpoint": "/api/coverage-truth",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -817,7 +830,7 @@
         "http"
       ],
       "title": "Dashboard stats",
-      "description": "GET /api/dashboard/stats — DSH board metrics from live public APIs on apex.",
+      "description": "GET /api/dashboard/stats \u2014 DSH board metrics from live public APIs on apex.",
       "endpoint": "/api/dashboard/stats",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -830,7 +843,7 @@
         "http"
       ],
       "title": "Decide",
-      "description": "GET /api/decide — not implemented; no decision attestation is created.",
+      "description": "GET /api/decide \u2014 not implemented; no decision attestation is created.",
       "endpoint": "/api/decide",
       "method": "GET",
       "lifecycle": "NOT_IMPLEMENTED",
@@ -843,7 +856,7 @@
         "http"
       ],
       "title": "Detect",
-      "description": "POST /api/detect — free Article 50 provenance VERIFICATION (EU AI Act 50(2)). GET /api/detect — service descriptor.",
+      "description": "POST /api/detect \u2014 free Article 50 provenance VERIFICATION (EU AI Act 50(2)). GET /api/detect \u2014 service descriptor.",
       "endpoint": "/api/detect",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -856,7 +869,7 @@
         "http"
       ],
       "title": "Detect (POST)",
-      "description": "POST /api/detect — free Article 50 provenance VERIFICATION (EU AI Act 50(2)). GET /api/detect — service descriptor.",
+      "description": "POST /api/detect \u2014 free Article 50 provenance VERIFICATION (EU AI Act 50(2)). GET /api/detect \u2014 service descriptor.",
       "endpoint": "/api/detect",
       "method": "POST",
       "lifecycle": "LIVE",
@@ -869,7 +882,7 @@
         "http"
       ],
       "title": "Detector interop",
-      "description": "GET /api/detector-interop — open, signed detector-interoperability matrix.",
+      "description": "GET /api/detector-interop \u2014 open, signed detector-interoperability matrix.",
       "endpoint": "/api/detector-interop",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -882,7 +895,7 @@
         "http"
       ],
       "title": "Distribution ledger",
-      "description": "GET /api/distribution-ledger — one deduplicated list of every outward surface CSOAI has shipped to, with canonical URL, state, checked_at, and proof for each entry.",
+      "description": "GET /api/distribution-ledger \u2014 one deduplicated list of every outward surface CSOAI has shipped to, with canonical URL, state, checked_at, and proof for each entry.",
       "endpoint": "/api/distribution-ledger",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -895,7 +908,7 @@
         "http"
       ],
       "title": "Door settles",
-      "description": "GET /api/door-settles — for each door the site holds a settlement record for: when it last settled and the transaction the facilitator named. Read from the SAME records /api/revenue counts (`settled:tx:*` in REVENUE_KV, written by recordSettlement in functions/api/_x402.ts), through the same enumerator (listSettlementRecords in revenue.ts) — one parser, two surfaces.",
+      "description": "GET /api/door-settles \u2014 for each door the site holds a settlement record for: when it last settled and the transaction the facilitator named. Read from the SAME records /api/revenue counts (`settled:tx:*` in REVENUE_KV, written by recordSettlement in functions/api/_x402.ts), through the same enumerator (listSettlementRecords in revenue.ts) \u2014 one parser, two surfaces.",
       "endpoint": "/api/door-settles",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -921,7 +934,7 @@
         "http"
       ],
       "title": "Embed",
-      "description": "GET /api/embed — machine contract for the white-label kit. Counts are not typed here. The badge and embed.js read GET /api/gspc.",
+      "description": "GET /api/embed \u2014 machine contract for the white-label kit. Counts are not typed here. The badge and embed.js read GET /api/gspc.",
       "endpoint": "/api/embed",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -934,7 +947,7 @@
         "http"
       ],
       "title": "Eu ai act",
-      "description": "/api/eu-ai-act — evidence summary for the EU AI Act regime (Art 50, high-risk, GPAI). Obligation map is the same one the evidence-bundle assembler uses (see ./_obligations).",
+      "description": "/api/eu-ai-act \u2014 evidence summary for the EU AI Act regime (Art 50, high-risk, GPAI). Obligation map is the same one the evidence-bundle assembler uses (see ./_obligations).",
       "endpoint": "/api/eu-ai-act",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -986,7 +999,7 @@
         "http"
       ],
       "title": "Evidence bundle (POST)",
-      "description": "GET /api/evidence-bundle — Tier 2: an evidence bundle mapped to ONE regulatory obligation.",
+      "description": "GET /api/evidence-bundle \u2014 Tier 2: an evidence bundle mapped to ONE regulatory obligation.",
       "endpoint": "/api/evidence-bundle",
       "method": "POST",
       "lifecycle": "LIVE",
@@ -999,7 +1012,7 @@
         "http"
       ],
       "title": "Evidence github",
-      "description": "GET /api/evidence/github?owner=X&repo=Y — proxy to GitHub API for repo evidence. Returns: { evidence: [{sha, date, message, author}], error?, rateLimit? }",
+      "description": "GET /api/evidence/github?owner=X&repo=Y \u2014 proxy to GitHub API for repo evidence. Returns: { evidence: [{sha, date, message, author}], error?, rateLimit? }",
       "endpoint": "/api/evidence/github",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -1012,7 +1025,7 @@
         "http"
       ],
       "title": "Evidence intake (POST)",
-      "description": "POST /api/evidence-intake — explicit candidate measurement intake.",
+      "description": "POST /api/evidence-intake \u2014 explicit candidate measurement intake.",
       "endpoint": "/api/evidence-intake",
       "method": "POST",
       "lifecycle": "LIVE",
@@ -1077,7 +1090,7 @@
         "http"
       ],
       "title": "Feeds provider diff (POST)",
-      "description": "A safe reference for an invoice line: letters, digits, dot, dash, underscore; ≤64 chars.",
+      "description": "A safe reference for an invoice line: letters, digits, dot, dash, underscore; \u226464 chars.",
       "endpoint": "/api/feeds/provider-diff",
       "method": "POST",
       "lifecycle": "LIVE",
@@ -1090,7 +1103,7 @@
         "http"
       ],
       "title": "Files",
-      "description": "files — retired until its response can be derived from current evidence.",
+      "description": "files \u2014 retired until its response can be derived from current evidence.",
       "endpoint": "/api/files",
       "method": "GET",
       "lifecycle": "QUARANTINED_PRE_RELEASE",
@@ -1103,7 +1116,7 @@
         "http"
       ],
       "title": "Files (POST)",
-      "description": "files — retired until its response can be derived from current evidence.",
+      "description": "files \u2014 retired until its response can be derived from current evidence.",
       "endpoint": "/api/files",
       "method": "POST",
       "lifecycle": "QUARANTINED_PRE_RELEASE",
@@ -1129,7 +1142,7 @@
         "http"
       ],
       "title": "Fines",
-      "description": "GET /api/fines — First-Fine Watch: signed coverage of the public AI enforcement record.",
+      "description": "GET /api/fines \u2014 First-Fine Watch: signed coverage of the public AI enforcement record.",
       "endpoint": "/api/fines",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -1142,7 +1155,7 @@
         "http"
       ],
       "title": "Footprint",
-      "description": "GET /api/footprint — the adoption funnel, one stage per row, nothing summed across stages.",
+      "description": "GET /api/footprint \u2014 the adoption funnel, one stage per row, nothing summed across stages.",
       "endpoint": "/api/footprint",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -1168,7 +1181,7 @@
         "http"
       ],
       "title": "Free door (POST)",
-      "description": "GET /api/free-door — a REAL x402 door priced at zero.",
+      "description": "GET /api/free-door \u2014 a REAL x402 door priced at zero.",
       "endpoint": "/api/free-door",
       "method": "POST",
       "lifecycle": "LIVE",
@@ -1181,7 +1194,7 @@
         "http"
       ],
       "title": "Fulfill",
-      "description": "GET /api/fulfill — public fulfillment door is closed.",
+      "description": "GET /api/fulfill \u2014 public fulfillment door is closed.",
       "endpoint": "/api/fulfill",
       "method": "GET",
       "lifecycle": "DOOR_CLOSED",
@@ -1194,7 +1207,7 @@
         "http"
       ],
       "title": "Growth loops",
-      "description": "/api/growth-loops — retired until loop status is derived from current evidence.",
+      "description": "/api/growth-loops \u2014 retired until loop status is derived from current evidence.",
       "endpoint": "/api/growth-loops",
       "method": "GET",
       "lifecycle": "QUARANTINED_PRE_RELEASE",
@@ -1233,7 +1246,7 @@
         "http"
       ],
       "title": "Hub cards",
-      "description": "An index either answered or it did not. `ok: true` with zero cells is a real, empty index — it has been read. Only `ok: false` is unread, and it always carries the reason, because \"we could not read it\" and \"it holds nothing\" are different facts and only one of them is ours to assert.",
+      "description": "An index either answered or it did not. `ok: true` with zero cells is a real, empty index \u2014 it has been read. Only `ok: false` is unread, and it always carries the reason, because \"we could not read it\" and \"it holds nothing\" are different facts and only one of them is ours to assert.",
       "endpoint": "/api/hub-cards",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -1246,7 +1259,7 @@
         "http"
       ],
       "title": "Include",
-      "description": "GET /api/include — not implemented; no Merkle inclusion proof is produced.",
+      "description": "GET /api/include \u2014 not implemented; no Merkle inclusion proof is produced.",
       "endpoint": "/api/include",
       "method": "GET",
       "lifecycle": "NOT_IMPLEMENTED",
@@ -1259,7 +1272,7 @@
         "http"
       ],
       "title": "Interop bulk",
-      "description": "GET /api/interop-bulk — metered bulk/replay access to signed interop surfaces.",
+      "description": "GET /api/interop-bulk \u2014 metered bulk/replay access to signed interop surfaces.",
       "endpoint": "/api/interop-bulk",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -1272,7 +1285,7 @@
         "http"
       ],
       "title": "Lead",
-      "description": "POST /api/lead — accepts the \"email me the signed report\" form.",
+      "description": "POST /api/lead \u2014 accepts the \"email me the signed report\" form.",
       "endpoint": "/api/lead",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -1285,7 +1298,7 @@
         "http"
       ],
       "title": "Lead (POST)",
-      "description": "POST /api/lead — accepts the \"email me the signed report\" form.",
+      "description": "POST /api/lead \u2014 accepts the \"email me the signed report\" form.",
       "endpoint": "/api/lead",
       "method": "POST",
       "lifecycle": "LIVE",
@@ -1298,7 +1311,7 @@
         "http"
       ],
       "title": "Learn loop",
-      "description": "/api/learn-loop — quarantined pre-release surface.",
+      "description": "/api/learn-loop \u2014 quarantined pre-release surface.",
       "endpoint": "/api/learn-loop",
       "method": "GET",
       "lifecycle": "QUARANTINED_PRE_RELEASE",
@@ -1311,7 +1324,7 @@
         "http"
       ],
       "title": "Learn loop (POST)",
-      "description": "/api/learn-loop — quarantined pre-release surface.",
+      "description": "/api/learn-loop \u2014 quarantined pre-release surface.",
       "endpoint": "/api/learn-loop",
       "method": "POST",
       "lifecycle": "QUARANTINED_PRE_RELEASE",
@@ -1350,7 +1363,7 @@
         "http"
       ],
       "title": "Mcp",
-      "description": "GET /api/mcp — the MCP registry, served from a PROBED artifact.",
+      "description": "GET /api/mcp \u2014 the MCP registry, served from a PROBED artifact.",
       "endpoint": "/api/mcp",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -1363,7 +1376,7 @@
         "http"
       ],
       "title": "Memory",
-      "description": "memory — retired until its response can be derived from current evidence.",
+      "description": "memory \u2014 retired until its response can be derived from current evidence.",
       "endpoint": "/api/memory",
       "method": "GET",
       "lifecycle": "QUARANTINED_PRE_RELEASE",
@@ -1376,7 +1389,7 @@
         "http"
       ],
       "title": "Memory (POST)",
-      "description": "memory — retired until its response can be derived from current evidence.",
+      "description": "memory \u2014 retired until its response can be derived from current evidence.",
       "endpoint": "/api/memory",
       "method": "POST",
       "lifecycle": "QUARANTINED_PRE_RELEASE",
@@ -1441,7 +1454,7 @@
         "http"
       ],
       "title": "Momentum",
-      "description": "GET /api/momentum — live, sourced, dated figures (board, signed cards, corrections, capsules, PyPI and Hugging Face downloads, census rows, MCP tools, x402 doors) and third-party listings verified on the read; a failed source is omitted, never zeroed.",
+      "description": "GET /api/momentum \u2014 live, sourced, dated figures (board, signed cards, corrections, capsules, PyPI and Hugging Face downloads, census rows, MCP tools, x402 doors) and third-party listings verified on the read; a failed source is omitted, never zeroed.",
       "endpoint": "/api/momentum",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -1454,7 +1467,7 @@
         "http"
       ],
       "title": "Usage",
-      "description": "GET /api/usage — daily counts of what callers did at the agent doors (MCP initialize client names, tool calls, A2A outcomes, chat and AG-UI states); aggregate only, no IP or text; our own monitors excluded by name; kind measured, a lower bound; never revenue.",
+      "description": "GET /api/usage \u2014 daily counts of what callers did at the agent doors (MCP initialize client names, tool calls, A2A outcomes, chat and AG-UI states); aggregate only, no IP or text; our own monitors excluded by name; kind measured, a lower bound; never revenue.",
       "endpoint": "/api/usage",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -1467,7 +1480,7 @@
         "http"
       ],
       "title": "Observability",
-      "description": "GET /api/observability — machine-readable estate health.",
+      "description": "GET /api/observability \u2014 machine-readable estate health.",
       "endpoint": "/api/observability",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -1493,7 +1506,7 @@
         "http"
       ],
       "title": "Openapi",
-      "description": "GET /api/openapi.json — an OpenAPI 3.1 description of the PUBLIC read endpoints that already exist, for ChatGPT / Custom-GPT Actions and any other schema importer.",
+      "description": "GET /api/openapi.json \u2014 an OpenAPI 3.1 description of the PUBLIC read endpoints that already exist, for ChatGPT / Custom-GPT Actions and any other schema importer.",
       "endpoint": "/api/openapi.json",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -1506,7 +1519,7 @@
         "http"
       ],
       "title": "Operator",
-      "description": "operator — retired until its response can be derived from current evidence.",
+      "description": "operator \u2014 retired until its response can be derived from current evidence.",
       "endpoint": "/api/operator",
       "method": "GET",
       "lifecycle": "QUARANTINED_PRE_RELEASE",
@@ -1519,7 +1532,7 @@
         "http"
       ],
       "title": "Operator (POST)",
-      "description": "operator — retired until its response can be derived from current evidence.",
+      "description": "operator \u2014 retired until its response can be derived from current evidence.",
       "endpoint": "/api/operator",
       "method": "POST",
       "lifecycle": "QUARANTINED_PRE_RELEASE",
@@ -1532,7 +1545,7 @@
         "http"
       ],
       "title": "Otel",
-      "description": "GET /api/otel — collector presence. LIVE only if a collector answers. Else UNCHECKABLE. Not a 23rd axis.",
+      "description": "GET /api/otel \u2014 collector presence. LIVE only if a collector answers. Else UNCHECKABLE. Not a 23rd axis.",
       "endpoint": "/api/otel",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -1545,7 +1558,7 @@
         "http"
       ],
       "title": "Owasp report",
-      "description": "GET /api/owasp-report — OWASP LLM Top 10 ↔ GSPC axis coverage report.",
+      "description": "GET /api/owasp-report \u2014 OWASP LLM Top 10 \u2194 GSPC axis coverage report.",
       "endpoint": "/api/owasp-report",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -1558,7 +1571,7 @@
         "http"
       ],
       "title": "Outer world model snapshot",
-      "description": "GET /api/owm — the outer world model snapshot: every observed subject (own surfaces included), its state (CONSISTENT / INCONSISTENT / SINGLE_SURFACE / UNCHECKABLE / UNMEASURED), last change, evidence sha256 and next check, plus each reaction-loop stage and whether it is LIVE, STAGED or MISSING.",
+      "description": "GET /api/owm \u2014 the outer world model snapshot: every observed subject (own surfaces included), its state (CONSISTENT / INCONSISTENT / SINGLE_SURFACE / UNCHECKABLE / UNMEASURED), last change, evidence sha256 and next check, plus each reaction-loop stage and whether it is LIVE, STAGED or MISSING.",
       "endpoint": "/api/owm",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -1571,7 +1584,7 @@
         "http"
       ],
       "title": "Paddle webhook",
-      "description": "paddle-webhook — withdrawn: records are free and are never called certificates.",
+      "description": "paddle-webhook \u2014 withdrawn: records are free and are never called certificates.",
       "endpoint": "/api/paddle-webhook",
       "method": "GET",
       "lifecycle": "RETIRED",
@@ -1584,7 +1597,7 @@
         "http"
       ],
       "title": "Paddle webhook (POST)",
-      "description": "paddle-webhook — withdrawn: records are free and are never called certificates.",
+      "description": "paddle-webhook \u2014 withdrawn: records are free and are never called certificates.",
       "endpoint": "/api/paddle-webhook",
       "method": "POST",
       "lifecycle": "RETIRED",
@@ -1727,7 +1740,7 @@
         "http"
       ],
       "title": "Pqc",
-      "description": "GET /api/pqc — continuity mill vs estate signer. Not a 23rd axis. Continuity MEASURED ≠ we are PQC.",
+      "description": "GET /api/pqc \u2014 continuity mill vs estate signer. Not a 23rd axis. Continuity MEASURED \u2260 we are PQC.",
       "endpoint": "/api/pqc",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -1740,7 +1753,7 @@
         "http"
       ],
       "title": "Press",
-      "description": "GET /api/press.json — what changed, with the command that proves each line.",
+      "description": "GET /api/press.json \u2014 what changed, with the command that proves each line.",
       "endpoint": "/api/press.json",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -1753,7 +1766,7 @@
         "http"
       ],
       "title": "Prod readiness",
-      "description": "/api/prod-readiness — retired until readiness is derived from current evidence.",
+      "description": "/api/prod-readiness \u2014 retired until readiness is derived from current evidence.",
       "endpoint": "/api/prod-readiness",
       "method": "GET",
       "lifecycle": "QUARANTINED_PRE_RELEASE",
@@ -1779,7 +1792,7 @@
         "http"
       ],
       "title": "Proof (POST)",
-      "description": "GET /api/proof — inclusion proofs for public-root leaves.",
+      "description": "GET /api/proof \u2014 inclusion proofs for public-root leaves.",
       "endpoint": "/api/proof",
       "method": "POST",
       "lifecycle": "LIVE",
@@ -1818,7 +1831,7 @@
         "http"
       ],
       "title": "Receipt status",
-      "description": "GET /api/receipt-status — current receipt issuance status.",
+      "description": "GET /api/receipt-status \u2014 current receipt issuance status.",
       "endpoint": "/api/receipt-status",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -1831,7 +1844,7 @@
         "http"
       ],
       "title": "Receipts",
-      "description": "GET /api/receipts?payer=0x… — settlement receipts for one payer.",
+      "description": "GET /api/receipts?payer=0x\u2026 \u2014 settlement receipts for one payer.",
       "endpoint": "/api/receipts",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -1857,7 +1870,7 @@
         "http"
       ],
       "title": "Receipts batch (POST)",
-      "description": "GET /api/receipts/batch?from=<iso>&to=<iso> — a historical batch of the estate's measurement receipts, sold over the existing x402 rail (SKU receipts_batch, x402-or-invoice).",
+      "description": "GET /api/receipts/batch?from=<iso>&to=<iso> \u2014 a historical batch of the estate's measurement receipts, sold over the existing x402 rail (SKU receipts_batch, x402-or-invoice).",
       "endpoint": "/api/receipts/batch",
       "method": "POST",
       "lifecycle": "LIVE",
@@ -1870,7 +1883,7 @@
         "http"
       ],
       "title": "Receipts latest",
-      "description": "GET /api/receipts/latest — aggregate state of the signed x402 receipt store.",
+      "description": "GET /api/receipts/latest \u2014 aggregate state of the signed x402 receipt store.",
       "endpoint": "/api/receipts/latest",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -1883,7 +1896,7 @@
         "http"
       ],
       "title": "Receipts verify",
-      "description": "POST /api/receipts/verify — hand it an x402 offer-receipt artefact, get VALID or INVALID and the reason. Free forever, like every verification surface in this estate.",
+      "description": "POST /api/receipts/verify \u2014 hand it an x402 offer-receipt artefact, get VALID or INVALID and the reason. Free forever, like every verification surface in this estate.",
       "endpoint": "/api/receipts/verify",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -1896,7 +1909,7 @@
         "http"
       ],
       "title": "Receipts verify (POST)",
-      "description": "POST /api/receipts/verify — hand it an x402 offer-receipt artefact, get VALID or INVALID and the reason. Free forever, like every verification surface in this estate.",
+      "description": "POST /api/receipts/verify \u2014 hand it an x402 offer-receipt artefact, get VALID or INVALID and the reason. Free forever, like every verification surface in this estate.",
       "endpoint": "/api/receipts/verify",
       "method": "POST",
       "lifecycle": "LIVE",
@@ -1909,7 +1922,7 @@
         "http"
       ],
       "title": "Refund",
-      "description": "POST /api/refund — record a refund or chargeback and revoke entitlement + cert.",
+      "description": "POST /api/refund \u2014 record a refund or chargeback and revoke entitlement + cert.",
       "endpoint": "/api/refund",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -1922,7 +1935,7 @@
         "http"
       ],
       "title": "Refund (POST)",
-      "description": "POST /api/refund — record a refund or chargeback and revoke entitlement + cert.",
+      "description": "POST /api/refund \u2014 record a refund or chargeback and revoke entitlement + cert.",
       "endpoint": "/api/refund",
       "method": "POST",
       "lifecycle": "LIVE",
@@ -1935,7 +1948,7 @@
         "http"
       ],
       "title": "Registers",
-      "description": "GET /api/registers — unsigned static benchmark summaries.",
+      "description": "GET /api/registers \u2014 unsigned static benchmark summaries.",
       "endpoint": "/api/registers",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -1948,7 +1961,7 @@
         "http"
       ],
       "title": "Regulation",
-      "description": "GET /api/regulation — source-cited regulation deadline feed.",
+      "description": "GET /api/regulation \u2014 source-cited regulation deadline feed.",
       "endpoint": "/api/regulation",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2000,7 +2013,7 @@
         "http"
       ],
       "title": "Reported",
-      "description": "GET /api/reported — third-party figures we carry but did not measure.",
+      "description": "GET /api/reported \u2014 third-party figures we carry but did not measure.",
       "endpoint": "/api/reported",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2013,7 +2026,7 @@
         "http"
       ],
       "title": "Reported (POST)",
-      "description": "GET /api/reported — third-party figures we carry but did not measure.",
+      "description": "GET /api/reported \u2014 third-party figures we carry but did not measure.",
       "endpoint": "/api/reported",
       "method": "POST",
       "lifecycle": "NOT_IMPLEMENTED",
@@ -2039,7 +2052,7 @@
         "http"
       ],
       "title": "Request attestation (POST)",
-      "description": "GET /api/request-attestation — Tier 1: commission a signed card for a subject (× optional axis).",
+      "description": "GET /api/request-attestation \u2014 Tier 1: commission a signed card for a subject (\u00d7 optional axis).",
       "endpoint": "/api/request-attestation",
       "method": "POST",
       "lifecycle": "LIVE",
@@ -2052,7 +2065,7 @@
         "http"
       ],
       "title": "Revenue",
-      "description": "GET /api/revenue — the three-SKU revenue instrumentation (EXEC-A-REVENUE.md §5).",
+      "description": "GET /api/revenue \u2014 the three-SKU revenue instrumentation (EXEC-A-REVENUE.md \u00a75).",
       "endpoint": "/api/revenue",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2065,7 +2078,7 @@
         "http"
       ],
       "title": "Root",
-      "description": "GET /api/root — alias of public/root.json. Same bytes the static door serves. Never a second forest.",
+      "description": "GET /api/root \u2014 alias of public/root.json. Same bytes the static door serves. Never a second forest.",
       "endpoint": "/api/root",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2078,7 +2091,7 @@
         "http"
       ],
       "title": "Router",
-      "description": "/api/router — the bounded discovery + interop + packages router.",
+      "description": "/api/router \u2014 the bounded discovery + interop + packages router.",
       "endpoint": "/api/router",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2091,7 +2104,7 @@
         "http"
       ],
       "title": "Rulings",
-      "description": "GET /api/rulings — every signed ruling record (csoai.ruling/0.1) with its signature state, read-only. A ruling decides which rule applies or whether a rule output is served; it never sets a measured state.",
+      "description": "GET /api/rulings \u2014 every signed ruling record (csoai.ruling/0.1) with its signature state, read-only. A ruling decides which rule applies or whether a rule output is served; it never sets a measured state.",
       "endpoint": "/api/rulings",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2117,7 +2130,7 @@
         "http"
       ],
       "title": "Rwa evidence (POST)",
-      "description": "GET /api/rwa/evidence?asset=<symbol|issuer_address> — per-request signed evidence card of ONE XRPL asset's deterministic on-ledger state. Sold to machines over the existing x402 rail (same accepts entry / facilitator / settle path as /api/request-attestation).",
+      "description": "GET /api/rwa/evidence?asset=<symbol|issuer_address> \u2014 per-request signed evidence card of ONE XRPL asset's deterministic on-ledger state. Sold to machines over the existing x402 rail (same accepts entry / facilitator / settle path as /api/request-attestation).",
       "endpoint": "/api/rwa/evidence",
       "method": "POST",
       "lifecycle": "LIVE",
@@ -2130,7 +2143,7 @@
         "http"
       ],
       "title": "Sandbox",
-      "description": "sandbox — retired until its response can be derived from current evidence.",
+      "description": "sandbox \u2014 retired until its response can be derived from current evidence.",
       "endpoint": "/api/sandbox",
       "method": "GET",
       "lifecycle": "QUARANTINED_PRE_RELEASE",
@@ -2143,7 +2156,7 @@
         "http"
       ],
       "title": "Sandbox (POST)",
-      "description": "sandbox — retired until its response can be derived from current evidence.",
+      "description": "sandbox \u2014 retired until its response can be derived from current evidence.",
       "endpoint": "/api/sandbox",
       "method": "POST",
       "lifecycle": "QUARANTINED_PRE_RELEASE",
@@ -2169,7 +2182,7 @@
         "http"
       ],
       "title": "Sov town state",
-      "description": "GET /api/sov-town/state.jsonl — live SOV Town sim state (STAGING, DESIGN-labelled).",
+      "description": "GET /api/sov-town/state.jsonl \u2014 live SOV Town sim state (STAGING, DESIGN-labelled).",
       "endpoint": "/api/sov-town/state.jsonl",
       "method": "GET",
       "lifecycle": "QUARANTINED_PRE_RELEASE",
@@ -2182,7 +2195,7 @@
         "http"
       ],
       "title": "Specialists",
-      "description": "GET /api/specialists — the signed specialist-team feed, served LIVE + pass-through.",
+      "description": "GET /api/specialists \u2014 the signed specialist-team feed, served LIVE + pass-through.",
       "endpoint": "/api/specialists",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2195,7 +2208,7 @@
         "http"
       ],
       "title": "State",
-      "description": "GET /api/state — the ONE live state surface every lane quotes instead of asserting.",
+      "description": "GET /api/state \u2014 the ONE live state surface every lane quotes instead of asserting.",
       "endpoint": "/api/state",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2234,7 +2247,7 @@
         "http"
       ],
       "title": "Summary",
-      "description": "GET /api/summary — one-shot media-briefing payload.",
+      "description": "GET /api/summary \u2014 one-shot media-briefing payload.",
       "endpoint": "/api/summary",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2247,7 +2260,7 @@
         "http"
       ],
       "title": "Swift",
-      "description": "GET /api/swift — reader of public/interop/swift-census.json. Three-state census tape (LIVE / COMMITTED / DISCOVERED). DISCOVERED-first, not MEASURED. Not a SWIFT client feed. writes_board=false. Supersedes the swift-17 tape; 26 named banks sourced, 40+ universe cited.",
+      "description": "GET /api/swift \u2014 reader of public/interop/swift-census.json. Three-state census tape (LIVE / COMMITTED / DISCOVERED). DISCOVERED-first, not MEASURED. Not a SWIFT client feed. writes_board=false. Supersedes the swift-17 tape; 26 named banks sourced, 40+ universe cited.",
       "endpoint": "/api/swift",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2260,7 +2273,7 @@
         "http"
       ],
       "title": "Synthesis",
-      "description": "/api/synthesis — retired until mappings is derived from current evidence.",
+      "description": "/api/synthesis \u2014 retired until mappings is derived from current evidence.",
       "endpoint": "/api/synthesis",
       "method": "GET",
       "lifecycle": "QUARANTINED_PRE_RELEASE",
@@ -2273,7 +2286,7 @@
         "http"
       ],
       "title": "Tools",
-      "description": "GET /api/tools?q=<query> — the MCP tool catalogue, derived from a PROBED artifact.",
+      "description": "GET /api/tools?q=<query> \u2014 the MCP tool catalogue, derived from a PROBED artifact.",
       "endpoint": "/api/tools",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2312,7 +2325,7 @@
         "http"
       ],
       "title": "Verify",
-      "description": "POST /api/verify — verify a posted measurement card. GET explains how.",
+      "description": "POST /api/verify \u2014 verify a posted measurement card. GET explains how.",
       "endpoint": "/api/verify",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2325,7 +2338,7 @@
         "http"
       ],
       "title": "Verify batch",
-      "description": "GET /api/verify-batch — not implemented; no cards are verified.",
+      "description": "GET /api/verify-batch \u2014 not implemented; no cards are verified.",
       "endpoint": "/api/verify-batch",
       "method": "GET",
       "lifecycle": "NOT_IMPLEMENTED",
@@ -2338,7 +2351,7 @@
         "http"
       ],
       "title": "Verify card",
-      "description": "GET /api/verify-card — not implemented; no card is verified.",
+      "description": "GET /api/verify-card \u2014 not implemented; no card is verified.",
       "endpoint": "/api/verify-card",
       "method": "GET",
       "lifecycle": "NOT_IMPLEMENTED",
@@ -2351,7 +2364,7 @@
         "http"
       ],
       "title": "Verify (POST)",
-      "description": "POST /api/verify — verify a posted measurement card. GET explains how.",
+      "description": "POST /api/verify \u2014 verify a posted measurement card. GET explains how.",
       "endpoint": "/api/verify",
       "method": "POST",
       "lifecycle": "LIVE",
@@ -2403,7 +2416,7 @@
         "http"
       ],
       "title": "Webhooks",
-      "description": "GET/POST /api/webhooks — webhook CRUD (in-memory + KV if bound). GET: returns array of { id, url, events, active, created_at } POST: creates new webhook with { url, events } DELETE: ?id=X removes a webhook",
+      "description": "GET/POST /api/webhooks \u2014 webhook CRUD (in-memory + KV if bound). GET: returns array of { id, url, events, active, created_at } POST: creates new webhook with { url, events } DELETE: ?id=X removes a webhook",
       "endpoint": "/api/webhooks",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2416,7 +2429,7 @@
         "http"
       ],
       "title": "Webhooks (DELETE)",
-      "description": "GET/POST /api/webhooks — webhook CRUD (in-memory + KV if bound). GET: returns array of { id, url, events, active, created_at } POST: creates new webhook with { url, events } DELETE: ?id=X removes a webhook",
+      "description": "GET/POST /api/webhooks \u2014 webhook CRUD (in-memory + KV if bound). GET: returns array of { id, url, events, active, created_at } POST: creates new webhook with { url, events } DELETE: ?id=X removes a webhook",
       "endpoint": "/api/webhooks",
       "method": "DELETE",
       "lifecycle": "LIVE",
@@ -2429,7 +2442,7 @@
         "http"
       ],
       "title": "Webhooks (POST)",
-      "description": "GET/POST /api/webhooks — webhook CRUD (in-memory + KV if bound). GET: returns array of { id, url, events, active, created_at } POST: creates new webhook with { url, events } DELETE: ?id=X removes a webhook",
+      "description": "GET/POST /api/webhooks \u2014 webhook CRUD (in-memory + KV if bound). GET: returns array of { id, url, events, active, created_at } POST: creates new webhook with { url, events } DELETE: ?id=X removes a webhook",
       "endpoint": "/api/webhooks",
       "method": "POST",
       "lifecycle": "LIVE",
@@ -2442,7 +2455,7 @@
         "http"
       ],
       "title": "Witness",
-      "description": "/api/witness — quarantined paid witness surface.",
+      "description": "/api/witness \u2014 quarantined paid witness surface.",
       "endpoint": "/api/witness",
       "method": "GET",
       "lifecycle": "QUARANTINED_PRE_RELEASE",
@@ -2455,7 +2468,7 @@
         "http"
       ],
       "title": "Witness (POST)",
-      "description": "/api/witness — quarantined paid witness surface.",
+      "description": "/api/witness \u2014 quarantined paid witness surface.",
       "endpoint": "/api/witness",
       "method": "POST",
       "lifecycle": "QUARANTINED_PRE_RELEASE",
@@ -2468,7 +2481,7 @@
         "http"
       ],
       "title": "Witness status",
-      "description": "GET /api/witness/status?sha256=<64hex> — free, always. The state of one witnessed digest:",
+      "description": "GET /api/witness/status?sha256=<64hex> \u2014 free, always. The state of one witnessed digest:",
       "endpoint": "/api/witness/status",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2481,7 +2494,7 @@
         "http"
       ],
       "title": "Worker",
-      "description": "GET /api/worker — the GPU worker's state, read from the pod's own health endpoint at request time.",
+      "description": "GET /api/worker \u2014 the GPU worker's state, read from the pod's own health endpoint at request time.",
       "endpoint": "/api/worker",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2520,7 +2533,7 @@
         "http"
       ],
       "title": "Wrapper index",
-      "description": "GET /api/wrapper/index.json — every asset on the wrapped-asset roster and in the per-deployment archives, keyed by CAIP-19, with the lookup URL for each. The sides that have no CAIP-19 id (a fund register, bank deposits) are listed separately with the reason, never dropped.",
+      "description": "GET /api/wrapper/index.json \u2014 every asset on the wrapped-asset roster and in the per-deployment archives, keyed by CAIP-19, with the lookup URL for each. The sides that have no CAIP-19 id (a fund register, bank deposits) are listed separately with the reason, never dropped.",
       "endpoint": "/api/wrapper/index.json",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2533,7 +2546,7 @@
         "http"
       ],
       "title": "Wrapper (POST)",
-      "description": "GET /api/wrapper?id=<roster id> — per-request signed evidence card of ONE wrapped/bridged stablecoin pair: the wrapped token's totalSupply on its chain and the canonical token's balance in the bridge escrow on the origin chain, both read live from public RPC at a FINALIZED block whose hash a SECOND, different RPC operator confirmed, every raw result sha256'd. Sold over the existing x402 rail (same accepts entry / facilitator / settle path as /api/request-attestation).",
+      "description": "GET /api/wrapper?id=<roster id> \u2014 per-request signed evidence card of ONE wrapped/bridged stablecoin pair: the wrapped token's totalSupply on its chain and the canonical token's balance in the bridge escrow on the origin chain, both read live from public RPC at a FINALIZED block whose hash a SECOND, different RPC operator confirmed, every raw result sha256'd. Sold over the existing x402 rail (same accepts entry / facilitator / settle path as /api/request-attestation).",
       "endpoint": "/api/wrapper",
       "method": "POST",
       "lifecycle": "LIVE",
@@ -2546,7 +2559,7 @@
         "http"
       ],
       "title": "Cross-ledger daily record (signed, verbatim)",
-      "description": "GET /api/xl — the signed cross-ledger daily record, free and verbatim: the newest xl-daily record on the public Hugging Face dataset csoai/cross-ledger-supply, byte for byte as published, served only after its Ed25519-signed wrapper verifies under the pinned board key and pins the sha256 of exactly these bytes. ?date=YYYY-MM-DD serves that day's record; ?part=signed serves the signed wrapper itself. A record that does not verify is never served (503). The values are each ledger's own supply figure (totalSupply() or its equivalent), not issued or outstanding supply, reserves or redeemability, and nothing here ranks issuers.",
+      "description": "GET /api/xl \u2014 the signed cross-ledger daily record, free and verbatim: the newest xl-daily record on the public Hugging Face dataset csoai/cross-ledger-supply, byte for byte as published, served only after its Ed25519-signed wrapper verifies under the pinned board key and pins the sha256 of exactly these bytes. ?date=YYYY-MM-DD serves that day's record; ?part=signed serves the signed wrapper itself. A record that does not verify is never served (503). The values are each ledger's own supply figure (totalSupply() or its equivalent), not issued or outstanding supply, reserves or redeemability, and nothing here ranks issuers.",
       "endpoint": "/api/xl",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2637,7 +2650,7 @@
         "http"
       ],
       "title": "X402",
-      "description": "GET /api/x402 — the machine catalog of the metered rail. NO AMOUNTS HERE.",
+      "description": "GET /api/x402 \u2014 the machine catalog of the metered rail. NO AMOUNTS HERE.",
       "endpoint": "/api/x402",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2650,7 +2663,7 @@
         "http"
       ],
       "title": "X402 listing",
-      "description": "GET /api/x402-listing — what the PayAI discovery index holds for OUR doors, read live.",
+      "description": "GET /api/x402-listing \u2014 what the PayAI discovery index holds for OUR doors, read live.",
       "endpoint": "/api/x402-listing",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2663,7 +2676,7 @@
         "http"
       ],
       "title": "X402 listing 402index",
-      "description": "GET /api/x402-listing-402index — what the 402 Index (402index.io) holds for OUR doors, read live.",
+      "description": "GET /api/x402-listing-402index \u2014 what the 402 Index (402index.io) holds for OUR doors, read live.",
       "endpoint": "/api/x402-listing-402index",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2676,7 +2689,7 @@
         "http"
       ],
       "title": "X402 quotes",
-      "description": "GET /api/x402-quotes — every door the x402 manifest declares, asked once without payment, with the HTTP status and body each door answered, read live.",
+      "description": "GET /api/x402-quotes \u2014 every door the x402 manifest declares, asked once without payment, with the HTTP status and body each door answered, read live.",
       "endpoint": "/api/x402-quotes",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2702,7 +2715,7 @@
         "http"
       ],
       "title": "Xrpl",
-      "description": "GET /api/xrpl — reader of the committed public-root 16.",
+      "description": "GET /api/xrpl \u2014 reader of the committed public-root 16.",
       "endpoint": "/api/xrpl",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2715,7 +2728,7 @@
         "http"
       ],
       "title": "Yield",
-      "description": "GET /api/yield — the weekly yield dashboard (V3 brief G5.6).",
+      "description": "GET /api/yield \u2014 the weekly yield dashboard (V3 brief G5.6).",
       "endpoint": "/api/yield",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2741,7 +2754,7 @@
         "http"
       ],
       "title": "Ras mcp probe (POST)",
-      "description": "GET /api/ras/mcp-probe?url=<https MCP endpoint> — ONE live, read-only MCP discovery of a public endpoint, returned with an Ed25519-signed receipt.",
+      "description": "GET /api/ras/mcp-probe?url=<https MCP endpoint> \u2014 ONE live, read-only MCP discovery of a public endpoint, returned with an Ed25519-signed receipt.",
       "endpoint": "/api/ras/mcp-probe",
       "method": "POST",
       "lifecycle": "LIVE",
@@ -2767,7 +2780,7 @@
         "http"
       ],
       "title": "Ras x402 check (POST)",
-      "description": "GET /api/ras/x402-check?url=<https x402 resource> — ONE live GET of a public x402 resource, scored by the rule of the daily census, returned with an Ed25519-signed receipt.",
+      "description": "GET /api/ras/x402-check?url=<https x402 resource> \u2014 ONE live GET of a public x402 resource, scored by the rule of the daily census, returned with an Ed25519-signed receipt.",
       "endpoint": "/api/ras/x402-check",
       "method": "POST",
       "lifecycle": "LIVE",
@@ -2793,7 +2806,7 @@
         "http"
       ],
       "title": "Ras supply (POST)",
-      "description": "GET /api/ras/supply?asset=USDC&ledger=ethereum — one fresh, signed read of an issuer-listed token deployment's totalSupply(), labelled by the strength of the evidence behind it.",
+      "description": "GET /api/ras/supply?asset=USDC&ledger=ethereum \u2014 one fresh, signed read of an issuer-listed token deployment's totalSupply(), labelled by the strength of the evidence behind it.",
       "endpoint": "/api/ras/supply",
       "method": "POST",
       "lifecycle": "LIVE",
@@ -2806,7 +2819,7 @@
         "mcp"
       ],
       "title": "art50_marking_evidence",
-      "description": "PAID (x402 or CSOAI LTD invoice). Article 50 marking-evidence pack via https://councilof.ai/api/art50/marking-evidence: is a machine-readable mark DETECTABLE in these bytes right now (C2PA manifest store, assertion hashes, hard binding, claim signature; IPTC digitalSourceType), beside the verbatim Art 50(2) excerpt hash and the Art 99(4) ceiling. Watermarks are UNCHECKABLE where no public detector exists and the pack says so. Point-in-time detection — never a conformity opinion, never a compliance word of any kind. preview=true is free and returns the same measurement unsigned. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED rather than inventing a result.",
+      "description": "PAID (x402 or CSOAI LTD invoice). Article 50 marking-evidence pack via https://councilof.ai/api/art50/marking-evidence: is a machine-readable mark DETECTABLE in these bytes right now (C2PA manifest store, assertion hashes, hard binding, claim signature; IPTC digitalSourceType), beside the verbatim Art 50(2) excerpt hash and the Art 99(4) ceiling. Watermarks are UNCHECKABLE where no public detector exists and the pack says so. Point-in-time detection \u2014 never a conformity opinion, never a compliance word of any kind. preview=true is free and returns the same measurement unsigned. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED rather than inventing a result.",
       "endpoint": null,
       "method": "POST",
       "lifecycle": "LIVE",
@@ -2819,7 +2832,7 @@
         "mcp"
       ],
       "title": "board_totals",
-      "description": "Live GSPC board totals from https://councilof.ai/api/gspc. Returns the slot count and the measured count as two labelled numbers WITH their kind — a slot is a declared position on the board, a measurement is a real run behind it; the two are never summed and never swapped — plus as_of dates for the board and for this fetch. We measure, never certify. If the board cannot be fetched the answer is a distinct UNREACHABLE state: no cached number is ever presented as live.",
+      "description": "Live GSPC board totals from https://councilof.ai/api/gspc. Returns the slot count and the measured count as two labelled numbers WITH their kind \u2014 a slot is a declared position on the board, a measurement is a real run behind it; the two are never summed and never swapped \u2014 plus as_of dates for the board and for this fetch. We measure, never certify. If the board cannot be fetched the answer is a distinct UNREACHABLE state: no cached number is ever presented as live.",
       "endpoint": null,
       "method": "POST",
       "lifecycle": "LIVE",
@@ -2832,7 +2845,7 @@
         "mcp"
       ],
       "title": "commission_card",
-      "description": "PAID (x402). Commission one signed card-v0 receipt (surface ras.commission) for a named subject on the frozen bank via https://councilof.ai/api/request-attestation. Re-serves every signed measurement card already on file for the subject; a payment never mints a MEASURED cell (fresh_run stays UNMEASURED until a published run exists). Without x_payment the tool returns the 402 challenge (accepts[] with asset, amount, payTo) plus a free preview of the cards already on file. Measurement, not certification — never a rank, a grade or a certificate. Verification stays free.",
+      "description": "PAID (x402). Commission one signed card-v0 receipt (surface ras.commission) for a named subject on the frozen bank via https://councilof.ai/api/request-attestation. Re-serves every signed measurement card already on file for the subject; a payment never mints a MEASURED cell (fresh_run stays UNMEASURED until a published run exists). Without x_payment the tool returns the 402 challenge (accepts[] with asset, amount, payTo) plus a free preview of the cards already on file. Measurement, not certification \u2014 never a rank, a grade or a certificate. Verification stays free.",
       "endpoint": null,
       "method": "POST",
       "lifecycle": "LIVE",
@@ -2845,7 +2858,7 @@
         "mcp"
       ],
       "title": "get_axis",
-      "description": "One axis row from the live GSPC board at https://councilof.ai/api/gspc — every axis the board carries, behavioural and financial families alike, addressed by the axis id exactly as the board spells it: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "description": "One axis row from the live GSPC board at https://councilof.ai/api/gspc \u2014 every axis the board carries, behavioural and financial families alike, addressed by the axis id exactly as the board spells it: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer \u2014 a declared slot with no run behind it, published so the gap is visible \u2014 never an error and never a zero. Never a certification.",
       "endpoint": null,
       "method": "POST",
       "lifecycle": "LIVE",
@@ -2884,7 +2897,7 @@
         "mcp"
       ],
       "title": "list_cards",
-      "description": "The published signed-card index (https://councilof.ai/signed/card_index.json): what the index declares (n_cards) and how many rows it actually carries, reported next to — never reconciled with — the count the card store endpoint (https://councilof.ai/api/cards) reports for itself. Two labelled numbers from two surfaces; if they disagree, this tool shows the disagreement rather than picking one. Optional filters return recent rows: axis, limit.",
+      "description": "The published signed-card index (https://councilof.ai/signed/card_index.json): what the index declares (n_cards) and how many rows it actually carries, reported next to \u2014 never reconciled with \u2014 the count the card store endpoint (https://councilof.ai/api/cards) reports for itself. Two labelled numbers from two surfaces; if they disagree, this tool shows the disagreement rather than picking one. Optional filters return recent rows: axis, limit.",
       "endpoint": null,
       "method": "POST",
       "lifecycle": "LIVE",
@@ -2897,7 +2910,7 @@
         "mcp"
       ],
       "title": "mcp_trust",
-      "description": "GET the latest MCP handshake trust snapshot (https://councilof.ai/interop/mcp-trust/latest.json): counts of how many internet-facing MCP servers answer a correct initialize handshake, how many respond with an auth challenge, and how many are unreachable. Counts only by doctrine — host details withheld by design. A partial round or a cap change is disclosed in the snapshot. Measurement, never certification. Three states: VALID (fetched), UNREACHABLE (could not fetch), UNCHECKABLE (body unreadable).",
+      "description": "GET the latest MCP handshake trust snapshot (https://councilof.ai/interop/mcp-trust/latest.json): counts of how many internet-facing MCP servers answer a correct initialize handshake, how many respond with an auth challenge, and how many are unreachable. Counts only by doctrine \u2014 host details withheld by design. A partial round or a cap change is disclosed in the snapshot. Measurement, never certification. Three states: VALID (fetched), UNREACHABLE (could not fetch), UNCHECKABLE (body unreadable).",
       "endpoint": null,
       "method": "POST",
       "lifecycle": "LIVE",
@@ -2910,7 +2923,7 @@
         "mcp"
       ],
       "title": "measurement_index",
-      "description": "Read the latest signed measurement-capsule index published at https://councilof.ai/measurement-capsules/latest.json: the index root over every capsule, each batch (adapter, kind, capsule count, measurement states, batch Merkle root, record sha256, record signature and OpenTimestamps state), the index's own board signature re-verified here against the pinned did:web:csoai.org#board-attestation-1 key, and the anchor states published beside it (OpenTimestamps, Rekor, XRPL) — PENDING is never called attested. States only: measurement, not endorsement; no verdict, score or ranking. NOT_PUBLISHED when no index is served; UNREACHABLE when the source could not be fetched.",
+      "description": "Read the latest signed measurement-capsule index published at https://councilof.ai/measurement-capsules/latest.json: the index root over every capsule, each batch (adapter, kind, capsule count, measurement states, batch Merkle root, record sha256, record signature and OpenTimestamps state), the index's own board signature re-verified here against the pinned did:web:csoai.org#board-attestation-1 key, and the anchor states published beside it (OpenTimestamps, Rekor, XRPL) \u2014 PENDING is never called attested. States only: measurement, not endorsement; no verdict, score or ranking. NOT_PUBLISHED when no index is served; UNREACHABLE when the source could not be fetched.",
       "endpoint": null,
       "method": "POST",
       "lifecycle": "LIVE",
@@ -2923,7 +2936,7 @@
         "mcp"
       ],
       "title": "verify_capsule",
-      "description": "Verify one measurement capsule. Pass capsule_json as the capsule's JSON TEXT (exact: number lexemes are kept) or as an object. Recomputes capsule_id (sha256 of the canonical JSON without capsule_id), picks the rule by the capsule's schema (csoai.measurement-capsule/0.2: RFC 6962 Merkle with 0x00/0x01 domain separation; the superseded v0.1 capsule schema: the v0.1 rule), finds the published batch of the same kind, recomputes that batch's root from its published leaves, and returns the audit path of this capsule against the root named by the signed index. States: INCLUDED, NOT_INCLUDED, ID_MISMATCH, UNCHECKABLE, NOT_PUBLISHED. Verifying is free forever. It proves the bytes were published and bound; what they measured is the capsule's own measurement_state and limitations — measurement, not endorsement.",
+      "description": "Verify one measurement capsule. Pass capsule_json as the capsule's JSON TEXT (exact: number lexemes are kept) or as an object. Recomputes capsule_id (sha256 of the canonical JSON without capsule_id), picks the rule by the capsule's schema (csoai.measurement-capsule/0.2: RFC 6962 Merkle with 0x00/0x01 domain separation; the superseded v0.1 capsule schema: the v0.1 rule), finds the published batch of the same kind, recomputes that batch's root from its published leaves, and returns the audit path of this capsule against the root named by the signed index. States: INCLUDED, NOT_INCLUDED, ID_MISMATCH, UNCHECKABLE, NOT_PUBLISHED. Verifying is free forever. It proves the bytes were published and bound; what they measured is the capsule's own measurement_state and limitations \u2014 measurement, not endorsement.",
       "endpoint": null,
       "method": "POST",
       "lifecycle": "LIVE",
@@ -2936,7 +2949,7 @@
         "mcp"
       ],
       "title": "server_evidence",
-      "description": "Trust per server, not totals: every published measurement capsule about ONE endpoint URL across all batches — MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A card-signature state, self-parity cells for CSOAI's own doors, and any later adapter (e.g. tool drift) — each with its measurement_state, observed_at, correction_pointer, limitations, batch Merkle root and an inclusion pointer (verify_capsule re-derives inclusion). Read from a static per-endpoint shard keyed by sha256 of the normalised URL. An endpoint with no capsule answers NOT_MEASURED with an empty list — never an error and never a clean bill. No verdict, score or ranking: measurement, not endorsement.",
+      "description": "Trust per server, not totals: every published measurement capsule about ONE endpoint URL across all batches \u2014 MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A card-signature state, self-parity cells for CSOAI's own doors, and any later adapter (e.g. tool drift) \u2014 each with its measurement_state, observed_at, correction_pointer, limitations, batch Merkle root and an inclusion pointer (verify_capsule re-derives inclusion). Read from a static per-endpoint shard keyed by sha256 of the normalised URL. An endpoint with no capsule answers NOT_MEASURED with an empty list \u2014 never an error and never a clean bill. No verdict, score or ranking: measurement, not endorsement.",
       "endpoint": null,
       "method": "POST",
       "lifecycle": "LIVE",
@@ -2949,7 +2962,7 @@
         "mcp"
       ],
       "title": "receipts_batch",
-      "description": "PAID (x402 or CSOAI LTD invoice). A historical batch of the estate's measurement receipts via https://councilof.ai/api/receipts/batch: every signed card-v0 leaf whose as_of falls in [from,to] (≤200), each with its Merkle inclusion path and the public root(s) that carried it, plus the root index for the window and one signed manifest card citing the batch sha256. preview=true is free and returns count, span, root count and the sha256 of the exact bytes the paid call returns. Recent leaves are free at /root.json, /cards/ and /api/proof?sha= — the batch sells assembly across history, never a conclusion. No settlement-receipt stream exists (/api/receipts/latest is UNPUBLISHED) and this tool never claims one. Without x_payment the tool returns the 402 challenge.",
+      "description": "PAID (x402 or CSOAI LTD invoice). A historical batch of the estate's measurement receipts via https://councilof.ai/api/receipts/batch: every signed card-v0 leaf whose as_of falls in [from,to] (\u2264200), each with its Merkle inclusion path and the public root(s) that carried it, plus the root index for the window and one signed manifest card citing the batch sha256. preview=true is free and returns count, span, root count and the sha256 of the exact bytes the paid call returns. Recent leaves are free at /root.json, /cards/ and /api/proof?sha= \u2014 the batch sells assembly across history, never a conclusion. No settlement-receipt stream exists (/api/receipts/latest is UNPUBLISHED) and this tool never claims one. Without x_payment the tool returns the 402 challenge.",
       "endpoint": null,
       "method": "POST",
       "lifecycle": "LIVE",
@@ -2962,7 +2975,7 @@
         "mcp"
       ],
       "title": "rwa_evidence",
-      "description": "PAID (x402). Per-request signed evidence card of ONE XRPL issued asset's deterministic on-ledger state via https://councilof.ai/api/rwa/evidence: AccountRoot lsf* flags, Domain, the two-way xrp-ledger.toml check (PASS / FAIL / UNCHECKABLE — unreachable is never FAIL), gateway_balances obligation, holders as the free reader has them, every raw fetch sha256'd. preview=true is free (unsigned state). Historical state at fetched_at — not a rating, not a guarantee, not a conformity mark; /api/xrpl and /root.json stay free. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED.",
+      "description": "PAID (x402). Per-request signed evidence card of ONE XRPL issued asset's deterministic on-ledger state via https://councilof.ai/api/rwa/evidence: AccountRoot lsf* flags, Domain, the two-way xrp-ledger.toml check (PASS / FAIL / UNCHECKABLE \u2014 unreachable is never FAIL), gateway_balances obligation, holders as the free reader has them, every raw fetch sha256'd. preview=true is free (unsigned state). Historical state at fetched_at \u2014 not a rating, not a guarantee, not a conformity mark; /api/xrpl and /root.json stay free. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED.",
       "endpoint": null,
       "method": "POST",
       "lifecycle": "LIVE",
@@ -2975,7 +2988,7 @@
         "mcp"
       ],
       "title": "verify_card",
-      "description": "Verify a signed gspc.measurement-card under the published rule (https://councilof.ai/signed/HOW-TO-VERIFY.md): recompute the id from the canonical body bytes, then check the Ed25519 signature under the PINNED key published at did:web:csoai.org#card-attestation-1. A card that carries its own key proves only that the file is self-consistent — anyone can alter a body and sign it with a key they just generated — so a signer other than the published key is reported INVALID. Three verdicts, never two: VALID, INVALID (with the reason), or UNCHECKABLE when the check could not be completed — 'could not check' is a different claim from 'forged'. Accepts the card as a JSON object, a JSON string, or a councilof.ai / csoai.org URL. Never a certification.",
+      "description": "Verify a signed gspc.measurement-card under the published rule (https://councilof.ai/signed/HOW-TO-VERIFY.md): recompute the id from the canonical body bytes, then check the Ed25519 signature under the PINNED key published at did:web:csoai.org#card-attestation-1. A card that carries its own key proves only that the file is self-consistent \u2014 anyone can alter a body and sign it with a key they just generated \u2014 so a signer other than the published key is reported INVALID. Three verdicts, never two: VALID, INVALID (with the reason), or UNCHECKABLE when the check could not be completed \u2014 'could not check' is a different claim from 'forged'. Accepts the card as a JSON object, a JSON string, or a councilof.ai / csoai.org URL. Never a certification.",
       "endpoint": null,
       "method": "POST",
       "lifecycle": "LIVE",
@@ -3001,7 +3014,7 @@
         "mcp"
       ],
       "title": "x402_trust",
-      "description": "GET the latest x402 catalog trust snapshot: counts of how many catalogued x402 resources open a correct 402 challenge vs how many are phantom on the wire. Counts only by doctrine — host details withheld; a 402 is NOT delivery; measurement, never certification.",
+      "description": "GET the latest x402 catalog trust snapshot: counts of how many catalogued x402 resources open a correct 402 challenge vs how many are phantom on the wire. Counts only by doctrine \u2014 host details withheld; a 402 is NOT delivery; measurement, never certification.",
       "endpoint": null,
       "method": "POST",
       "lifecycle": "LIVE",
@@ -3014,7 +3027,7 @@
         "mcp"
       ],
       "title": "evidence_bundle_preview",
-      "description": "For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject: the obligation record, its counsel-gate status and the already-signed measurement cards that are relevant to it (count plus the first cards, each with its verify link), read live from https://councilof.ai/api/evidence-bundle. Relevant-to is never a determination: no answer says satisfied or not satisfied, and zero relevant cards is answered EMPTY, never as an error and never as a clean bill. Article 53 output is evidence for review, not a legal determination. Evidence for obligation work — not a conformity assessment, certification, audit opinion or compliance determination; grants no status. Measurement, not certification. Verification of any card is free at https://councilof.ai/gspc-verify.",
+      "description": "For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject: the obligation record, its counsel-gate status and the already-signed measurement cards that are relevant to it (count plus the first cards, each with its verify link), read live from https://councilof.ai/api/evidence-bundle. Relevant-to is never a determination: no answer says satisfied or not satisfied, and zero relevant cards is answered EMPTY, never as an error and never as a clean bill. Article 53 output is evidence for review, not a legal determination. Evidence for obligation work \u2014 not a conformity assessment, certification, audit opinion or compliance determination; grants no status. Measurement, not certification. Verification of any card is free at https://councilof.ai/gspc-verify.",
       "endpoint": null,
       "method": "POST",
       "lifecycle": "LIVE",
@@ -3040,7 +3053,7 @@
         "mcp"
       ],
       "title": "evidence_bundle",
-      "description": "PAID (x402). An evidence bundle for ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject via https://councilof.ai/api/evidence-bundle: OSCAL 1.1.0 assessment-results assembled only from already-signed measurement cards (each with its card bytes and Merkle inclusion proof), plus one manifest card-v0, signed when the signing key is present. Observations are relevant-to the obligation, never satisfied or not satisfied; zero relevant cards ships as an empty bundle, and the free preview says so first (preview=true here, or the free tool evidence_bundle_preview). Article 53 output is evidence for review, not a legal determination. Evidence for obligation work — not a conformity assessment, certification, audit opinion or compliance determination; grants no status. Measurement, not certification. Without x_payment the tool returns the 402 challenge, which is the only place terms appear. Verification of any card is free at https://councilof.ai/gspc-verify.",
+      "description": "PAID (x402). An evidence bundle for ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject via https://councilof.ai/api/evidence-bundle: OSCAL 1.1.0 assessment-results assembled only from already-signed measurement cards (each with its card bytes and Merkle inclusion proof), plus one manifest card-v0, signed when the signing key is present. Observations are relevant-to the obligation, never satisfied or not satisfied; zero relevant cards ships as an empty bundle, and the free preview says so first (preview=true here, or the free tool evidence_bundle_preview). Article 53 output is evidence for review, not a legal determination. Evidence for obligation work \u2014 not a conformity assessment, certification, audit opinion or compliance determination; grants no status. Measurement, not certification. Without x_payment the tool returns the 402 challenge, which is the only place terms appear. Verification of any card is free at https://councilof.ai/gspc-verify.",
       "endpoint": null,
       "method": "POST",
       "lifecycle": "LIVE",
@@ -3209,7 +3222,7 @@
         "http"
       ],
       "title": "Scitt configuration",
-      "description": "GET /.well-known/scitt-configuration — what a SCITT client finds when it probes the conventional discovery path, stated truthfully: the estate operates NO transparency service.",
+      "description": "GET /.well-known/scitt-configuration \u2014 what a SCITT client finds when it probes the conventional discovery path, stated truthfully: the estate operates NO transparency service.",
       "endpoint": "/.well-known/scitt-configuration",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -3222,7 +3235,7 @@
         "http"
       ],
       "title": "X402",
-      "description": "GET /.well-known/x402 and /.well-known/x402/ — 308 to the JSON door. Agents probe the suffix-less well-known; the file we ship is x402.json. Pack assembly only. Does not fill a cell.",
+      "description": "GET /.well-known/x402 and /.well-known/x402/ \u2014 308 to the JSON door. Agents probe the suffix-less well-known; the file we ship is x402.json. Pack assembly only. Does not fill a cell.",
       "endpoint": "/.well-known/x402",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -3235,7 +3248,7 @@
         "http"
       ],
       "title": "X402",
-      "description": "GET /.well-known/x402.json — the x402 discovery manifest, served live so `mode` is derived from env (never typed). Replaces the static file that pointed agents at a mock pack host; the metered resources live on THIS origin. No amounts here — they live in each 402 challenge.",
+      "description": "GET /.well-known/x402.json \u2014 the x402 discovery manifest, served live so `mode` is derived from env (never typed). Replaces the static file that pointed agents at a mock pack host; the metered resources live on THIS origin. No amounts here \u2014 they live in each 402 challenge.",
       "endpoint": "/.well-known/x402.json",
       "method": "GET",
       "lifecycle": "LIVE",

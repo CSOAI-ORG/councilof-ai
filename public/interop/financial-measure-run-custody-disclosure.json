@@ -1,13 +1,13 @@
 {
  "schema": "csoai.financial-measure-run/0.4",
  "axis": "custody-disclosure",
- "as_of": "2026-09-07T11:30:35Z",
+ "as_of": "2026-09-17T12:58:11Z",
  "n": 16,
  "n_unit": "issuer accounts (not bank items)",
  "status": "MEASURED",
  "risk_verdict": "UNMEASURED",
  "three_state": "PASS / FAIL / UNCHECKABLE per fact. UNREACHABLE page => UNCHECKABLE, never FAIL.",
- "producer": "scripts/grade_financial_ledgers.py",
+ "producer": "scripts/gspc_financial_facts.py (invoked from grade_financial_ledgers.py --gspc-facts)",
  "honesty": "Facts MEASURED from this run's fetches. Risk/compliance/quality UNMEASURED. Not a rating, not advice, not an endorsement. No model, no accuracy, no leader. C-2026-0826-05: do not restore MEASURED-INDEX-v0.1.",
  "measured": [
   {
@@ -226,5 +226,5 @@
   "UNCHECKABLE": 9
  },
  "rubric": "custodian and auditor named-string presence. Never quality.",
- "content_id": "161be8a9141409d492928c2154000cd1974a760e97cd32571f47c1ad41c43f28"
+ "content_id": "6f4e10cbcc1ed5002638682be4316717dc5460eb103dc2eb13362d8c9dd0883c"
 }

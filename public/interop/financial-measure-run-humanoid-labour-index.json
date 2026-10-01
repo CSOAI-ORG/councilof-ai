@@ -1,13 +1,13 @@
 {
  "schema": "csoai.financial-measure-run/0.4",
  "axis": "humanoid-labour-index",
- "as_of": "2026-09-07T11:30:35Z",
+ "as_of": "2026-09-17T12:58:11Z",
  "n": 8,
  "n_unit": "frozen vendor URLs",
  "status": "MEASURED",
  "risk_verdict": "UNMEASURED",
  "three_state": "PASS / FAIL / UNCHECKABLE per fact. UNREACHABLE page => UNCHECKABLE, never FAIL.",
- "producer": "scripts/grade_financial_ledgers.py",
+ "producer": "scripts/gspc_financial_facts.py (invoked from grade_financial_ledgers.py --gspc-facts)",
  "honesty": "Facts MEASURED from this run's fetches. Risk/compliance/quality UNMEASURED. Not a rating, not advice, not an endorsement. No model, no accuracy, no leader. C-2026-0826-05: do not restore MEASURED-INDEX-v0.1.",
  "measured": [
   {
@@ -17,7 +17,10 @@
    "dated_deployment_count_published": false,
    "three_state": "FAIL",
    "fleet_size": null,
-   "fleet_size_status": "UNMEASURED"
+   "fleet_size_status": "UNMEASURED",
+   "evidence": null,
+   "reason": "no count of robots/units in the visible text that is both dated and stated as deployed",
+   "visible_chars": 1031
   },
   {
    "url": "https://agilityrobotics.com",
@@ -26,7 +29,10 @@
    "dated_deployment_count_published": false,
    "three_state": "FAIL",
    "fleet_size": null,
-   "fleet_size_status": "UNMEASURED"
+   "fleet_size_status": "UNMEASURED",
+   "evidence": null,
+   "reason": "no count of robots/units in the visible text that is both dated and stated as deployed",
+   "visible_chars": 3179
   },
   {
    "url": "https://bostondynamics.com",
@@ -35,7 +41,10 @@
    "dated_deployment_count_published": false,
    "three_state": "FAIL",
    "fleet_size": null,
-   "fleet_size_status": "UNMEASURED"
+   "fleet_size_status": "UNMEASURED",
+   "evidence": null,
+   "reason": "no count of robots/units in the visible text that is both dated and stated as deployed",
+   "visible_chars": 6640
   },
   {
    "url": "https://www.unitree.com",
@@ -44,7 +53,10 @@
    "dated_deployment_count_published": false,
    "three_state": "FAIL",
    "fleet_size": null,
-   "fleet_size_status": "UNMEASURED"
+   "fleet_size_status": "UNMEASURED",
+   "evidence": null,
+   "reason": "no count of robots/units in the visible text that is both dated and stated as deployed",
+   "visible_chars": 5309
   },
   {
    "url": "https://www.apptronik.com",
@@ -53,7 +65,10 @@
    "dated_deployment_count_published": false,
    "three_state": "FAIL",
    "fleet_size": null,
-   "fleet_size_status": "UNMEASURED"
+   "fleet_size_status": "UNMEASURED",
+   "evidence": null,
+   "reason": "no count of robots/units in the visible text that is both dated and stated as deployed",
+   "visible_chars": 9133
   },
   {
    "url": "https://www.1x.tech",
@@ -62,7 +77,10 @@
    "dated_deployment_count_published": false,
    "three_state": "FAIL",
    "fleet_size": null,
-   "fleet_size_status": "UNMEASURED"
+   "fleet_size_status": "UNMEASURED",
+   "evidence": null,
+   "reason": "no count of robots/units in the visible text that is both dated and stated as deployed",
+   "visible_chars": 367
   },
   {
    "url": "https://www.tesla.com/AI",
@@ -71,24 +89,31 @@
    "dated_deployment_count_published": false,
    "three_state": "UNCHECKABLE",
    "fleet_size": null,
-   "fleet_size_status": "UNMEASURED"
+   "fleet_size_status": "UNMEASURED",
+   "evidence": null,
+   "reason": "page UNREACHABLE this run; absence of a count was never observed"
   },
   {
    "url": "https://www.sanctuary.ai",
    "http": 200,
    "page_state": "OK",
-   "dated_deployment_count_published": true,
-   "three_state": "PASS",
+   "dated_deployment_count_published": false,
+   "three_state": "FAIL",
    "fleet_size": null,
-   "fleet_size_status": "UNMEASURED"
+   "fleet_size_status": "UNMEASURED",
+   "evidence": null,
+   "reason": "no count of robots/units in the visible text that is both dated and stated as deployed",
+   "visible_chars": 8794
   }
  ],
  "object": "disclosure-facts",
  "index_formula": false,
  "tally": {
-  "PASS": 1,
-  "FAIL": 6,
+  "FAIL": 7,
   "UNCHECKABLE": 1
  },
- "content_id": "00c4b9f889dbfbc82252167afd80cd06b7b963678a30f3b698de873d54912084"
+ "rubric": "PASS needs all three in the page's VISIBLE TEXT, within 120 characters of each other: a count of robots/units, deployment language, and a date. A rank ('#1 Robotics Story of April 2026') and a model designator ('Digit 5 Humanoid Robot') are not counts. Markup is not a published claim. Every PASS carries the sentence it was read from, in `evidence.quote`, so a stranger can re-read it on the page.",
+ "predicate_bias": "One-directional: a count stated in a way this predicate cannot read is graded FAIL, never PASS. A missed disclosure is recoverable; a fabricated one is not.",
+ "correction": "C-2026-0917-03 — the 2026-09-07 run published a false PASS on sanctuary.ai",
+ "content_id": "cb21d0ba9fa6eb76466d992347a4b06d356a576deda1764e80c37b4a5e79cec5"
 }

@@ -26,16 +26,25 @@ CALENDARS = [
     "https://finney.calendar.eternitywall.com",
 ]
 
-def main():
+def receipt_name(now: datetime.datetime) -> str:
+    """Receipt filename is named for the instant it records as as_of, never a literal."""
+    return f"ots-stamp-batch-{now.strftime('%Y-%m-%d')}.json"
+
+
+def main(argv=None, now=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("paths", nargs="+")
     ap.add_argument("--out-dir", default=None)
-    a = ap.parse_args()
+    a = ap.parse_args(argv)
 
     from opentimestamps.calendar import RemoteCalendar
     from opentimestamps.core.timestamp import Timestamp, DetachedTimestampFile
     from opentimestamps.core.op import OpSHA256
     from opentimestamps.core.serialize import BytesSerializationContext
+
+    # --out-dir is a destination, not a precondition: create it before the first write.
+    if a.out_dir is not None:
+        pathlib.Path(a.out_dir).mkdir(parents=True, exist_ok=True)
 
     rows = []
     for sp in a.paths:
@@ -91,9 +100,11 @@ def main():
                              "verify against the chain, before any file is called anchored."),
         })
 
+    # One instant serves both the recorded as_of and the receipt filename.
+    now = datetime.datetime.now(datetime.timezone.utc) if now is None else now
     manifest = {
         "schema": "csoai.ots-stamp-batch/0.1",
-        "as_of": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "as_of": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
         "signed": False,
         "unsigned_reason": "The board signer runs as OIDC inside GitHub Actions, disabled account-wide.",
         "anchoring_is_not_signing": ("Anchoring proves WHEN bytes existed. Signing proves WHO "
@@ -102,7 +113,7 @@ def main():
         "calendars": CALENDARS,
         "stamps": rows,
     }
-    mp = pathlib.Path(a.out_dir or ".") / "ots-stamp-batch-2026-09-17.json"
+    mp = pathlib.Path(a.out_dir or ".") / receipt_name(now)
     mp.write_text(json.dumps(manifest, indent=1))
     print(f"\nwrote {mp}")
     return 0 if any(r.get("state") == "PENDING_CALENDAR_COMMITMENT" for r in rows) else 1
