@@ -1,6 +1,6 @@
 {
  "schema": "csoai.measurement-capsule-index/0.3",
- "as_of": "2026-09-30T08:18:22Z",
+ "as_of": "2026-10-01T08:11:31Z",
  "what_this_is": "One index over every signed measurement-capsule batch: each batch's own Merkle root, record sha256, signature and OTS state, and one root over all of them.",
  "what_this_is_not": "Not a grade, ranking, admission or approval of anything. The capsules measure declared vs observed; this index only binds them together.",
  "authority_state": "NONE: measurement only; this capsule grants and records no execution authority",
@@ -40,30 +40,30 @@
    }
   },
   {
-   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-09-30-claim_watch",
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-10-01-claim_watch",
    "adapter": "claim_watch",
    "kind": "measurement.claim_watch",
    "n_capsules": 1,
    "states": {
-    "CONFIRMED": 1
+    "QUARANTINED": 1
    },
-   "merkle_root": "44ec4b9730196fc357c7e20f7a330027cbfa0a9ad38077015b8f13cc67b76869",
-   "record_sha256": "3fdbf6cc820fa40f7606792fc0db7492c227b5e5f5152d88fece3a0cbcedf4a9",
-   "capsules_sha256": "c2090011b2aace79cbbc50b25efb436a97e2b6b0e65480786ba758701e752a27",
+   "merkle_root": "5e6440b6f9fbccdc2dca66aff3c79c02f649ccb56cd795d0f043b651dd50c32e",
+   "record_sha256": "1647b07db74e3b3569367c4423d80fd7b42c52ae287fb0078786e7acc12f9ce2",
+   "capsules_sha256": "70451eda2d8166b9a61084f5c01b8ff57210a7016d97ab0320b4c730f2b827ed",
    "signature_state": "VERIFIES",
-   "signed_at": "2026-09-30T08:17:27.249Z",
+   "signed_at": "2026-10-01T08:10:21.594Z",
    "ots_state": "PENDING_CALENDAR_COMMITMENT",
    "ots_attestations": {
-    "PendingAttestation": 3
+    "PendingAttestation": 2
    },
    "source": {
     "receipts": [
      {
       "sealed_id": "4a31dd96e79dcf1b",
-      "date": "2026-09-30",
-      "receipt_sha256": "0780def9b06038c18f46c709789886294dc7b9618c45e1848e5b888ebcd6751e",
-      "receipt_signature_payload_sha256": "661f5f434d831470c0e0803e768f917df3d9393439038665edc24b89aa505f63",
-      "run_change_state": "CONFIRMED"
+      "date": "2026-10-01",
+      "receipt_sha256": "f4df2b1b5c14eb90298d32d4bd4720890d93587590a05dca7785d0d59e88e984",
+      "receipt_signature_payload_sha256": "10837086ac617fff0ac997cbd9d9f6dc3e59acfe88da18ab3f54753e576f5d5d",
+      "run_change_state": "QUARANTINED"
      }
     ],
     "n_receipts": 1
@@ -104,7 +104,7 @@
    }
   },
   {
-   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-09-30-cross_ledger",
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-10-01-cross_ledger",
    "adapter": "cross_ledger",
    "kind": "measurement.cross_ledger_supply",
    "n_capsules": 383,
@@ -122,14 +122,14 @@
     "TOTAL_PARTIAL": 5,
     "UNCHECKABLE": 32
    },
-   "merkle_root": "4d1a955e12833786393c04473064299ad54464c0a0dd1ba4e5794a62f52de892",
-   "record_sha256": "67107098348dd2e1568fc3198c042969a455e854a669d9bd43c70dd1c24fa682",
-   "capsules_sha256": "5cc54486e76fef55d1d9b14eed095434b8dcc7521f9b388997b93578179c76cd",
+   "merkle_root": "7a51896104b0123d93e556a3c9196957e2d1258fff83a6ad4be4937facedd271",
+   "record_sha256": "ca622361ef1e0e7b706d12f1986158ab8e1737086df0d68d53d065bdc143f504",
+   "capsules_sha256": "a0264a1b1d092c1cda4ab9faca44c166fa72eb30b9ea0a37b17673851ddf9894",
    "signature_state": "VERIFIES",
-   "signed_at": "2026-09-30T08:16:47.143Z",
+   "signed_at": "2026-10-01T08:08:15.931Z",
    "ots_state": "PENDING_CALENDAR_COMMITMENT",
    "ots_attestations": {
-    "PendingAttestation": 3
+    "PendingAttestation": 2
    },
    "source": {
     "records": [
@@ -197,18 +197,18 @@
       "issuer_list_state": "READ"
      },
      {
-      "file": "/evac-bulk/xl-daily/2026-09-30/xl-daily-2026-09-30.json",
+      "file": "/evac-bulk/xl-daily/2026-10-01/xl-daily-2026-10-01.json",
       "asset": "xl-daily",
       "schema": "csoai.cross-ledger-xl-daily/0.1",
-      "sha256": "4b135ecbfcebb5324462e6dda3870d8f3b625c900ac08f6e4753a25803fbe33c",
+      "sha256": "285293956cb7a41eba5fbfaf674a4c57010496b60b425cbfcabecb8b066798eb",
       "signature": "VERIFIES",
-      "signature_payload_sha256": "6b5d7c930fbacae874391917c8edc65f730f37ab8ab75b5ad3c011dd1ab9b126",
-      "date": "2026-09-30",
+      "signature_payload_sha256": "6bdb6bc9611f3c9c12ca9de1cced8ab8399e85d77a161677816bd1972ec8aa95",
+      "date": "2026-10-01",
       "assets": 23
      }
     ],
     "skipped_files": [
-     "institutional-evidence-links-2026-09-30.json"
+     "institutional-evidence-links-2026-10-01.json"
     ]
    }
   },
@@ -421,34 +421,34 @@
    }
   },
   {
-   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-09-30-operations",
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-10-01-operations",
    "adapter": "operations",
    "kind": "operations",
-   "n_capsules": 479,
+   "n_capsules": 236,
    "states": {
-    "BITCOIN_ATTESTED": 6,
+    "BITCOIN_ATTESTED": 7,
     "INCLUDED_PROOF_VERIFIES": 1,
-    "LANDED_NOT_SHIPPED": 74,
+    "LANDED_NOT_SHIPPED": 54,
     "PENDING_CALENDAR_COMMITMENT": 1,
-    "PRESENT_SHA256_UNRECORDED": 389,
-    "TIME_TO_CORRECT_UNMEASURED": 7,
+    "PRESENT_SHA256_UNRECORDED": 169,
+    "TIME_TO_CORRECT_UNMEASURED": 3,
     "UNCHECKABLE": 1
    },
-   "merkle_root": "63d1e261f6d2e384823e2563ecf89377496f02cfd9426d669dc0dba97eaf6b51",
-   "record_sha256": "ceeb69de3df39518a53c2b955add283f0496169262ea9bafd0ad202916fc014d",
-   "capsules_sha256": "df7403eb19e22deb39a44d6fcd23f424cfab46cf377ef70316a07a84fc678597",
+   "merkle_root": "8d41a82a2651efc9c068a957b38d86782ca004f6f159668c32b7960fe91efadc",
+   "record_sha256": "f599e7d9e37383a69f549b9f1ab5d61266841c957c644ef049b7b849223806b1",
+   "capsules_sha256": "618b0e517d97f3cb2f0e1224549937a4773ca23404a750563e1fea8c1ccc5eee",
    "signature_state": "VERIFIES",
-   "signed_at": "2026-09-30T08:17:09.310Z",
+   "signed_at": "2026-10-01T08:09:18.828Z",
    "ots_state": "PENDING_CALENDAR_COMMITMENT",
    "ots_attestations": {
-    "PendingAttestation": 3
+    "PendingAttestation": 2
    },
    "source": {
-    "harvest_dir": "/evac-bulk/operations/2026-09-30/20260930T080505Z",
-    "harvest_sha256": "9124db4986b39c4018cc6a5092a7f3745ae982cd65c86d62af86fe16e3fdaeaf",
-    "date": "2026-09-30",
+    "harvest_dir": "/evac-bulk/operations/2026-10-01/20261001T080504Z",
+    "harvest_sha256": "21823c5b16c61819dee4f5317e25bf92232a74d1bfaa07bc81396aad0dcf3c5c",
+    "date": "2026-10-01",
     "schema": "csoai.operations-harvest/0.1",
-    "harvested_at": "2026-09-30T08:05:05Z",
+    "harvested_at": "2026-10-01T08:05:04Z",
     "source_states": {
      "anchor": "READ",
      "correction": "READ",
@@ -458,73 +458,73 @@
      "publication": "READ"
     },
     "files_sha256": {
-     "anchors.json": "eba7e7389cef4acb05f9dd7bb415ea6d4f63a42eb7ab8d56c8e6b5700d8a7ee4",
-     "corrections.json": "13c3c49a77b4fd4a1a544fabc2e54d4e383815b385126f4e7bd42ced0c7b3b11",
-     "corrections.previous.json": "8f642a04014adc923f21dad6137183a3102e30282fdc50acb1ada634f3ce4ad4",
-     "hf-commits.json": "c879ece3b12ddd611e96ecf2e95a5afc673293f84b52cc2f2bf95e817ee938be",
-     "landings.json": "ebffb8d9e123fd2582ee9d2b0bbe0678bec983bbb20400c6bcba4af3253f5e0d",
+     "anchors.json": "cee8666f7b1d98bcd3393744b62c953e8533a86f5896e34fec3007ac61437823",
+     "corrections.json": "1f07e524565e3a1baec636e68a5e6cf537aa336c5c505d38ec2c450ddcf7cef3",
+     "corrections.previous.json": "13c3c49a77b4fd4a1a544fabc2e54d4e383815b385126f4e7bd42ced0c7b3b11",
+     "hf-commits.json": "7e662caf847e46af4711674d817ee8cc13c6033643c1b396d643617133ef35b4",
+     "landings.json": "75d4172e7af45dd72e9d83047b9093c59e3d5f3d6f5dc42ae0bed51c0ca20d35",
      "notices.json": "5083afdc16b6c6e5c05854feec19f20d3569880ee91d7197d98609e2ab3d7863"
     }
    }
   },
   {
-   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-09-30-public_signals",
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-10-01-public_signals",
    "adapter": "public_signals",
    "kind": "measurement.public_signal",
-   "n_capsules": 118,
+   "n_capsules": 119,
    "states": {
-    "MEASURED": 104,
-    "PARTIAL": 1,
-    "UNCHECKABLE": 13
+    "MEASURED": 101,
+    "PARTIAL": 2,
+    "UNCHECKABLE": 16
    },
-   "merkle_root": "80a2d12efb54ff01aa150680639df8326b0cf3c5e5cb7ef5662f0d95d37718ec",
-   "record_sha256": "8767d3d5f402e429dccce4ad96d056dcecc2d28a8e171f2ed3850ca8469a41e9",
-   "capsules_sha256": "bfbb06fcae6d8d898182879855845d60037c56215de48451fa2d75f674ac5b6c",
+   "merkle_root": "f11087f060aa4d61f5fd1c40537c0ae9c358ff17466fc205972c37ad1c145ec1",
+   "record_sha256": "0c522265a7bc175851be38287deb507fca9e5ba4341476ec3403408b5c5a0d3d",
+   "capsules_sha256": "850d32398b610a428509c8519f2ac9272e6706dfc87cfc712a21ac7c4f94c0fb",
    "signature_state": "VERIFIES",
-   "signed_at": "2026-09-30T06:28:51.736Z",
+   "signed_at": "2026-10-01T05:53:12.739Z",
    "ots_state": "PENDING_CALENDAR_COMMITMENT",
    "ots_attestations": {
     "PendingAttestation": 3
    },
    "source": {
-    "record": "/evac-bulk/public-signals/2026-09-30/record.json",
-    "record_sha256": "8300a830699d520fd94daebfeff556467bb1f056ba00dc0e1bbc17c2b6132378",
-    "date": "2026-09-30",
+    "record": "/evac-bulk/public-signals/2026-10-01/record.json",
+    "record_sha256": "864c793ec44bcdcc1d1407cafae3dd69c18855b65ede88958edec1e6b047d6d2",
+    "date": "2026-10-01",
     "schema": "csoai.public-signals/0.1",
     "record_signature": "VERIFIES",
-    "record_signature_payload_sha256": "a9e5423cca3a06081f453e1233d8610900289d17a50e8931cf55576de6afcc05",
-    "n_signals": 118,
-    "previous_record_sha256": "30426d23c40bc823e845454643d70021003a9b97ca2d81ce6e08f3ff5c226326",
-    "changes_sha256": "309c9a88d0b854b4b847a23dd502e229b49bfb64c3fdf6a4daf17814f5e85016"
+    "record_signature_payload_sha256": "e3fb3c0d644945c9ac15398932a93c4d84acbb2830dce7736c1fe7e0ccd80029",
+    "n_signals": 119,
+    "previous_record_sha256": "8300a830699d520fd94daebfeff556467bb1f056ba00dc0e1bbc17c2b6132378",
+    "changes_sha256": "2b3c1863e56423977f7d71ee5e5909803be16476ebc3b62eb9bbb1f14db2bef9"
    }
   },
   {
-   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-09-30-self_parity",
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-10-01-self_parity",
    "adapter": "self_parity",
    "kind": "measurement.self_parity",
    "n_capsules": 166,
    "states": {
-    "CONSISTENT": 45,
-    "INCONSISTENT": 8,
+    "CONSISTENT": 41,
+    "INCONSISTENT": 11,
     "NOT_DECLARED": 1,
-    "NOT_LISTED": 64,
+    "NOT_LISTED": 65,
     "UNCHECKABLE": 48
    },
-   "merkle_root": "3d5d0faab68c43303c493b80f1e78b16cb9540dc9ed05bad82e8152b52f5a53d",
-   "record_sha256": "df18985070be64a74df767b5356b76aa67f9277baa8c485ee3166de65369f51a",
-   "capsules_sha256": "9d40ada0c53bd3504c16da4142db26bcde8d40c325e9844f4b5bac93d2154b99",
+   "merkle_root": "8a3d29edf648ca85401c8ec45dbf3a2793a48b0a41e3780b1fd9f840985ed6a9",
+   "record_sha256": "33fa38ec7539a251f667a7d346466a19378356b792fff8a01bd3d2430f64810f",
+   "capsules_sha256": "bf28bb927764dbcbcdfc0409e520a9fff7bcc12bc03e43059d2cf6ebe77e9350",
    "signature_state": "VERIFIES",
-   "signed_at": "2026-09-30T08:15:30.863Z",
+   "signed_at": "2026-10-01T08:07:35.538Z",
    "ots_state": "PENDING_CALENDAR_COMMITMENT",
    "ots_attestations": {
-    "PendingAttestation": 3
+    "PendingAttestation": 2
    },
    "source": {
-    "record": "/evac-bulk/self-parity/2026-09-30/record.json",
-    "record_sha256": "41fc8df30eab09fd3157958da009788c5df271a08d46c04f729ee0c5f352554c",
+    "record": "/evac-bulk/self-parity/2026-10-01/record.json",
+    "record_sha256": "2bd780cff6d47d3fa28105708940c475b6829d85bb1629415f46cdd311a98ff1",
     "record_signature": "VERIFIES",
-    "record_signature_payload_sha256": "8a79cd613d9dde4b16b53f0566ee7b7def6c547ce7a5a38e39be5fe4237fa604",
-    "date": "2026-09-30",
+    "record_signature_payload_sha256": "9aa018cd34fafa7b71aeb710fe072cf47cfba268814165f8c2aafcc2c989a659",
+    "date": "2026-10-01",
     "schema": "csoai.self-parity/0.1"
    }
   },
@@ -545,8 +545,9 @@
    "capsules_sha256": "d11db3e6b89d98c9577aff5c41c1aeb8674f94b37f34a95406fb7454a082e35a",
    "signature_state": "VERIFIES",
    "signed_at": "2026-09-30T08:16:26.359Z",
-   "ots_state": "PENDING_CALENDAR_COMMITMENT",
+   "ots_state": "BITCOIN_ATTESTED",
    "ots_attestations": {
+    "BitcoinBlockHeaderAttestation": 1,
     "PendingAttestation": 3
    },
    "source": {
@@ -572,21 +573,26 @@
    }
   }
  ],
- "n_capsules_total": 10979,
- "index_root": "6760518bfff7149f6f552075527640432f7200c2986476bf8b5f8685caf7b693",
+ "n_capsules_total": 10737,
+ "index_root": "9631cc00b91ce9d1e37e517851eab126be6ca1a4dc6b66a26d86352aada5b562",
  "index_root_rule": "the batch rule (merkle) over the sorted capsule_id leaves of ALL batches together",
  "merkle": "RFC 6962 Merkle Tree Hash over the capsule_id leaves (32 bytes each) sorted ascending: leaf = SHA-256(0x00 || capsule_id), node = SHA-256(0x01 || left || right); for n > 1 leaves the split is at k = the largest power of two smaller than n (RFC 6962 section 2.1), so no leaf is promoted or duplicated; one leaf = its leaf hash; empty = SHA-256 of the empty string",
  "capsule_schema": "csoai.measurement-capsule/0.2",
  "batch_schema": "csoai.measurement-capsule-batch/0.2",
- "root_over_batch_merkle_roots": "195eae7926bead60969a2838a75a9e5b1c780cbd3330d781e8f9332520abd37c",
- "pending_source": [],
+ "root_over_batch_merkle_roots": "15b7250af130c143180263045c9b1e95635cf6560a086e3141cea459ca8a7e6f",
+ "pending_source": [
+  {
+   "adapter": "tool_drift_daily_source",
+   "why": "NOT_UPDATED: no source newer than the one in the 2026-09-30 batch at capsule time; the 2026-09-30 batch is carried"
+  }
+ ],
  "verify": "for each batch: recompute every capsule_id and the batch Merkle root, check record sha256 and its board signature; then recompute index_root over the union of capsule ids; the index itself is signed (.signed.json) and OTS-stamped (.json.ots)",
- "date": "2026-09-30",
+ "date": "2026-10-01",
  "chain_rule": "each day's index names the FINAL version of the previous day's index on disk (measurement-index-v0.2-<prev_date>.json): prev_index_sha256 = sha256 of its bytes, prev_index_root = its index_root; gap_days = calendar days strictly between prev_date and date that have no index (0 = consecutive); a re-issue of a day names the version it replaces in supersedes; the first day (genesis) has prev = null",
- "chain_seq": 4,
- "prev_date": "2026-09-29",
- "prev_index_sha256": "fb56321561f16362c83d8eaaf9320083bb2ac96fa466f4d560625639cc08b332",
- "prev_index_root": "5ce9511e9554cef6d92d166af08f9bae0b5149655fa555e2025a505ed9af06df",
+ "chain_seq": 5,
+ "prev_date": "2026-09-30",
+ "prev_index_sha256": "c96b94b988df4ea029a6516ddc1fc7c65ed4e712b3833b475b20bee2e32277ef",
+ "prev_index_root": "6760518bfff7149f6f552075527640432f7200c2986476bf8b5f8685caf7b693",
  "gap_days": 0,
  "missing_dates": [],
  "genesis": null,
@@ -605,7 +611,7 @@
    },
    "claim_watch": {
     "state": "FRESH",
-    "last_good_date": "2026-09-30"
+    "last_good_date": "2026-10-01"
    },
    "contract_parity": {
     "state": "CARRIED",
@@ -613,7 +619,7 @@
    },
    "cross_ledger": {
     "state": "FRESH",
-    "last_good_date": "2026-09-30"
+    "last_good_date": "2026-10-01"
    },
    "mill_cross_runtime": {
     "state": "CARRIED",
@@ -625,21 +631,23 @@
    },
    "operations": {
     "state": "FRESH",
-    "last_good_date": "2026-09-30"
+    "last_good_date": "2026-10-01"
    },
    "public_signals": {
     "state": "FRESH",
-    "last_good_date": "2026-09-30"
+    "last_good_date": "2026-10-01"
    },
    "self_parity": {
     "state": "FRESH",
-    "last_good_date": "2026-09-30"
+    "last_good_date": "2026-10-01"
    },
    "tool_drift": {
-    "state": "FRESH",
+    "state": "NOT_UPDATED",
     "last_good_date": "2026-09-30"
    }
   },
-  "not_updated": []
+  "not_updated": [
+   "tool_drift@2026-09-30"
+  ]
  }
 }
