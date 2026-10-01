@@ -396,6 +396,18 @@ stage(
         };
       }),
       licence: "CC0-1.0",
+      // Related machine records (priority / reaction / event feed / corrections). Not prose of
+      // the Markdown document of record — a stable discovery map the producer owns so a
+      // regenerated index cannot drop it (847abe01 hand-patched the derived file and --check
+      // went red). Paths are the public URLs these records are served at.
+      machine_records: {
+        priority: "https://councilof.ai/spec/claim-maintenance/priority.json",
+        priority_root: "https://councilof.ai/spec/claim-maintenance/priority-root.json",
+        reaction_index: "https://councilof.ai/spec/claim-maintenance/reaction-index.json",
+        claim_events: "https://councilof.ai/api/claims/events",
+        claim_events_head: "https://councilof.ai/api/claims/events/head",
+        corrections: "https://councilof.ai/api/corrections",
+      },
     },
     null,
     2,
