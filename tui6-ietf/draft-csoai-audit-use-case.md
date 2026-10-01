@@ -1,15 +1,15 @@
-# IETF AUDIT Use-Case Scope (DRAFT — submitted, awaiting datatracker publication)
+# IETF AUDIT Use-Case Scope (DRAFT — submitted review copy)
 
-**Status:** Submitted to the IETF Independent Submission queue 2026-09-12; not yet published on datatracker (verified 2026-09-13). This text is the review copy.
-**Date:** 2026-09-13 (v2 — stale counts replaced with live references; §6 added)
+**Status:** Submitted to the IETF Independent Submission queue 2026-09-12. This repository copy does not assert datatracker publication; verify the external submission state before citing it.
+**Date:** 2026-10-01 (v3 — changing counts removed from prose; current live-readback receipt added; §6 retained)
 **Author:** CSOAI Ltd (UK 16939677)
 
 ## Abstract
 
-This draft describes the use of cryptographic receipts and measurement cards for AI governance audit trails. CSOAI operates a public measurement board covering 22 governance/safety/provenance/continuity axes, where each accepted measurement is issued as an Ed25519-signed card, included in a public Merkle root, and witnessed in the Rekor transparency log and the Bitcoin chain via OpenTimestamps.
+This draft describes the use of cryptographic receipts and measurement cards for AI governance audit trails. CSOAI operates a public measurement board across governance, security/safety, provenance and continuity axes. The live API currently derives 23 axes / 23 measured, but this document treats that count as changing state rather than a protocol constant. Accepted public-root leaves are content-addressed; signed artifacts use DID-published Ed25519 keys, and the public root is independently witnessed via Rekor and OpenTimestamps.
 
 Live state (re-fetch before citing — counts advance):
-- Board: https://councilof.ai/api/gspc (22 axes, all measured)
+- Board: https://councilof.ai/api/gspc (derive current axis and measured-axis counts from totals; do not copy a stale typed count)
 - Public root: https://councilof.ai/root.json (leaf count, Merkle root, signature)
 - Witness sidecar: https://councilof.ai/interop/root-witness-latest.json (Rekor index, OTS status)
 
@@ -28,14 +28,15 @@ Organizations deploying AI systems need auditable evidence of model behaviour. C
 - Rekor transparency-log witnessing and OpenTimestamps Bitcoin anchoring
 - x402 payment-gated evidence delivery
 
-## Evidence (verified 2026-09-13)
+## Evidence (live references; point-in-time receipt refreshed 2026-10-01)
 
-- Public root: 264 signed leaves, Merkle root and Ed25519 envelope signature verifiable at https://councilof.ai/root.json
-- Bitcoin anchor: current and prior roots carry OpenTimestamps proofs with confirmed Bitcoin block attestations (verify: https://councilof.ai/interop/root-witness-latest.json)
-- Rekor witnessing: every published root carries a Rekor inclusion (latest index in the witness sidecar)
-- Historical corpus: 335 signed cards under a separate published key (did:web:csoai.org#card-attestation-1), a corpus deliberately separate from the public root (zero identifier overlap, by design)
+- Public root: fetch https://councilof.ai/root.json for the current leaf count, Merkle root and envelope state. Do not hard-code a historical leaf count in this draft.
+- Bitcoin anchor: fetch https://councilof.ai/interop/root-witness-latest.json and require the exact-root OpenTimestamps state to be derived from the proof bytes; the current readback reports CONFIRMED_BITCOIN.
+- Rekor witnessing: read the exact-root Rekor status and log index from the same witness sidecar rather than assuming every future root has completed witnessing.
+- Historical signed-card corpus: read https://councilof.ai/signed/card_index.json as its own population. It is deliberately not interchangeable with the public-root leaf population.
 - Verification guide: https://councilof.ai/signed/HOW-TO-VERIFY.md
-- Corrections ledger (48 public corrections): https://councilof.ai/api/corrections
+- Corrections ledger: https://councilof.ai/api/corrections. Count corrections from the served body and require signature_state VALID; do not hard-code the count here.
+- Point-in-time machine-readable readback used for this revision: measurement/ietf-audit-live-readback-2026-10-01.json.
 
 ## 6. Decline Records (additive — responds to community review)
 
