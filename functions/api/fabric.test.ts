@@ -45,6 +45,7 @@ function fixtureFetcher(
     a2aReachable?: boolean;
     a2aRpcError?: boolean;
     invalidRootSignature?: boolean;
+    claimIncomplete?: boolean;
     origin?: string;
   } = {},
 ) {
@@ -164,6 +165,46 @@ function fixtureFetcher(
           version: "v1.0",
           status: "Candidate",
           endpoint: "https://example.test/api/a2ui/run",
+        });
+      }
+      if (url.pathname === "/api/claims/events") {
+        return new Response('{"seq":0}\n', {
+          headers: { "content-type": "application/x-ndjson" },
+        });
+      }
+      if (url.pathname === "/api/claims/events/head") {
+        return json({
+          head: { as_of: "2026-09-28T13:20:04Z", feed: { n_lines: 9 } },
+          verification: { state: "VERIFIES" },
+        });
+      }
+      if (url.pathname === "/api/corrections") {
+        return json({
+          schema: "csoai.corrections/0.1",
+          corrections: Array.from({ length: 89 }, (_, i) => ({ id: i })),
+        });
+      }
+      if (url.pathname === "/spec/claim-maintenance/priority-root.json") {
+        return options.claimIncomplete
+          ? json({ error: "not_found" }, 404)
+          : json({
+              schema: "csoai.claim-maintenance-priority-root/0.1",
+              leaf_count: 6,
+            });
+      }
+      if (url.pathname === "/spec/claim-maintenance/reaction-index.json") {
+        return json({
+          schema: "csoai.claim-maintenance-reaction-index/0.1",
+          signals: Array.from({ length: 49 }, (_, i) => ({ id: "signal-" + String(i) })),
+          category: { direct_name_collision_count_in_snapshot: 2 },
+        });
+      }
+      if (url.pathname === "/evidence/ras-opportunity-watch/batch.json") {
+        return json({
+          schema: "csoai.evidence-batch/0.1",
+          as_of: "2026-10-01T03:57:57Z",
+          events_file: { n_events: 4 },
+          state_counts: { CONSISTENT: 1, DIVERGENT: 2, PARTIAL: 1 },
         });
       }
       if (url.pathname === "/api/compute") {
@@ -378,7 +419,7 @@ describe("GET /api/fabric", () => {
         OBSERVED_AT,
       );
       expect(mcpCalls).toBe(1);
-      expect(otherRails).toHaveBeenCalledTimes(17);
+      expect(otherRails).toHaveBeenCalledTimes(23);
       expect(externalFetch).not.toHaveBeenCalled();
       expect(byId(manifest, "mcp-tools")).toMatchObject({
         state: "RUNTIME_OBSERVED",
@@ -399,8 +440,8 @@ describe("GET /api/fabric", () => {
     );
 
     expect(manifest.schema).toBe("csoai.capability-fabric/0.1");
-    expect(fetcher).toHaveBeenCalledTimes(18);
-    expect(manifest.rails.length).toBe(17);
+    expect(fetcher).toHaveBeenCalledTimes(24);
+    expect(manifest.rails.length).toBe(19);
     expect(manifest.action_contract).toMatchObject({
       schema: "csoai.capability-action-contract/0.1",
       policy: { mode: "FAIL_CLOSED", execution_enabled: false },
@@ -466,6 +507,17 @@ describe("GET /api/fabric", () => {
       state: "RUNTIME_OBSERVED",
       endpoint: "/api/a2ui",
       summary: expect.stringContaining("Candidate"),
+    });
+    expect(byId(manifest, "claim-maintenance")).toMatchObject({
+      state: "RUNTIME_OBSERVED",
+      summary: expect.stringContaining("9 claim-event lines verify"),
+    });
+    expect(byId(manifest, "claim-maintenance").summary).toContain("89 corrections");
+    expect(byId(manifest, "claim-maintenance").summary).toContain("6 immutable leaves");
+    expect(byId(manifest, "claim-maintenance").summary).toContain("49 signals");
+    expect(byId(manifest, "ras-evidence-fabric")).toMatchObject({
+      state: "RUNTIME_OBSERVED",
+      summary: expect.stringContaining("4 evidence events served"),
     });
     expect(byId(manifest, "hf-census")).toMatchObject({
       state: "CATALOGUED",
@@ -534,6 +586,18 @@ describe("GET /api/fabric", () => {
     expect(byId(manifest, "public-root")).toMatchObject({
       state: "UNCHECKABLE",
       last_error: "root signature did not verify against published DID key",
+    });
+  });
+
+  it("fails Claim Maintenance closed when one proof surface is missing", async () => {
+    const manifest = await buildFabricManifest(
+      "https://example.test/api/fabric",
+      fixtureFetcher({ claimIncomplete: true }),
+      OBSERVED_AT,
+    );
+    expect(byId(manifest, "claim-maintenance")).toMatchObject({
+      state: "UNCHECKABLE",
+      last_error: expect.stringContaining("priority-root"),
     });
   });
 
@@ -615,7 +679,7 @@ describe("GET /api/fabric", () => {
       OBSERVED_AT,
     );
 
-    expect(manifest.rails.length).toBe(17);
+    expect(manifest.rails.length).toBe(19);
     expect(byId(manifest, "mcp-tools")).toMatchObject({
       state: "UNREACHABLE",
       last_error: "network unavailable",
@@ -654,7 +718,7 @@ describe("GET /api/fabric", () => {
       await vi.advanceTimersByTimeAsync(3_500);
       const manifest = await pending;
 
-      expect(fetcher).toHaveBeenCalledTimes(18);
+      expect(fetcher).toHaveBeenCalledTimes(24);
       expect(byId(manifest, "mcp-tools")).toMatchObject({
         state: "UNREACHABLE",
         last_error: "probe timed out after 3500ms",
