@@ -1,0 +1,67 @@
+{
+  "schema": "csoai.governance.fabric/0.1",
+  "canonical": "https://councilof.ai/governance/manifest.json",
+  "measurement_authority": "https://councilof.ai",
+  "scope": "Canonical discovery pointers and configured site roles. Site availability and measurement freshness require independent readback.",
+  "components": {
+    "authority_model": "https://councilof.ai/governance/authority-model.json",
+    "committee_registry": "https://councilof.ai/governance/committee-registry.json",
+    "contribution_routes": "https://councilof.ai/governance/contribution-routes.json",
+    "correction_policy": "https://councilof.ai/governance/correction-policy.json",
+    "corrections": "https://councilof.ai/api/corrections",
+    "gspc": "https://councilof.ai/api/gspc",
+    "institutional_record": "https://councilof.ai/memberships/",
+    "root": "https://councilof.ai/root.json",
+    "state": "https://councilof.ai/api/state",
+    "work_evidence_schema": "https://councilof.ai/interop/work-evidence-capsule-v0.1.schema.json"
+  },
+  "doctrine": "One governance truth, many site experiences. Measurement, never certification.",
+  "public_rules": [
+    "No external organization is described as controlled by CSOAI.",
+    "No committee membership is named without evidence.",
+    "Site roles select emphasis and do not create separate measurement authorities.",
+    "Claims of partnership, funding, membership or endorsement require their own relationship record."
+  ],
+  "sites": [
+    {
+      "configured_discovery_path": "/.well-known/csoai-governance.json",
+      "role": "safety_evaluation",
+      "site": "https://agisafe.ai"
+    },
+    {
+      "configured_discovery_path": "/.well-known/csoai-governance.json",
+      "role": "security_continuity",
+      "site": "https://asisecurity.ai"
+    },
+    {
+      "configured_discovery_path": "/.well-known/csoai-governance.json",
+      "role": "canonical_measurement_governance",
+      "site": "https://councilof.ai"
+    },
+    {
+      "configured_discovery_path": "/.well-known/csoai-governance.json",
+      "role": "institutional_identity",
+      "site": "https://csoai.org"
+    },
+    {
+      "configured_discovery_path": "/.well-known/csoai-governance.json",
+      "role": "human_agent_operations",
+      "site": "https://meok.ai"
+    },
+    {
+      "configured_discovery_path": "/.well-known/csoai-governance.json",
+      "role": "openness_models",
+      "site": "https://openmoe.ai"
+    },
+    {
+      "configured_discovery_path": "/.well-known/csoai-governance.json",
+      "role": "verification_provenance",
+      "site": "https://proofof.ai"
+    },
+    {
+      "configured_discovery_path": "/.well-known/csoai-governance.json",
+      "role": "safety_literacy",
+      "site": "https://safetyof.ai"
+    }
+  ]
+}
