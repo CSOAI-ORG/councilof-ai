@@ -330,6 +330,21 @@ def cmd_sign(a):
     # when feed, head and signature agree, so an unsigned head is never the served one.
     shutil.copyfile(hp, out / "head.json")
     shutil.copyfile(sp, out / "head.signed.json")
+
+    # The reaction index is a derived view of the served, signed claim-event head.
+    # Refresh it only for the canonical public feed; fixture/temp sign operations stay isolated.
+    repo = pathlib.Path(__file__).resolve().parents[2]
+    canonical_out = (repo / "public/claims/events/v0.1").resolve()
+    reaction_script = repo / "scripts/claims/claim_maintenance_reaction.py"
+    reaction_output = repo / "public/spec/claim-maintenance/reaction-index.json"
+    if out.resolve() == canonical_out and reaction_script.is_file() and reaction_output.parent.is_dir():
+        rr = subprocess.run(
+            [sys.executable, str(reaction_script), "--events-dir", str(out), "--output", str(reaction_output)],
+            capture_output=True, text=True, timeout=60,
+        )
+        if rr.returncode != 0:
+            die(f"reaction refresh failed rc={rr.returncode}: {(rr.stderr or rr.stdout).strip()[-300:]}")
+
     print(json.dumps({"ok": True, "signed": sp.name, "payload_sha256": doc["signature"]["payload_sha256"]}))
 
 
