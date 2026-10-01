@@ -354,3 +354,32 @@ def test_pod_token_absent_fails_closed_without_network() -> None:
                 pass
             else:
                 raise AssertionError(f"signed with an absent token file: {path}")
+
+
+def test_shape_a_boundary_is_sticky_exact_card() -> None:
+    import publish_public_root as pub
+
+    expected = "6109d9dd03edf688f511bb106fb5a25ad5b2650c3c04e6116271a01c72d65111"
+    sticky = pub.load_sticky_cards(ROOT)
+    assert [c["sha256"] for c in sticky] == [expected]
+    assert pub.card_sha256(sticky[0]) == expected
+
+    # Today's outer grammar adds product metadata; regenerating the same declaration
+    # would therefore move the whole-card digest. The publisher must replace that
+    # semantic twin with the exact historical signed card instead.
+    source = json.loads((ROOT / pub.STICKY_CARD_SOURCES[expected]).read_text())
+    leaf = {k: source[k] for k in ("surface", "subject", "as_of", "source_urls", "payload", "unmeasured", "tags")}
+    regenerated = pub.make_card(leaf, "00" * 64, will_sign=True)
+    assert regenerated["sha256"] != expected
+    merged = pub.preserve_sticky_cards([regenerated], sticky)
+    assert len(merged) == 1
+    assert merged[0]["sha256"] == expected
+
+
+def test_shape_a_boundary_staged_source_matches_sticky_semantics() -> None:
+    import publish_public_root as pub
+
+    expected = next(iter(pub.STICKY_CARD_SOURCES))
+    card = pub.load_sticky_cards(ROOT)[0]
+    source = json.loads((ROOT / pub.STICKY_CARD_SOURCES[expected]).read_text())
+    assert pub._semantic_card_fields(card) == pub._semantic_card_fields(source)
