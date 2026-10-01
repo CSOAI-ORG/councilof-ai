@@ -14,7 +14,7 @@
         "kty": "OKP",
         "crv": "Ed25519",
         "x": "03g9l-dVNGVEAVVWQrJU9aLtkYTN3uARd52P7DEq-8g",
-        "kid": "csoai-site-release-1",
+        "kid": "site-release-1",
         "use": "sig"
       }
     },
@@ -26,7 +26,7 @@
         "kty": "OKP",
         "crv": "Ed25519",
         "x": "M0cuAmhx2yDNvZnnbEdTLr_PhLN6vtWyYNrjWJ31aW0",
-        "kid": "csoai-estate-chain-1",
+        "kid": "estate-chain-1",
         "use": "sig"
       }
     },
@@ -77,6 +77,18 @@
         "kid": "csoai-card-attestation-2",
         "use": "sig"
       }
+    },
+    {
+      "id": "did:web:csoai.org#route-attestation-1",
+      "type": "JsonWebKey2020",
+      "controller": "did:web:csoai.org",
+      "publicKeyJwk": {
+        "kty": "OKP",
+        "crv": "Ed25519",
+        "x": "SolrH6bODivM2S5BzMqniM3IL9yopfRO8IbXdMKWJcM",
+        "kid": "csoai-route-attestation-1",
+        "use": "sig"
+      }
     }
   ],
   "assertionMethod": [
@@ -85,7 +97,8 @@
     "did:web:csoai.org#board-attestation-1",
     "did:web:csoai.org#card-attestation-1",
     "did:web:csoai.org#gspc-board-22axis-2026",
-    "did:web:csoai.org#card-attestation-2"
+    "did:web:csoai.org#card-attestation-2",
+    "did:web:csoai.org#route-attestation-1"
   ],
   "authentication": [
     "did:web:csoai.org#site-release-1"
@@ -94,12 +107,12 @@
     {
       "id": "did:web:csoai.org#verifier",
       "type": "AttestationVerifier",
-      "serviceEndpoint": "https://councilof.ai/gspc-verify/"
+      "serviceEndpoint": "https://councilof.ai/verify"
     }
   ],
-  "_serviceNote": "The MCP measurement-server endpoint was removed 2026-08-19: its worker returned 404 and a DID document must not advertise dead services. It returns in the same commit that redeploys it.",
+  "_serviceNote": "The MCP measurement-server endpoint was removed 2026-08-19: GET on the advertised worker returns 404 and a DID document must not advertise a dead service. It returns in the same commit that redeploys a live endpoint. This apex copy now matches that rule.",
   "_keyContinuity": {
-    "note": "Two signing identities per KEY-CONTINUITY.md (binding estate note, 2026-08-16). #site-release-1 signs site deploys, release cards and agent cards (keystone-held). #estate-chain-1 signs fleet board chains and measurement cards (pod-held). Public verify surfaces label which key signed each artifact. Ed25519 today; ML-DSA-65 is roadmap, not present. #card-attestation-1 (added 2026-08-20) signs the mine's measurement-card generation (d4cb0eaa, Mac-held estate key) - the cards' actual signer, published so the 335-card chain verifies against the trust root.",
+    "note": "Three signing identities per KEY-CONTINUITY.md. #site-release-1 signs site artifacts (keystone-held). #estate-chain-1 signs fleet chains, measurement cards and boards (pod-held). #card-attestation-1 (THE BRICK, estate key d4cb0eaa, Mac-held) signs carded measurement receipts, the corrections ledger and MANIFEST cards; published 2026-08-20 after its signatures verified under the published canon (stranger-verifiable against did.json). Ed25519 today; ML-DSA-65 is roadmap, not present.",
     "superseded": [
       {
         "x": "9LQnjdwhbC8GCyc6_P2e8AhWOZNzsjsJd5T-cvs2w0I",
@@ -108,7 +121,8 @@
       }
     ]
   },
-  "_boardAttestationNote": "#board-attestation-1 signs the PUBLIC BOARD SNAPSHOT as served by the site (integrity of /api/gspc), distinct from #estate-chain-1 which signs pod measurement chains. Born and held in Cloudflare; the private half never leaves.",
-  "_gspcBoardKeyNote": "#gspc-board-22axis-2026 is the Ed25519 key that signed public/signed/gspc-board.signed.json (the 2026-09-02 freeze, now superseded) through the Coinbase cb-mpc signing protocol. Custody, corrected 2026-09-25 (C-2026-0925-01): all three additive shares sit in one directory on one host, so this is one failure domain; the share split was never performed. That the helper never assembles a whole private scalar is its design claim and has not been audited. The signature is a stock RFC 8032 signature. JWK x is the raw 32-byte public key d573a7219c0d645091e9f640cb5bbfe71429d43ac168568665a7a260d01e0d2c in base64url. Distinct from #board-attestation-1 (3KB living stamp / Pages card-sign). This fragment is published so a stranger can pin the freeze key independently of the file that carries the signature. did:web resolution of this id is https://csoai.org/.well-known/did.json — the same fragment must appear there for DID pin, not only on this councilof.ai copy.",
-  "_pqcNote": "#board-pqc-1 ABSENT (UNMEASURED). No ML-DSA public key is published in this document. Do not generate one off-keystone. ML-DSA-65 signatures are ~3.3KB and cannot live inside the 3KB card atom. Hybrid is a second receipt on root/DID, never inside the card. Ed25519 is not replaced. PQCBench is the GSPC continuity arena (csoai/gspc-asi), not a PQC signature."
+  "_boardAttestationNote": "#board-attestation-1 signs the PUBLIC BOARD SNAPSHOT as served by the site (integrity of /api/gspc), distinct from #estate-chain-1 (pod measurement chains). Born and held in Cloudflare; private half never leaves.",
+  "_gspcBoardKeyNote": "#gspc-board-22axis-2026 is the 3-party Coinbase cb-mpc Ed25519 additive key that signs public/signed/gspc-board.signed.json on councilof.ai. The private scalar never exists as a whole number. JWK x is the raw 32-byte public key d573a7219c0d645091e9f640cb5bbfe71429d43ac168568665a7a260d01e0d2c in base64url. Distinct from #board-attestation-1 (3KB living stamp). Published so a stranger can pin the freeze key at the did:web origin, independently of the file that carries the signature.",
+  "_cardAttestationNote": "#card-attestation-1 (d4cb0eaa) signs the 3KB ed25519 h3k measurement cards, the corrections ledger and the MANIFEST card chain. Private half held on the estate Mac only; never in CI, never in this repo.",
+  "_pqcNote": "#board-pqc-1 ABSENT (UNMEASURED). No ML-DSA public key is published in this document. Do not generate one off-keystone. ML-DSA-65 signatures are ~3.3KB and cannot live inside the 3KB card atom. Hybrid is a second receipt on root/DID, never inside the card. Ed25519 is not replaced. PQCBench is the GSPC continuity arena (csoai/gspc-asi), not a PQC signature. Live Pages may still omit #board-attestation-1 on assertionMethod until this repo is promoted."
 }
