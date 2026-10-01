@@ -87,5 +87,21 @@ echo "  root-ots-built ok" | tee -a "$LOG"
 # the upload, or /api/proof and MCP get_card would serve paths into the previous root. HF_TOKEN comes only from the
 # environment (streamed on stdin by the Oracle auto-land trigger); without it the gate is check-only and holds on any drift.
 HF_TOKEN=$EVTOK /usr/bin/python3 scripts/pod-loops/evidence_sync.py ${EVTOK:+--apply} --public-dir public --message "sync from councilof.ai build $(git rev-parse --short HEAD)" --receipt /workspace/ci/evidence-sync.json >/workspace/ci/evidence-sync.log 2>&1 && echo "  evidence-sync ok: $(tail -1 /workspace/ci/evidence-sync.log | cut -c1-160)" | tee -a $LOG || { echo "  evidence-sync FAILED; upload blocked" | tee -a $LOG; tail -3 /workspace/ci/evidence-sync.log | sed "s/^/    /"; exit 17; }
+# Deterministic deploy-tree receipt: bind the exact static tree handed to the sole Pages writer.
+# This does not claim dynamic/edge transforms are byte-identical; anonymous served-byte readback is separate.
+/usr/bin/python3 scripts/pod-loops/build_tree_receipt.py \
+  --root dist/client \
+  --source-commit "$(git rev-parse HEAD)" \
+  --select index.html \
+  --select root.json \
+  --select layer0-distribution.json \
+  --out /workspace/ci/deploy-tree-receipt.json \
+  >/workspace/ci/deploy-tree-receipt.stdout 2>&1 || { echo "  deploy-tree-receipt FAILED; upload blocked" | tee -a "$LOG"; tail -3 /workspace/ci/deploy-tree-receipt.stdout | sed "s/^/    /"; exit 19; }
+/usr/bin/python3 - <<'PYR' | tee -a "$LOG"
+import json
+p="/workspace/ci/deploy-tree-receipt.json"
+d=json.load(open(p))
+print(f"  deploy-tree-receipt ok: {d['file_count']} files tree={d['tree_digest']} source={d['source_commit']}")
+PYR
 npx wrangler pages deploy dist/client --project-name=councilof-ai --branch=master --commit-dirty=true >/workspace/ci/wrangler-deploy.log 2>&1 && echo "  DEPLOYED: $(grep -oE "https://[a-z0-9]+\.councilof-ai\.pages\.dev" /workspace/ci/wrangler-deploy.log | tail -1)" | tee -a $LOG || { echo "  deploy FAILED" | tee -a $LOG; tail -4 /workspace/ci/wrangler-deploy.log | sed "s/^/    /"; exit 8; }
 echo "=== done $(date -u +%FT%TZ)" | tee -a $LOG
