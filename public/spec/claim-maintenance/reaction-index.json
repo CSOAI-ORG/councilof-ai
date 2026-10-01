@@ -1,0 +1,47 @@
+{
+  "as_of": "2026-09-28T13:20:04Z",
+  "claim_ceiling": "Observation, identity, payment, settlement, delivery, execution, acceptance, and correction remain distinct states; no state is promoted without evidence from its producing boundary.",
+  "counter_evidence_packets": [],
+  "counts": {
+    "actions": {
+      "NO_REMEASUREMENT": 5,
+      "OBSERVE_ONLY": 4
+    },
+    "change_states": {
+      "CONFIRMED": 5
+    },
+    "counter_evidence_packets": 0,
+    "object_states": {
+      "MEASURED": 1,
+      "OBSERVED": 2,
+      "REPRODUCED": 4,
+      "SIGNED": 1
+    }
+  },
+  "not": [
+    "not a score or ranking",
+    "not certification or compliance status",
+    "not a finding of falsity or misconduct",
+    "not a legal-rights or trademark determination"
+  ],
+  "privacy": {
+    "rule": "a subject is DISCLOSED only when its registry_id is a LIVE row of /spec/claim-maintenance/register.json; otherwise SEALED: sealed id, claims c1..cN and atoms a1..aN by first appearance in the private source, no names, text, URLs or values",
+    "sealed_subjects_remain_sealed": true
+  },
+  "reaction_policy": {
+    "CONFIRMED": "NO_REMEASUREMENT",
+    "FAILED_CHECK": "OWNER_REVIEW",
+    "NON_CONFIRMED_CHANGE": "BOUNDED_REMEASUREMENT",
+    "OTHER_OBSERVATION": "OBSERVE_ONLY",
+    "SOURCE_READ_FAILURE": "OBSERVE_ONLY"
+  },
+  "schema": "csoai.claim-maintenance-reaction-index/0.2",
+  "source": {
+    "feed": "/claims/events/v0.1/events.jsonl",
+    "feed_bytes_sha256": "a90c509de5433c862c4ecf8d20c77cedd6a97b70b317d5e19138a135ac15a933",
+    "head": "/claims/events/v0.1/head.json",
+    "head_seq": 8,
+    "head_signature": "/claims/events/v0.1/head.signed.json",
+    "n_lines": 9
+  }
+}
