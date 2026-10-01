@@ -33,6 +33,8 @@ export const AXES_C: AxisScore[] = [
       "public MCP registry on 2026-09-22. 230 UNCHECKABLE (141 behind an auth wall), 78 UNREACHABLE, 30 with no " +
       "read-only tool and 1 with no tools are recorded and never counted. A server count, never pooled with bank-item n.",
     status: "MEASURED",
+    // Exact payload.as_of from the signed run companion. Serve/build/deploy time never refreshes it.
+    facts_as_of: "2026-09-22T05:43:05Z",
     // No separation field: there is no fleet and no leader, so no separation test is APPLICABLE.
     evidence_url: "/interop/effect-binding-server-probe-2026-09-22.signed.json",
     run_attestation: "ED25519_SIGNED",
