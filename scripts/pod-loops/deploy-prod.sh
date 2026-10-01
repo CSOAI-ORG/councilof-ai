@@ -98,5 +98,18 @@ echo "  root-ots-built ok" | tee -a "$LOG"
 # the upload, or /api/proof and MCP get_card would serve paths into the previous root. HF_TOKEN comes only from the
 # environment (streamed on stdin by the Oracle auto-land trigger); without it the gate is check-only and holds on any drift.
 HF_TOKEN=$EVTOK /usr/bin/python3 scripts/pod-loops/evidence_sync.py ${EVTOK:+--apply} --public-dir public --message "sync from councilof.ai build $(git rev-parse --short HEAD)" --receipt /workspace/ci/evidence-sync.json >/workspace/ci/evidence-sync.log 2>&1 && echo "  evidence-sync ok: $(tail -1 /workspace/ci/evidence-sync.log | cut -c1-160)" | tee -a $LOG || { echo "  evidence-sync FAILED; upload blocked" | tee -a $LOG; tail -3 /workspace/ci/evidence-sync.log | sed "s/^/    /"; exit 17; }
+# Bind the exact static tree handed to Wrangler to this source commit. This receipt is generated
+# after every build/prerender/gate mutation and immediately before upload, so a deploy log line
+# cannot be mistaken for byte provenance. The helper refuses symlinks and missing selected files.
+/usr/bin/python3 scripts/pod-loops/build_tree_receipt.py \
+  --root dist/client \
+  --source-commit "$(git rev-parse HEAD)" \
+  --select root.json \
+  --select layer0-distribution.json \
+  --select index.html \
+  --out /workspace/ci/deploy-tree-receipt.json \
+  >/workspace/ci/deploy-tree-receipt.log 2>&1 \
+  && echo "  deploy-tree-receipt ok: $(python3 -c 'import json; d=json.load(open("/workspace/ci/deploy-tree-receipt.json")); print(str(d["file_count"])+" files "+d["tree_digest"][:16]+"…")')" | tee -a $LOG \
+  || { echo "  deploy-tree-receipt FAILED; upload blocked" | tee -a $LOG; tail -4 /workspace/ci/deploy-tree-receipt.log | sed "s/^/    /"; exit 19; }
 npx wrangler pages deploy dist/client --project-name=councilof-ai --branch=master --commit-dirty=true >/workspace/ci/wrangler-deploy.log 2>&1 && echo "  DEPLOYED: $(grep -oE "https://[a-z0-9]+\.councilof-ai\.pages\.dev" /workspace/ci/wrangler-deploy.log | tail -1)" | tee -a $LOG || { echo "  deploy FAILED" | tee -a $LOG; tail -4 /workspace/ci/wrangler-deploy.log | sed "s/^/    /"; exit 8; }
 echo "=== done $(date -u +%FT%TZ)" | tee -a $LOG

@@ -5,29 +5,29 @@
     "readiness": "2026-09-15T04:25:48.658623+00:00"
   },
   "counts": {
-    "anchored": 0,
+    "anchored": 3,
     "asset_specific_x402_settled": 0,
     "deep_probed": 18,
     "indexed": 425,
     "issuer_site_registered": 425,
-    "measured": 1,
+    "measured": 3,
     "no_source_located": 0,
     "primary_source_registered": 19,
-    "prior_probe_replay_needed": 6,
+    "prior_probe_replay_needed": 5,
     "replay_identity_hold": 1,
     "replay_stage_ready": 9,
-    "rooted": 1,
-    "signed": 1,
-    "witnessed": 1
+    "rooted": 3,
+    "signed": 3,
+    "witnessed": 3
   },
   "kind": "executable-evidence-backlog",
   "next_action_counts": {
     "BUILD_REPRODUCIBLE_CHAIN_MEASUREMENT": 1,
+    "PUBLISH_ASSET_SPECIFIC_PROTOCOL_DOORS": 3,
     "RECONCILE_REPLAY_IDENTITY": 1,
-    "REPLAY_EXISTING_MEASUREMENT_AT_RECORDED_HEIGHT": 6,
-    "REVIEW_ISSUER_SITE_FOR_ATTESTATION": 406,
+    "REPLAY_EXISTING_MEASUREMENT_AT_RECORDED_HEIGHT": 5,
+    "REVIEW_ISSUER_SITE_FOR_ATTESTATION": 405,
     "RUN_PRIMARY_SOURCE_DEEP_PROBE": 1,
-    "SIGN_ROOT_WITNESS_ANCHOR": 1,
     "STAGE_REPLAYED_MEASUREMENT": 9
   },
   "population": 425,
@@ -45,7 +45,7 @@
         "supply": "one reproducible reader per reported chain at an exact block or ledger"
       },
       "name": "USD Coin",
-      "next_action": "REPLAY_EXISTING_MEASUREMENT_AT_RECORDED_HEIGHT",
+      "next_action": "PUBLISH_ASSET_SPECIFIC_PROTOCOL_DOORS",
       "primary_source": "https://www.circle.com/en/transparency",
       "priority_score": 2072.263207,
       "rank": 1,
@@ -223,19 +223,19 @@
         "verification_state": "MANUALLY_REGISTERED_UNVERIFIED"
       },
       "states": {
-        "anchored": false,
+        "anchored": true,
         "asset_specific_x402_settled": false,
         "deep_probe": "DEEP_PROBED",
         "indexed": true,
         "issuer_site_registered": true,
-        "measured": false,
+        "measured": true,
         "primary_source_registered": true,
-        "prior_probe_replay_needed": true,
+        "prior_probe_replay_needed": false,
         "replay_identity_hold": false,
         "replay_stage_ready": false,
-        "rooted": false,
-        "signed": false,
-        "witnessed": false
+        "rooted": true,
+        "signed": true,
+        "witnessed": true
       },
       "symbol": "USDC"
     },
@@ -1854,7 +1854,7 @@
         "supply": "one reproducible reader per reported chain at an exact block or ledger"
       },
       "name": "Ripple USD",
-      "next_action": "SIGN_ROOT_WITNESS_ANCHOR",
+      "next_action": "PUBLISH_ASSET_SPECIFIC_PROTOCOL_DOORS",
       "primary_source": "https://ripple.com/stablecoin/",
       "priority_score": 240.717352,
       "rank": 21,
@@ -1879,7 +1879,7 @@
         "verification_state": "MANUALLY_REGISTERED_UNVERIFIED"
       },
       "states": {
-        "anchored": false,
+        "anchored": true,
         "asset_specific_x402_settled": false,
         "deep_probe": "DEEP_PROBED",
         "indexed": true,
@@ -14874,7 +14874,7 @@
         "supply": "one reproducible reader per reported chain at an exact block or ledger"
       },
       "name": "EUR CoinVertible",
-      "next_action": "REVIEW_ISSUER_SITE_FOR_ATTESTATION",
+      "next_action": "PUBLISH_ASSET_SPECIFIC_PROTOCOL_DOORS",
       "primary_source": null,
       "priority_score": 40,
       "rank": 251,
@@ -14901,19 +14901,19 @@
         "verification_state": "DIRECTORY_LEAD_UNVERIFIED"
       },
       "states": {
-        "anchored": false,
+        "anchored": true,
         "asset_specific_x402_settled": false,
         "deep_probe": "NOT_SCHEDULED",
         "indexed": true,
         "issuer_site_registered": true,
-        "measured": false,
+        "measured": true,
         "primary_source_registered": false,
         "prior_probe_replay_needed": false,
         "replay_identity_hold": false,
         "replay_stage_ready": false,
-        "rooted": false,
-        "signed": false,
-        "witnessed": false
+        "rooted": true,
+        "signed": true,
+        "witnessed": true
       },
       "symbol": "EURCV"
     },
@@ -24207,7 +24207,7 @@
   "signals": {
     "deep_probed_missing_auditor": 15,
     "deep_probed_missing_report_date": 17,
-    "issuer_site_only_pending_review": 406,
+    "issuer_site_only_pending_review": 405,
     "no_source_located": 0,
     "note": "Signals are computed from committed artifacts by this builder; they are not hand-typed.",
     "stale_attestation_reports": 1,
