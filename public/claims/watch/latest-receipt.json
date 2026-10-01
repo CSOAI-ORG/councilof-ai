@@ -1,0 +1,351 @@
+{
+ "schema": "csoai.claim-watch-receipt/0.1",
+ "run_id": "20260928T023123Z",
+ "ran_at_utc": "2026-09-28T02:32:30Z",
+ "cadence": "weekly",
+ "registry": null,
+ "registry_sha256": null,
+ "registries_watched": [
+  {
+   "registry": "/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+   "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
+   "sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+   "supersedes": "claimreg-ai-assurance-and-settlement-2026-09-23"
+  },
+  {
+   "registry": "/claims/claimreg-hiring-platforms-2026-09-24-rev2.json",
+   "registry_id": "claimreg-hiring-platforms-2026-09-24-rev2",
+   "sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+   "supersedes": "claimreg-hiring-platforms-2026-09-24"
+  },
+  {
+   "registry": "/claims/claimreg-ondo-chainlink-2026-09-22-rev2.json",
+   "registry_id": "claimreg-ondo-chainlink-2026-09-22-rev2",
+   "sha256": "4c8efe065cffbba0c7674907ddb882eb1d4144af543e263a16ac318b0cf2ca59",
+   "supersedes": "claimreg-ondo-chainlink-2026-09-22"
+  }
+ ],
+ "registry_note": "3 registries on disk are superseded by nothing. They are separate chains over separate subjects, so no single one is 'the' registry; all of them are named above and each is pinned by its digest. The single-registry field stays null because filling it would mean picking one",
+ "claims_touched": [
+  "CL-1",
+  "CL-3",
+  "CL-4",
+  "CL-5",
+  "ON-1",
+  "ON-2"
+ ],
+ "states": {
+  "CL-1": "CLAIM_MEASURED",
+  "CL-3": "CLAIM_MEASURED",
+  "CL-4": "BASELINE_RECORDED",
+  "CL-5": "CLAIM_MEASURED",
+  "ON-1": "BASELINE_RECORDED",
+  "ON-2": "BASELINE_RECORDED"
+ },
+ "artifacts": {
+  "CL-1.json": "aaee3db550a3fedd051b90e36584b8429ba1c6f1def7872b2496a84942bd364a",
+  "CL-3.json": "c201cae78651bab2e974e21803212dd688cf6e7a2d9510147ec39e0258619a57",
+  "CL-4.json": "20c2450c67e38ac5714764ef05530c0f99e68034da7369ef75ee90ec7c5ad2cf",
+  "CL-5.json": "f8782dec50576d7e532257fd6d0a1dc357b76b7f28115ad0d7a9806b51a28135",
+  "ON-1.json": "76f483de402f92879375b2b037a06d86f90715a8a8556f450f95184054a66bca",
+  "ON-2.json": "3574d864787d3d6801492039c48bdf4131bfb715b6324edbb797c62c37c640b1"
+ },
+ "registry_reread": {
+  "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json": {
+   "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
+   "claims_read": 62,
+   "digests_that_moved": 14,
+   "unreachable_this_run": 0,
+   "no_comparable_recorded_digest": 0,
+   "error": null
+  },
+  "claimreg-hiring-platforms-2026-09-24-rev2.json": {
+   "registry_id": "claimreg-hiring-platforms-2026-09-24-rev2",
+   "claims_read": 29,
+   "digests_that_moved": 4,
+   "unreachable_this_run": 0,
+   "no_comparable_recorded_digest": 0,
+   "error": null
+  },
+  "claimreg-ondo-chainlink-2026-09-22-rev2.json": {
+   "registry_id": "claimreg-ondo-chainlink-2026-09-22-rev2",
+   "claims_read": 8,
+   "digests_that_moved": 0,
+   "unreachable_this_run": 1,
+   "no_comparable_recorded_digest": 7,
+   "error": null
+  }
+ },
+ "reread_extractor": "scripts/claims/reread.mjs, which recomputes each recorded digest with the extractor that produced it (the one its artifact names, or csoai-visible-text/1 when it names none), imported from the reference implementation named by the specification. Like with like, so a digest difference is a difference in the source and never a difference between two readers (spec v0.2 6.3.1)",
+ "observed_changes_requiring_review": [
+  {
+   "claim": "CL-5",
+   "kind": "interval_past_a_feed's_own_declared_heartbeat",
+   "detail": {
+    "beyond_grace": 2,
+    "largest_single_excess_s": 90,
+    "of_intervals": 363
+   },
+   "note": "intervals in this window ran past the feed's own declared heartbeat by more than the stated grace. This is an observed change requiring review over this window; it is not an outage, a failure or an allegation"
+  },
+  {
+   "claim": "CR-1",
+   "kind": "source_digest_differs_from_the_recorded_read",
+   "detail": {
+    "subject": "Credo AI",
+    "url": "https://www.credo.ai/",
+    "previous_hash": "beaeec8efed1798c9f783f5b88684837b6c69a5520b7923ab1c990d861e69a98",
+    "current_hash": "35c84c64338bd63892348a8b17dfb7215a92facccd75365f952b88c232605298",
+    "covers": "visible-text",
+    "extractor": "csoai-visible-text/2"
+   },
+   "note": "the bytes at this URL differ from the bytes recorded at the previous read. That is the entire content of this statement. There are many ordinary reasons a page changes and this loop holds no view about which applies"
+  },
+  {
+   "claim": "CR-2",
+   "kind": "source_digest_differs_from_the_recorded_read",
+   "detail": {
+    "subject": "Credo AI",
+    "url": "https://www.credo.ai/",
+    "previous_hash": "beaeec8efed1798c9f783f5b88684837b6c69a5520b7923ab1c990d861e69a98",
+    "current_hash": "35c84c64338bd63892348a8b17dfb7215a92facccd75365f952b88c232605298",
+    "covers": "visible-text",
+    "extractor": "csoai-visible-text/2"
+   },
+   "note": "the bytes at this URL differ from the bytes recorded at the previous read. That is the entire content of this statement. There are many ordinary reasons a page changes and this loop holds no view about which applies"
+  },
+  {
+   "claim": "CR-3",
+   "kind": "source_digest_differs_from_the_recorded_read",
+   "detail": {
+    "subject": "Credo AI",
+    "url": "https://www.credo.ai/",
+    "previous_hash": "beaeec8efed1798c9f783f5b88684837b6c69a5520b7923ab1c990d861e69a98",
+    "current_hash": "35c84c64338bd63892348a8b17dfb7215a92facccd75365f952b88c232605298",
+    "covers": "visible-text",
+    "extractor": "csoai-visible-text/2"
+   },
+   "note": "the bytes at this URL differ from the bytes recorded at the previous read. That is the entire content of this statement. There are many ordinary reasons a page changes and this loop holds no view about which applies"
+  },
+  {
+   "claim": "AR-1",
+   "kind": "source_digest_differs_from_the_recorded_read",
+   "detail": {
+    "subject": "Armilla",
+    "url": "https://www.armilla.ai/",
+    "previous_hash": "812c17b7a13a87e31855ce2c228937157466f010459684c6e7164aa9cfbfd8ce",
+    "current_hash": "b138259a31319c558e864507f5e2db6df8439b7bec4d1379cde8d10338f586db",
+    "covers": "visible-text",
+    "extractor": "csoai-visible-text/2"
+   },
+   "note": "the bytes at this URL differ from the bytes recorded at the previous read. That is the entire content of this statement. There are many ordinary reasons a page changes and this loop holds no view about which applies"
+  },
+  {
+   "claim": "AR-2",
+   "kind": "source_digest_differs_from_the_recorded_read",
+   "detail": {
+    "subject": "Armilla",
+    "url": "https://www.armilla.ai/",
+    "previous_hash": "812c17b7a13a87e31855ce2c228937157466f010459684c6e7164aa9cfbfd8ce",
+    "current_hash": "b138259a31319c558e864507f5e2db6df8439b7bec4d1379cde8d10338f586db",
+    "covers": "visible-text",
+    "extractor": "csoai-visible-text/2"
+   },
+   "note": "the bytes at this URL differ from the bytes recorded at the previous read. That is the entire content of this statement. There are many ordinary reasons a page changes and this loop holds no view about which applies"
+  },
+  {
+   "claim": "LF-1",
+   "kind": "source_digest_differs_from_the_recorded_read",
+   "detail": {
+    "subject": "Langfuse",
+    "url": "https://langfuse.com/",
+    "previous_hash": "c43a572e146b9ba8a3b32ffcc80542bd2117740249a1f3e471c8bab24fa28143",
+    "current_hash": "f82ad37139b4fce6c0752765e8e39a61604f589502c68707022f330d035d2bca",
+    "covers": "visible-text",
+    "extractor": "csoai-visible-text/2"
+   },
+   "note": "the bytes at this URL differ from the bytes recorded at the previous read. That is the entire content of this statement. There are many ordinary reasons a page changes and this loop holds no view about which applies"
+  },
+  {
+   "claim": "LF-2",
+   "kind": "source_digest_differs_from_the_recorded_read",
+   "detail": {
+    "subject": "Langfuse",
+    "url": "https://langfuse.com/",
+    "previous_hash": "c43a572e146b9ba8a3b32ffcc80542bd2117740249a1f3e471c8bab24fa28143",
+    "current_hash": "f82ad37139b4fce6c0752765e8e39a61604f589502c68707022f330d035d2bca",
+    "covers": "visible-text",
+    "extractor": "csoai-visible-text/2"
+   },
+   "note": "the bytes at this URL differ from the bytes recorded at the previous read. That is the entire content of this statement. There are many ordinary reasons a page changes and this loop holds no view about which applies"
+  },
+  {
+   "claim": "LF-3",
+   "kind": "source_digest_differs_from_the_recorded_read",
+   "detail": {
+    "subject": "Langfuse",
+    "url": "https://langfuse.com/",
+    "previous_hash": "c43a572e146b9ba8a3b32ffcc80542bd2117740249a1f3e471c8bab24fa28143",
+    "current_hash": "f82ad37139b4fce6c0752765e8e39a61604f589502c68707022f330d035d2bca",
+    "covers": "visible-text",
+    "extractor": "csoai-visible-text/2"
+   },
+   "note": "the bytes at this URL differ from the bytes recorded at the previous read. That is the entire content of this statement. There are many ordinary reasons a page changes and this loop holds no view about which applies"
+  },
+  {
+   "claim": "LF-4",
+   "kind": "source_digest_differs_from_the_recorded_read",
+   "detail": {
+    "subject": "Langfuse",
+    "url": "https://langfuse.com/",
+    "previous_hash": "c43a572e146b9ba8a3b32ffcc80542bd2117740249a1f3e471c8bab24fa28143",
+    "current_hash": "f82ad37139b4fce6c0752765e8e39a61604f589502c68707022f330d035d2bca",
+    "covers": "visible-text",
+    "extractor": "csoai-visible-text/2"
+   },
+   "note": "the bytes at this URL differ from the bytes recorded at the previous read. That is the entire content of this statement. There are many ordinary reasons a page changes and this loop holds no view about which applies"
+  },
+  {
+   "claim": "LF-5",
+   "kind": "source_digest_differs_from_the_recorded_read",
+   "detail": {
+    "subject": "Langfuse",
+    "url": "https://langfuse.com/",
+    "previous_hash": "c43a572e146b9ba8a3b32ffcc80542bd2117740249a1f3e471c8bab24fa28143",
+    "current_hash": "f82ad37139b4fce6c0752765e8e39a61604f589502c68707022f330d035d2bca",
+    "covers": "visible-text",
+    "extractor": "csoai-visible-text/2"
+   },
+   "note": "the bytes at this URL differ from the bytes recorded at the previous read. That is the entire content of this statement. There are many ordinary reasons a page changes and this loop holds no view about which applies"
+  },
+  {
+   "claim": "CS-1",
+   "kind": "source_digest_differs_from_the_recorded_read",
+   "detail": {
+    "subject": "Council of AI (CSOAI Ltd)",
+    "url": "https://councilof.ai/",
+    "previous_hash": "726456f620ba41446ab450013fcf6b658660f7c69c9cb7e85a9eb291a065340f",
+    "current_hash": "6a19b185e4f8b267c827fa0c9ed53b2d9f63e0ebe0edb31034d10c92c1236c2f",
+    "covers": "visible-text",
+    "extractor": "csoai-visible-text/2"
+   },
+   "note": "the bytes at this URL differ from the bytes recorded at the previous read. That is the entire content of this statement. There are many ordinary reasons a page changes and this loop holds no view about which applies"
+  },
+  {
+   "claim": "CS-2",
+   "kind": "source_digest_differs_from_the_recorded_read",
+   "detail": {
+    "subject": "Council of AI (CSOAI Ltd)",
+    "url": "https://councilof.ai/",
+    "previous_hash": "726456f620ba41446ab450013fcf6b658660f7c69c9cb7e85a9eb291a065340f",
+    "current_hash": "6a19b185e4f8b267c827fa0c9ed53b2d9f63e0ebe0edb31034d10c92c1236c2f",
+    "covers": "visible-text",
+    "extractor": "csoai-visible-text/2"
+   },
+   "note": "the bytes at this URL differ from the bytes recorded at the previous read. That is the entire content of this statement. There are many ordinary reasons a page changes and this loop holds no view about which applies"
+  },
+  {
+   "claim": "CS-3",
+   "kind": "source_digest_differs_from_the_recorded_read",
+   "detail": {
+    "subject": "Council of AI (CSOAI Ltd)",
+    "url": "https://councilof.ai/",
+    "previous_hash": "726456f620ba41446ab450013fcf6b658660f7c69c9cb7e85a9eb291a065340f",
+    "current_hash": "6a19b185e4f8b267c827fa0c9ed53b2d9f63e0ebe0edb31034d10c92c1236c2f",
+    "covers": "visible-text",
+    "extractor": "csoai-visible-text/2"
+   },
+   "note": "the bytes at this URL differ from the bytes recorded at the previous read. That is the entire content of this statement. There are many ordinary reasons a page changes and this loop holds no view about which applies"
+  },
+  {
+   "claim": "CS-4",
+   "kind": "source_digest_differs_from_the_recorded_read",
+   "detail": {
+    "subject": "Council of AI (CSOAI Ltd)",
+    "url": "https://councilof.ai/",
+    "previous_hash": "726456f620ba41446ab450013fcf6b658660f7c69c9cb7e85a9eb291a065340f",
+    "current_hash": "6a19b185e4f8b267c827fa0c9ed53b2d9f63e0ebe0edb31034d10c92c1236c2f",
+    "covers": "visible-text",
+    "extractor": "csoai-visible-text/2"
+   },
+   "note": "the bytes at this URL differ from the bytes recorded at the previous read. That is the entire content of this statement. There are many ordinary reasons a page changes and this loop holds no view about which applies"
+  },
+  {
+   "claim": "EC-1",
+   "kind": "dated_claim_has_reached_its_resolution_date",
+   "detail": {
+    "claim_id": "EC-1",
+    "subject": "European Central Bank (Pontes)",
+    "resolution_date": "2026-09-21",
+    "state_at_registration": "UNMEASURED",
+    "claim_verbatim": "The initial launch of Pontes took place 21 September 2026, with subsequent further improvements to be introduced step by step."
+   },
+   "note": "this claim carried a date on which public evidence can settle it, and that date has arrived. Raising it is a prompt for a person to look. It is not a finding, it is not a measurement, and it carries no view about the outcome"
+  },
+  {
+   "claim": "RH-3",
+   "kind": "source_digest_differs_from_the_recorded_read",
+   "detail": {
+    "subject": "RentAHuman",
+    "url": "https://rentahuman.ai/docs",
+    "previous_hash": "99d3e6b97703ee188dfeaec9cb44f52e97e5b6f25c9efec1b2e8ff7ba5afd109",
+    "current_hash": "3f81d109bd83eff5dd0550f5fdcc641d8dc28d22a711ce0aa3e33e7a851a42ee",
+    "covers": "visible-text",
+    "extractor": "csoai-visible-text/2"
+   },
+   "note": "the bytes at this URL differ from the bytes recorded at the previous read. That is the entire content of this statement. There are many ordinary reasons a page changes and this loop holds no view about which applies"
+  },
+  {
+   "claim": "IN-1",
+   "kind": "source_digest_differs_from_the_recorded_read",
+   "detail": {
+    "subject": "Invoke",
+    "url": "https://invoke.nanocorp.app/",
+    "previous_hash": "7ab129fe7ef883997cb5528c5a5871d41ca30b0d3275cdfdd9ef8bac85626be5",
+    "current_hash": "4c1c03a7133e4330aa232c90392876554ca880b7ba4eeb4f0e2803ce2dc18d9f",
+    "covers": "visible-text",
+    "extractor": "csoai-visible-text/2"
+   },
+   "note": "the bytes at this URL differ from the bytes recorded at the previous read. That is the entire content of this statement. There are many ordinary reasons a page changes and this loop holds no view about which applies"
+  },
+  {
+   "claim": "IN-2",
+   "kind": "source_digest_differs_from_the_recorded_read",
+   "detail": {
+    "subject": "Invoke",
+    "url": "https://invoke.nanocorp.app/",
+    "previous_hash": "7ab129fe7ef883997cb5528c5a5871d41ca30b0d3275cdfdd9ef8bac85626be5",
+    "current_hash": "4c1c03a7133e4330aa232c90392876554ca880b7ba4eeb4f0e2803ce2dc18d9f",
+    "covers": "visible-text",
+    "extractor": "csoai-visible-text/2"
+   },
+   "note": "the bytes at this URL differ from the bytes recorded at the previous read. That is the entire content of this statement. There are many ordinary reasons a page changes and this loop holds no view about which applies"
+  },
+  {
+   "claim": "IN-5",
+   "kind": "source_digest_differs_from_the_recorded_read",
+   "detail": {
+    "subject": "Invoke",
+    "url": "https://invoke.nanocorp.app/for-agents",
+    "previous_hash": "f884f2743c4ac50b31aa5f0e6929915801db69252ca666982b2c7f51b5a781c3",
+    "current_hash": "a1408e5a36afc4f4b9c637316329bb1f39df6f8e9ed2d24ecee5527fa63c1ea9",
+    "covers": "visible-text",
+    "extractor": "csoai-visible-text/2"
+   },
+   "note": "the bytes at this URL differ from the bytes recorded at the previous read. That is the entire content of this statement. There are many ordinary reasons a page changes and this loop holds no view about which applies"
+  },
+  {
+   "claim": "CL-3",
+   "kind": "source_not_reachable_this_run",
+   "detail": {
+    "subject": "chainlink",
+    "url": "https://api.llama.fi/oracles",
+    "http_status": 402,
+    "reason": "HTTP 402"
+   },
+   "note": "this reader could not obtain the page on this run, with the status recorded. The absence of a read is recorded as an event rather than as nothing (spec 1.1); it is not an absence and not a statement about the subject"
+  }
+ ],
+ "observed_changes_count": 21,
+ "discipline": "an observed change is a prompt for a human to look. This loop makes no allegation, sends nothing to any party named in the registry, and never edits a published file"
+}

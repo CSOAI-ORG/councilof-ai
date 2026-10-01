@@ -1,7 +1,7 @@
 {
   "schema": "csoai.claim-maintenance.register/0.1",
   "title": "Claim maintenance register — the subjects Council of AI maintains public claims on",
-  "as_of": "2026-09-25T11:08:49Z",
+  "as_of": "2026-09-28T04:23:29Z",
   "specification": "https://councilof.ai/spec/claim-maintenance/v0.2/",
   "specification_licence": "CC0-1.0",
   "maintainer": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
@@ -25,8 +25,8 @@
   "right_of_reply": "A defect in any record here is a defect in this register. Report it to nicholas@csoai.org; corrections are published at https://councilof.ai/api/corrections.",
   "totals": {
     "registries": 3,
-    "registry_files_on_disk": 6,
-    "registries_superseded": 3,
+    "registry_files_on_disk": 7,
+    "registries_superseded": 4,
     "subjects": 28,
     "claims": 99,
     "by_state": {
@@ -709,16 +709,16 @@
         "UNMEASURED": 1,
         "UNCHECKABLE": 0
       },
-      "first_captured": "2026-09-22T00:00:00Z",
+      "first_captured": "2026-09-28T00:00:00Z",
       "first_captured_basis": "registry.created_utc",
-      "last_read": "2026-09-22T00:00:00Z",
+      "last_read": "2026-09-28T00:00:00Z",
       "last_read_basis": "registry.created_utc",
       "next_scheduled_read": null,
       "next_scheduled_read_state": "UNSCHEDULED",
-      "registry_id": "claimreg-ondo-chainlink-2026-09-22-rev2",
-      "registry_url": "https://councilof.ai/claims/claimreg-ondo-chainlink-2026-09-22-rev2.json",
+      "registry_id": "claimreg-ondo-chainlink-maintenance-20260928T023900Z",
+      "registry_url": "https://councilof.ai/claims/claimreg-ondo-chainlink-maintenance-20260928T023900Z.json",
       "registry_schema": "csoai.claim-registry/0.2",
-      "timestamp_receipt": "https://councilof.ai/claims/claimreg-ondo-chainlink-2026-09-22-rev2.json.ots",
+      "timestamp_receipt": "https://councilof.ai/claims/claimreg-ondo-chainlink-maintenance-20260928T023900Z.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 0,
       "claims_without_a_specification_state": 0
@@ -790,16 +790,16 @@
         "UNMEASURED": 1,
         "UNCHECKABLE": 0
       },
-      "first_captured": "2026-09-22T00:00:00Z",
+      "first_captured": "2026-09-28T00:00:00Z",
       "first_captured_basis": "registry.created_utc",
-      "last_read": "2026-09-22T00:00:00Z",
+      "last_read": "2026-09-28T00:00:00Z",
       "last_read_basis": "registry.created_utc",
       "next_scheduled_read": null,
       "next_scheduled_read_state": "UNSCHEDULED",
-      "registry_id": "claimreg-ondo-chainlink-2026-09-22-rev2",
-      "registry_url": "https://councilof.ai/claims/claimreg-ondo-chainlink-2026-09-22-rev2.json",
+      "registry_id": "claimreg-ondo-chainlink-maintenance-20260928T023900Z",
+      "registry_url": "https://councilof.ai/claims/claimreg-ondo-chainlink-maintenance-20260928T023900Z.json",
       "registry_schema": "csoai.claim-registry/0.2",
-      "timestamp_receipt": "https://councilof.ai/claims/claimreg-ondo-chainlink-2026-09-22-rev2.json.ots",
+      "timestamp_receipt": "https://councilof.ai/claims/claimreg-ondo-chainlink-maintenance-20260928T023900Z.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 0,
       "claims_without_a_specification_state": 0
@@ -820,6 +820,10 @@
     },
     {
       "file": "claimreg-ondo-chainlink-2026-09-22-rev2.signed.json",
+      "schema": "csoai.signed-run/0.1"
+    },
+    {
+      "file": "claimreg-ondo-chainlink-maintenance-20260928T023900Z.signed.json",
       "schema": "csoai.signed-run/0.1"
     }
   ],
@@ -885,7 +889,10 @@
       "claims": 29
     },
     {
-      "status": "LIVE",
+      "status": "SUPERSEDED",
+      "superseded_by": "claimreg-ondo-chainlink-maintenance-20260928T023900Z",
+      "file_sha256": "4c8efe065cffbba0c7674907ddb882eb1d4144af543e263a16ac318b0cf2ca59",
+      "supersession_sha256_matches": true,
       "registry_id": "claimreg-ondo-chainlink-2026-09-22-rev2",
       "url": "https://councilof.ai/claims/claimreg-ondo-chainlink-2026-09-22-rev2.json",
       "schema": "csoai.claim-registry/0.2",
@@ -912,6 +919,20 @@
       "signature_binding": "none",
       "subjects": 2,
       "claims": 8
+    },
+    {
+      "status": "LIVE",
+      "registry_id": "claimreg-ondo-chainlink-maintenance-20260928T023900Z",
+      "url": "https://councilof.ai/claims/claimreg-ondo-chainlink-maintenance-20260928T023900Z.json",
+      "schema": "csoai.claim-registry/0.2",
+      "created": "2026-09-28T00:00:00Z",
+      "signature_state_verbatim": "SIGNED BY SIDECAR — the signature is over these bytes, not inside them. See /claims/claimreg-ondo-chainlink-maintenance-20260928T023900Z.signed.json, which pins this file by sha256 and carries the Ed25519 signature by did:web:csoai.org#board-attestation-1. A signature proves these bytes were signed at that time; it grades nothing and certifies nobody.",
+      "signed": true,
+      "signature_binding": "sidecar",
+      "signature_sidecar_url": "https://councilof.ai/claims/claimreg-ondo-chainlink-maintenance-20260928T023900Z.signed.json",
+      "sidecar_pin_verified": true,
+      "subjects": 2,
+      "claims": 8
     }
   ],
   "does_not_prove": [
@@ -921,5 +942,5 @@
     "that a superseded registry was wrong; it was replaced, its bytes are unchanged, and it is still served at its own URL",
     "that a timestamp receipt is anchored in a block; a receipt file is submitted, not confirmed, until its upgrade is verified"
   ],
-  "register_digest": "b6212a8da5550ce2b0443ab20416156cf5ed4746115e74aa4079861a9f0b8a6a"
+  "register_digest": "c7943cada6f3ecdd197b90f917d3568d0bf06cd076ebc97b50e6f6451217056e"
 }
