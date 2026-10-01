@@ -10,7 +10,7 @@ import shutil
 import subprocess
 
 MARKER = '# CSOAI BUSINESS OBSERVER'
-FILES = ('observe.py', 'calendar.json', 'test_observe.py', 'install.py', 'README.md', 'indexes.py', 'index_reader.py')
+FILES = ('observe.py', 'calendar.json', 'test_observe.py', 'install.py', 'README.md', 'indexes.py', 'index_reader.py', 'worker_quality_report.py', 'worker_quality_bridge.py', 'test_worker_quality_report.py', 'test_worker_quality_integration.py')
 
 
 def crontab():

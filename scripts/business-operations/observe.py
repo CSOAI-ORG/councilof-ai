@@ -14,6 +14,7 @@ import shutil
 import tempfile
 import urllib.request
 import urllib.error
+import worker_quality_bridge
 
 UTC = timezone.utc
 MAX_BYTES = 4 * 1024 * 1024
@@ -206,6 +207,12 @@ def run(state, config, mill=False, force_sources=False):
             alerts.append({'id': 'mill:degraded', 'kind': 'service', 'detail': health.get('state', health.get('status'))})
     else:
         disk_metrics = None
+    quality = None
+    if mill:
+        quality_detail, quality = worker_quality_bridge.collect()
+        write_json(state / 'raw' / 'worker-quality.json', quality_detail)
+        for code in quality['alerts']:
+            alerts.append({'id': 'worker-quality:' + code, 'kind': 'measurement-quality'})
     sources_path = state / 'sources.json'
     sources = json.loads(sources_path.read_text()) if sources_path.exists() else {}
     attempted = sources.get('attempted_at')
@@ -246,6 +253,7 @@ def run(state, config, mill=False, force_sources=False):
                 'gspc': {'measured_on': gspc.get('measured_on'), 'totals': gspc.get('totals'), 'freshness_verified': False},
                 'hub_cards': {'totals': hub.get('totals'), 'read_so_far': hub.get('read_so_far'), 'as_of': hub.get('as_of'), 'signature_verified': False},
                 'mill_health': observations.get('mill_health', {}).get('data'),
+                'worker_quality': quality,
                 'publication_pipeline': pipeline,
                 'local_model_count': len(models) if mill else None,
                 'indexes': indexes,
@@ -270,6 +278,17 @@ def run(state, config, mill=False, force_sources=False):
              'Repeat buyers, ARR, retention and gross margin: unmeasured.', '',
              '## Requires attention', '']
     lines += ['- ' + item['id'] + ': ' + str(item.get('detail', 'inspect latest.json and raw observations')) for item in alerts]
+    if quality is not None:
+        qcounts = quality.get('quality_counts')
+        lines += ['', '## Worker output quality', '',
+                  'Quality state: ' + quality['state'],
+                  'Verified run records: ' + str(quality.get('verified_run_records')),
+                  'Fully graded candidates: ' + str(qcounts.get('FULLY_GRADED_CANDIDATE', 0) if qcounts is not None else None),
+                  'Partly graded candidates: ' + str(qcounts.get('PARTLY_GRADED_CANDIDATE', 0) if qcounts is not None else None),
+                  'Legacy candidate hash records requiring review: ' + str(quality.get('legacy_candidate_hash_records')),
+                  'No graded output: ' + str(qcounts.get('NO_GRADED_OUTPUT', 0) if qcounts is not None else None),
+                  'Admission and publication: not established by this compute readback.',
+                  'This report is refreshed by the existing observer schedule; it does not start model jobs.']
     lines += ['', '## Verified calendar; external actions remain unsent', '']
     lines += ['- ' + item['date'] + ': ' + item['title'] + ' — ' + item['state'] + ' — ' + item['url'] for item in events]
     lines += ['', 'Measurement, not certification. API observations are not independent chain verification.']
