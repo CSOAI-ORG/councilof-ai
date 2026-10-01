@@ -5,7 +5,7 @@
     "readiness": "2026-09-15T04:25:48.658623+00:00"
   },
   "counts": {
-    "anchored": 0,
+    "anchored": 3,
     "asset_specific_x402_settled": 0,
     "deep_probed": 18,
     "indexed": 425,
@@ -23,11 +23,11 @@
   "kind": "executable-evidence-backlog",
   "next_action_counts": {
     "BUILD_REPRODUCIBLE_CHAIN_MEASUREMENT": 1,
+    "PUBLISH_ASSET_SPECIFIC_PROTOCOL_DOORS": 3,
     "RECONCILE_REPLAY_IDENTITY": 1,
     "REPLAY_EXISTING_MEASUREMENT_AT_RECORDED_HEIGHT": 5,
     "REVIEW_ISSUER_SITE_FOR_ATTESTATION": 405,
     "RUN_PRIMARY_SOURCE_DEEP_PROBE": 1,
-    "SIGN_ROOT_WITNESS_ANCHOR": 3,
     "STAGE_REPLAYED_MEASUREMENT": 9
   },
   "population": 425,
@@ -45,7 +45,7 @@
         "supply": "one reproducible reader per reported chain at an exact block or ledger"
       },
       "name": "USD Coin",
-      "next_action": "SIGN_ROOT_WITNESS_ANCHOR",
+      "next_action": "PUBLISH_ASSET_SPECIFIC_PROTOCOL_DOORS",
       "primary_source": "https://www.circle.com/en/transparency",
       "priority_score": 2072.263207,
       "rank": 1,
@@ -223,7 +223,7 @@
         "verification_state": "MANUALLY_REGISTERED_UNVERIFIED"
       },
       "states": {
-        "anchored": false,
+        "anchored": true,
         "asset_specific_x402_settled": false,
         "deep_probe": "DEEP_PROBED",
         "indexed": true,
@@ -1854,7 +1854,7 @@
         "supply": "one reproducible reader per reported chain at an exact block or ledger"
       },
       "name": "Ripple USD",
-      "next_action": "SIGN_ROOT_WITNESS_ANCHOR",
+      "next_action": "PUBLISH_ASSET_SPECIFIC_PROTOCOL_DOORS",
       "primary_source": "https://ripple.com/stablecoin/",
       "priority_score": 240.717352,
       "rank": 21,
@@ -1879,7 +1879,7 @@
         "verification_state": "MANUALLY_REGISTERED_UNVERIFIED"
       },
       "states": {
-        "anchored": false,
+        "anchored": true,
         "asset_specific_x402_settled": false,
         "deep_probe": "DEEP_PROBED",
         "indexed": true,
@@ -14874,7 +14874,7 @@
         "supply": "one reproducible reader per reported chain at an exact block or ledger"
       },
       "name": "EUR CoinVertible",
-      "next_action": "SIGN_ROOT_WITNESS_ANCHOR",
+      "next_action": "PUBLISH_ASSET_SPECIFIC_PROTOCOL_DOORS",
       "primary_source": null,
       "priority_score": 40,
       "rank": 251,
@@ -14901,7 +14901,7 @@
         "verification_state": "DIRECTORY_LEAD_UNVERIFIED"
       },
       "states": {
-        "anchored": false,
+        "anchored": true,
         "asset_specific_x402_settled": false,
         "deep_probe": "NOT_SCHEDULED",
         "indexed": true,
