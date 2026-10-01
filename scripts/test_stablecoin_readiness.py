@@ -12,6 +12,7 @@ from build_stablecoin_readiness import (
     find_index_commitment,
     index_commitment_state,
     measured_asset_anchor_state,
+    rooted_xrpl_asset_measurements,
     validate,
 )
 
@@ -24,8 +25,13 @@ class StablecoinReadinessTruthTest(unittest.TestCase):
     def test_authoritative_coverage(self) -> None:
         validate(self.document)
         self.assertEqual(425, self.document["coverage"]["indexed_assets"])
-        self.assertEqual(1, self.document["coverage"]["deeply_measured_assets"])
-        self.assertEqual(424, self.document["coverage"]["unmeasured_assets"])
+        source_index = json.loads((Path(".") / "public/interop/stablecoin-universe-2026-09/index.json").read_text())
+        current_root = json.loads((Path(".") / "public/root.json").read_text())
+        expected = rooted_xrpl_asset_measurements(Path(".").resolve(), set(current_root.get("card_sha256") or []), source_index["assets"])
+        self.assertEqual(len(expected), self.document["coverage"]["deeply_measured_assets"])
+        self.assertEqual(425 - len(expected), self.document["coverage"]["unmeasured_assets"])
+        measured_symbols = {row["symbol"] for row in self.document["assets"] if row["measurement"]["state"] == "MEASURED"}
+        self.assertTrue({"RLUSD", "USDC", "EURCV"}.issubset(measured_symbols))
         witness = json.loads((Path(".") / "public/interop/root-witness-latest.json").read_text())
         w_blocks = (((witness.get("witnesses") or {}).get("ots") or {}).get("bitcoin_blocks")) or []
         expected = self.document["coverage"]["deeply_measured_assets"] if w_blocks else 0
@@ -88,7 +94,7 @@ class StablecoinReadinessTruthTest(unittest.TestCase):
 
     def test_indexed_asset_cannot_be_relabeled_measured(self) -> None:
         changed = copy.deepcopy(self.document)
-        row = next(row for row in changed["assets"] if row["symbol"] != "RLUSD")
+        row = next(row for row in changed["assets"] if row["measurement"]["state"] == "UNMEASURED")
         row["measurement"]["state"] = "MEASURED"
         row["measurement"]["depth"] = "PARTIAL_ONE_CHAIN"
         with self.assertRaises(AssertionError):
@@ -102,7 +108,7 @@ class StablecoinReadinessTruthTest(unittest.TestCase):
         ):
             with self.subTest(field=field):
                 changed = copy.deepcopy(self.document)
-                row = next(row for row in changed["assets"] if row["symbol"] != "RLUSD")
+                row = next(row for row in changed["assets"] if row["measurement"]["state"] == "UNMEASURED")
                 row[field] = value
                 with self.assertRaises(AssertionError):
                     validate(changed)
@@ -127,6 +133,11 @@ class StablecoinReadinessTruthTest(unittest.TestCase):
         del next(row for row in changed["assets"] if row.get("x402_door"))["x402_door"]
         with self.assertRaises(AssertionError):
             validate(changed)
+
+    def test_ambiguous_or_non_xrpl_symbol_stays_unmeasured(self) -> None:
+        usdb = [row for row in self.document["assets"] if row["symbol"] == "USDB"]
+        self.assertGreaterEqual(len(usdb), 2)
+        self.assertTrue(all(row["measurement"]["state"] == "UNMEASURED" for row in usdb))
 
     def test_no_amount_is_typed_on_the_public_surface(self) -> None:
         rendered = json.dumps(self.document)
