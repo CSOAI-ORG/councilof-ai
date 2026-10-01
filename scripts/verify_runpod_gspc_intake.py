@@ -837,7 +837,16 @@ def _validate_semantics(
             "CARD_ID_MISMATCH", "card ID does not recompute from its body"
         )
     card_sha256 = sha256_bytes(canonical_card)
-    if run.get("card_sha256") != card_sha256:
+    declared_card_sha256 = run.get("card_sha256")
+    if declared_card_sha256 == card_sha256:
+        card_hash_mode = "canonical-card"
+    elif declared_card_sha256 == card_id:
+        # Release 091a616a wrote the canonical body ID in run.card_sha256.
+        # Accept that exact legacy mode only after independently checking the
+        # canonical wrapper, its fixed unsigned fields, body ID and item evidence.
+        # The receipt still records the actual wrapper digest and original run hash.
+        card_hash_mode = "canonical-body-id-legacy"
+    else:
         raise IntakeError("CARD_HASH_MISMATCH", "run card hash does not recompute")
 
     source_hashes = {
@@ -869,6 +878,7 @@ def _validate_semantics(
         "subject": subject,
         "model_manifest_digest": model_digest,
         "bank_sha256": bank_sha256,
+        "card_hash_mode": card_hash_mode,
         "source_hashes": source_hashes,
         "counts": expected_counts,
         "accuracy": _expected_accuracy(counts.correct, n),
