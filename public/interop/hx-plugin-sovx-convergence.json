@@ -1,0 +1,95 @@
+{
+  "schema": "csoai.hx-plugin-sovx-convergence/0.1",
+  "title": "Harness X + Plugin X + SovX convergence contract",
+  "date": "2026-10-01",
+  "purpose": "One authority and state-transition contract for distribution, installable plugins, asset-evidence wrappers, measurement, routing, history, change maintenance and paid delivery.",
+  "authority_map": {
+    "GSPC": "measurement and admission",
+    "Harness X": "distribution and format rendering",
+    "Plugin X": "installable packaging over the same declared capabilities",
+    "SovX": "asset evidence wrapper over admitted evidence",
+    "Layer O / OM Router": "discovery and routing",
+    "SovSpace": "evidence, dependency and history graph",
+    "Claim Maintenance": "watch, re-verification and supersession",
+    "x402": "commercial delivery rail",
+    "Mioke": "human and agent work surface"
+  },
+  "action_policy": {
+    "READ_ONLY": "agent-executable only when the capability contract permits it",
+    "PUBLISH_SIGN_PAY_DELETE_ADMIN": "requires explicit authority",
+    "UNKNOWN": "INPUT_REQUIRED",
+    "completion_rule": "No completed state without executor evidence."
+  },
+  "invariants": [
+    "Producer evidence is not admission.",
+    "Distribution never upgrades measurement state.",
+    "Payment never mints trust, measurement, acceptance, settlement, finality or admission.",
+    "SovX never upgrades upstream asset or rail state beyond admitted evidence.",
+    "UNMEASURED is distinct from FAILED, ABSENT, REJECTED and FALSE.",
+    "A signature proves origin and integrity, not truth.",
+    "Corrections supersede prior records; published evidence is not silently rewritten.",
+    "Discovery or catalog presence is evidence about reach, not endorsement.",
+    "Mutable external claims require structured measurement time or explicit UNCHECKABLE freshness.",
+    "Settlement requires settlement evidence; transaction evidence alone is insufficient.",
+    "FINAL requires measured finality; scheduled, proposed or code-only evidence cannot advance to deployed or live.",
+    "A delivery record may bind exact response bytes after confirmed settlement but remains distinct from the signed x402 receipt.",
+    "A UI run finishing does not imply an external effect; PAYMENT_REQUIRED remains review-required.",
+    "The sole production writer must receipt the exact upload tree or a documented post-build transform."
+  ],
+  "producer_contract": {
+    "required": [
+      "host or runner class",
+      "model or executable digest where applicable",
+      "input or bank pins",
+      "per-unit result states",
+      "terminal producer state",
+      "evidence time"
+    ],
+    "rule": "A producer may prove that work ran. Only the admission authority may turn eligible producer evidence into admitted measurement."
+  },
+  "freshness_contract": {
+    "measurement_time_states": ["EXACT", "DAY", "NOT_AFTER", "UNCHECKABLE"],
+    "freshness_states": ["CURRENT", "STALE", "UNCHECKABLE"],
+    "rule": "Serve, build and deploy time do not refresh evidence time."
+  },
+  "flow": [
+    "discover",
+    "qualify",
+    "route",
+    "produce_evidence",
+    "verify_producer_provenance",
+    "measure_or_preserve_unmeasured",
+    "admission_decision",
+    "wrap",
+    "publish",
+    "deliver",
+    "receipt",
+    "watch",
+    "reverify",
+    "confirm_or_supersede"
+  ],
+  "canonical_dependencies": [
+    "public/interop/master-harness-index-v0.4.json",
+    "plugins/gspc/plugin.json",
+    "plugins/gspc/.mcp.json",
+    "packages/sovx-wrapped-asset-insight-snap/snap.manifest.json",
+    "council-os/capabilities.json",
+    "public/.well-known/layer-o-presence.json",
+    "public/spec/claim-maintenance/index.json",
+    "public/spec/claim-maintenance/priority.json",
+    "public/spec/claim-maintenance/reaction-index.json",
+    "public/spec/claim-maintenance/priority-root.json",
+    "functions/api/_gspc_measurement_time.ts",
+    "functions/api/_x402.ts",
+    "functions/api/_x402_receipt.ts",
+    "scripts/pod-loops/build_tree_receipt.py"
+  ],
+  "interpretation": {
+    "measurement": "A bounded observed result under a declared method and evidence state.",
+    "admission": "An authority decision over eligible evidence, separate from producer completion.",
+    "wrapper": "A projection of admitted evidence that may narrow claims but may not upgrade them.",
+    "delivery": "The response or artifact actually emitted to a consumer.",
+    "receipt": "Evidence about a commercial or delivery event; not a truth or quality verdict.",
+    "supersession": "A later record that preserves the earlier published record and explicitly replaces its current standing."
+  }
+}
