@@ -1,0 +1,99 @@
+{
+  "authority": {
+    "execution": false,
+    "measurement": false,
+    "publication": false,
+    "settlement": false,
+    "signing": false
+  },
+  "axis_results": {
+    "asset_semantics": "PASS",
+    "atomicity": "UNMEASURED",
+    "correction_reverification": "PASS_DOMAIN_MAPPING_RECHECKED",
+    "destination_finality": "UNMEASURED",
+    "failure_recovery": "UNMEASURED",
+    "message_mapping": "PASS",
+    "observability": "PARTIAL",
+    "reciprocal_roundtrip": "UNMEASURED",
+    "replay_idempotency": "UNMEASURED",
+    "source_finality": "PASS",
+    "state_proof": "PARTIAL_ATTESTATION_PRESENT_SIGNATURE_UNVERIFIED"
+  },
+  "checks": {
+    "circle_attestation_present": true,
+    "circle_message_hash_matches": true,
+    "circle_payload_exact_match": true,
+    "domain_10003_not_canton": true,
+    "event_emitted_by_xreserve": true,
+    "event_signature_matches": true,
+    "remote_domain_is_stacks": true,
+    "remote_domain_matches": true,
+    "source_finalized": true,
+    "transaction_success": true,
+    "transaction_targets_xreserve": true,
+    "upstream_derivation_pin_current": true
+  },
+  "circle_attestation": {
+    "attestation_present": true,
+    "http_status": 200,
+    "message_hash": "0x1dff52b22959b08acc693105ce48d3022d5a9d9df3eec2ea0d827706a06eb10a",
+    "payload_matches_derived": true,
+    "response_sha256": "767f3f6d73e0b0ad952a671d6aca6b2860b07b814cc6ea7cf8886c3afdc9d60d",
+    "signature_verification": "UNMEASURED"
+  },
+  "decoded_event": {
+    "amount_atomic": "5000000",
+    "hook_data": "0x",
+    "local_depositor": "0xa1404d9e7646b0112c49ae0296d6347c956d0867",
+    "local_token": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+    "max_fee_atomic": "0",
+    "remote_domain": 10003,
+    "remote_recipient": "0x000000000000000000000016645b198e420798dcda00bc8e49711fed753c37ad",
+    "remote_token": "0x000000000616440caf0bbc800a33993ea85c2392aeb53696608b057573646378"
+  },
+  "measurement_scope": "SOURCE_TRANSACTION_AND_ATTESTATION_PAYLOAD_ONLY",
+  "measurement_state": "PARTIALLY_MEASURED",
+  "observed_at": "2026-10-01T08:15:44.687230Z",
+  "public_readback": {
+    "anonymous_successor_readback": false,
+    "dependency_readback": "PASS",
+    "successor_publication": "LOCAL_CANDIDATE_NOT_PUBLISHED"
+  },
+  "remote_domain_mapping": {
+    "destination": "stacks",
+    "info_http_status": 200,
+    "info_sha256": "a69ff72bb99f08a74919506aba7ee85714f4ecd465275c2c2951de20b00ced56",
+    "info_url": "https://xreserve-api.circle.com/v1/info",
+    "remote_domain": 10003
+  },
+  "route_id": "besu-evm->stacks",
+  "schema": "csoai.ras-xreserve-public-replay-result/0.6.1",
+  "source_transaction": {
+    "block_number": 24027662,
+    "event_log_index": 1128,
+    "finalized_block_number": 26096118,
+    "finalized_depth": 2068456,
+    "status": "0x1",
+    "to": "0x8888888199b2df864bf678259607d6d5ebb4e3ce",
+    "tx_hash": "0xd1ad545d00f14e8ccba3c325366933a3391e049ea0a2a9327f2688c3851a33f8"
+  },
+  "unmeasured": [
+    "stacks_destination_mint",
+    "stacks_destination_finality",
+    "circle_attestation_signature_verification",
+    "cross_ledger_atomicity",
+    "task_bound_sov1_authority",
+    "reciprocal_live_roundtrip"
+  ],
+  "upstream_derivation": {
+    "commit": "5ba8d85afbbaccddbc8bed0715f2edbd95124583",
+    "current_main_commit": "5ba8d85afbbaccddbc8bed0715f2edbd95124583",
+    "github_api_http_status": 200,
+    "message_hash": "0x1dff52b22959b08acc693105ce48d3022d5a9d9df3eec2ea0d827706a06eb10a",
+    "nonce": "0x10a58118ad58610fef60b36a157691a70c42fd1fb00a037b6af95567cffd9861",
+    "packed_payload_bytes": 240,
+    "repo": "https://github.com/digital-asset/xreserve-deposits",
+    "reproduced_before_attestation_read": true,
+    "tool": "deposit-intent-hash/deriveDepositIntentHash.ts"
+  }
+}

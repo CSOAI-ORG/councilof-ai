@@ -33,6 +33,8 @@ export type MeasurementTime =
       note: string;
     };
 
+// Evidence precision is preserved. A day is never silently promoted to 00:00Z,
+// and a signed-card creation time is an upper bound on the measurement, not the run time.
 const BOARD_V2_MEASURED_ON = "2026-08-12";
 const JAIL_GOLD_RUN = "2026-08-18T03:22:16Z";
 const SWARM_CARD_CREATED = "2026-08-19T09:24:39.162060+00:00";
@@ -107,7 +109,6 @@ export function withMeasurementTime<T extends AxisScore>(axis: T): TimedAxis<T> 
     },
   };
 }
-
 export type FreshnessResult = {
   state: "CURRENT" | "STALE" | "UNCHECKABLE";
   reason: string;

@@ -118,6 +118,14 @@ class Seals(unittest.TestCase):
             res = v.check(t, doc, did_path, live=False)
             self.assertEqual(res["rows"][0]["signature"]["state"], "INVALID")
 
+    def test_seal_refuses_record_outside_declared_root(self):
+        with tempfile.TemporaryDirectory() as root_dir, tempfile.TemporaryDirectory() as other_dir:
+            root = Path(root_dir)
+            rec = Path(other_dir) / "layer0-outside.json"
+            rec.write_text('{"as_of":"2026-10-01T00:00:00Z","schema":"t/0"}')
+            with self.assertRaises(SystemExit):
+                s.seal_body(root, rec)
+
     def test_unsigned_record_without_declaration_is_named(self):
         with tempfile.TemporaryDirectory() as t:
             t = Path(t)

@@ -1,0 +1,24 @@
+{
+  "schema": "csoai.signed-artifact/0.1",
+  "payload": {
+    "schema": "csoai.signed-artifact/0.1",
+    "artifact": {
+      "path": "/interop/ras/xreserve/v0.6.1/RELEASE.pending.json",
+      "sha256": "42e9fa3dc11209ff9c20ded94bed8d27781af50efa0379e735a341c69247fb53",
+      "bytes": 3023,
+      "schema": "csoai.ras-xreserve-release/0.6.1",
+      "as_of": null
+    },
+    "record_id": null,
+    "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+    "what_this_proves": "these bytes were signed by the board key at this time; not a grade, not an endorsement, and no claim about any third party named in the artifact"
+  },
+  "sig_ed25519": "20db7d339afb36ca8d62e2b95919ed5f3161844f08276ba43952315c69fcfad2c00aa5eaf3c88f1f188e60defa8a51aefe8d7646c69fcf4369c3f4982e7e7807",
+  "sig_encoding": "hex",
+  "key": "did:web:csoai.org#board-attestation-1",
+  "key_source": "https://csoai.org/.well-known/did.json",
+  "verified_locally": true,
+  "failing_control_rejected": true,
+  "signed_utc": "2026-10-01T15:42:10Z",
+  "verify_with": "canonical JSON (sort_keys, separators=(',',':')) of .payload, Ed25519 over those exact bytes"
+}

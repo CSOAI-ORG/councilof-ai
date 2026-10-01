@@ -46,7 +46,12 @@ def canonical(obj) -> bytes:
 
 
 def seal_body(root: Path, record: Path) -> dict:
-    rel = str(record.resolve().relative_to(root))
+    root = root.resolve()
+    resolved_record = record.resolve()
+    try:
+        rel = str(resolved_record.relative_to(root))
+    except ValueError as exc:
+        raise SystemExit("GATE: Layer 0 record must be inside the declared root") from exc
     b = record.read_bytes()
     d = json.loads(b)
     proofs = v.ots_sidecars(root, rel)
