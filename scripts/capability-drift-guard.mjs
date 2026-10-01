@@ -29,42 +29,88 @@ const idOf = (s) =>
     .replace(/[-\s.]/g, "_")
     .replace(/^api_/, "");
 
-/** Which capability ids each door SHOULD expose, per the registry. */
+const HTTP_METHODS = new Set([
+  "get", "post", "put", "patch", "delete", "options", "head",
+]);
+
+const httpKey = (method, endpoint) => {
+  const verb = String(method ?? "").trim().toUpperCase();
+  let path = String(endpoint ?? "").trim();
+  if (!verb || !path) return "";
+  if (!path.startsWith("/")) path = "/" + path;
+  return verb + " " + path;
+};
+
+/** Registry truth: HTTP is method+path+lifecycle; MCP/A2A expose LIVE names only. */
 export function expected(registry) {
-  const out = { http: new Set(), mcp: new Set(), a2a: new Set() };
+  const out = { http: new Map(), mcp: new Set(), a2a: new Set() };
   for (const c of registry.capabilities ?? []) {
-    for (const p of c.protocols ?? []) if (out[p]) out[p].add(idOf(c.id));
+    for (const protocol of c.protocols ?? []) {
+      if (protocol === "http") {
+        const key = httpKey(
+          c.method ?? c.probe?.method,
+          c.endpoint ?? c.probe?.request,
+        );
+        const path = String(c.endpoint ?? c.probe?.request ?? "");
+        // /.well-known documents are real HTTP surfaces, but they are not
+        // operations in /openapi.json and are checked by their own producers.
+        if (key && path.startsWith("/api/")) {
+          out.http.set(key, String(c.lifecycle ?? "LIVE"));
+        }
+      } else if (c.lifecycle === "LIVE" && out[protocol]) {
+        out[protocol].add(idOf(c.id));
+      }
+    }
   }
   return out;
 }
 
-/** What each door ACTUALLY exposes. */
+/** What each door ACTUALLY exposes. HTTP identity includes lifecycle. */
 export function observed({ openapi, mcp, agentCard }) {
+  const http = new Map();
+  for (const [path, operations] of Object.entries(openapi?.paths ?? {})) {
+    for (const method of HTTP_METHODS) {
+      const op = operations?.[method];
+      if (op && typeof op === "object") {
+        http.set(
+          httpKey(method, path),
+          String(op["x-csoai-lifecycle"] ?? "LIVE"),
+        );
+      }
+    }
+  }
   return {
-    http: new Set(
-      Object.keys(openapi?.paths ?? {}).map(
-        (p) =>
-          idOf(
-            p
-              .replace(/^\//, "")
-              .replace(/^api\//, "")
-              .replace(/\//g, "_"),
-          ) || "root",
-      ),
-    ),
+    http,
     mcp: new Set((mcp?.result?.tools ?? []).map((t) => idOf(t.name))),
     a2a: new Set((agentCard?.skills ?? []).map((s) => idOf(s.id ?? s.name))),
   };
 }
 
 export function diff(exp, obs) {
-  const report = {};
-  for (const door of ["http", "mcp", "a2a"]) {
-    const missing = [...exp[door]].filter((x) => !obs[door].has(x)); // promised, not served
-    const extra = [...obs[door]].filter((x) => !exp[door].has(x)); // served, not registered
+  const httpMissing = [...exp.http.keys()].filter((x) => !obs.http.has(x));
+  const httpExtra = [...obs.http.keys()].filter((x) => !exp.http.has(x));
+  const lifecycle = [...exp.http.entries()]
+    .filter(([key, state]) => obs.http.has(key) && obs.http.get(key) !== state)
+    .map(([key, state]) => ({
+      key,
+      expected: state,
+      observed: obs.http.get(key),
+    }));
+  const report = {
+    http: {
+      missing: httpMissing,
+      extra: httpExtra,
+      lifecycle,
+      ok: httpMissing.length === 0 && httpExtra.length === 0 && lifecycle.length === 0,
+    },
+  };
+  for (const door of ["mcp", "a2a"]) {
+    const missing = [...exp[door]].filter((x) => !obs[door].has(x));
+    const extra = [...obs[door]].filter((x) => !exp[door].has(x));
     report[door] = {
       missing,
       extra,
+      lifecycle: [],
       ok: missing.length === 0 && extra.length === 0,
     };
   }
@@ -100,14 +146,44 @@ async function main() {
   if (args.includes("--selftest")) {
     const reg = {
       capabilities: [
-        { id: "get_root", protocols: ["mcp", "a2a"] },
-        { id: "gspc", protocols: ["http"] },
+        {
+          id: "get_root",
+          lifecycle: "LIVE",
+          protocols: ["mcp", "a2a"],
+        },
+        {
+          id: "api-gspc-get",
+          lifecycle: "LIVE",
+          protocols: ["http"],
+          method: "GET",
+          endpoint: "/api/gspc",
+        },
+        {
+          id: "api-draft-post",
+          lifecycle: "QUARANTINED_PRE_RELEASE",
+          protocols: ["http"],
+          method: "POST",
+          endpoint: "/api/draft",
+        },
+        {
+          id: "well-known-example",
+          lifecycle: "LIVE",
+          protocols: ["http"],
+          method: "GET",
+          endpoint: "/.well-known/example",
+        },
       ],
     };
     const d = diff(
       expected(reg),
       observed({
-        openapi: { paths: { "/api/gspc": {} } },
+        openapi: {
+          paths: {
+            "/api/gspc": { get: {} },
+            "/api/draft": { post: {} },
+            "/api/ghost": { post: {} },
+          },
+        },
         mcp: {
           result: { tools: [{ name: "get_root" }, { name: "ghost_tool" }] },
         },
@@ -117,16 +193,25 @@ async function main() {
     const caught =
       d.mcp.extra.includes("ghost_tool") &&
       d.a2a.missing.includes("get_root") &&
-      d.http.ok;
+      d.http.extra.includes("POST /api/ghost") &&
+      d.http.lifecycle.some(
+        (x) =>
+          x.key === "POST /api/draft" &&
+          x.expected === "QUARANTINED_PRE_RELEASE" &&
+          x.observed === "LIVE",
+      ) &&
+      !d.http.missing.includes("GET /api/gspc") &&
+      !d.http.missing.some((x) => x.includes("/.well-known/"));
     if (!caught) {
       console.error("✖ capability-drift-guard selftest FAILED");
       process.exit(1);
     }
     console.log(
-      "✓ capability-drift-guard selftest: an unregistered tool and an undelivered skill are both caught",
+      "✓ capability-drift-guard selftest: method/path/lifecycle drift, MCP extras and A2A omissions are caught",
     );
     process.exit(0);
   }
+
 
   const registry = JSON.parse(
     readFileSync("capabilities/registry.json", "utf8"),
@@ -180,6 +265,10 @@ async function main() {
     if (r.extra.length)
       console.error(
         `    served but NOT registered (${r.extra.length}): ${r.extra.slice(0, 12).join(", ")}`,
+      );
+    if (r.lifecycle?.length)
+      console.error(
+        `    lifecycle mismatch (${r.lifecycle.length}): ${r.lifecycle.slice(0, 8).map((x) => `${x.key} expected=${x.expected} observed=${x.observed}`).join("; ")}`,
       );
   }
   if (bad && !WARN_ONLY) {

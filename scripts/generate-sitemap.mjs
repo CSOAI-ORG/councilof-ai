@@ -4,7 +4,8 @@
  *
  * Parses `<Route path="...">` declarations (static string paths only), drops
  * :param routes, duplicates, and auth/admin/legacy junk, then emits a sitemap
- * with real lastmod (today) and hand-tuned priorities for flagship surfaces.
+ * with hand-tuned priorities for flagship surfaces. Omit lastmod until the
+ * source can provide each page's actual last significant content change.
  *
  * Run: node scripts/generate-sitemap.mjs   (wired into `npm run build:client`)
  */
@@ -533,10 +534,17 @@ const DELISTED = new Map([
   ["/regulator-atlas", "canonical: /regulators/"],
   ["/x402-leaderboard", "canonical: /x402-board/"],
 ]);
-// Evidence copies of third-party pages under an /interop report's mirrors/ folder; public/_headers
-// sends X-Robots-Tag noindex for the same pattern.
-const MIRROR_RE = /^\/interop\/[^/]+\/mirrors\//;
-const isDelisted = (p) => DELISTED.has(p.replace(/\/+$/, "") || "/") || MIRROR_RE.test(p);
+// These captured copies self-canonicalise to third-party owners. Other
+// /mirrors/ pages are original CSOAI evidence and must stay listed.
+const CROSS_CANONICAL_MIRRORS = new Set(
+  ["118", "120", "129", "14", "195", "2", "246", "250", "262", "286", "347"]
+    .map((id) => `/interop/stablecoin-deep-2026-09/mirrors/${id}`),
+);
+// Only captured copies that self-canonicalise to third-party owners leave the
+// sitemap. Other /mirrors/ pages are original CSOAI evidence and stay listed.
+const isDelisted = (p) => DELISTED.has(p.replace(/\/+$/, "") || "/") ||
+  CROSS_CANONICAL_MIRRORS.has(p.replace(/\/+$/, "")) ||
+  p.startsWith("/interop/rwa-reconciliation-2026-09/mirrors/rwa-xyz-");
 
 // Prerendered as <path>/index.html with no bare->slash rule in _redirects, so Pages answers the
 // bare form with a 308. Emit the served form.
@@ -711,7 +719,6 @@ for (const sp of collectStaticPages(join(ROOT, "public"))) {
 console.log(`[sitemap] static public/*.html pages considered: +${staticAdded} before canonicalise`);
 
 // --- Emit XML ---------------------------------------------------------------
-const today = new Date().toISOString().slice(0, 10);
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const MACHINE = new Map(MACHINE_PATHS.map(([p, cf, pr]) => [p, { cf, pr }]));
 let rewritten = 0;
@@ -742,7 +749,6 @@ const urls = finalPaths
     return [
       "  <url>",
       `    <loc>${loc}</loc>`,
-      `    <lastmod>${today}</lastmod>`,
       `    <changefreq>${cf}</changefreq>`,
       `    <priority>${pr}</priority>`,
       "  </url>",
@@ -763,7 +769,7 @@ console.log(
     `${droppedRedirect} redirect-to-elsewhere, ${delisted} delisted (noindex or canonical elsewhere), ${blogUnbuilt} unbuilt blog slugs (404), ` +
     `${blogSkipped} redirected or withdrawn blog slugs; ` +
     `${rewritten} rewritten to their trailing-slash canonical; ` +
-    `${blogSlugs.length - blogUnbuilt - blogSkipped} blog articles; lastmod=${today})`
+    `${blogSlugs.length - blogUnbuilt - blogSkipped} blog articles; lastmod=omitted)`
 );
 
 // Flagship sanity check — these MUST be present.
