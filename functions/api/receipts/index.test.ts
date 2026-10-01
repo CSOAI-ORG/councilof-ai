@@ -4,13 +4,50 @@
  * and the only person who calls this is a buyer who just paid.
  */
 import { describe, expect, it } from "vitest";
-import { handle, onRequestGet, type ReceiptRow } from "./index";
+import { handle, onRequestGet, readReceipts, type ReceiptRow } from "./index";
+import { buildReceiptRecord, receiptPayerKey } from "../_x402_receipt";
+import { buildDeliveryRecord, deliveryTxKey } from "../_x402_delivery_record";
 
 const call = async (qs: string) => {
   const res = await onRequestGet({
     request: new Request(`https://councilof.ai/api/receipts${qs}`),
   } as Parameters<typeof onRequestGet>[0]);
   return { res, body: (await res.json()) as Record<string, never> };
+};
+
+class KV {
+  rows = new Map<string, string>();
+  async get(k: string) { return this.rows.get(k) ?? null; }
+  async put(k: string, v: string) { this.rows.set(k, v); }
+  async list(o: { prefix: string }) {
+    return {
+      keys: [...this.rows.keys()].filter((k) => k.startsWith(o.prefix)).map((name) => ({ name })),
+      list_complete: true,
+    };
+  }
+}
+
+const payerReceipt = (payer: string, tx = "0xabc") => {
+  const payload = {
+    version: 1 as const,
+    network: "eip155:8453",
+    resourceUrl: "https://councilof.ai/api/signed-data-feed",
+    payer,
+    issuedAt: 1790838000,
+    transaction: tx,
+  };
+  return {
+    payload,
+    record: buildReceiptRecord({
+      receipt: { format: "jws", signature: "a.b.c" },
+      payload,
+      resource: "https://councilof.ai/api/signed-data-feed?feed=1",
+      amount_atomic: "20000",
+      asset: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      self: false,
+      settlement_recorded: true,
+    }),
+  };
 };
 
 describe("/api/receipts?payer=", () => {
@@ -63,6 +100,8 @@ describe("/api/receipts?payer=", () => {
     expect(honesty.empty_is_not_none).toMatch(/including\s+one who has paid/i);
     expect(honesty.what_the_signature_covers).toMatch(/board-attestation-1/);
     expect(honesty.what_the_signature_covers).toMatch(/NOT amount, asset/);
+    expect(honesty.what_delivery_evidence_covers).toMatch(/UNSIGNED CSOAI/);
+    expect(honesty.what_delivery_evidence_covers).toMatch(/does not prove buyer acceptance/i);
   });
 
   it("serves rows as OK once a store exists — the seam actually works", async () => {
@@ -84,6 +123,40 @@ describe("/api/receipts?payer=", () => {
     expect(body.status).toBe("OK");
     expect(body.count).toBe(1);
     expect((body.items as unknown as ReceiptRow[])[0].txHash).toBe("0xabc");
+  });
+
+  it("joins exact delivery evidence by settlement transaction without extending the JWS", async () => {
+    const payer = "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31";
+    const kv = new KV();
+    const { payload, record } = payerReceipt(payer);
+    kv.rows.set(receiptPayerKey(payer, payload.issuedAt, payload.transaction), JSON.stringify(record));
+    const delivery = buildDeliveryRecord({
+      transaction: payload.transaction,
+      resource: record.resource,
+      response_sha256: "c".repeat(64),
+      response_bytes: 4242,
+      delivered_at: "2026-10-01T07:01:00Z",
+    });
+    kv.rows.set(deliveryTxKey(payload.transaction), JSON.stringify(delivery));
+    const rows = await readReceipts(payer, kv as any);
+    expect(rows).toHaveLength(1);
+    expect(rows![0].txHash).toBe(payload.transaction);
+    expect(rows![0].delivery).toMatchObject({
+      response_sha256: "c".repeat(64),
+      response_bytes: 4242,
+      signed: false,
+    });
+    expect(rows![0].receipt?.signature).toBe("a.b.c");
+  });
+
+  it("returns delivery null when the payment receipt exists but no delivery record was retained", async () => {
+    const payer = "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31";
+    const kv = new KV();
+    const { payload, record } = payerReceipt(payer);
+    kv.rows.set(receiptPayerKey(payer, payload.issuedAt, payload.transaction), JSON.stringify(record));
+    const rows = await readReceipts(payer, kv as any);
+    expect(rows).toHaveLength(1);
+    expect(rows![0].delivery).toBeNull();
   });
 
   it("still distinguishes a genuinely empty history from an unrecorded one", async () => {

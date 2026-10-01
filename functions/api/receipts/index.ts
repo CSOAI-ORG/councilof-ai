@@ -26,6 +26,7 @@
 
 /// <reference types="@cloudflare/workers-types" />
 import { readReceiptsByPayer } from "../_x402_receipt";
+import { readDeliveryByTransaction } from "../_x402_delivery_record";
 
 const EIP55_ISH = /^0x[0-9a-fA-F]{40}$/;
 
@@ -43,6 +44,15 @@ export interface ReceiptRow {
   zero_value?: boolean;
   self?: boolean | null;
   record_schema?: string;
+  delivery?: {
+    schema: string;
+    response_sha256: string;
+    response_bytes: number;
+    content_type: string;
+    delivered_at: string;
+    signed: false;
+    claim_boundary: string;
+  } | null;
 }
 
 /**
@@ -63,20 +73,40 @@ export async function readReceipts(
 ): Promise<ReceiptRow[] | null> {
   const rows = await readReceiptsByPayer(kv as unknown as Parameters<typeof readReceiptsByPayer>[0], payer);
   if (rows === null) return null;
-  return rows.map((r) => ({
-    payer: r.payload.payer,
-    txHash: r.payload.transaction || "",
-    network: r.payload.network,
-    amount: r.amount_atomic ?? "",
-    asset: r.asset ?? "",
-    resource: r.resource,
-    settledAt: r.issued_at,
-    // The artefact a stranger can check without trusting this endpoint, and the record around it.
-    receipt: r.receipt,
-    kid: r.kid,
-    zero_value: r.zero_value,
-    self: r.self,
-    record_schema: r.schema,
+  return Promise.all(rows.map(async (r) => {
+    const transaction = r.payload.transaction || "";
+    const deliveryRecord = transaction
+      ? await readDeliveryByTransaction(
+          kv as unknown as Parameters<typeof readDeliveryByTransaction>[0],
+          transaction,
+        )
+      : null;
+    return {
+      payer: r.payload.payer,
+      txHash: transaction,
+      network: r.payload.network,
+      amount: r.amount_atomic ?? "",
+      asset: r.asset ?? "",
+      resource: r.resource,
+      settledAt: r.issued_at,
+      // The artefact a stranger can check without trusting this endpoint, and the record around it.
+      receipt: r.receipt,
+      kid: r.kid,
+      zero_value: r.zero_value,
+      self: r.self,
+      record_schema: r.schema,
+      delivery: deliveryRecord
+        ? {
+            schema: deliveryRecord.schema,
+            response_sha256: deliveryRecord.response_sha256,
+            response_bytes: deliveryRecord.response_bytes,
+            content_type: deliveryRecord.content_type,
+            delivered_at: deliveryRecord.delivered_at,
+            signed: false as const,
+            claim_boundary: deliveryRecord.claim_boundary,
+          }
+        : null,
+    };
   }));
 }
 
@@ -107,6 +137,11 @@ export async function handle(
       what_a_receipt_is_not:
         "These are payment receipts. /api/receipts/batch serves card-v0 measurement leaves under " +
         "the signed public root, which are a different artefact and are not evidence of payment.",
+      what_delivery_evidence_covers:
+        "When an item carries delivery, it is an UNSIGNED CSOAI append-only record joined by the " +
+        "settlement transaction. response_sha256 and response_bytes identify the exact payload bytes " +
+        "the server says it emitted after the settle. It does NOT extend the x402 receipt signature " +
+        "and does not prove buyer acceptance, payment finality, semantic truth, or that the buyer retained the bytes.",
     },
     endpoints: {
       latest: "/api/receipts/latest",
