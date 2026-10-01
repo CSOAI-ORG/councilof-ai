@@ -1,0 +1,49 @@
+{
+  "schema": "csoai.correction-note/0.1",
+  "id": "C-2026-0917-03",
+  "kind": "false-pass",
+  "date_found": "2026-09-17",
+  "license": "CC-BY-4.0",
+  "publisher": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
+  "subject": "GSPC axis humanoid-labour-index — /interop/financial-measure-run-humanoid-labour-index.json",
+  "reached_the_public": true,
+  "severity_note": "A live MEASURED claim that a stranger could falsify in one fetch. On this board that is the worst kind of defect there is.",
+  "not_a_grade": true,
+  "what_was_wrong": "The run of 2026-09-07T11:30:35Z (content_id 00c4b9f889dbfbc82252167afd80cd06b7b963678a30f3b698de873d54912084) recorded, for https://www.sanctuary.ai, \"dated_deployment_count_published\": true and three_state PASS, and published a tally of PASS 1 / FAIL 6 / UNCHECKABLE 1. The axis task is \"named vendor publishes a dated deployment count on a stable URL? Y/N\". sanctuary.ai publishes no count of robots anywhere: fetched 2026-09-17, HTTP 200, 245,649 bytes, 8,794 characters of visible text, ZERO occurrences of any number followed by a unit noun. The single PASS on this axis was fabricated by the grader.",
+  "why_it_was_wrong": "The predicate was one regex run against RAW MARKUP. Its second alternative, \\b(\\d{1,5})\\s+(robots?|units?|humanoids?).{0,40}\\b(20\\d{2})\\b, had no word boundary after the unit noun, so \"Robot\" inside \"Robotics\" satisfied robots?. The press-coverage headline \"Sanctuary AI #1 Robotics Story of April 2026\" then supplied everything the regex wanted: the \"1\" of \"#1\" became the count, \"Robotics\" became the unit, \"2026\" became the date. Three separate errors compounded — matching markup instead of prose, accepting a rank as a count, and never requiring any deployment claim at all. The predicate had two unit tests and both used clean synthetic sentences, so neither could ever have caught this.",
+  "how_caught": "Outside reading of the published artifact against the page it claims to describe, 2026-09-17. One fetch. Found independently by two lanes within the hour; the three residual leaks were found by running the landed predicate against the real captured pages and against markup-only inputs.",
+  "what_changed": "Two commits. PR #2633, landed 2026-09-17T13:24 in a parallel lane, fixed the predicate in scripts/gspc_financial_facts.py: has_dated_deployment_count() now requires a COUNT, a DEPLOYMENT claim and a YEAR to co-occur in one 120-character window — ordering-free, so it cannot be defeated by word order — and rejects a count preceded by a rank. It changed the producer only, so the false PASS was still being served after it landed. This commit regenerates the artifact, which is what the public actually reads, and closes three leaks the window predicate still had: a claim appearing only in a JSON-LD <script> or an HTML comment PASSed (the predicate matched raw markup, not visible text), and a model designator read as a count ('Digit 5 Humanoid Robot', live on agilityrobotics.com, PASSed whenever a deploy word fell inside the window). Every PASS now carries evidence.quote, the sentence it was read from.",
+  "tally_before": {
+    "PASS": 1,
+    "FAIL": 6,
+    "UNCHECKABLE": 1
+  },
+  "tally_after": {
+    "PASS": 0,
+    "FAIL": 7,
+    "UNCHECKABLE": 1
+  },
+  "n_unchanged": 8,
+  "status_unchanged": "MEASURED — the axis still measures 8 frozen URLs; what changed is what it read on one of them.",
+  "controls": "scripts/test_humanoid_dated_count.py, 26/26. Seven disclosures it must fire on in three word orders, eight headlines it must refuse, the three markup/designator leaks, and the real bytes of the page. Those bytes now live at scripts/fixtures/humanoid/ with the URL, fetch time and sha256 — the control previously read /tmp/sanc.html, so the one case taken from the real page silently skipped wherever /tmp had been cleared, CI included. One control proves the ORIGINAL pattern still fires on those bytes: a control is only a control if the defect reproduces on it. A must-PASS case keeps the suite from being satisfiable by a predicate wired to no. Three mutants were run and each fails a distinct control: matching raw markup loses 2, dropping the designator guard loses 1, returning None always loses 3.",
+  "predicate_bias": "One-directional by design. A count stated in a way the predicate cannot read is graded FAIL, never PASS. A missed disclosure is recoverable; a fabricated one is not.",
+  "signed_bytes_untouched": true,
+  "signed_bytes_note": "The signed card /interop/financial-measure-card-humanoid-labour-index.json (as_of 2026-09-01T04:12:34Z) was always honest — it records dated_deployment_count_published false for all eight URLs, sanctuary.ai included. The defect existed only in the later unsigned run. No signed bytes were edited.",
+  "what_this_does_not_claim": "Not a claim that these seven vendors deploy no robots. It is a claim about what their named URLs published, in readable text, on the date fetched. FAIL here means the disclosure was not found at that address; it is not a finding about the companies.",
+  "surfaces": {
+    "ledger": "https://councilof.ai/api/corrections",
+    "artifact": "https://councilof.ai/interop/financial-measure-run-humanoid-labour-index.json",
+    "board": "https://councilof.ai/api/gspc",
+    "this_file": "/corrections/humanoid-labour-index-false-pass.json"
+  },
+  "evidence": [
+    "/corrections/humanoid-labour-index-false-pass.json",
+    "/interop/financial-measure-run-humanoid-labour-index.json",
+    "scripts/gspc_financial_facts.py",
+    "scripts/test_humanoid_dated_count.py",
+    "scripts/fixtures/humanoid/provenance.json"
+  ],
+  "signature": null,
+  "unsigned_reason": "Correction notes are published unsigned in this repository; the run artifacts they describe are content-addressed and the signer is owner-gated. Signing this note would not make the corrected run any more checkable than its content_id already does.",
+  "still_live_after_the_producer_fix": "Recorded because it is the reusable lesson: PR #2633 corrected the producer and the board went on serving PASS 1 / FAIL 6 / UNCHECKABLE 1 for another hour, because nothing re-ran it. A claim lives in the artifact as well as in its generator."
+}
