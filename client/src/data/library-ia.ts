@@ -135,10 +135,9 @@ export const PRIMARY_PATHS = new Set<string>([
   "/watchdog-hub",
   // Evidence
   "/honesty", "/refutation-ledger", "/firewall-charter", "/doctrine", "/api-docs", "/status", "/rating-the-raters",
-  // /pay — the buyer surface: every x402 door from the live manifest, one settle each from the
-  // owner's own wallet. A current page the coordinator deep-links (?door=); unregistered it
-  // would ship flagged "archived" under a link we actively use.
-  "/pay",
+  // /pay-all is the owner wallet tool for one settlement per x402 door. The static
+  // buyer page owns /pay; the coordinator deep-links this app route with ?door=.
+  "/pay-all",
   // /services is a primary nav destination (HeaderNav PRIMARY_LINKS). Without an
   // entry here it renders under the "Reference / archive" banner — a nav item
   // leading to a page that calls itself archived.

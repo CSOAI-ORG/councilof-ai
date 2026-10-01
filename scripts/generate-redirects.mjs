@@ -81,6 +81,8 @@ const EXISTING = [
   // the live measurement workflow rather than advertise a frozen PR queue.
   "/merge-me             /how-we-work   308",
   "/merge-me/            /how-we-work   308",
+    // The static buyer page owns /pay; retire the former app page at /pay/ to it.
+  "/pay/                  /pay                  308",
   "/favicon.ico           /csoai-icon.svg      308",
   // /conflicts was 404; a reader looking for our conflict-of-interest disclosure lands on it (2026-09-27).
   "/conflicts            /independence/       308",
@@ -408,6 +410,7 @@ const REVIEWED_PUBLIC_HTML_APP_ROUTES = new Set([
   "/advisory",   // reviewed legacy hand-off page
   "/benchmarks", // static-first benchmark registry
   "/globe",      // exact /globe -> /globe3d.html redirect owns this door
+  "/governance", // static discovery bundle (#2777) owns this door; app route retired
 ]);
 const publicHtmlRouteCollisions = routes
   .map(normFrom)

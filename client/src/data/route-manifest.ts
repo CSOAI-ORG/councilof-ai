@@ -1558,7 +1558,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Panel"
  },
  {
-  "path": "/pay",
+  "path": "/pay-all",
   "comp": "PayEveryDoor",
   "title": "Pay Every Door"
  },
