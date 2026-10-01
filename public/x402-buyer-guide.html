@@ -46,60 +46,67 @@ footer a{color:var(--gold);text-decoration:none}
 </section>
 <h2>The 30-second version</h2>
 <pre><code># 1. GET a paid resource → 402 with payment challenge
-curl -i https://councilof.ai/api/request-attestation?subject=USDC
+curl -i "https://councilof.ai/api/request-attestation?subject=USDC"
 # → HTTP/1.1 402 Payment Required
-# → X-Payment-Address: 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31
-# → X-Payment-Network: eip155:8453
-# → X-Payment-Amount: <from 402 challenge — never typed on this page>
-# → X-Payment-Asset: 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913
+# Read accepts[] in the JSON body for amount, network, asset and payTo.
+# The v2 PAYMENT-REQUIRED header contains the base64-encoded challenge.
 
-# 2. Pay the challenge (USDC on Base)
-# 3. Retry with X-Payment-Signature header
-curl -H "X-Payment-Signature: &lt;signed-payment&gt;" \
-     https://councilof.ai/api/request-attestation?subject=USDC
-# → HTTP/1.1 200 OK + signed receipt + paid artefact</code></pre>
+# 2. Use an x402 client to create the signed payment payload for these terms.
+# 3. Retry the same resource with the v2 PAYMENT-SIGNATURE header.
+curl -H "PAYMENT-SIGNATURE: &lt;base64-encoded-payment-payload&gt;" \
+     "https://councilof.ai/api/request-attestation?subject=USDC"
+# → HTTP 200 + paid artefact only after verified settlement</code></pre>
+<p>The placeholder is a signed x402 payment payload, not a transaction hash or an offer-receipt JWS. Legacy v1 clients use <code>X-PAYMENT</code>. Read the current amount from the challenge, including any active promotion; a 402 is an offer, not proof of payment.</p>
 <h2>The catalog</h2>
-<p>10 resources: 1 free + 9 paid. Full discovery at <code>https://councilof.ai/.well-known/x402.json</code>.</p>
+<p>Existing resources are listed below. Read the current catalog and free previews at <a href="/.well-known/x402.json">/.well-known/x402.json</a>.</p>
 <table>
 <thead><tr><th>Resource</th><th>Endpoint</th><th>Amount</th></tr></thead>
 <tbody>
-<tr><td>Free door</td><td><code>/api/free-door</code></td><td class="amt">free (no 402)</td></tr>
+<tr><td>Free door</td><td><code>/api/free-door</code></td><td class="amt">zero-amount 402 handshake</td></tr>
 <tr><td>Issuance</td><td><code>/api/request-attestation?subject=&lt;id&gt;</code></td><td class="amt">metered — read the 402</td></tr>
-<tr><td>Evidence bundle</td><td><code>/api/evidence-bundle?obligation=&lt;...&gt;</code></td><td class="amt">metered — read the 402</td></tr>
+<tr><td>Evidence bundle</td><td><code>/api/evidence-bundle?obligation=article-50&amp;bundle=1</code></td><td class="amt">metered — read the 402</td></tr>
 <tr><td>Proof bundle</td><td><code>/api/proof?bundle=1</code></td><td class="amt">metered — read the 402</td></tr>
 <tr><td>RWA evidence</td><td><code>/api/rwa/evidence?asset=&lt;symbol&gt;</code></td><td class="amt">metered — read the 402</td></tr>
-<tr><td>Wrapper parity</td><td><code>/api/wrapper/parity</code></td><td class="amt">metered — read the 402</td></tr>
+<tr><td>Wrapper parity</td><td><code>/api/wrapper?id=usdc.e:arbitrum</code></td><td class="amt">metered — read the 402</td></tr>
 <tr><td>Art. 50 marking</td><td><code>/api/art50/marking-evidence?url=&lt;...&gt;</code></td><td class="amt">metered — read the 402</td></tr>
 <tr><td>Provider diff</td><td><code>/api/feeds/provider-diff?history=1</code></td><td class="amt">metered — read the 402</td></tr>
 <tr><td>Receipts batch</td><td><code>/api/receipts/batch?from=&lt;date&gt;</code></td><td class="amt">metered — read the 402</td></tr>
 <tr><td>Data feed</td><td><code>/api/eunomia-data?feed=1</code></td><td class="amt">metered — read the 402</td></tr>
 </tbody></table>
 <h2>Verification — always free</h2>
-<pre><code># Get a card
-curl https://councilof.ai/api/card?sha=&lt;64-hex&gt;
-# Verify the Ed25519 signature offline
-python3 scripts/verify_receipt.py &lt;receipt.jws&gt;
-# Or online
-curl https://councilof.ai/api/receipts/verify -d '&lt;receipt.jws&gt;'</code></pre>
+<pre><code># Browse the public root and fetch a card named by that root.
+curl "https://councilof.ai/root.json"
+curl "https://councilof.ai/cards/&lt;sha16-from-root&gt;.json"
+
+# Verify an x402 offer or receipt JWS with the repository verifier.
+# Requires Python's cryptography package; fetches the public DID document.
+python3 scripts/verify_receipt.py --jws '&lt;receipt.jws&gt;'
+# Or send a JSON object to the hosted verifier.
+curl "https://councilof.ai/api/receipts/verify" \
+     -H 'Content-Type: application/json' \
+     -d '{"receipt":"&lt;receipt.jws&gt;"}'</code></pre>
+<p>For measurement-card signatures and their verification rules, use the <a href="/gspc-verify">free card verifier</a>. A valid signature proves signed bytes; settlement and measurement claims have their own evidence.</p>
 <h2>Common patterns</h2>
-<h3>"I want to know if USDC was measured"</h3>
-<pre><code>curl https://councilof.ai/api/free-door
-curl "https://councilof.ai/api/card?subject=USDC"</code></pre>
+<h3>"I want the current measurement board without a wallet"</h3>
+<pre><code>curl "https://councilof.ai/api/gspc"
+curl "https://councilof.ai/api/cards"</code></pre>
 <h3>"I want a signed receipt for my compliance dossier"</h3>
 <pre><code># Paid: settle the 402 challenge (USDC on Base)
-curl https://councilof.ai/api/request-attestation?subject=USDC
-# Pay the 402 challenge, retry with X-Payment-Signature</code></pre>
+curl "https://councilof.ai/api/request-attestation?subject=USDC"
+# Create the signed payment payload, then retry with PAYMENT-SIGNATURE.</code></pre>
 <h3>"I need an EU AI Act Article 50 evidence bundle"</h3>
-<pre><code># Paid: settle the 402 for a full OSCAL 1.1.0 bundle
-curl https://councilof.ai/api/evidence-bundle?obligation=article-50&amp;subject=model-id&amp;bundle=1</code></pre>
+<pre><code># First inspect the free preview for your exact subject.
+curl "https://councilof.ai/api/evidence-bundle?obligation=article-50&amp;subject=model-id"
+# Paid: use the same subject and add bundle=1 to request the 402.
+curl "https://councilof.ai/api/evidence-bundle?obligation=article-50&amp;subject=model-id&amp;bundle=1"</code></pre>
+<p>Replace <code>model-id</code> with the subject you need. Check <code>relevant_signed_cards</code> before paying: zero means the selection is empty, and payment creates no new measurements.</p>
 <h3>"I want to prove this card is in your canonical Merkle root"</h3>
 <pre><code># One leaf: free
 curl "https://councilof.ai/api/proof?sha=&lt;64-hex&gt;"
 # Multiple leaves: paid batch (settle the 402)
 curl "https://councilof.ai/api/proof?bundle=1"</code></pre>
 <h2>MCP integration</h2>
-<pre><code>{"servers":{"csoai-gspc-mcp":{"url":"https://councilof.ai/mcp","stdio":"npx -y <!--email_off-->csoai-gspc-mcp@0.2.2<!--/email_off-->"}}}</code></pre>
-<p>18 tools at <code>/mcp</code>: 13 free + 5 metered, on the same x402 rail. The 13 free tools alone are at <code>https://councilof.ai/mcp/free</code>, with no payment step.</p>
+<p>Connect a Streamable HTTP MCP client to <code>https://councilof.ai/mcp</code>. Use <code>tools/list</code> for its current tool definitions; the <a href="/.well-known/x402.json">discovery manifest</a> also lists free and paid tools. Paid tools use the same x402 rail.</p>
 <div class="never">
 <strong>What we never sell:</strong>
 <ul><li>A score, rank, or grade</li><li>A certificate of compliance</li><li>A MEASURED cell (payment mints no new measurement)</li><li>A conformity determination</li><li>Private data (every payment uses already-public cards)</li></ul>
