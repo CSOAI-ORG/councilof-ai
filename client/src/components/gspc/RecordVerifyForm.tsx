@@ -100,7 +100,7 @@ function TallyOptIn({ ok, variant }: { ok: boolean; variant: "light" | "dark" })
   );
 }
 
-export default function RecordVerifyForm({ variant = "dark", seed, seedNonce, onVerdict, autoVerify = false }: {
+export default function RecordVerifyForm({ variant = "dark", seed, seedNonce, onVerdict, onInputChange, autoVerify = false }: {
   variant?: "light" | "dark";
   /** Host-provided original text; editable. Verified automatically only when autoVerify is set. */
   seed?: string;
@@ -111,6 +111,8 @@ export default function RecordVerifyForm({ variant = "dark", seed, seedNonce, on
   seedNonce?: number;
   /** Called only for a completed, current-input verdict, never a click. */
   onVerdict?: (v: RecordVerdict) => void;
+  /** Called when a reader edits or clears the input, so the host can discard source labels tied to earlier bytes. */
+  onInputChange?: () => void;
 }) {
   const [text, setText] = useState("");
   const [verdict, setVerdict] = useState<{ result: UseAwareVerdict; inputHash: string } | null>(null);
@@ -166,6 +168,7 @@ export default function RecordVerifyForm({ variant = "dark", seed, seedNonce, on
 
   const edit = (next: string) => {
     attempt.current += 1; verifier.current.invalidate();
+    onInputChange?.();
     setText(next); setVerdict(null); setBusy(false); setFailure(false);
     setNotice(next.trim() ? "Input changed. This text has not been checked." : "Ready for a record. Nothing has been checked.");
   };
