@@ -1,6 +1,6 @@
 /**
  * /api/growth-loops — retired until loop status is derived from current evidence.
- * @openapi-retired
+ * @openapi-unavailable
  */
 
 const json = (body: unknown, status = 200) =>

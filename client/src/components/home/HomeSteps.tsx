@@ -39,9 +39,9 @@ export const STEPS: Step[] = [
   {
     id: "sign",
     kicker: "2 · Sign",
-    title: "Signed, and free to check",
+    title: "Checkable evidence, free to verify",
     body:
-      "Every measurement card is signed with a key we publish, so anyone can prove it has not changed since we issued it. Paste one into the verifier and your own browser does the maths: no account, nothing leaves your device, free forever. A rank is never for sale, and our own models are listed apart and never counted in.",
+      "Measurement cards that carry an Ed25519 signature are independently checkable with a key we publish. Other measurement artifacts declare their attestation state explicitly, including content-addressed unsigned records, so we never imply a signature where none exists. Paste a signed card into the verifier and your own browser does the maths: no account, nothing leaves your device, free forever. A rank is never for sale, and our own models are listed apart and never counted in.",
     href: "/gspc-verify",
     cta: "Check a record yourself",
     img: { base: "/images/home/evidence-card", widths: [480, 800, 1376], width: 1376, height: 768, alt: "Two hands holding a glass card showing a verified signed record" },
