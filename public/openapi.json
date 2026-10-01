@@ -2288,21 +2288,14 @@
         "responses": {
           "503": {
             "content": {
-              "application/json": {
-                "example": {
-                  "code": "RETIRED",
-                  "endpoint": "/api/growth-loops",
-                  "schema": "csoai.retired-endpoint/0.1",
-                  "status": "UNAVAILABLE"
-                }
-              }
+              "application/json": {}
             },
-            "description": "Retired \u2014 withdrawn, not pre-release. csoai.retired-endpoint/0.1, code RETIRED"
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
         "security": [],
         "summary": "/api/growth-loops \u2014 retired until loop status is derived from current evidence.",
-        "x-csoai-lifecycle": "RETIRED"
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       }
     },
     "/api/gspc": {
@@ -5656,21 +5649,14 @@
         "responses": {
           "503": {
             "content": {
-              "application/json": {
-                "example": {
-                  "code": "RETIRED",
-                  "endpoint": "/api/prod-readiness",
-                  "schema": "csoai.retired-endpoint/0.1",
-                  "status": "UNAVAILABLE"
-                }
-              }
+              "application/json": {}
             },
-            "description": "Retired \u2014 withdrawn, not pre-release. csoai.retired-endpoint/0.1, code RETIRED"
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
         "security": [],
         "summary": "/api/prod-readiness \u2014 retired until readiness is derived from current evidence.",
-        "x-csoai-lifecycle": "RETIRED"
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       }
     },
     "/api/proof": {
@@ -8202,21 +8188,14 @@
         "responses": {
           "503": {
             "content": {
-              "application/json": {
-                "example": {
-                  "code": "RETIRED",
-                  "endpoint": "/api/synthesis",
-                  "schema": "csoai.retired-endpoint/0.1",
-                  "status": "UNAVAILABLE"
-                }
-              }
+              "application/json": {}
             },
-            "description": "Retired \u2014 withdrawn, not pre-release. csoai.retired-endpoint/0.1, code RETIRED"
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
         "security": [],
         "summary": "/api/synthesis \u2014 retired until mappings is derived from current evidence.",
-        "x-csoai-lifecycle": "RETIRED"
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       }
     },
     "/api/tools": {
