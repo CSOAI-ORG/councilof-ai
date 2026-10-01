@@ -1,0 +1,95 @@
+{
+  "bounded_causal_verdict": "NO_NUMERICAL_EFFECT_IN_TESTED_1C_CASE",
+  "cases": [
+    {
+      "bruggeman": 2.1808248939418737,
+      "cutoff_hit": true,
+      "elapsed_s": 2.772,
+      "electrode": "aligned",
+      "end_V": 0.004999999999998783,
+      "frac_theory": 0.2242832842267253,
+      "mAh_per_g": 88.12650132258732,
+      "t_end_s": 852.8371095734259,
+      "variant": "original"
+    },
+    {
+      "bruggeman": 4.300506082471894,
+      "cutoff_hit": true,
+      "elapsed_s": 6.579,
+      "electrode": "reference",
+      "end_V": 0.004999999999998783,
+      "frac_theory": 0.13781777488437355,
+      "mAh_per_g": 54.15204419936239,
+      "t_end_s": 524.0520406389907,
+      "variant": "original"
+    },
+    {
+      "bruggeman": 2.1808248939418737,
+      "cutoff_hit": true,
+      "elapsed_s": 5.614,
+      "electrode": "aligned",
+      "end_V": 0.004999999999998783,
+      "frac_theory": 0.2242832842267253,
+      "mAh_per_g": 88.12650132258732,
+      "t_end_s": 852.8371095734259,
+      "variant": "collector_mapped"
+    },
+    {
+      "bruggeman": 4.300506082471894,
+      "cutoff_hit": true,
+      "elapsed_s": 5.274,
+      "electrode": "reference",
+      "end_V": 0.004999999999998783,
+      "frac_theory": 0.13781777488437355,
+      "mAh_per_g": 54.15204419936239,
+      "t_end_s": 524.0520406389907,
+      "variant": "collector_mapped"
+    }
+  ],
+  "condition": {
+    "crate": 1.0,
+    "direction": "lithiation",
+    "porosity_mode": "as_measured",
+    "radius_m": 5e-06,
+    "separator": "polymer25"
+  },
+  "deltas": {
+    "aligned": {
+      "end_V": 0.0,
+      "frac_theory": 0.0,
+      "mAh_per_g": 0.0,
+      "t_end_s": 0.0
+    },
+    "reference": {
+      "end_V": 0.0,
+      "frac_theory": 0.0,
+      "mAh_per_g": 0.0,
+      "t_end_s": 0.0
+    }
+  },
+  "parameter_change": {
+    "Positive current collector conductivity [S.m-1]": {
+      "collector_mapped": 58411000.0,
+      "original": 36914000.0
+    },
+    "Positive current collector density [kg.m-3]": {
+      "collector_mapped": 8960.0,
+      "original": 2700.0
+    },
+    "Positive current collector specific heat capacity [J.kg-1.K-1]": {
+      "collector_mapped": 385.0,
+      "original": 897.0
+    },
+    "Positive current collector thermal conductivity [W.m-1.K-1]": {
+      "collector_mapped": 401.0,
+      "original": 237.0
+    },
+    "Positive current collector thickness [m]": {
+      "collector_mapped": 1.2e-05,
+      "original": 1.6e-05
+    }
+  },
+  "pybamm": "26.8.0.0",
+  "schema": "csoai.ras-battery-control/1.0",
+  "scope_note": "One bounded 1C lithiation case: R5um, polymer25, as_measured; does not prove zero effect for every PyBaMM option or thermal/current-collector configuration."
+}

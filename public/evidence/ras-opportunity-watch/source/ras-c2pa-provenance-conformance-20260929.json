@@ -1,0 +1,109 @@
+{
+  "acceptance": [
+    "unsigned must remain unsigned/non-pass",
+    "invalid signature must fail cryptographic validation",
+    "hard-binding mismatch must fail",
+    "assertion URI mismatch must fail",
+    "valid manifest and trusted signer are separate predicates",
+    "C2PA provenance PASS must never be promoted to truth of depicted real-world content"
+  ],
+  "canonical_resources": [
+    {
+      "accepts": [
+        {
+          "amount": "8000",
+          "asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "extra": {
+            "feePayer": "CjNFTjvBhbJJd2B5ePPMHRLx1ELZpa8dwQgGL727eKww"
+          },
+          "maxTimeoutSeconds": 300,
+          "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+          "payTo": "AytHnvc6bZx1ALTy7b5Px7hcavoSYszG9aeKvDcZ8R1u",
+          "scheme": "exact"
+        }
+      ],
+      "description": "Raw C2PA manifest-store dump for a media file, with no verdict wrapper. Returns every manifest in the provenance chain with its claim generator, signer, assertion labels, edit actions, AI-source flag, ingredient graph and the granular validation codes. For agents that want the full provenance tree rather than a go/no-go verdict. Heavy binary fields (thumbnails, hash blobs) are not echoed.",
+      "lastUpdated": "2026-09-29T07:40:50.986Z",
+      "resource": "https://payai.agentstools.dev/provenance/inspect",
+      "x402Version": 2
+    },
+    {
+      "accepts": [
+        {
+          "amount": "20000",
+          "asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "extra": {
+            "feePayer": "CjNFTjvBhbJJd2B5ePPMHRLx1ELZpa8dwQgGL727eKww"
+          },
+          "maxTimeoutSeconds": 300,
+          "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+          "payTo": "AytHnvc6bZx1ALTy7b5Px7hcavoSYszG9aeKvDcZ8R1u",
+          "scheme": "exact"
+        }
+      ],
+      "description": "Cryptographic C2PA / Content-Credentials verdict for a media file. Parses the embedded manifest, verifies the signature chain and asset hash-binding against the C2PA production + Interim trust lists, and returns a go/no-go verdict (authentic-provenance, untrusted-signer, tampered, unsigned) with the distilled signed claims. Cryptographic provenance, not a deepfake detector.",
+      "lastUpdated": "2026-09-29T07:40:50.444Z",
+      "resource": "https://payai.agentstools.dev/provenance/verify",
+      "x402Version": 2
+    }
+  ],
+  "discovery_source": {
+    "observed_at": "2026-09-29T10:17:49.029889+00:00",
+    "sha256": "61727fa660a217472160c9c53cce5de1d4c8184b4b0ba04a25c2ae7786adebfe",
+    "url": "https://facilitator.payai.network/discovery/resources?limit=1000"
+  },
+  "fixtures": [
+    {
+      "expected": "NO_CONTENT_CREDENTIALS",
+      "id": "unsigned",
+      "path": "legacy/1.4/image/jpeg/adobe-20220124-A.jpg",
+      "sha256": "f999fd78bfe8a83c96e468a078830ba94485bc1bc6fd086fb94a43bd29dd0f23"
+    },
+    {
+      "expected": "VALID_MANIFEST_UNKNOWN_OR_UNTRUSTED_SOURCE",
+      "id": "valid_untrusted_test_signer",
+      "path": "legacy/1.4/image/jpeg/adobe-20220124-C.jpg",
+      "sha256": "75a8da33f6eaf1e16bf3b42cd78913b22b2e6a671fda217a508b1ba4230ce864"
+    },
+    {
+      "expected": "INVALID_SIGNATURE",
+      "id": "invalid_signature",
+      "path": "legacy/1.4/image/jpeg/adobe-20220124-E-sig-CA.jpg",
+      "sha256": "0d4c2774f1b7e94b9613bb952b0a76b6a178d22ac6d206d257d2af1376cbbff2"
+    },
+    {
+      "expected": "HARD_BINDING_HASH_MISMATCH",
+      "id": "hard_binding_mismatch",
+      "path": "legacy/1.4/image/jpeg/adobe-20220124-E-dat-CA.jpg",
+      "sha256": "dae9d121060cec4b6f27ee8acda85ad461cf75f2261d90b463319b787342d7f9"
+    },
+    {
+      "expected": "ASSERTION_URI_HASH_MISMATCH",
+      "id": "assertion_uri_mismatch",
+      "path": "legacy/1.4/image/jpeg/adobe-20220124-E-uri-CA.jpg",
+      "sha256": "56014faf6b97532252c9bb90dcf484923a8aa7bba197e84a8555044a35e4f3a6"
+    }
+  ],
+  "generated_at": "2026-09-29T10:21:19.150073+00:00",
+  "measurement_states": {
+    "buyer_acceptance": "UNMEASURED_HOLD",
+    "discovery": "SOURCE_OBSERVED",
+    "exact_byte_delivery": "UNMEASURED_HOLD",
+    "local_oracle_execution": "HOLD_PENDING_COMPATIBLE_TOOL_BUILD",
+    "official_fixture_oracle": "SOURCE_OBSERVED",
+    "payment": "UNMEASURED_HOLD",
+    "settlement": "UNMEASURED_HOLD",
+    "third_party_service_behavior": "UNMEASURED_HOLD"
+  },
+  "official_oracle": {
+    "checkout_blocker": "vendor/profile-evaluator-rs points to a public URL that returned repository not found during anonymous recursive submodule init",
+    "conformance_cli_checkout_state": "HOLD_PUBLIC_SUBMODULE_UNAVAILABLE",
+    "conformance_cli_commit": "c09f0340524b088a81475f7b7eaab5ba7042772f",
+    "conformance_cli_repo": "https://github.com/contentauth/c2pa-conformance-tool-cli",
+    "fallback_tool": "c2patool 0.27.22 local build pending",
+    "public_testfiles_commit": "22beccc075707475b038d8789d0136c009e43143",
+    "public_testfiles_repo": "https://github.com/c2pa-org/public-testfiles"
+  },
+  "schema": "csoai.ras-conformance-evidence/1.0",
+  "subject": "AgentTools C2PA x402 provenance projection"
+}
