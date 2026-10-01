@@ -30,7 +30,9 @@ those canonical body bytes, not the digest):
 All paths record the DID that actually signed (--did; default #board-attestation-1).
 n<30 cards stay UNMEASURED ("n<30 unquotable") even if signed. Empty is never 0.
 Signed bytes are content-addressed and never overwritten: a changed body lands on a
-new path and the old card is recorded in SUPERSEDED.jsonl, not edited.
+new path and the old card is recorded in SUPERSEDED.jsonl, not edited. Because the
+address is a function of the body, a card that is already signed is skipped BEFORE a
+signature is spent on it, not after.
 """
 from __future__ import annotations
 
@@ -74,6 +76,71 @@ def card_path(axis: str, digest: str) -> Path:
     a changed body lands on a different path, so an existing signed card can never
     be overwritten by construction."""
     return DST / f"signed-{str(axis or '')[:8]}-{digest[:12]}.json"
+
+
+def local_content_address(body: dict) -> str | None:
+    """sha256 over the canonical body, or None when no single preimage is safe.
+
+    The JS canonical form is the preimage every verifier of a style-C card recomputes;
+    canonical_bytes is the estate's Python form. They differ only for an integral float,
+    and where they differ there is no unambiguous address to compute here — the caller
+    falls back to the digest the signer attests.
+    """
+    try:
+        pre = canonical_js_body_bytes(body)
+    except ValueError:
+        return None
+    if pre != canonical_bytes(body):
+        return None
+    return hashlib.sha256(pre).hexdigest()
+
+
+def already_signed(axis: str, digest: str) -> Path | None:
+    """The signed card already living at this content address, or None.
+
+    Both halves are load-bearing: the id must match (the filename carries only 12 hex
+    of it) and the file must actually carry a signature, because a half-written or
+    unsigned file at the path is not a card to skip.
+    """
+    dest = card_path(axis, digest)
+    if not dest.is_file():
+        return None
+    try:
+        prev = json.loads(dest.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    return dest if prev.get("id") == digest and prev.get("signature") else None
+
+
+def freeze_body(body: dict) -> dict:
+    """Apply the transforms the signature will freeze, in place; return the body.
+
+    A signature freezes the body, so the body must be true AFTER it is signed, not
+    only before. "signed-pending-verify" was a state that expired the moment the card
+    verified, and it was interned into the bytes anyway — which is how the Hub ended
+    up with cells saying MEASURED over bodies saying UNMEASURED (#1155). The state
+    written here is the one that survives: a run of n>=30 that is about to be signed
+    by the board key IS the measurement; n<30 is not quotable and says so.
+    signature_state must likewise describe the state that survives the signer call —
+    leaving STAGED_UNSIGNED here would build a cryptographically valid wrapper around
+    a lifecycle contradiction.
+
+    This is a function rather than four lines inside the loop because the content
+    address of a signed card is sha256 over THIS body: anything that needs to know
+    which card a staged body becomes — the already-signed pre-check below, and the
+    test that guards it — must apply exactly these transforms. A second copy drifts,
+    and did: signature_state was added here and the honesty test went on building the
+    pre-#1155 body, so its fixture sat at an address the signer never writes.
+    """
+    n = int(body.get("n") or 0)
+    if n >= 30:
+        body["status"] = "MEASURED"
+        body["unmeasured"] = []
+    else:
+        body["status"] = "UNMEASURED"
+        body["unmeasured"] = ["n<30 unquotable"]
+    body["signature_state"] = "SIGNED"
+    return body
 
 
 def prior_cards(model: str, axis: str, digest: str) -> list[dict]:
@@ -285,23 +352,7 @@ def main(argv: list[str] | None = None) -> int:
                 failures += 1
                 continue
         n = int(body.get("n") or 0)
-        # A signature freezes the body, so the body must be true AFTER it is signed,
-        # not only before. "signed-pending-verify" was a state that expired the moment
-        # the card verified, and it was interned into the bytes anyway — which is how
-        # the Hub ended up with cells saying MEASURED over bodies saying UNMEASURED
-        # (#1155). The state written here is the one that survives: a run of n>=30 that
-        # is about to be signed by the board key IS the measurement; n<30 is not
-        # quotable and says so.
-        if n >= 30:
-            body["status"] = "MEASURED"
-            body["unmeasured"] = []
-        else:
-            body["status"] = "UNMEASURED"
-            body["unmeasured"] = ["n<30 unquotable"]
-        # This value is part of the signed body, so it must describe the state
-        # that survives the signer call. Leaving STAGED_UNSIGNED here creates a
-        # cryptographically valid wrapper around a lifecycle contradiction.
-        body["signature_state"] = "SIGNED"
+        freeze_body(body)
         if args.require_hub_admission and not is_runpod:
             body["admission"] = wrap["admission"]
         wrap["body"] = body
@@ -310,6 +361,23 @@ def main(argv: list[str] | None = None) -> int:
             print(f"HALT {fp.name} {len(raw)}B", file=sys.stderr)
             failures += 1
             continue
+        # The destination is a function of the body, so whether this card is already
+        # on disk is knowable BEFORE a signature is spent on it. #1888 moved that
+        # check below the sign call when the digest became attested, and from then on
+        # every re-run paid the signer again for cards already signed: the surviving
+        # check stopped the BYTES being rewritten, not the SIGNATURE being issued.
+        # The pre-address is the JS canonical form cross-checked against the Python
+        # one — exactly the pair sign_locally and sign_via_pod_token_attested already
+        # trust — and where the two diverge there is no safe pre-address, so the
+        # attested digest below stays the only content address. A wrong pre-address
+        # can only fail to match: a skip requires a signed card carrying that id.
+        pre_digest = local_content_address(body)
+        if pre_digest is not None:
+            hit = already_signed(str(body.get("axis") or ""), pre_digest)
+            if hit is not None:
+                print("SKIP already-signed", hit.name, pre_digest[:16])
+                signed += 1
+                continue
         # OIDC: the trusted signer parses the payload in JavaScript and returns the
         # digest of the exact bytes it signed. Numeric JSON values do not retain
         # Python's int/float distinction across that boundary, so its attested
@@ -327,15 +395,17 @@ def main(argv: list[str] | None = None) -> int:
             failures += 1
             continue
         dest = card_path(body.get("axis") or "", digest)
+        # Backstop for the pre-check above: the attested digest is authoritative, and
+        # it is the one that decides where these bytes land.
+        if already_signed(str(body.get("axis") or ""), digest) is not None:
+            print("SKIP already-signed", dest.name, digest[:16])
+            signed += 1
+            continue
         if dest.is_file():
             try:
                 prev = json.loads(dest.read_text(encoding="utf-8"))
             except Exception:
                 prev = {}
-            if prev.get("id") == digest and prev.get("signature"):
-                print("SKIP already-signed", dest.name, digest[:16])
-                signed += 1
-                continue
             if prev.get("signature"):
                 # Unreachable while the path is a function of the body — a different
                 # digest is a different path. Kept because the day it fires, the
