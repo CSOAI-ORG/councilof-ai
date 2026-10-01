@@ -109,3 +109,78 @@ export function withMeasurementTime<T extends AxisScore>(axis: T): TimedAxis<T> 
     },
   };
 }
+export type FreshnessResult = {
+  state: "CURRENT" | "STALE" | "UNCHECKABLE";
+  reason: string;
+  evaluated_at: string;
+  max_age_seconds: number;
+  age_seconds?: number;
+  age_lower_bound_seconds?: number;
+  age_upper_bound_seconds?: number;
+};
+
+const parseInstant = (value: string): number | null => {
+  const ms = Date.parse(value);
+  return Number.isFinite(ms) ? ms : null;
+};
+
+export function evaluateMeasurementFreshness(
+  measurement: MeasurementTime,
+  evaluatedAt: string,
+  maxAgeSeconds: number,
+): FreshnessResult {
+  const now = parseInstant(evaluatedAt);
+  const base = { evaluated_at: evaluatedAt, max_age_seconds: maxAgeSeconds };
+  if (now === null || !Number.isFinite(maxAgeSeconds) || maxAgeSeconds < 0) {
+    return { ...base, state: "UNCHECKABLE", reason: "INVALID_EVALUATION_INPUT" };
+  }
+  const maxMs = maxAgeSeconds * 1000;
+
+  if (measurement.state === "EXACT") {
+    const observed = parseInstant(measurement.observed_at);
+    if (observed === null || observed > now) {
+      return { ...base, state: "UNCHECKABLE", reason: observed === null ? "INVALID_MEASUREMENT_TIME" : "MEASUREMENT_IN_FUTURE" };
+    }
+    const ageMs = now - observed;
+    return {
+      ...base,
+      state: ageMs <= maxMs ? "CURRENT" : "STALE",
+      reason: ageMs <= maxMs ? "AGE_WITHIN_BOUND" : "AGE_EXCEEDS_BOUND",
+      age_seconds: ageMs / 1000,
+    };
+  }
+
+  if (measurement.state === "DAY") {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(measurement.observed_on)) {
+      return { ...base, state: "UNCHECKABLE", reason: "INVALID_MEASUREMENT_DAY" };
+    }
+    const start = Date.parse(measurement.observed_on + "T00:00:00Z");
+    const end = start + 86400000 - 1;
+    if (!Number.isFinite(start) || start > now) {
+      return { ...base, state: "UNCHECKABLE", reason: start > now ? "MEASUREMENT_DAY_IN_FUTURE" : "INVALID_MEASUREMENT_DAY" };
+    }
+    const lowerAge = Math.max(0, now - Math.min(end, now));
+    const upperAge = now - start;
+    if (upperAge <= maxMs) {
+      return { ...base, state: "CURRENT", reason: "WHOLE_DAY_WITHIN_BOUND", age_lower_bound_seconds: lowerAge / 1000, age_upper_bound_seconds: upperAge / 1000 };
+    }
+    if (lowerAge > maxMs) {
+      return { ...base, state: "STALE", reason: "WHOLE_DAY_EXCEEDS_BOUND", age_lower_bound_seconds: lowerAge / 1000, age_upper_bound_seconds: upperAge / 1000 };
+    }
+    return { ...base, state: "UNCHECKABLE", reason: "DAY_PRECISION_STRADDLES_BOUND", age_lower_bound_seconds: lowerAge / 1000, age_upper_bound_seconds: upperAge / 1000 };
+  }
+
+  if (measurement.state === "NOT_AFTER") {
+    const bound = parseInstant(measurement.not_after);
+    if (bound === null || bound > now) {
+      return { ...base, state: "UNCHECKABLE", reason: bound === null ? "INVALID_NOT_AFTER" : "NOT_AFTER_IN_FUTURE" };
+    }
+    const lowerAge = now - bound;
+    if (lowerAge > maxMs) {
+      return { ...base, state: "STALE", reason: "NOT_AFTER_ALREADY_EXCEEDS_BOUND", age_lower_bound_seconds: lowerAge / 1000 };
+    }
+    return { ...base, state: "UNCHECKABLE", reason: "NOT_AFTER_CANNOT_PROVE_CURRENT", age_lower_bound_seconds: lowerAge / 1000 };
+  }
+
+  return { ...base, state: "UNCHECKABLE", reason: "NO_STRUCTURED_MEASUREMENT_TIME" };
+}

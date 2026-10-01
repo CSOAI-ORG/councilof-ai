@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { beforeAll, describe, expect, it } from "vitest";
 import { onRequestGet } from "./gspc";
+import { evaluateMeasurementFreshness } from "./_gspc_measurement_time";
 
 type MeasurementTime =
   | { state: "EXACT"; observed_at: string }
@@ -91,5 +92,31 @@ describe("GET /api/gspc structured measurement time", () => {
     expect(body.measurement_time_contract.states.NOT_AFTER).toEqual(["swarm"]);
     expect(body.measurement_time_contract.states.UNCHECKABLE).toEqual([]);
     expect(Object.values(body.measurement_time_contract.states).flat()).toHaveLength(23);
+  });
+});
+
+describe("precision-aware freshness admission", () => {
+  const now = "2026-10-01T05:00:00Z";
+
+  it("EXACT timestamps can prove CURRENT or STALE", () => {
+    expect(evaluateMeasurementFreshness({ state: "EXACT", precision: "instant", observed_at: "2026-10-01T04:30:00Z", source: "x", source_field: "x" }, now, 3600).state).toBe("CURRENT");
+    expect(evaluateMeasurementFreshness({ state: "EXACT", precision: "instant", observed_at: "2026-09-30T04:30:00Z", source: "x", source_field: "x" }, now, 3600).state).toBe("STALE");
+  });
+
+  it("DAY precision fails closed when the bound cuts through that day", () => {
+    const result = evaluateMeasurementFreshness({ state: "DAY", precision: "day", observed_on: "2026-09-30", source: "x", source_field: "x" }, "2026-10-01T12:00:00Z", 24 * 3600);
+    expect(result.state).toBe("UNCHECKABLE");
+    expect(result.reason).toBe("DAY_PRECISION_STRADDLES_BOUND");
+  });
+
+  it("NOT_AFTER can prove STALE but never CURRENT", () => {
+    const bound = { state: "NOT_AFTER" as const, precision: "instant-upper-bound" as const, not_after: "2026-10-01T04:30:00Z", source: "x", source_field: "x", note: "upper bound only" };
+    expect(evaluateMeasurementFreshness(bound, now, 3600).state).toBe("UNCHECKABLE");
+    expect(evaluateMeasurementFreshness(bound, now, 60).state).toBe("STALE");
+  });
+
+  it("UNCHECKABLE never upgrades to CURRENT", () => {
+    const missing = { state: "UNCHECKABLE" as const, precision: "unknown" as const, source: "x", source_field: "none", note: "missing" };
+    expect(evaluateMeasurementFreshness(missing, now, 86400)).toMatchObject({ state: "UNCHECKABLE", reason: "NO_STRUCTURED_MEASUREMENT_TIME" });
   });
 });
