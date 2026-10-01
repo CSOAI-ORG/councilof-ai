@@ -1,0 +1,22 @@
+{
+  "schema": "csoai.gspc-axis-freshness-case/0.2",
+  "record": {
+    "axis": "governance",
+    "status": "MEASURED",
+    "measurement_time": {
+      "state": "DAY",
+      "precision": "day",
+      "observed_on": "2026-08-12",
+      "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+      "source_field": "measured"
+    }
+  },
+  "now": "2026-10-01T12:00:00Z",
+  "max_age_seconds": 1209600,
+  "expected": {
+    "state": "STALE",
+    "admit_current": false,
+    "reason": "WHOLE_DAY_OLDER_THAN_BOUND"
+  },
+  "note": "The 14-day bound is a fixture parameter, not a GSPC constitutional freshness policy."
+}

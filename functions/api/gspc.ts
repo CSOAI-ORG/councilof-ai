@@ -15,6 +15,7 @@ import { buildCite, citeUrl, sha256Hex } from "./_gspc_cite";
 import { FINANCIAL_FACTS_AS_OF, financialFamilyBlock } from "./_gspc_fin_as_of";
 import { ROWS_SEPARATION } from "./_gspc_rows_separation";
 import { MDE_STATES, UNDERPOWERED_STATE, applyUnderpowered, measuredOnModel, withPower } from "./_gspc_power";
+import { withMeasurementTime } from "./_gspc_measurement_time";
 
 // 22-axis canon (ADR-001): 14 GSPC behavioural axes + 8 financial/domain axes.
 // Swept into the payload 2026-08-26. Before this, the 8 financial axes were ruled
@@ -484,7 +485,7 @@ export const onRequestGet: PagesFunction = async (context) => {
       ? row.status
       : undefined;
     return { ...a, facts_as_of: row.as_of, ...(facts_status ? { facts_status } : {}) };
-  });
+  }).map(withMeasurementTime);
   const ownLedExcludedAxes = selectedRaw
     .filter((a) => a.kind === "model-comparison" && isOwnCouncilModel(a.leader))
     .map((a) => a.axis);
@@ -892,6 +893,19 @@ export const onRequestGet: PagesFunction = async (context) => {
       "no HuggingFace bank: the measured one carries evidence_url to its signed run, and a " +
       "declared slot with nothing behind it carries no link at all rather than one that resolves " +
       "to nothing.",
+    measurement_time_contract: {
+      schema: "csoai.gspc-measurement-time/0.1",
+      rule: "Measurement time comes from measurement evidence. API response time, build time, deploy time and readback time never refresh a measurement.",
+      global_max_age_seconds: null,
+      global_freshness_policy: "UNSET",
+      admission_note: "A relying pipeline may set a max age, but must evaluate evidence precision fail-closed: EXACT may be compared directly; DAY is day precision; NOT_AFTER proves only an upper bound; UNCHECKABLE cannot be admitted CURRENT.",
+      states: {
+        EXACT: selected.filter((a) => a.measurement_time.state === "EXACT").map((a) => a.axis),
+        DAY: selected.filter((a) => a.measurement_time.state === "DAY").map((a) => a.axis),
+        NOT_AFTER: selected.filter((a) => a.measurement_time.state === "NOT_AFTER").map((a) => a.axis),
+        UNCHECKABLE: selected.filter((a) => a.measurement_time.state === "UNCHECKABLE").map((a) => a.axis),
+      },
+    },
     axes: selected.map(withResolvableBank),
     // In the payload for honesty; NOT the board. See the note on each entry.
     measured_in_lane: axis ? undefined : MEASURED_IN_LANE,
