@@ -243,7 +243,16 @@ for (const r of live) {
       last_read: max(s.reads) || r.created,
       last_read_basis: s.reads.length ? "artifact.access_date" : "registry.created_utc",
       next_scheduled_read: min(s.nexts),
-      next_scheduled_read_state: s.nexts.length ? "SCHEDULED" : "UNSCHEDULED",
+      // A named date that is already before this register's as_of is not "SCHEDULED" — the
+      // weekly pod loop that owned those reads was retired 2026-09-28 and the dates passed
+      // without a completed run. DUE_NOT_RUN is the same word the one scheduler uses
+      // (scripts/claims/maintenance_due.py). This field is derived from (next, as_of) only;
+      // run outcomes stay in the checks ledger, never inferred here.
+      next_scheduled_read_state: !s.nexts.length
+        ? "UNSCHEDULED"
+        : min(s.nexts) < asOf
+          ? "DUE_NOT_RUN"
+          : "SCHEDULED",
       registry_id: r.registry_id,
       registry_url: r.registry_url,
       registry_schema: r.schema,
@@ -270,6 +279,7 @@ const totals = {
   ),
   claims_conforming_to_artifact_schema: subjectRows.reduce((n, s) => n + s.conforming_artifacts, 0),
   subjects_with_a_scheduled_next_read: subjectRows.filter((s) => s.next_scheduled_read_state === "SCHEDULED").length,
+  subjects_with_a_due_unrun_next_read: subjectRows.filter((s) => s.next_scheduled_read_state === "DUE_NOT_RUN").length,
 };
 
 /**
