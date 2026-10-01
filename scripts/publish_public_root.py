@@ -105,6 +105,16 @@ LAST_UNSIGNED_SHAS = (
 )
 LAST_UNSIGNED_SET = frozenset(LAST_UNSIGNED_SHAS)
 
+# Exact historical cards whose continued inclusion is itself a public invariant.
+# These are not regenerated under today's outer-card grammar: doing so changes the
+# whole-card digest even when the underlying declaration is byte-for-byte the same.
+# The source atom remains on disk and is checked against the pinned card's semantic
+# fields; drift fails closed rather than silently moving the anchor.
+STICKY_CARD_SOURCES = {
+    "6109d9dd03edf688f511bb106fb5a25ad5b2650c3c04e6116271a01c72d65111":
+        "public/interop/estate-boundary-2026-09/card-shape-a-boundary-unsigned.json",
+}
+
 EXIT_OK = 0
 EXIT_SPLIT = 2
 EXIT_MISSING_KEY = 3
@@ -526,6 +536,57 @@ def make_card(leaf: dict, sig: str | None, will_sign: bool | None = None) -> dic
     return card
 
 
+def _semantic_card_fields(obj: dict) -> dict:
+    """Fields a staged atom and its signed historical card must agree on.
+
+    Outer grammar fields such as product/product_block are intentionally excluded:
+    adding those later is exactly what would move a whole-card digest.
+    """
+    return {k: obj.get(k) for k in (
+        "surface", "subject", "as_of", "source_urls", "payload", "unmeasured", "tags"
+    )}
+
+
+def load_sticky_cards(repo_root: Path | None = None) -> list[dict]:
+    """Load exact immutable cards whose root membership must survive publisher upgrades.
+
+    Every pinned card must still reproduce its own whole-card digest, carry a signature,
+    and semantically match the staged source atom. Missing/tampered/drifted bytes halt
+    publication instead of silently replacing the historical anchor with a new digest.
+    """
+    root = repo_root or ROOT
+    out: list[dict] = []
+    for expected_sha, source_rel in STICKY_CARD_SOURCES.items():
+        card_path = root / "public" / "cards" / f"{expected_sha[:16]}.json"
+        source_path = root / source_rel
+        try:
+            wrapped = json.loads(card_path.read_text(encoding="utf-8"))
+            source = json.loads(source_path.read_text(encoding="utf-8"))
+        except Exception as exc:
+            raise SystemExit(f"STICKY CARD HALT: cannot read {expected_sha[:16]}: {type(exc).__name__}")
+        card = wrapped.get("card") if isinstance(wrapped, dict) else None
+        if not isinstance(card, dict):
+            raise SystemExit(f"STICKY CARD HALT: {card_path} has no card object")
+        if card.get("sha256") != expected_sha or card_sha256(card) != expected_sha:
+            raise SystemExit(f"STICKY CARD HALT: {expected_sha[:16]} whole-card digest drift")
+        if not card.get("sig_ed25519"):
+            raise SystemExit(f"STICKY CARD HALT: {expected_sha[:16]} is no longer signed")
+        if card.get("surface") not in SURFACES:
+            raise SystemExit(f"STICKY CARD HALT: {expected_sha[:16]} has unsupported surface")
+        if _semantic_card_fields(card) != _semantic_card_fields(source):
+            raise SystemExit(f"STICKY CARD HALT: staged source drift for {expected_sha[:16]}")
+        out.append(card)
+    return out
+
+
+def preserve_sticky_cards(cards: list[dict], sticky: list[dict]) -> list[dict]:
+    """Replace regenerated semantic twins with their exact historical card bytes."""
+    by_identity = {(c.get("surface"), c.get("subject"), c.get("as_of")): c for c in sticky}
+    kept = [c for c in cards if (c.get("surface"), c.get("subject"), c.get("as_of")) not in by_identity]
+    kept.extend(sticky)
+    return kept
+
+
 def load_committed() -> dict:
     path = ROOT / "public" / "root.json"
     return json.loads(path.read_text(encoding="utf-8"))
@@ -793,6 +854,11 @@ def main() -> int:
             if card["sha256"] not in new_unsigned:
                 new_unsigned.append(card["sha256"])
         cards.append(card)
+
+    # Preserve exact historical anchors after all dynamic cards are built. A staged
+    # semantic twin is replaced rather than duplicated, so one declaration stays one
+    # leaf while its original whole-card digest remains in every subsequent root.
+    cards = preserve_sticky_cards(cards, load_sticky_cards(ROOT))
 
     asset_cards = [c for c in cards if c["surface"] == "xrpl.asset.state"]
     if len(asset_cards) != 16:
