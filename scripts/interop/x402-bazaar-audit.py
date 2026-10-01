@@ -255,6 +255,16 @@ def render_markdown(readings: list[dict[str, Any]], door_timeout: int | None) ->
         "",
     ]
     for result in readings:
+        if result.get("status") == "UNCHECKABLE":
+            lines += [
+                f"## {result['index']}",
+                "",
+                f"- `{result['url']}`",
+                f"- status: **UNCHECKABLE** — `{result['error_type']}: {result['error']}`",
+                "- no presence or absence conclusion is drawn from this failed read",
+                "",
+            ]
+            continue
         lines += [
             f"## {result['index']}",
             "",
@@ -301,12 +311,23 @@ def main() -> int:
     timeout = door_max_timeout()
     declared = manifest_routes()
     readings = []
+    failed = False
     for name, url in targets:
         try:
-            readings.append(add_manifest_coverage(reading(name, url, timeout), declared))
+            result = add_manifest_coverage(reading(name, url, timeout), declared)
+            result["status"] = "OBSERVED"
+            readings.append(result)
         except (urllib.error.URLError, ValueError, KeyError, json.JSONDecodeError) as exc:
-            print(f"UNCHECKABLE {name} {type(exc).__name__}: {exc}; {OUT} left untouched", file=sys.stderr)
-            return 2
+            failed = True
+            readings.append({
+                "index": name,
+                "url": url,
+                "status": "UNCHECKABLE",
+                "error_type": type(exc).__name__,
+                "error": str(exc),
+                "ours": [],
+                "not_proof_of_absence": True,
+            })
     document = {
         "kind": "csoai.x402-bazaar-audit/v1",
         "as_of": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
@@ -318,13 +339,15 @@ def main() -> int:
     }
     if args.json:
         print(json.dumps(document, indent=2))
-        return 0
+        return 2 if failed else 0
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(render_markdown(readings, timeout))
     print("wrote " + str(OUT) + ": " + "; ".join(
-        f"{row['index']} {len(row['ours'])} of {row['scanned']}/{row['declared_total']}" for row in readings
+        (f"{row['index']} {len(row['ours'])} of {row['scanned']}/{row['declared_total']}"
+         if row["status"] == "OBSERVED" else f"{row['index']} UNCHECKABLE")
+        for row in readings
     ))
-    return 0
+    return 2 if failed else 0
 
 
 if __name__ == "__main__":
