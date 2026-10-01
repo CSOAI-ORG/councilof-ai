@@ -90,6 +90,37 @@ class StablecoinPromotionQueueTest(unittest.TestCase):
         self.assertEqual(406, signals["issuer_site_only_pending_review"])
         self.assertEqual(signals["no_source_located"], self.document["counts"]["no_source_located"])
 
+    def test_replay_backlog_is_split_by_actual_evidence_state(self) -> None:
+        counts = self.document["counts"]
+        actions = self.document["next_action_counts"]
+        self.assertEqual(9, counts["replay_stage_ready"])
+        self.assertEqual(6, counts["prior_probe_replay_needed"])
+        self.assertEqual(1, counts["replay_identity_hold"])
+        self.assertEqual(9, actions["STAGE_REPLAYED_MEASUREMENT"])
+        self.assertEqual(6, actions["REPLAY_EXISTING_MEASUREMENT_AT_RECORDED_HEIGHT"])
+        self.assertEqual(1, actions["RECONCILE_REPLAY_IDENTITY"])
+        self.assertEqual(1, actions["BUILD_REPRODUCIBLE_CHAIN_MEASUREMENT"])
+
+    def test_replay_staging_never_promotes_measurement_state(self) -> None:
+        rows = [row for row in self.document["rows"] if row["states"]["replay_stage_ready"]]
+        self.assertEqual(9, len(rows))
+        for row in rows:
+            self.assertFalse(row["states"]["measured"])
+            self.assertEqual("STAGE_REPLAYED_MEASUREMENT", row["next_action"])
+            self.assertTrue(row["replay_evidence"]["qualified_readings"])
+
+    def test_usdtb_identity_mismatch_stays_on_hold(self) -> None:
+        row = next(row for row in self.document["rows"] if row["symbol"] == "USDTB")
+        self.assertEqual("RECONCILE_REPLAY_IDENTITY", row["next_action"])
+        self.assertTrue(row["states"]["replay_identity_hold"])
+        self.assertFalse(row["states"]["measured"])
+        reasons = {
+            reason
+            for reading in row["replay_evidence"]["held_readings"]
+            for reason in reading["hold_reasons"]
+        }
+        self.assertIn("SUBJECT_SYMBOL_MISMATCH", reasons)
+
     def test_anchor_without_measurement_fails_closed(self) -> None:
         changed = copy.deepcopy(self.document)
         changed["rows"][1]["states"]["anchored"] = True
