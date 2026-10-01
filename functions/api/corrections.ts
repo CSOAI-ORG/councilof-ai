@@ -131,8 +131,17 @@ export const LEDGER = {
       what_was_wrong: "The live legacy ChatGPT compatibility manifest had become a second, stale description of the estate. It froze the board at '22-axis GSPC' while the live board/state contract reported 23 axis and 23 measured. It also advertised /measure and /anchor operations that were not backed by a dedicated or catch-all source route in the canonical release tree, while omitting the existing Claim Maintenance and corrections read contracts.",
       how_caught: "A single-source-of-truth convergence audit compared the live plugin bytes, live /api/state, canonical /api/openapi.json and the current canonical staging mirror before changing any public surface.",
       what_changed: "The compatibility manifest no longer types an axis count, points explicitly to /api/openapi.json as the canonical Actions schema, removes the two unbacked measure/anchor declarations, and adds the existing /api/claims/register and /api/corrections GETs. The canonical Actions schema exposes /api/state, Claim Maintenance and corrections as existing read surfaces. Claim Maintenance, Dashboard and plugin copy now point to the already-landed ledger authorities in /api/state; no new ledger, scheduler, protocol or measurement engine was created.",
-      status: "CORRECTED IN SOURCE; PRODUCTION DEPLOY/READBACK PENDING",
+      status: "CORRECTED; LIVE READBACK 2026-10-01",
       reached_the_public: true,
+      live_readback:
+        "Anonymous GET https://councilof.ai/interop/chatgpt-plugin.json on 2026-10-01 " +
+        "(descriptive UA) answers 200, 6088 bytes: no '22-axis', no unbacked /measure or /anchor " +
+        "declarations, x-canonical-openapi = https://councilof.ai/api/openapi.json, and the " +
+        "existing /api/claims/register and /api/corrections GETs are present. " +
+        "GET /.well-known/mcp/server-card.json likewise carries no 22-axis and no unbacked " +
+        "measure/anchor routes. The deploy/readback that this entry's status used to await has " +
+        "happened; published_at remains UNRECORDED because the first-serving deploy timestamp " +
+        "was not captured at the time.",
       evidence: [
         "/interop/chatgpt-plugin.json",
         "/api/openapi.json",

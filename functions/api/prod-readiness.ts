@@ -1,6 +1,6 @@
 /**
  * /api/prod-readiness — retired until readiness is derived from current evidence.
- * @openapi-unavailable
+ * @openapi-retired
  */
 
 const json = (body: unknown, status = 200) =>
