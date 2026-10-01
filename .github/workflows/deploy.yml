@@ -229,6 +229,11 @@ jobs:
       - name: Signed-JSON guard — a stub or broken /signed/*.json blocks the deploy
         run: node scripts/signed-json-guard.mjs dist/client
 
+      - name: Governance discovery — JSON, Council pointers and bound bytes
+        run: |
+          node --test scripts/governance-discovery-gate.node-test.mjs
+          node scripts/governance-discovery-gate.mjs dist/client
+
       # A door that serves 200 but is missing from /.well-known/index.json is live and
       # undiscoverable through the canonical route. The index was append-only until
       # 2026-09-05 (300 files on disk vs 292 indexed). Derived now; gated here.

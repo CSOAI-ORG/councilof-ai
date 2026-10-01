@@ -191,6 +191,12 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         run: node scripts/signed-json-guard.mjs dist/client
 
+      - name: Governance discovery — JSON, Council pointers and bound bytes
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node --test scripts/governance-discovery-gate.node-test.mjs
+          node scripts/governance-discovery-gate.mjs dist/client
+
       # A private canary token (harness/instrument-guard) in any public file means a held-out
       # slice has leaked. The gate holds only digests from the signed commitments record, prints
       # the file and digest (never the token), and exits 2 when no record exists: an unread list

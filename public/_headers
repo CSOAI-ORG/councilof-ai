@@ -49,6 +49,13 @@
   Cache-Control: no-cache, must-revalidate
   Link: <https://councilof.ai/.well-known/api-catalog>; rel="api-catalog"
 
+# Canonical governance discovery (manifest + well-known pointer).
+/.well-known/csoai-governance.json
+  Content-Type: application/json; charset=utf-8
+
+/governance/manifest.json
+  Content-Type: application/json; charset=utf-8
+
 # Public read-only MCP connection metadata, consumed by browser and server clients.
 /.well-known/mcp/server-card.json
   Content-Type: application/json
