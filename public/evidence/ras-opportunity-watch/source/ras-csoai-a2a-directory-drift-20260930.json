@@ -1,0 +1,70 @@
+{
+  "canonical_provider": {
+    "agent_version": "1.1.0",
+    "bytes": 15872,
+    "content_type": "application/a2a+json",
+    "http_status": 200,
+    "sha256": "fd9d2e84d3a03142123384564ebc0edc4c0e4fb30c79d12c49f995b04d3abfe7",
+    "signature_count": 1,
+    "skill_count": 10,
+    "skill_ids": [
+      "gspc-board",
+      "east-west-crosswalk",
+      "measured-badge",
+      "benchmark-quality-register",
+      "article50-detect",
+      "eu-ai-act-screen",
+      "x402-discovery",
+      "estate-index",
+      "measurement-capsules",
+      "server-evidence"
+    ],
+    "supported_interfaces": [
+      {
+        "protocolBinding": "JSONRPC",
+        "protocolVersion": "1.0",
+        "url": "https://councilof.ai/api/a2a"
+      }
+    ],
+    "url": "https://councilof.ai/.well-known/agent-card.json"
+  },
+  "claim_boundary": "Public directory projection freshness only. This is not an availability, security, compliance, endorsement, or misconduct finding.",
+  "claim_maintenance": {
+    "acceptance_test": "Re-fetch both public URLs. Resolve this drift only when the directory projection independently reflects the current canonical skill set/version; preserve future divergence as a new versioned observation.",
+    "change_to_watch": "directory projection catches up to the canonical 10-skill Agent Card or the canonical card changes again",
+    "dependency": "third-party discovery page -> provider Agent Card",
+    "product_owner": [
+      "R-2 CLAIM MAINTENANCE",
+      "R-3 MONITOR"
+    ]
+  },
+  "comparison": {
+    "canonical_skill_count": 10,
+    "canonical_skills_absent_from_projection_text": [
+      "measurement-capsules",
+      "server-evidence"
+    ],
+    "interpretation": "The third-party directory page reflects an older public Agent Card snapshot than the canonical provider card observed at the same review. No claim is made about the directory operator beyond these public bytes.",
+    "projection_described_skill_count": 8,
+    "verdict": "SOURCE_OBSERVED_DIRECTORY_PROJECTION_STALE"
+  },
+  "measurement_states": {
+    "canonical_provider_card": "SOURCE_OBSERVED",
+    "directory_operator_intent": "UNMEASURED_HOLD",
+    "projection_freshness": "SOURCE_OBSERVED_STALE",
+    "service_quality": "UNMEASURED_HOLD",
+    "third_party_directory_page": "SOURCE_OBSERVED"
+  },
+  "observed_at": "2026-09-30T03:41:58Z",
+  "schema": "csoai.ras-directory-freshness-evidence/1.0",
+  "third_party_projection": {
+    "bytes": 61242,
+    "contains_measurement_capsules_skill_id": false,
+    "contains_server_evidence_skill_id": false,
+    "content_type": "text/html",
+    "http_status": 200,
+    "observed_description_fact": "page describes the agent as advertising eight skills",
+    "sha256": "615b9d92203160eed7d5487fe17622f9b67f90e48f09c2083cb348cadad076e0",
+    "url": "https://apis.io/apis/councilof-ai/council-of-ai-measurement-agent-a2a/"
+  }
+}

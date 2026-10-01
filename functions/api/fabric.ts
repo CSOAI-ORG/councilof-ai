@@ -369,6 +369,12 @@ export async function buildFabricManifest(
     agentCard,
     a2aRuntime,
     a2ui,
+    claimEvents,
+    claimHead,
+    corrections,
+    claimPriorityRoot,
+    claimReaction,
+    rasBatch,
     compute,
     providerCanary,
     actionJobs,
@@ -394,6 +400,12 @@ export async function buildFabricManifest(
     boundedProbe(origin, "/.well-known/agent-card.json", fetcher),
     boundedProbe(origin, "/api/a2a", fetcher, a2aInit),
     boundedProbe(origin, "/api/a2ui", fetcher),
+    boundedProbe(origin, "/api/claims/events", fetcher, {}, false),
+    boundedProbe(origin, "/api/claims/events/head", fetcher),
+    boundedProbe(origin, "/api/corrections", fetcher),
+    boundedProbe(origin, "/spec/claim-maintenance/priority-root.json", fetcher),
+    boundedProbe(origin, "/spec/claim-maintenance/reaction-index.json", fetcher),
+    boundedProbe(origin, "/evidence/ras-opportunity-watch/batch.json", fetcher),
     boundedProbe(origin, "/api/compute", fetcher),
     boundedProbe(origin, "/api/provider-canary", fetcher),
     boundedProbe(origin, "/api/action-jobs", fetcher),
@@ -658,6 +670,71 @@ export async function buildFabricManifest(
       }),
     );
   }
+
+  const claimVerification = record(claimHead.json?.verification);
+  const claimHeadBody = record(claimHead.json?.head);
+  const claimFeedMeta = record(claimHeadBody?.feed);
+  const claimPriorityLeaves = number(claimPriorityRoot.json?.leaf_count);
+  const claimReactionSignals = array(claimReaction.json?.signals).length;
+  const claimReactionCategory = record(claimReaction.json?.category);
+  const claimCollisionCount = number(claimReactionCategory?.direct_name_collision_count_in_snapshot);
+  const correctionCount = array(corrections.json?.corrections).length;
+  const claimReady = claimEvents.ok && claimHead.ok &&
+    text(claimVerification?.state) === "VERIFIES" && corrections.ok &&
+    claimPriorityRoot.ok && claimReaction.ok;
+
+  rails.push(
+    rail(observedAt, {
+      id: "claim-maintenance",
+      label: "Claim Maintenance",
+      role: "claim change, dependency, correction and bounded re-verification evidence",
+      protocol: "HTTP+JSON / append-only signed head / Merkle priority evidence",
+      state: claimReady ? "RUNTIME_OBSERVED" : "UNCHECKABLE",
+      endpoint: "/api/claims/events/head",
+      evidence_ref: claimReady ? "/spec/claim-maintenance/priority-root.json" : "/api/claims/events/head",
+      summary: claimReady
+        ? String(number(claimFeedMeta?.n_lines) ?? "Unknown") + " claim-event lines verify; " +
+          String(correctionCount) + " corrections are published; priority evidence has " +
+          String(claimPriorityLeaves ?? "unknown") + " immutable leaves; reaction index has " +
+          String(claimReactionSignals) + " signals and " + String(claimCollisionCount ?? "unknown") +
+          " direct category collisions."
+        : "Claim Maintenance did not produce a complete current proof across feed, signed head, corrections, priority root and reaction index.",
+      freshness_seconds: ageSeconds(claimHeadBody?.as_of, observedAtMs),
+      last_error: claimReady ? null : [
+        !claimEvents.ok ? "events:" + String(claimEvents.error) : null,
+        !claimHead.ok ? "head:" + String(claimHead.error) : null,
+        text(claimVerification?.state) !== "VERIFIES"
+          ? "head-verification:" + String(text(claimVerification?.state) ?? "missing") : null,
+        !corrections.ok ? "corrections:" + String(corrections.error) : null,
+        !claimPriorityRoot.ok ? "priority-root:" + String(claimPriorityRoot.error) : null,
+        !claimReaction.ok ? "reaction:" + String(claimReaction.error) : null,
+      ].filter(Boolean).join("; "),
+    }),
+  );
+
+  const rasEventsFile = record(rasBatch.json?.events_file);
+  const rasStateCounts = record(rasBatch.json?.state_counts);
+  const rasReady = rasBatch.ok &&
+    text(rasBatch.json?.schema) === "csoai.evidence-batch/0.1" &&
+    number(rasEventsFile?.n_events) !== null;
+  rails.push(
+    rail(observedAt, {
+      id: "ras-evidence-fabric",
+      label: "RAS opportunity evidence",
+      role: "normalized opportunity observations in the shared evidence fabric",
+      protocol: "csoai.evidence-event/0.1 batch",
+      state: rasReady ? "RUNTIME_OBSERVED" : "UNCHECKABLE",
+      endpoint: "/evidence/ras-opportunity-watch/batch.json",
+      evidence_ref: "/evidence/ras-opportunity-watch/batch.json",
+      summary: rasReady
+        ? String(number(rasEventsFile?.n_events)) + " evidence events served; state counts " +
+          JSON.stringify(rasStateCounts ?? {}) +
+          ". This is evidence normalization, not adoption, equivalence or a product score."
+        : "The normalized RAS evidence batch was not readable as a csoai.evidence-batch/0.1 record.",
+      freshness_seconds: ageSeconds(rasBatch.json?.as_of, observedAtMs),
+      last_error: rasReady ? null : rasBatch.error,
+    }),
+  );
 
   const computeBody = compute.ok ? compute.json : null;
   const census = record(computeBody?.census);
