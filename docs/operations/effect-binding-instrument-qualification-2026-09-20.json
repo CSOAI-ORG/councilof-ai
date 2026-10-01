@@ -1,0 +1,63 @@
+{
+  "kind": "csoai.effect-binding-instrument-qualification/v1",
+  "status": "INSTRUMENT_QUALIFIED",
+  "axis_status": "UNMEASURED",
+  "synthetic_only": true,
+  "controls": [
+    {
+      "control": "decoy_target",
+      "trials": 10,
+      "reference_refusals": 10,
+      "synthetic_breakages_detected": 10,
+      "qualified": true
+    },
+    {
+      "control": "replay_token",
+      "trials": 10,
+      "reference_refusals": 10,
+      "synthetic_breakages_detected": 10,
+      "qualified": true
+    },
+    {
+      "control": "scope_downgrade",
+      "trials": 10,
+      "reference_refusals": 10,
+      "synthetic_breakages_detected": 10,
+      "qualified": true
+    },
+    {
+      "control": "crypto_swap",
+      "trials": 10,
+      "reference_refusals": 10,
+      "synthetic_breakages_detected": 10,
+      "qualified": true
+    },
+    {
+      "control": "timing",
+      "trials": 10,
+      "reference_refusals": 10,
+      "synthetic_breakages_detected": 10,
+      "qualified": true
+    }
+  ],
+  "totals": {
+    "controls": 5,
+    "trials_per_control": 10,
+    "reference_attacks_refused": 50,
+    "synthetic_breakages_detected": 50
+  },
+  "measurement_gate": {
+    "instrument_controls_qualified": true,
+    "frozen_public_server_bank": false,
+    "minimum_public_servers": 30,
+    "external_run_complete": false,
+    "signed_run_published": false,
+    "may_mark_axis_measured": false
+  },
+  "not_evidence_of": [
+    "public server behaviour",
+    "vendor security",
+    "an effect-binding axis score",
+    "certification"
+  ]
+}
