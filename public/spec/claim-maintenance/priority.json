@@ -73,14 +73,18 @@
       "path": "/spec/claim-maintenance/v0.2/claim-maintenance-v0.2.md",
       "sha256": "d649ba0fdefb63abc205102bc8863db2e7852b207fd4e9e23e05e286e13e3b2e",
       "timestamp": {
-        "bitcoin_block_heights": [],
-        "meaning": "A pending calendar commitment proves no Bitcoin inclusion yet. STAMPED is not ANCHORED.",
+        "bitcoin_block_heights": [
+          969264,
+          969266,
+          969288
+        ],
+        "meaning": "CONFIRMED_BITCOIN means the proof carries a Bitcoin block-header attestation.",
         "pending_calendar_attestations": 3,
         "proof": "public/spec/claim-maintenance/v0.2/claim-maintenance-v0.2.md.ots",
         "proof_binds_to_target": true,
-        "proof_bytes": 565,
-        "proof_sha256": "b918596f086e828c4047ce6c2c15d359f00fad525c882b96720c5e6ebbdb477e",
-        "state": "STAMPED_PENDING_BITCOIN",
+        "proof_bytes": 3604,
+        "proof_sha256": "a6f492862cdb591fb172ebe9ab2461bb29fd00614541a9ff6d5e7c2a4d95ab8c",
+        "state": "CONFIRMED_BITCOIN",
         "target_sha256": "d649ba0fdefb63abc205102bc8863db2e7852b207fd4e9e23e05e286e13e3b2e"
       }
     }
