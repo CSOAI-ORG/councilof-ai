@@ -1,0 +1,39 @@
+{
+  "anonymous_public_readback": false,
+  "domain_mapping": {
+    "10001": "Canton",
+    "10003": "Stacks"
+  },
+  "execution_authority": "none",
+  "files_sha256": {
+    "config/ras/xreserve-public-replay-v0.6.1.json": "59a03ab8bd5a82e9b3f46b3cd4e9c7463dc07cc26642be4f806f441e07a69dfc",
+    "evidence/ras/2026-10-01/xreserve-public-replay-v0.6.1.json": "57e7306c18d691821db4ff28569da767ad5aee5d755a0eecbb5a5575d70cbe6e",
+    "scripts/ras_xreserve_public_replay.py": "156844098816a86065dc78d03ee25c2a31772b39b4742769f9932378b65da3e9",
+    "scripts/test_ras_xreserve_public_replay.py": "1298db686546d17b5ab775d9f52257a7b0278a8003c1df2f4fd8149494ff9f42"
+  },
+  "live_transaction_capability": false,
+  "measurement_authority": false,
+  "measurement_state": "PARTIALLY_MEASURED",
+  "note": "v0.6.1 corrects domain 10003 to Stacks and rejects Canton relabelling. Public dependencies replay cleanly. This successor itself is not published; anonymous successor readback remains false until an owner-authorized publication step.",
+  "om_router": {
+    "admitted": 0,
+    "executable": 0,
+    "ranked": 0
+  },
+  "public_dependency_readback": true,
+  "public_release": false,
+  "route_id": "besu-evm->stacks",
+  "schema": "csoai.ras-xreserve-release/0.6.1",
+  "signature_state": "UNSIGNED_RELEASE_BUNDLE",
+  "source_commit": "a6bcce2259d554f19b601ee1be99d1fa52b48791",
+  "status": "LOCAL_CANDIDATE",
+  "unmeasured": [
+    "stacks_destination_mint",
+    "stacks_destination_finality",
+    "circle_attestation_signature_verification",
+    "cross_ledger_atomicity",
+    "task_bound_sov1_authority",
+    "reciprocal_live_roundtrip"
+  ],
+  "version": "0.6.1"
+}
