@@ -213,6 +213,8 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   };
 
   const resourceUrl = new URL(`/api/evidence-bundle?obligation=${ob.id}&bundle=1${subject ? `&subject=${encodeURIComponent(subject)}` : ""}`, origin).toString();
+  const previewUrl = new URL(resourceUrl);
+  previewUrl.searchParams.delete("bundle");
 
   // THE HUMAN DOOR. This SKU declares rail "x402-or-invoice" and its notes describe "a CSOAI LTD
   // invoice for a first human deal", but the 402 challenge named no way to ask for one — so a
@@ -305,7 +307,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       accepts,
       bazaar,
       csoai: { schema: "csoai.evidence-bundle/0.1", per: "bundle", lid: CSOAI_LID, never: ["conformity determination", "certificate", "score", "rank"], preview,
-        free_preview: `${origin}/api/evidence-bundle?obligation=${encodeURIComponent(ob.id)}`,
+        free_preview: previewUrl.toString(),
         deliverable: "one pack for this subject and obligation: the bench JSON, its detached Ed25519 signature, and the OSCAL assessment-results wrapper — assembled from already-signed cards, never a conformity determination",
         rail: railMode(env), not_paid_reason: payment.reason, catalog: `${origin}/api/x402`, invoice: { how: `${resourceUrl}&invoice=gbp&commissioned_by=<legal entity>`, note: "a buyer who cannot pay USDC can ask for a CSOAI LTD invoice — the reference is issued here, the amount only on the invoice" } },
     });
