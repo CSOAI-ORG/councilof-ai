@@ -48,7 +48,7 @@ function ClientCompatibility() {
         One backend serves every client, but each client needs its own test. A config checked against the docs is
         not a tested client, and a tested client is not a store listing. This table is rendered from{" "}
         <a
-          href={`${compat.receipt_base_url}council-os/client-compatibility.json`}
+          href="/council-os/client-compatibility.json"
           className="text-emerald-700 underline"
           target="_blank"
           rel="noopener noreferrer"
@@ -84,7 +84,7 @@ function ClientCompatibility() {
                 <td className="py-2 text-xs space-x-3">
                   {c.receipt && (
                     <a
-                      href={`${compat.receipt_base_url}${c.receipt}`}
+                      href={`/${c.receipt}`}
                       className="text-emerald-700 underline"
                       target="_blank"
                       rel="noopener noreferrer"
