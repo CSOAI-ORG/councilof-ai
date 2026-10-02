@@ -338,6 +338,27 @@ class X402RouteProbeTests(unittest.TestCase):
         self.assertEqual(external["redirect_target"], None)
         self.assertEqual(external["redirect_target_state"], "WITHHELD_OR_MISSING")
 
+    def test_owned_canonical_redirects_are_not_growth_failures(self):
+        feed = MODULE._x402_route_result(
+            "https://councilof.ai/api/eunomia-data", 308,
+            {"location": "https://councilof.ai/api/signed-data-feed",
+             "link": '<https://councilof.ai/api/signed-data-feed>; rel="canonical"'}, b"")
+        proof = MODULE._x402_route_result(
+            "https://councilof.ai/api/proof", 307,
+            {"location": "https://councilof.ai/api/proof?bundle=1"}, b"")
+        self.assertEqual(feed["state"], "CANONICAL_REDIRECT")
+        self.assertEqual(feed["redirect_target_state"], "SAME_OWNED_HOST_CANONICAL")
+        self.assertEqual(feed["redirect_target"], "https://councilof.ai/api/signed-data-feed")
+        self.assertEqual(proof["state"], "CANONICAL_REDIRECT")
+        self.assertEqual(proof["redirect_target_state"], "SAME_OWNED_HOST_CANONICAL")
+        self.assertEqual(proof["redirect_target"], "https://councilof.ai/api/proof?bundle=1")
+        actions = MODULE.derive_x402_route_actions({
+            "state": "MEASURED", "route_count": 2,
+            "route_states": {"CANONICAL_REDIRECT": 2},
+            "routes": [feed, proof],
+        })
+        self.assertEqual(actions, [])
+
     def test_external_or_unsupported_urls_are_not_probed(self):
         with patch.object(MODULE.urllib.request, "urlopen") as open_url:
             result = MODULE.probe_x402_route("https://other.example/api")

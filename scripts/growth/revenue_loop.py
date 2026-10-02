@@ -249,29 +249,46 @@ def _x402_route_result(url: str, status: int, headers, body: bytes) -> dict:
         redirect_port = redirect_parsed.port if redirect_parsed else None
     except ValueError:
         redirect_port = -1
-    redirect_allowed = bool(redirect_parsed and redirect_parsed.scheme == "https"
-                            and redirect_parsed.hostname in {"councilof.ai", "www.councilof.ai", "csoai.org", "www.csoai.org"}
-                            and redirect_port in (None, 443)
-                            and not redirect_parsed.username and not redirect_parsed.password
-                            and not redirect_parsed.query and not redirect_parsed.fragment)
+    same_owned_host = bool(redirect_parsed and redirect_parsed.scheme == "https"
+                           and redirect_parsed.hostname in {"councilof.ai", "www.councilof.ai", "csoai.org", "www.csoai.org"}
+                           and redirect_port in (None, 443)
+                           and not redirect_parsed.username and not redirect_parsed.password
+                           and not redirect_parsed.fragment)
+    no_query_redirect = bool(same_owned_host and not redirect_parsed.query)
+    fixed_proof_bundle_redirect = bool(
+        same_owned_host and urllib.parse.urlsplit(url).path == "/api/proof"
+        and redirect_parsed.path == "/api/proof" and redirect_parsed.query == "bundle=1"
+    )
+    link = headers.get("link") if headers else None
+    canonical_link_redirect = bool(
+        no_query_redirect and isinstance(link, str)
+        and f"<{redirect_url}>" in link and 'rel="canonical"' in link
+    )
+    canonical_redirect = canonical_link_redirect or fixed_proof_bundle_redirect
     if status == 402:
         state = "VALID_X402_V2_BAZAAR_CHALLENGE" if version == 2 and bazaar and parse_state == "PARSED" else "INVALID_OR_UNCHECKABLE_CHALLENGE"
     elif status == 200:
         state = "PUBLIC_RESPONSE"
     elif status in {301, 302, 303, 307, 308}:
-        state = "REDIRECT_REVIEW_REQUIRED"
+        state = "CANONICAL_REDIRECT" if canonical_redirect else "REDIRECT_REVIEW_REQUIRED"
     elif status in {400, 422}:
         state = "INPUT_REQUIRED_OR_REJECTED"
     else:
         state = f"HTTP_{status}"
+    redirect_target_state = (
+        "SAME_OWNED_HOST_CANONICAL" if canonical_redirect else
+        "SAME_OWNED_HOST_NO_QUERY" if no_query_redirect else
+        "WITHHELD_OR_MISSING" if redirect else "NONE"
+    )
+    retained_redirect = bool(no_query_redirect or fixed_proof_bundle_redirect)
     return {
         "url": url, "http_status": status, "state": state,
         "payment_required_present": bool(payment), "x402_version": version,
         "bazaar_extension_present": bazaar, "challenge_parse_state": parse_state,
         "sampled_body_bytes": len(body),
         "sampled_body_sha256": hashlib.sha256(body).hexdigest(),
-        "redirect_target_state": "SAME_OWNED_HOST_NO_QUERY" if redirect_allowed else "WITHHELD_OR_MISSING" if redirect else "NONE",
-        "redirect_target": urllib.parse.urlunsplit((redirect_parsed.scheme, redirect_parsed.netloc, redirect_parsed.path, "", "")) if redirect_allowed else None,
+        "redirect_target_state": redirect_target_state,
+        "redirect_target": urllib.parse.urlunsplit((redirect_parsed.scheme, redirect_parsed.netloc, redirect_parsed.path, redirect_parsed.query if fixed_proof_bundle_redirect else "", "")) if retained_redirect else None,
     }
 
 class _NoRedirectHandler(urllib.request.HTTPRedirectHandler):
@@ -336,7 +353,7 @@ def derive_x402_route_actions(route_probes: dict) -> list[dict]:
         return [{"state": "X402_ROUTE_MONITOR_UNCHECKABLE",
                  "action": "restore complete first-party route readbacks before making x402 distribution claims",
                  "evidence": f"route_probe_state={route_probes.get('state')}; route_count={route_probes.get('route_count')}"}]
-    expected = {"VALID_X402_V2_BAZAAR_CHALLENGE", "PUBLIC_RESPONSE", "INPUT_REQUIRED_OR_REJECTED"}
+    expected = {"VALID_X402_V2_BAZAAR_CHALLENGE", "PUBLIC_RESPONSE", "INPUT_REQUIRED_OR_REJECTED", "CANONICAL_REDIRECT"}
     states = route_probes.get("route_states") or {}
     unexpected = {state: count for state, count in states.items() if state not in expected and count}
     if not unexpected:
