@@ -628,7 +628,7 @@ def councilof_top(f: dict, product_index: Path | None) -> str:
         badge_row(f),
         "",
         "Independent AI-governance measurement. This repository is the live site, API and signing pipeline behind "
-        "[councilof.ai](https://councilof.ai): the 22-axis GSPC board, Ed25519-signed measurement cards, the signed Merkle public root and its transparency-log witness, "
+        "[councilof.ai](https://councilof.ai): the GSPC board, Ed25519-signed measurement cards, the signed Merkle public root and its transparency-log witness, "
         "the corrections ledger, the A2A agent card, the x402 manifest, and the PyPI / npm readers. **Measurement, not certification.**",
         "",
         derived_line(f),
