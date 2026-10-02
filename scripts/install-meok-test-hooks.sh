@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Install MEOK proxy-path test hooks into the active git hooks location.
-# The repo uses core.hooksPath (~/.config/git/hooks) — that wins over .git/hooks.
+# core.hooksPath (~/.config/git/hooks) wins over .git/hooks.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
@@ -11,7 +11,6 @@ if [[ -z "$HOOKS_PATH" ]]; then
 fi
 mkdir -p "$HOOKS_PATH"
 
-# Preserve existing LFS pre-push by chaining it inside our pre-push template.
 install_hook() {
   local name="$1"
   local src="$ROOT/.githooks/$name"
@@ -28,7 +27,6 @@ install_hook() {
 install_hook pre-commit
 install_hook pre-push
 
-# Also keep .git/hooks/pre-commit in sync (used if hooksPath is ever unset)
 if [[ "$HOOKS_PATH" != "$ROOT/.git/hooks" ]]; then
   cp "$ROOT/.githooks/pre-commit" "$ROOT/.git/hooks/pre-commit"
   chmod +x "$ROOT/.git/hooks/pre-commit"
@@ -36,5 +34,7 @@ if [[ "$HOOKS_PATH" != "$ROOT/.git/hooks" ]]; then
 fi
 
 echo "MEOK proxy-path test hooks installed (hooksPath=$HOOKS_PATH)"
-echo "  pre-commit: runs 16 tests when meok/ is staged"
-echo "  pre-push:   runs 16 tests on every push"
+echo "  pre-commit: required unit tests on EVERY commit"
+echo "  pre-push:   required full suite (16) on every push"
+echo "  Optional local interceptor (blocks --no-verify):"
+echo "    export PATH=\"$ROOT/scripts/bin:\$PATH\""

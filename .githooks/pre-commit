@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 # pre-commit — attestation gate + MEOK MCP proxy-path tests.
-# Installed to core.hooksPath / .git/hooks by scripts/install-meok-test-hooks.sh
-# Emergency bypass: git commit --no-verify
+# Tests are mandatory on every commit. There is no supported skip path.
 set -uo pipefail
 ROOT="$(git rev-parse --show-toplevel)"
 cd "$ROOT"
 
-# 1) Existing signed-artefact gate (unchanged behaviour)
+# 1) Signed-artefact gate (when those files are staged)
 if git diff --cached --name-only | grep -qE '\.sig\.json$|\.oscal\.json$|MEOK_OSCAL_COMPONENT\.json$|verify_oscal\.py$'; then
   echo "pre-commit: signed artefacts touched — verifying…"
   if [[ -f "${ROOT}/scripts/verify_all_attestations.sh" ]]; then
@@ -18,17 +17,15 @@ if git diff --cached --name-only | grep -qE '\.sig\.json$|\.oscal\.json$|MEOK_OS
   fi
 fi
 
-# 2) MEOK MCP proxy-path tests when the surface is staged
-if git diff --cached --name-only | grep -qE '^meok/|scripts/run-meok-proxy-tests\.sh|\.githooks/pre-'; then
-  echo "pre-commit: MEOK MCP surface staged — running proxy-path tests…"
-  if ! MEOK_TEST_UNIT_ONLY=1 bash "${ROOT}/scripts/run-meok-proxy-tests.sh"; then
-    echo
-    echo "pre-commit: ❌ MEOK MCP proxy-path tests FAILED — commit blocked."
-    echo "  Fix the regression in meok/mcp/ before committing."
-    echo "  Emergency bypass: git commit --no-verify"
-    exit 1
-  fi
-  echo "pre-commit: ✅ MEOK MCP proxy-path unit tests passed (13/13; live runs on pre-push/CI)"
+# 2) MEOK MCP proxy-path tests — required on EVERY commit (not just meok/ changes)
+echo "pre-commit: running MEOK MCP proxy-path tests (required)…"
+if ! MEOK_TEST_UNIT_ONLY=1 bash "${ROOT}/scripts/run-meok-proxy-tests.sh"; then
+  echo
+  echo "pre-commit: ❌ MEOK MCP proxy-path tests FAILED — commit blocked."
+  echo "  Fix the regression in meok/mcp/ before committing."
+  echo "  These tests are mandatory and cannot be skipped."
+  exit 1
 fi
+echo "pre-commit: ✅ MEOK MCP proxy-path unit tests passed (13/13)"
 
 exit 0

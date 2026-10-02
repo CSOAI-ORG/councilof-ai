@@ -1,21 +1,19 @@
 #!/usr/bin/env bash
 # pre-push — MEOK MCP proxy-path tests must pass before any push.
-# Also preserves git-lfs pre-push if git-lfs is installed.
-# Emergency bypass: git push --no-verify
+# No supported skip path. Also preserves git-lfs pre-push if installed.
 set -uo pipefail
 ROOT="$(git rev-parse --show-toplevel)"
 cd "$ROOT"
 
-echo "pre-push: running MEOK MCP proxy-path tests…"
+echo "pre-push: running MEOK MCP proxy-path tests (required)…"
 if ! bash "${ROOT}/scripts/run-meok-proxy-tests.sh"; then
   echo
   echo "pre-push: ❌ MEOK MCP proxy-path tests FAILED — push blocked."
-  echo "  Emergency bypass: git push --no-verify"
+  echo "  These tests are mandatory and cannot be skipped."
   exit 1
 fi
 echo "pre-push: ✅ MEOK MCP proxy-path tests passed (16)"
 
-# Preserve LFS if present
 if command -v git-lfs >/dev/null 2>&1; then
   git lfs pre-push "$@"
 fi

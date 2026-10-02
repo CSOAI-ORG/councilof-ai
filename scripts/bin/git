@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# git wrapper — refuse hook-skipping flags so MEOK proxy tests cannot be bypassed.
+# Put this directory first on PATH:  export PATH="…/clawd/scripts/bin:$PATH"
+# CI is the other (host-independent) enforcement layer.
+set -euo pipefail
+
+REAL_GIT="${MEOK_REAL_GIT:-}"
+if [[ -z "$REAL_GIT" ]]; then
+  for cand in /opt/homebrew/bin/git /usr/bin/git; do
+    if [[ -x "$cand" ]]; then REAL_GIT="$cand"; break; fi
+  done
+fi
+if [[ -z "$REAL_GIT" ]]; then
+  echo "meok-git-wrapper: cannot find real git binary" >&2
+  exit 127
+fi
+
+for arg in "$@"; do
+  case "$arg" in
+    --no-verify|--no-hooks)
+      echo "meok-git-wrapper: '$arg' is disabled — MEOK MCP proxy-path tests cannot be skipped." >&2
+      echo "  Fix failing tests in meok/mcp/ instead of bypassing the gate." >&2
+      exit 1
+      ;;
+  esac
+done
+
+exec "$REAL_GIT" "$@"
