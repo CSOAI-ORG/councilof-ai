@@ -1,26 +1,24 @@
-# Gate MEOK MCP → SOV3 proxy-path tests on every change.
+# Host-independent gate for MEOK MCP → SOV3 proxy-path tests.
+# Always runs on main and PRs (required status check friendly — path filters
+# would leave "Expected" pending when the workflow does not start).
+#
 # 16 tests: 13 unit (deterministic, mocked SOV3) + 3 live (skip if :3102 absent).
 name: meok-mcp-proxy-tests
 
 on:
   push:
-    paths:
-      - "meok/**"
-      - "scripts/run-meok-proxy-tests.sh"
-      - "scripts/install-meok-test-hooks.sh"
-      - ".githooks/**"
-      - ".github/workflows/meok-mcp-proxy-tests.yml"
+    branches: [main, master]
   pull_request:
-    paths:
-      - "meok/**"
-      - "scripts/run-meok-proxy-tests.sh"
-      - "scripts/install-meok-test-hooks.sh"
-      - ".githooks/**"
-      - ".github/workflows/meok-mcp-proxy-tests.yml"
+    branches: [main, master]
   workflow_dispatch:
+
+concurrency:
+  group: meok-mcp-proxy-tests-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   proxy-path:
+    name: proxy-path
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -41,9 +39,11 @@ jobs:
           MEOK_TEST_UNIT_ONLY: "0"
         run: bash scripts/run-meok-proxy-tests.sh
 
-      - name: Fail if zero tests ran
+      - name: Require at least 16 tests collected
         run: |
-          # Safety: the runner must execute the suite; a silent 0-test pass is a regression.
+          set -euo pipefail
+          export PYTEST_DISABLE_PLUGIN_AUTOLOAD=1
+          export PYTHONPATH="$PWD"
           python -m pytest meok/mcp/tests/test_proxy_path.py --collect-only -q | tee /tmp/collected.txt
           count=$(grep -c '::' /tmp/collected.txt || true)
           echo "collected=$count"
