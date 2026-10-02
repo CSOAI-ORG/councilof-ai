@@ -5,7 +5,7 @@
 // was checked against. `verified: false` marks a shape we could not confirm against
 // official docs — it is shown clearly labelled "unverified", never as a promise.
 //
-// The asset (already live, a STANDARD MCP server so it works on every MCP client):
+// The asset (already live; client compatibility is recorded separately, not assumed):
 //   remote HTTP MCP : https://councilof.ai/mcp/free   (streamable-http, no auth, the free readers)
 //                     https://councilof.ai/mcp        (the same free readers + the x402-metered tools)
 //   stdio (npm)     : npx -y csoai-gspc-mcp
