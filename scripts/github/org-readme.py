@@ -508,7 +508,7 @@ WHO_WE_ARE = (
 
 def derived_line(f: dict) -> str:
     return (f"_derived {f['derived']} by [`scripts/github/org-readme.py`](https://huggingface.co/datasets/csoai/councilof-ai-source/blob/main/source/scripts/github/org-readme.py) — "
-            "every number on this page is read live from the URLs in that script; if this page and the API disagree, the API is right._")
+            "board, root, distribution and door status were read from the linked public endpoints at generation time; the product catalogue comes from the checked-in index. Recheck the endpoints for current state._")
 
 
 def repos_table() -> str:
