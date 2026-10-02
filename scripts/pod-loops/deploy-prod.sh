@@ -1,7 +1,7 @@
 #!/bin/bash
 # Full pipeline on the pod: build -> prerender -> gates -> wrangler pages deploy (councilof-ai, master).
 # GitHub is not in this loop. Run only after build-gates.sh has passed for the same ref.
-set -uo pipefail
+set -euo pipefail
 # ONE production writer across pods (30 Sep 2026). The locks below are per pod (/workspace/ci/*.lock are symlinks
 # into each pod's /root/ci-local/run), and three pods mount this volume; on 30 Sep the lanes pod and the build pod
 # uploaded production concurrently. deploy-preview.sh runs a COPY of this file with the one production branch flag
@@ -16,9 +16,21 @@ exec 9>/workspace/ci/deploy.lock; flock -n 9 || { echo "another deploy holds /wo
 export PATH=/workspace/tools/node/bin:$PATH
 # The HF write token (evidence-sync only) never reaches npm, vite, prerender or wrangler: keep it unexported.
 EVTOK=${HF_TOKEN:-}; unset HF_TOKEN
-CI=/workspace/ci/councilof-ai; LOG=/workspace/ci/deploy-prod.log; REF=${1:-master}
-echo "=== deploy-prod $(date -u +%FT%TZ) ref=$REF" | tee -a $LOG
-cd $CI && git fetch -q origin && git checkout -q -f "origin/$REF" && echo "  at $(git rev-parse --short HEAD)" | tee -a $LOG
+BARE=/workspace/staging/mirror/councilof-ai.git
+LOG=/workspace/ci/deploy-prod.log; REF=${1:-master}
+# Pin the canonical commit in a fresh checkout; never overwrite the shared writer.
+git check-ref-format --branch "$REF" >/dev/null || { echo "invalid release branch"; exit 2; }
+[ -d "$BARE/objects" ] || { echo "canonical mirror missing"; exit 2; }
+mkdir -p /root/ci-local
+CI=$(mktemp -d /root/ci-local/csoai-deploy-XXXXXXXX)
+trap 'rm -rf -- "$CI"' EXIT
+git clone -q --shared --no-checkout "$BARE" "$CI" || { echo "clean clone failed"; exit 2; }
+SHA=$(git -C "$CI" rev-parse --verify "refs/remotes/origin/$REF^{commit}") || { echo "release ref missing"; exit 2; }
+git -C "$CI" checkout -q --detach "$SHA" || { echo "clean checkout failed"; exit 2; }
+[ -z "$(git -C "$CI" status --porcelain)" ] || { echo "clean checkout is dirty"; exit 2; }
+echo "=== deploy-prod $(date -u +%FT%TZ) ref=$REF sha=$SHA" | tee -a "$LOG"
+cd "$CI"
+echo "  at $(git rev-parse --short HEAD)" | tee -a "$LOG"
 # Protect all previously served sitemap URLs before any source build.
 /usr/bin/python3 /workspace/csoai-scale-engine/release_guard/sitemap_guard.py --public-dir public --baseline /workspace/csoai-scale-engine/release_guard/sitemap-known-public.json --receipt /workspace/ci/sitemap-source-check.json --observe-live >/workspace/ci/sitemap-source-check.log 2>&1 || { echo "  sitemap-source FAILED; missing or uncheckable served URLs; build held" | tee -a "$LOG"; exit 13; }
 echo "  sitemap-source ok" | tee -a "$LOG"
@@ -30,7 +42,9 @@ echo "  root-witness-candidate ok" | tee -a "$LOG"
 /usr/bin/python3 scripts/pod-loops/root_ots_manifest_gate.py --public-dir public >/workspace/ci/root-ots-source.log 2>&1 || { echo "  root-ots-source FAILED; upload blocked" | tee -a "$LOG"; exit 14; }
 echo "  root-ots-source ok" | tee -a "$LOG"
 # Always rebuild (22 Sep 2026): a ref change with a stale dist/ shipped Functions from the new ref over static files from the old one.
-rm -rf dist/client; npm ci --no-audit --no-fund --loglevel=error >/dev/null 2>&1; npm run build:client >/workspace/ci/build.log 2>&1 && echo "  build ok: $(find dist/client -type f | wc -l) files" | tee -a $LOG || { echo "  build FAILED" | tee -a $LOG; tail -5 /workspace/ci/build.log; exit 4; }
+rm -rf dist/client
+npm ci --no-audit --no-fund --loglevel=error >/workspace/ci/npm-ci.log 2>&1 || { echo "  npm ci FAILED" | tee -a "$LOG"; tail -5 /workspace/ci/npm-ci.log; exit 3; }
+npm run build:client >/workspace/ci/build.log 2>&1 && echo "  build ok: $(find dist/client -type f | wc -l) files" | tee -a "$LOG" || { echo "  build FAILED" | tee -a "$LOG"; tail -5 /workspace/ci/build.log; exit 4; }
 t0=$(date +%s)
 HTML=$(find dist/client -name "*.html" 2>/dev/null | wc -l)
 if [ "${SKIP_PRERENDER:-0}" = "1" ] && [ "$HTML" -ge 350 ]; then

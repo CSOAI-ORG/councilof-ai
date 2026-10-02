@@ -508,7 +508,7 @@ WHO_WE_ARE = (
 
 def derived_line(f: dict) -> str:
     return (f"_derived {f['derived']} by [`scripts/github/org-readme.py`](https://huggingface.co/datasets/csoai/councilof-ai-source/blob/main/source/scripts/github/org-readme.py) — "
-            "every number on this page is read live from the URLs in that script; if this page and the API disagree, the API is right._")
+            "board, root, distribution and door status were read from the linked public endpoints at generation time; the product catalogue comes from the checked-in index. Recheck the endpoints for current state._")
 
 
 def repos_table() -> str:
@@ -628,7 +628,7 @@ def councilof_top(f: dict, product_index: Path | None) -> str:
         badge_row(f),
         "",
         "Independent AI-governance measurement. This repository is the live site, API and signing pipeline behind "
-        "[councilof.ai](https://councilof.ai): the 22-axis GSPC board, Ed25519-signed measurement cards, the signed Merkle public root and its transparency-log witness, "
+        "[councilof.ai](https://councilof.ai): the GSPC board, Ed25519-signed measurement cards, the signed Merkle public root and its transparency-log witness, "
         "the corrections ledger, the A2A agent card, the x402 manifest, and the PyPI / npm readers. **Measurement, not certification.**",
         "",
         derived_line(f),

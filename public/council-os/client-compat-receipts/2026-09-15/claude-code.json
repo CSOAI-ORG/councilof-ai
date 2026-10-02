@@ -1,0 +1,49 @@
+{
+  "schema": "csoai.client-compat-receipt/0.1",
+  "client": "Claude Code",
+  "client_version": "Claude Code CLI 2.1.266 on disk; the tool call was made from a Claude Agent SDK session on the same Mac",
+  "read_at": "2026-09-15T06:38:05Z",
+  "exact_config": {
+    "file": "project .mcp.json",
+    "mcpServers": {
+      "csoai-gspc": {
+        "type": "http",
+        "url": "https://councilof.ai/mcp"
+      }
+    }
+  },
+  "tools_discovered": {
+    "count": 12,
+    "names": [
+      "art50_marking_evidence",
+      "board_totals",
+      "commission_card",
+      "get_axis",
+      "get_card",
+      "get_root",
+      "list_cards",
+      "receipts_batch",
+      "rwa_evidence",
+      "verify_card",
+      "verify_inclusion",
+      "x402_trust"
+    ],
+    "note": "The session's list lacks mcp_trust, which the endpoint serves (13). mcp_trust reached master at 02:57Z; the server declares listChanged false, so a client keeps the list it read when it connected. A reconnect should show 13. That was NOT re-tested."
+  },
+  "free_call": {
+    "tool": "board_totals",
+    "state": "LIVE",
+    "public_count": "22 axis · 22 measured",
+    "fetched_at": "2026-09-15T06:38:05.074Z"
+  },
+  "cli_health_check": {
+    "commands": [
+      "claude mcp list",
+      "claude mcp get csoai-gspc"
+    ],
+    "csoai-gspc": "Project config; a fresh CLI invocation reports Pending approval, because approval is given per interactive session",
+    "plugin:council-of-ai:gspc-npm": "npx -y csoai-gspc-mcp: Connected"
+  },
+  "verdict": "TESTED_PASS",
+  "verdict_scope": "Remote HTTP server in Claude Code on one Mac. Not a test of Claude Desktop, claude.ai custom connectors or the Claude connectors directory."
+}

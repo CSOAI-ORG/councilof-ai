@@ -723,6 +723,9 @@ async function worker(id) {
   const openPage = async () => {
     gen = browserGen;
     const pg = await browser.newPage({ viewport: { width: 1280, height: 900 }, serviceWorkers: 'block' });
+    // Keep first-load controls inert in saved HTML; on the served site this init
+    // script is absent and hydration enables them once handlers are attached.
+    await pg.addInitScript(() => { window.__CSOAI_PRERENDER__ = true; });
     if (OFFLINE_REVIEW) await pg.route('**/*', route => allowOfflineRequest(route.request().url(),route.request().method(),`http://localhost:${PORT}`) ? route.continue() : route.abort());
     pg.on("pageerror", e => errs.push(e.message.slice(0, 100)));
     return pg;

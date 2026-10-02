@@ -30,7 +30,7 @@
       "inputSchema": {
         "type": "object",
         "properties": {
-          "url": { "type": "string", "description": "Public http(s) URL of the generative output to measure (≤20 MiB)." },
+          "url": { "type": "string", "format": "uri", "pattern": "^https?://", "maxLength": 2048, "description": "Public HTTP(S) URL of the generative output to measure (≤20 MiB). The server fetches only this declared measurement subject." },
           "bytes_b64": { "type": "string", "description": "Alternatively the output bytes, base64 (≤20 MiB decoded)." },
           "manifest_b64": { "type": "string", "description": "Alternatively a detached C2PA manifest store, base64 (manifest-only mode)." },
           "preview": { "type": "boolean", "description": "true = free unsigned measurement (no card sha, no signature)." },

@@ -184,9 +184,11 @@ export default function Quickstart() {
       <section aria-labelledby="s3" className="mx-auto max-w-4xl px-5 py-10">
         <h2 id="s3" className="text-2xl font-bold">3 · Verify evidence — signature, then inclusion</h2>
         <p className="mt-3 leading-7 text-slate-700">
-          Every deliverable is a card: Ed25519-signed under the published DID key, and either already a leaf of the public Merkle
-          root or staged for the next one. Verify the signature offline, then the leaf against the root the site publishes. A
-          signature proves who signed the bytes; it does not make the read correct — that is what the correction path is for.
+          Start with the artifact type. For a signed measurement card, check its Ed25519 signature with the published DID key.
+          If it has a Merkle inclusion proof, verify that proof against a published root that contains it; a staged card is not
+          yet included. Other deliverables have their own receipts and checks. A valid signature or root protects the record,
+          not the truth of a measurement, so read its evidence and correction history too. An OTS calendar receipt is not a
+          Bitcoin confirmation.
         </p>
         <Code>{`curl -s https://councilof.ai/root.json | jq '{card_count, merkle_root, as_of}'
 curl -s https://councilof.ai/interop/root-witness-pointer.json | jq '.witnesses'   # OTS (Bitcoin) + Rekor`}</Code>
