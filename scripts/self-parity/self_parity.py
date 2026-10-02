@@ -775,6 +775,92 @@ def read_bazaar(http, cat, id_, name, base, limit):
     return ix
 
 
+def read_cdp_merchant(http, cat):
+    """Read our payee-specific CDP catalogue, not a moving global offset list.
+
+    This establishes presence or absence for payees in the live x402 manifest.
+    It cannot find old listings under payees no longer in that manifest.
+    """
+    ix = index("cdp-bazaar", "Coinbase CDP x402 Bazaar discovery", None, None,
+               applies=("x402-door", "x402-manifest"),
+               frame="merchant-specific /discovery/merchant for each payTo in our live manifest, "
+                     "paginated to its stated total; does not inspect old payees")
+    payees = sorted({str(o.get("facts", {}).get("payTo")) for o in cat
+                    if o.get("kind") == "x402-door" and o.get("facts", {}).get("payTo")})
+    if not payees:
+        ix.update(openness="UNREACHABLE", notes=["live x402 catalogue has no payTo; merchant lookup not attempted"])
+        return ix
+    first, complete, n_read, pages = None, True, 0, 0
+    totals, seen = {}, set()
+    for payee in payees:
+        offset, total = 0, None
+        while pages < 30:
+            url = ("https://api.cdp.coinbase.com/platform/v2/x402/discovery/merchant?"
+                   + urllib.parse.urlencode({"payTo": payee, "limit": 100, "offset": offset}))
+            r = http.get(url, note="cdp-bazaar merchant")
+            first = first or r
+            pages += 1
+            if not r.ok:
+                complete = False
+                ix["notes"].append(f"{payee}: HTTP {r.get('status')} {r.get('error')}")
+                break
+            try:
+                d = r.json()
+                pg, rows = d["pagination"], d["resources"]
+                reported = pg["total"]
+                if (str(d["payTo"]).lower() != payee.lower() or
+                        not isinstance(reported, int) or reported < 0 or
+                        not isinstance(rows, list) or pg["offset"] != offset):
+                    raise ValueError("merchant response does not match requested payee/offset/schema")
+                if total is not None and total != reported:
+                    raise ValueError("merchant total changed during pagination")
+                total = reported
+                for it in rows:
+                    if not isinstance(it, dict) or not any(
+                            str(a.get("payTo", "")).lower() == payee.lower()
+                            for a in it.get("accepts") or [] if isinstance(a, dict)):
+                        raise ValueError("resource has no acceptance for requested payee")
+                    bazaar = (it.get("extensions") or {}).get("bazaar") or {}
+                    tool = ((bazaar.get("info") or {}).get("input") or {}).get("toolName") if it.get("type") == "mcp" else None
+                    key = (payee.lower(), it.get("resource"), tool)
+                    if not key[1] or key in seen:
+                        raise ValueError("missing or duplicate resource identity")
+                    seen.add(key)
+                    fields = x402_listing(it)
+                    oid, why = map_door(fields["url"], cat)
+                    entry = {"key": fields["url"], "maps_to": [oid] if oid else [], "fields": fields}
+                    if why:
+                        entry["url_note"] = why
+                    (ix["listings"] if oid else ix["orphan_listings"]).append(entry)
+                n_read += len(rows)
+                if offset + len(rows) >= total:
+                    break
+                if not rows:
+                    raise ValueError("short merchant page before reported total")
+                offset += len(rows)
+            except (KeyError, TypeError, ValueError, json.JSONDecodeError) as e:
+                complete = False
+                ix["notes"].append(f"{payee}: {type(e).__name__}: {str(e)[:120]}")
+                break
+        else:
+            complete = False
+            ix["notes"].append(f"{payee}: stopped at 30 pages")
+        totals[payee] = total
+        if total is None or sum(1 for key in seen if key[0] == payee.lower()) != total:
+            complete = False
+    if not first or not first.ok:
+        ix.update(openness=classify_error(first or {}),
+                  openness_evidence=ev(first or {}, "merchant-specific discovery did not answer"))
+        return ix
+    ix.update(openness="OPEN_DIRECTORY",
+              openness_evidence=ev(first, "keyless merchant-specific discovery answered"),
+              read_state="COMPLETE" if complete else "PARTIAL",
+              reported_total=totals, n_read=n_read, pages=pages, payees=payees)
+    if not complete:
+        ix["notes"].append("absence is UNCHECKABLE because the merchant read was incomplete")
+    return ix
+
+
 def read_402index(http, cat):
     ix = index("402index", "402index.io", None, None, applies=("x402-door", "x402-manifest"),
                frame="search frame: q=councilof.ai and q=csoai.org, each read to its stated total (the whole index, "
@@ -958,8 +1044,7 @@ def read_indices(http, cat):
         yield "https://mcpizy.com/sitemap.xml"
     out.append(read_sitemap_presence(http, "mcpizy", "MCPizy (mcpizy.com)", mcpizy_pages, r"/directory/[^/]*(csoai|councilof|council-of-ai|gspc)",
                                      "/directory/fetch", ("mcp-server",), "the sitemap's /directory/ entries as served"))
-    out.append(read_bazaar(http, cat, "cdp-bazaar", "Coinbase CDP x402 Bazaar discovery",
-                           "https://api.cdp.coinbase.com/platform/v2/x402/discovery/resources", 100))
+    out.append(read_cdp_merchant(http, cat))
     out.append(read_bazaar(http, cat, "payai-bazaar", "PayAI facilitator discovery",
                            "https://facilitator.payai.network/discovery/resources", 1000))
     out.append(read_402index(http, cat))

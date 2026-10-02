@@ -51,6 +51,14 @@ export default function LobbyComposer({
   onAsk?: (text: string) => boolean;
 }) {
   const [q, setQ] = useState("");
+  // The prerendered composer cannot handle events until React hydrates. Keep it
+  // disabled until then so a fast first question is never silently discarded.
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    // Static snapshots are captured after effects. The prerender browser keeps
+    // this gate closed so its saved HTML cannot accept a question before hydration.
+    if (!(window as Window & { __CSOAI_PRERENDER__?: boolean }).__CSOAI_PRERENDER__) setReady(true);
+  }, []);
   const [audience, setAudience] = useState<string>(() => {
     try {
       const v = localStorage.getItem("coai.lobby.audience");
@@ -142,6 +150,7 @@ export default function LobbyComposer({
   }, [turns, onFirstReply]);
 
   function submit() {
+    if (!ready) return;
     const text = q.trim();
     if (chat.busy) return;
     // The button always looks and acts live: with nothing typed it puts the cursor in the box.
@@ -172,6 +181,8 @@ export default function LobbyComposer({
         <div className="relative min-w-0 basis-full flex-1 sm:basis-auto">
           <textarea
             ref={inputRef}
+            disabled={!ready}
+            aria-busy={!ready}
             value={q}
             rows={1}
             onChange={(e) => {
@@ -186,17 +197,17 @@ export default function LobbyComposer({
             }}
             aria-label="Ask the Council, or name a pane to open"
             aria-describedby="coai-lobby-chat-note"
-            placeholder="Ask a question, or paste a signed record to check it"
+            placeholder={ready ? "Ask a question, or paste a signed record to check it" : "Starting Ask…"}
             className="max-h-28 min-h-12 w-full resize-none rounded-xl border border-border bg-background px-4 py-3 text-[15px] leading-snug text-foreground placeholder:text-muted-foreground shadow-inner transition outline-none focus:border-primary focus:ring-2 focus:ring-primary/25 motion-reduce:transition-none"
           />
         </div>
         <button
           type="button"
           onClick={submit}
-          disabled={chat.busy}
+          disabled={!ready || chat.busy}
           className={`${PRIMARY} min-h-11 shrink-0 px-6 py-2.5 text-[15px] shadow-sm`}
         >
-          {chat.busy ? "…" : "Ask"}
+          {!ready ? "Starting…" : chat.busy ? "…" : "Ask"}
         </button>
         {onTool && (
           <div ref={toolsRef} className="relative shrink-0">

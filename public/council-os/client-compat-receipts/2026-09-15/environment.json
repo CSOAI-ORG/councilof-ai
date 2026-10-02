@@ -1,0 +1,35 @@
+{
+  "schema": "csoai.client-compat-receipt/0.1",
+  "kind": "environment-census",
+  "read_at": "2026-09-15T06:36Z",
+  "host": "owner Mac (Darwin 25.5)",
+  "installed": {
+    "Cursor.app": "3.18.25",
+    "ChatGPT.app": "26.908.70816",
+    "Claude.app": "1.52386.3",
+    "claude-code-cli": "2.1.266",
+    "node": "v22.22.3"
+  },
+  "not_installed": {
+    "VS Code": "no Visual Studio Code app; the `code` binary bundled inside Cursor is Cursor, not VS Code",
+    "gemini-cli": "`gemini` not on PATH",
+    "cursor-agent": "symlink dangling"
+  },
+  "hf_space": {
+    "source": "GET https://huggingface.co/api/spaces/csoai/gspc-board",
+    "sdk": "static",
+    "runtime_stage": "RUNNING",
+    "lastModified": "2026-09-15T01:11:35.000Z",
+    "note": "A static Space is a distribution surface, not an MCP client."
+  },
+  "doc_urls_http": {
+    "https://cursor.com/docs/mcp": 200,
+    "https://code.visualstudio.com/docs/agent-customization/mcp-servers": 200,
+    "https://geminicli.com/docs/tools/mcp-server/": 200,
+    "https://help.openai.com/en/articles/12515353-build-with-the-apps-sdk": "403 to curl (bot wall; not evidence of absence)",
+    "https://developers.openai.com/apps-sdk": "200 after redirect to /plugins",
+    "https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp": 200,
+    "https://code.claude.com/docs/en/mcp": 200
+  },
+  "verdict": "NOT_APPLICABLE"
+}

@@ -312,5 +312,57 @@ class ConditionalGet(unittest.TestCase):
             self.assertNotIn("if-none-match", seen[-1]); self.assertNotIn("if-modified-since", seen[-1])
 
 
+
+class CoinbaseMerchantLookup(unittest.TestCase):
+    class FakeHttp:
+        def __init__(self, response):
+            self.response = response
+            self.urls = []
+
+        def get(self, url, note=None):
+            self.urls.append(url)
+            body = json.dumps(self.response).encode()
+            return sp.Resp(url=url, status=200, body=body, sha256=sp.sha(body),
+                           n_bytes=len(body), error=None)
+
+    def _door(self):
+        return door_off("https://councilof.ai/api/free-door", "0")
+
+    def test_empty_merchant_result_proves_current_payee_absence(self):
+        http = self.FakeHttp({"payTo": "0xABC", "resources": [],
+                              "pagination": {"limit": 100, "offset": 0, "total": 0}})
+        ix = sp.read_cdp_merchant(http, [self._door()])
+        self.assertEqual(ix["read_state"], "COMPLETE")
+        self.assertEqual(ix["reported_total"], {"0xABC": 0})
+        self.assertIn("/discovery/merchant?", http.urls[0])
+        self.assertIn("payTo=0xABC", http.urls[0])
+        self.assertEqual(sp.build_cells([self._door()], [ix])[0]["state"], "NOT_LISTED")
+
+    def test_wrong_payee_cannot_prove_absence(self):
+        http = self.FakeHttp({"payTo": "0xDEF", "resources": [],
+                              "pagination": {"limit": 100, "offset": 0, "total": 0}})
+        ix = sp.read_cdp_merchant(http, [self._door()])
+        self.assertEqual(ix["read_state"], "PARTIAL")
+        self.assertEqual(sp.build_cells([self._door()], [ix])[0]["state"], "UNCHECKABLE")
+
+    def test_matching_resource_maps_to_current_door(self):
+        resource = {"resource": "https://councilof.ai/api/free-door", "x402Version": 2,
+                    "accepts": [{"payTo": "0xabc", "amount": "0", "network": "eip155:8453"}]}
+        http = self.FakeHttp({"payTo": "0xABC", "resources": [resource],
+                              "pagination": {"limit": 100, "offset": 0, "total": 1}})
+        ix = sp.read_cdp_merchant(http, [self._door()])
+        self.assertEqual(ix["read_state"], "COMPLETE")
+        self.assertEqual(ix["listings"][0]["maps_to"], [self._door()["id"]])
+        self.assertEqual(sp.build_cells([self._door()], [ix])[0]["state"], "CONSISTENT")
+
+    def test_unmatched_resource_cannot_prove_complete_read(self):
+        resource = {"resource": "https://councilof.ai/api/free-door", "x402Version": 2,
+                    "accepts": [{"payTo": "0xDEF", "amount": "0", "network": "eip155:8453"}]}
+        http = self.FakeHttp({"payTo": "0xABC", "resources": [resource],
+                              "pagination": {"limit": 100, "offset": 0, "total": 1}})
+        ix = sp.read_cdp_merchant(http, [self._door()])
+        self.assertEqual(ix["read_state"], "PARTIAL")
+        self.assertEqual(sp.build_cells([self._door()], [ix])[0]["state"], "UNCHECKABLE")
+
 if __name__ == "__main__":
     unittest.main()
