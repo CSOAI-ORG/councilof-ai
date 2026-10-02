@@ -222,6 +222,10 @@ function ruleAxisCount(facts, file, text, add, liveCount, rawContent = "") {
 
     const before = text.slice(Math.max(0, m.index - 40), m.index);
     if (BREAKDOWN_BEFORE.test(before)) continue;
+    // Matrix dimensions such as "10 models x 14 axes" describe a frozen batch,
+    // not the current board's slot count. The model count immediately scopes the
+    // following axis count to that batch.
+    if (/\b\d+\s+models?\s*[x×]\s*$/i.test(before)) continue;
     // Derived triple 22·22·0 with labels "axes · measured · unmeasured".
     // Prerender concatenates the heading number with the next paragraph, so
     // COUNT_RE sees "0 axes". That 0 is unmeasured_axes, not a board-total claim.
@@ -348,6 +352,15 @@ const LIVE_TENSE = [
   "attested on",
 ];
 
+function hasLiveTense(text) {
+  return LIVE_TENSE.some((phrase) => {
+    const escaped = phrase
+      .replace(/[.*+?^$()|[\]\\{}]/g, "\\$&")
+      .replace(/\s+/g, "\\s+");
+    return new RegExp("\\b" + escaped + "\\b", "i").test(text);
+  });
+}
+
 const RAIL_TERMS = {
   eas: /\bEAS\b|Ethereum Attestation Service/i,
   erc3643_onchainid: /ERC[-\s]?3643|ONCHAINID|trusted[-\s]issuer/i,
@@ -408,6 +421,10 @@ function ruleAnchorCount(facts, file, text, add) {
     const n = WORDS[raw] ?? parseInt(raw, 10);
     if (!Number.isFinite(n) || n <= declared) continue;   // understatement is safe
     const window = ctx(text, m.index, re.lastIndex, 130);
+    // A Bitcoin block height followed by a flattened next-field name such as
+    // "block 968674 anchors.json" is not a claim of 968674 independent anchors.
+    const immediateBefore = text.slice(Math.max(0, m.index - 24), m.index);
+    if (/\bblock\s*$/i.test(immediateBefore)) continue;
     if (/\bplanned\b|\bwill\b|\bwould\b|\bonce\b|\bnot yet\b|\bfund(s|ing|ed)?\b|\boutcome\b/i.test(window)) {
       continue;  // future/funded framing is honest — "OUTCOME: a 4-anchor machine"
     }
@@ -468,7 +485,7 @@ function ruleCapabilityTense(facts, file, text, add) {
       // devnet rail: only "mainnet/production" framing is a violation.
       if (rail.status === "devnet" && !/\bmainnet\b|\bproduction\b/i.test(lower)) continue;
 
-      if (!LIVE_TENSE.some((p) => lower.includes(p))) continue;
+      if (!hasLiveTense(lower)) continue;
 
       add({
         rule: "capability-tense",
@@ -571,6 +588,7 @@ function selftestCases(N, M, U) {
   [`derived triple flattened ${N}·${M}·${U} axes · measured · unmeasured (reproduces 1804 deploy)`, `<p>Living GSPC · derived totals ${N}·${M}·${U} axes · measured · unmeasured — ${N} axis · ${M} measured</p>`, false],
   ["VIOLATION: a real 0-axes board-total claim still fails", "<p>The board currently carries 0 axes.</p>", true],
   ["enumerated subset: the count names exactly its members", "<p>Separation on 3 axes (governance, safety, care) is computed from rows.</p>", false],
+  ["matrix dimension scopes its own batch", "<p>Cross-runtime reproduction, batch 2 (10 models x 14 axes).</p>", false],
   ["VIOLATION: enumerated list shorter than the count", "<p>Separation on 4 axes (governance, safety, care) is computed from rows.</p>", true],
   [`${M} measured is the observed measured count, not an overclaim`, `<p>The board publishes ${M} measured axes.</p>`, false],
   // "All N axes are measured" is honest only while no slot is declared-but-unmeasured.
@@ -595,6 +613,7 @@ function selftestCases(N, M, U) {
   ["honest pending label", "<p>Stamped, not yet anchored: the calendar has not committed this digest to Bitcoin.</p>", false],
   ["honest future tense for atom anchoring", "<p>Each atom will be anchored to Bitcoin once a calendar commits it.</p>", false],
   ["honest conditional verification rule", "<p>Treat OTS as Bitcoin-anchored only when the sidecar derives CONFIRMED_BITCOIN from the proof bytes.</p>", false],
+  ["honest none-state on a live surface", "<p>This live surface has no OTS proof published alongside it.</p>", false],
   // ── anchor-count concept rule (2026-09-03) ───────────────────────────────────
   // Each of these survived a hand-grep pass. The noun form carries no verb the
   // tense rule can see; the JSON-LD one was live on proofs.councilof.ai.
@@ -605,6 +624,7 @@ function selftestCases(N, M, U) {
   ["honest: 4-anchor as a funded OUTCOME", "<p>OUTCOME: a 4-anchor machine that gives regulators a single verifiable surface.</p>", false],
   ["honest: planned framing", "<p>A 4-anchor machine is planned once Bitcoin anchoring lands.</p>", false],
   ["map anchor NODES are a different sense and must pass", "<p>6 Anchor nodes · 5 live on the governance globe.</p>", false],
+  ["Bitcoin block height beside anchors.json is not an anchor count", "<p>OpenTimestamps proof with a Bitcoin attestation at block 968674 anchors.json lists the states.</p>", false],
   // ── unsigned interop scoping (#841 regression) ────────────────────────────────
   // An unsigned run artifact in /interop/ is a DIFFERENT INSTRUMENT from the board.
   // It legitimately says "4 axes" when measuring 4 axes on its own population.
