@@ -140,7 +140,7 @@ function CopyBlock({ block }: { block: ConfigBlock }) {
           {copied ? "Copied" : "Copy"}
         </button>
       </div>
-      <pre className="text-xs bg-slate-900 text-slate-100 rounded-lg p-3 overflow-x-auto leading-relaxed">
+      <pre className="max-w-full whitespace-pre-wrap break-all text-xs bg-slate-900 text-slate-100 rounded-lg p-3 leading-relaxed">
         <code>{block.code}</code>
       </pre>
     </div>
