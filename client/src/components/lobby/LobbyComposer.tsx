@@ -54,7 +54,11 @@ export default function LobbyComposer({
   // The prerendered composer cannot handle events until React hydrates. Keep it
   // disabled until then so a fast first question is never silently discarded.
   const [ready, setReady] = useState(false);
-  useEffect(() => setReady(true), []);
+  useEffect(() => {
+    // Static snapshots are captured after effects. The prerender browser keeps
+    // this gate closed so its saved HTML cannot accept a question before hydration.
+    if (!(window as Window & { __CSOAI_PRERENDER__?: boolean }).__CSOAI_PRERENDER__) setReady(true);
+  }, []);
   const [audience, setAudience] = useState<string>(() => {
     try {
       const v = localStorage.getItem("coai.lobby.audience");
