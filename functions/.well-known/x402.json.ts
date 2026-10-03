@@ -51,6 +51,12 @@ export type ListingOffer = { skuId: string; tier: string; productId?: string; am
 export const OFFERS: Record<string, ListingOffer> = {
   // The free door lists under its OWN product and sku id, as its 402 does (functions/api/free-door.ts).
   "/api/free-door": { skuId: FREE_DOOR_SKU, tier: "per_request", productId: FREE_DOOR_PRODUCT_ID, amountAtomic: "0" },
+  // Zero-priced subject discovery doors use the same request-attestation SKU/tier as their
+  // handlers, but override the atomic amount to 0. Keeping these in OFFERS makes the
+  // well-known manifest render from the same payment terms the live challenge uses.
+  "/api/discover/chainlink": { skuId: "request_attestation", tier: "per_request", amountAtomic: "0" },
+  "/api/discover/ondo": { skuId: "request_attestation", tier: "per_request", amountAtomic: "0" },
+  "/api/discover/ondo-ousg": { skuId: "request_attestation", tier: "per_request", amountAtomic: "0" },
   "/api/request-attestation": { skuId: "request_attestation", tier: "per_request" },
   "/api/evidence-bundle": { skuId: "evidence_bundle", tier: "bundle" },
   "/api/signed-data-feed": { skuId: "issuance", tier: "reserve" },
@@ -180,9 +186,8 @@ export const onRequestGet: PagesFunction<X402Env> = async ({ request, env }) => 
         const description = `Free ${label} discovery: subject identity, evidence routes, board and verification links. Discovery is not measurement or endorsement.`;
         return {
           method: "GET", url: resource, paid_for: null, amount: "0", description,
-          accepts: [req(resource, description)],
+          ...req(resource, description),
           note: "Zero-priced discovery route using an existing free-door mechanism; not a new paid SKU. INDEXED may be claimed only after confirmed settlement and Bazaar readback.",
-          indexed_in: null,
         };
       }),
       { method: "GET", url: `${origin}/api/request-attestation?subject=model-or-subject-id`, paid_for: "issuance",

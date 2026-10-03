@@ -37,7 +37,7 @@ export default function CouncilLobby() {
   const [location, setLocation] = useLocation();
   const dashboard =
     location === "/dashboard" || location.startsWith("/dashboard/");
-  const intent = useLobbyDeepLink(!dashboard);
+  const intent = useLobbyDeepLink();
 
   // Existing openLobby() CTAs now converge on the one dashboard instead of
   // spawning the retired overlay as a second application.

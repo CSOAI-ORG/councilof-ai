@@ -7,7 +7,10 @@ export const PASSING_SCORE = 70;
 
 export interface QuizQuestion {
   id: number | string;
-  questionText: string;
+  // Current course modules and Quiz.ts render question; older callers may still supply
+  // questionText, so keep it as an optional compatibility alias rather than splitting types.
+  question: string;
+  questionText?: string;
   options: string[];
   correctAnswer?: number;
   explanation?: string;

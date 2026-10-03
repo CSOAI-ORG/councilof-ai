@@ -231,7 +231,7 @@ export function hrefFor(door: Door): string {
   if (door.kind === "route") return door.path;
   if (door.kind === "pane") {
     if (door.pane === "verify") return "/gspc-verify";
-    if (door.pane === "measured" || door.pane === "ras" || door.pane === "assess") return "/assess";
+    if (door.pane === "measured" || door.pane === "ras") return "/assess";
     if (door.pane === "evidence") return "/gpai-evidence";
     if (door.pane === "embed") return "/embed";
     if (door.pane === "watchdog") return "/watchdog-hub";

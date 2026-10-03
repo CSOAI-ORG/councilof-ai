@@ -54,7 +54,7 @@ describe("useArenaDoors mechanic", () => {
     };
 
     const isQuotable =
-      unmeasuredAxis.status === "MEASURED" &&
+      String(unmeasuredAxis.status) === "MEASURED" &&
       unmeasuredAxis.n > 0 &&
       typeof unmeasuredAxis.accuracy === "number";
 
@@ -88,7 +88,7 @@ describe("useArenaDoors mechanic", () => {
     };
 
     const isQuotable =
-      emptyAxis.status === "MEASURED" &&
+      String(emptyAxis.status) === "MEASURED" &&
       emptyAxis.n > 0 &&
       typeof emptyAxis.accuracy === "number";
 

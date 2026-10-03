@@ -674,6 +674,7 @@
       "schema_refs": [],
       "source": "functions/api/arena/scoreboard.ts",
       "surfaces": [
+        "openapi",
         "llms",
         "nav"
       ]
@@ -838,7 +839,9 @@
       },
       "schema_refs": [],
       "source": "functions/api/assess/key.ts",
-      "surfaces": []
+      "surfaces": [
+        "openapi"
+      ]
     },
     {
       "audience": "agent",
@@ -1218,7 +1221,9 @@
       },
       "schema_refs": [],
       "source": "functions/api/claims/events/index.ts",
-      "surfaces": []
+      "surfaces": [
+        "openapi"
+      ]
     },
     {
       "audience": "agent",
@@ -1241,7 +1246,9 @@
       },
       "schema_refs": [],
       "source": "functions/api/claims/events/head.ts",
-      "surfaces": []
+      "surfaces": [
+        "openapi"
+      ]
     },
     {
       "audience": "agent",
@@ -1266,7 +1273,9 @@
         "csoai.claim-reactions/0.1"
       ],
       "source": "functions/api/claims/reactions/index.ts",
-      "surfaces": []
+      "surfaces": [
+        "openapi"
+      ]
     },
     {
       "audience": "agent",
@@ -1371,6 +1380,7 @@
       ],
       "source": "functions/api/claims/register.ts",
       "surfaces": [
+        "openapi",
         "llms"
       ],
       "surfaces_note": "Named in llms.txt and llms-full.txt, which is where it is actually published today. NOT declared for the openapi surface, because it is not in the OpenAPI document yet and scripts/build_openapi.py composes that document from the x402 catalogue rather than from this registry. Declaring a surface the door does not appear on is the kind of claim this registry exists to stop."
@@ -1399,7 +1409,9 @@
         "csoai.watch-request/0.1"
       ],
       "source": "functions/api/claims/watch-request.ts",
-      "surfaces": [],
+      "surfaces": [
+        "openapi"
+      ],
       "surfaces_note": "Called by the GSPC evidence panel (packages/gspc-panel). Not yet in the OpenAPI document or llms.txt; declaring a surface the door does not appear on is the claim this registry exists to stop."
     },
     {
@@ -1639,7 +1651,9 @@
       },
       "schema_refs": [],
       "source": "functions/api/corpus-watch/status.ts",
-      "surfaces": []
+      "surfaces": [
+        "openapi"
+      ]
     },
     {
       "audience": "agent",
@@ -1850,7 +1864,9 @@
         "csoai.dashboard.stats/0.2"
       ],
       "source": "functions/api/dashboard/stats.ts",
-      "surfaces": []
+      "surfaces": [
+        "openapi"
+      ]
     },
     {
       "audience": "agent",
@@ -2242,7 +2258,9 @@
       },
       "schema_refs": [],
       "source": "functions/api/evidence/github.ts",
-      "surfaces": []
+      "surfaces": [
+        "openapi"
+      ]
     },
     {
       "audience": "agent",
@@ -3976,6 +3994,7 @@
       ],
       "source": "functions/api/receipts/index.ts",
       "surfaces": [
+        "openapi",
         "llms",
         "nav"
       ]
@@ -4062,7 +4081,9 @@
         "csoai.receipts.latest/0.2"
       ],
       "source": "functions/api/receipts/latest.ts",
-      "surfaces": []
+      "surfaces": [
+        "openapi"
+      ]
     },
     {
       "audience": "both",
@@ -4089,6 +4110,7 @@
       ],
       "source": "functions/api/receipts/verify.ts",
       "surfaces": [
+        "openapi",
         "llms",
         "nav"
       ]
@@ -4119,6 +4141,7 @@
       ],
       "source": "functions/api/receipts/verify.ts",
       "surfaces": [
+        "openapi",
         "llms",
         "nav"
       ]
@@ -4710,7 +4733,9 @@
       },
       "schema_refs": [],
       "source": "functions/api/sov-town/state.jsonl.ts",
-      "surfaces": []
+      "surfaces": [
+        "openapi"
+      ]
     },
     {
       "audience": "agent",
@@ -5331,7 +5356,9 @@
       },
       "schema_refs": [],
       "source": "functions/api/witness/status.ts",
-      "surfaces": []
+      "surfaces": [
+        "openapi"
+      ]
     },
     {
       "audience": "agent",
@@ -5454,7 +5481,9 @@
       },
       "schema_refs": [],
       "source": "functions/api/wrapper/index.json.ts",
-      "surfaces": []
+      "surfaces": [
+        "openapi"
+      ]
     },
     {
       "audience": "both",
@@ -7075,7 +7104,9 @@
         "csoai.route-evidence/0.1"
       ],
       "source": "functions/api/route/execute.ts",
-      "surfaces": []
+      "surfaces": [
+        "openapi"
+      ]
     },
     {
       "audience": "both",
@@ -7101,85 +7132,171 @@
         "csoai.route-evidence/0.1"
       ],
       "source": "functions/api/route/execute.ts",
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "Zero-priced x402 discovery door for Chainlink / LINK. Discovery only: not a measurement, rating, endorsement, or certificate.",
+      "description_state": "DOCUMENTED",
+      "id": "api-discover-chainlink",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "method": "GET",
+      "name": "Chainlink discovery",
+      "path": "/api/discover/chainlink",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "GET",
+        "request": "/api/discover/chainlink",
+        "safe": true
+      },
+      "schema_refs": [
+        "csoai.subject-discovery/0.1"
+      ],
+      "source": "functions/api/discover/chainlink.ts",
+      "surfaces": [
+        "openapi",
+        "llms"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "POST alias for the zero-priced Chainlink / LINK discovery door. Discovery only, not measurement.",
+      "description_state": "DOCUMENTED",
+      "id": "api-discover-chainlink-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "method": "POST",
+      "name": "Chainlink discovery (POST)",
+      "path": "/api/discover/chainlink",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "POST",
+        "request": "/api/discover/chainlink",
+        "safe": false,
+        "unsafe_reason": "POST alias; unattended capability probes do not exercise POST"
+      },
+      "schema_refs": [
+        "csoai.subject-discovery/0.1"
+      ],
+      "source": "functions/api/discover/chainlink.ts",
       "surfaces": []
     },
     {
       "audience": "agent",
-      "description": "GET /api/discover/chainlink \u2014 bounded discovery door for chainlink.",
-      "endpoint": "/api/discover/chainlink",
-      "id": "api-discover-chainlink",
-      "lifecycle": "LIVE",
-      "method": "GET",
-      "payment": "free",
-      "protocols": [
-        "http"
-      ],
-      "title": "Discover chainlink"
-    },
-    {
-      "audience": "agent",
-      "description": "POST /api/discover/chainlink \u2014 bounded discovery door for chainlink.",
-      "endpoint": "/api/discover/chainlink",
-      "id": "api-discover-chainlink-post",
-      "lifecycle": "LIVE",
-      "method": "POST",
-      "payment": "free",
-      "protocols": [
-        "http"
-      ],
-      "title": "Discover chainlink"
-    },
-    {
-      "audience": "agent",
-      "description": "GET /api/discover/ondo \u2014 bounded discovery door for ondo.",
-      "endpoint": "/api/discover/ondo",
+      "description": "Zero-priced x402 discovery door for Ondo Finance / ONDO. Discovery only: not a measurement, rating, endorsement, or certificate.",
+      "description_state": "DOCUMENTED",
       "id": "api-discover-ondo",
+      "kind": "http",
       "lifecycle": "LIVE",
       "method": "GET",
+      "name": "Ondo discovery",
+      "path": "/api/discover/ondo",
       "payment": "free",
-      "protocols": [
-        "http"
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "GET",
+        "request": "/api/discover/ondo",
+        "safe": true
+      },
+      "schema_refs": [
+        "csoai.subject-discovery/0.1"
       ],
-      "title": "Discover ondo"
+      "source": "functions/api/discover/ondo.ts",
+      "surfaces": [
+        "openapi",
+        "llms"
+      ]
     },
     {
       "audience": "agent",
-      "description": "POST /api/discover/ondo \u2014 bounded discovery door for ondo.",
-      "endpoint": "/api/discover/ondo",
+      "description": "POST alias for the zero-priced Ondo Finance / ONDO discovery door. Discovery only, not measurement.",
+      "description_state": "DOCUMENTED",
       "id": "api-discover-ondo-post",
+      "kind": "http",
       "lifecycle": "LIVE",
       "method": "POST",
+      "name": "Ondo discovery (POST)",
+      "path": "/api/discover/ondo",
       "payment": "free",
-      "protocols": [
-        "http"
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "POST",
+        "request": "/api/discover/ondo",
+        "safe": false,
+        "unsafe_reason": "POST alias; unattended capability probes do not exercise POST"
+      },
+      "schema_refs": [
+        "csoai.subject-discovery/0.1"
       ],
-      "title": "Discover ondo"
+      "source": "functions/api/discover/ondo.ts",
+      "surfaces": []
     },
     {
       "audience": "agent",
-      "description": "GET /api/discover/ondo-ousg \u2014 bounded discovery door for ondo-ousg.",
-      "endpoint": "/api/discover/ondo-ousg",
+      "description": "Zero-priced x402 discovery door for Ondo Finance OUSG on XRPL. Discovery only: not a measurement, rating, endorsement, or certificate.",
+      "description_state": "DOCUMENTED",
       "id": "api-discover-ondo-ousg",
+      "kind": "http",
       "lifecycle": "LIVE",
       "method": "GET",
+      "name": "Ondo OUSG discovery",
+      "path": "/api/discover/ondo-ousg",
       "payment": "free",
-      "protocols": [
-        "http"
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "GET",
+        "request": "/api/discover/ondo-ousg",
+        "safe": true
+      },
+      "schema_refs": [
+        "csoai.subject-discovery/0.1"
       ],
-      "title": "Discover ondo-ousg"
+      "source": "functions/api/discover/ondo-ousg.ts",
+      "surfaces": [
+        "openapi",
+        "llms"
+      ]
     },
     {
       "audience": "agent",
-      "description": "POST /api/discover/ondo-ousg \u2014 bounded discovery door for ondo-ousg.",
-      "endpoint": "/api/discover/ondo-ousg",
+      "description": "POST alias for the zero-priced Ondo Finance OUSG discovery door. Discovery only, not measurement.",
+      "description_state": "DOCUMENTED",
       "id": "api-discover-ondo-ousg-post",
+      "kind": "http",
       "lifecycle": "LIVE",
       "method": "POST",
+      "name": "Ondo OUSG discovery (POST)",
+      "path": "/api/discover/ondo-ousg",
       "payment": "free",
-      "protocols": [
-        "http"
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "POST",
+        "request": "/api/discover/ondo-ousg",
+        "safe": false,
+        "unsafe_reason": "POST alias; unattended capability probes do not exercise POST"
+      },
+      "schema_refs": [
+        "csoai.subject-discovery/0.1"
       ],
-      "title": "Discover ondo-ousg"
+      "source": "functions/api/discover/ondo-ousg.ts",
+      "surfaces": []
     }
   ],
   "generator": "scripts/capability-seed.mjs (mechanical fields) plus hand-authored editorial fields",
@@ -7187,106 +7304,214 @@
   "not_declared": [],
   "openapi_gap": [
     {
-      "id": "api-arena-scoreboard",
-      "method": "GET",
-      "path": "/api/arena/scoreboard",
-      "reason": "functions/api subdirectory route; scripts/badger/csoai-openapi-gen.py walks functions/api/*.ts at the top level only, and this route is not an x402 door either"
-    },
-    {
-      "id": "api-assess-key",
-      "method": "GET",
-      "path": "/api/assess/key",
-      "reason": "functions/api subdirectory route; scripts/badger/csoai-openapi-gen.py walks functions/api/*.ts at the top level only, and this route is not an x402 door either"
-    },
-    {
-      "id": "api-corpus-watch-status",
-      "method": "GET",
-      "path": "/api/corpus-watch/status",
-      "reason": "functions/api subdirectory route; scripts/badger/csoai-openapi-gen.py walks functions/api/*.ts at the top level only, and this route is not an x402 door either"
-    },
-    {
-      "id": "api-dashboard-stats",
-      "method": "GET",
-      "path": "/api/dashboard/stats",
-      "reason": "functions/api subdirectory route; scripts/badger/csoai-openapi-gen.py walks functions/api/*.ts at the top level only, and this route is not an x402 door either"
-    },
-    {
-      "id": "api-evidence-github",
-      "method": "GET",
-      "path": "/api/evidence/github",
-      "reason": "functions/api subdirectory route; scripts/badger/csoai-openapi-gen.py walks functions/api/*.ts at the top level only, and this route is not an x402 door either"
-    },
-    {
-      "id": "api-receipts-latest",
-      "method": "GET",
-      "path": "/api/receipts/latest",
-      "reason": "functions/api subdirectory route; scripts/badger/csoai-openapi-gen.py walks functions/api/*.ts at the top level only, and this route is not an x402 door either"
-    },
-    {
-      "id": "api-receipts-verify",
-      "method": "GET",
-      "path": "/api/receipts/verify",
-      "reason": "functions/api subdirectory route; scripts/badger/csoai-openapi-gen.py walks functions/api/*.ts at the top level only, and this route is not an x402 door either"
-    },
-    {
-      "id": "api-receipts-verify-post",
+      "id": "api-art50-marking-evidence-post",
+      "path": "/api/art50/marking-evidence",
       "method": "POST",
-      "path": "/api/receipts/verify",
-      "reason": "functions/api subdirectory route; scripts/badger/csoai-openapi-gen.py walks functions/api/*.ts at the top level only, and this route is not an x402 door either"
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
     },
     {
-      "id": "api-receipts",
-      "method": "GET",
-      "path": "/api/receipts",
-      "reason": "functions/api subdirectory route; scripts/badger/csoai-openapi-gen.py walks functions/api/*.ts at the top level only, and this route is not an x402 door either"
+      "id": "api-signed-data-feed-post",
+      "path": "/api/signed-data-feed",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
     },
     {
-      "id": "api-sov-town-state-jsonl",
-      "method": "GET",
-      "path": "/api/sov-town/state.jsonl",
-      "reason": "functions/api subdirectory route; scripts/badger/csoai-openapi-gen.py walks functions/api/*.ts at the top level only, and this route is not an x402 door either"
+      "id": "api-evidence-bundle-post",
+      "path": "/api/evidence-bundle",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
     },
     {
-      "id": "api-witness-status",
-      "method": "GET",
-      "path": "/api/witness/status",
-      "reason": "functions/api subdirectory route; scripts/badger/csoai-openapi-gen.py walks functions/api/*.ts at the top level only, and this route is not an x402 door either"
+      "id": "api-feeds-provider-diff-post",
+      "path": "/api/feeds/provider-diff",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
     },
     {
-      "id": "api-wrapper-index-json",
-      "method": "GET",
-      "path": "/api/wrapper/index.json",
-      "reason": "functions/api subdirectory route; scripts/badger/csoai-openapi-gen.py walks functions/api/*.ts at the top level only, and this route is not an x402 door either"
+      "id": "api-free-door-post",
+      "path": "/api/free-door",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-measurement-fresh-capsule-post",
+      "path": "/api/measurement/fresh-capsule",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-pop-a2a-post",
+      "path": "/api/pop/a2a",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-pop-claim-watch-post",
+      "path": "/api/pop/claim-watch",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-pop-corrections-post",
+      "path": "/api/pop/corrections",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-pop-layer0-post",
+      "path": "/api/pop/layer0",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-pop-mcp-registry-post",
+      "path": "/api/pop/mcp-registry",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-pop-ots-proofs-post",
+      "path": "/api/pop/ots-proofs",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-pop-stablecoins-post",
+      "path": "/api/pop/stablecoins",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-pop-swift-post",
+      "path": "/api/pop/swift",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-pop-x402-bazaar-post",
+      "path": "/api/pop/x402-bazaar",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-pop-xrpl-post",
+      "path": "/api/pop/xrpl",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-proof-post",
+      "path": "/api/proof",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-receipts-batch-post",
+      "path": "/api/receipts/batch",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-request-attestation-post",
+      "path": "/api/request-attestation",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-rwa-evidence-post",
+      "path": "/api/rwa/evidence",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-wrapper-post",
+      "path": "/api/wrapper",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-wrapper-asset-usdc-post",
+      "path": "/api/wrapper/asset/usdc",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-wrapper-asset-usdt-post",
+      "path": "/api/wrapper/asset/usdt",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-wrapper-asset-dai-post",
+      "path": "/api/wrapper/asset/dai",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-ras-mcp-probe-post",
+      "path": "/api/ras/mcp-probe",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-ras-x402-check-post",
+      "path": "/api/ras/x402-check",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-ras-supply-post",
+      "path": "/api/ras/supply",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
     },
     {
       "id": "well-known-api-catalog",
-      "method": "GET",
       "path": "/.well-known/api-catalog",
+      "method": "GET",
       "reason": "a /.well-known document; the OpenAPI producer covers functions/api only"
     },
     {
       "id": "well-known-mcp-registry-auth",
-      "method": "GET",
       "path": "/.well-known/mcp-registry-auth",
+      "method": "GET",
       "reason": "a /.well-known document; the OpenAPI producer covers functions/api only"
     },
     {
       "id": "well-known-scitt-configuration",
-      "method": "GET",
       "path": "/.well-known/scitt-configuration",
+      "method": "GET",
       "reason": "a /.well-known document; the OpenAPI producer covers functions/api only"
     },
     {
       "id": "well-known-x402",
-      "method": "GET",
       "path": "/.well-known/x402",
+      "method": "GET",
       "reason": "a /.well-known document; the OpenAPI producer covers functions/api only"
     },
     {
       "id": "well-known-x402-json",
-      "method": "GET",
       "path": "/.well-known/x402.json",
+      "method": "GET",
       "reason": "a /.well-known document; the OpenAPI producer covers functions/api only"
+    },
+    {
+      "id": "api-discover-chainlink-post",
+      "path": "/api/discover/chainlink",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-discover-ondo-post",
+      "path": "/api/discover/ondo",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-discover-ondo-ousg-post",
+      "path": "/api/discover/ondo-ousg",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
     }
   ],
   "rules": [

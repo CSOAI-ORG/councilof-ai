@@ -27,7 +27,9 @@ export type FeedRow = {
   href: string;
 };
 
-export type Read<T> = { ok: true; body: T; readAt: string } | { ok: false; error: string; readAt: string };
+export type Read<T> =
+  | { ok: true; body: T; readAt: string; error?: undefined }
+  | { ok: false; error: string; readAt: string; body?: undefined };
 
 export const FLEET_STATUS_URL = "https://huggingface.co/datasets/csoai/fleet-status/resolve/main/fleet_status.public.json";
 export const FLEET_STATUS_PAGE = "https://huggingface.co/datasets/csoai/fleet-status";

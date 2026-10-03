@@ -3,13 +3,8 @@
  * Questions for training modules
  */
 
-export interface QuizQuestion {
-  id: string;
-  question: string;
-  options: string[];
-  correctAnswer: number;
-  explanation: string;
-}
+import type { QuizQuestion } from "@/types/quiz";
+export type { QuizQuestion } from "@/types/quiz";
 
 export interface Quiz {
   moduleId: string;

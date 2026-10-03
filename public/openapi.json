@@ -176,7 +176,7 @@
       "url": "https://creativecommons.org/licenses/by/4.0/"
     },
     "title": "Council of AI \u2014 Public API",
-    "version": "0.3+d097339238db",
+    "version": "0.3+6c45f78d53f5",
     "x-guidance": "Free board: GET /api/gspc \u2014 quote totals.lid verbatim, never compose a count. Paid doors are the operations carrying x-payment-info: GET without payment answers HTTP 402 with the x402 v2 challenge (accepts[0]: scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31); pay it and retry with the X-PAYMENT header. Required query parameters carry an example that reaches the 402. Free previews are named per door under x-csoai.free_preview. Catalog: https://councilof.ai/.well-known/x402.json and https://councilof.ai/api/x402. Verify is free: https://councilof.ai/gspc-verify. Offer & Receipt emission is conditional: a 402 carries server-signed offers only when the Pages signing key is available; a settled 200 carries a signed receipt only when settlement exposes the required payer and transaction evidence and that key is available. The extension uses JWS/EdDSA, kid did:web:csoai.org#board-attestation-1, published at https://csoai.org/.well-known/did.json. Check either without trusting this document: POST it to /api/receipts/verify, or download https://councilof.ai/verifier/verify_receipt.py; default mode reads the public DID document, and a retained key document allows offline replay. 23 axes measured \u00b7 14 model fleets \u00b7 0 separated leaders \u00b7 9 public leader scores \u00b7 9 fact runs \u00b7 TIE is TIE \u00b7 not a certificate."
   },
   "openapi": "3.1.0",
@@ -1403,92 +1403,278 @@
     },
     "/api/discover/chainlink": {
       "get": {
-        "description": "",
-        "operationId": "get__api_discover_chainlink",
+        "description": "Zero-priced discovery route using an existing free-door mechanism; not a new paid SKU. INDEXED may be claimed only after confirmed settlement and Bazaar readback.",
+        "operationId": "x402_discover_chainlink",
+        "parameters": [],
         "responses": {
           "200": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "schema": {
+                  "description": "Zero-priced discovery route using an existing free-door mechanism; not a new paid SKU. INDEXED may be claimed only after confirmed settlement and Bazaar readback.",
+                  "type": "object"
+                }
+              }
             },
-            "description": "OK"
-          }
-        },
-        "security": [],
-        "summary": ""
-      },
-      "post": {
-        "description": "",
-        "operationId": "post__api_discover_chainlink",
-        "responses": {
-          "200": {
+            "description": "Zero-priced discovery route using an existing free-door mechanism; not a new paid SKU. INDEXED may be claimed only after confirmed settlement and Bazaar readback."
+          },
+          "402": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "accepts": [
+                    {
+                      "amount": "0",
+                      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                      "extra": {
+                        "decimals": 6,
+                        "name": "USD Coin",
+                        "symbol": "USDC",
+                        "version": "2"
+                      },
+                      "maxAmountRequired": "0",
+                      "maxTimeoutSeconds": 300,
+                      "network": "eip155:8453",
+                      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+                      "scheme": "exact"
+                    }
+                  ],
+                  "error": "Payment required",
+                  "extensions": {
+                    "bazaar": {
+                      "info": {
+                        "input": {
+                          "method": "GET",
+                          "type": "http"
+                        }
+                      }
+                    }
+                  },
+                  "resource": {
+                    "description": "Zero-priced discovery route using an existing free-door mechanism; not a new paid SKU. INDEXED may be claimed only after confirmed settlement and Bazaar readback.",
+                    "mimeType": "application/json",
+                    "url": "https://councilof.ai/api/discover/chainlink"
+                  },
+                  "x402Version": 2
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/X402PaymentRequired"
+                }
+              }
             },
-            "description": "OK"
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "headers": {
+              "PAYMENT-REQUIRED": {
+                "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
-        "security": [],
-        "summary": ""
+        "summary": "free door \u2014 /api/discover/chainlink",
+        "tags": [
+          "x402",
+          "free"
+        ],
+        "x-csoai": {
+          "challenge": {
+            "amount_source": "the door pins X402_AMOUNT to 0 and /.well-known/x402.json advertises amount 0",
+            "captured": false
+          },
+          "door": "https://councilof.ai/api/discover/chainlink",
+          "paid_for": null
+        },
+        "x-payment-info": {
+          "protocols": [
+            "x402"
+          ]
+        }
       }
     },
     "/api/discover/ondo": {
       "get": {
-        "description": "",
-        "operationId": "get__api_discover_ondo",
+        "description": "Zero-priced discovery route using an existing free-door mechanism; not a new paid SKU. INDEXED may be claimed only after confirmed settlement and Bazaar readback.",
+        "operationId": "x402_discover_ondo",
+        "parameters": [],
         "responses": {
           "200": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "schema": {
+                  "description": "Zero-priced discovery route using an existing free-door mechanism; not a new paid SKU. INDEXED may be claimed only after confirmed settlement and Bazaar readback.",
+                  "type": "object"
+                }
+              }
             },
-            "description": "OK"
-          }
-        },
-        "security": [],
-        "summary": ""
-      },
-      "post": {
-        "description": "",
-        "operationId": "post__api_discover_ondo",
-        "responses": {
-          "200": {
+            "description": "Zero-priced discovery route using an existing free-door mechanism; not a new paid SKU. INDEXED may be claimed only after confirmed settlement and Bazaar readback."
+          },
+          "402": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "accepts": [
+                    {
+                      "amount": "0",
+                      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                      "extra": {
+                        "decimals": 6,
+                        "name": "USD Coin",
+                        "symbol": "USDC",
+                        "version": "2"
+                      },
+                      "maxAmountRequired": "0",
+                      "maxTimeoutSeconds": 300,
+                      "network": "eip155:8453",
+                      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+                      "scheme": "exact"
+                    }
+                  ],
+                  "error": "Payment required",
+                  "extensions": {
+                    "bazaar": {
+                      "info": {
+                        "input": {
+                          "method": "GET",
+                          "type": "http"
+                        }
+                      }
+                    }
+                  },
+                  "resource": {
+                    "description": "Zero-priced discovery route using an existing free-door mechanism; not a new paid SKU. INDEXED may be claimed only after confirmed settlement and Bazaar readback.",
+                    "mimeType": "application/json",
+                    "url": "https://councilof.ai/api/discover/ondo"
+                  },
+                  "x402Version": 2
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/X402PaymentRequired"
+                }
+              }
             },
-            "description": "OK"
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "headers": {
+              "PAYMENT-REQUIRED": {
+                "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
-        "security": [],
-        "summary": ""
+        "summary": "free door \u2014 /api/discover/ondo",
+        "tags": [
+          "x402",
+          "free"
+        ],
+        "x-csoai": {
+          "challenge": {
+            "amount_source": "the door pins X402_AMOUNT to 0 and /.well-known/x402.json advertises amount 0",
+            "captured": false
+          },
+          "door": "https://councilof.ai/api/discover/ondo",
+          "paid_for": null
+        },
+        "x-payment-info": {
+          "protocols": [
+            "x402"
+          ]
+        }
       }
     },
     "/api/discover/ondo-ousg": {
       "get": {
-        "description": "",
-        "operationId": "get__api_discover_ondo-ousg",
+        "description": "Zero-priced discovery route using an existing free-door mechanism; not a new paid SKU. INDEXED may be claimed only after confirmed settlement and Bazaar readback.",
+        "operationId": "x402_discover_ondo_ousg",
+        "parameters": [],
         "responses": {
           "200": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "schema": {
+                  "description": "Zero-priced discovery route using an existing free-door mechanism; not a new paid SKU. INDEXED may be claimed only after confirmed settlement and Bazaar readback.",
+                  "type": "object"
+                }
+              }
             },
-            "description": "OK"
-          }
-        },
-        "security": [],
-        "summary": ""
-      },
-      "post": {
-        "description": "",
-        "operationId": "post__api_discover_ondo-ousg",
-        "responses": {
-          "200": {
+            "description": "Zero-priced discovery route using an existing free-door mechanism; not a new paid SKU. INDEXED may be claimed only after confirmed settlement and Bazaar readback."
+          },
+          "402": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "accepts": [
+                    {
+                      "amount": "0",
+                      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                      "extra": {
+                        "decimals": 6,
+                        "name": "USD Coin",
+                        "symbol": "USDC",
+                        "version": "2"
+                      },
+                      "maxAmountRequired": "0",
+                      "maxTimeoutSeconds": 300,
+                      "network": "eip155:8453",
+                      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+                      "scheme": "exact"
+                    }
+                  ],
+                  "error": "Payment required",
+                  "extensions": {
+                    "bazaar": {
+                      "info": {
+                        "input": {
+                          "method": "GET",
+                          "type": "http"
+                        }
+                      }
+                    }
+                  },
+                  "resource": {
+                    "description": "Zero-priced discovery route using an existing free-door mechanism; not a new paid SKU. INDEXED may be claimed only after confirmed settlement and Bazaar readback.",
+                    "mimeType": "application/json",
+                    "url": "https://councilof.ai/api/discover/ondo-ousg"
+                  },
+                  "x402Version": 2
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/X402PaymentRequired"
+                }
+              }
             },
-            "description": "OK"
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "headers": {
+              "PAYMENT-REQUIRED": {
+                "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
-        "security": [],
-        "summary": ""
+        "summary": "free door \u2014 /api/discover/ondo-ousg",
+        "tags": [
+          "x402",
+          "free"
+        ],
+        "x-csoai": {
+          "challenge": {
+            "amount_source": "the door pins X402_AMOUNT to 0 and /.well-known/x402.json advertises amount 0",
+            "captured": false
+          },
+          "door": "https://councilof.ai/api/discover/ondo-ousg",
+          "paid_for": null
+        },
+        "x-payment-info": {
+          "protocols": [
+            "x402"
+          ]
+        }
       }
     },
     "/api/distribution-ledger": {
@@ -9898,6 +10084,9 @@
     "catalog": "https://councilof.ai/api/x402",
     "doors": [
       "/api/free-door",
+      "/api/discover/chainlink",
+      "/api/discover/ondo",
+      "/api/discover/ondo-ousg",
       "/api/request-attestation",
       "/api/evidence-bundle",
       "/api/signed-data-feed",
@@ -9961,7 +10150,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 124,
+    "public_operations": 118,
     "quarantined": [
       {
         "buyable": false,

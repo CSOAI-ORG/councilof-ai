@@ -47,6 +47,27 @@ def verify_inclusion(leaf: str, proof: list[dict], root: str) -> bool:
             return False
     return cur == root
 
+def reaction_commitment(doc: dict) -> tuple[str, str, str] | None:
+    """Return (mode, path, sha256) for the source bytes committed by a reaction index.
+
+    v0.2 originally committed directly to the public claim-event feed through
+    source.feed_bytes_sha256. Later market-reaction snapshots commit to a
+    separate immutable source_snapshot. Both are valid source-boundary shapes;
+    absence of either is a HOLD rather than a guessed interpretation.
+    """
+    source = doc.get("source")
+    if isinstance(source, dict):
+        digest = source.get("feed_bytes_sha256")
+        if isinstance(digest, str) and len(digest) == 64:
+            return ("claim_events", "/api/claims/events", digest)
+    snap = doc.get("source_snapshot")
+    if isinstance(snap, dict):
+        path = snap.get("path")
+        digest = snap.get("sha256")
+        if isinstance(path, str) and path.startswith("/") and isinstance(digest, str) and len(digest) == 64:
+            return ("snapshot", path, digest)
+    return None
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--origin", default="https://councilof.ai")
@@ -101,24 +122,38 @@ def main() -> int:
     reaction_body = bodies.get("/spec/claim-maintenance/reaction-index.json")
     feed_body = bodies.get("/api/claims/events")
     head_body = bodies.get("/api/claims/events/head")
-    if reaction_body and feed_body:
+    if reaction_body:
         try:
             reaction = json.loads(reaction_body)
-            expected = reaction["source"]["feed_bytes_sha256"]
-            if sha256(feed_body) != expected:
-                errors.append("reaction:live-feed-hash-drift")
+            commitment = reaction_commitment(reaction)
+            if commitment is None:
+                errors.append("reaction:source-commitment-missing")
+            else:
+                mode, path, expected = commitment
+                if mode == "claim_events":
+                    if feed_body is None or sha256(feed_body) != expected:
+                        errors.append("reaction:live-feed-hash-drift")
+                    if head_body:
+                        wrapper = json.loads(head_body)
+                        live_head = wrapper.get("head", wrapper)
+                        if live_head.get("feed", {}).get("bytes_sha256") != expected:
+                            errors.append("reaction:live-head-hash-drift")
+                else:
+                    try:
+                        st, final, headers, source_body = fetch(origin + path)
+                        checks.append({"path": path, "status": st, "bytes": len(source_body), "sha256": sha256(source_body)})
+                        if st != 200:
+                            errors.append(f"reaction:snapshot-http:{st}:{path}")
+                        elif final.rstrip("/") != (origin + path).rstrip("/"):
+                            errors.append(f"reaction:snapshot-redirect:{final}")
+                        elif sha256(source_body) != expected:
+                            errors.append(f"reaction:snapshot-hash-drift:{path}")
+                    except urllib.error.HTTPError as exc:
+                        errors.append(f"reaction:snapshot-http:{exc.code}:{path}")
+                    except Exception as exc:
+                        errors.append(f"reaction:snapshot-fetch:{type(exc).__name__}:{exc}")
         except Exception as exc:
             errors.append(f"reaction:parse:{type(exc).__name__}:{exc}")
-
-    if reaction_body and head_body:
-        try:
-            reaction = json.loads(reaction_body)
-            wrapper = json.loads(head_body)
-            live_head = wrapper.get("head", wrapper)
-            if live_head.get("feed", {}).get("bytes_sha256") != reaction["source"]["feed_bytes_sha256"]:
-                errors.append("reaction:live-head-hash-drift")
-        except Exception as exc:
-            errors.append(f"head:parse:{type(exc).__name__}:{exc}")
 
     corrections = bodies.get("/api/corrections")
     if corrections:

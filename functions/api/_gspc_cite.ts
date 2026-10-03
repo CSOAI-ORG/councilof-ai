@@ -32,7 +32,7 @@ export interface CiteInput {
 const str = (v: unknown): string | null => (typeof v === "string" && v.trim() ? v : null);
 
 export async function sha256Hex(bytes: Uint8Array): Promise<string> {
-  const d = await crypto.subtle.digest("SHA-256", bytes);
+  const d = await crypto.subtle.digest("SHA-256", Uint8Array.from(bytes).buffer);
   return [...new Uint8Array(d)].map((x) => x.toString(16).padStart(2, "0")).join("");
 }
 

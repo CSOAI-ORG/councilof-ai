@@ -53,6 +53,7 @@ export interface AxisScore {
   separation_p?: number;      // McNemar exact p on discordant pairs (leader vs best base)
   separation_basis?: string;  // stated when the determination is not McNemar (e.g. Wilson-bound non-overlap)
   separation_method?: string;
+  separation_untested_reason_code?: string;
   separation_evidence?: Record<string, unknown>;
   interval?: [number, number];   // Wilson 95% CI on the leader — present ONLY where the n is honestly independent
   fleet_mean?: number;        // mean accuracy across the measured fleet — the linear aggregator; absent where the fleet mean is not in the signed source

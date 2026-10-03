@@ -71,7 +71,7 @@ export function isFactsAxis(a: AxisCellSource): boolean {
 
 export type AccuracyCell =
   /** A real leader figure. `prefix` is "≥" when the value is a stated lower bound. */
-  | { state: "figure"; text: string; prefix: string; lowerBound?: string }
+  | { state: "figure"; text: string; prefix: string; lowerBound?: string; title?: string }
   /** Measured, but by deterministic facts — no accuracy exists to show. */
   | { state: "facts"; text: string; detail?: string; title: string }
   /** A model-comparison run exists, but the board publishes no attributable leader score. */
