@@ -19,7 +19,7 @@ import spray from "../../scripts/badger/_spray-log-v2.json";
 import doi from "../../docs/DOI_AXIS_CARDS_2026-08-24.json";
 import { buildRevenue, type RevenueEnv } from "./revenue";
 
-interface Correction { id: string; date: string; what_was_wrong: string; how_caught: string; fix: string; status?: string }
+interface Correction { id: string; date: string; what_was_wrong: string; how_caught: string; fix: string; what_changed?: string; status?: string }
 interface Card { card: string; axis?: string; ts?: string }
 interface Spray { lane?: string; status?: string; target?: string }
 

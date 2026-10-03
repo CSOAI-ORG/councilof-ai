@@ -141,7 +141,7 @@ export interface Deps {
   timeoutMs?: number;
 }
 
-type Got<T> = { ok: true; value: T } | { ok: false; reason: string };
+type Got<T> = { ok: true; value: T; reason?: undefined } | { ok: false; reason: string; value?: undefined };
 
 const nf = new Intl.NumberFormat("en-GB");
 const isCount = (v: unknown): v is number => typeof v === "number" && Number.isSafeInteger(v) && v >= 0;

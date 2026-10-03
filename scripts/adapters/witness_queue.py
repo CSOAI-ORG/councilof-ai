@@ -39,7 +39,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, Optional
 
 KIND = "csoai.witness.hash/0.1"
 ENTRY_SCHEMA = "csoai.witness-entry/0.1"
@@ -68,7 +68,7 @@ PUBLIC_FIELDS = (
     "rfc3161_tsa", "rfc3161_status", "rfc3161_token_sha256", "queued_at", "status", "witnessed",
 )
 
-Transport = Callable[[str, str, bytes | None, dict[str, str]], tuple[int, bytes]]
+Transport = Callable[[str, str, Optional[bytes], dict[str, str]], tuple[int, bytes]]
 
 
 def canonical_bytes(obj: Any) -> bytes:

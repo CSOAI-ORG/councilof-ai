@@ -297,13 +297,19 @@ const merged = [...entries.values()].map((seeded) => {
   return out;
 });
 // WHICH ENTRIES public/openapi.json IS EXPECTED TO CARRY.
-// scripts/badger/csoai-openapi-gen.py walks functions/api/*.ts - the TOP LEVEL only - and
-// scripts/build_openapi.py adds the x402 doors from the manifest. Anything else this estate
-// serves (a route in a functions/api subdirectory, a /.well-known document) is outside the
-// document's reach today. That gap is NAMED here, entry by entry, rather than counted or
-// implied: a new undocumented route appears in this list and has to be justified, and an
-// exemption that the document later covers fails scripts/build_openapi.py --check as stale.
-const doorPaths = new Set(wk.resources.map((r) => new URL(r.url).pathname));
+// scripts/badger/csoai-openapi-gen.py now walks fixed handlers recursively under functions/api/.
+// scripts/build_openapi.py then replaces an x402 resource path with the ONE method named by the
+// well-known x402 manifest. That replacement is deliberate: aliases exported by the same handler
+// are real HTTP capabilities, but they are not advertised as separate payable/discovery methods.
+// /.well-known documents remain outside the OpenAPI producer. The gap is NAMED entry by entry so
+// a producer expansion makes the old exemption fail closed instead of silently ageing.
+const doorMethods = new Map();
+for (const r of wk.resources) {
+  const path = new URL(r.url).pathname;
+  const method = String(r.method || "GET").toUpperCase();
+  if (!doorMethods.has(path)) doorMethods.set(path, new Set());
+  doorMethods.get(path).add(method);
+}
 const openapiGap = [];
 for (const c of merged) {
   // MCP tools and A2A skills are not HTTP operations; they are rendered onto their own doors.
@@ -311,16 +317,30 @@ for (const c of merged) {
     c.surfaces = c.surfaces.filter((s) => s !== "openapi");
     continue;
   }
-  // The walker's own glob is functions/api/*.ts - a FILE rule, not a path rule. /api/receipts is
-  // served by functions/api/receipts/index.ts, so it looks top-level and the walker never sees it.
-  const topLevelFile = /^functions\/api\/[^/]+\.ts$/.test(c.source ?? "");
+
+  const httpish = c.kind === "http" || c.kind === "population_door";
+  const source = String(c.source ?? "");
+  // Mirrors the recursive walker's fixed-route boundary: functions/api source, no private path
+  // segment, no dynamic [param] segment, and no test file.
+  const fixedApiSource =
+    /^functions\/api\//.test(source) &&
+    !source.split("/").some((part) => part.startsWith("_")) &&
+    !source.includes("[") &&
+    !source.endsWith(".test.ts");
+  const listedMethods = doorMethods.get(c.path);
+  // An x402-listed path is owned by the manifest's method set because build_openapi.py replaces
+  // the walker's whole path item with the listed operation. Otherwise the recursive walker owns it.
   const inScope =
-    (c.kind === "http" || c.kind === "population_door") &&
-    (doorPaths.has(c.path) || topLevelFile);
+    httpish &&
+    (listedMethods
+      ? listedMethods.has(String(c.method || "").toUpperCase())
+      : fixedApiSource);
+
   if (inScope) {
     if (!c.surfaces.includes("openapi")) c.surfaces = ["openapi", ...c.surfaces];
     continue;
   }
+
   c.surfaces = c.surfaces.filter((s) => s !== "openapi");
   openapiGap.push({
     id: c.id,
@@ -329,7 +349,9 @@ for (const c of merged) {
     reason:
       c.kind === "well_known"
         ? "a /.well-known document; the OpenAPI producer covers functions/api only"
-        : "functions/api subdirectory route; scripts/badger/csoai-openapi-gen.py walks functions/api/*.ts at the top level only, and this route is not an x402 door either",
+        : listedMethods
+          ? "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+          : "outside the recursive fixed-route functions/api surface rendered by scripts/badger/csoai-openapi-gen.py",
   });
 }
 

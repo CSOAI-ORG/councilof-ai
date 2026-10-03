@@ -206,6 +206,12 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
   - https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum · free preview: https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum&preview=1
     Wrapped-asset parity evidence: change record for one pair between the two latest published ledger snapshots. Returns per-field deltas of wrapped supply, escrow balance and ratio, with both snapshot dates read from the files. States: DELTA_READ, or UNCHECKABLE when only one snapshot exists. Free preview; verification is free.
   - https://councilof.ai/api/free-door — a live 402 route priced at zero: it settles, and charges nothing.
+  - https://councilof.ai/api/discover/chainlink — a live 402 route priced at zero: it settles, and charges nothing.
+  - https://councilof.ai/api/discover/chainlink — a live 402 route priced at zero: it settles, and charges nothing.
+  - https://councilof.ai/api/discover/ondo — a live 402 route priced at zero: it settles, and charges nothing.
+  - https://councilof.ai/api/discover/ondo — a live 402 route priced at zero: it settles, and charges nothing.
+  - https://councilof.ai/api/discover/ondo-ousg — a live 402 route priced at zero: it settles, and charges nothing.
+  - https://councilof.ai/api/discover/ondo-ousg — a live 402 route priced at zero: it settles, and charges nothing.
 - Free preview: omit `bundle=1` or add `preview=1` as the 402 body documents. Verify stays free: https://councilof.ai/gspc-verify
 - Follow a commission (free): GET https://councilof.ai/api/commissions — per subject `fulfillment` QUEUED | RETRIEVABLE | UNFULFILLABLE, `retrieval` points at the signed cards, `by_origin` separates OUTSIDE from SELF_TEST. Quote it live; a settled request is not a measurement until a signed card is retrievable.
 
@@ -281,7 +287,7 @@ The older https://councilof.ai/feed.xml is a hand-maintained item list kept for 
 - MCP (free door, the address to add to Claude or any chat client): POST https://councilof.ai/mcp/free — the fourteen free read-only readers only, same definitions as /mcp, no payment tool. No account, no key. Setup, tool list and example prompts: https://councilof.ai/connect/claude/
 - Public root (https://councilof.ai/root.json): Merkle envelope. Quote live `sig_ed25519` — unsigned until keystone signs the compact preimage (kind, schema, as_of, merkle_root, card_count, did_intended). Leaves MAY carry GH-secret attestations — coverage harvest, not grades. Not MEASURED. Not a certificate. Free; not paywalled.
 - Mill-card root discovery pointer: https://councilof.ai/interop/card-root-latest.json — an unsigned pointer to immutable root bytes. Follow `root_url` and check `root_sha256`. Its leaf count is separate from `/root.json`, `/signed/card_index.json` and `/api/gspc`. Read the `.ots` sidecar and verify its subject hash. Calendar-only proofs remain pending; a BitcoinBlockHeaderAttestation tag can be checked against public block headers, but a tag alone is not local full-node chain validation or a certificate.
-- Dated immutable mill-card root (as of 2026-09-30T13:46:20Z, 1457 leaves): https://councilof.ai/interop/card-root-2026-09-30-d71db8230991.json (SHA-256 c898a31c1e86f882ca06f133198740c19acde4eb86feb37e01c66461aed40285). Its .ots sidecar (SHA-256 f3584c237a8d29ec8ebb94fe31a4ac1c821bd7a27dcc25fca3f150499d9bcfcc) is calendar-pending: a submitted request, not evidence of a time, until a Bitcoin attestation is added. This is not local Bitcoin full-node chain validation.
+- Dated immutable mill-card root (as of 2026-09-30T15:51:34Z, 1461 leaves): https://councilof.ai/interop/card-root-2026-09-30-1c4f3d20ab52.json (SHA-256 5d3cb923db9a2c540ed199117dc5612beda6659b2ebd634d7c4d636c3c374739). Its .ots sidecar (SHA-256 7774e3ac6437b8b3976fad225911198ad975b7dada7d23a583cdd37e9ff96753) is calendar-pending: a submitted request, not evidence of a time, until a Bitcoin attestation is added. This is not local Bitcoin full-node chain validation.
 - MCP (stdio, run locally, zero deps): npm `csoai-gspc-mcp`. Query https://registry.npmjs.org/csoai-gspc-mcp for the published version, then call that install's `tools/list`; package source in this repository targets the same 19-tool contract as the HTTP door.
 - Verify a server (per-server evidence, in the browser): https://councilof.ai/verify-server/ — every signed measurement capsule keyed to ONE endpoint URL, each re-derivable in the page (capsule id + Merkle inclusion + index signature). States only; an unknown URL is NOT_MEASURED, never clean. Same module as the MCP tools server_evidence / verify_capsule.
 - MCP registry: ai.councilof/gspc → https://councilof.ai/mcp (the canonical, domain-verified name; io.github.CSOAI-ORG/gspc is its deprecated alias for the same door. Query the official registry for the currently published server version.)
@@ -373,13 +379,13 @@ board, whose totals stay GET https://councilof.ai/api/gspc. A superseded version
 ## Timestamp proofs (anchored is not the same claim as submitted)
 
 Derived at generation from https://councilof.ai/interop/ots/manifest.json (same bytes on disk at
-public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-09-30T13:46:25Z). An upgrade loop
+public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-10-03T10:37:26Z). An upgrade loop
 keeps advancing these, so read the manifest for a fresher count rather than quoting this line alone.
 
-- Detached OpenTimestamps proofs that actually deserialize: 659. The manifest is built by
+- Detached OpenTimestamps proofs that actually deserialize: 653. The manifest is built by
   reading every .ots file in its scanned directories and keeping only those that parse — never from a
   list of files we intended to stamp.
-- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 650.
+- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 644.
 - Still calendar-pending: 9. A calendar-pending proof is a submitted request, not
   evidence of a time. `submitted` is not `anchored`.
 - Proofs whose subject is not served beside them: 63 — an anchor a reader cannot check

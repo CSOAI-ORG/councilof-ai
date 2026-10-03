@@ -80,5 +80,5 @@ export async function feedPayloadEvidence(body:unknown){
 }
 export async function feedJson(body:unknown,status=200,extra:Record<string,string>={}){
  const raw=feedPayloadBytes(body);
- return new Response(raw,{status,headers:{'content-type':'application/json; charset=utf-8','cache-control':'no-store, no-transform','access-control-allow-origin':'*','access-control-expose-headers':'x-csoai-payload-sha256, x-csoai-feed-sha256, x-csoai-delivery-record-state, x-payment-response, payment-response',...extra,'x-csoai-payload-sha256':await sha256Hex(raw)}});
+ return new Response(Uint8Array.from(raw).buffer,{status,headers:{'content-type':'application/json; charset=utf-8','cache-control':'no-store, no-transform','access-control-allow-origin':'*','access-control-expose-headers':'x-csoai-payload-sha256, x-csoai-feed-sha256, x-csoai-delivery-record-state, x-payment-response, payment-response',...extra,'x-csoai-payload-sha256':await sha256Hex(raw)}});
 }

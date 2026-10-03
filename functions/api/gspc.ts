@@ -473,7 +473,7 @@ export const onRequestGet: PagesFunction = async (context) => {
     if (axis) target.searchParams.set("axis", axis);
     const inner = await (onRequestGet as unknown as (c: typeof context) => Promise<Response>)({
       ...context,
-      request: new Request(target.toString(), { method: "GET", headers: { accept: "application/json" } }),
+      request: new Request(target.toString(), { method: "GET", headers: { accept: "application/json" } }) as typeof context.request,
     });
     const common = {
       "content-type": "application/json; charset=utf-8",

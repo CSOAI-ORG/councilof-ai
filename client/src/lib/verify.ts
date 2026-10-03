@@ -103,7 +103,7 @@ export async function verifyEd25519Detached(
   const keyToUse = publishedPubkeyB64 || pubkeyB64;
   let key: CryptoKey;
   try {
-    key = await crypto.subtle.importKey("raw", b64ToBytes(keyToUse), { name: "Ed25519" }, false, ["verify"]);
+    key = await crypto.subtle.importKey("raw", Uint8Array.from(b64ToBytes(keyToUse)).buffer, { name: "Ed25519" }, false, ["verify"]);
   } catch (e) {
     const name = (e as { name?: string }).name || "";
     if (name === "NotSupportedError") {
@@ -122,7 +122,7 @@ export async function verifyEd25519Detached(
 
   let sig_ok = false;
   try {
-    sig_ok = await crypto.subtle.verify("Ed25519", key, b64ToBytes(sigB64), bodyBytes);
+    sig_ok = await crypto.subtle.verify("Ed25519", key, Uint8Array.from(b64ToBytes(sigB64)).buffer, Uint8Array.from(bodyBytes).buffer);
   } catch {
     // Malformed signature bytes → the signature does not verify. Invalid, not unsupported.
     sig_ok = false;

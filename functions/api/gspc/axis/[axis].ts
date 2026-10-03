@@ -17,6 +17,6 @@ export const onRequestGet: PagesFunction = async (context) => {
   if (fmt) target.searchParams.set("format", fmt);
   return (gspcGet as unknown as (c: typeof context) => Promise<Response>)({
     ...context,
-    request: new Request(target.toString(), { method: "GET", headers: context.request.headers }),
+    request: new Request(target.toString(), { method: "GET", headers: context.request.headers }) as typeof context.request,
   });
 };

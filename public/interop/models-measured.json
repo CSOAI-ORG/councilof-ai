@@ -2,7 +2,7 @@
  "schema": "csoai.models-measured/0.1",
  "what": "Distinct AI models with at least one signed, quotable measurement on a frozen bank, split by whose model it is.",
  "headline": {
-  "third_party_models": 161,
+  "third_party_models": 163,
   "own_models_excluded": 48,
   "own_unconfirmed": 3,
   "third_party_with_admission_receipt": 45,
@@ -23,12 +23,12 @@
   },
   "mill_cards_signed": {
    "path": "/interop/mill-cards-signed/",
-   "files_read": 2833,
-   "cards_counted": 1183,
+   "files_read": 2863,
+   "cards_counted": 1208,
    "cards_counted_with_admission_receipt": 262,
    "cards_not_counted": {
     "signature_not_valid": 0,
-    "not_measured": 557,
+    "not_measured": 562,
     "not_quotable": 0,
     "under_30": 0,
     "unsigned": 36,
@@ -38,7 +38,7 @@
    "rule": "Ed25519 signature verifies under the did:web:csoai.org key it names, id == sha256(canonical body), status MEASURED, quotable, n >= 30, not STAGED_UNSIGNED, not withdrawn, not superseded"
   }
  },
- "inputs_sha256": "0ed59942b1c15c3a4cd88282b56b47067a8fa514fbf3381c0c113d11d7989fd2",
+ "inputs_sha256": "3465575ca67574ac6df13fe9f49f656a6019240741fb00ce7c11e9e9015880a8",
  "models": [
   {
    "id": "clan-law-plain",
@@ -766,7 +766,7 @@
    "id": "llama3.2:3b",
    "name_published": true,
    "kind": "third_party",
-   "cards": 24,
+   "cards": 27,
    "axes": 23,
    "sources": [
     "mill-cards-signed",
@@ -776,6 +776,22 @@
    "recorded_as": [
     "llama3.2:3b",
     "ollama:llama3.2:3b@sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+   ]
+  },
+  {
+   "id": "qwen2.5:7b",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 26,
+   "axes": 20,
+   "sources": [
+    "mill-cards-signed",
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "ollama:qwen2.5:7b@sha256:845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "qwen2.5:7b"
    ]
   },
   {
@@ -792,22 +808,6 @@
    "recorded_as": [
     "ollama:qwen2.5:0.5b-instruct@sha256:a8b0c51577010a279d933d14c2a8ab4b268079d44c5c8830c0a93900f1827c67",
     "qwen2.5:0.5b-instruct"
-   ]
-  },
-  {
-   "id": "qwen2.5:7b",
-   "name_published": true,
-   "kind": "third_party",
-   "cards": 21,
-   "axes": 20,
-   "sources": [
-    "mill-cards-signed",
-    "signed-card-index"
-   ],
-   "admission_receipt": false,
-   "recorded_as": [
-    "ollama:qwen2.5:7b@sha256:845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
-    "qwen2.5:7b"
    ]
   },
   {
@@ -840,6 +840,20 @@
    "recorded_as": [
     "gemma3:12b",
     "ollama:gemma3:12b@sha256:f4031aab637d1ffa37b42570452ae0e4fad0314754d17ded67322e4b95836f8a"
+   ]
+  },
+  {
+   "id": "gemma3:4b",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 17,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "ollama:gemma3:4b@sha256:a2af6cc3eb7fa8be8504abaf9b04e88f17a119ec3f04a3addf55f92841195f5a"
    ]
   },
   {
@@ -1302,20 +1316,6 @@
    "admission_receipt": true,
    "recorded_as": [
     "deepseek-ai/DeepSeek-V4-Pro"
-   ]
-  },
-  {
-   "id": "gemma3:4b",
-   "name_published": true,
-   "kind": "third_party",
-   "cards": 12,
-   "axes": 12,
-   "sources": [
-    "mill-cards-signed"
-   ],
-   "admission_receipt": false,
-   "recorded_as": [
-    "ollama:gemma3:4b@sha256:a2af6cc3eb7fa8be8504abaf9b04e88f17a119ec3f04a3addf55f92841195f5a"
    ]
   },
   {
@@ -2037,6 +2037,20 @@
    ]
   },
   {
+   "id": "mistral-nemo:12b",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 7,
+   "axes": 7,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "ollama:mistral-nemo:12b@sha256:e7e06d107c6c86ed0cf45445f1790720b5092149c4c95f4d965844e9afbfdc89"
+   ]
+  },
+  {
    "id": "Qwen/Qwen3-4B-Base",
    "name_published": true,
    "kind": "third_party",
@@ -2216,6 +2230,20 @@
    "admission_receipt": false,
    "recorded_as": [
     "yentinglin/Llama-3-Taiwan-8B-Instruct"
+   ]
+  },
+  {
+   "id": "hf.co/ggml-org/MiMo-V2.6-Distill-Qwen-9B-GGUF:Q8_0",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 5,
+   "axes": 5,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "ollama:hf.co/ggml-org/MiMo-V2.6-Distill-Qwen-9B-GGUF:Q8_0@sha256:dbdd4bb7a97bae9e7cd9750e599aa1ac88996a4408dbe00f3e4d4e64c23685ff"
    ]
   },
   {

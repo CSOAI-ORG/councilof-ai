@@ -55,7 +55,7 @@ import urllib.error
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, Optional
 
 SCHEMA = "csoai.evm.permission-state/0.1"
 SURFACE = "public.notice"
@@ -358,7 +358,7 @@ ALWAYS_UNMEASURED = [
     "source verification of bytecode against a published repository",
 ]
 
-Transport = Callable[[str, list[dict[str, Any]]], list[dict[str, Any]] | None]
+Transport = Callable[[str, list[dict[str, Any]]], Optional[list[dict[str, Any]]]]
 
 
 def canonical_bytes(obj: Any) -> bytes:

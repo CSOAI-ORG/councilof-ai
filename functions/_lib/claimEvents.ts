@@ -103,7 +103,11 @@ export async function verifyFeed(feedText: string, headText: string, signedText:
     return done(0, head);
   }
   const chain = await verifyChain(lines);
-  checks.push({ check: "chain", ok: chain.ok, detail: chain.ok ? `${lines.length} lines link` : `line ${chain.at}: ${chain.why}` });
+  if ("at" in chain) {
+    checks.push({ check: "chain", ok: false, detail: "line " + chain.at + ": " + chain.why });
+  } else {
+    checks.push({ check: "chain", ok: true, detail: String(lines.length) + " lines link" });
+  }
 
   const bytesSha = await sha256hex(enc.encode(feedText));
   checks.push({ check: "feed bytes", ok: bytesSha === feed.bytes_sha256, detail: `sha256(events.jsonl) = ${bytesSha}` });

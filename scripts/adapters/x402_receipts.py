@@ -44,7 +44,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, Optional
 
 KIND = "csoai.x402.receipt/0.1"
 RECORD_SCHEMA = "csoai.x402.receipt-record/0.1"
@@ -74,7 +74,7 @@ VERDICT_RE = re.compile(
     re.I,
 )
 
-Transport = Callable[[str, str, bytes | None, dict[str, str]], tuple[int, bytes]]
+Transport = Callable[[str, str, Optional[bytes], dict[str, str]], tuple[int, bytes]]
 
 
 def canonical_bytes(obj: Any) -> bytes:

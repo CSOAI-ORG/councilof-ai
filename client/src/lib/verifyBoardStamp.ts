@@ -48,7 +48,7 @@ export async function verifyBoardStamp(stamp: Stamp, did: DidDoc, subtle: Subtle
   if (!subtle) return { state: "UNCHECKABLE", reason: "this browser exposes no WebCrypto" };
   let key: CryptoKey;
   try {
-    key = await subtle.importKey("raw", fromB64u(x), { name: "Ed25519" }, false, ["verify"]);
+    key = await subtle.importKey("raw", Uint8Array.from(fromB64u(x)).buffer, { name: "Ed25519" }, false, ["verify"]);
   } catch {
     return { state: "UNCHECKABLE", reason: "this browser has no Ed25519 in WebCrypto" };
   }
@@ -58,6 +58,6 @@ export async function verifyBoardStamp(stamp: Stamp, did: DidDoc, subtle: Subtle
   } catch (e) {
     return { state: "UNCHECKABLE", reason: `cannot canonicalise the preimage: ${(e as Error).message}` };
   }
-  const ok = await subtle.verify({ name: "Ed25519" }, key, fromHex(stamp.signature), msg);
+  const ok = await subtle.verify({ name: "Ed25519" }, key, Uint8Array.from(fromHex(stamp.signature)).buffer, Uint8Array.from(msg).buffer);
   return ok ? { state: "VALID", keyId } : { state: "INVALID", reason: "the signature does not verify over the published preimage" };
 }

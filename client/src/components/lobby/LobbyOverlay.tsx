@@ -524,7 +524,7 @@ export default function LobbyOverlay({
                 {localPane && tab.id === "home" ? (
                   <LobbyHome onSelect={go} onOpenRoute={openRoute} />
                 ) : localPane ? (
-                  <LobbyPlay onOpenRoute={openRoute} />
+                  <LobbyPlay />
                 ) : nativePane && tab.id === "board" ? (
                   <LobbyBoardPane />
                 ) : nativePane && tab.id === "matrix" ? (
