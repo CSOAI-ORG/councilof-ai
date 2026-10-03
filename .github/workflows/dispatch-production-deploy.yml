@@ -1,0 +1,34 @@
+name: dispatch-production-deploy
+on:
+  push:
+    branches:
+      - csoai/lane-universal-gspc-20261003
+
+permissions:
+  actions: write
+  contents: write
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: csoai/lane-universal-gspc-20261003
+          fetch-depth: 0
+      - name: Dispatch canonical production deploy on master
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh workflow run deploy.yml --repo "$GITHUB_REPOSITORY" --ref master -f check_registry=false
+      - name: Remove dispatch bootstrap from release branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "csoai-release-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/dispatch-production-deploy.yml
+          git commit -m "chore: remove production deploy dispatcher"
+          git push origin HEAD:csoai/lane-universal-gspc-20261003
