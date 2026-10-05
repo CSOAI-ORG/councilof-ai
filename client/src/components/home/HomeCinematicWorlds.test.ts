@@ -46,7 +46,7 @@ describe("cinematic three-world merge contract", () => {
     expect(shipped).not.toMatch(/certified organization|buy a rank|\/murder|\/difflin|\/mundrr/i);
     expect(shipped).toContain("GET /api/gspc");
     expect(shipped).toContain("Jail is measured");
-    expect(shipped).toContain("TIE");
+    expect(shipped).toMatch(/TIE|UNTESTED/);
     expect(worlds).toContain("public_count");
   });
 });

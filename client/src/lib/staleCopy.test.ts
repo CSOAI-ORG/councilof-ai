@@ -17,23 +17,14 @@ const pressroom = readFileSync(resolve(__dirname, "../pages/PublicPress.tsx"), "
 const accessibility = readFileSync(resolve(__dirname, "../pages/Accessibility.tsx"), "utf8");
 
 describe("stale copy honesty", () => {
-  it("the public pay desk reaches the real wallet-enabled MCP jobs and reads live settlement state", () => {
-    for (const tool of [
-      "commission_card",
-      "rwa_evidence",
-      "art50_marking_evidence",
-      "receipts_batch",
-    ]) {
-      expect(payDesk).toContain(`/dashboard?tab=tools&amp;tool=${tool}`.replace("&amp;", "&"));
-    }
-    // 2026-09-14: both PayAPI URLs answer 404 and PayAPI's own llms.txt / providers page do not list us.
-    // A page may not call a dead link a "verified PayAPI listing"; re-add only with a live detail URL.
+  it("the public pay desk points to x402 discovery and forbids a certificate claim", () => {
+    expect(payDesk).toContain('/.well-known/x402.json');
+    expect(payDesk).toContain("Amounts appear only in the 402 challenge");
+    expect(payDesk).toContain("What a payment never buys");
+    expect(payDesk).toContain("A certificate of compliance");
+    expect(payDesk).toContain("MEASURED cell (payment mints no new measurement)");
+    expect(payDesk).toContain("Measurement, not certification");
     expect(payDesk).not.toContain("payapi.market");
-    expect(payDesk).toContain('fetch("/api/x402"');
-    expect(payDesk).toContain('fetch("/api/revenue"');
-    expect(payDesk).toContain("revenue.j.one_number.all_time");
-    expect(payDesk).not.toContain("Number(revenue.j && revenue.j.one_number) > 0");
-    expect(payDesk).not.toMatch(/settlement\s+(?:stays\s+)?UNCHECKABLE|No <code>\/proof<\/code> until live/i);
   });
 
   it("press and accessibility claims fail closed instead of freezing unsupported claims", () => {

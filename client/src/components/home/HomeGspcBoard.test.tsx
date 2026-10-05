@@ -171,7 +171,7 @@ describe("HomeGspcBoard (mocked /api/gspc)", () => {
     expect(html).toContain("Inspect the attestation request");
     expect(html).toContain("it does not start a new GSPC run");
     expect(html).not.toContain("Need a new scoped run?");
-    expect(seo.routes["/assess"].description).toContain("does not trigger a new GSPC run");
+    expect(seo.routes["/assess"].description).toContain("starts no new run");
     expect(seo.routes["/assess"].description).not.toContain("Runs are metered per call");
   });
 
@@ -192,8 +192,8 @@ describe("HomeGspcBoard (mocked /api/gspc)", () => {
     expect(html).toContain("rendered directly here; Hugging Face is a distribution mirror");
     expect(html).not.toContain("This page embeds it and does not redraw it");
     expect(html).not.toContain("gspc-governance-leaderboard");
-    // Two doors to the same endpoint: the header link and the summary tiles' as_of source line.
-    expect(html.match(/href="\/api\/gspc"/g)).toHaveLength(2);
+    // One link to the endpoint; the tiles use GET /api/gspc as inline text.
+    expect(html.match(/href="\/api\/gspc"/g)).toHaveLength(1);
   });
 
   it("shows 9 axes and a Load more derived from the array; expanded shows every axis", () => {
@@ -340,7 +340,7 @@ describe("HomeGspcBoard (mocked /api/gspc)", () => {
     );
     const stamp = html.slice(html.indexOf('data-testid="gspc-tiles-as-of"'));
     expect(stamp).toContain("behavioural axes 2026-08-12");
-    expect(stamp).toContain('href="/api/gspc"');
+    expect(stamp).toContain("GET /api/gspc");
     const noStamp = renderToStaticMarkup(<HomeGspcBoard data={{ ...payload, measured_on: undefined }} />);
     expect(noStamp).toContain("UNCHECKABLE — the payload carries no measured_on.date");
   });

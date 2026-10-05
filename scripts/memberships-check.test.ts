@@ -94,7 +94,7 @@ describe("memberships-check: it can fail", () => {
         ? { status: 410, body: "User was blocked" }
         : url === "https://example.test/roster"
         ? { status: 200, body: "Members: Somebody Else" }
-        : { status: 200, body: JSON.stringify({ pagination: { total: 1 }, items: ["Council of AI CSOAI Templeman councilof.ai io.github.CSOAI-ORG csoai-gspc-mcp CSOAI LTD"] }) };
+        : { status: 200, body: JSON.stringify({ pagination: { total: 1 }, items: ["Council of AI CSOAI Templeman councilof.ai io.github.CSOAI-ORG csoai-gspc-mcp CSOAI LTD ai.councilof/gspc"] }) };
     const out = await runChecks(planted, fetcher);
     expect(out.failures.map((f) => f.id)).toEqual(["bogus-roster"]);
     expect(out.exitCode).toBe(1);

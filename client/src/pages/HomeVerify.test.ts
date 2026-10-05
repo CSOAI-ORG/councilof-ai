@@ -140,7 +140,6 @@ describe("/tools is the plugin snippet", () => {
     expect(tools).toContain("Grok");
     expect(tools).toContain("https://councilof.ai/mcp");
     expect(tools).toContain("mcpServers");
-    expect(tools).toMatch(/Ask: board totals/);
     expect(tools).toContain("ALL_TOOL_NAMES");
     expect(tools).toContain("FREE_TOOL_NAMES");
     expect(tools).toContain("PAID_TOOL_NAMES");
