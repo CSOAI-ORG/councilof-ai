@@ -207,10 +207,7 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
     Wrapped-asset parity evidence: change record for one pair between the two latest published ledger snapshots. Returns per-field deltas of wrapped supply, escrow balance and ratio, with both snapshot dates read from the files. States: DELTA_READ, or UNCHECKABLE when only one snapshot exists. Free preview; verification is free.
   - https://councilof.ai/api/free-door — a live 402 route priced at zero: it settles, and charges nothing.
   - https://councilof.ai/api/discover/chainlink — a live 402 route priced at zero: it settles, and charges nothing.
-  - https://councilof.ai/api/discover/chainlink — a live 402 route priced at zero: it settles, and charges nothing.
   - https://councilof.ai/api/discover/ondo — a live 402 route priced at zero: it settles, and charges nothing.
-  - https://councilof.ai/api/discover/ondo — a live 402 route priced at zero: it settles, and charges nothing.
-  - https://councilof.ai/api/discover/ondo-ousg — a live 402 route priced at zero: it settles, and charges nothing.
   - https://councilof.ai/api/discover/ondo-ousg — a live 402 route priced at zero: it settles, and charges nothing.
 - Free preview: omit `bundle=1` or add `preview=1` as the 402 body documents. Verify stays free: https://councilof.ai/gspc-verify
 - Follow a commission (free): GET https://councilof.ai/api/commissions — per subject `fulfillment` QUEUED | RETRIEVABLE | UNFULFILLABLE, `retrieval` points at the signed cards, `by_origin` separates OUTSIDE from SELF_TEST. Quote it live; a settled request is not a measurement until a signed card is retrievable.

@@ -194,8 +194,10 @@ function paidDoorsSection() {
     const preview = c.free_preview ? ` · free preview: ${SITE}${c.free_preview}` : "";
     return `  - ${SITE}${req}${preview}\n    ${c.description}`;
   });
+  const seenFreePaths = new Set();
   const freeDoors = reg.capabilities
     .filter((c) => c.kind !== "mcp_tool" && c.kind !== "a2a_skill" && c.payment === "free" && (c.probe?.expect_status ?? []).includes(402))
+    .filter((c) => { if (seenFreePaths.has(c.path)) return false; seenFreePaths.add(c.path); return true; })
     .map((c) => `  - ${SITE}${c.path} — a live 402 route priced at zero: it settles, and charges nothing.`);
   return `- HTTP doors (GET or POST -> 402 unless \`X-PAYMENT\` / facilitator settlement). Derived from
   council-os/capabilities.json at generation; the same declaration renders /.well-known/x402.json
