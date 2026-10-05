@@ -105,7 +105,7 @@ jobs:
       # scripts/pages-size-guard.mjs already existed and was wired into NOTHING. It is wired
       # here, on public/, so the answer arrives in two seconds instead of twenty minutes.
       - name: Pages size guard — 25 MiB per-file limit (source assets)
-        run: node scripts/pages-size-guard.mjs public --packed-history-projection
+        run: node scripts/pages-size-guard.mjs public --packed-history-projection --exclude proofs,cards
 
       - name: Install deps
         run: npm ci --no-audit --no-fund
@@ -288,6 +288,9 @@ jobs:
           node --test scripts/retired-proof-archive.node-test.mjs
           test -f 'dist/client/functions/interop/[[path]].ts'
           node scripts/retired-proof-archive.mjs --dir dist/client
+
+      - name: Drop exclusions from dist (served via HF redirects)
+        run: node scripts/drop-proofs-from-dist.mjs dist/client
 
       - name: Pages size guard — 25 MiB per-file limit (built tree)
         run: node scripts/pages-size-guard.mjs dist/client
