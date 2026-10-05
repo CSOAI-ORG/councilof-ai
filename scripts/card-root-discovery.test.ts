@@ -17,7 +17,7 @@ describe('mill-card root machine discovery', () => {
     expect(line).toContain('unsigned pointer');
     expect(line).toContain('root_sha256');
     expect(line).toContain('separate from `/root.json`, `/signed/card_index.json` and `/api/gspc`');
-    expect(line).toContain('pending until an independent `ots verify` confirms a Bitcoin attestation');
+    expect(line).toContain('Calendar-only proofs remain pending');
     expect(line).not.toMatch(/\b\d{3,}\s+(?:cards|leaves|measurements)\b/);
   });
 });
