@@ -243,13 +243,42 @@ describe("claim-events-changed-pages.mjs", () => {
     expect(changedPages(day2, deps, r.next_state).pages).toEqual([]);
   });
 
+  it("a WITHDRAWN claim marks only its dependent page for reindexing", () => {
+    const feed = [
+      { seq: 1, kind: "event", subject_sealed_id: OPEN, claim: "DX-1", change_state: "WITHDRAWN", recorded_state: "CONFIRMED", at: "2026-09-30T09:00:00Z" },
+    ].map((row) => JSON.stringify(row)).join("\n") + "\n";
+    const r = changedPages(feed, deps, { cursor_seq: 0 });
+    expect(r.pages.map((p) => p.url)).toEqual(["https://councilof.ai/api/claims/events", "https://councilof.ai/p/open-claim-1"]);
+    expect(r.pages.find((p) => p.url.endsWith("/p/open-claim-1")).because).toContain(`${OPEN}:claim:DX-1`);
+    expect(r.pinged).toBe(false);
+  });
+
   it("has no network code: it computes the list and pings nothing", () => {
     const src = readFileSync(join(HERE, "claim-events-changed-pages.mjs"), "utf8").replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, "");
     expect(src).not.toMatch(/\bfetch\s*\(|node:https?|node:net|node:dgram|XMLHttpRequest|WebSocket|child_process/);
   });
 
-  it("the committed page-deps manifest names only real feed routes", () => {
+  it("the committed dependencies resolve to shipped feed routes or the maintenance page", () => {
     const m = JSON.parse(readFileSync(join(HERE, "claim-events-page-deps.json"), "utf8"));
-    for (const p of m.pages) expect(p.url).toMatch(/^https:\/\/councilof\.ai\/api\/claims\/events(\/head)?$/);
+    const handlers = new Map([
+      ["/api/claims/events", "functions/api/claims/events/index.ts"],
+      ["/api/claims/events/head", "functions/api/claims/events/head.ts"],
+    ]);
+    const app = readFileSync(join(ROOT, "client/src/App.tsx"), "utf8");
+    expect(m.pages.length).toBeGreaterThan(0);
+    expect(new Set(m.pages.map((p) => p.url)).size).toBe(m.pages.length);
+    for (const p of m.pages) {
+      const url = new URL(p.url);
+      expect(url.origin).toBe("https://councilof.ai");
+      expect(url.search + url.hash).toBe("");
+      expect(p.depends_on).toEqual(["feed"]);
+      const path = url.pathname.replace(/\/$/, "");
+      if (handlers.has(path)) {
+        expect(existsSync(join(ROOT, handlers.get(path)))).toBe(true);
+      } else {
+        expect(path).toBe("/claim-maintenance");
+        expect(app).toContain('<Route path="/claim-maintenance" component={ClaimMaintenance}');
+      }
+    }
   });
 });

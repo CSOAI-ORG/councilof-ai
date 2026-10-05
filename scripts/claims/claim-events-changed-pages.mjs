@@ -20,7 +20,7 @@
  *   "feed"                         any new line (the feed endpoints themselves: their bytes changed)
  *   "<sealed_id>:atom:<ref>"       that atom's value changed (an atoms line lists it in atoms_changed)
  *   "<sealed_id>:atom:*"           any atom of the subject changed
- *   "<sealed_id>:claim:<ref>"      that claim's change_state is CORRECTED or QUARANTINED, or its
+ *   "<sealed_id>:claim:<ref>"      that claim's change_state is CORRECTED, QUARANTINED or WITHDRAWN, or its
  *                                  recorded_state differs from the last one the feed carried for it
  *   "<sealed_id>:*"                any of the above for the subject
  * <ref> is the ref the feed carries: a claim id / atom name for a DISCLOSED subject, c1../a1.. for a SEALED one.
@@ -29,7 +29,9 @@
  */
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 
-const CHANGE_STATES = new Set(["CORRECTED", "QUARANTINED"]);
+// A withdrawal changes the public claim surface just as materially as a correction or
+// quarantine. Keep all three as explicit dependency events even if recorded_state is unchanged.
+const CHANGE_STATES = new Set(["CORRECTED", "QUARANTINED", "WITHDRAWN"]);
 
 export function parseFeed(text) {
   if (!text) return [];

@@ -14,9 +14,28 @@ fi
 # One deploy at a time, enforced by the kernel, not by pgrep (22 Sep 2026: two waiters launched 33 s apart and raced).
 exec 9>/workspace/ci/deploy.lock; flock -n 9 || { echo "another deploy holds /workspace/ci/deploy.lock; temporary failure"; exit 75; }
 export PATH=/workspace/tools/node/bin:$PATH
+resolve_bare_repo() {
+  if [ -n "${CSOAI_BARE_REPO:-}" ]; then
+    [ "$(git --git-dir="$CSOAI_BARE_REPO" rev-parse --is-bare-repository 2>/dev/null)" = "true" ] || {
+      echo "configured CSOAI_BARE_REPO is not a usable bare repository: $CSOAI_BARE_REPO" >&2
+      return 1
+    }
+    printf '%s\n' "$CSOAI_BARE_REPO"
+    return 0
+  fi
+  local candidate
+  for candidate in /workspace/git/councilof-ai.git /workspace/staging/mirror/councilof-ai.git; do
+    if [ "$(git --git-dir="$candidate" rev-parse --is-bare-repository 2>/dev/null)" = "true" ]; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+  done
+  echo "no usable councilof-ai bare repository found; set CSOAI_BARE_REPO explicitly" >&2
+  return 1
+}
 # The HF write token (evidence-sync only) never reaches npm, vite, prerender or wrangler: keep it unexported.
 EVTOK=${HF_TOKEN:-}; unset HF_TOKEN
-BARE=/workspace/git/councilof-ai.git; LOG=/workspace/ci/deploy-prod.log; REF=${1:-master}
+BARE=$(resolve_bare_repo) || exit 2; LOG=/workspace/ci/deploy-prod.log; REF=${1:-master}
 echo "=== deploy-prod $(date -u +%FT%TZ) ref=$REF" | tee -a "$LOG"
 COMMIT=$(git --git-dir="$BARE" rev-parse --verify "refs/heads/$REF^{commit}") || { echo "  ref resolution FAILED: $REF" | tee -a "$LOG"; exit 2; }
 CI=$(mktemp -d /workspace/ci/deploy-prod.XXXXXX)

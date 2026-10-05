@@ -15,7 +15,10 @@ describe("corrections-feed is derived from RefutationLedger source", () => {
   it("advertises refutations and each is shaped", () => {
     const feed = read("public/interop/corrections-feed.json");
     expect(feed.schema).toBe("csoai.corrections-feed/0.1");
-    expect(feed.total).toBeGreaterThan(0);
+    expect(feed.total).toBe(feed.corrections.length);
+    expect(feed.state).toBe("HISTORICAL_REFUTATION_SNAPSHOT");
+    expect(feed.signature_state).toBe("UNSIGNED_SNAPSHOT");
+    expect(feed.canonical_corrections).toBe("/api/corrections");
     for (const c of feed.corrections) {
       expect(c.refutation_id).toMatch(/^REF-\d{3}$/);
       expect(typeof c.claim).toBe("string");
@@ -25,13 +28,14 @@ describe("corrections-feed is derived from RefutationLedger source", () => {
     }
   });
 
-  it("count matches the entries inside RefutationLedger.tsx (drift gate)", () => {
+  it("preserves historical REF rows while containing every current UI ID", () => {
     const src = readFileSync(join(process.cwd(), "client/src/pages/RefutationLedger.tsx"), "utf8");
-    const parsed = src.match(/n:\s*(\d+),/g) ?? [];
+    const ids = [...src.matchAll(/n:\s*(\d+),/g)].map((m) => `REF-${m[1].padStart(3, "0")}`);
     const feed = read("public/interop/corrections-feed.json");
-    // Source entries count is derived by parsing n: labels; feed must match.
-    // If this fails: run scripts/badger/generate-corrections (source changed).
-    expect(feed.total).toBe(parsed.length);
+    const published = new Set(feed.corrections.map((row: { refutation_id: string }) => row.refutation_id));
+    expect(published.size).toBe(feed.total);
+    for (const id of ids) expect(published.has(id)).toBe(true);
+    expect(published.has("REF-010")).toBe(true); // historical row absent from current UI
   });
 });
 

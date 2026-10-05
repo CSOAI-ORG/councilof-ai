@@ -1,8 +1,12 @@
 {
   "schema": "csoai.corrections-feed/0.1",
   "as_of": "20260905T062637Z",
-  "principle": "Every refuted claim is published as a signed correction card. This is the integrity asset.",
-  "total": 9,
+  "state": "HISTORICAL_REFUTATION_SNAPSHOT",
+  "source": "client/src/pages/RefutationLedger.tsx plus retained historical REF rows",
+  "canonical_corrections": "/api/corrections",
+  "signature_state": "UNSIGNED_SNAPSHOT",
+  "principle": "A historical selection of UI refutations, not the full corrections ledger. Per-row SHA-256 is a content identifier, not an Ed25519 signature.",
+  "total": 10,
   "corrections": [
     {
       "refutation_id": "REF-001",

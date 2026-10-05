@@ -9,7 +9,26 @@ set -euo pipefail
 exec 9>/workspace/ci/deploy.lock
 flock -w 900 9 || { echo "deploy lock wait timed out"; exit 9; }
 export PATH=/workspace/tools/node/bin:$PATH
-BARE=/workspace/git/councilof-ai.git; LOG=/workspace/ci/build-gates.log
+resolve_bare_repo() {
+  if [ -n "${CSOAI_BARE_REPO:-}" ]; then
+    [ "$(git --git-dir="$CSOAI_BARE_REPO" rev-parse --is-bare-repository 2>/dev/null)" = "true" ] || {
+      echo "configured CSOAI_BARE_REPO is not a usable bare repository: $CSOAI_BARE_REPO" >&2
+      return 1
+    }
+    printf '%s\n' "$CSOAI_BARE_REPO"
+    return 0
+  fi
+  local candidate
+  for candidate in /workspace/git/councilof-ai.git /workspace/staging/mirror/councilof-ai.git; do
+    if [ "$(git --git-dir="$candidate" rev-parse --is-bare-repository 2>/dev/null)" = "true" ]; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+  done
+  echo "no usable councilof-ai bare repository found; set CSOAI_BARE_REPO explicitly" >&2
+  return 1
+}
+BARE=$(resolve_bare_repo) || exit 2; LOG=/workspace/ci/build-gates.log
 REF=${1:-master}
 echo "=== build-gates $(date -u +%FT%TZ) ref=$REF" | tee -a "$LOG"
 COMMIT=$(git --git-dir="$BARE" rev-parse --verify "refs/heads/$REF^{commit}") || { echo "ref resolution failed: $REF" | tee -a "$LOG"; exit 2; }
