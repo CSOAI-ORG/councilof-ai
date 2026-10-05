@@ -60,6 +60,9 @@ export const DESCRIPTION_KEY_BY_PATH: Record<string, string> = {
   "/api/ras/mcp-probe": "ras_mcp_probe",
   "/api/ras/x402-check": "ras_x402_check",
   "/api/ras/supply": "ras_supply",
+  "/api/discover/chainlink": "discover_chainlink",
+  "/api/discover/ondo": "discover_ondo",
+  "/api/discover/ondo-ousg": "discover_ondo_ousg",
 };
 
 export function descriptionForPath(path: string, assetSymbol?: string): string | null {

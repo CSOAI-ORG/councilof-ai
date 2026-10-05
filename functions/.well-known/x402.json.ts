@@ -36,7 +36,7 @@ import {
 } from "../api/_x402_descriptions";
 import WRAPPER_ASSET_DOORS from "../api/_wrapper_asset_doors.json";
 import { POPULATION_IDS } from "../api/_population";
-import { RAS_MCP_PROBE_DESCRIPTION, RAS_X402_CHECK_DESCRIPTION, RAS_SUPPLY_DESCRIPTION } from "../api/_x402_descriptions";
+import { RAS_MCP_PROBE_DESCRIPTION, RAS_X402_CHECK_DESCRIPTION, RAS_SUPPLY_DESCRIPTION, descriptionForPath } from "../api/_x402_descriptions";
 import { RAS_OUTPUT_SCHEMAS } from "../api/_ras_schemas";
 import { SKU as POPULATION_SKU } from "../api/_population_door";
 import FREE_TOOLS from "../mcp/gspc-tools.json";
@@ -183,7 +183,7 @@ export const onRequestGet: PagesFunction<X402Env> = async ({ request, env }) => 
         ["ondo-ousg", "Ondo Finance OUSG on XRPL"],
       ].map(([id, label]) => {
         const resource = `${origin}/api/discover/${id}`;
-        const description = `Free ${label} discovery: subject identity, evidence routes, board and verification links. Discovery is not measurement or endorsement.`;
+        const description = descriptionForPath(`/api/discover/${id}`) ?? `Free ${label} discovery: subject identity, evidence routes, board and verification links. Discovery is not measurement or endorsement.`;
         return {
           method: "GET", url: resource, paid_for: null, amount: "0", description,
           ...req(resource, description),

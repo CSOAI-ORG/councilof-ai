@@ -10,6 +10,7 @@ import {
   x402Accepts,
   type X402Env,
 } from "../_x402";
+import { descriptionForPath } from "../_x402_descriptions";
 
 type Subject = {
   label: string;
@@ -68,7 +69,7 @@ export const handleSubject = async (
 
   const url = new URL(request.url);
   const resourceUrl = `${url.origin}/api/discover/${key}`;
-  const description =
+  const description = descriptionForPath(`/api/discover/${key}`) ??
     `Free CSOAI discovery for ${subject.label}: evidence routes and verification links. ` +
     "It is an index entry, not a measurement, rating, endorsement, or certificate.";
   const accepts = x402Accepts(
