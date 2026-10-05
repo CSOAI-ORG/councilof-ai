@@ -2,7 +2,7 @@
   "schema": "csoai.storefront/0.1",
   "name": "Council of AI — Product Catalog",
   "register": "measurement, not certification — assessed, not certified",
-  "updated": "2026-08-25",
+  "updated": "2026-10-05",
   "board": {
     "note": "The live measurement board lives at /api/gspc and /arena-scoreboard. No count is frozen here: cite totals.public_count, which carries the slot count and the measured count together — a slot with no run behind it is published UNMEASURED and is never counted as a measurement. Jail is MEASURED with separation TIE. Slot-15 / human-vs-ai are measured in-lane only — not board-quotable."
   },
@@ -84,8 +84,16 @@
       "name": "RAS Booking Desk",
       "status": "draft",
       "href": "/ras",
-      "payment": null,
-      "note": "booking not live — draft/pending only; verify free; measurement credential never a grade; no public prices."
+      "payment": {
+        "rail": "paddle",
+        "status": "paddle_pending",
+        "price_intro": "$99",
+        "price_intro_period": "30 days",
+        "price_ongoing": "$399",
+        "stripe": "never",
+        "checkout_url": null
+      },
+      "note": "measurement booking only — never a certificate, never a grade; verify stays free; not purchasable until Paddle KYC passes"
     },
     {
       "id": "cobol-bridge",
@@ -102,8 +110,9 @@
       "note": "pay-as-you-go at the 402; verify stays free"
     },
     "human_booking": {
-      "status": "not_live",
-      "note": "no processor named or wired; free or pay-as-you-go x402 only"
+      "status": "paddle_pending",
+      "rail": "paddle",
+      "note": "Paddle rail (humans only); not purchasable until Paddle KYC/live verification passes; never Stripe"
     }
   },
   "verify": {
