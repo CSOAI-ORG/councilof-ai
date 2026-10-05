@@ -42,4 +42,4 @@ All source refs and observed unfinished worktree changes are retained in the mig
 - Client build passed, including capability, OpenAPI, source evidence, redirects, size and lazy-chunk checks. Full production prerender/deploy/readback gates remain the release lane's responsibility.
 - No production deploy, paid invocation, outreach or scheduler activation was performed.
 
-DEPLOY-LOCK.md reserves production writes to the Mac/CI release lane. This candidate is supplied through a PR to master.
+DEPLOY-LOCK.md reserves production writes to the Mac/CI release lane. This candidate is prepared on codex/m4-master-consolidation-20261005 for a PR to master. The branch push succeeded; PR creation is blocked by GitHub integration HTTP 403 and the existing CLI credential HTTP 401. No PR, master merge or deployment is claimed.
