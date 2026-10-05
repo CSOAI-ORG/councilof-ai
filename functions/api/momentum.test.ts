@@ -113,14 +113,20 @@ function upstream(): Record<string, Route> {
     // A pin on one version (22811459, "22 axes") would not be answered here and the figure would be omitted.
     "https://zenodo.org/api/records/22293340": () =>
       json({ doi: "10.5281/zenodo.22987453", metadata: { title: "GSPC board snapshot", publication_date: "2026-09-22" }, stats: { unique_downloads: 223 } }),
-    "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.CSOAI-ORG/gspc&version=latest": () =>
-      json({ servers: [{ server: { name: "io.github.CSOAI-ORG/gspc", version: "1.4.2" } }] }),
+    "https://registry.modelcontextprotocol.io/v0/servers?search=ai.councilof/gspc&version=latest": () =>
+      json({ servers: [{ server: { name: "ai.councilof/gspc", version: "1.4.4" } }] }),
     "https://raw.githubusercontent.com/EthicalML/awesome-artificial-intelligence-regulation/master/README.md": () => text("# list\n* one\n* [Council of AI](https://councilof.ai) - measurement\n"),
     "https://raw.githubusercontent.com/awesomedata/awesome-public-datasets/master/README.rst": () => text("x\n* GSPC <https://huggingface.co/datasets/csoai/gspc-board>\n"),
-    "https://glama.ai/mcp/connectors/io.github.CSOAI-ORG/gspc": () => text("<html>io.github.CSOAI-ORG/gspc</html>"),
-    "https://smithery.ai/servers/csoai/gspc": () => text("<html>gspc https://councilof.ai/api-docs/</html>"),
+    "https://glama.ai/mcp/connectors/ai.councilof/gspc-free": () => text("<html>ai.councilof/gspc-free</html>"),
+    "https://smithery.ai/servers/csoai/gspc-mcp": () => text("<html>gspc https://councilof.ai/api-docs/</html>"),
+    "https://mcpnav.net/server/gspc/": () => text("<html>Council of AI GSPC</html>"),
+    "https://npm.io/package/gspc-card-verifier": () => text("<html>gspc-card-verifier https://github.com/CSOAI-ORG/councilof-ai</html>"),
+    "https://theworldofai.org/mcp/ai-councilof-gspc/": () => text("<html>ai.councilof/gspc https://councilof.ai</html>"),
+    "https://vouch-protocol.com/agent-trust-index/": () => text("<html>ai.councilof/gspc https://councilof.ai</html>"),
+    "https://vaara.io/conformance.html": () => text("<html>Vaara Conformance Results row 4: Council of AI — Reproduction: the author's checkers over the author's vectors</html>"),
+    "https://andraxpentester.in/mcp-servers/csoai-gspc-mcp": () => text("<html>csoai-gspc-mcp read-only security assessment</html>"),
     "https://402index.io/api/v1/services?q=councilof.ai&limit=100": () => json({ total: 1, services: [{ url: "https://councilof.ai/api/free-door" }] }),
-    "https://raw.githubusercontent.com/api-evangelist/councilof-ai/main/README.md": () => text("profile of https://councilof.ai/openapi.json"),
+    "https://providers.apievangelist.com/providers/councilof-ai/": () => text("<html>Council of AI — CSOAI provider profile</html>"),
   };
 }
 
@@ -322,13 +328,18 @@ describe("/api/momentum — every figure is live, sourced and dated", () => {
   });
 
   it("shows a listing only when the index names us on this read, with the endorsement line", async () => {
-    const p = await buildMomentum(deps({ "https://smithery.ai/servers/csoai/gspc": () => text("<html>some other server</html>"), "https://glama.ai/mcp/connectors/io.github.CSOAI-ORG/gspc": () => json({}, 403) }));
+    const p = await buildMomentum(deps({ "https://smithery.ai/servers/csoai/gspc-mcp": () => text("<html>some other server</html>"), "https://glama.ai/mcp/connectors/ai.councilof/gspc-free": () => json({}, 403) }));
     const l = p.listings.map((x) => x.id);
     expect(l).toContain("ethicalml-awesome-ai-regulation");
     expect(p.listings.find((x) => x.id === "ethicalml-awesome-ai-regulation")?.evidence).toBe("README line 3 names councilof.ai");
     expect(l).not.toContain("smithery");
     expect(l).not.toContain("glama");
     expect(p.omitted.map((o) => o.id)).toEqual(expect.arrayContaining(["listing:smithery", "listing:glama"]));
+    expect(p.listings.find((x) => x.id === "mcp-registry")?.signal_class).toBe("listing");
+    expect(p.listings.find((x) => x.id === "world-of-ai")?.signal_class).toBe("independent_observation");
+    expect(p.listings.find((x) => x.id === "vouch-agent-trust-index")?.signal_class).toBe("independent_assessment");
+    expect(p.listings.find((x) => x.id === "vaara-reproduction")?.signal_class).toBe("independent_reproduction");
+    expect(p.listings.find((x) => x.id === "andrax-mcpgrade")?.signal_class).toBe("independent_assessment");
     expect(p.listing_line).toBe(LISTING_LINE);
     expect(LISTING_LINE).toBe("A listing is not an endorsement.");
   });

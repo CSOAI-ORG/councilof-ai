@@ -26,6 +26,11 @@ describe("dashboard consolidation details", () => {
     expect(source).toMatch(/results:\s*HomeGspcBoard/);
   });
 
+  it("renders the evidence lifecycle as a native product pane", () => {
+    expect(tabById("lifecycle")).toMatchObject({ kind: "native", path: "" });
+    expect(hasPane("lifecycle")).toBe(true);
+  });
+
   it("pins embedded page controls to the canvas corner — no floating Workspace button to clear", () => {
     // 27 Sep 2026: the floating mobile "Workspace" button left the canvas; the History
     // control now lives in the section bar, so the controls no longer need a top-16 offset.

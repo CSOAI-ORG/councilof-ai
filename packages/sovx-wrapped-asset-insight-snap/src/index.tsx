@@ -24,6 +24,7 @@ export const Insight = ({ result }: { result: Lookup | null }) => {
         {result.records.map((r) => (
           <Box key={r.id}>
             <Text>{`Measured state: ${r.state} as of ${r.asOf}`}</Text>
+            <Text>{`Freshness: ${r.freshness.state} (${r.freshness.reason})`}</Text>
             <Link href={r.evidence}>{`Record ${r.id}`}</Link>
           </Box>
         ))}

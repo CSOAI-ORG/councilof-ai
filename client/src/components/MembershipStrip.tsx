@@ -48,6 +48,8 @@ export interface MembershipRow {
   tier?: string;
   featured?: number;
   evidence_label?: string;
+  /** Optional short public wording for a bounded programme/participation fact. */
+  public_line?: string;
   /** Set when the evidence URL stopped resolving (e.g. the Zenodo 410 of 29 Sep 2026); printed beside the link. */
   status_note?: string;
   status_since?: string;

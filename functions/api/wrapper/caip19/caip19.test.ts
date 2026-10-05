@@ -49,6 +49,9 @@ describe("/api/wrapper/caip19/<CAIP-19> — free preview by contract", () => {
     const r = b.records[0];
     expect(r.id).toBe("usdc.e:arbitrum");
     expect(r.as_of).toMatch(/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ$/);
+    expect(r.measurement_time).toMatchObject({ state: "EXACT", precision: "instant", observed_at: r.as_of, source_field: "as_of" });
+    expect(r.freshness).toMatchObject({ state: "UNCHECKABLE", reason: "NO_DECLARED_MAX_AGE", max_age_seconds: null });
+    expect(b.freshness_policy).toMatchObject({ state: "UNSET" });
     expect(r.evidence).toBe(`${ORIGIN}/w/usdc.e:arbitrum`);
     expect(r.published.state).toBe(L.records.find((x) => x.id === "usdc.e:arbitrum")!.state);
     expect(r.card.preview).toBe(true);

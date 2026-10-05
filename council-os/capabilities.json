@@ -1756,7 +1756,7 @@
         "safe": true
       },
       "schema_refs": [
-        "csoai.coverage-truth/0.1"
+        "csoai.coverage-truth/0.2"
       ],
       "source": "functions/api/coverage-truth.ts",
       "surfaces": [
@@ -7297,6 +7297,35 @@
       ],
       "source": "functions/api/discover/ondo-ousg.ts",
       "surfaces": []
+    },
+    {
+      "id": "api-product-flow",
+      "kind": "http",
+      "path": "/api/product-flow",
+      "method": "GET",
+      "name": "Product workflow",
+      "description": "GET /api/product-flow \u2014 one read-only product lifecycle over existing engines. It does not create a second workflow engine or upgrade any stage's authority.",
+      "description_state": "DOCUMENTED",
+      "audience": "both",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [
+        "csoai.live-state/1",
+        "csoai.product-flow/0.1",
+        "csoai.worker-state/0.1"
+      ],
+      "surfaces": [
+        "openapi"
+      ],
+      "probe": {
+        "method": "GET",
+        "request": "/api/product-flow",
+        "expect_status": [
+          200
+        ],
+        "safe": true
+      },
+      "source": "functions/api/product-flow.ts"
     }
   ],
   "generator": "scripts/capability-seed.mjs (mechanical fields) plus hand-authored editorial fields",

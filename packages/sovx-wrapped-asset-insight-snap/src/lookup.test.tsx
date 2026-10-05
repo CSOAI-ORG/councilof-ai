@@ -8,7 +8,7 @@ const CAIP = `eip155:42161/erc20:${USDCE}`;
 const answer = {
   schema: "csoai.wrapper-caip19/0.1",
   records: [
-    { id: "usdc.e:arbitrum", state: "ESCROW_PARITY_READ", as_of: "2026-09-28T22:05:25Z", evidence: "https://councilof.ai/w/usdc.e:arbitrum", card: {} },
+    { id: "usdc.e:arbitrum", state: "ESCROW_PARITY_READ", as_of: "2026-09-28T22:05:25Z", measurement_time: { state: "EXACT", precision: "instant", observed_at: "2026-09-28T22:05:25Z" }, freshness: { state: "UNCHECKABLE", reason: "NO_DECLARED_MAX_AGE" }, evidence: "https://councilof.ai/w/usdc.e:arbitrum", card: {} },
   ],
 };
 const fakeFetch = (status: number, body: unknown, seen: string[] = []) =>
@@ -46,7 +46,7 @@ describe("lookup", () => {
     const seen: string[] = [];
     const r = await lookup(CAIP, fakeFetch(200, answer, seen));
     expect(seen).toEqual([API + CAIP]);
-    expect(r).toEqual({ kind: "records", caip19: CAIP, records: [{ id: "usdc.e:arbitrum", state: "ESCROW_PARITY_READ", asOf: "2026-09-28T22:05:25Z", evidence: "https://councilof.ai/w/usdc.e:arbitrum" }] });
+    expect(r).toEqual({ kind: "records", caip19: CAIP, records: [{ id: "usdc.e:arbitrum", state: "ESCROW_PARITY_READ", asOf: "2026-09-28T22:05:25Z", evidence: "https://councilof.ai/w/usdc.e:arbitrum", measurementTime: { state: "EXACT", precision: "instant", observedAt: "2026-09-28T22:05:25Z" }, freshness: { state: "UNCHECKABLE", reason: "NO_DECLARED_MAX_AGE" } }] });
   });
   it("404 is 'no record', not an error", async () => {
     expect(await lookup(CAIP, fakeFetch(404, { error: "not_on_roster" }))).toEqual({ kind: "none", caip19: CAIP });
@@ -71,7 +71,7 @@ describe("Insight", () => {
   it("says 'Measured state: X as of Y' with a link, and nothing that reads as a score or advice", async () => {
     const r = await lookup(CAIP, fakeFetch(200, answer));
     const shown = texts(Insight({ result: r }));
-    expect(shown).toEqual([TITLE, "Measured state: ESCROW_PARITY_READ as of 2026-09-28T22:05:25Z", "https://councilof.ai/w/usdc.e:arbitrum", "Record usdc.e:arbitrum", FOOTNOTE]);
+    expect(shown).toEqual([TITLE, "Measured state: ESCROW_PARITY_READ as of 2026-09-28T22:05:25Z", "Freshness: UNCHECKABLE (NO_DECLARED_MAX_AGE)", "https://councilof.ai/w/usdc.e:arbitrum", "Record usdc.e:arbitrum", FOOTNOTE]);
     expect(shown.join(" ")).not.toMatch(/\b(score|safe|unsafe|risk|warning|danger|recommend|trusted|certified|avoid|should)\b/iu);
   });
   it("says there is nothing to look up when the transaction names no contract", () => {

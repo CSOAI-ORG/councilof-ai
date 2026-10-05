@@ -1233,7 +1233,7 @@
     },
     "/api/coverage-truth": {
       "get": {
-        "description": "GET /api/coverage-truth \u2014 distiguish indexed, runnable, measured, signed.",
+        "description": "GET /api/coverage-truth \u2014 distinguish indexed, runnable, measured, signed.",
         "operationId": "get__api_coverage-truth",
         "responses": {
           "200": {
@@ -1244,7 +1244,7 @@
           }
         },
         "security": [],
-        "summary": "GET /api/coverage-truth \u2014 distiguish indexed, runnable, measured, signed."
+        "summary": "GET /api/coverage-truth \u2014 distinguish indexed, runnable, measured, signed."
       }
     },
     "/api/cross": {
@@ -6109,6 +6109,22 @@
         "x-csoai-lifecycle": "RETIRED"
       }
     },
+    "/api/product-flow": {
+      "get": {
+        "description": "GET /api/product-flow \u2014 one read-only product lifecycle over existing engines. It does not create a second workflow engine or upgrade any stage's authority.",
+        "operationId": "get__api_product-flow",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/product-flow \u2014 one read-only product lifecycle over existing engines. It does not create a second workflow engine or upgrade any stage's authority."
+      }
+    },
     "/api/proof": {
       "get": {
         "description": "Inclusion proof bundle for leaves available in the last published Merkle root, read from that root. Each leaf comes with its hash, index and proof path, plus the root and the signed card count. States: included with a path, or absent from the root. Verification is free: recompute any path against /root.json. Bare path is validation (HTTP 400 naming sha or bundle). Free inclusion via optional sha. Paid root bundle when bundle=1 (HTTP 402).",
@@ -10150,7 +10166,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 118,
+    "public_operations": 119,
     "quarantined": [
       {
         "buyable": false,

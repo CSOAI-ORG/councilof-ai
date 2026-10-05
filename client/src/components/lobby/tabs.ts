@@ -36,6 +36,7 @@ import { isUnframeable, pathBare } from "@/lib/unframeable";
 
 export type LobbyTabId =
   | "home"
+  | "lifecycle"
   | "explore"
   | "board"
   | "evidence-index"
@@ -125,6 +126,15 @@ export const LOBBY_TABS: LobbyTab[] = [
     path: "",
     kind: "local",
     cues: /\b(home|hub|launcher|start|lobby home|council os|the os|ag[- ]?ui|chat)\b/i,
+  },
+  {
+    id: "lifecycle",
+    label: "Evidence lifecycle",
+    blurb:
+      "The one end-to-end product flow: request, evidence, bounded runtime, GSPC measurement, constitutional review, verification, delivery and maintenance.",
+    path: "",
+    kind: "native",
+    cues: /\b(lifecycle|workflow|one product|end to end|end-to-end|evidence lifecycle|product flow)\b/i,
   },
   {
     id: "learn",
@@ -860,7 +870,7 @@ const DASHBOARD_NAV_DEFINITION: {
     label: "Ask",
     description:
       "Ask in plain words; every answer names the tool and the record it came from.",
-    tabs: [{ id: "home", label: "Ask the Council" }],
+    tabs: [{ id: "home", label: "Ask the Council" }, { id: "lifecycle", label: "Product workflow" }],
   },
   {
     id: "board",

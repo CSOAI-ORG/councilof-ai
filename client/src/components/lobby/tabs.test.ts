@@ -254,6 +254,7 @@ describe("Council OS tabs", () => {
     const ids = DASHBOARD_TABS.map((t) => t.id);
     expect(ids).toEqual([
       "home",
+      "lifecycle",
       "board",
       "models",
       "matrix",

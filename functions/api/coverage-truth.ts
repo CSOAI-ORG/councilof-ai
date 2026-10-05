@@ -1,9 +1,9 @@
 /**
- * GET /api/coverage-truth — distiguish indexed, runnable, measured, signed.
+ * GET /api/coverage-truth — distinguish indexed, runnable, measured, signed.
  *
- * Public coverage counts must reconcile to card IDs (issuance #2391).
+ * Coverage harvest leaves and signed measurement cards are distinct artifact sets.
  * Every value here is derived from a committed artifact. Nothing typed.
- * Numbers are NEVER summed across lifecycle states.
+ * Counts have different units across surfaces and cannot be added into a total.
  */
 
 import rootJson from "../../public/root.json";
@@ -27,16 +27,16 @@ export const onRequestGet: PagesFunction<Env> = async ({ env, request }) => {
   const url = new URL(request.url);
   const cacheHeader = url.searchParams.has("nocache") ? "no-store" : "public, max-age=120";
 
-  // Helper: signed card IDs from card_index.json
-  const root = rootJson as Record<string, unknown>;
-  const cards = cardIndex as { cards?: Array<{ signed?: boolean; cell?: Record<string, string> }>; n_cards?: number };
+  // The root is a coverage-harvest commitment; the index lists signed measurement cards.
+  const root = rootJson as { card_count?: number; card_sha256?: string[]; as_of?: string };
+  const cards = cardIndex as { cards?: Array<{ signed?: boolean; card?: string }>; n_cards?: number };
   const cardRows = Array.isArray(cards.cards) ? cards.cards : [];
-  const signedCardIds = new Set<string>(
-    cardRows.filter((c) => c.signed && c.cell).map((c) => c.cell ? `${c.cell.issuer}/${c.cell.model}/${c.cell.axis}` : ""),
-  );
+  const signedCardRows = cardRows.filter((c) => c.signed === true && typeof c.card === "string");
+  const signedCardIds = new Set(signedCardRows.map((c) => c.card));
 
-  // Surface 1: Signed cards (root)
-  const rootCardCount = typeof root.card_count === "number" ? root.card_count : null;
+  // Surface 1: Coverage-harvest leaves (not signed measurement cards)
+  const rootLeafCount = typeof root.card_count === "number" ? root.card_count : null;
+  const rootLeafRows = Array.isArray(root.card_sha256) ? root.card_sha256.length : null;
 
   // Surface 2: Stablecoin universe
   const sc = stablecoinUniverse as { asset_count?: number; assets?: unknown[] };
@@ -70,17 +70,26 @@ export const onRequestGet: PagesFunction<Env> = async ({ env, request }) => {
   // Build per-surface counts
   const surfaces: SurfaceCounts[] = [
     {
-      surface: "signed-cards (root.json)",
+      surface: "signed-cards (card_index.json)",
       indexed: cardRows.length,
       runnable: null,
-      measured: signedCardIds.size,
-      signed: rootCardCount ?? signedCardIds.size,
+      // A signed digest index does not itself prove a subject measurement.
+      measured: null,
+      signed: signedCardIds.size,
+    },
+    {
+      surface: "coverage-harvest leaves (root.json)",
+      indexed: rootLeafRows ?? 0,
+      runnable: null,
+      measured: null,
+      signed: null,
     },
     {
       surface: "stablecoin-universe",
       indexed: scIndexed ?? 0,
       runnable: null,
-      measured: chainMeasured,
+      // Chain control facts are not a count of measured stablecoin assets.
+      measured: null,
       signed: null,
     },
     {
@@ -106,22 +115,23 @@ export const onRequestGet: PagesFunction<Env> = async ({ env, request }) => {
     },
   ];
 
-  // Reconciliation: signed card count from card_index vs root
-  const reconciled = cardRows.length === (rootCardCount ?? cardRows.length);
+  // Validate each artifact against its own declared count. Never equate the two sets.
 
   const body = {
-    schema: "csoai.coverage-truth/0.1",
+    schema: "csoai.coverage-truth/0.2",
     title: "Coverage truth — indexed / runnable / measured / signed",
     endpoint: "/api/coverage-truth",
     contract:
-      "Distinguishes INDEXED (catalogued), RUNNABLE (responded), MEASURED (signed card body), and SIGNED (live root). " +
-      "Numbers are NEVER summed across lifecycle states. Numbers reconcile to card IDs from public/root.json.",
+      "Distinguishes INDEXED (catalogued), RUNNABLE (responded), MEASURED (control facts), and SIGNED (measurement-card digests). " +
+      "Coverage-harvest root leaves are not measurement cards. Counts are scoped to each surface and unit; heterogeneous surfaces cannot be summed.",
     summary: {
-      indexed_total: surfaces.reduce((s, c) => s + (c.indexed ?? 0), 0),
-      runnable_total: surfaces.reduce((s, c) => s + (c.runnable ?? 0), 0),
-      measured_total: surfaces.reduce((s, c) => s + (c.measured ?? 0), 0),
-      signed_total: surfaces.reduce((s, c) => s + (c.signed ?? 0), 0),
-      reconciliation_ok: reconciled,
+      aggregate_state: "NOT_ADDITIVE_DIFFERENT_UNITS",
+      signed_card_ids_in_index: signedCardIds.size,
+      card_index_declared_count: typeof cards.n_cards === "number" ? cards.n_cards : null,
+      card_index_count_matches: typeof cards.n_cards === "number" && cards.n_cards === cardRows.length && signedCardIds.size === cardRows.length,
+      root_harvest_leaf_count: rootLeafCount,
+      root_harvest_as_of: root.as_of ?? null,
+      root_leaf_count_matches: rootLeafCount !== null && rootLeafRows === rootLeafCount,
     },
     surfaces,
     not_covered: [

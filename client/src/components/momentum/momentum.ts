@@ -40,6 +40,8 @@ export interface MomentumFigure {
 export interface MomentumListing {
   id: string;
   name: string;
+  /** Older build snapshots may not carry this additive field; absence is treated as a plain listing. */
+  signal_class?: "listing" | "independent_observation" | "independent_assessment" | "independent_reproduction";
   url: string;
   evidence: string;
   verified_at: string;

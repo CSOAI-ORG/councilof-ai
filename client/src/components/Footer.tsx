@@ -62,6 +62,7 @@ export function Footer() {
     {
       title: 'Evidence',
       links: [
+        { name: 'Evidence & external signals', href: '/traction/' },
         { name: 'GSPC JSON', href: '/api/gspc', external: true },
         { name: 'Evidence files (cards, proofs)', href: 'https://huggingface.co/datasets/csoai/councilof-ai-evidence', external: true },
         { name: 'Methodology', href: '/methodology/' },

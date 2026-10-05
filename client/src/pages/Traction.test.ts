@@ -26,11 +26,36 @@ describe("traction public-truth contract", () => {
     expect(source).not.toMatch(/value=\{live\.commissions\?\.count\}/);
   });
 
-  it("separates standards participation and discovery from endorsement and customers", () => {
-    expect(source).toContain("Founder Nicholas Templeman participates in the W3C Agent Conformance and Benchmarking Community Group");
-    expect(source).toContain("does not imply W3C endorsement, certification or conformance");
-    expect(source).toContain("not a customer count or endorsement");
-    expect(source).toContain("strict ledger above counts verified non-self payers");
+  it("separates external signals, participation, first-party metrics and commercial proof", () => {
+    expect(source).toContain("Independent assessment");
+    expect(source).toContain("Listing / discovery");
+    expect(source).toContain("Participation / programme");
+    expect(source).toContain("First-party measurement");
+    expect(source).toContain("Commercial proof");
+    expect(source).toContain("Pending / unverified");
+    expect(source).toContain("signal.signal_class");
+    expect(source).toContain("MEMBERSHIPS.rows.find");
+    expect(source).toContain("does not imply endorsement, adoption or a customer");
+    expect(source).toContain("does not claim repeat-payer or maintained-renewal evidence");
+  });
+
+  it("publishes canonical and JSON-LD discovery metadata without ratings", () => {
+    expect(source).toContain('rel="canonical" href="https://councilof.ai/traction/"');
+    expect(source).toContain('type="application/ld+json"');
+    expect(source).toContain('"@type": "WebPage"');
+    expect(source).toContain('"@type": "ItemList"');
+    expect(source).not.toMatch(/AggregateRating|ReviewRating|ratingValue/);
+  });
+
+  it("does not hard-code stale third-party grades or tool counts", () => {
+    expect(source).not.toContain("Glama Quality A");
+    expect(source).not.toContain("twelve discoverable tools");
+    expect(source).not.toContain("CSOAI-ORG/councilof-ai");
+  });
+
+  it("does not promote withdrawn blog routes as live evidence", () => {
+    expect(source).toContain("Legacy blog routes remain under the reviewed publication hold");
+    expect(source).not.toContain('href="/blog/"');
   });
 
   it("removes the stale August vanity inventory and keeps traction primary", () => {
