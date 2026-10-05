@@ -2,7 +2,7 @@
 
 Goal: consolidate recovered work into the existing master product, keep durable recovery on the existing RunPod allocation, and release through the established owner.
 
-Original base: 02a16ca8ee2bbf589626eda58fa572308e997cdd. Current master 1757d2b7db05e33c76ae006c34070784ece27709 was fetched and merged into this candidate; its catalog pricing/payment state is retained.
+Original base: 02a16ca8ee2bbf589626eda58fa572308e997cdd. Master 1757d2b7db05e33c76ae006c34070784ece27709 was fetched and merged, preserving its catalog pricing/payment state. A final refresh integrated b330f3efa1cb6ddc5e0f69cf4cccc3ae77bbec84, whose only change aligns CI size checks and dist exclusions with the existing build.
 
 This source candidate recovers useful changes from the retained worktrees without replacing the newer master release. It does not claim deployment, new revenue, package publication or completion of a customer job.
 
