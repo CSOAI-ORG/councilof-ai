@@ -171,14 +171,16 @@ export default function DashboardWorkspace({
   const talkRef = useRef<TalkPanelHandle>(null);
   // On the home surface a typed question goes to the AG-UI TalkPanel (tool cards + citations).
   // An explicit pane command ("show the board") still navigates through the lobby chat.
+  // Record the user's question in session history so chat history remains accessible.
   const askTalk = useCallback(
     (text: string) => {
       if (activePane || hasConversation || !talkRef.current) return false;
       if (isExplicitNavigationCommand(text) && (matchTab(text) || matchRoute(text))) return false;
+      chat.recordUserMessage(text);
       talkRef.current.ask(text);
       return true;
     },
-    [activePane, hasConversation],
+    [activePane, hasConversation, chat],
   );
   const activity = useActivity();
   // The side rail only exists when it has something to hold: a conversation that

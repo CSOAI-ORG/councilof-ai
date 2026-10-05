@@ -323,6 +323,8 @@ export interface LobbyChat {
   activeId: string | null;
   active: Thread | null;
   busy: boolean;
+  /** Record a user message without processing — for TalkPanel questions that need session history. */
+  recordUserMessage: (text: string) => void;
   send: (
     question: string,
     onNavigate: (t: LobbyTab) => void,
@@ -351,6 +353,35 @@ export function useLobbyChat(): LobbyChat {
 
   const startThread = useCallback(() => setActiveId(null), []);
   const selectThread = useCallback((id: string) => setActiveId(id), []);
+
+  const recordUserMessage = useCallback(
+    (text: string) => {
+      const question = text.trim();
+      if (!question) return;
+      let id = activeId;
+      const userTurn: Turn = { role: "user", text: question, at: now() };
+      setThreads((prev) => {
+        if (id && prev.some((t) => t.id === id)) {
+          return prev.map((t) =>
+            t.id === id ? { ...t, turns: [...t.turns, userTurn] } : t,
+          );
+        }
+        const fresh: Thread = {
+          id: `t${Date.now().toString(36)}${prev.length}`,
+          title:
+            question.length > 64
+              ? question.slice(0, 63).trimEnd() + "…"
+              : question,
+          startedAt: now(),
+          turns: [userTurn],
+        };
+        id = fresh.id;
+        return [...prev, fresh];
+      });
+      setActiveId(id!);
+    },
+    [activeId],
+  );
 
   const send = useCallback(
     async (
@@ -609,6 +640,7 @@ export function useLobbyChat(): LobbyChat {
     activeId,
     active,
     busy,
+    recordUserMessage,
     send,
     startThread,
     selectThread,
