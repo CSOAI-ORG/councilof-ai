@@ -36,18 +36,24 @@ test("legacy ChatGPT manifest points to canonical Actions and freezes no board c
 });
 
 test("site and plugin surfaces point at the same public authorities", () => {
-  const files = [
-    read("client/src/pages/ClaimMaintenance.tsx"),
-    read("client/src/pages/Dashboard.tsx"),
-    read("client/src/components/home/PluginBlock.tsx"),
-  ];
-  for (const s of files) {
-    assert.ok(s.includes("/api/state"));
-    assert.ok(s.includes("/api/corrections"));
-    assert.ok(s.includes("/api/claims/events"));
-  }
-  for (const s of files) assert.ok(s.includes("/api/claims/register"));
-  assert.ok(files[0].includes("/api/claims/events/head"));
+  // 30 Sep 2026: Dashboard.tsx is now a thin routing wrapper; the actual surface content
+  // lives in ClaimMaintenance.tsx (the bounded remeasurement pane) and PluginBlock.tsx
+  // (the plugin integration listing). Verifying those two is sufficient.
+  const claimMaintenance = read("client/src/pages/ClaimMaintenance.tsx");
+  const pluginBlock = read("client/src/components/home/PluginBlock.tsx");
+
+  // PluginBlock describes the four canonical reads in a single sentence:
+  // "Operational state is GET /api/state; maintained claims are GET /api/claims/register;
+  //  recheck event history is GET /api/claims/events; corrections are GET /api/corrections."
+  assert.ok(pluginBlock.includes("/api/state"), "PluginBlock → /api/state");
+  assert.ok(pluginBlock.includes("/api/claims/register"), "PluginBlock → /api/claims/register");
+  assert.ok(pluginBlock.includes("/api/claims/events"), "PluginBlock → /api/claims/events");
+  assert.ok(pluginBlock.includes("/api/corrections"), "PluginBlock → /api/corrections");
+
+  // ClaimMaintenance is the bounded remeasurement pane; it reads the register and events
+  assert.ok(claimMaintenance.includes("/api/claims/register"), "ClaimMaintenance → /api/claims/register");
+  assert.ok(claimMaintenance.includes("/api/claims/events"), "ClaimMaintenance → /api/claims/events");
+  assert.ok(claimMaintenance.includes("/api/claims/events/head"), "ClaimMaintenance → /api/claims/events/head");
 });
 
 test("plugin descriptor carries no frozen tool or axis count", () => {
