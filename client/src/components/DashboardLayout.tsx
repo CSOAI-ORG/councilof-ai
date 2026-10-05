@@ -133,25 +133,6 @@ function SectionLinks({
                     />
                     <span className="truncate">{group.label}</span>
                   </Link>
-                  {active && group.tabs.length > 1 ? (
-                    <ul className="ml-6 mt-1 space-y-0.5 border-l border-emerald-950/10 pl-3" aria-label={`${group.label} panes`}>
-                      {group.tabs.map((tab) => (
-                        <li key={tab.id}>
-                          <Link
-                            href={`/dashboard?tab=${tab.id}`}
-                            onClick={onNavigate}
-                            aria-current={tab.id === activeTab ? "page" : undefined}
-                            className={cn(
-                              "flex min-h-9 items-center rounded-lg px-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700",
-                              tab.id === activeTab ? "font-semibold text-emerald-900" : "text-slate-600 hover:text-slate-950",
-                            )}
-                          >
-                            {tab.label}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : null}
                 </li>
               );
             })}

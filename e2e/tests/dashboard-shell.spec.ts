@@ -129,15 +129,16 @@ test("sidebar exposes seven plainly named sections as direct /dashboard?tab= lin
     "/dashboard?tab=home",
     "/dashboard?tab=board",
     "/dashboard?tab=verify",
-    "/dashboard?tab=space",
-    "/dashboard?tab=tools",
-    "/dashboard?tab=standards",
-    "/dashboard?tab=measured",
+    "/dashboard?tab=connect",
+    "/dashboard?tab=learn",
+    "/dashboard?tab=sovx",
+    "/dashboard?tab=corrections",
   ]);
   for (const h of hrefs) expect(h).toMatch(/^\/dashboard\?tab=[a-z0-9-]+$/);
-  // Verify, Evidence pack and Evidence index are one section with three pages.
+  // Verify section contains three panes: Check a record, Evidence pack, Evidence index.
+  // The section bar (not the sidebar) shows sub-tabs when the active pane belongs to a multi-tab section.
   await openTab(page, "evidence");
-  const sub = page.getByRole("navigation", { name: "Verify & evidence pages" });
+  const sub = page.getByRole("navigation", { name: "Verify pages" });
   await expect(sub.getByRole("link", { name: "Evidence index", exact: true })).toHaveAttribute(
     "href",
     "/dashboard?tab=evidence-index",
@@ -316,11 +317,18 @@ test("one workspace keeps the composer and account access while a tool pane is o
     page.getByLabel("Open Council OS"),
     "no legacy overlay launcher over the shell",
   ).toHaveCount(0);
-  if (isMobile)
+  if (isMobile) {
     await page.getByRole("button", { name: "Open workspace navigation" }).click();
-  await expect(
-    page.getByLabel("Open account and workspace menu").first(),
-  ).toBeVisible();
+    // The account menu is in the mobile drawer, not the hidden desktop sidebar.
+    await expect(
+      page.getByRole("dialog", { name: "Council OS sections" })
+        .getByLabel("Open account and workspace menu"),
+    ).toBeVisible();
+  } else {
+    await expect(
+      page.getByLabel("Open account and workspace menu").first(),
+    ).toBeVisible();
+  }
 });
 
 test("the mobile consent notice has no floating launcher over it", async ({
