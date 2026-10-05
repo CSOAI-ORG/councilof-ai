@@ -84,6 +84,41 @@ def path_label(path: Path) -> str:
         return str(path)
 
 
+def resolve_excluded_subdir(subdir: str) -> Path:
+    """Return the appropriate directory for a subdir that may be excluded from PUBLIC.
+
+    When PUBLIC differs from DEFAULT_PUBLIC (i.e., we're validating dist/client) and
+    the subdirectory doesn't exist in PUBLIC but is listed in deploy-exclusions.json
+    and exists in DEFAULT_PUBLIC, return DEFAULT_PUBLIC / subdir. Otherwise return
+    PUBLIC / subdir. This allows the gate to validate card and proof integrity against
+    source when those directories are intentionally excluded from the deploy tree and
+    served via redirect.
+    """
+    target = PUBLIC / subdir
+    if target.is_dir():
+        return target
+    if PUBLIC == DEFAULT_PUBLIC:
+        return target
+    source = DEFAULT_PUBLIC / subdir
+    if not source.is_dir():
+        return target
+    exclusions_path = REPO / "scripts" / "deploy-exclusions.json"
+    if not exclusions_path.is_file():
+        return target
+    try:
+        manifest = json.loads(exclusions_path.read_text(encoding="utf-8"))
+        entries = manifest.get("entries") if isinstance(manifest.get("entries"), list) else []
+        excluded = any(
+            isinstance(e, dict) and e.get("path") == subdir and e.get("kind") == "dir"
+            for e in entries
+        )
+        if excluded:
+            return source
+    except Exception:
+        pass
+    return target
+
+
 def canonical_public_path(path: Path) -> str:
     return "public/" + path.relative_to(PUBLIC).as_posix()
 
@@ -173,11 +208,16 @@ def fold_inclusion_proof(leaf: str, index: int, siblings: list[str]) -> str:
 
 
 def validate_root_card_wrappers(errors: list[str], leaves: list[str], expected_root: str) -> None:
-    """Bind every root leaf to the collision-safe public/cards wrapper bytes."""
-    cards_dir = PUBLIC / "cards"
+    """Bind every root leaf to the collision-safe public/cards wrapper bytes.
+
+    When running against dist/client, cards/ and proofs/ may be excluded from the
+    deploy tree (served via redirect). In that case, validate against source public/.
+    """
+    cards_dir = resolve_excluded_subdir("cards")
+    proofs_dir = resolve_excluded_subdir("proofs")
     for expected_index, leaf in enumerate(leaves):
         wrapper_path = cards_dir / f"{leaf[:16]}.json"
-        proof_path = PUBLIC / "proofs" / f"{leaf[:16]}.json"
+        proof_path = proofs_dir / f"{leaf[:16]}.json"
         if not wrapper_path.is_file():
             errors.append(f"public-root leaf has no public card wrapper: {leaf}")
             continue
@@ -997,6 +1037,22 @@ def run_selftest() -> int:
     assert proof_derived_status(1, 4) == "CONFIRMED_BITCOIN"
     assert proof_derived_status(0, 4) == "STAMPED_PENDING_BITCOIN"
     assert proof_derived_status(0, 0) == "NO_ATTESTATION"
+    # resolve_excluded_subdir: when PUBLIC = DEFAULT_PUBLIC, always return PUBLIC / subdir
+    configure_public_dir(DEFAULT_PUBLIC)
+    assert resolve_excluded_subdir("cards") == DEFAULT_PUBLIC / "cards"
+    assert resolve_excluded_subdir("proofs") == DEFAULT_PUBLIC / "proofs"
+    # resolve_excluded_subdir: when PUBLIC is dist/client and cards/proofs are excluded, fall back to source
+    import tempfile as _excl_tempfile
+    with _excl_tempfile.TemporaryDirectory() as excl_dist:
+        excl_dist_path = Path(excl_dist)
+        (excl_dist_path / "interop").mkdir()
+        configure_public_dir(excl_dist_path)
+        # cards/ and proofs/ don't exist in the temp dist, and are in deploy-exclusions, so should fall back
+        assert resolve_excluded_subdir("cards") == DEFAULT_PUBLIC / "cards"
+        assert resolve_excluded_subdir("proofs") == DEFAULT_PUBLIC / "proofs"
+        # an arbitrary subdir not in exclusions should NOT fall back
+        assert resolve_excluded_subdir("schema") == excl_dist_path / "schema"
+        configure_public_dir(DEFAULT_PUBLIC)
     eas_errors: list[str] = []
     validate_eas_witness(
         eas_errors,
