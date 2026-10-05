@@ -148,8 +148,8 @@ const CORRECTIONS_LEDGER_FILE = "corrections/index.html";
 // not an assertion of the board total.
 const BREAKDOWN_BEFORE = /\b(?:\d+\s+of|the other|remaining|only|another)\s+$/i;
 
-// "13 axis signals", "5 axis lens" — the noun is qualified; not a board count.
-const QUALIFIED_AFTER = /^\s*(?:signals?|lens|families|groups?|pairs?)\b/i;
+// "13 axis signals", "5 axis lens", "12 axis pointers" — the noun is qualified; not a board count.
+const QUALIFIED_AFTER = /^\s*(?:signals?|lens|families|groups?|pairs?|pointers?)\b/i;
 
 // "22 axes measured" — postfix-qualified MEASURED count (the live totals.lid grammar).
 // Delegated to ruleMeasuredOverclaim; see the note inside ruleAxisCount.
@@ -222,6 +222,13 @@ function ruleAxisCount(facts, file, text, add, liveCount, rawContent = "") {
 
     const before = text.slice(Math.max(0, m.index - 40), m.index);
     if (BREAKDOWN_BEFORE.test(before)) continue;
+    // "Scope 1 model, 14 axes" — describing an experiment's scope, not a board count.
+    // "10 models × 14 axes" — multiplication describing experiment dimensions.
+    // "154 cards · 11 models · 14 axes" — a metric list describing what was measured.
+    // These are historical batch/experiment descriptions from research and state reports.
+    if (/\bScope\b[^.]{0,30}$/i.test(before)) continue;
+    if (/\d+\s+models?\s*[×x]\s*$/i.test(before)) continue;
+    if (/\d+\s+models?\s*[·]\s*$/i.test(before)) continue;
     // Derived triple 22·22·0 with labels "axes · measured · unmeasured".
     // Prerender concatenates the heading number with the next paragraph, so
     // COUNT_RE sees "0 axes". That 0 is unmeasured_axes, not a board-total claim.
@@ -380,7 +387,7 @@ const RAIL_TERMS = {
 // anchored to Bitcoin" still fails INSIDE a root file, which is the claim the rail exists for.
 const RAIL_SUBJECT_EXEMPT = {
   ots_atom_anchor: {
-    files: /^(root\.json|interop\/card-root-[^/]*\.json)$/,
+    files: /^(root\.json|interop\/card-root-[^/]*\.json|evidence\/index\.json)$/,
     unless: /\batoms?\b|\bqueued\b|\bpress release\b|\bbridge card\b/i,
   },
 };
@@ -416,6 +423,11 @@ function ruleAnchorCount(facts, file, text, add) {
     // · 5 live" is a true statement about a map and must not be flagged. Match
     // the noun that follows, not just the number.
     if (/\banchor\s+nodes?\b/i.test(text.slice(m.index, re.lastIndex + 12))) continue;
+    // "block 968674 anchors.json" — a Bitcoin block number followed by a filename
+    // containing "anchors" is not an anchor-count claim. Check for "block" before
+    // the number. The OTS proofs state their attestation block; that is evidence,
+    // not a claim about how many anchors exist.
+    if (/\bblock\s+$/i.test(text.slice(Math.max(0, m.index - 10), m.index))) continue;
     add({
       rule: "anchor-count",
       file,

@@ -19,7 +19,7 @@ export default function OperationalCharter() {
     document.title = "Charter | Council of AI";
   }, []);
   return (
-    <main className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white">
       <section className="max-w-3xl mx-auto px-6 py-16">
         <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-700">Charter</p>
         <h1 className="mt-2 text-3xl font-black tracking-tight text-gray-900">The operational charter</h1>
@@ -50,6 +50,6 @@ export default function OperationalCharter() {
           nothing.
         </p>
       </section>
-    </main>
+    </div>
   );
 }

@@ -106,7 +106,7 @@ export default function ModelsMeasured() {
   }, [read]);
 
   return (
-    <main className="surface-base section-y" data-testid="models-measured">
+    <div className="surface-base section-y" data-testid="models-measured">
       <div className="section-shell">
         <p className="t-kicker text-emerald-800 dark:text-emerald-300">Models measured</p>
         <h1 className="t-band mt-3 max-w-3xl text-foreground">Every AI model we have measured on a frozen bank</h1>
@@ -194,6 +194,6 @@ export default function ModelsMeasured() {
           </>
         ) : null}
       </div>
-    </main>
+    </div>
   );
 }
