@@ -245,7 +245,7 @@ export default function LiveBoardGlance({
             {facts.length > 0 ? (
               <>
                 <h3 className="mt-7 text-sm font-bold text-foreground">
-                  Fact runs <span className="font-normal text-muted-foreground">· {facts.length} axes · a rule reads a public record; no model, no ranking</span>
+                  Fact runs <span className="font-normal text-muted-foreground">· {facts.length} · a rule reads a public record; no model, no ranking</span>
                 </h3>
                 <ul className="mt-3 grid list-none grid-cols-2 gap-2 p-0 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7" aria-label="Fact-run axes and their state">
                   {facts.map((t) => (
