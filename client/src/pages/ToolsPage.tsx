@@ -1,8 +1,6 @@
 import MomentumStrip from "@/components/momentum/MomentumStrip";
 import { useEffect, useState } from "react";
 import { ArrowRight, CheckCircle2, Copy, PlugZap, ShieldCheck, Terminal } from "lucide-react";
-import SignedAgentTravel from "@/components/SignedAgentTravel";
-import TwoSpeed from "@/components/TwoSpeed";
 import WatchlistPane from "@/components/WatchlistPane";
 import { ALL_TOOL_NAMES, FREE_TOOL_NAMES, PAID_TOOL_NAMES } from "@/lib/mcpTools";
 import { setMetaDescription } from "@/lib/utils";
@@ -285,8 +283,7 @@ export default function ToolsPage() {
         title="The tools, and how far they travel"
         ids={["mcp_tools", "x402_doors", "pypi_csoai_all_time", "hf_downloads_30d_other"]}
       />
-      <SignedAgentTravel />
-      <TwoSpeed />
+      {/* SignedAgentTravel and TwoSpeed (internal strategy notes) moved to /status/internal, 6 Oct 2026. */}
       <WatchlistPane />
     </section>
   );

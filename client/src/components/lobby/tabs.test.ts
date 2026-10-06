@@ -256,6 +256,7 @@ describe("Council OS tabs", () => {
     expect(ids).toEqual([
       "home",
       "measured",
+      "art50",
       "mine",
       "verify",
       "evidence",

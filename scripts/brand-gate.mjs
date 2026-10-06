@@ -194,6 +194,28 @@ const RULES = [
     allowOn: /^\/corrections\/index\.html$/, // CORRECTIONS_LEDGER_PAGE (inlined: RULES is evaluated standalone)
   },
   {
+    id: "agent_instruction_leak",
+    // Persona sweep 6 Oct 2026 (finding T05): instructions written for agents and operators —
+    // "Do not restore…", "public door", "This VM", "planted key", "in-lane only", "Apex 522",
+    // "SPEC only, not a live mill", strategy-note titles — were rendering on /products, /tools,
+    // /benchmarks and in the header menu. A visitor reads them as the site talking to itself.
+    // The corrections ledger quotes withdrawn copy verbatim, so it alone is exempt. JS-only text
+    // (menus, panes) is pinned separately by client/src/components/HeaderNav.copy.test.ts.
+    // "Do not …" is an IMPERATIVE only when no subject precedes it: "We do not invent scores" is
+    // doctrine stated to the reader and must ship, so a first-person/second-person subject right
+    // before it is excluded (the scanner always matches case-insensitively).
+    pattern: /(?<!\b(?:we|i|you|they)\s)\b(?:Do not (?:invent|restore|paint|mint|put|ship|build from)|public door|This VM\b|planted key|per-site agent|in-lane only|Apex 5\d\d|SPEC only, not a live|war brief|domination playbook)\b/i,
+    why: "Agent/operator instruction or internal strategy note on a public surface. Say what the reader can do, or move the note to /status/internal (noindex).",
+    // Exempt, by exact built path: the corrections ledger (quotes withdrawn copy verbatim), the two
+    // files WRITTEN FOR AGENTS (instructions to agents are their purpose), and the noindex operator
+    // page the notes were moved to.
+    allowOn: /^\/(?:corrections\/index\.html|llms\.txt|llms-full\.txt|status\/internal\/index\.html)$/,
+    // Rendered pages and text files only. A served JSON body is machine data, often dated or
+    // OTS-stamped (e.g. /owm/v0.1/latest.json labels a subject "this snapshot's public door"); its
+    // wording is fixed at its producer, not by this rule.
+    pagesOnly: true,
+  },
+  {
     id: "infra_leak",
     // Any localhost:<port>, not just 4400: prerender binds an OS-assigned port unless --port
     // is passed, so a missed canonical rewrite can now bake ANY port into the shipped HTML.
@@ -304,6 +326,7 @@ function jsonDisplayHits(obj, rel) {
       if (DISTRIBUTION_CATALOGUE.test(rel) && /(^|\.)packages\[\d+\]\.name$/.test(at)) return;
       if (REGISTRY_IDENTIFIER.test(node.trim())) return;
       for (const rule of RULES) {
+        if (rule.pagesOnly) continue; // see the rule: pages and text files only
         if (rule.allowOn && rule.allowOn.test(rel)) continue;
         const re = new RegExp(rule.pattern.source, "gi");
         let m;
@@ -340,6 +363,10 @@ if (SELFTEST) {
     ["pricing_leak", "$0.005/card", "/corrections/index.html"],
     ["gpai_code_signature", "GPAI Code of Practice signatory", "/corrections/index.html"],
     ["measured_index_sticker", "MEASURED-INDEX-v0.1", "/corrections/index.html"],
+    ["agent_instruction_leak", "Do not restore MEASURED-INDEX-v0.1", "/corrections/index.html"],
+    ["agent_instruction_leak", "In build — COBOL lineage. Apex 522. SPEC only, not a live mill", "/corrections/index.html"],
+    ["agent_instruction_leak", "Slot 15 / human-vs-ai stay in-lane only.", "/corrections/index.html"],
+    ["agent_instruction_leak", "This VM holds the planted key behind the public door", "/corrections/index.html"],
   ];
   let bad = 0;
   // The corrections-ledger exemption is one built path, never a prefix or a lookalike.
@@ -473,6 +500,30 @@ if (SELFTEST) {
       for (const t of ["This is not a certificate.", "CSOAI issues no certificates.", "This legacy certificate page is withdrawn.", "signed with a C2PA signing certificate", "an X.509 certificate chain"])
         if (trips(t)) { console.error(`\u2716 selftest: certificate_term now fails copy that must ship: ${JSON.stringify(t)}`); bad++; }
     }
+  }
+  {
+    const r = RULES.find((x) => x.id === "agent_instruction_leak");
+    const trips = (t) => new RegExp(r.pattern.source, "gi").test(t);
+    for (const t of [
+      "Three proposed index measures. Reference test sets only; none is a signed result.",
+      "In development: COBOL lineage under DORA / Basel / SOX. UNMEASURED until a signed card exists.",
+      "The v0.1 sticker stays withdrawn (C-2026-0826-05).",
+      "No public leader (no signed per-model card)",
+      "Empty cells stay empty. We do not invent scores.",
+      "If we cannot verify it, we do not ship it.",
+      "we do not put other people's numbers on our board",
+    ])
+      if (trips(t)) { console.error(`\u2716 selftest: agent_instruction_leak now fails copy that must ship: ${JSON.stringify(t)}`); bad++; }
+    for (const t of ["Empty stays empty — do not invent drift numbers or a Merkle seal.", "C-2026-0826-05: do not restore MEASURED-INDEX-v0.1."])
+      if (!trips(t)) { console.error(`\u2716 selftest: agent_instruction_leak no longer catches ${JSON.stringify(t)}`); bad++; }
+    if (jsonDisplayHits({ subjects: [{ label: "this snapshot's public door" }] }, "/owm/v0.1/latest.json").some((h) => h.rule === "agent_instruction_leak")) {
+      console.error("\u2716 selftest: agent_instruction_leak now runs on JSON display fields (it is pages-only)"); bad++;
+    }
+    // The exemption is four exact built paths, never a prefix or a lookalike.
+    for (const p of ["/corrections/index.html", "/llms.txt", "/llms-full.txt", "/status/internal/index.html"])
+      if (!r.allowOn.test(p)) { console.error(`\u2716 selftest: agent_instruction_leak no longer exempts ${p}`); bad++; }
+    for (const p of ["/products/index.html", "/status/index.html", "/x/llms.txt", "/status/internal/other.html", "/index.html"])
+      if (r.allowOn.test(p)) { console.error(`\u2716 selftest: agent_instruction_leak exemption leaks to ${p}`); bad++; }
   }
   if (bad) { console.error(`\u2716 brand-gate selftest FAILED (${bad})`); process.exit(1); }
   console.log(`\u2713 brand-gate selftest: ${CASES.length}/${CASES.length} rules still catch what they exist to catch`);

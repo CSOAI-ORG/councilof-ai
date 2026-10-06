@@ -34,6 +34,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+// The one own-model rule (R1/R2 + the owner-unconfirmed tags), shared with
+// build-own-model-disclosure.mjs and build-models-measured.mjs — imported, never re-typed.
+import { isR1, isR2, UNCONFIRMED_TAGS } from "./build-own-model-disclosure.mjs";
 
 const REPO = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const CARDS = path.join(REPO, "public", "signed", "cards");
@@ -83,6 +86,10 @@ for (const f of files) {
 
 // ── model keys, with the display-name policy applied ─────────────────────────
 const rawModels = [...new Set(cells.map((c) => c.model))].sort();
+// Classed on the RAW name (the withheld keys are neutral on purpose). Persona sweep 6 Oct 2026
+// (T15): /board/models printed counts.models as "Models measured", counting our own tags in.
+const ownClass = (m) => (isR1(m) || isR2(m) ? "own" : UNCONFIRMED_TAGS.includes(m) ? "own_unconfirmed" : "third_party");
+const modelsBy = (k) => rawModels.filter((m) => ownClass(m) === k).length;
 const withheld = rawModels.filter((m) => UNPUBLISHABLE_NAME.test(m));
 const modelKey = new Map();
 let n = 0;
@@ -166,6 +173,9 @@ const body = {
     cards_read: files.length,
     cells: publicCells.length,
     models: models.length,
+    models_third_party: modelsBy("third_party"),
+    models_own: modelsBy("own"),
+    models_own_unconfirmed: modelsBy("own_unconfirmed"),
     axes: axes.length,
     signed_cells: publicCells.filter((c) => c.signed).length,
     possible_cells: models.length * axes.length,
@@ -174,6 +184,11 @@ const body = {
       "cells out of possible_cells. Most pairs were never measured, and the empty ones are the honest " +
       "part of the picture — they are shown, not hidden.",
   },
+  models_split_rule:
+    "counts.models_own = R1 (name starts sov/clan) or R2 (starts with the word council, or carries " +
+    "(council specialist)); counts.models_own_unconfirmed = the owner-unconfirmed tags; " +
+    "counts.models_third_party = everything else. Same rule as /independence/own-model-disclosure.json. " +
+    "The three add up to counts.models.",
   skipped,
   axes,
   models,

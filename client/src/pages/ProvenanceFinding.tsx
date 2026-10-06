@@ -251,6 +251,9 @@ export default function ProvenanceFinding() {
           <Link href="/refutation-ledger" className="text-emerald-300 hover:underline">
             The experiments that refuted us →
           </Link>
+          <a href="/dashboard/?tab=art50" className="font-semibold text-amber-200 hover:underline">
+            Check one of your own outputs for a mark (free preview) →
+          </a>
         </div>
 
         <p className="text-[11px] text-emerald-100/40">
