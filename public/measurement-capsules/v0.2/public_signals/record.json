@@ -1,53 +1,53 @@
 {
  "schema": "csoai.measurement-capsule-batch/0.2",
- "as_of": "2026-09-30T06:28:51Z",
+ "as_of": "2026-10-01T05:53:08Z",
  "capsule_schema": "csoai.measurement-capsule/0.2",
  "adapter": "public_signals",
  "kind": "measurement.public_signal",
- "n_capsules": 118,
+ "n_capsules": 119,
  "states": {
-  "MEASURED": 104,
-  "PARTIAL": 1,
-  "UNCHECKABLE": 13
+  "MEASURED": 101,
+  "PARTIAL": 2,
+  "UNCHECKABLE": 16
  },
- "merkle_root": "80a2d12efb54ff01aa150680639df8326b0cf3c5e5cb7ef5662f0d95d37718ec",
+ "merkle_root": "f11087f060aa4d61f5fd1c40537c0ae9c358ff17466fc205972c37ad1c145ec1",
  "merkle": "RFC 6962 Merkle Tree Hash over the capsule_id leaves (32 bytes each) sorted ascending: leaf = SHA-256(0x00 || capsule_id), node = SHA-256(0x01 || left || right); for n > 1 leaves the split is at k = the largest power of two smaller than n (RFC 6962 section 2.1), so no leaf is promoted or duplicated; one leaf = its leaf hash; empty = SHA-256 of the empty string",
  "canonicalisation": {
   "rule": "JSON, object keys sorted, no insignificant whitespace, UTF-8, non-ASCII unescaped; every capsule's bytes are checked byte-equal to its RFC 8785 (JCS) serialisation at build and at verify",
-  "jcs_byte_equal": "118/118",
+  "jcs_byte_equal": "119/119",
   "checked_with": "rfc8785 0.1.4 (independent RFC 8785 implementation)"
  },
  "capsules_file": {
   "path": "capsules.jsonl.gz",
-  "sha256": "bfbb06fcae6d8d898182879855845d60037c56215de48451fa2d75f674ac5b6c",
-  "bytes": 21230,
-  "uncompressed_sha256": "09da663515b51428078f7589c0af4da8163ff055cf7afd47125ed4822c534c8f",
-  "uncompressed_bytes": 210739,
+  "sha256": "850d32398b610a428509c8519f2ac9272e6706dfc87cfc712a21ac7c4f94c0fb",
+  "bytes": 20904,
+  "uncompressed_sha256": "bf07ae4d0f884ceed90b935cbbfc625ebdff2828170ae875773f4a426128f834",
+  "uncompressed_bytes": 212084,
   "format": "gzip (mtime 0, no filename, level 9) of canonical JSON lines sorted by capsule_id"
  },
  "authority_state": "NONE: measurement only; this capsule grants and records no execution authority",
  "what_this_is": "Public signals and traction: one capsule per outside signal about CSOAI (package downloads, Hugging Face, index listings, x402 non-self payers, data generated, search presence, citations), each with its source URL, response sha256, state and self_or_external class.",
  "what_this_is_not": "Not a traction claim. SELF and MIXED_UNSEPARABLE capsules are never traction; UNCHECKABLE is never 0.",
  "source": {
-  "record": "/evac-bulk/public-signals/2026-09-30/record.json",
-  "record_sha256": "8300a830699d520fd94daebfeff556467bb1f056ba00dc0e1bbc17c2b6132378",
-  "date": "2026-09-30",
+  "record": "/evac-bulk/public-signals/2026-10-01/record.json",
+  "record_sha256": "864c793ec44bcdcc1d1407cafae3dd69c18855b65ede88958edec1e6b047d6d2",
+  "date": "2026-10-01",
   "schema": "csoai.public-signals/0.1",
   "record_signature": "VERIFIES",
-  "record_signature_payload_sha256": "a9e5423cca3a06081f453e1233d8610900289d17a50e8931cf55576de6afcc05",
-  "n_signals": 118,
-  "previous_record_sha256": "30426d23c40bc823e845454643d70021003a9b97ca2d81ce6e08f3ff5c226326",
-  "changes_sha256": "309c9a88d0b854b4b847a23dd502e229b49bfb64c3fdf6a4daf17814f5e85016"
+  "record_signature_payload_sha256": "e3fb3c0d644945c9ac15398932a93c4d84acbb2830dce7736c1fe7e0ccd80029",
+  "n_signals": 119,
+  "previous_record_sha256": "8300a830699d520fd94daebfeff556467bb1f056ba00dc0e1bbc17c2b6132378",
+  "changes_sha256": "2b3c1863e56423977f7d71ee5e5909803be16476ebc3b62eb9bbb1f14db2bef9"
  },
  "capsules_by_state": {
-  "MEASURED": 104,
-  "UNCHECKABLE": 13,
-  "PARTIAL": 1
+  "MEASURED": 101,
+  "UNCHECKABLE": 16,
+  "PARTIAL": 2
  },
  "capsules_by_self_or_external": {
-  "EXTERNAL": 16,
-  "SELF": 51,
-  "NOT_APPLICABLE": 10,
+  "EXTERNAL": 15,
+  "SELF": 50,
+  "NOT_APPLICABLE": 13,
   "MIXED_UNSEPARABLE": 41
  },
  "publication": {

@@ -26,6 +26,18 @@ const NOT_READS: Record<string, Record<string, string>> = {
   "functions/api/_rulings_data.ts": {
     "csoai/gspc-jail-goldbank": "an evidence uri (with its sha256) inside signed ruling R-2026-0929-04; the generated module is served as data and fetches nothing",
   },
+  // The corrections ledger cites dataset files as evidence for what a correction says (a pinned
+  // revision and its sha256, or the latest.json a watcher writes). GET /api/corrections serves those
+  // strings as data and fetches none of them.
+  "functions/api/corrections.ts": {
+    "csoai/councilof-ai-evidence": "evidence urls inside correction records (claim-maintenance and corrections-watch outputs, the pre-correction interceptor.py); the ledger is served as data",
+    "csoai/gspc-gov": "evidence urls inside the jail distinct_items correction (items.jsonl, the NOTICE commit); the ledger is served as data",
+    "csoai/gspc-jail-goldbank": "evidence urls inside the jail distinct_items correction (samples.jsonl and gold_results.json at a pinned revision); the ledger is served as data",
+    "csoai/gspc-xr": "an evidence url inside the jail distinct_items correction (items.jsonl at a pinned revision); the ledger is served as data",
+  },
+  "functions/api/_ledgers.ts": {
+    "csoai/councilof-ai-evidence": "a curl command inside the ledgers index telling a reader how to fetch the claim-maintenance chain; _ledgers.ts does not fetch it",
+  },
 };
 
 function walk(dir: string, out: string[] = []): string[] {

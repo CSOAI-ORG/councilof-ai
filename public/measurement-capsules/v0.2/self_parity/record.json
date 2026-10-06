@@ -1,18 +1,18 @@
 {
  "schema": "csoai.measurement-capsule-batch/0.2",
- "as_of": "2026-09-30T08:15:29Z",
+ "as_of": "2026-10-01T08:07:31Z",
  "capsule_schema": "csoai.measurement-capsule/0.2",
  "adapter": "self_parity",
  "kind": "measurement.self_parity",
  "n_capsules": 166,
  "states": {
-  "CONSISTENT": 45,
-  "INCONSISTENT": 8,
+  "CONSISTENT": 41,
+  "INCONSISTENT": 11,
   "NOT_DECLARED": 1,
-  "NOT_LISTED": 64,
+  "NOT_LISTED": 65,
   "UNCHECKABLE": 48
  },
- "merkle_root": "3d5d0faab68c43303c493b80f1e78b16cb9540dc9ed05bad82e8152b52f5a53d",
+ "merkle_root": "8a3d29edf648ca85401c8ec45dbf3a2793a48b0a41e3780b1fd9f840985ed6a9",
  "merkle": "RFC 6962 Merkle Tree Hash over the capsule_id leaves (32 bytes each) sorted ascending: leaf = SHA-256(0x00 || capsule_id), node = SHA-256(0x01 || left || right); for n > 1 leaves the split is at k = the largest power of two smaller than n (RFC 6962 section 2.1), so no leaf is promoted or duplicated; one leaf = its leaf hash; empty = SHA-256 of the empty string",
  "canonicalisation": {
   "rule": "JSON, object keys sorted, no insignificant whitespace, UTF-8, non-ASCII unescaped; every capsule's bytes are checked byte-equal to its RFC 8785 (JCS) serialisation at build and at verify",
@@ -21,27 +21,27 @@
  },
  "capsules_file": {
   "path": "capsules.jsonl.gz",
-  "sha256": "9d40ada0c53bd3504c16da4142db26bcde8d40c325e9844f4b5bac93d2154b99",
-  "bytes": 27130,
-  "uncompressed_sha256": "1b336ff013c583ac01911da51db75171f0bcd8c722583799c2d6b8a3533eeac3",
-  "uncompressed_bytes": 314743,
+  "sha256": "bf28bb927764dbcbcdfc0409e520a9fff7bcc12bc03e43059d2cf6ebe77e9350",
+  "bytes": 27018,
+  "uncompressed_sha256": "63f6cdeef5ccd59881255e52bf6e54b1d6b2828a35d191e6f9445f304d95d7f5",
+  "uncompressed_bytes": 314826,
   "format": "gzip (mtime 0, no filename, level 9) of canonical JSON lines sorted by capsule_id"
  },
  "authority_state": "NONE: measurement only; this capsule grants and records no execution authority",
  "what_this_is": "Self-parity: what external indexes list about CSOAI's own offerings vs our live bytes, one capsule per (index, offering) cell and per own-surface check.",
  "what_this_is_not": "Not a ranking of any index. NOT_LISTED is a state, not an error.",
  "source": {
-  "record": "/evac-bulk/self-parity/2026-09-30/record.json",
-  "record_sha256": "41fc8df30eab09fd3157958da009788c5df271a08d46c04f729ee0c5f352554c",
+  "record": "/evac-bulk/self-parity/2026-10-01/record.json",
+  "record_sha256": "2bd780cff6d47d3fa28105708940c475b6829d85bb1629415f46cdd311a98ff1",
   "record_signature": "VERIFIES",
-  "record_signature_payload_sha256": "8a79cd613d9dde4b16b53f0566ee7b7def6c547ce7a5a38e39be5fe4237fa604",
-  "date": "2026-09-30",
+  "record_signature_payload_sha256": "9aa018cd34fafa7b71aeb710fe072cf47cfba268814165f8c2aafcc2c989a659",
+  "date": "2026-10-01",
   "schema": "csoai.self-parity/0.1"
  },
  "capsules_by_state": {
-  "CONSISTENT": 45,
-  "INCONSISTENT": 8,
-  "NOT_LISTED": 64,
+  "INCONSISTENT": 11,
+  "CONSISTENT": 41,
+  "NOT_LISTED": 65,
   "UNCHECKABLE": 48,
   "NOT_DECLARED": 1
  },
