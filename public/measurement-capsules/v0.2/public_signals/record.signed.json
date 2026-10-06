@@ -5,28 +5,28 @@
   "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
   "not_a_grade": "The signature proves these bytes were signed by the board key; it does not prove any claim beyond what the capsules' own instruments measured.",
   "artifact": {
-   "path": "measurement-capsules/v0.2/2026-09-30/public_signals/record.json",
-   "sha256": "8767d3d5f402e429dccce4ad96d056dcecc2d28a8e171f2ed3850ca8469a41e9",
+   "path": "measurement-capsules/v0.2/2026-10-01/public_signals/record.json",
+   "sha256": "0c522265a7bc175851be38287deb507fca9e5ba4341476ec3403408b5c5a0d3d",
    "schema": "csoai.measurement-capsule-batch/0.2",
-   "as_of": "2026-09-30T06:28:51Z"
+   "as_of": "2026-10-01T05:53:08Z"
   },
-  "merkle_root": "80a2d12efb54ff01aa150680639df8326b0cf3c5e5cb7ef5662f0d95d37718ec",
-  "n_capsules": 118,
+  "merkle_root": "f11087f060aa4d61f5fd1c40537c0ae9c358ff17466fc205972c37ad1c145ec1",
+  "n_capsules": 119,
   "states": {
-   "MEASURED": 104,
-   "PARTIAL": 1,
-   "UNCHECKABLE": 13
+   "MEASURED": 101,
+   "PARTIAL": 2,
+   "UNCHECKABLE": 16
   },
-  "capsules_sha256": "bfbb06fcae6d8d898182879855845d60037c56215de48451fa2d75f674ac5b6c",
+  "capsules_sha256": "850d32398b610a428509c8519f2ac9272e6706dfc87cfc712a21ac7c4f94c0fb",
   "adapter": "public_signals",
   "kind": "measurement.public_signal"
  },
  "signature": {
   "did": "did:web:csoai.org#board-attestation-1",
   "alg": "Ed25519",
-  "sig_ed25519": "a52c78125028017d9fd345671d5d3e32dc4ce783f479b182a7ed8ff58f7e331da3eed9ed0806372c62f55800526afa0596bafbaf7aab259e2014a4181783580e",
-  "payload_sha256": "b741612e5c2b6653418f918b4167d14063908eb5dba80a17a51b3ea5758d7d40",
-  "signed_at": "2026-09-30T06:28:51.736Z"
+  "sig_ed25519": "e9922dfcb77078a47645d276f903d7d0d19322fac73a3178a0bace7c0b8e3f4adc955828cddb42da4ab1d42a6372ed69a2b60377f01427ba3d9b7f50ce09d90f",
+  "payload_sha256": "0fa2ea7b805df8685120c16f0e832b499c4880747025715d6b423cf417923f3a",
+  "signed_at": "2026-10-01T05:53:12.739Z"
  },
  "local_verification": {
   "result": "VERIFIES",
