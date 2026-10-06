@@ -341,7 +341,9 @@ jobs:
           # pyarrow + huggingface_hub: scripts/spray/test_gspc_spray_skip.py exercises the HF viewer
           # publish path offline and imports both. This step first ran on 2026-10-06 (step 7 had been
           # red on every PR) and failed on ModuleNotFoundError: pyarrow / huggingface_hub.
-          python3 -m pip install -q pytest cryptography pyarrow huggingface_hub
+          # opentimestamps-client: test_ots_restamp_ledger.py builds detached proofs offline and runs
+          # the release gate's own .ots check over them.
+          python3 -m pip install -q pytest cryptography pyarrow huggingface_hub opentimestamps-client
           python3 -m pytest -q scripts/spray/test_gspc_parity.py scripts/spray/test_gspc_spray_skip.py
           python3 -m pytest -q scripts/test_public_root.py -k kinds_index
           python3 -m pytest -q harness/gspc-top100/test_priority_pick.py harness/gspc-top100/test_inflight_cells.py
@@ -350,6 +352,9 @@ jobs:
           python3 -m pytest -q harness/gspc-top100/test_one_option_menu.py
           python3 scripts/withdraw_one_option_cards.py
           python3 -m pytest -q scripts/readers/test_layer0_liveness_reader.py
+          # public-root halted on every run of 5-6 Oct 2026 on a stale ledger proof; the re-stamp
+          # producer must keep the old pair, roll back on failure and clear the gate's own check.
+          python3 -m pytest -q scripts/test_ots_restamp_ledger.py
           # #2391: connector envelope validator (failing controls) + Kaggle adapter replay.
           python3 -m pytest -q scripts/adapters/test_connector_envelope.py scripts/adapters/test_kaggle_envelopes.py
           # The mill signer must not spend a signature on a card it has already signed.

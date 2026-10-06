@@ -1,11 +1,15 @@
 name: public-root
 
-# One writer. Commits public/root.json + cards + proofs + publisher-health + public/archive (provable-archive index,
-# EIP-1186 proof bytes, evm-events cursor).
-# Does NOT prerender the site. Does NOT add a fourth overlapping full-site deploy.
-# Existing Pages deploy on master picks up the JSON. GHA on master only.
-# If BOARD_SIGN_KEY_PKCS8_B64 is missing, fail closed (exit 3). Never publish unsigned NEW leaves.
-# Never print the key. Never wrangler. Never stamp MEASURED.
+# The only producer of the public root. It builds public/root.json + cards + proofs + publisher-health +
+# public/archive (provable-archive index, EIP-1186 proof bytes, evm-events cursor), signs through the
+# GitHub-OIDC relay (/api/board-sign; "public-root" is on its workflow allow-list), witnesses the exact
+# bytes (Rekor + OpenTimestamps), runs the release gate, and banks the signed tree on the ONE rolling
+# branch public-root/pending behind ONE pull request.
+# SINGLE WRITER (owner ruling, 6 Oct 2026): GitHub master changes only through a gated pull request, and
+# deploy.yml ships it. This workflow never pushes master — not the tree, not halt health. Promotion is
+# public-root-candidate-upgrade.yml's job (upgrade the exact proof, re-run the gate and pr-gates, then merge).
+# Does NOT prerender the site. Never wrangler. Never print the key. Never stamp MEASURED.
+# If neither the OIDC relay nor BOARD_SIGN_KEY_PKCS8_B64 can sign, fail closed (exit 3). Never publish unsigned NEW leaves.
 
 on:
   schedule:
@@ -37,10 +41,10 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
-  actions: write   # to dispatch deploy.yml — see "trigger site deploy"
+  actions: write   # maintain-pending dispatches public-root-candidate-upgrade.yml
   contents: write
   id-token: write
-  pull-requests: write   # publisher opens its own PR; a direct push cannot satisfy the required gates check
+  pull-requests: write   # the publisher opens/updates its one PR; it never pushes master (single writer)
 
 jobs:
   # A pending candidate owns its exact OTS proof. Regenerating a fresh root on the
@@ -153,6 +157,28 @@ jobs:
           set -euo pipefail
           python scripts/witness_public_root.py --refresh-eas
 
+      # The release gate checks every public .ots against the bytes beside it and blocks the whole
+      # root on one mismatch. It did, on every run of 5-6 Oct 2026 (37376012173, 37403227482,
+      # 37447955940): the EAS step rewrote eas-root-attestations.json, whose .ots still proved its
+      # 30 Sep bytes. The EAS step now leaves an unchanged NOT_YET alone; when the ledger really
+      # changes (an attestation is appended), this keeps the old bytes + old proof as a dated pair
+      # and stamps the new bytes. Scope: the declared publisher-owned ledgers only. A dated receipt
+      # whose bytes change is still blocked. Nothing changed means nothing is written.
+      - name: Re-stamp a publisher-owned ledger this run changed (old bytes + old proof kept as a dated pair)
+        if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
+        run: |
+          set -euo pipefail
+          short=$(sha256sum public/root.json | cut -c1-8)
+          python scripts/ots_restamp_ledger.py --event "root-${short}" --list-out "$RUNNER_TEMP/restamped.txt"
+          if [ -s "$RUNNER_TEMP/restamped.txt" ]; then
+            # The OTS manifest is generated from the proof files, and llms.txt quotes the manifest's
+            # counts and as_of. Rebuild both from their producers, or pr-gates' llms.txt check goes
+            # red on the candidate (it went red on master when #2816 rebuilt the manifest alone).
+            python scripts/ots_manifest_rebuild.py --apply
+            node scripts/llms-txt.mjs
+            printf '%s\n' public/interop/ots/manifest.json public/llms.txt public/llms-full.txt >> "$RUNNER_TEMP/restamped.txt"
+          fi
+
       # readiness.json is a derived view over root.json + root-witness-latest.json.
       # Rebuilding it before the witness steps made a newly stamped root inherit the
       # previous root's Bitcoin-confirmed state. Recompute only after all exact-root
@@ -201,8 +227,6 @@ jobs:
         id: commit_tree
         if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
         env:
-          # Needed by the pull-request fallback below, when a direct push to master is
-          # refused by branch protection.
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
@@ -230,6 +254,12 @@ jobs:
           if [ -f public/interop/eas-root-attestations.json ]; then
             git add -- public/interop/eas-root-attestations.json
           fi
+          # A re-stamped ledger: its new proof, the dated pair of old bytes + old proof, the OTS
+          # manifest and llms.txt rebuilt from their producers. Listed by the re-stamp step; the
+          # list is absent or empty when nothing changed.
+          if [ -s "$RUNNER_TEMP/restamped.txt" ]; then
+            git add --pathspec-from-file="$RUNNER_TEMP/restamped.txt"
+          fi
           if [ -d public/interop/witness ]; then
             mapfile -d '' digest_files < <(find public/interop/witness -maxdepth 1 -type f -name '*.json' -print0)
             if [ "${#digest_files[@]}" -gt 0 ]; then
@@ -241,53 +271,13 @@ jobs:
             exit 0
           fi
           git commit -m "public-root: adapters → cards → merkle ($(date -u +%Y-%m-%dT%H:%MZ))"
-          # A pending OTS stamp is honest evidence of calendar submission, but it is
-          # weaker than the Bitcoin-confirmed root already live. Never attempt a direct
-          # master push for a pending candidate and never arm auto-merge for it.
-          candidate_ots=$(python3 - <<'PY'
-          import json
-          from pathlib import Path
-          side = json.loads(Path("public/interop/root-witness-latest.json").read_text())
-          print(str(((side.get("witnesses") or {}).get("ots") or {}).get("status") or "UNKNOWN"))
-          PY
-          )
-          echo "candidate OTS state: ${candidate_ots}"
-          # Rebase-and-retry. Building + signing the tree takes ~3 minutes, and other
-          # lanes push to master more often than that, so a bare push loses the race
-          # every time: on 2026-09-03 two consecutive runs signed a complete tree and
-          # then threw it away on "failed to push some refs". The publisher only ever
-          # adds its own generated paths, so replaying them onto whatever landed
-          # meanwhile is safe — and losing a signed tree to a race is not.
-          if [ "$candidate_ots" = "CONFIRMED_BITCOIN" ]; then
-            for attempt in 1 2 3 4 5; do
-              if git push origin HEAD:master; then
-                echo "pushed on attempt $attempt"
-                echo "pushed=true" >> "$GITHUB_OUTPUT"
-                exit 0
-              fi
-              echo "push race on attempt $attempt — rebasing onto origin/master"
-              git fetch origin master
-              # --autostash: the run leaves other generated files dirty (adapter
-              # sidecars, health variants) and plain `git rebase` refuses with
-              # "cannot rebase: You have unstaged changes", which is exactly how
-              # attempt 1 died the first time this retry loop ran.
-              git rebase --autostash origin/master || { git rebase --abort || true; exit 1; }
-              sleep $((attempt * 5))
-            done
-          else
-            echo "candidate is not Bitcoin-confirmed — banking it without a master push"
-          fi
-          # Branch protection makes a direct push unwinnable, not merely raced.
-          # Requiring the `gates` status check on master applies to direct pushes too,
-          # and a push creates a commit no check has run on yet, so the remote answers
-          # 'GH006: Protected branch update failed — Required status check "gates" is
-          # expected.' Retrying that forever cannot succeed: public-root last published
-          # at 05:00Z on 2026-09-06 and the live root went hours stale while every run
-          # burned five attempts and halted.
-          # So route the signed tree through the gate instead of around it: open a PR
-          # and let it auto-merge once `gates` passes. Same bytes, same protection, and
-          # the tree is never thrown away because the branch outlives the run.
-          echo "direct push rejected — routing the signed tree through a pull request"
+          # SINGLE WRITER (owner ruling, 6 Oct 2026): master changes only through a gated pull
+          # request, so this job never pushes master. It could not anyway: branch protection
+          # answered every direct push of 5-6 Oct 2026 with "GH006: Protected branch update
+          # failed ... Changes must be made through a pull request". The signed tree goes to the
+          # rolling branch and its one pull request; the candidate maintainer
+          # (public-root-candidate-upgrade.yml) upgrades the exact OTS proof, re-runs the release
+          # gate, dispatches pr-gates on the branch and only then arms the merge.
           # ONE branch, not one per run. A timestamped branch per hour banks 24 stranded
           # branches and 24 pull requests a day, and only the newest is worth landing —
           # each tree already contains everything the previous one did. A single
@@ -295,64 +285,60 @@ jobs:
           # lands the current root, and there is exactly one thing to look at.
           branch="public-root/pending"
           if ! git push --force origin "HEAD:refs/heads/${branch}"; then
-            echo "HALT: could not even push the publish branch ${branch}" >&2
+            echo "HALT: could not push the publish branch ${branch}" >&2
             exit 1
           fi
           echo "signed tree banked on ${branch} (force-updated to the latest)"
-          # Reuse the open PR if there is one; a force-push already updated it in place.
-          existing=$(gh pr list --head "${branch}" --state open --json url --jq '.[0].url' 2>/dev/null || true)
-          if [ -n "${existing:-}" ]; then
+          # Reuse the open PR if there is one; the force-push already updated it in place. A newer
+          # tree restarts the Bitcoin clock, so any armed merge on the old bytes is disarmed.
+          existing=$(gh pr list --head "${branch}" --base master --state open --json url --jq '.[0].url // ""')
+          if [ -n "${existing}" ]; then
             echo "existing publish PR updated in place: ${existing}"
-            if [ "$candidate_ots" != "CONFIRMED_BITCOIN" ]; then
-              gh pr merge "${existing}" --disable-auto 2>/dev/null || true
-            fi
+            gh pr merge "${existing}" --disable-auto 2>/dev/null || true
             echo "pushed=pr" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           url=$(gh pr create --base master --head "${branch}" \
             --title "public-root: Bitcoin-pending signed candidate" \
-            --body "Automated signed candidate. Its exact bytes and OTS proof are preserved while Bitcoin confirmation matures. It must not replace the live confirmed root while pending. The candidate maintainer upgrades the proof, runs the release gate, triggers hosted checks and only then enables auto-merge." \
+            --body "Automated signed candidate from public-root.yml. Its exact bytes and OTS proof are preserved while Bitcoin confirmation matures; it must not replace the live confirmed root while pending. public-root-candidate-upgrade.yml upgrades the proof, re-runs the release gate, dispatches pr-gates on this branch and only then arms the merge. Measurement, not certification." \
             2>&1 | tail -1) || {
               # Stay RED. The tree is safe on the branch, but it is NOT on master and the
               # root is therefore NOT published. A green tick here would say "published"
               # about a root nobody can fetch — the same vacuous-check shape as a guard
               # that passes because it never looked.
-              echo "HALT: tree banked on ${branch} but NOT published — gh pr create needs 'pull-requests: write'" >&2
+              echo "HALT: tree banked on ${branch} but no pull request — gh pr create needs 'pull-requests: write' and the repository setting that lets GitHub Actions create pull requests" >&2
               echo "pushed=branch" >> "$GITHUB_OUTPUT"
               exit 1
           }
           echo "opened ${url}"
-          if [ "$candidate_ots" = "CONFIRMED_BITCOIN" ]; then
-            gh pr merge "${url}" --squash --auto || echo "auto-merge unavailable; ${url} needs a human merge"
-          else
-            echo "candidate remains open with auto-merge disabled until Bitcoin confirmation"
-          fi
+          echo "candidate stays open with no merge armed until its proof is Bitcoin-confirmed"
           echo "pushed=pr" >> "$GITHUB_OUTPUT"
           exit 0
-      # A push made with GITHUB_TOKEN does NOT trigger other workflows — GitHub's
-      # loop-prevention. So the published tree never deployed itself: checked on
-      # 2026-09-03, every "public-root: adapters → cards → merkle" commit had ZERO
-      # deploy runs, and a signed tree only reached production hours later when the
-      # 3-hourly catch-up cron happened to pick it up, or when an unrelated human
-      # push dragged it along. workflow_dispatch is an explicit exception to that
-      # rule, so dispatching deploy.yml here does start a run.
-      - name: trigger site deploy
-        if: success() && steps.commit_tree.outputs.pushed == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh workflow run deploy.yml --ref master
 
-      # Halt is still fail-closed (publish step failed). Persist health only — never the unsigned tree.
-      - name: commit halt health
+      # Halt is fail-closed: a step above failed, so no tree is banked. The health record is the
+      # evidence of the halt, but it is not a reason to write master. Every halt of 5-6 Oct 2026
+      # tried a direct push to master and was refused (GH006), and under the single-writer
+      # ruling a successful one would be a second writer. The record stays with the run: in the
+      # run summary and as an artifact. The run stays red.
+      - name: record halt health with the run (summary + artifact; never a master write)
         if: failure() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
         run: |
           set -euo pipefail
-          git config user.name "csoai-public-root"
-          git config user.email "board@csoai.org"
-          git add public/publisher-health.json
-          if git diff --cached --quiet; then
-            echo "no halt health"
-            exit 0
-          fi
-          git commit -m "public-root: halt health (tree not published, $(date -u +%Y-%m-%dT%H:%MZ))"
-          git push origin HEAD:master
+          {
+            echo "## public-root halted: no tree banked, nothing published"
+            echo
+            echo "publisher-health.json at halt time (also attached as the publisher-health-halt artifact):"
+            echo
+            echo '```json'
+            head -c 60000 public/publisher-health.json 2>/dev/null || echo '(public/publisher-health.json absent)'
+            echo
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: keep halt health as a run artifact
+        if: failure() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
+        uses: actions/upload-artifact@v4
+        with:
+          name: publisher-health-halt
+          path: public/publisher-health.json
+          if-no-files-found: warn
+          retention-days: 30
