@@ -141,7 +141,11 @@ function WorkspaceBoardCard() {
         </div>
       ) : (
         <>
-          <p className="mt-3 font-mono text-2xl font-black tracking-tight text-foreground sm:text-3xl" data-testid="ws-board-count">
+          <p
+            className="mt-3 font-mono text-2xl font-black tracking-tight text-foreground sm:text-3xl"
+            data-testid="ws-board-count"
+            title="An axis is one test. Measured means a published run stands behind it."
+          >
             {count}
           </p>
           <p className="mt-1 text-sm leading-snug text-muted-foreground" data-testid="ws-board-separation">
@@ -184,7 +188,7 @@ function WorkspaceBoardCard() {
               <>
                 <span className="font-mono text-base font-black text-foreground">{nf.format(models)}</span>{" "}
                 <Link href="/models-measured/" className="underline decoration-dotted underline-offset-2 hover:text-foreground">
-                  AI models measured on frozen banks
+                  AI models measured on fixed question sets
                 </Link>
                 ; our own are listed apart, never counted in.
               </>
@@ -219,6 +223,8 @@ type Place = {
   href: string;
   title: string;
   job: string;
+  /** The technical words for this place, kept in the tooltip rather than on the card. */
+  hint?: string;
   img: { base: string; w: number; h: number } | null;
   figure: ReactNode;
 };
@@ -228,6 +234,7 @@ function PlaceCard({ p }: { p: Place }) {
     <li className="min-w-0">
       <Link
         href={p.href}
+        title={p.hint}
         className="group flex h-full flex-col overflow-hidden rounded-3xl border border-emerald-950/10 bg-card shadow-[0_1px_2px_rgba(6,21,15,0.04)] transition hover:border-emerald-700/40 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700 motion-reduce:transition-none"
         data-testid={`ws-place-${p.id}`}
       >
@@ -324,13 +331,14 @@ export default function GspcWorkspaceHome({
       id: "verify",
       href: "/dashboard?tab=verify",
       title: "Verify",
-      job: "Paste a signed card; your browser recomputes its hash and signature. Free, nothing uploaded.",
+      job: "Paste a result we published; your browser checks that it has not been changed and that we really issued it. Free, and nothing is uploaded.",
+      hint: "Recomputes the record's SHA-256 hash and checks its Ed25519 signature against our published keys.",
       img: { base: "/images/home/evidence-card", w: 480, h: 268 },
       figure: (
         <p className="mt-3 text-[13px] leading-snug text-muted-foreground" data-testid="ws-fig-verify">
-          Every check ends <span className="font-mono font-bold text-foreground">VALID</span>,{" "}
-          <span className="font-mono font-bold text-foreground">INVALID</span> or{" "}
-          <span className="font-mono font-bold text-foreground">UNCHECKABLE</span>; never a silent pass.
+          Every check ends genuine (<span className="font-mono font-bold text-foreground">VALID</span>), not genuine (
+          <span className="font-mono font-bold text-foreground">INVALID</span>) or not checkable (
+          <span className="font-mono font-bold text-foreground">UNCHECKABLE</span>); never a silent pass.
         </p>
       ),
     },
@@ -341,11 +349,12 @@ export default function GspcWorkspaceHome({
       href: "/dashboard?tab=connect",
       title: "For developers",
       job: "Add the tools to Claude, Cursor or your own AI agent with one line.",
+      hint: "An MCP server; the same answers are also served over A2A, AG-UI and A2UI.",
       img: { base: "/images/home/plugin", w: 480, h: 258 },
       figure: (
         <LiveFigureLine
           read={toolsRead}
-          pick={(n) => (typeof n === "number" ? { value: String(n), label: "tools declared by tools/list; a tool is runtime-observed only after its own tools/call", source: "POST /mcp → tools/list", as_of: null } : null)}
+          pick={(n) => (typeof n === "number" ? { value: String(n), label: "tools the live server lists; each counts as working only once it has been called", source: "POST /mcp → tools/list · declared by tools/list; a tool is runtime-observed only after its own tools/call", as_of: null } : null)}
           testId="ws-fig-connect"
         />
       ),
@@ -354,7 +363,7 @@ export default function GspcWorkspaceHome({
       id: "learn",
       href: "/dashboard?tab=learn",
       title: "Learn",
-      job: "Reproduce a published measurement in your browser, then practise on the same frozen questions.",
+      job: "Repeat a published test in your browser, then practise on the same fixed questions.",
       img: { base: "/images/home/arena", w: 480, h: 270 },
       figure: <LiveFigureLine read={exercises} pick={exercisesFigure} testId="ws-fig-learn" />,
     },
@@ -370,7 +379,7 @@ export default function GspcWorkspaceHome({
       id: "corrections",
       href: "/dashboard?tab=corrections",
       title: "Corrections",
-      job: "What we got wrong, how it was caught and what changed. Signed records are superseded, never edited.",
+      job: "What we got wrong, how it was caught and what changed. Published results are replaced by new ones, never edited.",
       img: { base: "/images/home/watchdog", w: 480, h: 268 },
       figure: <LiveFigureLine read={state} pick={correctionsFigure} testId="ws-fig-corrections" />,
     },
@@ -411,7 +420,7 @@ export default function GspcWorkspaceHome({
           <ul className="mt-4 hidden max-w-5xl list-none gap-4 p-0 text-sm leading-relaxed text-emerald-50/90 sm:grid sm:grid-cols-3" data-testid="ws-plain">
             <li>
               <span className="block text-xs font-bold uppercase tracking-wide text-emerald-300">What this is</span>
-              We test AI models and the servers they use, publish every result signed, and never sell a grade.
+              We test AI models and the servers they use, publish every result with a signature anyone can check, and never sell a grade.
             </li>
             <li>
               <span className="block text-xs font-bold uppercase tracking-wide text-emerald-300">What you can do</span>
@@ -455,8 +464,11 @@ export default function GspcWorkspaceHome({
         </section>
 
         <p className="mt-8 border-t border-border pt-4 text-xs leading-relaxed text-muted-foreground">
-          Council of AI measures. It does not certify, and a grade is never sold. Checking a result is always free. Agents get the same answers over{" "}
-          <Link href="/agents/" className="font-semibold text-emerald-800 underline underline-offset-2">MCP, A2A, AG-UI and A2UI</Link>.
+          Council of AI measures. It does not certify, and a grade is never sold. Checking a result is always free.{" "}
+          <Link href="/agents/" title="Over MCP, A2A, AG-UI and A2UI" className="font-semibold text-emerald-800 underline underline-offset-2">
+            AI agents can ask the same questions directly
+          </Link>
+          .
         </p>
       </div>
     </div>

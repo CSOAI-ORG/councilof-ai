@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { classifySubject, freeQuestion, matchModels, stateMeaning, statTiles, toolTitle, verifyHref } from "./resultCard";
+import { classifySubject, freeQuestion, matchModels, newestSignedRun, stateMeaning, statTiles, toolTitle, verifyHref } from "./resultCard";
 
 describe("resultCard", () => {
   it("prints only fields the tool returned, at most four, as_of last", () => {
@@ -54,5 +54,19 @@ describe("resultCard", () => {
     expect(verifyHref("https://councilof.ai/api/gspc")).toBe("/api/gspc");
     expect(verifyHref("javascript:alert(1)")).toBeNull();
     expect(verifyHref(null)).toBeNull();
+  });
+
+  it("dates a model answer from its newest MEASURED signed run, and never guesses one", () => {
+    const rows = [
+      { id: "a", subject: "qwen3:8b", status: "MEASURED", run_id: "20260922T141918.1Z-x", url: "/c/a.json" },
+      { id: "b", subject: "qwen3:8b", status: "MEASURED", run_id: "20260930T010101.1Z-y", url: "/c/b.json" },
+      { id: "c", subject: "qwen3:8b", status: "UNMEASURED", run_id: "20261005T000000.1Z-z", url: "/c/c.json" },
+      { id: "d", subject: "qwen3:8b", status: "MEASURED", run_id: "not-a-date", url: "/c/d.json" },
+      { id: "e", subject: "llama3.2:3b", status: "MEASURED", run_id: "20261006T000000.1Z-w", url: "/c/e.json" },
+    ];
+    expect(newestSignedRun(rows, "qwen3:8b")).toEqual({ date: "2026-09-30", url: "/c/b.json", id: "b" });
+    expect(newestSignedRun(rows, "ollama:qwen3:8b")).toEqual({ date: "2026-09-30", url: "/c/b.json", id: "b" });
+    expect(newestSignedRun(rows, "acme-llm-7b")).toBeNull();
+    expect(newestSignedRun(null, "qwen3:8b")).toBeNull();
   });
 });
