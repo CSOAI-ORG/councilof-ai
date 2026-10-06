@@ -7,7 +7,7 @@ function matrix(axisId: string, accuracy: number, cardUrl = `/signed/${axisId}.j
   return {
     counts: {},
     axes: [{ id: axisId, cards: 1, models: 1, mean_accuracy: accuracy, best_accuracy: accuracy, as_of: "2026-09-07" }],
-    models: [{ id: "benchmark-leader", name_published: true, cards: 1, axes: [axisId], mean_accuracy: accuracy, best_accuracy: accuracy, as_of: "2026-09-07" }],
+    models: [{ id: "benchmark-leader", kind: "third_party", name_published: true, cards: 1, axes: [axisId], mean_accuracy: accuracy, best_accuracy: accuracy, as_of: "2026-09-07" }],
     cells: [{ model: "benchmark-leader", axis: axisId, accuracy, created: "2026-09-07", card: "abc123", card_url: cardUrl, signed: true }],
   };
 }
@@ -64,5 +64,29 @@ describe("axisStatEvidence — cohort identity boundary", () => {
     expect(axisStatEvidence("missing", matrix("gspc-jail", 0.563))).toBeNull();
     expect(axisStatEvidence("gspc-jail", noCells)).toBeNull();
     expect(axisStatEvidence("gspc-jail", matrix("gspc-jail", 0.563))).toBeNull();
+  });
+
+  it("never takes the header interval from one of our own rows", () => {
+    // 6 Oct 2026: the pane headed columns "best 100.0%" with our own overlay in the top cell.
+    const m = matrix("mmlu-30", 1);
+    m.models = [
+      { ...m.models[0], id: "sov-overlay:latest", kind: "own" },
+      { id: "third-party", kind: "third_party", name_published: true, cards: 1, axes: ["mmlu-30"], mean_accuracy: 0.8, best_accuracy: 0.8, as_of: "2026-09-07" },
+    ];
+    m.cells = [
+      { ...m.cells[0], model: "sov-overlay:latest", accuracy: 1 },
+      { ...m.cells[0], model: "third-party", accuracy: 0.8, card: "def456", card_url: "/signed/tp.json" },
+    ];
+    m.axes = [{ ...m.axes[0], best_accuracy: 0.8, mean_accuracy: 0.8 }];
+    const evidence = axisStatEvidence("mmlu-30", m);
+    expect(evidence).not.toBeNull();
+    expect(evidence!.lo).toBeLessThan(0.8);
+    expect(evidence!.hi).toBeGreaterThan(0.8);
+
+    // An axis only our own rows were measured on has no header figure at all.
+    const ownOnly = matrix("mmlu-30", 1);
+    ownOnly.models = [{ ...ownOnly.models[0], kind: "own" }];
+    ownOnly.axes = [{ ...ownOnly.axes[0], best_accuracy: null, mean_accuracy: null }];
+    expect(axisStatEvidence("mmlu-30", ownOnly)).toBeNull();
   });
 });

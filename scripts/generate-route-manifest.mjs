@@ -29,7 +29,12 @@ try {
   const rows = [];
   // A component name is not a public title. Where the derived title says something the page is not
 // (X402Leaderboard is a door board of 402 challenge fields, not a leaderboard), name it here.
-const TITLE_OVERRIDES = { X402Leaderboard: "x402 door board" };
+// UKAIBill read as "UK AI Bill" in the Library, naming a law that is not in force (6 Oct 2026).
+const TITLE_OVERRIDES = {
+  X402Leaderboard: "x402 door board",
+  UKAIBill: "UK AI rules (no AI statute in force)",
+  UKAIBillCompliance: "UK AI rules: what applies today",
+};
 let m;
   while ((m = reRender.exec(src)) !== null) {
     const [, p, comp] = m;

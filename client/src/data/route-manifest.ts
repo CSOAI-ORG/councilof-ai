@@ -198,11 +198,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Readiness"
  },
  {
-  "path": "/authority",
-  "comp": "BadgesPage",
-  "title": "Badges Page"
- },
- {
   "path": "/badge",
   "comp": "BadgeKit",
   "title": "Badge Kit"
@@ -415,7 +410,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  {
   "path": "/compliance/uk-ai-bill",
   "comp": "UKAIBillCompliance",
-  "title": "UKAIBill Compliance"
+  "title": "UK AI rules: what applies today"
  },
  {
   "path": "/conformity-assessment",
@@ -885,7 +880,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  {
   "path": "/frameworks/uk-ai-bill",
   "comp": "UKAIBill",
-  "title": "UKAIBill"
+  "title": "UK AI rules (no AI statute in force)"
  },
  {
   "path": "/frequently-asked-questions",
@@ -1181,11 +1176,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/integrations",
   "comp": "Integrations",
   "title": "Integrations"
- },
- {
-  "path": "/intel",
-  "comp": "Intel",
-  "title": "Intel"
  },
  {
   "path": "/interop/a2a-jcs-2026-09-27",

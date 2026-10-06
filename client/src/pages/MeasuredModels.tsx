@@ -73,6 +73,8 @@ interface AxisRow {
   id: string;
   cards: number;
   models: number;
+  /** build-card-matrix rule 7: mean/best below are over these third-party rows only. */
+  models_third_party?: number;
   zero_not_quotable?: number;
   mean_accuracy: number | null;
   best_accuracy: number | null;
@@ -691,8 +693,8 @@ export default function MeasuredModels() {
               <tr>
                 <th className="px-4 py-2 font-semibold">Axis (card set)</th>
                 <th className="px-4 py-2 text-right font-semibold">Models run</th>
-                <th className="px-4 py-2 text-right font-semibold">Best score</th>
-                <th className="px-4 py-2 text-right font-semibold">Average</th>
+                <th className="px-4 py-2 text-right font-semibold">Best third-party score</th>
+                <th className="px-4 py-2 text-right font-semibold">Third-party average</th>
                 <th className="px-4 py-2 font-semibold">Last measured</th>
               </tr>
             </thead>
@@ -710,9 +712,14 @@ export default function MeasuredModels() {
                         {a.id}
                       </Link>
                     </td>
-                    <td className="px-4 py-2 text-right font-mono">{a.models}</td>
-                    <td className="px-4 py-2 text-right font-mono">{pctOrNotQuotable(a.best_accuracy, a.zero_not_quotable)}</td>
-                    <td className="px-4 py-2 text-right font-mono">{pctOrNotQuotable(a.mean_accuracy, a.zero_not_quotable)}</td>
+                    <td className="px-4 py-2 text-right font-mono">
+                      {a.models}
+                      {typeof a.models_third_party === "number" && (
+                        <span className="block text-[10px] text-gray-500">{a.models_third_party} third-party</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-2 text-right font-mono">{a.models_third_party === 0 ? "no third-party model" : pctOrNotQuotable(a.best_accuracy, a.zero_not_quotable)}</td>
+                    <td className="px-4 py-2 text-right font-mono">{a.models_third_party === 0 ? "no third-party model" : pctOrNotQuotable(a.mean_accuracy, a.zero_not_quotable)}</td>
                     <td className="px-4 py-2 font-mono text-xs text-gray-600">
                       {a.as_of?.slice(0, 10) ?? "—"}
                     </td>

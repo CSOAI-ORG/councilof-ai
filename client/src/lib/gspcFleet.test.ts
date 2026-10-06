@@ -20,6 +20,8 @@ import {
   wilson,
   splitAxes,
   badgeSVG,
+  kindOf,
+  thirdPartyIds,
   type FleetMatrix,
 } from "./gspcFleet";
 
@@ -62,20 +64,37 @@ describe("the grid — an unmeasured pair is absent, not zero", () => {
 });
 
 describe("shaping functions", () => {
-  it("topModelsForAxis orders best-first and only lists models measured there", () => {
+  it("topModelsForAxis orders third-party models highest-first and only lists models measured there", () => {
     const axis = matrix.axes[0].id;
     const rows = topModelsForAxis(matrix, axis);
     for (let i = 1; i < rows.length; i++) {
       expect(rows[i - 1].accuracy).toBeGreaterThanOrEqual(rows[i].accuracy);
     }
-    expect(rows.length).toBe(matrix.axes[0].models);
+    expect(rows.length).toBe(matrix.axes[0].models_third_party);
   });
 
-  it("leaderLabel is the top row and equals the axis's declared best", () => {
+  it("our own models are never in an axis ordering or a composite (6 Oct 2026)", () => {
+    const third = thirdPartyIds(matrix);
+    expect(third.size).toBe(matrix.counts.models_third_party);
+    for (const a of matrix.axes) {
+      for (const r of topModelsForAxis(matrix, a.id)) expect(third.has(r.model), `${a.id} ${r.model}`).toBe(true);
+    }
+    for (const r of compositeAcrossAxes(matrix, matrix.axes.map((a) => a.id))) expect(third.has(r.model), r.model).toBe(true);
+    const c = deriveCounts(matrix);
+    expect(c.thirdParty + c.own + c.ownUnconfirmed).toBe(c.models);
+    expect(c.own).toBe(matrix.counts.models_own);
+  });
+
+  it("a row without a kind is never treated as third-party (fail closed)", () => {
+    expect(kindOf({})).toBe("own_unconfirmed");
+    expect(kindOf({ kind: "third_party" })).toBe("third_party");
+  });
+
+  it("leaderLabel is the top third-party row and equals the axis's declared best", () => {
     const a = matrix.axes[0];
     const leader = leaderLabel(matrix, a.id);
     expect(leader).not.toBeNull();
-    expect(leader!.accuracy).toBeCloseTo(a.best_accuracy, 5);
+    expect(leader!.accuracy).toBeCloseTo(a.best_accuracy as number, 5);
   });
 
   it("rowsForModel returns one entry per axis, measured and unmeasured alike", () => {

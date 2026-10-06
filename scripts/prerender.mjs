@@ -193,7 +193,7 @@ function discover() {
     "/industries/energy",
     "/library/axes",
     "/verify", "/os", "/assess", "/academy", "/compare", "/layer0",
-    "/trust-center", "/network", "/intel", "/hive", "/methodology", "/honesty",
+    "/trust-center", "/network", "/hive", "/methodology", "/honesty",
     "/dashboard", "/login", "/start", "/about", "/insurers",
     "/privacy-policy", "/firewall-charter", "/gspc-verify", "/gspc-arena",
     "/embed", "/white-label",

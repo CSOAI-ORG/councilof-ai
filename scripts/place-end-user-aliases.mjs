@@ -26,7 +26,7 @@ export const STRANGER_DIRS = [
   "os", "gspc", "gspc-scoreboard", "scoreboard", "gspc-verify", "verify",
   "gspc-arena", "assess", "watchdog", "watchdog-map", "academy", "console", "council-os",
   "lobby", "compare", "vs", "layer0", "trust-center", "network", "distribution",
-  "intel", "hive", "methodology", "honesty", "insurers", "regulators",
+  "hive", "methodology", "honesty", "insurers", "regulators",
   "industries", "enterprise", "library", "library/axes", "library/measurement",
   "privacy-policy", "disclaimers", "legal", "system-card",
   "pricing", "start",

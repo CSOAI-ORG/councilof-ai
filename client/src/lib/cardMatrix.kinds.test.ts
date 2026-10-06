@@ -45,6 +45,36 @@ describe("card-matrix: own models are labelled, never inferred in the client", (
   });
 });
 
+describe("card-matrix: an axis figure is a third-party figure (6 Oct 2026)", () => {
+  // The Council OS Leaderboard headed each column with axes[].best_accuracy, which was taken over
+  // every model — so our own overlays set "best 100.0%". The producer now takes both axis figures
+  // over third-party rows only; our own rows never set or join them.
+  type Axis = { id: string; models: number; models_third_party: number; models_own: number; mean_accuracy: number | null; best_accuracy: number | null };
+  const axes: Axis[] = matrix.axes;
+  const kindOf = new Map(models.map((m) => [m.id, m.kind]));
+
+  it("best_accuracy is the highest quotable third-party cell on the axis, or null", () => {
+    for (const a of axes) {
+      const q = cells.filter((c) => c.axis === a.id && kindOf.get(c.model) === "third_party" && !c.zero_flag && typeof c.accuracy === "number");
+      expect(a.best_accuracy, a.id).toBe(q.length ? Math.max(...q.map((c) => c.accuracy as number)) : null);
+    }
+  });
+
+  it("the rule changes a published figure: on some axis our own row out-scored every third-party row", () => {
+    // Guards against the test above passing only because nothing changed.
+    const changed = axes.filter((a) => {
+      const own = cells.filter((c) => c.axis === a.id && kindOf.get(c.model) !== "third_party" && !c.zero_flag && typeof c.accuracy === "number");
+      return own.some((c) => a.best_accuracy === null || (c.accuracy as number) > a.best_accuracy);
+    });
+    expect(changed.length).toBeGreaterThan(0);
+  });
+
+  it("models splits into third-party and own on every axis", () => {
+    for (const a of axes) expect(a.models_third_party + a.models_own, a.id).toBe(a.models);
+    expect(typeof matrix.axis_stats_rule).toBe("string");
+  });
+});
+
 describe("card-matrix: zeros that point at the scoring are not quoted", () => {
   it("AXIS_FLOOR marks exactly the axes where every model scored exactly 0", () => {
     const axes = [...new Set(cells.map((c) => c.axis))];
