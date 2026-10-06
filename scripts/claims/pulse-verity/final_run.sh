@@ -27,7 +27,7 @@ for s in d['samples']:
           'tamper_text_valid', s['tamper_v2_canonical_one_byte']['valid'], 'tamper_sig_valid', s['tamper_v2_signature_one_byte']['valid'],
           'line_check_caught', s['tamper_json_sources_detected_by_line_check'])
 if not d['all_pass']:
-    sys.exit('STOP: the re-check did not pass. Do not publish; tell Justin what changed.')
+    sys.exit('STOP: the re-check did not pass. Do not publish; tell Pulse what changed.')
 PY
 python3 "$HERE/build_final.py" "$E"
 T0=$(awk 'NR==1{print $2}' "$E/fetch_times.txt"); T1=$(awk 'END{print $2}' "$E/fetch_times.txt")
