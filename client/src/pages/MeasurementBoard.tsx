@@ -610,6 +610,14 @@ function RowDetail({
                           ? "this card did not load, so nothing from it is shown"
                           : `${b.model ?? "model not recorded"} · accuracy ${typeof b.accuracy === "number" ? b.accuracy : "not recorded"} · ${typeof b.created === "string" ? b.created.slice(0, 10) : c.ts.slice(0, 10)}`}
                     </span>
+                    {b !== undefined && b !== "error" && b.accuracy === 0 && (
+                      <a
+                        href={`/board/models?axis=${encodeURIComponent(c.axis)}`}
+                        className="inline-flex min-h-[44px] items-center px-1 text-[12px] text-amber-900 underline"
+                      >
+                        why a zero may not be quotable
+                      </a>
+                    )}
                     <a
                       href={verifyCardHref(cardPath(c))}
                       data-testid={`verify-card-${row.id}`}
