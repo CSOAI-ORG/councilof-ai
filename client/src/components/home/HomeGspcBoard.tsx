@@ -23,6 +23,7 @@ import { useGspcBoard, type GspcAxis, type GspcPayload } from "../board/useGspcB
 import { axisRunEvidence } from "../board/runEvidence";
 import { axisMeta } from "../../lib/axisRegulation";
 import { hubCardsFeed } from "./hubCardsFeed";
+import ModelCountKey from "@/components/ModelCountKey";
 
 /** Public distribution mirror for the canonical GET /api/gspc board. */
 export const SPACE_PAGE_URL = "https://huggingface.co/spaces/csoai/gspc-board";
@@ -428,6 +429,7 @@ export function HubResultsBoard({
                 : `Partial read · ${cells.length} retrieved MEASURED cells · population totals withheld`}
       </p>
       {asOf ? <p className="mt-1 text-xs text-slate-500 dark:text-emerald-100/55">Feed observed {asOf}</p> : null}
+      <ModelCountKey className="mt-2 max-w-xl" />
 
       {data && axes.length > 0 ? (
         <>

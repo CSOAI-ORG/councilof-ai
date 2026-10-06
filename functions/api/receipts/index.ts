@@ -27,6 +27,7 @@
 /// <reference types="@cloudflare/workers-types" />
 import { readReceiptsByPayer } from "../_x402_receipt";
 import { readDeliveryByTransaction } from "../_x402_delivery_record";
+import { headFromGet } from "../_head";
 
 const EIP55_ISH = /^0x[0-9a-fA-F]{40}$/;
 
@@ -209,3 +210,7 @@ export async function handle(
 
 export const onRequestGet: PagesFunction<{ REVENUE_KV?: KVNamespace }> = async ({ request, env }) =>
   handle(request, (p) => readReceipts(p, env?.REVENUE_KV));
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

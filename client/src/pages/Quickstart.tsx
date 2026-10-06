@@ -233,7 +233,8 @@ curl -s -H 'Content-Type: application/json' -H 'Accept: application/json, text/e
           The whole paid path, in six steps: discover → request → 402 → settle → receive → verify. One worked door is used
           so every command copy-pastes; any other door in the manifest follows the same steps. Response shapes below come
           from live calls on 2026-09-14 and are truncated. Amounts and counts are shown as placeholders: the 402 you
-          receive is the only authority on an amount. A settlement of zero is not a purchase.
+          receive is the only authority on an amount, and the amount can change between calls, so read accepts[] each
+          time. A settlement of zero is not a purchase.
         </p>
         <p className="mt-3 rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm leading-6 text-emerald-950">
           Payments from the operator's own wallets are recorded as self-tests and never counted as revenue

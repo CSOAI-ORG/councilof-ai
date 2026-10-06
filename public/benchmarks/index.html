@@ -2,6 +2,7 @@
 <html lang="en-GB">
 <head>
 <meta charset="utf-8">
+<!-- Without this a phone lays the page out at 980px and shrinks it (persona sweep 6 Oct 2026). -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>GSPC Benchmarks — Council of AI</title>
 <!-- No count in this description: a count frozen into <head> cannot be derived and
@@ -48,7 +49,6 @@ Two numbers travel together: <code>totals.axes</code> counts SLOTS on the board,
 slots with a real run behind them, and <code>totals.unmeasured_axes</code> is published so the gap is visible — quoting the
 slot count alone would claim measurements that do not exist.
 <span id="jail-sep"></span>
-Slot 15 / human-vs-ai stay in-lane only.
 </div>
 <h2>Measured axes (live board)</h2>
 <div class="wrap">
@@ -82,10 +82,21 @@ Council of AI · CSOAI Ltd · UK 16939677 ·
   var el=document.getElementById("board-count");
   var rows=document.getElementById("board-rows");
   if(!el||!rows) return;
-  function cell(tr,value,className){
+  /* Plain-English labels for the board's leader states; [label, longer reason for the tooltip].
+   * A raw machine enum (NO_SIGNED_CARD) used to print straight into the Leader column. */
+  var LS={NO_SIGNED_CARD:["No public leader (no signed per-model card)","The candidate leader has no signed per-model card in the public index, so no leader score is asserted."],EXCLUDED_OWN_MODEL:["No public leader (own model excluded)","The point leader was CSOAI's own model, excluded from the public ranking; no external re-ranking is asserted."]};
+  /* First-class states the reader is meant to see verbatim. Any other ALL-CAPS enum reaching a
+   * cell has no mapping yet: it is shown as a dash (raw value in the tooltip), never as copy. */
+  var SHOWN_AS_IS={TIE:1,UNTESTED:1,SEPARATED:1,"NOT APPLICABLE":1,MEASURED:1,UNMEASURED:1};
+  function cell(tr,value,className,title){
     var td=document.createElement("td");
     if(className) td.className=className;
+    if(typeof value==="string"&&/^[A-Z][A-Z_]{5,}$/.test(value)&&!SHOWN_AS_IS[value]){
+      if(window.console) console.warn("benchmarks: unmapped enum",value);
+      title=value; value=null;
+    }
     td.textContent=value===null||typeof value==="undefined"?"—":String(value);
+    if(title) td.title=title;
     tr.appendChild(td);
   }
   fetch("/api/gspc",{headers:{accept:"application/json"}})
@@ -105,7 +116,10 @@ Council of AI · CSOAI Ltd · UK 16939677 ·
         cell(tr,a.benchmark||a.bench||a.dataset||a.kind);
         cell(tr,a.status==="MEASURED"?a.n:null,"num");
         cell(tr,typeof a.accuracy==="number"?a.accuracy.toFixed(3):null,"num");
-        cell(tr,a.leader||a.public_leader_state||null);
+        var lead=a.leader||a.public_leader_state||null;
+        if(a.leader) cell(tr,a.leader);
+        else if(lead&&LS[lead]) cell(tr,LS[lead][0],null,LS[lead][1]);
+        else cell(tr,lead);
         cell(tr,a.kind==="model-comparison"?(a.separation||"UNTESTED"):"—",a.separation==="SEPARATED"?"ok":"");
         rows.appendChild(tr);
       });

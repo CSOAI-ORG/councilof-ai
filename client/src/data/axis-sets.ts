@@ -940,7 +940,7 @@ export const AXIS_SETS: AxisSet[] = [
     doesNotEstablish: [
       "Any view on risk, solvency or creditworthiness. What a control flag implies is explicitly unmeasured and would need legal advice, not a benchmark.",
       "Board totals. Quote GET /api/gspc totals.public_count for axes/measured/unmeasured — never invent board counts from this file.",
-      "A rating, a ranking, an index formula, or an endorsement of any named instrument. C-2026-0826-05: do not restore MEASURED-INDEX-v0.1.",
+      "A rating, a ranking, an index formula, or an endorsement of any named instrument. The MEASURED-INDEX-v0.1 sticker stays withdrawn (C-2026-0826-05).",
     ],
     relation:
       "These rows are also carried on the public board. Board slot and measured counts are derived live from GET /api/gspc. This register is dated per-row detail behind those same rows — not a competing board claim, and not a place to stamp MEASURED onto unsigned runs.",

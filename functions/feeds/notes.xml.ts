@@ -7,6 +7,7 @@
  */
 import data from "../../client/src/data/evidence-notes.json";
 import { rss, FEED_HEADERS, type Entry } from "./_xml";
+import { headFromGet } from "../api/_head";
 
 interface Note { id: string; date: string; title: string; summary: string; body: string; artifacts: { label: string; url: string }[] }
 
@@ -41,3 +42,7 @@ export const onRequestGet = async (): Promise<Response> =>
     "Dated evidence notes, one citable page per note, each naming the artifacts behind it. Derived from client/src/data/evidence-notes.json; nothing typed.",
     entries(),
   ), { headers: FEED_HEADERS });
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

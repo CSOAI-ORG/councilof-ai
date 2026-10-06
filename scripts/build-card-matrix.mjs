@@ -108,6 +108,8 @@ for (const m of rawModels) {
 }
 
 // ── ownership, classified on the RAW name, carried by the public key ─────────
+// The withheld keys are neutral on purpose. Persona sweep 6 Oct 2026 (T15): /board/models
+// printed counts.models as "Models measured", counting our own tags in.
 function modelKind(raw) {
   if (isR1(raw) || isR2(raw)) return "own";
   if (UNCONFIRMED_TAGS.includes(raw)) return "own_unconfirmed";
@@ -248,6 +250,11 @@ const body = {
       "cells out of possible_cells. Most pairs were never measured, and the empty ones are the honest " +
       "part of the picture — they are shown, not hidden.",
   },
+  models_split_rule:
+    "counts.models_own = R1 (name starts sov/clan) or R2 (starts with the word council, or carries " +
+    "(council specialist)); counts.models_own_unconfirmed = the owner-unconfirmed tags; " +
+    "counts.models_third_party = everything else. Same rule as /independence/own-model-disclosure.json. " +
+    "The three add up to counts.models.",
   skipped,
   axes,
   models,

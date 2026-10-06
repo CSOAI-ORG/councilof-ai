@@ -136,14 +136,22 @@ test("sidebar exposes eight plainly named sections as direct /dashboard?tab= lin
     "/dashboard?tab=corrections",
   ]);
   for (const h of hrefs) expect(h).toMatch(/^\/dashboard\?tab=[a-z0-9-]+$/);
-  // "Check a result" section contains three panes: Check a result, Evidence pack, Evidence index.
+  // "Check a result" section contains two panes: Check a result and Evidence pack. Evidence index
+  // moved to "For developers" (tools audit, 6 Oct 2026): it is an API coverage index, not a check.
   // The section bar (not the sidebar) shows sub-tabs when the active pane belongs to a multi-tab section.
   await openTab(page, "evidence");
   const sub = page.getByRole("navigation", { name: "Check a result pages" });
-  await expect(sub.getByRole("link", { name: "Evidence index", exact: true })).toHaveAttribute(
+  await expect(sub.getByRole("link", { name: "Evidence pack", exact: true })).toHaveAttribute(
     "href",
-    "/dashboard?tab=evidence-index",
+    "/dashboard?tab=evidence",
   );
+  await expect(sub.getByRole("link", { name: "Evidence index", exact: true })).toHaveCount(0);
+  await openTab(page, "evidence-index");
+  await expect(
+    page
+      .getByRole("navigation", { name: "For developers pages" })
+      .getByRole("link", { name: "Evidence index", exact: true }),
+  ).toHaveAttribute("href", "/dashboard?tab=evidence-index");
   await expect(page.getByRole("navigation", { name: "Council workspace modes" })).toHaveCount(0);
   // No door on the shell hops through the legacy /os redirect.
   const legacy = await page.locator('a[href^="/os?"]').count();
@@ -202,7 +210,6 @@ test("every sidebar tab renders its own pane inside the shell, error-free", asyn
     "explore",
     "board",
     "swift",
-    "results",
     "models",
     "measured",
     "verify",
@@ -240,6 +247,23 @@ test("every sidebar tab renders its own pane inside the shell, error-free", asyn
   }
   expect(pageErrors, "no uncaught exceptions across the tabs").toEqual([]);
   expect(consoleErrors, "no console errors across the tabs").toEqual([]);
+});
+
+test("retired duplicate ids open the pane that owns their content (tools audit, 6 Oct 2026)", async ({
+  page,
+}) => {
+  // ?tab=results rendered the board under a second name; ?tab=watchdog framed /watchdog-hub,
+  // which 308s to /os, so the pane showed the start page nested inside itself.
+  for (const [id, owner] of [
+    ["results", "board"],
+    ["watchdog", "corrections"],
+  ] as const) {
+    await openTab(page, id);
+    await expectShell(page, id);
+    await expect(page.locator(`[data-testid="dashboard-pane-${owner}"]`), `${id} -> ${owner}`).toHaveCount(1);
+    await expect(page.locator('[data-testid="dashboard-pane-unknown"]')).toHaveCount(0);
+    await expect(page.locator('iframe[src*="watchdog-hub"]')).toHaveCount(0);
+  }
 });
 
 test("legacy door ids resolve to a real pane, never the fallback", async ({
@@ -312,6 +336,20 @@ test("a cold /os door converges on the canonical Dashboard", async ({
 }) => {
   await expectColdDoor(page, "/os?lobby=verify", "verify");
   await expectColdDoor(page, "/os?lobby=swift", "swift");
+});
+
+test("a fresh deep link lands on its section, not the page head", async ({ page }) => {
+  // App.tsx ScrollToTop used to scroll to the top on every route mount, undoing the browser's own jump
+  // to the fragment, so /how-we-work/#machine-surface (the home hero's link) opened at the page head.
+  await page.goto("/how-we-work/#machine-surface");
+  const section = page.locator("#machine-surface");
+  await expect(section).toBeVisible({ timeout: 30_000 });
+  await expect
+    .poll(async () => Math.abs((await section.boundingBox())?.y ?? 99_999), {
+      message: "#machine-surface within 200px of the viewport top",
+      timeout: 15_000,
+    })
+    .toBeLessThan(200);
 });
 
 test("a cold /gspc-scoreboard door converges on the canonical Dashboard", async ({

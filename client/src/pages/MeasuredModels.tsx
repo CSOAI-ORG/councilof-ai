@@ -2,6 +2,7 @@ import { Fragment, useEffect, useMemo, useState } from "react";
 import { Link, useSearch } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
 import { modelHref } from "@/lib/livingBoard";
+import ModelCountKey from "@/components/ModelCountKey";
 
 /**
  * /board/models — every model we have measured, every axis it was measured on,
@@ -519,11 +520,9 @@ export default function MeasuredModels() {
       {/* sizes before you click */}
       <dl className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
         {[
-          [
-            "Third-party models",
-            c.models_third_party,
-            `our own ${c.models_own} are listed apart and never compared; ${c.models_own_unconfirmed} unconfirmed`,
-          ],
+          // Third-party only (scripts/build-card-matrix.mjs splits the set, 6 Oct 2026): the bare
+          // total counted our own model tags in with everyone else's. Ours are listed apart below.
+          ["Models measured", c.models_third_party, `third-party; our own ${c.models_own} (+${c.models_own_unconfirmed} unconfirmed) are in this set and listed apart, never compared`],
           ["Axes in this set", c.axes, "benchmark axis, not board axis"],
           ["Cells filled", c.cells, `of ${c.possible_cells} possible pairs`],
           ["Cells with a signature", c.signed_cells, "each re-checkable offline"],
@@ -541,6 +540,8 @@ export default function MeasuredModels() {
         {matrix.what_a_cell_is} Coverage is {c.cells} of {c.possible_cells} pairs — see the coverage
         map below.
       </p>
+
+      <ModelCountKey className="mt-3 max-w-3xl" />
 
       {/* view switcher */}
       <div className="mt-6 flex flex-wrap items-center gap-2">

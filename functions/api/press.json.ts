@@ -19,6 +19,7 @@ import root from "../../public/root.json";
 import spray from "../../scripts/badger/_spray-log-v2.json";
 import doi from "../../docs/DOI_AXIS_CARDS_2026-08-24.json";
 import { buildRevenue, type RevenueEnv } from "./revenue";
+import { headFromGet } from "./_head";
 
 interface Correction { id: string; date: string; what_was_wrong: string; how_caught?: string; fix?: string; what_changed?: string; status?: string; detected_by?: string }
 interface Card { card: string; axis?: string; ts?: string }
@@ -205,3 +206,7 @@ export const onRequestGet: PagesFunction<RevenueEnv> = async ({ env }) =>
   new Response(JSON.stringify(await build(env), null, 2), {
     headers: { "content-type": "application/json; charset=utf-8", "cache-control": "public, max-age=300", "access-control-allow-origin": "*" },
   });
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

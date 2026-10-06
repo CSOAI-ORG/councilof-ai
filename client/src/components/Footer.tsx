@@ -8,6 +8,7 @@
 import { Link } from 'wouter';
 import { BookOpen, Linkedin, Mail } from 'lucide-react';
 import EmailOff from './EmailOff';
+import { CONTACT_MAILBOX } from '@/lib/buying';
 import FooterVerifyStrip from './FooterVerifyStrip';
 import FooterStats from './momentum/FooterStats';
 import MembershipStrip from './MembershipStrip';
@@ -38,7 +39,9 @@ export function Footer() {
         { name: 'Tools — plugin snippet', href: '/tools/' },
         { name: 'Ask about a measured run', href: '/contact/?arm=run' },
         { name: 'Ledger', href: '/contact/?arm=ledger' },
-        { name: 'Data', href: '/contact/?arm=data' },
+        // A licensing enquiry, not a download: the label says so, and the free download sits beside it.
+        { name: 'Data licensing (enquiry)', href: '/contact/?arm=data' },
+        { name: 'Download the board data', href: '/board/#board-download' },
         { name: 'Library', href: '/library/' },
       ],
     },
@@ -115,7 +118,7 @@ export function Footer() {
   const socialLinks = [
     { name: 'Source snapshot (archived)', icon: BookOpen, href: 'https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/CSOAI-ORG/councilof-ai' },
     { name: 'LinkedIn', icon: Linkedin, href: 'https://linkedin.com/company/csoai' },
-    { name: 'Email', icon: Mail, href: 'mailto:contact@csoai.org' },
+    { name: 'Email', icon: Mail, href: `mailto:${CONTACT_MAILBOX}` },
   ];
 
   return (
@@ -391,10 +394,10 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-border pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-muted-foreground text-xs">
-            © {currentYear} CSOAI Ltd · Registered in England & Wales No. 16939677 · 3rd Floor, 86–90 Paul Street, London EC2A 4NE · <EmailOff text="contact@csoai.org" />
+            © {currentYear} CSOAI Ltd · Registered in England & Wales No. 16939677 · 3rd Floor, 86–90 Paul Street, London EC2A 4NE · <EmailOff text={CONTACT_MAILBOX} />
           </p>
           <p className="text-muted-foreground text-xs">
-            To object to, dispute or request a correction of anything we publish: <a href="/dispute/" className="underline">/dispute</a> or <a href="mailto:contact@csoai.org" className="underline">contact@csoai.org</a>. Corrections are dated in the <a href="/corrections/" className="underline">ledger</a>.
+            To object to, dispute or request a correction of anything we publish: <a href="/dispute/" className="underline">/dispute</a> or <a href={`mailto:${CONTACT_MAILBOX}`} className="underline">{CONTACT_MAILBOX}</a>. Corrections are dated in the <a href="/corrections/" className="underline">ledger</a>.
           </p>
           <p className="text-muted-foreground text-xs text-center md:text-right max-w-md">
             Who runs and funds us, and where we have an interest:{" "}

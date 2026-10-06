@@ -37,7 +37,13 @@ import {
 } from "@/lib/dashboardView";
 import { setOsOpen } from "@/lib/osChrome";
 import { NAV_ID, PANEL_ID } from "@/components/lobby/LobbyPaneTabs";
-import { MENU_GROUPS, SUPPORT_LINKS, readStartTab, writeStartTab } from "@/components/gspc/workspaceMenu";
+import {
+  MENU_GROUPS,
+  SUPPORT_LINKS,
+  readStartTab,
+  writeStartTab,
+  type SupportLink,
+} from "@/components/gspc/workspaceMenu";
 import BoardStatusStrip from "@/components/gspc/BoardStatusStrip";
 import { recordActivity, useActivity } from "@/components/lobby/workspace";
 import { LOBBY_TABS } from "@/components/lobby/tabs";
@@ -146,6 +152,23 @@ function SectionLinks({
   );
 }
 
+/** One support link. A machine file or feed (`external`) opens in a new tab: the flag existed but
+ *  was ignored, so llms.txt replaced the workspace in the same tab (tools audit, 6 Oct 2026). */
+function SupportLinkItem({ link }: { link: SupportLink }) {
+  return (
+    <li>
+      <a
+        href={link.href}
+        {...(link.external ? { target: "_blank", rel: "noreferrer" } : {})}
+        className="flex min-h-9 items-center rounded-lg px-2 text-sm text-slate-700 hover:bg-slate-100 hover:text-slate-950"
+      >
+        {link.label}
+        {link.external ? <span className="sr-only"> (opens in a new tab)</span> : null}
+      </a>
+    </li>
+  );
+}
+
 /** Support and resources: one disclosure at the foot of the menu. Pages and machine files only. */
 function SupportMenu() {
   return (
@@ -155,12 +178,16 @@ function SupportMenu() {
         Support and resources
       </summary>
       <ul className="space-y-0.5 border-t border-border p-2">
-        {SUPPORT_LINKS.map((l) => (
-          <li key={l.href}>
-            <a href={l.href} className="flex min-h-9 items-center rounded-lg px-2 text-sm text-slate-700 hover:bg-slate-100 hover:text-slate-950">
-              {l.label}
-            </a>
-          </li>
+        {SUPPORT_LINKS.filter((l) => !l.forDevelopers).map((l) => (
+          <SupportLinkItem key={l.href} link={l} />
+        ))}
+      </ul>
+      <p className="border-t border-border px-4 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+        For developers
+      </p>
+      <ul className="space-y-0.5 px-2 pb-2" aria-label="For developers">
+        {SUPPORT_LINKS.filter((l) => l.forDevelopers).map((l) => (
+          <SupportLinkItem key={l.href} link={l} />
         ))}
       </ul>
     </details>

@@ -133,10 +133,13 @@ describe("dashboard measured arena", () => {
     expect(html).toContain("not the canonical GSPC board");
     expect(html).toContain("model-a:7b");
     expect(html).toContain("model-b:7b");
-    expect(html).toContain(
-      "No published endpoint currently accepts one prompt plus two model identifiers",
-    );
-    expect(html).toContain("UNCHECKABLE");
+    // Tools audit, 6 Oct 2026: no empty "Live prompt battle" box while the contract publishes no
+    // endpoint; the boundary stays recorded in DASHBOARD_ARENA_CONTRACT (UNCHECKABLE, null).
+    expect(DASHBOARD_ARENA_CONTRACT.livePromptBattle.endpoint).toBeNull();
+    expect(html).not.toContain("Live prompt battle");
+    // The raw feeds are one click away, behind a labelled expander, not loose in the footer.
+    expect(html).toContain("Raw data (for developers)");
+    expect(html).toMatch(/<details[^>]*data-testid="arena-raw-links"[\s\S]*Round feed[\s\S]*Recompute content id[\s\S]*<\/details>/);
     expect(html).not.toContain("oowm-private:7b");
   });
 });

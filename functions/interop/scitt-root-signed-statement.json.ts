@@ -16,6 +16,7 @@
  * /api/press.json returns rather than keeping its own copy.
  */
 import root from "../../public/root.json";
+import { headFromGet } from "../api/_head";
 
 // Web-standard digest: Pages Functions have no node:crypto.
 async function sha256Hex(bytes: Uint8Array): Promise<string> {
@@ -76,3 +77,7 @@ export const onRequestGet: PagesFunction = async () => {
     headers: { "content-type": "application/json; charset=utf-8", "cache-control": "public, max-age=300", "access-control-allow-origin": "*" },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

@@ -9,7 +9,10 @@
  * If a count is mentioned, the API wins: GET https://councilof.ai/api/gspc.
  */
 
-export type FaqItem = { q: string; a: string; url?: string };
+import { BUYING_FAQ_ANSWER } from "@/lib/buying";
+
+/** `id` overrides the positional q<n> anchor where other surfaces link the entry by name. */
+export type FaqItem = { q: string; a: string; url?: string; id?: string };
 
 export interface FaqSection {
   id: string;
@@ -28,7 +31,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   },
   {
     q: 'What is the GSPC board, and what does its count line ("… axis · … measured") mean?',
-    a: "GSPC (Governance · Safety · Provenance · Continuity) is the living board of measurement slots. The count — read from GET /api/gspc, not typed here — states how many slots carry a measured result versus how many are honestly empty or described.",
+    a: "GSPC (Governance · Safety · Provenance · Continuity) is the living board of measurement slots. Its count, read from GET /api/gspc and not typed here, states how many slots carry a measured result. Third-party figures are at /api/reported, corrections at /api/corrections, signing keys at /.well-known/did.json; no account needed.",
     url: "/dashboard/?tab=board",
   },
   {
@@ -57,9 +60,12 @@ export const FAQ_ITEMS: FaqItem[] = [
     url: "/gspc-verify",
   },
   {
-    q: "Where is the live board, and can I fetch it myself?",
-    a: "The board is machine-readable at GET councilof.ai/api/gspc. Third-party figures at /api/reported, corrections at /api/corrections, signing keys at /.well-known/did.json, regulation feed at /api/regulation. Everything is served without an account.",
-    url: "/api/gspc",
+    // Replaced "Where is the live board, and can I fetch it myself?" on 6 Oct 2026 (12-question
+    // ceiling); its endpoint list moved into the GSPC answer above. No count is typed: the names
+    // are read live from the fleet file at the top of /board.
+    q: "Which models does the board compare, and are GPT, Claude or Gemini on it?",
+    a: "The board compares only the models named at the top of /board, read live from its fleet file. A model not named there, including hosted API models such as GPT, Claude and Gemini, is UNMEASURED on the board: not scored, not ranked. Other model counts on this site count other things; /board says which is which.",
+    url: "/board",
   },
   {
     q: "What happens when Council of AI gets something wrong?",
@@ -72,9 +78,12 @@ export const FAQ_ITEMS: FaqItem[] = [
     url: "/independence/",
   },
   {
-    q: "Is verification free, and is a grade ever for sale?",
-    a: "Verification is free forever and needs no account. A grade is never sold. There are no public prices on this site — enterprise starts at the lobby door. Where measurement is paid it is pay-as-you-go x402, quoted at the 402 itself. The x402 doors that are live are the ones listed in the machine-readable manifest at /.well-known/x402.json; /services reads that manifest on every load, so this answer names no count.",
-    url: "/dashboard/?task=enterprise-start&tab=measured",
+    // Replaced "Is verification free, and is a grade ever for sale?" on 6 Oct 2026: this answer
+    // keeps both of its facts and adds what a buyer could not find — how to get an invoice.
+    q: "How do I buy, and can you invoice an EU company?",
+    a: BUYING_FAQ_ANSWER,
+    url: "/api/x402",
+    id: "buying",
   },
   {
     q: "Is a measurement card legal advice, and what happens when the law changes?",
@@ -90,7 +99,7 @@ export const FAQ_SECTIONS: FaqSection[] = [
   {
     id: "what-we-are",
     title: "What we are",
-    items: [FAQ_ITEMS[0], FAQ_ITEMS[1], FAQ_ITEMS[2]],
+    items: [FAQ_ITEMS[0], FAQ_ITEMS[1], FAQ_ITEMS[7], FAQ_ITEMS[2]],
   },
   {
     id: "what-we-are-not",
@@ -100,7 +109,7 @@ export const FAQ_SECTIONS: FaqSection[] = [
   {
     id: "how-to-verify",
     title: "How to verify",
-    items: [FAQ_ITEMS[6], FAQ_ITEMS[7], FAQ_ITEMS[8]],
+    items: [FAQ_ITEMS[6], FAQ_ITEMS[8]],
   },
   {
     id: "money",

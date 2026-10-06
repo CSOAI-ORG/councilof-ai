@@ -6,6 +6,7 @@
 // counters. No record content, no identifiers, no IP retention.
 // GRAMMAR: the tally is a SELF-REPORTED, OPT-IN signal — it is not a MEASURED
 // number and every surface that shows it must say so.
+import { headFromGet } from "./_head";
 
 interface Env { SOV_ARENA_STATE: KVNamespace }
 
@@ -43,3 +44,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     headers: { "content-type": "application/json", "access-control-allow-origin": "*" },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

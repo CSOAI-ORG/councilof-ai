@@ -12,6 +12,7 @@
 import { build } from "../api/press.json";
 import { caughtOf, remedyOf } from "../_lib/corrections-fields";
 import type { RevenueEnv } from "../api/revenue";
+import { headFromGet } from "../api/_head";
 
 const esc = (s: unknown) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 // Each command block scrolls sideways on a phone, so it is a keyboard stop with a name: a
@@ -144,3 +145,7 @@ ${notAnnounced}
 
   return new Response(html, { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=300" } });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

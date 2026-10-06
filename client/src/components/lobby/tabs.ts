@@ -107,7 +107,7 @@ export type LobbyTab = {
 };
 
 export type LobbyRouteGroup =
-  "product" | "audience" | "record" | "receipts" | "analyst";
+  "product" | "audience" | "record" | "receipts" | "analyst" | "preview";
 
 export type LobbyRoute = {
   label: string;
@@ -345,8 +345,10 @@ export const LOBBY_TABS: LobbyTab[] = [
   {
     id: "art50",
     label: "Article 50 marking evidence",
+    // Plain English that also carries the words a reader searches with ("watermark", "C2PA",
+    // "content credentials", "label AI images"): the command palette indexes this blurb.
     blurb:
-      "Measure whether one generative output carries a detectable machine-readable mark — C2PA recomputed by bytes, watermarks named UNCHECKABLE — and commission the signed pack.",
+      "Check whether one AI-generated file (images, video, audio or PDF) carries a machine-readable mark, as EU AI Act Article 50(2) asks: C2PA content credentials recomputed from the bytes, the IPTC AI-generated label read, and every watermark we cannot check named UNCHECKABLE. Free preview.",
     path: "",
     kind: "native",
     cues: /\b(article ?50|art\.? ?50|marking evidence|content credentials|c2pa|watermark(?:s|ing)?)\b/i,
@@ -393,15 +395,22 @@ export const LOBBY_TABS: LobbyTab[] = [
     // NOT a bare "readiness": three destinations answer to that word (this
     // assessment, the guided Readiness assessment, and the CRA Readiness Kit), so
     // the bare cue silently swallowed the other two. Each now owns a phrase.
-    cues: /\b(assess|assessment|get measured|measure me|measure my)\b|\b(ras|readiness assessment|booking|human.?rail)\b/i,
+    // "enterprise" lands here natively: the /enterprise page 308s (public/_redirects), and its old
+    // LOBBY_ROUTES entry opened a second copy of the app on the receipts pane (tools audit, 6 Oct 2026).
+    cues: /\b(assess|assessment|get measured|measure me|measure my)\b|\b(ras|readiness assessment|booking|human.?rail|enterprises?)\b/i,
   },
   {
+    // Kept as an id only, so old ?tab=watchdog links and chat commands still resolve:
+    // normalizeLobbyTabId() sends it to Corrections. It framed /watchdog-hub, which
+    // functions/watchdog-hub.ts 308s to /os, so the pane showed the start page nested
+    // inside itself (tools audit, 6 Oct 2026). It has no pane and no URL of its own.
     id: "watchdog",
-    label: "Watchdog evidence",
+    label: "Watchdog (now Corrections)",
     blurb:
-      "Read the current public Watchdog material. Durable report filing and signed acknowledgements are not live yet.",
-    path: "/watchdog-hub",
-    cues: /\b(watchdog|incident|report(?:ed)?|complaint|heat.?map)\b/i,
+      "Old Watchdog links open the Corrections ledger: every correction we have published and the claims we keep re-checking.",
+    path: "",
+    kind: "native",
+    cues: /\b(watchdog|incident reports?)\b/i,
   },
   {
     id: "claimguard",
@@ -509,25 +518,18 @@ export const LOBBY_ROUTES: LobbyRoute[] = [
     cues: /\b(underwrit\w*|insurance|insurers?)\b/i,
   },
   {
-    label: "Enterprise",
-    blurb:
-      "The enterprise door. The assessment itself lives on the Get-measured pane.",
-    path: "/enterprise",
-    group: "audience",
-    cues: /\b(enterprises?)\b/i,
-  },
-  {
     label: "Government",
-    blurb: "The public-sector door, as published.",
+    blurb:
+      "A layout prototype of a public-sector evidence workspace. Not live: it monitors nothing and grants no access.",
     path: "/government",
-    group: "audience",
+    group: "preview",
     cues: /\b(public sector|government)\b/i,
   },
   {
     label: "Layer 0",
     blurb: "The signed trust layer the agent rail stands on.",
     path: "/layer0",
-    group: "record",
+    group: "analyst",
     cues: /\b(layer[- ]?0|layer zero)\b/i,
   },
   {
@@ -866,6 +868,12 @@ const DASHBOARD_NAV_DEFINITION: {
   // product sections in the order of ONE-PRODUCT-PLAN §2.1: Board, Verify, Connect, Learn, SovX,
   // Corrections. Route is a Connect pane (it is a tool an agent calls); Claim maintenance is a
   // Corrections pane (re-checking is how a claim avoids needing a correction).
+  //
+  // Tools audit, 6 Oct 2026 ("half the tools don't work or make sense"): the `connect` section is
+  // labelled "For developers", so a stranger can tell which panes are not for them. Everything A–Z
+  // moved to Get results (strangers search there); Evidence index moved from Check a result to For
+  // developers (it is an API coverage index, not a check). Its id stays `connect`, so every
+  // /dashboard?tab=connect link keeps working.
   {
     id: "ask",
     label: "Get results",
@@ -874,6 +882,10 @@ const DASHBOARD_NAV_DEFINITION: {
     tabs: [
       { id: "home", label: "Get results" },
       { id: "measured", label: "Request a fresh run" },
+      // Article 50(2): the one tool that answers "is my AI output marked?". It was filed out of
+      // sight under Check a result, so the /article-50 buyer could not reach it (6 Oct 2026).
+      { id: "art50", label: "Check an AI output (Art. 50)" },
+      { id: "explore", label: "Everything A–Z" },
     ],
   },
   {
@@ -890,7 +902,6 @@ const DASHBOARD_NAV_DEFINITION: {
     tabs: [
       { id: "verify", label: "Check a result" },
       { id: "evidence", label: "Evidence pack" },
-      { id: "evidence-index", label: "Evidence index" },
     ],
   },
   {
@@ -906,16 +917,16 @@ const DASHBOARD_NAV_DEFINITION: {
   },
   {
     id: "connect",
-    label: "Connect",
+    label: "For developers",
     description:
-      "Add the GSPC tools to your AI client or agent: MCP, A2A, AG-UI, A2UI, and the decide-only router.",
+      "Add the tools to Claude, Cursor or your agent; protocol doors and the tool console.",
     tabs: [
       { id: "connect", label: "Install" },
       { id: "route", label: "Route" },
       { id: "tools", label: "MCP tools" },
       { id: "fabric", label: "Connections" },
       { id: "swift", label: "Paid doors (x402)" },
-      { id: "explore", label: "Everything A–Z" },
+      { id: "evidence-index", label: "Evidence index" },
     ],
   },
   {
@@ -939,11 +950,10 @@ const DASHBOARD_NAV_DEFINITION: {
     id: "corrections",
     label: "Corrections",
     description:
-      "Every correction we have published, the claims we keep re-checking, and public incident reports.",
+      "Every correction we have published and the claims we keep re-checking.",
     tabs: [
       { id: "corrections", label: "Corrections ledger" },
       { id: "claims", label: "Claim maintenance" },
-      { id: "watchdog", label: "Watchdog" },
     ],
   },
 ];
@@ -972,12 +982,13 @@ export function isDashboardTab(tab: LobbyTab): boolean {
 
 /** Panes outside every section still belong to one, for the section title and catalogue. */
 const DASHBOARD_HIDDEN_GROUPS: Record<string, DashboardNavGroupId> = {
-  archive: "verify",
-  state: "verify",
+  // Estate state and the provable archive are diagnostic, developer-facing panes (tools audit,
+  // 6 Oct 2026): they sit under For developers, not under a stranger's "Check a result".
+  archive: "connect",
+  state: "connect",
   cards: "verify",
   attestations: "verify",
   claimguard: "verify",
-  art50: "verify",
   embed: "connect",
   harness: "connect",
   terminal: "board",
@@ -1024,6 +1035,11 @@ export function normalizeLobbyTabId(id: string): string {
     "gspc-route": "route",
     ledger: "corrections",
     wrappers: "sovx",
+    // Tools audit, 6 Oct 2026. `results` rendered the same board pane as `board` under a second
+    // name; `watchdog` framed /watchdog-hub, which 308s to /os and nested the app inside itself.
+    // Old links keep resolving, each to the pane that owns that content.
+    results: "board",
+    watchdog: "corrections",
   };
   return Object.prototype.hasOwnProperty.call(aliases, value)
     ? aliases[value]

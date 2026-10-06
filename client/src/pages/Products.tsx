@@ -1,13 +1,8 @@
 import { Link } from "wouter";
 import { toolSummary } from "@/lib/mcpTools";
 import EmptySlots from "@/components/EmptySlots";
-import GovernanceTerminal from "@/components/GovernanceTerminal";
-import HealthInventory from "@/components/HealthInventory";
 import HealthTerms from "@/components/HealthTerms";
-import PermissionlessRevenue from "@/components/PermissionlessRevenue";
-import PlaybookAudit from "@/components/PlaybookAudit";
 import ProductFill from "@/components/ProductFill";
-import SovExternalAudit from "@/components/SovExternalAudit";
 import { useBoardCount } from "@/lib/boardCount";
 
 /**
@@ -108,7 +103,7 @@ const MODULES = [
     name: "Legacy on-ramp",
     href: "/cobolbridge",
     tag: "In build",
-    what: "COBOL lineage into signed evidence — in build. Apex 522. Pathway UNMEASURED until a signed card exists.",
+    what: "COBOL lineage into signed evidence — in development. UNMEASURED until a signed card exists.",
   },
   {
     name: "Council Academy",
@@ -207,13 +202,11 @@ export default function Products() {
         </ul>
       </section>
 
+      {/* Operator notes (health inventory, governance terminal, revenue funnels, external audit,
+          playbook audit) moved to the noindex /status/internal page on 6 Oct 2026: they were
+          agent instructions and strategy notes, not product copy a buyer can act on. */}
       <ProductFill tone="dark" />
-      <HealthInventory tone="dark" />
       <HealthTerms tone="dark" />
-      <GovernanceTerminal tone="dark" />
-      <PermissionlessRevenue tone="dark" />
-      <SovExternalAudit tone="dark" />
-      <PlaybookAudit tone="dark" />
       <EmptySlots tone="dark" />
 
       <section aria-labelledby="engine-h" className="mt-12">

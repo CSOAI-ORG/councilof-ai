@@ -62,7 +62,8 @@ export function fullDoorInstall(origin: string): Record<string, string> {
   return {
     default: `claude mcp add --transport http council-of-ai ${origin}/mcp/free`,
     this_door: `claude mcp add --transport http council-of-ai-metered ${origin}/mcp (the ${FREE_TOOL_COUNT} free tools plus ${PAID_TOOL_COUNT} x402 tools)`,
-    stdio_lite: `npx -y csoai-gspc-mcp (stdio-lite ${STDIO_LITE_LINE}: fewer tools, versioned separately; ask it for its tools/list)`,
+    // Every published npm release is marked deprecated on npm (T14, 6 Oct 2026); say so first.
+    stdio_lite: `deprecated on npm; npx -y csoai-gspc-mcp (stdio-lite ${STDIO_LITE_LINE}: fewer tools, versioned separately; ask it for its tools/list)`,
     no_install_at_all: "curl -s https://councilof.ai/api/gspc",
     python: 'pip install "csoai-gspc[verify]" && csoai-gspc check',
   };

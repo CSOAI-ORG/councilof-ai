@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
@@ -24,7 +24,6 @@ describe("reader rails preserve endpoint truth", () => {
   });
 
   it.each([
-    ["AgentsReaderRail.tsx", "/api/agents"],
     ["McpReaderRail.tsx", "/api/mcp"],
     ["A2aReaderRail.tsx", "/api/a2a"],
     ["OtelReaderRail.tsx", "/api/otel"],
@@ -43,11 +42,24 @@ describe("reader rails preserve endpoint truth", () => {
     expect(trace).toContain("card_sha256");
   });
 
-  it("fails the unpublished agent and A2A readers closed", () => {
-    expect(source("AgentsReaderRail.tsx")).toContain("UNREACHABLE —");
-    // A 404 is the door saying it does not exist: NOT PUBLISHED / UNMEASURED, not an outage.
-    expect(source("AgentsReaderRail.tsx")).toContain("response.status === 404");
-    expect(source("AgentsReaderRail.tsx")).toContain("NOT PUBLISHED —");
+  it("asks no unpublished door: the agents rail states UNMEASURED until a census endpoint exists", () => {
+    // Tools audit, 6 Oct 2026: GET /api/agents answered 404 on every load and logged a console
+    // error. No endpoint is published, so the rail makes no request. When one ships, this fails
+    // until the rail reads it again.
+    const agentsEndpointExists =
+      existsSync(resolve(__dirname, "../../../../functions/api/agents.ts")) ||
+      existsSync(resolve(__dirname, "../../../../functions/api/agents/index.ts"));
+    expect(existsSync(resolve(__dirname, "../../../../functions/api/gspc.ts")), "path check").toBe(true);
+    const agents = source("AgentsReaderRail.tsx");
+    if (agentsEndpointExists) {
+      expect(agents).toContain('fetch("/api/agents"');
+    } else {
+      expect(agents).not.toContain("fetch(");
+      expect(agents).toContain("UNMEASURED: no agents census is published yet");
+    }
+  });
+
+  it("fails the unpublished A2A reader closed", () => {
     expect(source("A2aReaderRail.tsx")).toContain("NO CENSUS PUBLISHED —");
     expect(source("A2aReaderRail.tsx")).toContain("UNCHECKABLE —");
     expect(source("A2aReaderRail.tsx")).toContain(

@@ -187,7 +187,7 @@ export const METROLOGY_NOT_CLAIMED = [
   // one. The live count is on /gspc-scoreboard, derived from GET /api/gspc.
   "We do not claim the games apparatus is built or measuring anything today. It is a published doctrine. What runs is the signed board (its live slot and measured counts are on the board page), the signed cards, the verification endpoint and the swarm axis.",
   "We do not claim an automatic generator that turns existing benchmarks into fresh environments. That is a research direction, and any design that puts a language model into the scoring loop is ruled out by our first design law: no model judges another model.",
-  "We do not claim slot 15 as a board axis. It is measured in-lane only, is never board-quotable, and is never counted in any total — the board's own slot and measured counts are published on the board page and come from the signed payload, not from copy.",
+  "We do not claim slot 15 as a board axis. It is measured separately from the board, is never board-quotable, and is never counted in any total — the board's own slot and measured counts are published on the board page and come from the signed payload, not from copy.",
   "We do not claim the ARC-AGI-3 results as our own measurement. They are third-party figures from the ARC Prize project, reported here and attributed, and they are not on our board.",
   "We do not publish other projects' saturation, contamination or timing figures as if we had measured them. The arguments on this page stand without borrowed numbers.",
   "We do not claim to host or measure any environment whose licence forbids it. Only permissively licensed environments are named as candidates for a frozen instrument.",

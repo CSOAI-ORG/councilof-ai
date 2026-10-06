@@ -14,7 +14,7 @@ import { FAQ_ITEMS, FAQ_SECTIONS } from "@/data/home-faq";
  * Each answer: 40–60 words, one living URL, no second question inside.
  */
 
-const LAST_REVIEWED = "2026-08-28";
+const LAST_REVIEWED = "2026-10-06";
 
 export default function FaqPage() {
   useEffect(() => {
@@ -153,7 +153,7 @@ export default function FaqPage() {
                   return (
                     <details
                       key={item.q}
-                      id={`q${globalIdx + 1}`}
+                      id={item.id ?? `q${globalIdx + 1}`}
                       open
                       className="group"
                     >
