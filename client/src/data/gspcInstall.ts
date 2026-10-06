@@ -8,7 +8,7 @@
 // The asset (already live; client compatibility is recorded separately, not assumed):
 //   remote HTTP MCP : https://councilof.ai/mcp/free   (streamable-http, no auth, the free readers)
 //                     https://councilof.ai/mcp        (the same free readers + the x402-metered tools)
-//   stdio (npm)     : npx -y csoai-gspc-mcp
+//   stdio (npm)     : npx -y csoai-gspc-mcp   (published releases are deprecated on npm and carry fewer tools)
 //   universal REST  : GET https://councilof.ai/api/gspc  (+ ?axis=), GET /api/cards
 //   OpenAPI 3.1     : https://councilof.ai/openapi/gspc.json
 //   function tools  : https://councilof.ai/openapi/gspc-function-tools.json
@@ -62,7 +62,7 @@ export const MCP_NATIVE: PlatformCard[] = [
     docUrl: "https://code.claude.com/docs/en/mcp",
     blocks: [
       { label: "Remote (recommended)", lang: "bash", code: `claude mcp add --transport http csoai-gspc ${MCP_URL}` },
-      { label: "stdio fallback", lang: "bash", code: "claude mcp add --transport stdio csoai-gspc -- npx -y csoai-gspc-mcp" },
+      { label: "stdio fallback (npm, deprecated; fewer tools)", lang: "bash", code: "claude mcp add --transport stdio csoai-gspc -- npx -y csoai-gspc-mcp" },
       { label: "Project .mcp.json", lang: "json", code: `{
   "mcpServers": {
     "csoai-gspc": { "type": "http", "url": "${MCP_URL}" }
@@ -110,7 +110,7 @@ export const MCP_NATIVE: PlatformCard[] = [
     "csoai-gspc": { "url": "${MCP_URL}" }
   }
 }` },
-      { label: "stdio", lang: "json", code: `{
+      { label: "stdio (npm, deprecated; fewer tools)", lang: "json", code: `{
   "mcpServers": {
     "csoai-gspc": { "type": "stdio", "command": "npx", "args": ["-y", "csoai-gspc-mcp"] }
   }
@@ -132,7 +132,7 @@ export const MCP_NATIVE: PlatformCard[] = [
     "csoai-gspc": { "serverUrl": "${MCP_URL}" }
   }
 }` },
-      { label: "stdio", lang: "json", code: `{
+      { label: "stdio (npm, deprecated; fewer tools)", lang: "json", code: `{
   "mcpServers": {
     "csoai-gspc": { "command": "npx", "args": ["-y", "csoai-gspc-mcp"] }
   }
@@ -159,7 +159,7 @@ export const MCP_NATIVE: PlatformCard[] = [
     }
   }
 }` },
-      { label: "stdio", lang: "json", code: `{
+      { label: "stdio (npm, deprecated; fewer tools)", lang: "json", code: `{
   "mcpServers": {
     "csoai-gspc": { "command": "npx", "args": ["-y", "csoai-gspc-mcp"], "disabled": false, "autoApprove": [] }
   }
@@ -181,7 +181,7 @@ export const MCP_NATIVE: PlatformCard[] = [
     "csoai-gspc": { "url": "${MCP_URL}" }
   }
 }` },
-      { label: "stdio", lang: "json", code: `{
+      { label: "stdio (npm, deprecated; fewer tools)", lang: "json", code: `{
   "context_servers": {
     "csoai-gspc": { "command": "npx", "args": ["-y", "csoai-gspc-mcp"], "env": {} }
   }
@@ -202,7 +202,7 @@ export const MCP_NATIVE: PlatformCard[] = [
   - name: csoai-gspc
     type: streamable-http
     url: ${MCP_URL}` },
-      { label: "stdio", lang: "yaml", code: `mcpServers:
+      { label: "stdio (npm, deprecated; fewer tools)", lang: "yaml", code: `mcpServers:
   - name: csoai-gspc
     type: stdio
     command: npx
@@ -226,7 +226,7 @@ export const MCP_NATIVE: PlatformCard[] = [
     "councilof": { "httpUrl": "${MCP_URL}" }
   }
 }` },
-      { label: "stdio", lang: "json", code: `{
+      { label: "stdio (npm, deprecated; fewer tools)", lang: "json", code: `{
   "mcpServers": {
     "councilof": { "command": "npx", "args": ["-y", "csoai-gspc-mcp"] }
   }

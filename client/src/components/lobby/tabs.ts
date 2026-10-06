@@ -345,8 +345,10 @@ export const LOBBY_TABS: LobbyTab[] = [
   {
     id: "art50",
     label: "Article 50 marking evidence",
+    // Plain English that also carries the words a reader searches with ("watermark", "C2PA",
+    // "content credentials", "label AI images"): the command palette indexes this blurb.
     blurb:
-      "Measure whether one generative output carries a detectable machine-readable mark — C2PA recomputed by bytes, watermarks named UNCHECKABLE — and commission the signed pack.",
+      "Check whether one AI-generated file (images, video, audio or PDF) carries a machine-readable mark, as EU AI Act Article 50(2) asks: C2PA content credentials recomputed from the bytes, the IPTC AI-generated label read, and every watermark we cannot check named UNCHECKABLE. Free preview.",
     path: "",
     kind: "native",
     cues: /\b(article ?50|art\.? ?50|marking evidence|content credentials|c2pa|watermark(?:s|ing)?)\b/i,
@@ -880,6 +882,9 @@ const DASHBOARD_NAV_DEFINITION: {
     tabs: [
       { id: "home", label: "Get results" },
       { id: "measured", label: "Request a fresh run" },
+      // Article 50(2): the one tool that answers "is my AI output marked?". It was filed out of
+      // sight under Check a result, so the /article-50 buyer could not reach it (6 Oct 2026).
+      { id: "art50", label: "Check an AI output (Art. 50)" },
       { id: "explore", label: "Everything A–Z" },
     ],
   },
@@ -984,7 +989,6 @@ const DASHBOARD_HIDDEN_GROUPS: Record<string, DashboardNavGroupId> = {
   cards: "verify",
   attestations: "verify",
   claimguard: "verify",
-  art50: "verify",
   embed: "connect",
   harness: "connect",
   terminal: "board",

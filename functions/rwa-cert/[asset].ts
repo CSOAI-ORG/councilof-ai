@@ -1,5 +1,6 @@
 /** GET /rwa-cert/<slug> — the report the staged EAS attestation points at. See ./_report.ts. */
 import { report } from "./_report";
+import { headFromGet } from "../api/_head";
 
 const esc = (s: unknown) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
@@ -64,3 +65,7 @@ ${esc(r.publisher)}. ${esc(r.license)}. Verification is free and needs no accoun
 </main></body></html>`;
   return new Response(html, { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=300" } });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

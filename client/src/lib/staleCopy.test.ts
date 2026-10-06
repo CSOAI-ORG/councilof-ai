@@ -80,9 +80,16 @@ describe("stale copy honesty", () => {
     expect(card.capabilities.free_tools).toBe(lock.free.length);
     expect(card.capabilities.tools).toEqual(fleet);
     expect(card.description).toContain(`server ${registry.version}`);
-    expect(card.endpoints.mcp.stdio).toBe(
-      `npx -y ${registry.packages[0].identifier}@${registry.packages[0].version}`,
-    );
+    // While every published npm release is deprecated on npm (scripts/harness-x/render.mjs
+    // NPM_STDIO_ADVERTISED), the card withholds the stdio pin and names the free door instead.
+    if (card.endpoints.mcp.stdio === null) {
+      expect(card.endpoints.mcp.stdio_note).toMatch(/deprecated on npm.*use the free door https:\/\/councilof\.ai\/mcp\/free/);
+      expect(card.endpoints.mcp.free).toBe("https://councilof.ai/mcp/free");
+    } else {
+      expect(card.endpoints.mcp.stdio).toBe(
+        `npx -y ${registry.packages[0].identifier}@${registry.packages[0].version}`,
+      );
+    }
     // The agent card no longer lists /mcp as an A2A interface (it does not speak A2A;
     // spec v1.0.1 §8.3.1). The npm-tools copy it used to carry lives in mcp.json, asserted
     // above. What the card's JSONRPC interface must now say is that it is the real A2A door.
@@ -146,13 +153,20 @@ const eunomiaNav = readFileSync(resolve(__dirname, "../components/HeaderNav.tsx"
 const eunomiaPage = readFileSync(resolve(__dirname, "../pages/EunomiaIndices.tsx"), "utf8");
 const eunomiaData = readFileSync(resolve(__dirname, "../data/eunomia.ts"), "utf8");
 
-describe("leftover: eunomia indices stay UNMEASURED on the living board", () => {
+describe("leftover: eunomia indices stay UNMEASURED as indices", () => {
   it("does not stamp the three empty index axes MEASURED", () => {
     expect(eunomiaNav).not.toMatch(/now measured \(frozen gold sets/);
-    expect(eunomiaNav).toMatch(/UNMEASURED on GET \/api\/gspc/);
+    // Persona sweep 6 Oct 2026 (T05): the index ids are not rows on GET /api/gspc, and the board
+    // lists humanoid-labour-index (component facts) as MEASURED, so the menu no longer says
+    // "UNMEASURED on GET /api/gspc"; it says none is a signed result.
+    expect(eunomiaNav).not.toMatch(/UNMEASURED on GET \/api\/gspc/);
+    expect(eunomiaNav).toMatch(/Three proposed index measures\. Reference test sets only; none is a signed result\./);
     expect(eunomiaPage).not.toMatch(/EUNOMIA indices — measured/);
     expect(eunomiaPage).not.toMatch(/now MEASURED/);
-    expect(eunomiaPage).toMatch(/UNMEASURED on GET \/api\/gspc/);
+    expect(eunomiaPage).toMatch(/UNMEASURED as indices/);
+    expect(eunomiaPage).not.toMatch(/Each index slot on the living board is UNMEASURED/);
+    expect(eunomiaPage).not.toMatch(/[Dd]o not restore/);
+    expect(eunomiaPage).toMatch(/stays withdrawn/);
     expect(eunomiaData).not.toMatch(/Aspirational index axes — now MEASURED/);
     expect(eunomiaData).toMatch(/UNMEASURED on the living board \(C-2026-0826-05\)/);
   });

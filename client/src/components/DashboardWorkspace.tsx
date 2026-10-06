@@ -175,7 +175,12 @@ export default function DashboardWorkspace({
     [setLocation],
   );
 
-  const hasConversation = Boolean(chat.active?.turns.length);
+  // A question asked on the Get results home is answered by the home TalkPanel. It is still
+  // recorded in session history (so History/Chats can reach it), but it must not swap the home
+  // canvas for LobbyThread: that unmounted the TalkPanel and aborted its /api/agui/run ~8 ms
+  // after sending (6 Oct 2026, the first question never got an answer).
+  const [talkOwnsHome, setTalkOwnsHome] = useState(false);
+  const hasConversation = Boolean(chat.active?.turns.length) && !talkOwnsHome;
   const talkRef = useRef<TalkPanelHandle>(null);
   // On the home surface a typed question goes to the AG-UI TalkPanel (tool cards + citations).
   // An explicit pane command ("show the board") still navigates through the lobby chat.
@@ -184,6 +189,7 @@ export default function DashboardWorkspace({
     (text: string) => {
       if (activePane || hasConversation || !talkRef.current) return false;
       if (isExplicitNavigationCommand(text) && (matchTab(text) || matchRoute(text))) return false;
+      setTalkOwnsHome(true);
       chat.recordUserMessage(text);
       talkRef.current.ask(text);
       return true;

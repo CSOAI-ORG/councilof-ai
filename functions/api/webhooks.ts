@@ -7,6 +7,7 @@
  * Honest about state: in-memory means webhook subscriptions vanish on cold start.
  * Wire LEADS KV (or a future WEBHOOKS KV) to make them durable.
  */
+import { headFromGet } from "./_head";
 interface Env { WEBHOOKS?: KVNamespace }
 
 interface Webhook {
@@ -61,3 +62,7 @@ export const onRequestDelete: PagesFunction<Env> = async (ctx) => {
   if (ctx.env.WEBHOOKS) await ctx.env.WEBHOOKS.delete(id);
   return Response.json({ deleted: id });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

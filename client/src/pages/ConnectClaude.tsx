@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { Link } from "wouter";
 import FREE_TOOLS from "../../../functions/mcp/gspc-tools.json";
+import { CONTACT_MAILBOX } from "@/lib/buying";
 
 // /connect/claude — the connector documentation page named in the Claude connector directory
 // listing (Anthropic Software Directory Policy 3.C: purpose, setup and troubleshooting, public).
@@ -18,7 +19,7 @@ export const CLAUDE_CODE_CMD = `claude mcp add --transport http council-of-ai ${
 // from a bare url (https://cursor.com/docs/context/mcp). The home hero and /tools link here as
 // "Add to Claude or Cursor", so the Cursor line has to be on this page.
 export const CURSOR_JSON = `{"mcpServers":{"council-of-ai":{"url":"${FREE_DOOR}"}}}`;
-const SUPPORT = "contact@csoai.org";
+const SUPPORT = CONTACT_MAILBOX;
 
 type ToolDef = { name: string; title?: string };
 export const TOOLS = (FREE_TOOLS as { tools: ToolDef[] }).tools;

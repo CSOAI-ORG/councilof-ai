@@ -23,6 +23,7 @@
  * SCOPE. Only doors on the requesting origin are asked. A manifest row on another host is
  * returned as `skipped` (the page then asks that door itself), so this is not an open relay.
  */
+import { headFromGet } from "./_head";
 
 export const QUOTES_SCHEMA = "csoai.x402-quotes/0.1";
 export const MANIFEST_PATH = "/.well-known/x402.json";
@@ -170,3 +171,7 @@ export const onRequestGet: PagesFunction = async ({ request, waitUntil }) => {
   }
   return response;
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

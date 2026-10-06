@@ -21,6 +21,7 @@
  * Cached ten minutes at the edge when the read was complete; no-store otherwise.
  */
 import { OUR_HOSTS, routeKey } from "./x402-listing";
+import { headFromGet } from "./_head";
 
 export const FOUR02_INDEX_URL = "https://402index.io/api/v1/services";
 export const FOUR02_QUERY = "councilof.ai";
@@ -213,3 +214,7 @@ export const onRequestGet: PagesFunction = async () => {
     },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

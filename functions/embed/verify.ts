@@ -21,6 +21,7 @@
  * to third parties to paste into their own sites. Locally the same request simply never
  * returned. `env.ASSETS.fetch` reads the asset directly and cannot re-enter the router.
  */
+import { headFromGet } from "../api/_head";
 interface Env {
   ASSETS: { fetch: (req: Request | string) => Promise<Response> };
 }
@@ -56,3 +57,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

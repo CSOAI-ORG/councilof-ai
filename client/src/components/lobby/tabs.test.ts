@@ -259,6 +259,7 @@ describe("Council OS tabs", () => {
     expect(ids).toEqual([
       "home",
       "measured",
+      "art50",
       "explore",
       "mine",
       "verify",
@@ -329,7 +330,7 @@ describe("tools audit, 6 Oct 2026: dead and developer-only panes", () => {
     for (const id of ["state", "archive", "harness", "products", "workbench", "embed", "library"])
       expect(dashboardNavGroupOf(id)?.id, id).toBe("connect");
     const ask = DASHBOARD_NAV_GROUPS.find((g) => g.id === "ask")!;
-    expect(ask.tabs.map((t) => t.id)).toEqual(["home", "measured", "explore"]);
+    expect(ask.tabs.map((t) => t.id)).toEqual(["home", "measured", "art50", "explore"]);
   });
 
   it("files the Government prototype as a preview, not an audience door", () => {

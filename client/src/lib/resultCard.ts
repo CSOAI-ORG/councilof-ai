@@ -47,7 +47,7 @@ export function stateMeaning(label: string | undefined): string {
     return "Nothing is published about this yet. That is not a finding either way; you can request a fresh run.";
   if (l.startsWith("UNCHECKABLE")) return "It could not be checked, usually because the record was not found. Nothing passed or failed.";
   if (l.startsWith("NEEDS_INPUT")) return "The tool needs one more detail before it can answer.";
-  if (l.startsWith("PAYMENT_REQUIRED")) return "This is a paid run. Nothing has been paid; you would pay from your own wallet or by invoice.";
+  if (l.startsWith("PAYMENT_REQUIRED")) return "This is a paid run. Nothing has been paid; you would pay from your own wallet, or arrange an invoice by email.";
   if (l.startsWith("INVALID")) return "The check failed: the bytes or the signature do not match.";
   if (l.startsWith("UNREACHABLE") || l.startsWith("ERROR") || l.startsWith("FAILED")) return "The source could not be reached just now. No result is shown in its place.";
   if (l.startsWith("VALID")) return "The check passed: the record matches its published signature or source.";

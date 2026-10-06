@@ -169,6 +169,15 @@
 /interop/:report/mirrors/*
   X-Robots-Tag: noindex, nofollow
 
+# Operator notes (health inventory, governance terminal, revenue funnels, external and playbook
+# audits, agent travel, two-speed) moved off /products and /tools to this page on 6 Oct 2026. The
+# SPA shell's <meta name="robots"> says "index, follow" before the page's own noindex; the header
+# removes the ambiguity. The sitemap does not list it.
+/status/internal
+  X-Robots-Tag: noindex, nofollow
+/status/internal/
+  X-Robots-Tag: noindex, nofollow
+
 # Install surfaces (lane ecosystem-install-20260930): the verifier ES module is imported cross-origin by
 # browsers and evaluators, and helm clients read the chart repository from anywhere.
 /lib/*.mjs

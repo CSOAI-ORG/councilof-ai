@@ -28,6 +28,7 @@
 // private key had not been located in any estate key store swept, so the proof cannot
 // currently be completed — rotating this value requires a deploy, and would invalidate any
 // holder of the current private key, so it is not changed here.
+import { headFromGet } from "../api/_head";
 
 const PUBKEY = "SPsNsIkKmIZD0HJejPzQSwp4mHdNyN2ODpvYpMEWKGI=";
 
@@ -41,3 +42,7 @@ export const onRequestGet: PagesFunction = async () => {
     },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

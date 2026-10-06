@@ -409,7 +409,39 @@ import CookieConsent from "./components/CookieConsent";
 function ScrollToTop() {
   const [location] = useLocation();
   useEffect(() => {
+    // A link with a fragment (/how-we-work/#machine-surface) lands on that section. Until 6 Oct 2026
+    // this effect always scrolled to the top, so it undid the browser's own jump to the anchor and
+    // every deep link opened at the page head. Lazy pages mount after this effect runs, so the
+    // target is looked for on each frame for about a second before giving up.
+    const hash = window.location.hash;
+    if (!hash || hash.length < 2) {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      return;
+    }
+    let id = hash.slice(1);
+    try {
+      id = decodeURIComponent(id);
+    } catch {
+      /* keep the raw fragment */
+    }
+    const found = document.getElementById(id);
+    if (found) {
+      found.scrollIntoView({ block: 'start' });
+      return;
+    }
     window.scrollTo({ top: 0, behavior: 'instant' });
+    let frames = 0;
+    let raf = 0;
+    const seek = () => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ block: 'start' });
+        return;
+      }
+      if (++frames < 60) raf = requestAnimationFrame(seek);
+    };
+    raf = requestAnimationFrame(seek);
+    return () => cancelAnimationFrame(raf);
   }, [location]);
   return null;
 }

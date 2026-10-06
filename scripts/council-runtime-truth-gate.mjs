@@ -1324,6 +1324,12 @@ assert.ok(
 assert.match(benchmarkSource, /fetch\("\/api\/gspc"/);
 assert.match(benchmarkSource, /a\.accuracy\.toFixed\(3\)/);
 assert.match(benchmarkSource, /a\.leader\|\|a\.public_leader_state/);
+// Persona sweep 6 Oct 2026 (T05): leader states render as plain English, never as a raw enum,
+// and the operator note "Slot 15 / human-vs-ai stay in-lane only." stays off the page.
+assert.match(benchmarkSource, /NO_SIGNED_CARD:\["No public leader/);
+assert.match(benchmarkSource, /EXCLUDED_OWN_MODEL:\["No public leader/);
+assert.match(benchmarkSource, /\/\^\[A-Z\]\[A-Z_\]\{5,\}\$\/\.test\(value\)/);
+assert.doesNotMatch(benchmarkSource, /in-lane only/i);
 assert.doesNotMatch(benchmarkSource, /\bcouncil specialist\b/i);
 assert.doesNotMatch(
   benchmarkRows[1],

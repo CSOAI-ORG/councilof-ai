@@ -191,6 +191,12 @@ export default function IndustrySolutions() {
               Enterprise lobby
             </Link>
           </div>
+          <p className="mt-5 text-sm text-slate-600">
+            Publishing AI-generated images, video, audio or PDFs?{" "}
+            <a href="/dashboard/?tab=art50" className="font-semibold text-emerald-700 underline underline-offset-2 hover:text-emerald-800">
+              Check one of your own outputs for a mark (free preview) →
+            </a>
+          </p>
         </div>
       </section>
     </div>

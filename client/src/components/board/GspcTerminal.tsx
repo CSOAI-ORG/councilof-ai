@@ -19,7 +19,9 @@ export { axisRunEvidence } from "./runEvidence";
 const GSPC_URL = "/api/gspc";
 const ELO_URL = "/arena/elo_reference.json";
 const CARD_INDEX_URL = "/signed/card_index.json";
-const NPX_LINE = "npx -y csoai-gspc-mcp";
+// The free MCP door, not the npm package: every published npm release is marked deprecated on npm and
+// carries fewer tools (T14, 6 Oct 2026).
+const MCP_LINE = "MCP (free, no key): https://councilof.ai/mcp/free";
 
 /** Board axis id → per-axis Elo key. Only these board axes carry a per-model ranking. */
 const AXIS_TO_ELO: Record<string, string> = {
@@ -422,7 +424,7 @@ export default function GspcTerminal({ className }: { className?: string }) {
         <div className="flex flex-col items-end gap-1.5">
           {/* Dynamic, live badge — the count is the endpoint's, never typed */}
           <img src="/api/badge" alt="GSPC live badge" height={20} className="h-5" />
-          <code className="rounded bg-black/40 px-2 py-1 font-mono text-[10px] text-emerald-300">{NPX_LINE}</code>
+          <code className="rounded bg-black/40 px-2 py-1 font-mono text-[10px] text-emerald-300">{MCP_LINE}</code>
         </div>
       </div>
 

@@ -33,6 +33,8 @@ import {
 import { useModelsCount } from "./useModelsCount";
 import GetResults from "./GetResults";
 import CorpusCount from "./CorpusCount";
+import { correctionHeadline, correctionHref } from "@/lib/correctionHeadline";
+import ModelCountKey from "@/components/ModelCountKey";
 
 const nf = new Intl.NumberFormat("en-GB");
 
@@ -187,6 +189,7 @@ function WorkspaceBoardCard() {
               </>
             )}
           </p>
+          <ModelCountKey className="mt-3" />
           <details className="group mt-3 rounded-xl border border-border px-3" data-testid="ws-board-records">
             <summary className="flex min-h-11 cursor-pointer list-none items-center text-sm font-medium text-muted-foreground hover:text-foreground">
               How many signed records stand behind this
@@ -440,15 +443,17 @@ function WhatsNew() {
         <a href="/corrections/" className="font-semibold text-emerald-200 underline underline-offset-2">Open it</a>
       </span>
     );
+  // Date plus the first sentence only; every correction stays published in full on /corrections/.
+  const headline = correctionHeadline(latest.what_was_wrong) || latest.id;
   return (
     <span className="block" data-testid="ws-whats-new">
-      <span className="line-clamp-2" title={latest.what_was_wrong}>
+      <span className="line-clamp-2">
         {latest.date ? `${latest.date}: ` : ""}
-        {latest.what_was_wrong ?? latest.id}
+        {headline}
       </span>{" "}
-      <Link href="/dashboard?tab=corrections" className="font-semibold text-emerald-200 underline underline-offset-2">
-        All changes
-      </Link>
+      <a href={correctionHref(latest.id)} className="font-semibold text-emerald-200 underline underline-offset-2">
+        Read the full correction
+      </a>
     </span>
   );
 }

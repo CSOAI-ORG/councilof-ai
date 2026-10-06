@@ -698,7 +698,7 @@ describe("GET /mcp — the one-command install is at the point of discovery", ()
     expect(g.install.default).toBe(`claude mcp add --transport http council-of-ai ${ORIGIN}/mcp/free`);
     expect(Object.values(g.install).filter((v) => /\/mcp\/free\b/.test(String(v)))).toHaveLength(1);
     // The npm stdio package is labelled as the lighter, separately versioned implementation.
-    expect(g.install.stdio_lite).toMatch(/^npx -y csoai-gspc-mcp \(stdio-lite \d+\.\d+\.x: fewer tools/);
+    expect(g.install.stdio_lite).toMatch(/^deprecated on npm; npx -y csoai-gspc-mcp \(stdio-lite \d+\.\d+\.x: fewer tools/);
     expect(g.install.claude_code).toBeUndefined();
     expect(g.install.any_client).toBeUndefined();
     expect(g.install.no_install_at_all).toMatch(/api\/gspc/);
@@ -736,5 +736,45 @@ describe("/mcp tools/call verify_card — pinned_key names the anchor that match
     const sc = await verify({ ...card, did: undefined, pubkey: "11".repeat(32) });
     expect(sc.state).toBe("INVALID");
     expect(sc.pinned_key).toBeNull();
+  });
+});
+
+describe("a dated amount is said in the 402 human line, built from the challenge (T11, 6 Oct 2026)", () => {
+  const challenge = (endsAt?: string) => ({
+    x402Version: 2,
+    accepts: [
+      {
+        scheme: "exact",
+        network: "eip155:8453",
+        amount: "1",
+        payTo: "0xpay",
+        ...(endsAt ? { csoai_pricing: { ends_at: endsAt, normal_amount_atomic: "2", offered_amount_atomic: "1" } } : {}),
+      },
+    ],
+    extensions: { bazaar: { info: {}, schema: {} } },
+  });
+  const summaryFor = async (endsAt?: string) => {
+    const pr = challenge(endsAt);
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => new Response(JSON.stringify(pr), { status: 402, headers: { "PAYMENT-REQUIRED": btoa(JSON.stringify(pr)) } })),
+    );
+    const r = await call(rpc("tools/call", { name: "commission_card", arguments: { subject: "qwen3", axis: "gov" } }));
+    return String(r.result.content[1].text);
+  };
+
+  it("names the end and the standard-amount FIELD when accepts[0] carries ends_at — never an amount", async () => {
+    const line = await summaryFor("2026-10-11T00:00:00Z");
+    expect(line).toMatch(/^PAYMENT_REQUIRED/);
+    expect(line).toContain("Launch amount until 2026-10-11T00:00:00Z");
+    expect(line).toContain("accepts[0].csoai_pricing.normal_amount_atomic");
+    expect(line).toContain("read accepts[] on every call");
+    expect(line).not.toMatch(/\$\s?\d/);
+  });
+
+  it("says nothing about a launch amount once the challenge carries no end date", async () => {
+    const line = await summaryFor(undefined);
+    expect(line).toMatch(/^PAYMENT_REQUIRED/);
+    expect(line).not.toMatch(/launch amount/i);
   });
 });

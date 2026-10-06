@@ -18,6 +18,7 @@
  *                                   subjects holding at least one claim in that state
  */
 import register from "../../../public/spec/claim-maintenance/register.json";
+import { headFromGet } from "../_head";
 
 const STATES = ["CLAIM_CAPTURED", "CLAIM_MEASURED", "UNMEASURED", "UNCHECKABLE"] as const;
 type State = (typeof STATES)[number];
@@ -86,3 +87,7 @@ export const onRequestOptions: PagesFunction = async () =>
     status: 204,
     headers: { ...HEADERS, "access-control-allow-methods": "GET, OPTIONS", "access-control-allow-headers": "*" },
   });
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

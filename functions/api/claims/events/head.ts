@@ -8,6 +8,7 @@
  *   node scripts/claims/claim-events-rederive.mjs --url https://councilof.ai
  */
 import { type Ctx, loadVerified, unavailable } from "../../../_lib/claimEvents";
+import { headFromGet } from "../../_head";
 
 export const onRequestGet = async (ctx: Ctx): Promise<Response> => {
   let loaded;
@@ -49,3 +50,7 @@ export const onRequestGet = async (ctx: Ctx): Promise<Response> => {
     },
   );
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

@@ -158,6 +158,26 @@ test("sidebar exposes eight plainly named sections as direct /dashboard?tab= lin
   expect(legacy, "no /os?lobby= hops inside the shell").toBe(0);
 });
 
+test("a question typed on Get results keeps its answer panel mounted (no self-abort)", async ({ page }) => {
+  // Regression, 6 Oct 2026: askTalk recorded the question into the lobby chat first, which
+  // swapped the home canvas for the thread view, unmounted the TalkPanel and aborted its
+  // /api/agui/run request ~8 ms after sending it. The first question never got an answer.
+  await openTab(page, "home");
+  const aborted: string[] = [];
+  page.on("requestfailed", (r) => {
+    if (r.url().includes("/api/agui/run") && /ABORTED/i.test(r.failure()?.errorText || "")) aborted.push(r.url());
+  });
+  const box = page.getByRole("textbox", { name: "Ask the Council, or name a pane to open" });
+  await expect(box).toBeVisible();
+  await box.fill("What does the board say?");
+  await box.press("Enter");
+  // The run is shown inside the home TalkPanel, and the home canvas stays mounted.
+  await expect(page.getByTestId("talk-run").first()).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByTestId("gspc-workspace-home")).toBeVisible();
+  await page.waitForTimeout(500);
+  expect(aborted, "the TalkPanel run must not be aborted by its own page").toEqual([]);
+});
+
 test("the canonical dashboard accepts its optional trailing slash", async ({
   page,
 }) => {
@@ -318,6 +338,20 @@ test("a cold /os door converges on the canonical Dashboard", async ({
   await expectColdDoor(page, "/os?lobby=swift", "swift");
 });
 
+test("a fresh deep link lands on its section, not the page head", async ({ page }) => {
+  // App.tsx ScrollToTop used to scroll to the top on every route mount, undoing the browser's own jump
+  // to the fragment, so /how-we-work/#machine-surface (the home hero's link) opened at the page head.
+  await page.goto("/how-we-work/#machine-surface");
+  const section = page.locator("#machine-surface");
+  await expect(section).toBeVisible({ timeout: 30_000 });
+  await expect
+    .poll(async () => Math.abs((await section.boundingBox())?.y ?? 99_999), {
+      message: "#machine-surface within 200px of the viewport top",
+      timeout: 15_000,
+    })
+    .toBeLessThan(200);
+});
+
 test("a cold /gspc-scoreboard door converges on the canonical Dashboard", async ({
   page,
 }) => {
@@ -417,10 +451,10 @@ test("chat remains beside a tool and its session history stays reachable", async
 
   await composer.fill(question);
   await page.getByRole("button", { name: "Ask", exact: true }).click();
+  // On Get results the home TalkPanel answers the question (it stays mounted; see the
+  // no-self-abort test); the question is still recorded in session history, checked below.
   await expect(
-    page
-      .getByRole("log", { name: "Council of AI conversation" })
-      .getByText(question, { exact: true }),
+    page.getByTestId("talk-run").filter({ hasText: question }).first(),
   ).toBeVisible();
   await expect(page).toHaveURL(/tab=home/);
   await expect(
@@ -449,9 +483,10 @@ test("chat remains beside a tool and its session history stays reachable", async
   await expect(rail).toBeVisible();
   await rail.getByRole("tab", { name: /^Chats/ }).click();
   await expect(rail.getByTestId("dashboard-chat-rail")).toBeVisible();
-  await expect(rail.getByText(question, { exact: true })).toBeVisible();
+  // The Get results question was answered by the home TalkPanel and recorded in session
+  // history as its own conversation; it stays reachable one click away under History.
   await rail.getByRole("button", { name: /^History/ }).click();
-  await expect(rail.getByText(question, { exact: true })).toBeVisible();
+  await expect(rail.getByText(question, { exact: true }).first()).toBeVisible();
 });
 
 test("GSPC quests are a styled in-workspace game and never promote play into measurement", async ({
