@@ -142,7 +142,7 @@ jobs:
       # node:test files that vitest cannot collect (vitest.config.ts NODE_TEST_FILES). They used to be
       # reported by vitest as failed suites and so never actually ran. The list is read from the config
       # so the exclusion there and this step cannot name different files.
-      - name: Unit tests — node:test files under scripts/
+      - name: Unit tests — node:test files vitest cannot collect
         if: steps.scope.outputs.gated == 'true'
         run: |
           files=$(sed -n '/^export const NODE_TEST_FILES = \[/,/^\];/p' vitest.config.ts | grep -o "'[^']*'" | tr -d "'")
@@ -338,7 +338,10 @@ jobs:
       - name: Python tests (spray parity + skip rules, publisher kinds index)
         if: steps.scope.outputs.gated == 'true'
         run: |
-          python3 -m pip install -q pytest cryptography
+          # pyarrow + huggingface_hub: scripts/spray/test_gspc_spray_skip.py exercises the HF viewer
+          # publish path offline and imports both. This step first ran on 2026-10-06 (step 7 had been
+          # red on every PR) and failed on ModuleNotFoundError: pyarrow / huggingface_hub.
+          python3 -m pip install -q pytest cryptography pyarrow huggingface_hub
           python3 -m pytest -q scripts/spray/test_gspc_parity.py scripts/spray/test_gspc_spray_skip.py
           python3 -m pytest -q scripts/test_public_root.py -k kinds_index
           python3 -m pytest -q harness/gspc-top100/test_priority_pick.py harness/gspc-top100/test_inflight_cells.py

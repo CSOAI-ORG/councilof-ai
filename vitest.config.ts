@@ -19,7 +19,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 // Council OS deep-link contract: ?lobby= / ?task= / ?ask=) had been in that state:
 // red on master, running nothing. Specific prefixes are listed before the bare
 // `@` so the longest match wins however the resolver iterates.
-// node:test files under scripts/ (import { test } from "node:test"). Vitest cannot collect them and
+// node:test files (import { test } from "node:test") and bare assert scripts. Vitest cannot collect them and
 // reported each as a FAILED suite ("No test suite found"), which kept the pr-gates unit step red on
 // every PR. They are named one by one, not globbed, and pr-gates.yml runs exactly this list under
 // `node --test` in its own step, so excluding them here removes no coverage.
@@ -33,6 +33,9 @@ export const NODE_TEST_FILES = [
   'scripts/surface/facts-scope.test.mjs',
   'scripts/surface/prerender-io.test.mjs',
   'scripts/surface/render-board-reference.test.mjs',
+  // A bare assert script (no test framework): node --test runs it as one test; vitest reported
+  // "No test suite found" in the orphan-coverage step (`npx vitest run council-os ...`).
+  'council-os/gspc-pontius-boundary.test.mjs',
 ];
 
 export default defineConfig({
