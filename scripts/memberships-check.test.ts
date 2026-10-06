@@ -89,12 +89,19 @@ describe("memberships-check: it can fail", () => {
     // Every real public row answers 200 with our name in this fake; only the bogus one does not.
     // Rows recorded as unavailable (status_note) answer 410 here, as they do live.
     const recordedGone = new Set(manifest.rows.filter((r: { status_note?: string }) => r.status_note).map((r: { evidence: string }) => r.evidence));
+    // The fake answers with every name a real row expects (each row's own check.expect), so a row
+    // whose evidence moved namespace (mcp-registry: io.github.CSOAI-ORG -> ai.councilof/gspc,
+    // 2026-09-28) cannot turn this "only the bogus row fails" fixture red on its own.
+    const ourNames = [
+      "Council of AI CSOAI Templeman councilof.ai io.github.CSOAI-ORG csoai-gspc-mcp CSOAI LTD",
+      ...manifest.rows.flatMap((r: { check?: { expect?: string[] } }) => r.check?.expect ?? []),
+    ].join(" ");
     const fetcher = async (url: string) =>
       recordedGone.has(url)
         ? { status: 410, body: "User was blocked" }
         : url === "https://example.test/roster"
         ? { status: 200, body: "Members: Somebody Else" }
-        : { status: 200, body: JSON.stringify({ pagination: { total: 1 }, items: ["Council of AI CSOAI Templeman councilof.ai io.github.CSOAI-ORG csoai-gspc-mcp CSOAI LTD"] }) };
+        : { status: 200, body: JSON.stringify({ pagination: { total: 1 }, items: [ourNames] }) };
     const out = await runChecks(planted, fetcher);
     expect(out.failures.map((f) => f.id)).toEqual(["bogus-roster"]);
     expect(out.exitCode).toBe(1);

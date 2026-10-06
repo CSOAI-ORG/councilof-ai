@@ -117,6 +117,22 @@ export function isServed(pathname, files, routes, redirects = new Map()) {
   for (const r of routes) {
     if (r.endsWith("/*") && (p === r.slice(0, -2) || p.startsWith(r.slice(0, -1)))) return true;
   }
+  // A splat redirect serves every path under its prefix: `/cards/*  https://huggingface.co/.../cards/:splat  302`
+  // is how /cards/<sha16>.json is served since the card wrappers left the Pages bundle (the 20,000-file
+  // cap). Live 2026-10-06: /cards/019274d32066c2b1.json -> 302 -> the HF dataset file -> 200. Before
+  // this, readRedirects kept the literal key "/cards/*" and nothing ever looked it up, so 56 served
+  // card URLs were carried in the baseline as dead. A same-origin target is judged like any other
+  // path; an off-origin target leaves this gate's scope (same-origin paths), and the rule that sends
+  // it there is the thing we publish.
+  for (const [from, to] of redirects) {
+    if (!from.endsWith("/*")) continue;
+    const prefix = from.slice(0, -1);
+    if (!p.startsWith(prefix)) continue;
+    const target = to.replace(":splat", p.slice(prefix.length));
+    if (/^https?:\/\//i.test(target) && !/^https?:\/\/(?:www\.)?councilof\.ai(?:\/|$)/i.test(target)) return true;
+    const t = target.replace(/^https?:\/\/(?:www\.)?councilof\.ai/i, "").replace(/\/+$/, "") || "/";
+    if (t !== p) return isServed(t, files, routes);
+  }
   return false;
 }
 
@@ -126,8 +142,14 @@ export function readRedirects(root) {
     for (const line of readFileSync(join(root, "public/_redirects"), "utf8").split("\n")) {
       const t = line.trim();
       if (!t || t.startsWith("#")) continue;
-      const [from, to] = t.split(/\s+/);
-      if (from && to && !m.has(from)) m.set(from.replace(/\/+$/, "") || "/", to);
+      const [from, to, status] = t.split(/\s+/);
+      // A splat key keeps its "/*" (see isServed); every other key loses its trailing slash. Only a
+      // real redirect (3xx) splat is kept: a 200 splat is a rewrite, and `/*  /index.html  200` (the
+      // SPA fallback) or `/signed/*  /signed/:splat  200` would otherwise make every path look served.
+      const splat = !!from && from.endsWith("/*");
+      if (splat && !/^30[12378]$/.test(status || "")) continue;
+      const key = splat ? from : (from || "").replace(/\/+$/, "") || "/";
+      if (from && to && !m.has(key)) m.set(key, to);
     }
   } catch { /* no redirects file: every path is judged on its own */ }
   return m;
@@ -153,6 +175,12 @@ if (SELFTEST && process.argv[1] && resolve(process.argv[1]) === fileURLToPath(im
     linksIn({ a: "see https://councilof.ai/api/gspc." })[0].url === "https://councilof.ai/api/gspc");
   must("follows a canonical redirect", isServed("/gspc-verify", new Set(["/gspc-verify/index.html"]), routes, new Map([["/gspc-verify", "/gspc-verify/"]])));
   must("honours a catch-all function route", isServed("/mcp", files, new Set(["/mcp", "/mcp/*"])));
+  const splat = new Map([["/cards/*", "https://huggingface.co/datasets/x/resolve/main/cards/:splat"], ["/old/*", "/a.svg"], ["/gone/*", "/nowhere/:splat"]]);
+  must("serves a path under an off-origin splat redirect", isServed("/cards/0123456789abcdef.json", files, routes, splat));
+  must("judges a same-origin splat target", isServed("/old/anything", files, routes, splat));
+  must("still catches a splat whose same-origin target is dead", !isServed("/gone/x.json", files, routes, splat));
+  must("a splat does not serve paths outside its prefix", !isServed("/cardsx/1.json", files, routes, splat));
+  must("readRedirects keeps no 200 splat (a rewrite, e.g. the SPA fallback)", ![...readRedirects(REPO).keys()].some((k) => k === "/*"));
   if (bad) { console.error(`✖ link-gate selftest FAILED (${bad})`); process.exit(1); }
   console.log(`✓ link-gate selftest: ${CASES}/${CASES} — catches the dead link it was written for, passes what we serve`);
   process.exit(0);

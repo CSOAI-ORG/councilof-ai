@@ -57,9 +57,15 @@ describe("public entry surfaces use the supply-led evidence hierarchy", () => {
     // of the supply-led hierarchy, so it is pinned where each band now renders: the front door
     // still leads with what is measured before it asks for anything, and the directory of every
     // door comes last on the page that carries it.
+    // The front door was rebuilt on 2026-09-30 (owner): HomeCredibility and the inline id="board"
+    // band are gone, and the board renders as LiveBoardGlance directly under the hero. The order is
+    // still the supply-led one: the measurements, then how the evidence is made and checked, and only
+    // then the ways in (ask, connect, check). Each band must be present, so a missing band cannot pass
+    // as indexOf -1 sorting first.
     const home = source("HomeVerify.tsx");
-    expect(home.indexOf("<HomeHero")).toBeLessThan(home.indexOf("<HomeCredibility"));
-    expect(home.indexOf("<HomeCredibility")).toBeLessThan(home.indexOf('id="board"'));
+    const bands = ["<HomeHero", "<LiveBoardGlance", "<HomeSteps", "<HomeWaysIn"].map((b) => home.indexOf(b));
+    expect(bands.every((i) => i >= 0)).toBe(true);
+    expect(bands).toEqual([...bands].sort((a, b) => a - b));
 
     const deep = source("HowWeWork.tsx");
     expect(deep.indexOf("<HomeStrengths")).toBeLessThan(deep.indexOf("<HomeNavigator"));

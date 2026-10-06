@@ -45,7 +45,12 @@ describe("/pricing-free — the explainer names no price and sells no grade", ()
   });
 
   it("labels unpublished integrations as source or notes rather than installs", () => {
-    expect(products).not.toMatch(/href="\/extension\/"/);
+    // /extension/ became a real page on 2026-09-30 (public/extension/index.html: the rc zip, its
+    // SHA256SUMS, and "does not claim Chrome Web Store approval"), so the products tile may link it.
+    // What stays forbidden is calling it an install: the tile and the page both disclaim a store listing.
+    const extensionPage = readFileSync(join(dir, "../../../public/extension/index.html"), "utf8");
+    expect(extensionPage).toMatch(/does not claim Chrome Web Store approval/);
+    expect(products).not.toMatch(/chromewebstore\.google\.com|Install from the Chrome Web Store/i);
     expect(products).toMatch(/Browser extension source/);
     expect(products).toMatch(/No browser-store install claimed/);
     expect(products).toMatch(/Grok integration source/);

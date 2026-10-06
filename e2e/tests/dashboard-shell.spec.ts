@@ -257,10 +257,13 @@ test("the board pane quotes GET /api/gspc and embeds the living Space — nothin
   await openTab(page, "board");
   const pane = page.locator('[data-testid="dashboard-pane-board"]');
   await expect(pane).toHaveCount(1);
+  // The pane links the payload twice on purpose: the header link and the summary tiles' as_of
+  // source line (HomeGspcBoard.test.tsx pins both). #2794 turned the second into plain <code> to
+  // satisfy an exact count of 1 here, which removed the source link beside the tiles' numbers.
   await expect(
-    pane.locator('a[href="/api/gspc"]'),
+    pane.locator('a[href="/api/gspc"]').first(),
     "the payload link",
-  ).toHaveCount(1);
+  ).toBeAttached();
   // Master's HomeGspcBoard (post #1158) is a self-contained 22-axis strip rendered from
   // /api/gspc; the iframe to csoai-gspc-board.static.hf.space was removed 2026-09-02 because
   // the Space had sunset to 302s. The assertion is now: there is NO iframe dependency,
