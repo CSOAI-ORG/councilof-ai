@@ -15,11 +15,13 @@ import {
   isPrimaryPath,
   libraryItems,
   prettifyTitle,
+  WITHDRAWN_PATHS,
 } from "@/data/library-ia";
 import {
   LOBBY_ROUTES,
   LOBBY_TABS,
   dashboardNavGroupOf,
+  normalizeLobbyTabId,
   type LobbyRouteGroup,
 } from "@/components/lobby/tabs";
 import DashboardEmbeddedView from "@/components/DashboardEmbeddedView";
@@ -48,8 +50,42 @@ const ROUTE_GROUP_LABELS: Record<LobbyRouteGroup, string> = {
   audience: "Audiences",
   record: "Evidence records",
   receipts: "Method and receipts",
-  analyst: "Analyst tools",
+  analyst: "For developers and analysts",
+  preview: "Previews: not live yet",
 };
+
+/**
+ * Developer-facing panes (tools audit, 6 Oct 2026). A stranger reading the A–Z list should see
+ * at a glance which entries are diagnostics, protocol plumbing or signed-in tools, so these are
+ * filed under one "For developers" group rather than beside the result workflows.
+ */
+const DEVELOPER_GROUP = "For developers";
+const DEVELOPER_TAB_IDS = new Set([
+  "state",
+  "archive",
+  "harness",
+  "products",
+  "workbench",
+  "terminal",
+  "console",
+  "leaderboard",
+  "embed",
+]);
+
+/**
+ * Library pages held back until their content is corrected (tools audit, 6 Oct 2026): the
+ * "Regions & Jurisdictions" sector and the /compliance/* pages carry an invented fine figure and
+ * deadlines that have already passed. Their URLs keep working for external links; the in-app
+ * listing returns once the pages are corrected.
+ */
+function heldForCorrection(path: string, title: string): boolean {
+  return (
+    classify(path, title).id === "regions" ||
+    path === "/compliance" ||
+    path.startsWith("/compliance/") ||
+    path === "/global-ai-safety-initiative"
+  );
+}
 
 const INTERNAL_ROUTE =
   /^\/(?:404|admin|login|signup|register|settings|api-keys|bulk-import|widget|old-home|home-v\d|landing|demo|os-demo)(?:\/|$)/;
@@ -69,6 +105,12 @@ const CANONICAL_ALIAS_PATHS = new Set([
   "/csoai-law",
   "/meok-law",
   "/os",
+  // Duplicates of a page the catalogue already lists (tools audit, 6 Oct 2026): /help-center is
+  // the FAQ again, /usp the About page, /tracks the Academy, /connect-gspc the Install pane.
+  "/help-center",
+  "/usp",
+  "/tracks",
+  "/connect-gspc",
   "/readiness-assessment",
   "/sov-os",
   "/standards",
@@ -89,13 +131,17 @@ export function buildDashboardCatalogue(): DashboardCatalogueEntry[] {
 
   for (const tab of LOBBY_TABS) {
     if (["home", "software", "explore"].includes(tab.id)) continue;
+    // An id the shell resolves to another pane (results -> board, watchdog -> corrections) is a
+    // compatibility alias, not a second tool: listing it would show one pane under two names.
+    if (normalizeLobbyTabId(tab.id) !== tab.id) continue;
     add({
       id: `tab:${tab.id}`,
       label: tab.label,
       description: tab.blurb,
-      group:
-        dashboardNavGroupOf(tab.id)?.label ||
-        (tab.id === "play" ? "Practice" : "Workspace tools"),
+      group: DEVELOPER_TAB_IDS.has(tab.id)
+        ? DEVELOPER_GROUP
+        : dashboardNavGroupOf(tab.id)?.label ||
+          (tab.id === "play" ? "Practice" : "Workspace tools"),
       kind: "workflow",
       href: `/dashboard?tab=${tab.id}`,
       path: tab.path || undefined,
@@ -124,6 +170,7 @@ export function buildDashboardCatalogue(): DashboardCatalogueEntry[] {
     if (
       route.comp === "Redirect" ||
       CANONICAL_ALIAS_PATHS.has(route.path) ||
+      WITHDRAWN_PATHS.has(route.path) ||
       !isPrimaryPath(route.path) ||
       INTERNAL_ROUTE.test(route.path)
     )
@@ -151,6 +198,7 @@ export function buildDashboardCatalogue(): DashboardCatalogueEntry[] {
   for (const route of libraryItems()) {
     if (
       CANONICAL_ALIAS_PATHS.has(route.path) ||
+      heldForCorrection(route.path, route.title) ||
       INTERNAL_ROUTE.test(route.path) ||
       !normalizeDashboardView(route.path)
     )

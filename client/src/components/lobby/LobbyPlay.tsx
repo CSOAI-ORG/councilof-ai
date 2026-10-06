@@ -1,5 +1,5 @@
 import { FOCUS, MEASURE, SP, TYPE } from "./glass";
-import { PLAY_CARDS, PLAY_NOTICE } from "./play";
+import { PLAY_CARDS, PLAY_COMING_LATER_LINE, PLAY_NOTICE } from "./play";
 import { Link } from "wouter";
 import { dashboardViewHref } from "@/lib/dashboardView";
 
@@ -11,11 +11,12 @@ import { dashboardViewHref } from "@/lib/dashboardView";
  * they have left the measured surfaces: nothing in this gallery is a
  * measurement, and nothing in it is signed.
  *
- * THE HONEST STATE IS THE FEATURE. A card either opens a REAL route in the
- * centre pane, or it carries "Not yet playable — in build" and has no link at
- * all. It is never dressed as playable: the arena wrapper exists only as a local
- * package and nothing is deployed. See the per-card `reality` line in play.ts —
- * it is rendered on every card, on both statuses, with no way to dismiss it.
+ * THE HONEST STATE IS THE FEATURE. Only a card that opens a REAL route is drawn
+ * as a card. The in-build ones (no destination yet) are one plain line at the
+ * foot of the gallery, "Coming later: …", with no link: three full-size cards a
+ * reader could not open read as broken tools (tools audit, 6 Oct 2026). See the
+ * per-card `reality` line in play.ts — it is rendered on every drawn card, with
+ * no way to dismiss it.
  */
 
 export default function LobbyPlay() {
@@ -64,7 +65,7 @@ export default function LobbyPlay() {
       </section>
 
       <ul className="mt-6 grid gap-5 sm:grid-cols-2">
-        {PLAY_CARDS.map((c) => {
+        {PLAY_CARDS.filter((c) => c.status === "route" && !!c.route).map((c) => {
           const live = c.status === "route" && !!c.route;
           return (
             <li
@@ -133,7 +134,14 @@ export default function LobbyPlay() {
         })}
       </ul>
 
-      <p className={`mt-6 ${MEASURE} ${TYPE.fine}`}>
+      <p
+        className={`mt-6 ${MEASURE} ${TYPE.muted}`}
+        data-testid="play-coming-later"
+      >
+        {PLAY_COMING_LATER_LINE}
+      </p>
+
+      <p className={`mt-3 ${MEASURE} ${TYPE.fine}`}>
         Evidence and verification surfaces are the emerald ones in the left
         rail. For a number you can re-check, use an independently admitted card;
         the current admission matrix has no quotable cells, and this gallery

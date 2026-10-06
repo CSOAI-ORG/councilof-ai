@@ -359,7 +359,39 @@ export interface LibraryItem extends RouteEntry { sector: string }
 // removed prosperity-fund / maternal-covenant / sov3 / codename pages from the narrative — the
 // archive keeps the record for SEO, but the public Library must not resurface retracted claims.
 const NOT_LIBRARIED =
-  /^\/(404|login|signup|register|admin|dashboard|api-keys|bulk-import|settings|me\b|my-|ab-testing|widget|egg|hatch|enter|onboard|welcome|start|analytics|outreach|marketing|reports?|brief|public|all|region-settings|regional-analytics|government-dashboard|government-portal|old-home|landing|legacy|home-v[0-9]|stripe|prosperity|maternal-covenant|covenant|sov3|sov-town|sovereign|gods-eye|horus|dragonfly|four-wings|opengridworks|certification|certificate|ceasai|get-certified|pricing|plans|payg|billing|roi)/;
+  /^\/(404|login|signup|register|admin|dashboard|api-keys|bulk-import|settings|me\b|my-|ab-testing|widget|egg|hatch|enter|onboard|welcome|start|analytics|outreach|marketing|reports?|brief|public|all|region-settings|regional-analytics|government-dashboard|government-portal|old-home|landing|legacy|home-v[0-9]|stripe|prosperity|maternal-covenant|covenant|sov3|sov-town|sovereign|gods-eye|horus|dragonfly|four-wings|opengridworks|certification|certificate|ceasai|get-certified|pricing|plans|payg|billing|roi|battlecards)/;
+
+/**
+ * Withdrawn from every in-app list: the Library, the A–Z catalogue and the archive (tools audit,
+ * 6 Oct 2026). Each entry opened another page, the app itself, or a duplicate. Most are Pages
+ * Functions that 308 to /os?lobby=home (functions/jobs.ts, functions/watchdog-hub.ts, …), so a
+ * catalogue card framed the start page nested inside the workspace. library-ia.test.ts derives
+ * that redirect set from functions/ and fails if any of it is listed again. The URLs themselves
+ * keep working for external links; only the in-app listing is withdrawn.
+ */
+export const WITHDRAWN_PATHS: ReadonlySet<string> = new Set<string>([
+  "/jobs",
+  "/features/watchdog-jobs",
+  "/early-access",
+  "/watchdog-hub",
+  "/watchdog",
+  "/recommendations",
+  "/about-credential",
+  "/remediation-partners",
+  // Found by the functions/ scan in library-ia.test.ts: each 308s to /os?lobby=home.
+  "/how-it-works/compliance",
+  "/how-it-works/dashboard",
+  "/watchdog-heatmap",
+  "/watchdog-leaderboard",
+  "/watchdog-map",
+  "/watchdog-signup",
+  "/watchdog/help-protect-humanity",
+  "/watchdog/incident",
+  // The same page components as /watchdog-map and /watchdog-hub, reached through an alias path
+  // the edge does not redirect: listing them would undo the withdrawal through a side door.
+  "/heatmap",
+  "/watchdog/report",
+]);
 
 /** Every non-primary, surfaced route, classified — the archive contents. */
 export function libraryItems(): LibraryItem[] {
@@ -367,6 +399,7 @@ export function libraryItems(): LibraryItem[] {
     // A redirect is not a page — never list it in the Library (legacy /sov3-* rows
     // were rendering their internal-codename titles as archive links).
     .filter((r) => r.comp !== "Redirect")
+    .filter((r) => !WITHDRAWN_PATHS.has(r.path))
     .filter((r) => !isPrimaryPath(r.path) && !NOT_LIBRARIED.test(r.path) && !hasForbiddenBrand(r.path) && !/\.[a-z]+$/.test(r.path))
     .filter((r) => !/certification exam|view pricing|paid plans|get certified/i.test(`${r.title} ${r.path}`))
     .map((r) => ({ ...r, title: prettifyTitle(r.title), sector: classify(r.path, r.title).id }));

@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
-import { paneForTool } from "./DashboardWorkspace";
+import { CANDIDATE_INTAKE_LIVE, paneForTool } from "./DashboardWorkspace";
 import { LOBBY_TABS } from "./lobby/tabs";
 
 describe("canonical dashboard workspace", () => {
@@ -41,5 +41,17 @@ describe("canonical dashboard workspace", () => {
 
   it("sends newly discovered tools to the live Tools workspace instead of inventing a UI", () => {
     expect(paneForTool("future_runtime_tool")).toBe("tools");
+  });
+
+  it("offers no candidate-evidence receipt while network intake is not live (tools audit, 6 Oct 2026)", () => {
+    expect(CANDIDATE_INTAKE_LIVE).toBe(false);
+    const quests = readFileSync(
+      resolve(__dirname, "../../../public/gspc-quests.html"),
+      "utf8",
+    );
+    expect(quests).toContain("const CANDIDATE_REVIEW_LIVE = false;");
+    // The only remaining "Review as candidate evidence" button is inside the gated helper.
+    expect(quests.match(/onclick="offerQuestEvidence\(\)"/g)?.length).toBe(1);
+    expect(quests).toContain("window.CouncilEvidence");
   });
 });

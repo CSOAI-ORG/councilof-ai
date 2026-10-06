@@ -1,13 +1,17 @@
 import { describe, expect, it } from "vitest";
 import { buildDashboardCatalogue } from "./DashboardCataloguePane";
-import { LOBBY_ROUTES, LOBBY_TABS } from "@/components/lobby/tabs";
+import { LOBBY_ROUTES, LOBBY_TABS, normalizeLobbyTabId } from "@/components/lobby/tabs";
 
 describe("Council master catalogue", () => {
   const entries = buildDashboardCatalogue();
 
   it("gives every curated workflow and public surface one workspace destination", () => {
+    // An alias id (results -> board, watchdog -> corrections) opens another tab's pane, so it is
+    // catalogued once, under the tab that owns the pane (tools audit, 6 Oct 2026).
     for (const tab of LOBBY_TABS.filter(
-      (item) => !["home", "software", "explore"].includes(item.id),
+      (item) =>
+        !["home", "software", "explore"].includes(item.id) &&
+        normalizeLobbyTabId(item.id) === item.id,
     )) {
       expect(
         entries.some((entry) => entry.id === `tab:${tab.id}`),

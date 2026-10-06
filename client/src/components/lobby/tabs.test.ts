@@ -13,6 +13,7 @@ import {
   LOBBY_TABS,
   matchRoute,
   matchTab,
+  normalizeLobbyTabId,
   OS_RAIL_TABS,
   paneLoadFor,
   routesIn,
@@ -174,9 +175,10 @@ describe("Council OS tabs", () => {
       ...LOBBY_ROUTES.map((r) => r.path),
     ]);
     // Framed product routes.
+    // /watchdog-hub is not here: functions/watchdog-hub.ts 308s it to /os, so framing it nested
+    // the app inside itself. Its old ?tab=watchdog links now open Corrections (tools audit, 6 Oct 2026).
     for (const p of [
       "/products",
-      "/watchdog-hub",
       "/honesty",
       "/regulators",
       "/cra-readiness",
@@ -232,14 +234,15 @@ describe("Council OS tabs", () => {
 
   it("gives the canonical dashboard the owner's six task sections, then two under More", () => {
     // council-os-ui, 6 Oct 2026 (owner brief 1 Oct): Results-as-a-Service. The navigation reads
-    // Get results · My results · Check a result · Leaderboard · Connect · Learn; SovX and
-    // Corrections stay reachable under "More". Verify + Evidence pack + Evidence index stay ONE section.
+    // Get results · My results · Check a result · Leaderboard · For developers · Learn; SovX and
+    // Corrections stay reachable under "More". Tools audit, 6 Oct 2026: the Connect section is
+    // labelled "For developers" (its id stays `connect`), and Evidence index moved into it.
     expect(DASHBOARD_NAV_GROUPS.map((g) => g.label)).toEqual([
       "Get results",
       "My results",
       "Check a result",
       "Leaderboard",
-      "Connect",
+      "For developers",
       "Learn",
       "SovX",
       "Corrections",
@@ -250,17 +253,17 @@ describe("Council OS tabs", () => {
       expect(g.description.length).toBeGreaterThan(20);
     }
     const verify = DASHBOARD_NAV_GROUPS.find((g) => g.id === "verify")!;
-    expect(verify.tabs.map((t) => t.id)).toEqual(["verify", "evidence", "evidence-index"]);
+    expect(verify.tabs.map((t) => t.id)).toEqual(["verify", "evidence"]);
 
     const ids = DASHBOARD_TABS.map((t) => t.id);
     expect(ids).toEqual([
       "home",
       "measured",
       "art50",
+      "explore",
       "mine",
       "verify",
       "evidence",
-      "evidence-index",
       "board",
       "models",
       "matrix",
@@ -270,19 +273,18 @@ describe("Council OS tabs", () => {
       "tools",
       "fabric",
       "swift",
-      "explore",
+      "evidence-index",
       "learn",
       "space",
       "play",
       "sovx",
       "corrections",
       "claims",
-      "watchdog",
     ]);
     // Every pane the old rail and the old pill strip reached still has a section.
     for (const id of [
       "home", "measured", "verify", "board", "evidence-index", "swift", "evidence",
-      "tools", "learn", "watchdog", "standards", "fabric", "space", "play",
+      "tools", "learn", "standards", "fabric", "space", "play",
     ])
       expect(ids).toContain(id);
     expect(new Set(ids).size).toBe(ids.length);
@@ -296,6 +298,44 @@ describe("Council OS tabs", () => {
   it("files every pane outside a section under one for its title", () => {
     for (const id of ["cards", "state", "archive", "attestations", "embed", "harness", "art50"])
       expect(dashboardNavGroupOf(id), id).not.toBeNull();
+  });
+});
+
+describe("tools audit, 6 Oct 2026: dead and developer-only panes", () => {
+  it("sends old Watchdog links to Corrections instead of framing a redirect to the app itself", () => {
+    expect(normalizeLobbyTabId("watchdog")).toBe("corrections");
+    expect(tabById("watchdog").path).toBe("");
+    expect(DASHBOARD_TABS.map((t) => t.id)).not.toContain("watchdog");
+    expect(LOBBY_TABS.some((t) => t.path === "/watchdog-hub")).toBe(false);
+    // A chat command still lands somewhere true: the tab id normalises to Corrections.
+    expect(normalizeLobbyTabId(matchTab("open the watchdog")!.id)).toBe("corrections");
+  });
+
+  it("opens the one board for ?tab=results, which rendered the same pane under a second name", () => {
+    expect(normalizeLobbyTabId("results")).toBe("board");
+    expect(normalizeLobbyTabId(matchTab("show results")!.id)).toBe("board");
+  });
+
+  it("opens 'enterprise' natively on the request pane, never as a second copy of the app", () => {
+    expect(LOBBY_ROUTES.some((r) => r.path === "/enterprise")).toBe(false);
+    expect(matchTab("open enterprise")?.id).toBe("measured");
+    expect(matchRoute("open enterprise")).toBeNull();
+  });
+
+  it("keeps developer panes in one clearly labelled For developers section", () => {
+    const dev = DASHBOARD_NAV_GROUPS.find((g) => g.id === "connect")!;
+    expect(dev.label).toBe("For developers");
+    expect(dev.tabs.map((t) => t.id)).toContain("evidence-index");
+    expect(dev.tabs.map((t) => t.id)).not.toContain("explore");
+    for (const id of ["state", "archive", "harness", "products", "workbench", "embed", "library"])
+      expect(dashboardNavGroupOf(id)?.id, id).toBe("connect");
+    const ask = DASHBOARD_NAV_GROUPS.find((g) => g.id === "ask")!;
+    expect(ask.tabs.map((t) => t.id)).toEqual(["home", "measured", "art50", "explore"]);
+  });
+
+  it("files the Government prototype as a preview, not an audience door", () => {
+    expect(routesIn("preview").map((r) => r.path)).toEqual(["/government"]);
+    expect(routesIn("audience").map((r) => r.path)).not.toContain("/government");
   });
 });
 

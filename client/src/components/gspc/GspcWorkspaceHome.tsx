@@ -298,10 +298,12 @@ export default function GspcWorkspaceHome({
       ),
     },
     {
+      // Tools audit, 6 Oct 2026: this place is the developer section, so it says so. Route (candidates
+      // as JSON plus a tie-break rule) left this grid; it stays a sub-tab under For developers.
       id: "connect",
       href: "/dashboard?tab=connect",
-      title: "Connect",
-      job: "One line adds the GSPC tools to Claude, Cursor or any MCP client. A2A, AG-UI and A2UI too.",
+      title: "For developers",
+      job: "Add the tools to Claude, Cursor or your own AI agent with one line.",
       img: { base: "/images/home/plugin", w: 480, h: 258 },
       figure: (
         <LiveFigureLine
@@ -309,19 +311,6 @@ export default function GspcWorkspaceHome({
           pick={(n) => (typeof n === "number" ? { value: String(n), label: "tools declared by tools/list; a tool is runtime-observed only after its own tools/call", source: "POST /mcp → tools/list", as_of: null } : null)}
           testId="ws-fig-connect"
         />
-      ),
-    },
-    {
-      id: "route",
-      href: "/dashboard?tab=route",
-      title: "Route",
-      job: "Your candidates and your policy in; a decision and an unsigned route record out. Decide-only.",
-      img: { base: "/images/home/receipt", w: 480, h: 192 },
-      figure: (
-        <p className="mt-3 text-[13px] leading-snug text-muted-foreground">
-          A tie is printed as <span className="font-mono font-bold text-foreground">TIE</span>, untested as{" "}
-          <span className="font-mono font-bold text-foreground">UNTESTED</span>; the tie-break rule is yours and is recorded.
-        </p>
       ),
     },
     {
