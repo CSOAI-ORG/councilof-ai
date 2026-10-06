@@ -133,10 +133,25 @@ describe("Council OS tabs", () => {
   it("frames extra live routes from a chat command without a new tab", () => {
     expect(matchRoute("open the instrument")?.path).toBe("/instrument");
     expect(matchRoute("show the system card")?.path).toBe("/dashboard?tab=cards");
-    expect(matchRoute("open the mcp fleet")?.path).toBe("/dashboard?tab=tools");
     expect(matchRoute("show the regulation feed")?.path).toBe("/dashboard?tab=standards");
-    expect(matchTab("open the crosswalk")?.id).toBe("matrix");
     expect(matchRoute("what is the weather")).toBeNull();
+  });
+
+  // Tools audit, 6 Oct 2026. "open crosswalk" opened the Regulation matrix (the matrix cue also
+  // said "crosswalk" and ties go to the tab); "open the mcp fleet" matched a route whose path,
+  // /dashboard?tab=tools, cannot be framed, so it fell back to Everything A–Z.
+  it("opens the Crosswalk page for 'open crosswalk', not the Regulation matrix", () => {
+    expect(matchTab("open crosswalk")).toBeNull();
+    expect(matchRoute("open crosswalk")?.path).toBe("/crosswalk");
+    expect(matchRoute("open the crosswalk")?.path).toBe("/crosswalk");
+    expect(matchTab("open the regulation matrix")?.id).toBe("matrix");
+  });
+
+  it("opens the MCP tools pane natively for 'open the mcp fleet'", () => {
+    expect(matchTab("open the mcp fleet")?.id).toBe("tools");
+    expect(matchTab("show the fleet manifest")?.id).toBe("tools");
+    expect(matchRoute("open the mcp fleet")).toBeNull();
+    expect(LOBBY_ROUTES.some((r) => r.path === "/dashboard?tab=tools")).toBe(false);
   });
 
   it("lists every pane exactly once", () => {

@@ -1,13 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link, useSearch } from "wouter";
-import {
-  Archive,
-  ArrowRight,
-  Building2,
-  Compass,
-  Search,
-  Wrench,
-} from "lucide-react";
+import { Archive, ArrowRight, Compass, Search, Wrench } from "lucide-react";
 import { ROUTE_MANIFEST } from "@/data/route-manifest";
 import {
   classify,
@@ -32,7 +25,7 @@ import {
   normalizeDashboardView,
 } from "@/lib/dashboardView";
 
-type CatalogueKind = "workflow" | "surface" | "industry" | "library";
+type CatalogueKind = "workflow" | "surface" | "library";
 
 export type DashboardCatalogueEntry = {
   id: string;
@@ -217,13 +210,37 @@ export function buildDashboardCatalogue(): DashboardCatalogueEntry[] {
   return entries;
 }
 
-const KIND_FILTERS: { id: "all" | CatalogueKind; label: string }[] = [
+// No "Industries" filter: the builder above emits no industry entries, and a chip that can only
+// ever say "no match" is a dead control (6 Oct 2026).
+export const KIND_FILTERS: { id: "all" | CatalogueKind; label: string }[] = [
   { id: "all", label: "All" },
   { id: "workflow", label: "Workflows" },
   { id: "surface", label: "Current pages" },
-  { id: "industry", label: "Industries" },
   { id: "library", label: "Library" },
 ];
+
+/**
+ * Search starts across EVERYTHING (6 Oct 2026). The default used to be "Workflows", so typing
+ * "methodology", "enterprise" or "tc260" answered "No Council destination matches" although each
+ * is a current page in this catalogue. A chip the reader picks still narrows the search; when it
+ * narrows it to nothing, the empty state offers the wider search instead of a dead end.
+ */
+export const DEFAULT_CATALOGUE_KIND: "all" | CatalogueKind = "all";
+
+export function filterCatalogue(
+  catalogue: DashboardCatalogueEntry[],
+  kind: "all" | CatalogueKind,
+  query: string,
+): DashboardCatalogueEntry[] {
+  const needle = query.trim().toLowerCase();
+  return catalogue.filter((entry) => {
+    if (kind !== "all" && entry.kind !== kind) return false;
+    if (!needle) return true;
+    return `${entry.label} ${entry.description} ${entry.group} ${entry.path || ""}`
+      .toLowerCase()
+      .includes(needle);
+  });
+}
 
 export default function DashboardCataloguePane() {
   const search = useSearch();
@@ -231,18 +248,20 @@ export default function DashboardCataloguePane() {
   const embeddedLabel =
     dashboardViewLabel(search) || embeddedPath || "Published surface";
   const [query, setQuery] = useState("");
-  const [kind, setKind] = useState<"all" | CatalogueKind>("workflow");
+  const [kind, setKind] = useState<"all" | CatalogueKind>(DEFAULT_CATALOGUE_KIND);
   const catalogue = useMemo(buildDashboardCatalogue, []);
-  const filtered = useMemo(() => {
-    const needle = query.trim().toLowerCase();
-    return catalogue.filter((entry) => {
-      if (kind !== "all" && entry.kind !== kind) return false;
-      if (!needle) return true;
-      return `${entry.label} ${entry.description} ${entry.group} ${entry.path || ""}`
-        .toLowerCase()
-        .includes(needle);
-    });
-  }, [catalogue, kind, query]);
+  const filtered = useMemo(
+    () => filterCatalogue(catalogue, kind, query),
+    [catalogue, kind, query],
+  );
+  // What the same words find across every kind, for the "search all instead" offer.
+  const widerCount = useMemo(
+    () =>
+      kind === "all" || !query.trim()
+        ? 0
+        : filterCatalogue(catalogue, "all", query).length,
+    [catalogue, kind, query],
+  );
   const groups = useMemo(() => {
     const map = new Map<string, DashboardCatalogueEntry[]>();
     for (const entry of filtered)
@@ -253,8 +272,7 @@ export default function DashboardCataloguePane() {
   if (embeddedPath)
     return <DashboardEmbeddedView path={embeddedPath} label={embeddedLabel} />;
 
-  // A kind with no entries is not shown as a "0" tile or an empty filter chip: the catalogue
-  // builder emits no industry entries today, and "Industries 0" read as a measured absence.
+  // A kind with no entries is not shown as a "0" tile or an empty filter chip.
   const counts = KIND_FILTERS.slice(1)
     .map((filter) => ({
       ...filter,
@@ -373,9 +391,7 @@ export default function DashboardCataloguePane() {
                     className="group flex min-h-28 items-start gap-3 rounded-xl border border-border bg-card p-4 transition hover:border-emerald-700/35 hover:shadow-sm"
                   >
                     <span className="mt-0.5 rounded-lg bg-emerald-50 p-2 text-emerald-800">
-                      {entry.kind === "industry" ? (
-                        <Building2 className="h-4 w-4" />
-                      ) : entry.kind === "workflow" ? (
+                      {entry.kind === "workflow" ? (
                         <Wrench className="h-4 w-4" />
                       ) : entry.kind === "library" ? (
                         <Archive className="h-4 w-4" />
@@ -400,11 +416,9 @@ export default function DashboardCataloguePane() {
                         <span>
                           {entry.kind === "workflow"
                             ? "Workspace"
-                            : entry.kind === "industry"
-                              ? "Sector view"
-                              : entry.kind === "library"
-                                ? "Reference"
-                                : "In-frame page"}
+                            : entry.kind === "library"
+                              ? "Reference"
+                              : "In-frame page"}
                         </span>
                         {entry.auth ? (
                           <span className="text-amber-800">
@@ -428,8 +442,22 @@ export default function DashboardCataloguePane() {
         <div
           role="status"
           className="mt-8 rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground"
+          data-testid="catalogue-no-match"
         >
-          No Council destination matches “{query}”.
+          <p>
+            {kind === "all"
+              ? `No Council destination matches “${query}”.`
+              : `No ${KIND_FILTERS.find((f) => f.id === kind)?.label.toLowerCase() ?? "entries"} match “${query}”.`}
+          </p>
+          {widerCount > 0 ? (
+            <button
+              type="button"
+              onClick={() => setKind("all")}
+              className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-xl border border-emerald-800/30 bg-card px-4 text-sm font-semibold text-emerald-900 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700"
+            >
+              Search all {widerCount} {widerCount === 1 ? "match" : "matches"} instead
+            </button>
+          ) : null}
         </div>
       )}
     </section>

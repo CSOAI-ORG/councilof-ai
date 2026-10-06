@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { UNFRAMEABLE, isUnframeable, pathBare, withoutEmbed } from "./unframeable";
+import { UNFRAMEABLE, isUnframeable, pathBare, unframeableLanding, withoutEmbed } from "./unframeable";
 
 describe("unframeable set", () => {
   it("is the OS chrome branches, DSH, and demo shells — not products", () => {
@@ -50,5 +50,28 @@ describe("unframeable set", () => {
     expect(withoutEmbed("/dashboard?embed=1")).toBe("/dashboard");
     expect(withoutEmbed("/library?embed=1#axis")).toBe("/library#axis");
     expect(withoutEmbed("/")).toBe("/");
+  });
+});
+
+// Tools audit, 6 Oct 2026: /watchdog-hub, /jobs, /early-access … are 308'd to /os?lobby=home and
+// /enterprise to /dashboard, so the framed page was Council OS inside itself.
+describe("unframeableLanding — where a framed page actually landed", () => {
+  const at = (pathname: string, search = "", hash = "") => ({ contentWindow: { location: { pathname, search, hash } } });
+
+  it("flags a frame that landed on Council OS, with the breakout href (embed dropped)", () => {
+    expect(unframeableLanding(at("/os", "?lobby=home"))).toEqual({ path: "/os", href: "/os?lobby=home" });
+    expect(unframeableLanding(at("/dashboard/", "?embed=1"))).toEqual({ path: "/dashboard", href: "/dashboard/" });
+  });
+
+  it("leaves a frameable page, an empty frame and an unreadable frame alone", () => {
+    expect(unframeableLanding(at("/methodology", "?embed=1"))).toBeNull();
+    expect(unframeableLanding(at("blank"))).toBeNull();
+    expect(unframeableLanding(null)).toBeNull();
+    const crossOrigin = {
+      get contentWindow(): never {
+        throw new Error("SecurityError: cross-origin frame");
+      },
+    };
+    expect(unframeableLanding(crossOrigin as never)).toBeNull();
   });
 });

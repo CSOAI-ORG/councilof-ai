@@ -19,6 +19,15 @@ import { dashboardViewHref } from "@/lib/dashboardView";
  * no way to dismiss it.
  */
 
+/**
+ * Where a live card opens. A Council OS pane (/dashboard?tab=…) opens as itself: dashboardViewHref
+ * refuses to frame /dashboard and fell back to Everything A–Z, so the Coliseum's "Open in
+ * workspace" (route /dashboard?tab=space) landed on the catalogue (tools audit, 6 Oct 2026).
+ */
+export function playHref(route: string, title: string): string {
+  return route.startsWith("/dashboard?") ? route : dashboardViewHref(route, title);
+}
+
 export default function LobbyPlay() {
   return (
     <section
@@ -116,7 +125,7 @@ export default function LobbyPlay() {
 
                 {live ? (
                   <Link
-                    href={dashboardViewHref(c.route!, c.title)}
+                    href={playHref(c.route!, c.title)}
                     className={`mt-3 inline-flex items-center gap-1.5 rounded-xl bg-amber-800 px-4 py-2 text-[12.5px] font-semibold text-white transition hover:bg-amber-900 motion-reduce:transition-none ${FOCUS}`}
                   >
                     {c.chip === "playable now"

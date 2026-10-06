@@ -5,6 +5,35 @@ import { InputBoundVerifier } from "@/lib/inputBoundVerification";
 import { isOwnModel } from "@/lib/livingBoard";
 
 type Tally = { ok: number; fail: number };
+
+/** A bare 64-hex card id: the card is fetched from the signed card store, never parsed as JSON. */
+export const BARE_CARD_ID = /^(?:sha256:)?([0-9a-f]{64})$/i;
+
+export const NOT_IN_INDEX =
+  "This id is not in the signed card index. If it came from My results, open the record and paste its full text here.";
+
+export type FetchedCard =
+  | { state: "found"; id: string; url: string; text: string }
+  | { state: "not_found"; id: string; url: string }
+  | { state: "error"; id: string; url: string; error: string };
+
+/**
+ * Read a signed card by id from /signed/cards/<id>.json, as unaltered text. A 404, or a dev
+ * server's HTML fallback, is "not found": the id is not in the signed card store.
+ */
+export async function fetchSignedCard(id: string, fetchImpl: typeof fetch = fetch): Promise<FetchedCard> {
+  const lower = id.toLowerCase();
+  const url = `/signed/cards/${lower}.json`;
+  try {
+    const r = await fetchImpl(url, { headers: { accept: "application/json" } });
+    const ct = (r.headers.get("content-type") || "").toLowerCase();
+    if (r.status === 404 || (r.ok && ct.includes("text/html"))) return { state: "not_found", id: lower, url };
+    if (!r.ok) return { state: "error", id: lower, url, error: `HTTP ${r.status}` };
+    return { state: "found", id: lower, url, text: await r.text() };
+  } catch (e) {
+    return { state: "error", id: lower, url, error: e instanceof Error ? e.message : String(e) };
+  }
+}
 type UseAwareVerdict = RecordVerdict & { useStatus: RecordUseStatus };
 
 /** What a gspc.measurement-card says, read from the pasted bytes. A VALID check proves the
@@ -120,7 +149,7 @@ function TallyOptIn({ ok, variant }: { ok: boolean; variant: "light" | "dark" })
   );
 }
 
-export default function RecordVerifyForm({ variant = "dark", seed, seedNonce, onVerdict, onInputChange, autoVerify = false }: {
+export default function RecordVerifyForm({ variant = "dark", seed, seedNonce, onVerdict, onInputChange, onBareId, autoVerify = false }: {
   variant?: "light" | "dark";
   /** Host-provided original text; editable. Verified automatically only when autoVerify is set. */
   seed?: string;
@@ -133,12 +162,15 @@ export default function RecordVerifyForm({ variant = "dark", seed, seedNonce, on
   onVerdict?: (v: RecordVerdict) => void;
   /** Called when a reader edits or clears the input, so the host can discard source labels tied to earlier bytes. */
   onInputChange?: () => void;
+  /** Called when a pasted bare card id was fetched from the signed card store and put in the box. */
+  onBareId?: (id: string) => void;
 }) {
   const [text, setText] = useState("");
   const [verdict, setVerdict] = useState<{ result: UseAwareVerdict; inputHash: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const [failure, setFailure] = useState(false);
-  const [notice, setNotice] = useState("Paste a record to begin. Nothing has been checked yet.");
+  const [notice, setNotice] = useState("Paste a record or a card id to begin. Nothing has been checked yet.");
+  const [notFound, setNotFound] = useState<string | null>(null);
   const verifier = useRef(new InputBoundVerifier<UseAwareVerdict>());
   const attempt = useRef(0);
   const field = useRef<HTMLTextAreaElement>(null);
@@ -161,10 +193,30 @@ export default function RecordVerifyForm({ variant = "dark", seed, seedNonce, on
   }, [seed, seedNonce]);
 
   const run = async (input?: string) => {
-    const value0 = typeof input === "string" ? input : text;
+    let value0 = typeof input === "string" ? input : text;
     if ((busy && typeof input !== "string") || !value0.trim()) return;
     const current = ++attempt.current;
-    setBusy(true); setFailure(false); setVerdict(null);
+    setBusy(true); setFailure(false); setVerdict(null); setNotFound(null);
+    // A bare card id is not a record. It used to be parsed as JSON and came back UNCHECKABLE;
+    // now the signed card it names is fetched and those bytes are what get checked.
+    const bare = value0.trim().match(BARE_CARD_ID)?.[1];
+    if (bare) {
+      setNotice("Fetching the signed card for this id. Nothing has been checked yet.");
+      const fetched = await fetchSignedCard(bare);
+      if (current !== attempt.current) return;
+      if (fetched.state === "not_found") {
+        setBusy(false); setNotFound(fetched.id); setNotice(NOT_IN_INDEX);
+        return;
+      }
+      if (fetched.state === "error") {
+        setBusy(false); setFailure(true);
+        setNotice(`The signed card for this id could not be fetched (${fetched.error}). Nothing has been checked.`);
+        return;
+      }
+      value0 = fetched.text;
+      setText(fetched.text);
+      onBareId?.(fetched.id);
+    }
     setNotice("Checking this record. An optional public-key cross-check may take up to three seconds.");
     let bound: { result: UseAwareVerdict; inputHash: string } | null;
     try {
@@ -189,24 +241,25 @@ export default function RecordVerifyForm({ variant = "dark", seed, seedNonce, on
   const edit = (next: string) => {
     attempt.current += 1; verifier.current.invalidate();
     onInputChange?.();
-    setText(next); setVerdict(null); setBusy(false); setFailure(false);
+    setText(next); setVerdict(null); setBusy(false); setFailure(false); setNotFound(null);
     setNotice(next.trim() ? "Input changed. This text has not been checked." : "Ready for a record. Nothing has been checked.");
   };
 
   return (
     <div className="min-w-0 space-y-4">
       <div>
-        <label htmlFor={fieldId} className={`mb-2 block text-base font-semibold forced-colors:text-[CanvasText] ${light ? "text-slate-900" : "text-emerald-50"}`}>Record JSON</label>
+        <label htmlFor={fieldId} className={`mb-2 block text-base font-semibold forced-colors:text-[CanvasText] ${light ? "text-slate-900" : "text-emerald-50"}`}>Record JSON or card id</label>
         <p id={helpId} className={`mb-3 max-w-[65ch] text-sm leading-relaxed ${muted}`}>
-          Paste one original record. The check runs in this browser; the record is not uploaded.
-          A separate request may read published public-key metadata. Editing clears the previous result.
+          Paste one original record, or a 64-character card id to fetch that signed card. The check runs
+          in this browser; the record is not uploaded. A separate request may read published public-key
+          metadata. Editing clears the previous result.
         </p>
         <textarea
           ref={field} id={fieldId} value={text} onChange={(event) => edit(event.target.value)}
           aria-describedby={helpId}
           aria-invalid={verdict?.result.reasons.includes("parse_error") || undefined}
           autoCapitalize="off" autoCorrect="off" spellCheck={false}
-          placeholder="Paste one complete JSON record here"
+          placeholder="Paste one complete JSON record, or a card id"
           className={`min-h-[176px] w-full rounded-xl border p-3 font-mono text-base leading-relaxed forced-colors:border-[ButtonText] forced-colors:bg-[Canvas] forced-colors:text-[CanvasText] forced-colors:placeholder:text-[GrayText] ${FOCUS} ${
             light ? "border-slate-400 bg-white text-slate-900 placeholder:text-slate-600 [color-scheme:light]"
               : "border-emerald-500/50 bg-[#03110b] text-emerald-100 placeholder:text-emerald-100/70 [color-scheme:dark]"
@@ -224,6 +277,12 @@ export default function RecordVerifyForm({ variant = "dark", seed, seedNonce, on
           }`}>Clear record</button>
       </div>
       <p className={`text-sm leading-relaxed ${muted}`} role="status" aria-live="polite" aria-atomic="true">{notice}</p>
+      {notFound && (
+        <p role="alert" data-testid="record-not-in-index" className={`rounded-lg border p-3 text-sm leading-relaxed forced-colors:text-[CanvasText] ${light ? "border-amber-400 bg-amber-50 text-amber-900" : "border-amber-400/60 bg-amber-500/10 text-amber-100"}`}>
+          <strong>Not checked.</strong> {NOT_IN_INDEX}
+          <span className="mt-1 block break-all font-mono text-xs">{notFound}</span>
+        </p>
+      )}
       {failure && <p role="alert" className={`text-sm leading-relaxed forced-colors:text-[CanvasText] ${light ? "text-amber-800" : "text-amber-200"}`}>
         This browser could not finish the check. Your text is unchanged. Try again, or open the verifier in an up-to-date browser.
         No VALID or INVALID result has been established.

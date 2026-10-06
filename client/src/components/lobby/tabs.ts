@@ -180,7 +180,9 @@ export const LOBBY_TABS: LobbyTab[] = [
       "Industry × regulation grid — living data from GET /api/gspc. Printer of the board, not a simulation.",
     path: "",
     kind: "native",
-    cues: /\b(matrix|industry|sector|regulation|crosswalk|east.?west|compliance grid)\b/i,
+    // No "crosswalk" here (6 Oct 2026): the Crosswalk page has its own route below, and with
+    // this cue the tie went to this tab, so "open crosswalk" opened the Regulation matrix.
+    cues: /\b(matrix|industry|sector|regulation|east.?west|compliance grid)\b/i,
   },
   {
     id: "results",
@@ -215,7 +217,9 @@ export const LOBBY_TABS: LobbyTab[] = [
     blurb:
       "Published tooling and MCP servers — connect, run, verify. Not a marketplace.",
     path: "/tools",
-    cues: /\b(tools?|tooling|tool commons|mcp tools)\b/i,
+    // "mcp fleet" / "fleet manifest" open this pane natively. They used to point at a LOBBY_ROUTES
+    // entry whose path, /dashboard?tab=tools, cannot be framed, so they fell back to Everything A–Z.
+    cues: /\b(tools?|tooling|tool commons|mcp tools|mcp fleet|fleet manifest)\b/i,
   },
   {
     id: "verify",
@@ -628,13 +632,6 @@ export const LOBBY_ROUTES: LobbyRoute[] = [
     path: "/benchmark-quality",
     group: "analyst",
     cues: /\b(benchmark[- ]?quality|quality register)\b/i,
-  },
-  {
-    label: "Tools",
-    blurb: "Inspect published tool descriptions and runtime availability separately.",
-    path: "/dashboard?tab=tools",
-    group: "analyst",
-    cues: /\b(mcp fleet|fleet manifest)\b/i,
   },
   {
     label: "MCP registry",

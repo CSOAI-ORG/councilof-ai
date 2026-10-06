@@ -41,6 +41,40 @@ export function paneForTool(name: string): string {
   return "tools";
 }
 
+/**
+ * The home composer's question goes to the AG-UI TalkPanel, which answers it on the start screen.
+ *
+ * 6 Oct 2026: askTalk used to record the question as a lobby chat turn first. That flipped
+ * hasConversation, which swapped the home canvas (and the TalkPanel in it) for LobbyThread, and
+ * TalkPanel's unmount effect aborted the POST /api/agui/run it had just started: the first question
+ * typed on the start screen never got an answer. Two fixes met here and both are kept:
+ * - #2834 (master): the question is still recorded in session history (`keepInChat`), but
+ *   DashboardWorkspace sets talkOwnsHome before it does, so the turn never swaps the canvas.
+ * - tools audit: the question is also kept in the workspace History as an "ask" activity entry.
+ *
+ * Returns true when the TalkPanel took the question; false sends it on to the lobby chat.
+ */
+export function askOnHome(
+  text: string,
+  ctx: {
+    activePane: boolean;
+    hasConversation: boolean;
+    talk: { ask: (question: string) => void } | null;
+    record?: typeof recordActivity;
+    /** Records the question in session history; runs before the TalkPanel is asked. */
+    keepInChat?: (question: string) => void;
+  },
+): boolean {
+  if (ctx.activePane || ctx.hasConversation || !ctx.talk) return false;
+  if (isExplicitNavigationCommand(text) && (matchTab(text) || matchRoute(text))) return false;
+  const question = text.trim();
+  if (!question) return false;
+  (ctx.record ?? recordActivity)({ kind: "ask", label: question });
+  ctx.keepInChat?.(question);
+  ctx.talk.ask(question);
+  return true;
+}
+
 function shortDescription(description: string): string {
   const sentence = description.split(/(?<=[.!?])\s/)[0]?.trim();
   if (!sentence) return "Published MCP capability.";
@@ -162,9 +196,12 @@ export default function DashboardWorkspace({
         return;
       }
       recordActivity({ kind: "route", label, path });
-      setLocation(dashboardViewHref(path, label));
+      // A Council OS pane (/dashboard?tab=…) opens as itself. dashboardViewHref refuses to frame
+      // /dashboard and falls back to Everything A–Z, which is where "show the system card" and
+      // "show the regulation feed" used to land (tools audit, 6 Oct 2026).
+      setLocation(path.startsWith("/dashboard?") ? path : dashboardViewHref(path, label));
     },
-    [navigate],
+    [navigate, setLocation],
   );
 
   const selectTool = useCallback(
@@ -184,16 +221,22 @@ export default function DashboardWorkspace({
   const talkRef = useRef<TalkPanelHandle>(null);
   // On the home surface a typed question goes to the AG-UI TalkPanel (tool cards + citations).
   // An explicit pane command ("show the board") still navigates through the lobby chat.
-  // Record the user's question in session history so chat history remains accessible.
+  // The question is kept in History twice (see askOnHome): as an "ask" activity entry, and as a
+  // session-history turn that talkOwnsHome keeps from swapping the canvas and aborting the run.
   const askTalk = useCallback(
-    (text: string) => {
-      if (activePane || hasConversation || !talkRef.current) return false;
-      if (isExplicitNavigationCommand(text) && (matchTab(text) || matchRoute(text))) return false;
-      setTalkOwnsHome(true);
-      chat.recordUserMessage(text);
-      talkRef.current.ask(text);
-      return true;
-    },
+    (text: string) =>
+      askOnHome(text, {
+        activePane: Boolean(activePane),
+        hasConversation,
+        talk: talkRef.current,
+        // #2834: the question is also a turn in session history (Chats › History). talkOwnsHome is
+        // set first, in the same batch, so that turn never flips hasConversation and the home
+        // canvas (and the TalkPanel's run) stays mounted.
+        keepInChat: (question) => {
+          setTalkOwnsHome(true);
+          chat.recordUserMessage(question);
+        },
+      }),
     [activePane, hasConversation, chat],
   );
   const activity = useActivity();
@@ -280,13 +323,14 @@ export default function DashboardWorkspace({
               onAsk={(q) => talkRef.current?.ask(q)}
               toolCount={toolPhase === "ready" ? tools.length : null}
               toolState={toolPhase}
-              talk={
+              talk={({ onRunDone }) => (
                 <TalkPanel
                   ref={talkRef}
                   variant="dock"
+                  onRunDone={onRunDone}
                   className="mt-4 rounded-3xl border border-emerald-950/10 bg-card p-4 shadow-[0_1px_2px_rgba(6,21,15,0.04)] sm:p-5"
                 />
-              }
+              )}
             />
           )}
         </div>

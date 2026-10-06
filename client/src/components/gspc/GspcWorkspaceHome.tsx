@@ -16,8 +16,9 @@
  *   - Claim maintenance: ledgers.claim_maintenance.counts, each outcome named, never summed.
  * No number is typed. Loading shows a role="status" placeholder; a failed read says so in words.
  */
-import type { ReactNode } from "react";
+import { useCallback, useRef, type ReactNode } from "react";
 import { Link } from "wouter";
+import { addMyResult, lookupFromRun, type FinishedLookupRun } from "@/lib/myResults";
 import { ArrowRight, Coins } from "lucide-react";
 import { useGspcBoard } from "@/components/board/useGspcBoard";
 import { boardTiles, separationRead, type TileState } from "@/components/home/LiveBoardGlance";
@@ -258,19 +259,55 @@ function PlaceCard({ p }: { p: Place }) {
   );
 }
 
+/** What the home hands its TalkPanel: called once per finished run. */
+export type TalkHooks = { onRunDone: (run: FinishedLookupRun) => void };
+
+/**
+ * Get results lookups waiting for their answer: question -> subject. When the run for that
+ * question finishes, the lookup is saved to My results with the state the tool returned and the
+ * record it cited (6 Oct 2026: it was saved before any answer, with no state at all).
+ */
+export function useLookupRecorder(save: typeof addMyResult = addMyResult) {
+  const pending = useRef(new Map<string, string>());
+  const expectLookup = useCallback((question: string, subject: string) => {
+    pending.current.set(question.trim(), subject);
+  }, []);
+  const onRunDone = useCallback(
+    (run: FinishedLookupRun) => {
+      const key = run.question.trim();
+      const subject = pending.current.get(key);
+      if (!subject) return;
+      pending.current.delete(key);
+      save(lookupFromRun(subject, run));
+    },
+    [save],
+  );
+  return { expectLookup, onRunDone };
+}
+
 export default function GspcWorkspaceHome({
   talk,
   onAsk,
   toolCount,
   toolState,
 }: {
-  /** The AG-UI TalkPanel, rendered by the workspace so its ref stays with the composer. */
-  talk: ReactNode;
+  /** The AG-UI TalkPanel, rendered by the workspace so its ref stays with the composer. A function
+   *  receives the hooks the home needs on that panel (onRunDone saves Get results lookups). */
+  talk: ReactNode | ((hooks: TalkHooks) => ReactNode);
   /** Send a question to that TalkPanel (Get results uses it for the free lookup). */
   onAsk?: (question: string) => void;
   toolCount: number | null;
   toolState: "loading" | "ready" | "failed";
 }) {
+  const { expectLookup, onRunDone } = useLookupRecorder();
+  const askLookup = useCallback(
+    (question: string, subject: string) => {
+      expectLookup(question, subject);
+      onAsk?.(question);
+    },
+    [expectLookup, onAsk],
+  );
+  const talkNode = typeof talk === "function" ? talk({ onRunDone }) : talk;
   const state = useLiveJson("/api/state");
   const wrappers = useLiveJson("/api/wrapper/index.json");
   const exercises = useLiveJson("/academy/exercises/exercises.json");
@@ -389,7 +426,7 @@ export default function GspcWorkspaceHome({
       </section>
 
       <div className="mx-auto w-full max-w-[1400px] px-4 py-6 sm:px-8 sm:py-8 lg:px-12">
-        <GetResults onAsk={onAsk} />
+        <GetResults onAsk={onAsk ? askLookup : undefined} />
 
         <div className="mt-6 grid gap-6 xl:grid-cols-12">
           <section id="ws-answers" aria-labelledby="ws-ask-h" className="min-w-0 scroll-mt-4 xl:col-span-7">
@@ -399,7 +436,7 @@ export default function GspcWorkspaceHome({
             <p className="mt-1 max-w-xl text-sm leading-relaxed text-muted-foreground">
               Free answers from what we have published. Each one says where it came from and links to the record so you can check it.
             </p>
-            {talk}
+            {talkNode}
           </section>
           <div className="min-w-0 xl:col-span-5">
             <WorkspaceBoardCard />

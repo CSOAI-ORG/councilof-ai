@@ -11,7 +11,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
 import { ArrowRight, Search, Trash2 } from "lucide-react";
 import ResultCard, { StateChip } from "@/components/talk/ResultCard";
-import { clearMyResults, MY_RESULTS_EVENT, readMyResults, type MyResult } from "@/lib/myResults";
+import { clearMyResults, lookupAgainHref, MY_RESULTS_EVENT, readMyResults, type MyResult } from "@/lib/myResults";
 
 const FOCUS =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
@@ -198,16 +198,29 @@ export default function MyResultsPane() {
                 </span>
                 {r.state ? <StateChip label={r.state} /> : null}
                 <span className="text-xs text-muted-foreground">{r.at.slice(0, 10)}</span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setQ(r.ref ?? r.subject);
-                    setAsked(r.ref && r.kind !== "watch" ? r.ref : r.subject);
-                  }}
-                  className={`min-h-11 rounded-lg border border-border px-3 text-sm font-semibold text-foreground hover:bg-muted ${FOCUS}`}
-                >
-                  Status
-                </button>
+                {r.kind === "lookup" ? (
+                  // A lookup is not a request: there is nothing of it in the paid-request queue, so
+                  // "Status" (which searched that queue) always answered "nothing matches". The
+                  // useful action is to ask the same question again.
+                  <Link
+                    href={lookupAgainHref(r)}
+                    className={`inline-flex min-h-11 items-center rounded-lg border border-border px-3 text-sm font-semibold text-foreground hover:bg-muted ${FOCUS}`}
+                    data-testid="my-results-again"
+                  >
+                    Look up again
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setQ(r.ref ?? r.subject);
+                      setAsked(r.ref && r.kind !== "watch" ? r.ref : r.subject);
+                    }}
+                    className={`min-h-11 rounded-lg border border-border px-3 text-sm font-semibold text-foreground hover:bg-muted ${FOCUS}`}
+                  >
+                    Status
+                  </button>
+                )}
               </li>
             ))}
           </ul>
@@ -217,7 +230,7 @@ export default function MyResultsPane() {
             <Link href="/dashboard" className="inline-flex items-center gap-1 font-semibold text-emerald-800 underline dark:text-emerald-300">
               Get results <ArrowRight className="h-3 w-3" aria-hidden="true" />
             </Link>
-            ; what you look up or request here is listed in this browser only.
+            . What you look up or request is kept in this browser only.
           </p>
         )}
       </section>

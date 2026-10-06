@@ -1,7 +1,11 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 
 import { FRONTEND_TOOLS, MAX_STEPS, planUi, readPageContext, withPageSubject } from "./uiTools";
 import { serveAguiRun } from "./aguiRun";
+import PAID_TOOLS from "../mcp/paid-tools.json";
+import ToolRunner, { type RunnerTool } from "../../client/src/components/ToolRunner";
 
 const HEX = "cd".repeat(32);
 const ORIGIN = "https://councilof.ai";
@@ -75,6 +79,29 @@ describe("planUi — deterministic page moves, never a number", () => {
     expect(withPageSubject("verify this", { subject: HEX })).toBe(`verify this ${HEX}`);
     expect(withPageSubject("what does the board say", { subject: HEX })).toBe("what does the board say");
   });
+  // Tools audit, 6 Oct 2026: the paid-ask plan named form[data-ui-form='request'] and
+  // [data-ui-action='request-submit'], and neither existed in the client, so watch mode said
+  // "Typing … as the subject" and typed nothing. Render the real runner for commission_card (its
+  // schema from paid-tools.json, as tools/list serves it) and look for every selector the plan names.
+  it("every selector the paid-ask plan names exists on the rendered request form", () => {
+    const tool = (PAID_TOOLS as { tools: RunnerTool[] }).tools.find((t) => t.name === "commission_card")!;
+    expect(tool).toBeDefined();
+    const html = renderToStaticMarkup(
+      createElement(ToolRunner, { catalogue: [tool], initialToolName: "commission_card", initialArguments: { subject: "https://example.com/mcp" } }),
+    );
+    const p = planUi("commission a card for https://example.com/mcp")!;
+    const selectors = p.steps.map((s) => s.args.selector).filter((x): x is string => typeof x === "string");
+    expect(selectors.length).toBeGreaterThanOrEqual(2);
+    for (const sel of selectors) {
+      for (const [, attr, value] of sel.matchAll(/\[([a-z-]+)='([^']+)'\]/g)) expect(html, sel).toContain(`${attr}="${value}"`);
+      if (sel.startsWith("form")) expect(html).toMatch(/<form[^>]*data-ui-form="request"/);
+    }
+    const fill = p.steps.find((s) => s.tool === "fillForm")!;
+    for (const name of Object.keys(fill.args.values as Record<string, unknown>)) expect(html).toContain(`data-ui-field="${name}"`);
+    // The highlighted control is the submit button itself, and nothing here submits it.
+    expect(html).toMatch(/<button type="submit"[^>]*data-ui-action="request-submit"/);
+  });
+
   it("readPageContext bounds and type-checks", () => {
     expect(readPageContext({ path: "/x", subjectKind: "bogus", headings: [1, "a"] })).toMatchObject({ path: "/x", subjectKind: null, headings: ["a"] });
   });

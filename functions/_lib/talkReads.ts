@@ -18,6 +18,25 @@ type Json = Record<string, unknown>;
 
 export const ROUTER_READ_TOOLS: ReadonlySet<string> = new Set(["corrections_summary", "claim_maintenance_register"]);
 
+/** An ISO date or datetime string, else null ("UNRECORDED" is a recorded absence, not a date). */
+function isoOf(v: unknown): string | null {
+  return typeof v === "string" && /^\d{4}-\d{2}-\d{2}/.test(v) ? v : null;
+}
+
+/**
+ * Corrections, newest first. GET /api/corrections lists them newest-first but not strictly (a few
+ * older rows sit at the end in ascending order), so the old `rows.slice(-limit).reverse()` returned
+ * the five OLDEST corrections as "recent". Sorted here by published_at when it is a recorded date,
+ * else the entry date, descending; rows with the same key keep the source's order (stable sort).
+ */
+export function newestFirst(rows: Json[]): Json[] {
+  const key = (row: Json) => isoOf(row.published_at) ?? isoOf(row.date) ?? "";
+  return rows
+    .map((row, i) => ({ row, i, k: key(row) }))
+    .sort((a, b) => (a.k === b.k ? a.i - b.i : a.k < b.k ? 1 : -1))
+    .map(({ row }) => row);
+}
+
 export async function correctionsSummary(origin: string, args: Json): Promise<Json> {
   const path = "/api/corrections";
   let d: Json;
@@ -29,9 +48,8 @@ export async function correctionsSummary(origin: string, args: Json): Promise<Js
   const rows = Array.isArray(d.corrections) ? (d.corrections as Json[]) : [];
   const asked = Number.isInteger(args.limit) ? Number(args.limit) : 5;
   const limit = Math.max(1, Math.min(20, asked));
-  const recent = rows
-    .slice(-limit)
-    .reverse()
+  const recent = newestFirst(rows)
+    .slice(0, limit)
     .map((row) => ({
       id: row.id ?? null,
       date: row.date ?? null,

@@ -441,7 +441,7 @@ test("a top-level embed hint normalizes to the canonical workspace", async ({
   ).toHaveCount(0);
 });
 
-test("chat remains beside a tool and its session history stays reachable", async ({
+test("a home question goes to the Answers panel, and History keeps it beside a tool", async ({
   page,
   isMobile,
 }) => {
@@ -451,11 +451,19 @@ test("chat remains beside a tool and its session history stays reachable", async
 
   await composer.fill(question);
   await page.getByRole("button", { name: "Ask", exact: true }).click();
-  // On Get results the home TalkPanel answers the question (it stays mounted; see the
-  // no-self-abort test); the question is still recorded in session history, checked below.
+  // 6 Oct 2026 (#2834, tools audit). A home question used to swap the canvas to the chat log and
+  // unmount the Answers panel mid-run, so POST /api/agui/run was aborted and the first question
+  // never got an answer. The home TalkPanel now answers it and stays mounted (see the no-self-abort
+  // test; this static server has no /api, so the run ends in its honest no-answer state). The
+  // question is kept in session history and as an "Asked" entry in the workspace History, both
+  // checked below.
   await expect(
     page.getByTestId("talk-run").filter({ hasText: question }).first(),
   ).toBeVisible();
+  await expect(page.getByTestId("gspc-workspace-home")).toBeVisible();
+  await expect(
+    page.getByRole("log", { name: "Council of AI conversation" }),
+  ).toHaveCount(0);
   await expect(page).toHaveURL(/tab=home/);
   await expect(
     page.locator('[data-testid="dashboard-pane-space"]'),
@@ -487,6 +495,11 @@ test("chat remains beside a tool and its session history stays reachable", async
   // history as its own conversation; it stays reachable one click away under History.
   await rail.getByRole("button", { name: /^History/ }).click();
   await expect(rail.getByText(question, { exact: true }).first()).toBeVisible();
+  // It is also in the workspace History, as asked.
+  await rail.getByRole("tab", { name: "Workspace" }).click();
+  await expect(
+    rail.locator('[data-activity-kind="ask"]').getByText(question, { exact: true }),
+  ).toBeVisible();
 });
 
 test("GSPC quests are a styled in-workspace game and never promote play into measurement", async ({
