@@ -2,11 +2,10 @@ import { describe, expect, it } from "vitest";
 import { invoiceHandoff, INVOICE_CONTACT } from "./_invoice_handoff";
 
 describe("invoice handoff — a quotation that stores nothing must say so", () => {
-  // evidence-bundle and art50/marking-evidence answer invoice=gbp with a reference derived by
-  // hashing the request, and write nothing to LEADS, queue nothing and mail nothing. LEADS IS bound
-  // on this deployment (since 841ebbcde); these paths just do not use it. The old wording, "CSOAI
-  // LTD issues the invoice against this reference", reads to a buyer as "they know I asked" — and
-  // nobody does. The lost thing is a customer.
+  // Three endpoints answer invoice=gbp with a reference derived by hashing the request and then
+  // persist nothing. /api/lead reports {"bound":false} on this deployment, so there is no store
+  // to persist into. The old wording, "CSOAI LTD issues the invoice against this reference",
+  // reads to a buyer as "they know I asked" — and nobody does. The lost thing is a customer.
   const h = invoiceHandoff("CSOAI-EB-ABC123", "evidence bundle for dora");
 
   it("states plainly that the request was not recorded", () => {
@@ -16,7 +15,7 @@ describe("invoice handoff — a quotation that stores nothing must say so", () =
     expect(h.you_must_send_this).toMatch(/email/i);
   });
 
-  it("says the reference is derived and filed nowhere — asking twice tells nobody twice", () => {
+  it("says the reference is derived, not stored — asking twice tells nobody twice", () => {
     expect(h.recorded_note).toMatch(/derived/i);
     expect(invoiceHandoff("CSOAI-EB-ABC123", "evidence bundle for dora").mailto).toBe(h.mailto);
   });
@@ -25,13 +24,6 @@ describe("invoice handoff — a quotation that stores nothing must say so", () =
     expect(h.mailto.startsWith(`mailto:${INVOICE_CONTACT}?`)).toBe(true);
     expect(decodeURIComponent(h.mailto)).toContain("CSOAI-EB-ABC123");
     expect(decodeURIComponent(h.mailto)).toContain("evidence bundle for dora");
-  });
-
-  it("does not blame an unbound datastore — LEADS is bound; the endpoint is what keeps nothing", () => {
-    const all = JSON.stringify(h) + decodeURIComponent(h.mailto);
-    expect(all).not.toMatch(/no datastore is bound/i);
-    expect(all).not.toMatch(/\bnot bound\b/i);
-    expect(h.recorded_note).toMatch(/does not write to it/i);
   });
 
   it("never quotes an amount — the owner invoices, the Function does not price", () => {
