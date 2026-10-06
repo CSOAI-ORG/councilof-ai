@@ -42,7 +42,7 @@ export default function LobbyPlay() {
           Council OS — local play
         </h2>
         <span className="rounded-full border border-amber-600/35 bg-amber-50 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wide text-amber-800">
-          not a measurement surface
+          Practice only: doesn&apos;t change any results
         </span>
       </div>
 
@@ -151,10 +151,7 @@ export default function LobbyPlay() {
       </p>
 
       <p className={`mt-3 ${MEASURE} ${TYPE.fine}`}>
-        Evidence and verification surfaces are the emerald ones in the left
-        rail. For a number you can re-check, use an independently admitted card;
-        the current admission matrix has no quotable cells, and this gallery
-        invents none.
+        These are practice games, not test results.
       </p>
     </section>
   );

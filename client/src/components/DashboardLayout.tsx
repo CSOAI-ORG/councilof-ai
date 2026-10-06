@@ -26,7 +26,8 @@ import {
   normalizeLobbyTabId,
   type DashboardNavGroupId,
 } from "@/components/lobby/tabs";
-import DashboardPane, { paneLabel } from "@/components/DashboardPane";
+import DashboardPane, { hasPane, paneLabel } from "@/components/DashboardPane";
+import { labelForViewPath } from "@/lib/viewLabel";
 import DashboardWorkspace, { SECTION_ACTIONS_ID } from "@/components/DashboardWorkspace";
 import DashboardAccountMenu from "@/components/DashboardAccountMenu";
 import CorpusChip from "@/components/CorpusChip";
@@ -46,7 +47,16 @@ import {
 } from "@/components/gspc/workspaceMenu";
 import BoardStatusStrip from "@/components/gspc/BoardStatusStrip";
 import { recordActivity, useActivity } from "@/components/lobby/workspace";
-import { LOBBY_TABS } from "@/components/lobby/tabs";
+import { LOBBY_TABS, sidebarLabel } from "@/components/lobby/tabs";
+
+/**
+ * Panes that quote a card count. The corpus chip names which of the three card corpora a count
+ * belongs to (council-os/CARD-CORPORA.md), so it sits beside those counts and nowhere else.
+ */
+const CORPUS_PANES = new Set(["verify", "cards", "evidence", "evidence-index", "archive"]);
+
+// The menu's own label for a pane lives in lobby/tabs (the Ask panel reads it too).
+export { sidebarLabel };
 
 const SMALL_QUERY = "(max-width: 767px)";
 
@@ -62,8 +72,10 @@ const SECTION_ICONS: Record<DashboardNavGroupId, typeof Gauge> = {
 };
 
 export function dashboardActiveLabel(activeTab: string, search: string): string {
-  const embeddedViewLabel = dashboardViewFromSearch(search)
-    ? dashboardViewLabel(search)
+  const viewPath = dashboardViewFromSearch(search);
+  // A framed page without ?label is named from its own head, never shown as its raw path.
+  const embeddedViewLabel = viewPath
+    ? dashboardViewLabel(search) || labelForViewPath(viewPath)
     : null;
   return (
     embeddedViewLabel ||
@@ -312,10 +324,13 @@ export default function DashboardLayout({
 
   useEffect(() => {
     const tab = LOBBY_TABS.find((t) => t.id === activeTab);
-    if (tab && activeTab !== "home" && !embeddedView) recordActivity({ kind: "pane", label: tab.label, tabId: tab.id });
+    // Recent uses the menu's own words (Leaderboard, Check a result, Connect), not the older tab labels.
+    if (tab && activeTab !== "home" && !embeddedView)
+      recordActivity({ kind: "pane", label: sidebarLabel(tab.id) ?? tab.label, tabId: tab.id });
   }, [activeTab, embeddedView]);
 
-  const sectionTitle = group?.label ?? activeLabel;
+  const unknownPane = activeTab !== "home" && activeTab !== "software" && !embeddedView && !hasPane(activeTab);
+  const sectionTitle = unknownPane ? "Not found" : group?.label ?? activeLabel;
   const subTabs = group && group.tabs.length > 1 ? group.tabs : [];
 
   return (
@@ -438,7 +453,7 @@ export default function DashboardLayout({
               ) : null}
               <div className="ml-auto flex shrink-0 items-center gap-2">
                 {/* The card corpus in view, named in the Council OS chrome (the site header shows it from 2xl). */}
-                {!embeddedView && activeTab !== "home" && activeTab !== "mine" ? <CorpusChip className="hidden md:inline-flex 2xl:hidden" /> : null}
+                {!embeddedView && CORPUS_PANES.has(activeTab) ? <CorpusChip className="hidden md:inline-flex 2xl:hidden" /> : null}
                 {!embeddedView ? <StartPageButton activeTab={activeTab} /> : null}
                 <div id={SECTION_ACTIONS_ID} className="flex shrink-0 items-center gap-2" />
               </div>

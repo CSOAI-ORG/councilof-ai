@@ -1,5 +1,6 @@
 import {
   ArrowRight,
+  ChevronDown,
   ClipboardCheck,
   FileCheck2,
   Mail,
@@ -12,6 +13,169 @@ import { Link } from "wouter";
 import { useSearch } from "wouter";
 import ToolRunner from "./ToolRunner";
 import { BUYING_LINES, CONTACT_MAILBOX } from "@/lib/buying";
+import ResultCard from "@/components/talk/ResultCard";
+import { FRESH_RUN_DOCTRINE } from "@/lib/resultCard";
+import { challengeOf, type Challenge } from "@/lib/aguiTalk";
+import { callTool } from "@/lib/sovTools";
+
+const FOCUS =
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+
+type TermsRead =
+  | { state: "idle" }
+  | { state: "reading" }
+  | { state: "ok"; challenge: Challenge }
+  | { state: "error"; text: string };
+
+/**
+ * A payment network in words. The challenge names it as a CAIP-2 id (eip155:8453) or a short
+ * name (base); a stranger reads "Base". An id this table does not know is not shown on the card
+ * face at all (it stays in the exact terms underneath), so no raw chain id reaches the face.
+ */
+const NETWORK_NAMES: Record<string, string> = {
+  "eip155:8453": "Base",
+  base: "Base",
+  "eip155:84532": "Base Sepolia (a test network)",
+  "base-sepolia": "Base Sepolia (a test network)",
+  "eip155:1": "Ethereum",
+  ethereum: "Ethereum",
+  "eip155:137": "Polygon",
+  polygon: "Polygon",
+  solana: "Solana",
+  "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": "Solana",
+};
+
+export function networkName(network: string | null | undefined): string | null {
+  if (!network) return null;
+  const key = network.trim().toLowerCase();
+  return Object.prototype.hasOwnProperty.call(NETWORK_NAMES, key) ? NETWORK_NAMES[key] : null;
+}
+
+/**
+ * The plain card a stranger sees first: what a fresh run request is, what it buys, and that
+ * nothing has been charged. "See the terms" asks commission_card on the MCP door WITHOUT a
+ * payment: the tool fetches the same GET /api/request-attestation the page used to call, and
+ * returns its 402 challenge (the terms) inside an ordinary 200 reply, so the browser does not log
+ * a failed request (tools audit retest, 6 Oct 2026). Nothing is recorded or charged; this page
+ * never pays. The card face names the network in words and states no amount: the exact terms
+ * (network id, asset, amount in the challenge's own units) sit under "The exact terms".
+ */
+function FreshRunCard({ initialSubject }: { initialSubject: string }) {
+  const [subject, setSubject] = useState(initialSubject);
+  const [terms, setTerms] = useState<TermsRead>({ state: "idle" });
+  const named = subject.trim();
+  const readTerms = async () => {
+    if (!named) return;
+    setTerms({ state: "reading" });
+    // No x_payment is ever passed from this page: the tool can only answer with its terms.
+    const reply = await callTool(REQUEST_ATTESTATION_CONTRACT.tool, { subject: named.slice(0, 200) });
+    const structured = reply.raw?.result?.structuredContent;
+    const challenge = structured?.status === "PAYMENT_REQUIRED" ? challengeOf(structured) : null;
+    setTerms(
+      challenge
+        ? { state: "ok", challenge }
+        : { state: "error", text: "The terms could not be read just now. Nothing was charged; try again in a moment." },
+    );
+  };
+  const first = terms.state === "ok" ? terms.challenge.accepts[0] : null;
+  return (
+    <ResultCard
+      as="div"
+      testId="fresh-run-card"
+      title={named ? `A fresh run for ${named}` : "A fresh run"}
+      tool={REQUEST_ATTESTATION_CONTRACT.tool}
+      label={REQUEST_ATTESTATION_CONTRACT.requestState}
+      tiles={[
+        { key: "subject", label: "Subject", value: named || "Not named yet" },
+        { key: "deliverable", label: "What you get", value: "Signed receipt", hint: "and a place in the queue" },
+        { key: "charged", label: "Charged", value: "Nothing yet" },
+      ]}
+    >
+      <div className="mt-4 space-y-3">
+        <label className="block text-sm font-medium text-foreground" htmlFor="fresh-run-subject">
+          What should we test? A model, or a server address
+        </label>
+        <input
+          id="fresh-run-subject"
+          value={subject}
+          onChange={(e) => {
+            setSubject(e.target.value);
+            setTerms({ state: "idle" });
+          }}
+          placeholder="e.g. qwen3:8b or example.com/mcp"
+          autoComplete="off"
+          spellCheck={false}
+          maxLength={200}
+          className={`min-h-11 w-full rounded-xl border border-border bg-background px-3 text-base text-foreground placeholder:text-muted-foreground ${FOCUS}`}
+        />
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            onClick={readTerms}
+            disabled={!named || terms.state === "reading"}
+            className={`inline-flex min-h-11 items-center rounded-xl bg-emerald-800 px-4 text-sm font-semibold text-white hover:bg-emerald-900 disabled:opacity-50 dark:bg-emerald-600 ${FOCUS}`}
+            data-testid="fresh-run-terms"
+          >
+            {terms.state === "reading" ? "Reading the terms…" : "See the terms (no payment)"}
+          </button>
+          <Link
+            href="/dashboard"
+            className={`inline-flex min-h-11 items-center text-sm font-semibold text-emerald-800 underline underline-offset-4 dark:text-emerald-300 ${FOCUS}`}
+          >
+            Check existing results (free)
+          </Link>
+        </div>
+        {terms.state === "ok" ? (
+          <div className="rounded-xl border border-amber-700/25 bg-amber-50/60 p-3 text-sm text-amber-950 dark:border-amber-400/30 dark:bg-amber-950/50 dark:text-amber-50" role="status" data-testid="fresh-run-terms-result">
+            <p className="font-semibold">These are the terms. Nothing was charged.</p>
+            <p className="mt-1" data-testid="fresh-run-terms-plain">
+              If you go ahead, you pay from your own wallet{first?.symbol ? ` in ${first.symbol}` : ""}
+              {networkName(first?.network) ? ` on ${networkName(first?.network)}` : ""}. Your wallet shows the exact amount before
+              you approve it, and nothing is taken unless you do. This page never pays.
+            </p>
+            <details className="mt-2" data-testid="fresh-run-terms-exact">
+              <summary className={`flex min-h-11 cursor-pointer items-center py-2 font-medium ${FOCUS}`}>The exact terms, as your wallet will see them</summary>
+              <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-1 text-xs">
+                {first?.network ? (
+                  <>
+                    <dt className="font-medium">Network</dt>
+                    <dd className="break-all font-mono">{first.network}</dd>
+                  </>
+                ) : null}
+                {first?.asset ? (
+                  <>
+                    <dt className="font-medium">Asset</dt>
+                    <dd className="break-all font-mono">
+                      {first.asset}
+                      {first.symbol ? ` (${first.symbol})` : ""}
+                    </dd>
+                  </>
+                ) : null}
+                {first?.payTo ? (
+                  <>
+                    <dt className="font-medium">Pay to</dt>
+                    <dd className="break-all font-mono">{first.payTo}</dd>
+                  </>
+                ) : null}
+                {first?.amountAtomic ? (
+                  <>
+                    <dt className="font-medium">Amount</dt>
+                    <dd className="break-all font-mono">{first.amountAtomic} (in the asset&apos;s smallest unit, as the terms state it)</dd>
+                  </>
+                ) : null}
+              </dl>
+              {terms.challenge.description ? <p className="mt-2 [overflow-wrap:anywhere]">{terms.challenge.description}</p> : null}
+            </details>
+          </div>
+        ) : terms.state === "error" ? (
+          <p className="text-sm text-rose-800 dark:text-rose-300" role="alert">
+            {terms.text}
+          </p>
+        ) : null}
+      </div>
+    </ResultCard>
+  );
+}
 
 export const REQUEST_ATTESTATION_CONTRACT = {
   tool: "commission_card",
@@ -271,85 +435,47 @@ export default function DashboardRequestPane() {
       aria-labelledby="request-attestation-title"
     >
       <div className="rounded-2xl border border-emerald-900/10 bg-[linear-gradient(135deg,#04120c_0%,#073b2b_100%)] p-6 text-white shadow-sm sm:p-7">
-        <div className="flex flex-wrap items-start justify-between gap-5">
-          <div className="max-w-3xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-200">
-              Council OS · {isPricingOverview ? "How paying works" : "Request a fresh run"}
-            </p>
-            <h1
-              id="request-attestation-title"
-              className="mt-2 text-3xl font-semibold tracking-tight"
-            >
-              {isPricingOverview
-                ? "How the free rail works"
-                : "Request a fresh run"}
-            </h1>
-            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-emerald-50/80">
-              {isPricingOverview ? (
-                <>
-                  Verify is free forever. A grade is never sold. There are no
-                  public prices and no SaaS tiers. Metered RAS work can re-serve
-                  signed measurement cards already on file; payment never
-                  creates a MEASURED cell. A fresh run remains{" "}
-                  <strong className="text-white">UNMEASURED</strong> until a
-                  published run actually exists.
-                </>
-              ) : (
-                <>
-                  A fresh run is a new test of a model you name. First you see
-                  the terms: what you would get and the exact amount. If you
-                  pay, you get a signed receipt and your request joins the
-                  public queue. Paying never buys a result: a result exists
-                  only once the test has run and been published, and checking
-                  it is always free. No delivery date is promised yet.
-                </>
-              )}
-            </p>
-            {!isPricingOverview ? (
-              <details className="mt-3 max-w-2xl text-sm text-emerald-50/80" data-testid="request-fine-print">
-                <summary className="cursor-pointer font-semibold text-emerald-100">
-                  The fine print
-                </summary>
-                <p className="mt-2 leading-relaxed">
-                  RAS commissions one card-v0 receipt for a named subject on the
-                  frozen bank. It can re-serve signed measurement cards already
-                  on file; payment never creates a MEASURED cell. A fresh run
-                  remains <strong className="text-white">UNMEASURED</strong>{" "}
-                  until a published run actually exists.
-                </p>
-              </details>
-            ) : null}
-            <Link href="/dashboard?tab=board" className="mt-4 inline-flex text-sm font-semibold text-emerald-200 underline underline-offset-4 hover:text-white">
-              Looking for results already published? Open the leaderboard →
-            </Link>
-            <Link href="/dashboard/?tab=art50" data-testid="request-pane-art50" className="mt-2 flex w-fit text-sm font-semibold text-emerald-200 underline underline-offset-4 hover:text-white">
-              Looking for an Article 50 marking check? Check an AI output for a mark →
-            </Link>
-            {/* The one buying statement (lib/buying.ts): what can be ordered today and how an invoice works. */}
-            <details className="mt-4 max-w-2xl rounded-xl border border-white/15 bg-white/5 px-4 py-3" data-testid="request-pane-buying">
-              <summary className="cursor-pointer text-sm font-semibold text-emerald-100">How to buy, and how invoices work</summary>
-              <ul className="mt-2 list-disc space-y-1 pl-5 text-[13px] leading-relaxed text-emerald-50/85">
-                {BUYING_LINES.map((line) => (
-                  <li key={line}>{line}</li>
-                ))}
-              </ul>
-            </details>
-          </div>
-          <div
-            className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-right"
-            title="For developers and agents: the tool and route this page calls."
+        <div className="max-w-3xl">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-200">
+            Council of AI · Get results
+          </p>
+          <h1
+            id="request-attestation-title"
+            className="mt-2 text-3xl font-semibold tracking-tight"
           >
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-emerald-200/70">
-              For developers
-            </p>
-            <code className="mt-1 block text-xs text-white">
-              {REQUEST_ATTESTATION_CONTRACT.tool}
-            </code>
-            <code className="mt-0.5 block text-[10px] text-emerald-100/70">
-              {REQUEST_ATTESTATION_CONTRACT.route}
-            </code>
-          </div>
+            {isPricingOverview ? "How the free rail works" : "Request a fresh run"}
+          </h1>
+          <p className="mt-3 max-w-2xl text-base leading-relaxed text-emerald-50/90" data-testid="fresh-run-doctrine">
+            {isPricingOverview ? (
+              <>
+                Verify is free forever. A grade is never sold. There are no
+                public prices and no SaaS tiers. Metered RAS work can re-serve
+                signed measurement cards already on file; payment never
+                creates a MEASURED cell. A fresh run remains{" "}
+                <strong className="text-white">UNMEASURED</strong> until a
+                published run actually exists.
+              </>
+            ) : (
+              FRESH_RUN_DOCTRINE
+            )}
+          </p>
+          <Link href="/dashboard/?tab=art50" data-testid="request-pane-art50" className="mt-4 flex w-fit text-sm font-semibold text-emerald-200 underline underline-offset-4 hover:text-white">
+            Looking for an Article 50 marking check? Check an AI output for a mark →
+          </Link>
+          {/* The one buying statement (lib/buying.ts): what can be ordered today and how an invoice works. */}
+          <details className="mt-4 max-w-2xl rounded-xl border border-white/15 bg-white/5 px-4 py-3" data-testid="request-pane-buying">
+            <summary className="min-h-11 cursor-pointer py-2 text-sm font-semibold text-emerald-100">How to buy, and how invoices work</summary>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-[13px] leading-relaxed text-emerald-50/85">
+              {BUYING_LINES.map((line) => (
+                <li key={line}>{line}</li>
+              ))}
+            </ul>
+          </details>
         </div>
+      </div>
+
+      <div className="mt-5">
+        <FreshRunCard initialSubject={params.get("subject") ?? ""} />
       </div>
 
       {!isPricingOverview ? (
@@ -367,16 +493,10 @@ export default function DashboardRequestPane() {
               From your own wallet
             </p>
             <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-              Use the form below. “Check terms · no payment” shows the exact
-              amount and who is paid. Nothing is paid until you approve it in
-              your wallet.
+              “See the terms (no payment)” above shows the exact amount and
+              who is paid. Nothing is paid until you approve it in your
+              wallet; this page never pays.
             </p>
-            <a
-              href="#request-attestation-runner"
-              className="mt-2 inline-flex min-h-11 items-center gap-1 text-sm font-bold text-emerald-800 underline underline-offset-4"
-            >
-              Go to the form ↓
-            </a>
           </div>
           <div className="rounded-2xl border border-border bg-card p-4" data-testid="request-invoice">
             <p className="flex items-center gap-2 text-base font-bold text-foreground">
@@ -403,6 +523,34 @@ export default function DashboardRequestPane() {
           </div>
         </section>
       ) : null}
+
+      <details className="group mt-6 rounded-2xl border border-border bg-card" data-testid="fresh-run-developers">
+        <summary className={`flex min-h-12 cursor-pointer list-none items-center gap-2 px-4 text-sm font-semibold text-foreground ${FOCUS}`}>
+          <ChevronDown className="h-4 w-4 transition-transform group-open:rotate-180 motion-reduce:transition-none" aria-hidden="true" />
+          For developers: the contract, the job catalogue and the tool runner
+        </summary>
+        <div className="border-t border-border p-4 sm:p-5">
+      <div className="flex flex-wrap items-start justify-between gap-5 rounded-xl border border-border bg-background p-4">
+        <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">
+          RAS commissions one card-v0 receipt for a named subject on the
+          frozen bank. It can re-serve signed measurement cards already on
+          file; payment never creates a MEASURED cell. A fresh run remains{" "}
+          <strong className="text-foreground">UNMEASURED</strong> until a
+          published run actually exists.
+        </p>
+        <div className="rounded-xl border border-border bg-muted px-4 py-3 text-right">
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+            Canonical contract
+          </p>
+          <code className="mt-1 block text-xs text-foreground">
+            {REQUEST_ATTESTATION_CONTRACT.tool}
+          </code>
+          <code className="mt-0.5 block text-xs text-muted-foreground">
+            {REQUEST_ATTESTATION_CONTRACT.route}
+          </code>
+        </div>
+      </div>
+
 
       <section
         className="mt-5 rounded-2xl border border-border bg-card p-4 sm:p-5"
@@ -579,6 +727,8 @@ export default function DashboardRequestPane() {
           initialArguments={initialArguments}
         />
       </div>
+        </div>
+      </details>
     </section>
   );
 }

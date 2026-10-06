@@ -177,7 +177,7 @@ export const LOBBY_TABS: LobbyTab[] = [
     id: "matrix",
     label: "Regulation matrix",
     blurb:
-      "Industry × regulation grid — living data from GET /api/gspc. Printer of the board, not a simulation.",
+      "Which rules apply to which industry. Pick an industry.",
     path: "",
     kind: "native",
     // No "crosswalk" here (6 Oct 2026): the Crosswalk page has its own route below, and with
@@ -1003,6 +1003,33 @@ export function dashboardNavGroupOf(id: string): DashboardNavGroup | null {
   return hidden
     ? DASHBOARD_NAV_GROUPS.find((group) => group.id === hidden) || null
     : null;
+}
+
+/**
+ * The label the menu itself shows for a pane: a section's first pane is the section's sidebar
+ * link (Leaderboard, For developers …), a section sub-tab is its sub-tab label, anything else its
+ * tab label. (Moved here from DashboardLayout so the Ask panel can name a pane without loading the
+ * workspace chunk.)
+ */
+export function sidebarLabel(tabId: string): string | null {
+  const first = DASHBOARD_NAV_GROUPS.find((g) => g.tabs[0]?.id === tabId);
+  if (first) return first.label;
+  return DASHBOARD_TABS.find((t) => t.id === tabId)?.label ?? LOBBY_TABS.find((t) => t.id === tabId)?.label ?? null;
+}
+
+/**
+ * Where a Council OS pane sits, in the menu's own words: ["Leaderboard"] for a section's first
+ * pane, ["Leaderboard", "Standards"] for a sub-tab or a pane filed under a section. Tools audit
+ * retest, 6 Oct 2026: the Ask panel said "The workspace › Open Council OS" on the Leaderboard,
+ * because it named /dashboard and ignored ?tab=.
+ */
+export function menuTrail(rawTabId: string | null | undefined): string[] {
+  const tabId = normalizeLobbyTabId(rawTabId ?? "");
+  const group = dashboardNavGroupOf(tabId);
+  const own = sidebarLabel(tabId);
+  if (!group) return own ? [own] : [];
+  if (group.tabs[0]?.id === tabId) return [group.label];
+  return own && own !== group.label ? [group.label, own] : [group.label];
 }
 
 /** One compatibility choke point for old launcher and edge redirect vocabulary. */

@@ -60,7 +60,6 @@ function CommissionCardView({ c }: { c: Commission }) {
         ...(c.as_of ? [{ key: "as_of", label: "Requested", value: c.as_of.slice(0, 10) }] : []),
       ]}
       verifyUrl={first ? first.url : "/dashboard?tab=verify"}
-      verifyText={first ? "Open the signed result" : "Check a result"}
       recordId={c.receipt_sha}
       summary={`Receipt ${c.receipt_sha}${c.tx ? ` · transaction ${c.tx}` : ""}`}
       raw={c}

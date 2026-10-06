@@ -107,7 +107,7 @@ export const PLAY_CARDS: PlayCard[] = [
   },
   {
     id: "literacy",
-    title: "Literacy Training Arena",
+    title: "Council Academy",
     blurb:
       "Learning how these systems behave, and what a measurement does and does not say.",
     image: "/images/literacy_training_arena.jpg",

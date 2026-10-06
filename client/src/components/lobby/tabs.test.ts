@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  menuTrail,
+  sidebarLabel,
   DASHBOARD_NAV_GROUPS,
   DASHBOARD_TABS,
   dashboardNavGroupOf,
@@ -519,5 +521,20 @@ describe("XRPL instruments tab (M-OS03)", () => {
     const t = tabById("xrpl");
     expect(t?.label).toBe("XRPL instruments");
     expect(JSON.stringify(t?.blurb ?? "")).not.toMatch(/1[0-9]\s*[/]\s*1[0-9]/);
+  });
+});
+
+// Tools audit retest, 6 Oct 2026: the Ask panel said "The workspace › Open Council OS" on the Leaderboard.
+describe("menuTrail names a pane in the menu's own words", () => {
+  it("names a section's first pane by the section, and a sub-tab under its section", () => {
+    expect(menuTrail("board")).toEqual(["Leaderboard"]);
+    expect(menuTrail("matrix")).toEqual(["Leaderboard", "Regulation matrix"]);
+    expect(menuTrail("home")).toEqual(["Get results"]);
+    expect(menuTrail("connect")).toEqual(["For developers"]);
+    // A pane filed under a section (not in its sub-tabs) keeps that section first.
+    expect(menuTrail("leaderboard")[0]).toBe("Leaderboard");
+    // Old aliases resolve to the pane that owns the content.
+    expect(menuTrail("results")).toEqual(["Leaderboard"]);
+    expect(sidebarLabel("board")).toBe("Leaderboard");
   });
 });

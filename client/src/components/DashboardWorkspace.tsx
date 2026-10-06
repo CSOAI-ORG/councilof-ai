@@ -8,6 +8,7 @@ import LobbyComposer, {
   type ComposerTool,
 } from "@/components/lobby/LobbyComposer";
 import LobbyThread from "@/components/lobby/LobbyThread";
+import { openAsk } from "@/components/ask/askBus";
 import TalkPanel, { type TalkPanelHandle } from "@/components/talk/TalkPanel";
 import GspcWorkspaceHome from "@/components/gspc/GspcWorkspaceHome";
 import {
@@ -34,8 +35,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
-type ToolPhase = "loading" | "ready" | "failed";
 
 export function paneForTool(name: string): string {
   return "tools";
@@ -110,7 +109,6 @@ export default function DashboardWorkspace({
   const chat = useLobbyChat();
   const threadEndRef = useRef<HTMLDivElement>(null);
   const [tools, setTools] = useState<ComposerTool[]>([]);
-  const [toolPhase, setToolPhase] = useState<ToolPhase>("loading");
   const [candidate, setCandidate] = useState<CandidateObservation | null>(null);
   const intentParams = useMemo(
     () =>
@@ -125,7 +123,6 @@ export default function DashboardWorkspace({
       if (cancelled) return;
       if (reply.state !== "ok") {
         setTools([]);
-        setToolPhase("failed");
         return;
       }
       setTools(
@@ -134,7 +131,6 @@ export default function DashboardWorkspace({
           description: shortDescription(tool.description),
         })),
       );
-      setToolPhase("ready");
     });
     return () => {
       cancelled = true;
@@ -321,8 +317,6 @@ export default function DashboardWorkspace({
           ) : (
             <GspcWorkspaceHome
               onAsk={(q) => talkRef.current?.ask(q)}
-              toolCount={toolPhase === "ready" ? tools.length : null}
-              toolState={toolPhase}
               talk={({ onRunDone }) => (
                 <TalkPanel
                   ref={talkRef}
@@ -351,6 +345,16 @@ export default function DashboardWorkspace({
           seedPrompt={seedPrompt}
           seedNonce={search.length}
           onAsk={askTalk}
+          // On a pane (not the start screen), a free question is answered in the Ask side panel as a
+          // result card, beside the pane, instead of as raw text in the chat thread.
+          onFreeQuestion={
+            activePane
+              ? (q) => {
+                  openAsk(q);
+                  return true;
+                }
+              : undefined
+          }
         />
       </section>
       {railHasContent ? (

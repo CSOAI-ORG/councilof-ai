@@ -232,7 +232,17 @@ export default function Instrument() {
                 {L.measured}
               </p>
               <p className="mt-2 text-xs text-gray-600 dark:text-gray-400">{L.caveat}</p>
-              <p className="mt-2 font-mono text-[10px] text-gray-400">{L.artefact}</p>
+              {/* The artefact as a link a reader can open, not a printed repository path (tools audit
+                  retest, 6 Oct 2026). A site path opens here; a results/ file opens in the dataset. */}
+              <a
+                href={L.artefact.startsWith("/") ? L.artefact : `${HF}/blob/main/${L.artefact}`}
+                target={L.artefact.startsWith("/") ? undefined : "_blank"}
+                rel={L.artefact.startsWith("/") ? undefined : "noopener noreferrer"}
+                title={L.artefact}
+                className="mt-1 inline-flex min-h-11 items-center text-xs font-semibold text-emerald-700 underline underline-offset-2 dark:text-emerald-400"
+              >
+                The data behind this number{L.artefact.startsWith("/") ? "" : " (Hugging Face) ↗"}
+              </a>
             </div>
 
             {/* The rule that makes this an instrument rather than an arena. */}
@@ -257,7 +267,7 @@ export default function Instrument() {
               </Link>
               <a href={HF} target="_blank" rel="noopener noreferrer"
                  className="text-emerald-700 dark:text-emerald-400 hover:underline">
-                Raw JSON for every number →
+                The data behind every number (Hugging Face dataset) ↗
               </a>
             </div>
           </div>

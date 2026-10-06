@@ -9,14 +9,16 @@
  *   - the board card: totals.public_count and totals.separation_public_count (GET /api/gspc), and the
  *     model count (/interop/models-measured.json, derived from the signed cards at build time);
  *   - Verify: card_chain.bodies_verified_valid (/api/state, corpus 3 of three, kind measured);
- *   - Connect: the number of tools tools/list returns (passed in; read by the workspace);
+ *   - For developers: the number of tools tools/list returns on /mcp/free, the door that card installs
+ *     (read here, from that door; /mcp also lists the paid tools, so its length is not this number);
  *   - Learn: the exercises in /academy/exercises/exercises.json;
  *   - SovX: counts.pairs in /api/wrapper/index.json;
  *   - Corrections: ledgers.corrections_in_this_deploy (/api/state);
  *   - Claim maintenance: ledgers.claim_maintenance.counts, each outcome named, never summed.
  * No number is typed. Loading shows a role="status" placeholder; a failed read says so in words.
  */
-import { useCallback, useRef, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { listTools } from "@/lib/sovTools";
 import { Link } from "wouter";
 import { addMyResult, lookupFromRun, type FinishedLookupRun } from "@/lib/myResults";
 import { ArrowRight, Coins } from "lucide-react";
@@ -65,10 +67,14 @@ export function LiveFigureLine({
     );
   return (
     <p className="mt-3 text-[13px] leading-snug text-muted-foreground" data-testid={testId} data-state="live">
-      <span className="font-mono text-base font-black text-foreground">{f.value}</span> {f.label}
-      <span className="block truncate font-mono text-xs" title={f.source + (f.as_of ? ` · as of ${f.as_of}` : "")}>
-        {f.source}
-      </span>
+      {/* Where the figure came from is a tooltip, not a line of source paths on the card face. */}
+      <span
+        className="cursor-help font-mono text-base font-black text-foreground"
+        title={`Read from ${f.source}${f.as_of ? ` · as of ${f.as_of}` : ""}`}
+      >
+        {f.value}
+      </span>{" "}
+      {f.label}
     </p>
   );
 }
@@ -292,19 +298,38 @@ export function useLookupRecorder(save: typeof addMyResult = addMyResult) {
   return { expectLookup, onRunDone };
 }
 
+/**
+ * The free door's own tools/list, read once. The card that shows this count installs
+ * https://councilof.ai/mcp/free, so the count is that door's, never /mcp's (which adds the paid tools).
+ */
+export function useFreeDoorToolCount(list: typeof listTools = listTools): LiveRead<unknown> {
+  const [read, setRead] = useState<LiveRead<unknown>>({ state: "loading", data: null, error: null });
+  useEffect(() => {
+    let cancelled = false;
+    list("/mcp/free").then((reply) => {
+      if (cancelled) return;
+      setRead(
+        reply.state === "ok"
+          ? { state: "ok", data: reply.tools.length, error: null }
+          : { state: "error", data: null, error: "tools/list on /mcp/free did not answer" },
+      );
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [list]);
+  return read;
+}
+
 export default function GspcWorkspaceHome({
   talk,
   onAsk,
-  toolCount,
-  toolState,
 }: {
   /** The AG-UI TalkPanel, rendered by the workspace so its ref stays with the composer. A function
    *  receives the hooks the home needs on that panel (onRunDone saves Get results lookups). */
   talk: ReactNode | ((hooks: TalkHooks) => ReactNode);
   /** Send a question to that TalkPanel (Get results uses it for the free lookup). */
   onAsk?: (question: string) => void;
-  toolCount: number | null;
-  toolState: "loading" | "ready" | "failed";
 }) {
   const { expectLookup, onRunDone } = useLookupRecorder();
   const askLookup = useCallback(
@@ -319,12 +344,7 @@ export default function GspcWorkspaceHome({
   const wrappers = useLiveJson("/api/wrapper/index.json");
   const exercises = useLiveJson("/academy/exercises/exercises.json");
 
-  const toolsRead: LiveRead<unknown> =
-    toolState === "loading"
-      ? { state: "loading", data: null, error: null }
-      : toolState === "failed" || toolCount === null
-        ? { state: "error", data: null, error: "tools/list did not answer" }
-        : { state: "ok", data: toolCount, error: null };
+  const toolsRead = useFreeDoorToolCount();
 
   const places: Place[] = [
     {
@@ -348,13 +368,13 @@ export default function GspcWorkspaceHome({
       id: "connect",
       href: "/dashboard?tab=connect",
       title: "For developers",
-      job: "Add the tools to Claude, Cursor or your own AI agent with one line.",
+      job: "Use these free tools inside Claude, ChatGPT or Cursor, or add them to your own AI agent.",
       hint: "An MCP server; the same answers are also served over A2A, AG-UI and A2UI.",
       img: { base: "/images/home/plugin", w: 480, h: 258 },
       figure: (
         <LiveFigureLine
           read={toolsRead}
-          pick={(n) => (typeof n === "number" ? { value: String(n), label: "tools the live server lists; each counts as working only once it has been called", source: "POST /mcp → tools/list · declared by tools/list; a tool is runtime-observed only after its own tools/call", as_of: null } : null)}
+          pick={(n) => (typeof n === "number" ? { value: String(n), label: "free tools, no account", source: "POST https://councilof.ai/mcp/free → tools/list (the door this card installs; the paid tools are on /mcp only) · declared by tools/list; a tool is runtime-observed only after its own tools/call", as_of: null } : null)}
           testId="ws-fig-connect"
         />
       ),
@@ -415,7 +435,7 @@ export default function GspcWorkspaceHome({
           </h1>
           {/* Phone: one plain line, so the Get results box is on the first screen. */}
           <p className="mt-2 text-sm leading-relaxed text-emerald-50/90 sm:hidden">
-            Look up what is already measured (free), order a fresh run, and check any result yourself.
+            Look up what is already measured (free), ask for a fresh run, and check any result yourself.
           </p>
           <ul className="mt-4 hidden max-w-5xl list-none gap-4 p-0 text-sm leading-relaxed text-emerald-50/90 sm:grid sm:grid-cols-3" data-testid="ws-plain">
             <li>
@@ -424,10 +444,10 @@ export default function GspcWorkspaceHome({
             </li>
             <li>
               <span className="block text-xs font-bold uppercase tracking-wide text-emerald-300">What you can do</span>
-              Look up what is already measured (free), order a fresh run, track it, and check any result yourself.
+              Look up what is already measured (free), ask for a fresh run, track it, and check any result yourself.
             </li>
             <li>
-              <span className="block text-xs font-bold uppercase tracking-wide text-emerald-300">What&apos;s new</span>
+              <span className="block text-xs font-bold uppercase tracking-wide text-emerald-300">Corrections</span>
               <WhatsNew />
             </li>
           </ul>
@@ -497,7 +517,7 @@ function WhatsNew() {
   return (
     <span className="block" data-testid="ws-whats-new">
       <span className="line-clamp-2">
-        {latest.date ? `${latest.date}: ` : ""}
+        <strong className="font-semibold">Latest correction:</strong> {latest.date ? `${latest.date}: ` : ""}
         {headline}
       </span>{" "}
       <a href={correctionHref(latest.id)} className="font-semibold text-emerald-200 underline underline-offset-2">

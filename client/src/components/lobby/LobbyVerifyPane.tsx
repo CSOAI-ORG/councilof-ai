@@ -181,28 +181,56 @@ export default function LobbyVerifyPane() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const loadRandom = () => {
+    const pool = ready?.cards ?? [];
+    if (pool.length) load(pool[Math.floor(Math.random() * pool.length)]);
+  };
+
   return (
     <div className={`${SP.panel} h-full overflow-y-auto`}>
       <p className={TYPE.section}>Check a result</p>
-      <h2 className="mt-1 text-[22px] font-semibold tracking-tight text-slate-900">
-        Is this result genuine?
-      </h2>
-      <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-slate-700">
-        Paste a result we published, or load one of ours below. Your browser checks that nothing in it
-        has been changed and that it was really issued by us. Nothing you paste leaves this device, and
-        no account is asked for. Every check ends one of three ways: genuine (VALID), not genuine
-        (INVALID) or not checkable (UNCHECKABLE).
+      <h1 className="mt-1 text-[22px] font-semibold tracking-tight text-slate-900">
+        Pick a result to check
+      </h1>
+      <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-slate-700">
+        Paste a result or its id. We re-check the signature in your browser; nothing is uploaded.
       </p>
-      <details className="mt-2 max-w-2xl text-[13px] leading-relaxed text-slate-600" data-testid="verify-how">
-        <summary className="cursor-pointer font-semibold text-slate-800">How the check works</summary>
-        <p className="mt-1">
-          Native in Council OS. The record is canonicalised and hashed in your browser, and the
-          Ed25519 signature is checked against trust anchors pinned in the verifier's own source —
-          the keys published at <code className="font-mono text-[12px]">/.well-known/did.json</code>,
-          fixed at build time so no key is looked up at check time. A live fetch of that document is
-          shown as a labelled cross-check only. This is GSPC card-v1 — not a VRO, not an Emilia
-          receipt, not an XRPL credential.
-        </p>
+      <details className="mt-3 max-w-2xl rounded-xl border border-slate-900/10 bg-white/70 px-4" data-testid="verify-how">
+        <summary className={`min-h-11 cursor-pointer py-3 text-[14px] font-semibold text-slate-800 ${FOCUS}`}>
+          How this check works
+        </summary>
+        <div className="space-y-2 pb-4 text-[13px] leading-relaxed text-slate-700">
+          <p>
+            The record is canonicalised and hashed in your browser, and the Ed25519 signature is
+            checked against trust anchors pinned in the verifier's own source — the keys published at{" "}
+            <code className="font-mono text-[12px]">/.well-known/did.json</code>, fixed at build time so
+            no key is looked up at check time. A live fetch of that document is shown as a labelled
+            cross-check only. No account is asked for — here or ever.
+          </p>
+          <p>
+            Every check ends one of three ways: genuine (VALID), not genuine (INVALID) or not checkable
+            (UNCHECKABLE). This is GSPC card-v1 — not a VRO, not an Emilia receipt, not an XRPL credential.
+          </p>
+          {ready ? (
+            ready.source.kind === "chain" ? (
+              <p>
+                <strong className="tabular-nums">{ready.source.positions}</strong> positions in the signed
+                chain — <strong className="tabular-nums">{ready.source.published}</strong> with a published
+                body you can check in full, and <strong className="tabular-nums">{ready.source.withheld}</strong>{" "}
+                whose body is withheld and therefore cannot be. A withheld position is listed rather than
+                dropped, so an absence is never invisible.
+              </p>
+            ) : (
+              <p>
+                <strong className="tabular-nums">{ready.source.listed}</strong> cards in the published index (
+                <code className="font-mono text-xs">/signed/card_index.json</code>), counted from its array
+                rather than read off its header. The fuller chain manifest,{" "}
+                <code className="font-mono text-xs">/signed/chain.json</code>, is not being served, so this
+                pane draws from the index instead and does not quote chain totals it cannot read.
+              </p>
+            )
+          ) : null}
+        </div>
       </details>
 
       {/* ── a real published card, so the tool can actually be exercised ── */}
@@ -221,26 +249,17 @@ export default function LobbyVerifyPane() {
 
         {ready && (
           <>
-            {ready.source.kind === "chain" ? (
-              <p className="text-[13px] text-slate-700">
-                <strong className="tabular-nums">{ready.source.positions}</strong> positions in the
-                signed chain — <strong className="tabular-nums">{ready.source.published}</strong> with
-                a published body you can check in full, and{" "}
-                <strong className="tabular-nums">{ready.source.withheld}</strong> whose body is withheld
-                and therefore cannot be. A withheld position is listed rather than dropped, so an
-                absence is never invisible.
-              </p>
-            ) : (
-              <p className="text-[13px] text-slate-700">
-                <strong className="tabular-nums">{ready.source.listed}</strong> cards in the published
-                index (<code className="font-mono text-xs">/signed/card_index.json</code>), counted
-                from its array rather than read off its header. The fuller chain manifest,{" "}
-                <code className="font-mono text-xs">/signed/chain.json</code>, is not being served,
-                so this pane is drawing from the index instead and is not quoting chain totals it cannot
-                read.
-              </p>
-            )}
+            <p className="text-[14px] text-slate-700">No result to hand? Load one of ours and check it.</p>
             <div className="mt-3 flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={loadRandom}
+                disabled={!ready.cards.length}
+                className={`min-h-11 rounded-lg bg-emerald-700 px-4 py-2 text-[14px] font-semibold text-white transition hover:bg-emerald-800 disabled:opacity-40 ${FOCUS}`}
+                data-testid="verify-load-random"
+              >
+                Load a published card at random
+              </button>
               <button
                 type="button"
                 onClick={() => {
@@ -248,20 +267,9 @@ export default function LobbyVerifyPane() {
                   if (head) load(head);
                 }}
                 disabled={!ready.cards.length}
-                className={`rounded-lg border border-emerald-700/30 bg-emerald-50 px-3 py-1.5 text-[12px] font-semibold text-emerald-900 transition hover:bg-emerald-100 disabled:opacity-40 ${FOCUS}`}
+                className={`min-h-11 rounded-lg border border-slate-900/15 bg-white px-3 py-2 text-[13px] font-semibold text-slate-800 transition hover:bg-slate-50 disabled:opacity-40 ${FOCUS}`}
               >
-                {ready.source.kind === "chain" ? "Load the chain head" : "Load the head card"}
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  const pool = ready.cards;
-                  if (pool.length) load(pool[Math.floor(Math.random() * pool.length)]);
-                }}
-                disabled={!ready.cards.length}
-                className={`rounded-lg border border-slate-900/15 bg-white px-3 py-1.5 text-[12px] font-semibold text-slate-800 transition hover:bg-slate-50 disabled:opacity-40 ${FOCUS}`}
-              >
-                Load a published card at random
+                {ready.source.kind === "chain" ? "Load the chain head" : "Load the latest card"}
               </button>
               <a
                 href={ready.source.kind === "chain" ? "/signed/chain.json" : "/signed/card_index.json"}
@@ -273,8 +281,8 @@ export default function LobbyVerifyPane() {
               </a>
             </div>
             {loadedId && !loadError && (
-              <p className="mt-2 font-mono text-xs text-slate-600">
-                loaded {loadedId.slice(0, 16)}… — press Verify to check it
+              <p className="mt-2 text-sm text-slate-700" title={`Card ${loadedId}`}>
+                A published result is in the box below. Press Verify this record to check it.
               </p>
             )}
             {loadError && (
@@ -313,12 +321,21 @@ export default function LobbyVerifyPane() {
           }}
         />
         <div data-ui-subject={loadedId ?? undefined} data-ui-subject-kind={loadedId ? "card" : undefined}>
-          <VerificationPath
-            verdict={verdict}
-            cardId={loadedId}
-            indexIds={ready ? new Set(ready.cards.map((c) => c.id)) : null}
-            checkedAt={checkedAt}
-          />
+          {/* The six-hop path is for readers who want the mechanics; the result above carries the
+              answer (tools audit retest, 6 Oct 2026: the path opened under every result). */}
+          <details className="mt-4 rounded-xl border border-slate-900/10 bg-white/70 px-4" data-testid="verify-path-details">
+            <summary className={`flex min-h-11 cursor-pointer items-center text-[14px] font-semibold text-slate-800 ${FOCUS}`}>
+              How it was checked, step by step
+            </summary>
+            <div className="pb-4">
+              <VerificationPath
+                verdict={verdict}
+                cardId={loadedId}
+                indexIds={ready ? new Set(ready.cards.map((c) => c.id)) : null}
+                checkedAt={checkedAt}
+              />
+            </div>
+          </details>
         </div>
       </div>
 

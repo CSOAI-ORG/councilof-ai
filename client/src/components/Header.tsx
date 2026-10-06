@@ -211,18 +211,18 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
           </div>
 
           <div className="hidden md:flex flex-nowrap items-center gap-2 2xl:gap-3">
-            <Button asChild variant="ghost" size="sm" className="hidden rounded-xl font-semibold text-emerald-800 hover:bg-emerald-50 lg:inline-flex"><Link href="/gspc-verify">Verify</Link></Button>
+            <Button asChild variant="ghost" size="sm" className="hidden rounded-xl font-semibold text-emerald-800 hover:bg-emerald-50 lg:inline-flex"><Link href="/dashboard?tab=verify">Verify</Link></Button>
             <CorpusChip />
             <button
               type="button"
               onClick={() => openAsk()}
               className="inline-flex min-h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl border border-emerald-800/25 px-2.5 text-sm font-semibold text-emerald-900 transition-colors hover:bg-emerald-50"
-              aria-label="Ask GSPC"
-              title="Ask GSPC"
+              aria-label="Ask about the results"
+              title="Ask about the results"
               data-testid="ask-launcher"
             >
               <MessageSquareText className="h-4 w-4" aria-hidden="true" />
-              <span className="hidden 2xl:inline">Ask</span>
+              <span>Ask</span>
             </button>
             <button type="button" onClick={() => openPalette()} className="inline-flex min-h-10 shrink-0 items-center rounded-xl p-2 text-slate-600 transition-colors hover:bg-emerald-50 hover:text-emerald-800" aria-label="Search pages and ask (Ctrl K)" title="Search pages and ask (Ctrl K / ⌘K)" aria-keyshortcuts="Control+K Meta+K" data-testid="palette-launcher">
               <Search className="h-5 w-5" aria-hidden="true" />
@@ -262,7 +262,7 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
           </div>
 
           <div className="md:hidden flex items-center gap-2">
-            <button type="button" onClick={() => openAsk()} className="inline-flex min-h-10 items-center gap-1 rounded-lg px-2 text-sm font-semibold text-emerald-900 hover:bg-muted" aria-label="Ask GSPC" data-testid="ask-launcher-mobile"><MessageSquareText className="h-5 w-5" aria-hidden="true" /><span className="sr-only sm:not-sr-only">Ask</span></button>
+            <button type="button" onClick={() => openAsk()} className="inline-flex min-h-10 items-center gap-1 rounded-lg px-2 text-sm font-semibold text-emerald-900 hover:bg-muted" aria-label="Ask about the results" data-testid="ask-launcher-mobile"><MessageSquareText className="h-5 w-5" aria-hidden="true" /><span className="sr-only sm:not-sr-only">Ask</span></button>
             <button type="button" onClick={() => openPalette()} className="p-2 rounded-lg text-muted-foreground hover:bg-muted" aria-label="Search pages and ask"><Search className="h-5 w-5" aria-hidden="true" /></button>
             <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 rounded-lg text-muted-foreground hover:bg-muted" aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}>
               {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}

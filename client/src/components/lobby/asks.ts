@@ -88,7 +88,10 @@ const BY_AUDIENCE: Record<string, string[]> = {
   board: [Q.boardNow, Q.wrong, Q.howMany, Q.claims],
   researcher: [Q.safety, Q.ties, Q.index, Q.jail],
   press: [Q.boardNow, Q.wrong, Q.ties, Q.root],
-  insurer: [Q.which, Q.dora, Q.reserve, Q.custody],
+  // Underwriting AI risk: jailbreak and safety results first, then the financial-sector evidence
+  // (tools audit retest, 6 Oct 2026: "Which tests have results?" was the same generic opener as
+  // every other audience).
+  insurer: [Q.jail, Q.safety, Q.dora, Q.reserve],
   regulator: [Q.art50, Q.governance, Q.wrong, Q.root],
 };
 
@@ -173,8 +176,8 @@ export function asksFor(pathname: string, audience: string, limit = 4): string[]
  * audience gets a link (an unmapped audience renders no door, not a dead one).
  */
 export const AUDIENCE_DOORS: Record<string, { href: string; label: string }> = {
-  regulator: { href: "/for/regulator", label: "Open the regulator door" },
-  insurer: { href: "/insurers", label: "Open the insurer rail" },
+  regulator: { href: "/for/regulator", label: "Open the page for regulators" },
+  insurer: { href: "/insurers", label: "See what insurers can rely on" },
 };
 
 /** Total questions in the registry — quoted in the UI, computed, never typed. */
