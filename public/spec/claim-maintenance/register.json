@@ -1,7 +1,7 @@
 {
   "schema": "csoai.claim-maintenance.register/0.1",
   "title": "Claim maintenance register — the subjects Council of AI maintains public claims on",
-  "as_of": "2026-10-01T10:44:58Z",
+  "as_of": "2026-10-06T07:50:17Z",
   "specification": "https://councilof.ai/spec/claim-maintenance/v0.2/",
   "specification_licence": "CC0-1.0",
   "maintainer": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
@@ -24,19 +24,19 @@
   "selection_criteria": "Subjects are selected where a public claim is (a) specific enough to capture verbatim and (b) about infrastructure a third party relies on. Selection is published because a selection rule is the one place an agenda can hide (spec 10.3).",
   "right_of_reply": "A defect in any record here is a defect in this register. Report it to nicholas@csoai.org; corrections are published at https://councilof.ai/api/corrections.",
   "totals": {
-    "registries": 3,
-    "registry_files_on_disk": 7,
+    "registries": 4,
+    "registry_files_on_disk": 8,
     "registries_superseded": 4,
-    "subjects": 28,
-    "claims": 99,
+    "subjects": 29,
+    "claims": 103,
     "by_state": {
       "CLAIM_CAPTURED": 1,
-      "CLAIM_MEASURED": 33,
-      "UNMEASURED": 39,
+      "CLAIM_MEASURED": 36,
+      "UNMEASURED": 40,
       "UNCHECKABLE": 26
     },
-    "claims_conforming_to_artifact_schema": 91,
-    "subjects_with_a_scheduled_next_read": 0,
+    "claims_conforming_to_artifact_schema": 95,
+    "subjects_with_a_scheduled_next_read": 1,
     "subjects_with_a_due_unrun_next_read": 26
   },
   "disclosures": [
@@ -536,6 +536,33 @@
       "claims_without_a_specification_state": 0
     },
     {
+      "subject": "Pulse Labs OpCo LLC (Pulse Verity Index)",
+      "subject_key": "thepulse.markets",
+      "identifier": "thepulse.markets",
+      "identifier_kind": "domain",
+      "source": "https://mcp.thepulse.markets/api/index/v1/pubkey",
+      "claim_count": 4,
+      "states": {
+        "CLAIM_CAPTURED": 0,
+        "CLAIM_MEASURED": 3,
+        "UNMEASURED": 1,
+        "UNCHECKABLE": 0
+      },
+      "first_captured": "2026-09-26T13:51:30Z",
+      "first_captured_basis": "artifact.first_captured_utc",
+      "last_read": "2026-10-06T07:40:41Z",
+      "last_read_basis": "artifact.access_date",
+      "next_scheduled_read": "2026-10-13T14:00:00Z",
+      "next_scheduled_read_state": "SCHEDULED",
+      "registry_id": "claimreg-pulse-verity-2026-10-06",
+      "registry_url": "https://councilof.ai/claims/claimreg-pulse-verity-2026-10-06.json",
+      "registry_schema": "csoai.claim-registry/0.3",
+      "timestamp_receipt": null,
+      "timestamp_state": "NONE",
+      "conforming_artifacts": 4,
+      "claims_without_a_specification_state": 0
+    },
+    {
       "subject": "Purple Llama",
       "subject_key": "github.com/meta-llama/PurpleLlama",
       "identifier": "github.com/meta-llama/PurpleLlama",
@@ -934,6 +961,18 @@
       "sidecar_pin_verified": true,
       "subjects": 2,
       "claims": 8
+    },
+    {
+      "status": "LIVE",
+      "registry_id": "claimreg-pulse-verity-2026-10-06",
+      "url": "https://councilof.ai/claims/claimreg-pulse-verity-2026-10-06.json",
+      "schema": "csoai.claim-registry/0.3",
+      "created": "2026-09-26T00:00:00Z",
+      "signature_state_verbatim": "UNSIGNED UNTIL PUBLICATION. On publication it is signed by sidecar under did:web:csoai.org#board-attestation-1, as the existing registries are.",
+      "signed": false,
+      "signature_binding": "none",
+      "subjects": 1,
+      "claims": 4
     }
   ],
   "does_not_prove": [
@@ -943,5 +982,5 @@
     "that a superseded registry was wrong; it was replaced, its bytes are unchanged, and it is still served at its own URL",
     "that a timestamp receipt is anchored in a block; a receipt file is submitted, not confirmed, until its upgrade is verified"
   ],
-  "register_digest": "f8c1ce5f0cc7582e52f142f81f3910649f52572eda74106190c92d6c0a4a758c"
+  "register_digest": "65b266c17dbf0fade2594486f6e9a3718a3ad5cb688bce32040595cdacf7873b"
 }
