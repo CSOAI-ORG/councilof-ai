@@ -1,5 +1,9 @@
 # ci/hf-jobs — the second runner (Hugging Face Jobs)
 
+> **The deploy route is RETIRED (6 Oct 2026).** Owner ruling, 6 Oct 2026 (SINGLE WRITER, top of CLAUDE.md and _alignment/ALIGNMENT_2026-10-06.md): GitHub master, shipped by .github/workflows/deploy.yml, is the ONLY production writer of councilof.ai. `deploy.sh` is now a stub
+> that refuses to run (exit 3); its old body is in git history at `892c355cb`. Nothing here may
+> deploy councilof.ai. What remains: `public-root.sh`, the image, and the mirror tools.
+
 GitHub has limited the CSOAI-ORG account's Actions (support ticket #4720908: runs die at
 runner start, up to 7 business days). This directory is the insurance: the two critical
 pipelines — the gated site deploy and the hourly signed public root — can run on
@@ -14,7 +18,7 @@ alias writes change on one side only, or if the runner image's Playwright tag dr
 
 | file | what |
 |---|---|
-| `deploy.sh <source> [ref]` | deploy.yml: guards → build → prerender → 9 gates → `wrangler pages deploy` ×3 → apex assert / recheck / anti-clobber / hold |
+| `deploy.sh` | **RETIRED 2026-10-06** (single-writer ruling). A stub that refuses to run; it was deploy.yml as an HF Job |
 | `public-root.sh <source> [ref]` | public-root.yml: `publish_public_root.py` → `witness_public_root.py` → `eas_attest_root.mjs` → commit + push to master (halt-health on failure) |
 | `lib.sh` | step ledger, fail-closed helpers, source resolution (git URL → bundle → HF mirror fallback), token-free git credential helper |
 | `Dockerfile` + `bootstrap.sh` | the `csoai/ci-runner` image (Playwright base + Python 3.11 + wrangler + git) |
@@ -26,7 +30,7 @@ alias writes change on one side only, or if the runner image's Playwright tag dr
 
 | pipeline | GitHub (primary) | HF Jobs (insurance) |
 |---|---|---|
-| site deploy | `deploy.yml` on push / 3-hourly cron | `hf jobs run … deploy.sh` on demand (no schedule — two writers racing the Pages alias is the clobber the workflow already fights) |
+| site deploy | `deploy.yml` from GitHub master — the only production writer | **none** — retired 2026-10-06 (single-writer ruling) |
 | public root | `public-root.yml` hourly (`7 * * * *`) | `hf jobs scheduled run "7 * * * *" … public-root.sh`, `--no-concurrency` (= the workflow's `concurrency` group) |
 | site host | Cloudflare Pages project `councilof-ai` | same project, same `wrangler` commands, same three aliases (`master`, `main`, `production`) |
 | source | GitHub checkout | GitHub clone over HTTPS (private repo → `GIT_PUSH_TOKEN`), or the HF mirror bundle when GitHub is unreachable |
@@ -103,47 +107,11 @@ its own ruling.
 All from a hosted shell with `hf auth login` as a member with write on `csoai`.
 `--namespace csoai` bills the org and keeps the jobs visible to the org.
 
-### Deploy — on demand
+### Deploy — retired
 
-```bash
-# from the pre-built image (recommended)
-hf jobs run --namespace csoai --flavor cpu-upgrade --timeout 45m \
-  --secrets-file .env.secrets \
-  hf.co/spaces/csoai/ci-runner \
-  bash -lc 'git -c credential.helper="!f(){ echo username=x-access-token; echo password=\$GIT_PUSH_TOKEN; }; f" \
-              clone -q https://github.com/CSOAI-ORG/councilof-ai.git /w \
-            && cd /w && bash ci/hf-jobs/deploy.sh /w master'
-```
-
-`.env.secrets` for the deploy: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`,
-`GIT_PUSH_TOKEN`, `HF_TOKEN`. The wrapper clone gets `ci/hf-jobs/` into the container via a
-credential helper (the token never enters a URL, a log, or `.git/config`); `deploy.sh` then
-clones `/w` at the requested ref and re-points `origin` at GitHub. Pass the GitHub URL as
-`<source>` instead if you want the script itself to prove GitHub is reachable (and fall back
-to the mirror if not).
-
-GitHub unreachable? Mount the mirror and point the script at it — no git token needed:
-
-```bash
-hf jobs run --namespace csoai --flavor cpu-upgrade --timeout 45m \
-  --secrets CLOUDFLARE_API_TOKEN=… --secrets CLOUDFLARE_ACCOUNT_ID=… --secrets HF_TOKEN \
-  -v hf://datasets/csoai/councilof-ai-mirror:/mirror:ro \
-  hf.co/spaces/csoai/ci-runner \
-  bash -lc 'git init -q /w && git -C /w fetch -q $(ls -1t /mirror/*.bundle | head -1) "+refs/*:refs/bundle/*" \
-            && git -C /w checkout -q --detach refs/bundle/heads/master 2>/dev/null || git -C /w checkout -q --detach refs/bundle/remotes/origin/master; \
-            cd /w && bash ci/hf-jobs/deploy.sh /mirror master'
-```
-
-Fallback with no Space yet (bare Playwright image, bootstrap at start, add ~2 min):
-
-```bash
-hf jobs run --namespace csoai --flavor cpu-upgrade --timeout 60m --secrets-file .env.secrets \
-  mcr.microsoft.com/playwright:v1.61.1-noble \
-  bash -lc 'git -c credential.helper="!f(){ echo username=x-access-token; echo password=\$GIT_PUSH_TOKEN; }; f" \
-              clone -q https://github.com/CSOAI-ORG/councilof-ai.git /w \
-            && bash /w/ci/hf-jobs/bootstrap.sh && export PATH=/opt/py311/bin:$PATH \
-            && bash /w/ci/hf-jobs/deploy.sh /w master'
-```
+There is no HF Jobs deploy command any more. Owner ruling, 6 Oct 2026 (SINGLE WRITER, top of CLAUDE.md and _alignment/ALIGNMENT_2026-10-06.md): GitHub master, shipped by .github/workflows/deploy.yml, is the ONLY production writer of councilof.ai. A second route to the same Pages
+project is how production was overwritten on 28 Sep, 30 Sep and 5 Oct 2026. To change the site:
+branch from GitHub master, open a PR, merge; `deploy.yml` ships it.
 
 ### Public root — hourly
 
@@ -167,7 +135,6 @@ never be pushed (the push would be rejected as non-fast-forward anyway; it fails
 ### Dry runs (nothing deployed, nothing pushed)
 
 ```bash
-DRY_RUN=1 bash ci/hf-jobs/deploy.sh      https://github.com/CSOAI-ORG/councilof-ai.git master   # every gate, no upload
 DRY_RUN=1 bash ci/hf-jobs/public-root.sh https://github.com/CSOAI-ORG/councilof-ai.git master   # = workflow_dispatch dry_run=true
 ```
 
