@@ -257,9 +257,9 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       },
       next: [
         // "CSOAI LTD issues the invoice against this reference" used to stand alone here, and a
-        // buyer reads that as "they know I asked". Nobody knows: this endpoint stores nothing,
-        // and /api/lead reports {"bound":false}, so there is no datastore on this deployment to
-        // store it in. The first line now says who has to act, because it is the buyer.
+        // buyer reads that as "they know I asked". Nobody knows: this path stores nothing. LEADS
+        // is bound on this deployment, but this path does not write to it and sends no mail. The
+        // first line now says who has to act, because it is the buyer.
         "NOTHING HERE HAS TOLD CSOAI THAT YOU ASKED — email the reference to nicholas@csoai.org, or no invoice can be raised.",
         "CSOAI LTD issues the invoice against this reference once it receives it — no amount is quoted on this endpoint.",
         "The bundle is assembled and delivered once that invoice settles.",

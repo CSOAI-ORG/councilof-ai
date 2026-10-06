@@ -2,11 +2,11 @@
  * POST /api/lead — accepts the "email me the signed report" form.
  *
  * HONESTY OVER APPEARANCE
- * There is no datastore bound to this project yet, and this endpoint does not pretend
- * otherwise: it returns `stored: false` with the reason, every time, until a KV namespace is
- * bound (binding name LEADS) — at which point it writes and says `stored: true`. A 200 that
- * silently drops a lead is the false-success pattern this estate keeps hunting in itself;
- * a 500 would block the user's flow for something that is our gap, not theirs.
+ * The LEADS KV namespace is bound on this deployment (wrangler.jsonc, since 841ebbcde): a POST
+ * writes the record there and says `stored: true`. If a deployment ever runs without that
+ * binding, this endpoint does not pretend otherwise: it returns `stored: false` with the reason.
+ * A 200 that silently drops a lead is the false-success pattern this estate keeps hunting in
+ * itself; a 500 would block the user's flow for something that is our gap, not theirs.
  *
  * Nothing here is used for anything else: no analytics, no enrichment, no third party.
  */
@@ -52,12 +52,17 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
 };
 
 /**
- * GET /api/lead — diagnostic eye. stored:true was returned while the namespace listed zero
- * keys from outside; this shows what the FUNCTION's binding actually sees, which is the only
- * view that settles whether writes are landing somewhere else.
+ * GET /api/lead — answers one question: is the LEADS binding present on this deployment?
+ * The body is exactly {"bound": true} or {"bound": false}, and this handler never reads the
+ * namespace to produce it.
+ *
+ * It used to list up to ten key names and a count. LEADS keys are named
+ * `<kind>:<ISO timestamp>:<uuid>` (contact:, lead:, and older subscribe: records), so that public
+ * GET told anyone when each inbound request arrived and how many there were. No contents leaked,
+ * but lead timing and volume did. The question it was built to settle (stored:true while the
+ * namespace looked empty from outside) is settled. An operator who needs the keys reads the
+ * namespace directly, with `wrangler kv key list --namespace-id <the LEADS id in wrangler.jsonc>`
+ * or in the Cloudflare dashboard. No public surface lists them.
  */
-export const onRequestGet: PagesFunction<Env> = async (ctx) => {
-  if (!ctx.env.LEADS) return Response.json({ bound: false });
-  const l = await ctx.env.LEADS.list({ limit: 10 });
-  return Response.json({ bound: true, keys: l.keys.map(k => k.name), count: l.keys.length });
-};
+export const onRequestGet: PagesFunction<Env> = async (ctx) =>
+  Response.json({ bound: Boolean(ctx.env.LEADS) }, { headers: { "cache-control": "no-store" } });
