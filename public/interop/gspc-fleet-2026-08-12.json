@@ -1,0 +1,880 @@
+{
+ "schema": "csoai.gspc-fleet/0.1",
+ "what": "Every base model's score, n, Wilson 95% interval and rank spread on each behavioural axis of the 2026-08-12 frozen banks, computed from the published per-item rows.",
+ "measured": "2026-08-12 (day precision, from the dataset MANIFEST.json)",
+ "dataset": "csoai/gspc-peritem-rows-2026-08-12",
+ "dataset_url": "https://huggingface.co/datasets/csoai/gspc-peritem-rows-2026-08-12",
+ "dataset_revision": "294e4cf9e8b72a00aa50de024b3ed3e7ab0b3361",
+ "peritem_sha256": "0d8dacfbe7384a5d2f6a83e7455482ab75f935366bbb6e18da61cfdac8890dec",
+ "licence": "CC-BY-4.0",
+ "licence_note": "Same licence as the per-item rows these figures are computed from.",
+ "statistics": "Classical test theory: accuracy = k/n over the frozen items; Wilson 1927 score interval at 95% (z=1.959964); rank spread from interval overlap. No item response model is fitted.",
+ "rank_spread_rule": "best = 1 + models whose lower bound is above this model's upper bound; worst = 1 + models whose upper bound is above this model's lower bound. Overlapping spreads mean the measurement does not order those models.",
+ "determination_authority": "Separation (SEPARATED / TIE / UNTESTED) is decided only by the board's fixed test (exact McNemar, leader vs best base model, p<0.05) and served by /api/gspc. board_determination is copied from the signed rows record (/interop/gspc-peritem-rows-2026-08-12.json); the rank spread is annotation and decides nothing. Where the board says UNTESTED, no position is published.",
+ "untested_rule": "On an axis the board marks UNTESTED, per-model figures are withheld (models: [], models_withheld: N, models_withheld_ids: who answered, without figures) because the board names no leader there; the reason is the board's own. The rows stay public in the dataset.",
+ "own_model_rule": "CSOAI's own prompt overlays on stock base models are in the rows; they are counted, excluded before comparison, and never scored or listed here.",
+ "producer": "scripts/gspc_separation_from_rows.py --fleet",
+ "signed": false,
+ "signed_note": "Not a signed artifact. The rows it is computed from are bound by hash in the signed rows record (/interop/gspc-peritem-rows-2026-08-12.signed.json); recompute from the dataset to check every figure.",
+ "axes": {
+  "governance": {
+   "file": "peritem_gov.jsonl",
+   "sha256": "3a1d3193d3651448dd311efe4c7efcbdffb19e07fba06c15e628b844bfbfa2a5",
+   "distinct_items": 237,
+   "board_determination": "TIE",
+   "models": [
+    {
+     "model": "mistral:7b",
+     "base_model": true,
+     "k": 139,
+     "n": 237,
+     "accuracy": 0.5865,
+     "wilson95": [
+      0.523,
+      0.647
+     ],
+     "rank_spread": [
+      1,
+      4
+     ]
+    },
+    {
+     "model": "deepseek-r1:8b",
+     "base_model": true,
+     "k": 128,
+     "n": 237,
+     "accuracy": 0.5401,
+     "wilson95": [
+      0.476,
+      0.602
+     ],
+     "rank_spread": [
+      1,
+      5
+     ]
+    },
+    {
+     "model": "gemma3:12b",
+     "base_model": true,
+     "k": 112,
+     "n": 237,
+     "accuracy": 0.4726,
+     "wilson95": [
+      0.41,
+      0.536
+     ],
+     "rank_spread": [
+      1,
+      5
+     ]
+    },
+    {
+     "model": "llama3.2:3b",
+     "base_model": true,
+     "k": 110,
+     "n": 237,
+     "accuracy": 0.4641,
+     "wilson95": [
+      0.402,
+      0.528
+     ],
+     "rank_spread": [
+      1,
+      5
+     ]
+    },
+    {
+     "model": "qwen2.5:3b",
+     "base_model": true,
+     "k": 102,
+     "n": 237,
+     "accuracy": 0.4304,
+     "wilson95": [
+      0.369,
+      0.494
+     ],
+     "rank_spread": [
+      2,
+      5
+     ]
+    },
+    {
+     "model": "qwen2.5:0.5b-instruct",
+     "base_model": true,
+     "k": 66,
+     "n": 237,
+     "accuracy": 0.2785,
+     "wilson95": [
+      0.225,
+      0.339
+     ],
+     "rank_spread": [
+      6,
+      6
+     ]
+    }
+   ],
+   "own_overlays": {
+    "count": 13,
+    "excluded_before_comparison": true,
+    "listed": false
+   }
+  },
+  "safety": {
+   "file": "peritem_agi.jsonl",
+   "sha256": "b70ccaa015668a80aeb50196623e8a138b6238e023b6cdff4308ee4fd592b2cb",
+   "distinct_items": 36,
+   "board_determination": "TIE",
+   "models": [
+    {
+     "model": "gemma3:12b",
+     "base_model": true,
+     "k": 34,
+     "n": 36,
+     "accuracy": 0.9444,
+     "wilson95": [
+      0.819,
+      0.985
+     ],
+     "rank_spread": [
+      1,
+      4
+     ]
+    },
+    {
+     "model": "qwen2.5:3b",
+     "base_model": true,
+     "k": 32,
+     "n": 36,
+     "accuracy": 0.8889,
+     "wilson95": [
+      0.747,
+      0.956
+     ],
+     "rank_spread": [
+      1,
+      4
+     ]
+    },
+    {
+     "model": "mistral:7b",
+     "base_model": true,
+     "k": 29,
+     "n": 36,
+     "accuracy": 0.8056,
+     "wilson95": [
+      0.65,
+      0.902
+     ],
+     "rank_spread": [
+      1,
+      4
+     ]
+    },
+    {
+     "model": "deepseek-r1:8b",
+     "base_model": true,
+     "k": 28,
+     "n": 36,
+     "accuracy": 0.7778,
+     "wilson95": [
+      0.619,
+      0.883
+     ],
+     "rank_spread": [
+      1,
+      4
+     ]
+    },
+    {
+     "model": "llama3.2:3b",
+     "base_model": true,
+     "k": 16,
+     "n": 36,
+     "accuracy": 0.4444,
+     "wilson95": [
+      0.295,
+      0.604
+     ],
+     "rank_spread": [
+      5,
+      6
+     ]
+    },
+    {
+     "model": "qwen2.5:0.5b-instruct",
+     "base_model": true,
+     "k": 15,
+     "n": 36,
+     "accuracy": 0.4167,
+     "wilson95": [
+      0.271,
+      0.578
+     ],
+     "rank_spread": [
+      5,
+      6
+     ]
+    }
+   ],
+   "own_overlays": {
+    "count": 13,
+    "excluded_before_comparison": true,
+    "listed": false
+   }
+  },
+  "continuity": {
+   "file": "peritem_asi.jsonl",
+   "sha256": "f90910c6cede5f97a1158226535020c17cf6f7f22a19ce65201511b179ef9e40",
+   "distinct_items": 33,
+   "board_determination": "TIE",
+   "models": [
+    {
+     "model": "gemma3:12b",
+     "base_model": true,
+     "k": 20,
+     "n": 33,
+     "accuracy": 0.6061,
+     "wilson95": [
+      0.437,
+      0.753
+     ],
+     "rank_spread": [
+      1,
+      6
+     ]
+    },
+    {
+     "model": "deepseek-r1:8b",
+     "base_model": true,
+     "k": 18,
+     "n": 33,
+     "accuracy": 0.5455,
+     "wilson95": [
+      0.38,
+      0.702
+     ],
+     "rank_spread": [
+      1,
+      6
+     ]
+    },
+    {
+     "model": "mistral:7b",
+     "base_model": true,
+     "k": 14,
+     "n": 33,
+     "accuracy": 0.4242,
+     "wilson95": [
+      0.272,
+      0.592
+     ],
+     "rank_spread": [
+      1,
+      6
+     ]
+    },
+    {
+     "model": "llama3.2:3b",
+     "base_model": true,
+     "k": 13,
+     "n": 33,
+     "accuracy": 0.3939,
+     "wilson95": [
+      0.247,
+      0.563
+     ],
+     "rank_spread": [
+      1,
+      6
+     ]
+    },
+    {
+     "model": "qwen2.5:3b",
+     "base_model": true,
+     "k": 13,
+     "n": 33,
+     "accuracy": 0.3939,
+     "wilson95": [
+      0.247,
+      0.563
+     ],
+     "rank_spread": [
+      1,
+      6
+     ]
+    },
+    {
+     "model": "qwen2.5:0.5b-instruct",
+     "base_model": true,
+     "k": 12,
+     "n": 33,
+     "accuracy": 0.3636,
+     "wilson95": [
+      0.222,
+      0.534
+     ],
+     "rank_spread": [
+      1,
+      6
+     ]
+    }
+   ],
+   "own_overlays": {
+    "count": 13,
+    "excluded_before_comparison": true,
+    "listed": false
+   }
+  },
+  "provenance": {
+   "file": "peritem_prv.jsonl",
+   "sha256": "fb9efe3afda9d075cf38607c53f1c6a8044909b642e58747b9559a87fcc83237",
+   "distinct_items": 32,
+   "board_determination": "TIE",
+   "models": [
+    {
+     "model": "llama3.2:3b",
+     "base_model": true,
+     "k": 23,
+     "n": 32,
+     "accuracy": 0.7188,
+     "wilson95": [
+      0.546,
+      0.844
+     ],
+     "rank_spread": [
+      1,
+      5
+     ]
+    },
+    {
+     "model": "gemma3:12b",
+     "base_model": true,
+     "k": 22,
+     "n": 32,
+     "accuracy": 0.6875,
+     "wilson95": [
+      0.514,
+      0.82
+     ],
+     "rank_spread": [
+      1,
+      5
+     ]
+    },
+    {
+     "model": "mistral:7b",
+     "base_model": true,
+     "k": 21,
+     "n": 32,
+     "accuracy": 0.6562,
+     "wilson95": [
+      0.483,
+      0.796
+     ],
+     "rank_spread": [
+      1,
+      5
+     ]
+    },
+    {
+     "model": "qwen2.5:3b",
+     "base_model": true,
+     "k": 21,
+     "n": 32,
+     "accuracy": 0.6562,
+     "wilson95": [
+      0.483,
+      0.796
+     ],
+     "rank_spread": [
+      1,
+      5
+     ]
+    },
+    {
+     "model": "qwen2.5:0.5b-instruct",
+     "base_model": true,
+     "k": 15,
+     "n": 32,
+     "accuracy": 0.4688,
+     "wilson95": [
+      0.309,
+      0.636
+     ],
+     "rank_spread": [
+      1,
+      6
+     ]
+    },
+    {
+     "model": "deepseek-r1:8b",
+     "base_model": true,
+     "k": 6,
+     "n": 32,
+     "accuracy": 0.1875,
+     "wilson95": [
+      0.089,
+      0.353
+     ],
+     "rank_spread": [
+      5,
+      6
+     ]
+    }
+   ],
+   "own_overlays": {
+    "count": 13,
+    "excluded_before_comparison": true,
+    "listed": false
+   }
+  },
+  "cross-reality": {
+   "file": "peritem_xr.jsonl",
+   "sha256": "34758dd55d2b632e8a2a26390c3f1e01d7044a92e8c38d7ee76bd0386bcc8a6a",
+   "distinct_items": 32,
+   "board_determination": "UNTESTED",
+   "models": [],
+   "own_overlays": {
+    "count": 13,
+    "excluded_before_comparison": true,
+    "listed": false
+   },
+   "models_withheld": 6,
+   "models_withheld_ids": [
+    "deepseek-r1:8b",
+    "gemma3:12b",
+    "llama3.2:3b",
+    "mistral:7b",
+    "qwen2.5:0.5b-instruct",
+    "qwen2.5:3b"
+   ],
+   "untested_reason_code": "NO_SIGNED_CARD_FOR_AXIS",
+   "untested_reason": "The published rows give TIE (exact McNemar p=0.0654, n=32), but this axis has no signed card of any model in the public card index (/signed/card_index.json). The board publishes a separation determination only on axes that carry signed cards, so this one stays UNTESTED rather than resting on rows alone."
+  },
+  "detector-interop": {
+   "file": "peritem_det.jsonl",
+   "sha256": "665e358bedbaf899620fd5119a2a9d9b1415eb91396a463955c0e667c21b94a3",
+   "distinct_items": 33,
+   "board_determination": "UNTESTED",
+   "models": [],
+   "own_overlays": {
+    "count": 13,
+    "excluded_before_comparison": true,
+    "listed": false
+   },
+   "models_withheld": 6,
+   "models_withheld_ids": [
+    "deepseek-r1:8b",
+    "gemma3:12b",
+    "llama3.2:3b",
+    "mistral:7b",
+    "qwen2.5:0.5b-instruct",
+    "qwen2.5:3b"
+   ],
+   "untested_reason_code": "NO_SIGNED_CARD_FOR_AXIS",
+   "untested_reason": "The published rows give TIE (exact McNemar p=0.4531, n=33), but this axis has no signed card of any model in the public card index (/signed/card_index.json). The board publishes a separation determination only on axes that carry signed cards, so this one stays UNTESTED rather than resting on rows alone."
+  },
+  "art5-safeguard": {
+   "file": "peritem_art5.jsonl",
+   "sha256": "950861961ed3e1d0481c4577850b908b41ef696785b500956f11c502015cf1a3",
+   "distinct_items": 36,
+   "board_determination": "UNTESTED",
+   "models": [],
+   "own_overlays": {
+    "count": 13,
+    "excluded_before_comparison": true,
+    "listed": false
+   },
+   "models_withheld": 6,
+   "models_withheld_ids": [
+    "deepseek-r1:8b",
+    "gemma3:12b",
+    "llama3.2:3b",
+    "mistral:7b",
+    "qwen2.5:0.5b-instruct",
+    "qwen2.5:3b"
+   ],
+   "untested_reason_code": "NO_SIGNED_CARD_FOR_AXIS",
+   "untested_reason": "The published rows give TIE (exact McNemar p=1.0, n=36), but this axis has no signed card of any model in the public card index (/signed/card_index.json). The board publishes a separation determination only on axes that carry signed cards, so this one stays UNTESTED rather than resting on rows alone."
+  },
+  "care": {
+   "file": "peritem_care.jsonl",
+   "sha256": "888f230b58e5d78a8570244b9e8374c9740f24c3d6fd9f45d67b372db25f27b2",
+   "distinct_items": 199,
+   "board_determination": "TIE",
+   "models": [
+    {
+     "model": "qwen2.5:0.5b-instruct",
+     "base_model": true,
+     "k": 81,
+     "n": 200,
+     "accuracy": 0.405,
+     "wilson95": [
+      0.339,
+      0.474
+     ],
+     "rank_spread": [
+      1,
+      2
+     ]
+    },
+    {
+     "model": "qwen2.5:3b",
+     "base_model": true,
+     "k": 74,
+     "n": 200,
+     "accuracy": 0.37,
+     "wilson95": [
+      0.306,
+      0.439
+     ],
+     "rank_spread": [
+      1,
+      5
+     ]
+    },
+    {
+     "model": "deepseek-r1:8b",
+     "base_model": true,
+     "k": 51,
+     "n": 200,
+     "accuracy": 0.255,
+     "wilson95": [
+      0.2,
+      0.32
+     ],
+     "rank_spread": [
+      2,
+      5
+     ]
+    },
+    {
+     "model": "mistral:7b",
+     "base_model": true,
+     "k": 50,
+     "n": 200,
+     "accuracy": 0.25,
+     "wilson95": [
+      0.195,
+      0.314
+     ],
+     "rank_spread": [
+      2,
+      5
+     ]
+    },
+    {
+     "model": "gemma3:12b",
+     "base_model": true,
+     "k": 49,
+     "n": 200,
+     "accuracy": 0.245,
+     "wilson95": [
+      0.191,
+      0.309
+     ],
+     "rank_spread": [
+      2,
+      5
+     ]
+    },
+    {
+     "model": "llama3.2:3b",
+     "base_model": true,
+     "k": 7,
+     "n": 200,
+     "accuracy": 0.035,
+     "wilson95": [
+      0.017,
+      0.07
+     ],
+     "rank_spread": [
+      6,
+      6
+     ]
+    }
+   ],
+   "own_overlays": {
+    "count": 13,
+    "excluded_before_comparison": true,
+    "listed": false
+   }
+  },
+  "conformance": {
+   "file": "peritem_mcp.jsonl",
+   "sha256": "9ac4db30d9d0039555702445ab940346974da36b4b1d8de58dc775849caa26da",
+   "distinct_items": 35,
+   "board_determination": "TIE",
+   "models": [
+    {
+     "model": "mistral:7b",
+     "base_model": true,
+     "k": 25,
+     "n": 35,
+     "accuracy": 0.7143,
+     "wilson95": [
+      0.549,
+      0.837
+     ],
+     "rank_spread": [
+      1,
+      5
+     ]
+    },
+    {
+     "model": "llama3.2:3b",
+     "base_model": true,
+     "k": 23,
+     "n": 35,
+     "accuracy": 0.6571,
+     "wilson95": [
+      0.492,
+      0.792
+     ],
+     "rank_spread": [
+      1,
+      5
+     ]
+    },
+    {
+     "model": "gemma3:12b",
+     "base_model": true,
+     "k": 22,
+     "n": 35,
+     "accuracy": 0.6286,
+     "wilson95": [
+      0.463,
+      0.768
+     ],
+     "rank_spread": [
+      1,
+      5
+     ]
+    },
+    {
+     "model": "qwen2.5:0.5b-instruct",
+     "base_model": true,
+     "k": 17,
+     "n": 35,
+     "accuracy": 0.4857,
+     "wilson95": [
+      0.33,
+      0.644
+     ],
+     "rank_spread": [
+      1,
+      6
+     ]
+    },
+    {
+     "model": "qwen2.5:3b",
+     "base_model": true,
+     "k": 17,
+     "n": 35,
+     "accuracy": 0.4857,
+     "wilson95": [
+      0.33,
+      0.644
+     ],
+     "rank_spread": [
+      1,
+      6
+     ]
+    },
+    {
+     "model": "deepseek-r1:8b",
+     "base_model": true,
+     "k": 9,
+     "n": 35,
+     "accuracy": 0.2571,
+     "wilson95": [
+      0.142,
+      0.421
+     ],
+     "rank_spread": [
+      4,
+      6
+     ]
+    }
+   ],
+   "own_overlays": {
+    "count": 13,
+    "excluded_before_comparison": true,
+    "listed": false
+   }
+  },
+  "openness": {
+   "file": "peritem_oss.jsonl",
+   "sha256": "f04421a8a8b4a6f01d79dfe771ede8ef40de4338955dcb64a48244df9008685f",
+   "distinct_items": 32,
+   "board_determination": "TIE",
+   "models": [
+    {
+     "model": "gemma3:12b",
+     "base_model": true,
+     "k": 27,
+     "n": 32,
+     "accuracy": 0.8438,
+     "wilson95": [
+      0.682,
+      0.931
+     ],
+     "rank_spread": [
+      1,
+      4
+     ]
+    },
+    {
+     "model": "mistral:7b",
+     "base_model": true,
+     "k": 23,
+     "n": 32,
+     "accuracy": 0.7188,
+     "wilson95": [
+      0.546,
+      0.844
+     ],
+     "rank_spread": [
+      1,
+      6
+     ]
+    },
+    {
+     "model": "qwen2.5:3b",
+     "base_model": true,
+     "k": 20,
+     "n": 32,
+     "accuracy": 0.625,
+     "wilson95": [
+      0.453,
+      0.771
+     ],
+     "rank_spread": [
+      1,
+      6
+     ]
+    },
+    {
+     "model": "qwen2.5:0.5b-instruct",
+     "base_model": true,
+     "k": 19,
+     "n": 32,
+     "accuracy": 0.5938,
+     "wilson95": [
+      0.423,
+      0.745
+     ],
+     "rank_spread": [
+      1,
+      6
+     ]
+    },
+    {
+     "model": "deepseek-r1:8b",
+     "base_model": true,
+     "k": 16,
+     "n": 32,
+     "accuracy": 0.5,
+     "wilson95": [
+      0.336,
+      0.664
+     ],
+     "rank_spread": [
+      2,
+      6
+     ]
+    },
+    {
+     "model": "llama3.2:3b",
+     "base_model": true,
+     "k": 14,
+     "n": 32,
+     "accuracy": 0.4375,
+     "wilson95": [
+      0.282,
+      0.607
+     ],
+     "rank_spread": [
+      2,
+      6
+     ]
+    }
+   ],
+   "own_overlays": {
+    "count": 13,
+    "excluded_before_comparison": true,
+    "listed": false
+   }
+  },
+  "machinery-conformity": {
+   "file": "peritem_mach.jsonl",
+   "sha256": "d3133100c2889cf259f2faa5390c69ccd3c71ac157fbb4ccd369b3c679996a0b",
+   "distinct_items": 33,
+   "board_determination": "UNTESTED",
+   "models": [],
+   "own_overlays": {
+    "count": 13,
+    "excluded_before_comparison": true,
+    "listed": false
+   },
+   "models_withheld": 6,
+   "models_withheld_ids": [
+    "deepseek-r1:8b",
+    "gemma3:12b",
+    "llama3.2:3b",
+    "mistral:7b",
+    "qwen2.5:0.5b-instruct",
+    "qwen2.5:3b"
+   ],
+   "untested_reason_code": "NO_SIGNED_CARD_FOR_AXIS",
+   "untested_reason": "The published rows give TIE (exact McNemar p=0.5811, n=33), but this axis has no signed card of any model in the public card index (/signed/card_index.json). The board publishes a separation determination only on axes that carry signed cards, so this one stays UNTESTED rather than resting on rows alone."
+  },
+  "swarm": {
+   "file": "peritem_swarm.jsonl",
+   "sha256": "0a54c4abae07d638d25e7121771500dfc3f40ad0a40a46279a1b6a4dc17f6212",
+   "distinct_items": 3,
+   "board_determination": "UNTESTED",
+   "models": [],
+   "own_overlays": {
+    "count": 13,
+    "excluded_before_comparison": true,
+    "listed": false
+   },
+   "models_withheld": 6,
+   "models_withheld_ids": [
+    "deepseek-r1:8b",
+    "gemma3:12b",
+    "llama3.2:3b",
+    "mistral:7b",
+    "qwen2.5:0.5b-instruct",
+    "qwen2.5:3b"
+   ],
+   "untested_reason_code": "ROWS_ARE_A_RETIRED_BANK",
+   "untested_reason": "The published swarm rows are the retired 3-prompt PROTOCOL bank (40 rows per model over 3 distinct items), not the wave-2b bank the board's swarm row serves; rows from one bank cannot decide a separation determination about another."
+  },
+  "affect": {
+   "file": "peritem_affect.jsonl",
+   "sha256": "7e8a612889d486df40ba638e36ba976cd2820460272fe65c0202e271c95e99e7",
+   "distinct_items": 41,
+   "board_determination": "UNTESTED",
+   "models": [],
+   "own_overlays": {
+    "count": 13,
+    "excluded_before_comparison": true,
+    "listed": false
+   },
+   "models_withheld": 6,
+   "models_withheld_ids": [
+    "deepseek-r1:8b",
+    "gemma3:12b",
+    "llama3.2:3b",
+    "mistral:7b",
+    "qwen2.5:0.5b-instruct",
+    "qwen2.5:3b"
+   ],
+   "untested_reason_code": "NO_SIGNED_CARD_FOR_AXIS",
+   "untested_reason": "The published rows give TIE (exact McNemar p=1.0, n=41), but this axis has no signed card of any model in the public card index (/signed/card_index.json). The board publishes a separation determination only on axes that carry signed cards, so this one stays UNTESTED rather than resting on rows alone."
+  }
+ }
+}

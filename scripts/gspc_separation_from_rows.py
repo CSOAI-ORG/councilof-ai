@@ -35,6 +35,10 @@ MODES
                                     carry signed cards and whether the rows' leader has a signed
                                     per-model card of its own.
   --dataset-revision SHA            the Hugging Face commit the rows were read from (recorded).
+  --fleet REPO                      (2026-10-06, living board) write ONLY the unsigned
+                                    public/interop/gspc-fleet-2026-08-12.{json,csv}: every base model's
+                                    k, n, accuracy, Wilson 95% interval and rank spread per axis, with the
+                                    board's own determination copied beside it. Decides nothing.
   --power REPO                      (2026-09-28, board honesty) write ONLY the unsigned generated
                                     module functions/api/_gspc_rows_power.ts inside REPO: per axis
                                     distinct_items, paired_items, the observed discordance rate and
@@ -393,6 +397,139 @@ def write_power_module(repo, rows_dir, revision):
     return module
 
 
+# ── fleet: every base model's score, n, Wilson interval and rank spread per axis (2026-10-06) ──
+# The living board shows the whole compared fleet, not only leader and runner-up. Nothing here
+# decides anything: SEPARATED / TIE / UNTESTED stay the board's determinations (the record
+# above, served by /api/gspc). The rank spread is the Wilson annotation re-expressed as the
+# range of positions a model could hold given every other model's interval:
+#   best  = 1 + (models whose lower bound is above this model's upper bound)
+#   worst = 1 + (models whose upper bound is above this model's lower bound)
+# Two models whose spreads overlap are not ordered by the measurement.
+FLEET_PATH = "public/interop/gspc-fleet-2026-08-12.json"
+FLEET_CSV_PATH = "public/interop/gspc-fleet-2026-08-12.csv"
+
+
+def rank_spread(intervals):
+    """intervals: {model: (lo, hi)} -> {model: (best, worst)}. Pure; ties at equal bounds do not
+    order two models (strict inequalities), so identical intervals share a spread."""
+    out = {}
+    for m, (lo, hi) in intervals.items():
+        above = sum(1 for o, (olo, _ohi) in intervals.items() if o != m and olo > hi)
+        maybe = sum(1 for o, (_olo, ohi) in intervals.items() if o != m and ohi > lo)
+        out[m] = (1 + above, 1 + maybe)
+    return out
+
+
+def fleet_axis(rows):
+    """Base fleet only: our own prompt overlays are counted and excluded, never scored here."""
+    per = collections.defaultdict(lambda: [0, 0])
+    own = set()
+    for r in rows:
+        if str(r.get("transport_error", "")).startswith("TRANSPORT"):
+            continue
+        m = r["model"]
+        if is_own(m):
+            own.add(m)
+            continue
+        per[m][1] += 1
+        per[m][0] += bool(r.get("correct"))
+    ci = {m: wilson(k, n) for m, (k, n) in per.items()}
+    spread = rank_spread(ci)
+    models = []
+    for m, (k, n) in sorted(per.items(), key=lambda kv: (-kv[1][0] / max(1, kv[1][1]), kv[0])):
+        lo, hi = ci[m]
+        models.append({"model": m, "base_model": m in BASES, "k": k, "n": n,
+                       "accuracy": round(k / n, 4) if n else None,
+                       "wilson95": [round(lo, 3), round(hi, 3)],
+                       "rank_spread": list(spread[m])})
+    return models, len(own)
+
+
+def write_fleet(repo, rows_dir, revision):
+    peritem_sha256, sums = verify_sums(rows_dir)
+    rec = json.load(open(os.path.join(repo, "public/interop/gspc-peritem-rows-2026-08-12.json"), encoding="utf-8"))
+    if rec.get("peritem_sha256") != peritem_sha256:
+        raise SystemExit(f"ABORT rows {peritem_sha256} are not the rows the signed record binds "
+                         f"({rec.get('peritem_sha256')}); a fleet table from other rows would describe another bank")
+    axes = {}
+    for axis, fname in AXIS_FILE.items():
+        raw = open(os.path.join(rows_dir, fname), "rb").read()
+        assert hashlib.sha256(raw).hexdigest() == sums[fname]
+        rows = [json.loads(line) for line in raw.decode("utf-8").splitlines() if line.strip()]
+        models, own_n = fleet_axis(rows)
+        r = rec["axes"][axis]
+        entry = {"file": fname, "sha256": sums[fname], "distinct_items": len({x["item"] for x in rows}),
+                 "board_determination": r["determination"],
+                 "models": models,
+                 "own_overlays": {"count": own_n, "excluded_before_comparison": True, "listed": False}}
+        if r["determination"] == "UNTESTED":
+            # The board withholds a leader where it publishes no determination; listing every
+            # model's score here would name one by the back door. Withheld, with the board's reason.
+            entry["models"] = []
+            entry["models_withheld"] = len(models)
+            entry["models_withheld_ids"] = sorted(m["model"] for m in models)
+            entry["untested_reason_code"] = r.get("untested_reason_code")
+            entry["untested_reason"] = r.get("untested_reason")
+        axes[axis] = entry
+    doc = {
+        "schema": "csoai.gspc-fleet/0.1",
+        "what": "Every base model's score, n, Wilson 95% interval and rank spread on each behavioural axis "
+                "of the 2026-08-12 frozen banks, computed from the published per-item rows.",
+        "measured": "2026-08-12 (day precision, from the dataset MANIFEST.json)",
+        "dataset": DATASET,
+        "dataset_url": f"https://huggingface.co/datasets/{DATASET}",
+        "dataset_revision": revision,
+        "peritem_sha256": peritem_sha256,
+        "licence": "CC-BY-4.0",
+        "licence_note": "Same licence as the per-item rows these figures are computed from.",
+        "statistics": "Classical test theory: accuracy = k/n over the frozen items; Wilson 1927 score interval "
+                      "at 95% (z=1.959964); rank spread from interval overlap. No item response model is fitted.",
+        "rank_spread_rule": "best = 1 + models whose lower bound is above this model's upper bound; worst = 1 + "
+                            "models whose upper bound is above this model's lower bound. Overlapping spreads "
+                            "mean the measurement does not order those models.",
+        "determination_authority": "Separation (SEPARATED / TIE / UNTESTED) is decided only by the board's fixed "
+                                   "test (exact McNemar, leader vs best base model, p<0.05) and served by "
+                                   "/api/gspc. board_determination is copied from the signed rows record "
+                                   "(/interop/gspc-peritem-rows-2026-08-12.json); the rank spread is annotation "
+                                   "and decides nothing. Where the board says UNTESTED, no position is published.",
+        "untested_rule": "On an axis the board marks UNTESTED, per-model figures are withheld (models: [], "
+                         "models_withheld: N, models_withheld_ids: who answered, without figures) because the board names no leader there; the reason is the board's "
+                         "own. The rows stay public in the dataset.",
+        "own_model_rule": "CSOAI's own prompt overlays on stock base models are in the rows; they are counted, "
+                          "excluded before comparison, and never scored or listed here.",
+        "producer": "scripts/gspc_separation_from_rows.py --fleet",
+        "signed": False,
+        "signed_note": "Not a signed artifact. The rows it is computed from are bound by hash in the signed rows "
+                       "record (/interop/gspc-peritem-rows-2026-08-12.signed.json); recompute from the dataset "
+                       "to check every figure.",
+        "axes": axes,
+    }
+    with open(os.path.join(repo, FLEET_PATH), "w", encoding="utf-8") as fh:
+        fh.write(json.dumps(doc, indent=1, ensure_ascii=False) + "\n")
+    lines = ["axis,board_determination,model,group,k,n,accuracy,wilson95_lo,wilson95_hi,rank_best,rank_worst,"
+             "position_published,in_comparison,note"]
+    for axis, e in axes.items():
+        published = e["board_determination"] != "UNTESTED"
+        if not published:
+            lines.append(",".join(str(x) for x in (
+                axis, e["board_determination"], "", "base_models_withheld", "", "", "", "", "", "", "", "no", "no",
+                f"{e['models_withheld']} base models answered this bank; per-model figures withheld because the "
+                f"board publishes no determination here ({e.get('untested_reason_code') or 'UNTESTED'})")))
+        for m in e["models"]:
+            lo, hi = m["wilson95"]
+            b, w = m["rank_spread"]
+            lines.append(",".join(str(x) for x in (
+                axis, e["board_determination"], m["model"], "base_model", m["k"], m["n"], m["accuracy"], lo, hi,
+                b, w, "yes", "yes", "")))
+        lines.append(",".join(str(x) for x in (
+            axis, e["board_determination"], "", "own_overlays_excluded", "", "", "", "", "", "", "", "no", "no",
+            f"{e['own_overlays']['count']} CSOAI-owned prompt overlays in the rows; excluded before comparison; "
+            "not scored here")))
+    with open(os.path.join(repo, FLEET_CSV_PATH), "w", encoding="utf-8") as fh:
+        fh.write("\n".join(lines) + "\n")
+    return doc
+
+
 def test_rows(rows_dir, nperm):
     peritem_sha256, sums = verify_sums(rows_dir)
     out = {}
@@ -570,9 +707,18 @@ def main():
     ap.add_argument("--dataset-revision", default="UNRECORDED")
     ap.add_argument("--power", metavar="REPO",
                     help="write ONLY the unsigned functions/api/_gspc_rows_power.ts (distinct_items, MDE, fleet)")
+    ap.add_argument("--fleet", metavar="REPO",
+                    help="write ONLY the unsigned public/interop/gspc-fleet-2026-08-12.{json,csv} (every base model)")
     ap.add_argument("--allow-signed-rewrite", action="store_true",
                     help="with --board: rewrite the public record even when its .signed.json binds other bytes")
     a = ap.parse_args()
+    if a.fleet:
+        doc = write_fleet(a.fleet, a.rows, a.dataset_revision)
+        for axis, e in doc["axes"].items():
+            print(f"  fleet {axis:21s} {e['board_determination']:9s} " + " ".join(
+                f"{m['model']}={m['k']}/{m['n']}[{m['rank_spread'][0]}-{m['rank_spread'][1]}]" for m in e["models"]))
+        if not (a.json or a.board or a.power):
+            return 0
     if a.power:
         mod = write_power_module(a.power, a.rows, a.dataset_revision)
         f = mod["fleet"]

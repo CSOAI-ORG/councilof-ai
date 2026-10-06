@@ -243,6 +243,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Measurement Board"
  },
  {
+  "path": "/board/model",
+  "comp": "BoardModel",
+  "title": "Board Model"
+ },
+ {
   "path": "/board/models",
   "comp": "MeasuredModels",
   "title": "Measured Models"

@@ -12,6 +12,7 @@ import {
 } from "@/data/axis-sets";
 import { GAP_BY_AXIS } from "./GSPCGapMap";
 import { verifyCardHref } from "@/lib/cardParam";
+import LivingBoard, { BoardFreshness } from "@/components/gspc/LivingBoard";
 
 /**
  * /board — one board a person can actually navigate.
@@ -1057,6 +1058,8 @@ export default function MeasurementBoard() {
         <h1 className="mt-2 text-3xl font-black tracking-tight text-gray-900 sm:text-4xl">
           The measurement board
         </h1>
+        {/* dated freshness on the first screen: read live from /api/gspc, never typed */}
+        <BoardFreshness />
         <p className="mt-3 max-w-3xl text-base text-gray-700">
           We publish several different measuring instruments. Each one asks a different set of
           questions, of different things, on different dates — so each one carries its own count,
@@ -1071,6 +1074,9 @@ export default function MeasurementBoard() {
           from, so you can open the file and check.
         </p>
       </header>
+
+      {/* ── the living board: freshness, rank spread on one frozen bank, downloads ── */}
+      <LivingBoard withFreshness={false} />
 
       {/* ── the set switcher, with sizes shown before you click ────────────── */}
       <nav className="mt-6" aria-label="Choose a measurement set">
