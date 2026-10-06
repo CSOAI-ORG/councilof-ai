@@ -38,7 +38,6 @@ test("legacy ChatGPT manifest points to canonical Actions and freezes no board c
 test("site and plugin surfaces point at the same public authorities", () => {
   const files = [
     read("client/src/pages/ClaimMaintenance.tsx"),
-    read("client/src/pages/Dashboard.tsx"),
     read("client/src/components/home/PluginBlock.tsx"),
   ];
   for (const s of files) {
@@ -48,6 +47,13 @@ test("site and plugin surfaces point at the same public authorities", () => {
   }
   for (const s of files) assert.ok(s.includes("/api/claims/register"));
   assert.ok(files[0].includes("/api/claims/events/head"));
+  // 2026-09-30: the /dashboard metrics page was retired (client/src/pages/Dashboard.tsx is now the
+  // Council OS shell). Its board, card and corrections figures moved to the workspace home, which
+  // reads them beside their sources; it carries no claim-maintenance cards, so it is held only to
+  // the authorities it shows.
+  const workspace = read("client/src/components/gspc/GspcWorkspaceHome.tsx");
+  assert.ok(workspace.includes("/api/state"));
+  assert.ok(workspace.includes("/api/corrections"));
 });
 
 test("plugin descriptor carries no frozen tool or axis count", () => {

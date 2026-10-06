@@ -600,7 +600,7 @@ export default function HomeGspcBoard({
             {unread ? "UNCHECKABLE — the board was not read on this load" : measuredOn ?? "UNCHECKABLE — the payload carries no measured_on.date"}
           </strong>
           {" · "}source:{" "}
-          <code className="font-mono">GET /api/gspc</code>
+          <a href="/api/gspc" className="font-mono underline underline-offset-2">GET /api/gspc</a>
           {" → totals, measured_on.date"}
         </p>
       ) : null}

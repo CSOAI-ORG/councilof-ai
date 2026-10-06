@@ -23,12 +23,12 @@
   },
   "mill_cards_signed": {
    "path": "/interop/mill-cards-signed/",
-   "files_read": 2863,
-   "cards_counted": 1208,
+   "files_read": 2868,
+   "cards_counted": 1210,
    "cards_counted_with_admission_receipt": 262,
    "cards_not_counted": {
     "signature_not_valid": 0,
-    "not_measured": 562,
+    "not_measured": 565,
     "not_quotable": 0,
     "under_30": 0,
     "unsigned": 36,
@@ -38,7 +38,7 @@
    "rule": "Ed25519 signature verifies under the did:web:csoai.org key it names, id == sha256(canonical body), status MEASURED, quotable, n >= 30, not STAGED_UNSIGNED, not withdrawn, not superseded"
   }
  },
- "inputs_sha256": "3465575ca67574ac6df13fe9f49f656a6019240741fb00ce7c11e9e9015880a8",
+ "inputs_sha256": "05193983a6246323cd945055890c7a612c379cc22e20b2ce0102da0669f51617",
  "models": [
   {
    "id": "clan-law-plain",
@@ -871,6 +871,22 @@
    ]
   },
   {
+   "id": "mistral:7b",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 14,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed",
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "mistral:7b",
+    "ollama:mistral:7b@sha256:6577803aa9a036369e481d648a2baebb381ebc6e897f2bb9a766a2aa7bfbc1cf"
+   ]
+  },
+  {
    "id": "deepseek-ai/DeepSeek-R1",
    "name_published": true,
    "kind": "third_party",
@@ -1344,22 +1360,6 @@
    "admission_receipt": true,
    "recorded_as": [
     "meta-llama/Llama-3.1-70B-Instruct"
-   ]
-  },
-  {
-   "id": "mistral:7b",
-   "name_published": true,
-   "kind": "third_party",
-   "cards": 12,
-   "axes": 12,
-   "sources": [
-    "mill-cards-signed",
-    "signed-card-index"
-   ],
-   "admission_receipt": false,
-   "recorded_as": [
-    "mistral:7b",
-    "ollama:mistral:7b@sha256:6577803aa9a036369e481d648a2baebb381ebc6e897f2bb9a766a2aa7bfbc1cf"
    ]
   },
   {

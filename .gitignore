@@ -2,6 +2,9 @@ node_modules/
 .pnpm-store/
 dist/
 *.zip
+# The OpenAI plugin package is a rendered, committed artifact: scripts/harness-x/render.mjs --check
+# (functions/mcp/tool-counts.test.ts) compares it byte for byte, so CI must see it.
+!distribution/packages/gspc-openai-plugin.zip
 .DS_Store
 .env
 .env.local

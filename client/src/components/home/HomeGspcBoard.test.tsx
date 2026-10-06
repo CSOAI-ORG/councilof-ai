@@ -171,7 +171,9 @@ describe("HomeGspcBoard (mocked /api/gspc)", () => {
     expect(html).toContain("Inspect the attestation request");
     expect(html).toContain("it does not start a new GSPC run");
     expect(html).not.toContain("Need a new scoped run?");
-    expect(seo.routes["/assess"].description).toContain("does not trigger a new GSPC run");
+    // seo-head.json was reworded (same meaning) to "re-serves signed measurement cards already on
+    // file and starts no new run"; what is pinned is that paying is never described as starting a run.
+    expect(seo.routes["/assess"].description).toContain("starts no new run");
     expect(seo.routes["/assess"].description).not.toContain("Runs are metered per call");
   });
 

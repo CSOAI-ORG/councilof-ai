@@ -248,8 +248,20 @@ describe("claim-events-changed-pages.mjs", () => {
     expect(src).not.toMatch(/\bfetch\s*\(|node:https?|node:net|node:dgram|XMLHttpRequest|WebSocket|child_process/);
   });
 
-  it("the committed page-deps manifest names only real feed routes", () => {
+  // 2026-10-01 (847abe01b) added /claim-maintenance/, the human page that renders the feed (App.tsx
+  // route; live 200 while a sibling nonsense path 404s). A page earns its place here by being a real
+  // route that renders the feed; nothing else may be listed, because the list is what IndexNow pings.
+  const FEED_PAGES = new Set(["https://councilof.ai/claim-maintenance/"]);
+  it("the committed page-deps manifest names only real feed routes and the pages that render the feed", () => {
     const m = JSON.parse(readFileSync(join(HERE, "claim-events-page-deps.json"), "utf8"));
-    for (const p of m.pages) expect(p.url).toMatch(/^https:\/\/councilof\.ai\/api\/claims\/events(\/head)?$/);
+    for (const p of m.pages) {
+      if (FEED_PAGES.has(p.url)) {
+        expect(p.depends_on).toEqual(["feed"]);
+        const route = new URL(p.url).pathname.replace(/\/$/, "");
+        expect(readFileSync(join(HERE, "../../client/src/App.tsx"), "utf8")).toContain(`<Route path="${route}"`);
+      } else {
+        expect(p.url).toMatch(/^https:\/\/councilof\.ai\/api\/claims\/events(\/head)?$/);
+      }
+    }
   });
 });
