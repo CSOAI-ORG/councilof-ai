@@ -317,7 +317,17 @@ export async function paidToolResult(
         ? "A payment authorization was presented, but this response does not prove settlement. Inspect the returned reason, wallet, chain and facilitator before signing or retrying."
         : "sign accepts[0] (x402 exact scheme, EIP-3009 transferWithAuthorization under extra.name/version) with your wallet, base64 the payload, and call this tool again with x_payment=<that value>. The free preview, if any, is in payment_required.csoai.preview.",
     };
-    const summary = `PAYMENT_REQUIRED — ${tool.csoai.route} answered 402; accepts[] carries asset, amount and payTo. ${retryWarning} ${DOCTRINE}.`;
+    // T11 (6 Oct 2026): a dated amount is said in the human line, built from the challenge itself so it
+    // disappears once accepts[0] no longer carries an end date. No amount is typed here.
+    const accepts0 = (Array.isArray(paymentRequired.accepts) ? paymentRequired.accepts[0] : undefined) as
+      | { csoai_pricing?: { ends_at?: unknown } }
+      | undefined;
+    const endsAt = accepts0?.csoai_pricing?.ends_at;
+    const datedAmount =
+      typeof endsAt === "string" && endsAt
+        ? ` Launch amount until ${endsAt}; after that this tool asks the standard amount in accepts[0].csoai_pricing.normal_amount_atomic — read accepts[] on every call.`
+        : "";
+    const summary = `PAYMENT_REQUIRED — ${tool.csoai.route} answered 402; accepts[] carries asset, amount and payTo. ${retryWarning}${datedAmount} ${DOCTRINE}.`;
     return {
       content: [
         { type: "text" as const, text: JSON.stringify(payload) },

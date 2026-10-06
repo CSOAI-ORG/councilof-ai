@@ -7,6 +7,8 @@ import {
   toLegacyNetwork,
   toV1Requirements,
   hasPaymentHeader,
+  headerPaymentRequired,
+  pricingTerms,
 } from "./_x402";
 import {
   ESTATE_PAY_TO,
@@ -29,6 +31,44 @@ const receipt = (v: 1 | 2) =>
   );
 
 afterEach(() => vi.unstubAllGlobals());
+
+describe("pricing_terms — a dated amount is said in words, then disappears by itself (T11)", () => {
+  const challenge = (now: string) =>
+    buildPaymentRequiredV2({
+      resourceUrl: RESOURCE,
+      description: "fixture door",
+      serviceName: "fixture",
+      accepts: x402Accepts({ X402_PROMO_NOW: now }, RESOURCE, { skuId: "issuance", tier: "reserve" }),
+      bazaar: { info: {}, schema: {} },
+      csoai: { per: "fixture" },
+    });
+
+  it("is present during the launch amount, names its end and the field, and carries no amount", () => {
+    const body = challenge("2026-10-10T23:59:59Z") as { csoai: Record<string, unknown> };
+    const terms = String(body.csoai.pricing_terms);
+    expect(body.csoai.per).toBe("fixture"); // the door's own sidecar keys survive
+    expect(terms).toContain("until 2026-10-11T00:00:00Z (end of 2026-10-10 UTC)");
+    expect(terms).toContain("csoai_pricing.normal_amount_atomic");
+    expect(terms).toContain("your wallet signs exactly the amount shown and nothing more");
+    expect(terms).not.toMatch(/\d{4,}(?![-:T])|\$|USDC\s*\d/); // no amount in prose
+    // Body only: the PAYMENT-REQUIRED header never carries the sidecar.
+    expect(JSON.stringify(headerPaymentRequired(body))).not.toContain("pricing_terms");
+  });
+
+  it("is absent once the launch amount has ended, and absent on a door with no sidecar of its own", () => {
+    const after = challenge("2026-10-11T00:00:00Z") as { csoai: Record<string, unknown> };
+    expect(after.csoai).toEqual({ per: "fixture" });
+    const bare = buildPaymentRequiredV2({
+      resourceUrl: RESOURCE,
+      description: "fixture door",
+      serviceName: "fixture",
+      accepts: x402Accepts({ X402_PROMO_NOW: "2026-10-12T00:00:00Z" }, RESOURCE, { skuId: "issuance", tier: "reserve" }),
+      bazaar: { info: {}, schema: {} },
+    });
+    expect("csoai" in bare).toBe(false);
+    expect(pricingTerms(x402Accepts({ X402_PROMO_NOW: "2026-10-12T00:00:00Z" }, RESOURCE, { skuId: "issuance", tier: "reserve" }))).toBeNull();
+  });
+});
 
 describe("x402 rail — money destination and token domain", () => {
   it("applies the bounded launch offer only to existing-data work and exposes both terms", () => {

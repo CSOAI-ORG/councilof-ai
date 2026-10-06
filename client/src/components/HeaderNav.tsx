@@ -36,6 +36,7 @@ export const navigation: NavGroup[] = [
       { name: 'Evaluator access conditions', href: '/evaluator-access', description: 'No developer money, no gag clauses, the method on the card, corrections govern, access and redaction terms published' },
       { name: 'The GSPC instrument', href: '/instrument', description: 'Four deterministic lenses over frozen provisions. No model sits in the verdict path' },
       { name: 'Published tools', href: '/tools', description: 'MCP servers you can run yourself — not a marketplace' },
+      { name: 'Connect your AI', href: '/connect/', description: 'Add the free MCP door to your AI client. No key, no account' },
       { name: 'Agent quickstart', href: '/quickstart', description: 'Explore measurements, follow the change record, verify evidence, then connect to the supported feeds; commissioning is optional' },
       { section: 'Specialist boards', name: 'Financial axis', href: '/financial-axes', description: 'The declared financial slots — measured where measured, UNMEASURED and honest where not' },
       { name: 'Stablecoin readiness', href: '/stablecoins', description: 'A frozen discovery index with measurement, signature, root, witness and settlement state kept separate' },

@@ -10,6 +10,7 @@
  *
  * Nothing here is used for anything else: no analytics, no enrichment, no third party.
  */
+import { headFromGet } from "./_head";
 
 interface Env {
   LEADS?: KVNamespace;
@@ -66,3 +67,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
  */
 export const onRequestGet: PagesFunction<Env> = async (ctx) =>
   Response.json({ bound: Boolean(ctx.env.LEADS) }, { headers: { "cache-control": "no-store" } });
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

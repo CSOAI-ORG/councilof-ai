@@ -18,6 +18,7 @@
  * the owner's review. No score, rank or index may be derived from these states.
  */
 import { BASE_HEADERS, type Ctx, loadVerified, splitLines, unavailable } from "../../../_lib/claimEvents";
+import { headFromGet } from "../../_head";
 
 
 export const onRequestGet = async (ctx: Ctx): Promise<Response> => {
@@ -65,3 +66,7 @@ export const onRequestOptions = async (): Promise<Response> =>
     status: 204,
     headers: { ...BASE_HEADERS, "access-control-allow-methods": "GET, OPTIONS", "access-control-allow-headers": "*" },
   });
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

@@ -41,6 +41,7 @@ import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
 import { AXES_C } from "./_gspc_axes_c";
 import { verifyCard } from "../_lib/cardVerify";
+import { headFromGet } from "./_head";
 
 // WHAT WAS WRONG (found by operating the endpoint, 2026-08-26)
 //
@@ -378,3 +379,7 @@ export const onRequestGet: PagesFunction = async (context) => {
     headers: { ...headers, "content-type": "image/svg+xml; charset=utf-8" },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

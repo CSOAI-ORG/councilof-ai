@@ -314,6 +314,20 @@ test("a cold /os door converges on the canonical Dashboard", async ({
   await expectColdDoor(page, "/os?lobby=swift", "swift");
 });
 
+test("a fresh deep link lands on its section, not the page head", async ({ page }) => {
+  // App.tsx ScrollToTop used to scroll to the top on every route mount, undoing the browser's own jump
+  // to the fragment, so /how-we-work/#machine-surface (the home hero's link) opened at the page head.
+  await page.goto("/how-we-work/#machine-surface");
+  const section = page.locator("#machine-surface");
+  await expect(section).toBeVisible({ timeout: 30_000 });
+  await expect
+    .poll(async () => Math.abs((await section.boundingBox())?.y ?? 99_999), {
+      message: "#machine-surface within 200px of the viewport top",
+      timeout: 15_000,
+    })
+    .toBeLessThan(200);
+});
+
 test("a cold /gspc-scoreboard door converges on the canonical Dashboard", async ({
   page,
 }) => {

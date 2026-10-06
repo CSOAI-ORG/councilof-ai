@@ -23,6 +23,7 @@ import { entries as roots } from "./roots.xml";
 import { entries as census } from "./x402-census.xml";
 import { entries as notes } from "./notes.xml";
 import { boardEntries } from "./_board";
+import { headFromGet } from "../api/_head";
 
 const esc = (s: unknown) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
@@ -130,3 +131,7 @@ curl -sI https://councilof.ai/feeds/corrections.xml</code></pre>
 </main></body></html>`;
   return new Response(html, { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=300" } });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

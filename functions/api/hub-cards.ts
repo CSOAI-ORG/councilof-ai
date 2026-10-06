@@ -27,6 +27,7 @@
 // subtotal published as a total is an invented number. When any index is unread
 // the totals are now withheld (null) and what was read is offered separately,
 // under a name that cannot be mistaken for the population.
+import { headFromGet } from "./_head";
 
 /// <reference types="@cloudflare/workers-types" />
 
@@ -649,3 +650,7 @@ export const onRequestGet: PagesFunction = async (ctx) => {
     status: reached === 0 ? 503 : 200,
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

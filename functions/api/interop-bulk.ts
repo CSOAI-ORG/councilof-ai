@@ -8,6 +8,7 @@
  *
  * Trust engine free forever. Metered = bulk/scale/replay only. No certification.
  */
+import { headFromGet } from "./_head";
 interface Env { RECEIPT_PUBKEY_HEX?: string }
 
 const SURFACES = [
@@ -65,3 +66,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
     { status: 200 }
   );
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

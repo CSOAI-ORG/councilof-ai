@@ -293,7 +293,7 @@ export default function ConnectHub() {
             <p className="t-body mt-3 max-w-3xl text-muted-foreground">
               <code className="font-mono text-foreground">{FULL_DOOR}</code> serves the same free tools plus metered ones.
               A metered tool called without payment answers with an x402 payment challenge that names its free
-              equivalent; a challenge is not a charge, and nothing is paid unless your own wallet signs it. The
+              equivalent; a challenge is not a charge, and nothing is paid unless your own wallet signs it. Amounts are set per request in the payment challenge and can change; your wallet signs exactly the amount shown and nothing more. The
               doors and their free previews are listed in <A href="/.well-known/x402.json">/.well-known/x402.json</A>.
             </p>
             <p className="t-body mt-3 text-muted-foreground">

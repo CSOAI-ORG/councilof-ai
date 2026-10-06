@@ -15,6 +15,7 @@
 // printed here; the count is read at /api/state, so this note never carries a second copy of it.
 import chainFacts from "../../public/signed/chain-facts.json";
 import { PINNED_ANCHORS, b64ToBytes, bytesToHex } from "../_lib/cardVerify";
+import { headFromGet } from "./_head";
 
 interface CardIndexEntry {
   card: string;
@@ -228,3 +229,7 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
       "check is re-run: unchecked is not failed. See /signed/HOW-TO-VERIFY.md.",
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

@@ -19,6 +19,7 @@
  */
 import index from "../../public/interop/x402-census/index.json";
 import { rss, FEED_HEADERS, type Entry } from "./_xml";
+import { headFromGet } from "../api/_head";
 
 const SITE = "https://councilof.ai";
 const SELF = `${SITE}/feeds/x402-census.xml`;
@@ -114,3 +115,7 @@ export const onRequestGet: PagesFunction = async () =>
     ),
     { headers: FEED_HEADERS },
   );
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

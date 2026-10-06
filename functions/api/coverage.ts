@@ -14,6 +14,7 @@ import {
 // DEFINITIONS = gspc-tools.json + paid-tools.json) — never a typed number.
 import GSPC_TOOLS from "../mcp/gspc-tools.json";
 import PAID_TOOLS from "../mcp/paid-tools.json";
+import { headFromGet } from "./_head";
 
 export const MCP_TOOL_TABLE = {
   free: (GSPC_TOOLS as { tools: { name: string }[] }).tools.map((tool) => tool.name),
@@ -144,3 +145,7 @@ export const onRequestOptions: PagesFunction = async () =>
     status: 204,
     headers: { "access-control-allow-origin": "*" },
   });
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

@@ -3,6 +3,7 @@
 // guidance; predicates only; signed; UNMEASURED honest where not verified. Never a
 // certification of any regime. Signing mirrors /api/gspc: canonical JCS + Ed25519 via
 // BOARD_SIGN_KEY_PKCS8_B64, key echoed via did:web:csoai.org#board-attestation-1.
+import { headFromGet } from "./_head";
 
 interface Env { KV?: unknown; BOARD_SIGN_KEY_PKCS8_B64?: string }
 
@@ -65,3 +66,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     headers: { "content-type": "application/json; charset=utf-8" },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

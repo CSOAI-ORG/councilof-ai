@@ -80,9 +80,16 @@ describe("stale copy honesty", () => {
     expect(card.capabilities.free_tools).toBe(lock.free.length);
     expect(card.capabilities.tools).toEqual(fleet);
     expect(card.description).toContain(`server ${registry.version}`);
-    expect(card.endpoints.mcp.stdio).toBe(
-      `npx -y ${registry.packages[0].identifier}@${registry.packages[0].version}`,
-    );
+    // While every published npm release is deprecated on npm (scripts/harness-x/render.mjs
+    // NPM_STDIO_ADVERTISED), the card withholds the stdio pin and names the free door instead.
+    if (card.endpoints.mcp.stdio === null) {
+      expect(card.endpoints.mcp.stdio_note).toMatch(/deprecated on npm.*use the free door https:\/\/councilof\.ai\/mcp\/free/);
+      expect(card.endpoints.mcp.free).toBe("https://councilof.ai/mcp/free");
+    } else {
+      expect(card.endpoints.mcp.stdio).toBe(
+        `npx -y ${registry.packages[0].identifier}@${registry.packages[0].version}`,
+      );
+    }
     // The agent card no longer lists /mcp as an A2A interface (it does not speak A2A;
     // spec v1.0.1 §8.3.1). The npm-tools copy it used to carry lives in mcp.json, asserted
     // above. What the card's JSONRPC interface must now say is that it is the real A2A door.
