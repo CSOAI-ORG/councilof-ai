@@ -2,7 +2,7 @@
  "discovery": {
   "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
   "http": 200,
-  "n_resources": 11,
+  "n_resources": 31,
   "network": "eip155:8453",
   "notes": [],
   "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
@@ -38,6 +38,87 @@
    "zero_price": true
   },
   {
+   "catalog_amount": "0",
+   "challenge": {
+    "amount": "0",
+    "checks": {
+     "amount_present": true,
+     "asset_usdc": true,
+     "network_base": true,
+     "payto_matches": true,
+     "resource_named": true,
+     "scheme_exact": true
+    },
+    "conformant": true,
+    "facilitator_seen": false,
+    "n_accepts": 1,
+    "notes": [],
+    "x402Version": 2
+   },
+   "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
+   "http": 402,
+   "i": 1,
+   "note": "free door: a live 402 route priced at zero \u2014 settles and charges nothing",
+   "paid_for": null,
+   "state": "PROBED",
+   "url": "https://councilof.ai/api/discover/chainlink",
+   "zero_price": true
+  },
+  {
+   "catalog_amount": "0",
+   "challenge": {
+    "amount": "0",
+    "checks": {
+     "amount_present": true,
+     "asset_usdc": true,
+     "network_base": true,
+     "payto_matches": true,
+     "resource_named": true,
+     "scheme_exact": true
+    },
+    "conformant": true,
+    "facilitator_seen": false,
+    "n_accepts": 1,
+    "notes": [],
+    "x402Version": 2
+   },
+   "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
+   "http": 402,
+   "i": 2,
+   "note": "free door: a live 402 route priced at zero \u2014 settles and charges nothing",
+   "paid_for": null,
+   "state": "PROBED",
+   "url": "https://councilof.ai/api/discover/ondo",
+   "zero_price": true
+  },
+  {
+   "catalog_amount": "0",
+   "challenge": {
+    "amount": "0",
+    "checks": {
+     "amount_present": true,
+     "asset_usdc": true,
+     "network_base": true,
+     "payto_matches": true,
+     "resource_named": true,
+     "scheme_exact": true
+    },
+    "conformant": true,
+    "facilitator_seen": false,
+    "n_accepts": 1,
+    "notes": [],
+    "x402Version": 2
+   },
+   "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
+   "http": 402,
+   "i": 3,
+   "note": "free door: a live 402 route priced at zero \u2014 settles and charges nothing",
+   "paid_for": null,
+   "state": "PROBED",
+   "url": "https://councilof.ai/api/discover/ondo-ousg",
+   "zero_price": true
+  },
+  {
    "catalog_amount": null,
    "challenge": {
     "amount": "10000",
@@ -57,7 +138,7 @@
    },
    "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
    "http": 402,
-   "i": 1,
+   "i": 4,
    "paid_for": "issuance",
    "state": "PROBED",
    "url": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id"
@@ -82,7 +163,7 @@
    },
    "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
    "http": 402,
-   "i": 2,
+   "i": 5,
    "paid_for": "assembly",
    "state": "PROBED",
    "url": "https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1"
@@ -107,85 +188,10 @@
    },
    "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
    "http": 402,
-   "i": 3,
-   "paid_for": "assembly",
-   "state": "PROBED",
-   "url": "https://councilof.ai/api/eunomia-data?feed=1"
-  },
-  {
-   "catalog_amount": null,
-   "challenge": {
-    "amount": "10000",
-    "checks": {
-     "amount_present": true,
-     "asset_usdc": true,
-     "network_base": true,
-     "payto_matches": true,
-     "resource_named": true,
-     "scheme_exact": true
-    },
-    "conformant": true,
-    "facilitator_seen": true,
-    "n_accepts": 1,
-    "notes": [],
-    "x402Version": 2
-   },
-   "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
-   "http": 402,
-   "i": 4,
-   "paid_for": "assembly",
-   "state": "PROBED",
-   "url": "https://councilof.ai/api/proof?bundle=1"
-  },
-  {
-   "catalog_amount": null,
-   "challenge": {
-    "amount": "10000",
-    "checks": {
-     "amount_present": true,
-     "asset_usdc": true,
-     "network_base": true,
-     "payto_matches": true,
-     "resource_named": true,
-     "scheme_exact": true
-    },
-    "conformant": true,
-    "facilitator_seen": true,
-    "n_accepts": 1,
-    "notes": [],
-    "x402Version": 2
-   },
-   "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
-   "http": 402,
-   "i": 5,
-   "paid_for": "issuance",
-   "state": "PROBED",
-   "url": "https://councilof.ai/api/rwa/evidence?asset=RLUSD"
-  },
-  {
-   "catalog_amount": null,
-   "challenge": {
-    "amount": "10000",
-    "checks": {
-     "amount_present": true,
-     "asset_usdc": true,
-     "network_base": true,
-     "payto_matches": true,
-     "resource_named": true,
-     "scheme_exact": true
-    },
-    "conformant": true,
-    "facilitator_seen": true,
-    "n_accepts": 1,
-    "notes": [],
-    "x402Version": 2
-   },
-   "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
-   "http": 402,
    "i": 6,
-   "paid_for": "issuance",
+   "paid_for": "assembly",
    "state": "PROBED",
-   "url": "https://councilof.ai/api/wrapper?id=usdc.e:arbitrum"
+   "url": "https://councilof.ai/api/signed-data-feed?feed=1"
   },
   {
    "catalog_amount": null,
@@ -210,7 +216,7 @@
    "i": 7,
    "paid_for": "assembly",
    "state": "PROBED",
-   "url": "https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum"
+   "url": "https://councilof.ai/api/proof?bundle=1"
   },
   {
    "catalog_amount": null,
@@ -233,9 +239,9 @@
    "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
    "http": 402,
    "i": 8,
-   "paid_for": "assembly",
+   "paid_for": "issuance",
    "state": "PROBED",
-   "url": "https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png"
+   "url": "https://councilof.ai/api/rwa/evidence?asset=RLUSD"
   },
   {
    "catalog_amount": null,
@@ -258,9 +264,9 @@
    "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
    "http": 402,
    "i": 9,
-   "paid_for": "assembly",
+   "paid_for": "issuance",
    "state": "PROBED",
-   "url": "https://councilof.ai/api/feeds/provider-diff?history=1"
+   "url": "https://councilof.ai/api/wrapper?id=usdc.e:arbitrum"
   },
   {
    "catalog_amount": null,
@@ -285,10 +291,510 @@
    "i": 10,
    "paid_for": "assembly",
    "state": "PROBED",
+   "url": "https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum"
+  },
+  {
+   "catalog_amount": null,
+   "challenge": {
+    "amount": "10000",
+    "checks": {
+     "amount_present": true,
+     "asset_usdc": true,
+     "network_base": true,
+     "payto_matches": true,
+     "resource_named": true,
+     "scheme_exact": true
+    },
+    "conformant": true,
+    "facilitator_seen": true,
+    "n_accepts": 1,
+    "notes": [],
+    "x402Version": 2
+   },
+   "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
+   "http": 402,
+   "i": 11,
+   "paid_for": "issuance",
+   "state": "PROBED",
+   "url": "https://councilof.ai/api/wrapper/asset/usdc"
+  },
+  {
+   "catalog_amount": null,
+   "challenge": {
+    "amount": "10000",
+    "checks": {
+     "amount_present": true,
+     "asset_usdc": true,
+     "network_base": true,
+     "payto_matches": true,
+     "resource_named": true,
+     "scheme_exact": true
+    },
+    "conformant": true,
+    "facilitator_seen": true,
+    "n_accepts": 1,
+    "notes": [],
+    "x402Version": 2
+   },
+   "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
+   "http": 402,
+   "i": 12,
+   "paid_for": "issuance",
+   "state": "PROBED",
+   "url": "https://councilof.ai/api/wrapper/asset/usdt"
+  },
+  {
+   "catalog_amount": null,
+   "challenge": {
+    "amount": "10000",
+    "checks": {
+     "amount_present": true,
+     "asset_usdc": true,
+     "network_base": true,
+     "payto_matches": true,
+     "resource_named": true,
+     "scheme_exact": true
+    },
+    "conformant": true,
+    "facilitator_seen": true,
+    "n_accepts": 1,
+    "notes": [],
+    "x402Version": 2
+   },
+   "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
+   "http": 402,
+   "i": 13,
+   "paid_for": "issuance",
+   "state": "PROBED",
+   "url": "https://councilof.ai/api/wrapper/asset/dai"
+  },
+  {
+   "catalog_amount": null,
+   "challenge": {
+    "amount": "10000",
+    "checks": {
+     "amount_present": true,
+     "asset_usdc": true,
+     "network_base": true,
+     "payto_matches": true,
+     "resource_named": true,
+     "scheme_exact": true
+    },
+    "conformant": true,
+    "facilitator_seen": true,
+    "n_accepts": 1,
+    "notes": [],
+    "x402Version": 2
+   },
+   "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
+   "http": 402,
+   "i": 14,
+   "paid_for": "assembly",
+   "state": "PROBED",
+   "url": "https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png"
+  },
+  {
+   "catalog_amount": null,
+   "challenge": {
+    "amount": "10000",
+    "checks": {
+     "amount_present": true,
+     "asset_usdc": true,
+     "network_base": true,
+     "payto_matches": true,
+     "resource_named": true,
+     "scheme_exact": true
+    },
+    "conformant": true,
+    "facilitator_seen": true,
+    "n_accepts": 1,
+    "notes": [],
+    "x402Version": 2
+   },
+   "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
+   "http": 402,
+   "i": 15,
+   "paid_for": "assembly",
+   "state": "PROBED",
+   "url": "https://councilof.ai/api/feeds/provider-diff?history=1"
+  },
+  {
+   "catalog_amount": null,
+   "challenge": {
+    "amount": "10000",
+    "checks": {
+     "amount_present": true,
+     "asset_usdc": true,
+     "network_base": true,
+     "payto_matches": true,
+     "resource_named": true,
+     "scheme_exact": true
+    },
+    "conformant": true,
+    "facilitator_seen": true,
+    "n_accepts": 1,
+    "notes": [],
+    "x402Version": 2
+   },
+   "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
+   "http": 402,
+   "i": 16,
+   "paid_for": "assembly",
+   "state": "PROBED",
    "url": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00:00:00Z"
+  },
+  {
+   "catalog_amount": null,
+   "challenge": {
+    "amount": "10000",
+    "checks": {
+     "amount_present": true,
+     "asset_usdc": true,
+     "network_base": true,
+     "payto_matches": true,
+     "resource_named": true,
+     "scheme_exact": true
+    },
+    "conformant": true,
+    "facilitator_seen": true,
+    "n_accepts": 1,
+    "notes": [],
+    "x402Version": 2
+   },
+   "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
+   "http": 402,
+   "i": 17,
+   "paid_for": "issuance",
+   "state": "PROBED",
+   "url": "https://councilof.ai/api/measurement/fresh-capsule"
+  },
+  {
+   "catalog_amount": null,
+   "challenge": {
+    "amount": "10000",
+    "checks": {
+     "amount_present": true,
+     "asset_usdc": true,
+     "network_base": true,
+     "payto_matches": true,
+     "resource_named": true,
+     "scheme_exact": true
+    },
+    "conformant": true,
+    "facilitator_seen": true,
+    "n_accepts": 1,
+    "notes": [],
+    "x402Version": 2
+   },
+   "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
+   "http": 402,
+   "i": 18,
+   "paid_for": "assembly",
+   "state": "PROBED",
+   "url": "https://councilof.ai/api/pop/stablecoins"
+  },
+  {
+   "catalog_amount": null,
+   "challenge": {
+    "amount": "10000",
+    "checks": {
+     "amount_present": true,
+     "asset_usdc": true,
+     "network_base": true,
+     "payto_matches": true,
+     "resource_named": true,
+     "scheme_exact": true
+    },
+    "conformant": true,
+    "facilitator_seen": true,
+    "n_accepts": 1,
+    "notes": [],
+    "x402Version": 2
+   },
+   "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
+   "http": 402,
+   "i": 19,
+   "paid_for": "assembly",
+   "state": "PROBED",
+   "url": "https://councilof.ai/api/pop/swift"
+  },
+  {
+   "catalog_amount": null,
+   "challenge": {
+    "amount": "10000",
+    "checks": {
+     "amount_present": true,
+     "asset_usdc": true,
+     "network_base": true,
+     "payto_matches": true,
+     "resource_named": true,
+     "scheme_exact": true
+    },
+    "conformant": true,
+    "facilitator_seen": true,
+    "n_accepts": 1,
+    "notes": [],
+    "x402Version": 2
+   },
+   "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
+   "http": 402,
+   "i": 20,
+   "paid_for": "assembly",
+   "state": "PROBED",
+   "url": "https://councilof.ai/api/pop/xrpl"
+  },
+  {
+   "catalog_amount": null,
+   "challenge": {
+    "amount": "10000",
+    "checks": {
+     "amount_present": true,
+     "asset_usdc": true,
+     "network_base": true,
+     "payto_matches": true,
+     "resource_named": true,
+     "scheme_exact": true
+    },
+    "conformant": true,
+    "facilitator_seen": true,
+    "n_accepts": 1,
+    "notes": [],
+    "x402Version": 2
+   },
+   "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
+   "http": 402,
+   "i": 21,
+   "paid_for": "assembly",
+   "state": "PROBED",
+   "url": "https://councilof.ai/api/pop/x402-bazaar"
+  },
+  {
+   "catalog_amount": null,
+   "challenge": {
+    "amount": "10000",
+    "checks": {
+     "amount_present": true,
+     "asset_usdc": true,
+     "network_base": true,
+     "payto_matches": true,
+     "resource_named": true,
+     "scheme_exact": true
+    },
+    "conformant": true,
+    "facilitator_seen": true,
+    "n_accepts": 1,
+    "notes": [],
+    "x402Version": 2
+   },
+   "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
+   "http": 402,
+   "i": 22,
+   "paid_for": "assembly",
+   "state": "PROBED",
+   "url": "https://councilof.ai/api/pop/mcp-registry"
+  },
+  {
+   "catalog_amount": null,
+   "challenge": {
+    "amount": "10000",
+    "checks": {
+     "amount_present": true,
+     "asset_usdc": true,
+     "network_base": true,
+     "payto_matches": true,
+     "resource_named": true,
+     "scheme_exact": true
+    },
+    "conformant": true,
+    "facilitator_seen": true,
+    "n_accepts": 1,
+    "notes": [],
+    "x402Version": 2
+   },
+   "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
+   "http": 402,
+   "i": 23,
+   "paid_for": "assembly",
+   "state": "PROBED",
+   "url": "https://councilof.ai/api/pop/a2a"
+  },
+  {
+   "catalog_amount": null,
+   "challenge": {
+    "amount": "10000",
+    "checks": {
+     "amount_present": true,
+     "asset_usdc": true,
+     "network_base": true,
+     "payto_matches": true,
+     "resource_named": true,
+     "scheme_exact": true
+    },
+    "conformant": true,
+    "facilitator_seen": true,
+    "n_accepts": 1,
+    "notes": [],
+    "x402Version": 2
+   },
+   "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
+   "http": 402,
+   "i": 24,
+   "paid_for": "assembly",
+   "state": "PROBED",
+   "url": "https://councilof.ai/api/pop/ots-proofs"
+  },
+  {
+   "catalog_amount": null,
+   "challenge": {
+    "amount": "10000",
+    "checks": {
+     "amount_present": true,
+     "asset_usdc": true,
+     "network_base": true,
+     "payto_matches": true,
+     "resource_named": true,
+     "scheme_exact": true
+    },
+    "conformant": true,
+    "facilitator_seen": true,
+    "n_accepts": 1,
+    "notes": [],
+    "x402Version": 2
+   },
+   "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
+   "http": 402,
+   "i": 25,
+   "paid_for": "assembly",
+   "state": "PROBED",
+   "url": "https://councilof.ai/api/pop/layer0"
+  },
+  {
+   "catalog_amount": null,
+   "challenge": {
+    "amount": "10000",
+    "checks": {
+     "amount_present": true,
+     "asset_usdc": true,
+     "network_base": true,
+     "payto_matches": true,
+     "resource_named": true,
+     "scheme_exact": true
+    },
+    "conformant": true,
+    "facilitator_seen": true,
+    "n_accepts": 1,
+    "notes": [],
+    "x402Version": 2
+   },
+   "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
+   "http": 402,
+   "i": 26,
+   "paid_for": "assembly",
+   "state": "PROBED",
+   "url": "https://councilof.ai/api/pop/corrections"
+  },
+  {
+   "catalog_amount": null,
+   "challenge": {
+    "amount": "10000",
+    "checks": {
+     "amount_present": true,
+     "asset_usdc": true,
+     "network_base": true,
+     "payto_matches": true,
+     "resource_named": true,
+     "scheme_exact": true
+    },
+    "conformant": true,
+    "facilitator_seen": true,
+    "n_accepts": 1,
+    "notes": [],
+    "x402Version": 2
+   },
+   "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
+   "http": 402,
+   "i": 27,
+   "paid_for": "assembly",
+   "state": "PROBED",
+   "url": "https://councilof.ai/api/pop/claim-watch"
+  },
+  {
+   "catalog_amount": null,
+   "challenge": {
+    "amount": "20000",
+    "checks": {
+     "amount_present": true,
+     "asset_usdc": true,
+     "network_base": true,
+     "payto_matches": true,
+     "resource_named": true,
+     "scheme_exact": true
+    },
+    "conformant": true,
+    "facilitator_seen": true,
+    "n_accepts": 1,
+    "notes": [],
+    "x402Version": 2
+   },
+   "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
+   "http": 402,
+   "i": 28,
+   "paid_for": "issuance",
+   "state": "PROBED",
+   "url": "https://councilof.ai/api/ras/mcp-probe?url=https://councilof.ai/mcp"
+  },
+  {
+   "catalog_amount": null,
+   "challenge": {
+    "amount": "20000",
+    "checks": {
+     "amount_present": true,
+     "asset_usdc": true,
+     "network_base": true,
+     "payto_matches": true,
+     "resource_named": true,
+     "scheme_exact": true
+    },
+    "conformant": true,
+    "facilitator_seen": true,
+    "n_accepts": 1,
+    "notes": [],
+    "x402Version": 2
+   },
+   "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
+   "http": 402,
+   "i": 29,
+   "paid_for": "issuance",
+   "state": "PROBED",
+   "url": "https://councilof.ai/api/ras/x402-check?url=https://councilof.ai/api/free-door"
+  },
+  {
+   "catalog_amount": null,
+   "challenge": {
+    "amount": "20000",
+    "checks": {
+     "amount_present": true,
+     "asset_usdc": true,
+     "network_base": true,
+     "payto_matches": true,
+     "resource_named": true,
+     "scheme_exact": true
+    },
+    "conformant": true,
+    "facilitator_seen": true,
+    "n_accepts": 1,
+    "notes": [],
+    "x402Version": 2
+   },
+   "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
+   "http": 402,
+   "i": 30,
+   "paid_for": "issuance",
+   "state": "PROBED",
+   "url": "https://councilof.ai/api/ras/supply?asset=USDC&ledger=ethereum"
   }
  ],
- "generated_at": "2026-09-14T13:21:37Z",
+ "generated_at": "2026-10-06T13:35:47Z",
  "limitations": [
   "402 challenge shape only \u2014 fulfillment bytes and settlement are not exercised without an authorized payment",
   "challenge conformance is not a delivery guarantee",
@@ -297,8 +803,8 @@
  "schema": "csoai.x402-door-conformance/0.1",
  "summary": {
   "discovered_mismatch": 0,
-  "n_doors": 11,
-  "probed_conformant": 11,
+  "n_doors": 31,
+  "probed_conformant": 31,
   "uncheckable": 0
  }
 }
