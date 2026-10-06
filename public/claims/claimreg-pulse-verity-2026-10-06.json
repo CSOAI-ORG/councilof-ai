@@ -3,7 +3,7 @@
   "registry_id": "claimreg-pulse-verity-2026-10-06",
   "status": "DRAFT, NOT PUBLISHED. Pulse gave a written OK on 30 September on two conditions: that the Thursday 1 October run gives the same outcome, and that five wording changes are made. Both are met in this version. It publishes only after Pulse has replied on this exact wording and the maintainer decides to publish.",
   "created_utc": "2026-09-26",
-  "built_at_utc": "2026-10-06T12:13:54Z",
+  "built_at_utc": "2026-10-06T12:39:45Z",
   "maintainer": "CSOAI Ltd (Council of AI), UK Companies House 16939677 - claim maintenance (measurement, never certification)",
   "conforms_to": "https://councilof.ai/spec/claim-maintenance/v0.2/",
   "conforms_to_sha256_of_markdown_read": "d649ba0fdefb63abc205102bc8863db2e7852b207fd4e9e23e05e286e13e3b2e",
@@ -476,7 +476,7 @@
   ],
   "subject_review": "Pulse reviewed the 26 September draft and on 27 September supplied two corrected UTC times for its own actions, confirming on 28 September that they match its deployment records. Pulse's summary of this review, in its words of 30 September: \"Everything else about our actions reads correctly to us.\" On 30 September Pulse also corrected its own /pubkey note (see PV-1 and the 25 September entry) and asked for five wording changes, all made in this version. Pulse's OK covers publishing the record and the account of its own actions; it is not an endorsement of CSOAI or of the Claim Maintenance specification, and Pulse keeps its right of reply. The deployment times remain attributed to Pulse. States, measurements, limits and the publication decision remain the maintainer's (spec 1.2).",
   "conflicts_note": "To the maintainer's knowledge, as of 6 October 2026, no commercial relationship, membership, investment, employment or standards-body co-participation exists between CSOAI Ltd and Pulse Labs OpCo LLC. Pulse offered on 19 September to write an adapter and send it as a pull request; the maintainer asked Pulse to hold off on 20 September and declined an adapter on 22 September. No payment has passed in either direction. CSOAI's own 'Governance Pulse' page (councilof.ai/pulse/) is unrelated to Pulse Labs.",
-  "right_of_reply": "Pulse may reply at any time. The maintainer will link Pulse's reply from this record, or include it here with Pulse's agreement. Report any defect in this record to nicholas@csoai.org. Corrections are published at https://councilof.ai/api/corrections.",
+  "right_of_reply": "Report any defect in this record to nicholas@csoai.org. Corrections are published at https://councilof.ai/api/corrections.",
   "how_to_rerun": {
     "note": "verify_pulse.py rewrites verify_result.json in the folder it is given. Copy the evidence folder first and run the checker on the copy, so that the published verify_result.json, and its digest under evidence_files, stay unchanged.",
     "copy_first": "cp -r public/claims/pulse-verity/evidence-2026-10-06 /tmp/pulse-check",
@@ -506,7 +506,7 @@
   "tools": {
     "verify_pulse.py": "f34e289d642baa848a27e7ebe6149847ec33cafe3d3f0b3a0e986936ad5adaaa"
   },
-  "maintenance_schedule": "The claim watch is scheduled to re-read the five URLs at 07:50 UTC each day; next_read_utc names the read of 13 October. This file is next planned to be updated in the week of 13 October 2026, and changes only through a reviewed pull request.",
+  "maintenance_schedule": "The claim watch is scheduled to re-read the five URLs at 07:50 UTC each day; next_read_utc names the read of 13 October.",
   "evidence_licence_note": "The response bodies and response headers in the pulse-verity/evidence-*/ folders are bytes served by Pulse's public URLs, reproduced unmodified as evidence. They are not covered by the repository's licence; see pulse-verity/NOTICE.",
   "signature_state": "UNSIGNED UNTIL PUBLICATION. On publication it is signed by sidecar under did:web:csoai.org#board-attestation-1, as the existing registries are.",
   "timestamp_state": "NONE until publication.",
@@ -517,5 +517,5 @@
     "an endorsement, certification, listing or partnership, or a recommendation or approval of the Pulse Verity Index or of any use of it",
     "that a digest in this file was committed to any external timestamp. None has been yet"
   ],
-  "registry_digest": "6a6701251d85e528df1a3fa9fbf58b9087164547db29d37dfcdc0190b3bb72a2"
+  "registry_digest": "8fb64dcaee491a8d4bc72697a668c553386c614f7ab6b94bf85fbe44bdc13671"
 }

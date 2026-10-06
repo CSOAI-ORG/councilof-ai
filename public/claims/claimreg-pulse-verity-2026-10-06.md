@@ -5,7 +5,7 @@
 Maintainer: CSOAI Ltd (Council of AI), UK Companies House 16939677.  
 Subject: Pulse Labs OpCo LLC, `thepulse.markets`. The signing API is at `mcp.thepulse.markets`.  
 Follows: [Claim Maintenance v0.2](https://councilof.ai/spec/claim-maintenance/v0.2/).  
-Record of reference: `claimreg-pulse-verity-2026-10-06.json` (registry digest `6a6701251d85e528df1a3fa9fbf58b9087164547db29d37dfcdc0190b3bb72a2`). This page is a readable rendering of it; where the two disagree, the JSON governs.
+Record of reference: `claimreg-pulse-verity-2026-10-06.json` (registry digest `8fb64dcaee491a8d4bc72697a668c553386c614f7ab6b94bf85fbe44bdc13671`). This page is a readable rendering of it; where the two disagree, the JSON governs.
 
 ## In one paragraph
 
@@ -162,5 +162,5 @@ Checker: `pulse-verity/verify_pulse.py` sha256 `f34e289d642baa848a27e7ebe6149847
 The response bodies and response headers in the pulse-verity/evidence-*/ folders are bytes served by Pulse's public URLs, reproduced unmodified as evidence. They are not covered by the repository's licence; see pulse-verity/NOTICE.
 
 **Signature and timestamp:** UNSIGNED UNTIL PUBLICATION. On publication it is signed by sidecar under did:web:csoai.org#board-attestation-1, as the existing registries are.  
-**Next scheduled read (next_read_utc):** 2026-10-13T07:50:00Z. The claim watch is scheduled to re-read the five URLs at 07:50 UTC each day; next_read_utc names the read of 13 October. This file is next planned to be updated in the week of 13 October 2026, and changes only through a reviewed pull request.  
-**Right of reply:** Pulse may reply at any time. The maintainer will link Pulse's reply from this record, or include it here with Pulse's agreement. Report any defect in this record to nicholas@csoai.org. Corrections are published at https://councilof.ai/api/corrections.
+**Next scheduled read (next_read_utc):** 2026-10-13T07:50:00Z. The claim watch is scheduled to re-read the five URLs at 07:50 UTC each day; next_read_utc names the read of 13 October.  
+**Right of reply:** Report any defect in this record to nicholas@csoai.org. Corrections are published at https://councilof.ai/api/corrections.

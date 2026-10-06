@@ -40,11 +40,11 @@ RING_SHA_26SEP = 'a96d6c5c29368caa3279ecf2be9d870e7335ee514cec6b1975a5fecd32c9dd
 SUBJECT = {"name": "Pulse Labs OpCo LLC (Pulse Verity Index)", "identifier": "thepulse.markets", "identifier_kind": "domain",
            "identifier_note": "Publisher named in the key ring file: \"Pulse Labs OpCo LLC\". The signing API is at mcp.thepulse.markets."}
 # The claim watch (Oracle cron 50 7 * * *) re-reads the five URLs at 07:50 UTC each day. next_read_utc names the
-# read seven days on, after which the record is next planned to be updated (only through a reviewed pull request).
+# read seven days on. No job updates this record on a date, so it states no update date (that would be a commitment
+# the maintainer has not made); it changes only when someone rebuilds it from this producer.
 NEXT_READ = (datetime.date.fromisoformat(DAY) + datetime.timedelta(days=7)).isoformat() + 'T07:50:00Z'
 _NU = datetime.date.fromisoformat(DAY) + datetime.timedelta(days=7)
-NEXT_UPDATE_NOTE = (f"The claim watch is scheduled to re-read the five URLs at 07:50 UTC each day; next_read_utc names the read of {_NU.day} {_NU.strftime('%B')}. "
-                    f"This file is next planned to be updated in the week of {_NU.day} {_NU.strftime('%B %Y')}, and changes only through a reviewed pull request.")
+NEXT_UPDATE_NOTE = f"The claim watch is scheduled to re-read the five URLs at 07:50 UTC each day; next_read_utc names the read of {_NU.day} {_NU.strftime('%B')}."
 evidence = [
     {"url": RING_URL, "access_date": T_RING, "content_hash": sha_file('keyring.json')},
     {"url": API_URL, "access_date": T_API, "content_hash": sha_file('pubkey.json')},
@@ -246,7 +246,7 @@ registry = {
     ],
     "subject_review": "Pulse reviewed the 26 September draft and on 27 September supplied two corrected UTC times for its own actions, confirming on 28 September that they match its deployment records. Pulse's summary of this review, in its words of 30 September: \"Everything else about our actions reads correctly to us.\" On 30 September Pulse also corrected its own /pubkey note (see PV-1 and the 25 September entry) and asked for five wording changes, all made in this version. Pulse's OK covers publishing the record and the account of its own actions; it is not an endorsement of CSOAI or of the Claim Maintenance specification, and Pulse keeps its right of reply. The deployment times remain attributed to Pulse. States, measurements, limits and the publication decision remain the maintainer's (spec 1.2).",
     "conflicts_note": "To the maintainer's knowledge, as of 6 October 2026, no commercial relationship, membership, investment, employment or standards-body co-participation exists between CSOAI Ltd and Pulse Labs OpCo LLC. Pulse offered on 19 September to write an adapter and send it as a pull request; the maintainer asked Pulse to hold off on 20 September and declined an adapter on 22 September. No payment has passed in either direction. CSOAI's own 'Governance Pulse' page (councilof.ai/pulse/) is unrelated to Pulse Labs.",
-    "right_of_reply": "Pulse may reply at any time. The maintainer will link Pulse's reply from this record, or include it here with Pulse's agreement. Report any defect in this record to nicholas@csoai.org. Corrections are published at https://councilof.ai/api/corrections.",
+    "right_of_reply": "Report any defect in this record to nicholas@csoai.org. Corrections are published at https://councilof.ai/api/corrections.",
     "how_to_rerun": {"note": "verify_pulse.py rewrites verify_result.json in the folder it is given. Copy the evidence folder first and run the checker on the copy, so that the published verify_result.json, and its digest under evidence_files, stay unchanged.",
                      "copy_first": f"cp -r public/claims/pulse-verity/{EV.name} /tmp/pulse-check",
                      "verify": "python3 public/claims/pulse-verity/verify_pulse.py /tmp/pulse-check", "refetch": "bash scripts/claims/pulse-verity/final_run.sh (fetches the five URLs into a new dated folder, verifies, rebuilds)", "build": f"python3 scripts/claims/pulse-verity/build_final.py {EV.name}"},
