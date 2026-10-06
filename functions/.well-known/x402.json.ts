@@ -33,6 +33,8 @@ import {
   ART50_MARKING_EVIDENCE_DESCRIPTION,
   PROVIDER_DIFF_DESCRIPTION,
   wrapperAssetDescription,
+  DISCOVERY_SUBJECT_LABELS,
+  subjectDiscoveryDescription,
 } from "../api/_x402_descriptions";
 import WRAPPER_ASSET_DOORS from "../api/_wrapper_asset_doors.json";
 import { POPULATION_IDS } from "../api/_population";
@@ -177,13 +179,9 @@ export const onRequestGet: PagesFunction<X402Env> = async ({ request, env }) => 
         note: "Payable and priced at zero — it settles, and charges nothing. It answers 402 rather than 200 on purpose: the x402 Bazaar catalogues only a resource that settles, so a 200 route cannot be indexed. It belongs in resources rather than quarantined because it is a live 402 route, not a withdrawn one. To read the same content without any x402 handshake, GET a free_equivalents URL — those answer 200.",
         free_equivalents: [`${origin}/api/gspc`, `${origin}/root.json`],
       },
-      ...[
-        ["chainlink", "Chainlink / LINK"],
-        ["ondo", "Ondo Finance / ONDO"],
-        ["ondo-ousg", "Ondo Finance OUSG on XRPL"],
-      ].map(([id, label]) => {
+      ...Object.entries(DISCOVERY_SUBJECT_LABELS).map(([id, label]) => {
         const resource = `${origin}/api/discover/${id}`;
-        const description = `Free ${label} discovery: subject identity, evidence routes, board and verification links. Discovery is not measurement or endorsement.`;
+        const description = subjectDiscoveryDescription(label);
         return {
           method: "GET", url: resource, paid_for: null, amount: "0", description,
           ...req(resource, description),

@@ -101,9 +101,9 @@ board moves, so treat this as a copy and re-fetch for current values.
       "financial": {
         "axes": 8,
         "measured": 8,
-        "as_of": "2026-09-07T11:30:35Z",
+        "as_of": "2026-09-17T12:58:11Z",
         "reader_state": "REACHABLE",
-        "reader_as_of": "2026-09-06T23:49:21Z",
+        "reader_as_of": "2026-09-15T07:13:43Z",
         "source": "/interop/financial-facts-as-of.json",
         "risk_verdict": "UNMEASURED",
         "note": "The 8 financial/domain axes (ADR-001), all MEASURED as deterministic-facts runs — issuer-account flags read off the public ledger (financial n=16 on the live XRPL reader; provenance-controls n=6) and public statistical series, graded by rule with no model, no fleet and no judgement. None of the eight is a model comparison, so none has a leader, an accuracy or a separation determination, and none contributes to any mean below — measured is not the same as scored. The two former index slots are measured as component facts (ai-adoption-components, labour-components), never restored to the retired MEASURED-INDEX-v0.1 sticker (C-2026-0826-05). as_of is the producer run (scripts/grade_financial_ledgers.py), never a typed 2026-08-25."
@@ -840,14 +840,14 @@ it yourself; we did not vet it.
 ## 10. TIMESTAMP PROOFS — anchored is not the same claim as submitted
 
 Derived at generation from https://councilof.ai/interop/ots/manifest.json (same bytes on disk at
-public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-10-03T10:37:26Z). An upgrade loop
+public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-10-06T10:58:28Z). An upgrade loop
 keeps advancing these, so read the manifest for a fresher count rather than quoting this line alone.
 
-- Detached OpenTimestamps proofs that actually deserialize: 653. The manifest is built by
+- Detached OpenTimestamps proofs that actually deserialize: 657. The manifest is built by
   reading every .ots file in its scanned directories and keeping only those that parse — never from a
   list of files we intended to stamp.
-- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 644.
-- Still calendar-pending: 9. A calendar-pending proof is a submitted request, not
+- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 646.
+- Still calendar-pending: 11. A calendar-pending proof is a submitted request, not
   evidence of a time. `submitted` is not `anchored`.
 - Proofs whose subject is not served beside them: 63 — an anchor a reader cannot check
   what was stamped against. Published as a count rather than hidden.

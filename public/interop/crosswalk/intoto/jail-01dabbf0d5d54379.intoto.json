@@ -2,12 +2,12 @@
   "_type": "https://in-toto.io/Statement/v1",
   "predicate": {
     "figure": {
-      "accuracy": 0.5259,
-      "axis": "governance",
+      "accuracy": 0.6056,
+      "axis": "jail",
       "issuer": "CSOAI Ltd",
       "kind": "gspc.measurement-card",
-      "model": "ollama:llama3.1:8b@sha256:46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e",
-      "n": 232,
+      "model": "ollama:mistral-nemo:12b@sha256:e7e06d107c6c86ed0cf45445f1790720b5092149c4c95f4d965844e9afbfdc89",
+      "n": 71,
       "status": "MEASURED",
       "unmeasured": []
     },
@@ -15,7 +15,7 @@
       "bank_sha256": null,
       "grader": null,
       "items_sha256": null,
-      "n": 232,
+      "n": 71,
       "rerun": null
     },
     "never": [
@@ -30,7 +30,7 @@
     "reproducible": false,
     "source": {
       "canonical_rule": "sorted JSON.stringify (ECMAScript numbers)",
-      "card_id": "043cc030220b1bdb4a03a4204d88890392a8fe3fb81787858e8c896a6722ce8d",
+      "card_id": "01dabbf0d5d54379a7908e5e226768b02700e8371e86027728e8cc115c76a7d3",
       "card_kind": "gspc.measurement-card",
       "preimage_rule": "sha256(canonical body)",
       "signature_alg": "Ed25519",
@@ -58,9 +58,9 @@
   "subject": [
     {
       "digest": {
-        "sha256": "043cc030220b1bdb4a03a4204d88890392a8fe3fb81787858e8c896a6722ce8d"
+        "sha256": "01dabbf0d5d54379a7908e5e226768b02700e8371e86027728e8cc115c76a7d3"
       },
-      "name": "gspc-measurement-card/governance/ollama:llama3.1:8b@sha256:46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e"
+      "name": "gspc-measurement-card/jail/ollama:mistral-nemo:12b@sha256:e7e06d107c6c86ed0cf45445f1790720b5092149c4c95f4d965844e9afbfdc89"
     }
   ]
 }

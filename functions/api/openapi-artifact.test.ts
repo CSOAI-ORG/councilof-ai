@@ -103,9 +103,12 @@ describe("the paid operations are exactly the doors in /.well-known/x402.json", 
     }
   });
 
-  it("free-door is the only zero-amount door", () => {
+  // Since #2783 (2026-10-01) three named-subject discovery doors are zero-priced on purpose: a confirmed
+  // zero-value settlement gives a Bazaar indexer a distinct resource URL. They join the free door; any
+  // other zero-amount door is still a defect.
+  it("the zero-amount doors are exactly free-door and the subject discovery doors", () => {
     const zero = paid().filter(({ op }) => op.responses["402"].content["application/json"].example.accepts[0].amount === "0");
-    expect([...new Set(zero.map(({ path }) => path))]).toEqual(["/api/free-door"]);
+    expect([...new Set(zero.map(({ path }) => path))].sort()).toEqual(["/api/discover/chainlink", "/api/discover/ondo", "/api/discover/ondo-ousg", "/api/free-door"]);
   });
 
   it("describes proof and batch as the artifacts their handlers return", () => {

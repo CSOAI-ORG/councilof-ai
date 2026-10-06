@@ -212,6 +212,8 @@ describe("catalog + discovery", () => {
     const c = await (await catalog(ctx("/api/x402"))).json();
     expect(c.resources.map((t: { id: string }) => t.id)).toEqual([
       "free_door",
+      // #2783 (2026-10-01): the zero-priced named-subject discovery doors, one catalogue row.
+      "subject_discovery",
       "issuance",
       "evidence_bundle",
       "data_feed",

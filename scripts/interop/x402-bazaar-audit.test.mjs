@@ -25,7 +25,10 @@ function run(sourceUrl) {
       { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] });
     return { code: 0, out };
   } catch (e) {
-    return { code: e.status, err: String(e.stderr ?? "") };
+    // Since #2782 (2026-10-01) the audit reports a refused index as a JSON row on stdout
+    // ({"status": "UNCHECKABLE", "error": "scanned 1 of a declared 5000; ..."}) and still exits 2.
+    // The refusal is what is asserted, wherever the script writes it.
+    return { code: e.status, err: String(e.stderr ?? "") + String(e.stdout ?? "") };
   }
 }
 

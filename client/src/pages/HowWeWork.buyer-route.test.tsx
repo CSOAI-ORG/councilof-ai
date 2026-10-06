@@ -13,9 +13,17 @@ describe("/how-we-work measured-run route", () => {
     expect(how).toContain("<ToolStack />");
     expect(how).toContain("<LivingStages />");
     expect(how).toContain("<HomeNavigator />");
-    expect(contact).toContain('run: "Run / re-attest enquiry"');
+    // The ?arm= presets moved out of Contact.tsx into lib/pilotEnquiry.ts (2026-09-30); Contact
+    // applies them through enquiryPreset(window.location.search).
+    const enquiry = readFileSync(resolve(__dirname, "../lib/pilotEnquiry.ts"), "utf8");
+    expect(enquiry).toContain("run: 'Run / re-attest enquiry'");
+    expect(contact).toContain("enquiryPreset(window.location.search)");
     // 2026-09-26: one mailbox, rendered plain (PlainEmail) so edge obfuscation cannot hide it.
-    expect(contact).toContain("window.location.href = `mailto:${CONTACT_MAILBOX}");
+    // Since 2026-09-30 the form opens a prepared draft (prepareContactEmail) addressed to the
+    // site-wide contact address, the one the footer and /dispute publish, instead of a bare mailto.
+    expect(contact).toContain("import PlainEmail, { CONTACT_MAILBOX } from '@/components/PlainEmail'");
+    expect(contact).toContain("if (emailDraft.mailto) window.location.href = emailDraft.mailto;");
+    expect(enquiry).toContain("return formatDraft(CONTACT_ENQUIRY_EMAIL, subject, body);");
 
     const tiles = renderToStaticMarkup(<ToolStack />);
     const runTile = tiles.match(/<article id="tool-measured"[\s\S]*?<\/article>/)?.[0] ?? "";

@@ -176,7 +176,7 @@
       "url": "https://creativecommons.org/licenses/by/4.0/"
     },
     "title": "Council of AI \u2014 Public API",
-    "version": "0.3+6c45f78d53f5",
+    "version": "0.3+0d815bc0182c",
     "x-guidance": "Free board: GET /api/gspc \u2014 quote totals.lid verbatim, never compose a count. Paid doors are the operations carrying x-payment-info: GET without payment answers HTTP 402 with the x402 v2 challenge (accepts[0]: scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31); pay it and retry with the X-PAYMENT header. Required query parameters carry an example that reaches the 402. Free previews are named per door under x-csoai.free_preview. Catalog: https://councilof.ai/.well-known/x402.json and https://councilof.ai/api/x402. Verify is free: https://councilof.ai/gspc-verify. Offer & Receipt emission is conditional: a 402 carries server-signed offers only when the Pages signing key is available; a settled 200 carries a signed receipt only when settlement exposes the required payer and transaction evidence and that key is available. The extension uses JWS/EdDSA, kid did:web:csoai.org#board-attestation-1, published at https://csoai.org/.well-known/did.json. Check either without trusting this document: POST it to /api/receipts/verify, or download https://councilof.ai/verifier/verify_receipt.py; default mode reads the public DID document, and a retained key document allows offline replay. 23 axes measured \u00b7 14 model fleets \u00b7 0 separated leaders \u00b7 9 public leader scores \u00b7 9 fact runs \u00b7 TIE is TIE \u00b7 not a certificate."
   },
   "openapi": "3.1.0",
@@ -1403,7 +1403,7 @@
     },
     "/api/discover/chainlink": {
       "get": {
-        "description": "Zero-priced discovery route using an existing free-door mechanism; not a new paid SKU. INDEXED may be claimed only after confirmed settlement and Bazaar readback.",
+        "description": "Subject discovery links for Chainlink / LINK: identity, evidence routes, board and verify links. States: DISCOVERY_ONLY; the door reads nothing new and mints no measurement, and settling its zero-amount challenge charges nothing. Verification is free at /gspc-verify.",
         "operationId": "x402_discover_chainlink",
         "parameters": [],
         "responses": {
@@ -1411,12 +1411,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "Zero-priced discovery route using an existing free-door mechanism; not a new paid SKU. INDEXED may be claimed only after confirmed settlement and Bazaar readback.",
+                  "description": "Subject discovery links for Chainlink / LINK: identity, evidence routes, board and verify links. States: DISCOVERY_ONLY; the door reads nothing new and mints no measurement, and settling its zero-amount challenge charges nothing. Verification is free at /gspc-verify.",
                   "type": "object"
                 }
               }
             },
-            "description": "Zero-priced discovery route using an existing free-door mechanism; not a new paid SKU. INDEXED may be claimed only after confirmed settlement and Bazaar readback."
+            "description": "Subject discovery links for Chainlink / LINK: identity, evidence routes, board and verify links. States: DISCOVERY_ONLY; the door reads nothing new and mints no measurement, and settling its zero-amount challenge charges nothing. Verification is free at /gspc-verify."
           },
           "402": {
             "content": {
@@ -1451,7 +1451,7 @@
                     }
                   },
                   "resource": {
-                    "description": "Zero-priced discovery route using an existing free-door mechanism; not a new paid SKU. INDEXED may be claimed only after confirmed settlement and Bazaar readback.",
+                    "description": "Subject discovery links for Chainlink / LINK: identity, evidence routes, board and verify links. States: DISCOVERY_ONLY; the door reads nothing new and mints no measurement, and settling its zero-amount challenge charges nothing. Verification is free at /gspc-verify.",
                     "mimeType": "application/json",
                     "url": "https://councilof.ai/api/discover/chainlink"
                   },
@@ -1495,7 +1495,7 @@
     },
     "/api/discover/ondo": {
       "get": {
-        "description": "Zero-priced discovery route using an existing free-door mechanism; not a new paid SKU. INDEXED may be claimed only after confirmed settlement and Bazaar readback.",
+        "description": "Subject discovery links for Ondo Finance / ONDO: identity, evidence routes, board and verify links. States: DISCOVERY_ONLY; the door reads nothing new and mints no measurement, and settling its zero-amount challenge charges nothing. Verification is free at /gspc-verify.",
         "operationId": "x402_discover_ondo",
         "parameters": [],
         "responses": {
@@ -1503,12 +1503,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "Zero-priced discovery route using an existing free-door mechanism; not a new paid SKU. INDEXED may be claimed only after confirmed settlement and Bazaar readback.",
+                  "description": "Subject discovery links for Ondo Finance / ONDO: identity, evidence routes, board and verify links. States: DISCOVERY_ONLY; the door reads nothing new and mints no measurement, and settling its zero-amount challenge charges nothing. Verification is free at /gspc-verify.",
                   "type": "object"
                 }
               }
             },
-            "description": "Zero-priced discovery route using an existing free-door mechanism; not a new paid SKU. INDEXED may be claimed only after confirmed settlement and Bazaar readback."
+            "description": "Subject discovery links for Ondo Finance / ONDO: identity, evidence routes, board and verify links. States: DISCOVERY_ONLY; the door reads nothing new and mints no measurement, and settling its zero-amount challenge charges nothing. Verification is free at /gspc-verify."
           },
           "402": {
             "content": {
@@ -1543,7 +1543,7 @@
                     }
                   },
                   "resource": {
-                    "description": "Zero-priced discovery route using an existing free-door mechanism; not a new paid SKU. INDEXED may be claimed only after confirmed settlement and Bazaar readback.",
+                    "description": "Subject discovery links for Ondo Finance / ONDO: identity, evidence routes, board and verify links. States: DISCOVERY_ONLY; the door reads nothing new and mints no measurement, and settling its zero-amount challenge charges nothing. Verification is free at /gspc-verify.",
                     "mimeType": "application/json",
                     "url": "https://councilof.ai/api/discover/ondo"
                   },
@@ -1587,7 +1587,7 @@
     },
     "/api/discover/ondo-ousg": {
       "get": {
-        "description": "Zero-priced discovery route using an existing free-door mechanism; not a new paid SKU. INDEXED may be claimed only after confirmed settlement and Bazaar readback.",
+        "description": "Subject discovery links for Ondo Finance OUSG on XRPL: identity, evidence routes, board and verify links. States: DISCOVERY_ONLY; the door reads nothing new and mints no measurement, and settling its zero-amount challenge charges nothing. Verification is free at /gspc-verify.",
         "operationId": "x402_discover_ondo_ousg",
         "parameters": [],
         "responses": {
@@ -1595,12 +1595,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "Zero-priced discovery route using an existing free-door mechanism; not a new paid SKU. INDEXED may be claimed only after confirmed settlement and Bazaar readback.",
+                  "description": "Subject discovery links for Ondo Finance OUSG on XRPL: identity, evidence routes, board and verify links. States: DISCOVERY_ONLY; the door reads nothing new and mints no measurement, and settling its zero-amount challenge charges nothing. Verification is free at /gspc-verify.",
                   "type": "object"
                 }
               }
             },
-            "description": "Zero-priced discovery route using an existing free-door mechanism; not a new paid SKU. INDEXED may be claimed only after confirmed settlement and Bazaar readback."
+            "description": "Subject discovery links for Ondo Finance OUSG on XRPL: identity, evidence routes, board and verify links. States: DISCOVERY_ONLY; the door reads nothing new and mints no measurement, and settling its zero-amount challenge charges nothing. Verification is free at /gspc-verify."
           },
           "402": {
             "content": {
@@ -1635,7 +1635,7 @@
                     }
                   },
                   "resource": {
-                    "description": "Zero-priced discovery route using an existing free-door mechanism; not a new paid SKU. INDEXED may be claimed only after confirmed settlement and Bazaar readback.",
+                    "description": "Subject discovery links for Ondo Finance OUSG on XRPL: identity, evidence routes, board and verify links. States: DISCOVERY_ONLY; the door reads nothing new and mints no measurement, and settling its zero-amount challenge charges nothing. Verification is free at /gspc-verify.",
                     "mimeType": "application/json",
                     "url": "https://councilof.ai/api/discover/ondo-ousg"
                   },

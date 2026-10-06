@@ -19,6 +19,25 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 // Council OS deep-link contract: ?lobby= / ?task= / ?ask=) had been in that state:
 // red on master, running nothing. Specific prefixes are listed before the bare
 // `@` so the longest match wins however the resolver iterates.
+// node:test files (import { test } from "node:test") and bare assert scripts. Vitest cannot collect them and
+// reported each as a FAILED suite ("No test suite found"), which kept the pr-gates unit step red on
+// every PR. They are named one by one, not globbed, and pr-gates.yml runs exactly this list under
+// `node --test` in its own step, so excluding them here removes no coverage.
+export const NODE_TEST_FILES = [
+  'scripts/build-models-measured.test.mjs',
+  'scripts/contract-convergence.test.mjs',
+  'scripts/feed-delivery-kit.test.mjs',
+  'scripts/harness-x/render.test.mjs',
+  'scripts/review/deploy-target-wiring.test.mjs',
+  'scripts/review/pages-release-target.test.mjs',
+  'scripts/surface/facts-scope.test.mjs',
+  'scripts/surface/prerender-io.test.mjs',
+  'scripts/surface/render-board-reference.test.mjs',
+  // A bare assert script (no test framework): node --test runs it as one test; vitest reported
+  // "No test suite found" in the orphan-coverage step (`npx vitest run council-os ...`).
+  'council-os/gspc-pontius-boundary.test.mjs',
+];
+
 export default defineConfig({
   // Match the application's React transform. Several component tests render
   // TSX directly through Vitest rather than through client/vite.config.ts.
@@ -48,6 +67,6 @@ export default defineConfig({
     // copies resolve their fixture paths relative to dist/, so they fail on files that are
     // present in the source tree. dist/ is gitignored, so CI never saw it and only a local
     // run after a build went red, which reads like a broken test rather than a duplicate.
-    exclude: [...defaultExclude, 'dist/**', '**/dist/**', '**/.git-wt-*/**', 'docs/**/*.test.mjs', 'mcp/gspc-server/wired-tools.test.mjs', 'e2e/**', '**/e2e/**', '**/worktrees/**', 'packages/**', 'council-os/planned-ready.lock.test.mjs'],
+    exclude: [...defaultExclude, 'dist/**', '**/dist/**', '**/.git-wt-*/**', 'docs/**/*.test.mjs', 'mcp/gspc-server/wired-tools.test.mjs', 'e2e/**', '**/e2e/**', '**/worktrees/**', 'packages/**', 'council-os/planned-ready.lock.test.mjs', ...NODE_TEST_FILES],
   },
 });
