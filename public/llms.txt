@@ -286,7 +286,7 @@ The older https://councilof.ai/feed.xml is a hand-maintained item list kept for 
 - MCP (flagship HTTP, remote URL for any host): POST https://councilof.ai/mcp — 19 tools: fourteen free readers plus five x402-metered evidence tools. No CSOAI account; package presence does not prove paid settlement or delivery.
 - MCP (free door, the address to add to Claude or any chat client): POST https://councilof.ai/mcp/free — the fourteen free read-only readers only, same definitions as /mcp, no payment tool. No account, no key. Setup, tool list and example prompts: https://councilof.ai/connect/claude/
 - Public root (https://councilof.ai/root.json): Merkle envelope. Quote live `sig_ed25519` — unsigned until keystone signs the compact preimage (kind, schema, as_of, merkle_root, card_count, did_intended). Leaves MAY carry GH-secret attestations — coverage harvest, not grades. Not MEASURED. Not a certificate. Free; not paywalled.
-- Mill-card root discovery pointer: https://councilof.ai/interop/card-root-latest.json — an unsigned pointer to immutable root bytes. Follow `root_url` and check `root_sha256`. Its leaf count is separate from `/root.json`, `/signed/card_index.json` and `/api/gspc`. Read the `.ots` sidecar and verify its subject hash. Calendar-only proofs remain pending; a BitcoinBlockHeaderAttestation tag can be checked against public block headers, but a tag alone is not local full-node chain validation or a certificate.
+- Mill-card root discovery pointer: https://councilof.ai/interop/card-root-latest.json — an unsigned pointer to immutable root bytes. Follow `root_url` and check `root_sha256`. Its leaf count is separate from `/root.json`, `/signed/card_index.json` and `/api/gspc`. Read the `.ots` sidecar and verify its subject hash. Calendar-only proofs remain pending until an independent `ots verify` confirms a Bitcoin attestation; a BitcoinBlockHeaderAttestation tag can be checked against public block headers, but a tag alone is not local full-node chain validation or a certificate.
 - Dated immutable mill-card root (as of 2026-10-01T06:51:30Z, 1466 leaves): https://councilof.ai/interop/card-root-2026-10-01-35544212115c.json (SHA-256 c445fc6b80f22535e5c1f894856083854c7ec3d4eb0184915a70502e41846f55). Its .ots sidecar (SHA-256 678598ba6d53363d8e92358ac86cd609b8df067428648a7ba78dc16081ab42c3) carries a BitcoinBlockHeaderAttestation, as parsed from the proof bytes into https://councilof.ai/interop/ots/manifest.json. No public-header audit is published for this root, so the block header is not independently corroborated here; this is not local Bitcoin full-node chain validation or verification of individual card measurements.
 - MCP (stdio, run locally, zero deps): npm `csoai-gspc-mcp`. Query https://registry.npmjs.org/csoai-gspc-mcp for the published version, then call that install's `tools/list`; package source in this repository targets the same 19-tool contract as the HTTP door.
 - Verify a server (per-server evidence, in the browser): https://councilof.ai/verify-server/ — every signed measurement capsule keyed to ONE endpoint URL, each re-derivable in the page (capsule id + Merkle inclusion + index signature). States only; an unknown URL is NOT_MEASURED, never clean. Same module as the MCP tools server_evidence / verify_capsule.
@@ -379,14 +379,14 @@ board, whose totals stay GET https://councilof.ai/api/gspc. A superseded version
 ## Timestamp proofs (anchored is not the same claim as submitted)
 
 Derived at generation from https://councilof.ai/interop/ots/manifest.json (same bytes on disk at
-public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-10-06T08:07:16Z). An upgrade loop
+public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-10-06T10:58:28Z). An upgrade loop
 keeps advancing these, so read the manifest for a fresher count rather than quoting this line alone.
 
-- Detached OpenTimestamps proofs that actually deserialize: 655. The manifest is built by
+- Detached OpenTimestamps proofs that actually deserialize: 657. The manifest is built by
   reading every .ots file in its scanned directories and keeping only those that parse — never from a
   list of files we intended to stamp.
 - Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 646.
-- Still calendar-pending: 9. A calendar-pending proof is a submitted request, not
+- Still calendar-pending: 11. A calendar-pending proof is a submitted request, not
   evidence of a time. `submitted` is not `anchored`.
 - Proofs whose subject is not served beside them: 63 — an anchor a reader cannot check
   what was stamped against. Published as a count rather than hidden.

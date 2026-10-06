@@ -92,3 +92,32 @@ test("pinned signed bytes pass only while their correction document exists", () 
   const withCorr = fixtureRepo({ ...signed, "public/signed/gspc-board.status.json": "{}" });
   assert.equal(runGuard({ repo: withCorr, roots: ["public"] }).ok, true);
 });
+
+test("a captured dated receipt passes only while the correction it points to is in place", () => {
+  const roots = ["council-os", "public"];
+  const receipt = {
+    "council-os/receipts/ecosystem-install-20260930/helm-rendered.yaml":
+      '      "_gspcBoardKeyNote": "#gspc-board-22axis-2026 is the 3-party Coinbase cb-mpc Ed25519 additive key"\n',
+  };
+  const corrected = { "public/.well-known/did.json": '{"_gspcBoardKeyNote":"one host, so treat it as single-key custody."}' };
+
+  const without = runGuard({ repo: fixtureRepo(receipt), roots });
+  assert.equal(without.ok, false, "a receipt whose correction file is absent is not exempt");
+  assert.equal(without.receiptsMissingCorrection.length, 1);
+
+  const reverted = runGuard({ repo: fixtureRepo({ ...receipt, "public/.well-known/did.json": '{"_gspcBoardKeyNote":"an Ed25519 key"}' }), roots });
+  assert.equal(reverted.ok, false, "a correction file that no longer carries the correction does not exempt");
+
+  const ok = runGuard({ repo: fixtureRepo({ ...receipt, ...corrected }), roots });
+  assert.equal(ok.ok, true, JSON.stringify(ok, null, 2));
+  assert.equal(ok.datedReceipts.length, 1);
+  assert.equal(ok.datedReceipts[0].captured, "2026-09-30");
+
+  // Only the named file is exempt: a sibling capture in the same receipts directory is not.
+  const sibling = runGuard({
+    repo: fixtureRepo({ ...receipt, ...corrected, "council-os/receipts/ecosystem-install-20260930/other.yaml": "signed under 3-party custody\n" }),
+    roots,
+  });
+  assert.equal(sibling.ok, false);
+  assert.equal(sibling.violations[0].file, "council-os/receipts/ecosystem-install-20260930/other.yaml");
+});

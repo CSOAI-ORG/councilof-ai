@@ -17,22 +17,23 @@ const pressroom = readFileSync(resolve(__dirname, "../pages/PublicPress.tsx"), "
 const accessibility = readFileSync(resolve(__dirname, "../pages/Accessibility.tsx"), "utf8");
 
 describe("stale copy honesty", () => {
-  it("the public pay desk reaches the real wallet-enabled MCP jobs and reads live settlement state", () => {
-    for (const tool of [
-      "commission_card",
-      "rwa_evidence",
-      "art50_marking_evidence",
-      "receipts_batch",
-    ]) {
-      expect(payDesk).toContain(`/dashboard?tab=tools&amp;tool=${tool}`.replace("&amp;", "&"));
-    }
+  // public/pay.html is the static BUYER page since #2788 (2026-10-01): it owns /pay, while the owner's
+  // wallet sweep (PayEveryDoor, which reads live settlement state) moved to the /pay-all app route.
+  // This test used to demand MCP-job deep links and live /api/revenue reads from a pay.html that no
+  // GitHub master revision ever shipped. What the buyer page must do now: send the buyer to the live
+  // manifest and a free preview, keep amounts out of the page, and say what a payment never buys.
+  it("the public buyer page sends a buyer to the live manifest and claims no price or settlement state", () => {
+    expect(payDesk).toContain('<link rel="canonical" href="https://councilof.ai/pay">');
+    expect(payDesk).toContain('href="/.well-known/x402.json"');
+    expect(payDesk).toContain('href="/x402-buyer-guide.html"');
+    expect(payDesk).toMatch(/Amounts appear only in the 402 challenge/);
+    expect(payDesk).toMatch(/payment mints no new measurement/i);
+    expect(payDesk).toMatch(/Measurement, not certification/);
+    expect(payDesk).toContain("/pay-all");
+    expect(payDesk).not.toMatch(/(?:£|\$|€)\s?\d|\b\d+(?:\.\d+)?\s?(?:usd|usdc|gbp|eur)\b/i);
     // 2026-09-14: both PayAPI URLs answer 404 and PayAPI's own llms.txt / providers page do not list us.
     // A page may not call a dead link a "verified PayAPI listing"; re-add only with a live detail URL.
     expect(payDesk).not.toContain("payapi.market");
-    expect(payDesk).toContain('fetch("/api/x402"');
-    expect(payDesk).toContain('fetch("/api/revenue"');
-    expect(payDesk).toContain("revenue.j.one_number.all_time");
-    expect(payDesk).not.toContain("Number(revenue.j && revenue.j.one_number) > 0");
     expect(payDesk).not.toMatch(/settlement\s+(?:stays\s+)?UNCHECKABLE|No <code>\/proof<\/code> until live/i);
   });
 

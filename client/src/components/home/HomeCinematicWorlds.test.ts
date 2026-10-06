@@ -46,7 +46,12 @@ describe("cinematic three-world merge contract", () => {
     expect(shipped).not.toMatch(/certified organization|buy a rank|\/murder|\/difflin|\/mundrr/i);
     expect(shipped).toContain("GET /api/gspc");
     expect(shipped).toContain("Jail is measured");
-    expect(shipped).toContain("TIE");
+    // Owner ruling 2026-09-29 moved the jail separation from TIE to UNTESTED (corrections ledger,
+    // "DONE 2026-09-29"), and the copy followed on 2026-09-30. The contract is the same: an undecided
+    // separation is named by its state, never dressed up as a pass, and jail is not called a TIE.
+    expect(shipped).toContain("UNTESTED");
+    expect(shipped).toMatch(/never dressed up as a pass/);
+    expect(shipped).not.toMatch(/a TIE stays a TIE|A TIE is never dressed up/);
     expect(worlds).toContain("public_count");
   });
 });

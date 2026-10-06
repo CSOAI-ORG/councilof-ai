@@ -179,7 +179,7 @@ describe("door descriptions are buyer-first (2026-09-06)", () => {
       // first clause = the deliverable, not doctrine: must NOT open with estate-speak.
       // Population doors open with "<population> slice —": the slice is the deliverable.
       expect(r.description!.toLowerCase()).toMatch(
-        /^(live board totals|a card-v0 commission receipt|one named subject gets a card-v0 commission receipt|signed compliance evidence bundle|signed derivative data feed|inclusion proof bundle|rwa asset evidence|wrapped-asset parity evidence|art\. 50 marking evidence|provider change record|historical measurement-card batch|mcp discovery probe receipt|x402 challenge conformance receipt|token supply read receipt|fresh measurement capsule|[a-z0-9 ,-]+ slice\b)/,
+        /^(live board totals|a card-v0 commission receipt|one named subject gets a card-v0 commission receipt|signed compliance evidence bundle|signed derivative data feed|inclusion proof bundle|rwa asset evidence|wrapped-asset parity evidence|art\. 50 marking evidence|provider change record|historical measurement-card batch|mcp discovery probe receipt|x402 challenge conformance receipt|token supply read receipt|fresh measurement capsule|subject discovery links|[a-z0-9 ,-]+ slice\b)/,
       );
     }
   });

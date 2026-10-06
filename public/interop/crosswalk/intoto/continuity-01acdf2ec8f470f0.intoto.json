@@ -2,21 +2,20 @@
   "_type": "https://in-toto.io/Statement/v1",
   "predicate": {
     "figure": {
-      "accuracy": 0.6333,
-      "axis": "jail",
+      "accuracy": 0.303,
+      "axis": "continuity",
       "issuer": "CSOAI Ltd",
       "kind": "gspc.measurement-card",
-      "model": "meta-llama/Llama-3.2-1B-Instruct",
-      "n": 30,
-      "route": "hf-router",
+      "model": "ollama:qwen2.5:1.5b@sha256:65ec06548149b04c096a120e4a6da9d4017ea809c91734ea5631e89f96ddc57b",
+      "n": 33,
       "status": "MEASURED",
       "unmeasured": []
     },
     "inputs": {
       "bank_sha256": null,
-      "grader": "deterministic-exact-token/0.1",
+      "grader": null,
       "items_sha256": null,
-      "n": 30,
+      "n": 33,
       "rerun": null
     },
     "never": [
@@ -27,11 +26,11 @@
     ],
     "not_a_certification": true,
     "not_a_conformity_assessment": true,
-    "note": "cannot be recomputed from this attestation: bank_sha256, items_sha256 absent. The signature attests only that we published this figure at this time.",
+    "note": "cannot be recomputed from this attestation: bank_sha256, items_sha256, grader absent. The signature attests only that we published this figure at this time.",
     "reproducible": false,
     "source": {
       "canonical_rule": "sorted JSON.stringify (ECMAScript numbers)",
-      "card_id": "103d69855ec5a63ba46f997439f729b91829c642c55e4722134978e24c9334a0",
+      "card_id": "01acdf2ec8f470f0b6e4d0745a9391800c27436f2d8e7bc8d9e597cd68bf2675",
       "card_kind": "gspc.measurement-card",
       "preimage_rule": "sha256(canonical body)",
       "signature_alg": "Ed25519",
@@ -51,16 +50,17 @@
     },
     "unreproducible": [
       "bank_sha256",
-      "items_sha256"
+      "items_sha256",
+      "grader"
     ]
   },
   "predicateType": "https://councilof.ai/attestations/measurement/v1",
   "subject": [
     {
       "digest": {
-        "sha256": "103d69855ec5a63ba46f997439f729b91829c642c55e4722134978e24c9334a0"
+        "sha256": "01acdf2ec8f470f0b6e4d0745a9391800c27436f2d8e7bc8d9e597cd68bf2675"
       },
-      "name": "gspc-measurement-card/jail/meta-llama/Llama-3.2-1B-Instruct"
+      "name": "gspc-measurement-card/continuity/ollama:qwen2.5:1.5b@sha256:65ec06548149b04c096a120e4a6da9d4017ea809c91734ea5631e89f96ddc57b"
     }
   ]
 }
