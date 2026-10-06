@@ -184,8 +184,6 @@ export default function Article50() {
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
             <a href="/dashboard/?tab=art50" data-testid="article50-cta-primary" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-black text-[#03110b] hover:bg-emerald-400">Check one of your AI outputs for a mark (free preview) →</a>
-            <a href="/classifier" className="rounded-xl border border-emerald-500/30 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Does Article 50 apply to my AI? →</a>
-            <a href="/readiness" className="rounded-xl border border-emerald-500/30 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Full 2 Aug readiness →</a>
             <a href="/crosswalk" className="rounded-xl border border-emerald-500/30 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Framework crosswalk →</a>
           </div>
           <p className="mt-3 text-[12px] text-emerald-100/60">

@@ -147,7 +147,8 @@ export function separationLabel(a: GspcAxis): string {
   if (a.kind === "deterministic-facts") return "facts · no separation test";
   const s = String(a.separation ?? "UNTESTED");
   if (s === "TIE") return "TIE · not a measured advantage";
-  if (s === "UNTESTED") return "not separation-tested";
+  // The state word itself stays visible: UNTESTED is first-class, not paraphrased away.
+  if (s === "UNTESTED") return "UNTESTED · no separation test has run";
   return s;
 }
 

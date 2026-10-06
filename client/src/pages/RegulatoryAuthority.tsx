@@ -211,7 +211,7 @@ export default function RegulatoryAuthority() {
                 </p>
                 <ul className="space-y-2 text-gray-700 text-sm mb-6">
                   <li>▹ Mandatory for high-risk AI in Europe</li>
-                  <li>▹ Legally binding compliance certificates</li>
+                  <li>▹ Designated by EU member states — CSOAI is not a notified body</li>
                   <li>▹ €30M fines for non-compliance</li>
                   <li>▹ Timeline: 24 months (2026-2027)</li>
                 </ul>

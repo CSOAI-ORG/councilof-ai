@@ -146,9 +146,21 @@ const RULES = [
     pattern: /\bcertificates?\b/i,
     // Negations and retirement notices are disclosure, not an offer. The technical senses of the
     // word (PKI, TLS, X.509, C2PA signing certificates, certificate transparency) are not ours to ban.
-    nearAllow: /\bnot\s+(?:a\s+|an\s+)?certificates?\b|\bno\s+certificates?\b|\bnever\s+(?:issues?\s+)?(?:a\s+)?certificates?\b|issues?\s+no\s+certificates?|withdrawn|retired|legacy|superseded|completion record|x\.?509|\btls\b|\bssl\b|\bpki\b|signing certificate|code[\s-]signing|c2pa|certificate transparency|root certificate|leaf certificate|certificate chain|self[\s-]signed|\bmtls\b|\bacme\b|let'?s encrypt/i,
+    nearAllow: /\bnot\s+(?:a\s+|an\s+)?certificates?\b|\bno\s+certificates?\b|issues?\s+no\s+[a-z ,]{0,40}\bcertificates?\b|\bnever\s+(?:issues?\s+)?(?:a\s+)?certificates?\b|issues?\s+no\s+certificates?|withdrawn|retired|legacy|superseded|completion record|x\.?509|\btls\b|\bssl\b|\bpki\b|signing certificate|code[\s-]signing|c2pa|certificate transparency|root certificate|leaf certificate|certificate chain|self[\s-]signed|\bmtls\b|\bacme\b|let'?s encrypt/i,
     allowOn: /certificate-verification|verify-certificate|(^|\/)certificates(\/|\.html|$)|refutation|corrections/i,
     why: 'CSOAI issues no certificates. The Academy issues free "completion records" (csoai.completion-record/0.1).',
+  },
+  {
+    id: "compliance_artifact_offer",
+    // Persona audit T04 (2026-10-06): /readiness sold "Ed25519-signed compliance passports … provable
+    // transparency you can show a regulator", and /me listed a "Compliance Passport · Live". We measure;
+    // we issue no compliance passport, certificate, seal or badge, and no compliance determination.
+    // nearAllow holds SPECIFIC negation phrases only. A bare "never"/"no" is not enough: the window is
+    // ±90 chars, and "never deniable" sat right next to "Compliance Passport" on /me.
+    pattern: /\bcompliance passports?\b|\bprovable (?:compliance|transparency)\b|\byou can show a regulator\b|\bcompliance (?:certificate|seal|badge)s?\b/i,
+    nearAllow: /issues? no compliance|no compliance (?:passport|certificate|determination)|not a compliance|never a compliance|neither can anyone|withdrawn|retired/i,
+    allowOn: /refutation|corrections/i,
+    why: "CSOAI issues no compliance passports, certificates, seals or badges, and no compliance determination. Offer the measurement (e.g. /dashboard?tab=art50: DETECTED / NOT_DETECTED / UNCHECKABLE), never a compliance artefact.",
   },
   {
     id: "rank_for_sale",
@@ -497,8 +509,29 @@ if (SELFTEST) {
     else {
       for (const t of ["Get your AI governance certificate today", "Download your certificate"])
         if (!trips(t)) { console.error(`\u2716 selftest: certificate_term no longer catches ${JSON.stringify(t)}`); bad++; }
-      for (const t of ["This is not a certificate.", "CSOAI issues no certificates.", "This legacy certificate page is withdrawn.", "signed with a C2PA signing certificate", "an X.509 certificate chain"])
+      for (const t of ["This is not a certificate.", "CSOAI issues no certificates.", "CSOAI issues no compliance passports, certificates or compliance determinations.", "This legacy certificate page is withdrawn.", "signed with a C2PA signing certificate", "an X.509 certificate chain"])
         if (trips(t)) { console.error(`\u2716 selftest: certificate_term now fails copy that must ship: ${JSON.stringify(t)}`); bad++; }
+    }
+  }
+  // The compliance-artefact rule catches the offer and passes the specific negations, through the
+  // same ±90-char window the scan uses.
+  {
+    const rule = RULES.find((r) => r.id === "compliance_artifact_offer");
+    const trips = (t) => { const m = rule.pattern.exec(t); if (!m) return false; const w = t.slice(Math.max(0, m.index - 90), m.index + m[0].length + 90); return !rule.nearAllow.test(w); };
+    if (!rule) { console.error("\u2716 selftest: compliance_artifact_offer missing"); bad++; }
+    else {
+      for (const t of [
+        "CSOAI issues Ed25519-signed compliance passports and C2PA watermark attestations for Article 50",
+        "Compliance Passport Live",
+        "Your Ed25519-signed governance identity - provable, portable, never deniable. Compliance Passport",
+        "provable transparency you can show a regulator",
+      ])
+        if (!trips(t)) { console.error(`\u2716 selftest: compliance_artifact_offer no longer catches ${JSON.stringify(t)}`); bad++; }
+      for (const t of [
+        "CSOAI issues no compliance passports, certificates or compliance determinations.",
+        "Can we obtain a NIST compliance certificate? No — and neither can anyone else",
+      ])
+        if (trips(t)) { console.error(`\u2716 selftest: compliance_artifact_offer now fails copy that must ship: ${JSON.stringify(t)}`); bad++; }
     }
   }
   {

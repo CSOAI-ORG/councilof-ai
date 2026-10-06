@@ -206,6 +206,26 @@ function ModelRow({ m }: { m: FleetModel }) {
   );
 }
 
+/** What the board's fixed test actually compared: the leader and the runner-up, nothing else.
+ *  Every figure is read from /api/gspc separation_evidence; an axis that publishes no structured
+ *  evidence gets no line. */
+function BoardTestLine({ board }: { board: AxisView["board"] }) {
+  const ev = board?.separation_evidence;
+  if (!board || !ev || typeof ev !== "object") return null;
+  const lead = ev.leader?.model;
+  const next = ev.next_best?.model;
+  if (!lead || !next || typeof ev.mcnemar_p !== "number" || typeof ev.paired_items !== "number") return null;
+  const word =
+    board.separation === "SEPARATED" ? "are separated" : board.separation === "TIE" ? "are not separated" : null;
+  if (!word) return null;
+  return (
+    <p className="mt-2 text-sm text-gray-800" data-testid="board-test-line">
+      <span className="font-semibold">The board's test:</span> {lead} and runner-up {next} {word} (exact
+      McNemar p={ev.mcnemar_p}, {ev.paired_items} paired items). The test compares only these two.
+    </p>
+  );
+}
+
 function AxisTable({ view }: { view: AxisView }) {
   if (view.kind !== "ranked") {
     return (
@@ -240,6 +260,7 @@ function AxisTable({ view }: { view: AxisView }) {
         {board.bench ? <span className="text-gray-600"> · {board.bench}</span> : null} ·{" "}
         <span className="font-mono">{fleet.distinct_items}</span> questions in the frozen bank · higher is better
       </p>
+      <BoardTestLine board={board} />
       <table className="mt-3 w-full text-left" data-testid="fleet-table">
         <thead>
           <tr className="whitespace-nowrap text-[11px] uppercase tracking-wide text-gray-600">
@@ -258,7 +279,7 @@ function AxisTable({ view }: { view: AxisView }) {
               <td colSpan={4} className="pt-3">
                 {g.label === "no-clear-winner" && (
                   <p className="rounded-lg bg-gray-900 px-3 py-1.5 text-sm font-bold text-white">
-                    No clear winner (tie) — {g.models.length} models
+                    Could still be first on 95% ranges — {g.models.length} {g.models.length === 1 ? "model" : "models"}
                   </p>
                 )}
                 {g.label === "separated-leader" && (
@@ -268,7 +289,7 @@ function AxisTable({ view }: { view: AxisView }) {
                 )}
                 {g.label === "ordered" && (
                   <p className="px-1 text-xs font-bold uppercase tracking-wide text-gray-600">
-                    Below the top group
+                    {view.board.separation === "SEPARATED" ? "The rest of the fleet" : "Cannot be first on 95% ranges"}
                   </p>
                 )}
               </td>
@@ -281,13 +302,17 @@ function AxisTable({ view }: { view: AxisView }) {
       </table>
       {board.separation_sentence && (
         <p className="mt-3 text-sm text-gray-800">
-          <span className="font-semibold">The board's test:</span> {board.separation_sentence}
+          <span className="font-semibold">In the board's words:</span> {board.separation_sentence}
         </p>
       )}
       <p className="mt-1 text-xs text-gray-600">
         “Possible position” is the range of places a model could hold given every model's 95% range on the
         same frozen bank. Overlapping ranges are not ordered by this measurement. It is annotation; the
-        tie-or-separated word comes only from the board's fixed test. {fleet.own_overlays.count} of our own
+        tie-or-separated word comes only from{" "}
+        <a href="/methodology/#separation" className="underline">
+          the board's fixed test
+        </a>
+        . {fleet.own_overlays.count} of our own
         prompt overlays answered this bank too; they are excluded before comparison and not shown.
       </p>
     </div>

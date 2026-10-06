@@ -69,13 +69,13 @@ export const FAQ_ITEMS: FaqItem[] = [
   },
   {
     q: "What happens when Council of AI gets something wrong?",
-    a: "It goes in the public corrections ledger at /api/corrections, appended and never deleted. Each entry records what was wrong, how it was caught and what changed. The hardest example — a retracted consensus guarantee (DR-0007) — is on that ledger.",
-    url: "/refutation-ledger",
+    a: "It goes in the public corrections ledger at /corrections/ (the same entries as JSON at /api/corrections). Each entry records what was wrong, how it was caught and what changed, dated. The hardest example — a retracted consensus guarantee (DR-0007) — is on that ledger.",
+    url: "/corrections/",
   },
   {
     q: "Who pays Council of AI, and who never pays?",
-    a: "No company we measure pays for its place on the board, its score, or its removal. Members of the public never pay. We fund ourselves by selling signed evidence artefacts, published whether the result flatters the buyer or not.",
-    url: "/about",
+    a: "No company we measure pays for its place on the board, its score, or its removal. Members of the public never pay. Who funds us, and any in-kind support, is set out on /independence/; where a fact is not yet published there, that page says so.",
+    url: "/independence/",
   },
   {
     // Replaced "Is verification free, and is a grade ever for sale?" on 6 Oct 2026: this answer

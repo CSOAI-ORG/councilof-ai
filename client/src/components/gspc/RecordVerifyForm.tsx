@@ -2,9 +2,28 @@ import { useEffect, useId, useRef, useState } from "react";
 import { FOCUS } from "../lobby/glass";
 import { lookupRecordUseStatus, verifyRecord, type RecordUseStatus, type RecordVerdict } from "@/lib/recordVerify";
 import { InputBoundVerifier } from "@/lib/inputBoundVerification";
+import { isOwnModel } from "@/lib/livingBoard";
 
 type Tally = { ok: number; fail: number };
 type UseAwareVerdict = RecordVerdict & { useStatus: RecordUseStatus };
+
+/** What a gspc.measurement-card says, read from the pasted bytes. A VALID check proves the
+ *  bytes are unedited; it does not say what they record, so the page says it. Nothing is filled
+ *  in: the card carries no item count, so n is stated as absent. */
+export function recordSays(text: string): { model: string; axis: string; accuracy: string; created: string; own: boolean } | null {
+  let parsed: any;
+  try { parsed = JSON.parse(text); } catch { return null; }
+  const body = parsed && typeof parsed === "object" ? parsed.body : null;
+  if (!body || typeof body !== "object" || body.kind !== "gspc.measurement-card") return null;
+  const model = typeof body.model === "string" ? body.model : "model not recorded";
+  return {
+    model,
+    axis: typeof body.axis === "string" ? body.axis : "not recorded",
+    accuracy: typeof body.accuracy === "number" ? String(body.accuracy) : "not recorded",
+    created: typeof body.created === "string" ? body.created.slice(0, 10) : "not recorded",
+    own: typeof body.model === "string" && isOwnModel(body.model),
+  };
+}
 
 function readTally(value: unknown): Tally | null {
   if (!value || typeof value !== "object") return null;
@@ -39,10 +58,11 @@ function TallyOptIn({ ok, variant }: { ok: boolean; variant: "light" | "dark" })
   }, []);
 
   const count = tally ? (
-    <p className={`text-sm leading-relaxed ${muted}`}>
-      {(tally.ok + tally.fail).toLocaleString()} outcomes in the public tally
-      ({tally.ok.toLocaleString()} matched · {tally.fail.toLocaleString()} did not) —
-      a self-reported, opt-in signal, not a measurement.
+    <p className={`text-sm leading-relaxed ${muted}`} data-testid="verify-tally-count">
+      Opt-in clicks from anyone, including our own tests: {tally.ok.toLocaleString()} said their
+      check matched, {tally.fail.toLocaleString()} said it did not. Self-reported, not a
+      measurement, and not about this record. Only these two numbers are stored, so earlier test
+      clicks cannot be separated from real ones.
     </p>
   ) : null;
 
@@ -211,6 +231,15 @@ export default function RecordVerifyForm({ variant = "dark", seed, seedNonce, on
       {verdict && (
         <section key={`${verdict.inputHash}-${verdict.result.state}`} aria-labelledby={resultId}
           className={`min-w-0 space-y-3 rounded-xl border p-4 forced-colors:border-[CanvasText] forced-colors:bg-[Canvas] ${light ? "border-slate-300 bg-slate-50" : "border-emerald-500/30 bg-[#03110b]"}`}>
+          {(() => {
+            const says = recordSays(text);
+            return says ? (
+              <p data-testid="record-says" className={`text-sm leading-relaxed [overflow-wrap:anywhere] forced-colors:text-[CanvasText] ${light ? "text-slate-900" : "text-emerald-50"}`}>
+                This record says: {says.model} · axis {says.axis} · accuracy {says.accuracy} · recorded {says.created} · n: not in this card
+                {says.own && " — one of our own prompt overlays; the public board does not rank these."}
+              </p>
+            ) : null;
+          })()}
           <p id={resultId} data-testid="record-verdict-headline" className={`text-base font-semibold leading-relaxed forced-colors:text-[CanvasText] ${
             verdict.result.state === "VALID" ? light ? "text-emerald-800" : "text-emerald-200"
               : verdict.result.state === "INVALID" ? light ? "text-red-800" : "text-red-200"

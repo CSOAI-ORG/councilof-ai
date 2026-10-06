@@ -8,11 +8,11 @@
 <!-- No count in this description: a count frozen into <head> cannot be derived and
      is the first thing to go stale (this one said "14 measured of 14 quotable"
      after the board had been swept). The live count renders into #board-count. -->
-<meta name="description" content="The live GSPC board: per-axis n, leader accuracy and separation, with UNMEASURED reported rather than hidden. Jail MEASURED with separation TIE (2026-08-25). Counts come from councilof.ai/api/gspc. Measurement, not certification.">
+<meta name="description" content="The live GSPC board: per-axis n, leader accuracy and separation, with UNMEASURED reported rather than hidden. Counts come from councilof.ai/api/gspc. Measurement, not certification.">
 <link rel="canonical" href="https://councilof.ai/benchmarks">
 <meta name="robots" content="index,follow">
 <meta property="og:title" content="GSPC Benchmarks — Council of AI">
-<meta property="og:description" content="The live GSPC board: per-axis n, leader accuracy and separation, with UNMEASURED reported rather than hidden. Jail MEASURED with separation TIE (2026-08-25). Counts come from councilof.ai/api/gspc. Measurement, not certification.">
+<meta property="og:description" content="The live GSPC board: per-axis n, leader accuracy and separation, with UNMEASURED reported rather than hidden. Counts come from councilof.ai/api/gspc. Measurement, not certification.">
 <meta property="og:url" content="https://councilof.ai/benchmarks">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://councilof.ai/og-image.png">
@@ -48,7 +48,7 @@ Measurement, not certification. Not a notified body.</p>
 Two numbers travel together: <code>totals.axes</code> counts SLOTS on the board, <code>totals.measured_axes</code> counts
 slots with a real run behind them, and <code>totals.unmeasured_axes</code> is published so the gap is visible — quoting the
 slot count alone would claim measurements that do not exist.
-Jail is <strong>MEASURED</strong> with separation <strong>TIE</strong> (determined 2026-08-25).
+<span id="jail-sep"></span>
 </div>
 <h2>Measured axes (live board)</h2>
 <div class="wrap">
@@ -59,12 +59,12 @@ Jail is <strong>MEASURED</strong> with separation <strong>TIE</strong> (determin
 </tbody>
 </table>
 </div>
-<p class="sub">Rows are rendered from the living API. Missing values stay blank; withheld leaders are never reconstructed here.</p>
+<p class="sub">Rows are rendered from the living API. Missing values stay blank; withheld leaders are never reconstructed here.
+Separation “—” on a fact axis: fact axes are not model comparisons; no separation test applies.</p>
 <div class="note">
 A TIE is not a win. Affect gold is counsel-pending: behaviour against a pending key, not a legal verdict.
-Care is separated from base models, not from the majority baseline.
 Scores describe a frozen run on a date. They do not describe compliance.
-Historical RSS / sitting-day copy may still say “13 measured of 14” for the pre-jail-TIE sitting — cite live <code>totals.public_count</code>.
+Historical RSS / sitting-day copy may still say “13 measured of 14” for an earlier sitting — cite live <code>totals.public_count</code>.
 </div>
 <footer>
 Council of AI · CSOAI Ltd · UK 16939677 ·
@@ -107,6 +107,9 @@ Council of AI · CSOAI Ltd · UK 16939677 ·
       else if(typeof t.axes==="number"&&typeof t.measured_axes==="number") el.textContent=t.axes+" axes · "+t.measured_axes+" measured";
       if(typeof t.count_grammar==="string"&&t.count_grammar.trim()) el.title=t.count_grammar;
       rows.textContent="";
+      var jailEl=document.getElementById("jail-sep");
+      var jail=(Array.isArray(d.axes)?d.axes:[]).filter(function(a){return a&&a.axis==="jail";})[0];
+      if(jailEl&&jail&&jail.status) jailEl.textContent="Jail: "+jail.status+" · separation "+(jail.separation||"UNTESTED")+" (see /api/corrections C-2026-0929-02).";
       (Array.isArray(d.axes)?d.axes:[]).forEach(function(a){
         var tr=document.createElement("tr");
         cell(tr,a.axis);
@@ -117,7 +120,7 @@ Council of AI · CSOAI Ltd · UK 16939677 ·
         if(a.leader) cell(tr,a.leader);
         else if(lead&&LS[lead]) cell(tr,LS[lead][0],null,LS[lead][1]);
         else cell(tr,lead);
-        cell(tr,a.kind==="model-comparison"?(a.separation||"UNTESTED"):"NOT APPLICABLE",a.separation==="SEPARATED"?"ok":"");
+        cell(tr,a.kind==="model-comparison"?(a.separation||"UNTESTED"):"—",a.separation==="SEPARATED"?"ok":"");
         rows.appendChild(tr);
       });
       if(!rows.children.length){
