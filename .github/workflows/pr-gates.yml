@@ -77,14 +77,17 @@ jobs:
 
   # 6 Oct 2026: a third party's contact details were removed from this tree after we had told them
   # nothing naming them would be public. This runs on EVERY PR, outside the scope step below, because
-  # they could come back in any file, docs included. The identifiers are stored only as digests; read
-  # the test's docstring before changing it, and never put an identifier in a commit message or PR text.
+  # they could come back in any file, docs included. The identifiers live only in the repository secret
+  # THIRD_PARTY_GUARD_IDS, never in the tree; without it the job fails as UNMEASURED. Read the test's
+  # docstring before changing it, and never put an identifier in a commit message or PR text.
   third-party-identifiers:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - name: No guarded third-party identifier in any tracked path or file
+        env:
+          THIRD_PARTY_GUARD_IDS: ${{ secrets.THIRD_PARTY_GUARD_IDS }}
         run: python3 scripts/privacy/test_third_party_identifiers.py -v
 
   gates:
