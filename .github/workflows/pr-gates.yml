@@ -112,7 +112,12 @@ jobs:
 
       - name: Install deps
         if: steps.scope.outputs.gated == 'true'
-        run: npm ci --no-audit --no-fund
+        # The Python half matches deploy.yml's install. scripts/ots-manifest-fresh.test.ts (step "Unit
+        # tests") runs scripts/pod-loops/root_ots_manifest_gate.py, which imports opentimestamps; without
+        # it the gate died on ImportError in 0.25 s and the unit step went red on every PR.
+        run: |
+          npm ci --no-audit --no-fund
+          python3 -m pip install -q cryptography opentimestamps-client
 
       # This used to run only after merge in deploy.yml. PR #1847 passed every hosted
       # PR check and then the master deployment stopped because TypeScript errors had
@@ -133,6 +138,16 @@ jobs:
       - name: Unit tests — client, functions and scripts
         if: steps.scope.outputs.gated == 'true'
         run: npx vitest run client/src functions scripts
+
+      # node:test files that vitest cannot collect (vitest.config.ts NODE_TEST_FILES). They used to be
+      # reported by vitest as failed suites and so never actually ran. The list is read from the config
+      # so the exclusion there and this step cannot name different files.
+      - name: Unit tests — node:test files under scripts/
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          files=$(sed -n '/^export const NODE_TEST_FILES = \[/,/^\];/p' vitest.config.ts | grep -o "'[^']*'" | tr -d "'")
+          test -n "$files" || { echo "NODE_TEST_FILES is empty or unreadable"; exit 1; }
+          node --test $files
 
       - name: Build client
         if: steps.scope.outputs.gated == 'true'

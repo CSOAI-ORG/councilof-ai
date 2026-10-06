@@ -10,6 +10,7 @@
  * verification is free; none carries a price, a grade or a score.
  */
 import descriptions from "./x402-descriptions.json";
+import DISCOVERY_SUBJECTS from "./discover/subjects.json";
 
 const D = descriptions as Record<string, string>;
 
@@ -28,6 +29,15 @@ export const FRESH_CAPSULE_DESCRIPTION = D.fresh_capsule;
 
 /** Per-asset wrapper doors (/api/wrapper/asset/<asset>): one template, the asset symbol filled in. */
 export const wrapperAssetDescription = (assetSymbol: string) => D.wrapper_asset.replace("{ASSET}", assetSymbol);
+
+/**
+ * Zero-priced subject discovery doors (/api/discover/<id>): one template, the subject's label filled
+ * in. The labels live in discover/subjects.json so the doors, /.well-known/x402.json and the OpenAPI
+ * producer read the same bytes. Before 2026-10-06 the door's own 402, the manifest row and
+ * capabilities.json each carried a different sentence.
+ */
+export const DISCOVERY_SUBJECT_LABELS = DISCOVERY_SUBJECTS as Record<string, string>;
+export const subjectDiscoveryDescription = (label: string) => D.subject_discovery.replace("{SUBJECT}", label);
 
 /** Self-serve RAS doors (functions/api/ras/*) — one fresh computation each, receipt signed. */
 export const RAS_MCP_PROBE_DESCRIPTION = D.ras_mcp_probe;
@@ -66,6 +76,11 @@ export function descriptionForPath(path: string, assetSymbol?: string): string |
   const pop = path.match(/^\/api\/pop\/([^/]+)$/);
   if (pop) return POPULATION_DESCRIPTIONS[pop[1]] ?? null;
   if (/^\/api\/wrapper\/asset\/[^/]+$/.test(path)) return assetSymbol ? wrapperAssetDescription(assetSymbol) : null;
+  const discover = path.match(/^\/api\/discover\/([^/]+)$/);
+  if (discover) {
+    const label = DISCOVERY_SUBJECT_LABELS[discover[1]];
+    return label ? subjectDiscoveryDescription(label) : null;
+  }
   const key = DESCRIPTION_KEY_BY_PATH[path];
   return key ? D[key] ?? null : null;
 }

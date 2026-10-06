@@ -81,6 +81,7 @@ SOURCE_RENDERED = {"well_known_x402.json"}
 MANIFEST_RENDERER = HERE / "render_x402_manifest.mjs"
 DESCRIPTION_SOURCE = REPO / "functions" / "api" / "x402-descriptions.json"
 WRAPPER_ASSET_DOORS = REPO / "functions" / "api" / "_wrapper_asset_doors.json"
+DISCOVERY_SUBJECTS = REPO / "functions" / "api" / "discover" / "subjects.json"
 DESCRIPTION_PATHS = {
     # Every door, not three (2026-09-28): the canonical text is the one source the manifest, each
     # door's 402 (and so the Bazaar extension's catalogue entry), capabilities.json and llms.txt read.
@@ -515,6 +516,11 @@ def compose(fix: Path = FIX) -> dict:
             door = next((d for d in load(WRAPPER_ASSET_DOORS)["doors"] if d["asset"] == path.rsplit("/", 1)[1]), None)
             if door:
                 canonical_description = canonical_descriptions["wrapper_asset"].replace("{ASSET}", door["symbol"])
+        if canonical_description is None and path.startswith("/api/discover/"):
+            # One template for the subject discovery doors, the subject's label filled in — as the door renders it.
+            label = load(DISCOVERY_SUBJECTS).get(path.rsplit("/", 1)[1])
+            if label:
+                canonical_description = canonical_descriptions["subject_discovery"].replace("{SUBJECT}", label)
         description = canonical_description or (challenge or {}).get("resource", {}).get("description") or (tier or {}).get("deliverable") or r.get("note") or ""
         note = FREE_TIER_OP_NOTE.get(path)
         if note and note not in description:

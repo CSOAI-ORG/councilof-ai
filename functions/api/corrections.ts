@@ -1022,6 +1022,12 @@ export const LEDGER = {
       id: "C-2026-0917-03",
       date: "2026-09-17",
       first_observed_at: "2026-09-17T12:06Z",
+      detected_at: "2026-09-17T12:06Z",
+      detected_by: "UNRECORDED",
+      published_at: "UNRECORDED",
+      timing_evidence: [
+        "detected_at is this entry's own first_observed_at, recorded when the entry was written. The entry names no detector and no first-public time, so both stay UNRECORDED.",
+      ],
       what_was_wrong:
         "The GSPC axis humanoid-labour-index published a PASS that was not true. The run of " +
         "2026-09-07 recorded, for https://www.sanctuary.ai, dated_deployment_count_published true " +
