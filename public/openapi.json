@@ -170,7 +170,7 @@
       "name": "CSOAI Ltd",
       "url": "https://councilof.ai/"
     },
-    "description": "Verification is free forever. Agents pay per artefact: issuance, assembly, cadence \u2014 never a grade. 23 axes measured \u00b7 14 model fleets \u00b7 0 separated leaders \u00b7 9 public leader scores \u00b7 9 fact runs \u00b7 TIE is TIE \u00b7 not a certificate. Operations with security [] are free and unauthenticated. Operations with x-payment-info are x402 doors; an amount appears only inside a door's 402 challenge (documented as each door's 402 example).",
+    "description": "Verification is free forever. Agents pay per artefact: issuance, assembly, cadence \u2014 never a grade. 23 axes measured \u00b7 14 model fleets \u00b7 0 separated leaders \u00b7 9 public leader scores \u00b7 9 fact runs \u00b7 TIE is TIE \u00b7 not a certificate. Operations with security [] are free and unauthenticated. Operations with x-payment-info are x402 doors; an amount appears only inside a door's 402 challenge (documented as each door's 402 example). Python's default urllib User-Agent (Python-urllib/x.y) is refused at our CDN with 403 'error code: 1010'. Send any User-Agent, e.g. urllib.request.Request(url, headers={'User-Agent': 'my-check/1'}).",
     "license": {
       "name": "CC-BY-4.0",
       "url": "https://creativecommons.org/licenses/by/4.0/"
@@ -560,7 +560,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -1462,7 +1462,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -1554,7 +1554,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -1646,7 +1646,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -2010,7 +2010,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -2350,7 +2350,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -2655,7 +2655,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -3189,7 +3189,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -3710,7 +3710,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -3976,7 +3976,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -4230,7 +4230,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -4485,7 +4485,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -4740,7 +4740,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -4994,7 +4994,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -5247,7 +5247,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -5501,7 +5501,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -5755,7 +5755,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -6012,7 +6012,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -6328,7 +6328,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -6634,7 +6634,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -6950,7 +6950,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -7214,7 +7214,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -7540,7 +7540,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -8021,7 +8021,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -8383,7 +8383,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -8570,7 +8570,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -9292,7 +9292,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -9406,7 +9406,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -9510,7 +9510,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -9614,7 +9614,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
@@ -9864,7 +9864,7 @@
                 }
               }
             },
-            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
             "headers": {
               "PAYMENT-REQUIRED": {
                 "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",

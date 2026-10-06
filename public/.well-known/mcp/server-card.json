@@ -24,7 +24,8 @@
     "mcp": {
       "primary": "https://councilof.ai/mcp",
       "current": "https://councilof.ai/mcp",
-      "stdio": "npx -y csoai-gspc-mcp@0.2.2",
+      "stdio": null,
+      "stdio_note": "npm csoai-gspc-mcp: published releases are deprecated on npm and carry fewer tools; use the free door https://councilof.ai/mcp/free",
       "note": "Live door is https://councilof.ai/mcp (GET 200). HTTP tools/list is nineteen: fourteen free readers plus five x402-metered evidence tools. witness_hash is quarantined and not advertised. Registry server 1.4.4.",
       "free": "https://councilof.ai/mcp/free",
       "free_note": "https://councilof.ai/mcp/free serves the fourteen free readers only, from the same definitions and handlers as https://councilof.ai/mcp: no payment tool and no payment text. It is the address for chat clients and directories that list no payment software."
@@ -1368,6 +1369,7 @@
         "rail": "x402",
         "route": "/api/request-attestation",
         "sku": "request_attestation",
+        "sells": "issuance",
         "free_preview": "the 402 body (csoai.preview)",
         "deliverable": "one card-v0 leaf, surface ras.commission, Ed25519 when the Pages key is present"
       }
@@ -1461,6 +1463,7 @@
         "rail": "x402-or-invoice",
         "route": "/api/art50/marking-evidence",
         "sku": "art50_marking_evidence",
+        "sells": "issuance",
         "free_preview": "preview=true",
         "deliverable": "one card-v0 leaf, surface art50.marking-evidence, kind csoai.art50.marking-evidence/0.1",
         "deployed_by": "live on councilof.ai (verified 2026-09-03)"
@@ -1547,6 +1550,7 @@
         "rail": "x402",
         "route": "/api/rwa/evidence",
         "sku": "rwa_evidence",
+        "sells": "issuance",
         "free_preview": "preview=true",
         "deliverable": "one card-v0 leaf, surface public.notice, kind csoai.eater.xrpl-issuer/0.1",
         "deployed_by": "live on councilof.ai (verified 2026-09-03)"
@@ -1637,6 +1641,7 @@
         "rail": "x402-or-invoice",
         "route": "/api/receipts/batch",
         "sku": "receipts_batch",
+        "sells": "assembly",
         "free_preview": "preview=true",
         "deliverable": "csoai.receipts.batch/0.1 + one signed manifest card-v0 (surface receipts.batch)"
       }
@@ -1733,6 +1738,7 @@
         "rail": "x402",
         "route": "/api/evidence-bundle",
         "sku": "evidence_bundle",
+        "sells": "assembly",
         "free_preview": "preview=true, or the free tool evidence_bundle_preview",
         "deliverable": "OSCAL 1.1.0 assessment-results over already-signed cards (with inclusion proofs) plus one manifest card-v0, surface evidence.bundle",
         "deployed_by": "live on councilof.ai (402 on ?obligation=article-53&bundle=1, read 2026-09-30)"

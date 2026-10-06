@@ -236,6 +236,19 @@ const FIN_AXIS_IDS = new Set([
   "labour-components", "humanoid-labour-index",
 ]);
 
+/**
+ * The dated register (/interop/financial-axes.json, OTS-stamped, never edited) words one correction
+ * as an instruction to agents: "C-2026-0826-05: do not restore MEASURED-INDEX-v0.1." A reader is
+ * not the agent it addresses, so the page states the same fact declaratively (persona sweep 6 Oct
+ * 2026, T05). The register's bytes are untouched; only the visible sentence is relabelled.
+ */
+export function plainRegisterNote(note: string): string {
+  return String(note).replace(
+    /C-2026-0826-05:\s*do not restore MEASURED-INDEX-v0\.1\./gi,
+    "The MEASURED-INDEX-v0.1 sticker stays withdrawn (C-2026-0826-05).",
+  );
+}
+
 const FIN_CHIP: Record<string, string> = {
   MEASURED: "bg-emerald-100 text-emerald-800 border-emerald-300",
   UNMEASURED: "bg-gray-100 text-gray-600 border-gray-300",
@@ -424,7 +437,7 @@ export default function GspcScoreboard() {
                 {finAxis?.bank_status && <p className="mt-2 text-xs text-gray-600"><strong>Input bank.</strong> {finAxis.bank_status}</p>}
                 {finAxis?.declared_as && <p className="mt-2 text-xs text-gray-600">{finAxis.declared_as}</p>}
                 {(finAxis?.note || (focused as any)?.note) && (
-                  <p className="mt-2 text-xs italic text-gray-600">{finAxis?.note || (focused as any)?.note}</p>
+                  <p className="mt-2 text-xs italic text-gray-600">{plainRegisterNote(finAxis?.note || (focused as any)?.note)}</p>
                 )}
                 <p className="mt-2 text-[11px] text-gray-500">
                   Board counts: live <a className="underline" href="/api/gspc">GET /api/gspc</a>.{" "}

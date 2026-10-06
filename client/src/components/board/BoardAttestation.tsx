@@ -403,8 +403,11 @@ export default function BoardAttestation({
               N→N+1 drift · {drift?.status || "UNCHECKABLE"}
             </p>
             <p className={`mt-1 text-[11px] ${dark ? "text-amber-200/70" : "text-amber-800"}`}>
-              {drift?.note ||
-                "No published board time series for N→N+1 drift. Empty stays empty — do not invent drift numbers or a Merkle seal."}{" "}
+              {/* UNCHECKABLE renders a plain sentence: the honesty file's note is written for agents
+                  ("do not invent…") and stays in the file for them (persona sweep 6 Oct 2026). */}
+              {(drift?.status || "UNCHECKABLE") === "UNCHECKABLE" || !drift?.note
+                ? "No published board time series for N→N+1 drift, so no drift figure or Merkle seal is shown. Empty stays empty."
+                : drift.note}{" "}
               Living snapshot only — cite{" "}
               <a
                 href="/root.json"

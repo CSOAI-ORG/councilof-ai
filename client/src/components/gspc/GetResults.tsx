@@ -262,7 +262,7 @@ export default function GetResults({
           n={2}
           icon={Zap}
           title="Fresh run"
-          body={kind === "record" ? "A record is already a result; verify it instead." : "We measure it now. Pay per run from your own wallet or by invoice; you see the terms before anything is paid."}
+          body={kind === "record" ? "A record is already a result; verify it instead." : "Ask for a new measurement. Pay per run from your own wallet; you see the terms before anything is paid. Invoiced work is arranged by email."}
           active={active}
         >
           {kind !== "record" ? (

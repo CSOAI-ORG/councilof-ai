@@ -20,4 +20,27 @@ describe("mill receipt readiness", () => {
     falseClaim.regulatory_linkage.regulation_score_eligible = true;
     expect(isMillReceiptReadiness({ schema: "csoai.mill-receipt-readiness/v1", receipts: [falseClaim] })).toBe(false);
   });
+
+  it("reads the v2 file (signed receipts) instead of rejecting it whole", () => {
+    // Shape of the live /interop/mill-receipt-readiness.json on 6 Oct 2026 (schema v2, SIGNED).
+    const signed: MillReceipt = { ...structuredClone(row), declared_lifecycle: "SIGNED" };
+    const v2 = {
+      schema: "csoai.mill-receipt-readiness/v2",
+      truth_rule: "Outer cryptographic validity, inner declared lifecycle, and regulatory linkage are independent states.",
+      counts: { receipts: 1, outer_signature_valid: 1, declared_staged_unsigned: 0, declared_signed: 1, regulatory_linked: 0, regulatory_unlinked: 1 },
+      receipts: [signed],
+    };
+    expect(isMillReceiptReadiness(v2)).toBe(true);
+  });
+  it("shows an INVALID or UNCHECKABLE outer signature rather than hiding the file", () => {
+    for (const state of ["INVALID", "UNCHECKABLE"] as const) {
+      const r = structuredClone(row);
+      r.outer_signature.state = state;
+      expect(isMillReceiptReadiness({ schema: "csoai.mill-receipt-readiness/v2", receipts: [r] })).toBe(true);
+    }
+    const unknown = structuredClone(row) as unknown as { outer_signature: { state: string } };
+    unknown.outer_signature.state = "PROBABLY_FINE";
+    expect(isMillReceiptReadiness({ schema: "csoai.mill-receipt-readiness/v2", receipts: [unknown] })).toBe(false);
+    expect(isMillReceiptReadiness({ schema: "csoai.mill-receipt-readiness/v3", receipts: [row] })).toBe(false);
+  });
 });

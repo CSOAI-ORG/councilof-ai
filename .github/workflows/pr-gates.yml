@@ -172,6 +172,15 @@ jobs:
           node scripts/facts-gate.mjs --selftest
           node scripts/facts-gate.mjs dist/client
 
+      # Persona audit T06 (2026-10-06): /axis/jail said TIE while the board said UNTESTED, /axes
+      # disagreed with both, and /benchmarks repeated a corrected claim. facts-gate reads counts;
+      # this compares each static axis pages state, separation and n with this commits board.
+      - name: Axis-state gate — static axis pages agree with the board
+        if: steps.scope.outputs.gated == true
+        run: |
+          node scripts/axis-state-gate.mjs --selftest
+          node scripts/axis-state-gate.mjs dist/client
+
       # 2026-09-15 review: nine promoted articles resolved to the withdrawal notice, /status/
       # rendered the homepage, enum keys shipped as teaching copy, a "no other body publishes"
       # claim sat beside its own retraction, and the homepage carried two <main> landmarks.

@@ -39,9 +39,10 @@ function daysUntil(iso: string, now: Date): number {
 const SERVICES: { title: string; href: string; body: string; note: string }[] = [
   {
     title: "Marking-presence census",
-    href: "/api/art50/marking-evidence",
+    // Humans land on the pane, never on 402 JSON; the API path stays in the note for agents.
+    href: "/dashboard/?tab=art50",
     body: "One output, one point in time: is a machine-readable mark detected by named methods? The Function recomputes a C2PA manifest by bytes, reads the IPTC DigitalSourceType, and names every watermark it cannot check, with the reason.",
-    note: "Detection preview is free. The signed evidence pack is paid via x402 — the amount lives at the 402 challenge, never here.",
+    note: "Detection preview is free. The signed evidence pack is paid via x402 — the amount lives at the 402 challenge, never here. Agents: GET /api/art50/marking-evidence?url=…&preview=1.",
   },
   {
     title: "Detector-interop bench",

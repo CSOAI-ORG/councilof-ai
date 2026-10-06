@@ -24,6 +24,7 @@
  * `node scripts/mcp-probe.mjs` to refresh it; `--check` re-validates the honesty contract in CI.
  */
 import registry from "../../evidence/mcp-registry.json";
+import { headFromGet } from "./_head";
 
 export const onRequestGet: PagesFunction = async () => {
   const servers = (registry as any).servers || [];
@@ -66,3 +67,7 @@ export const onRequestGet: PagesFunction = async () => {
     }
   );
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

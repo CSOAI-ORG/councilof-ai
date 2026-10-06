@@ -10,6 +10,7 @@ import { routeExecute, MAX_BODY_BYTES } from "../../_lib/route/execute";
 import { routeSigner, ROUTE_KID } from "../../_lib/route/sign";
 import { fetchOriginJson } from "../../mcp/_board";
 import { CENSUS_PATH } from "../../_lib/route/census";
+import { headFromGet } from "../_head";
 
 type Env = { ROUTE_SIGN_KEY_PKCS8_B64?: string };
 
@@ -73,3 +74,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   });
   return json(r.http_status, r.body);
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

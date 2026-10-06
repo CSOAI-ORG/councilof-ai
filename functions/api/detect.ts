@@ -22,6 +22,7 @@
  */
 
 import { DETECTION_PREDICATE, toDsse, toInTotoStatement } from "./intoto";
+import { headFromGet } from "./_head";
 
 interface Env {
   BOARD_ATTESTATION_KEY_PKCS8_B64?: string;
@@ -258,3 +259,7 @@ export const onRequestGet: PagesFunction<Env> = async () =>
     access: "free for all; unrestricted for authorities, media, fact-checkers, researchers, civil society",
     complements: "/api/article50 (issues a passport) — this proves the mark that endpoint otherwise trusts",
   });
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

@@ -101,7 +101,7 @@ for (const vp of VIEWPORTS) {
     const answered = page.getByTestId("talk-tool-card").or(page.getByTestId("talk-answer")).first();
     await expect(answered).toBeVisible({ timeout: 10_000 });
     expect(aborted, "POST /api/agui/run was not aborted").toEqual([]);
-    // The answer stays on the start screen; the question did not become a chat turn.
+    // The answer stays on the start screen; the question did not swap the canvas to the chat log.
     await expect(page.getByTestId("gspc-workspace-home")).toBeVisible();
     await expect(page.getByRole("log", { name: "Council of AI conversation" })).toHaveCount(0);
     // One server question, one card: no census card about other hosts beside it.

@@ -42,13 +42,15 @@ export function paneForTool(name: string): string {
 }
 
 /**
- * The home composer's question goes to the AG-UI TalkPanel, and to nothing else.
+ * The home composer's question goes to the AG-UI TalkPanel, which answers it on the start screen.
  *
- * 6 Oct 2026: this used to ALSO call chat.recordUserMessage(text). That added a user turn to the
- * lobby chat, which flipped hasConversation, which swapped the home canvas (and the TalkPanel in
- * it) for LobbyThread. TalkPanel's unmount effect then aborted the POST /api/agui/run it had just
- * started, so the first question typed on the start screen never got an answer. The question is
- * kept in History as an "ask" activity entry instead; the chat thread is not touched.
+ * 6 Oct 2026: askTalk used to record the question as a lobby chat turn first. That flipped
+ * hasConversation, which swapped the home canvas (and the TalkPanel in it) for LobbyThread, and
+ * TalkPanel's unmount effect aborted the POST /api/agui/run it had just started: the first question
+ * typed on the start screen never got an answer. Two fixes met here and both are kept:
+ * - #2834 (master): the question is still recorded in session history (`keepInChat`), but
+ *   DashboardWorkspace sets talkOwnsHome before it does, so the turn never swaps the canvas.
+ * - tools audit: the question is also kept in the workspace History as an "ask" activity entry.
  *
  * Returns true when the TalkPanel took the question; false sends it on to the lobby chat.
  */
@@ -59,6 +61,8 @@ export function askOnHome(
     hasConversation: boolean;
     talk: { ask: (question: string) => void } | null;
     record?: typeof recordActivity;
+    /** Records the question in session history; runs before the TalkPanel is asked. */
+    keepInChat?: (question: string) => void;
   },
 ): boolean {
   if (ctx.activePane || ctx.hasConversation || !ctx.talk) return false;
@@ -66,6 +70,7 @@ export function askOnHome(
   const question = text.trim();
   if (!question) return false;
   (ctx.record ?? recordActivity)({ kind: "ask", label: question });
+  ctx.keepInChat?.(question);
   ctx.talk.ask(question);
   return true;
 }
@@ -80,6 +85,14 @@ function shortDescription(description: string): string {
 
 /** DashboardLayout's section bar exposes this slot for workspace-level actions. */
 export const SECTION_ACTIONS_ID = "coai-section-actions";
+
+/**
+ * Tools audit, 6 Oct 2026: the candidate-evidence tray offered a receipt that went nowhere,
+ * because network intake is not live in this release (CandidateEvidenceTray says so itself).
+ * It is not drawn until intake exists; the quest bridge script still posts observations, and the
+ * tray returns by flipping this one constant once an intake endpoint is published.
+ */
+export const CANDIDATE_INTAKE_LIVE = false;
 
 export default function DashboardWorkspace({
   activePane,
@@ -199,20 +212,32 @@ export default function DashboardWorkspace({
     [setLocation],
   );
 
-  const hasConversation = Boolean(chat.active?.turns.length);
+  // A question asked on the Get results home is answered by the home TalkPanel. It is still
+  // recorded in session history (so History/Chats can reach it), but it must not swap the home
+  // canvas for LobbyThread: that unmounted the TalkPanel and aborted its /api/agui/run ~8 ms
+  // after sending (6 Oct 2026, the first question never got an answer).
+  const [talkOwnsHome, setTalkOwnsHome] = useState(false);
+  const hasConversation = Boolean(chat.active?.turns.length) && !talkOwnsHome;
   const talkRef = useRef<TalkPanelHandle>(null);
   // On the home surface a typed question goes to the AG-UI TalkPanel (tool cards + citations).
   // An explicit pane command ("show the board") still navigates through the lobby chat.
-  // The question is kept in History as an "ask" activity entry (see askOnHome): it must NOT
-  // become a chat turn, or the canvas swaps away from the TalkPanel and aborts the run.
+  // The question is kept in History twice (see askOnHome): as an "ask" activity entry, and as a
+  // session-history turn that talkOwnsHome keeps from swapping the canvas and aborting the run.
   const askTalk = useCallback(
     (text: string) =>
       askOnHome(text, {
         activePane: Boolean(activePane),
         hasConversation,
         talk: talkRef.current,
+        // #2834: the question is also a turn in session history (Chats › History). talkOwnsHome is
+        // set first, in the same batch, so that turn never flips hasConversation and the home
+        // canvas (and the TalkPanel's run) stays mounted.
+        keepInChat: (question) => {
+          setTalkOwnsHome(true);
+          chat.recordUserMessage(question);
+        },
       }),
-    [activePane, hasConversation],
+    [activePane, hasConversation, chat],
   );
   const activity = useActivity();
   // The side rail only exists when it has something to hold: a conversation that
@@ -309,7 +334,7 @@ export default function DashboardWorkspace({
             />
           )}
         </div>
-        {candidate ? (
+        {CANDIDATE_INTAKE_LIVE && candidate ? (
           <CandidateEvidenceTray
             observation={candidate}
             onDismiss={() => setCandidate(null)}

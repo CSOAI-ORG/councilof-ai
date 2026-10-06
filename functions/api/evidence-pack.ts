@@ -12,6 +12,7 @@
 // + a drift/conformance rail — not a parametric trigger (aiSure's triggers are
 // business-metric SLAs, not benchmark scores; the pack supplies the baseline data
 // those SLAs need).
+import { headFromGet } from "./_head";
 interface Env {
   KV?: unknown;
 }
@@ -81,3 +82,7 @@ export const onRequestGet: PagesFunction<Env> = async () => {
     headers: { "content-type": "application/json", "cache-control": "public, max-age=1800", "access-control-allow-origin": "*" },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

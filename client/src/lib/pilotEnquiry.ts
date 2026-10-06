@@ -1,5 +1,7 @@
 /** Local email-draft preparation only. No fetch, storage, payment or send action. */
-export const ENQUIRY_EMAIL = 'nicholas@csoai.org';
+import { CONTACT_MAILBOX } from '@/lib/buying';
+
+export const ENQUIRY_EMAIL = CONTACT_MAILBOX;
 export const ENQUIRY_LIMITS = { name: 100, email: 254, subject: 160, message: 5000 } as const;
 export type EnquiryFields = { name: string; email: string; subject: string; message: string };
 export type EnquiryDraft = { subject: string; body: string; copyText: string; mailto: string | null };
@@ -20,7 +22,13 @@ export function enquiryPreset(search: string): Pick<EnquiryFields, 'subject' | '
     ledger: 'Ledger enquiry', data: 'Data enquiry', run: 'Run / re-attest enquiry',
   };
   if (!arm || !Object.prototype.hasOwnProperty.call(subjects, arm)) return null;
-  return { subject: subjects[arm], message: `Enquiry for the ${arm} arm. Verify stays free. A grade is never sold.` };
+  // Plain words a buyer would write, per arm (persona sweep 6 Oct 2026, T10) — not "the run arm".
+  const messages: Record<string, string> = {
+    run: 'I would like a measurement of: [model or server]. Organisation: … Billing contact: …',
+    data: 'I would like to ask about licensing Council of AI data (traces, preference pairs, safety incidents).',
+    ledger: 'I would like to ask about the signed evidence feed.',
+  };
+  return { subject: subjects[arm], message: `${messages[arm]}\n\nChecking a result stays free.` };
 }
 
 export function prepareEnquiry(input: EnquiryFields): EnquiryDraft {
@@ -37,8 +45,13 @@ export function prepareEnquiry(input: EnquiryFields): EnquiryDraft {
   return formatDraft(ENQUIRY_EMAIL, subject, body);
 }
 
-/** The existing Contact form's recipient; never supplied by query or form data. */
-export const CONTACT_ENQUIRY_EMAIL = 'contact@csoai.org';
+/**
+ * The existing Contact form's recipient; never supplied by query or form data. Until 6 Oct 2026
+ * this was contact@csoai.org while the footer, JSON-LD, security.txt and the invoice handoff
+ * named nicholas@csoai.org; nothing confirms contact@ reaches a monitored inbox, so the form
+ * uses the one mailbox constant too.
+ */
+export const CONTACT_ENQUIRY_EMAIL = CONTACT_MAILBOX;
 
 function formatDraft(recipient: string, subject: string, body: string): EnquiryDraft {
   const copyText = `To: ${recipient}\nSubject: ${subject}\n\n${body}`;

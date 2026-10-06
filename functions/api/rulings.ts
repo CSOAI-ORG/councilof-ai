@@ -19,6 +19,7 @@
  */
 
 import { RULINGS, RULINGS_INDEX } from "./_rulings_data";
+import { headFromGet } from "./_head";
 
 const BOARD_DID = "did:web:csoai.org#board-attestation-1";
 const BOARD_KEY_HEX = "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170";
@@ -130,3 +131,7 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
 
 export const onRequestOptions: PagesFunction = async () =>
   new Response(null, { status: 204, headers: { "access-control-allow-origin": "*", "access-control-allow-methods": "GET, OPTIONS" } });
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

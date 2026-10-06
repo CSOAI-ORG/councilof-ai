@@ -90,7 +90,7 @@ export default function HomeHero() {
         </div>
         <p className="mt-5">
           <a
-            href="/how-we-work#machine-surface"
+            href="/how-we-work/#machine-surface"
             data-testid="hero-cta-agents"
             className="inline-flex min-h-11 items-center font-mono text-[13px] font-semibold text-emerald-300 underline decoration-dotted underline-offset-4 hover:text-emerald-200"
           >

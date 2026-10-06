@@ -2,6 +2,7 @@
  * GET /api/health — JSON health, never the SPA shell.
  * Claims E2E asserts this returns JSON (the shell HTML was the soft-404 bug).
  */
+import { headFromGet } from "./_head";
 export function onRequestGet() {
   return new Response(
     JSON.stringify({
@@ -25,3 +26,7 @@ export function onRequestGet() {
     }
   );
 }
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

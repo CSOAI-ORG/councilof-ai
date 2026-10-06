@@ -23,6 +23,7 @@ import { AXES_A } from "../api/_gspc_axes_a";
 import { AXES_B } from "../api/_gspc_axes_b";
 import { AXES_FIN } from "../api/_gspc_axes_fin";
 import { AXES_C } from "../api/_gspc_axes_c";
+import { headFromGet } from "../api/_head";
 
 export const onRequestGet: PagesFunction = async () => {
   const axes = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN];
@@ -56,3 +57,7 @@ export const onRequestGet: PagesFunction = async () => {
     },
   );
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

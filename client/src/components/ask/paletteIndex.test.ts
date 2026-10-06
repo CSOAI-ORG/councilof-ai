@@ -3,7 +3,7 @@
  * The fixture rows carry the field names GET /api/gspc serves ({axis, task, status, …}).
  */
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { axisTitle, boardAxisItems, loadBoardAxes, resetPaletteIndexForTest, search } from "./paletteIndex";
+import { axisTitle, boardAxisItems, buildIndex, loadBoardAxes, resetPaletteIndexForTest, search } from "./paletteIndex";
 
 const BOARD = {
   axes: [
@@ -45,5 +45,18 @@ describe("command palette — the board's tests", () => {
     expect(await loadBoardAxes(down)).toEqual([]);
     expect(boardAxisItems({ totals: {} })).toEqual([]);
     expect(boardAxisItems(null)).toEqual([]);
+  });
+});
+
+describe("command palette finds the Article 50(2) marking check by the words people use", () => {
+  const items = buildIndex();
+  for (const q of ["watermark", "C2PA", "content credentials", "label AI images", "article 50"]) {
+    it(`"${q}" returns /dashboard/?tab=art50`, () => {
+      expect(search(q, items).map((i) => i.href)).toContain("/dashboard/?tab=art50");
+    });
+  }
+  it("files it under Get results, not Check a result", () => {
+    const hit = items.find((i) => i.href === "/dashboard/?tab=art50");
+    expect(hit?.crumb).toBe("Council OS › Get results");
   });
 });

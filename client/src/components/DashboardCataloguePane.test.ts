@@ -5,14 +5,18 @@ import {
   filterCatalogue,
   KIND_FILTERS,
 } from "./DashboardCataloguePane";
-import { LOBBY_ROUTES, LOBBY_TABS } from "@/components/lobby/tabs";
+import { LOBBY_ROUTES, LOBBY_TABS, normalizeLobbyTabId } from "@/components/lobby/tabs";
 
 describe("Council master catalogue", () => {
   const entries = buildDashboardCatalogue();
 
   it("gives every curated workflow and public surface one workspace destination", () => {
+    // An alias id (results -> board, watchdog -> corrections) opens another tab's pane, so it is
+    // catalogued once, under the tab that owns the pane (tools audit, 6 Oct 2026).
     for (const tab of LOBBY_TABS.filter(
-      (item) => !["home", "software", "explore"].includes(item.id),
+      (item) =>
+        !["home", "software", "explore"].includes(item.id) &&
+        normalizeLobbyTabId(item.id) === item.id,
     )) {
       expect(
         entries.some((entry) => entry.id === `tab:${tab.id}`),
@@ -57,12 +61,17 @@ describe("Council master catalogue", () => {
     expect(DEFAULT_CATALOGUE_KIND).toBe("all");
     for (const [q, path] of [
       ["methodology", "/methodology"],
-      ["enterprise", "/enterprise"],
-      ["tc260", "/tc260"],
+      // /enterprise itself is no longer catalogued: it 308s to the request pane, and "enterprise"
+      // in chat opens that pane natively (#2823). The default filter still finds its library page.
+      ["enterprise", "/how-it-works/enterprise"],
+      ["crosswalk", "/crosswalk"],
     ] as const) {
       const hits = filterCatalogue(entries, DEFAULT_CATALOGUE_KIND, q);
       expect(hits.some((entry) => entry.path === path), `${q} -> ${path}`).toBe(true);
     }
+    // /tc260 is in the Regions & Jurisdictions sector, held back until its content is corrected
+    // (#2823, tools audit): its URL keeps working, but the in-app listing does not offer it.
+    expect(filterCatalogue(entries, DEFAULT_CATALOGUE_KIND, "tc260").some((entry) => entry.path === "/tc260")).toBe(false);
   });
 
   it("a chosen chip still narrows, and the wider search is what the empty state offers", () => {

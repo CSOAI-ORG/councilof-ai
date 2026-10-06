@@ -12,6 +12,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
+import ModelCountKey from "@/components/ModelCountKey";
 
 interface Row {
   id: string;
@@ -128,6 +129,7 @@ export default function ModelsMeasured() {
               third-party models carry at least one signed, quotable measurement (n of 30 or more) on a frozen, published
               question bank. Our own {nf.format(groups.own.length)} models are listed below them and never counted in.
             </p>
+            <ModelCountKey className="mt-4 max-w-3xl" />
             <ul className="mt-6 max-w-3xl list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-muted-foreground">
               {read.doc.not_this.map((t) => (
                 <li key={t}>{t}</li>

@@ -11,6 +11,7 @@
  * or a listing; this endpoint adds its counts to nothing.
  */
 import { SELF_TOOLS, USAGE_DIMS, USAGE_RETENTION_DAYS, USAGE_SCHEMA, countDay, utcDay, type DayCounts } from "../_lib/usage";
+import { headFromGet } from "./_head";
 
 type KV = Parameters<typeof countDay>[0];
 interface Env { SOV_ARENA_STATE?: KV }
@@ -71,3 +72,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env, waitUntil
   if (cache) waitUntil(cache.put(cacheKey, res.clone()).catch(() => undefined));
   return res;
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

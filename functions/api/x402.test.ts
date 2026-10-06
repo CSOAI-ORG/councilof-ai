@@ -4,6 +4,8 @@
 
 import { describe, expect, it } from "vitest";
 import { onRequestGet } from "./x402";
+import { onRequestGet as wellKnownGet } from "../.well-known/x402.json";
+import PAID_TOOLS from "../mcp/paid-tools.json";
 
 const CATALOG_URL = "https://councilof.ai/api/x402";
 
@@ -136,6 +138,24 @@ describe("/api/x402 — URL fields are URLs, not sentences", () => {
     const doc = JSON.stringify(await catalog());
     expect(doc.match(WRONG_REASON)?.[0] ?? null).toBeNull();
     expect((await catalog()).mcp.how).toMatch(/x_payment ARGUMENT/);
+  });
+
+  // T14 (6 Oct 2026): this catalog typed four paid tools while /mcp served five (evidence_bundle was
+  // missing). Both catalogs now derive from the file the door serves; this holds the three equal.
+  it("lists the same paid MCP tools as the door serves, as /.well-known/x402.json does", async () => {
+    const served = PAID_TOOLS.tools.map((t) => t.name);
+    const doc = await catalog();
+    expect(doc.mcp.paid_tools.map((t: { name: string }) => t.name)).toEqual(served);
+    for (const t of doc.mcp.paid_tools) {
+      expect(["issuance", "assembly"]).toContain(t.sells);
+      expect(t.route).toMatch(/^https:\/\/councilof\.ai\/api\//);
+    }
+    expect(doc.mcp.paid_tools.find((t: { name: string }) => t.name === "evidence_bundle")?.sells).toBe("assembly");
+    const wk = (await (await (wellKnownGet as unknown as (c: unknown) => Promise<Response>)({
+      request: new Request("https://councilof.ai/.well-known/x402.json"),
+      env: {},
+    })).json()) as { mcp: { paid_tools: string[] } };
+    expect(wk.mcp.paid_tools).toEqual(served);
   });
 
   it("reports the rail mode from env rather than asserting one", async () => {

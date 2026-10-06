@@ -1,6 +1,7 @@
 // functions/api/chat.ts - Ask SOV entry (helpers are _-private modules)
 import { onRequestPost as groundedPost } from "./_chatGrounded";
 import { recordUsage } from "../_lib/usage";
+import { headFromGet } from "./_head";
 
 export { onRequestOptions } from "./_chatGrounded";
 
@@ -59,3 +60,7 @@ export const onRequestPost: typeof groundedPost = async (ctx) => {
   }
   return res;
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);
