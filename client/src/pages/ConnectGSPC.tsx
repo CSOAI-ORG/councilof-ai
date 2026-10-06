@@ -218,9 +218,9 @@ export default function ConnectGSPC() {
           </p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Connect GSPC to your AI</h1>
           <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">
-            The Council of AI GSPC board is a standard MCP server, so it already works on every MCP client —
-            and a plain OpenAPI/function tool covers the rest. Add it in about 30 seconds. Your AI can then
-            read the live governance board and verify signed measurement cards on demand.
+            Connect the free GSPC MCP endpoint to a compatible AI client to read the live board and verify signed
+            measurement cards. Choose your platform below; where remote MCP is unavailable, use a documented stdio
+            or OpenAPI route. The client register shows which connections we have actually tested.
           </p>
           <p className="mt-3 max-w-2xl text-sm text-emerald-100/70">
             We <strong className="text-white">measure</strong>; we never certify. No conformity mark, no fee,
