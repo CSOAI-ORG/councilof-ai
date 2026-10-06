@@ -183,19 +183,27 @@ export default function LobbyVerifyPane() {
 
   return (
     <div className={`${SP.panel} h-full overflow-y-auto`}>
-      <p className={TYPE.section}>Verify a card</p>
+      <p className={TYPE.section}>Check a result</p>
       <h2 className="mt-1 text-[22px] font-semibold tracking-tight text-slate-900">
-        Recompute it here, in this tab
+        Is this result genuine?
       </h2>
       <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-slate-700">
-        Native in Council OS. The record is canonicalised and hashed in your browser, and the
-        Ed25519 signature is checked against trust anchors pinned in the verifier's own source —
-        the keys published at <code className="font-mono text-[12px]">/.well-known/did.json</code>,
-        fixed at build time so no key is looked up at check time. A live fetch of that document is
-        shown as a labelled cross-check only. Nothing you paste leaves this device, and no account
-        is asked for — here or ever. Three states only: VALID · INVALID · UNCHECKABLE. This is
-        GSPC card-v1 — not a VRO, not an Emilia receipt, not an XRPL credential.
+        Paste a result we published, or load one of ours below. Your browser checks that nothing in it
+        has been changed and that it was really issued by us. Nothing you paste leaves this device, and
+        no account is asked for. Every check ends one of three ways: genuine (VALID), not genuine
+        (INVALID) or not checkable (UNCHECKABLE).
       </p>
+      <details className="mt-2 max-w-2xl text-[13px] leading-relaxed text-slate-600" data-testid="verify-how">
+        <summary className="cursor-pointer font-semibold text-slate-800">How the check works</summary>
+        <p className="mt-1">
+          Native in Council OS. The record is canonicalised and hashed in your browser, and the
+          Ed25519 signature is checked against trust anchors pinned in the verifier's own source —
+          the keys published at <code className="font-mono text-[12px]">/.well-known/did.json</code>,
+          fixed at build time so no key is looked up at check time. A live fetch of that document is
+          shown as a labelled cross-check only. This is GSPC card-v1 — not a VRO, not an Emilia
+          receipt, not an XRPL credential.
+        </p>
+      </details>
 
       {/* ── a real published card, so the tool can actually be exercised ── */}
       <div className="mt-5 rounded-2xl border border-slate-900/10 bg-white/70 p-4">

@@ -86,6 +86,9 @@ export default function MyResultsPane() {
   const [queue, setQueue] = useState<Queue>({ state: "loading", rows: [] });
   const [q, setQ] = useState("");
   const [asked, setAsked] = useState("");
+  // A watch request has no public status endpoint (POST /api/claims/watch-request only records it),
+  // so its Status button says that instead of searching the paid-commission queue for it.
+  const [watchNote, setWatchNote] = useState<string | null>(null);
 
   useEffect(() => {
     const load = () => setMine(readMyResults());
@@ -129,6 +132,7 @@ export default function MyResultsPane() {
         aria-label="Look up a request"
         onSubmit={(e) => {
           e.preventDefault();
+          setWatchNote(null);
           setAsked(q.trim());
         }}
       >
@@ -153,6 +157,11 @@ export default function MyResultsPane() {
       </form>
 
       <div className="mt-4 space-y-2" aria-live="polite">
+        {watchNote ? (
+          <p className="rounded-xl border border-border bg-muted p-3 text-sm text-foreground [overflow-wrap:anywhere]" data-testid="my-results-watch-note">
+            {watchNote}
+          </p>
+        ) : null}
         {asked ? (
           queue.state === "loading" ? (
             <p role="status" className="text-sm text-muted-foreground">Reading the queue…</p>
@@ -168,7 +177,8 @@ export default function MyResultsPane() {
             </ul>
           ) : (
             <p className="rounded-xl border border-border bg-muted p-3 text-sm text-foreground" data-testid="my-results-none">
-              Nothing in the public queue matches “{asked}”. A request appears here once it is paid; a lookup alone is not a request.{" "}
+              Nothing in the public queue matches “{asked}”. A request appears here once it is paid; a lookup alone is not a request. If
+              you paid, use the receipt id from the reply.{" "}
               <Link href={`/dashboard?tab=measured&subject=${encodeURIComponent(asked)}`} className="font-semibold text-emerald-800 underline dark:text-emerald-300">
                 Request a fresh run
               </Link>
@@ -213,8 +223,17 @@ export default function MyResultsPane() {
                   <button
                     type="button"
                     onClick={() => {
+                      if (r.kind === "watch") {
+                        setAsked("");
+                        setWatchNote(
+                          `Your monthly re-check request${r.ref ? ` (${r.ref})` : ""} for “${r.subject}” was recorded for a person to review. ` +
+                            "There is no public status for watch requests yet; nothing is scheduled or charged unless it is accepted.",
+                        );
+                        return;
+                      }
+                      setWatchNote(null);
                       setQ(r.ref ?? r.subject);
-                      setAsked(r.ref && r.kind !== "watch" ? r.ref : r.subject);
+                      setAsked(r.ref ?? r.subject);
                     }}
                     className={`min-h-11 rounded-lg border border-border px-3 text-sm font-semibold text-foreground hover:bg-muted ${FOCUS}`}
                   >

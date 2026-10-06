@@ -312,13 +312,15 @@ export function toneOf(label: string | undefined): Tone {
  * Tools audit, 6 Oct 2026: "List signed cards" (hashes and axis codes, no model or score) and
  * "Show the public root" (a Merkle root) were developer chips on a stranger's start screen. They
  * are gone from the chips; list_cards and get_root stay available to agents over POST /mcp.
+ * Stranger journey, 6 Oct 2026: "the board" and "x402 census" became "the leaderboard" and "paid
+ * doors"; the router sends each to the same tool as before.
  */
 export const TALK_SUGGESTIONS: { text: string; tool: string }[] = [
-  { text: "What does the board say?", tool: "board_totals" },
+  { text: "What does the leaderboard show?", tool: "board_totals" },
   { text: "How did safety measure?", tool: "get_axis" },
   { text: "What is measured about github.com?", tool: "server_evidence" },
   { text: "Show the latest corrections", tool: "corrections_summary" },
-  { text: "x402 census", tool: "x402_trust" },
+  { text: "Which paid doors answer?", tool: "x402_trust" },
 ];
 
 export type StreamOptions = {

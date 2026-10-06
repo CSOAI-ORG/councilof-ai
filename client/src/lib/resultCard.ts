@@ -58,7 +58,7 @@ export function stateMeaning(label: string | undefined): string {
   if (l.startsWith("UNTESTED")) return "Not yet tested on this axis.";
   if (l.startsWith("QUEUED")) return "Your request is in the queue; nothing has been measured for it yet.";
   if (l.startsWith("RETRIEVABLE")) return "Signed results are published for this request; open them below.";
-  if (l.startsWith("RECEIVED_FOR_REVIEW")) return "Received. A person accepts or declines it; nothing is scheduled yet.";
+  if (l.startsWith("RECEIVED_FOR_REVIEW")) return "Recorded for a person to review. Nothing is scheduled or charged yet.";
   if (l.startsWith("RELEVANT_CARDS_FOUND")) return "Signed results relevant to this obligation were found. Relevant is not a determination: nothing here says the obligation is met.";
   if (l.startsWith("EMPTY")) return "Nothing was found for this yet. That is not a finding either way.";
   return "The state word the tool returned.";
@@ -196,4 +196,27 @@ export function matchModels(models: ModelRow[], typed: string, max = 5): ModelRo
   const exact = models.filter((m) => norm(m.id) === q);
   const partial = models.filter((m) => norm(m.id) !== q && norm(m.id).includes(q));
   return [...exact, ...partial].slice(0, max);
+}
+
+/** One row of /interop/pod-cards-index.json (built from the signed card bytes at deploy time). */
+export type PodCardRow = { id?: string; url?: string; subject?: string; status?: string | null; run_id?: string | null };
+
+/**
+ * The newest MEASURED signed run on file for one model, so a "yes, it is measured" answer carries a
+ * date and one record a reader can open. The date is the run's own UTC day, read from its run_id
+ * (YYYYMMDDThhmmss…); a row without a parseable run_id, a URL or MEASURED status is skipped, never
+ * guessed. null = no such row, and the caller then shows no date rather than a placeholder.
+ */
+export function newestSignedRun(cards: PodCardRow[] | null | undefined, modelId: string): { date: string; url: string; id: string } | null {
+  if (!Array.isArray(cards)) return null;
+  const want = norm(modelId);
+  let best: { key: string; date: string; url: string; id: string } | null = null;
+  for (const c of cards) {
+    if (!c || typeof c.subject !== "string" || norm(c.subject) !== want) continue;
+    if (c.status !== "MEASURED" || typeof c.url !== "string" || typeof c.run_id !== "string") continue;
+    const m = /^(\d{4})(\d{2})(\d{2})T/.exec(c.run_id);
+    if (!m) continue;
+    if (!best || c.run_id > best.key) best = { key: c.run_id, date: `${m[1]}-${m[2]}-${m[3]}`, url: c.url, id: typeof c.id === "string" ? c.id : "" };
+  }
+  return best ? { date: best.date, url: best.url, id: best.id } : null;
 }
