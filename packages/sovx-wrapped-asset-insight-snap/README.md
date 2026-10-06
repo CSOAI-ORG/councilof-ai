@@ -5,6 +5,7 @@ A MetaMask Snap. For the contract a pending transaction calls, it fetches the **
 on that contract:
 
     Measured state: <STATE> as of <as_of>
+    Freshness: UNCHECKABLE (NO_DECLARED_MAX_AGE)
     Record <id>   → https://councilof.ai/w/<id>
 
 That is all it shows. No score, no rank, no severity, no advice. A state records what was read on-chain

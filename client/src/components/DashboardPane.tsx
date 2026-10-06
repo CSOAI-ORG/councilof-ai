@@ -71,6 +71,9 @@ const DashboardLearningPane = lazy(
 const ConnectPane = lazy(() => import("@/components/gspc/ConnectPane"));
 const RoutePane = lazy(() => import("@/components/gspc/RoutePane"));
 const CorrectionsPane = lazy(() => import("@/components/gspc/CorrectionsPane"));
+const DashboardLifecyclePane = lazy(
+  () => import("@/components/DashboardLifecyclePane"),
+);
 
 const PANES: Record<string, React.LazyExoticComponent<any>> = {
   // home: DashboardWorkspace owns the chat-first landing — no separate pane.
@@ -94,6 +97,7 @@ const PANES: Record<string, React.LazyExoticComponent<any>> = {
   standards: DashboardStandardsPane,
   fabric: DashboardFabricPane,
   tools: DashboardToolsPane,
+  lifecycle: DashboardLifecyclePane,
   measured: DashboardRequestPane,
   space: DashboardArenaPane,
   learn: DashboardLearningPane,

@@ -1,12 +1,20 @@
 /**
  * Looks up the free preview for one token contract on councilof.ai and reduces it to what the insight
- * shows: each record's state, its as_of, and a link to the record. Nothing is scored, ranked or
+ * shows: each record's state, measurement time, fail-closed freshness, and a link to the record.
+ * Nothing is scored, ranked or
  * advised; a missing record is said plainly, and a failed fetch says the record could not be fetched.
  */
 export const ORIGIN = "https://councilof.ai";
 export const API = `${ORIGIN}/api/wrapper/caip19/`;
 
-export type RecordView = { id: string; state: string; asOf: string; evidence: string };
+export type RecordView = {
+  id: string;
+  state: string;
+  asOf: string;
+  evidence: string;
+  measurementTime: { state: "EXACT"; precision: "instant"; observedAt: string };
+  freshness: { state: "UNCHECKABLE"; reason: "NO_DECLARED_MAX_AGE" };
+};
 export type Lookup =
   | { kind: "records"; caip19: string; records: RecordView[] }
   | { kind: "none"; caip19: string }
@@ -57,8 +65,19 @@ export function toRecords(body: unknown): RecordView[] {
   const out: RecordView[] = [];
   for (const r of records as Record<string, unknown>[]) {
     const evidence = evidenceLink(r?.evidence);
-    if (typeof r?.id === "string" && typeof r.state === "string" && STATE_RE.test(r.state) && typeof r.as_of === "string" && AS_OF_RE.test(r.as_of) && evidence) {
-      out.push({ id: r.id, state: r.state, asOf: r.as_of, evidence });
+    const mt = r?.measurement_time as Record<string, unknown> | undefined;
+    const fr = r?.freshness as Record<string, unknown> | undefined;
+    const structuredTime = mt?.state === "EXACT" && mt?.precision === "instant" && typeof mt?.observed_at === "string" && mt.observed_at === r?.as_of;
+    const failClosedFreshness = fr?.state === "UNCHECKABLE" && fr?.reason === "NO_DECLARED_MAX_AGE";
+    if (typeof r?.id === "string" && typeof r.state === "string" && STATE_RE.test(r.state) && typeof r.as_of === "string" && AS_OF_RE.test(r.as_of) && evidence && structuredTime && failClosedFreshness) {
+      out.push({
+        id: r.id,
+        state: r.state,
+        asOf: r.as_of,
+        evidence,
+        measurementTime: { state: "EXACT", precision: "instant", observedAt: mt.observed_at as string },
+        freshness: { state: "UNCHECKABLE", reason: "NO_DECLARED_MAX_AGE" },
+      });
     }
   }
   return out;

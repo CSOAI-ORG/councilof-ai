@@ -17,10 +17,11 @@
  *   · Windows are never added: all-time, 30-day and 7-day stay separate fields.
  *   · Hugging Face downloads of the datasets our own services read and of the rest are two figures,
  *     never added; our own share inside the rest is UNMEASURED (SELF_READ_DATASETS below).
- *   · A third-party listing is shown only if its page or API names us on this request, and every
- *     listing travels with "A listing is not an endorsement."
- *   · No price, no score or rank of anyone, no conformity wording, no membership labels here (the
- *     participation record has its own manifest and its own page).
+ *   · A third-party signal is shown only if its page or API names us on this request. Each signal
+ *     carries its evidence class: listing, independent observation, independent assessment or
+ *     independent reproduction. A listing stays a listing and travels with "A listing is not an endorsement."
+ *   · External grades, ranks and verdicts are not copied into Council-owned claims: the source link
+ *     is the authority for an external assessment. Participation has its own manifest and page.
  *
  * SELF-CONTAINED ON PURPOSE. This module imports nothing, so the same code runs inside the Pages
  * Function and, at build time, under `node --experimental-strip-types` (scripts/momentum-snapshot.mjs)
@@ -82,10 +83,14 @@ export interface Figure {
   unmeasured?: { field: string; state: "UNMEASURED"; reason: string }[];
 }
 
+export type ExternalSignalClass = "listing" | "independent_observation" | "independent_assessment" | "independent_reproduction";
+
 export interface Listing {
   id: string;
   name: string;
-  /** Our own entry on that index. */
+  /** Evidence class: discovery/listing is not promoted into independent assessment. */
+  signal_class: ExternalSignalClass;
+  /** Our own entry on that external surface. */
   url: string;
   /** What was found on this request that names us. */
   evidence: string;
@@ -807,6 +812,7 @@ export async function zenodo(deps: Deps, id: string): Promise<Got<ZenodoRecord>>
 type ListingSpec = {
   id: string;
   name: string;
+  signal_class: ExternalSignalClass;
   url: string;
   probe: string;
   /** Returns the evidence sentence if the probe body names us, else null. */
@@ -818,12 +824,13 @@ export const LISTINGS: ListingSpec[] = [
   {
     id: "mcp-registry",
     name: "Official MCP Registry",
-    url: "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.CSOAI-ORG/gspc&version=latest",
-    probe: "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.CSOAI-ORG/gspc&version=latest",
+    signal_class: "listing",
+    url: "https://registry.modelcontextprotocol.io/v0/servers?search=ai.councilof/gspc&version=latest",
+    probe: "https://registry.modelcontextprotocol.io/v0/servers?search=ai.councilof/gspc&version=latest",
     find: (b) => {
       try {
-        const s = (JSON.parse(b)?.servers ?? []).find((x: any) => x?.server?.name === "io.github.CSOAI-ORG/gspc");
-        return s ? `io.github.CSOAI-ORG/gspc ${s.server.version ?? ""} is listed`.trim() : null;
+        const s = (JSON.parse(b)?.servers ?? []).find((x: any) => x?.server?.name === "ai.councilof/gspc");
+        return s ? `ai.councilof/gspc ${s.server.version ?? ""} is listed`.trim() : null;
       } catch {
         return null;
       }
@@ -832,6 +839,7 @@ export const LISTINGS: ListingSpec[] = [
   {
     id: "ethicalml-awesome-ai-regulation",
     name: "EthicalML awesome AI regulation list",
+    signal_class: "listing",
     url: "https://github.com/EthicalML/awesome-artificial-intelligence-regulation",
     probe: "https://raw.githubusercontent.com/EthicalML/awesome-artificial-intelligence-regulation/master/README.md",
     find: (b) => {
@@ -842,6 +850,7 @@ export const LISTINGS: ListingSpec[] = [
   {
     id: "awesome-public-datasets",
     name: "awesome-public-datasets",
+    signal_class: "listing",
     url: "https://github.com/awesomedata/awesome-public-datasets",
     probe: "https://raw.githubusercontent.com/awesomedata/awesome-public-datasets/master/README.rst",
     find: (b) => {
@@ -852,20 +861,71 @@ export const LISTINGS: ListingSpec[] = [
   {
     id: "glama",
     name: "Glama MCP directory",
-    url: "https://glama.ai/mcp/connectors/io.github.CSOAI-ORG/gspc",
-    probe: "https://glama.ai/mcp/connectors/io.github.CSOAI-ORG/gspc",
-    find: (b) => (b.includes("io.github.CSOAI-ORG/gspc") ? "the connector page names io.github.CSOAI-ORG/gspc" : null),
+    signal_class: "independent_observation",
+    url: "https://glama.ai/mcp/connectors/ai.councilof/gspc-free",
+    probe: "https://glama.ai/mcp/connectors/ai.councilof/gspc-free",
+    find: (b) => (b.includes("ai.councilof/gspc-free") ? "the connector page names ai.councilof/gspc-free" : null),
   },
   {
     id: "smithery",
     name: "Smithery",
-    url: "https://smithery.ai/servers/csoai/gspc",
-    probe: "https://smithery.ai/servers/csoai/gspc",
+    signal_class: "listing",
+    url: "https://smithery.ai/servers/csoai/gspc-mcp",
+    probe: "https://smithery.ai/servers/csoai/gspc-mcp",
     find: (b) => (/councilof\.ai/i.test(b) && /gspc/i.test(b) ? "the server page links councilof.ai" : null),
+  },
+  {
+    id: "mcpnav",
+    name: "MCPNav",
+    signal_class: "listing",
+    url: "https://mcpnav.net/server/gspc/",
+    probe: "https://mcpnav.net/server/gspc/",
+    find: (b) => (/Council of AI GSPC/i.test(b) ? "the directory page names Council of AI GSPC; its tool/version snapshot may lag the live server" : null),
+  },
+  {
+    id: "npmio-card-verifier",
+    name: "npm.io — gspc-card-verifier",
+    signal_class: "listing",
+    url: "https://npm.io/package/gspc-card-verifier",
+    probe: "https://npm.io/package/gspc-card-verifier",
+    find: (b) => (/gspc-card-verifier/i.test(b) && /CSOAI-ORG/i.test(b) ? "the package index names gspc-card-verifier and links the CSOAI-ORG source repository" : null),
+  },
+  {
+    id: "world-of-ai",
+    name: "World of AI MCP directory",
+    signal_class: "independent_observation",
+    url: "https://theworldofai.org/mcp/ai-councilof-gspc/",
+    probe: "https://theworldofai.org/mcp/ai-councilof-gspc/",
+    find: (b) => (/ai\.councilof\/gspc/i.test(b) && /councilof\.ai/i.test(b) ? "the directory page names ai.councilof/gspc and councilof.ai" : null),
+  },
+  {
+    id: "vouch-agent-trust-index",
+    name: "Vouch Protocol Agent Trust Index",
+    signal_class: "independent_assessment",
+    url: "https://vouch-protocol.com/agent-trust-index/",
+    probe: "https://vouch-protocol.com/agent-trust-index/",
+    find: (b) => ((/ai\.councilof\/gspc/i.test(b) || /io\.github\.CSOAI-ORG\/gspc/i.test(b)) && /councilof\.ai/i.test(b) ? "the independent index names Council of AI GSPC and councilof.ai" : null),
+  },
+  {
+    id: "vaara-reproduction",
+    name: "Vaara Conformance Results",
+    signal_class: "independent_reproduction",
+    url: "https://vaara.io/conformance.html",
+    probe: "https://vaara.io/conformance.html",
+    find: (b) => (/Vaara Conformance Results row 4: Council of AI/i.test(b) && /Reproduction: the author['’]s checkers over the author['’]s vectors/i.test(b) ? "the independent results register carries a Council of AI reproduction row scoped to the author's checkers and vectors" : null),
+  },
+  {
+    id: "andrax-mcpgrade",
+    name: "Andrax MCPGrade",
+    signal_class: "independent_assessment",
+    url: "https://andraxpentester.in/mcp-servers/csoai-gspc-mcp",
+    probe: "https://andraxpentester.in/mcp-servers/csoai-gspc-mcp",
+    find: (b) => (/csoai-gspc-mcp/i.test(b) && /security assessment/i.test(b) ? "the external MCP security assessment names csoai-gspc-mcp; inspect its findings directly rather than copying a grade into Council claims" : null),
   },
   {
     id: "402index",
     name: "402 Index",
+    signal_class: "independent_observation",
     url: "https://402index.io/api/v1/services?q=councilof.ai&limit=100",
     probe: "https://402index.io/api/v1/services?q=councilof.ai&limit=100",
     find: (b) => {
@@ -881,10 +941,11 @@ export const LISTINGS: ListingSpec[] = [
   },
   {
     id: "api-evangelist",
-    name: "API Evangelist profile",
-    url: "https://github.com/api-evangelist/councilof-ai",
-    probe: "https://raw.githubusercontent.com/api-evangelist/councilof-ai/main/README.md",
-    find: (b) => (/councilof\.ai/i.test(b) ? "an independent API profile of councilof.ai" : null),
+    name: "API Evangelist provider profile",
+    signal_class: "independent_observation",
+    url: "https://providers.apievangelist.com/providers/councilof-ai/",
+    probe: "https://providers.apievangelist.com/providers/councilof-ai/",
+    find: (b) => (/Council of AI/i.test(b) && /csoai/i.test(b) ? "the independent provider profile names Council of AI; its inventory snapshot can lag the live Council surfaces" : null),
   },
 ];
 
@@ -897,7 +958,7 @@ export async function listings(deps: Deps, specs: ListingSpec[] = LISTINGS): Pro
     if (!r.ok) return void omitted.push({ id: `listing:${s.id}`, reason: r.reason });
     const ev = s.find(String(r.value));
     if (!ev) return void omitted.push({ id: `listing:${s.id}`, reason: `${s.probe} answered but does not name us on this read` });
-    ok.push({ id: s.id, name: s.name, url: s.url, evidence: ev, verified_at: deps.now().toISOString() });
+    ok.push({ id: s.id, name: s.name, signal_class: s.signal_class, url: s.url, evidence: ev, verified_at: deps.now().toISOString() });
   });
   return { ok, omitted };
 }

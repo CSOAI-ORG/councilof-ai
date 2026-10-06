@@ -22,7 +22,7 @@ import updates from "../../../public/interop/memberships-updates.json";
 import { MEMBERSHIPS } from "./MembershipStrip";
 
 export type UpdateKind = "added" | "corrected" | "verified" | "recorded";
-export type UpdateEvidenceKind = "public_url" | "private_email" | "command";
+export type UpdateEvidenceKind = "public_url" | "private_email" | "account_page" | "command";
 
 export interface MembershipUpdate {
   date: string;
@@ -85,7 +85,9 @@ function Evidence({ update }: { update: MembershipUpdate }) {
   }
   return (
     <span>
-      <span className="rounded bg-slate-100 px-1 text-xs text-slate-700">private evidence</span>{" "}
+      <span className="rounded bg-slate-100 px-1 text-xs text-slate-700">
+        {update.evidence_kind === "account_page" ? "private account evidence" : "private evidence"}
+      </span>{" "}
       <span className="text-slate-700">{update.evidence}</span>
     </span>
   );

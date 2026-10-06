@@ -3267,6 +3267,19 @@
       "lifecycle": "LIVE",
       "audience": "both",
       "payment": "free"
+    },
+    {
+      "id": "api-product-flow",
+      "protocols": [
+        "http"
+      ],
+      "title": "Product workflow",
+      "description": "GET /api/product-flow — one read-only product lifecycle over existing engines. It does not create a second workflow engine or upgrade any stage's authority.",
+      "endpoint": "/api/product-flow",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "both",
+      "payment": "free"
     }
   ]
 }

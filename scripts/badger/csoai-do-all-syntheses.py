@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """csoai-do-all-syntheses.py — SYN-01..08 in one pass (real data only).
 
-SYN-01 corrections-feed.json  <- RefutationLedger.tsx (8 real refutations)
+SYN-01 corrections-feed.json  <- historical UI refutations, preserving older rows
 SYN-02 obligations-ledger.json <- scans public/interop/*/card-*.json (stablecoin/gpai/swift/xrpl)
 SYN-03 otel bridge            <- OTEL spans from queue dirs + .well-known/otel.json
 SYN-05 rwa evidence           <- T-REX/BUIDL evidence template (honest, no invented numbers)
@@ -49,12 +49,40 @@ def build_corrections_feed():
             "sha256": sha256(f"{n}|{claim}|{measured}"),
             "kind": "correction-card",
         })
+    if not entries:
+        raise ValueError("no current refutations parsed; source format may have changed")
+    if len({row["refutation_id"] for row in entries}) != len(entries):
+        raise ValueError("duplicate current refutation IDs")
+    # The published REF cohort is historical: the current UI has nine rows, while
+    # REF-010 remains in the committed feed. Regeneration must not erase history.
+    feed_path = INTEROP / "corrections-feed.json"
+    previous = json.loads(feed_path.read_text()) if feed_path.exists() else {}
+    if not isinstance(previous, dict):
+        raise ValueError("previous corrections feed must be an object")
+    retained = previous.get("corrections", [])
+    if not isinstance(retained, list):
+        raise ValueError("previous corrections must be an array")
+    by_id = {}
+    for row in retained:
+        key = row.get("refutation_id") if isinstance(row, dict) else None
+        if not key or key in by_id:
+            raise ValueError("previous corrections have missing or duplicate IDs")
+        by_id[key] = row
+    for row in entries:
+        key = row["refutation_id"]
+        if key in by_id and any(by_id[key].get(field) != value for field, value in row.items()):
+            raise ValueError(f"historical refutation changed: {key}")
+        by_id.setdefault(key, row)
     return {
         "schema": "csoai.corrections-feed/0.1",
         "as_of": now(),
-        "principle": "Every refuted claim is published as a signed correction card. This is the integrity asset.",
-        "total": len(entries),
-        "corrections": entries,
+        "state": "HISTORICAL_REFUTATION_SNAPSHOT",
+        "source": "client/src/pages/RefutationLedger.tsx plus retained historical REF rows",
+        "canonical_corrections": "/api/corrections",
+        "signature_state": "UNSIGNED_SNAPSHOT",
+        "principle": "A historical selection of UI refutations, not the full corrections ledger. Per-row SHA-256 is a content identifier, not an Ed25519 signature.",
+        "total": len(by_id),
+        "corrections": list(by_id.values()),
     }
 
 

@@ -8,8 +8,9 @@
  * roster record on that contract is read (one contract can carry two records, e.g. a token renamed
  * in place); chains are pinned once per request.
  *
- *   200  every record's state and as_of, the preview card, the short evidence link, and the state the
- *        free public ledger last published. UNMEASURED is a 200 like any other state.
+ *   200  every record's state, structured measurement time, fail-closed freshness, preview card,
+ *        short evidence link, and the state the free public ledger last published. UNMEASURED is a
+ *        200 like any other state.
  *   404  the contract is not on the roster: no wrapped-asset measurement is on record for it.
  *   400  not an eip155 erc20 CAIP-19.
  *
@@ -83,6 +84,20 @@ export const onRequestGet: PagesFunction = async ({ request, env, params }) => {
         id: entry.id,
         state: String(b.payload.state),
         as_of: b.fetched_at,
+        measurement_time: {
+          state: "EXACT",
+          precision: "instant",
+          observed_at: b.fetched_at,
+          source: `${origin}/w/${entry.id}`,
+          source_field: "as_of",
+          note: "Exact wrapper preview fetch time. Serve, build and deploy time do not refresh it.",
+        },
+        freshness: {
+          state: "UNCHECKABLE",
+          reason: "NO_DECLARED_MAX_AGE",
+          max_age_seconds: null,
+          note: "No product-specific maximum age is declared for this wrapper measurement, so CURRENT or STALE is not inferred.",
+        },
         evidence: `${origin}/w/${entry.id}`,
         published: published ? { state: published.state, as_of: L.as_of, ledger: `${origin}/interop/wrapped-asset-parity-latest.json` } : null,
         card: await previewCardFor(entry, b),
@@ -104,6 +119,10 @@ export const onRequestGet: PagesFunction = async ({ request, env, params }) => {
     records,
     found: true,
     ...(roster ? { caip2: roster.caip2, pairs: roster.pairs, archive: roster.archive, candidate_batch: roster.candidate_batch, method: roster.method } : {}),
+    freshness_policy: {
+      state: "UNSET",
+      rule: "No global or product-specific max-age is declared for wrapper measurements; freshness therefore fails closed as UNCHECKABLE.",
+    },
     note: "A state names what was read at a pinned block. It is not a rating, a recommendation or an endorsement.",
     token_list: `${origin}/wallet/measured-wrappers.tokenlist.json`,
     signed_card: `${origin}/api/wrapper?id=<record id>`,

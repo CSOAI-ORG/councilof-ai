@@ -7,6 +7,9 @@
  * not deliver. The data-testids are the ones the first screen used, pinned by ConnectHub.test.
  */
 import { Link } from "wouter";
+import { MEMBERSHIPS } from "@/components/MembershipStrip";
+
+const STARTUP_PROGRAMME = MEMBERSHIPS.rows.find((row) => row.id === "cloudflare-startups" && row.state === "VERIFIED");
 
 export const WAYS_IN: { testid: string; href: string; verb: string; title: string; body: string }[] = [
   {
@@ -111,6 +114,19 @@ export default function HomeWaysIn() {
             </li>
           ))}
         </ul>
+
+        <div className="mt-12 rounded-2xl border border-border bg-card p-5 sm:p-6" data-testid="home-evidence-map">
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-emerald-800 dark:text-emerald-300">Evidence & public signals</p>
+          <h3 className="mt-2 text-xl font-black text-foreground">See what is independent, what is participation, and what is our own measurement.</h3>
+          <p className="mt-2 max-w-4xl text-sm leading-relaxed text-muted-foreground">External assessments, listings, standards and programme participation, first-party metrics, commercial proof and pending mentions stay in separate evidence classes.</p>
+          {STARTUP_PROGRAMME?.public_line ? (
+            <p className="mt-4 text-sm text-foreground"><strong>{STARTUP_PROGRAMME.public_line}</strong> Programme participation; not a partnership or endorsement.</p>
+          ) : null}
+          <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm font-bold">
+            <Link href="/traction/" className="text-emerald-800 underline underline-offset-4 dark:text-emerald-300">Inspect the evidence map →</Link>
+            <Link href="/memberships/" className="text-emerald-800 underline underline-offset-4 dark:text-emerald-300">Where we take part →</Link>
+          </div>
+        </div>
       </div>
     </section>
   );

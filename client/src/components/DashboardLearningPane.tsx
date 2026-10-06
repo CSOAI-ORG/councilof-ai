@@ -25,6 +25,7 @@ import {
   regulationStateLabel,
 } from "@/data/learningDisplayLabels";
 import { dashboardViewHref } from "@/lib/dashboardView";
+import EvidenceFoundationsCourse from "./EvidenceFoundationsCourse";
 
 type ReviewDecision = "READY_FOR_REVIEW" | "RETURN_FOR_REVISION" | "DISCARD";
 
@@ -357,6 +358,8 @@ export default function DashboardLearningPane() {
             .
           </p>
         </header>
+
+        <EvidenceFoundationsCourse />
 
         <div className="mt-8 grid gap-5 lg:grid-cols-[minmax(15rem,0.72fr)_minmax(0,2fr)]">
           {/* Small screens: a compact selector instead of the full list, so the chosen lesson
