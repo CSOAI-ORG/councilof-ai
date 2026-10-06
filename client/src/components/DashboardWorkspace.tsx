@@ -187,6 +187,22 @@ export default function DashboardWorkspace({
   // continues beside a tool pane. An empty "Open a pane or start a task" column cost
   // ~320px on every visit and said nothing.
   const railHasContent = Boolean(activePane) && chat.turnCount > 0;
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const seenTurns = useRef(chat.turnCount);
+  useEffect(() => {
+    const hasNewTurn = chat.turnCount > seenTurns.current;
+    seenTurns.current = chat.turnCount;
+    if (!hasNewTurn || !activePane || !window.matchMedia("(max-width: 1279px)").matches) return;
+
+    const turns = chat.active?.turns ?? [];
+    const latest = turns[turns.length - 1];
+    const question = [...turns].reverse().find((turn) => turn.role === "user")?.text ?? "";
+    // Pane-navigation commands should leave the newly opened pane in view.
+    if (latest?.role !== "council" || (isExplicitNavigationCommand(question) && (matchTab(question) || matchRoute(question)))) return;
+    // The desktop rail shows this answer already; on smaller screens its only
+    // home is the closed History drawer. Open that drawer when the answer lands.
+    setHistoryOpen(true);
+  }, [activePane, chat.active, chat.turnCount]);
   const [actionsSlot, setActionsSlot] = useState<HTMLElement | null>(null);
   useEffect(() => {
     setActionsSlot(document.getElementById(SECTION_ACTIONS_ID));
@@ -206,7 +222,7 @@ export default function DashboardWorkspace({
         {historyAvailable
           ? (() => {
               const trigger = (
-                <Dialog>
+                <Dialog open={historyOpen} onOpenChange={setHistoryOpen}>
                   <DialogTrigger asChild>
                     <button
                       type="button"

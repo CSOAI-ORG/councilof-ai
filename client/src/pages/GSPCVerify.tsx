@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import PublicRootCatalogue from "@/components/gspc/PublicRootCatalogue";
 import { ANCHORING_CLAIM, CURRENT_ROOT_OTS_CLAIM } from "../data/anchoringClaim";
 import { Link } from "wouter";
@@ -69,6 +69,12 @@ export default function GSPCVerify() {
     | { state: "refused" | "failed"; href: string; reason: string }
     | null
   >(null);
+  const linkedRequest = useRef<AbortController | null>(null);
+  const clearLinkedSource = useCallback(() => {
+    linkedRequest.current?.abort();
+    linkedRequest.current = null;
+    setLinked(null);
+  }, []);
 
   useEffect(() => {
     const p = resolveCardParam(window.location.search, window.location.origin);
@@ -79,6 +85,7 @@ export default function GSPCVerify() {
       return;
     }
     const ac = new AbortController();
+    linkedRequest.current = ac;
     setLinked({ state: "loading", href: p.href });
     (async () => {
       try {
@@ -92,6 +99,7 @@ export default function GSPCVerify() {
           const d = await crypto.subtle.digest("SHA-256", buf);
           digest = [...new Uint8Array(d)].map((x) => x.toString(16).padStart(2, "0")).join("");
         } catch { /* no WebCrypto: the verifier below says UNCHECKABLE itself */ }
+        if (ac.signal.aborted) return;
         setLinked({ state: "loaded", href: p.href, bytes: buf.byteLength, sha256: digest });
         setAutoVerify(true);
         setSeed(raw);
@@ -101,10 +109,14 @@ export default function GSPCVerify() {
         setLinked({ state: "failed", href: p.href, reason: String(e?.message ?? e) });
       }
     })();
-    return () => ac.abort();
+    return () => {
+      ac.abort();
+      if (linkedRequest.current === ac) linkedRequest.current = null;
+    };
   }, []);
 
   const tryPublished = useCallback(async () => {
+    clearLinkedSource();
     setTryBusy(true);
     setTryErr(null);
     try {
@@ -120,9 +132,10 @@ export default function GSPCVerify() {
     } finally {
       setTryBusy(false);
     }
-  }, []);
+  }, [clearLinkedSource]);
 
   const tryGovernanceRetrieve = useCallback(async () => {
+    clearLinkedSource();
     setTryBusy(true);
     setTryErr(null);
     try {
@@ -137,7 +150,7 @@ export default function GSPCVerify() {
     } finally {
       setTryBusy(false);
     }
-  }, []);
+  }, [clearLinkedSource]);
 
   useEffect(() => {
     document.title = "Verify a signed card — client-side | Council of AI";
@@ -337,7 +350,7 @@ export default function GSPCVerify() {
             </p>
           )}
           <div className="mt-4 rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6">
-            <RecordVerifyForm variant="dark" seed={seed} seedNonce={seedNonce} autoVerify={autoVerify} />
+            <RecordVerifyForm variant="dark" seed={seed} seedNonce={seedNonce} autoVerify={autoVerify} onInputChange={clearLinkedSource} />
           </div>
         </section>
         )}
@@ -394,8 +407,8 @@ export default function GSPCVerify() {
               <code>pubkey</code> on the card.
             </li>
             <li>
-              It does not contact a server. Verification is local; you bring the records and
-              the WebCrypto implementation in your browser.
+              The record you paste is not sent to a server for verification. Your browser may
+              retrieve published public-key metadata; it runs the cryptographic check locally.
             </li>
             <li>
               It does not assert that a model is &quot;safe&quot;, &quot;compliant&quot;, or

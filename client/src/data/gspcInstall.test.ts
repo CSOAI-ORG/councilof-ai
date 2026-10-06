@@ -4,6 +4,8 @@ import { REGISTRIES } from "./gspcInstall";
 describe("GSPC registry truth", () => {
   it("points listed directories at evidence instead of submission forms", () => {
     const listed = [
+      "npm — gspc-card-verifier",
+      "npm — @csoai/gspc-cli",
       "Official MCP Registry",
       "A2A agent directories",
       "Smithery",
