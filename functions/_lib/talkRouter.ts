@@ -7,8 +7,8 @@
  *   1. routeIntent(text) maps a question onto one or more of the SAME tools POST /mcp serves
  *      (functions/mcp/gspc-tools.json + paid-tools.json), using keyword and entity extraction
  *      only: a 64-hex id -> verify_card / get_card / verify_inclusion, a domain or URL ->
- *      server_evidence (+ mcp_trust census context), an axis name -> get_axis, "board" ->
- *      board_totals, and so on. No model is in the path.
+ *      server_evidence, an obligation ("evidence for DORA") -> evidence_bundle_preview, an axis
+ *      name -> get_axis, "board" -> board_totals, and so on. No model is in the path.
  *   2. callTool(name, args, origin) dispatches IN-PROCESS to the functions /mcp itself calls
  *      (sharedToolResult / measurementToolResult / paidToolResult), so the answer cannot
  *      disagree with the MCP door.
@@ -22,8 +22,8 @@
  *     come from the caller's own wallet).
  *   - It never guesses. An unrecognised question returns kind "help": the list of what it can
  *     answer, with no number in it.
- *   - It never grades trust. "Is X trustworthy" is answered with what is measured about X and
- *     what the census counts; "trustworthy" is not a state any tool emits.
+ *   - It never grades trust. "Is X trustworthy" is answered with what is measured about X;
+ *     "trustworthy" is not a state any tool emits.
  */
 import GSPC_TOOLS from "../mcp/gspc-tools.json";
 import { TOP_OBSERVED_LABEL, isSeparated } from "./leaderLabel";
@@ -32,6 +32,8 @@ import AXIS_ALIASES from "../mcp/axis-aliases.json";
 import { sharedToolResult, type McpToolResult } from "../mcp/_handlers";
 import { MEASUREMENT_TOOL_NAMES, measurementToolResult } from "../mcp/_measurement";
 import { PAID_TOOL_NAMES, paidToolResult } from "../mcp/_paid";
+import { EVIDENCE_TOOL_NAMES, evidenceToolResult } from "../mcp/_evidence";
+import { ROUTE_TOOL_NAMES, routeToolResult } from "../mcp/_route";
 import { ROUTER_READ_TOOLS, routerReadResult } from "./talkReads";
 
 type Json = Record<string, unknown>;
@@ -129,6 +131,17 @@ function firstJsonObject(text: string): string | null {
   }
 }
 
+const EVIDENCE_WORD = /\b(evidence|records?|cards?)\b/;
+
+/** The evidence_bundle_preview obligation a question names (its schema enum), else null. */
+export function obligationOf(t: string): "article-50" | "article-53" | "dora" | "cra" | null {
+  if (/\b(article[- ]?50|art\.?\s?50)\b/.test(t)) return "article-50";
+  if (/\b(article[- ]?53|art\.?\s?53)\b/.test(t)) return "article-53";
+  if (/\bdora\b/.test(t)) return "dora";
+  if (/\bcra\b|\bcyber resilience act\b/.test(t)) return "cra";
+  return null;
+}
+
 /**
  * Deterministic intent routing. Pure: no I/O. Entity rules run before topic keywords, so a
  * question that names a card id or a server is answered about THAT id or server.
@@ -153,6 +166,12 @@ export function routeIntent(raw: string): Plan {
     const axis = extractAxis(text);
     return { kind: "tools", intent: "commission a signed card", calls: [{ tool: "commission_card", args: { subject: subj, ...(axis ? { axis } : {}) } }] };
   }
+  // Signed evidence for ONE obligation (free): "which signed evidence is there for DORA",
+  // "evidence for Article 50". Runs before the paid Article 50 rule, which keeps every question that
+  // carries a URL ("article 50 marking evidence for https://…/image.png"): that one is about a file.
+  const obligation = !URL_RE.test(text) && EVIDENCE_WORD.test(t) ? obligationOf(t) : null;
+  if (obligation)
+    return { kind: "tools", intent: `signed evidence for ${obligation}`, calls: [{ tool: "evidence_bundle_preview", args: { obligation } }] };
   if (/\b(article|art\.?) ?50\b|\bc2pa\b|\bmarking evidence\b|\bwatermark/.test(t)) {
     const ep = text.match(URL_RE);
     if (!ep) return { kind: "needs_input", intent: "Article 50 marking evidence", tool: "art50_marking_evidence", missing: "url", example: "article 50 marking evidence for https://example.com/image.png" };
@@ -181,13 +200,13 @@ export function routeIntent(raw: string): Plan {
   const ep = extractEndpoint(text);
   if (ep) {
     if (/\bx402\b|\bpayment door|\bpaywall/.test(t)) return { kind: "tools", intent: "x402 door census", calls: [{ tool: "x402_trust", args: {} }] };
+    // ONE call (6 Oct 2026). This used to add mcp_trust, so every server lookup also printed a green
+    // census card about 500 other hosts, which read as a verdict on the server asked about. The census
+    // is still one question away ("mcp census", the topic rule below).
     return {
       kind: "tools",
       intent: "what is measured about this server",
-      calls: [
-        { tool: "server_evidence", args: { endpoint_url: ep.url, ...(ep.bareHost ? { _bare_host: true } : {}) } },
-        { tool: "mcp_trust", args: {} },
-      ],
+      calls: [{ tool: "server_evidence", args: { endpoint_url: ep.url, ...(ep.bareHost ? { _bare_host: true } : {}) } }],
     };
   }
 
@@ -225,8 +244,13 @@ export async function callTool(name: string, args: Json, origin: string): Promis
   if (!ROUTABLE_TOOLS.has(name)) throw new Error(`not a /mcp tool: ${name}`);
   const clean: Json = {};
   for (const [k, v] of Object.entries(args)) if (k !== "x_payment" && !k.startsWith("_")) clean[k] = v;
+  // The same dispatch order as functions/mcp/[[path]].ts. evidence_bundle_preview and route were
+  // missing here, so a routed call fell through to sharedToolResult's verify_card default and came
+  // back UNCHECKABLE (found 6 Oct 2026, when the router first routed to evidence_bundle_preview).
   if (PAID_TOOL_NAMES.has(name)) return paidToolResult(name, clean, origin);
   if (MEASUREMENT_TOOL_NAMES.has(name)) return measurementToolResult(name, clean, origin);
+  if (EVIDENCE_TOOL_NAMES.has(name)) return evidenceToolResult(name, clean, origin);
+  if (ROUTE_TOOL_NAMES.has(name)) return routeToolResult(clean, origin);
   return sharedToolResult(name, clean, origin);
 }
 
@@ -281,6 +305,7 @@ const SHOW: Record<string, string[]> = {
   measurement_index: ["as_of", "n_capsules_total", "n_batches", "index_root"],
   verify_capsule: ["reason"],
   server_evidence: ["endpoint", "n_capsules", "by_adapter", "as_of", "other_endpoints_measured_at_this_origin", "note"],
+  evidence_bundle_preview: ["relevant_signed_cards", "relation", "determination", "counsel_confirmed"],
 };
 
 function fmt(v: unknown): string {
@@ -342,7 +367,9 @@ export const HELP_TEXT =
   "I answer by calling the same tools as POST /mcp (plus two read-only router reads: corrections and Claim Maintenance) and quoting their output. I can:\n" +
   "- **board totals** — \"what does the board say\" (board_totals)\n" +
   "- **one axis** — \"how did safety measure\" (get_axis)\n" +
-  "- **a server** — \"is example.com/mcp trustworthy\" → what is measured about it (server_evidence) and the MCP census (mcp_trust)\n" +
+  "- **a server** — \"what is measured about example.com/mcp\" → what is measured about it (server_evidence)\n" +
+  "- **the MCP census** — \"how many mcp servers answered\" (mcp_trust)\n" +
+  "- **evidence for one obligation** — \"which signed evidence is there for DORA\" (evidence_bundle_preview: Article 50, Article 53, DORA or CRA)\n" +
   "- **a signed card** — paste a 64-hex card id (verify_card); \"is <hex> included in the root\" (verify_inclusion)\n" +
   "- **the public root** — \"show the public root\" (get_root); **signed cards** — \"list signed cards\" (list_cards)\n" +
   "- **x402 doors** — \"x402 census\" (x402_trust); **capsules** — \"measurement index\" (measurement_index)\n" +

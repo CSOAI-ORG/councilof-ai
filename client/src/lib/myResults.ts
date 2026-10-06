@@ -16,9 +16,39 @@ export type MyResult = {
   at: string;
   /** The state the source returned when this entry was saved (re-read live in the pane). */
   state?: string;
-  /** A receipt sha, transaction hash or watch request id, when the source gave one. */
+  /** A receipt sha, transaction hash or watch request id, when the source gave one. For a lookup,
+   *  the record id the answering tool cited. */
   ref?: string;
+  /** For a lookup: the exact question the free tools were asked, so "Look up again" re-asks it. */
+  question?: string;
 };
+
+/** The minimum of a finished AG-UI run (lib/aguiTalk TalkRun) that a lookup row needs. */
+export type FinishedLookupRun = {
+  question: string;
+  status?: string;
+  tools: { label?: string | null; citation?: { record_id?: string | null } | null }[];
+};
+
+/**
+ * Save a Get results lookup once its run has finished, with what the run actually returned: the
+ * first tool's own state word and the record id it cited. A run that returned no tool (an error,
+ * a cancelled stream) is still listed, with no state, rather than with a guessed one.
+ */
+export function lookupFromRun(subject: string, run: FinishedLookupRun): Omit<MyResult, "id" | "at"> {
+  const first = run.tools[0];
+  const state = typeof first?.label === "string" && first.label.trim() ? first.label.trim() : undefined;
+  const ref = typeof first?.citation?.record_id === "string" && first.citation.record_id ? first.citation.record_id : undefined;
+  return { kind: "lookup", subject, question: run.question, ...(state ? { state } : {}), ...(ref ? { ref } : {}) };
+}
+
+/** Where "Look up again" goes: the original question re-asked on the dashboard (the box is filled,
+ *  nothing is sent until the reader presses Ask), or, for a model lookup, Get results refilled. */
+export function lookupAgainHref(r: Pick<MyResult, "subject" | "question">): string {
+  return r.question
+    ? `/dashboard?ask=${encodeURIComponent(r.question)}`
+    : `/dashboard?lookup=${encodeURIComponent(r.subject)}`;
+}
 
 export const MY_RESULTS_KEY = "coai:my-results";
 export const MY_RESULTS_EVENT = "coai:my-results";

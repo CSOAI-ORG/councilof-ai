@@ -20,7 +20,7 @@ const local = !process.env.BASE_URL;
 
 export default defineConfig({
   testDir: "./tests",
-  testMatch: /dashboard-shell\.spec\.ts/,
+  testMatch: /(dashboard-shell|dashboard-home-ask)\.spec\.ts/,
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,

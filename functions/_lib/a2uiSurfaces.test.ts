@@ -94,6 +94,28 @@ describe("A2UI surfaces (board card, verify result)", () => {
     expect(empty.dataModel.state).toBe("PARTIAL");
   });
 
+  // Tools audit, 6 Oct 2026: board_totals output has no axes array, and the surface sent
+  // tie_axes: [] and untested_axes: [] beside "7 TIE · 7 UNTESTED".
+  it("a payload without axes leaves the per-axis lists unknown (null), never empty", () => {
+    const b = boardCardSurface(BOARD, "s7");
+    expect(b.dataModel.tie_axes).toBeNull();
+    expect(b.dataModel.untested_axes).toBeNull();
+    expect(b.dataModel.separation).toMatch(/7 TIE · 7 UNTESTED/);
+    const withAxes = boardCardSurface(
+      {
+        ...BOARD,
+        axes: [
+          { axis: "safety", kind: "model-comparison", separation: "TIE" },
+          { axis: "jail", kind: "model-comparison", separation: "UNTESTED" },
+          { axis: "effect-binding", kind: "deterministic-facts", separation: null },
+        ],
+      },
+      "s8",
+    );
+    expect(withAxes.dataModel.tie_axes).toEqual(["safety"]);
+    expect(withAxes.dataModel.untested_axes).toEqual(["jail"]);
+  });
+
   it("a verify result keeps its state and every check; UNCHECKABLE is never upgraded", () => {
     const v = verifyResultSurface(VERIFY, "s5");
     expect(v.dataModel.state).toBe("VALID");

@@ -12,7 +12,7 @@
  * read says so.
  */
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Link } from "wouter";
+import { Link, useSearch } from "wouter";
 import { ArrowRight, BellRing, ClipboardList, Search, Sparkles, Timer, Zap } from "lucide-react";
 import ResultCard from "@/components/talk/ResultCard";
 import { classifySubject, freeQuestion, matchModels, type ModelRow, type SubjectKind } from "@/lib/resultCard";
@@ -123,7 +123,14 @@ function Step({
 
 type WatchState = { state: "idle" | "confirm" | "sending" | "done" | "error"; text?: string };
 
-export default function GetResults({ onAsk }: { onAsk?: (question: string) => void }) {
+export default function GetResults({
+  onAsk,
+}: {
+  /** Send the free question to the Answers panel. The host saves the lookup to My results when the
+   *  run finishes, with the state the tool returned (see GspcWorkspaceHome). */
+  onAsk?: (question: string, subject: string) => void;
+}) {
+  const search = useSearch();
   const [value, setValue] = useState("");
   const [subject, setSubject] = useState<string | null>(null);
   const [watch, setWatch] = useState<WatchState>({ state: "idle" });
@@ -141,11 +148,20 @@ export default function GetResults({ onAsk }: { onAsk?: (question: string) => vo
     setWatch({ state: "idle" });
     const k = classifySubject(s);
     const q = freeQuestion(k, s);
-    if (q && onAsk) {
-      onAsk(q);
-      addMyResult({ kind: "lookup", subject: s });
-    }
+    // A server or record lookup is saved to My results by the host once its run has finished,
+    // with the state the tool returned. Saving it here, before any answer, stored a row with no
+    // state, which My results then searched for in the paid-request queue and reported missing.
+    if (q && onAsk) onAsk(q, s);
   };
+
+  // "Look up again" from My results (a model lookup) lands here with ?lookup=<subject>: the box is
+  // filled and focused, and nothing is looked up until the reader presses Get results.
+  useEffect(() => {
+    const prefill = new URLSearchParams(search.startsWith("?") ? search.slice(1) : search).get("lookup")?.trim().slice(0, 300);
+    if (!prefill) return;
+    setValue(prefill);
+    inputRef.current?.focus();
+  }, [search]);
 
   const sendWatch = async () => {
     if (!subject) return;

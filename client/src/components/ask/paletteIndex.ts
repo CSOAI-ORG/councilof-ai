@@ -59,10 +59,93 @@ export function buildIndex(): PaletteItem[] {
   return out;
 }
 
+// ── the board's tests, by name ───────────────────────────────────────────────
+
+/** Fired on window when the board's test names have been read into the index. */
+export const PALETTE_INDEX_EVENT = "council:palette-index";
+const BOARD_SOURCE = "/api/gspc";
+
+const WORD_CASE: Record<string, string> = { ai: "AI", xr: "XR", mcp: "MCP" };
+
+/** "art5-safeguard" -> "Art5 safeguard", "ai-adoption-components" -> "AI adoption components". */
+export function axisTitle(axis: string): string {
+  const words = axis.split(/[-_\s]+/).filter(Boolean).map((w) => WORD_CASE[w.toLowerCase()] ?? w.toLowerCase());
+  if (!words.length) return axis;
+  const first = words[0];
+  words[0] = WORD_CASE[first.toLowerCase()] ? first : first.charAt(0).toUpperCase() + first.slice(1);
+  return words.join(" ");
+}
+
+/**
+ * One palette entry per test on the board, read from the same GET /api/gspc payload the board
+ * uses (tools audit, 6 Oct 2026: typing "safety" found nothing). Names and the board's own one-line
+ * task only: no number is carried into the palette.
+ */
+export function boardAxisItems(payload: unknown): PaletteItem[] {
+  const axes = payload && typeof payload === "object" ? (payload as { axes?: unknown }).axes : null;
+  if (!Array.isArray(axes)) return [];
+  const out: PaletteItem[] = [];
+  const seen = new Set<string>();
+  for (const row of axes) {
+    const axis = row && typeof row === "object" ? (row as { axis?: unknown }).axis : null;
+    if (typeof axis !== "string" || !axis.trim() || seen.has(axis)) continue;
+    seen.add(axis);
+    const task = (row as { task?: unknown }).task;
+    out.push({
+      id: `axis:${axis}`,
+      title: `${axisTitle(axis)} — test on the board`,
+      href: "/dashboard/?tab=board",
+      crumb: "Council OS › Leaderboard",
+      description: `${typeof task === "string" && task.trim() ? `${task.trim()}. ` : ""}${axis}`,
+    });
+  }
+  return out;
+}
+
+let axisItems: PaletteItem[] = [];
+let axisLoad: Promise<PaletteItem[]> | null = null;
+let axisTriedAt = 0;
+const AXIS_RETRY_MS = 30_000;
+
+/** Read the board's test names once per page. A failed read adds nothing and may be retried
+ *  (at most every 30 s, so a down board is not re-fetched on every keystroke). */
+export function loadBoardAxes(fetchImpl: typeof fetch = fetch): Promise<PaletteItem[]> {
+  if (axisLoad) return axisLoad;
+  axisTriedAt = Date.now();
+  axisLoad = fetchImpl(BOARD_SOURCE, { headers: { accept: "application/json" } })
+    .then((r) => (r.ok ? r.json() : null))
+    .then((payload) => {
+      axisItems = boardAxisItems(payload);
+      if (!axisItems.length) axisLoad = null;
+      try {
+        window.dispatchEvent(new Event(PALETTE_INDEX_EVENT));
+      } catch {
+        /* no window (tests) */
+      }
+      return axisItems;
+    })
+    .catch(() => {
+      axisLoad = null;
+      return [];
+    });
+  return axisLoad;
+}
+
 let cached: PaletteItem[] | null = null;
+/** Navigation destinations, then the board's tests once they have been read. */
 export function paletteIndex(): PaletteItem[] {
   if (!cached) cached = buildIndex();
-  return cached;
+  if (typeof window !== "undefined" && !axisLoad && !axisItems.length && Date.now() - axisTriedAt > AXIS_RETRY_MS)
+    void loadBoardAxes();
+  return axisItems.length ? [...cached, ...axisItems] : cached;
+}
+
+/** Test seam. */
+export function resetPaletteIndexForTest(): void {
+  cached = null;
+  axisItems = [];
+  axisLoad = null;
+  axisTriedAt = 0;
 }
 
 /** Plain substring + word-start scoring. Deterministic; no fuzzy guessing past the words typed. */

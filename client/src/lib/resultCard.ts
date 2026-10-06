@@ -29,6 +29,7 @@ const TOOL_TITLES: Record<string, string> = {
   art50_marking_evidence: "AI-content marking evidence",
   rwa_evidence: "Real-world asset evidence",
   receipts_batch: "Receipts",
+  evidence_bundle_preview: "Signed evidence for one obligation",
   route: "Route decision",
   model_lookup: "Models measured on frozen question banks",
 };
@@ -58,6 +59,8 @@ export function stateMeaning(label: string | undefined): string {
   if (l.startsWith("QUEUED")) return "Your request is in the queue; nothing has been measured for it yet.";
   if (l.startsWith("RETRIEVABLE")) return "Signed results are published for this request; open them below.";
   if (l.startsWith("RECEIVED_FOR_REVIEW")) return "Received. A person accepts or declines it; nothing is scheduled yet.";
+  if (l.startsWith("RELEVANT_CARDS_FOUND")) return "Signed results relevant to this obligation were found. Relevant is not a determination: nothing here says the obligation is met.";
+  if (l.startsWith("EMPTY")) return "Nothing was found for this yet. That is not a finding either way.";
   return "The state word the tool returned.";
 }
 

@@ -291,6 +291,18 @@ export default function LobbyVerifyPane() {
             setVerdict(v);
             setCheckedAt(new Date().toISOString());
           }}
+          // A pasted bare card id: the form fetched that signed card into the box, so the
+          // verification path below can say which card it is and check its index membership.
+          onBareId={(id) => {
+            setLoadError(null);
+            setLoadedId(id);
+          }}
+          // An edit means the box no longer holds the card that was loaded or fetched.
+          onInputChange={() => {
+            setLoadedId(null);
+            setVerdict(null);
+            setCheckedAt(null);
+          }}
         />
         <div data-ui-subject={loadedId ?? undefined} data-ui-subject-kind={loadedId ? "card" : undefined}>
           <VerificationPath

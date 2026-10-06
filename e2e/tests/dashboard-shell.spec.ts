@@ -383,7 +383,7 @@ test("a top-level embed hint normalizes to the canonical workspace", async ({
   ).toHaveCount(0);
 });
 
-test("chat remains beside a tool and its session history stays reachable", async ({
+test("a home question goes to the Answers panel, and History keeps it beside a tool", async ({
   page,
   isMobile,
 }) => {
@@ -393,11 +393,18 @@ test("chat remains beside a tool and its session history stays reachable", async
 
   await composer.fill(question);
   await page.getByRole("button", { name: "Ask", exact: true }).click();
+  // DESIGN CHANGE, 6 Oct 2026 (tools audit). A home question used to become a lobby chat turn as
+  // well, which swapped the canvas to the chat log and unmounted the Answers panel mid-run, so
+  // POST /api/agui/run was aborted and the first question never got an answer. It now stays in
+  // the Answers panel (this static server has no /api, so the run ends in its honest no-answer
+  // state) and is kept in History as an "Asked" entry.
   await expect(
-    page
-      .getByRole("log", { name: "Council of AI conversation" })
-      .getByText(question, { exact: true }),
+    page.getByTestId("talk-transcript").getByText(question, { exact: true }),
   ).toBeVisible();
+  await expect(page.getByTestId("gspc-workspace-home")).toBeVisible();
+  await expect(
+    page.getByRole("log", { name: "Council of AI conversation" }),
+  ).toHaveCount(0);
   await expect(page).toHaveURL(/tab=home/);
   await expect(
     page.locator('[data-testid="dashboard-pane-space"]'),
@@ -425,9 +432,14 @@ test("chat remains beside a tool and its session history stays reachable", async
   await expect(rail).toBeVisible();
   await rail.getByRole("tab", { name: /^Chats/ }).click();
   await expect(rail.getByTestId("dashboard-chat-rail")).toBeVisible();
-  await expect(rail.getByText(question, { exact: true })).toBeVisible();
+  await expect(rail.getByText("Open Council Space", { exact: true })).toBeVisible();
   await rail.getByRole("button", { name: /^History/ }).click();
-  await expect(rail.getByText(question, { exact: true })).toBeVisible();
+  await expect(rail.getByText("Open Council Space").first()).toBeVisible();
+  // The home question is in the workspace History, as asked.
+  await rail.getByRole("tab", { name: "Workspace" }).click();
+  await expect(
+    rail.locator('[data-activity-kind="ask"]').getByText(question, { exact: true }),
+  ).toBeVisible();
 });
 
 test("GSPC quests are a styled in-workspace game and never promote play into measurement", async ({
