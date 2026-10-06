@@ -15,6 +15,7 @@
  * Otherwise it is null, and `sources` says which upstream failed and how. A
  * zero here always means someone measured zero. Null means we do not know.
  */
+import { headFromGet } from "../_head";
 
 export const onRequestGet: PagesFunction = async ({ request }) => {
   const origin = new URL(request.url).origin;
@@ -166,3 +167,7 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
     },
   );
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

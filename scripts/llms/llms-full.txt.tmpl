@@ -241,6 +241,8 @@ doors — the AG-UI stream and the A2A binding — were missing from the list be
 was a number that had stopped being true. Count the rows.
 
 1. MCP (agent to tools) — `POST https://councilof.ai/mcp`
+   Free read-only door for chat clients, no key: `POST https://councilof.ai/mcp/free`. Claude Code:
+   `claude mcp add --transport http council-of-ai https://councilof.ai/mcp/free`
 2. A2A (agent to agent) — `POST https://councilof.ai/api/a2a`, JSON-RPC v1.0; SendMessage answers
    with the live lid derived from /api/gspc. The interface `/.well-known/agent-card.json` names.
 3. AG-UI (agent to user) — `GET https://councilof.ai/api/agui/gspc-state`, SSE STATE_DELTA +
@@ -250,6 +252,7 @@ was a number that had stopped being true. Count the rows.
 5. Grok plugin — source not publicly hosted while the GitHub organisation is unavailable
 6. Hermes integration — no public install package is currently advertised
 7. REST + curl — `curl https://councilof.ai/api/gspc`
+   Python's default urllib User-Agent (Python-urllib/x.y) is refused at our CDN with 403 'error code: 1010'. Send any User-Agent, e.g. urllib.request.Request(url, headers={'User-Agent': 'my-check/1'}).
 
 The source-linked SOV World observatory is at https://councilof.ai/world/observatory/.
 It is a dated simulation archive; its source date and upstream signature-verification status are shown on the page.

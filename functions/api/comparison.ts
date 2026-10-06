@@ -9,6 +9,7 @@
 // Register: measurement, not certification. MEASURED cells are ours and signed;
 // REPORTED cells are third-party context with attribution. Where we have no
 // overlap data, the cell stays UNKNOWN-honest — never a fabricated number.
+import { headFromGet } from "./_head";
 interface Env {
   KV?: unknown;
 }
@@ -108,3 +109,7 @@ export async function onRequestGet({ env, request }: { env: Env; request: Reques
     },
   });
 }
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

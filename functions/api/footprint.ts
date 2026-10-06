@@ -40,6 +40,7 @@
 import packages from "../../public/interop/footprint-packages.json";
 import distribution from "../../public/interop/distribution-latest.json";
 import registryLatest from "../../public/interop/mcp-registry-latest.json";
+import { headFromGet } from "./_head";
 
 export const SCHEMA = "csoai.footprint/0.1";
 export const TTL_SECONDS = 3600;
@@ -528,3 +529,7 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
     },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

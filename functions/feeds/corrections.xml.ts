@@ -12,6 +12,7 @@
  */
 import { LEDGER } from "../api/corrections";
 import { rss, atom, FEED_HEADERS, type Entry } from "./_xml";
+import { headFromGet } from "../api/_head";
 
 interface Correction { id: string; date: string; what_was_wrong: string; how_caught: string; fix: string; status?: string }
 
@@ -43,3 +44,7 @@ export const onRequestGet: PagesFunction = async () =>
   new Response(rss(TITLE, "https://councilof.ai/feeds/corrections.xml", DESC, entries()), { headers: FEED_HEADERS });
 
 export const atomBody = () => atom(TITLE, "https://councilof.ai/feeds/corrections.atom", DESC, entries());
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

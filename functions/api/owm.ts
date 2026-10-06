@@ -11,6 +11,7 @@
  *   ?subject=<id>   one subject row (404 if the snapshot has no such subject)
  */
 import { type Ctx, OWM_PATH, sha256Hex, unavailable, validateSnapshot } from "../_lib/owm";
+import { headFromGet } from "./_head";
 
 export const onRequestGet = async (ctx: Ctx): Promise<Response> => {
   const url = new URL(ctx.request.url);
@@ -62,3 +63,7 @@ export const onRequestGet = async (ctx: Ctx): Promise<Response> => {
   }
   return new Response(JSON.stringify({ ...snapshot, served }, null, 2), { status: 200, headers });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

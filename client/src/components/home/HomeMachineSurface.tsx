@@ -36,7 +36,8 @@ export interface MachineDoor {
 export const MACHINE_DOORS: MachineDoor[] = [
   { href: "/api/gspc", name: "GET /api/gspc", what: "the whole board — every axis, sample size, state and separation" },
   { href: "/api/state", name: "GET /api/state", what: "what exists and how each count was derived, with its kind" },
-  { href: "/mcp", name: "POST /mcp", what: "the tool surface, over streamable HTTP" },
+  { href: "/mcp/free", name: "POST /mcp/free", what: "the free read-only tools; the address to add to a chat client, no key" },
+  { href: "/mcp", name: "POST /mcp", what: "the free tools plus the x402-metered evidence tools" },
   { href: "/.well-known/agent.json", name: "/.well-known/agent.json", what: "the A2A agent card: skills, endpoints and what they refuse" },
   { href: "/.well-known/x402.json", name: "/.well-known/x402.json", what: "every metered door, its payment terms and its free preview" },
   { href: "/.well-known/did.json", name: "/.well-known/did.json", what: "our public keys — pin one before you trust any signature" },

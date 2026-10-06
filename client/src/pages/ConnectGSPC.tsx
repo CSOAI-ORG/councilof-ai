@@ -306,7 +306,8 @@ export default function ConnectGSPC() {
         <h2 className="text-2xl font-bold">MCP-native clients</h2>
         <p className="text-sm text-gray-600 mt-1">
           The server speaks streamable-HTTP at <code className="font-mono">{MCP_URL}</code>, with a stdio fallback
-          (<code className="font-mono">{STDIO_CMD}</code>). Every config below was checked against the client's current docs;
+          (<code className="font-mono">{STDIO_CMD}</code>) whose published npm releases are marked deprecated on npm and
+          carry fewer tools, so prefer the URL. Every config below was checked against the client's current docs;
           that is not a client test. Which clients were actually run is recorded in the client test register below.
         </p>
         <div className="grid md:grid-cols-2 gap-5 mt-6">

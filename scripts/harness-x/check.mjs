@@ -341,7 +341,13 @@ assert a["state"]=="LIVE" and b["state"]=="ABSENT" and a["doctrine_sha256"]=="${
   const scText = JSON.stringify(sc);
   const versions = [...scText.matchAll(/server (\d+\.\d+\.\d+)/g)].map((m) => m[1]);
   rec("well-known-server-card", "every stated registry server version == live", versions.length > 0 && versions.every((v) => v === WANT_VERSION), versions.join(", "));
-  rec("well-known-server-card", "stdio pin == npm package version", sc.endpoints.mcp.stdio.endsWith("@" + npmV) && mj.servers[0].stdio.endsWith("@" + npmV), sc.endpoints.mcp.stdio);
+  // Either the stdio pin is the published npm version, or (while every published release is deprecated
+  // on npm, render.mjs NPM_STDIO_ADVERTISED) both documents carry stdio: null with a stdio_note.
+  const pinned = (m) => typeof m.stdio === "string" && m.stdio.endsWith("@" + npmV);
+  const withheld = (m) => m.stdio === null && /deprecated on npm/.test(m.stdio_note || "");
+  rec("well-known-server-card", "stdio pin == npm package version, or withheld with a note",
+    (pinned(sc.endpoints.mcp) && pinned(mj.servers[0])) || (withheld(sc.endpoints.mcp) && withheld(mj.servers[0])),
+    String(sc.endpoints.mcp.stdio ?? sc.endpoints.mcp.stdio_note));
   rec("well-known-server-card", "mcp.json registry version == live; tools == locked",
     mj.servers[0].registry.version === WANT_VERSION && sameList(mj.measured.tools, EXPECT_TOOLS) && mj.measured.total_tools === EXPECT_TOOLS.length, mj.servers[0].registry.version);
   // Stale fleet prose = any count word that is not the locked one ("eight free", "twelve tools" were

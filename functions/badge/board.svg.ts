@@ -33,6 +33,7 @@
  */
 import { onRequestGet as gspcGet } from "../api/gspc";
 import { axisCountLine } from "../api/_boardCounts";
+import { headFromGet } from "../api/_head";
 
 type Ctx = { request: Request; env: unknown; waitUntil: (p: Promise<unknown>) => void };
 export type BoardSource = (ctx: Ctx) => Promise<Response>;
@@ -261,3 +262,7 @@ export const handle = async (ctx: Ctx, src: BoardSource = inProcess, now: () => 
 
 export const onRequestGet: PagesFunction = async (context) =>
   handle({ request: context.request, env: context.env, waitUntil: (p) => context.waitUntil(p) });
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

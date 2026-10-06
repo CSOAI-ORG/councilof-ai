@@ -13,6 +13,7 @@
  * Existence of a digest only. Never the bytes, never the URL, never a verdict.
  */
 import { ENTRY_SCHEMA, PRESUMPTION, SHA_RE, WITNESS_SCHEMA, json, kvKey, publicView, type WitnessEntry } from "../_witness";
+import { headFromGet } from "../_head";
 
 type Env = { WITNESS_KV?: KVNamespace };
 
@@ -85,3 +86,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     anchors,
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

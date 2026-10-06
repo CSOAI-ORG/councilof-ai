@@ -5,6 +5,7 @@ import { onRequestGet as feed, onRequestPost as feedPost } from "./signed-data-f
 import { onRequestGet as catalog } from "./x402";
 import { onRequestGet as wellKnown } from "../.well-known/x402.json";
 import { ESTATE_PAY_TO } from "./_x402_config";
+import PAID_MCP_TOOLS from "../mcp/paid-tools.json";
 
 const ORIGIN = "https://councilof.ai";
 const ctx = (path: string, env: Record<string, unknown> = {}, headers: Record<string, string> = {}) =>
@@ -245,7 +246,9 @@ describe("catalog + discovery", () => {
       "pop_corrections",
       "pop_claim-watch",
     ]);
-    expect(c.mcp.paid_tools.map((t: { name: string }) => t.name)).toEqual(["commission_card", "art50_marking_evidence", "rwa_evidence", "receipts_batch"]);
+    // Derived from the file /mcp serves (T14, 6 Oct 2026): the typed list here omitted evidence_bundle.
+    expect(c.mcp.paid_tools.map((t: { name: string }) => t.name)).toEqual(PAID_MCP_TOOLS.tools.map((t) => t.name));
+    expect(c.mcp.paid_tools.map((t: { name: string }) => t.name)).toContain("evidence_bundle");
     expect(JSON.stringify(c)).not.toContain('"id":"witness_hash"');
     expect(c.free_forever).toEqual(
       expect.arrayContaining([

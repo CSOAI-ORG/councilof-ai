@@ -30,6 +30,7 @@
 import { verifyCard, cardState, PINNED_ANCHORS, type Anchor } from "../_lib/cardVerify";
 import { isSignedRun, verifySignedRunDoc } from "../_lib/signedRunVerify";
 import { verifyLeaf, canonicalBytes, sha256Hex } from "../_lib/cardSign";
+import { headFromGet } from "./_head";
 
 const CORS = {
   "access-control-allow-origin": "*",
@@ -287,3 +288,7 @@ export const onRequestPost: PagesFunction = async ({ request }) => {
         : "This card fails the published rule for the stated reason. INVALID is a positive finding, distinct from UNCHECKABLE.",
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);
