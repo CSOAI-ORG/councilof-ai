@@ -3,6 +3,8 @@ import { Link, useLocation, useSearch } from "wouter";
 import {
   BookOpenCheck,
   ChevronRight,
+  ClipboardList,
+  Search as SearchIcon,
   Coins,
   LifeBuoy,
   Pin,
@@ -43,7 +45,8 @@ import { LOBBY_TABS } from "@/components/lobby/tabs";
 const SMALL_QUERY = "(max-width: 767px)";
 
 const SECTION_ICONS: Record<DashboardNavGroupId, typeof Gauge> = {
-  ask: MessageSquareText,
+  ask: SearchIcon,
+  mine: ClipboardList,
   board: Gauge,
   verify: ShieldCheck,
   connect: PlugZap,
@@ -58,7 +61,7 @@ export function dashboardActiveLabel(activeTab: string, search: string): string 
     : null;
   return (
     embeddedViewLabel ||
-    (activeTab === "home" ? "Conversation" : paneLabel(activeTab) || activeTab)
+    (activeTab === "home" ? "Get results" : paneLabel(activeTab) || activeTab)
   );
 }
 
@@ -303,10 +306,8 @@ export default function DashboardLayout({
           aria-label="Council OS sections"
         >
           <div className="px-5 pb-3 pt-5">
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-emerald-800">
-              GSPC
-            </p>
-            <p className="mt-0.5 text-sm font-semibold text-slate-900">Council OS workspace</p>
+            <p className="text-base font-black tracking-tight text-slate-900">Council OS</p>
+            <p className="mt-0.5 text-xs text-slate-600">Independent AI measurements, on request</p>
           </div>
           <nav
             id={isSmall ? undefined : NAV_ID}
@@ -340,7 +341,7 @@ export default function DashboardLayout({
               className="fixed inset-y-0 left-0 z-[61] flex w-[min(20rem,86vw)] flex-col bg-white shadow-2xl"
             >
               <div className="flex h-14 items-center justify-between border-b border-border px-4">
-                <p className="text-sm font-semibold text-slate-900">GSPC · Council OS</p>
+                <p className="text-sm font-semibold text-slate-900">Council OS</p>
                 <button
                   type="button"
                   aria-label="Close workspace navigation"
@@ -410,7 +411,7 @@ export default function DashboardLayout({
               ) : null}
               <div className="ml-auto flex shrink-0 items-center gap-2">
                 {/* The card corpus in view, named in the Council OS chrome (the site header shows it from 2xl). */}
-                {!embeddedView ? <CorpusChip className="hidden md:inline-flex 2xl:hidden" /> : null}
+                {!embeddedView && activeTab !== "home" && activeTab !== "mine" ? <CorpusChip className="hidden md:inline-flex 2xl:hidden" /> : null}
                 {!embeddedView ? <StartPageButton activeTab={activeTab} /> : null}
                 <div id={SECTION_ACTIONS_ID} className="flex shrink-0 items-center gap-2" />
               </div>

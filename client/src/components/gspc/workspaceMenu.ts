@@ -6,12 +6,10 @@
 import type { DashboardNavGroupId } from "@/components/lobby/tabs";
 
 export const MENU_GROUPS: { heading: string | null; sections: DashboardNavGroupId[] }[] = [
-  { heading: null, sections: ["ask"] },
-  { heading: "Measure", sections: ["board", "verify"] },
-  { heading: "Build", sections: ["connect"] },
-  { heading: "Learn", sections: ["learn"] },
-  { heading: "Markets", sections: ["sovx"] },
-  { heading: "Accountability", sections: ["corrections"] },
+  // Owner brief (1 Oct 2026): task-named, in this order. Get results · My results · Check a result ·
+  // Leaderboard · Connect · Learn. Everything else sits under "More".
+  { heading: null, sections: ["ask", "mine", "verify", "board", "connect", "learn"] },
+  { heading: "More", sections: ["sovx", "corrections"] },
 ];
 
 /** Support and resources: pages and machine files, never a section. Every href is served. */

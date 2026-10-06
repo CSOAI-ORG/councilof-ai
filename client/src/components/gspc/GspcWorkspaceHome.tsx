@@ -31,7 +31,7 @@ import {
   type LiveRead,
 } from "./useLiveJson";
 import { useModelsCount } from "./useModelsCount";
-import StartHere from "./StartHere";
+import GetResults from "./GetResults";
 import CorpusCount from "./CorpusCount";
 
 const nf = new Intl.NumberFormat("en-GB");
@@ -84,6 +84,21 @@ const TILE_WORD: Record<TileState, string> = {
   FACT_RUN: "fact run",
   UNMEASURED: "unmeasured",
 };
+const TILE_LABEL: Record<TileState, string> = {
+  SEPARATED: "Separated",
+  TIE: "Tie",
+  UNTESTED: "Untested",
+  FACT_RUN: "Fact checks",
+  UNMEASURED: "Unmeasured",
+};
+// Jargon lives here, in the tooltip, not in the face of the card.
+const TILE_HELP: Record<TileState, string> = {
+  SEPARATED: "Model-comparison tests where one model was measurably apart from the rest (SEPARATED). Even then, nothing is called best.",
+  TIE: "Model-comparison tests where the models measured could not be told apart (TIE). A tie stays a tie.",
+  UNTESTED: "Model-comparison tests with too little data to test for a gap yet (UNTESTED).",
+  FACT_RUN: "Tests that check facts about servers and public records rather than compare models (deterministic fact runs).",
+  UNMEASURED: "Tests with no published run yet (UNMEASURED).",
+};
 
 /** The board, compact: the count line WITH its separation line, the model count, one dot per axis. */
 function WorkspaceBoardCard() {
@@ -105,10 +120,10 @@ function WorkspaceBoardCard() {
           <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-60 motion-safe:animate-ping" />
           <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-600" />
         </span>
-        Live board
+        Live leaderboard
       </p>
       <h2 id="ws-board-h" className="mt-2 text-xl font-black tracking-tight text-foreground">
-        The GSPC board
+        What the tests show today
       </h2>
       {error ? (
         <p className="mt-4 rounded-2xl border border-amber-500/50 bg-amber-50 px-4 py-3 text-sm text-amber-950" data-testid="ws-board-error">
@@ -129,6 +144,19 @@ function WorkspaceBoardCard() {
           <p className="mt-1 text-sm leading-snug text-muted-foreground" data-testid="ws-board-separation">
             {sepLine ?? (sep ? `${sep.separated} of ${sep.comparison} model-comparison axes separated · ${sep.ties} TIE · ${sep.untested} UNTESTED` : "separation line not in the payload")}
           </p>
+          <dl className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4 xl:grid-cols-2 2xl:grid-cols-4" data-testid="ws-board-tiles">
+            {(Object.keys(TILE_WORD) as TileState[])
+              .filter((s) => s !== "UNMEASURED" || tiles.some((t) => t.state === s))
+              .map((s) => (
+                <div key={s} className="rounded-xl bg-muted/70 px-3 py-2" title={TILE_HELP[s]}>
+                  <dt className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                    <span className={`inline-block h-2.5 w-2.5 rounded-[3px] ${TILE_DOT[s]}`} aria-hidden="true" />
+                    {TILE_LABEL[s]}
+                  </dt>
+                  <dd className="font-mono text-2xl font-black leading-tight text-foreground">{tiles.filter((t) => t.state === s).length}</dd>
+                </div>
+              ))}
+          </dl>
           <ul className="mt-4 flex list-none flex-wrap gap-1.5 p-0" aria-label="Every axis and its state">
             {tiles.map((t) => (
               <li key={t.axis} title={`${t.axis}: ${TILE_WORD[t.state]}`} className="inline-flex">
@@ -159,7 +187,12 @@ function WorkspaceBoardCard() {
               </>
             )}
           </p>
-          <CorpusCount />
+          <details className="group mt-3 rounded-xl border border-border px-3" data-testid="ws-board-records">
+            <summary className="flex min-h-11 cursor-pointer list-none items-center text-sm font-medium text-muted-foreground hover:text-foreground">
+              How many signed records stand behind this
+            </summary>
+            <CorpusCount />
+          </details>
           <p className="mt-3 text-xs leading-snug text-muted-foreground">
             A tie stays a tie; untested stays untested. Read live from <a className="font-semibold text-emerald-800 underline underline-offset-2" href="/api/gspc">GET /api/gspc</a>. Not a certificate.
           </p>
@@ -167,11 +200,11 @@ function WorkspaceBoardCard() {
       )}
       <p className="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-sm font-bold">
         <Link href="/dashboard?tab=board" className="inline-flex min-h-11 items-center text-emerald-800 underline underline-offset-4">
-          Open the live board →
+          Open the leaderboard →
         </Link>
-        <Link href="/board/" className="inline-flex min-h-11 items-center text-emerald-800 underline underline-offset-4">
-          Full page
-        </Link>
+        <a href="/board/" className="inline-flex min-h-11 items-center text-emerald-800 underline underline-offset-4">
+          Public leaderboard page
+        </a>
       </p>
     </section>
   );
@@ -224,11 +257,14 @@ function PlaceCard({ p }: { p: Place }) {
 
 export default function GspcWorkspaceHome({
   talk,
+  onAsk,
   toolCount,
   toolState,
 }: {
   /** The AG-UI TalkPanel, rendered by the workspace so its ref stays with the composer. */
   talk: ReactNode;
+  /** Send a question to that TalkPanel (Get results uses it for the free lookup). */
+  onAsk?: (question: string) => void;
   toolCount: number | null;
   toolState: "loading" | "ready" | "failed";
 }) {
@@ -322,83 +358,54 @@ export default function GspcWorkspaceHome({
   return (
     <div className="min-h-0 flex-1 overflow-y-auto" data-testid="gspc-workspace-home">
       <section className="relative isolate overflow-hidden bg-[#04120c]" aria-labelledby="ws-h">
-        <picture>
-          <source media="(max-width: 1023.98px)" srcSet="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />
-          <source type="image/webp" srcSet="/images/home/evidence-card-800.webp 800w, /images/home/evidence-card-1376.webp 1376w" sizes="50vw" />
-          <img
-            src="/images/home/evidence-card-800.webp"
-            alt=""
-            aria-hidden="true"
-            width={800}
-            height={447}
-            decoding="async"
-            className="pointer-events-none absolute inset-y-0 right-0 hidden h-full w-1/2 object-cover opacity-70 lg:block"
-          />
-        </picture>
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(90% 90% at 12% 0%, rgba(16,185,129,.22) 0%, transparent 60%), linear-gradient(90deg, rgba(4,18,12,1) 0%, rgba(4,18,12,.96) 50%, rgba(4,18,12,.55) 100%)",
+              "radial-gradient(90% 90% at 12% 0%, rgba(16,185,129,.22) 0%, transparent 60%), linear-gradient(90deg, rgba(4,18,12,1) 0%, rgba(4,18,12,.96) 60%, rgba(4,18,12,.85) 100%)",
           }}
         />
-        <div className="relative z-10 mx-auto w-full max-w-[1400px] px-4 py-6 sm:px-8 sm:py-10 lg:px-12">
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">GSPC · Council OS workspace</p>
+        <div className="relative z-10 mx-auto w-full max-w-[1400px] px-4 py-4 sm:px-8 sm:py-8 lg:px-12">
+          <p className="hidden font-mono text-xs font-bold uppercase tracking-[0.2em] text-emerald-300 sm:block">Council OS</p>
           <h1
             id="ws-h"
-            className="mt-3 max-w-2xl font-black tracking-[-0.03em] text-white"
-            style={{ fontSize: "clamp(1.6rem, 1rem + 2vw, 2.6rem)", lineHeight: 1.08 }}
+            className="mt-2 max-w-3xl font-black tracking-[-0.03em] text-white"
+            style={{ fontSize: "clamp(1.35rem, 1rem + 2vw, 2.4rem)", lineHeight: 1.1 }}
           >
-            Ask, check and connect, over the live board.
+            Independent test results for AI models and servers, on request.
           </h1>
-          <p className="mt-3 max-w-xl text-base leading-relaxed text-emerald-50/90">
-            Every answer names the tool and the signed record behind it. Every figure is read live. Verifying is free.
+          {/* Phone: one plain line, so the Get results box is on the first screen. */}
+          <p className="mt-2 text-sm leading-relaxed text-emerald-50/90 sm:hidden">
+            Look up what is already measured (free), order a fresh run, and check any result yourself.
           </p>
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <a
-              href="#ws-ask"
-              className="inline-flex min-h-12 items-center justify-center rounded-xl bg-emerald-400 px-6 text-base font-black text-[#03110b] transition hover:bg-emerald-300 motion-reduce:transition-none"
-              data-testid="ws-cta-ask"
-            >
-              Ask a question ↓
-            </a>
-            <Link
-              href="/dashboard?tab=verify"
-              className="hidden min-h-12 items-center justify-center rounded-xl border border-emerald-300/50 px-6 text-base font-bold text-emerald-50 transition hover:border-emerald-300 hover:bg-emerald-400/10 motion-reduce:transition-none sm:inline-flex"
-            >
-              Verify a card
-            </Link>
-            <Link
-              href="/dashboard?tab=connect"
-              className="hidden min-h-12 items-center justify-center rounded-xl border border-emerald-300/50 px-6 text-base font-bold text-emerald-50 transition hover:border-emerald-300 hover:bg-emerald-400/10 motion-reduce:transition-none sm:inline-flex"
-            >
-              Connect your agent
-            </Link>
-          </div>
-          {/* Phone: one primary action (Ask); the other two are a quiet row (ONE-PRODUCT-PLAN §4 rule 7). */}
-          <p className="mt-3 flex gap-5 text-sm font-bold sm:hidden">
-            <Link href="/dashboard?tab=verify" className="inline-flex min-h-11 items-center text-emerald-200 underline underline-offset-4">
-              Verify a card
-            </Link>
-            <Link href="/dashboard?tab=connect" className="inline-flex min-h-11 items-center text-emerald-200 underline underline-offset-4">
-              Connect your agent
-            </Link>
-          </p>
+          <ul className="mt-4 hidden max-w-5xl list-none gap-4 p-0 text-sm leading-relaxed text-emerald-50/90 sm:grid sm:grid-cols-3" data-testid="ws-plain">
+            <li>
+              <span className="block text-xs font-bold uppercase tracking-wide text-emerald-300">What this is</span>
+              We test AI models and the servers they use, publish every result signed, and never sell a grade.
+            </li>
+            <li>
+              <span className="block text-xs font-bold uppercase tracking-wide text-emerald-300">What you can do</span>
+              Look up what is already measured (free), order a fresh run, track it, and check any result yourself.
+            </li>
+            <li>
+              <span className="block text-xs font-bold uppercase tracking-wide text-emerald-300">What&apos;s new</span>
+              <WhatsNew />
+            </li>
+          </ul>
         </div>
       </section>
 
       <div className="mx-auto w-full max-w-[1400px] px-4 py-6 sm:px-8 sm:py-8 lg:px-12">
-        <StartHere />
-        <div className="grid gap-6 xl:grid-cols-12">
-          <section id="ws-ask" aria-labelledby="ws-ask-h" className="min-w-0 scroll-mt-4 xl:col-span-7">
-            <p className="t-kicker text-emerald-800">Ask the Council</p>
-            <h2 id="ws-ask-h" className="mt-2 text-xl font-black tracking-tight text-foreground">
-              Ask in plain words
+        <GetResults onAsk={onAsk} />
+
+        <div className="mt-6 grid gap-6 xl:grid-cols-12">
+          <section id="ws-answers" aria-labelledby="ws-ask-h" className="min-w-0 scroll-mt-4 xl:col-span-7">
+            <h2 id="ws-ask-h" className="text-xl font-black tracking-tight text-foreground">
+              Answers
             </h2>
             <p className="mt-1 max-w-xl text-sm leading-relaxed text-muted-foreground">
-              Answers are fields of the named tool&apos;s output, the same tools <code className="font-mono text-[0.9em]">/mcp</code> serves. No model
-              writes them; if there is no evidence, the answer says so.
+              Free answers from what we have published. Each one says where it came from and links to the record so you can check it.
             </p>
             {talk}
           </section>
@@ -408,22 +415,51 @@ export default function GspcWorkspaceHome({
         </div>
 
         <section aria-labelledby="ws-places-h" className="mt-10">
-          <p className="t-kicker text-emerald-800">What you can do next</p>
-          <h2 id="ws-places-h" className="mt-2 text-xl font-black tracking-tight text-foreground">
-            Verify, connect, route, learn, and see what we corrected
+          <h2 id="ws-places-h" className="text-xl font-black tracking-tight text-foreground">
+            More you can do
           </h2>
-          <ul className="mt-5 grid list-none gap-4 p-0 sm:grid-cols-2 xl:grid-cols-4">
+          <ul className="mt-4 grid list-none gap-4 p-0 sm:grid-cols-2 xl:grid-cols-4">
             {places.map((p) => (
               <PlaceCard key={p.id} p={p} />
             ))}
           </ul>
         </section>
 
-        <p className="mt-8 border-t border-border pt-5 text-xs leading-relaxed text-muted-foreground">
-          Council of AI measures. It does not certify, and a rank is never sold. Agents get the same answers over{" "}
+        <p className="mt-8 border-t border-border pt-4 text-xs leading-relaxed text-muted-foreground">
+          Council of AI measures. It does not certify, and a grade is never sold. Checking a result is always free. Agents get the same answers over{" "}
           <Link href="/agents/" className="font-semibold text-emerald-800 underline underline-offset-2">MCP, A2A, AG-UI and A2UI</Link>.
         </p>
       </div>
     </div>
+  );
+}
+
+/** One live line: the newest published correction and the board's own date. Never typed. */
+function WhatsNew() {
+  const ledger = useLiveJson<{ corrections?: { id?: string; date?: string; what_was_wrong?: string }[] }>("/api/corrections");
+  const latest = ledger.state === "ok" && Array.isArray(ledger.data?.corrections) ? ledger.data.corrections[0] : null;
+  if (ledger.state === "loading")
+    return (
+      <span role="status" className="block text-emerald-50/70">
+        Reading the latest change…
+      </span>
+    );
+  if (!latest)
+    return (
+      <span className="block">
+        The change log could not be read just now.{" "}
+        <a href="/corrections/" className="font-semibold text-emerald-200 underline underline-offset-2">Open it</a>
+      </span>
+    );
+  return (
+    <span className="block" data-testid="ws-whats-new">
+      <span className="line-clamp-2" title={latest.what_was_wrong}>
+        {latest.date ? `${latest.date}: ` : ""}
+        {latest.what_was_wrong ?? latest.id}
+      </span>{" "}
+      <Link href="/dashboard?tab=corrections" className="font-semibold text-emerald-200 underline underline-offset-2">
+        All changes
+      </Link>
+    </span>
   );
 }
