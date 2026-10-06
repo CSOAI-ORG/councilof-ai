@@ -88,7 +88,10 @@ const BY_AUDIENCE: Record<string, string[]> = {
   board: [Q.boardNow, Q.wrong, Q.howMany, Q.claims],
   researcher: [Q.safety, Q.ties, Q.index, Q.jail],
   press: [Q.boardNow, Q.wrong, Q.ties, Q.root],
-  insurer: [Q.which, Q.dora, Q.reserve, Q.custody],
+  // Underwriting AI risk: jailbreak and safety results first, then the financial-sector evidence
+  // (tools audit retest, 6 Oct 2026: "Which tests have results?" was the same generic opener as
+  // every other audience).
+  insurer: [Q.jail, Q.safety, Q.dora, Q.reserve],
   regulator: [Q.art50, Q.governance, Q.wrong, Q.root],
 };
 

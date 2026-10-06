@@ -100,6 +100,21 @@ export function extractEndpoint(text: string): { url: string; bareHost: boolean 
   return null;
 }
 
+/**
+ * A model name in a question: an Ollama-style tag ("qwen3:8b", "llama3.1:8b-instruct") or a name
+ * from a known model family ("gpt-4o", "claude-3.5-sonnet", "gemma3"). Null when there is none.
+ */
+// Families whose bare name is also an English word stem ("phi…", "grok") need a digit or a hyphen.
+const MODEL_FAMILY =
+  /\b((?:gpt-?\d[a-z0-9._-]*|claude(?:-[a-z0-9._-]+)?|llama[a-z0-9._-]*|qwen[a-z0-9._-]*|gemma[a-z0-9._-]*|mistral[a-z0-9._-]*|mixtral[a-z0-9._-]*|deepseek[a-z0-9._-]*|phi-?\d[a-z0-9._-]*|grok-\d[a-z0-9._-]*|gemini(?:-[a-z0-9._-]+)?|granite[a-z0-9._-]*|olmo[a-z0-9._-]*)(?::[a-z0-9._-]+)?)\b/i;
+const MODEL_TAG = /(?:^|\s)([a-z][a-z0-9._-]*:[0-9][a-z0-9._-]*)(?=$|[\s?.!,])/i;
+export function extractModel(text: string): string | null {
+  const tag = text.match(MODEL_TAG)?.[1];
+  if (tag) return tag;
+  const fam = text.match(MODEL_FAMILY)?.[1];
+  return fam ? fam.replace(/[.,]+$/, "") : null;
+}
+
 /** The canonical axis a question names (canonical id or one of its aliases), else null. */
 export function extractAxis(text: string): string | null {
   const t = text.toLowerCase();
@@ -210,6 +225,15 @@ export function routeIntent(raw: string): Plan {
     };
   }
 
+  // 4b. "Which model is best / safest?" The board's own answer: how many tests separated a leader
+  //     and how many ended in a tie. Nothing here names a best model (tools audit retest, 6 Oct 2026).
+  if (/\b(best|safest|top|winner|winning|strongest|most accurate|leading)\b.*\b(models?|llms?|ai)\b|\bwhich (model|llm|ai)\b.*\b(better|best|safer|safest|win|wins|top)\b/.test(t))
+    return { kind: "tools", intent: "is there a best model", calls: [{ tool: "board_totals", args: {} }] };
+  // 4c. A named model ("qwen3:8b", "is gpt-4o safe?"): what is published about it, read from the list
+  //     built from the signed cards. A count is not a safety verdict, and the answer says so.
+  const model = extractModel(text);
+  if (model) return { kind: "tools", intent: `what is published about ${model}`, calls: [{ tool: "model_lookup", args: { model } }] };
+
   // 5. Topic keywords (no entity).
   if (/\bx402\b|\bpaid (doors?|endpoints?|apis?)\b|\bpayment doors?\b/.test(t)) return { kind: "tools", intent: "x402 door census", calls: [{ tool: "x402_trust", args: {} }] };
   if (/\bmcp\b.*\b(servers?|trust|census|handshake|ecosystem|internet)\b|\b(servers?|trust|census)\b.*\bmcp\b/.test(t)) return { kind: "tools", intent: "MCP handshake census", calls: [{ tool: "mcp_trust", args: {} }] };
@@ -301,6 +325,7 @@ const SHOW: Record<string, string[]> = {
   x402_trust: ["as_of", "headline"],
   mcp_trust: ["as_of", "headline", "partial", "doctrine"],
   corrections_summary: ["count", "signature_state_reported", "signature_verification", "correction_latency", "recent", "note"],
+  model_lookup: ["model", "cards", "axes", "whose", "other_matches", "note"],
   claim_maintenance_register: ["as_of", "totals", "subject_count", "registry_count", "right_of_reply", "does_not_prove", "note"],
   measurement_index: ["as_of", "n_capsules_total", "n_batches", "index_root"],
   verify_capsule: ["reason"],
@@ -364,9 +389,10 @@ function renderOutcome(o: ToolOutcome): string {
 }
 
 export const HELP_TEXT =
-  "I answer by calling the same tools as POST /mcp (plus two read-only router reads: corrections and Claim Maintenance) and quoting their output. I can:\n" +
+  "I answer by calling the same tools as POST /mcp (plus three read-only router reads: corrections, Claim Maintenance and the list of models measured) and quoting their output. I can:\n" +
   "- **board totals** — \"what does the board say\" (board_totals)\n" +
   "- **one axis** — \"how did safety measure\" (get_axis)\n" +
+  "- **a model** — \"qwen3:8b\" or \"is gpt-4o safe?\" → how many signed results are on file for it, a count and not a verdict (model_lookup)\n" +
   "- **a server** — \"what is measured about example.com/mcp\" → what is measured about it (server_evidence)\n" +
   "- **the MCP census** — \"how many mcp servers answered\" (mcp_trust)\n" +
   "- **evidence for one obligation** — \"which signed evidence is there for DORA\" (evidence_bundle_preview: Article 50, Article 53, DORA or CRA)\n" +

@@ -15,10 +15,19 @@
 //
 // We MEASURE; we never certify. The test line proves the connection with a real call.
 
+import CONNECT_MATRIX from "../../../distribution/connect/connect-matrix.json";
+
 // Every snippet on /connect-gspc defaults to the FREE door (audit 2026-09-28 #10): a developer who
 // pastes the first config they see should get the tools that cost nothing, not a door whose
 // metered tools answer with a payment challenge. /mcp is still named, with what it adds.
 export const MCP_FREE_URL = "https://councilof.ai/mcp/free";
+
+// The one claude.ai / Claude Desktop connector path, read from the connect matrix's claude-app row
+// (council-os/distribution.json → distribution/connect/connect-matrix.json), the same words
+// /connect/claude and the Council OS Connect pane give. Never typed here a second time.
+export const CLAUDE_APP_WHERE: string =
+  (CONNECT_MATRIX as { clients: { id: string; where: string }[] }).clients.find((c) => c.id === "claude-app")?.where ??
+  "Customize → Connectors → Add custom connector";
 export const MCP_METERED_URL = "https://councilof.ai/mcp";
 export const MCP_URL = MCP_FREE_URL;
 export const STDIO_CMD = "npx -y csoai-gspc-mcp";
@@ -80,8 +89,8 @@ export const MCP_NATIVE: PlatformCard[] = [
     tagline: "Paid plans: paste the URL in Connectors. Free: use the mcp-remote bridge.",
     docUrl: "https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp",
     blocks: [
-      // The one thing a claude.ai or Claude Desktop user pastes: Settings → Connectors → Add custom connector.
-      { label: "Connector URL (claude.ai or Claude Desktop → Settings → Connectors)", lang: "text", code: MCP_FREE_URL },
+      // The one thing a claude.ai or Claude Desktop user pastes, at the matrix's claude-app path.
+      { label: `Connector URL (claude.ai or Claude Desktop: ${CLAUDE_APP_WHERE})`, lang: "text", code: MCP_FREE_URL },
       { label: "claude_desktop_config.json (bridge)", lang: "json", code: `{
   "mcpServers": {
     "csoai-gspc": {
@@ -96,7 +105,7 @@ export const MCP_NATIVE: PlatformCard[] = [
   }
 }` },
     ],
-    note: "The JSON config file is stdio-only, so remote needs the mcp-remote bridge. On Pro/Max/Team/Enterprise you can instead add the URL natively under Settings → Connectors → Add custom connector.",
+    note: `The JSON config file is stdio-only, so remote needs the mcp-remote bridge. On Pro/Max/Team/Enterprise you can instead add the URL natively: ${CLAUDE_APP_WHERE}.`,
   },
   {
     id: "cursor",

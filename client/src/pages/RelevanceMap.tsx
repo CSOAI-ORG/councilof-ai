@@ -66,9 +66,47 @@ export default function RelevanceMap({ embedded = false }: { embedded?: boolean;
   const fy = (i: number) => padTop + 30 + i * ((H - padTop - 60) / Math.max(frameworks.length, 1));
   const cyMid = H / 2;
 
+  // Embedded in the Regulation matrix pane: the pane already has the heading and the intro, so only
+  // the pickers are drawn, in the pane's light style, with 44 px targets (tools audit retest,
+  // 6 Oct 2026: the page's own h1 repeated the pane's heading, and the whole page hero sat in a
+  // 285 px box on a phone).
+  const pickers = embedded ? (
+    <div className="py-2" data-testid="relevance-pickers">
+      <p className="text-sm font-semibold text-slate-800">Pick an industry</p>
+      <div className="mt-2 flex flex-wrap gap-2">
+        {INDUSTRIES.map((ind) => (
+          <button
+            key={ind}
+            type="button"
+            onClick={() => setIndustry(ind)}
+            aria-pressed={industry === ind}
+            className={"inline-flex min-h-11 items-center rounded-full border px-4 text-sm font-semibold transition-colors " + (industry === ind ? "border-emerald-800 bg-emerald-800 text-white" : "border-slate-300 bg-white text-slate-800 hover:bg-slate-50")}
+          >
+            {ind}
+          </button>
+        ))}
+      </div>
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Region</span>
+        {REGIONS.map((r) => (
+          <button
+            key={r}
+            type="button"
+            onClick={() => setRegion(r)}
+            aria-pressed={region === r}
+            className={"inline-flex min-h-11 items-center rounded-full border px-3 text-xs font-semibold transition-colors " + (region === r ? "border-teal-800 bg-teal-800 text-white" : "border-slate-300 bg-white text-slate-700 hover:bg-slate-50")}
+          >
+            {r}
+          </button>
+        ))}
+      </div>
+    </div>
+  ) : null;
+
   return (
-    <div className="min-h-screen bg-white">
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 text-white py-16">
+    <div className={embedded ? "bg-white" : "min-h-screen bg-white"}>
+      {pickers}
+      {embedded ? null : <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 text-white py-16">
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI · the relevance map</p>
@@ -86,11 +124,11 @@ export default function RelevanceMap({ embedded = false }: { embedded?: boolean;
             ))}
           </div>
         </div>
-      </section>
+      </section>}
 
-      <section className="max-w-6xl mx-auto px-6 py-12">
+      <section className={embedded ? "py-4" : "max-w-6xl mx-auto px-6 py-12"}>
         {!industry && (
-          <div className="rounded-2xl border border-dashed border-gray-300 p-12 text-center text-gray-400">
+          <div className={`rounded-2xl border border-dashed border-gray-300 text-center text-gray-500 ${embedded ? "p-6 text-sm" : "p-12"}`}>
             Pick an industry above — the relevance map renders here on click (nothing loads until you do).
           </div>
         )}

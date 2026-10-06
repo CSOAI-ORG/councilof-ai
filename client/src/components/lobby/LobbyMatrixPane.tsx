@@ -28,6 +28,13 @@ export function matrixBoardSummary(axes: Pick<Axis, "status">[]): string {
   return `${total} ${total === 1 ? "axis" : "axes"} · ${measured} measured · ${unmeasured} unmeasured`;
 }
 
+/** The same counts in plain words for the pane face (no axis ids). UNMEASURED stays a stated number. */
+export function matrixBoardPlain(axes: Pick<Axis, "status">[]): string {
+  const total = axes.length;
+  const measured = axes.filter((axis) => matrixAxisState(axis) === "MEASURED").length;
+  return `${total} ${total === 1 ? "test" : "tests"} on the board · ${measured} with published results · ${total - measured} not measured yet`;
+}
+
 export default function LobbyMatrixPane({ onOpenSpace }: { onOpenSpace?: (axis: string) => void }) {
   const [state, setState] = useState<Pick<AxesState, "axes" | "source" | "loading">>({
     axes: [],
@@ -44,58 +51,35 @@ export default function LobbyMatrixPane({ onOpenSpace }: { onOpenSpace?: (axis: 
   return (
     <section aria-labelledby="coai-matrix-h" className={`${SP.panel} h-full overflow-y-auto`}>
       <p className={TYPE.section}>Industry × Regulation</p>
-      <h2 id="coai-matrix-h" className="mt-1 text-[22px] font-semibold tracking-tight text-slate-900">
+      <h1 id="coai-matrix-h" className="mt-1 text-[22px] font-semibold tracking-tight text-slate-900">
         What governs what
-      </h2>
+      </h1>
       
       <p className={`mt-3 ${MEASURE} ${TYPE.body}`}>
         Which rules apply to which industry. Pick an industry below to see them. This is a map of
         relevance, not a compliance verdict and not certification.
       </p>
 
-      {/* Living drivers from GET /api/gspc */}
-      <div className="mt-4 rounded-lg border border-emerald-200 bg-emerald-50/50 px-3 py-2">
-        <p className="text-[11px] font-semibold text-emerald-800">Living board state</p>
-        <p className="text-[12px] text-emerald-700 font-mono">
-          {state.loading
-            ? "Reading GET /api/gspc…"
-            : state.source === "wire"
-              ? matrixBoardSummary(state.axes)
-                : "Offline fallback — this build's snapshot"}
-        </p>
-        <div className="mt-2 flex flex-wrap gap-2">
-          {!state.loading && state.axes.slice(0, 8).map((a) => (
-            <span
-              key={a.axis}
-              className={`rounded px-1.5 py-0.5 text-[9px] font-mono ${
-                matrixAxisState(a) === "MEASURED"
-                  ? "bg-emerald-100 text-emerald-800"
-                  : "bg-amber-100 text-amber-800"
-              }`}
-            >
-              {a.axis}: {matrixAxisState(a)}
-            </span>
-          ))}
-          {!state.loading && state.axes.length > 8 && (
-            <span className="text-[9px] text-slate-400">+{state.axes.length - 8} more</span>
-          )}
-        </div>
-      </div>
+      {/* Living drivers from GET /api/gspc: one plain line. Tools audit retest, 6 Oct 2026: the raw
+          axis ids (machinery-conformity: MEASURED …) in 9 px type were jargon on a stranger's page. */}
+      <p className="mt-4 text-sm text-slate-700" data-testid="matrix-board-line">
+        {state.loading
+          ? "Reading the board…"
+          : state.source === "wire"
+            ? matrixBoardPlain(state.axes)
+            : "The board could not be read just now; nothing is shown in its place."}{" "}
+        <a href="/dashboard?tab=board" className={`inline-flex min-h-11 items-center font-semibold text-emerald-800 underline underline-offset-2 ${FOCUS}`}>
+          Open the leaderboard
+        </a>
+      </p>
 
-      {/* The existing RelevanceMap visual — NOT rebuilt */}
-      <div className="mt-6 rounded-xl border border-slate-200 overflow-hidden">
-        <div className="bg-amber-50 border-b border-amber-200 px-3 py-1.5">
-          <p className="text-[11px] font-semibold text-amber-800">
-            Relevance map: pick an industry to see the rules our connectors map to
-          </p>
-        </div>
-        <div className="max-h-[500px] overflow-y-auto">
-          <Suspense fallback={<div className="p-8 text-center text-slate-400 text-sm">Loading relevance map…</div>}>
-            <RelevanceMap embedded />
-          </Suspense>
-        </div>
+      {/* The existing RelevanceMap visual, embedded: its own page heading is not drawn here (the pane
+          has one), and it is not boxed into a fixed-height frame, so the map keeps its width. */}
+      <div className="mt-4">
+        <Suspense fallback={<div className="p-8 text-center text-slate-400 text-sm">Loading relevance map…</div>}>
+          <RelevanceMap embedded />
+        </Suspense>
       </div>
-
 
       <div className="mt-6 rounded-xl border border-sky-200 bg-sky-50/50 p-4">
         <p className={`${TYPE.section} text-sky-800`}>For regulators</p>
@@ -122,19 +106,19 @@ export default function LobbyMatrixPane({ onOpenSpace }: { onOpenSpace?: (axis: 
       <div className="mt-6 flex flex-wrap gap-3">
         <a
           href="/map"
-          className={`${SURFACE} rounded-lg px-4 py-2 text-[12px] font-semibold text-slate-700 transition hover:bg-slate-100 ${FOCUS}`}
+          className={`${SURFACE} inline-flex min-h-11 items-center rounded-lg px-4 py-2 text-[12px] font-semibold text-slate-700 transition hover:bg-slate-100 ${FOCUS}`}
         >
           Full relevance map →
         </a>
         <a
           href="/crosswalk"
-          className={`${SURFACE} rounded-lg px-4 py-2 text-[12px] font-semibold text-slate-700 transition hover:bg-slate-100 ${FOCUS}`}
+          className={`${SURFACE} inline-flex min-h-11 items-center rounded-lg px-4 py-2 text-[12px] font-semibold text-slate-700 transition hover:bg-slate-100 ${FOCUS}`}
         >
           Open crosswalk →
         </a>
         <a
           href="/gspc-arena"
-          className={`${SURFACE} rounded-lg px-4 py-2 text-[12px] font-semibold text-slate-700 transition hover:bg-slate-100 ${FOCUS}`}
+          className={`${SURFACE} inline-flex min-h-11 items-center rounded-lg px-4 py-2 text-[12px] font-semibold text-slate-700 transition hover:bg-slate-100 ${FOCUS}`}
         >
           Open Council Space →
         </a>
@@ -142,9 +126,10 @@ export default function LobbyMatrixPane({ onOpenSpace }: { onOpenSpace?: (axis: 
           href="/api/gspc"
           target="_blank"
           rel="noreferrer"
-          className={`${SURFACE} rounded-lg px-4 py-2 text-[12px] font-semibold text-emerald-700 transition hover:bg-emerald-50 ${FOCUS}`}
+          className={`${SURFACE} inline-flex min-h-11 items-center rounded-lg px-4 py-2 text-[12px] font-semibold text-emerald-700 transition hover:bg-emerald-50 ${FOCUS}`}
+          title="GET /api/gspc"
         >
-          GET /api/gspc ↗
+          The board's raw data ↗
         </a>
       </div>
     </section>

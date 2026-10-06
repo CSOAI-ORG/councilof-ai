@@ -16,6 +16,7 @@ import { BUYING_LINES, CONTACT_MAILBOX } from "@/lib/buying";
 import ResultCard from "@/components/talk/ResultCard";
 import { FRESH_RUN_DOCTRINE } from "@/lib/resultCard";
 import { challengeOf, type Challenge } from "@/lib/aguiTalk";
+import { callTool } from "@/lib/sovTools";
 
 const FOCUS =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
@@ -27,9 +28,37 @@ type TermsRead =
   | { state: "error"; text: string };
 
 /**
+ * A payment network in words. The challenge names it as a CAIP-2 id (eip155:8453) or a short
+ * name (base); a stranger reads "Base". An id this table does not know is not shown on the card
+ * face at all (it stays in the exact terms underneath), so no raw chain id reaches the face.
+ */
+const NETWORK_NAMES: Record<string, string> = {
+  "eip155:8453": "Base",
+  base: "Base",
+  "eip155:84532": "Base Sepolia (a test network)",
+  "base-sepolia": "Base Sepolia (a test network)",
+  "eip155:1": "Ethereum",
+  ethereum: "Ethereum",
+  "eip155:137": "Polygon",
+  polygon: "Polygon",
+  solana: "Solana",
+  "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": "Solana",
+};
+
+export function networkName(network: string | null | undefined): string | null {
+  if (!network) return null;
+  const key = network.trim().toLowerCase();
+  return Object.prototype.hasOwnProperty.call(NETWORK_NAMES, key) ? NETWORK_NAMES[key] : null;
+}
+
+/**
  * The plain card a stranger sees first: what a fresh run request is, what it buys, and that
- * nothing has been charged. "See the terms" is a GET without payment: the endpoint answers with
- * its 402 challenge (the terms) and records nothing; this page never pays.
+ * nothing has been charged. "See the terms" asks commission_card on the MCP door WITHOUT a
+ * payment: the tool fetches the same GET /api/request-attestation the page used to call, and
+ * returns its 402 challenge (the terms) inside an ordinary 200 reply, so the browser does not log
+ * a failed request (tools audit retest, 6 Oct 2026). Nothing is recorded or charged; this page
+ * never pays. The card face names the network in words and states no amount: the exact terms
+ * (network id, asset, amount in the challenge's own units) sit under "The exact terms".
  */
 function FreshRunCard({ initialSubject }: { initialSubject: string }) {
   const [subject, setSubject] = useState(initialSubject);
@@ -38,20 +67,15 @@ function FreshRunCard({ initialSubject }: { initialSubject: string }) {
   const readTerms = async () => {
     if (!named) return;
     setTerms({ state: "reading" });
-    try {
-      const r = await fetch(`${REQUEST_ATTESTATION_CONTRACT.route}?subject=${encodeURIComponent(named.slice(0, 200))}`, {
-        headers: { accept: "application/json" },
-      });
-      const body: unknown = await r.json().catch(() => null);
-      const challenge = r.status === 402 ? challengeOf(body) : null;
-      setTerms(
-        challenge
-          ? { state: "ok", challenge }
-          : { state: "error", text: `The terms could not be read (HTTP ${r.status}). Nothing was charged.` },
-      );
-    } catch (e) {
-      setTerms({ state: "error", text: `The terms could not be read (${e instanceof Error ? e.message : String(e)}). Nothing was charged.` });
-    }
+    // No x_payment is ever passed from this page: the tool can only answer with its terms.
+    const reply = await callTool(REQUEST_ATTESTATION_CONTRACT.tool, { subject: named.slice(0, 200) });
+    const structured = reply.raw?.result?.structuredContent;
+    const challenge = structured?.status === "PAYMENT_REQUIRED" ? challengeOf(structured) : null;
+    setTerms(
+      challenge
+        ? { state: "ok", challenge }
+        : { state: "error", text: "The terms could not be read just now. Nothing was charged; try again in a moment." },
+    );
   };
   const first = terms.state === "ok" ? terms.challenge.accepts[0] : null;
   return (
@@ -104,17 +128,44 @@ function FreshRunCard({ initialSubject }: { initialSubject: string }) {
         {terms.state === "ok" ? (
           <div className="rounded-xl border border-amber-700/25 bg-amber-50/60 p-3 text-sm text-amber-950 dark:border-amber-400/30 dark:bg-amber-950/50 dark:text-amber-50" role="status" data-testid="fresh-run-terms-result">
             <p className="font-semibold">These are the terms. Nothing was charged.</p>
-            <p className="mt-1">
+            <p className="mt-1" data-testid="fresh-run-terms-plain">
               If you go ahead, you pay from your own wallet{first?.symbol ? ` in ${first.symbol}` : ""}
-              {first?.network ? ` on ${first.network}` : ""}. The amount is the one the terms state
-              {first?.amountAtomic ? ` (${first.amountAtomic} in the asset's smallest unit)` : ""}. This page never pays.
+              {networkName(first?.network) ? ` on ${networkName(first?.network)}` : ""}. Your wallet shows the exact amount before
+              you approve it, and nothing is taken unless you do. This page never pays.
             </p>
-            {terms.challenge.description ? (
-              <details className="mt-2">
-                <summary className={`min-h-11 cursor-pointer py-2 font-medium ${FOCUS}`}>What the receipt says it contains</summary>
-                <p className="[overflow-wrap:anywhere]">{terms.challenge.description}</p>
-              </details>
-            ) : null}
+            <details className="mt-2" data-testid="fresh-run-terms-exact">
+              <summary className={`flex min-h-11 cursor-pointer items-center py-2 font-medium ${FOCUS}`}>The exact terms, as your wallet will see them</summary>
+              <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-1 text-xs">
+                {first?.network ? (
+                  <>
+                    <dt className="font-medium">Network</dt>
+                    <dd className="break-all font-mono">{first.network}</dd>
+                  </>
+                ) : null}
+                {first?.asset ? (
+                  <>
+                    <dt className="font-medium">Asset</dt>
+                    <dd className="break-all font-mono">
+                      {first.asset}
+                      {first.symbol ? ` (${first.symbol})` : ""}
+                    </dd>
+                  </>
+                ) : null}
+                {first?.payTo ? (
+                  <>
+                    <dt className="font-medium">Pay to</dt>
+                    <dd className="break-all font-mono">{first.payTo}</dd>
+                  </>
+                ) : null}
+                {first?.amountAtomic ? (
+                  <>
+                    <dt className="font-medium">Amount</dt>
+                    <dd className="break-all font-mono">{first.amountAtomic} (in the asset&apos;s smallest unit, as the terms state it)</dd>
+                  </>
+                ) : null}
+              </dl>
+              {terms.challenge.description ? <p className="mt-2 [overflow-wrap:anywhere]">{terms.challenge.description}</p> : null}
+            </details>
           </div>
         ) : terms.state === "error" ? (
           <p className="text-sm text-rose-800 dark:text-rose-300" role="alert">

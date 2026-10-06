@@ -117,9 +117,10 @@ export default function CraReadinessKit() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
       <div className="mx-auto max-w-4xl px-5 py-12">
         <nav className="text-sm text-zinc-500 mb-6">
-          <Link href="/" className="hover:text-zinc-300">Home</Link>
+          {/* 44 px tap targets (tools audit retest, 6 Oct 2026: these were 20 px tall on a phone). */}
+          <Link href="/" className="inline-flex min-h-11 items-center hover:text-zinc-300">Home</Link>
           <span className="mx-2">/</span>
-          <Link href="/products" className="hover:text-zinc-300">Products</Link>
+          <Link href="/products" className="inline-flex min-h-11 items-center hover:text-zinc-300">Products</Link>
           <span className="mx-2">/</span>
           <span className="text-zinc-300">CRA Readiness Kit</span>
         </nav>
@@ -141,9 +142,8 @@ export default function CraReadinessKit() {
         </p>
         <p className="text-zinc-500 text-sm mb-10">
           A template plus tooling — not legal advice, not a conformity assessment.
-          We run the same clocks on ourselves:{" "}
-          <code className="text-zinc-300">docs/incidents/RUNBOOK.md</code> (not publicly hosted: the GitHub organisation is unavailable and the source mirror is private)
-          . That file is an operating procedure, not a CE mark.
+          We run the same clocks on ourselves (see &ldquo;We run this ourselves&rdquo; below); our own
+          runbook is an operating procedure, not a CE mark.
         </p>
 
         {/* Section: deadline mechanics */}
@@ -254,13 +254,13 @@ export default function CraReadinessKit() {
           <div className="flex flex-wrap gap-3">
             <Link
               href="/contact"
-              className="rounded-lg bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-zinc-950 hover:bg-emerald-400"
+              className="inline-flex min-h-11 items-center rounded-lg bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-zinc-950 hover:bg-emerald-400"
             >
               Get the kit — talk to us →
             </Link>
             <Link
               href="/blog/uk-cyber-security-resilience-bill-ai-supply-chain"
-              className="rounded-lg border border-zinc-700 px-5 py-2.5 text-sm font-semibold text-zinc-200 hover:bg-white/5"
+              className="inline-flex min-h-11 items-center rounded-lg border border-zinc-700 px-5 py-2.5 text-sm font-semibold text-zinc-200 hover:bg-white/5"
             >
               Free explainer: cyber-resilience law and the AI supply chain →
             </Link>
@@ -277,7 +277,7 @@ export default function CraReadinessKit() {
           <div className="space-y-3">
             {FAQ.map((f) => (
               <details key={f.q} className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-4">
-                <summary className="cursor-pointer text-sm font-semibold text-zinc-200">{f.q}</summary>
+                <summary className="flex min-h-11 cursor-pointer items-center text-sm font-semibold text-zinc-200">{f.q}</summary>
                 <p className="mt-2 text-sm leading-relaxed text-zinc-400">{f.a}</p>
               </details>
             ))}

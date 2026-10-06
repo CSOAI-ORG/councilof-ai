@@ -6,6 +6,12 @@
  *     (distribution/connect/connect-matrix.json, rendered from council-os/distribution.json);
  *   - the A2A card and endpoint are ConnectHub's constants.
  * So the pane cannot name a tool or a door /connect does not. No price, no count typed.
+ *
+ * ONE claude.ai PATH (tools audit retest, 6 Oct 2026). The pane used to print its own
+ * "Settings → Connectors" label above the matrix's "Customize → Connectors" row, so a reader saw two
+ * paths. The claude.ai / Claude Desktop line now reads the matrix's claude-app row (the same
+ * words /connect/claude gives, checked against Anthropic's help page), and that row is not
+ * repeated in the list under it.
  */
 import { useState } from "react";
 import { Link } from "wouter";
@@ -13,12 +19,28 @@ import { CLAUDE_CODE_CMD, CURSOR_JSON, FREE_DOOR, ONE_LINE, TOOLS } from "@/page
 import NextSteps from "./NextSteps";
 import { A2A_ENDPOINT, AGENT_CARD, FULL_DOOR, PLATFORMS, VERIFY_OFFLINE } from "@/pages/ConnectHub";
 
-function CopyLine({ label, text, testId }: { label: string; text: string; testId?: string }) {
+/** The click path in plain size; a trailing "(… owners: …) — checked …" note in small print under it. */
+function WhereLine({ where, testId }: { where: string; testId?: string }) {
+  const m = where.match(/^(.*?)\s*(\(.*)$/);
+  const path = m ? m[1] : where;
+  const note = m ? m[2] : null;
+  return (
+    <p className="mt-0.5 break-words text-sm leading-snug text-foreground" data-testid={testId}>
+      {path}
+      {note ? <span className="mt-0.5 block text-xs text-muted-foreground">{note}</span> : null}
+    </p>
+  );
+}
+
+function CopyLine({ label, text, testId, where }: { label: string; text: string; testId?: string; where?: string }) {
   const [copied, setCopied] = useState(false);
   return (
     <div className="min-w-0" data-testid={testId}>
       <div className="flex items-center justify-between gap-3">
-        <p className="min-w-0 break-words text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">{label}</p>
+        <div className="min-w-0">
+          <p className="break-words text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">{label}</p>
+          {where ? <WhereLine where={where} testId={testId ? `${testId}-where` : undefined} /> : null}
+        </div>
         <button
           type="button"
           aria-label={`Copy: ${label}`}
@@ -51,10 +73,15 @@ const DOORS: { name: string; url: string; what: string }[] = [
   { name: "A2UI", url: "https://councilof.ai/api/a2ui", what: "Board card and verify result as A2UI v0.9.1 surfaces (v1.0 Candidate on request)." },
 ];
 
+/** The clients that already have their own copy line above; the list below does not repeat them. */
+const CLAUDE_APP = PLATFORMS.find((p) => p.id === "claude-app");
+const SHOWN_ABOVE = new Set(["claude-app", "claude-code", "cursor"]);
+const OTHER_CLIENTS = PLATFORMS.filter((p) => !SHOWN_ABOVE.has(p.id));
+
 export default function ConnectPane() {
   const [group, setGroup] = useState<string>("");
-  const groups = [...new Set(PLATFORMS.map((p) => p.group))];
-  const shown = group ? PLATFORMS.filter((p) => p.group === group) : PLATFORMS.slice(0, 6);
+  const groups = [...new Set(OTHER_CLIENTS.map((p) => p.group))];
+  const shown = group ? OTHER_CLIENTS.filter((p) => p.group === group) : OTHER_CLIENTS.slice(0, 6);
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-8 sm:py-8" data-testid="connect-pane">
       <p className="t-kicker text-emerald-800">Connect · Install</p>
@@ -65,11 +92,9 @@ export default function ConnectPane() {
       </p>
 
       <div className="mt-6 grid gap-4 rounded-3xl border border-emerald-950/10 bg-card p-5 sm:p-6 lg:grid-cols-2">
-        <CopyLine
-          label="claude.ai or Claude Desktop: Settings → Connectors → Add custom connector"
-          text={FREE_DOOR}
-          testId="connect-pane-connector"
-        />
+        {CLAUDE_APP ? (
+          <CopyLine label={CLAUDE_APP.platform} where={CLAUDE_APP.where} text={CLAUDE_APP.url} testId="connect-pane-connector" />
+        ) : null}
         <CopyLine label="Claude Code" text={CLAUDE_CODE_CMD} testId="connect-pane-claude" />
         <CopyLine label="Cursor (~/.cursor/mcp.json)" text={CURSOR_JSON} testId="connect-pane-cursor" />
         <CopyLine label="Check every signed card offline" text={VERIFY_OFFLINE} />
@@ -84,7 +109,7 @@ export default function ConnectPane() {
             onChange={(e) => setGroup(e.target.value)}
             className="mt-2 min-h-11 w-full rounded-xl border border-border bg-background px-3 text-sm"
           >
-            <option value="">First six clients</option>
+            <option value="">Six more clients</option>
             {groups.map((g) => (
               <option key={g} value={g}>
                 {g}

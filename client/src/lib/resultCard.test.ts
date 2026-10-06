@@ -11,11 +11,14 @@ import {
   newestSignedRun,
   modelAnchor,
   modelVerifyHref,
+  plainAnswer,
   plainDuration,
   stateMeaning,
   statTiles,
   toolTitle,
   verifyHref,
+  verifyLink,
+  x402Counts,
 } from "./resultCard";
 
 const tiles = (tool: string, output: unknown) => statTiles(output, 4, tool).map((t) => `${t.label}=${t.value}${t.hint ? ` (${t.hint})` : ""}`);
@@ -58,6 +61,13 @@ describe("resultCard", () => {
     expect(freeQuestion("server", "github.com")).toBe("What is measured about github.com?");
     expect(freeQuestion("record", "sha256:" + "b".repeat(64))).toBe("verify " + "b".repeat(64));
     expect(freeQuestion("model", "x")).toBeNull();
+    // A sentence is a question for the Answers panel, not a model name (tools audit retest).
+    expect(classifySubject("Is gpt-4o safe?")).toBe("question");
+    expect(classifySubject("which model is best")).toBe("question");
+    expect(classifySubject("what does the board say right now")).toBe("question");
+    expect(classifySubject("gpt-4o")).toBe("model");
+    expect(classifySubject("qwen3 8b")).toBe("model");
+    expect(freeQuestion("question", " Is gpt-4o safe? ")).toBe("Is gpt-4o safe?");
   });
 
   it("matches models exactly first, then by containment", () => {
@@ -239,5 +249,88 @@ describe("resultCard", () => {
     expect(plainDuration(1714)).toBe("29 min");
     expect(plainDuration(7200)).toBe("2 h");
     expect(plainDuration(3 * 86400)).toBe("3 days");
+  });
+
+  // Tools audit retest, 6 Oct 2026 (#2841): the x402 card printed 15 in a tile and 16 in its text.
+  it("derives the x402 tile and the x402 sentence from one source", () => {
+    const out = {
+      state: "VALID",
+      as_of: "2026-10-06T06:41:19Z",
+      counts: { challenge_402: 75, dead_404_or_unreachable: 15, other_error: 1, total: 100 },
+      headline: "75 of 100 rows answer a correct 402 challenge; 16 rows are phantom or unreachable. Counts only by doctrine.",
+    };
+    const c = x402Counts(out);
+    expect(c).toEqual({ tried: 100, askCorrectly: 75, goneOrNotAnswering: 16 });
+    // The producer's own headline counts dead + other_error as "phantom or unreachable": same number.
+    expect(out.headline).toContain(`${c.goneOrNotAnswering} rows are phantom or unreachable`);
+    expect(tiles("x402_trust", out)).toEqual([
+      "Paid doors tried=100",
+      "Ask for payment correctly=75",
+      "Gone or not answering=16",
+      "Read on=2026-10-06",
+    ]);
+    expect(plainAnswer("x402_trust", out)).toBe("Of 100 paid doors we tried, 75 asked for payment correctly and 16 were gone or not answering.");
+    // No other_error field: the tile is the dead count alone, never a guessed addition.
+    expect(x402Counts({ counts: { dead_404_or_unreachable: 3, total: 100 } }).goneOrNotAnswering).toBe(3);
+  });
+
+  it("writes each plain sentence from the same fields its tiles show", () => {
+    const axis = { axis: "safety", n: 36, accuracy: 0.944, interval: [0.81, 0.99], separation: "TIE", top_observed_not_separated: "gemma3:12b (base model)" };
+    expect(plainAnswer("get_axis", axis)).toBe(
+      "Safety: no model was clearly better (a tie). The highest score observed was 94%, by gemma3:12b (base model), over 36 questions.",
+    );
+    // UNTESTED is the comparison, not the axis: an UNTESTED axis can still carry n and a score.
+    expect(plainAnswer("get_axis", { axis: "jail", separation: "UNTESTED" })).toBe("Jail: whether any model is clearly better has not been tested yet.");
+    expect(plainAnswer("get_axis", { axis: "jail", n: 71, accuracy: 0.59, separation: "UNTESTED", leader: "qwen2.5:0.5b-instruct (base model)" })).toBe(
+      "Jail: the highest score observed was 59%, by qwen2.5:0.5b-instruct (base model), over 71 questions. Whether any model is clearly better has not been tested yet.",
+    );
+    expect(
+      plainAnswer("board_totals", {
+        counts: [
+          { name: "axis_slots", value: 23 },
+          { name: "measured", value: 23 },
+        ],
+        separation: { separated_leads: 0, ties: 7 },
+      }),
+    ).toBe("23 of the 23 tests on the board have published results. No test has a clear winner yet; 7 are ties.");
+    expect(plainAnswer("server_evidence", { endpoint: "https://github.com/mcp", n_capsules: 0, capsules: [] })).toBe(
+      "We have no published checks for https://github.com/mcp yet.",
+    );
+    expect(plainAnswer("list_cards", { index: { n_cards_declared: 335 }, card_store_count_endpoint: { count: 336 } })).toBe(
+      "The signed index lists 335 cards. The live card store counts 336; the two are counted separately and never added.",
+    );
+    // A tool without a sentence, or a missing field, gives null (the caller keeps the tool's own words).
+    expect(plainAnswer("route", { decision: "x" })).toBeNull();
+    expect(plainAnswer("x402_trust", { counts: {} })).toBeNull();
+  });
+
+  it("says READ for every fetch-only read, list_cards and corrections included", () => {
+    expect(chipFor("list_cards", "LIVE")).toEqual({ chip: "READ", toolWord: "LIVE" });
+    expect(chipFor("corrections_summary", "LIVE")).toEqual({ chip: "READ", toolWord: "LIVE" });
+    expect(chipFor("board_totals", "MEASURED")).toEqual({ chip: "MEASURED", toolWord: null });
+  });
+
+  it("sends Verify yourself to a page that shows the same source, not a raw file, where one exists", () => {
+    const id = "c".repeat(64);
+    expect(verifyLink("verify_card", {}, id, "/signed/cards/x.json")).toBe(`/dashboard?tab=verify&card=${id}`);
+    expect(verifyLink("get_axis", { axis: "safety" }, "axis:safety", "https://councilof.ai/api/gspc?axis=safety")).toBe("/axis/safety");
+    expect(verifyLink("board_totals", {}, null, "https://councilof.ai/api/gspc")).toBe("/dashboard?tab=board");
+    expect(verifyLink("list_cards", {}, null, "https://councilof.ai/signed/card_index.json")).toBe("/dashboard?tab=cards");
+    expect(verifyLink("corrections_summary", {}, null, "https://councilof.ai/api/corrections")).toBe("/dashboard?tab=corrections");
+    expect(verifyLink("mcp_trust", {}, null, "https://councilof.ai/interop/mcp-trust/latest.json")).toBe("/boards/mcp/");
+    // No reader page renders the x402 snapshot: the cited file stays.
+    expect(verifyLink("x402_trust", {}, null, "https://councilof.ai/interop/x402-trust/latest.json")).toBe("/interop/x402-trust/latest.json");
+  });
+
+  it("answers a model lookup in plain words, and links its row on the list", () => {
+    const hit = { state: "MEASURED", model: "qwen3:8b", cards: 13, axes: 13, whose: "third party" };
+    expect(tiles("model_lookup", hit)).toEqual(["Signed results=13", "Test areas=13", "Whose model=third party"]);
+    expect(plainAnswer("model_lookup", hit)).toBe("qwen3:8b has 13 signed results on file, across 13 test areas. A count, not a score or a safety verdict.");
+    expect(plainAnswer("model_lookup", { state: "NOT_MEASURED", model: "gpt-4o", cards: 0 })).toBe(
+      "Nothing is published about gpt-4o yet. That is not a finding either way.",
+    );
+    expect(verifyLink("model_lookup", hit, null, "https://councilof.ai/interop/models-measured.json")).toBe("/models-measured/#model-qwen3-8b");
+    // Not on the list: the list page itself, where a reader can see it is absent.
+    expect(verifyLink("model_lookup", { state: "NOT_MEASURED", model: "gpt-4o" }, null, "https://councilof.ai/interop/models-measured.json")).toBe("/models-measured/");
   });
 });

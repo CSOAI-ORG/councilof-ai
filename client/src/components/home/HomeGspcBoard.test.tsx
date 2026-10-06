@@ -429,13 +429,25 @@ describe("Last measured replaces the LIVE status word", () => {
     expect(daysSince("2026-09-22", Date.parse("2026-10-06T12:00:00Z"))).toBe(14);
   });
 
-  it("prints Last measured with its date, never the word LIVE", () => {
+  it("leads with the model tests' own date and names the fact checks' date, never the word LIVE", () => {
+    // Tools audit retest, 6 Oct 2026: the headline was the newest date of ANY axis (a fact check)
+    // while every model comparison shown was older. Each date now comes from its own axes.
+    expect(boardMeasuredRange(dated, "model-comparison")).toEqual({ newest: "2026-08-12", oldest: "2026-08-12" });
+    expect(boardMeasuredRange(dated, "deterministic-facts")).toEqual({ newest: "2026-09-22", oldest: "2026-09-22" });
     const html = renderToStaticMarkup(<HomeGspcBoard data={dated} />);
     const tile = html.slice(html.indexOf('data-testid="gspc-last-measured"'), html.indexOf('data-testid="gspc-tiles-as-of"'));
-    expect(tile).toContain("Last measured");
-    expect(tile).toContain("2026-09-22");
-    expect(tile).toContain("oldest result 2026-08-12");
+    expect(tile).toContain("Models last tested");
+    expect(tile).toMatch(/Models last tested<\/p><p[^>]*>2026-08-12/);
+    expect(tile).toContain("fact checks last read 2026-09-22");
     expect(tile).not.toContain(">LIVE<");
+  });
+
+  it("falls back to Last measured when the board has no model-comparison dates", () => {
+    const factsOnly: GspcPayload = { ...dated, axes: [dated.axes![1]] };
+    const html = renderToStaticMarkup(<HomeGspcBoard data={factsOnly} />);
+    const tile = html.slice(html.indexOf('data-testid="gspc-last-measured"'), html.indexOf('data-testid="gspc-tiles-as-of"'));
+    expect(tile).toContain("Last measured");
+    expect(tile).toContain("oldest result");
   });
 
   it("marks a date older than the threshold STALE, and says what that means", () => {

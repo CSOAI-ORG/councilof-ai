@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { onRequest } from "../../../functions/mcp/[[path]]";
-import { ALL_TOOL_NAMES } from "./mcpTools";
+import { ALL_TOOL_NAMES, FREE_TOOL_NAMES, PAID_TOOL_NAMES } from "./mcpTools";
 import {
   MCP_PROTOCOL_VERSION,
   MCP_REQUEST_TIMEOUT_MS,
@@ -227,6 +227,30 @@ describe("browser MCP request contract", () => {
 
     await expect(result).resolves.toBe("MCP request timed out after 25ms");
     expect(network).toHaveBeenCalledTimes(1);
+  });
+
+  it("asks the free door when told to, and that door lists only the free tools", async () => {
+    // Tools audit retest, 6 Oct 2026: the For developers card installs /mcp/free but printed the
+    // length of /mcp's list (free + paid). The count now comes from the door the card installs.
+    const seen: string[] = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+        const request = asRequest(input, init);
+        seen.push(new URL(request.url).pathname);
+        return throughHandler(request);
+      }),
+    );
+    const reply = await mcpRpc("tools/list", {}, { hostname: "councilof.ai", door: "/mcp/free" });
+    const names = (reply.result?.tools as Array<{ name: string }>).map((t) => t.name);
+    expect(seen).toEqual(["/mcp/free"]);
+    expect(names).toEqual(FREE_TOOL_NAMES);
+    expect(PAID_TOOL_NAMES.length).toBeGreaterThan(0);
+    expect(names.some((n) => PAID_TOOL_NAMES.includes(n))).toBe(false);
+    expect(mcpRpcEndpoints("localhost", "tools/list", true, "/mcp/free")).toEqual([
+      "/mcp/free",
+      "https://councilof.ai/mcp/free",
+    ]);
   });
 
   it("publishes one finite default deadline", () => {

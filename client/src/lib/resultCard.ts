@@ -37,7 +37,7 @@ const TOOL_TITLES: Record<string, string> = {
   receipts_batch: "Receipts",
   evidence_bundle_preview: "Signed evidence for one obligation",
   route: "Route decision",
-  model_lookup: "Models measured on frozen question banks",
+  model_lookup: "What is published about this model",
 };
 
 export function toolTitle(name: string): string {
@@ -82,8 +82,10 @@ export const READ_MEANING = "Read from the published file; no signature was chec
 /**
  * Tools that only fetch a published file. Their own VALID / LIVE means "the file was read and
  * parsed", not "a signature was checked", so the card shows READ and keeps the tool's word small.
+ * list_cards and corrections_summary said LIVE for the same kind of read (tools audit retest,
+ * 6 Oct 2026: "LIVE vs READ for the same kind of read"); they read files too, so they say READ.
  */
-const FETCH_ONLY = new Set(["get_root", "mcp_trust", "x402_trust", "get_card"]);
+const FETCH_ONLY = new Set(["get_root", "mcp_trust", "x402_trust", "get_card", "list_cards", "corrections_summary"]);
 
 /**
  * The state chip a card shows, and the tool's own word when the chip differs from it.
@@ -168,6 +170,24 @@ const CLEAR_WINNER: Record<string, string> = {
   TIE: "No: a tie",
   UNTESTED: "Not tested yet",
 };
+
+/**
+ * The x402 census in plain counts: ONE place that both the tiles and the card's sentence read.
+ * "Gone or not answering" is the snapshot producer's own "phantom or unreachable" figure
+ * (scripts/catalog-trust-round.py: dead_404_or_unreachable + other_error), so the tile, the
+ * sentence and the snapshot's headline all print the same number. Tools audit retest, 6 Oct
+ * 2026: the tile printed dead_404_or_unreachable alone (15) beside a headline of 16.
+ */
+export function x402Counts(o: Obj): { tried: number | null; askCorrectly: number | null; goneOrNotAnswering: number | null } {
+  const c = rec(o.counts);
+  const dead = num(c?.dead_404_or_unreachable);
+  const other = num(c?.other_error);
+  return {
+    tried: num(c?.total),
+    askCorrectly: num(c?.challenge_402),
+    goneOrNotAnswering: dead === null ? null : dead + (other ?? 0),
+  };
+}
 
 /**
  * Per-tool tiles: the fields a stranger needs from each tool, in plain words. Each reads only
@@ -304,17 +324,23 @@ const TILE_SPECS: Record<string, (o: Obj) => StatTile[]> = {
     return t;
   },
   x402_trust: (o) => {
-    const c = rec(o.counts);
+    const c = x402Counts(o);
     const t: StatTile[] = [];
-    const add = (key: string, label: string) => {
-      const v = num(c?.[key]);
-      if (v !== null) t.push({ key: `counts.${key}`, label, value: fmt(v) });
-    };
-    add("total", "Paid doors tried");
-    add("challenge_402", "Ask for payment correctly");
-    add("dead_404_or_unreachable", "Gone or unreachable");
+    if (c.tried !== null) t.push({ key: "counts.total", label: "Paid doors tried", value: fmt(c.tried) });
+    if (c.askCorrectly !== null) t.push({ key: "counts.challenge_402", label: "Ask for payment correctly", value: fmt(c.askCorrectly) });
+    if (c.goneOrNotAnswering !== null)
+      t.push({ key: "counts.dead_404_or_unreachable+other_error", label: "Gone or not answering", value: fmt(c.goneOrNotAnswering) });
     const asOf = day(o.as_of);
     if (asOf) t.push({ key: "as_of", label: "Read on", value: asOf });
+    return t;
+  },
+  model_lookup: (o) => {
+    const t: StatTile[] = [];
+    const cards = num(o.cards);
+    if (cards !== null) t.push({ key: "cards", label: "Signed results", value: fmt(cards) });
+    const axes = num(o.axes);
+    if (axes !== null) t.push({ key: "axes", label: "Test areas", value: fmt(axes) });
+    if (typeof o.whose === "string" && o.whose) t.push({ key: "whose", label: "Whose model", value: o.whose.replace(/\s*\(.*\)$/, "") });
     return t;
   },
   corrections_summary: (o) => {
@@ -386,6 +412,116 @@ export function statTiles(output: unknown, max = 4, tool?: string): StatTile[] {
 }
 
 /**
+ * One plain sentence for the face of an answer, built from the tiles statTiles() returns for the
+ * same output, so the sentence and the tiles cannot print different numbers. null when the tool
+ * has no plain sentence, or a tile it needs is missing; the caller then shows the answer's own
+ * first sentence. Nothing is filled in.
+ */
+export function plainAnswer(tool: string, output: unknown): string | null {
+  const o = rec(output);
+  if (!o || !Object.prototype.hasOwnProperty.call(TILE_SPECS, tool)) return null;
+  const tiles = TILE_SPECS[tool](o);
+  const v = (key: string): string | null => tiles.find((t) => t.key === key)?.value ?? null;
+  switch (tool) {
+    case "x402_trust": {
+      const tried = v("counts.total");
+      const ok = v("counts.challenge_402");
+      const gone = v("counts.dead_404_or_unreachable+other_error");
+      if (!tried || !ok) return null;
+      return `Of ${tried} paid doors we tried, ${ok} asked for payment correctly${gone ? ` and ${gone} were gone or not answering` : ""}.`;
+    }
+    case "mcp_trust": {
+      const tried = v("counts.total");
+      const listed = v("counts.initialize_ok_tools_listed");
+      const login = v("counts.auth_challenged_401_403");
+      if (!tried || !listed) return null;
+      return `Of ${tried} MCP servers we tried, ${listed} listed their tools${login ? ` and ${login} asked for a login` : ""}${o.partial === true ? " (a partial round)" : ""}.`;
+    }
+    case "board_totals": {
+      const slots = v("axis_slots");
+      const measured = v("measured");
+      if (!slots || !measured) return null;
+      const leads = v("separated_leads");
+      const ties = v("ties");
+      const sep =
+        leads === "0" && ties
+          ? ` No test has a clear winner yet; ${ties} are ties.`
+          : leads && ties
+            ? ` ${leads} have a clear winner; ${ties} are ties.`
+            : "";
+      return `${measured} of the ${slots} tests on the board have published results.${sep}`;
+    }
+    case "get_axis": {
+      const axis = typeof o.axis === "string" && o.axis ? o.axis.charAt(0).toUpperCase() + o.axis.slice(1) : null;
+      const sepWord = typeof o.separation === "string" ? o.separation.toUpperCase() : "";
+      const n = v("n");
+      const best = v("accuracy");
+      const top = v("top");
+      if (!axis) return null;
+      // UNTESTED is about the comparison (was any model shown to be clearly better?), not about
+      // whether the axis has results: an UNTESTED axis can still carry n and a highest score.
+      if (sepWord === "UNTESTED")
+        return n && best
+          ? `${axis}: the highest score observed was ${best}${top ? `, by ${top}` : ""}, over ${n} questions. Whether any model is clearly better has not been tested yet.`
+          : `${axis}: whether any model is clearly better has not been tested yet.`;
+      if (!n || !best) return null;
+      if (sepWord === "SEPARATED" && top) return `${axis}: ${top} is clearly ahead, at ${best} over ${n} questions.`;
+      if (sepWord === "TIE")
+        return `${axis}: no model was clearly better (a tie). The highest score observed was ${best}${top ? `, by ${top}` : ""}, over ${n} questions.`;
+      return `${axis}: the highest score observed was ${best}${top ? `, by ${top}` : ""}, over ${n} questions.`;
+    }
+    case "server_evidence": {
+      const endpoint = typeof o.endpoint === "string" && o.endpoint.trim() ? o.endpoint.trim() : "this server";
+      const n = v("n_capsules");
+      if (n === null) return null;
+      if (n === "0") return `We have no published checks for ${endpoint} yet.`;
+      const consistent = v("consistent");
+      const last = v("last_checked");
+      return `${consistent ?? "Some"} of ${n} published checks on ${endpoint} were consistent${last ? `; the last was on ${last}` : ""}.`;
+    }
+    case "model_lookup": {
+      const model = typeof o.model === "string" && o.model ? o.model : null;
+      if (!model) return null;
+      if (String(o.state ?? "").toUpperCase() === "NOT_MEASURED") return `Nothing is published about ${model} yet. That is not a finding either way.`;
+      const cards = v("cards");
+      const axes = v("axes");
+      if (!cards) return null;
+      return `${model} has ${cards} signed results on file${axes ? `, across ${axes} test areas` : ""}. A count, not a score or a safety verdict.`;
+    }
+    case "corrections_summary": {
+      const count = v("count");
+      const newest = v("recent.date");
+      if (!count) return null;
+      return `${count} corrections are published${newest ? `; the newest is dated ${newest}` : ""}.`;
+    }
+    case "get_root": {
+      const cards = v("card_count");
+      const dated = v("as_of");
+      if (!cards) return null;
+      return `${cards} cards sit under the public root${dated ? ` dated ${dated}` : ""}.`;
+    }
+    case "list_cards": {
+      const declared = v("index.n_cards_declared");
+      const store = v("card_store_count_endpoint.count");
+      if (!declared) return null;
+      return store && store !== declared
+        ? `The signed index lists ${declared} cards. The live card store counts ${store}; the two are counted separately and never added.`
+        : `The signed index lists ${declared} cards.`;
+    }
+    case "verify_card": {
+      const checks = v("checks");
+      const state = String(o.state ?? "").toUpperCase();
+      if (!checks) return null;
+      if (state === "VALID") return `Genuine: ${checks} checks passed${v("pinned_key") ? ", signed by Council of AI" : ""}.`;
+      if (state === "INVALID") return `Not genuine: only ${checks} checks passed.`;
+      return null;
+    }
+    default:
+      return null;
+  }
+}
+
+/**
  * One plain line for the card face naming what was actually looked up, when the tool resolved
  * the reader's words to something else (server_evidence turns "github.com" into
  * https://github.com/mcp). Read from the output; null when the tool did not say.
@@ -439,6 +575,29 @@ export function answerSections(text: string): { byTool: Record<string, string>; 
   return { byTool, shared: shared.join("\n\n").trim() };
 }
 
+/**
+ * Where "Verify yourself" goes for one tool result. A record with a 64-hex id opens in the
+ * in-browser checker with that record loaded; a board, axis, card-index or corrections read opens
+ * the page that renders the same source and says how to check it. Anything else keeps the cited
+ * file (tools audit retest, 6 Oct 2026: "Verify yourself often opens a raw file").
+ */
+export function verifyLink(tool: string, output: unknown, recordId: string | null | undefined, citationUrl: string | null | undefined): string | null {
+  const o = rec(output);
+  const id = typeof recordId === "string" ? recordId.replace(/^sha256:/i, "") : "";
+  if (["verify_card", "get_card", "verify_inclusion"].includes(tool) && /^[0-9a-f]{64}$/i.test(id))
+    return `/dashboard?tab=verify&card=${id.toLowerCase()}`;
+  if (tool === "get_axis" && o && typeof o.axis === "string" && /^[a-z0-9-]+$/.test(o.axis)) return `/axis/${o.axis}`;
+  if (tool === "board_totals") return "/dashboard?tab=board";
+  if (tool === "list_cards") return "/dashboard?tab=cards";
+  if (tool === "corrections_summary") return "/dashboard?tab=corrections";
+  // The list page renders the same /interop/models-measured.json, one anchored row per model.
+  if (tool === "model_lookup" && o && typeof o.model === "string" && o.model)
+    return String(o.state ?? "").toUpperCase() === "MEASURED" ? `/models-measured/#${modelAnchor(o.model)}` : "/models-measured/";
+  // The MCP Trust Board renders the same /interop/mcp-trust/latest.json and links the file.
+  if (tool === "mcp_trust") return "/boards/mcp/";
+  return verifyHref(citationUrl);
+}
+
 /** The one link a reader follows to check the result themselves. */
 export function verifyHref(citationUrl: string | null | undefined): string | null {
   if (!citationUrl) return null;
@@ -458,14 +617,23 @@ export function verifyHref(citationUrl: string | null | undefined): string | nul
 export const FRESH_RUN_DOCTRINE =
   "We can't run a new test on demand. You can ask for one: you see the terms first and nothing is charged by asking. Paying buys a signed receipt and a place in the queue, never a result; a result appears only once it is measured.";
 
-/** What a stranger typed: a signed record id, a server/web address, or (otherwise) a model name. */
-export type SubjectKind = "record" | "server" | "model" | "empty";
+/**
+ * What a stranger typed: a signed record id, a server/web address, a question in words, or
+ * (otherwise) a model name. Tools audit retest, 6 Oct 2026: every free text ("is gpt-4o safe?")
+ * was looked up as a model name and came back "nothing published about 'is gpt-4o safe?'". A
+ * sentence now goes to the Answers panel, which answers what the published records can answer and
+ * says so plainly when they cannot. A model name has no question mark and no question word.
+ */
+export type SubjectKind = "record" | "server" | "model" | "question" | "empty";
+
+const QUESTION_WORD = /^(is|are|was|were|what|what's|whats|how|which|who|whose|why|when|where|does|do|did|can|could|should|will|would|has|have|show|list|tell|explain|compare|find)\b/i;
 
 export function classifySubject(raw: string): SubjectKind {
   const s = raw.trim();
   if (!s) return "empty";
   if (/^(sha256:)?[0-9a-f]{64}$/i.test(s)) return "record";
   if (/^https?:\/\//i.test(s)) return "server";
+  if (/\?$/.test(s) || (/\s/.test(s) && QUESTION_WORD.test(s)) || s.split(/\s+/).length >= 4) return "question";
   // A bare host (example.com, mcp.example.org/path) — but not a model tag like "qwen2.5:7b" or "llama-3.1-8b".
   if (/^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+(?:[a-z]{2,24})(?:[/:][^\s]*)?$/i.test(s) && !/:\d+b\b/i.test(s) && !/^[\w-]+\.\d/.test(s))
     return "server";
@@ -477,6 +645,7 @@ export function freeQuestion(kind: SubjectKind, subject: string): string | null 
   const s = subject.trim();
   if (kind === "record") return `verify ${s.replace(/^sha256:/i, "")}`;
   if (kind === "server") return `What is measured about ${s}?`;
+  if (kind === "question") return s;
   return null;
 }
 

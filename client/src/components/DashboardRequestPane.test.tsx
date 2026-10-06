@@ -4,6 +4,7 @@ import { Router } from "wouter";
 import DashboardRequestPane, {
   REQUEST_ATTESTATION_CONTRACT,
   buildActualJobs,
+  networkName,
 } from "./DashboardRequestPane";
 
 const catalog = {
@@ -192,5 +193,26 @@ describe("request-attestation dashboard pane", () => {
     };
     const jobs = buildActualJobs(foreign);
     expect(jobs.some((job) => ["verify", "article50", "provider-history"].includes(job.id))).toBe(false);
+  });
+});
+
+// Tools audit retest, 6 Oct 2026: the terms card showed "eip155:8453" on its face.
+describe("the fresh-run terms name the network in words", () => {
+  it("names Base for its chain id and short name, and nothing for an unknown id", () => {
+    expect(networkName("eip155:8453")).toBe("Base");
+    expect(networkName("base")).toBe("Base");
+    expect(networkName("eip155:999999")).toBeNull();
+    expect(networkName(null)).toBeNull();
+  });
+
+  it("puts no chain id and no amount on the card face before the terms are read", () => {
+    const html = renderToStaticMarkup(
+      <Router ssrPath="/dashboard" ssrSearch="tab=measured&subject=qwen3:8b">
+        <DashboardRequestPane />
+      </Router>,
+    );
+    const face = html.slice(html.indexOf('data-testid="fresh-run-card"'), html.indexOf("fresh-run-terms\""));
+    expect(face).not.toMatch(/eip155:/);
+    expect(face).not.toMatch(/smallest unit/);
   });
 });

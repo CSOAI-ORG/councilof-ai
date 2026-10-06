@@ -54,6 +54,31 @@ export function recordSays(text: string): { model: string; axis: string; accurac
   };
 }
 
+/** A score as a stranger reads it: 0.857 → "85.7%". A value outside 0–1 is printed as recorded. */
+function plainScore(accuracy: string): string {
+  const x = Number(accuracy);
+  return Number.isFinite(x) && x >= 0 && x <= 1 && /^[0-9.]+$/.test(accuracy) ? `${Math.round(x * 1000) / 10}%` : accuracy;
+}
+
+/**
+ * The tiles of a checked record: how many checks passed, then what a measurement card says
+ * (model, test, score, date). A field the record does not carry is left out, never filled in.
+ */
+export function verifyTiles(
+  says: ReturnType<typeof recordSays>,
+  checksPassed: string | null,
+): { label: string; value: string }[] {
+  const t: { label: string; value: string }[] = [];
+  if (checksPassed) t.push({ label: "Checks passed", value: checksPassed });
+  if (says) {
+    if (says.model !== "model not recorded") t.push({ label: "Model", value: says.model });
+    if (says.axis !== "not recorded") t.push({ label: "Test", value: says.axis });
+    if (says.accuracy !== "not recorded") t.push({ label: "Score", value: plainScore(says.accuracy) });
+    if (says.created !== "not recorded") t.push({ label: "Recorded", value: says.created });
+  }
+  return t;
+}
+
 function readTally(value: unknown): Tally | null {
   if (!value || typeof value !== "object") return null;
   const { ok, fail } = value as Partial<Tally>;
@@ -297,12 +322,28 @@ export default function RecordVerifyForm({ variant = "dark", seed, seedNonce, on
         <section key={`${verdict.inputHash}-${verdict.result.state}`} aria-labelledby={resultId}
           className={`min-w-0 space-y-3 rounded-xl border p-4 forced-colors:border-[CanvasText] forced-colors:bg-[Canvas] ${light ? "border-slate-300 bg-slate-50" : "border-emerald-500/30 bg-[#03110b]"}`}>
           {(() => {
+            // Tools audit retest, 6 Oct 2026: the result had no tiles and opened on hashes. What the
+            // record says, and how many checks passed, are now tiles; the hashes are in the details.
             const says = recordSays(text);
-            return says ? (
-              <p data-testid="record-says" className={`text-sm leading-relaxed [overflow-wrap:anywhere] forced-colors:text-[CanvasText] ${light ? "text-slate-900" : "text-emerald-50"}`}>
-                This record says: {says.model} · axis {says.axis} · accuracy {says.accuracy} · recorded {says.created} · n: not in this card
-                {says.own && " — one of our own prompt overlays; the public board does not rank these."}
-              </p>
+            const decided = verdict.result.lines.filter((l) => l.ok === true || l.ok === false);
+            const passed = decided.filter((l) => l.ok === true).length;
+            const tiles = verifyTiles(says, decided.length ? `${passed}/${decided.length}` : null);
+            return tiles.length ? (
+              <>
+                <dl data-testid="record-tiles" className="grid grid-cols-[repeat(auto-fit,minmax(7.5rem,1fr))] gap-2">
+                  {tiles.map((t) => (
+                    <div key={t.label} className={`min-w-0 rounded-xl px-3 py-2 ${light ? "bg-white" : "bg-emerald-500/10"}`}>
+                      <dt className={`text-xs font-medium [overflow-wrap:anywhere] ${muted}`}>{t.label}</dt>
+                      <dd className={`font-mono text-lg font-bold leading-tight [overflow-wrap:anywhere] ${light ? "text-slate-900" : "text-emerald-50"}`}>{t.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+                {says?.own ? (
+                  <p data-testid="record-says" className={`text-sm leading-relaxed ${muted}`}>
+                    This is one of our own prompt overlays; the public board does not rank these.
+                  </p>
+                ) : null}
+              </>
             ) : null;
           })()}
           <p id={resultId} data-testid="record-verdict-headline" className={`text-base font-semibold leading-relaxed forced-colors:text-[CanvasText] ${
@@ -340,10 +381,10 @@ export default function RecordVerifyForm({ variant = "dark", seed, seedNonce, on
                 : verdict.result.reasons.includes("parse_error") ? "Check that you pasted one complete JSON record, without a code fence or surrounding explanation. Correct the text and verify again."
                   : "Use a supported original record or ask its publisher for verification instructions. Review the check details before trying again."}
           </p>
-          <p className={`break-all font-mono text-xs leading-relaxed ${muted}`}>Input SHA-256: {verdict.inputHash}</p>
           <details open={verdict.result.state !== "VALID"} className={`min-w-0 text-sm forced-colors:text-[CanvasText] ${light ? "text-slate-800" : "text-emerald-100"}`}>
             <summary className={`min-h-[44px] cursor-pointer rounded-md py-3 font-semibold forced-colors:text-[CanvasText] ${FOCUS}`}>Check details ({verdict.result.lines.length})</summary>
             <div className="space-y-2">
+              <p className={`break-all font-mono text-xs leading-relaxed ${muted}`}>Input SHA-256: {verdict.inputHash}</p>
               {verdict.result.lines.map((line, index) => <div key={`${line.code}-${index}`} className="flex min-w-0 items-start gap-2 leading-relaxed">
                 <span aria-hidden="true">{line.ok === true ? "✓" : line.ok === false ? "✗" : "○"}</span>
                 <span className="min-w-0 [overflow-wrap:anywhere]">

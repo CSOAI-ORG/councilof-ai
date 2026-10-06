@@ -41,13 +41,18 @@ const ISO_DAY = /\b(\d{4}-\d{2}-\d{2})/g;
  * measurement_time (observed_on / observed_at / not_after) and facts_as_of, and the ISO dates in
  * measured_on.date. Read, never typed; null when the payload states none.
  */
-export function boardMeasuredRange(data: GspcPayload | null | undefined): { newest: string; oldest: string } | null {
+export function boardMeasuredRange(
+  data: GspcPayload | null | undefined,
+  /** Only axes of this kind ("model-comparison", "deterministic-facts"); measured_on.date is then not read. */
+  kind?: string,
+): { newest: string; oldest: string } | null {
   const days: string[] = [];
   const take = (v: unknown) => {
     if (typeof v !== "string") return;
     for (const m of v.matchAll(ISO_DAY)) days.push(m[1]);
   };
   for (const a of (Array.isArray(data?.axes) ? data!.axes : []) as Record<string, any>[]) {
+    if (kind && a?.kind !== kind) continue;
     const mt = a?.measurement_time;
     if (mt && typeof mt === "object") {
       take(mt.observed_on);
@@ -56,7 +61,7 @@ export function boardMeasuredRange(data: GspcPayload | null | undefined): { newe
     }
     take(a?.facts_as_of);
   }
-  take((data?.measured_on as { date?: unknown } | undefined)?.date);
+  if (!kind) take((data?.measured_on as { date?: unknown } | undefined)?.date);
   const sorted = days.filter((d) => !Number.isNaN(Date.parse(`${d}T00:00:00Z`))).sort();
   return sorted.length ? { newest: sorted[sorted.length - 1], oldest: sorted[0] } : null;
 }
@@ -574,7 +579,12 @@ export default function HomeGspcBoard({
   const rawMeasuredOn = (data?.measured_on as { date?: unknown } | undefined)?.date;
   const measuredOn = typeof rawMeasuredOn === "string" && rawMeasuredOn.trim() ? rawMeasuredOn.trim() : null;
   // "Last measured" replaces a LIVE status word that was true of the fetch and false of the data.
-  const range = unread ? null : boardMeasuredRange(data);
+  // Tools audit retest, 6 Oct 2026: the headline date was the newest of ANY axis (a fact check on
+  // 22 Sep) while every model comparison shown was from August. The tile now leads with the model
+  // tests' own date and names the fact checks' date beside it; each is read from its own axes.
+  const modelRange = unread ? null : boardMeasuredRange(data, "model-comparison");
+  const factRange = unread ? null : boardMeasuredRange(data, "deterministic-facts");
+  const range = modelRange ?? (unread ? null : boardMeasuredRange(data));
   const newestStale = range ? daysSince(range.newest) > STALE_AFTER_DAYS : false;
   const oldestStale = range ? daysSince(range.oldest) > STALE_AFTER_DAYS : false;
 
@@ -637,10 +647,11 @@ export default function HomeGspcBoard({
             unreadable board used to print 0 / 0 / 0 TIE / 0 — a count of nothing presented as a
             measurement. Say UNCHECKABLE instead; never infer a value from an absent payload. */}
         {[
-          ["Measured axes", loading ? "…" : unread ? "UNCHECKABLE" : String(measuredAxes), unread ? "no axes read" : `${axes.length} declared`],
-          ["Model fleets", loading ? "…" : unread ? "UNCHECKABLE" : String(comparisonAxes), "comparison axes"],
-          ["Separated", loading ? "…" : unread ? "UNCHECKABLE" : String(separated), unread ? "no value inferred" : `${ties} TIE`],
-          ["Fact runs", loading ? "…" : unread ? "UNCHECKABLE" : String(factRuns), "public facts"],
+          // Plain labels (tools audit retest, 6 Oct 2026); the board's own words stay in the line above.
+          ["Tests with results", loading ? "…" : unread ? "UNCHECKABLE" : String(measuredAxes), unread ? "no tests read" : `of ${axes.length} on the board`],
+          ["Model comparisons", loading ? "…" : unread ? "UNCHECKABLE" : String(comparisonAxes), "tests that compare models"],
+          ["Clear winners", loading ? "…" : unread ? "UNCHECKABLE" : String(separated), unread ? "no value inferred" : `${ties} ${ties === 1 ? "tie" : "ties"}`],
+          ["Fact checks", loading ? "…" : unread ? "UNCHECKABLE" : String(factRuns), "public facts read"],
         ].map(([label, value, note]) => (
           <div key={label} className="rounded-2xl border border-slate-200/80 bg-slate-50/70 px-3.5 py-3 dark:border-emerald-900/40 dark:bg-white/[0.035]">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-emerald-100/55">{label}</p>
@@ -649,13 +660,17 @@ export default function HomeGspcBoard({
           </div>
         ))}
         <div className="rounded-2xl border border-slate-200/80 bg-slate-50/70 px-3.5 py-3 dark:border-emerald-900/40 dark:bg-white/[0.035]" data-testid="gspc-last-measured">
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-emerald-100/55">Last measured</p>
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-emerald-100/55">
+            {modelRange ? "Models last tested" : "Last measured"}
+          </p>
           <p className="mt-1 text-xl font-black tracking-tight text-slate-950 dark:text-emerald-50">
             {error ? "UNREACHABLE" : loading ? "…" : range ? range.newest : "UNCHECKABLE"}
             {range && newestStale ? <StaleChip day={range.newest} /> : null}
           </p>
           <p className="mt-0.5 text-xs text-slate-500 dark:text-emerald-100/55">
-            {range ? (
+            {range && factRange && modelRange ? (
+              <span data-testid="gspc-facts-last">fact checks last read {factRange.newest}</span>
+            ) : range ? (
               <>
                 oldest result {range.oldest}
                 {!newestStale && oldestStale ? <StaleChip day={range.oldest} /> : null}

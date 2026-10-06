@@ -5,6 +5,13 @@
  * 8 px grid (p-2/p-4, gap-2), body ≥ 14 px, nothing under 12 px. Jargon lives in tooltips
  * (the chip's title, the link's title) and in the expander, never in the face of the card.
  * The link text is always "Verify yourself"; the record id or timestamp it points at is in title=.
+ *
+ * Tools audit retest, 6 Oct 2026:
+ *   - tiles were cut off in narrow hosts (57 px each in the 420 px Ask panel) because the grid
+ *     switched to four columns on the VIEWPORT width. The grid now fits as many ≥ 7.5rem columns
+ *     as the card itself has room for, and a value wraps instead of being cut off;
+ *   - a tool id (x402_trust, GET /api/…) and the tool's own state word no longer sit on the face:
+ *     they are the first line inside "Details and raw output". A plain phrase still shows.
  */
 import type { ReactNode } from "react";
 import { ChevronDown, ExternalLink, Loader2, ShieldCheck } from "lucide-react";
@@ -93,6 +100,9 @@ export default function ResultCard({
   const tone = toneOf(label);
   const Tag = as;
   const external = !!verifyUrl && /^https?:\/\//.test(verifyUrl);
+  // An identifier (snake_case tool name, endpoint, "GET /api/…") is jargon on the face; it goes in the expander.
+  const toolIsId = /^[\w.:/-]+$/.test(tool) || /^(GET|POST)\s/.test(tool);
+  const hasDetails = toolIsId || !!toolWord || !!summary || !!answer || !!args || raw !== undefined;
   return (
     <Tag
       className={`relative overflow-hidden rounded-2xl border border-border bg-card p-4 pl-5 shadow-sm before:absolute before:inset-y-0 before:left-0 before:w-1 ${RAIL[tone]}`}
@@ -102,18 +112,11 @@ export default function ResultCard({
       <div className="flex items-start gap-2">
         <div className="min-w-0 flex-1">
           <h3 className="text-base font-semibold leading-snug text-foreground [overflow-wrap:anywhere]">{title}</h3>
-          <p
-            className={`${/^[\w.:/-]+$/.test(tool) ? "font-mono " : ""}text-xs text-muted-foreground`}
-            title={toolHint ?? "The tool that answered (the same one /mcp serves)"}
-          >
-            {tool}
-            {toolWord ? (
-              <span className="font-sans" title="The tool's own word for this result" data-testid="result-tool-word">
-                {" "}
-                · the tool says {toolWord}
-              </span>
-            ) : null}
-          </p>
+          {toolIsId ? null : (
+            <p className="text-xs text-muted-foreground" title={toolHint ?? "Where this answer came from"}>
+              {tool}
+            </p>
+          )}
         </div>
         {running ? (
           <span className="inline-flex shrink-0 items-center gap-1 text-xs text-muted-foreground">
@@ -132,16 +135,14 @@ export default function ResultCard({
       ) : null}
 
       {tiles.length ? (
-        <dl className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4" data-testid="result-tiles">
+        // Columns follow the card's own width (auto-fit, ≥ 7.5rem each), not the viewport's: four
+        // across in a wide card, two in a phone or the 420 px Ask panel. Nothing is truncated.
+        <dl className="mt-4 grid grid-cols-[repeat(auto-fit,minmax(7.5rem,1fr))] gap-2" data-testid="result-tiles">
           {tiles.map((t) => (
             <div key={t.key} className="min-w-0 rounded-xl bg-muted/70 px-3 py-2" title={`Field: ${t.key}`}>
-              <dt className="truncate text-xs font-medium text-muted-foreground">{t.label}</dt>
-              <dd className="truncate font-mono text-base font-bold leading-tight text-foreground sm:text-lg" title={t.value}>{t.value}</dd>
-              {t.hint ? (
-                <dd className="truncate text-xs text-muted-foreground" title={t.hint}>
-                  {t.hint}
-                </dd>
-              ) : null}
+              <dt className="text-xs font-medium leading-snug text-muted-foreground [overflow-wrap:anywhere]">{t.label}</dt>
+              <dd className="font-mono text-lg font-bold leading-tight text-foreground [overflow-wrap:anywhere]">{t.value}</dd>
+              {t.hint ? <dd className="text-xs leading-snug text-muted-foreground [overflow-wrap:anywhere]">{t.hint}</dd> : null}
             </div>
           ))}
         </dl>
@@ -166,13 +167,30 @@ export default function ResultCard({
         </p>
       ) : null}
 
-      {summary || answer || args || raw !== undefined ? (
+      {hasDetails ? (
         <details className="group mt-3 border-t border-border pt-2" data-testid="result-details">
           <summary className={`flex min-h-11 cursor-pointer list-none items-center gap-1 rounded text-sm font-medium text-muted-foreground hover:text-foreground ${FOCUS}`}>
             <ChevronDown className="h-4 w-4 transition-transform group-open:rotate-180 motion-reduce:transition-none" aria-hidden="true" />
             Details and raw output
           </summary>
           <div className="space-y-2 pb-1 text-sm">
+            {toolIsId ? (
+              <p className="text-xs text-muted-foreground [overflow-wrap:anywhere]" data-testid="result-tool">
+                {/^[a-z][a-z0-9_]*$/.test(tool) ? "Answered by the tool " : "Read from "}
+                <code className="font-mono">{tool}</code>
+                {toolHint ? ` (${toolHint})` : /^[a-z][a-z0-9_]*$/.test(tool) ? " (the same tool /mcp serves to agents)" : ""}
+                {toolWord ? (
+                  <span data-testid="result-tool-word">
+                    {"; "}its own word for this result: <code className="font-mono">{toolWord}</code>
+                  </span>
+                ) : null}
+                .
+              </p>
+            ) : toolWord ? (
+              <p className="text-xs text-muted-foreground" data-testid="result-tool-word">
+                The tool&apos;s own word for this result: <code className="font-mono">{toolWord}</code>.
+              </p>
+            ) : null}
             {summary ? <p className="text-foreground [overflow-wrap:anywhere]">{summary}</p> : null}
             {answer ? <div data-testid="talk-answer-detail">{answer}</div> : null}
             {args ? (

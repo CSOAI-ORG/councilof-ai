@@ -25,6 +25,7 @@ import {
   regulationStateLabel,
 } from "@/data/learningDisplayLabels";
 import { dashboardViewHref } from "@/lib/dashboardView";
+import { openAsk } from "@/components/ask/askBus";
 
 type ReviewDecision = "READY_FOR_REVIEW" | "RETURN_FOR_REVISION" | "DISCARD";
 
@@ -73,9 +74,15 @@ export function plainBenchCaption(axis: string, bench: string): string | null {
   return name ? `${name}: ${q}` : q.charAt(0).toUpperCase() + q.slice(1);
 }
 
-/** Coaching goes to the home Answers panel, which shows tool results as plain cards. */
-function coachHref(prompt: string): string {
-  return `/dashboard?ask=${encodeURIComponent(prompt)}`;
+/**
+ * The question "See how this test measured" asks, in the Ask panel beside the lesson. Tools audit
+ * retest, 6 Oct 2026: "Ask Council to coach this stage" left the lesson for the start screen and
+ * came back with a stats card, because answers come from published records by fixed rules: there
+ * is no coach. The control now says what it does, asks the question the rules answer (the axis
+ * id is spelled with spaces, the form the router matches), and the lesson stays open.
+ */
+export function axisQuestion(axis: string): string {
+  return `How did the ${axis.replace(/-/g, " ")} test measure?`;
 }
 
 type ScenarioPointer = {
@@ -138,16 +145,6 @@ const STAGE_HELP: Record<LearningStageId, string> = {
   "human-review": "A person accepts, returns or discards the practice record.",
 };
 
-function coachPrompt(axis: string, stage: LearningStageId | null): string {
-  const label = boardAxisLabel(axis);
-  if (stage === "propose-fix") {
-    return `Help me draft a reversible remediation for the ${label} axis. Name the evidence, uncertainty, rollback and verification test. Do not apply anything; wait for my approval.`;
-  }
-  if (stage === "human-review") {
-    return `Help me review my ${label} practice record. Separate facts, assumptions and gaps, then give me accept, return or discard options. Do not submit evidence or change a system.`;
-  }
-  return `Coach me through the ${label} GSPC learning path at the ${stage ?? "complete"} stage. Use published sources, explain errors, and do not submit, train or change anything.`;
-}
 
 function badgeTone(value: string): string {
   if (
@@ -777,12 +774,13 @@ export default function DashboardLearningPane() {
                       Coaching (optional)
                     </summary>
                     <div className="mt-2 flex flex-wrap gap-2">
-                      <Link
-                        href={coachHref(coachPrompt(selected.axis.id, activeStage.id))}
-                        className="rounded-xl border border-amber-800/25 bg-white px-4 py-2.5 text-xs font-semibold text-amber-950 hover:border-amber-800/50"
+                      <button
+                        type="button"
+                        onClick={() => openAsk(axisQuestion(selected.axis.id))}
+                        className="min-h-11 rounded-xl border border-amber-800/25 bg-white px-4 py-2.5 text-xs font-semibold text-amber-950 hover:border-amber-800/50"
                       >
-                        Ask Council to coach this stage
-                      </Link>
+                        See how this test measured (opens beside the lesson)
+                      </button>
                       {activeStage.id === "play" ? (
                         <Link
                           href={dashboardViewHref(
@@ -816,18 +814,20 @@ export default function DashboardLearningPane() {
                       or model-training permission was created.
                     </p>
                     <div className="mt-3 flex flex-wrap gap-3 text-xs font-semibold">
-                      <Link
-                        href="/dashboard?tab=board"
-                        className="text-emerald-900 underline underline-offset-2"
+                      {/* This axis's own page (rendered from the board), not the whole board. */}
+                      <a
+                        href={`/axis/${encodeURIComponent(selected.axis.id)}`}
+                        className="inline-flex min-h-11 items-center text-emerald-900 underline underline-offset-2"
                       >
                         See the published evidence for this axis
-                      </Link>
-                      <Link
-                        href={coachHref(coachPrompt(selected.axis.id, null))}
-                        className="text-emerald-900 underline underline-offset-2"
+                      </a>
+                      <button
+                        type="button"
+                        onClick={() => openAsk(axisQuestion(selected.axis.id))}
+                        className="inline-flex min-h-11 items-center text-emerald-900 underline underline-offset-2"
                       >
-                        Discuss the result with Council
-                      </Link>
+                        See how this test measured
+                      </button>
                     </div>
                   </div>
                 </div>

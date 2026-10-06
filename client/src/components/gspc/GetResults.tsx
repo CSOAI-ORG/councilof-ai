@@ -42,6 +42,7 @@ const KIND_WORD: Record<Exclude<SubjectKind, "empty">, string> = {
   model: "an AI model",
   server: "a server or web address",
   record: "a published result (record id)",
+  question: "a question, so it went to Answers below",
 };
 
 const EXAMPLES = ["github.com", "qwen3:8b", "https://councilof.ai/mcp"];
@@ -270,7 +271,8 @@ export default function GetResults({
     // A server or record lookup is saved to My results by the host once its run has finished,
     // with the state the tool returned. Saving it here, before any answer, stored a row with no
     // state, which My results then searched for in the paid-request queue and reported missing.
-    if (q && onAsk) onAsk(q, s);
+    // A question is answered but not saved to My results as a lookup (it names no subject).
+    if (q && onAsk) onAsk(q, k === "question" ? "" : s);
   };
 
   // "Look up again" from My results (a model lookup) lands here with ?lookup=<subject>: the box is
@@ -306,7 +308,9 @@ export default function GetResults({
     }
   };
 
-  const freshHref = subject ? `/dashboard?tab=measured&subject=${encodeURIComponent(subject)}` : "/dashboard?tab=measured";
+  // A question is not a subject to test or watch; those choices then ask for a model or server.
+  const named = subject && kind !== "question" ? subject : null;
+  const freshHref = named ? `/dashboard?tab=measured&subject=${encodeURIComponent(named)}` : "/dashboard?tab=measured";
   const active = Boolean(subject);
 
   return (
@@ -420,7 +424,9 @@ export default function GetResults({
           body="Ask for it to be tested again each month. A person reviews each request; nothing is charged by asking."
           active={active}
         >
-          {subject ? (
+          {subject && kind === "question" ? (
+            <span className="block text-sm text-muted-foreground">Type a model or a server address above to ask for a monthly re-check.</span>
+          ) : subject ? (
             watch.state === "idle" ? (
               <button type="button" onClick={() => setWatch({ state: "confirm" })} className={ACTION} data-testid="get-watch">
                 Ask for a monthly re-check

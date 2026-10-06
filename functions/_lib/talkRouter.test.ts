@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { ROUTABLE_TOOLS, callTool, executePlan, extractAxis, extractEndpoint, routeIntent, talk } from "./talkRouter";
+import { ROUTABLE_TOOLS, callTool, executePlan, extractAxis, extractEndpoint, extractModel, routeIntent, talk } from "./talkRouter";
 import { isConfirmed, lastUserText, serveAguiRun } from "./aguiRun";
 import { ROUTER_READ_TOOLS } from "./talkReads";
 import { onRequestPost as chatPost } from "../api/chat";
@@ -451,3 +451,45 @@ describe("the doors use the router: POST /api/chat and A2A plain text", () => {
     expect(seen).toHaveLength(0);
   });
 });
+
+// Tools audit retest, 6 Oct 2026: "qwen3:8b", "Is gpt-4o safe?" and "Which model is best?" got
+// "I could not match that question to a tool".
+describe("a named model and the best-model question get grounded answers", () => {
+  const MODELS = {
+    models: [
+      { id: "qwen3:8b", kind: "third_party", cards: 13, axes: 13 },
+      { id: "qwen3:4b", kind: "third_party", cards: 21, axes: 20 },
+      { id: "sov3-light", kind: "own", cards: 4, axes: 4 },
+    ],
+  };
+
+  it("finds a model name in a question, and not in ordinary words", () => {
+    expect(extractModel("qwen3:8b")).toBe("qwen3:8b");
+    expect(extractModel("Is gpt-4o safe?")).toBe("gpt-4o");
+    expect(extractModel("how did llama3.1:8b do")).toBe("llama3.1:8b");
+    expect(extractModel("what is the philosophy here")).toBeNull();
+    expect(extractModel("How did the jail (jailbreak) test measure?")).toBeNull();
+    expect(extractModel("What does the leaderboard show?")).toBeNull();
+  });
+
+  it("routes a model to model_lookup and 'which is best' to the board, never naming a best model", () => {
+    expect(routeIntent("qwen3:8b")).toMatchObject({ kind: "tools", calls: [{ tool: "model_lookup", args: { model: "qwen3:8b" } }] });
+    expect(routeIntent("Is gpt-4o safe?")).toMatchObject({ kind: "tools", calls: [{ tool: "model_lookup", args: { model: "gpt-4o" } }] });
+    expect(routeIntent("Which model is best?")).toMatchObject({ kind: "tools", calls: [{ tool: "board_totals" }] });
+    expect(routeIntent("what is the safest AI model")).toMatchObject({ kind: "tools", calls: [{ tool: "board_totals" }] });
+    expect(routeIntent("measure all models").kind).toBe("help");
+    expect(ROUTER_READ_TOOLS.has("model_lookup")).toBe(true);
+    expect(ROUTABLE_TOOLS.has("model_lookup")).toBe(false);
+  });
+
+  it("answers MEASURED with a count for a listed model and NOT_MEASURED for an unlisted one", async () => {
+    stubOrigin({ "/interop/models-measured.json": () => Response.json(MODELS) });
+    const hit = ((await callTool("model_lookup", { model: "qwen3:8b" }, ORIGIN)) as unknown as { structuredContent: Record<string, any> }).structuredContent;
+    expect(hit).toMatchObject({ state: "MEASURED", model: "qwen3:8b", cards: 13, axes: 13, whose: "third party" });
+    expect(hit.note).toMatch(/not a score/);
+    const miss = ((await callTool("model_lookup", { model: "gpt-4o" }, ORIGIN)) as unknown as { structuredContent: Record<string, any> }).structuredContent;
+    expect(miss).toMatchObject({ state: "NOT_MEASURED", model: "gpt-4o", cards: 0 });
+    expect(miss.note).toMatch(/not a finding/);
+  });
+});
+

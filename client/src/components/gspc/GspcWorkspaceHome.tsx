@@ -9,14 +9,16 @@
  *   - the board card: totals.public_count and totals.separation_public_count (GET /api/gspc), and the
  *     model count (/interop/models-measured.json, derived from the signed cards at build time);
  *   - Verify: card_chain.bodies_verified_valid (/api/state, corpus 3 of three, kind measured);
- *   - Connect: the number of tools tools/list returns (passed in; read by the workspace);
+ *   - For developers: the number of tools tools/list returns on /mcp/free, the door that card installs
+ *     (read here, from that door; /mcp also lists the paid tools, so its length is not this number);
  *   - Learn: the exercises in /academy/exercises/exercises.json;
  *   - SovX: counts.pairs in /api/wrapper/index.json;
  *   - Corrections: ledgers.corrections_in_this_deploy (/api/state);
  *   - Claim maintenance: ledgers.claim_maintenance.counts, each outcome named, never summed.
  * No number is typed. Loading shows a role="status" placeholder; a failed read says so in words.
  */
-import { useCallback, useRef, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { listTools } from "@/lib/sovTools";
 import { Link } from "wouter";
 import { addMyResult, lookupFromRun, type FinishedLookupRun } from "@/lib/myResults";
 import { ArrowRight, Coins } from "lucide-react";
@@ -296,19 +298,38 @@ export function useLookupRecorder(save: typeof addMyResult = addMyResult) {
   return { expectLookup, onRunDone };
 }
 
+/**
+ * The free door's own tools/list, read once. The card that shows this count installs
+ * https://councilof.ai/mcp/free, so the count is that door's, never /mcp's (which adds the paid tools).
+ */
+export function useFreeDoorToolCount(list: typeof listTools = listTools): LiveRead<unknown> {
+  const [read, setRead] = useState<LiveRead<unknown>>({ state: "loading", data: null, error: null });
+  useEffect(() => {
+    let cancelled = false;
+    list("/mcp/free").then((reply) => {
+      if (cancelled) return;
+      setRead(
+        reply.state === "ok"
+          ? { state: "ok", data: reply.tools.length, error: null }
+          : { state: "error", data: null, error: "tools/list on /mcp/free did not answer" },
+      );
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [list]);
+  return read;
+}
+
 export default function GspcWorkspaceHome({
   talk,
   onAsk,
-  toolCount,
-  toolState,
 }: {
   /** The AG-UI TalkPanel, rendered by the workspace so its ref stays with the composer. A function
    *  receives the hooks the home needs on that panel (onRunDone saves Get results lookups). */
   talk: ReactNode | ((hooks: TalkHooks) => ReactNode);
   /** Send a question to that TalkPanel (Get results uses it for the free lookup). */
   onAsk?: (question: string) => void;
-  toolCount: number | null;
-  toolState: "loading" | "ready" | "failed";
 }) {
   const { expectLookup, onRunDone } = useLookupRecorder();
   const askLookup = useCallback(
@@ -323,12 +344,7 @@ export default function GspcWorkspaceHome({
   const wrappers = useLiveJson("/api/wrapper/index.json");
   const exercises = useLiveJson("/academy/exercises/exercises.json");
 
-  const toolsRead: LiveRead<unknown> =
-    toolState === "loading"
-      ? { state: "loading", data: null, error: null }
-      : toolState === "failed" || toolCount === null
-        ? { state: "error", data: null, error: "tools/list did not answer" }
-        : { state: "ok", data: toolCount, error: null };
+  const toolsRead = useFreeDoorToolCount();
 
   const places: Place[] = [
     {
@@ -358,7 +374,7 @@ export default function GspcWorkspaceHome({
       figure: (
         <LiveFigureLine
           read={toolsRead}
-          pick={(n) => (typeof n === "number" ? { value: String(n), label: "tools, no account; each counts as working only once it has been called", source: "POST /mcp → tools/list · declared by tools/list; a tool is runtime-observed only after its own tools/call", as_of: null } : null)}
+          pick={(n) => (typeof n === "number" ? { value: String(n), label: "free tools, no account", source: "POST https://councilof.ai/mcp/free → tools/list (the door this card installs; the paid tools are on /mcp only) · declared by tools/list; a tool is runtime-observed only after its own tools/call", as_of: null } : null)}
           testId="ws-fig-connect"
         />
       ),

@@ -47,7 +47,7 @@ import {
 } from "@/components/gspc/workspaceMenu";
 import BoardStatusStrip from "@/components/gspc/BoardStatusStrip";
 import { recordActivity, useActivity } from "@/components/lobby/workspace";
-import { DASHBOARD_TABS, LOBBY_TABS } from "@/components/lobby/tabs";
+import { LOBBY_TABS, sidebarLabel } from "@/components/lobby/tabs";
 
 /**
  * Panes that quote a card count. The corpus chip names which of the three card corpora a count
@@ -55,15 +55,8 @@ import { DASHBOARD_TABS, LOBBY_TABS } from "@/components/lobby/tabs";
  */
 const CORPUS_PANES = new Set(["verify", "cards", "evidence", "evidence-index", "archive"]);
 
-/**
- * The label the menu itself shows for a pane: a section's first pane is the section's sidebar
- * link (Leaderboard, Connect …), a section sub-tab is its sub-tab label, anything else its tab label.
- */
-export function sidebarLabel(tabId: string): string | null {
-  const first = DASHBOARD_NAV_GROUPS.find((g) => g.tabs[0]?.id === tabId);
-  if (first) return first.label;
-  return DASHBOARD_TABS.find((t) => t.id === tabId)?.label ?? LOBBY_TABS.find((t) => t.id === tabId)?.label ?? null;
-}
+// The menu's own label for a pane lives in lobby/tabs (the Ask panel reads it too).
+export { sidebarLabel };
 
 const SMALL_QUERY = "(max-width: 767px)";
 

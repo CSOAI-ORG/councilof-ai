@@ -281,8 +281,8 @@ export default function LobbyVerifyPane() {
               </a>
             </div>
             {loadedId && !loadError && (
-              <p className="mt-2 font-mono text-xs text-slate-600">
-                loaded {loadedId.slice(0, 16)}… — press Verify to check it
+              <p className="mt-2 text-sm text-slate-700" title={`Card ${loadedId}`}>
+                A published result is in the box below. Press Verify this record to check it.
               </p>
             )}
             {loadError && (
@@ -321,12 +321,21 @@ export default function LobbyVerifyPane() {
           }}
         />
         <div data-ui-subject={loadedId ?? undefined} data-ui-subject-kind={loadedId ? "card" : undefined}>
-          <VerificationPath
-            verdict={verdict}
-            cardId={loadedId}
-            indexIds={ready ? new Set(ready.cards.map((c) => c.id)) : null}
-            checkedAt={checkedAt}
-          />
+          {/* The six-hop path is for readers who want the mechanics; the result above carries the
+              answer (tools audit retest, 6 Oct 2026: the path opened under every result). */}
+          <details className="mt-4 rounded-xl border border-slate-900/10 bg-white/70 px-4" data-testid="verify-path-details">
+            <summary className={`flex min-h-11 cursor-pointer items-center text-[14px] font-semibold text-slate-800 ${FOCUS}`}>
+              How it was checked, step by step
+            </summary>
+            <div className="pb-4">
+              <VerificationPath
+                verdict={verdict}
+                cardId={loadedId}
+                indexIds={ready ? new Set(ready.cards.map((c) => c.id)) : null}
+                checkedAt={checkedAt}
+              />
+            </div>
+          </details>
         </div>
       </div>
 

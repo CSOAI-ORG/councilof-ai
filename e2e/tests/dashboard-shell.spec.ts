@@ -616,16 +616,15 @@ test("the 22-axis learning arena keeps coaching, practice and human review in on
   await coaching.locator("summary", { hasText: "Coaching (optional)" }).click();
   await expect(coaching).toHaveAttribute("open", "");
   await pane
-    .getByRole("link", { name: "Ask Council to coach this stage" })
+    .getByRole("button", { name: /See how this test measured/ })
     .click();
-  await expect(page.getByText(/Nothing sent yet/i)).toBeVisible();
-  await expect(
-    page.getByRole("textbox", { name: /Ask the Council/i }),
-  ).toHaveValue(
-    /Coach me through the Governance GSPC learning path at the play stage/i,
+  // 6 Oct 2026 (tools-plain-cards retest): the question the rules can answer is asked in the Ask
+  // panel beside the lesson, which renders it as a plain card; the lesson stays open.
+  const ask = page.getByTestId("ask-pane");
+  await expect(ask).toBeVisible();
+  await expect(ask.getByTestId("talk-run").last()).toHaveAttribute(
+    "aria-label",
+    /How did the governance test measure\?/i,
   );
-  // 6 Oct 2026 (tools-plain-cards): coaching opens on the Get results home, where the answer
-  // renders as plain tool cards, instead of in the learning pane's raw-JSON lobby renderer.
-  await expect(page).toHaveURL(/\/dashboard\/?\?ask=/);
-  await expect(page).not.toHaveURL(/tab=learn/);
+  await expect(page).toHaveURL(/tab=learn/);
 });

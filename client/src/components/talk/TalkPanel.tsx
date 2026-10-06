@@ -16,7 +16,7 @@
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { ArrowUp, Loader2, Mic, MicOff, ShieldAlert, Eye } from "lucide-react";
 import ResultCard from "@/components/talk/ResultCard";
-import { answerSections, checkedLine, chipFor, firstSentence, statTiles, toolTitle, verifyHref } from "@/lib/resultCard";
+import { answerSections, checkedLine, chipFor, firstSentence, plainAnswer, statTiles, toolTitle, verifyLink } from "@/lib/resultCard";
 import type { PageContext } from "../../../../functions/_lib/uiTools";
 import { LISTEN_PRIVACY_NOTE, isListenSupported, startListening, stopListening } from "@/lib/councilListen";
 import {
@@ -155,7 +155,7 @@ function ToolCard({ card, answer }: { card: TalkToolCard; answer?: string }) {
       running={card.status === "running"}
       tiles={statTiles(card.output, 4, card.name)}
       checked={checkedLine(card.name, card.output)}
-      verifyUrl={verifyHref(cit?.url)}
+      verifyUrl={verifyLink(card.name, card.output, cit?.record_id, cit?.url)}
       recordId={cit?.record_id ?? null}
       summary={card.summary}
       answer={answer ? <AnswerText text={answer} /> : undefined}
@@ -175,6 +175,21 @@ function sectionFor(run: TalkRun, tool: string, index: number): string | undefin
   if (own) return shared ? `${own}\n\n${shared}` : own;
   // An answer with no per-tool blocks belongs to the first card only, never repeated.
   return index === 0 && !Object.keys(byTool).length ? run.text : undefined;
+}
+
+/**
+ * The one sentence under a run's cards. A tool with a plain sentence (resultCard.plainAnswer) gets
+ * it, built from the same fields as its tiles, so the sentence and the tiles agree (tools audit
+ * retest, 6 Oct 2026: the x402 card printed 15 in a tile and 16 in this line). Otherwise the
+ * answer's own first sentence.
+ */
+export function faceSentence(run: Pick<TalkRun, "text" | "tools">): string {
+  const plain = run.tools
+    .filter((t) => t.status !== "running")
+    .map((t) => plainAnswer(t.name, t.output))
+    .filter((x): x is string => Boolean(x));
+  if (plain.length) return plain.slice(0, 2).join(" ");
+  return firstSentence(run.text) || (run.tools.length ? "See the card above." : run.text);
 }
 
 function RunView({
@@ -244,7 +259,7 @@ function RunView({
         // "Details and raw output" expander (owner brief: no field dump after an answer).
         <div className="rounded-xl border border-border bg-card p-3" data-testid="talk-answer">
           <p className="text-sm leading-relaxed text-foreground [overflow-wrap:anywhere]">
-            {firstSentence(run.text) || (run.tools.length ? "See the card above." : run.text)}
+            {faceSentence(run)}
           </p>
           {run.tools.length ? null : (
             <details className="mt-2 text-sm">

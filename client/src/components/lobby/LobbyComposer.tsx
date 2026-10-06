@@ -29,6 +29,7 @@ export default function LobbyComposer({
   tools = [],
   onTool,
   onAsk,
+  onFreeQuestion,
 }: {
   chat: LobbyChat;
   onNavigate: (tab: LobbyTab) => void;
@@ -49,6 +50,8 @@ export default function LobbyComposer({
   /** Offered every free-text question first. Returning true means the host answered it (the
    *  dashboard home hands questions to the AG-UI TalkPanel); false falls through to chat.send. */
   onAsk?: (text: string) => boolean;
+  /** Offered a free question once every local lane has passed on it (see LobbyChat.send). */
+  onFreeQuestion?: (text: string) => boolean;
 }) {
   const [q, setQ] = useState("");
   // The prerendered composer cannot handle events until React hydrates. Keep it
@@ -162,7 +165,7 @@ export default function LobbyComposer({
     setSeeded(false);
     setAsksOpen(false);
     if (onAsk?.(text)) return;
-    void chat.send(text, onNavigate, onOpenRoute);
+    void chat.send(text, onNavigate, onOpenRoute, onFreeQuestion);
   }
 
   return (
@@ -293,7 +296,10 @@ export default function LobbyComposer({
             <div
               role="dialog"
               aria-label={`Suggested questions for ${paneLabel}`}
-              className="absolute bottom-full right-0 z-20 mb-2 w-[min(22rem,calc(100vw-2rem))] rounded-2xl border border-border bg-card p-3 text-foreground shadow-xl max-sm:left-3 max-sm:right-3 max-sm:w-auto"
+              // The workspace clips anything above it, so the popover never grows past the room above
+              // the composer: with 44 px chips it scrolls instead (tools audit retest, 6 Oct 2026: at
+              // 375 px its top ran under the section bar and the audience chips could not be tapped).
+              className="absolute bottom-full right-0 z-20 mb-2 max-h-[max(14rem,calc(100dvh-26rem))] w-[min(22rem,calc(100vw-2rem))] overflow-y-auto overscroll-contain rounded-2xl border border-border bg-card p-3 text-foreground shadow-xl max-sm:left-3 max-sm:right-3 max-sm:w-auto"
             >
               <p className={TYPE.section}>Asking as</p>
               <div className="mt-1.5 flex flex-wrap gap-1.5">
@@ -307,7 +313,8 @@ export default function LobbyComposer({
                       aria-pressed={on}
                       title={a.who}
                       className={
-                        `rounded-full border px-2.5 py-0.5 text-[11px] font-semibold transition motion-reduce:transition-none ${FOCUS} ` +
+                        // 44 px tall and 12 px text (tools audit retest, 6 Oct 2026: these chips were 24 px).
+                        `inline-flex min-h-11 items-center rounded-full border px-3 text-xs font-semibold transition motion-reduce:transition-none ${FOCUS} ` +
                         (on
                           ? "border-emerald-700/40 bg-emerald-100 text-emerald-900"
                           : "border-slate-900/12 bg-white text-slate-600 hover:border-slate-900/25")
@@ -329,20 +336,20 @@ export default function LobbyComposer({
                         audience,
                     );
                   }}
-                  className={`mt-2 w-full rounded-lg border border-emerald-700/30 bg-emerald-50 px-3 py-1.5 text-left text-[12px] font-semibold text-emerald-900 transition hover:bg-emerald-100 motion-reduce:transition-none ${FOCUS}`}
+                  className={`mt-2 flex min-h-11 w-full items-center rounded-lg border border-emerald-700/30 bg-emerald-50 px-3 py-1.5 text-left text-[12px] font-semibold text-emerald-900 transition hover:bg-emerald-100 motion-reduce:transition-none ${FOCUS}`}
                 >
                   {AUDIENCE_DOORS[audience].label} →
                 </button>
               )}
               <p className={`${TYPE.section} mt-3`}>For “{paneLabel}”</p>
               <p className={TYPE.fine}>Tap to fill — never auto-send</p>
-              <ul className="mt-2 max-h-48 space-y-1 overflow-y-auto">
+              <ul className="mt-2 space-y-1">
                 {suggestions.map((s) => (
                   <li key={s}>
                     <button
                       type="button"
                       onClick={() => prefill(s, false)}
-                      className={`w-full rounded-lg border border-slate-900/10 px-3 py-1.5 text-left text-[12px] text-slate-700 transition hover:border-emerald-700/35 hover:bg-emerald-50/50 motion-reduce:transition-none ${FOCUS}`}
+                      className={`min-h-11 w-full rounded-lg border border-slate-900/10 px-3 py-1.5 text-left text-[12px] text-slate-700 transition hover:border-emerald-700/35 hover:bg-emerald-50/50 motion-reduce:transition-none ${FOCUS}`}
                     >
                       {s}
                     </button>

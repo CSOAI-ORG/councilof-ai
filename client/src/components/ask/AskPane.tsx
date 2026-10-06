@@ -20,7 +20,8 @@
  * (councilListen) with the privacy note that Chrome may send audio to Google.
  */
 import { useCallback, useEffect, useId, useRef, useState } from "react";
-import { useLocation } from "wouter";
+import { useLocation, useSearch } from "wouter";
+import { menuTrail } from "@/components/lobby/tabs";
 import { CheckCircle2, Circle, CircleSlash, Hand, Loader2, OctagonX, PauseCircle, Undo2, X, XCircle } from "lucide-react";
 import TalkPanel, { type TalkPanelHandle } from "@/components/talk/TalkPanel";
 import OwmFreshness from "@/components/ask/OwmFreshness";
@@ -116,8 +117,25 @@ function Switch({ id, label, checked, onChange, hint }: { id: string; label: str
   );
 }
 
+/**
+ * "You are on: …" for the Ask panel. Inside Council OS the pane is named by the menu's own words
+ * (?tab=board → "Council OS › Leaderboard"); elsewhere the palette's breadcrumb for the path.
+ */
+export function askHere(location: string, search: string): string {
+  const path = location.replace(/\/+$/, "") || "/";
+  if (path === "/dashboard") {
+    const q = new URLSearchParams(search.startsWith("?") ? search.slice(1) : search);
+    if (q.get("view")) return "Council OS › A published page";
+    const trail = menuTrail(q.get("tab") || "home");
+    return ["Council OS", ...trail].join(" › ");
+  }
+  const here = crumbFor(location);
+  return here ? `${here.crumb} › ${here.title}` : location;
+}
+
 export default function AskPane({ open, onClose, question }: { open: boolean; onClose: () => void; question?: { text: string; n: number } | null }) {
   const [location] = useLocation();
+  const search = useSearch();
   const talk = useRef<TalkPanelHandle>(null);
   const titleId = useId();
   const [prefs, setPrefs] = useState<Prefs>(() => readPrefs());
@@ -270,7 +288,7 @@ export default function AskPane({ open, onClose, question }: { open: boolean; on
     }
   }, [prefs.watch]);
 
-  const here = crumbFor(location) ;
+  const here = askHere(location, search);
   const awaiting = steps.find((s) => s.state === "awaiting_confirm");
 
   return (
@@ -287,7 +305,7 @@ export default function AskPane({ open, onClose, question }: { open: boolean; on
             Ask about the results
           </h2>
           <p className="truncate text-xs text-muted-foreground" data-testid="ask-breadcrumb">
-            You are on: {here ? `${here.crumb} › ${here.title}` : location}
+            You are on: {here}
           </p>
         </div>
         {collapsed ? (

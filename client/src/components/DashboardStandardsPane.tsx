@@ -13,20 +13,20 @@ const ADAPTERS = [
     href: dashboardViewHref("/findings", "OWASP Agentic mapping"),
   },
   {
+    // Tools audit retest, 6 Oct 2026: this opened the MCP tool runner, which has no OWASP content.
+    // The OWASP MCP Top 10 rows are on the crosswalk page, in its #mcp section.
     name: "OWASP MCP",
     description: "A security checklist for the tool servers AI agents call. Being listed does not mean a server was tested.",
-    href: "/dashboard?tab=tools",
+    href: dashboardViewHref("/crosswalks/owasp-asi#mcp", "OWASP MCP mapping"),
   },
   {
     name: "Microsoft agent safety",
     description: "Microsoft's list of agent-safety controls, kept as a reference. It is not a legal or compliance verdict.",
     href: dashboardViewHref("/crosswalk", "Microsoft agent safety mapping"),
   },
-  {
-    name: "SCITT",
-    description: "A standard format for public, tamper-evident receipts. We show where ours fit; nothing here is a pass.",
-    href: "/dashboard?tab=attestations",
-  },
+  // SCITT is a receipt format, not a checklist our tests map to, and the only pane it could open
+  // (the attestation ledger) is written for developers (tools audit retest, 6 Oct 2026). It is
+  // named under "Technical: receipt formats" below instead.
   {
     name: "C2PA",
     description: "The standard for labelling AI-made images and media. We use it for AI-content marking evidence, separate from our test results.",
@@ -82,7 +82,7 @@ export default function DashboardStandardsPane() {
           className="inline-flex min-h-11 items-center font-semibold text-emerald-800 underline underline-offset-2"
           data-testid="standards-receipt-formats"
         >
-          Technical: receipt formats
+          Technical: receipt formats (SCITT, C2PA and others)
         </a>
       </p>
 
