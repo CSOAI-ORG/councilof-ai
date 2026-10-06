@@ -169,7 +169,7 @@ function discover() {
   // discovery never sees /for/:persona or /industries/:slug, so those cold-load
   // 404 against the honest catch-all. Force them into the snapshot queue.
   const MUST = [
-    "/gspc", "/scoreboard", "/console", "/council-os", "/lobby", "/legal",
+    "/gspc", "/scoreboard", "/board", "/board/model", "/console", "/council-os", "/lobby", "/legal",
     "/vs", "/vs/vanta", "/vs/drata", "/vs/credo-ai", "/vs/onetrust",
     "/for/regulator", "/for/enterprise", "/for/finance", "/for/healthcare",
     "/for/startup", "/for/sec-filer",
