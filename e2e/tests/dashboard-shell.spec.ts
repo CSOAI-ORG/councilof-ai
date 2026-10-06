@@ -110,7 +110,7 @@ test.beforeEach(async ({ context }) => {
   await context.route(/hf\.space/, (r) => r.abort());
 });
 
-test("sidebar exposes seven plainly named sections as direct /dashboard?tab= links", async ({
+test("sidebar exposes eight plainly named sections as direct /dashboard?tab= links", async ({
   page,
 }) => {
   await openTab(page, "board");
@@ -127,18 +127,19 @@ test("sidebar exposes seven plainly named sections as direct /dashboard?tab= lin
     .evaluateAll((as) => as.map((a) => a.getAttribute("href")));
   expect(hrefs).toEqual([
     "/dashboard?tab=home",
-    "/dashboard?tab=board",
+    "/dashboard?tab=mine",
     "/dashboard?tab=verify",
+    "/dashboard?tab=board",
     "/dashboard?tab=connect",
     "/dashboard?tab=learn",
     "/dashboard?tab=sovx",
     "/dashboard?tab=corrections",
   ]);
   for (const h of hrefs) expect(h).toMatch(/^\/dashboard\?tab=[a-z0-9-]+$/);
-  // Verify section contains three panes: Check a record, Evidence pack, Evidence index.
+  // "Check a result" section contains three panes: Check a result, Evidence pack, Evidence index.
   // The section bar (not the sidebar) shows sub-tabs when the active pane belongs to a multi-tab section.
   await openTab(page, "evidence");
-  const sub = page.getByRole("navigation", { name: "Verify pages" });
+  const sub = page.getByRole("navigation", { name: "Check a result pages" });
   await expect(sub.getByRole("link", { name: "Evidence index", exact: true })).toHaveAttribute(
     "href",
     "/dashboard?tab=evidence-index",
@@ -175,6 +176,7 @@ test("every sidebar tab renders its own pane inside the shell, error-free", asyn
   // server there is no auth backend, so the test would hang).
   const ids = [
     "home",
+    "mine",
     "learn",
     "play",
     "explore",
@@ -203,12 +205,12 @@ test("every sidebar tab renders its own pane inside the shell, error-free", asyn
     await expectShell(page, id);
     const pane = page.locator(`[data-testid="dashboard-pane-${id}"]`);
     if (id === "home") {
-      // Home is the GSPC workspace: Ask (the AG-UI talk panel) beside the live board.
+      // Home is the GSPC workspace: Get results (one input), then Answers (the AG-UI talk panel) beside the live board.
       // The retired metrics page is gone (30 Sep 2026); its figures each have one place here.
       await expect(page.getByTestId("gspc-workspace-home"), "home: the GSPC workspace").toBeVisible();
       await expect(
-        page.getByRole("heading", { name: "Ask in plain words", exact: true }),
-        "home: conversation first",
+        page.getByRole("heading", { name: "Answers", exact: true }),
+        "home: answers panel present",
       ).toBeVisible();
       await expect(page.getByTestId("ws-board")).toHaveCount(1);
       await expect(page.getByText("Account overview and recent measurements", { exact: true })).toHaveCount(0);
