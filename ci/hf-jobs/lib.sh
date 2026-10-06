@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 # ci/hf-jobs/lib.sh — shared helpers for the Hugging Face Jobs second runner.
 #
-# Sourced by deploy.sh and public-root.sh. Doctrine: fail closed, never print a
-# secret, never install anything at pipeline time (provisioning is bootstrap.sh).
-#
-# Step ledger: every named GitHub Actions step is announced with `step '<exact name>'`
-# so ci/hf-jobs/steps-drift.test.mjs can assert the two runners never diverge.
+# Sourced by no runner since 6 Oct 2026: deploy.sh and public-root.sh are both retired
+# stubs (single-writer ruling). Kept for its source-resolution helpers. Doctrine: fail
+# closed, never print a secret, never install anything at pipeline time (provisioning is
+# bootstrap.sh).
 
 set -euo pipefail
 
@@ -101,7 +100,7 @@ clone_from_url() {
     || git -C "$dest" checkout -q --detach "origin/$ref" \
     || { echo "    ref '$ref' not found in $url" >&2; return 1; }
   # A local-path source (e.g. the job's wrapper clone at /w) must never become the push
-  # target: origin is always GitHub so public-root.sh pushes to master, not to /w.
+  # target: origin is always GitHub, never /w.
   if [ -d "$url" ]; then git -C "$dest" remote set-url origin "$GITHUB_REPO_URL"; fi
 }
 
