@@ -2,6 +2,7 @@ import {
   ArrowRight,
   ClipboardCheck,
   FileCheck2,
+  Mail,
   ScanSearch,
   ShieldAlert,
   WalletCards,
@@ -21,6 +22,25 @@ export const REQUEST_ATTESTATION_CONTRACT = {
 } as const;
 
 const JOB_CATALOG_ROUTE = "/api/x402";
+
+/** Contact of record for commercial requests (functions/api/_invoice_handoff.ts INVOICE_CONTACT). */
+export const INVOICE_CONTACT = "nicholas@csoai.org";
+
+/**
+ * The invoice path for a fresh run, stated as it is: there is no invoice form or invoice endpoint
+ * for commission_card (request-attestation has no `invoice=gbp` branch), so the only route is an
+ * email the buyer sends. The mailto link opens the reader's own mail app; nothing is sent from here.
+ */
+export function invoiceMailto(subject: string | null): string {
+  const what = subject ? `a fresh run for ${subject}` : "a fresh run";
+  const body =
+    `I would like to pay by invoice for ${what}.\n\n` +
+    `Model or subject: ${subject ?? ""}\n` +
+    `Organisation (legal name):\n` +
+    `Billing address:\n\n` +
+    `(Written from councilof.ai. The site records nothing for an invoice request: this email is the request.)`;
+  return `mailto:${INVOICE_CONTACT}?subject=${encodeURIComponent(`Invoice request: ${what}`)}&body=${encodeURIComponent(body)}`;
+}
 
 type CatalogResource = {
   id?: string;
@@ -145,7 +165,7 @@ export function buildActualJobs(catalog: unknown): ActualJob[] {
       outcome:
         "An obligation-wide pack of existing Article 50 evidence. This link does not select or assess an individual model. Inspect the API challenge before authorising a purchase in your client.",
       href: article50Route,
-      action: "Inspect Article 50 API",
+      action: "Open the machine terms (JSON)",
       payment: paidDisclosure,
     });
   }
@@ -164,7 +184,7 @@ export function buildActualJobs(catalog: unknown): ActualJob[] {
       state: "DEVELOPER API · HISTORY",
       outcome: history.deliverable,
       href: historyRoute,
-      action: "Inspect history API",
+      action: "Open the machine terms (JSON)",
       payment: paidDisclosure,
     });
   }
@@ -190,20 +210,23 @@ const STEPS = [
   {
     number: "01",
     icon: ScanSearch,
-    title: "Inspect what already exists",
-    body: "Enter a subject and optional axis, then call without x_payment. The endpoint returns its current 402 challenge and free preview, including signed measurement cards already on file. A challenge is not a purchase or a delivery.",
+    title: "See the terms first",
+    body: "Enter the model and press “Check terms · no payment”. You see the exact amount, what you would get, and a free preview of results already on file. Nothing is bought or delivered by looking.",
+    hint: "Calls commission_card without x_payment: the route answers with its x402 402 challenge and a free preview.",
   },
   {
     number: "02",
     icon: WalletCards,
-    title: "Pay from the challenge",
-    body: "If you choose to continue, the Pay button signs the exact accepts[] entry from that 402 in your wallet. This workspace never asks for a seed phrase or private key and never invents an amount.",
+    title: "Pay, if you choose to",
+    body: "“Review payment” asks your own wallet to approve exactly those terms. This page never asks for a seed phrase or private key, and never makes up an amount.",
+    hint: "The Pay button signs the exact accepts[] entry from that 402 challenge in your wallet.",
   },
   {
     number: "03",
     icon: FileCheck2,
-    title: "Inspect the receipt, then verify",
-    body: "Treat a receipt as delivered only when the response says DELIVERED. Treat it as signed only when the returned card actually carries a verifiable signature. Verify is free.",
+    title: "Keep the receipt, then check",
+    body: "The reply carries your signed receipt. This browser does not save it for you yet, so copy its id: My results finds it by that id. A result counts only once it is published, and checking it is free.",
+    hint: "Treat a receipt as delivered only when the response says DELIVERED, and as signed only when the returned card carries a verifiable signature.",
   },
 ] as const;
 
@@ -250,8 +273,8 @@ export default function DashboardRequestPane() {
       <div className="rounded-2xl border border-emerald-900/10 bg-[linear-gradient(135deg,#04120c_0%,#073b2b_100%)] p-6 text-white shadow-sm sm:p-7">
         <div className="flex flex-wrap items-start justify-between gap-5">
           <div className="max-w-3xl">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-200">
-              Council of AI · Request Attestation Service
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-200">
+              Council OS · {isPricingOverview ? "How paying works" : "Request a fresh run"}
             </p>
             <h1
               id="request-attestation-title"
@@ -259,7 +282,7 @@ export default function DashboardRequestPane() {
             >
               {isPricingOverview
                 ? "How the free rail works"
-                : "Request a receipt. Never mistake it for a fresh measurement."}
+                : "Request a fresh run"}
             </h1>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-emerald-50/80">
               {isPricingOverview ? (
@@ -273,21 +296,39 @@ export default function DashboardRequestPane() {
                 </>
               ) : (
                 <>
+                  A fresh run is a new test of a model you name. First you see
+                  the terms: what you would get and the exact amount. If you
+                  pay, you get a signed receipt and your request joins the
+                  public queue. Paying never buys a result: a result exists
+                  only once the test has run and been published, and checking
+                  it is always free. No delivery date is promised yet.
+                </>
+              )}
+            </p>
+            {!isPricingOverview ? (
+              <details className="mt-3 max-w-2xl text-sm text-emerald-50/80" data-testid="request-fine-print">
+                <summary className="cursor-pointer font-semibold text-emerald-100">
+                  The fine print
+                </summary>
+                <p className="mt-2 leading-relaxed">
                   RAS commissions one card-v0 receipt for a named subject on the
                   frozen bank. It can re-serve signed measurement cards already
                   on file; payment never creates a MEASURED cell. A fresh run
                   remains <strong className="text-white">UNMEASURED</strong>{" "}
                   until a published run actually exists.
-                </>
-              )}
-            </p>
+                </p>
+              </details>
+            ) : null}
             <Link href="/dashboard?tab=board" className="mt-4 inline-flex text-sm font-semibold text-emerald-200 underline underline-offset-4 hover:text-white">
-              Looking for published measurements? Open the GSPC board →
+              Looking for results already published? Open the leaderboard →
             </Link>
           </div>
-          <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-right">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-emerald-200/70">
-              Canonical contract
+          <div
+            className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-right"
+            title="For developers and agents: the tool and route this page calls."
+          >
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-emerald-200/70">
+              For developers
             </p>
             <code className="mt-1 block text-xs text-white">
               {REQUEST_ATTESTATION_CONTRACT.tool}
@@ -299,14 +340,65 @@ export default function DashboardRequestPane() {
         </div>
       </div>
 
+      {!isPricingOverview ? (
+        <section
+          className="mt-5 grid gap-3 md:grid-cols-2"
+          aria-label="Two ways to pay"
+          data-testid="request-pay-ways"
+        >
+          <div
+            className="rounded-2xl border border-border bg-card p-4"
+            title="x402 v2: USDC on Base, signed in your own wallet."
+          >
+            <p className="flex items-center gap-2 text-base font-bold text-foreground">
+              <WalletCards className="h-4 w-4 text-emerald-800" aria-hidden="true" />
+              From your own wallet
+            </p>
+            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+              Use the form below. “Check terms · no payment” shows the exact
+              amount and who is paid. Nothing is paid until you approve it in
+              your wallet.
+            </p>
+            <a
+              href="#request-attestation-runner"
+              className="mt-2 inline-flex min-h-11 items-center gap-1 text-sm font-bold text-emerald-800 underline underline-offset-4"
+            >
+              Go to the form ↓
+            </a>
+          </div>
+          <div className="rounded-2xl border border-border bg-card p-4" data-testid="request-invoice">
+            <p className="flex items-center gap-2 text-base font-bold text-foreground">
+              <Mail className="h-4 w-4 text-emerald-800" aria-hidden="true" />
+              By invoice
+            </p>
+            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+              There is no invoice form for a fresh run yet, and this site
+              records nothing for an invoice request. Email{" "}
+              <span className="font-semibold text-foreground">{INVOICE_CONTACT}</span>{" "}
+              with the model and your organisation&apos;s legal name; the
+              amount is on the invoice, never on this site.
+            </p>
+            <a
+              href={invoiceMailto(params.get("subject"))}
+              className="mt-2 inline-flex min-h-11 items-center gap-1 text-sm font-bold text-emerald-800 underline underline-offset-4"
+            >
+              Write the email
+            </a>
+            <span className="ml-1 text-xs text-muted-foreground">
+              (opens your mail app; nothing is sent from here)
+            </span>
+          </div>
+        </section>
+      ) : null}
+
       <section
         className="mt-5 rounded-2xl border border-border bg-card p-4 sm:p-5"
         aria-labelledby="actual-job-title"
       >
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-800">
-              Actual jobs · sourced from the live catalogue
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-800">
+              Other paid evidence · read from the live catalogue
             </p>
             <h2
               id="actual-job-title"
@@ -382,6 +474,7 @@ export default function DashboardRequestPane() {
             <li
               key={step.number}
               className="rounded-2xl border border-border bg-card p-4"
+              title={step.hint}
             >
               <div className="flex items-center justify-between gap-3">
                 <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-800">
@@ -391,10 +484,10 @@ export default function DashboardRequestPane() {
                   {step.number}
                 </span>
               </div>
-              <h2 className="mt-3 text-sm font-semibold text-foreground">
+              <h2 className="mt-3 text-base font-semibold text-foreground">
                 {step.title}
               </h2>
-              <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
+              <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
                 {step.body}
               </p>
             </li>
@@ -460,7 +553,14 @@ export default function DashboardRequestPane() {
         </div>
       </aside>
 
-      <div className="mt-6" id="request-attestation-runner">
+      <div className="mt-6 scroll-mt-4" id="request-attestation-runner">
+        <h2 className="text-lg font-bold text-foreground">Check the terms for your fresh run</h2>
+        <p className="mb-3 mt-1 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+          This form uses the same public interface agents use, so it shows
+          technical names. Fill in the model (subject) and press “Check terms ·
+          no payment”: you see the amount and what you would get. Nothing is
+          paid unless you then approve it in your wallet.
+        </p>
         <ToolRunner
           initialToolName={REQUEST_ATTESTATION_CONTRACT.tool}
           initialArguments={initialArguments}

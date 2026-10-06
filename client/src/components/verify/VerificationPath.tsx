@@ -142,7 +142,7 @@ export default function VerificationPath({
         <dt className="font-semibold">Next re-check</dt>
         <dd>
           No published schedule re-derives the card index (its producer signs, so it runs by hand, never in CI). You can re-check this
-          card here at any time, free.{root ? ` The public root is rebuilt on its own schedule: ${root}.` : ""}
+          card here at any time, free.{root ? ` The public root is rebuilt by ${root}.` : ""}
         </dd>
       </dl>
     </section>

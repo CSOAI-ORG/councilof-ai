@@ -404,6 +404,14 @@ export function paidReservePreviewFromResult(result: RunnerToolResult): {
   return null;
 }
 
+/**
+ * A paid tool called without payment answers PAYMENT_REQUIRED: that is the terms, as asked for,
+ * not a failure. Shown as such instead of the red UNCHECKABLE a stranger reads as an error.
+ */
+export function termsOnly(result: RunnerToolResult): boolean {
+  return !result.ok && result.state !== "unreachable" && resultOutcome(result) === "PAYMENT_REQUIRED";
+}
+
 export function resultOutcome(result: RunnerToolResult): string | null {
   const payload = result.structuredContent;
   if (!payload || typeof payload !== "object" || Array.isArray(payload))
@@ -1092,11 +1100,11 @@ export default function ToolRunner({
 
               {output ? (
                 <section
-                  className={`mt-6 overflow-hidden rounded-xl border ${output.result.ok ? "border-emerald-700/25" : output.result.state === "unreachable" ? "border-amber-700/25" : "border-rose-700/20"}`}
+                  className={`mt-6 overflow-hidden rounded-xl border ${output.result.ok ? "border-emerald-700/25" : output.result.state === "unreachable" || termsOnly(output.result) ? "border-amber-700/25" : "border-rose-700/20"}`}
                   aria-live="polite"
                 >
                   <header
-                    className={`flex flex-wrap items-start justify-between gap-3 px-4 py-3 ${output.result.ok ? "bg-emerald-50" : output.result.state === "unreachable" ? "bg-amber-50" : "bg-rose-50"}`}
+                    className={`flex flex-wrap items-start justify-between gap-3 px-4 py-3 ${output.result.ok ? "bg-emerald-50" : output.result.state === "unreachable" || termsOnly(output.result) ? "bg-amber-50" : "bg-rose-50"}`}
                   >
                     <div className="flex items-start gap-2.5">
                       {output.result.ok ? (
@@ -1116,7 +1124,9 @@ export default function ToolRunner({
                             ? "RUNTIME_OBSERVED"
                             : output.result.state === "unreachable"
                               ? "UNREACHABLE"
-                              : "UNCHECKABLE"}
+                              : termsOnly(output.result)
+                                ? "TERMS SHOWN · NOTHING PAID"
+                                : "UNCHECKABLE"}
                         </p>
                         <p className="mt-0.5 text-[10px] text-slate-600">
                           {active.name} · {output.observedAt}

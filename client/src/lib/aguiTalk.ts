@@ -310,12 +310,12 @@ export function toneOf(label: string | undefined): Tone {
  * routes to a named free tool; aguiTalk.test.ts pins every one of them against routeIntent.
  */
 export const TALK_SUGGESTIONS: { text: string; tool: string }[] = [
-  { text: "What does the board say?", tool: "board_totals" },
+  { text: "What does the leaderboard show?", tool: "board_totals" },
   { text: "How did safety measure?", tool: "get_axis" },
-  { text: "List signed cards", tool: "list_cards" },
-  { text: "Show the public root", tool: "get_root" },
+  { text: "Show the latest result cards", tool: "list_cards" },
+  { text: "Show recent corrections", tool: "corrections_summary" },
   { text: "What is measured about github.com?", tool: "server_evidence" },
-  { text: "x402 census", tool: "x402_trust" },
+  { text: "Which paid doors answer?", tool: "x402_trust" },
 ];
 
 export type StreamOptions = {

@@ -466,9 +466,12 @@ const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel(
           {isListenSupported() ? LISTEN_PRIVACY_NOTE : "This browser has no speech recognition; typing works everywhere."}
         </p>
       ) : null}
-      <p className="mt-3 text-xs text-muted-foreground">
-        Answers are fields of the named tools&apos; output, the same tools POST /mcp serves. No model writes them. Measurement, not
-        certification; paid tools never run without your click, and never pay.
+      <p
+        className="mt-3 text-xs text-muted-foreground"
+        title="Each answer quotes fields of the named tool's output: the same tools POST /mcp serves to agents."
+      >
+        Every answer is copied from a published record and names its source. No AI writes them. A measurement, not a certificate;
+        nothing paid runs without your click, and this panel never pays.
       </p>
     </section>
   );
