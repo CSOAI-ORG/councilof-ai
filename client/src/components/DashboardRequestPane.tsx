@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { useSearch } from "wouter";
 import ToolRunner from "./ToolRunner";
+import { BUYING_LINES } from "@/lib/buying";
 
 export const REQUEST_ATTESTATION_CONTRACT = {
   tool: "commission_card",
@@ -284,6 +285,18 @@ export default function DashboardRequestPane() {
             <Link href="/dashboard?tab=board" className="mt-4 inline-flex text-sm font-semibold text-emerald-200 underline underline-offset-4 hover:text-white">
               Looking for published measurements? Open the GSPC board →
             </Link>
+            <Link href="/dashboard/?tab=art50" data-testid="request-pane-art50" className="mt-2 flex w-fit text-sm font-semibold text-emerald-200 underline underline-offset-4 hover:text-white">
+              Looking for an Article 50 marking check? Check an AI output for a mark →
+            </Link>
+            {/* The one buying statement (lib/buying.ts): what can be ordered today and how an invoice works. */}
+            <details className="mt-4 max-w-2xl rounded-xl border border-white/15 bg-white/5 px-4 py-3" data-testid="request-pane-buying">
+              <summary className="cursor-pointer text-sm font-semibold text-emerald-100">How to buy, and how invoices work</summary>
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-[13px] leading-relaxed text-emerald-50/85">
+                {BUYING_LINES.map((line) => (
+                  <li key={line}>{line}</li>
+                ))}
+              </ul>
+            </details>
           </div>
           <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-right">
             <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-emerald-200/70">

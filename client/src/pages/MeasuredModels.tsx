@@ -2,6 +2,7 @@ import { Fragment, useEffect, useMemo, useState } from "react";
 import { Link, useSearch } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
 import MillReceiptReadinessPanel from "@/components/MillReceiptReadinessPanel";
+import ModelCountKey from "@/components/ModelCountKey";
 
 /**
  * /board/models — every model we have measured, every axis it was measured on,
@@ -396,7 +397,11 @@ export default function MeasuredModels() {
       {/* sizes before you click */}
       <dl className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
         {[
-          ["Models measured", c.models, "each run against at least one axis"],
+          // Third-party only when the producer splits the set (scripts/build-card-matrix.mjs, 6 Oct
+          // 2026): the bare total counted our own model tags in with everyone else's.
+          typeof c.models_third_party === "number" && typeof c.models_own === "number" && typeof c.models_own_unconfirmed === "number"
+            ? ["Models measured", c.models_third_party, `third-party; our own ${c.models_own} (+${c.models_own_unconfirmed} unconfirmed) are in this set and listed apart`]
+            : ["Models measured", c.models, "each run against at least one axis"],
           ["Axes in this set", c.axes, "benchmark axis, not board axis"],
           ["Cells filled", c.cells, `of ${c.possible_cells} possible pairs`],
           ["Cells with a signature", c.signed_cells, "each re-checkable offline"],
@@ -414,6 +419,8 @@ export default function MeasuredModels() {
         {matrix.what_a_cell_is} Coverage is {c.cells} of {c.possible_cells} pairs — see the coverage
         map below.
       </p>
+
+      <ModelCountKey className="mt-3 max-w-3xl" />
 
       <MillReceiptReadinessPanel />
 

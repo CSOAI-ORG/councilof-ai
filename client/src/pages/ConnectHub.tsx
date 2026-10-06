@@ -24,6 +24,7 @@ import { setMetaDescription } from "@/lib/utils";
 import CONNECT_MATRIX from "../../../distribution/connect/connect-matrix.json";
 import { CUSTOMER_CONFIGURED, FREE_MCP, HELM_REPO, PAID_MCP, PYPI, STACKS } from "@/data/stackInstall";
 import DocMeta from "@/components/docs/DocMeta";
+import { CONTACT_MAILBOX } from "@/lib/buying";
 
 type ConnectClient = {
   id: string;
@@ -352,7 +353,7 @@ export default function ConnectHub() {
 
         <p className="text-[13px] leading-relaxed text-muted-foreground">
           We measure; we do not certify. A VALID signature says a record is ours and unaltered, not that what it
-          measured is good. Questions: <A href="mailto:contact@csoai.org">contact@csoai.org</A>.
+          measured is good. Questions: <A href={`mailto:${CONTACT_MAILBOX}`}>{CONTACT_MAILBOX}</A>.
         </p>
       </div>
     </div>

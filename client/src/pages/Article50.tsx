@@ -14,7 +14,15 @@ const L4 = LANE4["article-50"];
 // until 2 Aug 2027. Fines for transparency breaches: up to €15M or 3%.
 function days(to: string) { return Math.max(0, Math.ceil((new Date(to + "T00:00:00Z").getTime() - Date.now()) / 86400000)); }
 
-const CHECKLIST: { art: string; t: string; law: string; us: string; link?: { href: string; label: string } }[] = [
+const CHECKLIST: {
+  art: string;
+  t: string;
+  law: string;
+  us: string;
+  link?: { href: string; label: string };
+  /** A second door: the tool that answers the reader's own question for this line. */
+  tool?: { href: string; label: string };
+}[] = [
   {
     art: "Art. 50(1)",
     t: "AI-interaction disclosure",
@@ -28,6 +36,7 @@ const CHECKLIST: { art: string; t: string; law: string; us: string; link?: { hre
     law: "Providers of AI systems that generate synthetic audio, image, video or text must mark the output as artificially generated in a machine-readable way — detectable, effective, interoperable, robust. This is the direction the C2PA content-provenance ecosystem and the Code of Practice on marking are converging on.",
     us: "Nothing on this site generates synthetic audio, image, video or text, so there is no output to mark — the registry says so out loud. We also measured whether an embedded C2PA manifest survives ordinary transforms on assets we marked ourselves: in the signed run of 13 August 2026, 0 of 12 marked assets kept it intact (0 of 108 measured cells). If we ever ship generative output, the marking obligation attaches immediately — no grace period for features launched after 2 Aug 2026.",
     link: { href: "/provenance-finding", label: "The 0-of-20 provenance finding →" },
+    tool: { href: "/dashboard/?tab=art50", label: "Check one of your outputs for a mark (free preview) →" },
   },
   {
     art: "Art. 50(3)",
@@ -114,10 +123,19 @@ export default function Article50() {
               <p className="mt-3 border-t border-emerald-500/10 pt-3 text-[13px] leading-relaxed text-emerald-100/85">
                 <strong className="text-emerald-50">On this site:</strong> {c.us}
               </p>
-              {c.link && (
-                <a href={c.link.href} className="mt-2 inline-block text-[12px] font-semibold text-emerald-300 hover:underline">
-                  {c.link.label}
-                </a>
+              {(c.link || c.tool) && (
+                <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1">
+                  {c.link && (
+                    <a href={c.link.href} className="inline-block text-[12px] font-semibold text-emerald-300 hover:underline">
+                      {c.link.label}
+                    </a>
+                  )}
+                  {c.tool && (
+                    <a href={c.tool.href} className="inline-block text-[12px] font-semibold text-amber-200 hover:underline" data-testid="art50-row-tool">
+                      {c.tool.label}
+                    </a>
+                  )}
+                </div>
               )}
             </div>
           ))}
@@ -153,16 +171,26 @@ export default function Article50() {
           </div>
         </div>
 
-        {/* CTA */}
-        <div className="mt-8 rounded-2xl border border-emerald-400/25 bg-emerald-500/[0.06] p-5">
-          <div className="text-sm font-black text-emerald-100">Get Article-50-ready with CSOAI</div>
-          <p className="mt-1 text-sm text-emerald-100/75">Surface classification, first-interaction disclosure patterns, C2PA / content-provenance marking, and <b>Layer-0 signed evidence</b> that it was in place — reproducible for auditors.</p>
+        {/* CTA — the one tool that answers the Article 50(2) buyer's question. It measures whether a
+            mark is detected in one output at one point in time; it is never a readiness, conformity
+            or compliance verdict, and it names no price (the amount is on the invoice or the 402). */}
+        <div className="mt-8 rounded-2xl border border-emerald-400/25 bg-emerald-500/[0.06] p-5" data-testid="article50-cta">
+          <h2 className="text-sm font-black text-emerald-100">Check your AI outputs for a machine-readable mark</h2>
+          <p className="mt-1 text-sm text-emerald-100/75">
+            Paste the public link to an image, video, audio file or PDF your AI produced. We read the
+            file once and report whether a C2PA manifest or IPTC &lsquo;AI-generated&rsquo; label is
+            detected, and name every watermark we cannot check. Free preview, nothing stored. A
+            measurement at one point in time, not a conformity opinion.
+          </p>
           <div className="mt-4 flex flex-wrap gap-2">
-            <a href="/assess" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-black text-[#03110b] hover:bg-emerald-400">Get your signed readiness assessment →</a>
+            <a href="/dashboard/?tab=art50" data-testid="article50-cta-primary" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-black text-[#03110b] hover:bg-emerald-400">Check one of your AI outputs for a mark (free preview) →</a>
             <a href="/classifier" className="rounded-xl border border-emerald-500/30 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Does Article 50 apply to my AI? →</a>
             <a href="/readiness" className="rounded-xl border border-emerald-500/30 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Full 2 Aug readiness →</a>
             <a href="/crosswalk" className="rounded-xl border border-emerald-500/30 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Framework crosswalk →</a>
           </div>
+          <p className="mt-3 text-[12px] text-emerald-100/60">
+            <a href="/assess" className="underline underline-offset-2 hover:text-emerald-100">For developers and agents: request a signed attestation →</a>
+          </p>
         </div>
 
         <div className="mt-12">

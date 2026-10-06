@@ -131,7 +131,7 @@ export const AXES_FIN: AxisScore[] = [
     note: "MEASURED as two Eurostat series from isoc_eb_ai, 2025: enterprises with 10+ employees " +
       "using any AI 19.95%, large enterprises 250+ 55.03%. The size class is a dimension of the " +
       "same response, so both series are read from one fetch. Not an index. No formula file. " +
-      "C-2026-0826-05: do not restore MEASURED-INDEX-v0.1. Former slot id ai-economy-index.",
+      "The MEASURED-INDEX-v0.1 sticker stays withdrawn (C-2026-0826-05). Former slot id ai-economy-index.",
   },
   {
     axis: "labour-components", family: "financial", kind: "deterministic-facts",
@@ -154,7 +154,7 @@ export const AXES_FIN: AxisScore[] = [
     note: "MEASURED as two Eurostat series, 2025: activity rate age 15-64 75.6% of population " +
       "(lfsi_emp_a), unemployment rate age 15-74 6.0% of the labour force (une_rt_a). Supersedes a " +
       "World Bank modelled-ILO pair that this row used to quote as Eurostat. Not an index. " +
-      "C-2026-0826-05: do not restore MEASURED-INDEX-v0.1. Former slot id human-labour-index.",
+      "The MEASURED-INDEX-v0.1 sticker stays withdrawn (C-2026-0826-05). Former slot id human-labour-index.",
   },
   {
     axis: "humanoid-labour-index", family: "financial", kind: "deterministic-facts",

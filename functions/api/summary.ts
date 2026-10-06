@@ -18,6 +18,7 @@
  * Doctrine holds: every value is fetched at request time; no number is
  * typed; nothing here is computed; nothing here is guessed.
  */
+import { CONTACT_MAILBOX } from "./_buying";
 import { headFromGet } from "./_head";
 
 type Env = { RUNPOD_WORKER_HEALTH_URL?: string; WORKER_STATE_KV?: KVNamespace };
@@ -74,8 +75,9 @@ export const onRequestGet: PagesFunction<Env> = async ({ request }) => {
       site: "https://councilof.ai",
       president: "Nicholas Templeman",
       // councilof.ai publishes no MX record, so no @councilof.ai address can receive mail
-      // (audit 2026-09-28 #2). contact@csoai.org is the address the site footer uses.
-      contact: "contact@csoai.org",
+      // (audit 2026-09-28 #2). One mailbox site-wide since 6 Oct 2026 (functions/api/_buying.ts):
+      // the address the footer, llms.txt, the invoice handoff and security.txt name.
+      contact: CONTACT_MAILBOX,
       aidisclosure: "Drafting assistance disclosed per CSOAI ethics: all publicity text authored with Claude (Anthropic). Numbers and URLs verified programmatically before publication.",
     },
 
@@ -120,8 +122,8 @@ export const onRequestGet: PagesFunction<Env> = async ({ request }) => {
     },
 
     contact_for_reply: {
-      press: "contact@csoai.org",
-      disputes: "contact@csoai.org",
+      press: CONTACT_MAILBOX,
+      disputes: CONTACT_MAILBOX,
       partnership: "nicholas@csoai.org",
       approval_review: "PRIORITY-GATED — owner approval required for outbound.",
     },
