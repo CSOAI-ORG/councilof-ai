@@ -754,8 +754,9 @@ function loadCardSet(raw: unknown): LoadedSet {
     family: "card corpus",
     n: a.models ?? null,
     nUnit: "models run",
+    // build-card-matrix rule 7: an axis's best and average are over third-party models only.
     headline: typeof a.best_accuracy === "number" ? a.best_accuracy : null,
-    headlineLabel: "best model's score",
+    headlineLabel: "best third-party model's score",
     headlineFormat: "pct",
     interval: null,
     measuredOn: `${a.models} models`,
@@ -764,10 +765,10 @@ function loadCardSet(raw: unknown): LoadedSet {
     whyUnmeasured: a.cards > 0 ? null : "No card records this axis.",
     evidence: [
       {
-        label: "every model measured on this axis, ranked",
+        label: "every model measured on this axis",
         href: `/board/models?axis=${encodeURIComponent(a.id)}`,
         kind: "page",
-        what: "the ranking, with a link to each model's signed record",
+        what: "third-party models and our own listed apart, with a link to each model's signed record",
       },
       {
         label: "the card index as data",
@@ -778,7 +779,7 @@ function loadCardSet(raw: unknown): LoadedSet {
     ],
     note:
       typeof a.mean_accuracy === "number"
-        ? `Average across the models run: ${(a.mean_accuracy * 100).toFixed(1)}%.`
+        ? `Average across the third-party models run: ${(a.mean_accuracy * 100).toFixed(1)}%. Our own models are listed apart and never set either figure.`
         : null,
   }));
 

@@ -1,5 +1,10 @@
 import {useState } from "react";
 import { ChevronDown, CheckCircle, Shield } from "lucide-react";
+
+// Correction, 6 Oct 2026: this page described a "UK AI Bill" as an enacted regulation that is
+// mandatory for high-risk systems. No AI-specific statute is in force in the UK, so there is no
+// such obligation and no AI-specific penalty. The copy now says what applies; /frameworks/uk-ai-bill
+// carries the same correction.
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -7,27 +12,27 @@ export default function UKAIBillCompliance() {
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
 
   const faqs = [
-    { question: "What is the UK AI Bill?", answer: "The UK AI Bill is a flexible, principles-based AI regulation that applies to high-risk AI systems. It emphasizes transparency, accountability, and human oversight." },
-    { question: "Is it mandatory?", answer: "Yes, for high-risk AI systems operating in the UK. The UK AI Bill takes a flexible approach, allowing sector-specific guidance." },
-    { question: "How does CSOAI help?", answer: "CSOAI provides UK AI Bill compliance assessment, Council review, and training. We help you implement transparency and accountability measures." },
-    { question: "What are key requirements?", answer: "Transparency, accountability, risk management, human oversight, and documentation. CSOAI helps implement each requirement." }
+    { question: "Is there a UK AI Bill in force?", answer: "No. No AI-specific Act of Parliament is in force. Bills about AI have been introduced as proposals, including private members' bills in the House of Lords; a bill is not law until it receives Royal Assent." },
+    { question: "Is there an AI-specific fine in the UK?", answer: "No. The UK has no AI-specific penalty regime. Penalties that reach an AI system come from the existing law it falls under, such as data protection, equality, consumer, financial-services or online-safety law, each with its own regulator." },
+    { question: "What does government policy ask for?", answer: "The 2023 white paper 'A pro-innovation approach to AI regulation' asks existing regulators to apply five principles within their current powers: safety, security and robustness; appropriate transparency and explainability; fairness; accountability and governance; contestability and redress. The principles are not statutory." },
+    { question: "What does Council of AI do?", answer: "We measure AI systems against published rules and sign the result; verification is free. We do not certify, and nothing here is legal advice or a compliance determination." }
   ];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white">
       <div className="bg-emerald-600 text-white py-16">
         <div className="max-w-6xl mx-auto px-4">
-          <h1 className="text-4xl font-bold mb-4">UK AI Bill Compliance</h1>
+          <h1 className="text-4xl font-bold mb-4">UK AI regulation: what applies today</h1>
           <p className="text-xl text-emerald-100">
-            Achieve compliance with the UK's flexible, principles-based AI regulation
+            No AI-specific statute is in force in the UK. Existing law and existing regulators apply.
           </p>
         </div>
       </div>
 
       <div className="max-w-6xl mx-auto px-4 py-16">
         <div className="mb-20 bg-emerald-50 p-12 rounded-lg border-2 border-emerald-200">
-          <h2 className="text-3xl font-bold mb-6">UK AI Bill Overview</h2>
-          <p className="text-gray-700">The UK AI Bill takes a flexible, principles-based approach to AI regulation. It focuses on high-risk systems and emphasizes transparency, accountability, and human oversight.</p>
+          <h2 className="text-3xl font-bold mb-6">Overview</h2>
+          <p className="text-gray-700">There is no enacted &ldquo;UK AI Bill&rdquo;, so there is no AI-specific obligation or fine to comply with. Government policy asks existing regulators (ICO, FCA, CMA, Ofcom, MHRA and others) to apply five non-statutory principles within their current powers. See <a href="/frameworks/uk-ai-bill" className="underline">UK AI regulation</a> for the law that does apply.</p>
         </div>
 
         <div className="mb-20">
@@ -50,9 +55,9 @@ export default function UKAIBillCompliance() {
         </div>
 
         <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white p-12 rounded-lg text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready for UK AI Bill Compliance?</h2>
-          <Button size="lg" className="bg-white text-emerald-600 hover:bg-emerald-50 font-bold" onClick={() => window.location.href = "/compliance"}>
-            Start Assessment
+          <h2 className="text-3xl font-bold mb-4">See what we have measured</h2>
+          <Button size="lg" className="bg-white text-emerald-600 hover:bg-emerald-50 font-bold" onClick={() => window.location.href = "/dashboard?tab=board"}>
+            Open the measured board
           </Button>
         </div>
       </div>
