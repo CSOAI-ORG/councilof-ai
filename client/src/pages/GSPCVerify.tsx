@@ -164,6 +164,11 @@ export default function GSPCVerify() {
       .then((d) => {
         if (d && typeof d === "object" && Array.isArray(d.axes)) {
           setBoardData(d);
+          // The board's rows link here as /gspc-verify/#board-stamp. The section renders only
+          // once the board has loaded, after the browser's own hash scroll, so scroll to it then.
+          if (typeof window !== "undefined" && window.location.hash === "#board-stamp") {
+            requestAnimationFrame(() => document.getElementById("board-stamp")?.scrollIntoView());
+          }
         }
       })
       .catch(() => { /* verification page still works without the board data */ });
@@ -371,7 +376,7 @@ export default function GSPCVerify() {
 
         {/* LIVING ATTESTATION TABLES — from GET /api/gspc */}
         {boardData && (
-          <section>
+          <section id="board-stamp" className="scroll-mt-24">
             <h2 className="text-2xl font-bold text-emerald-50">Board stamp — living board, not your card</h2>
             <p className="mt-1 text-[13px] text-emerald-100/60">
               This is the published board stamp. It is not a stamp on a card you just pasted.

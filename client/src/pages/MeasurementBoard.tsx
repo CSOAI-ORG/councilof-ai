@@ -6,12 +6,15 @@ import {
   BOARD_FALLBACK,
   CARD_AXIS_ALIASES,
   fetchPublishedSet,
+  rowHasCardQuestion,
+  rowVerifyTarget,
   type AxisRow,
   type AxisSet,
   type LoadedSet,
 } from "@/data/axis-sets";
 import { GAP_BY_AXIS } from "./GSPCGapMap";
 import { verifyCardHref } from "@/lib/cardParam";
+import { isOwnModel, ROWS_RECORD_SIGNED_URL } from "@/lib/livingBoard";
 import LivingBoard, { BoardFreshness } from "@/components/gspc/LivingBoard";
 
 /**
@@ -117,7 +120,7 @@ const pct = (v: number) => `${(v * 100).toFixed(1)}%`;
 
 function formatHeadline(row: AxisRow): string {
   if (row.headline === null) return "—";
-  if (row.headlineFormat === "pct") return pct(row.headline);
+  if (row.headlineFormat === "pct") return row.headlineCount ? `${pct(row.headline)} (${row.headlineCount})` : pct(row.headline);
   if (row.headlineFormat === "elo") return row.headline.toFixed(0);
   return String(row.headline);
 }
@@ -317,20 +320,84 @@ function rowCards(row: AxisRow, cardsByAxis: Record<string, CardRef[]>): CardRef
 
 const cardPath = (c: CardRef) => `/signed/cards/${c.card}.json`;
 
-/** Row → verifier, pre-filled: the newest signed card for this row, loaded and checked by
- *  /gspc-verify/ without a paste. Rendered only when the row has a card. */
-function VerifyRowLink({ row, setId, card }: { row: AxisRow; setId: string; card: CardRef }) {
+/** Row → verifier. A Verify link is rendered ONLY when the board itself declares that a signed
+ *  per-model card backs this row's model and number (leader_card_state SIGNED_PER_MODEL_CARD).
+ *  The card index files cards by axis, not by model and number, so "the newest card under this
+ *  axis" is somebody else's evidence; linking it said VALID about a measurement the row does not
+ *  show. Otherwise the row says plainly that no card backs the number, and points at the two
+ *  signed things that do bind it: the board snapshot and the per-item rows record. */
+function RowVerify({ row, setId }: { row: AxisRow; setId: string }) {
+  if (!rowHasCardQuestion(row)) return null;
+  const leader = row.measuredOn ?? "this row's model";
+  const target = rowVerifyTarget(row);
+  if (target) {
+    return (
+      <a
+        href={verifyCardHref(target)}
+        onClick={(e) => e.stopPropagation()}
+        data-testid={`verify-${setId}-${row.id}`}
+        title={`Verify the signed card for ${leader} on this row`}
+        className="inline-flex min-h-[44px] items-center rounded-md px-1 font-semibold text-emerald-800 underline decoration-emerald-400 underline-offset-2 hover:text-emerald-950"
+      >
+        Verify
+      </a>
+    );
+  }
   return (
-    <a
-      href={verifyCardHref(cardPath(card))}
-      onClick={(e) => e.stopPropagation()}
-      data-testid={`verify-${setId}-${row.id}`}
-      title={`Verify the newest signed record for this row (${card.card.slice(0, 12)}…, recorded ${card.ts})`}
-      className="inline-flex min-h-[44px] items-center rounded-md px-1 font-semibold text-emerald-800 underline decoration-emerald-400 underline-offset-2 hover:text-emerald-950"
-    >
-      Verify
-    </a>
+    <span data-testid={`no-card-${setId}-${row.id}`} className="text-xs text-gray-700">
+      No signed card for this model's number ·{" "}
+      <a
+        href="/gspc-verify/#board-stamp"
+        onClick={(e) => e.stopPropagation()}
+        className="inline-flex min-h-[44px] items-center font-semibold text-emerald-800 underline underline-offset-2"
+      >
+        Check the signed board snapshot
+      </a>{" "}
+      ·{" "}
+      <a
+        href={ROWS_RECORD_SIGNED_URL}
+        onClick={(e) => e.stopPropagation()}
+        className="inline-flex min-h-[44px] items-center font-semibold text-emerald-800 underline underline-offset-2"
+      >
+        Per-item rows (signed record)
+      </a>
+    </span>
   );
+}
+
+/** One signed card's body, read so the list can say what each card records. */
+interface CardBody {
+  model?: string;
+  accuracy?: number;
+  created?: string;
+  axis?: string;
+}
+
+/** Fetch the bodies of the cards filed under a row (about 850 bytes each), only when the row is
+ *  opened. A card that does not load is listed as "did not load", never guessed. */
+function useCardBodies(cards: CardRef[]): Record<string, CardBody | "error"> {
+  const [bodies, setBodies] = useState<Record<string, CardBody | "error">>({});
+  const key = cards.map((c) => c.card).join(",");
+  useEffect(() => {
+    let cancelled = false;
+    for (const c of cards) {
+      fetch(cardPath(c))
+        .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
+        .then((d) => {
+          if (cancelled) return;
+          const b = d && typeof d === "object" && d.body && typeof d.body === "object" ? (d.body as CardBody) : null;
+          setBodies((prev) => ({ ...prev, [c.card]: b ?? "error" }));
+        })
+        .catch(() => {
+          if (!cancelled) setBodies((prev) => ({ ...prev, [c.card]: "error" }));
+        });
+    }
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key]);
+  return bodies;
 }
 
 /** "Cite this": a block whose sha256 is over the exact bytes its URL serves. Read on demand
@@ -403,6 +470,17 @@ function RowDetail({
   // rather than a wrong one, because a link to somebody else's evidence is worse
   // than no link at all.
   const cards = rowCards(row, cardsByAxis);
+  const bodies = useCardBodies(cards);
+  // Our own prompt overlays are dropped from the list once their body has loaded and named one;
+  // the board excludes them before comparison, so listing them under a row reads as a ranking.
+  const ownCount = cards.filter((c) => {
+    const b = bodies[c.card];
+    return b && b !== "error" && typeof b.model === "string" && isOwnModel(b.model);
+  }).length;
+  const shown = cards.filter((c) => {
+    const b = bodies[c.card];
+    return !(b && b !== "error" && typeof b.model === "string" && isOwnModel(b.model));
+  });
   return (
     <div className="border-t border-gray-200 bg-gray-50 px-4 py-4 text-sm">
       <div className="grid gap-4 md:grid-cols-2">
@@ -412,6 +490,14 @@ function RowDetail({
           </h4>
           <p className="mt-1 text-gray-800">{row.what}</p>
           {row.note && <p className="mt-2 text-gray-600">{row.note}</p>}
+          {row.leaderCardNote && (
+            <p
+              className={`mt-2 text-xs ${row.leaderCardState === "SIGNED_PER_MODEL_CARD" ? "text-gray-600" : "font-semibold text-amber-800"}`}
+              data-testid={`row-leader-card-note-${row.id}`}
+            >
+              {row.leaderCardNote}
+            </p>
+          )}
           {row.whyUnmeasured && (
             <div className="mt-3 rounded-lg border border-amber-300 bg-amber-50 p-3">
               <p className="text-xs font-bold uppercase tracking-wide text-amber-900">
@@ -429,8 +515,8 @@ function RowDetail({
               <dt className="text-gray-600">
                 <Term def={GLOSSARY.find((g) => g.term === "n")!.short}>Things measured (n)</Term>
               </dt>
-              <dd className="font-mono text-gray-900">
-                {row.n === null ? "nothing measured" : `${row.n} ${row.nUnit}`}
+              <dd className="text-right font-mono text-gray-900">
+                {row.n === null ? "nothing measured" : row.nNote ?? `${row.n} ${row.nUnit}`}
               </dd>
             </div>
             <div className="flex justify-between gap-4">
@@ -490,42 +576,60 @@ function RowDetail({
         </ul>
 
         {cards.length > 0 && (
-          <div className="mt-3 rounded-lg border border-emerald-200 bg-emerald-50/50 p-3">
-            <p className="text-xs font-bold uppercase tracking-wide text-emerald-900">
-              Signed records for this row
+          <div className="mt-3 rounded-lg border border-gray-300 bg-white p-3" data-testid={`filed-cards-${row.id}`}>
+            <p className="text-xs font-bold uppercase tracking-wide text-gray-800">
+              Signed cards filed under this axis (not the number above)
             </p>
-            <p className="mt-1 text-xs text-emerald-950">
-              Each is one measurement, stamped so you can confirm offline that it has not been
-              edited. Open one and check it against{" "}
+            <p className="mt-1 text-xs text-gray-700">
+              Each card is one earlier measurement of one model, stamped so you can confirm offline
+              that it has not been edited. A card can record a different model, or a different
+              measurement of the same model, from the row above — read what each one records before
+              relying on it. Steps:{" "}
               <a href="/signed/HOW-TO-VERIFY.md" className="underline">
-                the verification steps
+                how to verify
               </a>
               .
             </p>
-            <ul className="mt-2 flex flex-wrap gap-2">
-              {cards.slice(0, 6).map((c) => (
-                <li key={c.card}>
-                  <a
-                    href={cardPath(c)}
-                    data-testid={`card-${row.id}`}
-                    className="inline-block rounded-md border border-emerald-300 bg-white px-2 py-1 font-mono text-[11px] text-emerald-800 hover:border-emerald-600"
-                    title={`${c.axis} · recorded ${c.ts}`}
-                  >
-                    {c.card.slice(0, 12)}…
-                  </a>{" "}
-                  <a
-                    href={verifyCardHref(cardPath(c))}
-                    data-testid={`verify-card-${row.id}`}
-                    className="inline-flex min-h-[44px] items-center px-1 text-[12px] font-semibold text-emerald-800 underline"
-                  >
-                    Verify this
-                  </a>
-                </li>
-              ))}
+            <ul className="mt-2 space-y-1">
+              {shown.slice(0, 8).map((c) => {
+                const b = bodies[c.card];
+                return (
+                  <li key={c.card} className="flex flex-wrap items-center gap-x-2 text-[12px] text-gray-800">
+                    <a
+                      href={cardPath(c)}
+                      data-testid={`card-${row.id}`}
+                      className="inline-block rounded-md border border-gray-300 bg-white px-2 py-1 font-mono text-[11px] text-emerald-800 hover:border-emerald-600"
+                      title={`${c.axis} · recorded ${c.ts}`}
+                    >
+                      {c.card.slice(0, 12)}…
+                    </a>
+                    <span data-testid={`card-says-${row.id}`}>
+                      {b === undefined
+                        ? "reading the card…"
+                        : b === "error"
+                          ? "this card did not load, so nothing from it is shown"
+                          : `${b.model ?? "model not recorded"} · accuracy ${typeof b.accuracy === "number" ? b.accuracy : "not recorded"} · ${typeof b.created === "string" ? b.created.slice(0, 10) : c.ts.slice(0, 10)}`}
+                    </span>
+                    <a
+                      href={verifyCardHref(cardPath(c))}
+                      data-testid={`verify-card-${row.id}`}
+                      className="inline-flex min-h-[44px] items-center px-1 text-[12px] font-semibold text-emerald-800 underline"
+                    >
+                      Verify this card
+                    </a>
+                  </li>
+                );
+              })}
             </ul>
-            {cards.length > 6 && (
-              <p className="mt-2 text-xs text-emerald-900">
-                {cards.length - 6} more for this row —{" "}
+            {ownCount > 0 && (
+              <p className="mt-2 text-xs text-gray-700" data-testid={`own-cards-hidden-${row.id}`}>
+                {ownCount} {ownCount === 1 ? "card" : "cards"} from our own prompt overlays are not
+                listed; the board excludes them before comparison.
+              </p>
+            )}
+            {shown.length > 8 && (
+              <p className="mt-2 text-xs text-gray-700">
+                {shown.length - 8} more under this axis —{" "}
                 <a href="/signed/card_index.json" className="underline">
                   see the whole index
                 </a>
@@ -577,16 +681,15 @@ function SetTable({
               </div>
               <p className="text-sm text-gray-700">{r.what}</p>
               <div className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs text-gray-600">
-                <span>{r.n === null ? "nothing measured" : `n = ${r.n} ${r.nUnit}`}</span>
+                <span>{r.n === null ? "nothing measured" : r.nNote ? `n = ${r.nNote}` : `n = ${r.n} ${r.nUnit}`}</span>
                 <span>
                   {r.headlineLabel}: {formatHeadline(r)}
                 </span>
               </div>
             </button>
-            {rowCards(r, cardsByAxis)[0] && (
+            {rowHasCardQuestion(r) && (
               <div className="border-t border-gray-100 px-4 py-1 text-sm">
-                <VerifyRowLink row={r} setId={setId} card={rowCards(r, cardsByAxis)[0]} />
-                <span className="text-xs text-gray-600"> the newest signed record for this row</span>
+                <RowVerify row={r} setId={setId} />
               </div>
             )}
             {open === r.id && <RowDetail row={r} setId={setId} cardsByAxis={cardsByAxis} />}
@@ -632,6 +735,11 @@ function SetTable({
                 </td>
                 <td className="px-4 py-2 text-right font-mono text-gray-900">
                   {r.n === null ? <span className="text-gray-400">none</span> : r.n}
+                  {r.nNote && (
+                    <span className="block text-[10px] font-normal text-gray-500" data-testid={`n-note-${r.id}`}>
+                      {r.nNote}
+                    </span>
+                  )}
                 </td>
                 <td className="px-4 py-2 text-right font-mono text-gray-900">
                   {formatHeadline(r)}
@@ -645,10 +753,10 @@ function SetTable({
                 </td>
                 <td className="px-4 py-2 text-emerald-700">
                   {open === r.id ? "close" : `open (${r.evidence.length})`}
-                  {rowCards(r, cardsByAxis)[0] && (
+                  {rowHasCardQuestion(r) && (
                     <>
                       {" · "}
-                      <VerifyRowLink row={r} setId={setId} card={rowCards(r, cardsByAxis)[0]} />
+                      <RowVerify row={r} setId={setId} />
                     </>
                   )}
                 </td>

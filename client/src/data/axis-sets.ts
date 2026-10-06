@@ -80,6 +80,69 @@ export interface AxisRow {
   evidence: EvidenceLink[];
   /** The artifact's own note, verbatim. */
   note: string | null;
+  /** Whether a signed per-model card backs THIS row's model and number, as the board itself
+   *  declares it (/api/gspc axes[].leader_card_state). null = the board declared no backing card.
+   *  Never inferred from the card index: a card filed under the same axis may record a different
+   *  model, or a different measurement of the same model. Only the board set declares it; rows of
+   *  other sets leave it undefined. */
+  leaderCardState?: "SIGNED_PER_MODEL_CARD" | "NO_SIGNED_PER_MODEL_CARD" | "CARD_RECORDS_A_DIFFERENT_MEASUREMENT" | null;
+  /** The card the board names for this row's leader (axes[].leader_card_url), or null. Used as a
+   *  Verify target only when leaderCardState is SIGNED_PER_MODEL_CARD. */
+  leaderCardUrl?: string | null;
+  /** The board's own sentence about that card (axes[].leader_card_note), verbatim. */
+  leaderCardNote?: string | null;
+  /** When the headline was computed over a different row count than n (the separation test
+   *  counts frozen rows, duplicates included), the raw count behind the headline, e.g.
+   *  "81/200 answers". Read from separation_evidence.leader; null when the counts agree. */
+  headlineCount?: string | null;
+  /** The plain-English reading of n when it differs from the headline's row count, derived from
+   *  separation_evidence and separation_n_note. null when the counts agree. */
+  nNote?: string | null;
+}
+
+/** Does a row have anything to say about a backing card? Only the board set declares
+ *  leader_card_state (other sets leave it undefined), and only a row that shows a model's
+ *  number can be backed by one. */
+export function rowHasCardQuestion(row: AxisRow): boolean {
+  return row.leaderCardState !== undefined && row.headline !== null && !!row.measuredOn;
+}
+
+/** The card a row's Verify link may open, or null. Only a card the board itself declares as the
+ *  signed per-model card for this row's model and number qualifies. Never the newest card filed
+ *  under the axis: that is a different model's, or a different measurement's, evidence. */
+export function rowVerifyTarget(row: AxisRow): string | null {
+  if (!rowHasCardQuestion(row)) return null;
+  return row.leaderCardState === "SIGNED_PER_MODEL_CARD" && row.leaderCardUrl ? row.leaderCardUrl : null;
+}
+
+/** When the separation test's leader row count differs from the board's n (duplicate items in
+ *  the frozen rows), say so in plain words. Every figure is read from the axis; none is typed. */
+export function countMismatch(a: any): { headlineCount: string; nNote: string } | null {
+  const se = a?.separation_evidence;
+  const lead = se && typeof se === "object" ? se.leader : null;
+  const k = lead?.k, ln = lead?.n, n = a?.n;
+  if (![k, ln, n].every((v) => typeof v === "number" && Number.isFinite(v))) return null;
+  if (ln === n || typeof a?.separation_n_note !== "string") return null;
+  const extra = ln - n;
+  const why =
+    extra === 1
+      ? "one item appears twice in the frozen rows"
+      : extra > 1
+        ? `${extra} items appear more than once in the frozen rows`
+        : "the frozen rows hold fewer answers than distinct items";
+  return { headlineCount: `${k}/${ln} answers`, nNote: `${n} distinct items — ${why}` };
+}
+
+const LEADER_CARD_STATES = new Set([
+  "SIGNED_PER_MODEL_CARD",
+  "NO_SIGNED_PER_MODEL_CARD",
+  "CARD_RECORDS_A_DIFFERENT_MEASUREMENT",
+]);
+
+/** The board's declared leader-card state, or null. An unknown or absent value is null, which
+ *  means "no backing card" — never a guess that one exists. */
+export function leaderCardStateOf(v: unknown): AxisRow["leaderCardState"] {
+  return typeof v === "string" && LEADER_CARD_STATES.has(v) ? (v as NonNullable<AxisRow["leaderCardState"]>) : null;
 }
 
 export interface LoadedSet {
@@ -312,6 +375,11 @@ export function loadBoard(raw: unknown, provenance = "Live from the board endpoi
           "A slot published so the gap is visible. Nothing has been run against it.",
       evidence: ev,
       note: a.note ?? null,
+      leaderCardState: leaderCardStateOf(a.leader_card_state ?? null),
+      leaderCardUrl: typeof a.leader_card_url === "string" && a.leader_card_url ? a.leader_card_url : null,
+      leaderCardNote: typeof a.leader_card_note === "string" && a.leader_card_note ? a.leader_card_note : null,
+      headlineCount: countMismatch(a)?.headlineCount ?? null,
+      nNote: countMismatch(a)?.nNote ?? null,
     };
   });
 

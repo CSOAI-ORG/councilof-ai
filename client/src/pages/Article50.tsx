@@ -159,8 +159,7 @@ export default function Article50() {
           <p className="mt-1 text-sm text-emerald-100/75">Surface classification, first-interaction disclosure patterns, C2PA / content-provenance marking, and <b>Layer-0 signed evidence</b> that it was in place — reproducible for auditors.</p>
           <div className="mt-4 flex flex-wrap gap-2">
             <a href="/assess" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-black text-[#03110b] hover:bg-emerald-400">Get your signed readiness assessment →</a>
-            <a href="/classifier" className="rounded-xl border border-emerald-500/30 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Does Article 50 apply to my AI? →</a>
-            <a href="/readiness" className="rounded-xl border border-emerald-500/30 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Full 2 Aug readiness →</a>
+            <a href="/dashboard?tab=art50" className="rounded-xl border border-emerald-500/30 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Check one output for a machine-readable mark →</a>
             <a href="/crosswalk" className="rounded-xl border border-emerald-500/30 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Framework crosswalk →</a>
           </div>
         </div>

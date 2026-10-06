@@ -12,6 +12,7 @@
  * change on every poll — this repo shipped exactly that defect once (last_checked at serve
  * time) and the corrections ledger records it.
  */
+import { caughtOf, remedyOf } from "../_lib/corrections-fields";
 import { LEDGER } from "./corrections";
 import cardIndex from "../../public/signed/card_index.json";
 import root from "../../public/root.json";
@@ -19,7 +20,7 @@ import spray from "../../scripts/badger/_spray-log-v2.json";
 import doi from "../../docs/DOI_AXIS_CARDS_2026-08-24.json";
 import { buildRevenue, type RevenueEnv } from "./revenue";
 
-interface Correction { id: string; date: string; what_was_wrong: string; how_caught: string; fix: string; what_changed?: string; status?: string }
+interface Correction { id: string; date: string; what_was_wrong: string; how_caught?: string; fix?: string; what_changed?: string; status?: string; detected_by?: string }
 interface Card { card: string; axis?: string; ts?: string }
 interface Spray { lane?: string; status?: string; target?: string }
 
@@ -105,7 +106,8 @@ export async function build(env: RevenueEnv = {}) {
       proof: "curl -s https://councilof.ai/api/corrections | jq '.corrections|length'",
       feed: `${P}/feeds/corrections.xml`,
       items: corrections.filter((c) => inWindow(c.date)).map((c) => ({
-        id: c.id, date: c.date, what_was_wrong: c.what_was_wrong, how_caught: c.how_caught, fix: c.fix,
+        id: c.id, date: c.date, what_was_wrong: c.what_was_wrong, how_caught: c.how_caught ?? null, fix: c.fix ?? null,
+        what_changed: c.what_changed ?? null, status: c.status ?? null, detected_by: c.detected_by ?? null,
         proof: `curl -s https://councilof.ai/api/corrections | jq '.corrections[]|select(.id=="${c.id}")'`,
       })),
     },
@@ -169,7 +171,9 @@ export async function build(env: RevenueEnv = {}) {
         q: "What is the most recent thing you got wrong?",
         a: (() => {
           const newest = corrections.slice().sort((a, b) => (a.date < b.date ? 1 : -1))[0];
-          return newest ? `${newest.id} (${newest.date}). ${newest.what_was_wrong} It was caught: ${newest.how_caught} The fix: ${newest.what_changed ?? newest.fix ?? "see the entry at /api/corrections"}` : "The ledger is empty, which is a fact about the ledger and not a claim that nothing was wrong.";
+          if (!newest) return "The ledger is empty, which is a fact about the ledger and not a claim that nothing was wrong.";
+          const remedy = remedyOf(newest);
+          return `${newest.id} (${newest.date}). ${newest.what_was_wrong} How it was caught: ${caughtOf(newest)} ${remedy.label}: ${remedy.text}`;
         })(),
       },
       {

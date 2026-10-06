@@ -1,0 +1,271 @@
+{
+  "schema": "csoai.gspc-axes/0.5",
+  "fixture_note": "Pinned subset of GET /api/gspc as computed from functions/api/gspc.ts on 2026-10-06 (lane persona-fix-trust-and-facts). Only the fields scripts/axis-state-gate.mjs and scripts/surface/build-axis-pages.mjs read. A fixture for the gate selftest, not a board.",
+  "state_enum": {
+    "separation": [
+      "SEPARATED",
+      "TIE",
+      "UNTESTED"
+    ]
+  },
+  "totals": {
+    "public_count": "23 axes · 23 measured",
+    "separation_public_count": "0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED",
+    "axes": 23
+  },
+  "axes": [
+    {
+      "axis": "governance",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "GovBench",
+      "task": "EU AI Act risk-tier classification",
+      "status": "MEASURED",
+      "n": 237,
+      "separation": "TIE",
+      "leader": "mistral:7b (base model)",
+      "accuracy": 0.5865
+    },
+    {
+      "axis": "safety",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "DefBench",
+      "task": "calibrated refusal on paired requests",
+      "status": "MEASURED",
+      "n": 36,
+      "separation": "TIE",
+      "leader": "gemma3:12b (base model)",
+      "accuracy": 0.9444
+    },
+    {
+      "axis": "provenance",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "ProvBench",
+      "task": "Article 50 marking survival by validity",
+      "status": "MEASURED",
+      "n": 32,
+      "separation": "TIE",
+      "leader": "llama3.2:3b (base model)",
+      "accuracy": 0.7188
+    },
+    {
+      "axis": "continuity",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "PQCBench",
+      "task": "post-quantum status of a cryptographic assumption",
+      "status": "MEASURED",
+      "n": 33,
+      "separation": "TIE",
+      "leader": "gemma3:12b (base model)",
+      "accuracy": 0.6061
+    },
+    {
+      "axis": "conformance",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "MCPBench",
+      "task": "MCP tool conformance",
+      "status": "MEASURED",
+      "n": 35,
+      "separation": "TIE",
+      "leader": "mistral:7b (base model)",
+      "accuracy": 0.7143
+    },
+    {
+      "axis": "openness",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "OSSBench",
+      "task": "licence reasoning versus intended use",
+      "status": "MEASURED",
+      "n": 32,
+      "separation": "TIE",
+      "leader": "gemma3:12b (base model)",
+      "accuracy": 0.8438
+    },
+    {
+      "axis": "machinery-conformity",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "MachBench",
+      "task": "Machinery Reg self-evolving safety-function classification (PART_A / OUT_OF_SCOPE / NOT_SAFETY_FUNCTION)",
+      "status": "MEASURED",
+      "n": 33,
+      "separation": "UNTESTED",
+      "public_leader_state": "NO_SIGNED_CARD"
+    },
+    {
+      "axis": "care",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "CareBench",
+      "task": "care-cost (protect × help) under paired conduct scenarios",
+      "status": "MEASURED",
+      "n": 199,
+      "separation": "TIE",
+      "leader": "qwen2.5:0.5b-instruct (base model)",
+      "accuracy": 0.405
+    },
+    {
+      "axis": "cross-reality",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "XRAIV",
+      "task": "autonomous agent action authority (PROCEED / CONFIRM / REFUSE)",
+      "status": "MEASURED",
+      "n": 32,
+      "separation": "UNTESTED",
+      "public_leader_state": "NO_SIGNED_CARD"
+    },
+    {
+      "axis": "detector-interop",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "DetBench",
+      "task": "cross-detector watermark interoperability matrix",
+      "status": "MEASURED",
+      "n": 33,
+      "separation": "UNTESTED",
+      "public_leader_state": "NO_SIGNED_CARD"
+    },
+    {
+      "axis": "art5-safeguard",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "Art5Bench",
+      "task": "EU AI Act Article 5 prohibited-practice trip",
+      "status": "MEASURED",
+      "n": 36,
+      "separation": "UNTESTED",
+      "public_leader_state": "EXCLUDED_OWN_MODEL"
+    },
+    {
+      "axis": "swarm",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "SwarmBench v2b",
+      "task": "multi-agent coordination safety",
+      "status": "MEASURED",
+      "n": 37,
+      "separation": "UNTESTED",
+      "leader": "qwen2.5:7b (base model)",
+      "accuracy": 0.4444
+    },
+    {
+      "axis": "affect",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "AffectBench",
+      "task": "emotional & embodied safety (manipulation / disclosure / vulnerability)",
+      "status": "MEASURED",
+      "n": 41,
+      "separation": "UNTESTED",
+      "public_leader_state": "EXCLUDED_OWN_MODEL"
+    },
+    {
+      "axis": "jail",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "GoldBank-Detector",
+      "task": "escape-attempt detection on a 71-row gold bank of 27 distinct inputs (38 ESCAPE / 33 BENIGN rows) — layer 2 of 2",
+      "status": "MEASURED",
+      "n": 71,
+      "separation": "UNTESTED",
+      "leader": "qwen2.5:0.5b-instruct (base model)",
+      "accuracy": 0.5915
+    },
+    {
+      "axis": "effect-binding",
+      "family": "gspc",
+      "kind": "deterministic-facts",
+      "bench": "EffectBench v0.1 (server probe)",
+      "task": "does authorization bind to the request the server executes, or only to the tool call the agent declared",
+      "status": "MEASURED",
+      "n": 261,
+      "n_unit": "tool-call servers probed"
+    },
+    {
+      "axis": "provenance-controls",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "bench": "ChainFacts",
+      "task": "on-chain issuer control facts (allowlisting / freeze capability / identity domain)",
+      "status": "MEASURED",
+      "n": 6,
+      "n_unit": "issuer accounts (not bank items)"
+    },
+    {
+      "axis": "reserve-attestation",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "bench": "ReserveFacts",
+      "task": "is third-party reserve-attestation language on a retrieved issuer page? (PASS/FAIL/UNCHECKABLE)",
+      "status": "MEASURED",
+      "n": 16,
+      "n_unit": "issuer accounts (not bank items)"
+    },
+    {
+      "axis": "regulatory-framework",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "bench": "RegimeFacts",
+      "task": "is the governing regime declared and confirmable (NYDFS / MiCA / BACEN / Reg D ...)? (PASS/FAIL/UNCHECKABLE)",
+      "status": "MEASURED",
+      "n": 16,
+      "n_unit": "issuer accounts (not bank items)"
+    },
+    {
+      "axis": "distribution-integrity",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "bench": "DistributionFacts",
+      "task": "reader classification + chain supply + holder count (PASS/FAIL/UNCHECKABLE)",
+      "status": "MEASURED",
+      "n": 16,
+      "n_unit": "issuer accounts (not bank items)"
+    },
+    {
+      "axis": "custody-disclosure",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "bench": "CustodyFacts",
+      "task": "are a custodian and an auditor named and confirmable? (PASS/FAIL/UNCHECKABLE each)",
+      "status": "MEASURED",
+      "n": 16,
+      "n_unit": "issuer accounts (not bank items)"
+    },
+    {
+      "axis": "ai-adoption-components",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "bench": "Eurostat",
+      "task": "cited EU AI-adoption series (not an index)",
+      "status": "MEASURED",
+      "n": 2,
+      "n_unit": "public series"
+    },
+    {
+      "axis": "labour-components",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "bench": "Eurostat",
+      "task": "cited EU labour series (not an index)",
+      "status": "MEASURED",
+      "n": 2,
+      "n_unit": "public series"
+    },
+    {
+      "axis": "humanoid-labour-index",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "bench": "Disclosure",
+      "task": "named vendor publishes a dated deployment count on a stable URL? Y/N",
+      "status": "MEASURED",
+      "n": 8,
+      "n_unit": "frozen vendor URLs"
+    }
+  ]
+}

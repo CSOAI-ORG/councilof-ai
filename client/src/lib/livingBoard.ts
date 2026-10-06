@@ -60,6 +60,17 @@ export interface BoardAxis {
   separation_sentence?: string;
   separation_untested_reason?: string;
   separation_untested_reason_code?: string;
+  separation_p?: number;
+  /** The board's own record of its separation test. An object on rows-decided axes; some axes
+   *  publish a sentence instead, so readers must check the type. */
+  separation_evidence?:
+    | {
+        leader?: { model?: string; k?: number; n?: number };
+        next_best?: { model?: string; k?: number; n?: number };
+        paired_items?: number;
+        mcnemar_p?: number;
+      }
+    | string;
   note?: string;
   measurement_time?: {
     state?: string;
@@ -128,7 +139,8 @@ export type AxisView =
   | { kind: "mismatch"; axis: string; board: BoardAxis | null; fleet: FleetAxis; reason: string };
 
 export interface RankGroup {
-  /** "tie" when the board says TIE and these models' spreads overlap the leader's. */
+  /** "no-clear-winner": on a TIE axis, the models whose 95% ranges still allow first place.
+   *  "ordered": the models that cannot be first on 95% ranges (or, on a SEPARATED axis, the rest). */
   label: "no-clear-winner" | "ordered" | "separated-leader";
   models: FleetModel[];
 }
@@ -140,8 +152,11 @@ export function spreadsOverlap(a: [number, number], b: [number, number]): boolea
 
 /**
  * Group an axis's models for display. The board's determination is the authority:
- *  - TIE: every model whose spread overlaps the leader's spread is shown under
- *    "No clear winner (tie)"; the rest are listed after it with their own spreads.
+ *  - TIE: the models whose rank spread starts at 1 (they could still be first on 95% ranges) form
+ *    the top group; the rest cannot be first on 95% ranges and are listed after it. A model whose
+ *    spread merely overlaps the leader's somewhere lower down (leader [1,4], model [2,5]) cannot be
+ *    first and is NOT in the top group: overlap with the leader is not a tie for first. The board's
+ *    test compares only the leader and the runner-up; this grouping is annotation, never a test.
  *  - SEPARATED: the leader is shown alone as the board's separated leader (its sentence is the
  *    board's); spreads remain annotation.
  */
@@ -154,7 +169,7 @@ export function groupAxis(determination: string, models: FleetModel[]): RankGrou
       ...(rest.length ? [{ label: "ordered" as const, models: rest }] : []),
     ];
   }
-  const top = models.filter((m) => spreadsOverlap(m.rank_spread, lead.rank_spread));
+  const top = models.filter((m) => m.rank_spread[0] === 1);
   const others = models.filter((m) => !top.includes(m));
   return [
     { label: "no-clear-winner", models: top },

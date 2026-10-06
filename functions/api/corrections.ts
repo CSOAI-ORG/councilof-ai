@@ -43,6 +43,85 @@ export const LEDGER = {
   },
   corrections: [
     {
+      "id": "C-2026-1006-13",
+      "date": "2026-10-06",
+      "detected_at": "2026-10-06",
+      "detected_by": "persona test",
+      "published_at": "UNRECORDED",
+      "timing_evidence": [
+        "A persona audit on 2026-10-06 opened the Verify link on each /board row and read the card each one loaded; only the day is recorded",
+        "published_at is UNRECORDED: the deploy that first serves the corrected board had not happened when this entry was written"
+      ],
+      "what_was_wrong": "On /board, each row with a public leader carried a 'Verify' link that opened /gspc-verify/ on the newest signed card filed under that axis. The card index files cards by axis, not by model and number, so those cards recorded a different model and a different number, often one of our own prompt overlays at accuracy 0.0, and the verifier then said VALID about bytes that never backed the row, without saying what the card recorded. For every row with a public leader the board itself declares leader_card_state NO_SIGNED_PER_MODEL_CARD or CARD_RECORDS_A_DIFFERENT_MEASUREMENT. Separately, POST /api/verify-tally coerced its body with Boolean(), so a request with no outcome ('{}') was counted as 'did not match', and the page called the two counters 'outcomes in the public tally' without saying they include our own test clicks.",
+      "how_caught": "A persona audit (a reader who clicks Verify and reads what the verifier loaded) compared each card's model and accuracy with the row it was linked from.",
+      "what_changed": "A Verify link now renders only where the board declares SIGNED_PER_MODEL_CARD for the row's leader; with today's board that is no row. Other rows say 'No signed card for this model's number' and link the signed board snapshot (/gspc-verify/#board-stamp) and the signed per-item rows record, and the row detail prints the board's own leader_card_note. The cards filed under an axis are listed as 'Signed cards filed under this axis (not the number above)' with model, accuracy and date, our own prompt overlays left out and counted. The verifier prints what a measurement card records (model, axis, accuracy, date, and that the card carries no n) above its VALID or INVALID line. POST /api/verify-tally answers 400 unless ok is a boolean. The two stored counters are left as they are; earlier test clicks cannot be separated from real ones, and the page now says so. A test (client/src/data/axis-sets.verify-links.test.ts) requires every Verify target to be a card for the row's own leader and headline.",
+      "status": "CORRECTED - at the producers; signed cards unchanged",
+      "reached_the_public": true,
+      "evidence": [
+        "https://councilof.ai/api/gspc (axes[].leader_card_state, axes[].leader_card_url, axes[].leader_card_note)",
+        "https://councilof.ai/signed/card_index.json",
+        "client/src/pages/MeasurementBoard.tsx; client/src/data/axis-sets.ts; client/src/components/gspc/RecordVerifyForm.tsx; functions/api/verify-tally.ts"
+      ]
+    },
+    {
+      "id": "C-2026-1006-12",
+      "date": "2026-10-06",
+      "detected_at": "2026-10-06",
+      "detected_by": "persona test",
+      "published_at": "UNRECORDED",
+      "timing_evidence": [
+        "A persona audit on 2026-10-06 read /board/models and /signed/card-matrix.json; the zero pattern is read from the signed cards of the 2026-08-19 run (body.created); only the day of detection is recorded",
+        "published_at is UNRECORDED: the deploy that first serves the corrected index had not happened when this entry was written"
+      ],
+      "what_was_wrong": "In the signed card run of 2026-08-19, every card on two banks (gov and care) records accuracy exactly 0.0, and some models record exactly 0.0 on every bank they were run on (deepseek-r1:8b among third-party models, and three of our own prompt overlays) while other models scored above zero on the same banks. /board/models and /signed/card-matrix.json called each of these 'a measured zero rather than a missing measurement', counted them into every average and best, and a model page showed such a zero on gov or care with no word that the public board measured the same model on governance and care with a different instrument. A zero where every model scored zero, or where one model scored zero on every bank, points at the scoring rather than the model.",
+      "how_caught": "A persona audit read a model page at 0.0% on every axis and checked the other models on the same banks.",
+      "what_changed": "scripts/build-card-matrix.mjs flags such cells (zero_flag AXIS_FLOOR or MODEL_FLOOR, with the rule written into the file), leaves them out of mean_accuracy and best_accuracy, counts them under counts.zero_not_quotable and replaces the 'measured zero' sentence. /board/models shows a flagged cell as '0.0% · not quotable' with the reason in words, still linking its signed card, and a third-party model page on gov or care links that model's page on the public board instead of pasting a figure across corpora. The signed cards are unchanged.",
+      "status": "CORRECTED - presentation and derived index; signed cards unchanged; cause UNMEASURED",
+      "reached_the_public": true,
+      "open_items": [
+        "Why the 2026-08-19 run recorded these zeros (a scoring or answer-parsing failure is the likely reading) is UNMEASURED: the cards carry accuracy only, with no item count and no raw answers. A re-run that keeps item-level outputs would settle it."
+      ],
+      "evidence": [
+        "https://councilof.ai/signed/card-matrix.json (cells[].zero_flag, zero_flag_rule, counts.zero_not_quotable)",
+        "https://councilof.ai/signed/card_index.json",
+        "scripts/build-card-matrix.mjs; client/src/pages/MeasuredModels.tsx; client/src/lib/cardMatrix.kinds.test.ts"
+      ]
+    },
+    {
+      "id": "C-2026-1006-11",
+      "date": "2026-10-06",
+      "detected_at": "2026-10-06",
+      "detected_by": "persona test",
+      "published_at": "UNRECORDED",
+      "timing_evidence": [
+        "A persona audit on 2026-10-06 read https://councilof.ai/independence/ beside GET /api/gspc; only the day is recorded",
+        "published_at is UNRECORDED: the deploy that first serves the corrected page had not happened when this entry was written"
+      ],
+      "what_was_wrong": "/independence/ said the public board 'withholds the leader on 8 of 14' model-comparison axes where one of our models held the point lead, that there 'the board shows no leader at all', and in the same paragraph 'Of the 9 leaders it does name, 0 match any of our own-model name rules': 8 + 9 = 17 of 14. On 6 of the 8 own-led axes the board does name a leader, the best third-party model, compared again from the published per-item rows without ours; it shows no leader on 2, and on 3 further axes it shows none because the leader has no signed card. The site footer and the FAQ also stated funding facts ('No financial ties to OpenAI, Anthropic, Google, Microsoft, Meta, or any AI vendor'; 'We fund ourselves by selling signed evidence artefacts') that /independence/ itself marks as not yet published.",
+      "how_caught": "A persona audit (a reader checking our conflicts of interest) added the two live counts on the page and found they exceeded the axes they describe.",
+      "what_changed": "/independence/ now derives the sentence from GET /api/gspc as a partition: the axes re-compared without our model and how many of those leads separated (from axes[].separation), the axes where no leader is shown, and the axes with no signed card. When the parts do not add up to totals.comparison_axes it prints '(counts do not reconcile; read /api/gspc)' instead. A test (client/src/pages/Independence.exclusion.test.ts) checks the partition against the board this commit serves. The footer, the FAQ and /accreditation now point to /independence/ for who runs and funds us rather than stating facts that page has not published.",
+      "old_values": {
+        "/independence/ (quoted, not claimed)": "Read live: the board withholds the leader on 8 of 14 model-comparison axes (governance, provenance, continuity, conformance, openness, care, art5-safeguard, affect). Of the 9 leaders it does name, 0 match any of our own-model name rules.",
+        "site footer (quoted, not claimed)": "Independent. No financial ties to OpenAI, Anthropic, Google, Microsoft, Meta, or any AI vendor.",
+        "FAQ 'Who pays Council of AI' (quoted, not claimed)": "We fund ourselves by selling signed evidence artefacts, published whether the result flatters the buyer or not."
+      },
+      "new_values": {
+        "/independence/": "Read live: one of our models held the point lead on N of M model-comparison axes. On R of them the board compares the base models without ours and shows the best third-party model; S of those leads separated, T are ties. On W it shows no leader. On C more it shows no leader because that leader has no signed card. In all, the board names L leaders on M axes, and 0 of them match any of our own-model name rules. (every figure read from GET /api/gspc)",
+        "site footer": "Who runs and funds us, and where we have an interest: independence and conflicts (/independence/).",
+        "FAQ 'Who pays Council of AI'": "Who funds us, and any in-kind support, is set out on /independence/; where a fact is not yet published there, that page says so."
+      },
+      "status": "CORRECTED - at the producer; funding facts still to be published",
+      "reached_the_public": true,
+      "open_items": [
+        "The funding, in-kind support and ties blocks on /independence/ still read 'not yet published'. Only when they are published may the footer or the FAQ state them."
+      ],
+      "evidence": [
+        "https://councilof.ai/independence/",
+        "https://councilof.ai/api/gspc (totals.own_leaders_excluded_axes, axes[].public_leader_state, axes[].separation)",
+        "client/src/pages/Independence.tsx; client/src/pages/Independence.exclusion.test.ts"
+      ]
+    },
+    {
       "id": "C-2026-0930-12",
       "date": "2026-09-30",
       "detected_at": "2026-09-30T13:30Z",
@@ -108,7 +187,8 @@ export const LEDGER = {
       "reached_the_public": true,
       "open_items": [
         "Hugging Face model cards under csoai that describe sov models as fine-tuned are a separate set of statements; they are listed in the 2026-09-28 inventory and are not changed by this entry.",
-        "The signed per-item rows record keeps the word fine-tunes in its own_model_exclusion string until a new record is signed; this entry is the superseding note."
+        "The signed per-item rows record keeps the word fine-tunes in its own_model_exclusion string until a new record is signed; this entry is the superseding note.",
+        "The Hugging Face dataset card csoai/gspc-peritem-rows-2026-08-12 (README, revision 8c6f8a12) still calls the sov6-*-v3-light models fine-tunes, removed before ranking. The README is not in that dataset's SHA256SUMS and no producer for it is in this repository; it is changed by a separate Hugging Face commit."
       ],
       "evidence": [
         "https://councilof.ai/api/gspc (measured_on.model, peritem_rows.own_model_exclusion, peritem_rows.own_model_exclusion_correction, axes[*].separation_evidence.fleet)",

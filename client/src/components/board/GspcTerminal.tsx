@@ -145,9 +145,19 @@ const isMeasuredModelAxis = (a: Axis): boolean =>
 const isFacts = (a: Axis): boolean =>
   a.status === "MEASURED" && a.kind !== "model-comparison";
 
+/** One compound label for every row: the run state and, on a model-comparison axis, the board's
+ *  separation word — MEASURED · TIE, MEASURED · UNTESTED. A measured row with no public leader
+ *  score still carries its separation (it was keyed on a numeric accuracy before, so those rows
+ *  read a bare "MEASURED" and hid their UNTESTED). Fact rows have no separation test. */
+export function statusLabel(a: Pick<Axis, "status" | "kind" | "separation">): string {
+  if (a.status === "MEASURED" && a.kind === "model-comparison") return `MEASURED · ${a.separation ?? "UNTESTED"}`;
+  if (a.status === "MEASURED") return "MEASURED · facts";
+  return a.status || "UNMEASURED";
+}
+
 function StatusChip({ a }: { a: Axis }) {
   const sep = a.separation;
-  if (isMeasuredModelAxis(a)) {
+  if (a.status === "MEASURED" && a.kind === "model-comparison") {
     const tone =
       sep === "SEPARATED"
         ? "bg-emerald-100 text-emerald-800"
@@ -155,21 +165,21 @@ function StatusChip({ a }: { a: Axis }) {
           ? "bg-slate-100 text-slate-600"
           : "bg-amber-100 text-amber-800";
     return (
-      <span className={`rounded px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide ${tone}`}>
-        {sep === "SEPARATED" ? "SEPARATED" : sep === "TIE" ? "TIE" : sep || "MEASURED"}
+      <span className={`whitespace-nowrap rounded px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide ${tone}`}>
+        {statusLabel(a)}
       </span>
     );
   }
   if (isFacts(a)) {
     return (
-      <span className="rounded bg-sky-100 px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide text-sky-800">
-        FACTS
+      <span className="whitespace-nowrap rounded bg-sky-100 px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide text-sky-800">
+        {statusLabel(a)}
       </span>
     );
   }
   return (
     <span className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide text-slate-700">
-      {a.status || "UNMEASURED"}
+      {statusLabel(a)}
     </span>
   );
 }
@@ -459,7 +469,7 @@ export default function GspcTerminal({ className }: { className?: string }) {
                 <th className="hidden px-2 py-2 font-medium sm:table-cell">Bench</th>
                 <th className="px-2 py-2 text-right font-medium">Figure</th>
                 <th className="px-2 py-2 text-right font-medium">n</th>
-                <th className="px-2 py-2 font-medium">Status</th>
+                <th className="px-2 py-2 font-medium">Status · separation</th>
                 <th className="py-2 pl-1 pr-3 text-right font-medium sm:px-4" aria-hidden />
               </tr>
             </thead>

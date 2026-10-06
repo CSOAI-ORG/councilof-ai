@@ -28,12 +28,29 @@
  *    retired internal brand. Neither is acceptable, so it does both halves
  *    honestly.
  *
+ * 5. OUR OWN MODELS ARE LABELLED, NEVER RANKED AMONG THIRD-PARTY ONES. Each model row
+ *    carries `kind` ("third_party" | "own" | "own_unconfirmed"), classified from the RAW
+ *    card name before the withheld-name mapping, so a withheld-name-N row is still "own"
+ *    and no internal name is emitted. counts.models stays the whole corpus (consumers read
+ *    it); the per-kind counts sit beside it.
+ * 6. A ZERO IS QUOTED ONLY WHERE OTHER MODELS BEAT IT ON THE SAME BANK. A cell is flagged
+ *    `zero_flag: "AXIS_FLOOR"` when every model on its axis scored exactly 0, and
+ *    `"MODEL_FLOOR"` when its model scored exactly 0 on every axis it has while another
+ *    model scored above 0 on at least one of them. Flagged cells are kept (they are signed
+ *    evidence) but left out of mean_accuracy / best_accuracy and counted under
+ *    counts.zero_not_quotable. The cards carry no item count and no raw answers, so the
+ *    cause cannot be checked from the card.
+ *
  *   node scripts/build-card-matrix.mjs           # writes public/signed/card-matrix.json
  *   node scripts/build-card-matrix.mjs --check   # fails if the file on disk is stale
  */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+// Own-model classification: the exact rules scripts/build-own-model-disclosure.mjs publishes
+// (R1 sov*/clan*, R2 council*, and its UNCONFIRMED_TAGS list), imported rather than copied, the
+// same import scripts/build-models-measured.mjs uses. Not /api/gspc's council-only test.
+import { isR1, isR2, UNCONFIRMED_TAGS } from "./build-own-model-disclosure.mjs";
 
 const REPO = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const CARDS = path.join(REPO, "public", "signed", "cards");
@@ -90,6 +107,15 @@ for (const m of rawModels) {
   modelKey.set(m, UNPUBLISHABLE_NAME.test(m) ? `withheld-name-${++n}` : m);
 }
 
+// ── ownership, classified on the RAW name, carried by the public key ─────────
+function modelKind(raw) {
+  if (isR1(raw) || isR2(raw)) return "own";
+  if (UNCONFIRMED_TAGS.includes(raw)) return "own_unconfirmed";
+  return "third_party";
+}
+const kindByKey = new Map();
+for (const m of rawModels) kindByKey.set(modelKey.get(m), modelKind(m));
+
 const mean = (xs) => {
   const v = xs.filter((x) => typeof x === "number");
   return v.length ? Math.round((v.reduce((s, x) => s + x, 0) / v.length) * 10000) / 10000 : null;
@@ -99,11 +125,38 @@ const newest = (xs) => {
   return v.length ? v[v.length - 1] : null;
 };
 
-const publicCells = cells.map((c) => {
+const publicCells0 = cells.map((c) => {
   const key = modelKey.get(c.model);
   const { model, ...rest } = c;
   return { model: key, ...rest };
 });
+
+// ── zeros that point at the scoring, not the model ───────────────────────────
+const isZero = (c) => c.accuracy === 0;
+const axisFloor = new Set(
+  [...new Set(publicCells0.map((c) => c.axis))].filter((ax) => {
+    const own = publicCells0.filter((c) => c.axis === ax);
+    return own.length > 0 && own.every(isZero);
+  }),
+);
+const modelFloor = new Set(
+  [...new Set(publicCells0.map((c) => c.model))].filter((m) => {
+    const mine = publicCells0.filter((c) => c.model === m);
+    if (!mine.length || !mine.every(isZero)) return false;
+    const myAxes = new Set(mine.map((c) => c.axis));
+    return publicCells0.some((c) => c.model !== m && myAxes.has(c.axis) && typeof c.accuracy === "number" && c.accuracy > 0);
+  }),
+);
+const zeroFlag = (c) => (axisFloor.has(c.axis) ? "AXIS_FLOOR" : modelFloor.has(c.model) ? "MODEL_FLOOR" : null);
+const publicCells = publicCells0.map((c) => {
+  const flag = zeroFlag(c);
+  return flag ? { ...c, zero_flag: flag } : c;
+});
+const quotable = (xs) => xs.filter((c) => !c.zero_flag);
+const best = (xs) => {
+  const v = quotable(xs).map((c) => c.accuracy).filter((x) => typeof x === "number");
+  return v.length ? Math.max(...v) : null;
+};
 
 const axisIds = [...new Set(publicCells.map((c) => c.axis))].sort();
 const modelIds = [...new Set(publicCells.map((c) => c.model))].sort();
@@ -114,8 +167,9 @@ const axes = axisIds.map((id) => {
     id,
     cards: own.length,
     models: new Set(own.map((c) => c.model)).size,
-    mean_accuracy: mean(own.map((c) => c.accuracy)),
-    best_accuracy: own.length ? Math.max(...own.map((c) => c.accuracy ?? 0)) : null,
+    mean_accuracy: mean(quotable(own).map((c) => c.accuracy)),
+    best_accuracy: best(own),
+    zero_not_quotable: own.filter((c) => c.zero_flag).length,
     as_of: newest(own.map((c) => c.created)),
   };
 });
@@ -124,11 +178,13 @@ const models = modelIds.map((id) => {
   const own = publicCells.filter((c) => c.model === id);
   return {
     id,
+    kind: kindByKey.get(id),
     name_published: !id.startsWith("withheld-name-"),
     cards: own.length,
     axes: [...new Set(own.map((c) => c.axis))].sort(),
-    mean_accuracy: mean(own.map((c) => c.accuracy)),
-    best_accuracy: own.length ? Math.max(...own.map((c) => c.accuracy ?? 0)) : null,
+    mean_accuracy: mean(quotable(own).map((c) => c.accuracy)),
+    best_accuracy: best(own),
+    zero_not_quotable: own.filter((c) => c.zero_flag).length,
     as_of: newest(own.map((c) => c.created)),
   };
 });
@@ -151,8 +207,21 @@ const body = {
     "An empty cell means that pair was never measured — it is not a zero.",
   what_this_does_not_establish:
     "That a model is good, or better than another. A cell is one score on one small bank on one date. " +
-    "Several of these banks are small enough that a single item moves the number visibly, most cells in " +
-    "the matrix are empty, and a score of zero is a measured zero rather than a missing measurement.",
+    "Several of these banks are small enough that a single item moves the number visibly, and most cells in " +
+    "the matrix are empty. A zero is quoted only where other models scored above zero on the same bank. " +
+    "Where every model scored exactly zero on a bank, or one model scored exactly zero on every bank, the " +
+    "zero points at the scoring rather than the model, and it is shown as not quotable. These cards record " +
+    "accuracy only, with no item count and no raw answers, so the cause cannot be checked from the card.",
+  zero_flag_rule: {
+    AXIS_FLOOR: "every model on this cell's axis scored exactly 0",
+    MODEL_FLOOR: "this cell's model scored exactly 0 on every axis it has, while another model scored above 0 on at least one of them",
+    effect: "flagged cells stay in cells[] (they are signed evidence) but are left out of mean_accuracy and best_accuracy, and are counted under counts.zero_not_quotable",
+  },
+  own_model_rule: "scripts/build-own-model-disclosure.mjs R1 (sov*, clan*), R2 (council*) and UNCONFIRMED_TAGS, imported",
+  kind_note:
+    "models[].kind is third_party, own (our own prompt overlays and specialists, classified on the raw card name before " +
+    "any name is withheld) or own_unconfirmed (names that suggest a model we derived; the owner has not confirmed them). " +
+    "Our own models are listed apart and never compared with third-party ones.",
   display_name_policy: {
     rule:
       "A model whose recorded name carries a retired internal brand is indexed under a neutral key. Its " +
@@ -166,6 +235,11 @@ const body = {
     cards_read: files.length,
     cells: publicCells.length,
     models: models.length,
+    models_third_party: models.filter((m) => m.kind === "third_party").length,
+    models_own: models.filter((m) => m.kind === "own").length,
+    models_own_unconfirmed: models.filter((m) => m.kind === "own_unconfirmed").length,
+    cells_third_party: publicCells.filter((c) => kindByKey.get(c.model) === "third_party").length,
+    zero_not_quotable: publicCells.filter((c) => c.zero_flag).length,
     axes: axes.length,
     signed_cells: publicCells.filter((c) => c.signed).length,
     possible_cells: models.length * axes.length,

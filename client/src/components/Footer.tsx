@@ -98,7 +98,6 @@ export function Footer() {
         { name: 'Independence and conflicts', href: '/independence/' },
         { name: 'Contact', href: '/contact/' },
         { name: 'Where we take part', href: '/memberships/' },
-        { name: 'Blog', href: '/blog/' },
         { name: 'FAQ', href: '/faq/' },
         { name: 'Careers', href: '/careers/' },
       ],
@@ -109,7 +108,6 @@ export function Footer() {
         { name: 'Disclaimers', href: '/disclaimers/' },
         { name: 'Privacy', href: '/privacy-policy/' },
         { name: 'Terms', href: '/terms-of-service/' },
-        { name: 'GDPR / DPA', href: '/dpa/' },
       ],
     },
   ];
@@ -374,7 +372,7 @@ export function Footer() {
               { href: '/.well-known/security.txt', label: 'Security contact', hint: 'how to report a vulnerability to us' },
               { href: '/llms.txt', label: 'llms.txt', hint: 'what this site is, written for machines' },
               { href: 'https://find-and-update.company-information.service.gov.uk/company/16939677', label: 'Companies House 16939677', hint: 'CSOAI Ltd on the public register' },
-              { href: '/api/corrections', label: 'Corrections ledger', hint: 'everything we have published and had to correct' },
+              { href: '/corrections/', label: 'Corrections ledger', hint: 'everything we have published and had to correct' },
             ].map((l) => (
               <li key={l.href}>
                 <a
@@ -399,7 +397,11 @@ export function Footer() {
             To object to, dispute or request a correction of anything we publish: <a href="/dispute/" className="underline">/dispute</a> or <a href="mailto:contact@csoai.org" className="underline">contact@csoai.org</a>. Corrections are dated in the <a href="/corrections/" className="underline">ledger</a>.
           </p>
           <p className="text-muted-foreground text-xs text-center md:text-right max-w-md">
-            Independent. No financial ties to OpenAI, Anthropic, Google, Microsoft, Meta, or any AI vendor.
+            Who runs and funds us, and where we have an interest:{" "}
+            <a href="/independence/" className="underline">
+              independence and conflicts
+            </a>
+            .
           </p>
         </div>
       </div>

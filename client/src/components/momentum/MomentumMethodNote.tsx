@@ -13,7 +13,7 @@ const ROWS: { name: string; how: string; href: string }[] = [
   {
     name: "Public corrections, all dated",
     how: "GET /api/corrections → the number of ledger entries. Shown only when every entry carries a date; “this week” counts entries dated in the last seven days.",
-    href: "/api/corrections",
+    href: "/corrections/",
   },
   {
     name: "Measurement capsules",
