@@ -32,7 +32,7 @@ export default function AccountBrief() {
     return () => clearTimeout(t);
   }, [a]);
   if (!a) return (
-    <div className="min-h-screen bg-[#03110b] p-12 text-emerald-50">Account not found. <a href="/intel" className="text-emerald-300 underline">Back to the Hive →</a></div>
+    <div className="min-h-screen bg-[#03110b] p-12 text-emerald-50">Account not found.</div>
   );
   const s = scoreAccount(a);
   const gr = globeRegionFor(a);
@@ -43,7 +43,6 @@ export default function AccountBrief() {
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
       <div className="mx-auto max-w-5xl px-6 py-12">
         <CouncilNav />
-        <a href="/intel" className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/75 hover:text-emerald-200">← Distribution Hive</a>
         <div className="mt-3 flex flex-wrap items-center gap-3">
           <h1 className="text-4xl font-black tracking-tight">{a.name}</h1>
           <span className={"rounded-full border px-3 py-1 text-xs font-bold " + PLAY_META[a.play].tone}>{PLAY_META[a.play].label}</span>

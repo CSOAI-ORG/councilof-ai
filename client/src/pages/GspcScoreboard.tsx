@@ -163,7 +163,7 @@ function ArenaEloPanel() {
       <div className="mt-3 flex flex-wrap gap-2">
         <Link href="/compliance/eu-ai-act" className="inline-flex min-h-[44px] items-center rounded-full border border-emerald-600/20 px-3 py-1 text-xs text-emerald-700 hover:bg-emerald-50 sm:min-h-0">EU AI Act pack</Link>
         <Link href="/compliance/nist-ai-rmf" className="inline-flex min-h-[44px] items-center rounded-full border border-emerald-600/20 px-3 py-1 text-xs text-emerald-700 hover:bg-emerald-50 sm:min-h-0">NIST RMF pack</Link>
-        <Link href="/compliance/uk-ai-bill" className="inline-flex min-h-[44px] items-center rounded-full border border-emerald-600/20 px-3 py-1 text-xs text-emerald-700 hover:bg-emerald-50 sm:min-h-0">UK AI Bill pack</Link>
+        <Link href="/compliance/uk-ai-bill" className="inline-flex min-h-[44px] items-center rounded-full border border-emerald-600/20 px-3 py-1 text-xs text-emerald-700 hover:bg-emerald-50 sm:min-h-0">UK AI regulation (no AI statute in force)</Link>
         <Link href="/compliance/canada-ai-act" className="inline-flex min-h-[44px] items-center rounded-full border border-emerald-600/20 px-3 py-1 text-xs text-emerald-700 hover:bg-emerald-50 sm:min-h-0">Canada AI Act pack</Link>
       </div>
       <div className="mt-4 flex flex-wrap gap-2">

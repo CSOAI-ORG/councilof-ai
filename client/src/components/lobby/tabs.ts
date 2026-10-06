@@ -551,13 +551,6 @@ export const LOBBY_ROUTES: LobbyRoute[] = [
     cues: /\b(hive)\b/i,
   },
   {
-    label: "Intel",
-    blurb: "Competitor and landscape notes.",
-    path: "/intel",
-    group: "record",
-    cues: /\b(intel|landscape notes)\b/i,
-  },
-  {
     label: "Signed cards",
     blurb:
       "Browse published card records and open the family-aware verifier.",

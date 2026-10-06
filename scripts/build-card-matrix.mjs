@@ -40,6 +40,10 @@
  *    evidence) but left out of mean_accuracy / best_accuracy and counted under
  *    counts.zero_not_quotable. The cards carry no item count and no raw answers, so the
  *    cause cannot be checked from the card.
+ * 7. AN AXIS'S AVERAGE AND BEST ARE THIRD-PARTY FIGURES. axes[].mean_accuracy and
+ *    axes[].best_accuracy are taken over third-party models only (null when none was
+ *    measured on the axis); our own rows never set or join an axis figure. axes[].models
+ *    still counts every model; models_third_party / models_own split it.
  *
  *   node scripts/build-card-matrix.mjs           # writes public/signed/card-matrix.json
  *   node scripts/build-card-matrix.mjs --check   # fails if the file on disk is stale
@@ -163,14 +167,21 @@ const best = (xs) => {
 const axisIds = [...new Set(publicCells.map((c) => c.axis))].sort();
 const modelIds = [...new Set(publicCells.map((c) => c.model))].sort();
 
+// Rule 7: an axis's average and best are figures about third-party models only. Before
+// 6 Oct 2026 they were taken over every model on the axis, so the Council OS Leaderboard
+// headed each column "best 100.0%" with one of our own overlays in the top cell.
+const isThirdParty = (c) => kindByKey.get(c.model) === "third_party";
 const axes = axisIds.map((id) => {
   const own = publicCells.filter((c) => c.axis === id);
+  const third = own.filter(isThirdParty);
   return {
     id,
     cards: own.length,
     models: new Set(own.map((c) => c.model)).size,
-    mean_accuracy: mean(quotable(own).map((c) => c.accuracy)),
-    best_accuracy: best(own),
+    models_third_party: new Set(third.map((c) => c.model)).size,
+    models_own: new Set(own.filter((c) => !isThirdParty(c)).map((c) => c.model)).size,
+    mean_accuracy: mean(quotable(third).map((c) => c.accuracy)),
+    best_accuracy: best(third),
     zero_not_quotable: own.filter((c) => c.zero_flag).length,
     as_of: newest(own.map((c) => c.created)),
   };
@@ -224,6 +235,11 @@ const body = {
     "models[].kind is third_party, own (our own prompt overlays and specialists, classified on the raw card name before " +
     "any name is withheld) or own_unconfirmed (names that suggest a model we derived; the owner has not confirmed them). " +
     "Our own models are listed apart and never compared with third-party ones.",
+  axis_stats_rule:
+    "axes[].mean_accuracy and axes[].best_accuracy are computed over third-party models only (kind third_party), " +
+    "and are null where no third-party model was measured on the axis. Our own models (own, own_unconfirmed) never " +
+    "set or join an axis average or best. axes[].models counts every model on the axis; models_third_party and " +
+    "models_own split it.",
   display_name_policy: {
     rule:
       "A model whose recorded name carries a retired internal brand is indexed under a neutral key. Its " +

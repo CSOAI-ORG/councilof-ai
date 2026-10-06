@@ -373,7 +373,6 @@ const AgentGovernance = lazy(() => import("./pages/AgentGovernance"));
 const Cra = lazy(() => import("./pages/Cra"));
 const Nis2 = lazy(() => import("./pages/Nis2"));
 const VulnerabilityDisclosure = lazy(() => import("./pages/VulnerabilityDisclosure"));
-const Intel = lazy(() => import("./pages/Intel"));
 const AccountBrief = lazy(() => import("./pages/AccountBrief"));
 const Article50 = lazy(() => import("./pages/Article50"));
 const VerifyLeaderboard = lazy(() => import("./pages/VerifyLeaderboard"));
@@ -382,7 +381,6 @@ const Dora = lazy(() => import("./pages/Dora"));
 const DemoOS = lazy(() => import("./pages/DemoOS"));
 const PocShowcase = lazy(() => import("./pages/PocShowcase"));
 const CouncilSpace = lazy(() => import("./pages/CouncilSpace"));
-const BadgesPage = lazy(() => import("./pages/BadgesPage"));
 const EmbedPage = lazy(() => import("./pages/EmbedPage"));
 const BadgeKit = lazy(() => import("./pages/BadgeKit"));
 const GetListed = lazy(() => import("./pages/GetListed"));
@@ -1157,7 +1155,6 @@ function AppShell() {
                   <Route path="/cra" component={Cra} />
                   <Route path="/nis2" component={Nis2} />
                   <Route path="/vulnerability-disclosure" component={VulnerabilityDisclosure} />
-                  <Route path="/intel" component={Intel} />
                   <Route path="/brief" component={AccountBrief} />
                   <Route path="/article-50" component={Article50} />
                   <Route path="/verify-leaderboard" component={VerifyLeaderboard} />
@@ -1174,10 +1171,9 @@ function AppShell() {
                   <Route path="/sovereign-space">{() => <Redirect to="/gspc-arena" />}</Route>
                   <Route path="/stripe-checkout.js" component={Gone} />
                   <Route path="/simulate">{() => <Redirect to="/gspc-arena" />}</Route>
-                  {/* A second route for the same path stood here and was UNREACHABLE: wouter's
-                      Switch takes the first match, and the redirect above already owns that path
-                      (public/_redirects agrees with it). BadgesPage stays reachable at /authority. */}
-                  <Route path="/authority" component={BadgesPage} />
+                  {/* /authority (embeddable verified-status badges, a conformity mark) and /intel
+                      (an internal sales-target board) were withdrawn on 6 Oct 2026: both 308 from
+                      scripts/generate-redirects.mjs EXISTING. Do not re-add either route. */}
                   <Route path="/world-3d" component={RealWorldMap} />
                   <Route path="/real-world" component={RealWorldMap} />
                   <Route path="/plans">{() => <Redirect to="/dashboard?tab=measured&task=pricing-overview" />}</Route>

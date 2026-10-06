@@ -532,28 +532,8 @@ export async function generateCertificatePDF(data: CertificateData): Promise<Blo
     doc.text(`with a score of ${data.score}%`, pageWidth / 2, 140, { align: 'center' });
   }
 
-  // Council Verification Seal
-  if (data.byzantineVerified) {
-    const sealX = pageWidth / 2;
-    const sealY = 158;
-
-    // Outer circle
-    doc.setFillColor(34, 197, 94);
-    doc.circle(sealX, sealY, 12, 'F');
-
-    // Inner circle
-    doc.setFillColor(255, 255, 255);
-    doc.circle(sealX, sealY, 9, 'F');
-
-    // Checkmark (simplified)
-    doc.setFillColor(34, 197, 94);
-    doc.setFontSize(12);
-    doc.setTextColor(34, 197, 94);
-    doc.text('33', sealX, sealY + 3, { align: 'center' });
-
-    doc.setFontSize(7);
-    doc.text('COUNCIL VERIFIED', sealX, sealY + 18, { align: 'center' });
-  }
+  // A "COUNCIL VERIFIED" seal was drawn here when data.byzantineVerified was set. It was a
+  // conformity mark on a training record, and we never certify; removed 6 Oct 2026.
 
   // Certificate details
   const detailsY = 185;
