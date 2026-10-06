@@ -52,6 +52,14 @@ function shortDescription(description: string): string {
 /** DashboardLayout's section bar exposes this slot for workspace-level actions. */
 export const SECTION_ACTIONS_ID = "coai-section-actions";
 
+/**
+ * Tools audit, 6 Oct 2026: the candidate-evidence tray offered a receipt that went nowhere,
+ * because network intake is not live in this release (CandidateEvidenceTray says so itself).
+ * It is not drawn until intake exists; the quest bridge script still posts observations, and the
+ * tray returns by flipping this one constant once an intake endpoint is published.
+ */
+export const CANDIDATE_INTAKE_LIVE = false;
+
 export default function DashboardWorkspace({
   activePane,
   activeTab,
@@ -276,7 +284,7 @@ export default function DashboardWorkspace({
             />
           )}
         </div>
-        {candidate ? (
+        {CANDIDATE_INTAKE_LIVE && candidate ? (
           <CandidateEvidenceTray
             observation={candidate}
             onDismiss={() => setCandidate(null)}

@@ -308,13 +308,16 @@ export function toneOf(label: string | undefined): Tone {
 /**
  * Suggested questions. Each is a phrase the deterministic router (functions/_lib/talkRouter.ts)
  * routes to a named free tool; aguiTalk.test.ts pins every one of them against routeIntent.
+ *
+ * Tools audit, 6 Oct 2026: "List signed cards" (hashes and axis codes, no model or score) and
+ * "Show the public root" (a Merkle root) were developer chips on a stranger's start screen. They
+ * are gone from the chips; list_cards and get_root stay available to agents over POST /mcp.
  */
 export const TALK_SUGGESTIONS: { text: string; tool: string }[] = [
   { text: "What does the board say?", tool: "board_totals" },
   { text: "How did safety measure?", tool: "get_axis" },
-  { text: "List signed cards", tool: "list_cards" },
-  { text: "Show the public root", tool: "get_root" },
   { text: "What is measured about github.com?", tool: "server_evidence" },
+  { text: "Show the latest corrections", tool: "corrections_summary" },
   { text: "x402 census", tool: "x402_trust" },
 ];
 

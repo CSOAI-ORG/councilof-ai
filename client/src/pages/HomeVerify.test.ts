@@ -118,7 +118,8 @@ describe("header restores master menu and Council OS", () => {
     expect(header).toContain('name: "Board"');
     expect(header).toContain('name: "Council OS"');
     expect(header).toContain('name: "Tools"');
-    expect(header).toContain("href: '/watchdog-hub'");
+    // Tools audit, 6 Oct 2026: /watchdog-hub 308s to /os, so the header no longer links it.
+    expect(header).not.toContain("href: '/watchdog-hub'");
     expect(header).toContain("href: '/for/enterprise'");
     expect(header).not.toContain("href: '/watchdog'");
     expect(header).not.toContain("Chat is Council OS");
