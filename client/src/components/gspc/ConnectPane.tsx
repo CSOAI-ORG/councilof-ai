@@ -58,13 +58,18 @@ export default function ConnectPane() {
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-8 sm:py-8" data-testid="connect-pane">
       <p className="t-kicker text-emerald-800">Connect · Install</p>
-      <h2 className="mt-2 text-2xl font-black tracking-tight text-foreground">Add GSPC to your AI client or agent</h2>
+      <h1 className="mt-2 text-2xl font-black tracking-tight text-foreground">Add Council of AI to your AI assistant</h1>
       <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-        Every door reads the same published records this workspace shows. The free door needs no account and no key, and
-        verification stays free.
+        Your assistant can then look up what we have measured and check any result, using the same published records this
+        workspace shows. Free, with no account and no key.
       </p>
 
       <div className="mt-6 grid gap-4 rounded-3xl border border-emerald-950/10 bg-card p-5 sm:p-6 lg:grid-cols-2">
+        <CopyLine
+          label="claude.ai or Claude Desktop: Settings → Connectors → Add custom connector"
+          text={FREE_DOOR}
+          testId="connect-pane-connector"
+        />
         <CopyLine label="Claude Code" text={CLAUDE_CODE_CMD} testId="connect-pane-claude" />
         <CopyLine label="Cursor (~/.cursor/mcp.json)" text={CURSOR_JSON} testId="connect-pane-cursor" />
         <CopyLine label="Check every signed card offline" text={VERIFY_OFFLINE} />
@@ -102,7 +107,12 @@ export default function ConnectPane() {
         </div>
       </div>
 
-      <h3 className="mt-8 text-lg font-black tracking-tight text-foreground">The doors</h3>
+      <details className="group mt-8 rounded-2xl border border-border bg-card" data-testid="connect-developers">
+        <summary className="flex min-h-12 cursor-pointer list-none items-center px-4 text-sm font-semibold text-foreground">
+          For developers: every door and the tool list
+        </summary>
+        <div className="border-t border-border p-4">
+      <h3 className="text-lg font-black tracking-tight text-foreground">The doors</h3>
       <ul className="mt-3 grid list-none gap-3 p-0 sm:grid-cols-2">
         {DOORS.map((d) => (
           <li key={d.name} className="min-w-0 rounded-2xl border border-border bg-card p-4">
@@ -124,6 +134,8 @@ export default function ConnectPane() {
           </li>
         ))}
       </ul>
+        </div>
+      </details>
       <NextSteps
         testId="connect-next"
         steps={[

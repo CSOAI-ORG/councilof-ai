@@ -177,7 +177,7 @@ export const LOBBY_TABS: LobbyTab[] = [
     id: "matrix",
     label: "Regulation matrix",
     blurb:
-      "Industry × regulation grid — living data from GET /api/gspc. Printer of the board, not a simulation.",
+      "Which rules apply to which industry. Pick an industry.",
     path: "",
     kind: "native",
     // No "crosswalk" here (6 Oct 2026): the Crosswalk page has its own route below, and with

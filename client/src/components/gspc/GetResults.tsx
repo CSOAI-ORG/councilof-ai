@@ -21,9 +21,12 @@ import { Link, useSearch } from "wouter";
 import { ArrowRight, BellRing, ClipboardList, ExternalLink, Search, Sparkles, Zap } from "lucide-react";
 import ResultCard from "@/components/talk/ResultCard";
 import {
+  FRESH_RUN_DOCTRINE,
   classifySubject,
   freeQuestion,
   matchModels,
+  modelAnchor,
+  modelVerifyHref,
   newestSignedRun,
   type ModelRow,
   type PodCardRow,
@@ -114,7 +117,8 @@ function ModelLookup({ subject }: { subject: string }) {
             ? `Nothing published about “${subject}” yet`
             : `“${subject}”`
       }
-      tool="models-measured.json"
+      tool="From our published list"
+      toolHint="Read from /interop/models-measured.json"
       running={read.state === "loading"}
       label={label}
       tiles={
@@ -127,8 +131,8 @@ function ModelLookup({ subject }: { subject: string }) {
             ]
           : []
       }
-      verifyUrl={top ? "/dashboard?tab=verify" : "/models-measured/"}
-      verifyText={top ? "Check a result yourself (free)" : "See every model we have measured"}
+      verifyUrl={top ? modelVerifyHref(top) : "/models-measured/"}
+      recordId={top?.first_signed_card ?? null}
       summary={
         read.state === "error"
           ? `The list could not be read (${read.error}). Nothing is shown in its place.`
@@ -140,6 +144,17 @@ function ModelLookup({ subject }: { subject: string }) {
     >
       {top ? (
         <div className="mt-3 space-y-1 text-sm text-muted-foreground" data-testid="get-results-model-more">
+          {typeof top.cards === "number" && top.cards > 0 ? (
+            <p>
+              <a
+                href={`/models-measured/#${modelAnchor(top.id)}`}
+                className={`inline-flex min-h-11 items-center font-semibold text-emerald-800 underline underline-offset-2 dark:text-emerald-300 ${FOCUS}`}
+                data-testid="get-results-model-results"
+              >
+                See its {top.cards} result{top.cards === 1 ? "" : "s"}
+              </a>
+            </p>
+          ) : null}
           {run ? (
             <p>
               <a
@@ -217,8 +232,28 @@ export default function GetResults({
   const [value, setValue] = useState("");
   const [subject, setSubject] = useState<string | null>(null);
   const [watch, setWatch] = useState<WatchState>({ state: "idle" });
+  const [asked, setAsked] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const kind: SubjectKind = subject ? classifySubject(subject) : "empty";
+
+  // The answer renders below the five steps, out of view on a phone. After each submit, bring
+  // it to the top of the view and move focus to its heading, so the reader sees what came back.
+  useEffect(() => {
+    if (!asked || !subject) return;
+    const id = classifySubject(subject) === "model" ? "ws-model-answer" : "ws-answers";
+    const frame = window.requestAnimationFrame(() => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+      el.scrollIntoView({ block: "start", behavior: reduce ? "auto" : "smooth" });
+      const heading = el.querySelector<HTMLElement>("h2, h3");
+      if (heading) {
+        if (!heading.hasAttribute("tabindex")) heading.setAttribute("tabindex", "-1");
+        heading.focus({ preventScroll: true });
+      }
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [asked, subject]);
 
   const submit = (raw: string) => {
     const s = raw.trim().slice(0, 300);
@@ -228,6 +263,7 @@ export default function GetResults({
     }
     setValue(s);
     setSubject(s);
+    setAsked((n) => n + 1);
     setWatch({ state: "idle" });
     const k = classifySubject(s);
     const q = freeQuestion(k, s);
@@ -352,11 +388,7 @@ export default function GetResults({
           icon={Zap}
           title={kind === "record" ? "Check this result" : "Request a fresh run"}
           hint={kind === "record" ? undefined : "Paid per run over x402 (USDC, from your own wallet); invoiced work is arranged by email. The exact amount appears only in the terms."}
-          body={
-            kind === "record"
-              ? "A result id is already a result: check that it is genuine instead. Free."
-              : "A new test of the model you name. You see the terms before paying anything, from your own wallet; invoiced work is arranged by email. You get a receipt and a place in the public queue; paying never buys a result, and no delivery date is promised yet."
-          }
+          body={kind === "record" ? "A result id is already a result: check that it is genuine instead. Free." : `${FRESH_RUN_DOCTRINE} Invoiced work is arranged by email.`}
           active={active}
         >
           {kind !== "record" ? (
@@ -395,7 +427,9 @@ export default function GetResults({
               </button>
             ) : watch.state === "confirm" ? (
               <span className="flex flex-col gap-2">
-                <span className="text-sm text-foreground">Send a request for a person to review? No email or account is asked for.</span>
+                <span className="text-sm leading-snug text-foreground" data-testid="get-watch-note">
+                  Sends “{subject}, monthly” for a person to review. No email or account is asked for.
+                </span>
                 <span className="flex flex-wrap gap-2">
                   <button type="button" onClick={sendWatch} className={`min-h-11 rounded-lg bg-emerald-800 px-3 text-sm font-semibold text-white hover:bg-emerald-900 ${FOCUS}`}>
                     Send request

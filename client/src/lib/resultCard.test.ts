@@ -1,5 +1,24 @@
 import { describe, expect, it } from "vitest";
-import { classifySubject, freeQuestion, matchModels, newestSignedRun, stateMeaning, statTiles, toolTitle, verifyHref } from "./resultCard";
+import {
+  READ_MEANING,
+  answerSections,
+  checkedLine,
+  chipFor,
+  classifySubject,
+  firstSentence,
+  freeQuestion,
+  matchModels,
+  newestSignedRun,
+  modelAnchor,
+  modelVerifyHref,
+  plainDuration,
+  stateMeaning,
+  statTiles,
+  toolTitle,
+  verifyHref,
+} from "./resultCard";
+
+const tiles = (tool: string, output: unknown) => statTiles(output, 4, tool).map((t) => `${t.label}=${t.value}${t.hint ? ` (${t.hint})` : ""}`);
 
 describe("resultCard", () => {
   it("prints only fields the tool returned, at most four, as_of last", () => {
@@ -68,5 +87,157 @@ describe("resultCard", () => {
     expect(newestSignedRun(rows, "ollama:qwen3:8b")).toEqual({ date: "2026-09-30", url: "/c/b.json", id: "b" });
     expect(newestSignedRun(rows, "acme-llm-7b")).toBeNull();
     expect(newestSignedRun(null, "qwen3:8b")).toBeNull();
+  });
+
+  it("gives each common tool plain tiles that carry the answer (shapes as the live tools return them, 6 Oct 2026)", () => {
+    expect(
+      tiles("get_axis", {
+        state: "LIVE",
+        axis: "safety",
+        n: 36,
+        accuracy: 0.9444,
+        interval: [0.819, 0.985],
+        separation: "TIE",
+        leader: null,
+        top_observed_not_separated: "gemma3:12b (base model)",
+      }),
+    ).toEqual(["Questions=36", "Best score=94% (range 81–99%)", "Clear winner?=No: a tie", "Highest observed=gemma3:12b (base model)"]);
+    expect(tiles("get_axis", { n: 27, accuracy: 0.444, separation: "SEPARATED", leader: "mock-swarm:3b" })).toContain("Clear winner?=Yes");
+
+    expect(
+      tiles("board_totals", {
+        state: "LIVE",
+        counts: [
+          { name: "axis_slots", value: 23, kind: "declared slot count" },
+          { name: "measured", value: 23, kind: "measurement count" },
+          { name: "unmeasured", value: 0, kind: "first-class" },
+        ],
+        separation: { comparison_axes: 14, separated_leads: 0, ties: 7, untested: 7 },
+        as_of: { fetched_at: "2026-10-06T13:00:17.845Z" },
+      }),
+    ).toEqual(["Tests on the board=23", "With results=23", "Clear winners=0", "Ties=7"]);
+
+    // Two corpora, two labels; a page of 5 rows is never called "newest".
+    expect(
+      tiles("list_cards", {
+        state: "LIVE",
+        index: { n_cards_declared: 335, rows_carried: 335, packaged_at: "2026-08-28T15:39:25+00:00" },
+        card_store_count_endpoint: { count: 336 },
+        rows: [{ card: "a".repeat(64), ts: "2026-08-19T09:24:39+00:00" }],
+      }),
+    ).toEqual(["Cards in index=335", "Store reports=336", "Index updated=2026-08-28"]);
+    expect(
+      tiles("list_cards", {
+        index: { n_cards_declared: 2, rows_carried: 2 },
+        rows: [{ ts: "2026-08-19T09:00:00Z" }, { ts: "2026-08-21T09:00:00Z" }],
+      }),
+    ).toContain("Newest=2026-08-21");
+
+    expect(
+      tiles("server_evidence", {
+        state: "MEASURED",
+        endpoint: "https://graded.sh/mcp",
+        as_of: "2026-10-01T08:11:31Z",
+        n_capsules: 2,
+        capsules: [
+          { measurement_state: "CONSISTENT", observed_at: "2026-09-25T07:33:52Z" },
+          { measurement_state: "INCONSISTENT", observed_at: "2026-09-20T07:33:52Z" },
+        ],
+      }),
+    ).toEqual(["Checks=2", "Consistent=1", "Last checked=2026-09-25"]);
+    expect(tiles("server_evidence", { state: "NOT_MEASURED", n_capsules: 0, capsules: [], as_of: "2026-10-01T08:11:31Z" })).toEqual([
+      "Checks=0",
+      "Records as of=2026-10-01",
+    ]);
+
+    const checks = [
+      { check: "Family", ok: true },
+      { check: "Card id", ok: true },
+      { check: "Trust anchor", ok: true },
+      { check: "Live anchor cross-check", ok: true, advisory: true },
+      { check: "Signature", ok: true },
+      { check: "Framing", ok: null },
+    ];
+    expect(tiles("verify_card", { state: "VALID", checks, pinned_key: "did:web:csoai.org#card-attestation-1" })).toEqual([
+      "Checks passed=5/5 (1 more noted, not pass or fail)",
+      "Signed by=Council of AI (key card-attestation-1)",
+    ]);
+    // No signing date in the output: no "Signed on" tile, never a guessed one.
+    expect(tiles("verify_card", { state: "VALID", checks, pinned_key: "did:web:csoai.org#card-attestation-1" }).join()).not.toContain("Signed on");
+    expect(tiles("verify_card", { state: "VALID", checks, pinned_key: "did:web:csoai.org#k", created: "2026-08-19T09:24:39Z" })).toContain(
+      "Signed on=2026-08-19",
+    );
+    // An INVALID card is never "Signed by Council of AI".
+    expect(tiles("verify_card", { state: "INVALID", checks: [{ ok: false }], pinned_key: "did:web:csoai.org#k" })).toEqual(["Checks passed=0/1"]);
+
+    expect(
+      tiles("corrections_summary", {
+        count: 90,
+        recent: [{ date: "2026-09-30" }, { date: "2026-09-27" }],
+        correction_latency: { exact: 1, median_seconds_exact: 4600 },
+      }),
+    ).toEqual(["Corrections=90", "Newest=2026-09-30", "Median fix time=1 h 17 min (over 1 timed correction)"]);
+
+    // Corpus 2 is named as the root's leaves, never just "cards".
+    expect(tiles("get_root", { state: "VALID", card_count: 319, merkle_root: "4".repeat(64), as_of: "2026-09-30T05:05:34Z" })).toEqual([
+      "Cards under the root=319",
+      "Root dated=2026-09-30",
+    ]);
+  });
+
+  it("falls back to the generic picker for tools without a spec, and skips protocol fields", () => {
+    expect(tiles("some_new_tool", { x402Version: 2, tool: "x", route: "/r", sku: "s", family: "f", total: 3 })).toEqual(["Total=3"]);
+  });
+
+  it("shows READ, not VALID, for tools that only fetched a file, and keeps the tool's own word", () => {
+    expect(chipFor("get_root", "VALID")).toEqual({ chip: "READ", toolWord: "VALID" });
+    expect(chipFor("x402_trust", "VALID")).toEqual({ chip: "READ", toolWord: "VALID" });
+    expect(chipFor("mcp_trust", "VALID")).toEqual({ chip: "READ", toolWord: "VALID" });
+    expect(chipFor("get_card", "INVALID")).toEqual({ chip: "INVALID", toolWord: null });
+    expect(chipFor("verify_card", "VALID")).toEqual({ chip: "VALID", toolWord: null });
+    expect(stateMeaning("READ")).toBe(`${READ_MEANING}.`);
+    expect(READ_MEANING).toBe("Read from the published file; no signature was checked");
+    expect(stateMeaning("READY_FOR_REVIEW")).not.toBe(`${READ_MEANING}.`);
+    for (const w of ["RELEVANT_CARDS_FOUND", "EMPTY", "CONSISTENT", "PROBED", "SIGNED", "DELIVERED"])
+      expect(stateMeaning(w), w).not.toBe("The state word the tool returned.");
+  });
+
+  it("names the endpoint server_evidence actually looked up", () => {
+    expect(checkedLine("server_evidence", { endpoint: "https://github.com/mcp" })).toBe(
+      "We checked our published records for https://github.com/mcp",
+    );
+    expect(checkedLine("get_axis", { endpoint: "x" })).toBeNull();
+  });
+
+  it("keeps one sentence on the face and splits the rest by tool", () => {
+    const text =
+      "**server_evidence** → NOT_MEASURED — No published capsule is keyed to this endpoint. NOT_MEASURED is not a finding.\n- n_capsules: 0\n\n" +
+      "**mcp_trust** → VALID — MCP handshake census (partial round).\n- partial: true\n\n" +
+      "_Every line above is a field of the named tool's output._";
+    expect(firstSentence(text)).toBe("No published capsule is keyed to this endpoint.");
+    expect(firstSentence("**get_axis** → MEASURED — axis \"safety\" (a real run stands behind this row).\n- n: 36")).toBe(
+      'Axis "safety" (a real run stands behind this row).',
+    );
+    const { byTool, shared } = answerSections(text);
+    expect(Object.keys(byTool)).toEqual(["server_evidence", "mcp_trust"]);
+    expect(byTool.server_evidence).toContain("n_capsules: 0");
+    expect(byTool.server_evidence).not.toContain("handshake");
+    expect(shared).toContain("Every line above");
+  });
+
+  it("links a model to its first signed card, and its row on the list", () => {
+    const id = "b".repeat(64);
+    expect(modelVerifyHref({ first_signed_card: id })).toBe(`/dashboard?tab=verify&card=${id}`);
+    expect(modelVerifyHref({ first_signed_card: null })).toBe("/dashboard?tab=verify");
+    expect(modelVerifyHref({ first_signed_card: "not-a-hash" })).toBe("/dashboard?tab=verify");
+    expect(modelAnchor("qwen3:8b")).toBe("model-qwen3-8b");
+    expect(modelAnchor("Qwen/Qwen2.5-0.5B-Instruct")).toBe("model-qwen-qwen2-5-0-5b-instruct");
+  });
+
+  it("prints durations in plain units", () => {
+    expect(plainDuration(4600)).toBe("1 h 17 min");
+    expect(plainDuration(1714)).toBe("29 min");
+    expect(plainDuration(7200)).toBe("2 h");
+    expect(plainDuration(3 * 86400)).toBe("3 days");
   });
 });

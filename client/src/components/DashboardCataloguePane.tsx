@@ -18,6 +18,7 @@ import {
   type LobbyRouteGroup,
 } from "@/components/lobby/tabs";
 import DashboardEmbeddedView from "@/components/DashboardEmbeddedView";
+import { descriptionForViewPath, labelForViewPath } from "@/lib/viewLabel";
 import {
   dashboardViewFromSearch,
   dashboardViewHref,
@@ -178,7 +179,7 @@ export function buildDashboardCatalogue(): DashboardCatalogueEntry[] {
     add({
       id: `primary:${route.path}`,
       label,
-      description: "Current published Council of AI surface.",
+      description: descriptionForViewPath(route.path) ?? "A published page on councilof.ai.",
       group: classify(route.path, label).title,
       kind: "surface",
       href: dashboardViewHref(route.path, label),
@@ -199,7 +200,7 @@ export function buildDashboardCatalogue(): DashboardCatalogueEntry[] {
     add({
       id: `library:${route.path}`,
       label: route.title || route.path,
-      description: "Dated reference surface retained in the Council library.",
+      description: descriptionForViewPath(route.path) ?? "An older dated page, kept in the library for reference.",
       group: `Library · ${classify(route.path, route.title).title}`,
       kind: "library",
       href: dashboardViewHref(route.path, route.title),
@@ -208,6 +209,13 @@ export function buildDashboardCatalogue(): DashboardCatalogueEntry[] {
   }
 
   return entries;
+}
+
+/** A framed path's name: its catalogue entry's label, else the lobby/head label. */
+export function viewEntryLabel(path: string): string {
+  const bare = path.split(/[?#]/)[0].replace(/\/+$/, "") || "/";
+  const entry = buildDashboardCatalogue().find((e) => e.path && (e.path.split(/[?#]/)[0].replace(/\/+$/, "") || "/") === bare);
+  return entry?.label && !entry.label.startsWith("/") ? entry.label : labelForViewPath(path);
 }
 
 // No "Industries" filter: the builder above emits no industry entries, and a chip that can only
@@ -245,8 +253,11 @@ export function filterCatalogue(
 export default function DashboardCataloguePane() {
   const search = useSearch();
   const embeddedPath = dashboardViewFromSearch(search);
+  // Without ?label, name the page from its catalogue entry or its own head — never the raw path.
   const embeddedLabel =
-    dashboardViewLabel(search) || embeddedPath || "Published surface";
+    dashboardViewLabel(search) ||
+    (embeddedPath ? viewEntryLabel(embeddedPath) : null) ||
+    "Published page";
   const [query, setQuery] = useState("");
   const [kind, setKind] = useState<"all" | CatalogueKind>(DEFAULT_CATALOGUE_KIND);
   const catalogue = useMemo(buildDashboardCatalogue, []);

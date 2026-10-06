@@ -28,6 +28,56 @@ import { dashboardViewHref } from "@/lib/dashboardView";
 
 type ReviewDecision = "READY_FOR_REVIEW" | "RETURN_FOR_REVISION" | "DISCARD";
 
+/**
+ * One plain question per axis, shown under its question-bank name. It restates the bank's
+ * published task (GET /api/gspc → axes[].task) in everyday words; it adds no claim. An axis that
+ * is not listed simply shows no caption.
+ */
+export const PLAIN_BENCH: Record<string, string> = {
+  governance: "can the model sort AI uses into the right EU AI Act risk level?",
+  safety: "does the model refuse harmful requests but still help with safe ones?",
+  provenance: "can the model tell when an “AI-made” label on content still counts?",
+  continuity: "can the model tell whether encryption will hold up against quantum computers?",
+  conformance: "does the model use agent tools the way the MCP standard says?",
+  openness: "can the model tell whether a software licence allows what you want to do?",
+  "machinery-conformity": "can the model tell when a self-changing machine function is a safety function?",
+  care: "does the model protect people without refusing to help them?",
+  "cross-reality": "does an AI agent know when to act, when to ask first and when to refuse?",
+  "detector-interop": "can the model work out which watermark detectors can read which watermarks?",
+  "art5-safeguard": "does the model spot uses the EU AI Act bans outright?",
+  swarm: "do several AI agents working together stay safe?",
+  affect: "does the model avoid manipulating people or exploiting their feelings?",
+  jail: "can the model spot an attempt to break out of its safety rules?",
+  "effect-binding": "does a server check what it actually runs, not just what the agent asked for?",
+  "provenance-controls": "can a stablecoin issuer freeze or restrict accounts, as the chain shows?",
+  "reserve-attestation": "does the issuer show a third-party check of its reserves?",
+  "regulatory-framework": "is the rulebook the issuer follows stated and checkable?",
+  "distribution-integrity": "are the coin's supply and holders what the issuer says?",
+  "custody-disclosure": "are the custodian and the auditor named and checkable?",
+  "ai-adoption-components": "official EU figures on business AI use, cited, not scored.",
+  "labour-components": "official EU labour figures, cited, not scored.",
+  "humanoid-labour-index": "does a named robot maker publish a dated count of robots at work?",
+};
+
+/** The plain question alone, capitalised, for the narrow axis list. */
+export function plainBenchQuestion(axis: string): string | null {
+  const q = Object.prototype.hasOwnProperty.call(PLAIN_BENCH, axis) ? PLAIN_BENCH[axis] : null;
+  return q ? q.charAt(0).toUpperCase() + q.slice(1) : null;
+}
+
+/** "DefBench: does the model refuse harmful requests but still help with safe ones?" */
+export function plainBenchCaption(axis: string, bench: string): string | null {
+  const q = Object.prototype.hasOwnProperty.call(PLAIN_BENCH, axis) ? PLAIN_BENCH[axis] : null;
+  if (!q) return null;
+  const name = bench.split(/\s+[—–-]\s+/)[0].trim();
+  return name ? `${name}: ${q}` : q.charAt(0).toUpperCase() + q.slice(1);
+}
+
+/** Coaching goes to the home Answers panel, which shows tool results as plain cards. */
+function coachHref(prompt: string): string {
+  return `/dashboard?ask=${encodeURIComponent(prompt)}`;
+}
+
 type ScenarioPointer = {
   regulator_name?: string;
   obligation?: string;
@@ -434,6 +484,11 @@ export default function DashboardLearningPane() {
                         <span className="mt-0.5 block truncate text-[10px] text-muted-foreground">
                           {path.axis.bench}
                         </span>
+                        {plainBenchQuestion(path.axis.id) ? (
+                          <span className="mt-0.5 line-clamp-2 block text-[11px] leading-snug text-muted-foreground">
+                            {plainBenchQuestion(path.axis.id)}
+                          </span>
+                        ) : null}
                       </span>
                       <span className="font-mono text-[9px] text-muted-foreground">
                         {done}/5
@@ -470,6 +525,11 @@ export default function DashboardLearningPane() {
                 <p className="mt-1 text-sm font-medium text-emerald-900">
                   {selected.axis.bench}
                 </p>
+                {plainBenchCaption(selected.axis.id, selected.axis.bench) ? (
+                  <p className="mt-1 text-sm text-foreground" data-testid="learning-plain-bench">
+                    {plainBenchCaption(selected.axis.id, selected.axis.bench)}
+                  </p>
+                ) : null}
                 <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
                   {selected.axis.task}
                 </p>
@@ -718,7 +778,7 @@ export default function DashboardLearningPane() {
                     </summary>
                     <div className="mt-2 flex flex-wrap gap-2">
                       <Link
-                        href={`/dashboard?tab=learn&ask=${encodeURIComponent(coachPrompt(selected.axis.id, activeStage.id))}`}
+                        href={coachHref(coachPrompt(selected.axis.id, activeStage.id))}
                         className="rounded-xl border border-amber-800/25 bg-white px-4 py-2.5 text-xs font-semibold text-amber-950 hover:border-amber-800/50"
                       >
                         Ask Council to coach this stage
@@ -757,13 +817,13 @@ export default function DashboardLearningPane() {
                     </p>
                     <div className="mt-3 flex flex-wrap gap-3 text-xs font-semibold">
                       <Link
-                        href="/dashboard?tab=evidence"
+                        href="/dashboard?tab=board"
                         className="text-emerald-900 underline underline-offset-2"
                       >
-                        Review the separate evidence gate
+                        See the published evidence for this axis
                       </Link>
                       <Link
-                        href={`/dashboard?tab=learn&ask=${encodeURIComponent(coachPrompt(selected.axis.id, null))}`}
+                        href={coachHref(coachPrompt(selected.axis.id, null))}
                         className="text-emerald-900 underline underline-offset-2"
                       >
                         Discuss the result with Council

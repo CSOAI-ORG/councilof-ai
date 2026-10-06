@@ -8,7 +8,13 @@
  * shown; there is no placeholder number.
  */
 
-export type StatTile = { key: string; label: string; value: string };
+export type StatTile = {
+  key: string;
+  label: string;
+  value: string;
+  /** Optional small line under the value (e.g. how many entries a median is over). */
+  hint?: string;
+};
 
 const TOOL_TITLES: Record<string, string> = {
   server_evidence: "What is measured about this server",
@@ -59,9 +65,34 @@ export function stateMeaning(label: string | undefined): string {
   if (l.startsWith("QUEUED")) return "Your request is in the queue; nothing has been measured for it yet.";
   if (l.startsWith("RETRIEVABLE")) return "Signed results are published for this request; open them below.";
   if (l.startsWith("RECEIVED_FOR_REVIEW")) return "Recorded for a person to review. Nothing is scheduled or charged yet.";
+  if (/^READ\b/.test(l)) return `${READ_MEANING}.`;
   if (l.startsWith("RELEVANT_CARDS_FOUND")) return "Signed results relevant to this obligation were found. Relevant is not a determination: nothing here says the obligation is met.";
   if (l.startsWith("EMPTY")) return "Nothing was found for this yet. That is not a finding either way.";
+  if (l.startsWith("CONSISTENT")) return "The two public statements we compared agree with each other. It does not say either one is good.";
+  if (l.startsWith("PROBED")) return "We read the public source directly and recorded what it said. No verdict is drawn from it.";
+  if (l.startsWith("SIGNED")) return "Signed by Council of AI. Anyone can check the signature with the link on this card.";
+  if (l.startsWith("DELIVERED"))
+    return "The paid request returned its payload. That alone does not prove a signature; check the record it returned.";
   return "The state word the tool returned.";
+}
+
+/** The chip a fetch-only tool shows: it read a published file and checked no signature. */
+export const READ_MEANING = "Read from the published file; no signature was checked";
+
+/**
+ * Tools that only fetch a published file. Their own VALID / LIVE means "the file was read and
+ * parsed", not "a signature was checked", so the card shows READ and keeps the tool's word small.
+ */
+const FETCH_ONLY = new Set(["get_root", "mcp_trust", "x402_trust", "get_card"]);
+
+/**
+ * The state chip a card shows, and the tool's own word when the chip differs from it.
+ * A fetch-only tool that read its file shows READ; a failure word (INVALID, UNREACHABLE …) is
+ * never softened into READ, because then nothing was read.
+ */
+export function chipFor(tool: string, label: string | undefined): { chip: string | undefined; toolWord: string | null } {
+  if (label && FETCH_ONLY.has(tool) && /^(VALID|LIVE)\b/i.test(label)) return { chip: "READ", toolWord: label };
+  return { chip: label, toolWord: null };
 }
 
 // Fields that are never a stat: prose, identifiers, plumbing and doctrine lines.
@@ -69,6 +100,7 @@ const SKIP = new Set([
   "state", "doctrine", "note", "notes", "source", "kind", "schema", "key", "shard_url", "index_root",
   "version", "more", "not_a_certification", "endpoint", "reason", "detail", "reachable", "headline",
   "partial_reason", "url", "href", "id", "summary", "description", "error", "what", "label",
+  "x402Version", "tool", "route", "sku", "not_gspc", "family", "pinned_key", "rows",
 ]);
 
 const PRIORITY = [
@@ -111,10 +143,214 @@ function show(key: string, v: unknown): string | null {
   return null;
 }
 
-/** Up to `max` stat tiles from a tool's structured output, printed as returned. */
-export function statTiles(output: unknown, max = 4): StatTile[] {
+type Obj = Record<string, unknown>;
+const rec = (v: unknown): Obj | null => (v && typeof v === "object" && !Array.isArray(v) ? (v as Obj) : null);
+const num = (v: unknown): number | null => (typeof v === "number" && Number.isFinite(v) ? v : null);
+const fmt = (n: number): string => new Intl.NumberFormat("en-GB").format(n);
+const day = (v: unknown): string | null => (typeof v === "string" ? (v.match(/^(\d{4}-\d{2}-\d{2})/)?.[1] ?? null) : null);
+const latestDay = (values: unknown[]): string | null =>
+  values.map(day).filter((d): d is string => Boolean(d)).sort().pop() ?? null;
+const pct = (x: number, round: (n: number) => number = Math.round): string => `${round(x * 100)}%`;
+
+/** A duration in seconds, in the largest plain unit that keeps it readable. */
+export function plainDuration(seconds: number): string {
+  if (!Number.isFinite(seconds) || seconds < 0) return "";
+  const min = Math.round(seconds / 60);
+  if (min < 60) return `${Math.max(1, min)} min`;
+  const h = Math.floor(min / 60);
+  if (h < 48) return min % 60 ? `${h} h ${min % 60} min` : `${h} h`;
+  return `${Math.round(h / 24)} days`;
+}
+
+/** The separation word as a plain answer to "is there a clear winner?". */
+const CLEAR_WINNER: Record<string, string> = {
+  SEPARATED: "Yes",
+  TIE: "No: a tie",
+  UNTESTED: "Not tested yet",
+};
+
+/**
+ * Per-tool tiles: the fields a stranger needs from each tool, in plain words. Each reads only
+ * fields the tool returned; a missing field drops its tile, it is never filled in.
+ */
+const TILE_SPECS: Record<string, (o: Obj) => StatTile[]> = {
+  get_axis: (o) => {
+    const t: StatTile[] = [];
+    const n = num(o.n);
+    if (n !== null) t.push({ key: "n", label: "Questions", value: fmt(n) });
+    const acc = num(o.accuracy);
+    if (acc !== null) {
+      const iv = Array.isArray(o.interval) && o.interval.length === 2 ? o.interval.map(num) : null;
+      // The range is widened outward when rounded, never narrowed.
+      const range = iv && iv[0] !== null && iv[1] !== null ? `range ${Math.floor(iv[0] * 100)}–${pct(iv[1], Math.ceil)}` : undefined;
+      t.push({ key: "accuracy", label: "Best score", value: pct(acc), hint: range });
+    }
+    if (typeof o.separation === "string" && o.separation) {
+      const s = o.separation.toUpperCase();
+      t.push({ key: "separation", label: "Clear winner?", value: CLEAR_WINNER[s] ?? o.separation });
+    }
+    const top =
+      typeof o.leader === "string" && o.leader
+        ? o.leader
+        : typeof o.top_observed_not_separated === "string" && o.top_observed_not_separated
+          ? o.top_observed_not_separated
+          : null;
+    if (top) t.push({ key: "top", label: "Highest observed", value: top });
+    return t;
+  },
+  board_totals: (o) => {
+    const list = Array.isArray(o.counts) ? o.counts.map(rec) : [];
+    const flat = rec(o.counts);
+    const count = (name: string) => {
+      const row = list.find((r) => r?.name === name);
+      return row ? num(row.value) : flat ? num(flat[name]) : null;
+    };
+    const sep = rec(o.separation);
+    const t: StatTile[] = [];
+    const slots = count("axis_slots");
+    const measured = count("measured");
+    if (slots !== null) t.push({ key: "axis_slots", label: "Tests on the board", value: fmt(slots) });
+    if (measured !== null) t.push({ key: "measured", label: "With results", value: fmt(measured) });
+    const leads = num(sep?.separated_leads);
+    const ties = num(sep?.ties);
+    if (leads !== null) t.push({ key: "separated_leads", label: "Clear winners", value: fmt(leads) });
+    if (ties !== null) t.push({ key: "ties", label: "Ties", value: fmt(ties) });
+    return t;
+  },
+  list_cards: (o) => {
+    // Two corpora, two labels, never added together (council-os/CARD-CORPORA.md).
+    const idx = rec(o.index);
+    const store = rec(o.card_store_count_endpoint);
+    const t: StatTile[] = [];
+    const declared = num(idx?.n_cards_declared);
+    if (declared !== null) t.push({ key: "index.n_cards_declared", label: "Cards in index", value: fmt(declared) });
+    const reported = num(store?.count);
+    if (reported !== null) t.push({ key: "card_store_count_endpoint.count", label: "Store reports", value: fmt(reported) });
+    const rows = Array.isArray(o.rows) ? o.rows.map(rec) : [];
+    const carried = num(idx?.rows_carried);
+    // "Newest" only when every row came back; otherwise the newest of a page is not the newest card.
+    const newest = rows.length && carried !== null && rows.length >= carried ? latestDay(rows.map((r) => r?.ts)) : null;
+    if (newest) t.push({ key: "rows.ts", label: "Newest", value: newest });
+    else {
+      const packaged = day(idx?.packaged_at);
+      if (packaged) t.push({ key: "index.packaged_at", label: "Index updated", value: packaged });
+    }
+    return t;
+  },
+  server_evidence: (o) => {
+    const n = num(o.n_capsules);
+    if (n === null) return [];
+    const t: StatTile[] = [{ key: "n_capsules", label: "Checks", value: fmt(n) }];
+    const caps = Array.isArray(o.capsules) ? o.capsules.map(rec) : [];
+    if (n > 0) {
+      let consistent: number | null = null;
+      if (caps.length) consistent = caps.filter((c) => c?.measurement_state === "CONSISTENT").length;
+      else {
+        const by = rec(o.by_adapter);
+        if (by) consistent = Object.values(by).reduce<number>((s, v) => s + (num(rec(v)?.CONSISTENT) ?? 0), 0);
+      }
+      if (consistent !== null) t.push({ key: "consistent", label: "Consistent", value: fmt(consistent) });
+      const last = latestDay(caps.map((c) => c?.observed_at)) ?? day(o.as_of);
+      if (last) t.push({ key: "last_checked", label: "Last checked", value: last });
+    } else {
+      const asOf = day(o.as_of);
+      if (asOf) t.push({ key: "as_of", label: "Records as of", value: asOf });
+    }
+    return t;
+  },
+  verify_card: (o) => {
+    const checks = Array.isArray(o.checks) ? o.checks.map(rec).filter((c): c is Obj => Boolean(c)) : [];
+    // A check with ok:null is a note (e.g. frozen framing), not a pass or a fail.
+    const decided = checks.filter((c) => c.ok === true || c.ok === false);
+    const t: StatTile[] = [];
+    if (decided.length) {
+      const passed = decided.filter((c) => c.ok === true).length;
+      const notes = checks.length - decided.length;
+      t.push({
+        key: "checks",
+        label: "Checks passed",
+        value: `${passed}/${decided.length}`,
+        hint: notes ? `${notes} more noted, not pass or fail` : undefined,
+      });
+    }
+    const valid = String(o.state ?? "").toUpperCase() === "VALID";
+    if (valid && typeof o.pinned_key === "string" && /^did:web:csoai\.org#/.test(o.pinned_key))
+      t.push({ key: "pinned_key", label: "Signed by", value: "Council of AI", hint: o.pinned_key.replace(/^did:web:csoai\.org#/, "key ") });
+    const signed = day(o.signed_on ?? o.created ?? o.signed_at);
+    if (valid && signed) t.push({ key: "signed_on", label: "Signed on", value: signed });
+    return t;
+  },
+  get_root: (o) => {
+    const t: StatTile[] = [];
+    // Corpus 2 of three (the public root's leaves); named as such, never just "cards".
+    const cards = num(o.card_count);
+    if (cards !== null) t.push({ key: "card_count", label: "Cards under the root", value: fmt(cards) });
+    const asOf = day(o.as_of);
+    if (asOf) t.push({ key: "as_of", label: "Root dated", value: asOf });
+    return t;
+  },
+  mcp_trust: (o) => {
+    const c = rec(o.counts);
+    const t: StatTile[] = [];
+    const add = (key: string, label: string) => {
+      const v = num(c?.[key]);
+      if (v !== null) t.push({ key: `counts.${key}`, label, value: fmt(v) });
+    };
+    add("total", "Servers tried");
+    add("initialize_ok_tools_listed", "Listed their tools");
+    add("auth_challenged_401_403", "Asked for a login");
+    const asOf = day(o.as_of);
+    if (asOf) t.push({ key: "as_of", label: "Read on", value: asOf, hint: o.partial === true ? "partial round" : undefined });
+    return t;
+  },
+  x402_trust: (o) => {
+    const c = rec(o.counts);
+    const t: StatTile[] = [];
+    const add = (key: string, label: string) => {
+      const v = num(c?.[key]);
+      if (v !== null) t.push({ key: `counts.${key}`, label, value: fmt(v) });
+    };
+    add("total", "Paid doors tried");
+    add("challenge_402", "Ask for payment correctly");
+    add("dead_404_or_unreachable", "Gone or unreachable");
+    const asOf = day(o.as_of);
+    if (asOf) t.push({ key: "as_of", label: "Read on", value: asOf });
+    return t;
+  },
+  corrections_summary: (o) => {
+    const t: StatTile[] = [];
+    const count = num(o.count);
+    if (count !== null) t.push({ key: "count", label: "Corrections", value: fmt(count) });
+    const recent = Array.isArray(o.recent) ? o.recent.map(rec) : [];
+    const newest = latestDay(recent.map((r) => r?.date));
+    if (newest) t.push({ key: "recent.date", label: "Newest", value: newest });
+    const lat = rec(o.correction_latency);
+    const median = num(lat?.median_seconds_exact);
+    const exact = num(lat?.exact);
+    if (median !== null && exact) {
+      t.push({
+        key: "correction_latency.median_seconds_exact",
+        label: "Median fix time",
+        value: plainDuration(median),
+        hint: `over ${fmt(exact)} timed correction${exact === 1 ? "" : "s"}`,
+      });
+    }
+    return t;
+  },
+};
+
+/**
+ * Up to `max` stat tiles from a tool's structured output, printed as returned. When `tool` has a
+ * TILE_SPECS entry, its plain tiles are used; otherwise (or when it finds nothing) the generic
+ * picker reads the top-level fields.
+ */
+export function statTiles(output: unknown, max = 4, tool?: string): StatTile[] {
   if (!output || typeof output !== "object" || Array.isArray(output)) return [];
   const o = output as Record<string, unknown>;
+  if (tool && Object.prototype.hasOwnProperty.call(TILE_SPECS, tool)) {
+    const spec = TILE_SPECS[tool](o).filter((t) => t.value);
+    if (spec.length) return spec.slice(0, max);
+  }
   const found: StatTile[] = [];
   const push = (key: string, label: string, v: unknown) => {
     if (found.some((t) => t.key === key)) return;
@@ -149,6 +385,60 @@ export function statTiles(output: unknown, max = 4): StatTile[] {
   return [...rest.slice(0, max - (asOf.length ? 1 : 0)), ...asOf].slice(0, max);
 }
 
+/**
+ * One plain line for the card face naming what was actually looked up, when the tool resolved
+ * the reader's words to something else (server_evidence turns "github.com" into
+ * https://github.com/mcp). Read from the output; null when the tool did not say.
+ */
+export function checkedLine(tool: string, output: unknown): string | null {
+  const o = rec(output);
+  if (tool === "server_evidence" && o && typeof o.endpoint === "string" && o.endpoint.trim())
+    return `We checked our published records for ${o.endpoint.trim()}`;
+  return null;
+}
+
+/**
+ * The first sentence of an answer, for the face of the panel; the rest goes behind each card's
+ * expander. The "**tool** → STATE —" lead is dropped: the card already shows the tool and its chip.
+ */
+export function firstSentence(text: string): string {
+  const line =
+    text
+      .split(/\n/)
+      .map((l) => l.replace(/^-\s+/, "").replace(/\*\*|`/g, "").trim())
+      .find((l) => l.length > 0) ?? "";
+  const body = line
+    .replace(/^[a-z0-9_]+\s*→\s*/i, "")
+    .replace(/^[A-Z][A-Z0-9_]*(?:\s+\d+\s+of\s+\d+\s+\w+)?\s+—\s+/, "")
+    .trim();
+  const m = body.match(/^(.+?[.!?])(?=\s|$)/);
+  const s = (m ? m[1] : body).trim();
+  return s ? s.charAt(0).toUpperCase() + s.slice(1) : "";
+}
+
+/**
+ * The run's answer text split by tool: each "**tool** → …" block belongs to that tool's card.
+ * Text before the first block, and the closing provenance line, go to every card.
+ */
+export function answerSections(text: string): { byTool: Record<string, string>; shared: string } {
+  const byTool: Record<string, string> = {};
+  const blocks = text.split(/\n{2,}/);
+  const shared: string[] = [];
+  let current: string | null = null;
+  for (const b of blocks) {
+    const m = b.match(/^\*\*([a-z0-9_]+)\*\*\s*→/i);
+    if (m) {
+      current = m[1];
+      byTool[current] = byTool[current] ? `${byTool[current]}\n\n${b}` : b;
+    } else if (current && !/^_.*_$/s.test(b.trim())) {
+      byTool[current] = `${byTool[current]}\n\n${b}`;
+    } else {
+      shared.push(b);
+    }
+  }
+  return { byTool, shared: shared.join("\n\n").trim() };
+}
+
 /** The one link a reader follows to check the result themselves. */
 export function verifyHref(citationUrl: string | null | undefined): string | null {
   if (!citationUrl) return null;
@@ -160,6 +450,13 @@ export function verifyHref(citationUrl: string | null | undefined): string | nul
     return null;
   }
 }
+
+/**
+ * The one sentence about a fresh run, shared by Get results (step 2) and the Request a fresh run
+ * pane: asking is free, and paying never buys a result.
+ */
+export const FRESH_RUN_DOCTRINE =
+  "We can't run a new test on demand. You can ask for one: you see the terms first and nothing is charged by asking. Paying buys a signed receipt and a place in the queue, never a result; a result appears only once it is measured.";
 
 /** What a stranger typed: a signed record id, a server/web address, or (otherwise) a model name. */
 export type SubjectKind = "record" | "server" | "model" | "empty";
@@ -183,7 +480,26 @@ export function freeQuestion(kind: SubjectKind, subject: string): string | null 
   return null;
 }
 
-export type ModelRow = { id: string; kind?: string; cards?: number; axes?: number; name_published?: boolean };
+export type ModelRow = {
+  id: string;
+  kind?: string;
+  cards?: number;
+  axes?: number;
+  name_published?: boolean;
+  /** The model's first card in the signed card index (scripts/build-models-measured.mjs); null when it has none. */
+  first_signed_card?: string | null;
+};
+
+/** The anchor of a model's row on /models-measured/ (the page and the Get results card share it). */
+export function modelAnchor(id: string): string {
+  return `model-${id.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")}`;
+}
+
+/** Where "Verify yourself" goes for a model: its first signed card, checked in the browser. */
+export function modelVerifyHref(row: Pick<ModelRow, "first_signed_card"> | null | undefined): string {
+  const id = row?.first_signed_card;
+  return typeof id === "string" && /^[0-9a-f]{64}$/i.test(id) ? `/dashboard?tab=verify&card=${id.toLowerCase()}` : "/dashboard?tab=verify";
+}
 
 function norm(s: string): string {
   return s.toLowerCase().replace(/^(ollama:|t4:|hf:)/, "").replace(/:latest$/, "").replace(/[\s_]+/g, "-");

@@ -80,8 +80,8 @@ const KIT = [
 
 const FAQ = [
   {
-    q: "What starts on 11 September 2026 under the Cyber Resilience Act?",
-    a: "From 11 September 2026, manufacturers of products with digital elements placed on the EU market must report actively exploited vulnerabilities and severe incidents to ENISA via the Single Reporting Platform, with notification also to the relevant national CSIRT: an early warning within 24 hours of becoming aware, an updated notification within 72 hours, and a final report within 14 days for a vulnerability (after handling, for an incident).",
+    q: "What has applied since 11 September 2026 under the Cyber Resilience Act?",
+    a: "Since 11 September 2026, manufacturers of products with digital elements placed on the EU market must report actively exploited vulnerabilities and severe incidents to ENISA via the Single Reporting Platform, with notification also to the relevant national CSIRT: an early warning within 24 hours of becoming aware, an updated notification within 72 hours, and a final report within 14 days for a vulnerability (after handling, for an incident).",
   },
   {
     q: "Who is in scope?",
@@ -125,13 +125,13 @@ export default function CraReadinessKit() {
         </nav>
 
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-zinc-500 mb-3">
-          EU Cyber Resilience Act · Reg (EU) 2024/2847 · reporting live 11 Sep 2026
+          EU Cyber Resilience Act · Reg (EU) 2024/2847 · reporting has applied since 11 Sep 2026
         </p>
         <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight mb-3">
-          CRA reporting starts 11 Sep 2026 — the 24h/72h/14-day runbook, signed.
+          CRA reporting has applied since 11 Sep 2026: the 24h/72h/14-day runbook
         </h1>
         <p className="text-zinc-400 leading-relaxed mb-2">
-          From <strong className="text-zinc-200">11 September 2026</strong>, every manufacturer of a
+          Since <strong className="text-zinc-200">11 September 2026</strong>, every manufacturer of a
           &ldquo;product with digital elements&rdquo; on the EU market owes ENISA an early warning
           within 24 hours of learning of an actively exploited vulnerability or severe incident, an
           updated notification within 72 hours, and a final report within 14 days — via the ENISA

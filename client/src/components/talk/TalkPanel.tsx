@@ -16,7 +16,7 @@
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { ArrowUp, Loader2, Mic, MicOff, ShieldAlert, Eye } from "lucide-react";
 import ResultCard from "@/components/talk/ResultCard";
-import { statTiles, toolTitle, verifyHref } from "@/lib/resultCard";
+import { answerSections, checkedLine, chipFor, firstSentence, statTiles, toolTitle, verifyHref } from "@/lib/resultCard";
 import type { PageContext } from "../../../../functions/_lib/uiTools";
 import { LISTEN_PRIVACY_NOTE, isListenSupported, startListening, stopListening } from "@/lib/councilListen";
 import {
@@ -141,26 +141,40 @@ function ChallengeDetails({ output }: { output: unknown }) {
   );
 }
 
-function ToolCard({ card }: { card: TalkToolCard }) {
+function ToolCard({ card, answer }: { card: TalkToolCard; answer?: string }) {
   const args = argsOf(card);
   const argText = typeof args === "string" ? args : Object.keys(args).length ? JSON.stringify(args) : "no arguments";
   const cit = card.citation;
+  const { chip, toolWord } = chipFor(card.name, card.label);
   return (
     <ResultCard
       title={toolTitle(card.name)}
       tool={card.name}
-      label={card.label}
+      label={chip}
+      toolWord={toolWord}
       running={card.status === "running"}
-      tiles={statTiles(card.output)}
+      tiles={statTiles(card.output, 4, card.name)}
+      checked={checkedLine(card.name, card.output)}
       verifyUrl={verifyHref(cit?.url)}
       recordId={cit?.record_id ?? null}
       summary={card.summary}
+      answer={answer ? <AnswerText text={answer} /> : undefined}
       args={argText}
       raw={card.output ?? undefined}
     >
       {card.label === "PAYMENT_REQUIRED" ? <ChallengeDetails output={card.output} /> : null}
     </ResultCard>
   );
+}
+
+/** This card's part of the streamed answer (its own "**tool** →" block plus the shared lines). */
+function sectionFor(run: TalkRun, tool: string, index: number): string | undefined {
+  if (!run.text) return undefined;
+  const { byTool, shared } = answerSections(run.text);
+  const own = byTool[tool];
+  if (own) return shared ? `${own}\n\n${shared}` : own;
+  // An answer with no per-tool blocks belongs to the first card only, never repeated.
+  return index === 0 && !Object.keys(byTool).length ? run.text : undefined;
 }
 
 function RunView({
@@ -181,8 +195,8 @@ function RunView({
       </p>
       {run.tools.length ? (
         <ul className="space-y-2" aria-label="Tools called">
-          {run.tools.map((t) => (
-            <ToolCard key={t.id} card={t} />
+          {run.tools.map((t, i) => (
+            <ToolCard key={t.id} card={t} answer={sectionFor(run, t.name, i)} />
           ))}
         </ul>
       ) : null}
@@ -214,20 +228,32 @@ function RunView({
       ) : null}
       {run.status === "cancelled" ? <p className="text-sm text-muted-foreground">Cancelled. Nothing was called.</p> : null}
       {run.consentRequired && onEnableWatch ? (
-        <div className="rounded-xl border border-border bg-muted p-3 text-sm text-foreground" data-testid="talk-consent" role="group" aria-label="Watch mode is off">
+        <div className="rounded-xl border border-border bg-muted p-3 text-sm text-foreground" data-testid="talk-consent" role="group" aria-label="Moving the page is switched off">
           <p className="flex items-center gap-2 font-semibold">
             <Eye className="h-4 w-4 shrink-0" aria-hidden="true" /> I can show you this on the page ({run.consentRequired.steps} step
-            {run.consentRequired.steps === 1 ? "" : "s"}), but watch mode is off.
+            {run.consentRequired.steps === 1 ? "" : "s"}), but moving the page is switched off.
           </p>
-          <p className="mt-1 text-xs text-muted-foreground">Nothing on the page moved. Turn watch on to let Ask GSPC move it; you can stop or undo any step.</p>
+          <p className="mt-1 text-xs text-muted-foreground">Nothing on the page moved. Switch on &ldquo;Let it move the page for me&rdquo; and it will; you can stop or undo any step.</p>
           <button type="button" onClick={() => onEnableWatch(run)} className={`mt-2 min-h-11 rounded-lg border border-emerald-800/40 bg-card px-4 text-sm font-semibold text-emerald-900 hover:bg-emerald-50 dark:text-emerald-100 dark:hover:bg-emerald-950 ${FOCUS}`}>
-            Turn watch on and show me
+            Switch it on and show me
           </button>
         </div>
       ) : null}
       {run.text ? (
+        // The face keeps one sentence. Every field of the answer is inside each card's
+        // "Details and raw output" expander (owner brief: no field dump after an answer).
         <div className="rounded-xl border border-border bg-card p-3" data-testid="talk-answer">
-          <AnswerText text={run.text} />
+          <p className="text-sm leading-relaxed text-foreground [overflow-wrap:anywhere]">
+            {firstSentence(run.text) || (run.tools.length ? "See the card above." : run.text)}
+          </p>
+          {run.tools.length ? null : (
+            <details className="mt-2 text-sm">
+              <summary className={`min-h-11 cursor-pointer list-none py-2 font-medium text-muted-foreground hover:text-foreground ${FOCUS}`}>
+                Full answer
+              </summary>
+              <AnswerText text={run.text} />
+            </details>
+          )}
         </div>
       ) : run.status === "streaming" ? (
         <p className="inline-flex items-center gap-2 text-sm text-muted-foreground">

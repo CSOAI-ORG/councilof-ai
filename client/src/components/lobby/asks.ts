@@ -173,8 +173,8 @@ export function asksFor(pathname: string, audience: string, limit = 4): string[]
  * audience gets a link (an unmapped audience renders no door, not a dead one).
  */
 export const AUDIENCE_DOORS: Record<string, { href: string; label: string }> = {
-  regulator: { href: "/for/regulator", label: "Open the regulator door" },
-  insurer: { href: "/insurers", label: "Open the insurer rail" },
+  regulator: { href: "/for/regulator", label: "Open the page for regulators" },
+  insurer: { href: "/insurers", label: "See what insurers can rely on" },
 };
 
 /** Total questions in the registry — quoted in the UI, computed, never typed. */

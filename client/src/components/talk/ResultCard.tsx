@@ -1,9 +1,10 @@
 /**
  * ResultCard — one tool result as a visual A2UI / AG-UI surface (owner brief, 1 Oct 2026):
- *   a compact header with a state chip, 2–4 stat tiles, ONE "verify yourself" line,
+ *   a compact header with a state chip, 2–4 stat tiles, ONE "Verify yourself" link,
  *   and the details and raw output behind an expander.
  * 8 px grid (p-2/p-4, gap-2), body ≥ 14 px, nothing under 12 px. Jargon lives in tooltips
- * (the chip's title) and in the expander, never in the face of the card.
+ * (the chip's title, the link's title) and in the expander, never in the face of the card.
+ * The link text is always "Verify yourself"; the record id or timestamp it points at is in title=.
  */
 import type { ReactNode } from "react";
 import { ChevronDown, ExternalLink, Loader2, ShieldCheck } from "lucide-react";
@@ -47,14 +48,21 @@ export type ResultCardProps = {
   title: string;
   /** The tool's own name, shown small (and in the expander) so agents and people see the same thing. */
   tool: string;
+  /** Tooltip for the tool line, when the line is a plain phrase rather than a tool name. */
+  toolHint?: string;
   label?: string;
   running?: boolean;
   tiles: StatTile[];
   verifyUrl?: string | null;
-  verifyText?: string;
   recordId?: string | null;
+  /** The tool's own state word, shown small when the chip says something plainer (READ). */
+  toolWord?: string | null;
+  /** One plain line on the card face naming what was looked up (e.g. the URL a domain became). */
+  checked?: string | null;
   /** The tool's own one-line summary: goes in the expander, verbatim. */
   summary?: string;
+  /** The answer text for this tool, as streamed: goes in the expander. */
+  answer?: ReactNode;
   args?: string;
   raw?: unknown;
   /** Extra content under the tiles (a payment challenge, model rows ...). */
@@ -66,13 +74,16 @@ export type ResultCardProps = {
 export default function ResultCard({
   title,
   tool,
+  toolHint,
   label,
   running,
   tiles,
   verifyUrl,
-  verifyText = "Verify yourself",
   recordId,
+  toolWord,
+  checked,
   summary,
+  answer,
   args,
   raw,
   children,
@@ -91,8 +102,17 @@ export default function ResultCard({
       <div className="flex items-start gap-2">
         <div className="min-w-0 flex-1">
           <h3 className="text-base font-semibold leading-snug text-foreground [overflow-wrap:anywhere]">{title}</h3>
-          <p className="font-mono text-xs text-muted-foreground" title="The tool that answered (the same one /mcp serves)">
+          <p
+            className={`${/^[\w.:/-]+$/.test(tool) ? "font-mono " : ""}text-xs text-muted-foreground`}
+            title={toolHint ?? "The tool that answered (the same one /mcp serves)"}
+          >
             {tool}
+            {toolWord ? (
+              <span className="font-sans" title="The tool's own word for this result" data-testid="result-tool-word">
+                {" "}
+                · the tool says {toolWord}
+              </span>
+            ) : null}
           </p>
         </div>
         {running ? (
@@ -105,13 +125,23 @@ export default function ResultCard({
       </div>
 
       {!running && label ? <p className="mt-2 text-sm leading-snug text-muted-foreground">{stateMeaning(label)}</p> : null}
+      {!running && checked ? (
+        <p className="mt-1 text-sm leading-snug text-foreground [overflow-wrap:anywhere]" data-testid="result-checked">
+          {checked}
+        </p>
+      ) : null}
 
       {tiles.length ? (
         <dl className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4" data-testid="result-tiles">
           {tiles.map((t) => (
-            <div key={t.key} className="min-w-0 rounded-xl bg-muted/70 px-3 py-2" title={t.key}>
+            <div key={t.key} className="min-w-0 rounded-xl bg-muted/70 px-3 py-2" title={`Field: ${t.key}`}>
               <dt className="truncate text-xs font-medium text-muted-foreground">{t.label}</dt>
               <dd className="truncate font-mono text-base font-bold leading-tight text-foreground sm:text-lg" title={t.value}>{t.value}</dd>
+              {t.hint ? (
+                <dd className="truncate text-xs text-muted-foreground" title={t.hint}>
+                  {t.hint}
+                </dd>
+              ) : null}
             </div>
           ))}
         </dl>
@@ -120,27 +150,23 @@ export default function ResultCard({
       {children}
 
       {verifyUrl ? (
-        <p className="mt-4 flex min-w-0 items-center gap-2 text-sm" data-testid="talk-citation">
+        <p className="mt-3 flex min-w-0 items-center gap-2 text-sm" data-testid="talk-citation">
           <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-700 dark:text-emerald-300" aria-hidden="true" />
           <a
             href={verifyUrl}
             target={external ? "_blank" : undefined}
             rel={external ? "noopener noreferrer" : undefined}
-            className={`inline-flex shrink-0 items-center gap-1 rounded font-semibold text-emerald-800 underline underline-offset-2 dark:text-emerald-300 ${FOCUS}`}
+            title={recordId ? `Record: ${recordId}` : verifyUrl}
+            className={`inline-flex min-h-11 shrink-0 items-center gap-1 rounded font-semibold text-emerald-800 underline underline-offset-2 dark:text-emerald-300 ${FOCUS}`}
           >
-            {verifyText}
+            Verify yourself
             {external ? <ExternalLink className="h-3 w-3" aria-hidden="true" /> : null}
             {external ? <span className="sr-only"> (opens in a new tab)</span> : null}
           </a>
-          {recordId ? (
-            <span className="min-w-0 truncate font-mono text-xs text-muted-foreground" title={recordId}>
-              {recordId}
-            </span>
-          ) : null}
         </p>
       ) : null}
 
-      {summary || args || raw !== undefined ? (
+      {summary || answer || args || raw !== undefined ? (
         <details className="group mt-3 border-t border-border pt-2" data-testid="result-details">
           <summary className={`flex min-h-11 cursor-pointer list-none items-center gap-1 rounded text-sm font-medium text-muted-foreground hover:text-foreground ${FOCUS}`}>
             <ChevronDown className="h-4 w-4 transition-transform group-open:rotate-180 motion-reduce:transition-none" aria-hidden="true" />
@@ -148,6 +174,7 @@ export default function ResultCard({
           </summary>
           <div className="space-y-2 pb-1 text-sm">
             {summary ? <p className="text-foreground [overflow-wrap:anywhere]">{summary}</p> : null}
+            {answer ? <div data-testid="talk-answer-detail">{answer}</div> : null}
             {args ? (
               <p className="font-mono text-xs text-muted-foreground [overflow-wrap:anywhere]">
                 <span className="font-sans font-medium">Called with: </span>

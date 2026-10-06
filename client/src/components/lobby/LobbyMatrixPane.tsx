@@ -10,7 +10,7 @@ import { FOCUS, MEASURE, SP, SURFACE, TYPE } from "./glass";
  * the archive visual, not as a fork.
  *
  * Authority: GET /api/gspc. If this pane disagrees with the API, the API wins.
- * This is a printer of the living board, not a simulation, not certification.
+ * A relevance map, not a simulation and not certification.
  */
 
 const RelevanceMap = lazy(() => import("@/pages/RelevanceMap"));
@@ -49,9 +49,8 @@ export default function LobbyMatrixPane({ onOpenSpace }: { onOpenSpace?: (axis: 
       </h2>
       
       <p className={`mt-3 ${MEASURE} ${TYPE.body}`}>
-        Printer of the living board. Not a simulation. Not certification.{" "}
-        <span className="font-semibold">Cite GET /api/gspc as the authority.</span>{" "}
-        If this page disagrees with the API, the API wins.
+        Which rules apply to which industry. Pick an industry below to see them. This is a map of
+        relevance, not a compliance verdict and not certification.
       </p>
 
       {/* Living drivers from GET /api/gspc */}
@@ -86,28 +85,17 @@ export default function LobbyMatrixPane({ onOpenSpace }: { onOpenSpace?: (axis: 
       {/* The existing RelevanceMap visual — NOT rebuilt */}
       <div className="mt-6 rounded-xl border border-slate-200 overflow-hidden">
         <div className="bg-amber-50 border-b border-amber-200 px-3 py-1.5">
-          <p className="text-[10px] font-semibold text-amber-800">
-            Archive visual from /map — 6 industries · 12 bridges (the fun one we already had)
+          <p className="text-[11px] font-semibold text-amber-800">
+            Relevance map: pick an industry to see the rules our connectors map to
           </p>
         </div>
         <div className="max-h-[500px] overflow-y-auto">
           <Suspense fallback={<div className="p-8 text-center text-slate-400 text-sm">Loading relevance map…</div>}>
-            <RelevanceMap />
+            <RelevanceMap embedded />
           </Suspense>
         </div>
       </div>
 
-      {/* Links to living data sources */}
-      <div className="mt-4 grid grid-cols-2 gap-2 text-[11px]">
-        <a href="/industries" className="rounded-lg border border-slate-200 px-3 py-2 hover:bg-slate-50">
-          <span className="font-semibold text-slate-700">industries.ts</span>
-          <span className="block text-slate-500">15 sectors</span>
-        </a>
-        <a href="/crosswalk" className="rounded-lg border border-slate-200 px-3 py-2 hover:bg-slate-50">
-          <span className="font-semibold text-slate-700">east-west-v1.json</span>
-          <span className="block text-slate-500">Crosswalk</span>
-        </a>
-      </div>
 
       <div className="mt-6 rounded-xl border border-sky-200 bg-sky-50/50 p-4">
         <p className={`${TYPE.section} text-sky-800`}>For regulators</p>
@@ -115,10 +103,6 @@ export default function LobbyMatrixPane({ onOpenSpace }: { onOpenSpace?: (axis: 
           Regulators can <strong>aim</strong> a draft rule against this matrix. They cannot get a verdict from it.
         </p>
         <ul className={`mt-3 space-y-2 ${TYPE.muted}`}>
-          <li>
-            <strong>Matrix cells</strong> — MEASURED / UNMEASURED / REPORTED from GET /api/gspc + existing crosswalk.
-            Empty stays empty.
-          </li>
           <li>
             <strong>Draft provisions</strong> — may open PRACTICE / unsigned sim only.
             <span className="mt-1 block rounded border border-amber-300 bg-amber-50 px-2 py-1 text-[11px] font-semibold text-amber-900">

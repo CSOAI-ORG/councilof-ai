@@ -152,14 +152,21 @@ export default function VerificationPath({
               ? "Not checked yet. The last attempt could not run any check on this text."
               : "Not checked yet."}
         </dd>
-        <dt className="font-semibold">Corpus-wide check</dt>
-        <dd>{facts?.as_of ? `Every body in the index last re-verified ${facts.as_of} (GET /api/state → card_chain)` : facts ? "The last corpus-wide run could not be read." : "Reading…"}</dd>
-        <dt className="font-semibold">Next re-check</dt>
-        <dd>
-          No published schedule re-derives the card index (its producer signs, so it runs by hand, never in CI). You can re-check this
-          card here at any time, free.{root ? ` The public root is rebuilt by ${root}.` : ""}
-        </dd>
       </dl>
+      {/* The corpus-wide and schedule lines name pipelines (the build pod, staged leaves): useful to
+          an auditor, noise to a first-time reader, so they sit behind a disclosure. */}
+      <details className="mt-1 text-xs text-slate-800" data-testid="verification-schedule">
+        <summary className="min-h-11 cursor-pointer py-3 text-sm font-semibold text-slate-800">How this check works: when it was last run</summary>
+        <dl className="grid grid-cols-1 gap-x-3 gap-y-1 pb-1 sm:grid-cols-[9rem_1fr]">
+          <dt className="font-semibold">Corpus-wide check</dt>
+          <dd>{facts?.as_of ? `Every body in the index last re-verified ${facts.as_of} (GET /api/state → card_chain)` : facts ? "The last corpus-wide run could not be read." : "Reading…"}</dd>
+          <dt className="font-semibold">Next re-check</dt>
+          <dd>
+            No published schedule re-derives the card index (its producer signs, so it runs by hand, never in CI). You can re-check this
+            card here at any time, free.{root ? ` The public root is rebuilt by ${root}.` : ""}
+          </dd>
+        </dl>
+      </details>
     </section>
   );
 }

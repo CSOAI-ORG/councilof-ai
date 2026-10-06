@@ -2,36 +2,40 @@ import { useMemo, useState } from "react";
 import { Link } from "wouter";
 import { ArrowRight, BookOpenCheck, Search } from "lucide-react";
 import { FRAMEWORKS } from "@/data/frameworks";
-import { JOINED_SPECS } from "@/data/joinedSpecs";
 import { dashboardViewHref } from "@/lib/dashboardView";
 
+// One plain sentence each. The technical receipt-format registry (data/joinedSpecs.ts) is a
+// developer reference and lives on its own page, not in this end-user pane.
 const ADAPTERS = [
   {
     name: "OWASP Agentic",
-    description: "Security-risk mapping for agentic applications. A mapping is not an OWASP endorsement or a GSPC score.",
+    description: "A security checklist for AI agents. We map our tests to it; this is not an OWASP endorsement.",
     href: dashboardViewHref("/findings", "OWASP Agentic mapping"),
   },
   {
     name: "OWASP MCP",
-    description: "MCP security and tool-boundary mapping. Catalogue coverage does not mean a server has been exercised.",
+    description: "A security checklist for the tool servers AI agents call. Being listed does not mean a server was tested.",
     href: "/dashboard?tab=tools",
   },
   {
     name: "Microsoft agent safety",
-    description: "Agent-safety controls mapped as reference material; no legal or conformity verdict is implied.",
+    description: "Microsoft's list of agent-safety controls, kept as a reference. It is not a legal or compliance verdict.",
     href: dashboardViewHref("/crosswalk", "Microsoft agent safety mapping"),
   },
   {
     name: "SCITT",
-    description: "Receipt and transparency-service bindings. Current registry state is printed below rather than promoted to a pass.",
+    description: "A standard format for public, tamper-evident receipts. We show where ours fit; nothing here is a pass.",
     href: "/dashboard?tab=attestations",
   },
   {
     name: "C2PA",
-    description: "Content-provenance adapter and Article 50 evidence path. It is separate from a GSPC measurement.",
+    description: "The standard for labelling AI-made images and media. We use it for AI-content marking evidence, separate from our test results.",
     href: "/dashboard?tab=art50",
   },
 ] as const;
+
+/** Developer page that lists the receipt and provenance formats (JoinedSpecsFooter renders them). */
+const RECEIPT_FORMATS_HREF = "/embed#joined-specs-title";
 
 export default function DashboardStandardsPane() {
   const [query, setQuery] = useState("");
@@ -47,15 +51,16 @@ export default function DashboardStandardsPane() {
 
   return (
     <section className="mx-auto max-w-6xl px-5 py-7 sm:px-8" aria-labelledby="standards-lab-title">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-800">Council of AI · Standards Lab</p>
-      <h1 id="standards-lab-title" className="mt-2 text-3xl font-semibold tracking-tight text-foreground">Mappings stay separate from measurements.</h1>
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-800">Council of AI · Standards</p>
+      <h1 id="standards-lab-title" className="mt-2 text-3xl font-semibold tracking-tight text-foreground">Standards we map our tests to</h1>
       <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-        Standards Lab binds published frameworks and external receipt formats to Council workflows. Every item here is <strong className="text-foreground">CATALOGUED</strong> unless a more specific reproduced or measured state is shown elsewhere. Nothing on this page is a legal verdict, certification, or GSPC score.
+        How our tests line up with published standards and checklists. A mapping is not a test result, a legal verdict or a
+        certification; every item here is listed (<span title="CATALOGUED: listed and mapped, not measured">catalogued</span>), not measured.
       </p>
 
       <section className="mt-7" aria-labelledby="named-adapters-title">
         <div className="flex items-center justify-between gap-3">
-          <h2 id="named-adapters-title" className="text-sm font-semibold">Named adapters</h2>
+          <h2 id="named-adapters-title" className="text-sm font-semibold">Standards and checklists</h2>
           <span className="rounded-full border border-border bg-card px-2 py-1 text-[10px] font-semibold text-muted-foreground">CATALOGUED</span>
         </div>
         <div className="mt-3 grid gap-2 md:grid-cols-2 xl:grid-cols-3">
@@ -71,29 +76,15 @@ export default function DashboardStandardsPane() {
         </div>
       </section>
 
-      <section className="mt-8" aria-labelledby="bindings-title">
-        <div className="flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <h2 id="bindings-title" className="text-sm font-semibold">Receipt and provenance bindings</h2>
-            <p className="mt-1 text-xs text-muted-foreground">Directly from the joined-spec registry; registry state is preserved verbatim.</p>
-          </div>
-          <span className="text-xs text-muted-foreground">{JOINED_SPECS.length} bindings</span>
-        </div>
-        <div className="mt-3 overflow-hidden rounded-xl border border-border bg-card">
-          <div className="divide-y divide-border">
-            {JOINED_SPECS.map((spec) => (
-              <div key={`${spec.name}-${spec.kind}`} className="grid gap-2 px-4 py-3 sm:grid-cols-[minmax(9rem,0.7fr)_minmax(12rem,1fr)_auto] sm:items-center">
-                <div>
-                  <p className="text-sm font-medium text-foreground">{spec.name}</p>
-                  <code className="text-[10px] text-muted-foreground">{spec.preimage_rule}</code>
-                </div>
-                <p className="text-xs leading-relaxed text-muted-foreground">{spec.wire}</p>
-                <span className="w-fit rounded-full border border-border bg-muted px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-foreground">registry: {spec.status}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <p className="mt-4 text-sm">
+        <a
+          href={RECEIPT_FORMATS_HREF}
+          className="inline-flex min-h-11 items-center font-semibold text-emerald-800 underline underline-offset-2"
+          data-testid="standards-receipt-formats"
+        >
+          Technical: receipt formats
+        </a>
+      </p>
 
       <section className="mt-8" aria-labelledby="framework-library-title">
         <div className="flex flex-wrap items-end justify-between gap-3">

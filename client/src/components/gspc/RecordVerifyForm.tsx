@@ -86,13 +86,19 @@ function TallyOptIn({ ok, variant }: { ok: boolean; variant: "light" | "dark" })
     return () => { live = false; clearTimeout(timer); controller.abort(); };
   }, []);
 
+  // Anyone can click the tally button, with any record, so its numbers say nothing about our
+  // records: "N did not" read as "N of your cards failed". The count stays published, behind a
+  // disclosure, under a label that says what it is.
   const count = tally ? (
-    <p className={`text-sm leading-relaxed ${muted}`} data-testid="verify-tally-count">
-      Opt-in clicks from anyone, including our own tests: {tally.ok.toLocaleString()} said their
-      check matched, {tally.fail.toLocaleString()} said it did not. Self-reported, not a
-      measurement, and not about this record. Only these two numbers are stored, so earlier test
-      clicks cannot be separated from real ones.
-    </p>
+    <details className={`text-sm leading-relaxed ${muted}`} data-testid="verify-tally">
+      <summary className={`min-h-[44px] cursor-pointer rounded-md py-3 font-semibold ${FOCUS}`}>About the public tally</summary>
+      <p data-testid="verify-tally-count">
+        Unverified, self-reported clicks: {(tally.ok + tally.fail).toLocaleString()}. Opt-in clicks from anyone,
+        including our own tests: {tally.ok.toLocaleString()} said their check matched, {tally.fail.toLocaleString()} said
+        it did not. Self-reported, not a measurement, and not about this record. Only these two numbers are stored, so
+        earlier test clicks cannot be separated from real ones.
+      </p>
+    </details>
   ) : null;
 
   if (state === "sent") return (

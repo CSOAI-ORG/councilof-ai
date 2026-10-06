@@ -6,20 +6,21 @@ import { useEffect, useState } from "react";
 // Pure SVG, rendered only on click — no always-on force-graph dependency on the
 // zero-dep OS. Data model aligned with the M4 -> M2 relevance-maps pass-over.
 
-type Bridge = { id: string; label: string; industries: string[]; frameworks: string[] };
+// `label` is the connector's technical name (kept as a tooltip); `plain` is what a reader sees.
+type Bridge = { id: string; label: string; plain: string; industries: string[]; frameworks: string[] };
 const BRIDGES: Bridge[] = [
-  { id: "iso20022", label: "iso20022-bridge", industries: ["Finance"], frameworks: ["DORA", "NIS2", "GDPR"] },
-  { id: "swift", label: "swift-bridge", industries: ["Finance"], frameworks: ["DORA", "AML/CFT", "GDPR"] },
-  { id: "fix", label: "fix-bridge", industries: ["Finance"], frameworks: ["MiFID II", "DORA"] },
-  { id: "cobol", label: "cobol-bridge", industries: ["Finance", "Government"], frameworks: ["DORA", "SOX"] },
-  { id: "hl7", label: "hl7-fhir-bridge", industries: ["Healthcare"], frameworks: ["HIPAA", "EU AI Act Annex III", "GDPR"] },
-  { id: "dicom", label: "dicom-bridge", industries: ["Healthcare"], frameworks: ["HIPAA", "MDR"] },
-  { id: "scada", label: "scada-bridge", industries: ["Energy & Infrastructure", "Manufacturing"], frameworks: ["NIS2", "IEC 62443"] },
-  { id: "modbus", label: "modbus-bridge", industries: ["Energy & Infrastructure", "Manufacturing"], frameworks: ["IEC 62443", "NIS2"] },
-  { id: "opcua", label: "opcua-bridge", industries: ["Manufacturing"], frameworks: ["IEC 62443", "EU AI Act"] },
-  { id: "xroad", label: "x-road-bridge", industries: ["Government"], frameworks: ["eIDAS", "GDPR"] },
-  { id: "ldap", label: "ldap-bridge", industries: ["Government", "Enterprise"], frameworks: ["GDPR", "NIS2"] },
-  { id: "edi", label: "edifact-bridge", industries: ["Manufacturing", "Enterprise"], frameworks: ["GDPR", "Customs/UCC"] },
+  { id: "iso20022", label: "iso20022-bridge", plain: "Bank payments (ISO 20022)", industries: ["Finance"], frameworks: ["DORA", "NIS2", "GDPR"] },
+  { id: "swift", label: "swift-bridge", plain: "SWIFT bank messages", industries: ["Finance"], frameworks: ["DORA", "AML/CFT", "GDPR"] },
+  { id: "fix", label: "fix-bridge", plain: "Trading orders (FIX)", industries: ["Finance"], frameworks: ["MiFID II", "DORA"] },
+  { id: "cobol", label: "cobol-bridge", plain: "Mainframe systems (COBOL)", industries: ["Finance", "Government"], frameworks: ["DORA", "SOX"] },
+  { id: "hl7", label: "hl7-fhir-bridge", plain: "Health records (HL7 FHIR)", industries: ["Healthcare"], frameworks: ["HIPAA", "EU AI Act Annex III", "GDPR"] },
+  { id: "dicom", label: "dicom-bridge", plain: "Medical images (DICOM)", industries: ["Healthcare"], frameworks: ["HIPAA", "MDR"] },
+  { id: "scada", label: "scada-bridge", plain: "Plant control (SCADA)", industries: ["Energy & Infrastructure", "Manufacturing"], frameworks: ["NIS2", "IEC 62443"] },
+  { id: "modbus", label: "modbus-bridge", plain: "Industrial devices (Modbus)", industries: ["Energy & Infrastructure", "Manufacturing"], frameworks: ["IEC 62443", "NIS2"] },
+  { id: "opcua", label: "opcua-bridge", plain: "Factory machines (OPC UA)", industries: ["Manufacturing"], frameworks: ["IEC 62443", "EU AI Act"] },
+  { id: "xroad", label: "x-road-bridge", plain: "Government data exchange (X-Road)", industries: ["Government"], frameworks: ["eIDAS", "GDPR"] },
+  { id: "ldap", label: "ldap-bridge", plain: "Staff directories (LDAP)", industries: ["Government", "Enterprise"], frameworks: ["GDPR", "NIS2"] },
+  { id: "edi", label: "edifact-bridge", plain: "Trade documents (EDIFACT)", industries: ["Manufacturing", "Enterprise"], frameworks: ["GDPR", "Customs/UCC"] },
 ];
 
 const INDUSTRIES = ["Finance", "Healthcare", "Energy & Infrastructure", "Government", "Manufacturing", "Enterprise"];
@@ -42,8 +43,14 @@ function inRegion(frameworks: string[], region: string) {
   });
 }
 
-export default function RelevanceMap() {
-  useEffect(() => { document.title = "Relevance Map — what governs what · CSOAI"; }, []);
+/**
+ * `embedded`: rendered inside a Council OS pane (the Regulation matrix). The pane is not the page,
+ * so it must not overwrite the document title, and the standalone page's footer note stays off.
+ */
+export default function RelevanceMap({ embedded = false }: { embedded?: boolean; params?: unknown } = {}) {
+  useEffect(() => {
+    if (!embedded) document.title = "Relevance Map — what governs what · CSOAI";
+  }, [embedded]);
   const [industry, setIndustry] = useState<string | null>(null);
   const [region, setRegion] = useState<string>("All");
 
@@ -91,7 +98,7 @@ export default function RelevanceMap() {
           <>
             <div className="flex flex-wrap items-center gap-3">
               <h2 className="text-xl font-bold text-gray-900">{industry}</h2>
-              <span className="rounded-lg bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">{bridges.length} relevant bridges</span>
+              <span className="rounded-lg bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">{bridges.length} relevant connectors</span>
               <span className="rounded-lg bg-sky-50 px-3 py-1 text-xs font-semibold text-sky-700">{frameworks.length} frameworks mapped</span>
               {gaps.length > 0 && <span className="rounded-lg bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">{gaps.length} baseline gaps</span>}
             </div>
@@ -115,8 +122,9 @@ export default function RelevanceMap() {
                 {/* bridge nodes */}
                 {bridges.map((b, i) => (
                   <g key={b.id}>
+                    <title>{`${b.plain} — connector ${b.label}`}</title>
                     <rect x={bx} y={by(i) - 18} width={150} height={36} rx={9} fill="#ecfdf5" stroke="#34d399" />
-                    <text x={bx + 75} y={by(i) + 4} textAnchor="middle" fill="#047857" fontSize={12} fontWeight={600}>{b.label}</text>
+                    <text x={bx + 75} y={by(i) + 4} textAnchor="middle" fill="#047857" fontSize={b.plain.length > 22 ? 10 : 11.5} fontWeight={600}>{b.plain}</text>
                   </g>
                 ))}
                 {/* framework nodes */}
@@ -128,7 +136,7 @@ export default function RelevanceMap() {
                 ))}
                 {/* column labels */}
                 <text x={cx + 75} y={20} textAnchor="middle" fill="#64748b" fontSize={11} fontWeight={700}>INDUSTRY</text>
-                <text x={bx + 75} y={20} textAnchor="middle" fill="#64748b" fontSize={11} fontWeight={700}>CSOAI BRIDGES</text>
+                <text x={bx + 75} y={20} textAnchor="middle" fill="#64748b" fontSize={11} fontWeight={700}>CONNECTORS</text>
                 <text x={fx + 95} y={20} textAnchor="middle" fill="#64748b" fontSize={11} fontWeight={700}>FRAMEWORKS</text>
               </svg>
             </div>
@@ -146,7 +154,7 @@ export default function RelevanceMap() {
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               {bridges.map((b) => (
                 <div key={b.id} className="rounded-2xl border border-gray-200 p-5">
-                  <div className="font-mono font-bold text-emerald-700">{b.label}</div>
+                  <div className="font-bold text-emerald-700" title={`Connector: ${b.label}`}>{b.plain}</div>
                   <div className="mt-2 flex flex-wrap gap-1.5">
                     {b.frameworks.map((f) => <span key={f} className="rounded-md bg-gray-100 px-2 py-0.5 text-xs text-gray-600">{f}</span>)}
                   </div>
@@ -156,9 +164,9 @@ export default function RelevanceMap() {
           </>
         )}
 
-        <div className="mt-10 rounded-2xl border border-gray-200 bg-gray-50 p-5 text-xs text-gray-500 leading-relaxed">
+        {embedded ? null : <div className="mt-10 rounded-2xl border border-gray-200 bg-gray-50 p-5 text-xs text-gray-500 leading-relaxed">
           The relevance map renders client-side as pure SVG on demand — no graph library loads until you pick an industry, keeping the OS zero-dependency. The full force-directed version (347-MCP fleet topology) and live gap-to-roadmap links switch on with the Layer 0 backend. Explore the fleet at <a href="/mcp-fleet" className="text-emerald-700 font-semibold">/mcp-fleet</a> or try the Council at <a href="/try" className="text-emerald-700 font-semibold">/try</a>.
-        </div>
+        </div>}
       </section>
     </div>
   );

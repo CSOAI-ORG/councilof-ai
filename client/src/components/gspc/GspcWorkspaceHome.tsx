@@ -65,10 +65,14 @@ export function LiveFigureLine({
     );
   return (
     <p className="mt-3 text-[13px] leading-snug text-muted-foreground" data-testid={testId} data-state="live">
-      <span className="font-mono text-base font-black text-foreground">{f.value}</span> {f.label}
-      <span className="block truncate font-mono text-xs" title={f.source + (f.as_of ? ` · as of ${f.as_of}` : "")}>
-        {f.source}
-      </span>
+      {/* Where the figure came from is a tooltip, not a line of source paths on the card face. */}
+      <span
+        className="cursor-help font-mono text-base font-black text-foreground"
+        title={`Read from ${f.source}${f.as_of ? ` · as of ${f.as_of}` : ""}`}
+      >
+        {f.value}
+      </span>{" "}
+      {f.label}
     </p>
   );
 }
@@ -348,13 +352,13 @@ export default function GspcWorkspaceHome({
       id: "connect",
       href: "/dashboard?tab=connect",
       title: "For developers",
-      job: "Add the tools to Claude, Cursor or your own AI agent with one line.",
+      job: "Use these free tools inside Claude, ChatGPT or Cursor, or add them to your own AI agent.",
       hint: "An MCP server; the same answers are also served over A2A, AG-UI and A2UI.",
       img: { base: "/images/home/plugin", w: 480, h: 258 },
       figure: (
         <LiveFigureLine
           read={toolsRead}
-          pick={(n) => (typeof n === "number" ? { value: String(n), label: "tools the live server lists; each counts as working only once it has been called", source: "POST /mcp → tools/list · declared by tools/list; a tool is runtime-observed only after its own tools/call", as_of: null } : null)}
+          pick={(n) => (typeof n === "number" ? { value: String(n), label: "tools, no account; each counts as working only once it has been called", source: "POST /mcp → tools/list · declared by tools/list; a tool is runtime-observed only after its own tools/call", as_of: null } : null)}
           testId="ws-fig-connect"
         />
       ),
@@ -415,7 +419,7 @@ export default function GspcWorkspaceHome({
           </h1>
           {/* Phone: one plain line, so the Get results box is on the first screen. */}
           <p className="mt-2 text-sm leading-relaxed text-emerald-50/90 sm:hidden">
-            Look up what is already measured (free), order a fresh run, and check any result yourself.
+            Look up what is already measured (free), ask for a fresh run, and check any result yourself.
           </p>
           <ul className="mt-4 hidden max-w-5xl list-none gap-4 p-0 text-sm leading-relaxed text-emerald-50/90 sm:grid sm:grid-cols-3" data-testid="ws-plain">
             <li>
@@ -424,10 +428,10 @@ export default function GspcWorkspaceHome({
             </li>
             <li>
               <span className="block text-xs font-bold uppercase tracking-wide text-emerald-300">What you can do</span>
-              Look up what is already measured (free), order a fresh run, track it, and check any result yourself.
+              Look up what is already measured (free), ask for a fresh run, track it, and check any result yourself.
             </li>
             <li>
-              <span className="block text-xs font-bold uppercase tracking-wide text-emerald-300">What&apos;s new</span>
+              <span className="block text-xs font-bold uppercase tracking-wide text-emerald-300">Corrections</span>
               <WhatsNew />
             </li>
           </ul>
@@ -497,7 +501,7 @@ function WhatsNew() {
   return (
     <span className="block" data-testid="ws-whats-new">
       <span className="line-clamp-2">
-        {latest.date ? `${latest.date}: ` : ""}
+        <strong className="font-semibold">Latest correction:</strong> {latest.date ? `${latest.date}: ` : ""}
         {headline}
       </span>{" "}
       <a href={correctionHref(latest.id)} className="font-semibold text-emerald-200 underline underline-offset-2">

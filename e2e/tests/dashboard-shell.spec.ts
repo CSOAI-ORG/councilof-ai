@@ -624,5 +624,8 @@ test("the 22-axis learning arena keeps coaching, practice and human review in on
   ).toHaveValue(
     /Coach me through the Governance GSPC learning path at the play stage/i,
   );
-  await expect(page.getByText(/PRACTICE_ONLY · UNMEASURED/i)).toBeVisible();
+  // 6 Oct 2026 (tools-plain-cards): coaching opens on the Get results home, where the answer
+  // renders as plain tool cards, instead of in the learning pane's raw-JSON lobby renderer.
+  await expect(page).toHaveURL(/\/dashboard\/?\?ask=/);
+  await expect(page).not.toHaveURL(/tab=learn/);
 });

@@ -80,6 +80,8 @@ export const MCP_NATIVE: PlatformCard[] = [
     tagline: "Paid plans: paste the URL in Connectors. Free: use the mcp-remote bridge.",
     docUrl: "https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp",
     blocks: [
+      // The one thing a claude.ai or Claude Desktop user pastes: Settings → Connectors → Add custom connector.
+      { label: "Connector URL (claude.ai or Claude Desktop → Settings → Connectors)", lang: "text", code: MCP_FREE_URL },
       { label: "claude_desktop_config.json (bridge)", lang: "json", code: `{
   "mcpServers": {
     "csoai-gspc": {
