@@ -75,6 +75,18 @@ jobs:
       - name: All RunPod cards and buyer replay — no network or signing
         run: node --test scripts/test_runpod_verifier_parity.mjs scripts/test_gspc_replay_kit.mjs
 
+  # 6 Oct 2026: a third party's contact details were removed from this tree after we had told them
+  # nothing naming them would be public. This runs on EVERY PR, outside the scope step below, because
+  # they could come back in any file, docs included. The identifiers are stored only as digests; read
+  # the test's docstring before changing it, and never put an identifier in a commit message or PR text.
+  third-party-identifiers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: No guarded third-party identifier in any tracked path or file
+        run: python3 scripts/privacy/test_third_party_identifiers.py -v
+
   gates:
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -345,6 +357,8 @@ jobs:
           python3 -m pytest -q scripts/spray/test_gspc_parity.py scripts/spray/test_gspc_spray_skip.py
           python3 -m pytest -q scripts/test_public_root.py -k kinds_index
           python3 -m pytest -q harness/gspc-top100/test_priority_pick.py harness/gspc-top100/test_inflight_cells.py
+          # The pre-send mail check: no address but the one being checked may ever be put to a mail server.
+          python3 -m pytest -q scripts/outward-gate/test_contact_reachability.py
           # C-2026-0914-01: a one-option exact-label menu is refused, and every signed card
           # graded by one is in WITHDRAWN.jsonl (derived from the bound bank bytes).
           python3 -m pytest -q harness/gspc-top100/test_one_option_menu.py

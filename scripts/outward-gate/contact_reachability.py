@@ -4,22 +4,26 @@
 MEASURES only. For each address it:
   0. looks the address up in our hard-bounce ledger (built from real bounce notices),
   1. resolves MX (falling back to A, per RFC 5321 s5.1),
-  2. opens SMTP on port 25 and asks RCPT TO for the address,
-  3. in a second session, asks RCPT TO for a random address at the same domain (the must-fail control),
-  4. QUITs. It never sends DATA, so no message is ever delivered.
+  2. opens SMTP on port 25 and asks RCPT TO for that address, and only that address,
+  3. QUITs. It never sends DATA, so no message is ever delivered.
 At most one connection per second.
 
-Known limit (measured 28 Sep 2026): Exchange Online without directory-based edge blocking answers
-"250 Recipient OK" for a mailbox that does not exist and bounces later (hello@gotrust.be -> 550 5.1.10).
-RCPT acceptance therefore never proves a mailbox exists; only a rejected control makes it evidence.
-The bounce ledger is what catches that case after its first bounce.
+No made-up control address (removed 6 Oct 2026). This checker used to open a second session and ask
+RCPT TO for a random address at the same domain, so that a rejected control would make a 250 count as
+evidence that the mailbox exists. That asked a third party's mail server about an address nobody owns,
+which the third party never agreed to and which looks like a directory-harvest probe. The step is
+removed, not made optional, and test_contact_reachability.py fails if any address other than the one
+being checked is ever put to a server. The cost is stated, not hidden: RCPT acceptance alone never
+proves a mailbox exists, so a 250 is ACCEPTS_UNCONTROLLED and existence stays UNMEASURED.
+
+Known limit: some servers (for example Exchange Online without directory-based edge blocking) answer
+"250 Recipient OK" for a mailbox that does not exist and bounce the message later (550 5.1.10). The
+bounce ledger is what catches that case, after its first bounce.
 
 Verdicts:
   BOUNCED_BEFORE the address is in the hard-bounce ledger -> do not send
-  ACCEPTS       real address 250, control 5xx -> the server distinguishes mailboxes and took this one
-  ACCEPT_ALL    both 250 -> the server takes anything; existence UNMEASURED
-  ACCEPTS_UNCONTROLLED  real 250, control 4xx/error -> existence UNMEASURED
-  REJECTED      real address 5xx (e.g. 550 5.1.10 unknown recipient) -> do not send
+  ACCEPTS_UNCONTROLLED  the address got 250 at RCPT -> existence UNMEASURED (see above)
+  REJECTED      the address got 5xx at RCPT (e.g. 550 5.1.10 unknown recipient) -> do not send
   TEMPFAIL      4xx (greylisting, rate limit) -> UNMEASURED, retry later
   NO_MAIL_HOST  no MX and no A -> do not send
   UNREACHABLE   no MX host answered on port 25 (egress blocked?) -> UNMEASURED
@@ -33,7 +37,7 @@ Only BOUNCED_BEFORE, REJECTED and NO_MAIL_HOST block a send; everything else is 
     python3 contact_reachability.py --security-txt URL ... # addresses from security.txt Contact: lines
 Exit 2 if any address is blocking, else 0.
 """
-import json, re, secrets, smtplib, socket, subprocess, sys, time, urllib.request
+import json, re, smtplib, socket, subprocess, sys, time, urllib.request
 
 HELO = "csoai.org"
 MAIL_FROM = "nicholas@csoai.org"
@@ -106,14 +110,15 @@ def rcpt(host, addr):
             s.close()
 
 
-def verdict(c1, m1, stage, c2):
-    """One address's verdict from the first session (code, text, stage reached) and the control's RCPT code.
+def verdict(c1, m1, stage):
+    """One address's verdict from its single session: (code, text, stage reached).
 
     A refusal before RCPT (EHLO or MAIL FROM), or one whose text is about the connecting client (no reverse DNS,
     a blocklisted IP, relaying denied to our host), says nothing about the recipient: SENDER_REFUSED, never
-    REJECTED. Only a 5xx answered to RCPT itself, about the address, is a verdict on the mailbox."""
+    REJECTED. Only a 5xx answered to RCPT itself, about the address, is a verdict on the mailbox. A 2xx is never
+    proof that the mailbox exists (see the module note), so it is ACCEPTS_UNCONTROLLED."""
     if 200 <= c1 < 300:
-        return "ACCEPT_ALL" if c2 and 200 <= c2 < 300 else "ACCEPTS" if c2 and 500 <= c2 < 600 else "ACCEPTS_UNCONTROLLED"
+        return "ACCEPTS_UNCONTROLLED"
     if stage != "RCPT" or CLIENT_REFUSAL.search(m1 or ""):
         return "SENDER_REFUSED"
     if 500 <= c1 < 600:
@@ -143,17 +148,15 @@ def check(addr, ledger=None):
         return {**r, "verdict": "UNREACHABLE", "evidence": f"{domain}: no MX lookup could be made (no dig, DoH failed)"}
     if not hosts:
         return {**r, "verdict": "NO_MAIL_HOST", "evidence": f"{domain}: no MX and no A record"}
-    control = f"csoai-probe-{secrets.token_hex(6)}@{domain}"
     errors = []
     for h in hosts[:3]:
         try:
             c1, m1, st1 = rcpt(h, addr)
-            c2, m2, _ = rcpt(h, control) if 200 <= c1 < 300 else (None, "", None)
         except Exception as e:
             errors.append(f"{h}: {type(e).__name__}: {e}")
             continue
-        v = verdict(c1, m1, st1, c2)
-        ev = f"{via} {h}: {st1} for {addr} -> {c1} {m1[:160]}; control -> {c2} {m2[:80]}"
+        v = verdict(c1, m1, st1)
+        ev = f"{via} {h}: {st1} for {addr} -> {c1} {m1[:160]}"
         return {**r, "verdict": v, "mail_host": h, "evidence": ev}
     return {**r, "verdict": "UNREACHABLE", "evidence": "; ".join(errors)[:400]}
 
