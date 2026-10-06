@@ -373,7 +373,6 @@ const AgentGovernance = lazy(() => import("./pages/AgentGovernance"));
 const Cra = lazy(() => import("./pages/Cra"));
 const Nis2 = lazy(() => import("./pages/Nis2"));
 const VulnerabilityDisclosure = lazy(() => import("./pages/VulnerabilityDisclosure"));
-const AccountBrief = lazy(() => import("./pages/AccountBrief"));
 const Article50 = lazy(() => import("./pages/Article50"));
 const VerifyLeaderboard = lazy(() => import("./pages/VerifyLeaderboard"));
 const GovernanceLayer = lazy(() => import("./pages/GovernanceLayer"));
@@ -1155,7 +1154,6 @@ function AppShell() {
                   <Route path="/cra" component={Cra} />
                   <Route path="/nis2" component={Nis2} />
                   <Route path="/vulnerability-disclosure" component={VulnerabilityDisclosure} />
-                  <Route path="/brief" component={AccountBrief} />
                   <Route path="/article-50" component={Article50} />
                   <Route path="/verify-leaderboard" component={VerifyLeaderboard} />
                   <Route path="/packs/eu-article-50" component={Article50Pack} />
@@ -1171,9 +1169,10 @@ function AppShell() {
                   <Route path="/sovereign-space">{() => <Redirect to="/gspc-arena" />}</Route>
                   <Route path="/stripe-checkout.js" component={Gone} />
                   <Route path="/simulate">{() => <Redirect to="/gspc-arena" />}</Route>
-                  {/* /authority (embeddable verified-status badges, a conformity mark) and /intel
-                      (an internal sales-target board) were withdrawn on 6 Oct 2026: both 308 from
-                      scripts/generate-redirects.mjs EXISTING. Do not re-add either route. */}
+                  {/* /authority (embeddable verified-status badges, a conformity mark), /intel
+                      (an internal sales-target board) and /brief (its per-account sales brief)
+                      were withdrawn on 6 Oct 2026: all three 308 from
+                      scripts/generate-redirects.mjs EXISTING. Do not re-add any of these routes. */}
                   <Route path="/world-3d" component={RealWorldMap} />
                   <Route path="/real-world" component={RealWorldMap} />
                   <Route path="/plans">{() => <Redirect to="/dashboard?tab=measured&task=pricing-overview" />}</Route>

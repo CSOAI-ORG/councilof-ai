@@ -85,6 +85,11 @@ const EXISTING = [
   "/authority/           /gspc-verify/        308",
   "/intel                /                    308",
   "/intel/               /                    308",
+  // /brief?id=<account> was the per-account sales brief /intel linked to: a named organisation,
+  // its "play" and the pitch to lead with. Internal sales material, unlisted and unlinked once
+  // /intel went, but still served; withdrawn the same day, to the home page for the same reason.
+  "/brief                /                    308",
+  "/brief/               /                    308",
   // The noindex GitHub PR train is retired: its API returns 404 and the live
   // lazy chunk is missing. Send old bookmarks to the indexed explanation of
   // the live measurement workflow rather than advertise a frozen PR queue.

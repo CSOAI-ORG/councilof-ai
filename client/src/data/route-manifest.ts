@@ -253,11 +253,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Mcp Trust Board"
  },
  {
-  "path": "/brief",
-  "comp": "AccountBrief",
-  "title": "Account Brief"
- },
- {
   "path": "/bulk-import",
   "comp": "BulkAISystemImport",
   "title": "Bulk AISystem Import"
