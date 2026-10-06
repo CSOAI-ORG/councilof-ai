@@ -381,7 +381,10 @@ export async function requestTimestamp(tsa: string, digestHex: string): Promise<
   const requested_at = nowIso();
   const digest = fromHex(digestHex);
   const nonce = crypto.getRandomValues(new Uint8Array(8));
-  nonce[0] &= 0x7f; // keep the INTEGER positive and byte-for-byte searchable in the reply
+  // Positive AND a non-zero first byte. DER drops a leading 0x00, so a nonce drawn as 0x00… (1 in 128)
+  // came back one byte shorter, the 8-byte search below missed it, and a paid request holding a valid
+  // token was declared UNCHECKABLE. Keeping byte 0 in 0x01–0x7f makes the INTEGER byte-for-byte ours.
+  nonce[0] = (nonce[0] & 0x7f) || 0x01;
   const fail = (reason: string): Rfc3161 => ({ tsa, status: "UNCHECKABLE", reason, token_b64: null, token_sha256: null, requested_at });
   let res: Response;
   try {
