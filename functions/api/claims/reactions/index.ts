@@ -1,5 +1,6 @@
 import { BASE_HEADERS, loadVerified, splitLines, type Ctx } from "../../../_lib/claimEvents";
 import { REACTION_SCHEMA, deriveClaimReactions, reactionSummary } from "../../../_lib/claimReactions";
+import { headFromGet } from "../../_head";
 
 export const onRequestGet: PagesFunction = async (ctx) => {
   try {
@@ -56,3 +57,7 @@ export const onRequestOptions: PagesFunction = async () =>
     status: 204,
     headers: { ...BASE_HEADERS, "access-control-allow-methods": "GET, OPTIONS" },
   });
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

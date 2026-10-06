@@ -81,6 +81,7 @@ import { AXES_C } from "./_gspc_axes_c";
 import { crosscheckBoardSnapshot } from "./_board_snapshot";
 import { axisCountLine } from "./_boardCounts";
 import { ledgersBlock } from "./_ledgers";
+import { headFromGet } from "./_head";
 
 /** How a number was obtained. Never collapsed, never inferred from the value. */
 type Kind = "measured" | "probed" | "catalogued" | "declared" | "unmeasured";
@@ -1154,3 +1155,7 @@ export const onRequestGet: PagesFunction = async () => {
     },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

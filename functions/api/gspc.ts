@@ -16,6 +16,7 @@ import { FINANCIAL_FACTS_AS_OF, financialFamilyBlock } from "./_gspc_fin_as_of";
 import { ROWS_SEPARATION } from "./_gspc_rows_separation";
 import { MDE_STATES, UNDERPOWERED_STATE, applyUnderpowered, measuredOnModel, withPower } from "./_gspc_power";
 import { withMeasurementTime } from "./_gspc_measurement_time";
+import { headFromGet } from "./_head";
 
 // 22-axis canon (ADR-001): 14 GSPC behavioural axes + 8 financial/domain axes.
 // Swept into the payload 2026-08-26. Before this, the 8 financial axes were ruled
@@ -1150,3 +1151,7 @@ export const onRequestGet: PagesFunction = async (context) => {
   context.waitUntil(cache.put(cacheKey, response.clone()));
   return response;
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

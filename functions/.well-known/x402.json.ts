@@ -45,6 +45,7 @@ import FREE_TOOLS from "../mcp/gspc-tools.json";
 import PAID_TOOLS from "../mcp/paid-tools.json";
 import { freshCapsulePaymentRequired, PATH as FRESH_CAPSULE_PATH } from "../api/measurement/fresh-capsule";
 import { FREE_DOOR_PRODUCT_ID, FREE_DOOR_SKU } from "../api/free-door";
+import { headFromGet } from "../api/_head";
 
 /** The SKU tier each door passes to x402Accepts — keyed by the path the door serves. */
 // pathScoped: the door charges its PATH, not the concrete example URL, so a buyer's target never
@@ -343,3 +344,7 @@ export const onRequestGet: PagesFunction<X402Env> = async ({ request, env }) => 
     headers: { "content-type": "application/json; charset=utf-8", "cache-control": "public, max-age=300", "access-control-allow-origin": "*" },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

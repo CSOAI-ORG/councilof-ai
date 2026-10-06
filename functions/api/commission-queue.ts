@@ -10,6 +10,7 @@
  */
 import { classifyCommissionTarget } from "./_commission_target";
 import { readHubCardsIndex, readPodCardsIndex } from "./commissions";
+import { headFromGet } from "./_head";
 
 type Env = { REVENUE_KV?: KVNamespace; ASSETS?: { fetch: (r: Request) => Promise<Response> } };
 
@@ -202,3 +203,7 @@ export async function buildCommissionQueue(env: Env, origin = "https://councilof
 
 export const onRequestGet: PagesFunction<Env> = async ({ env, request }) =>
   json(await buildCommissionQueue(env, new URL(request.url).origin));
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

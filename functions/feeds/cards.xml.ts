@@ -13,6 +13,7 @@
  */
 import cardIndex from "../../public/signed/card_index.json";
 import { rss, FEED_HEADERS, type Entry } from "./_xml";
+import { headFromGet } from "../api/_head";
 
 interface Card { card: string; axis?: string; ts?: string; card_url?: string; kid?: string; signed?: boolean }
 
@@ -58,3 +59,7 @@ export const onRequestGet: PagesFunction = async () =>
     "The newest entries in the SIGNED CARD INDEX, each with the id a stranger can verify. Derived from public/signed/card_index.json; nothing typed. Not the public-root leaf set and not the on-disk wrapper count — those are separate corpora.",
     entries(),
   ), { headers: FEED_HEADERS });
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

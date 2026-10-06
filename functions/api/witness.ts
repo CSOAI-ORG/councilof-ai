@@ -61,6 +61,7 @@ import {
   type FetchOutcome,
   type WitnessEntry,
 } from "./_witness";
+import { headFromGet } from "./_head";
 
 type Env = X402Env & { WITNESS_KV?: KVNamespace; RFC3161_TSA_URL?: string };
 
@@ -283,3 +284,7 @@ export const __testOnlyOnRequestPost: PagesFunction<Env> = async ({ request, env
 
 export const onRequestGet: PagesFunction<Env> = async ({ request }) => unavailable(request);
 export const onRequestPost: PagesFunction<Env> = async ({ request }) => unavailable(request);
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

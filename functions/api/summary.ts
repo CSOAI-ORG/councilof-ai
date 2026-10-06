@@ -18,6 +18,7 @@
  * Doctrine holds: every value is fetched at request time; no number is
  * typed; nothing here is computed; nothing here is guessed.
  */
+import { headFromGet } from "./_head";
 
 type Env = { RUNPOD_WORKER_HEALTH_URL?: string; WORKER_STATE_KV?: KVNamespace };
 
@@ -135,3 +136,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request }) => {
     },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

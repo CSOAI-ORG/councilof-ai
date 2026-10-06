@@ -13,6 +13,7 @@
  * The verify URL points at THIS domain. proofof.ai is currently unreachable (Vercel
  * billing block, 2026-07-31); sending users there would be sending them to a dead page.
  */
+import { headFromGet } from "./_head";
 
 interface Env {
   ARTICLE50_HMAC_SECRET?: string;
@@ -119,3 +120,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   const valid = expected === presented;
   return Response.json({ valid, note: valid ? "Signature valid — this passport was issued by CSOAI." : "Signature does not match — do not rely on this passport." });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

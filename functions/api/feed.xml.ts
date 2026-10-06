@@ -15,6 +15,7 @@
 // Newest first, capped at 50 derived items after the board line. The hand-typed history that
 // used to live here was retired with this change: no test read it, and a feed that is code
 // cannot be the durable record — /feeds/corrections.xml and /interop/** are.
+import { headFromGet } from "./_head";
 
 interface FeedItem {
   title: string;
@@ -150,3 +151,7 @@ ${items}
     },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

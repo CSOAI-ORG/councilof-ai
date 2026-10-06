@@ -23,6 +23,7 @@
 // literal strings in the name of candour — the abstraction IS the honest form.
 //
 // CC-BY-4.0. Council of AI (CSOAI Ltd, UK Companies House 16939677).
+import { headFromGet } from "./_head";
 
 // Exported so the corrections FEED derives from this exact object. Two surfaces generating
 // their own copy of the ledger would drift, and then the estate would have to reconcile them —
@@ -2342,3 +2343,7 @@ export const onRequestGet: PagesFunction = async () => {
     },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

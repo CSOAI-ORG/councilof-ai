@@ -199,7 +199,7 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     kind: "receipt",
     href: "https://www.npmjs.com/package/csoai-gspc-mcp",
     plant: "claude mcp add gspc -- npx -y csoai-gspc-mcp",
-    note: "Published npm 0.2.1 lists 12 tools (7 free + 5 x402, including witness_hash). HTTP /mcp serves 12 as well, split 8 free + 4 x402: witness_hash is quarantined there and x402_trust is served instead.",
+    note: "Every published npm release is marked deprecated on npm and carries fewer tools than the HTTP door; ask that install for its tools/list, or use the free door https://councilof.ai/mcp/free.",
     snippet: NPM_SNIPPET,
   },
   {

@@ -5,6 +5,7 @@
  * Keep the old route explicit so a client cannot mistake a GitHub 403/404,
  * an empty list, or the response time for a healthy operating stage.
  */
+import { headFromGet } from "./_head";
 
 const json = (body: unknown) =>
   new Response(JSON.stringify(body, null, 2), {
@@ -41,3 +42,7 @@ export function buildBodyState() {
 
 export const onRequestGet: PagesFunction = async () => json(buildBodyState());
 export const onRequestOptions: PagesFunction = async () => new Response(null, { status: 204 });
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

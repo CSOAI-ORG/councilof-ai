@@ -18,7 +18,7 @@ const MCP_METERED_URL = "https://councilof.ai/mcp";
 const EXTENSION_ZIP = `/downloads/gspc-verify-${EXTENSION_MANIFEST.version}.zip`;
 const MCP_SNIPPET = `{
   "mcpServers": {
-    "gspc": {
+    "council-of-ai": {
       "url": "${MCP_URL}"
     }
   }
@@ -59,7 +59,7 @@ Live board: https://councilof.ai/api/gspc
 Measurement, not certification.`;
 
 const HOSTS = [
-  { name: "Claude", how: "Add gspc → paste the JSON below, or the URL." },
+  { name: "Claude", how: "Customize → Connectors → + Add → Add custom connector, then paste the URL https://councilof.ai/mcp/free. No JSON, no key." },
   { name: "Cursor", how: "Paste the JSON into ~/.cursor/mcp.json" },
   { name: "Kimi", how: "MCP settings → same JSON / URL." },
   { name: "Grok", how: "Same URL, as a remote (Streamable HTTP) MCP server." },
