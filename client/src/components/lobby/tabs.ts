@@ -71,7 +71,8 @@ export type LobbyTabId =
   | "connect"
   | "route"
   | "corrections"
-  | "sovx";
+  | "sovx"
+  | "mine";
 
 export type LobbyTab = {
   id: LobbyTabId;
@@ -119,12 +120,21 @@ export type LobbyRoute = {
 export const LOBBY_TABS: LobbyTab[] = [
   {
     id: "home",
-    label: "Conversation",
+    label: "Get results",
     blurb:
       "Chat-first Council of AI workspace — ask, inspect evidence, and open tools without leaving the thread.",
     path: "",
     kind: "local",
     cues: /\b(home|hub|launcher|start|lobby home|council os|the os|ag[- ]?ui|chat)\b/i,
+  },
+  {
+    id: "mine",
+    label: "My results",
+    blurb:
+      "Where your request stands, the signed results once delivered, and a free check that they are genuine. No account needed.",
+    path: "",
+    kind: "native",
+    cues: /\b(my results?|my requests?|my orders?|my jobs?|status of my|receipt status)\b/i,
   },
   {
     id: "learn",
@@ -828,6 +838,7 @@ export function routesIn(group: LobbyRouteGroup): LobbyRoute[] {
  */
 export type DashboardNavGroupId =
   | "ask"
+  | "mine"
   | "board"
   | "verify"
   | "connect"
@@ -857,32 +868,40 @@ const DASHBOARD_NAV_DEFINITION: {
   // Corrections pane (re-checking is how a claim avoids needing a correction).
   {
     id: "ask",
-    label: "Ask",
+    label: "Get results",
     description:
-      "Ask in plain words; every answer names the tool and the record it came from.",
-    tabs: [{ id: "home", label: "Ask the Council" }],
+      "Type a model, server or record: see what is already measured, free, then request a fresh run or a monthly watch.",
+    tabs: [
+      { id: "home", label: "Get results" },
+      { id: "measured", label: "Request a fresh run" },
+    ],
+  },
+  {
+    id: "mine",
+    label: "My results",
+    description: "Where your request stands, the signed results once delivered, and a free check.",
+    tabs: [{ id: "mine", label: "My results" }],
+  },
+  {
+    id: "verify",
+    label: "Check a result",
+    description:
+      "Check any signed result yourself, in your browser: genuine (VALID), not genuine (INVALID) or not checkable.",
+    tabs: [
+      { id: "verify", label: "Check a result" },
+      { id: "evidence", label: "Evidence pack" },
+      { id: "evidence-index", label: "Evidence index" },
+    ],
   },
   {
     id: "board",
-    label: "Board",
-    description: "What we measured, on which axes, and what each result does and does not establish.",
+    label: "Leaderboard",
+    description: "What we measured, on which tests, read live. A tie stays a tie; nothing is called best.",
     tabs: [
       { id: "board", label: "Live board" },
       { id: "models", label: "Model registry" },
       { id: "matrix", label: "Regulation matrix" },
       { id: "standards", label: "Standards" },
-      { id: "measured", label: "Request a measurement" },
-    ],
-  },
-  {
-    id: "verify",
-    label: "Verify",
-    description:
-      "Check any signed card yourself, in your browser: VALID, INVALID or UNCHECKABLE.",
-    tabs: [
-      { id: "verify", label: "Check a record" },
-      { id: "evidence", label: "Evidence pack" },
-      { id: "evidence-index", label: "Evidence index" },
     ],
   },
   {

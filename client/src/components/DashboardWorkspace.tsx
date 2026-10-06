@@ -247,6 +247,7 @@ export default function DashboardWorkspace({
             <LobbyThread chat={chat} endRef={threadEndRef} />
           ) : (
             <GspcWorkspaceHome
+              onAsk={(q) => talkRef.current?.ask(q)}
               toolCount={toolPhase === "ready" ? tools.length : null}
               toolState={toolPhase}
               talk={

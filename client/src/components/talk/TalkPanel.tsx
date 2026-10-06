@@ -14,7 +14,9 @@
  * reader chooses to make it, comes from their own wallet, outside this panel.
  */
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
-import { ArrowUp, ExternalLink, Loader2, Mic, MicOff, ShieldAlert, Wrench, Eye } from "lucide-react";
+import { ArrowUp, Loader2, Mic, MicOff, ShieldAlert, Eye } from "lucide-react";
+import ResultCard from "@/components/talk/ResultCard";
+import { statTiles, toolTitle, verifyHref } from "@/lib/resultCard";
 import type { PageContext } from "../../../../functions/_lib/uiTools";
 import { LISTEN_PRIVACY_NOTE, isListenSupported, startListening, stopListening } from "@/lib/councilListen";
 import {
@@ -144,46 +146,20 @@ function ToolCard({ card }: { card: TalkToolCard }) {
   const argText = typeof args === "string" ? args : Object.keys(args).length ? JSON.stringify(args) : "no arguments";
   const cit = card.citation;
   return (
-    <li className="rounded-xl border border-border bg-card p-3 shadow-sm" data-testid="talk-tool-card">
-      <div className="flex flex-wrap items-center gap-2">
-        <Wrench className="h-3.5 w-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />
-        <span className="font-mono text-sm font-semibold text-foreground">{card.name}</span>
-        {card.status === "running" ? (
-          <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-            <Loader2 className="h-3 w-3 animate-spin motion-reduce:animate-none" aria-hidden="true" /> calling
-          </span>
-        ) : (
-          <StateLabel label={card.label} />
-        )}
-      </div>
-      <p className="mt-1 font-mono text-xs text-muted-foreground break-all">
-        <span className="sr-only">arguments: </span>
-        {argText}
-      </p>
-      {card.summary ? <p className="mt-2 text-sm text-foreground [overflow-wrap:anywhere]">{card.summary}</p> : null}
-      {cit ? (
-        <p className="mt-2 text-xs text-muted-foreground" data-testid="talk-citation">
-          <span className="font-medium text-foreground">Cited record: </span>
-          <span className="font-mono break-all">{cit.record_id ?? "none named"}</span>
-          {cit.url ? (
-            <>
-              {" · "}
-              <a
-                href={cit.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`inline-flex items-center gap-0.5 break-all font-medium text-emerald-800 underline underline-offset-2 dark:text-emerald-300 ${FOCUS} rounded`}
-              >
-                {cit.url.replace(/^https?:\/\//, "")}
-                <ExternalLink className="h-3 w-3 shrink-0" aria-hidden="true" />
-                <span className="sr-only"> (opens in a new tab)</span>
-              </a>
-            </>
-          ) : null}
-        </p>
-      ) : null}
+    <ResultCard
+      title={toolTitle(card.name)}
+      tool={card.name}
+      label={card.label}
+      running={card.status === "running"}
+      tiles={statTiles(card.output)}
+      verifyUrl={verifyHref(cit?.url)}
+      recordId={cit?.record_id ?? null}
+      summary={card.summary}
+      args={argText}
+      raw={card.output ?? undefined}
+    >
       {card.label === "PAYMENT_REQUIRED" ? <ChallengeDetails output={card.output} /> : null}
-    </li>
+    </ResultCard>
   );
 }
 

@@ -230,20 +230,21 @@ describe("Council OS tabs", () => {
     expect(matchRoute("show insurers")?.path).toBe("/insurers");
   });
 
-  it("gives the canonical dashboard seven plainly named sections", () => {
-    // gspc-product-ui, 30 Sep 2026: GSPC is the product and Council OS its workspace. Ask leads,
-    // then the six product sections of ONE-PRODUCT-PLAN §2.1 (Board, Verify, Connect, Learn, SovX,
-    // Corrections). Still at most seven; Verify + Evidence pack + Evidence index stay ONE section.
+  it("gives the canonical dashboard the owner's six task sections, then two under More", () => {
+    // council-os-ui, 6 Oct 2026 (owner brief 1 Oct): Results-as-a-Service. The navigation reads
+    // Get results · My results · Check a result · Leaderboard · Connect · Learn; SovX and
+    // Corrections stay reachable under "More". Verify + Evidence pack + Evidence index stay ONE section.
     expect(DASHBOARD_NAV_GROUPS.map((g) => g.label)).toEqual([
-      "Ask",
-      "Board",
-      "Verify",
+      "Get results",
+      "My results",
+      "Check a result",
+      "Leaderboard",
       "Connect",
       "Learn",
       "SovX",
       "Corrections",
     ]);
-    expect(DASHBOARD_NAV_GROUPS.length).toBeLessThanOrEqual(7);
+    expect(DASHBOARD_NAV_GROUPS.length).toBeLessThanOrEqual(8);
     for (const g of DASHBOARD_NAV_GROUPS) {
       expect(g.tabs.length, `${g.id} resolves every member`).toBeGreaterThan(0);
       expect(g.description.length).toBeGreaterThan(20);
@@ -254,14 +255,15 @@ describe("Council OS tabs", () => {
     const ids = DASHBOARD_TABS.map((t) => t.id);
     expect(ids).toEqual([
       "home",
+      "measured",
+      "mine",
+      "verify",
+      "evidence",
+      "evidence-index",
       "board",
       "models",
       "matrix",
       "standards",
-      "measured",
-      "verify",
-      "evidence",
-      "evidence-index",
       "connect",
       "route",
       "tools",

@@ -106,7 +106,6 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
               </svg>
             </div>
             <span className="whitespace-nowrap text-lg font-black tracking-tight text-emerald-800 sm:text-xl 2xl:text-2xl">Council of AI</span>
-            <span className="hidden 2xl:inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-emerald-800">measurement · not certification</span>
           </a>
 
           <div className="hidden md:flex items-center" ref={dropdownRef}>
@@ -257,7 +256,7 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
             ) : (
               <>
                 {/* 2026-09-26: "Sign In" left the main nav (newcomer audit). /login still exists. */}
-                <Button asChild size="sm" className="rounded-xl bg-emerald-700 font-semibold text-white shadow-sm hover:bg-emerald-800"><Link href="/assess">Request attestation</Link></Button>
+                <Button asChild size="sm" className="rounded-xl bg-emerald-700 font-semibold text-white shadow-sm hover:bg-emerald-800"><Link href="/dashboard" data-testid="header-council-os">Council OS</Link></Button>
               </>
             )}
           </div>
@@ -329,7 +328,7 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
                   </>
                 ) : (
                   <>
-                    <Button asChild className="w-full bg-emerald-600 hover:bg-emerald-700"><a href="/assess" onClick={() => setMobileMenuOpen(false)}>Request attestation</a></Button>
+                    <Button asChild className="w-full bg-emerald-700 hover:bg-emerald-800"><a href="/dashboard" onClick={() => setMobileMenuOpen(false)}>Council OS</a></Button>
                   </>
                 )}
               </div>

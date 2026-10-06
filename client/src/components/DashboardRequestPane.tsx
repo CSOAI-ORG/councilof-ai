@@ -99,7 +99,7 @@ export function buildActualJobs(catalog: unknown): ActualJob[] {
     body.rail.network &&
     body.rail.mode &&
     body.rail.amounts
-      ? `Pay-as-you-go x402 in ${body.rail.asset.symbol} on ${body.rail.network} · rail ${body.rail.mode} · ${body.rail.amounts}. Opening a route is not a charge; wallet authorisation and successful settlement are required.`
+      ? `Pay per run from your own wallet, in ${body.rail.asset.symbol} on ${body.rail.network} · ${body.rail.amounts}. Opening this is not a charge: you approve the payment in your wallet, and nothing is taken unless it goes through.`
       : null;
   const jobs: ActualJob[] = [];
 

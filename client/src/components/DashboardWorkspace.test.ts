@@ -16,7 +16,7 @@ describe("canonical dashboard workspace", () => {
     expect(source).not.toMatch(/returned live/);
   });
 
-  it("names the canonical living board GSPC board", () => {
+  it("names the canonical living board GSPC board (the section reads Leaderboard)", () => {
     expect(LOBBY_TABS.find((tab) => tab.id === "board")?.label).toBe(
       "GSPC board",
     );
