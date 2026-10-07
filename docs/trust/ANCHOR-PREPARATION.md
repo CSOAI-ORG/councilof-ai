@@ -1,3 +1,16 @@
+> **⚠️ STALE VALUES BELOW — SUPERSEDED 2026-10-07.**
+> This document's `sha256(root.json)`, byte count, card count, `as_of` and Merkle root describe the
+> root as it stood on **2026-09-11** (`62a1931b…`, 14,518 B, 167 cards). That root has since been
+> superseded. **Do not anchor these values.**
+> Current root, to attest instead: `sha256 = f1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e`,
+> 25,513 B, 319 cards, merkle `47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d`,
+> `as_of = 2026-09-30T05:05:34Z`. Read it live from `https://councilof.ai/root.json` at execution time.
+> Machine-readable current anchor state: `trust/anchor-state-20261007.json`.
+> The network/contract/cost sections below remain valid; only the *hash to anchor* is stale, and the
+> document already instructed re-fetching at execution time. No transaction has been signed or sent.
+
+---
+
 # Anchor Transaction Preparation
 
 **Date:** 2026-09-11
@@ -5,6 +18,9 @@
 **STOP gate:** All steps below prepare exact parameters. No paid signature or transaction is submitted.
 
 ## Exact Hash to Anchor
+
+> ⚠️ **The table in this section is the superseded 2026-09-11 root.** See the banner at the top of
+> this file for the current values. Re-fetch at execution time — as this section already instructs.
 
 The hash to anchor is the SHA-256 of the **exact server response bytes** of `/root.json`:
 
