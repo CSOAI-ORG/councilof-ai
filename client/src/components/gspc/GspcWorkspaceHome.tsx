@@ -25,7 +25,6 @@ import { ArrowRight, Coins } from "lucide-react";
 import { useGspcBoard } from "@/components/board/useGspcBoard";
 import { boardTiles, separationRead, type TileState } from "@/components/home/LiveBoardGlance";
 import {
-  claimMaintenanceFigure,
   correctionsFigure,
   exercisesFigure,
   sovxFigure,
@@ -34,6 +33,7 @@ import {
   type LiveRead,
 } from "./useLiveJson";
 import { useModelsCount } from "./useModelsCount";
+import { checkWords, chipOf, countsLine, dayLabel, readClaimChecks, registryWords, STATUS_WORDS } from "./claimChecks";
 import GetResults from "./GetResults";
 import CorpusCount from "./CorpusCount";
 import { correctionHeadline, correctionHref } from "@/lib/correctionHeadline";
@@ -272,6 +272,121 @@ function PlaceCard({ p }: { p: Place }) {
   );
 }
 
+/**
+ * The Claim maintenance place. Its numbers are the check rows counted for today (claimChecks.ts):
+ * a check whose due date has passed with no completed run is overdue, whatever the last run wrote.
+ * The whole card is its one button: it opens the list of checks in place, overdue first. Nothing on
+ * it is typed. (7 Oct 2026 retest: the card linked to /dashboard?tab=claims, which embeds the
+ * category page and its specification, not the checks; that page stays one link away below the list.)
+ * Until the rows are read, or when they cannot be, it is the plain place card with that state said.
+ */
+function ClaimsPlaceCard({ p, read }: { p: Place; read: LiveRead<unknown> }) {
+  const [open, setOpen] = useState(false);
+  const listRef = useRef<HTMLDivElement | null>(null);
+  const r = read.state === "ok" ? readClaimChecks(read.data) : null;
+  useEffect(() => {
+    if (open) listRef.current?.scrollIntoView?.({ block: "nearest" });
+  }, [open]);
+
+  if (!r) {
+    const figure =
+      read.state === "loading" ? (
+        <span role="status" aria-live="polite" className="mt-3 block text-[13px] text-muted-foreground" data-testid="ws-fig-claims" data-state="loading">
+          <span className="inline-block h-3 w-24 animate-pulse rounded bg-muted align-middle motion-reduce:animate-none" aria-hidden="true" />
+          <span className="sr-only">Reading the checks</span>
+        </span>
+      ) : (
+        <span className="mt-3 block text-[13px] text-amber-900" data-testid="ws-fig-claims" data-state="unread">
+          The checks could not be read {read.state === "error" ? `(${read.error})` : "(no check rows in the answer)"}. Nothing is shown in their place.
+        </span>
+      );
+    return <PlaceCard p={{ ...p, figure }} />;
+  }
+
+  const chip = chipOf(r);
+  const ran = dayLabel(r.runAt);
+  return (
+    <li className="min-w-0">
+      <div
+        className="flex h-full flex-col overflow-hidden rounded-3xl border border-emerald-950/10 bg-card shadow-[0_1px_2px_rgba(6,21,15,0.04)]"
+        data-testid={`ws-place-${p.id}`}
+      >
+        <button
+          type="button"
+          aria-expanded={open}
+          aria-controls="ws-claims-checks"
+          onClick={() => setOpen((v) => !v)}
+          title={`Read from ${r.source}, counted for ${r.today}`}
+          className="group flex flex-1 flex-col text-left transition hover:bg-emerald-50/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-emerald-700 motion-reduce:transition-none"
+          data-testid="ws-claims-open"
+        >
+          {p.img ? (
+            <img
+              src={`${p.img.base}-480.webp`}
+              width={p.img.w}
+              height={p.img.h}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              className="aspect-[16/9] h-auto w-full bg-muted object-cover"
+            />
+          ) : null}
+          <span className="flex w-full flex-1 flex-col p-4 sm:p-5">
+            <span className="text-base font-black tracking-tight text-foreground">{p.title}</span>
+            <span className="mt-1 text-sm leading-relaxed text-muted-foreground">{p.job}</span>
+            <span className="mt-auto block">
+              <span className="mt-3 flex flex-wrap items-center gap-2 text-[13px] leading-snug text-muted-foreground" data-testid="ws-fig-claims" data-state="live">
+                <span
+                  className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${chip.tone === "warn" ? "bg-amber-100 text-amber-950" : "bg-emerald-100 text-emerald-950"}`}
+                  data-testid="ws-claims-chip"
+                >
+                  {chip.text}
+                </span>
+                <span className="font-semibold text-foreground" data-testid="ws-claims-counts">
+                  {countsLine(r)}
+                </span>
+              </span>
+              <span className="mt-1 block text-xs text-muted-foreground">
+                {ran ? `Last run ${ran}. Counted against today's date.` : "The last run date was not given. Counted against today's date."}
+              </span>
+              <span className="mt-3 inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-emerald-800/30 bg-emerald-50 px-3.5 py-2 text-sm font-bold text-emerald-950 group-hover:border-emerald-700">
+                {open ? "Hide the checks" : `See the ${r.rows.length} checks`}
+                <ArrowRight className={`h-4 w-4 transition ${open ? "rotate-90" : ""} motion-reduce:transition-none`} aria-hidden="true" />
+              </span>
+            </span>
+          </span>
+        </button>
+        <div id="ws-claims-checks" ref={listRef} hidden={!open} className="border-t border-border px-4 pb-4 pt-3 sm:px-5" data-testid="ws-claims-checks">
+          <ul className="m-0 list-none space-y-2 p-0" aria-label="Scheduled re-checks, overdue first">
+            {r.rows.map((c) => (
+              <li key={`${c.registry}|${c.check}`} className="rounded-xl border border-border px-3 py-2 text-[13px] leading-snug" data-status={c.status}>
+                <span
+                  className={`mr-1.5 inline-block rounded-full px-2 py-0.5 text-[11px] font-bold ${
+                    c.status === "overdue" || c.status === "not_read" ? "bg-amber-100 text-amber-950" : "bg-muted text-foreground"
+                  }`}
+                >
+                  {STATUS_WORDS[c.status]}
+                </span>
+                <span className="font-semibold text-foreground">{registryWords(c.registry)}</span>
+                <span className="text-muted-foreground">
+                  {" "}
+                  · {checkWords(c.check)} · due <time dateTime={c.due}>{dayLabel(c.due)}</time>
+                </span>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2 text-xs text-muted-foreground">
+            Overdue means the due date has passed and no completed run is recorded.{" "}
+            <Link href={p.href} className="font-semibold text-emerald-800 underline underline-offset-2">
+              How the schedule works
+            </Link>
+          </p>
+        </div>
+      </div>
+    </li>
+  );
+}
+
 /** What the home hands its TalkPanel: called once per finished run. */
 export type TalkHooks = { onRunDone: (run: FinishedLookupRun) => void };
 
@@ -404,12 +519,16 @@ export default function GspcWorkspaceHome({
       figure: <LiveFigureLine read={state} pick={correctionsFigure} testId="ws-fig-corrections" />,
     },
     {
+      // 7 Oct 2026 retest: this card printed the last run's frozen outcomes ("9 not yet due" while three
+      // were overdue) and opened the specification page. It now counts the check rows for today and
+      // its one button opens the list of checks in place (ClaimsPlaceCard). The href is the fallback
+      // only: where the schedule rules and the register are explained.
       id: "claims",
       href: "/dashboard?tab=claims",
       title: "Claim maintenance",
       job: "Published claims are re-read against their sources on a schedule, and re-measured, marked stale or retired.",
       img: { base: "/images/home/clock", w: 480, h: 360 },
-      figure: <LiveFigureLine read={state} pick={claimMaintenanceFigure} testId="ws-fig-claims" />,
+      figure: null,
     },
   ];
 
@@ -477,9 +596,7 @@ export default function GspcWorkspaceHome({
             More you can do
           </h2>
           <ul className="mt-4 grid list-none gap-4 p-0 sm:grid-cols-2 xl:grid-cols-4">
-            {places.map((p) => (
-              <PlaceCard key={p.id} p={p} />
-            ))}
+            {places.map((p) => (p.id === "claims" ? <ClaimsPlaceCard key={p.id} p={p} read={state} /> : <PlaceCard key={p.id} p={p} />))}
           </ul>
         </section>
 
