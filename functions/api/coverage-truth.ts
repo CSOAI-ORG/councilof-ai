@@ -30,10 +30,19 @@ export const onRequestGet: PagesFunction<Env> = async ({ env, request }) => {
 
   // Helper: signed card IDs from card_index.json
   const root = rootJson as Record<string, unknown>;
-  const cards = cardIndex as { cards?: Array<{ signed?: boolean; cell?: Record<string, string> }>; n_cards?: number };
+  const cards = cardIndex as {
+    cards?: Array<{ signed?: boolean; cell?: Record<string, string>; axis?: string }>;
+    n_cards?: number;
+  };
   const cardRows = Array.isArray(cards.cards) ? cards.cards : [];
+  // Rows are flat ({axis, card, card_url, kid, pubkey, sig, signed, ts}) — there is no
+  // nested `cell` object, so the issuer/model/axis triple can never be derived here.
+  // Empty is not zero: report null rather than a measured-looking 0.
+  const cellDerived = cardRows.some((c) => Boolean(c.cell));
   const signedCardIds = new Set<string>(
-    cardRows.filter((c) => c.signed && c.cell).map((c) => c.cell ? `${c.cell.issuer}/${c.cell.model}/${c.cell.axis}` : ""),
+    cellDerived
+      ? cardRows.filter((c) => c.signed && c.cell).map((c) => `${c.cell!.issuer}/${c.cell!.model}/${c.cell!.axis}`)
+      : [],
   );
 
   // Surface 1: Signed cards (root)
@@ -74,8 +83,11 @@ export const onRequestGet: PagesFunction<Env> = async ({ env, request }) => {
       surface: "signed-cards (root.json)",
       indexed: cardRows.length,
       runnable: null,
-      measured: signedCardIds.size,
-      signed: rootCardCount ?? signedCardIds.size,
+      // null = NOT DERIVABLE, not zero: rows carry no cell object, so the
+      // issuer/model/axis triple cannot be computed from this file. Quoting 335
+      // would claim every index row is a measurement; quoting 0 would claim none is.
+      measured: cellDerived ? signedCardIds.size : null,
+      signed: rootCardCount ?? (cellDerived ? signedCardIds.size : null),
     },
     {
       surface: "stablecoin-universe",
@@ -107,8 +119,20 @@ export const onRequestGet: PagesFunction<Env> = async ({ env, request }) => {
     },
   ];
 
-  // Reconciliation: signed card count from card_index vs root
-  const reconciled = cardRows.length === (rootCardCount ?? cardRows.length);
+  // Reconciliation — WITHIN each corpus, never ACROSS the two.
+  //
+  // card_index (335 rows) and root.json (319 leaves) are SEPARATE_CORPORA: zero
+  // identifier overlap (verified 2026-10-07, 335∩319=0). The previous check compared
+  // cardRows.length against root.card_count, which is 335 === 319 by construction and
+  // therefore permanently false — it reported a broken reconciliation when each corpus
+  // was in fact internally consistent (n_cards === rows, card_count === leaves).
+  //
+  // Correct meaning: every declared header agrees with its own bytes.
+  const rootLeaves = Array.isArray(root.card_sha256) ? (root.card_sha256 as unknown[]).length : null;
+  const indexHeader = typeof cards.n_cards === "number" ? cards.n_cards : null;
+  const rootInternal = rootCardCount !== null && rootLeaves !== null ? rootCardCount === rootLeaves : null;
+  const indexInternal = indexHeader !== null ? indexHeader === cardRows.length : null;
+  const reconciled = rootInternal === true && indexInternal === true;
 
   const body = {
     schema: "csoai.coverage-truth/0.1",
@@ -123,6 +147,22 @@ export const onRequestGet: PagesFunction<Env> = async ({ env, request }) => {
       measured_total: surfaces.reduce((s, c) => s + (c.measured ?? 0), 0),
       signed_total: surfaces.reduce((s, c) => s + (c.signed ?? 0), 0),
       reconciliation_ok: reconciled,
+      // Why the two corpus sizes differ, so reconciliation_ok is never read as "335 === 319".
+      corpus_relationship: {
+        relationship: "SEPARATE_CORPORA",
+        identifier_overlap: 0,
+        note: "card_index rows and root.json leaves are disjoint identifier sets and are never summed, never compared for equality, and never added to a total. reconciliation_ok reports only WITHIN-corpus header agreement.",
+        root_declared_card_count: rootCardCount,
+        root_published_leaves: rootLeaves,
+        root_headers_agree: rootInternal,
+        index_declared_n_cards: indexHeader,
+        index_rows: cardRows.length,
+        index_headers_agree: indexInternal,
+        observed: "2026-10-07T04:31Z — 335 index rows, 319 leaves, intersection 0.",
+      },
+      measured_note: cellDerived
+        ? undefined
+        : "signed-cards measured is null, not 0: card_index rows carry no cell object, so the issuer/model/axis triple is underivable from this file. Empty is not zero.",
     },
     surfaces,
     not_covered: [

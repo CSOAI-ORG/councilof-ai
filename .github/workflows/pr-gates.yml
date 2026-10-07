@@ -75,6 +75,23 @@ jobs:
       - name: All RunPod cards and buyer replay — no network or signing
         run: node --test scripts/test_runpod_verifier_parity.mjs scripts/test_gspc_replay_kit.mjs
 
+  # 7 Oct 2026: a wallet private key sat in tui4-x402-test/sign-payment.cjs from 27ac2d551 to #2879, and
+  # the wallet was swept. This gate ran only in deploy.yml, AFTER merge, so a key could land on master
+  # and the first red was the deploy. It runs on EVERY PR, outside the scope step below, because a key can
+  # arrive in any path. It reads blobs from the index, so the default full checkout is required.
+  wallet-credentials:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: No wallet private key in any tracked path — selftest, then the index
+        run: |
+          node scripts/wallet-credential-gate.mjs --selftest
+          node scripts/wallet-credential-gate.mjs
+
   # 6 Oct 2026: a third party's contact details were removed from this tree after we had told them
   # nothing naming them would be public. This runs on EVERY PR, outside the scope step below, because
   # they could come back in any file, docs included. The identifiers live only in the repository secret
@@ -89,6 +106,28 @@ jobs:
         env:
           THIRD_PARTY_GUARD_IDS: ${{ secrets.THIRD_PARTY_GUARD_IDS }}
         run: python3 scripts/privacy/test_third_party_identifiers.py -v
+
+  # 7 Oct 2026: PR #2871 edited public/interop/iso-20022.json, whose sibling .ots commits to the
+  # previous bytes. Every PR check was green, because the only proof-vs-target comparison
+  # (scripts/root-witness-release-gate.py) ran in deploy.yml after the merge, and every master deploy
+  # from f4487608d on failed closed there. This job decides the same question from the PR alone: a PR
+  # may not change, or delete, the bytes of a file an OpenTimestamps proof commits to unless it also
+  # replaces the proof with one for the new bytes. It runs on EVERY PR, outside the scope step below,
+  # because stamped files also live outside the gated paths (evidence/, _quarantine/). The same check
+  # runs inside `gates` so the required context carries it for public/ and scripts/.
+  stamped-bytes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      # Depth 2: on pull_request HEAD is the merge commit, so HEAD^1 is the base the PR merges into.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Stamped bytes - selftest, then this PR against its base
+        run: |
+          python3 -m pip install -q opentimestamps-client
+          python3 scripts/stamped-bytes-gate.py --selftest
+          python3 scripts/stamped-bytes-gate.py --base HEAD^1 --head HEAD
 
   gates:
     runs-on: ubuntu-latest
@@ -121,9 +160,22 @@ jobs:
 
       - uses: actions/checkout@v4
         if: steps.scope.outputs.gated == 'true'
+        with:
+          fetch-depth: 2   # HEAD^1 = the base this PR merges into, for the stamped-bytes step
       - uses: actions/setup-node@v4
         if: steps.scope.outputs.gated == 'true'
         with: { node-version: 20 }
+
+      # Runs before `npm ci` so a stamped-byte edit fails in seconds. See the stamped-bytes job above
+      # for why (#2871 / deploy run 37590160574). Verified to fail: the selftest goes red when any one
+      # of its four guards is removed, and replaying f4487608d against its parent exits 1 naming
+      # public/interop/iso-20022.json.
+      - name: Stamped bytes - no OTS-stamped file changes without a valid new proof
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          python3 -m pip install -q opentimestamps-client
+          python3 scripts/stamped-bytes-gate.py --selftest
+          python3 scripts/stamped-bytes-gate.py --base HEAD^1 --head HEAD
 
       - name: Install deps
         if: steps.scope.outputs.gated == 'true'

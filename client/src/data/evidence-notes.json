@@ -239,24 +239,24 @@
   {
    "id": "honest-unmeasured-n12",
    "date": "2026-09-14",
-   "title": "An honest UNMEASURED at n=12",
-   "summary": "A signed, admitted safety card says UNMEASURED because 12 graded items are fewer than 30; its accuracy field is not quoted.",
-   "body": "mistralai/Mistral-7B-Instruct-v0.2 has a current signed, admitted card on the safety axis (https://councilof.ai/interop/mill-cards-signed/signed-safety-5de28cfe94db.json). The body says status UNMEASURED, with unmeasured: n<30 unquotable, at n=12. The card also carries an accuracy field. We do not quote it, because the card itself says the value is not quotable at this sample size. UNMEASURED here does not mean the model failed, and it does not mean the model passed. It means 12 graded items are fewer than the 30 the rule requires before a result is stated. The card is still signed and still listed in hub-cards-index.json with its status passed through unchanged, because an honest UNMEASURED is information: it tells a reader exactly where the evidence stops. The item rows and admission receipt the card names are public, so the 12 rows can be inspected even though no accuracy is quoted from them.",
+   "title": "An honest UNMEASURED at n=11",
+   "summary": "A signed, admitted safety card says UNMEASURED because 11 graded items are fewer than 30; its accuracy field is not quoted.",
+   "body": "mistralai/Mistral-7B-Instruct-v0.2 had a signed, admitted card on the safety axis (https://councilof.ai/interop/mill-cards-signed/signed-safety-5de28cfe94db.json) whose body said status UNMEASURED, with unmeasured: n<30 unquotable, at n=12. That card has since been superseded by re-admitted runs. The current card (https://councilof.ai/interop/mill-cards-signed/signed-safety-fad7ec06bed5.json) is still UNMEASURED for the same reason, at n=11. Both cards also carry an accuracy field. We do not quote it, because each card itself says the value is not quotable at this sample size. UNMEASURED here does not mean the model failed, and it does not mean the model passed. It means 11 graded items are fewer than the 30 the rule requires before a result is stated. An honest UNMEASURED is information: it tells a reader exactly where the evidence stops. The item rows and admission receipt the current card names are public, so they can be inspected even though no accuracy is quoted from them.",
    "artifacts": [
     {
-     "label": "Mistral-7B-Instruct-v0.2 safety card",
+     "label": "Current Mistral-7B-Instruct-v0.2 safety card",
+     "url": "https://councilof.ai/interop/mill-cards-signed/signed-safety-fad7ec06bed5.json"
+    },
+    {
+     "label": "Superseded n=12 safety card",
      "url": "https://councilof.ai/interop/mill-cards-signed/signed-safety-5de28cfe94db.json"
     },
     {
-     "label": "Hub cards index",
-     "url": "https://councilof.ai/interop/hub-cards-index.json"
-    },
-    {
-     "label": "Admission receipt",
-     "url": "https://councilof.ai/interop/mill-evidence/admission-9222a3c8528a.json"
+     "label": "Current card's admission receipt",
+     "url": "https://councilof.ai/interop/mill-evidence/admission-0bf50d155e24.json"
     }
    ],
-   "social": "A signed safety card at n=12 says UNMEASURED: n<30 unquotable. We do not quote its accuracy. It is not a pass and not a fail; it marks where the evidence stops. https://councilof.ai/interop/mill-cards-signed/signed-safety-5de28cfe94db.json"
+   "social": "A signed safety card at n=11 says UNMEASURED: n<30 unquotable. We do not quote its accuracy. It is not a pass and not a fail; it marks where the evidence stops. https://councilof.ai/interop/mill-cards-signed/signed-safety-fad7ec06bed5.json"
   },
   {
    "id": "commission-self-funded-chain",

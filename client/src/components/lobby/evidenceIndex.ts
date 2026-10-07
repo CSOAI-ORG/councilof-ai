@@ -83,10 +83,16 @@ export function composeEvidenceIndex(input: EvidenceInput): Record<string, unkno
 
   return {
     schema: "csoai.evidence-index/0.1",
+    // Re-test 7 Oct 2026: this said "for the named subject" while every row named the axis
+    // LEADER, usually another provider's model, so a reader who typed their own model got an index
+    // about other people's models under their model's name. Evidence for one named model is
+    // answered by EvidenceSubject.ts; this index describes the board.
     what_this_is:
-      "An index of the PUBLISHED Council of AI measurements a reader can retrieve and recompute " +
-      "for the named subject. Compiled on this device from GET /api/gspc — this index is not " +
-      "itself signed. The signed objects are the per-axis cards; they verify against the " +
+      "An index of the PUBLISHED Council of AI board measurements a reader can retrieve and " +
+      "recompute, for the board as a whole. Each row names that axis's LEADER, which is usually " +
+      "another provider's model: this index is not evidence about any one model unless that model " +
+      "is the leader named on the row. Compiled on this device from GET /api/gspc — this index is " +
+      "not itself signed. The signed objects are the per-axis cards; they verify against the " +
       "published key at /gspc-verify without contacting us.",
     what_this_is_not:
       "Not a certification, not a conformity assessment, not an accreditation, and not legal " +
@@ -95,7 +101,7 @@ export function composeEvidenceIndex(input: EvidenceInput): Record<string, unkno
     compiled_on: now,
     compiled_on_note: "This device's clock. The measurement dates are the board's, below.",
     subject: {
-      system: system.trim() || "UNNAMED — fill in the system this index is about",
+      system: system.trim() || "NOT NAMED — this index describes the board, not one system",
       provider: provider.trim() || "UNNAMED",
     },
     board: {
