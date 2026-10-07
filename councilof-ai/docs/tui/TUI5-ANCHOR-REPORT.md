@@ -55,6 +55,18 @@ The 2026-09-11 specs carried the retired 167-card hash — a prepared transactio
 
 **All three anchor one identical subject:** `sha256(root.json) = f1913eca…` — the same value as the OTS subject, the Rekor content and the sidecar `artifact.sha256`. Each spec stops at `PREPARED_NOT_SUBMITTED`; nothing signed, nothing submitted, **$0 spent**.
 
+### Blocker-resolution round (same day, owner instructed "fix all those")
+
+| Blocker | Action taken | State |
+|---|---|---|
+| Base EAS has no attester key | Dedicated hot wallet `0x65910f9827e2a87c4acb961b35f33c09ee0c94f2` created; key → `gh secret set EAS_ATTESTER_PRIVATE_KEY` via stdin, then shredded from disk (never in chat/logs/repo). The `eas-root-attestations.json` reason `no attester key in GitHub secrets` is now obsolete. | ✅ key live · ⏳ needs 0.00002 ETH dust on Base, then the hourly `public-root` publish auto-attests (schema, relay and log-write all pre-existing) |
+| XRPL memo has no account | Dedicated standard account generated with `xrpl-py` (roundtrip-verified): **`rJJYvRPDPyGCa3jfCGCEGRccrk7S1bPLCk`**; seed in `~/.sovereign/keystore/xrpl_anchor_account_seed.txt` (0600), never printed | ⏳ needs ≥10 XRP activation, then prepared memo tx fires |
+| 2 unsigned root cards (USDQ/EURQ) | Root cause: `publish_public_root.py` skipped signing for the 2026-08-31 grandfather set *even when a signer was available* (`will_sign = is_new and have_key`). Fix: `will_sign = have_key` + semantics comment. | ✅ written, rebased, 20/20 focused tests green, all 5 repo content gates green · ⏳ push in flight → PR |
+| Ethereum EAS L1 | `scripts/eas_attest_root_eth.mjs` (official v0.26 contracts, on-chain-verified; fail-closed `NOT_YET`/`NOT_FUNDED`/`WAITING_GAS`, ≤$2 cap) + `.github/workflows/eas-eth-attest.yml` (`confirm=attest-l1` gate, PR-only) | 🔲 staged in clone, next commit |
+| Cold-key ceremony receipt | Reconstructed from runtime evidence ONLY: run `32266562512` (2026-08-19T14:51:53Z, actor `CSOAI-ORG`, success), workflow bytes, secret inventory, relay allowlist. Unverifiable links `UNVERIFIED`, missing witness `MISSING` | ✅ `ceremony/board-attestation-ceremony-receipt.md` + `ceremony/OWNER-ACTIONS-STAGED.md` (committed, pushed) |
+
+**Owner-bounded asks (stage, never fire):** three sends staged in `ceremony/OWNER-ACTIONS-STAGED.md` — Base 0.00002 ETH, L1 0.0004 ETH (P2), XRPL ≥10 XRP. **Spend to date: $0.**
+
 ---
 
 ### Verified Baseline (2026-09-11, date-stamped — superseded states listed in §0)
