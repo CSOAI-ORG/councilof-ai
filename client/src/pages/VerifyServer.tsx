@@ -32,7 +32,10 @@ const DESCRIPTION =
 
 const EXAMPLES: { label: string; url: string }[] = [
   { label: "our own MCP door", url: "https://councilof.ai/mcp" },
-  { label: "one of our doors with a disagreement", url: "https://councilof.ai/api/request-attestation?subject=model-or-subject-id" },
+  // A real asset, not the old `model-or-subject-id` placeholder (repair round, 7 Oct 2026). This door's
+  // published capsules include one INCONSISTENT reading (payai-bazaar), shard
+  // public/measurement-capsules/v0.2/endpoints/49.json.
+  { label: "one of our doors with a disagreement", url: "https://councilof.ai/api/rwa/evidence?asset=RLUSD" },
   { label: "a URL we hold nothing about", url: "https://example.com/mcp" },
 ];
 

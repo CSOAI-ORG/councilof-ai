@@ -17,7 +17,7 @@
  * payment cannot be read (UNCHECKABLE) stays queued: it could be a stranger's.
  */
 import { classifyCommissionTarget } from "./_commission_target";
-import { commissionOrigin, readHubCardsIndex, readPodCardsIndex, type CommissionOrigin } from "./commissions";
+import { commissionOrigin, isOwedOrigin, readHubCardsIndex, readPodCardsIndex, type CommissionOrigin } from "./commissions";
 import { headFromGet } from "./_head";
 import { INVOICE_CONTACT } from "./_invoice_handoff";
 
@@ -193,7 +193,8 @@ export async function buildCommissionQueue(env: Env, origin = "https://councilof
     const not_owed: NotOwedRow[] = [];
     reconciled.rows.forEach((r, i) => {
       const o = origins[i];
-      if (o === "SELF_TEST" || o === "ZERO_VALUE") not_owed.push({ ...r, status: o, origin: o });
+      // The same owed-work rule /api/commissions counts `queued` by (isOwedOrigin), so the two agree.
+      if (!isOwedOrigin(o)) not_owed.push({ ...r, status: o as "SELF_TEST" | "ZERO_VALUE", origin: o });
       else rows.push({ ...r, origin: o });
     });
     return {

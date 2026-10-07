@@ -115,8 +115,9 @@ describe("/api/revenue — invoice requests apart from issuances", () => {
     const store: Store = new Map([
       ["count:issuances", "13"],
       ["count:invoice_requested", "2"],
-      ["art50:aa", JSON.stringify({ subject: "s1", payment: { mode: "invoice-gbp", reference: "CSOAI-A50-1" } })],
-      ["art50:bb", JSON.stringify({ subject: "s2", payment: { mode: "invoice-gbp", reference: "CSOAI-A50-2" } })],
+      ["art50:aa", JSON.stringify({ subject: "s1", payment: { mode: "invoice-gbp", reference: "CSOAI-A50-1", commissioned_by: "Acme Design Ltd" } })],
+      // the blueprint's S-SG-04 check asks with commissioned_by=test; on the old rule each run issued a pack
+      ["art50:bb", JSON.stringify({ subject: "s2", payment: { mode: "invoice-gbp", reference: "CSOAI-A50-2", commissioned_by: "Test" } })],
       ["art50:cc", JSON.stringify({ subject: "s3", payment: { mode: "x402", transaction: "0x9" } })],
       ["art50:dd", JSON.stringify({ subject: "s4", payment: { mode: "invoice-gbp", reference: "CSOAI-A50-3", state: "MARKED_PAID" } })],
       // the invoice rail's own request records are a different prefix and never read as packs
@@ -124,7 +125,9 @@ describe("/api/revenue — invoice requests apart from issuances", () => {
     ]);
     const body = (await buildRevenue({ REVENUE_KV: fakeKv(store) })) as any;
     expect(body.invoice.invoice_requested).toMatchObject({ count: 2, status: "MEASURED" });
-    expect(body.invoice.issued_before_payment).toMatchObject({ count: 2, status: "MEASURED", records_read: 4 });
+    expect(body.invoice.issued_before_payment).toMatchObject({ count: 2, status: "MEASURED", records_read: 4, named_test: 1 });
+    // an organisation name is read to count "test" and never returned
+    expect(JSON.stringify(body)).not.toContain("Acme");
     expect(body.skus.issuance.count).toBe(13);
     expect(body.skus.issuance.includes_issued_before_payment).toBe(2);
   });

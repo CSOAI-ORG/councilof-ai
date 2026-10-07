@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { buildCommissionQueue } from "./commission-queue";
+import { buildCommissions } from "./commissions";
 
 /**
  * Product organ PS-02 (7 Oct 2026): /api/commission-queue listed two rows QUEUED for 15 and 31 days
@@ -66,5 +67,31 @@ describe("commission queue: owed work only", () => {
     expect(body.queued).toBe(2);
     expect(body.not_owed.map((r: { subject: string; status: string }) => [r.subject, r.status])).toEqual([["gemma3:12b", "ZERO_VALUE"]]);
     expect(body.zero_value).toBe(1);
+  });
+
+  it("/api/commissions and /api/commission-queue count the same owed work (repair round, 7 Oct 2026)", async () => {
+    // Before: the queue said queued 0 (both self-paid rows in not_owed) while /api/commissions said
+    // queued 2 for the same two rows. Both now count by isOwedOrigin().
+    const store: Store = new Map([
+      ["ras:a", queued("clan-csoai-plain:latest", "0xeec6", "2026-09-06T08:01:23.527Z")],
+      ["ras:b", queued("llama3.2:1b", "0x5da0", "2026-09-22T13:20:35.593Z")],
+      ["ras:c", queued("qwen3:4b", "0xaaa", "2026-10-01T00:00:00Z")],
+      ["ras:d", queued("mistral:7b", "0xbbb", "2026-10-02T00:00:00Z")],
+      ["ras:e", queued("gemma3:12b", "0xccc", "2026-10-03T00:00:00Z")],
+      ["settled:tx:0xeec6", settled(OWNER_TEST, "20000")],
+      ["settled:tx:0x5da0", settled(PAY_TO)],
+      ["settled:tx:0xaaa", settled(STRANGER)],
+      ["settled:tx:0xccc", settled(STRANGER, "0")],
+    ]);
+    const env = { REVENUE_KV: fakeKv(store), X402_SELF_WALLETS: OWNER_TEST };
+    const queue = (await buildCommissionQueue(env, "https://councilof.ai", noCards)) as any;
+    const list = (await buildCommissions(env, "https://councilof.ai", noCards)) as any;
+    expect(queue.queued).toBe(2); // the stranger's row and the unreadable one
+    expect(list.queued).toBe(queue.queued);
+    expect(list.queued_not_owed).toBe(queue.self_test + queue.zero_value);
+    expect(list.queued_not_owed).toBe(3);
+    expect(list.queued_rule).toMatch(/owed work only/);
+    const owed = Object.fromEntries(list.commissions.map((c: { subject: string; owed: boolean }) => [c.subject, c.owed]));
+    expect(owed).toEqual({ "clan-csoai-plain:latest": false, "llama3.2:1b": false, "qwen3:4b": true, "mistral:7b": true, "gemma3:12b": false });
   });
 });

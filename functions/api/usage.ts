@@ -22,7 +22,10 @@ const MAX_DAYS = 14;
 const CACHE_SECONDS = 300;
 /** The first UTC day the counter existed. Days before it are not "0"; they were never counted. */
 export const COUNTING_SINCE = "2026-09-29";
-/** The first UTC day a row's key carried its client class. */
+/**
+ * The first UTC day a row carried its client class, as KV metadata on the row (functions/_lib/usage.ts);
+ * the row's key and value are unchanged. Rows written before it have no metadata: "unrecorded".
+ */
 export const CLIENT_CLASS_SINCE = "2026-10-07";
 
 export const onRequestOptions: PagesFunction = async () => new Response(null, { status: 204, headers: CORS });

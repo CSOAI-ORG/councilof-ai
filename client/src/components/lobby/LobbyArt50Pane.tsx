@@ -33,6 +33,10 @@ import { addMyResult, paidResult, seedChecker, signedRecordOf, VERIFY_SEED_HREF 
  * x402: the pane reads the live 402 terms first (nothing is charged), the wallet signs those exact
  * terms, and the door is retried once (lib/payEveryDoor payDoor, the same path as /pay-all). What
  * the door delivers is shown, saved to My results in this browser, and handed to the free checker.
+ *
+ * THE INVOICE RAIL IS A QUOTATION UNTIL PAID (7 Oct 2026). Its answer is AWAITING_PAYMENT: a reference,
+ * no card, nothing signed. QuotationView shows that and what happens next; the "Pack issued" view is
+ * only ever drawn for an answer that carries a card.
  */
 
 type Check = { method: string; result: string; note?: string };
@@ -51,17 +55,34 @@ type WalletPay =
   | { kind: "terms"; door: Door; challenge: X402Challenge }
   | { kind: "unpayable"; detail: string }
   | { kind: "paying"; door: Door; state: DoorState };
+/**
+ * What the Function answers on either rail. The GBP invoice rail is a QUOTATION until paid (7 Oct
+ * 2026, functions/api/art50/marking-evidence.ts): `state` AWAITING_PAYMENT, `card` null, `bytes` 0,
+ * a reference and the invoice handoff, and nothing signed. Only once CSOAI LTD marks the reference
+ * paid does the same request answer `state` RELEASED with the signed card.
+ */
 type Pack = {
   mode: string;
+  state?: string;
   scope?: Scope;
   signed: boolean;
   unsigned_reason: string | null;
   bytes: number;
-  payment: { mode: string; reference?: string; commissioned_by?: string; transaction?: string | null; payer?: string | null };
-  card: Record<string, unknown>;
-  /** The Function's invoice handoff (functions/api/_invoice_handoff.ts): nothing is recorded server-side. */
-  invoice?: { recorded?: boolean; recorded_note?: string; you_must_send_this?: string; contact?: string; mailto?: string };
+  payment: { mode: string; reference?: string; commissioned_by?: string; transaction?: string | null; payer?: string | null; state?: string };
+  /** null while the invoice reference awaits payment: a quotation carries no card. */
+  card: Record<string, unknown> | null;
+  /** The Function's invoice handoff (functions/api/_invoice_handoff.ts), worded by what the door recorded. */
+  invoice?: { recorded?: boolean; recorded_note?: string; you_must_send_this?: string; contact?: string; mailto?: string; note?: string };
+  /** When and how a quoted pack is released (invoice rail, AWAITING_PAYMENT only). */
+  release?: { when?: string; how?: string; same_bytes?: string; who?: string };
+  /** Present when the store could not be read, so the request was not recorded. */
+  store_note?: string;
 };
+
+/** A quotation, not a pack: nothing was signed or issued, whatever else the answer carries. */
+export function isAwaitingPayment(p: Pick<Pack, "state" | "card">): boolean {
+  return p.state === "AWAITING_PAYMENT" || p.card == null;
+}
 
 const EP = "/api/art50/marking-evidence";
 
@@ -133,6 +154,113 @@ function ScopeLines({ scope, testId }: { scope: Scope; testId: string }) {
       </li>
     </ul>
   );
+}
+
+/**
+ * The invoice rail's answer before payment: a reference and what happens next. Nothing in it was
+ * issued, so it shows no card, no byte count, no Copy block and no verify link (a stranger read
+ * "Pack issued · 0 bytes of signed payload" and a `null` leaf here on 7 Oct 2026).
+ */
+export function QuotationView({ pack }: { pack: Pack }) {
+  const ref = pack.payment.reference ?? null;
+  return (
+    <section className="mt-6 rounded-xl border border-amber-600/35 bg-amber-50/70 px-4 py-4" data-testid="art50-quotation">
+      <p className={TYPE.section}>Quotation · awaiting payment · nothing signed yet</p>
+      <p className="mt-1 text-[15px] font-semibold text-slate-900">
+        Invoice reference <code className="break-all font-mono">{ref ?? "none returned"}</code>
+      </p>
+      <p className={`mt-1 ${TYPE.fine}`}>
+        {pack.payment.commissioned_by ? `For ${pack.payment.commissioned_by} · ` : ""}
+        This request issued no pack and signed nothing. The measurement above is the free, unsigned preview.
+      </p>
+      <p className={`mt-3 ${MEASURE} text-[13px] leading-relaxed text-slate-800`} data-testid="art50-quotation-release">
+        {ref ? `The signed pack is released once CSOAI LTD marks reference ${ref} paid, after its invoice is settled. ` : "The signed pack is released once CSOAI LTD marks the reference paid. "}
+        Then press “Commission (GBP invoice)” again with the same organisation and the same output; the signed pack comes back here.
+      </p>
+      {pack.release?.same_bytes && <p className={`mt-1 ${MEASURE} ${TYPE.fine}`}>Same output: {pack.release.same_bytes}.</p>}
+      {pack.release?.who && <p className={`mt-1 ${MEASURE} ${TYPE.fine}`}>{pack.release.who}</p>}
+      {pack.store_note && <p className="mt-2 text-[12.5px] text-amber-900">{pack.store_note}.</p>}
+      {pack.invoice?.you_must_send_this && (
+        <div className="mt-3 rounded-lg border border-amber-600/35 bg-white/80 px-3 py-2.5" data-testid="art50-invoice-handoff">
+          <p className="text-[13px] font-semibold text-amber-950">{pack.invoice.you_must_send_this}</p>
+          {pack.invoice.recorded_note && <p className={`mt-1 ${TYPE.fine}`}>{pack.invoice.recorded_note}</p>}
+          {/* The draft opens in the reader's own mail app; nothing is sent from here. Add billing
+              contact, billing address and VAT number in that email — never to the Function. */}
+          {pack.invoice.mailto?.startsWith("mailto:") && (
+            <a href={pack.invoice.mailto} className={`${PRIMARY} ${FOCUS} mt-2 min-h-11 px-4 py-2 text-[13px]`}>
+              Email the reference to CSOAI
+            </a>
+          )}
+        </div>
+      )}
+      {pack.scope ? <ScopeLines scope={pack.scope} testId="art50-pack-scope" /> : null}
+    </section>
+  );
+}
+
+/** A pack that carries a card: delivered over x402, or released after the owner marked its invoice paid. */
+function IssuedView({ pack, onOpenRoute }: { pack: Pack; onOpenRoute?: (path: string, label: string) => void }) {
+  const record = signedRecordOf(pack);
+  return (
+    <section className="mt-6 rounded-xl border border-emerald-700/30 bg-emerald-50/70 px-4 py-4" data-testid="art50-pack-issued">
+      <p className={TYPE.section}>Pack issued · {pack.signed ? "signed" : "unsigned"}</p>
+      {pack.payment.mode === "x402" ? (
+        <p className="mt-1 text-[15px] font-semibold text-slate-900">
+          Paid over x402{pack.payment.transaction ? (
+            <>
+              {" "}· transaction <code className="break-all font-mono text-[12px]">{pack.payment.transaction}</code>
+            </>
+          ) : null}
+        </p>
+      ) : (
+        <p className="mt-1 text-[15px] font-semibold text-slate-900">
+          Invoice reference <code className="font-mono">{pack.payment.reference}</code>
+        </p>
+      )}
+      <p className={`mt-1 ${TYPE.fine}`}>
+        {pack.payment.commissioned_by ? `Commissioned by ${pack.payment.commissioned_by} · ` : ""}
+        {pack.bytes} bytes of signed payload
+        {!pack.signed && pack.unsigned_reason ? ` · unsigned: ${pack.unsigned_reason}` : ""}
+        {pack.payment.mode === "x402" ? " · saved to My results in this browser" : ""}
+      </p>
+      {pack.scope ? <ScopeLines scope={pack.scope} testId="art50-pack-scope" /> : null}
+      {pack.invoice?.you_must_send_this && (
+        <div className="mt-3 rounded-lg border border-amber-600/35 bg-amber-50 px-3 py-2.5" data-testid="art50-invoice-handoff">
+          <p className="text-[13px] font-semibold text-amber-950">{pack.invoice.you_must_send_this}</p>
+          {pack.invoice.recorded_note && <p className={`mt-1 ${TYPE.fine}`}>{pack.invoice.recorded_note}</p>}
+          {/* The draft opens in the reader's own mail app; nothing is sent from here. Add billing
+              contact, billing address and VAT number in that email — never to the Function. */}
+          {pack.invoice.mailto?.startsWith("mailto:") && (
+            <a href={pack.invoice.mailto} className={`${PRIMARY} ${FOCUS} mt-2 min-h-11 px-4 py-2 text-[13px]`}>
+              Email the reference to CSOAI
+            </a>
+          )}
+        </div>
+      )}
+      {pack.invoice?.note && <p className={`mt-2 ${MEASURE} text-[12.5px] leading-relaxed text-slate-800`}>{pack.invoice.note}</p>}
+      {pack.card ? <CopyBlock label="The card-v0 leaf (verify at /gspc-verify)" text={JSON.stringify(pack.card, null, 2)} /> : null}
+      {record ? (
+        <a
+          href={VERIFY_SEED_HREF}
+          onClick={() => seedChecker(JSON.stringify(record, null, 2))}
+          className={`mt-3 inline-flex min-h-11 items-center text-[12.5px] font-semibold text-emerald-800 underline underline-offset-2 ${FOCUS}`}
+          data-testid="art50-check-genuine"
+        >
+          Check this pack is genuine (free) →
+        </a>
+      ) : null}
+      {onOpenRoute && (
+        <button type="button" onClick={() => onOpenRoute("/gspc-verify", "Verify a card")} className={`mt-3 text-[12.5px] font-semibold text-emerald-800 underline-offset-2 hover:underline ${FOCUS}`}>
+          Verify this card →
+        </button>
+      )}
+    </section>
+  );
+}
+
+/** The one place that decides which answer this is: a quotation is never drawn as an issued pack. */
+export function PackView({ pack, onOpenRoute }: { pack: Pack; onOpenRoute?: (path: string, label: string) => void }) {
+  return isAwaitingPayment(pack) ? <QuotationView pack={pack} /> : <IssuedView pack={pack} onOpenRoute={onOpenRoute} />;
 }
 
 export default function LobbyArt50Pane({ onOpenRoute }: { onOpenRoute?: (path: string, label: string) => void }) {
@@ -231,7 +359,6 @@ export default function LobbyArt50Pane({ onOpenRoute }: { onOpenRoute?: (path: s
   }, [walletPay]);
 
   const m = preview?.measurement ?? null;
-  const packRecord = pack ? signedRecordOf(pack) : null;
 
   return (
     <div className="h-full overflow-y-auto px-5 py-5 sm:px-7">
@@ -312,15 +439,15 @@ export default function LobbyArt50Pane({ onOpenRoute }: { onOpenRoute?: (path: s
             <p className={TYPE.section}>Commission the signed pack</p>
             <p className={`mt-1 ${MEASURE} ${TYPE.body}`}>
               The same measurement, Ed25519-signed and timestamped as one card-v0 leaf, commissioned for an organisation and
-              settled on a CSOAI LTD invoice in GBP. The reference below is what the invoice cites; the amount is on the
-              invoice, not here.
+              settled on a CSOAI LTD invoice in GBP. Asking gives you a reference for the invoice, not the pack: nothing is
+              signed until that invoice is paid. The amount is on the invoice, not here.
             </p>
             <div className="mt-3">
               <Field id="coai-a50-org" label="Organisation commissioning the pack" value={org} onChange={setOrg} placeholder="Acme Design Ltd" />
             </div>
             <div className="mt-3 flex flex-wrap items-center gap-2">
               <button type="button" disabled={!orgOk || !urlOk || phase !== "idle"} onClick={commission} className={`${PRIMARY} ${FOCUS} disabled:opacity-50`}>
-                {phase === "commissioning" ? "Issuing…" : "Commission (GBP invoice)"}
+                {phase === "commissioning" ? "Asking for a reference…" : "Commission (GBP invoice)"}
               </button>
               <span className={TYPE.fine}>Agents settle the same pack on the x402 rail at the Function.</span>
             </div>
@@ -364,60 +491,7 @@ export default function LobbyArt50Pane({ onOpenRoute }: { onOpenRoute?: (path: s
         </section>
       )}
 
-      {pack && (
-        <section className="mt-6 rounded-xl border border-emerald-700/30 bg-emerald-50/70 px-4 py-4">
-          <p className={TYPE.section}>Pack issued · {pack.signed ? "signed" : "unsigned"}</p>
-          {pack.payment.mode === "x402" ? (
-            <p className="mt-1 text-[15px] font-semibold text-slate-900">
-              Paid over x402{pack.payment.transaction ? (
-                <>
-                  {" "}· transaction <code className="break-all font-mono text-[12px]">{pack.payment.transaction}</code>
-                </>
-              ) : null}
-            </p>
-          ) : (
-            <p className="mt-1 text-[15px] font-semibold text-slate-900">
-              Invoice reference <code className="font-mono">{pack.payment.reference}</code>
-            </p>
-          )}
-          <p className={`mt-1 ${TYPE.fine}`}>
-            {pack.payment.commissioned_by ? `Commissioned by ${pack.payment.commissioned_by} · ` : ""}
-            {pack.bytes} bytes of signed payload
-            {!pack.signed && pack.unsigned_reason ? ` · unsigned: ${pack.unsigned_reason}` : ""}
-            {pack.payment.mode === "x402" ? " · saved to My results in this browser" : ""}
-          </p>
-          {pack.scope ? <ScopeLines scope={pack.scope} testId="art50-pack-scope" /> : null}
-          {pack.invoice?.you_must_send_this && (
-            <div className="mt-3 rounded-lg border border-amber-600/35 bg-amber-50 px-3 py-2.5" data-testid="art50-invoice-handoff">
-              <p className="text-[13px] font-semibold text-amber-950">{pack.invoice.you_must_send_this}</p>
-              {pack.invoice.recorded_note && <p className={`mt-1 ${TYPE.fine}`}>{pack.invoice.recorded_note}</p>}
-              {/* The draft opens in the reader's own mail app; nothing is sent from here. Add billing
-                  contact, billing address and VAT number in that email — never to the Function. */}
-              {pack.invoice.mailto?.startsWith("mailto:") && (
-                <a href={pack.invoice.mailto} className={`${PRIMARY} ${FOCUS} mt-2 min-h-11 px-4 py-2 text-[13px]`}>
-                  Email the reference to CSOAI
-                </a>
-              )}
-            </div>
-          )}
-          <CopyBlock label="The card-v0 leaf (verify at /gspc-verify)" text={JSON.stringify(pack.card, null, 2)} />
-          {packRecord ? (
-            <a
-              href={VERIFY_SEED_HREF}
-              onClick={() => seedChecker(JSON.stringify(packRecord, null, 2))}
-              className={`mt-3 inline-flex min-h-11 items-center text-[12.5px] font-semibold text-emerald-800 underline underline-offset-2 ${FOCUS}`}
-              data-testid="art50-check-genuine"
-            >
-              Check this pack is genuine (free) →
-            </a>
-          ) : null}
-          {onOpenRoute && (
-            <button type="button" onClick={() => onOpenRoute("/gspc-verify", "Verify a card")} className={`mt-3 text-[12.5px] font-semibold text-emerald-800 underline-offset-2 hover:underline ${FOCUS}`}>
-              Verify this card →
-            </button>
-          )}
-        </section>
-      )}
+      {pack && <PackView pack={pack} onOpenRoute={onOpenRoute} />}
     </div>
   );
 }

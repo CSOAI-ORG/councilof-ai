@@ -52,8 +52,25 @@ type Commission = {
    * UNCHECKABLE = no settlement record to read. A commission is demand evidence only when OUTSIDE.
    */
   origin: CommissionOrigin;
+  /** Owed work (isOwedOrigin): false for a commission the estate paid itself or that moved nothing. */
+  owed: boolean;
 };
 export type CommissionOrigin = "OUTSIDE" | "SELF_TEST" | "ZERO_VALUE" | "UNCHECKABLE";
+
+/**
+ * Owed work, ONE rule for /api/commissions and /api/commission-queue (repair round, 7 Oct 2026).
+ * A commission is owed work unless the estate paid it (SELF_TEST) or it moved nothing (ZERO_VALUE);
+ * an UNCHECKABLE payment stays owed, because it could be a stranger's. Before this, the queue moved
+ * the two self-paid rows of 7 Oct to `not_owed` (queued 0) while this endpoint still counted them in
+ * `queued` (2): two public numbers for one queue.
+ */
+export function isOwedOrigin(o: CommissionOrigin): boolean {
+  return o === "OUTSIDE" || o === "UNCHECKABLE";
+}
+export const OWED_RULE =
+  "queued counts owed work only: QUEUED commissions paid by a non-self wallet (OUTSIDE) or whose payment cannot be read " +
+  "(UNCHECKABLE). A QUEUED commission the estate paid itself (SELF_TEST) or that moved nothing (ZERO_VALUE) stays listed " +
+  "with owed:false and is counted in queued_not_owed. /api/commission-queue applies the same rule.";
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body, null, 2), {
@@ -246,7 +263,7 @@ export async function buildCommissions(env: Env, origin = "https://councilof.ai"
     const commissions: Commission[] = bare.map((c, i) => {
       const joined = joinDelivery(c, pod, hub);
       // Writer: DID-signed cards in the published index → RETRIEVABLE (never invents MEASURED/scores).
-      return { ...c, ...joined, fulfillment: fulfillmentAfterDelivery(c.fulfillment, joined.delivery), origin: origins[i] };
+      return { ...c, ...joined, fulfillment: fulfillmentAfterDelivery(c.fulfillment, joined.delivery), origin: origins[i], owed: isOwedOrigin(origins[i]) };
     });
     const subjects = [...new Set(commissions.map((c) => c.subject))];
     return {
@@ -255,7 +272,9 @@ export async function buildCommissions(env: Env, origin = "https://councilof.ai"
       as_of: new Date().toISOString(),
       count: commissions.length,
       subjects,
-      queued: commissions.filter((c) => c.fulfillment === "QUEUED").length,
+      queued: commissions.filter((c) => c.fulfillment === "QUEUED" && c.owed).length,
+      queued_not_owed: commissions.filter((c) => c.fulfillment === "QUEUED" && !c.owed).length,
+      queued_rule: OWED_RULE,
       retrievable: commissions.filter((c) => c.fulfillment === "RETRIEVABLE").length,
       delivered: (pod === null || hub === null) ? null : commissions.filter((c) => c.delivery.state === "CARDS_PUBLISHED").length,
       retrieval: {

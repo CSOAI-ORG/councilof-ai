@@ -237,8 +237,14 @@ export const INVOICE_COUNTING_SINCE = "2026-10-07";
  * Art 50 packs issued on the invoice rail BEFORE payment — every invoice-gbp issuance written before
  * the rail became a quotation (7 Oct 2026). They sit inside count:issuances and were never paid, so
  * they are named here rather than left to read as sales. Bounded read; the bound is reported.
+ *
+ * `named_test` (repair round, 7 Oct 2026): the S-SG-04 check in the estate blueprint asks the invoice
+ * rail with commissioned_by=test, and until this rule reaches production every run of it signs a
+ * real pack and adds one to count:issuances (13 -> 15 on the morning of 7 Oct, from the engineer's and
+ * the verifier's runs). Those packs carry the organisation "test"; they are counted by that name and
+ * no other organisation name is read out or returned.
  */
-async function legacyInvoiceIssuances(kv: KVNamespace, limit = 1000): Promise<{ count: number; read: number; truncated: boolean }> {
+async function legacyInvoiceIssuances(kv: KVNamespace, limit = 1000): Promise<{ count: number; named_test: number; read: number; truncated: boolean }> {
   const keys: string[] = [];
   let cursor: string | undefined;
   let truncated = false;
@@ -249,15 +255,19 @@ async function legacyInvoiceIssuances(kv: KVNamespace, limit = 1000): Promise<{ 
     if (cursor && keys.length >= limit) truncated = true;
   } while (cursor && keys.length < limit);
   let count = 0;
+  let named_test = 0;
   for (const key of keys) {
     try {
-      const r = JSON.parse((await kv.get(key)) || "null") as { payment?: { mode?: string; state?: string } } | null;
-      if (r?.payment?.mode === "invoice-gbp" && r.payment.state !== "MARKED_PAID") count++;
+      const r = JSON.parse((await kv.get(key)) || "null") as { payment?: { mode?: string; state?: string; commissioned_by?: unknown } } | null;
+      if (r?.payment?.mode === "invoice-gbp" && r.payment.state !== "MARKED_PAID") {
+        count++;
+        if (typeof r.payment.commissioned_by === "string" && r.payment.commissioned_by.trim().toLowerCase() === "test") named_test++;
+      }
     } catch {
       /* an unreadable record is not evidence of an unpaid pack */
     }
   }
-  return { count, read: keys.length, truncated };
+  return { count, named_test, read: keys.length, truncated };
 }
 
 async function invoiceCounts(env: RevenueEnv): Promise<Record<string, unknown>> {
@@ -297,10 +307,12 @@ async function invoiceCounts(env: RevenueEnv): Promise<Record<string, unknown>> 
       status: legacy.truncated ? "PARTIAL" : "MEASURED",
       records_read: legacy.read,
       truncated: legacy.truncated,
+      named_test: legacy.named_test,
+      named_test_definition: 'of count, the packs issued for the organisation name "test" (any case): the blueprint check asks with commissioned_by=test',
       source: "REVENUE_KV art50:* records with payment.mode invoice-gbp and no paid mark",
       note:
-        `Article 50 packs the invoice rail signed and issued before any payment, until ${INVOICE_COUNTING_SINCE}. Each is ` +
-        "inside skus.issuance.count, and none is a sale.",
+        `Article 50 packs the invoice rail signed and issued before any payment, until the quotation rule reached production ` +
+        `(on or after ${INVOICE_COUNTING_SINCE}; each record carries its own as_of). Each is inside skus.issuance.count, and none is a sale.`,
     };
   } catch (e) {
     issued_before_payment = { count: null, status: "UNMEASURED", source: `REVENUE_KV list failed (${(e as Error).message})` };

@@ -36,11 +36,6 @@
  * technology-neutral; and CSOAI is a C2PA member. The preview, the 402 and the delivered pack carry
  * `scope`, and the signed leaf carries its short form.
  *
- * SCOPE, IN EVERY PACK (owner-approved, 7 Oct 2026; functions/_lib/art50Scope.ts): the pack detects C2PA
- * and IPTC metadata only; NOT_DETECTED does not mean "unmarked", because Article 50(2) is
- * technology-neutral; and CSOAI is a C2PA member. The preview, the 402 and the delivered pack carry
- * `scope`, and the signed leaf carries its short form.
- *
  * WORDING RULE (binding): results read "marking not detected by method <z>". Never "absent",
  * never "non-compliant"/"compliant"/"certified"/"safe". Watermarks are spoofable and strippable,
  * so the pack attests DETECTION at a time, never a guarantee about the generator.
@@ -334,6 +329,19 @@ const INVOICE_GBP_NOTE =
   "returns this free measurement, unsigned, and a reference recorded with the organisation named; the signed pack is " +
   "released once CSOAI LTD marks that reference paid and the same request is made again";
 
+/**
+ * Who can fetch a pack once its reference is marked paid, said to the buyer before they pay (repair
+ * round, 7 Oct 2026). The reference is derived from the organisation's name and the output's bytes and
+ * carries no secret, so a request naming the same organisation and the same output receives the
+ * signed pack too (the issuance is not counted again). The bytes are a public URL's, measurable by
+ * anyone in the free preview; what a copy adds is the signature and the organisation's name on it.
+ * Whether to add a buyer-held secret is an owner decision; until then the buyer is told.
+ */
+export const INVOICE_RELEASE_WHO =
+  "Once marked paid, the signed pack is returned to any request that names this organisation and this output: the " +
+  "reference is derived from them and holds no secret. Anyone can measure the same public bytes in the free preview; " +
+  "a copy of the pack also carries the organisation's name.";
+
 /** One invoice request as stored. No contact details: the buyer's email is how CSOAI reaches them. */
 export type InvoiceRequestRecord = {
   reference: string;
@@ -550,6 +558,7 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
           when: "after CSOAI LTD marks this reference paid, once the invoice settles. No agent and no request can mark it.",
           how: `make the same request again after payment: ${repeat}`,
           same_bytes: `the reference names these bytes (sha256 ${m.subject.sha256 ?? "unknown"}) and this organisation; if the output at the URL changes, its reference changes too`,
+          who: INVOICE_RELEASE_WHO,
         },
         ...(readFailed ? { store_note: "REVENUE_KV could not be read, so this request was not recorded and no paid mark could be checked" } : {}),
         note: "Quotation: the same measurement as the free preview, unsigned, with no card. Nothing is signed or released by this request.",

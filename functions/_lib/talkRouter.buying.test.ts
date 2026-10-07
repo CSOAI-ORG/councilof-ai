@@ -36,6 +36,18 @@ describe("a buying question reaches the buying statement before obligation match
     expect(routeIntent("commission a card for https://example.com/mcp")).toMatchObject({ kind: "tools", calls: [{ tool: "commission_card" }] });
   });
 
+  it("a question that only MENTIONS buying, or names a model, keeps master's route (repair round, 7 Oct 2026)", () => {
+    // The first cut tested BUY_INTENT before obligationOf(); these four lost their tools to the buying
+    // statement. Each expectation is the route master (fe1077498) gives the same question.
+    expect(routeIntent("Which signed evidence is there for DORA procurement?")).toMatchObject({
+      kind: "tools",
+      calls: [{ tool: "evidence_bundle_preview", args: { obligation: "dora" } }],
+    });
+    expect(routeIntent("what does article 50 require about invoicing deepfakes")).toMatchObject({ kind: "needs_input", tool: "art50_marking_evidence" });
+    expect(routeIntent("buy a signed card for llama3.2:3b")).toMatchObject({ kind: "tools", calls: [{ tool: "model_lookup", args: { model: "llama3.2:3b" } }] });
+    expect(routeIntent("how do I get a quote for a fresh run of mistral")).toMatchObject({ kind: "tools", calls: [{ tool: "model_lookup", args: { model: "mistral" } }] });
+  });
+
   it("A2A / AG-UI path: executePlan answers with the published statement, calls no tool and claims no tool answer", async () => {
     const t = await executePlan(routeIntent(Q), "https://councilof.ai");
     expect(t.answer).toContain("GBP invoice");

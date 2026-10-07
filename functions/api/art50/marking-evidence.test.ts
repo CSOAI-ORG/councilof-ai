@@ -265,6 +265,9 @@ describe("invoice rail — ?commissioned_by=<org>&invoice=gbp", () => {
     expect(b.invoice.recorded_note).toMatch(/No contact details are stored/);
     expect(JSON.stringify(b)).not.toMatch(/No datastore is bound|NOT recorded/);
     expect(b.release.how).toContain("invoice=gbp");
+    // the buyer is told, before paying, that a paid reference holds no secret
+    expect(b.release.who).toMatch(/any request that names this organisation and this output/);
+    expect(b.release.who).toMatch(/holds no secret/);
     const rec = JSON.parse(kv.store.get(`art50-invoice:${b.payment.reference}`) ?? "null");
     expect(rec).toMatchObject({ reference: b.payment.reference, commissioned_by: "Acme Design Ltd", state: "AWAITING_PAYMENT", contact: null, subject_sha256: b.measurement.subject.sha256 });
     // counted as an invoice request, never as an issuance

@@ -35,7 +35,7 @@ import { PAID_TOOL_NAMES, paidToolResult } from "../mcp/_paid";
 import { EVIDENCE_TOOL_NAMES, evidenceToolResult } from "../mcp/_evidence";
 import { ROUTE_TOOL_NAMES, routeToolResult } from "../mcp/_route";
 import { ROUTER_READ_TOOLS, routerReadResult } from "./talkReads";
-import { BUY_INTENT, buyingAnswer } from "../api/_buying";
+import { buyingAnswer } from "../api/_buying";
 
 type Json = Record<string, unknown>;
 
@@ -159,6 +159,30 @@ export function obligationOf(t: string): "article-50" | "article-53" | "dora" | 
 }
 
 /**
+ * The words that ASK to buy, for the pre-emptive buying rule in routeIntent (repair round, 7 Oct 2026).
+ * Narrower than BUY_INTENT (functions/api/_buying.ts), which still answers the chat fallback once no
+ * tool matched: the first cut tested BUY_INTENT itself before obligationOf(), and its stems took
+ * questions that only mention buying as a topic — "signed evidence for DORA procurement" and "what
+ * does article 50 require about invoicing deepfakes" lost their tools to the buying statement. So
+ * here: the noun "invoice(s)", never "invoicing"; the verb "procure", never "procurement"; no
+ * "billing". Measured against master's routes by functions/_lib/talkRouter.buying.test.ts.
+ */
+const BUY_ASK =
+  /\b(?:invoices?|vat|purchase orders?|buy(?:ing)?|purchas(?:e|ing)|place an order|how (?:do|can) (?:i|we) (?:order|pay)|get a quote|quotation|procure)\b/i;
+
+/**
+ * A question that asks how to buy and names no subject. One that names a subject keeps that
+ * subject's tool: a URL keeps its paid door (its 402 carries both ways to pay for that exact output),
+ * and a card id, a server or a model keeps its lookup ("buy a signed card for llama3.2:3b", "how do I
+ * get a quote for a fresh run of mistral" answer about that model, as on master).
+ */
+export function isBuyingQuestion(text: string): boolean {
+  if (!BUY_ASK.test(text)) return false;
+  if (URL_RE.test(text) || HEX64.test(text.toLowerCase())) return false;
+  return !extractEndpoint(text) && !extractModel(text);
+}
+
+/**
  * Deterministic intent routing. Pure: no I/O. Entity rules run before topic keywords, so a
  * question that names a card id or a server is answered about THAT id or server.
  */
@@ -185,9 +209,9 @@ export function routeIntent(raw: string): Plan {
   // How to buy, pay or get an invoice (7 Oct 2026, sell organ SG-07). "How do I buy an Article 50
   // evidence pack and get an invoice?" names an obligation AND asks how to buy, and the obligation
   // rule below sent it to evidence_bundle_preview: the buyer got a card count instead of the buying
-  // statement. A buying question is now tested BEFORE obligationOf(). One that names a URL keeps the
-  // tool route below, because that door's own 402 carries both ways to pay for that exact output.
-  if (BUY_INTENT.test(text) && !URL_RE.test(text)) return { kind: "help", intent: "buying" };
+  // statement. A buying question is now tested BEFORE obligationOf() — but only one that ASKS to buy
+  // (BUY_ASK, narrower than BUY_INTENT) and names no subject (isBuyingQuestion).
+  if (isBuyingQuestion(text)) return { kind: "help", intent: "buying" };
   // Signed evidence for ONE obligation (free): "which signed evidence is there for DORA",
   // "evidence for Article 50". Runs before the paid Article 50 rule, which keeps every question that
   // carries a URL ("article 50 marking evidence for https://…/image.png"): that one is about a file.
