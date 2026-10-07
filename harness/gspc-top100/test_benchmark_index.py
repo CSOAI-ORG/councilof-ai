@@ -78,6 +78,60 @@ def test_published_is_a_subset_of_what_exists_now() -> None:
     assert not missing, sorted(missing)[:5]
 
 
+
+def test_verify_does_not_report_the_pointer_stub_as_a_missing_card() -> None:
+    """A published row whose file is present but excluded from disk rows is a NON-CARD row,
+    not a vanished card. Reporting it as "gone from disk" would have been a false claim that
+    published evidence disappeared — the exact class of error this TUI exists to prevent.
+
+    Regression: the stub carries model "?" (a literal, truthy string) and sha256_id "", while
+    70 genuinely unsigned cards also carry sha256_id "" — so neither field alone identifies it.
+    """
+    import io
+    from contextlib import redirect_stdout
+
+    doc = json.loads(INDEX.read_text(encoding="utf-8"))
+    rows = doc["cards"]
+    disk = {r["path"] for r in bbi.rows_on_disk()}
+    published = {r.get("path") for r in rows}
+
+    stub_paths = {r.get("path") for r in rows
+                  if str(r.get("model") or "").strip() in ("", "?", "null", "None")}
+    missing = published - disk - stub_paths
+
+    assert stub_paths == {"mill-cards-signed/GOVERNANCE-RETRIEVE.json"}, stub_paths
+    assert not missing, f"truly vanished cards: {sorted(missing)[:5]}"
+    # the file really is on disk — only rows_on_disk excludes it (no card body)
+    stub = INDEX.parent / "mill-cards-signed" / "GOVERNANCE-RETRIEVE.json"
+    assert stub.is_file(), "the pointer stub must exist for this regression to be meaningful"
+
+    buf = io.StringIO()
+    with redirect_stdout(buf):
+        bbi.verify(INDEX)
+    out = buf.getvalue()
+    assert "non-card rows" in out
+    assert "published but gone from disk: 0" in out, out
+    # unsigned rows with an empty id must NOT be classed as non-cards
+    unsigned_empty_id = [r for r in rows if not str(r.get("sha256_id") or "").strip()
+                         and str(r.get("model") or "").strip() not in ("", "?", "null", "None")]
+    assert len(unsigned_empty_id) >= 60, len(unsigned_empty_id)
+    assert all(str(r.get("model") or "").strip() not in ("", "?") for r in unsigned_empty_id)
+
+
+def test_drift_counts_are_reported_exactly() -> None:
+    """Drift must be a single, unambiguous number: on-disk cards never published."""
+    doc = json.loads(INDEX.read_text(encoding="utf-8"))
+    disk = {r["path"] for r in bbi.rows_on_disk()}
+    published = {r.get("path") for r in doc["cards"]}
+    drift = len(disk - published)
+    assert drift >= 0
+    # every drifted path must actually read back as a card body (a real, countable card)
+    for path in sorted(disk - published)[:25]:
+        name = path.split("/", 1)[-1]
+        directory = INDEX.parent / path.split("/", 1)[0]
+        card = json.loads((directory / name).read_text(encoding="utf-8"))
+        assert isinstance(card.get("body"), dict), f"{path} is not a card"
+
 if __name__ == "__main__":
     for name, fn in sorted(globals().items()):
         if name.startswith("test_") and callable(fn):

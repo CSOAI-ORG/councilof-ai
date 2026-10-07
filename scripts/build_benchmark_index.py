@@ -135,13 +135,29 @@ def verify(index_path: Path) -> int:
 
     disk = {r["path"] for r in rows_on_disk()}
     published = {r.get("path") for r in rows}
-    missing = published - disk
+    # A published row with no card body (the GOVERNANCE-RETRIEVE pointer stub) is deliberately
+    # excluded by rows_on_disk, so it lands in `published - disk` and used to be reported as
+    # "gone from disk" — which is false: the file is present, it is simply not a measurement card.
+    # Detect it on the placeholder model, not on an empty id: 70 genuinely unsigned rows also
+    # carry an empty sha256_id, but only the stub carries model "?".
+    def _is_non_card(row: dict) -> bool:
+        model = str(row.get("model") or "").strip()
+        return model in ("", "?", "null", "None")
+
+    non_card_rows = [r for r in rows if _is_non_card(r)]
+    non_card_paths = {r.get("path") for r in non_card_rows}
+    missing = published - disk - non_card_paths
     added = disk - published
     print(f"coverage: {len(published)} published / {len(disk)} on disk")
     print(f"  published but gone from disk: {len(missing)}")
     print(f"  on disk but never published:  {len(added)}  <- drift")
 
-    stale = bool(added) or bool(missing) or not ok or not all(internal.values())
+    if non_card_rows:
+        print(f"  non-card rows (placeholder model, excluded from disk rows): {len(non_card_rows)}")
+        for r in non_card_rows[:5]:
+            print(f"      {r.get('path')} (axis={r.get('axis')}, signed={r.get('signed')})")
+
+    stale = bool(added) or bool(missing) or bool(non_card_rows) or not ok or not all(internal.values())
     print(f"\n{'DRIFT — regenerate and re-stamp' if stale else 'CLEAN'} ({index_path.name})")
     return 1 if stale else 0
 
