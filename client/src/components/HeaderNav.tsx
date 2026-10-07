@@ -10,9 +10,9 @@ export const PRIMARY_LINKS: { name: string; href: string }[] = [
   { name: "Verify", href: "/gspc-verify" },
   // Services sits between Board and Verify: it is the list of doors the rail
   // publishes, read live from /.well-known/x402.json — not a brochure.
-  { name: "Pricing", href: "/pricing" },
   { name: "Services", href: "/services/" },
   { name: "Board", href: "/board/" },
+  { name: "Pricing", href: "/pricing" },
   { name: "Council OS", href: "/dashboard" },
   { name: "Tools", href: "/tools" },
 ];
