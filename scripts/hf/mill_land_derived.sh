@@ -19,9 +19,9 @@
 #
 # One stamped derived view follows the cards too, public/interop/mill-receipt-readiness.json (the
 # 36 STAGED_UNSIGNED wrappers resolved to their terminal replacements). Its bytes carry an .ots and
-# are never edited here: lane/mill-receipt-versioned-20261007 versions it in the signer's step, the
-# same way #2865 versions the hub-cards index. A replay of #2846 extended one of those chains
-# (Llama-3.2-1B-Instruct, safety), so a mill PR needs that lane as well as this one.
+# are never edited here: the signer's step versions it (#2868: a new immutable file, its own proof
+# and a moving pointer), the same way #2865 versions the hub-cards index. A replay of #2846 extended
+# one of those chains (Llama-3.2-1B-Instruct, safety), so this step relies on the signer having run.
 set -euo pipefail
 # The body is one function, called on the last line with `; exit`: the checkout below can rewrite
 # this very file, and bash reads a script as it runs, so nothing may be read from it after that.

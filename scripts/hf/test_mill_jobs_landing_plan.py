@@ -88,6 +88,18 @@ class PlanRulesTest(unittest.TestCase):
         self.assertEqual([c["number"] for c in p["close"]], [2846])
         self.assertIn("#2843", p["hold_reason"])
 
+    def test_of_twins_the_human_touched_one_is_kept_even_when_newer(self):
+        # A merge-lane commit on the newer twin means a human is working there: the bot-only
+        # lower twin is the one that closes, so one HF Jobs PR stays open, not two.
+        a, b = ("a" * 64, "b" * 64)
+        prs = [lp.OpenPR(2843, "mill/land-hfjobs-3", True, {a, b}),
+               lp.OpenPR(2846, "mill/land-hfjobs-4", False, {a, b})]
+        p = lp.plan([], prs, set(), 10)
+        self.assertEqual([c["number"] for c in p["close"]], [2843])
+        self.assertIn("#2846", p["close"][0]["reason"])
+        self.assertIn("#2846", p["hold_reason"])
+        self.assertNotIn("#2843", p["hold_reason"])
+
     def test_human_touched_unreadable_and_other_lane_prs_are_never_closed(self):
         a = "a" * 64
         prs = [

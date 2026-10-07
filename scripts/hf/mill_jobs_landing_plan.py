@@ -20,9 +20,9 @@ Rules, in order, for each staged unsigned card:
 
 Superseded PRs. An open PR on the own prefix (mill/land-hfjobs-) is closed when every evidence
 digest it carries is on master, or is carried by another open mill/land-* PR (a strict superset,
-or an identical set on a lower-numbered PR). Only bot-authored PRs are ever closed: a PR with a
-commit by anyone else has a human working on it and is left alone. A PR whose cards could not be
-read is never closed.
+or an identical set on a PR a human has worked on or on a lower-numbered PR). Only bot-authored
+PRs are ever closed: a PR with a commit by anyone else has a human working on it and is left
+alone. A PR whose cards could not be read is never closed.
 
 One rolling PR. While any own-prefix PR stays open, nothing new lands (hold); the staged cards
 wait in the dataset and land in one PR after that one merges or is closed.
@@ -167,9 +167,10 @@ def superseded_prs(prs: list[OpenPR], on_master: set[str]) -> list[tuple[OpenPR,
             if other.number == pr.number or other.number in closed or not other.readable:
                 continue
             # Compare what each PR still adds over master: two PRs that differ only in gradings
-            # master already holds are the same PR, and the lower number is the one kept.
+            # master already holds are the same PR. Of such twins the one a human has worked on is
+            # kept (this PR is bot-only by the guard above), else the lower number.
             rest, other_rest = pr.digests - on_master, other.digests - on_master
-            if rest and rest <= other_rest and (rest < other_rest or other.number < pr.number):
+            if rest and rest <= other_rest and (rest < other_rest or not other.bot_only or other.number < pr.number):
                 closing.append((pr, f"every grading it carries that is not on master is also in #{other.number}"))
                 closed.add(pr.number)
                 break
