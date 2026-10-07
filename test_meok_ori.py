@@ -250,5 +250,34 @@ class T7CLI(unittest.TestCase):
         self.assertEqual(rep["runs"][1]["tier"], 4)
 
 
+class T8CC0Constitution(unittest.TestCase):
+    """The CC0 Claude constitution folded in as meta-seed (2026-10-07)."""
+
+    def test_t31_four_tiers_verbatim_order(self):
+        from meok_ori.constitution_cc0 import CC0_TIERS
+        self.assertEqual([t for t, _, _ in CC0_TIERS], [1, 2, 3, 4])
+        names = [n for _, n, _ in CC0_TIERS]
+        self.assertEqual(names[0], "Broadly safe")
+        self.assertEqual(names[3], "Genuinely helpful")
+
+    def test_t32_cc0_attribution_present(self):
+        from meok_ori.constitution_cc0 import CC0_LICENSE, attribution
+        self.assertIn("CC0", CC0_LICENSE)
+        self.assertIn("anthropic.com/constitution", attribution())
+
+    def test_t33_all_22_articles_mapped(self):
+        from meok_ori.constitution_cc0 import coverage
+        cov = coverage()
+        self.assertEqual(cov["unmapped"], 0)
+        self.assertEqual(cov["mapped"], 22)
+
+    def test_t34_priority_order_puts_safety_first(self):
+        from meok_ori.constitution_cc0 import priority_order
+        ordered = priority_order([21, 19, 2, 6])
+        # Art.2 (tier 1) and Art.19 (tier 1) considered before Art.21 (tier 4)
+        self.assertLess(ordered.index(2), ordered.index(21))
+        self.assertLess(ordered.index(19), ordered.index(21))
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

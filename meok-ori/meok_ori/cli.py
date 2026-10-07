@@ -117,12 +117,21 @@ def _cmd_status(_: argparse.Namespace) -> int:
 
 
 def _cmd_constitution(_: argparse.Namespace) -> int:
+    from meok_ori.constitution_cc0 import (CC0_PUBLISHED, CC0_TIERS, attribution,
+                                           coverage)
     print(f"constitutional harness v0.1.0 — {len(ARTICLES)} articles")
     for n, title in ARTICLES:
         print(f"  {n:2d}. {title}")
-    print("\nenforced at runtime: 2, 6, 7, 10, 11, 12, 19, 21 "
+    print("\nenforced at runtime: 2, 6, 7, 10, 11, 12, 18, 19, 21 "
           "(default-deny, budget, research/execution, receipts, verification, "
-          "signing, no-self-approval, public claim state)")
+          "signing, failure-stages, no-self-approval, public claim state)")
+    print(f"\nmeta-seed — Claude's Constitution ({CC0_PUBLISHED}, CC0 1.0) "
+          "4-tier priority ordering:")
+    for t, name, _desc in CC0_TIERS:
+        print(f"  tier {t}. {name}")
+    cov = coverage()
+    print(f"coverage: {cov['mapped']}/22 articles mapped to a CC0 tier")
+    print(f"attribution: {attribution()}")
     return 0
 
 
