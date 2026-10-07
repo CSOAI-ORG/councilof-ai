@@ -111,7 +111,11 @@ function sharedToolSummary(
         string,
         unknown
       > | null;
-      return `index declares ${idx?.n_cards_declared ?? "?"} card rows; the store's count endpoint reports ${store?.count ?? "?"}. Two labelled numbers, not reconciled here.`;
+      const xb =
+        store?.includes_cross_border_card === true
+          ? " By its own definition that count includes the cross-border East-West card (a separate schema)."
+          : "";
+      return `index declares ${idx?.n_cards_declared ?? "?"} card rows; the store's count endpoint reports ${store?.count ?? "?"}.${xb} Two labelled numbers, not reconciled here.`;
     }
     case "get_root":
       return `${payload.state ?? "?"} — public-root merkle ${String(payload.merkle_root || "").slice(0, 16) || "none"}. Not GSPC.`;
