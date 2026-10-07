@@ -12,8 +12,8 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
-import LobbyEvidencePane from "./LobbyEvidencePane";
+import { describe, expect, it, vi } from "vitest";
+import LobbyEvidencePane, { revealAnswer } from "./LobbyEvidencePane";
 import LobbyEmbedPane from "./LobbyEmbedPane";
 import { cardSnippet } from "@/lib/embedSnippet";
 
@@ -47,6 +47,35 @@ describe("Evidence pack pane — first screen", () => {
   it("with a host opener, the help controls use it (the Council OS overlay)", () => {
     const withHost = renderToStaticMarkup(createElement(LobbyEvidencePane, { onOpenRoute: () => undefined }));
     expect(withHost).toMatch(/<button[^>]*data-testid="evidence-help-what"/);
+  });
+});
+
+describe("Evidence pack pane — the answer is brought into view (375 px repair)", () => {
+  it("scrolls the answer card's top into view and focuses its heading without a second scroll", () => {
+    const scrollIntoView = vi.fn();
+    const focus = vi.fn();
+    expect(revealAnswer({ scrollIntoView }, { focus })).toBe(true);
+    expect(scrollIntoView).toHaveBeenCalledWith({ block: "start", inline: "nearest", behavior: "smooth" });
+    expect(focus).toHaveBeenCalledWith({ preventScroll: true });
+  });
+
+  it("jumps instantly for reduced-motion readers", () => {
+    const scrollIntoView = vi.fn();
+    revealAnswer({ scrollIntoView }, null, true);
+    expect(scrollIntoView).toHaveBeenCalledWith(expect.objectContaining({ behavior: "auto" }));
+  });
+
+  it("reports nothing revealed when there is no card yet (still loading)", () => {
+    expect(revealAnswer(null)).toBe(false);
+  });
+
+  it("the card clears the Dashboard composer when scrolled to", () => {
+    const html = renderToStaticMarkup(createElement(LobbyEvidencePane));
+    // The pane source wires the ref and the scroll margins; the first screen has no card yet.
+    expect(html).not.toContain('data-testid="evidence-answer"');
+    const src = readFileSync(resolve(here, "LobbyEvidencePane.tsx"), "utf8");
+    expect(src).toMatch(/scroll-mt-4 scroll-mb-40/);
+    expect(src).toMatch(/revealAnswer\(answerRef\.current, headingRef\.current/);
   });
 });
 

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent, type Ref } from "react";
 import { FOCUS, MEASURE, PRIMARY, SP, TYPE } from "./glass";
 import { leaderLabel } from "../../../../functions/_lib/leaderLabel";
 import { Check, CopyBlock, Field, PaneHead, WireNotice } from "./paneKit";
@@ -93,16 +93,58 @@ function initialSubject(): string {
   }
 }
 
+/**
+ * REPAIR 7 OCT 2026 — THE ANSWER LANDED BELOW THE FOLD. At 375 px the card rendered at about
+ * y=590, behind the Dashboard composer, and nothing moved: the stranger pressed "Look it up" and
+ * saw no change. After an explicit ask (never on page load), bring the card's top into view in the
+ * pane's own scroller and move focus to its heading, so a screen reader hears the answer too.
+ * Reduced-motion readers get an instant jump. Returns false when there was nothing to reveal.
+ */
+export function revealAnswer(
+  el: Pick<HTMLElement, "scrollIntoView"> | null | undefined,
+  heading?: Pick<HTMLElement, "focus"> | null,
+  reduceMotion = false,
+): boolean {
+  if (!el || typeof el.scrollIntoView !== "function") return false;
+  el.scrollIntoView({ block: "start", inline: "nearest", behavior: reduceMotion ? "auto" : "smooth" });
+  try {
+    heading?.focus({ preventScroll: true });
+  } catch {
+    /* focus is a courtesy; the scroll already happened */
+  }
+  return true;
+}
+
+function prefersReducedMotion(): boolean {
+  try {
+    return typeof window !== "undefined" && !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  } catch {
+    return false;
+  }
+}
+
 const CHIP_TONE: Record<SubjectCard["tone"], string> = {
   measured: "bg-emerald-100 text-emerald-900 ring-1 ring-emerald-700/25",
   own: "bg-slate-100 text-slate-800 ring-1 ring-slate-500/25",
   none: "bg-amber-50 text-amber-900 ring-1 ring-amber-700/25",
 };
 
-function SubjectAnswer({ card, onPick }: { card: SubjectCard; onPick: (id: string) => void }) {
+function SubjectAnswer({
+  card,
+  onPick,
+  sectionRef,
+  headingRef,
+}: {
+  card: SubjectCard;
+  onPick: (id: string) => void;
+  sectionRef?: Ref<HTMLElement>;
+  headingRef?: Ref<HTMLHeadingElement>;
+}) {
   return (
     <section
-      className="mt-5 rounded-2xl border border-slate-900/10 bg-white p-5 shadow-sm"
+      ref={sectionRef}
+      aria-live="polite"
+      className="mt-5 scroll-mt-4 scroll-mb-40 rounded-2xl border border-slate-900/10 bg-white p-5 shadow-sm"
       aria-labelledby="coai-ev-answer-title"
       data-testid="evidence-answer"
       data-state={card.state}
@@ -113,7 +155,7 @@ function SubjectAnswer({ card, onPick }: { card: SubjectCard; onPick: (id: strin
       >
         {card.chip}
       </span>
-      <h3 id="coai-ev-answer-title" className="mt-2 break-words text-[18px] font-semibold text-slate-900">
+      <h3 id="coai-ev-answer-title" ref={headingRef} tabIndex={-1} className="mt-2 break-words outline-none text-[18px] font-semibold text-slate-900">
         {card.subject ?? card.query}
       </h3>
       <p className={`mt-1.5 ${MEASURE} ${TYPE.body}`}>{card.sentence}</p>
@@ -255,14 +297,27 @@ export default function LobbyEvidencePane({
     () => (models.phase === "ready" && asked.trim() ? answerForSubject(asked, models.file) : null),
     [models, asked],
   );
+  const answerRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  /** Set by an explicit ask; cleared once the card it produced has been brought into view. */
+  const revealPending = useRef(false);
+  const [askCount, setAskCount] = useState(0);
   const ask = (e?: FormEvent) => {
     e?.preventDefault();
+    revealPending.current = true;
     setAsked(query.trim());
+    setAskCount((n) => n + 1);
   };
   const pick = (id: string) => {
+    revealPending.current = true;
     setQuery(id);
     setAsked(id);
+    setAskCount((n) => n + 1);
   };
+  useEffect(() => {
+    if (!revealPending.current || !answer) return;
+    if (revealAnswer(answerRef.current, headingRef.current, prefersReducedMotion())) revealPending.current = false;
+  }, [answer, askCount]);
   // The board-wide index (For developers) is about the board, so it no longer takes the model
   // the reader named above: printing that name over other models' rows was the defect.
   const system = "";
@@ -348,7 +403,7 @@ export default function LobbyEvidencePane({
           <p className="mt-2 font-mono text-[11px] text-amber-900/80">{models.error}</p>
         </div>
       )}
-      {answer && <SubjectAnswer card={answer} onPick={pick} />}
+      {answer && <SubjectAnswer card={answer} onPick={pick} sectionRef={answerRef} headingRef={headingRef} />}
       {!answer && models.phase !== "failed" && !asked.trim() && (
         <p className={`mt-4 ${MEASURE} ${TYPE.muted}`}>
           The answer is a short card: whether we hold signed measurements for that model, how many,
