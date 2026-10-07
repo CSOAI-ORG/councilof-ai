@@ -58,12 +58,24 @@ jobs:
       - name: Install the official OTS client
         run: pip install -q cryptography opentimestamps-client==0.7.2
 
-      # Master's copy of the script runs, since the PR branch can predate it.
+      # Master's copy of the script runs, since the PR branch can predate it. Only a CONFLICTING branch is
+      # reconciled: master's protection is not strict, so a behind-but-clean PR can merge, and every
+      # reconcile is a new head that needs its gates (and an approval) again.
       - name: Reconcile the open upgrade PR with master
         id: reconcile
         if: steps.open.outputs.branch != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          BRANCH: ${{ steps.open.outputs.branch }}
         run: |
           set -euo pipefail
+          mergeable=$(gh pr view "$BRANCH" --repo "$REPO" --json mergeable --jq .mergeable || echo UNREAD)
+          if [ "$mergeable" != "CONFLICTING" ]; then
+            echo "moved=false" >> "$GITHUB_OUTPUT"
+            echo "$BRANCH is $mergeable against master; not reconciled."
+            exit 0
+          fi
           git config user.name "csoai-ots-upgrade"
           git config user.email "board@csoai.org"
           git fetch -q origin master

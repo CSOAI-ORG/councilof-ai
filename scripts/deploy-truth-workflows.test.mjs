@@ -265,6 +265,8 @@ describe("A-G1 / A-G4 repair: every writer of the derived files reconciles befor
     expect(wf.indexOf("- name: Reconcile a review branch with master")).toBeLessThan(wf.indexOf("- name: Stage exact-root proof candidates"));
     // node is set up before the reconcile, which may regenerate llms
     expect(wf.indexOf("uses: actions/setup-node@v4")).toBeLessThan(wf.indexOf("- name: Reconcile a review branch with master"));
+    // only a conflicting branch is merged with master: a behind-but-clean PR can merge as it is
+    expect(rec).toMatch(/if \[ "\$mergeable" != "CONFLICTING" \]; then\n\s*echo "moved=false"/);
     const push = step(wf, "Push a reconciled review branch");
     expect(push).toContain("if: steps.stage.outputs.changed == '0' && steps.reconcile.outputs.moved == 'true'");
     expect(push).toContain('git push origin "HEAD:$BRANCH"');
@@ -275,6 +277,7 @@ describe("A-G1 / A-G4 repair: every writer of the derived files reconciles befor
     for (const name of ["public-root-candidate-upgrade.yml", "ots-upgrade.yml"]) {
       expect(WF(name)).toContain('python3 "$RUNNER_TEMP/reconcile_derived.py" --onto origin/master');
     }
+    expect(step(WF("ots-upgrade.yml"), "Reconcile the open upgrade PR with master")).toMatch(/if \[ "\$mergeable" != "CONFLICTING" \]/);
     expect(WF("card-root.yml")).toMatch(/git checkout -b "\$branch"/);
   });
 });

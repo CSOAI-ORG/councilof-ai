@@ -310,11 +310,14 @@ def main(argv=None) -> int:
     a.report.write_text(json.dumps(report, indent=2) + "\n")
     print(f"upgraded={len(report['upgraded'])} still_pending={len(report['still_pending'])} "
           f"bound_skipped={len(report['bound_skipped'])} rederive={len(report['rederive'])} "
+          f"rederive_pending={len(report['rederive_pending'])} "
           f"own_maintainer_skipped={len(report['own_maintainer_skipped'])}")
     for rel, why in report["bound_skipped_why"].items():
         print(f"  BOUND {rel} <- {', '.join(f'{h} ({w})' for h, w in why.items())} (its producer must re-derive the binding)")
     for rel, item in report["rederive"].items():
         print(f"  REDERIVE {rel} -> {', '.join(item['bindings'])}")
+    for rel in report["rederive_pending"]:
+        print(f"  BOUND, RE-DERIVABLE, STILL PENDING {rel}")
     return 0
 
 
