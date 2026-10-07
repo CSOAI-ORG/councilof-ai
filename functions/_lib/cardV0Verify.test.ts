@@ -47,8 +47,21 @@ describe("card verdict on real estate-signed leaves (pinned key)", () => {
     expect(await judge({ ...FIX.card_v0_signed, payload: { ...FIX.card_v0_signed.payload, holders: 1 } })).toMatchObject({ state: "INVALID", reasons: ["sha256_mismatch"] });
   });
 
-  it("a digest domain the verifier does not implement is UNCHECKABLE, never judged by another rule", async () => {
-    expect(await judge({ ...FIX.card_v0_signed, digest_covers: "something-else" })).toMatchObject({ state: "UNCHECKABLE", reasons: ["digest_domain_unknown"] });
+  it("an unknown digest domain cannot steer tamper evidence away: under a pinned key it is judged by the payload rule", async () => {
+    // the checker's case (7 Oct): a TAMPERED leaf plus any unknown digest_covers used to read UNCHECKABLE
+    const tampered = { ...FIX.card_v0_signed, payload: { ...FIX.card_v0_signed.payload, holders: 1 }, digest_covers: "something-else" };
+    expect(await judge(tampered)).toMatchObject({ state: "INVALID", reasons: ["sha256_mismatch"] });
+    // a whole-card leaf whose declared domain is rewritten is tampered too
+    expect(await judge({ ...FIX.card_v1_signed, digest_covers: "something-else" })).toMatchObject({ state: "INVALID", reasons: ["sha256_mismatch"] });
+    // the untampered payload still verifies, and the odd declaration is recorded beside the verdict
+    const v = await judge({ ...FIX.card_v0_signed, digest_covers: "something-else" });
+    expect(v.state).toBe("VALID");
+    expect(v.checks.map((c) => c.code)).toContain("digest_domain_not_issued");
+  });
+
+  it("under a key this verifier does not pin, an unknown digest domain stays UNCHECKABLE", async () => {
+    const other = { ...FIX.card_v0_signed, did: "did:web:example.org#k1", digest_covers: "something-else" };
+    expect(await judge(other)).toMatchObject({ state: "UNCHECKABLE", reasons: ["digest_domain_unknown"] });
   });
 
   it("POST /api/verify and the /gspc-verify page give the same verdict on the whole-card leaf", async () => {

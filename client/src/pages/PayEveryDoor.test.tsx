@@ -4,6 +4,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { Router } from "wouter";
 import { describe, expect, it } from "vitest";
 import PayEveryDoor, { DoorCard, Index402Cell, OutcomeLine, SettleCell } from "./PayEveryDoor";
+import { WalletState } from "@/components/lobby/LobbyArt50Pane";
 import {
   DELIST_RISK_DAYS,
   THE_LINE,
@@ -425,5 +426,28 @@ describe("/pay-all is wired like every other current page", () => {
     expect(strip(pageSource)).toContain("doorForLink(doors, wanted)");
     expect(strip(pageSource)).toContain("Show every door");
     expect(strip(pageSource)).toContain("the manifest does not declare");
+  });
+});
+
+describe("a paid retry that fails after sending reads 'may have settled', never 'not paid' (7 Oct 2026)", () => {
+  const state = {
+    kind: "maybe-settled" as const,
+    detail: "the paid retry answered HTTP 500: paid_not_delivered",
+    settlement: { transaction: `0x${"ab".repeat(32)}`, network: "eip155:8453", payer: null, success: true },
+    refund: "Email nicholas@csoai.org with the transaction or reference below.",
+  };
+  it("/pay-all: PAYMENT MAY HAVE SETTLED, the transaction and the refund path; no NOT SETTLED", () => {
+    const html = renderToStaticMarkup(<OutcomeLine state={state} />);
+    expect(html).toContain("PAYMENT MAY HAVE SETTLED.");
+    expect(html).toContain("Check your wallet");
+    expect(html).toContain(state.settlement.transaction);
+    expect(html).toContain(state.refund);
+    expect(html).not.toMatch(/NOT SETTLED|Not paid/);
+  });
+  it("the art50 wallet pane says the same, never 'Not paid'", () => {
+    const html = renderToStaticMarkup(<WalletState state={state} />);
+    expect(html).toMatch(/Payment may have settled/);
+    expect(html).toContain(state.refund);
+    expect(html).not.toMatch(/Not paid/);
   });
 });

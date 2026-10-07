@@ -3,7 +3,7 @@ import { FOCUS, MEASURE, PRIMARY, TYPE } from "./glass";
 import { CopyBlock, Field, PaneHead } from "./paneKit";
 import { INVOICE_NEXT_STEP } from "@/lib/buying";
 import { ART50_SCOPE } from "../../../../functions/_lib/art50Scope";
-import { payDoor, quoteDoor, type Door, type DoorState } from "@/lib/payEveryDoor";
+import { MAYBE_SETTLED_LINE, payDoor, quoteDoor, type Door, type DoorState } from "@/lib/payEveryDoor";
 import { discoverEIP6963, formatPaymentAmount, type X402Challenge } from "@/lib/x402Wallet";
 import { addMyResult, paidResult, seedChecker, signedRecordOf, VERIFY_SEED_HREF } from "@/lib/myResults";
 
@@ -83,7 +83,7 @@ function CheckRow({ c }: { c: Check }) {
 }
 
 /** The wallet path's states, in plain words; DELIVERED is shown as the pack below. */
-function WalletState({ state }: { state: DoorState }) {
+export function WalletState({ state }: { state: DoorState }) {
   const line = (t: string, tone = "text-slate-800") => (
     <p className={`mt-3 text-[12.5px] ${tone}`} data-testid="art50-wallet-state">
       {t}
@@ -101,6 +101,11 @@ function WalletState({ state }: { state: DoorState }) {
       );
     case "unsettled":
       return line(`Not paid: the door answered 402 again. Reason, verbatim: ${state.reason}`, "text-amber-900");
+    case "maybe-settled":
+      return line(
+        `${MAYBE_SETTLED_LINE} The door said: ${state.detail}.${state.settlement?.transaction ? ` Transaction ${state.settlement.transaction}.` : ""}${state.refund ? ` ${state.refund}` : ""}`,
+        "text-amber-900",
+      );
     case "rejected":
       return line(`Not paid: ${state.detail}`, "text-amber-900");
     case "wrong-network":

@@ -170,17 +170,19 @@ export const SKUS: Record<string, Sku> = {
       "A read our side could not run (DNS unreadable, RPC down, signer error) is never settled.",
   },
 
-  // SKU — Article 50 marking-evidence pack. One signed card-v0 leaf per output measured: is a
-  // machine-readable mark DETECTABLE in these bytes (C2PA manifest recomputed in the Function;
-  // watermarks UNCHECKABLE where no public detector exists), beside the verbatim Art 50(2)
-  // excerpt hash and the Art 99(4) ceiling. Point-in-time detection, never a conformity opinion.
+  // SKU — Article 50 marking-evidence pack. One signed card-v0 leaf per output measured: which
+  // machine-readable marks C2PA and IPTC metadata methods DETECT in these bytes (C2PA manifest
+  // recomputed in the Function; no watermark is read), beside the verbatim Art 50(2) text hash. The
+  // Art 99(4) ceiling was dropped from the pack on 2026-09-30 (functions/_lib/art50Law.ts).
+  // Point-in-time detection, never a conformity opinion.
   art50_marking_evidence: {
     id: "art50_marking_evidence",
     name: "Article 50 marking evidence (issuance)",
     artifact:
       "one card-v0 leaf, surface art50.marking-evidence, kind csoai.art50.marking-evidence/0.1 — asset sha256, " +
-      "C2PA manifest/assertion/data-hash/signature status, watermark statuses, Art 50(2) excerpt hash, " +
-      "Art 99(4) ceiling, unmeasured[]; Ed25519 under did:web:csoai.org#board-attestation-1",
+      "C2PA manifest/assertion/data-hash/signature status, IPTC digitalSourceType, watermark statuses (UNCHECKABLE), " +
+      "Art 50(2) text hash, scope (C2PA and IPTC metadata only; NOT_DETECTED is not unmarked; CSOAI is a C2PA member), " +
+      "unmeasured[]; Ed25519 under did:web:csoai.org#board-attestation-1",
     unit: "1 pack = 1 output (URL or uploaded bytes) × 1 point in time",
     sells: "issuance",
     prices: {

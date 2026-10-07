@@ -38,10 +38,10 @@
 import { headFromGet } from "../_head";
 import { verifyX402Payment, x402Accepts, buildPaymentRequiredV2, declareBazaarHttpGet, paymentRequiredResponseSigned, hasPaymentHeader, CSOAI_LID, type X402Env } from "../_x402";
 import { railMode } from "../_x402_config";
-import { signPayload, cardV0 } from "../../_lib/cardSign";
+import { signPayload, cardV0, canonicalBytes, PAYLOAD_CAP_BYTES } from "../../_lib/cardSign";
 import { inspectC2pa, sha256, xmpDigitalSourceType, type C2paInspection } from "../../_lib/c2pa";
 import { ART50_SOURCES, ART50_DATES, art50LawBlock, art50TextSha256 } from "../../_lib/art50Law";
-import { invoiceHandoff } from "../_invoice_handoff";
+import { invoiceHandoff, INVOICE_CONTACT } from "../_invoice_handoff";
 import { ART50_MARKING_EVIDENCE_DESCRIPTION } from "../_x402_descriptions";
 import { ART50_SCOPE, ART50_SCOPE_SIGNED } from "../../_lib/art50Scope";
 
@@ -227,17 +227,63 @@ export async function measure(input: Input): Promise<Measurement> {
   };
 }
 
-/** The signed leaf body. Kept far under 3072 bytes: statements + short notes, never the verbatim prose. */
-async function leafPayload(m: Measurement, fetched_at: string, payment: Record<string, unknown> | null): Promise<Record<string, unknown>> {
+/**
+ * HOW SHORT THE SIGNED LEAF'S FREE TEXT IS, BY LEVEL (7 Oct 2026). Level 0 is the historical shape.
+ * signPayload refuses a payload over PAYLOAD_CAP_BYTES, and on the x402 rail it runs AFTER the
+ * facilitator has settled — so a leaf that does not fit used to mean a buyer charged and handed a
+ * bare 500 (measured on the pod: a re-saved AI JPEG with IPTC DETECTED and the C2PA notes at 120
+ * characters came to 3,254 bytes). fitLeafPayload walks these levels until the leaf fits, and the
+ * handler runs it BEFORE settlement with the widest payment block a settle can add. Only free text
+ * shortens: every method, result, statement, gap code, the scope and the law block stay. The full
+ * text rides in the response's `measurement` whenever a level above 0 was used.
+ */
+export const LEAF_TRIM_LEVELS = [
+  { note: 120, statement: 200, gap: 150 },
+  { note: 60, statement: 160, gap: 80 },
+  { note: 0, statement: 120, gap: 40 },
+  { note: 0, statement: 80, gap: 0 },
+] as const;
+
+/**
+ * The widest payment block a settlement can put in the leaf, for the pre-settlement fit: an EVM
+ * transaction hash is 66 characters and a Solana signature at most 88; payers are 42 or 44. Each
+ * field here is longer than any of those, so a leaf that fits with this block fits with the real one.
+ */
+export const PAYMENT_BLOCK_WORST_CASE: Record<string, unknown> = {
+  mode: "x402",
+  network: "n".repeat(64),
+  transaction: "t".repeat(132),
+  payer: "p".repeat(132),
+};
+
+/** The signed leaf body at a trim level, the smallest level that fits the cap, or null when none does. */
+export async function fitLeafPayload(
+  m: Measurement,
+  fetched_at: string,
+  payment: Record<string, unknown> | null,
+  cap: number = PAYLOAD_CAP_BYTES,
+): Promise<{ payload: Record<string, unknown>; level: number; bytes: number } | null> {
+  for (let level = 0; level < LEAF_TRIM_LEVELS.length; level++) {
+    const payload = await leafPayload(m, fetched_at, payment, level);
+    const bytes = canonicalBytes(payload).byteLength;
+    if (bytes <= cap) return { payload, level, bytes };
+  }
+  return null;
+}
+
+/** The signed leaf body. Kept under 3072 bytes by fitLeafPayload: statements + short notes, never the verbatim prose. */
+async function leafPayload(m: Measurement, fetched_at: string, payment: Record<string, unknown> | null, level = 0): Promise<Record<string, unknown>> {
+  const t = LEAF_TRIM_LEVELS[level];
   return {
     kind: KIND,
     attests: "point-in-time detection of a machine-readable mark by the methods listed in checked[]; independently signed, timestamped measurement — not a conformity opinion, not a guarantee",
     subject: { sha256: m.subject.sha256, bytes: m.subject.bytes, container: m.subject.container, source: m.subject.source },
     fetched_at,
-    checked: m.checked.map((c) => (c.note ? { method: c.method, result: c.result, note: c.note.slice(0, 120) } : { method: c.method, result: c.result })),
-    statements: m.statements.slice(0, 4).map((s) => s.slice(0, 200)),
+    checked: m.checked.map((c) => (c.note && t.note > 0 ? { method: c.method, result: c.result, note: c.note.slice(0, t.note) } : { method: c.method, result: c.result })),
+    statements: m.statements.slice(0, 4).map((s) => s.slice(0, t.statement)),
     scope: ART50_SCOPE_SIGNED,
-    gaps: Object.fromEntries(Object.entries(m.gaps).map(([k, v]) => [k, v.slice(0, 150)])),
+    gaps: Object.fromEntries(Object.entries(m.gaps).map(([k, v]) => [k, v.slice(0, t.gap)])),
+    ...(level > 0 ? { trim_level: level } : {}),
     law: {
       article: "Art 50(2) Reg (EU) 2024/1689",
       text_sha256: await art50TextSha256(),
@@ -400,6 +446,22 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
         unmeasured: ["root_inclusion", "watermark.synthid"],
       },
     });
+    // THE LEAF MUST FIT BEFORE ANY MONEY MOVES (7 Oct 2026). verifyX402Payment settles; a leaf too
+    // big to sign after that is a buyer charged for nothing. The measurement is already known here,
+    // so fit it now with the widest payment block a settle can add, and refuse before settling if
+    // even the shortest level cannot fit.
+    if (!(await fitLeafPayload(m, fetched_at, PAYMENT_BLOCK_WORST_CASE))) {
+      return json(
+        {
+          schema: KIND,
+          error: "undeliverable",
+          reason: `this output's signed leaf cannot fit the ${PAYLOAD_CAP_BYTES}-byte cap at any trim level, so no payment is asked for or settled; the free preview still measures it`,
+          payment_taken: false,
+          free_preview: `${resourceUrl}?preview=1`,
+        },
+        422,
+      );
+    }
     const paid = await verifyX402Payment(request, env, challengeUrl, accepts[0], { bazaar });
     if (!paid.ok) {
       const paymentRequired = buildPaymentRequiredV2({
@@ -430,12 +492,58 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
     paymentResponseHeader = paid.paymentResponse;
   }
 
-  const payload = await leafPayload(m, fetched_at, payment);
+  // PAID AND NOT SIGNED IS NEVER A BARE 500 (7 Oct 2026). By here the buyer has paid (x402 settled,
+  // or an invoice marked paid). If the leaf still cannot be signed, the answer carries what was
+  // measured, the payment as settled, a recorded failure and the refund path — never just an error.
+  const paidNotSigned = async (reason: string): Promise<Response> => {
+    const key = `art50-undelivered:${String(payment!.transaction ?? payment!.reference ?? fetched_at)}`;
+    const failure = { at: fetched_at, reason, payment, subject_sha256: m.subject.sha256, url: m.subject.url };
+    let recorded: string | null = null;
+    if (env.REVENUE_KV) {
+      try {
+        await env.REVENUE_KV.put(key, JSON.stringify(failure));
+        recorded = `REVENUE_KV ${key}`;
+      } catch {
+        recorded = null;
+      }
+    }
+    const ref = String(payment!.transaction ?? payment!.reference ?? "(none named)");
+    const subject = `CSOAI art50 paid, not delivered: ${ref}`;
+    const body = `Payment: ${JSON.stringify(payment)}\nOutput sha256: ${m.subject.sha256 ?? "unknown"}\nAt: ${fetched_at}\nReason: ${reason}\n\nPlease refund this payment or re-issue the signed pack.`;
+    return json(
+      {
+        schema: KIND,
+        error: "paid_not_delivered",
+        reason: `the signed pack could not be issued after payment: ${reason}`,
+        payment_settled: payment!.mode === "x402" ? !!payment!.transaction || null : null,
+        payment,
+        delivered: "the measurement below, unsigned; no card was issued",
+        scope: ART50_SCOPE,
+        measurement: m,
+        law,
+        failure_recorded: recorded !== null,
+        failure_record: recorded,
+        refund: {
+          how: `Email ${INVOICE_CONTACT} with the transaction or reference below. CSOAI LTD refunds the payment or re-issues the signed pack; do not pay again for the same output.`,
+          reference: ref,
+          contact: INVOICE_CONTACT,
+          mailto: `mailto:${INVOICE_CONTACT}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
+        },
+        note: "Payment may have settled even though this answer is not 200. Check the transaction before retrying.",
+      },
+      500,
+      paymentResponseHeader ? { "x-payment-response": paymentResponseHeader } : {},
+    );
+  };
+
+  const fitted = await fitLeafPayload(m, fetched_at, payment);
+  if (!fitted) return paidNotSigned(`payload exceeds the ${PAYLOAD_CAP_BYTES}-byte cap at every trim level`);
+  const payload = fitted.payload;
   let leaf;
   try {
     leaf = await signPayload(payload, env.BOARD_SIGN_KEY_PKCS8_B64);
   } catch (e) {
-    return json({ schema: KIND, error: "uncheckable", reason: (e as Error).message }, 500);
+    return paidNotSigned((e as Error).message);
   }
   const tx = payment.transaction as string | null | undefined;
   const card = cardV0({
@@ -467,6 +575,12 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
       card,
       law,
       detail: m.detail,
+      ...(fitted.level > 0
+        ? {
+            measurement: m,
+            leaf_trim: `the signed leaf's free text (notes, statements, gap reasons) was shortened to trim level ${fitted.level} of ${LEAF_TRIM_LEVELS.length - 1} to fit the ${PAYLOAD_CAP_BYTES}-byte cap; every method, result and gap code is kept, and the full text is in measurement`,
+          }
+        : {}),
       signed: !!leaf.sig_ed25519,
       unsigned_reason: leaf.sig_ed25519 ? null : leaf.unsigned_reason?.startsWith("BOARD_SIGN_KEY") ? "no signing key bound in the Pages env (BOARD_SIGN_KEY_PKCS8_B64); the leaf is issued unsigned and says so in unmeasured[]" : leaf.unsigned_reason,
       bytes: leaf.bytes,

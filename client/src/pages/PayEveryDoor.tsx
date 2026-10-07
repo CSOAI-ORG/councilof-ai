@@ -17,6 +17,7 @@ import {
   LISTING_PATH,
   MANIFEST_PATH,
   QUOTES_PATH,
+  MAYBE_SETTLED_LINE,
   THE_LINE,
   daysSince,
   delistRisk,
@@ -336,6 +337,30 @@ export function OutcomeLine({ state }: { state: DoorState }) {
           No EIP-6963 wallet announced itself. Install or unlock a browser wallet — this page cannot pay on your behalf.
         </p>
       );
+    case "maybe-settled": {
+      const tx = state.settlement?.transaction ?? null;
+      const explorer = explorerTxUrl(state.settlement?.network ?? null, tx);
+      return (
+        <div className="text-[12px] text-amber-900" data-testid="pay-state">
+          <p>
+            <span className="font-semibold">PAYMENT MAY HAVE SETTLED.</span> {MAYBE_SETTLED_LINE} The door said: {state.detail}.
+          </p>
+          {tx ? (
+            <p className="mt-1 break-all text-[11px]">
+              Transaction{" "}
+              {explorer ? (
+                <a href={explorer} target="_blank" rel="noreferrer" className="font-mono underline">
+                  {tx}
+                </a>
+              ) : (
+                <code className="font-mono">{tx}</code>
+              )}
+            </p>
+          ) : null}
+          {state.refund ? <p className="mt-1 text-[11px]">{state.refund}</p> : null}
+        </div>
+      );
+    }
     case "error":
       return (
         <p className="text-[12px] text-amber-800" data-testid="pay-state">
@@ -424,6 +449,10 @@ export function DoorCard({
         <div className="shrink-0">
           {done ? (
             <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-emerald-800">settled through</span>
+          ) : state.kind === "maybe-settled" ? (
+            <span className="rounded-full bg-amber-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-amber-900" data-testid="pay-maybe-settled">
+              check wallet first
+            </span>
           ) : (
             <button
               type="button"
@@ -759,6 +788,7 @@ export default function PayEveryDoor() {
       {walkQueue.length > 0 ? (
         <p className="mt-2 text-[12px] text-slate-700" data-testid="settle-all-tally">
           <span className="font-semibold">Settle all:</span> {tally.delivered} settled · {tally.unsettled} unsettled · {tally.rejected} declined ·{" "}
+          {tally.maybe_settled} may have settled (check the wallet) ·{" "}
           {tally.failed} failed · {tally.pending} pending · of {tally.queued} queued
         </p>
       ) : null}
