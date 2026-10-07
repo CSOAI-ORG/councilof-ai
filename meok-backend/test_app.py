@@ -28,7 +28,9 @@ sys.path.insert(0, str(HERE))
 import pytest
 from fastapi.testclient import TestClient
 
-import app as app_module
+import os
+os.environ.setdefault("MEOK_SIGIL_SECRET", "test-secret-for-pytest-2026")
+import app
 from app import app
 
 

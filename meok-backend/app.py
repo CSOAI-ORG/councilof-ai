@@ -62,7 +62,8 @@ _ROOT = Path(__file__).resolve().parent
 _ICHARS_DB = Path(os.environ.get("MEOK_ICHARS_DB", _ROOT / "ichars.db"))
 _USERS_DB = Path(os.environ.get("MEOK_USERS_DB", _ROOT / "users.db"))
 _SIGIL_LOG = Path(os.environ.get("MEOK_SIGIL_LOG", _ROOT / "sigil_chain.jsonl"))
-SIGIL_SECRET = os.environ.get("MEOK_SIGIL_SECRET", "defoneos-csoai-meok-2026").encode()
+_SIGIL_SECRET = os.environ.get("MEOK_SIGIL_SECRET").encode() if os.environ.get("MEOK_SIGIL_SECRET") else None
+SIGIL_SECRET = _SIGIL_SECRET  # backward-compat alias
 
 
 def sigil(payload: dict) -> str:
