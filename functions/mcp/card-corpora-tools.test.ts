@@ -250,3 +250,57 @@ describe("list_cards carries its own state (talk UI label, 2026-09-29)", () => {
     expect(tool.outputSchema.properties.state.enum).toEqual(["LIVE", "UNREACHABLE"]);
   });
 });
+
+describe("list_cards quotes what the store's count includes (2026-10-07)", () => {
+  // /api/cards counts the signed index rows plus the cross-border East-West card when published
+  // (functions/api/cards.ts). The tool showed 335 beside 336 under "the disagreement is the
+  // finding"; it now carries the endpoint's own flag and definition, and still adjusts neither number.
+  const n = INDEX.cards.length;
+  const NOTE =
+    "count = signed measurement cards in the living registry plus cross-border East-West card when published. kid identifies the signing key.";
+  const cardsSay = (body: Record<string, unknown>): Route => (url) =>
+    url.pathname === "/api/cards" ? json(200, body) : undefined;
+
+  it("flags the cross-border card and quotes the endpoint's definition, leaving both counts as served", async () => {
+    network([cardsSay({ cross_border: { card: "cross-border-card" }, cards: { count: n + 1, signed: n + 1, signed_under_did_key: n }, note: NOTE })]);
+    const out = (await listCardsTool(ORIGIN, { limit: 1 })) as Record<string, any>;
+    expect(out.card_store_count_endpoint.count).toBe(n + 1);
+    expect(out.card_store_count_endpoint.signed_under_did_key).toBe(n);
+    expect(out.card_store_count_endpoint.includes_cross_border_card).toBe(true);
+    expect(out.card_store_count_endpoint.count_definition_as_published).toBe(
+      "count = signed measurement cards in the living registry plus cross-border East-West card when published.",
+    );
+    expect(out.index.rows_carried).toBe(n);
+  });
+
+  it("does not flag it when the endpoint carries no cross-border card", async () => {
+    network([cardsSay({ cross_border: null, cards: { count: n, signed: n } })]);
+    const out = (await listCardsTool(ORIGIN, { limit: 1 })) as Record<string, any>;
+    expect(out.card_store_count_endpoint.includes_cross_border_card).toBe(false);
+    expect(out.card_store_count_endpoint.count_definition_as_published).toBeNull();
+  });
+
+  it("the MCP answer's first line names the cross-border card only when the endpoint flags it", async () => {
+    const firstLine = async () => {
+      const res = await onRequest({
+        request: new Request(`${ORIGIN}/mcp/free`, {
+          method: "POST",
+          headers: { "content-type": "application/json", accept: "application/json, text/event-stream", "MCP-Protocol-Version": "2025-03-26" },
+          body: JSON.stringify({ jsonrpc: "2.0", id: 9, method: "tools/call", params: { name: "list_cards", arguments: { limit: 1 } } }),
+        }),
+        env: {},
+        params: {},
+      } as never);
+      const text = await res.text();
+      const data = text.includes("data:") ? text.split("\n").find((l) => l.startsWith("data:"))!.slice(5) : text;
+      return (JSON.parse(data) as { result: { content: { text: string }[] } }).result.content[0].text.split("\n")[0];
+    };
+    network([cardsSay({ cross_border: { card: "cross-border-card" }, cards: { count: n + 1, signed: n + 1 }, note: NOTE })]);
+    const flagged = await firstLine();
+    expect(flagged).toContain("cross-border East-West card");
+    expect(flagged).toContain("not reconciled here");
+    vi.unstubAllGlobals();
+    network([cardsSay({ cross_border: null, cards: { count: n, signed: n } })]);
+    expect(await firstLine()).not.toContain("cross-border");
+  });
+});
