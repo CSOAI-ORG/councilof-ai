@@ -6,6 +6,7 @@ import RecordVerifyForm from "@/components/gspc/RecordVerifyForm";
 import { setMetaDescription } from "@/lib/utils";
 import BoardAttestation from "@/components/board/BoardAttestation";
 import { CARD_PARAM_MAX_BYTES, resolveCardParam } from "@/lib/cardParam";
+import { takeCheckerSeed } from "@/lib/myResults";
 
 /**
  * /gspc-verify — verify published card bytes yourself.
@@ -77,6 +78,19 @@ export default function GSPCVerify() {
   }, []);
 
   useEffect(() => {
+    // ?seed=mine: a record handed over from My results or the pay page in this tab's sessionStorage
+    // (lib/myResults seedChecker). A paid art50 pack lives only in the buyer's browser, so it has no
+    // URL to pass as ?card=; it is read once, verified at once, and nothing is uploaded.
+    if (new URLSearchParams(window.location.search).get("seed") === "mine") {
+      const raw = takeCheckerSeed();
+      if (raw) {
+        setMode("estate");
+        setAutoVerify(true);
+        setSeed(raw);
+        setSeedNonce((n) => n + 1);
+        return;
+      }
+    }
     const p = resolveCardParam(window.location.search, window.location.origin);
     if (p.state === "none") return;
     setMode("estate");
