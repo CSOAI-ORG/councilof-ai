@@ -1,0 +1,133 @@
+# TUI-4 Gap Register — 2026-10-07
+
+Machine-readable twin: `gap-register-2026-10-07.json` (same directory).
+Doctrine: measurement, never certification. Submission ≠ acceptance; listing ≠ indexing;
+HTTP 200 ≠ correct bytes. All readbacks below were anonymous, unauthenticated HTTP from one
+machine, 2026-10-07 ~04:00–04:15 UTC. Cost of this audit: $0 (read-only probes).
+
+This register answers one question: **what is missing from what TUI-4 was doing on
+2026-09-11**, learned by probing, with a worked-out fix for each gap.
+
+---
+
+## The estate moved (11 Sep → 7 Oct)
+
+| Surface | 2026-09-11 | 2026-10-07 (live probe) |
+|---|---|---|
+| MCP tools | 12 (8 free / 4 paid) | **19 (14 free / 5 metered)**; plus `/mcp/free` → 14 |
+| A2A skills | 4 | **12** |
+| `/.well-known/x402.json` resources | 9 | **31** |
+| `/api/x402` catalog resources | 9 | **29** |
+| Registry identity | `io.github.CSOAI-ORG/gspc` 1.4.0 | **`ai.councilof/gspc` 1.4.4** + new `ai.councilof/gspc-free` 1.4.4 |
+| DID keys | 3 | **7** |
+| npm `csoai-gspc-mcp` | 0.2.1 | 0.2.2 (0.2.3-rc.2 prerelease present) |
+
+Full registry walk (70 pages / 7,000 entries, 2026-10-07): **old `io.github.CSOAI-ORG/gspc`
+no longer exists** — the rename replaced it, no duplicate source of truth.
+
+## TUI-4 verify checklist — live, 2026-10-07
+
+| # | Requirement | State | Evidence |
+|---|---|---|---|
+| 1 | MCP tool discovery | **VERIFIED** | POST `/mcp` tools/list → 19; `/mcp/free` → 14 |
+| 2 | A2A Agent Card discovery | **VERIFIED** | `/.well-known/agent-card.json` 200, v1.4.0, 12 skills |
+| 3 | x402 Bazaar-compatible challenge | **VERIFIED** | free door → 402 amount 0; `/api/proof?bundle=1` → 402 amount 10000 |
+| 4 | Signed offer receipt | **VERIFIED** | offer-receipt extension present on doors; offline Ed25519 VALID, server verdict VALID |
+| 5 | Free metadata door | **VERIFIED** | `/api/free-door` 402, amount "0", eip155:8453 |
+| 6 | Paid existing-evidence door | **VERIFIED** | 402, 10000 atomic ($0.01), csoai_pricing + bazaar ext |
+| 7 | Attribution fields | **VERIFIED** | `csoai_pricing` block on 402; UTM per 09-14 map; receipts carry payer/resourceUrl/transaction |
+| 8 | Correction + provenance links | **VERIFIED** | `/api/corrections` 200 (248,487 B); llms.txt names both |
+| 9 | Truthful directory updates | **GAP — 5 items below** | see GAP-2…GAP-7 |
+
+---
+
+## Gaps and worked-out fixes
+
+### GAP-1 — `llms.txt` prints 3 discover routes twice — FIXED, PR open
+- **Evidence:** 6 discover mentions, 3 unique (live `llms.txt`, 2026-10-07T04:00Z).
+- **Root cause:** `council-os/capabilities.json` declares GET **and** POST variants of the
+  same route (258 entries, 59 duplicated paths; the three discover routes are explicitly
+  `Chainlink discovery` + `Chainlink discovery (POST)`). The `freeDoors` render is a
+  methodless path line with no dedupe.
+- **Fix landed:** Set-based path dedupe in `scripts/llms-txt.mjs` + regenerated
+  `public/llms.txt` — **PR #2854** (+5/−3). `node scripts/llms-txt.mjs --check` ✓ both
+  files match live; `bash scripts/pre-push-gates.sh` ✓ clean.
+- **Supersedes:** PR #2799 (same dedup, CONFLICTING/DIRTY; its other intents landed via
+  #2783 and #2835).
+
+### GAP-2 — `awesome-mcp-servers` listing was deleted upstream — REGRESSED, needs re-PR
+- **Evidence:** repo-wide code search for `councilof-ai`/`csoai-gspc` → **0 hits**
+  (2026-10-07). Was present 2026-09-23 (5 lines), first absent 2026-09-27.
+- **Root cause:** upstream commit `3c301956` "shorten long descriptions" (2026-09-27T02:12Z)
+  removed both CSOAI-ORG entries (original merge: PR #13360).
+- **Fix worked out:** re-submit a **short** entry (long descriptions invite the next
+  shortening pass). Draft, ready to PR to `punkpeye/awesome-mcp-servers`:
+  `- [CSOAI-ORG/councilof-ai](https://github.com/CSOAI-ORG/councilof-ai) … ☁️ - Live GSPC measurement board over MCP (councilof.ai/mcp, 19 tools: 14 free + x402-metered). Measurement, never certification. Verify: councilof.ai/gspc-verify`
+- **Status:** external submission → **owner action-time approval required**.
+
+### GAP-3 — PulseMCP entry is gone — REGRESSED, needs re-submission
+- **Evidence:** manifest claimed LISTED (`servers/detail/io-github-csoai-org-gspc`,
+  checked 2026-09-14); **today that URL → 404**, searches for gspc/council-of-ai → 0 hits.
+  (The org's other servers still appear in their index — the gspc entry specifically is gone.)
+- **Fix worked out:** submit at `https://www.pulsemcp.com/submit` (form; **owner approval
+  required**). Note: PulseMCP describes itself as daily-updated over "all MCP servers" —
+  with the registry rename to `ai.councilof/gspc` the crawler may re-pick it up on its own;
+  submit only if the next daily cycle stays empty.
+
+### GAP-4 — Smithery: stale duplicate + tool set never re-verified
+- **Evidence:** current listing `csoai/gspc-mcp` "Council of AI GSPC (HTTP)" 200; the old
+  duplicate `csoai/gspc` also still serves 200 (153 KB). The 2026-09-14 claim of 4 phantom
+  tools (`verify, jail-probe, enter-arena, measure`) could **not** be re-confirmed today —
+  the tool list renders client-side (SPA), so raw HTML proves nothing either way.
+- **Fix worked out:** owner opens the Smithery dashboard (org `org_01KP63P98PWZJHKXJNW27V99GS`),
+  retires `csoai/gspc`, and forces re-inspection of `csoai/gspc-mcp` against live
+  tools/list (19 tools). Then re-probe and update this register.
+
+### GAP-5 — Glama connector points at a retired registry name
+- **Evidence:** listing live (200, `quality_grade:a`, `maintenance_grade:a`,
+  `license_grade:a`, `author:claimed`). Connector is keyed
+  `io.github.CSOAI-ORG/gspc` — **the registry name that no longer exists** (renamed
+  `ai.councilof/gspc`). The 2026-09-14 "40/40 Unhealthy connectors" claim did **not**
+  reproduce: no "Unhealthy" text in today's page HTML.
+- **Fix worked out:** Glama auto-indexes from GitHub/npm — the repo's `.well-known` and
+  registry publish workflow now emit `ai.councilof/gspc`; next Glama re-crawl should adopt
+  it. If the connector still shows the old key after the next crawl cycle, owner claims/updates
+  the connector in Glama's UI.
+
+### GAP-6 — Receipt signature "mismatch" was stale/false — CLOSED with correction
+- **Evidence:** the 11 Sep self-test JWS (`public/interop/x402-self-settlement-2026-09-11.json`,
+  kid `#board-attestation-1`) verified **offline VALID** against the current DID (exact kid
+  match; 6 other keys correctly invalid) and the server verdict today is `VALID`.
+- **Fix landed:** dated CORRECTION appended to `docs/tui4/agent-economy-map-2026-09-14.md`
+  in this PR; findings row marked closed. The 2026-09-14 observation stays on record as a
+  historical observation that does not reproduce.
+
+### GAP-7 — x402 index coverage unproven — ENUMERATION BLOCKED, honest UNKNOWN
+- **Evidence:** PayAI discovery returns only its first 100 rows to an anonymous caller and
+  no cursor was extractable — **0 of those 100 rows are ours**, but absence across the full
+  catalogue is **not established**. The CDP discovery URL from the 09-14 manifest
+  (`api.cdp.coinbase.com/x402/discovery/resources`) now **404s** — endpoint moved/dead.
+- **Fix worked out:** (a) find the working pagination or authenticated enumeration for
+  PayAI discovery before writing any "listed/absent" claim; (b) CDP listing is a
+  **facilitator decision** (owner): adding a Coinbase-facilitated `accepts[]` entry is the
+  mechanism by which CDP's index picks a resource up. No claim made either way today.
+
+---
+
+## Also stale, not fixed here (controller-owned surfaces)
+
+- `docs/tui4/destination-manifest-2026-09-14.json` still records the old registry identity
+  (`io.github.CSOAI-ORG/gspc`, 1.4.2) for five destinations. It is a **dated** artifact and
+  is left intact; this register supersedes its counts and identity fields as of 2026-10-07.
+- `wk 31 vs catalog 29` resource counts differ because `/.well-known/x402.json` expands the
+  three discover URLs while `/api/x402` keeps one template row — presentation difference,
+  not two truths. Both render from `council-os/capabilities.json`.
+
+## Claims this register does NOT make
+
+- No customer, revenue, or settlement claim (the 11 Sep self-test remains
+  INTERNAL_SELF_FUNDED).
+- No directory is called healthy, verified, or endorsed — only HTTP-observed.
+- Rekor/OTS/Bitcoin states are untouched here; OTS stays `STAMPED_PENDING_BITCOIN`.
+- "Not listed" is recorded as an observation with method and time, never as a fact about
+  a third party's internals.

@@ -1,0 +1,103 @@
+{
+  "schema": "csoai.tui4.gap-register/1.0",
+  "kind": "agent.economy.gap-register",
+  "audited_at": "2026-10-07T04:15:00Z",
+  "supersedes": "docs/tui4/destination-manifest-2026-09-14.json (counts and registry identity only; dated artifact retained)",
+  "method": "anonymous unauthenticated HTTP probes + official MCP registry full walk (70 pages, 7000 entries) + GitHub raw/commit-history reads; single machine",
+  "cost_usd": 0,
+  "doctrine": "Measurement, never certification. Submission != acceptance; listing != indexing; HTTP 200 != correct bytes. Unknown is a first-class value.",
+
+  "estate_delta": {
+    "mcp_tools": {"2026-09-11": 12, "2026-10-07": 19, "free": 14, "metered": 5},
+    "mcp_free_door": {"url": "https://councilof.ai/mcp/free", "tools": 14},
+    "a2a_skills": {"2026-09-11": 4, "2026-10-07": 12},
+    "x402_well_known_resources": {"2026-09-11": 9, "2026-10-07": 31},
+    "x402_catalog_resources": {"2026-09-11": 9, "2026-10-07": 29},
+    "registry_identity": {"before": "io.github.CSOAI-ORG/gspc 1.4.0", "after": "ai.councilof/gspc 1.4.4", "extra": "ai.councilof/gspc-free 1.4.4", "old_name_present": false, "walk": "70 pages / 7000 entries"},
+    "did_keys": {"2026-09-11": 3, "2026-10-07": 7},
+    "npm": {"latest": "0.2.2", "prerelease_present": "0.2.3-rc.2"}
+  },
+
+  "verify_checklist": {
+    "mcp_tool_discovery": "VERIFIED (19 tools, 14 on free door)",
+    "a2a_agent_card": "VERIFIED (v1.4.0, 12 skills)",
+    "x402_bazaar_challenge": "VERIFIED (402 amount 0 free; amount 10000 paid)",
+    "signed_offer_receipt": "VERIFIED (offline Ed25519 VALID under #board-attestation-1; server verdict VALID)",
+    "free_metadata_door": "VERIFIED (amount 0, eip155:8453)",
+    "paid_existing_evidence_door": "VERIFIED (10000 atomic, csoai_pricing + bazaar extensions)",
+    "attribution_fields": "VERIFIED (csoai_pricing on 402; receipt carries payer/resourceUrl/transaction)",
+    "correction_provenance_links": "VERIFIED (/api/corrections 200 248487 bytes; llms.txt names both)",
+    "truthful_directory_updates": "GAP (GAP-2..GAP-7)"
+  },
+
+  "gaps": [
+    {
+      "id": "GAP-1",
+      "title": "llms.txt duplicates three discover routes",
+      "state": "FIXED_STAGED",
+      "evidence": {"live_mentions": 6, "unique": 3, "observed_at": "2026-10-07T04:00Z"},
+      "root_cause": "council-os/capabilities.json declares GET+POST variants (258 entries, 59 dup paths); freeDoors render is methodless and had no dedupe",
+      "fix": "Set-based path dedupe in scripts/llms-txt.mjs + regenerate public/llms.txt",
+      "verification": ["node scripts/llms-txt.mjs --check -> both files match live", "regenerated diff = exactly 3 lines removed", "bash scripts/pre-push-gates.sh -> clean"],
+      "pr": "https://github.com/CSOAI-ORG/councilof-ai/pull/2854",
+      "supersedes": "#2799 (CONFLICTING; its other intents landed via #2783, #2835)"
+    },
+    {
+      "id": "GAP-2",
+      "title": "awesome-mcp-servers entries deleted upstream",
+      "state": "REGRESSED_OWNER_ACTION",
+      "evidence": {"repo_code_search_hits": 0, "present_as_of": "2026-09-23", "first_absent": "2026-09-27", "removing_commit": "3c301956 'shorten long descriptions' 2026-09-27T02:12Z", "original_pr": 13360},
+      "fix": "Re-PR a SHORT entry (long descriptions invite the next shortening pass); draft in gap-register md",
+      "blocker": "external submission requires owner action-time approval"
+    },
+    {
+      "id": "GAP-3",
+      "title": "PulseMCP listing gone",
+      "state": "REGRESSED_OWNER_ACTION",
+      "evidence": {"detail_url": "https://www.pulsemcp.com/servers/detail/io-github-csoai-org-gspc", "detail_status_today": 404, "search_hits": 0, "manifest_claimed": "LISTED 2026-09-14"},
+      "fix": "Wait one daily crawl cycle (registry renamed to ai.councilof/gspc may re-trigger ingestion); if still empty, submit via https://www.pulsemcp.com/submit",
+      "blocker": "form submission requires owner approval"
+    },
+    {
+      "id": "GAP-4",
+      "title": "Smithery stale duplicate + unverified tool set",
+      "state": "OWNER_DASHBOARD",
+      "evidence": {"current_listing": "csoai/gspc-mcp 200", "duplicate": "csoai/gspc still 200 (153KB)", "phantom_tools_2026-09-14_claim": ["verify", "jail-probe", "enter-arena", "measure"], "reconfirmed_today": false, "reason": "tool list renders client-side; raw HTML proves neither way"},
+      "fix": "Owner: retire csoai/gspc, force re-inspect csoai/gspc-mcp against live tools/list (19), re-probe"
+    },
+    {
+      "id": "GAP-5",
+      "title": "Glama connector keyed to retired registry name",
+      "state": "STALE_KEY_AWAITING_RECRAWL",
+      "evidence": {"listing": "200", "grades": {"quality": "a", "maintenance": "a", "license": "a"}, "connector_key": "io.github.CSOAI-ORG/gspc", "registry_name_now": "ai.councilof/gspc", "unhealthy_40_of_40_claim_reproduced": false},
+      "fix": "Next Glama re-crawl should adopt new name from registry; if not, owner claims/updates connector in Glama UI"
+    },
+    {
+      "id": "GAP-6",
+      "title": "Receipt signature mismatch finding was stale",
+      "state": "CLOSED_CORRECTED",
+      "evidence": {"offline_verify": "VALID under #board-attestation-1 (exact kid); 6 other keys invalid", "server_verdict": "VALID", "server_as_of": "2026-10-07T04:10:09.915Z", "receipt": "public/interop/x402-self-settlement-2026-09-11.json"},
+      "fix": "Dated CORRECTION appended to docs/tui4/agent-economy-map-2026-09-14.md in this PR; findings row closed; 2026-09-14 observation retained as history"
+    },
+    {
+      "id": "GAP-7",
+      "title": "x402 index coverage (PayAI / CDP) unproven",
+      "state": "UNKNOWN_ENUMERATION_BLOCKED",
+      "evidence": {"payai_first_100_rows_ours": 0, "payai_full_enumeration": "blocked — no cursor returned to anonymous caller", "cdp_endpoint": "https://api.cdp.coinbase.com/x402/discovery/resources -> 404 (endpoint moved/dead)"},
+      "fix": "Find working pagination/authenticated enumeration before any listed/absent claim; CDP listing = facilitator decision (owner): add a Coinbase-facilitated accepts[] entry",
+      "claims_made": "none — absence not established"
+    }
+  ],
+
+  "stale_but_untouched": [
+    "docs/tui4/destination-manifest-2026-09-14.json — old registry identity on 5 destinations; dated artifact retained, superseded by this register",
+    "wk(31) vs catalog(29) resource counts — presentation difference (expanded URLs vs template row), both render from council-os/capabilities.json"
+  ],
+
+  "claims_not_made": [
+    "no customer, revenue, or settlement claim (11 Sep self-test stays INTERNAL_SELF_FUNDED)",
+    "no directory called healthy/verified/endorsed — HTTP-observed only",
+    "Rekor/OTS/Bitcoin states untouched; OTS stays STAMPED_PENDING_BITCOIN",
+    "'not listed' is an observation with method and time, never a fact about a third party's internals"
+  ]
+}
