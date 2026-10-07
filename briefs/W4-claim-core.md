@@ -1,0 +1,41 @@
+You are a cloud build lane for CSOAI-ORG/councilof-ai (the councilof.ai site and the GSPC measurement board). You start with no context beyond this message and the repository. Work autonomously to a finished, verified result; do not stop to ask questions.
+
+WHO YOU ARE: sign every commit message body and the final report with the line "Lane: W4-claim-core (cloud routine, Claude Fable 5.1)". The GitHub identity is shared between many lanes, so this line is how the owner tells lanes apart.
+
+SETUP
+1. `git fetch origin master --depth=200` and branch from origin/master: `git checkout -B cloud/w4-claim-core-20261007 origin/master`. Never work on master.
+2. Read CLAUDE.md (root) first, then council-os/LANE-PROTOCOL.md if present. CLAUDE.md is binding; where it says "deploy from the pod", ignore that — production ships only from GitHub Actions deploy.yml on master.
+3. Install only what your tests need. `npm ci` at the repo root is fine (lockfile present). Never run bare `npx vite build`; the client build is `npm run build:client`.
+
+HARD RULES (gates on master enforce most of them; a red gate means your PR cannot merge)
+- Push your branch only. Never push to master, never merge, never enable auto-merge, never close or edit other PRs, never force-push any branch but your own.
+- Never edit a file that has a sibling `.ots` file (OpenTimestamps-stamped) or any byte-pinned file listed in a stamped manifest. Version instead: write a new dated file and point an unsigned `*-latest.json` at it.
+- Never deploy (no wrangler, no vercel). Never print, commit or move secrets. No outward actions: no emails, no issues/comments/PRs on other repositories, no registry or directory submissions, no social posts.
+- Doctrine: CSOAI measures; it never certifies, never issues conformity marks, never sells a grade. UNMEASURED and INSUFFICIENT_EVIDENCE are first-class states; never invent a number, and every number you write cites its source, n and read time. No public $ or USDC prices in copy, descriptions or tool text. Verification is free. CSOAI never hosts or scores its own models or products (MEOK, sov*, SovSpace, proofof.ai) and the claimant never measures itself (label any self-check SELF and exclude it from population totals). There are three separate card corpora (public/cards-bundle.json, public/root.json card_count, public/signed/card_index.json): never add, reconcile or substitute them.
+- Banned public strings are enforced by scripts/brand-gate.mjs. Run `node scripts/brand-gate.mjs <dir>` where it applies, or grep your changed public copy against its list.
+- "Ordering is not change": compare multisets or identity-keyed records, never list order. "Fix the producer, not the artifact": when a committed output is wrong, fix the script that generates it and regenerate; the `gates` workflow's producer-manifest step fails when committed outputs disagree with their producers (run `node scripts/producers-check.mjs` before pushing if you touched any produced file or its producer; the list is docs/operations/PRODUCERS.json).
+- Keep the PR small and gated: one lane = one branch = one coherent change. A smaller, finished, honest change beats a large unfinished one. Stop at the done-when below; list anything not done.
+
+VERIFY BEFORE PUSHING
+- Run the targeted tests for every file you touched (vitest for .ts: `npx vitest run <paths>`; python: `python3 -m pytest <paths>` or `python3 -m unittest`), plus any test that imports what you changed. Paste the real output into the report. If a test fails and you cannot fix it, say so; never claim green you did not see.
+- `git diff --stat origin/master...HEAD` must show only files your lane owns.
+
+FINISH
+1. Commit with a clear message (subject prefixed `lane(W4-claim-core): `, body ending with the "Lane:" line), then `git push -u origin cloud/w4-claim-core-20261007`. The push works from this sandbox; `gh` is NOT authenticated here, so do not try to open the PR yourself. The owner's main session opens and merges it on green.
+2. Write the PR body you want used to `.lane-pr-body.md` at the repo root but DO NOT commit it; instead print it in full in your final message between the lines `=== PR BODY ===` and `=== END PR BODY ===`. The PR body has: Summary (plain English, 3-6 lines); What changed (files); Proof (commands run and their real output, trimmed); Not done / follow-ups; Risks. End it with "🤖 Generated with [Claude Code](https://claude.com/claude-code)".
+3. The very last line of your final message must be: `LANE-W4-claim-core-DONE branch=cloud/w4-claim-core-20261007 head=<full sha> tests=<pass|fail|partial>`.
+
+YOUR LANE
+Lane W4-claim-core: make the claim-maintenance engine tell the truth about what it has already read, and schedule what is due.
+
+Context (read 7 Oct 2026 05:30Z on production): `GET https://councilof.ai/api/claims/register` reports 99 claims, 28 subjects, 0 scheduled, 26 "due but not run" — because the register never joins the completed reads. Re-reads compare whole-page digests, so 60 "changed" candidates from the 6 Oct reads are really 19 page changes on 13 URLs. Spec: docs/claims (claim-maintenance spec v0.2 is CC0 and has four claim states; there is a v0.3-PROPOSED doc — do not adopt v0.3, only cite v0.2 sections).
+
+Code you own: scripts/claims/reread.mjs, scripts/claim-maintenance-register.mjs, scripts/claims/maintenance_due.py (+ its tests), functions/api/claims/register.ts (+ test), a new .github/workflows/claim-maintenance.yml, and tests you add next to these. Find the committed outcomes copy (outcomes.jsonl) and the registry revision files with `git grep -l outcomes.jsonl` and `git ls-files | grep -i claim`. Never rewrite the existing signed registry rev files; a new registry revision is a new file.
+
+Do, in order (stop at what you can finish and verify):
+1. CM-02: add a `claim_present` signal to scripts/claims/reread.mjs — the claim's normalised verbatim text found in the reference-extractor's text of the page. Split CHANGED_CONFIRMED into PAGE_MOVED_CLAIM_PRESENT vs CLAIM_ABSENT_CONFIRMED; only CLAIM_ABSENT_CONFIRMED writes a candidate. These are check-outcome vocabulary, not a fifth claim state (spec 4.9 wording: "present at one read and absent at the next"). Same-extractor comparisons only. Add a mutation test: two claims on one page, one unchanged — the test must go red if the split is disabled. If the 6 Oct read texts are committed, re-run over them and report the measured claim-absent count (expected well below 60); if they are not committed, say so and do not guess the number.
+2. CM-01: make scripts/claim-maintenance-register.mjs join the committed outcomes so each scheduled check reads COMPLETED(outcome,row_sha256) or DUE_NOT_RUN — join evidence, never infer. Target: the 2026-09-28 scheduled read shows COMPLETED CHANGED_CONFIRMED with row_sha256 starting 5255c0fb (verify this from the bytes; if the bytes say otherwise, report what they say). Regenerate the register output through its producer, so `node scripts/producers-check.mjs` passes.
+3. M20: maintenance_due.py writes a next_read_utc per due subject into a NEW registry revision file (the signing step happens later on the signer path, so mark it unsigned and say so); /api/claims/register must then report totals.subjects_with_a_scheduled_next_read >= the due count and subjects_with_a_due_unrun_next_read = 0 when computed from the committed files. Keep the non-allegation and right-of-reply text exactly as it is.
+4. CM-04 (only if 1-3 are green): .github/workflows/claim-maintenance.yml — schedule `50 7 * * *` plus workflow_dispatch; runs maintenance_due.py and the register producer, and opens a PR `bot/claim-maintenance-<date>` with the outputs (use the repo's existing pattern for bot PRs: find another workflow that opens PRs with peter-evans/create-pull-request or gh and copy its permissions and token use; note in the PR body that bot-token PRs need a close/reopen to trigger checks). Use only secrets that other workflows already reference; if it needs an HF token, reference the same secret name other workflows use.
+
+Done when: mutation test exists and passes (and you showed it fails with the split disabled); register join test passes; producers-check passes; the register computed from committed files shows due-unrun 0 or you report the exact remaining count and why.
