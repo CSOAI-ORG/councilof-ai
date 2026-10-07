@@ -9,15 +9,17 @@
 
 | Settlement | Amount | Classification | Evidence |
 |------------|--------|----------------|----------|
-| External customer revenue | $0.00 | ZERO | No verified external settlements |
-| Internal self-funded | $0.00 | INTERNAL_SELF_FUNDED | Self wallet: 0x4dB7...02B7 (wrangler.jsonc) |
-| Zero-value probes | 0 | ZERO_VALUE_PROBE | No probes executed |
-| x402 settlements verified | 0 | — | /api/revenue: all counts null |
-| SKU-1 (issuances) | 3 | MEASURED | REVENUE_KV, not settled |
-| SKU-2 (proofs) | null | UNMEASURED | No bundles delivered |
+| External customer revenue | **$0.03** | EXTERNAL_CUSTOMER | 2 distinct non-self payers (REVENUE_KV) |
+| Internal self-funded | 22 settlements | INTERNAL_SELF_FUNDED | Excluded from revenue |
+| Zero-value probes | 8 | ZERO_VALUE_PROBE | Excluded from revenue |
+| x402 settlements verified | 2 | — | /api/revenue, facilitator-confirmed |
+| SKU-1 (issuances) | 13 | MEASURED | REVENUE_KV |
+| SKU-2 (proofs) | 1 | MEASURED | REVENUE_KV |
 | SKU-3 (licences) | null | UNMEASURED | No licences settled |
 
-**Honest statement:** CSOAI has $0.00 external customer revenue. The x402 rail is live (facilitator provisioned), but no external customer has completed a settlement. The 3 issuances in SKU-1 are MEASURED but not settled. Internal testing is NEVER counted as revenue. Revenue is earned on issuance, assembly, and a durable signature — never a grade.
+**Correction (Oct 7):** TUI-6 (Sep 11) reported $0.00. As of Oct 7, the live API reports $0.03 from 2 distinct non-self payers. The 22 self-settlements and 8 zero-value probes are correctly excluded. This is the first non-zero external revenue.
+
+**Honest statement:** CSOAI has $0.03 external customer revenue from 2 payers. No repeat buyer yet. The x402 rail is live and functioning. Internal testing is NEVER counted as revenue. Revenue is earned on issuance, assembly, and a durable signature — never a grade.
 
 ## Three Offers
 
@@ -106,18 +108,18 @@
 | OTS | Submitted, pending Bitcoin | *.ots files |
 | x402 offer | 0.01 USDC existing-data, through 11 Oct 2026 | /api/x402 |
 | Free door | 0 (free forever) | /api/free-door |
-| External revenue | $0.00 | /api/revenue |
+| External revenue | **$0.03** from 2 payers | /api/revenue (Oct 7) |
 | MCP tools | 12 (8 free, 4 paid) | /mcp tools/list |
 
 ## Settlement Classification
 
 | Settlement | Class | Revenue |
 |------------|-------|---------|
-| x402 self-test (0x4dB7...02B7) | INTERNAL_SELF_FUNDED | $0.00 |
-| External customer payment | EXTERNAL_CUSTOMER | $0.00 (none) |
-| Zero-value free-door probe | ZERO_VALUE_PROBE | $0.00 |
+| 2 external customer payments | EXTERNAL_CUSTOMER | $0.03 |
+| 22 self-settlements (0x4dB7...02B7) | INTERNAL_SELF_FUNDED | $0.00 (excluded) |
+| 8 zero-value probes | ZERO_VALUE_PROBE | $0.00 (excluded) |
 
-**Rule:** Internal testing is NEVER revenue. Revenue remains $0.00 until an external customer completes a settlement.
+**Rule:** Internal testing is NEVER revenue. Revenue is $0.03 from 2 external payers.
 
 ## Targeted Contacts (Prepared, Not Sent)
 
