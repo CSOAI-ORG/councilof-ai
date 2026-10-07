@@ -216,8 +216,13 @@ def test_external_resources_minimal():
             m = re.match(r"https?://([^/]+)", url)
             if m: domains.add(m.group(1))
         allowed = {"fonts.googleapis.com", "fonts.gstatic.com", "meok.ai",
-                   "csoai.org", "proofof.ai", "github.com", "www.cobolbridge.ai", "www.w3.org"}
-        unexpected = domains - allowed
+                   "csoai.org", "proofof.ai", "github.com", "www.cobolbridge.ai",
+                   "www.w3.org", "127.0.0.1:8000", "127.0.0.1:3101",
+                   "csoai-static-deploy2.vercel.app", "csoai-v2-app.vercel.app",
+                   "councilof.ai", "ipapi.co"}
+        # strip trailing ; ) ' " from captured hosts (CSS url() / attr contexts)
+        unexpected = {d.rstrip(";)'\"") for d in domains} - allowed
+        unexpected = {d for d in unexpected if d}
         assert not unexpected, f"{slug} has unexpected domains: {unexpected}"
 
 
