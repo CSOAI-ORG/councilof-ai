@@ -118,9 +118,10 @@ def _sigil(prev: str, payload: dict) -> str:
 
 
 @contextmanager
-def get_db():
+def get_db(db_path: Path = None):
     """Context manager for DB connection."""
-    conn = sqlite3.connect(str(DB_PATH))
+    path = db_path or DB_PATH
+    conn = sqlite3.connect(str(path))
     conn.row_factory = sqlite3.Row
     try:
         yield conn
@@ -129,10 +130,11 @@ def get_db():
         conn.close()
 
 
-def init_db() -> None:
+def init_db(db_path: Path = None) -> None:
     """Initialize the database schema."""
-    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with get_db() as conn:
+    path = db_path or DB_PATH
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with get_db(path) as conn:
         conn.executescript(SCHEMA)
 
 
@@ -142,12 +144,12 @@ class SovereignWitness:
     def __init__(self, db_path: Path = None):
         self.db_path = db_path or DB_PATH
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
-        init_db()
+        init_db(self.db_path)
 
     def append_sigil(self, actor: str, action: str, payload: dict = None, bft_vote: dict = None) -> dict:
         """Append a SIGIL event to the chain."""
         payload = payload or {}
-        with get_db() as conn:
+        with get_db(self.db_path) as conn:
             row = conn.execute('SELECT hash FROM sigil_chain ORDER BY id DESC LIMIT 1').fetchone()
             prev_hash = row['hash'] if row else '0' * 64
             event = {
@@ -171,7 +173,7 @@ class SovereignWitness:
         }
         sigil = _sigil('audit', event)
         event['sigil'] = sigil
-        with get_db() as conn:
+        with get_db(self.db_path) as conn:
             conn.execute(
                 'INSERT INTO audit_log (ts, actor, actor_type, action, sigil, status, details_json) VALUES (?,?,?,?,?,?,?)',
                 (event['ts'], actor, actor_type, action, sigil, status, json.dumps(details)),
@@ -186,7 +188,7 @@ class SovereignWitness:
             'votes_for': 0, 'votes_against': 0, 'votes_abstain': 0,
             'quorum': 22, 'approved': False,
         }
-        with get_db() as conn:
+        with get_db(self.db_path) as conn:
             cur = conn.execute(
                 'INSERT INTO bft_proposals (title, proposer, action_json, status, quorum, created_at) VALUES (?,?,?,?,?,?)',
                 (title, proposer, json.dumps(action), 'pending', 22, event['created_at']),
@@ -197,7 +199,7 @@ class SovereignWitness:
     def vote_bft(self, proposal_id: int, voter: str, choice: str) -> dict:
         """Cast a BFT vote. choice: 'for', 'against', 'abstain'."""
         sigil = _sigil('vote', {'proposal_id': proposal_id, 'voter': voter, 'choice': choice})
-        with get_db() as conn:
+        with get_db(self.db_path) as conn:
             conn.execute(
                 'INSERT INTO bft_votes (proposal_id, voter, choice, sigil, ts) VALUES (?,?,?,?,?)',
                 (proposal_id, voter, choice, sigil, _now()),
@@ -218,7 +220,7 @@ class SovereignWitness:
     def log_watchdog(self, lat: float, lon: float, severity: str, type_: str) -> dict:
         """Log a watchdog report."""
         sigil = _sigil('watchdog', {'lat': lat, 'lon': lon, 'severity': severity, 'type': type_})
-        with get_db() as conn:
+        with get_db(self.db_path) as conn:
             conn.execute(
                 'INSERT INTO watchdogs (lat, lon, severity, type, ts, sigil) VALUES (?,?,?,?,?,?)',
                 (lat, lon, severity, type_, _now(), sigil),
@@ -228,7 +230,7 @@ class SovereignWitness:
     def register_oscal(self, sha256: str, name: str, category: str, description: str = '') -> dict:
         """Register an OSCAL component."""
         sigil = _sigil('oscal', {'sha256': sha256, 'name': name})
-        with get_db() as conn:
+        with get_db(self.db_path) as conn:
             conn.execute(
                 'INSERT INTO oscal_components (sha256, name, category, sigil, description) VALUES (?,?,?,?,?)',
                 (sha256, name, category, sigil, description),
@@ -238,7 +240,7 @@ class SovereignWitness:
     def register_crosswalk(self, framework: str, article: str, covered_by: str) -> dict:
         """Register a crosswalk cell."""
         sigil = _sigil('crosswalk', {'framework': framework, 'article': article})
-        with get_db() as conn:
+        with get_db(self.db_path) as conn:
             conn.execute(
                 'INSERT INTO crosswalk_cells (framework, article, covered_by, sigil) VALUES (?,?,?,?)',
                 (framework, article, covered_by, sigil),
@@ -247,13 +249,13 @@ class SovereignWitness:
 
     def recent_sigil(self, limit: int = 100) -> list:
         """Get the most recent SIGIL events."""
-        with get_db() as conn:
+        with get_db(self.db_path) as conn:
             rows = conn.execute('SELECT * FROM sigil_chain ORDER BY id DESC LIMIT ?', (limit,)).fetchall()
             return [dict(r) for r in rows]
 
     def verify_sigil(self, hash_: str) -> dict:
         """Verify a SIGIL event by its hash."""
-        with get_db() as conn:
+        with get_db(self.db_path) as conn:
             row = conn.execute('SELECT * FROM sigil_chain WHERE hash = ?', (hash_,)).fetchone()
             if row:
                 return {'verified': True, 'event': dict(row)}
@@ -271,34 +273,34 @@ class SovereignWitness:
             params.append(action)
         query += ' ORDER BY id DESC LIMIT ?'
         params.append(limit)
-        with get_db() as conn:
+        with get_db(self.db_path) as conn:
             return [dict(r) for r in conn.execute(query, params).fetchall()]
 
     def bft_proposals(self, limit: int = 50) -> list:
         """Get recent BFT proposals."""
-        with get_db() as conn:
+        with get_db(self.db_path) as conn:
             return [dict(r) for r in conn.execute('SELECT * FROM bft_proposals ORDER BY id DESC LIMIT ?', (limit,)).fetchall()]
 
     def oscal_components(self) -> list:
         """Get all OSCAL components."""
-        with get_db() as conn:
+        with get_db(self.db_path) as conn:
             return [dict(r) for r in conn.execute('SELECT * FROM oscal_components').fetchall()]
 
     def crosswalk_cells(self, framework: str = None) -> list:
         """Get all crosswalk cells, optionally filtered by framework."""
-        with get_db() as conn:
+        with get_db(self.db_path) as conn:
             if framework:
                 return [dict(r) for r in conn.execute('SELECT * FROM crosswalk_cells WHERE framework = ?', (framework,)).fetchall()]
             return [dict(r) for r in conn.execute('SELECT * FROM crosswalk_cells').fetchall()]
 
     def watchdogs(self, limit: int = 100) -> list:
         """Get recent watchdog reports."""
-        with get_db() as conn:
+        with get_db(self.db_path) as conn:
             return [dict(r) for r in conn.execute('SELECT * FROM watchdogs ORDER BY id DESC LIMIT ?', (limit,)).fetchall()]
 
     def stats(self) -> dict:
         """Get the Witness stats."""
-        with get_db() as conn:
+        with get_db(self.db_path) as conn:
             return {
                 'sigil_count': conn.execute('SELECT COUNT(*) FROM sigil_chain').fetchone()[0],
                 'audit_count': conn.execute('SELECT COUNT(*) FROM audit_log').fetchone()[0],
