@@ -44,10 +44,10 @@ describe("pricing_terms — a dated amount is said in words, then disappears by 
     });
 
   it("is present during the launch amount, names its end and the field, and carries no amount", () => {
-    const body = challenge("2026-10-10T23:59:59Z") as { csoai: Record<string, unknown> };
+    const body = challenge("2027-01-10T23:59:59Z") as { csoai: Record<string, unknown> };
     const terms = String(body.csoai.pricing_terms);
     expect(body.csoai.per).toBe("fixture"); // the door's own sidecar keys survive
-    expect(terms).toContain("until 2026-10-11T00:00:00Z (end of 2026-10-10 UTC)");
+    expect(terms).toContain("until 2027-01-11T00:00:00Z (end of 2027-01-10 UTC)");
     expect(terms).toContain("csoai_pricing.normal_amount_atomic");
     expect(terms).toContain("your wallet signs exactly the amount shown and nothing more");
     expect(terms).not.toMatch(/\d{4,}(?![-:T])|\$|USDC\s*\d/); // no amount in prose
@@ -56,17 +56,17 @@ describe("pricing_terms — a dated amount is said in words, then disappears by 
   });
 
   it("is absent once the launch amount has ended, and absent on a door with no sidecar of its own", () => {
-    const after = challenge("2026-10-11T00:00:00Z") as { csoai: Record<string, unknown> };
+    const after = challenge("2027-01-11T00:00:00Z") as { csoai: Record<string, unknown> };
     expect(after.csoai).toEqual({ per: "fixture" });
     const bare = buildPaymentRequiredV2({
       resourceUrl: RESOURCE,
       description: "fixture door",
       serviceName: "fixture",
-      accepts: x402Accepts({ X402_PROMO_NOW: "2026-10-12T00:00:00Z" }, RESOURCE, { skuId: "issuance", tier: "reserve" }),
+      accepts: x402Accepts({ X402_PROMO_NOW: "2027-01-12T00:00:00Z" }, RESOURCE, { skuId: "issuance", tier: "reserve" }),
       bazaar: { info: {}, schema: {} },
     });
     expect("csoai" in bare).toBe(false);
-    expect(pricingTerms(x402Accepts({ X402_PROMO_NOW: "2026-10-12T00:00:00Z" }, RESOURCE, { skuId: "issuance", tier: "reserve" }))).toBeNull();
+    expect(pricingTerms(x402Accepts({ X402_PROMO_NOW: "2027-01-12T00:00:00Z" }, RESOURCE, { skuId: "issuance", tier: "reserve" }))).toBeNull();
   });
 });
 
@@ -99,8 +99,21 @@ describe("x402 rail — money destination and token domain", () => {
     expect(fresh.amount).toBe("500000");
     expect(fresh.csoaiPricing?.pricing_basis).toBe("STANDARD");
 
-    const [expired] = x402Accepts(
+    // Owner ruling #16 (7 Oct 2026): the old end, 2026-10-11, is still inside the launch period.
+    const [extended] = x402Accepts(
       { X402_PROMO_NOW: "2026-10-11T00:00:00Z" },
+      RESOURCE,
+      { skuId: "issuance", tier: "reserve" },
+    );
+    expect(extended.amount).toBe("10000");
+    expect(extended.csoaiPricing).toMatchObject({
+      campaign_id: "csoai-launch-30d-20260911",
+      normal_amount_atomic: "20000",
+      ends_at: "2027-01-11T00:00:00Z",
+    });
+
+    const [expired] = x402Accepts(
+      { X402_PROMO_NOW: "2027-01-11T00:00:00Z" },
       RESOURCE,
       { skuId: "issuance", tier: "reserve" },
     );

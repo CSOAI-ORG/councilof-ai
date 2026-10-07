@@ -188,10 +188,21 @@ export type X402Accept = {
   };
 };
 
+/**
+ * The launch amount on existing-data doors (PROMO_EXISTING_DATA below).
+ *
+ * EXTENDED (7 Oct 2026, owner ruling #16, applied by agent under the owner's delegation): ends_at
+ * moved from 2026-10-11T00:00:00Z to 2027-01-11T00:00:00Z. Why: 0-1 independent payers so far, so
+ * letting the standard amounts apply would raise the Art 50 door about 2,500-fold and the evidence
+ * bundle about 25,000-fold before the paid route had been proven with a single stranger. No amount
+ * changed. The id keeps its original "30d" spelling on purpose: it names the campaign that started
+ * on 2026-09-11 and is already carried by challenges, receipts and ledger rows, so renaming it would
+ * split one campaign into two. Its length is starts_at..ends_at, not the id.
+ */
 export const X402_LAUNCH_CAMPAIGN = {
   id: "csoai-launch-30d-20260911",
   starts_at: "2026-09-11T00:00:00Z",
-  ends_at: "2026-10-11T00:00:00Z",
+  ends_at: "2027-01-11T00:00:00Z",
   amount_atomic: "10000", // 0.01 USDC
 } as const;
 
@@ -954,6 +965,9 @@ export function challengeAccept(
  * normal_amount_atomic) said so; no sentence a person or an agent's summary would read did. The
  * sentence is BUILT from the accepts entries, so it disappears by itself once no entry carries an
  * end date. It names fields, never an amount: the amount lives only in accepts[].
+ *
+ * 7 Oct 2026 (owner ruling #16): the end moved to 2027-01-11T00:00:00Z (see X402_LAUNCH_CAMPAIGN).
+ * Nothing here changed: the sentence reads ends_at from the accepts entries, so it names the new end.
  */
 export function pricingTerms(accepts: X402Accept[]): string | null {
   const ends = accepts
