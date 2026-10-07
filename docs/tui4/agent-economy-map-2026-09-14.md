@@ -165,6 +165,24 @@ UTM attribution: every external link carries `?utm_source=<directory>`.
   - Root cause: key rotation in Cloudflare env var (`BOARD_SIGN_KEY_PKCS8_B64`)
   - Fix: re-issue receipt with current key, or investigate key rotation history
 
+### CORRECTION (2026-10-07T04:10Z, TUI-4 re-verification — does not reproduce)
+
+The signature-mismatch finding above was re-tested from scratch on 2026-10-07 and did
+not reproduce:
+
+- **Offline Ed25519 check**, same JWS (`x402-self-settlement-2026-09-11.json`) against
+  **every** key in the current `did:web:csoai.org` document (7 keys): **VALID** under
+  `#board-attestation-1` — the exact `kid` in the JWS header — and invalid under all six
+  others (negative controls, as they must be).
+- **Server verdict**: `POST /api/receipts/verify` with the same receipt →
+  `verdict: VALID`, `"receipt verifies under the resolved key"` (as_of
+  `2026-10-07T04:10:09.915Z`).
+
+The 2026-09-14 mismatch observation stands as a recorded observation of that day; it does
+not reproduce today, and the cause of the earlier disagreement (key rotation vs. a faulty
+check) was not established either way. Nothing here claims Bitcoin, anchoring, or
+certification — this is a signature check against published bytes and DID material only.
+
 ---
 
 ## Honest Findings (TUI 4)
@@ -174,8 +192,8 @@ UTM attribution: every external link carries `?utm_source=<directory>`.
 | MCP server requires `Accept: text/event-stream` | Low (documented) | SDK clients must include both Accept types |
 | Coinbase CDP x402 registry has 0/14,567 entries | Medium | A real paid settlement may help; not measured here |
 | Smithery csoai/gspc lists 4 phantom tools | High (live) | Owner to retire duplicate |
-| Receipt signature mismatch (key rotation) | Medium | Investigate Cloudflare env var |
-| mcp.so NOT_LISTED | Medium | Owner to submit at mcp.so/submit |
+| Receipt signature mismatch (key rotation) | Medium (closed 2026-10-07) | Does not reproduce — offline + server both VALID 2026-10-07, see CORRECTION above |
+| mcp.so NOT_LISTED | Medium (closed 2026-10-07) | Wrong slug at the time — today `mcp.so/servers/csoai-gspc-measurement` serves 200 "CSOAI GSPC measurement" |
 
 ---
 
