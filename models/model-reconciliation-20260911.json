@@ -705,7 +705,7 @@
     "CORRECTED: The36 PR#1888 cards are a FOURTH card population at /interop/mill-cards-signed/. They are NOT in the335-card index, NOT in the167-card root, and NOT in the336-card store.",
     "CORRECTED: PR#1888 card canonical form requires ECMAScript number normalization (integral floats \u2192 int). 10/36 fail without it.",
     "REJECTED: '167 cards are in the root and 335 in the corpus, so 167 of 335 are in the root.' \u2192 Root and index are DISJOINT (0 SHA overlap).",
-    "REJECTED: '22 axes are model comparisons.' \u2192 Only 14 are model-comparison; 8 are deterministic financial facts.",
+    "REJECTED: '22 axes are model comparisons.' → 14 model-comparison + 9 deterministic-facts (23 total). STALE ON 2026-10-07: live /api/gspc reports axes=23, measured_axes=23, unmeasured_axes=0, kinds {model-comparison: 14, deterministic-facts: 9}. The 22/8 split was correct when measured 2026-09-11; humanoid-labour-index is the ninth deterministic axis.",
     "REJECTED: 'The board is continuously refreshed.' → Behavioural axes last run 2026-08-12 (29 days stale). Financial axes 2026-08-25 (17 days stale).",
     "CORRECTED: '689 UNMEASURED cells' is the FROZEN-INDEX population only (64 models x 16 axes), built from card_index.json alone — it omits the mill entirely. True estate coverage: 1,762 of 3,348 cells (52.63%) = index 335/1024 + mill 1,427/2,324. See models/coverage-matrix-canon.json.",
     "FOUND: 39 live cells carry two signed cards each (39 redundant leaves) — one-cell-one-card is violated — but ALL 39 have IDENTICAL values, so no incompatible claim is published. value_conflicts=0. Fix belongs to card_root.py/SUPERSEDED.jsonl (TUI-5)."

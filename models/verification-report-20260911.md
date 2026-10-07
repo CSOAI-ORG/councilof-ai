@@ -126,9 +126,11 @@ My v1/v2 reports said "HF Jobs harness not in this repo." **That was wrong.** On
 
 What remains genuinely blocked is **launch authority** (running a new HF Job), not harness availability.
 
-### Board state (22 axes)
+### Board state (23 axes — live 2026-10-07; 22 when this was first measured on 2026-09-11)
 Behavioural (14, model-comparison): governance, safety, provenance, continuity, conformance, openness, machinery-conformity, care, cross-reality, detector-interop, art5-safeguard, swarm, affect, jail.
-Financial (8, deterministic-facts): provenance-controls, reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure, ai-adoption-components, labour-components, humanoid-labour-index.
+Deterministic-facts (9): effect-binding (gspc family) plus the 8 financial axes — provenance-controls, reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure, ai-adoption-components, labour-components, humanoid-labour-index.
+
+*Source: live `https://councilof.ai/api/gspc`, observed 2026-10-07T10:47Z — `axes: 23`, `measured_axes: 23`, `unmeasured_axes: 0`, `quotable_axes: 23`, kinds `{model-comparison: 14, deterministic-facts: 9}`. The 22-axis split recorded on 2026-09-11 was correct on that date; the board has since gained a ninth deterministic axis. Separation at observation: `0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED` — measured ≠ separated, and neither is folded into the other.*
 
 - Gold run 2026-08-18T03:22:16Z; behavioural last run 2026-08-12; jail 2026-08-18; financial 2026-08-25.
 - Board signer `#board-attestation-1`, SIGNED (Ed25519, verifiable).
@@ -194,7 +196,7 @@ Environment: macOS Python 3.14 needed `SSL_CERT_FILE=certifi` (no CA bundle ship
 5. ❌ **"HF Jobs harness not in this repo"** (my own v1/v2 claim) → **`harness/` has 354 files, public.**
 6. ❌ **"benchmark-index totals are current"** → stale by 982 cards.
 7. ❌ **"70 INVALID = failed verifications"** → UNMEASURED placeholders with no id.
-8. ❌ **"22 axes are model comparisons"** → 14 model-comparison + 8 deterministic-facts.
+8. ❌ **"22 axes are model comparisons"** → 14 model-comparison + 9 deterministic-facts (23 total). **Superseded on 2026-10-07:** the live `/api/gspc` reports `axes: 23, measured_axes: 23, unmeasured_axes: 0` with kinds `{model-comparison: 14, deterministic-facts: 9}`. The 22/8 split recorded on 2026-09-11 was correct then; `humanoid-labour-index` is the ninth deterministic axis. Never quote the axis count without its observation date.
 9. ❌ **"Board continuously refreshed"** → behavioural 2026-08-12, financial 2026-08-25.
 10. ❌ **Indexed ≠ measured, signed ≠ committed ≠ anchored** — held throughout: mill cards reach a **Merkle commitment** via `card_root.py` (1,466 live + 1,402 superseded = 2,868) and stop there; an OTS stamp is a separate, owner-gated step that reads `pending` until Bitcoin. `root.json`'s 319 leaves are a different surface again. **no Rekor / OTS / Base / XRPL claim is made by this TUI.**
 
