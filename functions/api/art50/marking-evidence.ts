@@ -20,6 +20,11 @@
  *                                              {mode:"invoice-gbp", reference:"CSOAI-A50-<id>"} —
  *                                              the owner invoices in GBP; no price stated here.
  *
+ * SCOPE, IN EVERY PACK (owner-approved, 7 Oct 2026; functions/_lib/art50Scope.ts): the pack detects C2PA
+ * and IPTC metadata only; NOT_DETECTED does not mean "unmarked", because Article 50(2) is
+ * technology-neutral; and CSOAI is a C2PA member. The preview, the 402 and the delivered pack carry
+ * `scope`, and the signed leaf carries its short form.
+ *
  * WORDING RULE (binding): results read "marking not detected by method <z>". Never "absent",
  * never "non-compliant"/"compliant"/"certified"/"safe". Watermarks are spoofable and strippable,
  * so the pack attests DETECTION at a time, never a guarantee about the generator.
@@ -38,6 +43,7 @@ import { inspectC2pa, sha256, xmpDigitalSourceType, type C2paInspection } from "
 import { ART50_SOURCES, ART50_DATES, art50LawBlock, art50TextSha256 } from "../../_lib/art50Law";
 import { invoiceHandoff } from "../_invoice_handoff";
 import { ART50_MARKING_EVIDENCE_DESCRIPTION } from "../_x402_descriptions";
+import { ART50_SCOPE, ART50_SCOPE_SIGNED } from "../../_lib/art50Scope";
 
 type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string; REVENUE_KV?: KVNamespace };
 
@@ -230,6 +236,7 @@ async function leafPayload(m: Measurement, fetched_at: string, payment: Record<s
     fetched_at,
     checked: m.checked.map((c) => (c.note ? { method: c.method, result: c.result, note: c.note.slice(0, 120) } : { method: c.method, result: c.result })),
     statements: m.statements.slice(0, 4).map((s) => s.slice(0, 200)),
+    scope: ART50_SCOPE_SIGNED,
     gaps: Object.fromEntries(Object.entries(m.gaps).map(([k, v]) => [k, v.slice(0, 150)])),
     law: {
       article: "Art 50(2) Reg (EU) 2024/1689",
@@ -354,6 +361,7 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
       mode: "preview",
       signed: false,
       fetched_at,
+      scope: ART50_SCOPE,
       measurement: m,
       law,
       how_to_commission: {
@@ -407,6 +415,7 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
           lid: CSOAI_LID,
           never: ["conformity opinion", "guarantee", "certificate", "grade"],
           deliverable: "one card-v0 leaf, surface art50.marking-evidence, ≤3KB payload, Ed25519-signed when the Pages key is present",
+          scope: ART50_SCOPE,
           preview: m,
           free_preview: `${resourceUrl}?preview=1&url=…`,
           invoice_gbp: `${resourceUrl}?commissioned_by=<organisation>&invoice=gbp`,
@@ -454,6 +463,7 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
     {
       schema: KIND,
       mode: payment.mode,
+      scope: ART50_SCOPE,
       card,
       law,
       detail: m.detail,
@@ -477,7 +487,8 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
           }
         : {}),
       verify: `${origin}/gspc-verify`,
-      note: "Independently signed, timestamped measurement of mark detection at fetched_at. Not a conformity opinion, not a guarantee, not a certificate. Root inclusion follows the public-root workflow.",
+      verify_how: "paste `card` into the free checker at /gspc-verify, or POST it to /api/verify; both read card-v0 leaves under the pinned did:web:csoai.org#board-attestation-1 key",
+      note: "Independently signed, timestamped measurement of mark detection at fetched_at, by C2PA and IPTC metadata methods only (see scope). Not a conformity opinion, not a guarantee, not a certificate. Root inclusion follows the public-root workflow.",
     },
     200,
     paymentResponseHeader ? { "x-payment-response": paymentResponseHeader } : {},

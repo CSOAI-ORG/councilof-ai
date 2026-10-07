@@ -217,6 +217,14 @@ describe("three outcomes and no fourth", () => {
     }
   });
 
+  it("DELIVERED keeps what was bought: the door's 200 body rides on the outcome (it used to be dropped)", async () => {
+    const pack = { schema: "csoai.art50.marking-evidence/0.1", card: { payload: { kind: "k" }, sha256: "ab".repeat(32), sig_ed25519: "cd".repeat(64) } };
+    const fetchImpl = vi.fn(async () => jsonResponse(200, pack)) as unknown as typeof fetch;
+    const s = await payDoor({ door: door(), challenge: challengeFromPaymentRequired(PAYMENT_REQUIRED)!, provider: provider(), walletName: "w", fetchImpl });
+    expect(s.kind).toBe("delivered");
+    if (s.kind === "delivered") expect(s.body).toEqual(pack);
+  });
+
   it("DELIVERED without a receipt header keeps settlement null — delivery is not proof of settlement", async () => {
     const out = await retryDoorWithPayment(door(), "hdr", vi.fn(async () => jsonResponse(200, {})) as unknown as typeof fetch);
     expect(out.kind).toBe("delivered");

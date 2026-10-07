@@ -271,7 +271,7 @@
         "http"
       ],
       "title": "Art50 marking evidence",
-      "description": "Art. 50 marking evidence: one signed pack for one generative output at a named URL, measured from its bytes. Reports whether a machine-readable mark (C2PA manifest, assertion hashes, hard binding, claim signature; IPTC digitalSourceType) is detectable now, beside the verbatim Article 50(2) text. States: DETECTED, NOT_DETECTED or UNCHECKABLE; never a legal determination. Free unsigned preview; verification is free.",
+      "description": "Art. 50 marking evidence: one signed pack for one generative output at a named URL, measured from its bytes. Detects C2PA and IPTC metadata only (C2PA manifest, assertion hashes, hard binding, claim signature; IPTC digitalSourceType); no watermark is read. States: DETECTED, NOT_DETECTED (not proof the output is unmarked) or UNCHECKABLE; never a legal determination. CSOAI is a C2PA member. Free unsigned preview; verification is free.",
       "endpoint": "/api/art50/marking-evidence",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -986,7 +986,7 @@
         "http"
       ],
       "title": "Evidence bundle",
-      "description": "Signed compliance evidence bundle for one obligation: EU AI Act Article 50 or 53, DORA or EU-CRA, as OSCAL results. Built only from already-signed measurement cards, each with its full bytes and Merkle inclusion proof, plus one signed manifest card. States: ASSEMBLED, or zero relevant cards stated as zero; never a finding that an obligation is met. Verification is free at /gspc-verify.",
+      "description": "Signed evidence bundle for one obligation: EU AI Act Article 50 or 53, DORA or EU-CRA, as OSCAL results. Built only from already-signed measurement cards, each with its full bytes and Merkle inclusion proof, plus one signed manifest card. States: ASSEMBLED, or zero relevant cards stated as zero; never a finding that an obligation is met. Verification is free at /gspc-verify.",
       "endpoint": "/api/evidence-bundle",
       "method": "GET",
       "lifecycle": "LIVE",

@@ -11,7 +11,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
 import { ArrowRight, Search, Trash2 } from "lucide-react";
 import ResultCard, { StateChip } from "@/components/talk/ResultCard";
-import { clearMyResults, lookupAgainHref, MY_RESULTS_EVENT, readMyResults, type MyResult } from "@/lib/myResults";
+import { clearMyResults, downloadText, lookupAgainHref, MY_RESULTS_EVENT, readMyResults, seedChecker, VERIFY_SEED_HREF, type MyResult } from "@/lib/myResults";
 
 const FOCUS =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
@@ -35,7 +35,9 @@ const ORIGIN_WORD: Record<string, string> = {
   ZERO_VALUE: "nothing moved",
   UNCHECKABLE: "not checkable",
 };
-const KIND_WORD: Record<MyResult["kind"], string> = { lookup: "Looked up", "fresh-run": "Fresh run", watch: "Watch request" };
+const KIND_WORD: Record<MyResult["kind"], string> = { lookup: "Looked up", "fresh-run": "Fresh run", watch: "Watch request", paid: "Paid result" };
+
+const ROW_BUTTON = `inline-flex min-h-11 items-center rounded-lg border border-border px-3 text-sm font-semibold text-foreground hover:bg-muted ${FOCUS}`;
 
 export function findCommissions(rows: Commission[], q: string): Commission[] {
   const s = q.trim().toLowerCase().replace(/^sha256:/, "");
@@ -207,7 +209,44 @@ export default function MyResultsPane() {
                 </span>
                 {r.state ? <StateChip label={r.state} /> : null}
                 <span className="text-xs text-muted-foreground">{r.at.slice(0, 10)}</span>
-                {r.kind === "lookup" ? (
+                {r.kind === "paid" ? (
+                  // A paid result is what the door delivered, kept in this browser: check it for free,
+                  // download it, see the transaction. Only a commission receipt is in the public queue,
+                  // so only that kind gets "Status" (an art50 pack would always answer "nothing matches").
+                  <span className="flex flex-wrap gap-2">
+                    {r.record ? (
+                      <a href={VERIFY_SEED_HREF} onClick={() => seedChecker(r.record!)} className={ROW_BUTTON} data-testid="my-results-check">
+                        Check it is genuine
+                      </a>
+                    ) : null}
+                    {r.record ? (
+                      <button type="button" onClick={() => downloadText(r.record!, `csoai-${(r.ref ?? "record").slice(0, 12)}.json`)} className={ROW_BUTTON}>
+                        Download
+                      </button>
+                    ) : null}
+                    {r.tx ? (
+                      <a href={`https://basescan.org/tx/${r.tx}`} target="_blank" rel="noreferrer" className={ROW_BUTTON} title={r.tx}>
+                        Transaction
+                      </a>
+                    ) : null}
+                    {r.ref && r.door && /\/api\/request-attestation\b/.test(r.door) ? (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setWatchNote(null);
+                          setQ(r.ref!);
+                          setAsked(r.ref!);
+                        }}
+                        className={ROW_BUTTON}
+                      >
+                        Status
+                      </button>
+                    ) : null}
+                    {!r.record ? (
+                      <span className="self-center text-xs text-muted-foreground">The record was not kept here{r.ref ? ` (id ${r.ref.slice(0, 12)}…)` : ""}.</span>
+                    ) : null}
+                  </span>
+                ) : r.kind === "lookup" ? (
                   // A lookup is not a request: there is nothing of it in the paid-request queue, so
                   // "Status" (which searched that queue) always answered "nothing matches". The
                   // useful action is to ask the same question again.

@@ -238,7 +238,7 @@ export function unsettledReason(body: unknown): string {
 }
 
 export type PaidOutcome =
-  | { kind: "delivered"; http: number; paymentResponse: string | null; settlement: Settlement | null }
+  | { kind: "delivered"; http: number; paymentResponse: string | null; settlement: Settlement | null; body: unknown }
   | { kind: "unsettled"; http: 402; reason: string }
   | { kind: "failed"; http: number; detail: string };
 
@@ -257,7 +257,10 @@ export async function retryDoorWithPayment(
   }
   if (r.status >= 200 && r.status < 300) {
     const paymentResponse = r.headers.get("x-payment-response");
-    return { kind: "delivered", http: r.status, paymentResponse, settlement: decodeSettlement(paymentResponse) };
+    // KEEP WHAT WAS BOUGHT (2026-10-07). This used to return without reading the body, so a paid
+    // door's deliverable (the signed art50 pack, the commission receipt) was dropped on the floor:
+    // the payer saw DELIVERED and a transaction hash, and nothing they could keep or check.
+    return { kind: "delivered", http: r.status, paymentResponse, settlement: decodeSettlement(paymentResponse), body: await readJson(r) };
   }
   const body = await readJson(r);
   const err =
@@ -271,7 +274,7 @@ export type DoorState =
   | { kind: "idle" }
   | { kind: "signing"; wallet: string }
   | { kind: "paying" }
-  | { kind: "delivered"; paymentResponse: string | null; settlement: Settlement | null }
+  | { kind: "delivered"; paymentResponse: string | null; settlement: Settlement | null; body?: unknown }
   | { kind: "unsettled"; reason: string }
   | { kind: "rejected"; detail: string }
   | { kind: "wrong-network"; detail: string }
@@ -309,7 +312,7 @@ export async function payDoor(
     phase({ kind: "paying" });
     const outcome = await retryDoorWithPayment(door, signature.header, fetchImpl);
     if (outcome.kind === "delivered") {
-      return { kind: "delivered", paymentResponse: outcome.paymentResponse, settlement: outcome.settlement };
+      return { kind: "delivered", paymentResponse: outcome.paymentResponse, settlement: outcome.settlement, body: outcome.body };
     }
     if (outcome.kind === "unsettled") return { kind: "unsettled", reason: outcome.reason };
     return { kind: "error", detail: outcome.detail };

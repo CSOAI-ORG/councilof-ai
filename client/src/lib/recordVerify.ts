@@ -19,6 +19,7 @@
  */
 
 import { verifyCard, anchorsFromDid, type Anchor, type CardState, type CardVerdict } from "../../../functions/_lib/cardVerify";
+import { isCardV0, verifyCardV0 } from "../../../functions/_lib/cardV0Verify";
 
 export interface RecordVerdict {
   lines: { label: string; ok: boolean | null; detail: string; code: string }[];
@@ -114,6 +115,28 @@ export async function verifyRecord(raw: string): Promise<RecordVerdict> {
       reasons: ["parse_error"],
       family: "unknown",
       lines: [{ label: "Parse", ok: false, code: "parse_error", detail: "Not valid JSON — nothing was checked." }],
+    };
+  }
+
+  // card-v0 leaves (an art50 pack, a RAS receipt, a population-door or wrapper card) are judged by
+  // the same module POST /api/verify uses. Until 2026-10-07 this page sent them to cardVerify, which
+  // does not know the shape, so the record a paid pack told its buyer to check here came back
+  // UNCHECKABLE/unrecognised_family. Pinned anchors decide; nothing is fetched.
+  // A buyer often pastes the whole delivered pack ({ scope, card, law, … }); the signed record is its
+  // `card`, so that is what is judged, and the page says so.
+  const inner = !isCardV0(rec) && rec && typeof rec === "object" ? (rec as { card?: unknown }).card : undefined;
+  const leaf = isCardV0(rec) ? rec : isCardV0(inner) ? inner : null;
+  if (leaf) {
+    const v = await verifyCardV0(leaf, raw);
+    return {
+      valid: v.state === "VALID",
+      state: v.state,
+      reasons: v.reasons,
+      family: v.family,
+      lines: [
+        { label: "Parse", ok: true, code: "parse_ok", detail: leaf === rec ? "Valid JSON." : "Valid JSON: a delivered pack; its `card` is the signed record checked below." },
+        ...v.checks.map((c) => ({ label: c.check, ok: c.ok, detail: c.detail, code: c.code })),
+      ],
     };
   }
 

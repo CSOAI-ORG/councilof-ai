@@ -193,6 +193,26 @@ describe("every outcome renders as itself", () => {
     expect(without).toContain("Delivery is not proof of settlement");
   });
 
+  it("DELIVERED keeps what was bought: the signed record's id, a download, the free check and My results", () => {
+    const sha = "ab".repeat(32);
+    const html = card({
+      kind: "delivered",
+      paymentResponse: null,
+      settlement: null,
+      body: { schema: "csoai.art50.marking-evidence/0.1", card: { payload: { kind: "k" }, sha256: sha, sig_ed25519: "cd".repeat(64) } },
+    });
+    expect(html).toContain('data-testid="pay-delivered-record"');
+    expect(html).toContain("a signed record, id");
+    expect(html).toContain(sha);
+    expect(html).toContain("Download what was delivered (JSON)");
+    expect(html).toContain('href="/gspc-verify?seed=mine"');
+    expect(html).toContain('href="/dashboard?tab=mine"');
+    // a body with no signed record says so instead of inventing one
+    const plain = card({ kind: "delivered", paymentResponse: null, settlement: null, body: { totals: {} } });
+    expect(plain).toContain("carries no signed record to check");
+    expect(plain).not.toContain("gspc-verify?seed=mine");
+  });
+
   it("WRONG NETWORK names the chain the challenge requires", () => {
     const html = card({ kind: "wrong-network", detail: "x402Wallet: wallet stayed on chain 1; the 402 requires 8453" });
     expect(html).toContain("WRONG NETWORK.");

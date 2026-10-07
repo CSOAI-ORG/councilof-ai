@@ -108,10 +108,10 @@ export const SKUS: Record<string, Sku> = {
       "blocks via x402. They pay for OUR signature + Merkle anchor, not to avoid the maths.",
   },
 
-  // SKU-2 — Compliance Evidence Bundle (PROOF). Metered per bundle.
+  // SKU-2 — Evidence Bundle (PROOF; renamed from "Compliance Evidence Bundle" 2026-10-07: "compliance" sits next to certification). Metered per bundle.
   evidence_bundle: {
     id: "evidence_bundle",
-    name: "Compliance Evidence Bundle (proof)",
+    name: "Evidence Bundle (proof)",
     artifact:
       "a pack directory: <bench>.json + <bench>.sig.json (detached Ed25519) + " +
       "<bench>_oscal.json (OSCAL 1.1.0 assessment-results) — e.g. public/packs/eu-article-50/",
