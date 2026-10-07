@@ -24,6 +24,7 @@ import {
   sameResource,
   routeKey,
   selectDoor,
+  doorForLink,
   unsettledReason,
   type Door,
   type ListingReading,
@@ -283,6 +284,18 @@ describe("deep link and walk order", () => {
     expect(selectDoor(doors, `${ORIGIN}/api/nothing`)).toBeNull();
     expect(doorFromSearch("")).toBeNull();
     expect(routeKey("nonsense")).toBe("nonsense");
+  });
+
+  it("a link to a declared route with its own query pays THAT resource (fresh-capsule needs endpoint= and dimension=)", () => {
+    const doors = doorsFromManifest(MANIFEST);
+    const own = `${ORIGIN}/api/rwa/evidence?asset=XRP`;
+    expect(doorForLink(doors, own)).toMatchObject({ url: own, routeKey: doors[2].routeKey, method: doors[2].method });
+    // the manifest's own spelling, a bare path, or the same query in another order: the manifest door, unchanged
+    expect(doorForLink(doors, doors[2].url)).toBe(doors[2]);
+    expect(doorForLink(doors, "/api/free-door")).toBe(doors[0]);
+    // a route the manifest does not declare selects nothing, whatever its query
+    expect(doorForLink(doors, `${ORIGIN}/api/nothing?x=1`)).toBeNull();
+    expect(doorForLink(doors, null)).toBeNull();
   });
 
   it("pay-all walks only doors with a live challenge that have not been delivered", () => {

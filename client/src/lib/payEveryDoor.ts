@@ -356,6 +356,26 @@ export function selectDoor(doors: Door[], wanted: string | null): Door | null {
   );
 }
 
+/**
+ * The door a deep link pays. A manifest row carries ONE example query, and some doors need inputs
+ * the example does not have: /api/measurement/fresh-capsule is listed bare and answers 400 (and
+ * settles nothing) without endpoint= and dimension=, so /pay-all could quote it but never pay it.
+ * A link that names a DECLARED route with its own query now pays that exact resource: same origin,
+ * same path, the link's query, quoted from its own live 402 like any other door. A link to a route
+ * the manifest does not declare still selects nothing.
+ */
+export function doorForLink(doors: Door[], wanted: string | null): Door | null {
+  const base = selectDoor(doors, wanted);
+  if (!base || !wanted || base.url === wanted) return base;
+  try {
+    const w = new URL(wanted);
+    if (!w.search || routeKey(w.toString()) !== base.routeKey || sameResource(base.url, w.toString())) return base;
+    return { ...base, url: w.toString() };
+  } catch {
+    return base;
+  }
+}
+
 /** What /api/x402-listing returns — the shape functions/api/x402-listing.ts writes. */
 export type ListingReading = {
   kind: "MEASURED" | "UNCHECKABLE";

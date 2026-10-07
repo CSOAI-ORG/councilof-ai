@@ -29,7 +29,7 @@ import {
   quoteDoor,
   relayedFetch,
   remainingDoors,
-  selectDoor,
+  doorForLink,
   settleFor,
   walkTally,
   type Door,
@@ -583,7 +583,23 @@ export default function PayEveryDoor() {
     };
   }, []);
 
-  const selected = doors ? selectDoor(doors, wanted) : null;
+  const selected = doors ? doorForLink(doors, wanted) : null;
+  const selectedUrl = selected?.url ?? null;
+
+  // A linked door with its own query (doorForLink) is not in the manifest's list, so the load above
+  // never read its 402: read it here, directly, like any door the relay could not read.
+  useEffect(() => {
+    if (!selected || !selectedUrl || quotes[selectedUrl] !== undefined) return;
+    let cancelled = false;
+    setQuotes((prev) => ({ ...prev, [selectedUrl]: "reading" }));
+    quoteDoor(selected).then((q) => {
+      if (!cancelled) setQuotes((prev) => ({ ...prev, [selectedUrl]: q }));
+    });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedUrl, doors]);
   const visible = doors ? (selected ? [selected] : doors) : [];
   const readingValue = reading === "reading" ? null : reading;
   const reading402Value = reading402 === "reading" ? null : reading402;
