@@ -12,14 +12,14 @@
  *   agui_state  — POST /api/agui/run: grounded / unknown / needs_input / confirm_required / error
  *
  * WHAT IS NEVER STORED: no IP address, no user-agent string, no message text, no arguments, no
- * cookie, no identifier of any kind. A stored key is `usage:v1:<day>:<dim>:<name>:<class>.<random>`;
- * the random suffix only keeps two events from overwriting each other and links to nothing.
+ * cookie, no identifier of any kind. A stored key is `usage:v1:<day>:<dim>:<name>:<random>`; the
+ * random suffix only keeps two events from overwriting each other and links to nothing.
  *
- * CLIENT CLASS (7 Oct 2026, sell organ SG-09). <class> is one word from CLIENT_CLASSES, derived from
- * the User-Agent header at write time by a fixed published rule (CLIENT_CLASS_RULE); the header
- * itself is never stored. It says what kind of client the caller DECLARED (a browser, a crawler, an
- * HTTP library, an agent runtime, nothing), never who it is: a User-Agent can claim anything. Rows
- * written before this date carry an 8-hex suffix only and are read back as "unrecorded".
+ * CLIENT CLASS (7 Oct 2026, sell organ SG-09). Each row carries KV metadata {client_class}: one word
+ * from CLIENT_CLASSES, derived from the User-Agent header at write time by a fixed published rule
+ * (CLIENT_CLASS_RULE); the header itself is never stored. It says what kind of client the caller
+ * DECLARED (a browser, a crawler, an HTTP library, an agent runtime, nothing), never who it is: a
+ * User-Agent can claim anything. Rows written before this carry no metadata and read as "unrecorded".
  *
  * SELF-EXCLUSION IS BY NAME, NEVER BY GUESS. A request is ours — and is not written at all — only
  * when it carries the header `x-csoai-self: <name>` with a name in SELF_TOOLS, or a User-Agent
@@ -86,11 +86,10 @@ export function clientClassOf(headers: Headers): ClientClass {
   return "other";
 }
 
-/** The class written into a stored key's suffix, or "unrecorded" for rows from before 7 Oct 2026. */
-export function clientClassOfKey(key: string): ClientClass | "unrecorded" {
-  const suffix = key.slice(key.lastIndexOf(":") + 1);
-  const m = suffix.match(/^([a-z-]+)\.[0-9a-f]{8}$/);
-  return m && (CLIENT_CLASSES as readonly string[]).includes(m[1]) ? (m[1] as ClientClass) : "unrecorded";
+/** The class a stored row's metadata carries, or "unrecorded" for rows written before 7 Oct 2026. */
+export function clientClassOfRow(metadata: unknown): ClientClass | "unrecorded" {
+  const c = (metadata as { client_class?: unknown } | null | undefined)?.client_class;
+  return typeof c === "string" && (CLIENT_CLASSES as readonly string[]).includes(c) ? (c as ClientClass) : "unrecorded";
 }
 
 const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -134,8 +133,8 @@ export function parseUsageKey(key: string): { day: string; dim: UsageDim; name: 
 }
 
 type KV = {
-  put(key: string, value: string, opts?: { expirationTtl?: number }): Promise<void>;
-  list(opts: { prefix: string; cursor?: string; limit?: number }): Promise<{ keys: { name: string }[]; list_complete: boolean; cursor?: string }>;
+  put(key: string, value: string, opts?: { expirationTtl?: number; metadata?: { client_class: ClientClass } }): Promise<void>;
+  list(opts: { prefix: string; cursor?: string; limit?: number }): Promise<{ keys: { name: string; metadata?: unknown }[]; list_complete: boolean; cursor?: string }>;
 };
 
 export type UsageCtx = {
@@ -144,9 +143,16 @@ export type UsageCtx = {
   waitUntil?: (p: Promise<unknown>) => void;
 };
 
-function kvOf(env: unknown): KV | null {
+function kvOf(env: unknown, headers?: Headers): KV | null {
   const kv = (env as { SOV_ARENA_STATE?: KV } | undefined)?.SOV_ARENA_STATE;
-  return kv && typeof kv.put === "function" ? kv : null;
+  if (!kv || typeof kv.put !== "function") return null;
+  if (!headers) return kv;
+  // The row's client class rides as KV metadata (one word); the key and the value are unchanged.
+  const client_class = clientClassOf(headers);
+  return {
+    put: (key, value, opts) => kv.put(key, value, { ...opts, metadata: { client_class } }),
+    list: (o) => kv.list(o),
+  };
 }
 
 /**
@@ -158,9 +164,9 @@ export function recordUsage(ctx: UsageCtx, dim: UsageDim, rawName: string): stri
   try {
     if (selfToolOf(ctx.request.headers)) return null;
     if (dim === "mcp_client" && SELF_NAMES.has(cleanName(rawName).toLowerCase())) return null;
-    const kv = kvOf(ctx.env);
+    const kv = kvOf(ctx.env, ctx.request.headers);
     if (!kv) return null;
-    const key = usageKey(utcDay(), dim, cleanName(rawName), `${clientClassOf(ctx.request.headers)}.${crypto.randomUUID().slice(0, 8)}`);
+    const key = usageKey(utcDay(), dim, cleanName(rawName), crypto.randomUUID().slice(0, 8));
     const p = kv.put(key, "1", { expirationTtl: USAGE_RETENTION_DAYS * 86_400 }).catch(() => undefined);
     if (ctx.waitUntil) ctx.waitUntil(p);
     return key;
@@ -177,7 +183,7 @@ const emptyDay = (): DayCounts =>
 /**
  * Count the rows under one day's prefix. `pages` caps the list calls; the result says if it was cut.
  * `complete` is LIST completeness (the listing reached its end), not whether the day is over.
- * `client_class` counts the same rows per dimension by the class in each key's suffix.
+ * `client_class` counts the same rows per dimension by the class in each row's metadata.
  */
 export async function countDay(
   kv: KV,
@@ -194,7 +200,7 @@ export async function countDay(
       const p = parseUsageKey(k.name);
       if (!p || p.day !== day) continue;
       counts[p.dim][p.name] = (counts[p.dim][p.name] ?? 0) + 1;
-      const cls = clientClassOfKey(k.name);
+      const cls = clientClassOfRow(k.metadata);
       client_class[p.dim][cls] = (client_class[p.dim][cls] ?? 0) + 1;
       rows++;
     }

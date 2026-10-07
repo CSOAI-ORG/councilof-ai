@@ -68,13 +68,14 @@ describe("recordUsage stores a name and a count, never who", () => {
       "Claude Code: v2 <me@example.com>",
     );
     await settle();
-    expect(key).toMatch(new RegExp(`^usage:v1:${utcDay()}:mcp_client:Claude-Code_-v2-_me_example.com_:other\\.[0-9a-f]{8}$`)); // the class suffix (7 Oct 2026): SomeAgent/1.0 declares "other"
+    expect(key).toMatch(new RegExp(`^usage:v1:${utcDay()}:mcp_client:Claude-Code_-v2-_me_example.com_:[0-9a-f]{8}$`));
     expect([...kv.store.keys()]).toEqual([key]);
     const everything = JSON.stringify([...kv.store.entries()]);
     expect(everything).not.toContain("203.0.113.9");
     expect(everything).not.toContain("SomeAgent");
     expect(everything).not.toContain("@");
-    expect(kv.put.mock.calls[0][2]).toEqual({ expirationTtl: expect.any(Number) });
+    // the row's client class rides as KV metadata (7 Oct 2026): one word, SomeAgent/1.0 declares "other"
+    expect(kv.put.mock.calls[0][2]).toEqual({ expirationTtl: expect.any(Number), metadata: { client_class: "other" } });
   });
 
   it("writes nothing for our own traffic or without a binding", async () => {
