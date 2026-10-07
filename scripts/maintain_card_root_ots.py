@@ -196,6 +196,19 @@ def maintain(root_paths, output_dir: Path, *, max_requests=8, timeout=10,
     return report
 
 
+def default_roots(public_dir: Path = PUBLIC) -> list[Path]:
+    """Every exact card-root file in public_dir, selected by the ROOT_NAME rule _safe_root enforces.
+
+    The glob card-root-*.json also matches siblings that are not roots: card-root-latest.json (the
+    unsigned discovery pointer) and card-root-<date>-<hash>.header-audit.json (an audit record).
+    Passed straight to maintain(), the first of those made _safe_root raise "unexpected card-root
+    path", so every scheduled card-root-ots-upgrade run failed closed from 5 Oct 2026 and no
+    card-root proof was upgraded. A sibling is skipped here; an explicitly named path still goes
+    through _safe_root and is refused.
+    """
+    return sorted(p for p in public_dir.glob("card-root-*.json") if ROOT_NAME.fullmatch(p.name))
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("roots", nargs="*", type=Path)
@@ -203,7 +216,7 @@ def main(argv=None) -> int:
     parser.add_argument("--max-requests", type=int, default=8)
     parser.add_argument("--timeout", type=int, default=10)
     args = parser.parse_args(argv)
-    roots = args.roots or sorted(PUBLIC.glob("card-root-*.json"))
+    roots = args.roots or default_roots()
     try:
         report = maintain(roots, args.output_dir, max_requests=args.max_requests, timeout=args.timeout)
     except Exception as exc:

@@ -100,8 +100,41 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Reconcile the rolling candidate with current master
+      # scripts/llms-txt.mjs (run below) needs node; pinned to the version deploy.yml builds with.
+      - uses: actions/setup-node@v4
         if: steps.candidate.outputs.exists == 'true'
+        with:
+          node-version: "20"
+
+      # Hold a head that already passed its gates. Every confirmed tick re-witnesses and commits, and
+      # every master move adds a reconcile merge, so the head used to move on each tick that ran. Now
+      # that master requires the pull_request checks (gates, build), and those wait for the owner's
+      # approval on a bot-pushed head, a moving head can never collect them. A head with a passing
+      # dispatched pr-gates run and no conflict with master is kept as it is; the merge step below
+      # retries it. Master branch protection is not strict, so a behind-but-clean head may merge.
+      - name: Hold a head whose gates already passed
+        if: steps.candidate.outputs.exists == 'true'
+        id: hold
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          URL: ${{ steps.candidate.outputs.url }}
+        run: |
+          set -euo pipefail
+          head=$(git rev-parse HEAD)
+          passed=$(gh run list --repo "$REPO" --workflow pr-gates.yml --branch public-root/pending --event workflow_dispatch --limit 50 \
+            --json headSha,event,conclusion \
+            --jq "[.[] | select(.event == \"workflow_dispatch\" and .headSha == \"$head\" and .conclusion == \"success\")] | length")
+          mergeable=$(gh pr view "$URL" --repo "$REPO" --json mergeable --jq .mergeable)
+          if [ "$passed" != "0" ] && [ "$mergeable" != "CONFLICTING" ]; then
+            echo "held=true" >> "$GITHUB_OUTPUT"
+            echo "HOLD: pr-gates already passed on $head (mergeable=$mergeable); not reconciling or re-witnessing."
+          else
+            echo "held=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Reconcile the rolling candidate with current master
+        if: steps.candidate.outputs.exists == 'true' && steps.hold.outputs.held != 'true'
         run: |
           set -euo pipefail
           git config user.name "csoai-public-root"
@@ -121,7 +154,7 @@ jobs:
         run: pip install -q cryptography opentimestamps-client
 
       - name: Upgrade the exact candidate proof
-        if: steps.candidate.outputs.exists == 'true'
+        if: steps.candidate.outputs.exists == 'true' && steps.hold.outputs.held != 'true'
         id: ots
         run: |
           set -euo pipefail
@@ -151,12 +184,43 @@ jobs:
           python3 scripts/build_archive_index.py
           python3 scripts/witness_public_root.py --recheck || true
 
+      # The OTS manifest is DERIVED from every .ots under public/interop, and llms.txt quotes its
+      # counts. The upgrade above rewrote the candidate's proof bytes, so the manifest row for that
+      # proof no longer matched them, and pr-gates' ots-manifest-fresh test failed closed on every
+      # candidate head from 6 Oct 20:56Z (runs 37561421223, 37570519909, 37572741428: "OTS manifest
+      # differs from current proof bytes"). The candidate could never merge and root.json stayed at
+      # 2026-09-30. Rebuild both from their producers, as public-root.yml does for its own re-stamp.
+      # The gate ignores as_of, so an unchanged manifest is left alone instead of rewritten each tick.
+      - name: Rebuild the OTS manifest and llms files from the proof bytes
+        if: steps.ots.outputs.confirmed == 'true'
+        run: |
+          set -euo pipefail
+          if python3 scripts/pod-loops/root_ots_manifest_gate.py --public-dir public; then
+            echo "OTS manifest already matches the proof bytes; not rewritten."
+          else
+            python3 scripts/ots_manifest_rebuild.py --apply
+          fi
+          # The rebuild renames a served .ots that does not parse to .ots.invalid. That is evidence
+          # being withdrawn, which is a human decision, so the candidate stops here instead.
+          quarantined=$(git status --porcelain -- 'public/interop/*.ots.invalid' 'public/interop/ots/*.ots.invalid')
+          if [ -n "$quarantined" ]; then
+            echo "HALT: the manifest rebuild quarantined a served .ots file; review by hand: $quarantined" >&2
+            exit 1
+          fi
+          # llms.txt and llms-full.txt derive from the manifest and the live board; pr-gates runs
+          # `llms-txt.mjs --check`, so regenerate them in the same commit. An unreachable board
+          # throws here, which stops the candidate rather than committing a guess.
+          node scripts/llms-txt.mjs
+
       - name: Prove the candidate is publishable
         if: steps.ots.outputs.confirmed == 'true'
         run: |
           set -euo pipefail
           python3 scripts/root-witness-release-gate.py --selftest
           python3 scripts/root-witness-release-gate.py --phase candidate
+          # the same offline check pr-gates runs in scripts/ots-manifest-fresh.test.ts
+          python3 scripts/pod-loops/root_ots_manifest_gate.py --public-dir public
+          node scripts/llms-txt.mjs --check
           python3 - <<'PY'
           import json
           from pathlib import Path
@@ -178,6 +242,8 @@ jobs:
           git add public/interop/root-*.json.ots
           git add public/interop/root-witness-*.json public/interop/root-witness-pointer.json
           git add public/interop/stablecoin-universe-2026-09/readiness.json public/archive/index.json
+          # derived from the proof bytes above; a proof and its manifest row land in one commit
+          git add public/interop/ots/manifest.json public/llms.txt public/llms-full.txt
           if ! git diff --cached --quiet; then
             git commit -m "public-root: upgrade exact candidate to Bitcoin-confirmed"
             git push origin "HEAD:$BRANCH"
@@ -193,7 +259,7 @@ jobs:
       # Waiting in-job matters: the refresh step above re-witnesses on every confirmed tick, so the
       # head moves between ticks and a pass recorded on an older commit must never merge a newer one.
       - name: Merge only after pr-gates passed on these exact bytes
-        if: steps.ots.outputs.confirmed == 'true'
+        if: steps.ots.outputs.confirmed == 'true' || steps.hold.outputs.held == 'true'
         timeout-minutes: 50
         env:
           GH_TOKEN: ${{ github.token }}
@@ -201,10 +267,22 @@ jobs:
           URL: ${{ steps.candidate.outputs.url }}
         run: |
           set -euo pipefail
-          head=$(gh pr view "$URL" --repo "$REPO" --json headRefOid --jq .headRefOid)
+          # The head is the commit THIS job holds, read locally. `gh pr view` right after the push
+          # above still returned the previous head: run 37570458604 pushed a57199d1b at 04:14:33Z,
+          # read 88b72c67d, and waited on a run for the wrong commit (7 Oct 2026).
+          head=$(git rev-parse HEAD)
+          remote=$(git ls-remote origin refs/heads/public-root/pending | cut -f1)
+          if [ "$remote" != "$head" ]; then
+            echo "HALT: public-root/pending moved to $remote while this job holds $head; the next tick re-gates it." >&2
+            exit 1
+          fi
+          # Only a workflow_dispatch run executes the gates. A pull_request run on a bot-pushed head
+          # ends action_required without running anything (37570504906 on 7 Oct), so it is never
+          # waited on or counted.
           runs() {
-            gh run list --repo "$REPO" --workflow pr-gates.yml --branch public-root/pending --limit 50 \
-              --json databaseId,headSha,status,conclusion,createdAt
+            gh run list --repo "$REPO" --workflow pr-gates.yml --branch public-root/pending --event workflow_dispatch --limit 50 \
+              --json databaseId,headSha,status,conclusion,createdAt,event \
+              | jq '[.[] | select(.event == "workflow_dispatch")]'
           }
           # Reuse a run on this exact commit that passed or is still going; a failed one is retried.
           run_id=$(runs | jq -r --arg sha "$head" \
@@ -229,4 +307,7 @@ jobs:
             exit 1
           fi
           echo "pr-gates run $run_id passed on $head; merging exactly that commit"
-          gh pr merge "$URL" --repo "$REPO" --squash --match-head-commit "$head"
+          if ! gh pr merge "$URL" --repo "$REPO" --squash --match-head-commit "$head"; then
+            echo "HALT: pr-gates passed on $head but GitHub refused the merge. Master requires the pull_request checks (gates, build), and on a head pushed by this workflow they wait for approval. Owner: open $URL, Checks, 'Approve and run' once; this head is held, and the next tick merges it when those checks pass." >&2
+            exit 1
+          fi

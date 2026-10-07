@@ -55,52 +55,68 @@ jobs:
           set -euo pipefail
           python3 scripts/card_root.py --stamp | tee /tmp/card-root-build.txt
           python3 - <<'PY'
-          import os, re, subprocess
+          import os, subprocess, sys
           from pathlib import Path
           rows = subprocess.check_output(
               ["git", "status", "--porcelain", "--", "public/interop/card-root-*"],
               text=True,
           ).splitlines()
-          if not rows:
+          sys.path.insert(0, "scripts")
+          # Create-only evidence, except the tracked discovery pointer card-root-latest.json, which
+          # moves with each new root (` M`). The rule and its tests live in card_root.publish_rows.
+          from card_root import publish_rows
+          try:
+              found = publish_rows(rows)
+          except ValueError as exc:
+              raise SystemExit(str(exc))
+          if not found["changed"]:
               print("Current exact commitment and proof already exist; nothing to publish.")
               with open(os.environ["GITHUB_OUTPUT"], "a") as out:
                   out.write("changed=false\n")
               raise SystemExit(0)
-          if any(not row.startswith("?? ") for row in rows):
-              raise SystemExit("refusing to modify an existing card root or OTS proof")
-          names = sorted(row[3:] for row in rows)
-          roots = [name for name in names if name.endswith(".json")]
-          proofs = [name for name in names if name.endswith(".json.ots")]
-          if len(roots) != 1 or proofs != [roots[0] + ".ots"]:
-              raise SystemExit(f"expected one new exact root/proof pair, got {names}")
-          if not re.fullmatch(
-              r"public/interop/card-root-[0-9]{4}-[0-9]{2}-[0-9]{2}(?:-[a-f0-9]{12})?\.json",
-              roots[0],
-          ):
-              raise SystemExit(f"unexpected root path: {roots[0]}")
-          import hashlib, json, sys
-          sys.path.insert(0, "scripts")
+          import hashlib
           from maintain_card_ots import parse, proof_state
-          root_raw = Path(roots[0]).read_bytes()
+          root_raw = Path(found["root"]).read_bytes()
           subject = hashlib.sha256(root_raw).hexdigest()
-          status = proof_state(parse(Path(proofs[0]).read_bytes(), subject))["state"]
+          status = proof_state(parse(Path(found["proof"]).read_bytes(), subject))["state"]
           with open(os.environ["GITHUB_OUTPUT"], "a") as out:
               out.write("changed=true\n")
-              out.write(f"root={roots[0]}\n")
-              out.write(f"proof={proofs[0]}\n")
-              out.write(f"slug={Path(roots[0]).stem}\n")
+              out.write(f"root={found['root']}\n")
+              out.write(f"proof={found['proof']}\n")
+              out.write(f"pointer={'true' if found['pointer'] else 'false'}\n")
+              out.write(f"slug={Path(found['root']).stem}\n")
               out.write(f"subject={subject}\n")
               out.write(f"status={status}\n")
           PY
       - name: Recompute the exact candidate offline
         if: steps.root.outputs.changed == 'true'
         run: python3 scripts/card_root.py --verify --root "${{ steps.root.outputs.root }}"
+      - uses: actions/setup-node@v4
+        if: steps.root.outputs.changed == 'true'
+        with:
+          node-version: "20"
+      # A new proof needs its OTS manifest row, and llms.txt quotes both the manifest and the
+      # pointer's root. pr-gates fails a PR whose derived files lag its proof bytes
+      # (scripts/ots-manifest-fresh.test.ts, llms-txt.mjs --check), so they land in the same commit.
+      - name: Rebuild the OTS manifest and llms files for the new proof
+        if: steps.root.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
+          python3 scripts/ots_manifest_rebuild.py --apply
+          quarantined=$(git status --porcelain -- 'public/interop/*.ots.invalid' 'public/interop/ots/*.ots.invalid')
+          if [ -n "$quarantined" ]; then
+            echo "refusing: the manifest rebuild quarantined a served .ots file; review by hand: $quarantined" >&2
+            exit 1
+          fi
+          node scripts/llms-txt.mjs
+          python3 scripts/pod-loops/root_ots_manifest_gate.py --public-dir public
       - name: Open a review-only pending-proof PR
         if: steps.root.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           ROOT: ${{ steps.root.outputs.root }}
           PROOF: ${{ steps.root.outputs.proof }}
+          POINTER: ${{ steps.root.outputs.pointer }}
           SLUG: ${{ steps.root.outputs.slug }}
           SUBJECT: ${{ steps.root.outputs.subject }}
           STATUS: ${{ steps.root.outputs.status }}
@@ -111,9 +127,11 @@ jobs:
           git config user.email "board@csoai.org"
           git checkout -b "$branch"
           git add -- "$ROOT" "$PROOF"
+          if [ "$POINTER" = "true" ]; then git add -- public/interop/card-root-latest.json; fi
+          git add -- public/interop/ots/manifest.json public/llms.txt public/llms-full.txt
           git commit -m "card-root: current signed-card commitment ($STATUS)"
           git push origin "HEAD:$branch"
           gh pr create --base master --head "$branch" \
             --title "card-root: current signed-card commitment ($STATUS)" \
-            --body "Automated create-only card-root candidate triggered by signed mill-card bytes landing. Exact root subject SHA-256: $SUBJECT. Recorded OTS status: $STATUS; chain_verified=false. The root commits the deduplicated current signed-card set and the sidecar binds these exact root-file bytes. No existing card, root, or proof bytes were replaced. Review and merge remain human decisions; the scheduled maintainer may later add a Bitcoin attestation tag to this same PR, still without claiming chain verification."
+            --body "Automated create-only card-root candidate triggered by signed mill-card bytes landing. Exact root subject SHA-256: $SUBJECT. Recorded OTS status: $STATUS; chain_verified=false. The root commits the deduplicated current signed-card set and the sidecar binds these exact root-file bytes. No existing card, root, or proof bytes were replaced; the unsigned discovery pointer, the OTS manifest and the llms files were regenerated from these bytes. Review and merge remain human decisions; the scheduled maintainer may later add a Bitcoin attestation tag to this same PR, still without claiming chain verification."
           gh workflow run pr-gates.yml --ref "$branch"

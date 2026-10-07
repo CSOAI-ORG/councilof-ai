@@ -12,6 +12,14 @@ name: bot-checks-sweeper
 # the dispatchable workflow, the PR is banked with ONE explicit operator action comment.
 #
 # Never comments twice on the same PR (marker search). Never merges. Never skips tests.
+#
+# ONCE PER SHA (O-P1-7, 7 Oct 2026). The sweep used to re-dispatch pr-gates on every pass for any
+# head without a GREEN gates run, so a head whose gates had failed was re-run every 20 minutes and
+# on every listed workflow completion: 8.5 h of Actions history held 87 failures and 60
+# action_required runs; mill/land-hfjobs-37377166526 was dispatched 14 times and public-root/pending
+# carried 13 failed gate runs. A failed gate on unchanged bytes fails again. Now a head is dispatched at
+# most once: any gates check-run on it (passed, failed or running) or any dispatched pr-gates run
+# for it (queued included) means it has had its run. A new push is a new head and gets one.
 
 on:
   schedule:
@@ -66,18 +74,30 @@ jobs:
           prs = json.loads(gh(["pr", "list", "--repo", REPO,
                                "--state", "open", "--limit", "100",
                                "--json", "number,headRefName,headRefOid,title,isCrossRepository"]).stdout)
-          swept, dispatched, banked = [], [], []
+          swept, dispatched, banked, already = [], [], [], []
           for pr in prs:
               n, branch, sha = pr["number"], pr["headRefName"], pr["headRefOid"]
               if pr.get("isCrossRepository"):
                   continue  # forks are out of scope for token dispatch
-              cr = json.loads(gh(["api", f"repos/{REPO}/commits/{sha}/check-runs?per_page=100"]).stdout)
+              cr = json.loads(gh(["api", f"repos/{REPO}/commits/{sha}/check-runs?per_page=100"]).stdout or "{}")
               all_gates = [r for r in (cr.get("check_runs") or []) if r.get("name") == "gates"]
-              green_gates = [r for r in all_gates if r.get("conclusion") == "success"]
-              if green_gates:
-                  continue  # already has a passing protected context on the current head
-              # Failed or in-progress gates exist but none passed — re-dispatch
-              # (the earlier dispatch may have failed, or a newer head invalidated it)
+              # Passed, failed, timed out or still running: this head has had its gates run (once per
+              # SHA). action_required, cancelled, skipped and neutral ran nothing and do not count.
+              ran = [r for r in all_gates
+                     if r.get("status") != "completed" or r.get("conclusion") in ("success", "failure", "timed_out")]
+              if ran:
+                  states = sorted({r.get("conclusion") or r.get("status") or "?" for r in ran})
+                  already.append({"pr": n, "sha": sha[:8], "gates": states})
+                  continue
+              # A dispatched run that has not started yet has no check-run, so ask Actions too.
+              runs = gh(["api", f"repos/{REPO}/actions/workflows/pr-gates.yml/runs?head_sha={sha}&event=workflow_dispatch&per_page=5",
+                         "-q", ".total_count"])
+              if runs.returncode != 0:
+                  print(f"skip #{n}: could not read pr-gates runs for {sha[:8]} (no dispatch on an unknown state)")
+                  continue
+              if (runs.stdout.strip() or "0") != "0":
+                  already.append({"pr": n, "sha": sha[:8], "gates": ["dispatched"]})
+                  continue
               swept.append(n)
               r = gh(["workflow", "run", "pr-gates.yml", "--repo", REPO,
                       "--ref", branch, "-f", f"pr={n}"])
@@ -126,5 +146,6 @@ jobs:
                       print(f"banked #{n} with operator action")
                   else:
                       banked.append(n)
-          print(json.dumps({"swept_missing_gates": swept, "dispatched": dispatched, "banked": banked}))
+          print(json.dumps({"swept_missing_gates": swept, "dispatched": dispatched, "banked": banked,
+                            "skipped_already_gated_once": already}))
           PY

@@ -13,9 +13,9 @@ from opentimestamps.core.op import OpSHA256
 from opentimestamps.core.serialize import StreamSerializationContext
 from opentimestamps.core.timestamp import DetachedTimestampFile, Timestamp
 
-from card_root import build
+from card_root import build, publish_rows
 from maintain_card_ots import serialize
-from maintain_card_root_ots import maintain
+from maintain_card_root_ots import default_roots, maintain
 
 CALENDAR = "https://a.pool.opentimestamps.org"
 
@@ -171,6 +171,60 @@ class CardRootAutomationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "source changed"):
             maintain([made["root_path"]], output, fetcher=changed, public_dir=self.public)
         self.assertFalse(output.exists())
+
+
+    # A-G3 (7 Oct 2026): card-root-ots-upgrade failed closed on every run from 5 Oct because the
+    # default glob handed maintain() the header-audit sibling and the discovery pointer.
+    def test_default_roots_skip_pointer_and_header_audit_siblings(self):
+        self.card("000000000001")
+        made = build(stamp=True, now=self.now, signed_dir=self.signed, out_dir=self.public, submitter=pending_proof)
+        audit = self.public / "card-root-2026-09-14-2eb8f4992a13.header-audit.json"
+        audit.write_text(json.dumps({"kind": "header-audit", "note": "not a root"}))
+        self.assertTrue((self.public / "card-root-latest.json").is_file())
+        self.assertEqual(default_roots(self.public), [made["root_path"]])
+
+        def bitcoin_response(url, commitment, timeout):
+            timestamp = Timestamp(commitment)
+            timestamp.attestations.add(BitcoinBlockHeaderAttestation(12345))
+            out = io.BytesIO()
+            timestamp.serialize(StreamSerializationContext(out))
+            return out.getvalue()
+
+        report = maintain(default_roots(self.public), self.root / "glob-upgrade",
+                          fetcher=bitcoin_response, public_dir=self.public)
+        self.assertEqual(report["roots"], 1)
+        self.assertEqual(report["proofs_changed"], 1)
+        # Failing control: the siblings are still refused when named explicitly.
+        for sibling in (audit, self.public / "card-root-latest.json"):
+            with self.assertRaisesRegex(ValueError, "unexpected card-root path"):
+                maintain([sibling], self.root / f"explicit-{sibling.stem}",
+                         fetcher=bitcoin_response, public_dir=self.public)
+
+    # A-G3 (7 Oct 2026): card-root.yml refused every build from 6 Oct because build() moves the
+    # tracked discovery pointer, which git reports as " M public/interop/card-root-latest.json".
+    def test_publish_rows_allow_the_tracked_pointer_with_one_new_pair(self):
+        root = "public/interop/card-root-2026-10-07-0123456789ab.json"
+        rows = [f"?? {root}", f"?? {root}.ots", " M public/interop/card-root-latest.json"]
+        self.assertEqual(publish_rows(rows), {"changed": True, "root": root, "proof": root + ".ots", "pointer": True})
+        self.assertEqual(publish_rows(rows[:2])["pointer"], False)
+        self.assertEqual(publish_rows([]), {"changed": False})
+
+    def test_publish_rows_still_refuse_edits_to_evidence(self):
+        root = "public/interop/card-root-2026-10-07.json"
+        pointer = " M public/interop/card-root-latest.json"
+        refused = [
+            [" M public/interop/card-root-2026-10-01.json", pointer],          # an existing root edited
+            [f"?? {root}", " M public/interop/card-root-2026-10-01.json.ots"],  # an existing proof edited
+            [pointer],                                                          # pointer moved alone
+            [f"?? {root}", pointer],                                            # root without its proof
+            [f"?? {root}", f"?? {root}.ots", "?? public/interop/card-root-2026-10-07-aaaaaaaaaaaa.json", pointer],
+            [" D public/interop/card-root-latest.json"],                        # pointer deleted
+            ["?? public/interop/card-root-latest.json", f"?? {root}", f"?? {root}.ots"],
+            ["?? public/interop/card-root-evil.json", "?? public/interop/card-root-evil.json.ots"],
+        ]
+        for rows in refused:
+            with self.subTest(rows=rows), self.assertRaises(ValueError):
+                publish_rows(rows)
 
 
 if __name__ == "__main__":

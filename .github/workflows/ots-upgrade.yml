@@ -1,0 +1,122 @@
+name: ots-upgrade
+
+# A-G4 (7 Oct 2026): upgrade the public OTS proofs that are still calendar-pending, then open a PR.
+# On master 18 of 707 proofs were pending-only, the oldest committed on 17 Sep; the only upgrader
+# was an Oracle job aimed at a dead pod and the frozen canon. Card-root and public-root proofs have
+# their own maintainers and are excluded; a proof whose exact bytes another file names is skipped
+# and reported (scripts/ots_upgrade_pending.py says why). Every new Bitcoin attestation is checked
+# against two public block explorers before the PR opens; no Bitcoin node runs here, and nothing
+# here says "anchored" or "confirmed" about a proof that has not been checked.
+on:
+  schedule:
+    - cron: "41 6 * * *"
+  workflow_dispatch: {}
+
+concurrency:
+  group: ots-upgrade
+  cancel-in-progress: false
+
+permissions:
+  actions: write
+  contents: write
+  pull-requests: write
+
+jobs:
+  upgrade:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      # One open upgrade PR at a time: a proof still pending on master would otherwise be upgraded
+      # again, and a new PR opened, every day until the first one merged.
+      - name: Skip while an upgrade PR is open
+        id: open
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          open=$(gh pr list --repo "$REPO" --state open --limit 100 --json number,headRefName \
+            --jq '[.[] | select(.headRefName | startswith("ots/upgrade-")) | .number] | join(",")')
+          echo "open=$open" >> "$GITHUB_OUTPUT"
+          if [ -n "$open" ]; then echo "An ots-upgrade PR is open (#$open); review and merge it first. Nothing to do."; fi
+
+      - uses: actions/checkout@v4
+        if: steps.open.outputs.open == ''
+      - uses: actions/setup-python@v5
+        if: steps.open.outputs.open == ''
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-node@v4
+        if: steps.open.outputs.open == ''
+        with:
+          node-version: "20"
+      - name: Install the official OTS client
+        if: steps.open.outputs.open == ''
+        run: pip install -q cryptography opentimestamps-client==0.7.2
+
+      - name: Upgrade pending-only proofs in place
+        if: steps.open.outputs.open == ''
+        id: up
+        run: |
+          set -euo pipefail
+          python3 scripts/ots_upgrade_pending.py --report "$RUNNER_TEMP/ots-upgrade.json"
+          n=$(python3 -c 'import json,sys; print(len(json.load(open(sys.argv[1]))["upgraded"]))' "$RUNNER_TEMP/ots-upgrade.json")
+          echo "upgraded=$n" >> "$GITHUB_OUTPUT"
+          { echo '## ots-upgrade'; echo '```json'; cat "$RUNNER_TEMP/ots-upgrade.json"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          # only the upgraded proofs may have changed
+          python3 - "$RUNNER_TEMP/ots-upgrade.json" <<'PY'
+          import json, subprocess, sys
+          want = set(json.load(open(sys.argv[1]))["upgraded"])
+          rows = subprocess.check_output(["git", "status", "--porcelain"], text=True).splitlines()
+          got = {r[3:] for r in rows}
+          if got != want or any(not r.startswith(" M ") for r in rows):
+              raise SystemExit(f"refusing unexpected diff: {rows} (expected upgrades of {sorted(want)})")
+          PY
+
+      - name: Check each new Bitcoin attestation against two block explorers
+        if: steps.up.outputs.upgraded != '' && steps.up.outputs.upgraded != '0'
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/upgraded"
+          python3 - "$RUNNER_TEMP/ots-upgrade.json" "$RUNNER_TEMP/upgraded" <<'PY'
+          import json, pathlib, shutil, sys
+          for i, p in enumerate(json.load(open(sys.argv[1]))["upgraded"]):
+              shutil.copy(p, pathlib.Path(sys.argv[2]) / f"{i:03d}-{pathlib.Path(p).name}")
+          PY
+          # exit 1 = an attestation DISAGREES with the block header: no PR
+          python3 scripts/ots_block_check.py --dir "$RUNNER_TEMP/upgraded" --out "$RUNNER_TEMP/block-check.json"
+
+      - name: Rebuild the OTS manifest and llms files from the proof bytes
+        if: steps.up.outputs.upgraded != '' && steps.up.outputs.upgraded != '0'
+        run: |
+          set -euo pipefail
+          python3 scripts/ots_manifest_rebuild.py --apply
+          quarantined=$(git status --porcelain -- 'public/interop/*.ots.invalid' 'public/interop/ots/*.ots.invalid')
+          if [ -n "$quarantined" ]; then
+            echo "refusing: the manifest rebuild quarantined a served .ots file; review by hand: $quarantined" >&2
+            exit 1
+          fi
+          node scripts/llms-txt.mjs
+          python3 scripts/pod-loops/root_ots_manifest_gate.py --public-dir public
+          python3 scripts/root-witness-release-gate.py --phase candidate
+
+      - name: Open the review PR and dispatch its gates
+        if: steps.up.outputs.upgraded != '' && steps.up.outputs.upgraded != '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          branch="ots/upgrade-${GITHUB_RUN_ID}"
+          git config user.name "csoai-ots-upgrade"
+          git config user.email "board@csoai.org"
+          git checkout -b "$branch"
+          python3 -c 'import json,sys; print("\n".join(json.load(open(sys.argv[1]))["upgraded"]))' "$RUNNER_TEMP/ots-upgrade.json" \
+            | xargs git add --
+          git add -- public/interop/ots/manifest.json public/llms.txt public/llms-full.txt
+          git commit -m "ots: upgrade pending proofs to Bitcoin attestations (explorer-checked, chain unverified)"
+          git push origin "HEAD:$branch"
+          gh pr create --repo "$REPO" --base master --head "$branch" \
+            --title "ots: upgrade pending proofs to Bitcoin attestations" \
+            --body "The daily ots-upgrade job fetched Bitcoin attestations for proofs that were calendar-pending. Each new attestation's digest was compared with the block's merkle root as two public explorers report it (ots_block_check.py); no Bitcoin node ran here, so chain_verified stays false. Subject files are byte-identical; only the proofs and the derived OTS manifest and llms files change. Proofs another file binds by exact bytes, and card-root and public-root proofs, were left to their own maintainers. Review and merge are human decisions."
+          gh workflow run pr-gates.yml --repo "$REPO" --ref "$branch"

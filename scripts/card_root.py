@@ -45,6 +45,7 @@ import argparse
 import importlib.util
 import hashlib
 import json
+import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -217,6 +218,39 @@ def write_discovery_pointer(root_path: Path, ots_path: Path, out_dir: Path) -> P
         handle.write(encoded)
     temp.replace(path)
     return path
+
+
+POINTER_ROW = " M public/interop/card-root-latest.json"
+_PUBLISHED_ROOT = re.compile(r"public/interop/card-root-[0-9]{4}-[0-9]{2}-[0-9]{2}(?:-[a-f0-9]{12})?\.json\Z")
+
+
+def publish_rows(rows: list[str]) -> dict:
+    """Decide what a ``--stamp`` build may publish, from ``git status --porcelain -- public/interop/card-root-*``.
+
+    Evidence is create-only: the new root and its proof must be untracked files ("?? "), and no
+    existing root or proof may change. The one exception is the discovery pointer
+    card-root-latest.json. It is tracked, and build() moves it to every new root, so it shows as
+    " M". card-root.yml treated that row as an edit to evidence and refused every build from
+    6 Oct 2026, which froze the mill-card root at 2026-10-01. The pointer is unsigned and names a
+    root; it is allowed to move only together with exactly one new root/proof pair.
+
+    Returns {"changed": False} when nothing moved, otherwise the new root, its proof and whether
+    the pointer moved. Anything else raises ValueError.
+    """
+    if not rows:
+        return {"changed": False}
+    pointer = POINTER_ROW in rows
+    others = [row for row in rows if row != POINTER_ROW]
+    if any(not row.startswith("?? ") for row in others):
+        raise ValueError(f"refusing to modify an existing card root or OTS proof: {rows}")
+    names = sorted(row[3:] for row in others)
+    roots = [name for name in names if name.endswith(".json")]
+    proofs = [name for name in names if name.endswith(".json.ots")]
+    if len(roots) != 1 or proofs != [roots[0] + ".ots"] or len(names) != 2:
+        raise ValueError(f"expected one new exact root/proof pair, got {names} (pointer moved: {pointer})")
+    if not _PUBLISHED_ROOT.fullmatch(roots[0]):
+        raise ValueError(f"unexpected root path: {roots[0]}")
+    return {"changed": True, "root": roots[0], "proof": proofs[0], "pointer": pointer}
 
 
 def build(*, stamp: bool = False, now: datetime | None = None,

@@ -1,10 +1,19 @@
 # Post-deploy verification — G1.6 POST-MERGE PROVER.
 #
 # After every deploy, hit both hosts (councilof.ai + csoai.org), assert 200s
-# on critical endpoints, and comment on the PR that triggered the deploy.
+# on critical endpoints, check that /.well-known/deploy.json names the commit
+# that was deployed, and write the result to the run summary.
 #
 # This workflow runs AFTER the build-deploy job completes successfully.
 # It verifies the LIVE deployment, not the build artifacts.
+#
+# O-pdv (7 Oct 2026): it had no run on record since 15 Sep. The workflow_run
+# trigger below never fired (no follower of deploy.yml's name ever has; see the
+# post-deploy-verify job in deploy.yml), so deploy.yml now dispatches this file
+# with the deployed commit. The workflow_run trigger is kept: if it ever fires,
+# the concurrency group collapses the duplicate. The step that commented on "the
+# most recently updated open PR" is gone: a push deploy has no PR, so it would
+# have posted to an unrelated one on every deploy.
 
 name: Post-deploy verification
 
@@ -12,6 +21,16 @@ on:
   workflow_run:
     workflows: ["Build + deploy site (gated production branch)"]
     types: [completed]
+  workflow_dispatch:
+    inputs:
+      deploy_sha:
+        description: "Commit the deploy built (deploy.yml passes it); empty = current master"
+        type: string
+        default: ""
+      deploy_run_id:
+        description: "deploy.yml run id, for the summary"
+        type: string
+        default: ""
 
 concurrency:
   group: post-deploy-verify
@@ -20,8 +39,10 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     timeout-minutes: 10
+    permissions:
+      contents: read
     steps:
       - name: Probe live endpoints on both hosts
         id: probe
@@ -121,46 +142,59 @@ jobs:
           echo -e "$REPORT" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
 
-      - name: Comment on PR
-        if: always()
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const pass = '${{ steps.probe.outputs.pass }}';
-            const fail = '${{ steps.probe.outputs.fail }}';
-            const contentFail = '${{ steps.content.outputs.fail }}';
-            const probeReport = `${{ steps.probe.outputs.report }}`;
-            const contentReport = `${{ steps.content.outputs.report }}`;
-            const totalFail = parseInt(fail) + parseInt(contentFail);
-            const icon = totalFail === 0 ? '✅' : '⚠️';
-            const body = [
-              `## ${icon} Post-deploy verification`,
-              '',
-              `**Endpoints**: ${pass} pass, ${fail} fail`,
-              `**Content probes**: ${contentFail} fail`,
-              '',
-              '### Endpoint probes',
-              probeReport,
-              '',
-              '### Content probes',
-              contentReport,
-              '',
-              `_Verified by post-deploy-verify.yml at ${new Date().toISOString()}_`,
-            ].join('\n');
+      # O-P1-14: the marker deploy.yml writes just before upload must name the commit deployed.
+      # ?cb= asks the edge for origin bytes, so a cached copy cannot pass for the new deploy.
+      - name: Deploy marker names the deployed commit
+        id: marker
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          WANT_DISPATCH: ${{ inputs.deploy_sha }}
+          WANT_RUN: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          set -uo pipefail
+          want="${WANT_DISPATCH:-${WANT_RUN:-}}"
+          if [ -z "$want" ]; then want=$(gh api "repos/$REPO/commits/master" -q .sha); fi
+          got=""
+          for i in 1 2 3 4 5 6; do
+            got=$(curl -fsS --max-time 20 "https://councilof.ai/.well-known/deploy.json?cb=$(date +%s)$i" | python3 -c "import json,sys; print(json.load(sys.stdin).get('sha',''))" 2>/dev/null || true)
+            [ "$got" = "$want" ] && break
+            sleep 20
+          done
+          echo "want=$want" >> "$GITHUB_OUTPUT"
+          echo "got=${got:-unreadable}" >> "$GITHUB_OUTPUT"
+          if [ "$got" = "$want" ]; then
+            echo "deploy marker: MATCH $got"
+          elif [ -n "$got" ] && [ "$(gh api "repos/$REPO/compare/$want...$got" -q .status 2>/dev/null)" = "ahead" ]; then
+            # deploys queue (deploy.yml cancel-in-progress: false); a later run already shipped a newer master
+            echo "deploy marker: SUPERSEDED — production serves $got, a later commit than $want"
+          else
+            echo "::error::deploy marker names ${got:-nothing readable}, expected $want: production is not serving the build this deploy made"
+            exit 1
+          fi
 
-            // Find the PR associated with the triggering workflow run
-            const { data: prs } = await github.rest.pulls.list({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              state: 'open',
-              per_page: 5,
-            });
-            // Comment on the most recently updated open PR
-            if (prs.length > 0) {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: prs[0].number,
-                body,
-              });
-            }
+      - name: Summary
+        if: always()
+        env:
+          PASS: ${{ steps.probe.outputs.pass }}
+          FAIL: ${{ steps.probe.outputs.fail }}
+          CONTENT_FAIL: ${{ steps.content.outputs.fail }}
+          PROBE_REPORT: ${{ steps.probe.outputs.report }}
+          CONTENT_REPORT: ${{ steps.content.outputs.report }}
+          MARKER_WANT: ${{ steps.marker.outputs.want }}
+          MARKER_GOT: ${{ steps.marker.outputs.got }}
+          DEPLOY_RUN: ${{ inputs.deploy_run_id || github.event.workflow_run.id }}
+        run: |
+          {
+            echo "## Post-deploy verification"
+            echo ""
+            echo "Deploy run: ${DEPLOY_RUN:-unknown}"
+            echo "Deploy marker: want \`${MARKER_WANT:-?}\`, served \`${MARKER_GOT:-?}\`"
+            echo "Endpoints: ${PASS:-?} pass, ${FAIL:-?} fail. Content probes: ${CONTENT_FAIL:-?} fail."
+            echo ""
+            echo "### Endpoint probes"
+            printf '%s\n' "$PROBE_REPORT"
+            echo ""
+            echo "### Content probes"
+            printf '%s\n' "$CONTENT_REPORT"
+          } >> "$GITHUB_STEP_SUMMARY"

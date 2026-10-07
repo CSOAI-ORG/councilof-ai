@@ -28,12 +28,16 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
+        # One open upgrade PR at a time. With master's proofs still pending, every hourly tick used to
+        # branch from master and would open a new review PR each hour until one merged. While an
+        # upgrade PR is open, its branch is maintained in place instead of master.
         run: |
           set -euo pipefail
           prs=$(gh pr list --repo "$REPO" --state open --limit 100 \
             --json headRefName,isCrossRepository \
-            --jq '[.[] | select(.isCrossRepository == false) | .headRefName | select(startswith("card-root/pending-"))]')
-          refs=$(jq -cn --argjson prs "$prs" '$prs + ["master"] | unique')
+            --jq '[.[] | select(.isCrossRepository == false) | .headRefName | select(startswith("card-root/pending-") or startswith("card-root/ots-upgrade-"))]')
+          refs=$(jq -cn --argjson prs "$prs" \
+            'if ([$prs[] | select(startswith("card-root/ots-upgrade-"))] | length) > 0 then $prs else $prs + ["master"] end | unique')
           echo "refs=$refs" >> "$GITHUB_OUTPUT"
 
   upgrade:
@@ -95,6 +99,25 @@ jobs:
             root="public/interop/$(basename "${proof%.ots}")"
             python3 scripts/card_root.py --verify --root "$root"
           done
+      - uses: actions/setup-node@v4
+        if: steps.stage.outputs.changed != '0'
+        with:
+          node-version: "20"
+      # The OTS manifest carries each proof's sha256 and state, and llms.txt quotes the manifest.
+      # An upgraded proof without its rebuilt row fails pr-gates (scripts/ots-manifest-fresh.test.ts),
+      # so the derived files land in the same commit as the proof bytes.
+      - name: Rebuild the OTS manifest and llms files for the upgraded proofs
+        if: steps.stage.outputs.changed != '0'
+        run: |
+          set -euo pipefail
+          python3 scripts/ots_manifest_rebuild.py --apply
+          quarantined=$(git status --porcelain -- 'public/interop/*.ots.invalid' 'public/interop/ots/*.ots.invalid')
+          if [ -n "$quarantined" ]; then
+            echo "refusing: the manifest rebuild quarantined a served .ots file; review by hand: $quarantined" >&2
+            exit 1
+          fi
+          node scripts/llms-txt.mjs
+          python3 scripts/pod-loops/root_ots_manifest_gate.py --public-dir public
       - name: Update the review branch or open one
         if: steps.stage.outputs.changed != '0'
         env:
@@ -111,6 +134,7 @@ jobs:
             branch="$SOURCE_REF"
           fi
           git add public/interop/card-root-*.json.ots
+          git add -- public/interop/ots/manifest.json public/llms.txt public/llms-full.txt
           git commit -m "card-root: stage OTS Bitcoin-attestation upgrade (chain unverified)"
           git push origin "HEAD:$branch"
           if [ "$SOURCE_REF" = "master" ]; then

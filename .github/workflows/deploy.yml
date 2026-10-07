@@ -25,6 +25,10 @@ jobs:
   build-deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    # true once the gated tree was uploaded AND still held after the clobber window. The follow-on
+    # job below reads it, so a deploy whose later live gates fail is still verified.
+    outputs:
+      deployed: ${{ steps.hold.outcome == 'success' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -303,6 +307,40 @@ jobs:
       - name: Pages size guard — 25 MiB per-file limit (built tree)
         run: node scripts/pages-size-guard.mjs dist/client
 
+      # O-P1-14 (7 Oct 2026): a deploy made outside this workflow could not be told apart from one
+      # made by it, so the drift guard re-deployed unchanged master and the heartbeat had no deploy
+      # record to read. This marker names the commit this job built and the run that uploads it.
+      # post-deploy-verify.yml and drift-guard.yml compare it with master. It is unsigned and says
+      # which build is serving, nothing about whether that build's content is right. Written last,
+      # after every dist gate, so no gate ever sees it.
+      - name: Deploy marker — /.well-known/deploy.json names the commit this run built
+        env:
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+          EVENT: ${{ github.event_name }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          mkdir -p dist/client/.well-known
+          SHA=$(git rev-parse HEAD) node -e '
+            const fs = require("fs");
+            const e = process.env;
+            const body = {
+              schema: "csoai.deploy-marker/1",
+              sha: e.SHA,
+              run_id: Number(e.RUN_ID),
+              run_attempt: Number(e.RUN_ATTEMPT),
+              event: e.EVENT,
+              repository: e.REPO,
+              workflow: ".github/workflows/deploy.yml",
+              at: new Date().toISOString().replace(/\.\d{3}Z$/, "Z"),
+              scope: "Unsigned marker written by deploy.yml immediately before upload: the commit this build was made from and the Actions run that uploaded it. It is not a signature and says nothing about whether the content is correct.",
+            };
+            if (!/^[0-9a-f]{40}$/.test(body.sha) || !Number.isSafeInteger(body.run_id)) throw new Error("bad marker " + JSON.stringify(body));
+            fs.writeFileSync("dist/client/.well-known/deploy.json", JSON.stringify(body, null, 2) + "\n");
+          '
+          cat dist/client/.well-known/deploy.json
+
       # No alias guessing: the read-only API comparison must prove that master is
       # still the production target and that its declared bindings match this file.
       # Preview shares storage today; do not stamp unused main/production previews.
@@ -314,6 +352,7 @@ jobs:
           node scripts/review/pages-release-target.mjs --config wrangler.jsonc --branch master
 
       - name: Deploy → councilof.ai
+        id: deploy
         timeout-minutes: 8
         env: { CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}', CLOUDFLARE_ACCOUNT_ID: '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}' }
         run: |
@@ -370,6 +409,7 @@ jobs:
       # Clobber has also landed after the first recheck went green. One more
       # window; rewrite again if a second writer wins the alias later.
       - name: Confirm gated tree still holds
+        id: hold
         timeout-minutes: 6
         env: { CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}', CLOUDFLARE_ACCOUNT_ID: '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}' }
         run: |
@@ -425,8 +465,67 @@ jobs:
           FLEET_LOCK_LIVE: "1"
         run: npx vitest run functions/mcp/tool-fleet.lock.test.ts
 
+      # D-01 / A-G6 (7 Oct 2026): no change announcement had left since 6 Oct 21:50Z. The build-pod
+      # hook that sent them lost its route under the single-writer ruling, and it also sent capsule
+      # .json URLs. This announces only HTML pages whose visible text changed since the last deploy
+      # (and entity pages whose sitemap <lastmod> moved); scripts/indexnow-deploy.mjs says how. Its
+      # only state is the last deploy's fingerprints, kept in the Actions cache. It runs once the
+      # gated tree held, even if a later live gate failed, because the pages are live either way;
+      # and it can never fail the deploy.
+      - name: IndexNow state — restore the last deploy's fingerprints
+        if: ${{ !cancelled() && steps.hold.outcome == 'success' }}
+        uses: actions/cache/restore@v4
+        with:
+          path: .indexnow-state
+          key: indexnow-state-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: indexnow-state-
+
+      - name: IndexNow — announce changed HTML pages only
+        if: ${{ !cancelled() && steps.hold.outcome == 'success' }}
+        continue-on-error: true
+        timeout-minutes: 8
+        run: node scripts/indexnow-deploy.mjs --dist dist/client --state .indexnow-state/state.json
+
+      - name: IndexNow state — save for the next deploy
+        if: ${{ !cancelled() && steps.hold.outcome == 'success' && hashFiles('.indexnow-state/state.json') != '' }}
+        uses: actions/cache/save@v4
+        with:
+          path: .indexnow-state
+          key: indexnow-state-${{ github.run_id }}-${{ github.run_attempt }}
+
       # csoai.org is the static apex (csoai-site-deploy.yml ← csoai-static-deploy2).
       # Do NOT redeploy the SPA to csoai-site — that overwrites did:web:csoai.org.
+
+  # ---------------------------------------------------------------------------
+  # POST-DEPLOY VERIFICATION (O-pdv, 7 Oct 2026). post-deploy-verify.yml follows this workflow by
+  # `workflow_run` and had NO run on record since it was added on 15 Sep: no follower of this
+  # workflow's name has ever started from a deploy (claims-e2e, sov-stack-e2e, gspc-spray and
+  # hf-gspc-surface-sync neither), while hf-gspc-surface-sync does start from "public-root". The
+  # likely cause is the "+" in this workflow's name, which GitHub's filter patterns read as a
+  # quantifier. A workflow_dispatch from here does not depend on name matching, and
+  # workflow_dispatch is GitHub's documented exception to GITHUB_TOKEN loop prevention.
+  # ---------------------------------------------------------------------------
+  post-deploy-verify:
+    needs: build-deploy
+    if: ${{ !cancelled() && needs.build-deploy.outputs.deployed == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    continue-on-error: true
+    permissions:
+      actions: write
+      contents: read
+    steps:
+      - name: Dispatch post-deploy-verify for the commit this run deployed
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          gh workflow run post-deploy-verify.yml --repo "$REPO" --ref master \
+            -f deploy_sha="$SHA" -f deploy_run_id="$RUN_ID"
+          echo "dispatched post-deploy-verify for $SHA (deploy run $RUN_ID)"
 
   # ---------------------------------------------------------------------------
   # OUTWARD CLAIMS — what we say about ourselves, to someone else.

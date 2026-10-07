@@ -48,13 +48,37 @@ jobs:
       # automatically by re-running the official deploy of canonical master. Only on scheduled
       # runs — a push already deployed, so re-triggering there would loop. deploy.yml's own
       # concurrency (cancel-in-progress) makes repeated triggers safe.
+      #
+      # A redeploy restores canon only when production is serving something OTHER than the official
+      # build of master. O-drift (7 Oct 2026): a one-word canon mismatch ("23 axis" vs live "23 axes")
+      # failed every run, and each self-heal re-ran a 19-minute deploy of a master that was already
+      # live (2c2fa34bc deployed at 20:53Z and 22:40Z, re-dispatched at 00:30Z). So read the marker
+      # deploy.yml writes (/.well-known/deploy.json) and skip when it already names master, or when a
+      # deploy is already queued or running. An unreadable marker still self-heals: a clobbering
+      # upload would not carry deploy.yml's marker.
       - name: Self-heal on drift (redeploy canonical master)
         if: steps.assert.outcome == 'failure' && github.event_name != 'push'
         env:
           GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
         run: |
-          echo "DRIFT DETECTED — re-running the official deploy to restore canon (self-heal)."
-          gh workflow run deploy.yml --ref master
+          set -uo pipefail
+          master=$(gh api "repos/$REPO/commits/master" -q .sha 2>/dev/null || true)
+          served=$(curl -fsS --max-time 20 "https://councilof.ai/.well-known/deploy.json?cb=$(date +%s)" \
+            | python3 -c "import json,sys; print(json.load(sys.stdin).get('sha',''))" 2>/dev/null || true)
+          active=$(gh run list --repo "$REPO" --workflow deploy.yml --limit 20 --json status \
+            --jq '[.[] | select(.status != "completed")] | length' 2>/dev/null || echo 0)
+          echo "master=${master:-unreadable} served=${served:-unreadable} active_deploys=$active"
+          if [ -n "$master" ] && [ "$served" = "$master" ]; then
+            echo "DRIFT on the official build of master ($master): a redeploy cannot restore canon. Not dispatching; fix canon.json or the code."
+            exit 0
+          fi
+          if [ "$active" != "0" ]; then
+            echo "DRIFT, but $active deploy run(s) are already queued or running; not dispatching another."
+            exit 0
+          fi
+          echo "DRIFT DETECTED — production is not serving master's official build; re-running the official deploy (self-heal)."
+          gh workflow run deploy.yml --repo "$REPO" --ref master
       # Keep the alert RED so the clobber stays visible even though it self-heals — the durable
       # fix is still revoking the clobbering lane's direct-deploy token (see DEPLOY-LOCK.md).
       - name: Fail the run if drift was detected
