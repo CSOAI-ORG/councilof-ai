@@ -1,4 +1,4 @@
-import { CONTACT_MAILBOX } from "@/lib/buying";
+import PlainEmail from "@/components/PlainEmail";
 
 /**
  * MomentumMethodNote — the short methodology note every "how these are measured" link points at
@@ -82,9 +82,9 @@ export default function MomentumMethodNote() {
         endorsement. <strong className="text-emerald-50">Snapshots.</strong> When the page is built, the same producer
         writes a snapshot so the page is readable without JavaScript; it is labelled as a snapshot with the time it was
         taken, and the live read replaces it when it answers. To dispute a figure, email{" "}
-        <a href={`mailto:${CONTACT_MAILBOX}`} className="text-emerald-300 underline underline-offset-2">
-          {CONTACT_MAILBOX}
-        </a>
+        {/* PlainEmail (2026-10-07): a bare mailto here was the one address Cloudflare still
+            rewrote to "[email protected]" on /methodology/, a page the Kaggle follow-up cites. */}
+        <PlainEmail className="text-emerald-300 underline underline-offset-2" />
         ; corrections are dated in the{" "}
         <a href="/corrections/" className="text-emerald-300 underline underline-offset-2">
           public ledger

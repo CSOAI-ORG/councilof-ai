@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link } from "wouter";
-import { CONTACT_MAILBOX } from "@/lib/buying";
+import PlainEmail from "@/components/PlainEmail";
 
 // /dispute — appeals & dispute resolution: every decision is reviewable; a measurement body
 // with no appeal path is a court with no defence counsel (GAP-E2E HM.0). An allegation is not a
@@ -8,7 +8,7 @@ import { CONTACT_MAILBOX } from "@/lib/buying";
 //
 // Public copy carries no internal labels (audit 2026-09-28 #30): "Charter Article 18" is not the
 // Article 18 the live /charter/ page shows, and "Boundary #7" is defined nowhere public.
-// Contact is the one mailbox (lib/buying.ts CONTACT_MAILBOX), the address the footer uses: councilof.ai publishes no MX record,
+// Contact is the one mailbox (lib/buying.ts CONTACT_MAILBOX, rendered by PlainEmail), the address the footer uses: councilof.ai publishes no MX record,
 // so a @councilof.ai address cannot receive mail (audit #2). The ledger is /corrections/, not
 // /refutation-ledger (a page of experiments); the verifier is /gspc-verify/, not the board JSON
 // (audit #12). Two paths, not one: an instrument run is re-run, and a disclosure-lag or claim
@@ -45,8 +45,6 @@ const STANDING = [
   "A member of the public directly affected by a published measurement",
   "Any AI system subject to a published result — the instrument measures everyone, including the people selling it",
 ];
-
-const DISPUTE_EMAIL = CONTACT_MAILBOX;
 
 const GUARANTEES = [
   "Notice — a clear explanation of the decision, the reasoning, and the evidence",
@@ -151,10 +149,12 @@ export default function Dispute() {
         <div className="mt-8 rounded-xl border border-slate-200 bg-white p-5">
           <h3 className="font-bold">Direct dispute contact</h3>
           <p className="mt-2 text-sm leading-relaxed text-slate-600">
+            {/* PlainEmail, not a bare mailto (2026-10-07): /dispute is the objection route the
+                /api/corrections and /api/claims/register envelopes name, and Cloudflare's Email
+                Address Obfuscation turned a bare mailto here into "[email protected]" for every
+                reader without JavaScript. */}
             Email{" "}
-            <a href={`mailto:${DISPUTE_EMAIL}?subject=Dispute`} className="text-emerald-700 underline font-medium">
-              {DISPUTE_EMAIL}
-            </a>{" "}
+            <PlainEmail subject="Dispute" className="text-emerald-700 underline font-medium" />{" "}
             with the card hash, board cell, instrument run or record you contest. Include your
             name, organisation (if applicable), and the specific claim you are raising.
           </p>
@@ -171,9 +171,7 @@ export default function Dispute() {
             Some records do not come from an instrument run: a disclosure-lag measurement or a claim
             record reads what was published, where and when. Send the primary source (URL and date)
             to{" "}
-            <a href={`mailto:${DISPUTE_EMAIL}?subject=Primary%20source`} className="text-emerald-700 underline font-medium">
-              {DISPUTE_EMAIL}
-            </a>
+            <PlainEmail subject="Primary source" className="text-emerald-700 underline font-medium" />
             . We re-read it, move the row to PRIMARY if it qualifies, and log the outcome in the{" "}
             <Link href="/corrections/" className="text-emerald-700 underline">
               corrections ledger

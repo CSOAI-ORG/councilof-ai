@@ -24,6 +24,12 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SPEC_DIR = join(ROOT, "public/spec/claim-maintenance");
 const CHECK = process.argv.includes("--check");
 const BASE = "https://councilof.ai";
+// The site's share card (answers 200, image/png). The version index page already used it; the
+// version pages had og:title/description/url but no og:image (outward gate, 2026-10-07). [og-image]
+const OG_IMAGE = `${BASE}/og-image.png`;
+// Availability of every DOI the estate has published, with the live alternative for each. Read
+// here so a dead DOI printed in a document of record gets its note beside it. [doi-note]
+const ZENODO_STATUS_PATH = join(ROOT, "public/interop/zenodo-status.json");
 
 const sha256 = (s) => createHash("sha256").update(s).digest("hex");
 
@@ -147,6 +153,93 @@ function mdToHtml(md) {
   return { html: out.join("\n"), toc };
 }
 
+const EMAIL_RE = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g;
+const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&");
+
+/**
+ * The note printed beside a DOI that public/interop/zenodo-status.json marks UNAVAILABLE: the
+ * estate's one notice, the HTTP status the DOI answered when last checked, and each live
+ * alternative the status file records. "Same bytes" is printed only where it is CHECKED here: the
+ * status file records sha256_matches_deposit, and a file served from this repository hashes to
+ * that digest on disk now. Otherwise the producer refuses rather than print the claim. [doi-note]
+ */
+function doiNote(d, status) {
+  const alts = (d.alternatives || []).filter((a) => a && a.url && a.http_status_at_check === 200);
+  const parts = alts.map((a) => {
+    const onSite = a.url.startsWith(`${BASE}/`);
+    const href = onSite ? a.url.slice(BASE.length) : a.url;
+    const relation = String(a.relation || "");
+    if (/same bytes/i.test(relation)) {
+      const local = onSite ? join(ROOT, "public", a.url.slice(BASE.length + 1)) : null;
+      const ok =
+        a.sha256_matches_deposit === true &&
+        typeof a.sha256 === "string" &&
+        (!local || (existsSync(local) && sha256(readFileSync(local)) === a.sha256));
+      if (!ok)
+        throw new Error(
+          `[spec] zenodo-status.json says ${a.url} holds the same bytes as the deposit behind ${d.doi}, ` +
+            `but that does not check out here — refusing to print "same bytes".`,
+        );
+    }
+    return `Read instead: <a href="${esc(href)}">${esc(href)}</a> (${esc(relation)}).`;
+  });
+  return (
+    `<small class="doi-note">[${esc(String(status.notice))} This DOI answered HTTP ` +
+    `${Number(d.http_status_at_check)} when last checked (${esc(String(status.as_of))}).` +
+    `${parts.length ? ` ${parts.join(" ")}` : ""}]</small>`
+  );
+}
+
+/**
+ * Every DOI the status file marks UNAVAILABLE, as a matcher and a note built on first use: a DOI
+ * this specification never prints is never checked here. Empty if the status file is absent.
+ */
+function unavailableDois() {
+  if (!existsSync(ZENODO_STATUS_PATH)) return [];
+  const status = JSON.parse(readFileSync(ZENODO_STATUS_PATH, "utf8"));
+  return (status.dois || [])
+    .filter((d) => d && d.state === "UNAVAILABLE" && typeof d.doi === "string")
+    .map((d) => {
+      let note = null;
+      return {
+        re: new RegExp(`(?<![\\w.])${escRe(d.doi)}(?!\\d)`, "g"),
+        note: () => (note ??= doiNote(d, status)),
+      };
+    });
+}
+
+/**
+ * What the Markdown cannot say about itself, added to the derived HTML only. The document of
+ * record is never edited (its bytes are the deposited bytes), so this producer does three things
+ * to the page it generates, from data on disk:
+ *
+ *  1. Relative links become site paths under the version directory. "claim-maintenance-v0.2.md"
+ *     and "schema/…" resolved only from the canonical slash URL; a reader or link checker resolving
+ *     them from anywhere else got a 404 (outward gate, 2026-10-07). [abs-links]
+ *  2. A DOI the status file marks UNAVAILABLE gets its note (doiNote) beside it. [doi-note]
+ *  3. An email address in body text becomes a mailto link inside <!--email_off-->…<!--/email_off-->.
+ *     Cloudflare's Email Address Obfuscation otherwise rewrites it into "[email protected]" and a
+ *     script, so a reader without JavaScript, a crawler or an agent never sees it. [email-off]
+ *
+ * 2 and 3 touch text only: never a tag, never the inside of an existing link.
+ */
+function servedBody(html, version, dois) {
+  const dir = `/spec/claim-maintenance/${version}/`;
+  const linked = html.replace(/href="(?![a-z][a-z0-9+.-]*:|\/|#)([^"]+)"/gi, (_, h) => `href="${dir}${h}"`);
+  let inLink = 0;
+  return linked.replace(/(<[^>]*>)|([^<]+)/g, (_, tag, text) => {
+    if (tag) {
+      if (/^<a\b/i.test(tag)) inLink++;
+      else if (/^<\/a\s*>/i.test(tag)) inLink = Math.max(0, inLink - 1);
+      return tag;
+    }
+    if (inLink) return text;
+    let t = text.replace(EMAIL_RE, (e) => `<!--email_off--><a href="mailto:${e}">${e}</a><!--/email_off-->`);
+    for (const d of dois) t = t.replace(d.re, (doi) => `${doi} ${d.note()}`);
+    return t;
+  });
+}
+
 /** Per version, so a later version's page names itself. For v0.1 this is byte-for-byte the
  * sentence v0.1 was published with, so regenerating v0.1 changes nothing (spec 12). */
 const descriptionFor = (version) =>
@@ -164,6 +257,9 @@ const depositNotice = (d) => (depositUnavailable(d) ? String(d.availability.noti
 
 function page({ version, bodyHtml, toc, mdName, mdDigest, date, deposit }) {
   const canonical = `${BASE}/spec/claim-maintenance/${version}/`;
+  // Site path, not a relative href: "claim-maintenance-v0.2.md" alone resolves to a 404 from any
+  // base but the canonical slash URL. [abs-links]
+  const sitePath = `/spec/claim-maintenance/${version}/`;
   const DESCRIPTION = descriptionFor(version);
   const ld = {
     "@context": "https://schema.org",
@@ -226,6 +322,8 @@ function page({ version, bodyHtml, toc, mdName, mdDigest, date, deposit }) {
 <meta property="og:description" content="${esc(DESCRIPTION)}">
 <meta property="og:url" content="${canonical}">
 <meta property="og:type" content="article">
+<meta property="og:image" content="${OG_IMAGE}">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="robots" content="index,follow,max-snippet:-1">
 <link rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/">
 <link rel="alternate" type="text/markdown" href="${canonical}${mdName}">
@@ -254,11 +352,12 @@ th{background:var(--code)}
 ul,ol{padding-left:1.4em}
 li{margin:.3em 0}
 footer{margin-top:3em;padding-top:1.2em;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem}
+.doi-note{color:var(--muted)}
 </style>
 </head>
 <body>
 <div class="wrap">
-<nav class="nav"><a href="/">Council of AI</a><a href="/claim-maintenance">Claim maintenance</a><a href="/spec/claim-maintenance/">All versions</a><a href="/api/claims/register">Register (JSON)</a><a href="${mdName}">This document as Markdown</a></nav>
+<nav class="nav"><a href="/">Council of AI</a><a href="/claim-maintenance">Claim maintenance</a><a href="/spec/claim-maintenance/">All versions</a><a href="/api/claims/register">Register (JSON)</a><a href="${sitePath}${mdName}">This document as Markdown</a></nav>
 <main>
 <div class="toc"><strong>Contents</strong><ol>${toc
     .map((t) => `<li><a href="#${t.id}">${esc(t.text.replace(/^\d+\.\s*/, ""))}</a></li>`)
@@ -267,7 +366,7 @@ ${bodyHtml}
 </main>
 <footer>
 Council of AI (CSOAI Ltd, UK Companies House 16939677). This specification is dedicated to the public domain under CC0 1.0 Universal — adopt it without asking us.
-Source of record: <a href="${mdName}">${esc(mdName)}</a>, SHA-256 <code>${mdDigest}</code>.
+Source of record: <a href="${sitePath}${mdName}">${esc(mdName)}</a>, SHA-256 <code>${mdDigest}</code>.
 ${deposit && !depositUnavailable(deposit) ? `<br>Archived with a persistent identifier we do not control: <a href="${deposit.doi_url}">${esc(deposit.doi)}</a> (all versions: <a href="${deposit.concept_doi_url}">${esc(deposit.concept_doi)}</a>). A DOI makes a document citable and permanent; it does not make it right.` : ""}
 ${depositUnavailable(deposit) ? `<br>Archival deposit: DOI ${esc(deposit.doi)} (all versions: ${esc(deposit.concept_doi)}). <strong>${esc(depositNotice(deposit))}</strong> The document of record above is the deposited file, byte for byte: its SHA-256 is the one the deposit recorded. Status: <a href="https://councilof.ai/interop/zenodo-status.json">/interop/zenodo-status.json</a>.` : ""}
 </footer>
@@ -283,6 +382,8 @@ const stage = (path, body) => {
   writes.push({ path, body });
   staged.set(path, body);
 };
+
+const DEAD_DOIS = unavailableDois();
 
 for (const version of versions()) {
   const dir = join(SPEC_DIR, version);
@@ -312,7 +413,10 @@ for (const version of versions()) {
         `document of record hashes to ${mdDigest}. The deposited bytes and the served bytes have diverged — ` +
         `deposit a new version rather than editing a published one.`,
     );
-  stage(join(dir, "index.html"), page({ version, bodyHtml: html, toc, mdName, mdDigest, date, deposit }));
+  stage(
+    join(dir, "index.html"),
+    page({ version, bodyHtml: servedBody(html, version, DEAD_DOIS), toc, mdName, mdDigest, date, deposit }),
+  );
   stage(
     join(dir, "spec.json"),
     JSON.stringify(

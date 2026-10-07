@@ -6,8 +6,9 @@
  */
 
 import { Link } from 'wouter';
-import { BookOpen, Linkedin, Mail } from 'lucide-react';
+import { BookOpen, Linkedin } from 'lucide-react';
 import EmailOff from './EmailOff';
+import PlainEmail from './PlainEmail';
 import { CONTACT_MAILBOX } from '@/lib/buying';
 import FooterVerifyStrip from './FooterVerifyStrip';
 import FooterStats from './momentum/FooterStats';
@@ -118,8 +119,20 @@ export function Footer() {
   const socialLinks = [
     { name: 'Source snapshot (archived)', icon: BookOpen, href: 'https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/CSOAI-ORG/councilof-ai' },
     { name: 'LinkedIn', icon: Linkedin, href: 'https://linkedin.com/company/csoai' },
-    { name: 'Email', icon: Mail, href: `mailto:${CONTACT_MAILBOX}` },
   ];
+  // The mail icon is the one footer link Cloudflare's Email Address Obfuscation rewrote on EVERY
+  // page (to /cdn-cgi/l/email-protection#…), along with the bottom-bar mailto: so no page could
+  // show a reader without JavaScript, a crawler or an agent a plain address (outward gate,
+  // 2026-10-07). Both now sit inside <!--email_off-->, as PlainEmail and EmailOff already do.
+  // React cannot emit an HTML comment, so this link is set as markup: the same 44x44 target and
+  // the same lucide Mail glyph (v0.453.0 paths), the address a constant, never input.
+  const socialLinkClass =
+    'inline-flex h-11 w-11 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-primary';
+  const mailIconHtml =
+    `<!--email_off--><a href="mailto:${CONTACT_MAILBOX}" target="_blank" rel="noopener noreferrer" class="${socialLinkClass}" aria-label="Email">` +
+    '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail h-5 w-5" aria-hidden="true">' +
+    '<rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>' +
+    '</a><!--/email_off-->';
 
   return (
     <footer
@@ -161,8 +174,16 @@ export function Footer() {
             </svg>
             <span className="text-xl font-bold">CSOAI</span>
           </Link>
+          {/* 2026-10-07 (outward gate): this line said "Independent measurement body" on every page,
+              including /research/cross-hardware-reproducibility/, whose own limits say "Not
+              independent. All runs are ours." The page is right: we run, grade and publish our own
+              measurements, and to our knowledge nobody outside has re-run them yet. The line now
+              says what is true on every page it appears on. "A signed card", not "every signature":
+              the card chain is signed under a key the DID document publishes (335 of 335 verify
+              with /verify-yourself/verify-estate.mjs, 2026-10-07); not every signed file is. */}
           <p className="text-muted-foreground text-sm max-w-md">
-            Independent measurement body. Signed attestation and transparent measurement — never certification.
+            Measurement, never certification. We run our own tests, so our results are not independent
+            checks; anyone can verify a signed card against the keys we publish.
           </p>
           <div className="-mx-2.5 flex gap-1 sm:ml-auto">
             {socialLinks.map((social) => (
@@ -172,12 +193,13 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 // 44x44 hit area around a 20px glyph (audit 2026-09-30 #8: the bare icon was 20x20).
-                className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-primary"
+                className={socialLinkClass}
                 aria-label={social.name}
               >
                 <social.icon className="h-5 w-5" />
               </a>
             ))}
+            <span className="contents" data-testid="footer-mail-icon" dangerouslySetInnerHTML={{ __html: mailIconHtml }} />
           </div>
         </div>
 
@@ -367,6 +389,11 @@ export function Footer() {
           across three columns or not linked at all. Each href was fetched on 2026-09-22 and
           answered 200; /security.txt (without .well-known) is a 404 and is deliberately not
           linked. This row never carries a count, so it cannot go stale.
+          2026-10-07: a sixth, how to verify a card offline. /signed/HOW-TO-VERIFY.md pins the key
+          from the DID document and checks the Ed25519 signature locally; its one-file verifier,
+          run that day on a card fetched from /signed/cards/, printed VALID 1 · INVALID 0. The
+          signed root (/root.json) and the entity line were already in the footer and are not
+          repeated here.
         */}
         <div className="border-t border-border pt-6 mb-6" data-testid="footer-trust-row">
           <ul className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 list-none p-0 m-0 text-xs">
@@ -376,6 +403,7 @@ export function Footer() {
               { href: '/llms.txt', label: 'llms.txt', hint: 'what this site is, written for machines' },
               { href: 'https://find-and-update.company-information.service.gov.uk/company/16939677', label: 'Companies House 16939677', hint: 'CSOAI Ltd on the public register' },
               { href: '/corrections/', label: 'Corrections ledger', hint: 'everything we have published and had to correct' },
+              { href: '/signed/HOW-TO-VERIFY.md', label: 'Verify a card offline', hint: 'check the Ed25519 signature on a card yourself, against the key in did:web:csoai.org' },
             ].map((l) => (
               <li key={l.href}>
                 <a
@@ -397,7 +425,7 @@ export function Footer() {
             © {currentYear} CSOAI Ltd · Registered in England & Wales No. 16939677 · 3rd Floor, 86–90 Paul Street, London EC2A 4NE · <EmailOff text={CONTACT_MAILBOX} />
           </p>
           <p className="text-muted-foreground text-xs">
-            To object to, dispute or request a correction of anything we publish: <a href="/dispute/" className="underline">/dispute</a> or <a href={`mailto:${CONTACT_MAILBOX}`} className="underline">{CONTACT_MAILBOX}</a>. Corrections are dated in the <a href="/corrections/" className="underline">ledger</a>.
+            To object to, dispute or request a correction of anything we publish: <a href="/dispute/" className="underline">/dispute</a> or <PlainEmail className="underline" />. Corrections are dated in the <a href="/corrections/" className="underline">ledger</a>.
           </p>
           <p className="text-muted-foreground text-xs text-center md:text-right max-w-md">
             Who runs and funds us, and where we have an interest:{" "}

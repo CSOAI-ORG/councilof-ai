@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { onRequestGet } from "./register";
 import register from "../../../public/spec/claim-maintenance/register.json";
+import { ACCOUNTABILITY_ENVELOPE } from "../../_lib/accountability";
 
 const ROOT = resolve(__dirname, "../../..");
 const get = (url: string) =>
@@ -14,11 +15,33 @@ describe("GET /api/claims/register", () => {
   it("serves the committed register bytes — it does not compute a second copy", async () => {
     const res = await get("https://councilof.ai/api/claims/register");
     expect(res.status).toBe(200);
-    const body = await res.json();
-    expect(body).toEqual(register);
+    const { envelope, ...served } = await res.json();
+    // Every key but the one unsigned envelope is the committed register, unchanged.
+    expect(served).toEqual(register);
+    expect(envelope).toEqual(ACCOUNTABILITY_ENVELOPE);
     expect(res.headers.get("content-type")).toMatch(/application\/json/);
     expect(res.headers.get("link")).toContain("/spec/claim-maintenance/v0.2/");
     expect(res.headers.get("x-claim-maintenance-spec")).toBe("https://councilof.ai/spec/claim-maintenance/v0.2/");
+  });
+
+  it("names who answers for it and how to object, outside the register's own digest", async () => {
+    // Outward gate 2026-10-07: the register stated a mailbox but no route to object. The block is
+    // added by the endpoint; register.json never carries it, so register_digest is unchanged.
+    expect("envelope" in register).toBe(false);
+    for (const url of [
+      "https://councilof.ai/api/claims/register",
+      `https://councilof.ai/api/claims/register?state=UNMEASURED`,
+    ]) {
+      const { envelope } = await (await get(url)).json();
+      expect(envelope.signed).toBe(false);
+      expect(envelope.entity).toBe("CSOAI Ltd");
+      expect(envelope.registration).toContain("16939677");
+      expect(envelope.contact_email).toBe("nicholas@csoai.org");
+      expect(envelope.objection_route).toBe("https://councilof.ai/dispute/");
+      expect(envelope.corrections_ledger).toBe("https://councilof.ai/api/corrections");
+      expect(envelope.how_to_object).toMatch(/\bobject\b/);
+      expect(envelope.how_to_object).toContain("nicholas@csoai.org");
+    }
   });
 
   it("counts what is on disk, not what we wish existed", () => {

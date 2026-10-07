@@ -8,6 +8,11 @@
  * and served from those exact bytes here. This endpoint computes nothing of its own: a second
  * engine producing its own copy of a register is a second register, and the two drift.
  *
+ * ONE ADDED KEY, `envelope` (2026-10-07): who answers for the register and how to object to it
+ * (functions/_lib/accountability.ts). It is not register content. It is not in register.json and
+ * not covered by register_digest, so remove `envelope` (and `view` on a filtered read) before
+ * comparing a response with the committed register. Every other key is the committed bytes.
+ *
  * WHAT THIS IS NOT. Not fact-checking, not certification, not auditing, not reputation scoring,
  * not adversarial journalism. No entry states or implies that any claim is false. A listing is
  * not an endorsement and it is not an accusation. No score, rank or index may be derived from
@@ -19,6 +24,7 @@
  */
 import register from "../../../public/spec/claim-maintenance/register.json";
 import { headFromGet } from "../_head";
+import { ACCOUNTABILITY_ENVELOPE } from "../../_lib/accountability";
 
 const STATES = ["CLAIM_CAPTURED", "CLAIM_MEASURED", "UNMEASURED", "UNCHECKABLE"] as const;
 type State = (typeof STATES)[number];
@@ -66,7 +72,7 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
     subjects = subjects.filter((s) => ((s.states as Record<string, number>)[wantState] ?? 0) > 0);
   }
 
-  if (!wantSubject && !wantState) return json(register);
+  if (!wantSubject && !wantState) return json({ ...register, envelope: ACCOUNTABILITY_ENVELOPE });
 
   // A filtered view reports the filter and the population it was taken from, so a partial read
   // can never be mistaken for the whole register.
@@ -79,6 +85,7 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
       note: "A filtered view. totals[] below describe the whole register, not this filter.",
     },
     subjects,
+    envelope: ACCOUNTABILITY_ENVELOPE,
   });
 };
 

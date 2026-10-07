@@ -24,6 +24,7 @@
 //
 // CC-BY-4.0. Council of AI (CSOAI Ltd, UK Companies House 16939677).
 import { headFromGet } from "./_head";
+import { ACCOUNTABILITY_SENTENCE } from "../_lib/accountability";
 
 // Exported so the corrections FEED derives from this exact object. Two surfaces generating
 // their own copy of the ledger would drift, and then the estate would have to reconcile them —
@@ -2406,11 +2407,20 @@ export const onRequestGet: PagesFunction = async () => {
   // signature_state is ALWAYS emitted. It used to appear only when the check failed, so a reader
   // could not tell a verified ledger from one where the field had been dropped — absence is not
   // a pass.
+  // `note` also carries who answers for this ledger and how to object to an entry (outward gate,
+  // 2026-10-07: the ledger stated objections but no route and no plain address). It goes in
+  // `note`, not in a new key, ON PURPOSE: the signed attestation's content_id_rule names the
+  // unsigned top-level keys ["signature", "signature_state", "signature_check",
+  // "correction_latency", "note", "fix_requires"], and two producers (scripts/spray/gspc-spray.py,
+  // scripts/pod-loops/gspc-spray.py) strip that same fixed list. A seventh top-level key would make
+  // the signed rule wrong about the served bytes until the next re-issue, and those readers would
+  // compute a digest that matches nothing. `note` is already outside the digest, so the signature
+  // and content_id are untouched. Source of the facts: functions/_lib/accountability.ts.
   const out: Record<string, unknown> = {
     ...LEDGER,
     signature_state: check.state,
     signature_check: check,
-    note: STATE_NOTE[check.state],
+    note: `${STATE_NOTE[check.state]} ${ACCOUNTABILITY_SENTENCE}`,
     correction_latency: correctionLatencyBlock,
   };
   if (check.state !== "VALID") out.fix_requires = "re-issue over the current bytes: scripts/sign-corrections-ledger.mjs";
