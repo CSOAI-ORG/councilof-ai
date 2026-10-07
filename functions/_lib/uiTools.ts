@@ -83,9 +83,21 @@ export const FRONTEND_TOOLS: { name: FrontendToolName; description: string; para
     parameters: { type: "object", properties: { kind: { enum: ["card", "server"] }, id: { type: "string" } }, required: ["kind", "id"] },
   },
   {
+    // Re-test 7 Oct 2026: this tool was advertised but planUi never chose it, so "scroll to the
+    // bottom" in watch mode did nothing. It now takes the words a reader uses (top, bottom, up, down,
+    // or a section's name) as well as a selector, and planUi emits it (scrollArgs below).
     name: "scroll",
-    description: "Scroll an element matching a CSS selector into view.",
-    parameters: { type: "object", properties: { selector: { type: "string" } }, required: ["selector"] },
+    description:
+      "Scroll the page or pane the reader is on: to the top or bottom, one screen up or down, or to a named section (its heading words or an axis id), or to an element matching a CSS selector.",
+    parameters: {
+      type: "object",
+      properties: {
+        to: { enum: ["top", "bottom", "up", "down"] },
+        section: { type: "string", maxLength: 60 },
+        selector: { type: "string" },
+      },
+      anyOf: [{ required: ["to"] }, { required: ["section"] }, { required: ["selector"] }],
+    },
   },
   {
     name: "focus",
@@ -161,6 +173,40 @@ function step(tool: FrontendToolName, args: Json, say: string, effect: StepEffec
   return { id: `ui_${++seq}`, tool, args, say, effect, confirm: CONFIRM_EFFECTS.has(effect) };
 }
 
+const SCROLL_WORD = /\bscroll\b/;
+
+/**
+ * What "scroll …" asks for, as scroll-tool args. Pure. "scroll to the bottom" / "scroll down" /
+ * "scroll to the top" / "scroll up" move the active pane; "scroll to safety" or "scroll to the
+ * methodology section" name a section, matched on the page by axis id or heading words. `axis` is
+ * the canonical axis the talk router extracted, preferred over the raw words when present.
+ */
+export function scrollArgs(text: string, axis?: string | null): { to: "top" | "bottom" | "up" | "down" } | { section: string } | null {
+  const t = String(text ?? "").toLowerCase().replace(/\s+/g, " ").trim();
+  const m = t.match(/\bscroll\b(.*)$/);
+  if (!m) return null;
+  let rest = m[1].replace(/[.!?]+$/g, "").trim();
+  rest = rest.replace(/^(?:me|it|(?:the|this) (?:page|pane|screen|view))\s*/, "").replace(/^all the way\s*/, "");
+  let dir: "up" | "down" | null = null;
+  const d = rest.match(/^(up|down)\b\s*/);
+  if (d) {
+    dir = d[1] as "up" | "down";
+    rest = rest.slice(d[0].length);
+  }
+  rest = rest.replace(/^(?:to|until|towards?)\s+/, "").replace(/^(?:the )?(?:very )?/, "").trim();
+  if (/^(?:bottom|end|footer)\b/.test(rest)) return { to: "bottom" };
+  if (/^(?:top|start|beginning|header)\b/.test(rest)) return { to: "top" };
+  const section = rest
+    .replace(/^(?:the|a|an)\s+/, "")
+    .replace(/\s+(?:section|part|row|axis|heading|area|bit|panel)$/, "")
+    .replace(/\s+(?:on|of|in) (?:this|the) (?:page|pane)$/, "")
+    .trim()
+    .slice(0, 60);
+  if (axis && (section.includes(axis) || !section)) return { section: axis };
+  if (section) return { section };
+  return dir ? { to: dir } : { to: "down" };
+}
+
 /**
  * Deterministic UI plan. Pure: no I/O. Returns null when the question does not ask to move the
  * page (a plain data question gets the data tools only). `axis` is the canonical axis id the
@@ -171,10 +217,26 @@ export function planUi(raw: string, page: PageContext = {}, opts: { axis?: strin
   const text = String(raw ?? "").trim();
   const t = text.toLowerCase().replace(/\s+/g, " ");
   if (!t) return null;
-  const asked = DRIVE.test(t) || /\b(commission|order)\b.*\b(card|measurement|attestation)\b/.test(t) || Boolean(opts.watch);
+  const asked = DRIVE.test(t) || SCROLL_WORD.test(t) || /\b(commission|order)\b.*\b(card|measurement|attestation)\b/.test(t) || Boolean(opts.watch);
   if (!asked) return null;
 
   const steps: UiStep[] = [];
+
+  // "scroll …" moves the page the reader is on and goes nowhere else (re-test 7 Oct 2026: the
+  // tool was advertised and never planned, so asking to scroll did nothing).
+  const sc = SCROLL_WORD.test(t) ? scrollArgs(t, opts.axis) : null;
+  if (sc) {
+    const say =
+      "section" in sc
+        ? `Scrolling to ${sc.section}.`
+        : sc.to === "top"
+          ? "Scrolling to the top."
+          : sc.to === "bottom"
+            ? "Scrolling to the bottom."
+            : `Scrolling ${sc.to}.`;
+    steps.push(step("scroll", sc, say));
+    return { intent: "section" in sc ? `scroll to ${sc.section}` : `scroll ${sc.to}`, steps };
+  }
   const hex = t.match(HEX64)?.[1] ?? (DEICTIC.test(t) && page.subjectKind === "card" ? page.subject ?? null : null);
   const urlHit = text.match(URL_RE)?.[0];
   const server = urlHit ? trimUrl(urlHit) : DEICTIC.test(t) && page.subjectKind === "server" ? page.subject ?? null : null;

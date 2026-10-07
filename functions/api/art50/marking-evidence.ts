@@ -36,6 +36,11 @@
  * technology-neutral; and CSOAI is a C2PA member. The preview, the 402 and the delivered pack carry
  * `scope`, and the signed leaf carries its short form.
  *
+ * SCOPE, IN EVERY PACK (owner-approved, 7 Oct 2026; functions/_lib/art50Scope.ts): the pack detects C2PA
+ * and IPTC metadata only; NOT_DETECTED does not mean "unmarked", because Article 50(2) is
+ * technology-neutral; and CSOAI is a C2PA member. The preview, the 402 and the delivered pack carry
+ * `scope`, and the signed leaf carries its short form.
+ *
  * WORDING RULE (binding): results read "marking not detected by method <z>". Never "absent",
  * never "non-compliant"/"compliant"/"certified"/"safe". Watermarks are spoofable and strippable,
  * so the pack attests DETECTION at a time, never a guarantee about the generator.

@@ -423,3 +423,82 @@ describe("scope — every pack says what it can and cannot see", () => {
     expect(pinned.reasons).toEqual(["signature_invalid"]);
   });
 });
+
+/**
+ * SCOPE IN EVERY PACK (owner-approved wording, growth plan Gate 0, 7 Oct 2026): the pack detects C2PA
+ * and IPTC metadata only; NOT_DETECTED does not mean "unmarked" (Art 50(2) is technology-neutral);
+ * CSOAI is a C2PA member. And the paid route end to end with a mocked facilitator: 402 → settle →
+ * the signed pack → the settlement recorded as SELF for an X402_SELF_WALLETS payer → the card
+ * verifies under the same verdict the free checker uses.
+ */
+describe("scope — every pack says what it can and cannot see", () => {
+  const SELF = "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7";
+  const kv = () => {
+    const store = new Map<string, string>();
+    return { store, get: async (k: string) => store.get(k) ?? null, put: async (k: string, v: string) => void store.set(k, v) };
+  };
+
+  it("the scope text itself: metadata only, NOT_DETECTED is not 'unmarked', C2PA membership disclosed", () => {
+    expect(ART50_SCOPE.detects).toMatch(/^C2PA and IPTC metadata only/);
+    expect(ART50_SCOPE.not_detected).toMatch(/does not mean the output is unmarked/);
+    expect(ART50_SCOPE.not_detected).toMatch(/technology-neutral/);
+    expect(ART50_SCOPE.disclosure).toMatch(/CSOAI is a member of the C2PA/);
+    expect(ART50_SCOPE_SIGNED.disclosure).toBe("CSOAI is a C2PA member");
+    expect(JSON.stringify(ART50_SCOPE)).not.toMatch(FORBIDDEN);
+  });
+
+  it("the free preview carries the scope beside a NOT_DETECTED result", async () => {
+    stubFetch();
+    const r = await get(ctx(`${EP}?preview=1&url=https://cdn.example/plain.png`));
+    expect(r.status).toBe(200);
+    const b = await r.json();
+    expect(b.scope).toEqual(ART50_SCOPE);
+    expect(b.measurement.checked.find((c: { method: string }) => c.method === "c2pa.manifest-store").result).toBe("NOT_DETECTED");
+  });
+
+  it("the 402 carries the scope before anyone pays", async () => {
+    stubFetch();
+    const r = await get(ctx(`${EP}?url=https://cdn.example/plain.png`));
+    expect(r.status).toBe(402);
+    const b = await r.json();
+    expect(b.csoai.scope).toEqual(ART50_SCOPE);
+    expect(b.resource.description).toMatch(/C2PA and IPTC metadata only/);
+    expect(b.resource.description).toMatch(/CSOAI is a C2PA member/);
+  });
+
+  it("paid end to end (mocked facilitator): signed pack with scope in the leaf, self payer recorded as self, card verifies", async () => {
+    let settles = 0;
+    stubFetch((p) => {
+      if (p.endsWith("/settle")) settles += 1;
+      return new Response(JSON.stringify(p.endsWith("/verify") ? { isValid: true } : { success: true, transaction: "0xselftest", network: "base", payer: SELF }));
+    });
+    const { pkcs8b64, pubHex } = await testKey();
+    const store = kv();
+    const env = { X402_FACILITATOR_URL: "https://f.example", X402_SELF_WALLETS: SELF, BOARD_SIGN_KEY_PKCS8_B64: pkcs8b64, REVENUE_KV: store };
+    const hdr = btoa(JSON.stringify({ x402Version: 1, scheme: "exact", network: "base", payload: {} }));
+    const r = await get(ctx(`${EP}?url=https://cdn.example/plain.png`, env, { headers: { "x-payment": hdr } }));
+    expect(r.status).toBe(200);
+    expect(settles).toBe(1);
+    const b = await r.json();
+    // the pack and the signed leaf both state the scope
+    expect(b.scope).toEqual(ART50_SCOPE);
+    expect(b.card.payload.scope).toEqual(ART50_SCOPE_SIGNED);
+    expect(b.card.payload.statements).toContain("marking not detected by method c2pa.manifest-store");
+    expect(b.bytes).toBeLessThanOrEqual(3072);
+    expect(b.signed).toBe(true);
+    expect(b.verify).toBe(`${ORIGIN}/gspc-verify`);
+    expect(JSON.stringify(b.card)).not.toMatch(FORBIDDEN);
+    // the settlement is recorded, and as the estate paying itself (never a buyer, never revenue)
+    const rec = JSON.parse(store.store.get("settled:tx:0xselftest") ?? "null");
+    expect(rec).toMatchObject({ transaction: "0xselftest", self: true });
+    expect(rec.funding_class).not.toBe("UNKNOWN");
+    // and the delivered card verifies under the shared card-v0 verdict (the throwaway key stands in
+    // for the pinned board key, which this test does not hold)
+    const v = await verifyCardV0(b.card, JSON.stringify(b.card), [{ id: "did:web:csoai.org#board-attestation-1", hex: pubHex }]);
+    expect(v.state).toBe("VALID");
+    // under the real pinned key a throwaway signature is a positive INVALID, never UNCHECKABLE
+    const pinned = await verifyCardV0(b.card, JSON.stringify(b.card));
+    expect(pinned.state).toBe("INVALID");
+    expect(pinned.reasons).toEqual(["signature_invalid"]);
+  });
+});
