@@ -1,7 +1,8 @@
 """🐉 MEOK OS Backend — FastAPI on :8000 (recovered 7 Oct 2026)
 
-The sovereign backend that powers meok.ai. 20 endpoints, 37 tests,
-SIGIL-signed everything.
+The sovereign backend that powers meok.ai. 20 endpoints, tested by
+test_app.py. SIGIL entries are HMAC-SHA256 under a local key (integrity only;
+not a signature, not Ed25519).
 
 Endpoints (full spec — test_app.py is the source of truth):
   GET  /api/backend/status            — sovereign status dict
@@ -55,19 +56,63 @@ from fastapi.responses import JSONResponse, Response
 from pydantic import BaseModel, Field
 
 # ---------------------------------------------------------------------------
-# Paths + SIGIL signing
+# Paths + SIGIL (HMAC-SHA256 under a local key; not a signature)
 # ---------------------------------------------------------------------------
 
 _ROOT = Path(__file__).resolve().parent
 _ICHARS_DB = Path(os.environ.get("MEOK_ICHARS_DB", _ROOT / "ichars.db"))
 _USERS_DB = Path(os.environ.get("MEOK_USERS_DB", _ROOT / "users.db"))
 _SIGIL_LOG = Path(os.environ.get("MEOK_SIGIL_LOG", _ROOT / "sigil_chain.jsonl"))
-SIGIL_SECRET = os.environ.get("MEOK_SIGIL_SECRET", "defoneos-csoai-meok-2026").encode()
+
+# SIGIL: HMAC-SHA256 under a local key (integrity only; not a signature, not Ed25519).
+# Anyone holding the key can produce a valid SIGIL, so a SIGIL shows only that an entry
+# was written by a holder of this key and has not changed since.
+#
+# Key: MEOK_SIGIL_SECRET if set, else the key file (MEOK_SIGIL_KEY_FILE, default
+# ~/.config/meok-backend/sigil.key, shared with sovereign_db.py: same backend, same env
+# var), created on first use with 32 random bytes, mode 0600. There is no default key in
+# source. Earlier revisions shipped one in this file, so any SIGIL, chain entry or token
+# written under it can be forged by anyone who has read the source: entries from those
+# revisions are UNSIGNED, and /api/sigil/verify reports them as not verified.
+
+
+def key_file() -> Path:
+    return Path(os.environ.get("MEOK_SIGIL_KEY_FILE",
+                               str(Path.home() / ".config" / "meok-backend" / "sigil.key")))
+
+
+def _load_key() -> bytes:
+    """Return the SIGIL MAC key: env, then key file, else create a random key file."""
+    env = os.environ.get("MEOK_SIGIL_SECRET")
+    if env:
+        return env.encode()
+    p = key_file()
+    try:
+        key = p.read_bytes().strip()
+    except FileNotFoundError:
+        p.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            os.chmod(str(p.parent), 0o700)
+        except OSError:
+            pass
+        new_key = os.urandom(32).hex().encode()
+        try:
+            fd = os.open(str(p), os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        except FileExistsError:  # another process created it first
+            key = p.read_bytes().strip()
+        else:
+            with os.fdopen(fd, "wb") as f:
+                f.write(new_key + b"\n")
+            key = new_key
+    if not key:
+        raise ValueError(f"SIGIL key file is empty: {p}")
+    return key
 
 
 def sigil(payload: dict) -> str:
+    """HMAC-SHA256 over sorted-key JSON under the local key (64 hex). Not a signature."""
     msg = json.dumps(payload, sort_keys=True).encode()
-    return hmac.new(SIGIL_SECRET, msg, hashlib.sha256).hexdigest()
+    return hmac.new(_load_key(), msg, hashlib.sha256).hexdigest()
 
 
 def hash_short(payload: dict) -> str:
@@ -180,6 +225,18 @@ def _last_hash() -> str:
             if line:
                 last = json.loads(line).get("hash", "")
     return last or ("0" * 32)
+
+
+def _entry_authentic(entry: Dict) -> bool:
+    """True only if entry["hash"] is the HMAC of the rest of the entry under the current key.
+
+    An entry written under any other key (including the old in-source default), or
+    altered after it was written, returns False: treat it as unsigned."""
+    h = entry.get("hash")
+    if not isinstance(h, str) or "prev" not in entry:
+        return False
+    body = {k: v for k, v in entry.items() if k != "hash"}
+    return hmac.compare_digest(sigil(body).encode(), h.encode())
 
 
 def _read_chain(n: int = 10) -> List[Dict]:
@@ -332,7 +389,7 @@ TEMPLES = [
      "regulations": [
          {"code": "Maternal Covenant", "name": "Maternal Covenant", "desc": "6 care dimensions", "year": 2026},
          {"code": "Defoneos", "name": "Defoneos Security", "desc": "302 SDK patches, CVE-free", "year": 2026},
-         {"code": "SIGIL", "name": "SIGIL Audit Chain", "desc": "Ed25519 every action", "year": 2026},
+         {"code": "SIGIL", "name": "SIGIL Audit Chain", "desc": "HMAC-SHA256 hash chain, local key", "year": 2026},
          {"code": "BFT Council", "name": "BFT Council", "desc": "13-Queen + King, 9/13 quorum", "year": 2026},
      ]},
 ]
@@ -864,9 +921,19 @@ def sigil_verify(body: Dict = {}):
     h = body.get("hash", "")
     if not h:
         raise HTTPException(400, "hash required")
+    # Presence in the log is not enough: the hash must be the HMAC of the entry under
+    # this backend's key. Anyone can append a line to a JSONL file.
+    found = None
     for entry in _read_chain(1000):
         if entry.get("hash") == h:
-            return {"verified": True, "block": entry}
+            if _entry_authentic(entry):
+                return {"verified": True, "block": entry}
+            found = found or entry
+    if found is not None:
+        return {"verified": False, "block": found,
+                "reason": "entry found, but its hash is not the HMAC of the entry under this "
+                          "backend's key: written under another key (such as the old "
+                          "in-source default) or altered since"}
     return {"verified": False}
 
 
