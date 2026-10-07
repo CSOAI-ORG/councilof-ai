@@ -58,6 +58,28 @@ jobs:
           python-version: "3.11"
       - name: Install the official OTS client
         run: pip install -q opentimestamps-client==0.7.2
+      # scripts/llms-txt.mjs needs node: the reconcile below and the rebuild further down both run it.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      # A review branch is kept in place across ticks, so master moves under it. Four writers commit the
+      # OTS manifest and the llms files with their proofs, and a branch that is not reconciled conflicts
+      # on their as_of and count lines once another writer's PR merges first, and stays wedged until a
+      # person merges by hand (shown on the lanes pod, 7 Oct). scripts/reconcile_derived.py merges
+      # master and regenerates only those derived files from the merged bytes; a conflict in root, proof
+      # or pointer bytes still aborts this leg. Master's copy runs, since the branch can predate it.
+      - name: Reconcile a review branch with master
+        id: reconcile
+        if: matrix.ref != 'master'
+        run: |
+          set -euo pipefail
+          git config user.name "csoai-card-root"
+          git config user.email "board@csoai.org"
+          git fetch -q origin master
+          git show origin/master:scripts/reconcile_derived.py > "$RUNNER_TEMP/reconcile_derived.py"
+          before=$(git rev-parse HEAD)
+          python3 "$RUNNER_TEMP/reconcile_derived.py" --onto origin/master
+          if [ "$(git rev-parse HEAD)" != "$before" ]; then echo "moved=true" >> "$GITHUB_OUTPUT"; else echo "moved=false" >> "$GITHUB_OUTPUT"; fi
       - name: Offline immutability, binding, and state regressions
         run: PYTHONPATH=scripts python3 -m unittest scripts/test_card_root_automation.py scripts/test_ots_maintenance.py -v
       - name: Stage exact-root proof candidates
@@ -99,10 +121,6 @@ jobs:
             root="public/interop/$(basename "${proof%.ots}")"
             python3 scripts/card_root.py --verify --root "$root"
           done
-      - uses: actions/setup-node@v4
-        if: steps.stage.outputs.changed != '0'
-        with:
-          node-version: "20"
       # The OTS manifest carries each proof's sha256 and state, and llms.txt quotes the manifest.
       # An upgraded proof without its rebuilt row fails pr-gates (scripts/ots-manifest-fresh.test.ts),
       # so the derived files land in the same commit as the proof bytes.
@@ -142,4 +160,14 @@ jobs:
               --title "card-root: review OTS Bitcoin-attestation upgrades" \
               --body "The scheduled bounded maintainer obtained OTS proof bytes carrying Bitcoin attestation tags for exact existing card-root files. Root and signed-card bytes are byte-identical. This workflow has no Bitcoin node: chain_verified remains false, and this PR makes no Bitcoin-confirmation or anchored claim. Review and merge are human decisions."
           fi
+          # once per new head: every push above is a new commit
           gh workflow run pr-gates.yml --ref "$branch"
+      - name: Push a reconciled review branch
+        if: steps.stage.outputs.changed == '0' && steps.reconcile.outputs.moved == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ matrix.ref }}
+        run: |
+          set -euo pipefail
+          git push origin "HEAD:$BRANCH"
+          gh workflow run pr-gates.yml --ref "$BRANCH"

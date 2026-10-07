@@ -1,12 +1,19 @@
 name: ots-upgrade
 
-# A-G4 (7 Oct 2026): upgrade the public OTS proofs that are still calendar-pending, then open a PR.
+# A-G4 (7 Oct 2026): upgrade the public OTS proofs that are still calendar-pending, and keep one PR.
 # On master 18 of 707 proofs were pending-only, the oldest committed on 17 Sep; the only upgrader
 # was an Oracle job aimed at a dead pod and the frozen canon. Card-root and public-root proofs have
-# their own maintainers and are excluded; a proof whose exact bytes another file names is skipped
-# and reported (scripts/ots_upgrade_pending.py says why). Every new Bitcoin attestation is checked
-# against two public block explorers before the PR opens; no Bitcoin node runs here, and nothing
-# here says "anchored" or "confirmed" about a proof that has not been checked.
+# their own maintainers and are excluded. A proof whose exact bytes another file names is upgraded
+# only when every such file is one whose binding scripts/ots_upgrade_pending.py can re-derive in the
+# same change (and is unsigned and unstamped); any other bound proof is skipped and reported. Every
+# new Bitcoin attestation is checked against two public block explorers before anything is pushed; no
+# Bitcoin node runs here, and nothing here says "anchored" or "confirmed" about an unchecked proof.
+#
+# ONE PR, MAINTAINED IN PLACE (repair, 7 Oct). This job used to skip while its PR was open. The PR
+# rewrites the OTS manifest and llms lines that three other writers rewrite too, so whichever lands
+# second conflicted, and a conflicting PR wedged both itself and this job. Now each run reconciles the
+# open PR's branch with master (scripts/reconcile_derived.py regenerates only the derived manifest and
+# llms files; any other conflict fails closed) and upgrades what is still pending on that branch.
 on:
   schedule:
     - cron: "41 6 * * *"
@@ -26,43 +33,52 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      # One open upgrade PR at a time: a proof still pending on master would otherwise be upgraded
-      # again, and a new PR opened, every day until the first one merged.
-      - name: Skip while an upgrade PR is open
+      - name: Find the open upgrade PR
         id: open
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
-          open=$(gh pr list --repo "$REPO" --state open --limit 100 --json number,headRefName \
-            --jq '[.[] | select(.headRefName | startswith("ots/upgrade-")) | .number] | join(",")')
-          echo "open=$open" >> "$GITHUB_OUTPUT"
-          if [ -n "$open" ]; then echo "An ots-upgrade PR is open (#$open); review and merge it first. Nothing to do."; fi
+          branch=$(gh pr list --repo "$REPO" --state open --limit 100 --json headRefName,isCrossRepository \
+            --jq '[.[] | select(.isCrossRepository == false and (.headRefName | startswith("ots/upgrade-"))) | .headRefName] | sort | .[0] // ""')
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
+          if [ -n "$branch" ]; then echo "Maintaining the open upgrade PR on $branch."; else echo "No upgrade PR is open; working from master."; fi
 
       - uses: actions/checkout@v4
-        if: steps.open.outputs.open == ''
+        with:
+          ref: ${{ steps.open.outputs.branch || 'master' }}
+          fetch-depth: 0
       - uses: actions/setup-python@v5
-        if: steps.open.outputs.open == ''
         with:
           python-version: "3.11"
       - uses: actions/setup-node@v4
-        if: steps.open.outputs.open == ''
         with:
           node-version: "20"
       - name: Install the official OTS client
-        if: steps.open.outputs.open == ''
         run: pip install -q cryptography opentimestamps-client==0.7.2
 
+      # Master's copy of the script runs, since the PR branch can predate it.
+      - name: Reconcile the open upgrade PR with master
+        id: reconcile
+        if: steps.open.outputs.branch != ''
+        run: |
+          set -euo pipefail
+          git config user.name "csoai-ots-upgrade"
+          git config user.email "board@csoai.org"
+          git fetch -q origin master
+          git show origin/master:scripts/reconcile_derived.py > "$RUNNER_TEMP/reconcile_derived.py"
+          before=$(git rev-parse HEAD)
+          python3 "$RUNNER_TEMP/reconcile_derived.py" --onto origin/master
+          if [ "$(git rev-parse HEAD)" != "$before" ]; then echo "moved=true" >> "$GITHUB_OUTPUT"; else echo "moved=false" >> "$GITHUB_OUTPUT"; fi
+
       - name: Upgrade pending-only proofs in place
-        if: steps.open.outputs.open == ''
         id: up
         run: |
           set -euo pipefail
-          python3 scripts/ots_upgrade_pending.py --report "$RUNNER_TEMP/ots-upgrade.json"
+          python3 scripts/ots_upgrade_pending.py --report "$RUNNER_TEMP/ots-upgrade.json" --stage-dir "$RUNNER_TEMP/upgraded"
           n=$(python3 -c 'import json,sys; print(len(json.load(open(sys.argv[1]))["upgraded"]))' "$RUNNER_TEMP/ots-upgrade.json")
           echo "upgraded=$n" >> "$GITHUB_OUTPUT"
-          { echo '## ots-upgrade'; echo '```json'; cat "$RUNNER_TEMP/ots-upgrade.json"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
           # only the upgraded proofs may have changed
           python3 - "$RUNNER_TEMP/ots-upgrade.json" <<'PY'
           import json, subprocess, sys
@@ -75,19 +91,34 @@ jobs:
 
       - name: Check each new Bitcoin attestation against two block explorers
         if: steps.up.outputs.upgraded != '' && steps.up.outputs.upgraded != '0'
+        # exit 1 = an attestation DISAGREES with the block header: nothing is pushed
+        run: python3 scripts/ots_block_check.py --dir "$RUNNER_TEMP/upgraded" --out "$RUNNER_TEMP/block-check.json"
+
+      # anchors.json records the explorer check above, so this runs after it. A proof whose binding cannot
+      # be re-derived is put back to its committed bytes with its bindings and reported, never shipped
+      # half-bound.
+      - name: Re-derive the bindings of upgraded bound proofs
+        if: steps.up.outputs.upgraded != '' && steps.up.outputs.upgraded != '0'
+        id: rederive
         run: |
           set -euo pipefail
-          mkdir -p "$RUNNER_TEMP/upgraded"
-          python3 - "$RUNNER_TEMP/ots-upgrade.json" "$RUNNER_TEMP/upgraded" <<'PY'
-          import json, pathlib, shutil, sys
-          for i, p in enumerate(json.load(open(sys.argv[1]))["upgraded"]):
-              shutil.copy(p, pathlib.Path(sys.argv[2]) / f"{i:03d}-{pathlib.Path(p).name}")
+          python3 scripts/ots_upgrade_pending.py --rederive --report "$RUNNER_TEMP/ots-upgrade.json" --block-check "$RUNNER_TEMP/block-check.json"
+          { echo '## ots-upgrade'; echo '```json'; cat "$RUNNER_TEMP/ots-upgrade.json"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          n=$(python3 -c 'import json,sys; print(len(json.load(open(sys.argv[1]))["upgraded"]))' "$RUNNER_TEMP/ots-upgrade.json")
+          echo "upgraded=$n" >> "$GITHUB_OUTPUT"
+          # only the upgraded proofs and the bindings re-derived for them may have changed
+          python3 - "$RUNNER_TEMP/ots-upgrade.json" <<'PY'
+          import json, subprocess, sys
+          r = json.load(open(sys.argv[1]))
+          want = set(r["upgraded"]) | {b for bs in r.get("rederived", {}).values() for b in bs}
+          rows = subprocess.check_output(["git", "status", "--porcelain"], text=True).splitlines()
+          got = {x[3:] for x in rows}
+          if got != want or any(not x.startswith(" M ") for x in rows):
+              raise SystemExit(f"refusing unexpected diff: {rows} (expected {sorted(want)})")
           PY
-          # exit 1 = an attestation DISAGREES with the block header: no PR
-          python3 scripts/ots_block_check.py --dir "$RUNNER_TEMP/upgraded" --out "$RUNNER_TEMP/block-check.json"
 
       - name: Rebuild the OTS manifest and llms files from the proof bytes
-        if: steps.up.outputs.upgraded != '' && steps.up.outputs.upgraded != '0'
+        if: steps.rederive.outputs.upgraded != '' && steps.rederive.outputs.upgraded != '0'
         run: |
           set -euo pipefail
           python3 scripts/ots_manifest_rebuild.py --apply
@@ -98,25 +129,39 @@ jobs:
           fi
           node scripts/llms-txt.mjs
           python3 scripts/pod-loops/root_ots_manifest_gate.py --public-dir public
+          # the gates that read the re-derived bindings: exact proof bindings, and the capsule VC view
           python3 scripts/root-witness-release-gate.py --phase candidate
+          node scripts/mechanism/capsule-vc.mjs --check
 
-      - name: Open the review PR and dispatch its gates
-        if: steps.up.outputs.upgraded != '' && steps.up.outputs.upgraded != '0'
+      - name: Commit, push and dispatch the gates once
+        if: (steps.rederive.outputs.upgraded != '' && steps.rederive.outputs.upgraded != '0') || steps.reconcile.outputs.moved == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
+          OPEN_BRANCH: ${{ steps.open.outputs.branch }}
         run: |
           set -euo pipefail
-          branch="ots/upgrade-${GITHUB_RUN_ID}"
           git config user.name "csoai-ots-upgrade"
           git config user.email "board@csoai.org"
-          git checkout -b "$branch"
-          python3 -c 'import json,sys; print("\n".join(json.load(open(sys.argv[1]))["upgraded"]))' "$RUNNER_TEMP/ots-upgrade.json" \
-            | xargs git add --
+          if [ -n "$OPEN_BRANCH" ]; then
+            branch="$OPEN_BRANCH"
+          else
+            branch="ots/upgrade-${GITHUB_RUN_ID}"
+            git checkout -b "$branch"
+          fi
+          if [ -f "$RUNNER_TEMP/ots-upgrade.json" ]; then
+            python3 -c 'import json,sys; r=json.load(open(sys.argv[1])); print("\n".join(sorted(set(r["upgraded"]) | {b for bs in r.get("rederived", {}).values() for b in bs})))' "$RUNNER_TEMP/ots-upgrade.json" \
+              | xargs -r git add --
+          fi
           git add -- public/interop/ots/manifest.json public/llms.txt public/llms-full.txt
-          git commit -m "ots: upgrade pending proofs to Bitcoin attestations (explorer-checked, chain unverified)"
+          if ! git diff --cached --quiet; then
+            git commit -m "ots: upgrade pending proofs to Bitcoin attestations (explorer-checked, chain unverified)"
+          fi
           git push origin "HEAD:$branch"
-          gh pr create --repo "$REPO" --base master --head "$branch" \
-            --title "ots: upgrade pending proofs to Bitcoin attestations" \
-            --body "The daily ots-upgrade job fetched Bitcoin attestations for proofs that were calendar-pending. Each new attestation's digest was compared with the block's merkle root as two public explorers report it (ots_block_check.py); no Bitcoin node ran here, so chain_verified stays false. Subject files are byte-identical; only the proofs and the derived OTS manifest and llms files change. Proofs another file binds by exact bytes, and card-root and public-root proofs, were left to their own maintainers. Review and merge are human decisions."
+          if [ -z "$OPEN_BRANCH" ]; then
+            gh pr create --repo "$REPO" --base master --head "$branch" \
+              --title "ots: upgrade pending proofs to Bitcoin attestations" \
+              --body "The daily ots-upgrade job fetched Bitcoin attestations for proofs that were calendar-pending. Each new attestation's digest was compared with the block's merkle root as two public explorers report it (ots_block_check.py); no Bitcoin node ran here, so chain_verified stays false. Subject files are byte-identical. Only the proofs, the bindings that name their exact bytes (re-derived in the same commit: interop/ots-exact-bindings-v1.json, mechanism/vc.json by its producer, measurement-capsules/v0.2/anchors.json with the explorer check), and the derived OTS manifest and llms files change. Card-root and public-root proofs are left to their own maintainers. This branch is kept in place: later runs merge master into it and add proofs that upgrade since. Review and merge are human decisions."
+          fi
+          # once per new head: the push above is a new commit
           gh workflow run pr-gates.yml --repo "$REPO" --ref "$branch"

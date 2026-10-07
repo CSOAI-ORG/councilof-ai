@@ -3,14 +3,16 @@
  * where the workflow's own shell or Python decides something, that code is extracted from the YAML
  * and RUN against fakes, so the test exercises the bytes Actions will execute.
  *
- *   A-G1 / O-P0-3  public-root-candidate-upgrade: the manifest + llms rebuild, the local head, and
- *                  only workflow_dispatch gate runs.
+ *   A-G1 / O-P0-3  public-root-candidate-upgrade: the manifest + llms rebuild, the local head, only
+ *                  workflow_dispatch gate runs, a hold that ends when a required check fails, a
+ *                  reconcile that regenerates derived files (scripts/reconcile-derived.test.mjs), and
+ *                  at most one gates dispatch per head.
  *   A-G3           card-root workflows stage the pointer and the derived files (rules: test_card_root_automation.py).
  *   O-P1-14        deploy.yml writes /.well-known/deploy.json before upload, outside the preflight window.
  *   O-pdv          deploy.yml dispatches post-deploy-verify; post-deploy-verify no longer comments on a random PR.
  *   O-drift        canon.json's expected wording follows its own counts; the self-heal skips a master that is live.
- *   O-P1-7         bot-checks-sweeper dispatches pr-gates at most once per head SHA.
- *   D-04           gspc-spray calls no Zenodo while the account is blocked; owner-gated legs do not fail the run.
+ *   O-P1-7         bot-checks-sweeper dispatches pr-gates at most once per head SHA, and never on an unread state.
+ *   D-04           gspc-spray calls no Zenodo while the account is blocked; only owner-gated legs do not fail the run.
  */
 import { describe, expect, it } from "vitest";
 import { spawnSync } from "node:child_process";
@@ -83,39 +85,129 @@ describe("A-G1: the root candidate can pass its own gates", () => {
 
 describe("A-G1: a head whose gates passed is held, so the owner's one approval can stick", () => {
   const wf = WF("public-root-candidate-upgrade.yml");
+  const HOLD = "Classify the head - gates passed (held), failed, or not yet run";
 
   it("skips reconcile and re-witness on a held head, and the merge step still runs for it", () => {
-    expect(wf.indexOf("- name: Hold a head whose gates already passed")).toBeLessThan(wf.indexOf("- name: Reconcile the rolling candidate"));
+    expect(wf.indexOf(`- name: ${HOLD}`)).toBeLessThan(wf.indexOf("- name: Reconcile the rolling candidate"));
     expect(step(wf, "Reconcile the rolling candidate with current master")).toContain("steps.hold.outputs.held != 'true'");
     expect(step(wf, "Upgrade the exact candidate proof")).toContain("steps.hold.outputs.held != 'true'");
     expect(step(wf, "Merge only after pr-gates passed on these exact bytes"))
       .toContain("if: steps.ots.outputs.confirmed == 'true' || steps.hold.outputs.held == 'true'");
   });
 
-  function hold(passed, mergeable) {
+  function hold(latest, mergeable, requiredFailed = "", apiFails = false) {
     const dir = tmp("hold-");
     const bin = path.join(dir, "bin");
     fs.mkdirSync(bin);
     spawnSync("git", ["init", "-q"], { cwd: dir });
     spawnSync("git", ["-c", "user.name=t", "-c", "user.email=t@t", "commit", "-q", "--allow-empty", "-m", "x"], { cwd: dir });
+    // gh applies --jq itself; the stand-in prints what that filter yields
     fs.writeFileSync(path.join(bin, "gh"), `#!/bin/bash
 case "$1 $2" in
-  "run list") echo "${passed}" ;;
+  "run list") echo "${latest}" ;;
   "pr view") echo "${mergeable}" ;;
+  api*) ${apiFails ? "exit 1" : `echo "${requiredFailed}"`} ;;
 esac
 `, { mode: 0o755 });
     const out = path.join(dir, "out");
-    const r = spawnSync("bash", ["-e", "-c", runBlock(wf, "Hold a head whose gates already passed")], { cwd: dir, encoding: "utf8",
+    const r = spawnSync("bash", ["-e", "-c", runBlock(wf, HOLD)], { cwd: dir, encoding: "utf8",
       env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, GITHUB_OUTPUT: out, REPO: "r/r", URL: "u" } });
     expect(r.status, r.stderr).toBe(0);
-    return fs.readFileSync(out, "utf8").trim();
+    const o = Object.fromEntries(fs.readFileSync(out, "utf8").trim().split("\n").map((l) => l.split("=")));
+    expect(o.held).toBe(o.state === "held" ? "true" : "false");
+    return o.state;
   }
 
   it("holds only a passed, non-conflicting head", () => {
-    expect(hold("1", "MERGEABLE")).toBe("held=true");
-    expect(hold("1", "UNKNOWN")).toBe("held=true");
-    expect(hold("0", "MERGEABLE")).toBe("held=false");
-    expect(hold("1", "CONFLICTING")).toBe("held=false");
+    expect(hold("success", "MERGEABLE")).toBe("held");
+    expect(hold("success", "UNKNOWN")).toBe("held");
+    expect(hold("", "MERGEABLE")).toBe("open");
+    expect(hold("success", "CONFLICTING")).toBe("open");
+  });
+
+  it("ends the hold when a required check failed after the dispatched pass (the verifier's frozen head)", () => {
+    // the approved pull_request run tests the merge ref and reads the live board, so it can fail later
+    expect(hold("success", "MERGEABLE", "gates")).toBe("failed");
+    expect(hold("success", "MERGEABLE", "build")).toBe("failed");
+    expect(hold("failure", "MERGEABLE")).toBe("failed");
+    expect(hold("timed_out", "MERGEABLE")).toBe("failed");
+    // an unreadable check-run list never moves or merges anything: the head is judged on its dispatched run
+    expect(hold("success", "MERGEABLE", "", true)).toBe("held");
+  });
+
+  it("a failed head is not re-gated on the same bytes: only a moved reconcile makes a new head", () => {
+    const stop = step(wf, "Stop on a failed head that nothing has changed");
+    expect(stop).toContain("if: steps.hold.outputs.state == 'failed' && steps.reconcile.outputs.moved != 'true'");
+    expect(stop).toMatch(/exit 1/);
+    const at = (n) => wf.indexOf(`- name: ${n}`);
+    expect(at("Reconcile the rolling candidate with current master")).toBeLessThan(at("Stop on a failed head that nothing has changed"));
+    expect(at("Stop on a failed head that nothing has changed")).toBeLessThan(at("Upgrade the exact candidate proof"));
+  });
+
+  it("reconciles with master's copy of reconcile_derived.py, after the OTS client is installed, and pushes only a moved head", () => {
+    const rec = runBlock(wf, "Reconcile the rolling candidate with current master");
+    expect(rec).toContain("git show origin/master:scripts/reconcile_derived.py > \"$RUNNER_TEMP/reconcile_derived.py\"");
+    expect(rec).toContain('python3 "$RUNNER_TEMP/reconcile_derived.py" --onto origin/master');
+    expect(rec).not.toMatch(/git merge --no-edit origin\/master/);
+    expect(rec).toMatch(/if \[ "\$\(git rev-parse HEAD\)" != "\$before" \]; then\n\s*git push origin "HEAD:public-root\/pending"/);
+    expect(wf.indexOf("- name: Install witness dependencies")).toBeLessThan(wf.indexOf("- name: Reconcile the rolling candidate"));
+    expect(fs.existsSync(path.join(ROOT, "scripts/reconcile_derived.py"))).toBe(true);
+  });
+
+  // The merge step, run against a stand-in gh and a real origin, for each state of the newest
+  // dispatched run on the head.
+  function merge(latestRun) {
+    const dir = tmp("merge-");
+    const bin = path.join(dir, "bin");
+    const work = path.join(dir, "work");
+    const origin = path.join(dir, "origin.git");
+    fs.mkdirSync(bin);
+    spawnSync("git", ["init", "-q", "--bare", origin]);
+    spawnSync("git", ["init", "-q", work]);
+    const g = (...a) => spawnSync("git", ["-c", "user.name=t", "-c", "user.email=t@t", ...a], { cwd: work, encoding: "utf8" });
+    g("commit", "-q", "--allow-empty", "-m", "x");
+    g("remote", "add", "origin", origin);
+    g("push", "-q", "origin", "HEAD:refs/heads/public-root/pending");
+    const head = g("rev-parse", "HEAD").stdout.trim();
+    const log = path.join(dir, "calls");
+    const flag = path.join(dir, "dispatched");
+    const run = latestRun && { databaseId: 7, headSha: head, event: "workflow_dispatch", createdAt: "2026-10-07T00:00:00Z", ...latestRun };
+    const fresh = { databaseId: 8, headSha: head, status: "queued", conclusion: "", event: "workflow_dispatch", createdAt: "2999-01-01T00:00:00Z" };
+    fs.writeFileSync(path.join(bin, "gh"), `#!/bin/bash
+echo "$*" >> ${JSON.stringify(log)}
+case "$1 $2" in
+  "run list") if [ -f ${JSON.stringify(flag)} ]; then echo '${JSON.stringify([fresh, ...(run ? [run] : [])])}'; else echo '${JSON.stringify(run ? [run] : [])}'; fi ;;
+  "workflow run") touch ${JSON.stringify(flag)} ;;
+  "run watch") exit 0 ;;
+  "pr merge") exit 0 ;;
+esac
+`, { mode: 0o755 });
+    fs.writeFileSync(path.join(bin, "sleep"), "#!/bin/bash\nexit 0\n", { mode: 0o755 });
+    const r = spawnSync("bash", ["-e", "-c", runBlock(wf, "Merge only after pr-gates passed on these exact bytes")], { cwd: work, encoding: "utf8",
+      env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, REPO: "r/r", URL: "u", GH_TOKEN: "x" } });
+    const calls = fs.existsSync(log) ? fs.readFileSync(log, "utf8") : "";
+    return { status: r.status, stderr: r.stderr, dispatches: (calls.match(/^workflow run pr-gates\.yml/gm) || []).length,
+      merged: /^pr merge u .*--match-head-commit /m.test(calls) && calls.includes(head) };
+  }
+
+  it("dispatches pr-gates at most once per head: a failed run on these bytes is never retried", () => {
+    const failed = merge({ status: "completed", conclusion: "failure" });
+    expect(failed.status).toBe(1);
+    expect(failed.stderr).toMatch(/already concluded failure/);
+    expect(failed.dispatches).toBe(0);
+    expect(failed.merged).toBe(false);
+    const passed = merge({ status: "completed", conclusion: "success" });
+    expect(passed.status, passed.stderr).toBe(0);
+    expect(passed.dispatches).toBe(0);
+    expect(passed.merged).toBe(true);
+    const running = merge({ status: "in_progress", conclusion: "" });
+    expect(running.dispatches).toBe(0);
+    // nothing yet, or only a cancelled run that tested nothing: exactly one dispatch
+    for (const r of [merge(null), merge({ status: "completed", conclusion: "cancelled" })]) {
+      expect(r.status, r.stderr).toBe(0);
+      expect(r.dispatches).toBe(1);
+      expect(r.merged).toBe(true);
+    }
   });
 });
 
@@ -160,6 +252,30 @@ describe("A-G3: one open card-root upgrade PR at a time", () => {
   });
   it("still names the matching PR heads in the gh query", () => {
     expect(script).toContain('select(startswith("card-root/pending-") or startswith("card-root/ots-upgrade-"))');
+  });
+});
+
+describe("A-G1 / A-G4 repair: every writer of the derived files reconciles before it pushes", () => {
+  it("card-root-ots-upgrade reconciles a review branch with master and pushes a reconciled branch once", () => {
+    const wf = WF("card-root-ots-upgrade.yml");
+    const rec = step(wf, "Reconcile a review branch with master");
+    expect(rec).toContain("if: matrix.ref != 'master'");
+    expect(rec).toContain("git show origin/master:scripts/reconcile_derived.py");
+    expect(rec).toContain('python3 "$RUNNER_TEMP/reconcile_derived.py" --onto origin/master');
+    expect(wf.indexOf("- name: Reconcile a review branch with master")).toBeLessThan(wf.indexOf("- name: Stage exact-root proof candidates"));
+    // node is set up before the reconcile, which may regenerate llms
+    expect(wf.indexOf("uses: actions/setup-node@v4")).toBeLessThan(wf.indexOf("- name: Reconcile a review branch with master"));
+    const push = step(wf, "Push a reconciled review branch");
+    expect(push).toContain("if: steps.stage.outputs.changed == '0' && steps.reconcile.outputs.moved == 'true'");
+    expect(push).toContain('git push origin "HEAD:$BRANCH"');
+    expect(wf).not.toMatch(/--force|HEAD:master|gh pr merge/);
+  });
+
+  it("the public-root candidate and ots-upgrade run the same script; card-root.yml opens fresh branches from master", () => {
+    for (const name of ["public-root-candidate-upgrade.yml", "ots-upgrade.yml"]) {
+      expect(WF(name)).toContain('python3 "$RUNNER_TEMP/reconcile_derived.py" --onto origin/master');
+    }
+    expect(WF("card-root.yml")).toMatch(/git checkout -b "\$branch"/);
   });
 });
 
@@ -270,6 +386,8 @@ if a[:2] == ["pr", "list"]:
     print(json.dumps(fx["prs"]))
 elif a[0] == "api" and "/check-runs" in a[1]:
     sha = a[1].split("/commits/")[1].split("/")[0]
+    if fx["checks"].get(sha) == "ERROR":
+        sys.exit(1)
     print(json.dumps({"check_runs": fx["checks"].get(sha, [])}))
 elif a[0] == "api" and "/actions/workflows/pr-gates.yml/runs" in a[1]:
     sha = a[1].split("head_sha=")[1].split("&")[0]
@@ -301,6 +419,11 @@ elif a[:2] == ["pr", "view"]:
     );
     // only the head with no gate run at all, and the one whose only "run" never ran (action_required)
     expect(dispatched).toEqual(["fresh", "approval"]);
+  });
+
+  it("an unreadable check-run list is an unknown state: no dispatch (it used to read as no gates yet)", () => {
+    expect(sweep([pr(7, "unread", sha("u"))], { [sha("u")]: "ERROR" }, {})).toEqual([]);
+    expect(sweep([pr(7, "unread", sha("u"))], {}, {})).toEqual(["unread"]);   // control: readable and empty
   });
 
   it("a failed head is not re-dispatched on the next sweep (it used to be, every 20 minutes)", () => {
@@ -359,15 +482,43 @@ sys.exit(${rc})
     return spawnSync("bash", ["-e", "-c", script], { cwd: dir, encoding: "utf8",
       env: { ...process.env, RUNNER_TEMP: dir, FORCE: "", DRY: "" } });
   }
-  const results = (...rows) => ({ results: rows.map(([surface, status]) => ({ surface, status, detail: "d" })) });
+  const results = (...rows) => ({ results: rows.map(([surface, status, detail = "d"]) => ({ surface, status, detail })) });
+  // the two PyPI refusal texts scripts/spray/gspc-spray.py writes (pypi_stale_source_refusal)
+  const WAIT = "the snapshot version 0.2.20261007 sorts below the package source's own 0.2.20261007.1: pip would never pick it. The source release goes out first (distribution/SUBMIT.md).";
+  const AHEAD = "package source declares 0.2.20260930.1, older than the source PyPI already serves (0.2.20261007.1; latest release 0.2.20261007.1): publishing would put a newer version number over older code. Update the checkout this script runs from.";
 
-  it("PyPI REFUSED and npm BLOCKED are owner-gated warnings; any other FAILED still fails", () => {
-    const ok = spray(results(["hf-dataset", "PUBLISHED"], ["pypi", "REFUSED"], ["npm", "BLOCKED"]), 1);
+  it("the source-release-first PyPI refusal and npm BLOCKED are owner-gated warnings; any other FAILED still fails", () => {
+    const ok = spray(results(["hf-dataset", "PUBLISHED"], ["pypi", "REFUSED", WAIT], ["npm", "BLOCKED"]), 1);
     expect(ok.status, ok.stdout + ok.stderr).toBe(0);
     expect(ok.stdout).toMatch(/owner-gated::PyPI REFUSED/);
-    expect(spray(results(["hf-dataset", "FAILED"], ["pypi", "REFUSED"]), 1).status).toBe(1);
+    expect(spray(results(["hf-dataset", "FAILED"], ["pypi", "REFUSED", WAIT]), 1).status).toBe(1);
     expect(spray(results(["kaggle", "REFUSED"]), 1).status).toBe(1);
     expect(spray(null, 2).status).toBe(2);   // refused to publish at all: always red
     expect(spray(null, 0).status).toBe(1);   // no report is not a pass
+  });
+
+  it("PyPI serving a source newer than master declares stays red: code not on master reached PyPI", () => {
+    const r = spray(results(["hf-dataset", "PUBLISHED"], ["pypi", "REFUSED", AHEAD]), 1);
+    expect(r.status).toBe(1);
+    expect(r.stdout).toMatch(/::error title=gspc-spray::pypi REFUSED: package source declares/);
+    expect(spray(results(["pypi", "REFUSED", "the package source's pyproject.toml declares no version"]), 1).status).toBe(1);
+  });
+
+  it("an unreachable GitHub API reads as HTTP 000, not 000000", () => {
+    const dir = tmp("probe-");
+    const bin = path.join(dir, "bin");
+    fs.mkdirSync(bin);
+    fs.mkdirSync(path.join(dir, "functions/_lib"), { recursive: true });
+    fs.writeFileSync(path.join(dir, "functions/_lib/zenodoStatus.ts"), 'export const ZENODO_ACCOUNT_STATE: "UNAVAILABLE" | "AVAILABLE" = "UNAVAILABLE";\n');
+    // what curl does on a connect failure with -w '%{http_code}': prints 000, exits 7
+    fs.writeFileSync(path.join(bin, "curl"), "#!/bin/bash\nprintf 000\nexit 7\n", { mode: 0o755 });
+    const out = path.join(dir, "out");
+    const r = spawnSync("bash", ["-e", "-c", choose], { cwd: dir, encoding: "utf8", env: {
+      ...process.env, PATH: `${bin}:${process.env.PATH}`, GITHUB_OUTPUT: out, RUNNER_TEMP: dir, HAS_HF: "true", HAS_KAGGLE: "true",
+      HAS_GITHUB: "true", GSPC_BOARD_TOKEN: "t", HAS_ZENODO: "false", HAS_PYPI: "false", HAS_NPM: "false", EVENT: "schedule" } });
+    expect(r.status, r.stderr).toBe(0);
+    expect(r.stdout).toMatch(/\(HTTP 000, push=False\)/);
+    expect(r.stdout).not.toMatch(/000000/);
+    expect(fs.readFileSync(out, "utf8")).not.toMatch(/--github/);
   });
 });

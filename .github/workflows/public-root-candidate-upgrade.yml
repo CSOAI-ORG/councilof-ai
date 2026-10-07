@@ -106,13 +106,25 @@ jobs:
         with:
           node-version: "20"
 
-      # Hold a head that already passed its gates. Every confirmed tick re-witnesses and commits, and
-      # every master move adds a reconcile merge, so the head used to move on each tick that ran. Now
-      # that master requires the pull_request checks (gates, build), and those wait for the owner's
-      # approval on a bot-pushed head, a moving head can never collect them. A head with a passing
-      # dispatched pr-gates run and no conflict with master is kept as it is; the merge step below
-      # retries it. Master branch protection is not strict, so a behind-but-clean head may merge.
-      - name: Hold a head whose gates already passed
+      # opentimestamps is needed from here on: the reconcile below can rebuild the OTS manifest.
+      - name: Install witness dependencies
+        if: steps.candidate.outputs.exists == 'true'
+        run: pip install -q cryptography opentimestamps-client
+
+      # Hold a head that already passed its gates; stop re-gating one that already failed. Every confirmed
+      # tick re-witnesses and commits, and every master move adds a reconcile merge, so the head used to
+      # move on each tick that ran. Master requires the pull_request checks (gates, build), and those wait
+      # for the owner's approval on a bot-pushed head, so a moving head can never collect them.
+      #   held   - the latest dispatched pr-gates run on this head passed, no required check on it has
+      #            failed, and it does not conflict with master: kept as it is; the merge step retries it.
+      #            Master's protection is not strict, so a behind-but-clean head may merge.
+      #   failed - the latest dispatched run failed, or the latest `gates` or `build` check-run on the head
+      #            failed (the approved pull_request run tests the merge ref and reads the live board, so it
+      #            can fail after a dispatched pass). The hold ends. The same bytes are not re-gated or
+      #            re-witnessed; only the reconcile below (master moved, or a derived file went stale) makes a
+      #            new head, and the next step stops the tick when it did not.
+      #   open   - no result yet: the ordinary path.
+      - name: Classify the head - gates passed (held), failed, or not yet run
         if: steps.candidate.outputs.exists == 'true'
         id: hold
         env:
@@ -122,36 +134,63 @@ jobs:
         run: |
           set -euo pipefail
           head=$(git rev-parse HEAD)
-          passed=$(gh run list --repo "$REPO" --workflow pr-gates.yml --branch public-root/pending --event workflow_dispatch --limit 50 \
-            --json headSha,event,conclusion \
-            --jq "[.[] | select(.event == \"workflow_dispatch\" and .headSha == \"$head\" and .conclusion == \"success\")] | length")
+          echo "head=$head" >> "$GITHUB_OUTPUT"
+          # newest first: the latest completed dispatched run on this exact head decides
+          latest=$(gh run list --repo "$REPO" --workflow pr-gates.yml --branch public-root/pending --event workflow_dispatch --limit 50 \
+            --json headSha,event,status,conclusion \
+            --jq "[.[] | select(.event == \"workflow_dispatch\" and .headSha == \"$head\" and .status == \"completed\")] | .[0].conclusion // \"\"")
+          # The latest check-run of each required name. An unreadable answer is logged and treated as no
+          # failure seen: it can only keep a head as it is, never move or merge one.
+          if ! required_failed=$(gh api "repos/$REPO/commits/$head/check-runs?per_page=100" \
+              --jq '[.check_runs[] | select(.name == "gates" or .name == "build")] | group_by(.name) | map(max_by(.id))
+                    | map(select(.status == "completed" and (.conclusion == "failure" or .conclusion == "timed_out")) | .name) | join(",")'); then
+            echo "::warning::could not read the check-runs on $head; judging it on the dispatched runs alone"
+            required_failed=""
+          fi
           mergeable=$(gh pr view "$URL" --repo "$REPO" --json mergeable --jq .mergeable)
-          if [ "$passed" != "0" ] && [ "$mergeable" != "CONFLICTING" ]; then
-            echo "held=true" >> "$GITHUB_OUTPUT"
+          if [ "$latest" = "failure" ] || [ "$latest" = "timed_out" ] || [ -n "$required_failed" ]; then
+            state=failed
+            echo "FAILED: gates failed on $head (latest dispatched run: ${latest:-none}; failed required checks: ${required_failed:-none}). Not held; not re-gated on the same bytes."
+          elif [ "$latest" = "success" ] && [ "$mergeable" != "CONFLICTING" ]; then
+            state=held
             echo "HOLD: pr-gates already passed on $head (mergeable=$mergeable); not reconciling or re-witnessing."
           else
-            echo "held=false" >> "$GITHUB_OUTPUT"
+            state=open
           fi
+          echo "state=$state" >> "$GITHUB_OUTPUT"
+          if [ "$state" = "held" ]; then echo "held=true" >> "$GITHUB_OUTPUT"; else echo "held=false" >> "$GITHUB_OUTPUT"; fi
 
+      # Four writers commit the OTS manifest and the llms files with their proofs (this candidate,
+      # card-root.yml, card-root-ots-upgrade.yml, ots-upgrade.yml), and whichever PR merges second
+      # conflicted on their as_of and count lines: shown on the lanes pod after a card-root OTS upgrade
+      # landed first. scripts/reconcile_derived.py regenerates those three files from the merged bytes;
+      # a conflict anywhere else (root, proof, witness bytes) still aborts and fails the run closed.
+      # Master's copy of the script runs, since this branch can predate it.
       - name: Reconcile the rolling candidate with current master
         if: steps.candidate.outputs.exists == 'true' && steps.hold.outputs.held != 'true'
+        id: reconcile
         run: |
           set -euo pipefail
           git config user.name "csoai-public-root"
           git config user.email "board@csoai.org"
-          git fetch origin master
+          git fetch -q origin master
+          git show origin/master:scripts/reconcile_derived.py > "$RUNNER_TEMP/reconcile_derived.py"
           before=$(git rev-parse HEAD)
-          # A real content conflict fails the workflow closed. Never choose a
-          # side automatically for root, proof, or witness bytes.
-          git merge --no-edit origin/master
-          after=$(git rev-parse HEAD)
-          if [ "$before" != "$after" ]; then
+          python3 "$RUNNER_TEMP/reconcile_derived.py" --onto origin/master
+          if [ "$(git rev-parse HEAD)" != "$before" ]; then
             git push origin "HEAD:public-root/pending"
+            echo "moved=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "moved=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Install witness dependencies
-        if: steps.candidate.outputs.exists == 'true'
-        run: pip install -q cryptography opentimestamps-client
+      - name: Stop on a failed head that nothing has changed
+        if: steps.hold.outputs.state == 'failed' && steps.reconcile.outputs.moved != 'true'
+        env:
+          HEAD_SHA: ${{ steps.hold.outputs.head }}
+        run: |
+          echo "::error title=public-root candidate::pr-gates failed on $HEAD_SHA and neither master nor a derived file has moved since, so these bytes are not re-gated or re-witnessed. Read the failed gates run on the candidate PR. The next master move reconciles and re-gates a new head once."
+          exit 1
 
       - name: Upgrade the exact candidate proof
         if: steps.candidate.outputs.exists == 'true' && steps.hold.outputs.held != 'true'
@@ -284,9 +323,21 @@ jobs:
               --json databaseId,headSha,status,conclusion,createdAt,event \
               | jq '[.[] | select(.event == "workflow_dispatch")]'
           }
-          # Reuse a run on this exact commit that passed or is still going; a failed one is retried.
-          run_id=$(runs | jq -r --arg sha "$head" \
-            '[.[] | select(.headSha == $sha and (.status != "completed" or .conclusion == "success"))] | .[0].databaseId // ""')
+          # Once per SHA. Reuse the newest run on this exact commit if it passed or is still going. One that
+          # failed is NOT retried: the same bytes fail the same way, and every retry was one more red
+          # pr-gates run (public-root/pending: 22 failed dispatched runs over 8 heads in the 24 h to
+          # 07:49Z 7 Oct). Only a cancelled run, which tested nothing, is replaced.
+          latest=$(runs | jq -c --arg sha "$head" '[.[] | select(.headSha == $sha)] | .[0] // {}')
+          run_id=$(printf '%s' "$latest" | jq -r '.databaseId // ""')
+          run_status=$(printf '%s' "$latest" | jq -r '.status // ""')
+          run_conclusion=$(printf '%s' "$latest" | jq -r '.conclusion // ""')
+          if [ -n "$run_id" ] && [ "$run_status" = "completed" ] && [ "$run_conclusion" != "success" ]; then
+            if [ "$run_conclusion" != "cancelled" ]; then
+              echo "HALT: pr-gates run $run_id already concluded $run_conclusion on $head; the same bytes are not dispatched again." >&2
+              exit 1
+            fi
+            run_id=""
+          fi
           if [ -z "$run_id" ]; then
             since=$(date -u -d '1 minute ago' +%Y-%m-%dT%H:%M:%SZ)
             gh workflow run pr-gates.yml --repo "$REPO" --ref public-root/pending

@@ -29,8 +29,9 @@ name: gspc-spray
 # token" (GSPC_BOARD_TOKEN is dead), [pypi] REFUSED (a release-order guard: the source release goes
 # out first) and [npm] BLOCKED (WebAuthn account). So: Zenodo is not called unless
 # functions/_lib/zenodoStatus.ts says ZENODO_ACCOUNT_STATE = "AVAILABLE"; the GitHub mirror runs
-# only when its token can push to gspc-board; and PyPI REFUSED and npm BLOCKED are reported as
-# owner-gated warnings, not failures. Any other FAILED or REFUSED still fails the run.
+# only when its token can push to gspc-board; and that one PyPI refusal ("the source release goes out
+# first") and npm BLOCKED are reported as owner-gated warnings, not failures. Any other FAILED or
+# REFUSED still fails the run, including PyPI serving a source newer than master declares.
 
 on:
   schedule:
@@ -155,9 +156,12 @@ jobs:
           if [ "$HAS_KAGGLE" = "true" ]; then flags="$flags --kaggle"; else note "KAGGLE_ACCESS_TOKEN missing — Kaggle skipped"; fi
           if [ "$HAS_GITHUB" = "true" ]; then
             # The secret exists; ask GitHub whether it still authenticates and may push, before cloning.
+            # curl prints 000 itself when it cannot connect, and then exits non-zero: `|| true`, never
+            # `|| echo 000`, or the code reads 000000 (the bug fixed in post-deploy-verify).
             gh_code=$(curl -s -o "$RUNNER_TEMP/gspc-board.json" -w '%{http_code}' --max-time 20 \
               -H "Authorization: Bearer $GSPC_BOARD_TOKEN" -H "Accept: application/vnd.github+json" \
-              https://api.github.com/repos/CSOAI-ORG/gspc-board || echo 000)
+              https://api.github.com/repos/CSOAI-ORG/gspc-board || true)
+            gh_code=${gh_code:-000}
             can_push=$(python3 -c "import json,sys; print(json.load(open(sys.argv[1])).get('permissions',{}).get('push', False))" "$RUNNER_TEMP/gspc-board.json" 2>/dev/null || echo False)
             rm -f "$RUNNER_TEMP/gspc-board.json"
             if [ "$gh_code" = "200" ] && [ "$can_push" = "True" ]; then flags="$flags --github"
@@ -204,15 +208,20 @@ jobs:
           # script refused to publish: live truth unreadable or unverified), is always red.
           if [ "$rc" != "0" ] && [ "$rc" != "1" ]; then exit "$rc"; fi
           if [ ! -f "$RUNNER_TEMP/spray/spray-report.json" ]; then echo "::error title=gspc-spray::no report written (exit $rc)"; exit 1; fi
-          # exit 1 = some surface FAILED or REFUSED. PyPI's release-order refusal is owner-gated (the
-          # source release goes out first, distribution/SUBMIT.md); it is reported, not failed.
+          # exit 1 = some surface FAILED or REFUSED. ONE PyPI refusal is owner-gated: the snapshot version
+          # sorts below the package source's own version, so the source release has to go out first
+          # (distribution/SUBMIT.md); it is reported, not failed. Every other PyPI refusal stays red,
+          # above all "package source declares X, older than the source PyPI already serves": code
+          # that is not on master reached PyPI, which is a release-order defect, not a wait.
           python3 - "$RUNNER_TEMP/spray/spray-report.json" <<'PY'
           import json, sys
           r = json.load(open(sys.argv[1]))
           bad = []
           for x in r["results"]:
-              if x["status"] == "REFUSED" and x["surface"] == "pypi":
-                  print(f"::warning title=gspc-spray owner-gated::PyPI REFUSED: {x.get('detail') or ''}"[:900])
+              detail = x.get("detail") or ""
+              if x["status"] == "REFUSED" and x["surface"] == "pypi" and "The source release goes out first" in detail \
+                      and "older than the source PyPI already serves" not in detail:
+                  print(f"::warning title=gspc-spray owner-gated::PyPI REFUSED: {detail}"[:900])
               elif x["status"] in ("FAILED", "REFUSED"):
                   bad.append(x)
           for x in bad:
