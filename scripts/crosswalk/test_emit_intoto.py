@@ -225,6 +225,98 @@ def test_selection_rule() -> None:
     )
 
 
+# ------------------------------------------- selection is STABLE: new cards never move a current pick
+def _card(cid: str, axis: str = "safety", status: str = "MEASURED") -> dict:
+    """A selection-only stand-in. select() reads id, body.axis and body.status and nothing else."""
+    return {"id": cid * 64 if len(cid) == 1 else cid, "body": {"axis": axis, "status": status}}
+
+
+def _ids(chosen: list[dict]) -> dict[str, str]:
+    return {c["body"]["axis"]: c["id"] for c in chosen}
+
+
+def test_selection_is_stable() -> None:
+    print("selection is stable")
+    a, b, c, d = (x * 64 for x in "abcd")
+    held = [_card("b")]
+    prior = _ids(E.select(held))
+    check("first run, no history: the only eligible card is picked", prior == {"safety": b}, prior)
+
+    # The #2888 case: the mill lands a MEASURED card whose id sorts BELOW the current pick.
+    grown = held + [_card("a")]
+    check(
+        "a newly landed smaller MEASURED id does NOT move a pick that is still current",
+        _ids(E.select(grown, prior)) == {"safety": b},
+        _ids(E.select(grown, prior)),
+    )
+    check(
+        "NEGATIVE CONTROL: without the prior pick the same corpus picks the smaller id "
+        "(so the test above is held by the rule, not by the fixture)",
+        _ids(E.select(grown)) == {"safety": a},
+    )
+
+    # A superseded pick follows SUPERSEDED.jsonl to its replacement, even past a smaller id.
+    corpus = [_card("a"), _card("b"), _card("c"), _card("d")]
+    check(
+        "a superseded pick moves to its replacement, not to the smallest id",
+        _ids(E.select(corpus, {"safety": b}, {b: d})) == {"safety": d},
+        _ids(E.select(corpus, {"safety": b}, {b: d})),
+    )
+    check(
+        "a chain of supersessions is followed to its terminal card",
+        _ids(E.select(corpus, {"safety": b}, {b: c, c: d})) == {"safety": d},
+    )
+
+    # Choose anew ONLY when the replacement is not eligible.
+    unmeasured = [_card("a"), _card("b"), _card("c", status="UNMEASURED"), _card("d")]
+    got = _ids(E.select(unmeasured, {"safety": b}, {b: c}))
+    check("a pick superseded by an UNMEASURED card is chosen anew: smallest eligible id", got == {"safety": a}, got)
+    got = _ids(E.select(corpus, {"safety": b}, {}, {b}))
+    check("a withdrawn pick is chosen anew, never kept", got == {"safety": a}, got)
+    got = _ids(E.select(corpus, {"safety": b}, {b: c}, {c}))
+    check("a pick whose replacement is withdrawn is chosen anew", got == {"safety": a}, got)
+    other_axis = [_card("a"), _card("b"), _card("c", axis="jail")]
+    got = _ids(E.select(other_axis, {"safety": b}, {b: c}))
+    check("a replacement on another axis is not this axis's pick", got == {"safety": a, "jail": c}, got)
+
+    # Never a superseded or withdrawn card, with or without history.
+    got = _ids(E.select(corpus, {}, {a: d}, {b}))
+    check("with no history a superseded or withdrawn smaller id is skipped", got == {"safety": c}, got)
+
+    # Fixed point: re-running on its own output selects the same cards (this is what --check needs).
+    once = _ids(E.select(unmeasured, {"safety": b}, {b: c}))
+    twice = _ids(E.select(unmeasured, once, {b: c}))
+    check("the rule is a fixed point on its own output", once == twice, (once, twice))
+
+    try:
+        E.select(corpus, {"safety": b}, {b: c, c: b})
+        check("NEGATIVE: a supersession cycle HALTs", False)
+    except SystemExit:
+        check("NEGATIVE: a supersession cycle HALTs", True)
+
+
+def test_live_selection_is_current() -> None:
+    """The committed index on this commit: every pick eligible, and a smaller new id moves nothing."""
+    print("live selection")
+    cards = E.load_cards()
+    replacements, withdrawn = E.load_ledgers()
+    prior = E.load_prior()
+    check("the committed index has picks to hold", len(prior) >= 10, len(prior))
+    chosen = _ids(E.select(cards, prior, replacements, withdrawn))
+    check("the committed picks are exactly what the rule selects", chosen == prior, sorted(set(chosen.items()) ^ set(prior.items())))
+    by_id = {card["id"]: card for card in cards}
+    stale = [cid[:16] for cid in prior.values() if cid in replacements or cid in withdrawn]
+    check("no committed pick is superseded or withdrawn", stale == [], stale)
+    unmeasured = [cid[:16] for cid in prior.values() if by_id.get(cid, {}).get("body", {}).get("status") != "MEASURED"]
+    check("every committed pick is a MEASURED card in the corpus", unmeasured == [], unmeasured)
+    # Land a MEASURED card below every pick on every axis: nothing may move.
+    landed = cards + [_card("0" * 63 + str(i % 10), axis) for i, axis in enumerate(sorted(prior))]
+    check(
+        "landing a smaller MEASURED id on every axis moves no pick",
+        _ids(E.select(landed, prior, replacements, withdrawn)) == prior,
+    )
+
+
 # ------------------------------------ the live corpus really is signed (skipped, loudly, if no lib)
 def test_live_corpus_signatures() -> None:
     print("live corpus")
@@ -262,6 +354,8 @@ def main() -> int:
     test_constants_match_functions_api_intoto_ts()
     test_output_is_deterministic()
     test_selection_rule()
+    test_selection_is_stable()
+    test_live_selection_is_current()
     test_live_corpus_signatures()
     print()
     if FAILURES:
