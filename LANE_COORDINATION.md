@@ -488,3 +488,27 @@ evidence-backed; Rev 2 on the one non-self settlement; Timing 9). Instrument dec
 Gates to 7.0 unchanged: file 8 UK IPO provisionals (~£480–800) + first paying customer.
 Full pack: csoai.org/series-a/00-SAFE_READINESS.md (owner repo, committed locally).
 EIS advance assurance (HMRC, free, 2–4 wks) is the gate that makes the ASA work.
+
+## 2026-10-07 · M4 lane — cross-lane alignment with the Claim-Maintenance/website lane (append)
+
+**1. Verified listings surface shipped** (`public/verified-listings.md`): the Claude +
+SAIL entries with source provenance, plus the four listings verified by direct retrieval
+today and the five pending submissions — every row names what its evidence does NOT
+establish (inclusion ≠ endorsement/reproduction/revenue). This is an ADDITIVE surface;
+it preserves every existing register entry (33-entry milestone register untouched —
+its patch remains with its owner). **No-duplicate declaration:** the two punkpeye PRs
+(#1313, #15903), MCP-Registry staging, OpenAI prep and the Claude-listing update are
+each submitted ONCE from this lane; no further submission of these will be made by M4.
+PrivateEmail-only Vanta work and the SAFE contribution stay with their current owners.
+
+**2. Handoff row (Kin Score credit fix).** The prepared `conformance.grade` ←
+`grade.result` compatibility change (22 offline checks, per the Claim-Maintenance lane)
+targets the catalogue-evidence emitter. M4 probed: NOT in councilof-ai-work
+public/interop scorecards, NOT in csoai-static-deploy2 well-known manifests — the
+emitting artefact sits in the Kin-submission bundle owned by that lane. Row stays open
+with them; M4 will verify the scorer's readback after their change lands.
+
+**3. Desktop Commander confirmed** (from the owner's DC dashboard): endpoint
+`https://mcp.desktopcommander.app/mcp` (OAuth, per-client tokens), three devices online
+(IOKs-MacBook-Air, NICHOLASs-MacBook-Air-2, sov33-owem-micro2). M4's Hermes MCP wiring
+awaits the one-time Authorize click (owner-gated, staged).
