@@ -199,6 +199,80 @@ export async function waitFor(selector: string, ms = 4000): Promise<Element | nu
   }
 }
 
+/* ------------------------------------------------------------------ scrolling */
+
+/** Never scroll the Ask panel itself, or a dialog over the page: the reader asked about the page. */
+const NOT_THE_PAGE = "[data-testid='ask-pane'], [data-testid='talk-panel'], [role='dialog']";
+
+function canScroll(el: Element): el is HTMLElement {
+  if (!(el instanceof HTMLElement) || el.scrollHeight <= el.clientHeight + 1) return false;
+  const oy = getComputedStyle(el).overflowY;
+  return oy === "auto" || oy === "scroll" || oy === "overlay";
+}
+
+/**
+ * The scroll box the reader is looking at. The dashboard's centre pane scrolls inside
+ * [data-testid='dashboard-tool-canvas'] (or a scroller inside it); a page scrolls the document.
+ * Otherwise the largest visible scroller that is not the Ask panel or a dialog.
+ */
+export function activeScroller(): HTMLElement {
+  const doc = (document.scrollingElement as HTMLElement | null) ?? document.documentElement;
+  const canvas = document.querySelector("[data-testid='dashboard-tool-canvas']");
+  const pool: Element[] = canvas ? [canvas, ...Array.from(canvas.querySelectorAll("*"))] : Array.from(document.querySelectorAll("main, main *, body *"));
+  let best: HTMLElement | null = null;
+  let area = 0;
+  for (const el of pool) {
+    if (!canScroll(el) || el.closest(NOT_THE_PAGE)) continue;
+    const a = el.clientWidth * el.clientHeight;
+    if (a > area) {
+      best = el;
+      area = a;
+    }
+  }
+  // A small inner scroller (a code block) is not "the page" when the document itself scrolls.
+  const docScrolls = doc.scrollHeight > doc.clientHeight + 1;
+  if (best && (!docScrolls || area >= 0.4 * window.innerWidth * window.innerHeight)) return best;
+  return doc;
+}
+
+const norm = (x: string) => x.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+
+/**
+ * A named section of the page: an axis row (data-axis-row), a named region, an id, then the first
+ * heading whose words contain the name. Elements inside the Ask panel are never a match (the
+ * reader's own question is on screen there). Waits briefly for a lazy pane.
+ */
+export async function findSection(name: string, ms = 2500): Promise<Element | null> {
+  const words = norm(name).slice(0, 60);
+  if (!words) return null;
+  const slug = words.replace(/ /g, "-");
+  const start = Date.now();
+  for (;;) {
+    const direct = [
+      `[data-axis-row='${slug}']`,
+      `[data-ui-region='${slug}']`,
+      `[data-section='${slug}']`,
+      `#${typeof CSS !== "undefined" && CSS.escape ? CSS.escape(slug) : slug}`,
+    ];
+    for (const sel of direct) {
+      try {
+        const el = document.querySelector(sel);
+        if (el && !el.closest(NOT_THE_PAGE)) return el;
+      } catch {
+        /* an id that is not a valid selector: try the next */
+      }
+    }
+    const heads = document.querySelectorAll("h1, h2, h3, h4, [role='heading'], summary, legend, [data-axis-row]");
+    for (const h of Array.from(heads)) {
+      if (h.closest(NOT_THE_PAGE)) continue;
+      const label = norm(`${h.getAttribute("data-axis-row") ?? ""} ${h.textContent ?? ""}`);
+      if (label && (` ${label} `).includes(` ${words} `)) return h;
+    }
+    if (Date.now() - start > ms) return null;
+    await sleep(120);
+  }
+}
+
 function sameOrigin(path: unknown): string | null {
   if (typeof path !== "string" || !path.startsWith("/") || path.startsWith("//")) return null;
   return path;
@@ -351,11 +425,32 @@ export const UI_COMMANDS: Record<FrontendToolName, Executor> = {
     return skipped("There is no verify control on this page, so nothing was checked.");
   },
 
-  async scroll(args) {
-    const el = await waitFor(String(args.selector ?? ""));
-    if (!el) return skipped("That part is not on this page.");
+  async scroll(args, step) {
+    const to = args.to;
+    if (to === "top" || to === "bottom" || to === "up" || to === "down") {
+      const box = activeScroller();
+      const before = box.scrollTop;
+      const max = Math.max(0, box.scrollHeight - box.clientHeight);
+      const page = Math.round(box.clientHeight * 0.8);
+      const target =
+        to === "top" ? 0 : to === "bottom" ? max : Math.max(0, Math.min(max, before + (to === "down" ? page : -page)));
+      if (Math.abs(target - before) < 2) {
+        return done(to === "top" || to === "up" ? "Already at the top; nothing moved." : "Already at the bottom; nothing moved.");
+      }
+      box.scrollTo({ top: target, behavior: reduceMotion() ? "auto" : "smooth" });
+      undoStack.push({ stepId: step.id, tool: "scroll", run: () => box.scrollTo({ top: before }) });
+      await sleep(reduceMotion() ? 50 : 500);
+      return done(to === "top" ? "Scrolled to the top." : to === "bottom" ? "Scrolled to the bottom." : `Scrolled ${to}.`);
+    }
+    const el =
+      typeof args.section === "string" && args.section.trim()
+        ? await findSection(args.section)
+        : typeof args.selector === "string" && args.selector
+          ? await waitFor(args.selector)
+          : null;
+    if (!el) return skipped("That part is not on this page, so nothing moved.");
     el.scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth", block: "start" });
-    return done("Scrolled.");
+    return done(typeof args.section === "string" ? `Scrolled to ${args.section.trim().slice(0, 60)}.` : "Scrolled.");
   },
 
   async focus(args) {

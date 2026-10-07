@@ -97,9 +97,15 @@ describe("Council OS tabs", () => {
     expect(matchTab("get measured")?.id).toBe("measured");
   });
 
-  it("opens Software for a dashboard command", () => {
+  it("lands a dashboard command on the start screen, under the start screen's own title", () => {
     expect(matchTab("open the dashboard")?.id).toBe("software");
     expect(matchTab("go to dsh")?.id).toBe("software");
+    // Re-test 7 Oct 2026: the legacy id said "Opened Software" and changed nothing.
+    expect(normalizeLobbyTabId("software")).toBe("home");
+    expect(normalizeLobbyTabId("dsh")).toBe("home");
+    expect(tabById("software").label).toBe(tabById("home").label);
+    expect(tabById("software").label).not.toMatch(/software/i);
+    expect(tabById("software").blurb).not.toMatch(/signed-in dashboard|DSH/i);
   });
 
   it("treats chat / AG UI as the Council OS home, and frames models and tools", () => {

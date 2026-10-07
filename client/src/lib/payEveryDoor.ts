@@ -237,10 +237,27 @@ export function unsettledReason(body: unknown): string {
   return "the door answered 402 again and relayed no reason";
 }
 
+/**
+ * AFTER A SIGNED PAYMENT IS SENT, "NOT PAID" IS ONLY EVER SAID ON A 402 (7 Oct 2026). A paid door
+ * settles before it builds the deliverable, so a 5xx (or a dropped connection) after the X-PAYMENT
+ * retry can follow a settle that already moved the buyer's USDC. The art50 pane used to read
+ * "Not paid: the paid retry answered HTTP 500" and /pay-all "NOT SETTLED." in exactly that case.
+ * Anything but 2xx or 402 after sending is MAYBE-SETTLED: check the wallet before paying again.
+ */
+export const MAYBE_SETTLED_LINE =
+  "Payment may have settled: the signed payment was sent, and the door did not deliver. Check your wallet (or the transaction) before you pay again.";
+
+/** The refund path a door states in a non-2xx body (functions/api/art50/marking-evidence.ts `refund`), or null. */
+export function refundLine(body: unknown): string | null {
+  const b = body && typeof body === "object" ? (body as Record<string, unknown>) : null;
+  const r = b?.refund && typeof b.refund === "object" ? (b.refund as Record<string, unknown>) : null;
+  return r && typeof r.how === "string" && r.how.trim() ? r.how : null;
+}
+
 export type PaidOutcome =
-  | { kind: "delivered"; http: number; paymentResponse: string | null; settlement: Settlement | null }
+  | { kind: "delivered"; http: number; paymentResponse: string | null; settlement: Settlement | null; body: unknown }
   | { kind: "unsettled"; http: 402; reason: string }
-  | { kind: "failed"; http: number; detail: string };
+  | { kind: "maybe-settled"; http: number | null; detail: string; paymentResponse: string | null; settlement: Settlement | null; body: unknown };
 
 /** Retry the SAME door once with the signed payload in X-PAYMENT. */
 export async function retryDoorWithPayment(
@@ -257,22 +274,34 @@ export async function retryDoorWithPayment(
   }
   if (r.status >= 200 && r.status < 300) {
     const paymentResponse = r.headers.get("x-payment-response");
-    return { kind: "delivered", http: r.status, paymentResponse, settlement: decodeSettlement(paymentResponse) };
+    // KEEP WHAT WAS BOUGHT (2026-10-07). This used to return without reading the body, so a paid
+    // door's deliverable (the signed art50 pack, the commission receipt) was dropped on the floor:
+    // the payer saw DELIVERED and a transaction hash, and nothing they could keep or check.
+    return { kind: "delivered", http: r.status, paymentResponse, settlement: decodeSettlement(paymentResponse), body: await readJson(r) };
   }
   const body = await readJson(r);
   const err =
     body && typeof body === "object" && typeof (body as { error?: unknown }).error === "string"
       ? (body as { error: string }).error
       : null;
-  return { kind: "failed", http: r.status, detail: `the paid retry answered HTTP ${r.status}${err ? `: ${err}` : ""}` };
+  const paymentResponse = r.headers.get("x-payment-response");
+  return {
+    kind: "maybe-settled",
+    http: r.status,
+    detail: `the paid retry answered HTTP ${r.status}${err ? `: ${err}` : ""}`,
+    paymentResponse,
+    settlement: decodeSettlement(paymentResponse),
+    body,
+  };
 }
 
 export type DoorState =
   | { kind: "idle" }
   | { kind: "signing"; wallet: string }
   | { kind: "paying" }
-  | { kind: "delivered"; paymentResponse: string | null; settlement: Settlement | null }
+  | { kind: "delivered"; paymentResponse: string | null; settlement: Settlement | null; body?: unknown }
   | { kind: "unsettled"; reason: string }
+  | { kind: "maybe-settled"; detail: string; settlement: Settlement | null; refund: string | null; body?: unknown }
   | { kind: "rejected"; detail: string }
   | { kind: "wrong-network"; detail: string }
   | { kind: "no-wallet" }
@@ -302,18 +331,29 @@ export async function payDoor(
   const { door, challenge, provider, walletName } = args;
   const fetchImpl = args.fetchImpl || fetch;
   const phase = args.onPhase || (() => {});
+  // Set once the signed payment leaves this page: from then on a failure may follow a settle.
+  let sent = false;
   try {
     buildTypedData(challenge, PREFLIGHT_SIGNER);
     phase({ kind: "signing", wallet: walletName });
     const signature = await signX402Challenge(provider, challenge);
     phase({ kind: "paying" });
+    sent = true;
     const outcome = await retryDoorWithPayment(door, signature.header, fetchImpl);
     if (outcome.kind === "delivered") {
-      return { kind: "delivered", paymentResponse: outcome.paymentResponse, settlement: outcome.settlement };
+      return { kind: "delivered", paymentResponse: outcome.paymentResponse, settlement: outcome.settlement, body: outcome.body };
     }
     if (outcome.kind === "unsettled") return { kind: "unsettled", reason: outcome.reason };
-    return { kind: "error", detail: outcome.detail };
+    return { kind: "maybe-settled", detail: outcome.detail, settlement: outcome.settlement, refund: refundLine(outcome.body), body: outcome.body };
   } catch (error) {
+    if (sent) {
+      return {
+        kind: "maybe-settled",
+        detail: `the paid retry did not complete (${String((error as Error)?.message ?? error)})`,
+        settlement: null,
+        refund: null,
+      };
+    }
     const classified: PayState = classifyPayError(error);
     if (classified.kind === "rejected") return { kind: "rejected", detail: classified.detail };
     if (classified.kind === "wrong-network") return { kind: "wrong-network", detail: classified.detail };
@@ -351,6 +391,26 @@ export function selectDoor(doors: Door[], wanted: string | null): Door | null {
     doors.find((d) => new URL(d.url).pathname === wanted) ||
     null
   );
+}
+
+/**
+ * The door a deep link pays. A manifest row carries ONE example query, and some doors need inputs
+ * the example does not have: /api/measurement/fresh-capsule is listed bare and answers 400 (and
+ * settles nothing) without endpoint= and dimension=, so /pay-all could quote it but never pay it.
+ * A link that names a DECLARED route with its own query now pays that exact resource: same origin,
+ * same path, the link's query, quoted from its own live 402 like any other door. A link to a route
+ * the manifest does not declare still selects nothing.
+ */
+export function doorForLink(doors: Door[], wanted: string | null): Door | null {
+  const base = selectDoor(doors, wanted);
+  if (!base || !wanted || base.url === wanted) return base;
+  try {
+    const w = new URL(wanted);
+    if (!w.search || routeKey(w.toString()) !== base.routeKey || sameResource(base.url, w.toString())) return base;
+    return { ...base, url: w.toString() };
+  } catch {
+    return base;
+  }
 }
 
 /** What /api/x402-listing returns — the shape functions/api/x402-listing.ts writes. */
@@ -428,7 +488,9 @@ export function remainingDoors(
 ): Door[] {
   return doors.filter((d) => {
     const q = quotes[d.url];
-    return q !== undefined && q !== "reading" && q.kind === "challenge" && states[d.url]?.kind !== "delivered";
+    const s = states[d.url]?.kind;
+    // A door that may have settled is never walked again: paying it twice is the one thing to avoid.
+    return q !== undefined && q !== "reading" && q.kind === "challenge" && s !== "delivered" && s !== "maybe-settled";
   });
 }
 
@@ -541,14 +603,15 @@ export function daysSince(iso: string | null | undefined, now: number | Date): n
 }
 
 /** The running tally of a Settle-all walk, read off the door states — nothing is counted twice. */
-export type WalkTally = { queued: number; delivered: number; unsettled: number; rejected: number; failed: number; pending: number };
+export type WalkTally = { queued: number; delivered: number; unsettled: number; maybe_settled: number; rejected: number; failed: number; pending: number };
 
 export function walkTally(queue: string[], states: Record<string, DoorState | undefined>): WalkTally {
-  const t: WalkTally = { queued: queue.length, delivered: 0, unsettled: 0, rejected: 0, failed: 0, pending: 0 };
+  const t: WalkTally = { queued: queue.length, delivered: 0, unsettled: 0, maybe_settled: 0, rejected: 0, failed: 0, pending: 0 };
   for (const url of queue) {
     const k = states[url]?.kind;
     if (k === "delivered") t.delivered++;
     else if (k === "unsettled") t.unsettled++;
+    else if (k === "maybe-settled") t.maybe_settled++;
     else if (k === "rejected") t.rejected++;
     else if (k === "error" || k === "wrong-network" || k === "no-wallet") t.failed++;
     else t.pending++;

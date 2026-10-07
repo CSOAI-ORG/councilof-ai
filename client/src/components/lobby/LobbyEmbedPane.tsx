@@ -1,10 +1,11 @@
 import { useMemo, useState } from "react";
-import { FOCUS, MEASURE, PRIMARY, SP, TYPE } from "./glass";
+import { FOCUS, MEASURE, SP, TYPE } from "./glass";
 import { leaderLabel } from "../../../../functions/_lib/leaderLabel";
 import { CopyBlock, PaneHead, WireNotice } from "./paneKit";
 import { quotableWire, stateWord, useBoardWire, useSignalCards } from "./boardWire";
 import { badgeSnippet, cardSnippet, CARD_EMBED_HEIGHT, CARD_EMBED_WIDTH } from "@/lib/embedSnippet";
 import JoinedSpecsFooter from "@/components/JoinedSpecsFooter";
+import HelpDoor from "./HelpDoor";
 
 /**
  * LobbyEmbedPane — the white-label embed kit, NATIVE in Council OS.
@@ -20,9 +21,12 @@ import JoinedSpecsFooter from "@/components/JoinedSpecsFooter";
  *   · The badge is <img src="/api/badge?axis=…"> — the same endpoint the snippet
  *     ships, rendered same-origin. If the board says "unmeasured", the preview
  *     says "unmeasured"; there is no styled placeholder to mistake for a score.
- *   · The card widget is the real /embed/verify.html iframe doing real Ed25519
- *     verification in this browser. A tampered card shows red here exactly as it
- *     would on the embedder's site.
+ *   · The card widget is the real /embed/verify iframe. It loads the card's bytes and
+ *     asks the live verifier (POST /api/verify, the same shared rule as /gspc-verify),
+ *     shows its three-state answer, and links to /gspc-verify/?card=… so a visitor's
+ *     own browser can repeat the check. Re-test 7 Oct 2026: this widget used to be a
+ *     withdrawal notice, so the kit handed out a snippet that told every embedding
+ *     site's visitors the verifier had been withdrawn.
  *
  * WHAT IS NEVER CONSTRUCTED. Card paths come from GET /signals/_index.json, never
  * derived from an axis name: the axes are `governance`/`provenance` while the
@@ -32,6 +36,10 @@ import JoinedSpecsFooter from "@/components/JoinedSpecsFooter";
  * DOCTRINE. A badge is a measurement, not a conformity mark, and the embedder
  * cannot alter the signed verdict — an edit to the card's bytes breaks the
  * signature and the widget shows it. Verification is free forever.
+ *
+ * HELP LINKS WORK WITHOUT A HOST. The Dashboard renders this pane with no props
+ * (DashboardPane.tsx `<C />`), so `onOpenRoute` is undefined there and the old
+ * buttons threw on click and did nothing. Without a host they are plain links.
  */
 
 const ORIGIN = "https://councilof.ai";
@@ -41,7 +49,7 @@ type Widget = "badge" | "card";
 export default function LobbyEmbedPane({
   onOpenRoute,
 }: {
-  onOpenRoute: (path: string, label: string) => void;
+  onOpenRoute?: (path: string, label: string) => void;
 }) {
   const wire = useBoardWire();
   const cards = useSignalCards();
@@ -66,11 +74,11 @@ export default function LobbyEmbedPane({
 
   return (
     <div className={`${SP.panel} h-full overflow-y-auto`}>
-      <PaneHead eyebrow="Embed kit" title="Build the embed, from what is actually on the board">
-        Pick a live axis or a published signed card. The preview below is the real endpoint, not a
-        mock-up — what you see here is what a visitor to your site sees. This is measurement and
-        attestation, never a certification or a conformity mark, and verification is free forever.
-        The snippet hashes the same card-v1 bytes. No extra kinds.
+      <PaneHead eyebrow="Embed kit" title="Put a live result on your own site">
+        Choose a status badge for the whole board or one axis, or a small panel that checks one of
+        our signed cards. The preview below is the real thing, not a mock-up: what you see here is
+        what your visitors see. It shows a measurement, never a certification or a pass mark, and
+        checking is free, always.
       </PaneHead>
 
       <div className="mt-5 flex flex-wrap gap-2" role="group" aria-label="Which embed">
@@ -87,7 +95,7 @@ export default function LobbyEmbedPane({
                 : "border border-slate-900/12 bg-white text-slate-700 hover:bg-slate-900/5")
             }
           >
-            {w === "badge" ? "Live status badge" : "Self-verifying card"}
+            {w === "badge" ? "Live status badge" : "Checked signed card"}
           </button>
         ))}
       </div>
@@ -196,25 +204,26 @@ export default function LobbyEmbedPane({
               </label>
 
               <div className="mt-5 rounded-2xl border border-slate-900/10 bg-white/90 p-5">
-                <p className={TYPE.section}>Live widget — real Ed25519, in this browser</p>
+                <p className={TYPE.section}>Live widget — the one your visitors see</p>
                 {cardPath ? (
                   <>
                     <iframe
                       key={cardPath}
-                      src={`/embed/verify.html?card=${cardPath}`}
+                      src={`/embed/verify?card=${cardPath}`}
                       width={CARD_EMBED_WIDTH}
                       height={CARD_EMBED_HEIGHT}
                       loading="lazy"
                       style={{ border: 0, maxWidth: "100%" }}
-                      title="Verify a signed measurement card"
+                      title="A signed measurement card, checked"
                       className="mt-3 rounded-xl"
+                      data-testid="embed-card-preview"
                     />
                     <CopyBlock text={cardPaste} label="copy-paste · HTML" />
                   </>
                 ) : (
                   <p className={`mt-2 ${MEASURE} ${TYPE.body}`}>
-                    Choose a card above and the real widget loads here, verifying it in this browser
-                    before you ship the snippet.
+                    Choose a card above and the real widget loads here and checks it, so you see the
+                    answer before you copy the snippet.
                   </p>
                 )}
               </div>
@@ -229,36 +238,44 @@ export default function LobbyEmbedPane({
         </h3>
         <ol className={`mt-3 list-decimal space-y-2 pl-5 ${MEASURE} ${TYPE.body}`}>
           <li>
-            The card commits to its own bytes: <code className="font-mono text-[11.5px]">content_id</code>{" "}
-            is the SHA-256 of its canonical form, recomputed locally. Any edit changes the hash.
+            Every card carries a fingerprint of its own contents. Change one character and the
+            fingerprint no longer matches, so the site showing the card cannot quietly edit it.
           </li>
           <li>
-            That hash is signed with Ed25519 and checked against the published signer at{" "}
-            <code className="font-mono text-[11.5px]">/.well-known/did.json</code>.
+            The panel asks our public verifier, which checks that fingerprint and our signature
+            against the keys we publish, and shows one of three answers: the signature checks out,
+            it does not match, or it could not be checked.
           </li>
           <li>
-            None of it contacts us. That is what self-verifying means — and it is free for everyone,
-            forever.
+            A visitor who would rather not trust us presses “Check it yourself”: their own browser
+            repeats the check on the verifier page. Free for everyone, forever.
           </li>
         </ol>
+        <details className="mt-4 rounded-xl border border-slate-900/10 bg-white/80 px-4 py-2.5">
+          <summary className={`cursor-pointer text-[12.5px] font-semibold text-slate-800 ${FOCUS}`}>
+            For developers
+          </summary>
+          <p className={`mt-2 ${MEASURE} ${TYPE.muted}`}>
+            The fingerprint is <code className="font-mono text-[11px]">content_id</code>, the SHA-256 of
+            the card&apos;s canonical bytes; the signature is Ed25519, checked against the keys pinned in
+            the verifier and published at{" "}
+            <code className="font-mono text-[11px]">/.well-known/did.json</code>. The panel at{" "}
+            <code className="font-mono text-[11px]">/embed/verify?card=…</code> posts the card&apos;s bytes to{" "}
+            <code className="font-mono text-[11px]">POST /api/verify</code>, the same rule as{" "}
+            <code className="font-mono text-[11px]">/gspc-verify</code> and the MCP verify tool, and
+            states VALID, INVALID or UNCHECKABLE. It computes nothing itself.
+          </p>
+        </details>
         {/* ONE door, not two. /white-label renders the very same component as
             /embed, so a second button labelled "white-label terms" would promise
             a page that does not exist and land on this one. */}
         <div className="mt-5 flex flex-wrap gap-2.5">
-          <button
-            type="button"
-            onClick={() => onOpenRoute("/embed", "Embed / white-label")}
-            className={`${PRIMARY} px-3.5 py-2 text-[12.5px]`}
-          >
+          <HelpDoor path="/embed" label="Embed / white-label" primary onOpenRoute={onOpenRoute}>
             The full embed guide
-          </button>
-          <button
-            type="button"
-            onClick={() => onOpenRoute("/gspc-verify", "Verify a card")}
-            className={`rounded-xl border border-slate-900/12 bg-white px-3.5 py-2 text-[12.5px] font-semibold text-slate-700 transition hover:bg-slate-900/5 motion-reduce:transition-none ${FOCUS}`}
-          >
-            Verify a card yourself
-          </button>
+          </HelpDoor>
+          <HelpDoor path="/gspc-verify" label="Verify a card" onOpenRoute={onOpenRoute}>
+            Check a card yourself
+          </HelpDoor>
         </div>
         <JoinedSpecsFooter />
       </div>
