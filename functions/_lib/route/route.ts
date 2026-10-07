@@ -275,6 +275,8 @@ export function routeSummary(r: RouteResult): string {
       return `ROUTED to ${chosen.id}: its purpose matches the request (basis ${chosen.choice_basis}; ${of}). Unsigned decide-only preview; nothing was called or charged.`;
     if (tm.state === "MATCHED_FORBIDDEN") {
       const m = tm.matched[0];
+      if (tm.paid)
+        return `NO_PERMITTED_CANDIDATE: the request matches ${m.id}, a paid check (x402) that runs only from your own wallet (policy.caller_wallet: true; ${m.forbid_policy}). Nothing was called or charged. Free next step: ${tm.paid.free_step} Page: https://councilof.ai${tm.paid.door}`;
       return `NO_PERMITTED_CANDIDATE: the request matches ${m.id}, which the policy forbids (${m.forbid_policy}). Nothing was called or charged.`;
     }
     if (r.state === "UNTESTED")

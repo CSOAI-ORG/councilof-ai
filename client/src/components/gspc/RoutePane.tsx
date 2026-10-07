@@ -39,6 +39,13 @@ const SEPARATION_TEXT: Record<string, string> = {
     "UNTESTED: no separation test covers these candidates on this axis. The choice below came from your tie-break rule; an untested axis is not a tie and not a win.",
 };
 
+/** UNTESTED beside ROUTED, when the router chose among its own tools by purpose. */
+const UNTESTED_TOOLS = "UNTESTED: no measurement compares these tools with each other, so this is a match on purpose, not a ranking.";
+/** UNTESTED as the outcome, when no tool's purpose matched. */
+const UNTESTED_NONE = "UNTESTED means nothing was matched or measured for this request; it is not a tie and not a failure.";
+
+type PaidNext = { id: string; tool: string; free_step: string; door: string };
+
 function rec(v: unknown): Json | null {
   return v && typeof v === "object" && !Array.isArray(v) ? (v as Json) : null;
 }
@@ -89,6 +96,11 @@ export default function RoutePane() {
   const result = phase.k === "done" ? phase.result : null;
   const chosen = rec(result?.chosen);
   const taskMatch = rec(result?.task_match);
+  const paidRec = rec(taskMatch?.paid);
+  const paid: PaidNext | null =
+    paidRec && typeof paidRec.tool === "string" && typeof paidRec.free_step === "string" && typeof paidRec.door === "string" && paidRec.door.startsWith("/")
+      ? (paidRec as unknown as PaidNext)
+      : null;
   const separation = typeof result?.separation === "string" ? result.separation : null;
   const forbidden = Array.isArray(result?.forbidden) ? (result!.forbidden as Json[]) : [];
   const considered = (rec(rec(result?.record)?.observed)?.considered ?? []) as Json[];
@@ -234,14 +246,20 @@ export default function RoutePane() {
           </div>
         ) : result ? (
           <section className="rounded-3xl border border-emerald-950/10 bg-card p-5 shadow-[0_24px_50px_-38px_rgba(4,18,12,.45)] sm:p-6" data-testid="route-card" aria-label="Route decision">
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2" data-testid="route-badges">
               <span className="rounded-full bg-[#04120c] px-3 py-1 font-mono text-xs font-bold uppercase tracking-wide text-emerald-200">{String(result.state)}</span>
-              {separation ? (
+              {/* Separation describes a choice: shown only when one was made, and never twice. */}
+              {chosen && separation && separation !== result.state ? (
                 <span
                   className={`rounded-full px-3 py-1 font-mono text-xs font-bold uppercase tracking-wide ${separation === "SEPARATED" ? "bg-emerald-800 text-white" : separation === "TIE" ? "bg-sky-100 text-sky-950" : "bg-slate-100 text-slate-900"}`}
                   data-testid="route-separation"
                 >
                   {separation}
+                </span>
+              ) : null}
+              {paid ? (
+                <span className="rounded-full bg-amber-100 px-3 py-1 font-mono text-xs font-bold uppercase tracking-wide text-amber-950" data-testid="route-paid">
+                  paid check
                 </span>
               ) : null}
               <span className="rounded-full border border-border px-3 py-1 font-mono text-xs font-bold uppercase tracking-wide text-muted-foreground">unsigned preview</span>
@@ -253,22 +271,41 @@ export default function RoutePane() {
                   basis <code className="font-mono">{String(chosen.choice_basis)}</code>
                 </span>
               </p>
+            ) : paid ? (
+              <p className="mt-4 text-lg text-foreground" data-testid="route-none">
+                Your request matches <span className="font-mono font-black">{paid.tool}</span>, a paid check.
+              </p>
             ) : (
               <p className="mt-4 text-lg text-foreground" data-testid="route-none">
                 {taskMatch
                   ? taskMatch.state === "MATCHED_FORBIDDEN"
                     ? String(taskMatch.reason ?? "Only tools your policy forbids match this request, so no tool was chosen.")
-                    : "No tool's purpose matches this request, so no tool was chosen and no tie-break ran."
+                    : "No tool's purpose matches this request, so no tool was chosen."
                   : "No candidate was permitted by the policy."}
               </p>
             )}
-            {taskMatch ? (
+            {paid ? (
+              <div className="mt-3 max-w-3xl text-sm leading-relaxed" data-testid="route-paid-next">
+                <p className="text-muted-foreground">
+                  A paid check runs only when you pay from your own wallet, so it was not chosen and nothing was called or charged.
+                </p>
+                <p className="mt-2 text-foreground">
+                  <span className="font-bold">Next:</span> {paid.free_step}{" "}
+                  <a href={paid.door} className="font-bold text-emerald-800 underline underline-offset-2 hover:text-emerald-950" data-testid="route-paid-door">
+                    Open {paid.tool}
+                  </a>
+                  <span className="text-muted-foreground"> (the signed version is paid there, from your wallet).</span>
+                </p>
+              </div>
+            ) : taskMatch ? (
               <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground" data-testid="route-honesty">
                 {chosen
-                  ? "Chosen because this tool's purpose matches your request, not from a measured difference between tools."
-                  : "Nothing was chosen. Name what you want checked: a card, an axis, a server, or the board."}
+                  ? `Chosen because this tool's purpose matches your request. ${separation === "UNTESTED" ? UNTESTED_TOOLS : ""}`
+                  : taskMatch.state === "MATCHED_FORBIDDEN"
+                    ? "Turn that policy preset off to allow it, or ask for a different check."
+                    : `${UNTESTED_NONE} Name what you want checked: a card, an axis, a server, or the board.`}
               </p>
-            ) : separation && SEPARATION_TEXT[separation] ? (
+            ) : chosen && separation && SEPARATION_TEXT[separation] ? (
               <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground" data-testid="route-honesty">
                 {SEPARATION_TEXT[separation]}
               </p>

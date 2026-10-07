@@ -234,6 +234,50 @@ export type TaskMatch = {
   /** The tools that matched, highest score first (at most five). A score is a pattern weight, not a measurement. */
   matched: Array<{ id: string; score: number; permit: boolean; forbid_policy: string | null }>;
   method: string;
+  /**
+   * Set only when the matching tool is a paid (x402) one that the wallet floor held back
+   * (floor:paid-needs-caller-wallet): the caller set no policy, so the answer names the paid check and
+   * the one next step, instead of a policy refusal.
+   */
+  paid?: PaidNext & { id: string; tool: string };
+};
+
+/** The paid-wallet floor (policy.ts). A paid tool is chosen only when the caller declares a wallet. */
+export const PAID_FLOOR = "floor:paid-needs-caller-wallet";
+
+export type PaidNext = {
+  /** The free thing to do now, in plain words. */
+  free_step: string;
+  /** The page that offers the free step and, from the person's own wallet, the paid one. */
+  door: string;
+};
+
+/**
+ * One next step per paid fleet tool (functions/mcp/paid-tools.json). Each free step is one the tool's
+ * own tools/list description states (a free preview, or the free tool that previews it); each door is
+ * the in-site page for that tool. Coverage is pinned by a test.
+ */
+export const PAID_NEXT: Record<string, PaidNext> = {
+  art50_marking_evidence: {
+    free_step: "Run the free detection preview: it checks the same bytes and returns the measurement unsigned.",
+    door: "/dashboard?tab=art50",
+  },
+  commission_card: {
+    free_step: "Check the terms with no payment: you see the amount and a free preview of the cards already on file.",
+    door: "/dashboard?tab=measured",
+  },
+  evidence_bundle: {
+    free_step: "Run the free evidence_bundle_preview first: it says what the bundle would hold, including when it would be empty.",
+    door: "/dashboard?tab=tools&tool=evidence_bundle",
+  },
+  receipts_batch: {
+    free_step: "Run it with preview=true for free: it returns the count, the span and the sha256 of the paid bytes. Recent receipts are free at /root.json.",
+    door: "/dashboard?tab=tools&tool=receipts_batch",
+  },
+  rwa_evidence: {
+    free_step: "Run it with preview=true for free: it returns the same on-ledger state, unsigned.",
+    door: "/dashboard?tab=tools&tool=rwa_evidence",
+  },
 };
 
 export const TASK_MATCH_METHOD =

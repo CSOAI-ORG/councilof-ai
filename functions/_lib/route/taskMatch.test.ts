@@ -9,7 +9,7 @@ import { describe, expect, it } from "vitest";
 import FREE from "../../mcp/gspc-tools.json";
 import PAID from "../../mcp/paid-tools.json";
 import { route, routeSummary, BANNED_ROUTE_WORDS, type RouteResult } from "./route";
-import { PURPOSE, toolScore, namesEndpoint } from "./taskMatch";
+import { PAID_NEXT, PURPOSE, toolScore, namesEndpoint, type TaskMatch } from "./taskMatch";
 import { computeEventId } from "./evidence";
 
 const deps = {
@@ -83,14 +83,51 @@ describe("route over the default tool fleet: the request's purpose decides", () 
     expect((r.task_match as { reason: string }).reason).toMatch(/Only task_sha256 was sent/);
   });
 
-  it("a request that matches only a paid tool, without a wallet, names the tool and the policy that forbids it", async () => {
+  it("a request that matches only a paid tool, without a wallet, names the paid check and its free next step", async () => {
     const r = await ask("commission a measurement card for my model");
     expect(r.state).toBe("NO_PERMITTED_CANDIDATE");
     expect(r.chosen).toBeNull();
-    const tm = r.task_match as { state: string; matched: Array<{ id: string; forbid_policy: string | null }> };
+    const tm = r.task_match as TaskMatch;
     expect(tm.state).toBe("MATCHED_FORBIDDEN");
     expect(tm.matched[0]).toMatchObject({ id: "mcp:commission_card", forbid_policy: "floor:paid-needs-caller-wallet" });
-    expect(routeSummary(r)).toContain("mcp:commission_card, which the policy forbids (floor:paid-needs-caller-wallet)");
+    expect(tm.paid).toMatchObject({ id: "mcp:commission_card", tool: "commission_card", door: "/dashboard?tab=measured" });
+    expect(tm.reason).toContain("commission_card, a paid check (x402)");
+    expect(tm.reason).not.toMatch(/forbidden by the policy/);
+    expect(routeSummary(r)).toContain("mcp:commission_card, a paid check (x402)");
+    expect(routeSummary(r)).toContain("Free next step:");
+  });
+
+  it('"is this image AI-generated" names the Article 50 paid check and the free detection preview, not a policy refusal', async () => {
+    const r = await ask("is this image AI-generated");
+    const tm = r.task_match as TaskMatch;
+    expect(tm.state).toBe("MATCHED_FORBIDDEN");
+    expect(tm.paid).toMatchObject({ id: "mcp:art50_marking_evidence", door: "/dashboard?tab=art50" });
+    expect(tm.paid!.free_step).toMatch(/free detection preview/);
+    expect(tm.reason).not.toMatch(/forbidden by the policy|Name what you want/);
+    expect(`${tm.reason} ${routeSummary(r)}`).not.toMatch(BANNED_ROUTE_WORDS);
+  });
+
+  it("with a wallet declared the same request routes to the paid tool and carries no paid next step", async () => {
+    const r = await ask("is this image AI-generated", WALLET);
+    expect((r.chosen as { id: string }).id).toBe("mcp:art50_marking_evidence");
+    expect((r.task_match as TaskMatch).paid).toBeUndefined();
+  });
+
+  it("a policy the caller set is still named as the policy that forbade the match", async () => {
+    const r = await ask("which tool verifies a signed card", { policy: { presets: ["local-only"] } });
+    const tm = r.task_match as TaskMatch;
+    expect(tm.state).toBe("MATCHED_FORBIDDEN");
+    expect(tm.paid).toBeUndefined();
+    expect(tm.reason).toMatch(/forbidden by the policy \(/);
+  });
+
+  it("every paid fleet tool has one free next step and an in-site door", () => {
+    for (const t of (PAID as { tools: Array<{ name: string }> }).tools) {
+      const n = PAID_NEXT[t.name];
+      expect(n, t.name).toBeDefined();
+      expect(n.door.startsWith("/dashboard?tab=")).toBe(true);
+      expect(n.free_step).toMatch(/free/i);
+    }
   });
 
   it("caller-declared candidates keep the caller's tie-break (no task matching)", async () => {

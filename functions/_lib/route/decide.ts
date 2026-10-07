@@ -14,7 +14,7 @@
 import { isSeparated, leaderLabel } from "../leaderLabel";
 import { evaluate, type CallerPolicy, type CandidateFacts, type PolicyContext } from "./policy";
 import type { BoardAxis, Candidate, Measurement, Objective, PolicyVerdict, Separation, TieBreakRule } from "./types";
-import { TASK_MATCH_METHOD, type TaskMatch } from "./taskMatch";
+import { PAID_FLOOR, PAID_NEXT, TASK_MATCH_METHOD, type TaskMatch } from "./taskMatch";
 
 /** "mistral:7b (base model)" -> "mistral:7b". Case-insensitive match key. */
 export function modelKey(s: string | null | undefined): string {
@@ -147,6 +147,7 @@ export function decide(
       const topPermitted = scored.filter((r) => r.x.verdict.permit);
       const top = topPermitted.length ? topPermitted[0].s : 0;
       let state: TaskMatch["state"] = "UNTESTED";
+      let paid: TaskMatch["paid"];
       let reason = relevanceReadable
         ? "No tool's purpose matches this request, so no tool was chosen. Nothing is picked by name order."
         : "Only task_sha256 was sent: the request text is needed to match a tool's purpose, so no tool was chosen.";
@@ -162,7 +163,17 @@ export function decide(
         }
       } else if (topAll > 0) {
         state = "MATCHED_FORBIDDEN";
-        reason = "The tool whose purpose matches this request is forbidden by the policy, so no tool was chosen.";
+        const top0 = scored[0].x;
+        const tool = top0.candidate.tool ?? null;
+        if (top0.verdict.forbid_policy === PAID_FLOOR && top0.candidate.paid && tool && PAID_NEXT[tool]) {
+          // The caller set no policy: the floor holds every paid tool back until a wallet is declared.
+          paid = { id: top0.candidate.id, tool, ...PAID_NEXT[tool] };
+          reason =
+            `The request matches ${tool}, a paid check (x402). A paid check runs only when you pay from your own ` +
+            "wallet (policy.caller_wallet: true), so nothing was chosen, called or charged.";
+        } else {
+          reason = `The tool whose purpose matches this request is forbidden by the policy (${top0.verdict.forbid_policy}), so no tool was chosen.`;
+        }
       }
       task_match = {
         state,
@@ -175,6 +186,7 @@ export function decide(
           forbid_policy: r.x.verdict.forbid_policy,
         })),
         method: TASK_MATCH_METHOD,
+        ...(paid ? { paid } : {}),
       };
     } else if (permitted.length === 1) {
       chosen = { id: permitted[0].candidate.id, choice_basis: "only_permitted" };
