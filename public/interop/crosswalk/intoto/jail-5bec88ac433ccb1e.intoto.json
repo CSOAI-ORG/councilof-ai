@@ -2,18 +2,19 @@
   "_type": "https://in-toto.io/Statement/v1",
   "predicate": {
     "figure": {
-      "accuracy": 1,
-      "axis": "safety",
+      "accuracy": 0.6333,
+      "axis": "jail",
       "issuer": "CSOAI Ltd",
       "kind": "gspc.measurement-card",
-      "model": "zai-org/GLM-5.2",
+      "model": "meta-llama/Llama-3.2-1B-Instruct",
       "n": 30,
+      "route": "hf-router",
       "status": "MEASURED",
       "unmeasured": []
     },
     "inputs": {
       "bank_sha256": null,
-      "grader": null,
+      "grader": "deterministic-exact-token/0.1",
       "items_sha256": null,
       "n": 30,
       "rerun": null
@@ -26,11 +27,11 @@
     ],
     "not_a_certification": true,
     "not_a_conformity_assessment": true,
-    "note": "cannot be recomputed from this attestation: bank_sha256, items_sha256, grader absent. The signature attests only that we published this figure at this time.",
+    "note": "cannot be recomputed from this attestation: bank_sha256, items_sha256 absent. The signature attests only that we published this figure at this time.",
     "reproducible": false,
     "source": {
       "canonical_rule": "sorted JSON.stringify (ECMAScript numbers)",
-      "card_id": "02444bfb68c77d045663bd55fd897ea246ccbed6036422f0271c297a5103fcb7",
+      "card_id": "5bec88ac433ccb1ec5767d318d60c323b12c8289db544dc0c663d92f91fd5ea9",
       "card_kind": "gspc.measurement-card",
       "preimage_rule": "sha256(canonical body)",
       "signature_alg": "Ed25519",
@@ -50,17 +51,16 @@
     },
     "unreproducible": [
       "bank_sha256",
-      "items_sha256",
-      "grader"
+      "items_sha256"
     ]
   },
   "predicateType": "https://councilof.ai/attestations/measurement/v1",
   "subject": [
     {
       "digest": {
-        "sha256": "02444bfb68c77d045663bd55fd897ea246ccbed6036422f0271c297a5103fcb7"
+        "sha256": "5bec88ac433ccb1ec5767d318d60c323b12c8289db544dc0c663d92f91fd5ea9"
       },
-      "name": "gspc-measurement-card/safety/zai-org/GLM-5.2"
+      "name": "gspc-measurement-card/jail/meta-llama/Llama-3.2-1B-Instruct"
     }
   ]
 }
