@@ -5,6 +5,10 @@ on:
     branches: [main, master]
   pull_request:
     branches: [main, master]
+  # `build` is a required context on master. A PR pushed with GITHUB_TOKEN (mill-jobs-land,
+  # hub-queue-land) fires no pull_request run, so those workflows dispatch this one on the PR branch
+  # and the check lands on the PR head. 2026-10-07: bot heads of #2843 and #2846 never carried it.
+  workflow_dispatch:
 
 jobs:
   build:

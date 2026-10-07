@@ -8,7 +8,8 @@
 # gates, and no producer re-ran them on the branch:
 #   public/interop/models-measured.json  scripts/build-models-measured.mjs (--check in the node tests)
 #   client/src/data/evidence-notes.json  scripts/evidence-notes-current-cards.mjs (a note citing a
-#                                        card the signer just superseded fails evidence-notes.cards.test.ts)
+#                                        card the signer just superseded fails evidence-notes.cards.test.ts;
+#                                        the note gains a closing update sentence, never a silent re-link)
 #   public/interop/crosswalk/intoto/     scripts/crosswalk/emit_intoto.py (producers-check; a new
 #                                        axis, or a representative that stopped saying MEASURED)
 # #2802 failed the first, #2815/#2843/#2846 the second; the third renamed a statement file that the
@@ -38,15 +39,14 @@ for attempt in 1 2 3; do
   node scripts/evidence-notes-current-cards.mjs > notes.log 2>&1 || rc=$?
   cat notes.log
   if [ -n "$REPORT" ]; then
-    # A citation refreshed by machine leaves the note's prose as it was: say which notes, so a
-    # human can check that the prose still reads true beside the card it now links.
+    # Say which notes changed and how, so a human reads each once beside the card it now names.
     { grep -E '^evidence-notes: ' notes.log | sed 's/^evidence-notes: /- /' || true; } > notes.md
     if [ -s notes.md ]; then
-      { echo "Evidence-note citations refreshed on this branch by \`scripts/evidence-notes-current-cards.mjs\` (links only; the prose was not edited, so read it once beside the current card):"; echo; cat notes.md; } > "$REPORT"
+      { echo "Evidence notes refreshed on this branch by \`scripts/evidence-notes-current-cards.mjs\`. A note whose prose names a card the signer just superseded gains one closing sentence saying so and naming the current card; its links (and the admission receipt link) follow the current card. The prose above that sentence is unchanged, so read it once: rewrite it if it should now describe the current card."; echo; cat notes.md; } > "$REPORT"
     fi
   fi
   if [ "$rc" = 2 ]; then
-    echo "::warning::evidence-notes: a superseded citation has no free artifact slot; a human must edit that note (see log above)"
+    echo "::warning::evidence-notes: a note needs a human rewrite (the update sentence would break the 250-word rule, or a withdrawn card or receipt has nothing to link); see the UNRESOLVED lines above"
   elif [ "$rc" != 0 ]; then
     return "$rc"
   fi

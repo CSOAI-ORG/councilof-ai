@@ -41,6 +41,9 @@ SERVABLE_TAGS = frozenset({"text-generation", "text2text-generation", "conversat
 # said no", the probe-first mapping, or a 404 on the Hub itself count.
 # A route that answers but yields fewer than --min-graded parseable labels is dead for grading
 # too (see mill(min_graded=...)); like every dead row it expires with --dead-max-age-days.
+# Unlike "no endpoint", low yield is a fact about ONE bank: Qwen/Qwen3-8B-Base parses 2 of 30
+# governance items through featherless-ai and holds MEASURED n=30 cards on eight other axes. So a
+# low-yield row is axis-scoped ("scope": "axis"): it skips (id, axis), never the model everywhere.
 LOW_YIELD_MARKER = "low-yield route"
 DEAD_MARKERS = ("no live inference provider", "no-endpoint (all ", "HTTP 404 model not on the Hub", LOW_YIELD_MARKER)
 HF_MODEL_API = "https://huggingface.co/api/models/"
@@ -135,6 +138,50 @@ def load_revision_pins(path: Path | None) -> dict[str, str] | None:
     return pins
 
 
+def dead_row_scope(row: dict) -> str:
+    """"axis" for a row that is dead on its own axis only (a low-yield route), "" for a model-wide row.
+
+    The reason text is read too, so a low-yield row written without the field is never mistaken
+    for a model-wide one."""
+    if str(row.get("scope") or "") == "axis" or LOW_YIELD_MARKER in str(row.get("reason") or ""):
+        return "axis"
+    return ""
+
+
+def _fresh_dead_rows(path: Path | None, max_age_days: int | None) -> list[dict]:
+    """The rows of the dead file that are still in force (see load_dead_slugs for the expiry)."""
+    if path is None:
+        return []
+    p = Path(path)
+    if not p.is_file():
+        return []
+    cutoff = None
+    if max_age_days is not None:
+        cutoff = datetime.now(timezone.utc) - timedelta(days=max_age_days)
+    out: list[dict] = []
+    for ln in p.read_text(encoding="utf-8").splitlines():
+        if not ln.strip():
+            continue
+        try:
+            o = json.loads(ln)
+        except Exception:
+            continue
+        if not isinstance(o, dict) or not o.get("id"):
+            continue
+        if cutoff is not None:
+            raw = str(o.get("as_of") or "")
+            try:
+                seen = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+                if seen.tzinfo is None:
+                    seen = seen.replace(tzinfo=timezone.utc)
+            except ValueError:
+                continue  # undated → expired → re-probe
+            if seen < cutoff:
+                continue  # stale → re-probe
+        out.append(o)
+    return out
+
+
 def load_dead_slugs(path: Path | None, max_age_days: int | None = None) -> set[str]:
     """Persistent dead-slug set (jsonl rows {id, reason, axis, as_of}). Missing file → empty.
 
@@ -152,37 +199,17 @@ def load_dead_slugs(path: Path | None, max_age_days: int | None = None) -> set[s
     stamp. Unbounded trust in an undated claim is how a stale list becomes permanent.
 
     max_age_days=None keeps every entry, which is the old behaviour.
+
+    Model-wide rows only: an axis-scoped (low-yield) row is in load_dead_cells, never here.
     """
-    if path is None:
-        return set()
-    p = Path(path)
-    if not p.is_file():
-        return set()
-    cutoff = None
-    if max_age_days is not None:
-        cutoff = datetime.now(timezone.utc) - timedelta(days=max_age_days)
-    out: set[str] = set()
-    for ln in p.read_text(encoding="utf-8").splitlines():
-        if not ln.strip():
-            continue
-        try:
-            o = json.loads(ln)
-        except Exception:
-            continue
-        if not o.get("id"):
-            continue
-        if cutoff is not None:
-            raw = str(o.get("as_of") or "")
-            try:
-                seen = datetime.fromisoformat(raw.replace("Z", "+00:00"))
-                if seen.tzinfo is None:
-                    seen = seen.replace(tzinfo=timezone.utc)
-            except ValueError:
-                continue  # undated → expired → re-probe
-            if seen < cutoff:
-                continue  # stale → re-probe
-        out.add(str(o["id"]))
-    return out
+    return {str(o["id"]) for o in _fresh_dead_rows(path, max_age_days) if not dead_row_scope(o)}
+
+
+def load_dead_cells(path: Path | None, max_age_days: int | None = None) -> set[tuple[str, str]]:
+    """(id, axis) cells an axis-scoped dead row (a low-yield route) skips, with the same expiry as
+    load_dead_slugs. A scoped row without an axis skips nothing: it cannot say where it applies."""
+    return {(str(o["id"]), str(o["axis"])) for o in _fresh_dead_rows(path, max_age_days)
+            if dead_row_scope(o) and o.get("axis")}
 
 
 def load_inflight_cells(path: Path | None) -> set[tuple[str, str]]:
@@ -216,25 +243,36 @@ def is_dead_reason(reason: str) -> bool:
 
 
 def dead_rows_from_skips(skips: list[dict], as_of: str) -> list[dict]:
-    seen: set[str] = set()
+    seen: set[tuple[str, str]] = set()
     out: list[dict] = []
     for sk in skips:
         mid = str(sk.get("id") or "")
-        if not mid or mid in seen or not is_dead_reason(str(sk.get("reason") or "")):
+        reason = str(sk.get("reason") or "")
+        if not mid or not is_dead_reason(reason):
             continue
-        seen.add(mid)
-        out.append({"id": mid, "reason": str(sk.get("reason"))[:120], "axis": sk.get("axis"), "as_of": as_of})
+        row = {"id": mid, "reason": reason[:160], "axis": sk.get("axis"), "as_of": as_of}
+        if dead_row_scope(row):
+            row["scope"] = "axis"  # a low-yield route: dead on this axis only
+        key = (mid, str(row["axis"]) if row.get("scope") else "")
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(row)
     return out
 
 
 def append_dead_slugs(path: Path, rows: list[dict], max_age_days: int | None = None) -> int:
-    """Append new dead ids to the persistent file (dedupe by id). Returns rows written.
+    """Append new dead rows to the persistent file. Returns rows written.
 
-    With max_age_days, an id whose only rows have EXPIRED counts as unknown, so a re-probe that
-    finds it still dead writes it back with a fresh as_of (the contract load_dead_slugs states).
-    Without it, an expired row was never re-stamped and the id was re-probed on every run."""
+    Dedupe: a model-wide row by id; an axis-scoped row by (id, axis), and not at all when the
+    model is already dead everywhere. With max_age_days, a row whose only predecessors have
+    EXPIRED counts as unknown, so a re-probe that finds it still dead writes it back with a fresh
+    as_of (the contract load_dead_slugs states). Without it, an expired row was never re-stamped
+    and the id was re-probed on every run."""
     known = load_dead_slugs(path, max_age_days)
-    fresh = [r for r in rows if r["id"] not in known]
+    known_cells = load_dead_cells(path, max_age_days)
+    fresh = [r for r in rows if r["id"] not in known
+             and (not dead_row_scope(r) or (r["id"], str(r.get("axis") or "")) not in known_cells)]
     if not fresh:
         return 0
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -328,12 +366,14 @@ def pick_emptiest(
     dead: set[str] | None = None,
     inflight: set[tuple[str, str]] | None = None,
     priority_ids: set[str] | None = None,
+    dead_cells: set[tuple[str, str]] | None = None,
 ) -> list[dict]:
     """Emptiest (id, axis) cells by rank. priority_ids (2026-09-14: QUEUED model ids from
     GET /api/commission-queue, fallback /api/commissions) are picked FIRST, in rank order among themselves, then the rest by rank —
     a paid request drives the mill instead of waiting for its rank; every other guard still applies. generative_only keeps SERVABLE_TAGS only (no fallback to
-    non-generative repos); dead ids are never picked; only_ids is an allowlist; inflight (id, axis)
-    cells are already staged in an open landing PR and are skipped until that PR merges or closes."""
+    non-generative repos); dead ids are never picked; dead_cells (id, axis) are low-yield routes on
+    that axis only; only_ids is an allowlist; inflight (id, axis) cells are already staged in an open
+    landing PR and are skipped until that PR merges or closes."""
 
     def is_empty(r: dict) -> bool:
         if axis:
@@ -348,6 +388,8 @@ def pick_emptiest(
         empty = [r for r in empty if str(r.get("id") or "") not in dead]
     if inflight and axis:
         empty = [r for r in empty if (str(r.get("id") or ""), axis) not in inflight]
+    if dead_cells and axis:
+        empty = [r for r in empty if (str(r.get("id") or ""), axis) not in dead_cells]
     if only_ids:
         empty = [r for r in empty if str(r.get("id") or "") in only_ids]
     if generative_only:
@@ -1023,9 +1065,10 @@ def mill(
     rows = load_queue(queue_path)
     ax = axis if axis in MODEL_AXES else "governance"
     dead = load_dead_slugs(dead_path, dead_max_age_days)
+    dead_cells = load_dead_cells(dead_path, dead_max_age_days)
     inflight = load_inflight_cells(inflight_path)
     rows = inject_commissioned_subjects(rows, priority_ids, axis=ax)
-    picked = pick_emptiest(rows, pick_n, generative_only=generative_only, axis=ax, only_ids=only_ids, dead=dead, inflight=inflight, priority_ids=priority_ids)
+    picked = pick_emptiest(rows, pick_n, generative_only=generative_only, axis=ax, only_ids=only_ids, dead=dead, inflight=inflight, priority_ids=priority_ids, dead_cells=dead_cells)
     if shards > 1:
         # Shard membership is a function of the MODEL ID ONLY -- never of position in
         # `picked`. Stride-slicing would be disjoint for one snapshot and overlapping the
@@ -1174,8 +1217,9 @@ def mill(
                 # min_graded of the items is a route failure (a base model that does not follow
                 # the one-token format, a provider that truncates), not a measurement of the
                 # model: #2846 carried 31 such cards at n=1-9. No card is staged; the reason is
-                # a dead marker, so the id joins dead_slugs and the next pick skips it until
-                # --dead-max-age-days expires the row and it is probed again.
+                # a dead marker, so (id, axis) joins dead_slugs as an axis-scoped row and the next
+                # pick on THIS axis skips it until --dead-max-age-days expires the row; other axes
+                # are untouched (the same base models hold n=30 cards elsewhere).
                 skips.append({"id": mid, "axis": ax, "reason": (
                     f"UNCHECKABLE {LOW_YIELD_MARKER}: {n} of {len(items)} items parseable "
                     f"(<{min_graded} graded) via {_ROUTE.get(mid) or 'unknown route'}")})
@@ -1227,6 +1271,7 @@ def mill(
         "axis": axis,
         "only_ids_n": len(only_ids) if only_ids is not None else 0,
         "dead_known": len(dead),
+        "dead_cells_this_axis": sum(1 for (_m, a) in dead_cells if a == ax),
         "inflight_known": len(inflight),
         "inflight_skipped_this_axis": sum(1 for (_m, a) in inflight if a == ax),
         "dead_new": len(dead_new),
@@ -1260,7 +1305,7 @@ def main() -> int:
     ap.add_argument("--bank-dataset", default="", help="public HF dataset the frozen bank came from (e.g. csoai/gspc-gov); recorded on the card's evidence, never guessed")
     ap.add_argument("--bank-revision", default="", help="immutable commit of --bank-dataset; required for a quotable staged card")
     ap.add_argument("--revision-pins", default="", help="JSON object of model id to immutable revision; controlled runs never re-resolve it")
-    ap.add_argument("--min-graded", type=int, default=0, help="stage no card when fewer than this many items return a parseable label; the route is written to --dead as a low-yield route instead (0 = off)")
+    ap.add_argument("--min-graded", type=int, default=0, help="stage no card when fewer than this many items return a parseable label; the (id, axis) route is written to --dead as an axis-scoped low-yield row instead (0 = off)")
     args = ap.parse_args()
     only = load_only_ids(Path(args.only)) if args.only else None
     priority = load_only_ids(Path(args.priority)) if args.priority else set()
@@ -1287,7 +1332,7 @@ def main() -> int:
         revision_fetch=(lambda model: revision_pins.get(model)) if revision_pins is not None else None,
         min_graded=max(0, args.min_graded),
     )
-    print(json.dumps({k: rep[k] for k in ("queue_n", "picked", "graded", "staged_unsigned", "measured_flips", "dead_known", "dead_new", "dead_appended", "inflight_known", "inflight_skipped_this_axis", "probe_first") if k in rep}, default=str))
+    print(json.dumps({k: rep[k] for k in ("queue_n", "picked", "graded", "staged_unsigned", "measured_flips", "dead_known", "dead_cells_this_axis", "dead_new", "dead_appended", "inflight_known", "inflight_skipped_this_axis", "probe_first") if k in rep}, default=str))
     print("skips", len(rep["skips"]))
     return 0
 

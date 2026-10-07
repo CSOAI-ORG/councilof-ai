@@ -8,17 +8,25 @@
 // replacement"). #2815, #2843 and #2846 stopped there; #2802 was fixed by hand, in prose. This is the
 // mechanical half of that fix, run by the land workflows on the PR branch after the signer:
 //
-//   superseded card cited  -> the card that replaces it now (end of the SUPERSEDED.jsonl chain) is
-//                             cited too, as an artifact link. The note keeps its 1-3 artifacts: when
-//                             it already has three, the superseded card's own artifact link is
-//                             pointed at the current card (the body still names the old card, so
-//                             both stay cited), else the last artifact that is not a mill card is.
+//   prose names a superseded card, and nothing in the note cites its replacement yet (a link a
+//   person placed beside it, with their label, is their call and stands)
+//                          -> one update sentence is appended to the body, always last:
+//                             "Update from SUPERSEDED.jsonl: <old>, cited above, is superseded by
+//                             <current URL>. The text above describes the cited cards as they stood
+//                             before that; the current card states its own n and status."
+//                             Re-pointing a link alone left prose such as "has a current signed,
+//                             admitted card (<old>)" false beside it (verifier, 2026-10-07): the
+//                             sentence says in the text itself that the card it calls current is
+//                             not. It quotes no number, and it is rebuilt (or dropped) on every run.
+//   artifact links a superseded card -> it links the current card instead ("Current card (replaces
+//                             <old>)"), and a link to the old card's admission receipt follows to the
+//                             current card's receipt, so the links never mix two cards.
 //   withdrawn card cited   -> the citing artifact's label names the correction id.
 //
-// It never edits a note's title, summary, body or social text and never quotes a number: a note
-// whose prose is now wrong still needs a human, and the accuracy rule in the same test still reads
-// the old card's own signed accuracy beside the old card's URL. A case it cannot fix mechanically
-// (no artifact slot to use) is printed and exits 2.
+// It never edits a note's title, summary, social text or the body above the update sentence, and
+// the accuracy rule in the same test still reads the old card's own signed accuracy beside the old
+// card's URL. A case it cannot fix mechanically (the sentence would break the 250-word body rule, a
+// withdrawn card with no artifact to label) is printed and exits 2: a human rewrites that note.
 //
 //   node scripts/evidence-notes-current-cards.mjs           # rewrite the notes file when needed
 //   node scripts/evidence-notes-current-cards.mjs --check   # exit 1 if a rewrite is needed
@@ -30,8 +38,12 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 export const NOTES = join(ROOT, "client", "src", "data", "evidence-notes.json");
 export const MILL = join(ROOT, "public", "interop", "mill-cards-signed");
 const CARD_URL = "https://councilof.ai/interop/mill-cards-signed/";
+const ADMISSION_URL = "https://councilof.ai/interop/mill-evidence/";
 const MILL_CARD_RE = /mill-cards-signed\/(signed-[A-Za-z0-9-]+\.json)/g;
-const MAX_ARTIFACTS = 3;
+// client/src/data/evidence-notes.ts copyRuleViolations: a body is 120-250 words.
+const MAX_BODY_WORDS = 250;
+export const ERRATA_MARK = "Update from SUPERSEDED.jsonl:";
+const wordCount = (text) => text.split(/\s+/).filter(Boolean).length;
 
 const fileOf = (url) => {
   const m = String(url ?? "").match(/mill-cards-signed\/(signed-[A-Za-z0-9-]+\.json)/);
@@ -69,40 +81,81 @@ export function currentCardFor(file, superseded) {
   return at;
 }
 
-/** Returns { note, changes: string[], unresolved: string[] } without mutating the input. */
-export function refreshNote(input, superseded, withdrawn) {
+/** [body above the update sentence, the update sentence or ""]. The sentence is always last. */
+export function splitErrata(body) {
+  const at = body.indexOf(ERRATA_MARK);
+  return at < 0 ? [body, ""] : [body.slice(0, at).trimEnd(), body.slice(at)];
+}
+
+/** The update sentence for Map(current file -> superseded files the prose names). No numbers. */
+export function errataSentence(byCurrent) {
+  const parts = [...byCurrent].map(
+    ([current, files]) => `${files.join(" and ")}, cited above, ${files.length > 1 ? "are" : "is"} superseded by ${CARD_URL}${current}`,
+  );
+  return `${ERRATA_MARK} ${parts.join("; ")}. The text above describes the cited cards as they stood before that; the current card states its own n and status.`;
+}
+
+/** Returns { note, changes: string[], unresolved: string[] } without mutating the input.
+ *  admissionOf(file) -> the admission receipt file a signed card names, or null. */
+export function refreshNote(input, superseded, withdrawn, admissionOf = () => null) {
   const note = structuredClone(input);
   const changes = [];
   const unresolved = [];
-  for (const file of citedMillCards(input)) {
+
+  // 1. The prose. Superseded cards the prose names, grouped by the card that replaces them now.
+  const [text, oldErrata] = splitErrata(note.body);
+  const prose = [note.title, note.summary, text, note.social].join("\n");
+  const named = [...new Set([...prose.matchAll(MILL_CARD_RE)].map((m) => m[1]))];
+  // A note that already links the current card beside one its prose names was handled by a person
+  // (care-read-n-before-accuracy: "current re-run ... the body quotes the superseded ..." on the
+  // link's label); their wording stands. The sentence is this script's, kept once it wrote it.
+  const linked = new Set(input.artifacts.map((a) => fileOf(a.url)).filter(Boolean));
+  const ownSentence = new Set([...oldErrata.matchAll(/signed-[A-Za-z0-9-]+\.json/g)].map((m) => m[0]));
+  const byCurrent = new Map();
+  for (const file of named) {
     const current = currentCardFor(file, superseded);
-    if (current === file || citedMillCards(note).includes(current)) continue;
-    const link = { label: `Current card (replaces ${file})`, url: CARD_URL + current };
-    const own = note.artifacts.findIndex((a) => fileOf(a.url) === file);
-    if (note.artifacts.length < MAX_ARTIFACTS) {
-      note.artifacts.splice(own >= 0 ? own + 1 : note.artifacts.length, 0, link);
-      changes.push(`${note.id}: cites ${current}, which replaces ${file}`);
-      continue;
-    }
-    // Three artifacts already. Re-point the old card's own link only when the prose still names the
-    // old card (so it stays cited); otherwise use the last artifact that is not a mill card.
-    const prose = [note.title, note.summary, note.body, note.social].join("\n");
-    let slot = own >= 0 && prose.includes(file) ? own : -1;
-    if (slot < 0) {
-      for (let i = note.artifacts.length - 1; i >= 0; i -= 1) {
-        if (!fileOf(note.artifacts[i].url)) {
-          slot = i;
-          break;
-        }
-      }
-    }
-    if (slot < 0) {
-      unresolved.push(`${note.id}: ${file} is superseded by ${current}, and no artifact slot can carry it`);
-      continue;
-    }
-    changes.push(`${note.id}: artifact "${note.artifacts[slot].label}" now cites ${current}, which replaces ${file}`);
-    note.artifacts[slot] = link;
+    if (current === file || named.includes(current)) continue;
+    if (linked.has(current) && !ownSentence.has(file)) continue;
+    if (!byCurrent.has(current)) byCurrent.set(current, []);
+    byCurrent.get(current).push(file);
   }
+  const errata = byCurrent.size ? errataSentence(byCurrent) : "";
+  if (errata !== oldErrata) {
+    const body = errata ? `${text} ${errata}` : text;
+    if (wordCount(body) > MAX_BODY_WORDS) {
+      unresolved.push(
+        `${note.id}: the prose names ${[...byCurrent.values()].flat().join(", ")}, now superseded, and the update sentence would take the body past ${MAX_BODY_WORDS} words; a human must rewrite it`,
+      );
+    } else {
+      note.body = body;
+      for (const [current, files] of byCurrent) {
+        changes.push(`${note.id}: the body now says ${files.join(" and ")} ${files.length > 1 ? "are" : "is"} superseded by ${current} (update sentence; the prose above it is unchanged)`);
+      }
+      if (!errata) changes.push(`${note.id}: update sentence dropped (the prose names every current card itself)`);
+    }
+  }
+
+  // 2. The links. A link to a superseded card links the current card; the old card's admission
+  //    receipt, when linked, follows it, so the artifacts never pair one card with another's receipt.
+  for (let i = 0; i < note.artifacts.length; i += 1) {
+    const file = fileOf(note.artifacts[i].url);
+    if (!file) continue;
+    const current = currentCardFor(file, superseded);
+    if (current === file || note.artifacts.some((a) => fileOf(a.url) === current)) continue;
+    note.artifacts[i] = { label: `Current card (replaces ${file})`, url: CARD_URL + current };
+    changes.push(`${note.id}: artifact links ${current}, which replaces ${file}`);
+    const oldReceipt = admissionOf(file);
+    const newReceipt = admissionOf(current);
+    const at = oldReceipt ? note.artifacts.findIndex((a) => a.url === ADMISSION_URL + oldReceipt) : -1;
+    if (at >= 0 && newReceipt && newReceipt !== oldReceipt) {
+      note.artifacts[at] = { label: `Current card's admission receipt (replaces ${oldReceipt})`, url: ADMISSION_URL + newReceipt };
+      changes.push(`${note.id}: admission receipt link follows to ${newReceipt}, the receipt ${current} names`);
+    } else if (at >= 0) {
+      unresolved.push(`${note.id}: links ${oldReceipt}, the receipt of superseded ${file}, and ${current} names no receipt to link instead`);
+    }
+  }
+
+  // 3. Withdrawals.
   for (const file of citedMillCards(note)) {
     const current = currentCardFor(file, superseded);
     const w = withdrawn.find((row) => row.withdrawn_file === current);
@@ -118,12 +171,12 @@ export function refreshNote(input, superseded, withdrawn) {
   return { note, changes, unresolved };
 }
 
-export function refreshAll(doc, superseded, withdrawn) {
+export function refreshAll(doc, superseded, withdrawn, admissionOf = () => null) {
   const out = structuredClone(doc);
   const changes = [];
   const unresolved = [];
   out.notes = doc.notes.map((n) => {
-    const r = refreshNote(n, superseded, withdrawn);
+    const r = refreshNote(n, superseded, withdrawn, admissionOf);
     changes.push(...r.changes);
     unresolved.push(...r.unresolved);
     return r.note;
@@ -134,10 +187,19 @@ export function refreshAll(doc, superseded, withdrawn) {
 if (import.meta.url === `file://${process.argv[1]}`) {
   const raw = readFileSync(NOTES, "utf8");
   const doc = JSON.parse(raw);
+  const admissionOf = (file) => {
+    try {
+      const f = JSON.parse(readFileSync(join(MILL, file), "utf8"))?.body?.admission?.file;
+      return typeof f === "string" && /^admission-[A-Za-z0-9-]+\.json$/.test(f) ? f : null;
+    } catch {
+      return null;
+    }
+  };
   const { doc: next, changes, unresolved } = refreshAll(
     doc,
     readJsonl(join(MILL, "SUPERSEDED.jsonl")),
     readJsonl(join(MILL, "WITHDRAWN.jsonl")),
+    admissionOf,
   );
   for (const c of changes) console.log(`evidence-notes: ${c}`);
   for (const u of unresolved) console.error(`evidence-notes: UNRESOLVED ${u}`);

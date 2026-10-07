@@ -42,8 +42,9 @@ STAGING = "csoai/mill-jobs-staging"
 # the denominator, as before.
 ITEMS = 40
 # A route that yields fewer than MIN_GRADED parseable labels is a route failure (n=1-9 cards on
-# #2846: base models, truncating providers). No card is staged; the id is written to the dead
-# list instead, and DEAD_MAX_AGE_DAYS re-probes it later (the hub-queue-mill expiry).
+# #2846: base models, truncating providers). No card is staged; (id, axis) is written to the dead
+# list instead as an axis-scoped row, and DEAD_MAX_AGE_DAYS re-probes it later (the hub-queue-mill
+# expiry). The other axes still pick the model.
 MIN_GRADED = 10
 DEAD_MAX_AGE_DAYS = 14
 
@@ -83,7 +84,9 @@ FETCH
 python3 - <<'DEADMERGE'
 # The dead rows earlier jobs uploaded (dead/<axis>/shard-*-dead.jsonl) join the committed list
 # BEFORE this job picks, so a route found dead or low-yield in one round is not re-graded in the
-# next. Rows keep their own as_of; --dead-max-age-days decides what is still skipped.
+# next. Rows keep their own as_of and scope (a low-yield row skips its own axis only); keyed by
+# (id, axis, as_of), so two axes' rows from one second both survive; --dead-max-age-days decides
+# what is still skipped.
 import json, os, pathlib
 from huggingface_hub import HfApi, hf_hub_download
 dead = pathlib.Path("mill-in/dead.jsonl")
@@ -91,7 +94,7 @@ have = set()
 for ln in dead.read_text(encoding="utf-8").splitlines():
     try:
         o = json.loads(ln)
-        have.add((o.get("id"), o.get("as_of")))
+        have.add((o.get("id"), o.get("axis"), o.get("as_of")))
     except Exception:
         pass
 added = 0
@@ -107,7 +110,7 @@ try:
                     o = json.loads(ln)
                 except Exception:
                     continue
-                key = (o.get("id"), o.get("as_of"))
+                key = (o.get("id"), o.get("axis"), o.get("as_of"))
                 if not o.get("id") or key in have:
                     continue
                 have.add(key)

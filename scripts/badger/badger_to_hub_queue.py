@@ -124,6 +124,9 @@ def to_row(atom: dict, slug: str) -> dict | None:
 
 
 def load_dead() -> set[str]:
+    """Model-wide dead ids. An axis-scoped row (a low-yield route, "scope": "axis") says the model
+    fails ONE bank's format, not that it is unservable, so it never drops the model from the queue
+    (mill_hub_queue.dead_row_scope is the same rule)."""
     dead: set[str] = set()
     if not DEAD.exists():
         return dead
@@ -133,8 +136,11 @@ def load_dead() -> set[str]:
             continue
         try:
             d = json.loads(line)
-            if isinstance(d, dict) and d.get("id"):
-                dead.add(d["id"])
+            if not (isinstance(d, dict) and d.get("id")):
+                continue
+            if d.get("scope") == "axis" or "low-yield route" in str(d.get("reason") or ""):
+                continue
+            dead.add(d["id"])
         except Exception:
             continue
     return dead

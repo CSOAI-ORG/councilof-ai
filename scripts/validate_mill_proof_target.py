@@ -13,7 +13,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "harness" / "gspc-top100"))
-from mill_hub_queue import GEN_TAGS, HF_PROVIDER_SUFFIX, load_dead_slugs, load_queue  # noqa: E402
+from mill_hub_queue import GEN_TAGS, HF_PROVIDER_SUFFIX, load_dead_cells, load_dead_slugs, load_queue  # noqa: E402
 
 MODEL = re.compile(r"^[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$")
 REVISION = re.compile(r"^[0-9a-f]{40,64}$")
@@ -60,6 +60,8 @@ def validate_target(model: str, axis: str, queue: Path, dead: Path | None,
         raise ValueError("exact model-axis cell is already measured in the fetched queue")
     if model in load_dead_slugs(dead, max_age_days=14):
         raise ValueError("exact model is in the current dead-slug window")
+    if (model, axis) in load_dead_cells(dead, max_age_days=14):
+        raise ValueError("exact model-axis route is in the current low-yield window")
     if (model, axis) in inflight_cells(inflight):
         raise ValueError("exact model-axis cell is already in flight")
 

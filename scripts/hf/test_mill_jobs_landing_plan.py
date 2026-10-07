@@ -4,6 +4,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from datetime import datetime, timezone
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -24,6 +25,9 @@ def g(model, axis, n, seed, cid="", path=""):
 
 BOT = [{"authors": [{"email": "board@csoai.org"}]}]
 HUMAN = BOT + [{"authors": [{"email": "nicholas@csoai.org"}]}]
+# #2815 on 2026-10-07: bot commits plus one "Merge branch 'master'" by a person (second parent on master).
+MASTER_MERGE = {"authors": [{"email": "nicholas@csoai.org"}], "parents": ["p" * 40, "m" * 40], "merges_master": True}
+NOW = datetime(2026, 10, 7, 12, 0, tzinfo=timezone.utc)
 
 
 class PlanRulesTest(unittest.TestCase):
@@ -116,6 +120,115 @@ class PlanRulesTest(unittest.TestCase):
         self.assertFalse(lp.is_bot_only({"commits": HUMAN}))
         self.assertFalse(lp.is_bot_only({"commits": []}))
         self.assertFalse(lp.is_bot_only({}))
+
+    def test_a_commit_that_only_merged_master_in_is_not_human_work(self):
+        self.assertTrue(lp.is_bot_only({"commits": BOT + [MASTER_MERGE]}))
+        # A merge whose second parent is NOT on master brought other work in: human.
+        self.assertFalse(lp.is_bot_only({"commits": BOT + [{**MASTER_MERGE, "merges_master": False}]}))
+        # Parents unknown, or one parent: an ordinary commit, judged by its author.
+        self.assertFalse(lp.is_bot_only({"commits": BOT + [{**MASTER_MERGE, "parents": ["p" * 40]}]}))
+        no_parents = {k: v for k, v in MASTER_MERGE.items() if k != "parents"}
+        self.assertFalse(lp.is_bot_only({"commits": BOT + [no_parents]}))
+        # A person's ordinary commit beside the merge still marks the PR human-touched.
+        self.assertFalse(lp.is_bot_only({"commits": HUMAN + [MASTER_MERGE]}))
+
+    def test_live_2815_shape_closes_the_merge_only_twin_and_holds_one(self):
+        # Read 2026-10-07 07:4xZ: #2815 (bot + one master merge by a person) adds 77 gradings over
+        # master, all in #2843; #2846 adds exactly #2843's 112. One PR must stay open, not two.
+        a, b, c = ("a" * 64, "b" * 64, "c" * 64)
+        prs = [lp.OpenPR(2815, "mill/land-hfjobs-2", lp.is_bot_only({"commits": BOT + [MASTER_MERGE]}), {a}),
+               lp.OpenPR(2843, "mill/land-hfjobs-3", lp.is_bot_only({"commits": BOT}), {a, b, c}),
+               lp.OpenPR(2846, "mill/land-hfjobs-4", lp.is_bot_only({"commits": BOT}), {a, b, c})]
+        p = lp.plan([], prs, set(), 10)
+        self.assertEqual(sorted(c["number"] for c in p["close"]), [2815, 2846])
+        self.assertIn("#2843", p["hold_reason"])
+        for gone in ("#2815", "#2846"):
+            self.assertNotIn(gone, p["hold_reason"])
+
+
+def rollup(**checks):
+    return [{"__typename": "CheckRun", "name": n, "status": "COMPLETED", "conclusion": c, "completedAt": t}
+            for n, (c, t) in checks.items()]
+
+
+class StaleRollingPrTest(unittest.TestCase):
+    def test_stale_reason_reads_conflicts_failed_and_missing_required_checks(self):
+        old, recent = "2026-10-06T06:00:00Z", "2026-10-07T10:00:00Z"
+        head_old = [{"committedDate": old}]
+        self.assertIn("conflicts", lp.stale_reason({"mergeable": "CONFLICTING"}, NOW, 24))
+        red = {"mergeable": "MERGEABLE", "statusCheckRollup": rollup(gates=("FAILURE", old), build=("SUCCESS", old))}
+        self.assertIn("gates", lp.stale_reason(red, NOW, 24))
+        self.assertEqual(lp.stale_reason({**red, "statusCheckRollup": rollup(gates=("FAILURE", recent))}, NOW, 24), "")
+        # A later green run of the same check on the same head is what counts.
+        rerun = rollup(gates=("FAILURE", old), build=("SUCCESS", old)) + rollup(gates=("SUCCESS", recent))
+        self.assertEqual(lp.stale_reason({"statusCheckRollup": rerun, "commits": head_old}, NOW, 24), "")
+        no_build = {"statusCheckRollup": rollup(gates=("SUCCESS", old)), "commits": head_old}
+        self.assertIn("build", lp.stale_reason(no_build, NOW, 24))
+        self.assertEqual(lp.stale_reason({**no_build, "commits": [{"committedDate": recent}]}, NOW, 24), "")
+        green = {"mergeable": "UNKNOWN", "statusCheckRollup": rollup(gates=("SUCCESS", old), build=("SUCCESS", old)),
+                 "commits": head_old}
+        self.assertEqual(lp.stale_reason(green, NOW, 24), "")
+
+    def test_a_stale_bot_pr_is_replaced_from_staging_and_stops_holding(self):
+        old_x, old_y = g("org/x", "safety", 33, "1"), g("org/y", "safety", 3, "2")   # y: below the floor
+        stale = lp.OpenPR.from_gradings(2843, "mill/land-hfjobs-3", True, [old_x, old_y], stale="it conflicts with master")
+        staged = [g("org/x", "safety", 33, "1"), g("org/z", "governance", 31, "3")]
+        p = lp.plan(staged, [stale], set(), 10)
+        self.assertFalse(p["hold"], p["hold_reason"])
+        self.assertEqual({(r["model"], r["n"]) for r in p["admitted"]}, {("org/x", 33), ("org/z", 31)})
+        self.assertEqual(p["close"], [])
+        self.assertEqual(p["replace"], [{"number": 2843, "branch": "mill/land-hfjobs-3",
+                                         "reason": "it conflicts with master", "needs_cells": [["org/x", "safety"]]}])
+
+    def test_live_replay_closes_the_twins_and_replaces_the_conflicting_one(self):
+        # 2026-10-07 07:50Z as read from the public API: #2815 (bot + a master merge) and #2846 add
+        # nothing #2843 lacks; #2843 and #2846 conflict with master. Staging still holds #2843's
+        # gradings, so one run leaves exactly one HF Jobs PR: the fresh one it opens.
+        x, y = g("org/x", "safety", 33, "1"), g("org/y", "care", 31, "2")
+        prs = [lp.OpenPR.from_gradings(2815, "mill/land-hfjobs-2", lp.is_bot_only({"commits": BOT + [MASTER_MERGE]}), [x]),
+               lp.OpenPR.from_gradings(2843, "mill/land-hfjobs-3", True, [x, y], stale="it conflicts with master"),
+               lp.OpenPR.from_gradings(2846, "mill/land-hfjobs-4", True, [x, y], stale="it conflicts with master")]
+        p = lp.plan([g("org/x", "safety", 33, "1"), g("org/y", "care", 31, "2")], prs, set(), 10)
+        self.assertEqual(sorted(c["number"] for c in p["close"]), [2815, 2846])
+        self.assertTrue(all("#2843 is itself replaced in this run" in c["reason"] for c in p["close"]))
+        self.assertEqual([r["number"] for r in p["replace"]], [2843])
+        self.assertFalse(p["hold"])
+        self.assertEqual(len(p["admitted"]), 2)
+
+    def test_a_stale_pr_whose_gradings_are_all_settled_closes_now(self):
+        on_master, low = g("org/x", "safety", 33, "1"), g("org/y", "safety", 3, "2")
+        stale = lp.OpenPR.from_gradings(2843, "mill/land-hfjobs-3", True, [on_master, low], stale="it conflicts with master")
+        p = lp.plan([], [stale], {on_master.digest}, 10)
+        self.assertEqual([c["number"] for c in p["close"]], [2843])
+        self.assertIn("conflicts", p["close"][0]["reason"])
+        self.assertEqual(p["replace"], [])
+        self.assertFalse(p["hold"])
+
+    def test_a_stale_pr_with_a_grading_staging_no_longer_holds_keeps_holding(self):
+        gone = g("org/x", "safety", 33, "1")
+        stale = lp.OpenPR.from_gradings(2843, "mill/land-hfjobs-3", True, [gone], stale="it conflicts with master")
+        p = lp.plan([g("org/z", "governance", 31, "3")], [stale], set(), 10)
+        self.assertTrue(p["hold"])
+        self.assertEqual(p["replace"], [])
+        self.assertEqual(p["close"], [])
+        self.assertIn("#2843", p["hold_reason"])
+        self.assertIn("not replaced", p["hold_reason"])
+
+    def test_human_touched_or_healthy_prs_are_never_replaced(self):
+        x = g("org/x", "safety", 33, "1")
+        human = lp.OpenPR.from_gradings(2843, "mill/land-hfjobs-3", False, [x], stale="it conflicts with master")
+        p = lp.plan([g("org/x", "safety", 33, "1")], [human], set(), 10)
+        self.assertTrue(p["hold"])
+        self.assertEqual((p["replace"], p["close"]), ([], []))
+        self.assertIn("a human has committed to it", p["hold_reason"])
+        # A healthy rolling PR holds the slot, so a stale one beside it cannot be replaced this run.
+        healthy = lp.OpenPR.from_gradings(2850, "mill/land-hfjobs-5", True, [g("org/q", "care", 31, "4")])
+        stale = lp.OpenPR.from_gradings(2843, "mill/land-hfjobs-3", True, [x], stale="it conflicts with master")
+        p = lp.plan([g("org/x", "safety", 33, "1")], [healthy, stale], set(), 10)
+        self.assertTrue(p["hold"])
+        self.assertEqual(p["replace"], [])
+        self.assertIn("#2850", p["hold_reason"])
+        self.assertIn("#2843", p["hold_reason"])
 
     def test_grading_needs_a_full_evidence_digest(self):
         self.assertIsNone(lp.grading_of({"body": {"model": "m", "axis": "a", "n": 30, "evidence": {"items_sha256": "ab"}}}))

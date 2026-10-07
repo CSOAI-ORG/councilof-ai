@@ -54,6 +54,9 @@ class ProofTargetTest(unittest.TestCase):
         cases = []
         cases.append(("member", lambda: self.queue.write_text(json.dumps({"id": "other/model", "pipeline_tag": "text-generation"}) + "\n")))
         cases.append(("dead", lambda: self.dead.write_text(json.dumps({"id": "org/model", "as_of": "2999-01-01T00:00:00Z"}) + "\n")))
+        cases.append(("low-yield on this axis", lambda: self.dead.write_text(json.dumps({
+            "id": "org/model", "axis": "safety", "scope": "axis", "reason": "UNCHECKABLE low-yield route: 2 of 30",
+            "as_of": "2999-01-01T00:00:00Z"}) + "\n")))
         cases.append(("measured", lambda: self.queue.write_text(json.dumps({"id": "org/model", "pipeline_tag": "text-generation", "measured_axes": {"safety": {"status": "MEASURED", "card_id": "x"}}}) + "\n")))
         cases.append(("inflight", lambda: self.inflight.write_text(json.dumps({"id": "org/model", "axis": "safety"}) + "\n")))
         for name, mutate in cases:
@@ -66,6 +69,13 @@ class ProofTargetTest(unittest.TestCase):
             ("canonical", {**self.metadata, "id": "org/other"}),
         ):
             with self.subTest(name=name), self.assertRaises(ValueError): self.check(metadata=metadata)
+
+    def test_a_low_yield_row_on_another_axis_does_not_refuse_this_one(self):
+        # A low-yield route is dead on its own axis only (mill_hub_queue.dead_row_scope).
+        self.dead.write_text(json.dumps({"id": "org/model", "axis": "governance", "scope": "axis",
+                                         "reason": "UNCHECKABLE low-yield route: 2 of 30",
+                                         "as_of": "2999-01-01T00:00:00Z"}) + "\n")
+        self.assertTrue(self.check()["eligible"])
 
 
 if __name__ == "__main__":

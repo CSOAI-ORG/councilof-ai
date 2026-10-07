@@ -10,7 +10,7 @@ name: hub-queue-land
 # Never signs here. Never stamps MEASURED. n<30 stays unquotable. Empty stays empty.
 # A-G2 (2026-10-07): after the signer, the derived views a signed card changes (models-measured.json,
 # evidence-note citations, in-toto statements) are rebuilt on the branch by scripts/hf/mill_land_derived.sh, and the
-# gates are dispatched only then, so they judge the branch as it will merge.
+# required checks (gates, build) are dispatched only then, so they judge the branch as it will merge.
 
 on:
   workflow_run:
@@ -82,7 +82,6 @@ jobs:
           set -euo pipefail
           AXIS="${{ steps.land.outputs.axis }}"
           BR="mill/land-${AXIS}-${RUN_ID}"
-          echo "branch=$BR" >> "$GITHUB_OUTPUT"
           git config user.name "csoai-hub-queue-land"
           git config user.email "board@csoai.org"
           git checkout -b "$BR"
@@ -96,6 +95,9 @@ jobs:
           git add public/interop/mill-cards-unsigned public/interop/mill-evidence
           git commit -m "mill: land ${{ steps.land.outputs.landed }} UNSIGNED ${AXIS} cards from hub-queue-mill run ${RUN_ID} (sign pending; nothing MEASURED)"
           git push origin "HEAD:$BR"
+          # Set once the branch exists on the remote: the later steps key on it (and run even if a
+          # step between them fails), so it must never name a branch that was not pushed.
+          echo "branch=$BR" >> "$GITHUB_OUTPUT"
           gh pr create --base master --head "$BR" \
             --title "mill: ${{ steps.land.outputs.landed }} ${AXIS} cards from run ${RUN_ID} — OIDC sign pending, nothing MEASURED" \
             --body-file staged/PR-BODY.md
@@ -103,8 +105,8 @@ jobs:
           # ("refusing the whole legacy inbox") — the dispatch must name the exact run it
           # landed. RUN_ID is already in scope (it is in the branch name and commit).
           gh workflow run hf-fin-shells-measure.yml --ref "$BR" -f target=mill -f mill_run_id="${RUN_ID}"
-          # pr-gates is dispatched by the derived-views step below, after the signer's commit and the
-          # rebuild (A-G2): a gate run on this unsigned head judged a branch that was about to change.
+          # pr-gates and the build check are dispatched by the last step below, after the signer's commit
+          # and the rebuild (A-G2): a gate run on this unsigned head judged a branch about to change.
       - name: wait for signer, then verify DID signature and current admission (no key here)
         if: steps.land.outputs.landed != '0'
         run: |
@@ -188,8 +190,10 @@ jobs:
               print(f"| `{n}` | {v} | {w} |")
           PY
           gh pr comment "$BR" --body-file verify.md
-      - name: rebuild derived views on the PR branch, then dispatch the gates (A-G2)
-        if: steps.land.outputs.landed != '0'
+      - name: rebuild derived views on the PR branch (A-G2)
+        # Runs even when the verify step above failed: the views follow the branch's bytes, whatever
+        # the verdict table says about them.
+        if: ${{ !cancelled() && steps.pr.outputs.branch != '' }}
         run: |
           set -euo pipefail
           BR="${{ steps.pr.outputs.branch }}"
@@ -202,17 +206,25 @@ jobs:
           else
             echo "::warning::signer is '${ST:-unknown}' on $BR, so the derived views were not rebuilt. After it completes run, from a checkout: bash scripts/hf/mill_land_derived.sh $BR"
           fi
-          # TUI-1 (2026-09-13): GITHUB_TOKEN-created PRs never fire pull_request checks, so
-          # mill landing PRs carried zero protected checks (e.g. #2025 closed after manual
-          # evidence review with "no checks reported"). Least-privilege fix with the existing
-          # mechanism: pr-gates.yml already accepts workflow_dispatch — dispatch it at this
-          # branch so required checks attach to the PR head. Branch protection untouched.
-          # If dispatch is not permitted, bank the PR and print the exact operator action —
-          # never fake a green check.
-          if ! gh workflow run pr-gates.yml --ref "$BR" 2>/dev/null; then
-            echo "OPERATOR ACTION REQUIRED: PR $BR created but protected checks could not be dispatched." >&2
-            echo "Run: gh workflow run pr-gates.yml --ref $BR" >&2
-          fi
+      - name: dispatch the required checks on the PR head (gates, build)
+        # TUI-1 (2026-09-13): GITHUB_TOKEN-created PRs never fire pull_request checks, so mill landing
+        # PRs carried zero protected checks (e.g. #2025 closed after manual evidence review with "no
+        # checks reported"). Least-privilege fix with the existing mechanism: dispatch the workflows
+        # that publish the two contexts branch protection requires on master, `gates` (pr-gates.yml)
+        # and `build` (ci.yml; 2026-10-07: bot heads #2843 and #2846 never got `build` at all). Its
+        # own step, so a failed verify step above no longer leaves the PR checkless. If dispatch is
+        # not permitted, print the exact operator action and fail the step; never fake a green check.
+        if: ${{ !cancelled() && steps.pr.outputs.branch != '' }}
+        run: |
+          BR="${{ steps.pr.outputs.branch }}"
+          rc=0
+          for wf in pr-gates.yml ci.yml; do
+            if ! gh workflow run "$wf" --ref "$BR"; then
+              echo "OPERATOR ACTION REQUIRED: PR $BR created but $wf could not be dispatched. Run: gh workflow run $wf --ref $BR" >&2
+              rc=1
+            fi
+          done
+          exit $rc
       - name: upload land report
         if: always()
         uses: actions/upload-artifact@v4
