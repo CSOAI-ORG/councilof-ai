@@ -26,6 +26,31 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
+      # workflow_dispatch can select any ref. A Cloudflare --branch=master target
+      # does not prove the checked-out source is master. Reject other sources
+      # before checkout, dependency installation or any provider credential use.
+      - name: Canonical production source — master only
+        env:
+          RELEASE_REPOSITORY: ${{ github.repository }}
+          RELEASE_REF: ${{ github.ref }}
+          RELEASE_EVENT: ${{ github.event_name }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${RELEASE_REPOSITORY:-}" != "CSOAI-ORG/councilof-ai" ]; then
+            echo "::error::Production source must be CSOAI-ORG/councilof-ai."
+            exit 1
+          fi
+          if [ "${RELEASE_REF:-}" != "refs/heads/master" ]; then
+            echo "::error::Production source must be refs/heads/master."
+            exit 1
+          fi
+          case "${RELEASE_EVENT:-}" in
+            push|workflow_dispatch|schedule) ;;
+            *) echo "::error::Unsupported production release event."; exit 1 ;;
+          esac
+          echo "canonical production source accepted"
+
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: 20 }

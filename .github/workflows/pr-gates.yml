@@ -158,9 +158,35 @@ jobs:
         run: node scripts/hold-guard.mjs
 
   gates:
+    # Required checks must fail, not become skipped-success, when a safety job fails.
+    # Keep the independent guards mandatory even when the site build is out of scope.
+    needs: [card-verifier-parity, wallet-credentials, third-party-identifiers, stamped-bytes, hold-guard]
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
+      - name: Require successful mandatory guards
+        env:
+          GUARD_RESULTS: ${{ toJSON(needs) }}
+          GUARD_EVENT: ${{ github.event_name }}
+        run: |
+          python3 - <<'PY'
+          import json, os, sys
+          results = json.loads(os.environ["GUARD_RESULTS"])
+          required = ["card-verifier-parity", "wallet-credentials", "third-party-identifiers", "stamped-bytes", "hold-guard"]
+          event = os.environ.get("GUARD_EVENT", "")
+          if event != "pull_request":
+              sys.exit("Diagnostic or unsupported event; required PR approval is not established")
+          failures = []
+          for name in required:
+              result = results.get(name, {}).get("result", "missing")
+              if result != "success":
+                  failures.append(f"{name}={result}")
+          if failures:
+              sys.exit("Mandatory guards did not pass: " + ", ".join(failures))
+          print("Mandatory PR guards passed")
+          PY
+
       # No checkout: the file list comes from the API, so an out-of-scope PR costs a few seconds
       # and pulls no history. This regex IS the old `paths:` filter - keep them in step.
       - name: Scope - does this PR touch a gated path?
@@ -182,7 +208,7 @@ jobs:
             echo "gated paths in this PR:"; printf '  %s\n' $gated
           else
             echo "gated=false" >> "$GITHUB_OUTPUT"
-            echo "no gated path changed - the suite below is skipped and gates passes by scope."
+            echo "no site-build path changed - site suite skipped; mandatory guards already passed."
             printf '%s\n' "$changed" | sed 's/^/  /'
           fi
 
@@ -193,6 +219,10 @@ jobs:
       - uses: actions/setup-node@v4
         if: steps.scope.outputs.gated == 'true'
         with: { node-version: 20 }
+
+      - name: Release governance controls
+        if: steps.scope.outputs.gated == 'true'
+        run: node --test scripts/review/release-governance.node-test.mjs
 
       # Runs before `npm ci` so a stamped-byte edit fails in seconds. See the stamped-bytes job above
       # for why (#2871 / deploy run 37590160574). Verified to fail: the selftest goes red when any one

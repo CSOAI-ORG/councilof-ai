@@ -7,9 +7,10 @@ name: bot-checks-sweeper
 #
 # Least-privilege repair (no PAT, no GitHub App, no protection weakening, no fabricated
 # checks): this sweeper finds open PRs whose head has no `gates` check-run and dispatches
-# the REAL pr-gates suite against the PR branch (check-runs attach to the head sha, so
-# they surface on the PR like any pull_request run). If the branch is too old to carry
-# the dispatchable workflow, the PR is banked with ONE explicit operator action comment.
+# the REAL pr-gates suite against the PR branch for diagnosis. workflow_dispatch checks
+# do not satisfy required PR checks. An authorized human must trigger eligible PR checks
+# and review the latest head before a normal protected merge. Never use admin bypass.
+# If dispatch fails, bank ONE explicit operator action comment; do not infer its cause.
 #
 # Never comments twice on the same PR (marker search). Never merges. Never skips tests.
 
@@ -75,7 +76,7 @@ jobs:
               all_gates = [r for r in (cr.get("check_runs") or []) if r.get("name") == "gates"]
               green_gates = [r for r in all_gates if r.get("conclusion") == "success"]
               if green_gates:
-                  continue  # already has a passing protected context on the current head
+                  continue  # a passing run exists; PR merge eligibility is not inferred here
               # Failed or in-progress gates exist but none passed — re-dispatch
               # (the earlier dispatch may have failed, or a newer head invalidated it)
               swept.append(n)
@@ -84,42 +85,41 @@ jobs:
               if r.returncode == 0:
                   dispatched.append(n)
                   print(f"dispatched pr-gates for #{n} ({branch} @ {sha[:8]})")
-                  # MEASURED TRUTH (2026-09-13, PR #2134): a workflow_dispatch gates run IS
-                  # green evidence on the head sha, but GitHub does NOT count it toward the
-                  # PR's required check — mergeable_state stays "blocked". Credentials cannot
-                  # safely trigger pull_request for a bot-opened PR, so per the operating
-                  # contract the PR is banked with ONE explicit operator action.
+                  # Diagnostic dispatch is not a protected PR approval. Bank the human
+                  # event/review action without suggesting a bypass of branch protection.
                   comments = gh(["pr", "view", str(n), "--repo", REPO,
                                  "--json", "comments", "-q", "[.comments[].body] | join('\n')"]).stdout
-                  if "bot-checks-sweeper: operator action" not in comments:
+                  if "bot-checks-sweeper: protected operator action v2" not in comments:
                       body = (
-                          "bot-checks-sweeper: operator action required.\n\n"
-                          f"This PR was opened by automation, so no pull_request checks fired. "
-                          f"The REAL gates suite has been dispatched on `{branch}` — its result "
-                          f"attaches to head {sha[:8]} (Actions tab → pr-gates → this branch).\n\n"
-                          "**Operator action:** when that dispatched run is green, merge with "
-                          "admin rights (`gh pr merge "
-                          f"{n} --squash --admin`). Branch protection counts only pull_request-event "
-                          "checks; the dispatched green run is the evidence, the admin merge is the "
-                          "human act. Posted once; nothing was auto-merged and no check was fabricated."
+                          "bot-checks-sweeper: protected operator action v2.\n\n"
+                          f"No passing `gates` run was observed for head {sha[:8]}. "
+                          f"The real suite was dispatched on `{branch}` for diagnosis only. "
+                          "A successful workflow_dispatch run does not satisfy required PR checks.\n\n"
+                          "**Authorized owner action:** trigger eligible pull_request checks, for example "
+                          "by closing and reopening this PR in the web UI, then verify all required "
+                          "checks on the latest PR/test-merge commit and obtain the required review. "
+                          "Use the normal protected merge only after those requirements pass. "
+                          "Never use admin bypass or weaken protection.\n\n"
+                          "This replaces any earlier admin-merge advice from this sweeper. "
+                          "Nothing was auto-merged and no check was fabricated."
                       )
                       gh(["pr", "comment", str(n), "--repo", REPO, "--body", body])
                       print(f"banked operator-action comment on #{n}")
               else:
-                  # Branch predates dispatchable pr-gates (or ref vanished): bank the PR with
-                  # ONE explicit operator action — never claim automation worked.
+                  # Dispatch did not complete. Bank the PR without guessing why it failed.
                   comments = gh(["pr", "view", str(n), "--repo", REPO,
                                  "--json", "comments", "-q", "[.comments[].body] | join('\n')"]).stdout
-                  if "bot-checks-sweeper: operator action" not in comments:
+                  if "bot-checks-sweeper: protected operator action v2" not in comments:
                       body = (
-                          "bot-checks-sweeper: operator action required.\n\n"
-                          f"This PR was opened by automation (GITHUB_TOKEN), so the protected "
-                          f"`gates` check never fired, and the branch `{branch}` predates the "
-                          "dispatchable pr-gates workflow, so the sweeper cannot run it for you.\n\n"
-                          "**Operator action (one of):** close and re-open this PR from the web UI "
-                          "(a human-triggered event fires pull_request checks), or merge current "
-                          "`master` into the branch with a human credential.\n\n"
-                          "Posted once by bot-checks-sweeper; no checks were fabricated."
+                          "bot-checks-sweeper: protected operator action v2.\n\n"
+                          f"No passing `gates` run was observed for head {sha[:8]}, and the diagnostic "
+                          f"dispatch on `{branch}` did not complete. Required PR checks remain unconfirmed.\n\n"
+                          "**Authorized owner action:** inspect the dispatch failure, trigger eligible "
+                          "pull_request checks (for example by closing and reopening the PR in the web UI), "
+                          "and verify every required check on the latest PR/test-merge commit. Obtain "
+                          "the required review before a normal protected merge. Never use admin bypass "
+                          "or weaken protection.\n\n"
+                          "This replaces any earlier admin-merge advice. No checks were fabricated."
                       )
                       gh(["pr", "comment", str(n), "--repo", REPO, "--body", body])
                       banked.append(n)
