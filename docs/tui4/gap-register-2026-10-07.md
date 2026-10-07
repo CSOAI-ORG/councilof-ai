@@ -130,10 +130,16 @@ no longer exists** — the rename replaced it, no duplicate source of truth.
     settlement against `/api/proof?bundle=1` (cost: $0.01 USDC + negligible Base gas;
     classification INTERNAL_SELF_FUNDED, never revenue), (3) verify merchant discovery
     total ≥ 1, (4) switch env back to PayAI or keep CDP — routing is the owner's call.
-  - **Permissionless alternative staged (not fired):** Agent Bazaar
-    (open-x402-bazaar) accepts `POST /submit {"manifestUrl":"https://councilof.ai/.well-known/x402.json"}`
-    with no account/KYC — wire-compatible mirror. One curl, $0; awaiting owner's word since
-    it is a fifth, newly-discovered external submission beyond the approved four.
+  - **Owner said GO (2026-10-07T05:0xZ).** Deliverables: runbook
+    `docs/tui4/cdp-bazaar-runbook-2026-10-07.md` + staged `scripts/x402/cdp_index_settle.py`
+    (dry-run exit 0; no-creds exit 2 BLOCKED, attempts nothing). The edge turns out to be
+    **CDP-code-complete** (`functions/api/_cdp_jwt.ts`, per-request Ed25519 JWT) — Option B is
+    3 env entries away, deferred as a live-rail decision. Option A (direct settle, no rail
+    change) needs only: CDP API keys + funded signer + ~$0.01 self-settled.
+  - **Permissionless alternative FIRED, service down:** `bazaar.saylorinnovations.com`
+    `POST /submit {"manifestUrl":…}` + every D1-backed route returned Cloudflare 1101 across
+    4 attempts (only cached `/discovery/stats` answers: 2041 listings / 21172 resources).
+    Submit unverifiable while their service is down — retry pending.
   - PayAI full-catalogue enumeration remains blocked (no cursor for anonymous callers) —
     first 100 rows contain 0 of ours; absence NOT established.
 
