@@ -50,6 +50,17 @@ HARVEST_KEY_MARKERS = ("harvest",)
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 EXPECTED_TARGET_COUNT = 17
 
+# Canonical state vocabulary (the estate's doctrine): INDEXED, MEASURED, SIGNED,
+# WITNESSED, BITCOIN-ANCHORED, DEPLOYED, INDEPENDENTLY USED, INDEPENDENTLY PAID.
+# Fan-out eligibility requires the measured-and-signed family — 'PUBLISHED' is
+# kept for flat-shape compatibility but is NOT an estate state. Fixed 2026-10-07:
+# the first real board-signed artifact (effect-binding-server-probe-2026-09-22)
+# carries payload.status='MEASURED' and was blocked by a status word that does
+# not exist in the vocabulary — one concept, two spellings.
+FANOUT_ELIGIBLE_STATES = frozenset({
+    "PUBLISHED", "MEASURED", "SIGNED", "WITNESSED", "BITCOIN-ANCHORED", "DEPLOYED",
+})
+
 MISSING = object()
 
 
@@ -61,21 +72,83 @@ def present(obj, key):
     return (True, obj[key])
 
 
+def _payload_sha_candidates(payload):
+    """Both named preimage rules for a payload digest.
+    house = json.dumps(sort_keys, separators, ensure_ascii=True) — the card rule.
+    js    = JSON.stringify of key-sorted object = ensure_ascii=False — the rule
+            declared by the signed-companion envelopes' `canonical` field.
+    The rule that matches is NAMED in the result; neither matching is a block."""
+    canon = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode()
+    js = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
+    return {
+        hashlib.sha256(canon).hexdigest(): "house-json-dumps-ascii",
+        hashlib.sha256(js).hexdigest(): "js-json-stringify",
+    }
+
+
+def normalize_envelope(evidence):
+    """Accept BOTH estate envelope shapes and return (flat, notes).
+
+    Flat (tests/simple): {sha256, signed_by, as_of, status, ...}
+    Signed companion (the real estate shape, e.g. effect-binding-server-probe
+    -2026-09-22.signed.json): {schema, payload: {...}, signature: {did, alg,
+    sig_ed25519, payload_sha256, canonical, signer_auth, signed_at}, verify}.
+
+    Also verifies payload_sha256 against the payload under the declared rule;
+    a mismatch is a TAMPER block (carried out as a gate reason by check_gate).
+    """
+    notes = {"envelope_shape": "flat", "payload_sha256_rule": None, "payload_sha256_verified": None}
+    if not isinstance(evidence, dict):
+        return (evidence, notes)
+    sig = evidence.get("signature")
+    payload = evidence.get("payload")
+    if not (isinstance(sig, dict) and isinstance(payload, dict)):
+        return (evidence, notes)
+
+    notes["envelope_shape"] = "signed-companion"
+    flat = dict(evidence)
+    flat.setdefault("status", payload.get("status"))
+    flat.setdefault("as_of", payload.get("as_of") or sig.get("signed_at"))
+    found, signer = present(sig, "did")
+    flat.setdefault("signed_by", signer if found and signer is not MISSING else None)
+    found, sha = present(sig, "payload_sha256")
+    flat.setdefault("sha256", sha if found and sha is not MISSING else None)
+
+    # Verify the payload digest under the declared/known preimage rules.
+    found, claimed = present(sig, "payload_sha256")
+    if found and isinstance(claimed, str) and SHA256_RE.match(claimed):
+        candidates = _payload_sha_candidates(payload)
+        rule = candidates.get(claimed)
+        if rule:
+            notes["payload_sha256_rule"] = rule
+            notes["payload_sha256_verified"] = True
+        else:
+            notes["payload_sha256_verified"] = False  # tamper: check_gate blocks
+    return (flat, notes)
+
+
 def check_gate(evidence):
     """Return the list of named gate-failure reasons (empty list = gate open)."""
     if not isinstance(evidence, dict):
         return ["evidence_not_an_object"]
 
+    evidence, notes = normalize_envelope(evidence)
     reasons = []
 
-    # 1. status must be exactly PUBLISHED (present-null is its own reason).
+    # 0. signed-companion tamper check: payload_sha256 must verify under a
+    #    named preimage rule (house json.dumps or JS JSON.stringify).
+    if notes.get("payload_sha256_verified") is False:
+        reasons.append("payload_sha256_mismatch")
+
+    # 1. status must be in the fan-out-eligible vocabulary (present-null is its
+    #    own reason).
     found, status = present(evidence, "status")
     if not found:
         reasons.append("status_missing")
     elif status is None:
         reasons.append("status_present_null")
-    elif status != "PUBLISHED":
-        reasons.append("status_not_published: %r" % (status,))
+    elif status not in FANOUT_ELIGIBLE_STATES:
+        reasons.append("status_not_fanout_eligible: %r" % (status,))
 
     # 2. sha256 must be present, non-null, well-formed (64 lowercase hex).
     found, sha = present(evidence, "sha256")
@@ -125,7 +198,9 @@ def check_gate(evidence):
 def run(evidence, out_dir):
     """Run the catapult. Returns (result_dict, exit_code). Writes nothing on
     gate failure; on any post-gate failure removes everything already written.
-    """
+    Accepts both envelope shapes (flat and signed-companion) — normalize first,
+    then gate and render from the same normalized object."""
+    evidence, notes = normalize_envelope(evidence)
     reasons = check_gate(evidence)
     if reasons:
         return ({"state": "GATE_BLOCKED", "blocked_by": reasons}, 0)
