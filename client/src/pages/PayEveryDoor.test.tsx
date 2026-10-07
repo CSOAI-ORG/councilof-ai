@@ -420,7 +420,9 @@ describe("/pay-all is wired like every other current page", () => {
     // Effects do not run in a static render, so the manifest is unread here; the page must not
     // claim the door is missing before it has read the list.
     expect(one).not.toContain('data-testid="pay-deep-link"');
-    expect(strip(pageSource)).toContain("selectDoor(doors, wanted)");
+    // doorForLink (lib/payEveryDoor) is selectDoor plus "a declared route with its own query pays that
+    // resource"; a route the manifest does not declare still selects nothing (payEveryDoor.test.ts).
+    expect(strip(pageSource)).toContain("doorForLink(doors, wanted)");
     expect(strip(pageSource)).toContain("Show every door");
     expect(strip(pageSource)).toContain("the manifest does not declare");
   });
