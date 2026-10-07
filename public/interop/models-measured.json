@@ -5,7 +5,7 @@
   "third_party_models": 163,
   "own_models_excluded": 48,
   "own_unconfirmed": 3,
-  "third_party_with_admission_receipt": 45,
+  "third_party_with_admission_receipt": 48,
   "label": "models measured on frozen banks (third-party models only; our own are listed separately and never counted in)"
  },
  "not_this": [
@@ -23,22 +23,22 @@
   },
   "mill_cards_signed": {
    "path": "/interop/mill-cards-signed/",
-   "files_read": 2932,
-   "cards_counted": 1210,
-   "cards_counted_with_admission_receipt": 262,
+   "files_read": 3142,
+   "cards_counted": 1209,
+   "cards_counted_with_admission_receipt": 269,
    "cards_not_counted": {
     "signature_not_valid": 0,
-    "not_measured": 629,
+    "not_measured": 794,
     "not_quotable": 0,
     "under_30": 0,
     "unsigned": 36,
     "withdrawn": 39,
-    "superseded": 1018
+    "superseded": 1064
    },
    "rule": "Ed25519 signature verifies under the did:web:csoai.org key it names, id == sha256(canonical body), status MEASURED, quotable, n >= 30, not STAGED_UNSIGNED, not withdrawn, not superseded"
   }
  },
- "inputs_sha256": "d5e11f51040ef65a4bc3cb8791e890731e256d00d8e62019441e27a8e91f1a2f",
+ "inputs_sha256": "9e325231a32f71d9e64711bba08abc93acac8e8b6c3d424cb4e76d1664ff29d8",
  "models": [
   {
    "id": "clan-law-plain",
@@ -1015,7 +1015,7 @@
    "sources": [
     "mill-cards-signed"
    ],
-   "admission_receipt": false,
+   "admission_receipt": true,
    "first_signed_card": null,
    "recorded_as": [
     "IlyaGusev/saiga_llama3_8b"
@@ -1120,7 +1120,7 @@
    "sources": [
     "mill-cards-signed"
    ],
-   "admission_receipt": false,
+   "admission_receipt": true,
    "first_signed_card": null,
    "recorded_as": [
     "Qwen/Qwen2-7B-Instruct"
@@ -1862,6 +1862,21 @@
    ]
   },
   {
+   "id": "Qwen/Qwen2.5-32B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 10,
+   "axes": 10,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "first_signed_card": null,
+   "recorded_as": [
+    "Qwen/Qwen2.5-32B-Instruct"
+   ]
+  },
+  {
    "id": "Qwen/Qwen3-0.6B",
    "name_published": true,
    "kind": "third_party",
@@ -1919,21 +1934,6 @@
    "first_signed_card": null,
    "recorded_as": [
     "mistralai/Mistral-7B-Instruct-v0.2"
-   ]
-  },
-  {
-   "id": "Qwen/Qwen2.5-32B-Instruct",
-   "name_published": true,
-   "kind": "third_party",
-   "cards": 9,
-   "axes": 9,
-   "sources": [
-    "mill-cards-signed"
-   ],
-   "admission_receipt": false,
-   "first_signed_card": null,
-   "recorded_as": [
-    "Qwen/Qwen2.5-32B-Instruct"
    ]
   },
   {
@@ -2072,36 +2072,6 @@
    ]
   },
   {
-   "id": "Qwen/Qwen3-14B-Base",
-   "name_published": true,
-   "kind": "third_party",
-   "cards": 8,
-   "axes": 8,
-   "sources": [
-    "mill-cards-signed"
-   ],
-   "admission_receipt": false,
-   "first_signed_card": null,
-   "recorded_as": [
-    "Qwen/Qwen3-14B-Base"
-   ]
-  },
-  {
-   "id": "Qwen/Qwen3-8B-Base",
-   "name_published": true,
-   "kind": "third_party",
-   "cards": 8,
-   "axes": 8,
-   "sources": [
-    "mill-cards-signed"
-   ],
-   "admission_receipt": false,
-   "first_signed_card": null,
-   "recorded_as": [
-    "Qwen/Qwen3-8B-Base"
-   ]
-  },
-  {
    "id": "qwen2.5:0.5b",
    "name_published": true,
    "kind": "third_party",
@@ -2194,6 +2164,21 @@
    ]
   },
   {
+   "id": "Qwen/Qwen3-14B-Base",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 7,
+   "axes": 7,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "first_signed_card": null,
+   "recorded_as": [
+    "Qwen/Qwen3-14B-Base"
+   ]
+  },
+  {
    "id": "Qwen/Qwen3-4B-Base",
    "name_published": true,
    "kind": "third_party",
@@ -2206,6 +2191,21 @@
    "first_signed_card": null,
    "recorded_as": [
     "Qwen/Qwen3-4B-Base"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen3-8B-Base",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 7,
+   "axes": 7,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "first_signed_card": null,
+   "recorded_as": [
+    "Qwen/Qwen3-8B-Base"
    ]
   },
   {

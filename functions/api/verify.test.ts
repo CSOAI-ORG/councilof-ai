@@ -14,7 +14,9 @@ vi.mock("../_lib/cardVerify", async () => {
   return { ...actual, verifyCard: vi.fn() };
 });
 
-import { verifyCard } from "../_lib/cardVerify";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { CARD_ATTESTATION_HEX, verifyCard } from "../_lib/cardVerify";
 import { onRequestGet, onRequestPost } from "./verify";
 
 const call = (body: unknown) =>
@@ -115,5 +117,53 @@ describe("/api/verify", () => {
     } as any);
     const b = await (await call({ card: { id: "d".repeat(64) } })).json();
     expect(b.state).toBe("VALID");
+  });
+
+  describe("the live did.json cross-check reads the published keys, not just their ids", () => {
+    // E2E 2026-10-07: every POST /api/verify answer carried "Live anchor cross-check — ok:false —
+    // The live did.json does not list this key while the pinned set also does", for a key that
+    // did.json on both hosts lists, while the MCP `verify_card` tool reading the same document
+    // said "agrees". The endpoint's own did.json reader kept only the method ids and left every
+    // key hex empty, so the cross-check could never match. It must use cardVerify.anchorsFromDid.
+    const DID = readFileSync(resolve(__dirname, "../../public/.well-known/did.json"), "utf8");
+    const CARD = JSON.parse(
+      readFileSync(
+        resolve(__dirname, "../../public/signed/cards/82994353b8f94337746ddf73700b0edc425d695d43910dbfeb53d118d5a09a1c.json"),
+        "utf8",
+      ),
+    );
+    const serveDid = () =>
+      vi.stubGlobal(
+        "fetch",
+        vi.fn(async (url: string) =>
+          String(url).endsWith("/.well-known/did.json")
+            ? new Response(DID, { status: 200, headers: { "content-type": "application/json" } })
+            : new Response("{}", { status: 404 }),
+        ),
+      );
+
+    it("hands verifyCard the decoded key bytes of every published verification method", async () => {
+      serveDid();
+      vi.mocked(verifyCard).mockResolvedValue({
+        valid: true, id: "e".repeat(64), family: "gspc.measurement-card", reasons: [], checks: [],
+      } as any);
+      await call({ card: { id: "e".repeat(64) } });
+      expect(verifyCard).toHaveBeenCalledTimes(1);
+      const anchors = vi.mocked(verifyCard).mock.calls[0][1] as { id: string; hex: string }[];
+      expect(anchors.length).toBeGreaterThan(0);
+      for (const a of anchors) expect(a.hex).toMatch(/^[0-9a-f]{64}$/);
+      expect(anchors).toContainEqual({ id: "did:web:csoai.org#card-attestation-1", hex: CARD_ATTESTATION_HEX });
+    });
+
+    it("so a published card's cross-check row says the live document AGREES (advisory, verdict unchanged)", async () => {
+      serveDid();
+      const actual = await vi.importActual<typeof import("../_lib/cardVerify")>("../_lib/cardVerify");
+      vi.mocked(verifyCard).mockImplementation(actual.verifyCard);
+      const b = await (await call({ card: CARD })).json();
+      expect(b.state).toBe("VALID");
+      const row = b.checks.find((c: { check: string }) => c.check === "Live anchor cross-check");
+      expect(row).toMatchObject({ ok: true, code: "live_anchor_agrees" });
+      expect(row.detail).not.toMatch(/does not list/);
+    });
   });
 });

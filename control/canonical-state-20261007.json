@@ -1,10 +1,13 @@
 {
-  "schema": "csoai.canonical-controller/2.2",
+  "schema": "csoai.canonical-controller/2.3",
   "title": "TUI-1 Canonical State Ledger \u2014 2026-10-07 observation",
-  "observed_at": "2026-10-07T06:01:13Z",
+  "observed_at": "2026-10-07T10:40:00Z",
   "observed_by": "TUI-1 Canonical Controller (Hermes/JEEVES)",
   "branch": "control/canonical-state-20260911",
-  "pr": 2847,
+  "pr": [
+    "#2847",
+    "#2878"
+  ],
   "rebased_onto": "master b3a44080e9be8cbc975bbc4ad44f3897385f3c43",
   "authority_rule": {
     "one_authority_per_record_type": true,
@@ -822,7 +825,7 @@
     {
       "id": "B-06",
       "state": "VERIFIED",
-      "blocker": "Resolved 2026-10-07: artefact existed in the sibling estate (CSOAI-ORG/sovos-harness, councilof-ai/measurement/iso20022-families.json, blob b98cd3d7, 2549B, commit d72149ea4698) - 7 families / 25 message types / implemented 0. Harvested to public/interop/iso-20022-families.json with explicit measurement_state=CATALOGUED, signature_state=UNSIGNED, sig/pubkey/did=null, merkle_root_inclusion=NOT_IN_PUBLIC_ROOT, anchors all NOT_WITNESSED, plus full provenance. public/interop/iso-20022.json (the 139B stub) now carries the counts with a note that family counts are catalogued, not measured.",
+      "blocker": "Resolved 2026-10-07: artefact existed in the sibling estate (an internal sibling repository of this estate \u2014 name withheld: internal codename \u2014 at councilof-ai/measurement/iso20022-families.json, blob b98cd3d7, 2549B, commit d72149ea4698) - 7 families / 25 message types / implemented 0. Harvested to public/interop/iso-20022-families.json with explicit measurement_state=CATALOGUED, signature_state=UNSIGNED, sig/pubkey/did=null, merkle_root_inclusion=NOT_IN_PUBLIC_ROOT, anchors all NOT_WITNESSED, plus full provenance. public/interop/iso-20022.json (the 139B stub) now carries the counts with a note that family counts are catalogued, not measured.",
       "evidence": "Source card is UNSIGNED - never quote the family count as a measurement or as anchored.",
       "resolved_on": "2026-10-07"
     },
@@ -870,26 +873,42 @@
     },
     {
       "id": "B-13",
-      "state": "CONTRADICTED",
-      "blocker": "NEW 2026-10-07: README.md tagline reads '22 axes measured / 14 model fleets / 3 public leader scores / 8 fact runs' (derived 2026-09-09T15:55:49Z) while live /api/gspc reports 23 axes, 23 measured, public_leader_count 9, fact_runs 9.",
-      "evidence": "GET /api/gspc totals on 2026-10-07: axes 23, measured_axes 23, public_leader_count 9, fact_runs 9. README.md line 1 tagline still says 22 / 3 / 8. README.md is PINNED in white-paper-index-v0.1.json; the tagline is emitted by scripts/github/org-readme.py (unpinned) which reads /api/gspc live, so the generated block simply has not been re-derived since 2026-09-09.",
+      "state": "VERIFIED",
+      "blocker": "Closed 2026-10-07: README.md regenerated through its own generator (scripts/github/org-readme.py, the sanctioned path \u2014 not hand-edited). Tagline now reads '23 axes measured \u00b7 14 model comparisons: 0 separated \u00b7 7 TIE \u00b7 7 UNTESTED \u00b7 9 fact runs', matching live totals (23/9/9). The prose sentence that hard-coded '22-axis GSPC board' was converted to a derived f-string reading f['axes_total'], and the generator docstring's stale '22-axis board' was de-hard-coded, so the page can no longer disagree with the API. Regeneration also refreshed every other stale number: public root 168 -> 319 leaves, OTS STAMPED_PENDING_BITCOIN -> CONFIRMED_BITCOIN, corrections 47 -> 93 (STALE -> VALID), payers 1 -> 2, hub cells 1119 -> 411, PyPI/npm versions.",
+      "evidence": "Regenerated locally with full inputs (README.md + docs/product/_INDEX.json + all 9 product markdown files downloaded to the scratch dir so the products table kept its real titles and 402 doors). Verified: 0 '22-axis'/'22 axes' residues in README, 0 in emitted output; generator py_compile rc=0; its own guard() call rc=0; run-to-run determinism confirmed (only the derived timestamp and hub as_of differ between two consecutive runs). NOTE: white-paper-index-v0.1.json was deliberately NOT re-pinned \u2014 it is Bitcoin/OTS-attested and editing it is owner-gated. Its README pin was already drifted before this change; the attested bytes are untouched.",
       "needs": "Re-run scripts/github/org-readme.py to regenerate the pinned block, then re-pin README.md in white-paper-index. Not hand-edited here: hand-editing a generated block would be overwritten on the next run and would desynchronise the pin.",
-      "raised_on": "2026-10-07"
+      "raised_on": "2026-10-07",
+      "resolved_on": "2026-10-07"
     },
     {
       "id": "B-14",
-      "state": "CONTRADICTED",
-      "blocker": "NEW 2026-10-07: README.md links DOI 10.5281/zenodo.21991104 (badge image + hyperlink) but both estate DOIs answer HTTP 410 GONE, while public/interop/zenodo-status.json states 'No surface we publish links one as available.'",
-      "evidence": "doi.org/10.5281/zenodo.21991104 -> 410 and doi.org/10.5281/zenodo.21755656 -> 410 (re-verified 2026-10-07). The badge SVG https://zenodo.org/badge/DOI/... still returns 200, so the badge renders while its link target is dead.",
+      "state": "VERIFIED",
+      "blocker": "Closed 2026-10-07: the DOI badge linked https://doi.org/10.5281/zenodo.21991104, which answers HTTP 410 \u2014 a badge linking to a thing that does not exist, violating badge_row()'s own docstring ('Every badge links to a thing that exists') and the zenodo-status.json rule ('No surface we publish links one as available'). The badge now keeps the identifier in its alt text and links to https://councilof.ai/interop/zenodo-status.json (live 200), which carries the dated notice, the appeal state and the mirror. The same dead methodology link in profile_md() was repointed too, so the defect is not merely moved to another surface. The identifier 10.5281/zenodo.21991104 is still printed as text in the surfaces table \u2014 identifiers are preserved; only the false availability claim is removed.",
+      "evidence": "Post-fix scan of the regenerated README: exactly 1 doi.org link remains \u2014 10.5281/zenodo.22293340, which returns HTTP 200 (alive), so it stays. Dead methodology DOI now appears only as plain identifier text, never as a hyperlink. Generator: 0 occurrences of the dead methodology link. Root cause of the 410 itself remains B-09 (owner appeal) \u2014 this blocker was the estate publishing a dead link, which is now closed.",
       "needs": "Owner appeal to Zenodo is the real fix (see B-09). Until it resolves, the README badge should carry the zenodo-status.json notice or be dropped. README.md is pinned and generator-owned, so this is not hand-edited here.",
-      "raised_on": "2026-10-07"
+      "raised_on": "2026-10-07",
+      "resolved_on": "2026-10-07"
+    },
+    {
+      "id": "B-15",
+      "state": "INCOMPLETE",
+      "blocker": "Observed 2026-10-07 10:06:10Z\u201310:28Z: an automated regeneration wrote public/interop/art50-target-index.json (commit f68c5b2b04 'regenerate from live provider-diff') while its sibling proof art50-target-index.json.ots still proved the 2026-09-28 bytes. root-witness-release-gate then BLOCKED every deploy: 'public .ots digest mismatch: art50-target-index.json.ots proves a2118d8f..., target ... hashes to b7c69b30...'. Build + deploy site failed twice (10:06:17Z, 10:20:58Z) and public-root failed (10:10:05Z). The authorised workflow repaired it \u2014 by 10:35Z the JSON had been restored to a2118d8f..., the exact bytes the .ots proves \u2014 and deploy returned to in_progress. This is the same hazard this lane caused and was reverted for earlier today (editing a stamped file), which means the failure mode recurs through automation, not only through hand edits.",
+      "evidence": "Root cause chain verified independently: commit timestamps f68c5b2b04 10:06:10Z vs .ots last touched 2026-09-28; gate source scripts/root-witness-release-gate.py states invalid public artefacts 'must be produced by the authorised workflow' and accepts a pending calendar stamp as stamped (never as Bitcoin-anchored). Not fixed by this lane: re-stamping a signed artefact is the trust lane's authorised workflow, and a hand re-stamp would repeat the error that produced B-15. Needs: make the regeneration job re-stamp (or refuse to write) any file carrying a sibling .ots, so a deploy can never be blocked by a regeneration again.",
+      "resolved_on": null
+    },
+    {
+      "id": "B-16",
+      "state": "INCOMPLETE",
+      "blocker": "Live master workflow 'stablecoin-evidence-round' FAILING (2026-10-07T10:30:17Z on fa20647456): job 'refresh' fails at step 'Prove the reader and queue contracts'. Reported by the controller because it is a red run on master and the brief requires inspecting every workflow run; it belongs to the TUI-2 finance lane, not to this one.",
+      "evidence": "actions/runs?branch=master \u2014 conclusion=failure, job 'refresh', failing step 'Prove the reader and queue contracts'. No file touched by this lane is involved. Not reproduced locally, not claimed fixed.",
+      "resolved_on": null
     }
   ],
-  "revision_note": "v2.2 (2026-10-07): blockers B-01/B-04/B-05/B-06/B-10/B-11/B-12 resolved by direct re-execution; B-07 claim corrected (upstream spec is live, not 404); B-13 and B-14 newly raised (README tagline stale, README DOI link 410). B-02/B-03 owner-gated paid anchors; B-08 compute budget; B-09 Zenodo appeal.",
+  "revision_note": "v2.3 (2026-10-07 10:40Z): B-13 and B-14 closed via the sanctioned generator path (README regenerated through org-readme.py; prose de-hard-coded to derived). B-15 raised: automated regeneration of a stamped artefact blocked every deploy for 22 minutes; repaired by the authorised workflow, prevention still missing. B-16 raised: stablecoin-evidence-round red on master (TUI-2 lane). All 6 previously fixed blockers remain closed. Pin index untouched (attested). Previous revision 2.2 at observed_at 2026-10-07T06:01:13Z.",
   "blocker_state_counts": {
-    "VERIFIED": 7,
+    "VERIFIED": 9,
     "BLOCKED": 3,
-    "INCOMPLETE": 2,
-    "CONTRADICTED": 2
+    "INCOMPLETE": 4,
+    "CONTRADICTED": 0
   }
 }

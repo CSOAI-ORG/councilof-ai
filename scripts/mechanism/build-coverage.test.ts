@@ -4,14 +4,15 @@ import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 // @ts-expect-error: plain ESM script, no type declarations
-import { derive, serialise, nodeIo, articlesIn, corpusRoot, routeFiles, SOURCE, OUTPUT, PROVISION_ID_RE } from "./build-coverage.mjs";
+import { derive, serialise, nodeIo, articlesIn, corpusRoot, routeFiles, readInventory, SOURCE, OUTPUT, PROVISION_ID_RE } from "./build-coverage.mjs";
 
 const ROOT = join(__dirname, "..", "..");
 const read = (p: string) => readFileSync(join(ROOT, p));
 const readJson = (p: string) => JSON.parse(read(p).toString("utf8"));
 const out = readJson(OUTPUT);
 const manifest = readJson("public/interop/frozen-provision-hashes.json");
-const inventory = readJson("public/interop/regulatory-inventory.json");
+// The current stamped version, through the pointer: the 2026-09-10 snapshot is frozen history.
+const inventory = readInventory("public/interop/regulatory-inventory-latest.json", nodeIo(ROOT));
 
 describe("mechanism coverage", () => {
   it("committed JSON is exactly the producer's output", () => {
@@ -92,5 +93,26 @@ describe("mechanism coverage", () => {
       },
     };
     expect(() => derive(read(SOURCE), tampered)).toThrow(/corpus_root does not recompute/);
+  });
+});
+
+describe("mechanism coverage reads the inventory through its pointer", () => {
+  const io = nodeIo(ROOT);
+  const pointerPath = "public/interop/regulatory-inventory-latest.json";
+  const pointer = readJson(pointerPath);
+  const withPointer = (patch: Record<string, unknown>) => ({
+    ...io,
+    readJson: (p: string) => (p === pointerPath ? { ...pointer, ...patch } : io.readJson(p)),
+  });
+
+  it("reads exactly the stamped version the pointer selects, never the frozen snapshot by name", () => {
+    const viaPointer = readInventory(pointerPath, io);
+    expect(createHash("sha256").update(read(pointer.index_url.replace(/^\//, "public/"))).digest("hex")).toBe(pointer.index_sha256);
+    expect(viaPointer).toEqual(readJson(pointer.index_url.replace(/^\//, "public/")));
+  });
+
+  it("fails closed on a pointer whose digest does not name those bytes, or that leaves the versioned set", () => {
+    expect(() => readInventory(pointerPath, withPointer({ index_sha256: "0".repeat(64) }))).toThrow(/is not the bytes/);
+    expect(() => readInventory(pointerPath, withPointer({ index_url: "/interop/../signed/x.json" }))).toThrow(/outside the versioned/);
   });
 });

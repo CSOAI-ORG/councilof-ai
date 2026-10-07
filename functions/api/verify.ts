@@ -27,7 +27,7 @@
  * valid card UNCHECKABLE, and an unpinned signer cannot pass because the network was down.
  * Verification is free, forever. It certifies nothing.
  */
-import { verifyCard, cardState, PINNED_ANCHORS, type Anchor } from "../_lib/cardVerify";
+import { verifyCard, cardState, anchorsFromDid, PINNED_ANCHORS, type Anchor } from "../_lib/cardVerify";
 import { isSignedRun, verifySignedRunDoc } from "../_lib/signedRunVerify";
 import { verifyLeaf, canonicalBytes, sha256Hex } from "../_lib/cardSign";
 import { headFromGet } from "./_head";
@@ -44,16 +44,20 @@ const json = (body: unknown, status = 200) =>
     headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store", ...CORS },
   });
 
-/** A labelled cross-check only. It never decides a verdict; PINNED_ANCHORS do. */
+/**
+ * A labelled cross-check only. It never decides a verdict; PINNED_ANCHORS do.
+ *
+ * The anchors are parsed by cardVerify.anchorsFromDid — the same parser the MCP `verify_card`
+ * tool uses — so the key bytes are decoded from each publicKeyJwk. Until 2026-10-07 this helper
+ * kept only the method ids and left every `hex` empty, so the cross-check could never find the
+ * signing key and every /api/verify answer carried a false "live did.json does not list this
+ * key" row, while the MCP tool reading the same document said "agrees".
+ */
 async function liveAnchors(origin: string): Promise<Anchor[]> {
   try {
     const r = await fetch(`${origin}/.well-known/did.json`, { headers: { accept: "application/json" } });
     if (!r.ok) return [];
-    const did = (await r.json()) as { verificationMethod?: { id?: string; publicKeyMultibase?: string }[] };
-    return (did.verificationMethod ?? [])
-      .filter((v) => v.id)
-      .map((v) => ({ id: String(v.id), hex: "" }))
-      .filter((a) => a.id) as Anchor[];
+    return anchorsFromDid(await r.json());
   } catch {
     return [];
   }

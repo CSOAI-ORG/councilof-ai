@@ -150,6 +150,21 @@ jobs:
           out=$(node scripts/build-mill-receipt-readiness.mjs --version); echo "$out"
           case "$out" in *VERSIONED*) python3 scripts/ots_manifest_rebuild.py --apply && node scripts/llms-txt.mjs ;; esac
           node scripts/build-mill-receipt-readiness.mjs --check   # the gates step must now pass
+      # public/interop/regulatory-inventory.json is stamped as well, and it pins the in-toto
+      # statements by path. emit_intoto.py keeps each axis's pick while it stays current and
+      # MEASURED, so new cards move nothing; a pick moves only when sign_mill_cards.py supersedes
+      # it (or it is withdrawn). Then the statement file is renamed and the inventory must become
+      # a new immutable version + its own fresh proof, with the pointer and the /api/counters
+      # binding moved. Unchanged picks: no write.
+      - name: re-derive the in-toto crosswalk and version the regulatory inventory (stamped bytes untouched)
+        if: (inputs.target || 'financial') == 'mill' || inputs.target == 'runpod'
+        run: |
+          set -euo pipefail
+          python3 -m pip install -q opentimestamps-client
+          python3 scripts/crosswalk/emit_intoto.py
+          out=$(node scripts/build-regulatory-inventory.mjs --version); echo "$out"
+          case "$out" in *VERSIONED*) python3 scripts/ots_manifest_rebuild.py --apply && node scripts/llms-txt.mjs ;; esac
+          node scripts/regulatory-inventory-gate.mjs   # the build:client step must now pass
       - name: commit signed cards
         id: commit
         env:
@@ -164,10 +179,10 @@ jobs:
             git add public/interop/ledger-card-*.json
           elif [ "$T" = "mill" ]; then
             git add public/interop/mill-cards-signed public/interop/mill-cards-unsigned
-            git add public/interop/hub-cards-index-* public/interop/mill-receipt-readiness-* public/interop/ots/manifest.json public/llms.txt public/llms-full.txt
+            git add public/interop/hub-cards-index-* public/interop/mill-receipt-readiness-* public/interop/crosswalk/intoto public/interop/regulatory-inventory-* functions/api/_regulatory_inventory.ts public/interop/ots/manifest.json public/llms.txt public/llms-full.txt
           elif [ "$T" = "runpod" ]; then
             git add public/interop/mill-cards-signed
-            git add public/interop/hub-cards-index-* public/interop/mill-receipt-readiness-* public/interop/ots/manifest.json public/llms.txt public/llms-full.txt
+            git add public/interop/hub-cards-index-* public/interop/mill-receipt-readiness-* public/interop/crosswalk/intoto public/interop/regulatory-inventory-* functions/api/_regulatory_inventory.ts public/interop/ots/manifest.json public/llms.txt public/llms-full.txt
           else
             git add public/interop/financial-measure-card-*.json
           fi
