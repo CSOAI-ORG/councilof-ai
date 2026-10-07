@@ -6,10 +6,20 @@
  *   mcp_client  — the `clientInfo.name` an MCP client declares in `initialize` (POST /mcp, /mcp/free)
  *   mcp_tool    — the tool name of each `tools/call` (only names on the /mcp tools/list; anything
  *                 else is counted as "not-a-tool")
- *   a2a_outcome — POST /api/a2a: "ok" or "error:<JSON-RPC code>", prefixed by the wire shape
- *                 ("v1.0:" or "v0.3:")
- *   chat_state  — POST /api/chat: the reply's `state` (grounded / unknown / needs_input / ...)
+ *   a2a_outcome — POST /api/a2a: "ok" or "error<JSON-RPC code>", prefixed by the version the
+ *                 REQUEST declared: "v1.0_" (A2A-Version 1.0, patch ignored), "v0.3_" (served by
+ *                 the 0.3 shim), "unversioned_" (no header, not served as 0.3: not JSON-RPC, or
+ *                 not a 0.3 method) or "vother_" (any other header value). Until 2026-10-07 the
+ *                 prefix was read off the RESPONSE header, so every request not served as 0.3 -
+ *                 including bodies that were not JSON-RPC at all - was labelled "v1.0_".
+ *   chat_state  — POST /api/chat: the reply's `state` (grounded / unknown / needs_input / ...);
+ *                 "error" is any HTTP status >= 400, including a handler that threw (counted
+ *                 since 2026-10-07; before that a thrown handler wrote nothing).
  *   agui_state  — POST /api/agui/run: grounded / unknown / needs_input / confirm_required / error
+ *   reject_shape — a request a door refused because it could not be read as a question or a
+ *                 JSON-RPC request (POST /api/chat HTTP 400; POST /api/a2a -32600 / -32700):
+ *                 "<door>.<content class>.<top-level key NAMES>", keys from a fixed allowlist in
+ *                 functions/_lib/askInput.ts, anything else "other". Never a value. Since 2026-10-07.
  *
  * WHAT IS NEVER STORED: no IP address, no user-agent string, no message text, no arguments, no
  * cookie, no identifier of any kind. A stored key is `usage:v1:<day>:<dim>:<name>:<random>`; the
@@ -30,7 +40,7 @@ export const USAGE_PREFIX = "usage:v1:";
 /** Rows expire on their own; nothing is kept past this. */
 export const USAGE_RETENTION_DAYS = 400;
 
-export const USAGE_DIMS = ["mcp_client", "mcp_tool", "a2a_outcome", "chat_state", "agui_state"] as const;
+export const USAGE_DIMS = ["mcp_client", "mcp_tool", "a2a_outcome", "chat_state", "agui_state", "reject_shape"] as const;
 export type UsageDim = (typeof USAGE_DIMS)[number];
 
 export type SelfTool = {
@@ -133,6 +143,33 @@ export function recordUsage(ctx: UsageCtx, dim: UsageDim, rawName: string): stri
     return null;
   }
 }
+
+/**
+ * Label changes a reader needs to compare days across a change. Published verbatim on GET
+ * /api/usage, so a series that moved from one label to another is never read as a drop.
+ */
+export const USAGE_LABEL_NOTES: readonly { since: string; dim: UsageDim; note: string }[] = [
+  {
+    since: "2026-10-07",
+    dim: "a2a_outcome",
+    note: "The prefix now names the version the request declared. Before this day every request not served by the 0.3 shim was prefixed v1.0_, including bodies that were not JSON-RPC at all (-32600) and requests with no A2A-Version header (-32009); those are now unversioned_ (no header) or vother_ (an unsupported header value). An A2A-Version with a patch number (1.0.0, 1.0.1) is now served as 1.0, as A2A v1.0 section 3.6 requires, instead of -32009.",
+  },
+  {
+    since: "2026-10-07",
+    dim: "a2a_outcome",
+    note: "With no A2A-Version header (0.3), a method name that is neither A2A 0.3 nor A2A 1.0 (for example the MCP methods initialize or tools/list) now answers -32601 method not found instead of -32009 version not supported. A 1.0 method name with no header still answers -32009.",
+  },
+  {
+    since: "2026-10-07",
+    dim: "chat_state",
+    note: "POST /api/chat now reads the question from more body shapes (question, query, q, input, text, an A2A message, OpenAI content parts, a text/plain or form body). error still counts every HTTP status >= 400, and now also a handler that threw, which before this day wrote no row.",
+  },
+  {
+    since: "2026-10-07",
+    dim: "reject_shape",
+    note: "New dimension. Before this day the shape of a refused request was not recorded anywhere: UNMEASURED, not zero.",
+  },
+];
 
 export type DayCounts = Record<UsageDim, Record<string, number>>;
 

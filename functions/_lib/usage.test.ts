@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { SELF_TOOLS, cleanName, countDay, parseUsageKey, recordUsage, selfToolOf, usageKey, utcDay } from "./usage";
 import { buildUsage } from "../api/usage";
 import { onRequestPost as a2aPost } from "../api/a2a";
+import { onRequestPost as chatPost } from "../api/chat";
 import { onRequest as mcpRequest } from "../mcp/[[path]]";
 
 /** An in-memory KV with the two calls usage uses. */
@@ -143,7 +144,42 @@ describe("the doors write what they say they write", () => {
     await post({ jsonrpc: "2.0", id: 2, method: "SendMessage", params: {} });
     await settle();
     const names = [...kv.store.keys()].map((k) => parseUsageKey(k)?.name).sort();
-    expect(names).toEqual(["v0.3_ok", "v1.0_error-32009"]);
+    // The SendMessage above carried NO A2A-Version header. Until 2026-10-07 it was counted as
+    // "v1.0_error-32009" because the label was read off the response header.
+    expect(names).toEqual(["unversioned_error-32009", "v0.3_ok"]);
+  });
+
+  it("A2A labels the version the request declared, and records the shape of a body that is not JSON-RPC", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => Response.json({ totals: { lid: "lid" }, axes: [{ axis: "a" }] })));
+    const kv = fakeKv();
+    const env = { SOV_ARENA_STATE: kv };
+    const post = (body: unknown, headers: Record<string, string> = {}) =>
+      a2aPost({ request: new Request("https://councilof.ai/api/a2a", { method: "POST", headers: { "content-type": "application/json", ...headers }, body: JSON.stringify(body) }), env, waitUntil } as never);
+    await post({ query: "what does the board say" });
+    await post({ jsonrpc: "2.0", id: 1, method: "SendMessage", params: { message: { messageId: "m", role: "ROLE_USER", parts: [{ text: "board" }] } } }, { "a2a-version": "1.0.0" });
+    await post({ jsonrpc: "2.0", id: 2, method: "SendMessage", params: {} }, { "a2a-version": "2.0" });
+    await settle();
+    const rows = [...kv.store.keys()].map((k) => parseUsageKey(k)).map((p) => `${p?.dim}:${p?.name}`).sort();
+    expect(rows).toEqual([
+      "a2a_outcome:unversioned_error-32600",
+      "a2a_outcome:v1.0_ok",
+      "a2a_outcome:vother_error-32009",
+      "reject_shape:a2a.-32600.json.query",
+    ]);
+  });
+
+  it("chat records a refused request's shape (key names, never the text)", async () => {
+    const kv = fakeKv();
+    const env = { SOV_ARENA_STATE: kv };
+    const post = (body: string, ctype = "application/json") =>
+      chatPost({ request: new Request("https://councilof.ai/api/chat", { method: "POST", headers: { "content-type": ctype }, body }), env, waitUntil } as never);
+    const refused = await post(JSON.stringify({ secret_field_name: "private words" }));
+    expect(refused.status).toBe(400);
+    await post("{}");
+    await settle();
+    const rows = [...kv.store.keys()].map((k) => parseUsageKey(k)).map((p) => `${p?.dim}:${p?.name}`).sort();
+    expect(rows).toEqual(["chat_state:error", "chat_state:error", "reject_shape:chat.json.nokeys", "reject_shape:chat.json.other"]);
+    expect([...kv.store.keys()].join(" ")).not.toMatch(/secret|private/);
   });
 
   it("MCP records initialize clientInfo.name and tools/call names, and skips our canary", async () => {

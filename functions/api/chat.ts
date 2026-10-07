@@ -47,14 +47,44 @@ export const onRequestGet = async (ctx: { request: Request }) =>
     },
   });
 
-// Aggregate usage only (functions/_lib/usage.ts): the reply's state word. No question text is kept.
+/**
+ * A handler that THREW used to escape this wrapper: the platform answered with its own error page
+ * and nothing was counted, so chat_state "error" was a lower bound on failures. It is now caught,
+ * answered as JSON and counted as "error" like any other failed reply.
+ */
+export function chatFailure(): Response {
+  return Response.json(
+    {
+      error: "internal",
+      state: "error",
+      detail:
+        "The chat door failed while answering. Nothing was measured by this reply. This failure is counted on GET /api/usage (chat_state error).",
+      answer: null,
+    },
+    { status: 500, headers: { "access-control-allow-origin": "*", "cache-control": "no-store" } },
+  );
+}
+
+// Aggregate usage only (functions/_lib/usage.ts): the reply's state word, and for a request that
+// carried no question its body SHAPE (content class + allowlisted key names). No question text is kept.
 export const onRequestPost: typeof groundedPost = async (ctx) => {
-  const res = await groundedPost(ctx);
+  let res: Response;
+  try {
+    res = await groundedPost(ctx);
+  } catch {
+    res = chatFailure();
+  }
   const c = ctx as unknown as { request: Request; env?: unknown; waitUntil?: (p: Promise<unknown>) => void };
   if (c.env && c.waitUntil) {
     c.waitUntil(
       res.clone().json()
-        .then((j) => { recordUsage(c, "chat_state", chatUsageState(res.status, (j as { state?: unknown })?.state)); })
+        .then((j) => {
+          const body = j as { state?: unknown; received?: { shape?: unknown } };
+          recordUsage(c, "chat_state", chatUsageState(res.status, body?.state));
+          if (res.status === 400 && typeof body?.received?.shape === "string") {
+            recordUsage(c, "reject_shape", `chat.${body.received.shape}`);
+          }
+        })
         .catch(() => { recordUsage(c, "chat_state", chatUsageState(res.status, null)); }),
     );
   }

@@ -6,6 +6,7 @@ import { ART5, ART5_CUES, why } from "./_chatArt5";
 import { lobbyGround } from "./_chatLobby";
 import { executePlan, HELP_TEXT, routeIntent } from "../_lib/talkRouter";
 import { BUY_INTENT, buyingAnswer } from "./_buying";
+import { ACCEPTED_SHAPES, readAsk } from "../_lib/askInput";
 
 interface Env { SOV_GATE_URL?: string; SOV_GATE_TOKEN?: string }
 
@@ -201,21 +202,42 @@ async function grounded(q: string, origin: string): Promise<string | null> {
 
 export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   const { request, env } = ctx;
-  let body: any = {};
-  try { body = await request.json(); } catch { /* empty ok */ }
-
-  const messages =
-    Array.isArray(body.messages) ? body.messages :
-    typeof body.prompt === "string" ? [{ role: "user", content: body.prompt }] :
-    typeof body.message === "string" ? [{ role: "user", content: body.message }] : [];
+  // The question is read by functions/_lib/askInput.ts. Until 2026-10-07 only `messages` (string
+  // content), `prompt` and `message` (strings) were read, and every other body - {question},
+  // {query}, {input}, {text}, {q}, an A2A message object, a text/plain or form body - got a bare
+  // 400 {"error":"no message"}; an OpenAI content-parts array was read as "[object Object]".
+  const ask = await readAsk(request);
+  const origin = new URL(request.url).origin;
+  if (ask.question === null) {
+    return Response.json(
+      {
+        error: "no message",
+        detail:
+          "No question was found in this request body. Nothing was answered and nothing was measured. " +
+          "Send the question in one of the accepted shapes.",
+        accepted: [...ACCEPTED_SHAPES],
+        example: `curl -s -X POST ${origin}/api/chat -H 'content-type: application/json' -d '{"message":"What does the board say?"}'`,
+        // The body's shape: content class and top-level key NAMES from a fixed list, never a value.
+        // POST /api/chat records it on /api/usage (reject_shape) so a refusal can be diagnosed.
+        received: { content: ask.content, shape: ask.shape },
+        describe: `${origin}/api/chat`,
+      },
+      { status: 400, headers: CORS },
+    );
+  }
+  const body: any = ask.body ?? {};
+  const question = ask.question;
+  // The upstream runtime (below) is handed the caller's own messages only when they are plain
+  // {role, content:string} turns; anything else is handed the one question that was read.
+  const plainTurns =
+    Array.isArray(body.messages) &&
+    body.messages.length > 0 &&
+    body.messages.every((m: any) => m && typeof m === "object" && typeof m.role === "string" && typeof m.content === "string");
+  const messages = plainTurns ? body.messages : [{ role: "user", content: question }];
   const requestedModel = typeof body.model === "string" ? body.model : null;
   // The private gate's routing id is never returned to public clients.
   const runtimeModel = requestedModel || "sov6-ethics-v3-light";
   const publicModel = requestedModel || "council-routing-default";
-  if (!messages.length) return Response.json({ error: "no message" }, { status: 400, headers: CORS });
-
-  const question = String(messages[messages.length - 1]?.content ?? "");
-  const origin = new URL(request.url).origin;
 
   // `model` used to be stamped on EVERY reply, defaulting to "sov6-ethics-v3-light" — including
   // the deterministic `grounded` and `refused` answers, which are computed from the published

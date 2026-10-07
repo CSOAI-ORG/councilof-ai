@@ -40,6 +40,7 @@
 import { DOCTRINE, measurementIndex, serverEvidence, verifyCapsule } from "../_lib/measurementCapsule";
 import { executePlan, routeIntent, type Plan } from "../_lib/talkRouter";
 import { recordUsage } from "../_lib/usage";
+import { shapeLabel } from "../_lib/askInput";
 import { evidenceBundlePreview } from "../mcp/_evidence";
 import { routeResult } from "../mcp/_route";
 import { routeSummary } from "../_lib/route/route";
@@ -119,6 +120,44 @@ export const V03_METHODS: Record<string, string> = {
   "agent/getAuthenticatedExtendedCard": "GetExtendedAgentCard",
 };
 const isLegacyVersionHeader = (v: string): boolean => v === "" || /^0\.[23](\.\d+)*$/.test(v);
+
+/**
+ * The Major.Minor an A2A-Version header names. A2A v1.0 section 3.6: "Patch version numbers ...
+ * MUST not be considered when clients and servers negotiate protocol versions." Until 2026-10-07
+ * this door compared the raw header, so `A2A-Version: 1.0.0` (or 1.0.1) got -32009 although 1.0
+ * is the version it serves. Anything that is not Major.Minor[.patch...] is returned trimmed, as sent.
+ */
+export function normalizeA2aVersion(raw: string | null): string {
+  const v = (raw ?? "").trim();
+  const m = v.match(/^(\d+)\.(\d+)(?:\.\d+)*$/);
+  return m ? `${Number(m[1])}.${Number(m[2])}` : v;
+}
+
+/** MCP JSON-RPC method names: a client that sends one here has the wrong door, not the wrong version. */
+const MCP_METHODS = new Set([
+  "initialize", "ping", "tools/list", "tools/call", "resources/list", "resources/read",
+  "resources/templates/list", "prompts/list", "prompts/get", "completion/complete", "logging/setLevel",
+]);
+/** A2A names from before 0.3 (0.1 / 0.2). */
+const PRE_03_METHODS = new Set(["tasks/send", "tasks/sendSubscribe"]);
+
+/** Why a method is not served on the 0.3 wire, and what to send instead. */
+export function unversionedMethodHint(method: string): string {
+  if (Object.prototype.hasOwnProperty.call(METHODS, method)) {
+    return `${method} is the A2A 1.0 name: send it with the header A2A-Version: ${A2A_PROTOCOL_VERSION}, or send the 0.3 name with no header`;
+  }
+  if (MCP_METHODS.has(method) || method.startsWith("notifications/")) {
+    return `${method} is an MCP method; this is the A2A door. The MCP server is POST /mcp/free`;
+  }
+  if (PRE_03_METHODS.has(method)) {
+    return `${method} is an A2A name from before 0.3; send message/send (0.3, no header) or SendMessage with A2A-Version: ${A2A_PROTOCOL_VERSION}`;
+  }
+  return `not an A2A method; the 0.3 names served here are ${Object.keys(V03_METHODS).join(", ")}, and the 1.0 names need A2A-Version: ${A2A_PROTOCOL_VERSION}`;
+}
+
+/** What a body that is not JSON-RPC should have been, for a stranger who meant to ask a question. */
+const NOT_JSONRPC_HINT =
+  'This is the A2A JSON-RPC door: send {"jsonrpc":"2.0","id":1,"method":"SendMessage","params":{"message":{"messageId":"m-1","role":"ROLE_USER","parts":[{"text":"<question>"}]}}} with A2A-Version: 1.0. To ask in plain words without JSON-RPC, POST {"message":"<question>"} to /api/chat.';
 
 /** 0.3 Message -> v1.0 Message: parts {kind:"text",text} -> {text}, {kind:"data",data} -> {data}. */
 export function v03MessageToV1(m: Json): Json {
@@ -861,7 +900,7 @@ export const onRequestGet: PagesFunction = async (context) => {
     // sentence on this endpoint states how many there are.
     skills: [...SKILL_IDS],
     version_rule:
-      "Send `A2A-Version: 1.0`. Per A2A v1.0, an absent or empty header means 0.3. A v1.0 method name sent as 0.3 returns VersionNotSupportedError -32009. The 0.3 wire shape itself is served: a 0.3 method name (message/send, tasks/get, ...) with no header or a 0.x one is mapped onto the 1.0 handler and answered as a 0.3 Message; a request that declares 1.0 must use the 1.0 names.",
+      "Send `A2A-Version: 1.0`; a patch number (1.0.1) is ignored, as A2A v1.0 section 3.6 requires. Per A2A v1.0, an absent or empty header means 0.3. A v1.0 method name sent as 0.3 returns VersionNotSupportedError -32009; any other name that is not an A2A 0.3 method returns -32601. The 0.3 wire shape itself is served: a 0.3 method name (message/send, tasks/get, ...) with no header or a 0.x one is mapped onto the 1.0 handler and answered as a 0.3 Message; a request that declares 1.0 must use the 1.0 names. A body that is not JSON-RPC returns -32600; to ask in plain words, POST {\"message\": \"...\"} to /api/chat.",
     compat_0_3: Object.keys(V03_METHODS),
     tasks: "none kept — every SendMessage answers with a Message, so GetTask can only ever say TaskNotFound",
     register: REGISTER,
@@ -894,49 +933,81 @@ export async function handlePost(request: Request): Promise<Response> {
     }
     return rpcError(null, A2A_ERROR.INVALID_REQUEST, "request body could not be read", "REQUEST_READ_FAILED");
   }
+  // `received` is the body's SHAPE (content class + allowlisted top-level key names, never a
+  // value; functions/_lib/askInput.ts). onRequestPost records it as reject_shape on /api/usage.
+  const ctype = (request.headers.get("content-type") ?? "").toLowerCase();
   try {
     parsed = JSON.parse(text);
   } catch {
-    return rpcError(null, A2A_ERROR.PARSE, "request body is not JSON", "PARSE_ERROR");
+    const received = text.trim() ? (ctype.includes("form") ? "form" : ctype.includes("json") ? "unparsed" : "text") : "none";
+    return rpcError(null, A2A_ERROR.PARSE, `request body is not JSON. ${NOT_JSONRPC_HINT}`, "PARSE_ERROR", { received });
   }
   if (Array.isArray(parsed)) {
-    return rpcError(null, A2A_ERROR.INVALID_REQUEST, "batch requests are not served here; send one request per POST", "INVALID_REQUEST");
+    return rpcError(null, A2A_ERROR.INVALID_REQUEST, "batch requests are not served here; send one request per POST", "INVALID_REQUEST", { received: "json.array" });
   }
   const req = record(parsed);
   const id = req?.id;
   const method = str(req?.method);
   if (!req || req.jsonrpc !== "2.0" || !method) {
-    return rpcError(id, A2A_ERROR.INVALID_REQUEST, 'a JSON-RPC 2.0 request needs jsonrpc:"2.0" and a method', "INVALID_REQUEST");
-  }
-
-  const requested = (request.headers.get("a2a-version") ?? "").trim();
-  // The 0.3 wire shape: a 0.3 method name with no version header (or a 0.x one).
-  if (isLegacyVersionHeader(requested) && Object.prototype.hasOwnProperty.call(V03_METHODS, method)) {
-    return serveV03(id, method, req.params, origin);
-  }
-  if (!requested) {
     return rpcError(
       id,
-      A2A_ERROR.VERSION_NOT_SUPPORTED,
-      `An absent A2A-Version means 0.3, which this interface does not serve; send A2A-Version: ${A2A_PROTOCOL_VERSION} and the v1.0 method name (for example SendMessage)`,
-      "VERSION_NOT_SUPPORTED",
-      { requested: "0.3", supported: [A2A_PROTOCOL_VERSION], missingVersionHeader: true },
+      A2A_ERROR.INVALID_REQUEST,
+      `a JSON-RPC 2.0 request needs jsonrpc:"2.0" and a method. ${NOT_JSONRPC_HINT}`,
+      "INVALID_REQUEST",
+      { received: shapeLabel("json", parsed) },
+    );
+  }
+
+  const rawVersion = (request.headers.get("a2a-version") ?? "").trim();
+  const requested = normalizeA2aVersion(rawVersion);
+  // The 0.3 wire shape: a 0.3 method name with no version header (or a 0.x one).
+  if (isLegacyVersionHeader(rawVersion) && Object.prototype.hasOwnProperty.call(V03_METHODS, method)) {
+    return serveV03(id, method, req.params, origin);
+  }
+  if (isLegacyVersionHeader(rawVersion)) {
+    // An absent header means 0.3 (A2A v1.0 section 3.6.2), and the 0.3 names ARE served above.
+    // Until 2026-10-07 the no-header case told every such caller "0.3, which this interface does
+    // not serve" with -32009 - false since the 0.3 shim landed on 2026-09-29 - and gave the same
+    // answer to MCP methods (initialize, tools/list) sent to the wrong door.
+    const declared = rawVersion || "absent (0.3)";
+    if (Object.prototype.hasOwnProperty.call(METHODS, method)) {
+      return rpcError(
+        id,
+        A2A_ERROR.VERSION_NOT_SUPPORTED,
+        rawVersion
+          ? `A2A-Version ${rawVersion} is served only with the 0.3 method names; ${unversionedMethodHint(method)}`
+          : `An absent A2A-Version means 0.3, and ${unversionedMethodHint(method)}`,
+        "VERSION_NOT_SUPPORTED",
+        {
+          requested: rawVersion || "0.3",
+          supported: [A2A_PROTOCOL_VERSION],
+          served_0_3: Object.keys(V03_METHODS),
+          ...(rawVersion ? {} : { missingVersionHeader: true }),
+        },
+      );
+    }
+    return rpcError(
+      id,
+      A2A_ERROR.METHOD_NOT_FOUND,
+      `method not found: ${method}. A2A-Version ${declared}: ${unversionedMethodHint(method)}`,
+      "METHOD_NOT_FOUND",
+      { method, requested: rawVersion || "0.3", served_0_3: Object.keys(V03_METHODS), ...(rawVersion ? {} : { missingVersionHeader: true }) },
     );
   }
   if (requested !== A2A_PROTOCOL_VERSION) {
     return rpcError(
       id,
       A2A_ERROR.VERSION_NOT_SUPPORTED,
-      `A2A-Version ${requested} is not served; this interface speaks ${A2A_PROTOCOL_VERSION}`,
+      `A2A-Version ${rawVersion} is not served; this interface speaks ${A2A_PROTOCOL_VERSION} (a patch number is ignored), and 0.3 with the 0.3 method names`,
       "VERSION_NOT_SUPPORTED",
-      { requested, supported: [A2A_PROTOCOL_VERSION] },
+      { requested: rawVersion, supported: [A2A_PROTOCOL_VERSION] },
     );
   }
-  if (method.includes("/")) {
+  if (Object.prototype.hasOwnProperty.call(V03_METHODS, method)) {
     return rpcError(
       id,
       A2A_ERROR.VERSION_NOT_SUPPORTED,
-      `${method} is a 0.3 method name; send A2A-Version: ${A2A_PROTOCOL_VERSION} and the v1.0 name (for example SendMessage)`,
+      `${method} is a 0.3 method name; with A2A-Version: ${A2A_PROTOCOL_VERSION} send the 1.0 name ${V03_METHODS[method]}, or send ${method} with no A2A-Version header (0.3)`,
       "VERSION_NOT_SUPPORTED",
       { method, supported: [A2A_PROTOCOL_VERSION] },
     );
@@ -994,17 +1065,39 @@ async function serveV03(id: unknown, method: string, params: unknown, origin: st
   });
 }
 
+/**
+ * The usage prefix: the version the REQUEST declared, not the header on the response. Until
+ * 2026-10-07 this read the response's a2a-version header, which is "1.0" on every reply the 0.3
+ * shim did not serve - so a body that was not JSON-RPC at all, or a call with no A2A-Version
+ * header, was counted as "v1.0_error-...". That is the label /api/usage showed for 717 x -32600
+ * and 309 x -32009 in the 7 days to 6 Oct 2026.
+ */
+export function a2aUsageShape(rawVersionHeader: string | null, servedAs03: boolean): "v0.3" | "v1.0" | "unversioned" | "vother" {
+  if (servedAs03) return "v0.3";
+  const raw = (rawVersionHeader ?? "").trim();
+  if (raw === "") return "unversioned";
+  if (normalizeA2aVersion(raw) === A2A_PROTOCOL_VERSION) return "v1.0";
+  return isLegacyVersionHeader(raw) ? "v0.3" : "vother";
+}
+
 export const onRequestPost: PagesFunction = async (context) => {
   const res = await handlePost(context.request);
-  // Aggregate usage (functions/_lib/usage.ts): wire shape + ok / error code. No text, no caller id.
+  // Aggregate usage (functions/_lib/usage.ts): declared version + ok / error code, and for a body
+  // that was not a JSON-RPC request its shape (key names only). No text, no caller id.
   const ctx = context as unknown as { request: Request; env?: unknown; waitUntil?: (p: Promise<unknown>) => void };
   if (ctx.env && ctx.waitUntil) {
-    const shape = res.headers.get("a2a-version") === "0.3" ? "v0.3" : "v1.0";
+    const shape = a2aUsageShape(context.request.headers.get("a2a-version"), res.headers.get("a2a-version") === "0.3");
     ctx.waitUntil(
       res.clone().json()
         .then((j) => {
-          const code = (record(record(j)?.error) ?? {}).code;
+          const err = record(record(j)?.error) ?? {};
+          const code = err.code;
           recordUsage(ctx, "a2a_outcome", `${shape}_${typeof code === "number" ? `error${code}` : "ok"}`);
+          if (code === A2A_ERROR.INVALID_REQUEST || code === A2A_ERROR.PARSE) {
+            const meta = record(record(Array.isArray(err.data) ? err.data[0] : null)?.metadata);
+            const received = str(meta?.received);
+            if (received) recordUsage(ctx, "reject_shape", `a2a.${code}.${received}`);
+          }
         })
         .catch(() => undefined),
     );
