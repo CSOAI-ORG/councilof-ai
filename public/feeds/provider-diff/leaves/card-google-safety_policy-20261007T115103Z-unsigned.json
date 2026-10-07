@@ -1,0 +1,55 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "public.notice",
+ "subject": "Google — safety_policy: bytes changed 2026-10-07",
+ "as_of": "2026-10-07T11:51:15Z",
+ "source_urls": [
+  "https://ai.google/responsibility/principles/"
+ ],
+ "payload": {
+  "kind": "csoai.diff.provider-terms/0.1",
+  "state": "PROBED",
+  "provider": "google",
+  "surface": "safety_policy",
+  "url": "https://ai.google/responsibility/principles/",
+  "prev_sha256": "2508208d6ea1a164582ca5f8b7413a4821118d1d25d786d6843f2102d43dc270",
+  "new_sha256": "cf1e2a6836f751c47094b4a2687549e0df68a7cd1037c73a549b02f6c419fd82",
+  "prev_bytes_sha256": "9970a8ac752a6494684f983c4c73454e0b63ade20f355e04f78dec24175ae253",
+  "new_bytes_sha256": "87d0739e8fde91249f486b4ba6c5cac88dc6a324450242c9be046d89622555f1",
+  "prev_fetched_at": "2026-09-14T10:50:19Z",
+  "fetched_at": "2026-10-07T11:51:15Z",
+  "http_status": 200,
+  "robots": "allow",
+  "normaliser": "csoai-norm-v1",
+  "byte_length": {
+   "prev": 170397,
+   "new": 170273
+  },
+  "etag": {
+   "prev": "\"VJEv3w\"",
+   "new": "\"BFyxtQ\""
+  },
+  "last_modified": {
+   "prev": null,
+   "new": null
+  },
+  "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+  "not_a_grade": true,
+  "writes_board": false,
+  "content_stored": false
+ },
+ "sha256": "598a73a15a1374cca4363a0782571ac3f878a5b3ab833bfa7b5030a0b75dcd0f",
+ "sig_ed25519": null,
+ "unmeasured": [
+  "what changed (content is never stored)",
+  "why it changed",
+  "whether the change is material to anyone",
+  "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+ ],
+ "tags": [
+  "provider-diff",
+  "provider:google",
+  "surface:safety_policy",
+  "hash-only"
+ ]
+}
