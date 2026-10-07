@@ -25,8 +25,17 @@ import { verifyLeaf, canonicalBytes, sha256Hex } from "./cardSign";
  * a false failure, read live on POST /api/verify on 7 Oct with
  * public/archive/xrpl-rlusd/2026-09.jsonl's last line. The whole-card rule below reproduces all
  * 2,994 signed and 126 unsigned whole-card leaves under public/archive (read 7 Oct): 0 mismatches.
- * A leaf that declares any OTHER digest domain is UNCHECKABLE (digest_domain_unknown), never
- * judged by a rule it did not declare.
+ * A leaf that declares any OTHER digest domain is UNCHECKABLE (digest_domain_unknown) when its key
+ * is not pinned here, since this verifier cannot know another issuer's rules.
+ *
+ * UNDER A PINNED KEY THE DOMAINS ARE A CLOSED SET (7 Oct 2026). Until this date an unknown
+ * `digest_covers` was UNCHECKABLE whatever key the record named, so adding any such field to a
+ * TAMPERED estate leaf turned INVALID into UNCHECKABLE: the record chose its own verdict. The estate
+ * signs card-shaped leaves under two rules only (payload-only card-v0, and whole-card card-v1; no
+ * card-shaped record in the repo declares any other, scanned 7 Oct), and a card-v0 declaration sits
+ * outside the signed payload bytes. So a record naming a pinned key with an unknown domain is judged
+ * by the payload-only rule (digest_domain_not_issued is recorded beside the verdict): tampering
+ * still reads INVALID, and an untampered payload still verifies.
  *
  * The float quirk applies here too: a leaf signed by Python over an integral float ("1.0") is
  * re-rendered "1" by JavaScript. A digest mismatch on bytes that carry such a float is therefore
@@ -71,8 +80,18 @@ export async function verifyCardV0(
     },
   ];
   if (covers !== undefined && covers !== null && !whole) {
-    checks.push({ check: "Digest", ok: null, code: "digest_domain_unknown", detail: `the record declares digest_covers ${JSON.stringify(covers)}, a rule this verifier does not implement; it is not judged by another one` });
-    return { state: "UNCHECKABLE", family, id: rec.sha256, reasons: ["digest_domain_unknown"], checks };
+    const claimed = String(rec.did || "");
+    const pinnedKey = anchors.some((a) => a.id === claimed && /^[0-9a-f]{64}$/i.test(a.hex));
+    if (!pinnedKey) {
+      checks.push({ check: "Digest", ok: null, code: "digest_domain_unknown", detail: `the record declares digest_covers ${JSON.stringify(covers)}, a rule this verifier does not implement, under a key it does not pin; it is not judged by another one` });
+      return { state: "UNCHECKABLE", family, id: rec.sha256, reasons: ["digest_domain_unknown"], checks };
+    }
+    checks.push({
+      check: "Digest domain",
+      ok: null,
+      code: "digest_domain_not_issued",
+      detail: `the record declares digest_covers ${JSON.stringify(covers)}; ${claimed} signs card-shaped leaves under the payload-only rule and ${WHOLE_CARD_COVERS} only, and a card-v0 declaration is outside the signed bytes, so it is judged by the payload-only rule rather than letting an unsigned field pick its verdict`,
+    });
   }
 
   let preimage: Record<string, unknown> = rec.payload;
