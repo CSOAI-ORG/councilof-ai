@@ -71,6 +71,20 @@ export type Decision = {
   task_match: TaskMatch | null;
 };
 
+/** The caller rules that forbade a tool, in the words the person used: "the read-only preset". */
+export function callerRuleWords(ids: string[]): string {
+  const words = ids.map((id) =>
+    id.startsWith("caller:preset:")
+      ? `the ${id.slice("caller:preset:".length)} preset`
+      : id === "caller:forbid-providers"
+        ? "your forbid_providers list"
+        : id === "caller:allow-kinds"
+          ? "your allow_kinds list"
+          : id,
+  );
+  return words.length <= 1 ? (words[0] ?? "") : `${words.slice(0, -1).join(", ")} and ${words[words.length - 1]}`;
+}
+
 function tieBreak(cands: Candidate[], rules: TieBreakRule[]): Candidate[] {
   const key = (a: Candidate, b: Candidate, r: TieBreakRule): number => {
     if (r === "cheapest_declared") {
@@ -166,11 +180,30 @@ export function decide(
         const top0 = scored[0].x;
         const tool = top0.candidate.tool ?? null;
         if (top0.verdict.forbid_policy === PAID_FLOOR && top0.candidate.paid && tool && PAID_NEXT[tool]) {
-          // The caller set no policy: the floor holds every paid tool back until a wallet is declared.
-          paid = { id: top0.candidate.id, tool, ...PAID_NEXT[tool] };
-          reason =
-            `The request matches ${tool}, a paid check (x402). A paid check runs only when you pay from your own ` +
-            "wallet (policy.caller_wallet: true), so nothing was chosen, called or charged.";
+          // The wallet floor holds every paid tool back until a wallet is declared. A rule the caller set
+          // may forbid the same tool as well (evaluate() names the floor first); both are named, and the
+          // one next step says to lift the caller's rule before the free step, never around it.
+          const callerForbids = top0.verdict.forbids_matched.filter((id) => id.startsWith("caller:"));
+          const next = PAID_NEXT[tool];
+          if (callerForbids.length) {
+            const rules = callerRuleWords(callerForbids);
+            paid = {
+              id: top0.candidate.id,
+              tool,
+              ...next,
+              forbidden_by: callerForbids,
+              next_step: `Turn off ${rules} if you want ${tool} at all: your policy forbids it. Then: ${next.free_step}`,
+            };
+            reason =
+              `The request matches ${tool}, and it was not chosen for two reasons: your policy forbids it ` +
+              `(${callerForbids.join(", ")}: ${rules}), and it is a paid check (x402) that runs only when you pay ` +
+              "from your own wallet (policy.caller_wallet: true). Nothing was chosen, called or charged.";
+          } else {
+            paid = { id: top0.candidate.id, tool, ...next, next_step: next.free_step };
+            reason =
+              `The request matches ${tool}, a paid check (x402). A paid check runs only when you pay from your own ` +
+              "wallet (policy.caller_wallet: true), so nothing was chosen, called or charged.";
+          }
         } else {
           reason = `The tool whose purpose matches this request is forbidden by the policy (${top0.verdict.forbid_policy}), so no tool was chosen.`;
         }

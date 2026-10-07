@@ -236,10 +236,18 @@ export type TaskMatch = {
   method: string;
   /**
    * Set only when the matching tool is a paid (x402) one that the wallet floor held back
-   * (floor:paid-needs-caller-wallet): the caller set no policy, so the answer names the paid check and
-   * the one next step, instead of a policy refusal.
+   * (floor:paid-needs-caller-wallet): the answer names the paid check and the one next step. When a
+   * rule the caller set (a preset, forbid_providers, allow_kinds) forbids the same tool, forbidden_by
+   * names it and next_step says to lift it first: the preset is never hidden behind the paid check.
    */
-  paid?: PaidNext & { id: string; tool: string };
+  paid?: PaidNext & {
+    id: string;
+    tool: string;
+    /** The caller rules that also forbid this tool (e.g. "caller:preset:read-only"). Absent when none did. */
+    forbidden_by?: string[];
+    /** The one next step, in plain words: free_step, preceded by lifting forbidden_by when it is set. */
+    next_step: string;
+  };
 };
 
 /** The paid-wallet floor (policy.ts). A paid tool is chosen only when the caller declares a wallet. */

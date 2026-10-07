@@ -44,7 +44,21 @@ const UNTESTED_TOOLS = "UNTESTED: no measurement compares these tools with each 
 /** UNTESTED as the outcome, when no tool's purpose matched. */
 const UNTESTED_NONE = "UNTESTED means nothing was matched or measured for this request; it is not a tie and not a failure.";
 
-type PaidNext = { id: string; tool: string; free_step: string; door: string };
+type PaidNext = { id: string; tool: string; free_step: string; door: string; next_step?: string; forbidden_by?: string[] };
+
+/** "caller:preset:read-only" -> "the read-only preset": the words the person chose in the form above. */
+function ruleWords(ids: string[]): string {
+  const w = ids.map((id) =>
+    id.startsWith("caller:preset:")
+      ? `the ${id.slice("caller:preset:".length)} preset`
+      : id === "caller:forbid-providers"
+        ? "your forbid_providers list"
+        : id === "caller:allow-kinds"
+          ? "your allow_kinds list"
+          : id,
+  );
+  return w.length <= 1 ? (w[0] ?? "") : `${w.slice(0, -1).join(", ")} and ${w[w.length - 1]}`;
+}
 
 function rec(v: unknown): Json | null {
   return v && typeof v === "object" && !Array.isArray(v) ? (v as Json) : null;
@@ -101,6 +115,10 @@ export default function RoutePane() {
     paidRec && typeof paidRec.tool === "string" && typeof paidRec.free_step === "string" && typeof paidRec.door === "string" && paidRec.door.startsWith("/")
       ? (paidRec as unknown as PaidNext)
       : null;
+  // A rule the person set that ALSO forbids the paid tool. Never hidden behind the paid check.
+  const paidPolicy: string[] =
+    paid && Array.isArray(paid.forbidden_by) ? paid.forbidden_by.filter((x): x is string => typeof x === "string") : [];
+  const paidNextStep = paid && typeof paid.next_step === "string" && paid.next_step ? paid.next_step : paid?.free_step ?? "";
   const separation = typeof result?.separation === "string" ? result.separation : null;
   const forbidden = Array.isArray(result?.forbidden) ? (result!.forbidden as Json[]) : [];
   const considered = (rec(rec(result?.record)?.observed)?.considered ?? []) as Json[];
@@ -262,6 +280,11 @@ export default function RoutePane() {
                   paid check
                 </span>
               ) : null}
+              {paidPolicy.length ? (
+                <span className="rounded-full bg-rose-100 px-3 py-1 font-mono text-xs font-bold uppercase tracking-wide text-rose-950" data-testid="route-policy-forbids">
+                  your policy forbids it
+                </span>
+              ) : null}
               <span className="rounded-full border border-border px-3 py-1 font-mono text-xs font-bold uppercase tracking-wide text-muted-foreground">unsigned preview</span>
             </div>
             {chosen ? (
@@ -273,7 +296,8 @@ export default function RoutePane() {
               </p>
             ) : paid ? (
               <p className="mt-4 text-lg text-foreground" data-testid="route-none">
-                Your request matches <span className="font-mono font-black">{paid.tool}</span>, a paid check.
+                Your request matches <span className="font-mono font-black">{paid.tool}</span>, a paid check
+                {paidPolicy.length ? <>, and {ruleWords(paidPolicy)} you set {paidPolicy.length > 1 ? "forbid" : "forbids"} it</> : null}.
               </p>
             ) : (
               <p className="mt-4 text-lg text-foreground" data-testid="route-none">
@@ -286,11 +310,19 @@ export default function RoutePane() {
             )}
             {paid ? (
               <div className="mt-3 max-w-3xl text-sm leading-relaxed" data-testid="route-paid-next">
-                <p className="text-muted-foreground">
-                  A paid check runs only when you pay from your own wallet, so it was not chosen and nothing was called or charged.
-                </p>
+                {paidPolicy.length ? (
+                  <p className="text-muted-foreground" data-testid="route-paid-reasons">
+                    It was not chosen for two reasons: your policy forbids it (
+                    <code className="font-mono text-xs">{paidPolicy.join(", ")}</code>), and a paid check runs only when you pay from
+                    your own wallet. Nothing was called or charged.
+                  </p>
+                ) : (
+                  <p className="text-muted-foreground" data-testid="route-paid-reasons">
+                    A paid check runs only when you pay from your own wallet, so it was not chosen and nothing was called or charged.
+                  </p>
+                )}
                 <p className="mt-2 text-foreground">
-                  <span className="font-bold">Next:</span> {paid.free_step}{" "}
+                  <span className="font-bold">Next:</span> {paidNextStep}{" "}
                   <a href={paid.door} className="font-bold text-emerald-800 underline underline-offset-2 hover:text-emerald-950" data-testid="route-paid-door">
                     Open {paid.tool}
                   </a>
