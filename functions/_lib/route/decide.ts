@@ -14,6 +14,7 @@
 import { isSeparated, leaderLabel } from "../leaderLabel";
 import { evaluate, type CallerPolicy, type CandidateFacts, type PolicyContext } from "./policy";
 import type { BoardAxis, Candidate, Measurement, Objective, PolicyVerdict, Separation, TieBreakRule } from "./types";
+import { TASK_MATCH_METHOD, type TaskMatch } from "./taskMatch";
 
 /** "mistral:7b (base model)" -> "mistral:7b". Case-insensitive match key. */
 export function modelKey(s: string | null | undefined): string {
@@ -66,6 +67,8 @@ export type Decision = {
   separation: Separation;
   label: string | null;
   tie_break_applied: TieBreakRule[] | null;
+  /** Set only when the candidates are the GSPC tool fleet (no caller candidates): how the request matched a tool's purpose. */
+  task_match: TaskMatch | null;
 };
 
 function tieBreak(cands: Candidate[], rules: TieBreakRule[]): Candidate[] {
@@ -96,6 +99,14 @@ export function decide(
   ctx: PolicyContext,
   objective: Objective,
   axis: BoardAxis | null,
+  /**
+   * Task-to-tool scores (taskMatch.ts), passed only for the default GSPC tool fleet. With scores, the
+   * choice is the permitted tool whose purpose matches the request; when none matches, nothing is
+   * chosen (UNTESTED). The tie-break orders only tools with the same score, never the whole fleet.
+   * `null` with taskText absent means the caller sent only task_sha256: nothing can be matched.
+   */
+  relevance: Map<string, number> | null = null,
+  relevanceReadable = true,
 ): Decision {
   const considered: Considered[] = candidates.map((candidate) => {
     const measurement = measurementFor(candidate, axis, objective.quality_axis);
@@ -111,6 +122,7 @@ export function decide(
   let chosen: Decision["chosen"] = null;
   let label: string | null = null;
   let tie_break_applied: TieBreakRule[] | null = null;
+  let task_match: TaskMatch | null = null;
 
   const qualityWanted = objective.quality_axis !== null && objective.weights.quality > 0;
   const topModel = axis?.leader ? modelKey(axis.leader.model) : null;
@@ -126,7 +138,45 @@ export function decide(
   } else {
     separation = measured.length >= 2 ? "TIE" : "UNTESTED";
     label = measured.length ? leaderLabel(separation) : null;
-    if (permitted.length === 1) {
+    if (relevance) {
+      const scored = considered
+        .map((x) => ({ x, s: relevance.get(x.candidate.id) ?? 0 }))
+        .filter((r) => r.s > 0)
+        .sort((a, b) => b.s - a.s || (a.x.candidate.id < b.x.candidate.id ? -1 : 1));
+      const topAll = scored.length ? scored[0].s : 0;
+      const topPermitted = scored.filter((r) => r.x.verdict.permit);
+      const top = topPermitted.length ? topPermitted[0].s : 0;
+      let state: TaskMatch["state"] = "UNTESTED";
+      let reason = relevanceReadable
+        ? "No tool's purpose matches this request, so no tool was chosen. Nothing is picked by name order."
+        : "Only task_sha256 was sent: the request text is needed to match a tool's purpose, so no tool was chosen.";
+      if (top > 0 && top >= topAll) {
+        state = "MATCHED";
+        reason = "The chosen tool's purpose matches the request (its purpose patterns, then its description words).";
+        const tied = topPermitted.filter((r) => r.s === top).map((r) => r.x.candidate);
+        if (tied.length === 1) chosen = { id: tied[0].id, choice_basis: "task_match" };
+        else {
+          tie_break_applied = objective.tie_break;
+          const order = tieBreak(tied, objective.tie_break);
+          chosen = { id: order[0].id, choice_basis: `task_match>tie_break:${objective.tie_break.join(">")}` };
+        }
+      } else if (topAll > 0) {
+        state = "MATCHED_FORBIDDEN";
+        reason = "The tool whose purpose matches this request is forbidden by the policy, so no tool was chosen.";
+      }
+      task_match = {
+        state,
+        basis: "tool_purpose",
+        reason,
+        matched: scored.slice(0, 5).map((r) => ({
+          id: r.x.candidate.id,
+          score: r.s,
+          permit: r.x.verdict.permit,
+          forbid_policy: r.x.verdict.forbid_policy,
+        })),
+        method: TASK_MATCH_METHOD,
+      };
+    } else if (permitted.length === 1) {
       chosen = { id: permitted[0].candidate.id, choice_basis: "only_permitted" };
     } else if (permitted.length > 1) {
       tie_break_applied = objective.tie_break;
@@ -146,5 +196,6 @@ export function decide(
     separation,
     label,
     tie_break_applied,
+    task_match,
   };
 }

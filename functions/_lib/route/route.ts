@@ -10,6 +10,7 @@ import { buildCandidates } from "./candidates";
 import { applyCensus } from "./census";
 import { ARD_LISTINGS, MAX_DISCOVERED, type CandidateSource, type DiscoveryResult } from "./discovery";
 import { decide, type Decision } from "./decide";
+import { matchTask, type TaskMatch } from "./taskMatch";
 import type { CensusRead } from "./census";
 import type { CallerPolicy } from "./policy";
 import { buildRouteRecord, sha256Hex } from "./evidence";
@@ -195,7 +196,12 @@ export async function routeCore(
     }
   }
   const census = await applyCensus(candidates, deps.fetchCensus);
-  const decision = decide(candidates, policy, ctx, objective, board.axis);
+  // The default candidate set (no caller candidates, no discovery) is the GSPC tool fleet: there the
+  // request's text picks the tool whose purpose it names (taskMatch.ts), never the A-Z tie-break.
+  // Caller-declared candidates keep the caller's tie_break exactly as before.
+  const fleetDefault = (args.candidates === undefined || args.candidates === null) && args.discover === undefined;
+  const relevance = fleetDefault ? (taskText !== null ? matchTask(taskText, candidates) : new Map<string, number>()) : null;
+  const decision = decide(candidates, policy, ctx, objective, board.axis, relevance, taskText !== null);
   const readAt = (deps.now ?? (() => new Date()))().toISOString();
   const uuid = (deps.uuid ?? (() => crypto.randomUUID()))();
   const task: Task = { sha256: taskSha, data_class, needs_write: args.needs_write === true, content_retained: false };
@@ -229,7 +235,11 @@ export async function routeCore(
     readAt,
   };
   const result: RouteResult = {
-    state: decision.chosen ? "ROUTED" : "NO_PERMITTED_CANDIDATE",
+    state: decision.chosen
+      ? "ROUTED"
+      : decision.task_match?.state === "UNTESTED" && decision.permitted.length > 0
+        ? "UNTESTED"
+        : "NO_PERMITTED_CANDIDATE",
     mode: "decide_only",
     preview: true,
     signed: false,
@@ -241,10 +251,14 @@ export async function routeCore(
     forbidden: decision.considered
       .filter((x) => !x.verdict.permit)
       .map((x) => ({ id: x.candidate.id, forbid_policy: x.verdict.forbid_policy })),
+    ...(decision.task_match ? { task_match: decision.task_match } : {}),
     record,
-    note:
-      "Routing is not ranking: the caller's policy applied to published measurements. TIE and UNTESTED are " +
-      "stated as they are. Unsigned decide-only preview; nothing was executed or charged.",
+    note: decision.task_match
+      ? "The candidates are the GSPC tools (none were declared). The choice is the permitted tool whose purpose " +
+        "matches the request; when none matches the answer is UNTESTED, never a pick by name. This is not a quality " +
+        "ranking. Unsigned decide-only preview; nothing was executed or charged."
+      : "Routing is not ranking: the caller's policy applied to published measurements. TIE and UNTESTED are " +
+        "stated as they are. Unsigned decide-only preview; nothing was executed or charged.",
   };
   return { result, internals };
 }
@@ -254,6 +268,18 @@ export function routeSummary(r: RouteResult): string {
   if (r.state === "NOT_ENABLED") return "NOT_ENABLED (501): the route tool is decide-only; execution is POST /api/route/execute.";
   if (r.state === "BAD_ARGUMENTS") return `BAD_ARGUMENTS: ${(r.errors as string[]).join("; ")}`;
   const chosen = r.chosen as { id: string; choice_basis: string } | null;
+  const tm = r.task_match as TaskMatch | undefined;
+  if (tm) {
+    const of = `${r.permitted} of ${r.considered} tools permitted`;
+    if (chosen)
+      return `ROUTED to ${chosen.id}: its purpose matches the request (basis ${chosen.choice_basis}; ${of}). Unsigned decide-only preview; nothing was called or charged.`;
+    if (tm.state === "MATCHED_FORBIDDEN") {
+      const m = tm.matched[0];
+      return `NO_PERMITTED_CANDIDATE: the request matches ${m.id}, which the policy forbids (${m.forbid_policy}). Nothing was called or charged.`;
+    }
+    if (r.state === "UNTESTED")
+      return `UNTESTED: ${tm.reason} (${of}.) Ask about a signed card, a board axis, a server or the board totals, or pass your own candidates.`;
+  }
   const sep = String(r.separation);
   const tail = `${r.permitted} of ${r.considered} candidates permitted; separation ${sep}${
     r.label ? ` (${r.label})` : ""
