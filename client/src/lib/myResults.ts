@@ -7,6 +7,8 @@
  * on the server side because nothing here was ever the server's copy.
  */
 
+import { toolReadFailed } from "./aguiTalk";
+
 export type MyResultKind = "lookup" | "fresh-run" | "watch" | "paid";
 
 export type MyResult = {
@@ -113,7 +115,7 @@ export function takeCheckerSeed(): string | null {
 export type FinishedLookupRun = {
   question: string;
   status?: string;
-  tools: { label?: string | null; citation?: { record_id?: string | null } | null }[];
+  tools: { label?: string | null; citation?: { record_id?: string | null } | null; output?: unknown; isError?: boolean }[];
 };
 
 /**
@@ -123,7 +125,9 @@ export type FinishedLookupRun = {
  */
 export function lookupFromRun(subject: string, run: FinishedLookupRun): Omit<MyResult, "id" | "at"> {
   const first = run.tools[0];
-  const state = typeof first?.label === "string" && first.label.trim() ? first.label.trim() : undefined;
+  const label = typeof first?.label === "string" && first.label.trim() ? first.label.trim() : undefined;
+  const failed = Boolean(first && toolReadFailed({ label: label, output: first.output, isError: first.isError }));
+  const state = failed && !/^(UNREACHABLE|UNAVAILABLE|ERROR|FAILED)\b/i.test(label ?? "") ? "ERROR" : label;
   const ref = typeof first?.citation?.record_id === "string" && first.citation.record_id ? first.citation.record_id : undefined;
   return { kind: "lookup", subject, question: run.question, ...(state ? { state } : {}), ...(ref ? { ref } : {}) };
 }

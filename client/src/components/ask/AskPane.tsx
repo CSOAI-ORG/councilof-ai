@@ -1,3 +1,4 @@
+import { plannedPageReply } from "@/lib/askNavigation";
 /**
  * AskPane — Ask GSPC, the one assistant: a side pane on every page (opened from the header, the
  * command palette or Ctrl/⌘-K → Ask) over the SAME deterministic talk router every door uses
@@ -23,6 +24,8 @@ import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { useLocation, useSearch } from "wouter";
 import { menuTrail } from "@/components/lobby/tabs";
 import { CheckCircle2, Circle, CircleSlash, Hand, Loader2, OctagonX, PauseCircle, Undo2, X, XCircle } from "lucide-react";
+import { createWatchRequests, takeAskRequest } from "@/lib/askRequests";
+import type { AskRequest } from "@/components/ask/askBus";
 import TalkPanel, { type TalkPanelHandle } from "@/components/talk/TalkPanel";
 import OwmFreshness from "@/components/ask/OwmFreshness";
 import { streamRun, type TalkRun, type UiStepCall } from "@/lib/aguiTalk";
@@ -133,7 +136,10 @@ export function askHere(location: string, search: string): string {
   return here ? `${here.crumb} › ${here.title}` : location;
 }
 
-export default function AskPane({ open, onClose, question }: { open: boolean; onClose: () => void; question?: { text: string; n: number } | null }) {
+export default function AskPane({ open, onClose, question, onReady, onQuestionTaken }: {
+  open: boolean; onClose: () => void; question?: AskRequest | null;
+  onReady?: (handle: TalkPanelHandle | null) => void; onQuestionTaken?: () => void;
+}) {
   const [location] = useLocation();
   const search = useSearch();
   const talk = useRef<TalkPanelHandle>(null);
@@ -150,7 +156,14 @@ export default function AskPane({ open, onClose, question }: { open: boolean; on
   const [undoable, setUndoable] = useState(false);
   const stopRef = useRef(false);
   const decide = useRef<((d: "confirm" | "skip" | "stop") => void) | null>(null);
-  const pendingAsk = useRef<string | null>(null);
+  const pendingQuestion = useRef<AskRequest | null>(null);
+  const seenQuestion = useRef<number | null>(null);
+  const [answering, setAnswering] = useState(false);
+  const [watchRequest, setWatchRequest] = useState(0);
+  const watchRequests = useRef<ReturnType<typeof createWatchRequests> | null>(null);
+  if (!watchRequests.current) watchRequests.current = createWatchRequests(() => setWatchRequest((n) => n + 1));
+  const [queueNote, setQueueNote] = useState<string | null>(null);
+  useEffect(() => { onReady?.(talk.current); return () => onReady?.(null); }, [onReady]);
 
   useEffect(() => subscribeLog((l) => { setLog(l); setUndoable(canUndo()); }), []);
   useEffect(() => writePrefs(prefs), [prefs]);
@@ -160,11 +173,19 @@ export default function AskPane({ open, onClose, question }: { open: boolean; on
 
   // Ask the question the launcher or the palette handed over.
   useEffect(() => {
-    if (!question?.text) return;
+    if (question?.text && question.n !== seenQuestion.current) {
+      seenQuestion.current = question.n;
+      pendingQuestion.current = question;
+    }
+    const waiting = pendingQuestion.current;
+    if (!waiting) return;
     setTab("ask");
     setCollapsed(false);
-    talk.current?.ask(question.text);
-  }, [question]);
+    if (takeAskRequest(pendingQuestion, talk.current)) {
+      setQueueNote(null);
+      onQuestionTaken?.();
+    } else setQueueNote("Your question is kept here and will start when the current answer finishes.");
+  }, [question, answering, onQuestionTaken]);
 
   // Esc closes (and stops a running watch); focus lands in the pane when it opens.
   const paneRef = useRef<HTMLElement>(null);
@@ -268,25 +289,29 @@ export default function AskPane({ open, onClose, question }: { open: boolean; on
   const onRunDone = useCallback(
     (run: TalkRun) => {
       if (prefs.voice && run.text) {
-        const first = run.text.split(/\n{2,}/).slice(0, 2).join(". ");
+        const voiceText = !run.tools.length && run.ui.length ? plannedPageReply(run.ui.length) : run.text;
+        const first = voiceText.split(/\n{2,}/).slice(0, 2).join(". ");
         speakVoice(prepSpeech(first).slice(0, 600));
       }
-      if (prefs.watch && run.ui.length) void runWatch(run);
+      if (run.status === "done" && prefs.watch && run.ui.length) void runWatch(run);
     },
     [prefs.voice, prefs.watch, runWatch],
   );
 
   const enableWatchAndAsk = (run: TalkRun) => {
     setPrefs((p) => ({ ...p, watch: true }));
-    pendingAsk.current = run.question;
+    watchRequests.current!.queue(run);
+    setQueueNote("Your request to show this is kept until the current answer finishes.");
   };
   useEffect(() => {
-    if (prefs.watch && pendingAsk.current) {
-      const q = pendingAsk.current;
-      pendingAsk.current = null;
-      talk.current?.ask(q);
+    if (prefs.watch && watchRequests.current!.hasPending()) {
+      if (watchRequests.current!.take(talk.current)) {
+        setQueueNote(null);
+      } else if (!watchRequests.current!.hasPending()) {
+        setQueueNote("That earlier request is no longer available. Ask again to show it.");
+      }
     }
-  }, [prefs.watch]);
+  }, [prefs.watch, answering, watchRequest]);
 
   const here = askHere(location, search);
   const awaiting = steps.find((s) => s.state === "awaiting_confirm");
@@ -404,6 +429,7 @@ export default function AskPane({ open, onClose, question }: { open: boolean; on
           </div>
         </details>
 
+        {queueNote ? <p role="status" className="mt-3 text-sm text-muted-foreground">{queueNote}</p> : null}
         <div role="tablist" aria-label="Ask views" className="mt-4 flex gap-1 border-b border-border">
           {(["ask", "steps", "log"] as const).map((t) => (
             <button
@@ -428,6 +454,7 @@ export default function AskPane({ open, onClose, question }: { open: boolean; on
             declareUi
             watch={prefs.watch}
             onRunDone={onRunDone}
+            onBusyChange={setAnswering}
             onEnableWatch={enableWatchAndAsk}
             listen={prefs.voice}
           />

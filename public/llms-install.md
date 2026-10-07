@@ -22,31 +22,79 @@ npm package, API key, or OAuth:
 }
 ```
 
-Reconnect and confirm that Cline's server panel discovers the exact 12 names below
+Reconnect and confirm that Cline's server panel discovers the tool names declared in the catalog below
 (`tools/list` at the protocol level) before relying on the integration. The remote
 is the canonical service; it is also suitable for MCP clients that support remote
 Streamable HTTP configuration. This is not a claim of support for every AI platform
 or client.
 
-## Optional local stdio package (deprecated on npm)
+## NeMo Agent Toolkit example
 
-The package identity is `csoai-gspc-mcp` (not the stale scoped name previously
-shown here). Every release published to npm so far is marked deprecated on npm and
-carries fewer tools than the remote, so this guide no longer gives a local
-configuration: use the remote above, or the free read-only door
-https://councilof.ai/mcp/free. Read the deprecation yourself with
-`npm view csoai-gspc-mcp@latest deprecated`.
+For an existing NeMo Agent Toolkit workflow, this proposed function group uses the
+canonical remote. It follows NVIDIA's 1.8 documentation and has not been run in
+NeMo. Confirm your installed schema and the server's exact tool names before use.
 
-The repository currently prepares `0.2.3`, but that source version is **not a
-published npm release** until `npm view csoai-gspc-mcp@0.2.3 version` confirms that
-exact version and `npm view csoai-gspc-mcp@latest deprecated` prints nothing. Do not
-install or advertise `0.2.3` from npm before that independent check.
+```yaml
+function_groups:
+  council_free:
+    _type: mcp_client
+    server:
+      transport: streamable-http
+      url: https://councilof.ai/mcp
+    include:
+      - board_totals
+      - get_axis
+      - list_cards
+      - verify_card
+    tool_call_timeout: 60
+    max_sessions: 1
+    session_idle_timeout: 60
+    reconnect_enabled: false
+```
+
+This is a function-group fragment, not a complete runnable workflow. Add
+`council_free` to your existing `workflow.tool_names`, or reference individual
+functions as `council_free__board_totals`, `council_free__get_axis`,
+`council_free__list_cards`, and `council_free__verify_card`. The include list
+selects workflow tools; it is not an authorization boundary for arbitrary
+programmatic access.
+
+For a useful first task, read the board, inspect the governance axis, select one
+existing card returned by `list_cards`, and verify that exact card. Save the
+result bytes, card identifier, and original observation date. Keep the reported
+verdict distinct from independent signature replay, and preserve any correction
+or supersession links for a later return.
+
+The one-session and 60-second idle settings are proposed resource bounds, not
+measured memory savings. Native validation must confirm the four free tools work
+and metered tools are absent from the workflow's tool list.
+
+See NVIDIA's [MCP client configuration](https://docs.nvidia.com/nemo/agent-toolkit/latest/build-workflows/mcp-client.html)
+and [function-group workflow references](https://docs.nvidia.com/nemo/agent-toolkit/latest/build-workflows/functions-and-function-groups/function-groups.html).
+
+## Historical local stdio package
+
+For new connections, use the canonical remote configuration above.
+
+The npm package `csoai-gspc-mcp@0.2.2` was publicly available when checked on
+2026-10-03, but npm marks it **deprecated**. The publisher directs users to the
+measurement-only successor at `councilof.ai`. See the
+[exact version metadata](https://registry.npmjs.org/csoai-gspc-mcp/0.2.2).
+
+The published package describes eight free readers and four metered tools.
+That historical stdio package is a separate implementation from the reviewed
+remote catalog below. Publication and matching package integrity records do not
+establish catalog parity, current runtime support, or native-client compatibility.
+
+The earlier `0.2.1` installation examples were last publicly verified here on
+2026-09-09 and remain historical. This guide's current setup uses the canonical
+remote rather than installing a deprecated package.
 
 ## Exact reviewed tool catalog
 
 This list describes the reviewed source contract at this commit. Confirm that the
-deployed remote returns the same 12 names before treating it as the live contract.
-Listing the catalog and using all eight read/verification tools is free. In
+deployed remote returns the catalog's declared names before treating it as the live contract.
+Listing the catalog and using every free read/verification tool is free. In
 particular, `verify_card` checks a Council-issued signed measurement card without a
 payment. Its three possible verdict classes are `VALID`, `INVALID`, and
 `UNCHECKABLE`; signature validity is not certification of the subject.

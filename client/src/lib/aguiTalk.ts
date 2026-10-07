@@ -38,12 +38,23 @@ export type TalkToolCard = {
   name: string;
   /** The TOOL_CALL_ARGS deltas, concatenated as they arrived. */
   argsText: string;
-  status: "running" | "done";
+  status: "running" | "done" | "cancelled";
   label?: string;
   summary?: string;
   citation?: Citation;
   output?: unknown;
+  isError?: boolean;
+  messageId?: string;
+  parentMessageId?: string;
 };
+
+/** A failed read stays a failed read even if the server's run-level grounded flag is true. */
+export function toolReadFailed(card: Pick<TalkToolCard, "label" | "output" | "isError">): boolean {
+  const output = card.output && typeof card.output === "object" && !Array.isArray(card.output)
+    ? card.output as Record<string, unknown> : null;
+  return /^(UNREACHABLE|UNAVAILABLE|ERROR|FAILED)\b/i.test(card.label ?? "") ||
+    card.isError === true || output?.is_error === true || output?.isError === true;
+}
 
 export type ConfirmRequest = {
   tools: { tool: string; args: Json }[];
@@ -51,8 +62,17 @@ export type ConfirmRequest = {
   effect?: string;
 };
 
+/** The session-history question stays bound even if the server returns different IDs. */
+export type TalkOrigin = { threadId: string; userMessageId: string };
+
 export type TalkRun = {
+  /** Stable browser key; server IDs below never change this key. */
   id: string;
+  origin?: TalkOrigin;
+  threadId?: string;
+  runId?: string;
+  userMessageId?: string;
+  messageId?: string;
   question: string;
   status: "streaming" | "done" | "error" | "awaiting_confirmation" | "cancelled";
   tools: TalkToolCard[];
@@ -175,6 +195,10 @@ function uiStepFrom(id: string, name: string, argsText: string, ended: boolean):
 export function reduceRun(run: TalkRun, ev: Json): TalkRun {
   const type = str(ev.type);
   switch (type) {
+    case "RUN_STARTED":
+      return { ...run, threadId: str(ev.threadId) ?? run.threadId, runId: str(ev.runId) ?? run.runId };
+    case "TEXT_MESSAGE_START":
+      return { ...run, messageId: str(ev.messageId) ?? run.messageId };
     case "TOOL_CALL_START": {
       const name = str(ev.toolCallName) ?? "tool";
       if (FRONTEND_TOOL_NAMES.has(name)) {
@@ -184,7 +208,7 @@ export function reduceRun(run: TalkRun, ev: Json): TalkRun {
       }
       const id = str(ev.toolCallId) ?? `call_${run.tools.length + 1}`;
       if (run.tools.some((t) => t.id === id)) return run;
-      return { ...run, tools: [...run.tools, { id, name: str(ev.toolCallName) ?? "tool", argsText: "", status: "running" }] };
+      return { ...run, tools: [...run.tools, { id, name: str(ev.toolCallName) ?? "tool", argsText: "", status: "running", parentMessageId: str(ev.parentMessageId) ?? undefined }] };
     }
     case "TOOL_CALL_ARGS": {
       const id = str(ev.toolCallId);
@@ -209,6 +233,8 @@ export function reduceRun(run: TalkRun, ev: Json): TalkRun {
           ? { tool: str(cit.tool) ?? "", record_id: str(cit.record_id), url: str(cit.url) }
           : undefined,
         output: body.output,
+        isError: body.is_error === true || ev.is_error === true,
+        messageId: str(ev.messageId) ?? undefined,
       };
       // The server may have followed one sibling hop, so the result's own tool/args win.
       if (str(body.tool)) patch.name = str(body.tool)!;
@@ -229,6 +255,7 @@ export function reduceRun(run: TalkRun, ev: Json): TalkRun {
     case "STATE_DELTA":
       return { ...run, state: applyPatch(run.state, ev.delta) };
     case "TEXT_MESSAGE_CONTENT":
+      if (run.messageId && str(ev.messageId) && ev.messageId !== run.messageId) return run;
       return { ...run, text: run.text + (str(ev.delta) ?? "") };
     case "CUSTOM": {
       if (ev.name === "consent_required") {
@@ -245,7 +272,10 @@ export function reduceRun(run: TalkRun, ev: Json): TalkRun {
     }
     case "RUN_FINISHED": {
       const result = rec(ev.result) ?? undefined;
-      return { ...run, result, status: result?.awaiting_confirmation ? "awaiting_confirmation" : "done" };
+      const failed = run.status === "error" || run.tools.some(toolReadFailed);
+      return { ...run, threadId: str(ev.threadId) ?? run.threadId, runId: str(ev.runId) ?? run.runId, result,
+        status: failed ? "error" : result?.awaiting_confirmation ? "awaiting_confirmation" : "done",
+        ...(failed ? { error: run.error ?? "one or more sources did not return a successful result" } : {}) };
     }
     case "RUN_ERROR":
       return { ...run, status: "error", error: str(ev.message) ?? "the run failed" };
@@ -325,6 +355,9 @@ export const TALK_SUGGESTIONS: { text: string; tool: string }[] = [
 
 export type StreamOptions = {
   question: string;
+  threadId?: string;
+  runId?: string;
+  userMessageId?: string;
   confirmTool?: string[];
   /** Where the reader is; lets "this" mean the page's subject. */
   page?: PageContext;
@@ -343,10 +376,10 @@ export type StreamOptions = {
 /** POST one question to the AG-UI run endpoint and feed every event to onEvent. */
 export async function streamRun(o: StreamOptions): Promise<void> {
   const body: Json = {
-    threadId: `web-${Date.now().toString(36)}`,
-    runId: `run-${Math.random().toString(36).slice(2, 10)}`,
+    threadId: o.threadId ?? `web-${Date.now().toString(36)}`,
+    runId: o.runId ?? `run-${Math.random().toString(36).slice(2, 10)}`,
     messages: [
-      ...(o.question ? [{ id: "m1", role: "user", content: o.question }] : []),
+      ...(o.question ? [{ id: o.userMessageId ?? "m1", role: "user", content: o.question }] : []),
       ...(o.toolResults ?? []).map((r, i) => ({ id: `t${i + 1}`, role: "tool", toolCallId: r.toolCallId, content: r.content, ...(r.error ? { error: r.error } : {}) })),
     ],
   };

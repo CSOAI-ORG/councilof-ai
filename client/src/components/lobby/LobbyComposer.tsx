@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { AUDIENCES, AUDIENCE_DOORS, DEFAULT_AUDIENCE, asksFor } from "./asks";
 import { FOCUS, MEASURE, PRIMARY, TYPE } from "./glass";
 import type { LobbyTab } from "./tabs";
+import { onceAccepted } from "@/lib/askRequests";
+import type { TalkOrigin } from "@/lib/aguiTalk";
 import type { LobbyChat } from "./useLobbyChat";
 
 export type ComposerTool = {
@@ -30,6 +32,7 @@ export default function LobbyComposer({
   onTool,
   onAsk,
   onFreeQuestion,
+  onStop,
 }: {
   chat: LobbyChat;
   onNavigate: (tab: LobbyTab) => void;
@@ -49,9 +52,11 @@ export default function LobbyComposer({
   onTool?: (tool: ComposerTool) => void;
   /** Offered every free-text question first. Returning true means the host answered it (the
    *  dashboard home hands questions to the AG-UI TalkPanel); false falls through to chat.send. */
-  onAsk?: (text: string) => boolean;
+  onAsk?: (text: string) => boolean | "busy";
+  /** Stops the workspace run and leaves the draft untouched. */
+  onStop?: () => void;
   /** Offered a free question once every local lane has passed on it (see LobbyChat.send). */
-  onFreeQuestion?: (text: string) => boolean;
+  onFreeQuestion?: (text: string, origin?: TalkOrigin) => boolean | "busy";
 }) {
   const [q, setQ] = useState("");
   // The prerendered composer cannot handle events until React hydrates. Keep it
@@ -145,14 +150,14 @@ export default function LobbyComposer({
   }, [seedNonce, seedPrompt]);
 
   useEffect(() => {
-    const councilTurns = turns.filter((t) => t.role === "council").length;
+    const councilTurns = turns.filter((t) => t.role === "council" && (!t.talk || Boolean(t.talk.text) || t.talk.tools.some((tool) => tool.status === "done"))).length;
     if (councilTurns > 0 && !replied.current) {
       replied.current = true;
       onFirstReply?.();
     }
   }, [turns, onFirstReply]);
 
-  function submit() {
+  async function submit() {
     if (!ready) return;
     const text = q.trim();
     if (chat.busy) return;
@@ -161,11 +166,17 @@ export default function LobbyComposer({
       inputRef.current?.focus();
       return;
     }
-    setQ("");
-    setSeeded(false);
-    setAsksOpen(false);
-    if (onAsk?.(text)) return;
-    void chat.send(text, onNavigate, onOpenRoute, onFreeQuestion);
+    const taken = onAsk?.(text);
+    if (taken === "busy") return;
+    const accepted = onceAccepted(() => {
+      setQ((draft) => draft.trim() === text ? "" : draft);
+      setSeeded(false);
+      setAsksOpen(false);
+    });
+    if (taken === true) { accepted(); return; }
+    const sent = await chat.send(text, onNavigate, onOpenRoute, onFreeQuestion, accepted);
+    // Legacy hosts return void and have no acceptance callback.
+    if (sent !== false) accepted();
   }
 
   return (
@@ -212,6 +223,9 @@ export default function LobbyComposer({
         >
           {!ready ? "Starting…" : chat.busy ? "…" : "Ask"}
         </button>
+        {onStop ? (
+          <button type="button" onClick={onStop} className={`min-h-11 shrink-0 rounded-xl border border-border bg-background px-4 text-sm font-semibold ${FOCUS}`}>Stop answering</button>
+        ) : null}
         {onTool && (
           // Below sm the wrapper is static, so the popover is placed against the whole composer
           // (full width) instead of against its button near the right edge, where it was cut off.
