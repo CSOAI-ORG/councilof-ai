@@ -1,0 +1,522 @@
+{
+  "banks": {
+    "affect": {
+      "allowlisted": true,
+      "file": "gspc-affect.jsonl",
+      "rows": 41,
+      "sha256": "c64a5986bf807127c047344178262fade96dfaf856f555aa8bc1b79e0cee252a"
+    },
+    "art5-safeguard": {
+      "allowlisted": true,
+      "file": "gspc-art5.jsonl",
+      "rows": 36,
+      "sha256": "bdb7c0e8b7adb31f1e240b4e0c722bb18a7fb9c6eef60682bdea72a583ccf299"
+    },
+    "care": {
+      "allowlisted": true,
+      "file": "gspc-care.jsonl",
+      "rows": 199,
+      "sha256": "cee5e47a31f1db6c117a0b2f4a4c026f9ebe267c28106e4901ea44189de1767e"
+    },
+    "conformance": {
+      "allowlisted": true,
+      "file": "gspc-mcp.jsonl",
+      "rows": 35,
+      "sha256": "dc494ae6d1cb8abe3fe9a9424a2b37631a3d15ebdde000b7a0409a67c757420f"
+    },
+    "continuity": {
+      "allowlisted": true,
+      "file": "gspc-asi.jsonl",
+      "rows": 33,
+      "sha256": "25dd6a72ac5ad661c33d74a72da54ab9ac7d282de9d388085de20161b1f90b20"
+    },
+    "cross-reality": {
+      "allowlisted": true,
+      "file": "gspc-xr.jsonl",
+      "rows": 32,
+      "sha256": "9aafd224f011f5a7f709e39efbee35e3f71b56c320a2d4fb69e5cbcd6667e8dd"
+    },
+    "detector-interop": {
+      "allowlisted": true,
+      "file": "gspc-det.jsonl",
+      "rows": 33,
+      "sha256": "d75e96802d9eb9df1c42ea46ce55c577879d0d78d199b1c612c2b14685d62c8e"
+    },
+    "governance": {
+      "allowlisted": true,
+      "file": "gspc-gov.jsonl",
+      "rows": 237,
+      "sha256": "b93f9808f01416737a5944fec0ab8c3eda1dbba808daf7dda33a516b0cd61997"
+    },
+    "jail": {
+      "allowlisted": true,
+      "file": "gspc-jail.jsonl",
+      "rows": 71,
+      "sha256": "0b45b620f2277c364275420f812e9415698e3b8bf0b105a7bbb4c2b2627d0f4a"
+    },
+    "machinery-conformity": {
+      "allowlisted": true,
+      "file": "gspc-mach.jsonl",
+      "rows": 33,
+      "sha256": "ab0b40f2336e81703e3c17e9988b88a3b0d4bf3a441aa7c3c53b038a6398a434"
+    },
+    "openness": {
+      "allowlisted": true,
+      "file": "gspc-oss.jsonl",
+      "rows": 32,
+      "sha256": "644dc6de897896a88e90b8954abfa08d49b0e774f6270f30a9bf28b0831179ec"
+    },
+    "provenance": {
+      "allowlisted": true,
+      "file": "gspc-prv.jsonl",
+      "rows": 32,
+      "sha256": "5da9b25954ec575b1e86bca8306bd0cd6758161428717d60ac648dc52c8317d2"
+    },
+    "safety": {
+      "allowlisted": true,
+      "file": "gspc-agi.jsonl",
+      "rows": 36,
+      "sha256": "f963e3c739c7d75bf4750d3638f2b9aad7a161f8043f8e353224d29af17718d5"
+    },
+    "swarm": {
+      "allowlisted": true,
+      "file": "gspc-swarm.jsonl",
+      "rows": 37,
+      "sha256": "ab318986d684ebf8a46682a5b82ad7594b1bbd01f7acb25a50e94a3d868076a1"
+    }
+  },
+  "cpu_count": 4,
+  "cuda_version_driver": "13.0",
+  "decode": {
+    "keyword_max_tokens": 1024,
+    "max_tokens": 128,
+    "seed": 0,
+    "temperature": 0
+  },
+  "detail": "14 job(s) rc=0",
+  "finished_at": "2026-10-06T10:44:34Z",
+  "gpu": "0, Tesla T4, 15360 MiB, 580.178.04, 7.5, GPU-2692f532-cb7d-229b-4267-9a773bce1fe3\n1, Tesla T4, 15360 MiB, 580.178.04, 7.5, GPU-f3d31b8d-548d-e27e-7d21-ce3dacc9022b",
+  "kaggle_docker_image": "gcr.io/kaggle-gpu-images/python@sha256:37c64f7dd9c54116ecd1bcc88817c5469b88387388fade02bfa8bf3fc647d461",
+  "kaggle_kernel_run_type": "Batch",
+  "lane": "mill-kaggle-daily-20260928",
+  "model": {
+    "digest_3090": "a8b0c51577010a279d933d14c2a8ab4b268079d44c5c8830c0a93900f1827c67",
+    "digest_pin": "a8b0c51577010a279d933d14c2a8ab4b268079d44c5c8830c0a93900f1827c67",
+    "manifest_file_sha256": "a8b0c51577010a279d933d14c2a8ab4b268079d44c5c8830c0a93900f1827c67",
+    "manifest_path": "/tmp/ws/ollama-models/manifests/registry.ollama.ai/library/qwen2.5/0.5b-instruct",
+    "matches_3090": true,
+    "matches_pin": true,
+    "pin_source": "3090-intake-receipts",
+    "tag": "qwen2.5:0.5b-instruct",
+    "tags_digest": "a8b0c51577010a279d933d14c2a8ab4b268079d44c5c8830c0a93900f1827c67"
+  },
+  "model_pull_seconds": 5.2,
+  "model_tags_names": [
+    "qwen2.5:0.5b-instruct"
+  ],
+  "note": "SIDECAR: the card intake contract pins the card body key set, so the runtime is declared here, not in the card",
+  "nvcc": "Cuda compilation tools, release 12.8, V12.8.93\nBuild cuda_12.8.r12.8/compiler.35583870_0",
+  "ollama_install_seconds": 26.4,
+  "ollama_server_version": "0.35.1",
+  "platform": "Linux-6.18.48+-x86_64-with-glibc2.35",
+  "playlist": {
+    "args": [
+      "--max-tokens",
+      "128",
+      "--keyword-max-tokens",
+      "1024"
+    ],
+    "axes": [
+      "safety",
+      "provenance",
+      "continuity",
+      "conformance",
+      "openness",
+      "machinery-conformity",
+      "cross-reality",
+      "detector-interop",
+      "art5-safeguard",
+      "affect",
+      "jail",
+      "swarm",
+      "care",
+      "governance"
+    ],
+    "generator": "scripts/generate_runpod_gspc_playlist.py"
+  },
+  "python": "3.12.13",
+  "run_results": [
+    {
+      "counts": {
+        "attempted": 41,
+        "bank_items": 41,
+        "correct": 15,
+        "graded_n": 36,
+        "parse_errors_excluded": 5,
+        "transport_errors_excluded": 0,
+        "transport_ok": 41
+      },
+      "detail_code": "COMPLETE_UNSIGNED",
+      "done_reason_length": 0,
+      "done_reason_present": 41,
+      "instrument_sha256": "76d5e4b02b5a48cb4224e33ca1c0e6e0435ea81ec32bcb55bc3b3ee8c6754d93",
+      "items_rows": 41,
+      "items_sha256": "8b9e93b87098b2d71b24b3a2a012bfbe5325386e0537662ae60a97de2c1d5781",
+      "path": "slice/run1/runs/qwen2.5-0.5b-instruct/affect/runs/20261006T104312.332955Z-4cd4436856",
+      "raw_output_sha256_list_sha256": "4f404421b15c689511292bd0bcea5d07897cd9c3a1a6233f70df305536404238",
+      "run_id": "20261006T104312.332955Z-4cd4436856"
+    },
+    {
+      "counts": {
+        "attempted": 36,
+        "bank_items": 36,
+        "correct": 19,
+        "graded_n": 36,
+        "parse_errors_excluded": 0,
+        "transport_errors_excluded": 0,
+        "transport_ok": 36
+      },
+      "detail_code": "COMPLETE_UNSIGNED",
+      "done_reason_length": 0,
+      "done_reason_present": 36,
+      "instrument_sha256": "b06c75db93853885814786c61d66fcdb6deff9290ac82a3a9efc9b2fb8ffacb1",
+      "items_rows": 36,
+      "items_sha256": "039f47f3a22adfa222df3f8944cec921f82cced081e91660d59e182f43ab95b4",
+      "path": "slice/run1/runs/qwen2.5-0.5b-instruct/art5-safeguard/runs/20261006T104310.391893Z-668b0ed1a8",
+      "raw_output_sha256_list_sha256": "3341e1b60a2825462c8acb738a850da59575245dca3266112a1ed5074a1eff5a",
+      "run_id": "20261006T104310.391893Z-668b0ed1a8"
+    },
+    {
+      "counts": {
+        "attempted": 199,
+        "bank_items": 199,
+        "correct": 93,
+        "graded_n": 192,
+        "parse_errors_excluded": 7,
+        "transport_errors_excluded": 0,
+        "transport_ok": 199
+      },
+      "detail_code": "COMPLETE_UNSIGNED",
+      "done_reason_length": 2,
+      "done_reason_present": 199,
+      "instrument_sha256": "733f289809a2052bf6b31e0bf6948dc260527cfa5181e7bcf03f037f6104dd1b",
+      "items_rows": 199,
+      "items_sha256": "7968106bcb838be11a58d0268937cd344f265b3181cb0ccfb80cf0189710ebef",
+      "path": "slice/run1/runs/qwen2.5-0.5b-instruct/care/runs/20261006T104408.577015Z-faf3e3b1e2",
+      "raw_output_sha256_list_sha256": "f5f09027a54089ddf2cf2eb4f83b9f07470e262182bd2656734fc9c8d6c92824",
+      "run_id": "20261006T104408.577015Z-faf3e3b1e2"
+    },
+    {
+      "counts": {
+        "attempted": 35,
+        "bank_items": 35,
+        "correct": 18,
+        "graded_n": 35,
+        "parse_errors_excluded": 0,
+        "transport_errors_excluded": 0,
+        "transport_ok": 35
+      },
+      "detail_code": "COMPLETE_UNSIGNED",
+      "done_reason_length": 0,
+      "done_reason_present": 35,
+      "instrument_sha256": "e11ed7d116b4e76b88233921d7e09636d564c3e269992d85e58ad04e5876770e",
+      "items_rows": 35,
+      "items_sha256": "c639503b0246206cb07ff86fa264a0a17c51e954af7f8e1edba514fa7400dc99",
+      "path": "slice/run1/runs/qwen2.5-0.5b-instruct/conformance/runs/20261006T104300.460220Z-beda72561d",
+      "raw_output_sha256_list_sha256": "06cd54a6d9d5bb685e28d853373cd7189e06453068fe2134ca10f9bc21072a14",
+      "run_id": "20261006T104300.460220Z-beda72561d"
+    },
+    {
+      "counts": {
+        "attempted": 33,
+        "bank_items": 33,
+        "correct": 11,
+        "graded_n": 33,
+        "parse_errors_excluded": 0,
+        "transport_errors_excluded": 0,
+        "transport_ok": 33
+      },
+      "detail_code": "COMPLETE_UNSIGNED",
+      "done_reason_length": 0,
+      "done_reason_present": 33,
+      "instrument_sha256": "2676dd4cf4bb26e064017b3651eab3649fed8f8c5d024222d3b19144d43177d1",
+      "items_rows": 33,
+      "items_sha256": "3971360a14d203db6f36c0814fd5f802edf3e0937224795cd13e022678c09736",
+      "path": "slice/run1/runs/qwen2.5-0.5b-instruct/continuity/runs/20261006T104258.368239Z-fdb8f16013",
+      "raw_output_sha256_list_sha256": "51c51f64ab75a4134753689a54a63c5c3e35516e31cb1ebc9b7d837d9d0fb45f",
+      "run_id": "20261006T104258.368239Z-fdb8f16013"
+    },
+    {
+      "counts": {
+        "attempted": 32,
+        "bank_items": 32,
+        "correct": 13,
+        "graded_n": 32,
+        "parse_errors_excluded": 0,
+        "transport_errors_excluded": 0,
+        "transport_ok": 32
+      },
+      "detail_code": "COMPLETE_UNSIGNED",
+      "done_reason_length": 0,
+      "done_reason_present": 32,
+      "instrument_sha256": "55b79651f07857c194e404c0acf4e195c59ba99568e485eab61b5ea67ddf0a14",
+      "items_rows": 32,
+      "items_sha256": "3484e463ebd4ea6cfe856019291914236142a8e3a1e961ff2e66f0c9f8dce87e",
+      "path": "slice/run1/runs/qwen2.5-0.5b-instruct/cross-reality/runs/20261006T104306.581493Z-e31e13b55c",
+      "raw_output_sha256_list_sha256": "f8362f342f84a6c1efceba7a8b55768f6e5c20bc61b0a6a5b49667d27e0acea3",
+      "run_id": "20261006T104306.581493Z-e31e13b55c"
+    },
+    {
+      "counts": {
+        "attempted": 33,
+        "bank_items": 33,
+        "correct": 7,
+        "graded_n": 33,
+        "parse_errors_excluded": 0,
+        "transport_errors_excluded": 0,
+        "transport_ok": 33
+      },
+      "detail_code": "COMPLETE_UNSIGNED",
+      "done_reason_length": 0,
+      "done_reason_present": 33,
+      "instrument_sha256": "631c44aa00f56ad3d8b8d876e6c50dde6b0237d7bb5c64993cd62c3330d16c38",
+      "items_rows": 33,
+      "items_sha256": "418dbfe96574b0183f72058ccb21873840050a88b066b04a217fd1f794417035",
+      "path": "slice/run1/runs/qwen2.5-0.5b-instruct/detector-interop/runs/20261006T104308.284872Z-6cbe865798",
+      "raw_output_sha256_list_sha256": "f792be185cf6bfc4f75e5a5b6f2a9b464cf852ea0199dec3e1e2812db38ac9c7",
+      "run_id": "20261006T104308.284872Z-6cbe865798"
+    },
+    {
+      "counts": {
+        "attempted": 237,
+        "bank_items": 237,
+        "correct": 60,
+        "graded_n": 237,
+        "parse_errors_excluded": 0,
+        "transport_errors_excluded": 0,
+        "transport_ok": 237
+      },
+      "detail_code": "COMPLETE_UNSIGNED",
+      "done_reason_length": 0,
+      "done_reason_present": 237,
+      "instrument_sha256": "7418be955aec7e3250d5574da8fc68b768007e7da4c1a28bdcc1e6ef5aa87f8f",
+      "items_rows": 237,
+      "items_sha256": "2ccc9b6201097e5236199876adb4308220c94e0f8a4f9cce3e166824ff45c0cc",
+      "path": "slice/run1/runs/qwen2.5-0.5b-instruct/governance/runs/20261006T104419.821968Z-8a10312b58",
+      "raw_output_sha256_list_sha256": "5de720ddaf3c173484f590b167e014e4275c4b4814d687030cd2a66e9f598486",
+      "run_id": "20261006T104419.821968Z-8a10312b58"
+    },
+    {
+      "counts": {
+        "attempted": 71,
+        "bank_items": 71,
+        "correct": 33,
+        "graded_n": 71,
+        "parse_errors_excluded": 0,
+        "transport_errors_excluded": 0,
+        "transport_ok": 71
+      },
+      "detail_code": "COMPLETE_UNSIGNED",
+      "done_reason_length": 0,
+      "done_reason_present": 71,
+      "instrument_sha256": "f0ae854e1253dd2c189b9b7c9846cd8a41d7075fbe1bf770cd6c00c6ef0ef7f6",
+      "items_rows": 71,
+      "items_sha256": "28cb54967d8f357496ce3d7f2a04ce9da93ec1387fad3c10afe135855025e209",
+      "path": "slice/run1/runs/qwen2.5-0.5b-instruct/jail/runs/20261006T104314.953483Z-d9855c8a70",
+      "raw_output_sha256_list_sha256": "80f8df4bb9b0f12d45deefae2fc6bb666db335266f18c1dfb671b78ff2364d16",
+      "run_id": "20261006T104314.953483Z-d9855c8a70"
+    },
+    {
+      "counts": {
+        "attempted": 33,
+        "bank_items": 33,
+        "correct": 10,
+        "graded_n": 33,
+        "parse_errors_excluded": 0,
+        "transport_errors_excluded": 0,
+        "transport_ok": 33
+      },
+      "detail_code": "COMPLETE_UNSIGNED",
+      "done_reason_length": 0,
+      "done_reason_present": 33,
+      "instrument_sha256": "270fa20c0856ad3e02db0c626c65ee13f8909d3373bd2694c72db35845e89212",
+      "items_rows": 33,
+      "items_sha256": "f507016ed6d7971ea8428aade2a428859cb87f56286f5bbf1dab3007ea3bb0f8",
+      "path": "slice/run1/runs/qwen2.5-0.5b-instruct/machinery-conformity/runs/20261006T104304.334203Z-7961ec08fd",
+      "raw_output_sha256_list_sha256": "7ae2afd0f6941186dbac55a95e17508807b8f7510017926e6d38561818c288ea",
+      "run_id": "20261006T104304.334203Z-7961ec08fd"
+    },
+    {
+      "counts": {
+        "attempted": 32,
+        "bank_items": 32,
+        "correct": 16,
+        "graded_n": 32,
+        "parse_errors_excluded": 0,
+        "transport_errors_excluded": 0,
+        "transport_ok": 32
+      },
+      "detail_code": "COMPLETE_UNSIGNED",
+      "done_reason_length": 0,
+      "done_reason_present": 32,
+      "instrument_sha256": "f6dde4f108736f573576aa1e93f7e02c346899fdbcc56c6a074add9defd61dc5",
+      "items_rows": 32,
+      "items_sha256": "dcd75576696aee06a845bf4ef0fee764e36f5e21143d7b8a271bea8b7d835284",
+      "path": "slice/run1/runs/qwen2.5-0.5b-instruct/openness/runs/20261006T104302.502558Z-99fba1a474",
+      "raw_output_sha256_list_sha256": "cc3129ff03bc658a5b61a4da2cc88a3c9460ec6308e6d6ee5e407c0b17a7c70a",
+      "run_id": "20261006T104302.502558Z-99fba1a474"
+    },
+    {
+      "counts": {
+        "attempted": 32,
+        "bank_items": 32,
+        "correct": 15,
+        "graded_n": 31,
+        "parse_errors_excluded": 1,
+        "transport_errors_excluded": 0,
+        "transport_ok": 32
+      },
+      "detail_code": "COMPLETE_UNSIGNED",
+      "done_reason_length": 0,
+      "done_reason_present": 32,
+      "instrument_sha256": "5fd854ba4a804570a64035343fadba96e6eb312aea46ca264d187a86ebd77098",
+      "items_rows": 32,
+      "items_sha256": "2ca46acfeb7ae947b799871b153dfed1b358450407057ed4bc9d254370095492",
+      "path": "slice/run1/runs/qwen2.5-0.5b-instruct/provenance/runs/20261006T104256.543358Z-5efec08183",
+      "raw_output_sha256_list_sha256": "44f2b0bda7d7eb821ff9ac566f6924e371b35d55491b6860f8fcbe20df6ac114",
+      "run_id": "20261006T104256.543358Z-5efec08183"
+    },
+    {
+      "counts": {
+        "attempted": 36,
+        "bank_items": 36,
+        "correct": 10,
+        "graded_n": 20,
+        "parse_errors_excluded": 16,
+        "transport_errors_excluded": 0,
+        "transport_ok": 36
+      },
+      "detail_code": "COMPLETE_UNSIGNED",
+      "done_reason_length": 0,
+      "done_reason_present": 36,
+      "instrument_sha256": "b588f717e12411b71fb0c1a0ed08e8005583ae0aeb835fbc62d9302f0a7f364d",
+      "items_rows": 36,
+      "items_sha256": "e35ffaaa52ae6109fc8d15210135310fec6bfe6b80a1a2a108e4ef8fbc93c2ce",
+      "path": "slice/run1/runs/qwen2.5-0.5b-instruct/safety/runs/20261006T104106.397602Z-a3b799fcf5",
+      "raw_output_sha256_list_sha256": "1e45bbdb55fd4d0a1f5005179b7c23bc1b1641ce00e93de6c0541d86e381e9c1",
+      "run_id": "20261006T104106.397602Z-a3b799fcf5"
+    },
+    {
+      "counts": {
+        "attempted": 37,
+        "bank_items": 37,
+        "correct": 2,
+        "graded_n": 36,
+        "parse_errors_excluded": 1,
+        "transport_errors_excluded": 0,
+        "transport_ok": 37
+      },
+      "detail_code": "COMPLETE_UNSIGNED",
+      "done_reason_length": 1,
+      "done_reason_present": 37,
+      "instrument_sha256": "9034f650b23cb1eb69d16ed37ba1d337e9cdc12ebb43c2b8cb50fbb977e4b0dd",
+      "items_rows": 37,
+      "items_sha256": "4366dac8edead3a44a4e563c12fbdc5033cfe6ed61c023086a072cf418f0b363",
+      "path": "slice/run1/runs/qwen2.5-0.5b-instruct/swarm/runs/20261006T104318.671465Z-ee479ce79a",
+      "raw_output_sha256_list_sha256": "1dfa2963156abe7415b13757b8910aa10f7ca8db0205b28f7977c8616d8b6acc",
+      "run_id": "20261006T104318.671465Z-ee479ce79a"
+    }
+  ],
+  "runs": [
+    {
+      "job": "001-00-qwen2.5-0.5b-instruct-safety.json",
+      "rc": 0,
+      "repeat": 1,
+      "seconds": 110.2
+    },
+    {
+      "job": "002-00-qwen2.5-0.5b-instruct-provenance.json",
+      "rc": 0,
+      "repeat": 1,
+      "seconds": 1.8
+    },
+    {
+      "job": "003-00-qwen2.5-0.5b-instruct-continuity.json",
+      "rc": 0,
+      "repeat": 1,
+      "seconds": 2.1
+    },
+    {
+      "job": "004-00-qwen2.5-0.5b-instruct-conformance.json",
+      "rc": 0,
+      "repeat": 1,
+      "seconds": 2.1
+    },
+    {
+      "job": "005-00-qwen2.5-0.5b-instruct-openness.json",
+      "rc": 0,
+      "repeat": 1,
+      "seconds": 1.8
+    },
+    {
+      "job": "006-00-qwen2.5-0.5b-instruct-machinery-conformity.json",
+      "rc": 0,
+      "repeat": 1,
+      "seconds": 2.3
+    },
+    {
+      "job": "007-00-qwen2.5-0.5b-instruct-cross-reality.json",
+      "rc": 0,
+      "repeat": 1,
+      "seconds": 1.7
+    },
+    {
+      "job": "008-00-qwen2.5-0.5b-instruct-detector-interop.json",
+      "rc": 0,
+      "repeat": 1,
+      "seconds": 2.1
+    },
+    {
+      "job": "009-00-qwen2.5-0.5b-instruct-art5-safeguard.json",
+      "rc": 0,
+      "repeat": 1,
+      "seconds": 1.9
+    },
+    {
+      "job": "010-00-qwen2.5-0.5b-instruct-affect.json",
+      "rc": 0,
+      "repeat": 1,
+      "seconds": 2.6
+    },
+    {
+      "job": "011-00-qwen2.5-0.5b-instruct-jail.json",
+      "rc": 0,
+      "repeat": 1,
+      "seconds": 3.7
+    },
+    {
+      "job": "012-00-qwen2.5-0.5b-instruct-swarm.json",
+      "rc": 0,
+      "repeat": 1,
+      "seconds": 49.9
+    },
+    {
+      "job": "013-00-qwen2.5-0.5b-instruct-care.json",
+      "rc": 0,
+      "repeat": 1,
+      "seconds": 11.2
+    },
+    {
+      "job": "014-00-qwen2.5-0.5b-instruct-governance.json",
+      "rc": 0,
+      "repeat": 1,
+      "seconds": 14.4
+    }
+  ],
+  "schema": "csoai.mill-kaggle-environment/0.2",
+  "slice_id": "20261006T10-qwen2.5-0.5b-instruct",
+  "started_at": "2026-10-06T10:40:25Z",
+  "state": "COMPLETE",
+  "substrate": "Kaggle kernel nicktempleman/csoai-mill-kaggle-daily (private, 2x Tesla T4), triggered from oracle-micro-2",
+  "wall_seconds": 248.1
+}
