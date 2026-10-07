@@ -190,6 +190,8 @@ done
 
 if [ "$pushed_any" -eq 0 ]; then
   echo "pre-push: no refs on stdin — refusing (nothing to verify is not a pass)"
+  echo "  hint: if this push was piped (git push ... | tail), run it UNPIPED — the pipe"
+  echo "        replaces the ref list git writes to the hook's stdin, so the gate sees EOF."
   exit 1
 fi
 
