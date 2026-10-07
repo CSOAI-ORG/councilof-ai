@@ -153,3 +153,19 @@ python3 packages/evidence-fabric/safe_pack_verify.py --offline --pack docs/stand
 The external verifier reads the retained pack without replacing its stamped `verify.py` or other frozen bytes. The retained stamped `verify.py` can still print `VERIFIED`/exit 0 when signature material is absent. That historical byte/readback result establishes neither issuer authentication nor admission; use this external consumer for the corrected verdict contract. It checks sums, schema controls, derived events/renders and the freeze signature. A confirmed failed check returns `INVALID` (exit 1); unavailable files or dependencies return `UNCHECKABLE` (exit 2). When all checks hold under the supplied DID key, it returns `SELF_CONSISTENT_UNAUTHENTICATED_KEY` (exit 2), with `signature_valid: true` and `issuer_authenticated: null`. This consumer provides no independently authenticated issuer input and emits no `VERIFIED`/exit 0 result.
 
 This source command requires the reviewed signature-consumer predecessor; it does not imply a published package release. PyPI 0.1.0 lacks `verify-safe-freeze`; the retained 0.1.1 candidate is not published. No production signing, OTS anchoring or admission is established by this readback. Future generated packs copy the same helper into `lib/` before freezing; historical packs remain immutable.
+
+### Selected-pack code boundary (7 October 2026)
+
+Use the reviewed repository reader with `--offline --pack PATH`. It treats the selected pack as data and never executes its `validate.py` or imports its `lib/`. Record validation accepts only the reviewed 0.1-draft schema bytes and runs reader-side schema, cross-record and negative controls. Derivation uses only hash-qualified implementations beside the external reader. An unsupported schema or unavailable qualified implementation is `UNCHECKABLE` (exit 2). A supplied-DID signature does not authorize execution of pack code.
+
+Python's `-I` isolates interpreter imports; it is not an operating-system sandbox. The immutable historical verifier still contains its old executable-pack behavior. Do not run a verifier supplied by an unknown pack; invoke this external repository source instead. This source change does not authenticate an issuer or establish admission.
+
+All selected-pack reads are confined to regular files inside its root. Absolute or parent paths, duplicate manifest entries, symlinks and special files are rejected before reading. Each file is read once through no-follow directory-relative opens; later checks consume the same approved bytes. The derivation worker receives those bytes through standard input and never opens selected-pack files or imports selected-pack libraries. Missing listed files remain `UNCHECKABLE`; an observed digest mismatch remains `INVALID`.
+
+Run the external reader in an already trusted Python environment, for example:
+
+```sh
+python3 -I -B packages/evidence-fabric/safe_pack_verify.py --offline --pack /path/to/pack
+```
+
+The interpreter and installed dependencies belong to that trusted environment. The selected pack supplies data only; its signature does not establish trust in code or authorize execution.
