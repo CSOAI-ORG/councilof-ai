@@ -446,3 +446,27 @@ Resolves CONTRAD-001 truthfully: index.json stays a frozen discovery snapshot (l
   measured slot 23 with altered-preimage control), catapult-shape, arc-circle mapping.
 - No published signed bytes edited. No signing outside GHA OIDC. Tests ran on macOS
   Python 3.14 (8/8 rate controls; fails-before 30 / passes-after n_denominator).
+
+## 2026-10-07 · M4 lane — directory wave + guard-secret alignment (append)
+
+**1. THIRD_PARTY_GUARD_IDS is empty in repo secrets — the privacy guard cannot speak.**
+`scripts/privacy/test_third_party_identifiers.py` fails closed on EVERY PR since #2822
+("UNMEASURED" by its own words). Six lanes merged today with that check red (#2854 #2856
+#2859 #2860 #2861 #2862) — non-required, environmental, none silently (each merge that
+follows this notice should carry the same one-line honest note). Privacy lane: the
+guarded list is yours; the owner-ask names the exact settings path.
+
+**2. Directory wave (M4) — CSOAI GSPC connector status.** Live endpoint
+`councilof.ai/mcp` serves 19 tools (14 free + 5 paid x402), `csoai-gspc-mcp v1.4.4`.
+CONFIRMED_LISTED: Claude directory (stale text: claims 12 tools — update door at
+claude.ai/directory/manage), mcp.so (`/servers/csoai-gspc-measurement`), Glama connector
+(`ai.councilof/mcp`), PayAPI Market. SUBMITTED: punkpeye/awesome-remote-mcp-servers#1313.
+STAGED: official MCP Registry (`server.json` validated; PyPI 0.2.20261007.1 now carries
+`mcp-name: io.github.CSOAI-ORG/csoai-gspc` — package source bumped in this commit).
+GATED (owner): Smithery namespace scope, OpenAI identity verification, ChatGPT/Codex
+plugin upload (`/tmp/csoai-council-of-ai-plugin.zip` built). Full rows:
+public/interop/owner-asks-2026-10-07.md.
+
+**3. PyPI source-of-truth sync:** csoai-gspc 0.2.20261007.1 uploaded to PyPI directly
+(twine, ~/.pypirc) before this commit lands the matching README + pyproject — repo and
+registry must never disagree on the ownership line.
