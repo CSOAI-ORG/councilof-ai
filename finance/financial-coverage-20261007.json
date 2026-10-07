@@ -1,0 +1,131 @@
+{
+  "schema": "csoai.financial-coverage-state/1.0",
+  "generated_at": "2026-10-07T12:00:00Z",
+  "branch": "finance/full-spread-20260911",
+  "report_ref": "finance/TUI2-REPORT.md",
+  "stablecoin_universe": {
+    "indexed_count": 425,
+    "deep_measured_count": 6,
+    "chain_count": 211,
+    "deployment_count": 1640,
+    "circulating_usd_sum_indexed": 310786569942.87,
+    "circulating_usd_note": "Sum of upstream circulating.peggedUSD fields when present; an index observation, not deep on-chain measurement.",
+    "deep_measurement_queue_top20": [
+      "USDT", "USDC", "USDS", "DAI", "USDe", "USD1", "USDG", "PYUSD", "BUIDL", "USYC",
+      "RLUSD", "USDY", "USDD", "USDGO", "U", "USDf", "GHO", "USD0", "USDTB", "YLDS"
+    ],
+    "source": "https://stablecoins.llama.fi/stablecoins?includePrices=true"
+  },
+  "deep_measurements": [
+    {
+      "asset": "USDC",
+      "chain": "ethereum",
+      "reader": "evm-erc20-reader.mjs@1.0.0",
+      "contract": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "supply_normalized": "50,638,314,395.92",
+      "queried_at": "2026-09-11T13:00:56Z",
+      "state": "MEASURED_EVM"
+    },
+    {
+      "asset": "USDT",
+      "chain": "ethereum",
+      "reader": "evm-erc20-reader.mjs@1.0.0",
+      "contract": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "supply_normalized": "88,306,028,997.33",
+      "queried_at": "2026-09-11T13:00:56Z",
+      "state": "MEASURED_EVM"
+    },
+    {
+      "asset": "DAI",
+      "chain": "ethereum",
+      "reader": "evm-erc20-reader.mjs@1.0.0",
+      "contract": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+      "supply_normalized": "4,595,327,079.70",
+      "queried_at": "2026-09-11T13:00:57Z",
+      "state": "MEASURED_EVM"
+    },
+    {
+      "asset": "RLUSD",
+      "chain": "xrpl",
+      "reader": "xrpl-trustline-reader.mjs@1.0.0",
+      "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+      "supply_normalized": "60,496,192.87",
+      "trust_lines": 9198,
+      "queried_at": "2026-09-11T12:45:32Z",
+      "state": "MEASURED_XRPL"
+    },
+    {
+      "asset": "USDC",
+      "chain": "stellar",
+      "reader": "stellar-asset-reader.mjs@1.0.0",
+      "issuer": "GA24LJXFG73JGARIBG2GP6V5TNUUOS6BD23KOFCW3INLDY5KPKS7GACZ",
+      "supply_authorized": "421,769,351,032.54",
+      "num_accounts": 28,
+      "queried_at": "2026-09-11T13:04:20Z",
+      "state": "MEASURED_STELLAR"
+    },
+    {
+      "asset": "GateHub",
+      "chain": "xrpl",
+      "reader": "attestation-probe",
+      "state": "UNCHECKABLE",
+      "note": "SPA shell; no server-rendered attestation text in retrieved HTML"
+    }
+  ],
+  "coverage_register": {
+    "as_of": "2026-08-26",
+    "chains": {
+      "xrpl": {
+        "instruments_in_coverage_index": 16,
+        "measured_control_facts": 6,
+        "declared_not_located": 10
+      },
+      "evm_eas": {
+        "instruments_in_coverage_index": 2,
+        "contracts_with_measured_facts": 3
+      }
+    },
+    "total_indexed": 18,
+    "total_measured": 6
+  },
+  "attestation_pack": {
+    "pack": "stablecoin-attestation-2026-09",
+    "total_cards": 9,
+    "probed": 7,
+    "uncheckedable": 2,
+    "signed": 0,
+    "genius_ref": "P.L. 119-27 §4(a)(3)",
+    "mica_ref": "Regulation (EU) 2023/1114 Art 54"
+  },
+  "blockers": {
+    "deep_measurement_incomplete": {
+      "severity": "HIGH",
+      "measured": 6,
+      "total_indexed": 425,
+      "gap": 419
+    },
+    "zenodo_doi_blocked": {
+      "severity": "HIGH",
+      "blocked_since": "2026-09-29",
+      "doi": "10.5281/zenodo.21991104"
+    },
+    "base_eas_anchoring": {
+      "severity": "MEDIUM",
+      "status": "NOT_YET"
+    },
+    "xrpl_memo_anchoring": {
+      "severity": "MEDIUM",
+      "status": "NOT_YET"
+    },
+    "ots_bitcoin_confirmation": {
+      "severity": "LOW",
+      "status": "STAMPED_PENDING_BITCOIN"
+    }
+  },
+  "integrity_invariants": [
+    "Never claim 425 deep measurements — only 6 deep-measured",
+    "Never convert INDEXED into MEASURED",
+    "Never describe OTS as Bitcoin-confirmed — it is STAMPED_PENDING_BITCOIN",
+    "Never count internal purchases as customer revenue"
+  ]
+}
