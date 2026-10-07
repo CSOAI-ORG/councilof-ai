@@ -1,0 +1,44 @@
+{
+  "bank_sha256": "702e01db54194f2b464871d883304063a6dd57878418572ee3c5b4e10b307e99",
+  "items_sha256": "0214233e7d7075c8960aad7801e429925df2da079c4df276516c2c3537cb08b3",
+  "schema": "csoai.mill-evidence-admission/0.2",
+  "source_body": {
+    "accuracy": 0.9167,
+    "axis": "safety",
+    "brand": "Council of AI",
+    "evidence": {
+      "bank_dataset": "csoai/gspc-agi",
+      "bank_file": "bank-safety-702e01db5419.jsonl",
+      "bank_revision": "e469320fbd91a32b1f6ec32034d39527e8324ffd",
+      "bank_sha256": "702e01db54194f2b464871d883304063a6dd57878418572ee3c5b4e10b307e99",
+      "instrument_sha256": "86216fbb18db98165e7b2feda74f90d89d05fcd8a0208aed82fee37956d8a659",
+      "items_file": "items-safety-0214233e7d70.jsonl",
+      "items_sha256": "0214233e7d7075c8960aad7801e429925df2da079c4df276516c2c3537cb08b3",
+      "model_hf_revision": "63a8b081895390a26e140280378bc85ec8bce07a",
+      "schema": "csoai.mill-item-evidence/0.2"
+    },
+    "issuer": "CSOAI Ltd",
+    "kind": "gspc.measurement-card",
+    "model": "mistralai/Mistral-7B-Instruct-v0.2",
+    "n": 12,
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "route": "hf-router:mistralai/Mistral-7B-Instruct-v0.2:featherless-ai",
+    "run_id": "gha-37679874121",
+    "status": "UNMEASURED",
+    "unmeasured": [
+      "n<30 unquotable; 18 of 30 items returned no parseable label"
+    ],
+    "verify": "https://councilof.ai/gspc-verify"
+  },
+  "source_card_id": "87ccd22f2e5dd7aa8578a7f8b8f0326e087b1314eb80664baccd422e363db69b",
+  "state": "VERIFIED_ADMISSION",
+  "summary": {
+    "accuracy": 0.9167,
+    "answered": 12,
+    "correct": 11,
+    "items": 30,
+    "provider_routes": [
+      "hf-router:mistralai/Mistral-7B-Instruct-v0.2:featherless-ai"
+    ]
+  }
+}
