@@ -93,7 +93,12 @@ def rd(relative):
         qualified = os.stat(parts[-1], dir_fd=directory, follow_symlinks=False)
         if not stat.S_ISREG(qualified.st_mode):
             raise InvalidPack(f"unsafe pack member: {relative} is not a regular file")
-        descriptor = os.open(parts[-1], os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=directory)
+        try:
+            descriptor = os.open(parts[-1], os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=directory)
+        except OSError as exc:
+            if exc.errno in (errno.ELOOP, errno.ENOTDIR):
+                raise InvalidPack(f"unsafe pack member changed type: {relative}") from exc
+            raise
         actual = os.fstat(descriptor)
         if not stat.S_ISREG(actual.st_mode):
             raise InvalidPack(f"unsafe pack member: {relative} changed type")

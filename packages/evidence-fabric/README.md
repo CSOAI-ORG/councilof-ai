@@ -144,6 +144,8 @@ validates against the official module and record schemas served by schema.oasf.o
 
 ### Offline SAFE pack readback (7 October 2026)
 
+For publication, contribution and artifact-date qualifications beside the historical RFC draft, see [SAFE re-verification current status — 7 October 2026](../../docs/standards/OSAIA-RFC-SAFE-evidence-reverification-profile-CURRENT-2026-10-07.md).
+
 Use the repository source together with the reviewed `safe_freeze_v2.py` consumer beside it:
 
 ```sh

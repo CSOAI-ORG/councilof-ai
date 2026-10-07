@@ -403,6 +403,50 @@ class PackPathBoundary(unittest.TestCase):
                 verifier.os.close(descriptor)
         self.assertTrue(ancestor_swapped, "controlled ancestor swap did not run")
 
+    def test_leaf_open_symlink_swap_is_invalid_not_unavailable(self):
+        import errno
+        member = self.pack / "member"
+        real_open = verifier.os.open
+        # The first scenario performs a real, owned regular-file -> symlink swap.
+        # The remaining cases exercise the narrow syscall-error classification.
+        for scenario, expected_status, expected_holds in (
+                ("symlink", 1, False), ("not-directory", 1, False),
+                ("missing", 2, None), ("permission", 2, None)):
+            if member.exists() or member.is_symlink():
+                member.unlink()
+            member.write_bytes(b"owned harmless fixture")
+            self.manifest([("member", b"owned harmless fixture")])
+            triggered = False
+            def leaf_open(path, flags, *args, **kwargs):
+                nonlocal triggered
+                if path == "member" and kwargs.get("dir_fd") is not None:
+                    triggered = True
+                    if scenario == "symlink":
+                        member.unlink()
+                        member.symlink_to(self.target)
+                    else:
+                        code = {"not-directory": errno.ENOTDIR, "missing": errno.ENOENT,
+                                "permission": errno.EACCES}[scenario]
+                        raise OSError(code, "owned controlled leaf-open condition")
+                return real_open(path, flags, *args, **kwargs)
+            output = io.StringIO()
+            with mock.patch.object(verifier.os, "open", side_effect=leaf_open), \
+                 mock.patch.object(verifier, "check_validate", return_value=(True, "schema control holds")), \
+                 mock.patch.object(verifier, "check_derived", return_value=(True, "derived control holds")), \
+                 mock.patch.object(verifier, "check_signature", return_value=(None, "NOT_PRESENT")), \
+                 redirect_stdout(output):
+                status = verifier.main(["--offline", "--pack", str(self.pack)])
+            summary = json.loads(output.getvalue().splitlines()[-1])
+            print(json.dumps({"leaf_open_scenario": scenario, "triggered": triggered,
+                              "status": status, "summary": summary}))
+            self.assertTrue(triggered, scenario)
+            self.assertEqual(status, expected_status, scenario)
+            self.assertIs(summary["checks"]["sums"]["holds"], expected_holds, scenario)
+            self.assertEqual(summary["state"], "INVALID" if expected_status == 1 else "UNCHECKABLE", scenario)
+            self.assertIsNone(summary["issuer_authenticated"])
+            if expected_holds is False:
+                self.assertIn("unsafe pack member", summary["checks"]["sums"]["reason"])
+
     def test_checksum_approved_bytes_are_bound_for_later_checks(self):
         (self.pack / "member").write_bytes(b"approved bytes")
         self.manifest([("member", b"approved bytes")])
