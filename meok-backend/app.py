@@ -27,6 +27,7 @@ Endpoints (full spec — test_app.py is the source of truth):
   POST /api/sov3/invoke                 — Invoke a SOV3 tool
   POST /api/auth/signup                 — Create user
   POST /api/auth/login                  — Login user
+  GET  /api/auth/me                     — Current user (Bearer token from signup/login)
   GET  /api/news                        — 6 news items
 
 Run:
@@ -258,10 +259,10 @@ def _read_chain(n: int = 10) -> List[Dict]:
 
 
 def _last_sigil_short() -> str:
-    """Return a short, human-readable SIGIL hash for /api/backend/status."""
+    """Return a short SIGIL hash for /api/backend/status, or "no chain yet" when empty."""
     last = _last_hash()
     if last == "0" * 32:
-        return "b0935f6"  # fallback static
+        return "no chain yet"
     return last[:7]
 
 
@@ -1022,8 +1023,72 @@ def sov3_invoke(body: Sov3InvokeRequest):
 # ---------------------------------------------------------------------------
 
 
-def _hash_pw(pw: str, salt: str = "meok-2026") -> str:
-    return hmac.new(salt.encode(), pw.encode(), hashlib.sha256).hexdigest()
+# Passwords: scrypt (n=2**14, r=8, p=1) with a random 16-byte salt per user, stored as
+# "scrypt$<n>$<r>$<p>$<salt_hex>$<hash_hex>". Rows from earlier revisions hold a single
+# HMAC-SHA256 round under one fixed salt that is in source, so those hashes are cheap to
+# brute-force from users.db. They are accepted once at login and rewritten as scrypt;
+# nothing new is ever written in the legacy format.
+_SCRYPT_N, _SCRYPT_R, _SCRYPT_P = 2 ** 14, 8, 1
+_LEGACY_PW_SALT = "meok-2026"  # public; only recognises and upgrades old rows
+
+
+def _hash_pw(pw: str) -> str:
+    salt = os.urandom(16)
+    dk = hashlib.scrypt(pw.encode(), salt=salt, n=_SCRYPT_N, r=_SCRYPT_R, p=_SCRYPT_P, dklen=32)
+    return f"scrypt${_SCRYPT_N}${_SCRYPT_R}${_SCRYPT_P}${salt.hex()}${dk.hex()}"
+
+
+def _legacy_hash_pw(pw: str) -> str:
+    return hmac.new(_LEGACY_PW_SALT.encode(), pw.encode(), hashlib.sha256).hexdigest()
+
+
+def _is_legacy_pw_hash(stored: str) -> bool:
+    return not stored.startswith("scrypt$")
+
+
+def _check_pw(pw: str, stored: str) -> bool:
+    """True if pw matches the stored hash (scrypt, or the legacy format awaiting upgrade)."""
+    if not _is_legacy_pw_hash(stored):
+        try:
+            _, n, r, p, salt_hex, hash_hex = stored.split("$")
+            dk = hashlib.scrypt(pw.encode(), salt=bytes.fromhex(salt_hex), n=int(n), r=int(r),
+                                p=int(p), dklen=len(hash_hex) // 2)
+        except (ValueError, TypeError):
+            return False
+        return hmac.compare_digest(dk.hex().encode(), hash_hex.encode())
+    return hmac.compare_digest(_legacy_hash_pw(pw).encode(), stored.encode())
+
+
+# Tokens: "v1.<user_id>.<expiry>.<mac>", mac = HMAC-SHA256 under the SIGIL key over
+# "meok-token|v1|<user_id>|<expiry>". _verify_token() checks them and GET /api/auth/me
+# is the endpoint that does so. Earlier revisions returned a 32-hex value that nothing
+# could check. No other endpoint requires a token yet.
+_TOKEN_TTL = int(os.environ.get("MEOK_TOKEN_TTL", str(7 * 24 * 3600)))
+
+
+def _token_mac(user_id: str, exp: int) -> str:
+    msg = f"meok-token|v1|{user_id}|{exp}".encode()
+    return hmac.new(_load_key(), msg, hashlib.sha256).hexdigest()
+
+
+def _issue_token(user_id: str) -> str:
+    exp = int(time.time()) + _TOKEN_TTL
+    return f"v1.{user_id}.{exp}.{_token_mac(user_id, exp)}"
+
+
+def _verify_token(token) -> Optional[str]:
+    """Return the user_id if token is unexpired and was minted under the current key, else None."""
+    if not isinstance(token, str) or not token.startswith("v1."):
+        return None
+    try:
+        user_id, exp_s, mac = token[3:].rsplit(".", 2)
+    except ValueError:
+        return None
+    if not user_id or not exp_s.isdigit() or int(exp_s) < time.time():
+        return None
+    if not hmac.compare_digest(_token_mac(user_id, int(exp_s)).encode(), mac.encode()):
+        return None
+    return user_id
 
 
 @app.post("/api/auth/signup")
@@ -1049,7 +1114,7 @@ def auth_signup(body: AuthSignup):
         )
         c.commit()
     _sigil_append("U", user_id=user_id, email=email)
-    return {"user_id": user_id, "email": email, "token": sigil({"u": user_id, "ts": time.time()})[:32]}
+    return {"user_id": user_id, "email": email, "token": _issue_token(user_id)}
 
 
 # Email shape validator (test expects 400 on "noatsign")
@@ -1059,14 +1124,35 @@ _EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 @app.post("/api/auth/login")
 def auth_login(body: AuthLogin):
     email = str(body.email).lower()
-    pw_hash = _hash_pw(body.password)
     with _db(_USERS_DB) as c:
-        row = c.execute("SELECT user_id, email FROM users WHERE email = ? AND password_hash = ?",
-                         (email, pw_hash)).fetchone()
+        row = c.execute("SELECT user_id, email, password_hash FROM users WHERE email = ?",
+                        (email,)).fetchone()
     if not row:
+        _hash_pw(body.password)  # same work as a real check, so timing does not show the miss
         raise HTTPException(401, "invalid credentials")
-    return {"user_id": row["user_id"], "email": row["email"],
-            "token": sigil({"u": row["user_id"], "ts": time.time()})[:32]}
+    if not _check_pw(body.password, row["password_hash"]):
+        raise HTTPException(401, "invalid credentials")
+    if _is_legacy_pw_hash(row["password_hash"]):
+        with _db(_USERS_DB) as c:
+            c.execute("UPDATE users SET password_hash = ? WHERE user_id = ?",
+                      (_hash_pw(body.password), row["user_id"]))
+            c.commit()
+    return {"user_id": row["user_id"], "email": row["email"], "token": _issue_token(row["user_id"])}
+
+
+@app.get("/api/auth/me")
+def auth_me(request: Request):
+    auth = request.headers.get("authorization", "")
+    token = auth[7:].strip() if auth.lower().startswith("bearer ") else ""
+    user_id = _verify_token(token)
+    if not user_id:
+        raise HTTPException(401, "invalid or expired token")
+    with _db(_USERS_DB) as c:
+        row = c.execute("SELECT user_id, email, name FROM users WHERE user_id = ?",
+                        (user_id,)).fetchone()
+    if not row:
+        raise HTTPException(401, "invalid or expired token")
+    return {"user_id": row["user_id"], "email": row["email"], "name": row["name"]}
 
 
 # ---------------------------------------------------------------------------
