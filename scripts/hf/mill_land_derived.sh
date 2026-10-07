@@ -17,36 +17,14 @@
 # commits the result as the bot, and pushes without force. The hub-cards index version and its
 # OTS proof are written by the signer's own step (hf-fin-shells-measure.yml, #2865).
 #
-# One stamped derived view follows the cards too: public/interop/mill-receipt-readiness.json (the
-# 36 STAGED_UNSIGNED wrappers resolved to their terminal replacements; guard:mill-receipt-readiness
-# --check). It carries an .ots, so its bytes are never edited: when a signed card extends one of
-# those chains, the stamped pair moves intact to mill-receipt-readiness.pre-<branch>.json(.ots), the
-# producer writes the current view at the served path, a fresh create-only proof stamps it (pending
-# until the hourly upgrade), and the OTS manifest and llms files that quote it are re-derived - the
-# re-stamp pattern of #2816. The replay of #2846 extended one chain (Llama-3.2-1B-Instruct, safety).
-# Called by mill-jobs-land.yml and hub-queue-land.yml; pr-gates is dispatched after it.
+# One stamped derived view follows the cards too, public/interop/mill-receipt-readiness.json (the
+# 36 STAGED_UNSIGNED wrappers resolved to their terminal replacements). Its bytes carry an .ots and
+# are never edited here: lane/mill-receipt-versioned-20261007 versions it in the signer's step, the
+# same way #2865 versions the hub-cards index. A replay of #2846 extended one of those chains
+# (Llama-3.2-1B-Instruct, safety), so a mill PR needs that lane as well as this one.
 set -euo pipefail
 # The body is one function, called on the last line with `; exit`: the checkout below can rewrite
 # this very file, and bash reads a script as it runs, so nothing may be read from it after that.
-restamp_readiness() {
-  local f=public/interop/mill-receipt-readiness.json
-  if node scripts/build-mill-receipt-readiness.mjs --check >/dev/null 2>&1; then
-    return 0
-  fi
-  local pre="public/interop/mill-receipt-readiness.pre-${BR##*/}.json"
-  [ -e "$pre" ] && { echo "refusing: $pre exists" >&2; return 3; }
-  python3 -c "import opentimestamps" 2>/dev/null || python3 -m pip install -q opentimestamps-client
-  git mv "$f" "$pre"
-  git mv "$f.ots" "$pre.ots"
-  node scripts/build-mill-receipt-readiness.mjs
-  python3 scripts/surface/stamp_hub_cards_index.py "$f"
-  python3 scripts/ots_manifest_rebuild.py --apply
-  node scripts/llms-txt.mjs
-  node scripts/build-mill-receipt-readiness.mjs --check
-  git add -A public/interop/mill-receipt-readiness* public/interop/ots/manifest.json public/llms.txt public/llms-full.txt
-  echo "re-stamped mill-receipt-readiness.json; the previous stamped pair is kept as ${pre##*/}(.ots)"
-}
-
 main() {
 BR="${1:?usage: mill_land_derived.sh <branch> [report.md]}"
 REPORT="${2:-}"
@@ -75,14 +53,13 @@ for attempt in 1 2 3; do
   python3 scripts/crosswalk/emit_intoto.py
   git add public/interop/models-measured.json client/src/data/evidence-notes.json
   git add -A public/interop/crosswalk/intoto
-  restamp_readiness
   if git diff --cached --quiet; then
     echo "derived views already current on $BR"
     return 0
   fi
   git -c user.name="csoai-mill-land-derived" -c user.email="board@csoai.org" commit -q \
     -m "mill: rebuild the derived views for the cards signed on this branch" \
-    -m "Derived views only: models-measured.json, evidence-note citations, in-toto statements, and (when a staged chain moved) mill-receipt-readiness.json re-stamped with its previous stamped pair kept. No card, signature or ledger row is written here."
+    -m "Derived views only: models-measured.json, evidence-note citations, in-toto statements. No card, signature, ledger row or stamped file is written here."
   if git push --quiet origin "HEAD:$BR"; then
     echo "pushed derived views to $BR"
     return 0
