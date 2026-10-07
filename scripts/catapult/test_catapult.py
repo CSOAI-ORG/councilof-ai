@@ -82,7 +82,7 @@ def test_gate_blocks_draft_status():
         result = _result_json(stdout)
         assert code == 0, "gate-blocked must exit 0 (a no-op with the reason recorded)"
         assert result["state"] == "GATE_BLOCKED", result
-        assert any(reason.startswith("status_not_published") for reason in result["blocked_by"]), result
+        assert any(reason.startswith("status_not_fanout_eligible") for reason in result["blocked_by"]), result
         assert not os.path.exists(out_dir), "GATE_BLOCKED must write NO target and no out dir"
 
 
@@ -225,6 +225,92 @@ def test_manifest_main_names_unpublished_difference():
         assert set(man["readback_required"]) == set(targets_module.ALL_SURFACE_NAMES)
 
 
+def _signed_companion(status="MEASURED", signer="did:web:csoai.org#board-attestation-1", tamper=False, payload_extra=None):
+    """Build a real-shaped signed-companion envelope (effect-binding style)."""
+    payload = {
+        "schema": "csoai.effect-binding-server-run/0.1",
+        "axis": "effect-binding",
+        "board_slot": "23",
+        "kind": "deterministic-facts",
+        "status": status,
+        "n": "261",
+        "n_unit": "tool-call servers probed",
+        "as_of": "2026-09-22T05:43:05Z",
+    }
+    if payload_extra:
+        payload.update(payload_extra)
+    # JS rule: JSON.stringify of key-sorted object
+    canon = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
+    sha = hashlib.sha256(canon).hexdigest()
+    if tamper:
+        payload["n"] = "999999"  # mutate AFTER hashing — tamper signal
+    return {
+        "schema": "csoai.signed-companion/0.1",
+        "payload": payload,
+        "signature": {
+            "did": signer,
+            "alg": "Ed25519",
+            "sig_ed25519": "0363028ac72de6fcba6632332c6f0785f12e698cfee605b464",
+            "payload_sha256": sha,
+            "canonical": "JSON.stringify of key-sorted object, UTF-8",
+            "signer_auth": "pod-token",
+            "signed_at": "2026-09-22T08:06:53.196Z",
+        },
+    }
+
+
+def test_signed_companion_measured_passes():
+    """The REAL estate envelope shape with payload.status='MEASURED' must
+    catapult (the vocabulary fix: MEASURED is fan-out-eligible). This is the
+    shape of effect-binding-server-probe-2026-09-22.signed.json."""
+    with tempfile.TemporaryDirectory() as tmp:
+        evidence_path = _write_evidence(tmp, _signed_companion())
+        out_dir = os.path.join(tmp, "out")
+        code, stdout = _run_main(catapult.main, [evidence_path, "--out", out_dir])
+        result = _result_json(stdout)
+        assert code == 0, "a passing catapult must exit 0"
+        assert result["state"] == "CATAPULTED", result
+        assert result.get("targets_published", 0) == 17, result
+
+
+def test_signed_companion_tampered_payload_blocks():
+    """payload mutated after hashing must block: payload_sha256_mismatch."""
+    with tempfile.TemporaryDirectory() as tmp:
+        evidence_path = _write_evidence(tmp, _signed_companion(tamper=True))
+        out_dir = os.path.join(tmp, "out")
+        code, stdout = _run_main(catapult.main, [evidence_path, "--out", out_dir])
+        result = _result_json(stdout)
+        assert code == 0, "gate-blocked must exit 0"
+        assert result["state"] == "GATE_BLOCKED", result
+        assert "payload_sha256_mismatch" in result["blocked_by"], result
+        assert not os.path.exists(out_dir), "GATE_BLOCKED must write NOTHING"
+
+
+def test_signed_companion_unmeasured_blocks():
+    """payload.status='UNMEASURED' is NOT fan-out-eligible (vocabulary)."""
+    with tempfile.TemporaryDirectory() as tmp:
+        evidence_path = _write_evidence(tmp, _signed_companion(status="UNMEASURED"))
+        out_dir = os.path.join(tmp, "out")
+        code, stdout = _run_main(catapult.main, [evidence_path, "--out", out_dir])
+        result = _result_json(stdout)
+        assert code == 0
+        assert result["state"] == "GATE_BLOCKED", result
+        assert any(r.startswith("status_not_fanout_eligible") for r in result["blocked_by"]), result
+
+
+def test_signed_companion_harvest_signer_blocks():
+    """The harvest key inside signature.did must be rejected."""
+    with tempfile.TemporaryDirectory() as tmp:
+        evidence_path = _write_evidence(
+            tmp, _signed_companion(signer="did:web:csoai.org#harvest-stage-1"))
+        out_dir = os.path.join(tmp, "out")
+        code, stdout = _run_main(catapult.main, [evidence_path, "--out", out_dir])
+        result = _result_json(stdout)
+        assert code == 0
+        assert result["state"] == "GATE_BLOCKED", result
+        assert "harvest_key_rejected" in result["blocked_by"], result
+
+
 ALL_TESTS = [
     test_gate_blocks_draft_status,
     test_gate_blocks_tampered_sha256,
@@ -233,6 +319,10 @@ ALL_TESTS = [
     test_passing_case_renders_17_targets_and_manifest,
     test_targets_main_renders_17_of_17,
     test_manifest_main_names_unpublished_difference,
+    test_signed_companion_measured_passes,
+    test_signed_companion_tampered_payload_blocks,
+    test_signed_companion_unmeasured_blocks,
+    test_signed_companion_harvest_signer_blocks,
 ]
 
 
