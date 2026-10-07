@@ -1,8 +1,14 @@
 import type { RefObject } from "react";
+import { Link } from "wouter";
+import { verificationNavigationReply } from "@/lib/askNavigation";
 import { MEASURE_CHAT, TYPE, TONE } from "./glass";
 import { STATE_LABEL, type LobbyChat } from "./useLobbyChat";
 import { AnswerText } from "./answerText";
 import { TalkRunView } from "../talk/TalkPanel";
+
+const VERIFY_GUIDE_PARTS = verificationNavigationReply.split(
+  "[open Verify](/dashboard?tab=verify)",
+);
 
 const STATE_TONE: Record<string, string> = {
   model_response: TONE.running,
@@ -65,7 +71,24 @@ export default function LobbyThread({
             {/* The user's own words are shown verbatim — never re-interpreted.
                 The Council answers in Markdown, so its turn is rendered (see
                 answerText.tsx: React nodes, whitelist, never innerHTML). */}
-            {t.role === "user" ? t.text : <AnswerText text={t.text} />}
+            {t.role === "user" ? t.text : (
+              t.role === "council" &&
+              t.state === "deterministic" &&
+              t.signature === "local page guidance" &&
+              t.text === verificationNavigationReply &&
+              VERIFY_GUIDE_PARTS.length === 2
+            ) ? (
+              <>
+                {VERIFY_GUIDE_PARTS[0]}
+                <Link
+                  href="/dashboard?tab=verify"
+                  className="rounded-sm font-semibold underline underline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                >
+                  open Verify
+                </Link>
+                {VERIFY_GUIDE_PARTS[1]}
+              </>
+            ) : <AnswerText text={t.text} />}
           </div>}
           {t.role === "council" && (t.state || t.signature) && (
             <div className="mt-1.5 flex flex-wrap items-center gap-2">
