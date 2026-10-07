@@ -1,0 +1,68 @@
+{
+  "profile": "csoai.hitl-authority-effect/0.1",
+  "record_id": "hitl:example:20261007:001",
+  "issued_at": "2026-10-07T14:20:00Z",
+  "request": {
+    "request_id": "req:example:001",
+    "subject_ref": "subject:example",
+    "tenant_ref": "tenant:example",
+    "action": "apply_bounded_remediation",
+    "resource_ref": "repo:example@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "proposal_digest": {"alg":"sha256","value":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
+    "intent_ref": "intent:example:001"
+  },
+  "authority": {
+    "decision_id": "decision:example:001",
+    "decision": "APPROVE",
+    "decided_at": "2026-10-07T14:18:00Z",
+    "principal_ref": "did:web:example.org#owner",
+    "authority_epoch": "epoch:20261007:1",
+    "scope_digest": {"alg":"sha256","value":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"},
+    "expires_at": "2026-10-07T15:18:00Z",
+    "review_kind": "HUMAN_REVIEW",
+    "constraints": ["one repository", "no payment", "no publication"]
+  },
+  "invocation": {
+    "state": "EXECUTED",
+    "executor_ref": "executor:bounded-runtime",
+    "tool_ref": "tool:patch",
+    "invoked_at": "2026-10-07T14:19:00Z",
+    "invocation_digest": {"alg":"sha256","value":"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"},
+    "failure_stage": null
+  },
+  "effect": {
+    "state": "OBSERVED",
+    "observed_at": "2026-10-07T14:19:10Z",
+    "effect_digest": {"alg":"sha256","value":"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"},
+    "effect_ref": "artifact:patch:example",
+    "failure_stage": null
+  },
+  "verification": {
+    "state": "VERIFIED",
+    "verified_at": "2026-10-07T14:19:30Z",
+    "verifier_ref": "verifier:independent",
+    "method_ref": "method:effect-readback-v1",
+    "evidence_refs": ["sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"]
+  },
+  "claim_maintenance": {
+    "claim_ref": "claim:bounded-remediation-effect",
+    "reverification_record_ref": "safe-rv:example:001",
+    "watch_state": "CURRENT",
+    "next_review_condition": "subject, policy, authority, dependency or effect evidence changes"
+  },
+  "provenance": {
+    "receipt_ref": "receipt:example:001",
+    "signature_ref": null,
+    "transparency_ref": null,
+    "timestamp_ref": null,
+    "otel_trace_ref": null,
+    "ocsf_record_ref": null
+  },
+  "limits": [
+    "Approval proves a scoped authorization decision, not that the effect occurred.",
+    "Effect observation proves only the declared observation.",
+    "Verification does not imply certification, legal compliance, endorsement, or future authorization."
+  ]
+}
+
+[executed on device: IOKs-MacBook-Air.local (3a313181-9802-49ab-b57a-b58a3fd4466a)]
