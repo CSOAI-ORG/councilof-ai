@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
-"""🐉 MEOK Sovereign Database — SQLite-backed, SIGIL-signed, Defoneos-secured
+"""🐉 MEOK Sovereign Database — SQLite-backed, SIGIL-tagged (HMAC-SHA256), Defoneos-secured
 
-The sovereign data layer for the MEOK empire. All tables are SIGIL-signed
-(Ed25519), all writes are audited, all access is sovereign.
+The sovereign data layer for the MEOK empire. Rows carry a SIGIL: HMAC-SHA256
+under a local key (integrity only; not a signature, not Ed25519), all writes
+are audited, all access is sovereign.
 
 Tables (13):
 - ichars: i-character records (Sovereign Dragon, Sophia Care, etc.)
 - queens: 13-Queen + King OCEAN personalities
 - temples: 11 regulation temples (EU, UK, US, CA, CN, JP, SG, UN, ISO, IEEE, CSOAI)
 - regulations: 37+ regulations with code + name + description + year
-- sigil_chain: hash-chained Ed25519 audit (every action signed)
+- sigil_chain: hash-chained HMAC-SHA256 log of create/add/sign/vote actions (not every write)
 - audit_log: every action logged with actor + status + details
 - charter_titles: 60+ charter titles (Care, Council, BFT, SIGIL, etc.)
 - charter_signatures: BFT 9/13 ratifications
@@ -30,14 +31,63 @@ from pathlib import Path
 from typing import Dict, List, Optional
 from dataclasses import dataclass, asdict, field
 
-# === Ed25519-style SIGIL (HMAC-SHA256 deterministic) ===
-SIGIL_SECRET = os.environ.get("MEOK_SIGIL_SECRET", "sovereign-defoneos-csoai-2026").encode()
-def sign(payload: dict) -> str:
-    """Generate SIGIL hash (HMAC-SHA256)."""
-    msg = json.dumps(payload, sort_keys=True).encode()
-    return hmac.new(SIGIL_SECRET, msg, hashlib.sha256).hexdigest()[:32]
+# === SIGIL: HMAC-SHA256 under a local key (integrity only; not a signature, not Ed25519) ===
+# Anyone holding the key can produce a valid SIGIL, so a SIGIL shows only that the row
+# was written by a holder of this key and has not changed since. sign() truncates the
+# hex digest to 32 characters, i.e. 128 bits of the MAC.
+#
+# Key: MEOK_SIGIL_SECRET if set, else the key file (MEOK_SIGIL_KEY_FILE, default
+# ~/.config/meok-backend/sigil.key), created on first use with 32 random bytes, mode 0600.
+# There is no default key in source. Earlier revisions shipped one in this file, so any
+# SIGIL written under it can be forged by anyone who has read the source: rows from those
+# revisions are UNSIGNED, and verify() / verify_sigil_chain() report them as not verified.
 
-def verify(payload: dict, sigil: str) -> bool:
+def key_file() -> Path:
+    return Path(os.environ.get("MEOK_SIGIL_KEY_FILE",
+                               str(Path.home() / ".config" / "meok-backend" / "sigil.key")))
+
+
+def _load_key() -> bytes:
+    """Return the SIGIL MAC key: env, then key file, else create a random key file."""
+    env = os.environ.get("MEOK_SIGIL_SECRET")
+    if env:
+        return env.encode()
+    p = key_file()
+    try:
+        key = p.read_bytes().strip()
+    except FileNotFoundError:
+        p.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            os.chmod(str(p.parent), 0o700)
+        except OSError:
+            pass
+        new_key = os.urandom(32).hex().encode()
+        try:
+            fd = os.open(str(p), os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        except FileExistsError:  # another process created it first
+            key = p.read_bytes().strip()
+        else:
+            with os.fdopen(fd, "wb") as f:
+                f.write(new_key + b"\n")
+            key = new_key
+    if not key:
+        raise ValueError(f"SIGIL key file is empty: {p}")
+    return key
+
+
+def sign(payload: dict) -> str:
+    """HMAC-SHA256 over sorted-key JSON under the local key, truncated to 128 bits (32 hex). Not a signature."""
+    msg = json.dumps(payload, sort_keys=True).encode()
+    return hmac.new(_load_key(), msg, hashlib.sha256).hexdigest()[:32]
+
+
+def verify(payload: dict, sigil) -> bool:
+    """True only if sigil is the HMAC of payload under the current key.
+
+    A SIGIL written under any other key, including the old in-source default, returns
+    False: treat such rows as unsigned."""
+    if not isinstance(sigil, str):
+        return False
     return hmac.compare_digest(sign(payload), sigil)
 
 
@@ -99,7 +149,8 @@ CREATE TABLE IF NOT EXISTS sigil_chain (
     prev_hash TEXT NOT NULL,
     action TEXT NOT NULL,
     payload_json TEXT NOT NULL,
-    ts REAL NOT NULL
+    ts REAL NOT NULL,
+    sigil TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_sigil_chain_ts ON sigil_chain(ts);
 
@@ -193,6 +244,11 @@ def get_db():
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     conn.executescript(SCHEMA)
+    # Databases created before the sigil column existed: add it. Their old links keep
+    # sigil NULL, cannot be recomputed, and so never verify.
+    cols = {r["name"] for r in conn.execute("PRAGMA table_info(sigil_chain)")}
+    if "sigil" not in cols:
+        conn.execute("ALTER TABLE sigil_chain ADD COLUMN sigil TEXT")
     return conn
 
 
@@ -318,9 +374,9 @@ def append_sigil(conn, action: str, payload: dict, sigil: str):
     # chain: new_hash = sign(prev_hash + action + payload + sigil)
     chain_payload = {"prev": prev_hash, "action": action, "payload": payload, "sigil": sigil}
     chain_hash = sign(chain_payload)
-    conn.execute("""INSERT INTO sigil_chain (hash, prev_hash, action, payload_json, ts)
-                    VALUES (?, ?, ?, ?, ?)""",
-                 (chain_hash, prev_hash, action, json.dumps(payload), time.time()))
+    conn.execute("""INSERT INTO sigil_chain (hash, prev_hash, action, payload_json, ts, sigil)
+                    VALUES (?, ?, ?, ?, ?, ?)""",
+                 (chain_hash, prev_hash, action, json.dumps(payload), time.time(), sigil))
 
 
 def log_audit(conn, actor: str, action: str, sigil: str, status: str, details: dict):
@@ -433,18 +489,21 @@ def register_mcp(server_name: str, tools_count: int) -> str:
 
 
 def verify_sigil_chain() -> bool:
-    """Verify the entire SIGIL chain (each link points to previous)."""
+    """True only if every link points to the previous hash AND every hash is the HMAC of
+    its link under the current key. Links with no stored sigil (written before the sigil
+    column existed, under the old in-source default key) cannot be recomputed and fail."""
     conn = get_db()
     rows = conn.execute("SELECT * FROM sigil_chain ORDER BY id").fetchall()
-    if not rows:
-        return True
-    for i in range(len(rows)):
-        if i == 0:
-            prev_hash = "0" * 32
-        else:
-            prev_hash = rows[i-1]["hash"]
-        if rows[i]["prev_hash"] != prev_hash:
+    conn.close()
+    prev_hash = "0" * 32
+    for r in rows:
+        if r["prev_hash"] != prev_hash or r["sigil"] is None:
             return False
+        link = {"prev": r["prev_hash"], "action": r["action"],
+                "payload": json.loads(r["payload_json"]), "sigil": r["sigil"]}
+        if not verify(link, r["hash"]):
+            return False
+        prev_hash = r["hash"]
     return True
 
 
@@ -562,7 +621,7 @@ if __name__ == "__main__":
         ("IEEE", "IEEE P7003", "IEEE P7003", "Algorithmic bias", 2017, "IEEE"),
         ("CSOAI", "Maternal Covenant", "Maternal Covenant", "6 care dimensions", 2026, "CSOAI"),
         ("CSOAI", "Defoneos", "Defoneos Security", "302 SDK patches, CVE-free", 2026, "CSOAI"),
-        ("CSOAI", "SIGIL", "SIGIL Audit Chain", "Ed25519 every action", 2026, "CSOAI"),
+        ("CSOAI", "SIGIL", "SIGIL Audit Chain", "HMAC-SHA256 hash chain, local key", 2026, "CSOAI"),
         ("CSOAI", "BFT Council", "BFT Council", "13-Queen + King, 9/13 quorum", 2026, "CSOAI"),
     ]
     for code, rcode, rname, desc, year, source in regulations:

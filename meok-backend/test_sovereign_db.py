@@ -1,16 +1,33 @@
-"""Tests for MEOK Sovereign Database."""
-import sys
+"""Tests for MEOK Sovereign Database.
+
+Hermetic: the DB and the SIGIL key file live in a fresh temp dir, and any
+MEOK_SIGIL_SECRET in the environment is ignored, so no test reads a real key
+or writes to ~/.config.
+"""
+import ast
+import hashlib
+import hmac
+import json
 import os
+import sqlite3
+import stat
 import subprocess
+import sys
+import tempfile
 from pathlib import Path
 
-# Use a test DB
-os.environ["MEOK_DB_PATH"] = "/tmp/test_meok_sovereign.db"
-if os.path.exists("/tmp/test_meok_sovereign.db"):
-    os.remove("/tmp/test_meok_sovereign.db")
+import pytest
 
-sys.path.insert(0, "/Users/nicholas/clawd/meok-backend")
-import sovereign_db as sdb
+HERE = Path(__file__).resolve().parent
+_TMP = Path(tempfile.mkdtemp(prefix="meok_sovereign_test_"))
+
+# Set the env BEFORE importing the module (DB_PATH is read at import).
+os.environ["MEOK_DB_PATH"] = str(_TMP / "sovereign.db")
+os.environ["MEOK_SIGIL_KEY_FILE"] = str(_TMP / "sigil.key")
+os.environ.pop("MEOK_SIGIL_SECRET", None)
+
+sys.path.insert(0, str(HERE))
+import sovereign_db as sdb  # noqa: E402
 
 
 def test_13_tables():
@@ -154,6 +171,133 @@ def test_ocean_json_serialized():
     ichar = sdb.get_ichar(ichar_id)
     assert ichar["ocean"]["O"] == 0.9
     assert ichar["ocean"]["C"] == 0.3
+
+
+# === SIGIL key: no secret in source; env key, else a local key file ===
+
+def _reads_sigil_secret(node) -> bool:
+    return (isinstance(node, ast.Call) and node.args
+            and isinstance(node.args[0], ast.Constant)
+            and node.args[0].value == "MEOK_SIGIL_SECRET")
+
+
+def test_no_default_secret_in_source():
+    """MEOK_SIGIL_SECRET is read with no fallback value and no key literal sits in source."""
+    src = (HERE / "sovereign_db.py").read_text(encoding="utf-8")
+    assert "SIGIL_SECRET =" not in src
+    tree = ast.parse(src)
+    reads = [n for n in ast.walk(tree) if _reads_sigil_secret(n)]
+    assert reads, "MEOK_SIGIL_SECRET is no longer read at all"
+    for call in reads:
+        assert len(call.args) == 1 and not call.keywords, \
+            f"line {call.lineno}: MEOK_SIGIL_SECRET read with a fallback value"
+    for node in ast.walk(tree):  # nor `os.environ.get(...) or "literal"`
+        if isinstance(node, ast.BoolOp) and isinstance(node.op, ast.Or) \
+                and any(_reads_sigil_secret(v) for v in node.values):
+            assert not any(isinstance(v, ast.Constant) for v in node.values), \
+                f"line {node.lineno}: MEOK_SIGIL_SECRET falls back to a literal"
+
+
+def test_key_file_created_0600_and_random(monkeypatch, tmp_path):
+    kf = tmp_path / "sub" / "sigil.key"
+    monkeypatch.setenv("MEOK_SIGIL_KEY_FILE", str(kf))
+    monkeypatch.delenv("MEOK_SIGIL_SECRET", raising=False)
+    assert not kf.exists()
+    first = sdb.sign({"a": 1})
+    assert stat.S_IMODE(kf.stat().st_mode) == 0o600
+    key = kf.read_bytes().strip()
+    assert len(key) == 64 and int(key, 16) >= 0  # 32 random bytes, hex-encoded
+    assert sdb.sign({"a": 1}) == first  # stable once the file exists
+    other = tmp_path / "other.key"
+    monkeypatch.setenv("MEOK_SIGIL_KEY_FILE", str(other))
+    sdb.sign({"a": 1})
+    assert other.read_bytes().strip() != key  # a new file gets a new random key
+
+
+def test_env_key_overrides_key_file(monkeypatch, tmp_path):
+    kf = tmp_path / "sigil.key"
+    monkeypatch.setenv("MEOK_SIGIL_KEY_FILE", str(kf))
+    monkeypatch.setenv("MEOK_SIGIL_SECRET", "env-key-a")
+    a = sdb.sign({"a": 1})
+    assert not kf.exists()  # env key used; no key file written
+    monkeypatch.setenv("MEOK_SIGIL_SECRET", "env-key-b")
+    assert sdb.sign({"a": 1}) != a
+
+
+def test_empty_key_file_refused(monkeypatch, tmp_path):
+    kf = tmp_path / "sigil.key"
+    kf.write_bytes(b"\n")
+    monkeypatch.setenv("MEOK_SIGIL_KEY_FILE", str(kf))
+    monkeypatch.delenv("MEOK_SIGIL_SECRET", raising=False)
+    with pytest.raises(ValueError):
+        sdb.sign({"a": 1})
+
+
+def test_sigil_is_hmac_sha256_truncated_to_128_bits(monkeypatch):
+    monkeypatch.setenv("MEOK_SIGIL_SECRET", "k")
+    payload = {"b": 2, "a": 1}
+    full = hmac.new(b"k", json.dumps(payload, sort_keys=True).encode(), hashlib.sha256).hexdigest()
+    assert sdb.sign(payload) == full[:32]  # 32 hex chars = 128 bits
+
+
+def test_sigil_from_another_key_does_not_verify(monkeypatch):
+    """A SIGIL made under another key (e.g. the old in-source default) is unsigned here."""
+    monkeypatch.setenv("MEOK_SIGIL_SECRET", "old-key")
+    payload = {"x": 1}
+    old = sdb.sign(payload)
+    assert sdb.verify(payload, old) is True
+    monkeypatch.setenv("MEOK_SIGIL_SECRET", "new-key")
+    assert sdb.verify(payload, old) is False
+    assert sdb.verify(payload, None) is False
+
+
+# === SIGIL chain: links are recomputed under the current key ===
+
+def _fresh_db(monkeypatch, tmp_path, key):
+    monkeypatch.setattr(sdb, "DB_PATH", str(tmp_path / "chain.db"))
+    monkeypatch.setenv("MEOK_SIGIL_SECRET", key)
+
+
+def test_chain_written_under_another_key_not_verified(monkeypatch, tmp_path):
+    _fresh_db(monkeypatch, tmp_path, "old-key")
+    sdb.create_queen("Q", "Role", 1, "motto", {"O": 0.5})
+    sdb.cast_vote("queen-q", "prop-1", "for")
+    assert sdb.verify_sigil_chain() is True
+    monkeypatch.setenv("MEOK_SIGIL_SECRET", "new-key")
+    assert sdb.verify_sigil_chain() is False
+    assert sdb.get_stats()["sigil_chain_verified"] is False
+
+
+def test_chain_tamper_detected(monkeypatch, tmp_path):
+    _fresh_db(monkeypatch, tmp_path, "k")
+    sdb.create_queen("Q", "Role", 1, "motto", {"O": 0.5})
+    assert sdb.verify_sigil_chain() is True
+    conn = sqlite3.connect(sdb.DB_PATH)
+    conn.execute("UPDATE sigil_chain SET payload_json = ? WHERE id = 1", (json.dumps({"name": "forged"}),))
+    conn.commit()
+    conn.close()
+    assert sdb.verify_sigil_chain() is False
+
+
+def test_pre_migration_chain_rows_not_verified(monkeypatch, tmp_path):
+    """A DB from before the sigil column: its links cannot be recomputed, so they never verify."""
+    _fresh_db(monkeypatch, tmp_path, "k")
+    conn = sqlite3.connect(sdb.DB_PATH)
+    conn.execute("""CREATE TABLE sigil_chain (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    hash TEXT NOT NULL UNIQUE, prev_hash TEXT NOT NULL, action TEXT NOT NULL,
+                    payload_json TEXT NOT NULL, ts REAL NOT NULL)""")
+    conn.execute("INSERT INTO sigil_chain (hash, prev_hash, action, payload_json, ts) VALUES (?, ?, ?, ?, ?)",
+                 ("a" * 32, "0" * 32, "create_queen", "{}", 0.0))
+    conn.commit()
+    conn.close()
+    assert sdb.verify_sigil_chain() is False
+    conn = sqlite3.connect(sdb.DB_PATH)
+    cols = [r[1] for r in conn.execute("PRAGMA table_info(sigil_chain)")]
+    conn.close()
+    assert "sigil" in cols  # migrated in place
+    # New links chain onto the legacy one; the chain as a whole stays unverified.
+    sdb.create_queen("Q", "Role", 1, "motto", {"O": 0.5})
+    assert sdb.verify_sigil_chain() is False
 
 
 if __name__ == "__main__":
