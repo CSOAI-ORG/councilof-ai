@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { isMillReceiptReadiness, outerStateClass, regulationLabel, type MillReceiptReadiness } from "@/lib/millReceiptReadiness";
+import { loadMillReceiptReadiness, outerStateClass, regulationLabel, type MillReceiptReadiness } from "@/lib/millReceiptReadiness";
 
 export default function MillReceiptReadinessPanel() {
   const [data, setData] = useState<MillReceiptReadiness | null>(null);
   const [error, setError] = useState("");
   useEffect(() => {
-    fetch("/interop/mill-receipt-readiness.json")
-      .then((response) => response.ok ? response.json() : Promise.reject(new Error(`HTTP ${response.status}`)))
-      .then((value) => isMillReceiptReadiness(value) ? setData(value) : Promise.reject(new Error("invalid truth contract")))
+    // Through the discovery pointer: the stamped snapshot is frozen, newer readiness is a new version.
+    loadMillReceiptReadiness()
+      .then(setData)
       .catch((reason) => {
         const why = String(reason?.message ?? reason);
         // The technical reason is for whoever debugs the page, not visible copy (persona sweep 6 Oct 2026).

@@ -1,0 +1,114 @@
+{
+  "schema": "csoai.tui3-count-reconciliation/0.1",
+  "generated_at": "2026-10-07",
+  "purpose": "Single resolved source of truth for every TUI-3 count. Names each competing number, its basis and its date, then states which is current. Two dated readings of a moving target are not a contradiction once both carry their timestamp; an UNDATED count is.",
+  "branch": "models/verified-expansion-20260911",
+  "reconciles": [
+    "TUI-3-MODEL-VERIFICATION.md (sibling TUI-3 artifact, generated 2026-09-11T14:30Z)",
+    "models/estate-card-census-20261007.json (this TUI-3 artifact, observed 2026-10-07)",
+    "live https://councilof.ai responses"
+  ],
+
+  "public_root_cards": {
+    "resolves_conflict": true,
+    "readings": [
+      {"count": 167, "merkle": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5",
+       "as_of": "2026-09-11T08:45:22Z", "source": "live councilof.ai (TUI-3 session start)",
+       "note": "This is the number in the task brief."},
+      {"count": 169, "merkle": "94e99db52a67931a…", "as_of": "2026-09-11T12:45:44Z",
+       "source": "public/root.json at the branch's original base (1eb85163e)",
+       "note": "Same day, four hours later. The root is a rolling artifact."},
+      {"count": 319, "merkle": "47277a6f2034e80b6279fa969e832180…", "as_of": "2026-09-30T05:05:34Z",
+       "source": "live councilof.ai + public/root.json on current master",
+       "note": "CURRENT. Byte-identical across councilof.ai, csoai.org, www.councilof.ai (sha256(body) f1913eca…)."}
+    ],
+    "current": 319,
+    "correction": "TUI-3-MODEL-VERIFICATION.md states 167 / 78d4e019 as VERIFIED against a basis of 'master (b284d3cc)'. Its own checkout at that base carried root.json = 169 / 94e99db5, and current master carries 319. The 167 figure is the brief's 08:45Z reading, not the checkout's value.",
+    "status": "RESOLVED — quote 319 with as_of 2026-09-30 for anything dated after 2026-09-30; quote 167 only when explicitly dated 2026-09-11T08:45Z."
+  },
+
+  "mill_cards": {
+    "resolves_conflict": true,
+    "sibling_claim": {"signed": 1066, "unsigned": 366, "total": 1432,
+      "stated_location": "public/interop/mill-cards-signed/ (signed-* and unsigned-*)",
+      "problem": "unsigned-* files do not live in mill-cards-signed/ — they live in mill-cards-unsigned/. Also undercounts signed by 383 against its own stated basis."},
+    "branch_basis_checkout_2026_09_11": {"mill_cards_signed": 1449, "mill_cards_unsigned": 1065, "total": 2514},
+    "current_master_2026_10_07": {"mill_cards_signed": 2869, "mill_cards_unsigned": 2111, "total": 4980},
+    "current": {"files": 4980, "cards": 4979,
+      "note": "2,869 files in mill-cards-signed/ = 2,868 measurement cards + 1 non-card pointer (GOVERNANCE-RETRIEVE.json). Counting files overstates cards by 1."},
+    "delta_since_branch_basis": {"signed": 1420, "unsigned": 1046, "total": 2466},
+    "status": "RESOLVED — sibling's 1,066/366/1,432 is wrong against its own basis; use 2,514 for the 2026-09-11 base and 4,979 cards for 2026-10-07."
+  },
+
+  "signature_verification": {
+    "estate_verifier": "harness/gspc-top100/verify_card.py (three-state)",
+    "signed_index_335": {"VALID": 335, "INVALID": 0, "UNCHECKABLE": 0},
+    "mill_signed": {"files": 2869, "VALID": 2868, "INVALID": 1,
+      "invalid_detail": "GOVERNANCE-RETRIEVE.json — pointer stub (schema csoai.governance-retrieve/0.1), no body/id. Not a card, not a signature failure."},
+    "pr1888": {"total": 36, "VALID": 36, "sha256_valid": 36,
+      "subset_of_mill_signed": 36, "in_index": 0, "in_root": 0},
+    "distinct_cards_valid": 3203,
+    "formula": "2868 mill + 335 index (disjoint). PR#1888's 36 sit inside the 2868 and are never added again.",
+    "sibling_equivalent": "TUI-3-MODEL-VERIFICATION.md reports 335/0 for the chain only — narrower population, not a contradiction.",
+    "sha256_mismatches": 0
+  },
+
+  "non_failures_that_must_not_be_reported_as_failures": [
+    {"count": 70, "state": "UNMEASURED", "where": "mill-cards-unsigned/unsigned-mistral-7b-*.json",
+     "verifier_verdict": "INVALID ('no body or id')",
+     "truth": "Staged UNMEASURED placeholders carrying no id. There is no signature to check. Never '70 failed verifications'."}
+  ],
+
+  "benchmark_index": {
+    "published": {"cards": 3998, "signed": 2378, "unsigned": 1620, "models": 165,
+      "generated_at": "2026-09-17T02:57:48.870296+00:00",
+      "url": "https://councilof.ai/interop/benchmark-index-v0.1.json"},
+    "on_disk_2026_10_07": {"cards": 4980, "signed": 2869, "unsigned": 2111, "models": 166},
+    "delta": {"cards": 982, "signed": 491, "unsigned": 491, "models": 1},
+    "status": "STALE — published totals understate the corpus by 982 cards"
+  },
+
+  "chain_and_store": {
+    "chain_positions": 335,
+    "chain_bodies_published": 313,
+    "chain_bodies_withheld": 22,
+    "card_store": 336,
+    "card_store_note": "335 index rows + 1 cross-border card",
+    "index_packaged_at": "2026-08-28T15:39:25.229647+00:00",
+    "index_card_dates": "all 335 dated 2026-08-19",
+    "source": "sibling TUI-3-MODEL-VERIFICATION.md (chain detail retained here; not re-measured by TUI-3 v3)"
+  },
+
+  "axes": {
+    "board_axes": 22,
+    "model_comparison_axes": 14,
+    "deterministic_fact_axes": 8,
+    "index_axes": 16,
+    "mill_axes": 14,
+    "note": "22 = 14 model-comparison + 8 deterministic-facts. The 8 financial axes have no model, no fleet and no accuracy — never call them model comparisons."
+  },
+
+  "canonicalisation": {
+    "python_historical": "governs all 335 index cards",
+    "js_edge_signer": "governs all 2868 mill cards + 36 PR#1888 cards",
+    "index_cards_that_differ_between_rules": 117,
+    "risk": "One rule applied to everything yields 117 false INVALID",
+    "corroboration": "Estate research intake F60 independently states '117 of 335'"
+  },
+
+  "dates_discipline": {
+    "rule": "Every count on this branch now carries a date. Live authority is councilof.ai; the repo file must match it or the difference is reported, not averaged.",
+    "observation_times_used": ["2026-09-11T08:45Z", "2026-09-11T12:45Z", "2026-09-30T05:05Z", "2026-10-07"]
+  },
+
+  "costs": {"actual_spend_usd": 0.0, "revenue_usd": 0.0, "classification": "INTERNAL_SELF_FUNDED"},
+
+  "state_legend": {
+    "INDEXED": "present in a list; not a measurement",
+    "STAGED": "signed and awaiting promotion into chain/root",
+    "MEASURED": "a run with a result behind it",
+    "UNMEASURED": "declared slot or placeholder with no run",
+    "VALID": "verifier state for a signature that checks; never a grade",
+    "not_a_certification": true
+  }
+}

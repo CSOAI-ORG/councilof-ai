@@ -1,0 +1,205 @@
+{
+  "counts_rule": "Every rate carries its denominator: targets_published_of_attempted is M/N with N the named 17-surface list.",
+  "failure_mode": "ALL_OR_NOTHING",
+  "manifest_version": "catapult-manifest-v0",
+  "partial_publish_rule": "A manifest with a non-empty targets_not_published is a counter record only and MUST NOT be published as a fan-out; the catapult never publishes partial outputs.",
+  "readback_required": {
+    "a2a-skills-entry": true,
+    "ag-ui-card": true,
+    "audit-log-line": true,
+    "correction-graph-edge": true,
+    "council-board-row": true,
+    "evidence-pack-zip-manifest": true,
+    "hf-dataset-file-plan": true,
+    "llms-txt-entry": true,
+    "mcp-tool-schema": true,
+    "press-one-pager": false,
+    "regulator-crosswalk-entry": true,
+    "research-jsonl-line": true,
+    "rest-measurement-stub": true,
+    "rss-atom-entry": true,
+    "sitemap-entry": false,
+    "verify-page-html": true,
+    "x402-offer-stub": true
+  },
+  "signed_at": "2026-09-22T05:43:05Z",
+  "signer_did": "did:web:csoai.org#board-attestation-1",
+  "source_sha256": "d2196fe478ec37d1833a3b4526a6cd893c366bc44e29a8ec590aa5a1c8d84dac",
+  "targets": [
+    {
+      "byte_size": 491,
+      "content_type": "application/json",
+      "not_published_reason": null,
+      "published": true,
+      "readback_required": true,
+      "record_sha256": "6eda4f4ad36653cbb2a7dddf8b06946b1c0b3a869c86080570176e7ca9b5b885",
+      "surface_name": "council-board-row",
+      "target_path": "/api/gspc"
+    },
+    {
+      "byte_size": 2721,
+      "content_type": "application/json",
+      "not_published_reason": null,
+      "published": true,
+      "readback_required": true,
+      "record_sha256": "e9f3f7a38f317fb906121484f2a673d6da3c64f410c8161ef7074e515b88d6d9",
+      "surface_name": "rest-measurement-stub",
+      "target_path": "/api/measurements/{sha256}"
+    },
+    {
+      "byte_size": 918,
+      "content_type": "application/json",
+      "not_published_reason": null,
+      "published": true,
+      "readback_required": true,
+      "record_sha256": "10baeda5165424888da82c26100ca414bd61af4b8ce66a3be7fe5c0f196ba44a",
+      "surface_name": "mcp-tool-schema",
+      "target_path": "tools/call list_measurements|verify_measurement"
+    },
+    {
+      "byte_size": 622,
+      "content_type": "application/ld+json",
+      "not_published_reason": null,
+      "published": true,
+      "readback_required": true,
+      "record_sha256": "195bde8a7f766fe49a6140865cefa5d63247dedc413219a399e009e91f5f5c35",
+      "surface_name": "a2a-skills-entry",
+      "target_path": "/a2a/skills/measurements/{sha256}"
+    },
+    {
+      "byte_size": 659,
+      "content_type": "application/ld+json",
+      "not_published_reason": null,
+      "published": true,
+      "readback_required": true,
+      "record_sha256": "f9b349f454915b7078dd5200b90f3ec1299b717803b44f57b32942e62a73c4d3",
+      "surface_name": "ag-ui-card",
+      "target_path": "/ag-ui/{sha256}"
+    },
+    {
+      "byte_size": 929,
+      "content_type": "application/json",
+      "not_published_reason": null,
+      "published": true,
+      "readback_required": true,
+      "record_sha256": "85c0a437e39e47bf559752906d38230acff91c11317cb25d834495ad62d053cd",
+      "surface_name": "x402-offer-stub",
+      "target_path": "/x402/measure/{sha256}"
+    },
+    {
+      "byte_size": 732,
+      "content_type": "application/atom+xml",
+      "not_published_reason": null,
+      "published": true,
+      "readback_required": true,
+      "record_sha256": "da39c65cd0d14e6f58bd1cc0749aac9340c5b4192989f87f9c63f32b9b53ab45",
+      "surface_name": "rss-atom-entry",
+      "target_path": "/feed/measurements.atom"
+    },
+    {
+      "byte_size": 591,
+      "content_type": "application/json",
+      "not_published_reason": null,
+      "published": true,
+      "readback_required": true,
+      "record_sha256": "499c35242338e810cd3c0e2407fcf015b2be53364d54fd585d765914ff566cd2",
+      "surface_name": "hf-dataset-file-plan",
+      "target_path": "csoai/measurements/measurements/{sha256}.json"
+    },
+    {
+      "byte_size": 422,
+      "content_type": "application/x-ndjson",
+      "not_published_reason": null,
+      "published": true,
+      "readback_required": true,
+      "record_sha256": "e5893fae9f4c65b41f91d4bb23bd914d31edfad83b92cc144bf8d81a21fa4000",
+      "surface_name": "research-jsonl-line",
+      "target_path": "/datasets/csoai/measurements-YYYY-MM-DD.jsonl"
+    },
+    {
+      "byte_size": 266,
+      "content_type": "application/xml",
+      "not_published_reason": null,
+      "published": true,
+      "readback_required": false,
+      "record_sha256": "9f916e0bd0e3b7f0846c932142202411fd8033c141187e9f32989dc699da346c",
+      "surface_name": "sitemap-entry",
+      "target_path": "/sitemap-measurements.xml"
+    },
+    {
+      "byte_size": 875,
+      "content_type": "application/json",
+      "not_published_reason": null,
+      "published": true,
+      "readback_required": true,
+      "record_sha256": "8c61946ce3dc62c2fb60a62b4098fb092fde50e65e16cd428e50dd9484eaed27",
+      "surface_name": "regulator-crosswalk-entry",
+      "target_path": "/crosswalks/{axis}.json"
+    },
+    {
+      "byte_size": 843,
+      "content_type": "application/json",
+      "not_published_reason": null,
+      "published": true,
+      "readback_required": true,
+      "record_sha256": "a163ab7446636d1592e3520e48416f0aa264c08cea6158f6e39e784f1e4fbe44",
+      "surface_name": "evidence-pack-zip-manifest",
+      "target_path": "/packs/{sha256}.zip"
+    },
+    {
+      "byte_size": 525,
+      "content_type": "application/json",
+      "not_published_reason": null,
+      "published": true,
+      "readback_required": true,
+      "record_sha256": "f0031bbbbe082f2d19224b7f3f1baf858b7c6dfce807d27b8d9e293af4bbfe1d",
+      "surface_name": "correction-graph-edge",
+      "target_path": "/corrections/{new_id}"
+    },
+    {
+      "byte_size": 1144,
+      "content_type": "text/html",
+      "not_published_reason": null,
+      "published": true,
+      "readback_required": true,
+      "record_sha256": "65f4ddd48181b88754c3caac0b348117ac0e4f34f9af60b1d9d260e76254e422",
+      "surface_name": "verify-page-html",
+      "target_path": "/verify/{sha256}"
+    },
+    {
+      "byte_size": 799,
+      "content_type": "application/x-ndjson",
+      "not_published_reason": null,
+      "published": true,
+      "readback_required": true,
+      "record_sha256": "b57e75a08245e38d339f925a17cfaa89009086f2958919f98a0ac731ae3f294c",
+      "surface_name": "audit-log-line",
+      "target_path": "/audit/catapult/{sha256}"
+    },
+    {
+      "byte_size": 674,
+      "content_type": "text/markdown",
+      "not_published_reason": null,
+      "published": true,
+      "readback_required": true,
+      "record_sha256": "61cb51b4d63afb241f90b8ed5ac4962fef786e2e37b34e10542e6d9ea9999f53",
+      "surface_name": "llms-txt-entry",
+      "target_path": "/llms.txt"
+    },
+    {
+      "byte_size": 885,
+      "content_type": "text/markdown",
+      "not_published_reason": null,
+      "published": true,
+      "readback_required": false,
+      "record_sha256": "ba06bc05c20e613f488fbedec0ca6459abb6f79710be2e813ee9ba19749ecd30",
+      "surface_name": "press-one-pager",
+      "target_path": "/press/{sha256}.md"
+    }
+  ],
+  "targets_attempted": 17,
+  "targets_not_published": [],
+  "targets_not_published_rule": "The difference (attempted - published) is NAMED by surface, never zero-filled.",
+  "targets_published": 17,
+  "targets_published_of_attempted": "17/17"
+}
