@@ -199,7 +199,7 @@ mcp-so **UNKNOWN** · cline **NOT_LISTED** · docker-mcp **NOT_LISTED**.
 
 Scope items:
 - **ISO 20022 family count — RESOLVED (B-06).** The artefact existed in the sibling estate
-  (`CSOAI-ORG/sovos-harness`, blob `b98cd3d7`, 2,549 B): **7 families / 25 message types /
+  (`an internal sibling repository of this estate (name withheld: internal codename)`, blob `b98cd3d7`, 2,549 B): **7 families / 25 message types /
   implemented 0**. Harvested to `public/interop/iso-20022-families.json` with
   `measurement_state: CATALOGUED`, `signature_state: UNSIGNED`, `merkle_root_inclusion:
   NOT_IN_PUBLIC_ROOT`, all anchors `NOT_WITNESSED`, and full provenance. **The source card is
