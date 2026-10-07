@@ -1,0 +1,32 @@
+{
+  "ts": "2026-10-07T07:42:05Z",
+  "cycle": "EAT 2026-10-07 (wave: after aligned 4-phase plan)",
+  "measurements": [
+    {
+      "metric": "estate test sweep",
+      "value": "468 green (343 pytest: csoai-os 299 + backend 44+; 34 meok-ori; 91 mcp_wire)",
+      "provenance": "live pytest/unittest runs 2026-10-07 08:39-08:41 BST"
+    },
+    {
+      "metric": "MCP both-wire live proof",
+      "value": "7/7 PASS over real HTTP on 127.0.0.1:8090 (legacy init -> 2025-11-25, 2026 tools/call executes, _meta injected, session stripped, -32602 on unresolvable name, derive-when-possible, server/discover -> 2026-07-28)",
+      "provenance": "mcp2026_proxy_proof.py live run, exit=0"
+    },
+    {
+      "metric": "meok-ori release artifact",
+      "value": "meok_ori-0.2.0-py3-none-any.whl, 18,532 bytes (publish owner-gated)",
+      "provenance": "pip wheel --no-deps -w dist/ ./meok-ori"
+    },
+    {
+      "metric": "Kaggle dataset (gate PROVEN open)",
+      "value": "3/3 files verified via kaggle datasets files: corpus 1,189,255 + census 171,490 + audit 25,107 bytes",
+      "provenance": "https://www.kaggle.com/datasets/nicktempleman/sovereign-estate-eat-20261007 (PRIVATE; visibility flip staged)"
+    },
+    {
+      "metric": "disk",
+      "value": "5.0Gi free (98%) \u2014 at skill threshold, sibling scratch auto-prunes at 24h",
+      "provenance": "df -h /System/Volumes/Data 08:37 BST"
+    }
+  ],
+  "SIGIL_digest": "fd5be11b77741cb137619cf1889483a48880c25548325bbdb618eae7416326e3"
+}
