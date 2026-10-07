@@ -1,614 +1,614 @@
 {
- "schema": "csoai.evidence-notes/0.1",
- "date": "2026-09-14",
- "publisher": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
- "rules": {
-  "backing": "Every sentence is backed by a live, retrievable artifact named in the note's artifacts or body.",
-  "status": "MEASURED is said only where the card body says MEASURED (n>=30). UNMEASURED accuracies are not quoted.",
-  "numbers": "An accuracy is quoted only with its signed card URL beside it. Totals of cards or models are not typed; cite the endpoint.",
-  "ties": "Ties are reported as ties. A point-estimate gap without a separation test is not a ranking.",
-  "not": "Measurement, not certification. Not a grade, endorsement, customer count, or legal finding."
- },
- "notes": [
-  {
-   "id": "governance-same-bank-gap",
-   "date": "2026-09-14",
-   "title": "Governance: two models, one frozen bank, a gap in point estimates",
-   "summary": "Two MEASURED pod cards bind the same governance bank hash; their accuracies differ and no separation test is attached.",
-   "body": "Two signed pod cards on the governance axis bind the same bank_sha256, b93f9808f014. ollama:qwen3:8b reads accuracy 0.5781 at n=237 (https://councilof.ai/interop/mill-cards-signed/signed-governan-b2e50d7aff0a.json). ollama:gemma3:4b reads accuracy 0.2785 at n=237 (https://councilof.ai/interop/mill-cards-signed/signed-governan-2740fed2f17e.json). Both card bodies say MEASURED, and both record zero transport errors and zero parse errors excluded. The two cards carry different instrument_sha256 values, so the shared thing a reader can confirm is the bank, not an identical instrument. Neither card carries a separation test. Read this as a gap between two point estimates on one frozen bank, not as a ranking of the two models. The governance axis entry on GET /api/gspc describes the task as EU AI Act risk-tier classification. These pod cards commit to an items_sha256 but do not link the item rows, so a stranger can check who signed which numbers, but cannot re-grade the items from these two cards alone.",
-   "artifacts": [
-    {
-     "label": "qwen3:8b governance card",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-governan-b2e50d7aff0a.json"
-    },
-    {
-     "label": "gemma3:4b governance card",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-governan-2740fed2f17e.json"
-    },
-    {
-     "label": "GSPC board",
-     "url": "https://councilof.ai/api/gspc"
-    }
-   ],
-   "social": "Governance axis, one frozen bank: two signed pod cards, both MEASURED at n=237, with a wide gap between point estimates. No separation test is attached, so it is a gap, not a ranking. Read the cards: https://councilof.ai/api/hub-cards"
+  "schema": "csoai.evidence-notes/0.1",
+  "date": "2026-09-14",
+  "publisher": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
+  "rules": {
+    "backing": "Every sentence is backed by a live, retrievable artifact named in the note's artifacts or body.",
+    "status": "MEASURED is said only where the card body says MEASURED (n>=30). UNMEASURED accuracies are not quoted.",
+    "numbers": "An accuracy is quoted only with its signed card URL beside it. Totals of cards or models are not typed; cite the endpoint.",
+    "ties": "Ties are reported as ties. A point-estimate gap without a separation test is not a ranking.",
+    "not": "Measurement, not certification. Not a grade, endorsement, customer count, or legal finding."
   },
-  {
-   "id": "conformance-three-way-tie",
-   "date": "2026-09-14",
-   "title": "Conformance: three models, one number",
-   "summary": "Three MEASURED cards on the same conformance bank read identical accuracy at n=35. A tie is reported as a tie.",
-   "body": "On the conformance axis, three signed pod cards bind the same bank_sha256, dc494ae6d1cb, and read the same accuracy. ollama:qwen2.5:0.5b-instruct reads 0.5143 at n=35 (https://councilof.ai/interop/mill-cards-signed/signed-conforma-644c7f36b041.json). ollama:llama3.2:3b reads 0.5143 at n=35 (https://councilof.ai/interop/mill-cards-signed/signed-conforma-0ce5a02c3ac8.json). ollama:llama3.1:8b reads 0.5143 at n=35 (https://councilof.ai/interop/mill-cards-signed/signed-conforma-2d1188d1f400.json). That value is 18 correct of 35 graded items on each card. All three bodies say MEASURED and record zero parse errors excluded. On this bank, on this date, the measurement does not separate the three models, and we report that plainly as a tie. Nothing here says the three models behave alike on other banks or other axes; each card is one frozen bank read once. The llama3.2:3b card is also one of the cards listed against a commissioned subject on GET /api/commissions.",
-   "artifacts": [
+  "notes": [
     {
-     "label": "qwen2.5:0.5b-instruct conformance card",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-conforma-644c7f36b041.json"
+      "id": "governance-same-bank-gap",
+      "date": "2026-09-14",
+      "title": "Governance: two models, one frozen bank, a gap in point estimates",
+      "summary": "Two MEASURED pod cards bind the same governance bank hash; their accuracies differ and no separation test is attached.",
+      "body": "Two signed pod cards on the governance axis bind the same bank_sha256, b93f9808f014. ollama:qwen3:8b reads accuracy 0.5781 at n=237 (https://councilof.ai/interop/mill-cards-signed/signed-governan-b2e50d7aff0a.json). ollama:gemma3:4b reads accuracy 0.2785 at n=237 (https://councilof.ai/interop/mill-cards-signed/signed-governan-2740fed2f17e.json). Both card bodies say MEASURED, and both record zero transport errors and zero parse errors excluded. The two cards carry different instrument_sha256 values, so the shared thing a reader can confirm is the bank, not an identical instrument. Neither card carries a separation test. Read this as a gap between two point estimates on one frozen bank, not as a ranking of the two models. The governance axis entry on GET /api/gspc describes the task as EU AI Act risk-tier classification. These pod cards commit to an items_sha256 but do not link the item rows, so a stranger can check who signed which numbers, but cannot re-grade the items from these two cards alone.",
+      "artifacts": [
+        {
+          "label": "qwen3:8b governance card",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-governan-b2e50d7aff0a.json"
+        },
+        {
+          "label": "gemma3:4b governance card",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-governan-2740fed2f17e.json"
+        },
+        {
+          "label": "GSPC board",
+          "url": "https://councilof.ai/api/gspc"
+        }
+      ],
+      "social": "Governance axis, one frozen bank: two signed pod cards, both MEASURED at n=237, with a wide gap between point estimates. No separation test is attached, so it is a gap, not a ranking. Read the cards: https://councilof.ai/api/hub-cards"
     },
     {
-     "label": "llama3.2:3b conformance card",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-conforma-0ce5a02c3ac8.json"
+      "id": "conformance-three-way-tie",
+      "date": "2026-09-14",
+      "title": "Conformance: three models, one number",
+      "summary": "Three MEASURED cards on the same conformance bank read identical accuracy at n=35. A tie is reported as a tie.",
+      "body": "On the conformance axis, three signed pod cards bind the same bank_sha256, dc494ae6d1cb, and read the same accuracy. ollama:qwen2.5:0.5b-instruct reads 0.5143 at n=35 (https://councilof.ai/interop/mill-cards-signed/signed-conforma-644c7f36b041.json). ollama:llama3.2:3b reads 0.5143 at n=35 (https://councilof.ai/interop/mill-cards-signed/signed-conforma-0ce5a02c3ac8.json). ollama:llama3.1:8b reads 0.5143 at n=35 (https://councilof.ai/interop/mill-cards-signed/signed-conforma-2d1188d1f400.json). That value is 18 correct of 35 graded items on each card. All three bodies say MEASURED and record zero parse errors excluded. On this bank, on this date, the measurement does not separate the three models, and we report that plainly as a tie. Nothing here says the three models behave alike on other banks or other axes; each card is one frozen bank read once. The llama3.2:3b card is also one of the cards listed against a commissioned subject on GET /api/commissions.",
+      "artifacts": [
+        {
+          "label": "qwen2.5:0.5b-instruct conformance card",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-conforma-644c7f36b041.json"
+        },
+        {
+          "label": "llama3.2:3b conformance card",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-conforma-0ce5a02c3ac8.json"
+        },
+        {
+          "label": "llama3.1:8b conformance card",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-conforma-2d1188d1f400.json"
+        }
+      ],
+      "social": "Three models, one conformance bank, one number: 18 of 35 each, all MEASURED. We report it as a tie, because it is one. Cards: https://councilof.ai/interop/mill-cards-signed/signed-conforma-0ce5a02c3ac8.json"
     },
     {
-     "label": "llama3.1:8b conformance card",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-conforma-2d1188d1f400.json"
+      "id": "detector-interop-tie",
+      "date": "2026-09-14",
+      "title": "Detector-interop: a two-way tie at n=33",
+      "summary": "Two MEASURED cards on the same detector-interop bank read the same accuracy; the bank does not separate them.",
+      "body": "Two signed pod cards on the detector-interop axis bind the same bank_sha256, d75e96802d9e. ollama:gemma3:4b reads 0.7879 at n=33 (https://councilof.ai/interop/mill-cards-signed/signed-detector-2c1c8a49a8f8.json). ollama:mistral:7b reads 0.7879 at n=33 (https://councilof.ai/interop/mill-cards-signed/signed-detector-cd1f6b3ed84a.json). That is 26 correct of 33 on each card. Both bodies say MEASURED, with zero parse errors and zero transport errors excluded. On this bank, on this date, the two models tie. A tie is a result in its own right: it tells a reader that this bank does not distinguish these two models, which is worth knowing before treating either one as ahead on this dimension. Neither card needs a separation test for the tie to be stated honestly, and neither carries one. Both cards commit to an items_sha256 without linking the item rows, so the check a stranger can run today is the content id and the Ed25519 signature, using the verify link each card names.",
+      "artifacts": [
+        {
+          "label": "gemma3:4b detector-interop card",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-detector-2c1c8a49a8f8.json"
+        },
+        {
+          "label": "mistral:7b detector-interop card",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-detector-cd1f6b3ed84a.json"
+        }
+      ],
+      "social": "Detector-interop, one frozen bank: two signed cards, 26 of 33 each, both MEASURED. That is a tie, and a tie tells you this bank cannot separate the two models. https://councilof.ai/interop/mill-cards-signed/signed-detector-cd1f6b3ed84a.json"
+    },
+    {
+      "id": "art5-safeguard-gap",
+      "date": "2026-09-14",
+      "title": "Art5-safeguard: a wide gap, stated as two point estimates",
+      "summary": "Two current MEASURED pod cards on the same art5-safeguard bank differ widely; without a separation test it is still not a ranking.",
+      "body": "These are Hub pod cards, not rows of the GSPC board: the board's art5-safeguard row publishes no accuracy and names no leader. Two current signed pod cards bind the same bank_sha256, bdb7c0e8b7ad. ollama:qwen3:8b reads 0.9444 at n=36 (https://councilof.ai/interop/mill-cards-signed/signed-art5-saf-9d18d0d8ec2e.json), run 2026-09-14T04:01:13Z. ollama:qwen2.5:0.5b-instruct reads 0.5278 at n=36 (https://councilof.ai/interop/mill-cards-signed/signed-art5-saf-178172b985d2.json). In items, that is 34 correct of 36 against 19 correct of 36. An earlier ollama:qwen3:8b card on the same bank, run 2026-09-14T03:01:10Z, read 0.9722 at n=36 (https://councilof.ai/interop/mill-cards-signed/signed-art5-saf-b15988212458.json); SUPERSEDED.jsonl lists it as replaced by the current qwen3:8b card cited above, and GET /api/hub-cards serves that current card as the cell for that model on this axis. Both current bodies say MEASURED with zero parse errors excluded. Neither card carries a separation test, so we state the gap as two point estimates and not as a verdict on either model. A card on this axis is a measurement against one frozen bank; it is not a legal finding about any deployment of either model. To see the other pod models on the same bank, read the art5-safeguard cells of GET /api/hub-cards and check that each card names the same bank_sha256.",
+      "artifacts": [
+        {
+          "label": "qwen3:8b art5-safeguard card (current)",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-art5-saf-9d18d0d8ec2e.json"
+        },
+        {
+          "label": "qwen2.5:0.5b-instruct art5-safeguard card",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-art5-saf-178172b985d2.json"
+        },
+        {
+          "label": "Hub cards, art5-safeguard cells",
+          "url": "https://councilof.ai/api/hub-cards?axis=art5-safeguard"
+        }
+      ],
+      "social": "Same art5-safeguard bank, two current signed pod cards: 34 of 36 against 19 of 36, both MEASURED. Two point estimates: no separation test, no ranking, no legal finding. https://councilof.ai/api/hub-cards?axis=art5-safeguard"
+    },
+    {
+      "id": "cross-reality-small-gap",
+      "date": "2026-09-14",
+      "title": "Cross-reality: a four-point gap is not a lead",
+      "summary": "Two MEASURED cards on one cross-reality bank sit about four points apart at n near 31; the board's own rule says that is not an advantage.",
+      "body": "On the cross-reality axis, two signed pod cards bind the same bank_sha256, 9aafd224f011. ollama:qwen3:8b reads 0.6875 at n=32 (https://councilof.ai/interop/mill-cards-signed/signed-cross-re-e620fd5b9378.json). ollama:qwen2.5:7b reads 0.6452 at n=31 (https://councilof.ai/interop/mill-cards-signed/signed-cross-re-850c299a32b3.json). In items, that is 22 correct of 32 against 20 correct of 31. The qwen2.5:7b card excluded one parse error, which is why its n is 31 on a bank where the other card graded 32. Both bodies say MEASURED. No separation test is attached to either card, and the limitations text on GET /api/gspc states the rule we apply here: a point-estimate lead is not a measured advantage. So we do not call either model ahead on this axis. Two samples of about thirty items, two items apart in correct answers, are a reason to measure more, not a reason to choose.",
+      "artifacts": [
+        {
+          "label": "qwen3:8b cross-reality card",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-cross-re-e620fd5b9378.json"
+        },
+        {
+          "label": "qwen2.5:7b cross-reality card",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-cross-re-850c299a32b3.json"
+        },
+        {
+          "label": "GSPC board limitations",
+          "url": "https://councilof.ai/api/gspc"
+        }
+      ],
+      "social": "Cross-reality, one bank: 22 of 32 against 20 of 31. Both MEASURED, no separation test. A point-estimate lead is not a measured advantage, so neither model is called ahead. https://councilof.ai/api/gspc"
+    },
+    {
+      "id": "continuity-tie-and-gap",
+      "date": "2026-09-14",
+      "title": "Continuity: a tie and a gap on the same bank",
+      "summary": "Three MEASURED cards on one continuity bank: two tie exactly, and a third sits well above them without a separation test.",
+      "body": "On the continuity axis, three signed pod cards bind the same bank_sha256, 25dd6a72ac5a, each at n=33. ollama:qwen3:8b reads 0.6364 at n=33 (https://councilof.ai/interop/mill-cards-signed/signed-continui-19040fce76a1.json). ollama:gemma3:4b reads 0.303 at n=33 (https://councilof.ai/interop/mill-cards-signed/signed-continui-3e4769f24ea5.json). ollama:qwen2.5:1.5b reads 0.303 at n=33 (https://councilof.ai/interop/mill-cards-signed/signed-continui-01acdf2ec8f4.json). The last two tie exactly, at 10 correct of 33 each; the qwen3:8b card records 21 correct of 33. All three bodies say MEASURED with zero parse errors excluded. So this one bank carries a tie and a gap at the same time, and both are reported as they are. The gap between the qwen3:8b card and the two tied cards has no separation test attached; it is a difference between point estimates. The tie is a tie at the resolution of 33 items, not a claim that the two tied models behave identically elsewhere.",
+      "artifacts": [
+        {
+          "label": "qwen3:8b continuity card",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-continui-19040fce76a1.json"
+        },
+        {
+          "label": "gemma3:4b continuity card",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-continui-3e4769f24ea5.json"
+        },
+        {
+          "label": "qwen2.5:1.5b continuity card",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-continui-01acdf2ec8f4.json"
+        }
+      ],
+      "social": "One continuity bank, three signed cards: 21 of 33, then a tie at 10 of 33 and 10 of 33. A tie and a gap on the same bank, both reported as they are. https://councilof.ai/interop/mill-cards-signed/signed-continui-3e4769f24ea5.json"
+    },
+    {
+      "id": "care-read-n-before-accuracy",
+      "date": "2026-09-14",
+      "title": "Care: read n and the exclusion count before the accuracy",
+      "summary": "On one care bank, the higher accuracy sits on fewer graded items, because most of that model's replies could not be parsed.",
+      "body": "Two signed pod cards on the care axis bind the same bank_sha256, cee5e47a31f1, but they did not grade the same number of items. ollama:llama3.2:3b reads 0.7143 at n=77 (https://councilof.ai/interop/mill-cards-signed/signed-care-83d57579098c.json), and its compute_evidence records parse_errors_excluded: 122. ollama:qwen3:8b reads 0.3333 at n=198 (https://councilof.ai/interop/mill-cards-signed/signed-care-56bfcb37d774.json), with parse_errors_excluded: 1. The higher accuracy therefore sits on the replies that could be parsed, and on the llama3.2:3b card those were fewer than the replies that could not. Both bodies say MEASURED, because both n values clear 30. A reader comparing the two should read n and the exclusion count before the accuracy: a model that replies out of format on most items and correctly on the rest is a different finding from a model that replies in format on nearly every item. Neither card carries a separation test.",
+      "artifacts": [
+        {
+          "label": "llama3.2:3b care card, current re-run: 0.7051 at n=78 (the body quotes the superseded 0.7143 at n=77)",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-care-bc2d19a5d73b.json"
+        },
+        {
+          "label": "qwen3:8b care card",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-care-56bfcb37d774.json"
+        }
+      ],
+      "social": "Same care bank, two signed cards. The higher accuracy was graded on 77 items after 122 unparseable replies were excluded; the lower one on 198 items with 1 excluded. Read n before accuracy. https://councilof.ai/interop/mill-cards-signed/signed-care-83d57579098c.json"
+    },
+    {
+      "id": "zero-with-missing-error-field",
+      "date": "2026-09-14",
+      "title": "A zero with a missing error field is a question, not a finding",
+      "summary": "A MEASURED card reads accuracy 0 at n=237 and carries no parse-error count; its neighbour on the same bank does.",
+      "body": "ollama:qwen3:4b reads accuracy 0 at n=237 on the governance axis (https://councilof.ai/interop/mill-cards-signed/signed-governan-3c96b82c7e64.json), and the body says MEASURED. On the same bank_sha256, b93f9808f014, the ollama:qwen3:8b card reads 0.5781 at n=237 (https://councilof.ai/interop/mill-cards-signed/signed-governan-b2e50d7aff0a.json). The two compute_evidence blocks differ in one telling way: the qwen3:8b card records parse_errors_excluded: 0, and the qwen3:4b card has no parse_errors_excluded field at all. The qwen3:4b run_id is dated 2026-09-05; the qwen3:8b run_id is dated 2026-09-14. A zero on a 237-item bank with the error field absent is something to investigate before anyone repeats it as a statement about the model. We publish the observation and not an explanation, because the card bytes do not contain one. Read any zero alongside its error fields, and treat a missing field as missing, not as zero.",
+      "artifacts": [
+        {
+          "label": "qwen3:4b governance card",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-governan-3c96b82c7e64.json"
+        },
+        {
+          "label": "qwen3:8b governance card",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-governan-b2e50d7aff0a.json"
+        }
+      ],
+      "social": "A signed card reads 0 at n=237 and has no parse-error field; its neighbour on the same bank records 0 excluded. A zero with a missing error field is a question to investigate, not a finding. https://councilof.ai/interop/mill-cards-signed/signed-governan-3c96b82c7e64.json"
+    },
+    {
+      "id": "same-axis-different-bank",
+      "date": "2026-09-14",
+      "title": "Same axis name, different bank: stop before comparing",
+      "summary": "Two care cards name different frozen banks and different harnesses, so no difference between their numbers is a finding.",
+      "body": "Two care cards should not be compared, and the bytes say why. On the care axis, Qwen/Qwen3-14B reads 0.1333 at n=30 (https://councilof.ai/interop/mill-cards-signed/signed-care-eda16a8fc969.json). Its evidence block names bank_file bank-care-3cf9c16dbb6b.jsonl from the csoai/gspc-care dataset and the route hf-router:Qwen/Qwen3-14B:featherless-ai, and its admission receipt records 4 correct of 30. The ollama:llama3.2:3b care card reads 0.7143 at n=77 (https://councilof.ai/interop/mill-cards-signed/signed-care-83d57579098c.json), and its compute_evidence binds a different bank_sha256, cee5e47a31f1, against a local Ollama model digest. Same axis name, different frozen bank, different harness. The two numbers are not on a common scale, so no difference between them is a finding. Before comparing any two cards, match bank_sha256 before anything else; if the hashes differ, stop. The same check applies across GET /api/hub-cards, where cells from both populations appear side by side.",
+      "artifacts": [
+        {
+          "label": "Qwen3-14B care card",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-care-eda16a8fc969.json"
+        },
+        {
+          "label": "llama3.2:3b care card, current re-run: 0.7051 at n=78 (the body quotes the superseded 0.7143 at n=77)",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-care-bc2d19a5d73b.json"
+        },
+        {
+          "label": "Qwen3-14B admission receipt",
+          "url": "https://councilof.ai/interop/mill-evidence/admission-aa3e2e9e5738.json"
+        }
+      ],
+      "social": "Two care cards, same axis name, different frozen banks and harnesses. Their numbers are not on a common scale. Match bank_sha256 before comparing any two cards; if the hashes differ, stop. https://councilof.ai/api/hub-cards"
+    },
+    {
+      "id": "admission-receipt-anatomy",
+      "date": "2026-09-14",
+      "title": "What an admission receipt adds to a signed card",
+      "summary": "A Hub card's receipt records the pre-signing body and a summary; the index builder recomputes the card from it and drops any mismatch.",
+      "body": "The Qwen/Qwen3-14B care card carries a body.admission block naming admission-aa3e2e9e5738.json and that file's sha256. The receipt has state VERIFIED_ADMISSION. It records the source body as it stood before signing, with status UNMEASURED and the marker signed-pending-verify, plus a summary: 30 items, 30 answered, 4 correct. The signed card's body says MEASURED. That change follows a rule, not an editor. The Hub index builder recomputes the expected body from the receipt, setting MEASURED when n is at least 30 and UNMEASURED with n<30 unquotable otherwise, and it excludes any card whose body differs from that recomputation, whose receipt does not hash to the value the card names, or whose bank and item files do not hash to the values in the card's evidence block. The result is published as /interop/hub-cards-index.json. A card that fails any of those checks does not appear there, however valid its signature.",
+      "artifacts": [
+        {
+          "label": "Qwen3-14B care card",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-care-eda16a8fc969.json"
+        },
+        {
+          "label": "Admission receipt",
+          "url": "https://councilof.ai/interop/mill-evidence/admission-aa3e2e9e5738.json"
+        }
+      ],
+      "social": "A signed card is not enough to enter the Hub index. Its admission receipt must hash to the value the card names, its item and bank files must match, and its status must follow the n>=30 rule. https://councilof.ai/interop/mill-evidence/admission-aa3e2e9e5738.json"
+    },
+    {
+      "id": "item-evidence-regrade",
+      "date": "2026-09-14",
+      "title": "Re-grade a card yourself from its item rows",
+      "summary": "The item file behind a Hub care card is public, hashes to the value the card signs, and reproduces the card's accuracy.",
+      "body": "The item file behind the Qwen/Qwen3-14B care card is public: items-care-d2154338e911.jsonl. Its sha256 begins d2154338e911f65a, which is the items_sha256 the signed card names. Each of its 30 rows carries the prompt, prompt_sha256, the expected label, the observed label, an ok flag, the raw output's sha256 and the provider route. The allowed labels are 0 or 1, and the expected labels split 17 ones and 13 zeros. Counting rows with ok true gives 4 of 30, which matches the Qwen/Qwen3-14B card's accuracy of 0.1333 at n=30 (https://councilof.ai/interop/mill-cards-signed/signed-care-eda16a8fc969.json). This is what reproducibility means in practice: the aggregate can be recomputed from rows anyone can download, and the rows can be checked against a hash the signature covers. A card that carries just an aggregate cannot be checked this way, which is why aggregate-only cards no longer enter the quotable path. The frozen bank file the rows came from is published beside them.",
+      "artifacts": [
+        {
+          "label": "Item rows",
+          "url": "https://councilof.ai/interop/mill-evidence/items-care-d2154338e911.jsonl"
+        },
+        {
+          "label": "Qwen3-14B care card",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-care-eda16a8fc969.json"
+        },
+        {
+          "label": "Frozen bank file",
+          "url": "https://councilof.ai/interop/mill-evidence/bank-care-3cf9c16dbb6b.jsonl"
+        }
+      ],
+      "social": "Download 30 item rows, check their sha256 against the signed card, count ok:true. You get 4 of 30, the card's accuracy. That is what a reproducible card looks like. https://councilof.ai/interop/mill-evidence/items-care-d2154338e911.jsonl"
+    },
+    {
+      "id": "honest-unmeasured-n12",
+      "date": "2026-09-14",
+      "title": "An honest UNMEASURED at n=12",
+      "summary": "A signed, admitted safety card says UNMEASURED because 12 graded items are fewer than 30; its accuracy field is not quoted.",
+      "body": "mistralai/Mistral-7B-Instruct-v0.2 has a current signed, admitted card on the safety axis (https://councilof.ai/interop/mill-cards-signed/signed-safety-5de28cfe94db.json). The body says status UNMEASURED, with unmeasured: n<30 unquotable, at n=12. The card also carries an accuracy field. We do not quote it, because the card itself says the value is not quotable at this sample size. UNMEASURED here does not mean the model failed, and it does not mean the model passed. It means 12 graded items are fewer than the 30 the rule requires before a result is stated. The card is still signed and still listed in hub-cards-index.json with its status passed through unchanged, because an honest UNMEASURED is information: it tells a reader exactly where the evidence stops. The item rows and admission receipt the card names are public, so the 12 rows can be inspected even though no accuracy is quoted from them. That card has since been replaced; the card that now holds this cell is cited here beside it (https://councilof.ai/interop/mill-cards-signed/signed-safety-6477fa7db2f2.json), because the copy rule asks for the replacing card to sit beside the one it replaced.",
+      "artifacts": [
+        {
+          "label": "Mistral-7B-Instruct-v0.2 safety card",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-safety-5de28cfe94db.json"
+        },
+        {
+          "label": "Hub cards index",
+          "url": "https://councilof.ai/interop/hub-cards-index.json"
+        },
+        {
+          "label": "Admission receipt",
+          "url": "https://councilof.ai/interop/mill-evidence/admission-9222a3c8528a.json"
+        }
+      ],
+      "social": "A signed safety card at n=12 says UNMEASURED: n<30 unquotable. We do not quote its accuracy. It is not a pass and not a fail; it marks where the evidence stops. https://councilof.ai/interop/mill-cards-signed/signed-safety-5de28cfe94db.json"
+    },
+    {
+      "id": "commission-self-funded-chain",
+      "date": "2026-09-14",
+      "title": "The llama3.2:3b commission: a self-funded plumbing test that returned signed cards",
+      "summary": "A commissioned subject resolves to signed cards; the settlement behind it is published and classified as internal and self-funded.",
+      "body": "GET /api/commissions lists llama3.2:3b as a subject commissioned through a settled request-attestation, and resolves that subject to a list of signed card URLs across GSPC axes, each with its own n and status. The settlement behind it is published and classified. x402-self-settlement-2026-09-11.json records classification INTERNAL_SELF_FUNDED, transaction 0x60172f43ca14e587 at Base block 51172054, and says in its own words that it is a bounded plumbing and delivery test, not revenue, outside demand, adoption, an independent buyer, or a model measurement. The ERC-20 transfer it records moves from the payTo wallet to the same payTo wallet. So what this chain shows is that the commission path works end to end: a paid request is recorded, the subject is listed, and signed cards come back listed against it, retrievable by URL. It shows nothing about demand. The same subject's cards are also grouped in the pod cards index.",
+      "artifacts": [
+        {
+          "label": "Commissions endpoint",
+          "url": "https://councilof.ai/api/commissions"
+        },
+        {
+          "label": "Self-settlement record",
+          "url": "https://councilof.ai/interop/x402-self-settlement-2026-09-11.json"
+        },
+        {
+          "label": "Pod cards index",
+          "url": "https://councilof.ai/interop/pod-cards-index.json"
+        }
+      ],
+      "social": "We commissioned our own measurement of llama3.2:3b to test the path. The settlement is published and labelled INTERNAL_SELF_FUNDED: not revenue, not outside demand. The signed cards came back. https://councilof.ai/api/commissions"
+    },
+    {
+      "id": "commission-unmeasured-axes",
+      "date": "2026-09-14",
+      "title": "A commission returns measurement attempts, including UNMEASURED ones",
+      "summary": "Several cards delivered against the llama3.2:3b commission are UNMEASURED at n below 30, and they are signed like the rest.",
+      "body": "Not every card delivered against the llama3.2:3b commission is quotable, and GET /api/commissions says so card by card. The jail card reads status UNMEASURED at n=2 (https://councilof.ai/interop/mill-cards-signed/signed-jail-93152fee78d0.json). The machinery-conformity card reads UNMEASURED at n=23 (https://councilof.ai/interop/mill-cards-signed/signed-machiner-d3ef4dd76e1a.json). In the same list, the provenance and safety cards each read UNMEASURED at n=9, and the affect card reads UNMEASURED at n=24. Each of those bodies carries unmeasured: n<30 unquotable. The other cards in the list clear n=30 and say MEASURED. The commissions endpoint describes itself as never a score: a commission produces a measurement attempt, not a promised number, and where fewer than 30 items were graded the signed card says UNMEASURED and no accuracy is quoted. The UNMEASURED cards are signed under the same key as the MEASURED ones, so a reader can verify that the gaps were published rather than left out.",
+      "artifacts": [
+        {
+          "label": "Commissions endpoint",
+          "url": "https://councilof.ai/api/commissions"
+        },
+        {
+          "label": "llama3.2:3b jail card, current re-run: 0.4394 at n=66 (the body quotes the superseded 0.5 at n=2)",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-jail-52673eb7789c.json"
+        },
+        {
+          "label": "llama3.2:3b machinery-conformity card, current re-run: 0.3182 at n=22 (the body quotes the superseded 0.3478 at n=23)",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-machiner-d0992b57e5b8.json"
+        }
+      ],
+      "social": "Some cards returned for the llama3.2:3b commission say UNMEASURED: jail at n=2, machinery-conformity at n=23. They are signed like the MEASURED ones, so the gaps are published, not hidden. https://councilof.ai/api/commissions"
+    },
+    {
+      "id": "supersede-never-edit",
+      "date": "2026-09-14",
+      "title": "Signed bytes are superseded, not edited",
+      "summary": "A card whose signed body was wrong is still served; a published ledger row points to its replacement and says why.",
+      "body": "Signed bytes are not edited; they are superseded, and the supersession is published. The card signed-affect-0e870854f6bf.json for deepseek-ai/DeepSeek-V3.2 on the affect axis is still served and still signed, and its body still reads UNMEASURED with the marker signed-pending-verify at n=30. SUPERSEDED.jsonl carries a row with superseded_file signed-affect-0e870854f6bf.json, by_file signed-affect-e37184166a77.json, the reason \"#1155: body state corrected - the signed body must be true after signing\", and the time 2026-09-03T05:14:29Z. The replacement card is signed under the same did, did:web:csoai.org#board-attestation-1, and its body reads MEASURED at n=30. A reader holding the old card can find what replaced it and why; a reader holding the new card can find what it replaced. Nothing was deleted, neither signature was touched, and both files remain fetchable at their original URLs.",
+      "artifacts": [
+        {
+          "label": "Superseded card",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-affect-0e870854f6bf.json"
+        },
+        {
+          "label": "Supersession ledger",
+          "url": "https://councilof.ai/interop/mill-cards-signed/SUPERSEDED.jsonl"
+        },
+        {
+          "label": "Replacement card",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-affect-e37184166a77.json"
+        }
+      ],
+      "social": "A signed card with a wrong body stays online. A ledger row names its replacement, the reason and the time. Nothing deleted, no signature touched. That is how signed evidence gets corrected. https://councilof.ai/interop/mill-cards-signed/SUPERSEDED.jsonl"
+    },
+    {
+      "id": "aggregate-only-retired",
+      "date": "2026-09-14",
+      "title": "Why aggregate-only cards were retired from the quotable path",
+      "summary": "Since the 2026-09-13 evidence ruling, a Hub card without item evidence cannot land as quotable; older cards are superseded, not deleted.",
+      "body": "Since the 2026-09-13 evidence ruling, a Hub card that carries just an aggregate accuracy cannot enter the quotable path. The landing script, scripts/land_mill_cards.py, says it plainly: an aggregate-only card is never quotable; a card that binds an evidence bundle must find it, and a bundle that is absent or hashes differently fails closed; and cards with no evidence bundle are skipped with the reason that aggregate-only cards stopped landing after the 2026-09-13 evidence ruling. Older cards are not deleted. When a current card with item evidence replaces one, SUPERSEDED.jsonl records it with the reason \"#2075: replaced by a current reproducibly admitted v0.2 item-evidence card\". The Hub cards index describes its source as reproducibly admitted signed Hub cards on the deployed commit, and publishes how many signed files it saw and how many it skipped, so the retired population stays countable without being quotable. The reason is reproducibility: an aggregate cannot be re-graded, and item rows can.",
+      "artifacts": [
+        {
+          "label": "Supersession ledger",
+          "url": "https://councilof.ai/interop/mill-cards-signed/SUPERSEDED.jsonl"
+        },
+        {
+          "label": "Hub cards index",
+          "url": "https://councilof.ai/interop/hub-cards-index.json"
+        }
+      ],
+      "social": "An accuracy you cannot re-grade is not quotable. Since 13 September, Hub cards without item evidence stop at the landing step; older ones are superseded, not deleted, with the reason on a public ledger. https://councilof.ai/interop/hub-cards-index.json"
+    },
+    {
+      "id": "verify-a-card-yourself",
+      "date": "2026-09-14",
+      "title": "Verify a signed card yourself, with no account",
+      "summary": "Recompute the content id from the canonical body, then check the Ed25519 signature under the key published in did.json.",
+      "body": "Any signed card can be checked with public bytes and no account. Take the ollama:llama3.2:3b care card (signed-care-83d57579098c.json). Step one: take its body object, serialise it as JSON with keys sorted and no whitespace, and hash it with sha256. The result must equal the card's id field, which begins 83d57579098c; the card states this as its preimage_rule, sha256(canonical body). Step two: fetch did.json, find the verification method did:web:csoai.org#board-attestation-1 named in the card's did field, decode its Ed25519 public key, and verify the card's hex signature over the same canonical body bytes. Both checks passed when we ran them on 14 September. One trap: some cards carry whole-number values, such as the ollama:qwen3:4b governance card's accuracy 0 at n=237 (https://councilof.ai/interop/mill-cards-signed/signed-governan-3c96b82c7e64.json); a serialiser that writes 0.0 produces different bytes and a different hash. Each card's verify field points to the loginless verifier at councilof.ai/gspc-verify.",
+      "artifacts": [
+        {
+          "label": "llama3.2:3b care card, current re-run: 0.7051 at n=78 (the body quotes the superseded 0.7143 at n=77)",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-care-bc2d19a5d73b.json"
+        },
+        {
+          "label": "Published keys (did.json)",
+          "url": "https://csoai.org/.well-known/did.json"
+        },
+        {
+          "label": "Browser verifier",
+          "url": "https://councilof.ai/gspc-verify/"
+        }
+      ],
+      "social": "Check a signed card yourself: sort the body's keys, hash it, compare with id, then verify the Ed25519 signature with the key in did.json. No account needed. https://councilof.ai/gspc-verify/"
+    },
+    {
+      "id": "card-root-recompute",
+      "date": "2026-09-14",
+      "title": "Recompute the 14 September card root from its leaves",
+      "summary": "The card root's leaves hash whole signed cards, and rebuilding the tree from the published leaf list reproduces its root.",
+      "body": "card-root-2026-09-14.json is a Merkle commitment over signed cards. Its leaf_rule says each leaf is sha256 over canonical JSON of the whole signed card, including body, id, signature and did, not the body alone. Its proof_rule says parents combine positionally as sha256(left + right). We rebuilt the tree from the published leaves list in index order: pairing an unpaired node with itself at each level reproduces the published merkle_root, which begins 989b4e7f771d, and promoting the unpaired node unchanged does not. We also hashed each signed card we had fetched on 14 September, and each matched its listed leaf, including signed-governan-09759e29f44b.json at index 433. SUPERSEDED.jsonl has since replaced that card with https://councilof.ai/interop/mill-cards-signed/signed-governan-b2e50d7aff0a.json, which this root does not contain; a root commits to the bytes that existed when it was built. The same file lists skipped cards with a reason, such as superseded, so a reader can see what the root leaves out. The document is marked not_a_certificate: it commits to which bytes existed, and says nothing about whether the numbers inside those bytes mean what a reader hopes.",
+      "artifacts": [
+        {
+          "label": "Card root",
+          "url": "https://councilof.ai/interop/card-root-2026-09-14.json"
+        },
+        {
+          "label": "A leaf's card (index 433)",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-governan-09759e29f44b.json"
+        },
+        {
+          "label": "The card that replaced it",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-governan-b2e50d7aff0a.json"
+        }
+      ],
+      "social": "We rebuilt the 14 September card root from its published leaves and got the published root. Each leaf is sha256 of a whole signed card, signature included. It commits to bytes, not to meaning. https://councilof.ai/interop/card-root-2026-09-14.json"
+    },
+    {
+      "id": "card-root-bitcoin-attestation",
+      "date": "2026-09-14",
+      "title": "The 14 September card root: what its .ots sidecar proves",
+      "summary": "The sidecar for the card root carries Bitcoin block-header attestations that replay to real block merkle roots.",
+      "body": "card-root-2026-09-14.json tells readers to take its timestamp state from the .ots sidecar, never from the existence of the JSON file. We did. The sidecar is an OpenTimestamps proof over the sha256 that begins 3d39bd1aeb68, which is the sha256 of the JSON bytes served on 14 September. It holds calendar attestations from the alice and bob OpenTimestamps calendars and Bitcoin block-header attestations at heights 966920 and 966921. Replaying the proof's operations from the file digest yields the merkle roots recorded in those two blocks' headers, timestamped 05:28:01 and 05:33:52 UTC on 14 September. That is the lifecycle in one file: a calendar attestation is a promise to include a digest, and a block-header attestation is the included result, which anyone can check against a copy of the chain. It shows these exact bytes existed by those blocks. It does not make any card inside them correct.",
+      "artifacts": [
+        {
+          "label": "Card root",
+          "url": "https://councilof.ai/interop/card-root-2026-09-14.json"
+        },
+        {
+          "label": "OpenTimestamps sidecar",
+          "url": "https://councilof.ai/interop/card-root-2026-09-14.json.ots"
+        }
+      ],
+      "social": "The 14 September card root's .ots proof replays to the merkle roots of Bitcoin blocks 966920 and 966921. It shows those bytes existed by then. It does not make any card inside them correct. https://councilof.ai/interop/card-root-2026-09-14.json.ots"
+    },
+    {
+      "id": "pending-stamp-is-not-proof",
+      "date": "2026-09-14",
+      "title": "A pending timestamp is a request, not a proof",
+      "summary": "Three sibling card-root files from the same day carried pending calendar attestations and no block attestation when read; the root's own rule says what that means.",
+      "body": "Three other card-root files carry the same date and a hash suffix: card-root-2026-09-14-a137c8adc69c.json, card-root-2026-09-14-d11eb1937e62.json and card-root-2026-09-14-fc66dcd0927a.json. When we read their .ots sidecars on 14 September, each held pending calendar attestations and no Bitcoin block-header attestation. The rule for all of them is written inside the dated card root itself: until a proof is upgraded into a block, any stamp is a pending request, never a proof. A pending attestation says a calendar server accepted a digest and undertook to include it; there is nothing yet to check against the chain. So a reader holding one of these files can recompute its Merkle root from its leaves today, and must wait for the sidecar upgrade before saying anything about time. The difference between these files and the undecorated card root is visible in the sidecar bytes, not in the file names.",
+      "artifacts": [
+        {
+          "label": "Sidecar a137c8adc69c",
+          "url": "https://councilof.ai/interop/card-root-2026-09-14-a137c8adc69c.json.ots"
+        },
+        {
+          "label": "Sidecar d11eb1937e62",
+          "url": "https://councilof.ai/interop/card-root-2026-09-14-d11eb1937e62.json.ots"
+        },
+        {
+          "label": "Card root anchor_rule",
+          "url": "https://councilof.ai/interop/card-root-2026-09-14.json"
+        }
+      ],
+      "social": "Three same-day card-root files carried pending calendar stamps and no block attestation when we read them. A pending stamp is a request, not a proof; the time claim waits for the sidecar upgrade. https://councilof.ai/interop/card-root-2026-09-14.json"
+    },
+    {
+      "id": "two-roots-two-leaf-rules",
+      "date": "2026-09-14",
+      "title": "Two root documents, two leaf rules",
+      "summary": "root.json and the dated card root hash different things, so a leaf computed under one rule will not be found under the other.",
+      "body": "councilof.ai serves two different root documents, and they use different leaf rules, so their roots are not interchangeable. root.json, kind csoai.public-root/v1, defines a leaf as sha256 over the canonical card minus its sha256 and sig_ed25519 fields, and pairs an odd node with itself. Its tree_caveat says that tree shape is collidable in the sense of CVE-2012-2459, and that the ambiguity is closed because card_count sits inside the signed preimage, so a verifier must check the count. card-root-2026-09-14.json, kind csoai.card-root/1, hashes the whole signed card, signature included. A leaf computed under one rule will not be found under the other. Before checking an inclusion proof, read the leaf rule of the root you were handed. Do not compare the two documents' counts either: they commit to different sets of objects under different definitions, and a difference between them is not a discrepancy.",
+      "artifacts": [
+        {
+          "label": "Public root",
+          "url": "https://councilof.ai/root.json"
+        },
+        {
+          "label": "Card root",
+          "url": "https://councilof.ai/interop/card-root-2026-09-14.json"
+        }
+      ],
+      "social": "root.json and the dated card root use different leaf rules. A leaf hashed under one will not be found under the other, and their counts are not comparable. Read the leaf rule before verifying. https://councilof.ai/root.json"
+    },
+    {
+      "id": "what-a-402-is",
+      "date": "2026-09-14",
+      "title": "What an HTTP 402 challenge is, and what it is not",
+      "summary": "A 402 body is an offer that names the terms of a delivery; it is not a delivery, a settlement, or evidence that anyone paid.",
+      "body": "GET /api/wrapper?id=usdc.e:arbitrum answers HTTP 402 with a JSON body: x402Version 2, one accepts entry with scheme exact, network eip155:8453, the USDC contract on Base as the asset, a payTo address, a timeout, and a description of the resource. That body is an offer. It names what would be delivered and on what terms. It is not a delivery, not a settlement, and not evidence that anyone has ever paid. The amount appears inside the challenge, which is the place a reader should take it from. The door-conformance report probes this door among others and records, row by row, that the challenge shape conformed while fulfillment stayed UNMEASURED, because no payment was exercised. The resource description itself sets the scope of what sits behind the offer: a ratio, not a rate, a grade or a reserve attestation. The /wrappers/ page describes a free preview of the same card.",
+      "artifacts": [
+        {
+          "label": "A live 402 door",
+          "url": "https://councilof.ai/api/wrapper?id=usdc.e:arbitrum"
+        },
+        {
+          "label": "Door-conformance report",
+          "url": "https://councilof.ai/interop/x402-door-conformance-2026-09/report.json"
+        },
+        {
+          "label": "Wrapper parity page",
+          "url": "https://councilof.ai/wrappers/"
+        }
+      ],
+      "social": "An HTTP 402 is an offer: terms, asset, network, payee. It is not a delivery, not a settlement, not proof anyone paid. Read the amount from the challenge itself. https://councilof.ai/api/wrapper?id=usdc.e:arbitrum"
+    },
+    {
+      "id": "x402-door-conformance-round",
+      "date": "2026-09-14",
+      "title": "x402 door conformance: challenge shape probed, delivery not",
+      "summary": "Every door in the 14 September conformance report returned a conformant 402 challenge; every fulfillment stayed UNMEASURED.",
+      "body": "The x402 door-conformance report generated at 2026-09-14T01:50:50Z probed the resources discovered from councilof.ai's /.well-known/x402.json and recorded each response. Every door row returned HTTP 402 and passed the same six checks: amount present, asset is USDC, network is Base, payTo matches, resource named, scheme exact. One row is a zero-priced door that settles and charges nothing. Every row records fulfillment as UNMEASURED, because the probe did not pay. The summary card is unsigned, sets not_delivery_proof, and lists fulfillment_bytes and the settlement classification as unmeasured. One defect is visible in that summary: its subject line says 9 doors, while its payload says n_doors 10 and the report carries 10 rows. The report rows are the thing to read. A conformant challenge shows that a buyer's client can parse the offer; it says nothing about what arrives after payment.",
+      "artifacts": [
+        {
+          "label": "Door-conformance report",
+          "url": "https://councilof.ai/interop/x402-door-conformance-2026-09/report.json"
+        },
+        {
+          "label": "Unsigned summary card",
+          "url": "https://councilof.ai/interop/x402-door-conformance-2026-09/card-x402-door-conformance-summary-unsigned.json"
+        }
+      ],
+      "social": "Our x402 doors all returned a conformant 402 challenge in the 14 September probe. Delivery was not tested: no payment, fulfillment UNMEASURED. A parseable offer is not a delivered product. https://councilof.ai/interop/x402-door-conformance-2026-09/report.json"
+    },
+    {
+      "id": "deepseek-402-is-our-balance",
+      "date": "2026-09-14",
+      "title": "DeepSeek identity probe: the 402 is about our balance",
+      "summary": "Two probe receipts record DeepSeek's catalogue and a refused call for every model id; the refusal is our account balance, and no served identity was observed.",
+      "body": "DeepSeek's own news post, dated 2026-09-10, says that from 04:00 UTC on 14 September deepseek-v4-pro API requests route to V4.1-Flash. We tried to observe that from outside and could not. Two probe receipts, at 06:37:07Z and 09:27:01Z, show the model catalogue answering HTTP 200 with the ids deepseek-flash and deepseek-v4-pro. Every completion request, for deepseek-v4-pro, deepseek-flash, deepseek-chat and deepseek-reasoner, answered HTTP 402 with the error Insufficient Balance, recorded as REFUSED_BALANCE. That 402 is a fact about the balance on our API account. It is not a statement about DeepSeek's service or about any model. The later receipt says so directly: 0 of 4 requests returned a response from which served-model identity could be recorded. The rerouting remains the provider's announcement, not something these receipts observed. A probe that cannot see identity reports that it cannot see identity.",
+      "artifacts": [
+        {
+          "label": "Probe receipt 06:37Z",
+          "url": "https://councilof.ai/interop/deepseek-identity/deepseek-identity-20260914T063707Z.json"
+        },
+        {
+          "label": "Probe receipt 09:27Z",
+          "url": "https://councilof.ai/interop/deepseek-identity/deepseek-identity-20260914T092701Z.json"
+        }
+      ],
+      "social": "We probed DeepSeek's announced V4-Pro rerouting. Every call got 402 Insufficient Balance: a fact about our account, not DeepSeek. 0 of 4 calls showed which model served. https://councilof.ai/interop/deepseek-identity/deepseek-identity-20260914T092701Z.json"
+    },
+    {
+      "id": "x402-census-round-0906",
+      "date": "2026-09-14",
+      "title": "The 6 September x402 census round: one purchase per host, no verdicts",
+      "summary": "A buyer's-eye round paid each eligible host once and recorded the outcome; every host series stays UNMEASURED until 30 observations.",
+      "body": "The x402 settlement census round of 2026-09-06 is a buyer's-eye record: a throwaway wallet the estate controls paid each eligible third-party host once and wrote down what came back. Of 316 hosts probed, 314 produced paid rows. Outcomes by host: 100 DELIVERED, 213 REFUSED, 1 MISMATCH and 2 NO_CHALLENGE. Thirteen hosts are recorded as take-and-refuse, defined as status REFUSED while the host's own payment response reported a settlement transaction hash. The census index states its limits: REFUSED is not proof of bad faith, one purchase at one moment is not a pattern, CSOAI's own hosts are excluded, and no host was contacted, ranked or recommended. It also holds every host's series at UNMEASURED until that host has 30 paid observations, one per round, so nothing in this round is a verdict on any host. The round file describes every unit spent as a cost, never revenue.",
+      "artifacts": [
+        {
+          "label": "Round file",
+          "url": "https://councilof.ai/interop/x402-census/rounds/2026-09-06.json"
+        },
+        {
+          "label": "Census index",
+          "url": "https://councilof.ai/interop/x402-census/index.json"
+        }
+      ],
+      "social": "We paid 314 x402 hosts once each: 100 delivered, 213 refused, 13 took payment and refused. One purchase is not a pattern; every host stays UNMEASURED until 30 rounds. https://councilof.ai/interop/x402-census/rounds/2026-09-06.json"
+    },
+    {
+      "id": "wrapper-parity-usdce-arbitrum",
+      "date": "2026-09-14",
+      "title": "Wrapped USDC.e on Arbitrum against its escrow, at two named blocks",
+      "summary": "The parity ledger reads wrapped supply and escrow balance at pinned blocks and records a ratio, with raw reads hashed.",
+      "body": "The wrapped-asset parity ledger dated 2026-09-14 reads USDC.e on Arbitrum against the Arbitrum One ERC-20 gateway escrow on Ethereum. At Arbitrum block 504923416, totalSupply() on 0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8 returned 48,316,267.900248. At Ethereum block 25972488, balanceOf the escrow 0xcEe284F754E854890e311e3280b767F80797180d on the canonical USDC contract returned 52,223,762.917301. The ledger records escrow_over_wrapped as 1.080873, meaning the escrow balance read higher than the wrapped supply at those two blocks. Each raw hex return value is stored with its sha256, and each block carries its hash and a finality label: finalized tag as reported by the provider, not independently proven final. The ledger's attests field says what this is: point-in-time reads at the pinned blocks, a ratio, not a rate, not a grade, not a reserve attestation, not a certificate. The /wrappers/ page renders the same ledger.",
+      "artifacts": [
+        {
+          "label": "Parity ledger 2026-09-14 (served copy; the 03:13Z commit it was first read from is not publicly hosted)",
+          "url": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json"
+        },
+        {
+          "label": "Wrapper parity page",
+          "url": "https://councilof.ai/wrappers/"
+        }
+      ],
+      "social": "USDC.e on Arbitrum at block 504923416 against its gateway escrow at Ethereum block 25972488: escrow/wrapped = 1.080873. Raw reads hashed. A ratio, not a reserve attestation. https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json"
+    },
+    {
+      "id": "wrapper-four-states",
+      "date": "2026-09-14",
+      "title": "Four wrapper states, never collapsed into one number",
+      "summary": "A missing ratio can mean no escrow exists, the reserve is off-chain, or a read failed; the ledger labels which.",
+      "body": "The same parity ledger refuses to collapse its pairs into one number, and uses four states. ESCROW_PARITY_READ means both reads succeeded, as for dai:optimism, where escrow_over_wrapped is 1.505694 at OP Mainnet block 156875715 and Ethereum block 25972488. UNCHECKABLE_NATIVE_ISSUANCE: for usdc:base the record notes that Circle mints USDC natively on Base, so no escrow exists; supply is read and no parity is claimed. INDEXED_CUSTODIAL: for wbtc:ethereum the reserve is held by custodians and nothing independent is readable from here, so the pair stays indexed. UNMEASURED: for usdt0:arbitrum the read failed with an empty eth_call result from 0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627, and the ledger records the error instead of guessing. A reader who sees a missing ratio should read the state before anything else. Missing because no escrow exists, missing because the reserve is off-chain, and missing because a read failed are three different facts. The /wrappers/ page shows how many pairs sit in each state.",
+      "artifacts": [
+        {
+          "label": "Parity ledger 2026-09-14 (served copy; the 03:13Z commit it was first read from is not publicly hosted)",
+          "url": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json"
+        },
+        {
+          "label": "Wrapper parity page",
+          "url": "https://councilof.ai/wrappers/"
+        }
+      ],
+      "social": "No ratio can mean three things: no escrow exists, the reserve is off-chain, or the read failed. The wrapper ledger labels which, pair by pair, and never collapses them. https://councilof.ai/wrappers/"
+    },
+    {
+      "id": "stablecoin-indexed-not-measured",
+      "date": "2026-09-14",
+      "title": "Indexed is not measured: the stablecoin universe release",
+      "summary": "Every row of the frozen stablecoin index is labelled INDEXED and UNMEASURED; drift is appended, and the frozen bytes stay frozen.",
+      "body": "The stablecoin universe release frozen on 2026-09-11 indexes the public DefiLlama stablecoin response observed at 08:19:34Z that day, and its README is explicit about what indexing is not. Every row is labelled INDEXED, UNMEASURED, UNSIGNED, UNROOTED and UNANCHORED, so registry metadata cannot be presented as an independent chain measurement. The priority score that picks candidates for deeper work uses reported circulating value and chain count, and the README calls it scheduling metadata, not a risk, quality, safety, compliance or investment score. RLUSD is named as the asset with separately published deep evidence. When a later refresh showed drift, the note was appended and the frozen index.json and source.json stayed byte-identical, because a signed commitment binds their hashes; live per-subject states are kept in coverage-register.json. The README also prints the offline command that rebuilds the index from the frozen source bytes, so anyone can compare the output byte for byte.",
+      "artifacts": [
+        {
+          "label": "Release README",
+          "url": "https://councilof.ai/interop/stablecoin-universe-2026-09/README.md"
+        },
+        {
+          "label": "Frozen index",
+          "url": "https://councilof.ai/interop/stablecoin-universe-2026-09/index.json"
+        },
+        {
+          "label": "Live coverage register",
+          "url": "https://councilof.ai/interop/coverage-register.json"
+        }
+      ],
+      "social": "A registry listing is not a measurement. Every row in our frozen stablecoin index says INDEXED and UNMEASURED, and drift is appended while the frozen bytes stay frozen. https://councilof.ai/interop/stablecoin-universe-2026-09/README.md"
+    },
+    {
+      "id": "correction-empty-is-not-absence",
+      "date": "2026-09-14",
+      "title": "Correction C-2026-0913-01: an empty result is not absence",
+      "summary": "A census reported a handful of registry events where tens of thousands existed, because an RPC endpoint returned empty logs without an error.",
+      "body": "Correction C-2026-0913-01 on the public corrections record shows why an empty result is not absence. A census tool merged on 12 September reported 8 ERC-8004 Identity Registry registrations on Ethereum. The corrected count over the same range is 50,783. The cause, as recorded: the rpc.flashbots.net endpoint returned well-formed empty log results for ranges that contained receipt-verified events, with no error, and every check the tool ran at the time passed against it. It was caught when Etherscan's transaction count for the registry disagreed with the tool, and one on-chain receipt proved a Registered log that the endpoint had not returned. The fix adds known-event integrity checks: an endpoint's scan is not trusted unless it returns a receipt-verified event whenever that event's block is in range. The same record reported its own signature_state as STALE for a month, and said so rather than hiding it: it was signed on 2026-08-22 over a 15-entry body and appended 46 times without a re-issue. It was re-signed over the current bytes on 2026-09-22, and the state is now derived from an Ed25519 verification run on every request rather than from a typed label.",
+      "artifacts": [
+        {
+          "label": "Corrections record",
+          "url": "https://councilof.ai/api/corrections"
+        }
+      ],
+      "social": "Our ERC-8004 census reported 8 registrations; the corrected count is 50,783. An RPC endpoint returned empty logs with no error. Empty is not absence. The correction is public. https://councilof.ai/api/corrections"
+    },
+    {
+      "id": "governance-no-public-leader",
+      "date": "2026-09-14",
+      "title": "Governance: the board declines to name its own model as leader",
+      "summary": "The governance axis is MEASURED with no public leader, because the point lead belonged to a CSOAI council specialist.",
+      "body": "On GET /api/gspc, the governance axis shows MEASURED at n=237 with no public leader, and says why. Its public_leader_state reads EXCLUDED_OWN_MODEL: a CSOAI council specialist held the point lead, and the note states that a neutral measurement body does not rank its own models against the vendors it measures. External models answered the same frozen bank, and the axis publishes their fleet mean, but the note says an external re-ranking would need a per-model recompute that the payload does not carry, so no external leader or accuracy is asserted rather than invented. The earlier run is kept as a historical measurement record marked SUPERSEDED_FOR_PUBLIC_RANKING. The bank itself is public as the csoai/gspc-gov dataset. The result is a board that declines to report a lead that would flatter its publisher, keeps the measurement, and says exactly what is missing.",
+      "artifacts": [
+        {
+          "label": "GSPC board",
+          "url": "https://councilof.ai/api/gspc"
+        },
+        {
+          "label": "Governance bank dataset",
+          "url": "https://huggingface.co/datasets/csoai/gspc-gov"
+        }
+      ],
+      "social": "Our own council specialist led the governance axis on points. The public board shows no leader: a measurement body does not rank its own model against the vendors it measures. https://councilof.ai/api/gspc"
     }
-   ],
-   "social": "Three models, one conformance bank, one number: 18 of 35 each, all MEASURED. We report it as a tie, because it is one. Cards: https://councilof.ai/interop/mill-cards-signed/signed-conforma-0ce5a02c3ac8.json"
-  },
-  {
-   "id": "detector-interop-tie",
-   "date": "2026-09-14",
-   "title": "Detector-interop: a two-way tie at n=33",
-   "summary": "Two MEASURED cards on the same detector-interop bank read the same accuracy; the bank does not separate them.",
-   "body": "Two signed pod cards on the detector-interop axis bind the same bank_sha256, d75e96802d9e. ollama:gemma3:4b reads 0.7879 at n=33 (https://councilof.ai/interop/mill-cards-signed/signed-detector-2c1c8a49a8f8.json). ollama:mistral:7b reads 0.7879 at n=33 (https://councilof.ai/interop/mill-cards-signed/signed-detector-cd1f6b3ed84a.json). That is 26 correct of 33 on each card. Both bodies say MEASURED, with zero parse errors and zero transport errors excluded. On this bank, on this date, the two models tie. A tie is a result in its own right: it tells a reader that this bank does not distinguish these two models, which is worth knowing before treating either one as ahead on this dimension. Neither card needs a separation test for the tie to be stated honestly, and neither carries one. Both cards commit to an items_sha256 without linking the item rows, so the check a stranger can run today is the content id and the Ed25519 signature, using the verify link each card names.",
-   "artifacts": [
-    {
-     "label": "gemma3:4b detector-interop card",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-detector-2c1c8a49a8f8.json"
-    },
-    {
-     "label": "mistral:7b detector-interop card",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-detector-cd1f6b3ed84a.json"
-    }
-   ],
-   "social": "Detector-interop, one frozen bank: two signed cards, 26 of 33 each, both MEASURED. That is a tie, and a tie tells you this bank cannot separate the two models. https://councilof.ai/interop/mill-cards-signed/signed-detector-cd1f6b3ed84a.json"
-  },
-  {
-   "id": "art5-safeguard-gap",
-   "date": "2026-09-14",
-   "title": "Art5-safeguard: a wide gap, stated as two point estimates",
-   "summary": "Two current MEASURED pod cards on the same art5-safeguard bank differ widely; without a separation test it is still not a ranking.",
-   "body": "These are Hub pod cards, not rows of the GSPC board: the board's art5-safeguard row publishes no accuracy and names no leader. Two current signed pod cards bind the same bank_sha256, bdb7c0e8b7ad. ollama:qwen3:8b reads 0.9444 at n=36 (https://councilof.ai/interop/mill-cards-signed/signed-art5-saf-9d18d0d8ec2e.json), run 2026-09-14T04:01:13Z. ollama:qwen2.5:0.5b-instruct reads 0.5278 at n=36 (https://councilof.ai/interop/mill-cards-signed/signed-art5-saf-178172b985d2.json). In items, that is 34 correct of 36 against 19 correct of 36. An earlier ollama:qwen3:8b card on the same bank, run 2026-09-14T03:01:10Z, read 0.9722 at n=36 (https://councilof.ai/interop/mill-cards-signed/signed-art5-saf-b15988212458.json); SUPERSEDED.jsonl lists it as replaced by the current qwen3:8b card cited above, and GET /api/hub-cards serves that current card as the cell for that model on this axis. Both current bodies say MEASURED with zero parse errors excluded. Neither card carries a separation test, so we state the gap as two point estimates and not as a verdict on either model. A card on this axis is a measurement against one frozen bank; it is not a legal finding about any deployment of either model. To see the other pod models on the same bank, read the art5-safeguard cells of GET /api/hub-cards and check that each card names the same bank_sha256.",
-   "artifacts": [
-    {
-     "label": "qwen3:8b art5-safeguard card (current)",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-art5-saf-9d18d0d8ec2e.json"
-    },
-    {
-     "label": "qwen2.5:0.5b-instruct art5-safeguard card",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-art5-saf-178172b985d2.json"
-    },
-    {
-     "label": "Hub cards, art5-safeguard cells",
-     "url": "https://councilof.ai/api/hub-cards?axis=art5-safeguard"
-    }
-   ],
-   "social": "Same art5-safeguard bank, two current signed pod cards: 34 of 36 against 19 of 36, both MEASURED. Two point estimates: no separation test, no ranking, no legal finding. https://councilof.ai/api/hub-cards?axis=art5-safeguard"
-  },
-  {
-   "id": "cross-reality-small-gap",
-   "date": "2026-09-14",
-   "title": "Cross-reality: a four-point gap is not a lead",
-   "summary": "Two MEASURED cards on one cross-reality bank sit about four points apart at n near 31; the board's own rule says that is not an advantage.",
-   "body": "On the cross-reality axis, two signed pod cards bind the same bank_sha256, 9aafd224f011. ollama:qwen3:8b reads 0.6875 at n=32 (https://councilof.ai/interop/mill-cards-signed/signed-cross-re-e620fd5b9378.json). ollama:qwen2.5:7b reads 0.6452 at n=31 (https://councilof.ai/interop/mill-cards-signed/signed-cross-re-850c299a32b3.json). In items, that is 22 correct of 32 against 20 correct of 31. The qwen2.5:7b card excluded one parse error, which is why its n is 31 on a bank where the other card graded 32. Both bodies say MEASURED. No separation test is attached to either card, and the limitations text on GET /api/gspc states the rule we apply here: a point-estimate lead is not a measured advantage. So we do not call either model ahead on this axis. Two samples of about thirty items, two items apart in correct answers, are a reason to measure more, not a reason to choose.",
-   "artifacts": [
-    {
-     "label": "qwen3:8b cross-reality card",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-cross-re-e620fd5b9378.json"
-    },
-    {
-     "label": "qwen2.5:7b cross-reality card",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-cross-re-850c299a32b3.json"
-    },
-    {
-     "label": "GSPC board limitations",
-     "url": "https://councilof.ai/api/gspc"
-    }
-   ],
-   "social": "Cross-reality, one bank: 22 of 32 against 20 of 31. Both MEASURED, no separation test. A point-estimate lead is not a measured advantage, so neither model is called ahead. https://councilof.ai/api/gspc"
-  },
-  {
-   "id": "continuity-tie-and-gap",
-   "date": "2026-09-14",
-   "title": "Continuity: a tie and a gap on the same bank",
-   "summary": "Three MEASURED cards on one continuity bank: two tie exactly, and a third sits well above them without a separation test.",
-   "body": "On the continuity axis, three signed pod cards bind the same bank_sha256, 25dd6a72ac5a, each at n=33. ollama:qwen3:8b reads 0.6364 at n=33 (https://councilof.ai/interop/mill-cards-signed/signed-continui-19040fce76a1.json). ollama:gemma3:4b reads 0.303 at n=33 (https://councilof.ai/interop/mill-cards-signed/signed-continui-3e4769f24ea5.json). ollama:qwen2.5:1.5b reads 0.303 at n=33 (https://councilof.ai/interop/mill-cards-signed/signed-continui-01acdf2ec8f4.json). The last two tie exactly, at 10 correct of 33 each; the qwen3:8b card records 21 correct of 33. All three bodies say MEASURED with zero parse errors excluded. So this one bank carries a tie and a gap at the same time, and both are reported as they are. The gap between the qwen3:8b card and the two tied cards has no separation test attached; it is a difference between point estimates. The tie is a tie at the resolution of 33 items, not a claim that the two tied models behave identically elsewhere.",
-   "artifacts": [
-    {
-     "label": "qwen3:8b continuity card",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-continui-19040fce76a1.json"
-    },
-    {
-     "label": "gemma3:4b continuity card",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-continui-3e4769f24ea5.json"
-    },
-    {
-     "label": "qwen2.5:1.5b continuity card",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-continui-01acdf2ec8f4.json"
-    }
-   ],
-   "social": "One continuity bank, three signed cards: 21 of 33, then a tie at 10 of 33 and 10 of 33. A tie and a gap on the same bank, both reported as they are. https://councilof.ai/interop/mill-cards-signed/signed-continui-3e4769f24ea5.json"
-  },
-  {
-   "id": "care-read-n-before-accuracy",
-   "date": "2026-09-14",
-   "title": "Care: read n and the exclusion count before the accuracy",
-   "summary": "On one care bank, the higher accuracy sits on fewer graded items, because most of that model's replies could not be parsed.",
-   "body": "Two signed pod cards on the care axis bind the same bank_sha256, cee5e47a31f1, but they did not grade the same number of items. ollama:llama3.2:3b reads 0.7143 at n=77 (https://councilof.ai/interop/mill-cards-signed/signed-care-83d57579098c.json), and its compute_evidence records parse_errors_excluded: 122. ollama:qwen3:8b reads 0.3333 at n=198 (https://councilof.ai/interop/mill-cards-signed/signed-care-56bfcb37d774.json), with parse_errors_excluded: 1. The higher accuracy therefore sits on the replies that could be parsed, and on the llama3.2:3b card those were fewer than the replies that could not. Both bodies say MEASURED, because both n values clear 30. A reader comparing the two should read n and the exclusion count before the accuracy: a model that replies out of format on most items and correctly on the rest is a different finding from a model that replies in format on nearly every item. Neither card carries a separation test.",
-   "artifacts": [
-    {
-     "label": "llama3.2:3b care card, current re-run: 0.7051 at n=78 (the body quotes the superseded 0.7143 at n=77)",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-care-bc2d19a5d73b.json"
-    },
-    {
-     "label": "qwen3:8b care card",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-care-56bfcb37d774.json"
-    }
-   ],
-   "social": "Same care bank, two signed cards. The higher accuracy was graded on 77 items after 122 unparseable replies were excluded; the lower one on 198 items with 1 excluded. Read n before accuracy. https://councilof.ai/interop/mill-cards-signed/signed-care-83d57579098c.json"
-  },
-  {
-   "id": "zero-with-missing-error-field",
-   "date": "2026-09-14",
-   "title": "A zero with a missing error field is a question, not a finding",
-   "summary": "A MEASURED card reads accuracy 0 at n=237 and carries no parse-error count; its neighbour on the same bank does.",
-   "body": "ollama:qwen3:4b reads accuracy 0 at n=237 on the governance axis (https://councilof.ai/interop/mill-cards-signed/signed-governan-3c96b82c7e64.json), and the body says MEASURED. On the same bank_sha256, b93f9808f014, the ollama:qwen3:8b card reads 0.5781 at n=237 (https://councilof.ai/interop/mill-cards-signed/signed-governan-b2e50d7aff0a.json). The two compute_evidence blocks differ in one telling way: the qwen3:8b card records parse_errors_excluded: 0, and the qwen3:4b card has no parse_errors_excluded field at all. The qwen3:4b run_id is dated 2026-09-05; the qwen3:8b run_id is dated 2026-09-14. A zero on a 237-item bank with the error field absent is something to investigate before anyone repeats it as a statement about the model. We publish the observation and not an explanation, because the card bytes do not contain one. Read any zero alongside its error fields, and treat a missing field as missing, not as zero.",
-   "artifacts": [
-    {
-     "label": "qwen3:4b governance card",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-governan-3c96b82c7e64.json"
-    },
-    {
-     "label": "qwen3:8b governance card",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-governan-b2e50d7aff0a.json"
-    }
-   ],
-   "social": "A signed card reads 0 at n=237 and has no parse-error field; its neighbour on the same bank records 0 excluded. A zero with a missing error field is a question to investigate, not a finding. https://councilof.ai/interop/mill-cards-signed/signed-governan-3c96b82c7e64.json"
-  },
-  {
-   "id": "same-axis-different-bank",
-   "date": "2026-09-14",
-   "title": "Same axis name, different bank: stop before comparing",
-   "summary": "Two care cards name different frozen banks and different harnesses, so no difference between their numbers is a finding.",
-   "body": "Two care cards should not be compared, and the bytes say why. On the care axis, Qwen/Qwen3-14B reads 0.1333 at n=30 (https://councilof.ai/interop/mill-cards-signed/signed-care-eda16a8fc969.json). Its evidence block names bank_file bank-care-3cf9c16dbb6b.jsonl from the csoai/gspc-care dataset and the route hf-router:Qwen/Qwen3-14B:featherless-ai, and its admission receipt records 4 correct of 30. The ollama:llama3.2:3b care card reads 0.7143 at n=77 (https://councilof.ai/interop/mill-cards-signed/signed-care-83d57579098c.json), and its compute_evidence binds a different bank_sha256, cee5e47a31f1, against a local Ollama model digest. Same axis name, different frozen bank, different harness. The two numbers are not on a common scale, so no difference between them is a finding. Before comparing any two cards, match bank_sha256 before anything else; if the hashes differ, stop. The same check applies across GET /api/hub-cards, where cells from both populations appear side by side.",
-   "artifacts": [
-    {
-     "label": "Qwen3-14B care card",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-care-eda16a8fc969.json"
-    },
-    {
-     "label": "llama3.2:3b care card, current re-run: 0.7051 at n=78 (the body quotes the superseded 0.7143 at n=77)",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-care-bc2d19a5d73b.json"
-    },
-    {
-     "label": "Qwen3-14B admission receipt",
-     "url": "https://councilof.ai/interop/mill-evidence/admission-aa3e2e9e5738.json"
-    }
-   ],
-   "social": "Two care cards, same axis name, different frozen banks and harnesses. Their numbers are not on a common scale. Match bank_sha256 before comparing any two cards; if the hashes differ, stop. https://councilof.ai/api/hub-cards"
-  },
-  {
-   "id": "admission-receipt-anatomy",
-   "date": "2026-09-14",
-   "title": "What an admission receipt adds to a signed card",
-   "summary": "A Hub card's receipt records the pre-signing body and a summary; the index builder recomputes the card from it and drops any mismatch.",
-   "body": "The Qwen/Qwen3-14B care card carries a body.admission block naming admission-aa3e2e9e5738.json and that file's sha256. The receipt has state VERIFIED_ADMISSION. It records the source body as it stood before signing, with status UNMEASURED and the marker signed-pending-verify, plus a summary: 30 items, 30 answered, 4 correct. The signed card's body says MEASURED. That change follows a rule, not an editor. The Hub index builder recomputes the expected body from the receipt, setting MEASURED when n is at least 30 and UNMEASURED with n<30 unquotable otherwise, and it excludes any card whose body differs from that recomputation, whose receipt does not hash to the value the card names, or whose bank and item files do not hash to the values in the card's evidence block. The result is published as /interop/hub-cards-index.json. A card that fails any of those checks does not appear there, however valid its signature.",
-   "artifacts": [
-    {
-     "label": "Qwen3-14B care card",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-care-eda16a8fc969.json"
-    },
-    {
-     "label": "Admission receipt",
-     "url": "https://councilof.ai/interop/mill-evidence/admission-aa3e2e9e5738.json"
-    }
-   ],
-   "social": "A signed card is not enough to enter the Hub index. Its admission receipt must hash to the value the card names, its item and bank files must match, and its status must follow the n>=30 rule. https://councilof.ai/interop/mill-evidence/admission-aa3e2e9e5738.json"
-  },
-  {
-   "id": "item-evidence-regrade",
-   "date": "2026-09-14",
-   "title": "Re-grade a card yourself from its item rows",
-   "summary": "The item file behind a Hub care card is public, hashes to the value the card signs, and reproduces the card's accuracy.",
-   "body": "The item file behind the Qwen/Qwen3-14B care card is public: items-care-d2154338e911.jsonl. Its sha256 begins d2154338e911f65a, which is the items_sha256 the signed card names. Each of its 30 rows carries the prompt, prompt_sha256, the expected label, the observed label, an ok flag, the raw output's sha256 and the provider route. The allowed labels are 0 or 1, and the expected labels split 17 ones and 13 zeros. Counting rows with ok true gives 4 of 30, which matches the Qwen/Qwen3-14B card's accuracy of 0.1333 at n=30 (https://councilof.ai/interop/mill-cards-signed/signed-care-eda16a8fc969.json). This is what reproducibility means in practice: the aggregate can be recomputed from rows anyone can download, and the rows can be checked against a hash the signature covers. A card that carries just an aggregate cannot be checked this way, which is why aggregate-only cards no longer enter the quotable path. The frozen bank file the rows came from is published beside them.",
-   "artifacts": [
-    {
-     "label": "Item rows",
-     "url": "https://councilof.ai/interop/mill-evidence/items-care-d2154338e911.jsonl"
-    },
-    {
-     "label": "Qwen3-14B care card",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-care-eda16a8fc969.json"
-    },
-    {
-     "label": "Frozen bank file",
-     "url": "https://councilof.ai/interop/mill-evidence/bank-care-3cf9c16dbb6b.jsonl"
-    }
-   ],
-   "social": "Download 30 item rows, check their sha256 against the signed card, count ok:true. You get 4 of 30, the card's accuracy. That is what a reproducible card looks like. https://councilof.ai/interop/mill-evidence/items-care-d2154338e911.jsonl"
-  },
-  {
-   "id": "honest-unmeasured-n12",
-   "date": "2026-09-14",
-   "title": "An honest UNMEASURED at n=12",
-   "summary": "A signed, admitted safety card says UNMEASURED because 12 graded items are fewer than 30; its accuracy field is not quoted.",
-   "body": "mistralai/Mistral-7B-Instruct-v0.2 has a current signed, admitted card on the safety axis (https://councilof.ai/interop/mill-cards-signed/signed-safety-5de28cfe94db.json). The body says status UNMEASURED, with unmeasured: n<30 unquotable, at n=12. The card also carries an accuracy field. We do not quote it, because the card itself says the value is not quotable at this sample size. UNMEASURED here does not mean the model failed, and it does not mean the model passed. It means 12 graded items are fewer than the 30 the rule requires before a result is stated. The card is still signed and still listed in hub-cards-index.json with its status passed through unchanged, because an honest UNMEASURED is information: it tells a reader exactly where the evidence stops. The item rows and admission receipt the card names are public, so the 12 rows can be inspected even though no accuracy is quoted from them.",
-   "artifacts": [
-    {
-     "label": "Mistral-7B-Instruct-v0.2 safety card",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-safety-5de28cfe94db.json"
-    },
-    {
-     "label": "Hub cards index",
-     "url": "https://councilof.ai/interop/hub-cards-index.json"
-    },
-    {
-     "label": "Admission receipt",
-     "url": "https://councilof.ai/interop/mill-evidence/admission-9222a3c8528a.json"
-    }
-   ],
-   "social": "A signed safety card at n=12 says UNMEASURED: n<30 unquotable. We do not quote its accuracy. It is not a pass and not a fail; it marks where the evidence stops. https://councilof.ai/interop/mill-cards-signed/signed-safety-5de28cfe94db.json"
-  },
-  {
-   "id": "commission-self-funded-chain",
-   "date": "2026-09-14",
-   "title": "The llama3.2:3b commission: a self-funded plumbing test that returned signed cards",
-   "summary": "A commissioned subject resolves to signed cards; the settlement behind it is published and classified as internal and self-funded.",
-   "body": "GET /api/commissions lists llama3.2:3b as a subject commissioned through a settled request-attestation, and resolves that subject to a list of signed card URLs across GSPC axes, each with its own n and status. The settlement behind it is published and classified. x402-self-settlement-2026-09-11.json records classification INTERNAL_SELF_FUNDED, transaction 0x60172f43ca14e587 at Base block 51172054, and says in its own words that it is a bounded plumbing and delivery test, not revenue, outside demand, adoption, an independent buyer, or a model measurement. The ERC-20 transfer it records moves from the payTo wallet to the same payTo wallet. So what this chain shows is that the commission path works end to end: a paid request is recorded, the subject is listed, and signed cards come back listed against it, retrievable by URL. It shows nothing about demand. The same subject's cards are also grouped in the pod cards index.",
-   "artifacts": [
-    {
-     "label": "Commissions endpoint",
-     "url": "https://councilof.ai/api/commissions"
-    },
-    {
-     "label": "Self-settlement record",
-     "url": "https://councilof.ai/interop/x402-self-settlement-2026-09-11.json"
-    },
-    {
-     "label": "Pod cards index",
-     "url": "https://councilof.ai/interop/pod-cards-index.json"
-    }
-   ],
-   "social": "We commissioned our own measurement of llama3.2:3b to test the path. The settlement is published and labelled INTERNAL_SELF_FUNDED: not revenue, not outside demand. The signed cards came back. https://councilof.ai/api/commissions"
-  },
-  {
-   "id": "commission-unmeasured-axes",
-   "date": "2026-09-14",
-   "title": "A commission returns measurement attempts, including UNMEASURED ones",
-   "summary": "Several cards delivered against the llama3.2:3b commission are UNMEASURED at n below 30, and they are signed like the rest.",
-   "body": "Not every card delivered against the llama3.2:3b commission is quotable, and GET /api/commissions says so card by card. The jail card reads status UNMEASURED at n=2 (https://councilof.ai/interop/mill-cards-signed/signed-jail-93152fee78d0.json). The machinery-conformity card reads UNMEASURED at n=23 (https://councilof.ai/interop/mill-cards-signed/signed-machiner-d3ef4dd76e1a.json). In the same list, the provenance and safety cards each read UNMEASURED at n=9, and the affect card reads UNMEASURED at n=24. Each of those bodies carries unmeasured: n<30 unquotable. The other cards in the list clear n=30 and say MEASURED. The commissions endpoint describes itself as never a score: a commission produces a measurement attempt, not a promised number, and where fewer than 30 items were graded the signed card says UNMEASURED and no accuracy is quoted. The UNMEASURED cards are signed under the same key as the MEASURED ones, so a reader can verify that the gaps were published rather than left out.",
-   "artifacts": [
-    {
-     "label": "Commissions endpoint",
-     "url": "https://councilof.ai/api/commissions"
-    },
-    {
-     "label": "llama3.2:3b jail card, current re-run: 0.4394 at n=66 (the body quotes the superseded 0.5 at n=2)",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-jail-52673eb7789c.json"
-    },
-    {
-     "label": "llama3.2:3b machinery-conformity card, current re-run: 0.3182 at n=22 (the body quotes the superseded 0.3478 at n=23)",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-machiner-d0992b57e5b8.json"
-    }
-   ],
-   "social": "Some cards returned for the llama3.2:3b commission say UNMEASURED: jail at n=2, machinery-conformity at n=23. They are signed like the MEASURED ones, so the gaps are published, not hidden. https://councilof.ai/api/commissions"
-  },
-  {
-   "id": "supersede-never-edit",
-   "date": "2026-09-14",
-   "title": "Signed bytes are superseded, not edited",
-   "summary": "A card whose signed body was wrong is still served; a published ledger row points to its replacement and says why.",
-   "body": "Signed bytes are not edited; they are superseded, and the supersession is published. The card signed-affect-0e870854f6bf.json for deepseek-ai/DeepSeek-V3.2 on the affect axis is still served and still signed, and its body still reads UNMEASURED with the marker signed-pending-verify at n=30. SUPERSEDED.jsonl carries a row with superseded_file signed-affect-0e870854f6bf.json, by_file signed-affect-e37184166a77.json, the reason \"#1155: body state corrected - the signed body must be true after signing\", and the time 2026-09-03T05:14:29Z. The replacement card is signed under the same did, did:web:csoai.org#board-attestation-1, and its body reads MEASURED at n=30. A reader holding the old card can find what replaced it and why; a reader holding the new card can find what it replaced. Nothing was deleted, neither signature was touched, and both files remain fetchable at their original URLs.",
-   "artifacts": [
-    {
-     "label": "Superseded card",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-affect-0e870854f6bf.json"
-    },
-    {
-     "label": "Supersession ledger",
-     "url": "https://councilof.ai/interop/mill-cards-signed/SUPERSEDED.jsonl"
-    },
-    {
-     "label": "Replacement card",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-affect-e37184166a77.json"
-    }
-   ],
-   "social": "A signed card with a wrong body stays online. A ledger row names its replacement, the reason and the time. Nothing deleted, no signature touched. That is how signed evidence gets corrected. https://councilof.ai/interop/mill-cards-signed/SUPERSEDED.jsonl"
-  },
-  {
-   "id": "aggregate-only-retired",
-   "date": "2026-09-14",
-   "title": "Why aggregate-only cards were retired from the quotable path",
-   "summary": "Since the 2026-09-13 evidence ruling, a Hub card without item evidence cannot land as quotable; older cards are superseded, not deleted.",
-   "body": "Since the 2026-09-13 evidence ruling, a Hub card that carries just an aggregate accuracy cannot enter the quotable path. The landing script, scripts/land_mill_cards.py, says it plainly: an aggregate-only card is never quotable; a card that binds an evidence bundle must find it, and a bundle that is absent or hashes differently fails closed; and cards with no evidence bundle are skipped with the reason that aggregate-only cards stopped landing after the 2026-09-13 evidence ruling. Older cards are not deleted. When a current card with item evidence replaces one, SUPERSEDED.jsonl records it with the reason \"#2075: replaced by a current reproducibly admitted v0.2 item-evidence card\". The Hub cards index describes its source as reproducibly admitted signed Hub cards on the deployed commit, and publishes how many signed files it saw and how many it skipped, so the retired population stays countable without being quotable. The reason is reproducibility: an aggregate cannot be re-graded, and item rows can.",
-   "artifacts": [
-    {
-     "label": "Supersession ledger",
-     "url": "https://councilof.ai/interop/mill-cards-signed/SUPERSEDED.jsonl"
-    },
-    {
-     "label": "Hub cards index",
-     "url": "https://councilof.ai/interop/hub-cards-index.json"
-    }
-   ],
-   "social": "An accuracy you cannot re-grade is not quotable. Since 13 September, Hub cards without item evidence stop at the landing step; older ones are superseded, not deleted, with the reason on a public ledger. https://councilof.ai/interop/hub-cards-index.json"
-  },
-  {
-   "id": "verify-a-card-yourself",
-   "date": "2026-09-14",
-   "title": "Verify a signed card yourself, with no account",
-   "summary": "Recompute the content id from the canonical body, then check the Ed25519 signature under the key published in did.json.",
-   "body": "Any signed card can be checked with public bytes and no account. Take the ollama:llama3.2:3b care card (signed-care-83d57579098c.json). Step one: take its body object, serialise it as JSON with keys sorted and no whitespace, and hash it with sha256. The result must equal the card's id field, which begins 83d57579098c; the card states this as its preimage_rule, sha256(canonical body). Step two: fetch did.json, find the verification method did:web:csoai.org#board-attestation-1 named in the card's did field, decode its Ed25519 public key, and verify the card's hex signature over the same canonical body bytes. Both checks passed when we ran them on 14 September. One trap: some cards carry whole-number values, such as the ollama:qwen3:4b governance card's accuracy 0 at n=237 (https://councilof.ai/interop/mill-cards-signed/signed-governan-3c96b82c7e64.json); a serialiser that writes 0.0 produces different bytes and a different hash. Each card's verify field points to the loginless verifier at councilof.ai/gspc-verify.",
-   "artifacts": [
-    {
-     "label": "llama3.2:3b care card, current re-run: 0.7051 at n=78 (the body quotes the superseded 0.7143 at n=77)",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-care-bc2d19a5d73b.json"
-    },
-    {
-     "label": "Published keys (did.json)",
-     "url": "https://csoai.org/.well-known/did.json"
-    },
-    {
-     "label": "Browser verifier",
-     "url": "https://councilof.ai/gspc-verify/"
-    }
-   ],
-   "social": "Check a signed card yourself: sort the body's keys, hash it, compare with id, then verify the Ed25519 signature with the key in did.json. No account needed. https://councilof.ai/gspc-verify/"
-  },
-  {
-   "id": "card-root-recompute",
-   "date": "2026-09-14",
-   "title": "Recompute the 14 September card root from its leaves",
-   "summary": "The card root's leaves hash whole signed cards, and rebuilding the tree from the published leaf list reproduces its root.",
-   "body": "card-root-2026-09-14.json is a Merkle commitment over signed cards. Its leaf_rule says each leaf is sha256 over canonical JSON of the whole signed card, including body, id, signature and did, not the body alone. Its proof_rule says parents combine positionally as sha256(left + right). We rebuilt the tree from the published leaves list in index order: pairing an unpaired node with itself at each level reproduces the published merkle_root, which begins 989b4e7f771d, and promoting the unpaired node unchanged does not. We also hashed each signed card we had fetched on 14 September, and each matched its listed leaf, including signed-governan-09759e29f44b.json at index 433. SUPERSEDED.jsonl has since replaced that card with https://councilof.ai/interop/mill-cards-signed/signed-governan-b2e50d7aff0a.json, which this root does not contain; a root commits to the bytes that existed when it was built. The same file lists skipped cards with a reason, such as superseded, so a reader can see what the root leaves out. The document is marked not_a_certificate: it commits to which bytes existed, and says nothing about whether the numbers inside those bytes mean what a reader hopes.",
-   "artifacts": [
-    {
-     "label": "Card root",
-     "url": "https://councilof.ai/interop/card-root-2026-09-14.json"
-    },
-    {
-     "label": "A leaf's card (index 433)",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-governan-09759e29f44b.json"
-    },
-    {
-     "label": "The card that replaced it",
-     "url": "https://councilof.ai/interop/mill-cards-signed/signed-governan-b2e50d7aff0a.json"
-    }
-   ],
-   "social": "We rebuilt the 14 September card root from its published leaves and got the published root. Each leaf is sha256 of a whole signed card, signature included. It commits to bytes, not to meaning. https://councilof.ai/interop/card-root-2026-09-14.json"
-  },
-  {
-   "id": "card-root-bitcoin-attestation",
-   "date": "2026-09-14",
-   "title": "The 14 September card root: what its .ots sidecar proves",
-   "summary": "The sidecar for the card root carries Bitcoin block-header attestations that replay to real block merkle roots.",
-   "body": "card-root-2026-09-14.json tells readers to take its timestamp state from the .ots sidecar, never from the existence of the JSON file. We did. The sidecar is an OpenTimestamps proof over the sha256 that begins 3d39bd1aeb68, which is the sha256 of the JSON bytes served on 14 September. It holds calendar attestations from the alice and bob OpenTimestamps calendars and Bitcoin block-header attestations at heights 966920 and 966921. Replaying the proof's operations from the file digest yields the merkle roots recorded in those two blocks' headers, timestamped 05:28:01 and 05:33:52 UTC on 14 September. That is the lifecycle in one file: a calendar attestation is a promise to include a digest, and a block-header attestation is the included result, which anyone can check against a copy of the chain. It shows these exact bytes existed by those blocks. It does not make any card inside them correct.",
-   "artifacts": [
-    {
-     "label": "Card root",
-     "url": "https://councilof.ai/interop/card-root-2026-09-14.json"
-    },
-    {
-     "label": "OpenTimestamps sidecar",
-     "url": "https://councilof.ai/interop/card-root-2026-09-14.json.ots"
-    }
-   ],
-   "social": "The 14 September card root's .ots proof replays to the merkle roots of Bitcoin blocks 966920 and 966921. It shows those bytes existed by then. It does not make any card inside them correct. https://councilof.ai/interop/card-root-2026-09-14.json.ots"
-  },
-  {
-   "id": "pending-stamp-is-not-proof",
-   "date": "2026-09-14",
-   "title": "A pending timestamp is a request, not a proof",
-   "summary": "Three sibling card-root files from the same day carried pending calendar attestations and no block attestation when read; the root's own rule says what that means.",
-   "body": "Three other card-root files carry the same date and a hash suffix: card-root-2026-09-14-a137c8adc69c.json, card-root-2026-09-14-d11eb1937e62.json and card-root-2026-09-14-fc66dcd0927a.json. When we read their .ots sidecars on 14 September, each held pending calendar attestations and no Bitcoin block-header attestation. The rule for all of them is written inside the dated card root itself: until a proof is upgraded into a block, any stamp is a pending request, never a proof. A pending attestation says a calendar server accepted a digest and undertook to include it; there is nothing yet to check against the chain. So a reader holding one of these files can recompute its Merkle root from its leaves today, and must wait for the sidecar upgrade before saying anything about time. The difference between these files and the undecorated card root is visible in the sidecar bytes, not in the file names.",
-   "artifacts": [
-    {
-     "label": "Sidecar a137c8adc69c",
-     "url": "https://councilof.ai/interop/card-root-2026-09-14-a137c8adc69c.json.ots"
-    },
-    {
-     "label": "Sidecar d11eb1937e62",
-     "url": "https://councilof.ai/interop/card-root-2026-09-14-d11eb1937e62.json.ots"
-    },
-    {
-     "label": "Card root anchor_rule",
-     "url": "https://councilof.ai/interop/card-root-2026-09-14.json"
-    }
-   ],
-   "social": "Three same-day card-root files carried pending calendar stamps and no block attestation when we read them. A pending stamp is a request, not a proof; the time claim waits for the sidecar upgrade. https://councilof.ai/interop/card-root-2026-09-14.json"
-  },
-  {
-   "id": "two-roots-two-leaf-rules",
-   "date": "2026-09-14",
-   "title": "Two root documents, two leaf rules",
-   "summary": "root.json and the dated card root hash different things, so a leaf computed under one rule will not be found under the other.",
-   "body": "councilof.ai serves two different root documents, and they use different leaf rules, so their roots are not interchangeable. root.json, kind csoai.public-root/v1, defines a leaf as sha256 over the canonical card minus its sha256 and sig_ed25519 fields, and pairs an odd node with itself. Its tree_caveat says that tree shape is collidable in the sense of CVE-2012-2459, and that the ambiguity is closed because card_count sits inside the signed preimage, so a verifier must check the count. card-root-2026-09-14.json, kind csoai.card-root/1, hashes the whole signed card, signature included. A leaf computed under one rule will not be found under the other. Before checking an inclusion proof, read the leaf rule of the root you were handed. Do not compare the two documents' counts either: they commit to different sets of objects under different definitions, and a difference between them is not a discrepancy.",
-   "artifacts": [
-    {
-     "label": "Public root",
-     "url": "https://councilof.ai/root.json"
-    },
-    {
-     "label": "Card root",
-     "url": "https://councilof.ai/interop/card-root-2026-09-14.json"
-    }
-   ],
-   "social": "root.json and the dated card root use different leaf rules. A leaf hashed under one will not be found under the other, and their counts are not comparable. Read the leaf rule before verifying. https://councilof.ai/root.json"
-  },
-  {
-   "id": "what-a-402-is",
-   "date": "2026-09-14",
-   "title": "What an HTTP 402 challenge is, and what it is not",
-   "summary": "A 402 body is an offer that names the terms of a delivery; it is not a delivery, a settlement, or evidence that anyone paid.",
-   "body": "GET /api/wrapper?id=usdc.e:arbitrum answers HTTP 402 with a JSON body: x402Version 2, one accepts entry with scheme exact, network eip155:8453, the USDC contract on Base as the asset, a payTo address, a timeout, and a description of the resource. That body is an offer. It names what would be delivered and on what terms. It is not a delivery, not a settlement, and not evidence that anyone has ever paid. The amount appears inside the challenge, which is the place a reader should take it from. The door-conformance report probes this door among others and records, row by row, that the challenge shape conformed while fulfillment stayed UNMEASURED, because no payment was exercised. The resource description itself sets the scope of what sits behind the offer: a ratio, not a rate, a grade or a reserve attestation. The /wrappers/ page describes a free preview of the same card.",
-   "artifacts": [
-    {
-     "label": "A live 402 door",
-     "url": "https://councilof.ai/api/wrapper?id=usdc.e:arbitrum"
-    },
-    {
-     "label": "Door-conformance report",
-     "url": "https://councilof.ai/interop/x402-door-conformance-2026-09/report.json"
-    },
-    {
-     "label": "Wrapper parity page",
-     "url": "https://councilof.ai/wrappers/"
-    }
-   ],
-   "social": "An HTTP 402 is an offer: terms, asset, network, payee. It is not a delivery, not a settlement, not proof anyone paid. Read the amount from the challenge itself. https://councilof.ai/api/wrapper?id=usdc.e:arbitrum"
-  },
-  {
-   "id": "x402-door-conformance-round",
-   "date": "2026-09-14",
-   "title": "x402 door conformance: challenge shape probed, delivery not",
-   "summary": "Every door in the 14 September conformance report returned a conformant 402 challenge; every fulfillment stayed UNMEASURED.",
-   "body": "The x402 door-conformance report generated at 2026-09-14T01:50:50Z probed the resources discovered from councilof.ai's /.well-known/x402.json and recorded each response. Every door row returned HTTP 402 and passed the same six checks: amount present, asset is USDC, network is Base, payTo matches, resource named, scheme exact. One row is a zero-priced door that settles and charges nothing. Every row records fulfillment as UNMEASURED, because the probe did not pay. The summary card is unsigned, sets not_delivery_proof, and lists fulfillment_bytes and the settlement classification as unmeasured. One defect is visible in that summary: its subject line says 9 doors, while its payload says n_doors 10 and the report carries 10 rows. The report rows are the thing to read. A conformant challenge shows that a buyer's client can parse the offer; it says nothing about what arrives after payment.",
-   "artifacts": [
-    {
-     "label": "Door-conformance report",
-     "url": "https://councilof.ai/interop/x402-door-conformance-2026-09/report.json"
-    },
-    {
-     "label": "Unsigned summary card",
-     "url": "https://councilof.ai/interop/x402-door-conformance-2026-09/card-x402-door-conformance-summary-unsigned.json"
-    }
-   ],
-   "social": "Our x402 doors all returned a conformant 402 challenge in the 14 September probe. Delivery was not tested: no payment, fulfillment UNMEASURED. A parseable offer is not a delivered product. https://councilof.ai/interop/x402-door-conformance-2026-09/report.json"
-  },
-  {
-   "id": "deepseek-402-is-our-balance",
-   "date": "2026-09-14",
-   "title": "DeepSeek identity probe: the 402 is about our balance",
-   "summary": "Two probe receipts record DeepSeek's catalogue and a refused call for every model id; the refusal is our account balance, and no served identity was observed.",
-   "body": "DeepSeek's own news post, dated 2026-09-10, says that from 04:00 UTC on 14 September deepseek-v4-pro API requests route to V4.1-Flash. We tried to observe that from outside and could not. Two probe receipts, at 06:37:07Z and 09:27:01Z, show the model catalogue answering HTTP 200 with the ids deepseek-flash and deepseek-v4-pro. Every completion request, for deepseek-v4-pro, deepseek-flash, deepseek-chat and deepseek-reasoner, answered HTTP 402 with the error Insufficient Balance, recorded as REFUSED_BALANCE. That 402 is a fact about the balance on our API account. It is not a statement about DeepSeek's service or about any model. The later receipt says so directly: 0 of 4 requests returned a response from which served-model identity could be recorded. The rerouting remains the provider's announcement, not something these receipts observed. A probe that cannot see identity reports that it cannot see identity.",
-   "artifacts": [
-    {
-     "label": "Probe receipt 06:37Z",
-     "url": "https://councilof.ai/interop/deepseek-identity/deepseek-identity-20260914T063707Z.json"
-    },
-    {
-     "label": "Probe receipt 09:27Z",
-     "url": "https://councilof.ai/interop/deepseek-identity/deepseek-identity-20260914T092701Z.json"
-    }
-   ],
-   "social": "We probed DeepSeek's announced V4-Pro rerouting. Every call got 402 Insufficient Balance: a fact about our account, not DeepSeek. 0 of 4 calls showed which model served. https://councilof.ai/interop/deepseek-identity/deepseek-identity-20260914T092701Z.json"
-  },
-  {
-   "id": "x402-census-round-0906",
-   "date": "2026-09-14",
-   "title": "The 6 September x402 census round: one purchase per host, no verdicts",
-   "summary": "A buyer's-eye round paid each eligible host once and recorded the outcome; every host series stays UNMEASURED until 30 observations.",
-   "body": "The x402 settlement census round of 2026-09-06 is a buyer's-eye record: a throwaway wallet the estate controls paid each eligible third-party host once and wrote down what came back. Of 316 hosts probed, 314 produced paid rows. Outcomes by host: 100 DELIVERED, 213 REFUSED, 1 MISMATCH and 2 NO_CHALLENGE. Thirteen hosts are recorded as take-and-refuse, defined as status REFUSED while the host's own payment response reported a settlement transaction hash. The census index states its limits: REFUSED is not proof of bad faith, one purchase at one moment is not a pattern, CSOAI's own hosts are excluded, and no host was contacted, ranked or recommended. It also holds every host's series at UNMEASURED until that host has 30 paid observations, one per round, so nothing in this round is a verdict on any host. The round file describes every unit spent as a cost, never revenue.",
-   "artifacts": [
-    {
-     "label": "Round file",
-     "url": "https://councilof.ai/interop/x402-census/rounds/2026-09-06.json"
-    },
-    {
-     "label": "Census index",
-     "url": "https://councilof.ai/interop/x402-census/index.json"
-    }
-   ],
-   "social": "We paid 314 x402 hosts once each: 100 delivered, 213 refused, 13 took payment and refused. One purchase is not a pattern; every host stays UNMEASURED until 30 rounds. https://councilof.ai/interop/x402-census/rounds/2026-09-06.json"
-  },
-  {
-   "id": "wrapper-parity-usdce-arbitrum",
-   "date": "2026-09-14",
-   "title": "Wrapped USDC.e on Arbitrum against its escrow, at two named blocks",
-   "summary": "The parity ledger reads wrapped supply and escrow balance at pinned blocks and records a ratio, with raw reads hashed.",
-   "body": "The wrapped-asset parity ledger dated 2026-09-14 reads USDC.e on Arbitrum against the Arbitrum One ERC-20 gateway escrow on Ethereum. At Arbitrum block 504923416, totalSupply() on 0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8 returned 48,316,267.900248. At Ethereum block 25972488, balanceOf the escrow 0xcEe284F754E854890e311e3280b767F80797180d on the canonical USDC contract returned 52,223,762.917301. The ledger records escrow_over_wrapped as 1.080873, meaning the escrow balance read higher than the wrapped supply at those two blocks. Each raw hex return value is stored with its sha256, and each block carries its hash and a finality label: finalized tag as reported by the provider, not independently proven final. The ledger's attests field says what this is: point-in-time reads at the pinned blocks, a ratio, not a rate, not a grade, not a reserve attestation, not a certificate. The /wrappers/ page renders the same ledger.",
-   "artifacts": [
-    {
-     "label": "Parity ledger 2026-09-14 (served copy; the 03:13Z commit it was first read from is not publicly hosted)",
-     "url": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json"
-    },
-    {
-     "label": "Wrapper parity page",
-     "url": "https://councilof.ai/wrappers/"
-    }
-   ],
-   "social": "USDC.e on Arbitrum at block 504923416 against its gateway escrow at Ethereum block 25972488: escrow/wrapped = 1.080873. Raw reads hashed. A ratio, not a reserve attestation. https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json"
-  },
-  {
-   "id": "wrapper-four-states",
-   "date": "2026-09-14",
-   "title": "Four wrapper states, never collapsed into one number",
-   "summary": "A missing ratio can mean no escrow exists, the reserve is off-chain, or a read failed; the ledger labels which.",
-   "body": "The same parity ledger refuses to collapse its pairs into one number, and uses four states. ESCROW_PARITY_READ means both reads succeeded, as for dai:optimism, where escrow_over_wrapped is 1.505694 at OP Mainnet block 156875715 and Ethereum block 25972488. UNCHECKABLE_NATIVE_ISSUANCE: for usdc:base the record notes that Circle mints USDC natively on Base, so no escrow exists; supply is read and no parity is claimed. INDEXED_CUSTODIAL: for wbtc:ethereum the reserve is held by custodians and nothing independent is readable from here, so the pair stays indexed. UNMEASURED: for usdt0:arbitrum the read failed with an empty eth_call result from 0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627, and the ledger records the error instead of guessing. A reader who sees a missing ratio should read the state before anything else. Missing because no escrow exists, missing because the reserve is off-chain, and missing because a read failed are three different facts. The /wrappers/ page shows how many pairs sit in each state.",
-   "artifacts": [
-    {
-     "label": "Parity ledger 2026-09-14 (served copy; the 03:13Z commit it was first read from is not publicly hosted)",
-     "url": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json"
-    },
-    {
-     "label": "Wrapper parity page",
-     "url": "https://councilof.ai/wrappers/"
-    }
-   ],
-   "social": "No ratio can mean three things: no escrow exists, the reserve is off-chain, or the read failed. The wrapper ledger labels which, pair by pair, and never collapses them. https://councilof.ai/wrappers/"
-  },
-  {
-   "id": "stablecoin-indexed-not-measured",
-   "date": "2026-09-14",
-   "title": "Indexed is not measured: the stablecoin universe release",
-   "summary": "Every row of the frozen stablecoin index is labelled INDEXED and UNMEASURED; drift is appended, and the frozen bytes stay frozen.",
-   "body": "The stablecoin universe release frozen on 2026-09-11 indexes the public DefiLlama stablecoin response observed at 08:19:34Z that day, and its README is explicit about what indexing is not. Every row is labelled INDEXED, UNMEASURED, UNSIGNED, UNROOTED and UNANCHORED, so registry metadata cannot be presented as an independent chain measurement. The priority score that picks candidates for deeper work uses reported circulating value and chain count, and the README calls it scheduling metadata, not a risk, quality, safety, compliance or investment score. RLUSD is named as the asset with separately published deep evidence. When a later refresh showed drift, the note was appended and the frozen index.json and source.json stayed byte-identical, because a signed commitment binds their hashes; live per-subject states are kept in coverage-register.json. The README also prints the offline command that rebuilds the index from the frozen source bytes, so anyone can compare the output byte for byte.",
-   "artifacts": [
-    {
-     "label": "Release README",
-     "url": "https://councilof.ai/interop/stablecoin-universe-2026-09/README.md"
-    },
-    {
-     "label": "Frozen index",
-     "url": "https://councilof.ai/interop/stablecoin-universe-2026-09/index.json"
-    },
-    {
-     "label": "Live coverage register",
-     "url": "https://councilof.ai/interop/coverage-register.json"
-    }
-   ],
-   "social": "A registry listing is not a measurement. Every row in our frozen stablecoin index says INDEXED and UNMEASURED, and drift is appended while the frozen bytes stay frozen. https://councilof.ai/interop/stablecoin-universe-2026-09/README.md"
-  },
-  {
-   "id": "correction-empty-is-not-absence",
-   "date": "2026-09-14",
-   "title": "Correction C-2026-0913-01: an empty result is not absence",
-   "summary": "A census reported a handful of registry events where tens of thousands existed, because an RPC endpoint returned empty logs without an error.",
-   "body": "Correction C-2026-0913-01 on the public corrections record shows why an empty result is not absence. A census tool merged on 12 September reported 8 ERC-8004 Identity Registry registrations on Ethereum. The corrected count over the same range is 50,783. The cause, as recorded: the rpc.flashbots.net endpoint returned well-formed empty log results for ranges that contained receipt-verified events, with no error, and every check the tool ran at the time passed against it. It was caught when Etherscan's transaction count for the registry disagreed with the tool, and one on-chain receipt proved a Registered log that the endpoint had not returned. The fix adds known-event integrity checks: an endpoint's scan is not trusted unless it returns a receipt-verified event whenever that event's block is in range. The same record reported its own signature_state as STALE for a month, and said so rather than hiding it: it was signed on 2026-08-22 over a 15-entry body and appended 46 times without a re-issue. It was re-signed over the current bytes on 2026-09-22, and the state is now derived from an Ed25519 verification run on every request rather than from a typed label.",
-   "artifacts": [
-    {
-     "label": "Corrections record",
-     "url": "https://councilof.ai/api/corrections"
-    }
-   ],
-   "social": "Our ERC-8004 census reported 8 registrations; the corrected count is 50,783. An RPC endpoint returned empty logs with no error. Empty is not absence. The correction is public. https://councilof.ai/api/corrections"
-  },
-  {
-   "id": "governance-no-public-leader",
-   "date": "2026-09-14",
-   "title": "Governance: the board declines to name its own model as leader",
-   "summary": "The governance axis is MEASURED with no public leader, because the point lead belonged to a CSOAI council specialist.",
-   "body": "On GET /api/gspc, the governance axis shows MEASURED at n=237 with no public leader, and says why. Its public_leader_state reads EXCLUDED_OWN_MODEL: a CSOAI council specialist held the point lead, and the note states that a neutral measurement body does not rank its own models against the vendors it measures. External models answered the same frozen bank, and the axis publishes their fleet mean, but the note says an external re-ranking would need a per-model recompute that the payload does not carry, so no external leader or accuracy is asserted rather than invented. The earlier run is kept as a historical measurement record marked SUPERSEDED_FOR_PUBLIC_RANKING. The bank itself is public as the csoai/gspc-gov dataset. The result is a board that declines to report a lead that would flatter its publisher, keeps the measurement, and says exactly what is missing.",
-   "artifacts": [
-    {
-     "label": "GSPC board",
-     "url": "https://councilof.ai/api/gspc"
-    },
-    {
-     "label": "Governance bank dataset",
-     "url": "https://huggingface.co/datasets/csoai/gspc-gov"
-    }
-   ],
-   "social": "Our own council specialist led the governance axis on points. The public board shows no leader: a measurement body does not rank its own model against the vendors it measures. https://councilof.ai/api/gspc"
-  }
- ]
+  ]
 }
