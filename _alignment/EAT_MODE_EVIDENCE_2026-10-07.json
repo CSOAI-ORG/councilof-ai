@@ -1,5 +1,5 @@
 {
-  "ts": "2026-10-07T08:20:58Z",
+  "ts": "2026-10-07T15:55:53Z",
   "cycle": "EAT 2026-10-07 (wave: after aligned 4-phase plan)",
   "measurements": [
     {
@@ -51,7 +51,12 @@
       "metric": "launch.sh health run",
       "value": "steps 1-3 then died on PYTHONPATH pydantic poison (env issue, NOT test failures); full suite re-run manually clean = 468 green; launch.sh patched (export PYTHONPATH=) ; full 9-step green BLOCKED on owner decision: OrbStack squats 127.0.0.1:8000 (step 4 curls loopback)",
       "provenance": "LAUNCH_REPORT_20261007_084643.md + patch"
+    },
+    {
+      "metric": "migration + client-evidence reconciliation (owner-routed)",
+      "value": "12 discrepancies resolved/routed: 3 closed by M4 (launch.sh poison fix, count definitions, Glama server+Dockerfile+badge shipped), 7 routed to existing owner Nicholas Templeman (Glama OAuth claim, 7 approved+3 pending merges, hummingbot :8000, Kaggle visibility, PyPI, SOV3, OPENROUTER), 2 external (Glama platform auto-scrape, punkpeye maintainers). All 10 claims in the client-evidence table re-verified live today.",
+      "provenance": "MEOK_MIGRATION_CLIENT_EVIDENCE_RECONCILIATION_2026-10-07.md"
     }
   ],
-  "SIGIL_digest": "4e0f1c62ba32ed690115c377a0e9e3389af2d15feeb1cef323c8496384ca3dd1"
+  "SIGIL_digest": "3163e14a5383d08a4599d5f113dbe9a5dde6c8a3f1b1f53ff3efc3e12a04aa2c"
 }
