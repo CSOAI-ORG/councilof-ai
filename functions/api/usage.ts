@@ -10,7 +10,7 @@
  * ours that does not identify itself is counted as external. Usage is not revenue, a download
  * or a listing; this endpoint adds its counts to nothing.
  */
-import { SELF_TOOLS, USAGE_DIMS, USAGE_LABEL_NOTES, USAGE_RETENTION_DAYS, USAGE_SCHEMA, countDay, utcDay, type DayCounts } from "../_lib/usage";
+import { SELF_TOOLS, USAGE_DAY_NOTES, USAGE_DIMS, USAGE_LABEL_NOTES, USAGE_RETENTION_DAYS, USAGE_SCHEMA, countDay, utcDay, type DayCounts } from "../_lib/usage";
 import { headFromGet } from "./_head";
 
 type KV = Parameters<typeof countDay>[0];
@@ -37,6 +37,7 @@ export async function buildUsage(kv: KV | undefined, days: number, now: Date = n
     not: "Not revenue, not downloads, not listings, not adoption. These counts are added to no other figure.",
     dims: [...USAGE_DIMS],
     label_notes: USAGE_LABEL_NOTES,
+    day_notes: USAGE_DAY_NOTES,
   };
   if (!kv) {
     return { ...base, kind: "unmeasured", state: "UNMEASURED", reason: "the SOV_ARENA_STATE binding is not available to this deployment", days: [] };

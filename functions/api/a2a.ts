@@ -1077,7 +1077,10 @@ export function a2aUsageShape(rawVersionHeader: string | null, servedAs03: boole
   const raw = (rawVersionHeader ?? "").trim();
   if (raw === "") return "unversioned";
   if (normalizeA2aVersion(raw) === A2A_PROTOCOL_VERSION) return "v1.0";
-  return isLegacyVersionHeader(raw) ? "v0.3" : "vother";
+  // "v0.3" means SERVED by the 0.3 shim (handled above). A 0.x header on a request the shim did
+  // not serve (A2A-Version: 0.2 with SendMessage) is "vother", as usage.ts documents; it used to
+  // be labelled "v0.3", which named a version the request did not declare.
+  return "vother";
 }
 
 export const onRequestPost: PagesFunction = async (context) => {

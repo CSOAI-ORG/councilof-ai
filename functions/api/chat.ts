@@ -33,7 +33,7 @@ export function chatDescriptor(origin: string) {
       a2ui: { method: "POST", endpoint: `${origin}/api/a2ui/run`, protocol: "A2UI NDJSON", about: `${origin}/api/a2ui/run` },
     },
     example: `curl -s -X POST ${origin}/api/chat -H 'content-type: application/json' -d '{"message":"What does the board measure?"}'`,
-    privacy: "Aggregate counters only: the reply's state word is counted; no question text is kept.",
+    privacy: "Aggregate counters only: the reply's state word is counted, and for a request refused because no question was found, its body shape (content class and top-level key NAMES from a fixed allowlist, never a value; /api/usage reject_shape). No question text is kept.",
     api_description: `${origin}/openapi.json`,
   };
 }

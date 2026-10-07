@@ -49,7 +49,8 @@ const MAX_ITEMS = 64;
 /**
  * The question text in a parsed body, or null when it carries none.
  *   - a string is the question;
- *   - an array of role-tagged messages gives its last user turn (OpenAI / AG-UI / A2A roles);
+ *   - an array of role-tagged messages gives its LATEST user turn, "" when that turn is empty
+ *     (OpenAI / AG-UI / A2A roles); with no user turn, the last non-system message;
  *   - an array of parts gives its text parts joined ({type:"text",text}, {kind:"text",text}, {text});
  *   - an object gives `text`, then `messages`, then the QUESTION_FIELDS in order.
  * "" means a question field was present and empty; null means there was none at all.
@@ -61,19 +62,19 @@ export function questionOf(v: unknown, depth = 0): string | null {
     const items = v.slice(-MAX_ITEMS);
     const roled = items.filter((x) => typeof rec(x)?.role === "string");
     if (roled.length) {
-      for (let i = roled.length - 1; i >= 0; i--) {
-        if (!USER_ROLES.has(String(rec(roled[i])?.role))) continue;
-        const t = questionOf(roled[i], depth + 1);
-        if (t) return t;
-      }
-      // No user turn carries text: fall back to the last non-system message that does (the door
-      // used to read the last message whatever its role). A system prompt is never the question.
-      for (let i = roled.length - 1; i >= 0; i--) {
-        if (SYSTEM_ROLES.has(String(rec(roled[i])?.role))) continue;
-        const t = questionOf(roled[i], depth + 1);
-        if (t) return t;
-      }
-      return "";
+      // The LATEST user turn is the question, even when it is empty: an empty last turn is an
+      // empty question ("") and is never replaced by an earlier turn the caller did not just ask.
+      const roleOf = (x: unknown) => String(rec(x)?.role);
+      const last = (keep: (role: string) => boolean): unknown => {
+        for (let i = roled.length - 1; i >= 0; i--) if (keep(roleOf(roled[i]))) return roled[i];
+        return undefined;
+      };
+      const lastUser = last((r) => USER_ROLES.has(r));
+      if (lastUser !== undefined) return questionOf(lastUser, depth + 1) ?? "";
+      // No user turn at all: the last non-system message is read, as the door always read the
+      // last message. A system prompt is never the question.
+      const lastOther = last((r) => !SYSTEM_ROLES.has(r));
+      return lastOther !== undefined ? questionOf(lastOther, depth + 1) ?? "" : "";
     }
     let found = false;
     const texts: string[] = [];
@@ -104,7 +105,7 @@ export function questionOf(v: unknown, depth = 0): string | null {
 }
 
 /** Top-level key names a shape label may show. Any other key is reported only as "other". */
-const SHAPE_KEYS = new Set<string>([
+export const SHAPE_KEYS: ReadonlySet<string> = new Set<string>([
   ...QUESTION_FIELDS,
   "text",
   "messages",
