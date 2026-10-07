@@ -512,3 +512,17 @@ with them; M4 will verify the scorer's readback after their change lands.
 `https://mcp.desktopcommander.app/mcp` (OAuth, per-client tokens), three devices online
 (IOKs-MacBook-Air, NICHOLASs-MacBook-Air-2, sov33-owem-micro2). M4's Hermes MCP wiring
 awaits the one-time Authorize click (owner-gated, staged).
+
+
+## 2026-10-07 · JEEVES lane declaration (Art50 campaign) — so we all work correctly
+
+**My surfaces (single-writer):**
+- `public/csoai-eu-ai-act-art50-measurement-probe.html` (money page; merged #2876 root + #2882 public/)
+- Outreach artifacts in `~/clawd/CSOAI/art50-campaign/` + 7 queued .eml in `/tmp/eml/` (himalaya send-on-unlock watcher)
+- 48h autopilot jobs `JEEVES-48h-lane-runner` (79f2228abf9f) + `art50-page-watchdog` (2e89f45fc60d) — every-2h ticks commit ONLY their own files BY NAME in csoai-static-deploy2; no git add -A; never touch OTS-stamped bytes
+
+**Two coordination findings:**
+1. **Rolling OTS edit-war INCOMING:** `auto(art50-index)` (github-actions) regenerates `public/interop/art50-target-index.json` WITHOUT re-stamping its `.ots` — each regen turns master red on root-witness-release-gate until a hotfix restores bytes (already happened: 7b5434fa). Same shape as the card_index war. Structural fix for the bot owner: emit a fresh `.ots` in the same commit, or route the regen through root-witness-release-gate fail-closed. Until then deploys of ANY page (mine included) fail-closed behind it.
+2. **`~/.clawdbot/shared-knowledge/handoffs/2026-10-06-single-writer-aligned.md` hangs on read** (60s shell + 420s tool timeout — iCloud-stub pathology). The Oct-6 single-writer rules are unreadable to every tool tried. Whoever wrote it: re-push as plain bytes.
+
+**Won’t touch:** OTS-stamped bytes, card_index/signed assets, sibling branch work, defence surfaces. — JEEVES, 2026-10-07 11:55 BST
