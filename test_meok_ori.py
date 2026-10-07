@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""test_meok_ori.py — 30 tests for the sovereign harness (meok-ori).
+"""test_meok_ori.py — tests for meok-ori.
 
-Hermetic: stub backend only, receipts to tmp files, no network.
+Hermetic: stub backend only, receipts and the receipt key in tmp dirs, no network.
 """
+import hashlib
 import json
 import os
 import subprocess
@@ -19,15 +20,23 @@ from meok_ori.cli import main
 
 
 def tmp_receipts(fn):
-    """Decorator: point the receipt chain at a temp file."""
+    """Decorator: point the receipt chain and the receipt key at a temp dir."""
     def wrapper(*a, **kw):
         with tempfile.TemporaryDirectory() as td:
             old = core.RECEIPT_PATH
+            old_env = {k: os.environ.get(k) for k in ("MEOK_SIGIL_SECRET", "MEOK_SIGIL_KEY_FILE")}
             core.RECEIPT_PATH = Path(td) / "receipts.jsonl"
+            os.environ.pop("MEOK_SIGIL_SECRET", None)
+            os.environ["MEOK_SIGIL_KEY_FILE"] = str(Path(td) / "receipt.key")
             try:
                 return fn(*a, **kw)
             finally:
                 core.RECEIPT_PATH = old
+                for k, v in old_env.items():
+                    if v is None:
+                        os.environ.pop(k, None)
+                    else:
+                        os.environ[k] = v
     return wrapper
 
 
@@ -47,7 +56,7 @@ class T1Articles(unittest.TestCase):
         r = core.route_prompt("hello world ok")
         a = core.audit_run(model="qwen3.5-0.8b", route=r, receipt_hash="abc",
                            chain_ok=True, max_cost=1.0, signed=False,
-                           council=None, backend="stub")
+                           screen=None, backend="stub")
         arts = {f["article"] for f in a.findings}
         self.assertIn(19, arts)
 
@@ -56,7 +65,7 @@ class T2Sigil(unittest.TestCase):
     @tmp_receipts
     def test_t04_sign_deterministic(self):
         p = {"a": 1, "b": "x"}
-        self.assertEqual(core.sign(p), core.sign(p))
+        self.assertEqual(core.mac(p), core.mac(p))
 
     @tmp_receipts
     def test_t05_append_and_verify(self):
@@ -129,38 +138,37 @@ class T4Backends(unittest.TestCase):
         self.assertIn("ping", res.text)
 
 
-class T5Council(unittest.TestCase):
-    def test_t17_13_queens_2_vetos(self):
-        self.assertEqual(len(core.QUEENS), 13)
-        self.assertEqual(sum(1 for q in core.QUEENS if q["veto"]), 2)
+class T5Screen(unittest.TestCase):
+    def test_t17_13_rules_2_blocking(self):
+        self.assertEqual(len(core.SCREEN_RULES), 13)
+        self.assertEqual(sum(1 for r in core.SCREEN_RULES if r["blocking"]), 2)
+        self.assertEqual(sum(1 for r in core.SCREEN_RULES if r["check"] == "none"), 5)
 
-    def test_t18_benign_approved(self):
-        v = core.council_vote("hello world, the sovereign stack is green and tested.")
-        self.assertTrue(v.approved)
-        self.assertGreaterEqual(v.ayes, 9)
-        self.assertEqual(v.vetos, 0)
+    def test_t18_benign_passes(self):
+        v = core.keyword_screen("hello world, the sovereign stack is green and tested.")
+        self.assertTrue(v.passed)
+        self.assertGreaterEqual(v.rules_passed, 9)
+        self.assertEqual(v.blocking_failed, [])
 
-    def test_t19_harm_vetoes(self):
-        v = core.council_vote("you must kill the target now")
-        self.assertFalse(v.approved)
-        self.assertIn("Sophia Care", v.vetoed_by)
+    def test_t19_harm_word_blocks(self):
+        v = core.keyword_screen("you must kill the target now")
+        self.assertFalse(v.passed)
+        self.assertIn("harm-words", v.blocking_failed)
 
-    def test_t20_tally_supermajority(self):
-        votes = [{"id": "q", "name": "n", "veto": False, "vote": "aye"} for _ in range(8)]
-        votes += [{"id": "q", "name": "n", "veto": False, "vote": "nay"} for _ in range(5)]
-        v = core.tally(votes)
-        self.assertFalse(v.approved)  # 8 < 9
-        votes = votes[:1] * 9 + votes[9:]
-        v2 = core.tally(votes[:13])
-        # 9 ayes, 4 nays, 9 > 4 → approved
-        self.assertTrue(v2.approved)
+    def test_t20_tally_threshold(self):
+        res = [{"id": "r", "blocking": False, "result": "pass"} for _ in range(8)]
+        res += [{"id": "r", "blocking": False, "result": "fail"} for _ in range(5)]
+        self.assertFalse(core.screen_tally(res).passed)  # 8 < 9
+        res = res[:1] * 9 + res[9:]
+        # 9 pass, 4 fail -> passes
+        self.assertTrue(core.screen_tally(res[:13]).passed)
 
-    def test_t21_veto_blocks_even_with_ayes(self):
-        votes = [{"id": "qc", "name": "Sophia Care", "veto": True, "vote": "nay"}]
-        votes += [{"id": "q", "name": "n", "veto": False, "vote": "aye"} for _ in range(12)]
-        v = core.tally(votes)
-        self.assertFalse(v.approved)
-        self.assertEqual(v.vetos, 1)
+    def test_t21_blocking_rule_fails_even_with_passes(self):
+        res = [{"id": "harm-words", "blocking": True, "result": "fail"}]
+        res += [{"id": "r", "blocking": False, "result": "pass"} for _ in range(12)]
+        v = core.screen_tally(res)
+        self.assertFalse(v.passed)
+        self.assertEqual(v.blocking_failed, ["harm-words"])
 
 
 class T6Audit(unittest.TestCase):
@@ -168,7 +176,7 @@ class T6Audit(unittest.TestCase):
         r = core.route_prompt("x")
         a = core.audit_run(model="totally-made-up", route=r, receipt_hash="h",
                            chain_ok=True, max_cost=1.0, signed=False,
-                           council=None, backend="stub")
+                           screen=None, backend="stub")
         f = next(x for x in a.findings if x["article"] == 2)
         self.assertEqual(f["status"], "fail")
         self.assertFalse(a.ok)
@@ -177,7 +185,7 @@ class T6Audit(unittest.TestCase):
         r = core.route_prompt("x" * 2000, force_tier=4)
         a = core.audit_run(model="qwen3.5-0.8b", route=r, receipt_hash="h",
                            chain_ok=True, max_cost=0.000001, signed=False,
-                           council=None, backend="stub")
+                           screen=None, backend="stub")
         f = next(x for x in a.findings if x["article"] == 6)
         self.assertEqual(f["status"], "fail")
 
@@ -185,7 +193,7 @@ class T6Audit(unittest.TestCase):
         r = core.route_prompt("x")
         a = core.audit_run(model="qwen3.5-0.8b", route=r, receipt_hash="",
                            chain_ok=True, max_cost=1.0, signed=False,
-                           council=None, backend="stub")
+                           screen=None, backend="stub")
         f = next(x for x in a.findings if x["article"] == 10)
         self.assertEqual(f["status"], "fail")
 
@@ -193,7 +201,7 @@ class T6Audit(unittest.TestCase):
         r = core.route_prompt("x")
         a = core.audit_run(model="qwen3.5-0.8b", route=r, receipt_hash="h",
                            chain_ok=True, max_cost=1.0, signed=False,
-                           council=None, backend="stub")
+                           screen=None, backend="stub")
         f = next(x for x in a.findings if x["article"] == 12)
         self.assertIn("default", f["detail"])
 
@@ -202,7 +210,9 @@ class T7CLI(unittest.TestCase):
     def _run(self, *argv):
         with tempfile.TemporaryDirectory() as td:
             env = dict(os.environ, MEOK_ORI_RECEIPTS=str(Path(td) / "r.jsonl"),
+                       MEOK_SIGIL_KEY_FILE=str(Path(td) / "receipt.key"),
                        MEOK_ORI_MAX_COST="1.0")
+            env.pop("MEOK_SIGIL_SECRET", None)
             p = subprocess.run(
                 [sys.executable, "-m", "meok_ori", *argv],
                 capture_output=True, text=True, timeout=60, env=env,
@@ -218,12 +228,14 @@ class T7CLI(unittest.TestCase):
         self.assertTrue(out["constitution"]["ok"])
         self.assertEqual(len(out["constitution"]["findings"]), 9)
 
-    def test_t27_run_council_approved(self):
-        p = self._run("run", "hello world, the sovereign stack is green.",
-                      "--council", "--json", "--backend", "stub")
-        self.assertEqual(p.returncode, 0, p.stderr)
-        out = json.loads(p.stdout)
-        self.assertTrue(out["council"]["approved"])
+    def test_t27_run_screen_passes(self):
+        for flag in ("--screen", "--council"):  # --council is the 0.1.0 alias
+            p = self._run("run", "hello world, the sovereign stack is green.",
+                          flag, "--json", "--backend", "stub")
+            self.assertEqual(p.returncode, 0, p.stderr)
+            out = json.loads(p.stdout)
+            self.assertTrue(out["keyword_screen"]["passed"])
+            self.assertNotIn("council", out)
 
     def test_t28_run_denies_unknown_model(self):
         p = self._run("run", "hi", "--model", "made-up-model-9000", "--json")
@@ -277,6 +289,93 @@ class T8CC0Constitution(unittest.TestCase):
         # Art.2 (tier 1) and Art.19 (tier 1) considered before Art.21 (tier 4)
         self.assertLess(ordered.index(2), ordered.index(21))
         self.assertLess(ordered.index(19), ordered.index(21))
+
+
+class T9Honesty(unittest.TestCase):
+    """0.2.0 corrections: no secret in source, a real chain check, honest names."""
+
+    def test_t35_no_default_secret_in_source(self):
+        src = (ROOT / "meok-ori" / "meok_ori" / "core.py").read_text(encoding="utf-8")
+        self.assertNotIn("meok-ori-sovereign-2026", src)
+        self.assertNotIn("SIGIL_SECRET = os.environ.get(", src)
+
+    @tmp_receipts
+    def test_t36_key_file_created_0600_and_random(self):
+        kf = Path(os.environ["MEOK_SIGIL_KEY_FILE"])
+        self.assertFalse(kf.exists())
+        m1 = core.mac({"a": 1})
+        self.assertTrue(kf.exists())
+        self.assertEqual(kf.stat().st_mode & 0o777, 0o600)
+        self.assertEqual(len(kf.read_text().strip()), 64)
+        with tempfile.TemporaryDirectory() as td2:
+            os.environ["MEOK_SIGIL_KEY_FILE"] = str(Path(td2) / "receipt.key")
+            self.assertNotEqual(core.mac({"a": 1}), m1)  # another install, another key
+            os.environ["MEOK_SIGIL_KEY_FILE"] = str(kf)
+
+    @tmp_receipts
+    def test_t37_chain_under_another_key_fails(self):
+        os.environ["MEOK_SIGIL_SECRET"] = "key-a"
+        core.append_receipt({"kind": "old"})
+        self.assertTrue(core.verify_chain()[0])
+        os.environ["MEOK_SIGIL_SECRET"] = "key-b"
+        self.assertFalse(core.verify_chain()[0])
+
+    def test_t38_cli_chain_check_is_not_constant(self):
+        with tempfile.TemporaryDirectory() as td:
+            rp = Path(td) / "r.jsonl"
+            env = dict(os.environ, MEOK_ORI_RECEIPTS=str(rp),
+                       MEOK_SIGIL_KEY_FILE=str(Path(td) / "receipt.key"),
+                       MEOK_ORI_MAX_COST="1.0")
+            env.pop("MEOK_SIGIL_SECRET", None)
+
+            def run():
+                return subprocess.run(
+                    [sys.executable, "-m", "meok_ori", "run", "hello sovereign world",
+                     "--json", "--backend", "stub"], capture_output=True, text=True,
+                    timeout=60, env=env, cwd=str(ROOT / "meok-ori"))
+
+            p1 = run()
+            self.assertEqual(p1.returncode, 0, p1.stderr)
+            self.assertTrue(json.loads(p1.stdout)["chain_ok"])
+            rp.write_text(rp.read_text().replace('"stub"', '"forged"'))
+            p2 = run()
+            self.assertEqual(p2.returncode, 1)
+            out = json.loads(p2.stdout)
+            self.assertFalse(out["chain_ok"])
+            f11 = next(f for f in out["constitution"]["findings"] if f["article"] == 11)
+            self.assertEqual(f11["status"], "fail")
+
+    def test_t39_sign_hashes_the_whole_reply(self):
+        with tempfile.TemporaryDirectory() as td:
+            rp = Path(td) / "r.jsonl"
+            env = dict(os.environ, MEOK_ORI_RECEIPTS=str(rp),
+                       MEOK_SIGIL_KEY_FILE=str(Path(td) / "receipt.key"),
+                       MEOK_ORI_MAX_COST="1.0")
+            env.pop("MEOK_SIGIL_SECRET", None)
+            prompt = "x" * 200
+            p = subprocess.run(
+                [sys.executable, "-m", "meok_ori", "run", prompt, "--sign", "--json",
+                 "--backend", "stub"], capture_output=True, text=True, timeout=60,
+                env=env, cwd=str(ROOT / "meok-ori"))
+            self.assertEqual(p.returncode, 0, p.stderr)
+            text = json.loads(p.stdout)["text"]
+            rec = json.loads(rp.read_text().splitlines()[-1])
+            self.assertEqual(rec["reply_sha256"], hashlib.sha256(text.encode()).hexdigest())
+            self.assertNotIn("sigil", rec)
+
+    def test_t40_screen_command_says_what_it_is(self):
+        for cmd in ("screen", "council"):
+            p = subprocess.run([sys.executable, "-m", "meok_ori", cmd],
+                               capture_output=True, text=True, timeout=60,
+                               cwd=str(ROOT / "meok-ori"))
+            self.assertEqual(p.returncode, 0, p.stderr)
+            self.assertIn("Not a council, not BFT", p.stdout)
+            self.assertNotIn("Queen", p.stdout)
+
+    def test_t41_parallax_default_port_3001(self):
+        if os.environ.get("MEOK_PARALLAX_URL"):
+            self.skipTest("MEOK_PARALLAX_URL is set")
+        self.assertTrue(core.PARALLAX_URL.startswith("http://localhost:3001/"))
 
 
 if __name__ == "__main__":

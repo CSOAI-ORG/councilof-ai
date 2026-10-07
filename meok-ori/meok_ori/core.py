@@ -1,4 +1,4 @@
-"""meok-ori core — router, constitution, council, SIGIL receipts, harness wrap.
+"""meok-ori core — router, constitution, keyword screen, HMAC receipt chain, harness wrap.
 
 Everything here runs offline by default (deterministic stub backend) so the
 suite is hermetic; set OPENROUTER_API_KEY or run Ollama/Parallax for live.
@@ -19,19 +19,65 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 # ---------------------------------------------------------------------------
-# SIGIL — HMAC-SHA256 append-only receipt chain
+# Receipt chain — HMAC-SHA256, append-only, hash-linked
+#
+# What this is: a keyed MAC chain. It shows that the file was not edited by
+# someone who does not hold the key. It is NOT a signature: anyone who holds the
+# key can write a valid entry, and a third party cannot check an entry without
+# the key. Do not describe these receipts as "signed".
+#
+# The key never lives in source. Resolution order:
+#   1. MEOK_SIGIL_SECRET (environment, e.g. from a secret manager);
+#   2. the key file MEOK_SIGIL_KEY_FILE, default ~/.config/meok-ori/receipt.key;
+#   3. on first use, 32 random bytes are written to that file with mode 0600.
+#
+# meok-ori 0.1.0 (commit 8904cceae, 7 Oct 2026) fell back to a default secret
+# committed in this file. Receipts written under that default can be forged by
+# anyone who has read the source: treat them as unsigned, unverified records.
 # ---------------------------------------------------------------------------
 
-SIGIL_SECRET = os.environ.get("MEOK_SIGIL_SECRET", "meok-ori-sovereign-2026").encode()
 RECEIPT_PATH = Path(
     os.environ.get("MEOK_ORI_RECEIPTS", str(Path.cwd() / ".meok_ori_receipts.jsonl"))
 )
+DEFAULT_KEY_FILE = Path.home() / ".config" / "meok-ori" / "receipt.key"
 
 
-def sign(payload: Dict[str, Any]) -> str:
-    """Deterministic HMAC-SHA256 over canonical JSON."""
+def key_file() -> Path:
+    return Path(os.environ.get("MEOK_SIGIL_KEY_FILE", str(DEFAULT_KEY_FILE)))
+
+
+def _load_key() -> bytes:
+    """Return the receipt MAC key: env, then key file, else create a random key file."""
+    env = os.environ.get("MEOK_SIGIL_SECRET")
+    if env:
+        return env.encode()
+    p = key_file()
+    try:
+        key = p.read_bytes().strip()
+    except FileNotFoundError:
+        p.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            os.chmod(str(p.parent), 0o700)
+        except OSError:
+            pass
+        new_key = os.urandom(32).hex().encode()
+        try:
+            fd = os.open(str(p), os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        except FileExistsError:  # another process created it first
+            key = p.read_bytes().strip()
+        else:
+            with os.fdopen(fd, "wb") as f:
+                f.write(new_key + b"\n")
+            key = new_key
+    if not key:
+        raise ValueError(f"receipt key file is empty: {p}")
+    return key
+
+
+def mac(payload: Dict[str, Any]) -> str:
+    """HMAC-SHA256 over canonical JSON, under the local key. Not a signature."""
     msg = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
-    return hmac.new(SIGIL_SECRET, msg, hashlib.sha256).hexdigest()
+    return hmac.new(_load_key(), msg, hashlib.sha256).hexdigest()
 
 
 def append_receipt(record: Dict[str, Any], path: Optional[Path] = None) -> Dict[str, Any]:
@@ -41,7 +87,7 @@ def append_receipt(record: Dict[str, Any], path: Optional[Path] = None) -> Dict[
     entry = dict(record)
     entry["ts"] = time.time()
     entry["prev"] = prev
-    entry["hash"] = sign(entry)
+    entry["hash"] = mac(entry)
     with p.open("a", encoding="utf-8") as f:
         f.write(json.dumps(entry, sort_keys=True) + "\n")
     return entry
@@ -65,14 +111,16 @@ def last_hash(path: Optional[Path] = None) -> str:
 
 
 def verify_chain(path: Optional[Path] = None) -> Tuple[bool, int, str]:
-    """Verify every receipt's hash and prev-link. Returns (ok, count, last_hash)."""
+    """Recompute every receipt's HMAC under the current key and check each
+    prev-link. Returns (ok, count, last_hash). ok is False for an edited chain
+    and for receipts written under another key (including 0.1.0's default)."""
     entries = _read_chain(path)
     if not entries:
         return True, 0, "0" * 64
     prev = "0" * 64
     for e in entries:
         payload = {k: v for k, v in e.items() if k not in ("hash",)}
-        if sign(payload) != e.get("hash"):
+        if not hmac.compare_digest(mac(payload), str(e.get("hash", ""))):
             return False, len(entries), e.get("hash", "")
         if e.get("prev") != prev:
             return False, len(entries), e.get("hash", "")
@@ -157,7 +205,9 @@ def route_prompt(prompt: str, task: str = "chat", force_tier: Optional[int] = No
 
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 OLLAMA_URL = os.environ.get("OLLAMA_HOST", "http://localhost:11434") + "/api/chat"
-PARALLAX_URL = os.environ.get("MEOK_PARALLAX_URL", "http://localhost:1337") + "/v1/chat/completions"
+# Parallax serves its OpenAI-compatible API on :3001
+# (github.com/GradientHQ/parallax docs/user_guide/quick_start.md).
+PARALLAX_URL = os.environ.get("MEOK_PARALLAX_URL", "http://localhost:3001") + "/v1/chat/completions"
 
 
 def _ping(url: str, timeout: float = 1.0) -> bool:
@@ -320,24 +370,40 @@ def complete(prompt: str, route: Optional[Route] = None, backend: Optional[str] 
 
 
 # ---------------------------------------------------------------------------
-# 13-Queen council — hermetic BFT 9/13 vote on every output
+# Keyword screen — 13 fixed rules applied to the output text
+#
+# This is a keyword, regex and length screen. It is not a council, it is not
+# Byzantine fault tolerant, and no model votes. (meok-ori 0.1.0 called it a
+# "13-Queen BFT 9/13 council"; the rules were always the ones below.)
+#
+# What it checks (case-insensitive substring match, so "harmless" trips "harm"):
+#   harm-words  (blocking)  kill, attack, harm, weapon, destroy, shoot, bomb
+#   risk-words  (blocking)  bypass, exploit, steal, secret, password, exfiltrate
+#   pii                     an email address or a 13-19 digit number
+#   min-length-5 x4         the stripped text has at least 5 characters
+#   min-length-10           the stripped text has at least 10 characters
+#   no-check x5             no check at all: these rules always pass
+# The text passes if no blocking rule fails and at least 9 of the 13 rules pass.
+# In effect: no harm word, no risk word, and at least 5 characters. A PII hit on
+# its own does not fail the screen.
 # ---------------------------------------------------------------------------
 
-QUEENS: List[Dict[str, Any]] = [
-    {"id": "queen-care", "name": "Sophia Care", "dimension": "care", "veto": True, "emoji": "💗"},
-    {"id": "queen-watch", "name": "Watch", "dimension": "watch", "veto": True, "emoji": "🗼"},
-    {"id": "queen-strategy", "name": "Aurelian", "dimension": "strategy", "veto": False, "emoji": "♑"},
-    {"id": "queen-compliance", "name": "Justitia", "dimension": "compliance", "veto": False, "emoji": "⚖"},
-    {"id": "queen-arcana", "name": "Aleph", "dimension": "arcana", "veto": False, "emoji": "✨"},
-    {"id": "queen-finance", "name": "Asteria", "dimension": "finance", "veto": False, "emoji": "⭐"},
-    {"id": "queen-domain", "name": "Dominion", "dimension": "domain", "veto": False, "emoji": "🛞"},
-    {"id": "queen-brain", "name": "Brain", "dimension": "brain", "veto": False, "emoji": "🧠"},
-    {"id": "queen-proactive", "name": "Proactive", "dimension": "proactive", "veto": False, "emoji": "⚡"},
-    {"id": "queen-bridge", "name": "Bridge", "dimension": "bridge", "veto": False, "emoji": "🌉"},
-    {"id": "queen-distribution", "name": "Distribution", "dimension": "distribution", "veto": False, "emoji": "☀️"},
-    {"id": "queen-council", "name": "Council", "dimension": "council", "veto": False, "emoji": "🦁"},
-    {"id": "queen-sage", "name": "Sage", "dimension": "sage", "veto": False, "emoji": "🧘"},
+SCREEN_RULES: List[Dict[str, Any]] = [
+    {"id": "harm-words", "check": "harm", "blocking": True},
+    {"id": "risk-words", "check": "risk", "blocking": True},
+    {"id": "min-length-5-a", "check": "len5", "blocking": False},
+    {"id": "pii", "check": "pii", "blocking": False},
+    {"id": "no-check-a", "check": "none", "blocking": False},
+    {"id": "no-check-b", "check": "none", "blocking": False},
+    {"id": "min-length-5-b", "check": "len5", "blocking": False},
+    {"id": "min-length-5-c", "check": "len5", "blocking": False},
+    {"id": "no-check-c", "check": "none", "blocking": False},
+    {"id": "no-check-d", "check": "none", "blocking": False},
+    {"id": "min-length-10", "check": "len10", "blocking": False},
+    {"id": "min-length-5-d", "check": "len5", "blocking": False},
+    {"id": "no-check-e", "check": "none", "blocking": False},
 ]
+SCREEN_PASS_MIN = 9
 
 HARM_WORDS = ("kill", "attack", "harm", "weapon", "destroy", "shoot", "bomb")
 RISK_WORDS = ("bypass", "exploit", "steal", "secret", "password", "exfiltrate")
@@ -345,53 +411,47 @@ PII_RE = re.compile(r"[\w.+-]+@[\w-]+\.\w{2,}|\b\d{13,19}\b")
 
 
 @dataclass
-class CouncilVerdict:
-    approved: bool
-    ayes: int
-    nays: int
-    vetos: int
-    quorum: bool
-    vetoed_by: List[str]
-    quorum_needed: int = 9
-    voters: int = 13
+class ScreenVerdict:
+    passed: bool
+    rules_passed: int
+    rules_failed: int
+    blocking_failed: List[str]
+    failed: List[str]
+    pass_min: int = SCREEN_PASS_MIN
+    rules_total: int = 13
 
 
-def queen_votes(text: str) -> List[Dict[str, Any]]:
-    """Hermetic per-queen vote — no LLM required (works offline, Art. 11)."""
+def screen_rules(text: str) -> List[Dict[str, Any]]:
+    """Apply each rule to the text. Deterministic; no model involved."""
     t = (text or "").lower()
-    votes = []
-    for q in QUEENS:
-        nay = False
-        d = q["dimension"]
-        if d == "care" and any(w in t for w in HARM_WORDS):
-            nay = True
-        elif d == "watch" and any(w in t for w in RISK_WORDS):
-            nay = True
-        elif d == "compliance" and PII_RE.search(text or ""):
-            nay = True
-        elif d in ("strategy", "domain", "council", "brain") and len(t.strip()) < 5:
-            nay = True
-        elif d == "distribution" and len(t.strip()) < 10:
-            nay = True
-        votes.append({"id": q["id"], "name": q["name"], "veto": q["veto"],
-                      "vote": "nay" if nay else "aye"})
-    return votes
+    n = len(t.strip())
+    results = []
+    for r in SCREEN_RULES:
+        c = r["check"]
+        fail = ((c == "harm" and any(w in t for w in HARM_WORDS))
+                or (c == "risk" and any(w in t for w in RISK_WORDS))
+                or (c == "pii" and bool(PII_RE.search(text or "")))
+                or (c == "len5" and n < 5)
+                or (c == "len10" and n < 10))
+        results.append({"id": r["id"], "blocking": r["blocking"],
+                        "result": "fail" if fail else "pass"})
+    return results
 
 
-def tally(votes: List[Dict[str, Any]]) -> CouncilVerdict:
-    """BFT 9/13: supermajority + quorum + ayes > nays+vetos. Any VETO-queen nay
-    rejects outright (2 veto queens: Sophia Care + Watch)."""
-    ayes = sum(1 for v in votes if v["vote"] == "aye")
-    nays = sum(1 for v in votes if v["vote"] == "nay" and not v["veto"])
-    vetoed = [v["name"] for v in votes if v["vote"] == "nay" and v["veto"]]
-    quorum = (ayes + nays + len(vetoed)) >= 9
-    approved = (not vetoed) and ayes >= 9 and ayes > (nays + len(vetoed))
-    return CouncilVerdict(approved=approved, ayes=ayes, nays=nays,
-                          vetos=len(vetoed), quorum=quorum, vetoed_by=vetoed)
+def screen_tally(results: List[Dict[str, Any]]) -> ScreenVerdict:
+    """Pass = no blocking rule failed, at least SCREEN_PASS_MIN rules passed,
+    and more rules passed than failed."""
+    passed_n = sum(1 for r in results if r["result"] == "pass")
+    failed = [r["id"] for r in results if r["result"] == "fail"]
+    blocking = [r["id"] for r in results if r["result"] == "fail" and r["blocking"]]
+    ok = (not blocking) and passed_n >= SCREEN_PASS_MIN and passed_n > len(failed)
+    return ScreenVerdict(passed=ok, rules_passed=passed_n, rules_failed=len(failed),
+                         blocking_failed=blocking, failed=failed,
+                         rules_total=len(results))
 
 
-def council_vote(text: str) -> CouncilVerdict:
-    return tally(queen_votes(text))
+def keyword_screen(text: str) -> ScreenVerdict:
+    return screen_tally(screen_rules(text))
 
 
 # ---------------------------------------------------------------------------
@@ -407,7 +467,7 @@ class Audit:
 
 def audit_run(*, model: str, route: Route, receipt_hash: str,
               chain_ok: bool, max_cost: float, signed: bool,
-              council: Optional[CouncilVerdict], backend: str,
+              screen: Optional[ScreenVerdict], backend: str,
               status: str = "offline-stub") -> Audit:
     findings: List[Dict[str, Any]] = []
 
@@ -427,22 +487,28 @@ def audit_run(*, model: str, route: Route, receipt_hash: str,
     # Art. 10 effect bound to receipt
     add(10, "pass" if receipt_hash else "fail",
         "receipt bound" if receipt_hash else "no receipt (effect not bound)")
-    # Art. 11 verification separate from invocation
+    # Art. 11 verification separate from invocation — chain_ok must be the
+    # result of verify_chain() after the run, never a constant
     add(11, "pass" if chain_ok else "fail",
-        "chain verified post-run" if chain_ok else "chain verification failed")
-    # Art. 12 signing is not automatic — sigil only with explicit --sign
-    add(12, "pass", "signed explicitly" if signed else "unsigned by default (correct)")
+        "receipt chain HMAC re-verified post-run" if chain_ok
+        else "receipt chain does not verify under the current key (edited, or "
+             "written under another key; 0.1.0 receipts used a published default "
+             "key and count as unsigned)")
+    # Art. 12 not automatic — an HMAC tag only with explicit --sign
+    add(12, "pass", "HMAC tag added on explicit --sign (not a signature)" if signed
+        else "no HMAC tag by default (correct)")
     # Art. 18 failure stages are explicit — an errored run must not claim PASS
     add(18, "pass" if status != "error" else "fail",
         "run completed" if status != "error"
         else f"explicit failure stage: backend={backend} errored")
-    # Art. 19 no self-approval — council votes are hermetic, separate from generator
-    if council is not None:
-        add(19, "pass" if council.approved else "fail",
-            "council approved (separate voters)" if council.approved
-            else f"council rejected ayes={council.ayes} vetos={council.vetoed_by}")
+    # Art. 19 no self-approval — the keyword screen is deterministic code,
+    # separate from the generator (it is not a vote and not an independent party)
+    if screen is not None:
+        add(19, "pass" if screen.passed else "fail",
+            "keyword screen passed (deterministic rules, not the generator)" if screen.passed
+            else f"keyword screen failed: {screen.failed}")
     else:
-        add(19, "pass", "no council vote requested")
+        add(19, "pass", "no keyword screen requested")
     # Art. 21 public claim state — status must reflect the real backend used
     add(21, "pass", f"status reflects backend={backend}")
 

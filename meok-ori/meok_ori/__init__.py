@@ -1,13 +1,13 @@
-"""meok-ori — the sovereign harness. Better than OpenRouter's Ori.
+"""meok-ori — a local-first agent harness modelled on OpenRouter's Ori.
 
-Why this exists: Ori gives you OpenRouter OAuth + model pick + org guardrails.
-meok-ori gives you all of that PLUS the constitutional-harness (22 articles)
-enforced at runtime, a 13-Queen BFT 9/13 council vote on every output,
-a SIGIL-signed append-only receipt chain, the 4-tier sovereign cascade
-(OpenRouter / Ollama / Parallax P2P / offline stub), and i-character binding.
+What it has: a 4-tier backend cascade (OpenRouter / Ollama / Parallax / offline
+stub), a 22-article audit of each run, an optional keyword screen of the output
+(word lists, a PII regex and a length check; not a council and not a model vote),
+and an append-only HMAC receipt chain under a local key (integrity only; not a
+signature). Nothing here has been measured against Ori.
 
 Public framing: MEOK AI Labs / CSOAI Ltd. No internal codenames.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __all__ = ["core", "cli"]
