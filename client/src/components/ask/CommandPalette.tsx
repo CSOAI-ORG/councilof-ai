@@ -8,7 +8,7 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { navigate } from "wouter/use-browser-location";
 import { ArrowRight, CornerDownLeft, MessageSquareText, Pin, PinOff, Search, X } from "lucide-react";
-import { paletteIndex, search, type PaletteItem } from "@/components/ask/paletteIndex";
+import { PALETTE_INDEX_EVENT, paletteIndex, search, type PaletteItem } from "@/components/ask/paletteIndex";
 import { openAsk, readRecents, togglePin, type Recent } from "@/components/ask/askBus";
 import CorpusChip from "@/components/CorpusChip";
 
@@ -23,6 +23,13 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
   const [q, setQ] = useState("");
   const [active, setActive] = useState(0);
   const [recents, setRecents] = useState<Recent[]>(() => readRecents());
+  // The board's test names join the index once GET /api/gspc has been read; search again then.
+  const [indexVersion, setIndexVersion] = useState(0);
+  useEffect(() => {
+    const bump = () => setIndexVersion((v) => v + 1);
+    window.addEventListener(PALETTE_INDEX_EVENT, bump);
+    return () => window.removeEventListener(PALETTE_INDEX_EVENT, bump);
+  }, []);
   const input = useRef<HTMLInputElement>(null);
   const listId = useId();
   const returnTo = useRef<Element | null>(typeof document !== "undefined" ? document.activeElement : null);
@@ -49,7 +56,8 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
     for (const it of search(q)) out.push({ kind: "item", item: it, key: `i:${it.id}` });
     out.push({ kind: "ask", key: "ask" });
     return out;
-  }, [q, recents]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [q, recents, indexVersion]);
 
   useEffect(() => setActive(0), [q]);
 

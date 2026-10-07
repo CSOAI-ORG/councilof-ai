@@ -47,7 +47,6 @@ describe("no mounted page hosts or advertises a MEOK product", () => {
     expect(pages.length).toBeGreaterThan(100);
     expect(pages).toContain("pages/EI3.tsx");
     expect(pages).toContain("pages/JurisdictionEngine.tsx");
-    expect(pages).toContain("pages/BadgesPage.tsx");
   });
 
   it("no routed page names a MEOK product, links a MEOK product route or calls a MEOK backend", () => {

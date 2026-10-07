@@ -9,15 +9,18 @@
  *   - the board card: totals.public_count and totals.separation_public_count (GET /api/gspc), and the
  *     model count (/interop/models-measured.json, derived from the signed cards at build time);
  *   - Verify: card_chain.bodies_verified_valid (/api/state, corpus 3 of three, kind measured);
- *   - Connect: the number of tools tools/list returns (passed in; read by the workspace);
+ *   - For developers: the number of tools tools/list returns on /mcp/free, the door that card installs
+ *     (read here, from that door; /mcp also lists the paid tools, so its length is not this number);
  *   - Learn: the exercises in /academy/exercises/exercises.json;
  *   - SovX: counts.pairs in /api/wrapper/index.json;
  *   - Corrections: ledgers.corrections_in_this_deploy (/api/state);
  *   - Claim maintenance: ledgers.claim_maintenance.counts, each outcome named, never summed.
  * No number is typed. Loading shows a role="status" placeholder; a failed read says so in words.
  */
-import type { ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { listTools } from "@/lib/sovTools";
 import { Link } from "wouter";
+import { addMyResult, lookupFromRun, type FinishedLookupRun } from "@/lib/myResults";
 import { ArrowRight, Coins } from "lucide-react";
 import { useGspcBoard } from "@/components/board/useGspcBoard";
 import { boardTiles, separationRead, type TileState } from "@/components/home/LiveBoardGlance";
@@ -33,6 +36,8 @@ import {
 import { useModelsCount } from "./useModelsCount";
 import GetResults from "./GetResults";
 import CorpusCount from "./CorpusCount";
+import { correctionHeadline, correctionHref } from "@/lib/correctionHeadline";
+import ModelCountKey from "@/components/ModelCountKey";
 
 const nf = new Intl.NumberFormat("en-GB");
 
@@ -62,10 +67,14 @@ export function LiveFigureLine({
     );
   return (
     <p className="mt-3 text-[13px] leading-snug text-muted-foreground" data-testid={testId} data-state="live">
-      <span className="font-mono text-base font-black text-foreground">{f.value}</span> {f.label}
-      <span className="block truncate font-mono text-xs" title={f.source + (f.as_of ? ` · as of ${f.as_of}` : "")}>
-        {f.source}
-      </span>
+      {/* Where the figure came from is a tooltip, not a line of source paths on the card face. */}
+      <span
+        className="cursor-help font-mono text-base font-black text-foreground"
+        title={`Read from ${f.source}${f.as_of ? ` · as of ${f.as_of}` : ""}`}
+      >
+        {f.value}
+      </span>{" "}
+      {f.label}
     </p>
   );
 }
@@ -138,7 +147,11 @@ function WorkspaceBoardCard() {
         </div>
       ) : (
         <>
-          <p className="mt-3 font-mono text-2xl font-black tracking-tight text-foreground sm:text-3xl" data-testid="ws-board-count">
+          <p
+            className="mt-3 font-mono text-2xl font-black tracking-tight text-foreground sm:text-3xl"
+            data-testid="ws-board-count"
+            title="An axis is one test. Measured means a published run stands behind it."
+          >
             {count}
           </p>
           <p className="mt-1 text-sm leading-snug text-muted-foreground" data-testid="ws-board-separation">
@@ -181,12 +194,13 @@ function WorkspaceBoardCard() {
               <>
                 <span className="font-mono text-base font-black text-foreground">{nf.format(models)}</span>{" "}
                 <Link href="/models-measured/" className="underline decoration-dotted underline-offset-2 hover:text-foreground">
-                  AI models measured on frozen banks
+                  AI models measured on fixed question sets
                 </Link>
                 ; our own are listed apart, never counted in.
               </>
             )}
           </p>
+          <ModelCountKey className="mt-3" />
           <details className="group mt-3 rounded-xl border border-border px-3" data-testid="ws-board-records">
             <summary className="flex min-h-11 cursor-pointer list-none items-center text-sm font-medium text-muted-foreground hover:text-foreground">
               How many signed records stand behind this
@@ -215,6 +229,8 @@ type Place = {
   href: string;
   title: string;
   job: string;
+  /** The technical words for this place, kept in the tooltip rather than on the card. */
+  hint?: string;
   img: { base: string; w: number; h: number } | null;
   figure: ReactNode;
 };
@@ -224,6 +240,7 @@ function PlaceCard({ p }: { p: Place }) {
     <li className="min-w-0">
       <Link
         href={p.href}
+        title={p.hint}
         className="group flex h-full flex-col overflow-hidden rounded-3xl border border-emerald-950/10 bg-card shadow-[0_1px_2px_rgba(6,21,15,0.04)] transition hover:border-emerald-700/40 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700 motion-reduce:transition-none"
         data-testid={`ws-place-${p.id}`}
       >
@@ -255,77 +272,118 @@ function PlaceCard({ p }: { p: Place }) {
   );
 }
 
+/** What the home hands its TalkPanel: called once per finished run. */
+export type TalkHooks = { onRunDone: (run: FinishedLookupRun) => void };
+
+/**
+ * Get results lookups waiting for their answer: question -> subject. When the run for that
+ * question finishes, the lookup is saved to My results with the state the tool returned and the
+ * record it cited (6 Oct 2026: it was saved before any answer, with no state at all).
+ */
+export function useLookupRecorder(save: typeof addMyResult = addMyResult) {
+  const pending = useRef(new Map<string, string>());
+  const expectLookup = useCallback((question: string, subject: string) => {
+    pending.current.set(question.trim(), subject);
+  }, []);
+  const onRunDone = useCallback(
+    (run: FinishedLookupRun) => {
+      const key = run.question.trim();
+      const subject = pending.current.get(key);
+      if (!subject) return;
+      pending.current.delete(key);
+      save(lookupFromRun(subject, run));
+    },
+    [save],
+  );
+  return { expectLookup, onRunDone };
+}
+
+/**
+ * The free door's own tools/list, read once. The card that shows this count installs
+ * https://councilof.ai/mcp/free, so the count is that door's, never /mcp's (which adds the paid tools).
+ */
+export function useFreeDoorToolCount(list: typeof listTools = listTools): LiveRead<unknown> {
+  const [read, setRead] = useState<LiveRead<unknown>>({ state: "loading", data: null, error: null });
+  useEffect(() => {
+    let cancelled = false;
+    list("/mcp/free").then((reply) => {
+      if (cancelled) return;
+      setRead(
+        reply.state === "ok"
+          ? { state: "ok", data: reply.tools.length, error: null }
+          : { state: "error", data: null, error: "tools/list on /mcp/free did not answer" },
+      );
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [list]);
+  return read;
+}
+
 export default function GspcWorkspaceHome({
   talk,
   onAsk,
-  toolCount,
-  toolState,
 }: {
-  /** The AG-UI TalkPanel, rendered by the workspace so its ref stays with the composer. */
-  talk: ReactNode;
+  /** The AG-UI TalkPanel, rendered by the workspace so its ref stays with the composer. A function
+   *  receives the hooks the home needs on that panel (onRunDone saves Get results lookups). */
+  talk: ReactNode | ((hooks: TalkHooks) => ReactNode);
   /** Send a question to that TalkPanel (Get results uses it for the free lookup). */
   onAsk?: (question: string) => void;
-  toolCount: number | null;
-  toolState: "loading" | "ready" | "failed";
 }) {
+  const { expectLookup, onRunDone } = useLookupRecorder();
+  const askLookup = useCallback(
+    (question: string, subject: string) => {
+      expectLookup(question, subject);
+      onAsk?.(question);
+    },
+    [expectLookup, onAsk],
+  );
+  const talkNode = typeof talk === "function" ? talk({ onRunDone }) : talk;
   const state = useLiveJson("/api/state");
   const wrappers = useLiveJson("/api/wrapper/index.json");
   const exercises = useLiveJson("/academy/exercises/exercises.json");
 
-  const toolsRead: LiveRead<unknown> =
-    toolState === "loading"
-      ? { state: "loading", data: null, error: null }
-      : toolState === "failed" || toolCount === null
-        ? { state: "error", data: null, error: "tools/list did not answer" }
-        : { state: "ok", data: toolCount, error: null };
+  const toolsRead = useFreeDoorToolCount();
 
   const places: Place[] = [
     {
       id: "verify",
       href: "/dashboard?tab=verify",
       title: "Verify",
-      job: "Paste a signed card; your browser recomputes its hash and signature. Free, nothing uploaded.",
+      job: "Paste a result we published; your browser checks that it has not been changed and that we really issued it. Free, and nothing is uploaded.",
+      hint: "Recomputes the record's SHA-256 hash and checks its Ed25519 signature against our published keys.",
       img: { base: "/images/home/evidence-card", w: 480, h: 268 },
       figure: (
         <p className="mt-3 text-[13px] leading-snug text-muted-foreground" data-testid="ws-fig-verify">
-          Every check ends <span className="font-mono font-bold text-foreground">VALID</span>,{" "}
-          <span className="font-mono font-bold text-foreground">INVALID</span> or{" "}
-          <span className="font-mono font-bold text-foreground">UNCHECKABLE</span>; never a silent pass.
+          Every check ends genuine (<span className="font-mono font-bold text-foreground">VALID</span>), not genuine (
+          <span className="font-mono font-bold text-foreground">INVALID</span>) or not checkable (
+          <span className="font-mono font-bold text-foreground">UNCHECKABLE</span>); never a silent pass.
         </p>
       ),
     },
     {
+      // Tools audit, 6 Oct 2026: this place is the developer section, so it says so. Route (candidates
+      // as JSON plus a tie-break rule) left this grid; it stays a sub-tab under For developers.
       id: "connect",
       href: "/dashboard?tab=connect",
-      title: "Connect",
-      job: "One line adds the GSPC tools to Claude, Cursor or any MCP client. A2A, AG-UI and A2UI too.",
+      title: "For developers",
+      job: "Use these free tools inside Claude, ChatGPT or Cursor, or add them to your own AI agent.",
+      hint: "An MCP server; the same answers are also served over A2A, AG-UI and A2UI.",
       img: { base: "/images/home/plugin", w: 480, h: 258 },
       figure: (
         <LiveFigureLine
           read={toolsRead}
-          pick={(n) => (typeof n === "number" ? { value: String(n), label: "tools declared by tools/list; a tool is runtime-observed only after its own tools/call", source: "POST /mcp → tools/list", as_of: null } : null)}
+          pick={(n) => (typeof n === "number" ? { value: String(n), label: "free tools, no account", source: "POST https://councilof.ai/mcp/free → tools/list (the door this card installs; the paid tools are on /mcp only) · declared by tools/list; a tool is runtime-observed only after its own tools/call", as_of: null } : null)}
           testId="ws-fig-connect"
         />
-      ),
-    },
-    {
-      id: "route",
-      href: "/dashboard?tab=route",
-      title: "Route",
-      job: "Your candidates and your policy in; a decision and an unsigned route record out. Decide-only.",
-      img: { base: "/images/home/receipt", w: 480, h: 192 },
-      figure: (
-        <p className="mt-3 text-[13px] leading-snug text-muted-foreground">
-          A tie is printed as <span className="font-mono font-bold text-foreground">TIE</span>, untested as{" "}
-          <span className="font-mono font-bold text-foreground">UNTESTED</span>; the tie-break rule is yours and is recorded.
-        </p>
       ),
     },
     {
       id: "learn",
       href: "/dashboard?tab=learn",
       title: "Learn",
-      job: "Reproduce a published measurement in your browser, then practise on the same frozen questions.",
+      job: "Repeat a published test in your browser, then practise on the same fixed questions.",
       img: { base: "/images/home/arena", w: 480, h: 270 },
       figure: <LiveFigureLine read={exercises} pick={exercisesFigure} testId="ws-fig-learn" />,
     },
@@ -341,7 +399,7 @@ export default function GspcWorkspaceHome({
       id: "corrections",
       href: "/dashboard?tab=corrections",
       title: "Corrections",
-      job: "What we got wrong, how it was caught and what changed. Signed records are superseded, never edited.",
+      job: "What we got wrong, how it was caught and what changed. Published results are replaced by new ones, never edited.",
       img: { base: "/images/home/watchdog", w: 480, h: 268 },
       figure: <LiveFigureLine read={state} pick={correctionsFigure} testId="ws-fig-corrections" />,
     },
@@ -377,19 +435,19 @@ export default function GspcWorkspaceHome({
           </h1>
           {/* Phone: one plain line, so the Get results box is on the first screen. */}
           <p className="mt-2 text-sm leading-relaxed text-emerald-50/90 sm:hidden">
-            Look up what is already measured (free), order a fresh run, and check any result yourself.
+            Look up what is already measured (free), ask for a fresh run, and check any result yourself.
           </p>
           <ul className="mt-4 hidden max-w-5xl list-none gap-4 p-0 text-sm leading-relaxed text-emerald-50/90 sm:grid sm:grid-cols-3" data-testid="ws-plain">
             <li>
               <span className="block text-xs font-bold uppercase tracking-wide text-emerald-300">What this is</span>
-              We test AI models and the servers they use, publish every result signed, and never sell a grade.
+              We test AI models and the servers they use, publish every result with a signature anyone can check, and never sell a grade.
             </li>
             <li>
               <span className="block text-xs font-bold uppercase tracking-wide text-emerald-300">What you can do</span>
-              Look up what is already measured (free), order a fresh run, track it, and check any result yourself.
+              Look up what is already measured (free), ask for a fresh run, track it, and check any result yourself.
             </li>
             <li>
-              <span className="block text-xs font-bold uppercase tracking-wide text-emerald-300">What&apos;s new</span>
+              <span className="block text-xs font-bold uppercase tracking-wide text-emerald-300">Corrections</span>
               <WhatsNew />
             </li>
           </ul>
@@ -397,7 +455,7 @@ export default function GspcWorkspaceHome({
       </section>
 
       <div className="mx-auto w-full max-w-[1400px] px-4 py-6 sm:px-8 sm:py-8 lg:px-12">
-        <GetResults onAsk={onAsk} />
+        <GetResults onAsk={onAsk ? askLookup : undefined} />
 
         <div className="mt-6 grid gap-6 xl:grid-cols-12">
           <section id="ws-answers" aria-labelledby="ws-ask-h" className="min-w-0 scroll-mt-4 xl:col-span-7">
@@ -407,7 +465,7 @@ export default function GspcWorkspaceHome({
             <p className="mt-1 max-w-xl text-sm leading-relaxed text-muted-foreground">
               Free answers from what we have published. Each one says where it came from and links to the record so you can check it.
             </p>
-            {talk}
+            {talkNode}
           </section>
           <div className="min-w-0 xl:col-span-5">
             <WorkspaceBoardCard />
@@ -426,8 +484,11 @@ export default function GspcWorkspaceHome({
         </section>
 
         <p className="mt-8 border-t border-border pt-4 text-xs leading-relaxed text-muted-foreground">
-          Council of AI measures. It does not certify, and a grade is never sold. Checking a result is always free. Agents get the same answers over{" "}
-          <Link href="/agents/" className="font-semibold text-emerald-800 underline underline-offset-2">MCP, A2A, AG-UI and A2UI</Link>.
+          Council of AI measures. It does not certify, and a grade is never sold. Checking a result is always free.{" "}
+          <Link href="/agents/" title="Over MCP, A2A, AG-UI and A2UI" className="font-semibold text-emerald-800 underline underline-offset-2">
+            AI agents can ask the same questions directly
+          </Link>
+          .
         </p>
       </div>
     </div>
@@ -451,15 +512,17 @@ function WhatsNew() {
         <a href="/corrections/" className="font-semibold text-emerald-200 underline underline-offset-2">Open it</a>
       </span>
     );
+  // Date plus the first sentence only; every correction stays published in full on /corrections/.
+  const headline = correctionHeadline(latest.what_was_wrong) || latest.id;
   return (
     <span className="block" data-testid="ws-whats-new">
-      <span className="line-clamp-2" title={latest.what_was_wrong}>
-        {latest.date ? `${latest.date}: ` : ""}
-        {latest.what_was_wrong ?? latest.id}
+      <span className="line-clamp-2">
+        <strong className="font-semibold">Latest correction:</strong> {latest.date ? `${latest.date}: ` : ""}
+        {headline}
       </span>{" "}
-      <Link href="/dashboard?tab=corrections" className="font-semibold text-emerald-200 underline underline-offset-2">
-        All changes
-      </Link>
+      <a href={correctionHref(latest.id)} className="font-semibold text-emerald-200 underline underline-offset-2">
+        Read the full correction
+      </a>
     </span>
   );
 }

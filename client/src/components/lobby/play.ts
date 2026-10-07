@@ -68,9 +68,8 @@ export const PLAY_CARDS: PlayCard[] = [
     reality:
       "Opens the real quest page in the centre pane. You actually play: pick an axis, answer its items, and the " +
       "page grades you in-browser and keeps historical board references separate from current admitted evidence. It also " +
-      "carries a board-history view, a daily quest with a local streak, and an on-device co-op round. Your score stays local " +
-      "unless you explicitly create and submit a candidate receipt. Candidate evidence is not training data or a GSPC measurement; " +
-      "independent reproduction and admission are still required.",
+      "carries a board-history view, a daily quest with a local streak, and an on-device co-op round. Your score stays in " +
+      "this browser; it is not training data or a GSPC measurement, and only independent reproduction and admission make one.",
   },
   {
     id: "logic-duel",
@@ -108,7 +107,7 @@ export const PLAY_CARDS: PlayCard[] = [
   },
   {
     id: "literacy",
-    title: "Literacy Training Arena",
+    title: "Council Academy",
     blurb:
       "Learning how these systems behave, and what a measurement does and does not say.",
     image: "/images/literacy_training_arena.jpg",
@@ -135,9 +134,17 @@ export const PLAY_CARDS: PlayCard[] = [
   },
 ];
 
+/**
+ * The in-build cards, collapsed to one line under the gallery (tools audit, 6 Oct 2026). Three
+ * full-size cards a reader could not open read as broken tools; one line keeps the roadmap visible.
+ */
+export const PLAY_COMING_LATER: PlayCard[] = PLAY_CARDS.filter((c) => c.status !== "route");
+
+export const PLAY_COMING_LATER_LINE =
+  "Coming later: " + PLAY_COMING_LATER.map((c) => c.title.split(" — ")[0]).join(", ");
+
 /** The standing notice above the gallery. Rendered every time, never dismissible. */
 export const PLAY_NOTICE =
-  "Play gallery previews on councilof.ai. Where a card opens a route, the card says what kind of " +
-  "destination it is — quest pages you actually play, and pages you read. Cards " +
-  "marked “Not yet playable — in build” have no live destination yet, and are shown so the roadmap " +
-  "is visible rather than implied.";
+  "Every card below opens something you can use now: quest pages you actually play, and pages you " +
+  "read. Each card says which. Nothing here is a measurement. Games still in build are listed by name " +
+  "at the foot of the gallery, with no link, because there is nothing to open yet.";

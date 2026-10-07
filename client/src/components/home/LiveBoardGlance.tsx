@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { useGspcBoard, type GspcAxis, type GspcPayload } from "../board/useGspcBoard";
 import { boardRunDates } from "@/lib/boardRunDates";
+import ModelCountKey from "@/components/ModelCountKey";
 
 export interface SeparationRead {
   comparison: number;
@@ -255,6 +256,7 @@ export default function LiveBoardGlance({
               </>
             ) : null}
             {tiles.length === 0 ? <div role="status" className="mt-8 min-h-[52rem] sm:min-h-[34rem] lg:min-h-[17rem]" aria-busy="true" aria-label="Loading the board" /> : null}
+            <ModelCountKey className="mt-6 max-w-xl" />
 
             <p className="mt-6 max-w-4xl text-[13px] leading-relaxed text-muted-foreground">
               A tie stays a tie and an untested axis stays untested; neither is rounded up into a ranking, and an

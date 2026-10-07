@@ -14,6 +14,7 @@
 // nothing here can tell you which. Until that worksheet is labelled, this endpoint reports the run
 // as IN_PROGRESS with no score. A number published before its grader is validated is how the v1
 // board became a retraction.
+import { headFromGet } from "./_head";
 
 interface Surface {
   id: string;
@@ -169,3 +170,7 @@ export const onRequestGet: PagesFunction = async (context) => {
     },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

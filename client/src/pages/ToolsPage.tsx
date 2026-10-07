@@ -1,8 +1,6 @@
 import MomentumStrip from "@/components/momentum/MomentumStrip";
 import { useEffect, useState } from "react";
 import { ArrowRight, CheckCircle2, Copy, PlugZap, ShieldCheck, Terminal } from "lucide-react";
-import SignedAgentTravel from "@/components/SignedAgentTravel";
-import TwoSpeed from "@/components/TwoSpeed";
 import WatchlistPane from "@/components/WatchlistPane";
 import { ALL_TOOL_NAMES, FREE_TOOL_NAMES, PAID_TOOL_NAMES } from "@/lib/mcpTools";
 import { setMetaDescription } from "@/lib/utils";
@@ -18,7 +16,7 @@ const MCP_METERED_URL = "https://councilof.ai/mcp";
 const EXTENSION_ZIP = `/downloads/gspc-verify-${EXTENSION_MANIFEST.version}.zip`;
 const MCP_SNIPPET = `{
   "mcpServers": {
-    "gspc": {
+    "council-of-ai": {
       "url": "${MCP_URL}"
     }
   }
@@ -59,7 +57,7 @@ Live board: https://councilof.ai/api/gspc
 Measurement, not certification.`;
 
 const HOSTS = [
-  { name: "Claude", how: "Add gspc → paste the JSON below, or the URL." },
+  { name: "Claude", how: "Customize → Connectors → + Add → Add custom connector, then paste the URL https://councilof.ai/mcp/free. No JSON, no key." },
   { name: "Cursor", how: "Paste the JSON into ~/.cursor/mcp.json" },
   { name: "Kimi", how: "MCP settings → same JSON / URL." },
   { name: "Grok", how: "Same URL, as a remote (Streamable HTTP) MCP server." },
@@ -285,8 +283,7 @@ export default function ToolsPage() {
         title="The tools, and how far they travel"
         ids={["mcp_tools", "x402_doors", "pypi_csoai_all_time", "hf_downloads_30d_other"]}
       />
-      <SignedAgentTravel />
-      <TwoSpeed />
+      {/* SignedAgentTravel and TwoSpeed (internal strategy notes) moved to /status/internal, 6 Oct 2026. */}
       <WatchlistPane />
     </section>
   );

@@ -32,8 +32,8 @@ ln -sf /opt/py311/bin/python /usr/local/bin/python3.11
 ln -sf /opt/py311/bin/hf /usr/local/bin/hf
 
 # wrangler: deploy.yml runs `npx wrangler` (unpinned latest). A global install pins the
-# major so an npx resolve does not fetch at deploy time; `npx wrangler` in deploy.sh
-# stays byte-identical to the workflow.
+# major so an npx resolve does not fetch at run time. (deploy.sh, the only caller that
+# deployed, was retired on 2026-10-06 under the single-writer ruling.)
 npm install -g --no-audit --no-fund "wrangler@${WRANGLER_VERSION}" >/dev/null
 
 mkdir -p /opt/ci-runner/health

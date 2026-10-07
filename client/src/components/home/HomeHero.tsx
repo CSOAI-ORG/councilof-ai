@@ -68,8 +68,9 @@ export default function HomeHero() {
           We measure how AI systems behave, and publish the evidence so you can check it yourself.
         </h1>
         <p className="mt-5 max-w-2xl text-base leading-relaxed text-emerald-50/90 sm:text-lg" data-testid="hero-what-we-do">
-          We test AI models, agents and the endpoints they call on frozen, published questions, graded by fixed rules,
-          never by another AI. Every result is signed, free to check, re-checked on a schedule and corrected in public.
+          We test AI models, agents and the endpoints they call on published tasks, graded by fixed rules,
+          never by another AI. The board distinguishes signed cards, unsigned evidence and untested work.
+          Verification is free, and corrections stay public.
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           <a
@@ -89,7 +90,7 @@ export default function HomeHero() {
         </div>
         <p className="mt-5">
           <a
-            href="/how-we-work#machine-surface"
+            href="/how-we-work/#machine-surface"
             data-testid="hero-cta-agents"
             className="inline-flex min-h-11 items-center font-mono text-[13px] font-semibold text-emerald-300 underline decoration-dotted underline-offset-4 hover:text-emerald-200"
           >

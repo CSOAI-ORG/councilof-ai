@@ -2,6 +2,7 @@
 // States HOW every instrument measures + the honesty rules + claims it refuses.
 // Register: methodology is REFERENCE (how we measure), never a measurement itself.
 // Signed (gspc pattern): canonical JCS over the body WITHOUT the attestation field.
+import { headFromGet } from "./_head";
 
 interface Env { BOARD_SIGN_KEY_PKCS8_B64?: string }
 
@@ -75,3 +76,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     headers: { "content-type": "application/json; charset=utf-8" },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

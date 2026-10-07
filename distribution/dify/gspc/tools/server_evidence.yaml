@@ -6,7 +6,7 @@ identity:
 description:
   human:
     en_US: "Trust per server, not totals: every published measurement capsule about ONE endpoint URL across all batches — MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A card-signature state, self-parity cells for CSOAI's own doors, and any later adapter (e.g."
-  llm: "Trust per server, not totals: every published measurement capsule about ONE endpoint URL across all batches — MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A card-signature state, self-parity cells for CSOAI's own doors, and any later adapter (e.g. tool drift) — each with its measurement_state, observed_at, correction_pointer, limitations, batch Merkle root and an inclusion pointer (verify_capsule re-derives inclusion). Read from a static per-endpoint shard keyed by sha256 of the normalised URL. An endpoint with no capsule answers NOT_MEASURED with an empty list — never an error and never a clean bill. No verdict, score or ranking: measurement, not endorsement."
+  llm: "Trust per server, not totals: every published measurement capsule about ONE endpoint URL across all batches — MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A card-signature state, self-parity cells for CSOAI's own doors, and any later adapter (e.g. tool drift) — each with its measurement_state, observed_at, correction_pointer, limitations, batch Merkle root and an inclusion pointer for independent verification. Read from a static per-endpoint shard keyed by sha256 of the normalised URL. An endpoint with no capsule answers NOT_MEASURED with an empty list — never an error and never a clean bill. No verdict, score or ranking: measurement, not endorsement."
 parameters:
   - name: endpoint_url
     type: string
@@ -14,8 +14,8 @@ parameters:
     label:
       en_US: "endpoint_url"
     human_description:
-      en_US: "The endpoint URL, e.g. https://example.com/mcp or an agent-card URL."
-    llm_description: "The endpoint URL, e.g. https://example.com/mcp or an agent-card URL."
+      en_US: "Public HTTP(S) endpoint URL whose already-published measurement capsules should be read, e.g. https://example.com/mcp."
+    llm_description: "Public HTTP(S) endpoint URL whose already-published measurement capsules should be read, e.g. https://example.com/mcp."
     form: llm
 extra:
   python:

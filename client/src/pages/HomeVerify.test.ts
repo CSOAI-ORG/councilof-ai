@@ -118,7 +118,8 @@ describe("header restores master menu and Council OS", () => {
     expect(header).toContain('name: "Board"');
     expect(header).toContain('name: "Council OS"');
     expect(header).toContain('name: "Tools"');
-    expect(header).toContain("href: '/watchdog-hub'");
+    // Tools audit, 6 Oct 2026: /watchdog-hub 308s to /os, so the header no longer links it.
+    expect(header).not.toContain("href: '/watchdog-hub'");
     expect(header).toContain("href: '/for/enterprise'");
     expect(header).not.toContain("href: '/watchdog'");
     expect(header).not.toContain("Chat is Council OS");
@@ -142,7 +143,9 @@ describe("/tools is the plugin snippet", () => {
     expect(tools).toContain("Grok");
     expect(tools).toContain("https://councilof.ai/mcp");
     expect(tools).toContain("mcpServers");
-    expect(tools).toMatch(/Ask: board totals/);
+    // The 2026-09-28 redesign (#2686) replaced the "Ask: board totals" prompt with the sentence below;
+    // what it must still tell a reader first is to read the board and verify signed records.
+    expect(tools).toMatch(/Read the board, inspect evidence,\s+and verify signed records/);
     expect(tools).toContain("ALL_TOOL_NAMES");
     expect(tools).toContain("FREE_TOOL_NAMES");
     expect(tools).toContain("PAID_TOOL_NAMES");

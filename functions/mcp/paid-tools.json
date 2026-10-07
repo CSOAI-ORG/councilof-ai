@@ -19,7 +19,7 @@
         "required": ["subject"],
         "additionalProperties": false
       },
-      "csoai": { "paid": true, "rail": "x402", "route": "/api/request-attestation", "sku": "request_attestation", "free_preview": "the 402 body (csoai.preview)", "deliverable": "one card-v0 leaf, surface ras.commission, Ed25519 when the Pages key is present" }
+      "csoai": { "paid": true, "rail": "x402", "route": "/api/request-attestation", "sku": "request_attestation", "sells": "issuance", "free_preview": "the 402 body (csoai.preview)", "deliverable": "one card-v0 leaf, surface ras.commission, Ed25519 when the Pages key is present" }
     },
     {
       "name": "art50_marking_evidence",
@@ -30,7 +30,7 @@
       "inputSchema": {
         "type": "object",
         "properties": {
-          "url": { "type": "string", "description": "Public http(s) URL of the generative output to measure (≤20 MiB)." },
+          "url": { "type": "string", "format": "uri", "pattern": "^https?://", "maxLength": 2048, "description": "Public HTTP(S) URL of the generative output to measure (≤20 MiB). The server fetches only this declared measurement subject." },
           "bytes_b64": { "type": "string", "description": "Alternatively the output bytes, base64 (≤20 MiB decoded)." },
           "manifest_b64": { "type": "string", "description": "Alternatively a detached C2PA manifest store, base64 (manifest-only mode)." },
           "preview": { "type": "boolean", "description": "true = free unsigned measurement (no card sha, no signature)." },
@@ -38,7 +38,7 @@
         },
         "additionalProperties": false
       },
-      "csoai": { "paid": true, "rail": "x402-or-invoice", "route": "/api/art50/marking-evidence", "sku": "art50_marking_evidence", "free_preview": "preview=true", "deliverable": "one card-v0 leaf, surface art50.marking-evidence, kind csoai.art50.marking-evidence/0.1", "deployed_by": "live on councilof.ai (verified 2026-09-03)" }
+      "csoai": { "paid": true, "rail": "x402-or-invoice", "route": "/api/art50/marking-evidence", "sku": "art50_marking_evidence", "sells": "issuance", "free_preview": "preview=true", "deliverable": "one card-v0 leaf, surface art50.marking-evidence, kind csoai.art50.marking-evidence/0.1", "deployed_by": "live on councilof.ai (verified 2026-09-03)" }
     },
     {
       "name": "rwa_evidence",
@@ -56,7 +56,7 @@
         "required": ["asset"],
         "additionalProperties": false
       },
-      "csoai": { "paid": true, "rail": "x402", "route": "/api/rwa/evidence", "sku": "rwa_evidence", "free_preview": "preview=true", "deliverable": "one card-v0 leaf, surface public.notice, kind csoai.eater.xrpl-issuer/0.1", "deployed_by": "live on councilof.ai (verified 2026-09-03)" }
+      "csoai": { "paid": true, "rail": "x402", "route": "/api/rwa/evidence", "sku": "rwa_evidence", "sells": "issuance", "free_preview": "preview=true", "deliverable": "one card-v0 leaf, surface public.notice, kind csoai.eater.xrpl-issuer/0.1", "deployed_by": "live on councilof.ai (verified 2026-09-03)" }
     },
     {
       "name": "receipts_batch",
@@ -75,7 +75,7 @@
         "required": ["from"],
         "additionalProperties": false
       },
-      "csoai": { "paid": true, "rail": "x402-or-invoice", "route": "/api/receipts/batch", "sku": "receipts_batch", "free_preview": "preview=true", "deliverable": "csoai.receipts.batch/0.1 + one signed manifest card-v0 (surface receipts.batch)" }
+      "csoai": { "paid": true, "rail": "x402-or-invoice", "route": "/api/receipts/batch", "sku": "receipts_batch", "sells": "assembly", "free_preview": "preview=true", "deliverable": "csoai.receipts.batch/0.1 + one signed manifest card-v0 (surface receipts.batch)" }
     },
     {
       "name": "evidence_bundle",
@@ -169,6 +169,7 @@
         "rail": "x402",
         "route": "/api/evidence-bundle",
         "sku": "evidence_bundle",
+        "sells": "assembly",
         "free_preview": "preview=true, or the free tool evidence_bundle_preview",
         "deliverable": "OSCAL 1.1.0 assessment-results over already-signed cards (with inclusion proofs) plus one manifest card-v0, surface evidence.bundle",
         "deployed_by": "live on councilof.ai (402 on ?obligation=article-53&bundle=1, read 2026-09-30)"

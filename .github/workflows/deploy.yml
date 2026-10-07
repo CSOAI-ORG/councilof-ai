@@ -262,6 +262,14 @@ jobs:
       - name: Facts gate — no claim may contradict facts.json
         run: node scripts/facts-gate.mjs dist/client --board-reference prerender-board-reference.json
 
+      # Persona audit T06 (2026-10-06): a static axis page may not state a separation, status or n
+      # that the board this build serves does not (values, not phrases). Same board reference as
+      # facts-gate, so both gates judge the pages against one board.
+      - name: Axis-state gate — static axis pages agree with the board
+        run: |
+          node scripts/axis-state-gate.mjs --selftest
+          node scripts/axis-state-gate.mjs dist/client --board-reference prerender-board-reference.json
+
       - name: Dist bundle guard — stranger paths + API functions present
         run: |
           set -euo pipefail

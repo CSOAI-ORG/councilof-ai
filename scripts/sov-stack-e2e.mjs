@@ -181,23 +181,17 @@ async function clickWhenActionable(p, selector, timeoutMs = 30000) {
   await p.close();
 }
 
-// 2) /intel — globe, click account flies, tour button
+// 2) /intel — WITHDRAWN 6 Oct 2026. It was an internal sales-target board (named organisations
+// scored as "gaps"); internal material is never listed publicly. scripts/generate-redirects.mjs
+// 308s /intel and /intel/ to the home page. What is checkable now is the withdrawal itself: the
+// old URL must land on the home page, never on the board.
 {
   const { p, errs } = await page();
   await go(p, BASE + "/intel");
   await waitForHydration(p);
-  // Was a fixed 1500ms sleep racing a lazily-mounted iframe — it passed or failed depending
-  // on network timing, which makes a red run uninformative. Wait for the ELEMENT, not the
-  // clock: same assertion, no race. (Fixing the flake, not loosening the check — the iframe
-  // must still appear, it is just given until 15s to do so.)
-  const intelGlobe = await p
-    .waitForSelector('iframe[src*="globe3d"]', { timeout: 15000 })
-    .catch(() => null);
-  ok("/intel globe", intelGlobe !== null);
-  ok("/intel tour btn", await p.evaluate(() => /Tour the top gaps/i.test(document.body.innerText)));
-  ok("/intel voice toggle", await p.evaluate(() => /voice|muted/i.test(document.body.innerText)));
-  const acct = await p.$('button:has-text("JPMorgan"), button:has-text("Chase")');
-  if (acct) { await acct.click(); await p.waitForTimeout(800); ok("/intel select flies", await p.evaluate(() => /flown to/i.test(document.body.innerText))); } else ok("/intel select flies", false, "no account btn");
+  const url = new URL(p.url());
+  ok("/intel withdrawn (lands on /)", url.pathname === "/", `url=${p.url()}`);
+  ok("/intel board gone", !(await p.evaluate(() => /Tour the top gaps|Distribution Hive/i.test(document.body.innerText))));
   ok("/intel console-clean", errs.length === 0, errs.slice(0, 2).join(" | "));
   await p.close();
 }
@@ -211,8 +205,8 @@ async function clickWhenActionable(p, selector, timeoutMs = 30000) {
 // that door). The old assertions therefore measured a retired surface and could only fail.
 // What remains honestly checkable: the retired door must lead somewhere real — the Council
 // OS dashboard space tab — not a 404, a shell, or a dead redirect. The drive-command
-// capability the two /simulate spy blocks used to assert here is still covered live on
-// /brief (block 8, below).
+// capability the two /simulate spy blocks used to assert here moved to /brief (block 8),
+// which was withdrawn on 6 Oct 2026; see block 8 for where that coverage stands now.
 {
   const { p, errs } = await page();
   await go(p, BASE + "/simulate?q=a%20hiring%20AI%20in%20Germany");
@@ -224,17 +218,18 @@ async function clickWhenActionable(p, selector, timeoutMs = 30000) {
   await p.close();
 }
 
-// 4) /brief — HQ fly + convene + deep links
+// 4) /brief — WITHDRAWN 6 Oct 2026. It was the per-account sales brief /intel linked to (a
+// named organisation, its "play" and the pitch to lead with): internal sales material, never
+// listed publicly. scripts/generate-redirects.mjs 308s /brief and /brief/ to the home page, the
+// query string riding along. What is checkable now is the withdrawal itself: the old URL must
+// land on the home page, never on a brief.
 {
   const { p, errs } = await page();
   await go(p, BASE + "/brief?id=jpmorgan");
   await waitForHydration(p);
-  ok("/brief globe", await p.$('iframe[src*="globe3d"]') != null);
-  ok("/brief HQ caption", await p.evaluate(() => /flown to .*HQ/i.test(document.body.innerText)));
-  // The convene button was honestly renamed: "Convene the 33-agent council" oversold a
-  // designed layer as a live one, so AccountBrief.tsx now says "▶ Visualize the Council
-  // design over {country}". Same control, same flyAndConvene(spiral: true) wiring.
-  ok("/brief convene btn", await p.evaluate(() => /Visualize the Council design/i.test(document.body.innerText)));
+  const url = new URL(p.url());
+  ok("/brief withdrawn (lands on /)", url.pathname === "/", `url=${p.url()}`);
+  ok("/brief page gone", !(await p.evaluate(() => /CSOAI tailored brief|Account not found|Visualize the Council design/i.test(document.title + "\n" + document.body.innerText))));
   ok("/brief console-clean", errs.length === 0, errs.slice(0, 2).join(" | "));
   await p.close();
 }
@@ -252,49 +247,9 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
   await p.close();
 }
 
-// 6) DRIVE-COMMAND SPY — prove the globe actually RECEIVES commands when you interact.
-{
-  const { p, errs } = await page();
-  await go(p, BASE + "/intel");
-  await waitForHydration(p);
-  // The globe iframe attaches late; wait for it AND wait for its content frame
-  // to appear in p.frames() (not just for the DOM element). The iframe element
-  // appears before the content frame is registered, so an explicit wait on
-  // p.waitForFunction checking frames() length+url closes the race.
-  await p.waitForSelector('iframe[src*="globe3d"]', { timeout: 30000 }).catch(() => null);
-  // Wait for the iframe's content frame to actually load
-  await p.waitForFunction(
-    () => {
-      const iframes = Array.from(document.querySelectorAll("iframe"));
-      const globe = iframes.find((el) => (el.src || "").includes("globe3d"));
-      return globe && globe.contentDocument && globe.contentDocument.readyState === "complete";
-    },
-    { timeout: 30000 },
-  ).catch(() => null);
-  // Give Playwright one more tick to register the frame
-  await p.waitForTimeout(500);
-  const frame = await findGlobeFrameFromElement(p);
-  if (frame) {
-    await p.waitForTimeout(1600);
-    const cmds = await frame.evaluate(() => window.__spy || []);
-    // /intel (HorusIntel.tsx) embeds the globe READ-ONLY — verified 0 drive calls in the page
-    // vs 3 in /brief. Drive interaction is asserted on /brief and /simulate, where it passes.
-    // This passed before only because the globe self-emitted flyTo on load; the proxy + command
-    // rename removed that. flyTo OR layer0 counts, and an empty result is reported honestly
-    // rather than failed (the feature is not wired here) or forced green (the fake-pass removed
-    // earlier this session).
-    const drove = cmds.includes("flyTo") || cmds.includes("layer0");
-    if (drove) ok("/intel globe drive", true, "got: " + JSON.stringify(cmds));
-    else console.log("~ /intel globe drive — SKIPPED: /intel embeds the globe read-only (0 drive calls); drive is asserted on /brief");
-  } else {
-    const allFrames = p.frames().map(f => f.url());
-    const iframes = await p.$$eval("iframe", els => els.map(e => e.src));
-    ok("/intel globe RECEIVES flyTo on click", false,
-       `no globe frame | frames=${JSON.stringify(allFrames)} iframes=${JSON.stringify(iframes).slice(0, 200)}`);
-  }
-  ok("/intel spy console-clean", errs.length === 0, errs.slice(0, 2).join(" | "));
-  await p.close();
-}
+// 6) /intel drive-command spy — RETIRED with /intel (withdrawn 6 Oct 2026, see block 2). It only
+// ever reported "SKIPPED" there (the board embedded the globe read-only). Cross-frame drive
+// delivery was then asserted on /brief (block 8), itself withdrawn the same day.
 
 // 7) DRIVE-COMMAND SPY — /globe threat button drives the 3D globe (flyTo + neutralize).
 {
@@ -305,10 +260,11 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
   // globe itself at top level, so there is no parent to post and no cross-frame hop to
   // observe — the mechanism cannot fire by construction, which is why it returned [].
   //
-  // The capability itself is NOT going unmeasured: cross-frame command delivery is asserted
-  // on /brief (flyTo + bftSpiral), /simulate (stamps + bftSpiral + neutralize) and /intel
-  // (flyTo on click), all of which still embed the globe and all of which pass. Rather than
-  // assert a hop that no longer exists here, this reports the architectural reason.
+  // Cross-frame command delivery was asserted on /brief (flyTo + bftSpiral) until /brief was
+  // withdrawn on 6 Oct 2026; /simulate and /intel, which also used to, are retired too. No live
+  // public route embeds the globe in an iframe any more, so that hop has no surface to measure
+  // (block 8 records the gap). Rather than assert a hop that does not exist here, this reports
+  // the architectural reason.
   const childFrame = await findGlobeFrameFromElement(p);
   if (childFrame) {
     await childFrame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
@@ -317,40 +273,23 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
     const cmds = await childFrame.evaluate(() => window.__spy || []);
     ok("/globe threat drives globe", cmds.includes("flyTo") || cmds.includes("neutralize"), "got: " + JSON.stringify(cmds));
   } else {
-    console.log("~ /globe threat drives globe — SKIPPED: globe is top-level here, no parent→iframe hop exists. Covered on /brief and /intel.");
+    console.log("~ /globe threat drives globe — SKIPPED: globe is top-level here, no parent→iframe hop exists. No live surface has one since /brief was withdrawn.");
   }
   await p.close();
 }
 
-// 8) SPY — /brief "Convene the council" drives flyTo + bftSpiral over the HQ.
-{
-  const { p } = await page();
-  try {
-    await go(p, BASE + "/brief?id=jpmorgan");
-    await waitForHydration(p);
-    // Globe iframe may attach after the bundle hydrates; wait up to 15s
-    await p
-      .waitForSelector('iframe[src*="globe3d"]', { timeout: 15000 })
-      .catch(() => null);
-    const frame = await findGlobeFrameFromElement(p);
-    if (frame) {
-      await frame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
-      await clickWhenActionable(p, 'button:has-text("Visualize the Council design")');
-      await p.waitForTimeout(3800);
-      const cmds = await frame.evaluate(() => window.__spy || []);
-      // The council EFFECT (layer0, formerly bftSpiral) is the thing "drives council" tests.
-      // flyTo is incidental camera movement that can fire before the spy attaches — requiring
-      // it made the check flaky. Assert the effect that actually proves the council was driven.
-      ok("/brief convene drives council", cmds.includes("layer0") || cmds.includes("bftSpiral"), "got: " + JSON.stringify(cmds));
-    } else ok("/brief convene drives council", false, "no globe frame");
-  } catch (e) { ok("/brief convene drives council", false, String(e.message).slice(0, 40)); }
-  await p.close();
-}
+// 8) /brief "Convene the council" drive-command spy — RETIRED with /brief (withdrawn 6 Oct 2026,
+// see block 4). It was the last live surface that embedded the globe in an iframe and drove it
+// across frames (flyTo + layer0/bftSpiral). The capability is now UNMEASURED, not passing: the
+// remaining callers of client/src/lib/globeDrive.ts are /globe, where the globe is top-level
+// (block 7), and CouncilSpace, dead code behind the /gspc-arena door /simulate leads to (block 3).
+// Recorded here so the coverage gap is a visible decision, not a silent deletion. If a public
+// page embeds the globe again, reinstate this spy on it.
 
 // 9+10) /simulate drive-command spies — RETIRED with the surface (see block 3). There is no
 // globe iframe behind the /simulate door anymore, so these could only ever report
-// "no globe frame". The capabilities they measured are still asserted where they live:
-// council drive → block 8 on /brief; flyTo on click → block 6 on /intel; neutralize had no
+// "no globe frame". What they measured: council drive → block 8 on /brief, itself retired with
+// /brief (6 Oct 2026); flyTo on click → retired with /intel (6 Oct 2026); neutralize had no
 // surviving live surface as of 2026-09-10 — recorded here so the coverage gap is a visible
 // decision, not a silent deletion. If a threat surface returns, reinstate the neutralize spy.
 

@@ -15,6 +15,7 @@
  */
 import { classifyCommissionTarget, type Fulfillment, type SubjectKind } from "./_commission_target";
 import { selfWallets } from "./_x402";
+import { headFromGet } from "./_head";
 
 type Env = { REVENUE_KV?: KVNamespace; ASSETS?: { fetch: (r: Request) => Promise<Response> }; X402_PAY_TO?: string; X402_SELF_WALLETS?: string };
 
@@ -237,3 +238,7 @@ export async function buildCommissions(env: Env, origin = "https://councilof.ai"
 }
 
 export const onRequestGet: PagesFunction<Env> = async ({ env, request }) => json(await buildCommissions(env, new URL(request.url).origin));
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

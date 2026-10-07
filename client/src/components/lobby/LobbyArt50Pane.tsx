@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { FOCUS, MEASURE, PRIMARY, TYPE } from "./glass";
 import { CopyBlock, Field, PaneHead } from "./paneKit";
+import { INVOICE_NEXT_STEP } from "@/lib/buying";
 
 /**
  * LobbyArt50Pane — Article 50 marking evidence, NATIVE in Council OS.
@@ -37,6 +38,8 @@ type Pack = {
   bytes: number;
   payment: { mode: string; reference: string; commissioned_by: string };
   card: Record<string, unknown>;
+  /** The Function's invoice handoff (functions/api/_invoice_handoff.ts): nothing is recorded server-side. */
+  invoice?: { recorded?: boolean; recorded_note?: string; you_must_send_this?: string; contact?: string; mailto?: string };
 };
 
 const EP = "/api/art50/marking-evidence";
@@ -192,6 +195,9 @@ export default function LobbyArt50Pane({ onOpenRoute }: { onOpenRoute?: (path: s
               </button>
               <span className={TYPE.fine}>Agents settle the same pack on the x402 rail at the Function.</span>
             </div>
+            <p className={`mt-3 ${MEASURE} text-[12.5px] leading-relaxed text-slate-800`} data-testid="art50-invoice-next-step">
+              {INVOICE_NEXT_STEP}
+            </p>
           </div>
         </section>
       )}
@@ -206,6 +212,19 @@ export default function LobbyArt50Pane({ onOpenRoute }: { onOpenRoute?: (path: s
             Commissioned by {pack.payment.commissioned_by} · {pack.bytes} bytes of signed payload
             {!pack.signed && pack.unsigned_reason ? ` · unsigned: ${pack.unsigned_reason}` : ""}
           </p>
+          {pack.invoice?.you_must_send_this && (
+            <div className="mt-3 rounded-lg border border-amber-600/35 bg-amber-50 px-3 py-2.5" data-testid="art50-invoice-handoff">
+              <p className="text-[13px] font-semibold text-amber-950">{pack.invoice.you_must_send_this}</p>
+              {pack.invoice.recorded_note && <p className={`mt-1 ${TYPE.fine}`}>{pack.invoice.recorded_note}</p>}
+              {/* The draft opens in the reader's own mail app; nothing is sent from here. Add billing
+                  contact, billing address and VAT number in that email — never to the Function. */}
+              {pack.invoice.mailto?.startsWith("mailto:") && (
+                <a href={pack.invoice.mailto} className={`${PRIMARY} ${FOCUS} mt-2 min-h-11 px-4 py-2 text-[13px]`}>
+                  Email the reference to CSOAI
+                </a>
+              )}
+            </div>
+          )}
           <CopyBlock label="The card-v0 leaf (verify at /gspc-verify)" text={JSON.stringify(pack.card, null, 2)} />
           {onOpenRoute && (
             <button type="button" onClick={() => onOpenRoute("/gspc-verify", "Verify a card")} className={`mt-3 text-[12.5px] font-semibold text-emerald-800 underline-offset-2 hover:underline ${FOCUS}`}>

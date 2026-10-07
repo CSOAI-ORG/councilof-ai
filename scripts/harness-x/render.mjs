@@ -67,6 +67,13 @@ const REMOTE_VERSION = mcpServer.version;
 const npmPkg = (mcpServer.packages || []).find((p) => p.registryType === "npm");
 const NPM_ID = npmPkg.identifier;
 const NPM_VERSION = npmPkg.version;
+// T14 (6 Oct 2026): every published csoai-gspc-mcp release (0.1.1-0.2.2) is marked deprecated on npm
+// and carries fewer tools than the HTTP door, so the one-command stdio install led a developer to a
+// deprecated package with a different tool set. Until a non-deprecated release carries the SERVED tool
+// set, no discovery document advertises the stdio pin; each names the free door instead. Flip this to
+// true only after `npm view csoai-gspc-mcp@latest deprecated` prints nothing AND that release's
+// tools/list equals SERVED (scripts/harness-x/parity_live.py checks the second).
+const NPM_STDIO_ADVERTISED = false;
 const pyClientVersion = /^version\s*=\s*"([^"]+)"/m.exec(read("scripts/spray/pypi/csoai-gspc/pyproject.toml"))[1];
 const APACHE = read("scripts/spray/pypi/csoai-gspc/LICENSE");
 const layer0Version = readJson("packages/layer0-js/package.json").version;
@@ -118,7 +125,9 @@ emit("distribution/mcp-registry/io.github.CSOAI-ORG-gspc/server.json", j({
   version: REMOTE_VERSION,
   websiteUrl: ID.website,
   remotes: [{ type: "streamable-http", url: ID.door }],
-  packages: [{ registryType: "npm", identifier: NPM_ID, version: NPM_VERSION, transport: { type: "stdio" } }],
+  ...(NPM_STDIO_ADVERTISED
+    ? { packages: [{ registryType: "npm", identifier: NPM_ID, version: NPM_VERSION, transport: { type: "stdio" } }] }
+    : {}),
   _meta: regMeta,
 }));
 // The domain name's remote is the door with a trailing slash: the bare URL is registered under the
@@ -930,7 +939,9 @@ if (HTTP_VERSION !== REMOTE_VERSION) {
   process.exit(2);
 }
 const SERVER_NAME = "csoai-gspc-mcp"; // serverInfo.name, as initialize answers it
-const stdio = `npx -y ${NPM_ID}@${NPM_VERSION}`;
+const stdio = NPM_STDIO_ADVERTISED ? `npx -y ${NPM_ID}@${NPM_VERSION}` : null;
+const STDIO_NOTE = `npm ${NPM_ID}: published releases are deprecated on npm and carry fewer tools; use the free door ${FREE_DOOR}`;
+const stdioFields = NPM_STDIO_ADVERTISED ? { stdio } : { stdio, stdio_note: STDIO_NOTE };
 const fleetProse = `${word(free.length)} free readers plus ${word(paid.length)} x402-metered evidence tools`;
 // The one tool-count sentence the site, /mcp and these documents share (fix #19). Array lengths.
 const TOOL_COUNTS = `${SERVED_FREE.length} free tools at /mcp/free; ${SERVED.length} at /mcp ` +
@@ -957,7 +968,7 @@ emit("public/.well-known/mcp/server-card.json", j({
     mcp: {
       primary: ID.door,
       current: ID.door,
-      stdio,
+      ...stdioFields,
       note: `Live door is ${ID.door} (GET 200). HTTP tools/list is ${word(SERVED.length)}: ${fleetProse}. witness_hash is quarantined and not advertised. Registry server ${REMOTE_VERSION}.`,
       free: FREE_DOOR,
       free_note:
@@ -1014,7 +1025,7 @@ emit("public/.well-known/mcp.json", j({
       display_name: "GSPC Measurement Tools",
       url: ID.door,
       version: REMOTE_VERSION,
-      stdio,
+      ...stdioFields,
       auth_required: false,
       registry: {
         name: dist.registry_names.canonical,

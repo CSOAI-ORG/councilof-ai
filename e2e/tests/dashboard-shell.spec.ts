@@ -136,18 +136,46 @@ test("sidebar exposes eight plainly named sections as direct /dashboard?tab= lin
     "/dashboard?tab=corrections",
   ]);
   for (const h of hrefs) expect(h).toMatch(/^\/dashboard\?tab=[a-z0-9-]+$/);
-  // "Check a result" section contains three panes: Check a result, Evidence pack, Evidence index.
+  // "Check a result" section contains two panes: Check a result and Evidence pack. Evidence index
+  // moved to "For developers" (tools audit, 6 Oct 2026): it is an API coverage index, not a check.
   // The section bar (not the sidebar) shows sub-tabs when the active pane belongs to a multi-tab section.
   await openTab(page, "evidence");
   const sub = page.getByRole("navigation", { name: "Check a result pages" });
-  await expect(sub.getByRole("link", { name: "Evidence index", exact: true })).toHaveAttribute(
+  await expect(sub.getByRole("link", { name: "Evidence pack", exact: true })).toHaveAttribute(
     "href",
-    "/dashboard?tab=evidence-index",
+    "/dashboard?tab=evidence",
   );
+  await expect(sub.getByRole("link", { name: "Evidence index", exact: true })).toHaveCount(0);
+  await openTab(page, "evidence-index");
+  await expect(
+    page
+      .getByRole("navigation", { name: "For developers pages" })
+      .getByRole("link", { name: "Evidence index", exact: true }),
+  ).toHaveAttribute("href", "/dashboard?tab=evidence-index");
   await expect(page.getByRole("navigation", { name: "Council workspace modes" })).toHaveCount(0);
   // No door on the shell hops through the legacy /os redirect.
   const legacy = await page.locator('a[href^="/os?"]').count();
   expect(legacy, "no /os?lobby= hops inside the shell").toBe(0);
+});
+
+test("a question typed on Get results keeps its answer panel mounted (no self-abort)", async ({ page }) => {
+  // Regression, 6 Oct 2026: askTalk recorded the question into the lobby chat first, which
+  // swapped the home canvas for the thread view, unmounted the TalkPanel and aborted its
+  // /api/agui/run request ~8 ms after sending it. The first question never got an answer.
+  await openTab(page, "home");
+  const aborted: string[] = [];
+  page.on("requestfailed", (r) => {
+    if (r.url().includes("/api/agui/run") && /ABORTED/i.test(r.failure()?.errorText || "")) aborted.push(r.url());
+  });
+  const box = page.getByRole("textbox", { name: "Ask the Council, or name a pane to open" });
+  await expect(box).toBeVisible();
+  await box.fill("What does the board say?");
+  await box.press("Enter");
+  // The run is shown inside the home TalkPanel, and the home canvas stays mounted.
+  await expect(page.getByTestId("talk-run").first()).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByTestId("gspc-workspace-home")).toBeVisible();
+  await page.waitForTimeout(500);
+  expect(aborted, "the TalkPanel run must not be aborted by its own page").toEqual([]);
 });
 
 test("the canonical dashboard accepts its optional trailing slash", async ({
@@ -182,7 +210,6 @@ test("every sidebar tab renders its own pane inside the shell, error-free", asyn
     "explore",
     "board",
     "swift",
-    "results",
     "models",
     "measured",
     "verify",
@@ -222,6 +249,23 @@ test("every sidebar tab renders its own pane inside the shell, error-free", asyn
   expect(consoleErrors, "no console errors across the tabs").toEqual([]);
 });
 
+test("retired duplicate ids open the pane that owns their content (tools audit, 6 Oct 2026)", async ({
+  page,
+}) => {
+  // ?tab=results rendered the board under a second name; ?tab=watchdog framed /watchdog-hub,
+  // which 308s to /os, so the pane showed the start page nested inside itself.
+  for (const [id, owner] of [
+    ["results", "board"],
+    ["watchdog", "corrections"],
+  ] as const) {
+    await openTab(page, id);
+    await expectShell(page, id);
+    await expect(page.locator(`[data-testid="dashboard-pane-${owner}"]`), `${id} -> ${owner}`).toHaveCount(1);
+    await expect(page.locator('[data-testid="dashboard-pane-unknown"]')).toHaveCount(0);
+    await expect(page.locator('iframe[src*="watchdog-hub"]')).toHaveCount(0);
+  }
+});
+
 test("legacy door ids resolve to a real pane, never the fallback", async ({
   page,
 }) => {
@@ -257,10 +301,13 @@ test("the board pane quotes GET /api/gspc and embeds the living Space — nothin
   await openTab(page, "board");
   const pane = page.locator('[data-testid="dashboard-pane-board"]');
   await expect(pane).toHaveCount(1);
+  // The pane links the payload twice on purpose: the header link and the summary tiles' as_of
+  // source line (HomeGspcBoard.test.tsx pins both). #2794 turned the second into plain <code> to
+  // satisfy an exact count of 1 here, which removed the source link beside the tiles' numbers.
   await expect(
-    pane.locator('a[href="/api/gspc"]'),
+    pane.locator('a[href="/api/gspc"]').first(),
     "the payload link",
-  ).toHaveCount(1);
+  ).toBeAttached();
   // Master's HomeGspcBoard (post #1158) is a self-contained 22-axis strip rendered from
   // /api/gspc; the iframe to csoai-gspc-board.static.hf.space was removed 2026-09-02 because
   // the Space had sunset to 302s. The assertion is now: there is NO iframe dependency,
@@ -289,6 +336,20 @@ test("a cold /os door converges on the canonical Dashboard", async ({
 }) => {
   await expectColdDoor(page, "/os?lobby=verify", "verify");
   await expectColdDoor(page, "/os?lobby=swift", "swift");
+});
+
+test("a fresh deep link lands on its section, not the page head", async ({ page }) => {
+  // App.tsx ScrollToTop used to scroll to the top on every route mount, undoing the browser's own jump
+  // to the fragment, so /how-we-work/#machine-surface (the home hero's link) opened at the page head.
+  await page.goto("/how-we-work/#machine-surface");
+  const section = page.locator("#machine-surface");
+  await expect(section).toBeVisible({ timeout: 30_000 });
+  await expect
+    .poll(async () => Math.abs((await section.boundingBox())?.y ?? 99_999), {
+      message: "#machine-surface within 200px of the viewport top",
+      timeout: 15_000,
+    })
+    .toBeLessThan(200);
 });
 
 test("a cold /gspc-scoreboard door converges on the canonical Dashboard", async ({
@@ -380,7 +441,7 @@ test("a top-level embed hint normalizes to the canonical workspace", async ({
   ).toHaveCount(0);
 });
 
-test("chat remains beside a tool and its session history stays reachable", async ({
+test("a home question goes to the Answers panel, and History keeps it beside a tool", async ({
   page,
   isMobile,
 }) => {
@@ -390,11 +451,19 @@ test("chat remains beside a tool and its session history stays reachable", async
 
   await composer.fill(question);
   await page.getByRole("button", { name: "Ask", exact: true }).click();
+  // 6 Oct 2026 (#2834, tools audit). A home question used to swap the canvas to the chat log and
+  // unmount the Answers panel mid-run, so POST /api/agui/run was aborted and the first question
+  // never got an answer. The home TalkPanel now answers it and stays mounted (see the no-self-abort
+  // test; this static server has no /api, so the run ends in its honest no-answer state). The
+  // question is kept in session history and as an "Asked" entry in the workspace History, both
+  // checked below.
   await expect(
-    page
-      .getByRole("log", { name: "Council of AI conversation" })
-      .getByText(question, { exact: true }),
+    page.getByTestId("talk-run").filter({ hasText: question }).first(),
   ).toBeVisible();
+  await expect(page.getByTestId("gspc-workspace-home")).toBeVisible();
+  await expect(
+    page.getByRole("log", { name: "Council of AI conversation" }),
+  ).toHaveCount(0);
   await expect(page).toHaveURL(/tab=home/);
   await expect(
     page.locator('[data-testid="dashboard-pane-space"]'),
@@ -422,9 +491,15 @@ test("chat remains beside a tool and its session history stays reachable", async
   await expect(rail).toBeVisible();
   await rail.getByRole("tab", { name: /^Chats/ }).click();
   await expect(rail.getByTestId("dashboard-chat-rail")).toBeVisible();
-  await expect(rail.getByText(question, { exact: true })).toBeVisible();
+  // The Get results question was answered by the home TalkPanel and recorded in session
+  // history as its own conversation; it stays reachable one click away under History.
   await rail.getByRole("button", { name: /^History/ }).click();
-  await expect(rail.getByText(question, { exact: true })).toBeVisible();
+  await expect(rail.getByText(question, { exact: true }).first()).toBeVisible();
+  // It is also in the workspace History, as asked.
+  await rail.getByRole("tab", { name: "Workspace" }).click();
+  await expect(
+    rail.locator('[data-activity-kind="ask"]').getByText(question, { exact: true }),
+  ).toBeVisible();
 });
 
 test("GSPC quests are a styled in-workspace game and never promote play into measurement", async ({
@@ -541,13 +616,15 @@ test("the 22-axis learning arena keeps coaching, practice and human review in on
   await coaching.locator("summary", { hasText: "Coaching (optional)" }).click();
   await expect(coaching).toHaveAttribute("open", "");
   await pane
-    .getByRole("link", { name: "Ask Council to coach this stage" })
+    .getByRole("button", { name: /See how this test measured/ })
     .click();
-  await expect(page.getByText(/Nothing sent yet/i)).toBeVisible();
-  await expect(
-    page.getByRole("textbox", { name: /Ask the Council/i }),
-  ).toHaveValue(
-    /Coach me through the Governance GSPC learning path at the play stage/i,
+  // 6 Oct 2026 (tools-plain-cards retest): the question the rules can answer is asked in the Ask
+  // panel beside the lesson, which renders it as a plain card; the lesson stays open.
+  const ask = page.getByTestId("ask-pane");
+  await expect(ask).toBeVisible();
+  await expect(ask.getByTestId("talk-run").last()).toHaveAttribute(
+    "aria-label",
+    /How did the governance test measure\?/i,
   );
-  await expect(page.getByText(/PRACTICE_ONLY · UNMEASURED/i)).toBeVisible();
+  await expect(page).toHaveURL(/tab=learn/);
 });

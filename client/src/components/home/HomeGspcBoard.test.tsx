@@ -20,6 +20,9 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import HomeGspcBoard, {
+  STALE_AFTER_DAYS,
+  boardMeasuredRange,
+  daysSince,
   BoardStrip,
   HubResultsBoard,
   HUB_CARDS_PAGE_URL,
@@ -171,7 +174,9 @@ describe("HomeGspcBoard (mocked /api/gspc)", () => {
     expect(html).toContain("Inspect the attestation request");
     expect(html).toContain("it does not start a new GSPC run");
     expect(html).not.toContain("Need a new scoped run?");
-    expect(seo.routes["/assess"].description).toContain("does not trigger a new GSPC run");
+    // seo-head.json was reworded (same meaning) to "re-serves signed measurement cards already on
+    // file and starts no new run"; what is pinned is that paying is never described as starting a run.
+    expect(seo.routes["/assess"].description).toContain("starts no new run");
     expect(seo.routes["/assess"].description).not.toContain("Runs are metered per call");
   });
 
@@ -404,5 +409,62 @@ describe("HomeGspcBoard (mocked /api/gspc)", () => {
     const unavailable = renderToStaticMarkup(<HubResultsBoard data={null} error="offline" />);
     expect(unavailable).toContain('Hub results are unreachable. No result was inferred.');
     expect(unavailable).not.toContain('data-testid="hub-results-table"');
+  });
+});
+
+describe("Last measured replaces the LIVE status word", () => {
+  const dated: GspcPayload = {
+    ...payload,
+    measured_on: { date: "behavioural axes 2026-08-12 · jail 2026-08-18" },
+    axes: [
+      { ...comparison[0], measurement_time: { state: "DAY", observed_on: "2026-08-12" } } as GspcAxis,
+      { ...facts[0], facts_as_of: "2026-09-22T05:43:05Z" } as GspcAxis,
+    ],
+  };
+
+  it("reads the newest and oldest dates the payload states, and nothing else", () => {
+    expect(boardMeasuredRange(dated)).toEqual({ newest: "2026-09-22", oldest: "2026-08-12" });
+    expect(boardMeasuredRange({ ...payload, measured_on: undefined })).toBeNull();
+    expect(boardMeasuredRange(null)).toBeNull();
+    expect(daysSince("2026-09-22", Date.parse("2026-10-06T12:00:00Z"))).toBe(14);
+  });
+
+  it("leads with the model tests' own date and names the fact checks' date, never the word LIVE", () => {
+    // Tools audit retest, 6 Oct 2026: the headline was the newest date of ANY axis (a fact check)
+    // while every model comparison shown was older. Each date now comes from its own axes.
+    expect(boardMeasuredRange(dated, "model-comparison")).toEqual({ newest: "2026-08-12", oldest: "2026-08-12" });
+    expect(boardMeasuredRange(dated, "deterministic-facts")).toEqual({ newest: "2026-09-22", oldest: "2026-09-22" });
+    const html = renderToStaticMarkup(<HomeGspcBoard data={dated} />);
+    const tile = html.slice(html.indexOf('data-testid="gspc-last-measured"'), html.indexOf('data-testid="gspc-tiles-as-of"'));
+    expect(tile).toContain("Models last tested");
+    expect(tile).toMatch(/Models last tested<\/p><p[^>]*>2026-08-12/);
+    expect(tile).toContain("fact checks last read 2026-09-22");
+    expect(tile).not.toContain(">LIVE<");
+  });
+
+  it("falls back to Last measured when the board has no model-comparison dates", () => {
+    const factsOnly: GspcPayload = { ...dated, axes: [dated.axes![1]] };
+    const html = renderToStaticMarkup(<HomeGspcBoard data={factsOnly} />);
+    const tile = html.slice(html.indexOf('data-testid="gspc-last-measured"'), html.indexOf('data-testid="gspc-tiles-as-of"'));
+    expect(tile).toContain("Last measured");
+    expect(tile).toContain("oldest result");
+  });
+
+  it("marks a date older than the threshold STALE, and says what that means", () => {
+    const old = renderToStaticMarkup(
+      <HomeGspcBoard data={{ ...dated, axes: [dated.axes![0]], measured_on: { date: "behavioural axes 2026-08-12" } }} />,
+    );
+    // The fixture's only date is far older than the threshold on any run date after it.
+    if (daysSince("2026-08-12") > STALE_AFTER_DAYS) {
+      expect(old).toContain('data-testid="gspc-stale"');
+      expect(old).toContain("Older results are not re-run automatically.");
+    }
+  });
+
+  it("keeps the evidence-root paragraph, behind a How this is checked disclosure", () => {
+    const html = renderToStaticMarkup(<HomeGspcBoard data={payload} />);
+    const details = html.slice(html.indexOf('data-testid="gspc-how-checked"'));
+    expect(details).toContain("How this is checked");
+    expect(details).toContain("The evidence root is signed separately from this live board.");
   });
 });

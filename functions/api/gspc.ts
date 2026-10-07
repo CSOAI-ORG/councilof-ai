@@ -16,6 +16,7 @@ import { FINANCIAL_FACTS_AS_OF, financialFamilyBlock } from "./_gspc_fin_as_of";
 import { ROWS_SEPARATION } from "./_gspc_rows_separation";
 import { MDE_STATES, UNDERPOWERED_STATE, applyUnderpowered, measuredOnModel, withPower } from "./_gspc_power";
 import { withMeasurementTime } from "./_gspc_measurement_time";
+import { headFromGet } from "./_head";
 
 // 22-axis canon (ADR-001): 14 GSPC behavioural axes + 8 financial/domain axes.
 // Swept into the payload 2026-08-26. Before this, the 8 financial axes were ruled
@@ -972,7 +973,7 @@ export const onRequestGet: PagesFunction = async (context) => {
       `${selected.length} ${selected.length === 1 ? "axis is" : "axes are"} on the board and ${selected.filter((a) => a.status === "MEASURED").length} ${selected.filter((a) => a.status === "MEASURED").length === 1 ? "carries" : "carry"} a measurement. See totals.count_grammar. The financial-fact axes are not model comparisons — they carry no accuracy and no leader, but each is a measured deterministic-facts run.`,
       "provenance-controls plus the four 2026-09-01 issuer-disclosure mills (reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure) measure FACTS on the same six instruments. Risk verdicts stay UNMEASURED and need counsel. Not a rating, not advice, not a ranking, not an endorsement.",
       "Rail honesty on provenance-controls: the issuer facts are read from MAINNET, but the attestations are carried on DEVNET. XRPL mainnet attestation is PLANNED, not live, and nothing is attested on any Ethereum chain — the EVM-side attestation backend is NOT BUILT. Coverage is 6 of the 16 instruments the registry names; the other 10 have no locatable public issuer address and were never attested. That gap is scope, not staleness: all 6 re-verified against live mainnet with zero flag drift.",
-      "C-2026-0826-05 stands: MEASURED-INDEX-v0.1 was an over-claim. Those slots are now component-fact objects (ai-adoption-components, labour-components), not indexes. Do not restore the v0.1 sticker.",
+      "C-2026-0826-05 stands: MEASURED-INDEX-v0.1 was an over-claim. Those slots are now component-fact objects (ai-adoption-components, labour-components), not indexes. The v0.1 sticker stays withdrawn.",
       "Jail (slot 14) separation determination 2026-08-25: TIE — the leader's Wilson 95% interval [0.475, 0.698] contains the fleet mean 0.5455, so the point-estimate lead is not a measured advantage. Measured on a 7-model gold-bank fleet (all models n≥30 usable, 68–71), not the 19-model board fleet; the gold bank is published (csoai/gspc-jail-goldbank, HF 2026-08-25).",
       "jail's fleet accuracy 0.5455 is the mean of per-model accuracies across 7 models x 71 gold cells (usable n 68–71); the leader accuracy 0.5915 is the best zero-false-positive detector's (tp+tn)/71. Best precision 1.0, best recall 0.237 — the best detector still misses 3 of 4 escapes.",
       "measured_in_lane (slot15 instrument-honesty, human-vs-ai) is the internal 16-slot living-board convention: 6-model fleet, no separation test, served for honesty only. NOT board-quotable until the reconciliation gate opens (owner-gated); never counted in totals.",
@@ -1150,3 +1151,7 @@ export const onRequestGet: PagesFunction = async (context) => {
   context.waitUntil(cache.put(cacheKey, response.clone()));
   return response;
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

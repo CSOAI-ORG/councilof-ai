@@ -10,6 +10,7 @@ import {
   x402Accepts,
   type X402Env,
 } from "../_x402";
+import { DISCOVERY_SUBJECT_LABELS, subjectDiscoveryDescription } from "../_x402_descriptions";
 
 type Subject = {
   label: string;
@@ -20,7 +21,7 @@ type Subject = {
 
 export const SUBJECTS: Record<string, Subject> = {
   chainlink: {
-    label: "Chainlink / LINK",
+    label: DISCOVERY_SUBJECT_LABELS["chainlink"],
     aliases: ["Chainlink", "LINK"],
     evidenceSubject: "chainlink",
     links: (o) => ({
@@ -29,7 +30,7 @@ export const SUBJECTS: Record<string, Subject> = {
     }),
   },
   ondo: {
-    label: "Ondo Finance / ONDO",
+    label: DISCOVERY_SUBJECT_LABELS["ondo"],
     aliases: ["Ondo Finance", "ONDO"],
     evidenceSubject: "ondo-finance",
     links: (o) => ({
@@ -38,7 +39,7 @@ export const SUBJECTS: Record<string, Subject> = {
     }),
   },
   "ondo-ousg": {
-    label: "Ondo Finance OUSG on XRPL",
+    label: DISCOVERY_SUBJECT_LABELS["ondo-ousg"],
     aliases: ["Ondo Finance OUSG", "OUSG", "xrpl:OUSG"],
     evidenceSubject: "xrpl:OUSG",
     links: (o) => ({
@@ -68,9 +69,9 @@ export const handleSubject = async (
 
   const url = new URL(request.url);
   const resourceUrl = `${url.origin}/api/discover/${key}`;
-  const description =
-    `Free CSOAI discovery for ${subject.label}: evidence routes and verification links. ` +
-    "It is an index entry, not a measurement, rating, endorsement, or certificate.";
+  // One source for every surface (functions/api/x402-descriptions.test.ts): this 402, the manifest
+  // row and capabilities.json carry the same text. The boundary stays in the body below.
+  const description = subjectDiscoveryDescription(subject.label);
   const accepts = x402Accepts(
     { ...env, X402_AMOUNT: "0" } as X402Env,
     resourceUrl,

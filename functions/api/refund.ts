@@ -17,6 +17,7 @@
  * This endpoint does NOT sign the record. The publisher (Edge writer or M4
  * operator flow) is the signer; this is the intake that records the event.
  */
+import { headFromGet } from "./_head";
 
 type Env = { LEADS?: KVNamespace; REVENUE_KV?: KVNamespace };
 type Channel = "paddle_webhook" | "operator_manual" | "buyer_request" | "dispute_resolution";
@@ -197,3 +198,7 @@ export const onRequestGet: PagesFunction = async () => json({
     "No record is ever silently deleted — refunds are appended, never erased.",
   schema_url: "/schemas/csoai-refund-record-0.1.schema.json",
 });
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

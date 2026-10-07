@@ -718,7 +718,11 @@ const corrections: PopulationEntry = {
 // served at their own URL and stay covered by their own .ots, so both rows are read and the
 // `supersedes` chain is reported from the bytes rather than asserted here.
 const CLAIM_REGISTER = "/spec/claim-maintenance/register.json";
-/** Bounded same-site registry discovery; never fetch arbitrary URLs from registry content. */
+/** Bounded same-site registry discovery; never fetch arbitrary URLs from registry content.
+ *  A leaf is one flat /claims/<name>.json file: no nesting, no dots inside the name (so no sidecar
+ *  like .signed.json), no query, fragment or credentials. Upper case is allowed in the name because
+ *  the generated register already lists a UTC-stamped leaf, claimreg-ondo-chainlink-maintenance-
+ *  20260928T023900Z.json; a lowercase-only pattern refused it and failed the whole population closed. */
 export function registryPathsFromIndex(value: unknown): string[] {
   if (!isObj(value) || value.schema !== "csoai.claim-maintenance.register/0.1" || !Array.isArray(value.registries) || value.registries.length === 0 || value.registries.length > 100)
     throw new Error("The generated claim register is absent, malformed, empty or over its budget");
@@ -727,7 +731,7 @@ export function registryPathsFromIndex(value: unknown): string[] {
     if (!isObj(item) || typeof item.url !== "string") throw new Error("Registry URL is missing");
     if (item.schema !== undefined && !["csoai.claim-registry/0.1", "csoai.claim-registry/0.2", "csoai.claim-registry/0.3"].includes(String(item.schema))) throw new Error("Unsupported registry schema");
     const u = new URL(item.url, "https://councilof.ai");
-    if (u.origin !== "https://councilof.ai" || u.username || u.password || u.search || u.hash || u.pathname.length > 220 || !/^\/claims\/[a-z0-9]+(?:-[a-z0-9]+)*\.json$/.test(u.pathname))
+    if (u.origin !== "https://councilof.ai" || u.username || u.password || u.search || u.hash || u.pathname.length > 220 || !/^\/claims\/[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*\.json$/.test(u.pathname))
       throw new Error("Registry URL is outside the public claim-registry scope");
     paths.add(u.pathname);
   }

@@ -1,5 +1,5 @@
 /**
- * HomeWaysIn — Ask, Connect, Verify, and a line for each of the four readers who arrive here.
+ * HomeWaysIn — Ask, Connect, Verify, and a line for each of the five readers who arrive here.
  *
  * Moved out of the hero on 30 Sep 2026 so the first screen says one thing. Each door is a real,
  * working surface today: the chat on /dashboard, the connector hub at /connect/ (free MCP door,
@@ -38,6 +38,12 @@ export const READERS: { who: string; line: string; href: string; cta: string; ex
     line: "See how the models you are choosing between did, axis by axis, on the same frozen questions, each result signed.",
     href: "/board/models",
     cta: "Models, axis by axis",
+  },
+  {
+    who: "Publishing AI-generated content",
+    line: "Paste the link to an image, video, audio file or PDF your AI made and see whether a machine-readable mark is detected, as Article 50(2) of the EU AI Act asks. Free preview.",
+    href: "/dashboard/?tab=art50",
+    cta: "Check an output for a mark",
   },
   {
     who: "Building with AI",
@@ -94,7 +100,7 @@ export default function HomeWaysIn() {
         </ul>
 
         <h3 className="mt-14 text-lg font-black tracking-tight text-foreground">Who it is for</h3>
-        <ul className="mt-4 grid list-none gap-x-8 gap-y-6 p-0 sm:grid-cols-2 lg:grid-cols-4" data-testid="home-readers">
+        <ul className="mt-4 grid list-none gap-x-8 gap-y-6 p-0 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5" data-testid="home-readers">
           {READERS.map((r) => (
             <li key={r.who} className="border-t border-border pt-4">
               <p className="text-[15px] font-bold text-foreground">{r.who}</p>

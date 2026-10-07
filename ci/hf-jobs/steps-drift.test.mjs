@@ -1,11 +1,15 @@
 /**
- * Drift guard between the two runners.
+ * ci/hf-jobs guard. Both HF Jobs runners are RETIRED (owner ruling, 6 Oct 2026, SINGLE WRITER:
+ * GitHub master is the only production writer and changes only through a gated pull request).
  *
- * deploy.sh / public-root.sh must announce every NAMED step of the GitHub workflow
- * they mirror, in the same order, with the same text. If someone adds a gate to
- * deploy.yml and forgets the HF Jobs runner (or vice versa) this test goes red.
- * Also pins: the exact prerender command, the three wrangler alias deploys, and
- * the Dockerfile's Playwright tag against package-lock.json.
+ * deploy.sh was a second route to the Cloudflare Pages project; public-root.sh was a second route
+ * to master (it signed with an HF-held copy of the board key and pushed master with a PAT). Their
+ * workflow-mirror checks are gone with them. What is pinned now is that each stays retired: no
+ * wrangler, no build, no signing, no git, no push, and a non-zero exit.
+ *
+ * Also pins the Dockerfile's Playwright tag against package-lock.json and that every runner
+ * script still parses and never echoes a secret. public-root.yml's own invariants live in
+ * scripts/public_root_workflow.test.mjs.
  */
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
@@ -17,98 +21,54 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, "..", "..");
 const read = (p) => readFileSync(join(ROOT, p), "utf8");
 
-// Named steps of a workflow, in file order. `- name:` only appears on steps here
-// (the workflow's own `name:` is not list-prefixed). Quoted names are unquoted.
-function workflowSteps(yml) {
-  return [...yml.matchAll(/^\s*- name:\s*(.+?)\s*$/gm)].map((m) => {
-    const raw = m[1];
-    const q = raw.match(/^(["'])(.*)\1$/);
-    return q ? q[2] : raw;
-  });
-}
-// step '<name>' announcements in a runner script, in file order.
-const scriptSteps = (sh) => [...sh.matchAll(/^\s*step '([^']+)'/gm)].map((m) => m[1]);
+// The stubs' comments explain what they used to do, so judge the commands, not the prose.
+const codeOnly = (sh) => sh.split("\n").filter((l) => !/^\s*#/.test(l)).join("\n");
 
-const pairs = [
-  [".github/workflows/deploy.yml", "ci/hf-jobs/deploy.sh"],
-  [".github/workflows/public-root.yml", "ci/hf-jobs/public-root.sh"],
-];
-
-describe("HF Jobs runner mirrors the GitHub workflow step list", () => {
-  for (const [yml, sh] of pairs) {
-    it(`${sh} announces exactly the named steps of ${yml}, in order`, () => {
-      const expected = workflowSteps(read(yml));
-      const actual = scriptSteps(read(sh));
-      expect(expected.length).toBeGreaterThan(3);
-      expect(actual).toEqual(expected);
-    });
+function exitCode(script, args) {
+  try {
+    execFileSync("bash", [join(HERE, script), ...args], { stdio: "pipe", env: { PATH: process.env.PATH } });
+    return 0;
+  } catch (e) {
+    return e.status;
   }
+}
 
-  it("deploy.sh runs the prerender with the exact deploy.yml invocation", () => {
-    const m = read(".github/workflows/deploy.yml").match(/bash scripts\/prerender-run\.sh[^\n]*/);
-    expect(m).not.toBeNull();
-    expect(read("ci/hf-jobs/deploy.sh")).toContain(m[0].trim());
-  });
-
-  it("deploy.sh writes the same three Pages aliases with the same wrangler flags", () => {
-    const yml = read(".github/workflows/deploy.yml");
+describe("retired HF Jobs runners stay retired", () => {
+  it("deploy.sh is retired: it deploys nothing, builds nothing and refuses to run", () => {
     const sh = read("ci/hf-jobs/deploy.sh");
-    const lines = (s) => new Set([...s.matchAll(/npx wrangler pages deploy [^\n]+/g)].map((m) => m[0].trim()));
-    expect([...lines(yml)].sort()).toEqual([...lines(sh)].sort());
-    expect(lines(sh).size).toBe(3);
+    expect(sh).toMatch(/RETIRED 2026-10-06/);
+    expect(sh).toMatch(/single-writer ruling, 6 Oct 2026/);
+    expect(codeOnly(sh)).not.toMatch(/wrangler|npm run build|prerender-run|lib\.sh|curl|git /);
+    expect(exitCode("deploy.sh", ["https://github.com/CSOAI-ORG/councilof-ai.git", "master"])).toBe(3);
   });
 
-  it("deploy.sh runs the same gate scripts deploy.yml runs", () => {
-    const yml = read(".github/workflows/deploy.yml");
-    const sh = read("ci/hf-jobs/deploy.sh");
-    const gates = (s) => new Set([...s.matchAll(/node scripts\/([a-z0-9-]+\.mjs)/g)].map((m) => m[1]));
-    expect([...gates(sh)].sort()).toEqual([...gates(yml)].sort());
+  it("public-root.sh is retired: it signs nothing, pushes nothing and refuses to run", () => {
+    const sh = read("ci/hf-jobs/public-root.sh");
+    expect(sh).toMatch(/RETIRED 2026-10-06/);
+    expect(sh).toMatch(/single-writer ruling, 6 Oct 2026/);
+    const code = codeOnly(sh);
+    expect(code).not.toMatch(/publish_public_root|witness_public_root|eas_attest_root|board-sign|BOARD_SIGN|GIT_PUSH_TOKEN|lib\.sh|curl|python|node |npm |git /);
+    // Even with every secret it used to read present, it exits 3 and writes nothing.
+    let code3 = 0;
+    let stderr = "";
+    try {
+      execFileSync("bash", [join(HERE, "public-root.sh"), "https://github.com/CSOAI-ORG/councilof-ai.git", "master"], {
+        stdio: "pipe",
+        env: { PATH: process.env.PATH, BOARD_SIGN_KEY_PKCS8_B64: "x", GIT_PUSH_TOKEN: "x", DRY_RUN: "0" },
+      });
+    } catch (e) {
+      code3 = e.status;
+      stderr = String(e.stderr);
+    }
+    expect(code3).toBe(3);
+    expect(stderr).toContain(".github/workflows/public-root.yml");
   });
 
-  it("uses candidate gates before publication and a fresh live gate only after the final hold", () => {
-    const publicRootYml = read(".github/workflows/public-root.yml");
-    const publicRootSh = read("ci/hf-jobs/public-root.sh");
-    const deployYml = read(".github/workflows/deploy.yml");
-    const deploySh = read("ci/hf-jobs/deploy.sh");
-
-    for (const source of [publicRootYml, publicRootSh, deployYml, deploySh]) {
-      expect(source).toMatch(/root-witness-release-gate\.py --phase candidate/);
-    }
-    for (const source of [deployYml, deploySh]) {
-      const hold = source.indexOf("Confirm gated tree still holds");
-      const recheck = source.indexOf("Recheck deployed root against witnessed candidate (bounded, read-only)");
-      const live = source.indexOf("Live public root + witness integrity — fresh apex MATCH required");
-      expect(hold).toBeGreaterThan(-1);
-      expect(recheck).toBeGreaterThan(hold);
-      expect(live).toBeGreaterThan(recheck);
-      expect(source.slice(recheck, live)).toContain("--public-dir dist/client");
-      expect(source.slice(recheck, live)).toContain("--check-only");
-      expect(source.slice(live)).toContain("--phase live");
-      expect(source.slice(live)).toContain("--public-dir dist/client");
-    }
-  });
-
-  it("keeps the bounded live-root retry policy identical across GHA and HF", () => {
-    const yml = read(".github/workflows/deploy.yml");
-    const sh = read("ci/hf-jobs/deploy.sh");
-    for (const option of [
-      "--attempts 6",
-      "--retry-delay-seconds 10",
-      "--timeout-seconds 20",
-      "--live-timeout-seconds 30",
-    ]) {
-      expect(yml).toContain(option);
-      expect(sh).toContain(option);
-    }
-  });
-
-  it("stages the mutable exact-root witness pointer in both public-root runners", () => {
-    for (const source of [
-      read(".github/workflows/public-root.yml"),
-      read("ci/hf-jobs/public-root.sh"),
-    ]) {
-      expect(source).toContain("git add -- public/interop/root-witness-pointer.json");
-    }
+  it("the README no longer offers an HF command that runs either retired runner", () => {
+    const readme = read("ci/hf-jobs/README.md");
+    expect(readme).not.toMatch(/bash ci\/hf-jobs\/(public-root|deploy)\.sh/);
+    expect(readme).not.toMatch(/hf jobs scheduled run/);
+    expect(readme).toMatch(/`public-root\.sh`[^\n]*RETIRED 2026-10-06/);
   });
 
   it("Dockerfile base tag matches the playwright version in package-lock.json", () => {

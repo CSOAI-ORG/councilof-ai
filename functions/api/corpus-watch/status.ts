@@ -15,6 +15,7 @@
  *  - Every numeric claim on the public site must trace to a signed artefact. The status JSON carries
  *    the issuer (Ed25519, pubkey on the watcher's repo) so the page can verify it without surprise.
  */
+import { headFromGet } from "../_head";
 
 interface Env {
   /** Optional KV namespace pointing at the corpus-watch artefact store. When bound, the function
@@ -114,3 +115,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
     },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

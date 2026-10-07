@@ -11,7 +11,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
 import { ArrowRight, Search, Trash2 } from "lucide-react";
 import ResultCard, { StateChip } from "@/components/talk/ResultCard";
-import { clearMyResults, MY_RESULTS_EVENT, readMyResults, type MyResult } from "@/lib/myResults";
+import { clearMyResults, lookupAgainHref, MY_RESULTS_EVENT, readMyResults, type MyResult } from "@/lib/myResults";
 
 const FOCUS =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
@@ -60,7 +60,6 @@ function CommissionCardView({ c }: { c: Commission }) {
         ...(c.as_of ? [{ key: "as_of", label: "Requested", value: c.as_of.slice(0, 10) }] : []),
       ]}
       verifyUrl={first ? first.url : "/dashboard?tab=verify"}
-      verifyText={first ? "Open the signed result" : "Check a result"}
       recordId={c.receipt_sha}
       summary={`Receipt ${c.receipt_sha}${c.tx ? ` · transaction ${c.tx}` : ""}`}
       raw={c}
@@ -86,6 +85,9 @@ export default function MyResultsPane() {
   const [queue, setQueue] = useState<Queue>({ state: "loading", rows: [] });
   const [q, setQ] = useState("");
   const [asked, setAsked] = useState("");
+  // A watch request has no public status endpoint (POST /api/claims/watch-request only records it),
+  // so its Status button says that instead of searching the paid-commission queue for it.
+  const [watchNote, setWatchNote] = useState<string | null>(null);
 
   useEffect(() => {
     const load = () => setMine(readMyResults());
@@ -129,6 +131,7 @@ export default function MyResultsPane() {
         aria-label="Look up a request"
         onSubmit={(e) => {
           e.preventDefault();
+          setWatchNote(null);
           setAsked(q.trim());
         }}
       >
@@ -153,6 +156,11 @@ export default function MyResultsPane() {
       </form>
 
       <div className="mt-4 space-y-2" aria-live="polite">
+        {watchNote ? (
+          <p className="rounded-xl border border-border bg-muted p-3 text-sm text-foreground [overflow-wrap:anywhere]" data-testid="my-results-watch-note">
+            {watchNote}
+          </p>
+        ) : null}
         {asked ? (
           queue.state === "loading" ? (
             <p role="status" className="text-sm text-muted-foreground">Reading the queue…</p>
@@ -168,7 +176,8 @@ export default function MyResultsPane() {
             </ul>
           ) : (
             <p className="rounded-xl border border-border bg-muted p-3 text-sm text-foreground" data-testid="my-results-none">
-              Nothing in the public queue matches “{asked}”. A request appears here once it is paid; a lookup alone is not a request.{" "}
+              Nothing in the public queue matches “{asked}”. A request appears here once it is paid; a lookup alone is not a request. If
+              you paid, use the receipt id from the reply.{" "}
               <Link href={`/dashboard?tab=measured&subject=${encodeURIComponent(asked)}`} className="font-semibold text-emerald-800 underline dark:text-emerald-300">
                 Request a fresh run
               </Link>
@@ -198,16 +207,38 @@ export default function MyResultsPane() {
                 </span>
                 {r.state ? <StateChip label={r.state} /> : null}
                 <span className="text-xs text-muted-foreground">{r.at.slice(0, 10)}</span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setQ(r.ref ?? r.subject);
-                    setAsked(r.ref && r.kind !== "watch" ? r.ref : r.subject);
-                  }}
-                  className={`min-h-11 rounded-lg border border-border px-3 text-sm font-semibold text-foreground hover:bg-muted ${FOCUS}`}
-                >
-                  Status
-                </button>
+                {r.kind === "lookup" ? (
+                  // A lookup is not a request: there is nothing of it in the paid-request queue, so
+                  // "Status" (which searched that queue) always answered "nothing matches". The
+                  // useful action is to ask the same question again.
+                  <Link
+                    href={lookupAgainHref(r)}
+                    className={`inline-flex min-h-11 items-center rounded-lg border border-border px-3 text-sm font-semibold text-foreground hover:bg-muted ${FOCUS}`}
+                    data-testid="my-results-again"
+                  >
+                    Look up again
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (r.kind === "watch") {
+                        setAsked("");
+                        setWatchNote(
+                          `Your monthly re-check request${r.ref ? ` (${r.ref})` : ""} for “${r.subject}” was recorded for a person to review. ` +
+                            "There is no public status for watch requests yet; nothing is scheduled or charged unless it is accepted.",
+                        );
+                        return;
+                      }
+                      setWatchNote(null);
+                      setQ(r.ref ?? r.subject);
+                      setAsked(r.ref ?? r.subject);
+                    }}
+                    className={`min-h-11 rounded-lg border border-border px-3 text-sm font-semibold text-foreground hover:bg-muted ${FOCUS}`}
+                  >
+                    Status
+                  </button>
+                )}
               </li>
             ))}
           </ul>
@@ -217,7 +248,7 @@ export default function MyResultsPane() {
             <Link href="/dashboard" className="inline-flex items-center gap-1 font-semibold text-emerald-800 underline dark:text-emerald-300">
               Get results <ArrowRight className="h-3 w-3" aria-hidden="true" />
             </Link>
-            ; what you look up or request here is listed in this browser only.
+            . What you look up or request is kept in this browser only.
           </p>
         )}
       </section>

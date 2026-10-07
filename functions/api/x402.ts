@@ -53,6 +53,8 @@ import {
 import WRAPPER_ASSET_DOORS from "./_wrapper_asset_doors.json";
 import { POPULATIONS } from "./_population";
 import FREE_TOOLS from "../mcp/gspc-tools.json";
+import PAID_TOOLS from "../mcp/paid-tools.json";
+import { headFromGet } from "./_head";
 
 export const onRequestGet: PagesFunction<{
   X402_PAY_TO?: string;
@@ -305,12 +307,14 @@ export const onRequestGet: PagesFunction<{
     mcp: {
       url: u("/mcp"),
       free_tools: FREE_TOOLS.tools.map((t) => t.name),
-      paid_tools: [
-        { name: "commission_card", route: u("/api/request-attestation"), sells: "issuance" },
-        { name: "art50_marking_evidence", route: u("/api/art50/marking-evidence"), sells: "issuance", note: "deployed; the tool still answers NOT_DEPLOYED on any origin where the route 404s" },
-        { name: "rwa_evidence", route: u("/api/rwa/evidence"), sells: "issuance", note: "deployed; the tool still answers NOT_DEPLOYED on any origin where the route 404s" },
-        { name: "receipts_batch", route: u("/api/receipts/batch"), sells: "assembly" },
-      ],
+      // Derived from the file /mcp serves (T14, 6 Oct 2026). The typed list here had four tools while
+      // tools/list served five (evidence_bundle was missing), so the catalog and the door disagreed.
+      paid_tools: (PAID_TOOLS.tools as { name: string; csoai: { route: string; sells: string; note?: string } }[]).map((t) => ({
+        name: t.name,
+        route: u(t.csoai.route),
+        sells: t.csoai.sells,
+        ...(t.csoai.note ? { note: t.csoai.note } : {}),
+      })),
       // The last clause used to read "stdio (npm csoai-gspc-mcp) stays free-only", echoing a
       // REASON given in functions/mcp/paid-tools.json that is simply wrong: "stdio has no
       // payment header". Payment does not travel as a transport header at all — x_payment is a
@@ -336,3 +340,7 @@ export const onRequestGet: PagesFunction<{
     headers: { "content-type": "application/json; charset=utf-8", "cache-control": "public, max-age=300", "access-control-allow-origin": "*" },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

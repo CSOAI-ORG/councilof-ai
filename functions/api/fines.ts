@@ -25,6 +25,7 @@
  * is derived arithmetically from two corpus dates (as_of − powers_live), so the feed can
  * never assert a freshness that did not happen: it goes stale visibly rather than silently.
  */
+import { headFromGet } from "./_head";
 
 const AS_OF = "2026-08-24"; // date the rows below were last reviewed (commit 33a26615)
 const POWERS_LIVE = "2026-08-02"; // EU AI Act Art 101 GPAI fining powers switched on
@@ -128,3 +129,7 @@ export const onRequestGet: PagesFunction = async (context) => {
     },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

@@ -8,6 +8,7 @@
  * never a remembered number. Counters are the worker's own (since its process started), and the
  * staged outputs need separate admission and guarded release; worker counters do not prove publication.
  */
+import { headFromGet } from "./_head";
 type Env = { RUNPOD_WORKER_HEALTH_URL?: string; WORKER_STATE_KV?: KVNamespace };
 
 export const DEFAULT_HEALTH_URL = "https://fpowppss5ngtkw-8888.proxy.runpod.net/health";
@@ -100,3 +101,7 @@ function staleAge(readAt: unknown): number | null {
 }
 
 export const onRequestGet: PagesFunction<Env> = async ({ env }) => json(await buildWorker(env));
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

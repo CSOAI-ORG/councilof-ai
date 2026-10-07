@@ -766,6 +766,12 @@ async function callPaidTool(name, args) {
   }
 
   if (res.status === 402) {
+    // T11 (6 Oct 2026): say a dated amount in words, built from the challenge, so it disappears by itself.
+    const endsAt = body?.accepts?.[0]?.csoai_pricing?.ends_at;
+    const datedAmount =
+      typeof endsAt === "string" && endsAt
+        ? ` Launch amount until ${endsAt}; after that this tool asks the standard amount in accepts[0].csoai_pricing.normal_amount_atomic — read accepts[] on every call.`
+        : "";
     return {
       ...base,
       status: "PAYMENT_REQUIRED",
@@ -778,7 +784,8 @@ async function callPaidTool(name, args) {
         "A challenge is an answer, not a failure. " +
         (paymentPresented
           ? "A payment authorization was presented, but this response does not prove settlement. Inspect the wallet, chain and facilitator before signing or retrying."
-          : "Pay from your own wallet against accepts[] and call again with x_payment. No payment authorization was presented; nothing was charged by this request."),
+          : "Pay from your own wallet against accepts[] and call again with x_payment. No payment authorization was presented; nothing was charged by this request.") +
+        datedAmount,
     };
   }
   if (res.status === 404) {

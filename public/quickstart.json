@@ -2,7 +2,7 @@
   "schema": "csoai.agent-quickstart/0.1",
   "human": "https://councilof.ai/quickstart/",
   "one_line": "discover, request, read the 402, settle from your own wallet, receive a signed card, verify it offline",
-  "amounts": "No amount is written here. The only authority on an amount is accepts[] in the 402 you receive.",
+  "amounts": "No amount is written here. The only authority on an amount is accepts[] in the 402 you receive. Amounts are set per request in the payment challenge and can change; your wallet signs exactly the amount shown and nothing more.",
   "self_payments": "Payments from the operator's own wallets are recorded as self-tests and never counted as buyers or revenue. Authoritative flag: settled_usdc.excludes_self=true on /api/revenue.",
   "revenue_contract": "https://councilof.ai/api/revenue",
   "worked_example_door": "https://councilof.ai/api/request-attestation?subject=<id>",

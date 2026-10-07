@@ -1,13 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link, useSearch } from "wouter";
-import {
-  Archive,
-  ArrowRight,
-  Building2,
-  Compass,
-  Search,
-  Wrench,
-} from "lucide-react";
+import { Archive, ArrowRight, Compass, Search, Wrench } from "lucide-react";
 import { ROUTE_MANIFEST } from "@/data/route-manifest";
 import {
   classify,
@@ -15,14 +8,17 @@ import {
   isPrimaryPath,
   libraryItems,
   prettifyTitle,
+  WITHDRAWN_PATHS,
 } from "@/data/library-ia";
 import {
   LOBBY_ROUTES,
   LOBBY_TABS,
   dashboardNavGroupOf,
+  normalizeLobbyTabId,
   type LobbyRouteGroup,
 } from "@/components/lobby/tabs";
 import DashboardEmbeddedView from "@/components/DashboardEmbeddedView";
+import { descriptionForViewPath, labelForViewPath } from "@/lib/viewLabel";
 import {
   dashboardViewFromSearch,
   dashboardViewHref,
@@ -30,7 +26,7 @@ import {
   normalizeDashboardView,
 } from "@/lib/dashboardView";
 
-type CatalogueKind = "workflow" | "surface" | "industry" | "library";
+type CatalogueKind = "workflow" | "surface" | "library";
 
 export type DashboardCatalogueEntry = {
   id: string;
@@ -48,8 +44,42 @@ const ROUTE_GROUP_LABELS: Record<LobbyRouteGroup, string> = {
   audience: "Audiences",
   record: "Evidence records",
   receipts: "Method and receipts",
-  analyst: "Analyst tools",
+  analyst: "For developers and analysts",
+  preview: "Previews: not live yet",
 };
+
+/**
+ * Developer-facing panes (tools audit, 6 Oct 2026). A stranger reading the A–Z list should see
+ * at a glance which entries are diagnostics, protocol plumbing or signed-in tools, so these are
+ * filed under one "For developers" group rather than beside the result workflows.
+ */
+const DEVELOPER_GROUP = "For developers";
+const DEVELOPER_TAB_IDS = new Set([
+  "state",
+  "archive",
+  "harness",
+  "products",
+  "workbench",
+  "terminal",
+  "console",
+  "leaderboard",
+  "embed",
+]);
+
+/**
+ * Library pages held back until their content is corrected (tools audit, 6 Oct 2026): the
+ * "Regions & Jurisdictions" sector and the /compliance/* pages carry an invented fine figure and
+ * deadlines that have already passed. Their URLs keep working for external links; the in-app
+ * listing returns once the pages are corrected.
+ */
+function heldForCorrection(path: string, title: string): boolean {
+  return (
+    classify(path, title).id === "regions" ||
+    path === "/compliance" ||
+    path.startsWith("/compliance/") ||
+    path === "/global-ai-safety-initiative"
+  );
+}
 
 const INTERNAL_ROUTE =
   /^\/(?:404|admin|login|signup|register|settings|api-keys|bulk-import|widget|old-home|home-v\d|landing|demo|os-demo)(?:\/|$)/;
@@ -69,6 +99,12 @@ const CANONICAL_ALIAS_PATHS = new Set([
   "/csoai-law",
   "/meok-law",
   "/os",
+  // Duplicates of a page the catalogue already lists (tools audit, 6 Oct 2026): /help-center is
+  // the FAQ again, /usp the About page, /tracks the Academy, /connect-gspc the Install pane.
+  "/help-center",
+  "/usp",
+  "/tracks",
+  "/connect-gspc",
   "/readiness-assessment",
   "/sov-os",
   "/standards",
@@ -89,13 +125,17 @@ export function buildDashboardCatalogue(): DashboardCatalogueEntry[] {
 
   for (const tab of LOBBY_TABS) {
     if (["home", "software", "explore"].includes(tab.id)) continue;
+    // An id the shell resolves to another pane (results -> board, watchdog -> corrections) is a
+    // compatibility alias, not a second tool: listing it would show one pane under two names.
+    if (normalizeLobbyTabId(tab.id) !== tab.id) continue;
     add({
       id: `tab:${tab.id}`,
       label: tab.label,
       description: tab.blurb,
-      group:
-        dashboardNavGroupOf(tab.id)?.label ||
-        (tab.id === "play" ? "Practice" : "Workspace tools"),
+      group: DEVELOPER_TAB_IDS.has(tab.id)
+        ? DEVELOPER_GROUP
+        : dashboardNavGroupOf(tab.id)?.label ||
+          (tab.id === "play" ? "Practice" : "Workspace tools"),
       kind: "workflow",
       href: `/dashboard?tab=${tab.id}`,
       path: tab.path || undefined,
@@ -124,6 +164,7 @@ export function buildDashboardCatalogue(): DashboardCatalogueEntry[] {
     if (
       route.comp === "Redirect" ||
       CANONICAL_ALIAS_PATHS.has(route.path) ||
+      WITHDRAWN_PATHS.has(route.path) ||
       !isPrimaryPath(route.path) ||
       INTERNAL_ROUTE.test(route.path)
     )
@@ -138,7 +179,7 @@ export function buildDashboardCatalogue(): DashboardCatalogueEntry[] {
     add({
       id: `primary:${route.path}`,
       label,
-      description: "Current published Council of AI surface.",
+      description: descriptionForViewPath(route.path) ?? "A published page on councilof.ai.",
       group: classify(route.path, label).title,
       kind: "surface",
       href: dashboardViewHref(route.path, label),
@@ -151,6 +192,7 @@ export function buildDashboardCatalogue(): DashboardCatalogueEntry[] {
   for (const route of libraryItems()) {
     if (
       CANONICAL_ALIAS_PATHS.has(route.path) ||
+      heldForCorrection(route.path, route.title) ||
       INTERNAL_ROUTE.test(route.path) ||
       !normalizeDashboardView(route.path)
     )
@@ -158,7 +200,7 @@ export function buildDashboardCatalogue(): DashboardCatalogueEntry[] {
     add({
       id: `library:${route.path}`,
       label: route.title || route.path,
-      description: "Dated reference surface retained in the Council library.",
+      description: descriptionForViewPath(route.path) ?? "An older dated page, kept in the library for reference.",
       group: `Library · ${classify(route.path, route.title).title}`,
       kind: "library",
       href: dashboardViewHref(route.path, route.title),
@@ -169,32 +211,68 @@ export function buildDashboardCatalogue(): DashboardCatalogueEntry[] {
   return entries;
 }
 
-const KIND_FILTERS: { id: "all" | CatalogueKind; label: string }[] = [
+/** A framed path's name: its catalogue entry's label, else the lobby/head label. */
+export function viewEntryLabel(path: string): string {
+  const bare = path.split(/[?#]/)[0].replace(/\/+$/, "") || "/";
+  const entry = buildDashboardCatalogue().find((e) => e.path && (e.path.split(/[?#]/)[0].replace(/\/+$/, "") || "/") === bare);
+  return entry?.label && !entry.label.startsWith("/") ? entry.label : labelForViewPath(path);
+}
+
+// No "Industries" filter: the builder above emits no industry entries, and a chip that can only
+// ever say "no match" is a dead control (6 Oct 2026).
+export const KIND_FILTERS: { id: "all" | CatalogueKind; label: string }[] = [
   { id: "all", label: "All" },
   { id: "workflow", label: "Workflows" },
   { id: "surface", label: "Current pages" },
-  { id: "industry", label: "Industries" },
   { id: "library", label: "Library" },
 ];
+
+/**
+ * Search starts across EVERYTHING (6 Oct 2026). The default used to be "Workflows", so typing
+ * "methodology", "enterprise" or "tc260" answered "No Council destination matches" although each
+ * is a current page in this catalogue. A chip the reader picks still narrows the search; when it
+ * narrows it to nothing, the empty state offers the wider search instead of a dead end.
+ */
+export const DEFAULT_CATALOGUE_KIND: "all" | CatalogueKind = "all";
+
+export function filterCatalogue(
+  catalogue: DashboardCatalogueEntry[],
+  kind: "all" | CatalogueKind,
+  query: string,
+): DashboardCatalogueEntry[] {
+  const needle = query.trim().toLowerCase();
+  return catalogue.filter((entry) => {
+    if (kind !== "all" && entry.kind !== kind) return false;
+    if (!needle) return true;
+    return `${entry.label} ${entry.description} ${entry.group} ${entry.path || ""}`
+      .toLowerCase()
+      .includes(needle);
+  });
+}
 
 export default function DashboardCataloguePane() {
   const search = useSearch();
   const embeddedPath = dashboardViewFromSearch(search);
+  // Without ?label, name the page from its catalogue entry or its own head — never the raw path.
   const embeddedLabel =
-    dashboardViewLabel(search) || embeddedPath || "Published surface";
+    dashboardViewLabel(search) ||
+    (embeddedPath ? viewEntryLabel(embeddedPath) : null) ||
+    "Published page";
   const [query, setQuery] = useState("");
-  const [kind, setKind] = useState<"all" | CatalogueKind>("workflow");
+  const [kind, setKind] = useState<"all" | CatalogueKind>(DEFAULT_CATALOGUE_KIND);
   const catalogue = useMemo(buildDashboardCatalogue, []);
-  const filtered = useMemo(() => {
-    const needle = query.trim().toLowerCase();
-    return catalogue.filter((entry) => {
-      if (kind !== "all" && entry.kind !== kind) return false;
-      if (!needle) return true;
-      return `${entry.label} ${entry.description} ${entry.group} ${entry.path || ""}`
-        .toLowerCase()
-        .includes(needle);
-    });
-  }, [catalogue, kind, query]);
+  const filtered = useMemo(
+    () => filterCatalogue(catalogue, kind, query),
+    [catalogue, kind, query],
+  );
+  // What the same words find across every kind, for the "search all instead" offer.
+  const widerCount = useMemo(
+    () =>
+      kind === "all" || !query.trim()
+        ? 0
+        : filterCatalogue(catalogue, "all", query).length,
+    [catalogue, kind, query],
+  );
   const groups = useMemo(() => {
     const map = new Map<string, DashboardCatalogueEntry[]>();
     for (const entry of filtered)
@@ -205,8 +283,7 @@ export default function DashboardCataloguePane() {
   if (embeddedPath)
     return <DashboardEmbeddedView path={embeddedPath} label={embeddedLabel} />;
 
-  // A kind with no entries is not shown as a "0" tile or an empty filter chip: the catalogue
-  // builder emits no industry entries today, and "Industries 0" read as a measured absence.
+  // A kind with no entries is not shown as a "0" tile or an empty filter chip.
   const counts = KIND_FILTERS.slice(1)
     .map((filter) => ({
       ...filter,
@@ -325,9 +402,7 @@ export default function DashboardCataloguePane() {
                     className="group flex min-h-28 items-start gap-3 rounded-xl border border-border bg-card p-4 transition hover:border-emerald-700/35 hover:shadow-sm"
                   >
                     <span className="mt-0.5 rounded-lg bg-emerald-50 p-2 text-emerald-800">
-                      {entry.kind === "industry" ? (
-                        <Building2 className="h-4 w-4" />
-                      ) : entry.kind === "workflow" ? (
+                      {entry.kind === "workflow" ? (
                         <Wrench className="h-4 w-4" />
                       ) : entry.kind === "library" ? (
                         <Archive className="h-4 w-4" />
@@ -352,11 +427,9 @@ export default function DashboardCataloguePane() {
                         <span>
                           {entry.kind === "workflow"
                             ? "Workspace"
-                            : entry.kind === "industry"
-                              ? "Sector view"
-                              : entry.kind === "library"
-                                ? "Reference"
-                                : "In-frame page"}
+                            : entry.kind === "library"
+                              ? "Reference"
+                              : "In-frame page"}
                         </span>
                         {entry.auth ? (
                           <span className="text-amber-800">
@@ -380,8 +453,22 @@ export default function DashboardCataloguePane() {
         <div
           role="status"
           className="mt-8 rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground"
+          data-testid="catalogue-no-match"
         >
-          No Council destination matches “{query}”.
+          <p>
+            {kind === "all"
+              ? `No Council destination matches “${query}”.`
+              : `No ${KIND_FILTERS.find((f) => f.id === kind)?.label.toLowerCase() ?? "entries"} match “${query}”.`}
+          </p>
+          {widerCount > 0 ? (
+            <button
+              type="button"
+              onClick={() => setKind("all")}
+              className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-xl border border-emerald-800/30 bg-card px-4 text-sm font-semibold text-emerald-900 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700"
+            >
+              Search all {widerCount} {widerCount === 1 ? "match" : "matches"} instead
+            </button>
+          ) : null}
         </div>
       )}
     </section>

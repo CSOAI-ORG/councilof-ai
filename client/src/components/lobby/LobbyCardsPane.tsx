@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { Link } from "wouter";
 import { FOCUS, MEASURE, PRIMARY, SP, TYPE } from "./glass";
-import { PaneHead } from "./paneKit";
 import { fetchPinnedCardKey, verifyCard, type CardVerdict } from "@/lib/cardVerify";
 
 /**
@@ -176,11 +176,43 @@ function MillRootPanel() {
   );
 }
 
+const SECONDARY_ACTION = `rounded-xl border border-slate-900/12 bg-white px-3.5 py-2 text-[12.5px] font-semibold text-slate-700 transition hover:bg-slate-900/5 motion-reduce:transition-none ${FOCUS}`;
+
+/**
+ * "Verify a record you were given". The dashboard renders this pane as <C /> with no props, and
+ * the button called onOpenRoute regardless, so it threw and did nothing (tools audit, 6 Oct 2026).
+ * With no host handler it is a plain link to the Check a result pane.
+ */
+export function VerifyGivenRecord({
+  onOpenRoute,
+}: {
+  onOpenRoute?: (path: string, label: string) => void;
+}) {
+  if (!onOpenRoute)
+    return (
+      <Link href="/dashboard?tab=verify" className={SECONDARY_ACTION} data-testid="cards-verify-given">
+        Verify a record you were given
+      </Link>
+    );
+  return (
+    <button
+      type="button"
+      onClick={() => onOpenRoute("/gspc-verify", "Verify a card")}
+      className={SECONDARY_ACTION}
+      data-testid="cards-verify-given"
+    >
+      Verify a record you were given
+    </button>
+  );
+}
+
 export default function LobbyCardsPane({
   onOpenRoute,
 }: {
-  onOpenRoute: (path: string, label: string) => void;
+  /** The lobby overlay passes its route opener; the dashboard renders this pane with no props. */
+  onOpenRoute?: (path: string, label: string) => void;
 }) {
+  const [millOpen, setMillOpen] = useState(false);
   const [state, setState] = useState<IndexState>({ phase: "loading" });
   const [key, setKey] = useState<Uint8Array | null | "pending">("pending");
   const [q, setQ] = useState("");
@@ -258,15 +290,17 @@ export default function LobbyCardsPane({
 
   return (
     <div className={`${SP.panel} h-full overflow-y-auto`}>
-      <PaneHead eyebrow="Signed cards" title="Check a published card yourself, here">
-        Every card the published index declares. Pick one and this pane fetches it, recomputes the
-        sha256 of its canonical body, and checks the Ed25519 signature against{" "}
-        <code className="font-mono text-[12px]">did:web:csoai.org#card-attestation-1</code> — in your
-        browser, with no account. The result is something you established, not something we told you.
-        Card-v1 only — VALID · INVALID · UNCHECKABLE. No attachment table on the card.
-      </PaneHead>
-
-      <MillRootPanel />
+      <header>
+        <p className={TYPE.section}>Signed cards</p>
+        <h1 className="mt-1 text-[22px] font-semibold tracking-tight text-slate-900">Check the published cards</h1>
+        <div className={`mt-2 ${MEASURE} ${TYPE.body}`}>
+          Every card the published index declares. Pick one and this pane fetches it, recomputes the
+          sha256 of its canonical body, and checks its signature against{" "}
+          <span title="did:web:csoai.org#card-attestation-1">the published card key</span> — in your
+          browser, with no account. The result is something you established, not something we told
+          you. Each check ends VALID, INVALID or UNCHECKABLE.
+        </div>
+      </header>
 
       {state.phase === "loading" && (
         <p className={`mt-6 rounded-xl border border-slate-900/10 bg-white/80 px-4 py-3 ${TYPE.muted}`}>
@@ -443,13 +477,7 @@ export default function LobbyCardsPane({
               </li>
             </ul>
             <div className="mt-4 flex flex-wrap gap-2.5">
-              <button
-                type="button"
-                onClick={() => onOpenRoute("/gspc-verify", "Verify a card")}
-                className={`rounded-xl border border-slate-900/12 bg-white px-3.5 py-2 text-[12.5px] font-semibold text-slate-700 transition hover:bg-slate-900/5 motion-reduce:transition-none ${FOCUS}`}
-              >
-                Verify a record you were given
-              </button>
+              <VerifyGivenRecord onOpenRoute={onOpenRoute} />
               <a
                 href="/signed/HOW-TO-VERIFY.md"
                 target="_blank"
@@ -462,6 +490,22 @@ export default function LobbyCardsPane({
           </div>
         </>
       )}
+
+      <details
+        className="mt-7 rounded-2xl border border-slate-900/10 bg-white/70 p-4"
+        onToggle={(e) => setMillOpen((e.currentTarget as HTMLDetailsElement).open)}
+        data-testid="cards-technical"
+      >
+        <summary className={`cursor-pointer text-[13px] font-semibold text-slate-900 ${FOCUS}`}>
+          Technical: a separate collection of signed measurement cards
+        </summary>
+        <p className={`mt-2 ${MEASURE} ${TYPE.fine}`}>
+          Our measurement runs keep their own signed root, apart from the card index above. Its count
+          is not added to anything on this page.
+        </p>
+        {/* Read only when opened: it fetches and hashes the whole root file. */}
+        {millOpen ? <MillRootPanel /> : null}
+      </details>
     </div>
   );
 }

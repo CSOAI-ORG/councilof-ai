@@ -2,7 +2,7 @@
 
 Public name: Council of AI. Legal: CSOAI Ltd, UK Companies House 16939677. did:web:csoai.org.
 Neutral AI measurement body. Measurement, not certification. We do not certify, accredit, or issue conformity assessments.
-Contact: contact@csoai.org. To object to, dispute or request a correction of anything we publish: https://councilof.ai/dispute/ or that address; dated corrections: https://councilof.ai/api/corrections.
+Contact: nicholas@csoai.org. To object to, dispute or request a correction of anything we publish: https://councilof.ai/dispute/ or that address; dated corrections: https://councilof.ai/api/corrections.
 
 ## Claim boundary (quote this paragraph; it is the whole of what we assert)
 
@@ -25,6 +25,7 @@ Switchboard framing: the estate densifies a recomputable signed record over time
 
 Do not freeze numbers in this file. Read the living board:
 GET https://councilof.ai/api/gspc
+Python's default urllib User-Agent (Python-urllib/x.y) is refused at our CDN with 403 'error code: 1010'. Send any User-Agent, e.g. urllib.request.Request(url, headers={'User-Agent': 'my-check/1'}).
 
 Public lock (language only — every count lives on the API, none is frozen here):
 Quote `totals.public_count`, or `totals.count_grammar` for the long form. TWO numbers and they always travel together: `totals.axes` counts SLOTS on the board, `totals.measured_axes` counts slots with a real run behind them, and `totals.unmeasured_axes` is published so the gap is visible. Quoting the slot count alone would claim measurements that do not exist — quote both, or quote the smaller. In-lane honesty probes are not board-quotable.
@@ -286,9 +287,9 @@ The older https://councilof.ai/feed.xml is a hand-maintained item list kept for 
 - MCP (flagship HTTP, remote URL for any host): POST https://councilof.ai/mcp — 19 tools: fourteen free readers plus five x402-metered evidence tools. No CSOAI account; package presence does not prove paid settlement or delivery.
 - MCP (free door, the address to add to Claude or any chat client): POST https://councilof.ai/mcp/free — the fourteen free read-only readers only, same definitions as /mcp, no payment tool. No account, no key. Setup, tool list and example prompts: https://councilof.ai/connect/claude/
 - Public root (https://councilof.ai/root.json): Merkle envelope. Quote live `sig_ed25519` — unsigned until keystone signs the compact preimage (kind, schema, as_of, merkle_root, card_count, did_intended). Leaves MAY carry GH-secret attestations — coverage harvest, not grades. Not MEASURED. Not a certificate. Free; not paywalled.
-- Mill-card root discovery pointer: https://councilof.ai/interop/card-root-latest.json — an unsigned pointer to immutable root bytes. Follow `root_url` and check `root_sha256`. Its leaf count is separate from `/root.json`, `/signed/card_index.json` and `/api/gspc`. Read the `.ots` sidecar and verify its subject hash. Calendar-only proofs remain pending; a BitcoinBlockHeaderAttestation tag can be checked against public block headers, but a tag alone is not local full-node chain validation or a certificate.
-- Dated immutable mill-card root (as of 2026-09-30T15:51:34Z, 1461 leaves): https://councilof.ai/interop/card-root-2026-09-30-1c4f3d20ab52.json (SHA-256 5d3cb923db9a2c540ed199117dc5612beda6659b2ebd634d7c4d636c3c374739). Its .ots sidecar (SHA-256 7774e3ac6437b8b3976fad225911198ad975b7dada7d23a583cdd37e9ff96753) is calendar-pending: a submitted request, not evidence of a time, until a Bitcoin attestation is added. This is not local Bitcoin full-node chain validation.
-- MCP (stdio, run locally, zero deps): npm `csoai-gspc-mcp`. Query https://registry.npmjs.org/csoai-gspc-mcp for the published version, then call that install's `tools/list`; package source in this repository targets the same 19-tool contract as the HTTP door.
+- Mill-card root discovery pointer: https://councilof.ai/interop/card-root-latest.json — an unsigned pointer to immutable root bytes. Follow `root_url` and check `root_sha256`. Its leaf count is separate from `/root.json`, `/signed/card_index.json` and `/api/gspc`. Read the `.ots` sidecar and verify its subject hash. Calendar-only proofs remain pending until an independent `ots verify` confirms a Bitcoin attestation; a BitcoinBlockHeaderAttestation tag can be checked against public block headers, but a tag alone is not local full-node chain validation or a certificate.
+- Dated immutable mill-card root (as of 2026-10-01T06:51:30Z, 1466 leaves): https://councilof.ai/interop/card-root-2026-10-01-35544212115c.json (SHA-256 c445fc6b80f22535e5c1f894856083854c7ec3d4eb0184915a70502e41846f55). Its .ots sidecar (SHA-256 678598ba6d53363d8e92358ac86cd609b8df067428648a7ba78dc16081ab42c3) carries a BitcoinBlockHeaderAttestation, as parsed from the proof bytes into https://councilof.ai/interop/ots/manifest.json. No public-header audit is published for this root, so the block header is not independently corroborated here; this is not local Bitcoin full-node chain validation or verification of individual card measurements.
+- MCP (stdio, run locally, zero deps): npm `csoai-gspc-mcp`. Query https://registry.npmjs.org/csoai-gspc-mcp for the published version, then call that install's `tools/list`; package source in this repository targets the same 19-tool contract as the HTTP door. The published npm release is marked deprecated on npm and carries fewer tools than the HTTP door; until a newer release is published, use https://councilof.ai/mcp/free.
 - Verify a server (per-server evidence, in the browser): https://councilof.ai/verify-server/ — every signed measurement capsule keyed to ONE endpoint URL, each re-derivable in the page (capsule id + Merkle inclusion + index signature). States only; an unknown URL is NOT_MEASURED, never clean. Same module as the MCP tools server_evidence / verify_capsule.
 - MCP registry: ai.councilof/gspc → https://councilof.ai/mcp (the canonical, domain-verified name; io.github.CSOAI-ORG/gspc is its deprecated alias for the same door. Query the official registry for the currently published server version.)
 - Smithery: https://smithery.ai/servers/csoai/gspc-mcp — a third-party listing of this door. Its tools[] is Smithery's own snapshot and can lag the door; before relying on it, read the live POST https://councilof.ai/mcp tools/list (19 tools: fourteen free readers plus five x402-metered evidence tools). The older csoai/gspc entry is a stale duplicate.
@@ -327,7 +328,7 @@ Printers of the live board. Reach is distribution. Authority stays GET /api/gspc
   nobody should read our footprint as a vetting layer, never as an allegation about any registry: we
   assert no falsity about anyone, and a count of our own listings is not a judgement on the ecosystem
   they sit in. If you want to know whether a server does what it says, probe it; we did not vet it.
-- npm stdio: https://registry.npmjs.org/csoai-gspc-mcp (`csoai-gspc-mcp`)
+- npm stdio: https://registry.npmjs.org/csoai-gspc-mcp (`csoai-gspc-mcp`) — published releases are marked deprecated on npm and carry fewer tools; use https://councilof.ai/mcp/free
 - Glama directory search (flagship discovery UNSTABLE on 2026-09-04; other CSOAI servers are present): https://glama.ai/mcp/servers?query=csoai
 - Kaggle twin: https://www.kaggle.com/datasets/nicktempleman/csoai-gspc-living-board
 - Zenodo DOI (from live GET /api/gspc `doi`): 10.5281/zenodo.21991104 — UNAVAILABLE since 29 Sep 2026: Zenodo blocked the CSOAI account and every CSOAI record returns HTTP 410 (appeal pending; status at https://councilof.ai/interop/zenodo-status.json). Do not follow it as a working link.
@@ -379,14 +380,14 @@ board, whose totals stay GET https://councilof.ai/api/gspc. A superseded version
 ## Timestamp proofs (anchored is not the same claim as submitted)
 
 Derived at generation from https://councilof.ai/interop/ots/manifest.json (same bytes on disk at
-public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-10-03T10:37:26Z). An upgrade loop
+public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-10-06T10:58:28Z). An upgrade loop
 keeps advancing these, so read the manifest for a fresher count rather than quoting this line alone.
 
-- Detached OpenTimestamps proofs that actually deserialize: 653. The manifest is built by
+- Detached OpenTimestamps proofs that actually deserialize: 657. The manifest is built by
   reading every .ots file in its scanned directories and keeping only those that parse — never from a
   list of files we intended to stamp.
-- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 644.
-- Still calendar-pending: 9. A calendar-pending proof is a submitted request, not
+- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 646.
+- Still calendar-pending: 11. A calendar-pending proof is a submitted request, not
   evidence of a time. `submitted` is not `anchored`.
 - Proofs whose subject is not served beside them: 63 — an anchor a reader cannot check
   what was stamped against. Published as a count rather than hidden.
@@ -468,5 +469,5 @@ the change goes in the corrections ledger.
   response body. Badges render live from GET /api/gspc, so a pasted badge cannot drift into a
   false claim; an unmeasured axis renders grey as "unmeasured", never as a flattering zero.
   There is no "certified" badge and there never will be.
-- One-command MCP install: claude mcp add gspc -- npx -y csoai-gspc-mcp
+- One-command MCP install (Claude Code): claude mcp add --transport http council-of-ai https://councilof.ai/mcp/free
 - Python reader and card verifier: pip install "csoai-gspc[verify]"

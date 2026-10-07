@@ -33,7 +33,6 @@ const ITEMS: Item[] = [
   { name: "A2A governance bridge", cat: "Protocol", seat: "CSOAI - open at openpatent.ai", region: "Global", status: "Live", href: "/agents" },
   { name: "MCP (Model Context Protocol)", cat: "Protocol", seat: "Open spec", region: "Global", status: "In force", href: "/agents" },
   { name: "Jurisdiction engine (cross-layer AI law)", cat: "Protocol", seat: "CSOAI", region: "Global", status: "Live", href: "/law" },
-  { name: "Council Compliance Passport", cat: "Protocol", seat: "CSOAI - Ed25519 attestation", region: "Global", status: "Live", href: "/readiness" },
   { name: "Multi-Agent Council (configurable)", cat: "Council", seat: "CSOAI design", region: "Global", status: "Design — not live", href: "/bft" },
   { name: "The 4-Wing Council", cat: "Council", seat: "CSOAI", region: "Global", status: "Live", href: "/dragonfly" },
   { name: "The Hive (Council queens)", cat: "Council", seat: "CSOAI", region: "Global", status: "Live", href: "/hive" },

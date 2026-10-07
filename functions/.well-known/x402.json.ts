@@ -33,6 +33,8 @@ import {
   ART50_MARKING_EVIDENCE_DESCRIPTION,
   PROVIDER_DIFF_DESCRIPTION,
   wrapperAssetDescription,
+  DISCOVERY_SUBJECT_LABELS,
+  subjectDiscoveryDescription,
 } from "../api/_x402_descriptions";
 import WRAPPER_ASSET_DOORS from "../api/_wrapper_asset_doors.json";
 import { POPULATION_IDS } from "../api/_population";
@@ -43,6 +45,7 @@ import FREE_TOOLS from "../mcp/gspc-tools.json";
 import PAID_TOOLS from "../mcp/paid-tools.json";
 import { freshCapsulePaymentRequired, PATH as FRESH_CAPSULE_PATH } from "../api/measurement/fresh-capsule";
 import { FREE_DOOR_PRODUCT_ID, FREE_DOOR_SKU } from "../api/free-door";
+import { headFromGet } from "../api/_head";
 
 /** The SKU tier each door passes to x402Accepts — keyed by the path the door serves. */
 // pathScoped: the door charges its PATH, not the concrete example URL, so a buyer's target never
@@ -177,13 +180,9 @@ export const onRequestGet: PagesFunction<X402Env> = async ({ request, env }) => 
         note: "Payable and priced at zero — it settles, and charges nothing. It answers 402 rather than 200 on purpose: the x402 Bazaar catalogues only a resource that settles, so a 200 route cannot be indexed. It belongs in resources rather than quarantined because it is a live 402 route, not a withdrawn one. To read the same content without any x402 handshake, GET a free_equivalents URL — those answer 200.",
         free_equivalents: [`${origin}/api/gspc`, `${origin}/root.json`],
       },
-      ...[
-        ["chainlink", "Chainlink / LINK"],
-        ["ondo", "Ondo Finance / ONDO"],
-        ["ondo-ousg", "Ondo Finance OUSG on XRPL"],
-      ].map(([id, label]) => {
+      ...Object.entries(DISCOVERY_SUBJECT_LABELS).map(([id, label]) => {
         const resource = `${origin}/api/discover/${id}`;
-        const description = `Free ${label} discovery: subject identity, evidence routes, board and verification links. Discovery is not measurement or endorsement.`;
+        const description = subjectDiscoveryDescription(label);
         return {
           method: "GET", url: resource, paid_for: null, amount: "0", description,
           ...req(resource, description),
@@ -345,3 +344,7 @@ export const onRequestGet: PagesFunction<X402Env> = async ({ request, env }) => 
     headers: { "content-type": "application/json; charset=utf-8", "cache-control": "public, max-age=300", "access-control-allow-origin": "*" },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

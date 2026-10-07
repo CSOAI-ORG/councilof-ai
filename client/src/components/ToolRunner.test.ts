@@ -1,10 +1,13 @@
 import { describe, expect, it } from "vitest";
-import {
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import ToolRunner, {
   coerceToolArguments,
   fieldKind,
   initialToolDraft,
   isPaidTool,
   prefillToolDraft,
+  outputHeader,
   resultOutcome,
   type RunnerTool,
   type RunnerToolResult,
@@ -154,5 +157,57 @@ describe("MCP tool form model", () => {
       structuredContent: { status: "PAYMENT_REQUIRED" },
     };
     expect(resultOutcome(observed)).toBe("PAYMENT_REQUIRED");
+  });
+
+  // Tools audit, 6 Oct 2026: a paid tool's 402 challenge was headed "UNCHECKABLE" in rose.
+  it("heads a 402 challenge PAYMENT REQUIRED, nothing charged, never UNCHECKABLE", () => {
+    const challenge: RunnerToolResult = {
+      ok: false,
+      state: "unchecked",
+      text: "Payment required",
+      structuredContent: { status: "PAYMENT_REQUIRED", nothing_charged: true },
+    };
+    const head = outputHeader(challenge);
+    expect(head.word).toBe("PAYMENT REQUIRED: nothing has been charged");
+    expect(head.tone).toBe("payment");
+    expect(head.meaning).toMatch(/Nothing has been paid/);
+    expect(head.word).not.toMatch(/UNCHECKABLE/);
+    // Other outcomes keep their words.
+    expect(outputHeader({ ok: true, state: "runtime_observed", text: "" }).word).toBe("RUNTIME_OBSERVED");
+    expect(outputHeader({ ok: false, state: "unreachable", text: "" }).word).toBe("UNREACHABLE");
+    expect(outputHeader({ ok: false, state: "unchecked", text: "", structuredContent: { status: "BAD_ARGUMENTS" } }).word).toBe("UNCHECKABLE");
+  });
+});
+
+describe("a required enum starts unchosen", () => {
+  // evidence_bundle_preview / evidence_bundle carry a required obligation enum. The select showed
+  // its first value while the form held "", so Run answered "Required." beside a filled-looking field.
+  const enumTool: RunnerTool = {
+    name: "evidence_bundle_preview",
+    description: "test",
+    inputSchema: {
+      type: "object",
+      properties: {
+        obligation: { type: "string", enum: ["article-50", "article-53", "dora", "cra"] },
+        subject: { type: "string" },
+      },
+      required: ["obligation"],
+    },
+  };
+
+  it("shows a disabled Choose option as the selected value, matching the empty draft", () => {
+    const html = renderToStaticMarkup(createElement(ToolRunner, { catalogue: [enumTool], initialToolName: enumTool.name }));
+    expect(html).toMatch(/<option value="" disabled="" selected="">Choose…<\/option>/);
+    expect(html).not.toMatch(/<option value="article-50" selected/);
+    expect(initialToolDraft(enumTool).obligation).toBe("");
+    const blocked = coerceToolArguments(enumTool, initialToolDraft(enumTool));
+    expect("errors" in blocked && blocked.errors.obligation).toBe("Required.");
+  });
+
+  it("an optional enum still offers Not set", () => {
+    const optional: RunnerTool = { ...enumTool, inputSchema: { ...enumTool.inputSchema, required: [] } };
+    const html = renderToStaticMarkup(createElement(ToolRunner, { catalogue: [optional], initialToolName: optional.name }));
+    expect(html).toContain('<option value="" selected="">Not set</option>');
+    expect(html).not.toContain("Choose…");
   });
 });

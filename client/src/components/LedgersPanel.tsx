@@ -158,6 +158,13 @@ export default function LedgersPanel() {
                   <dt className="font-medium text-slate-700">Public readback</dt>
                   <dd className="break-all text-slate-900">{r.evidence_state.public_readback}</dd>
                 </dl>
+                {r.key === "corrections" && load.doc.corrections_in_this_deploy ? (
+                  <p className="mt-2 text-xs text-slate-800" data-testid="corrections-in-this-deploy">
+                    This deploy serves {load.doc.corrections_in_this_deploy.count} entries (newest{" "}
+                    <code>{load.doc.corrections_in_this_deploy.head_id ?? "not recorded"}</code>). The figure above is the
+                    root job&apos;s last read at {r.read_at}.
+                  </p>
+                ) : null}
                 <p className="mt-2 text-xs"><a className="underline underline-offset-4" href={r.served_url}>Served bytes</a></p>
               </li>
             ))}

@@ -1,0 +1,50 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "autoeat.eat-mining.stablecoins",
+ "subject": "EAT-mining: 45 stablecoins across 17 chains (34/45 reachable)",
+ "as_of": "2026-09-16T10:31:23Z",
+ "source_urls": [
+  "https://councilof.ai/interop/stablecoins-extended.json"
+ ],
+ "payload": {
+  "kind": "csoai.eat-mining/0.1",
+  "flags": {
+   "measures": true,
+   "writes_board": false,
+   "not_a_grade": true
+  },
+  "as_of": "2026-09-16T10:31:23Z",
+  "n": 45,
+  "n_ok": 34,
+  "n_http_error": 7,
+  "evidence_url": "/interop/stablecoins-extended.json",
+  "chains_covered": 17,
+  "chains": [
+   "Ethereum",
+   "XRPL",
+   "Solana",
+   "Algorand",
+   "Aptos",
+   "Arbitrum",
+   "Avalanche",
+   "BSC",
+   "Base",
+   "Hedera",
+   "Near",
+   "Optimism",
+   "Polkadot",
+   "Polygon",
+   "Stellar",
+   "Sui",
+   "Tron"
+  ],
+  "extends_reader_16": true,
+  "honesty": "45 stablecoins, 34/45 reachable. Extends XRPL reader-16 + bank-registry 6."
+ },
+ "unmeasured": [
+  "gspc_axis_assignment: 22-axis canon (ADR-001) is frozen",
+  "ots_anchor: pending ots-upgrade-loop.sh workflow",
+  "oidc_signature: pending auto-eat-sign workflow"
+ ],
+ "sha256": "3d56f493e790856a16fe57cc1817ed84b91dc287f62d4cd63ba3d82b42dc8fdf"
+}

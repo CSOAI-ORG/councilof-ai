@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { challengeFromResult, paidReservePreviewFromResult } from "@/components/ToolRunner";
+import { challengeFromResult, outputHeader, paidReservePreviewFromResult } from "@/components/ToolRunner";
 
 const base = { ok: false, text: "", state: "runtime_observed" as const };
 
@@ -122,5 +122,29 @@ describe("paid reserve disclosure", () => {
         schema: "csoai.request-attestation/0.2", preview: { signed_cards_on_file: "0" },
       } } },
     } as never)).toBeNull();
+  });
+});
+
+describe("the result header for a 402 challenge", () => {
+  it("reads the live MCP PAYMENT_REQUIRED envelope as PAYMENT REQUIRED (amber), not UNCHECKABLE", () => {
+    // Shape read from POST /mcp tools/call commission_card without x_payment, 6 Oct 2026:
+    // result.isError true, structuredContent.status "PAYMENT_REQUIRED", nothing_charged true.
+    const result = {
+      ok: false,
+      text: '{"x402Version":2,"error":"Payment required"}',
+      state: "unchecked" as const,
+      structuredContent: {
+        x402Version: 2,
+        error: "Payment required",
+        status: "PAYMENT_REQUIRED",
+        http_status: 402,
+        nothing_charged: true,
+        delivery_state: "NOT_DELIVERED",
+        settlement_state: "NOT_REQUESTED",
+      },
+    };
+    const head = outputHeader(result as never);
+    expect(head).toMatchObject({ word: "PAYMENT REQUIRED: nothing has been charged", tone: "payment" });
+    expect(head.meaning).toMatch(/own wallet/);
   });
 });

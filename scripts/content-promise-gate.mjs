@@ -30,6 +30,12 @@
  *      "no on-chain rating or attestation body …" / "nobody else … discloses"
  *      unless the sentence is itself the correction (retraction context nearby).
  *   6. One <main> per rendered page.
+ *   7. Navigation never promotes a withdrawn destination. Every site path in
+ *      client/src/components/HeaderNav.tsx and Footer.tsx (`href: '…'` entries and
+ *      JSX href="/…" attributes) must not match publication-state.json
+ *      withdrawn_routes, nor resolve to a route served by ContentReviewNotice.
+ *      (Persona audit T04, 2026-10-06: the Company menu linked /trust-center and the
+ *      footer linked /dpa/, both withdrawn.)
  *
  * SELFTEST. `--selftest` runs every check against planted fixtures and asserts
  * each one goes red on the violation AND green on the honest form. A gate that
@@ -53,6 +59,7 @@ const PATHS = {
   reading: "client/src/data/recommended-reading.json",
   learningPane: "client/src/components/DashboardLearningPane.tsx",
   pages: "client/src/pages",
+  nav: ["client/src/components/HeaderNav.tsx", "client/src/components/Footer.tsx"],
 };
 
 /* ── pure checks (strings in, findings out) ──────────────────────────────── */
@@ -126,6 +133,35 @@ export function checkRecommendations({ appSource, manifest, reading }) {
     } else if (e.state === "withdrawn") {
       if (!withdrawn) out.push(`recommended reading labels ${e.href} withdrawn but nothing withdraws it — stale label`);
     } else out.push(`recommended reading: ${e.href} has unknown state ${JSON.stringify(e.state)}`);
+  }
+  return out;
+}
+
+/** Site paths a navigation source links to: `href: '/x'`, `href: "/x"` and JSX href="/x". */
+export function navHrefs(source) {
+  const out = [];
+  const re = /\bhref(?::\s*|=\s*)(["'])(\/[^"'\s]*)\1/g;
+  let m;
+  while ((m = re.exec(source)) !== null) if (!m[2].startsWith("//")) out.push(m[2]);
+  return [...new Set(out)];
+}
+
+/** 7: navigation never promotes a withdrawn destination. */
+export function checkNavDestinations({ appSource, manifest, navSources }) {
+  const out = [];
+  const routes = parseRoutes(appSource);
+  const withdrawnInApp = routes.filter((r) => r.comp === manifest.withdrawal_notice_component).map((r) => r.path);
+  const patterns = [...manifest.withdrawn_routes, ...withdrawnInApp];
+  for (const { file, source } of navSources) {
+    for (const href of navHrefs(source)) {
+      if (patterns.some((pat) => routePatternMatches(pat, href))) {
+        out.push(`${file}: navigation links the WITHDRAWN destination ${href} — remove it or point at a live page`);
+        continue;
+      }
+      const served = routes.find((r) => routePatternMatches(r.path, href));
+      if (served && served.comp === manifest.withdrawal_notice_component)
+        out.push(`${file}: navigation links ${href}, which is served by ${served.comp}`);
+    }
   }
   return out;
 }
@@ -232,6 +268,13 @@ function run() {
   const statusFile = join(DIST, "status", "index.html");
   findings.push(...checkStatusRoute({ appSource, pageSourceFor: pageSourceForFactory(), statusHtml: existsSync(statusFile) ? readFileSync(statusFile, "utf8") : undefined }));
   findings.push(...checkRawLabelsSource(pane));
+  findings.push(
+    ...checkNavDestinations({
+      appSource,
+      manifest,
+      navSources: PATHS.nav.map((f) => ({ file: f, source: readFileSync(resolve(REPO, f), "utf8") })),
+    }),
+  );
 
   // Source-level comparison scan: every page/component the client renders.
   const srcFiles = [];
@@ -300,6 +343,12 @@ function selftest() {
 
   must("universal comparison, asserted", checkUniversalComparison("Statistical discipline. The part no on-chain rating or attestation body publishes. Every number carries its uncertainty."), true);
   must("universal comparison, as its own correction", checkUniversalComparison("This page used to say that nobody else in the field discloses confidence-interval methodology. We had not measured that, so it is gone."), false);
+
+  const navManifest = { withdrawal_notice_component: "ContentReviewNotice", withdrawn_routes: ["/trust-center", "/dpa", "/blog/:slug", "/blog"] };
+  must("nav promotes a withdrawn destination", checkNavDestinations({ appSource: app, manifest: navManifest, navSources: [{ file: "HeaderNav.tsx", source: "{ name: 'Trust Center', href: '/trust-center', description: 'x' }" }] }), true);
+  must("nav links a withdrawn route with a trailing slash (JSX)", checkNavDestinations({ appSource: app, manifest: navManifest, navSources: [{ file: "Footer.tsx", source: '<a href="/dpa/">GDPR / DPA</a>' }] }), true);
+  must("nav links a route served by the withdrawal notice", checkNavDestinations({ appSource: app, manifest: { ...navManifest, withdrawn_routes: [] }, navSources: [{ file: "Footer.tsx", source: "{ name: 'Blog', href: '/blog' }" }] }), true);
+  must("nav links a live page", checkNavDestinations({ appSource: app, manifest: navManifest, navSources: [{ file: "HeaderNav.tsx", source: "{ name: 'About', href: '/about/' }, { name: 'Ext', href: 'https://example.org/trust-center' }" }] }), false);
 
   must("one main", checkOneMain("<main>a</main>"), false);
   must("two mains", checkOneMain("<main>a</main><main>b</main>"), true);

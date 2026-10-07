@@ -77,11 +77,13 @@ describe("the home page says how to use it", () => {
     }
   });
 
-  it("says what we do in plain words: agents and endpoints, signed, re-checked, corrected in public", () => {
+  it("says what we do in plain words: agents and endpoints, signed vs unsigned vs untested, corrections public", () => {
     const html = renderToStaticMarkup(<Router ssrPath="/"><HomeHero /></Router>);
     expect(html).toContain("agents and the endpoints they call");
-    expect(html).toContain("re-checked on a schedule");
-    expect(html).toContain("corrected in public");
+    expect(html).toContain("signed cards, unsigned evidence and untested work");
+    expect(html).toContain("corrections stay public");
+    // Not every result is signed; the hero must not say so.
+    expect(html).not.toContain("Every result is signed");
   });
 });
 

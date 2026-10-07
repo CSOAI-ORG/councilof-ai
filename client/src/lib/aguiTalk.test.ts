@@ -117,6 +117,15 @@ describe("suggested questions are ones the router answers", () => {
     for (const s of TALK_SUGGESTIONS) expect(["commission_card", "art50_marking_evidence", "rwa_evidence", "receipts_batch"]).not.toContain(s.tool);
   });
 
+  it("offers a stranger no developer-only chip (tools audit, 6 Oct 2026)", () => {
+    // list_cards answers hashes and axis codes with no model or score; get_root answers a Merkle
+    // root. Both stay callable by agents over POST /mcp; neither is a start-screen question.
+    const tools = TALK_SUGGESTIONS.map((s) => s.tool);
+    expect(tools).not.toContain("list_cards");
+    expect(tools).not.toContain("get_root");
+    expect(TALK_SUGGESTIONS.map((s) => s.text)).toContain("Show the latest corrections");
+  });
+
   it("list_cards is labelled from its own state field, not ANSWERED", () => {
     expect(labelOf("list_cards", { state: "LIVE" }, false)).toBe("LIVE");
     expect(labelOf("list_cards", { state: "UNREACHABLE" }, false)).toBe("UNREACHABLE");

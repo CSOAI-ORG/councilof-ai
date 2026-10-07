@@ -112,7 +112,12 @@ jobs:
 
       - name: Install deps
         if: steps.scope.outputs.gated == 'true'
-        run: npm ci --no-audit --no-fund
+        # The Python half matches deploy.yml's install. scripts/ots-manifest-fresh.test.ts (step "Unit
+        # tests") runs scripts/pod-loops/root_ots_manifest_gate.py, which imports opentimestamps; without
+        # it the gate died on ImportError in 0.25 s and the unit step went red on every PR.
+        run: |
+          npm ci --no-audit --no-fund
+          python3 -m pip install -q cryptography opentimestamps-client
 
       # This used to run only after merge in deploy.yml. PR #1847 passed every hosted
       # PR check and then the master deployment stopped because TypeScript errors had
@@ -133,6 +138,16 @@ jobs:
       - name: Unit tests — client, functions and scripts
         if: steps.scope.outputs.gated == 'true'
         run: npx vitest run client/src functions scripts
+
+      # node:test files that vitest cannot collect (vitest.config.ts NODE_TEST_FILES). They used to be
+      # reported by vitest as failed suites and so never actually ran. The list is read from the config
+      # so the exclusion there and this step cannot name different files.
+      - name: Unit tests — node:test files vitest cannot collect
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          files=$(sed -n '/^export const NODE_TEST_FILES = \[/,/^\];/p' vitest.config.ts | grep -o "'[^']*'" | tr -d "'")
+          test -n "$files" || { echo "NODE_TEST_FILES is empty or unreadable"; exit 1; }
+          node --test $files
 
       - name: Build client
         if: steps.scope.outputs.gated == 'true'
@@ -156,6 +171,15 @@ jobs:
         run: |
           node scripts/facts-gate.mjs --selftest
           node scripts/facts-gate.mjs dist/client
+
+      # Persona audit T06 (2026-10-06): /axis/jail said TIE while the board said UNTESTED, /axes
+      # disagreed with both, and /benchmarks repeated a corrected claim. facts-gate reads counts;
+      # this compares each static axis pages state, separation and n with this commits board.
+      - name: Axis-state gate — static axis pages agree with the board
+        if: steps.scope.outputs.gated == true
+        run: |
+          node scripts/axis-state-gate.mjs --selftest
+          node scripts/axis-state-gate.mjs dist/client
 
       # 2026-09-15 review: nine promoted articles resolved to the withdrawal notice, /status/
       # rendered the homepage, enum keys shipped as teaching copy, a "no other body publishes"
@@ -323,7 +347,12 @@ jobs:
       - name: Python tests (spray parity + skip rules, publisher kinds index)
         if: steps.scope.outputs.gated == 'true'
         run: |
-          python3 -m pip install -q pytest cryptography
+          # pyarrow + huggingface_hub: scripts/spray/test_gspc_spray_skip.py exercises the HF viewer
+          # publish path offline and imports both. This step first ran on 2026-10-06 (step 7 had been
+          # red on every PR) and failed on ModuleNotFoundError: pyarrow / huggingface_hub.
+          # opentimestamps-client: test_ots_restamp_ledger.py builds detached proofs offline and runs
+          # the release gate's own .ots check over them.
+          python3 -m pip install -q pytest cryptography pyarrow huggingface_hub opentimestamps-client
           python3 -m pytest -q scripts/spray/test_gspc_parity.py scripts/spray/test_gspc_spray_skip.py
           python3 -m pytest -q scripts/test_public_root.py -k kinds_index
           python3 -m pytest -q harness/gspc-top100/test_priority_pick.py harness/gspc-top100/test_inflight_cells.py
@@ -332,6 +361,9 @@ jobs:
           python3 -m pytest -q harness/gspc-top100/test_one_option_menu.py
           python3 scripts/withdraw_one_option_cards.py
           python3 -m pytest -q scripts/readers/test_layer0_liveness_reader.py
+          # public-root halted on every run of 5-6 Oct 2026 on a stale ledger proof; the re-stamp
+          # producer must keep the old pair, roll back on failure and clear the gate's own check.
+          python3 -m pytest -q scripts/test_ots_restamp_ledger.py
           # #2391: connector envelope validator (failing controls) + Kaggle adapter replay.
           python3 -m pytest -q scripts/adapters/test_connector_envelope.py scripts/adapters/test_kaggle_envelopes.py
           # The mill signer must not spend a signature on a card it has already signed.
