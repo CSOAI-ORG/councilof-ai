@@ -92,7 +92,7 @@ Events are signed as a batch, through the existing board-sign path:
 2. On the host that holds the caller token: `sign_record.py batch.json --artifact-path <path> --extra extra.json`. This POSTs `/api/board-sign` and writes `batch.signed.json`, a `.ots` file and `.ots.json`.
 3. `python3 verify.py batch.json batch.signed.json events.jsonl --did did.json --tamper-control` must print VALID. It must also report every one-byte tamper as INVALID.
 
-The signature proves that these bytes were signed by `did:web:csoai.org#board-attestation-1`. It does not prove that any claim inside is true.
+A signature checked with a supplied DID document establishes consistency between these bytes, the signature and that supplied key. Independent issuer/key authentication is not established merely by `did.json`, and the signature does not prove that any claim inside is true.
 
 ## Bridges: probes, ingesters, maintenance
 
@@ -141,3 +141,15 @@ measured number becomes an `evaluation_report.metrics[]` entry (`type` gauge, UC
 point). UNMEASURED and UNCHECKABLE never become a metric or a value, and no `overall_rating` or `overall_scores`
 is ever written (`tests/test_oasf_eval.py`; fail-first run recorded in `receipts/F-OASF.fail-first.txt`). The golden
 validates against the official module and record schemas served by schema.oasf.outshift.com.
+
+### Offline SAFE pack readback (7 October 2026)
+
+Use the repository source together with the reviewed `safe_freeze_v2.py` consumer beside it:
+
+```sh
+python3 packages/evidence-fabric/safe_pack_verify.py --offline --pack docs/standards/osaia-safe-evidence-pack
+```
+
+The external verifier reads the retained pack without replacing its stamped `verify.py` or other frozen bytes. The retained stamped `verify.py` can still print `VERIFIED`/exit 0 when signature material is absent. That historical byte/readback result establishes neither issuer authentication nor admission; use this external consumer for the corrected verdict contract. It checks sums, schema controls, derived events/renders and the freeze signature. A confirmed failed check returns `INVALID` (exit 1); unavailable files or dependencies return `UNCHECKABLE` (exit 2). When all checks hold under the supplied DID key, it returns `SELF_CONSISTENT_UNAUTHENTICATED_KEY` (exit 2), with `signature_valid: true` and `issuer_authenticated: null`. This consumer provides no independently authenticated issuer input and emits no `VERIFIED`/exit 0 result.
+
+This source command requires the reviewed signature-consumer predecessor; it does not imply a published package release. PyPI 0.1.0 lacks `verify-safe-freeze`; the retained 0.1.1 candidate is not published. No production signing, OTS anchoring or admission is established by this readback. Future generated packs copy the same helper into `lib/` before freezing; historical packs remain immutable.

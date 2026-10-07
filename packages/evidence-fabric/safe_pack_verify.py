@@ -1,23 +1,22 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
-"""Verify this SAFE evidence pack offline. Copied into the pack as verify.py.
+"""Read a SAFE evidence pack offline without editing its frozen bytes.
 
-    python3 verify.py --offline          exit 0 only if every check below holds; any one-byte edit exits non-zero
+    python3 safe_pack_verify.py --offline --pack PATH
 
- 1. FREEZE.json.sha256sums_sha256 == sha256(SHA256SUMS), and every file listed in SHA256SUMS has that sha256;
-    no file in the pack is missing from SHA256SUMS.
- 2. validate.py: every record validates against the SAFE candidate schema, the cross-record rules hold, and all
-    nine rule-breaking controls are REJECTED.
- 3. events/events.jsonl and events/event-ids.json are re-derived from records/ by lib/ and must be byte-identical.
- 4. every file in render/ is re-rendered from those events by lib/ and must be byte-identical.
- 5. if FREEZE.signed.json and did.json are present: the board signature over FREEZE.json verifies (Ed25519,
-    did:web:csoai.org#board-attestation-1), else this check is reported as NOT_PRESENT, never as passed.
-Needs Python 3.9+, jsonschema (for 2), cryptography (for 5). Network: none.
+Checks sums, schema/negative controls, derived events/renders, and the freeze
+signature. Missing inputs or dependencies are UNCHECKABLE (exit 2); a confirmed
+failed check is INVALID (exit 1). A valid supplied-DID signature is reported as
+SELF_CONSISTENT_UNAUTHENTICATED_KEY (exit 2), never issuer authentication.
+Needs Python 3.9+, jsonschema (validation), cryptography (signature). Network: none.
 """
-import hashlib, io, json, os, subprocess, sys, contextlib
+import argparse, hashlib, io, json, os, subprocess, sys, contextlib
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.join(HERE, "lib"))
+SOURCE_DIR = os.path.dirname(os.path.abspath(__file__))
+HERE = SOURCE_DIR
+sys.path.insert(0, SOURCE_DIR)
+sys.path.insert(0, os.path.join(SOURCE_DIR, "lib"))
+UNKNOWN_ERRORS = (OSError, ImportError, ValueError, TypeError, KeyError, RecursionError)
 
 
 def sha(b):
@@ -37,9 +36,13 @@ def check_sums():
     for line in sums.decode().splitlines():
         h, rel = line.split("  ", 1)
         listed[rel] = h
+    missing = []
     for rel, h in listed.items():
         p = os.path.join(HERE, rel)
-        if not os.path.exists(p) or sha(open(p, "rb").read()) != h:
+        if not os.path.exists(p):
+            missing.append(rel)
+            continue
+        if sha(open(p, "rb").read()) != h:
             return False, f"{rel}: sha256 differs from SHA256SUMS"
     for root, _, files in os.walk(HERE):
         for f in files:
@@ -48,17 +51,24 @@ def check_sums():
                 continue
             if rel not in listed:
                 return False, f"{rel}: in the pack but not in SHA256SUMS"
+    if missing:
+        return None, f"{', '.join(missing)}: NOT_PRESENT (listed files unavailable)"
     return True, f"{len(listed)} files match"
 
 
 def check_validate():
-    r = subprocess.run([sys.executable, os.path.join(HERE, "validate.py")], capture_output=True, text=True,
+    script = os.path.join(HERE, "validate.py")
+    if not os.path.isfile(script):
+        return None, "NOT_PRESENT (validate.py not supplied)"
+    r = subprocess.run([sys.executable, "-B", script], capture_output=True, text=True,
                        env=dict(os.environ, PYTHONDONTWRITEBYTECODE="1"))
+    if r.returncode != 0 and any(name in r.stderr for name in ("ModuleNotFoundError:", "ImportError:")):
+        return None, "validation dependency unavailable: " + r.stderr.strip()[-200:]
     ok = r.returncode == 0 and r.stdout.strip().endswith("OK") and "ACCEPTED" not in r.stdout
     return ok, r.stdout.strip().splitlines()[-1] if r.stdout.strip() else r.stderr.strip()[-200:]
 
 
-def check_derived():
+def _check_derived_here():
     sys.dont_write_bytecode = True
     import safe_pack as SP
     import event as E
@@ -78,47 +88,73 @@ def check_derived():
     return True, f"{len(evs)} events and {len(SP.renders(evs))} renders re-derived byte-identical"
 
 
+def check_derived():
+    # Each selected pack gets fresh imports, including its ingest/render submodules.
+    worker = """
+import importlib.util, json, os, sys
+spec = importlib.util.spec_from_file_location("_safe_pack_verifier", sys.argv[1])
+verifier = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(verifier)
+verifier.HERE = sys.argv[2]
+sys.path[:] = [p for p in sys.path if p not in (verifier.SOURCE_DIR, os.path.join(verifier.SOURCE_DIR, "lib"))]
+sys.path.insert(0, os.path.join(verifier.HERE, "lib"))
+try:
+    result = verifier._check_derived_here()
+except verifier.UNKNOWN_ERRORS as exc:
+    result = (None, type(exc).__name__ + ": " + str(exc))
+print(json.dumps(result))
+"""
+    r = subprocess.run([sys.executable, "-I", "-B", "-c", worker, os.path.abspath(__file__), HERE],
+                       capture_output=True, text=True)
+    if r.returncode != 0:
+        return None, "derivation could not complete: " + r.stderr.strip()[-200:]
+    return tuple(json.loads(r.stdout))
+
+
 def check_signature():
-    if not (os.path.exists(os.path.join(HERE, "FREEZE.signed.json")) and os.path.exists(os.path.join(HERE, "did.json"))):
-        return None, "NOT_PRESENT (unsigned pack: signature not checked)"
-    import base64
-    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
-    s = json.loads(rd("FREEZE.signed.json")); did = json.loads(rd("did.json"))
-    canon = lambda o: json.dumps(o, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
-    pay, sg = s["payload"], s["signature"]
-    if sha(canon(pay)) != sg["payload_sha256"] or pay["artifact"]["sha256"] != sha(rd("FREEZE.json")):
-        return False, "FREEZE.signed.json does not cover FREEZE.json"
-    frag = sg["did"].split("#")[-1]
-    m = next((m for m in did["verificationMethod"] if m["id"].endswith("#" + frag)), None)
-    if not m:
-        return False, "UNVERIFIABLE_KEY"
-    x = m["publicKeyJwk"]["x"]
-    try:
-        Ed25519PublicKey.from_public_bytes(base64.urlsafe_b64decode(x + "=" * (-len(x) % 4))).verify(bytes.fromhex(sg["sig_ed25519"]), canon(pay))
-    except Exception:
-        return False, "signature does not verify"
-    return True, f"signed by {sg['did']} at {sg.get('signed_at')}"
+    # Reuse the reviewed external signature consumer, also copied into future pack/lib.
+    from safe_freeze_v2 import check_signature as check
+    def optional(rel):
+        try:
+            return rd(rel)
+        except FileNotFoundError:
+            return None
+    return check(rd("FREEZE.json"), optional("FREEZE.signed.json"), optional("did.json"))
 
 
-def main():
-    if "--offline" not in sys.argv:
-        print("usage: python3 verify.py --offline"); return 2
-    results, rc = [], 0
-    for name, fn in (("sums", check_sums), ("validate", check_validate), ("derived", check_derived), ("signature", check_signature)):
+def main(argv=None):
+    global HERE
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--offline", action="store_true", help="required; no network is used")
+    parser.add_argument("--pack", default=SOURCE_DIR, help="pack directory (default: beside this verifier)")
+    args = parser.parse_args(argv)
+    if not args.offline:
+        parser.print_usage()
+        return 2
+    HERE = os.path.abspath(args.pack)
+    results = {}
+    for name, fn in (("sums", check_sums), ("validate", check_validate),
+                     ("derived", check_derived), ("signature", check_signature)):
         try:
             with contextlib.redirect_stdout(io.StringIO()):
                 ok, why = fn()
-        except Exception as ex:
-            ok, why = False, f"{type(ex).__name__}: {ex}"
-        results.append((name, ok, why))
-        if ok is False:
-            rc = 1
-    for name, ok, why in results:
-        print(f"{'OK  ' if ok else ('FAIL' if ok is False else 'N/A ')} {name}: {why}")
-    fr = json.loads(rd("FREEZE.json"))
-    print(f"{'VERIFIED' if rc == 0 else 'NOT VERIFIED'} pack frozen at SHA256SUMS sha256 {fr['sha256sums_sha256']}")
+        except UNKNOWN_ERRORS as ex:
+            ok, why = None, f"{type(ex).__name__}: {ex}"
+        results[name] = {"holds": ok, "reason": why}
+    for name, result in results.items():
+        ok = result["holds"]
+        print(f"{'OK  ' if ok else ('FAIL' if ok is False else 'N/A ')} {name}: {result['reason']}")
+    if any(result["holds"] is False for result in results.values()):
+        state, rc = "INVALID", 1
+    elif any(result["holds"] is not True for result in results.values()):
+        state, rc = "UNCHECKABLE", 2
+    else:
+        state, rc = "SELF_CONSISTENT_UNAUTHENTICATED_KEY", 2
+    print(json.dumps({"verifier_profile": "csoai.safe-pack-readback/2", "state": state,
+                      "pack": HERE, "signature_valid": results["signature"]["holds"],
+                      "issuer_authenticated": None, "checks": results,
+                      "scope": "offline pack integrity and supplied-DID-key consistency; no issuer authentication"}))
     return rc
-
 
 if __name__ == "__main__":
     sys.exit(main())
