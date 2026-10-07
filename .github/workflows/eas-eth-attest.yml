@@ -1,0 +1,88 @@
+name: eas-eth-attest
+
+# L1 belt-and-braces witness: attest the ONE public root on Ethereum mainnet.
+# Sibling of the Base step inside public-root.yml, but deliberately NOT in it:
+# Base costs ~$0.001 and fires on every publish; L1 costs real gas and is an
+# owner-gated, deliberately-dispatched action (≤ $2.00 maximum authorised).
+#
+# Safety layers, all fail-closed to an honest state:
+#   1. `confirm` input must equal "attest-l1" or the job records SKIPPED and exits
+#   2. EAS_ATTESTER_PRIVATE_KEY missing  -> script records NOT_YET
+#   3. attester balance < 0.0004 ETH     -> script records NOT_FUNDED (funding is owner action)
+#   4. gas > 10 gwei                     -> script records WAITING_GAS
+#   5. single-writer ruling: master changes only through a PR -> this workflow
+#      never pushes master; it opens a PR with the updated attestation log
+#
+# The attester is a dedicated hot wallet (0x65910f9827e2a87c4acb961b35f33c09ee0c94f2),
+# never the owner's wallet. Key custody: GitHub secret only; never printed.
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Type attest-l1 to run (owner-gated spend ≤ $2.00)"
+        type: string
+        required: true
+
+concurrency:
+  group: eas-eth-attest
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  attest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Confirm gate (owner typed the phrase)
+        id: gate
+        run: |
+          if [ "${{ inputs.confirm }}" = "attest-l1" ]; then
+            echo "go=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "go=false" >> "$GITHUB_OUTPUT"
+            echo "SKIPPED: confirm phrase mismatch — nothing attempted."
+          fi
+      - name: Attest the current public root on Ethereum L1
+        if: steps.gate.outputs.go == 'true'
+        env:
+          EAS_ATTESTER_PRIVATE_KEY: ${{ secrets.EAS_ATTESTER_PRIVATE_KEY }}
+          ETH_RPC_URL: ${{ secrets.ETH_RPC_URL }}
+        run: |
+          set -euo pipefail
+          if [ -z "${EAS_ATTESTER_PRIVATE_KEY:-}" ]; then
+            echo "EAS key absent: record NOT_YET without loading wallet dependencies"
+            node scripts/eas_attest_root_eth.mjs
+          else
+            npm install --no-save --silent ethers@6 @ethereum-attestation-service/eas-sdk@2
+            node scripts/eas_attest_root_eth.mjs
+          fi
+      - name: Open PR with the L1 attestation log (single-writer ruling)
+        if: steps.gate.outputs.go == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git config user.name "csoai-eas-eth-attest"
+          git config user.email "board@csoai.org"
+          if git diff --quiet -- public/interop/eas-eth-root-attestations.json; then
+            echo "no L1 log change — nothing to PR"
+            exit 0
+          fi
+          BR="eas-eth-attest-$(date -u +%Y%m%dT%H%M%SZ)"
+          git checkout -b "$BR"
+          git add public/interop/eas-eth-root-attestations.json
+          git commit -m "eas-eth: record L1 root attestation state (owner-gated, <=\$2.00 cap)"
+          git push origin "HEAD:$BR"
+          gh pr create --base master --head "$BR" \
+            --title "eas-eth: L1 root attestation log" \
+            --body "Records the Ethereum L1 EAS attestation of the current public root (or an honest NOT_FUNDED/WAITING_GAS/NOT_YET state). Attester: dedicated hot wallet. Maximum authorised spend: \$2.00. Existence/time of bytes only — not certification."
