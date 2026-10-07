@@ -118,3 +118,29 @@ describe("lookupRecordUseStatus — independent of signature validity", () => {
     expect((await lookupRecordUseStatus(boardCard)).state).toBe("UNCHECKABLE");
   });
 });
+
+/**
+ * A card-v0/v1 leaf has no `id`: it is named by its sha256 (paid-route lane, 7 Oct 2026). The
+ * record a paid art50 pack sends its buyer to check used to show "Card id is missing" (UNCHECKABLE)
+ * under its VALID verdict; it is now looked up by that sha256.
+ */
+describe("lookupRecordUseStatus — a leaf is looked up by its sha256", () => {
+  const sha = "ab".repeat(32);
+  const leaf = JSON.stringify({ did: "did:web:csoai.org#board-attestation-1", payload: { kind: "k" }, sha256: sha, sig_ed25519: "cd".repeat(64) });
+
+  it("absence is NOT_ESTABLISHED, never 'Card id is missing'", async () => {
+    vi.stubGlobal("fetch", async () => ({ ok: true, text: async () => "" }) as unknown as Response);
+    const s = await lookupRecordUseStatus(leaf);
+    expect(s.state).toBe("NOT_ESTABLISHED");
+    expect(s.detail).not.toMatch(/Card id is missing/);
+  });
+
+  it("a leaf listed by its sha256 reads WITHDRAWN", async () => {
+    vi.stubGlobal("fetch", async () => ({ ok: true, text: async () => JSON.stringify({ withdrawn_id: sha, correction: "C-x" }) + "\n" }) as unknown as Response);
+    expect((await lookupRecordUseStatus(leaf)).state).toBe("WITHDRAWN");
+  });
+
+  it("a board-signed record with neither an id nor a leaf's sha256 still says its id is missing", async () => {
+    expect((await lookupRecordUseStatus(JSON.stringify({ did: "did:web:csoai.org#board-attestation-1" }))).state).toBe("UNCHECKABLE");
+  });
+});
