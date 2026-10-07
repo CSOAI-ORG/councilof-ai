@@ -114,14 +114,17 @@
   ],
 
   "revenue_summary": {
-    "external_customer_revenue": "$0.00",
-    "internal_self_funded": "$0.00",
+    "external_customer_revenue": "$0.03",
+    "internal_self_funded": "22 settlements (excluded)",
+    "zero_value_probes": "8 (excluded)",
     "settlement_classifications": {
-      "EXTERNAL_CUSTOMER": 0,
-      "INTERNAL_SELF_FUNDED": 0,
-      "ZERO_VALUE_PROBE": 0,
+      "EXTERNAL_CUSTOMER": 2,
+      "INTERNAL_SELF_FUNDED": 22,
+      "ZERO_VALUE_PROBE": 8,
       "UNKNOWN": 0
     },
-    "scale_gate": "One attributable outside buyer + repeat intent, OR two written pilot acceptances at stated price. Neither met."
+    "scale_gate": "0 for 30 days: NOT TRIGGERED. ≥1 repeat: NOT MET (0). ≥5 distinct in 30d: NOT MET (2). One attributable outside buyer + repeat intent OR two written pilot acceptances: neither met.",
+    "verified_at": "2026-10-07T04:26:00Z",
+    "source": "GET https://councilof.ai/api/revenue"
   }
 }

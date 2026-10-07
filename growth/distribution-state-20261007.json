@@ -1,0 +1,109 @@
+{
+  "schema": "csoai.distribution-state/1.0",
+  "generated_at": "2026-10-07T04:30:00Z",
+  "branch": "growth/verified-launch-20260911",
+
+  "revenue": {
+    "source": "GET https://councilof.ai/api/revenue",
+    "verified_at": "2026-10-07T04:26:00Z",
+    "external_customer_revenue_usdc": 30000,
+    "external_customer_revenue_display": "$0.03",
+    "distinct_nonself_payers": 2,
+    "repeat_nonself_payers": 0,
+    "self_settlements": 22,
+    "zero_value_settlements": 8,
+    "records_unreadable": 0,
+    "skus": {
+      "SKU-1_issuances": { "count": 13, "status": "MEASURED", "source": "REVENUE_KV" },
+      "SKU-2_proofs": { "count": 1, "status": "MEASURED", "source": "REVENUE_KV" },
+      "SKU-3_licences": { "count": null, "status": "UNMEASURED", "source": "counters.json" }
+    },
+    "classification": {
+      "EXTERNAL_CUSTOMER": { "count": 2, "revenue_usdc": 30000 },
+      "INTERNAL_SELF_FUNDED": { "count": 22, "revenue_usdc": 0 },
+      "ZERO_VALUE_PROBE": { "count": 8, "revenue_usdc": 0 }
+    },
+    "gates": {
+      "zero_for_30_days": false,
+      "one_repeat": false,
+      "five_distinct_in_30d": false
+    }
+  },
+
+  "claims_register": {
+    "source": "public/claims-register.json",
+    "total": 20,
+    "by_status": {
+      "live": 6,
+      "retired": 6,
+      "planned": 6,
+      "devnet": 1,
+      "unmeasured": 1
+    },
+    "live_ids": ["CR-001", "CR-005", "CR-010", "CR-013", "CR-015", "CR-019"],
+    "retired_ids": ["CR-007", "CR-008", "CR-009", "CR-011", "CR-014", "CR-017"]
+  },
+
+  "gspc_board": {
+    "source": "GET https://councilof.ai/api/gspc",
+    "verified_at": "2026-10-07T04:26:00Z",
+    "axes_total": 23,
+    "axes_measured": 23,
+    "model_comparisons": 14,
+    "fact_runs": 9,
+    "separated_leads": 0,
+    "ties": 7,
+    "untested_separations": 7,
+    "public_leaders": 9,
+    "items": 1230,
+    "model_fleets": 14,
+    "living_stamp": "UNVERIFIABLE",
+    "living_stamp_correction": "C-2026-0826-08"
+  },
+
+  "distribution_surfaces": {
+    "website": { "url": "https://councilof.ai", "status": "LIVE" },
+    "gspc_api": { "url": "https://councilof.ai/api/gspc", "status": "LIVE", "http": 200 },
+    "a2a_agent_card": { "url": "https://councilof.ai/.well-known/agent-card.json", "status": "LIVE", "http": 200, "content_type": "a2a+json" },
+    "x402_discovery": { "url": "https://councilof.ai/.well-known/x402.json", "status": "LIVE", "http": 200 },
+    "llms_txt": { "url": "https://councilof.ai/llms.txt", "status": "LIVE", "http": 200 },
+    "openapi": { "url": "https://councilof.ai/openapi.json", "status": "LIVE", "paths": 98, "operations": 126 },
+    "revenue_api": { "url": "https://councilof.ai/api/revenue", "status": "LIVE" },
+    "corrections": { "url": "https://councilof.ai/api/corrections", "status": "ACTIVE" }
+  },
+
+  "external_platforms": {
+    "github": { "org": "CSOAI-ORG", "repos": 651, "status": "PUBLIC" },
+    "huggingface": { "url": "https://huggingface.co/csoai", "status": "LIVE" },
+    "kaggle": { "status": "NOT_VERIFIED" },
+    "pypi": { "namespace": "csoai-*", "packages": 68 },
+    "glama": { "indexed": 333, "official": 66 },
+    "mcp_registry": { "indexed": 500, "runnable": 238 }
+  },
+
+  "zenodo": {
+    "doi": "10.5281/zenodo.21991104",
+    "status": "BLOCKED",
+    "blocked_since": "2026-09-29",
+    "reason": "Account blocked as spam after bulk publish",
+    "appeal": "pending",
+    "correction": "C-2026-0929-09"
+  },
+
+  "corrections_ledger": {
+    "active": true,
+    "entries": [
+      {
+        "id": "C-2026-0826-08",
+        "subject": "Living board stamp UNVERIFIABLE",
+        "date": "2026-08-26",
+        "restated": "2026-08-28"
+      }
+    ]
+  },
+
+  "prs": {
+    "1888": { "title": "mill: stage 36 enriched GSPC receipts", "state": "MERGED" },
+    "2847": { "title": "TUI-1 v2: canonical state rebuild", "state": "OPEN", "ci": "ALL_SUCCESS" }
+  }
+}
