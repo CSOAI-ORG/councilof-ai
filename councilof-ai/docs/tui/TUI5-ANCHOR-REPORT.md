@@ -70,6 +70,26 @@ The 2026-09-11 specs carried the retired 167-card hash — a prepared transactio
 
 ---
 
+## EAT day — 2026-10-07 (promotion machine unblocked, recurrence fixed)
+
+| Event | Receipt |
+|---|---|
+| Signing fix + L1 workflow + Base funding guards merged | councilof-ai **PR #2869** (squash, 06:06:31Z), required checks `gates`+`build` green |
+| Ceremony receipt + staged-asks + this report merged | sovos-harness **PR #14** (06:06:56Z) |
+| **Root cause of the stalled promotion found**: upgrade commit step staged the Bitcoin-confirmed `.ots` but not the *derived* manifest → `ots-manifest-fresh` test failed closed on every promotion | gates log run 37579841198 |
+| Manifest rebuilt **from the bytes** (659→662 proofs as master grew, 646 Bitcoin-attested, 0 quarantined; gate `VALID_PREIMAGE_ONLY` rc=0) and pushed | commit `e29eb831` → then reconcile `00055b8cb` |
+| **Recurrence fixed at source**: upgrade workflow now runs `ots_manifest_rebuild.py --apply` + `git add public/interop/ots` inside the same commit | **PR #2898 MERGED 10:53:17Z** |
+| Candidate #2840 was force-closed by the org bot at 10:07:26Z and again at 10:59:16Z (closer=CSOAI-ORG; no close logic exists in any workflow — attribution unresolved, recorded not guessed); reopened twice; controller ledger has no countermand | timeline events, `TUI-1-CANONICAL-STATE.json` (no candidate entry) |
+| Sole merge conflict with master was `public/interop/ots/manifest.json` — resolved by **regenerating from the merged tree's bytes** (never chosen between competing outputs); `git merge-tree` clean afterwards | reconcile `00055b8cb`, committer `csoai-public-root` |
+| Promotion re-engaged: #2840 **OPEN, head `00055b8cb`, MERGEABLE**; pr-gates on exact head in progress; upgrade run 37612389489 in progress (watch→squash-merge→deploy) | run 37612389489 |
+| 48h lane automation: hourly monitor-gated watch `tui5-anchor-watch-48h` (job `ae6610fab1a9`) — state probe covers candidate/gates/PR-2898/sidecar OTS+Rekor+EAS/attester balances/XRPL balance with bounded conditional actions and self-retirement after 2026-10-09T15:00Z | `~/.hermes/scripts/tui5_anchor_state.py` |
+
+**Pod/quota notes (honesty):** lanes pod `/root` full (34G of sibling worktrees), `/workspace` root-quota exceeded, build pod `/` 100% full → the fix ran **diskless** (git archive → rebuild → plumbing `hash-object`/`commit-tree`, no worktree, respecting the 2026-10-07 "no Mac worktrees" owner rule); the pod has **no push credentials** (no gh/token/netrc) so all pushes ran from this Mac with the content gates. The Mac clone `councilof-ai-prod` carries **923 files staged by a sibling lane** — its index was never touched (isolated `GIT_INDEX_FILE` used throughout).
+
+**Still owner-gated:** the three funding sends (wallet password never touches the agent), plus final PR #14-chain merges by review. **Spend to date: $0.**
+
+---
+
 ### Verified Baseline (2026-09-11, date-stamped — superseded states listed in §0)
 
 | Component | Status | Evidence |
