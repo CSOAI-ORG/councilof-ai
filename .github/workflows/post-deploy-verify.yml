@@ -61,7 +61,10 @@ jobs:
           for HOST in $(echo "$HOSTS" | tr ',' ' '); do
             for EP in $ENDPOINTS; do
               URL="https://$HOST$EP"
-              CODE=$(curl -s -o /dev/null -w "%{http_code}" -L --max-time 20 "$URL" 2>/dev/null || echo "000")
+              # -w already prints 000 when curl gets no answer; `|| echo 000` appended a second
+              # one ("000000", "308000" in run 37578860617). Keep curl's own code.
+              CODE=$(curl -s -o /dev/null -w "%{http_code}" -L --max-time 20 "$URL" 2>/dev/null) || true
+              CODE=${CODE:-000}
               if [ "$CODE" = "200" ] || [ "$CODE" = "301" ]; then
                 PASS=$((PASS+1))
                 REPORT="$REPORT\n✅ $HOST$EP → $CODE"
@@ -83,7 +86,8 @@ jobs:
                 FAIL=$((FAIL+1))
                 REPORT="$REPORT\n❌ urllib (default User-Agent) $HOST$EP"
               fi
-              HCODE=$(curl -s -o /dev/null -I -L -w '%{http_code}' --max-time 20 "$URL" 2>/dev/null || echo "000")
+              HCODE=$(curl -s -o /dev/null -I -L -w '%{http_code}' --max-time 20 "$URL" 2>/dev/null) || true
+              HCODE=${HCODE:-000}
               if [ "$HCODE" = "200" ]; then
                 PASS=$((PASS+1))
                 REPORT="$REPORT\n✅ HEAD $HOST$EP → $HCODE"

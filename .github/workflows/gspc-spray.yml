@@ -194,11 +194,12 @@ jobs:
           FORCE: ${{ inputs.force == true && '--force' || '' }}
           DRY: ${{ inputs.dry_run == true && '--dry-run' || '' }}
         run: |
-          set -uo pipefail
+          set -euo pipefail
           mkdir -p "$RUNNER_TEMP/spray"
+          # Actions runs this with bash -e, so the exit code is captured, not left to stop the step.
+          rc=0
           python3 scripts/spray/gspc-spray.py ${{ steps.choose.outputs.flags }} $FORCE $DRY \
-            --out "$RUNNER_TEMP/spray/snapshot" --report "$RUNNER_TEMP/spray/spray-report.json"
-          rc=$?
+            --out "$RUNNER_TEMP/spray/snapshot" --report "$RUNNER_TEMP/spray/spray-report.json" || rc=$?
           # 0 = clean, 1 = a surface FAILED or REFUSED (sorted below). Anything else, including 2 (the
           # script refused to publish: live truth unreadable or unverified), is always red.
           if [ "$rc" != "0" ] && [ "$rc" != "1" ]; then exit "$rc"; fi

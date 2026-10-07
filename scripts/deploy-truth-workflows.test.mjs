@@ -33,7 +33,9 @@ function step(wf, name) {
   return wf.slice(i, next === -1 ? undefined : next);
 }
 
-/** The literal `run: |` block of a step, de-indented, i.e. the script Actions hands to bash. */
+/** The literal `run: |` block of a step, de-indented, i.e. the script Actions hands to bash.
+ * Run it with `bash -e`, as Actions does: a dispatched spray run (37578857227) stopped at the first
+ * non-zero exit because the step relied on `set -uo pipefail` leaving -e off. */
 function runBlock(wf, name) {
   const s = step(wf, name);
   const lines = s.split("\n");
@@ -103,7 +105,7 @@ case "$1 $2" in
 esac
 `, { mode: 0o755 });
     const out = path.join(dir, "out");
-    const r = spawnSync("bash", ["-c", runBlock(wf, "Hold a head whose gates already passed")], { cwd: dir, encoding: "utf8",
+    const r = spawnSync("bash", ["-e", "-c", runBlock(wf, "Hold a head whose gates already passed")], { cwd: dir, encoding: "utf8",
       env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, GITHUB_OUTPUT: out, REPO: "r/r", URL: "u" } });
     expect(r.status, r.stderr).toBe(0);
     return fs.readFileSync(out, "utf8").trim();
@@ -146,7 +148,7 @@ describe("A-G3: one open card-root upgrade PR at a time", () => {
     const keep = openHeads.filter((h) => h.startsWith("card-root/pending-") || h.startsWith("card-root/ots-upgrade-"));
     fs.writeFileSync(path.join(bin, "gh"), `#!/bin/bash\necho '${JSON.stringify(keep)}'\n`, { mode: 0o755 });
     const out = path.join(dir, "out");
-    const r = spawnSync("bash", ["-c", script], { encoding: "utf8",
+    const r = spawnSync("bash", ["-e", "-c", script], { encoding: "utf8",
       env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, GITHUB_OUTPUT: out, REPO: "r/r" } });
     expect(r.status, r.stderr).toBe(0);
     return JSON.parse(fs.readFileSync(out, "utf8").trim().replace(/^refs=/, ""));
@@ -180,7 +182,7 @@ describe("O-P1-14 + O-pdv: deploy truth", () => {
     spawnSync("git", ["init", "-q"], { cwd: dir });
     spawnSync("git", ["-c", "user.name=t", "-c", "user.email=t@t", "commit", "-q", "--allow-empty", "-m", "x"], { cwd: dir });
     const env = { ...process.env, RUN_ID: "37575107101", RUN_ATTEMPT: "1", EVENT: "push", REPO: "CSOAI-ORG/councilof-ai" };
-    const r = spawnSync("bash", ["-c", script], { cwd: dir, env, encoding: "utf8" });
+    const r = spawnSync("bash", ["-e", "-c", script], { cwd: dir, env, encoding: "utf8" });
     expect(r.status, r.stderr).toBe(0);
     const body = JSON.parse(fs.readFileSync(path.join(dir, "dist/client/.well-known/deploy.json"), "utf8"));
     const head = spawnSync("git", ["rev-parse", "HEAD"], { cwd: dir, encoding: "utf8" }).stdout.trim();
@@ -189,7 +191,7 @@ describe("O-P1-14 + O-pdv: deploy truth", () => {
     expect(body.at).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/);
     // failing control: a run id that is not a number is refused, not written
     fs.rmSync(path.join(dir, "dist"), { recursive: true });
-    const bad = spawnSync("bash", ["-c", script], { cwd: dir, env: { ...env, RUN_ID: "nope" }, encoding: "utf8" });
+    const bad = spawnSync("bash", ["-e", "-c", script], { cwd: dir, env: { ...env, RUN_ID: "nope" }, encoding: "utf8" });
     expect(bad.status).not.toBe(0);
     expect(fs.existsSync(path.join(dir, "dist/client/.well-known/deploy.json"))).toBe(false);
   });
@@ -235,7 +237,7 @@ echo "{\\"sha\\": \\"$SERVED\\"}"
 `, { mode: 0o755 });
     const go = (env) => {
       fs.rmSync(log, { force: true });
-      const r = spawnSync("bash", ["-c", heal], { encoding: "utf8",
+      const r = spawnSync("bash", ["-e", "-c", heal], { encoding: "utf8",
         env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, REPO: "CSOAI-ORG/councilof-ai", ...env } });
       expect(r.status, r.stderr).toBe(0);
       return { out: r.stdout, dispatched: fs.existsSync(log) && fs.readFileSync(log, "utf8").includes("gh workflow run deploy.yml") };
@@ -275,7 +277,7 @@ elif a[0] == "api" and "/actions/workflows/pr-gates.yml/runs" in a[1]:
 elif a[:2] == ["pr", "view"]:
     print("")
 `, { mode: 0o755 });
-    const r = spawnSync("bash", ["-c", script], { encoding: "utf8",
+    const r = spawnSync("bash", ["-e", "-c", script], { encoding: "utf8",
       env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, REPO: "CSOAI-ORG/councilof-ai", GH_TOKEN: "x" } });
     expect(r.status, r.stderr).toBe(0);
     const calls = fs.readFileSync(log, "utf8").trim().split("\n").map((l) => JSON.parse(l));
@@ -320,7 +322,7 @@ describe("D-04: gspc-spray leaves the blocked Zenodo account alone", () => {
         `export const ZENODO_ACCOUNT_STATE: "UNAVAILABLE" | "AVAILABLE" = "${state}";\n`);
     }
     const out = path.join(dir, "out");
-    const r = spawnSync("bash", ["-c", choose], { cwd: dir, encoding: "utf8", env: {
+    const r = spawnSync("bash", ["-e", "-c", choose], { cwd: dir, encoding: "utf8", env: {
       ...process.env, GITHUB_OUTPUT: out, RUNNER_TEMP: dir, HAS_HF: "true", HAS_KAGGLE: "true", HAS_GITHUB: "false",
       HAS_ZENODO: "true", HAS_PYPI: "true", HAS_NPM: "false", EVENT: "schedule", ...env } });
     expect(r.status, r.stderr).toBe(0);
@@ -354,7 +356,7 @@ ${report === null ? "" : `open(rep, "w").write(json.dumps(${JSON.stringify(repor
 sys.exit(${rc})
 `);
     const script = runBlock(wf, "spray").replace("${{ steps.choose.outputs.flags }}", "--hf");
-    return spawnSync("bash", ["-c", script], { cwd: dir, encoding: "utf8",
+    return spawnSync("bash", ["-e", "-c", script], { cwd: dir, encoding: "utf8",
       env: { ...process.env, RUNNER_TEMP: dir, FORCE: "", DRY: "" } });
   }
   const results = (...rows) => ({ results: rows.map(([surface, status]) => ({ surface, status, detail: "d" })) });
