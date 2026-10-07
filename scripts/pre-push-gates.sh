@@ -190,8 +190,9 @@ done
 
 if [ "$pushed_any" -eq 0 ]; then
   echo "pre-push: no refs on stdin — refusing (nothing to verify is not a pass)"
-  echo "  hint: if this push was piped (git push ... | tail), run it UNPIPED — the pipe"
-  echo "        replaces the ref list git writes to the hook's stdin, so the gate sees EOF."
+  echo "  hint: the hook was invoked without its ref list. Re-run as a plain"
+  echo "        'git push origin <branch>' from the repo root (no command chained"
+  echo "        around it) — a retry unpiped succeeded here on 2026-10-07."
   exit 1
 fi
 
