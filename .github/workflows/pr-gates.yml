@@ -32,9 +32,17 @@ name: pr-gates
 # the rollup and GitHub blocks on the failure. Two check runs sharing a required context name have
 # no safe order. One workflow is the fix, and the two lists can no longer drift because there is
 # only one.
+#
+# `types` adds labeled / unlabeled / edited for the hold-guard job below: a hold label or title
+# marker must be able to turn the check red (and clear it) without a new push. Those events re-run
+# EVERY job here, gates included, on purpose. Skipping gates on a label event would publish a fresh
+# `gates` check run as "skipped", which branch protection counts as success and which supersedes
+# the push run - adding any label would then turn a red gates green. A re-run costs minutes; a
+# skip would be a bypass.
 on:
   pull_request:
     branches: [master]
+    types: [opened, synchronize, reopened, labeled, unlabeled, edited]
   workflow_dispatch:
     inputs:
       pr:
@@ -128,6 +136,26 @@ jobs:
           python3 -m pip install -q opentimestamps-client
           python3 scripts/stamped-bytes-gate.py --selftest
           python3 scripts/stamped-bytes-gate.py --base HEAD^1 --head HEAD
+
+  # A PR marked "do not merge" must not show green. Lanes self-merge with the shared token and a
+  # hold lived only in prose, so this makes the marker a failing check. Reads the event payload
+  # only (labels + title from GITHUB_EVENT_PATH): no token, no API, no network. Fails on a label
+  # hold / do-not-merge / DO NOT MERGE, or a title containing [HOLD], HOLD: or DO NOT MERGE
+  # (case-insensitive; "threshold:" and "household" do not match). Kept apart from `gates` so it
+  # reports in seconds and never waits on the build.
+  hold-guard:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: scripts/hold-guard.mjs
+          sparse-checkout-cone-mode: false
+      - name: hold-guard selftest
+        run: node scripts/hold-guard.mjs --selftest
+      - name: Is this PR on hold?
+        run: node scripts/hold-guard.mjs
 
   gates:
     runs-on: ubuntu-latest
