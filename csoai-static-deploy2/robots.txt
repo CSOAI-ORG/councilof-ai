@@ -1,29 +1,221 @@
+# robots.txt — https://csoai.org (trust-root host for did:web:csoai.org)
+# Canonical public site is https://councilof.ai — this host redirects there.
+# /.well-known/* stays here (DID, agent-card, MCP discovery).
+# AI crawlers DO NOT run JavaScript. Everything an LLM/agent needs must be
+# readable from this file, llms.txt, llms-full.txt, sitemap*.xml, .well-known/*,
+# or server-rendered HTML.
+#
+# Content signals: search/ai-input are permitted — this estate publishes measurements
+# so that they are read, cited and checked; an answer engine grounding a response in a
+# CSOAI measurement is the intended use. ai-train=no is an express reservation of rights
+# under Article 4(3) of Directive (EU) 2019/790. It is deliberate and should not be
+# removed without a decision to license training use.
+
 User-agent: *
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Allow: /
 Disallow: /.backups/
 Disallow: /.git/
 Disallow: /.eat-sigils/
-Disallow: /benchmark-results/
+Disallow: /benchmark-results/flywheel/
 Disallow: /EXEC/
 Disallow: /kaggle/
 Disallow: /free_gpu/
-Disallow: /api/
-Disallow: /sovereign-citation-mcp/
-Disallow: /_CLAIM_TICK
+Disallow: /api/internal/
+Disallow: /sovereign-citation-mcp/private/
+Disallow: /_CLAIM_TICK*
 Disallow: /overnight-log.txt
-Disallow: /com.meok.
+Disallow: /com.meok.*
 Disallow: /DEFONEOS_SPRINT_STATE.json
 Disallow: /arena_lb.csv
+Disallow: /runestones.db
+Disallow: /node_modules/
+Disallow: /.next/
+Disallow: /dist/
+Disallow: /build/
 
+# AI answer engines — explicit allow (one stanza per vendor)
 User-agent: GPTBot
-Allow: /llms.txt
-Allow: /index.html
-Allow: /defoneos.html
-Allow: /govbench.html
-Allow: /audit.html
-Allow: /master.html
+Allow: /
+# OpenAI training crawl
+
+User-agent: GPTBot-Image
+Allow: /
+# OpenAI image crawl
+
+User-agent: OAI-SearchBot
+Allow: /
+# OpenAI Search indexing
+
+User-agent: ChatGPT-User
+Allow: /
+# OpenAI on-demand fetch (user-triggered)
+
+User-agent: ClaudeBot
+Allow: /
+# Anthropic training crawl
+
+User-agent: Claude-Web
+Allow: /
+# Anthropic on-demand fetch
+
+User-agent: Claude-SearchBot
+Allow: /
+# Anthropic search index
+
+User-agent: anthropic-ai
+Allow: /
+# Anthropic legacy
 
 User-agent: Google-Extended
-Allow: /llms.txt
+Allow: /
+# Gemini training opt-in
 
+User-agent: GoogleOther
+Allow: /
+# Google AI ancillary
+
+User-agent: Googlebot-AI
+Allow: /
+# Google AI crawler (if/when public)
+
+User-agent: PerplexityBot
+Allow: /
+# Perplexity indexing
+
+User-agent: Perplexity-User
+Allow: /
+# Perplexity on-demand
+
+User-agent: Perplexity-Plus
+Allow: /
+# Perplexity Pro
+
+User-agent: MSNBot-Media
+Allow: /
+# Microsoft media
+
+User-agent: BingPreview
+Allow: /
+# Bing AI preview
+
+User-agent: Applebot-Extended
+Allow: /
+# Apple Intelligence training opt-in
+
+User-agent: Meta-ExternalAgent
+Allow: /
+# Meta AI
+
+User-agent: Meta-ExternalFetcher
+Allow: /
+# Meta AI fetch
+
+User-agent: Amazonbot
+Allow: /
+# Amazon Rufus / Alexa
+
+User-agent: Alexa-Crawler
+Allow: /
+# Alexa crawl
+
+User-agent: DeepSeekBot
+Allow: /
+# DeepSeek
+
+User-agent: Cohere-AI
+Allow: /
+# Cohere
+
+User-agent: Cohere-Command
+Allow: /
+# Cohere Command
+
+User-agent: MistralAI-User
+Allow: /
+# Mistral Le Chat
+
+User-agent: LeChatBot
+Allow: /
+# Le Chat bot
+
+User-agent: CCBot
+Allow: /
+# Common Crawl (training data for many models)
+
+User-agent: DuckAssistBot
+Allow: /
+# DuckDuckGo AI Assist
+
+User-agent: YouBot
+Allow: /
+# You.com
+
+User-agent: Bravebot
+Allow: /
+# Brave Leo
+
+User-agent: HuggingChatBot
+Allow: /
+# HuggingChat
+
+User-agent: Bytespider
+Allow: /
+# ByteDance
+
+User-agent: Diffbot
+Allow: /
+# Diffbot KG
+
+User-agent: Petalbot
+Allow: /
+# Huawei
+
+User-agent: SemrushBot-OBOT
+Allow: /
+# Semrush AI
+
+User-agent: TikTokSpider
+Allow: /
+# TikTok
+
+User-agent: Webz.io
+Allow: /
+# Webz.io
+
+User-agent: AI2Bot
+Allow: /
+# Allen AI
+
+User-agent: Ai2Bot-Dolma
+Allow: /
+# Allen AI Dolma
+
+User-agent: FirecrawlAgent
+Allow: /
+# Firecrawl
+
+User-agent: ImagesiftBot
+Allow: /
+# Imagesift
+
+User-agent: Timpibot
+Allow: /
+# Timpi
+
+User-agent: VelenBot
+Allow: /
+# Velen
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+Crawl-delay: 1
+
+# Canonical site is councilof.ai — point crawlers there.
+# csoai.org sitemap lists only /.well-known/* trust-root files.
+Sitemap: https://councilof.ai/sitemap.xml
 Sitemap: https://csoai.org/sitemap.xml

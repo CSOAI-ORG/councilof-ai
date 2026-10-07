@@ -227,28 +227,14 @@ def main():
     print(f"Model: {model_name}")
     print(f"Output: {OUT_PATH}\n")
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    # Resume support: count existing pairs per spec
-    existing = {}
-    if OUT_PATH.exists():
-        with OUT_PATH.open("r") as ef:
-            for line in ef:
-                try:
-                    d = json.loads(line)
-                    s = d.get("specialisation", "unknown")
-                    existing[s] = existing.get(s, 0) + 1
-                except:
-                    pass
-        print(f"Resume: found {sum(existing.values())} existing pairs: {existing}")
-    written = sum(existing.values())
+    written = 0
     start = time.time()
-    with OUT_PATH.open("a") as f:
+    with OUT_PATH.open("w") as f:
         for spec_name, spec in SPECS.items():
-            already = existing.get(spec_name, 0)
-            remaining = max(0, target_per_spec - already)
-            print(f"\n--- {spec_name} ({already} existing, {remaining} remaining of {target_per_spec}) ---")
+            print(f"\n--- {spec_name} (target {target_per_spec}) ---")
             count = 0
             failed = 0
-            for i in range(remaining):
+            for i in range(target_per_spec):
                 pair = generate_pair(spec_name, spec, model_name, i)
                 if pair:
                     f.write(json.dumps(pair) + "\n")

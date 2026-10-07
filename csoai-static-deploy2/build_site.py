@@ -45,31 +45,42 @@ OUT = ROOT / "_site"
 ROOT_EXTS = {".html", ".txt", ".xml", ".svg", ".css", ".js", ".webmanifest", ".ico", ".png"}
 
 # Directories that are part of the site.
-DIRS = ["tools", ".well-known", "assets", "images", "static", "_templates", "api",
+DIRS = ["tools", ".well-known", "assets", "images", "static", "_templates",
+        "agui-learning",
         # verified live and serving real content (not the 4,164-byte soft-404) on
         # 2026-08-05: /portal/ 19,235 B · /sovereign-wiki/ 4,947 B · /eu-ai-act/ 5,427 B
         # and its sub-routes /eu-ai-act/summary, /risk, /high-risk, /compliance.
-        "portal", "sovereign-wiki", "eu-ai-act",
-        # Cloudflare Pages Functions (Pages Functions = /functions/api/*.js)
-        # Verified live 2026-08-05: /api/health, /api/leaderboard, /api/eat-tick,
-        # /api/stats, /api/skus, /api/sov-bridge. Adding /functions means every
-        # function under functions/api/ ships; NEVER below excludes .py, .sh etc.
-        "functions"]
+        "portal", "sovereign-wiki", "eu-ai-act", "badge", "proof-anchors", "corrections",
+        # Frozen card-v0 schema + (optional) public-root leaves. Twin of
+        # councilof.ai/schema/card-v0.json — not a second board.
+        "schema", "cards", "proofs",
+        # 2026-09-01 OWNER: one website = councilof.ai. Do NOT ship functions/.
+        # Pages Functions run ahead of _redirects, so the #55 catch-all
+        # (/* -> https://councilof.ai/:splat 308!) never fired while /api/*
+        # workers were published. Dropping functions lets _redirects win.
+        # (was: "functions")
+        ]
+
 
 # Public JSON, named one by one. Anything not listed does not ship.
 JSON_ALLOW = {
     "agent.json", "mcp.json", "ecosystem.json", "manifest.json", "llm-manifest.json",
-    "agent-card.json", "openapi.json", "ai-plugin.json", "dataset-metadata.json",
+    "agent-card.json", "openapi.json", "verification.schema.json", "banks-manifest.json", "mcp.json", "ai-plugin.json", "dataset-metadata.json",
     "drift-feed.json",  # live SOV measurement feed — consumed by sov-space-vwm + sov-globe-portal
     "jspace_deck.json",  # J-space visual deck (Wave-3): served /jspace_deck.json
     "c_space_card.json",  # C-space fold (Wave-3): served /c_space_card.json
+    "agui-knowledge.json",  # AG UI 15-axis competitor/peer learning bundle — public machine feed for the seamless AG UI
+    # Public-root twin of councilof.ai (permissionless Merkle, not GSPC).
+    # Root-level *.json is otherwise internal state; these two are named.
+    "root.json",
+    "publisher-health.json",
 }
 
 # Named public files whose extension is NOT in ROOT_EXTS (.md/.pdf). Each was
 # verified live with real bytes on csoai.org 2026-08-05 and is public on
 # purpose; dropping them in the first _site deploy would silently kill live URLs.
 EXTRA_FILES = {
-    "PROVBENCH_ARXIV_PREPRINT_2026-07-30.md",  # /PROVBENCH_ARXIV_PREPRINT_2026-07-30.md 11,296 B
+    "PROVBENCH_ARXIV_PREPRINT_2026-07-30.md", "CANONICAL-DOIS.md",  # /PROVBENCH_ARXIV_PREPRINT_2026-07-30.md 11,296 B
     "API_DOCUMENTATION.md",                     # /API_DOCUMENTATION.md 3,419 B
     "ARENA_SUBMISSION.md",                      # /ARENA_SUBMISSION.md 449 B
     "PROVBENCH_PAPER.pdf",                      # /PROVBENCH_PAPER.pdf 5,009 B
@@ -81,26 +92,32 @@ EXTRA_FILES = {
     # index.html for /arena and /gspc-arena — the "hydration crash" observed
     # 2026-08-01 was actually a routing miss, not a JS failure. Adding it here.
     "_redirects",
-    "_headers",
 }
 
 # Never ship, even if an extension rule would otherwise allow it.
 NEVER = re.compile(
-    r"(^\.env|\.env$|\.env\.|(^|/)\\.git|\.pem$|\.key$|_rsa$|(^|/)\\.ssh/|"
+    r"(^\.env|\.env$|\.env\.|(^|/)\.git|\.pem$|\.key$|_rsa$|(^|/)\.ssh/|"
     r"wrangler\.toml$|\.cfignore$|SOVEREIGN_DEPLOY\.sh$|\.sh$|\.py$|\.jsonl$|"
-    r"(^|/)\\.backups?/|(^|/)runs/|(^|/)node_modules/|\.log$|\.sqlite|"
-    # Naming lock: engine codenames never ship on the public surface (A2).
-    # Internal build/state pages (SOV33_*, sov-state, sov33-*, evidenance-*) are
-    # not measurement surfaces — exclude from publish + sitemap so crawlers
-    # never index internal architecture labels.
-    r"^SOV33_|^sov33-|^sov3-|^sov6-|SOV33_|sov_engine|sovos-|^sov-state|^sovspace|"
-    r"SOV33)", re.I)
+    r"(^|/)\.backups?/|(^|/)runs/|(^|/)node_modules/|\.log$|\.sqlite)", re.I)
+
+# Pages whose identity is a retired/banned brand or an internal engine surface
+# (EAT contract 17 Aug: no sov-* product/engine names public, no MEOK OS chrome,
+# no OOWM demo while the weld is UNMEASURED). Files stay in the repo for history;
+# they are not published and their routes 308 to the honest desks in _redirects.
+NEVER_HTML = {
+    "master.html",          # SOV33 OWEM Master Hub — internal engine name
+    "sov_space_visual.html",# SOV-Space — banned product name (main #26 precedent)
+    "mcp-install.html",     # "Install Sovereign OS" — SOVOS brand being retired
+    "pulse.html",           # MEOK OS internal chrome
+    "experiments.html",     # MEOK OS internal chrome
+    "oowm-demo.html",       # OOWM demo — weld is UNMEASURED, do not publicize
+}
 
 
 def publishable():
     picked = []
     for p in sorted(ROOT.glob("*")):
-        if p.is_file() and not NEVER.search(p.name):
+        if p.is_file() and not NEVER.search(p.name) and p.name not in NEVER_HTML:
             # *.llm.json are the machine-readable companions every page already links
             # to with rel="alternate". 249 such links existed and not one file did, so
             # crawlers got the homepage as text/html. Generated by make_llm_json.py.
@@ -116,12 +133,7 @@ def publishable():
         for p in sorted(base.rglob("*")):
             if p.is_file():
                 rel = p.relative_to(ROOT).as_posix()
-                # Explicit allow for the signed-card ledger (api/sov-arena/signed.jsonl)
-                # and the arena rounds snapshot (api/sov-arena/rounds.jsonl)
-                # despite .jsonl being in NEVER. These are the measured outputs.
-                if rel == "api/sov-arena/signed.jsonl" or rel == "api/sov-arena/rounds.jsonl":
-                    picked.append(p)
-                elif not NEVER.search(rel):
+                if not NEVER.search(rel):
                     picked.append(p)
     return picked
 
@@ -170,12 +182,7 @@ def main():
     for probe in (".env", "wrangler.toml", "SOVEREIGN_DEPLOY.sh", "govbench_eval.py",
                   "positioning_guard.py", ".cfignore"):
         assert probe not in rels, f"ALLOWLIST LEAK: {probe} would ship"
-    # api/sov-arena/signed.jsonl is the spine-mcp signed ledger — allowlist exception.
-    # api/sov-arena/rounds.jsonl is the live arena rounds snapshot (measured output,
-    # static until KV sync auth is restored) — same exception class.
-    sigged_jsonl = [r for r in rels if r in ("api/sov-arena/signed.jsonl", "api/sov-arena/rounds.jsonl")]
-    non_sigged_jsonl = [r for r in rels if r.endswith(".jsonl") and r not in ("api/sov-arena/signed.jsonl", "api/sov-arena/rounds.jsonl")]
-    assert not non_sigged_jsonl, f"ALLOWLIST LEAK: a .jsonl would ship (excluding the spine-mcp signed ledger): {non_sigged_jsonl}"
+    assert not any(r.endswith(".jsonl") for r in rels), "ALLOWLIST LEAK: a .jsonl would ship"
     assert not any(r.startswith("runs/") for r in rels), "ALLOWLIST LEAK: runs/ would ship"
     print("leak probes: none of .env / wrangler.toml / *.py / *.jsonl / runs/ would ship")
 

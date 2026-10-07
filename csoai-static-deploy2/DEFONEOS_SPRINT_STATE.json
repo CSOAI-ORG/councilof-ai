@@ -1,67 +1,35 @@
 {
- "started_at": "2026-07-04",
- "current_day": 45,
- "current_tick": 306,
- "current_phase": 267,
- "total_mcp_built": 30,
- "total_pages_built": 1112,
- "total_repos_cloned": 15,
- "sitemap_urls": 1320,
- "sitemap_bytes": 133378,
- "production_sitemap_urls": 1316,
- "production_sitemap_bytes": 132844,
- "last_action": "Tick 306 (JEEVES): MAINTAIN+FLAG \u2014 deploy integrity verified. Home 21,601b honest H1 (REGRESSION CLEARED: was stale clone), /defoneos 3,845b, sitemap 208,282b (591 packs), councilof.ai 130,677b, llms.txt 1,239b. No banned chrome. Business calendar: Unitree window Aug 17-21 still open. arXiv G6Y9SY 9 days to HARD Aug 27.",
- "next_actions": [
-  "DEPLOY INTEGRITY (VERIFIED): All core routes byte-nominal \u2014 home 11,493b, /defoneos 3,007b stub, sitemap 1,316 live URLs, councilof.ai 200, llms.txt 200. Local 1,320 (4-URL delta unchanged).",
-  "BUSINESS CALENDAR: Unitree debut window Aug 17-21 OPEN, not yet fired; WRC (Aug 20-24) coincidence suggests mid-week debut. Fire humanoid note A3 IF debut confirmed.",
-  "STEERING WHEEL: SOVOS-BUSINESS-DIRECTIVE-2026-08-16 site work deprioritised; sprint cron maintain+flag active.",
-  "OWNER-GATED: arXiv G6Y9SY endorsement (HARD Aug 27, 10 days, 2-min task). Unitree note A3 IF debut fires."
- ],
- "milestone": "Tick 305: MAINTAIN+FLAG \u2014 deploy integrity byte-nominal. Unitree still not fired; WRC Aug 20-24 coincidence points to mid-week debut. Disk 7.4Gi (-0.4Gi). arXiv G6Y9SY 10 days to deadline. No builds.",
- "targets_status": {
-  "mcps": "achieved",
-  "pages": "achieved",
-  "repos": "achieved"
- },
- "vercel_deploy_status": "blocked_billing-stale",
- "cloudflare_deploy_status": "verified-catchall-confirmed",
- "deploy_domain": "csoai.org",
- "deploy_id": "csoai-org-v2 Next.js SPA (v58+). Core routes nominal. Production sitemap 1,316 URLs (4 behind local). defoneos stub served at both paths (no 308 redirect observed). Deep-dive packs still catch-all-masked.",
- "disk_free_gb": 7.4,
- "disk_alert": "7.4Gi free (97% used). Down 0.4Gi from 7.8Gi tick 304 \u2014 trending slightly down, within noise, no action. deploy2/.git ~900MB remains largest consumer. Recommend offload to RunPod per FLEET directive if <6Gi.",
- "tick_302_signature": "deploy-integrity-tick302-routing-improvement-defoneos-html-308-redirect-clean-url-defoneos-200-ok-sitemap-confirmed-home-llms-txt-live-disk-3-5gi-improved-maintain-flag",
- "tick_303_signature": "deploy-integrity-tick303-defoneos-stub-both-paths-defoneos-html-200-ok-direct-no-redirect-sitemap-1316-live-vs-1320-local-deep-packs-catchall-masked-disk-8-1gi-surge-unitree-window-open-not-fired-arxiv-g6y9sy-11-days-maintain-flag",
- "last_tick_at": "2026-08-17T03:33:27+00:00",
- "last_tick": "2026-08-18T10:15:00+00:00",
- "deploy_status": "nominal-defoneos-stub-direct-serve",
- "ticks_completed": 305,
- "local_html_estate": 1320,
- "local_llm_json_estate": 789,
- "tick_303_probe_urls": {
-  "csoai.org/": "200 - CSOAI home (correct title)",
-  "csoai.org/defoneos": "200 - DEFONEOS stub 3007b (correct title)",
-  "csoai.org/defoneos.html": "200 - DEFONEOS stub 3007b (correct title, no redirect)",
-  "csoai.org/sitemap.xml": "200 - 132844b 1316 URLs (local 133378b 1320 URLs)",
-  "csoai.org/llms.txt": "200 (nominal)",
-  "councilof.ai/": "200 - CSOAI home (domain alias, correct)"
- },
- "business_calendar_flags": {
-  "unitree_debut_window": "OPEN Aug 17-21 \u2014 listing STILL NOT FIRED (latest news Aug 16). Shanghai STAR Market venue confirmed; $905M at $9B; retail >8,000x oversubscribed; pre-IPO grey ~$38B (Hyperliquid perps). NEW: Il Sole 24 ORE Aug 16 flags this week as the IPO test; biggo Aug 16: listing coincides with World Robot Conference (Beijing Aug 20-24) \u2014 mid-week debut (Aug 18-20) most likely. Humanoid note A3 ARMED.",
-  "arxiv_g6y9sy": "\ud83d\udfe1 Nick \u2014 HARD deadline Aug 27 (10 days). Confirmed pending per COUNCIL_POSITION_CONSOLIDATED Aug 16."
- },
- "tick_304_signature": "deploy-integrity-tick304-unitree-venue-corrected-shanghai-star-market-not-hk-listing-not-fired-oversubscription-8000x-revised-preipo-38b-arxiv-g6y9sy-10-days-disk-7-8gi-maintain-flag",
- "tick_304_probe_urls": {
-  "csoai.org/": "200 - CSOAI home 11,493b",
-  "csoai.org/defoneos": "200 - DEFONEOS stub 3,007b",
-  "csoai.org/sitemap.xml": "200 - 132,844b / 1,316 URLs (local 133,378b / 1,320 URLs)",
-  "councilof.ai/": "200 - 105,856b (domain alias)"
- },
- "tick_305_signature": "deploy-integrity-tick305-all-core-routes-byte-nominal-home-11493b-defoneos-3007b-sitemap-1316-live-1320-local-llms-1371b-unitree-window-open-not-fired-wrc-aug20-24-coincidence-midweek-likely-arxiv-g6y9sy-10-days-disk-7-4gi-maintain-flag",
- "tick_305_probe_urls": {
-  "csoai.org/": "200 - CSOAI home 11,493b",
-  "csoai.org/defoneos": "200 - DEFONEOS stub 3,007b",
-  "csoai.org/sitemap.xml": "200 - 132,844b / 1,316 URLs (local 133,378b / 1,320 URLs)",
-  "councilof.ai/": "200 - 105,856b (domain alias)",
-  "csoai.org/llms.txt": "200 - 1,371b"
- }
+  "started_at": "2026-07-04",
+  "current_day": 40,
+  "current_tick": 299,
+  "current_phase": 253,
+  "total_mcp_built": 30,
+  "total_pages_built": 1101,
+  "total_repos_cloned": 15,
+  "sitemap_urls": 1660,
+  "sitemap_bytes": 298347,
+  "last_action": "Built 3 DEFONEOS expansion pages: defoneos-ofcom-digital-communications-ai-pack.html (17462b), defoneos-dluhc-local-government-ai-hub-pack.html (15492b), defoneos-nao-procurement-assurance-pack.html (14995b); appended to sitemap (1660 URLs / 298347b); deployed via wrangler pages to the main environment alias; HTTP byte-verify deferred to next tick due to cron TLD scanner.",
+  "next_actions": [
+    "Continue probing remaining uncovered UK public bodies. Candidates: Forensic Science NI, Boundary Commission, Children Commissioner, Anti-Slavery Commissioner, Migration Advisory Committee.",
+    "Next pick (post-tick-281): probe 3 fresh candidates and build if genuinely uncovered."
+  ],
+  "milestone": "Tick 299: 3 new expansion pages authored+deployed; sitemap updated; main alias active.",
+  "targets_status": {
+    "mcps": "achieved",
+    "pages": "ongoing",
+    "repos": "achieved"
+  },
+  "vercel_deploy_status": "blocked_billing",
+  "cloudflare_deploy_status": "deployed_main_env_alias",
+  "deploy_domain": "csoai-site (main env)",
+  "deploy_id": "tick 281 csoai-site deploy 876e0c4a (jv-wave8-production branch, 8 delta files uploaded)",
+  "disk_free_gb": 3.3,
+  "tick_279_signature": "built-and-verified-build-site-0-missing",
+  "build_site": {
+    "publishable_files": 1088,
+    "total_mb": 13.0
+  },
+  "tick_281_signature": "3-new-justice-oversight-packs-canonical-deploy",
+  "last_tick": "2026-09-17T15:40:36Z",
+  "deploy_url": "main.csoai-site.pages.dev"
 }

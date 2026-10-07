@@ -1,9 +1,9 @@
-# Council of AI — csoai-static-deploy2
+# clawd
 
-mcp-name: io.github.CSOAI-ORG/gspc
+Part of the MEOK AI Labs / CSOAI-ORG ecosystem.
 
-Council of AI (CSOAI Ltd · UK 16939677) — the neutral measurement body for AI
-compliance. Frozen benchmark harnesses, GSPC measurement axes, Ed25519-signed +
-time-anchored measurement credentials, external verifier. Measurement, not
-certification. This repository is the registry + Worker source of the
-`io.github.CSOAI-ORG/gspc` MCP server.
+- Empire hub: https://meok.ai
+- Governance: https://csoai.org
+- Source of truth: https://github.com/CSOAI-ORG/clawd
+
+See the top-level [MEOK topology](https://github.com/CSOAI-ORG/clawd/blob/main/AGENTS.md) for coordination rules.
