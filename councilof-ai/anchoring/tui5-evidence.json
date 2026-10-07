@@ -1,0 +1,154 @@
+{
+  "schema": "csoai.anchor.tui5-evidence/0.3",
+  "kind": "tui5.signing-roots-anchoring-evidence",
+  "branch": "trust/anchor-completion-20260911",
+  "observation_window_utc": {
+    "started": "2026-10-07T03:59:47Z",
+    "finished": "2026-10-07T04:12:00Z"
+  },
+  "subject": {
+    "source": "https://councilof.ai/root.json",
+    "kind": "csoai.public-root/v1",
+    "root_as_of": "2026-09-30T05:05:34Z",
+    "sha256_root_json": "f1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e",
+    "root_json_bytes": 25513,
+    "card_count": 319,
+    "merkle_root": "47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d"
+  },
+
+  "evidence_chain_seven_layers": {
+    "1_card_signature": {
+      "state": "VERIFIED (317) / EXPLICITLY_UNSIGNED (2)",
+      "corpus_A_public_root": {
+        "cards": 319,
+        "signatures_valid": 317,
+        "signatures_invalid": 0,
+        "unsigned_sig_ed25519_null": 2,
+        "unsigned_prefixes": ["617122cb45ba83ab", "747a510c1d3c618f"],
+        "digests_valid": 319,
+        "digest_rules_seen": {"ensure_ascii=False": 191, "ensure_ascii=True": 128},
+        "algorithm": "Ed25519 over canonical compact {did,schema,surface,as_of,sha256}",
+        "key": "did:web:csoai.org#board-attestation-1 (9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170)"
+      },
+      "corpus_B_signed_index": {
+        "cards": 335,
+        "signatures_valid": 335,
+        "ids_valid": 335,
+        "key_pinned_to_did": 335,
+        "key": "did:web:csoai.org#card-attestation-1 (d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38)"
+      },
+      "key_pinning": "Both keys pinned from https://csoai.org/.well-known/did.json, never trusted from card bytes",
+      "uncertainty": "2 unsigned root cards carry null sig_ed25519; counted explicitly, never reported as valid"
+    },
+    "2_merkle_root_inclusion": {
+      "state": "INCLUDED",
+      "leaf_membership": "319/319 exact sha256 leaf present in published card_sha256[]",
+      "inclusion_proofs": "319/319 index-aware directional walks (left=sha256(cur||sib), right=sha256(sib||cur)) reach the published root",
+      "root_recomputed_from_leaves": "47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d",
+      "matches_published": true,
+      "count_check": "319 leaves == card_count 319 (CVE-2012-2459 guard satisfied)",
+      "envelope_ed25519": "VALID over 274-byte preimage {kind,schema,as_of,merkle_root,card_count,did_intended}, ensure_ascii=False"
+    },
+    "3_rekor_witness": {
+      "state": "WITNESSED",
+      "current_root_logIndex": 3012420819,
+      "current_root_uuid": "108e9186e8c5677a60f8e5499012cdd18803397ac53087e7f71bb4ae1685a7fd44516d84d6064121",
+      "integratedTime": 1790744735,
+      "entry_kind": "rekord",
+      "verified_live": "GET rekor.sigstore.dev/api/v1/log/entries?logIndex=3012420819 -> entry retrieved 2026-10-07",
+      "rekor_tree_size_at_check": 3001319956,
+      "prior_root_logIndex_20260911": 2791822965,
+      "note": "The 11-Sep baseline logIndex belongs to the 167-card root; the current 319-card root has its own witness"
+    },
+    "4_ots_submission": {
+      "state": "SUBMITTED_AND_PARSED",
+      "proof_url": "https://councilof.ai/interop/root-f1913eca.json.ots",
+      "proof_sha256": "6ac9dd07d8b59b6a830b5056b2395c29b1ada411e97a3dab5a4d5fc987f5fac8",
+      "proof_bytes": 4845,
+      "proof_integrity": "sha256(proof bytes) matches sidecar proof_sha256 exactly",
+      "target": "f1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e == sha256(live root.json) confirmed by opentimestamps-client 'ots info'",
+      "calendars_pending": ["alice.btc.calendar.opentimestamps.org", "bob.btc.calendar.opentimestamps.org", "btc.calendar.catallaxy.com", "finney.calendar.eternitywall.com"]
+    },
+    "5_bitcoin_confirmation": {
+      "state": "CONFIRMED_BITCOIN",
+      "method": "opentimestamps-client 0.7.2 'ots info' parses BitcoinBlockHeaderAttestation leaves from the proof; headers independently re-fetched from two sources",
+      "attested_blocks_current_root": [969264, 969266, 969288, 969296],
+      "block_969264_hash": "000000000000000000018f2b886dd05a870b86fb96e3902fbe20c2241d4ef216",
+      "dual_source_agreement": "blockstream.info and mempool.space: block hashes agree AND headers byte-identical for all 4 heights",
+      "header_self_hash_verified": "sha256d(header) reversed == block_hash for all 4; leading zero bits 76/80/84/80",
+      "sidecar_header_crosscheck": "sidecar's 80-byte header hex byte-identical to blockstream; sha256 == d1bde21ce5165ded4a5ef661a27a8b75185987947dad4e2aa2fcfd216bb8f6a3",
+      "prior_root_167_cards_now_confirmed": {
+        "proof": "https://councilof.ai/interop/root-62a1931b.json.ots",
+        "target": "62a1931b4fdfd7351b3baa14354ccef068a9996592b199d2a862149a7dfaedc6",
+        "attested_blocks": [966483, 966485, 967122],
+        "note": "Was STAMPED_PENDING_BITCOIN on 2026-09-11; the calendars notarised it later. Proof bytes changed since 11-Sep (sha256 4a118e96 -> ff0776e0), so the old sidecar digest is superseded."
+      },
+      "scope": "PUBLIC_ROOT_BYTES_ONLY — proves these exact root.json bytes existed no later than the named block; not correctness, not certification, and does not cover the separate 335-card index",
+      "residual_uncertainty": "No local bitcoind, so ots verify's full node leg could not run; substituted by reference-client parse + dual-source header re-verification. Chain-reorg depth beyond the two queried explorers not tested."
+    },
+    "6_base_eas": {
+      "state": "NOT_YET",
+      "reason": "no EAS attestation in the append-only log matches this root.json sha256 (live sidecar 2026-10-01T08:25:24Z)",
+      "prepared_spec": "anchoring/base-eas-spec.json",
+      "network": "eip155:8453 (Base)",
+      "expected_max_cost_usd": 0.01,
+      "funding_source": "owner wallet (owner-gated, not executed)"
+    },
+    "7_xrpl_memo": {
+      "state": "NOT_YET",
+      "reason": "needs a funded XRPL account (owner); one memo tx carrying sha256(root.json)",
+      "prepared_spec": "anchoring/xrpl-memo-spec.json",
+      "network": "xrpl:mainnet",
+      "expected_max_cost_usd": 0.00001,
+      "funding_source": "owner XRPL account (owner-gated, not executed)"
+    }
+  },
+
+  "corpus_separation": {
+    "public_root_cards": 319,
+    "signed_index_cards": 335,
+    "identifier_overlap": 0,
+    "relationship": "SEPARATE_CORPORA — never summed, never conflated",
+    "baseline_delta": "2026-09-11 baseline said 167 root cards; live root as_of 2026-09-30 now carries 319. Baseline was correct at its observation time and is now stale."
+  },
+
+  "costs": {
+    "actual_spend_usd": 0,
+    "funding_source": "none — all verification read-only over free public endpoints",
+    "prepared_not_executed_total_usd": "0.01 (Base) + 0.00001 (XRPL) + 0.50-2.00 (Ethereum EAS) = ~0.51-2.01",
+    "owner_gated": true
+  },
+
+  "tests": [
+    {"test": "root envelope Ed25519 vs DID-pinned key", "result": "VALID"},
+    {"test": "merkle root recomputed from 319 leaves (positional, odd self-pair)", "result": "MATCH"},
+    {"test": "leaf count == declared card_count (CVE-2012-2459 guard)", "result": "319==319"},
+    {"test": "every root card digest (dual ascii rules)", "result": "319/319"},
+    {"test": "every root card signature vs board key", "result": "317 VALID, 2 UNSIGNED(null), 0 INVALID"},
+    {"test": "every root card inclusion proof (index-aware)", "result": "319/319 reach published root"},
+    {"test": "every signed-index card id+signature vs card key", "result": "335/335"},
+    {"test": "Rekor entry retrieval at current logIndex", "result": "3012420819 rekord retrieved"},
+    {"test": "OTS proof sha256 vs sidecar", "result": "MATCH (6ac9dd07...)"},
+    {"test": "ots info parses bitcoin attestations", "result": "4 heights in current proof; 3 unique in 167-card root proof"},
+    {"test": "bitcoin headers dual-source byte-identical + self-hash", "result": "4/4 heights"},
+    {"test": "corpus A/B identifier overlap", "result": "0"}
+  ],
+
+  "claims_rejected_or_corrected": [
+    {"claim": "OTS is Bitcoin-confirmed (implied by '5 chains anchored')", "correction": "As of 2026-10-07 BOTH published roots carry verified Bitcoin block-header attestations; on 2026-09-11 the state was STAMPED_PENDING_BITCOIN. Each state is date-stamped, never back-dated."},
+    {"claim": "167 cards in the current public root", "correction": "167 was true on 2026-09-11; live root as_of 2026-09-30T05:05:34Z carries 319. Always cite the as_of."},
+    {"claim": "Rekor witnessed at logIndex 2791822965", "correction": "That index belongs to the 167-card root; the current 319-card root is witnessed at 3012420819. Both reported with their own root digest."},
+    {"claim": "335 signed cards are anchored by the root", "correction": "0 identifier overlap with the public root; OTS scope is PUBLIC_ROOT_BYTES_ONLY"},
+    {"claim": "All root cards are signed", "correction": "2 of 319 root cards have sig_ed25519 = null and are explicitly UNSIGNED, not verified"}
+  ],
+
+  "blockers_remaining": [
+    {"id": "base-eas", "severity": "P1", "blocker": "Base EAS attestation not submitted", "owner_action": "fund Base wallet, sign, submit spec anchoring/base-eas-spec.json", "max_cost_usd": 0.01},
+    {"id": "xrpl-memo", "severity": "P1", "blocker": "XRPL memo transaction not submitted", "owner_action": "fund XRPL account, sign, submit spec anchoring/xrpl-memo-spec.json", "max_cost_usd": 0.00001},
+    {"id": "eth-eas", "severity": "P2", "blocker": "Ethereum EAS attestation not submitted", "owner_action": "fund ETH wallet, sign, submit", "max_cost_usd": 2.0},
+    {"id": "root-unsigned-2", "severity": "P2", "blocker": "2 root cards carry null signatures (617122cb45ba83ab, 747a510c1d3c618f)", "owner_action": "re-sign off-device or exclude from next root — creator lane decision"},
+    {"id": "btc-node-leg", "severity": "P3", "blocker": "ots verify full-node leg cannot run without local bitcoind", "owner_action": "optional; substituted by dual-source header verification"}
+  ],
+
+  "measurement_not_certification": true
+}

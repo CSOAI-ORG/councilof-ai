@@ -28,11 +28,27 @@ from pathlib import Path
 
 
 def fetch_json(url: str, timeout: int = 20) -> dict:
+    """TLS verification stays ON; certifi fallback when this interpreter ships
+    no CA bundle (python.org installer gap)."""
     req = urllib.request.Request(url, headers={
         "Accept": "application/json",
         "User-Agent": "CSOAI-TUI5-RootPipeline/1.0",
     })
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
+    import ssl
+    import os
+    ctx = None
+    try:
+        default = ssl.get_default_verify_paths().cafile
+        ctx = ssl.create_default_context(cafile=None) if (default and os.path.exists(default)) else None
+    except Exception:
+        ctx = None
+    if ctx is None:
+        try:
+            import certifi
+            ctx = ssl.create_default_context(cafile=certifi.where())
+        except Exception:
+            ctx = ssl.create_default_context()
+    with urllib.request.urlopen(req, timeout=timeout, context=ctx) as resp:
         return json.loads(resp.read())
 
 

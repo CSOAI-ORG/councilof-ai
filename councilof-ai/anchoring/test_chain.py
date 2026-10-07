@@ -21,7 +21,26 @@ from datetime import datetime, timezone
 
 BOARD_KEY = "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170"
 CARD_KEY = "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
-REKOR_LOG_INDEX = 2791822965
+REKOR_LOG_INDEX = 2791822965  # 167-card root's witness (2026-09-11); current root's index comes from the live sidecar
+
+
+def _ssl_ctx():
+    """TLS verification stays ON. This interpreter may ship without a CA bundle
+    (python.org installer gap) — fall back to certifi's cacert.pem. Never disables
+    certificate verification."""
+    import ssl
+    import os
+    try:
+        default = ssl.get_default_verify_paths().cafile
+        if default and os.path.exists(default):
+            return ssl.create_default_context()
+    except Exception:
+        pass
+    try:
+        import certifi
+        return ssl.create_default_context(cafile=certifi.where())
+    except Exception:
+        return ssl.create_default_context()
 
 
 def fetch(url, timeout=15):
@@ -29,7 +48,7 @@ def fetch(url, timeout=15):
         "Accept": "application/json",
         "User-Agent": "CSOAI-TUI5-Test/1.0",
     })
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
+    with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx()) as resp:
         return json.loads(resp.read())
 
 
@@ -85,12 +104,19 @@ def test_card_signatures(root, sample_size=5):
         card = card_data["card"]
         proof = card_data.get("proof", [])
 
-        # Verify digest (whole-card-except-sha256-and-sig_ed25519, ensure_ascii=False)
+        # Verify digest (whole-card-except-sha256-and-sig_ed25519). The corpus
+        # contains both CPython encodings: 191 cards canonicalise with
+        # ensure_ascii=False and 128 with True (measured 2026-10-07) — accept the
+        # rule that reproduces the published digest and record which held.
         digest_fields = {k: v for k, v in card.items() if k not in ("sha256", "sig_ed25519")}
-        computed_digest = hashlib.sha256(
-            json.dumps(digest_fields, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
-        ).hexdigest()
-        digest_ok = computed_digest == card["sha256"]
+        raw_true = json.dumps(digest_fields, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode()
+        raw_false = json.dumps(digest_fields, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
+        if hashlib.sha256(raw_true).hexdigest() == card["sha256"]:
+            digest_ok, digest_rule = True, "ensure_ascii=True"
+        elif hashlib.sha256(raw_false).hexdigest() == card["sha256"]:
+            digest_ok, digest_rule = True, "ensure_ascii=False"
+        else:
+            digest_ok, digest_rule = False, "NEITHER"
 
         # Verify signature (may be None for unsigned cards)
         sig_val = card.get("sig_ed25519")
@@ -125,6 +151,7 @@ def test_card_signatures(root, sample_size=5):
         results.append({
             "card_prefix": h[:16],
             "digest_ok": digest_ok,
+            "digest_rule": digest_rule,
             "signature_ok": sig_ok,
             "signature_state": sig_state,
             "proof_ok": proof_ok,
@@ -145,7 +172,8 @@ def test_card_signatures(root, sample_size=5):
 def test_corpora_separation(root, idx):
     """Verify the 167-card root and 335-card index have 0 identifier overlap."""
     root_leaves = set(root.get("card_sha256", []))
-    signed_hashes = set(c.get("card", "") for c in idx.get("cards", []))
+    rows = idx.get("cards", idx.get("rows", []))
+    signed_hashes = set(c.get("card", c.get("id", "")) for c in rows)
     overlap = root_leaves & signed_hashes
     return {
         "root_count": len(root_leaves),
@@ -187,7 +215,7 @@ def test_ots_calendars():
         url = f"https://{name}.btc.calendar.opentimestamps.org"
         try:
             req = urllib.request.Request(url, method="HEAD", headers={"User-Agent": "CSOAI-TUI5-Test/1.0"})
-            resp = urllib.request.urlopen(req, timeout=10)
+            resp = urllib.request.urlopen(req, timeout=10, context=_ssl_ctx())
             results[name] = {"status": resp.status, "state": "LIVE"}
         except Exception as e:
             results[name] = {"state": "UNREACHABLE", "error": str(e)}
@@ -214,7 +242,7 @@ def test_root_file_hash():
     """Verify the root.json file SHA-256 matches what was submitted to Rekor."""
     import urllib.request
     req = urllib.request.Request("https://councilof.ai/root.json", headers={"User-Agent": "CSOAI-TUI5-Test/1.0"})
-    raw = urllib.request.urlopen(req, timeout=15).read()
+    raw = urllib.request.urlopen(req, timeout=15, context=_ssl_ctx()).read()
     file_hash = hashlib.sha256(raw).hexdigest()
     return {
         "sha256": file_hash,

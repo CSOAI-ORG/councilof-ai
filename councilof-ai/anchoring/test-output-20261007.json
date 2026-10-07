@@ -1,0 +1,131 @@
+{
+  "schema": "csoai.anchor.e2e-test/0.1",
+  "kind": "tui5.end-to-end-verification",
+  "generated_at": "2026-10-07T04:14:19.578611+00:00",
+  "tests": {
+    "did_document": {
+      "verification_method_count": 7,
+      "methods": [
+        "did:web:csoai.org#site-release-1",
+        "did:web:csoai.org#estate-chain-1",
+        "did:web:csoai.org#board-attestation-1",
+        "did:web:csoai.org#card-attestation-1",
+        "did:web:csoai.org#gspc-board-22axis-2026",
+        "did:web:csoai.org#card-attestation-2",
+        "did:web:csoai.org#route-attestation-1"
+      ],
+      "has_board_attestation": true,
+      "has_card_attestation": true,
+      "state": "VALID"
+    },
+    "root_signature": {
+      "preimage_bytes": 274,
+      "pubkey_hex": "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
+      "state": "VALID"
+    },
+    "merkle_root": {
+      "leaf_count": 319,
+      "computed": "47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d",
+      "published": "47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d",
+      "state": "MATCH"
+    },
+    "card_signatures": {
+      "sample_size": 5,
+      "all_valid": true,
+      "valid_count": 5,
+      "results": [
+        {
+          "card_prefix": "23f628e1e1db4928",
+          "digest_ok": true,
+          "digest_rule": "ensure_ascii=False",
+          "signature_ok": true,
+          "signature_state": "VALID",
+          "proof_ok": true,
+          "proof_depth": 9,
+          "state": "VALID"
+        },
+        {
+          "card_prefix": "34b46e97f66a13b4",
+          "digest_ok": true,
+          "digest_rule": "ensure_ascii=False",
+          "signature_ok": true,
+          "signature_state": "VALID",
+          "proof_ok": true,
+          "proof_depth": 9,
+          "state": "VALID"
+        },
+        {
+          "card_prefix": "8e8e0badce70928a",
+          "digest_ok": true,
+          "digest_rule": "ensure_ascii=False",
+          "signature_ok": true,
+          "signature_state": "VALID",
+          "proof_ok": true,
+          "proof_depth": 9,
+          "state": "VALID"
+        },
+        {
+          "card_prefix": "c9483b135bab0866",
+          "digest_ok": true,
+          "digest_rule": "ensure_ascii=True",
+          "signature_ok": true,
+          "signature_state": "VALID",
+          "proof_ok": true,
+          "proof_depth": 9,
+          "state": "VALID"
+        },
+        {
+          "card_prefix": "e95927b5bfcd1cf4",
+          "digest_ok": true,
+          "digest_rule": "ensure_ascii=False",
+          "signature_ok": true,
+          "signature_state": "VALID",
+          "proof_ok": true,
+          "proof_depth": 9,
+          "state": "VALID"
+        }
+      ],
+      "state": "VALID"
+    },
+    "corpora_separation": {
+      "root_count": 319,
+      "signed_count": 335,
+      "overlap": 0,
+      "state": "SEPARATE"
+    },
+    "rekor_log": {
+      "tree_size": 3001472066,
+      "state": "LIVE"
+    },
+    "rekor_entry": {
+      "uuid": "108e9186e8c5677a745e131404b16562b3698b099d3c32b8f93e5a38745fe73ebb5a2350cca83598",
+      "logIndex": 2791822965,
+      "integratedTime": 1789116324,
+      "logID": "c0d23d6ad406973f9559f3ba2d1ca01f84147d8ffc5b8445c224f98b9591801d",
+      "state": "WITNESSED"
+    },
+    "ots_calendars": {
+      "alice": {
+        "status": 200,
+        "state": "LIVE"
+      },
+      "bob": {
+        "status": 200,
+        "state": "LIVE"
+      },
+      "state": "LIVE"
+    },
+    "root_file_hash": {
+      "sha256": "f1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e",
+      "size_bytes": 25513,
+      "state": "COMPUTED"
+    }
+  },
+  "summary": {
+    "total_tests": 9,
+    "passed": 9,
+    "failed": 0,
+    "failures": [],
+    "overall": "PASS"
+  }
+}

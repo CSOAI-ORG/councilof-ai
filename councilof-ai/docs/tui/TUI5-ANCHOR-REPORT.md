@@ -10,7 +10,42 @@
 
 The signing infrastructure is **sound and independently verified**. The root signature, Merkle tree, card signatures, and inclusion proofs all validate against the pinned DID key. Two of five chains are anchored (Rekor + OTS). Three chains are prepared and awaiting owner approval for submission.
 
-### Verified Baseline
+---
+
+## 0. RE-VERIFICATION — 2026-10-07 (full sweep; supersedes date-stamped states below)
+
+Observation window `2026-10-07T03:59:47Z → 04:12:00Z`. Source: live `councilof.ai`, `csoai.org`, `rekor.sigstore.dev`, Blockstream + mempool.space. Verifier: `anchoring/verify_all.py` (keys pinned from DID, never from card bytes). Machine receipt: `anchoring/full-verification-receipt.json` + `anchoring/tui5-evidence.json`. **Actual spend: $0.**
+
+### Subject (immutable version)
+
+| Field | Value |
+|-------|-------|
+| root.json sha256 | `f1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e` (25,513 bytes) |
+| root as_of | `2026-09-30T05:05:34Z` (kind `csoai.public-root/v1`) |
+| merkle root | `47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d` |
+| card_count | **319** (the 2026-09-11 baseline of 167 was true then, stale now — always cite `as_of`) |
+
+### The seven layers — verified separately, never collapsed
+
+| # | Layer | State (2026-10-07) | Evidence |
+|---|-------|--------------------|----------|
+| 1 | Card signature | ✅ **317 VALID / 2 EXPLICITLY UNSIGNED / 0 INVALID** (corpus A, 319 cards); ✅ 335/335 (corpus B) | Ed25519 compact envelope vs DID-pinned `board-attestation-1`; null `sig_ed25519` on `617122cb45ba83ab`, `747a510c1d3c618f` counted UNSIGNED, not valid |
+| 2 | Merkle-root inclusion | ✅ **319/319** | exact leaf membership + index-aware directional walks reach the published root; digests 319/319 (191 cards `ensure_ascii=False`, 128 `True`); `319 leaves == card_count` |
+| 3 | Rekor witness | ✅ **WITNESSED @ logIndex 3012420819** | live `rekord` entry retrieved 2026-10-07, integratedTime 1790744735, treeSize 3,001,319,956. *(2791822965 was the 167-card root's witness — report both with their own root digest)* |
+| 4 | OTS submission | ✅ proof parsed | `root-f1913eca.json.ots`, 4,845 bytes, sha256 `6ac9dd07…` matches sidecar; target == sha256(live root.json) confirmed by `ots info` |
+| 5 | Bitcoin confirmation | ✅ **CONFIRMED_BITCOIN** | reference client `opentimestamps-client 0.7.2` parses `BitcoinBlockHeaderAttestation` at blocks **969264, 969266, 969288, 969296**; all 4 headers byte-identical across Blockstream + mempool.space, `sha256d(header)==block_hash`, 76–84 leading zero bits |
+| 6 | Base EAS | 🔲 **NOT_YET** | sidecar: no attestation matches this root sha256; spec `anchoring/base-eas-spec.json`, max ~$0.01, owner-gated |
+| 7 | XRPL memo | 🔲 **NOT_YET** | needs funded XRPL account; spec `anchoring/xrpl-memo-spec.json`, max ~$0.00001, owner-gated |
+
+**The 167-card root's OTS is now also Bitcoin-confirmed** (blocks 966483/966485/967122; its proof bytes changed since 11 Sep — old digest `4a118e96…` superseded by `ff0776e0…`). On 2026-09-11 the state was `STAMPED_PENDING_BITCOIN`; each state is date-stamped, never back-dated.
+
+**Scope:** the Bitcoin timestamp proves these exact root.json bytes existed no later than the named block — not correctness, not certification, and it does not cover the separate 335-card index (0 identifier overlap; OTS scope `PUBLIC_ROOT_BYTES_ONLY`).
+
+**Residual uncertainty:** no local bitcoind, so `ots verify`'s full-node leg could not run; substituted by reference-client parse + dual-source header re-verification. Reorg depth beyond the two explorers not tested.
+
+---
+
+### Verified Baseline (2026-09-11, date-stamped — superseded states listed in §0)
 
 | Component | Status | Evidence |
 |-----------|--------|----------|
@@ -189,6 +224,10 @@ The Merkle tree's odd-leaf self-duplication makes it collidable: appending dupli
 | "Anchoring complete" | Infrastructure ready, 3 transactions need owner approval |
 | "DID has 2 verification methods" | 5 methods: site-release-1, estate-chain-1, board-attestation-1, card-attestation-1, gspc-board-22axis-2026 |
 | "Inclusion proofs: always hash(current+node)" | Direction-aware: hash(current+node) when sibling is right, hash(node+current) when left |
+| "OTS is Bitcoin-confirmed" (stated without date) | Only true from the notarisation date: on 2026-09-11 it was `STAMPED_PENDING_BITCOIN`; verified `CONFIRMED_BITCOIN` on 2026-10-07 at blocks 969264/969266/969288/969296 (§0) |
+| "Rekor logIndex 2791822965" (as current) | That index witnesses the 167-card root; the 319-card root is witnessed at 3012420819 — each cited with its own root sha256 |
+| "167 cards in the current root" | 167 @ 2026-09-11; live root as_of 2026-09-30 carries **319** — always cite `as_of` |
+| "All 319 root cards are signed" | 317 valid + **2 null `sig_ed25519`** explicitly counted UNSIGNED (0 invalid) |
 
 ---
 
@@ -197,6 +236,9 @@ The Merkle tree's odd-leaf self-duplication makes it collidable: appending dupli
 | File | Purpose |
 |------|---------|
 | `anchoring/verify_chain.py` | Independent card + root + infrastructure verification |
+| `anchoring/verify_all.py` | **Full sweep: every card in both corpora (502 cards), receipt output** |
+| `anchoring/full-verification-receipt.json` | Machine receipt of the 2026-10-07 full sweep |
+| `anchoring/tui5-evidence.json` | Seven-layer evidence chain with exact digests, counts, costs, blockers |
 | `anchoring/test_chain.py` | End-to-end test suite (9 tests, exit 0/1) |
 | `anchoring/root_pipeline.py` | Deterministic Merkle root recomputation |
 | `anchoring/rekor_push.py` | Rekor state documentation + future push guide |
@@ -217,7 +259,8 @@ The Merkle tree's odd-leaf self-duplication makes it collidable: appending dupli
 | Base EAS not submitted | P1 | Fund wallet + sign (~$0.01) |
 | XRPL memo not submitted | P1 | Fund account + sign (~$0.00001) |
 | Ethereum EAS not submitted | P2 | Fund wallet + sign (~$0.50-2) |
-| OTS awaiting Bitcoin | P2 | Automatic — wait for next calendar notarization |
+| ~~OTS awaiting Bitcoin~~ **RESOLVED 2026-10-07** | — | Bitcoin-confirmed at blocks 969264/969266/969288/969296 (§0) |
+| 2 root cards unsigned (`617122cb45ba83ab`, `747a510c1d3c618f`) | P2 | Re-sign off-device or exclude from next root — creator lane decision |
 | Cold key ceremony receipt | P2 | Document key generation ceremony |
 
 ---
