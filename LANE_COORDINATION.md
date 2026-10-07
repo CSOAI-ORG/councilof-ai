@@ -427,3 +427,22 @@ Branch `tui2/stablecoin-lane-2026-09-12` off master c34ee387. Claiming files:
 - `TUI-2-FINANCIAL-COVERAGE.md` (figures to today's measurements; honest-not-claim section intact)
 
 Resolves CONTRAD-001 truthfully: index.json stays a frozen discovery snapshot (labeled as such); live states live in the coverage matrix. No signing, no verdict words, £0 keyless.
+
+## 2026-10-07 · M4 lane — denominator reconciliation + alignment receipts (append)
+
+- DONE WHEN A producer fix: `n` had two spellings (financial_four_measure n=attempted
+  vs gspc_financial_facts n=graded). Both producers now emit n + n_semantics +
+  n_attempted + n_graded. sign_financial_runs.py refuses to sign a payload whose n
+  lacks n_semantics — the guard FIRES on the stale 2026-09-01 compact (30 named
+  violations, see scripts/test_n_denominator.py output).
+- test_rate_denominator.py: rate-key matching tightened to word tokens ("operate_"
+  false-positive on "rate_"), list-nested rates now walked (the FAIL-nested-without-
+  count control could never fire — guard decoration fixed), find_parent index-aware.
+  8/8 controls including the real paired-arm artifact.
+- Receipts in public/interop/: alignment-2026-10-07.md, audit-finance-disagreement
+  (18 Sep + 7 Oct), rate-denominator-audit-2026-09-18.json, unbound-anchors-register-
+  2026-10-07.json (2,156 ANCHOR_WITHOUT_SUBJECT), correction-watch (93 corrections,
+  signature_state VALID), effect-binding-measurement-design (historical — ADR-002
+  measured slot 23 with altered-preimage control), catapult-shape, arc-circle mapping.
+- No published signed bytes edited. No signing outside GHA OIDC. Tests ran on macOS
+  Python 3.14 (8/8 rate controls; fails-before 30 / passes-after n_denominator).

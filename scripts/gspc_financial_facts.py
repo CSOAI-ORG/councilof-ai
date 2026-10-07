@@ -575,11 +575,18 @@ def eurostat_latest(payload: Any, selector: dict[str, str] | None = None) -> tup
 # ── assemble ──────────────────────────────────────────────────────────────────
 
 def axis_envelope(axis: str, n: int, status: str, as_of: str, measured: list[Any], extra: dict[str, Any]) -> dict[str, Any]:
+    # DONE WHEN A fix (2026-10-07): every count carries its denominator.
+    # n here is GRADED (cells with a value); attempted counts UNREACHABLE too.
+    n_graded = n
+    n_attempted = extra.get("n_attempted") or len(measured)
     body = {
         "schema": "csoai.financial-measure-run/0.4",
         "axis": axis,
         "as_of": as_of,
         "n": n,
+        "n_semantics": "n = n_graded (cells with a value). n_attempted includes UNREACHABLE, recorded never counted.",
+        "n_graded": n_graded,
+        "n_attempted": n_attempted,
         "n_unit": extra.pop("n_unit", "issuer accounts (not bank items)"),
         "status": status,
         "risk_verdict": "UNMEASURED",

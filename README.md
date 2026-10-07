@@ -167,7 +167,7 @@ Source: `GET https://councilof.ai/api/revenue` and PayAI bazaar stats.
 - Revenue catalog: https://github.com/CSOAI-ORG/csoai-x402-revenue
 - Week-one report: https://github.com/CSOAI-ORG/csoai-blog-x402-revenue
 
-Network: Base (eip155:8453) · Asset: USDC · Pay-to: 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31 · Promo $0.01 until 2026-10-11.
+Network: Base (eip155:8453) · Asset: USDC · Pay-to: 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31 · Promo $0.01 until 2027-01-11 (extended 7 Oct 2026; was 2026-10-11).
 
 ## Documentation
 
