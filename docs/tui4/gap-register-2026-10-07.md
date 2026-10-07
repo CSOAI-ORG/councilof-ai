@@ -43,7 +43,7 @@ no longer exists** — the rename replaced it, no duplicate source of truth.
 
 ## Gaps and worked-out fixes
 
-### GAP-1 — `llms.txt` prints 3 discover routes twice — FIXED, PR open
+### GAP-1 — `llms.txt` prints 3 discover routes twice — FIXED, PR #2854 FILED
 - **Evidence:** 6 discover mentions, 3 unique (live `llms.txt`, 2026-10-07T04:00Z).
 - **Root cause:** `council-os/capabilities.json` declares GET **and** POST variants of the
   same route (258 entries, 59 duplicated paths; the three discover routes are explicitly
@@ -63,25 +63,33 @@ no longer exists** — the rename replaced it, no duplicate source of truth.
 - **Fix worked out:** re-submit a **short** entry (long descriptions invite the next
   shortening pass). Draft, ready to PR to `punkpeye/awesome-mcp-servers`:
   `- [CSOAI-ORG/councilof-ai](https://github.com/CSOAI-ORG/councilof-ai) … ☁️ - Live GSPC measurement board over MCP (councilof.ai/mcp, 19 tools: 14 free + x402-metered). Measurement, never certification. Verify: councilof.ai/gspc-verify`
-- **Status:** external submission → **owner action-time approval required**.
+- **Status (2026-10-07T04:40Z): PR FILED** — https://github.com/punkpeye/awesome-mcp-servers/pull/15893
+  (fork branch `CSOAI-ORG:add-csoai-entries-20261007`, both entries re-added at their
+  historical positions with shortened one-sentence descriptions). Owner's "go" was the
+  action-time approval. Awaiting upstream review.
 
 ### GAP-3 — PulseMCP entry is gone — REGRESSED, needs re-submission
 - **Evidence:** manifest claimed LISTED (`servers/detail/io-github-csoai-org-gspc`,
   checked 2026-09-14); **today that URL → 404**, searches for gspc/council-of-ai → 0 hits.
   (The org's other servers still appear in their index — the gspc entry specifically is gone.)
-- **Fix worked out:** submit at `https://www.pulsemcp.com/submit` (form; **owner approval
-  required**). Note: PulseMCP describes itself as daily-updated over "all MCP servers" —
-  with the registry rename to `ai.councilof/gspc` the crawler may re-pick it up on its own;
-  submit only if the next daily cycle stays empty.
+- **RESOLVED (2026-10-07T04:35Z): submissions are paused site-wide.** The /submit page
+  states: *"submissions and changes are temporarily paused… publish it to the Official MCP
+  Registry. That is the best first step even when we are not paused, and we will pick it up
+  automatically once we are back"* (last updated 2026-09-03). We are already published
+  there (`ai.councilof/gspc` 1.4.4, isLatest). Their sitemap carries **188 CSOAI-family
+  entries and 0 gspc/councilof entries** — the gap is theirs to close on reopen, and our
+  only correct action (official registry) is already done. Nothing to submit.
 
 ### GAP-4 — Smithery: stale duplicate + tool set never re-verified
 - **Evidence:** current listing `csoai/gspc-mcp` "Council of AI GSPC (HTTP)" 200; the old
   duplicate `csoai/gspc` also still serves 200 (153 KB). The 2026-09-14 claim of 4 phantom
   tools (`verify, jail-probe, enter-arena, measure`) could **not** be re-confirmed today —
   the tool list renders client-side (SPA), so raw HTML proves nothing either way.
-- **Fix worked out:** owner opens the Smithery dashboard (org `org_01KP63P98PWZJHKXJNW27V99GS`),
-  retires `csoai/gspc`, and forces re-inspection of `csoai/gspc-mcp` against live
-  tools/list (19 tools). Then re-probe and update this register.
+- **RESOLVED (2026-10-07T04:38Z) — both claims do not reproduce.** Registry API
+  `registry.smithery.ai/servers/csoai/gspc-mcp` returns a **live tool list of exactly the
+  current 19 tools** (no `measure`, no phantoms), `inactive:false`, `isDeployed:true`.
+  The old duplicate `csoai/gspc` → **404 "Server not found"** in the registry API; its 200
+  on the website is only the SPA shell (HTTP 200 ≠ correct bytes). No owner action needed.
 
 ### GAP-5 — Glama connector points at a retired registry name
 - **Evidence:** listing live (200, `quality_grade:a`, `maintenance_grade:a`,
@@ -89,10 +97,10 @@ no longer exists** — the rename replaced it, no duplicate source of truth.
   `io.github.CSOAI-ORG/gspc` — **the registry name that no longer exists** (renamed
   `ai.councilof/gspc`). The 2026-09-14 "40/40 Unhealthy connectors" claim did **not**
   reproduce: no "Unhealthy" text in today's page HTML.
-- **Fix worked out:** Glama auto-indexes from GitHub/npm — the repo's `.well-known` and
-  registry publish workflow now emit `ai.councilof/gspc`; next Glama re-crawl should adopt
-  it. If the connector still shows the old key after the next crawl cycle, owner claims/updates
-  the connector in Glama's UI.
+- **RESOLVED (2026-10-07T04:40Z) — Glama already re-crawled.** Connectors exist and serve 200
+  for **both new names**: `glama.ai/mcp/connectors/ai.councilof/gspc` and `…/ai.councilof/gspc-free`
+  ("Council of AI GSPC (free)"). Repo `server.json` emits `ai.councilof/gspc` 1.4.4 ✓. The old-key
+  connector page remains as historical record only. No owner action needed.
 
 ### GAP-6 — Receipt signature "mismatch" was stale/false — CLOSED with correction
 - **Evidence:** the 11 Sep self-test JWS (`public/interop/x402-self-settlement-2026-09-11.json`,
@@ -107,10 +115,27 @@ no longer exists** — the rename replaced it, no duplicate source of truth.
   no cursor was extractable — **0 of those 100 rows are ours**, but absence across the full
   catalogue is **not established**. The CDP discovery URL from the 09-14 manifest
   (`api.cdp.coinbase.com/x402/discovery/resources`) now **404s** — endpoint moved/dead.
-- **Fix worked out:** (a) find the working pagination or authenticated enumeration for
-  PayAI discovery before writing any "listed/absent" claim; (b) CDP listing is a
-  **facilitator decision** (owner): adding a Coinbase-facilitated `accepts[]` entry is the
-  mechanism by which CDP's index picks a resource up. No claim made either way today.
+- **CDP mechanism now EXACT (2026-10-07T04:45Z), all free checks run:**
+  - `GET …/v2/x402/discovery/merchant?payTo=0x2126864…` → **total 0** (absent, no key needed).
+  - `POST …/v2/x402/validate` on `/api/proof?bundle=1` → **`valid: true`,
+    simulation.outcome: "accepted"**, and our `extensions.bazaar` block (input schema,
+    output example) extracted intact. The paid door is already conformant.
+  - Free door: `valid: false` (Coinbase does not catalogue $0 discovery-only flows — by their docs).
+  - There is **no registration form**: indexing fires on the **first settled payment through
+    the CDP facilitator** (`settle`, not `verify`, with `paymentPayload.resource` set).
+  - **Staged owner decision (not executed):** the rail's facilitator is an owner switch —
+    `X402_FACILITATOR_URL` (Cloudflare Pages env). Runbook: (1) point the env at
+    `https://api.cdp.coinbase.com/platform/v2/x402` (CDP seller path may require CDP API
+    credentials — credential creation = owner), (2) run ONE self-facilitated $0.01
+    settlement against `/api/proof?bundle=1` (cost: $0.01 USDC + negligible Base gas;
+    classification INTERNAL_SELF_FUNDED, never revenue), (3) verify merchant discovery
+    total ≥ 1, (4) switch env back to PayAI or keep CDP — routing is the owner's call.
+  - **Permissionless alternative staged (not fired):** Agent Bazaar
+    (open-x402-bazaar) accepts `POST /submit {"manifestUrl":"https://councilof.ai/.well-known/x402.json"}`
+    with no account/KYC — wire-compatible mirror. One curl, $0; awaiting owner's word since
+    it is a fifth, newly-discovered external submission beyond the approved four.
+  - PayAI full-catalogue enumeration remains blocked (no cursor for anonymous callers) —
+    first 100 rows contain 0 of ours; absence NOT established.
 
 ---
 
