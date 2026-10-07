@@ -35,6 +35,10 @@ describe("/mcp/free tools/call route: the request picks the tool", () => {
     ["which tool verifies a signed card", "mcp:verify_card"],
     ["how did safety measure", "mcp:get_axis"],
     ["is example.com/mcp safe", "mcp:server_evidence"],
+    ["I got a card from a vendor, is it real?", "mcp:verify_card"],
+    ["which AI is safest", "mcp:board_totals"],
+    ["Is this AI model safe to use?", "mcp:board_totals"],
+    ["what scores did Claude get", "mcp:board_totals"],
   ] as const) {
     it(`"${task}" -> ${want}`, async () => {
       vi.stubGlobal("fetch", vi.fn(async (u: string) => {
