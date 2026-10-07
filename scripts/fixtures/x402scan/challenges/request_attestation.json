@@ -14,7 +14,7 @@
         "sku_id": "request_attestation",
         "starts_at": "2026-09-11T00:00:00Z"
       },
-      "description": "One named subject gets a card-v0 commission receipt: SHA-256 content-addressed and Ed25519-signed by did:web:csoai.org#board-attestation-1 when available, otherwise sig_ed25519:null with unsigned_reason. Check csoai.signer before paying. Paid reserve returns up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The separate interop root in the free preview is not included in the paid reserve. Payment never creates a MEASURED board cell.",
+      "description": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Without that key: sig_ed25519:null, unsigned_reason. Check csoai.signer before paying. Paid reserve: up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The interop root in the free preview is not included in the paid reserve. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.",
       "extra": {
         "decimals": 6,
         "name": "USD Coin",
@@ -26,15 +26,15 @@
       "mimeType": "application/json",
       "network": "eip155:8453",
       "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-      "resource": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id",
+      "resource": "https://councilof.ai/api/request-attestation?subject=llama3.2%3A3b",
       "scheme": "exact"
     }
   ],
   "csoai": {
     "catalog": "https://councilof.ai/api/x402",
-    "deliverable": "One named subject gets a card-v0 commission receipt: SHA-256 content-addressed and Ed25519-signed by did:web:csoai.org#board-attestation-1 when available, otherwise sig_ed25519:null with unsigned_reason. Check csoai.signer before paying. Paid reserve returns up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The separate interop root in the free preview is not included in the paid reserve. Payment never creates a MEASURED board cell.",
+    "deliverable": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Without that key: sig_ed25519:null, unsigned_reason. Check csoai.signer before paying. Paid reserve: up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The interop root in the free preview is not included in the paid reserve. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.",
     "explainer": "https://councilof.ai/pricing",
-    "lid": "23 axes measured · 14 model fleets · 0 separated leaders · 9 public leader scores · 9 fact runs · TIE is TIE · not a certificate.",
+    "lid": "23 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 9 fact runs · TIE is TIE · not a certificate.",
     "never": [
       "rank",
       "certificate",
@@ -57,7 +57,78 @@
     "preview": {
       "axis": null,
       "axis_known": null,
-      "cards": [],
+      "cards": [
+        {
+          "axis": "arc-30",
+          "card": "177955c6947764db3682dc7ca9deac06c89abca3477e5e272bf615f9c31c994e",
+          "card_url": "/signed/cards/177955c6947764db3682dc7ca9deac06c89abca3477e5e272bf615f9c31c994e.json"
+        },
+        {
+          "axis": "care-refusal-protect",
+          "card": "24c34bec128e434bdd45ad5dea033da5d656cbf956c6a6b54caf3e8b774794b8",
+          "card_url": "/signed/cards/24c34bec128e434bdd45ad5dea033da5d656cbf956c6a6b54caf3e8b774794b8.json"
+        },
+        {
+          "axis": "gspc-safety",
+          "card": "2820aa929f4640c1ab47f85c4eb03451cbda1906d34f90f70c5f35c5edc76467",
+          "card_url": "/signed/cards/2820aa929f4640c1ab47f85c4eb03451cbda1906d34f90f70c5f35c5edc76467.json"
+        },
+        {
+          "axis": "gsm8k-30",
+          "card": "4b53148f3a743ae1e81d910d057acc8492321f6c632771215ac36523578df516",
+          "card_url": "/signed/cards/4b53148f3a743ae1e81d910d057acc8492321f6c632771215ac36523578df516.json"
+        },
+        {
+          "axis": "gspc-conformance",
+          "card": "519cc296e47057d8dd14bb2aa2b56024f2f1d69c9669f50e8922c8fa1e186c31",
+          "card_url": "/signed/cards/519cc296e47057d8dd14bb2aa2b56024f2f1d69c9669f50e8922c8fa1e186c31.json"
+        },
+        {
+          "axis": "gspc-provenance",
+          "card": "62123d93724144cdfec5497af3984fa22d8ce749a4f2d0710b774c6614d8ed72",
+          "card_url": "/signed/cards/62123d93724144cdfec5497af3984fa22d8ce749a4f2d0710b774c6614d8ed72.json"
+        },
+        {
+          "axis": "gspc-openness",
+          "card": "851e263754518e692655902debb727d26c7a4e14b5fe6c6382a480b96f6b1a35",
+          "card_url": "/signed/cards/851e263754518e692655902debb727d26c7a4e14b5fe6c6382a480b96f6b1a35.json"
+        },
+        {
+          "axis": "gspc-governance",
+          "card": "94b8831311c24df5e7d93e1f1dc989d24639bbe64abc4034a51d78a0306508e1",
+          "card_url": "/signed/cards/94b8831311c24df5e7d93e1f1dc989d24639bbe64abc4034a51d78a0306508e1.json"
+        },
+        {
+          "axis": "gspc-continuity",
+          "card": "9a45f78d418ac2f35cbbe5d5b9724cbecdf8b1de12b5660fe1dab1ff98f1aa8c",
+          "card_url": "/signed/cards/9a45f78d418ac2f35cbbe5d5b9724cbecdf8b1de12b5660fe1dab1ff98f1aa8c.json"
+        },
+        {
+          "axis": "care",
+          "card": "a0dc1db7ba9c75e52253f4c9c62f7adf1fa71d6fcc5aa511ae17a6eff799faf8",
+          "card_url": "/signed/cards/a0dc1db7ba9c75e52253f4c9c62f7adf1fa71d6fcc5aa511ae17a6eff799faf8.json"
+        },
+        {
+          "axis": "mmlu-30",
+          "card": "b42c8f0331cbc213726791dad2bc193bcc9d7b31eac3baf48b4a19cfc37f28b5",
+          "card_url": "/signed/cards/b42c8f0331cbc213726791dad2bc193bcc9d7b31eac3baf48b4a19cfc37f28b5.json"
+        },
+        {
+          "axis": "care-refusal-help",
+          "card": "b754300b65bdf3b17a208bf05a0c3c66a3692f5e9a23f3f80febfcb2535a7ebc",
+          "card_url": "/signed/cards/b754300b65bdf3b17a208bf05a0c3c66a3692f5e9a23f3f80febfcb2535a7ebc.json"
+        },
+        {
+          "axis": "swag-30",
+          "card": "cf9c7ebd0c3b0a9c8cb6e9f134d40c8951ad27449ab9fa466799a24daa5f6784",
+          "card_url": "/signed/cards/cf9c7ebd0c3b0a9c8cb6e9f134d40c8951ad27449ab9fa466799a24daa5f6784.json"
+        },
+        {
+          "axis": "gov",
+          "card": "da966a91cb7e1e17eb0ce004801eab7f70d68f9b789c45b2acc528c9ee5654e6",
+          "card_url": "/signed/cards/da966a91cb7e1e17eb0ce004801eab7f70d68f9b789c45b2acc528c9ee5654e6.json"
+        }
+      ],
       "corpus_as_of": "2026-08-19T09:24:39.174226+00:00",
       "free_board": "https://councilof.ai/api/gspc",
       "free_preview": "https://councilof.ai/api/request-attestation?subject=<id>",
@@ -65,22 +136,28 @@
       "interop_collection": {
         "included_in_paid_reserve": false,
         "match_basis": "CASE_INSENSITIVE_MODEL_SUBSTRING",
-        "matching_active_leaves": 0,
+        "matching_active_leaves": 18,
         "note": "These are active root references whose model contains the query text, not exact subject identities, card-v1 reserve entries or new GSPC board scores. Check each card signature independently; this unsigned pointer and root-byte match do not prove Bitcoin anchoring. Payment does not include these references.",
         "pointer_url": "https://councilof.ai/interop/card-root-latest.json",
-        "root_active_leaves": 1423,
-        "root_as_of": "2026-09-24T16:23:03Z",
+        "root_active_leaves": 1466,
+        "root_as_of": "2026-10-01T06:51:30Z",
         "root_integrity": "BYTE_MATCHES_UNSIGNED_POINTER",
-        "root_sha256": "0d3be673ff22448fccaf6ada6454fab9bf54f0acdd26115ce3170a5c9f3ac29e",
-        "root_url": "https://councilof.ai/interop/card-root-2026-09-24-d9195149ce5e.json",
-        "sample_card_urls": [],
+        "root_sha256": "c445fc6b80f22535e5c1f894856083854c7ec3d4eb0184915a70502e41846f55",
+        "root_url": "https://councilof.ai/interop/card-root-2026-10-01-35544212115c.json",
+        "sample_card_urls": [
+          "https://councilof.ai/interop/mill-cards-signed/signed-cross-re-4585c2c7cfd3.json",
+          "https://councilof.ai/interop/mill-cards-signed/signed-governan-5bea4064b8b7.json",
+          "https://councilof.ai/interop/mill-cards-signed/signed-jail-b8bcedf8fe71.json",
+          "https://councilof.ai/interop/mill-cards-signed/signed-provenan-529f9d28c550.json"
+        ],
         "signature_verification": "NOT_PERFORMED",
         "state": "ROOT_REFERENCES_AVAILABLE"
       },
       "read_from": "https://councilof.ai/signed/card-matrix.json",
-      "signed_cards_on_file": 0,
-      "subject": "model-or-subject-id"
+      "signed_cards_on_file": 14,
+      "subject": "llama3.2:3b"
     },
+    "pricing_terms": "accepts[] carries a launch amount until 2026-10-11T00:00:00Z (end of 2026-10-10 UTC). From then this request asks its standard amount, the one in csoai_pricing.normal_amount_atomic. Read accepts[] on every call; your wallet signs exactly the amount shown and nothing more.",
     "rail": {
       "facilitator_configured": true,
       "mode": "live",
@@ -103,7 +180,7 @@
         "input": {
           "method": "GET",
           "queryParams": {
-            "subject": "model-or-subject-id"
+            "subject": "llama3.2:3b"
           },
           "type": "http"
         },
@@ -193,7 +270,7 @@
           {
             "acceptIndex": 0,
             "format": "jws",
-            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9yZXF1ZXN0LWF0dGVzdGF0aW9uP3N1YmplY3Q9bW9kZWwtb3Itc3ViamVjdC1pZCIsInNjaGVtZSI6ImV4YWN0IiwidmFsaWRVbnRpbCI6MTc5MDU3MjQ4OCwidmVyc2lvbiI6MX0.zL5rg2TLzQsqsU7IEBADZdCJuWRJ7xonUNJ_thzL3pLQ9dbLq7zkIqc7kBhxQfm_5OgD2KxCO5tyDBAn3_bGBQ"
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9yZXF1ZXN0LWF0dGVzdGF0aW9uP3N1YmplY3Q9bGxhbWEzLjIlM0EzYiIsInNjaGVtZSI6ImV4YWN0IiwidmFsaWRVbnRpbCI6MTc5MTM1MjIwOCwidmVyc2lvbiI6MX0.n8R_q_YTeLkoAjb9F0_YX1fqAGnfdI3SpMMJ5bG7mNd-_-KJHkPr1IjzXeY7Dy0epB7UVbo2bfZz05HsKTm-Ag"
           }
         ]
       },
@@ -232,7 +309,7 @@
     }
   },
   "resource": {
-    "description": "One named subject gets a card-v0 commission receipt: SHA-256 content-addressed and Ed25519-signed by did:web:csoai.org#board-attestation-1 when available, otherwise sig_ed25519:null with unsigned_reason. Check csoai.signer before paying. Paid reserve returns up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The separate interop root in the free preview is not included in the paid reserve. Payment never creates a MEASURED board cell.",
+    "description": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Without that key: sig_ed25519:null, unsigned_reason. Check csoai.signer before paying. Paid reserve: up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The interop root in the free preview is not included in the paid reserve. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.",
     "mimeType": "application/json",
     "serviceName": "CSOAI Request Attest",
     "tags": [
@@ -241,7 +318,7 @@
       "measurement",
       "x402"
     ],
-    "url": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id"
+    "url": "https://councilof.ai/api/request-attestation?subject=llama3.2%3A3b"
   },
   "x402Version": 2
 }

@@ -35,6 +35,7 @@ import { PAID_TOOL_NAMES, paidToolResult } from "../mcp/_paid";
 import { EVIDENCE_TOOL_NAMES, evidenceToolResult } from "../mcp/_evidence";
 import { ROUTE_TOOL_NAMES, routeToolResult } from "../mcp/_route";
 import { ROUTER_READ_TOOLS, routerReadResult } from "./talkReads";
+import { BUY_INTENT, buyingAnswer } from "../api/_buying";
 
 type Json = Record<string, unknown>;
 
@@ -43,7 +44,7 @@ export type ToolCall = { tool: string; args: Json };
 export type Plan =
   | { kind: "tools"; intent: string; calls: ToolCall[] }
   | { kind: "needs_input"; intent: string; tool: string; missing: string; example: string }
-  | { kind: "help"; intent: "help" | "unknown" };
+  | { kind: "help"; intent: "help" | "unknown" | "buying" };
 
 export type Citation = { tool: string; record_id: string | null; url: string | null };
 
@@ -181,6 +182,12 @@ export function routeIntent(raw: string): Plan {
     const axis = extractAxis(text);
     return { kind: "tools", intent: "commission a signed card", calls: [{ tool: "commission_card", args: { subject: subj, ...(axis ? { axis } : {}) } }] };
   }
+  // How to buy, pay or get an invoice (7 Oct 2026, sell organ SG-07). "How do I buy an Article 50
+  // evidence pack and get an invoice?" names an obligation AND asks how to buy, and the obligation
+  // rule below sent it to evidence_bundle_preview: the buyer got a card count instead of the buying
+  // statement. A buying question is now tested BEFORE obligationOf(). One that names a URL keeps the
+  // tool route below, because that door's own 402 carries both ways to pay for that exact output.
+  if (BUY_INTENT.test(text) && !URL_RE.test(text)) return { kind: "help", intent: "buying" };
   // Signed evidence for ONE obligation (free): "which signed evidence is there for DORA",
   // "evidence for Article 50". Runs before the paid Article 50 rule, which keeps every question that
   // carries a URL ("article 50 marking evidence for https://…/image.png"): that one is about a file.
@@ -432,6 +439,11 @@ export async function executePlan(
   origin: string,
   onEvent?: (e: { phase: "start" | "end"; call: ToolCall; outcome?: ToolOutcome; id: string }) => void | Promise<void>,
 ): Promise<TalkAnswer> {
+  if (plan.kind === "help" && plan.intent === "buying") {
+    // The one published buying statement (functions/api/_buying.ts), the same words as /faq/#buying.
+    // No tool is called, so nothing here is labelled a tool answer.
+    return { kind: "help", intent: "buying", grounded: false, answer: buyingAnswer(), label: null, tool_calls: [], citations: [], answered_by: "deterministic: the published buying statement (no tool called)" };
+  }
   if (plan.kind === "help") {
     return { kind: "help", intent: plan.intent, grounded: false, answer: (plan.intent === "unknown" ? "I could not match that question to a tool, so I have no grounded answer for it.\n\n" : "") + HELP_TEXT, label: null, tool_calls: [], citations: [], answered_by: "deterministic router (no tool matched)" };
   }

@@ -40,7 +40,7 @@ import {
   type X402Env,
 } from "./_x402";
 import { railMode } from "./_x402_config";
-import { REQUEST_ATTESTATION_DESCRIPTION } from "./_x402_descriptions";
+import { REQUEST_ATTESTATION_DESCRIPTION, REQUEST_ATTESTATION_EXAMPLE_SUBJECT } from "./_x402_descriptions";
 import { AXES } from "./_axis_register";
 import { signPayload, cardV0, BOARD_ATTESTATION_DID } from "../_lib/cardSign";
 import { classifyCommissionTarget } from "./_commission_target";
@@ -343,7 +343,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
   // Behavior) — that echo is what gets a resource catalogued.
   const bazaar = declareBazaarHttpGet({
     method: "GET",
-    queryParams: { subject: subject || "model-or-subject-id", ...(axis ? { axis } : {}) },
+    queryParams: { subject: subject || REQUEST_ATTESTATION_EXAMPLE_SUBJECT, ...(axis ? { axis } : {}) },
     queryParamsSchema: {
       properties: {
         subject: { type: "string", description: "Subject to commission (model id, instrument id, or card sha)" },
@@ -354,7 +354,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     outputExample: {
       schema: "https://councilof.ai/schema/card-v0.json",
       surface: "ras.commission",
-      subject: "model-or-subject-id",
+      subject: REQUEST_ATTESTATION_EXAMPLE_SUBJECT,
       payload: { status: "COMMISSIONED", reserve: [], fresh_run: "UNMEASURED" },
       sig_ed25519: "<hex or null>",
       unmeasured: ["root_inclusion"],

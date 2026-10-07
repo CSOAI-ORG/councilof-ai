@@ -12,8 +12,14 @@
  *   agui_state  — POST /api/agui/run: grounded / unknown / needs_input / confirm_required / error
  *
  * WHAT IS NEVER STORED: no IP address, no user-agent string, no message text, no arguments, no
- * cookie, no identifier of any kind. A stored key is `usage:v1:<day>:<dim>:<name>:<random>`; the
- * random suffix only keeps two events from overwriting each other and links to nothing.
+ * cookie, no identifier of any kind. A stored key is `usage:v1:<day>:<dim>:<name>:<class>.<random>`;
+ * the random suffix only keeps two events from overwriting each other and links to nothing.
+ *
+ * CLIENT CLASS (7 Oct 2026, sell organ SG-09). <class> is one word from CLIENT_CLASSES, derived from
+ * the User-Agent header at write time by a fixed published rule (CLIENT_CLASS_RULE); the header
+ * itself is never stored. It says what kind of client the caller DECLARED (a browser, a crawler, an
+ * HTTP library, an agent runtime, nothing), never who it is: a User-Agent can claim anything. Rows
+ * written before this date carry an 8-hex suffix only and are read back as "unrecorded".
  *
  * SELF-EXCLUSION IS BY NAME, NEVER BY GUESS. A request is ours — and is not written at all — only
  * when it carries the header `x-csoai-self: <name>` with a name in SELF_TOOLS, or a User-Agent
@@ -57,6 +63,35 @@ export const SELF_TOOLS: readonly SelfTool[] = [
   { name: "fleet-lock-test", kind: "internal-job", runs_on: "functions/mcp/tool-fleet.lock.test.ts (live probe)", ua_token: "csoai-fleet-lock" },
   { name: "fresh-capsule", kind: "internal-job", runs_on: "functions/api/measurement/fresh-capsule.ts (server-side MCP probe)", ua_token: "csoai-fresh-capsule" },
 ];
+
+/** What kind of client a request declared, from its User-Agent. Never an identity. */
+export const CLIENT_CLASSES = ["browser", "crawler", "http-library", "agent-runtime", "no-ua", "other"] as const;
+export type ClientClass = (typeof CLIENT_CLASSES)[number];
+
+/** The published rule, first match wins. Served verbatim on GET /api/usage as client_class_rule. */
+export const CLIENT_CLASS_RULE: readonly { cls: ClientClass; when: string; re: RegExp | null }[] = [
+  { cls: "no-ua", when: "no User-Agent header, or an empty one", re: null },
+  { cls: "crawler", when: "the User-Agent names a bot, crawler, spider or link preview", re: /bot\b|crawl|spider|slurp|facebookexternalhit|preview/i },
+  { cls: "http-library", when: "the User-Agent starts with an HTTP client library or CLI token (curl, wget, python-requests, httpx, aiohttp, node-fetch, undici, node, axios, Go-http-client, okhttp, Java, PostmanRuntime, Deno, Bun, ...)", re: /^(curl|wget|python-requests|python-urllib|python-httpx|httpx|aiohttp|node-fetch|undici|node|axios|got|go-http-client|okhttp|java|apache-httpclient|ruby|php|postmanruntime|insomnia|deno|bun|libwww-perl|powershell)\b/i },
+  { cls: "agent-runtime", when: "the User-Agent names an agent or model runtime (mcp, claude, anthropic, openai, chatgpt, cursor, langchain, llamaindex, autogen, crewai, a2a, agent)", re: /\b(mcp|claude|anthropic|openai|chatgpt|cursor|langchain|llamaindex|autogen|crewai|a2a|agent)\b/i },
+  { cls: "browser", when: "the User-Agent starts with Mozilla/5.0 and matched nothing above", re: /^Mozilla\/5\.0/ },
+  { cls: "other", when: "anything else", re: /[\s\S]/ },
+];
+
+/** The class a request declares. Reads the User-Agent, keeps one word, stores nothing else. */
+export function clientClassOf(headers: Headers): ClientClass {
+  const ua = (headers.get("user-agent") ?? "").trim();
+  if (!ua) return "no-ua";
+  for (const r of CLIENT_CLASS_RULE) if (r.re && r.re.test(ua)) return r.cls;
+  return "other";
+}
+
+/** The class written into a stored key's suffix, or "unrecorded" for rows from before 7 Oct 2026. */
+export function clientClassOfKey(key: string): ClientClass | "unrecorded" {
+  const suffix = key.slice(key.lastIndexOf(":") + 1);
+  const m = suffix.match(/^([a-z-]+)\.[0-9a-f]{8}$/);
+  return m && (CLIENT_CLASSES as readonly string[]).includes(m[1]) ? (m[1] as ClientClass) : "unrecorded";
+}
 
 const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const TOKEN_RES = SELF_TOOLS.filter((t) => t.ua_token).map((t) => ({
@@ -125,7 +160,7 @@ export function recordUsage(ctx: UsageCtx, dim: UsageDim, rawName: string): stri
     if (dim === "mcp_client" && SELF_NAMES.has(cleanName(rawName).toLowerCase())) return null;
     const kv = kvOf(ctx.env);
     if (!kv) return null;
-    const key = usageKey(utcDay(), dim, cleanName(rawName), crypto.randomUUID().slice(0, 8));
+    const key = usageKey(utcDay(), dim, cleanName(rawName), `${clientClassOf(ctx.request.headers)}.${crypto.randomUUID().slice(0, 8)}`);
     const p = kv.put(key, "1", { expirationTtl: USAGE_RETENTION_DAYS * 86_400 }).catch(() => undefined);
     if (ctx.waitUntil) ctx.waitUntil(p);
     return key;
@@ -139,9 +174,18 @@ export type DayCounts = Record<UsageDim, Record<string, number>>;
 const emptyDay = (): DayCounts =>
   Object.fromEntries(USAGE_DIMS.map((d) => [d, {} as Record<string, number>])) as DayCounts;
 
-/** Count the rows under one day's prefix. `pages` caps the list calls; the result says if it was cut. */
-export async function countDay(kv: KV, day: string, maxPages = 20): Promise<{ counts: DayCounts; complete: boolean; rows: number }> {
+/**
+ * Count the rows under one day's prefix. `pages` caps the list calls; the result says if it was cut.
+ * `complete` is LIST completeness (the listing reached its end), not whether the day is over.
+ * `client_class` counts the same rows per dimension by the class in each key's suffix.
+ */
+export async function countDay(
+  kv: KV,
+  day: string,
+  maxPages = 20,
+): Promise<{ counts: DayCounts; complete: boolean; rows: number; client_class: DayCounts }> {
   const counts = emptyDay();
+  const client_class = emptyDay();
   let cursor: string | undefined;
   let rows = 0;
   for (let i = 0; i < maxPages; i++) {
@@ -150,10 +194,12 @@ export async function countDay(kv: KV, day: string, maxPages = 20): Promise<{ co
       const p = parseUsageKey(k.name);
       if (!p || p.day !== day) continue;
       counts[p.dim][p.name] = (counts[p.dim][p.name] ?? 0) + 1;
+      const cls = clientClassOfKey(k.name);
+      client_class[p.dim][cls] = (client_class[p.dim][cls] ?? 0) + 1;
       rows++;
     }
-    if (page.list_complete || !page.cursor) return { counts, complete: true, rows };
+    if (page.list_complete || !page.cursor) return { counts, complete: true, rows, client_class };
     cursor = page.cursor;
   }
-  return { counts, complete: false, rows };
+  return { counts, complete: false, rows, client_class };
 }

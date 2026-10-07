@@ -39,6 +39,7 @@ import {
 import WRAPPER_ASSET_DOORS from "../api/_wrapper_asset_doors.json";
 import { POPULATION_IDS } from "../api/_population";
 import { RAS_MCP_PROBE_DESCRIPTION, RAS_X402_CHECK_DESCRIPTION, RAS_SUPPLY_DESCRIPTION } from "../api/_x402_descriptions";
+import { REQUEST_ATTESTATION_EXAMPLE_SUBJECT as RA_SUBJECT } from "../api/_x402_descriptions";
 import { RAS_OUTPUT_SCHEMAS } from "../api/_ras_schemas";
 import { SKU as POPULATION_SKU } from "../api/_population_door";
 import FREE_TOOLS from "../mcp/gspc-tools.json";
@@ -189,10 +190,14 @@ export const onRequestGet: PagesFunction<X402Env> = async ({ request, env }) => 
           note: "Zero-priced discovery route using an existing free-door mechanism; not a new paid SKU. INDEXED may be claimed only after confirmed settlement and Bazaar readback.",
         };
       }),
-      { method: "GET", url: `${origin}/api/request-attestation?subject=model-or-subject-id`, paid_for: "issuance",
+      // A REAL example subject (7 Oct 2026, sell organ SG-10). This listed the placeholder
+      // `model-or-subject-id`, which the OpenAPI producer turned into a `const`; a self-test paid for
+      // it on 22 Sep and it sat QUEUED as a model for 15 days. llama3.2:3b has signed cards on file
+      // (/signed/card-matrix.json), so the example's free preview shows a non-empty reserve.
+      { method: "GET", url: `${origin}/api/request-attestation?subject=${RA_SUBJECT}`, paid_for: "issuance",
         description:
           REQUEST_ATTESTATION_DESCRIPTION,
-        ...req(`${origin}/api/request-attestation?subject=model-or-subject-id`, REQUEST_ATTESTATION_DESCRIPTION)  },
+        ...req(`${origin}/api/request-attestation?subject=${RA_SUBJECT}`, REQUEST_ATTESTATION_DESCRIPTION)  },
       // `<id>` meant a MODEL id two lines above and an OBLIGATION id here, so a buyer reading
       // this file tries the obvious thing and gets 404 unknown_obligation. Probed 2026-09-05:
       // obligation=gpt-4o -> 404, obligation=dora|eu-cra|article-50|article-53 -> 402. The

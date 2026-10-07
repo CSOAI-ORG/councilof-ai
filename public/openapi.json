@@ -176,7 +176,7 @@
       "url": "https://creativecommons.org/licenses/by/4.0/"
     },
     "title": "Council of AI \u2014 Public API",
-    "version": "0.3+d27ac0d407c7",
+    "version": "0.3+aae78a4ce192",
     "x-guidance": "Free board: GET /api/gspc \u2014 quote totals.lid verbatim, never compose a count. Paid doors are the operations carrying x-payment-info: GET without payment answers HTTP 402 with the x402 v2 challenge (accepts[0]: scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31); pay it and retry with the X-PAYMENT header. Required query parameters carry an example that reaches the 402. Free previews are named per door under x-csoai.free_preview. Catalog: https://councilof.ai/.well-known/x402.json and https://councilof.ai/api/x402. Verify is free: https://councilof.ai/gspc-verify. Offer & Receipt emission is conditional: a 402 carries server-signed offers only when the Pages signing key is available; a settled 200 carries a signed receipt only when settlement exposes the required payer and transaction evidence and that key is available. The extension uses JWS/EdDSA, kid did:web:csoai.org#board-attestation-1, published at https://csoai.org/.well-known/did.json. Check either without trusting this document: POST it to /api/receipts/verify, or download https://councilof.ai/verifier/verify_receipt.py; default mode reads the public DID document, and a retained key document allows offline replay. 23 axes measured \u00b7 14 model fleets \u00b7 0 separated leaders \u00b7 9 public leader scores \u00b7 9 fact runs \u00b7 TIE is TIE \u00b7 not a certificate."
   },
   "openapi": "3.1.0",
@@ -7796,17 +7796,17 @@
     },
     "/api/request-attestation": {
       "get": {
-        "description": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Without that key: sig_ed25519:null, unsigned_reason. Check csoai.signer before paying. Paid reserve: up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The interop root in the free preview is not included in the paid reserve. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.",
+        "description": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Else sig_ed25519:null, unsigned_reason. Check csoai.signer before paying. Reserve: up to 24 card-v1 refs, dated /signed/card-matrix.json only; reserve_count covers that corpus. Preview interop root: not included in the paid reserve. Fresh run fulfilled by hand; no delivery date. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.",
         "operationId": "x402_request_attestation",
         "parameters": [
           {
             "description": "Subject to commission (model id, instrument id, or card sha)",
-            "example": "model-or-subject-id",
+            "example": "llama3.2:3b",
             "in": "query",
             "name": "subject",
             "required": true,
             "schema": {
-              "const": "model-or-subject-id",
+              "const": "llama3.2:3b",
               "type": "string"
             }
           },
@@ -7825,12 +7825,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Without that key: sig_ed25519:null, unsigned_reason. Check csoai.signer before paying. Paid reserve: up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The interop root in the free preview is not included in the paid reserve. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.",
+                  "description": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Else sig_ed25519:null, unsigned_reason. Check csoai.signer before paying. Reserve: up to 24 card-v1 refs, dated /signed/card-matrix.json only; reserve_count covers that corpus. Preview interop root: not included in the paid reserve. Fresh run fulfilled by hand; no delivery date. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.",
                   "type": "object"
                 }
               }
             },
-            "description": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Without that key: sig_ed25519:null, unsigned_reason. Check csoai.signer before paying. Paid reserve: up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The interop root in the free preview is not included in the paid reserve. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free."
+            "description": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Else sig_ed25519:null, unsigned_reason. Check csoai.signer before paying. Reserve: up to 24 card-v1 refs, dated /signed/card-matrix.json only; reserve_count covers that corpus. Preview interop root: not included in the paid reserve. Fresh run fulfilled by hand; no delivery date. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free."
           },
           "402": {
             "content": {
@@ -7851,7 +7851,7 @@
                         "sku_id": "request_attestation",
                         "starts_at": "2026-09-11T00:00:00Z"
                       },
-                      "description": "One named subject gets a card-v0 commission receipt: SHA-256 content-addressed and Ed25519-signed by did:web:csoai.org#board-attestation-1 when available, otherwise sig_ed25519:null with unsigned_reason. Check csoai.signer before paying. Paid reserve returns up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The separate interop root in the free preview is not included in the paid reserve. Payment never creates a MEASURED board cell.",
+                      "description": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Without that key: sig_ed25519:null, unsigned_reason. Check csoai.signer before paying. Paid reserve: up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The interop root in the free preview is not included in the paid reserve. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.",
                       "extra": {
                         "decimals": 6,
                         "name": "USD Coin",
@@ -7863,7 +7863,7 @@
                       "mimeType": "application/json",
                       "network": "eip155:8453",
                       "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-                      "resource": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id",
+                      "resource": "https://councilof.ai/api/request-attestation?subject=llama3.2%3A3b",
                       "scheme": "exact"
                     }
                   ],
@@ -7874,7 +7874,7 @@
                         "input": {
                           "method": "GET",
                           "queryParams": {
-                            "subject": "model-or-subject-id"
+                            "subject": "llama3.2:3b"
                           },
                           "type": "http"
                         },
@@ -7964,7 +7964,7 @@
                           {
                             "acceptIndex": 0,
                             "format": "jws",
-                            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9yZXF1ZXN0LWF0dGVzdGF0aW9uP3N1YmplY3Q9bW9kZWwtb3Itc3ViamVjdC1pZCIsInNjaGVtZSI6ImV4YWN0IiwidmFsaWRVbnRpbCI6MTc5MDU3MjQ4OCwidmVyc2lvbiI6MX0.zL5rg2TLzQsqsU7IEBADZdCJuWRJ7xonUNJ_thzL3pLQ9dbLq7zkIqc7kBhxQfm_5OgD2KxCO5tyDBAn3_bGBQ"
+                            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9yZXF1ZXN0LWF0dGVzdGF0aW9uP3N1YmplY3Q9bGxhbWEzLjIlM0EzYiIsInNjaGVtZSI6ImV4YWN0IiwidmFsaWRVbnRpbCI6MTc5MTM1MjIwOCwidmVyc2lvbiI6MX0.n8R_q_YTeLkoAjb9F0_YX1fqAGnfdI3SpMMJ5bG7mNd-_-KJHkPr1IjzXeY7Dy0epB7UVbo2bfZz05HsKTm-Ag"
                           }
                         ]
                       },
@@ -8003,7 +8003,7 @@
                     }
                   },
                   "resource": {
-                    "description": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Without that key: sig_ed25519:null, unsigned_reason. Check csoai.signer before paying. Paid reserve: up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The interop root in the free preview is not included in the paid reserve. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.",
+                    "description": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Else sig_ed25519:null, unsigned_reason. Check csoai.signer before paying. Reserve: up to 24 card-v1 refs, dated /signed/card-matrix.json only; reserve_count covers that corpus. Preview interop root: not included in the paid reserve. Fresh run fulfilled by hand; no delivery date. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Request Attest",
                     "tags": [
@@ -8012,7 +8012,7 @@
                       "measurement",
                       "x402"
                     ],
-                    "url": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id"
+                    "url": "https://councilof.ai/api/request-attestation?subject=llama3.2%3A3b"
                   },
                   "x402Version": 2
                 },
@@ -8041,9 +8041,9 @@
           "challenge": {
             "amount_source": "captured live 402 (challenges/request_attestation.json)",
             "captured": true,
-            "payment_required_header_bytes": 2864
+            "payment_required_header_bytes": 3696
           },
-          "door": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id",
+          "door": "https://councilof.ai/api/request-attestation?subject=llama3.2:3b",
           "free_preview": "https://councilof.ai/api/request-attestation?subject=<id>",
           "never": [
             "a score",

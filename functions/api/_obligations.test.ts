@@ -11,11 +11,21 @@ describe("obligation map — SKU-2 assembles against real obligations, never det
     expect(resolveObligation("nonsense")).toBeNull();
   });
 
-  it("only Article 50 is counsel-confirmed; the others ship their honesty note", () => {
+  it("a counsel-confirmed obligation ships no honesty note; every other one ships its note", () => {
     for (const o of Object.values(OBLIGATIONS)) {
       if (o.counsel_confirmed) expect(o.honesty).toBeNull();
       else expect(o.honesty).toMatch(/counsel|not (?:yet )?in the .*crosswalk|conformity/i);
     }
+  });
+
+  // Sell organ SG-08 (7 Oct 2026): article-50 read counsel_confirmed: true from 6383bf3d0 (2 Sep)
+  // with no counsel named, no date and no sign-off on record. No obligation is counsel-confirmed
+  // until the owner names the counsel and the date; article-50 says so on every output.
+  it("no obligation claims a counsel review that has no record; article-50 carries its review note", () => {
+    for (const o of Object.values(OBLIGATIONS)) expect(o.counsel_confirmed, o.id).toBe(false);
+    const a50 = OBLIGATIONS["article-50"];
+    expect(a50.review_note).toMatch(/Counsel review of the Article 50 wording is pending/);
+    expect(a50.honesty).toMatch(/not a legal determination/);
   });
 
   it("relevance always needs an obligation keyword; a given subject must also match, an absent one constrains nothing", () => {

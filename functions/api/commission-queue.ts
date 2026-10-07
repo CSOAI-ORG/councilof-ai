@@ -7,12 +7,24 @@
  *      (closes LIVE gap: CQ count=0 while /api/commissions queued≥1 for pre-enqueue admits)
  *
  * Aggregate public facts only. Never a score. SKU/UNFULFILLABLE never enter mill priority.
+ *
+ * OWED WORK ONLY (7 Oct 2026, product organ PS-02). A row is owed work only when someone other than
+ * the estate paid for it. Each row's payment is classed by commissionOrigin() — the settled:tx:<tx>
+ * record, the same self/zero rules as /api/revenue and /api/commissions — and a row the estate
+ * paid itself (SELF_TEST) or that moved nothing (ZERO_VALUE) leaves `rows` for `not_owed`, where it
+ * stays on the record with its class. The two rows QUEUED for 15 and 31 days on 7 Oct were both
+ * self payments (owner test wallet; house wallet to itself), so no refund is owed. A row whose
+ * payment cannot be read (UNCHECKABLE) stays queued: it could be a stranger's.
  */
 import { classifyCommissionTarget } from "./_commission_target";
-import { readHubCardsIndex, readPodCardsIndex } from "./commissions";
+import { commissionOrigin, readHubCardsIndex, readPodCardsIndex, type CommissionOrigin } from "./commissions";
 import { headFromGet } from "./_head";
+import { INVOICE_CONTACT } from "./_invoice_handoff";
 
-type Env = { REVENUE_KV?: KVNamespace; ASSETS?: { fetch: (r: Request) => Promise<Response> } };
+type Env = { REVENUE_KV?: KVNamespace; ASSETS?: { fetch: (r: Request) => Promise<Response> }; X402_PAY_TO?: string; X402_SELF_WALLETS?: string };
+
+/** A row the estate paid for itself, or that moved nothing: kept on the record, never owed work. */
+type NotOwedRow = Omit<QueueRow, "status"> & { status: "SELF_TEST" | "ZERO_VALUE"; origin: CommissionOrigin };
 
 type QueueRow = {
   subject: string;
@@ -173,9 +185,17 @@ export async function buildCommissionQueue(env: Env, origin = "https://councilof
     return { ...base, status: "UNMEASURED", rows: null, note: "no store bound — null, never empty" };
   }
   try {
-    const listed = await listCommissionQueue(env.REVENUE_KV);
+    const kv = env.REVENUE_KV;
+    const listed = await listCommissionQueue(kv);
     const reconciled = await suppressDelivered(listed.rows, env, origin, fetcher);
-    const rows = reconciled.rows;
+    const origins = await Promise.all(reconciled.rows.map((r) => commissionOrigin(kv, r.tx, env)));
+    const rows: (QueueRow & { origin: CommissionOrigin })[] = [];
+    const not_owed: NotOwedRow[] = [];
+    reconciled.rows.forEach((r, i) => {
+      const o = origins[i];
+      if (o === "SELF_TEST" || o === "ZERO_VALUE") not_owed.push({ ...r, status: o, origin: o });
+      else rows.push({ ...r, origin: o });
+    });
     return {
       ...base,
       status: "MEASURED",
@@ -183,12 +203,23 @@ export async function buildCommissionQueue(env: Env, origin = "https://councilof
       count: rows.length,
       queued: rows.filter((r) => r.fulfillment === "QUEUED").length,
       unfulfillable: rows.filter((r) => r.fulfillment === "UNFULFILLABLE").length,
+      self_test: not_owed.filter((r) => r.status === "SELF_TEST").length,
+      zero_value: not_owed.filter((r) => r.status === "ZERO_VALUE").length,
+      origin_rule:
+        "rows = owed work: payment OUTSIDE (a non-self wallet moved a non-zero amount) or UNCHECKABLE (no settlement record " +
+        "to read, so it could be anyone's). not_owed = SELF_TEST (an estate wallet paid) or ZERO_VALUE (nothing moved): on " +
+        "the record, never in the mill queue. Same record and rules as /api/commissions and /api/revenue; payer addresses are never returned.",
+      dispatch: {
+        mode: "MANUAL",
+        note: `Fresh model runs are fulfilled by hand: a queued row carries no delivery date. To ask about a fresh run, email ${INVOICE_CONTACT}.`,
+      },
       delivery_reconciliation: {
         state: reconciled.state,
         suppressed: reconciled.suppressed,
         meaning: "Signed cards already published for the requested model/axis leave the active mill queue. Index unreadable keeps work visible and reports UNCHECKABLE.",
       },
       rows,
+      not_owed,
       records_unreadable: listed.unreadable,
     };
   } catch (e) {

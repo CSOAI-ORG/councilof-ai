@@ -23,6 +23,7 @@ import countersDoc from "../../counters.json";
 import { railMode } from "./_x402_config";
 import { selfWallets } from "./_x402";
 import { headFromGet } from "./_head";
+import { REQUEST_ATTESTATION_EXAMPLE_SUBJECT } from "./_x402_descriptions";
 
 type CanonCounter = {
   value: string | number | null;
@@ -156,6 +157,175 @@ async function metric(
 }
 
 /**
+ * WHOSE SUBJECT WAS PAID FOR (7 Oct 2026, sell organ SG-09). A non-self payer is not yet a customer:
+ * the two counted on 7 Oct paid for a pack about our own og-image and for our own data feed. The
+ * subject a paid request named is read from the settled resource URL and classed:
+ *   OURS        a host of the estate, or an id of one of our own models / overlays
+ *   PLACEHOLDER a documentation placeholder (model-or-subject-id, example.com/.org/.net, localhost)
+ *   EXAMPLE     the example value a door is listed under in /.well-known/x402.json — the subject a
+ *               tester following the catalogue pays for (pinned to the manifest by revenue.outside.test.ts)
+ *   OUTSIDE     anything else that names a single subject
+ *   NONE        the door names no single subject (board totals, feeds, population slices, batches)
+ * Read from the URL only: nothing here fetches the subject or decides who its owner is beyond this list.
+ */
+export type SubjectClass = "OURS" | "PLACEHOLDER" | "EXAMPLE" | "OUTSIDE" | "NONE";
+
+/** The estate's own hosts (domain portfolio, 25 Sep 2026) and its Pages projects. */
+export const OWN_HOSTS: readonly string[] = [
+  "councilof.ai", "csoai.org", "proofof.ai", "openmoe.ai", "asisecurity.ai", "agisafe.ai", "safetyof.ai", "meok.ai",
+  "defoneos.com", "councilof-ai.pages.dev", "csoai-site.pages.dev",
+];
+/** Our own model ids: the council fine-tunes and overlays (clan-*, sov*, csoai*, meok*). */
+const OWN_ID = /(^|[^a-z0-9])(csoai|councilof|sov\d*|sovos|meok|clan)(?=$|[^a-z])/i;
+const PLACEHOLDER_HOST = /(^|\.)(example\.(com|org|net)|localhost)$/i;
+const PLACEHOLDER_IDS = new Set(["model-or-subject-id", "<id>", "<subject>", "<url>"]);
+/** Query parameters through which a paid door names its one subject. */
+export const SUBJECT_PARAMS = ["url", "subject", "endpoint", "server", "asset", "id", "model"] as const;
+/**
+ * The subject values the paid doors are LISTED under in /.well-known/x402.json (functions/.well-known/
+ * x402.json.ts). revenue.outside.test.ts renders the manifest and fails when a listed example is not here.
+ */
+export const LISTED_EXAMPLE_SUBJECTS: ReadonlySet<string> = new Set([
+  REQUEST_ATTESTATION_EXAMPLE_SUBJECT, "RLUSD", "usdc.e:arbitrum", "USDC",
+  "https://councilof.ai/og-image.png", "https://councilof.ai/mcp", "https://councilof.ai/api/free-door",
+]);
+
+const hostOf = (v: string): string | null => {
+  try {
+    const u = new URL(v);
+    return u.protocol === "http:" || u.protocol === "https:" ? u.hostname.toLowerCase() : null;
+  } catch {
+    return null;
+  }
+};
+const ownHost = (h: string) => OWN_HOSTS.some((o) => h === o || h.endsWith(`.${o}`));
+
+export function subjectClassOf(resource: string | null | undefined): { cls: SubjectClass; subject: string | null } {
+  let u: URL;
+  try {
+    u = new URL(String(resource || ""));
+  } catch {
+    return { cls: "NONE", subject: null };
+  }
+  let subject: string | null = null;
+  for (const k of SUBJECT_PARAMS) {
+    const v = u.searchParams.get(k);
+    if (v && v.trim()) {
+      subject = v.trim();
+      break;
+    }
+  }
+  const fromQuery = !!subject;
+  // Per-asset doors carry the subject in the path: /api/wrapper/asset/<symbol>. That door IS the
+  // asset (one door per asset), so its subject is never read as a listed example.
+  if (!subject) subject = u.pathname.match(/^\/api\/wrapper\/asset\/([^/]+)$/)?.[1] ?? null;
+  if (!subject) return { cls: "NONE", subject: null };
+  if (PLACEHOLDER_IDS.has(subject.toLowerCase())) return { cls: "PLACEHOLDER", subject };
+  const host = hostOf(subject);
+  if (host && PLACEHOLDER_HOST.test(host)) return { cls: "PLACEHOLDER", subject };
+  if (host ? ownHost(host) : OWN_ID.test(subject)) return { cls: "OURS", subject };
+  if (fromQuery && LISTED_EXAMPLE_SUBJECTS.has(subject)) return { cls: "EXAMPLE", subject };
+  return { cls: "OUTSIDE", subject };
+}
+
+/** The invoice rail's request counter (functions/api/art50/marking-evidence.ts). */
+export const INVOICE_REQUESTED_KEY = "count:invoice_requested";
+/** The first day the invoice rail recorded requests instead of issuing the pack before payment. */
+export const INVOICE_COUNTING_SINCE = "2026-10-07";
+
+/**
+ * Art 50 packs issued on the invoice rail BEFORE payment — every invoice-gbp issuance written before
+ * the rail became a quotation (7 Oct 2026). They sit inside count:issuances and were never paid, so
+ * they are named here rather than left to read as sales. Bounded read; the bound is reported.
+ */
+async function legacyInvoiceIssuances(kv: KVNamespace, limit = 1000): Promise<{ count: number; read: number; truncated: boolean }> {
+  const keys: string[] = [];
+  let cursor: string | undefined;
+  let truncated = false;
+  do {
+    const page = await kv.list({ prefix: "art50:", cursor, limit: 1000 });
+    for (const k of page.keys) keys.push(k.name);
+    cursor = page.list_complete ? undefined : (page as { cursor?: string }).cursor;
+    if (cursor && keys.length >= limit) truncated = true;
+  } while (cursor && keys.length < limit);
+  let count = 0;
+  for (const key of keys) {
+    try {
+      const r = JSON.parse((await kv.get(key)) || "null") as { payment?: { mode?: string; state?: string } } | null;
+      if (r?.payment?.mode === "invoice-gbp" && r.payment.state !== "MARKED_PAID") count++;
+    } catch {
+      /* an unreadable record is not evidence of an unpaid pack */
+    }
+  }
+  return { count, read: keys.length, truncated };
+}
+
+async function invoiceCounts(env: RevenueEnv): Promise<Record<string, unknown>> {
+  const definition =
+    "GBP invoice requests on the Article 50 door: one per reference (one organisation, one output's bytes), " +
+    "recorded when the reference is first asked for. A request is neither revenue nor an issuance; the signed pack " +
+    "is issued, and counted as an issuance, only when the owner marks the reference paid.";
+  const kv = env.REVENUE_KV;
+  if (!kv) {
+    return {
+      invoice_requested: { count: null, status: "UNMEASURED", source: "no REVENUE_KV bound — nothing is recorded, so nothing is counted", definition, counting_since: INVOICE_COUNTING_SINCE },
+      issued_before_payment: { count: null, status: "UNMEASURED", source: "no REVENUE_KV bound" },
+    };
+  }
+  let invoice_requested: Record<string, unknown>;
+  try {
+    const raw = await kv.get(INVOICE_REQUESTED_KEY);
+    const n = raw == null || raw === "" ? 0 : Number(raw);
+    invoice_requested = Number.isFinite(n)
+      ? {
+          count: n,
+          status: "MEASURED",
+          source: raw == null ? `REVENUE_KV ${INVOICE_REQUESTED_KEY} (absent: no request recorded since counting began)` : `REVENUE_KV ${INVOICE_REQUESTED_KEY}`,
+          definition,
+          counting_since: INVOICE_COUNTING_SINCE,
+          counting_note: "Counted from the deploy of the quotation rule (on or after the date above). Earlier invoice-rail requests were issued as packs and are counted under issued_before_payment.",
+        }
+      : { count: null, status: "UNMEASURED", source: `REVENUE_KV ${INVOICE_REQUESTED_KEY} unreadable (${raw})`, definition, counting_since: INVOICE_COUNTING_SINCE };
+  } catch (e) {
+    invoice_requested = { count: null, status: "UNMEASURED", source: `REVENUE_KV read failed (${(e as Error).message}) — count stays null, never substituted`, definition, counting_since: INVOICE_COUNTING_SINCE };
+  }
+  let issued_before_payment: Record<string, unknown>;
+  try {
+    const legacy = await legacyInvoiceIssuances(kv);
+    issued_before_payment = {
+      count: legacy.count,
+      status: legacy.truncated ? "PARTIAL" : "MEASURED",
+      records_read: legacy.read,
+      truncated: legacy.truncated,
+      source: "REVENUE_KV art50:* records with payment.mode invoice-gbp and no paid mark",
+      note:
+        `Article 50 packs the invoice rail signed and issued before any payment, until ${INVOICE_COUNTING_SINCE}. Each is ` +
+        "inside skus.issuance.count, and none is a sale.",
+    };
+  } catch (e) {
+    issued_before_payment = { count: null, status: "UNMEASURED", source: `REVENUE_KV list failed (${(e as Error).message})` };
+  }
+  return { invoice_requested, issued_before_payment };
+}
+
+const DELIVERED_OUTSIDE_BASE = {
+  id: "delivered_outside",
+  definition:
+    "Distinct non-self payer wallets (the one_number rules: payTo and X402_SELF_WALLETS excluded, non-zero settlements only) " +
+    "with at least one settlement for a door that names a subject that is not ours. A payer who paid only for our own " +
+    "subjects, a documentation placeholder, the example a door is listed under, or a door that names no single subject " +
+    "is not counted.",
+  subject_rule:
+    "The subject is the settled resource URL's url / subject / endpoint / server / asset / id / model parameter, or the " +
+    "/api/wrapper/asset/<symbol> path. OURS = an estate host (" + OWN_HOSTS.join(", ") + ") or our own model id " +
+    "(clan-*, sov*, csoai*, meok*); PLACEHOLDER = model-or-subject-id, example.com/.org/.net or localhost; EXAMPLE = " +
+    "the value the door is listed under in /.well-known/x402.json.",
+  caveat:
+    "A settlement record is written when the payment settles, before the pack is built; a pack that then failed to build " +
+    "would still count. The payer's identity is not known: a wallet that is not on the self list is not proven to be a stranger.",
+};
+
+/**
  * THE ONE NUMBER — distinct wallets that are not ours and paid. Every outside read of this estate
  * on 2026-09-05 converged on it as the only figure that decides the next move. Derived from the
  * settlement records recordSettlement() writes (functions/api/_x402.ts), never from the tally:
@@ -180,7 +350,8 @@ async function oneNumber(env: RevenueEnv): Promise<Record<string, unknown>> {
   if (!kv) {
     return { ...base, status: "UNMEASURED", all_time: null, last_30d: null, settlements: null, self_settlements: null, distinct_payers_by_door: null,
       repeat_nonself_payers: repeatPayers(null, null),
-      source: "no REVENUE_KV bound — nothing is recorded, so nothing is counted" };
+      source: "no REVENUE_KV bound — nothing is recorded, so nothing is counted",
+      delivered_outside: { ...DELIVERED_OUTSIDE_BASE, status: "UNMEASURED", all_time: null, last_30d: null, payers_by_subject_class: null, source: "no REVENUE_KV bound" } };
   }
   try {
     const listed = await listSettlementRecords(kv);
@@ -191,6 +362,9 @@ async function oneNumber(env: RevenueEnv): Promise<Record<string, unknown>> {
     const transactionsByPayer = new Map<string, Set<string>>();
     const recentTransactionsByPayer = new Map<string, Set<string>>();
     const byDoor: Record<string, Set<string>> = {};
+    const outsideAll = new Set<string>();
+    const outsideRecent = new Set<string>();
+    const payersByClass: Record<SubjectClass, Set<string>> = { OURS: new Set(), PLACEHOLDER: new Set(), EXAMPLE: new Set(), OUTSIDE: new Set(), NONE: new Set() };
     let settlements = 0;
     let selfSettlements = 0;
     let zeroValueSettlements = 0;
@@ -257,6 +431,14 @@ async function oneNumber(env: RevenueEnv): Promise<Record<string, unknown>> {
       // rather than dropped, so the per-door counts always sum to at least all_time.
       const door = (r.resource || "").trim() || "UNKNOWN_RESOURCE";
       (byDoor[door] ??= new Set<string>()).add(payer);
+      // Whose subject this payer paid for (SG-09): only a subject that is not ours makes the
+      // payer evidence of an outside customer.
+      const { cls } = subjectClassOf(r.resource);
+      payersByClass[cls].add(payer);
+      if (cls === "OUTSIDE") {
+        outsideAll.add(payer);
+        if (inLast30d) outsideRecent.add(payer);
+      }
     }
     const distinct_payers_by_door = Object.fromEntries(
       Object.keys(byDoor).sort().map((d) => [d, byDoor[d].size]),
@@ -286,11 +468,20 @@ async function oneNumber(env: RevenueEnv): Promise<Record<string, unknown>> {
           "index — read the index itself: scripts/interop/x402-bazaar-audit.py walks PayAI and " +
           "Coinbase CDP to completion and is the only thing that can say whether we are in one.",
       },
-      gates: { "0 for 30 days": "shape or price is wrong; do not add doors", "≥1 repeat": "open the next door", "≥5 distinct in 30d": "it is a product" } };
+      gates: { "0 for 30 days": "shape or price is wrong; do not add doors", "≥1 repeat": "open the next door", "≥5 distinct in 30d": "it is a product" },
+      delivered_outside: {
+        ...DELIVERED_OUTSIDE_BASE,
+        status: "MEASURED",
+        all_time: outsideAll.size,
+        last_30d: outsideRecent.size,
+        payers_by_subject_class: Object.fromEntries((Object.keys(payersByClass) as SubjectClass[]).map((k) => [k, payersByClass[k].size])),
+        source: "REVENUE_KV settled:tx:* records — the same non-self, non-zero settlements as one_number",
+      } };
   } catch (e) {
     return { ...base, status: "UNMEASURED", all_time: null, last_30d: null, settlements: null, self_settlements: null, distinct_payers_by_door: null,
       repeat_nonself_payers: repeatPayers(null, null),
-      source: `REVENUE_KV read failed (${(e as Error).message}) — count stays null, never substituted` };
+      source: `REVENUE_KV read failed (${(e as Error).message}) — count stays null, never substituted`,
+      delivered_outside: { ...DELIVERED_OUTSIDE_BASE, status: "UNMEASURED", all_time: null, last_30d: null, payers_by_subject_class: null, source: "REVENUE_KV read failed" } };
   }
 }
 
@@ -305,13 +496,17 @@ const json = (body: unknown, status = 200) =>
   });
 
 export async function buildRevenue(env: RevenueEnv) {
-  const [issuances, proofs, licences, settledFromTally, one_number] = await Promise.all([
+  const [issuances, proofs, licences, settledFromTally, oneNumberRead, invoice] = await Promise.all([
     metric(env, "revenue_issuances", "count:issuances"),
     metric(env, "revenue_proofs", "count:proofs"),
     metric(env, "revenue_licences", "count:licences"),
     metric(env, "revenue_settled_usdc", "settled:usdc_atomic"),
     oneNumber(env),
+    invoiceCounts(env),
   ]);
+  // delivered_outside is read in the same pass over settled:tx:* and served BESIDE one_number.
+  const { delivered_outside, ...one_number } = oneNumberRead as Record<string, unknown> & { delivered_outside: unknown };
+  const issuedBeforePayment = (invoice.issued_before_payment as { count?: number | null } | undefined)?.count ?? null;
   const settled =
     one_number.status === "MEASURED" && typeof one_number.settled_usdc_atomic === "number"
       ? {
@@ -344,12 +539,19 @@ export async function buildRevenue(env: RevenueEnv) {
       not_a_grade: "Revenue is earned on issuance, assembly, and a durable signature — never a grade.",
     },
     skus: {
-      issuance: { sku: "SKU-1", ...issuances },
+      issuance: {
+        sku: "SKU-1",
+        ...issuances,
+        // Named, not subtracted: the tally is what was written, and these packs are inside it.
+        includes_issued_before_payment: issuedBeforePayment,
+      },
       proofs: { sku: "SKU-2", ...proofs },
       licences: { sku: "SKU-3", ...licences },
     },
     settled_usdc: { ...settled, unit: "USDC atomic (6dp) on Base", excludes_self: true },
     one_number,
+    delivered_outside,
+    invoice,
     provisioning: {
       kv_bound: !!env.REVENUE_KV,
       gated: !!env.REVENUE_KEY,

@@ -233,25 +233,73 @@ describe("x402 rail — price only inside the 402", () => {
 });
 
 describe("invoice rail — ?commissioned_by=<org>&invoice=gbp", () => {
-  it("issues the same pack now with payment {mode: invoice-gbp, reference: CSOAI-A50-<id>} and states no price", async () => {
+  // INVOICE = A QUOTATION UNTIL PAID (7 Oct 2026, sell organ SG-04 + M1). Before this date the
+  // invoice rail signed and returned the pack at once and counted an issuance, so any caller could
+  // skip the paid door by typing an organisation name. Now: the free measurement and a recorded
+  // reference; the signed pack only after the owner writes the paid mark.
+  const kvStore = () => {
+    const store = new Map<string, string>();
+    return { store, get: async (k: string) => store.get(k) ?? null, put: async (k: string, v: string) => void store.set(k, v) };
+  };
+
+  it("returns the unsigned measurement and a recorded reference, never the signed pack, and states no price", async () => {
     stubFetch();
-    const r = await post(ctx(`${EP}?commissioned_by=${encodeURIComponent("Acme Design Ltd")}&invoice=gbp`, {}, { method: "POST", headers: { "content-type": "image/png" }, body: PLAIN_PNG }));
+    const kv = kvStore();
+    const r = await post(ctx(`${EP}?commissioned_by=${encodeURIComponent("Acme Design Ltd")}&invoice=gbp`, { REVENUE_KV: kv }, { method: "POST", headers: { "content-type": "image/png" }, body: PLAIN_PNG }));
     expect(r.status).toBe(200);
     const b = await r.json();
     expect(b.mode).toBe("invoice-gbp");
-    expect(b.payment).toMatchObject({ mode: "invoice-gbp", commissioned_by: "Acme Design Ltd", currency: "GBP" });
+    expect(b.state).toBe("AWAITING_PAYMENT");
+    expect(b.signed).toBe(false);
+    expect(b.card).toBeNull();
+    expect(JSON.stringify(b)).not.toMatch(/sig_ed25519/);
+    expect(b.payment).toMatchObject({ mode: "invoice-gbp", commissioned_by: "Acme Design Ltd", currency: "GBP", state: "AWAITING_PAYMENT" });
     expect(b.payment.reference).toMatch(/^CSOAI-A50-[0-9A-F]{10}$/);
-    expect(b.card.payload.payment.reference).toBe(b.payment.reference);
-    expect(b.card.tags).toContain("rail:invoice-gbp");
+    expect(b.measurement.statements).toContain("marking not detected by method c2pa.manifest-store");
     expect(b.invoice.amount).toBeNull();
     expect(b.invoice.issuer).toMatch(/16939677/);
-    expect(b.card.payload.statements).toContain("marking not detected by method c2pa.manifest-store");
-    expect(b.card.payload.law.fine_ceiling).toBeUndefined();
-    expect(b.card.payload.law.pre_existing_basis).toMatch(/Art 111\(4\)/);
-    expect(b.bytes).toBeLessThanOrEqual(3072);
+    // the per-door wording: this door DID record the request, and says what it holds
+    expect(b.invoice.recorded).toBe(true);
+    expect(b.invoice.recorded_under).toBe(`REVENUE_KV art50-invoice:${b.payment.reference}`);
+    expect(b.invoice.recorded_note).toMatch(/^Recorded under reference CSOAI-A50-/);
+    expect(b.invoice.recorded_note).toMatch(/No contact details are stored/);
+    expect(JSON.stringify(b)).not.toMatch(/No datastore is bound|NOT recorded/);
+    expect(b.release.how).toContain("invoice=gbp");
+    const rec = JSON.parse(kv.store.get(`art50-invoice:${b.payment.reference}`) ?? "null");
+    expect(rec).toMatchObject({ reference: b.payment.reference, commissioned_by: "Acme Design Ltd", state: "AWAITING_PAYMENT", contact: null, subject_sha256: b.measurement.subject.sha256 });
+    // counted as an invoice request, never as an issuance
+    expect(kv.store.get("count:invoice_requested")).toBe("1");
+    expect(kv.store.has("count:issuances")).toBe(false);
+    expect([...kv.store.keys()].some((k) => k.startsWith("art50:"))).toBe(false);
     const s = JSON.stringify(b);
     expect(s).not.toMatch(FORBIDDEN);
     expect(s).not.toMatch(/USD|\$\s?\d|£\s?\d|price/i);
+  });
+
+  it("the same organisation and bytes find the same reference, recorded and counted once", async () => {
+    stubFetch();
+    const kv = kvStore();
+    const ask = () => get(ctx(`${EP}?commissioned_by=Acme&invoice=gbp&url=https://cdn.example/plain.png`, { REVENUE_KV: kv }));
+    const a = await (await ask()).json();
+    const b = await (await ask()).json();
+    expect(b.payment.reference).toBe(a.payment.reference);
+    expect(kv.store.get("count:invoice_requested")).toBe("1");
+    // the organisation's case does not make a second reference; another output does
+    const c = await (await get(ctx(`${EP}?commissioned_by=ACME&invoice=gbp&url=https://cdn.example/plain.png`, { REVENUE_KV: kv }))).json();
+    expect(c.payment.reference).toBe(a.payment.reference);
+    const d = await (await get(ctx(`${EP}?commissioned_by=Acme&invoice=gbp&url=https://cdn.example/C.jpg`, { REVENUE_KV: kv }))).json();
+    expect(d.payment.reference).not.toBe(a.payment.reference);
+    expect(kv.store.get("count:invoice_requested")).toBe("2");
+  });
+
+  it("without a store it says the request was NOT recorded, and still releases nothing", async () => {
+    stubFetch();
+    const b = await (await get(ctx(`${EP}?commissioned_by=Acme&invoice=gbp&url=https://cdn.example/plain.png`))).json();
+    expect(b.signed).toBe(false);
+    expect(b.card).toBeNull();
+    expect(b.invoice.recorded).toBe(false);
+    expect(b.invoice.recorded_note).toMatch(/NOT recorded/);
+    expect(b.invoice.recorded_note).not.toMatch(/No datastore is bound/);
   });
 
   it("refuses invoice=gbp without an organisation", async () => {
@@ -259,19 +307,41 @@ describe("invoice rail — ?commissioned_by=<org>&invoice=gbp", () => {
     expect((await get(ctx(`${EP}?invoice=gbp&url=https://cdn.example/plain.png`))).status).toBe(400);
   });
 
-  it("signs the leaf with Ed25519 when the Pages key is present, and the signature verifies against the raw public key", async () => {
+  it("releases the signed pack only after the owner marks the reference paid, and counts the issuance once", async () => {
     stubFetch();
     const { pkcs8b64, pubHex } = await testKey();
-    const r = await get(ctx(`${EP}?commissioned_by=Acme&invoice=gbp&url=https://cdn.example/C.jpg`, { BOARD_SIGN_KEY_PKCS8_B64: pkcs8b64 }));
-    expect(r.status).toBe(200);
-    const b = await r.json();
+    const kv = kvStore();
+    const env = { BOARD_SIGN_KEY_PKCS8_B64: pkcs8b64, REVENUE_KV: kv };
+    const ask = async () => (await get(ctx(`${EP}?commissioned_by=Acme&invoice=gbp&url=https://cdn.example/C.jpg`, env))).json();
+    const before = await ask();
+    expect(before.signed).toBe(false);
+    expect(before.card).toBeNull();
+    const ref = before.payment.reference;
+    // the owner, and only the owner, writes the paid mark (Cloudflare dashboard → REVENUE_KV)
+    kv.store.set(`art50-invoice-paid:${ref}`, "INV-0001 paid");
+    const b = await ask();
+    expect(b.state).toBe("RELEASED");
     expect(b.signed).toBe(true);
+    expect(b.payment).toMatchObject({ mode: "invoice-gbp", reference: ref, state: "MARKED_PAID" });
+    expect(b.card.payload.payment.reference).toBe(ref);
+    expect(b.card.tags).toContain("rail:invoice-gbp");
     expect(b.card.did).toBe("did:web:csoai.org#board-attestation-1");
     expect(b.card.unmeasured).not.toContain("sig_ed25519");
     const v = await verifyLeaf(b.card.payload, b.card.sha256, b.card.sig_ed25519, pubHex);
     expect(v).toEqual({ sha_ok: true, sig_ok: true });
     expect(b.card.payload.fetched_at).toBe(b.card.as_of);
     expect(b.card.payload.checked.find((c: { method: string }) => c.method === "c2pa.claim-signature").result).toBe("VALID");
+    expect(b.card.payload.law.fine_ceiling).toBeUndefined();
+    expect(b.card.payload.law.pre_existing_basis).toMatch(/Art 111\(4\)/);
+    expect(b.bytes).toBeLessThanOrEqual(3072);
+    expect(JSON.stringify(b)).not.toContain("INV-0001"); // the owner's mark is read, never echoed
+    expect(kv.store.get("count:issuances")).toBe("1");
+    expect(JSON.parse(kv.store.get(`art50-invoice:${ref}`)!)).toMatchObject({ state: "RELEASED", leaf_sha256: b.card.sha256 });
+    // asking again re-delivers the paid pack; it is not a second sale
+    const again = await ask();
+    expect(again.signed).toBe(true);
+    expect(kv.store.get("count:issuances")).toBe("1");
+    expect(kv.store.get("count:invoice_requested")).toBe("1");
   });
 });
 

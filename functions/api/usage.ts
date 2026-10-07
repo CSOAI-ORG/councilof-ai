@@ -12,6 +12,7 @@
  */
 import { SELF_TOOLS, USAGE_DIMS, USAGE_RETENTION_DAYS, USAGE_SCHEMA, countDay, utcDay, type DayCounts } from "../_lib/usage";
 import { headFromGet } from "./_head";
+import { CLIENT_CLASSES, CLIENT_CLASS_RULE } from "../_lib/usage";
 
 type KV = Parameters<typeof countDay>[0];
 interface Env { SOV_ARENA_STATE?: KV }
@@ -21,6 +22,8 @@ const MAX_DAYS = 14;
 const CACHE_SECONDS = 300;
 /** The first UTC day the counter existed. Days before it are not "0"; they were never counted. */
 export const COUNTING_SINCE = "2026-09-29";
+/** The first UTC day a row's key carried its client class. */
+export const CLIENT_CLASS_SINCE = "2026-10-07";
 
 export const onRequestOptions: PagesFunction = async () => new Response(null, { status: 204, headers: CORS });
 
@@ -40,19 +43,45 @@ export async function buildUsage(kv: KV | undefined, days: number, now: Date = n
   if (!kv) {
     return { ...base, kind: "unmeasured", state: "UNMEASURED", reason: "the SOV_ARENA_STATE binding is not available to this deployment", days: [] };
   }
-  const out: Array<{ day: string; state: string; complete: boolean; rows: number | null; counts: DayCounts | null; reason?: string }> = [];
+  // TODAY IS NOT A CLOSED DAY (7 Oct 2026, sell organ SG-13). `complete: true` on today's row meant
+  // only that the KV listing finished; read as "the day is complete" it made a partial day look like
+  // a whole one. Every row now says day_closed: false while its UTC day is still running.
+  const today = utcDay(now);
+  const out: Array<{
+    day: string;
+    state: string;
+    complete: boolean;
+    day_closed: boolean;
+    rows: number | null;
+    counts: DayCounts | null;
+    client_class: DayCounts | null;
+    reason?: string;
+  }> = [];
   for (let i = 0; i < days; i++) {
     const day = utcDay(new Date(now.getTime() - i * 86_400_000));
     if (day < COUNTING_SINCE) break;
+    const day_closed = day < today;
     try {
       const r = await countDay(kv, day);
-      out.push({ day, state: r.complete ? "MEASURED" : "PARTIAL", complete: r.complete, rows: r.rows, counts: r.counts });
+      out.push({ day, state: r.complete ? "MEASURED" : "PARTIAL", complete: r.complete, day_closed, rows: r.rows, counts: r.counts, client_class: r.client_class });
     } catch (e) {
       // A failed read is UNMEASURED with its reason, never 0.
-      out.push({ day, state: "UNMEASURED", complete: false, rows: null, counts: null, reason: `list failed: ${e instanceof Error ? e.message : String(e)}` });
+      out.push({ day, state: "UNMEASURED", complete: false, day_closed, rows: null, counts: null, client_class: null, reason: `list failed: ${e instanceof Error ? e.message : String(e)}` });
     }
   }
-  return { ...base, state: "MEASURED", counting_since: COUNTING_SINCE, days: out };
+  return {
+    ...base,
+    state: "MEASURED",
+    counting_since: COUNTING_SINCE,
+    row_fields: {
+      complete: "LIST completeness: true when the KV listing for that day reached its end. It does not mean the day is over.",
+      day_closed: "true once the UTC day has ended. Today's row is day_closed false: its counts are still growing and are not a day's total.",
+      client_class: `Per dimension, the same rows counted by the kind of client the request declared in its User-Agent (${CLIENT_CLASSES.join(", ")}). "unrecorded" = rows written before ${CLIENT_CLASS_SINCE}, when no class was kept.`,
+    },
+    client_class_rule: CLIENT_CLASS_RULE.map((r) => ({ class: r.cls, when: r.when })),
+    client_class_note: "A class is what the caller's User-Agent declared, never who the caller is; the header itself is not stored. Rows of our own listed tools are not written at all (self_excluded).",
+    days: out,
+  };
 }
 
 export const onRequestGet: PagesFunction<Env> = async ({ request, env, waitUntil }) => {

@@ -18,6 +18,13 @@ export const FREE_DOOR_DESCRIPTION = D.free_door;
 export const PROOF_BUNDLE_DESCRIPTION = D.proof_bundle;
 export const RECEIPTS_BATCH_DESCRIPTION = D.receipts_batch;
 export const REQUEST_ATTESTATION_DESCRIPTION = D.request_attestation;
+/**
+ * The request-attestation door's listed example subject (7 Oct 2026, sell organ SG-10): a real model
+ * with signed cards on file (/signed/card-matrix.json), replacing the placeholder
+ * `model-or-subject-id`, which the OpenAPI producer published as a `const` and a self-test paid for
+ * on 22 Sep as if it were a model.
+ */
+export const REQUEST_ATTESTATION_EXAMPLE_SUBJECT = "llama3.2:3b";
 export const EVIDENCE_BUNDLE_DESCRIPTION = D.evidence_bundle;
 export const DATA_FEED_DESCRIPTION = D.data_feed;
 export const RWA_EVIDENCE_DESCRIPTION = D.rwa_evidence;

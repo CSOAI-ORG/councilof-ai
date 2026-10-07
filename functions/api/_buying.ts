@@ -10,7 +10,7 @@ export const BUYING_FAQ_URL = "/faq/#buying";
 export const BUYING_LINES: readonly string[] = [
   "Checking a result is free, always.",
   "Pay per call from your own wallet (x402): live at the paid doors listed at GET /api/x402. You see the terms before anything is paid.",
-  `A GBP invoice from CSOAI LTD can be arranged by email for the Article 50 pack, the evidence bundle and the provider-diff feed. The site records nothing when you ask, so email the reference you are given to ${CONTACT_MAILBOX}.`,
+  `A GBP invoice from CSOAI LTD can be arranged by email for the Article 50 pack, the evidence bundle and the provider-diff feed. For the Article 50 pack the site records your reference and organisation, never your contact details, and releases the signed pack once the invoice is paid; for the other two it records nothing. Either way, email the reference you are given to ${CONTACT_MAILBOX}.`,
   "Scoped fresh measurement runs: booking is not live. You can ask about one by email.",
 ];
 

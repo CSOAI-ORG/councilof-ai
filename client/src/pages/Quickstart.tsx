@@ -265,7 +265,7 @@ curl -s -H 'Content-Type: application/json' -H 'Accept: application/json, text/e
   "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
   "resources": [
     { "method": "GET", "url": "https://councilof.ai/api/free-door" },
-    { "method": "GET", "url": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id" },
+    { "method": "GET", "url": "https://councilof.ai/api/request-attestation?subject=llama3.2%3A3b" },
     …
   ]
 }`}</Code>

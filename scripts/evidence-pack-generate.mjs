@@ -52,8 +52,13 @@ const REGULATIONS = {
     // Words that make a card relevant-to this obligation (matched in subject/surface/tags).
     keywords: ["article 50", "art50", "art 50", "disclosure", "transparency", "provenance", "c2pa", "watermark", "synthetic", "marking", "agent.disclosure"],
     existing_pack: "public/packs/eu-article-50",
-    counsel_confirmed: true, // the provbench pack is already built and signed
-    honesty: null,
+    // Was `true` ("the provbench pack is already built and signed"): a built pack is not a counsel
+    // review. Closed 7 Oct 2026 with functions/api/_obligations.ts (sell organ SG-08) until the
+    // owner names the counsel and the date.
+    counsel_confirmed: false,
+    honesty:
+      "Article 50 evidence is independent third-party MEASUREMENT of marking detection, mapped to the transparency " +
+      "duties. Not a conformity mark. Counsel has not yet reviewed this obligation's wording or its penalty anchor.",
   },
   dora: {
     control_id: "DORA-28-30",

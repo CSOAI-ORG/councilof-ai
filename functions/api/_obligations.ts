@@ -41,9 +41,16 @@ export const OBLIGATIONS: Record<string, Obligation> = {
     // (13 on the 2026-09-30 corpus) carries art50 / marking in its own subject or tags.
     keywords: ["article 50", "art50", "art 50", "provenance", "c2pa", "watermark", "synthetic", "marking", "agent.disclosure"],
     existing_pack: "/packs/eu-article-50",
-    counsel_confirmed: true,
-    honesty: null,
-    review_note: null,
+    // COUNSEL GATE CLOSED (7 Oct 2026, sell organ SG-08). This read `true` from 6383bf3d0 (2 Sep)
+    // with no counsel record behind it: no named counsel, no date, no sign-off in the estate's
+    // records, while the obligation's own statutory_maximum line says "confirm exact figure with
+    // counsel". It stays false until the owner names the counsel and the date of the review.
+    counsel_confirmed: false,
+    honesty:
+      "Article 50 evidence is independent third-party MEASUREMENT of marking detection on named outputs, mapped to the " +
+      "transparency duties. It is not a conformity mark and not a legal determination. Counsel has not yet reviewed this " +
+      "obligation's wording or its penalty anchor.",
+    review_note: "Evidence for review, not a legal determination. Counsel review of the Article 50 wording is pending: no counsel is named yet.",
   },
   "article-53": {
     id: "article-53",

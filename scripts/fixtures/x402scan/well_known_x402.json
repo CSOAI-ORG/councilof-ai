@@ -434,7 +434,7 @@
             "sku_id": "request_attestation",
             "starts_at": "2026-09-11T00:00:00Z"
           },
-          "description": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Without that key: sig_ed25519:null, unsigned_reason. Check csoai.signer before paying. Paid reserve: up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The interop root in the free preview is not included in the paid reserve. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.",
+          "description": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Else sig_ed25519:null, unsigned_reason. Check csoai.signer before paying. Reserve: up to 24 card-v1 refs, dated /signed/card-matrix.json only; reserve_count covers that corpus. Preview interop root: not included in the paid reserve. Fresh run fulfilled by hand; no delivery date. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.",
           "extra": {
             "decimals": 6,
             "name": "USD Coin",
@@ -446,14 +446,14 @@
           "mimeType": "application/json",
           "network": "eip155:8453",
           "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-          "resource": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id",
+          "resource": "https://councilof.ai/api/request-attestation?subject=llama3.2:3b",
           "scheme": "exact"
         }
       ],
       "accepts_v1": [
         {
           "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
-          "description": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Without that key: sig_ed25519:null, unsigned_reason. Check csoai.signer before paying. Paid reserve: up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The interop root in the free preview is not included in the paid reserve. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.",
+          "description": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Else sig_ed25519:null, unsigned_reason. Check csoai.signer before paying. Reserve: up to 24 card-v1 refs, dated /signed/card-matrix.json only; reserve_count covers that corpus. Preview interop root: not included in the paid reserve. Fresh run fulfilled by hand; no delivery date. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.",
           "extra": {
             "name": "USD Coin",
             "version": "2"
@@ -466,14 +466,14 @@
             "type": "object"
           },
           "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-          "resource": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id",
+          "resource": "https://councilof.ai/api/request-attestation?subject=llama3.2:3b",
           "scheme": "exact"
         }
       ],
-      "description": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Without that key: sig_ed25519:null, unsigned_reason. Check csoai.signer before paying. Paid reserve: up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The interop root in the free preview is not included in the paid reserve. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.",
+      "description": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Else sig_ed25519:null, unsigned_reason. Check csoai.signer before paying. Reserve: up to 24 card-v1 refs, dated /signed/card-matrix.json only; reserve_count covers that corpus. Preview interop root: not included in the paid reserve. Fresh run fulfilled by hand; no delivery date. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.",
       "method": "GET",
       "paid_for": "issuance",
-      "url": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id"
+      "url": "https://councilof.ai/api/request-attestation?subject=llama3.2:3b"
     },
     {
       "accepts": [

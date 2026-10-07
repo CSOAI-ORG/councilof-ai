@@ -16,9 +16,20 @@
  *   &preview=1                                 FREE: the same measurement, unsigned, no card sha
  *   (no flag)                                  x402 rail: 402 challenge (price lives only there)
  *                                              → paid: signed card-v0 leaf
- *   &commissioned_by=<org>&invoice=gbp         invoice rail: signed pack now, payment
- *                                              {mode:"invoice-gbp", reference:"CSOAI-A50-<id>"} —
- *                                              the owner invoices in GBP; no price stated here.
+ *   &commissioned_by=<org>&invoice=gbp         invoice rail: the free measurement, unsigned, plus a
+ *                                              reference "CSOAI-A50-<id>" recorded in REVENUE_KV
+ *                                              (art50-invoice:<ref>, counted as invoice_requested).
+ *                                              The owner invoices in GBP; no price stated here. The
+ *                                              SIGNED pack is released only after the owner marks
+ *                                              the reference paid (REVENUE_KV art50-invoice-paid:<ref>)
+ *                                              and the buyer repeats the same request.
+ *
+ * INVOICE = A QUOTATION UNTIL PAID (7 Oct 2026, sell organ SG-04 + M1). Until this date invoice=gbp
+ * signed and returned the pack at once and counted it as an issuance, so any caller could get a
+ * signed pack by typing any organisation name, and nothing ever raised the invoice. It now follows
+ * the evidence-bundle rule: a reference and the free measurement, never the signed pack, until the
+ * owner marks the reference paid. The reference names one organisation and one output's bytes, so
+ * the same request asked again finds the same reference and, once marked paid, its pack.
  *
  * SCOPE, IN EVERY PACK (owner-approved, 7 Oct 2026; functions/_lib/art50Scope.ts): the pack detects C2PA
  * and IPTC metadata only; NOT_DETECTED does not mean "unmarked", because Article 50(2) is
@@ -251,10 +262,40 @@ async function leafPayload(m: Measurement, fetched_at: string, payment: Record<s
   };
 }
 
-async function invoiceReference(org: string, subjectSha: string | null, fetched_at: string): Promise<string> {
-  const h = await sha256(new TextEncoder().encode(`${org}|${subjectSha ?? "-"}|${fetched_at}`));
+/**
+ * The invoice reference names ONE organisation and ONE output's bytes: sha256(organisation, lower-
+ * cased | subject sha256). Stable on purpose (7 Oct 2026): asking again for the same bytes returns
+ * the same reference, so the owner's paid mark is found when the buyer comes back. It used to fold
+ * in fetched_at, so every request got a new reference and no payment could ever be matched to one.
+ */
+export async function invoiceReference(org: string, subjectSha: string | null): Promise<string> {
+  const h = await sha256(new TextEncoder().encode(`${org.trim().toLowerCase()}|${subjectSha ?? "-"}`));
   return `CSOAI-A50-${h.slice(0, 10).toUpperCase()}`;
 }
+
+/** REVENUE_KV keys of the invoice rail. Nothing but the owner writes the paid mark. */
+export const INVOICE_REQUEST_PREFIX = "art50-invoice:";
+export const INVOICE_PAID_PREFIX = "art50-invoice-paid:";
+export const INVOICE_REQUESTED_COUNTER = "count:invoice_requested";
+
+const INVOICE_ISSUER = "CSOAI LTD (Companies House 16939677), 3rd Floor 86-90 Paul Street, London EC2A 4NE";
+const INVOICE_GBP_NOTE =
+  "returns this free measurement, unsigned, and a reference recorded with the organisation named; the signed pack is " +
+  "released once CSOAI LTD marks that reference paid and the same request is made again";
+
+/** One invoice request as stored. No contact details: the buyer's email is how CSOAI reaches them. */
+export type InvoiceRequestRecord = {
+  reference: string;
+  commissioned_by: string;
+  subject_sha256: string | null;
+  subject_bytes: number | null;
+  url: string | null;
+  requested_at: string;
+  state: "AWAITING_PAYMENT" | "RELEASED";
+  contact: null;
+  released_at?: string;
+  leaf_sha256?: string;
+};
 
 // ───────────────────────────── handler ─────────────────────────────
 const handle: PagesFunction<Env> = async ({ request, env }) => {
@@ -367,6 +408,7 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
       how_to_commission: {
         x402: `${resourceUrl} (same request without preview=1 — the 402 carries the price)`,
         invoice_gbp: `${resourceUrl}?commissioned_by=<organisation>&invoice=gbp`,
+        invoice_gbp_note: INVOICE_GBP_NOTE,
       },
       note: "Preview: same measurement, no signature, no card. Marking results are stated as detected / not detected by the named method at fetched_at.",
     });
@@ -374,9 +416,96 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
 
   let payment: Record<string, unknown> | null = null;
   let paymentResponseHeader: string | undefined;
+  // Set only on the invoice rail once the owner's paid mark is found: the stored request (null
+  // when the buyer's request was never recorded) and its reference, so the release is written back.
+  let invoiceRelease: { reference: string; existing: InvoiceRequestRecord | null } | null = null;
   if (invoice) {
-    const reference = await invoiceReference(org, m.subject.sha256, fetched_at);
-    payment = { mode: "invoice-gbp", reference, commissioned_by: org, currency: "GBP" };
+    const reference = await invoiceReference(org, m.subject.sha256);
+    const kv = env.REVENUE_KV ?? null;
+    const requestKey = `${INVOICE_REQUEST_PREFIX}${reference}`;
+    let paidMark: string | null = null;
+    let existing: InvoiceRequestRecord | null = null;
+    let readFailed = false;
+    if (kv) {
+      try {
+        paidMark = await kv.get(`${INVOICE_PAID_PREFIX}${reference}`);
+        const raw = await kv.get(requestKey);
+        existing = raw ? (JSON.parse(raw) as InvoiceRequestRecord) : null;
+      } catch {
+        // An unreadable store releases nothing and records nothing: it is not a paid mark.
+        readFailed = true;
+        paidMark = null;
+        existing = null;
+      }
+    }
+
+    if (!paidMark) {
+      // NOT PAID (or not readable): the free measurement and a reference, never the signed pack.
+      // The request is recorded once per reference and counted once, apart from issuances.
+      let recorded = !!existing;
+      if (kv && !existing && !readFailed) {
+        const rec: InvoiceRequestRecord = {
+          reference,
+          commissioned_by: org,
+          subject_sha256: m.subject.sha256,
+          subject_bytes: m.subject.bytes,
+          url: m.subject.url,
+          requested_at: fetched_at,
+          state: "AWAITING_PAYMENT",
+          contact: null,
+        };
+        try {
+          await kv.put(requestKey, JSON.stringify(rec));
+          recorded = true;
+          try {
+            const n = Number((await kv.get(INVOICE_REQUESTED_COUNTER)) || "0") + 1;
+            await kv.put(INVOICE_REQUESTED_COUNTER, String(n));
+          } catch {
+            /* the record stands; a tally failure is not a second request */
+          }
+        } catch {
+          recorded = false;
+        }
+      }
+      const what = `Article 50 marking evidence, output sha256 ${m.subject.sha256 ?? "unknown"}`;
+      const handoff = invoiceHandoff(
+        reference,
+        what,
+        recorded ? { store: `REVENUE_KV ${requestKey}`, holds: "the organisation you named, the output's URL and the sha256 of the bytes measured" } : null,
+      );
+      const repeat = request.method === "GET" ? url.toString() : `POST the same bytes to ${url.toString()}`;
+      return json({
+        schema: KIND,
+        mode: "invoice-gbp",
+        state: "AWAITING_PAYMENT",
+        signed: false,
+        card: null,
+        bytes: 0,
+        unsigned_reason: `not released: the signed pack is released once CSOAI LTD marks reference ${reference} paid`,
+        fetched_at,
+        scope: ART50_SCOPE,
+        measurement: m,
+        law,
+        payment: { mode: "invoice-gbp", reference, commissioned_by: org, currency: "GBP", state: "AWAITING_PAYMENT" },
+        invoice: {
+          issuer: INVOICE_ISSUER,
+          currency: "GBP",
+          reference,
+          amount: null,
+          amount_note: "stated on the owner-issued invoice, never by this Function",
+          ...handoff,
+        },
+        release: {
+          when: "after CSOAI LTD marks this reference paid, once the invoice settles. No agent and no request can mark it.",
+          how: `make the same request again after payment: ${repeat}`,
+          same_bytes: `the reference names these bytes (sha256 ${m.subject.sha256 ?? "unknown"}) and this organisation; if the output at the URL changes, its reference changes too`,
+        },
+        ...(readFailed ? { store_note: "REVENUE_KV could not be read, so this request was not recorded and no paid mark could be checked" } : {}),
+        note: "Quotation: the same measurement as the free preview, unsigned, with no card. Nothing is signed or released by this request.",
+      });
+    }
+    payment = { mode: "invoice-gbp", reference, commissioned_by: org, currency: "GBP", state: "MARKED_PAID" };
+    invoiceRelease = { reference, existing };
   } else {
     const accepts = x402Accepts(env, challengeUrl, { skuId: SKU, tier: "pack", description });
     // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
@@ -419,6 +548,7 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
           preview: m,
           free_preview: `${resourceUrl}?preview=1&url=…`,
           invoice_gbp: `${resourceUrl}?commissioned_by=<organisation>&invoice=gbp`,
+          invoice_gbp_note: INVOICE_GBP_NOTE,
           rail: railMode(env),
           not_paid_reason: paid.reason,
           catalog: `${origin}/api/x402`,
@@ -451,9 +581,30 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
 
   if (env.REVENUE_KV) {
     try {
-      const n = Number((await env.REVENUE_KV.get("count:issuances")) || "0") + 1;
-      await env.REVENUE_KV.put("count:issuances", String(n));
+      // An invoice pack counts as an issuance once, at its first release; asking again after that
+      // re-delivers the pack for the same paid reference and is not a second sale.
+      const firstRelease = !invoiceRelease || invoiceRelease.existing?.state !== "RELEASED";
+      if (firstRelease) {
+        const n = Number((await env.REVENUE_KV.get("count:issuances")) || "0") + 1;
+        await env.REVENUE_KV.put("count:issuances", String(n));
+      }
       await env.REVENUE_KV.put(`art50:${leaf.sha256}`, JSON.stringify({ subject: m.subject.sha256, payment, as_of: fetched_at }));
+      if (invoiceRelease && firstRelease) {
+        const base: InvoiceRequestRecord = invoiceRelease.existing ?? {
+          reference: invoiceRelease.reference,
+          commissioned_by: org,
+          subject_sha256: m.subject.sha256,
+          subject_bytes: m.subject.bytes,
+          url: m.subject.url,
+          requested_at: fetched_at,
+          state: "AWAITING_PAYMENT",
+          contact: null,
+        };
+        await env.REVENUE_KV.put(
+          `${INVOICE_REQUEST_PREFIX}${invoiceRelease.reference}`,
+          JSON.stringify({ ...base, state: "RELEASED", released_at: fetched_at, leaf_sha256: leaf.sha256 }),
+        );
+      }
     } catch {
       /* a tally failure never blocks a deliverable */
     }
@@ -473,16 +624,15 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
       payment,
       ...(payment.mode === "invoice-gbp"
         ? {
+            state: "RELEASED",
             invoice: {
-              issuer: "CSOAI LTD (Companies House 16939677), 3rd Floor 86-90 Paul Street, London EC2A 4NE",
+              issuer: INVOICE_ISSUER,
               currency: "GBP",
               reference: payment.reference,
               amount: null,
               amount_note: "stated on the owner-issued invoice, never by this Function",
-              // Nothing here records the request — see _invoice_handoff.ts. Naming the issuer
-              // without saying that reads as "an invoice is coming", and none is, because no one
-              // at CSOAI has been told this happened.
-              ...invoiceHandoff(String(payment.reference), "Article 50 marking evidence"),
+              state: "MARKED_PAID",
+              note: "Released because CSOAI LTD marked this reference paid. Asking again re-delivers the pack for the same bytes; it is not a second sale.",
             },
           }
         : {}),
