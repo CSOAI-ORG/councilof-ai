@@ -706,13 +706,15 @@
     "CORRECTED: PR#1888 card canonical form requires ECMAScript number normalization (integral floats \u2192 int). 10/36 fail without it.",
     "REJECTED: '167 cards are in the root and 335 in the corpus, so 167 of 335 are in the root.' \u2192 Root and index are DISJOINT (0 SHA overlap).",
     "REJECTED: '22 axes are model comparisons.' \u2192 Only 14 are model-comparison; 8 are deterministic financial facts.",
-    "REJECTED: 'The board is continuously refreshed.' \u2192 Behavioural axes last run 2026-08-12 (29 days stale). Financial axes 2026-08-25 (17 days stale)."
+    "REJECTED: 'The board is continuously refreshed.' → Behavioural axes last run 2026-08-12 (29 days stale). Financial axes 2026-08-25 (17 days stale).",
+    "CORRECTED: '689 UNMEASURED cells' is the FROZEN-INDEX population only (64 models x 16 axes), built from card_index.json alone — it omits the mill entirely. True estate coverage: 1,762 of 3,348 cells (52.63%) = index 335/1024 + mill 1,427/2,324. See models/coverage-matrix-canon.json.",
+    "FOUND: 39 live cells carry two signed cards each (39 redundant leaves) — one-cell-one-card is violated — but ALL 39 have IDENTICAL values, so no incompatible claim is published. value_conflicts=0. Fix belongs to card_root.py/SUPERSEDED.jsonl (TUI-5)."
   ],
   "blockers": [
     "BLOCKER: 319 root card contents unfetchable (404) \u2014 root population individually unverifiable",
     "RESOLVED 2026-10-07: promotion path TRACED — see models/mill-promotion-pipeline-20261007.json. Path is hub-queue-mill.yml -> land_mill_cards.py (branch+PR, human merge) -> sign_mill_cards.py (OIDC) -> card_root.py (Merkle; SUPERSEDED excluded). It does NOT promote into signed/card_index.json — that index is a frozen 2026-08-19 corpus, not part of this pipeline.",
     "BLOCKER: benchmark-index-v0.1.json stale by 982 cards (3,998 published vs 4,980 on disk)",
-    "BLOCKER: 689 UNMEASURED cells in the 64\u00d716 matrix \u2014 needs HF Job launch authority",
+    "BLOCKER: 689 UNMEASURED cells in the 64×16 INDEX matrix — needs HF Job launch authority (money/external). NOTE: 689 is the index population only; estate-wide it is 1,586 of 3,348 uncovered — see models/coverage-matrix-canon.json (scripts/build_coverage_matrix.py).",
     "OPEN: 13 estate tests fail locally, ungated by CI (7 fleet-lock, 5 mill-honesty, 1 MCP manifest drift -> TUI-4)",
     "OPEN: raw_response_ref returns HTTP 401 \u2014 raw responses not publicly re-gradeable",
     "OPEN: two canonicalisation rules undocumented in /signed/HOW-TO-VERIFY.md (estate F62)",
