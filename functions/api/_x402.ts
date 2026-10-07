@@ -349,6 +349,13 @@ export const KNOWN_INTERNAL_X402_WALLETS = [
   // was an unsourced attribution and false. The single non-self payer counted today,
   // 0x7e6b6556… (0xc16ecc85…, 2026-09-08, 20000 atomic), is an external wallet: nonce 0,
   // relayed, holding ~3.09 USDC, paying five services in twelve seconds. It stays counted.
+  //
+  // COMPROMISED (2026-10-07): commit 27ac2d551 put this wallet's private key in a public file, and git
+  // history still holds it. A third-party sweeper drained it on 2026-09-22. The address is kept ONLY for
+  // historical classification: its one settlement (2026-09-12, tx 0xeaaafb8a…, nonce matched in the
+  // committed tui4 evidence) must stay self, never revenue. Anyone can sign as it now, so "self" for any
+  // later settlement from it cannot be verified. The classification fails toward undercounting revenue.
+  // Never fund it. See tui4-x402-test/KEY-COMPROMISED.md.
   "0x6ea00613c15f2463bc10c7188215c4fa6f4943c6",
 ] as const;
 
