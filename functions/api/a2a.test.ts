@@ -319,8 +319,11 @@ describe("POST /api/a2a — the A2A 0.3 wire shape is served through the 1.0 han
   it("still refuses a 0.3 method name under a declared 1.0 header, and an unknown slash method", async () => {
     const mixed = await send03([{ kind: "text", text: "board" }], V1_HEADERS);
     expect(mixed.json.error.code).toBe(A2A_ERROR.VERSION_NOT_SUPPORTED);
+    // No header means 0.3, and 0.3 IS served here; a name that is not a 0.3 method is therefore
+    // "method not found". Until 2026-10-07 it was -32009 "0.3, which this interface does not serve".
     const unknown = await rpc({ jsonrpc: "2.0", id: 9, method: "tasks/frobnicate", params: {} }, {});
-    expect(unknown.json.error.code).toBe(A2A_ERROR.VERSION_NOT_SUPPORTED);
+    expect(unknown.json.error.code).toBe(A2A_ERROR.METHOD_NOT_FOUND);
+    expect(unknown.json.error.data[0].metadata.served_0_3).toContain("message/send");
   });
 });
 
@@ -610,10 +613,66 @@ describe("POST /api/a2a — versions and the rest of the method table", () => {
     expect(legacy.json.error.message).toContain("SendMessage");
     const v03 = await send({}, { "a2a-version": "0.3" });
     expect(v03.json.error.code).toBe(A2A_ERROR.VERSION_NOT_SUPPORTED);
-    const malformed = await send({}, { "a2a-version": "1.0.1" });
-    expect(malformed.json.error.code).toBe(A2A_ERROR.VERSION_NOT_SUPPORTED);
+    const unsupported = await send({}, { "a2a-version": "2.0" });
+    expect(unsupported.json.error.code).toBe(A2A_ERROR.VERSION_NOT_SUPPORTED);
+    const garbage = await send({}, { "a2a-version": "latest" });
+    expect(garbage.json.error.code).toBe(A2A_ERROR.VERSION_NOT_SUPPORTED);
     const v10 = await send({}, { "a2a-version": "1.0" });
     expect(v10.json.error).toBeUndefined();
+  });
+
+  // Until 2026-10-07 this file asserted that `A2A-Version: 1.0.1` is refused with -32009. A2A v1.0
+  // section 3.6: "Patch version numbers ... MUST not be considered when clients and servers
+  // negotiate protocol versions." A 1.0.x header is 1.0.
+  it.each(["1.0.0", "1.0.1", " 1.0 "])("serves A2A-Version %j as 1.0 (patch ignored, A2A v1.0 section 3.6)", async (v) => {
+    stubBoard();
+    const { json, headers } = await send({}, { "a2a-version": v });
+    expect(json.error).toBeUndefined();
+    expect(headers.get("a2a-version")).toBe("1.0");
+    expect(json.result.message.parts[1].data.skill).toBe("gspc-board");
+  });
+
+  it("does not tell a no-header caller that 0.3 is unserved: 0.3 IS served (message/send)", async () => {
+    const { json } = await rpc({ jsonrpc: "2.0", id: 1, method: "SendMessage", params: {} }, {});
+    expect(json.error.code).toBe(A2A_ERROR.VERSION_NOT_SUPPORTED);
+    expect(json.error.message).not.toMatch(/does not serve/);
+    expect(json.error.message).toContain("A2A-Version: 1.0");
+    expect(json.error.data[0].metadata.served_0_3).toContain("message/send");
+  });
+
+  it.each(["initialize", "tools/list", "tools/call", "notifications/initialized"])(
+    "answers the MCP method %s sent with no A2A-Version as -32601 (wrong door), not -32009 (wrong version)",
+    async (method) => {
+      const { json } = await rpc({ jsonrpc: "2.0", id: 1, method, params: {} }, {});
+      expect(json.error.code).toBe(A2A_ERROR.METHOD_NOT_FOUND);
+      expect(json.error.message).toContain("/mcp/free");
+    },
+  );
+
+  it("answers a pre-0.3 tasks/send with -32601 naming message/send, not a version error", async () => {
+    const { json } = await rpc({ jsonrpc: "2.0", id: 1, method: "tasks/send", params: {} }, {});
+    expect(json.error.code).toBe(A2A_ERROR.METHOD_NOT_FOUND);
+    expect(json.error.message).toContain("message/send");
+  });
+
+  it("answers an MCP method under A2A-Version 1.0 as -32601, and a 0.3 name under 1.0 with the 1.0 name", async () => {
+    const mcp = await rpc({ jsonrpc: "2.0", id: 1, method: "tools/list", params: {} });
+    expect(mcp.json.error.code).toBe(A2A_ERROR.METHOD_NOT_FOUND);
+    const legacy = await rpc({ jsonrpc: "2.0", id: 1, method: "tasks/get", params: {} });
+    expect(legacy.json.error.code).toBe(A2A_ERROR.VERSION_NOT_SUPPORTED);
+    expect(legacy.json.error.message).toContain("GetTask");
+  });
+
+  it("tells a caller who sent a plain question (not JSON-RPC) where plain questions go, and reports the shape", async () => {
+    const { json } = await rpc({ message: "what does the board say" }, {});
+    expect(json.error.code).toBe(A2A_ERROR.INVALID_REQUEST);
+    expect(json.error.message).toContain("/api/chat");
+    // The shape is key NAMES only: the question text is never echoed or recorded.
+    expect(json.error.data[0].metadata.received).toBe("json.message");
+    expect(JSON.stringify(json)).not.toContain("what does the board say");
+    const parse = await rpc("what does the board say", {});
+    expect(parse.json.error.code).toBe(A2A_ERROR.PARSE);
+    expect(parse.json.error.data[0].metadata.received).toBe("unparsed");
   });
 
   it.each([

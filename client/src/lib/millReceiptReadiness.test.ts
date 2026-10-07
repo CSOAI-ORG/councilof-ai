@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { isMillReceiptReadiness, regulationLabel, type MillReceipt } from "./millReceiptReadiness";
+import { createHash } from "node:crypto";
+import { isMillReceiptReadiness, loadMillReceiptReadiness, MILL_RECEIPT_POINTER, MILL_RECEIPT_SNAPSHOT, regulationLabel,
+  type MillReceipt } from "./millReceiptReadiness";
 
 const row: MillReceipt = {
   id: "a".repeat(64), card_url: "/card.json", model: "model", axis: "governance", measured_at: null,
@@ -42,5 +44,46 @@ describe("mill receipt readiness", () => {
     unknown.outer_signature.state = "PROBABLY_FINE";
     expect(isMillReceiptReadiness({ schema: "csoai.mill-receipt-readiness/v2", receipts: [unknown] })).toBe(false);
     expect(isMillReceiptReadiness({ schema: "csoai.mill-receipt-readiness/v3", receipts: [row] })).toBe(false);
+  });
+
+  describe("loading through the discovery pointer", () => {
+    const version = "/interop/mill-receipt-readiness-2026-10-07-0123456789ab.json";
+    const bytes = JSON.stringify({ schema: "csoai.mill-receipt-readiness/v2", truth_rule: "t", counts: { receipts: 1 },
+      receipts: [{ ...structuredClone(row), declared_lifecycle: "SIGNED" }] });
+    const pointerFor = (over: Record<string, unknown> = {}) => JSON.stringify({ schema: "csoai.mill-receipt-readiness-pointer/1",
+      kind: "DISCOVERY_POINTER_ONLY", index_url: version,
+      index_sha256: createHash("sha256").update(bytes).digest("hex"), ...over });
+    const serve = (pointer: string | null, file = bytes) => {
+      const seen: string[] = [];
+      const fetcher = (async (input: RequestInfo | URL) => {
+        const path = String(input);
+        seen.push(path);
+        if (path === MILL_RECEIPT_POINTER) return pointer === null ? new Response("not found", { status: 404 }) : new Response(pointer);
+        if (path === version || (pointer === null && path === MILL_RECEIPT_SNAPSHOT)) return new Response(file);
+        return new Response("the stamped snapshot must not be read when a pointer exists", { status: 500 });
+      }) as typeof fetch;
+      return { fetcher, seen };
+    };
+
+    it("reads the version the pointer selects, and only its exact bytes", async () => {
+      const { fetcher, seen } = serve(pointerFor());
+      const data = await loadMillReceiptReadiness(fetcher);
+      expect(data.receipts[0].declared_lifecycle).toBe("SIGNED");
+      expect(seen).toEqual([MILL_RECEIPT_POINTER, version]);
+    });
+
+    it("falls back to the stamped snapshot only when no pointer is deployed", async () => {
+      const { fetcher, seen } = serve(null);
+      await loadMillReceiptReadiness(fetcher);
+      expect(seen).toEqual([MILL_RECEIPT_POINTER, MILL_RECEIPT_SNAPSHOT]);
+    });
+
+    it("rejects bytes the pointer did not name, and a pointer outside the versioned set", async () => {
+      await expect(loadMillReceiptReadiness(serve(pointerFor(), bytes + " ").fetcher)).rejects.toThrow(/sha256/);
+      for (const bad of [pointerFor({ index_url: "/interop/other.json" }), pointerFor({ index_url: "/interop/../secrets.json" }),
+                         pointerFor({ schema: "csoai.mill-receipt-readiness-pointer/0" }), pointerFor({ index_sha256: "x" }), "<html>"]) {
+        await expect(loadMillReceiptReadiness(serve(bad).fetcher)).rejects.toThrow(/pointer/);
+      }
+    });
   });
 });
