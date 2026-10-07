@@ -442,10 +442,15 @@ export const LOBBY_TABS: LobbyTab[] = [
     cues: /\b(workbench|analyst desk|skills palette)\b/i,
   },
   {
+    // LEGACY id. "Software" was the signed-in dashboard (DSH), which no longer exists as a separate
+    // page: /dashboard IS Council OS, and its start screen is "Get results". Re-test 7 Oct 2026:
+    // ?tab=software and "open the dashboard" said "Opened Software" and changed nothing, under a
+    // title naming a page that is gone. The id is kept so old links and commands still resolve;
+    // normalizeLobbyTabId() sends it to the start screen, and the label is that screen's own title.
     id: "software",
-    label: "Software",
+    label: "Get results",
     blurb:
-      "Signed-in dashboard (DSH) — opens as its own page, not an iframe inside /os.",
+      "The Council OS start screen: ask a question, or pick what you want checked.",
     path: "/dashboard",
     cues: /\b(dashboard|software|dsh|signed[- ]in)\b/i,
   },
@@ -1057,6 +1062,10 @@ export function normalizeLobbyTabId(id: string): string {
     // Old links keep resolving, each to the pane that owns that content.
     results: "board",
     watchdog: "corrections",
+    // The retired signed-in dashboard ("Software", DSH). /dashboard is Council OS now, so the old
+    // id lands on its start screen under the start screen's own title (re-test 7 Oct 2026).
+    software: "home",
+    dsh: "home",
   };
   return Object.prototype.hasOwnProperty.call(aliases, value)
     ? aliases[value]

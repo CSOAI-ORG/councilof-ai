@@ -1,1 +1,117 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive"><title>Legacy embed verifier withdrawn — Council of AI</title><style>body{margin:0;background:#07110c;color:#e8f5ee;font:16px/1.55 system-ui,sans-serif}main{max-width:38rem;margin:auto;padding:3rem 1.25rem}a{color:#5ee9a3}.box{border:1px solid #315845;border-radius:14px;padding:1.25rem;background:#0b1c13}</style></head><body><main><div class="box"><h1>Legacy verifier withdrawn</h1><p>This embed used an unanchored legacy key and cannot produce a trusted verdict. It is retained only as an explicit withdrawal notice.</p><p><a href="/gspc-verify">Open the canonical family-aware verifier →</a></p><p>Measurement, not certification.</p></div></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Signed measurement card, checked — Council of AI</title>
+<!--
+  The embeddable card widget, served at /embed/verify (functions/embed/verify.ts) and pasted by
+  other sites as <iframe src="https://councilof.ai/embed/verify?card=/signals/…">.
+
+  Until 7 Oct 2026 this file only told visitors that the old widget (which checked against an
+  unanchored legacy key) had been retired, so every embedding site showed that notice.
+  It now asks the LIVE verifier and computes nothing itself: it loads the card's bytes from this
+  site, posts them to POST /api/verify (functions/_lib/cardVerify.ts, the one shared rule behind
+  /gspc-verify and the MCP verify tool, keys pinned in its source), shows that verdict in three
+  states, and links to /gspc-verify/?card=… where the visitor's own browser repeats the check
+  without trusting us. Do not add a verifier here: re-deriving the signed bytes by hand gets the
+  float rule wrong on about a third of the cards (see functions/api/verify.ts).
+-->
+<style>
+:root{--bg:#f7fbf8;--ink:#0f2a1c;--muted:#3f5a4b;--edge:#cfe3d6;--ok:#14532d;--okbg:#dcfce7;--bad:#7f1d1d;--badbg:#fee2e2;--unc:#3f3f46;--uncbg:#e4e4e7;--btn:#14532d;--btnink:#fff}
+@media (prefers-color-scheme:dark){:root{--bg:#07110c;--ink:#e8f5ee;--muted:#a7c9b6;--edge:#2a4637;--ok:#bbf7d0;--okbg:#14532d;--bad:#fecaca;--badbg:#7f1d1d;--unc:#e4e4e7;--uncbg:#3f3f46;--btn:#5ee9a3;--btnink:#07110c}}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{min-height:100%;display:flex;flex-direction:column;gap:10px;padding:16px 18px;border:1px solid var(--edge);border-radius:14px}
+.eyebrow{margin:0;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.chip{align-self:flex-start;display:inline-block;padding:4px 10px;border-radius:999px;font-size:13px;font-weight:700}
+.chip[data-tone=ok]{background:var(--okbg);color:var(--ok)}
+.chip[data-tone=bad]{background:var(--badbg);color:var(--bad)}
+.chip[data-tone=unc],.chip[data-tone=busy]{background:var(--uncbg);color:var(--unc)}
+h1{margin:0;font-size:17px;line-height:1.35}
+p{margin:0}
+.fine{font-size:12.5px;color:var(--muted)}
+code{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;word-break:break-all}
+a.go{align-self:flex-start;display:inline-block;padding:9px 14px;border-radius:10px;background:var(--btn);color:var(--btnink);font-weight:600;text-decoration:none}
+a.go:focus-visible{outline:3px solid #22c55e;outline-offset:2px}
+</style>
+</head>
+<body>
+<main aria-live="polite" data-testid="embed-verify">
+  <p class="eyebrow">Council of AI · signed measurement</p>
+  <span class="chip" id="chip" data-tone="busy" data-state="CHECKING">Checking…</span>
+  <h1 id="title">Asking the verifier about this card</h1>
+  <p id="line">Loading the card from councilof.ai.</p>
+  <p class="fine" id="card"></p>
+  <a class="go" id="self" href="/gspc-verify/" target="_blank" rel="noopener">Check it yourself ↗</a>
+  <p class="fine">Checked by the public verifier on councilof.ai. The button repeats the check in your own browser, against the published key, so you need not trust us. Free, always. A measurement, not a certification.</p>
+</main>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var raw = (new URLSearchParams(location.search).get("card") || "").trim();
+  // Only a card this site publishes: a plain absolute path ending .json, nothing that could leave the origin.
+  var safe = /^\/[A-Za-z0-9._~\/-]{1,300}\.json$/.test(raw) && raw.indexOf("//") < 0 && raw.indexOf("..") < 0;
+  if (safe) $("self").href = "/gspc-verify/?card=" + encodeURIComponent(raw);
+
+  function show(state, tone, chip, title, line) {
+    var c = $("chip");
+    c.textContent = chip;
+    c.setAttribute("data-tone", tone);
+    c.setAttribute("data-state", state);
+    $("title").textContent = title;
+    $("line").textContent = line;
+  }
+  function cardLine(id) {
+    var el = $("card");
+    el.textContent = "";
+    var code = document.createElement("code");
+    code.textContent = raw + (id ? " · id " + String(id).slice(0, 16) + "…" : "");
+    el.appendChild(document.createTextNode("Card: "));
+    el.appendChild(code);
+  }
+
+  if (!raw) {
+    show("UNCHECKABLE", "unc", "No card named", "This frame was not told which card to check",
+      "Its address needs ?card= and the path of a signed card on councilof.ai. The button opens the verifier, where any card can be checked.");
+    return;
+  }
+  if (!safe) {
+    show("UNCHECKABLE", "unc", "Not loaded", "That is not a card this site publishes",
+      "Only signed cards published on councilof.ai are checked here, so nothing was loaded or judged.");
+    return;
+  }
+  cardLine("");
+  fetch(raw, { headers: { accept: "application/json" } })
+    .then(function (r) {
+      if (!r.ok) throw new Error("the card is not published at that path (HTTP " + r.status + ")");
+      return r.text();
+    })
+    .then(function (text) {
+      return fetch("/api/verify", { method: "POST", headers: { "content-type": "application/json" }, body: text })
+        .then(function (r) { return r.json(); });
+    })
+    .then(function (v) {
+      var state = v && v.state;
+      cardLine(v && v.id);
+      if (state === "VALID") {
+        show("VALID", "ok", "Signature checks out", "This card is exactly the one Council of AI signed",
+          "Its bytes reproduce its own id, and the signature verifies under a key Council of AI publishes. That proves who signed it and that it was not altered; it does not certify anything.");
+      } else if (state === "INVALID") {
+        show("INVALID", "bad", "Does not match its signature", "These bytes are not what was signed",
+          "The verifier found: " + (v.reason || "the published rule fails") + ". Do not rely on this card.");
+      } else {
+        show("UNCHECKABLE", "unc", "Could not be checked", "The verifier could not read this card",
+          (v && v.reason ? v.reason + ". " : "") + "Nothing was judged: that is not the same as a failed check.");
+      }
+    })
+    .catch(function (e) {
+      show("UNCHECKABLE", "unc", "Could not be checked", "The check did not complete",
+        String((e && e.message) || e) + ". Nothing was judged: that is not the same as a failed check.");
+    });
+})();
+</script>
+</body>
+</html>
