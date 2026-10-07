@@ -1,0 +1,238 @@
+{
+  "schema": "csoai.canonical-controller/2.1",
+  "title": "TUI-1 Canonical State Ledger — 2026-10-07 observation",
+  "observed_at": "2026-10-07T04:20:55Z",
+  "observed_by": "TUI-1 Canonical Controller (Hermes/JEEVES)",
+  "branch": "control/canonical-state-20260911",
+  "pr": 2847,
+  "rebased_onto": "master b3a44080e9be8cbc975bbc4ad44f3897385f3c43",
+
+  "authority_rule": {
+    "one_authority_per_record_type": true,
+    "authorities": {
+      "live_state": "/api/state",
+      "measurement_board": "/api/gspc",
+      "public_self_claims": "/claims-register.json",
+      "maintained_claim_state": "/api/claims/register",
+      "corrections": "/api/corrections",
+      "public_root": "/root.json",
+      "coverage": "/api/coverage-truth",
+      "revenue": "/api/revenue",
+      "distribution_presence": "/.well-known/layer-o-presence.json",
+      "root_witness": "/interop/root-witness-latest.json"
+    },
+    "precedence": "If this file and a live authority disagree, the live authority wins. This file is a dated observation plus six-TUI execution state, NOT a second count authority.",
+    "not_here_not_established": "A value absent from /api/state is not established. This file never promotes a number the authority does not publish."
+  },
+
+  "quoted_counts_observed": {
+    "_note": "Each entry names its authority field and as_of. Recorded as an observation, not asserted as canonical.",
+    "board_axis_slots": {"value": 23, "authority_field": "/api/state -> board.axis_slots", "kind": "declared"},
+    "board_measured_axes": {"value": 23, "authority_field": "/api/state -> board.measured_axes", "kind": "measured", "as_of": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25"},
+    "board_unmeasured_axes": {"value": 0, "authority_field": "/api/state -> board.unmeasured_axes"},
+    "board_public_count": {"value": "23 axes · 23 measured", "authority_field": "/api/state -> board.public_count"},
+    "signed_card_index_entries": {"value": 335, "authority_field": "/api/state -> signed_cards.count", "kind": "catalogued", "as_of": "2026-08-19T09:24:39.174287+00:00"},
+    "card_chain_positions": {"value": 335, "authority_field": "/api/state -> card_chain.chain_positions"},
+    "card_chain_bodies_published": {"value": 335, "authority_field": "/api/state -> card_chain.bodies_published", "as_of": "2026-09-29T03:11:13Z"},
+    "card_chain_bodies_verified_valid": {"value": 335, "authority_field": "/api/state -> card_chain.bodies_verified_valid", "as_of": "2026-09-29T03:11:13Z", "verification_provenance": "Shipped verifier public/signed/verify-card.mjs result as recorded by the authority. NOT re-executed in this session — see signature_verification."},
+    "public_root_card_count": {"value": 319, "authority_field": "/api/state -> public_root.card_count", "as_of": "2026-09-30T05:05:34Z"},
+    "public_root_merkle": {"value": "47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d", "authority_field": "/api/state -> public_root.merkle_root", "as_of": "2026-09-30T05:05:34Z"},
+    "public_root_bytes_sha256": {"value": "f1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e", "bytes": 25513, "authority_field": "/interop/root-witness-latest.json -> artifact"},
+    "corpus_identifier_overlap": {"value": 0, "authority_field": "/api/state -> signed_cards.corpus_relation.identifier_overlap", "relationship": "SEPARATE_CORPORA"},
+    "coverage_indexed_total": {"value": 1279, "authority_field": "/api/coverage-truth -> summary.indexed_total", "kind": "indexed"},
+    "coverage_runnable_total": {"value": 238, "authority_field": "/api/coverage-truth -> summary.runnable_total", "kind": "runnable"},
+    "coverage_measured_total": {"value": 12, "authority_field": "/api/coverage-truth -> summary.measured_total", "kind": "measured"},
+    "coverage_signed_total": {"value": 319, "authority_field": "/api/coverage-truth -> summary.signed_total", "kind": "signed"},
+    "coverage_reconciliation_ok": {"value": false, "authority_field": "/api/coverage-truth -> summary.reconciliation_ok", "state": "INCOMPLETE"},
+    "stablecoins_indexed": {"value": 425, "authority_field": "/api/coverage-truth -> surfaces[stablecoin-universe].indexed", "kind": "indexed", "never": "Never reported as 425 measured."},
+    "stablecoins_measured": {"value": 6, "authority_field": "/api/coverage-truth -> surfaces[stablecoin-universe].measured", "kind": "measured"},
+    "mcp_trust_indexed": {"value": 500, "authority_field": "/api/coverage-truth -> surfaces[mcp-trust].indexed"},
+    "mcp_trust_runnable": {"value": 238, "authority_field": "/api/coverage-truth -> surfaces[mcp-trust].runnable"},
+    "coverage_register_indexed": {"value": 18, "authority_field": "/api/coverage-truth -> surfaces[coverage-register].indexed"},
+    "x402_census_rounds": {"value": 1, "authority_field": "/api/coverage-truth -> surfaces[x402-census].indexed"},
+    "mcp_fleet_reachable_servers": {"value": 2, "authority_field": "/api/state -> mcp_fleet.reachable_distinct_servers", "kind": "probed", "as_of": "2026-09-30T17:20:50.056Z"},
+    "mcp_fleet_reachable_endpoints": {"value": 4, "authority_field": "/api/state -> mcp_fleet.reachable_endpoints", "as_of": "2026-09-30T17:20:50.056Z"},
+    "mcp_fleet_tools_probed": {"value": 38, "authority_field": "/api/state -> mcp_fleet.tools_probed", "as_of": "2026-09-30T17:20:50.056Z"},
+    "council_mcp_tools_catalogued": {"value": 19, "authority_field": "/api/state -> council_http_mcp.tools_count", "kind": "catalogued", "note": "14 free + 5 paid. Never added to mcp_fleet.tools_probed."},
+    "presence_surfaces_total": {"value": 159, "authority_field": "/.well-known/layer-o-presence.json -> surfaces_total", "as_of": "2026-09-30T06:10:51Z"},
+    "presence_measured": {"value": 70, "authority_field": "/.well-known/layer-o-presence.json -> measured"},
+    "presence_unmeasured": {"value": 89, "authority_field": "/.well-known/layer-o-presence.json -> unmeasured"},
+    "presence_published": {"value": 28, "authority_field": "/.well-known/layer-o-presence.json -> counts_by_state.PUBLISHED"},
+    "claims_rows_total": {"value": 20, "authority_field": "/api/state -> claims_register.rows_total", "as_of": "2026-09-23", "by_status": {"live": 5, "devnet": 1, "unmeasured": 1, "planned": 6, "retired": 7}},
+    "corrections_in_deploy": {"value": 93, "authority_field": "/api/state -> ledgers.corrections_in_this_deploy", "head_id": "C-2026-1006-13"},
+    "signed_mill_cards_withdrawn": {"value": 58, "authority_field": "/api/state -> ledgers.withdrawals.signed_mill_cards_withdrawn"},
+    "frozen_provisions": {"value": 417, "authority_field": "/api/counters -> frozen_provision_counter", "as_of": "2026-08-12T05:22:20.629949+00:00", "kind": "catalogued"},
+    "crosswalk_assets": {"value": 25, "authority_field": "/api/counters -> crosswalk_assets", "as_of": "2026-09-10", "kind": "catalogued"},
+    "published_crosswalk_regimes": {"value": 4, "authority_field": "/api/counters -> published_crosswalk_regimes", "as_of": "2026-09-10", "kind": "catalogued"},
+    "regulator_authority_adapters": {"value": 17, "authority_field": "/api/counters -> regulator_authority_adapters", "as_of": "2026-09-10", "kind": "catalogued"},
+    "axis_register_rows": {"value": 14, "authority_field": "/api/counters -> axis_register_rows", "kind": "catalogued", "note": "Register rows are not board slots and are never summed with them."},
+    "estate_index_entries": {"value": 7973, "authority_field": "/api/state -> estate_index.entries", "kind": "indexed", "as_of": "2026-09-17T03:12:46Z", "signed": false},
+    "openapi_paths": {"value": 160, "authority_field": "GET /openapi.json -> paths", "observed_at": "2026-10-07"}
+  },
+
+  "never_sum_rule": {
+    "rule": "indexed / runnable / measured / signed are four different questions and are never added.",
+    "withdrawn_and_superseded_are_never_admitted": "A withdrawn or quarantined record is never counted as an admitted measurement.",
+    "rejected_in_this_revision": [
+      "total_signed_all_corpora = 3207 (present in canonical-state-20261007.json v2.0) — REJECTED: sums two separate corpora, which /api/state forbids (SEPARATE_CORPORA), and its addend 2872 was a directory basename count, not a card count."
+    ]
+  },
+
+  "corpus_inventory_observed": {
+    "_method": "GitHub git/trees API on master, recursive, counted from paths — a directory listing, which is CATALOGUED not SIGNED.",
+    "mill_cards_signed_dir": {
+      "total_basenames": 2872,
+      "signed_card_json_files": 2868,
+      "non_card_files": ["README.md", "SUPERSEDED.jsonl", "WITHDRAWN.jsonl", "GOVERNANCE-RETRIEVE.json"],
+      "withdrawn_files_present_on_disk": 58,
+      "superseded_files_present_on_disk": 1402,
+      "withdrawn_and_superseded_overlap": 7,
+      "signed_minus_withdrawn": 2810,
+      "signed_minus_withdrawn_and_superseded": 1415,
+      "note": "2,872 is a directory basename count. 2,868 is the signed-card file count. 2,810 is signed minus withdrawn. Each answers a different question; none is a substitute for another."
+    },
+    "mill_cards_unsigned_dir": {"total_basenames": 2112, "unsigned_card_json_files": 2111, "non_card_files": ["README.md"]},
+    "public_signed_cards_dir": {"json_files": 335, "note": "The historical signed corpus; equals signed_cards.count."},
+    "public_root_leaves": {"value": 319, "authority": "/root.json"},
+    "swift_census_card_files": {"value": 26, "path": "public/interop/swift-census-2026-09/card-*.json", "kind": "catalogued"},
+    "rwa_attest_cards": {"value": 22, "path": "harness/rwa-attest/cards/*.json", "includes": ["benji", "buidl", "rlusd", "ousg", "acred"], "kind": "catalogued"},
+    "iso_20022": {"state": "INCOMPLETE", "detail": "public/interop/iso-20022.json is a name/description stub (as_of 2026-09-04). No ISO 20022 family count is published anywhere on master. MISSING — do not cite a family count."},
+    "ap2": {"state": "INCOMPLETE", "detail": "No AP2-named path exists on master. The AP2 mandate crosswalk lives in public/spec/delegation-receipt/CROSSWALK.md (Checkout Mandate / Payment Mandate). The upstream spec file it cites returned HTTP 404 on 2026-09-24. No AP2 implementation, no signed AP2 card."},
+    "cobol": {"state": "INCOMPLETE", "authority": "public/cobolbridge-status.json", "http": 200, "domain_state": "MARKETING_LANDING", "do_not_demo": true, "measured": false, "detail": "cobolbridge.ai answers 200 as a marketing landing. No signed card for cobol.legacy. Never described as a live mill or MEASURED."}
+  },
+
+  "trust_chain_seven_layers": {
+    "_rule": "Seven states, never collapsed into one word.",
+    "1_card_signature": {"state": "VERIFIED_BY_AUTHORITY", "alg": "Ed25519", "verifier": "public/signed/verify-card.mjs", "manifest_signed": true, "attestation_pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38", "board_signer": "did:web:csoai.org#board-attestation-1", "board_pubkey": "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170", "board_payload_sha256": "4e41d8ae7f4b1664809579f2b020f8411b7a3c5cd29ecccb26571bd9cbc20041", "board_signed_at": "2026-09-29T05:39:30.112Z"},
+    "2_merkle_root_inclusion": {"state": "VERIFIED", "merkle_root": "47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d", "card_count": 319, "as_of": "2026-09-30T05:05:34Z", "envelope": "SIGNED_ENVELOPE_PRESENT"},
+    "3_rekor_witness": {"state": "WITNESSED", "log_index": 3012420819, "uuid": "108e9186e8c5677a60f8e5499012cdd18803397ac53087e7f71bb4ae1685a7fd44516d84d6064121", "log_id": "c0d23d6ad406973f9559f3ba2d1ca01f84147d8ffc5b8445c224f98b9591801d", "type": "rekord/x509 over the preimage bytes with the board signature", "url": "https://rekor.sigstore.dev/api/v1/log/entries?logIndex=3012420819", "as_of": "2026-10-01T08:25:24Z"},
+    "4_ots_submission": {"state": "CONFIRMED_BITCOIN", "proof_sha256": "6ac9dd07d8b59b6a830b5056b2395c29b1ada411e97a3dab5a4d5fc987f5fac8", "subject_sha256": "f1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e", "observed_at": "2026-10-01T08:25:24Z"},
+    "5_bitcoin_confirmation": {"state": "CONFIRMED_BITCOIN", "blocks": [969264, 969266, 969288, 969296], "scope": "PUBLIC_ROOT_BYTES_ONLY", "boundary": "Proves these exact root.json bytes existed no later than the named block. Does NOT prove correctness, completeness, compliance, certification, or coverage, and does NOT anchor mill cards or the 335-card index."},
+    "6_base_eas": {"state": "NOT_YET", "reason": "no EAS attestation in the append-only log matches this root.json sha256", "log": "https://councilof.ai/interop/eas-root-attestations.json", "owner_gate": "Paid on-chain transaction — requires owner approval. Not attempted."},
+    "7_xrpl_memo": {"state": "NOT_YET", "reason": "needs a funded XRPL account (owner); one memo tx carrying the root hash", "owner_gate": "Paid on-chain transaction — requires owner approval. Not attempted."}
+  },
+
+  "revenue": {
+    "authority": "/api/revenue",
+    "settled_usdc_atomic": 30000,
+    "settled_usdc_human": "$0.03",
+    "distinct_nonself_payers": 2,
+    "self_settlements": 22,
+    "zero_value_settlements": 8,
+    "repeat_nonself_payers": 0,
+    "sku_1_issuances": {"count": 13, "status": "MEASURED"},
+    "sku_2_proofs": {"count": 1, "status": "MEASURED"},
+    "sku_3_licences": {"count": null, "status": "UNMEASURED", "rule": "null, never 0"},
+    "classification": {"EXTERNAL_CUSTOMER": 2, "INTERNAL_SELF_FUNDED": 22, "ZERO_VALUE_PROBE": 8},
+    "caveat": "Authority caveat verbatim: the figure does not independently reconcile the on-chain transfer amount or establish a customer relationship. Aggregate-only; no telemetry, no per-user data.",
+    "not_revenue": "Self-settlements and zero-value settlements are excluded from revenue by the authority's own definition. Internal testing is never revenue."
+  },
+
+  "x402_doors_observed": {
+    "authority": "GET /.well-known/x402.json (schema csoai.x402/0.2)",
+    "mode": "live",
+    "network": "eip155:8453",
+    "asset": "USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+    "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+    "free_doors": 3,
+    "free_door_amount_atomic": "0",
+    "paid_resources": 31,
+    "paid_amount_observed_atomic": "10000",
+    "paid_amount_observed_human": "0.01 USDC",
+    "verification_of_price": "Read from live 402 PAYMENT-REQUIRED challenges on /api/request-attestation and /api/proof at 2026-10-07T04:14Z, not from memory.",
+    "quarantined": "/api/witness — QUARANTINED_PRE_RELEASE, buyable:false until a release gate verifies leaf → signed root → sidecar → Rekor → OpenTimestamps.",
+    "spent_this_session": "$0.00 — no challenge settled, no door paid."
+  },
+
+  "costs": {
+    "actual_spend_this_session_usd": 0.00,
+    "funding_source": "none — read-only HTTP GETs and GitHub API reads",
+    "on_chain_transactions": 0,
+    "credentials_created": 0,
+    "external_forms_submitted": 0,
+    "emails_sent": 0,
+    "owner_gated_pending": ["Base EAS (~$0.01-0.05 gas)", "XRPL memo (~0.00001 XRP)", "x402 settlement testing (0.01 USDC per door)", "IETF email dispatch"]
+  },
+
+  "signature_verification": {
+    "state": "PARTIAL",
+    "verified_this_session": [
+      "Board attestation signature fields present and internally consistent via /api/state (Ed25519, signer did:web:csoai.org#board-attestation-1, payload_sha256, signed_at 2026-09-29T05:39:30.112Z, signed_snapshot_agrees=true)",
+      "Rekor entry referenced by logIndex/uuid/logID on the live witness document",
+      "OTS proof subject_sha256 equals the live root.json bytes sha256 (f1913eca…)"
+    ],
+    "not_verified_this_session": [
+      "verify-card.mjs re-execution over all 335 bodies — authority reports 335/335 valid as_of 2026-09-29; not re-run in this session",
+      "Independent Merkle path recomputation over the 319 leaves"
+    ],
+    "honest_label": "Signature verification is PARTIAL. The authority's verifier result is quoted with its as_of, not re-executed here."
+  },
+
+  "open_prs": {
+    "observed_at": "2026-10-07T04:18Z",
+    "count": 10,
+    "items": [
+      {"number": 2847, "branch": "control/canonical-state-20260911", "title": "TUI-1 v2: canonical state rebuild — 26-day gap closed (Oct 7)"},
+      {"number": 2846, "branch": "mill/land-hfjobs-37550410818", "title": "mill: 176 cards from HF Jobs (run 37550410818) — OIDC sign pending, nothing MEASURED"},
+      {"number": 2843, "branch": "mill/land-hfjobs-37521823171", "title": "mill: 176 cards from HF Jobs (run 37521823171) — OIDC sign pending, nothing MEASURED"},
+      {"number": 2840, "branch": "public-root/pending", "title": "public-root: Bitcoin-pending signed candidate"},
+      {"number": 2822, "branch": "lane/privacy-third-party-addresses-20261006", "title": "privacy: remove a third party's contact details"},
+      {"number": 2815, "branch": "mill/land-hfjobs-37442847693", "title": "mill: 141 cards from HF Jobs (run 37442847693)"},
+      {"number": 2808, "branch": "lane/pulse-verity-record-20261006", "title": "claims: stage the Pulse Verity record (DRAFT, owner gate)"},
+      {"number": 2802, "branch": "mill/land-hfjobs-37377166526", "title": "mill: 64 cards from HF Jobs (run 37377166526)"},
+      {"number": 2799, "branch": "cursor/fix-llms-txt-discover-dedup-c873", "title": "fix(llms-txt): deduplicate free 402 doors by path"},
+      {"number": 2786, "branch": "codex/growth-revenue-loop-current-20261001", "title": "growth: harden evidence-bound revenue and x402 loop"}
+    ]
+  },
+
+  "six_tui_execution_state": {
+    "tui_1_controller": {"branch": "control/canonical-state-20260911", "pr": 2847, "state": "OPEN_MERGEABLE", "verdict": "VERIFIED_WITH_CORRECTIONS", "note": "This file. Checks green at 2026-10-07T04:14Z: gates, build, selftest, lane-guard, conflict-guard, card-verifier-parity, bank-gate-and-delta, crawler-view-production. Cursor Security Agent in_progress at observation time."},
+    "tui_2_finance": {"branch": "finance/full-spread-20260911", "pr_history": [{"pr": 1903, "state": "CLOSED_NOT_MERGED", "closed": "2026-09-11"}, {"pr": 1944, "state": "CLOSED_NOT_MERGED", "closed": "2026-09-12"}], "state": "NO_OPEN_PR", "verdict": "INCOMPLETE", "live_truth_source": "/api/coverage-truth -> stablecoin-universe indexed 425 / measured 6"},
+    "tui_3_models": {"branch": "models/verified-expansion-20260911", "pr_history": [{"pr": 1906, "state": "CLOSED_NOT_MERGED"}, {"pr": 1942, "state": "CLOSED_NOT_MERGED", "closed": "2026-09-12"}], "state": "NO_OPEN_PR", "verdict": "INCOMPLETE", "note": "36 PR #1888 cards are STAGED, not in the 335-card chain or the 319-leaf root."},
+    "tui_4_agents": {"branch": "agents/discovery-consolidation-20260911", "pr_history": [{"pr": 1900, "state": "CLOSED_NOT_MERGED"}, {"pr": 1907, "state": "CLOSED_NOT_MERGED"}, {"pr": 1917, "state": "CLOSED_NOT_MERGED"}, {"pr": 1921, "state": "CLOSED_NOT_MERGED"}], "state": "NO_OPEN_PR", "verdict": "INCOMPLETE"},
+    "tui_5_trust": {"branch": "trust/anchor-completion-20260911", "pr_history": [{"pr": 1904, "state": "CLOSED_NOT_MERGED"}], "sibling_branch": "trust/anchor-completion-20260911-v2 (exists at 252dfa3da2, no PR)", "state": "NO_OPEN_PR", "verdict": "INCOMPLETE", "live_truth": "Layers 1-5 VERIFIED/CONFIRMED; layers 6-7 NOT_YET (owner-gated)"},
+    "tui_6_growth": {"branch": "growth/verified-launch-20260911", "pr_history": [{"pr": 1918, "state": "CLOSED_NOT_MERGED"}, {"pr": 1945, "state": "CLOSED_NOT_MERGED"}, {"pr": 2155, "state": "MERGED", "merged": "2026-09-13"}, {"pr": 2180, "state": "MERGED", "merged": "2026-09-13"}, {"pr": 2202, "state": "MERGED", "merged": "2026-09-14"}], "state": "NO_OPEN_PR", "verdict": "PARTIAL", "note": "Only lane with merged TUI work since 11 Sep."}
+  },
+
+  "claims_rejected_or_corrected": [
+    {"id": "COR-01", "surface": "control/canonical-state-20261007.json (same branch, v2.0, commit 0cf59ee4b567)", "claimed": "OTS status STAMPED_PENDING_BITCOIN", "corrected": "CONFIRMED_BITCOIN — blocks 969264/969266/969288/969296, observed 2026-10-01T08:25:24Z", "evidence": "/interop/root-witness-latest.json and /api/state -> ledgers.root.ots agree", "state": "CORRECTED"},
+    {"id": "COR-02", "surface": "control/canonical-state-20261007.json v2.0", "claimed": "mill_cards_signed = 2,872", "corrected": "2,872 directory basenames; 2,868 signed card JSON files; 2,810 signed minus withdrawn. Different questions.", "evidence": "git/trees API recursive count + WITHDRAWN.jsonl (58 rows)", "state": "CORRECTED"},
+    {"id": "COR-03", "surface": "control/canonical-state-20261007.json v2.0", "claimed": "mill_cards_unsigned = 2,112", "corrected": "2,112 directory basenames; 2,111 unsigned card JSON files", "evidence": "git/trees API", "state": "CORRECTED"},
+    {"id": "COR-04", "surface": "control/canonical-state-20261007.json v2.0", "claimed": "total_signed_all_corpora = 3,207", "corrected": "REJECTED — sums SEPARATE_CORPORA and uses a basename count as an addend", "evidence": "/api/state -> signed_cards.corpus_relation relationship SEPARATE_CORPORA, overlap 0", "state": "REJECTED"},
+    {"id": "COR-05", "surface": "control/canonical-state-20261007.json v2.0 + TUI1-REPORT-v2.md", "claimed": "Open PRs = 5", "corrected": "10 open PRs at 2026-10-07T04:18Z", "evidence": "gh pr list --state open", "state": "CORRECTED"},
+    {"id": "COR-06", "surface": "control/canonical-state-20261007.json v2.0", "claimed": "observation_time 2026-10-07T12:00:00Z", "corrected": "2026-10-07T04:20:55Z", "state": "CORRECTED", "note": "v2.0 recorded a timestamp 7h40m in its own future."},
+    {"id": "COR-07", "surface": "control/canonical-state-20261007.json v2.0", "claimed": "TUI-2..TUI-6 all 'STALE, no PR'", "corrected": "TUI-6 has three MERGED PRs (2155/2180/2202, 13-14 Sep); TUI-1 had a MERGED PR #1943 (12 Sep); TUI-5 has a sibling v2 branch at 252dfa3da2", "evidence": "gh api /pulls?state=all&head=CSOAI-ORG:<branch>", "state": "CORRECTED"},
+    {"id": "COR-08", "surface": "TUI-1 v1 (PRs #1899/#1903/#1904/#1906/#1907, closed 2026-09-11)", "claimed": "22 axes · 22 measured; public root 167; Rekor logIndex 2791822965; OTS pending", "corrected": "23 axes · 23 measured; public root 319; Rekor logIndex 3012420819; OTS CONFIRMED_BITCOIN", "evidence": "live /api/state, /api/gspc, /interop/root-witness-latest.json", "state": "SUPERSEDED"},
+    {"id": "COR-09", "surface": "HERMES-EXECUTION-LEDGER-20260912.md (root of master)", "claimed": "22 axes; root 169 cards; Rekor 2791822965; OTS pending; mill signed 1,493", "corrected": "23 axes; root 319; Rekor 3012420819; OTS CONFIRMED_BITCOIN; 2,868 signed card files", "state": "STALE_CONTRADICTS_LIVE", "action": "Flagged for replacement with an /api/state pointer — not edited without owner approval."},
+    {"id": "COR-10", "surface": "TUI-1-CANONICAL-STATE.json (root of master, schema 2.0, 2026-09-11)", "claimed": "22 axes; public root 167; OTS STAMPED_PENDING_BITCOIN; CR-015 insurance live", "corrected": "23 axes; root 319; OTS CONFIRMED_BITCOIN; CR-015 RETIRED (withdrawn C-2026-0902-06, no policy on file)", "state": "STALE_CONTRADICTS_LIVE", "action": "Flagged for replacement with an /api/state pointer — not edited without owner approval."},
+    {"id": "COR-11", "surface": "Goal brief baseline", "claimed": "Rekor root witnessed at log index 2791822965; OTS submitted and awaiting Bitcoin confirmation", "corrected": "Both superseded: log index 3012420819; OTS CONFIRMED_BITCOIN (blocks 969264+)", "state": "SUPERSEDED_BY_TIME"}
+  ],
+
+  "completion_condition": {
+    "coverage_denominators_and_numerators": {"state": "VERIFIED", "detail": "Coverage-truth: indexed 1279 / runnable 238 / measured 12 / signed 319, four kinds never summed."},
+    "live_urls": {"state": "VERIFIED", "checked": ["https://councilof.ai/ (200)", "https://councilof.ai/api/gspc (200)", "https://councilof.ai/api/state (200)", "https://councilof.ai/api/coverage-truth (200)", "https://councilof.ai/api/revenue (200)", "https://councilof.ai/api/counters (200)", "https://councilof.ai/api/root (200)", "https://councilof.ai/api/mcp (200)", "https://councilof.ai/.well-known/x402.json (200)", "https://councilof.ai/.well-known/layer-o-presence.json (200)", "https://councilof.ai/interop/root-witness-latest.json (200)", "https://councilof.ai/openapi.json (200, 160 paths)", "https://doi.org/10.5281/zenodo.21991104 (410 GONE)"]},
+    "commit_and_pr_identifiers": {"state": "VERIFIED", "pr": 2847, "branch": "control/canonical-state-20260911"},
+    "signature_verification": {"state": "INCOMPLETE", "detail": "PARTIAL — see signature_verification. verify-card.mjs not re-executed over 335 bodies this session."},
+    "root_and_witness_identifiers": {"state": "VERIFIED", "merkle": "47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d", "root_bytes_sha256": "f1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e", "rekor_log_index": 3012420819, "ots_blocks": [969264, 969266, 969288, 969296]},
+    "actual_costs": {"state": "VERIFIED", "spend_usd": 0.00, "funding_source": "none"},
+    "external_revenue_separated": {"state": "VERIFIED", "EXTERNAL_CUSTOMER": 2, "INTERNAL_SELF_FUNDED": 22, "ZERO_VALUE_PROBE": 8, "settled_usdc": "$0.03"},
+    "directory_status": {"state": "VERIFIED", "authority": "/.well-known/layer-o-presence.json", "surfaces_total": 159, "measured": 70, "unmeasured": 89, "published": 28, "mcp_directories_authority": "public/interop/mcp-directories.json (as_of 2026-09-14)", "mcp_registry": "LISTED", "smithery": "LISTED", "glama": "LISTED", "lobehub": "LISTED", "pulsemcp": "UNKNOWN", "mcp_so": "UNKNOWN", "cline": "NOT_LISTED", "docker_mcp": "NOT_LISTED"},
+    "unsupported_claims_corrected": {"state": "VERIFIED", "count": 11},
+    "no_duplicate_source_of_truth": {"state": "CONTRADICTED", "detail": "Two stale root-level ledgers on master contradict live /api/state: TUI-1-CANONICAL-STATE.json (2026-09-11) and HERMES-EXECUTION-LEDGER-20260912.md (2026-09-12). Both still assert 22 axes and superseded root/witness states. Recommend replacing each with a pointer to /api/state. Owner approval required to edit root files outside this lane.", "blocking": true}
+  },
+
+  "remaining_blockers": [
+    {"id": "B-01", "state": "CONTRADICTED", "blocker": "Duplicate source of truth: two stale root ledgers on master contradict /api/state.", "needs": "Owner approval to replace both with /api/state pointers."},
+    {"id": "B-02", "state": "BLOCKED", "blocker": "Base EAS attestation NOT_YET — no attestation matches this root.json sha256.", "needs": "Owner approval for a paid on-chain Base transaction (~$0.01-0.05)."},
+    {"id": "B-03", "state": "BLOCKED", "blocker": "XRPL memo anchor NOT_YET — needs a funded XRPL account.", "needs": "Owner approval + funded account (~0.00001 XRP)."},
+    {"id": "B-04", "state": "INCOMPLETE", "blocker": "coverage-truth summary.reconciliation_ok = false at 2026-10-07.", "needs": "TUI-2 lane to reconcile indexed/runnable/measured/signed across surfaces."},
+    {"id": "B-05", "state": "INCOMPLETE", "blocker": "Signature verification PARTIAL — 335-body verifier not re-executed this session.", "needs": "Run public/signed/verify-card.mjs over all bodies and record the result."},
+    {"id": "B-06", "state": "MISSING", "blocker": "ISO 20022 family count not published anywhere on master.", "needs": "TUI-2: build the family artefact or state MISSING."},
+    {"id": "B-07", "state": "MISSING", "blocker": "AP2: no implementation, no signed card; cited upstream spec file 404 since 2026-09-24.", "needs": "TUI-4: either build or record as MISSING."},
+    {"id": "B-08", "state": "INCOMPLETE", "blocker": "Deep measurement: 6 of 425 stablecoins measured (coverage-truth).", "needs": "Compute budget; never reported as 425."},
+    {"id": "B-09", "state": "BLOCKED", "blocker": "Zenodo DOI 10.5281/zenodo.21991104 returns HTTP 410 GONE (verified live 2026-10-07).", "needs": "Owner appeal to Zenodo."},
+    {"id": "B-10", "state": "BLOCKED", "blocker": "Five of six TUI lanes have no open PR; only TUI-6 has merged work since 11 Sep.", "needs": "Owner direction on whether lanes 2/3/4/5 are re-opened or retired."},
+    {"id": "B-11", "state": "INCOMPLETE", "blocker": "COBOL is a marketing landing only — do_not_demo true, no signed card.", "needs": "TUI-2/TUI-6: never describe as measured."},
+    {"id": "B-12", "state": "INCOMPLETE", "blocker": "1,460 mill card files present but withdrawn (58) or superseded (1,402) — never admitted as measurements.", "needs": "No action; recorded so no lane counts them."}
+  ]
+}
