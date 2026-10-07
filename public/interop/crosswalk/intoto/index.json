@@ -140,7 +140,7 @@
     }
   ],
   "subject_digest_rule": "subject[].digest.sha256 is the signed card's own id, which is sha256(canonical(body)) under the estate canonical rule.",
-  "what_this_is": "in-toto Statement v1 attestations DERIVED from Ed25519-signed GSPC measurement cards. One statement per axis, selected by rule: the lexicographically smallest card id whose body says MEASURED.",
+  "what_this_is": "in-toto Statement v1 attestations DERIVED from Ed25519-signed GSPC measurement cards. One statement per axis, selected by rule: the card this index already publishes for the axis while it is still in the corpus and says MEASURED, otherwise the lexicographically smallest card id whose body says MEASURED. The representative is sticky because a stamped inventory (public/interop/regulatory-inventory.json) names these files by path.",
   "what_this_is_not": [
     "Not a DSSE envelope — these Statements are unsigned, because this producer holds no key.",
     "Not a certification, accreditation, endorsement or conformity assessment.",

@@ -223,6 +223,22 @@ def test_selection_rule() -> None:
         "NEGATIVE: an axis with only UNMEASURED cards yields nothing",
         E.select([load("card-unmeasured.json")]) == [],
     )
+    # Sticky representative (2026-10-07): a published card stays the axis's statement when a card
+    # with a smaller id arrives, so a stamped inventory naming the file by path stays valid.
+    measured = [c for c in cards if c["body"]["status"] == "MEASURED"]
+    axis = measured[0]["body"]["axis"]
+    larger = max(measured, key=lambda c: c["id"])
+    smaller = dict(larger, id="0" * 64)  # a newcomer that sorts first
+    picked = E.select([larger, smaller], {axis: larger["id"]})
+    check("a published representative stays when a smaller id arrives", [c["id"] for c in picked] == [larger["id"]])
+    check("without a published one, the smallest id is chosen", [c["id"] for c in E.select([larger, smaller])] == ["0" * 64])
+    gone = E.select([smaller], {axis: larger["id"]})
+    check("a published representative that left the corpus is replaced by the rule", [c["id"] for c in gone] == ["0" * 64])
+    unmeasured = dict(larger, body=dict(larger["body"], status="UNMEASURED"))
+    check("a published representative that no longer says MEASURED is replaced",
+          [c["id"] for c in E.select([unmeasured, smaller], {axis: larger["id"]})] == ["0" * 64])
+    check("the committed index pins today's representatives", len(E.published_representatives()) >= 13,
+          len(E.published_representatives()))
 
 
 # ------------------------------------ the live corpus really is signed (skipped, loudly, if no lib)

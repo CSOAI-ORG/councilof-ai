@@ -21,8 +21,8 @@ name: HF-Jobs mill — land the staged cards
 # any open mill/land-* PR, one per cell, none below 10 graded items; closes bot-only HF Jobs PRs
 # whose gradings all live on master or in another open PR; and holds (lands nothing) while one HF
 # Jobs PR is still open, so at most one rolling PR exists. A-G2: after the signer, the derived views
-# a signed card changes (models-measured.json, evidence-note citations) are rebuilt and committed on
-# the PR branch, and only THEN are the gates dispatched, so they judge the branch as it will merge.
+# a signed card changes (models-measured.json, evidence-note citations, in-toto statements) are
+# rebuilt and committed on the PR branch, and only THEN are the gates dispatched, so they judge the branch as it will merge.
 
 on:
   schedule:

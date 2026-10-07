@@ -38,8 +38,17 @@ with the wall clock.
 
 SELECTION
 ---------
-One statement per axis: the lexicographically smallest card id whose body says MEASURED. That is a
-representative handful (13-14 files) rather than 973, chosen by a rule a stranger can re-apply.
+One statement per axis, a representative handful (13-14 files) rather than 973, chosen by a rule a
+stranger can re-apply: the card the committed index (DST/index.json) already publishes for the axis,
+while that card is still in the corpus and says MEASURED; otherwise the lexicographically smallest
+card id whose body says MEASURED.
+
+Why the representative is sticky (2026-10-07). public/interop/regulatory-inventory.json names each
+statement file by path and carries an OpenTimestamps proof, so its bytes are frozen. With a pure
+"smallest id" rule, any mill landing PR that signed a MEASURED card with a smaller id renamed that
+axis's statement file and broke the stamped inventory's path (regulatory-inventory-gate, in
+build:client) - replayed on #2846, governance-00a682b2cf10ed6d -> governance-002790144a6312d6.
+Signed cards are never deleted, so a published representative stays valid and stays put.
 
 USAGE
 -----
@@ -227,15 +236,36 @@ def load_cards() -> list[dict]:
     return cards
 
 
-def select(cards: list[dict]) -> list[dict]:
-    """One MEASURED card per axis: the smallest card id. A rule, not a hand-picked list."""
+def published_representatives(index_path: Path | None = None) -> dict[str, str]:
+    """axis -> card id of the statements the committed index already publishes ({} when absent)."""
+    path = index_path or (DST / "index.json")
+    try:
+        index = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    out: dict[str, str] = {}
+    for row in index.get("statements") or []:
+        if isinstance(row, dict) and row.get("axis") and row.get("card_id"):
+            out[str(row["axis"])] = str(row["card_id"])
+    return out
+
+
+def select(cards: list[dict], keep: dict[str, str] | None = None) -> list[dict]:
+    """One MEASURED card per axis. A rule, not a hand-picked list: the published representative in
+    `keep` (axis -> card id) while that card is in the corpus and MEASURED, else the smallest id."""
     best: dict[str, dict] = {}
+    by_id: dict[str, dict] = {}
     for card in cards:
+        by_id[str(card.get("id"))] = card
         body = card["body"]
         if body.get("status") != "MEASURED":
             continue
         axis = str(body.get("axis") or "")
         if axis and (axis not in best or card["id"] < best[axis]["id"]):
+            best[axis] = card
+    for axis, card_id in (keep or {}).items():
+        card = by_id.get(card_id)
+        if card and card["body"].get("status") == "MEASURED" and str(card["body"].get("axis") or "") == axis:
             best[axis] = card
     return [best[a] for a in sorted(best)]
 
@@ -265,8 +295,10 @@ def render(cards: list[dict]) -> dict[str, str]:
         "schema": "csoai.intoto-crosswalk-index/0.1",
         "what_this_is": (
             "in-toto Statement v1 attestations DERIVED from Ed25519-signed GSPC measurement cards. "
-            "One statement per axis, selected by rule: the lexicographically smallest card id whose "
-            "body says MEASURED."
+            "One statement per axis, selected by rule: the card this index already publishes for the "
+            "axis while it is still in the corpus and says MEASURED, otherwise the lexicographically "
+            "smallest card id whose body says MEASURED. The representative is sticky because a stamped "
+            "inventory (public/interop/regulatory-inventory.json) names these files by path."
         ),
         "what_this_is_not": [
             "Not a DSSE envelope — these Statements are unsigned, because this producer holds no key.",
@@ -320,7 +352,7 @@ def main() -> int:
         return 1
 
     cards = load_cards()
-    chosen = select(cards)
+    chosen = select(cards, published_representatives())
     if not chosen:
         print("HALT: no MEASURED card in the corpus", file=sys.stderr)
         return 1

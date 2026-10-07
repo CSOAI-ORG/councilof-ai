@@ -9,7 +9,7 @@ name: hub-queue-land
 # Human merge is the only gate.
 # Never signs here. Never stamps MEASURED. n<30 stays unquotable. Empty stays empty.
 # A-G2 (2026-10-07): after the signer, the derived views a signed card changes (models-measured.json,
-# evidence-note citations) are rebuilt on the branch by scripts/hf/mill_land_derived.sh, and the
+# evidence-note citations, in-toto statements) are rebuilt on the branch by scripts/hf/mill_land_derived.sh, and the
 # gates are dispatched only then, so they judge the branch as it will merge.
 
 on:
