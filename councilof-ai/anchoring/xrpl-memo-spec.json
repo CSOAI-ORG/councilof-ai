@@ -1,15 +1,32 @@
 {
-  "schema": "csoai.anchor.xrpl-memo-spec/0.1",
-  "kind": "xrpl.memo.anchor",
-  "prepared_at": "2026-09-11T10:59:48.325884+00:00",
+  "schema": "csoai.anchor.xrpl-memo-spec/0.2",
+  "kind": "xrpl.memo.anchor.prepared",
+  "prepared_at": "2026-10-07T05:40:00Z",
+  "supersedes": {
+    "file": "xrpl-memo-spec.json v0.1 (2026-09-11T10:59:48Z)",
+    "reason": "STALE: v0.1's MemoData encoded the retired 167-card root (78d4e019...). Regenerated against the live root."
+  },
+  "subject": {
+    "source": "https://councilof.ai/root.json",
+    "root_as_of": "2026-09-30T05:05:34Z",
+    "root_json_sha256": "f1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e",
+    "root_json_bytes": 25513,
+    "merkle_root": "47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d",
+    "card_count": 319,
+    "anchor_datum": "f1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e",
+    "anchor_datum_note": "Same sha256(root.json) subject as OTS, Rekor and the Base/ETH attestations — one subject across all witnesses."
+  },
   "transaction": {
     "TransactionType": "Payment",
     "Destination": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
+    "Destination_note": "XRPL genesis account (standard memo-anchoring sink). Owner may substitute any account they control — the memo, not the destination, is the anchor.",
     "Amount": "1",
+    "Fee": "10",
+    "Fee_note": "open_ledger_fee = 10 drops observed via https://xrpl.ws fee command at 2026-10-07T05:40Z; max authorized Fee = 1000 drops (fee-escalation buffer)",
     "Memos": [
       {
         "Memo": {
-          "MemoData": "37386434653031393131356436356436656137303735353837653363313433333762663031323039323861653563626539623662306138653065316537626235",
+          "MemoData": "66313931336563616165346561313861633131336433343163316230353033313863656334633439646364613434306461636262616462383965636131623465",
           "MemoFormat": "63736f61692d7075626c69632d726f6f742d7631",
           "MemoType": "6170706c69636174696f6e2f6a736f6e"
         }
@@ -17,32 +34,52 @@
     ]
   },
   "decoded_memo": {
-    "root_hash": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5",
-    "format": "csoai-public-root-v1",
-    "content_type": "application/json",
+    "MemoData_decoded": "f1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e",
+    "MemoData_encoding": "hex of the ASCII datum (64 chars → 128 hex chars), roundtrip verified",
+    "MemoFormat_decoded": "csoai-public-root-v1",
+    "MemoType_decoded": "application/json",
     "root_url": "https://councilof.ai/root.json"
-  },
-  "cost": {
-    "amount": "1 drop + fee",
-    "estimated_total_xrp": "~0.000012 XRP",
-    "estimated_total_usd": "~$0.00001",
-    "funding_source": "OWNER_XRPL_ACCOUNT (not automated)"
   },
   "network": {
     "name": "XRP Ledger Mainnet",
     "chain_id": "xrpl:mainnet",
-    "explorer": "https://xrpscan.com"
+    "rpc": "https://xrpl.ws",
+    "rpc_note": "xrplcluster.xrpl.org did not resolve from this environment (DNS) — xrpl.ws answered the fee query and is the recommended endpoint; re-check both at execution time.",
+    "explorer": "https://xrpscan.com",
+    "observed_fee_drops": 10,
+    "observed_at": "2026-10-07T05:40:00Z"
   },
-  "verification": {
-    "after_submission": "Search XRPL for memo containing root hash hex",
-    "command": "xrpscan.com search: 78d4e019115d65d6..."
+  "cost": {
+    "network_fee_drops": 10,
+    "network_fee_xrp": 0.00001,
+    "network_fee_usd": "~0.00002 at XRP ~$2 (order-of-magnitude; fee is protocol-set, not price-linked)",
+    "payment_drops": 1,
+    "maximum_authorized_fee_drops": 1000,
+    "account_reserve": "New accounts need the XRP reserve (order of 10 XRP) — use an existing funded account to avoid it",
+    "funding_source": "OWNER XRPL ACCOUNT — owner-gated, NOT executed by this lane",
+    "actual_spend_usd_to_date": 0
+  },
+  "replay_verification": {
+    "principle": "Any third party reads the tx from a public XRPL server and byte-compares the memo to the published root — no permission, no CSOAI tooling.",
+    "steps": [
+      "1. Take the tx hash from the submit response (engine_result tesSUCCESS, tx_json.hash)",
+      "2. JSON-RPC: {\"method\":\"tx\",\"params\":[{\"transaction\":\"<hash>\",\"binary\":false}]} against https://xrpl.ws",
+      "3. Assert Memos[0].Memo.MemoData == 66313931336563616165346561313861633131336433343163316230353033313863656334633439646364613434306461636262616462383965636131623465",
+      "4. Decode the memo (hex→ASCII) and assert it equals f1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e",
+      "5. Independently fetch https://councilof.ai/root.json, sha256 the bytes, assert equality",
+      "6. Confirm validation: tx validated in ledger N (meta.TransactionResult == tesSUCCESS)",
+      "7. Explorer: https://xrpscan.com/tx/<hash>",
+      "8. Record tx hash + ledger in interop/root-witness-latest.json witnesses.xrpl_memo (ATTESTED, replacing NOT_YET)"
+    ]
   },
   "status": "PREPARED_NOT_SUBMITTED",
   "requires_owner_action": true,
   "owner_action_needed": [
-    "1. Fund an XRPL account with \u22650.01 XRP",
-    "2. Sign this transaction with the account's secret key",
-    "3. Submit to XRPL mainnet",
-    "4. Record the transaction hash in interop/root-witness-latest.json"
-  ]
+    "1. Use a funded XRPL account (existing account avoids the reserve)",
+    "2. Sign this exact transaction (or identical memo) with the account secret — secret never enters this repo",
+    "3. Submit to XRPL mainnet; confirm tesSUCCESS",
+    "4. Run replay_verification steps 1-8",
+    "5. Record tx hash + ledger in the witness sidecar"
+  ],
+  "measurement_not_certification": true
 }

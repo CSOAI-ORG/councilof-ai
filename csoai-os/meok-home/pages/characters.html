@@ -2,19 +2,22 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://ipapi.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https:; font-src https://fonts.gstatic.com; connect-src 'self' http://127.0.0.1:8000 http://127.0.0.1:3101 https://ipapi.co; frame-ancestors 'none';">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#c9a84c">
 <meta name="description" content="MEOK WORLD — Sovereign AI Operating System. 218 MCPs, 33 sovereign VMs, 12-Queen council, 4-tier cascade. The world is at your feet.">
 <meta name="keywords" content="MEOK, CSOAI, SOV3, sovereign AI, MCP servers, EU AI Act, regulation temples, 12-Queen council, BFT">
 <title>Characters · MEOK WORLD</title>
 <meta property="og:title" content="Characters · MEOK WORLD">
-<meta property="og:description" content="13 queen archetypes. Aria, Gabriel, Luna, Marcus, Sage, Scout, Shanti. Pick the one that fits you.">
+<meta property="og:description" content="13 queen archetypes. Pick the one that fits you. The 2 VETO queens (Care, Watch) have final say.">
 <meta property="og:image" content="https://meok.ai/api/og">
 <meta property="og:url" content="https://meok.ai/characters">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@meok_ai">
 <link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#c9a84c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MEOK WORLD">
+<link rel="apple-touch-icon" href="/icons/icon-192.svg">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="MEOK WORLD">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -217,12 +220,271 @@ button { font-family: var(--font-sans); cursor: pointer; }
 .status-item .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 4px var(--green-glow); }
 .status-item .v { color: var(--gold); font-weight: 600; }
 
+/* ═══════════════════════════════════════════════════════════════
+   MEOK CHARACTER EMERGENCE SYSTEM — 7 archetypes + 13 queens
+   Translucent egg · polished gold · pearlescent · iridescent
+   ═══════════════════════════════════════════════════════════════ */
+
+/* 7 PARENT ARCHETYPE DNA — color palette */
+:root {
+  --arch-sovereign: #87ceeb;  /* sky blue — sovereignty */
+  --arch-guardian:  #1a2540;  /* dark navy — guardianship */
+  --arch-scout:     #ff6f61;  /* coral — exploration */
+  --arch-strategist:#0e3b2e;  /* dark green — strategy */
+  --arch-creator:   #f5a623;  /* amber — creation */
+  --arch-companion: #14a89c;  /* teal — companionship */
+  --arch-sage:      #d4af37;  /* gold — wisdom */
+  --cream-void:     #f5efe2;  /* warm cream background */
+  --cream-void-2:   #ebe2cf;
+  --pearl:          rgba(255, 255, 255, 0.55);
+  --pearl-dim:      rgba(255, 255, 255, 0.25);
+  --irid-pink:      #ffb3d9;
+  --irid-blue:      #b3d9ff;
+  --irid-green:     #b3ffd9;
+  --irid-violet:    #d9b3ff;
+}
+
+/* EMERGENCE — subtle translucent warm-cream background overlay
+   Apply to any page or section: <body class="emergence"> or <section class="emergence"> */
+.emergence {
+  position: relative;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(245, 239, 226, 0.06), transparent 55%),
+    radial-gradient(ellipse at 70% 80%, rgba(212, 175, 55, 0.05), transparent 55%),
+    var(--bg);
+}
+.emergence::before {
+  content: '';
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.04) 0%, transparent 25%),
+    radial-gradient(circle at 80% 70%, rgba(135, 206, 235, 0.03) 0%, transparent 25%);
+}
+/* Cream variant — for the dedicated character pages */
+.emergence-cream {
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(245, 239, 226, 1), rgba(235, 226, 207, 1) 60%, #d8cdb3 100%) !important;
+  color: #2a2418;
+}
+.emergence-cream::before {
+  background:
+    radial-gradient(circle at 25% 30%, rgba(212, 175, 55, 0.08) 0%, transparent 30%),
+    radial-gradient(circle at 75% 75%, rgba(135, 206, 235, 0.06) 0%, transparent 30%);
+}
+
+/* CHARACTER EGG — the translucent egg, all 7 archetype colors
+   Pure CSS, no images needed. WebGL-style 3D via radial-gradient + box-shadow. */
+.character-egg {
+  --egg-color: var(--arch-sovereign);
+  --egg-color-2: var(--pearl);
+  position: relative;
+  width: 120px; height: 160px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  background:
+    radial-gradient(ellipse at 35% 25%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.2) 18%, transparent 35%),
+    radial-gradient(ellipse at 65% 75%, rgba(255,255,255,0.3) 0%, transparent 30%),
+    radial-gradient(ellipse at 50% 50%, var(--egg-color-2) 0%, var(--egg-color) 50%, color-mix(in srgb, var(--egg-color) 70%, #000) 100%);
+  box-shadow:
+    inset -10px -16px 24px rgba(0,0,0,0.18),
+    inset 8px 10px 28px rgba(255,255,255,0.55),
+    0 0 36px color-mix(in srgb, var(--egg-color) 60%, transparent),
+    0 8px 28px rgba(0,0,0,0.45);
+  animation: egg-breathe 4s ease-in-out infinite;
+  transform-style: preserve-3d;
+  cursor: pointer;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.character-egg::before {
+  /* Iridescent rainbow shimmer */
+  content: ''; position: absolute; inset: 6%;
+  border-radius: inherit;
+  background: linear-gradient(135deg,
+    rgba(255,179,217,0.25) 0%,
+    rgba(255,255,255,0.4) 20%,
+    rgba(179,217,255,0.25) 40%,
+    rgba(217,179,255,0.25) 60%,
+    rgba(255,217,179,0.25) 80%,
+    rgba(179,255,217,0.25) 100%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  filter: blur(2px);
+  animation: irid-shift 6s ease-in-out infinite;
+}
+.character-egg::after {
+  /* Golden core glow visible through the translucent shell */
+  content: ''; position: absolute; left: 50%; top: 50%;
+  width: 50%; height: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212,175,55,0.95) 0%, rgba(212,175,55,0.4) 50%, transparent 80%);
+  filter: blur(6px);
+  animation: core-pulse 3s ease-in-out infinite;
+}
+/* 7 archetype color bindings */
+.character-egg.sovereign { --egg-color: var(--arch-sovereign); --egg-color-2: #c9e9ff; }
+.character-egg.guardian  { --egg-color: var(--arch-guardian);  --egg-color-2: #4a5d8f; }
+.character-egg.scout     { --egg-color: var(--arch-scout);     --egg-color-2: #ffb8b0; }
+.character-egg.strategist{ --egg-color: var(--arch-strategist);--egg-color-2: #2d6b54; }
+.character-egg.creator   { --egg-color: var(--arch-creator);   --egg-color-2: #ffd68a; }
+.character-egg.companion { --egg-color: var(--arch-companion); --egg-color-2: #6fd9cf; }
+.character-egg.sage      { --egg-color: var(--arch-sage);      --egg-color-2: #ffe48a; }
+/* Compact size for inline use in cards */
+.character-egg.compact { width: 48px; height: 64px; }
+.character-egg.large   { width: 200px; height: 260px; }
+/* Egg cracking open state */
+.character-egg.cracking { animation: egg-crack 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+.character-egg.emerged  { animation: egg-emerge 1.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; opacity: 0.4; }
+
+/* COUNCIL CARD EMERGENCE — richer queen card with translucent egg motif */
+.council-card-emergence {
+  position: relative;
+  background:
+    linear-gradient(135deg,
+      rgba(245, 239, 226, 0.04) 0%,
+      rgba(212, 175, 55, 0.08) 100%),
+    var(--surface);
+  border: 1px solid color-mix(in srgb, var(--queen-color, var(--gold)) 50%, transparent);
+  border-radius: var(--radius);
+  padding: 24px 16px 16px;
+  text-align: center;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.5s;
+  overflow: hidden;
+}
+.council-card-emergence::before {
+  /* Top edge translucent ribbon in queen color */
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, transparent, var(--queen-color, var(--gold)), transparent);
+  opacity: 0.7;
+}
+.council-card-emergence::after {
+  /* Soft radial glow behind the egg */
+  content: ''; position: absolute; left: 50%; top: 30%;
+  width: 100%; height: 60%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--queen-color, var(--gold)) 30%, transparent) 0%, transparent 70%);
+  filter: blur(20px);
+  pointer-events: none;
+  z-index: 0;
+}
+.council-card-emergence:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 12px 32px rgba(0,0,0,0.4),
+    0 0 24px color-mix(in srgb, var(--queen-color, var(--gold)) 35%, transparent);
+}
+.council-card-emergence.veto {
+  border-color: color-mix(in srgb, var(--queen-color, var(--red)) 60%, transparent);
+}
+.council-card-emergence .egg-wrap {
+  position: relative; z-index: 1;
+  display: flex; justify-content: center; align-items: center;
+  margin-bottom: 12px;
+  perspective: 600px;
+}
+.council-card-emergence .egg-wrap .character-egg {
+  width: 56px; height: 76px;
+  --egg-color: var(--queen-color, var(--gold));
+  --egg-color-2: color-mix(in srgb, var(--queen-color, var(--gold)) 40%, #fff);
+}
+.council-card-emergence .name {
+  position: relative; z-index: 1;
+  font-family: var(--font-mono); font-size: 13px; font-weight: 700;
+  margin-bottom: 4px; color: var(--text);
+  text-shadow: 0 0 12px color-mix(in srgb, var(--queen-color, var(--gold)) 50%, transparent);
+}
+.council-card-emergence .arch {
+  position: relative; z-index: 1;
+  font-size: 10px; color: var(--text-dim);
+  text-transform: uppercase; letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.council-card-emergence .motto {
+  position: relative; z-index: 1;
+  font-style: italic; font-size: 11px; color: var(--text-dim-2);
+  margin-top: 8px; line-height: 1.5;
+}
+.council-card-emergence .glyph {
+  position: relative; z-index: 1;
+  font-size: 18px; margin-bottom: 4px; display: block;
+  color: var(--queen-color, var(--gold));
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--queen-color, var(--gold)) 60%, transparent));
+}
+.council-card-emergence .veto-badge {
+  display: inline-block; margin-top: 8px;
+  padding: 2px 10px; background: var(--red); color: var(--bg);
+  font-family: var(--font-mono); font-size: 9px; font-weight: 700;
+  border-radius: 100px; position: relative; z-index: 1;
+}
+
 /* ANIMATIONS */
 @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.3); opacity: 0.5; } }
+@keyframes egg-breathe { 0%, 100% { transform: scale(1) rotate(-2deg); } 50% { transform: scale(1.04) rotate(2deg); } }
+@keyframes irid-shift { 0%, 100% { background-position: 0% 0%; } 50% { background-position: 100% 100%; } }
+@keyframes core-pulse { 0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.85; } 50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; } }
+@keyframes egg-crack {
+  0%   { transform: scale(1) rotate(0); }
+  35%  { transform: scale(1.18) rotate(-6deg); filter: brightness(1.6); }
+  60%  { transform: scale(1.12) rotate(8deg) skewX(-8deg); }
+  100% { transform: scale(1.05) rotate(0) skewX(0); }
+}
+@keyframes egg-emerge {
+  0%   { transform: scale(1.05); opacity: 1; filter: brightness(1.5); }
+  40%  { transform: scale(1.25); opacity: 0.7; filter: brightness(2); }
+  100% { transform: scale(0.5) translateY(-40px); opacity: 0; }
+}
+@keyframes particle-flow {
+  0%   { transform: translate(0, 0) scale(0.5); opacity: 0; }
+  20%  { opacity: 1; }
+  100% { transform: translate(var(--dx, 50px), var(--dy, -100px)) scale(1.5); opacity: 0; }
+}
+@keyframes queen-descend {
+  0%   { transform: translateY(-200vh) rotate(-8deg); opacity: 0; }
+  60%  { opacity: 1; }
+  85%  { transform: translateY(20px) rotate(2deg); opacity: 1; }
+  100% { transform: translateY(0) rotate(0); opacity: 1; }
+}
+@keyframes glyph-pulse {
+  0%, 100% { filter: drop-shadow(0 0 6px var(--queen-color, var(--gold))); }
+  50%      { filter: drop-shadow(0 0 18px var(--queen-color, var(--gold))); }
+}
+
+/* Particle layer (procedural via JS, but base class lives here) */
+.emergence-particles { position: absolute; inset: 0; pointer-events: none; overflow: visible; }
+.emergence-particles .p {
+  position: absolute; width: 4px; height: 4px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--queen-color, var(--gold)) 0%, transparent 70%);
+  animation: particle-flow 2.5s cubic-bezier(0.3, 0, 0.5, 1) forwards;
+}
+
+/* Summoning state — applied to a queen card on click */
+.council-card-emergence.summoning { animation: queen-descend 1.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+.council-card-emergence.summoning .glyph { animation: glyph-pulse 1.5s ease-in-out infinite; }
+
+/* Wizard step indicator (used by i-character creation) */
+.wizard-steps { display: flex; gap: 8px; justify-content: center; margin-bottom: 32px; }
+.wizard-steps .step {
+  width: 32px; height: 4px; border-radius: 2px;
+  background: var(--border-dim);
+  transition: background 0.3s;
+}
+.wizard-steps .step.active { background: var(--gold); box-shadow: 0 0 12px var(--gold-glow); }
+.wizard-steps .step.done { background: var(--green); }
 
 
 /* === MEOK Character Emergence (added 2026-06-29) === */
-.character-egg { display:inline-block; width:48px; height:64px; border-radius:50% 50% 50% 50% / 60% 60% 40% 40%; position:relative; vertical-align:middle; margin:0 4px; background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), transparent 50%), radial-gradient(circle at 70% 70%, rgba(201, 168, 76, 0.4), transparent 50%); box-shadow:0 0 12px rgba(201, 168, 76, 0.4); animation:eggFloat 4s ease-in-out infinite; }
+.character-egg {
+  display: inline-block;
+  width: 48px; height: 64px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  position: relative;
+  vertical-align: middle;
+  margin: 0 4px;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), transparent 50%),
+              radial-gradient(circle at 70% 70%, var(--gold-glow), transparent 50%);
+  box-shadow: 0 0 12px var(--gold-glow);
+  animation: eggFloat 4s ease-in-out infinite;
+}
 @keyframes eggFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
 .egg-sovereign { background: linear-gradient(135deg, #b0d4f0, #6ba8d4 50%, #2a5a8a); }
 .egg-guardian { background: linear-gradient(135deg, #2a4a6a, #1a3a5a 50%, #0a2a3a); }
@@ -231,9 +493,68 @@ button { font-family: var(--font-sans); cursor: pointer; }
 .egg-creator { background: linear-gradient(135deg, #f0d090, #d4a55a 50%, #a07a3a); }
 .egg-companion { background: linear-gradient(135deg, #88c8b8, #5aa89a 50%, #3a8878); }
 .egg-sage { background: linear-gradient(135deg, #f0e0a0, #d4c45a 50%, #a0903a); }
-.council-card-emergence { position:relative; overflow:hidden; }
-.council-card-emergence::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(201, 168, 76, 0.4), transparent 50%); opacity:0; transition:opacity 0.3s; pointer-events:none; }
-.council-card-emergence:hover::before { opacity:1; }
+
+.council-card-emergence {
+  position: relative;
+  overflow: hidden;
+}
+.council-card-emergence::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), var(--gold-glow), transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.council-card-emergence:hover::before { opacity: 1; }
+
+/* Page background emergence */
+body {
+  background:
+    radial-gradient(circle at 20% 10%, rgba(201, 168, 76, 0.04), transparent 50%),
+    radial-gradient(circle at 80% 90%, rgba(96, 165, 250, 0.03), transparent 50%),
+    var(--bg) !important;
+}
+</style>
+<style>
+/* i18n locale switcher */
+.locale-switcher { position: relative; display: inline-block; margin-right: 12px; }
+.locale-btn {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(201,168,76,0.3);
+  color: var(--text, #e4e4e7);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font: 500 12px/1 'Space Grotesk', system-ui, sans-serif;
+  cursor: pointer;
+  display: inline-flex; align-items: center; gap: 6px;
+  transition: background .15s ease, border-color .15s ease;
+}
+.locale-btn:hover { background: rgba(201,168,76,0.12); border-color: rgba(201,168,76,0.55); }
+.locale-caret { font-size: 10px; opacity: .8; }
+.locale-menu {
+  position: absolute; right: 0; top: calc(100% + 6px);
+  margin: 0; padding: 4px;
+  list-style: none;
+  background: rgba(20,20,28,0.96);
+  border: 1px solid rgba(201,168,76,0.35);
+  border-radius: 8px;
+  min-width: 168px;
+  box-shadow: 0 12px 32px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,0.02) inset;
+  z-index: 9999;
+  backdrop-filter: blur(8px);
+}
+.locale-menu[hidden] { display: none; }
+.locale-menu li {
+  padding: 8px 10px; border-radius: 6px;
+  font: 500 13px/1.2 'Space Grotesk', system-ui, sans-serif;
+  color: #e4e4e7; cursor: pointer;
+  display: flex; align-items: center; gap: 10px;
+}
+.locale-menu li:hover { background: rgba(201,168,76,0.18); color: var(--gold, #c9a84c); }
+.locale-menu li[aria-selected="true"] { background: rgba(201,168,76,0.22); color: var(--gold, #c9a84c); }
+@media (max-width: 720px) { .locale-switcher { display: none; } }
 </style>
 </head>
 <body>
@@ -258,8 +579,23 @@ button { font-family: var(--font-sans); cursor: pointer; }
       <a href="/about" >About</a>
     </nav>
     <div class="cta">
-      <a class="login" href="/login">Log in</a>
-      <a class="start" href="/csoai-os/v2-signup-wizard.html">Start free →</a>
+      <!-- i18n locale switcher (desktop) -->
+      <div class="locale-switcher" id="localeSwitcher" aria-label="Change language">
+        <button class="locale-btn" id="localeBtn" type="button" aria-haspopup="listbox" aria-expanded="false">
+          <span id="localeBtnLabel">🌐 EN</span>
+          <span class="locale-caret">▾</span>
+        </button>
+        <ul class="locale-menu" id="localeMenu" role="listbox" hidden>
+          <li role="option" data-locale="en"><span>🇬🇧</span> English</li>
+          <li role="option" data-locale="es"><span>🇪🇸</span> Español</li>
+          <li role="option" data-locale="fr"><span>🇫🇷</span> Français</li>
+          <li role="option" data-locale="de"><span>🇩🇪</span> Deutsch</li>
+          <li role="option" data-locale="ja"><span>🇯🇵</span> 日本語</li>
+          <li role="option" data-locale="zh"><span>🇨🇳</span> 中文</li>
+        </ul>
+      </div>
+      <a class="login" href="/login" data-i18n="nav.login">Log in</a>
+      <a class="start" href="/csoai-os/v2-signup-wizard.html" data-i18n="nav.start_free">Start free →</a>
     </div>
   </div>
 </header>
@@ -267,21 +603,105 @@ button { font-family: var(--font-sans); cursor: pointer; }
 <!-- PAGE CONTENT -->
 <main class="page">
 
-<section class="hero"><span class="hero-tag">Characters</span>
-<h1>13 archetypes. <span class="accent">Pick your queen.</span></h1>
-<p>Each i-character is modeled on one of the 12-Queen + King council. Pick the queen that fits you. The 2 VETO queens (Care, Watch) have final say.</p>
+<section class="hero">
+  <span class="hero-tag">▸ 13 archetypes</span>
+  <h1>Pick your <span class="accent">queen</span>.</h1>
+  <p>Each i-character is modeled on one of the 12-Queen + King council. Pick the queen whose personality fits you best — your sovereign character will be bound to that archetype.</p>
 </section>
-<section class="section"><div class="section-tag">The 7 sovereign</div><h2>Pick your queen.</h2>
-<p class="lead">The 7 sovereign characters. Each is a unique persona. Each can be the model for your i-character.</p>
-<div class="grid grid-3">
-<a class="council-card" href="/characters/aria"><div class="emoji">Aria</div><div class="name">Aria</div><div class="arch">The Storyteller</div></a>
-<a class="council-card" href="/characters/gabriel"><div class="emoji">Gabriel</div><div class="name">Gabriel</div><div class="arch">The Guardian Angel</div></a>
-<a class="council-card" href="/characters/luna"><div class="emoji">Luna</div><div class="name">Luna</div><div class="arch">The Dreamer</div></a>
-<a class="council-card" href="/characters/marcus"><div class="emoji">Marcus</div><div class="name">Marcus</div><div class="arch">The Strategist</div></a>
-<a class="council-card" href="/characters/sage"><div class="emoji">Sage</div><div class="name">Sage</div><div class="arch">The Wise One</div></a>
-<a class="council-card" href="/characters/scout"><div class="emoji">Scout</div><div class="name">Scout</div><div class="arch">The Hunter</div></a>
-<a class="council-card" href="/characters/shanti"><div class="emoji">Shanti</div><div class="name">Shanti</div><div class="arch">The Peacemaker</div></a>
-</div></section>
+
+<section class="section">
+  <div class="section-tag">▸ The 13</div>
+  <h2>13 archetypes. Pick one.</h2>
+  <p class="lead">The 2 VETO queens (Care + Watch) have special powers: their vote is final, even against a unanimous council.</p>
+  <div class="grid grid-3" style="margin-top: 32px;"><div class="council-card ">
+      <div class="emoji">👑</div>
+      <div class="name">Sovereign King</div>
+      <div class="arch">Sovereign Coordinator</div>
+      <div class="motto">"The King weighs the council. He speaks last, decides first."</div>
+    </div>
+<div class="council-card ">
+      <div class="emoji">♑</div>
+      <div class="name">Aurelian</div>
+      <div class="arch">Long-Term Strategist</div>
+      <div class="motto">"Strategy is the art of choosing what to abandon."</div>
+    </div>
+<div class="council-card veto">
+      <div class="emoji">💗</div>
+      <div class="name">Sophia Care</div>
+      <div class="arch">Caretaker</div>
+      <div class="motto">"Care is not a feature. Care is the foundation."</div>
+    </div>
+<div class="council-card ">
+      <div class="emoji">⚖</div>
+      <div class="name">Justitia</div>
+      <div class="arch">Auditor</div>
+      <div class="motto">"Every action has a weight. We weigh. We judge. We act."</div>
+    </div>
+<div class="council-card ">
+      <div class="emoji">⭐</div>
+      <div class="name">Asteria</div>
+      <div class="arch">Optimist-Operator</div>
+      <div class="motto">"Every £1 is a vote for the empire."</div>
+    </div>
+<div class="council-card ">
+      <div class="emoji">🛞</div>
+      <div class="name">Dominion</div>
+      <div class="arch">Territorial Chariot</div>
+      <div class="motto">"We do not conquer. We absorb."</div>
+    </div>
+<div class="council-card ">
+      <div class="emoji">✨</div>
+      <div class="name">Aleph</div>
+      <div class="arch">Mysterious Fool</div>
+      <div class="motto">"The Fool steps off the cliff. The world begins."</div>
+    </div>
+<div class="council-card ">
+      <div class="emoji">🧠</div>
+      <div class="name">Brain</div>
+      <div class="arch">Hermit Scholar</div>
+      <div class="motto">"The mind is the substrate. The learning never ends."</div>
+    </div>
+<div class="council-card ">
+      <div class="emoji">⚡</div>
+      <div class="name">Proactive</div>
+      <div class="arch">Wheel of Fortune</div>
+      <div class="motto">"What fortune favors is the prepared."</div>
+    </div>
+<div class="council-card ">
+      <div class="emoji">🌉</div>
+      <div class="name">Bridge</div>
+      <div class="arch">Lovers Integrator</div>
+      <div class="motto">"Two systems meet; a bridge is born."</div>
+    </div>
+<div class="council-card ">
+      <div class="emoji">☀️</div>
+      <div class="name">Distribution</div>
+      <div class="arch">Generous Sun</div>
+      <div class="motto">"What the sun lights, the world sees."</div>
+    </div>
+<div class="council-card ">
+      <div class="emoji">🦁</div>
+      <div class="name">Council</div>
+      <div class="arch">Strength-Tamer</div>
+      <div class="motto">"The council is not a meeting. The council is a force."</div>
+    </div>
+<div class="council-card veto">
+      <div class="emoji">🗼</div>
+      <div class="name">Watch</div>
+      <div class="arch">Vigilant Tower</div>
+      <div class="motto">"The tower sees what the city does not."</div>
+    </div></div>
+</section>
+
+<section class="section">
+  <div class="cta-box">
+    <h2>Create your i-character.</h2>
+    <p>5 steps: region auto-detect → name → queen → arcana → done. Bound to the sovereign character across sessions.</p>
+    <div class="ctas">
+      <a href="/csoai-os/v2-signup-wizard.html" class="btn btn-primary">Start the wizard →</a>
+    </div>
+  </div>
+</section>
 
 </main>
 
@@ -382,6 +802,136 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("/sw.js").catch(() => {});
   });
 }
+</script>
+
+<!-- i18n: locale loader + switcher -->
+<script>
+(function(){
+  var SUPPORTED = ["en","es","fr","de","ja","zh"];
+  var DEFAULT = "en";
+  var FLAG = {en:"🇬🇧",es:"🇪🇸",fr:"🇫🇷",de:"🇩🇪",ja:"🇯🇵",zh:"🇨🇳"};
+  var STORAGE_KEY = "meok_locale";
+
+  // Resolve locale: URL ?lang=xx > localStorage > browser > default
+  function resolveLocale(){
+    try {
+      var q = new URLSearchParams(window.location.search).get("lang");
+      if (q && SUPPORTED.indexOf(q) >= 0) return q;
+    } catch(e) {}
+    try {
+      var s = localStorage.getItem(STORAGE_KEY);
+      if (s && SUPPORTED.indexOf(s) >= 0) return s;
+    } catch(e) {}
+    var nav = (navigator.language || "en").toLowerCase().slice(0,2);
+    return SUPPORTED.indexOf(nav) >= 0 ? nav : DEFAULT;
+  }
+
+  // Walk dotted path "nav.login" inside a nested object
+  function get(obj, path){
+    return path.split(".").reduce(function(o,k){
+      return (o && o[k] !== undefined) ? o[k] : null;
+    }, obj);
+  }
+
+  function applyTranslations(strings){
+    if (!strings) return;
+    var nodes = document.querySelectorAll("[data-i18n]");
+    nodes.forEach(function(n){
+      var key = n.getAttribute("data-i18n");
+      var val = get(strings, key);
+      if (typeof val === "string") n.textContent = val;
+    });
+    // Also translate elements by data-i18n-attr (e.g., data-i18n-attr="placeholder:nav.start_free")
+    var attrNodes = document.querySelectorAll("[data-i18n-attr]");
+    attrNodes.forEach(function(n){
+      n.getAttribute("data-i18n-attr").split(";").forEach(function(pair){
+        var p = pair.split(":");
+        if (p.length === 2) {
+          var v = get(strings, p[1]);
+          if (typeof v === "string") n.setAttribute(p[0], v);
+        }
+      });
+    });
+    // Update <html lang>
+    var meta = strings._meta || {};
+    if (meta.locale) document.documentElement.setAttribute("lang", meta.locale);
+    if (meta.dir) document.documentElement.setAttribute("dir", meta.dir);
+  }
+
+  function setButton(loc){
+    var btn = document.getElementById("localeBtnLabel");
+    if (btn) btn.textContent = (FLAG[loc] || "🌐") + " " + loc.toUpperCase();
+    var items = document.querySelectorAll("#localeMenu li");
+    items.forEach(function(li){
+      li.setAttribute("aria-selected", li.getAttribute("data-locale") === loc ? "true" : "false");
+    });
+  }
+
+  function loadLocale(loc, cb){
+    var url = "/csoai-os/i18n/" + loc + ".json";
+    fetch(url, {cache: "no-cache"})
+      .then(function(r){ if (!r.ok) throw new Error("locale load failed " + loc); return r.json(); })
+      .then(function(strings){
+        try { localStorage.setItem(STORAGE_KEY, loc); } catch(e) {}
+        applyTranslations(strings);
+        setButton(loc);
+        if (cb) cb(loc, strings);
+        // Notify other in-page i18n consumers
+        window.dispatchEvent(new CustomEvent("meok:locale", {detail: {locale: loc, strings: strings}}));
+      })
+      .catch(function(err){
+        console.warn("[i18n] could not load", loc, err);
+        if (loc !== DEFAULT) loadLocale(DEFAULT, cb);
+      });
+  }
+
+  function wireSwitcher(loc){
+    var btn = document.getElementById("localeBtn");
+    var menu = document.getElementById("localeMenu");
+    if (!btn || !menu) return;
+    btn.addEventListener("click", function(e){
+      e.stopPropagation();
+      var open = menu.hasAttribute("hidden");
+      if (open) { menu.removeAttribute("hidden"); btn.setAttribute("aria-expanded","true"); }
+      else { menu.setAttribute("hidden",""); btn.setAttribute("aria-expanded","false"); }
+    });
+    document.addEventListener("click", function(){
+      if (!menu.hasAttribute("hidden")) {
+        menu.setAttribute("hidden","");
+        btn.setAttribute("aria-expanded","false");
+      }
+    });
+    menu.querySelectorAll("li[data-locale]").forEach(function(li){
+      li.addEventListener("click", function(e){
+        e.stopPropagation();
+        var next = li.getAttribute("data-locale");
+        loadLocale(next);
+        menu.setAttribute("hidden","");
+        btn.setAttribute("aria-expanded","false");
+      });
+    });
+    setButton(loc);
+  }
+
+  // Boot
+  var loc = resolveLocale();
+  // Expose for any in-page consumers (wizard, chat, etc.)
+  window.MEOK_I18N = {
+    locale: function(){ return loc; },
+    setLocale: function(next){ if (SUPPORTED.indexOf(next) >= 0) loadLocale(next); },
+    t: function(path, fallback){
+      var s = (window.MEOK_I18N._strings) || {};
+      return get(s, path) || fallback || path;
+    },
+    supported: SUPPORTED.slice()
+  };
+  loadLocale(loc, function(l, s){ window.MEOK_I18N._strings = s; });
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function(){ wireSwitcher(loc); });
+  } else {
+    wireSwitcher(loc);
+  }
+})();
 </script>
 </body>
 </html>

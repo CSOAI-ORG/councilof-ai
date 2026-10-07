@@ -302,3 +302,11 @@ sim-world-data/
 *.safetensors
 *.gguf
 **/sov-minimal-output*/
+
+# ---------------------------------------------------------------------------
+# meok-ori receipt key and local receipt chains — never commit
+# ---------------------------------------------------------------------------
+.meok_ori_key
+**/receipt.key
+.meok_ori_receipts.jsonl
+**/.meok_ori_receipts.jsonl

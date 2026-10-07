@@ -33,12 +33,30 @@ BOARD_ATTESTATION_KEY = "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b75
 CARD_ATTESTATION_KEY = "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
 
 
+def _ssl_ctx():
+    """TLS verification stays ON; fall back to certifi when this interpreter
+    ships no CA bundle (python.org installer gap). Never disables verification."""
+    import ssl
+    import os
+    try:
+        default = ssl.get_default_verify_paths().cafile
+        if default and os.path.exists(default):
+            return ssl.create_default_context()
+    except Exception:
+        pass
+    try:
+        import certifi
+        return ssl.create_default_context(cafile=certifi.where())
+    except Exception:
+        return ssl.create_default_context()
+
+
 def fetch_json(url: str, timeout: int = 15) -> dict:
     req = urllib.request.Request(url, headers={
         "Accept": "application/json",
         "User-Agent": "CSOAI-TUI5-Verifier/1.0",
     })
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
+    with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx()) as resp:
         return json.loads(resp.read())
 
 
@@ -162,7 +180,7 @@ def check_ots_calendars() -> dict:
         url = f"https://{name}.btc.calendar.opentimestamps.org"
         try:
             req = urllib.request.Request(url, method="HEAD", headers={"User-Agent": "CSOAI-TUI5/1.0"})
-            with urllib.request.urlopen(req, timeout=10) as resp:
+            with urllib.request.urlopen(req, timeout=10, context=_ssl_ctx()) as resp:
                 results[name] = {"status": str(resp.status), "verified": True}
         except Exception as e:
             results[name] = {"status": "UNREACHABLE", "error": str(e), "verified": False}

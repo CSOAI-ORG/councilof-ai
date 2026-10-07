@@ -1,0 +1,109 @@
+{
+  "schema": "csoai.anchor.eth-eas-spec/0.1",
+  "kind": "eas.attestation.prepared",
+  "prepared_at": "2026-10-07T05:40:00Z",
+  "correction": {
+    "claim": "prior report/spec named the Ethereum EAS contract as 0xA1207F3BBa224E2c9c3c6D5b0f0f4c9d8b7c6d5e",
+    "finding": "eth_getCode at that address returned 0 bytes — the address carries NO contract and was fabricated. The 2026-09-11 spec never validated it on-chain.",
+    "corrected_address": "0xA1207F3BBa224E2c9c3c6D5aF63D0eb1582Ce587",
+    "source_of_truth": "official docs https://docs.attest.org/docs/quick--start/contracts (Ethereum mainnet v0.26), then re-verified against chain state (eth_getCode = 19,971 bytes at block 26138114, 2026-10-07)"
+  },
+  "subject": {
+    "source": "https://councilof.ai/root.json",
+    "root_as_of": "2026-09-30T05:05:34Z",
+    "root_json_sha256": "f1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e",
+    "root_json_bytes": 25513,
+    "merkle_root": "47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d",
+    "card_count": 319,
+    "anchor_datum": "f1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e"
+  },
+  "network": {
+    "name": "Ethereum Mainnet",
+    "chain_id": 1,
+    "eip155": "eip155:1",
+    "rpc": "https://ethereum-rpc.publicnode.com",
+    "explorer": "https://etherscan.io",
+    "eas_explorer": "https://easscan.org",
+    "observed_block": 26138114,
+    "observed_base_fee_gwei": 0.1213,
+    "observed_gas_price_gwei": 0.1213,
+    "observed_at": "2026-10-07T05:40:00Z"
+  },
+  "contracts_verified_onchain": {
+    "eas": {
+      "address": "0xA1207F3BBa224E2c9c3c6D5aF63D0eb1582Ce587",
+      "version": "v0.26 (official docs)",
+      "eth_getCode_bytes": 19971,
+      "verified_at_block": 26138114,
+      "verified_at": "2026-10-07T05:40:00Z"
+    },
+    "schema_registry": {
+      "address": "0xA7b39296258348C78294F95B872b282326A97BDF",
+      "version": "v0.26 (official docs)",
+      "eth_getCode_bytes": 1976,
+      "verified_at_block": 26138114,
+      "verified_at": "2026-10-07T05:40:00Z"
+    }
+  },
+  "transactions_prepared": [
+    {
+      "step": 1,
+      "purpose": "register schema (one-time)",
+      "to": "0xA7b39296258348C78294F95B872b282326A97BDF",
+      "function": "createSchema(string schema, address resolver)",
+      "schema_string": "bytes32 rootSha256 bytes32 merkleRoot uint64 cardCount",
+      "resolver": "0x0000000000000000000000000000000000000000",
+      "gas_estimate": 300000,
+      "max_gas_price_gwei": 5
+    },
+    {
+      "step": 2,
+      "purpose": "attest the root digest",
+      "to": "0xA1207F3BBa224E2c9c3c6D5aF63D0eb1582Ce587",
+      "function": "attest((address recipient,uint64 expirationTime,bool revocable,bytes32 refUID,bytes data))",
+      "recipient": "0x0000000000000000000000000000000000000000",
+      "expirationTime": 0,
+      "revocable": false,
+      "refUID": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "data_fields": {
+        "rootSha256": "0xf1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e",
+        "merkleRoot": "0x47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d",
+        "cardCount": 319
+      },
+      "encoding_note": "data = SchemaEncoder('bytes32,bytes32,uint64').encodeData([...]) via the official EAS SDK — do not hand-roll",
+      "gas_estimate": 120000,
+      "max_gas_price_gwei": 5
+    }
+  ],
+  "cost": {
+    "observed": "gas price 0.1213 gwei at block 26138114 (2026-10-07)",
+    "expected_total_usd": "0.0001 - 0.001 at observed gas (420,000 gas × 0.1213 gwei ≈ 0.00005 ETH per full schema+attest)",
+    "protocol_fee": "v0.26 registry createSchema is payable with a fixed fee — read on-chain at execution time; stop and escalate if > $0.50",
+    "maximum_authorized_usd": 2.0,
+    "gas_price_spike_policy": "If effective gas price > 5 gwei, wait or escalate — the cap protects against fee spikes",
+    "funding_source": "OWNER ETH WALLET — owner-gated, NOT executed by this lane",
+    "actual_spend_usd_to_date": 0,
+    "priority": "P2 — Base (L2) first: same datum, ~100× cheaper; Ethereum L1 is the belt-and-braces witness"
+  },
+  "replay_verification": {
+    "principle": "Any third party reads the attestation from a public RPC and byte-compares it to the published root.",
+    "steps": [
+      "1. Take attestation UID from the attest() receipt (Attested event topic[1])",
+      "2. eth_call 0xA120...e587 getAttestation(bytes32 uid)",
+      "3. Decode data with SchemaEncoder('bytes32,bytes32,uint64'); assert rootSha256 == f1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e",
+      "4. Independently fetch https://councilof.ai/root.json, sha256 the bytes, assert equality",
+      "5. Explorer: https://etherscan.io/tx/<hash> (status == 1) and https://easscan.org/address/<UID> attestation page",
+      "6. Record tx hash + UID in interop/root-witness-latest.json witnesses.eas_ethereum (ATTESTED)"
+    ]
+  },
+  "status": "PREPARED_NOT_SUBMITTED",
+  "requires_owner_action": true,
+  "owner_action_needed": [
+    "1. Prefer Base first (P1, ~100× cheaper); execute Ethereum only if the L1 witness is wanted",
+    "2. Fund an ETH wallet (≤ $2.00 maximum authorized)",
+    "3. Read protocol fee at execution time; stop if above cap",
+    "4. Register schema (step 1), attest (step 2), run replay_verification",
+    "5. Record tx hash + UID in the witness sidecar"
+  ],
+  "measurement_not_certification": true
+}

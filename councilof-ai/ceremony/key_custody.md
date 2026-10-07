@@ -1,6 +1,8 @@
 # CSOAI Key Custody & Ceremony Receipt
 ## TUI 5 — Signing, Roots and Anchoring
-**Date:** 2026-09-11
+**Date:** 2026-09-11 · **Updated:** 2026-10-07
+
+> **2026-10-07 update:** the OTS submission for both published roots is now `CONFIRMED_BITCOIN` (blocks 969264/969266/969288/969296 for the current 319-card root; 966483/966485/967122 for the retired 167-card root — verified via `ots info` + dual-source header check). Rekor has witnessed the current root at logIndex 3012420819. Base/XRPL/Ethereum anchor specs regenerated against the live root (all `PREPARED_NOT_SUBMITTED`, owner-gated, $0 spent). Ceremony status tables below are date-stamped 2026-09-11.
 
 ---
 

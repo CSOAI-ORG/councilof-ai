@@ -1,0 +1,73 @@
+{
+  "schema": "csoai.anchor.full-verification/0.2",
+  "kind": "tui5.all-card-signature-verification",
+  "observation_started": "2026-10-07T04:03:46.844973+00:00",
+  "observation_finished": "2026-10-07T04:04:33.846811+00:00",
+  "verifier": "anchoring/verify_all.py (standalone; keys pinned from DID, never from cards)",
+  "key_pins": {
+    "board-attestation-1": "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
+    "card-attestation-1": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+    "source": "https://csoai.org/.well-known/did.json"
+  },
+  "root_envelope": {
+    "source": "https://councilof.ai/root.json",
+    "observed_at": "2026-10-07T04:03:46.844973+00:00",
+    "as_of": "2026-09-30T05:05:34Z",
+    "kind": "csoai.public-root/v1",
+    "card_count_declared": 319,
+    "leaves_present": 319,
+    "count_matches": true,
+    "merkle_root_published": "47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d",
+    "merkle_root_recomputed": "47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d",
+    "merkle_ok": true,
+    "ed25519_signature": "VALID",
+    "preimage_bytes": 274,
+    "sha256_root_json": "f1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e"
+  },
+  "corpus_A_public_root": {
+    "cards": 319,
+    "signatures_valid": 317,
+    "unsigned_cards": 2,
+    "unsigned_card_ids": [
+      "617122cb45ba83ab",
+      "747a510c1d3c618f"
+    ],
+    "signatures_invalid": 0,
+    "digests_valid": 319,
+    "digest_rules_seen": {
+      "ensure_ascii=False": 191,
+      "ensure_ascii=True": 128
+    },
+    "leaf_membership_valid": 319,
+    "inclusion_proofs_valid": 319,
+    "fetch_or_verify_errors": 0,
+    "error_samples": [],
+    "state": "VERIFIED_WITH_EXPLICIT_UNSIGNED"
+  },
+  "corpus_B_signed_index": {
+    "cards_declared": 335,
+    "cards_present": 335,
+    "signatures_valid": 335,
+    "ids_valid": 335,
+    "key_pinned_to_did": 335,
+    "fetch_or_verify_errors": 0,
+    "error_samples": [],
+    "state": "VERIFIED",
+    "corpus_note": "SEPARATE from the public root; identifier overlap reported below"
+  },
+  "identifier_overlap_A_B": 0,
+  "anchor_states_separate": {
+    "card_signature": "SIGNED_AND_VERIFIED (per-card, both corpora)",
+    "merkle_root_inclusion": "INCLUDED",
+    "rekor_witness": "WITNESSED at logIndex 2791822965 as observed 2026-09-11 (re-check before citing)",
+    "ots_submission": "STAMPED_PENDING_BITCOIN",
+    "bitcoin_confirmation": "PENDING (no Bitcoin block attestation in proof)",
+    "base_eas": "NOT_YET (spec prepared, owner-gated)",
+    "xrpl_memo": "NOT_YET (spec prepared, owner-gated)"
+  },
+  "spend": {
+    "actual_usd": 0,
+    "funding_source": "none \u2014 read-only verification, all endpoints free"
+  },
+  "measurement_not_certification": true
+}

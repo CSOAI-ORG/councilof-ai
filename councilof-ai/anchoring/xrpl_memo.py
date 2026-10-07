@@ -96,9 +96,16 @@ def main():
     root_hash = args.root_hash
     if not root_hash:
         import urllib.request
+        import ssl
+        import os
+        try:
+            default = ssl.get_default_verify_paths().cafile
+            ctx = ssl.create_default_context() if (default and os.path.exists(default)) else ssl.create_default_context(cafile=__import__("certifi").where())
+        except Exception:
+            ctx = ssl.create_default_context()
         req = urllib.request.Request("https://councilof.ai/root.json",
                                     headers={"User-Agent": "CSOAI-TUI5/1.0"})
-        root = json.loads(urllib.request.urlopen(req, timeout=15).read())
+        root = json.loads(urllib.request.urlopen(req, timeout=15, context=ctx).read())
         root_hash = root["merkle_root"]
         print(f"Fetched live root hash: {root_hash}", file=sys.stderr)
 

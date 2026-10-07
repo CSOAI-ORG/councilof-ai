@@ -1,43 +1,109 @@
 {
-  "schema": "csoai.anchor.base-eas-spec/0.1",
-  "kind": "eas.attestation",
-  "prepared_at": "2026-09-11T10:59:48.515136+00:00",
-  "root_hash": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5",
+  "schema": "csoai.anchor.base-eas-spec/0.2",
+  "kind": "eas.attestation.prepared",
+  "prepared_at": "2026-10-07T05:40:00Z",
+  "supersedes": {
+    "file": "base-eas-spec.json v0.1 (2026-09-11T10:59:48Z)",
+    "reason": "STALE: v0.1 carried merkle root 78d4e019... of the retired 167-card root. A prepared transaction must name the CURRENT root's digest or it anchors history by accident."
+  },
+  "subject": {
+    "source": "https://councilof.ai/root.json",
+    "root_as_of": "2026-09-30T05:05:34Z",
+    "root_json_sha256": "f1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e",
+    "root_json_bytes": 25513,
+    "merkle_root": "47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d",
+    "card_count": 319,
+    "anchor_datum": "f1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e",
+    "anchor_datum_note": "sha256(root.json) is the canonical datum across ALL witnesses — OTS subject, Rekor content and sidecar artifact.sha256 are this same value, so every chain attests one identical subject."
+  },
   "network": {
-    "chain_id": 8453,
     "name": "Base",
+    "chain_id": 8453,
     "eip155": "eip155:8453",
     "rpc": "https://mainnet.base.org",
-    "explorer": "https://basescan.org"
+    "explorer": "https://basescan.org",
+    "observed_block": 52278957,
+    "observed_base_fee_gwei": 0.005,
+    "observed_gas_price_gwei": 0.006,
+    "observed_at": "2026-10-07T05:40:00Z"
   },
-  "eas": {
-    "contract": "0x4200000000000000000000000000000000000021",
-    "schema_uid": "TO_BE_REGISTERED",
-    "method": "attest",
-    "data": {
+  "contracts_verified_onchain": {
+    "eas": {
+      "address": "0x4200000000000000000000000000000000000021",
+      "eth_getCode_bytes": 2055,
+      "verified_at_block": 52278957,
+      "verified_at": "2026-10-07T05:40:00Z"
+    },
+    "schema_registry": {
+      "address": "0x4200000000000000000000000000000000000002",
+      "eth_getCode_bytes": 2055,
+      "verified_at_block": 52278957,
+      "verified_at": "2026-10-07T05:40:00Z",
+      "note": "Registry fee on this predeploy is read at execution time (eth_call) — NOT assumed zero."
+    }
+  },
+  "transactions_prepared": [
+    {
+      "step": 1,
+      "purpose": "register schema (one-time)",
+      "to": "0x4200000000000000000000000000000000000002",
+      "function": "createSchema(string schema, address resolver)",
+      "schema_string": "bytes32 rootSha256 bytes32 merkleRoot uint64 cardCount",
+      "resolver": "0x0000000000000000000000000000000000000000",
+      "gas_estimate": 300000,
+      "max_gas_price_gwei": 0.05
+    },
+    {
+      "step": 2,
+      "purpose": "attest the root digest",
+      "to": "0x4200000000000000000000000000000000000021",
+      "function": "attest((address recipient,uint64 expirationTime,bool revocable,bytes32 refUID,bytes data))",
       "recipient": "0x0000000000000000000000000000000000000000",
       "expirationTime": 0,
       "revocable": false,
       "refUID": "0x0000000000000000000000000000000000000000000000000000000000000000",
-      "data": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5"
+      "data_fields": {
+        "rootSha256": "0xf1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e",
+        "merkleRoot": "0x47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d",
+        "cardCount": 319
+      },
+      "encoding_note": "data = SchemaEncoder('bytes32,bytes32,uint64').encodeData([...]) via the official EAS SDK or ethers AbiCoder — do not hand-roll",
+      "gas_estimate": 120000,
+      "max_gas_price_gwei": 0.05
     }
-  },
+  ],
   "cost": {
-    "gas_estimate": "~50,000 gas",
-    "gas_price": "~0.001 gwei on Base L2",
-    "estimated_usd": "~$0.01",
-    "funding_source": "OWNER_BASE_WALLET (not automated)"
+    "observed": "gas price 0.006 gwei at block 52278957 (2026-10-07)",
+    "expected_total_usd": "0.0005 - 0.003 at observed gas",
+    "schema_registry_fee": "UNKNOWN — read on-chain at execution time; if > $0.05 stop and escalate to owner",
+    "maximum_authorized_usd": 0.05,
+    "funding_source": "OWNER BASE WALLET — owner-gated, NOT executed by this lane",
+    "actual_spend_usd_to_date": 0
+  },
+  "replay_verification": {
+    "principle": "After submission ANY third party reads the attestation back from a public RPC and byte-compares it to the published root — no CSOAI tooling, no permission.",
+    "steps": [
+      "1. Take attestation UID from the attest() receipt (Attested event topic[1])",
+      "2. eth_call 0x4200...0021 getAttestation(bytes32 uid) → {schema, data, attester, time, revocable}",
+      "3. Decode data with SchemaEncoder('bytes32,bytes32,uint64'); assert rootSha256 == f1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e",
+      "4. Independently fetch https://councilof.ai/root.json, sha256 the bytes, assert equality with the attested rootSha256",
+      "5. Explorer: https://basescan.org/tx/<txhash> — To == 0x4200000000000000000000000000000000000021, status == 1",
+      "6. Record tx hash + UID + block in interop/root-witness-latest.json witnesses.eas_base (ATTESTED, replacing NOT_YET)"
+    ],
+    "one_liner": "cast call 0x4200000000000000000000000000000000000021 'getAttestation(bytes32)((bytes32,address,address,uint64,uint64,bool,bytes32,address,bytes))' <UID> --rpc-url https://mainnet.base.org"
   },
   "status": "PREPARED_NOT_SUBMITTED",
   "requires_owner_action": true,
   "owner_action_needed": [
-    "1. Fund a Base wallet with \u2265$0.05 USDC/ETH",
-    "2. Register schema (once): bytes32 root_hash",
-    "3. Call attest() with the root hash",
-    "4. Record attestation UID in interop/root-witness-latest.json"
+    "1. Fund a Base wallet (≤ $0.05 ETH covers both txs at observed gas)",
+    "2. Read the schema-registry fee at execution time; stop if > $0.05",
+    "3. Register schema (step 1), then attest (step 2)",
+    "4. Run replay_verification steps 1-6",
+    "5. Record tx hash + attestation UID in the witness sidecar"
   ],
   "x402_integration": {
-    "note": "The x402 rail already lives on Base (eip155:8453). The EAS attestation uses the same chain as the payment rail.",
+    "note": "The x402 rail already lives on Base (eip155:8453); same chain as the payment rail.",
     "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31"
-  }
+  },
+  "measurement_not_certification": true
 }
