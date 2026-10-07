@@ -1,4 +1,4 @@
-# TUI-1 Canonical Controller — Verified Report (v2.2)
+# TUI-1 Canonical Controller — Verified Report (v2.3)
 
 **Observed:** 2026-10-07T06:01:13Z
 **Branch:** `control/canonical-state-20260911`
@@ -164,7 +164,7 @@ mcp-so **UNKNOWN** · cline **NOT_LISTED** · docker-mcp **NOT_LISTED**.
 
 ---
 
-## 7. Claims rejected or corrected — 15
+## 7. Claims rejected or corrected — 17
 
 | ID | Surface | Was | Now |
 |---|---|---|---|
@@ -181,8 +181,8 @@ mcp-so **UNKNOWN** · cline **NOT_LISTED** · docker-mcp **NOT_LISTED**.
 | COR-11 | goal brief itself | Rekor 2791822965, OTS awaiting | **superseded by time** |
 | **COR-12** | `docs/grants/README.md` artefact table | merkle `e4cc26d1…`, sha `74797e30…`, 303 cards, 22 axes, Rekor 2791822965, `STAMPED_PENDING_BITCOIN`, `$0.00`, `chain.json → length` (no such field), MCP 354 (external registry) | **replaced with live values + real sources; two unsourced rows removed** |
 | **COR-13** | `docs/trust/ANCHOR-PREPARATION.md` | anchored `62a1931b…` / 167 cards as if current | **STALE-VALUES banner** with current root `f1913eca…` / 319 cards |
-| **COR-14** | `README.md` tagline | "22 axes · 3 public leader scores · 8 fact runs" | **still wrong — B-13 raised**, generator-owned, not hand-edited |
-| **COR-15** | `README.md` DOI badge | links `10.5281/zenodo.21991104` | **still dead — B-14 raised** (410), generator-owned |
+| **COR-14** | `README.md` tagline | "22 axes · 3 public leader scores · 8 fact runs" | **FIXED via the generator** — README regenerated through `org-readme.py`; tagline and prose now read 23 axes / 9 leaders / 9 fact runs, prose made **derived** not typed (B-13 closed) |
+| **COR-15** | `README.md` DOI badge | links `10.5281/zenodo.21991104` | **FIXED** — identifier kept, link repointed to the live `zenodo-status.json` notice; dead methodology link in `profile_md()` repointed too (B-14 closed). The 410 itself stays B-09 |
 
 ---
 
@@ -237,7 +237,7 @@ edit.
 
 ---
 
-## 10. Remaining blockers (14)
+## 10. Remaining blockers (16)
 
 | ID | State | Blocker | Needs |
 |---|---|---|---|
@@ -253,10 +253,13 @@ edit.
 | B-10 | **VERIFIED** | "five of six lanes have no PR" → **all six merged** | done 7 Oct |
 | B-11 | **VERIFIED** | COBOL "never describe as measured" → live page already honest | done 7 Oct |
 | B-12 | **VERIFIED** | 1,460 **rows** → **1,453 distinct files** (overlap 7) | done 7 Oct |
-| B-13 | **CONTRADICTED** | README tagline 22/3/8 vs live 23/9/9 | re-run `org-readme.py` + re-pin |
-| B-14 | **CONTRADICTED** | README DOI badge links a 410 target | owner appeal (B-09), then regenerate |
+| B-13 | **VERIFIED** | README tagline 22/3/8 vs live 23/9/9 → **regenerated through its own generator; prose de-hard-coded to derived** | done 7 Oct; attested pin **deliberately not re-pinned** |
+| B-14 | **VERIFIED** | README DOI badge links a 410 target → **identifier kept, link repointed to the live notice** | done 7 Oct; the 410 itself is still B-09 |
 
-**State counts:** 7 VERIFIED · 3 BLOCKED · 2 INCOMPLETE · 2 CONTRADICTED = 14.
+| B-15 | **INCOMPLETE** | automated regeneration overwrote `art50-target-index.json` while its `.ots` proved 29 Sep bytes → **every deploy BLOCKED** 10:06–10:28Z; authorised workflow restored the stamped bytes | **make the job re-stamp or refuse to write a stamped file** (recurrence of this lane's own error, via automation) |
+| B-16 | **INCOMPLETE** | `stablecoin-evidence-round` **FAILING on master** (10:30:17Z, job `refresh`, step "Prove the reader and queue contracts") | **TUI-2 lane** — reported, not touched |
+
+**State counts:** 9 VERIFIED · 3 BLOCKED · 4 INCOMPLETE · 0 CONTRADICTED = 16.
 
 **Rejection discipline applied throughout:** `INDEXED`, `DISCOVERED`, `STAGED` and `UNMEASURED`
 were never reported as `MEASURED`; `submitted` was never reported as `anchored`; internal
