@@ -336,8 +336,10 @@ export default function ToolStack() {
           Nine doors. Each one opens today.
         </h2>
         <p className="t-lede measure measure-center mt-5 text-center text-muted-foreground">
-          Independent measurement body. We run AI systems against frozen published tests, sign the
-          result, and leave empty cells empty. Nine doors, each a real page.
+          {/* 2026-10-07 (Lane F, F3): the lede opened "Independent measurement body." The tests
+              are ours and so are the runs; the footer and the cross-hardware study say so. */}
+          We run AI systems against frozen published tests, sign the result, and leave empty cells
+          empty. Nine doors, each a real page.
         </p>
         <div className="mx-auto mt-8 max-w-3xl rounded-2xl border border-emerald-200/70 bg-emerald-50/60 px-5 py-4">
           <HomeUnderstand

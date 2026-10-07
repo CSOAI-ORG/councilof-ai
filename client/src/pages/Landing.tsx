@@ -113,7 +113,7 @@ export default function Landing() {
             >
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
                 <Globe className="h-4 w-4" />
-                Independent measurement body
+                Measurement, never certification
               </div>
               
               <h1 className="text-4xl md:text-4xl lg:text-5xl font-bold leading-tight mb-6">

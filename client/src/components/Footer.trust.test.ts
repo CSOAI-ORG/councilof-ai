@@ -38,6 +38,13 @@ describe("footer trust furniture", () => {
     expect(research).toMatch(/Not independent\./);
     expect(code(footer)).not.toMatch(/independent measurement body/i);
     expect(code(footer)).toMatch(/not independent\s+checks/);
+    // The footer sits under /doctrine/, /how-we-work/ (ToolStack) and the embedded landing view
+    // (Landing): their body copy said "Independent measurement body" too, which would have put the
+    // corrected footer directly under the claim it corrects.
+    for (const rel of ["../pages/Doctrine.tsx", "home/ToolStack.tsx", "../pages/Landing.tsx"]) {
+      const src = code(readFileSync(resolve(__dirname, rel), "utf8"));
+      expect(src, rel).not.toMatch(/independent measurement body/i);
+    }
   });
 
   it("shows the entity, the signed root, the corrections ledger and the offline verify how-to", () => {

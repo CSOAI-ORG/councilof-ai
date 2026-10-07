@@ -96,7 +96,11 @@ export default function Doctrine() {
           Measurement, not certification.
         </h1>
         <p className="mt-4 text-lg text-gray-600">
-          Independent measurement body (CSOAI Ltd, UK 16939677). Live board{" "}
+          {/* 2026-10-07 (Lane F, F3): this said "Independent measurement body". We run, grade and
+              publish our own measurements, and to our knowledge nobody outside has re-run them
+              (/research/cross-hardware-reproducibility/: "Not independent. All runs are ours."). */}
+          CSOAI Ltd (UK 16939677) runs these measurements itself, so they are not independent
+          checks. Live board{" "}
           <a
             className="text-emerald-700 underline"
             href="https://councilof.ai/api/gspc"
