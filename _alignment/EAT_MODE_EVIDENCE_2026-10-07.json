@@ -1,5 +1,5 @@
 {
-  "ts": "2026-10-07T07:42:05Z",
+  "ts": "2026-10-07T08:20:58Z",
   "cycle": "EAT 2026-10-07 (wave: after aligned 4-phase plan)",
   "measurements": [
     {
@@ -26,7 +26,32 @@
       "metric": "disk",
       "value": "5.0Gi free (98%) \u2014 at skill threshold, sibling scratch auto-prunes at 24h",
       "provenance": "df -h /System/Volumes/Data 08:37 BST"
+    },
+    {
+      "metric": "mcp-2026-wire-kit public release",
+      "value": "github.com/CSOAI-ORG/mcp-2026-wire-kit live: 9 files, MIT, selftested gate suite 6/6, codename-sanitized (SOV3->sovereign-stack)",
+      "provenance": "gh api contents read-back 2026-10-07"
+    },
+    {
+      "metric": "upstream awesome-list PR",
+      "value": "punkpeye/awesome-mcp-servers#15904 OPEN (Developer Tools, single-entry diff, leak-free verified)",
+      "provenance": "gh pr create returned URL; June PR #8803 was closed-unmerged"
+    },
+    {
+      "metric": "header-add migration wave 1",
+      "value": "10/10 PRs OPEN across census top-10; 3/3 spot-verified via gh pr view (state OPEN, correct base, head mcp-2026-wire-header-add); mcp 2.x FastMCP->MCPServer rename handled, CI green 3.10/3.11/3.12 on 7 Python PRs; JS SDK verified NOT on 2026 wire (no pin invented); csoai-mcp-dist honestly classed full",
+      "provenance": "MCP_HEADER_ADD_WAVE1_2026-10-07.md + gh pr view read-backs; ~121 gh api calls, 0 rate-limits"
+    },
+    {
+      "metric": "meok-ori wheel install-proof",
+      "value": "fresh venv pip install -> meok-ori 0.2.0 -> constitution (22 articles) + run OK",
+      "provenance": "/tmp/wheeltest-venv live run"
+    },
+    {
+      "metric": "launch.sh health run",
+      "value": "steps 1-3 then died on PYTHONPATH pydantic poison (env issue, NOT test failures); full suite re-run manually clean = 468 green; launch.sh patched (export PYTHONPATH=) ; full 9-step green BLOCKED on owner decision: OrbStack squats 127.0.0.1:8000 (step 4 curls loopback)",
+      "provenance": "LAUNCH_REPORT_20261007_084643.md + patch"
     }
   ],
-  "SIGIL_digest": "fd5be11b77741cb137619cf1889483a48880c25548325bbdb618eae7416326e3"
+  "SIGIL_digest": "4e0f1c62ba32ed690115c377a0e9e3389af2d15feeb1cef323c8496384ca3dd1"
 }

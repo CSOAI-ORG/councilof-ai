@@ -6,6 +6,10 @@
 
 set -euo pipefail
 
+# Env hygiene (2026-10-07): a python3.14 Hermes venv on PYTHONPATH poisons
+# every python3.11 import (pydantic_core binary mismatch). Clear it for all steps.
+export PYTHONPATH=""
+
 # ── Colors ──
 R='\033[0;31m'; G='\033[0;32m'; Y='\033[1;33m'; B='\033[0;34m'
 C='\033[0;36m'; N='\033[0m'
