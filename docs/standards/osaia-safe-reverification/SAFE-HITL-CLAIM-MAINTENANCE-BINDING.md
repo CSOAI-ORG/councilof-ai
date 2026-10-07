@@ -58,5 +58,3 @@ Signatures, transparency logs, SCITT-style receipts, Rekor inclusion, OpenTimest
 - Candidate plugin binding: `csoai-alliance-control-plugin-v0.2.json`.
 
 The design target is one control fabric, not one mandatory engine.
-
-[executed on device: IOKs-MacBook-Air.local (3a313181-9802-49ab-b57a-b58a3fd4466a)]
