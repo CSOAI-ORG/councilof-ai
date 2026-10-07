@@ -1,3 +1,4 @@
+import { isVerificationNavigationQuestion } from "@/lib/askNavigation";
 import { useEffect, useRef, useState } from "react";
 import { AUDIENCES, AUDIENCE_DOORS, DEFAULT_AUDIENCE, asksFor } from "./asks";
 import { FOCUS, MEASURE, PRIMARY, TYPE } from "./glass";
@@ -166,7 +167,7 @@ export default function LobbyComposer({
       inputRef.current?.focus();
       return;
     }
-    const taken = onAsk?.(text);
+    const taken = isVerificationNavigationQuestion(text) ? false : (onAsk?.(text));
     if (taken === "busy") return;
     const accepted = onceAccepted(() => {
       setQ((draft) => draft.trim() === text ? "" : draft);
