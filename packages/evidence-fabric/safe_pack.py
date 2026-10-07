@@ -113,6 +113,7 @@ def copy_lib(pack):
     for sub in ("render", "ingest"):
         os.makedirs(os.path.join(lib, sub), exist_ok=True)
     shutil.copy(os.path.join(HERE, "event.py"), lib)
+    shutil.copy(os.path.join(HERE, "safe_freeze_v2.py"), lib)
     for f in ("__init__.py", "ocsf.py", "otel.py", "sarif.py", "intoto.py", "ecs_hec.py"):
         shutil.copy(os.path.join(HERE, "render", f), os.path.join(lib, "render", f))
     for f in ("__init__.py", "safe_in.py"):
