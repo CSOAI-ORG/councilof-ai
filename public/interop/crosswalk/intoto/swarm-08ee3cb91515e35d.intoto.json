@@ -2,12 +2,13 @@
   "_type": "https://in-toto.io/Statement/v1",
   "predicate": {
     "figure": {
-      "accuracy": 1,
-      "axis": "safety",
+      "accuracy": 0.3,
+      "axis": "swarm",
       "issuer": "CSOAI Ltd",
       "kind": "gspc.measurement-card",
-      "model": "zai-org/GLM-5.2",
+      "model": "deepseek-ai/DeepSeek-V3.1",
       "n": 30,
+      "route": "hf-router",
       "status": "MEASURED",
       "unmeasured": []
     },
@@ -30,7 +31,7 @@
     "reproducible": false,
     "source": {
       "canonical_rule": "sorted JSON.stringify (ECMAScript numbers)",
-      "card_id": "02444bfb68c77d045663bd55fd897ea246ccbed6036422f0271c297a5103fcb7",
+      "card_id": "08ee3cb91515e35d19d49d316b643809eb0946ab5937dfa19ba13da1c9f8ff2a",
       "card_kind": "gspc.measurement-card",
       "preimage_rule": "sha256(canonical body)",
       "signature_alg": "Ed25519",
@@ -58,9 +59,9 @@
   "subject": [
     {
       "digest": {
-        "sha256": "02444bfb68c77d045663bd55fd897ea246ccbed6036422f0271c297a5103fcb7"
+        "sha256": "08ee3cb91515e35d19d49d316b643809eb0946ab5937dfa19ba13da1c9f8ff2a"
       },
-      "name": "gspc-measurement-card/safety/zai-org/GLM-5.2"
+      "name": "gspc-measurement-card/swarm/deepseek-ai/DeepSeek-V3.1"
     }
   ]
 }

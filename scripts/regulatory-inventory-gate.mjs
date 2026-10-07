@@ -1,12 +1,20 @@
 #!/usr/bin/env node
+// The regulatory inventory gate, inside build:client. It validates the inventory the unsigned
+// pointer public/interop/regulatory-inventory-latest.json selects, never the 2026-09-10 snapshot by
+// name: that snapshot is OTS-stamped and frozen, and every later inventory is a new dated file with
+// its own proof (scripts/build-regulatory-inventory.mjs). Before validating, checkCurrent() proves
+// the pointer names exact bytes, that the proof commits to those bytes, that the in-toto rows
+// match public/interop/crosswalk/intoto/index.json, and that the /api/counters binding names the
+// same file. It writes nothing; when any of that fails it exits 1 with the recipe.
 
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { checkCurrent } from "./build-regulatory-inventory.mjs";
+
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const INVENTORY_PATH = path.join(ROOT, "public/interop/regulatory-inventory.json");
 const BOARD_PATH = path.join(ROOT, "public/signed/gspc-board.signed.json");
 const INTOTO_INDEX_PATH = path.join(ROOT, "public/interop/crosswalk/intoto/index.json");
 const EAST_WEST_PATH = path.join(ROOT, "public/crosswalk/east-west-v1.json");
@@ -163,9 +171,9 @@ function validate(
 }
 
 function selftest() {
-  const base = readJson(INVENTORY_PATH);
-  const board = readJson(BOARD_PATH);
   const intotoIndex = readJson(INTOTO_INDEX_PATH);
+  const base = checkCurrent(undefined, intotoIndex).doc;
+  const board = readJson(BOARD_PATH);
   const eastWest = readJson(EAST_WEST_PATH);
   const frozenManifest = readJson(FROZEN_MANIFEST_PATH);
   const frozenManifestBytes = fs.readFileSync(FROZEN_MANIFEST_PATH);
@@ -200,10 +208,18 @@ function selftest() {
 if (process.argv.includes("--selftest")) {
   selftest();
 } else {
-  const inventory = readJson(INVENTORY_PATH);
+  const intotoIndex = readJson(INTOTO_INDEX_PATH);
+  let current;
+  try {
+    current = checkCurrent(undefined, intotoIndex);
+  } catch (error) {
+    console.error(`regulatory-inventory-gate: ${error.message}`);
+    process.exit(1);
+  }
+  const inventory = current.doc;
   const errors = validate(inventory, {
     board: readJson(BOARD_PATH),
-    intotoIndex: readJson(INTOTO_INDEX_PATH),
+    intotoIndex,
     eastWest: readJson(EAST_WEST_PATH),
     frozenManifest: readJson(FROZEN_MANIFEST_PATH),
     frozenManifestBytes: fs.readFileSync(FROZEN_MANIFEST_PATH),
@@ -212,5 +228,5 @@ if (process.argv.includes("--selftest")) {
     for (const error of errors) console.error(`regulatory-inventory-gate: ${error}`);
     process.exit(1);
   }
-  console.log("regulatory-inventory-gate: PASS — 417 provision hashes + reproducible root · 17 authority adapters · 25 crosswalk assets · 22 GSPC axes · 4 published regimes");
+  console.log(`regulatory-inventory-gate: PASS (${current.name}, proof commits to its bytes) — 417 provision hashes + reproducible root · 17 authority adapters · 25 crosswalk assets · 22 GSPC axes · 4 published regimes`);
 }

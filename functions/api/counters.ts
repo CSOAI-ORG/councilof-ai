@@ -46,7 +46,9 @@
  * This endpoint has no state of its own — edit the artifact, commit, deploy.
  */
 
-import regulatoryInventory from "../../public/interop/regulatory-inventory.json";
+// The stamped inventory version public/interop/regulatory-inventory-latest.json selects, bound at
+// build time (scripts/build-regulatory-inventory.mjs); regulatory-inventory-gate.mjs checks the binding.
+import regulatoryInventory, { REGULATORY_INVENTORY_PATH } from "./_regulatory_inventory";
 import type { AxisScore } from "./_gspc_types";
 import { AXES_A } from "./_gspc_axes_a";
 import { AXES_B } from "./_gspc_axes_b";
@@ -98,7 +100,7 @@ const counter = (
 
 // ── sources, named once ──────────────────────────────────────────────────────
 const SRC_AXES = "functions/api/_gspc_axes_{a,b,c,fin}.ts (the arrays /api/gspc derives from)";
-const SRC_REGULATORY_INVENTORY = "public/interop/regulatory-inventory.json";
+const SRC_REGULATORY_INVENTORY = REGULATORY_INVENTORY_PATH;
 
 // ── the board's own date-of-record ───────────────────────────────────────────
 // Read from the NEWEST signed freeze (functions/api/_board_snapshot.ts). Its honest
