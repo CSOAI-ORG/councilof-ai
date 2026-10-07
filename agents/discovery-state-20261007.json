@@ -1,0 +1,174 @@
+{
+  "schema": "csoai.discovery-state/0.1",
+  "as_of": "2026-10-07T04:30:00Z",
+  "generated_by": "TUI-4 discovery subagent",
+  "probe_method": "live HTTP probes + MCP initialize/tools/list + file reads from agents/discovery-consolidation-20260911 branch",
+  "mcp": {
+    "reachable_distinct_servers": 2,
+    "reachable_endpoints": 4,
+    "tools_probed": 38,
+    "catalogued_not_probed": 6,
+    "unreachable": 0,
+    "servers": [
+      {
+        "id": "csoai-gspc-mcp",
+        "name": "csoai-gspc-mcp",
+        "endpoint": "https://councilof.ai/mcp",
+        "transport": "streamable-http",
+        "role": "primary",
+        "alias_of": null,
+        "status": "reachable",
+        "server_version": "1.4.4",
+        "tools_count": 19,
+        "free_tools": 14,
+        "paid_tools": 5
+      },
+      {
+        "id": "csoai-gspc-mcp-fallback",
+        "name": "csoai-gspc-mcp",
+        "endpoint": "https://csoai.org/mcp",
+        "transport": "streamable-http",
+        "role": "fallback",
+        "alias_of": "csoai-gspc-mcp",
+        "status": "reachable",
+        "server_version": "1.4.4",
+        "tools_count": 19,
+        "free_tools": 14,
+        "paid_tools": 5
+      },
+      {
+        "id": "csoai-gspc-mcp-free",
+        "name": "csoai-gspc-mcp",
+        "endpoint": "https://councilof.ai/mcp/free",
+        "transport": "streamable-http",
+        "role": "free-only",
+        "alias_of": null,
+        "status": "reachable",
+        "server_version": "1.4.4",
+        "tools_count": 14,
+        "free_tools": 14,
+        "paid_tools": 0
+      },
+      {
+        "id": "csoai-gspc-mcp-stdio",
+        "name": "csoai-gspc-mcp",
+        "endpoint": "stdio: node mcp/gspc-server/index.mjs",
+        "transport": "stdio",
+        "role": "stdio",
+        "alias_of": null,
+        "status": "reachable",
+        "server_version": "0.2.2",
+        "tools_count": 19,
+        "free_tools": 14,
+        "paid_tools": 5
+      }
+    ],
+    "catalogued_not_probed": [
+      {"id": "csoai-assess", "asserted_tools": 6},
+      {"id": "csoai-anchors", "asserted_tools": 3},
+      {"id": "csoai-ledger", "asserted_tools": 4},
+      {"id": "csoai-watchdog", "asserted_tools": 5},
+      {"id": "csoai-spectrum", "asserted_tools": 8},
+      {"id": "csoai-drift", "asserted_tools": 4}
+    ],
+    "external_catalogues": [
+      {
+        "id": "gspc-os-vendored",
+        "count": 363,
+        "unit": "server directories",
+        "source": "CSOAI-ORG/gspc-os servers/ (private, pod-only)"
+      }
+    ]
+  },
+  "a2a": {
+    "endpoint": "https://councilof.ai/api/a2a",
+    "protocol": "JSONRPC",
+    "protocol_version": "1.0",
+    "agent_card_status": 200,
+    "agent_card_version": "1.4.0",
+    "agents_json_status": 200,
+    "agents_json_schema": "csoai.agents-discovery/0.1",
+    "skills_count": 12,
+    "skills": [
+      "gspc-board",
+      "east-west-crosswalk",
+      "card-status-link",
+      "benchmark-quality-register",
+      "article50-detect",
+      "eu-ai-act-screen",
+      "x402-discovery",
+      "estate-index",
+      "measurement-capsules",
+      "server-evidence",
+      "evidence-bundle",
+      "gspc-route"
+    ],
+    "streaming": false,
+    "push_notifications": false,
+    "extended_agent_card": false,
+    "extensions": [
+      {
+        "uri": "https://councilof.ai/a2a/extensions/signed-receipts/v1/",
+        "status": "draft-not-emitted"
+      },
+      {
+        "uri": "https://councilof.ai/.well-known/x402.json",
+        "status": "live"
+      },
+      {
+        "uri": "x402-offer-receipt",
+        "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
+        "status": "conditionally-emitted"
+      }
+    ],
+    "identity": {
+      "did": "did:web:csoai.org",
+      "attestation_key": "did:web:csoai.org#board-attestation-1",
+      "did_document": "https://csoai.org/.well-known/did.json"
+    }
+  },
+  "x402": {
+    "discovery_index": "https://councilof.ai/.well-known/x402.json",
+    "discovery_status": 200,
+    "schema": "csoai.x402/0.2",
+    "x402_version": 2,
+    "scheme": "exact",
+    "network": "eip155:8453",
+    "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+    "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+    "mode": "live",
+    "total_resources": 31,
+    "free_resources": 4,
+    "paid_resources": 27,
+    "paid_issuance": 10,
+    "paid_assembly": 17,
+    "extensions": {
+      "offer_receipt": {
+        "supported": true,
+        "emission": "conditional",
+        "format": "jws",
+        "alg": "EdDSA",
+        "kid": "did:web:csoai.org#board-attestation-1",
+        "board_signing_key_configured": true,
+        "facilitator_configured": true,
+        "eip712": false
+      }
+    }
+  },
+  "revenue": {
+    "external_revenue_usdc": 0.03,
+    "external_payers": 2,
+    "self_settlements_excluded": 22,
+    "zero_value_excluded": 8,
+    "sku1_issuances": 13,
+    "sku2_proofs": 1
+  },
+  "changes_since_last_discovery": {
+    "agent_card_version": {"was": "1.1.0", "now": "1.4.0"},
+    "x402_resources": {"was": 29, "now": 31},
+    "x402_schema": {"was": "csoai.x402/0.1", "now": "csoai.x402/0.2"},
+    "mcp_server_version": {"was": "1.4.2", "now": "1.4.4"},
+    "a2a_skills": {"was": 12, "now": 12},
+    "mcp_tools": {"was": 19, "now": 19}
+  }
+}

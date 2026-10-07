@@ -835,7 +835,18 @@ def main() -> int:
         legacy_digest = payload_sha256(leaf["payload"])
         legacy_digests.append(legacy_digest)
         is_new = legacy_digest not in LAST_UNSIGNED_SET
-        will_sign = is_new and have_key
+        # Attempt a signature for EVERY leaf whenever a signer is available — not
+        # only for post-07:38Z leaves. The 07:38Z set may stay unsigned (it is a
+        # grandfather, and the is_new halt below still guards the NEW-leaf rule),
+        # but when the relay answers, signing it closes the NO_LAPTOP_SIGN gap the
+        # XRPL-16-16 ops doc tracks (docs/operations/XRPL-16-16-NEEDS-A-SIGNER-TARGET.md):
+        # USDQ/EURQ/PSC carry the tag only because this used to skip them.
+        # sig_ed25519 is excluded from card_sha256, so a successful signature never
+        # moves an existing leaf by itself; make_card(will_sign=True) drops the
+        # NO_LAPTOP_SIGN tag from unmeasured, which DOES change the whole-card
+        # digest — that is a new leaf id by design, signed, never a silent edit.
+        # Sign failure rebuilds will_sign=False and lands exactly on today's bytes.
+        will_sign = have_key
 
         card = make_card(leaf, None, will_sign=will_sign)
         sig = None

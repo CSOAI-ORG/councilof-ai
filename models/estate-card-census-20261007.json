@@ -1,0 +1,235 @@
+{
+  "schema": "csoai.tui3-estate-card-census/0.1",
+  "tui": 3,
+  "subject": "CSOAI signed card estate \u2014 population census and cryptographic verification",
+  "branch": "models/verified-expansion-20260911",
+  "observed_at": [
+    "2026-09-11T11:00:00Z",
+    "2026-10-07T00:00:00Z"
+  ],
+  "observation_note": "Two observation times, 26 days apart. Live authority is councilof.ai + csoai.org/.well-known/did.json. The 2026-09-11 reading is retained because the task brief is dated 11 Sep; both readings are reported and neither overwrites the other.",
+  "sources": {
+    "root": "https://councilof.ai/root.json",
+    "index": "https://councilof.ai/signed/card_index.json",
+    "store": "https://councilof.ai/api/cards",
+    "mill": "https://councilof.ai/interop/mill-cards-signed/ + mill-cards-unsigned/",
+    "did": "https://csoai.org/.well-known/did.json",
+    "verifier": "harness/gspc-top100/verify_card.py (estate's own three-state verifier)",
+    "repo": "https://github.com/CSOAI-ORG/councilof-ai @ master"
+  },
+  "populations": [
+    {
+      "name": "public_root",
+      "kind": "financial/domain leaves",
+      "count_2026_09_11": 167,
+      "merkle_2026_09_11": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5",
+      "count_now": 319,
+      "merkle_now": "47277a6f2034e80b6279fa969e832180\u2026",
+      "as_of_now": "2026-09-30T05:05:34Z",
+      "identical_on_councilof_ai_csoai_org_www": true,
+      "individual_cards_fetchable": false,
+      "note": "Card SHAs not resolvable via /signed/cards/ (404). Content unverifiable from public bytes."
+    },
+    {
+      "name": "signed_index",
+      "kind": "historical model corpus",
+      "count": 335,
+      "packaged_at": "2026-08-28T15:39:25.229647+00:00",
+      "card_dates": {
+        "2026-08-19": 335
+      },
+      "axes": 16,
+      "models": 64,
+      "unchanged_between_observations": true,
+      "signer": "did:web:csoai.org#card-attestation-1",
+      "canonicalisation": "python_historical"
+    },
+    {
+      "name": "card_store",
+      "kind": "index + cross-border",
+      "count": 336,
+      "note": "335 + 1 cross-border card"
+    },
+    {
+      "name": "mill_signed",
+      "kind": "GSPC mill receipts",
+      "files": 2869,
+      "cards": 2868,
+      "non_card_artifacts": 1,
+      "axes": 14,
+      "models": 166,
+      "signer": "did:web:csoai.org#board-attestation-1",
+      "canonicalisation": "js_edge_signer",
+      "includes_pr1888": 36
+    },
+    {
+      "name": "mill_unsigned",
+      "kind": "staged, awaiting signature",
+      "files": 2111,
+      "with_id": 2041,
+      "without_id": 70,
+      "all_body_status": "UNMEASURED"
+    },
+    {
+      "name": "leaf_union",
+      "kind": "public root leaf union",
+      "entries": 4253,
+      "source_roots": 69,
+      "as_of": "2026-10-07T03:01:23Z"
+    }
+  ],
+  "pr1888": {
+    "pr": 1888,
+    "commit": "df1e6d0bba957940e3a75e3ec1edb3a80e21be05",
+    "title": "mill: stage 36 enriched GSPC receipts and fail closed XRPL evidence",
+    "count": 36,
+    "sha256_valid": 36,
+    "ed25519_valid": 36,
+    "subset_of_mill_signed": 36,
+    "in_index": 0,
+    "in_root": 0,
+    "models": 11,
+    "axes": 14,
+    "state": "STAGED \u2014 in mill-cards-signed/, not in the 335-card index, not in the public root",
+    "correction": "Brief calls these 'off-device-signed model cards'. They are enriched GSPC measurement receipts signed via GitHub OIDC under #board-attestation-1."
+  },
+  "verification_totals": {
+    "method": "harness/gspc-top100/verify_card.py three-state verifier (VALID/INVALID/UNCHECKABLE)",
+    "index_cards": {
+      "total": 335,
+      "VALID": 335,
+      "INVALID": 0,
+      "UNCHECKABLE": 0
+    },
+    "mill_signed_cards": {
+      "total": 2868,
+      "VALID": 2868,
+      "INVALID": 0,
+      "UNCHECKABLE": 0,
+      "sha256_body_matches_id": "2868/2868"
+    },
+    "pr1888_within_mill": {
+      "total": 36,
+      "VALID": 36
+    },
+    "distinct_cards_valid": 3203,
+    "distinct_formula": "2868 mill + 335 index (disjoint); PR#1888's 36 are a subset of the 2868, not additive",
+    "mill_unsigned_with_id": {
+      "total": 2041,
+      "state": "UNCHECKABLE (no signature) \u2014 expected, staged"
+    },
+    "mill_unsigned_without_id": {
+      "total": 70,
+      "state": "verifier returns INVALID 'no body or id'",
+      "honest_reading": "These are UNMEASURED staged placeholders with no id. INVALID here is a SHA/shape verdict, NOT a signature failure and NOT tampering. Never report as '70 failed verifications'."
+    },
+    "non_card_in_signed_folder": {
+      "file": "mill-cards-signed/GOVERNANCE-RETRIEVE.json",
+      "schema": "csoai.governance-retrieve/0.1",
+      "verdict": "INVALID \u2014 no body or id",
+      "finding": "Pointer/retrieve stub, not a measurement card, sitting in the signed-card folder. Any glob count of mill-cards-signed/*.json overstates the card count by 1."
+    }
+  },
+  "canonicalisation": {
+    "python_historical": "json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=True) \u2014 integral floats emit as 0.0",
+    "js_edge_signer": "JS sorted compact JSON; integral floats <1e21 emit as integers",
+    "governs": {
+      "index_335": "python_historical",
+      "mill_and_pr1888": "js_edge_signer"
+    },
+    "cards_that_differ_between_rules": 117,
+    "of_which_in_index": 117,
+    "independent_corroboration": "Estate research intake F60 (docs/research-intake/2026-09-06/F60-harness-is-already-public.md) independently reports '117 of 335'",
+    "risk": "A verifier applying one rule to all cards reports 117 false INVALID. verify_card.py selects by preimage_rule \u2192 3203/3203 VALID.",
+    "action": "Record which canonicalisation governs which generation in /signed/HOW-TO-VERIFY.md (estate finding F62)."
+  },
+  "benchmark_provider_evidence": {
+    "artifact": "public/interop/benchmark-index-v0.1.json (LIVE at councilof.ai)",
+    "published_generated_at": "2026-09-17T02:57:48.870296+00:00",
+    "published_totals": {
+      "cards_total": 3998,
+      "signed": 2378,
+      "unsigned": 1620,
+      "axes": 14,
+      "models": 165
+    },
+    "on_disk_2026_10_07": {
+      "cards_total": 4980,
+      "signed": 2869,
+      "unsigned": 2111,
+      "axes": 14,
+      "models": 166
+    },
+    "delta": {
+      "cards_total": 982,
+      "signed": 491,
+      "unsigned": 491,
+      "models": 1
+    },
+    "state": "STALE \u2014 published index understates on-disk corpus by 982 cards",
+    "third_party_providers": {
+      "artifact": "public/interop/benchmarker-trust/ (LIVE)",
+      "files": [
+        "evidence-2026-09-12.json",
+        "scorecards-2026-09-13.json",
+        "unsigned/"
+      ],
+      "kind": "csoai.benchmarker-trust-evidence/0.1",
+      "preserved_third_party_sources": [
+        "OWASP LLM Top 10 2025 mapping (9 categories unmapped with reasons, pinned by test)",
+        "AI-Luminate v1.1 importer spec"
+      ],
+      "lane_note": "Recorded as 'TUI-5 benchmark-the-benchmarkers (nine-TUI brief 2026-09-12)' \u2014 a different brief numbering than this one",
+      "imported_scores_preserved_as": "third-party evidence, never as CSOAI measurements"
+    }
+  },
+  "tests": {
+    "runner": "python3 -m pytest (Python 3.14, macOS)",
+    "deps_matched_to_pr_gates": [
+      "pytest",
+      "cryptography",
+      "pyarrow 25.0.1",
+      "huggingface_hub",
+      "opentimestamps-client"
+    ],
+    "env_fixes_required": [
+      "SSL_CERT_FILE=certifi (system Python 3.14 had no CA bundle)"
+    ],
+    "ci_exact_subset": {
+      "tests": 56,
+      "passed": 56,
+      "failed": 0,
+      "source": ".github/workflows/pr-gates.yml lines 355-375",
+      "note": "Matches green CI on master \u2014 confirms local env is not the cause of other failures"
+    },
+    "full_harness_gspc_top100": {
+      "passed": 81,
+      "failed": 13,
+      "ci_runs_these_files": false,
+      "ci_evidence": "pr-gates.yml invokes only test_priority_pick, test_inflight_cells, test_one_option_menu, and test_mill_honesty -k sign_mill_skips_already_signed; test_fleet_locks.py and test_stdio_pack_matches_canonical.py are never executed",
+      "honest_claim": "13 tests fail locally with CI-equivalent deps. CI does not execute these files, so the failures are not gated. NOT claimed to fail in CI \u2014 CI was not run by TUI-3."
+    }
+  },
+  "costs": {
+    "actual_spend_usd": 0.0,
+    "revenue_usd": 0.0,
+    "classification": "INTERNAL_SELF_FUNDED",
+    "detail": "Read-only API calls, local Ed25519 verification, local pytest. No GPU, no paid API, no credentials created."
+  },
+  "claims_rejected": [
+    "Brief: '167 cards in the current public Merkle root' \u2014 STALE. Live root is 319 @ 2026-09-30 (167 was correct when observed 2026-09-11).",
+    "Brief: '36 new off-device-signed model cards' \u2014 they are GSPC receipts signed via GitHub OIDC under #board-attestation-1, and they are a SUBSET of the 2,868 mill cards, not a separate 36-card gain.",
+    "Brief: '335-card historical corpus' \u2014 accurate for the signed index, but the estate also holds 2,868 signed mill cards not counted there.",
+    "'Index card count represents the measurement estate' \u2014 it does not; 3,203 distinct cards verify VALID against 335 indexed.",
+    "'benchmark-index-v0.1.json totals are current' \u2014 STALE by 982 cards.",
+    "70 id-less UNMEASURED placeholders must never be reported as 'failed signature verifications'."
+  ],
+  "blockers": [
+    "BLOCKER: 319 root card contents not fetchable (404) \u2014 root population cannot be individually verified.",
+    "BLOCKER: 2,868 mill cards are STAGED, not in the signed index (335) and not in the root (319). No pipeline observed that promotes mill \u2192 index \u2192 root.",
+    "BLOCKER: benchmark-index-v0.1.json regeneration not observed \u2014 published totals stale by 982 cards.",
+    "BLOCKER: 689 UNMEASURED cells in the 64\u00d716 index matrix; new measurement requires HF Jobs launch authority.",
+    "BLOCKER: 13 estate tests fail locally and are not CI-gated (7 fleet-lock, 5 mill-honesty, 1 stdio pack drift). Not fixed by TUI-3 \u2014 cross-lane (TUI-4 owns MCP manifest drift).",
+    "OPEN: 70 UNMEASURED placeholders lack id; verifier classifies them INVALID rather than UNCHECKABLE."
+  ]
+}

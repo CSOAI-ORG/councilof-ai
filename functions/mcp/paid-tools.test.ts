@@ -764,9 +764,9 @@ describe("a dated amount is said in the 402 human line, built from the challenge
   };
 
   it("names the end and the standard-amount FIELD when accepts[0] carries ends_at — never an amount", async () => {
-    const line = await summaryFor("2026-10-11T00:00:00Z");
+    const line = await summaryFor("2027-01-11T00:00:00Z");
     expect(line).toMatch(/^PAYMENT_REQUIRED/);
-    expect(line).toContain("Launch amount until 2026-10-11T00:00:00Z");
+    expect(line).toContain("Launch amount until 2027-01-11T00:00:00Z");
     expect(line).toContain("accepts[0].csoai_pricing.normal_amount_atomic");
     expect(line).toContain("read accepts[] on every call");
     expect(line).not.toMatch(/\$\s?\d/);
