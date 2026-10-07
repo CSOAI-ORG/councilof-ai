@@ -96,10 +96,29 @@ def find_family_cards(public_key: bytes) -> dict[str, list[dict]]:
 
 
 def fetch_json(url: str) -> dict | None:
+    """Return the parsed body, or None only when the endpoint could not answer.
+
+    A 404 is an ANSWER, not an outage: /api/proof replies 404 with
+    {"error":"not_found"} for a sha that is not a leaf of the live root. Routing
+    that through the generic exception path collapsed "not included" into
+    "could not check" — 626 of 673 cards reported UNCHECKABLE for a question the
+    endpoint had definitively answered. Only non-404 HTTP errors and transport
+    failures return None.
+    """
+    req = urllib.request.Request(url, headers={"User-Agent": "councilof-ai-watch/0.1"})
     try:
-        req = urllib.request.Request(url, headers={"User-Agent": "councilof-ai-watch/0.1"})
         with urllib.request.urlopen(req, timeout=25) as r:
             return json.loads(r.read())
+    except urllib.error.HTTPError as exc:
+        if exc.code == 404:
+            try:
+                body = json.loads(exc.read())
+            except Exception:
+                body = None
+            if isinstance(body, dict) and body.get("proof"):
+                return body
+            return {"error": "not_found"} if body is None else body
+        return None
     except Exception:
         return None
 
