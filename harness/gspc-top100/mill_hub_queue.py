@@ -39,7 +39,10 @@ SERVABLE_TAGS = frozenset({"text-generation", "text2text-generation", "conversat
 # 401/403/429 are token/rate states and are never persisted as dead.
 # A single provider suffix answering 400 is that provider's miss, not a dead model: only "every suffix
 # said no", the probe-first mapping, or a 404 on the Hub itself count.
-DEAD_MARKERS = ("no live inference provider", "no-endpoint (all ", "HTTP 404 model not on the Hub")
+# A route that answers but yields fewer than --min-graded parseable labels is dead for grading
+# too (see mill(min_graded=...)); like every dead row it expires with --dead-max-age-days.
+LOW_YIELD_MARKER = "low-yield route"
+DEAD_MARKERS = ("no live inference provider", "no-endpoint (all ", "HTTP 404 model not on the Hub", LOW_YIELD_MARKER)
 HF_MODEL_API = "https://huggingface.co/api/models/"
 GEMINI_MODELS = ("gemini-2.0-flash", "gemini-1.5-flash")
 MODEL_AXES = (
@@ -224,9 +227,13 @@ def dead_rows_from_skips(skips: list[dict], as_of: str) -> list[dict]:
     return out
 
 
-def append_dead_slugs(path: Path, rows: list[dict]) -> int:
-    """Append new dead ids to the persistent file (dedupe by id). Returns rows written."""
-    known = load_dead_slugs(path)
+def append_dead_slugs(path: Path, rows: list[dict], max_age_days: int | None = None) -> int:
+    """Append new dead ids to the persistent file (dedupe by id). Returns rows written.
+
+    With max_age_days, an id whose only rows have EXPIRED counts as unknown, so a re-probe that
+    finds it still dead writes it back with a fresh as_of (the contract load_dead_slugs states).
+    Without it, an expired row was never re-stamped and the id was re-probed on every run."""
+    known = load_dead_slugs(path, max_age_days)
     fresh = [r for r in rows if r["id"] not in known]
     if not fresh:
         return 0
@@ -1011,6 +1018,7 @@ def mill(
     bank_dataset: str | None = None,
     bank_revision: str | None = None,
     revision_fetch=None,
+    min_graded: int = 0,
 ) -> dict:
     rows = load_queue(queue_path)
     ax = axis if axis in MODEL_AXES else "governance"
@@ -1161,6 +1169,17 @@ def mill(
                 hits += 1
         else:
             n = len(items) - unparsed
+            if min_graded and n < min_graded:
+                # M-P1-7 (2026-10-07). A route that returns a parseable label for fewer than
+                # min_graded of the items is a route failure (a base model that does not follow
+                # the one-token format, a provider that truncates), not a measurement of the
+                # model: #2846 carried 31 such cards at n=1-9. No card is staged; the reason is
+                # a dead marker, so the id joins dead_slugs and the next pick skips it until
+                # --dead-max-age-days expires the row and it is probed again.
+                skips.append({"id": mid, "axis": ax, "reason": (
+                    f"UNCHECKABLE {LOW_YIELD_MARKER}: {n} of {len(items)} items parseable "
+                    f"(<{min_graded} graded) via {_ROUTE.get(mid) or 'unknown route'}")})
+                continue
             reason = "n<30 unquotable" if n < 30 else "signed-pending-verify"
             if unparsed:
                 reason = f"{reason}; {unparsed} of {len(items)} items returned no parseable label"
@@ -1192,7 +1211,7 @@ def mill(
     as_of = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     dead_new = dead_rows_from_skips(skips, as_of)
     (out_dir / "dead_slugs.jsonl").write_text("".join(json.dumps(r) + "\n" for r in dead_new))
-    dead_appended = append_dead_slugs(Path(dead_path), dead_new) if dead_path else 0
+    dead_appended = append_dead_slugs(Path(dead_path), dead_new, dead_max_age_days) if dead_path else 0
     report = {
         "kind": "csoai.hub-queue-mill/0.1",
         "as_of": as_of,
@@ -1241,6 +1260,7 @@ def main() -> int:
     ap.add_argument("--bank-dataset", default="", help="public HF dataset the frozen bank came from (e.g. csoai/gspc-gov); recorded on the card's evidence, never guessed")
     ap.add_argument("--bank-revision", default="", help="immutable commit of --bank-dataset; required for a quotable staged card")
     ap.add_argument("--revision-pins", default="", help="JSON object of model id to immutable revision; controlled runs never re-resolve it")
+    ap.add_argument("--min-graded", type=int, default=0, help="stage no card when fewer than this many items return a parseable label; the route is written to --dead as a low-yield route instead (0 = off)")
     args = ap.parse_args()
     only = load_only_ids(Path(args.only)) if args.only else None
     priority = load_only_ids(Path(args.priority)) if args.priority else set()
@@ -1265,6 +1285,7 @@ def main() -> int:
         bank_dataset=args.bank_dataset or None,
         bank_revision=args.bank_revision or None,
         revision_fetch=(lambda model: revision_pins.get(model)) if revision_pins is not None else None,
+        min_graded=max(0, args.min_graded),
     )
     print(json.dumps({k: rep[k] for k in ("queue_n", "picked", "graded", "staged_unsigned", "measured_flips", "dead_known", "dead_new", "dead_appended", "inflight_known", "inflight_skipped_this_axis", "probe_first") if k in rep}, default=str))
     print("skips", len(rep["skips"]))

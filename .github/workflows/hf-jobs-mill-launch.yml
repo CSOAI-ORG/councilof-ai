@@ -21,7 +21,7 @@ on:
   workflow_dispatch:
     inputs:
       axes:
-        description: "comma list of axes (default: the two with the fewest measured cells this hour)"
+        description: "comma list of axes (default: least-covered by /interop/models-measured.json by_axis; clock when absent)"
         required: false
         default: ""
       grade:
@@ -113,41 +113,26 @@ jobs:
           echo "running or pending jobs in csoai: $running"
           echo "running=$running" >> "$GITHUB_OUTPUT"
 
-      - name: choose axes (fewest measured cells first; dispatch input overrides)
+      - name: choose axes (least-covered by models-measured.json by_axis; dispatch input overrides)
         id: axes
         if: steps.keys.outputs.ok == '1' && steps.busy.outputs.running == '0'
         env:
           AXES_INPUT: ${{ inputs.axes }}
         run: |
           set -euo pipefail
-          ROTATION=(governance safety provenance continuity conformance openness machinery-conformity care cross-reality detector-interop art5-safeguard swarm affect)
           if [ -n "${AXES_INPUT:-}" ]; then
-            AXES="$AXES_INPUT"; WHY="dispatch input"
-          else
-            # Read the live board's per-axis measured counts; pick the two lowest. Clock fallback
-            # when the board is unreachable — a cold start still rotates instead of stalling.
-            AXES=$(curl -sS -m 30 https://councilof.ai/api/gspc | python3 -c '
-          import json, sys
-          rot = sys.argv[1].split()
-          try:
-              d = json.load(sys.stdin)
-              axes = d.get("axes") or []
-              counts = {}
-              for a in axes:
-                  slug = a.get("slug") or a.get("id") or a.get("axis") or ""
-                  counts[slug] = int((a.get("measured_models") or a.get("n_models") or a.get("models_measured") or 0))
-              ranked = sorted(rot, key=lambda s: counts.get(s, 0))
-              print(",".join(ranked[:2]))
-          except Exception:
-              print("")
-          ' "${ROTATION[*]}" || true)
-            WHY="fewest measured models on /api/gspc"
-            if [ -z "$AXES" ]; then
-              H=$(date -u +%H); H=$((10#$H)); i=$((H % ${#ROTATION[@]})); j=$(((H + 7) % ${#ROTATION[@]}))
-              AXES="${ROTATION[$i]},${ROTATION[$j]}"; WHY="board unreachable — clock fallback"
-            fi
+            echo "axes=$AXES_INPUT (dispatch input)"; echo "axes=$AXES_INPUT" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
-          echo "axes=$AXES ($WHY)"; echo "axes=$AXES" >> "$GITHUB_OUTPUT"
+          # M-P1-5 (2026-10-07): this used to read measured_models / n_models / models_measured off
+          # /api/gspc axes. No axis carries those fields, so every count was 0 and the stable sort
+          # returned governance,safety every round. The per-axis model count lives in
+          # /interop/models-measured.json `by_axis`; without it the picker walks the rotation by
+          # clock and says so in the log. The selection rule and its tests: scripts/hf/mill_axis_pick.py.
+          python3 -m unittest discover -s scripts/hf -p test_mill_axis_pick.py
+          curl -sS -m 30 -A "Mozilla/5.0 csoai-hf-jobs-mill-launch" -o mm.json \
+            https://councilof.ai/interop/models-measured.json || rm -f mm.json
+          python3 scripts/hf/mill_axis_pick.py --models-measured mm.json --github-output "$GITHUB_OUTPUT"
 
       - name: launch (one HF Job per axis × shard; names only in the log)
         if: steps.keys.outputs.ok == '1' && steps.busy.outputs.running == '0'
@@ -170,6 +155,10 @@ jobs:
           DRY: ${{ inputs.dry_run || 'false' }}
         run: |
           set -euo pipefail
+          # The job ships these bytes inline, so their tests run here, before anything is submitted:
+          # 40 items, the 10-graded floor, the staged dead/in-flight merges (M-P1-7).
+          python3 scripts/test_hf_jobs_mill.py
+          python3 harness/gspc-top100/test_mill_min_graded.py
           launched=0; failed=0
           IFS=',' read -ra LIST <<< "$AXES"
           for AXIS in "${LIST[@]}"; do

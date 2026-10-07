@@ -63,3 +63,22 @@ test("first_signed_card names a card in the signed index for that model, and nev
   }
   assert.ok(linked > 0, "at least one model links to its first signed card");
 });
+
+test("by_axis counts distinct third-party models per recorded axis, and only them", () => {
+  const doc = derive();
+  const third = doc.headline.third_party_models;
+  const keys = Object.keys(doc.by_axis);
+  assert.ok(keys.length > 0, "by_axis is empty while third-party models are counted");
+  assert.deepEqual(keys, [...keys].sort(), "by_axis keys are sorted");
+  let maxAxes = 0;
+  for (const [axis, n] of Object.entries(doc.by_axis)) {
+    assert.ok(Number.isInteger(n) && n > 0, `${axis}: ${n} is not a positive count (an absent axis is omitted, never 0)`);
+    assert.ok(n <= third, `${axis}: ${n} models exceeds the ${third} third-party models counted`);
+  }
+  // A model's axis count is how many by_axis keys it contributes to; the totals must agree.
+  const contributions = doc.models.filter((m) => m.kind === "third_party").reduce((s, m) => s + m.axes, 0);
+  for (const m of doc.models) if (m.kind === "third_party") maxAxes = Math.max(maxAxes, m.axes);
+  assert.equal(Object.values(doc.by_axis).reduce((s, n) => s + n, 0), contributions);
+  assert.ok(maxAxes <= keys.length);
+  assert.match(doc.by_axis_rule, /not a measured zero/);
+});

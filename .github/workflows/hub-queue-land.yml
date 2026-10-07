@@ -8,6 +8,9 @@ name: hub-queue-land
 # cards VALID under the live DID with a current v0.2 admission receipt, and opens a PR.
 # Human merge is the only gate.
 # Never signs here. Never stamps MEASURED. n<30 stays unquotable. Empty stays empty.
+# A-G2 (2026-10-07): after the signer, the derived views a signed card changes (models-measured.json,
+# evidence-note citations) are rebuilt on the branch by scripts/hf/mill_land_derived.sh, and the
+# gates are dispatched only then, so they judge the branch as it will merge.
 
 on:
   workflow_run:
@@ -45,6 +48,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
       - name: deps
         run: pip install -q cryptography
       - name: download the mill artifact (hub-queue-mill-<run_id>)
@@ -97,17 +103,8 @@ jobs:
           # ("refusing the whole legacy inbox") — the dispatch must name the exact run it
           # landed. RUN_ID is already in scope (it is in the branch name and commit).
           gh workflow run hf-fin-shells-measure.yml --ref "$BR" -f target=mill -f mill_run_id="${RUN_ID}"
-          # TUI-1 (2026-09-13): GITHUB_TOKEN-created PRs never fire pull_request checks, so
-          # mill landing PRs carried zero protected checks (e.g. #2025 closed after manual
-          # evidence review with "no checks reported"). Least-privilege fix with the existing
-          # mechanism: pr-gates.yml already accepts workflow_dispatch — dispatch it at this
-          # branch so required checks attach to the PR head. Branch protection untouched.
-          # If dispatch is not permitted, bank the PR and print the exact operator action —
-          # never fake a green check.
-          if ! gh workflow run pr-gates.yml --ref "$BR" 2>/dev/null; then
-            echo "OPERATOR ACTION REQUIRED: PR $BR created but protected checks could not be dispatched." >&2
-            echo "Run: gh workflow run pr-gates.yml --ref $BR" >&2
-          fi
+          # pr-gates is dispatched by the derived-views step below, after the signer's commit and the
+          # rebuild (A-G2): a gate run on this unsigned head judged a branch that was about to change.
       - name: wait for signer, then verify DID signature and current admission (no key here)
         if: steps.land.outputs.landed != '0'
         run: |
@@ -191,6 +188,31 @@ jobs:
               print(f"| `{n}` | {v} | {w} |")
           PY
           gh pr comment "$BR" --body-file verify.md
+      - name: rebuild derived views on the PR branch, then dispatch the gates (A-G2)
+        if: steps.land.outputs.landed != '0'
+        run: |
+          set -euo pipefail
+          BR="${{ steps.pr.outputs.branch }}"
+          # The signer pushes to this branch without a retry, so the rebuild commits only after the
+          # signer run has finished; otherwise it would race the signer's push and lose it the cards.
+          ST=$(gh run list --workflow hf-fin-shells-measure.yml --branch "$BR" --json status -L 1 -q '.[0].status' || true)
+          if [ "$ST" = "completed" ]; then
+            bash scripts/hf/mill_land_derived.sh "$BR" derived-report.md
+            if [ -s derived-report.md ]; then gh pr comment "$BR" --body-file derived-report.md; fi
+          else
+            echo "::warning::signer is '${ST:-unknown}' on $BR, so the derived views were not rebuilt. After it completes run, from a checkout: bash scripts/hf/mill_land_derived.sh $BR"
+          fi
+          # TUI-1 (2026-09-13): GITHUB_TOKEN-created PRs never fire pull_request checks, so
+          # mill landing PRs carried zero protected checks (e.g. #2025 closed after manual
+          # evidence review with "no checks reported"). Least-privilege fix with the existing
+          # mechanism: pr-gates.yml already accepts workflow_dispatch — dispatch it at this
+          # branch so required checks attach to the PR head. Branch protection untouched.
+          # If dispatch is not permitted, bank the PR and print the exact operator action —
+          # never fake a green check.
+          if ! gh workflow run pr-gates.yml --ref "$BR" 2>/dev/null; then
+            echo "OPERATOR ACTION REQUIRED: PR $BR created but protected checks could not be dispatched." >&2
+            echo "Run: gh workflow run pr-gates.yml --ref $BR" >&2
+          fi
       - name: upload land report
         if: always()
         uses: actions/upload-artifact@v4

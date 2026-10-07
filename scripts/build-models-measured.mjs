@@ -193,6 +193,16 @@ export function derive() {
     }))
     .sort((a, b) => a.kind.localeCompare(b.kind) || b.cards - a.cards || a.id.localeCompare(b.id));
   const count = (k) => rows.filter((r) => r.kind === k).length;
+  // Distinct third-party models with at least one counted card on each axis, keyed by the axis name
+  // the card records (the signed index says "gspc-safety" where the mill says "safety"; they are
+  // different instruments and are not merged). The HF Jobs axis picker reads this to grade the
+  // least-covered axes first (.github/workflows/hf-jobs-mill-launch.yml, scripts/hf/mill_axis_pick.py).
+  const byAxis = {};
+  for (const r of models.values()) {
+    if (r.kind !== "third_party") continue;
+    for (const a of r.axes) byAxis[a] = (byAxis[a] ?? 0) + 1;
+  }
+  const by_axis = Object.fromEntries(Object.keys(byAxis).sort().map((a) => [a, byAxis[a]]));
 
   return {
     schema: "csoai.models-measured/0.1",
@@ -227,6 +237,10 @@ export function derive() {
         rule: "Ed25519 signature verifies under the did:web:csoai.org key it names, id == sha256(canonical body), status MEASURED, quotable, n >= 30, not STAGED_UNSIGNED, not withdrawn, not superseded",
       },
     },
+    by_axis_rule:
+      "by_axis[axis] = distinct third-party models with at least one counted card on that axis, under the axis name the card records. " +
+      "An axis absent here has no counted third-party card; it is not a measured zero.",
+    by_axis,
     inputs_sha256: hash.digest("hex"),
     models: rows,
   };

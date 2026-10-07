@@ -1,0 +1,162 @@
+name: financial-facts
+
+# Daily refresh of the 8 financial deterministic-facts axes (M-P1-10, 2026-10-07).
+#
+# WHY. /interop/financial-facts-as-of.json read as_of 2026-09-17 three weeks later: the producer
+# (scripts/gspc_financial_facts.py, run through grade_financial_ledgers.py --facts-only) had no
+# schedule anywhere - no workflow, no pod or Oracle cron called it.
+#
+# WHAT. Runs the producer (live reads: the /api/xrpl roster, XRPL AccountRoot, issuer pages,
+# Eurostat, frozen vendor URLs), and opens a PR ONLY when the committed bytes change. It never
+# writes master: GitHub master changes only by a gated, human-merged PR (single-writer ruling,
+# 6 Oct 2026). A newer refresh PR closes the older bot-only refresh PR it replaces, so at most one
+# is open. Stamped run artifacts (a sibling .ots) are never rewritten - the producer holds them and
+# reports them from their committed run - and this job fails closed if one changed anyway.
+# It signs nothing and decides nothing MEASURED beyond what the producer's rubric says; risk
+# verdicts stay UNMEASURED.
+
+on:
+  schedule:
+    - cron: "17 5 * * *"   # daily, off the hour
+  workflow_dispatch:
+
+concurrency: { group: financial-facts, cancel-in-progress: false }
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+
+      - name: producer tests (offline; the stamped-artifact hold first)
+        run: |
+          set -euo pipefail
+          python3 scripts/test_financial_facts_stamped.py
+          python3 -m unittest scripts/test_grade_financial_ledgers.py scripts/test_n_denominator.py scripts/test_humanoid_dated_count.py
+
+      - name: run the producer (8 fact axes; live reads)
+        run: |
+          set -euo pipefail
+          python3 scripts/grade_financial_ledgers.py --facts-only | tee producer.log
+
+      - name: changed? (and no stamped file touched)
+        id: diff
+        run: |
+          set -euo pipefail
+          changed=$(git status --porcelain -- public/interop functions/api/_gspc_fin_as_of.ts | awk '{print $2}')
+          if [ -z "$changed" ]; then
+            echo "no change in the committed facts - no PR"; echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          for f in $changed; do
+            if [ -e "$f.ots" ]; then
+              echo "::error::$f carries a sibling .ots and its bytes changed; stamped bytes are never rewritten. Nothing is opened."
+              exit 1
+            fi
+          done
+          printf '%s\n' $changed
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: do the board rows still quote this evidence? (reported in the PR, not hidden)
+        id: rows
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          set -uo pipefail
+          npm ci --no-audit --no-fund >/dev/null 2>&1 || true
+          if npx vitest run functions/api/_gspc_fin_rows_match_evidence.test.ts functions/api/gspc.financial-tally.test.ts \
+               functions/api/gspc.financial-as-of.test.ts > rows.log 2>&1; then
+            echo "rows=agree" >> "$GITHUB_OUTPUT"
+          else
+            echo "rows=DISAGREE" >> "$GITHUB_OUTPUT"
+          fi
+          tail -30 rows.log
+
+      - name: open the refresh PR; close the older bot-only refresh PR it replaces
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
+          AS_OF=$(python3 -c "import json; print(json.load(open('public/interop/financial-facts-as-of.json'))['as_of'])")
+          BR="facts/financial-${AS_OF//[:]/}"; BR="${BR//T/-}"; BR="${BR%Z}-${{ github.run_id }}"
+          python3 - "$AS_OF" "${{ steps.rows.outputs.rows }}" > PR-BODY.md <<'PY'
+          import json, sys
+          as_of, rows = sys.argv[1], sys.argv[2]
+          snap = json.load(open("public/interop/financial-facts-as-of.json"))
+          print(f"Daily refresh of the 8 financial deterministic-facts axes, read live at **{as_of}** by "
+                "`scripts/grade_financial_ledgers.py --facts-only` (workflow `financial-facts.yml`). "
+                "Facts, not ratings: risk verdicts stay UNMEASURED.\n")
+          print("| axis | n | as_of | status | tally |\n|---|---:|---|---|---|")
+          for name, a in snap["axes"].items():
+              tally = ", ".join(f"{k} {v}" for k, v in (a.get("tally") or {}).items())
+              print(f"| {name} | {a['n']} | {a['as_of']} | {a['status']} | {tally} |")
+          held = snap.get("held_stamped") or {}
+          if held:
+              print("\nHeld (stamped artifacts, never rewritten; reported from their committed run):")
+              for name, h in held.items():
+                  flag = " **fresh facts differ: version this artifact by hand**" if h.get("fresh_facts_differ") else ""
+                  print(f"- {name}{flag}")
+          thin = []
+          try:
+              run = json.load(open("public/interop/financial-measure-run-humanoid-labour-index.json"))
+              thin = [m for m in run.get("measured") or [] if isinstance(m.get("visible_chars"), int) and m["visible_chars"] < 500]
+          except Exception:
+              pass
+          if thin:
+              print("\nRead with care (a page answered 200 with under 500 visible characters, so its grade rests on very little text):")
+              for m in thin:
+                  print(f"- {m.get('url')}: {m.get('visible_chars')} visible chars, graded {m.get('three_state')}")
+          print(f"\nBoard rows vs this evidence (`_gspc_fin_rows_match_evidence`, `gspc.financial-tally`, `gspc.financial-as-of` tests): **{rows or 'not run'}**."
+                + (" A row's typed number no longer matches its evidence: edit `functions/api/_gspc_axes_fin.ts` in this PR before merging." if rows == "DISAGREE" else ""))
+          print("\nOpened by `financial-facts.yml`. Human merge is the only gate.")
+          PY
+          git config user.name "csoai-financial-facts"
+          git config user.email "board@csoai.org"
+          git checkout -b "$BR"
+          git add public/interop/financial-facts-as-of.json public/interop/financial-measure-run-*.json functions/api/_gspc_fin_as_of.ts
+          git commit -m "financial facts: daily refresh as of $AS_OF (8 axes; risk UNMEASURED)"
+          git push origin "HEAD:$BR"
+          url=$(gh pr create --base master --head "$BR" --title "financial facts: refresh as of $AS_OF" --body-file PR-BODY.md)
+          echo "opened $url"
+          new=${url##*/}
+          # One open refresh PR at a time: close the older ones, but only those no human has touched.
+          python3 - "$new" <<'PY'
+          import json, subprocess, sys
+          new = int(sys.argv[1])
+          gh = lambda *a: subprocess.run(["gh", *a], check=True, capture_output=True, text=True).stdout
+          for r in json.loads(gh("pr", "list", "--state", "open", "--limit", "100", "--json", "number,headRefName")):
+              if r["number"] == new or not r["headRefName"].startswith("facts/financial-"):
+                  continue
+              commits = json.loads(gh("pr", "view", str(r["number"]), "--json", "commits"))["commits"]
+              emails = {a.get("email", "").lower() for c in commits for a in c.get("authors", [])}
+              if not commits or emails - {"board@csoai.org"}:
+                  print(f"keep #{r['number']}: a human has committed to it")
+                  continue
+              gh("pr", "close", str(r["number"]), "--comment",
+                 f"Superseded by #{new}, a later read of the same producer. Branch kept.")
+              print(f"closed #{r['number']} (superseded by #{new})")
+          PY
+          if ! gh workflow run pr-gates.yml --ref "$BR" 2>/dev/null; then
+            echo "OPERATOR ACTION REQUIRED: run: gh workflow run pr-gates.yml --ref $BR" >&2
+          fi
+
+      - name: upload the producer log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: financial-facts-${{ github.run_id }}
+          path: |
+            producer.log
+            rows.log
+            PR-BODY.md
+          if-no-files-found: ignore
+          retention-days: 14

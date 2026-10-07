@@ -14,6 +14,15 @@ name: HF-Jobs mill — land the staged cards
 #
 # It does NOT sign, does not decide MEASURED (sign_mill_cards.py sets status from n), does not
 # touch the pod, deletes nothing from the dataset, and never writes master.
+#
+# 2026-10-07 (Lane B). M-P1-6: the staging tree is cumulative, so every run re-landed what earlier
+# PRs already held (#2843 and #2846: 176 cards, 26 cells, identical tables). scripts/hf/
+# mill_jobs_landing_plan.py now admits only gradings whose evidence digest is on neither master nor
+# any open mill/land-* PR, one per cell, none below 10 graded items; closes bot-only HF Jobs PRs
+# whose gradings all live on master or in another open PR; and holds (lands nothing) while one HF
+# Jobs PR is still open, so at most one rolling PR exists. A-G2: after the signer, the derived views
+# a signed card changes (models-measured.json, evidence-note citations) are rebuilt and committed on
+# the PR branch, and only THEN are the gates dispatched, so they judge the branch as it will merge.
 
 on:
   schedule:
@@ -39,6 +48,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.11" }
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
 
       - name: Install the hub client only
         run: pip install --quiet "huggingface_hub>=0.25"
@@ -83,8 +94,45 @@ jobs:
           print(f"pulled {n} staged card(s) and {e} evidence bundle(s) from csoai/mill-jobs-staging")
           PY
 
+      - name: plan (only new gradings; close superseded HF Jobs PRs; hold while one is open)
+        id: plan
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -s scripts/hf -p test_mill_jobs_landing_plan.py
+          python3 - <<'PY'
+          import json, subprocess
+          def gh(*a):
+              return subprocess.run(["gh", *a], check=True, capture_output=True, text=True).stdout
+          rows = json.loads(gh("pr", "list", "--state", "open", "--limit", "200", "--json", "number,headRefName"))
+          out = []
+          for r in rows:
+              if not str(r.get("headRefName") or "").startswith("mill/land-"):
+                  continue
+              # Authorship decides whether a PR may be auto-closed (bot-only) - read it per PR.
+              out.append(json.loads(gh("pr", "view", str(r["number"]), "--json", "number,headRefName,commits")))
+          json.dump(out, open("open-landing-prs.json", "w"))
+          print(f"open mill/land-* PRs: {len(out)}")
+          PY
+          python3 scripts/hf/mill_jobs_landing_plan.py --staged staged --open-prs open-landing-prs.json \
+            --min-graded 10 --excluded-dir staged-excluded --out staged/landing-plan.json --github-output "$GITHUB_OUTPUT"
+
+      - name: close superseded HF Jobs landing PRs (bot-only; branches kept)
+        if: steps.plan.outputs.close != ''
+        run: |
+          set -euo pipefail
+          for n in ${{ steps.plan.outputs.close }}; do
+            why=$(python3 -c "import json,sys; print(next(c['reason'] for c in json.load(open('staged/landing-plan.json'))['close'] if c['number']==int(sys.argv[1])))" "$n")
+            gh pr close "$n" --comment "Closed by mill-jobs-land run ${{ github.run_id }} as superseded: ${why}. Nothing is lost: the branch is kept, and every grading it carried is on master or in the PR named here. (M-P1-6: one rolling HF Jobs landing PR.)"
+          done
+
+      - name: hold (an HF Jobs landing PR is still open)
+        if: steps.plan.outputs.hold == 'true'
+        run: |
+          python3 -c "import json; print(json.load(open('staged/landing-plan.json'))['hold_reason'])" | tee -a "$GITHUB_STEP_SUMMARY"
+
       - name: land (dedupe per (model, axis), bind run provenance, require the evidence bundle)
         id: land
+        if: steps.plan.outputs.hold != 'true'
         env:
           # land_mill_cards.bind_run_provenance requires a positive GitHub Actions run id and stamps
           # the card's run_id as "gha-<id>"; the signer accepts exactly that id (bare or gha-).
@@ -97,10 +145,22 @@ jobs:
           # is dispatched for exactly that id — never the whole legacy inbox (#1941 provenance gate).
           python3 scripts/land_mill_cards.py --staged staged --run-id "$RUN_ID" --require-evidence --pr-body staged/PR-BODY.md --github-output "$GITHUB_OUTPUT"
           echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
+          # What the plan kept out of this PR, and why (the cards stay in the staging dataset).
+          python3 - <<'PY' >> staged/PR-BODY.md
+          import json
+          from collections import Counter
+          p = json.load(open("staged/landing-plan.json"))
+          c = Counter(r["reason"].split(":")[0].split(" (")[0] for r in p["excluded"])
+          print(f"\nLanding plan (`scripts/hf/mill_jobs_landing_plan.py`): {p['staged_cards']} staged gradings, "
+                f"{len(p['admitted'])} admitted ({sum(1 for r in p['admitted'] if r['quotable'])} with n>=30), "
+                f"{len(p['excluded'])} kept out:")
+          for reason, n in c.most_common():
+              print(f"- {n} x {reason}")
+          PY
 
       - name: branch, push, PR, dispatch the OIDC signer on the branch
         id: pr
-        if: steps.land.outputs.landed != '0'
+        if: steps.plan.outputs.hold != 'true' && steps.land.outputs.landed != '0'
         env:
           RUN_ID: ${{ steps.land.outputs.run_id }}
         run: |
@@ -117,12 +177,11 @@ jobs:
             --title "mill: ${{ steps.land.outputs.landed }} cards from HF Jobs (run ${{ github.run_id }}) — OIDC sign pending, nothing MEASURED" \
             --body-file staged/PR-BODY.md
           gh workflow run hf-fin-shells-measure.yml --ref "$BR" -f target=mill -f mill_run_id="${RUN_ID}"
-          if ! gh workflow run pr-gates.yml --ref "$BR" 2>/dev/null; then
-            echo "OPERATOR ACTION REQUIRED: run: gh workflow run pr-gates.yml --ref $BR" >&2
-          fi
+          # pr-gates is dispatched by the derived-views step below, after the signer's commit and the
+          # rebuild: a gate run on this unsigned head judged a branch that was about to change.
 
       - name: wait for signer, then verify DID signature and current admission (no key here)
-        if: steps.land.outputs.landed != '0'
+        if: steps.plan.outputs.hold != 'true' && steps.land.outputs.landed != '0'
         run: |
           set -euo pipefail
           BR="${{ steps.pr.outputs.branch }}"
@@ -180,6 +239,24 @@ jobs:
           PY
           gh pr comment "$BR" --body-file verify.md
 
+      - name: rebuild derived views on the PR branch, then dispatch the gates (A-G2)
+        if: steps.plan.outputs.hold != 'true' && steps.land.outputs.landed != '0'
+        run: |
+          set -euo pipefail
+          BR="${{ steps.pr.outputs.branch }}"
+          # The signer pushes to this branch without a retry, so the rebuild commits only after the
+          # signer run has finished; otherwise it would race the signer's push and lose it the cards.
+          ST=$(gh run list --workflow hf-fin-shells-measure.yml --branch "$BR" --json status -L 1 -q '.[0].status' || true)
+          if [ "$ST" = "completed" ]; then
+            bash scripts/hf/mill_land_derived.sh "$BR" derived-report.md
+            if [ -s derived-report.md ]; then gh pr comment "$BR" --body-file derived-report.md; fi
+          else
+            echo "::warning::signer is '${ST:-unknown}' on $BR, so the derived views were not rebuilt. After it completes run, from a checkout: bash scripts/hf/mill_land_derived.sh $BR"
+          fi
+          if ! gh workflow run pr-gates.yml --ref "$BR" 2>/dev/null; then
+            echo "OPERATOR ACTION REQUIRED: run: gh workflow run pr-gates.yml --ref $BR" >&2
+          fi
+
       - name: upload the land report
         if: always()
         uses: actions/upload-artifact@v4
@@ -187,6 +264,7 @@ jobs:
           name: mill-jobs-landed-${{ github.run_id }}
           path: |
             staged/land-report.json
+            staged/landing-plan.json
             staged/PR-BODY.md
           if-no-files-found: ignore
           retention-days: 14
