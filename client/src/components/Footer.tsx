@@ -293,10 +293,10 @@ export function Footer() {
           </p>
           <ul className="flex flex-wrap items-center justify-center gap-2 list-none p-0 m-0">
             {[
-              { name: 'C2PA', detail: 'contributor', href: 'https://c2pa.org/' },
+              { name: 'C2PA', detail: 'participation record', href: '/memberships#c2pa' },
               { name: 'Open Invention Network', detail: 'member', href: 'https://openinventionnetwork.com/' },
               { name: 'LOT Network', detail: 'member', href: 'https://lotnet.com/' },
-              { name: 'Decentralized Identity Foundation', detail: 'did:web trust root', href: 'https://identity.foundation/' },
+              { name: 'Decentralized Identity Foundation', detail: 'participation record', href: '/memberships#dif' },
             ].map((f) => (
               <li key={f.name}>
                 <a

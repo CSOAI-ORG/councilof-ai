@@ -62,8 +62,23 @@ describe("all-time revenue consumer preserves independent coverage", () => {
   it("rejects contradictory independent amount readings", () => {
     expect(readAllTimeRevenue({ ...partial(), settled_usdc: { status: "MEASURED", count: 50000 } })).toBeNull();
   });
-  it("retains the legacy MEASURED input accepted by these consumers", () => {
+  it("does not infer complete storage coverage from an older MEASURED label", () => {
     expect(readAllTimeRevenue({ one_number: { status: "MEASURED", all_time: 1, settlements: 2 }, settled_usdc: { count: 40000 } }))
-      .toEqual({ state: "measured", payers: 1, settlements: 2, atomic: 40000 });
+      .toBeNull();
+  });
+  it("keeps an explicit legacy null amount unknown even beside a measured aggregate", () => {
+    expect(readAllTimeRevenue({
+      one_number: { status: "MEASURED", all_time: 1, settlements: 2, settled_usdc_atomic: null },
+      settled_usdc: { status: "MEASURED", count: 999 },
+    })).toBeNull();
+  });
+  it("rejects an unknown or unqualified aggregate rather than replacing it with another amount", () => {
+    for (const settled_usdc of [
+      { status: "MEASURED", count: null },
+      { status: "UNMEASURED", count: null },
+      { count: 40000 },
+    ]) {
+      expect(readAllTimeRevenue({ ...partial(), settled_usdc })).toBeNull();
+    }
   });
 });
