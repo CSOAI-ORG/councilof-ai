@@ -1,41 +1,41 @@
 {
   "schema": "csoai.anchor.root-pipeline/0.1",
   "kind": "deterministic-root-build",
-  "generated_at": "2026-09-11T10:59:40.357415+00:00",
+  "generated_at": "2026-10-07T04:34:13.465418+00:00",
   "pipeline": "fetch-index \u2192 extract-ids \u2192 merkle \u2192 output",
   "deterministic": true,
   "note": "Same index input always produces the same root. No randomness, no timestamps in the tree.",
   "live_root": {
-    "merkle_root": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5",
-    "card_count": 167,
-    "as_of": "2026-09-11T08:45:22Z",
+    "merkle_root": "47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d",
+    "card_count": 319,
+    "as_of": "2026-09-30T05:05:34Z",
     "signer": "?",
     "source": "https://councilof.ai/root.json"
   },
   "index_stats": {
     "source": "https://councilof.ai/root.json (card_sha256 field)",
-    "total_leaves": 167,
-    "declared_count": 167,
+    "total_leaves": 319,
+    "declared_count": 319,
     "count_match": true,
     "separate_corpus_note": "The 167-card public root and 335-card signed-card index are SEPARATE corpora with 0 identifier overlap."
   },
   "merkle_build": {
-    "leaf_count": 167,
-    "root_hash": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5",
-    "depth": 9,
+    "leaf_count": 319,
+    "root_hash": "47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d",
+    "depth": 10,
     "algorithm": "SHA-256, positional pairs (left||right), odd-leaf self-duplication"
   },
   "reconciliation": {
-    "live_merkle_root": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5",
-    "computed_merkle_root": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5",
+    "live_merkle_root": "47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d",
+    "computed_merkle_root": "47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d",
     "match": true,
-    "live_card_count": 167,
-    "computed_card_count": 167
+    "live_card_count": 319,
+    "computed_card_count": 319
   },
   "anchor_targets": {
-    "root_hash": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5",
-    "root_hash_bytes_32": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5",
-    "root_hash_base64": "eNTgGRFdZdbqcHVYfjwUM3vwEgkorly+m2sKjg4ee7U=",
+    "root_hash": "47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d",
+    "root_hash_bytes_32": "47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d",
+    "root_hash_base64": "Ryd6byA06AtiefqWnoMhgLVYN5Vnc+4pM5qBW3TCui0=",
     "chains": {
       "bitcoin_ots": {
         "method": "OpenTimestamps calendar submission",
@@ -44,19 +44,19 @@
           "bob.btc.calendar.opentimestamps.org"
         ],
         "cost": "free",
-        "input": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5"
+        "input": "47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d"
       },
       "rekor_sigstore": {
         "method": "Rekor API entry creation",
         "url": "https://rekor.sigstore.dev/api/v1/log/entries",
         "cost": "free",
-        "input": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5"
+        "input": "47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d"
       },
       "xrpl_memo": {
         "method": "XRPL Memo field transaction",
         "network": "xrpl:mainnet",
         "cost": "~0.00001 XRP (~$0.00001)",
-        "memo_data": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5",
+        "memo_data": "47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d",
         "memo_format": "csoai-public-root-v1",
         "memo_type": "application/json"
       },
@@ -65,14 +65,14 @@
         "network": "eip155:8453",
         "contract": "0x4200000000000000000000000000000000000021",
         "cost": "~$0.01",
-        "data": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5"
+        "data": "47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d"
       },
       "ethereum_eas": {
         "method": "EAS Schema Attestation on Ethereum L1",
         "network": "eip155:1",
         "contract": "0xA1207F3BBa224E2c9c3c6D5B0f0f4c9d8b7c6d5e",
         "cost": "~$0.50-2",
-        "data": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5"
+        "data": "47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d"
       }
     }
   }

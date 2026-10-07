@@ -1,34 +1,56 @@
 {
-  "schema": "csoai.anchor.rekor-state/0.1",
+  "schema": "csoai.anchor.rekor-state/0.2",
   "kind": "rekor.sigstore.inclusion",
-  "measured_at": "2026-09-11T10:59:48.551631+00:00",
-  "current_entry": {
-    "status": "WITNESSED",
-    "logIndex": 2791822965,
-    "uuid": "108e9186e8c5677a745e131404b16562b3698b099d3c32b8f93e5a38745fe73ebb5a2350cca83598",
-    "integratedTime": 1789116324,
-    "logID": "c0d23d6ad406973f9559f3ba2d1ca01f84147d8ffc5b8445c224f98b9591801d",
-    "type": "rekord/x509 over the preimage bytes with the board signature",
-    "url": "https://rekor.sigstore.dev/api/v1/log/entries?logIndex=2791822965",
-    "entry_file": "https://councilof.ai/interop/rekor-root-62a1931b.json"
+  "measured_at": "2026-10-07T05:40:00Z",
+  "supersedes": "v0.1 (2026-09-11) — described the 167-card root as 'current'; it has since been replaced.",
+  "current_root_witness": {
+    "artifact": {
+      "url": "https://councilof.ai/root.json",
+      "sha256": "f1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e",
+      "merkle_root": "47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d",
+      "card_count": 319,
+      "root_as_of": "2026-09-30T05:05:34Z"
+    },
+    "entry": {
+      "status": "WITNESSED",
+      "logIndex": 3012420819,
+      "uuid": "108e9186e8c5677a60f8e5499012cdd18803397ac53087e7f71bb4ae1685a7fd44516d84d6064121",
+      "integratedTime": 1790744735,
+      "type": "rekord",
+      "url": "https://rekor.sigstore.dev/api/v1/log/entries?logIndex=3012420819",
+      "verified": "entry retrieved live from rekor.sigstore.dev on 2026-10-07 (kind=rekord)"
+    }
+  },
+  "prior_root_witness": {
+    "artifact": {
+      "url": "https://councilof.ai/root.json (as served 2026-09-11)",
+      "sha256": "62a1931b4fdfd7351b3baa14354ccef068a9996592b199d2a862149a7dfaedc6",
+      "merkle_root": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5",
+      "card_count": 167
+    },
+    "entry": {
+      "status": "WITNESSED (historical)",
+      "logIndex": 2791822965,
+      "uuid": "108e9186e8c5677a745e131404b16562b3698b099d3c32b8f93e5a38745fe73ebb5a2350cca83598",
+      "integratedTime": 1789116324,
+      "logID": "c0d23d6ad406973f9559f3ba2d1ca01f84147d8ffc5b8445c224f98b9591801d",
+      "url": "https://rekor.sigstore.dev/api/v1/log/entries?logIndex=2791822965",
+      "entry_file": "https://councilof.ai/interop/rekor-root-62a1931b.json",
+      "note": "The 2026-09-11 baseline logIndex belongs to THIS root — cite it only alongside 62a1931b..."
+    }
   },
   "rekor_log": {
     "url": "https://rekor.sigstore.dev/api/v1/log",
-    "tree_size_at_check": 2670683164,
+    "tree_size_at_check": 3001319956,
+    "checked_at": "2026-10-07T05:40:00Z",
     "status": "LIVE"
   },
-  "artifact_anchored": {
-    "url": "https://councilof.ai/root.json",
-    "sha256": "62a1931b4fdfd7351b3baa14354ccef068a9996592b199d2a862149a7dfaedc6",
-    "merkle_root": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5",
-    "card_count": 167
-  },
   "next_root_push": {
-    "status": "NOT_NEEDED_YET",
-    "trigger": "When a new root.json is published with updated card count or merkle root",
-    "method": "POST to https://rekor.sigstore.dev/api/v1/log/entries with rekord entry type",
+    "status": "NOT_NEEDED — the current root is already witnessed",
+    "trigger": "When a NEW root.json is published (any change to card_count or merkle_root)",
+    "method": "POST https://rekor.sigstore.dev/api/v1/log/entries, rekord entry type carrying preimage bytes + board Ed25519 signature + PEM pubkey (pure Ed25519 is rejected by hashedrekord)",
     "cost": "free"
   },
-  "honest_sentence": "The current root is witnessed in Rekor at logIndex 2791822965. No new push is needed until the root changes.",
+  "honest_sentence": "The current 319-card root (sha256 f1913eca..., as_of 2026-09-30) is witnessed in Rekor at logIndex 3012420819, verified live 2026-10-07. The 2026-09-11 baseline's logIndex 2791822965 witnessed the earlier 167-card root (sha256 62a1931b...) — two witnesses, two artifacts, never interchangeable.",
   "measurement_not_certification": true
 }
