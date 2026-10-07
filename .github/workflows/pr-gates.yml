@@ -271,7 +271,7 @@ jobs:
       # disagreed with both, and /benchmarks repeated a corrected claim. facts-gate reads counts;
       # this compares each static axis pages state, separation and n with this commits board.
       - name: Axis-state gate — static axis pages agree with the board
-        if: steps.scope.outputs.gated == true
+        if: steps.scope.outputs.gated == 'true'
         run: |
           node scripts/axis-state-gate.mjs --selftest
           node scripts/axis-state-gate.mjs dist/client
