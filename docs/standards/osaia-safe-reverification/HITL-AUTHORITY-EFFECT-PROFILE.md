@@ -26,5 +26,3 @@ Security properties:
 - historical records are retained and superseded rather than rewritten.
 
 Reference implementation note: CSOAI's current constitutional harness already separates policy, authority state, executor, GSPC measurement, effect receipts, signer and publisher. This profile makes the approval event itself portable and independently bindable.
-
-[executed on device: IOKs-MacBook-Air.local (3a313181-9802-49ab-b57a-b58a3fd4466a)]
