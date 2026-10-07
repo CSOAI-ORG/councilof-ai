@@ -111,11 +111,11 @@ export default function Wrappers() {
         <meta name="description" content={PAGE_DESCRIPTION} />
         <meta name="robots" content="index,follow" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="Wrappers | Council of AI" />
+        <meta property="og:title" content="SovX — wrapped-asset parity reads | Council of AI" />
         <meta property="og:description" content={PAGE_DESCRIPTION} />
         <meta property="og:url" content={CANONICAL} />
         <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content="Wrappers | Council of AI" />
+        <meta name="twitter:title" content="SovX — wrapped-asset parity reads | Council of AI" />
         <meta name="twitter:description" content={PAGE_DESCRIPTION} />
         <script type="application/ld+json">{JSON.stringify(PAGE_LD)}</script>
       </Helmet>
