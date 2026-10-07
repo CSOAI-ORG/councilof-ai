@@ -3,6 +3,13 @@
 **Basis:** master (b284d3cc)
 **Branch:** models/verified-expansion-20260911
 
+> **COUNTS SUPERSEDED — read `TUI-3-COUNT-RECONCILIATION.json` first (added 2026-10-07).**
+> Three counts below are out of date or mismatch their stated basis; everything else stands:
+> * **Public root: `167 / 78d4e019…` → current `319 / 47277a6f…` (as_of 2026-09-30).** Its own base checkout held `169 / 94e99db5…` — the 167 came from the brief's 08:45Z live reading, not from `public/root.json`.
+> * **Mill signed `1,066` / unsigned `366` / total `1,432` → `1,449 / 1,065 / 2,514` on that same basis; `2,869 / 2,111 / 4,980` on master 2026-10-07.** `unsigned-*` files live in `mill-cards-unsigned/`, not `mill-cards-signed/`.
+> * **`Mill total 1,432` counts files, not cards** — `mill-cards-signed/` holds one non-card pointer (`GOVERNANCE-RETRIEVE.json`).
+> Chain verification (335/0), PR#1888 (36 staged, 0 in chain, 0 in root) and the STAGED_UNSIGNED findings are **re-confirmed independently** by `models/estate-card-census-20261007.json`.
+
 ---
 
 ## Card Corpus Counts (Verified from Committed Artifacts)

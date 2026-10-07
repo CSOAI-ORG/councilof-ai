@@ -1,0 +1,34 @@
+{
+  "schema": "csoai.tui3-canonicalisation-split/0.1",
+  "observed_at": "2026-09-11",
+  "finding": "Two canonicalisation rules coexist across card generations. This is INDEPENDENTLY CONFIRMED (TUI-3 ad-hoc script) and MATCHES the estate's own research intake F60 (docs/research-intake/2026-09-06/F60-harness-is-already-public.md).",
+  "rules": {
+    "python_historical": {
+      "form": "json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=True).encode('utf-8')",
+      "int_float_behaviour": "integral floats emit as 0.0",
+      "applies_to": "all 335 index cards (313 declared preimage_rule + 22 with preimage field only)",
+      "code": "harness/gspc-top100/verify_card.py::canonical_body_bytes"
+    },
+    "js_edge_signer": {
+      "form": "JS sorted compact JSON; integral floats below 1e21 emit as integers (0.0 -> 0)",
+      "int_float_behaviour": "integral floats emit as integer",
+      "applies_to": "all 36 PR#1888 cards (preimage_rule == 'sha256(canonical body)')",
+      "code": "harness/gspc-top100/verify_card.py::canonical_js_body_bytes"
+    }
+  },
+  "index_rule_counts": {
+    "python_historical": 335,
+    "js_edge_signer": 0
+  },
+  "pr1888_rule_counts": {
+    "python_historical": 0,
+    "js_edge_signer": 36
+  },
+  "cards_differing_between_rules": 117,
+  "of_which_in_index": 117,
+  "corroboration": "F60 independently reported '117 of 335'. TUI-3 measured 117/335 by byte-comparison of the two canonical forms.",
+  "risk": "Any verifier that applies ONE rule to all cards will report 117 false INVALID. verify_card.py selects by preimage_rule and returns VALID 371/371.",
+  "action_required": "Record which canonicalisation governs which generation in /signed/HOW-TO-VERIFY.md (estate finding F62).",
+  "measurement_state": "MEASURED (byte-level comparison of published bytes)",
+  "not_a_certification": true
+}
