@@ -74,27 +74,27 @@ jobs:
             cp "$SRC_DIR/wrapped-asset-parity-2026-09/README.md" /tmp/wrapper-upload/README.md
           else
             python3 -c "
-import textwrap, pathlib
-readme = '''---
-language: en
-license: cc-by-4.0
-tags:
-  - csoai
-  - governance
-  - ai-act
-  - wrapped-asset-parity
----
+          import textwrap, pathlib
+          readme = '''---
+          language: en
+          license: cc-by-4.0
+          tags:
+            - csoai
+            - governance
+            - ai-act
+            - wrapped-asset-parity
+          ---
 
-# Wrapped Asset Parity
+          # Wrapped Asset Parity
 
-Crosswalk of CSOAI GSPC axes to wrapped (tokenised) asset compliance
-obligations. Published by Council of AI (CSOAI Ltd, UK 16939677).
-Measurement, not certification.
+          Crosswalk of CSOAI GSPC axes to wrapped (tokenised) asset compliance
+          obligations. Published by Council of AI (CSOAI Ltd, UK 16939677).
+          Measurement, not certification.
 
-**Source:** https://councilof.ai/interop/wrapped-asset-parity-latest.json
-'''
-pathlib.Path('/tmp/wrapper-upload/README.md').write_text(textwrap.dedent(readme))
-"
+          **Source:** https://councilof.ai/interop/wrapped-asset-parity-latest.json
+          '''
+          pathlib.Path('/tmp/wrapper-upload/README.md').write_text(textwrap.dedent(readme))
+          "
           fi
 
           # Verify we have content

@@ -20,6 +20,7 @@
  */
 
 import { currentBoardLid } from "./api/gspc";
+import { headFromGet } from "./api/_head";
 
 const SITE = "https://councilof.ai";
 const LID = currentBoardLid();
@@ -112,3 +113,7 @@ London EC2A 4NE. Measurement, not certification.
     },
   });
 }
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

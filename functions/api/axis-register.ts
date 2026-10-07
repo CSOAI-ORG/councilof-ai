@@ -10,6 +10,7 @@
  */
 
 import { AXES } from "./_axis_register";
+import { headFromGet } from "./_head";
 
 export const onRequestGet: PagesFunction = async ({ request }) => {
   const host = new URL(request.url).host;
@@ -31,3 +32,7 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
       "Current board counts: GET /api/gspc totals.public_count; this register is not a live slot tally.",
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

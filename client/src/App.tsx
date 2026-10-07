@@ -254,6 +254,7 @@ const TransparencyCop = lazy(() => import("./pages/TransparencyCop"));
 const GspcScoreboard = lazy(() => import("./pages/GspcScoreboard"));
 const MeasurementBoard = lazy(() => import("./pages/MeasurementBoard"));
 const MeasuredModels = lazy(() => import("./pages/MeasuredModels"));
+const BoardModel = lazy(() => import("./pages/BoardModel"));
 // /models-measured — the list behind the home page model count (2026-09-30), from /interop/models-measured.json.
 const ModelsMeasured = lazy(() => import("./pages/ModelsMeasured"));
 const FinancialAxes = lazy(() => import("./pages/FinancialAxes"));
@@ -372,8 +373,6 @@ const AgentGovernance = lazy(() => import("./pages/AgentGovernance"));
 const Cra = lazy(() => import("./pages/Cra"));
 const Nis2 = lazy(() => import("./pages/Nis2"));
 const VulnerabilityDisclosure = lazy(() => import("./pages/VulnerabilityDisclosure"));
-const Intel = lazy(() => import("./pages/Intel"));
-const AccountBrief = lazy(() => import("./pages/AccountBrief"));
 const Article50 = lazy(() => import("./pages/Article50"));
 const VerifyLeaderboard = lazy(() => import("./pages/VerifyLeaderboard"));
 const GovernanceLayer = lazy(() => import("./pages/GovernanceLayer"));
@@ -381,7 +380,6 @@ const Dora = lazy(() => import("./pages/Dora"));
 const DemoOS = lazy(() => import("./pages/DemoOS"));
 const PocShowcase = lazy(() => import("./pages/PocShowcase"));
 const CouncilSpace = lazy(() => import("./pages/CouncilSpace"));
-const BadgesPage = lazy(() => import("./pages/BadgesPage"));
 const EmbedPage = lazy(() => import("./pages/EmbedPage"));
 const BadgeKit = lazy(() => import("./pages/BadgeKit"));
 const GetListed = lazy(() => import("./pages/GetListed"));
@@ -408,7 +406,39 @@ import CookieConsent from "./components/CookieConsent";
 function ScrollToTop() {
   const [location] = useLocation();
   useEffect(() => {
+    // A link with a fragment (/how-we-work/#machine-surface) lands on that section. Until 6 Oct 2026
+    // this effect always scrolled to the top, so it undid the browser's own jump to the anchor and
+    // every deep link opened at the page head. Lazy pages mount after this effect runs, so the
+    // target is looked for on each frame for about a second before giving up.
+    const hash = window.location.hash;
+    if (!hash || hash.length < 2) {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      return;
+    }
+    let id = hash.slice(1);
+    try {
+      id = decodeURIComponent(id);
+    } catch {
+      /* keep the raw fragment */
+    }
+    const found = document.getElementById(id);
+    if (found) {
+      found.scrollIntoView({ block: 'start' });
+      return;
+    }
     window.scrollTo({ top: 0, behavior: 'instant' });
+    let frames = 0;
+    let raf = 0;
+    const seek = () => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ block: 'start' });
+        return;
+      }
+      if (++frames < 60) raf = requestAnimationFrame(seek);
+    };
+    raf = requestAnimationFrame(seek);
+    return () => cancelAnimationFrame(raf);
   }, [location]);
   return null;
 }
@@ -727,6 +757,7 @@ function AppShell() {
                   <Route path="/ceremony">{() => <Redirect to="/events/three-root-ceremony" />}</Route>
                   <Route path="/transparency-cop" component={TransparencyCop} />
                   <Route path="/board/models" component={MeasuredModels} />
+                  <Route path="/board/model" component={BoardModel} />
                   <Route path="/models-measured" component={ModelsMeasured} />
                   <Route path="/board" component={MeasurementBoard} />
                   <Route path="/gspc-scoreboard">{() => <Redirect to="/dashboard?tab=board" />}</Route>
@@ -1123,8 +1154,6 @@ function AppShell() {
                   <Route path="/cra" component={Cra} />
                   <Route path="/nis2" component={Nis2} />
                   <Route path="/vulnerability-disclosure" component={VulnerabilityDisclosure} />
-                  <Route path="/intel" component={Intel} />
-                  <Route path="/brief" component={AccountBrief} />
                   <Route path="/article-50" component={Article50} />
                   <Route path="/verify-leaderboard" component={VerifyLeaderboard} />
                   <Route path="/packs/eu-article-50" component={Article50Pack} />
@@ -1140,10 +1169,10 @@ function AppShell() {
                   <Route path="/sovereign-space">{() => <Redirect to="/gspc-arena" />}</Route>
                   <Route path="/stripe-checkout.js" component={Gone} />
                   <Route path="/simulate">{() => <Redirect to="/gspc-arena" />}</Route>
-                  {/* A second route for the same path stood here and was UNREACHABLE: wouter's
-                      Switch takes the first match, and the redirect above already owns that path
-                      (public/_redirects agrees with it). BadgesPage stays reachable at /authority. */}
-                  <Route path="/authority" component={BadgesPage} />
+                  {/* /authority (embeddable verified-status badges, a conformity mark), /intel
+                      (an internal sales-target board) and /brief (its per-account sales brief)
+                      were withdrawn on 6 Oct 2026: all three 308 from
+                      scripts/generate-redirects.mjs EXISTING. Do not re-add any of these routes. */}
                   <Route path="/world-3d" component={RealWorldMap} />
                   <Route path="/real-world" component={RealWorldMap} />
                   <Route path="/plans">{() => <Redirect to="/dashboard?tab=measured&task=pricing-overview" />}</Route>

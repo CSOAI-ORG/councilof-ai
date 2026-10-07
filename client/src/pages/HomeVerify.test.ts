@@ -106,9 +106,11 @@ describe("homepage is chat + GSPC list plus the estate", () => {
 describe("header restores master menu and Council OS", () => {
   it("labels the sitewide attestation door and measured-run enquiry honestly", () => {
     expect(header).toContain('name: "Verify"');
-    expect(header).toContain('<Link href="/assess">Request attestation</Link>');
-    expect(header).toContain('<a href="/assess" onClick={() => setMobileMenuOpen(false)}>Request attestation</a>');
-    expect(header).toContain("name: 'Request attestation', href: '/dashboard?tab=measured'");
+    // Owner, 1 Oct 2026: the header CTA reads "Council OS" and there is no doctrine pill in the header.
+    expect(header).toContain('<Link href="/dashboard" data-testid="header-council-os">Council OS</Link>');
+    expect(header).toContain('<a href="/dashboard" onClick={() => setMobileMenuOpen(false)}>Council OS</a>');
+    expect(header).not.toContain("measurement · not certification");
+    expect(header).toContain("name: 'Request a fresh run', href: '/dashboard?tab=measured'");
     const footer = readFileSync(resolve(here, "../components/Footer.tsx"), "utf8");
     expect(footer).toContain("{ name: 'Request attestation', href: '/assess/' }");
     expect(footer).toContain("{ name: 'Ask about a measured run', href: '/contact/?arm=run' }");
@@ -116,7 +118,8 @@ describe("header restores master menu and Council OS", () => {
     expect(header).toContain('name: "Board"');
     expect(header).toContain('name: "Council OS"');
     expect(header).toContain('name: "Tools"');
-    expect(header).toContain("href: '/watchdog-hub'");
+    // Tools audit, 6 Oct 2026: /watchdog-hub 308s to /os, so the header no longer links it.
+    expect(header).not.toContain("href: '/watchdog-hub'");
     expect(header).toContain("href: '/for/enterprise'");
     expect(header).not.toContain("href: '/watchdog'");
     expect(header).not.toContain("Chat is Council OS");
@@ -140,7 +143,9 @@ describe("/tools is the plugin snippet", () => {
     expect(tools).toContain("Grok");
     expect(tools).toContain("https://councilof.ai/mcp");
     expect(tools).toContain("mcpServers");
-    expect(tools).toMatch(/Ask: board totals/);
+    // The 2026-09-28 redesign (#2686) replaced the "Ask: board totals" prompt with the sentence below;
+    // what it must still tell a reader first is to read the board and verify signed records.
+    expect(tools).toMatch(/Read the board, inspect evidence,\s+and verify signed records/);
     expect(tools).toContain("ALL_TOOL_NAMES");
     expect(tools).toContain("FREE_TOOL_NAMES");
     expect(tools).toContain("PAID_TOOL_NAMES");

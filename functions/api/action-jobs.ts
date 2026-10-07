@@ -14,6 +14,7 @@
  */
 
 import { PHASE1_EXECUTOR_FIXTURE_CONTRACT } from "../_lib/phase1ActionExecutor";
+import { headFromGet } from "./_head";
 
 interface Env {
   LEADS?: KVNamespace;
@@ -1263,3 +1264,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     );
   }
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

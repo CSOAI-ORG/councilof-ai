@@ -6,7 +6,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { gunzipSync } from "node:zlib";
 // @ts-expect-error: plain ESM script, no type declarations
-import { build, capsuleToVc, readBatch, auditPath, rootFromPath, merkleRoot, OUTPUT, EXAMPLE, BOARD_KEY } from "./capsule-vc.mjs";
+import { build, capsuleToVc, capsuleIdForSubject, readBatch, auditPath, rootFromPath, merkleRoot, OUTPUT, EXAMPLE, BOARD_KEY } from "./capsule-vc.mjs";
 import { merkle, rootFromProof, capsuleVersion } from "../../functions/_lib/measurementCapsule";
 
 const ROOT = join(__dirname, "..", "..");
@@ -26,7 +26,7 @@ const canon = (v: unknown): Buffer => {
 
 describe("capsule -> W3C VC view", () => {
   it("the committed example is exactly the transform's output", () => {
-    expect(read(OUTPUT).toString("utf8")).toBe(build(EXAMPLE.batch, EXAMPLE.capsule_id, ROOT));
+    expect(read(OUTPUT).toString("utf8")).toBe(build(EXAMPLE.batch, undefined, ROOT));
   });
 
   it("is VCDM 2.0 shaped and says it is an unsigned view", () => {
@@ -88,7 +88,9 @@ describe("capsule -> W3C VC view", () => {
     const rec = JSON.parse(files.record.toString("utf8"));
     rec.as_of = "2000-01-01T00:00:00Z";
     expect(() =>
-      capsuleToVc({ batch: EXAMPLE.batch, capsuleId: EXAMPLE.capsule_id, files: { ...files, record: Buffer.from(JSON.stringify(rec)) }, didDoc: did }),
+      // EXAMPLE names a subject, not a capsule id, since the producer began selecting the example by
+      // subject (a re-run re-mints capsule ids). Resolve the real id, so the only fault is the record.
+      capsuleToVc({ batch: EXAMPLE.batch, capsuleId: capsuleIdForSubject(files, EXAMPLE.subject_id), files: { ...files, record: Buffer.from(JSON.stringify(rec)) }, didDoc: did }),
     ).toThrow(/does not pin/);
   });
 

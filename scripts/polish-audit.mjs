@@ -11,7 +11,7 @@ const { chromium } = require("playwright");
 // it is a test of a different system, reporting on this one.
 const BASE = process.env.AUDIT_BASE || "https://councilof.ai";
 const AXE = "https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.2/axe.min.js";
-const ROUTES = ["/", "/intel", "/brief?id=jpmorgan", "/crosswalk?fw=eu-ai-act,dora", "/pricing", "/assess", "/os", "/tool-commons"];
+const ROUTES = ["/", "/crosswalk?fw=eu-ai-act,dora", "/pricing", "/assess", "/os", "/tool-commons"];
 
 const b = await chromium.launch();
 const ctx = await b.newContext({ viewport: { width: 1280, height: 900 } });

@@ -184,6 +184,11 @@
       "description": "One navigable board across every axis set Council of AI publishes. Each set states what it measures, over what, when, what it establishes and what it does not.",
       "note": "No count in this title or description. A static entry cannot derive one, and ADR-001 forbids typing it — every count on /board renders in the body from the artifact that owns it."
     },
+    "/board/model": {
+      "title": "A single model on the GSPC board — every axis, score and range | Council of AI",
+      "description": "What the GSPC measurement board publishes about a single model: score, n and Wilson range per axis, and Not tested yet where it was not tested.",
+      "note": "No count in this title or description. The model is chosen by ?id= and every figure renders in the body from /api/gspc and /interop/gspc-fleet-2026-08-12.json."
+    },
     "/board/models": {
       "title": "Measured models — the signed card set | Council of AI",
       "description": "Every model Council of AI has measured, every axis it was measured on, and the signed record behind each cell. Sortable, filterable, honest about empty cells."
@@ -869,10 +874,6 @@
       "title": "Bulk AI system import | Council of AI",
       "description": "Import many AI systems into your Council OS workspace at once, with validation and a first risk classification for each, ready for evidence and measurement."
     },
-    "/authority": {
-      "title": "Governance badges | Council of AI",
-      "description": "The badges a measured model or server can display, what each records, and how to verify the signed card behind it. A badge states a measurement, not approval."
-    },
     "/horus": {
       "title": "Measure, sign, re-attest | Council of AI",
       "description": "An overview of how Council of AI works: frozen question banks, fixed grading rules, an Ed25519 signature on every result, and a grade that is never sold."
@@ -1095,17 +1096,9 @@
       "title": "EU AI Act readiness — 2 August 2026 | Council of AI",
       "description": "The 2 August 2026 EU AI Act duties on transparency and general-purpose models: what came into force, who it binds, and how to check your evidence against it."
     },
-    "BadgesPage": {
-      "title": "Governance badges | Council of AI",
-      "description": "The badges a measured model or server can display, what each records, and how to verify the signed card behind it. A badge states a measurement, not approval."
-    },
     "Competitors": {
       "title": "AI-governance battlecards | Council of AI",
       "description": "Cited battlecards comparing Council of AI with Vanta, Credo AI and OneTrust: what each publishes about itself, where scope differs, and what we do instead."
-    },
-    "AccountBrief": {
-      "title": "Account brief | Council of AI",
-      "description": "A tailored brief for a named account: the jurisdictions and provisions in scope, the measurements that exist, and the sources each statement rests on."
     },
     "UsStateAct": {
       "title": "US state AI law | Council of AI",
@@ -1149,7 +1142,7 @@
     },
     "UKAIBillCompliance": {
       "title": "UK AI regulation | Council of AI",
-      "description": "The UK's principles-based approach to AI regulation: the regulators involved, the proposed bill, what binds today, and what evidence a deployer can prepare now."
+      "description": "No AI-specific statute is in force in the UK. What applies to an AI system today, the five non-statutory principles, and what evidence a deployer can prepare."
     },
     "ConformityAssessment": {
       "title": "EU AI Act conformity assessment | Council of AI",
@@ -1253,7 +1246,7 @@
     },
     "UKAIBill": {
       "title": "UK AI regulation | Council of AI",
-      "description": "An introduction to UK AI regulation: the principles-based approach, the regulators involved, risk classification and what evidence a deployer can prepare today."
+      "description": "The UK has no AI-specific statute in force and no AI-specific penalty regime. What applies today: existing law, its regulators, and where AI bills stand."
     },
     "GlobalAISafetyInitiative": {
       "title": "Global AI Safety Initiative | Council of AI",
@@ -1354,10 +1347,6 @@
     "Insurers": {
       "title": "Evidence an underwriter can verify | Council of AI",
       "description": "Evidence an underwriter can verify: Ed25519-signed AI measurement cards, recomputable from published rows, from Council of AI. Measurement, not certification."
-    },
-    "Intel": {
-      "title": "Distribution Hive | Council of AI",
-      "description": "The Distribution Hive: account intelligence on the organisations in scope of AI regulation, drawn from public sources and used to offer help before a deadline."
     },
     "Iso42001VsEuAct": {
       "title": "ISO 42001 vs the EU AI Act | Council of AI",

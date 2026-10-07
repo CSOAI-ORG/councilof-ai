@@ -20,7 +20,8 @@
  * (councilListen) with the privacy note that Chrome may send audio to Google.
  */
 import { useCallback, useEffect, useId, useRef, useState } from "react";
-import { useLocation } from "wouter";
+import { useLocation, useSearch } from "wouter";
+import { menuTrail } from "@/components/lobby/tabs";
 import { CheckCircle2, Circle, CircleSlash, Hand, Loader2, OctagonX, PauseCircle, Undo2, X, XCircle } from "lucide-react";
 import TalkPanel, { type TalkPanelHandle } from "@/components/talk/TalkPanel";
 import OwmFreshness from "@/components/ask/OwmFreshness";
@@ -116,8 +117,25 @@ function Switch({ id, label, checked, onChange, hint }: { id: string; label: str
   );
 }
 
+/**
+ * "You are on: …" for the Ask panel. Inside Council OS the pane is named by the menu's own words
+ * (?tab=board → "Council OS › Leaderboard"); elsewhere the palette's breadcrumb for the path.
+ */
+export function askHere(location: string, search: string): string {
+  const path = location.replace(/\/+$/, "") || "/";
+  if (path === "/dashboard") {
+    const q = new URLSearchParams(search.startsWith("?") ? search.slice(1) : search);
+    if (q.get("view")) return "Council OS › A published page";
+    const trail = menuTrail(q.get("tab") || "home");
+    return ["Council OS", ...trail].join(" › ");
+  }
+  const here = crumbFor(location);
+  return here ? `${here.crumb} › ${here.title}` : location;
+}
+
 export default function AskPane({ open, onClose, question }: { open: boolean; onClose: () => void; question?: { text: string; n: number } | null }) {
   const [location] = useLocation();
+  const search = useSearch();
   const talk = useRef<TalkPanelHandle>(null);
   const titleId = useId();
   const [prefs, setPrefs] = useState<Prefs>(() => readPrefs());
@@ -270,7 +288,7 @@ export default function AskPane({ open, onClose, question }: { open: boolean; on
     }
   }, [prefs.watch]);
 
-  const here = crumbFor(location) ;
+  const here = askHere(location, search);
   const awaiting = steps.find((s) => s.state === "awaiting_confirm");
 
   return (
@@ -284,10 +302,10 @@ export default function AskPane({ open, onClose, question }: { open: boolean; on
       <header className="flex items-start gap-2 border-b border-border px-4 py-3">
         <div className="min-w-0 flex-1">
           <h2 id={titleId} className="text-base font-bold">
-            Ask GSPC
+            Ask about the results
           </h2>
           <p className="truncate text-xs text-muted-foreground" data-testid="ask-breadcrumb">
-            You are on: {here ? `${here.crumb} › ${here.title}` : location}
+            You are on: {here}
           </p>
         </div>
         {collapsed ? (
@@ -295,7 +313,7 @@ export default function AskPane({ open, onClose, question }: { open: boolean; on
             Expand
           </button>
         ) : null}
-        <button type="button" onClick={close} aria-label="Close Ask GSPC" className={`inline-flex h-11 w-11 items-center justify-center rounded-lg hover:bg-muted ${FOCUS}`}>
+        <button type="button" onClick={close} aria-label="Close Ask" className={`inline-flex h-11 w-11 items-center justify-center rounded-lg hover:bg-muted ${FOCUS}`}>
           <X className="h-5 w-5" aria-hidden="true" />
         </button>
       </header>
@@ -321,7 +339,7 @@ export default function AskPane({ open, onClose, question }: { open: boolean; on
       {awaiting ? (
         <div className="border-b border-amber-700/30 bg-amber-50 px-4 py-3 text-sm text-amber-950 dark:bg-amber-950 dark:text-amber-50" role="group" aria-label="Confirm this step" data-testid="watch-confirm">
           <p className="font-semibold">Needs your Confirm ({awaiting.effect}): {awaiting.say}</p>
-          <p className="mt-1 text-xs">Confirm lets Ask GSPC do this one step on the page. It never pays, signs or submits; that stays yours.</p>
+          <p className="mt-1 text-xs">Confirm lets Ask do this one step on the page. It never pays, signs or submits; that stays yours.</p>
           <div className="mt-2 flex flex-wrap gap-2">
             <button type="button" onClick={() => decide.current?.("confirm")} className={`min-h-11 rounded-lg bg-amber-800 px-4 text-sm font-semibold text-white hover:bg-amber-900 ${FOCUS}`}>
               Confirm
@@ -334,26 +352,23 @@ export default function AskPane({ open, onClose, question }: { open: boolean; on
       ) : null}
 
       <div className={`min-h-0 flex-1 overflow-y-auto px-4 py-3 ${collapsed ? "hidden" : ""}`}>
-        <p className="rounded-lg border border-border bg-muted px-3 py-2 text-xs text-foreground" data-testid="ask-rule-based">
-          <strong>Rule-based, not an AI model.</strong> A fixed keyword and entity router picks the tools and quotes their signed
-          records with a citation. Nothing here is written by a model; a question no record answers gets &ldquo;not measured&rdquo;.{" "}
+        <p className="rounded-lg border border-border bg-muted px-3 py-2 text-sm text-foreground" data-testid="ask-rule-based">
+          Answers come only from our published records, by fixed rules, never from an AI model.{" "}
           <a href="/ai-transparency" className="font-medium underline underline-offset-2">
-            How each surface is classified
+            How this works
           </a>
-          .
         </p>
-        <OwmFreshness className="mt-2" />
 
         <div className="mt-3 space-y-3">
           <Switch
             id="ask-watch"
-            label="Watch mode"
+            label="Let it move the page for me"
             checked={prefs.watch}
             onChange={(v) => {
               setPrefs((p) => ({ ...p, watch: v }));
               if (!v && running) stop();
             }}
-            hint="Let Ask GSPC move this page to show you. Off by default; Stop, Undo and Take over stay on screen."
+            hint="Ask can scroll and open things on this page to show you. Off by default; Stop, Undo and Take over stay on screen."
           />
           <Switch
             id="ask-voice"
@@ -370,19 +385,26 @@ export default function AskPane({ open, onClose, question }: { open: boolean; on
               {isListenSupported() ? LISTEN_PRIVACY_NOTE : "This browser has no speech recognition, so there is no mic; answers can still be spoken."}
             </p>
           ) : null}
-          <Switch
-            id="ask-agents"
-            label="Let an agent act in this tab"
-            checked={agents}
-            onChange={(v) => {
-              setAgents(v);
-              setAgentConsent(v);
-            }}
-            hint="An agent in this page (window.councilUi) may run the same view steps. Never commit, pay or schedule. Ends when you close the tab."
-          />
         </div>
 
-        <div role="tablist" aria-label="Ask GSPC views" className="mt-4 flex gap-1 border-b border-border">
+        <details className="mt-3 rounded-lg border border-border px-3" data-testid="ask-advanced">
+          <summary className={`min-h-11 cursor-pointer py-3 text-sm font-semibold ${FOCUS}`}>Advanced</summary>
+          <div className="space-y-3 pb-3">
+            <OwmFreshness />
+            <Switch
+              id="ask-agents"
+              label="Let an agent act in this tab"
+              checked={agents}
+              onChange={(v) => {
+                setAgents(v);
+                setAgentConsent(v);
+              }}
+              hint="An agent in this page (window.councilUi) may run the same view steps. Never commit, pay or schedule. Ends when you close the tab."
+            />
+          </div>
+        </details>
+
+        <div role="tablist" aria-label="Ask views" className="mt-4 flex gap-1 border-b border-border">
           {(["ask", "steps", "log"] as const).map((t) => (
             <button
               key={t}
@@ -437,7 +459,7 @@ export default function AskPane({ open, onClose, question }: { open: boolean; on
             <div className="rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground" data-testid="steps-empty">
               <p className="font-semibold text-foreground">No steps yet.</p>
               <p className="mt-1">
-                Turn on watch mode and ask something like &ldquo;show me safety&rdquo;, &ldquo;walk me through it&rdquo; or &ldquo;re-check
+                Turn on &ldquo;Let it move the page for me&rdquo; and ask something like &ldquo;show me safety&rdquo;, &ldquo;walk me through it&rdquo; or &ldquo;re-check
                 this&rdquo;. Each step appears here as it runs.
               </p>
             </div>

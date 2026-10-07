@@ -52,7 +52,7 @@ export const EMPTY_SLOTS: SlotFill[] = [
     axis: "custody-disclosure",
     honest_next:
       "MEASURED on the live board. did:web:csoai.org is planted. MEASURED is a disclosure instrument on a subject, not a ceremony write-up.",
-    never: "SOC 2-style blog as a GSPC cell. This VM inventing a signer.",
+    never: "SOC 2-style blog as a GSPC cell. A signer invented to fill the cell.",
   },
   {
     id: "ai-adoption-components",
@@ -72,7 +72,7 @@ export const EMPTY_SLOTS: SlotFill[] = [
     id: "humanoid-labour-index",
     axis: "humanoid-labour-index",
     honest_next:
-      "MEASURED on the live board as a deterministic-facts run. Do not invent a separate robot-workforce score beyond the signed cell.",
+      "MEASURED on the live board as a deterministic-facts run. No separate robot-workforce score is published beyond the signed cell.",
     never: "Tesla / Figure scrape as MEASURED. A robot-workforce score.",
   },
 ];

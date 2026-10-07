@@ -117,9 +117,8 @@ export default function CorpusChip({ className = "hidden 2xl:inline-flex" }: { c
         <Layers className="h-3.5 w-3.5" aria-hidden="true" />
         <span>
           <span className="sr-only">Card corpus in view: </span>
-          <span className="sr-only">{cur.name}, </span>
         </span>
-        <span className="font-mono text-xs text-slate-800" title={cur.name}>Corpus {cur.n}</span>
+        <span className="text-xs text-slate-800" title={cur.name}>{cur.name}</span>
         <ChevronDown className="h-3.5 w-3.5" aria-hidden="true" />
       </button>
       {open ? (

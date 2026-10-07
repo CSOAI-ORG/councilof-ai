@@ -139,6 +139,16 @@ export const DESTINATIONS: { re: RegExp; path: string; label: string; panel?: st
   { re: /\bdemo\b/, path: "/demo/", label: "the guided demo" },
 ];
 
+/**
+ * The request form on the "Request a fresh run" pane (client/src/components/ToolRunner.tsx, for
+ * commission_card): the form, its fields (data-ui-field="<arg name>") and its submit control.
+ * ToolRunner carries these attributes; uiTools.test.ts renders it and checks every selector a plan
+ * names is on the page. Until 6 Oct 2026 neither attribute existed, so watch mode said "Typing …
+ * as the subject" and typed nothing.
+ */
+export const REQUEST_FORM_SELECTOR = "form[data-ui-form='request']";
+export const REQUEST_SUBMIT_SELECTOR = "[data-ui-action='request-submit']";
+
 const HEX64 = /\b([0-9a-f]{64})\b/i;
 const URL_RE = /\bhttps?:\/\/[^\s<>"'`)\]]+/i;
 const DRIVE = /\b(show me|take me|go to|goto|open|navigate|bring up|walk me through|guide me|watch|drive|find|re-?check|recheck|verify this|check this)\b/;
@@ -173,11 +183,11 @@ export function planUi(raw: string, page: PageContext = {}, opts: { axis?: strin
   if (/\b(commission|order)\b.*\b(card|measurement|attestation)\b/.test(t)) {
     const subject = server ?? hex ?? null;
     steps.push(step("openPanel", { id: "measured" }, "Opening Get measured."));
-    if (subject) steps.push(step("fillForm", { selector: "form[data-ui-form='request']", values: { subject } }, `Typing ${subject} as the subject. Nothing is sent.`));
+    if (subject) steps.push(step("fillForm", { selector: REQUEST_FORM_SELECTOR, values: { subject } }, `Typing ${subject} as the subject. Nothing is sent.`));
     steps.push(
       step(
         "highlight",
-        { selector: "[data-ui-action='request-submit']", label: "Sending needs your Confirm" },
+        { selector: REQUEST_SUBMIT_SELECTOR, label: "Sending needs your Confirm" },
         "Sending a request is yours to do. I stop here; if you confirm, the paid tool answers with its 402 challenge and payment would come from your own wallet.",
         "pay",
       ),

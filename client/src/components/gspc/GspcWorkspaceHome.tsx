@@ -9,15 +9,18 @@
  *   - the board card: totals.public_count and totals.separation_public_count (GET /api/gspc), and the
  *     model count (/interop/models-measured.json, derived from the signed cards at build time);
  *   - Verify: card_chain.bodies_verified_valid (/api/state, corpus 3 of three, kind measured);
- *   - Connect: the number of tools tools/list returns (passed in; read by the workspace);
+ *   - For developers: the number of tools tools/list returns on /mcp/free, the door that card installs
+ *     (read here, from that door; /mcp also lists the paid tools, so its length is not this number);
  *   - Learn: the exercises in /academy/exercises/exercises.json;
  *   - SovX: counts.pairs in /api/wrapper/index.json;
  *   - Corrections: ledgers.corrections_in_this_deploy (/api/state);
  *   - Claim maintenance: ledgers.claim_maintenance.counts, each outcome named, never summed.
  * No number is typed. Loading shows a role="status" placeholder; a failed read says so in words.
  */
-import type { ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { listTools } from "@/lib/sovTools";
 import { Link } from "wouter";
+import { addMyResult, lookupFromRun, type FinishedLookupRun } from "@/lib/myResults";
 import { ArrowRight, Coins } from "lucide-react";
 import { useGspcBoard } from "@/components/board/useGspcBoard";
 import { boardTiles, separationRead, type TileState } from "@/components/home/LiveBoardGlance";
@@ -31,8 +34,10 @@ import {
   type LiveRead,
 } from "./useLiveJson";
 import { useModelsCount } from "./useModelsCount";
-import StartHere from "./StartHere";
+import GetResults from "./GetResults";
 import CorpusCount from "./CorpusCount";
+import { correctionHeadline, correctionHref } from "@/lib/correctionHeadline";
+import ModelCountKey from "@/components/ModelCountKey";
 
 const nf = new Intl.NumberFormat("en-GB");
 
@@ -62,10 +67,14 @@ export function LiveFigureLine({
     );
   return (
     <p className="mt-3 text-[13px] leading-snug text-muted-foreground" data-testid={testId} data-state="live">
-      <span className="font-mono text-base font-black text-foreground">{f.value}</span> {f.label}
-      <span className="block truncate font-mono text-xs" title={f.source + (f.as_of ? ` · as of ${f.as_of}` : "")}>
-        {f.source}
-      </span>
+      {/* Where the figure came from is a tooltip, not a line of source paths on the card face. */}
+      <span
+        className="cursor-help font-mono text-base font-black text-foreground"
+        title={`Read from ${f.source}${f.as_of ? ` · as of ${f.as_of}` : ""}`}
+      >
+        {f.value}
+      </span>{" "}
+      {f.label}
     </p>
   );
 }
@@ -83,6 +92,21 @@ const TILE_WORD: Record<TileState, string> = {
   UNTESTED: "untested",
   FACT_RUN: "fact run",
   UNMEASURED: "unmeasured",
+};
+const TILE_LABEL: Record<TileState, string> = {
+  SEPARATED: "Separated",
+  TIE: "Tie",
+  UNTESTED: "Untested",
+  FACT_RUN: "Fact checks",
+  UNMEASURED: "Unmeasured",
+};
+// Jargon lives here, in the tooltip, not in the face of the card.
+const TILE_HELP: Record<TileState, string> = {
+  SEPARATED: "Model-comparison tests where one model was measurably apart from the rest (SEPARATED). Even then, nothing is called best.",
+  TIE: "Model-comparison tests where the models measured could not be told apart (TIE). A tie stays a tie.",
+  UNTESTED: "Model-comparison tests with too little data to test for a gap yet (UNTESTED).",
+  FACT_RUN: "Tests that check facts about servers and public records rather than compare models (deterministic fact runs).",
+  UNMEASURED: "Tests with no published run yet (UNMEASURED).",
 };
 
 /** The board, compact: the count line WITH its separation line, the model count, one dot per axis. */
@@ -105,10 +129,10 @@ function WorkspaceBoardCard() {
           <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-60 motion-safe:animate-ping" />
           <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-600" />
         </span>
-        Live board
+        Live leaderboard
       </p>
       <h2 id="ws-board-h" className="mt-2 text-xl font-black tracking-tight text-foreground">
-        The GSPC board
+        What the tests show today
       </h2>
       {error ? (
         <p className="mt-4 rounded-2xl border border-amber-500/50 bg-amber-50 px-4 py-3 text-sm text-amber-950" data-testid="ws-board-error">
@@ -123,12 +147,29 @@ function WorkspaceBoardCard() {
         </div>
       ) : (
         <>
-          <p className="mt-3 font-mono text-2xl font-black tracking-tight text-foreground sm:text-3xl" data-testid="ws-board-count">
+          <p
+            className="mt-3 font-mono text-2xl font-black tracking-tight text-foreground sm:text-3xl"
+            data-testid="ws-board-count"
+            title="An axis is one test. Measured means a published run stands behind it."
+          >
             {count}
           </p>
           <p className="mt-1 text-sm leading-snug text-muted-foreground" data-testid="ws-board-separation">
             {sepLine ?? (sep ? `${sep.separated} of ${sep.comparison} model-comparison axes separated · ${sep.ties} TIE · ${sep.untested} UNTESTED` : "separation line not in the payload")}
           </p>
+          <dl className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4 xl:grid-cols-2 2xl:grid-cols-4" data-testid="ws-board-tiles">
+            {(Object.keys(TILE_WORD) as TileState[])
+              .filter((s) => s !== "UNMEASURED" || tiles.some((t) => t.state === s))
+              .map((s) => (
+                <div key={s} className="rounded-xl bg-muted/70 px-3 py-2" title={TILE_HELP[s]}>
+                  <dt className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                    <span className={`inline-block h-2.5 w-2.5 rounded-[3px] ${TILE_DOT[s]}`} aria-hidden="true" />
+                    {TILE_LABEL[s]}
+                  </dt>
+                  <dd className="font-mono text-2xl font-black leading-tight text-foreground">{tiles.filter((t) => t.state === s).length}</dd>
+                </div>
+              ))}
+          </dl>
           <ul className="mt-4 flex list-none flex-wrap gap-1.5 p-0" aria-label="Every axis and its state">
             {tiles.map((t) => (
               <li key={t.axis} title={`${t.axis}: ${TILE_WORD[t.state]}`} className="inline-flex">
@@ -153,13 +194,19 @@ function WorkspaceBoardCard() {
               <>
                 <span className="font-mono text-base font-black text-foreground">{nf.format(models)}</span>{" "}
                 <Link href="/models-measured/" className="underline decoration-dotted underline-offset-2 hover:text-foreground">
-                  AI models measured on frozen banks
+                  AI models measured on fixed question sets
                 </Link>
                 ; our own are listed apart, never counted in.
               </>
             )}
           </p>
-          <CorpusCount />
+          <ModelCountKey className="mt-3" />
+          <details className="group mt-3 rounded-xl border border-border px-3" data-testid="ws-board-records">
+            <summary className="flex min-h-11 cursor-pointer list-none items-center text-sm font-medium text-muted-foreground hover:text-foreground">
+              How many signed records stand behind this
+            </summary>
+            <CorpusCount />
+          </details>
           <p className="mt-3 text-xs leading-snug text-muted-foreground">
             A tie stays a tie; untested stays untested. Read live from <a className="font-semibold text-emerald-800 underline underline-offset-2" href="/api/gspc">GET /api/gspc</a>. Not a certificate.
           </p>
@@ -167,11 +214,11 @@ function WorkspaceBoardCard() {
       )}
       <p className="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-sm font-bold">
         <Link href="/dashboard?tab=board" className="inline-flex min-h-11 items-center text-emerald-800 underline underline-offset-4">
-          Open the live board →
+          Open the leaderboard →
         </Link>
-        <Link href="/board/" className="inline-flex min-h-11 items-center text-emerald-800 underline underline-offset-4">
-          Full page
-        </Link>
+        <a href="/board/" className="inline-flex min-h-11 items-center text-emerald-800 underline underline-offset-4">
+          Public leaderboard page
+        </a>
       </p>
     </section>
   );
@@ -182,6 +229,8 @@ type Place = {
   href: string;
   title: string;
   job: string;
+  /** The technical words for this place, kept in the tooltip rather than on the card. */
+  hint?: string;
   img: { base: string; w: number; h: number } | null;
   figure: ReactNode;
 };
@@ -191,6 +240,7 @@ function PlaceCard({ p }: { p: Place }) {
     <li className="min-w-0">
       <Link
         href={p.href}
+        title={p.hint}
         className="group flex h-full flex-col overflow-hidden rounded-3xl border border-emerald-950/10 bg-card shadow-[0_1px_2px_rgba(6,21,15,0.04)] transition hover:border-emerald-700/40 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700 motion-reduce:transition-none"
         data-testid={`ws-place-${p.id}`}
       >
@@ -222,74 +272,118 @@ function PlaceCard({ p }: { p: Place }) {
   );
 }
 
+/** What the home hands its TalkPanel: called once per finished run. */
+export type TalkHooks = { onRunDone: (run: FinishedLookupRun) => void };
+
+/**
+ * Get results lookups waiting for their answer: question -> subject. When the run for that
+ * question finishes, the lookup is saved to My results with the state the tool returned and the
+ * record it cited (6 Oct 2026: it was saved before any answer, with no state at all).
+ */
+export function useLookupRecorder(save: typeof addMyResult = addMyResult) {
+  const pending = useRef(new Map<string, string>());
+  const expectLookup = useCallback((question: string, subject: string) => {
+    pending.current.set(question.trim(), subject);
+  }, []);
+  const onRunDone = useCallback(
+    (run: FinishedLookupRun) => {
+      const key = run.question.trim();
+      const subject = pending.current.get(key);
+      if (!subject) return;
+      pending.current.delete(key);
+      save(lookupFromRun(subject, run));
+    },
+    [save],
+  );
+  return { expectLookup, onRunDone };
+}
+
+/**
+ * The free door's own tools/list, read once. The card that shows this count installs
+ * https://councilof.ai/mcp/free, so the count is that door's, never /mcp's (which adds the paid tools).
+ */
+export function useFreeDoorToolCount(list: typeof listTools = listTools): LiveRead<unknown> {
+  const [read, setRead] = useState<LiveRead<unknown>>({ state: "loading", data: null, error: null });
+  useEffect(() => {
+    let cancelled = false;
+    list("/mcp/free").then((reply) => {
+      if (cancelled) return;
+      setRead(
+        reply.state === "ok"
+          ? { state: "ok", data: reply.tools.length, error: null }
+          : { state: "error", data: null, error: "tools/list on /mcp/free did not answer" },
+      );
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [list]);
+  return read;
+}
+
 export default function GspcWorkspaceHome({
   talk,
-  toolCount,
-  toolState,
+  onAsk,
 }: {
-  /** The AG-UI TalkPanel, rendered by the workspace so its ref stays with the composer. */
-  talk: ReactNode;
-  toolCount: number | null;
-  toolState: "loading" | "ready" | "failed";
+  /** The AG-UI TalkPanel, rendered by the workspace so its ref stays with the composer. A function
+   *  receives the hooks the home needs on that panel (onRunDone saves Get results lookups). */
+  talk: ReactNode | ((hooks: TalkHooks) => ReactNode);
+  /** Send a question to that TalkPanel (Get results uses it for the free lookup). */
+  onAsk?: (question: string) => void;
 }) {
+  const { expectLookup, onRunDone } = useLookupRecorder();
+  const askLookup = useCallback(
+    (question: string, subject: string) => {
+      expectLookup(question, subject);
+      onAsk?.(question);
+    },
+    [expectLookup, onAsk],
+  );
+  const talkNode = typeof talk === "function" ? talk({ onRunDone }) : talk;
   const state = useLiveJson("/api/state");
   const wrappers = useLiveJson("/api/wrapper/index.json");
   const exercises = useLiveJson("/academy/exercises/exercises.json");
 
-  const toolsRead: LiveRead<unknown> =
-    toolState === "loading"
-      ? { state: "loading", data: null, error: null }
-      : toolState === "failed" || toolCount === null
-        ? { state: "error", data: null, error: "tools/list did not answer" }
-        : { state: "ok", data: toolCount, error: null };
+  const toolsRead = useFreeDoorToolCount();
 
   const places: Place[] = [
     {
       id: "verify",
       href: "/dashboard?tab=verify",
       title: "Verify",
-      job: "Paste a signed card; your browser recomputes its hash and signature. Free, nothing uploaded.",
+      job: "Paste a result we published; your browser checks that it has not been changed and that we really issued it. Free, and nothing is uploaded.",
+      hint: "Recomputes the record's SHA-256 hash and checks its Ed25519 signature against our published keys.",
       img: { base: "/images/home/evidence-card", w: 480, h: 268 },
       figure: (
         <p className="mt-3 text-[13px] leading-snug text-muted-foreground" data-testid="ws-fig-verify">
-          Every check ends <span className="font-mono font-bold text-foreground">VALID</span>,{" "}
-          <span className="font-mono font-bold text-foreground">INVALID</span> or{" "}
-          <span className="font-mono font-bold text-foreground">UNCHECKABLE</span>; never a silent pass.
+          Every check ends genuine (<span className="font-mono font-bold text-foreground">VALID</span>), not genuine (
+          <span className="font-mono font-bold text-foreground">INVALID</span>) or not checkable (
+          <span className="font-mono font-bold text-foreground">UNCHECKABLE</span>); never a silent pass.
         </p>
       ),
     },
     {
+      // Tools audit, 6 Oct 2026: this place is the developer section, so it says so. Route (candidates
+      // as JSON plus a tie-break rule) left this grid; it stays a sub-tab under For developers.
       id: "connect",
       href: "/dashboard?tab=connect",
-      title: "Connect",
-      job: "One line adds the GSPC tools to Claude, Cursor or any MCP client. A2A, AG-UI and A2UI too.",
+      title: "For developers",
+      job: "Use these free tools inside Claude, ChatGPT or Cursor, or add them to your own AI agent.",
+      hint: "An MCP server; the same answers are also served over A2A, AG-UI and A2UI.",
       img: { base: "/images/home/plugin", w: 480, h: 258 },
       figure: (
         <LiveFigureLine
           read={toolsRead}
-          pick={(n) => (typeof n === "number" ? { value: String(n), label: "tools declared by tools/list; a tool is runtime-observed only after its own tools/call", source: "POST /mcp → tools/list", as_of: null } : null)}
+          pick={(n) => (typeof n === "number" ? { value: String(n), label: "free tools, no account", source: "POST https://councilof.ai/mcp/free → tools/list (the door this card installs; the paid tools are on /mcp only) · declared by tools/list; a tool is runtime-observed only after its own tools/call", as_of: null } : null)}
           testId="ws-fig-connect"
         />
-      ),
-    },
-    {
-      id: "route",
-      href: "/dashboard?tab=route",
-      title: "Route",
-      job: "Your candidates and your policy in; a decision and an unsigned route record out. Decide-only.",
-      img: { base: "/images/home/receipt", w: 480, h: 192 },
-      figure: (
-        <p className="mt-3 text-[13px] leading-snug text-muted-foreground">
-          A tie is printed as <span className="font-mono font-bold text-foreground">TIE</span>, untested as{" "}
-          <span className="font-mono font-bold text-foreground">UNTESTED</span>; the tie-break rule is yours and is recorded.
-        </p>
       ),
     },
     {
       id: "learn",
       href: "/dashboard?tab=learn",
       title: "Learn",
-      job: "Reproduce a published measurement in your browser, then practise on the same frozen questions.",
+      job: "Repeat a published test in your browser, then practise on the same fixed questions.",
       img: { base: "/images/home/arena", w: 480, h: 270 },
       figure: <LiveFigureLine read={exercises} pick={exercisesFigure} testId="ws-fig-learn" />,
     },
@@ -305,7 +399,7 @@ export default function GspcWorkspaceHome({
       id: "corrections",
       href: "/dashboard?tab=corrections",
       title: "Corrections",
-      job: "What we got wrong, how it was caught and what changed. Signed records are superseded, never edited.",
+      job: "What we got wrong, how it was caught and what changed. Published results are replaced by new ones, never edited.",
       img: { base: "/images/home/watchdog", w: 480, h: 268 },
       figure: <LiveFigureLine read={state} pick={correctionsFigure} testId="ws-fig-corrections" />,
     },
@@ -322,85 +416,56 @@ export default function GspcWorkspaceHome({
   return (
     <div className="min-h-0 flex-1 overflow-y-auto" data-testid="gspc-workspace-home">
       <section className="relative isolate overflow-hidden bg-[#04120c]" aria-labelledby="ws-h">
-        <picture>
-          <source media="(max-width: 1023.98px)" srcSet="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />
-          <source type="image/webp" srcSet="/images/home/evidence-card-800.webp 800w, /images/home/evidence-card-1376.webp 1376w" sizes="50vw" />
-          <img
-            src="/images/home/evidence-card-800.webp"
-            alt=""
-            aria-hidden="true"
-            width={800}
-            height={447}
-            decoding="async"
-            className="pointer-events-none absolute inset-y-0 right-0 hidden h-full w-1/2 object-cover opacity-70 lg:block"
-          />
-        </picture>
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(90% 90% at 12% 0%, rgba(16,185,129,.22) 0%, transparent 60%), linear-gradient(90deg, rgba(4,18,12,1) 0%, rgba(4,18,12,.96) 50%, rgba(4,18,12,.55) 100%)",
+              "radial-gradient(90% 90% at 12% 0%, rgba(16,185,129,.22) 0%, transparent 60%), linear-gradient(90deg, rgba(4,18,12,1) 0%, rgba(4,18,12,.96) 60%, rgba(4,18,12,.85) 100%)",
           }}
         />
-        <div className="relative z-10 mx-auto w-full max-w-[1400px] px-4 py-6 sm:px-8 sm:py-10 lg:px-12">
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">GSPC · Council OS workspace</p>
+        <div className="relative z-10 mx-auto w-full max-w-[1400px] px-4 py-4 sm:px-8 sm:py-8 lg:px-12">
+          <p className="hidden font-mono text-xs font-bold uppercase tracking-[0.2em] text-emerald-300 sm:block">Council OS</p>
           <h1
             id="ws-h"
-            className="mt-3 max-w-2xl font-black tracking-[-0.03em] text-white"
-            style={{ fontSize: "clamp(1.6rem, 1rem + 2vw, 2.6rem)", lineHeight: 1.08 }}
+            className="mt-2 max-w-3xl font-black tracking-[-0.03em] text-white"
+            style={{ fontSize: "clamp(1.35rem, 1rem + 2vw, 2.4rem)", lineHeight: 1.1 }}
           >
-            Ask, check and connect, over the live board.
+            Independent test results for AI models and servers, on request.
           </h1>
-          <p className="mt-3 max-w-xl text-base leading-relaxed text-emerald-50/90">
-            Every answer names the tool and the signed record behind it. Every figure is read live. Verifying is free.
+          {/* Phone: one plain line, so the Get results box is on the first screen. */}
+          <p className="mt-2 text-sm leading-relaxed text-emerald-50/90 sm:hidden">
+            Look up what is already measured (free), ask for a fresh run, and check any result yourself.
           </p>
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <a
-              href="#ws-ask"
-              className="inline-flex min-h-12 items-center justify-center rounded-xl bg-emerald-400 px-6 text-base font-black text-[#03110b] transition hover:bg-emerald-300 motion-reduce:transition-none"
-              data-testid="ws-cta-ask"
-            >
-              Ask a question ↓
-            </a>
-            <Link
-              href="/dashboard?tab=verify"
-              className="hidden min-h-12 items-center justify-center rounded-xl border border-emerald-300/50 px-6 text-base font-bold text-emerald-50 transition hover:border-emerald-300 hover:bg-emerald-400/10 motion-reduce:transition-none sm:inline-flex"
-            >
-              Verify a card
-            </Link>
-            <Link
-              href="/dashboard?tab=connect"
-              className="hidden min-h-12 items-center justify-center rounded-xl border border-emerald-300/50 px-6 text-base font-bold text-emerald-50 transition hover:border-emerald-300 hover:bg-emerald-400/10 motion-reduce:transition-none sm:inline-flex"
-            >
-              Connect your agent
-            </Link>
-          </div>
-          {/* Phone: one primary action (Ask); the other two are a quiet row (ONE-PRODUCT-PLAN §4 rule 7). */}
-          <p className="mt-3 flex gap-5 text-sm font-bold sm:hidden">
-            <Link href="/dashboard?tab=verify" className="inline-flex min-h-11 items-center text-emerald-200 underline underline-offset-4">
-              Verify a card
-            </Link>
-            <Link href="/dashboard?tab=connect" className="inline-flex min-h-11 items-center text-emerald-200 underline underline-offset-4">
-              Connect your agent
-            </Link>
-          </p>
+          <ul className="mt-4 hidden max-w-5xl list-none gap-4 p-0 text-sm leading-relaxed text-emerald-50/90 sm:grid sm:grid-cols-3" data-testid="ws-plain">
+            <li>
+              <span className="block text-xs font-bold uppercase tracking-wide text-emerald-300">What this is</span>
+              We test AI models and the servers they use, publish every result with a signature anyone can check, and never sell a grade.
+            </li>
+            <li>
+              <span className="block text-xs font-bold uppercase tracking-wide text-emerald-300">What you can do</span>
+              Look up what is already measured (free), ask for a fresh run, track it, and check any result yourself.
+            </li>
+            <li>
+              <span className="block text-xs font-bold uppercase tracking-wide text-emerald-300">Corrections</span>
+              <WhatsNew />
+            </li>
+          </ul>
         </div>
       </section>
 
       <div className="mx-auto w-full max-w-[1400px] px-4 py-6 sm:px-8 sm:py-8 lg:px-12">
-        <StartHere />
-        <div className="grid gap-6 xl:grid-cols-12">
-          <section id="ws-ask" aria-labelledby="ws-ask-h" className="min-w-0 scroll-mt-4 xl:col-span-7">
-            <p className="t-kicker text-emerald-800">Ask the Council</p>
-            <h2 id="ws-ask-h" className="mt-2 text-xl font-black tracking-tight text-foreground">
-              Ask in plain words
+        <GetResults onAsk={onAsk ? askLookup : undefined} />
+
+        <div className="mt-6 grid gap-6 xl:grid-cols-12">
+          <section id="ws-answers" aria-labelledby="ws-ask-h" className="min-w-0 scroll-mt-4 xl:col-span-7">
+            <h2 id="ws-ask-h" className="text-xl font-black tracking-tight text-foreground">
+              Answers
             </h2>
             <p className="mt-1 max-w-xl text-sm leading-relaxed text-muted-foreground">
-              Answers are fields of the named tool&apos;s output, the same tools <code className="font-mono text-[0.9em]">/mcp</code> serves. No model
-              writes them; if there is no evidence, the answer says so.
+              Free answers from what we have published. Each one says where it came from and links to the record so you can check it.
             </p>
-            {talk}
+            {talkNode}
           </section>
           <div className="min-w-0 xl:col-span-5">
             <WorkspaceBoardCard />
@@ -408,22 +473,56 @@ export default function GspcWorkspaceHome({
         </div>
 
         <section aria-labelledby="ws-places-h" className="mt-10">
-          <p className="t-kicker text-emerald-800">What you can do next</p>
-          <h2 id="ws-places-h" className="mt-2 text-xl font-black tracking-tight text-foreground">
-            Verify, connect, route, learn, and see what we corrected
+          <h2 id="ws-places-h" className="text-xl font-black tracking-tight text-foreground">
+            More you can do
           </h2>
-          <ul className="mt-5 grid list-none gap-4 p-0 sm:grid-cols-2 xl:grid-cols-4">
+          <ul className="mt-4 grid list-none gap-4 p-0 sm:grid-cols-2 xl:grid-cols-4">
             {places.map((p) => (
               <PlaceCard key={p.id} p={p} />
             ))}
           </ul>
         </section>
 
-        <p className="mt-8 border-t border-border pt-5 text-xs leading-relaxed text-muted-foreground">
-          Council of AI measures. It does not certify, and a rank is never sold. Agents get the same answers over{" "}
-          <Link href="/agents/" className="font-semibold text-emerald-800 underline underline-offset-2">MCP, A2A, AG-UI and A2UI</Link>.
+        <p className="mt-8 border-t border-border pt-4 text-xs leading-relaxed text-muted-foreground">
+          Council of AI measures. It does not certify, and a grade is never sold. Checking a result is always free.{" "}
+          <Link href="/agents/" title="Over MCP, A2A, AG-UI and A2UI" className="font-semibold text-emerald-800 underline underline-offset-2">
+            AI agents can ask the same questions directly
+          </Link>
+          .
         </p>
       </div>
     </div>
+  );
+}
+
+/** One live line: the newest published correction and the board's own date. Never typed. */
+function WhatsNew() {
+  const ledger = useLiveJson<{ corrections?: { id?: string; date?: string; what_was_wrong?: string }[] }>("/api/corrections");
+  const latest = ledger.state === "ok" && Array.isArray(ledger.data?.corrections) ? ledger.data.corrections[0] : null;
+  if (ledger.state === "loading")
+    return (
+      <span role="status" className="block text-emerald-50/70">
+        Reading the latest change…
+      </span>
+    );
+  if (!latest)
+    return (
+      <span className="block">
+        The change log could not be read just now.{" "}
+        <a href="/corrections/" className="font-semibold text-emerald-200 underline underline-offset-2">Open it</a>
+      </span>
+    );
+  // Date plus the first sentence only; every correction stays published in full on /corrections/.
+  const headline = correctionHeadline(latest.what_was_wrong) || latest.id;
+  return (
+    <span className="block" data-testid="ws-whats-new">
+      <span className="line-clamp-2">
+        <strong className="font-semibold">Latest correction:</strong> {latest.date ? `${latest.date}: ` : ""}
+        {headline}
+      </span>{" "}
+      <a href={correctionHref(latest.id)} className="font-semibold text-emerald-200 underline underline-offset-2">
+        Read the full correction
+      </a>
+    </span>
   );
 }

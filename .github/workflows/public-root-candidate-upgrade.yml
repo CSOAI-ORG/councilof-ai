@@ -2,8 +2,9 @@ name: public-root-candidate-upgrade
 
 # Maintain the exact candidate banked by public-root.yml. A pending proof must be
 # upgraded in place; generating a new root would change the digest and restart the
-# Bitcoin clock. Promotion is armed only after the proof bytes themselves contain a
-# Bitcoin attestation and the full candidate release gate passes.
+# Bitcoin clock. Promotion happens only after the proof bytes themselves contain a
+# Bitcoin attestation, the full candidate release gate passes, and pr-gates has passed on
+# the exact head commit being merged (single writer: master changes only through a gated PR).
 on:
   schedule:
     - cron: "17,32,47,2 * * * *"
@@ -21,7 +22,8 @@ permissions:
 jobs:
   upgrade:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # 15 minutes of upgrade/witness work plus up to 50 waiting for pr-gates on the exact head.
+    timeout-minutes: 70
     steps:
       # A confirmed candidate lands by auto-merge, and a merge made on behalf of GITHUB_TOKEN
       # triggers no push workflow, so deploy.yml never runs for it. Measured 2026-09-14:
@@ -181,15 +183,50 @@ jobs:
             git push origin "HEAD:$BRANCH"
           fi
 
-      - name: Run hosted gates on the confirmed candidate
+      # Master's branch protection requires a pull request but no status check (read in repo
+      # settings on 6 Oct 2026: "Require status checks to pass before merging" is off). So the
+      # `gh pr merge --auto` this step used to run did not wait for pr-gates: on a pull request
+      # with nothing required it merges at once, ungated. A pull request opened with GITHUB_TOKEN
+      # also starts no pull_request workflow, so no check runs on it unless dispatched. Single
+      # writer means a GATED pull request, so the gate is made binding here: run pr-gates on THIS
+      # head commit, wait for it in this job, and merge only that commit and only on success.
+      # Waiting in-job matters: the refresh step above re-witnesses on every confirmed tick, so the
+      # head moves between ticks and a pass recorded on an older commit must never merge a newer one.
+      - name: Merge only after pr-gates passed on these exact bytes
         if: steps.ots.outputs.confirmed == 'true'
+        timeout-minutes: 50
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh workflow run pr-gates.yml --ref public-root/pending
-
-      - name: Arm promotion only after Bitcoin confirmation
-        if: steps.ots.outputs.confirmed == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
           URL: ${{ steps.candidate.outputs.url }}
-        run: gh pr merge "$URL" --squash --auto
+        run: |
+          set -euo pipefail
+          head=$(gh pr view "$URL" --repo "$REPO" --json headRefOid --jq .headRefOid)
+          runs() {
+            gh run list --repo "$REPO" --workflow pr-gates.yml --branch public-root/pending --limit 50 \
+              --json databaseId,headSha,status,conclusion,createdAt
+          }
+          # Reuse a run on this exact commit that passed or is still going; a failed one is retried.
+          run_id=$(runs | jq -r --arg sha "$head" \
+            '[.[] | select(.headSha == $sha and (.status != "completed" or .conclusion == "success"))] | .[0].databaseId // ""')
+          if [ -z "$run_id" ]; then
+            since=$(date -u -d '1 minute ago' +%Y-%m-%dT%H:%M:%SZ)
+            gh workflow run pr-gates.yml --repo "$REPO" --ref public-root/pending
+            for _ in $(seq 1 30); do
+              sleep 10
+              run_id=$(runs | jq -r --arg sha "$head" --arg since "$since" \
+                '[.[] | select(.headSha == $sha and .createdAt >= $since)] | .[0].databaseId // ""')
+              [ -n "$run_id" ] && break
+            done
+          fi
+          if [ -z "$run_id" ]; then
+            echo "HALT: no pr-gates run appeared for $head; not merging" >&2
+            exit 1
+          fi
+          echo "waiting for pr-gates run $run_id on $head"
+          if ! gh run watch "$run_id" --repo "$REPO" --exit-status --interval 30 > /dev/null; then
+            echo "HALT: pr-gates run $run_id did not pass on $head; not merging. The candidate stays open for a human." >&2
+            exit 1
+          fi
+          echo "pr-gates run $run_id passed on $head; merging exactly that commit"
+          gh pr merge "$URL" --repo "$REPO" --squash --match-head-commit "$head"

@@ -81,6 +81,7 @@ SOURCE_RENDERED = {"well_known_x402.json"}
 MANIFEST_RENDERER = HERE / "render_x402_manifest.mjs"
 DESCRIPTION_SOURCE = REPO / "functions" / "api" / "x402-descriptions.json"
 WRAPPER_ASSET_DOORS = REPO / "functions" / "api" / "_wrapper_asset_doors.json"
+DISCOVERY_SUBJECTS = REPO / "functions" / "api" / "discover" / "subjects.json"
 DESCRIPTION_PATHS = {
     # Every door, not three (2026-09-28): the canonical text is the one source the manifest, each
     # door's 402 (and so the Bazaar extension's catalogue entry), capabilities.json and llms.txt read.
@@ -515,6 +516,11 @@ def compose(fix: Path = FIX) -> dict:
             door = next((d for d in load(WRAPPER_ASSET_DOORS)["doors"] if d["asset"] == path.rsplit("/", 1)[1]), None)
             if door:
                 canonical_description = canonical_descriptions["wrapper_asset"].replace("{ASSET}", door["symbol"])
+        if canonical_description is None and path.startswith("/api/discover/"):
+            # One template for the subject discovery doors, the subject's label filled in — as the door renders it.
+            label = load(DISCOVERY_SUBJECTS).get(path.rsplit("/", 1)[1])
+            if label:
+                canonical_description = canonical_descriptions["subject_discovery"].replace("{SUBJECT}", label)
         description = canonical_description or (challenge or {}).get("resource", {}).get("description") or (tier or {}).get("deliverable") or r.get("note") or ""
         note = FREE_TIER_OP_NOTE.get(path)
         if note and note not in description:
@@ -545,7 +551,10 @@ def compose(fix: Path = FIX) -> dict:
                     "description": "Payment required — the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset "
                                    "(x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. "
                                    f"Pay accepts[0] (scheme {rail['scheme']}, network {rail['network']}, {rail['asset']['symbol']} {rail['asset']['contract']}, payTo {rail['pay_to']}; "
-                                   "amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+                                   "amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. "
+                                   # T11 (6 Oct 2026): the examples are captures, some taken during a dated launch amount.
+                                   "The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. "
+                                   "Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
                     "headers": {"PAYMENT-REQUIRED": {"description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) — under 4 KiB", "schema": {"type": "string"}}},
                     "content": {"application/json": {"schema": {"$ref": "#/components/schemas/X402PaymentRequired"}, "example": example}},
                 },
@@ -607,7 +616,11 @@ def compose(fix: Path = FIX) -> dict:
             "title": base["info"]["title"],
             "version": version,
             "description": f"{cat['one_line']} {lid} Operations with security [] are free and unauthenticated. "
-                           "Operations with x-payment-info are x402 doors; an amount appears only inside a door's 402 challenge (documented as each door's 402 example).",
+                           "Operations with x-payment-info are x402 doors; an amount appears only inside a door's 402 challenge (documented as each door's 402 example). "
+                           # T09 (6 Oct 2026): the CDN's Browser Integrity Check refuses two library User-Agent strings.
+                           # Say so until the edge rule exempts public data; remove this sentence once it does.
+                           "Python's default urllib User-Agent (Python-urllib/x.y) is refused at our CDN with 403 'error code: 1010'. "
+                           "Send any User-Agent, e.g. urllib.request.Request(url, headers={'User-Agent': 'my-check/1'}).",
             "x-guidance": guidance,
             "contact": CONTACT,
             "license": base["info"]["license"],

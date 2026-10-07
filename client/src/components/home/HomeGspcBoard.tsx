@@ -23,12 +23,65 @@ import { useGspcBoard, type GspcAxis, type GspcPayload } from "../board/useGspcB
 import { axisRunEvidence } from "../board/runEvidence";
 import { axisMeta } from "../../lib/axisRegulation";
 import { hubCardsFeed } from "./hubCardsFeed";
+import ModelCountKey from "@/components/ModelCountKey";
 
 /** Public distribution mirror for the canonical GET /api/gspc board. */
 export const SPACE_PAGE_URL = "https://huggingface.co/spaces/csoai/gspc-board";
 export const HUB_CARDS_PAGE_URL = "https://huggingface.co/datasets/csoai/gspc-hub-cards";
 /** Rows the strip shows before "Load more". A UI constant, not a board count. */
 export const STRIP_N = 9;
+
+/** A board date older than this many days carries a STALE chip. A UI threshold, not a board count. */
+export const STALE_AFTER_DAYS = 30;
+
+const ISO_DAY = /\b(\d{4}-\d{2}-\d{2})/g;
+
+/**
+ * The newest and oldest measurement dates the board payload itself states: every axis's
+ * measurement_time (observed_on / observed_at / not_after) and facts_as_of, and the ISO dates in
+ * measured_on.date. Read, never typed; null when the payload states none.
+ */
+export function boardMeasuredRange(
+  data: GspcPayload | null | undefined,
+  /** Only axes of this kind ("model-comparison", "deterministic-facts"); measured_on.date is then not read. */
+  kind?: string,
+): { newest: string; oldest: string } | null {
+  const days: string[] = [];
+  const take = (v: unknown) => {
+    if (typeof v !== "string") return;
+    for (const m of v.matchAll(ISO_DAY)) days.push(m[1]);
+  };
+  for (const a of (Array.isArray(data?.axes) ? data!.axes : []) as Record<string, any>[]) {
+    if (kind && a?.kind !== kind) continue;
+    const mt = a?.measurement_time;
+    if (mt && typeof mt === "object") {
+      take(mt.observed_on);
+      take(mt.observed_at);
+      take(mt.not_after);
+    }
+    take(a?.facts_as_of);
+  }
+  if (!kind) take((data?.measured_on as { date?: unknown } | undefined)?.date);
+  const sorted = days.filter((d) => !Number.isNaN(Date.parse(`${d}T00:00:00Z`))).sort();
+  return sorted.length ? { newest: sorted[sorted.length - 1], oldest: sorted[0] } : null;
+}
+
+/** Whole days from an ISO day to `now`. */
+export function daysSince(day: string, now: number = Date.now()): number {
+  return Math.floor((now - Date.parse(`${day}T00:00:00Z`)) / 86_400_000);
+}
+
+function StaleChip({ day }: { day: string }) {
+  return (
+    <span
+      className="ml-1.5 inline-flex cursor-help items-center rounded-full border border-amber-700/30 bg-amber-50 px-1.5 py-0.5 align-middle font-mono text-[10px] font-bold uppercase tracking-wide text-amber-900 dark:border-amber-400/40 dark:bg-amber-950 dark:text-amber-100"
+      title={`Measured on ${day}, more than ${STALE_AFTER_DAYS} days ago. Older results are not re-run automatically.`}
+      data-testid="gspc-stale"
+    >
+      STALE
+    </span>
+  );
+}
 
 export interface HubCell {
   model: string;
@@ -146,7 +199,8 @@ export function separationLabel(a: GspcAxis): string {
   if (a.kind === "deterministic-facts") return "facts · no separation test";
   const s = String(a.separation ?? "UNTESTED");
   if (s === "TIE") return "TIE · not a measured advantage";
-  if (s === "UNTESTED") return "not separation-tested";
+  // The state word itself stays visible: UNTESTED is first-class, not paraphrased away.
+  if (s === "UNTESTED") return "UNTESTED · no separation test has run";
   return s;
 }
 
@@ -427,6 +481,7 @@ export function HubResultsBoard({
                 : `Partial read · ${cells.length} retrieved MEASURED cells · population totals withheld`}
       </p>
       {asOf ? <p className="mt-1 text-xs text-slate-500 dark:text-emerald-100/55">Feed observed {asOf}</p> : null}
+      <ModelCountKey className="mt-2 max-w-xl" />
 
       {data && axes.length > 0 ? (
         <>
@@ -523,6 +578,15 @@ export default function HomeGspcBoard({
   // The tiles' as_of is the payload's own measurement stamp (measured_on.date) — never the clock.
   const rawMeasuredOn = (data?.measured_on as { date?: unknown } | undefined)?.date;
   const measuredOn = typeof rawMeasuredOn === "string" && rawMeasuredOn.trim() ? rawMeasuredOn.trim() : null;
+  // "Last measured" replaces a LIVE status word that was true of the fetch and false of the data.
+  // Tools audit retest, 6 Oct 2026: the headline date was the newest of ANY axis (a fact check on
+  // 22 Sep) while every model comparison shown was from August. The tile now leads with the model
+  // tests' own date and names the fact checks' date beside it; each is read from its own axes.
+  const modelRange = unread ? null : boardMeasuredRange(data, "model-comparison");
+  const factRange = unread ? null : boardMeasuredRange(data, "deterministic-facts");
+  const range = modelRange ?? (unread ? null : boardMeasuredRange(data));
+  const newestStale = range ? daysSince(range.newest) > STALE_AFTER_DAYS : false;
+  const oldestStale = range ? daysSince(range.oldest) > STALE_AFTER_DAYS : false;
 
   return (
     <section
@@ -556,13 +620,16 @@ export default function HomeGspcBoard({
             if (liveLid) return liveLid;
             return ax.length ? `${ax.length} axes measured · ${mc.length} model fleets · ${leaders} public leader scores · ${facts} fact runs · TIE is TIE · not a certificate.` : "";
           })()}
-          <span className="block">
+        </p>
+        <details className="mt-1 text-sm text-slate-600 dark:text-emerald-100/70" data-testid="gspc-how-checked">
+          <summary className="min-h-11 cursor-pointer py-2 font-semibold text-slate-700 dark:text-emerald-100/80">How this is checked</summary>
+          <p>
             The evidence root is signed separately from this live board. Its signature does not
             establish that these API rows match the preserved signed board snapshot; check{" "}
             <a href="/api/state" className="underline">GET /api/state</a> for that snapshot&apos;s status.
             Witnesses bind exact root bytes and may still be pending. Verify is free.
-          </span>
-        </p>
+          </p>
+        </details>
           <p className="mt-1 text-sm text-slate-600 dark:text-emerald-100/70">The live API response below is the master view. It is rendered directly here; Hugging Face is a distribution mirror.</p>
         </div>
         <p className="flex flex-wrap items-center gap-3 text-sm">
@@ -580,11 +647,11 @@ export default function HomeGspcBoard({
             unreadable board used to print 0 / 0 / 0 TIE / 0 — a count of nothing presented as a
             measurement. Say UNCHECKABLE instead; never infer a value from an absent payload. */}
         {[
-          ["Measured axes", loading ? "…" : unread ? "UNCHECKABLE" : String(measuredAxes), unread ? "no axes read" : `${axes.length} declared`],
-          ["Model fleets", loading ? "…" : unread ? "UNCHECKABLE" : String(comparisonAxes), "comparison axes"],
-          ["Separated", loading ? "…" : unread ? "UNCHECKABLE" : String(separated), unread ? "no value inferred" : `${ties} TIE`],
-          ["Fact runs", loading ? "…" : unread ? "UNCHECKABLE" : String(factRuns), "public facts"],
-          ["Status", error ? "UNREACHABLE" : loading ? "READING" : unread ? "UNCHECKABLE" : "LIVE", error || unread ? "no value inferred" : "from /api/gspc"],
+          // Plain labels (tools audit retest, 6 Oct 2026); the board's own words stay in the line above.
+          ["Tests with results", loading ? "…" : unread ? "UNCHECKABLE" : String(measuredAxes), unread ? "no tests read" : `of ${axes.length} on the board`],
+          ["Model comparisons", loading ? "…" : unread ? "UNCHECKABLE" : String(comparisonAxes), "tests that compare models"],
+          ["Clear winners", loading ? "…" : unread ? "UNCHECKABLE" : String(separated), unread ? "no value inferred" : `${ties} ${ties === 1 ? "tie" : "ties"}`],
+          ["Fact checks", loading ? "…" : unread ? "UNCHECKABLE" : String(factRuns), "public facts read"],
         ].map(([label, value, note]) => (
           <div key={label} className="rounded-2xl border border-slate-200/80 bg-slate-50/70 px-3.5 py-3 dark:border-emerald-900/40 dark:bg-white/[0.035]">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-emerald-100/55">{label}</p>
@@ -592,6 +659,31 @@ export default function HomeGspcBoard({
             <p className="mt-0.5 text-xs text-slate-500 dark:text-emerald-100/55">{note}</p>
           </div>
         ))}
+        <div className="rounded-2xl border border-slate-200/80 bg-slate-50/70 px-3.5 py-3 dark:border-emerald-900/40 dark:bg-white/[0.035]" data-testid="gspc-last-measured">
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-emerald-100/55">
+            {modelRange ? "Models last tested" : "Last measured"}
+          </p>
+          <p className="mt-1 text-xl font-black tracking-tight text-slate-950 dark:text-emerald-50">
+            {error ? "UNREACHABLE" : loading ? "…" : range ? range.newest : "UNCHECKABLE"}
+            {range && newestStale ? <StaleChip day={range.newest} /> : null}
+          </p>
+          <p className="mt-0.5 text-xs text-slate-500 dark:text-emerald-100/55">
+            {range && factRange && modelRange ? (
+              <span data-testid="gspc-facts-last">fact checks last read {factRange.newest}</span>
+            ) : range ? (
+              <>
+                oldest result {range.oldest}
+                {!newestStale && oldestStale ? <StaleChip day={range.oldest} /> : null}
+              </>
+            ) : error || unread ? (
+              "no value inferred"
+            ) : loading ? (
+              "reading"
+            ) : (
+              "the board states no date"
+            )}
+          </p>
+        </div>
       </div>
       {!loading ? (
         <p className="mt-2 text-xs text-slate-600 dark:text-emerald-100/65" data-testid="gspc-tiles-as-of">
@@ -600,7 +692,7 @@ export default function HomeGspcBoard({
             {unread ? "UNCHECKABLE — the board was not read on this load" : measuredOn ?? "UNCHECKABLE — the payload carries no measured_on.date"}
           </strong>
           {" · "}source:{" "}
-          <code className="font-mono">GET /api/gspc</code>
+          <a href="/api/gspc" className="font-mono underline underline-offset-2">GET /api/gspc</a>
           {" → totals, measured_on.date"}
         </p>
       ) : null}

@@ -329,6 +329,10 @@ export interface LobbyChat {
     question: string,
     onNavigate: (t: LobbyTab) => void,
     onOpenRoute?: (path: string, label: string) => void,
+    /** Offered a free question after every local lane (pane commands, a pasted card) has passed on
+     *  it. Returning true means the host answered it as a result card elsewhere (Council OS: the Ask
+     *  panel), so it is not sent to POST /api/chat and printed here as raw text. */
+    onFreeQuestion?: (question: string) => boolean,
   ) => Promise<void>;
   startThread: () => void;
   selectThread: (id: string) => void;
@@ -388,6 +392,7 @@ export function useLobbyChat(): LobbyChat {
       raw: string,
       onNavigate: (t: LobbyTab) => void,
       onOpenRoute?: (path: string, label: string) => void,
+      onFreeQuestion?: (question: string) => boolean,
     ) => {
       const question = raw.trim();
       if (!question || busy) return;
@@ -571,6 +576,18 @@ export function useLobbyChat(): LobbyChat {
         } finally {
           setBusy(false);
         }
+        return;
+      }
+
+      // Lane 1.9 — the host shows the answer as a result card (tools audit retest, 6 Oct 2026: on
+      // every pane but the start screen, answers arrived here as raw text dumps).
+      if (onFreeQuestion?.(question)) {
+        push({
+          role: "council",
+          text: "Answered in the Ask panel, as a card with its source and a Verify yourself link.",
+          state: "deterministic",
+          signature: "handed to the Ask panel · POST /api/agui/run",
+        });
         return;
       }
 

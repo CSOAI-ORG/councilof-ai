@@ -24,7 +24,8 @@
     "mcp": {
       "primary": "https://councilof.ai/mcp",
       "current": "https://councilof.ai/mcp",
-      "stdio": "npx -y csoai-gspc-mcp@0.2.2",
+      "stdio": null,
+      "stdio_note": "npm csoai-gspc-mcp: published releases are deprecated on npm and carry fewer tools; use the free door https://councilof.ai/mcp/free",
       "note": "Live door is https://councilof.ai/mcp (GET 200). HTTP tools/list is nineteen: fourteen free readers plus five x402-metered evidence tools. witness_hash is quarantined and not advertised. Registry server 1.4.4.",
       "free": "https://councilof.ai/mcp/free",
       "free_note": "https://councilof.ai/mcp/free serves the fourteen free readers only, from the same definitions and handlers as https://councilof.ai/mcp: no payment tool and no payment text. It is the address for chat clients and directories that list no payment software."
@@ -880,7 +881,7 @@
     {
       "name": "server_evidence",
       "title": "Every published capsule about one endpoint",
-      "description": "Trust per server, not totals: every published measurement capsule about ONE endpoint URL across all batches — MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A card-signature state, self-parity cells for CSOAI's own doors, and any later adapter (e.g. tool drift) — each with its measurement_state, observed_at, correction_pointer, limitations, batch Merkle root and an inclusion pointer (verify_capsule re-derives inclusion). Read from a static per-endpoint shard keyed by sha256 of the normalised URL. An endpoint with no capsule answers NOT_MEASURED with an empty list — never an error and never a clean bill. No verdict, score or ranking: measurement, not endorsement.",
+      "description": "Trust per server, not totals: every published measurement capsule about ONE endpoint URL across all batches — MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A card-signature state, self-parity cells for CSOAI's own doors, and any later adapter (e.g. tool drift) — each with its measurement_state, observed_at, correction_pointer, limitations, batch Merkle root and an inclusion pointer for independent verification. Read from a static per-endpoint shard keyed by sha256 of the normalised URL. An endpoint with no capsule answers NOT_MEASURED with an empty list — never an error and never a clean bill. No verdict, score or ranking: measurement, not endorsement.",
       "annotations": {
         "title": "Every published capsule about one endpoint",
         "readOnlyHint": true,
@@ -893,7 +894,10 @@
         "properties": {
           "endpoint_url": {
             "type": "string",
-            "description": "The endpoint URL, e.g. https://example.com/mcp or an agent-card URL."
+            "format": "uri",
+            "pattern": "^https?://",
+            "maxLength": 2048,
+            "description": "Public HTTP(S) endpoint URL whose already-published measurement capsules should be read, e.g. https://example.com/mcp."
           }
         },
         "required": [
@@ -1365,6 +1369,7 @@
         "rail": "x402",
         "route": "/api/request-attestation",
         "sku": "request_attestation",
+        "sells": "issuance",
         "free_preview": "the 402 body (csoai.preview)",
         "deliverable": "one card-v0 leaf, surface ras.commission, Ed25519 when the Pages key is present"
       }
@@ -1429,7 +1434,10 @@
         "properties": {
           "url": {
             "type": "string",
-            "description": "Public http(s) URL of the generative output to measure (≤20 MiB)."
+            "format": "uri",
+            "pattern": "^https?://",
+            "maxLength": 2048,
+            "description": "Public HTTP(S) URL of the generative output to measure (≤20 MiB). The server fetches only this declared measurement subject."
           },
           "bytes_b64": {
             "type": "string",
@@ -1455,6 +1463,7 @@
         "rail": "x402-or-invoice",
         "route": "/api/art50/marking-evidence",
         "sku": "art50_marking_evidence",
+        "sells": "issuance",
         "free_preview": "preview=true",
         "deliverable": "one card-v0 leaf, surface art50.marking-evidence, kind csoai.art50.marking-evidence/0.1",
         "deployed_by": "live on councilof.ai (verified 2026-09-03)"
@@ -1541,6 +1550,7 @@
         "rail": "x402",
         "route": "/api/rwa/evidence",
         "sku": "rwa_evidence",
+        "sells": "issuance",
         "free_preview": "preview=true",
         "deliverable": "one card-v0 leaf, surface public.notice, kind csoai.eater.xrpl-issuer/0.1",
         "deployed_by": "live on councilof.ai (verified 2026-09-03)"
@@ -1631,6 +1641,7 @@
         "rail": "x402-or-invoice",
         "route": "/api/receipts/batch",
         "sku": "receipts_batch",
+        "sells": "assembly",
         "free_preview": "preview=true",
         "deliverable": "csoai.receipts.batch/0.1 + one signed manifest card-v0 (surface receipts.batch)"
       }
@@ -1727,6 +1738,7 @@
         "rail": "x402",
         "route": "/api/evidence-bundle",
         "sku": "evidence_bundle",
+        "sells": "assembly",
         "free_preview": "preview=true, or the free tool evidence_bundle_preview",
         "deliverable": "OSCAL 1.1.0 assessment-results over already-signed cards (with inclusion proofs) plus one manifest card-v0, surface evidence.bundle",
         "deployed_by": "live on councilof.ai (402 on ?obligation=article-53&bundle=1, read 2026-09-30)"

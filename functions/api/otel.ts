@@ -2,6 +2,7 @@
  * GET /api/otel — collector presence.
  * LIVE only if a collector answers. Else UNCHECKABLE. Not a 23rd axis.
  */
+import { headFromGet } from "./_head";
 const json = (body: unknown) =>
   new Response(JSON.stringify(body, null, 2), {
     status: 200,
@@ -24,3 +25,7 @@ export const onRequestGet: PagesFunction = async () =>
     honesty:
       "No OTLP on councilof.ai. Cards without a trace id stay valid GSPC. They are blind to runtime. Not Datadog. Not an axis.",
   });
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

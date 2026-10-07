@@ -5,6 +5,7 @@
  * Uses GITHUB_TOKEN env if set (raises rate limit). Falls back to unauthenticated
  * (60 req/h per IP) when unset.
  */
+import { headFromGet } from "../_head";
 
 interface GitHubCommit {
   sha: string;
@@ -61,3 +62,7 @@ export const onRequestGet: PagesFunction = async (ctx) => {
     );
   }
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

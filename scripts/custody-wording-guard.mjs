@@ -18,6 +18,8 @@
  *      that the stamp is UNCHECKABLE until the ceremony, or cites C-2026-0925-01; or
  *   2. the file is signed bytes that cannot be edited (PINNED, each with the document that
  *      carries its correction); or
+ *   2b. the file is a captured, dated receipt (DATED_RECEIPTS, one named file per entry) and the
+ *      correction it points to is still in place; or
  *   3. council-os/custody-ceremonies.json records a PERFORMED ceremony with shares in at least two
  *      distinct custody domains and a record file that exists. Then the wording is true, and the
  *      guard passes everything (and says why).
@@ -71,6 +73,27 @@ const SKIP_DIR_NAMES = new Set(["node_modules", "mirrors", ".git"]);
 // that carries its correction, which the guard checks is present.
 export const PINNED = new Map([
   ["public/signed/gspc-board.signed.json", "public/signed/gspc-board.status.json"],
+]);
+
+// Captured, dated receipts: the verbatim output of a command run on the date in the path, kept as
+// evidence of what that command printed then. Rewriting one to today's wording would falsify the
+// receipt, so it is not edited. Each entry names the correction that supersedes the wording it
+// captured, and the exemption holds only while that correction is in place: the pointer file must
+// exist and still carry the corrected wording (`marks`). If it does not, the guard fails, as it does
+// for a pinned file whose correction is missing. One named file per entry, never a directory: a new
+// receipt that repeats old wording is a new capture and needs its own entry and its own correction.
+export const DATED_RECEIPTS = new Map([
+  // `helm template` output for packages/helm/llama-stack-csoai-eval, captured 30 Sep 2026 by lane
+  // ecosystem-install-20260930. Line 125 embeds that day's did.json _gspcBoardKeyNote, which said
+  // "3-party Coinbase cb-mpc". Superseded by the 6 Oct 2026 custody correction (owner approval
+  // 26Y): public/.well-known/did.json _gspcBoardKeyNote now states single-key custody. The same
+  // wording was first corrected elsewhere by C-2026-0925-01 (docs/corrections/2026-09-25-custody-wording.md).
+  ["council-os/receipts/ecosystem-install-20260930/helm-rendered.yaml", {
+    captured: "2026-09-30",
+    superseded_by: "the 2026-10-06 custody correction of public/.well-known/did.json _gspcBoardKeyNote (after C-2026-0925-01)",
+    correction: "public/.well-known/did.json",
+    marks: "treat it as single-key custody",
+  }],
 ]);
 
 // Files that exist to describe this rule; they quote the forbidden phrasing on purpose.
@@ -133,6 +156,8 @@ export function runGuard({ repo = REPO, roots = SCAN_ROOTS } = {}) {
   const ceremony = ceremonyAllows(registry, repo);
   const violations = [];
   const pinnedMissingCorrection = [];
+  const datedReceipts = [];
+  const receiptsMissingCorrection = [];
   let scanned = 0;
   for (const root of roots) {
     for (const rel of walk(path.join(repo, root), root)) {
@@ -150,11 +175,26 @@ export function runGuard({ repo = REPO, roots = SCAN_ROOTS } = {}) {
         if (!fs.existsSync(path.join(repo, corr))) pinnedMissingCorrection.push({ file: rel, correction: corr });
         continue;
       }
+      if (DATED_RECEIPTS.has(rel)) {
+        const r = DATED_RECEIPTS.get(rel);
+        let corrText = null;
+        try { corrText = fs.readFileSync(path.join(repo, r.correction), "utf8"); } catch { corrText = null; }
+        if (corrText === null || !corrText.includes(r.marks)) {
+          receiptsMissingCorrection.push({ file: rel, correction: r.correction, marks: r.marks });
+        } else {
+          datedReceipts.push({ file: rel, captured: r.captured, mentions: hits.length, superseded_by: r.superseded_by });
+        }
+        continue;
+      }
       for (const h of hits) violations.push({ file: rel, ...h });
     }
   }
-  const fail = (!ceremony.allowed && violations.length > 0) || pinnedMissingCorrection.length > 0;
-  return { ok: !fail, scanned, ceremony, violations: ceremony.allowed ? [] : violations, pinnedMissingCorrection };
+  const fail = (!ceremony.allowed && violations.length > 0) || pinnedMissingCorrection.length > 0
+    || receiptsMissingCorrection.length > 0;
+  return {
+    ok: !fail, scanned, ceremony, violations: ceremony.allowed ? [] : violations, pinnedMissingCorrection,
+    datedReceipts, receiptsMissingCorrection,
+  };
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
@@ -164,6 +204,8 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   } else {
     for (const v of res.violations) console.error(`✖ ${v.file}:${v.line}  "${v.match}"  ${v.excerpt}`);
     for (const p of res.pinnedMissingCorrection) console.error(`✖ ${p.file} is pinned signed bytes but its correction ${p.correction} is missing`);
+    for (const r of res.receiptsMissingCorrection) console.error(`✖ ${r.file} is a dated receipt but its correction ${r.correction} is missing or no longer says "${r.marks}"`);
+    for (const r of res.datedReceipts) console.log(`· ${r.file}: captured ${r.captured}, ${r.mentions} mention(s) kept verbatim; superseded by ${r.superseded_by}`);
     console.log(
       res.ok
         ? `custody-wording-guard: PASS — ${res.scanned} files; ${res.ceremony.allowed ? res.ceremony.why : "no split-custody wording without correction context (C-2026-0925-01)"}`

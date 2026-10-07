@@ -499,7 +499,7 @@
 </header>
 
 <main>
-<h1>GSPC QUESTS<small>Play frozen challenge banks with the published GSPC grading rules. Local results can become candidate evidence; only independent reproduction and admission can make a measured GSPC card.</small></h1>
+<h1>GSPC QUESTS<small>Play frozen challenge banks with the published GSPC grading rules. Local results are not evidence; only independent reproduction and admission can make a measured GSPC card.</small></h1>
 
 <div class="tabs" role="tablist">
   <button class="tab" role="tab" aria-selected="true" onclick="show('quests')">Quests</button>
@@ -519,7 +519,7 @@ A <span class="badge live">live source</span> reads the current published endpoi
 <div class="grid" id="grid"></div>
 <div class="warnbox hard"><b>Your score is local play, not a measurement.</b> Nothing you do here writes,
 signs or changes any model's card. The comparison figures are legacy, unadjudicated board references; your score lives only in this
-browser (localStorage) unless you explicitly review and submit a candidate evidence receipt. A candidate still is not a measurement.
+browser (localStorage). Reviewing a score as candidate evidence is not open in this release, and when it opens a candidate still is not a measurement.
 Completing a quest is not a
 qualification, declares no conformity, and is not legal advice. A conformity certificate needs an accreditation
 chain (a national accreditation body, then a certification body under ISO/IEC 42006); CSOAI holds none and does not claim to.</div>
@@ -672,6 +672,13 @@ const diffOf = p => { const s=snapOf(p); return s < 0.35 ? 3 : s < 0.60 ? 2 : 1;
 /* ---- local play store (localStorage). Best macro-F1 per axis. Never leaves the browser. ---- */
 const BEST_KEY = "gspc_quests_best_v1";
 let latestCandidate = null;
+/* Tools audit, 6 Oct 2026: candidate-evidence intake is not live, so the "Review as candidate
+   evidence" buttons offered a receipt that went nowhere. They are not drawn until intake exists;
+   the CouncilEvidence bridge and offerQuestEvidence() stay, so flipping this flag restores them. */
+const CANDIDATE_REVIEW_LIVE = false;
+const candidateReviewButton = () => CANDIDATE_REVIEW_LIVE
+  ? `<button class="go" onclick="offerQuestEvidence()">Review as candidate evidence</button>`
+  : "";
 function loadBest(){ try{ return JSON.parse(localStorage.getItem(BEST_KEY)||"{}"); }catch(_){ return {}; } }
 function saveBest(axisKey, rec){
   try{ const b=loadBest(); const cur=b[axisKey];
@@ -819,7 +826,7 @@ function result(){
     ${cur.counselNote ? `<div class="warnbox">${esc(cur.counselNote)}</div>` : ""}
     <div class="warnbox hard"><b>This is local play, not a measurement.</b> The published model value is historical
       context, not a currently admitted ranking. Nothing here was written to, or signed as, a model card; your score
-      stays in this browser unless you explicitly submit it as candidate evidence.</div>
+      stays in this browser.</div>
     <table><tr><th>item</th><th>key</th><th>you</th><th>anchor</th></tr>
       ${cur.items.map((it,i)=>{const pred=pairs[i][1];
         const ok=pred===it.a; const you=pred===null?"—":pred;
@@ -830,7 +837,7 @@ function result(){
           <td style="color:var(--dim)">${esc(it.anchor||"")}</td></tr>`;}).join("")}</table>
     <p class="note" style="border-top:none;padding-top:4px">Anchors are shown only here, after scoring — during play
       they would hand you the answer and the comparison with the model would measure nothing.</p>
-    <div class="nav"><button class="go" onclick="offerQuestEvidence()">Review as candidate evidence</button>
+    <div class="nav">${candidateReviewButton()}
       <button class="ghost" onclick="home()">Back to quests</button>
       <a class="ghost" href="${esc(cur.dataset_url||('https://huggingface.co/datasets/'+cur.dataset))}">The bank</a>
       <a class="ghost" href="/gspc/${esc(cur.axis)}">The axis card</a>
@@ -942,7 +949,7 @@ function dailyResult(correct){
     <div class="kv"><span>your streak (local)</span><span>${d.streak||0} day${(d.streak||0)===1?"":"s"}</span></div>
     <div style="font-size:12px;color:var(--dim);margin-top:12px">Share line — plain text, no certificate, nothing signed:</div>
     <div class="share" id="shareLine">${esc(share)}</div>
-    <div class="nav"><button class="go" onclick="offerQuestEvidence()">Review as candidate evidence</button>
+    <div class="nav">${candidateReviewButton()}
       <button class="ghost" onclick="copyShare()">Copy share line</button>
       <a class="ghost" href="/gspc/${esc(p.axis)}">The axis card</a>
       <button class="ghost" onclick="show('quests')">Play the full axis</button></div>
@@ -1015,7 +1022,7 @@ window.teamScore = function(){
     <div class="kv"><span>pooled accuracy</span><span>${s.accuracy.toFixed(3)}</span></div>
     <div class="warnbox hard">This is one device's pooled play, not a networked match and not a measurement. It writes
       nothing to any card. The pool is scored on the items the team actually answered.</div>
-    <div class="nav"><button class="go" onclick="offerQuestEvidence()">Review as candidate evidence</button>
+    <div class="nav">${candidateReviewButton()}
       <button class="ghost" onclick="teamView()">Another axis</button>
       <a class="ghost" href="/gspc/${esc(p.axis)}">The axis card</a></div>
   </div>`;
@@ -1087,7 +1094,7 @@ home();
       "@id": "https://councilof.ai/#website",
       "url": "https://councilof.ai/",
       "name": "GSPC Quests \u2014 play frozen challenge banks | CSOAI",
-      "description": "Play twelve behavioural GSPC challenge banks with deterministic grading. Local play can be reviewed as candidate evidence, but only independent reproduction and admission can produce a measured card.",
+      "description": "Play twelve behavioural GSPC challenge banks with deterministic grading. Local play stays in your browser; only independent reproduction and admission can produce a measured card.",
       "publisher": {
         "@id": "https://csoai.org/#organization"
       }

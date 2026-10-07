@@ -93,7 +93,7 @@ export default function StartHere() {
       <p className="mt-4 border-t border-border pt-4 text-sm text-muted-foreground" data-testid="ws-cost-verbs">
         <Link href="/dashboard?tab=verify" className="font-bold text-emerald-800 underline underline-offset-2">Verify</Link> is free, always ·{" "}
         <Link href="/dashboard?tab=measured" className="font-bold text-emerald-800 underline underline-offset-2">Commission</Link> creates a measurement request ·{" "}
-        <Link href="/dashboard?tab=swift" className="font-bold text-emerald-800 underline underline-offset-2">Pay (x402)</Link> happens only from your own wallet, after a challenge you can read first.
+        <Link href="/dashboard?tab=swift" className="font-bold text-emerald-800 underline underline-offset-2">Pay</Link> happens only from your own wallet, after you have read exactly what it costs.
       </p>
     </section>
   );

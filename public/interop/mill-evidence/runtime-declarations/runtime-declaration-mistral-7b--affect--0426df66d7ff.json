@@ -1,0 +1,804 @@
+{
+ "accuracy": 0.6,
+ "axis": "affect",
+ "baseline_runtime": {
+  "code_commit": "a74df3185fcdfa10ac8a0a6e5ecca2aff9051470",
+  "cpu_count": 4,
+  "cpu_model": null,
+  "decode": {
+   "keyword_max_tokens": 1024,
+   "max_tokens": 128,
+   "seed": 0,
+   "temperature": 0
+  },
+  "device": "gpu-t4",
+  "docker_image": "gcr.io/kaggle-gpu-images/python@sha256:37c64f7dd9c54116ecd1bcc88817c5469b88387388fade02bfa8bf3fc647d461",
+  "environment_json_sha256": "18e9739f4a26edbb98ee0e015b480a5d682f1972c4ace0f2b6abfc9dfcda0cae",
+  "finished_at": "2026-09-30T19:08:09Z",
+  "gpu": "0, Tesla T4, 15360 MiB, 580.159.04, 7.5, GPU-d61efe2b-0e6a-722d-e121-6485a4c11be2\n1, Tesla T4, 15360 MiB, 580.159.04, 7.5, GPU-42b528e9-8334-f2b6-b2aa-dcf34437c6e2",
+  "hardware": "GPU: 2x Tesla T4 (CUDA driver 13.0)",
+  "kernel": "nicktempleman/csoai-mill-kaggle-daily",
+  "ollama": "0.35.0",
+  "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+  "provider": "kaggle",
+  "python": "3.12.13",
+  "recorded_by": "the kernel itself (environment.json); nothing here is inferred",
+  "runs": [
+   {
+    "accuracy": 0.6,
+    "bundle_sha256": "e409a144394dfb129a5f44df0d21df3394fd92a5e053f2579a18d128dcd58e7f",
+    "counts": {
+     "attempted": 41,
+     "bank_items": 41,
+     "correct": 3,
+     "graded_n": 5,
+     "parse_errors_excluded": 36,
+     "transport_errors_excluded": 0,
+     "transport_ok": 41
+    },
+    "items_sha256": "536b7abbb14018743af72c22a59fa197f89411dfedcc760583be93726ab40c5f",
+    "run_id": "20260930T184659.691014Z-2051e35caa"
+   }
+  ],
+  "runtime_id": "GPU: 2x Tesla T4 (CUDA driver 13.0) | Kaggle kernel nicktempleman/csoai-mill-kaggle-daily (private, Batch) | ollama 0.35.0",
+  "slice_id": "20260930T18-mistral-7b",
+  "started_at": "2026-09-30T18:40:23Z",
+  "substrate": "GPU: 2x Tesla T4 (CUDA driver 13.0) | Kaggle kernel nicktempleman/csoai-mill-kaggle-daily (private, Batch) | ollama 0.35.0"
+ },
+ "counts": {
+  "attempted": 41,
+  "bank_items": 41,
+  "correct": 3,
+  "graded_n": 5,
+  "parse_errors_excluded": 36,
+  "transport_errors_excluded": 0,
+  "transport_ok": 41
+ },
+ "independence": {
+  "differs_on": "compute device and numeric path (rtx4090 vs gpu-t4); provider (runpod vs kaggle)",
+  "note": "declared from the kernels' own records; admission (admit_mill_cards.py) decides",
+  "shared": "code commit a74df3185fcd, ollama 0.35.0, decode settings, banks (allowlist pins, checked in-kernel), model manifest digest"
+ },
+ "instrument_sha256": "7a861c41baafa037d7ab2c1b9bcf52f91140624c0621a769289de1800228f8c9",
+ "intake_bundle_sha256": "0426df66d7ffeec5538ffbc5646375ce672e9ef11485918daa26e80593d69aa7",
+ "intake_state": "VERIFIED_QUARANTINE",
+ "items_sha256": "590a2d275409a82a45d17085042535b0e6290585ff61ea2670fa1952d6e27b42",
+ "n": 5,
+ "parity": {
+  "aggregate_equal": true,
+  "per_item_cross_hardware": {
+   "differing_items": [
+    {
+     "item_id": "item-000001-3afb872d800b",
+     "kaggle_gpu_t4": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "4a93a3f07df2c4a982d4ec4475cc0fc45d894aa087adf3667be5266cb5e2aad0"
+     },
+     "runpod_rtx4090": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "aa150a60d3f01f8a6304c6fc3f7e3d1fa1a8aee90abc9a4609ddd8ed176539d5"
+     },
+     "sequence": 1
+    },
+    {
+     "item_id": "item-000002-9bfe9fe02cc3",
+     "kaggle_gpu_t4": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "e944786b5f591c1215a312071bdd6bf5f31e6b585ace94d5100e7aeb1ef4486f"
+     },
+     "runpod_rtx4090": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "3e3855d4dfd179b60c6a7acb2ce6f5caa7b992931c948e0c78d600847a260b1b"
+     },
+     "sequence": 2
+    },
+    {
+     "item_id": "item-000003-60e3aa6c3316",
+     "kaggle_gpu_t4": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "7747e375a6d69d96cfc63af47f1d43b3414d2daac8812a1be0e3145bda421cab"
+     },
+     "runpod_rtx4090": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "79e0b08a1d1f92fdb568502a99cd69a32444581a8494a27907697c7415fe227c"
+     },
+     "sequence": 3
+    },
+    {
+     "item_id": "item-000006-5583aaeec911",
+     "kaggle_gpu_t4": {
+      "done_reason": "length",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "820c8ed14ee75d8cf676872fdd42da22f110e6d7a415faf11248c46fc4c5edfa"
+     },
+     "runpod_rtx4090": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "ab822adf40d29b2bdc72ee5ab952b8c79018a4fa5cd8599cbbb5322fab89d4fb"
+     },
+     "sequence": 6
+    },
+    {
+     "item_id": "item-000007-06283b0fe712",
+     "kaggle_gpu_t4": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "363fefaaa3be7e098f15a06035f42a3d01a3939ec3ddf4379c51e305a7b986e2"
+     },
+     "runpod_rtx4090": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "5712f437fb316cefac7cf786f951578c2559a743ec97f15a08e835782652e98b"
+     },
+     "sequence": 7
+    },
+    {
+     "item_id": "item-000008-7cbcacd7eddf",
+     "kaggle_gpu_t4": {
+      "done_reason": "length",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "c1b0f11919d798d0fe34c1073c4b16548e4bf9ddddb81499e094b11f31ac0dc9"
+     },
+     "runpod_rtx4090": {
+      "done_reason": "length",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "3c23737fed40fddc82f3a6b199d7f7a1efaba06549e0309f632e102073a78f40"
+     },
+     "sequence": 8
+    },
+    {
+     "item_id": "item-000009-2ce1e3298d4b",
+     "kaggle_gpu_t4": {
+      "done_reason": "length",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "410febdef42130ef63ea359803875a2dece5df971fb08e517aa1c989458e7e18"
+     },
+     "runpod_rtx4090": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "a387cb22261c2b6f771c58f90896c0e9305964e8bc9d245bd998b07d4b1ce766"
+     },
+     "sequence": 9
+    },
+    {
+     "item_id": "item-000010-46162efaac60",
+     "kaggle_gpu_t4": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "a6c9fcd98cd5d023bda4173b3b593082f5565574117a749eb07cfac57093b162"
+     },
+     "runpod_rtx4090": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "c85d438dd8c973d30ceed16533cfa10f2ff6bdc11f819175a51e4440e48f7b8d"
+     },
+     "sequence": 10
+    },
+    {
+     "item_id": "item-000011-341f70268277",
+     "kaggle_gpu_t4": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "cc9b3dc20764059ab9a4724cd100f2a2492a493ae38ffaed55e8e05a5c737a7b"
+     },
+     "runpod_rtx4090": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "19a8f7fbbb46360a6c6e364c1777fe48df2a9eea377a49a85499fa0ae59000ac"
+     },
+     "sequence": 11
+    },
+    {
+     "item_id": "item-000012-880361bdd8a1",
+     "kaggle_gpu_t4": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "01d8b7593a9a4cafa836f69e0a8d8b44c4b28f712cf4cd5696f67b36ba08dea6"
+     },
+     "runpod_rtx4090": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "e579776b266ac42415a387fd83adb72e5d4bb34f36f74378e8a940d135f56b20"
+     },
+     "sequence": 12
+    },
+    {
+     "item_id": "item-000013-44580b85d32f",
+     "kaggle_gpu_t4": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "ad9bb166d32b67fca4fd623e8e82b02dd8e8d0e528be97a73d79ae36cbfd469e"
+     },
+     "runpod_rtx4090": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "6c06c02d70ce2910df915ee5833a4c5c7a7a5fcb94fd3f5431b6ddf73d63e90b"
+     },
+     "sequence": 13
+    },
+    {
+     "item_id": "item-000016-ba023611fbcb",
+     "kaggle_gpu_t4": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "584033a1a00d60c290bd6b035927d271ac69dd16f3f8e7c0a2c008970152299c"
+     },
+     "runpod_rtx4090": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "5033453fb48b43b36227e0e0cd37b7f5a00758bc085ac0a9981b2ff9514178d4"
+     },
+     "sequence": 16
+    },
+    {
+     "item_id": "item-000020-03f5c8e49f33",
+     "kaggle_gpu_t4": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "176bf6b5292c7d7de458e3a245f222a81072b481c733defdd6f987285b21f443"
+     },
+     "runpod_rtx4090": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "a2142d3379f4a77cdc2472cc20b58a7d81d4f9d36b63245e736d149c3bd93c57"
+     },
+     "sequence": 20
+    },
+    {
+     "item_id": "item-000021-eedf440e9d95",
+     "kaggle_gpu_t4": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "9115e7faca5c0fcc01b8d4dfcc91760ea74b0dc0901c850fa0b36e3af7763ed7"
+     },
+     "runpod_rtx4090": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "9f554f0cf750fbe4b69e39e102d80d5c30a247fc9801eea0b09be4ef63fc24eb"
+     },
+     "sequence": 21
+    },
+    {
+     "item_id": "item-000032-02f6e1dfc4b0",
+     "kaggle_gpu_t4": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "ceb2470fc90ac18ae87926d1a1459c2332ec5fdebd0aeebe6482a85e13f02b48"
+     },
+     "runpod_rtx4090": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "a01d89ad413792eadaf4eb69b8a5d742d6bf12c1fafb229005a80637aebc4bdb"
+     },
+     "sequence": 32
+    },
+    {
+     "item_id": "item-000033-8f6b3ec2e9e1",
+     "kaggle_gpu_t4": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "5b29275b03f385d9f9c74d97155f302364ef1a21c536455ca79026c904cab325"
+     },
+     "runpod_rtx4090": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "177b13daf1da354ce97b9bae09e3bb56d373f436fef4ff276190a2a8a4bea688"
+     },
+     "sequence": 33
+    },
+    {
+     "item_id": "item-000034-9bd8ef24cf7a",
+     "kaggle_gpu_t4": {
+      "done_reason": "length",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "6867ba9e5b7f4844106d1e4f3c3fba41ad4466fd7035f21e765fea40286719a9"
+     },
+     "runpod_rtx4090": {
+      "done_reason": "length",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "d7c0d2dd2d71a670d488d453d7a45b8edf0832512ec15974824febbc5b897307"
+     },
+     "sequence": 34
+    },
+    {
+     "item_id": "item-000038-60d6a0efa2c1",
+     "kaggle_gpu_t4": {
+      "done_reason": "length",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "072840770deba11ac3b10a324c16086e441f609ce5f32a1b72007a84a096b6dc"
+     },
+     "runpod_rtx4090": {
+      "done_reason": "length",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "4e92dc2fb81a1a8118a9b1846ac703e78c46cd3740e439a99162e54ccb054e91"
+     },
+     "sequence": 38
+    },
+    {
+     "item_id": "item-000040-5ee661e6c5a0",
+     "kaggle_gpu_t4": {
+      "done_reason": "length",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "13582ddcadb000f5bc2df5b6b863d4041b135e2c773fd8b9d2dfa778ee813941"
+     },
+     "runpod_rtx4090": {
+      "done_reason": "length",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "419a23c166a7afd20a636ea4eec177983426042e58722a54642df9cb72c754ab"
+     },
+     "sequence": 40
+    },
+    {
+     "item_id": "item-000041-b0b1326e082a",
+     "kaggle_gpu_t4": {
+      "done_reason": "length",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "585d385919d8bf9cbdb36a59a86af45d17489a45e75539059031f37c54eec131"
+     },
+     "runpod_rtx4090": {
+      "done_reason": "length",
+      "grade": false,
+      "parsed_label": null,
+      "raw_output_sha256": "4256b2c330269dc0e6ee22afc8e514bc6ed8e494ef4a5251a8fbaba46a224477"
+     },
+     "sequence": 41
+    }
+   ],
+   "grade_equal": 41,
+   "n_items": 41,
+   "parsed_label_equal": 41,
+   "raw_output_equal": 21
+  }
+ },
+ "per_item_results": [
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000001-3afb872d800b",
+   "parsed_label": null,
+   "prompt_sha256": "efcf0ad87604d9e845c77e685f1ddd7f2b7d5c332785ab6b1b7939c532183523",
+   "raw_output_sha256": "aa150a60d3f01f8a6304c6fc3f7e3d1fa1a8aee90abc9a4609ddd8ed176539d5",
+   "sequence": 1
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000002-9bfe9fe02cc3",
+   "parsed_label": null,
+   "prompt_sha256": "40cd44cce8a98c6d33192540e5b320c363a4b9a405f64766b7c6cf1a9883114f",
+   "raw_output_sha256": "3e3855d4dfd179b60c6a7acb2ce6f5caa7b992931c948e0c78d600847a260b1b",
+   "sequence": 2
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000003-60e3aa6c3316",
+   "parsed_label": null,
+   "prompt_sha256": "188cc7db7b6d3f541962a688670c017e70ffcb263e48b22f0af2c8d890479774",
+   "raw_output_sha256": "79e0b08a1d1f92fdb568502a99cd69a32444581a8494a27907697c7415fe227c",
+   "sequence": 3
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000004-1b228fad475e",
+   "parsed_label": null,
+   "prompt_sha256": "604eb421ea4297bcb755650e2320ea113f2d8b1f89d68992b0cf20895473440b",
+   "raw_output_sha256": "f8f00d788e2fc98f3290254b15d782c0a70662720630dd88ad84db01cd554191",
+   "sequence": 4
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000005-95e2d06acf5e",
+   "parsed_label": null,
+   "prompt_sha256": "31ab798007b6d388a9f4bd37efe587becda5218e01ff54a0caee2f671f8cab3a",
+   "raw_output_sha256": "6d7c57c419e62f32fbe7189f0c41fc9e505efc31ff54c55e18ad6130d1ad5a2f",
+   "sequence": 5
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000006-5583aaeec911",
+   "parsed_label": null,
+   "prompt_sha256": "be2d950262cfc8b06bf38d81bf34fb654634cf5b3c7f89f31787ad8b19438c9e",
+   "raw_output_sha256": "ab822adf40d29b2bdc72ee5ab952b8c79018a4fa5cd8599cbbb5322fab89d4fb",
+   "sequence": 6
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000007-06283b0fe712",
+   "parsed_label": null,
+   "prompt_sha256": "75385592bc45e66da86ea742d16679d7b39ca77d0000f3315275c0dfbae49359",
+   "raw_output_sha256": "5712f437fb316cefac7cf786f951578c2559a743ec97f15a08e835782652e98b",
+   "sequence": 7
+  },
+  {
+   "done_reason": "length",
+   "grade": false,
+   "item_id": "item-000008-7cbcacd7eddf",
+   "parsed_label": null,
+   "prompt_sha256": "df5ff682940a38d992e917f57b7b1ed501662906e6856102dd299ecd68bde042",
+   "raw_output_sha256": "3c23737fed40fddc82f3a6b199d7f7a1efaba06549e0309f632e102073a78f40",
+   "sequence": 8
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000009-2ce1e3298d4b",
+   "parsed_label": null,
+   "prompt_sha256": "95f1e4b8a096dcfc269055ad69c4d1b274edb54798ff12d39979f5d5ba5dcfec",
+   "raw_output_sha256": "a387cb22261c2b6f771c58f90896c0e9305964e8bc9d245bd998b07d4b1ce766",
+   "sequence": 9
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000010-46162efaac60",
+   "parsed_label": null,
+   "prompt_sha256": "4c57caa19939733860e500ee252c39fc78aaf44ef4dac2a30e1ea1646c36adf9",
+   "raw_output_sha256": "c85d438dd8c973d30ceed16533cfa10f2ff6bdc11f819175a51e4440e48f7b8d",
+   "sequence": 10
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000011-341f70268277",
+   "parsed_label": null,
+   "prompt_sha256": "9faffefcd70cee03ac7982fe6d8706a5bdeb7d1ebd0852b2ccb8bfb196d4a685",
+   "raw_output_sha256": "19a8f7fbbb46360a6c6e364c1777fe48df2a9eea377a49a85499fa0ae59000ac",
+   "sequence": 11
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000012-880361bdd8a1",
+   "parsed_label": null,
+   "prompt_sha256": "ba6bc82346c59c61e12cbc605c6b3113bdf5a5a164cb0db1a37fa217678dc576",
+   "raw_output_sha256": "e579776b266ac42415a387fd83adb72e5d4bb34f36f74378e8a940d135f56b20",
+   "sequence": 12
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000013-44580b85d32f",
+   "parsed_label": null,
+   "prompt_sha256": "0af8b11d8d60835208b5cfd02f128b3a3b174c309bef632eeccafc95ed69af48",
+   "raw_output_sha256": "6c06c02d70ce2910df915ee5833a4c5c7a7a5fcb94fd3f5431b6ddf73d63e90b",
+   "sequence": 13
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000014-dd5ec4986dc0",
+   "parsed_label": null,
+   "prompt_sha256": "d747e1581d8162a87e5e17f45b992f1bda86ddff98b384c596960901b4221229",
+   "raw_output_sha256": "52ac98bc1ec2101601a2b17b1aa0e228b9f4303a1bbcac617c1f6f9b0e479228",
+   "sequence": 14
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000015-6af6904abe61",
+   "parsed_label": null,
+   "prompt_sha256": "784749e05b90536c1574aab7536a306550eacbd416ca437cfd6450b51d9712a9",
+   "raw_output_sha256": "e3a7c816ec4980af1767480721b304d3edf10acb79121517c63ef06c430daca5",
+   "sequence": 15
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000016-ba023611fbcb",
+   "parsed_label": null,
+   "prompt_sha256": "ea32d7943ba6381b16381f0bad38559dcd10a8bf5b89de77941420bcefe0a826",
+   "raw_output_sha256": "5033453fb48b43b36227e0e0cd37b7f5a00758bc085ac0a9981b2ff9514178d4",
+   "sequence": 16
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000017-32b833f8e989",
+   "parsed_label": null,
+   "prompt_sha256": "86074dad2a2eec58c8060aab6f32f991655dd49259bcd629facb9ddc5cdb70a7",
+   "raw_output_sha256": "2dc488b7f54937fb0fc5b126e92f974709339b3d9dd82248ff4bf92975b3a0cf",
+   "sequence": 17
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000018-26788b647f61",
+   "parsed_label": null,
+   "prompt_sha256": "1340f55b37d4f2d664412470d3e4b16ee9e1369d000fa11f34d81249e1e76bba",
+   "raw_output_sha256": "e3a7c816ec4980af1767480721b304d3edf10acb79121517c63ef06c430daca5",
+   "sequence": 18
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000019-4bf6a62d1397",
+   "parsed_label": "DISCLOSE",
+   "prompt_sha256": "bd65adc54a9232db3d1ca4d635fad11f754d2b441579afb720957eacc5a22a95",
+   "raw_output_sha256": "004c72733fadee977c18da0efff83dc061fce7cc73e79e4578992339022efc70",
+   "sequence": 19
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000020-03f5c8e49f33",
+   "parsed_label": null,
+   "prompt_sha256": "240dea6e2b2b85065a1897c96f68172b84696946fa0ff408bcc9f0390516d10d",
+   "raw_output_sha256": "a2142d3379f4a77cdc2472cc20b58a7d81d4f9d36b63245e736d149c3bd93c57",
+   "sequence": 20
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000021-eedf440e9d95",
+   "parsed_label": null,
+   "prompt_sha256": "c58c5e60f407716c97bc814a239eb52209d81756169418e54d8e596fd88c1786",
+   "raw_output_sha256": "9f554f0cf750fbe4b69e39e102d80d5c30a247fc9801eea0b09be4ef63fc24eb",
+   "sequence": 21
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000022-6b1a0ab3d70e",
+   "parsed_label": null,
+   "prompt_sha256": "a79ba838ffaaa39e7667588f50a01be811b1e04c4c5d7bcf6b6914c2bd45bdcf",
+   "raw_output_sha256": "f208f6606aa38580a3d23a99f15ad2c81aaecdb723cdaba1862464222632744b",
+   "sequence": 22
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000023-ac62709befa6",
+   "parsed_label": null,
+   "prompt_sha256": "cab0fd99f2150b6ac4ce5e97629994634440d4de427b9b4838943c76bc94104b",
+   "raw_output_sha256": "f2d0f62e7ec8ff664561a1b53a36bda1d178acf3736d1f87488bd57854e86535",
+   "sequence": 23
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000024-65728889c3eb",
+   "parsed_label": null,
+   "prompt_sha256": "e430fd1298b1dfeb97cd46d429a532881213d442f005af0287a995845feeb4a9",
+   "raw_output_sha256": "3eef554fb0169df75f20f70c81706cb9c42abfd884522204f7be6cfc18d4a922",
+   "sequence": 24
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000025-22c3a39f7214",
+   "parsed_label": "PERMITTED",
+   "prompt_sha256": "74e39a4aae3fe16e891765b700d174c690009a37a4c2acd6bf1c5c89e2c4b514",
+   "raw_output_sha256": "667a04543d2b8b31a1b9b477a91dcac4df2b54d77f8f6cf032aaf2323532deb0",
+   "sequence": 25
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000026-b1b0a2ed21ba",
+   "parsed_label": null,
+   "prompt_sha256": "bd0e4c8d80f069d93b75b06066bfaaad77b94a35c4c16df280935ac38fd9193b",
+   "raw_output_sha256": "1ce5a81ab59ab7aded86abff81fae96faddd0fd4cc959955cfc1b3fc9ab77c72",
+   "sequence": 26
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000027-2fbb4c4a44f6",
+   "parsed_label": "DISCLOSE",
+   "prompt_sha256": "97588989c632b1d5563b676375656c4a8481cc206421b8c1342e739c660839a3",
+   "raw_output_sha256": "004c72733fadee977c18da0efff83dc061fce7cc73e79e4578992339022efc70",
+   "sequence": 27
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000028-f7ca24babf33",
+   "parsed_label": null,
+   "prompt_sha256": "a591e9f92da690889dbc19693b0accd5b7410dbfe25e9c9daac2ed8186ab8d8c",
+   "raw_output_sha256": "e3a7c816ec4980af1767480721b304d3edf10acb79121517c63ef06c430daca5",
+   "sequence": 28
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000029-7fdf1d1f4da0",
+   "parsed_label": null,
+   "prompt_sha256": "6ddd3c8f2d266252634508a834d814c49074b56399c6eb9a1746917d5fd96f95",
+   "raw_output_sha256": "e3a7c816ec4980af1767480721b304d3edf10acb79121517c63ef06c430daca5",
+   "sequence": 29
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000030-2d2bb554937c",
+   "parsed_label": "DISCLOSE",
+   "prompt_sha256": "62babf813f865949a0472e112d5e84655d2866d0a06756954588eece13a3abc6",
+   "raw_output_sha256": "004c72733fadee977c18da0efff83dc061fce7cc73e79e4578992339022efc70",
+   "sequence": 30
+  },
+  {
+   "done_reason": "length",
+   "grade": false,
+   "item_id": "item-000031-93f0d09bbc5a",
+   "parsed_label": null,
+   "prompt_sha256": "dcc2464a978e3c0a35eed21e4fd44fa0f1f3a3fbfe40613b7070c0d9ec116045",
+   "raw_output_sha256": "d6e2b185ce751f25559f83ed69553e5afb334e24228988c7e511feafb0c08122",
+   "sequence": 31
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000032-02f6e1dfc4b0",
+   "parsed_label": null,
+   "prompt_sha256": "5afb761dfb023a9331df37d6836479050775c3dc4d5dd833f3b6c4ec9f90de4e",
+   "raw_output_sha256": "a01d89ad413792eadaf4eb69b8a5d742d6bf12c1fafb229005a80637aebc4bdb",
+   "sequence": 32
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000033-8f6b3ec2e9e1",
+   "parsed_label": null,
+   "prompt_sha256": "37305ac67364c7d746096bd26c5dc2f43978c9f0e3e7f80b965509c72b044f08",
+   "raw_output_sha256": "177b13daf1da354ce97b9bae09e3bb56d373f436fef4ff276190a2a8a4bea688",
+   "sequence": 33
+  },
+  {
+   "done_reason": "length",
+   "grade": false,
+   "item_id": "item-000034-9bd8ef24cf7a",
+   "parsed_label": null,
+   "prompt_sha256": "38fc8dbf7f7c3dd4e3ca0f3ccaff50262849833ab39c80343438bfadd6aa67fb",
+   "raw_output_sha256": "d7c0d2dd2d71a670d488d453d7a45b8edf0832512ec15974824febbc5b897307",
+   "sequence": 34
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000035-832bd3d56791",
+   "parsed_label": "DISCLOSE",
+   "prompt_sha256": "f2699251eccec436505a83a1a2d1c658467f907e2e3da26938c1e7f28efa7f58",
+   "raw_output_sha256": "004c72733fadee977c18da0efff83dc061fce7cc73e79e4578992339022efc70",
+   "sequence": 35
+  },
+  {
+   "done_reason": "length",
+   "grade": false,
+   "item_id": "item-000036-4a2472f9641d",
+   "parsed_label": null,
+   "prompt_sha256": "97e649e959d7ad8ed28bcbbba2e4b369f17a83ba21f29956599ed0812435311f",
+   "raw_output_sha256": "bf8c915273b6ebbecd3ea5c3460356cd17546ec1d970bdf699dcd9f1aa4a8ed5",
+   "sequence": 36
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000037-309eb49b47e8",
+   "parsed_label": null,
+   "prompt_sha256": "3aa74084a39ad597b36d483d2f7f785fee020870f5bf66ecbe49b0a7406ec3dd",
+   "raw_output_sha256": "e3a7c816ec4980af1767480721b304d3edf10acb79121517c63ef06c430daca5",
+   "sequence": 37
+  },
+  {
+   "done_reason": "length",
+   "grade": false,
+   "item_id": "item-000038-60d6a0efa2c1",
+   "parsed_label": null,
+   "prompt_sha256": "22619db14bfc3ec61e6342ea0732c64b5619db69d5196797c019d173d57f83e8",
+   "raw_output_sha256": "4e92dc2fb81a1a8118a9b1846ac703e78c46cd3740e439a99162e54ccb054e91",
+   "sequence": 38
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000039-ddb54ac870ce",
+   "parsed_label": null,
+   "prompt_sha256": "a63eee8ccd79f9edcca564cfd714bf1c57c5ec0032f9a6e0107b5ec86a149aae",
+   "raw_output_sha256": "79e6cf8e40f9f8198512003d5cc58f7814c4887a8330ecdd8fcf2b1def971346",
+   "sequence": 39
+  },
+  {
+   "done_reason": "length",
+   "grade": false,
+   "item_id": "item-000040-5ee661e6c5a0",
+   "parsed_label": null,
+   "prompt_sha256": "498a6b77d0de1574d700e3528df3a76bcd58559ebb985d08b2db9234b1d7c4ab",
+   "raw_output_sha256": "419a23c166a7afd20a636ea4eec177983426042e58722a54642df9cb72c754ab",
+   "sequence": 40
+  },
+  {
+   "done_reason": "length",
+   "grade": false,
+   "item_id": "item-000041-b0b1326e082a",
+   "parsed_label": null,
+   "prompt_sha256": "fe3a6aceb866dd66aa91e1d322fe1d0237f3b0a678d301de7063966490df0ca9",
+   "raw_output_sha256": "4256b2c330269dc0e6ee22afc8e514bc6ed8e494ef4a5251a8fbaba46a224477",
+   "sequence": 41
+  }
+ ],
+ "per_item_results_sha256": "f264633dc1e04cfefef6b5aef781402d4b17393346b4f2dece974ee1fa1546a1",
+ "produced_at": "2026-10-01T03:56:41Z",
+ "produced_by": "oracle-micro-2 ~/lanes/gspc-continuous/build_declarations.py (lane gspc-continuous-20260929)",
+ "run_id": "20261001T035104.226281Z-81655dba43",
+ "runtime": {
+  "bank_sha256": "c64a5986bf807127c047344178262fade96dfaf856f555aa8bc1b79e0cee252a",
+  "code_commit": "a74df3185fcdfa10ac8a0a6e5ecca2aff9051470",
+  "cpu_count": 32,
+  "cpu_model": "AMD Ryzen 9 7950X 16-Core Processor",
+  "decode": {
+   "keyword_max_tokens": 1024,
+   "max_tokens": 128,
+   "seed": 0,
+   "temperature": 0
+  },
+  "device": "rtx4090",
+  "docker_image": "runpod/pytorch:2.4.0-py3.11-cuda12.4.1-devel-ubuntu22.04",
+  "environment_json_sha256": "a8a74dcc281cfdfddae8bc16cc31cd19cb102b9f03614123bfbc82a356b1d2a7",
+  "finished_at": "2026-10-01T03:54:39Z",
+  "gpu": "0, NVIDIA GeForce RTX 4090, 24564 MiB, 570.195.03, 8.9, GPU-001d94d1-0a24-f46e-9917-aeacf408c95f",
+  "hardware": "GPU: 1x NVIDIA GeForce RTX 4090 (CUDA driver 12.8)",
+  "kernel": "runpod-pod:4om8q6jhkrgkzj",
+  "ollama": "0.35.0",
+  "platform": "Linux-6.8.0-90-generic-x86_64-with-glibc2.35",
+  "provider": "runpod",
+  "python": "3.11.10",
+  "recorded_by": "the kernel itself (environment.json); nothing here is inferred",
+  "runtime_id": "GPU: 1x NVIDIA GeForce RTX 4090 (CUDA driver 12.8) | RunPod pod 4om8q6jhkrgkzj (runpod/pytorch:2.4.0-py3.11-cuda12.4.1-devel-ubuntu22.04) | ollama 0.35.0",
+  "slice_id": "20261001T0349-mistral-7b",
+  "started_at": "2026-10-01T03:49:28Z",
+  "substrate": "GPU: 1x NVIDIA GeForce RTX 4090 (CUDA driver 12.8) | RunPod pod 4om8q6jhkrgkzj (runpod/pytorch:2.4.0-py3.11-cuda12.4.1-devel-ubuntu22.04) | ollama 0.35.0"
+ },
+ "schema": "csoai.mill-runtime-declaration/0.1",
+ "status": "SIDECAR - not inside the card: the intake contract pins the card body/run.json key sets exactly",
+ "subject": "ollama:mistral:7b@sha256:6577803aa9a036369e481d648a2baebb381ebc6e897f2bb9a766a2aa7bfbc1cf"
+}

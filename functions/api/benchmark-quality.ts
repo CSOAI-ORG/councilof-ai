@@ -43,6 +43,7 @@
 // the evidence, and set `fetched` to the day you fetched it. Never update a date without
 // re-fetching — the date is the whole claim.
 // ─────────────────────────────────────────────────────────────────────────────────────────
+import { headFromGet } from "./_head";
 
 /** The day every artifact cited in this file was actually fetched. */
 export const ASSESSED_ON = "2026-08-23";
@@ -911,3 +912,7 @@ export const onRequestGet: PagesFunction = async (context) => {
     },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

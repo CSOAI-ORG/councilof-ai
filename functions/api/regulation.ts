@@ -6,6 +6,7 @@
  * not a legal-compliance decision about any user or system. Corrections are
  * appended; they are never silently rewritten.
  */
+import { headFromGet } from "./_head";
 
 export const REGULATION_FEED = {
   schema: "csoai.regulation-deadlines/0.1",
@@ -126,3 +127,7 @@ export const onRequestGet: PagesFunction<{
     },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

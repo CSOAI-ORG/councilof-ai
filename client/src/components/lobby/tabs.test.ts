@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  menuTrail,
+  sidebarLabel,
   DASHBOARD_NAV_GROUPS,
   DASHBOARD_TABS,
   dashboardNavGroupOf,
@@ -13,6 +15,7 @@ import {
   LOBBY_TABS,
   matchRoute,
   matchTab,
+  normalizeLobbyTabId,
   OS_RAIL_TABS,
   paneLoadFor,
   routesIn,
@@ -132,10 +135,25 @@ describe("Council OS tabs", () => {
   it("frames extra live routes from a chat command without a new tab", () => {
     expect(matchRoute("open the instrument")?.path).toBe("/instrument");
     expect(matchRoute("show the system card")?.path).toBe("/dashboard?tab=cards");
-    expect(matchRoute("open the mcp fleet")?.path).toBe("/dashboard?tab=tools");
     expect(matchRoute("show the regulation feed")?.path).toBe("/dashboard?tab=standards");
-    expect(matchTab("open the crosswalk")?.id).toBe("matrix");
     expect(matchRoute("what is the weather")).toBeNull();
+  });
+
+  // Tools audit, 6 Oct 2026. "open crosswalk" opened the Regulation matrix (the matrix cue also
+  // said "crosswalk" and ties go to the tab); "open the mcp fleet" matched a route whose path,
+  // /dashboard?tab=tools, cannot be framed, so it fell back to Everything A–Z.
+  it("opens the Crosswalk page for 'open crosswalk', not the Regulation matrix", () => {
+    expect(matchTab("open crosswalk")).toBeNull();
+    expect(matchRoute("open crosswalk")?.path).toBe("/crosswalk");
+    expect(matchRoute("open the crosswalk")?.path).toBe("/crosswalk");
+    expect(matchTab("open the regulation matrix")?.id).toBe("matrix");
+  });
+
+  it("opens the MCP tools pane natively for 'open the mcp fleet'", () => {
+    expect(matchTab("open the mcp fleet")?.id).toBe("tools");
+    expect(matchTab("show the fleet manifest")?.id).toBe("tools");
+    expect(matchRoute("open the mcp fleet")).toBeNull();
+    expect(LOBBY_ROUTES.some((r) => r.path === "/dashboard?tab=tools")).toBe(false);
   });
 
   it("lists every pane exactly once", () => {
@@ -174,9 +192,10 @@ describe("Council OS tabs", () => {
       ...LOBBY_ROUTES.map((r) => r.path),
     ]);
     // Framed product routes.
+    // /watchdog-hub is not here: functions/watchdog-hub.ts 308s it to /os, so framing it nested
+    // the app inside itself. Its old ?tab=watchdog links now open Corrections (tools audit, 6 Oct 2026).
     for (const p of [
       "/products",
-      "/watchdog-hub",
       "/honesty",
       "/regulators",
       "/cra-readiness",
@@ -230,56 +249,59 @@ describe("Council OS tabs", () => {
     expect(matchRoute("show insurers")?.path).toBe("/insurers");
   });
 
-  it("gives the canonical dashboard seven plainly named sections", () => {
-    // gspc-product-ui, 30 Sep 2026: GSPC is the product and Council OS its workspace. Ask leads,
-    // then the six product sections of ONE-PRODUCT-PLAN §2.1 (Board, Verify, Connect, Learn, SovX,
-    // Corrections). Still at most seven; Verify + Evidence pack + Evidence index stay ONE section.
+  it("gives the canonical dashboard the owner's six task sections, then two under More", () => {
+    // council-os-ui, 6 Oct 2026 (owner brief 1 Oct): Results-as-a-Service. The navigation reads
+    // Get results · My results · Check a result · Leaderboard · For developers · Learn; SovX and
+    // Corrections stay reachable under "More". Tools audit, 6 Oct 2026: the Connect section is
+    // labelled "For developers" (its id stays `connect`), and Evidence index moved into it.
     expect(DASHBOARD_NAV_GROUPS.map((g) => g.label)).toEqual([
-      "Ask",
-      "Board",
-      "Verify",
-      "Connect",
+      "Get results",
+      "My results",
+      "Check a result",
+      "Leaderboard",
+      "For developers",
       "Learn",
       "SovX",
       "Corrections",
     ]);
-    expect(DASHBOARD_NAV_GROUPS.length).toBeLessThanOrEqual(7);
+    expect(DASHBOARD_NAV_GROUPS.length).toBeLessThanOrEqual(8);
     for (const g of DASHBOARD_NAV_GROUPS) {
       expect(g.tabs.length, `${g.id} resolves every member`).toBeGreaterThan(0);
       expect(g.description.length).toBeGreaterThan(20);
     }
     const verify = DASHBOARD_NAV_GROUPS.find((g) => g.id === "verify")!;
-    expect(verify.tabs.map((t) => t.id)).toEqual(["verify", "evidence", "evidence-index"]);
+    expect(verify.tabs.map((t) => t.id)).toEqual(["verify", "evidence"]);
 
     const ids = DASHBOARD_TABS.map((t) => t.id);
     expect(ids).toEqual([
       "home",
+      "measured",
+      "art50",
+      "explore",
+      "mine",
+      "verify",
+      "evidence",
       "board",
       "models",
       "matrix",
       "standards",
-      "measured",
-      "verify",
-      "evidence",
-      "evidence-index",
       "connect",
       "route",
       "tools",
       "fabric",
       "swift",
-      "explore",
+      "evidence-index",
       "learn",
       "space",
       "play",
       "sovx",
       "corrections",
       "claims",
-      "watchdog",
     ]);
     // Every pane the old rail and the old pill strip reached still has a section.
     for (const id of [
       "home", "measured", "verify", "board", "evidence-index", "swift", "evidence",
-      "tools", "learn", "watchdog", "standards", "fabric", "space", "play",
+      "tools", "learn", "standards", "fabric", "space", "play",
     ])
       expect(ids).toContain(id);
     expect(new Set(ids).size).toBe(ids.length);
@@ -293,6 +315,44 @@ describe("Council OS tabs", () => {
   it("files every pane outside a section under one for its title", () => {
     for (const id of ["cards", "state", "archive", "attestations", "embed", "harness", "art50"])
       expect(dashboardNavGroupOf(id), id).not.toBeNull();
+  });
+});
+
+describe("tools audit, 6 Oct 2026: dead and developer-only panes", () => {
+  it("sends old Watchdog links to Corrections instead of framing a redirect to the app itself", () => {
+    expect(normalizeLobbyTabId("watchdog")).toBe("corrections");
+    expect(tabById("watchdog").path).toBe("");
+    expect(DASHBOARD_TABS.map((t) => t.id)).not.toContain("watchdog");
+    expect(LOBBY_TABS.some((t) => t.path === "/watchdog-hub")).toBe(false);
+    // A chat command still lands somewhere true: the tab id normalises to Corrections.
+    expect(normalizeLobbyTabId(matchTab("open the watchdog")!.id)).toBe("corrections");
+  });
+
+  it("opens the one board for ?tab=results, which rendered the same pane under a second name", () => {
+    expect(normalizeLobbyTabId("results")).toBe("board");
+    expect(normalizeLobbyTabId(matchTab("show results")!.id)).toBe("board");
+  });
+
+  it("opens 'enterprise' natively on the request pane, never as a second copy of the app", () => {
+    expect(LOBBY_ROUTES.some((r) => r.path === "/enterprise")).toBe(false);
+    expect(matchTab("open enterprise")?.id).toBe("measured");
+    expect(matchRoute("open enterprise")).toBeNull();
+  });
+
+  it("keeps developer panes in one clearly labelled For developers section", () => {
+    const dev = DASHBOARD_NAV_GROUPS.find((g) => g.id === "connect")!;
+    expect(dev.label).toBe("For developers");
+    expect(dev.tabs.map((t) => t.id)).toContain("evidence-index");
+    expect(dev.tabs.map((t) => t.id)).not.toContain("explore");
+    for (const id of ["state", "archive", "harness", "products", "workbench", "embed", "library"])
+      expect(dashboardNavGroupOf(id)?.id, id).toBe("connect");
+    const ask = DASHBOARD_NAV_GROUPS.find((g) => g.id === "ask")!;
+    expect(ask.tabs.map((t) => t.id)).toEqual(["home", "measured", "art50", "explore"]);
+  });
+
+  it("files the Government prototype as a preview, not an audience door", () => {
+    expect(routesIn("preview").map((r) => r.path)).toEqual(["/government"]);
+    expect(routesIn("audience").map((r) => r.path)).not.toContain("/government");
   });
 });
 
@@ -461,5 +521,20 @@ describe("XRPL instruments tab (M-OS03)", () => {
     const t = tabById("xrpl");
     expect(t?.label).toBe("XRPL instruments");
     expect(JSON.stringify(t?.blurb ?? "")).not.toMatch(/1[0-9]\s*[/]\s*1[0-9]/);
+  });
+});
+
+// Tools audit retest, 6 Oct 2026: the Ask panel said "The workspace › Open Council OS" on the Leaderboard.
+describe("menuTrail names a pane in the menu's own words", () => {
+  it("names a section's first pane by the section, and a sub-tab under its section", () => {
+    expect(menuTrail("board")).toEqual(["Leaderboard"]);
+    expect(menuTrail("matrix")).toEqual(["Leaderboard", "Regulation matrix"]);
+    expect(menuTrail("home")).toEqual(["Get results"]);
+    expect(menuTrail("connect")).toEqual(["For developers"]);
+    // A pane filed under a section (not in its sub-tabs) keeps that section first.
+    expect(menuTrail("leaderboard")[0]).toBe("Leaderboard");
+    // Old aliases resolve to the pane that owns the content.
+    expect(menuTrail("results")).toEqual(["Leaderboard"]);
+    expect(sidebarLabel("board")).toBe("Leaderboard");
   });
 });

@@ -946,6 +946,30 @@ export function challengeAccept(
   };
 }
 
+/**
+ * pricingTerms — one plain sentence for a 402 whose amount is dated, or null when it is not.
+ *
+ * WHY (6 Oct 2026, T11). The launch amount on existing-data doors ends at X402_LAUNCH_CAMPAIGN.ends_at
+ * and the standard amount is far higher, but only the machine fields (csoai_pricing.ends_at and
+ * normal_amount_atomic) said so; no sentence a person or an agent's summary would read did. The
+ * sentence is BUILT from the accepts entries, so it disappears by itself once no entry carries an
+ * end date. It names fields, never an amount: the amount lives only in accepts[].
+ */
+export function pricingTerms(accepts: X402Accept[]): string | null {
+  const ends = accepts
+    .map((a) => a.csoaiPricing?.ends_at)
+    .filter((e): e is string => typeof e === "string" && !Number.isNaN(Date.parse(e)))
+    .sort();
+  if (!ends.length) return null;
+  const end = ends[0];
+  const lastDay = new Date(Date.parse(end) - 86_400_000).toISOString().slice(0, 10);
+  return (
+    `accepts[] carries a launch amount until ${end} (end of ${lastDay} UTC). From then this request asks its ` +
+    "standard amount, the one in csoai_pricing.normal_amount_atomic. Read accepts[] on every call; your wallet " +
+    "signs exactly the amount shown and nothing more."
+  );
+}
+
 /** Build an x402 v2 PaymentRequired object (the 402 BODY; the header carries headerPaymentRequired() of it). */
 export function buildPaymentRequiredV2(
   opts: PaymentRequiredV2Opts,
@@ -953,6 +977,9 @@ export function buildPaymentRequiredV2(
   const accepts = opts.accepts.map((a) =>
     challengeAccept(a, opts.resourceUrl, opts.description),
   );
+  // Body-only sidecar (headerPaymentRequired never copies `csoai`), so the header budget is unaffected.
+  const terms = pricingTerms(opts.accepts);
+  const csoai = opts.csoai || terms ? { ...(opts.csoai || {}), ...(terms ? { pricing_terms: terms } : {}) } : null;
   return {
     x402Version: 2,
     error: "Payment required",
@@ -971,7 +998,7 @@ export function buildPaymentRequiredV2(
       // Do NOT add `discoverable: true` here — that field is not in the bazaar spec.
       bazaar: opts.bazaar,
     },
-    ...(opts.csoai ? { csoai: opts.csoai } : {}),
+    ...(csoai ? { csoai } : {}),
   };
 }
 

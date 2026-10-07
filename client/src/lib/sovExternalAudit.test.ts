@@ -12,6 +12,7 @@ import {
 import { BOARD_COUNT_OBSERVED, BOARD_OBSERVATION } from "./boardCount";
 
 const products = readFileSync(resolve(__dirname, "../pages/Products.tsx"), "utf8");
+const internal = readFileSync(resolve(__dirname, "../pages/YieldInternal.tsx"), "utf8");
 
 describe("External XRPL / T-REX form", () => {
   it("keeps the three-arm map and the living board pin", () => {
@@ -52,6 +53,8 @@ describe("External XRPL / T-REX form", () => {
     const blob = JSON.stringify({ SOV_AUDIT_CLAIMS, LIVE_PIN, KEEP_ARMS, SOV_AUDIT_RULING });
     expect(blob).not.toMatch(/£79|£499|rank for sale|22\/22|dorado|cibola|sovos|sov3/i);
     expect(blob).not.toMatch(/rCsoai/i);
-    expect(products).toContain("SovExternalAudit");
+    // Operator notes live on the noindex /status/internal page, never on /products (6 Oct 2026).
+    expect(internal).toContain("<SovExternalAudit ");
+    expect(products).not.toContain("<SovExternalAudit");
   });
 });

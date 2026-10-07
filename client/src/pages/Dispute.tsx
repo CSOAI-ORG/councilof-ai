@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Link } from "wouter";
+import { CONTACT_MAILBOX } from "@/lib/buying";
 
 // /dispute — appeals & dispute resolution: every decision is reviewable; a measurement body
 // with no appeal path is a court with no defence counsel (GAP-E2E HM.0). An allegation is not a
@@ -7,7 +8,7 @@ import { Link } from "wouter";
 //
 // Public copy carries no internal labels (audit 2026-09-28 #30): "Charter Article 18" is not the
 // Article 18 the live /charter/ page shows, and "Boundary #7" is defined nowhere public.
-// Contact is contact@csoai.org, the address the footer uses: councilof.ai publishes no MX record,
+// Contact is the one mailbox (lib/buying.ts CONTACT_MAILBOX), the address the footer uses: councilof.ai publishes no MX record,
 // so a @councilof.ai address cannot receive mail (audit #2). The ledger is /corrections/, not
 // /refutation-ledger (a page of experiments); the verifier is /gspc-verify/, not the board JSON
 // (audit #12). Two paths, not one: an instrument run is re-run, and a disclosure-lag or claim
@@ -45,7 +46,7 @@ const STANDING = [
   "Any AI system subject to a published result — the instrument measures everyone, including the people selling it",
 ];
 
-const DISPUTE_EMAIL = "contact@csoai.org";
+const DISPUTE_EMAIL = CONTACT_MAILBOX;
 
 const GUARANTEES = [
   "Notice — a clear explanation of the decision, the reasoning, and the evidence",

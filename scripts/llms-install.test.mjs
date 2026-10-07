@@ -25,17 +25,14 @@ test("llms install guide matches the canonical MCP identity and tool catalog", a
     (match) => JSON.parse(match[1]),
   );
   const configs = examples.filter((example) => example.mcpServers);
-  assert.equal(configs.length, 2, "one remote and one local configuration");
+  // One remote configuration only: every published npm release is marked deprecated on npm and
+  // carries fewer tools, so the guide no longer offers a local stdio configuration (6 Oct 2026).
+  assert.equal(configs.length, 1, "one remote configuration, no local stdio configuration");
   assert.deepEqual(configs[0], {
     mcpServers: {
       "csoai-gspc": {
         type: "streamableHttp", url: remote, disabled: false, autoApprove: [],
       },
-    },
-  });
-  assert.deepEqual(configs[1], {
-    mcpServers: {
-      "csoai-gspc": { command: "npx", args: ["-y", "csoai-gspc-mcp@0.2.1"] },
     },
   });
   assert.equal(packageJson.name, "csoai-gspc-mcp");
@@ -58,18 +55,13 @@ test("llms install guide matches the canonical MCP identity and tool catalog", a
   assert.equal(catalog.free.length, 14);
   assert.equal(catalog.x402_metered.length, 5);
 
-  assert.equal(packageJson.version, "0.2.2");
+  // The version the guide names is the source package's, read from package.json, never typed here.
+  const v = packageJson.version.replace(/\./g, "\\.");
+  assert.match(guide, /Every release published to npm so far is marked deprecated on npm/);
+  assert.doesNotMatch(guide, /"args":\s*\[\s*"-y",\s*"csoai-gspc-mcp/);
   assert.match(
     guide,
-    /npm release last publicly verified here on 2026-09-09 is\s+`0\.2\.1`/,
-  );
-  assert.match(
-    guide,
-    /published `0\.2\.1` package predates the reviewed `0\.2\.2` conformance repair/,
-  );
-  assert.match(
-    guide,
-    /repository currently prepares `0\.2\.2`, but that source version is\s+\*\*not a\s+published npm release\*\*/,
+    new RegExp(`repository currently prepares \`${v}\`, but that source version is\\s+\\*\\*not a\\s+published npm release\\*\\*`),
   );
   assert.match(
     guide,
@@ -84,6 +76,7 @@ test("llms install guide matches the canonical MCP identity and tool catalog", a
     /Report delivery only when the successful tool result contains/,
   );
   assert.match(guide, /do not automatically retry an uncertain result/);
-  assert.match(guide, /npm view csoai-gspc-mcp@0\.2\.2 version/);
+  assert.match(guide, new RegExp(`npm view csoai-gspc-mcp@${v} version`));
+  assert.match(guide, /npm view csoai-gspc-mcp@latest deprecated/);
   assert.match(guide, /https:\/\/github\.com\/CSOAI-ORG\/councilof-ai/);
 });

@@ -106,8 +106,9 @@ describe("HomeHero", () => {
     const html = render(<HomeHero />);
     expect(html).toContain("We measure how AI systems behave");
     expect(html).toContain("agents and the endpoints they call");
-    expect(html).toContain("re-checked on a schedule");
-    expect(html).toContain("corrected in public");
+    expect(html).toContain("signed cards, unsigned evidence and untested work");
+    expect(html).toContain("corrections stay public");
+    expect(html).not.toContain("Every result is signed");
     expect(html).not.toMatch(/model fleets tested/i);
     expect(html).not.toContain("home-accountable-entity");
     for (const re of BANNED) expect(html).not.toMatch(re);

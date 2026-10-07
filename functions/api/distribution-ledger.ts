@@ -29,6 +29,7 @@
 import platforms from "../../public/interop/platforms-registered.json";
 import mcpDirs from "../../public/interop/mcp-directories.json";
 import a2aDirs from "../../public/interop/a2a-directories.json";
+import { headFromGet } from "./_head";
 
 type Category = "registry" | "marketplace" | "channel" | "capability-directory";
 
@@ -193,3 +194,7 @@ export const onRequestGet: PagesFunction = async () => {
     },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

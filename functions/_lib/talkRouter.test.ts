@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { ROUTABLE_TOOLS, callTool, executePlan, extractAxis, extractEndpoint, routeIntent, talk } from "./talkRouter";
+import { ROUTABLE_TOOLS, callTool, executePlan, extractAxis, extractEndpoint, extractModel, routeIntent, talk } from "./talkRouter";
 import { isConfirmed, lastUserText, serveAguiRun } from "./aguiRun";
 import { ROUTER_READ_TOOLS } from "./talkReads";
 import { onRequestPost as chatPost } from "../api/chat";
@@ -78,8 +78,9 @@ describe("routeIntent — deterministic keyword/entity routing onto the /mcp too
     ["what does the board say", ["board_totals"]],
     ["How many axes are measured?", ["board_totals"]],
     ["What does Council of AI measure?", ["board_totals"]],
-    ["is cityalert.live trustworthy", ["server_evidence", "mcp_trust"]],
-    ["check whether the mcp server at https://tapeperp.com/mcp is trustworthy", ["server_evidence", "mcp_trust"]],
+    ["is cityalert.live trustworthy", ["server_evidence"]],
+    ["check whether the mcp server at https://tapeperp.com/mcp is trustworthy", ["server_evidence"]],
+    ["What is measured about github.com?", ["server_evidence"]],
     [`verify ${HEX}`, ["verify_card"]],
     [`is ${HEX} included in the root?`, ["verify_inclusion"]],
     [`get the leaf ${HEX}`, ["get_card"]],
@@ -93,6 +94,11 @@ describe("routeIntent — deterministic keyword/entity routing onto the /mcp too
     ["show the public root", ["get_root"]],
     ["list signed cards", ["list_cards"]],
     ["commission a card for https://example.com/mcp", ["commission_card"]],
+    ["Which signed evidence is there for Article 50?", ["evidence_bundle_preview"]],
+    ["What signed evidence is there for DORA?", ["evidence_bundle_preview"]],
+    ["evidence for art. 53", ["evidence_bundle_preview"]],
+    ["signed cards relevant to the Cyber Resilience Act", ["evidence_bundle_preview"]],
+    ["article 50 marking evidence for https://example.com/image.png", ["art50_marking_evidence"]],
   ];
   it.each(cases)("%s -> %j", (q, tools) => {
     const plan = routeIntent(q);
@@ -132,6 +138,35 @@ describe("routeIntent — deterministic keyword/entity routing onto the /mcp too
     }
   });
 
+  // 6 Oct 2026: a server lookup used to add mcp_trust, so every lookup also printed a green VALID
+  // census card about 500 other hosts. One server question is one call now; the census stays one
+  // question away.
+  it("a server question plans exactly one call, server_evidence", () => {
+    const p = routeIntent("what is measured about github.com");
+    expect(p.kind).toBe("tools");
+    if (p.kind === "tools") {
+      expect(p.calls).toHaveLength(1);
+      expect(p.calls[0]).toMatchObject({ tool: "server_evidence", args: { endpoint_url: "https://github.com/mcp" } });
+    }
+    const census = routeIntent("mcp census");
+    expect(census.kind === "tools" && census.calls.map((c) => c.tool)).toEqual(["mcp_trust"]);
+  });
+
+  it("an obligation question maps onto the evidence_bundle_preview schema enum", () => {
+    const enumOf = (GSPC_TOOLS.tools.find((t) => t.name === "evidence_bundle_preview") as any).inputSchema.properties.obligation.enum;
+    const asks: [string, string][] = [
+      ["which signed evidence is there for article 50", "article-50"],
+      ["evidence for Article-53", "article-53"],
+      ["what signed evidence is there for DORA?", "dora"],
+      ["signed records for the CRA", "cra"],
+    ];
+    for (const [q, obligation] of asks) {
+      const p = routeIntent(q);
+      expect(p.kind === "tools" && p.calls[0]).toMatchObject({ tool: "evidence_bundle_preview", args: { obligation } });
+      expect(enumOf).toContain(obligation);
+    }
+  });
+
   it("a paid tool without its required argument asks for it instead of calling", () => {
     const p = routeIntent("commission a card");
     expect(p.kind).toBe("needs_input");
@@ -157,12 +192,12 @@ describe("executePlan — answers carry the tool output, a citation and the stat
     expect(a.answer).not.toMatch(/\b23\b/);
   });
 
-  it("a domain question cites mcp_trust and server_evidence, and never grades trust", async () => {
+  it("a domain question cites server_evidence only, adds no census card, and never grades trust", async () => {
     stubOrigin();
     const a = await talk("is cityalert.live trustworthy", ORIGIN);
     expect(a.grounded).toBe(true);
-    expect(a.citations.map((c) => c.tool)).toEqual(["server_evidence", "mcp_trust"]);
-    expect(a.answer).toContain("257 of 500 enumerated hosts");
+    expect(a.citations.map((c) => c.tool)).toEqual(["server_evidence"]);
+    expect(a.answer).not.toContain("257 of 500 enumerated hosts");
     expect(a.answer).not.toMatch(/\b(is|are) (trustworthy|safe|untrustworthy)\b/i);
   });
 
@@ -177,6 +212,61 @@ describe("executePlan — answers carry the tool output, a citation and the stat
     expect(a.answer).toContain("- signature_state_reported: VALID");
     expect(a.answer).toContain("- signature_verification: NOT_RUN");
     expect(a.answer).toContain("C-2");
+  });
+
+  // 6 Oct 2026: /api/corrections is newest-first, and correctionsSummary took rows.slice(-5).reverse(),
+  // so "show corrections" listed the five OLDEST rows as recent. The fixture below has the live
+  // order: newest first, published_at mostly "UNRECORDED", and a few older rows trailing in
+  // ascending order at the end.
+  it("corrections lists the newest rows first, whatever order the source tail is in", async () => {
+    const row = (id: string, date: string, published_at = "UNRECORDED") => ({ id, date, published_at, status: "CORRECTED" });
+    stubOrigin({
+      "/api/corrections": () =>
+        Response.json({
+          ...CORRECTIONS,
+          corrections: [
+            row("C-2026-0930-12", "2026-09-30"),
+            row("C-2026-0930-11", "2026-09-30"),
+            row("C-2026-0930-01", "2026-09-30"),
+            row("C-2026-0929-09", "2026-09-29"),
+            row("C-2026-0927-05", "2026-09-27", "2026-09-27T03:52:54Z"),
+            row("C-2026-0926-01", "2026-09-26", "2026-09-26T10:08:40Z"),
+            row("C-2026-0819-13", "2026-08-19"),
+            row("C-2026-0820-01", "2026-08-20"),
+            row("C-2026-0822-01", "2026-08-22"),
+          ],
+        }),
+    });
+    const r = ((await callTool("corrections_summary", { limit: 5 }, ORIGIN)) as unknown as { structuredContent: Record<string, any> }).structuredContent;
+    const recent = (r.recent ?? []) as { id: string }[];
+    expect(recent.map((c) => c.id)).toEqual(["C-2026-0930-12", "C-2026-0930-11", "C-2026-0930-01", "C-2026-0929-09", "C-2026-0927-05"]);
+    expect(r.count).toBe(9);
+  });
+
+  // The router's callTool lacked /mcp's evidence and route branches, so a routed
+  // evidence_bundle_preview fell through to verify_card and came back UNCHECKABLE (6 Oct 2026).
+  // Fixture fields are the ones GET /api/evidence-bundle?obligation=dora served that day.
+  it("an obligation question is answered by evidence_bundle_preview itself, never a verify_card fallback", async () => {
+    const seen = stubOrigin({
+      "/api/evidence-bundle": () =>
+        Response.json({
+          schema: "csoai.evidence-bundle/0.1",
+          kind: "preview",
+          obligation: { id: "dora", control_id: "DORA-28-30", title: "DORA Art. 28-30 — ICT third-party risk oversight + Register of Information", counsel_confirmed: false },
+          subject: null,
+          relevant_signed_cards: 1,
+          cards: [{ sha256: "0102dc8878b7136625760a4fa95909b64c2e97e92e9b68be59b66466494fde96", surface: "public.notice", as_of: "2026-09-12T09:23:55Z", url: "https://councilof.ai/cards/0102dc8878b71366.json" }],
+          corpus: { as_of: "2026-09-30T05:05:34Z", read_from: "https://councilof.ai/cards-bundle.json" },
+          relation: "relevant-to — never a determination",
+          free_verify: "https://councilof.ai/gspc-verify",
+        }),
+    });
+    const a = await talk("What signed evidence is there for DORA?", ORIGIN);
+    expect(a.answered_by).toBe("tool:evidence_bundle_preview");
+    expect(a.label).toBe("RELEVANT_CARDS_FOUND");
+    expect(a.answer).toContain("- relevant_signed_cards: 1");
+    expect(a.answer).toContain("- determination: NONE");
+    expect(seen.some((q) => new URL(q.url).pathname === "/api/evidence-bundle" && new URL(q.url).searchParams.get("obligation") === "dora")).toBe(true);
   });
 
   it("Claim Maintenance is the public register summary, not a fresh measurement", async () => {
@@ -318,7 +408,7 @@ const a2aText = (text: string) =>
   } as never);
 
 describe("the doors use the router: POST /api/chat and A2A plain text", () => {
-  it("/api/chat answers a server question from server_evidence + mcp_trust with citations, not ungrounded", async () => {
+  it("/api/chat answers a server question from server_evidence with a citation, not ungrounded", async () => {
     stubOrigin();
     const res = await chatPost({
       request: new Request(`${ORIGIN}/api/chat`, { method: "POST", body: JSON.stringify({ message: "is cityalert.live trustworthy" }) }),
@@ -326,8 +416,8 @@ describe("the doors use the router: POST /api/chat and A2A plain text", () => {
     } as never);
     const j = (await res.json()) as Record<string, any>;
     expect(j.state).toBe("grounded");
-    expect(j.answered_by).toBe("tool:server_evidence+mcp_trust");
-    expect(j.citations.map((c: any) => c.tool)).toContain("mcp_trust");
+    expect(j.answered_by).toBe("tool:server_evidence");
+    expect(j.citations.map((c: any) => c.tool)).toEqual(["server_evidence"]);
     expect(j.model).toBeNull();
     expect(j.signature).toBeNull();
   });
@@ -361,3 +451,45 @@ describe("the doors use the router: POST /api/chat and A2A plain text", () => {
     expect(seen).toHaveLength(0);
   });
 });
+
+// Tools audit retest, 6 Oct 2026: "qwen3:8b", "Is gpt-4o safe?" and "Which model is best?" got
+// "I could not match that question to a tool".
+describe("a named model and the best-model question get grounded answers", () => {
+  const MODELS = {
+    models: [
+      { id: "qwen3:8b", kind: "third_party", cards: 13, axes: 13 },
+      { id: "qwen3:4b", kind: "third_party", cards: 21, axes: 20 },
+      { id: "sov3-light", kind: "own", cards: 4, axes: 4 },
+    ],
+  };
+
+  it("finds a model name in a question, and not in ordinary words", () => {
+    expect(extractModel("qwen3:8b")).toBe("qwen3:8b");
+    expect(extractModel("Is gpt-4o safe?")).toBe("gpt-4o");
+    expect(extractModel("how did llama3.1:8b do")).toBe("llama3.1:8b");
+    expect(extractModel("what is the philosophy here")).toBeNull();
+    expect(extractModel("How did the jail (jailbreak) test measure?")).toBeNull();
+    expect(extractModel("What does the leaderboard show?")).toBeNull();
+  });
+
+  it("routes a model to model_lookup and 'which is best' to the board, never naming a best model", () => {
+    expect(routeIntent("qwen3:8b")).toMatchObject({ kind: "tools", calls: [{ tool: "model_lookup", args: { model: "qwen3:8b" } }] });
+    expect(routeIntent("Is gpt-4o safe?")).toMatchObject({ kind: "tools", calls: [{ tool: "model_lookup", args: { model: "gpt-4o" } }] });
+    expect(routeIntent("Which model is best?")).toMatchObject({ kind: "tools", calls: [{ tool: "board_totals" }] });
+    expect(routeIntent("what is the safest AI model")).toMatchObject({ kind: "tools", calls: [{ tool: "board_totals" }] });
+    expect(routeIntent("measure all models").kind).toBe("help");
+    expect(ROUTER_READ_TOOLS.has("model_lookup")).toBe(true);
+    expect(ROUTABLE_TOOLS.has("model_lookup")).toBe(false);
+  });
+
+  it("answers MEASURED with a count for a listed model and NOT_MEASURED for an unlisted one", async () => {
+    stubOrigin({ "/interop/models-measured.json": () => Response.json(MODELS) });
+    const hit = ((await callTool("model_lookup", { model: "qwen3:8b" }, ORIGIN)) as unknown as { structuredContent: Record<string, any> }).structuredContent;
+    expect(hit).toMatchObject({ state: "MEASURED", model: "qwen3:8b", cards: 13, axes: 13, whose: "third party" });
+    expect(hit.note).toMatch(/not a score/);
+    const miss = ((await callTool("model_lookup", { model: "gpt-4o" }, ORIGIN)) as unknown as { structuredContent: Record<string, any> }).structuredContent;
+    expect(miss).toMatchObject({ state: "NOT_MEASURED", model: "gpt-4o", cards: 0 });
+    expect(miss.note).toMatch(/not a finding/);
+  });
+});
+

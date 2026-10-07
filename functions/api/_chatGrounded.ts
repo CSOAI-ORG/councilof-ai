@@ -5,6 +5,7 @@ import {
 import { ART5, ART5_CUES, why } from "./_chatArt5";
 import { lobbyGround } from "./_chatLobby";
 import { executePlan, HELP_TEXT, routeIntent } from "../_lib/talkRouter";
+import { BUY_INTENT, buyingAnswer } from "./_buying";
 
 interface Env { SOV_GATE_URL?: string; SOV_GATE_TOKEN?: string }
 
@@ -42,6 +43,11 @@ async function grounded(q: string, origin: string): Promise<string | null> {
   // wrong — so hoisting it back above loadBoard would silently disable the gate.
   const refused = claimGuardRefuse(q, canon);
   if (refused) return refused;
+
+  // How to buy / invoice / billing / VAT / PO: one statement (functions/api/_buying.ts), the same
+  // words as /faq/#buying and the Council OS panes. Before the pricing rule, so "how much is an
+  // invoice" gets the invoice route rather than only "verification is free".
+  if (BUY_INTENT.test(q)) return buyingAnswer();
 
   if (/\b(pricing|plans?|how much|grade cost|is (it|verify|verification) free)\b/i.test(q)) {
     return `Verification and the published board are free. A scoped measurement is paid; booking is not live yet; the only paid rail is pay-as-you-go x402 at the door. /assess is the current request/waitlist surface, not a runnable free measurement. A rank is never sold.\n\n_Grounded in the published release state, not by a model._`;
@@ -288,7 +294,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   return reply(
     `I could not ground an answer from published measurement.\n\n` +
     `${HELP_TEXT}\n\n` +
-    "Try a **named board axis**, **EU AI Act Article 5**, **GET /api/gspc**, **pricing**, **get measured**, or the **measurement method**.\n\n" +
+    "Try a **named board axis**, **EU AI Act Article 5**, **GET /api/gspc**, **pricing**, **how to buy**, **get measured**, or the **measurement method**.\n\n" +
     `Named axes: ${named || "see GET /api/gspc"}.\n\n` +
     "I will not invent a number or a legal opinion.",
     "refused - no grounding available", "ungrounded",
