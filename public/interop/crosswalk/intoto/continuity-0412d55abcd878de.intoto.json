@@ -2,11 +2,11 @@
   "_type": "https://in-toto.io/Statement/v1",
   "predicate": {
     "figure": {
-      "accuracy": 0.6667,
-      "axis": "provenance",
+      "accuracy": 0.2667,
+      "axis": "continuity",
       "issuer": "CSOAI Ltd",
       "kind": "gspc.measurement-card",
-      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+      "model": "zai-org/GLM-4.7-Flash",
       "n": 30,
       "route": "hf-router",
       "status": "MEASURED",
@@ -31,7 +31,7 @@
     "reproducible": false,
     "source": {
       "canonical_rule": "sorted JSON.stringify (ECMAScript numbers)",
-      "card_id": "04734bea73d5138a0988aaf6871cb057329202f252344553f8dd2dcfe0a0e623",
+      "card_id": "0412d55abcd878ded2848506662e363412bb0e41369101e5306f1bb3ff807ef6",
       "card_kind": "gspc.measurement-card",
       "preimage_rule": "sha256(canonical body)",
       "signature_alg": "Ed25519",
@@ -59,9 +59,9 @@
   "subject": [
     {
       "digest": {
-        "sha256": "04734bea73d5138a0988aaf6871cb057329202f252344553f8dd2dcfe0a0e623"
+        "sha256": "0412d55abcd878ded2848506662e363412bb0e41369101e5306f1bb3ff807ef6"
       },
-      "name": "gspc-measurement-card/provenance/nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16"
+      "name": "gspc-measurement-card/continuity/zai-org/GLM-4.7-Flash"
     }
   ]
 }

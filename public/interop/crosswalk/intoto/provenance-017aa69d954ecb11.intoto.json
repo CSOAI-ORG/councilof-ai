@@ -2,12 +2,13 @@
   "_type": "https://in-toto.io/Statement/v1",
   "predicate": {
     "figure": {
-      "accuracy": 0.2574,
-      "axis": "governance",
+      "accuracy": 0.6,
+      "axis": "provenance",
       "issuer": "CSOAI Ltd",
       "kind": "gspc.measurement-card",
-      "model": "ollama:mistral-nemo:12b@sha256:e7e06d107c6c86ed0cf45445f1790720b5092149c4c95f4d965844e9afbfdc89",
-      "n": 237,
+      "model": "zai-org/GLM-4.7-Flash",
+      "n": 30,
+      "route": "hf-router",
       "status": "MEASURED",
       "unmeasured": []
     },
@@ -15,7 +16,7 @@
       "bank_sha256": null,
       "grader": null,
       "items_sha256": null,
-      "n": 237,
+      "n": 30,
       "rerun": null
     },
     "never": [
@@ -30,7 +31,7 @@
     "reproducible": false,
     "source": {
       "canonical_rule": "sorted JSON.stringify (ECMAScript numbers)",
-      "card_id": "00a682b2cf10ed6dda2abc16c438f61700714a5dd6c1cc9b6fb40b26671eb57d",
+      "card_id": "017aa69d954ecb11c1b864d54317bd8f3518a3491829b81b8287d200b6135fc2",
       "card_kind": "gspc.measurement-card",
       "preimage_rule": "sha256(canonical body)",
       "signature_alg": "Ed25519",
@@ -58,9 +59,9 @@
   "subject": [
     {
       "digest": {
-        "sha256": "00a682b2cf10ed6dda2abc16c438f61700714a5dd6c1cc9b6fb40b26671eb57d"
+        "sha256": "017aa69d954ecb11c1b864d54317bd8f3518a3491829b81b8287d200b6135fc2"
       },
-      "name": "gspc-measurement-card/governance/ollama:mistral-nemo:12b@sha256:e7e06d107c6c86ed0cf45445f1790720b5092149c4c95f4d965844e9afbfdc89"
+      "name": "gspc-measurement-card/provenance/zai-org/GLM-4.7-Flash"
     }
   ]
 }

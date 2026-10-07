@@ -2,13 +2,13 @@
   "_type": "https://in-toto.io/Statement/v1",
   "predicate": {
     "figure": {
-      "accuracy": 0.3,
-      "axis": "swarm",
+      "accuracy": 0.5333,
+      "axis": "governance",
       "issuer": "CSOAI Ltd",
       "kind": "gspc.measurement-card",
-      "model": "deepseek-ai/DeepSeek-V3.1",
+      "model": "Qwen/Qwen3-Coder-Next",
       "n": 30,
-      "route": "hf-router",
+      "route": "hf-router:Qwen/Qwen3-Coder-Next:novita",
       "status": "MEASURED",
       "unmeasured": []
     },
@@ -31,7 +31,7 @@
     "reproducible": false,
     "source": {
       "canonical_rule": "sorted JSON.stringify (ECMAScript numbers)",
-      "card_id": "08ee3cb91515e35d19d49d316b643809eb0946ab5937dfa19ba13da1c9f8ff2a",
+      "card_id": "0332a28fa1c9f535f48bf0d3f9308df12c2367fa0c486098798d024b5266dea9",
       "card_kind": "gspc.measurement-card",
       "preimage_rule": "sha256(canonical body)",
       "signature_alg": "Ed25519",
@@ -59,9 +59,9 @@
   "subject": [
     {
       "digest": {
-        "sha256": "08ee3cb91515e35d19d49d316b643809eb0946ab5937dfa19ba13da1c9f8ff2a"
+        "sha256": "0332a28fa1c9f535f48bf0d3f9308df12c2367fa0c486098798d024b5266dea9"
       },
-      "name": "gspc-measurement-card/swarm/deepseek-ai/DeepSeek-V3.1"
+      "name": "gspc-measurement-card/governance/Qwen/Qwen3-Coder-Next"
     }
   ]
 }
