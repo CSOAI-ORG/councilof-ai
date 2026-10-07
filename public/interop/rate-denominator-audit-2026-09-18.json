@@ -1,0 +1,24 @@
+{
+  "schema": "csoai.rate-denominator-audit/0.1",
+  "kind": "audit-receipt",
+  "generated_at": "2026-09-18T00:00:00Z",
+  "rule": "Every rate (key matching *_rate) MUST have a sibling denominator. Violations by name.",
+  "files_scanned": 5981,
+  "files_with_violations": 1,
+  "violations_by_name": [
+    {
+      "file": "public/interop/fin7-skeletons/coverage-leftover.json",
+      "rate_key": "fin7.scitt.we_operate_a_ts",
+      "parent_keys": [
+        "rfc",
+        "we_operate_a_ts"
+      ]
+    }
+  ],
+  "disclaimers": [
+    "MEASUREMENT, not CERTIFICATION.",
+    "Audit only. No edits, no signing, no dispatch.",
+    "If violations_by_name is empty, the rule holds for every artifact in public/interop/."
+  ],
+  "sha256": "62d5f1f908b77473bebce279da3df13e6befc6c35363ec25147edd9297d6aa62"
+}

@@ -5,7 +5,7 @@ const ORIGIN = "https://councilof.ai";
 const LEAF = "a".repeat(64);
 const ROOT_HASH = "b".repeat(64);
 // The clock is pinned inside the launch period, so the asserted amount does not flip when the launch
-// amount ends (2026-10-11T00:00:00Z, functions/api/_x402.ts X402_LAUNCH_CAMPAIGN).
+// amount ends (2027-01-11T00:00:00Z since owner ruling #16, functions/api/_x402.ts X402_LAUNCH_CAMPAIGN).
 const context = (path: string) =>
   ({ request: new Request(ORIGIN + path), env: { X402_PROMO_NOW: "2026-09-26T00:00:00Z" }, params: {} }) as never;
 
