@@ -139,9 +139,12 @@ export function plan(prev, pages, entities) {
   const prevPages = (!seed && prev.pages) || {};
   const prevEntities = (!seed && prev.entities) || {};
   const changedPages = seed ? [] : Object.keys(pages).filter((u) => prevPages[u] !== pages[u]).sort();
-  const entityCandidates = seed || !entities ? []
+  // No entity baseline yet (first run, or the listing was unreadable when it ran): record, never
+  // announce, or thousands of long-announced entity pages would all read as new at once.
+  const entitySeed = !!entities && (seed || Object.keys(prevEntities).length === 0);
+  const entityCandidates = entitySeed || !entities ? []
     : Object.keys(entities).filter((u) => isHtmlPage(u) && prevEntities[u] !== entities[u]).sort();
-  return { seed, changedPages, entityCandidates };
+  return { seed, entitySeed, changedPages, entityCandidates };
 }
 
 /** POST urlList in batches; returns [{count, status}] (status 0 = no HTTP answer). */
@@ -246,14 +249,14 @@ export async function run({ dist, statePath, dryRun = false, fetchImpl = fetch, 
     // carry forward only what is still listed; a candidate is recorded once it is submitted
     const prevEntities = (prev && prev.schema === SCHEMA && prev.entities) || {};
     for (const [u, lm] of Object.entries(entities)) {
-      if (p.seed) nextEntities[u] = lm;
+      if (p.entitySeed) nextEntities[u] = lm;
       else if (u in prevEntities && !p.entityCandidates.includes(u)) nextEntities[u] = prevEntities[u];
     }
   }
 
   let rc = 0;
   let pageNote = "";
-  let entityNote = entities ? "" : " entity_sitemaps=UNREADABLE(state kept)";
+  let entityNote = !entities ? " entity_sitemaps=UNREADABLE(state kept)" : p.entitySeed && !p.seed ? " entities=SEEDED(no baseline)" : "";
   if (p.seed) {
     log(`indexnow: SEED no previous state; recorded pages=${Object.keys(pages).length} entities=${entities ? Object.keys(entities).length : 0}; submitted=0`);
   } else {

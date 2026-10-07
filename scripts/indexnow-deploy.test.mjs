@@ -71,7 +71,7 @@ describe("what counts as a page", () => {
 describe("plan", () => {
   it("seeds on a first run and announces nothing", () => {
     const p = plan(null, { "https://councilof.ai/a/": "1" }, { "https://councilof.ai/x/": "2026-10-01" });
-    expect(p).toEqual({ seed: true, changedPages: [], entityCandidates: [] });
+    expect(p).toEqual({ seed: true, entitySeed: true, changedPages: [], entityCandidates: [] });
   });
 
   it("announces new and changed pages, and entities whose lastmod moved, HTML only", () => {
@@ -89,6 +89,14 @@ describe("plan", () => {
   it("an unreadable entity listing announces no entity", () => {
     const prev = { schema: SCHEMA, pages: {}, entities: { "https://councilof.ai/e1/": "2026-10-01" } };
     expect(plan(prev, {}, null).entityCandidates).toEqual([]);
+  });
+
+  it("entities with no baseline (listing was unreadable at the seed) are recorded, not announced", () => {
+    const prev = { schema: SCHEMA, pages: { "https://councilof.ai/a/": "1" }, entities: {} };
+    const p = plan(prev, { "https://councilof.ai/a/": "2" }, { "https://councilof.ai/e1/": "2026-10-01" });
+    expect(p.entitySeed).toBe(true);
+    expect(p.entityCandidates).toEqual([]);
+    expect(p.changedPages).toEqual(["https://councilof.ai/a/"]);
   });
 });
 
