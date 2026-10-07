@@ -361,14 +361,42 @@ def grade_custody(iss: dict, hit: dict) -> dict:
     }
 
 
+def _row_graded(r: dict) -> bool:
+    """A row is graded iff it carries an evaluated verdict (PASS/FAIL) anywhere
+    in its structure (verdicts nest under reserve/regulatory/… sub-dicts),
+    and its status (when present) is not UNREACHABLE/UNCHECKABLE."""
+    if not isinstance(r, dict):
+        return False
+    if r.get("status") in ("UNREACHABLE", "UNCHECKABLE"):
+        return False
+    if r.get("status") not in (None, "UNREACHABLE", "UNCHECKABLE"):
+        return True
+    def has_verdict(o) -> bool:
+        if isinstance(o, dict):
+            return any(has_verdict(v) for v in o.values())
+        if isinstance(o, list):
+            return any(has_verdict(v) for v in o)
+        return isinstance(o, str) and o in ("PASS", "FAIL")
+    return has_verdict(r)
+
+
 def envelope(axis: str, rubric: str, rows: list[dict], extra: dict | None = None) -> dict:
+    # DONE WHEN A fix (2026-10-07): every count carries its denominator.
+    # n was len(rows) = ATTEMPTED here but GRADED in gspc_financial_facts —
+    # one concept, two spellings. Both counts are now named; n keeps its old
+    # meaning (attempted) and n_semantics declares it.
+    n_attempted = len(rows)
+    n_graded = sum(1 for r in rows if _row_graded(r))
     body = {
         "schema": "csoai.financial-measure-run/0.2",
         "axis": axis,
         "as_of": AS_OF,
         "network": "public HTTP + XRPL MAINNET account_info/gateway_balances",
         "issuers": "RLUSD, Ondo OUSG, OpenEden TBILL, Archax×abrdn, Braza USDB, Braza BBRL",
-        "n": len(rows),
+        "n": n_attempted,
+        "n_semantics": "n = n_attempted (rows attempted). n_graded = rows with an evaluated verdict. UNREACHABLE/UNCHECKABLE counted in attempted, never in graded.",
+        "n_attempted": n_attempted,
+        "n_graded": n_graded,
         "status": "MEASURED",
         "risk_verdict": "UNMEASURED",
         "rubric": rubric,
@@ -391,10 +419,16 @@ def compact(axis: str, rows: list[dict]) -> dict:
     slim = []
     for r in rows:
         slim.append({k: r[k] for k in list(r)[:8]})
+    # DONE WHEN A fix (2026-10-07): denominator named, matching envelope().
+    n_attempted = len(rows)
+    n_graded = sum(1 for r in rows if _row_graded(r))
     return {
         "axis": axis,
         "kind": "csoai.financial-measure-run/0.2",
-        "n": len(rows),
+        "n": n_attempted,
+        "n_semantics": "n = n_attempted (rows attempted). n_graded = rows with an evaluated verdict.",
+        "n_attempted": n_attempted,
+        "n_graded": n_graded,
         "risk_verdict": "UNMEASURED",
         "status": "MEASURED",
         "as_of": AS_OF,

@@ -77,7 +77,7 @@ export default function Contact() {
           </h1>
           <p className="text-xl text-muted-foreground">
             One mailbox for measurement requests, evidence questions, disputes and press:{' '}
-            <PlainEmail className="font-semibold text-green-700 underline" />. Say what you want
+            <PlainEmail className="font-semibold text-green-900 underline" />. Say what you want
             measured or checked, and link the record if there is one.
           </p>
         </div>
@@ -216,7 +216,7 @@ export default function Contact() {
                     Enterprise and demo inquiries go straight to{' '}
                     <a
                       href={`mailto:${CONTACT_MAILBOX}?subject=Demo%20request%20%E2%80%94%20CSOAI%20master%20walkthrough`}
-                      className="text-green-700 hover:text-green-600 font-semibold"
+                      className="text-green-900 hover:text-green-600 font-semibold"
                     >
                       {CONTACT_MAILBOX}
                     </a>{' '}

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { buildCommissions, commissionOrigin, onRequestGet, POD_CARDS_INDEX, HUB_CARDS_INDEX, fulfillmentAfterDelivery } from "./commissions";
+import { createHash } from "node:crypto";
+import { buildCommissions, commissionOrigin, onRequestGet, POD_CARDS_INDEX, HUB_CARDS_INDEX, HUB_CARDS_POINTER, fulfillmentAfterDelivery } from "./commissions";
 
 function kvFrom(entries: Record<string, string>) {
   const store = new Map(Object.entries(entries));
@@ -103,14 +104,52 @@ describe("/api/commissions — requester retrieval (join to the signed pod-cards
     ] };
     const store = kvFrom({ "ras:hub": JSON.stringify({ subject: "org/model", subject_kind: "hub_model",
       model: "org/model", fulfillment: "QUEUED", axis: "safety" }) });
+    // Before versioning there is no pointer: a 404 falls back to the stamped snapshot.
+    const seen: string[] = [];
     const fetcher = (async (request: Request) => {
-      expect(new URL(request.url).pathname).toBe(HUB_CARDS_INDEX);
+      const path = new URL(request.url).pathname;
+      seen.push(path);
+      if (path === HUB_CARDS_POINTER) return new Response("not found", { status: 404 });
+      expect(path).toBe(HUB_CARDS_INDEX);
       return new Response(JSON.stringify(hub), { status: 200 });
     }) as typeof fetch;
     const body = await buildCommissions({ REVENUE_KV: store }, "https://councilof.ai", fetcher) as any;
+    expect(seen).toEqual([HUB_CARDS_POINTER, HUB_CARDS_INDEX]);
     expect(body.commissions[0].delivery).toEqual({ state: "CARDS_PUBLISHED", count: 1 });
     expect(body.commissions[0].cards[0].id).toBe("h".repeat(64));
-    expect(body.retrieval.hub_index).toBe(HUB_CARDS_INDEX);
+    expect(body.retrieval.hub_index).toBe(HUB_CARDS_POINTER);
+  });
+
+  it("reads the Hub index version the pointer selects, and only its exact bytes", async () => {
+    const version = "/interop/hub-cards-index-2026-10-07-0123456789ab.json";
+    const hubBytes = JSON.stringify({ schema: "csoai.hub-cards-index/0.1", cards: [
+      { id: "n".repeat(64), url: "https://councilof.ai/interop/mill-cards-signed/signed-care-n.json",
+        subject: "org/new-model", axis: "care", n: 30, status: "MEASURED", run_id: "gha-9" },
+    ] });
+    const pointerFor = (over: Record<string, unknown> = {}) => JSON.stringify({ schema: "csoai.hub-cards-index-pointer/1",
+      kind: "DISCOVERY_POINTER_ONLY", index_url: version,
+      index_sha256: createHash("sha256").update(hubBytes).digest("hex"), ...over });
+    const store = () => kvFrom({ "ras:new": JSON.stringify({ subject: "org/new-model", subject_kind: "hub_model",
+      model: "org/new-model", fulfillment: "QUEUED", axis: "care" }) });
+    const serve = (pointer: string, index = hubBytes) => (async (request: Request) => {
+      const path = new URL(request.url).pathname;
+      if (path === HUB_CARDS_POINTER) return new Response(pointer, { status: 200 });
+      if (path === version) return new Response(index, { status: 200 });
+      return new Response("stamped snapshot must not be read when a pointer exists", { status: 500 });
+    }) as typeof fetch;
+
+    const ok = await buildCommissions({ REVENUE_KV: store() }, "https://councilof.ai", serve(pointerFor())) as any;
+    expect(ok.commissions[0].delivery).toEqual({ state: "CARDS_PUBLISHED", count: 1 });
+    expect(ok.commissions[0].fulfillment).toBe("RETRIEVABLE");
+
+    // Bytes that are not the ones the pointer names, or a pointer outside the versioned set: UNCHECKABLE.
+    for (const fetcher of [serve(pointerFor(), hubBytes + " "), serve(pointerFor({ index_url: "/interop/other.json" })),
+                           serve(pointerFor({ schema: "csoai.hub-cards-index-pointer/0" })), serve("<html>")]) {
+      const body = await buildCommissions({ REVENUE_KV: store() }, "https://councilof.ai", fetcher) as any;
+      expect(body.commissions[0].delivery.state).toBe("UNCHECKABLE");
+      expect(body.commissions[0].cards).toBeNull();
+      expect(body.retrieval.state).toBe("UNCHECKABLE");
+    }
   });
 });
 

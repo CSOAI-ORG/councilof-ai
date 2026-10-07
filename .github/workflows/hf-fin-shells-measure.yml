@@ -121,6 +121,35 @@ jobs:
           else
             python3 scripts/sign_financial_runs.py
           fi
+      # public/interop/hub-cards-index.json has a sibling .ots, so its bytes are frozen. A signed card
+      # that joins the admitted set would otherwise fail build:client on the PR ("stamped hub index
+      # differs from current admitted cards"; #2802/#2815/#2843/#2846 stalled on exactly that).
+      # Write the new immutable version + its own fresh OTS proof (pending until the hourly upgrade),
+      # move the discovery pointer, and re-derive the OTS manifest, all in the signer's commit. An
+      # unchanged admitted set writes nothing.
+      - name: version the hub-cards index for the new card set (new file + new proof; stamped bytes untouched)
+        if: (inputs.target || 'financial') == 'mill' || inputs.target == 'runpod'
+        run: |
+          set -euo pipefail
+          python3 -m pip install -q opentimestamps-client
+          out=$(node scripts/surface/build-hub-cards-index.mjs --version); echo "$out"
+          # Only a new version adds a proof; the manifest is derived from the proofs on disk, and
+          # llms.txt / llms-full.txt quote the manifest's counts and as_of (scripts/llms-txt-derived.test.ts).
+          case "$out" in *VERSIONED*) python3 scripts/ots_manifest_rebuild.py --apply && node scripts/llms-txt.mjs ;; esac
+          node scripts/surface/build-hub-cards-index.mjs   # the build-mode check must now pass
+      # public/interop/mill-receipt-readiness.json is stamped too, and it is derived through
+      # SUPERSEDED.jsonl, which sign_mill_cards.py appends to whenever a receipt's card is replaced.
+      # Every mill PR then failed the gates ("mill receipt readiness is stale") with no fix that
+      # kept the stamp. Same migration as the hub index: a changed readiness becomes a new
+      # immutable version + its own fresh proof, and the discovery pointer moves. Unchanged: no write.
+      - name: version the mill receipt readiness (new file + new proof; stamped bytes untouched)
+        if: (inputs.target || 'financial') == 'mill' || inputs.target == 'runpod'
+        run: |
+          set -euo pipefail
+          python3 -m pip install -q opentimestamps-client
+          out=$(node scripts/build-mill-receipt-readiness.mjs --version); echo "$out"
+          case "$out" in *VERSIONED*) python3 scripts/ots_manifest_rebuild.py --apply && node scripts/llms-txt.mjs ;; esac
+          node scripts/build-mill-receipt-readiness.mjs --check   # the gates step must now pass
       - name: commit signed cards
         id: commit
         env:
@@ -135,8 +164,10 @@ jobs:
             git add public/interop/ledger-card-*.json
           elif [ "$T" = "mill" ]; then
             git add public/interop/mill-cards-signed public/interop/mill-cards-unsigned
+            git add public/interop/hub-cards-index-* public/interop/mill-receipt-readiness-* public/interop/ots/manifest.json public/llms.txt public/llms-full.txt
           elif [ "$T" = "runpod" ]; then
             git add public/interop/mill-cards-signed
+            git add public/interop/hub-cards-index-* public/interop/mill-receipt-readiness-* public/interop/ots/manifest.json public/llms.txt public/llms-full.txt
           else
             git add public/interop/financial-measure-card-*.json
           fi
