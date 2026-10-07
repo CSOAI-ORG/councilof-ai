@@ -142,3 +142,37 @@ describe("route over the default tool fleet: the request's purpose decides", () 
     expect(namesEndpoint("is example.com/mcp safe")).toBe(true);
   });
 });
+
+
+// Repair round (7 Oct): stranger phrasings the verifier found routed wrong or UNTESTED.
+import { toolScore as _score, PURPOSE as _PURPOSE } from "./taskMatch";
+const _best = (text: string): string | null => {
+  let top: string | null = null;
+  let hi = 0;
+  for (const tool of Object.keys(_PURPOSE)) {
+    const s = _score(tool, text);
+    if (s > hi) { hi = s; top = tool; }
+  }
+  return top;
+};
+describe("stranger phrasings (repair round)", () => {
+  it.each([
+    ["I got a card from a vendor, is it real?", "verify_card"],
+    ["is this signed card legit", "verify_card"],
+    ["Is this AI model safe to use?", "board_totals"],
+    ["which AI is safest", "board_totals"],
+    ["which model is the most honest", "board_totals"],
+    ["what scores did Claude get", "board_totals"],
+    ["compare two models", "board_totals"],
+    ["safest AI please", "board_totals"],
+    ["is my website compliant", "evidence_bundle_preview"],
+    ["how did safety measure", "get_axis"],
+    ["is example.com/mcp safe", "server_evidence"],
+    ["which tool verifies a signed card", "verify_card"],
+  ])("%s -> %s", (text, tool) => {
+    expect(_best(text)).toBe(tool);
+  });
+  it("still answers nothing for a request no tool serves", () => {
+    expect(_best("what is the weather in Paris tomorrow")).toBeNull();
+  });
+});

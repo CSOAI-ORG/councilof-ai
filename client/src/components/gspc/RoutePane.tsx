@@ -88,6 +88,7 @@ export default function RoutePane() {
 
   const result = phase.k === "done" ? phase.result : null;
   const chosen = rec(result?.chosen);
+  const taskMatch = rec(result?.task_match);
   const separation = typeof result?.separation === "string" ? result.separation : null;
   const forbidden = Array.isArray(result?.forbidden) ? (result!.forbidden as Json[]) : [];
   const considered = (rec(rec(result?.record)?.observed)?.considered ?? []) as Json[];
@@ -253,9 +254,21 @@ export default function RoutePane() {
                 </span>
               </p>
             ) : (
-              <p className="mt-4 text-lg text-foreground">No candidate was permitted by the policy.</p>
+              <p className="mt-4 text-lg text-foreground" data-testid="route-none">
+                {taskMatch
+                  ? taskMatch.state === "MATCHED_FORBIDDEN"
+                    ? String(taskMatch.reason ?? "Only tools your policy forbids match this request, so no tool was chosen.")
+                    : "No tool's purpose matches this request, so no tool was chosen and no tie-break ran."
+                  : "No candidate was permitted by the policy."}
+              </p>
             )}
-            {separation && SEPARATION_TEXT[separation] ? (
+            {taskMatch ? (
+              <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground" data-testid="route-honesty">
+                {chosen
+                  ? "Chosen because this tool's purpose matches your request, not from a measured difference between tools."
+                  : "Nothing was chosen. Name what you want checked: a card, an axis, a server, or the board."}
+              </p>
+            ) : separation && SEPARATION_TEXT[separation] ? (
               <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground" data-testid="route-honesty">
                 {SEPARATION_TEXT[separation]}
               </p>

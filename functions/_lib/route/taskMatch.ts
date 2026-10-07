@@ -60,7 +60,7 @@ export function namesAxis(t: string): boolean {
 }
 
 const OBLIGATION = /\b(article[- ]?5[03]|art\.?\s?5[03]|dora|cra|cyber resilience act|gpai transparency|ai act)\b/;
-const VERIFY_VERB = "(?:verif|check|validat|genuine|authentic|tamper|forged|fake|recompute|trust)";
+const VERIFY_VERB = "(?:verif|check|validat|genuine|authentic|tamper|forged|fake|recompute|trust|real|legit|spoof)";
 
 /**
  * The purpose of every fleet tool, as patterns over the lower-cased request. Weights: an entity or a
@@ -73,6 +73,12 @@ export const PURPOSE: Record<string, Pattern[]> = {
     { re: /\btotals?\b/, w: 3 },
     { re: /\bhow many (axes|axis|slots)\b|\bmeasured of\b|\bwhat (is|gets|has been) measured\b|\bwhat (do|does) [a-z0-9 .'-]{0,40}\bmeasure\b/, w: 3 },
     { re: /\b(best|safest|top|winner|winning|strongest|leading)\b.*\b(models?|llms?|ai)\b|\bwhich (model|llm|ai)\b.*\b(better|safer|wins?)\b/, w: 3 },
+    // Order-free: a quality word and a model word anywhere in the request ("which AI is safest",
+    // "is this AI model safe to use", "what scores did Claude get", "compare two models").
+    {
+      re: /(?=.*\b(best|safest|safer|safe|honest|honesty|top|winner|strongest|leading|scores?|scored|rank\w*|compare\w*|comparison|versus|vs)\b)(?=.*\b(models?|llms?|ai|ais|chatbots?|claude|gpt[- ]?\w*|chatgpt|gemini|llama|grok|mistral|deepseek|qwen)\b)/,
+      w: 3,
+    },
   ],
   get_axis: [
     { re: /\baxis\b/, w: 2 },
@@ -130,6 +136,7 @@ export const PURPOSE: Record<string, Pattern[]> = {
     { re: OBLIGATION, w: 3 },
     { re: new RegExp(`(?=.*${OBLIGATION.source})(?=.*\\b(evidence|records?|cards?|signed)\\b)`), w: 3 },
     { re: /\bobligations?\b|\bregulations?\b/, w: 1 },
+    { re: /\bcomplian\w*|\bcomply\b|\bregulat\w*|\blegal(ly)?\b/, w: 2 },
   ],
   commission_card: [
     { re: /\b(commission|order|request|buy|purchase)\b.*\b(card|measurement|attestation|run|test)\b/, w: 5 },
