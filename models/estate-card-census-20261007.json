@@ -90,7 +90,7 @@
     "in_root": 0,
     "models": 11,
     "axes": 14,
-    "state": "STAGED \u2014 in mill-cards-signed/, not in the 335-card index, not in the public root",
+    "state": "SUPERSEDED — all 36 replaced by a later signed card for the same (model, axis); 34/36 replacements are live leaves in card-root-2026-10-01. Not 'stuck staged'.",
     "correction": "Brief calls these 'off-device-signed model cards'. They are enriched GSPC measurement receipts signed via GitHub OIDC under #board-attestation-1."
   },
   "verification_totals": {
@@ -226,7 +226,7 @@
   ],
   "blockers": [
     "BLOCKER: 319 root card contents not fetchable (404) \u2014 root population cannot be individually verified.",
-    "BLOCKER: 2,868 mill cards are STAGED, not in the signed index (335) and not in the root (319). No pipeline observed that promotes mill \u2192 index \u2192 root.",
+    "RESOLVED 2026-10-07: mill -> card-root promotion path TRACED (models/mill-promotion-pipeline-20261007.json). card-root-2026-10-01 commits 1,466 live leaves + 1,402 superseded = all 2,868 signed cards. Mill cards are never promoted into signed/card_index.json (335) by design — that is a frozen 2026-08-19 corpus.",
     "BLOCKER: benchmark-index-v0.1.json regeneration not observed \u2014 published totals stale by 982 cards.",
     "BLOCKER: 689 UNMEASURED cells in the 64\u00d716 index matrix; new measurement requires HF Jobs launch authority.",
     "BLOCKER: 13 estate tests fail locally and are not CI-gated (7 fleet-lock, 5 mill-honesty, 1 stdio pack drift). Not fixed by TUI-3 \u2014 cross-lane (TUI-4 owns MCP manifest drift).",

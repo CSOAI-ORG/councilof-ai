@@ -710,7 +710,7 @@
   ],
   "blockers": [
     "BLOCKER: 319 root card contents unfetchable (404) \u2014 root population individually unverifiable",
-    "BLOCKER: 2,868 mill cards STAGED \u2014 no observed pipeline promoting mill \u2192 index \u2192 root",
+    "RESOLVED 2026-10-07: promotion path TRACED — see models/mill-promotion-pipeline-20261007.json. Path is hub-queue-mill.yml -> land_mill_cards.py (branch+PR, human merge) -> sign_mill_cards.py (OIDC) -> card_root.py (Merkle; SUPERSEDED excluded). It does NOT promote into signed/card_index.json — that index is a frozen 2026-08-19 corpus, not part of this pipeline.",
     "BLOCKER: benchmark-index-v0.1.json stale by 982 cards (3,998 published vs 4,980 on disk)",
     "BLOCKER: 689 UNMEASURED cells in the 64\u00d716 matrix \u2014 needs HF Job launch authority",
     "OPEN: 13 estate tests fail locally, ungated by CI (7 fleet-lock, 5 mill-honesty, 1 MCP manifest drift -> TUI-4)",
