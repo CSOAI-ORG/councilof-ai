@@ -286,7 +286,7 @@ export default function CraReadinessKit() {
 
         <section className="text-xs text-zinc-500 leading-relaxed border-t border-zinc-800 pt-6">
           <p>
-            Council of AI (CSOAI Ltd) is an independent measurement body. Dates above (11 Jun 2026,
+            Council of AI (CSOAI Ltd) is a measurement body. Dates above (11 Jun 2026,
             11 Sep 2026, 11 Dec 2027; the 24h / 72h / 14-day windows) should be confirmed against the
             final text of Regulation (EU) 2024/2847 and ENISA Single Reporting Platform guidance
             before you rely on them — treat the tables here as operational scaffolding, not the legal

@@ -81,7 +81,7 @@ export default function Launch() {
   useEffect(() => {
     document.title = "The launch story — Council of AI";
     setMetaDescription(
-      "An independent measurement body publishes scoped, replayable evidence about AI systems and issued assets. Every number is traceable. Every correction is public.",
+      "We publish scoped, replayable evidence about AI systems and issued assets. Every number is traceable. Every correction is public.",
     );
 
     fetch("/root.json")
@@ -146,7 +146,7 @@ export default function Launch() {
         </h1>
 
         <p className="mt-4 text-lg text-gray-600">
-          An independent measurement body publishes scoped, replayable
+          We publish scoped, replayable
           evidence about AI systems and issued assets. Every number below is
           fetched live from a named endpoint. Every correction is public and
           append-only. No grade is for sale.
@@ -213,7 +213,7 @@ export default function Launch() {
             What this is, and what it is not
           </h2>
           <p className="text-[15px] text-gray-600">
-            CSOAI Ltd (UK 16939677) is an independent measurement body. We
+            CSOAI Ltd (UK 16939677) is a measurement body. We
             measure and sign. We never certify, never rate, and never sell a
             grade. A payment buys a run, a signature, an attestation receipt —
             never the outcome.

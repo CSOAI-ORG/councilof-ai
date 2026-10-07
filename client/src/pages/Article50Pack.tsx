@@ -255,7 +255,7 @@ python3 sign.py --verify provbench.json</pre>
             page proves <em>integrity</em>, not attributed <em>identity</em>.
           </p>
           <p>
-            CSOAI is an independent measurement body. We issue measurements and signed attestations,
+            CSOAI is a measurement body. We issue measurements and signed attestations,
             never certificates of conformity. This evidence supports an Article 50 &ldquo;adequate
             alternative means&rdquo; case; it is not legal advice.
           </p>

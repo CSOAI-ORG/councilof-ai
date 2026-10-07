@@ -73,7 +73,7 @@ const FAQ = [
   },
   {
     q: "Is this a certification or a conformity assessment?",
-    a: "No. Council of AI is an independent measurement body. The pack is measurement evidence — not legal advice, not certification, and not a conformity assessment. Determination of compliance stays with the authorities.",
+    a: "No. Council of AI is a measurement body. The pack is measurement evidence — not legal advice, not certification, and not a conformity assessment. Determination of compliance stays with the authorities.",
   },
   {
     q: "Do regulators pay to verify the evidence?",
@@ -270,7 +270,7 @@ export default function GpaiEvidencePack() {
 
         <section className="text-xs text-zinc-500 leading-relaxed border-t border-zinc-800 pt-6">
           <p>
-            Council of AI (CSOAI Ltd) is an independent measurement body. We issue measurements and
+            Council of AI (CSOAI Ltd) is a measurement body. We issue measurements and
             signed attestation records — completion records, never certificates. Dates and figures
             above (2 Aug 2026 enforcement; €15M / 3% turnover) should be confirmed against Regulation
             (EU) 2024/1689 and the AI Office&rsquo;s published guidance before you rely on them.

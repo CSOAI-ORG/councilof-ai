@@ -149,7 +149,7 @@ export default function About() {
     document.title = "About the Council of AI — a UK measurement body | Council of AI";
     let m = document.querySelector('meta[name="description"]') as HTMLMetaElement | null;
     if (!m) { m = document.createElement("meta"); m.name = "description"; document.head.appendChild(m); }
-    m.content = "The Council of AI (CSOAI LTD, UK Companies House 16939677) is an independent AI measurement body: deterministic measurement, Ed25519-signed records, no certification and no accreditation chain. Live board counts: GET /api/gspc.";
+    m.content = "The Council of AI (CSOAI LTD, UK Companies House 16939677) is an AI measurement body: deterministic measurement, Ed25519-signed records, no certification and no accreditation chain. Live board counts: GET /api/gspc.";
   }, []);
   return (
     <div className="min-h-screen bg-white">

@@ -17,7 +17,12 @@
  *
  * The register is published at:
  *   https://councilof.ai/spec/claim-maintenance/register.json   (static bytes)
- *   https://councilof.ai/api/claims/register                    (same bytes, via functions/api/claims/register.ts)
+ *   https://councilof.ai/api/claims/register                    (functions/api/claims/register.ts)
+ *
+ * The endpoint serves the committed register plus one unsigned top-level key, `envelope` (who
+ * answers for the register and how to object; functions/_lib/accountability.ts), and `view` on a
+ * filtered read. Neither is in register.json or covered by register_digest: drop them before
+ * comparing a response with the committed file. Every other key is the committed bytes.
  */
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";

@@ -757,7 +757,7 @@ export default function NewHome() {
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <Badge className="mb-4 bg-green-100 text-green-800 text-sm px-4 py-2">
-              Independent measurement body
+              Measurement, not certification
             </Badge>
             <h2 className="text-4xl md:text-4xl font-bold text-gray-900 mb-6">
               Measured governance, published with its limits

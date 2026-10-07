@@ -26,7 +26,7 @@ export interface FaqSection {
 export const FAQ_ITEMS: FaqItem[] = [
   {
     q: "What is Council of AI?",
-    a: "Council of AI is an independent measurement body for AI behaviour. We run AI systems against frozen, published tests drawn from real statute, grade the answers with deterministic code, sign the result with an Ed25519 key, and publish it — including the parts we could not measure.",
+    a: "Council of AI is a measurement body for AI behaviour. We run AI systems against frozen, published tests drawn from real statute, grade the answers with deterministic code, sign the result with an Ed25519 key, and publish it — including the parts we could not measure. We run the tests ourselves, so a result is not an independent check; anyone can re-check its signature for free.",
     url: "/about",
   },
   {

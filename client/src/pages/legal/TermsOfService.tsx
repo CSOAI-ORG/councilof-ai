@@ -96,7 +96,7 @@ export default function TermsOfService() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-muted-foreground">
-                  CSOAI Ltd (Companies House 16939677) operates Council of AI as an independent AI measurement body.
+                  CSOAI Ltd (Companies House 16939677) operates Council of AI as an AI measurement body.
                   It measures and attests what systems do against dated instruments; it does
                   not, and cannot, declare conformity — a conformity certificate requires an accreditation chain CSOAI
                   does not hold.

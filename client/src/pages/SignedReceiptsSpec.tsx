@@ -103,6 +103,14 @@ export default function SignedReceiptsSpec() {
           Reproduced from <A href={`${BASE}/SPEC.md`}>SPEC.md</A> (draft 0.2) without changes. Draft 0.3,{" "}
           <A href={`${BASE}/draft-0.3/SPEC.md`}>draft-0.3/SPEC.md</A>, supersedes it: its section 0 lists every change.
         </p>
+        {/* 2026-10-07 (Lane F, F3 repair): the footer under this page says our results are not
+            independent checks; the author line of both drafts says otherwise. The drafts are pinned
+            byte for byte, so the correction is stated here rather than made in them. */}
+        <p data-testid="spec-author-line-note" className="mt-2 text-sm text-slate-600">
+          Both drafts&rsquo; author line calls CSOAI &ldquo;independent&rdquo;. We no longer describe ourselves
+          that way: we write and run our own tests, and to our knowledge nobody outside has re-run them yet.
+          The line is left as written because the drafts are published byte for byte.
+        </p>
         <div className="mt-4 leading-relaxed text-slate-800">
           <ReactMarkdown
             components={{

@@ -18,7 +18,7 @@ export default function HeroBoard() {
           Council of AI
         </h1>
         <p className="mt-4 max-w-2xl text-lg leading-relaxed text-emerald-100/90">
-          Independent measurement body. We measure, sign, re-attest. We do not certify.
+          We measure, sign, re-attest. We do not certify.
         </p>
 
         <p

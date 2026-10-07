@@ -275,8 +275,8 @@ export default function Pressroom() {
         </div>
         <h2 className="mt-12 text-xl font-bold text-gray-900">Boilerplate</h2>
         <p className="mt-2 max-w-3xl text-sm text-gray-700 leading-relaxed">
-          Council of AI (CSOAI Ltd, UK Companies House 16939677) is an
-          independent measurement body for AI behaviour. We run systems against
+          Council of AI (CSOAI Ltd, UK Companies House 16939677) is a
+          measurement body for AI behaviour. We run systems against
           frozen, published tests drawn from statute, sign the result, and
           publish the parts we could not measure. We do not certify or
           remediate. A grade is never sold. Verify stays free at

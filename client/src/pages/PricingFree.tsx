@@ -52,7 +52,7 @@ const STEPS = [
 ];
 
 const RULES = [
-  { k: "Measurement, not certification", v: "CSOAI LTD is an independent measurement body. It issues measurements and signed attestations, never certificates of conformity." },
+  { k: "Measurement, not certification", v: "CSOAI LTD is a measurement body. It issues measurements and signed attestations, never certificates of conformity." },
   { k: "A grade is never sold", v: "No tier sells a score, a rank, a pass/fail, or a place on the board. You pay for issuance, assembly and a durable independent signature — never for the answer." },
   { k: "Recomputable for free", v: "Every artefact stands on public bytes. Whoever holds the card and the published key can recompute it with no service contact." },
   { k: "No financial instrument", v: "No token, no credit, no cash-settled index. An attestation is a signed opinion about an asset; it tokenises nothing and confers no ownership." },

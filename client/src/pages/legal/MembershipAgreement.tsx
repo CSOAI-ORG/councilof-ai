@@ -269,7 +269,7 @@ export default function MembershipAgreement() {
                   <ul className="space-y-2">
                     {[
                       "Link to signed measurement cards they hold",
-                      "Cite Council of AI as an independent measurement body",
+                      "Cite Council of AI as a measurement body",
                       "Access member resources and the public verify rail"
                     ].map((item, index) => (
                       <li key={index} className="flex items-start gap-2">

@@ -157,8 +157,12 @@ export function strengthCards({
     {
       n: "01",
       title: "Nobody we measure is paying us",
+      // 2026-10-07 (Lane F, F3 repair): this opened by calling us an independent body, directly
+      // above a footer that says our results are not independent checks, and it links to
+      // /methodology/, which says "Not independent of what it measures". It now says what is true
+      // and keeps the promise that is: no vendor can buy, lift or remove a result.
       body:
-        "We are an independent measurement body. The tests are frozen and published before a run, the grading is done by a rule rather than by another AI, and no vendor can buy a place on the board, lift a score or have one taken down. Re-checking any result costs nothing and always will.",
+        "We write the tests and run them ourselves, and we build some of the models we measure, so a result here is not an independent check. What no vendor can do is buy a place on the board, lift a score or have one taken down. The tests are frozen and published before a run, the grading is done by a rule rather than by another AI, and re-checking any result costs nothing and always will.",
       proof: independenceProof(),
       link: { href: "/methodology", label: "How a measurement is made" },
     },

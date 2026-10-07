@@ -211,7 +211,7 @@ const getFrameworkGuideUrl = (id: string): string => {
 const faqs = [
   {
     question: "What is Council of AI?",
-    answer: "An independent AI measurement company — the independent measurement body for AI behaviour. We measure how an AI system behaves on our own published instruments, issue the result as an Ed25519-signed, hash-chained 3KB measurement card, and re-attest it over time. Not a certification body; not an observability tool.",
+    answer: "An AI measurement company. We measure how an AI system behaves on our own published instruments, issue the result as an Ed25519-signed, hash-chained 3KB measurement card, and re-attest it over time. Not a certification body; not an observability tool.",
   },
   {
     question: "What do I actually get?",
@@ -277,7 +277,7 @@ export default function NewHomeV2() {
                 transition={{ duration: 0.5 }}
                 className="mb-4 text-xs md:text-sm font-medium uppercase tracking-[0.2em] text-emerald-700"
               >
-                Council of AI — the independent measurement body for AI behaviour
+                Council of AI — measurement of AI behaviour, not certification
               </motion.p>
 
               <motion.h1
