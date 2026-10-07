@@ -470,3 +470,21 @@ public/interop/owner-asks-2026-10-07.md.
 **3. PyPI source-of-truth sync:** csoai-gspc 0.2.20261007.1 uploaded to PyPI directly
 (twine, ~/.pypirc) before this commit lands the matching README + pyproject — repo and
 registry must never disagree on the ownership line.
+
+## 2026-10-07 · M4 lane — RFC/standards alignment + SAFE-readiness (append)
+
+**1. Standards lane alignment.** `public/interop/rfc-alignment-2026-10-07.md` maps M4's
+instruments onto draft-templeman-scitt-framing-space (Datatracker, individual submission,
+expires 2027-03-09 — the revision window is an owner decision point). The catapult's
+dual-preimage verification (house json.dumps vs JS JSON.stringify, rule NAMED per record)
+is direct implementation evidence for the draft's framing-sensitivity thesis. Proposed
+contributions listed, none made: the standards lane authors and submits, M4 measures and
+records. Standing rule: "individual submission" is the only true label; never "WG adopted".
+
+**2. SAFE/ASA readiness (fundraising lane FYI).** Re-score honest: composite 5.6 (Jul) →
+**6.3 conservative** (IP 7 with 8 provisionals + anchored batch + IETF draft; Data 8
+evidence-backed; Rev 2 on the one non-self settlement; Timing 9). Instrument decision:
+**ASA (EIS) for UK angels + post-money SAFE for US**, cap $8M–$12M post, 0% discount.
+Gates to 7.0 unchanged: file 8 UK IPO provisionals (~£480–800) + first paying customer.
+Full pack: csoai.org/series-a/00-SAFE_READINESS.md (owner repo, committed locally).
+EIS advance assurance (HMRC, free, 2–4 wks) is the gate that makes the ASA work.
