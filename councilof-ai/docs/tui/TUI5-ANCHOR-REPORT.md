@@ -43,6 +43,18 @@ Observation window `2026-10-07T03:59:47Z → 04:12:00Z`. Source: live `councilof
 
 **Residual uncertainty:** no local bitcoind, so `ots verify`'s full-node leg could not run; substituted by reference-client parse + dual-source header re-verification. Reorg depth beyond the two explorers not tested.
 
+### Prepared transactions refreshed against the live root (same window)
+
+The 2026-09-11 specs carried the retired 167-card hash — a prepared transaction naming a dead root would anchor history by accident. All three regenerated:
+
+| Spec | Datum | Contract verified on-chain | Live cost observed | Max authorised | Replay verification |
+|------|-------|---------------------------|--------------------|----------------|---------------------|
+| `base-eas-spec.json` v0.2 | `f1913eca…` | EAS `0x4200…0021` 2,055 B + registry `0x4200…0002` 2,055 B @ block 52278957 | 0.006 gwei → ~$0.0005–0.003 | $0.05 | 6-step read-back in spec |
+| `xrpl-memo-spec.json` v0.2 | `f1913eca…` (MemoData hex, roundtrip-verified) | n/a (protocol) | 10 drops open-ledger via `xrpl.ws` | 1000 drops | 8-step read-back in spec |
+| `eth-eas-spec.json` v0.1 **NEW** | `f1913eca…` | **corrected** EAS `0xA1207F3BBa224E2c9c3c6D5aF63D0eb1582Ce587` 19,971 B + registry `0xA7b392…7BDF` 1,976 B @ block 26138114 | 0.1213 gwei → ~$0.0001–0.001 | $2.00 | 6-step read-back in spec |
+
+**All three anchor one identical subject:** `sha256(root.json) = f1913eca…` — the same value as the OTS subject, the Rekor content and the sidecar `artifact.sha256`. Each spec stops at `PREPARED_NOT_SUBMITTED`; nothing signed, nothing submitted, **$0 spent**.
+
 ---
 
 ### Verified Baseline (2026-09-11, date-stamped — superseded states listed in §0)
@@ -228,6 +240,8 @@ The Merkle tree's odd-leaf self-duplication makes it collidable: appending dupli
 | "Rekor logIndex 2791822965" (as current) | That index witnesses the 167-card root; the 319-card root is witnessed at 3012420819 — each cited with its own root sha256 |
 | "167 cards in the current root" | 167 @ 2026-09-11; live root as_of 2026-09-30 carries **319** — always cite `as_of` |
 | "All 319 root cards are signed" | 317 valid + **2 null `sig_ed25519`** explicitly counted UNSIGNED (0 invalid) |
+| "Ethereum EAS = 0xA1207F3BBa224E2c9c3c6D5b0f0f4c9d8b7c6d5e" | **FABRICATED — `eth_getCode` = 0 bytes.** Corrected to official v0.26 `0xA1207F3BBa224E2c9c3c6D5aF63D0eb1582Ce587` (19,971 B code), re-verified on-chain |
+| "Prepared specs target the live root" | v0.1 specs carried the retired 167-card hash `78d4e019…`; all three regenerated 2026-10-07 against `sha256(root.json) f1913eca…` |
 
 ---
 

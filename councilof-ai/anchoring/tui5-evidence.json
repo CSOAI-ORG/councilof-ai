@@ -89,18 +89,36 @@
     "6_base_eas": {
       "state": "NOT_YET",
       "reason": "no EAS attestation in the append-only log matches this root.json sha256 (live sidecar 2026-10-01T08:25:24Z)",
-      "prepared_spec": "anchoring/base-eas-spec.json",
+      "prepared_spec": "anchoring/base-eas-spec.json (v0.2, regenerated 2026-10-07 against the 319-card root — v0.1 carried the stale 78d4e019... hash)",
+      "contracts_verified_onchain": "EAS 0x4200...0021 (2,055 B code) + SchemaRegistry 0x4200...0002 (2,055 B) at block 52278957",
       "network": "eip155:8453 (Base)",
-      "expected_max_cost_usd": 0.01,
-      "funding_source": "owner wallet (owner-gated, not executed)"
+      "observed_gas_gwei": 0.006,
+      "expected_cost_usd": "0.0005-0.003",
+      "maximum_authorized_usd": 0.05,
+      "funding_source": "owner wallet (owner-gated, not executed)",
+      "replay_verification": "spec carries 6-step read-back: getAttestation → decode → sha256(root.json) compare → explorer → sidecar update"
     },
     "7_xrpl_memo": {
       "state": "NOT_YET",
       "reason": "needs a funded XRPL account (owner); one memo tx carrying sha256(root.json)",
-      "prepared_spec": "anchoring/xrpl-memo-spec.json",
-      "network": "xrpl:mainnet",
-      "expected_max_cost_usd": 0.00001,
-      "funding_source": "owner XRPL account (owner-gated, not executed)"
+      "prepared_spec": "anchoring/xrpl-memo-spec.json (v0.2, regenerated 2026-10-07 — v0.1 carried the stale hash)",
+      "network": "xrpl:mainnet via xrpl.ws (xrplcluster.xrpl.org DNS-unresolved from this environment)",
+      "observed_fee_drops": 10,
+      "max_authorized_fee_drops": 1000,
+      "expected_cost_usd": "~0.00002",
+      "funding_source": "owner XRPL account (owner-gated, not executed)",
+      "replay_verification": "spec carries 8-step read-back: tx → memo hex → decode → sha256(root.json) compare → tesSUCCESS → explorer → sidecar"
+    },
+    "8_ethereum_eas": {
+      "state": "NOT_YET",
+      "prepared_spec": "anchoring/eth-eas-spec.json (v0.1, NEW 2026-10-07)",
+      "correction": "prior spec named 0xA1207F3BBa224E2c9c3c6D5b0f0f4c9d8b7c6d5e — eth_getCode returned 0 bytes (fabricated address). Corrected to official v0.26 0xA1207F3BBa224E2c9c3c6D5aF63D0eb1582Ce587, re-verified on-chain: 19,971 B code at block 26138114",
+      "network": "eip155:1",
+      "observed_gas_gwei": 0.1213,
+      "expected_cost_usd": "0.0001-0.001",
+      "maximum_authorized_usd": 2.0,
+      "funding_source": "owner wallet (owner-gated, not executed)",
+      "priority": "P2 — Base carries the same datum ~100x cheaper"
     }
   },
 
@@ -115,7 +133,8 @@
   "costs": {
     "actual_spend_usd": 0,
     "funding_source": "none — all verification read-only over free public endpoints",
-    "prepared_not_executed_total_usd": "0.01 (Base) + 0.00001 (XRPL) + 0.50-2.00 (Ethereum EAS) = ~0.51-2.01",
+    "prepared_not_executed_total_usd": "Base ≤0.05 (expected 0.0005-0.003) + XRPL ~0.00002 + Ethereum ≤2.00 (expected 0.0001-0.001) = maximum authorised ~$2.05, expected ~$0.001-0.004",
+    "observed_gas": "Base 0.006 gwei @ 52278957; Ethereum 0.1213 gwei @ 26138114; XRPL 10 drops open-ledger (all 2026-10-07)",
     "owner_gated": true
   },
 
@@ -139,7 +158,9 @@
     {"claim": "167 cards in the current public root", "correction": "167 was true on 2026-09-11; live root as_of 2026-09-30T05:05:34Z carries 319. Always cite the as_of."},
     {"claim": "Rekor witnessed at logIndex 2791822965", "correction": "That index belongs to the 167-card root; the current 319-card root is witnessed at 3012420819. Both reported with their own root digest."},
     {"claim": "335 signed cards are anchored by the root", "correction": "0 identifier overlap with the public root; OTS scope is PUBLIC_ROOT_BYTES_ONLY"},
-    {"claim": "All root cards are signed", "correction": "2 of 319 root cards have sig_ed25519 = null and are explicitly UNSIGNED, not verified"}
+    {"claim": "All root cards are signed", "correction": "2 of 319 root cards have sig_ed25519 = null and are explicitly UNSIGNED, not verified"},
+    {"claim": "Ethereum EAS contract = 0xA1207F3BBa224E2c9c3c6D5b0f0f4c9d8b7c6d5e (2026-09-11 spec)", "correction": "FABRICATED — eth_getCode returned 0 bytes on mainnet. Corrected to official v0.26 0xA1207F3BBa224E2c9c3c6D5aF63D0eb1582Ce587 (19,971 B code at block 26138114) + SchemaRegistry 0xA7b39296258348C78294F95B872b282326A97BDF"},
+    {"claim": "Prepared anchor specs target the live root", "correction": "v0.1 specs carried the retired 167-card hash 78d4e019...; all specs regenerated 2026-10-07 against sha256(root.json) f1913eca... with contracts re-verified on-chain and live fees observed"}
   ],
 
   "blockers_remaining": [
