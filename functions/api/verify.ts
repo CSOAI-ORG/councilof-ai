@@ -26,10 +26,29 @@
  * Trust anchors are PINNED in the verifier's source, so an unreachable did.json cannot turn a
  * valid card UNCHECKABLE, and an unpinned signer cannot pass because the network was down.
  * Verification is free, forever. It certifies nothing.
+ *
+ * THREE DEFECTS FOUND BY OUTSIDE TOOLS ON 7 OCT 2026, fixed here (lane V1-verify-truth):
+ *   D1  A WITHDRAWN card came back plain VALID. The bytes are still served on purpose and the
+ *       signature still verifies over them, but the verdict never said the estate had withdrawn the
+ *       card. The cryptographic result now lives in `cryptographic_state`; `status` (LIVE / WITHDRAWN
+ *       / SUPERSEDED / UNCHECKED, from the two ledgers under /interop/mill-cards-signed/) is a
+ *       separate fact; and `state` is WITHDRAWN or SUPERSEDED when the signature is VALID and the
+ *       ledger says so. A cryptographic failure still wins: a tampered withdrawn card is INVALID.
+ *   D2  liveAnchors() mapped every did.json key to hex "" and never decoded publicKeyJwk.x, so the
+ *       advisory cross-check compared every signing key against an empty string and reported
+ *       live_anchor_disagrees on every card. It now decodes the OKP JWK through anchorsFromDid, the
+ *       same decoder the MCP tool and /gspc-verify use.
+ *   D3  public/root.json (csoai.public-root/v1) and the corrections ledger (csoai.corrections/0.1)
+ *       were UNCHECKABLE/unrecognised_family: our own root and ledger could not be checked by our own
+ *       verifier. Both families are routed to the rule the repo already applies to them elsewhere
+ *       (functions/_lib/publicRootVerify.ts; functions/api/corrections.ts checkSignature).
  */
-import { verifyCard, cardState, PINNED_ANCHORS, type Anchor } from "../_lib/cardVerify";
+import { verifyCard, cardState, anchorsFromDid, PINNED_ANCHORS, type Anchor } from "../_lib/cardVerify";
 import { isSignedRun, verifySignedRunDoc } from "../_lib/signedRunVerify";
 import { verifyLeaf, canonicalBytes, sha256Hex } from "../_lib/cardSign";
+import { isPublicRoot, verifyPublicRoot, PUBLIC_ROOT_KIND } from "../_lib/publicRootVerify";
+import { readStatusLedgers, statusFor, type StatusVerdict } from "../_lib/cardStatus";
+import { checkSignature as checkLedgerSignature } from "./corrections";
 import { headFromGet } from "./_head";
 
 const CORS = {
@@ -44,16 +63,21 @@ const json = (body: unknown, status = 200) =>
     headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store", ...CORS },
   });
 
-/** A labelled cross-check only. It never decides a verdict; PINNED_ANCHORS do. */
-async function liveAnchors(origin: string): Promise<Anchor[]> {
+/**
+ * A labelled cross-check only. It never decides a verdict; PINNED_ANCHORS do.
+ *
+ * Until 2026-10-07 this returned every verificationMethod with `hex: ""` — it read the ids and
+ * never decoded publicKeyJwk.x — so the cross-check in cardVerify compared each signing key against
+ * an empty string and every card reported live_anchor_disagrees: a vacuous check on an absent field.
+ * anchorsFromDid decodes the OKP/Ed25519 JWK `x` (base64url) to the raw 32-byte key, as the MCP tool
+ * and /gspc-verify already did. An anchor with no decodable key is dropped, never returned empty
+ * (functions/api/verify.truth.test.ts guards this).
+ */
+export async function liveAnchors(origin: string, fetchImpl: typeof fetch = fetch): Promise<Anchor[]> {
   try {
-    const r = await fetch(`${origin}/.well-known/did.json`, { headers: { accept: "application/json" } });
+    const r = await fetchImpl(`${origin}/.well-known/did.json`, { headers: { accept: "application/json" } });
     if (!r.ok) return [];
-    const did = (await r.json()) as { verificationMethod?: { id?: string; publicKeyMultibase?: string }[] };
-    return (did.verificationMethod ?? [])
-      .filter((v) => v.id)
-      .map((v) => ({ id: String(v.id), hex: "" }))
-      .filter((a) => a.id) as Anchor[];
+    return anchorsFromDid(await r.json()).filter((a) => /^[0-9a-f]{64}$/i.test(a.hex));
   } catch {
     return [];
   }
@@ -87,9 +111,78 @@ async function coerceCard(raw: unknown): Promise<{ card?: unknown; error?: strin
 import { isCardV0, verifyCardV0 } from "../_lib/cardV0Verify";
 export { isCardV0, verifyCardV0 };
 
-/** Same verdict path for every caller: card-v0 → verifyCardV0; everything else → cardVerify. */
-async function verdictFor(card: unknown, rawText: string | null, origin: string) {
-  if (isCardV0(card)) return verifyCardV0(card, rawText);
+export const CORRECTIONS_LEDGER_SCHEMA = "csoai.corrections/0.1";
+
+/** The corrections ledger as GET /api/corrections serves it, or its committed body. */
+export function isCorrectionsLedger(rec: unknown): rec is Record<string, unknown> {
+  return !!rec && typeof rec === "object" && !Array.isArray(rec)
+    && (rec as Record<string, unknown>).schema === CORRECTIONS_LEDGER_SCHEMA
+    && Array.isArray((rec as Record<string, unknown>).corrections);
+}
+
+/**
+ * The corrections ledger's own rule, unchanged: functions/api/corrections.ts checkSignature strips
+ * the unsigned wrapper fields, recomputes content_id over the canonical body (ensure_ascii=True) and
+ * verifies the detached Ed25519 attestation under pinned did:web:csoai.org#board-attestation-1.
+ * Mapped onto this door's three states: STALE (signature sound, body moved) is a positive failure
+ * of the posted document — the bytes you hold are not the bytes that were attested — so it is
+ * INVALID/content_id_mismatch here, never VALID.
+ */
+export async function verifyCorrectionsLedger(rec: Record<string, unknown>) {
+  const c = await checkLedgerSignature(rec);
+  const checks: { check: string; ok: boolean | null; code: string; detail: string }[] = [
+    { check: "Family", ok: true, code: "family", detail: `${CORRECTIONS_LEDGER_SCHEMA} — the public corrections ledger: content_id over the canonical body minus ${c.unsigned_wrapper_fields.join("/")}, detached Ed25519 attestation under ${c.key}.` },
+  ];
+  const reasons: string[] = [];
+  const attested = c.attested_content_id;
+  if (c.state === "UNSIGNED") {
+    checks.push({ check: "Signature", ok: null, code: "unsigned", detail: "UNSIGNED — the document carries no signature.attestation, nothing to verify. Recomputed content_id " + c.recomputed_content_id.slice(0, 16) + "…." });
+    reasons.push("unsigned");
+  } else {
+    checks.push({
+      check: "content_id",
+      ok: c.content_id_matches,
+      code: c.content_id_matches ? "content_id_match" : "content_id_mismatch",
+      detail: c.content_id_matches
+        ? `the canonical body reproduces the attested ${attested?.slice(0, 16)}…`
+        : `MISMATCH — the body hashes to ${c.recomputed_content_id.slice(0, 16)}… but the attestation names ${attested?.slice(0, 16) ?? "nothing"}…; the signature covers an earlier body (what /api/corrections reports as STALE), not these bytes.`,
+    });
+    checks.push({ check: "Signing key", ok: true, code: "anchor_match", detail: `${c.key} (${c.key_ed25519_hex.slice(0, 8)}…) — pinned in the ledger handler, no key resolved at check time.` });
+    if (c.ed25519_verified === null) {
+      checks.push({ check: "Signature", ok: null, code: "ed25519_unsupported", detail: "this runtime could not perform Ed25519; the attestation is neither confirmed nor refuted here." });
+      reasons.push("ed25519_unsupported");
+    } else {
+      checks.push({
+        check: "Signature",
+        ok: c.ed25519_verified,
+        code: c.ed25519_verified ? "signature_valid" : "signature_invalid",
+        detail: c.ed25519_verified ? `VALID — Ed25519 verifies over the canonical attestation under ${c.key}.` : `INVALID — the attestation signature does not verify under ${c.key}.`,
+      });
+      if (!c.ed25519_verified) reasons.push("signature_invalid");
+    }
+    if (!c.content_id_matches) reasons.push("content_id_mismatch");
+  }
+  const state: "VALID" | "INVALID" | "UNCHECKABLE" = c.state === "VALID" ? "VALID" : c.state === "UNSIGNED" || c.state === "UNCHECKABLE" ? "UNCHECKABLE" : "INVALID";
+  return { state, family: CORRECTIONS_LEDGER_SCHEMA, id: attested ?? c.recomputed_content_id, reasons, checks, ledger_signature_state: c.state };
+}
+
+type Verdict = {
+  state: "VALID" | "INVALID" | "UNCHECKABLE";
+  family: string | null;
+  id: string | null;
+  reasons: string[];
+  checks: { check: string; ok: boolean | null; code: string; detail: string }[];
+  [extra: string]: unknown;
+};
+
+/**
+ * Same verdict path for every caller: public root → publicRootVerify; corrections ledger → the
+ * ledger's own checkSignature; card-v0/v1 leaves → verifyCardV0; everything else → cardVerify.
+ */
+async function cryptographicVerdict(card: unknown, rawText: string | null, origin: string): Promise<Verdict> {
+  if (isPublicRoot(card)) return { ...(await verifyPublicRoot(card)) };
+  if (isCorrectionsLedger(card)) return { ...(await verifyCorrectionsLedger(card)) };
+  if (isCardV0(card)) return { ...(await verifyCardV0(card, rawText)) };
   const v = await verifyCard(card, await liveAnchors(origin));
   return {
     state: cardState(v.valid, v.reasons),
@@ -98,6 +191,69 @@ async function verdictFor(card: unknown, rawText: string | null, origin: string)
     reasons: v.reasons,
     checks: v.checks.map((c) => ({ check: c.label, ok: c.ok, code: c.code, detail: c.detail })),
   };
+}
+
+export type PublicState = "VALID" | "INVALID" | "UNCHECKABLE" | "WITHDRAWN" | "SUPERSEDED";
+
+/** Families that are not cards and have no row in the withdrawal ledgers. */
+const NOT_A_CARD = new Set<string | null>([PUBLIC_ROOT_KIND, CORRECTIONS_LEDGER_SCHEMA, "unknown", null]);
+
+/**
+ * The cryptographic result plus the publication status, kept as separate facts:
+ *   cryptographic_state — VALID / INVALID / UNCHECKABLE, from the family's own rule, unchanged;
+ *   status              — LIVE / WITHDRAWN / SUPERSEDED / UNCHECKED, from the ledgers;
+ *   state               — what a caller reading one field should act on: WITHDRAWN or SUPERSEDED
+ *                         when the signature is VALID and the ledger retires the id; otherwise the
+ *                         cryptographic state. A crypto failure wins — a tampered withdrawn card is
+ *                         INVALID — and an unreadable ledger is UNCHECKED, never LIVE.
+ */
+async function verdictFor(card: unknown, rawText: string | null, origin: string) {
+  const v = await cryptographicVerdict(card, rawText, origin);
+  const cryptographic_state = v.state;
+  if (NOT_A_CARD.has(v.family) || typeof v.id !== "string" || !v.id) {
+    return { ...v, cryptographic_state, state: cryptographic_state as PublicState, status: null as null, withdrawal: null, supersession: null, status_unchecked: [] as string[] };
+  }
+  const st: StatusVerdict = statusFor(v.id, await readStatusLedgers(origin), origin);
+  const checks = [...v.checks];
+  const reasons = [...v.reasons];
+  if (st.status === "WITHDRAWN") {
+    checks.push({ check: "Publication status", ok: false, code: "status_withdrawn", detail: `WITHDRAWN — ${st.withdrawal?.ledger} lists this id${st.withdrawal?.withdrawn_at ? ` (withdrawn ${st.withdrawal.withdrawn_at}` : ""}${st.withdrawal?.correction_id ? `, ${st.withdrawal.correction_id})` : st.withdrawal?.withdrawn_at ? ")" : ""}. The bytes are still served and the signature is unchanged; the estate no longer stands behind the measurement.` });
+    reasons.push("withdrawn");
+  } else if (st.status === "SUPERSEDED") {
+    const by = st.supersession?.superseded_by;
+    checks.push({ check: "Publication status", ok: false, code: "status_superseded", detail: `SUPERSEDED ${by ? `by ${by.slice(0, 16)}…` : "with no replacement named"}${st.supersession?.superseded_at ? ` on ${st.supersession.superseded_at}` : ""}${st.supersession?.reason ? ` (${st.supersession.reason.slice(0, 120)})` : ""} — ${by ? "read the replacement, not this card" : "this card is retired"}.` });
+    reasons.push("superseded");
+  } else if (st.status === "LIVE") {
+    checks.push({ check: "Publication status", ok: true, code: "status_live", detail: "LIVE — neither WITHDRAWN.jsonl nor SUPERSEDED.jsonl names this id." });
+  } else {
+    checks.push({ check: "Publication status", ok: null, code: "status_unchecked", detail: `UNCHECKED — ${st.unchecked.join("; ")}. The status is unknown, not LIVE; the cryptographic verdict stands on its own.` });
+  }
+  const state: PublicState = cryptographic_state === "VALID" && (st.status === "WITHDRAWN" || st.status === "SUPERSEDED") ? st.status : cryptographic_state;
+  return { ...v, checks, reasons, cryptographic_state, state, status: st.status, withdrawal: st.withdrawal, supersession: st.supersession, status_unchecked: st.unchecked };
+}
+
+/** Extra fields a family's rule returns beside the common verdict (root components, ledger state). */
+function familyExtras(v: Record<string, unknown>) {
+  const out: Record<string, unknown> = {};
+  for (const k of ["components", "as_of", "card_count", "ledger_signature_state"]) if (k in v) out[k] = v[k];
+  return out;
+}
+
+function noteFor(state: PublicState, v: { status?: string | null }) {
+  switch (state) {
+    case "VALID":
+      return "The body reproduces its own id and the signature verifies under a published key. A verified measurement card — not a certification of anything.";
+    case "WITHDRAWN":
+      return "The signature verifies (cryptographic_state VALID) but the estate has WITHDRAWN this card: see `withdrawal` for when, why and the correction. Do not quote it as a measurement.";
+    case "SUPERSEDED":
+      return "The signature verifies (cryptographic_state VALID) but a later card SUPERSEDES this one: see `supersession.superseded_by`. Read the replacement.";
+    case "UNCHECKABLE":
+      return "The check could not be completed for the stated reason. UNCHECKABLE is not INVALID: nothing was judged.";
+    default:
+      return v.status === "WITHDRAWN" || v.status === "SUPERSEDED"
+        ? `This record fails the published rule for the stated reason, and the ledger also marks it ${v.status}. INVALID is a positive finding; the cryptographic failure takes precedence.`
+        : "This record fails the published rule for the stated reason. INVALID is a positive finding, distinct from UNCHECKABLE.";
+  }
 }
 
 const RECORD_URL_RE = /^https:\/\/(councilof\.ai|csoai\.org|www\.csoai\.org)\//;
@@ -136,14 +292,19 @@ async function verifyRecordUrl(recordUrl: string, origin: string): Promise<Respo
     ...base,
     fetched,
     state: v.state,
+    cryptographic_state: v.cryptographic_state,
+    status: v.status,
     family: v.family,
     id: v.id,
     reason: v.state === "VALID" ? null : v.reasons.join(", "),
     reasons: v.reasons,
     checks: v.checks,
+    withdrawal: v.withdrawal,
+    supersession: v.supersession,
+    ...familyExtras(v),
     rule: `${origin}/signed/HOW-TO-VERIFY.md`,
     trust_anchor: "pinned in functions/_lib/cardVerify.ts (PINNED_ANCHORS) — no key resolution decides this verdict",
-    note: "fetched.sha256 is the digest of the exact bytes served at record_url on this request; the verdict is about the record those bytes carry. Verification is free, forever. It certifies nothing.",
+    note: `fetched.sha256 is the digest of the exact bytes served at record_url on this request; the verdict is about the record those bytes carry. ${noteFor(v.state, v)} Verification is free, forever. It certifies nothing.`,
   });
 }
 
@@ -159,9 +320,25 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
     how: "POST the card as JSON (the body itself, or {\"card\": …}), or POST {\"card\": \"https://councilof.ai/signed/cards/<sha>.json\"}",
     also_reads: "csoai.signed-run/0.1 signed evidence records (POST the signed document itself). The door checks the signature over the canonical payload; compare sha256 of the record you hold with artifact.sha256 in the answer.",
     states: {
-      VALID: "the body reproduces its own id and the signature verifies under a pinned key",
-      INVALID: "a positive finding — the card fails the published rule, with the reason named",
-      UNCHECKABLE: "the input was not a card this endpoint could read",
+      VALID: "the body reproduces its own id and the signature verifies under a pinned key, and no ledger retires the id",
+      INVALID: "a positive finding — the record fails the published rule, with the reason named. A cryptographic failure wins over any status",
+      UNCHECKABLE: "the input was not a record this endpoint could read, or a component could not be checked (named in checks)",
+      WITHDRAWN: "the signature verifies (cryptographic_state VALID) but /interop/mill-cards-signed/WITHDRAWN.jsonl withdraws the card; `withdrawal` carries withdrawn_at, reason and the correction id",
+      SUPERSEDED: "the signature verifies (cryptographic_state VALID) but /interop/mill-cards-signed/SUPERSEDED.jsonl names a replacement; `supersession.superseded_by` is the card to read",
+    },
+    status: {
+      field: "status — the publication status of a card id, a separate fact from cryptographic_state",
+      values: { LIVE: "neither ledger names the id", WITHDRAWN: "WITHDRAWN.jsonl names it", SUPERSEDED: "SUPERSEDED.jsonl names it", UNCHECKED: "a ledger could not be read; unknown is reported as unknown, never as LIVE" },
+      not_applicable_to: [PUBLIC_ROOT_KIND, CORRECTIONS_LEDGER_SCHEMA],
+    },
+    families: {
+      "gspc.measurement-card": "signed board/mill card (id + body + signature + did|pubkey)",
+      "csoai.content-id-card": "content_id card (cross-border / axis-signal family)",
+      "csoai.card-v0": "payload + sha256 + sig_ed25519 leaf (receipts, wrapper cards)",
+      "csoai.card-v1": "whole-card leaf declaring digest_covers whole-card-except-sha256-and-sig_ed25519",
+      "csoai.signed-run": "signed evidence record (census / probe pages)",
+      [PUBLIC_ROOT_KIND]: "public/root.json — envelope signature over {kind, schema, as_of, merkle_root, card_count, did_intended}, plus the Merkle root recomputed from card_sha256[]; `components` reports each",
+      [CORRECTIONS_LEDGER_SCHEMA]: "the corrections ledger (GET /api/corrections or its body) — content_id recomputed over the canonical body, detached Ed25519 attestation verified",
     },
     rule: new URL("/signed/HOW-TO-VERIFY.md", request.url).toString(),
     pinned_keys: PINNED_ANCHORS.map((a) => a.id),
@@ -224,20 +401,21 @@ export const onRequestPost: PagesFunction = async ({ request }) => {
   return json({
     schema: "csoai.verify/0.1",
     state,
+    cryptographic_state: v.cryptographic_state,
+    status: v.status,
     id: v.id ?? null,
     family: v.family ?? null,
     reason: state === "VALID" ? null : v.reasons.join(", "),
     reasons: v.reasons,
     checks: v.checks,
+    withdrawal: v.withdrawal,
+    supersession: v.supersession,
+    ...familyExtras(v),
     rule: `${origin}/signed/HOW-TO-VERIFY.md`,
     trust_anchor: "pinned in functions/_lib/cardVerify.ts (PINNED_ANCHORS) — no key resolution decides this verdict",
     free: true,
     not_a_certification: true,
-    note: state === "VALID"
-      ? "The body reproduces its own id and the signature verifies under a published key. A verified measurement card — not a certification of anything."
-      : state === "UNCHECKABLE"
-        ? "The check could not be completed for the stated reason. UNCHECKABLE is not INVALID: nothing was judged."
-        : "This card fails the published rule for the stated reason. INVALID is a positive finding, distinct from UNCHECKABLE.",
+    note: noteFor(state, v),
   });
 };
 
