@@ -204,7 +204,7 @@ export default function MyResultsPane() {
             {mine.map((r) => (
               <li key={r.id} className="flex flex-wrap items-center gap-2 px-4 py-3">
                 <span className="w-28 shrink-0 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{KIND_WORD[r.kind] ?? r.kind}</span>
-                <span className="min-w-0 flex-1 truncate font-mono text-sm text-foreground" title={r.subject}>
+                <span className="min-w-0 flex-1 basis-56 font-mono text-sm text-foreground [overflow-wrap:anywhere]" title={r.subject}>
                   {r.subject}
                 </span>
                 {r.state ? <StateChip label={r.state} /> : null}
