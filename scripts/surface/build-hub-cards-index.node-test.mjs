@@ -1,7 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import fs, { mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { syncBuiltinESMExports } from "node:module";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { assertNotStamped, buildIndex, cardsDigest, checkCurrentIndex, hasCurrentAdmission, otsSubjectDigest, readStamped, rowFromCard,
@@ -211,4 +212,46 @@ test("otsSubjectDigest reads only a real detached-proof header", () => {
   const digest = "c".repeat(64);
   assert.equal(otsSubjectDigest(Buffer.concat([OTS_HEADER, Buffer.from([1, 8]), Buffer.from(digest, "hex")])), digest);
   assert.equal(otsSubjectDigest(Buffer.concat([OTS_HEADER, Buffer.from([1, 2]), Buffer.from(digest, "hex")])), null);
+});
+
+// Gaps the #2865 verifier named: each test below goes red if the guard it names is deleted.
+test("the pointer is bound to the index bytes AND to the cards they carry: each hash is checked on its own", () => {
+  const { root, out } = stampedFixture();
+  try {
+    const v = writeVersionedIndex(out, indexWith(["a", "b"]), { stamp: fakeStamp });
+    const pointerPath = join(root, "hub-cards-index-latest.json");
+    const pointer = JSON.parse(readFileSync(pointerPath, "utf8"));
+    assert.equal(checkCurrentIndex(out, indexWith(["a", "b"])).file, v.file);
+    // Another stamped version's real digests: well-formed, and wrong for the file this pointer names.
+    const legacy = readStamped(root, "hub-cards-index.json");
+    assert.notEqual(legacy.sha256, pointer.index_sha256);
+    assert.notEqual(legacy.cards_sha256, pointer.cards_sha256);
+    for (const [field, value] of [["index_sha256", legacy.sha256], ["cards_sha256", legacy.cards_sha256]]) {
+      writeFileSync(pointerPath, JSON.stringify({ ...pointer, [field]: value }, null, 2) + "\n");
+      assert.throws(() => checkCurrentIndex(out, indexWith(["a", "b"])), /disagrees with the bytes/, `${field} is not checked`);
+      assert.throws(() => writeVersionedIndex(out, indexWith(["a", "b"]), { stamp: fakeStamp }), /disagrees with the bytes/, `${field} is not checked in --version`);
+    }
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test("a new version is create-only: a file that appears between the scan and the write is never overwritten", () => {
+  const { root, out } = stampedFixture();
+  const next = indexWith(["a", "b"]);
+  const name = `hub-cards-index-${next.as_of.slice(0, 10)}-${cardsDigest(next.cards).slice(0, 12)}.json`;
+  // A concurrent writer's file, not yet stamped. The scan cannot see it (it lands after the scan),
+  // which is exactly the window the wx flag closes.
+  writeFileSync(join(root, name), "another writer's bytes\n");
+  const realReaddir = fs.readdirSync;
+  fs.readdirSync = (dir, ...rest) => realReaddir(dir, ...rest).filter((f) => f !== name);
+  syncBuiltinESMExports();
+  try {
+    let stamped = 0;
+    assert.throws(() => writeVersionedIndex(out, next, { stamp: (p) => { stamped++; fakeStamp(p); } }), { code: "EEXIST" });
+    assert.equal(readFileSync(join(root, name), "utf8"), "another writer's bytes\n");
+    assert.equal(stamped, 0, "nothing was stamped");
+  } finally {
+    fs.readdirSync = realReaddir;
+    syncBuiltinESMExports();
+    rmSync(root, { recursive: true, force: true });
+  }
 });

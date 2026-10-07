@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Stamp one new hub-cards index version: <file> -> <file>.ots, create-only.
 
-Called by scripts/surface/build-hub-cards-index.mjs --version. It adds no stamping logic of its
+Called by scripts/surface/build-hub-cards-index.mjs --version, and (through that module's
+pythonStamper) by scripts/build-mill-receipt-readiness.mjs --version. It adds no stamping logic of its
 own: the proof comes from the estate's one OTS primitive (scripts/badger/ots_stamp.py submit_ots)
 and is checked with scripts/maintain_card_ots.py parse, exactly as scripts/card_root.py does.
 
