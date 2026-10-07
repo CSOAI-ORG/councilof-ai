@@ -2,7 +2,7 @@
 
 Status: **candidate CSOAI profile**, 7 October 2026. It is not an Open Secure AI Alliance standard and does not require GSPC, OpenShell, OpenBMC, LFX, or any particular engine.
 
-This profile closes one specific gap: a system can record that a human reviewed something, and separately record that a tool ran, without proving that the exact reviewed scope is the scope that executed. The record binds the proposal, decision, authority epoch, scope digest, invocation, observed effect and independent verification.
+This candidate is a portable structural record relating a reviewed proposal, a scoped decision, an invocation, an observed effect and a verification report. Schema validation checks declared fields and permitted state combinations. It does not authenticate the principal, resolve referenced evidence, compare recorded digests with source bytes, establish current authority or revocation, or prove that the reviewed scope actually executed.
 
 The normative separation is:
 
@@ -16,7 +16,7 @@ For SAFE, this is intended to compose with approval-to-execution scope binding (
 
 Claim maintenance remains separate. A claim derived from an effect can reference a re-verification record and declare `CURRENT`, `RETEST_DUE`, `STALE`, `UNMEASURED`, or `NOT_WATCHED`. Subject/version, policy, authority, dependency, evidence conflict, incident/near-miss, or age can trigger re-measurement.
 
-Security properties:
+Consumer requirements (not established by schema validation):
 - default deny on malformed/unknown authority;
 - no self-expanding scope;
 - no reusable raw credentials in the record;
@@ -25,4 +25,4 @@ Security properties:
 - signatures/timestamps/transparency receipts prove origin/integrity/time claims only;
 - historical records are retained and superseded rather than rewritten.
 
-Reference implementation note: CSOAI's current constitutional harness already separates policy, authority state, executor, GSPC measurement, effect receipts, signer and publisher. This profile makes the approval event itself portable and independently bindable.
+Consumer acceptance must independently resolve and hash the declared proposal, scope, invocation, effect and evidence artifacts; check their exact source pins and intended producer/consumer binding; and authenticate the relevant principal and assess authority epoch, expiry and current revocation. Invocation timing must fall within the declared approval interval, and stage times must be consistent. These are consumer requirements until an actual resolver and enforcement path implement them. A retained record or synthetic example does not establish those checks, live execution or verifier independence. An observed unauthorized effect must remain available as incident evidence and must not be promoted into a conformant current authorization claim.

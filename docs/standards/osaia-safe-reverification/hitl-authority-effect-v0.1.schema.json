@@ -126,7 +126,7 @@
     },
     {
       "if":{"properties":{"verification":{"properties":{"state":{"enum":["VERIFIED","FAILED","PARTIAL"]}},"required":["state"]}}},
-      "then":{"properties":{"verification":{"required":["verified_at","verifier_ref","method_ref"],"properties":{"evidence_refs":{"minItems":1}}}}}
+      "then":{"properties":{"verification":{"required":["verified_at","verifier_ref","method_ref"],"properties":{"verified_at":{"type":"string","format":"date-time"},"verifier_ref":{"type":"string","minLength":1},"method_ref":{"type":"string","minLength":1},"evidence_refs":{"minItems":1}}}}}
     }
   ],
   "$defs":{
