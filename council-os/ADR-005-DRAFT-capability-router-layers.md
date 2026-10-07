@@ -1,4 +1,4 @@
-# ADR-004 (DRAFT — NOT RULED, NOT IMPLEMENTED): one capability router — layers, escalation, receipts
+# ADR-005 (DRAFT — NOT RULED, NOT IMPLEMENTED): one capability router — layers, escalation, receipts
 
 Status: **PROPOSED 2026-10-07.** Nothing in this file is wired. `functions/_lib/route/`, `/api/route/execute`,
 the board, the MCP tool list and every count stay as they are until the owner rules. Each decision below
