@@ -787,11 +787,13 @@
       "read_at": "2026-10-07T10:12:03Z",
       "read": "UNVERIFIED_FROM_SANDBOX",
       "read_note": "GET https://claude.ai/directory/councilof-ai answered HTTP 403 with a Cloudflare challenge page (\"Just a moment...\") to two fetchers from the build sandbox on 2026-10-07. The row stays UNVERIFIED until a person reads the page, or a dated mailbox record confirms the listing.",
-      "what_it_proves": "If the page reads as recorded, Council of AI is listed in the Claude connector directory as a community connector pointing at https://councilof.ai/mcp/free. This lane could not read the page, so the row proves only that the listing is claimed and where to check it.",
+      "what_it_proves": "If the page reads as recorded, Council of AI is listed in the Claude connector directory as a community connector pointing at https://councilof.ai/mcp/free. This lane could not read the page, so the row proves only that the listing is claimed and where to check it. Recorded unavailability: The listing page cannot be read by scripted fetchers: claude.ai answered HTTP 403 (Cloudflare challenge) to two fetchers on 2026-10-07 and to an independent re-read on 2026-10-08, so this row records an unavailability rather than a page-content verification.",
       "what_it_does_not_prove": "A directory listing is not verification, review or endorsement by Anthropic, and it is not adoption: it says nothing about whether anyone has connected the server or about any measurement we publish. Community connectors are submitted by their operators.",
       "state": "UNVERIFIED",
       "question": "Is Council of AI in the Claude connector directory?",
-      "answer": "It is listed at https://claude.ai/directory/councilof-ai as a community connector (endpoint https://councilof.ai/mcp/free), as far as we can say: the page answers HTTP 403 to automated readers, so this row is UNVERIFIED until a person reads it. A directory listing is not verification or endorsement by Anthropic, and it is not adoption."
+      "answer": "It is listed at https://claude.ai/directory/councilof-ai as a community connector (endpoint https://councilof.ai/mcp/free), as far as we can say: the page answers HTTP 403 to automated readers, so this row is UNVERIFIED until a person reads it. A directory listing is not verification or endorsement by Anthropic, and it is not adoption.",
+      "status_note": "The listing page cannot be read by scripted fetchers: claude.ai answered HTTP 403 (Cloudflare challenge) to two fetchers on 2026-10-07 and to an independent re-read on 2026-10-08, so this row records an unavailability rather than a page-content verification.",
+      "status_since": "2026-10-07"
     }
   ],
   "excluded_note": "Bodies a reader might expect to find above, and are not there. Three reasons appear: we hold something weaker than the word would suggest, we are not eligible, or the body has no membership to hold. Each says which. This list exists so that absence from the table is an answer rather than a gap.",
