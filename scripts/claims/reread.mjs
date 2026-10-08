@@ -26,10 +26,11 @@
  *   node scripts/claims/reread.mjs --registry <file> [--only CL-1,CL-2] > readings.json
  *
  * Output: {"registry_id":…, "read_at_utc":…, "readings":[{claim_id, url, covers, extractor,
- *          recorded_hash, current_hash, changed, current_hash_current_extractor, http_status, reason}]}
+ *          recorded_hash, current_hash, changed, claim_present, claim_presence, current_hash_current_extractor, http_status, reason}]}
  */
 import { readFileSync } from 'node:fs';
 import { CURRENT_EXTRACTOR, EXTRACTOR_RULE_1, extractorFor, sha256hex } from '../claim-capture.mjs';
+import { locateClaim } from './claim-presence.mjs';
 
 const SPEC = 'https://councilof.ai/spec/claim-maintenance/v0.2/';
 const UA = `CSOAI-claim-maintenance/0.2 (+${SPEC})`;
@@ -52,6 +53,7 @@ function claimsOf(doc) {
   if (Array.isArray(doc.claims)) {
     return doc.claims.map((c) => ({
       claim_id: c.claim_id,
+      claim_verbatim: c.claim_verbatim ?? null,
       subject: c.subject?.name ?? null,
       url: c.source_url,
       covers: c.source_content_hash?.covers ?? 'visible-text',
@@ -69,6 +71,7 @@ function claimsOf(doc) {
       const src = (c.sources || [])[0] || {};
       out.push({
         claim_id: c.id ?? c.claim_id,
+        claim_verbatim: c.claim_verbatim ?? null,
         subject: key,
         url: src.url ?? s.source ?? null,
         covers: 'visible-text',
@@ -88,52 +91,103 @@ function claimsOf(doc) {
   return out;
 }
 
+
+const presenceBoundary = 'Literal quote location in this readable response only; a miss does not establish retraction, falsity or intent.';
+const inconclusivePresence = (mode) => ({
+  claim_present: null, claim_presence: { mode, boundary: presenceBoundary },
+});
+function presenceOf(c, buf) {
+  if (typeof c.claim_verbatim !== 'string' || !c.claim_verbatim.trim()) return inconclusivePresence('NO_VERBATIM');
+  const raw = buf.toString('utf8');
+  if (buf.subarray(0, 5).toString('latin1') === '%PDF-' || buf.includes(0) ||
+      !Buffer.from(raw, 'utf8').equals(buf)) return inconclusivePresence('NOT_SEARCHABLE_AS_BYTES');
+  let text, extractor, surface;
+  if (c.covers === 'visible-text') {
+    // Presence follows the current capture locating contract. The PAGE digest below still
+    // uses its recorded extractor: a legacy entity-decoding difference is not quote absence.
+    text = extractorFor(CURRENT_EXTRACTOR)(raw);
+    extractor = CURRENT_EXTRACTOR;
+    surface = 'VISIBLE_TEXT';
+  } else if (c.covers === 'raw-bytes') {
+    text = raw; extractor = null; surface = 'RAW_UTF8_RESPONSE';
+  } else return inconclusivePresence('UNSUPPORTED_SEARCH_SURFACE');
+  const mode = locateClaim(text, c.claim_verbatim);
+  return {
+    claim_present: mode !== 'NOT_LOCATED',
+    claim_presence: {
+      mode, extractor, search_surface: surface,
+      claim_sha256: sha256hex(Buffer.from(c.claim_verbatim, 'utf8')),
+      source_content_sha256: sha256hex(Buffer.from(text, 'utf8')),
+      boundary: presenceBoundary,
+    },
+  };
+}
+
+const pageCache = new Map();
+async function readPage(url) {
+  if (!pageCache.has(url)) {
+    try {
+      const res = await fetch(url, {
+        redirect: 'follow',
+        headers: { 'user-agent': UA, accept: 'text/html,application/xhtml+xml,application/pdf;q=0.9,*/*;q=0.8' },
+      });
+      pageCache.set(url, {
+        status: res.status, ok: res.ok,
+        body: res.ok ? Buffer.from(await res.arrayBuffer()) : null,
+        read_at_utc: new Date().toISOString().replace(/\.\d+Z$/, 'Z'),
+      });
+    } catch (e) {
+      pageCache.set(url, { error: String(e).slice(0, 120), status: null });
+    }
+  }
+  return pageCache.get(url);
+}
+
 const readings = [];
 for (const c of claimsOf(reg)) {
   if (only && !only.has(c.claim_id)) continue;
   if (!c.url) {
-    readings.push({ ...c, current_hash: null, changed: null, reason: 'no source url recorded' });
+    readings.push({ ...c, current_hash: null, changed: null, ...inconclusivePresence('NO_SOURCE'), reason: 'no source url recorded' });
     continue;
   }
-  let res;
-  try {
-    res = await fetch(c.url, {
-      redirect: 'follow',
-      headers: { 'user-agent': UA, accept: 'text/html,application/xhtml+xml,application/pdf;q=0.9,*/*;q=0.8' },
-    });
-  } catch (e) {
+  const page = await readPage(c.url);
+  if (page.error) {
     readings.push({
       ...c, current_hash: null, changed: null, http_status: null,
-      reason: `transport failure from this host: ${String(e).slice(0, 120)}`,
+      ...inconclusivePresence('READ_INCONCLUSIVE'),
+      reason: `transport failure from this host: ${page.error}`,
       recorded_as: 'SEARCH_INCONCLUSIVE',
     });
     continue;
   }
-  if (!res.ok) {
+  if (!page.ok) {
     readings.push({
-      ...c, current_hash: null, changed: null, http_status: res.status,
-      reason: `HTTP ${res.status}`,
+      ...c, current_hash: null, changed: null, http_status: page.status,
+      ...inconclusivePresence('READ_INCONCLUSIVE'),
+      reason: `HTTP ${page.status}`,
       recorded_as: 'SEARCH_INCONCLUSIVE',
       note: 'a page this reader could not obtain is inconclusive with its status recorded. It is not '
           + 'an absence and it is not a statement about the subject',
     });
     continue;
   }
-  const buf = Buffer.from(await res.arrayBuffer());
+  const buf = page.body;
+  const presence = presenceOf(c, buf);
   let extract;
   try {
     extract = c.covers === 'visible-text' ? extractorFor(c.extractor) : null;
   } catch (e) {
     // A digest whose extractor this reader does not hold cannot be recomputed like with like, so
     // no comparison is made and none is implied.
-    readings.push({ ...c, http_status: res.status, current_hash: null, changed: null,
-      reason: String(e.message || e).slice(0, 160) });
+    readings.push({ ...c, ...presence, http_status: page.status, current_hash: null, changed: null,
+      source_read_at_utc: page.read_at_utc, reason: String(e.message || e).slice(0, 160) });
     continue;
   }
   const digestOf = (fn) => sha256hex(Buffer.from(fn(buf.toString('utf8')), 'utf8'));
   const hash = extract ? digestOf(extract) : sha256hex(buf);
   readings.push({
-    ...c, http_status: res.status, current_hash: hash,
+    ...c, ...presence, http_status: page.status, current_hash: hash,
+    source_read_at_utc: page.read_at_utc,
     changed: c.recorded_hash ? hash !== c.recorded_hash : null,
     ...(extract && c.extractor !== CURRENT_EXTRACTOR
       ? { current_extractor: CURRENT_EXTRACTOR, current_hash_current_extractor: digestOf(extractorFor(CURRENT_EXTRACTOR)) }

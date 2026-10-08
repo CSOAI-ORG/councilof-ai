@@ -449,6 +449,7 @@ jobs:
           # the release gate's own .ots check over them.
           python3 -m pip install -q pytest cryptography pyarrow huggingface_hub opentimestamps-client
           node --test scripts/claims/maintenance-schedule-state.node-test.mjs
+          node --test scripts/claims/reread-extractor.node-test.mjs scripts/claims/reread-presence.node-test.mjs
           node scripts/claim-maintenance-register.mjs --check
           python3 -m pytest -q scripts/claims/test_maintenance_due.py
           python3 -m pytest -q scripts/spray/test_gspc_parity.py scripts/spray/test_gspc_spray_skip.py

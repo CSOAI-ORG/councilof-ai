@@ -32,6 +32,8 @@ import {
   SCHEMA, CURRENT_EXTRACTOR,
 } from '../claim-capture.mjs';
 
+import { normalizeLocatedText as norm } from './claim-presence.mjs';
+
 const HERE = dirname(fileURLToPath(import.meta.url));
 const arg = (k, d) => { const i = process.argv.indexOf('--' + k); return i > 0 ? process.argv[i + 1] : d; };
 const SPEC = 'https://councilof.ai/spec/claim-maintenance/v0.2/';
@@ -139,11 +141,6 @@ async function main() {
       // extractor, never about the subject, so the mode that found it is recorded rather than
       // silently normalised away. Extractors differ (spec 6.3) and the difference shows up as stray
       // spaces before punctuation and inline footnote markers that no reader of the page ever sees.
-      const norm = (x) => x
-        .replace(/\[\s*\d+\s*\]/g, ' ')
-        .replace(/\s+([,.;:!?])/g, '$1')
-        .replace(/\s+/g, ' ')
-        .trim();
       let presenceMode = 'NOT_LOCATED';
       let searchSurface = null;
       if (declaredCovers === 'visible-text') {
