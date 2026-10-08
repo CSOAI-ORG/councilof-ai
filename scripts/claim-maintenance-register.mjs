@@ -141,7 +141,7 @@ function readRegistry(file) {
     subjects,
     // Quoted, never restated. The registry's own words are carried in a field whose NAME says
     // they are a quotation, so this register never asserts the source's vocabulary as its own —
-    // and `signed` below is derived here rather than trusted from that sentence.
+    // and the legacy `signed` presence/binding flag is not a signature verification verdict.
     signature_state_verbatim: doc.signature_state ?? null,
     supersedes: doc.supersedes ?? null,
     ...signatureOf(file, raw, doc),
@@ -150,23 +150,36 @@ function readRegistry(file) {
 
 
 /**
- * Is this registry signed, and over WHICH bytes? A registry may carry the signature inside it, or
- * — as the rev2 registry does — in a sidecar that pins the registry by sha256. A sidecar is only
- * a signature of this file if the digest it pins is the digest this file actually has, so that is
- * checked rather than assumed: an unchecked claim about bytes is the failure this lane exists to
- * stop, and reading "signed" off a prose field would have reported a signed registry as unsigned.
+ * Preserve the legacy `signed` presence/binding flag, but never use it as a cryptographic
+ * verdict. This projection checks only local material and the sidecar's SHA256 pin.
+ * Signature validity and signer authentication require the separate verifier ceremony.
  */
 function signatureOf(file, raw, doc) {
+  const verification = {
+    signature_verification: "UNCHECKABLE",
+    signature_verification_note:
+      "This register checks material presence and SHA256 binding only. Cryptographic signature validity and signer authentication have not been verified here.",
+  };
   const inline = Boolean(doc.sig || doc.sig_ed25519 || doc.signature);
-  if (inline) return { signed: true, signature_binding: "inline" };
+  if (inline) return {
+    signed: true, signature_binding: "inline", signature_material_present: true,
+    signature_binding_state: "INLINE_MATERIAL_UNVERIFIED", ...verification,
+  };
   const sidecarFile = file.replace(/\.json$/, ".signed.json");
   const sidecarPath = join(CLAIMS_DIR, sidecarFile);
-  if (!existsSync(sidecarPath)) return { signed: false, signature_binding: "none" };
+  if (!existsSync(sidecarPath)) return {
+    signed: false, signature_binding: "none", signature_material_present: false,
+    signature_binding_state: "NO_MATERIAL", ...verification,
+  };
   let sidecar;
   try {
     sidecar = JSON.parse(readFileSync(sidecarPath, "utf8"));
   } catch {
-    return { signed: false, signature_binding: "sidecar_unparseable", signature_sidecar_url: `${BASE}/claims/${sidecarFile}` };
+    return {
+      signed: false, signature_binding: "sidecar_unparseable", signature_material_present: null,
+      signature_binding_state: "SIDECAR_UNPARSEABLE",
+      signature_sidecar_url: `${BASE}/claims/${sidecarFile}`, ...verification,
+    };
   }
   const pinned = sidecar?.payload?.artifact?.sha256 ?? null;
   const actual = sha256(Buffer.from(raw, "utf8"));
@@ -174,6 +187,9 @@ function signatureOf(file, raw, doc) {
   return {
     signed: ok,
     signature_binding: "sidecar",
+    signature_material_present: Boolean(sidecar?.sig || sidecar?.sig_ed25519 || sidecar?.signature),
+    signature_binding_state: ok ? "SIDECAR_SHA256_MATCH" : "SIDECAR_SHA256_MISMATCH",
+    ...verification,
     signature_sidecar_url: `${BASE}/claims/${sidecarFile}`,
     sidecar_pins_sha256: pinned,
     file_sha256_read_here: actual,
@@ -325,6 +341,15 @@ const register = {
   specification_licence: "CC0-1.0",
   maintainer: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   generated_by: "scripts/claim-maintenance-register.mjs — generated from the registry files on disk, never hand-listed (spec 7.5)",
+  signature_projection: {
+    authority: "Local material presence and sidecar SHA256 binding only",
+    verification: "UNCHECKABLE",
+    compatibility_fields: {
+      signed: "Legacy material-presence or sidecar-digest-match flag; never cryptographic signature validity or signer authentication.",
+      sidecar_pin_verified: "Exact SHA256 comparison only; it does not verify a signature or authenticate a signer.",
+    },
+    boundary: "Signature source wording is quoted verbatim. No cryptographic signature verification or signer authentication is performed by this register.",
+  },
   scheduled_read_projection: {
     authority: "scripts/claims/maintenance_due.py outcomes.jsonl; this is a derived view, never a second scheduler",
     source: checkLedger.capture?.source_url ?? null,
@@ -332,7 +357,7 @@ const register = {
     bytes_sha256: checkLedger.capture?.bytes_sha256 ?? null,
     outcomes_head_sha256: checkLedger.capture?.outcomes_head_sha256 ?? null,
     entries: checkLedger.rows.length,
-    rule: "COMPLETED requires the exact registry digest, every subject claim id, a read at or after its signed due time, and no failed/unconfirmed claims. Missing matching local proof is DUE_EXECUTION_UNVERIFIED, never an assertion that no read ran.",
+    rule: "COMPLETED requires the exact registry digest, every subject claim id, a read at or after its recorded due time, and no failed/unconfirmed claims. Missing matching local proof is DUE_EXECUTION_UNVERIFIED, never an assertion that no read ran.",
     boundary: "Unsigned producer reports; internal chain integrity is not independent source truth, a signature, or Bitcoin inclusion. Claim evidence states and per-claim cadence are unchanged.",
   },
   what_this_is:
@@ -381,6 +406,10 @@ const register = {
     signature_state_verbatim: r.signature_state_verbatim,
     signed: r.signed,
     signature_binding: r.signature_binding,
+    signature_material_present: r.signature_material_present,
+    signature_binding_state: r.signature_binding_state,
+    signature_verification: r.signature_verification,
+    signature_verification_note: r.signature_verification_note,
     ...(r.signature_sidecar_url ? { signature_sidecar_url: r.signature_sidecar_url } : {}),
     ...(r.sidecar_pin_verified === undefined ? {} : { sidecar_pin_verified: r.sidecar_pin_verified }),
     ...(r.sidecar_pin_note ? { sidecar_pin_note: r.sidecar_pin_note } : {}),
@@ -394,6 +423,7 @@ const register = {
     "that the subjects here are the only organisations making claims worth observing — this is what we maintain, not a survey",
     "that a superseded registry was wrong; it was replaced, its bytes are unchanged, and it is still served at its own URL",
     "that a timestamp receipt is anchored in a block; a receipt file is submitted, not confirmed, until its upgrade is verified",
+    "that a legacy signed flag or a sidecar SHA256 match verifies a cryptographic signature or authenticates its signer; verification here is UNCHECKABLE",
   ],
 };
 register.register_digest = sha256(canonical(register));

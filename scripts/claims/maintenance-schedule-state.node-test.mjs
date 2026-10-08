@@ -49,7 +49,7 @@ test("a digest from another registry version or a read missing a subject claim c
   assert.equal(state(fixture({ registry_sha256: "c".repeat(64) })).state, "DUE_EXECUTION_UNVERIFIED");
   assert.equal(state(fixture({ claim_ids_read: ["B"] })).state, "DUE_EXECUTION_UNVERIFIED");
 });
-test("a read before the exact signed due time or in the future cannot complete", () => {
+test("a read before the exact recorded due time or in the future cannot complete", () => {
   assert.equal(state(fixture({ checked_at: "2026-09-28T09:19:59Z" })).state, "DUE_EXECUTION_UNVERIFIED");
   assert.equal(state(fixture({ checked_at: "2026-10-08T12:00:01Z" })).state, "DUE_EXECUTION_UNVERIFIED");
 });
