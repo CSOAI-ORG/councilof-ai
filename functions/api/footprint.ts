@@ -45,6 +45,8 @@ import { headFromGet } from "./_head";
 export const SCHEMA = "csoai.footprint/0.1";
 export const TTL_SECONDS = 3600;
 export const FETCH_TIMEOUT_MS = 8000;
+/** Bound the retained revenue response used for both settlement rows and its digest. */
+export const REVENUE_MAX_BYTES = 1024 * 1024;
 export const REGISTRY_CENSUS_PATH = "/interop/mcp-registry-latest.json";
 /** Endpoint freshness policy: a dated registry measurement is still evidence after this age,
  *  but readers must see STALE first. It does not create a new measurement. */
@@ -83,7 +85,7 @@ export interface Row {
 }
 
 type Fetched =
-  | { ok: true; status: number; body: unknown; reason?: never }
+  | { ok: true; status: number; body: unknown; body_sha256?: string; reason?: never }
   | { ok: false; status: number | null; reason: string; body?: never };
 
 export interface Deps {
@@ -94,12 +96,37 @@ export interface Deps {
   origin: string;
 }
 
+async function retainedBytes(response: Response): Promise<Uint8Array<ArrayBuffer> | null> {
+  if (!response.body) return new Uint8Array();
+  const reader = response.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let size = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    size += value.byteLength;
+    if (size > REVENUE_MAX_BYTES) {
+      await reader.cancel();
+      return null;
+    }
+    chunks.push(value);
+  }
+  const bytes = new Uint8Array(size);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return bytes;
+}
+
 /** One upstream read, its own try/catch, its own timeout. Never throws. */
 export async function fetchJson(
   deps: Deps,
   url: string,
   headers: Record<string, string> = {},
   timeoutMs: number = FETCH_TIMEOUT_MS,
+  retainBodyDigest = false,
 ): Promise<Fetched> {
   try {
     const r = await deps.fetch(url, {
@@ -107,9 +134,15 @@ export async function fetchJson(
       signal: AbortSignal.timeout(timeoutMs),
     });
     if (!r.ok) return { ok: false, status: r.status, reason: `http ${r.status}` };
-    const text = await r.text();
+    // Optional fingerprint of the response bytes exposed by Fetch, not wire framing or issuer trust.
+    const bytes = retainBodyDigest ? await retainedBytes(r) : null;
+    if (retainBodyDigest && bytes === null) return { ok: false, status: r.status, reason: `body exceeds ${REVENUE_MAX_BYTES}-byte cap` };
+    const text = bytes ? new TextDecoder("utf-8", { fatal: true }).decode(bytes) : await r.text();
+    const body_sha256 = bytes
+      ? Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)), (b) => b.toString(16).padStart(2, "0")).join("")
+      : undefined;
     try {
-      return { ok: true, status: r.status, body: JSON.parse(text) };
+      return { ok: true, status: r.status, body: JSON.parse(text), ...(body_sha256 ? { body_sha256 } : {}) };
     } catch {
       return { ok: false, status: r.status, reason: "not json" };
     }
@@ -338,38 +371,118 @@ export function grossDistribution(nowIso: string, art: DistributionArtifact = di
 }
 
 // ── same-origin rows ──────────────────────────────────────────────────────────
-export async function economicUse(deps: Deps): Promise<Row> {
+const isCount = (v: unknown): v is number => typeof v === "number" && Number.isSafeInteger(v) && v >= 0;
+
+/** A declared producer timestamp is separate from our observation clock and from authenticated custody. */
+function revenueTime(body: Record<string, unknown>): {
+  as_of: string | null;
+  source_time_state: "UNPUBLISHED" | "INVALID" | "DECLARED";
+  as_of_field: "as_of" | null;
+} {
+  if (body.as_of == null) return { as_of: null, source_time_state: "UNPUBLISHED", as_of_field: null };
+  const value = body.as_of;
+  const match = typeof value === "string" && /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(?:\.(\d{1,3}))?Z$/.exec(value);
+  const time = typeof value === "string" ? Date.parse(value) : NaN;
+  const normalized = match ? `${match[1]}.${(match[2] ?? "").padEnd(3, "0")}Z` : null;
+  if (!match || !Number.isFinite(time) || new Date(time).toISOString() !== normalized) {
+    return { as_of: null, source_time_state: "INVALID", as_of_field: "as_of" };
+  }
+  return { as_of: value, source_time_state: "DECLARED", as_of_field: "as_of" };
+}
+
+/** Both settlement rows come from one read, so they cannot silently describe different snapshots. */
+export async function revenueRows(deps: Deps): Promise<{ economic_use: Row; repeat_payers: Row }> {
   const url = new URL("/api/revenue", deps.origin).toString();
-  const got = await fetchJson(deps, url);
-  const base = {
+  const got = await fetchJson(deps, url, {}, FETCH_TIMEOUT_MS, true);
+  const shared = {
+    source_url: url,
+    checked_at: deps.now(),
+    source_body_sha256: got.ok ? got.body_sha256 ?? null : null,
+    http_status: got.status,
+    custody_state: "UNQUALIFIED",
+    qualification: "Producer settlement-record counts; no independent ledger coverage or chain reconciliation, buyer identity, delivery or acceptance established. The producer does not publish enumeration completeness.",
+  };
+  const economic = {
+    ...shared,
     unit: "distinct non-self x402 payer wallets, all time",
     kind: "measured (settlement records)",
-    source_url: url,
     definition: "one_number.all_time on /api/revenue — distinct payer wallets that are not ours and moved a non-zero amount",
   };
-  if (!got.ok) return uncheckable(`/api/revenue: ${got.reason}`, base);
-  const one = (got.body as { one_number?: Record<string, unknown> })?.one_number;
-  if (!one) return uncheckable("/api/revenue carries no one_number", base);
-  const v = one.all_time;
-  if (!isNum(v)) {
-    return uncheckable(`one_number is ${String(one.status ?? "absent")}: ${String(one.source ?? "no count")}`, base);
-  }
-  return {
-    state: "READ",
-    value: v,
-    as_of: deps.now(),
-    last_30d: isNum(one.last_30d) ? one.last_30d : null,
-    ...base,
+  const repeat = {
+    ...shared,
+    unit: "distinct non-self wallets with at least two recorded settlement transaction IDs, all time",
+    kind: "measured (settlement records)",
+    definition: "Repeat settlement wallets are not proof of an independent customer, accepted delivery or repeat demand.",
   };
+  const failed = (reason: string) => ({
+    economic_use: uncheckable(reason, economic),
+    repeat_payers: uncheckable(reason, repeat),
+  });
+  if (!got.ok) return failed(`/api/revenue: ${got.reason}`);
+  if (!got.body || typeof got.body !== "object" || Array.isArray(got.body)) return failed("/api/revenue body is not an object");
+  const body = got.body as Record<string, unknown>;
+  if (body.schema !== "csoai.revenue/0.1") return failed("/api/revenue schema is absent or unsupported");
+  const one = body.one_number;
+  if (!one || typeof one !== "object" || Array.isArray(one)) return failed("/api/revenue carries no one_number");
+  const count = one as Record<string, unknown>;
+  if (count.id !== "distinct_nonself_payers") return failed("one_number identity is absent or unsupported");
+  const reason = `one_number is ${String(count.status ?? "absent")}: ${String(count.source ?? "no count")}`;
+  if (count.status === "UNMEASURED") {
+    return { economic_use: unmeasured(reason, economic), repeat_payers: unmeasured(reason, repeat) };
+  }
+  if (count.status !== "MEASURED") return failed(reason);
+  if (!isCount(count.records_unreadable)) return failed("one_number.records_unreadable is absent or invalid; record coverage is uncheckable");
+  if (count.records_unreadable !== 0) return failed("one_number reports unreadable settlement records; partial counts are withheld");
+  const time = revenueTime(body);
+  const common = { ...time, producer_source: typeof count.source === "string" ? count.source : null,
+    records_unreadable: count.records_unreadable };
+  const window = (all: number, recent: unknown) =>
+    isCount(recent) && recent <= all
+      ? { last_30d: recent, last_30d_state: "READ" }
+      : { last_30d: null, last_30d_state: recent == null ? "UNPUBLISHED" : "INVALID" };
+  const economic_use: Row = isCount(count.all_time)
+    ? { ...economic, ...common, state: "READ", value: count.all_time, ...window(count.all_time, count.last_30d) }
+    : uncheckable("one_number.all_time is not a non-negative safe integer", economic);
+  const r = count.repeat_nonself_payers;
+  let repeat_payers: Row;
+  if (r == null) {
+    repeat_payers = unmeasured("Producer carries no repeat_nonself_payers measurement; absence is not zero.", { ...repeat, ...common });
+  } else if (!r || typeof r !== "object" || Array.isArray(r) || !isCount((r as Record<string, unknown>).all_time)) {
+    repeat_payers = uncheckable("repeat_nonself_payers.all_time is not a non-negative safe integer", repeat);
+  } else {
+    const rcount = r as Record<string, unknown>;
+    const value = rcount.all_time as number;
+    if (!isCount(count.all_time) || value > count.all_time) {
+      repeat_payers = uncheckable("Repeat settlement wallets exceed or lack the distinct-wallet count in this snapshot", repeat);
+    } else {
+      const repeatWindow = window(value, rcount.last_30d);
+      // Two settlements within this window require at least one settlement in it.
+      // Preserve the valid all-time value, but withhold a contradictory window.
+      if (isCount(repeatWindow.last_30d)) {
+        if (economic_use.last_30d_state !== "READ") {
+          repeatWindow.last_30d = null;
+          repeatWindow.last_30d_state = "UNCHECKABLE";
+        } else if (repeatWindow.last_30d > (count.last_30d as number)) {
+          repeatWindow.last_30d = null;
+          repeatWindow.last_30d_state = "INVALID";
+        }
+      }
+      repeat_payers = {
+        ...repeat, ...common, state: "READ", value,
+        ...repeatWindow,
+        producer_definition: typeof rcount.definition === "string" ? rcount.definition : null,
+      };
+    }
+  }
+  return { economic_use, repeat_payers };
+}
+
+export async function economicUse(deps: Deps): Promise<Row> {
+  return (await revenueRows(deps)).economic_use;
 }
 
 export async function repeatPayers(deps: Deps): Promise<Row> {
-  const url = new URL("/api/revenue", deps.origin).toString();
-  return unmeasured(
-    "/api/revenue publishes distinct payers and settlement totals, not per-wallet settlement counts; " +
-      "a repeat payer cannot be derived from what it exposes, and nothing else records one.",
-    { unit: "wallets that paid more than once", source_url: url },
-  );
+  return (await revenueRows(deps)).repeat_payers;
 }
 
 export async function board(deps: Deps): Promise<Row> {
@@ -438,8 +551,9 @@ export const FUNNEL_ORDER = [
 export async function buildFootprint(deps: Deps) {
   const nowIso = deps.now();
   const registry_listings = registryListings(nowIso);
-  const [economic_use, repeat_payers, boardRow, signed_cards, github_stars] =
-    await Promise.all([economicUse(deps), repeatPayers(deps), board(deps), signedCards(deps), githubStars(deps)]);
+  const [revenue, boardRow, signed_cards, github_stars] =
+    await Promise.all([revenueRows(deps), board(deps), signedCards(deps), githubStars(deps)]);
+  const { economic_use, repeat_payers } = revenue;
   // No network: the 832 per-package counters were measured on the pod, once, into the artifact.
   const gross_distribution = grossDistribution(nowIso);
 
