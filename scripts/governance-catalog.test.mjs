@@ -56,3 +56,60 @@ describe('Governance MCP published catalogue search contract', () => {
     expect(packageJson.files).toContain('catalog.mjs');
   });
 });
+
+// Exercise the exact registered callback and its out/err serialization without
+// loading the SDK, connecting a transport, or calling a remote endpoint. This
+// is handler-level acceptance, not a claim of SDK/wire or installed-client use.
+const handlerSource = readFileSync(new URL('../mcp/csoai-governance/index.mjs', import.meta.url), 'utf8');
+const registered = 'server.setRequestHandler(CallToolRequestSchema, async (req) => {';
+const handlerStart = handlerSource.indexOf(registered);
+const handlerEnd = handlerSource.indexOf('\n});\n\nconst transport', handlerStart);
+if (handlerStart < 0 || handlerEnd < 0) throw new Error('Registered CallTool callback boundary unavailable');
+const callbackBody = handlerSource.slice(handlerStart + registered.length, handlerEnd);
+const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
+const callback = new AsyncFunction('req', 'api', 'out', 'err', 'catalogResult', 'GW', 'BAD', callbackBody);
+const sourceArrow = (name) => {
+  const match = handlerSource.match(new RegExp(`^const ${name} = (.+);$`, 'm'));
+  if (!match) throw new Error(`Actual ${name} serialization unavailable`);
+  return Function(`return (${match[1]});`)();
+};
+const actualOut = sourceArrow('out');
+const actualErr = sourceArrow('err');
+const callCatalog = (response, query = 'eu ai act') => {
+  const paths = [];
+  const api = async (path, body) => { paths.push({ path, body }); return response; };
+  return callback({ params: { name: 'csoai_catalog', arguments: { query } } }, api,
+    actualOut, actualErr, catalogResult, 'https://councilof.ai/api', /never-match-test/)
+    .then((result) => ({ result, paths }));
+};
+
+describe('Governance MCP actual catalogue callback and serialization', () => {
+  it('serializes the retained zero-match result and sends only the encoded catalog GET path', async () => {
+    const { result, paths } = await callCatalog(ok(zero));
+    expect(paths).toEqual([{ path: '/tools?q=eu%20ai%20act', body: undefined }]);
+    expect(result).toEqual({ content: [{ type: 'text', text: JSON.stringify({ total: 0, showing: 0, matches: [] }, null, 2) }] });
+    expect(result.isError).toBeUndefined();
+  });
+  it('serializes positive matches with the existing text envelope', async () => {
+    const { result } = await callCatalog(ok({ total: 1, tools: [{ name: 'board_totals' }] }), 'board');
+    expect(JSON.parse(result.content[0].text)).toEqual({ total: 1, showing: 1, matches: [{ name: 'board_totals' }] });
+    expect(result.isError).toBeUndefined();
+  });
+  it('serializes a non-OK JSON response as isError rather than an empty success', async () => {
+    const { result } = await callCatalog({ ok: false, status: 503, json: { total: 0, tools: [] } });
+    expect(result).toEqual({ isError: true, content: [{ type: 'text', text: 'CSOAI MCP error: catalog gateway unreachable (status 503)' }] });
+  });
+  it('serializes malformed search data through the existing error boundary', async () => {
+    const { result } = await callCatalog(ok({ total: 0, distinct_tools: ['unrelated'] }));
+    expect(result).toEqual({ isError: true, content: [{ type: 'text', text: 'CSOAI MCP error: catalog gateway returned malformed tools/total search result' }] });
+  });
+  it('keeps server identity consistent with its existing package and corrects network wording', () => {
+    const packageJson = JSON.parse(readFileSync(new URL('../mcp/csoai-governance/package.json', import.meta.url), 'utf8'));
+    const version = handlerSource.match(/new Server\(\{ name: "csoai-governance", version: "([^"]+)" \}/)?.[1];
+    expect(version).toBe(packageJson.version);
+    expect(packageJson.description).not.toMatch(/verify seals offline/i);
+    const verifier = handlerSource.slice(handlerSource.indexOf('name: "csoai_verify"'), handlerSource.indexOf('name: "csoai_govern"'));
+    expect(verifier).toContain('network request');
+    expect(verifier).not.toMatch(/seal offline/i);
+  });
+});

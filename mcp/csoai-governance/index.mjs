@@ -5,7 +5,7 @@
  * Exposes the CSOAI Sovereign's governance layer to ANY MCP client — Claude
  * Science, Claude Code, Cursor, or your own agent. Four tools:
  *   csoai_sign     — Ed25519-seal an artifact to CSOAI Layer 0 (auditable + reproducible)
- *   csoai_verify   — verify a seal offline against its public key
+ *   csoai_verify   — request verification through /api/verify against the supplied public key
  *   csoai_govern   — ask the CSOAI Sovereign a governance / cybersecurity question (role-guarded)
  *   csoai_catalog  — search the published governed CSOAI tools / MCPs
  *
@@ -46,7 +46,7 @@ const TOOLS = [
   },
   {
     name: "csoai_verify",
-    description: "Verify a CSOAI Layer-0 Ed25519 seal offline: confirm the signature matches the artifact and public key. Use to check provenance of anything previously sealed with csoai_sign.",
+    description: "Request verification through /api/verify: confirm whether the signature matches the artifact and supplied public key. This client uses a network request; signature validity alone does not establish issuer identity. Use to check provenance of anything previously sealed with csoai_sign.",
     inputSchema: {
       type: "object",
       properties: {
@@ -79,7 +79,7 @@ const TOOLS = [
 
 const BAD = /travell?er|companion|walks beside|i'?m sorry|can'?t help|as an ai language model|on your journey|dear friend|kindred/i;
 
-const server = new Server({ name: "csoai-governance", version: "0.1.0" }, { capabilities: { tools: {} } });
+const server = new Server({ name: "csoai-governance", version: "0.1.1" }, { capabilities: { tools: {} } });
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: TOOLS }));
 
 server.setRequestHandler(CallToolRequestSchema, async (req) => {
