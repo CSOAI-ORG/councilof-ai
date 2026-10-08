@@ -9,7 +9,7 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { Router } from "wouter";
-import ConnectHub, { A2A_ENDPOINT, FULL_DOOR } from "./ConnectHub";
+import ConnectHub, { A2A_ENDPOINT, FULL_DOOR, PLATFORMS } from "./ConnectHub";
 import { FREE_DOOR } from "./ConnectClaude";
 import HomeHero from "../components/home/HomeHero";
 import HomeWaysIn from "../components/home/HomeWaysIn";
@@ -43,6 +43,25 @@ describe("/connect is the connector hub, not a withdrawal notice", () => {
     expect(html).toContain(`these ${served.length} tools`);
     expect(html).toContain(FREE_DOOR);
     expect(html).toContain(FULL_DOOR);
+  });
+
+  it("renders the generated VS Code install href and keeps its copy-paste fallback", () => {
+    const row = PLATFORMS.find((c) => c.id === "vscode")!;
+    const html = render(<ConnectHub />);
+    const block = html.match(/<details\b[^>]*data-testid="connect-platform-vscode"[^>]*>([\s\S]*?)<\/details>/)?.[1] ?? "";
+    const tag = block.match(/<a\b[^>]*data-testid="connect-install-vscode"[^>]*>/)?.[0] ?? "";
+    const href = tag.match(/href="([^"]+)"/)?.[1] ?? "";
+    expect(row.install_action?.kind).toBe("vscode");
+    expect(href).toBe(row.install_action!.href);
+    expect(href).toMatch(/^vscode:mcp\/install\?/);
+    const servers = JSON.parse(row.snippet).servers;
+    expect(Object.keys(servers)).toEqual(["gspc"]);
+    expect(JSON.parse(decodeURIComponent(href.slice("vscode:mcp/install?".length)))).toEqual({ name: "gspc", ...servers.gspc });
+    expect(block).toContain("Add to VS Code");
+    expect(block).toContain('aria-label="Copy: VS Code (GitHub Copilot agent mode)"');
+    expect(block).toContain(row.snippet.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#x27;"));
+    expect(PLATFORMS.filter((c) => c.id !== "vscode").every((c) => c.install_action === undefined)).toBe(true);
+    expect(html.match(/data-testid="connect-install-/g)).toHaveLength(1);
   });
 
   it("names the A2A endpoint the served agent card declares", () => {
