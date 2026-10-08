@@ -149,6 +149,14 @@ jobs:
           else
             echo "EAS key present: dependency install and attestation are essential and fail closed"
             npm install --no-save --silent ethers@6 @ethereum-attestation-service/eas-sdk@2
+            # eas-sdk's ESM build does `import { isEqual } from 'lodash'` - a named import
+            # from a CJS package whose properties are assigned at runtime, so Node's static
+            # lexer finds no named exports and the whole publish crashed (run 37717488561,
+            # 2026-10-08). Rewrite any such import to a default-import destructure, then
+            # functionally verify the module loads before the attester script runs. If the
+            # verification fails the step fails closed exactly as designed.
+            node scripts/eas_lodash_interop_patch.mjs
+            node -e 'import("@ethereum-attestation-service/eas-sdk").then(m => console.log("eas-sdk import OK:", typeof m.EAS)).catch(e => { console.error(e); process.exit(1); })'
             node scripts/eas_attest_root.mjs
           fi
       - name: Refresh exact-root EAS witness metadata after the chain write
