@@ -212,7 +212,7 @@ jobs:
         # it the gate died on ImportError in 0.25 s and the unit step went red on every PR.
         run: |
           npm ci --no-audit --no-fund
-          python3 -m pip install -q cryptography opentimestamps-client
+          python3 -m pip install -q cryptography opentimestamps-client jsonschema==4.26.0
 
       # This used to run only after merge in deploy.yml. PR #1847 passed every hosted
       # PR check and then the master deployment stopped because TypeScript errors had
