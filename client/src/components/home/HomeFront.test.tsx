@@ -17,14 +17,35 @@ import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { Router } from "wouter";
 import HomeHero from "./HomeHero";
-import LiveBoardGlance, { boardTiles, modelsHeadline, separationRead } from "./LiveBoardGlance";
-import HomeStrengths, { anchorProof, correctionsProof, machineProof, strengthCards } from "./HomeStrengths";
+import LiveBoardGlance, {
+  boardTiles,
+  modelsHeadline,
+  separationRead,
+} from "./LiveBoardGlance";
+import HomeStrengths, {
+  anchorProof,
+  correctionsProof,
+  machineProof,
+  strengthCards,
+} from "./HomeStrengths";
 import HomeNavigator, { NAV_GROUPS } from "./HomeNavigator";
 import HomeMachineSurface, { MACHINE_DOORS } from "./HomeMachineSurface";
 import HomeReach, { corpusLines } from "./HomeReach";
-import HomeEvidenceShowcase, { withdrawnReadingRecords } from "./HomeEvidenceShowcase";
-import HomeWeakScore, { accuracyText, fieldText, WEAK_CARD_ID } from "./HomeWeakScore";
-import type { CorrectionsPayload, PopPreview, ReadState, RootPayload, StatePayload } from "./homeReads";
+import HomeEvidenceShowcase, {
+  withdrawnReadingRecords,
+} from "./HomeEvidenceShowcase";
+import HomeWeakScore, {
+  accuracyText,
+  fieldText,
+  WEAK_CARD_ID,
+} from "./HomeWeakScore";
+import type {
+  CorrectionsPayload,
+  PopPreview,
+  ReadState,
+  RootPayload,
+  StatePayload,
+} from "./homeReads";
 import type { GspcPayload } from "../board/useGspcBoard";
 
 /**
@@ -39,14 +60,22 @@ function render(node: React.ReactNode): string {
 /* ── fixtures ──────────────────────────────────────────────────────────── */
 
 const board: GspcPayload = {
-  totals: { public_count: "6 axis · 5 measured (mock)", items: 1230, model_fleets: 14, fact_runs: 9 },
+  totals: {
+    public_count: "6 axis · 5 measured (mock)",
+    items: 1230,
+    model_fleets: 14,
+    fact_runs: 9,
+  },
   measured_on: { date: "mock run 2026-01-01" },
   axes: [],
 };
 
 const corrections: ReadState<CorrectionsPayload> = {
   kind: "ready",
-  payload: { corrections: [{ id: "C-1" }, { id: "C-2" }], signature_state: "STALE" },
+  payload: {
+    corrections: [{ id: "C-1" }, { id: "C-2" }],
+    signature_state: "STALE",
+  },
 };
 
 const root: ReadState<RootPayload> = {
@@ -54,7 +83,8 @@ const root: ReadState<RootPayload> = {
   payload: {
     as_of: "2026-09-22T08:54:02Z",
     card_count: 305,
-    merkle_root: "40ce3833118fab76a98c55429a5b06c7c3051915780893f3ab60a25cb31ac0a4",
+    merkle_root:
+      "40ce3833118fab76a98c55429a5b06c7c3051915780893f3ab60a25cb31ac0a4",
     sig_ed25519: "a39f",
   },
 };
@@ -65,7 +95,13 @@ const ots: PopPreview = {
   n: 600,
   n_unit: "published .ots proofs that parse as proofs",
   as_of: "2026-09-22",
-  head: { declared_counts: { proofs: 600, bitcoin_attested: 56, calendar_pending: 544 } },
+  head: {
+    declared_counts: {
+      proofs: 600,
+      bitcoin_attested: 56,
+      calendar_pending: 544,
+    },
+  },
 };
 
 const estate: ReadState<StatePayload> = {
@@ -78,13 +114,27 @@ const estate: ReadState<StatePayload> = {
 };
 
 /** Banned on every public surface by scripts/brand-gate.mjs. Re-asserted at the component level. */
-const BANNED = [/\bsovos\b/i, /\bsov3\d*\b/i, /\bdorado\b/i, /\bcibola\b/i, /\bCEASAI/i, /\bget certified\b/i, /\bwe certify\b/i, /\bbyzantine\b/i, /\bBFT\b/];
+const BANNED = [
+  /\bsovos\b/i,
+  /\bsov3\d*\b/i,
+  /\bdorado\b/i,
+  /\bcibola\b/i,
+  /\bCEASAI/i,
+  /\bget certified\b/i,
+  /\bwe certify\b/i,
+  /\bbyzantine\b/i,
+  /\bBFT\b/,
+];
 
 /* ── hero + live board (rebuilt 2026-09-30) ─────────────────────────────── */
 
 const boardWithAxes: GspcPayload = {
   totals: {
     public_count: "4 axes · 3 measured (mock)",
+    axes: 4,
+    measured_axes: 3,
+    unmeasured_axes: 1,
+    fact_runs: 1,
     comparison_axes: 2,
     separated_leads: 0,
     ties: 1,
@@ -93,10 +143,35 @@ const boardWithAxes: GspcPayload = {
   },
   measured_on: { date: "mock run 2026-01-01" },
   axes: [
-    { axis: "mock-a", bench: "BenchA", kind: "model-comparison", status: "MEASURED", separation: "TIE", n: 40 },
-    { axis: "mock-b", bench: "BenchB", kind: "model-comparison", status: "MEASURED", separation: "UNTESTED", n: 31 },
-    { axis: "mock-c", bench: "FactsC", kind: "deterministic-facts", status: "MEASURED", n: 9 },
-    { axis: "mock-d", bench: "FactsD", kind: "deterministic-facts", status: "UNMEASURED" },
+    {
+      axis: "mock-a",
+      bench: "BenchA",
+      kind: "model-comparison",
+      status: "MEASURED",
+      separation: "TIE",
+      n: 40,
+    },
+    {
+      axis: "mock-b",
+      bench: "BenchB",
+      kind: "model-comparison",
+      status: "MEASURED",
+      separation: "UNTESTED",
+      n: 31,
+    },
+    {
+      axis: "mock-c",
+      bench: "FactsC",
+      kind: "deterministic-facts",
+      status: "MEASURED",
+      n: 9,
+    },
+    {
+      axis: "mock-d",
+      bench: "FactsD",
+      kind: "deterministic-facts",
+      status: "UNMEASURED",
+    },
   ],
 };
 const models = { third_party_models: 123, own_models_excluded: 7 };
@@ -104,7 +179,8 @@ const models = { third_party_models: 123, own_models_excluded: 7 };
 describe("HomeHero", () => {
   it("says what the business is in one plain sentence, with no figure and no banned string", () => {
     const html = render(<HomeHero />);
-    expect(html).toContain("We measure how AI systems behave");
+    expect(html).toContain("AI behaviour.");
+    expect(html).toContain("Check the evidence.");
     expect(html).toContain("agents and the endpoints they call");
     expect(html).toContain("signed cards, unsigned evidence and untested work");
     expect(html).toContain("corrections stay public");
@@ -135,16 +211,27 @@ describe("LiveBoardGlance", () => {
   });
 
   it("reads all four separation fields or none", () => {
-    expect(separationRead(boardWithAxes)).toEqual({ comparison: 2, separated: 0, ties: 1, untested: 1 });
-    expect(separationRead({ totals: { comparison_axes: 2, ties: 1 } })).toBeNull();
+    expect(separationRead(boardWithAxes)).toEqual({
+      comparison: 2,
+      separated: 0,
+      ties: 1,
+      untested: 1,
+    });
+    expect(
+      separationRead({ totals: { comparison_axes: 2, ties: 1 } }),
+    ).toBeNull();
   });
 
   it("prints the count line, the separation line and the model count off their sources", () => {
-    const html = render(<LiveBoardGlance data={boardWithAxes} models={models} />);
-    expect(html).toContain("4 axes · 3 measured (mock)");
-    expect(html).toContain("0 separated, 1 tie, 1 untested");
+    const html = render(
+      <LiveBoardGlance data={boardWithAxes} models={models} />,
+    );
+    expect(html).toContain(
+      'data-testid="board-public-count">3<span> / 4</span>',
+    );
+    expect(html).toContain("0 separated · 1 tie · 1 untested");
     expect(html).toContain(">123<");
-    expect(html).toContain("our own 7 are listed apart, never counted in");
+    expect(html).toContain("Our 7 own models are excluded");
     expect(html).toContain('href="/models-measured/"');
     expect(html).toContain('data-state="UNMEASURED"');
     expect(html).toContain("GET /api/gspc");
@@ -158,18 +245,42 @@ describe("LiveBoardGlance", () => {
   });
 
   it("accepts the model file only when its headline agrees with its own rows", () => {
-    const rows = [{ kind: "third_party" }, { kind: "third_party" }, { kind: "own" }];
-    expect(modelsHeadline({ schema: "csoai.models-measured/0.1", headline: { third_party_models: 2, own_models_excluded: 1 }, models: rows })).toEqual({
+    const rows = [
+      { kind: "third_party" },
+      { kind: "third_party" },
+      { kind: "own" },
+    ];
+    expect(
+      modelsHeadline({
+        schema: "csoai.models-measured/0.1",
+        headline: { third_party_models: 2, own_models_excluded: 1 },
+        models: rows,
+      }),
+    ).toEqual({
       third_party_models: 2,
       own_models_excluded: 1,
     });
-    expect(modelsHeadline({ schema: "csoai.models-measured/0.1", headline: { third_party_models: 14 }, models: rows })).toBeNull();
-    expect(modelsHeadline({ schema: "other", headline: { third_party_models: 2 }, models: rows })).toBeNull();
+    expect(
+      modelsHeadline({
+        schema: "csoai.models-measured/0.1",
+        headline: { third_party_models: 14 },
+        models: rows,
+      }),
+    ).toBeNull();
+    expect(
+      modelsHeadline({
+        schema: "other",
+        headline: { third_party_models: 2 },
+        models: rows,
+      }),
+    ).toBeNull();
   });
 
   it("prints the reason and NO figure when the board is unread", () => {
-    const html = render(<LiveBoardGlance data={null} error="HTTP 503" models={models} />);
-    expect(html).toContain("The board is unread");
+    const html = render(
+      <LiveBoardGlance data={null} error="HTTP 503" models={models} />,
+    );
+    expect(html).toContain("The board could not be read");
     expect(html).toContain("HTTP 503");
     expect(html).not.toContain(">123<");
   });
@@ -179,7 +290,9 @@ describe("LiveBoardGlance", () => {
 
 describe("HomeStrengths", () => {
   it("states the six strengths in the order they are worth saying", () => {
-    const titles = strengthCards({ corrections, root, ots }).map((c) => c.title);
+    const titles = strengthCards({ corrections, root, ots }).map(
+      (c) => c.title,
+    );
     expect(titles).toHaveLength(6);
     expect(titles[0]).toMatch(/paying us/i); // independent, published signed, free to re-check
     expect(titles[1]).toMatch(/bad results/i); // we publish our weak scores
@@ -205,7 +318,9 @@ describe("HomeStrengths", () => {
 
   it("never calls a pending timestamp anchored", () => {
     const p = anchorProof(root, ots);
-    expect(p.text).toContain("56 of 600 published proof files contain Bitcoin block-header attestations");
+    expect(p.text).toContain(
+      "56 of 600 published proof files contain Bitcoin block-header attestations",
+    );
     expect(p.text).toContain("544 remain calendar-pending");
     expect(p.text).not.toMatch(/600 (?:proofs )?anchored/i);
   });
@@ -218,21 +333,29 @@ describe("HomeStrengths", () => {
     expect(anchor.body).not.toMatch(/signed and timestamped/i);
     expect(anchor.body).toContain("Separately");
     expect(anchorProof(root, ots).text).toContain("separately");
-    expect(anchorProof(root, ots).text).not.toMatch(/timestamps? of this root/i);
+    expect(anchorProof(root, ots).text).not.toMatch(
+      /timestamps? of this root/i,
+    );
   });
 
   it("drops the timestamp clause entirely when that door did not answer", () => {
     expect(anchorProof(root, null).text).not.toMatch(/Bitcoin/);
-    expect(anchorProof(root, null).text).toContain("305 records under one signed root");
+    expect(anchorProof(root, null).text).toContain(
+      "305 records under one signed root",
+    );
   });
 
   it("says the root is unread rather than printing a stale timestamp", () => {
-    expect(machineProof({ kind: "failed", reason: "offline" }).text).toContain("offline");
+    expect(machineProof({ kind: "failed", reason: "offline" }).text).toContain(
+      "offline",
+    );
     expect(machineProof({ kind: "loading" }).live).toBe(false);
   });
 
   it("renders six cards with no banned string", () => {
-    const html = render(<HomeStrengths corrections={corrections} root={root} ots={ots} />);
+    const html = render(
+      <HomeStrengths corrections={corrections} root={root} ots={ots} />,
+    );
     expect(html.match(/data-strength="/g)).toHaveLength(6);
     expect(html).toContain("STALE");
     for (const re of BANNED) expect(html).not.toMatch(re);
@@ -243,7 +366,13 @@ describe("HomeStrengths", () => {
 
 describe("HomeNavigator", () => {
   it("groups the estate by the five questions a reader arrives with", () => {
-    expect(NAV_GROUPS.map((g) => g.id)).toEqual(["see", "check", "use", "changed", "who"]);
+    expect(NAV_GROUPS.map((g) => g.id)).toEqual([
+      "see",
+      "check",
+      "use",
+      "changed",
+      "who",
+    ]);
     for (const g of NAV_GROUPS) expect(g.question.endsWith("?")).toBe(true);
   });
 
@@ -260,7 +389,15 @@ describe("HomeNavigator", () => {
 
   it("reaches the board, the verifier, the ledger, the data doors and the library", () => {
     const hrefs = NAV_GROUPS.flatMap((g) => g.links.map((l) => l.href));
-    for (const href of ["#board", "/gspc-verify", "/refutation-ledger", "#machine-surface", "/library", "/memberships", "/contact/?arm=run"]) {
+    for (const href of [
+      "#board",
+      "/gspc-verify",
+      "/refutation-ledger",
+      "#machine-surface",
+      "/library",
+      "/memberships",
+      "/contact/?arm=run",
+    ]) {
       expect(hrefs).toContain(href);
     }
   });
@@ -276,18 +413,44 @@ describe("HomeNavigator", () => {
 
 describe("HomeMachineSurface", () => {
   const doors = {
-    stablecoins: { payload: { title: "Stablecoin universe", state: "INDEXED", n: 425, n_unit: "assets catalogued", as_of: "2026-09-16" } },
-    "x402-bazaar": { payload: { title: "x402 Bazaar listings", state: "INDEXED", n: null, as_of: "2026-09-17" } },
+    stablecoins: {
+      payload: {
+        title: "Stablecoin universe",
+        state: "INDEXED",
+        n: 425,
+        n_unit: "assets catalogued",
+        as_of: "2026-09-16",
+      },
+    },
+    "x402-bazaar": {
+      payload: {
+        title: "x402 Bazaar listings",
+        state: "INDEXED",
+        n: null,
+        as_of: "2026-09-17",
+      },
+    },
     a2a: { payload: null, reason: "/api/pop/a2a answered HTTP 500" },
     "ots-proofs": { payload: ots },
   };
-  const manifest: ReadState<{ resources: unknown[]; mcp: { free_tools: string[]; paid_tools: string[] } }> = {
+  const manifest: ReadState<{
+    resources: unknown[];
+    mcp: { free_tools: string[]; paid_tools: string[] };
+  }> = {
     kind: "ready",
-    payload: { resources: new Array(21).fill({ url: "x" }), mcp: { free_tools: new Array(9).fill("f"), paid_tools: new Array(4).fill("p") } },
+    payload: {
+      resources: new Array(21).fill({ url: "x" }),
+      mcp: {
+        free_tools: new Array(9).fill("f"),
+        paid_tools: new Array(4).fill("p"),
+      },
+    },
   };
 
   it("renders ten door lines and never a total across them", () => {
-    const html = render(<HomeMachineSurface doors={doors} manifest={manifest as never} />);
+    const html = render(
+      <HomeMachineSurface doors={doors} manifest={manifest as never} />,
+    );
     expect(html.match(/data-door="/g)).toHaveLength(10);
     expect(html).toContain("never added together");
     // 425 + 600 must not appear anywhere as a sum.
@@ -295,14 +458,18 @@ describe("HomeMachineSurface", () => {
   });
 
   it("shows a refused total as words and an unread door as UNREAD", () => {
-    const html = render(<HomeMachineSurface doors={doors} manifest={manifest as never} />);
+    const html = render(
+      <HomeMachineSurface doors={doors} manifest={manifest as never} />,
+    );
     expect(html).toContain("no total published");
     expect(html).toContain('data-door-state="UNREAD"');
     expect(html).toContain("HTTP 500");
   });
 
   it("counts the doors and tools off the manifest arrays", () => {
-    const html = render(<HomeMachineSurface doors={doors} manifest={manifest as never} />);
+    const html = render(
+      <HomeMachineSurface doors={doors} manifest={manifest as never} />,
+    );
     expect(html).toContain("21 doors");
     expect(html).toContain("9 free tools");
     expect(html).toContain("4 metered");
@@ -310,13 +477,25 @@ describe("HomeMachineSurface", () => {
 
   it("names only machine doors that are published, each with what it serves", () => {
     expect(MACHINE_DOORS.map((d) => d.href)).toEqual(
-      expect.arrayContaining(["/api/gspc", "/mcp", "/.well-known/agent.json", "/.well-known/x402.json", "/.well-known/did.json", "/llms.txt"]),
+      expect.arrayContaining([
+        "/api/gspc",
+        "/mcp",
+        "/.well-known/agent.json",
+        "/.well-known/x402.json",
+        "/.well-known/did.json",
+        "/llms.txt",
+      ]),
     );
     for (const d of MACHINE_DOORS) expect(d.what.length).toBeGreaterThan(10);
   });
 
   it("says the manifest is unread rather than printing a door count from memory", () => {
-    const html = render(<HomeMachineSurface doors={doors} manifest={{ kind: "failed", reason: "HTTP 502" } as never} />);
+    const html = render(
+      <HomeMachineSurface
+        doors={doors}
+        manifest={{ kind: "failed", reason: "HTTP 502" } as never}
+      />,
+    );
     expect(html).toContain("could not be read");
     expect(html).toContain("HTTP 502");
     expect(html).not.toContain("21 doors");
@@ -327,7 +506,11 @@ describe("HomeMachineSurface", () => {
 
 describe("HomeReach", () => {
   it("prints each corpus with its own kind and never adds them", () => {
-    const lines = corpusLines(estate) as { figure: string; headline: string; qualifier: string }[];
+    const lines = corpusLines(estate) as {
+      figure: string;
+      headline: string;
+      qualifier: string;
+    }[];
     expect(lines.map((l) => l.figure)).toEqual(["335", "305", "0"]);
     expect(lines[0].qualifier).toContain("measured");
     expect(lines[1].qualifier).toContain("catalogued");
@@ -337,7 +520,9 @@ describe("HomeReach", () => {
   });
 
   it("reports an unread state rather than an empty row of zeroes", () => {
-    expect(corpusLines({ kind: "failed", reason: "HTTP 500" })).toEqual({ unread: "HTTP 500" });
+    expect(corpusLines({ kind: "failed", reason: "HTTP 500" })).toEqual({
+      unread: "HTTP 500",
+    });
     expect(corpusLines({ kind: "loading" })).toEqual([]);
   });
 
@@ -362,7 +547,9 @@ describe("the withdrawal record is reachable, but never the front door's first i
   });
 
   it("renders no withdrawal block when showWithdrawn is false", () => {
-    const html = render(<HomeEvidenceShowcase sections="reading" showWithdrawn={false} />);
+    const html = render(
+      <HomeEvidenceShowcase sections="reading" showWithdrawn={false} />,
+    );
     expect(html).not.toContain('data-publication-state="withdrawn"');
     expect(html).not.toContain("This material is under review");
     expect(html).not.toContain("Withdrawal record");
@@ -377,13 +564,21 @@ describe("the withdrawal record is reachable, but never the front door's first i
   });
 
   it("never promotes a withdrawn entry as ready reading, either way", () => {
-    const withdrawnHrefs = new Set(withdrawnReadingRecords().map((w) => w.href));
+    const withdrawnHrefs = new Set(
+      withdrawnReadingRecords().map((w) => w.href),
+    );
     for (const html of [
       render(<HomeEvidenceShowcase sections="reading" showWithdrawn={false} />),
       render(<HomeEvidenceShowcase sections="reading" />),
     ]) {
-      const promoted = html.slice(0, html.indexOf("withdrawn-reading") + 1 || html.length);
-      for (const href of withdrawnHrefs) expect(promoted).not.toContain(`id="reading-${href.replace(/[^a-z0-9]+/gi, "-")}"`);
+      const promoted = html.slice(
+        0,
+        html.indexOf("withdrawn-reading") + 1 || html.length,
+      );
+      for (const href of withdrawnHrefs)
+        expect(promoted).not.toContain(
+          `id="reading-${href.replace(/[^a-z0-9]+/gi, "-")}"`,
+        );
     }
   });
 });
@@ -406,8 +601,12 @@ describe("HomeReach presentation", () => {
 
   it("keeps dry accounting words off the face of the page", () => {
     const html = render(<HomeReach state={estate} />);
-    const ourCopy = html.replace(/<section data-testid="live-counters-hero"[\s\S]*?<\/section>/g, "");
-    for (const word of [/\bcumulative\b/i, /\baggregate\b/i, /\bgross\b/i]) expect(ourCopy).not.toMatch(word);
+    const ourCopy = html.replace(
+      /<section data-testid="live-counters-hero"[\s\S]*?<\/section>/g,
+      "",
+    );
+    for (const word of [/\bcumulative\b/i, /\baggregate\b/i, /\bgross\b/i])
+      expect(ourCopy).not.toMatch(word);
   });
 });
 
@@ -436,14 +635,34 @@ describe("HomeWeakScore", () => {
   });
 
   it("shows whatever verdict the verifier returned, including a bad one", () => {
-    const valid = render(<HomeWeakScore read={{ kind: "ready", card, verdict: { state: "VALID", reason: "the hash matched and the signature verifies" } }} />,
+    const valid = render(
+      <HomeWeakScore
+        read={{
+          kind: "ready",
+          card,
+          verdict: {
+            state: "VALID",
+            reason: "the hash matched and the signature verifies",
+          },
+        }}
+      />,
     );
     expect(valid).toContain('data-verdict="VALID"');
     expect(valid).toContain("9.7%");
     expect(valid).toContain("signed card under our published key");
     expect(valid).not.toContain("every other result");
 
-    const bad = render(<HomeWeakScore read={{ kind: "ready", card, verdict: { state: "INVALID", reason: "the signature does not verify" } }} />,
+    const bad = render(
+      <HomeWeakScore
+        read={{
+          kind: "ready",
+          card,
+          verdict: {
+            state: "INVALID",
+            reason: "the signature does not verify",
+          },
+        }}
+      />,
     );
     expect(bad).toContain('data-verdict="INVALID"');
     expect(bad).toContain("the signature does not verify");
@@ -455,7 +674,13 @@ describe("HomeWeakScore", () => {
     // 0.0, not this card. A superlative a reader cannot check is the defect this instrument
     // exists to catch.
     const html = render(
-      <HomeWeakScore read={{ kind: "ready", card, verdict: { state: "VALID", reason: "ok" } }} />,
+      <HomeWeakScore
+        read={{
+          kind: "ready",
+          card,
+          verdict: { state: "VALID", reason: "ok" },
+        }}
+      />,
     );
     expect(html).not.toMatch(/\bthe (worst|lowest)\b/i);
     expect(html).toContain("not even the bottom");
@@ -466,7 +691,14 @@ describe("HomeWeakScore", () => {
   });
 
   it("discloses the superseded framing frozen inside the signed bytes", () => {
-    const html = render(<HomeWeakScore read={{ kind: "ready", card, verdict: { state: "VALID", reason: "ok" } }} />,
+    const html = render(
+      <HomeWeakScore
+        read={{
+          kind: "ready",
+          card,
+          verdict: { state: "VALID", reason: "ok" },
+        }}
+      />,
     );
     expect(html).toContain("13 measured of 14 quotable");
     expect(html).toContain("out of date, on purpose");
@@ -474,7 +706,9 @@ describe("HomeWeakScore", () => {
   });
 
   it("shows no score at all when the record could not be fetched", () => {
-    const html = render(<HomeWeakScore read={{ kind: "failed", reason: "HTTP 404" }} />);
+    const html = render(
+      <HomeWeakScore read={{ kind: "failed", reason: "HTTP 404" }} />,
+    );
     expect(html).toContain("could not be read");
     expect(html).toContain("HTTP 404");
     expect(html).not.toContain("9.7%");

@@ -1,0 +1,733 @@
+/* Homepage GSPC observatory; scoped so dashboard and other owners keep their theme. */
+.gspc-home-board {
+  padding: 72px 0 56px;
+  color: #e8f2ee;
+  background:
+    radial-gradient(
+      ellipse at 100% 0,
+      rgba(71, 182, 137, 0.14),
+      transparent 45%
+    ),
+    #08291f;
+  border-top: 1px solid #245544;
+}
+.gspc-board-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 28px;
+}
+.gspc-eyebrow,
+.gspc-detail-kicker {
+  font:
+    700 11px/1.5 ui-monospace,
+    SFMono-Regular,
+    monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #8ce0bb;
+}
+.gspc-board-heading h2 {
+  margin: 12px 0 0;
+  font-size: clamp(32px, 4.5vw, 54px);
+  font-weight: 850;
+  line-height: 1.03;
+  letter-spacing: -0.045em;
+  color: #fff;
+}
+.gspc-board-heading h2 span {
+  color: #70d9ab;
+}
+.gspc-board-intro {
+  max-width: 570px;
+  margin: 16px 0 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #c0d9cc;
+}
+.gspc-read-state {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 5px;
+  font:
+    500 11px/1.5 ui-monospace,
+    SFMono-Regular,
+    monospace;
+  color: #c0d9cc;
+}
+.gspc-read-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #a8b8b0;
+}
+.gspc-read-dot.is-ready {
+  background: #7adea9;
+  box-shadow: 0 0 0 4px #7adea91a;
+}
+.gspc-read-dot.is-error {
+  background: #f1bf67;
+}
+.gspc-read-state button {
+  border: 1px solid #456958;
+  background: #143a2c;
+  border-radius: 8px;
+  min-height: 40px;
+  padding: 7px 12px;
+  color: #ecfff5;
+  cursor: pointer;
+}
+.gspc-read-state button:hover:enabled {
+  background: #22523f;
+}
+.gspc-read-state button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.gspc-home-board button:focus-visible,
+.gspc-home-board a:focus-visible,
+.gspc-home-board input:focus-visible,
+.gspc-home-board select:focus-visible {
+  outline: 3px solid #9aebc5;
+  outline-offset: 3px;
+}
+.gspc-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  margin: 32px 0 0;
+  border: 1px solid #365c4b;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.035);
+  overflow: hidden;
+}
+.gspc-summary > div {
+  padding: 20px 21px;
+  border-right: 1px solid #365c4b;
+}
+.gspc-summary > div:last-child {
+  border-right: 0;
+}
+.gspc-summary dt {
+  font:
+    600 11px/1.55 ui-monospace,
+    SFMono-Regular,
+    monospace;
+  letter-spacing: 0.02em;
+  color: #cfdfd5;
+  min-height: 34px;
+}
+.gspc-summary dt a {
+  text-decoration: none;
+  color: inherit;
+}
+.gspc-summary dd {
+  font:
+    750 36px/1.25 ui-monospace,
+    SFMono-Regular,
+    monospace;
+  letter-spacing: -0.045em;
+  margin: 5px 0;
+  color: #fff;
+}
+.gspc-summary dd > span {
+  font-size: 18px;
+  color: #a8c4b4;
+  letter-spacing: -0.02em;
+}
+.gspc-summary p {
+  font-size: 11px;
+  line-height: 1.6;
+  color: #b7d0c1;
+  margin: 6px 0 0;
+}
+.gspc-separation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 18px 0 24px;
+}
+.gspc-separation p {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #bad6c6;
+  margin: 0;
+}
+.gspc-separation strong {
+  color: #effaf3;
+}
+.gspc-separation-track {
+  display: flex;
+  flex: none;
+  width: 140px;
+  height: 6px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #375349;
+}
+.gspc-separation-track .separated {
+  background: #7beaab;
+}
+.gspc-separation-track .tied {
+  background: #9cc4f2;
+}
+.gspc-separation-track .untested {
+  background: #788e84;
+}
+.gspc-explorer {
+  border: 1px solid #41604e;
+  border-radius: 20px;
+  background: #eff4ef;
+  color: #132b20;
+  padding: 22px;
+}
+.gspc-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.gspc-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.gspc-filters button {
+  border: 1px solid transparent;
+  border-radius: 7px;
+  padding: 10px 11px;
+  min-height: 42px;
+  font-size: 12px;
+  font-weight: 650;
+  color: #496252;
+  cursor: pointer;
+  background: transparent;
+}
+.gspc-filters button:hover {
+  background: #e2ebe3;
+}
+.gspc-filters button.active {
+  background: #1b4935;
+  color: #fff;
+  box-shadow: 0 1px 3px #08291f18;
+}
+.gspc-search-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.gspc-search-controls input,
+.gspc-search-controls select {
+  max-width: 100%;
+  border: 1px solid #c2d2c5;
+  border-radius: 8px;
+  background: #fff;
+  color: #21432d;
+  font:
+    500 12px/1.5 system-ui,
+    sans-serif;
+  min-height: 42px;
+  padding: 10px;
+}
+.gspc-search-controls input {
+  width: 216px;
+}
+.gspc-search-controls select {
+  width: 151px;
+}
+.gspc-search-controls input::placeholder {
+  color: #5c7062;
+  opacity: 1;
+}
+.gspc-result-count {
+  font:
+    500 11px/1.6 ui-monospace,
+    SFMono-Regular,
+    monospace;
+  color: #58695e;
+  margin: 14px 0 18px;
+}
+.gspc-explorer-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 292px;
+  gap: 20px;
+  align-items: start;
+}
+.gspc-axis-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.gspc-axis-grid li {
+  min-width: 0;
+}
+.gspc-axis-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  text-align: left;
+  width: 100%;
+  height: 100%;
+  border: 1px solid #cbd8cd;
+  background: #fff;
+  border-radius: 11px;
+  padding: 14px 12px 12px;
+  color: #163521;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    background 0.15s,
+    box-shadow 0.15s;
+}
+.gspc-axis-card:hover {
+  border-color: #759e83;
+  box-shadow: 0 3px 10px #173c2310;
+}
+.gspc-axis-card.selected {
+  background: #e0ede1;
+  border-color: #38644a;
+  box-shadow: inset 0 0 0 1px #38644a;
+}
+.gspc-card-kind {
+  font:
+    600 8px/1.5 ui-monospace,
+    SFMono-Regular,
+    monospace;
+  letter-spacing: 0.07em;
+  color: #627669;
+  margin-bottom: 7px;
+}
+.gspc-axis-card > strong {
+  font-size: 13px;
+  line-height: 1.4;
+  font-weight: 750;
+  overflow-wrap: anywhere;
+  min-height: 35px;
+}
+.gspc-card-bench {
+  color: #627469;
+  font-size: 10px;
+  line-height: 1.5;
+  margin: 5px 0 12px;
+  overflow-wrap: anywhere;
+}
+.gspc-card-bottom {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
+.gspc-state {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  border-radius: 5px;
+  padding: 4px 6px;
+  font:
+    650 9px/1.3 ui-monospace,
+    SFMono-Regular,
+    monospace;
+  letter-spacing: 0.015em;
+}
+.gspc-home-board .state-tie {
+  background: #e7eef8;
+  color: #254974;
+  border: 1px solid #b9cce3;
+}
+.gspc-home-board .state-untested {
+  background: #ecefeb;
+  color: #47594b;
+  border: 1px solid #ccd4cb;
+}
+.gspc-home-board .state-fact_run,
+.gspc-home-board .state-separated {
+  background: #d9edda;
+  color: #224f2d;
+  border: 1px solid #a9cfae;
+}
+.gspc-home-board .state-unmeasured,
+.gspc-home-board .state-unknown {
+  background: #fff1d0;
+  color: #725015;
+  border: 1px solid #e5c584;
+}
+.gspc-card-metric {
+  font-size: 9px;
+  color: #627368;
+  display: flex;
+  justify-content: space-between;
+  gap: 7px;
+  margin-top: 9px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.gspc-card-metric b {
+  color: #264e34;
+  font-weight: 650;
+}
+.gspc-detail {
+  position: sticky;
+  top: 90px;
+  padding: 22px 19px;
+  border: 1px solid #c8d7c8;
+  border-radius: 12px;
+  background: #fff;
+  color: #264834;
+  overflow-wrap: anywhere;
+}
+.gspc-detail-kicker {
+  color: #537b5c;
+  font-size: 9px;
+}
+.gspc-detail h3 {
+  scroll-margin-top: 90px;
+  font-size: 24px;
+  line-height: 1.16;
+  font-weight: 750;
+  letter-spacing: -0.025em;
+  color: #13351e;
+  margin: 10px 0 13px;
+}
+.gspc-detail-explanation {
+  font-size: 12px;
+  line-height: 1.65;
+  margin: 14px 0;
+  color: #4f6655;
+}
+.gspc-task {
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 14px 0;
+  padding-top: 13px;
+  border-top: 1px solid #e2eae2;
+}
+.gspc-detail-facts {
+  margin: 20px 0;
+}
+.gspc-detail-facts > div {
+  display: grid;
+  grid-template-columns: 95px minmax(0, 1fr);
+  gap: 12px;
+  border-top: 1px solid #e1e9e1;
+  padding: 9px 0;
+}
+.gspc-detail-facts dt {
+  font-size: 10px;
+  line-height: 1.6;
+  color: #647667;
+}
+.gspc-detail-facts dd {
+  margin: 0;
+  font:
+    550 10px/1.6 ui-monospace,
+    SFMono-Regular,
+    monospace;
+  color: #214c2d;
+}
+.gspc-evidence-box {
+  background: #edf3eb;
+  border: 1px solid #d6e3d2;
+  border-radius: 9px;
+  padding: 12px;
+}
+.gspc-evidence-box strong {
+  display: block;
+  font-size: 12px;
+  color: #23492b;
+}
+.gspc-evidence-box p,
+.gspc-evidence-box > span {
+  display: block;
+  font-size: 10px;
+  line-height: 1.6;
+  color: #56705a;
+  margin: 7px 0;
+}
+.gspc-evidence-box a {
+  display: block;
+  font-size: 11px;
+  line-height: 1.5;
+  font-weight: 650;
+  color: #1c5632;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  margin-top: 10px;
+}
+.gspc-source-notes {
+  margin-top: 15px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: #516555;
+}
+.gspc-source-notes summary {
+  cursor: pointer;
+  padding: 8px 0;
+  font-weight: 600;
+  color: #2d5638;
+  min-height: 38px;
+}
+.gspc-source-notes p {
+  margin: 7px 0;
+}
+.gspc-board-foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  margin: 20px 0 0;
+}
+.gspc-board-foot > p {
+  font:
+    400 10px/1.65 ui-monospace,
+    SFMono-Regular,
+    monospace;
+  color: #bad0c1;
+  max-width: 690px;
+  margin: 0;
+}
+.gspc-board-foot nav {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.gspc-board-foot a {
+  font-size: 11px;
+  line-height: 1.65;
+  font-weight: 650;
+  color: #e0f8e9;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  min-height: 32px;
+}
+.gspc-count-key {
+  margin-top: 16px;
+  color: #d1e9dc;
+}
+.gspc-count-key summary {
+  color: #d1e9dc;
+}
+.gspc-count-key a {
+  color: #b6e5cf;
+}
+.gspc-empty {
+  padding: 25px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #3c6147;
+}
+.gspc-empty button {
+  display: block;
+  min-height: 44px;
+  padding: 7px 10px;
+  margin-top: 12px;
+  border: 1px solid #5e8668;
+  border-radius: 6px;
+  background: #fff;
+  color: #244f2d;
+}
+.gspc-home-board > .section-shell > .gspc-empty {
+  color: #d4e7da;
+}
+.gspc-error {
+  padding: 16px 20px;
+  margin: 24px 0;
+  background: #f6eacc;
+  color: #6b4a10;
+  border: 1px solid #dec287;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.gspc-error a {
+  font-weight: 700;
+  text-decoration: underline;
+}
+.gspc-error details {
+  font-size: 11px;
+  margin-top: 7px;
+}
+@media (max-width: 1100px) {
+  .gspc-axis-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .gspc-explorer-body {
+    grid-template-columns: minmax(0, 1fr) 280px;
+  }
+  .gspc-summary > div {
+    padding: 17px;
+  }
+  .gspc-toolbar {
+    align-items: flex-start;
+  }
+  .gspc-search-controls {
+    width: 100%;
+  }
+  .gspc-search-controls input {
+    width: min(340px, 55vw);
+  }
+}
+@media (max-width: 760px) {
+  .gspc-home-board {
+    padding: 45px 0;
+  }
+  .gspc-board-heading {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .gspc-read-state {
+    justify-content: flex-start;
+  }
+  .gspc-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 25px;
+  }
+  .gspc-summary > div:nth-child(2) {
+    border-right: 0;
+  }
+  .gspc-summary > div:nth-child(-n + 2) {
+    border-bottom: 1px solid #365c4b;
+  }
+  .gspc-summary dt {
+    min-height: 36px;
+  }
+  .gspc-summary dd {
+    font-size: 29px;
+  }
+  .gspc-summary > div {
+    padding: 16px 13px;
+  }
+  .gspc-explorer {
+    padding: 15px;
+  }
+  .gspc-explorer-body {
+    display: flex;
+    flex-direction: column;
+  }
+  .gspc-axis-grid {
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .gspc-detail {
+    width: 100%;
+    position: static;
+    order: -1;
+  }
+  .gspc-separation {
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .gspc-separation-track {
+    width: 75px;
+    margin-top: 5px;
+  }
+  .gspc-filters {
+    gap: 2px;
+  }
+  .gspc-filters button {
+    font-size: 11px;
+    padding: 9px 8px;
+  }
+  .gspc-search-controls {
+    gap: 7px;
+    flex-wrap: nowrap;
+  }
+  .gspc-search-controls > label {
+    min-width: 0;
+    flex: 1;
+  }
+  .gspc-search-controls input,
+  .gspc-search-controls select {
+    width: 100%;
+    font-size: 11px;
+  }
+  .gspc-card-kind {
+    font-size: 7px;
+  }
+  .gspc-axis-card {
+    padding: 12px 10px;
+  }
+  .gspc-card-metric {
+    flex-direction: column;
+  }
+  .gspc-board-foot > p {
+    font-size: 10px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gspc-axis-card {
+    transition: none;
+  }
+}
+
+/* Readable evidence labels and visible keyboard focus at every width. */
+.gspc-summary dt,
+.gspc-summary p {
+  font-size: 12px;
+}
+.gspc-card-kind {
+  font-size: 10px;
+}
+.gspc-axis-card > strong {
+  font-size: 15px;
+  min-height: 40px;
+}
+.gspc-card-bench {
+  font-size: 12px;
+}
+.gspc-state {
+  font-size: 11px;
+}
+.gspc-card-metric {
+  font-size: 11px;
+}
+.gspc-detail-kicker {
+  font-size: 11px;
+}
+.gspc-detail-explanation,
+.gspc-task {
+  font-size: 14px;
+}
+.gspc-detail-facts dt,
+.gspc-detail-facts dd {
+  font-size: 12px;
+}
+.gspc-evidence-box p,
+.gspc-evidence-box > span,
+.gspc-evidence-box a {
+  font-size: 12px;
+}
+.gspc-detail h3:focus-visible {
+  outline: 3px solid #38644a;
+  outline-offset: 5px;
+}
+.gspc-explorer button:focus-visible,
+.gspc-explorer a:focus-visible,
+.gspc-explorer input:focus-visible,
+.gspc-explorer select:focus-visible {
+  outline-color: #38644a;
+}
+@media (max-width: 760px) {
+  .gspc-card-kind {
+    font-size: 9px;
+  }
+  .gspc-axis-card > strong {
+    font-size: 14px;
+  }
+  .gspc-card-bench {
+    font-size: 11px;
+  }
+  .gspc-state {
+    font-size: 10px;
+  }
+}

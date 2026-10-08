@@ -2,7 +2,7 @@
  * useGspcBoard — the single live read of GET /api/gspc for every board surface.
  *
  * WHY A SHARED HOOK. LiveLeaderboard and HumanVsAiPanel both need the board, and
- * both may sit on the same page. One module-level promise means one request, one
+ * both may sit on the same page. One subscribed feed means one request, one
  * failure mode, one truth on screen. There is no fallback payload and no seeded
  * sample: if the endpoint does not answer, `error` is set and the components say
  * so in words. A placeholder number is a lie with a nice font.
@@ -11,7 +11,7 @@
  * value is `null` when the payload does not carry it. Counts (how many axes, how
  * many measured) come from `totals` — never from a constant in this file.
  */
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 export interface GspcAxis {
   axis: string;
@@ -53,7 +53,15 @@ export interface GspcAxis {
   dataset?: string;
   note?: string;
   /** Only read if the API starts publishing one. Never written by this file. */
-  human_baseline?: number | { value?: number; accuracy?: number; source?: string; state?: string; note?: string };
+  human_baseline?:
+    | number
+    | {
+        value?: number;
+        accuracy?: number;
+        source?: string;
+        state?: string;
+        note?: string;
+      };
   human_accuracy?: number;
   [k: string]: unknown;
 }
@@ -96,84 +104,435 @@ export interface GspcPayload {
 
 export interface GspcBoardState {
   data: GspcPayload | null;
-  /** Set to a human-readable reason when the board could not be read. */
   error: string | null;
   loading: boolean;
+  readAt?: string | null;
+  refreshing?: boolean;
 }
-
+export interface GspcBoardSnapshot extends GspcBoardState {
+  /** UTC time this client validated the response, never the measurement time. */
+  readAt: string | null;
+  refreshing: boolean;
+}
+export interface GspcBoardLiveState extends GspcBoardSnapshot {
+  refresh: () => Promise<void>;
+}
 export const GSPC_ENDPOINT = "/api/gspc";
-
-/** Live origin used only when the relative fetch returns HTML (prerender on localhost). */
+export const GSPC_READ_TIMEOUT_MS = 15_000;
+export const GSPC_REFRESH_MS = 60_000;
 const LIVE_GSPC = "https://councilof.ai/api/gspc";
+const GSPC_SCHEMA = "csoai.gspc-axes/0.5";
+const record = (v: unknown): v is Record<string, unknown> =>
+  v !== null && typeof v === "object" && !Array.isArray(v);
+const count = (v: unknown): v is number =>
+  typeof v === "number" && Number.isSafeInteger(v) && v >= 0;
+const figure = (v: unknown): v is number =>
+  typeof v === "number" && Number.isFinite(v) && v >= 0 && v <= 1;
 
-let inflight: Promise<GspcPayload> | null = null;
-
+/** Validate the published contract without filling, renaming or normalising any field. */
+export function validateGspcPayload(value: unknown): GspcPayload {
+  function invalid(reason: string): never {
+    throw new Error("Unreadable board: " + reason);
+  }
+  if (!record(value) || value.schema !== GSPC_SCHEMA)
+    invalid("unsupported or missing schema");
+  if (!Array.isArray(value.axes) || !record(value.totals))
+    invalid("missing axes or totals");
+  const axes = value.axes;
+  const totals = value.totals;
+  const names = new Set<string>();
+  const statuses = new Set([
+    "MEASURED",
+    "UNMEASURED",
+    "DRAFT",
+    "SPEC",
+    "PLANNED",
+  ]);
+  const kinds = new Set([
+    "model-comparison",
+    "deterministic-facts",
+    "declared-slot",
+  ]);
+  const separations = new Set(["SEPARATED", "TIE", "UNTESTED"]);
+  for (const a of axes) {
+    if (
+      !record(a) ||
+      typeof a.axis !== "string" ||
+      !a.axis.trim() ||
+      names.has(a.axis)
+    ) {
+      invalid("missing or duplicate axis id");
+    }
+    names.add(a.axis);
+    if (typeof a.status !== "string" || !statuses.has(a.status))
+      invalid(a.axis + ": unknown status");
+    if (typeof a.kind !== "string" || !kinds.has(a.kind))
+      invalid(a.axis + ": unknown kind");
+    if (a.n !== undefined && !count(a.n)) invalid(a.axis + ": invalid n");
+    if (a.accuracy != null && !figure(a.accuracy))
+      invalid(a.axis + ": invalid accuracy");
+    if (
+      a.interval != null &&
+      (!Array.isArray(a.interval) ||
+        a.interval.length !== 2 ||
+        !a.interval.every(figure) ||
+        a.interval[0] > a.interval[1])
+    ) {
+      invalid(a.axis + ": invalid interval");
+    }
+    if (
+      a.leader != null &&
+      (typeof a.leader !== "string" || !a.leader.trim())
+    ) {
+      invalid(a.axis + ": invalid leader");
+    }
+    if (
+      a.separation != null &&
+      (typeof a.separation !== "string" || !separations.has(a.separation))
+    ) {
+      invalid(a.axis + ": unknown separation");
+    }
+    if (a.kind === "declared-slot" && a.status === "MEASURED")
+      invalid(a.axis + ": measured declared slot");
+    if (
+      a.kind !== "model-comparison" &&
+      (a.separation != null ||
+        a.accuracy != null ||
+        a.interval != null ||
+        a.leader != null)
+    ) {
+      invalid(a.axis + ": comparison fields on a non-comparison axis");
+    }
+    if (
+      a.status !== "MEASURED" &&
+      (a.accuracy != null ||
+        a.interval != null ||
+        a.leader != null ||
+        a.separation != null)
+    )
+      invalid(a.axis + ": comparison fields without a measurement");
+    if (
+      a.status === "MEASURED" &&
+      a.kind === "model-comparison" &&
+      a.separation == null
+    ) {
+      invalid(a.axis + ": missing separation state");
+    }
+  }
+  const measured = axes.filter((a) => a.status === "MEASURED");
+  const comparisons = measured.filter((a) => a.kind === "model-comparison");
+  const expected: Record<string, number> = {
+    axes: axes.length,
+    measured_axes: measured.length,
+    unmeasured_axes: axes.length - measured.length,
+    comparison_axes: comparisons.length,
+    fact_runs: measured.filter((a) => a.kind === "deterministic-facts").length,
+  };
+  for (const [key, n] of Object.entries(expected)) {
+    if (!count(totals[key]) || totals[key] !== n)
+      invalid("contradictory or missing totals." + key);
+  }
+  const separationKeys = [
+    "separated_leads",
+    "ties",
+    "untested_separations",
+  ] as const;
+  if (separationKeys.some((key) => totals[key] !== undefined)) {
+    const expectedSeparation = [
+      comparisons.filter((a) => a.separation === "SEPARATED").length,
+      comparisons.filter((a) => a.separation === "TIE").length,
+      comparisons.filter((a) => a.separation === "UNTESTED").length,
+    ];
+    separationKeys.forEach((key, i) => {
+      if (!count(totals[key]) || totals[key] !== expectedSeparation[i]) {
+        invalid("contradictory or incomplete totals." + key);
+      }
+    });
+  }
+  if (totals.public_count !== undefined) {
+    const text =
+      typeof totals.public_count === "string" ? totals.public_count : "";
+    const match = /^(\d+) (?:axis|axes) · (\d+) measured$/.exec(text);
+    if (
+      !match ||
+      Number(match[1]) !== axes.length ||
+      Number(match[2]) !== measured.length
+    ) {
+      invalid("contradictory totals.public_count");
+    }
+  }
+  return value as unknown as GspcPayload;
+}
+class PreviewTransportError extends Error {}
 function isLocalPreview(): boolean {
-  if (typeof window === "undefined") return false;
-  return window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost";
+  return (
+    typeof window !== "undefined" &&
+    (window.location.hostname === "127.0.0.1" ||
+      window.location.hostname === "localhost")
+  );
 }
-
-async function fetchGspcPayload(url: string): Promise<GspcPayload> {
-  const r = await fetch(url, { headers: { accept: "application/json" } });
-  if (!r.ok) throw new Error(`${url} answered HTTP ${r.status}`);
-  const text = await r.text();
-  const trimmed = text.replace(/^\uFEFF/, "").trim();
-  // Prerender serves dist/ from localhost. /api/gspc is a Pages Function, so the
-  // SPA fallback returns "<!doctype html>". Parsing that as JSON bakes
-  // "The board could not be read" into every crawler snapshot even though the
-  // live function answers JSON. Do not treat HTML as a board.
-  if (!trimmed || trimmed.startsWith("<")) {
-    throw new Error(`${url} returned HTML, not JSON`);
-  }
-  try {
-    return JSON.parse(trimmed) as GspcPayload;
-  } catch (e) {
-    throw new Error(`${url} was not JSON — ${e instanceof Error ? e.message : String(e)}`);
-  }
+export interface GspcBoardReaderOptions {
+  fetch?: typeof globalThis.fetch;
+  now?: () => Date;
+  timeoutMs?: number;
+  localPreview?: () => boolean;
 }
-
-/** One fetch per page load, shared by every board component. */
-export function loadGspcBoard(): Promise<GspcPayload> {
-  if (!inflight) {
-    inflight = fetchGspcPayload(GSPC_ENDPOINT)
-      .catch((e) => {
-        const msg = String((e as Error)?.message ?? e);
-        // Vite returns 404 for Pages Functions while a prerender server may return
-        // the SPA HTML. Both are preview-only transport failures; the live board
-        // remains the authority, so localhost may read it rather than render an
-        // invented empty state.
-        if (isLocalPreview() || /HTML|not JSON|Unexpected token/i.test(msg)) {
-          return fetchGspcPayload(LIVE_GSPC);
+export interface GspcBoardReader {
+  getSnapshot: () => GspcBoardSnapshot;
+  subscribe: (listener: () => void) => () => void;
+  load: () => Promise<GspcPayload>;
+  refresh: () => Promise<void>;
+}
+/** One stable store and one bounded operation shared by every subscribing board surface. */
+export function createGspcBoardReader(
+  options: GspcBoardReaderOptions = {},
+): GspcBoardReader {
+  const fetcher =
+    options.fetch ??
+    ((...args: Parameters<typeof globalThis.fetch>) =>
+      globalThis.fetch(...args));
+  const now = options.now ?? (() => new Date());
+  const timeoutMs = options.timeoutMs ?? GSPC_READ_TIMEOUT_MS;
+  const localPreview = options.localPreview ?? isLocalPreview;
+  if (!Number.isFinite(timeoutMs) || timeoutMs <= 0)
+    throw new Error("Invalid board read timeout");
+  let snapshot: GspcBoardSnapshot = {
+    data: null,
+    error: null,
+    loading: true,
+    refreshing: false,
+    readAt: null,
+  };
+  const listeners = new Set<() => void>();
+  type Operation = {
+    controller: AbortController;
+    promise: Promise<GspcPayload>;
+    cancel: () => void;
+  };
+  let operation: Operation | null = null;
+  let nextReadAt = 0;
+  let automaticTimer: ReturnType<typeof setTimeout> | null = null;
+  const publish = (next: GspcBoardSnapshot) => {
+    snapshot = next;
+    for (const listener of [...listeners]) listener();
+  };
+  const visible = () =>
+    typeof document === "undefined" || document.visibilityState !== "hidden";
+  const clearAutomatic = () => {
+    if (automaticTimer !== null) clearTimeout(automaticTimer);
+    automaticTimer = null;
+  };
+  function scheduleAutomatic() {
+    clearAutomatic();
+    if (listeners.size === 0 || !visible()) return;
+    const delay = nextReadAt - now().getTime();
+    // A pending generation owns the next wakeup when its deadline has passed.
+    if (operation && delay <= 0) return;
+    automaticTimer = setTimeout(automaticRead, Math.max(0, delay));
+  }
+  function automaticRead() {
+    clearAutomatic();
+    if (listeners.size === 0 || !visible()) return;
+    if (!operation) void load().catch(() => undefined);
+    scheduleAutomatic();
+  }
+  const start = (): Promise<GspcPayload> => {
+    if (operation) return operation.promise;
+    const before = snapshot;
+    const controller = new AbortController();
+    let rejectStop!: (reason: Error) => void;
+    const stopped = new Promise<never>((_, reject) => {
+      rejectStop = reject;
+    });
+    let timer: ReturnType<typeof setTimeout>;
+    const op = { controller } as Operation;
+    const retire = (reason: Error, intentional: boolean) => {
+      if (operation !== op) return;
+      operation = null;
+      if (intentional) nextReadAt = 0;
+      clearTimeout(timer);
+      controller.abort();
+      rejectStop(reason);
+      publish(
+        intentional
+          ? { ...before, loading: false, refreshing: false }
+          : {
+              ...snapshot,
+              error: reason.message,
+              loading: false,
+              refreshing: false,
+            },
+      );
+      scheduleAutomatic();
+    };
+    op.cancel = () => retire(new Error("Board read cancelled"), true);
+    const read = async (url: string): Promise<GspcPayload> => {
+      const r = await fetcher(url, {
+        headers: { accept: "application/json" },
+        cache: "no-store",
+        signal: controller.signal,
+      });
+      if (controller.signal.aborted) throw new Error("Board read cancelled");
+      if (!r.ok) {
+        const message = url + " answered HTTP " + r.status;
+        if (r.status === 404) throw new PreviewTransportError(message);
+        throw new Error(message);
+      }
+      const text = await r.text();
+      if (controller.signal.aborted) throw new Error("Board read cancelled");
+      const trimmed = text.replace(/^\uFEFF/, "").trim();
+      if (trimmed.startsWith("<"))
+        throw new PreviewTransportError(url + " returned HTML, not JSON");
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(trimmed);
+      } catch {
+        throw new Error(url + " returned malformed JSON");
+      }
+      return validateGspcPayload(parsed);
+    };
+    const work = Promise.resolve().then(async () => {
+      try {
+        return await read(GSPC_ENDPOINT);
+      } catch (e) {
+        if (
+          !controller.signal.aborted &&
+          localPreview() &&
+          e instanceof PreviewTransportError
+        ) {
+          return read(LIVE_GSPC);
         }
         throw e;
-      })
-      .catch((e) => {
-        inflight = null; // let a remount retry rather than cache a failure forever
-        throw e;
+      }
+    });
+    op.promise = Promise.race([work, stopped])
+      .then(
+        (data) => {
+          if (operation === op) {
+            const readAt = now().toISOString();
+            operation = null;
+            clearTimeout(timer);
+            publish({
+              data,
+              error: null,
+              loading: false,
+              refreshing: false,
+              readAt,
+            });
+            scheduleAutomatic();
+          }
+          return data;
+        },
+        (e) => {
+          if (operation === op) {
+            operation = null;
+            clearTimeout(timer);
+            publish({
+              ...snapshot,
+              error: String(e?.message ?? e),
+              loading: false,
+              refreshing: false,
+            });
+            scheduleAutomatic();
+          }
+          throw e;
+        },
+      )
+      .finally(() => {
+        clearTimeout(timer);
+        controller.abort();
       });
-  }
-  return inflight;
+    operation = op;
+    nextReadAt = now().getTime() + GSPC_REFRESH_MS;
+    timer = setTimeout(
+      () =>
+        retire(
+          new Error("Board read timed out after " + timeoutMs + " ms"),
+          false,
+        ),
+      timeoutMs,
+    );
+    scheduleAutomatic();
+    publish({
+      ...snapshot,
+      error: null,
+      loading: snapshot.data === null,
+      refreshing: snapshot.data !== null,
+    });
+    return op.promise;
+  };
+  const load = (): Promise<GspcPayload> => {
+    if (operation) return operation.promise;
+    if (now().getTime() < nextReadAt) {
+      if (snapshot.error) return Promise.reject(new Error(snapshot.error));
+      if (snapshot.data) return Promise.resolve(snapshot.data);
+    }
+    return start();
+  };
+  return {
+    getSnapshot: () => snapshot,
+    subscribe: (listener) => {
+      const first = listeners.size === 0;
+      listeners.add(listener);
+      // Finish lifecycle attachment before a load can notify reentrant subscribers.
+      if (first) {
+        if (typeof window !== "undefined")
+          window.addEventListener("focus", automaticRead);
+        if (typeof document !== "undefined")
+          document.addEventListener("visibilitychange", automaticRead);
+      }
+      automaticRead();
+      return () => {
+        listeners.delete(listener);
+        if (listeners.size === 0) {
+          clearAutomatic();
+          if (typeof window !== "undefined")
+            window.removeEventListener("focus", automaticRead);
+          if (typeof document !== "undefined")
+            document.removeEventListener("visibilitychange", automaticRead);
+        }
+        const pending = operation;
+        queueMicrotask(() => {
+          if (listeners.size === 0 && pending && operation === pending)
+            pending.cancel();
+        });
+      };
+    },
+    load,
+    refresh: async () => {
+      try {
+        await start();
+      } catch {
+        /* shared error state is the UI result */
+      }
+    },
+  };
 }
-
-export function useGspcBoard(): GspcBoardState {
-  const [state, setState] = useState<GspcBoardState>({ data: null, error: null, loading: true });
-
-  useEffect(() => {
-    let live = true;
-    loadGspcBoard()
-      .then((d) => { if (live) setState({ data: d, error: null, loading: false }); })
-      .catch((e) => { if (live) setState({ data: null, error: String(e?.message ?? e), loading: false }); });
-    return () => { live = false; };
-  }, []);
-
-  return state;
+const sharedBoardReader = createGspcBoardReader();
+export function loadGspcBoard(): Promise<GspcPayload> {
+  return sharedBoardReader.load();
+}
+export function refreshGspcBoard(): Promise<void> {
+  return sharedBoardReader.refresh();
+}
+export function useGspcBoard(): GspcBoardLiveState {
+  const state = useSyncExternalStore(
+    sharedBoardReader.subscribe,
+    sharedBoardReader.getSnapshot,
+    sharedBoardReader.getSnapshot,
+  );
+  return { ...state, refresh: refreshGspcBoard };
 }
 
 /* ── honest readers ──────────────────────────────────────────────────────── */
 
 /** A slot carries a quotable figure only when it is MEASURED and the number is real. */
 export function hasFigure(a: GspcAxis): boolean {
-  return a.status === "MEASURED" && typeof a.accuracy === "number" && Number.isFinite(a.accuracy);
+  return (
+    a.status === "MEASURED" &&
+    typeof a.accuracy === "number" &&
+    Number.isFinite(a.accuracy)
+  );
 }
 
 /**
@@ -185,7 +544,8 @@ export function hasFigure(a: GspcAxis): boolean {
 export function orderedRows(data: GspcPayload | null): GspcAxis[] {
   const axes = Array.isArray(data?.axes) ? [...(data!.axes as GspcAxis[])] : [];
   return axes.sort((x, y) => {
-    const fx = hasFigure(x), fy = hasFigure(y);
+    const fx = hasFigure(x),
+      fy = hasFigure(y);
     if (fx !== fy) return fx ? -1 : 1;
     if (!fx) return 0;
     return (y.accuracy as number) - (x.accuracy as number);
@@ -238,9 +598,14 @@ const num = (v: unknown): number | null =>
 export function findHumanBaseline(data: GspcPayload | null): HumanLeg | null {
   if (!data) return null;
 
-  const fromObject = (o: Record<string, unknown> | undefined | null): HumanLeg | null => {
+  const fromObject = (
+    o: Record<string, unknown> | undefined | null,
+  ): HumanLeg | null => {
     if (!o || typeof o !== "object") return null;
-    const v = num((o as any).value) ?? num((o as any).accuracy) ?? num((o as any).score);
+    const v =
+      num((o as any).value) ??
+      num((o as any).accuracy) ??
+      num((o as any).score);
     if (v === null) return null;
     return {
       value: v,
@@ -254,20 +619,37 @@ export function findHumanBaseline(data: GspcPayload | null): HumanLeg | null {
   const direct = fromObject(data.human_baseline as Record<string, unknown>);
   if (direct) return direct;
 
-  const flat = num((data.human_baseline as unknown) ?? (data.totals as any)?.human_baseline);
+  const flat = num(
+    (data.human_baseline as unknown) ?? (data.totals as any)?.human_baseline,
+  );
   if (flat !== null) {
-    return { value: flat, label: "human baseline", source: "stated in the /api/gspc payload", state: "REPORTED" };
+    return {
+      value: flat,
+      label: "human baseline",
+      source: "stated in the /api/gspc payload",
+      state: "REPORTED",
+    };
   }
 
   for (const a of [...(data.axes ?? []), ...(data.measured_in_lane ?? [])]) {
     const nested = fromObject(a.human_baseline as Record<string, unknown>);
-    if (nested) return { ...nested, label: nested.label === "human baseline" ? `${a.axis} — human baseline` : nested.label };
+    if (nested)
+      return {
+        ...nested,
+        label:
+          nested.label === "human baseline"
+            ? `${a.axis} — human baseline`
+            : nested.label,
+      };
     const v = num(a.human_baseline as unknown) ?? num(a.human_accuracy);
     if (v !== null) {
       return {
         value: v,
         label: `${a.axis} — human baseline`,
-        source: typeof a.dataset === "string" ? a.dataset : "stated on the axis in /api/gspc",
+        source:
+          typeof a.dataset === "string"
+            ? a.dataset
+            : "stated on the axis in /api/gspc",
         state: "REPORTED",
       };
     }
