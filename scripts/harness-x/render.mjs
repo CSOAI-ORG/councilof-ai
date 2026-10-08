@@ -24,6 +24,7 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { vscodeInstallAction } from "./vscode-install.mjs";
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const args = process.argv.slice(2);
@@ -1482,7 +1483,11 @@ class GspcProvider(ToolProvider):
     tool_counts: { free: freeDefs.length, full: freeDefs.length + paidDefs.length, note: "array lengths of functions/mcp/gspc-tools.json and paid-tools.json at render time" },
     live_check: "distribution/connect/connect-live-check.json (scripts/harness-x/connect-live.mjs)",
     doctrine: DOCTRINE,
-    clients: cm.clients.map((c) => ({ ...c, url: c.door === "full" ? ID.door : FREE_URL, snippet: fill(c.snippet) })),
+    clients: cm.clients.map((c) => {
+      const row = { ...c, url: c.door === "full" ? ID.door : FREE_URL, snippet: fill(c.snippet) };
+      const install_action = vscodeInstallAction(row, FREE_URL);
+      return install_action ? { ...row, install_action } : row;
+    }),
   }));
 }
 

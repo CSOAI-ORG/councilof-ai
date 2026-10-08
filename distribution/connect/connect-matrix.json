@@ -92,6 +92,7 @@
     },
     {
       "id": "vscode",
+      "installer": "vscode",
       "platform": "VS Code (GitHub Copilot agent mode)",
       "group": "Coding agents",
       "door": "free",
@@ -99,7 +100,11 @@
       "kind": "json",
       "snippet": "{\n  \"servers\": {\n    \"gspc\": { \"type\": \"http\", \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
       "docs": "https://code.visualstudio.com/docs/agent-customization/mcp-servers",
-      "url": "https://councilof.ai/mcp/free"
+      "url": "https://councilof.ai/mcp/free",
+      "install_action": {
+        "kind": "vscode",
+        "href": "vscode:mcp/install?%7B%22name%22%3A%22gspc%22%2C%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fcouncilof.ai%2Fmcp%2Ffree%22%7D"
+      }
     },
     {
       "id": "windsurf",
