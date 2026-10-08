@@ -119,3 +119,90 @@ _9 products read from `docs/product/_INDEX.json` (as_of 2026-09-06T06:00:18Z). A
 _Pushed by `scripts/spray/gspc-spray.py` (daily, idempotent by `as_of` and fingerprint). The live root `as_of` at derive time was `2026-09-30T05:05:34Z`; a surface that lags is shown lagging, not reconciled. Board data is CC-BY-4.0; the reader packages are Apache-2.0 / Apache-2.0._
 
 <!-- org-readme:end -->
+
+> **Source mirror.** This repository is the GitHub source of record for source changes. A public mirror is also available at
+> https://huggingface.co/datasets/csoai/councilof-ai-source; live public evidence remains at https://councilof.ai.
+
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/CSOAI-ORG/councilof-ai/badge)](https://scorecard.dev/viewer/?uri=github.com/CSOAI-ORG/councilof-ai)
+
+## Hosting and deploy
+
+| Host | Cloudflare Pages project | Deploy |
+|---|---|---|
+| councilof.ai / www | `councilof-ai` | GitHub Actions `deploy.yml` → `wrangler pages deploy` |
+| csoai.org | `csoai-site` | Wrangler (`csoai-site-deploy.yml`) |
+
+Vercel is not the live host. The leftover Vercel Git links (`csoai-v2-app`, `councilof-ai-src`) were disconnected and those Vercel projects deleted on 31 Aug 2026.
+
+Build (this repo):
+
+```bash
+npm run build:client
+bash scripts/prerender-run.sh --dist dist/client --wait 900 --min 350
+# GHA deploy.yml ships dist/client to Cloudflare Pages
+```
+
+Do **not** run `npx vite build` from the repo root (it picks up a dead `src/`). Do **not** `vercel deploy` this site.
+
+## Agents — paid artefacts (x402)
+
+The board and verification stay free. Metered artefacts (issuance, evidence assembly, signed feeds) are on the x402 rail. Amounts live only in the HTTP 402 challenge — this README does not invent a price. A grade is never sold.
+
+- Catalog: https://councilof.ai/api/x402
+- Manifest: https://councilof.ai/.well-known/x402.json
+- MCP: https://councilof.ai/mcp (`commission_card` and the other paid tools return a 402 as `structuredContent` until paid)
+
+### Verified week-one revenue (PayAI bazaar, 2026-09-16)
+
+| Metric | Value |
+|--------|------:|
+| External USDC settled | $0.02 |
+| Distinct external payers | 1 (paid), 10+ (free-door) |
+| Issuances | 8 |
+| CSOAI /api/free-door settlements/30d | 18 |
+| CSOAI uptime | 100% |
+| csoai-gspc-mcp npm downloads (last-month) | 776 |
+
+Source: `GET https://councilof.ai/api/revenue` and PayAI bazaar stats.
+
+### Buyer integration guides
+
+- Python (eth_account): https://github.com/CSOAI-ORG/csoai-x402-buyer-guide
+- TypeScript (viem): https://github.com/CSOAI-ORG/csoai-x402-typescript-example
+- Revenue catalog: https://github.com/CSOAI-ORG/csoai-x402-revenue
+- Week-one report: https://github.com/CSOAI-ORG/csoai-blog-x402-revenue
+
+Network: Base (eip155:8453) · Asset: USDC · Pay-to: 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31 · Promo $0.01 until 2027-01-11 (extended 7 Oct 2026; was 2026-10-11).
+
+## Documentation
+
+- [Measurement body overview](https://councilof.ai/about/)
+- [Methodology](https://councilof.ai/methodology/)
+- [GSPC scoreboard](https://councilof.ai/gspc-scoreboard)
+- [Published measurements](https://councilof.ai/benchmarks)
+- [EU AI Act Article 50](https://councilof.ai/article-50)
+
+## What we never do
+
+- Certify AI systems or issue compliance badges
+- Sell ratings, ranking position, or early sight of grades
+- Remediate or recommend fixes in exchange for fees
+- Take money in either direction from anything we rank
+
+## Surfaces
+
+| Surface | Purpose |
+|---------|---------|
+| [councilof.ai](https://councilof.ai) | Measurement body — signed credentials, verify, scoreboard |
+| [csoai.org](https://csoai.org) | Public site / DID apex |
+| [meok.ai](https://meok.ai) | MEOK OS — yours, on your keys |
+
+## License
+
+MIT © [CSOAI-ORG](https://huggingface.co/csoai)
+
+---
+
+<p align="center">
+  <sub>Council of AI · CSOAI LTD · UK Companies House 16939677 · We measure. We sign. We re-attest.</sub>
+</p>
