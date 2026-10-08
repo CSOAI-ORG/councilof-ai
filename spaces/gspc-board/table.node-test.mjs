@@ -36,11 +36,16 @@ class Element extends EventTarget {
 
 function board(version = 1, axes = ["governance", "safety", "jail"]) {
   return {
-    as_of: "2026-10-08T0" + version + ":00:00Z",
+    measured_on: { date: "behavioural axes 2026-08-12; jail 2026-08-18" },
     totals: { lid: "source-lid-" + version, measured_axes: axes.length, items: version * 100 },
     axes: axes.map((axis) => ({
       axis, status: "MEASURED", family: "ai", leader: "model-" + version,
       n: version * 10, accuracy: version / 10, fleet_mean: 0.05, separation: "TIE",
+      measurement_time: axis === "jail"
+        ? { state: "EXACT", observed_at: "2026-08-18T03:22:16Z" }
+        : axis === "safety"
+          ? { state: "NOT_AFTER", not_after: "2026-08-19T09:24:39Z" }
+          : { state: "DAY", observed_on: "2026-08-12" },
     })),
     limitations: ["governance limitation " + version],
   };
@@ -131,7 +136,17 @@ test("reads primary feeds each minute without replacing source measurement time"
   assert.equal(h.intervals.size, 1);
   assert.equal([...h.intervals.values()][0].ms, 60_000);
   assert.equal(h.el("lid").textContent, "Lid: source-lid-1");
-  assert.match(h.el("board-refresh-status").textContent, /2026-10-08T01:00:00Z/);
+  assert.match(h.el("board-refresh-status").textContent, /behavioural axes 2026-08-12/);
+  for (const [axis, date] of [
+    ["governance", /DAY · 2026-08-12/],
+    ["jail", /EXACT · 2026-08-18T03:22:16Z/],
+    ["safety", /NOT_AFTER · 2026-08-19T09:24:39Z \(upper bound, not an exact run time\)/],
+  ]) {
+    vm.runInContext('openAxis("' + axis + '")', h.context);
+    assert.match(h.el("find-table").innerHTML, date);
+  }
+  vm.runInContext('BOARD.axes[0].measurement_time = { state: "DAY" }; openAxis("governance")', h.context);
+  assert.match(h.el("find-table").innerHTML, /UNCHECKABLE · measurement date unreported/);
   const before = h.primaryCount();
   for (const [url, reply] of fixtures(2)) h.replies.set(url, reply);
   h.tick();
@@ -139,11 +154,17 @@ test("reads primary feeds each minute without replacing source measurement time"
   assert.equal(h.primaryCount() - before, 4);
   assert.equal(h.el("lid").textContent, "Lid: source-lid-2");
   assert.match(h.el("board-body").innerHTML, /model-2/);
-  assert.match(h.el("board-refresh-status").textContent, /2026-10-08T02:00:00Z/);
+  assert.match(h.el("board-refresh-status").textContent, /behavioural axes 2026-08-12/);
   h.tick();
   await flush();
-  assert.match(h.el("board-refresh-status").textContent, /2026-10-08T02:00:00Z/);
+  assert.match(h.el("board-refresh-status").textContent, /behavioural axes 2026-08-12/);
   assert.match(h.el("board-refresh-status").textContent, /not a new measurement/);
+  assert.match(h.el("find-table").innerHTML, /DAY · 2026-08-12/);
+  h.replies.set(API, { ...board(2), measured_on: undefined, as_of: "2026-10-08T06:00:00Z" });
+  h.tick();
+  await flush();
+  assert.match(h.el("board-refresh-status").textContent, /measurement context: unreported/);
+  assert.doesNotMatch(h.el("board-refresh-status").textContent, /2026-10-08T06:00:00Z/);
   assert.ok(h.requests.filter(({ url }) => primary.includes(url)).every(({ options }) => options.cache === "no-store"));
 });
 

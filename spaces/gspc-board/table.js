@@ -451,6 +451,17 @@ function renderHubCells() {
   </tr>`).join("") || '<tr><td colspan="6">No published cell matches this filter.</td></tr>';
 }
 
+function measurementTimeText(a) {
+  const time = a?.measurement_time || {};
+  if (time.state === "DAY" && typeof time.observed_on === "string")
+    return `DAY · ${time.observed_on}`;
+  if (time.state === "EXACT" && typeof time.observed_at === "string")
+    return `EXACT · ${time.observed_at}`;
+  if (time.state === "NOT_AFTER" && typeof time.not_after === "string")
+    return `NOT_AFTER · ${time.not_after} (upper bound, not an exact run time)`;
+  return "UNCHECKABLE · measurement date unreported";
+}
+
 function rows(pairs) {
   return `<thead><tr><th>Field</th><th>Published value</th></tr></thead><tbody>` +
     pairs.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${v}</td></tr>`).join("") +
@@ -493,6 +504,7 @@ function openAxis(name, updateOnly = false) {
 
   const finding = [
     ["Axis", esc(a.axis)],
+    ["Measurement time", esc(measurementTimeText(a))],
     ["Family", esc(a.family || "-")],
     ["Kind", esc(a.kind || "-")],
     ["Instrument / task", esc(a.task || a.bench || "-")],
@@ -771,10 +783,12 @@ let restoreHash = true;
 function refreshStatus(failures) {
   const el = document.getElementById("board-refresh-status");
   if (!el) return;
-  const asOf = BOARD?.as_of ? `Board snapshot: ${BOARD.as_of}. ` : "";
+  const date = typeof BOARD?.measured_on?.date === "string"
+    ? BOARD.measured_on.date : "unreported; see per-axis measurement evidence";
+  const context = BOARD ? `Published measurement context: ${date}. ` : "";
   el.textContent = failures.length
-    ? `${asOf}Latest read failed: ${failures.join(", ")}. Previously read values are retained where available; failed sources are UNCHECKABLE. Retrying while this page is open.`
-    : `${asOf}Public feeds read successfully. Refreshing each minute while this page is visible. A refresh is not a new measurement.`;
+    ? `${context}Latest read failed: ${failures.join(", ")}. Previously read values are retained where available; failed sources are UNCHECKABLE. Retrying while this page is open.`
+    : `${context}Public feeds read successfully. Refreshing each minute while this page is visible. A refresh is not a new measurement.`;
 }
 
 function renderCurrentBoard() {
