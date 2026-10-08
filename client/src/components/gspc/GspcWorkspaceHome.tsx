@@ -85,6 +85,7 @@ const TILE_DOT: Record<TileState, string> = {
   UNTESTED: "bg-slate-500",
   FACT_RUN: "bg-teal-600",
   UNMEASURED: "bg-amber-600",
+  UNKNOWN: "bg-slate-400",
 };
 const TILE_WORD: Record<TileState, string> = {
   SEPARATED: "separated",
@@ -92,6 +93,7 @@ const TILE_WORD: Record<TileState, string> = {
   UNTESTED: "untested",
   FACT_RUN: "fact run",
   UNMEASURED: "unmeasured",
+  UNKNOWN: "state unavailable",
 };
 const TILE_LABEL: Record<TileState, string> = {
   SEPARATED: "Separated",
@@ -99,6 +101,7 @@ const TILE_LABEL: Record<TileState, string> = {
   UNTESTED: "Untested",
   FACT_RUN: "Fact checks",
   UNMEASURED: "Unmeasured",
+  UNKNOWN: "State unavailable",
 };
 // Jargon lives here, in the tooltip, not in the face of the card.
 const TILE_HELP: Record<TileState, string> = {
@@ -107,6 +110,7 @@ const TILE_HELP: Record<TileState, string> = {
   UNTESTED: "Model-comparison tests with too little data to test for a gap yet (UNTESTED).",
   FACT_RUN: "Tests that check facts about servers and public records rather than compare models (deterministic fact runs).",
   UNMEASURED: "Tests with no published run yet (UNMEASURED).",
+  UNKNOWN: "The published axis state is unavailable. No run or comparison result is inferred (UNKNOWN).",
 };
 
 /** The board, compact: the count line WITH its separation line, the model count, one dot per axis. */
@@ -159,7 +163,7 @@ function WorkspaceBoardCard() {
           </p>
           <dl className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4 xl:grid-cols-2 2xl:grid-cols-4" data-testid="ws-board-tiles">
             {(Object.keys(TILE_WORD) as TileState[])
-              .filter((s) => s !== "UNMEASURED" || tiles.some((t) => t.state === s))
+              .filter((s) => (s !== "UNMEASURED" && s !== "UNKNOWN") || tiles.some((t) => t.state === s))
               .map((s) => (
                 <div key={s} className="rounded-xl bg-muted/70 px-3 py-2" title={TILE_HELP[s]}>
                   <dt className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">

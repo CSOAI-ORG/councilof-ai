@@ -3,7 +3,7 @@
 
 | lane | owner | files/territory | state |
 |---|---|---|---|
-| homepage-evidence-board-20261008 | Codex root/free-verifier, thread 01a11937-b6c3-73a0-8745-881b0bb8f7b3 | HomeVerify + home hero/board/steps/evidence paths/CSS, one shared useGspcBoard reader and focused tests; integrates immutable Drive V1/V2/V3 plus reader lifecycle repair. Preserves PR #2937 and its eight other paths; owner disposition required before merging either shared-hook implementation. | READY FOR OWNER REVIEW; 173 native checks and scoped types PASS |
+| homepage-evidence-board-20261008 | Codex root/free-verifier, thread 01a11937-b6c3-73a0-8745-881b0bb8f7b3 | HomeVerify + home hero/board/steps/evidence paths/CSS, one shared useGspcBoard reader and focused tests; GspcWorkspaceHome UNKNOWN display integration; integrates immutable Drive V1/V2/V3 plus reader lifecycle repair. Preserves PR #2937 and its eight other paths; owner disposition required before merging either shared-hook implementation. | READY FOR OWNER REVIEW; 173 home checks and 38 integration checks PASS; scoped home types PASS; full CI pending |
 | home-films | grok (tui-2) | homepage films from NotebookLM Downloads + demo loop | RUNNING |
 | epic-home | grok (tui-2) | restore mega-menu + OS + HeroSlides + 9-product ToolStack + LivingStages on home | RUNNING |
 | weekend-must | grok (tui-2) | MUST 1–25 lean surface: OS FAB, products four lines, assess insurer, mcp four tools | RUNNING |
