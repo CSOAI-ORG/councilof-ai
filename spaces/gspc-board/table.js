@@ -97,8 +97,8 @@ function chip(status, sep) {
   const kind = u === "MEASURED" ? (sep === "TIE" ? "warn" : "ok") : "empty";
   return `<span class="chip ${kind}">${esc(u)}</span>`;
 }
-async function loadJson(url) {
-  const r = await fetch(url, { headers: { accept: "application/json" } });
+async function loadJson(url, signal) {
+  const r = await fetch(url, { headers: { accept: "application/json" }, cache: "no-store", signal });
   if (!r.ok) throw new Error(`${url} ${r.status}`);
   return r.json();
 }
@@ -329,13 +329,23 @@ function leaderboardRows(a) {
 
 function renderLeaderboard(name) {
   const a = axisOf(name) || visibleAxes()[0] || (BOARD?.axes || [])[0];
-  if (!a) return;
+  if (!a) {
+    lbAxis = "";
+    document.getElementById("lb-axis").innerHTML = "";
+    document.getElementById("podium").innerHTML = "";
+    document.querySelector("#lb-table tbody").innerHTML =
+      '<tr><td colspan="6">No axes in the current board snapshot.</td></tr>';
+    document.getElementById("lb-note").textContent = "No axes are published in this snapshot.";
+    return;
+  }
   lbAxis = a.axis;
   const sel = document.getElementById("lb-axis");
-  if (sel && !sel.dataset.bound) {
+  if (sel) {
     sel.innerHTML = (BOARD.axes || []).map((x) =>
       `<option value="${esc(x.axis)}">${esc(x.axis)}</option>`
     ).join("");
+  }
+  if (sel && !sel.dataset.bound) {
     sel.onchange = () => {
       lbAxis = sel.value;
       renderLeaderboard(lbAxis);
@@ -447,15 +457,17 @@ function rows(pairs) {
     `</tbody>`;
 }
 
-function openAxis(name) {
+function openAxis(name, updateOnly = false) {
   const a = axisOf(name);
   if (!a) return;
-  selected = name;
-  lbAxis = name;
-  history.replaceState(null, "", `#${encodeURIComponent(name)}`);
-  renderMap();
-  renderBoardTable();
-  renderLeaderboard(name);
+  if (!updateOnly) {
+    selected = name;
+    lbAxis = name;
+    history.replaceState(null, "", `#${encodeURIComponent(name)}`);
+    renderMap();
+    renderBoardTable();
+    renderLeaderboard(name);
+  }
   const desk = document.getElementById("desk");
   desk.hidden = false;
   const on = measuredOf(a);
@@ -553,7 +565,7 @@ function openAxis(name) {
   links.push(`<a href="${API}?axis=${encodeURIComponent(a.axis)}" target="_blank" rel="noreferrer">Live axis</a>`);
   links.push(`<a href="${VERIFY}" target="_blank" rel="noreferrer">Verify a card</a>`);
   document.getElementById("desk-links").innerHTML = links.join("");
-  desk.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  if (!updateOnly) desk.scrollIntoView({ block: "nearest", behavior: "smooth" });
 }
 
 function renderRead() {
@@ -749,20 +761,30 @@ function applySearch() {
   if (lbAxis) renderLeaderboard(lbAxis);
 }
 
-async function boot() {
-  renderRead();
-  renderDoors();
-  document.getElementById("q").addEventListener("input", () => {
-    query = document.getElementById("q").value;
-    applySearch();
-  });
-  document.getElementById("watch-add").addEventListener("click", addLookup);
-  document.getElementById("watch-refresh").addEventListener("click", refreshLookup);
-  renderLookup();
-  try {
-    BOARD = await loadJson(API);
-  printLid(BOARD);
-    renderRuling();
+const REFRESH_MS = 60_000;
+const READ_TIMEOUT_MS = 20_000;
+let refreshTimer = null;
+let refreshFlight = null;
+let refreshStopped = false;
+let restoreHash = true;
+
+function refreshStatus(failures) {
+  const el = document.getElementById("board-refresh-status");
+  if (!el) return;
+  const asOf = BOARD?.as_of ? `Board snapshot: ${BOARD.as_of}. ` : "";
+  el.textContent = failures.length
+    ? `${asOf}Latest read failed: ${failures.join(", ")}. Previously read values are retained where available; failed sources are UNCHECKABLE. Retrying while this page is open.`
+    : `${asOf}Public feeds read successfully. Refreshing each minute while this page is visible. A refresh is not a new measurement.`;
+}
+
+function renderCurrentBoard() {
+  if (selected && !axisOf(selected)) {
+    selected = null;
+    document.getElementById("desk").hidden = true;
+  }
+  if (BOARD) {
+    printLid(BOARD);
+    renderRuling(QUEUE_SUMMARY?.n, CENSUS_WALK_SUMMARY?.n_unique_ids);
     renderTape(BOARD);
     renderMap();
     renderBoardTable();
@@ -772,32 +794,83 @@ async function boot() {
     renderHealth();
     renderCensusSites();
     renderHonesty();
-    const hash = decodeURIComponent((location.hash || "").replace(/^#/, ""));
-    if (hash && axisOf(hash)) openAxis(hash);
-  } catch (e) {
-    document.getElementById("board-body").innerHTML =
-      `<tr><td colspan="8" class="err">${esc(String(e))}</td></tr>`;
+    if (restoreHash) {
+      restoreHash = false;
+      const hash = decodeURIComponent((location.hash || "").replace(/^#/, ""));
+      if (hash && axisOf(hash)) openAxis(hash);
+    }
+    if (selected) openAxis(selected, true);
   }
-  try {
-    const idx = await loadJson(CARDS);
-    INDEX = idx.cards || [];
-    if (BOARD) { renderTape(BOARD); renderHealth(); }
-    if (selected) openAxis(selected);
-  } catch { INDEX = []; }
-  try {
-    const corr = await loadJson(CORRECTIONS);
-    CORRS = corr.corrections || corr.items || [];
-    if (BOARD) { renderTape(BOARD); renderHealth(); renderHonesty(); }
-    if (selected) openAxis(selected);
-  } catch { CORRS = []; }
-  try {
-    HUB = await loadJson(HUB_CARDS);
-    renderHubCells();
-    renderRuling(QUEUE_SUMMARY?.n, CENSUS_WALK_SUMMARY?.n_unique_ids);
-  } catch {
-    HUB = null;
-    renderHubCells();
-  }
+  renderHubCells();
+}
+
+function refreshBoard() {
+  if (refreshStopped || document.hidden) return Promise.resolve();
+  if (refreshFlight) return refreshFlight.promise;
+  const flight = { controller: new AbortController(), promise: null };
+  refreshFlight = flight;
+  const sources = [
+    { label: "board", url: API, valid: (d) => Array.isArray(d?.axes) && d.axes.every((a) => a && typeof a.axis === "string"), apply: (d) => { BOARD = d; } },
+    { label: "signed cards", url: CARDS, valid: (d) => Array.isArray(d?.cards) && d.cards.every((c) => c && typeof c === "object"), apply: (d) => { INDEX = d.cards; } },
+    { label: "corrections", url: CORRECTIONS, valid: (d) => Array.isArray(d?.corrections ?? d?.items) && (d.corrections ?? d.items).every((c) => c && typeof c === "object"), apply: (d) => { CORRS = d.corrections ?? d.items; } },
+    { label: "Hub cells", url: HUB_CARDS, valid: (d) => Array.isArray(d?.cells) && d.cells.every((c) => c && typeof c === "object"), apply: (d) => { HUB = d; } },
+  ];
+  const timeout = setTimeout(() => flight.controller.abort(), READ_TIMEOUT_MS);
+  flight.promise = (async () => {
+    try {
+      const results = await Promise.allSettled(sources.map(async (source) => {
+        const data = await loadJson(source.url, flight.controller.signal);
+        if (!source.valid(data)) throw new Error(`${source.label} response has no valid records array`);
+        return data;
+      }));
+      // An old page read must not overwrite a restored page, even if fetch ignores abort.
+      if (refreshStopped || refreshFlight !== flight) return;
+      const failures = [];
+      results.forEach((result, i) => {
+        if (result.status === "fulfilled") sources[i].apply(result.value);
+        else failures.push(sources[i].label);
+      });
+      if (!BOARD) {
+        printLid(null);
+        document.getElementById("board-body").innerHTML =
+          '<tr><td colspan="8" class="err">UNCHECKABLE — the board endpoint did not provide a valid snapshot.</td></tr>';
+      }
+      renderCurrentBoard();
+      refreshStatus(failures);
+    } finally {
+      clearTimeout(timeout);
+      if (refreshFlight === flight) refreshFlight = null;
+    }
+  })();
+  return flight.promise;
+}
+
+function startRefresh() {
+  refreshStopped = false;
+  if (refreshTimer == null) refreshTimer = setInterval(refreshBoard, REFRESH_MS);
+  refreshBoard();
+}
+
+function stopRefresh() {
+  refreshStopped = true;
+  if (refreshTimer != null) clearInterval(refreshTimer);
+  refreshTimer = null;
+  const flight = refreshFlight;
+  refreshFlight = null;
+  flight?.controller.abort();
+}
+
+function boot() {
+  renderRead();
+  renderDoors();
+  document.getElementById("q").addEventListener("input", () => {
+    query = document.getElementById("q").value;
+    applySearch();
+  });
+  document.getElementById("watch-add").addEventListener("click", addLookup);
+  document.getElementById("watch-refresh").addEventListener("click", refreshLookup);
+  renderLookup();
+  startRefresh();
   renderQueue();
   renderMarketCoverage();
 }
@@ -807,3 +880,9 @@ window.addEventListener("hashchange", () => {
   const hash = decodeURIComponent((location.hash || "").replace(/^#/, ""));
   if (hash && axisOf(hash)) openAxis(hash);
 });
+
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) refreshBoard();
+});
+window.addEventListener("pagehide", stopRefresh);
+window.addEventListener("pageshow", startRefresh);
