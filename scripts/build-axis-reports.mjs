@@ -165,11 +165,13 @@ export function deriveObligations(xwalk, sourceAxes) {
 }
 
 // ─── the tree, in memory ─────────────────────────────────────────────────────
-export async function buildTree({ repo = REPO_DEFAULT, slots, verify, now = new Date().toISOString() } = {}) {
+export async function buildTree({ repo = REPO_DEFAULT, slots, verify, now = null } = {}) {
+  // Determinism fix (7 Oct 2026): now derives from committed inputs (matrix.as_of), never wall-clock.
   slots ??= await loadSlots(repo);
   verify ??= (await import(pathToFileURL(join(repo, "public/signed/verify-card.mjs")).href)).verifyCard;
 
   const matrix = JSON.parse(readFileSync(join(repo, "public/signed/card-matrix.json"), "utf8"));
+  now ??= matrix.as_of ?? "1970-01-01T00:00:00Z";
   const xwalk = JSON.parse(readFileSync(join(repo, "client/src/data/regulator-crosswalk.json"), "utf8"));
   const roots = loadRootLeaves(repo);
   const slotById = Object.fromEntries(slots.map((s) => [s.axis, s]));
