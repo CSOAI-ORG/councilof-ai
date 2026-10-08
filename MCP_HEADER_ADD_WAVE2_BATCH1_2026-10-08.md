@@ -146,3 +146,12 @@ not a wire signal for this scanner. **After-rows are note-text-driven until post
   `pyproject.toml`, edited `server.py` (+ `mcp-wrapper.py` on `watermarking-authenticity-mcp`).
 * Scratch (pruned after 24 h): `~/.hermes/cache/scratch/wave2_{discover,patch,audit,note,push}.py`,
   `wave2_{sel,discovery,rows,patch,audits,push}.json`, `push.log`, `wave2_table.md`.
+
+---
+
+## RELEASE (batch 1 closed — 8 Oct 2026 02:45 UTC)
+
+- 25/25 PRs open, verified by independent read-back (sample: dora-nis2-crosswalk-mcp#2, dlms-bridge-mcp — OPEN, 4 files each; report URLs spot-checked 1st + 25th).
+- Eligible remaining: **387** header-add non-fork rows (412 − 25). Next batch requires a fresh CLAIM on the coordination board (session cap 25 honored: 10 wave-1 + 25 batch-1 = 35 migration PRs today).
+- API budget: 454/500. Wall: ~26 min. 0 secondary-limit hits.
+- NOTE: AGENTS.md RELEASE line was BLOCKED (agent-instruction file approval timed out) — this report is the release record.
