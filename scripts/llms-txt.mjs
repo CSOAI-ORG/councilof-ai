@@ -192,7 +192,7 @@ function paidDoorsSection() {
   const lines = doors.map((c) => {
     const req = c.probe?.request ?? c.path;
     const preview = c.free_preview ? ` · free preview: ${SITE}${c.free_preview}` : "";
-    return `  - ${SITE}${req}${preview}\n    ${c.description}`;
+    return `  - [${c.name ?? req}](${SITE}${req})${preview}\n    ${c.description}`;
   });
   // Dedupe by path: capabilities.json declares GET and POST variants of the same route
   // (e.g. /api/discover/* have both), but this render is a methodless path line — without
@@ -201,7 +201,7 @@ function paidDoorsSection() {
   const freeDoors = reg.capabilities
     .filter((c) => c.kind !== "mcp_tool" && c.kind !== "a2a_skill" && c.payment === "free" && (c.probe?.expect_status ?? []).includes(402))
     .filter((c) => { if (seenFreePaths.has(c.path)) return false; seenFreePaths.add(c.path); return true; })
-    .map((c) => `  - ${SITE}${c.path} — a live 402 route priced at zero: it settles, and charges nothing.`);
+    .map((c) => `  - [${c.name ?? c.path}](${SITE}${c.path}) — a live 402 route priced at zero: it settles, and charges nothing.`);
   return `- HTTP doors (GET or POST -> 402 unless \`X-PAYMENT\` / facilitator settlement). Derived from
   council-os/capabilities.json at generation; the same declaration renders /.well-known/x402.json
   and every operation in /openapi.json carrying x-payment-info. Do not count this list to learn how
