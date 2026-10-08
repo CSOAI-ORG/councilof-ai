@@ -1,0 +1,122 @@
+{
+  "schema": "csoai.anchor.retained-evidence-reconciliation/1.0",
+  "kind": "TUI5 retained signing + anchor evidence reconciled through its owner",
+  "reconciliation_window": {
+    "observation_started": "2026-10-07T15:50:38Z",
+    "observation_finished": "2026-10-08T00:43:02Z",
+    "registered_at": "2026-10-08T01:10:00Z",
+    "primary_receipt": "anchoring/full-verification-receipt.json (regenerated live, 2 runs, final run 00:43:02Z)",
+    "chain_test": "anchoring/test_chain.py → 9/9 PASS, exit 0 (correct standalone harness; pytest invocation is the wrong runner for this file)"
+  },
+  "subject": {
+    "url": "https://councilof.ai/root.json",
+    "sha256": "f1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e",
+    "as_of": "2026-09-30T05:05:34Z",
+    "card_count": 319,
+    "merkle_root": "47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d",
+    "bytes": 25513
+  },
+  "layers": [
+    {
+      "layer": "1_card_signature",
+      "state": "VERIFIED",
+      "measured": "652 SIGNED_AND_VERIFIED (corpus A 317 + corpus B 335); 2 EXPLICITLY_UNSIGNED (747a510c1d3c618f, 617122cb45ba83ab — grandfather set, NO_LAPTOP_SIGN); 0 invalid; key pinned to DID, never to card claims",
+      "owner": "board signing key — off-device ceremony (ceremony/board-attestation-ceremony-receipt.md); relay = GitHub OIDC `board-sign`, allowlist [public-root, hf-fin-shells, hf-inference-mill, auto-eat-sign]",
+      "verdict": "RECONCILED_WITH_PENDING_EXERCISE",
+      "note": "The signing fix that removes the grandfather-set skip is merged (PR #2869, 06:06:31Z) but has NOT run yet — the next publish after promotion signs the two cards into a new root."
+    },
+    {
+      "layer": "2_merkle_inclusion",
+      "state": "VERIFIED",
+      "measured": "319/319 inclusion proofs valid (index-aware, dual ensure_ascii digest rules 191/128); merkle recomputed == published; leaf membership 319/319; root envelope Ed25519 VALID over 274-byte preimage",
+      "owner": "CSOAI-ORG/councilof-ai public-root pipeline",
+      "verdict": "RECONCILED"
+    },
+    {
+      "layer": "3_rekor_witness",
+      "state": "WITNESSED",
+      "measured": "logIndex 3012420819, uuid 108e9186e8c5677a60f8e5499012cdd18803397ac53087e7f71bb4ae1685a7fd44516d84d6064121, logID c0d23d6ad406973f…, integratedTime 1790744735 = 2026-09-30T05:05:35Z (1s after root as_of); cross-read LIVE from rekor.sigstore.dev today; retained entry_file matches uuid",
+      "owner": "public Rekor log (Rekor/Sigstore) — CSOAI submitter via publish pipeline",
+      "verdict": "RECONCILED",
+      "claims_corrected": "Retained files previously asserted the OLD entry (2791822965 / 167-card root): anchoring/rekor_push.py rewritten today to derive from the live sidecar (was hardcoded 'NOT_NEEDED_YET'); test_chain.py keeps 2791822965 only as a dated constant with an inline pointer to the sidecar."
+    },
+    {
+      "layer": "4_ots_bitcoin",
+      "state": "CONFIRMED_BITCOIN",
+      "measured": "proof public/interop/root-f1913eca.json.ots, proof_sha256 6ac9dd07d8b59b6a830b5056b2395c29b1ada411e97a3dab5a4d5fc987f5fac8, subject == live root (True, re-checked today), blocks [969264, 969266, 969288, 969296], header byte-identical across Blockstream+mempool (verified in prior sweep)",
+      "owner": "OTS calendars + Bitcoin proof-of-publication; retention = public/interop/*.ots",
+      "verdict": "RECONCILED",
+      "claims_corrected": "anchoring/verify_all.py receipt previously HARDCODED STAMPED_PENDING_BITCOIN/PENDING — rewritten today: anchor block now DERIVED from the live sidecar with an explicit reconciliation note."
+    },
+    {
+      "layer": "5_base_eas",
+      "state": "NOT_YET",
+      "measured": "reason 'no EAS attestation in the append-only log matches this root.json sha256'; machinery live (public-root.yml auto-step, schema bytes32 sha256 + as_of + did); attester key present in GH secrets EAS_ATTESTER_PRIVATE_KEY (hot wallet 0x65910f9827e2a87c4acb961b35f33c09ee0c94f2, key never in repo/logs/chat); balance 0 wei; NOT_FUNDED/WAITING_GAS fail-closed guards merged (PR #2869)",
+      "owner": "Nicholas Templeman — funding send 1 (0.00002 ETH on Base)",
+      "verdict": "OWNER_ACTION"
+    },
+    {
+      "layer": "6_ethereum_eas",
+      "state": "NOT_FUNDED (workflow merged, not dispatched)",
+      "measured": "eas-eth-attest.yml + eas_attest_root_eth.mjs merged (PR #2869); official v0.26 contracts code-verified on-chain 2026-10-07 (EAS 0xA120…Ce587, registry 0xA7b3…A97BDF); guards NOT_YET/NOT_FUNDED/WAITING_GAS; cap $2.00 total",
+      "owner": "Nicholas Templeman — funding send 2 (0.0004 ETH on L1, P2) then dispatch confirm=attest-l1",
+      "verdict": "OWNER_ACTION"
+    },
+    {
+      "layer": "7_xrpl_memo",
+      "state": "NOT_YET",
+      "measured": "reason 'needs a funded XRPL account (owner); one memo tx carrying sha256(root.json)'; spec anchoring/xrpl-memo-spec.json regenerated to anchor_datum f1913eca… (v0.2); account rJJYvRPDPyGCa3jfCGCEGRccrk7S1bPLCk exists, actNotFound (unfunded); standard seed ONLY at ~/.sovereign/keystore/xrpl_anchor_account_seed.txt (0600, never printed)",
+      "owner": "Nicholas Templeman — funding send 3 (≥10 XRP from exchange); agent then submits memo (fee 10 drops, cap 1000 drops) and records tx receipt",
+      "verdict": "OWNER_ACTION"
+    },
+    {
+      "layer": "8_ots_manifest",
+      "state": "REGENERATED_AND_REGRESSION_FIXED",
+      "measured": "662 proofs / 646 Bitcoin-attested / 0 quarantined; gate root_ots_manifest_gate rc=0 state VALID_PREIMAGE_ONLY (run on candidate bytes); recurrence fixed at source: upgrade workflow rebuilds manifest in-commit (PR #2898 MERGED 10:53:17Z)",
+      "owner": "CSOAI-ORG/councilof-ai — derived file, regenerated from bytes only",
+      "verdict": "DIVERGENT_FOUND_AND_FIXED_TODAY"
+    },
+    {
+      "layer": "9_derived_surfaces_llms",
+      "state": "REGENERATED",
+      "measured": "public/llms.txt + llms-full.txt regenerated from the 23:02:56Z manifest (662/646 counts + as_of present; 'submitted not anchored' wording intact); fixed the pr-gates failure that blocked promotion",
+      "owner": "derived file — generator scripts/llms-txt.mjs",
+      "verdict": "DIVERGENT_FOUND_AND_FIXED_TODAY"
+    },
+    {
+      "layer": "10_memberships_row",
+      "state": "RECORDED_UNAVAILABILITY",
+      "measured": "claude-connector-directory row was UNVERIFIED with null status_note/status_since (failed charter-evidence test from #2915). Live re-read today: claude.ai still HTTP 403 to scripted fetchers → row now carries sanctioned recorded-unavailability fields (note, since 2026-10-07, containment in what_it_proves). NOT claimed verified.",
+      "owner": "public/interop/memberships.json — L1-listings lane row, reconciled by TUI5 for promotion",
+      "verdict": "DIVERGENT_FOUND_AND_FIXED_TODAY"
+    }
+  ],
+  "promotion_state": {
+    "candidate_pr": "CSOAI-ORG/councilof-ai#2840",
+    "head": "3ca753e63daa4339b96afd4e1908ba59a9806fbd",
+    "prior_head": "c9303fcd (witness-refresh churn moved heads under the upgrade watcher — 3 upgrade-run HALTs today, each 'candidate stays open for a human')",
+    "in_flight": "pr-gates dispatched on the exact head; watcher-merger runs gh pr merge --squash --match-head-commit on green",
+    "reconcile_merges": ["00055b8cb (manifest regenerated from merged bytes)", "c9303fcd (upgrade witness refresh)", "3ca753e63 (llms + memberships gate fixes)"]
+  },
+  "spend": {"actual_usd": 0, "funding_source": "none — read-only verification and free endpoints only"},
+  "claims_corrected_today": [
+    "verify_all.py anchor block: hardcoded old logIndex + STAMPED_PENDING_BITCOIN → live-derived",
+    "rekor_push.py: hardcoded 167-card entry + 'no new push needed' → live-derived state describer",
+    "card_signature string bug in this reconciliation (corpus A key is sig_state not sig_ok) → fixed and re-run",
+    "TUI-4 PR #2901 body cites baseline 'Rekor 2791822965 / OTS STAMPED_PENDING_BITCOIN / root 167' as unchanged — LIVE: 3012420819 / CONFIRMED_BITCOIN / 319 (flagged to that lane)",
+    "pytest invocation of test_chain.py (wrong harness: fixture-not-found) → documented standalone runner, 9/9 PASS"
+  ],
+  "tests": [
+    "anchoring/test_chain.py standalone: 9/9 PASS exit 0 (2026-10-08T00:44Z)",
+    "verify_all.py full sweep ×3 runs: final A 317+2 / 319 digests / 319 proofs / 0 errors; B 335/335 / 0 errors; one transient DNS miss reproduced and cleared on re-run (Errno 8, card cff1aaf0… re-fetched OK)",
+    "pr-gates (CI): previously 2 failures (llms as_of, memberships row) → both fixed with assertions replicated locally (ALL_OK) and pushed as 3ca753e63",
+    "repo pre-push content gates (wallet-credential + facts + brand + canary-leak + price): CLEAN after restoring full .github cone and completing the partial-clone object store (--refetch --filter=blob:limit=2m)"
+  ],
+  "owner_todos_today": [
+    "SEND 1: 0.00002 ETH on Base → 0x65910f9827e2a87c4acb961b35f33c09ee0c94f2 (unlocks the automatic per-publish Base EAS attestation)",
+    "SEND 2 (P2): 0.0004 ETH on L1 → same address (then dispatch eas-eth-attest confirm=attest-l1, cap $2)",
+    "SEND 3: ≥10 XRP → rJJYvRPDPyGCa3jfCGCEGRccrk7S1bPLCk (agent submits the prepared memo, fee 10 drops)",
+    "WATCH: watcher-merger will squash-merge #2840 when gates go green; deploy then publishes and the next publish signs USDQ/EURQ (2 unsigned → 0) into a NEW root"
+  ],
+  "measurement_not_certification": true
+}

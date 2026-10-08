@@ -1,70 +1,114 @@
 #!/usr/bin/env python3
 """
-CSOAI Rekor Sigstore Push
-==========================
-Pushes the root.json hash to the Rekor transparency log.
+CSOAI Rekor Sigstore State (reconciled 2026-10-07)
+==================================================
+Describes the CURRENT Rekor inclusion state for the public root — DERIVED from the
+live witness sidecar at observation time.
 
-The current root is ALREADY in Rekor at logIndex 2791822965.
-This script is for pushing UPDATED roots after new measurement cycles.
+Reconciliation note (2026-10-07): this file previously HARDCODED logIndex 2791822965
+over the 167-card root (sha256 62a1931b…) with "No new push is needed", while the
+retained live entry had moved to logIndex 3012420819 over the 319-card root
+(f1913eca…). A retained state file may never outrun the truth it reconciles, so
+every field below is read from the sidecar; an unreachable sidecar yields
+UNAVAILABLE — an honest absence, never a stale claim.
 
-Rekor accepts 'rekord' entries (not 'hashedrekord') because pure Ed25519
-is rejected by hashedrekord. The entry carries the preimage bytes,
-the raw Ed25519 signature, and the board's PEM public key.
+The actual Rekor submission for each root is performed by the publish pipeline
+(rekord type: preimage bytes + board Ed25519 signature + x509 public key);
+this script only reports state. No spend, read-only.
 
 Run:
     python3 anchoring/rekor_push.py [--verify-only]
-
-Status: The existing entry is WITNESSED. This script is for future roots.
 """
 
 import json
 import sys
+import urllib.request
 from datetime import datetime, timezone
+
+SIDECAR_URL = "https://councilof.ai/interop/root-witness-latest.json"
+ROOT_URL = "https://councilof.ai/root.json"
+UA = {"User-Agent": "CSOAI-rekor-state/0.2"}
+
+
+def _fetch(url, timeout=25):
+    import ssl
+    import os
+    ctx = None
+    try:
+        import certifi
+        ctx = ssl.create_default_context(cafile=certifi.where())
+    except Exception:
+        ctx = ssl.create_default_context()
+    req = urllib.request.Request(url, headers=UA)
+    with urllib.request.urlopen(req, timeout=timeout, context=ctx) as resp:
+        return resp.read()
 
 
 def describe_rekor_state() -> dict:
-    """Describe the current Rekor state for the CSOAI root."""
-    return {
-        "schema": "csoai.anchor.rekor-state/0.1",
+    """Describe the current Rekor state for the CSOAI root, live-derived."""
+    measured = datetime.now(timezone.utc).isoformat()
+    base = {
+        "schema": "csoai.anchor.rekor-state/0.2",
         "kind": "rekor.sigstore.inclusion",
-        "measured_at": datetime.now(timezone.utc).isoformat(),
+        "measured_at": measured,
+        "derived_from": SIDECAR_URL,
+        "measurement_not_certification": True,
+    }
+    try:
+        side = json.loads(_fetch(SIDECAR_URL))
+        rekor = ((side.get("witnesses") or {}).get("rekor")) or {}
+        artifact = side.get("artifact") or {}
+    except Exception as exc:  # honest absence, never a stale assertion
+        return {
+            **base,
+            "state": "UNAVAILABLE",
+            "reason": f"sidecar unreachable at measurement time ({type(exc).__name__}); no state asserted",
+        }
+    if not rekor:
+        return {**base, "state": "ABSENT", "reason": "no rekor witness present in sidecar"}
+    return {
+        **base,
+        "state": "WITNESSED" if rekor.get("status") == "WITNESSED" else rekor.get("status", "UNKNOWN"),
         "current_entry": {
-            "status": "WITNESSED",
-            "logIndex": 2791822965,
-            "uuid": "108e9186e8c5677a745e131404b16562b3698b099d3c32b8f93e5a38745fe73ebb5a2350cca83598",
-            "integratedTime": 1789116324,
-            "logID": "c0d23d6ad406973f9559f3ba2d1ca01f84147d8ffc5b8445c224f98b9591801d",
-            "type": "rekord/x509 over the preimage bytes with the board signature",
-            "url": "https://rekor.sigstore.dev/api/v1/log/entries?logIndex=2791822965",
-            "entry_file": "https://councilof.ai/interop/rekor-root-62a1931b.json",
-        },
-        "rekor_log": {
-            "url": "https://rekor.sigstore.dev/api/v1/log",
-            "tree_size_at_check": 2670683164,
-            "status": "LIVE",
+            "status": rekor.get("status"),
+            "logIndex": rekor.get("logIndex"),
+            "uuid": rekor.get("uuid"),
+            "integratedTime": rekor.get("integratedTime"),
+            "integratedTimeIso": (
+                datetime.fromtimestamp(rekor["integratedTime"], timezone.utc).isoformat()
+                if isinstance(rekor.get("integratedTime"), int) else None
+            ),
+            "logID": rekor.get("logID"),
+            "type": rekor.get("type"),
+            "url": f"https://rekor.sigstore.dev/api/v1/log/entries?logIndex={rekor.get('logIndex')}",
+            "entry_file": rekor.get("entry_file"),
         },
         "artifact_anchored": {
-            "url": "https://councilof.ai/root.json",
-            "sha256": "62a1931b4fdfd7351b3baa14354ccef068a9996592b199d2a862149a7dfaedc6",
-            "merkle_root": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5",
-            "card_count": 167,
+            "url": artifact.get("url") or ROOT_URL,
+            "sha256": artifact.get("sha256"),
+            "merkle_root": artifact.get("merkle_root"),
+            "card_count": artifact.get("card_count"),
+            "as_of": artifact.get("as_of"),
         },
         "next_root_push": {
-            "status": "NOT_NEEDED_YET",
-            "trigger": "When a new root.json is published with updated card count or merkle root",
-            "method": "POST to https://rekor.sigstore.dev/api/v1/log/entries with rekord entry type",
+            "status": "PERFORMED_BY_PUBLISH_PIPELINE",
+            "trigger": "a new root.json published by public-root.yml",
+            "method": "rekord entry (preimage bytes + board signature + x509 key)",
             "cost": "free",
         },
-        "honest_sentence": "The current root is witnessed in Rekor at logIndex 2791822965. "
-                          "No new push is needed until the root changes.",
-        "measurement_not_certification": True,
+        "honest_sentence": (
+            f"Root {artifact.get('sha256', '?')[:16]}… is witnessed in Rekor at logIndex "
+            f"{rekor.get('logIndex')} (observed {measured}). Measurement of inclusion only — "
+            "not a certification, not a signature-validity claim beyond what verify_all.py measures."
+        ),
     }
 
 
 def main():
     state = describe_rekor_state()
     print(json.dumps(state, indent=2))
+    return 0 if state.get("state") in ("WITNESSED",) else 1
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

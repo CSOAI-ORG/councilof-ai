@@ -57,6 +57,53 @@ def fetch_json(url, timeout=25):
     return json.loads(fetch(url, timeout))
 
 
+SIDECAR_URL = "https://councilof.ai/interop/root-witness-latest.json"
+
+
+def fetch_anchor_states(root_sha256):
+    """Anchor layers DERIVED from the live witness sidecar — never typed from memory.
+
+    2026-10-07: this receipt previously HARDCODED rekor/ots/eas/xrpl states (old
+    logIndex 2791822965, 'STAMPED_PENDING_BITCOIN') while the live sidecar had moved
+    to logIndex 3012420819 / CONFIRMED_BITCOIN. A retained receipt must not outrun
+    the truth it reconciles, so every anchor line below is read at observation time.
+    If the sidecar is unreachable the state is recorded as UNAVAILABLE — an honest
+    absence, never a stale assertion.
+    """
+    observed = datetime.now(timezone.utc).isoformat()
+    base = {"_source": SIDECAR_URL, "_observed_at": observed}
+    try:
+        side = fetch_json(SIDECAR_URL)
+    except Exception as exc:  # noqa: BLE001 — any fetch failure is an honest absence
+        na = f"UNAVAILABLE — sidecar unreachable at observation time ({type(exc).__name__}); state NOT asserted"
+        return {**base, "rekor_witness": na, "ots_submission": na,
+                "bitcoin_confirmation": na, "base_eas": na, "xrpl_memo": na}
+    w = side.get("witnesses") or {}
+    ots = w.get("ots") or {}
+    rekor = w.get("rekor") or {}
+    eas = w.get("eas_base") or w.get("eas") or {}
+    xrpl = w.get("xrpl_memo") or w.get("xrpl") or {}
+    ots_status = ots.get("status") or "UNKNOWN"
+    blocks = ots.get("bitcoin_blocks") or []
+    subject = ots.get("subject_sha256") or ""
+    return {
+        **base,
+        "rekor_witness": (
+            f"{rekor.get('status', 'UNKNOWN')} at logIndex {rekor.get('logIndex')} "
+            f"(uuid {str(rekor.get('uuid', ''))[:32]}…, integratedTime {rekor.get('integratedTime')}, "
+            f"logID {str(rekor.get('logID', ''))[:16]}…)"
+        ) if rekor else "ABSENT — no rekor witness in sidecar",
+        "ots_submission": f"{ots_status} — proof {ots.get('path', 'UNKNOWN')}",
+        "bitcoin_confirmation": (
+            f"CONFIRMED_BITCOIN — blocks {blocks}, header verified against "
+            f"{((ots.get('bitcoin_header') or {}).get('source_agreement') or 'sources:see-sidecar')}"
+        ) if ots_status == "CONFIRMED_BITCOIN" else f"NOT CONFIRMED — sidecar status {ots_status}",
+        "ots_subject_matches_live_root": (subject == root_sha256) if subject else None,
+        "base_eas": f"{eas.get('status', 'UNKNOWN')} — {str(eas.get('reason', ''))[:160]}",
+        "xrpl_memo": f"{xrpl.get('status', 'UNKNOWN')} — {str(xrpl.get('reason', ''))[:160]}",
+    }
+
+
 def canon(obj, ensure_ascii):
     return json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=ensure_ascii).encode("utf-8")
 
@@ -261,13 +308,20 @@ def main():
         },
         "identifier_overlap_A_B": len(set(leaves) & set(ids)),
         "anchor_states_separate": {
-            "card_signature": "SIGNED_AND_VERIFIED (per-card, both corpora)",
+            # derived from the counts actually verified above — never typed
+            # (corpus A records sig_state; corpus B records sig_ok — each counts with its own key)
+            "card_signature": (
+                f"{sum(1 for r in a_results if r.get('sig_state') == 'VALID') + sum(1 for r in b_results if r.get('sig_ok'))} "
+                f"SIGNED_AND_VERIFIED across both corpora; "
+                f"{sum(1 for r in a_results if r.get('sig_state') == 'UNSIGNED')} EXPLICITLY_UNSIGNED "
+                f"(counted as unsigned, never claimed signed)"
+            ),
             "merkle_root_inclusion": "INCLUDED" if all(r.get("proof_ok") for r in a_results) else "INCOMPLETE",
-            "rekor_witness": "WITNESSED at logIndex 2791822965 as observed 2026-09-11 (re-check before citing)",
-            "ots_submission": "STAMPED_PENDING_BITCOIN",
-            "bitcoin_confirmation": "PENDING (no Bitcoin block attestation in proof)",
-            "base_eas": "NOT_YET (spec prepared, owner-gated)",
-            "xrpl_memo": "NOT_YET (spec prepared, owner-gated)",
+            # rekor / ots / bitcoin / eas / xrpl: read live from the witness sidecar
+            # (this block was HARDCODED until 2026-10-07 and had gone stale: old
+            # logIndex 2791822965 + 'STAMPED_PENDING_BITCOIN' vs live 3012420819 +
+            # CONFIRMED_BITCOIN — see fetch_anchor_states for the reconciliation note)
+            **fetch_anchor_states(hashlib.sha256(raw_root).hexdigest()),
         },
         "spend": {"actual_usd": 0, "funding_source": "none — read-only verification, all endpoints free"},
         "measurement_not_certification": True,

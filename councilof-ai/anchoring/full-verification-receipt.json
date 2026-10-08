@@ -1,8 +1,8 @@
 {
   "schema": "csoai.anchor.full-verification/0.2",
   "kind": "tui5.all-card-signature-verification",
-  "observation_started": "2026-10-07T04:03:46.844973+00:00",
-  "observation_finished": "2026-10-07T04:04:33.846811+00:00",
+  "observation_started": "2026-10-08T00:42:25.035693+00:00",
+  "observation_finished": "2026-10-08T00:43:02.111443+00:00",
   "verifier": "anchoring/verify_all.py (standalone; keys pinned from DID, never from cards)",
   "key_pins": {
     "board-attestation-1": "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
@@ -11,7 +11,7 @@
   },
   "root_envelope": {
     "source": "https://councilof.ai/root.json",
-    "observed_at": "2026-10-07T04:03:46.844973+00:00",
+    "observed_at": "2026-10-08T00:42:25.035693+00:00",
     "as_of": "2026-09-30T05:05:34Z",
     "kind": "csoai.public-root/v1",
     "card_count_declared": 319,
@@ -35,8 +35,8 @@
     "signatures_invalid": 0,
     "digests_valid": 319,
     "digest_rules_seen": {
-      "ensure_ascii=False": 191,
-      "ensure_ascii=True": 128
+      "ensure_ascii=True": 128,
+      "ensure_ascii=False": 191
     },
     "leaf_membership_valid": 319,
     "inclusion_proofs_valid": 319,
@@ -57,13 +57,16 @@
   },
   "identifier_overlap_A_B": 0,
   "anchor_states_separate": {
-    "card_signature": "SIGNED_AND_VERIFIED (per-card, both corpora)",
+    "card_signature": "652 SIGNED_AND_VERIFIED across both corpora; 2 EXPLICITLY_UNSIGNED (counted as unsigned, never claimed signed)",
     "merkle_root_inclusion": "INCLUDED",
-    "rekor_witness": "WITNESSED at logIndex 2791822965 as observed 2026-09-11 (re-check before citing)",
-    "ots_submission": "STAMPED_PENDING_BITCOIN",
-    "bitcoin_confirmation": "PENDING (no Bitcoin block attestation in proof)",
-    "base_eas": "NOT_YET (spec prepared, owner-gated)",
-    "xrpl_memo": "NOT_YET (spec prepared, owner-gated)"
+    "_source": "https://councilof.ai/interop/root-witness-latest.json",
+    "_observed_at": "2026-10-08T00:43:02.111627+00:00",
+    "rekor_witness": "WITNESSED at logIndex 3012420819 (uuid 108e9186e8c5677a60f8e5499012cdd1\u2026, integratedTime 1790744735, logID c0d23d6ad406973f\u2026)",
+    "ots_submission": "CONFIRMED_BITCOIN \u2014 proof public/interop/root-f1913eca.json.ots",
+    "bitcoin_confirmation": "CONFIRMED_BITCOIN \u2014 blocks [969264, 969266, 969288, 969296], header verified against BLOCKSTREAM_MEMPOOL_BYTE_IDENTICAL",
+    "ots_subject_matches_live_root": true,
+    "base_eas": "NOT_YET \u2014 no EAS attestation in the append-only log matches this root.json sha256",
+    "xrpl_memo": "NOT_YET \u2014 needs a funded XRPL account (owner); one memo tx carrying sha256(root.json)"
   },
   "spend": {
     "actual_usd": 0,
