@@ -18,7 +18,7 @@ import os, re, shutil, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.dirname(HERE)
 PKG = "csoai_evidence_fabric"
-MODULES = ["event.py", "verify.py", "batch.py",
+MODULES = ["event.py", "verify.py", "batch.py", "safe_freeze_v2.py",
            "render/__init__.py", "render/ocsf.py", "render/otel.py", "render/sarif.py", "render/intoto.py",
            "render/ecs_hec.py", "render/w3c_acr01.py",
            "ingest/__init__.py", "ingest/sarif_in.py", "ingest/garak_in.py", "ingest/safe_in.py", "ingest/openshell_in.py"]

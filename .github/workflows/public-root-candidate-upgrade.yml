@@ -175,6 +175,14 @@ jobs:
           set -euo pipefail
           git config user.name "csoai-public-root"
           git config user.email "board@csoai.org"
+          # The proof bytes above just changed, so public/interop/ots/manifest.json -
+          # DERIVED from those bytes - is stale, and pr-gates' ots-manifest-fresh test
+          # fails closed on exactly that (hit 2026-10-07: the candidate reached pr-gates
+          # and halted with "OTS manifest differs from current proof bytes; rebuild before
+          # release"). Rebuild it from the bytes in the same commit; the manifest is
+          # generated from what the files are, never from the intention.
+          python3 scripts/ots_manifest_rebuild.py --apply
+          git add public/interop/ots
           git add public/interop/root-*.json.ots
           git add public/interop/root-witness-*.json public/interop/root-witness-pointer.json
           git add public/interop/stablecoin-universe-2026-09/readiness.json public/archive/index.json

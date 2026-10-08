@@ -260,12 +260,24 @@ export async function listCardsTool(origin: string, args: Record<string, unknown
   }
   try {
     const api = (await fetchOriginJson(origin, "/api/cards")) as {
-      cards?: { count?: number; signed?: number };
+      cards?: { count?: number; signed?: number; signed_under_did_key?: number };
+      cross_border?: unknown;
+      note?: unknown;
     };
+    // /api/cards defines its own count: the signed card index rows PLUS the cross-border East-West
+    // card when it is published (functions/api/cards.ts; a separate schema, never folded into the
+    // GSPC index per BOARD-RULING.md). Carry that from the endpoint's own fields, read live, so a
+    // one-card difference is read as what the endpoint says it is. Still two numbers, never
+    // reconciled here: this tool quotes the endpoint's definition and adjusts neither count.
+    const note = typeof api?.note === "string" ? api.note : "";
+    const firstSentence = note.split(/(?<=\.)\s/)[0] || null;
     out.card_store_count_endpoint = {
       source: `${origin}/api/cards`,
       count: api?.cards?.count ?? null,
       signed: api?.cards?.signed ?? null,
+      signed_under_did_key: api?.cards?.signed_under_did_key ?? null,
+      includes_cross_border_card: api?.cross_border != null,
+      count_definition_as_published: firstSentence,
     };
   } catch (e) {
     out.card_store_count_endpoint = unreachablePayload(origin, "/api/cards", e);

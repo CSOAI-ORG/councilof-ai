@@ -27,7 +27,7 @@
  * valid card UNCHECKABLE, and an unpinned signer cannot pass because the network was down.
  * Verification is free, forever. It certifies nothing.
  */
-import { verifyCard, cardState, PINNED_ANCHORS, type Anchor } from "../_lib/cardVerify";
+import { verifyCard, cardState, anchorsFromDid, PINNED_ANCHORS, type Anchor } from "../_lib/cardVerify";
 import { isSignedRun, verifySignedRunDoc } from "../_lib/signedRunVerify";
 import { verifyLeaf, canonicalBytes, sha256Hex } from "../_lib/cardSign";
 import { headFromGet } from "./_head";
@@ -44,16 +44,20 @@ const json = (body: unknown, status = 200) =>
     headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store", ...CORS },
   });
 
-/** A labelled cross-check only. It never decides a verdict; PINNED_ANCHORS do. */
+/**
+ * A labelled cross-check only. It never decides a verdict; PINNED_ANCHORS do.
+ *
+ * The anchors are parsed by cardVerify.anchorsFromDid — the same parser the MCP `verify_card`
+ * tool uses — so the key bytes are decoded from each publicKeyJwk. Until 2026-10-07 this helper
+ * kept only the method ids and left every `hex` empty, so the cross-check could never find the
+ * signing key and every /api/verify answer carried a false "live did.json does not list this
+ * key" row, while the MCP tool reading the same document said "agrees".
+ */
 async function liveAnchors(origin: string): Promise<Anchor[]> {
   try {
     const r = await fetch(`${origin}/.well-known/did.json`, { headers: { accept: "application/json" } });
     if (!r.ok) return [];
-    const did = (await r.json()) as { verificationMethod?: { id?: string; publicKeyMultibase?: string }[] };
-    return (did.verificationMethod ?? [])
-      .filter((v) => v.id)
-      .map((v) => ({ id: String(v.id), hex: "" }))
-      .filter((a) => a.id) as Anchor[];
+    return anchorsFromDid(await r.json());
   } catch {
     return [];
   }
@@ -83,57 +87,9 @@ async function coerceCard(raw: unknown): Promise<{ card?: unknown; error?: strin
   };
 }
 
-/**
- * CARD-V0 LEAVES (added 2026-09-25 with the self-serve RAS doors). The receipts those doors
- * return, the population-door attestations and /api/wrapper cards are card-v0 leaves: `payload`,
- * `sha256` over the payload's canonical bytes, `sig_ed25519` over those same bytes under a DID key
- * (functions/_lib/cardSign.ts — the rule /api/board-sign applies). cardVerify.ts does not know
- * that shape, so before this it answered UNCHECKABLE/unrecognised_family for every receipt the
- * estate itself issues. This adds no new rule: the preimage is canonicalBytes, the check is
- * cardSign.verifyLeaf, and the key is the PINNED anchor the DID names — never a fetched one.
- *
- * The float quirk applies here too: a leaf signed by Python over an integral float ("1.0") is
- * re-rendered "1" by JavaScript. A digest mismatch on bytes that carry such a float is therefore
- * UNCHECKABLE (float_rendering_ambiguous), never INVALID — the same refusal to report a false
- * failure the header above explains.
- */
-export function isCardV0(rec: unknown): rec is { payload: Record<string, unknown>; sha256: string; sig_ed25519: string | null; did?: string; did_intended?: string } {
-  if (!rec || typeof rec !== "object" || Array.isArray(rec)) return false;
-  const r = rec as Record<string, unknown>;
-  return !!r.payload && typeof r.payload === "object" && !Array.isArray(r.payload) && typeof r.sha256 === "string" && "sig_ed25519" in r;
-}
-
-const INTEGRAL_FLOAT_RE = /[:\[,]\s*-?\d+\.0+\s*[,}\]]/;
-
-export async function verifyCardV0(
-  rec: { payload: Record<string, unknown>; sha256: string; sig_ed25519: string | null; did?: string; did_intended?: string },
-  rawText: string | null,
-): Promise<{ state: "VALID" | "INVALID" | "UNCHECKABLE"; family: string; id: string; reasons: string[]; checks: { check: string; ok: boolean | null; code: string; detail: string }[] }> {
-  const checks: { check: string; ok: boolean | null; code: string; detail: string }[] = [
-    { check: "Family", ok: true, code: "family", detail: "csoai.card-v0 — payload + sha256 + sig_ed25519 over the canonical payload bytes" },
-  ];
-  const computed = await sha256Hex(canonicalBytes(rec.payload));
-  const shaOk = computed === rec.sha256.toLowerCase();
-  if (!shaOk) {
-    const ambiguous = rawText !== null && INTEGRAL_FLOAT_RE.test(rawText);
-    checks.push({ check: "Digest", ok: ambiguous ? null : false, code: ambiguous ? "float_rendering_ambiguous" : "sha256_mismatch", detail: ambiguous ? `computed ${computed}; the bytes carry an integral float JavaScript renders differently from the signer, so this is not judged` : `canonical payload hashes to ${computed}, not the declared ${rec.sha256}` });
-    return { state: ambiguous ? "UNCHECKABLE" : "INVALID", family: "csoai.card-v0", id: rec.sha256, reasons: [ambiguous ? "float_rendering_ambiguous" : "sha256_mismatch"], checks };
-  }
-  checks.push({ check: "Digest", ok: true, code: "sha256_ok", detail: "the canonical payload bytes reproduce the declared sha256" });
-  if (!rec.sig_ed25519) {
-    checks.push({ check: "Signature", ok: null, code: "unsigned", detail: "sig_ed25519 is null — the leaf declares itself unsigned; nothing to verify" });
-    return { state: "UNCHECKABLE", family: "csoai.card-v0", id: rec.sha256, reasons: ["unsigned"], checks };
-  }
-  const did = String(rec.did || "");
-  const pin = PINNED_ANCHORS.find((a) => a.id === did);
-  if (!pin) {
-    checks.push({ check: "Signing key", ok: null, code: "key_not_pinned", detail: `${did || "(no did)"} is not in this verifier's offline pin set` });
-    return { state: "UNCHECKABLE", family: "csoai.card-v0", id: rec.sha256, reasons: ["key_not_pinned"], checks };
-  }
-  const v = await verifyLeaf(rec.payload, rec.sha256.toLowerCase(), rec.sig_ed25519, pin.hex);
-  checks.push({ check: "Signature", ok: v.sig_ok, code: v.sig_ok ? "signature_ok" : "signature_invalid", detail: v.sig_ok ? `Ed25519 verifies under pinned ${did}` : `Ed25519 does not verify under pinned ${did}` });
-  return { state: v.sig_ok ? "VALID" : "INVALID", family: "csoai.card-v0", id: rec.sha256, reasons: v.sig_ok ? [] : ["signature_invalid"], checks };
-}
+/** card-v0 leaves: the shared verdict lives in functions/_lib/cardV0Verify.ts (re-exported for existing importers). */
+import { isCardV0, verifyCardV0 } from "../_lib/cardV0Verify";
+export { isCardV0, verifyCardV0 };
 
 /** Same verdict path for every caller: card-v0 → verifyCardV0; everything else → cardVerify. */
 async function verdictFor(card: unknown, rawText: string | null, origin: string) {

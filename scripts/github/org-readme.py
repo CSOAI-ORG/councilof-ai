@@ -5,7 +5,7 @@ from LIVE endpoints.
 
 Nothing in the emitted markdown is typed. Every count is read at run time from:
 
-  https://councilof.ai/api/gspc                 totals.lid verbatim, the 22-axis board
+  https://councilof.ai/api/gspc                 totals.lid verbatim, the board (axis count derived at run time, never typed)
   https://councilof.ai/api/badge                the board image (200 image/svg+xml, or it is left out)
   https://councilof.ai/badge/board.svg          same — included only if it answers
   https://councilof.ai/root.json                merkle_root, card_count, as_of, sig
@@ -372,7 +372,13 @@ def badge_row(f: dict) -> str:
     return " ".join([
         f"[![PyPI csoai-gspc](https://img.shields.io/pypi/v/csoai-gspc?style=flat-square&color={GREEN}&label=PyPI%20csoai--gspc)](https://pypi.org/project/csoai-gspc/)",
         f"[![npm csoai-gspc-mcp](https://img.shields.io/npm/v/csoai-gspc-mcp?style=flat-square&color={GREEN}&label=npm%20csoai--gspc--mcp)](https://www.npmjs.com/package/csoai-gspc-mcp)",
-        f"[![DOI {ZENODO_METHOD_CONCEPT}](https://zenodo.org/badge/DOI/{ZENODO_METHOD_CONCEPT}.svg)](https://doi.org/{ZENODO_METHOD_CONCEPT})",
+        # B-14 (raised 2026-10-07): doi.org/10.5281/zenodo.21991104 answers HTTP 410, so this
+        # badge linked to a thing that does not exist — violating this function's own contract
+        # ("every badge links to a thing that exists"). zenodo-status.json rule: "No surface we
+        # publish links one as available. Each prints the identifier, this notice, and the
+        # artifact's other live copy where one exists." The identifier stays in the alt text;
+        # the link now lands on the dated notice, which carries the appeal state and the mirror.
+        f"[![DOI {ZENODO_METHOD_CONCEPT} — record unavailable, see notice](https://zenodo.org/badge/DOI/{ZENODO_METHOD_CONCEPT}.svg)](https://councilof.ai/interop/zenodo-status.json)",
         f"[![License MIT](https://img.shields.io/badge/license-MIT-{GREEN}?style=flat-square)](https://huggingface.co/datasets/csoai/councilof-ai-source/blob/main/source/LICENSE)",
     ])
 
@@ -584,7 +590,7 @@ def profile_md(f: dict, product_index: Path | None) -> str:
         "",
         f"Also on the Hub: [`csoai`](https://huggingface.co/csoai) — {n_or_unc(f['hf']['datasets'])} datasets (frozen banks, hub cards), "
         f"{n_or_unc(f['hf']['spaces'])} Spaces, {n_or_unc(f['hf']['models'])} models. "
-        f"Methodology: [{ZENODO_METHOD_CONCEPT}](https://doi.org/{ZENODO_METHOD_CONCEPT}) — latest version `{f['zenodo']['method']['doi']}` ({f['zenodo']['method']['date']}). "
+        f"Methodology record {ZENODO_METHOD_CONCEPT} — record unavailable at doi.org since 29 Sep 2026, see " f"[the dated notice](https://councilof.ai/interop/zenodo-status.json) — latest version `{f['zenodo']['method']['doi']}` ({f['zenodo']['method']['date']}). "
         f"Board snapshot cited on 2026-09-05: `{f['zenodo']['snapshot_cited']['doi']}` = as_of `{f['zenodo']['snapshot_cited']['version']}`, under concept `{f['zenodo']['snapshot_cited']['conceptdoi']}`. "
         "Our own models losing our own arena: [councilof.ai/honesty](https://councilof.ai/honesty/).",
         "",
@@ -628,7 +634,10 @@ def councilof_top(f: dict, product_index: Path | None) -> str:
         badge_row(f),
         "",
         "Independent AI-governance measurement. This repository is the live site, API and signing pipeline behind "
-        "[councilof.ai](https://councilof.ai): the 22-axis GSPC board, Ed25519-signed measurement cards, the signed Merkle public root and its transparency-log witness, "
+        # B-13 (raised 2026-10-07): this sentence hard-coded "22-axis" while totals said 23.
+        # It is now derived from the same live totals as the tagline directly above, so the
+        # page cannot disagree with itself again. Nothing here is typed.
+        f"[councilof.ai](https://councilof.ai): the {f['axes_total']}-axis GSPC board, Ed25519-signed measurement cards, the signed Merkle public root and its transparency-log witness, "
         "the corrections ledger, the A2A agent card, the x402 manifest, and the PyPI / npm readers. **Measurement, not certification.**",
         "",
         derived_line(f),

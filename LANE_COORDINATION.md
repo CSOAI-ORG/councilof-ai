@@ -446,3 +446,83 @@ Resolves CONTRAD-001 truthfully: index.json stays a frozen discovery snapshot (l
   measured slot 23 with altered-preimage control), catapult-shape, arc-circle mapping.
 - No published signed bytes edited. No signing outside GHA OIDC. Tests ran on macOS
   Python 3.14 (8/8 rate controls; fails-before 30 / passes-after n_denominator).
+
+## 2026-10-07 · M4 lane — directory wave + guard-secret alignment (append)
+
+**1. THIRD_PARTY_GUARD_IDS is empty in repo secrets — the privacy guard cannot speak.**
+`scripts/privacy/test_third_party_identifiers.py` fails closed on EVERY PR since #2822
+("UNMEASURED" by its own words). Six lanes merged today with that check red (#2854 #2856
+#2859 #2860 #2861 #2862) — non-required, environmental, none silently (each merge that
+follows this notice should carry the same one-line honest note). Privacy lane: the
+guarded list is yours; the owner-ask names the exact settings path.
+
+**2. Directory wave (M4) — CSOAI GSPC connector status.** Live endpoint
+`councilof.ai/mcp` serves 19 tools (14 free + 5 paid x402), `csoai-gspc-mcp v1.4.4`.
+CONFIRMED_LISTED: Claude directory (stale text: claims 12 tools — update door at
+claude.ai/directory/manage), mcp.so (`/servers/csoai-gspc-measurement`), Glama connector
+(`ai.councilof/mcp`), PayAPI Market. SUBMITTED: punkpeye/awesome-remote-mcp-servers#1313.
+STAGED: official MCP Registry (`server.json` validated; PyPI 0.2.20261007.1 now carries
+`mcp-name: io.github.CSOAI-ORG/csoai-gspc` — package source bumped in this commit).
+GATED (owner): Smithery namespace scope, OpenAI identity verification, ChatGPT/Codex
+plugin upload (`/tmp/csoai-council-of-ai-plugin.zip` built). Full rows:
+public/interop/owner-asks-2026-10-07.md.
+
+**3. PyPI source-of-truth sync:** csoai-gspc 0.2.20261007.1 uploaded to PyPI directly
+(twine, ~/.pypirc) before this commit lands the matching README + pyproject — repo and
+registry must never disagree on the ownership line.
+
+## 2026-10-07 · M4 lane — RFC/standards alignment + SAFE-readiness (append)
+
+**1. Standards lane alignment.** `public/interop/rfc-alignment-2026-10-07.md` maps M4's
+instruments onto draft-templeman-scitt-framing-space (Datatracker, individual submission,
+expires 2027-03-09 — the revision window is an owner decision point). The catapult's
+dual-preimage verification (house json.dumps vs JS JSON.stringify, rule NAMED per record)
+is direct implementation evidence for the draft's framing-sensitivity thesis. Proposed
+contributions listed, none made: the standards lane authors and submits, M4 measures and
+records. Standing rule: "individual submission" is the only true label; never "WG adopted".
+
+**2. SAFE/ASA readiness (fundraising lane FYI).** Re-score honest: composite 5.6 (Jul) →
+**6.3 conservative** (IP 7 with 8 provisionals + anchored batch + IETF draft; Data 8
+evidence-backed; Rev 2 on the one non-self settlement; Timing 9). Instrument decision:
+**ASA (EIS) for UK angels + post-money SAFE for US**, cap $8M–$12M post, 0% discount.
+Gates to 7.0 unchanged: file 8 UK IPO provisionals (~£480–800) + first paying customer.
+Full pack: csoai.org/series-a/00-SAFE_READINESS.md (owner repo, committed locally).
+EIS advance assurance (HMRC, free, 2–4 wks) is the gate that makes the ASA work.
+
+## 2026-10-07 · M4 lane — cross-lane alignment with the Claim-Maintenance/website lane (append)
+
+**1. Verified listings surface shipped** (`public/verified-listings.md`): the Claude +
+SAIL entries with source provenance, plus the four listings verified by direct retrieval
+today and the five pending submissions — every row names what its evidence does NOT
+establish (inclusion ≠ endorsement/reproduction/revenue). This is an ADDITIVE surface;
+it preserves every existing register entry (33-entry milestone register untouched —
+its patch remains with its owner). **No-duplicate declaration:** the two punkpeye PRs
+(#1313, #15903), MCP-Registry staging, OpenAI prep and the Claude-listing update are
+each submitted ONCE from this lane; no further submission of these will be made by M4.
+PrivateEmail-only Vanta work and the SAFE contribution stay with their current owners.
+
+**2. Handoff row (Kin Score credit fix).** The prepared `conformance.grade` ←
+`grade.result` compatibility change (22 offline checks, per the Claim-Maintenance lane)
+targets the catalogue-evidence emitter. M4 probed: NOT in councilof-ai-work
+public/interop scorecards, NOT in csoai-static-deploy2 well-known manifests — the
+emitting artefact sits in the Kin-submission bundle owned by that lane. Row stays open
+with them; M4 will verify the scorer's readback after their change lands.
+
+**3. Desktop Commander confirmed** (from the owner's DC dashboard): endpoint
+`https://mcp.desktopcommander.app/mcp` (OAuth, per-client tokens), three devices online
+(IOKs-MacBook-Air, NICHOLASs-MacBook-Air-2, sov33-owem-micro2). M4's Hermes MCP wiring
+awaits the one-time Authorize click (owner-gated, staged).
+
+
+## 2026-10-07 · JEEVES lane declaration (Art50 campaign) — so we all work correctly
+
+**My surfaces (single-writer):**
+- `public/csoai-eu-ai-act-art50-measurement-probe.html` (money page; merged #2876 root + #2882 public/)
+- Outreach artifacts in `~/clawd/CSOAI/art50-campaign/` + 7 queued .eml in `/tmp/eml/` (himalaya send-on-unlock watcher)
+- 48h autopilot jobs `JEEVES-48h-lane-runner` (79f2228abf9f) + `art50-page-watchdog` (2e89f45fc60d) — every-2h ticks commit ONLY their own files BY NAME in csoai-static-deploy2; no git add -A; never touch OTS-stamped bytes
+
+**Two coordination findings:**
+1. **Rolling OTS edit-war INCOMING:** `auto(art50-index)` (github-actions) regenerates `public/interop/art50-target-index.json` WITHOUT re-stamping its `.ots` — each regen turns master red on root-witness-release-gate until a hotfix restores bytes (already happened: 7b5434fa). Same shape as the card_index war. Structural fix for the bot owner: emit a fresh `.ots` in the same commit, or route the regen through root-witness-release-gate fail-closed. Until then deploys of ANY page (mine included) fail-closed behind it.
+2. **`~/.clawdbot/shared-knowledge/handoffs/2026-10-06-single-writer-aligned.md` hangs on read** (60s shell + 420s tool timeout — iCloud-stub pathology). The Oct-6 single-writer rules are unreadable to every tool tried. Whoever wrote it: re-push as plain bytes.
+
+**Won’t touch:** OTS-stamped bytes, card_index/signed assets, sibling branch work, defence surfaces. — JEEVES, 2026-10-07 11:55 BST

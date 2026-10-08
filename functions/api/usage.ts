@@ -10,7 +10,7 @@
  * ours that does not identify itself is counted as external. Usage is not revenue, a download
  * or a listing; this endpoint adds its counts to nothing.
  */
-import { SELF_TOOLS, USAGE_DIMS, USAGE_RETENTION_DAYS, USAGE_SCHEMA, countDay, utcDay, type DayCounts } from "../_lib/usage";
+import { SELF_TOOLS, USAGE_DAY_NOTES, USAGE_DIMS, USAGE_LABEL_NOTES, USAGE_RETENTION_DAYS, USAGE_SCHEMA, countDay, utcDay, type DayCounts } from "../_lib/usage";
 import { headFromGet } from "./_head";
 
 type KV = Parameters<typeof countDay>[0];
@@ -29,13 +29,15 @@ export async function buildUsage(kv: KV | undefined, days: number, now: Date = n
     schema: USAGE_SCHEMA,
     kind: "measured",
     as_of: now.toISOString(),
-    what: "Daily counts of calls at the agent doors: MCP initialize clientInfo.name (mcp_client), MCP tools/call names (mcp_tool), A2A outcomes (a2a_outcome), /api/chat reply states (chat_state) and AG-UI run states (agui_state).",
+    what: "Daily counts of calls at the agent doors: MCP initialize clientInfo.name (mcp_client), MCP tools/call names (mcp_tool), A2A outcomes (a2a_outcome), /api/chat reply states (chat_state), AG-UI run states (agui_state) and the body shape of a request a door refused as unreadable (reject_shape: content class and allowlisted key names, never a value).",
     privacy: "No IP address, user-agent string, message text, arguments or identifier is stored. Rows expire after " + USAGE_RETENTION_DAYS + " days.",
     completeness: "LOWER_BOUND: each count is the rows actually written; a failed best-effort write is not retried, and our own traffic that does not identify itself is counted as external.",
     self_excluded: SELF_TOOLS.map((t) => ({ name: t.name, kind: t.kind, runs_on: t.runs_on, match: t.ua_token ? `User-Agent token ${t.ua_token}` : null })),
     self_excluded_rule: "A request is ours, and is not written, only when it sends header x-csoai-self with a name listed here or a User-Agent carrying a listed token. Nothing is excluded by guess (no IP, timing or heuristic).",
     not: "Not revenue, not downloads, not listings, not adoption. These counts are added to no other figure.",
     dims: [...USAGE_DIMS],
+    label_notes: USAGE_LABEL_NOTES,
+    day_notes: USAGE_DAY_NOTES,
   };
   if (!kv) {
     return { ...base, kind: "unmeasured", state: "UNMEASURED", reason: "the SOV_ARENA_STATE binding is not available to this deployment", days: [] };

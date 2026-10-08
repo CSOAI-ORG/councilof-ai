@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/schemas/hitl-authority-effect-v0.1.json",
+  "title": "HITL authority-to-effect record",
+  "description": "Vendor-neutral record binding a human or explicitly authorized principal decision to one scoped invocation, its observed effect, and separate verification. The record does not require GSPC, OpenShell, OpenBMC, LFX, or any specific runtime.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["profile","record_id","issued_at","request","authority","invocation","effect","verification","limits"],
+  "properties": {
+    "profile": {"const":"csoai.hitl-authority-effect/0.1"},
+    "record_id": {"type":"string","minLength":1},
+    "issued_at": {"type":"string","format":"date-time"},
+    "request": {
+      "type":"object","additionalProperties":false,
+      "required":["request_id","subject_ref","action","resource_ref","proposal_digest"],
+      "properties":{
+        "request_id":{"type":"string","minLength":1},
+        "subject_ref":{"type":"string","minLength":1},
+        "tenant_ref":{"type":["string","null"]},
+        "action":{"type":"string","minLength":1},
+        "resource_ref":{"type":"string","minLength":1},
+        "proposal_digest":{"$ref":"#/$defs/digest"},
+        "intent_ref":{"type":["string","null"]}
+      }
+    },
+    "authority": {
+      "type":"object","additionalProperties":false,
+      "required":["decision_id","decision","decided_at","principal_ref","authority_epoch","scope_digest","expires_at","review_kind"],
+      "properties":{
+        "decision_id":{"type":"string","minLength":1},
+        "decision":{"enum":["APPROVE","DENY","REVOKE"]},
+        "decided_at":{"type":"string","format":"date-time"},
+        "principal_ref":{"type":"string","minLength":1},
+        "authority_epoch":{"type":"string","minLength":1},
+        "scope_digest":{"$ref":"#/$defs/digest"},
+        "expires_at":{"type":"string","format":"date-time"},
+        "review_kind":{"enum":["HUMAN_REVIEW","AUTHORIZED_PRINCIPAL_REVIEW","PREAUTHORIZED_POLICY_WITH_HUMAN_MAXIMUM"]},
+        "constraints":{"type":"array","maxItems":64,"items":{"type":"string","minLength":1}},
+        "revokes_decision_id":{"type":["string","null"]}
+      }
+    },
+    "invocation": {
+      "type":"object","additionalProperties":false,
+      "required":["state"],
+      "properties":{
+        "state":{"enum":["NOT_INVOKED","REJECTED","EXECUTED","FAILED_BEFORE_EFFECT"]},
+        "executor_ref":{"type":["string","null"]},
+        "tool_ref":{"type":["string","null"]},
+        "invoked_at":{"type":["string","null"],"format":"date-time"},
+        "invocation_digest":{"oneOf":[{"type":"null"},{"$ref":"#/$defs/digest"}]},
+        "failure_stage":{"type":["string","null"]}
+      }
+    },
+    "effect": {
+      "type":"object","additionalProperties":false,
+      "required":["state"],
+      "properties":{
+        "state":{"enum":["NONE","UNKNOWN","OBSERVED","PARTIAL"]},
+        "observed_at":{"type":["string","null"],"format":"date-time"},
+        "effect_digest":{"oneOf":[{"type":"null"},{"$ref":"#/$defs/digest"}]},
+        "effect_ref":{"type":["string","null"]},
+        "failure_stage":{"type":["string","null"]}
+      }
+    },
+    "verification": {
+      "type":"object","additionalProperties":false,
+      "required":["state","evidence_refs"],
+      "properties":{
+        "state":{"enum":["NOT_RUN","UNCHECKABLE","VERIFIED","FAILED","PARTIAL"]},
+        "verified_at":{"type":["string","null"],"format":"date-time"},
+        "verifier_ref":{"type":["string","null"]},
+        "method_ref":{"type":["string","null"]},
+        "evidence_refs":{"type":"array","maxItems":128,"items":{"type":"string","minLength":1}}
+      }
+    },
+    "claim_maintenance": {
+      "type":"object","additionalProperties":false,
+      "properties":{
+        "claim_ref":{"type":["string","null"]},
+        "reverification_record_ref":{"type":["string","null"]},
+        "watch_state":{"enum":["CURRENT","RETEST_DUE","STALE","UNMEASURED","NOT_WATCHED"]},
+        "next_review_condition":{"type":["string","null"]}
+      }
+    },
+    "provenance": {
+      "type":"object","additionalProperties":false,
+      "properties":{
+        "receipt_ref":{"type":["string","null"]},
+        "signature_ref":{"type":["string","null"]},
+        "transparency_ref":{"type":["string","null"]},
+        "timestamp_ref":{"type":["string","null"]},
+        "otel_trace_ref":{"type":["string","null"]},
+        "ocsf_record_ref":{"type":["string","null"]}
+      }
+    },
+    "limits":{"type":"array","minItems":1,"maxItems":64,"items":{"type":"string","minLength":1}}
+  },
+  "allOf":[
+    {
+      "if":{"properties":{"authority":{"properties":{"decision":{"enum":["DENY","REVOKE"]}},"required":["decision"]}}},
+      "then":{"properties":{"invocation":{"properties":{"state":{"enum":["NOT_INVOKED","REJECTED","FAILED_BEFORE_EFFECT"]}}}}}
+    },
+    {
+      "if":{"properties":{"invocation":{"properties":{"state":{"const":"EXECUTED"}},"required":["state"]}}},
+      "then":{"properties":{
+        "authority":{"properties":{"decision":{"const":"APPROVE"}}},
+        "invocation":{
+          "required":["executor_ref","invoked_at","invocation_digest"],
+          "properties":{
+            "executor_ref":{"type":"string","minLength":1},
+            "invoked_at":{"type":"string","format":"date-time"},
+            "invocation_digest":{"$ref":"#/$defs/digest"}
+          }
+        }
+      }}
+    },
+    {
+      "if":{"properties":{"effect":{"properties":{"state":{"enum":["OBSERVED","PARTIAL"]}},"required":["state"]}}},
+      "then":{"properties":{"effect":{
+        "required":["observed_at","effect_digest"],
+        "properties":{
+          "observed_at":{"type":"string","format":"date-time"},
+          "effect_digest":{"$ref":"#/$defs/digest"}
+        }
+      }}}
+    },
+    {
+      "if":{"properties":{"verification":{"properties":{"state":{"enum":["VERIFIED","FAILED","PARTIAL"]}},"required":["state"]}}},
+      "then":{"properties":{"verification":{"required":["verified_at","verifier_ref","method_ref"],"properties":{"verified_at":{"type":"string","format":"date-time"},"verifier_ref":{"type":"string","minLength":1},"method_ref":{"type":"string","minLength":1},"evidence_refs":{"minItems":1}}}}}
+    }
+  ],
+  "$defs":{
+    "hex64":{"type":"string","pattern":"^[0-9a-f]{64}$"},
+    "digest":{"type":"object","additionalProperties":false,"required":["alg","value"],"properties":{"alg":{"const":"sha256"},"value":{"$ref":"#/$defs/hex64"}}}
+  }
+}

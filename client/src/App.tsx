@@ -764,6 +764,7 @@ function AppShell() {
                   <Route path="/financial-axes" component={FinancialAxes} />
                   <Route path="/stablecoins" component={Stablecoins} />
                   <Route path="/wrappers" component={Wrappers} />
+                  <Route path="/sovx" component={Wrappers} />
                   <Route path="/quickstart" component={Quickstart} />
                   <Route path="/how-we-work" component={HowWeWork} />
                   <Route path="/claim-maintenance" component={ClaimMaintenance} />

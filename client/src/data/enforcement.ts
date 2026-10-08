@@ -2,9 +2,18 @@
 // R8 canon: regulators + public get signed streams free forever. Data, never a score rank.
 export type Fine = { actor: string; jurisdiction: string; regime: string; amount: string; status: string };
 export type Deadline = { name: string; date: string; note: string };
+// The last verified First-Fine Watch figure and the date it was checked. These are the same rows and
+// the same review date GET /api/fines serves (functions/api/fines.ts AS_OF). The page reads that feed
+// first (client/src/data/firstFineWatch.ts) and labels any figure older than FRESH_DAYS as not updated
+// since its date. A typed "days since" count lived here until 7 Oct 2026 and read 22 for six weeks;
+// every count is now derived from these two dates, never typed.
+const FFW_AS_OF = "2026-08-24";
+const FFW_POWERS_ON = "2026-08-02";
 export const FFW = {
-  counter: "EU AI Act fines: \u20ac0",
-  daysSincePowers: 22,
+  eur: 0,
+  asOf: FFW_AS_OF,
+  powersOnIso: FFW_POWERS_ON,
+  counter: "EU AI Act fines: \u20ac0 (as at 24 Aug 2026)",
   powersOn: "2 Aug 2026",
   // The signed feed (/api/fines) signs with #board-attestation-1. This advertised
   // #estate-chain-1 — a key that IS published in did:web:csoai.org but does not sign

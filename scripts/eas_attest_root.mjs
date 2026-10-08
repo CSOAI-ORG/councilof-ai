@@ -52,6 +52,34 @@ const [{ ethers }, { EAS, SchemaEncoder, SchemaRegistry }] = await Promise.all([
 
 const provider = new ethers.JsonRpcProvider(process.env.BASE_RPC_URL || "https://mainnet.base.org");
 const signer = new ethers.Wallet(key, provider);
+// Funding guards (added 2026-10-07, the day the attester key first landed in secrets).
+// Without them an unfunded attester would attempt schema registration, revert, and
+// fail the whole publish step. An honest state write keeps the root ticking; the
+// state is written ONLY when it actually changes (the .ots beside this log must
+// keep proving the same bytes — see the header note).
+{
+  const balance = await provider.getBalance(signer.address);
+  const NOT_FUNDED = "attester wallet holds < 0.0004 ETH — owner funds the dedicated hot wallet (expected ~$0.001/attest at observed gas, cap $0.05)";
+  if (balance < 400000000000000n) {
+    if (!(log.status === "NOT_FUNDED" && log.reason === NOT_FUNDED)) {
+      log.status = "NOT_FUNDED"; log.reason = NOT_FUNDED; log.as_of = new Date().toISOString();
+      writeFileSync(OUT, JSON.stringify(log, null, 1) + "\n");
+    }
+    console.log(`EAS: NOT_FUNDED — attester ${signer.address} holds ${ethers.formatEther(balance)} ETH; nothing attempted`);
+    process.exit(0);
+  }
+  const feeData = await provider.getFeeData();
+  const gp = feeData.maxFeePerGas ?? feeData.gasPrice ?? 0n;
+  const WAITING = "maxFee above 10 gwei — retry on a quiet block (cap protection)";
+  if (gp > 10_000_000_000n) {
+    if (!(log.status === "WAITING_GAS" && log.reason === WAITING)) {
+      log.status = "WAITING_GAS"; log.reason = WAITING; log.as_of = new Date().toISOString();
+      writeFileSync(OUT, JSON.stringify(log, null, 1) + "\n");
+    }
+    console.log(`EAS: WAITING_GAS — ${ethers.formatUnits(gp, "gwei")} gwei > 10 gwei; nothing attempted`);
+    process.exit(0);
+  }
+}
 const registry = new SchemaRegistry(REGISTRY_ADDR); registry.connect(signer);
 const uid = ethers.solidityPackedKeccak256(["string", "address", "bool"], [SCHEMA, ethers.ZeroAddress, true]);
 let schemaUid = uid;

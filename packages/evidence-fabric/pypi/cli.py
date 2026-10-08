@@ -5,6 +5,7 @@
     csoai-evidence payload MEMBER EVENTS.jsonl --as-of <UTC>
     csoai-evidence verify BATCH.json BATCH.signed.json EVENTS.jsonl --did did.json [--tamper-control]
     csoai-evidence verify --structure RECORD.json|EVENTS.jsonl
+    csoai-evidence verify-safe-freeze FREEZE.json --signed FREEZE.signed.json --did did.json
     csoai-evidence render {ocsf,otel,sarif,intoto,ecs-hec,w3c-acr01} EVENTS.jsonl [...]
     csoai-evidence ingest {sarif,garak,safe,openshell} INPUT [...]
     csoai-evidence batch DIR --member NAME --as-of <UTC>
@@ -32,6 +33,8 @@ def main(argv=None):
         return _run("event", a)
     if cmd == "verify":
         return _run("verify", rest)
+    if cmd == "verify-safe-freeze":
+        return _run("safe_freeze_v2", rest)
     if cmd == "batch":
         return _run("batch", rest)
     table = RENDER if cmd == "render" else INGEST if cmd == "ingest" else None

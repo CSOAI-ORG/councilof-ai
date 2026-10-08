@@ -7,7 +7,7 @@
  * on the server side because nothing here was ever the server's copy.
  */
 
-export type MyResultKind = "lookup" | "fresh-run" | "watch";
+export type MyResultKind = "lookup" | "fresh-run" | "watch" | "paid";
 
 export type MyResult = {
   id: string;
@@ -21,7 +21,93 @@ export type MyResult = {
   ref?: string;
   /** For a lookup: the exact question the free tools were asked, so "Look up again" re-asks it. */
   question?: string;
+  /** For a paid result: the door URL that was paid (query included) and the settlement transaction. */
+  door?: string;
+  tx?: string;
+  /**
+   * For a paid result: the signed record the door delivered (a card-v0 leaf), as JSON text, so it
+   * can be checked and downloaded later. It is the only copy: a paid art50 pack is not stored on the
+   * server, so a buyer who clears this browser keeps nothing unless they downloaded it.
+   */
+  record?: string;
 };
+
+/** A signed record must stay small enough for localStorage; larger ones are referenced, not kept. */
+export const PAID_RECORD_MAX_CHARS = 32 * 1024;
+
+/** A card-v0 leaf: payload + sha256 + sig_ed25519 (functions/_lib/cardV0Verify.ts isCardV0). */
+function isLeaf(v: unknown): v is { sha256: string; sig_ed25519: string | null; payload: Record<string, unknown> } {
+  if (!v || typeof v !== "object" || Array.isArray(v)) return false;
+  const r = v as Record<string, unknown>;
+  return !!r.payload && typeof r.payload === "object" && !Array.isArray(r.payload) && typeof r.sha256 === "string" && "sig_ed25519" in r;
+}
+
+/**
+ * The signed record inside a paid door's 200 body, wherever that door puts it: `card` (art50 pack,
+ * request-attestation receipt), `manifest_card` (evidence bundle) or `signature` (fresh capsule).
+ * Null when the body carries none, which is stated rather than guessed.
+ */
+export function signedRecordOf(body: unknown): { sha256: string; sig_ed25519: string | null; payload: Record<string, unknown> } | null {
+  if (!body || typeof body !== "object") return null;
+  const b = body as Record<string, unknown>;
+  for (const k of ["card", "manifest_card", "signature"]) if (isLeaf(b[k])) return b[k] as ReturnType<typeof signedRecordOf>;
+  return isLeaf(body) ? (body as ReturnType<typeof signedRecordOf>) : null;
+}
+
+/** A short name for a paid door: its path after /api/, plus the named output when there is one. */
+export function paidSubject(doorUrl: string): string {
+  try {
+    const u = new URL(doorUrl);
+    const path = u.pathname.replace(/^\/api\//, "");
+    const named = u.searchParams.get("url") || u.searchParams.get("subject") || u.searchParams.get("obligation") || u.searchParams.get("asset");
+    return named ? `${path} · ${named}` : path;
+  } catch {
+    return doorUrl;
+  }
+}
+
+/**
+ * The My results row for a paid door that delivered: what the door returned, never more. The state
+ * reads DELIVERED (signed) or DELIVERED (unsigned) from the record itself; `ref` is the record id
+ * (sha256), which for a request-attestation receipt is also its receipt id in the public queue.
+ */
+export function paidResult(args: { doorUrl: string; body: unknown; transaction: string | null }): Omit<MyResult, "id" | "at"> {
+  const rec = signedRecordOf(args.body);
+  const text = rec ? JSON.stringify(rec, null, 2) : null;
+  return {
+    kind: "paid",
+    subject: paidSubject(args.doorUrl),
+    door: args.doorUrl,
+    state: rec ? (rec.sig_ed25519 ? "DELIVERED · SIGNED" : "DELIVERED · UNSIGNED") : "DELIVERED",
+    ...(rec ? { ref: rec.sha256 } : args.transaction ? { ref: args.transaction } : {}),
+    ...(args.transaction ? { tx: args.transaction } : {}),
+    ...(text && text.length <= PAID_RECORD_MAX_CHARS ? { record: text } : {}),
+  };
+}
+
+/**
+ * Hand a record to the free checker without a URL: it is put in this tab's sessionStorage and
+ * /gspc-verify?seed=mine reads it once. Nothing leaves the browser.
+ */
+export const VERIFY_SEED_KEY = "coai:verify-seed";
+export const VERIFY_SEED_HREF = "/gspc-verify?seed=mine";
+export function seedChecker(recordText: string): boolean {
+  try {
+    window.sessionStorage.setItem(VERIFY_SEED_KEY, recordText);
+    return true;
+  } catch {
+    return false;
+  }
+}
+export function takeCheckerSeed(): string | null {
+  try {
+    const v = window.sessionStorage.getItem(VERIFY_SEED_KEY);
+    if (v !== null) window.sessionStorage.removeItem(VERIFY_SEED_KEY);
+    return v;
+  } catch {
+    return null;
+  }
+}
 
 /** The minimum of a finished AG-UI run (lib/aguiTalk TalkRun) that a lookup row needs. */
 export type FinishedLookupRun = {
@@ -89,5 +175,21 @@ export function clearMyResults(): void {
     window.dispatchEvent(new Event(MY_RESULTS_EVENT));
   } catch {
     /* nothing to clear */
+  }
+}
+
+/** Save text as a file in the reader's own browser (a delivered record they must keep). */
+export function downloadText(text: string, filename: string): void {
+  try {
+    const url = URL.createObjectURL(new Blob([text], { type: "application/json" }));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+  } catch {
+    /* no Blob/URL support: the record is still shown on the page to copy */
   }
 }

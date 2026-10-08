@@ -23,7 +23,15 @@ type Env = { REVENUE_KV?: KVNamespace; ASSETS?: { fetch: (r: Request) => Promise
 type PodCard = { id: string; url: string; subject: string; axis: string | null; n: number | null; status: string | null; run_id: string | null };
 type Delivery = { state: "CARDS_PUBLISHED" | "NONE" | "UNCHECKABLE"; count: number | null; note?: string };
 export const POD_CARDS_INDEX = "/interop/pod-cards-index.json";
+/** The OTS-stamped Hub index snapshot of 2026-09-16. Its bytes are frozen; later card sets are versions. */
 export const HUB_CARDS_INDEX = "/interop/hub-cards-index.json";
+/**
+ * Unsigned discovery pointer to the stamped Hub index version whose cards equal the admitted set
+ * (scripts/surface/build-hub-cards-index.mjs). Read this, not the snapshot: a stamped file is never
+ * rewritten, so newly admitted cards appear only in a new hub-cards-index-<date>-<hex12>.json.
+ */
+export const HUB_CARDS_POINTER = "/interop/hub-cards-index-latest.json";
+const HUB_INDEX_VERSION = /^\/interop\/hub-cards-index(?:-\d{4}-\d{2}-\d{2}-[0-9a-f]{12})?\.json$/;
 
 type Commission = {
   subject: string;
@@ -111,16 +119,47 @@ export async function readPodCardsIndex(env: Env, origin: string, fetcher: typeo
   return readCardsIndex(env, origin, POD_CARDS_INDEX, "csoai.pod-cards-index/0.1", fetcher);
 }
 
-export async function readHubCardsIndex(env: Env, origin: string, fetcher: typeof fetch = fetch): Promise<Map<string, PodCard[]> | null> {
-  return readCardsIndex(env, origin, HUB_CARDS_INDEX, "csoai.hub-cards-index/0.1", fetcher);
+async function getAsset(env: Env, origin: string, path: string, fetcher: typeof fetch): Promise<Response> {
+  const req = new Request(new URL(path, origin).toString());
+  return env.ASSETS ? await env.ASSETS.fetch(req) : await fetcher(req);
 }
 
-async function readCardsIndex(env: Env, origin: string, path: string, schema: string, fetcher: typeof fetch): Promise<Map<string, PodCard[]> | null> {
+/**
+ * Which stamped Hub index is current, and the sha256 its bytes must have. A missing pointer (a
+ * deploy from before versioning) falls back to the snapshot; a pointer that is present but
+ * unreadable or names anything outside the versioned set is null — UNCHECKABLE, never the snapshot.
+ */
+export async function resolveHubCardsIndex(env: Env, origin: string, fetcher: typeof fetch = fetch): Promise<{ path: string; sha256: string | null } | null> {
   try {
-    const req = new Request(new URL(path, origin).toString());
-    const res = env.ASSETS ? await env.ASSETS.fetch(req) : await fetcher(req);
+    const res = await getAsset(env, origin, HUB_CARDS_POINTER, fetcher);
+    if (res.status === 404) return { path: HUB_CARDS_INDEX, sha256: null };
     if (!res.ok) return null;
-    const idx = (await res.json()) as { schema?: string; cards?: unknown };
+    const p = (await res.json()) as { schema?: unknown; index_url?: unknown; index_sha256?: unknown };
+    if (p.schema !== "csoai.hub-cards-index-pointer/1" || typeof p.index_url !== "string" || !HUB_INDEX_VERSION.test(p.index_url) ||
+        typeof p.index_sha256 !== "string" || !/^[0-9a-f]{64}$/.test(p.index_sha256)) return null;
+    return { path: p.index_url, sha256: p.index_sha256 };
+  } catch {
+    return null;
+  }
+}
+
+export async function readHubCardsIndex(env: Env, origin: string, fetcher: typeof fetch = fetch): Promise<Map<string, PodCard[]> | null> {
+  const current = await resolveHubCardsIndex(env, origin, fetcher);
+  if (current === null) return null;
+  return readCardsIndex(env, origin, current.path, "csoai.hub-cards-index/0.1", fetcher, current.sha256);
+}
+
+const hex = (buf: ArrayBuffer) => [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
+
+async function readCardsIndex(env: Env, origin: string, path: string, schema: string, fetcher: typeof fetch,
+                              expectedSha256: string | null = null): Promise<Map<string, PodCard[]> | null> {
+  try {
+    const res = await getAsset(env, origin, path, fetcher);
+    if (!res.ok) return null;
+    const raw = await res.arrayBuffer();
+    // The pointer names exact bytes; an index that is not those bytes is not the one it selected.
+    if (expectedSha256 !== null && hex(await crypto.subtle.digest("SHA-256", raw)) !== expectedSha256) return null;
+    const idx = JSON.parse(new TextDecoder().decode(raw)) as { schema?: string; cards?: unknown };
     if (idx.schema !== schema || !Array.isArray(idx.cards)) return null;
     const by = new Map<string, PodCard[]>();
     for (const c of idx.cards as Array<Record<string, unknown>>) {
@@ -159,7 +198,7 @@ function joinDelivery(c: Omit<Commission, "cards" | "delivery">, pod: Map<string
     return { cards: null, delivery: { state: "NONE", count: 0, note: "not a millable model target" } };
   }
   const index = c.subject_kind === "hub_model" ? hub : pod;
-  const path = c.subject_kind === "hub_model" ? HUB_CARDS_INDEX : POD_CARDS_INDEX;
+  const path = c.subject_kind === "hub_model" ? HUB_CARDS_POINTER : POD_CARDS_INDEX;
   if (index === null) return { cards: null, delivery: { state: "UNCHECKABLE", count: null, note: `${path} unreadable — null, never substituted` } };
   const all = index.get(c.model.toLowerCase()) ?? [];
   const cards = c.axis ? all.filter((k) => k.axis === c.axis) : all;
@@ -221,7 +260,7 @@ export async function buildCommissions(env: Env, origin = "https://councilof.ai"
       delivered: (pod === null || hub === null) ? null : commissions.filter((c) => c.delivery.state === "CARDS_PUBLISHED").length,
       retrieval: {
         index: POD_CARDS_INDEX,
-        hub_index: HUB_CARDS_INDEX,
+        hub_index: HUB_CARDS_POINTER,
         state: (pod === null || hub === null) ? "UNCHECKABLE" : "READ",
         how: "each `cards[].url` is a signed card; verify sha256(canonical body)==id and the Ed25519 signature under the kid in https://csoai.org/.well-known/did.json. When CARDS_PUBLISHED, fulfillment becomes RETRIEVABLE — publication is not a certificate and invents no MEASURED score.",
       },

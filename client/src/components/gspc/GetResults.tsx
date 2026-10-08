@@ -50,6 +50,16 @@ const EXAMPLES = ["github.com", "qwen3:8b", "https://councilof.ai/mcp"];
 type ModelsRead = { state: "idle" | "loading" | "ok" | "error"; rows: ModelRow[]; error?: string };
 type RunRead = { state: "loading" | "ok" | "error"; run: ReturnType<typeof newestSignedRun> };
 
+/**
+ * A link to one generated file (an image, video, audio file or PDF) is a subject for the Article 50
+ * marking check, not for a model run (paid-route lane, 7 Oct 2026): Get results used to call it "a
+ * server or web address" and offer a fresh model run, and the art50 door was reachable only from menus.
+ */
+export const MEDIA_URL_RE = /^https?:\/\/\S+\.(?:png|jpe?g|webp|gif|avif|heic|heif|tiff?|bmp|mp4|mov|webm|m4v|wav|mp3|m4a|ogg|flac|pdf)(?:[?#]\S*)?$/i;
+export function art50Href(url: string): string {
+  return `/dashboard/?tab=art50&url=${encodeURIComponent(url)}`;
+}
+
 function sameOriginPath(url: string): string {
   try {
     const u = new URL(url, "https://councilof.ai");
@@ -311,6 +321,7 @@ export default function GetResults({
   // A question is not a subject to test or watch; those choices then ask for a model or server.
   const named = subject && kind !== "question" ? subject : null;
   const freshHref = named ? `/dashboard?tab=measured&subject=${encodeURIComponent(named)}` : "/dashboard?tab=measured";
+  const media = Boolean(named && MEDIA_URL_RE.test(named));
   const active = Boolean(subject);
 
   return (
@@ -372,7 +383,7 @@ export default function GetResults({
 
       {subject ? (
         <p className="mt-4 text-sm text-foreground" aria-live="polite" data-testid="get-results-kind">
-          <span className="font-semibold [overflow-wrap:anywhere]">“{subject}”</span> looks like {kind === "empty" ? "nothing" : KIND_WORD[kind]}.
+          <span className="font-semibold [overflow-wrap:anywhere]">“{subject}”</span> looks like {media ? "a generated file (an image, video, audio file or PDF)" : kind === "empty" ? "nothing" : KIND_WORD[kind]}.
         </p>
       ) : null}
 
@@ -387,6 +398,20 @@ export default function GetResults({
             </a>
           ) : null}
         </Choice>
+        {media && named ? (
+          <Choice
+            id="fresh"
+            icon={Zap}
+            title="Check it for an Article 50 mark"
+            hint="Reads C2PA and IPTC metadata only; NOT_DETECTED does not mean the file is unmarked."
+            body="A free preview of what is detected in this file, then a signed pack if you want one: by invoice, or from your own wallet."
+            active={active}
+          >
+            <Link href={art50Href(named)} className={ACTION} data-testid="get-art50">
+              Check this file →
+            </Link>
+          </Choice>
+        ) : (
         <Choice
           id="fresh"
           icon={Zap}
@@ -405,6 +430,7 @@ export default function GetResults({
             </Link>
           )}
         </Choice>
+        )}
         <Choice
           id="track"
           icon={ClipboardList}
