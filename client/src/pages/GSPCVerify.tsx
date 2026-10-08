@@ -12,8 +12,9 @@ import { takeCheckerSeed } from "@/lib/myResults";
  * /gspc-verify — verify published card bytes yourself.
  *
  * The estate-card mode verifies exact pasted card bytes against the published
- * Ed25519 key. The public-root mode checks membership in the current unsigned
- * catalogue. A former local replay demo was removed because it generated both
+ * Ed25519 key. The public-root mode verifies the signed root envelope and
+ * checks inclusion without implying an individual leaf signature.
+ * A former local replay demo was removed because it generated both
  * its bodies and expected hashes in the same bundle and therefore could not
  * prove a published chain.
  */
@@ -227,18 +228,15 @@ export default function GSPCVerify() {
       <section className="border-b border-emerald-500/15">
         <div className="mx-auto max-w-4xl px-6 pt-14 pb-10">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">
-            Verify · nothing sent · no account
+            Free verification · no account
           </p>
           <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">
             Paste a signed card. Recompute it here.
           </h1>
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
-            Two modes. Cards recompute Ed25519 against the key the card names: estate cards use
-            did:web:csoai.org#card-attestation-1, and mill and pod measurement cards use
-            did:web:csoai.org#board-attestation-1.
-            Public-root mode loads GET /root.json, verifies its Ed25519 envelope against the pinned
-            board key, and binds inclusion proofs to that root. Root membership does not individually
-            sign a leaf. This is not a certificate, and it is not a training record.
+            Paste a signed card or try a published example below. The check runs in your browser;
+            your record is not uploaded. Your browser may read published records and public-key metadata.
+            A valid signature confirms the record's integrity. It does not certify a model's safety or compliance.
           </p>
           <p className="mt-3 max-w-3xl text-sm text-emerald-200/75 leading-relaxed">
             Every check ends in one of three results: <strong>VALID</strong> (the signature and the
@@ -246,6 +244,19 @@ export default function GSPCVerify() {
             <strong>UNCHECKABLE</strong> (the check could not be completed). Could-not-check is never
             reported as a failure.
           </p>
+          <details className="mt-4 max-w-3xl rounded-xl border border-emerald-400/20 bg-white/[0.035] px-4 py-3">
+            <summary className="cursor-pointer text-sm font-semibold text-emerald-200">
+              Signing keys and root inclusion
+            </summary>
+            <p className="mt-3 text-sm leading-relaxed text-emerald-100/80">
+              Cards check Ed25519 against the key the card names: estate cards use
+              did:web:csoai.org#card-attestation-1, and mill and pod measurement cards use
+              did:web:csoai.org#board-attestation-1. Public-root mode loads GET /root.json,
+              verifies its Ed25519 envelope against the pinned board key, and binds inclusion
+              proofs to that root. Root membership does not individually sign a leaf.
+              This is not a certificate, and it is not a training record.
+            </p>
+          </details>
           <div className="mt-6 grid gap-2 sm:grid-cols-3" aria-label="What verification checks">
             {[
               ["01", "Hash", "Recompute the content identifier from the exact bytes."],
