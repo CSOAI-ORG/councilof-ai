@@ -42,13 +42,14 @@ if (!key) {
 }
 if (log.attestations.some((a) => a.sha256 === sha)) { console.log("EAS: root already attested", sha.slice(0, 16)); process.exit(0); }
 
-// Dependencies are needed only for the explicit owner-funded EAS branch. Keeping
-// these imports below the no-key exit lets the workflow record NOT_YET without a
-// best-effort install or a swallowed module-resolution failure.
-const [{ ethers }, { EAS, SchemaEncoder, SchemaRegistry }] = await Promise.all([
-  import("ethers"),
-  import("@ethereum-attestation-service/eas-sdk"),
-]);
+// Dependencies are needed only for the explicit owner-funded EAS branch. ethers
+// loads first (ESM-clean) so the funding guards can defer an unfunded or expensive
+// attempt WITHOUT touching eas-sdk: its ESM build pulls lodash by named import,
+// which Node's CJS interop rejects (lodash assigns properties at runtime, so the
+// static lexer finds no named exports). eas-sdk therefore loads only AFTER the
+// guards pass, immediately before attestation, and the workflow patches lodash
+// interop + functionally verifies the import before this line can ever run.
+const { ethers } = await import("ethers");
 
 const provider = new ethers.JsonRpcProvider(process.env.BASE_RPC_URL || "https://mainnet.base.org");
 const signer = new ethers.Wallet(key, provider);
@@ -79,7 +80,13 @@ const signer = new ethers.Wallet(key, provider);
     console.log(`EAS: WAITING_GAS — ${ethers.formatUnits(gp, "gwei")} gwei > 10 gwei; nothing attempted`);
     process.exit(0);
   }
-}
+} // end funding guards
+
+// Load eas-sdk only now: key present, root not yet attested, balance >= 0.0004 ETH,
+// maxFee <= 10 gwei. A module-load failure here is a genuine infrastructure fault on
+// the funded path and fails the step loudly (fail closed) - the workflow has already
+// verified this import loads.
+const { EAS, SchemaEncoder, SchemaRegistry } = await import("@ethereum-attestation-service/eas-sdk");
 const registry = new SchemaRegistry(REGISTRY_ADDR); registry.connect(signer);
 const uid = ethers.solidityPackedKeccak256(["string", "address", "bool"], [SCHEMA, ethers.ZeroAddress, true]);
 let schemaUid = uid;
