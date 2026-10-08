@@ -1,0 +1,79 @@
+{
+  "card": {
+    "as_of": "2026-08-28T09:06:28.399Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Stablecoin",
+      "holders": 2,
+      "issuer": "Quantoz",
+      "issuer_address": "rDk1xiArDMjDqnrR2yWypwQAKg4mKnQYvs",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 1000000,
+      "symbol": "EURQ",
+      "verified_domain": null,
+      "verified_via": "XRPScan well-known directory"
+    },
+    "product": {
+      "sku": "xrpl-asset-state",
+      "tier": "free",
+      "free_fields": [
+        "issuer",
+        "currency",
+        "holders",
+        "supply",
+        "trust_lines"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "2a81dd2211a1268516fa08269e5a64dd98a10b1274f450af23c5e8ae884f36ab",
+    "sig_ed25519": "cef2053978bb5e42075e310ad240f6742456507d2a7c5882901f8d9861caf71a31f043b7410300dade65f295483a38ee129c25b2d8b35ada8d1b8bc75b08a10d",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL EURQ public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [
+      "strict_two_way_toml"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "dba76251e7dfaae2fe5d3923dd7008ad264b2431d1bcfd0d09c453942366ecc1",
+    "211955149304ebeb12db13d65f7a53997244f7ea4a49d3d359d60b5432e5dce7",
+    "ecab9bc43db2a3349f9c354c8c4480953ed388094c9fd894209eddfe8d3214c6",
+    "732876ed4edcc3dd3412f224f9c351484b4ad5f5472b3ee59d84b034d2503235",
+    "42bead95c24b1083352b01cd495fd9ab7ea2d695dce9a216d80f44f21aeb49f0",
+    "ba6d8acad90449683846e4017cf4ca04e22f65a4adb01863294e10a5f4ba170b",
+    "07d3d60b103d10ec865a50030051f2310c32e2808c6ae2e4f7ffc475491706b7",
+    "39eb578faaf89884eb8b00beb19a1ff4d68174f305d61784820188d1647c46a1",
+    "8697835b8e043692c55f946350c9f56ddfc91688e10105d48bc06dc36b2bc4df"
+  ]
+}
