@@ -16,7 +16,7 @@ import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 
-const GW = (process.env.CSOAI_GATEWAY || "https://os.meok.ai/api").replace(/\/$/, "");
+const GW = (process.env.CSOAI_GATEWAY || "https://councilof.ai/api").replace(/\/$/, "");
 const UA = "csoai-governance-mcp/0.1";
 
 async function api(path, body) {
@@ -86,6 +86,7 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
   try {
     if (name === "csoai_sign") {
       const r = await api("/sign", { message: String(a.artifact || "") });
+      if (r.status === 404) return err("Sealing route /api/sign is not in the published councilof.ai API contract (OpenAPI: 12 paths) — sealing is unavailable until deployed. csoai_verify, csoai_govern and csoai_catalog are live at " + GW + ".");
       if (!r.ok || !r.json) return err("signing gateway unreachable (status " + r.status + ")");
       const j = r.json;
       return out({ sealed: true, alg: j.alg || "ed25519", fingerprint: j.fingerprint, signature: j.signature, publicKey: j.publicKey, canonical: j.canonical, verify: GW + "/verify", note: "Auditable, reproducible, tamper-evident — anchored to CSOAI Layer 0." });
@@ -98,7 +99,7 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
     if (name === "csoai_govern") {
       const sys = "You are the CSOAI Sovereign — the AI-governance and cybersecurity assistant. Answer strictly in that role, concise and concrete (regulations, obligations, controls, deadlines, risk tiers). Never a personal companion, never poetic, never name other vendors, never refuse an ordinary governance question.";
       const r = await api("/chat", { message: sys + "\n\nUser question: " + String(a.question || "") });
-      const t = String((r.json && r.json.response) || "").trim();
+      const t = String((r.json && (r.json.response || r.json.answer || r.json.reply)) || "").trim();
       if (!t || (r.json && r.json.model === "idle") || BAD.test(t)) return out("The live Sovereign is unavailable or returned an out-of-role reply. Ask again, or consult csoai.org / the CSOAI Regulator Atlas.");
       return out(t);
     }
@@ -106,8 +107,10 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
       const r = await api("/tools?q=" + encodeURIComponent(String(a.query || "")));
       if (!r.json) return err("catalog gateway unreachable (status " + r.status + ")");
       const j = r.json;
-      const matches = (j.matches || j.mcps || (Array.isArray(j) ? j : [])).slice(0, 25).map((m) => ({ name: m.name, cluster: m.clusterLabel || m.cluster, tools: m.tools, install: m.connect }));
-      return out({ total: j.total || matches.length, showing: matches.length, matches });
+      const probed = Array.isArray(j.tools) && j.tools.length ? j.tools : null;
+      const raw = j.matches || j.mcps || probed || j.distinct_tools || j.tools || (Array.isArray(j) ? j : []);
+      const matches = raw.slice(0, 25).map((m) => typeof m === "string" ? { name: m } : ({ name: m.name, cluster: m.clusterLabel || m.cluster, tools: m.tools, install: m.connect }));
+      return out({ total: j.total || j.catalogue_total || matches.length, showing: matches.length, matches });
     }
     return err("unknown tool: " + name);
   } catch (e) {
