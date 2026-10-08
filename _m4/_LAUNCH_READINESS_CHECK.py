@@ -21,6 +21,7 @@ Exits 0 if everything is GREEN, 1 if any RED.
 import sys
 import os
 import json
+import re
 import hashlib
 import base64
 import subprocess
@@ -189,13 +190,16 @@ def main():
     print()
 
     # 10. SOVEREIGN DB TESTS
-    print(f"{BLUE}10. SOVEREIGN DB (target: 18/18 tests pass){RESET}")
+    print(f"{BLUE}10. SOVEREIGN DB (target: all tests pass, at least 18){RESET}")
     test_file = CL / 'meok-backend' / 'test_sovereign_db.py'
     if test_file.exists():
         try:
             result = subprocess.run(['/opt/homebrew/bin/python3.11', str(test_file)], capture_output=True, text=True, timeout=30, cwd=str(test_file.parent))
-            passed = '18 passed' in result.stdout
-            check("DB tests", passed, result.stdout.strip().split('\n')[-1] if result.stdout else 'no output')
+            last = result.stdout.strip().split('\n')[-1] if result.stdout else 'no output'
+            m = re.search(r'(\d+) passed', last)
+            passed = (result.returncode == 0 and m is not None and int(m.group(1)) >= 18
+                      and 'failed' not in last and 'error' not in last)
+            check("DB tests", passed, last)
         except Exception as e:
             check_warn("DB tests", False, str(e))
     else:

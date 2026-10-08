@@ -30,6 +30,9 @@ def _isolate_substrate():
     os.environ["MEOK_DB_PATH"] = str(sov_db)
     # Witness reads DB_PATH from a module-level constant; we have to override
     os.environ["MEOK_WITNESS_DB_PATH"] = str(wit_db)
+    # SIGIL key: a temp key file, never an env key or the developer's ~/.config key
+    os.environ.pop("MEOK_SIGIL_SECRET", None)
+    os.environ["MEOK_SIGIL_KEY_FILE"] = str(tmp / "sigil.key")
 
     # Make meok-backend importable
     mb = Path("/Users/nicholas/clawd/meok-backend")

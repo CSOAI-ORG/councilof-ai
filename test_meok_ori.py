@@ -13,8 +13,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-PKG_ROOT = ROOT / "meok-ori" if (ROOT / "meok-ori" / "meok_ori").exists() else ROOT
-sys.path.insert(0, str(PKG_ROOT))
+sys.path.insert(0, str(ROOT / "meok-ori"))
 
 from meok_ori import core
 from meok_ori.cli import main
@@ -214,11 +213,10 @@ class T7CLI(unittest.TestCase):
                        MEOK_SIGIL_KEY_FILE=str(Path(td) / "receipt.key"),
                        MEOK_ORI_MAX_COST="1.0")
             env.pop("MEOK_SIGIL_SECRET", None)
-            pkg_parent = PKG_ROOT if (PKG_ROOT / "meok_ori").exists() else ROOT
             p = subprocess.run(
                 [sys.executable, "-m", "meok_ori", *argv],
                 capture_output=True, text=True, timeout=60, env=env,
-                cwd=str(pkg_parent))
+                cwd=str(ROOT / "meok-ori"))
             return p
 
     def test_t26_run_json(self):
@@ -297,7 +295,7 @@ class T9Honesty(unittest.TestCase):
     """0.2.0 corrections: no secret in source, a real chain check, honest names."""
 
     def test_t35_no_default_secret_in_source(self):
-        src = (PKG_ROOT / "meok_ori" / "core.py").read_text(encoding="utf-8")
+        src = (ROOT / "meok-ori" / "meok_ori" / "core.py").read_text(encoding="utf-8")
         self.assertNotIn("meok-ori-sovereign-2026", src)
         self.assertNotIn("SIGIL_SECRET = os.environ.get(", src)
 
@@ -334,7 +332,7 @@ class T9Honesty(unittest.TestCase):
                 return subprocess.run(
                     [sys.executable, "-m", "meok_ori", "run", "hello sovereign world",
                      "--json", "--backend", "stub"], capture_output=True, text=True,
-                    timeout=60, env=env, cwd=str(PKG_ROOT))
+                    timeout=60, env=env, cwd=str(ROOT / "meok-ori"))
 
             p1 = run()
             self.assertEqual(p1.returncode, 0, p1.stderr)
@@ -358,7 +356,7 @@ class T9Honesty(unittest.TestCase):
             p = subprocess.run(
                 [sys.executable, "-m", "meok_ori", "run", prompt, "--sign", "--json",
                  "--backend", "stub"], capture_output=True, text=True, timeout=60,
-                env=env, cwd=str(PKG_ROOT))
+                env=env, cwd=str(ROOT / "meok-ori"))
             self.assertEqual(p.returncode, 0, p.stderr)
             text = json.loads(p.stdout)["text"]
             rec = json.loads(rp.read_text().splitlines()[-1])
@@ -369,7 +367,7 @@ class T9Honesty(unittest.TestCase):
         for cmd in ("screen", "council"):
             p = subprocess.run([sys.executable, "-m", "meok_ori", cmd],
                                capture_output=True, text=True, timeout=60,
-                               cwd=str(PKG_ROOT))
+                               cwd=str(ROOT / "meok-ori"))
             self.assertEqual(p.returncode, 0, p.stderr)
             self.assertIn("Not a council, not BFT", p.stdout)
             self.assertNotIn("Queen", p.stdout)

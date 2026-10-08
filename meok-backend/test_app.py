@@ -2,14 +2,18 @@
 MEOK OS Backend — pytest test suite.
 
 Hits every endpoint in app.py. Uses TestClient with a temporary
-SQLite + sigil chain so the tests don't touch the real on-disk store.
+SQLite + sigil chain + SIGIL key file so the tests don't touch the real
+on-disk store or key. Any MEOK_SIGIL_SECRET in the environment is ignored.
 
 Run:  pytest -q
 """
 
 from __future__ import annotations
 
+import ast
+import json
 import os
+import stat
 import sys
 import tempfile
 from pathlib import Path
@@ -20,6 +24,8 @@ _tmp = tempfile.mkdtemp(prefix="meok-backend-tests-")
 os.environ["MEOK_ICHARS_DB"] = str(Path(_tmp) / "ichars.db")
 os.environ["MEOK_USERS_DB"] = str(Path(_tmp) / "users.db")
 os.environ["MEOK_SIGIL_LOG"] = str(Path(_tmp) / "sigil_chain.jsonl")
+os.environ["MEOK_SIGIL_KEY_FILE"] = str(Path(_tmp) / "sigil.key")
+os.environ.pop("MEOK_SIGIL_SECRET", None)
 
 # Make app.py importable.
 HERE = Path(__file__).resolve().parent
@@ -28,9 +34,7 @@ sys.path.insert(0, str(HERE))
 import pytest
 from fastapi.testclient import TestClient
 
-import os
-os.environ.setdefault("MEOK_SIGIL_SECRET", "test-secret-for-pytest-2026")
-import app
+import app as app_module
 from app import app
 
 
@@ -642,3 +646,206 @@ def test_healthz(client):
     r = client.get("/api/healthz")
     assert r.status_code == 200
     assert r.json()["ok"] is True
+
+
+# --------------------------------------------------------------------------- #
+# SIGIL key: no secret in source; env key, else a local key file
+# --------------------------------------------------------------------------- #
+def _reads_sigil_secret(node) -> bool:
+    return (isinstance(node, ast.Call) and node.args
+            and isinstance(node.args[0], ast.Constant)
+            and node.args[0].value == "MEOK_SIGIL_SECRET")
+
+
+def test_no_default_secret_in_app_source():
+    """MEOK_SIGIL_SECRET is read with no fallback value and no key literal sits in source."""
+    src = (HERE / "app.py").read_text(encoding="utf-8")
+    assert "SIGIL_SECRET =" not in src
+    tree = ast.parse(src)
+    reads = [n for n in ast.walk(tree) if _reads_sigil_secret(n)]
+    assert reads, "MEOK_SIGIL_SECRET is no longer read at all"
+    for call in reads:
+        assert len(call.args) == 1 and not call.keywords, \
+            f"line {call.lineno}: MEOK_SIGIL_SECRET read with a fallback value"
+    for node in ast.walk(tree):  # nor `os.environ.get(...) or "literal"`
+        if isinstance(node, ast.BoolOp) and isinstance(node.op, ast.Or) \
+                and any(_reads_sigil_secret(v) for v in node.values):
+            assert not any(isinstance(v, ast.Constant) for v in node.values), \
+                f"line {node.lineno}: MEOK_SIGIL_SECRET falls back to a literal"
+
+
+def test_sigil_key_file_created_0600_and_random(monkeypatch, tmp_path):
+    kf = tmp_path / "sub" / "sigil.key"
+    monkeypatch.setenv("MEOK_SIGIL_KEY_FILE", str(kf))
+    monkeypatch.delenv("MEOK_SIGIL_SECRET", raising=False)
+    assert not kf.exists()
+    first = app_module.sigil({"a": 1})
+    assert stat.S_IMODE(kf.stat().st_mode) == 0o600
+    key = kf.read_bytes().strip()
+    assert len(key) == 64 and int(key, 16) >= 0  # 32 random bytes, hex-encoded
+    assert app_module.sigil({"a": 1}) == first  # stable once the file exists
+    other = tmp_path / "other.key"
+    monkeypatch.setenv("MEOK_SIGIL_KEY_FILE", str(other))
+    app_module.sigil({"a": 1})
+    assert other.read_bytes().strip() != key  # a new file gets a new random key
+
+
+def test_sigil_env_key_overrides_key_file(monkeypatch, tmp_path):
+    kf = tmp_path / "sigil.key"
+    monkeypatch.setenv("MEOK_SIGIL_KEY_FILE", str(kf))
+    monkeypatch.setenv("MEOK_SIGIL_SECRET", "env-key-a")
+    a = app_module.sigil({"a": 1})
+    assert not kf.exists()  # env key used; no key file written
+    monkeypatch.setenv("MEOK_SIGIL_SECRET", "env-key-b")
+    assert app_module.sigil({"a": 1}) != a
+
+
+def test_sigil_empty_key_file_refused(monkeypatch, tmp_path):
+    kf = tmp_path / "sigil.key"
+    kf.write_bytes(b"\n")
+    monkeypatch.setenv("MEOK_SIGIL_KEY_FILE", str(kf))
+    monkeypatch.delenv("MEOK_SIGIL_SECRET", raising=False)
+    with pytest.raises(ValueError):
+        app_module.sigil({"a": 1})
+
+
+# --------------------------------------------------------------------------- #
+# /api/sigil/verify recomputes the HMAC; presence in the log is not enough
+# --------------------------------------------------------------------------- #
+def _own_chain(monkeypatch, tmp_path, key):
+    log = tmp_path / "chain.jsonl"
+    log.touch()
+    monkeypatch.setattr(app_module, "_SIGIL_LOG", log)
+    monkeypatch.setenv("MEOK_SIGIL_SECRET", key)
+    return log
+
+
+def test_sigil_verify_rejects_entry_from_another_key(client, monkeypatch, tmp_path):
+    """An entry written under another key (e.g. the old in-source default) is unsigned here."""
+    _own_chain(monkeypatch, tmp_path, "old-key")
+    e = app_module._sigil_append("C", ichar_id="ich-1")
+    assert client.post("/api/sigil/verify", json={"hash": e["hash"]}).json()["verified"] is True
+    monkeypatch.setenv("MEOK_SIGIL_SECRET", "new-key")
+    v = client.post("/api/sigil/verify", json={"hash": e["hash"]}).json()
+    assert v["verified"] is False
+    assert v["block"]["hash"] == e["hash"]
+    assert "reason" in v
+
+
+def test_sigil_verify_rejects_altered_entry(client, monkeypatch, tmp_path):
+    log = _own_chain(monkeypatch, tmp_path, "k")
+    e = app_module._sigil_append("C", ichar_id="ich-1")
+    forged = dict(e, fields={"ichar_id": "ich-forged"})  # same hash, different content
+    log.write_text(json.dumps(forged) + "\n")
+    assert client.post("/api/sigil/verify", json={"hash": e["hash"]}).json()["verified"] is False
+
+
+def test_sigil_verify_appended_line_is_not_verified(client, monkeypatch, tmp_path):
+    """Anyone can append a line with any hash to the JSONL; it must not verify."""
+    log = _own_chain(monkeypatch, tmp_path, "k")
+    app_module._sigil_append("C", ichar_id="ich-1")
+    fake = {"ts": 1.0, "op": "C", "nonce": "n", "fields": {}, "prev": "0" * 32, "hash": "f" * 64}
+    with log.open("a") as f:
+        f.write(json.dumps(fake) + "\n")
+    assert client.post("/api/sigil/verify", json={"hash": "f" * 64}).json()["verified"] is False
+
+
+def test_sigil_wording_is_hmac_not_ed25519():
+    assert "SIGIL-signed" not in (app_module.__doc__ or "")
+    sigil_rows = [r for t in app_module.TEMPLES for r in t.get("regulations", [])
+                  if r["code"] == "SIGIL"]
+    assert sigil_rows and all("Ed25519" not in r["desc"] for r in sigil_rows)
+
+
+# --------------------------------------------------------------------------- #
+# Passwords: scrypt with a per-user salt; legacy rows upgraded at login
+# --------------------------------------------------------------------------- #
+def _stored_hash(email):
+    import sqlite3
+    conn = sqlite3.connect(str(app_module._USERS_DB))
+    row = conn.execute("SELECT password_hash FROM users WHERE email = ?", (email,)).fetchone()
+    conn.close()
+    return row[0] if row else None
+
+
+def test_password_hash_is_scrypt_with_per_user_salt(client):
+    for email in ("salt-a@meok.ai", "salt-b@meok.ai"):
+        r = client.post("/api/auth/signup", json={"email": email, "password": "same-pass-1"})
+        assert r.status_code == 200
+    a, b = _stored_hash("salt-a@meok.ai"), _stored_hash("salt-b@meok.ai")
+    assert a.startswith("scrypt$") and b.startswith("scrypt$")
+    assert a != b  # same password, different salt
+    assert a.split("$")[4] != b.split("$")[4]
+
+
+def test_login_upgrades_legacy_password_hash(client):
+    import sqlite3
+    email, pw = "legacy@meok.ai", "legacy-pass-1"
+    conn = sqlite3.connect(str(app_module._USERS_DB))
+    conn.execute("INSERT INTO users (user_id, email, password_hash, name, created_at) VALUES (?, ?, ?, ?, ?)",
+                 ("usr-legacy00001", email, app_module._legacy_hash_pw(pw), "Legacy", 0.0))
+    conn.commit()
+    conn.close()
+    assert client.post("/api/auth/login", json={"email": email, "password": "wrong-pass"}).status_code == 401
+    assert not _stored_hash(email).startswith("scrypt$")  # a failed login upgrades nothing
+    assert client.post("/api/auth/login", json={"email": email, "password": pw}).status_code == 200
+    assert _stored_hash(email).startswith("scrypt$")  # rewritten on first good login
+    assert client.post("/api/auth/login", json={"email": email, "password": pw}).status_code == 200
+    assert client.post("/api/auth/login", json={"email": email, "password": "wrong-pass"}).status_code == 401
+
+
+def test_login_unknown_email_401(client):
+    r = client.post("/api/auth/login", json={"email": "nobody@meok.ai", "password": "whatever1"})
+    assert r.status_code == 401
+
+
+# --------------------------------------------------------------------------- #
+# Tokens: verifiable, and GET /api/auth/me checks them
+# --------------------------------------------------------------------------- #
+def _bearer(token):
+    return {"Authorization": f"Bearer {token}"}
+
+
+def test_tokens_from_signup_and_login_verify(client):
+    email, pw = "token@meok.ai", "token-pass-1"
+    s = client.post("/api/auth/signup", json={"email": email, "password": pw, "name": "Tok"}).json()
+    me = client.get("/api/auth/me", headers=_bearer(s["token"]))
+    assert me.status_code == 200
+    assert me.json() == {"user_id": s["user_id"], "email": email, "name": "Tok"}
+    l = client.post("/api/auth/login", json={"email": email, "password": pw}).json()
+    assert client.get("/api/auth/me", headers=_bearer(l["token"])).json()["user_id"] == s["user_id"]
+
+
+def test_me_rejects_missing_tampered_and_foreign_tokens(client, monkeypatch):
+    s = client.post("/api/auth/signup", json={"email": "tamper@meok.ai", "password": "tamper-pass"}).json()
+    tok = s["token"]
+    assert client.get("/api/auth/me").status_code == 401
+    assert client.get("/api/auth/me", headers=_bearer("")).status_code == 401
+    uid, exp, mac = tok[3:].rsplit(".", 2)
+    assert client.get("/api/auth/me", headers=_bearer(f"v1.usr-someoneelse.{exp}.{mac}")).status_code == 401
+    assert client.get("/api/auth/me", headers=_bearer(f"v1.{uid}.{int(exp) + 1}.{mac}")).status_code == 401
+    assert client.get("/api/auth/me", headers=_bearer(tok[:-1] + ("0" if tok[-1] != "0" else "1"))).status_code == 401
+    monkeypatch.setenv("MEOK_SIGIL_SECRET", "some-other-key")  # minted under another key
+    assert client.get("/api/auth/me", headers=_bearer(tok)).status_code == 401
+
+
+def test_me_rejects_expired_token(client, monkeypatch):
+    s = client.post("/api/auth/signup", json={"email": "expired@meok.ai", "password": "expire-pass"}).json()
+    monkeypatch.setattr(app_module, "_TOKEN_TTL", -1)
+    stale = app_module._issue_token(s["user_id"])
+    assert app_module._verify_token(stale) is None
+    assert client.get("/api/auth/me", headers=_bearer(stale)).status_code == 401
+
+
+# --------------------------------------------------------------------------- #
+# Status: no invented hash on an empty chain
+# --------------------------------------------------------------------------- #
+def test_last_sigil_on_empty_chain_says_so(client, monkeypatch, tmp_path):
+    log = tmp_path / "empty.jsonl"
+    log.touch()
+    monkeypatch.setattr(app_module, "_SIGIL_LOG", log)
+    assert app_module._last_sigil_short() == "no chain yet"
+    assert client.get("/api/backend/status").json()["last_sigil"] == "no chain yet"
+    e = app_module._sigil_append("C", ichar_id="ich-1")
+    assert app_module._last_sigil_short() == e["hash"][:7]
+
