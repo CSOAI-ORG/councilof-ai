@@ -1,128 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>CSOAI — the independent measurement body for AI</title>
-<meta name="description" content="CSOAI measures AI systems against statute — 30 frameworks crosswalked across the EU, UK and US — and signs every result so anyone can verify it. Measurement, not certification."/>
-<link rel="canonical" href="#"/>
-<meta property="og:title" content="CSOAI — the independent measurement body for AI"/>
-<meta property="og:description" content="Independent measurement of AI systems against statute. 30 frameworks. Every published figure traces to a signed, verifiable record."/>
-<meta name="robots" content="index, follow"/>
-<meta name="ai-content-declaration" content="human-authored, machine-verifiable, Ed25519-signed"/>
-<meta name="citation-policy" content="CSOAI Ltd (2026). CSOAI — the independent measurement body for AI. https://csoai.org/"/>
-<link rel="icon" href="#" type="image/svg+xml"/>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"CSOAI Ltd — Council for the Safety of AI","url":"https://csoai.org","description":"Independent measurement body for AI governance: 30 frameworks crosswalked, deterministic provision-anchored assessments, Ed25519-signed verdicts anyone can verify offline.","foundingDate":"2025","legalName":"CSOAI Ltd","identifier":"UK Companies House 16939677"}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSOAI — Sovereign AI Governance</title>
+<meta name="description" content="CSOAI: Sovereign AI governance, compliance automation, and audit-grade certification. UK-sovereign, AUKUS-compatible.">
 <style>
-:root{--ink:#0b1220;--muted:#5a6478;--line:#e4e8f0;--gold:#c9a84c;--green:#0a8a3f;--green2:#067a35;--bg:#f7f9fc;--card:#ffffff}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg);line-height:1.6}
-a{color:var(--green);text-decoration:none}
-a:hover{text-decoration:underline}
-.banner{background:linear-gradient(90deg,#3a0f1a,#7a1f33,#3a0f1a);color:#ffd5dd;text-align:center;padding:10px 16px;font-size:13px;font-weight:500}
-.banner a{color:#fff;font-weight:700}
-nav{display:flex;flex-wrap:wrap;gap:18px;justify-content:center;padding:18px 20px;border-bottom:1px solid var(--line);background:var(--card);position:sticky;top:0;z-index:10;font-weight:600;font-size:14px}
-nav a{color:var(--ink)}
-.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
-.hero{padding:64px 20px 40px;text-align:center}
-.hero h1{font-size:44px;line-height:1.12;letter-spacing:-.02em;max-width:820px;margin:0 auto 18px}
-.hero h1 em{color:var(--green);font-style:normal}
-.hero p{font-size:19px;color:var(--muted);max-width:760px;margin:0 auto 26px}
-.cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-.btn{display:inline-block;padding:13px 22px;border-radius:10px;font-weight:700;font-size:15px}
-.btn-a{background:var(--green);color:#fff}
-.btn-b{background:transparent;border:1.5px solid var(--line);color:var(--ink)}
-.strip{background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:22px 20px;font-size:15px;text-align:center;color:var(--muted)}
-.strip strong{color:var(--ink)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
-h2.sec{font-size:30px;text-align:center;margin:0 0 8px;letter-spacing:-.01em}
-p.sub{text-align:center;color:var(--muted);font-size:16px;margin-bottom:30px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 20px 16px}
-.card h3{font-size:17px;margin-bottom:4px}
-.card .tag{font-size:12.5px;color:var(--green);font-weight:700}
-.card .yr{font-size:12.5px;color:var(--muted)}
-.card p{font-size:14px;color:var(--muted);margin:8px 0 12px}
-.more{text-align:center;margin:26px 0}
-section{padding:56px 0}
-.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
-.pillar{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
-.pillar h3{font-size:17px;margin-bottom:6px}
-.pillar p{font-size:14px;color:var(--muted)}
-.trust{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:26px}
-.trust div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;text-align:center}
-.trust b{display:block;font-size:22px;color:var(--green)}
-.trust span{font-size:13px;color:var(--muted)}
-footer{border-top:1px solid var(--line);background:var(--card);padding:30px 20px;text-align:center;font-size:13.5px;color:var(--muted)}
-footer .eco{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin:12px 0;font-weight:600}
-footer a{color:var(--ink)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:system-ui,-apple-system,sans-serif;background:#0a0e1a;color:#e0e6f0;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem}
+  h1{font-size:2.4rem;margin-bottom:0.5rem;background:linear-gradient(135deg,#4f8cff,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  p.sub{color:#8892a4;font-size:1.1rem;margin-bottom:2rem;text-align:center;max-width:600px}
+  .links{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center}
+  .links a{display:inline-block;padding:0.7rem 1.5rem;background:rgba(79,140,255,0.12);border:1px solid rgba(79,140,255,0.3);border-radius:8px;color:#4f8cff;text-decoration:none;font-size:0.95rem;transition:background 0.2s}
+  .links a:hover{background:rgba(79,140,255,0.25)}
+  footer{margin-top:3rem;color:#4a5568;font-size:0.8rem}
 </style>
 </head>
 <body>
-<div class="banner">EU AI Act Article 50 transparency rules are live — get your free signed passport | <a href="#">Get yours free →</a></div>
-<nav><a href="#">Home</a><a href="#">Master</a><a href="#">Sovereign</a><a href="#">GovBench</a><a href="#">ProvBench</a><a href="#">Audit</a><a href="#">DEFONEOS</a><a href="#">Attestation</a><a href="#">Article 50</a></nav>
-
-<div class="wrap">
-  <section class="hero">
-    <h1>The independent measurement body for AI.<br/><em>Measure. Sign. Prove.</em></h1>
-    <p>We test AI systems against <strong>30 crosswalked frameworks</strong> — EU AI Act, NIST AI RMF, ISO/IEC 42001, UK GDPR &amp; DPA 2018, NIS2, DORA and more — across 417 statutory provisions, and we sign every result with Ed25519. You verify measurement instead of asserting it.</p>
-    <div class="cta-row">
-      <a class="btn btn-a" href="#">Free AI risk check — signed in 2 minutes</a>
-      <a class="btn btn-b" href="#">See what we've measured</a>
-      <a class="btn btn-b" href="#">Attestation, not certification</a>
-    </div>
-  </section>
-</div>
-
-<div class="strip"><strong>Layer 0 is the trust floor:</strong> every governance decision is Ed25519-signed and publicly verifiable offline — recompute the hash, check the signature against our published key, without trusting us. UNMEASURED is reported, never hidden.</div>
-
-<section>
-  <h2 class="sec">30 frameworks. One signed proof.</h2>
-  <p class="sub">Spotlighted majors — browse the full crosswalk on the <a href="#">Master hub</a>.</p>
-  <div class="grid">
-    <div class="card"><div class="tag">Europe · 2024</div><h3>EU AI Act</h3><p>113 Articles — the first comprehensive AI law, risk-based, covering all AI systems in the EU market.</p></div>
-    <div class="card"><div class="tag">US · 2023</div><h3>NIST AI RMF</h3><p>GOVERN · MAP · MEASURE · MANAGE — the US risk-management framework for trustworthy AI.</p></div>
-    <div class="card"><div class="tag">International · 2023</div><h3>ISO/IEC 42001</h3><p>AI management systems standard — structured, certifiable governance for organisations.</p></div>
-    <div class="card"><div class="tag">UK · 2018</div><h3>UK GDPR &amp; DPA 2018</h3><p>The UK data-protection regime with automated-decision protections mapped to AI use.</p></div>
-    <div class="card"><div class="tag">Europe · 2023</div><h3>NIS2</h3><p>Cybersecurity for critical sectors — AI security, incident reporting, supply-chain obligations.</p></div>
-    <div class="card"><div class="tag">Europe · 2023</div><h3>DORA</h3><p>Digital Operational Resilience — ICT risk and third-party oversight for financial entities.</p></div>
-    <div class="card"><div class="tag">International · 2024</div><h3>Council of Europe</h3><p>CETS 225 — the world's first binding international treaty on AI.</p></div>
-    <div class="card"><div class="tag">International · 2024</div><h3>Cyber Resilience Act</h3><p>EU security requirements for connected products — vulnerabilities, SBOMs, lifecycle support.</p></div>
-    <div class="card"><div class="tag">International · 2023</div><h3>C2PA Provenance</h3><p>Content Credentials — measured survival under real transforms in ProvBench.</p></div>
-    <div class="card"><div class="tag">China · 2023</div><h3>TC260</h3><p>Comprehensive Chinese AI governance covering ethics, security and societal impact.</p></div>
-    <div class="card"><div class="tag">UK · 2024</div><h3>UK AI Safety</h3><p>Frontier AI risk evaluation through the UK AI Safety Institute.</p></div>
-    <div class="card"><div class="tag">APAC · 2024</div><h3>Singapore &amp; South Korea</h3><p>Model AI Governance Framework and the 2026 Korean AI Framework Act.</p></div>
+  <h1>CSOAI</h1>
+  <p class="sub">Sovereign AI governance &amp; compliance automation. UK-sovereign. AUKUS-compatible. Audit-grade, signed, neutral.</p>
+  <div class="links">
+    <a href="INVESTOR_DECK_W59.html">Investor Deck</a>
+    <a href="SOV3_HIVE_DASHBOARD.html">SOV3 Hive Dashboard</a>
+    <a href="defoneos-anti-slavery-commissioner-modern-slavery-ai-deep-dive-pack.html">DEFONEOS Deep Dives</a>
+    <a href="cobolbridge-landing.html">COBOLBridge</a>
+    <a href="case-study.html">Case Studies</a>
+    <a href="csoai-checkout.html">CSOAI Checkout</a>
   </div>
-  <div class="more"><a class="btn btn-b" href="#">Browse all 30 crosswalks →</a></div>
-</section>
-
-<section>
-  <h2 class="sec">One ecosystem, five products.</h2>
-  <p class="sub">Part of the MEOK AI Labs ecosystem.</p>
-  <div class="pillars">
-    <div class="pillar"><h3>CSOAI — measurement</h3><p>Deterministic, provision-anchored assessment with signed verdicts. The evidence body.</p></div>
-    <div class="pillar"><h3>ProofOf — attestation</h3><p>Real product tiers: Pro and done-for-you programmes. proofof.ai</p></div>
-    <div class="pillar"><h3>OpenMoE — infrastructure</h3><p>BFT-consensus MoE routing, MIT licensed. openmoe.ai</p></div>
-    <div class="pillar"><h3>CouncilOf — governance</h3><p>Democratic AI governance — where institutions and citizens meet. councilof.ai</p></div>
-    <div class="pillar"><h3>Meok — sovereign platform</h3><p>The sovereign AI layer binding it all. meok.ai</p></div>
-  </div>
-</section>
-
-<section>
-  <h2 class="sec">Measured, not marketed.</h2>
-  <p class="sub">Every number on this estate traces to a signed, verifiable record.</p>
-  <div class="trust">
-    <div><b>30</b><span>frameworks crosswalked</span></div>
-    <div><b>417</b><span>statutory provisions</span></div>
-    <div><b>30+</b><span>open-source MCPs on PyPI &amp; GitHub</span></div>
-    <div><b>100%</b><span>Ed25519-signed evidence</span></div>
-  </div>
-</section>
-</div>
-
-<footer>
-  <div>CSOAI Ltd · UK company 16939677 · Every published figure traces to a signed, verifiable record — inspect the <a href="#">SIGIL chain</a>.</div>
-  <div class="eco"><a href="#">csoai.org</a><a href="#">proofof.ai</a><a href="#">openmoe.ai</a><a href="#">councilof.ai</a><a href="#">meok.ai</a></div>
-  <div>Not a notified body — we issue measurements and attestations, never certificates of conformity. UNMEASURED is reported, never hidden.</div>
-</footer>
+  <footer>© 2026 CSOAI LTD — Sovereign by Design</footer>
 </body>
 </html>

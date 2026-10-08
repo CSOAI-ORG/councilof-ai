@@ -1,98 +1,304 @@
-# Vercel build cache + project metadata
-.vercel/
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
-# OS / editor scratch
-.DS_Store
+# ---------------------------------------------------------------------------
+# Virtual environments
+# ---------------------------------------------------------------------------
+.venv/
+venv/
+ENV/
+env/
+
+# ---------------------------------------------------------------------------
+# IDE / OS
+# ---------------------------------------------------------------------------
+.vscode/
+.idea/
 *.swp
 *.swo
 *~
+.DS_Store
+Thumbs.db
 
-# Local tmp scratch
-/tmp/
-
-# Snapshot runtime logs (but KEEP the snapshot dirs + manifests)
-.backups/snapshot.log
-.backups/*.log
-
-# Backups directory
-.backups/
-
-# Internal Python scripts (not deployed)
-_sigma_audit.py
-_sigma_patcher.py
-_e2e_tests.py
-_build_sigma_report.py
-_enrich_phantoms.py
-_gen_phantoms.py
-_rebuild_15.py
-
-# Internal markdown docs (not deployed)
-BEAUTY_PASS_LOG.md
-META_FIX_LOG.md
-PHANTOM_LIST_*.md
-PHANTOM_RECONCILIATION_*.md
-SIGMA_CHECK_*.md
-SOV33_BENCHMARK_E2E_PLAN.md
-SOV33_GROWTH_MODEL_*.md
-SOV33_OWEM_REALITY_*.md
-SOV3_OOWM_KNOWLEDGE_TAB_*.md
-COST_REDUCTION_MANIFESTO_*.md
-REGULATIONS_PIPELINE_EXPANSION_*.md
-LANE_TASKS_*.md
-distribution-pack.md
-distribution-tracker.md
-sov3_oowm_all_models.md
-sov3_oowm_knowledge_tab.md
-
-# Claim tickets and internal logs
-_CLAIM_TICK*.txt
-overnight-log.txt
-
-# Sigil JSON (audit receipts - internal)
-tick-*-sigil.json
-tick-*-eat-sigil.json
-.sigil-eat-*.json
-.sigma_audit_*.json
-.eat-*.json
-
-# Benchmark scripts and training data (not deployed)
-benchmark-results/*.py
-benchmark-results/*.sh
-benchmark-results/*.jsonl
-benchmark-results/*.log
-benchmark-results/Modelfile.*
-benchmark-results/__pycache__/
-benchmark-results/fluid-*/
-benchmark-results/fluid-*/checkpoints/
-.visual_sandbox/
-
-# macOS LaunchAgent plists
-com.meok.*.plist
-
-# Internal sprint state
-DEFONEOS_SPRINT_STATE.json
-DEFONEOS_SPRINT_STATE.json.bak*
-
-# Arena leaderboard (served via API)
-arena_lb.csv
-.vercel
-
-# Secrets and env files
+# ---------------------------------------------------------------------------
+# Local environment / secrets
+# ---------------------------------------------------------------------------
+# Registry auth tokens (npm/pip/yarn) — never commit literal tokens
+.npmrc
+**/.npmrc
+.pypirc
+**/.pypirc
+.yarnrc.yml
+**/.yarnrc.yml
 .env
 .env.*
+!.env.example
+!.env.mcp-ensemble.example
+
+# ---------------------------------------------------------------------------
+# Logs / backups / runtime dirs
+# ---------------------------------------------------------------------------
+logs/
+*.log
+.backups/
+
+# ---------------------------------------------------------------------------
+# Model weights / caches
+# ---------------------------------------------------------------------------
+mlx_models/
+*.bin
+*.safetensors
+*.gguf
+
+# ---------------------------------------------------------------------------
+# MCP marketplace sub-repos (managed independently)
+# ---------------------------------------------------------------------------
+mcp-marketplace/*/
+
+# ---------------------------------------------------------------------------
+# Transient / local-only directories
+# ---------------------------------------------------------------------------
+memory/
+audits/
+backups/
+recovery/
+*.log
+team_test_*.py
+test_team*.py
+.vercel
+.openclaw/
+Ironless-QDD-Actuator/
+asimov-mjlab/
+asimov-v0/
+claw-code/
+csoai-org/
+domain-sales-ghp/
+.env*.local
+
+# ---------------------------------------------------------------------------
+# Sub-projects with their own repos (managed independently)
+# ---------------------------------------------------------------------------
+csoai-org-v2/
+meok-desktop/
+meok-amica/
+meok-godeye/
+meok-agent-zero/
+meok-attestation-api/
+meok-platform/
+god-eye/
+opencrane/
+wolf-actuator/
+modular-bearing/
+cobolbridge-site/
+sovereign-temple-live/
+
+# ---------------------------------------------------------------------------
+# Large generated / deployment directories
+# ---------------------------------------------------------------------------
+mcp-marketplace/
+mcp-bridge/
+meok-oneos/
+meok-marketing/
+meok-labs-engine/
+sovereign-temple/
+sov3-deploy/
+vercel-deployables/
+unified-saas/
+sovereign-stack/
+vast-ai-deployment/
+meok-mobile/
+meok-kits-host/
+registry-publish/
+mcp-submissions/
+apify-actors/
+automation/
+
+# ---------------------------------------------------------------------------
+# Content / marketing / business docs (not code)
+# ---------------------------------------------------------------------------
+_TOPOLOGY/
+_ARCHIVED_SEVERED_BRANDS/
+_private_dagon/
+bleeding-edge-arsenal/
+csoai-docs/
+csoai-mcp-monetization/
+csoai-eu-ai-act-pillar/
+domain-sales/
+grants/
+marketing-assets/
+products/
+/research/
+jarvis-memory/
+k25-vision/
+harvi-funding/
+investing/
+ralph-mode/
+eu-ai-act-kit/
+eu-ai-act-kit.zip
+eu-ai-act-landing/
+eu-ai-act-api/
+mcp-monetization-gateway/
+meok-ai-landing/
+cobolbridge-landing.html/
+csoai-checkout.html/
+god-eye-binary/
+god-eye-report.html/
+god-eye-server.py/
+god-eye-viewer.html/
+proofof-site/
+proofof-ai/
+landlaw-site/
+fishkeeper-site/
+koikeeper-site/
+grabhire-site/
+commercialvehicle-site/
+council-ai-storefront/
+
+# ---------------------------------------------------------------------------
+# Standalone scripts / one-offs
+# ---------------------------------------------------------------------------
+create-stripe-products-live.py
+fix-stripe-pricing.py
+domain-monetization-plan.md
+domain-monetization-sprint.md
+agent-teams-monetization.md
+fix-stripe-pricing-NOW.sh
+DNS_FIX_INSTRUCTIONS.txt
+.vercelignore
+full_knowledge_ingest.py
+market_check.py
+grandcode_test_harness.py
+jarvis_integration.py
+agent_task_executor.py
 *.env
-**/*.env
+**/.env
+**/.env.*
+.env.sovereign
+*.env.backup
+SECRETS_LOCAL.md
+**/SECRETS_LOCAL.md
+*secret*.md
+*.pem
+*.key
+*credentials*
+node_modules/
+.next/
+*.pt
+*.npz
+*.dylib
+*.step
+meok-one/meok_one/data/
+meok-one/.meok_vm_key.txt
+meok-one/.env.local
+_archive/severed/
 
-# Python bytecode
-__pycache__/
-*.pyc
+# Build artifacts
+meokclaw-tui/meokclaw-test
+meokclaw-tui/build/
 
-# API key files
-api_keys.json
-secrets.json
-credentials.json
-__pycache__/
-*.pyc
-.venv/
-mcpbench_key.pem
-provbench-test-assets/
+# Test data
+meok-one/data/hive_traces.jsonl
+meok-one/test_funnel.py
+
+# Nested git repos (not submodules)
+delboy/
+iokfarm-site/
+lib2b/
+meok/
+meok-compliance-gateway/
+meok-integrations/
+meok-sdk-go/
+meok-sdk-python/
+meok-sdk-typescript/
+meok-skills/
+meok-slack-app/
+meok-teams-app/
+meok-vscode-extension/
+
+csoai-org-v2/.env.example
+
+meok-marketing/.env.example
+
+csoai-platform/.env
+
+csoai-platform/.env.example
+
+meok-oneos/.env.example
+
+# Rust build artifacts (accidentally tracked)
+solana-sbt/target/
+openpatent-hive/scripts/loadkeys.sh
+openpatent-hive/scripts/loadkeys.local.sh
+**/loadkeys.sh
+**/loadkeys.local.sh
+_m2_import/
+csoai-master/node_modules/
+csoai-dashboard-master/
+csoai-master/
+.env.local
+
+# Hive runtime data
+.hive/data/
+.hive/tasks/
+.hive/logs/
+
+# External submodule / dependency (independent repos with own remotes)
+openmoe/
+openmoe
+coai/
+coai
+haulage-deploy/
+
+# Generated deploy outputs
+*-deploy/
+hive-mailer/.probe_strikes*
+
+# === Rust / Solana build artifacts (added 2026-06-19) ===
+**/*.rlib
+**/*.rmeta
+**/.fingerprint/
+**/incremental/
+solana-sbt/target/
+
+sovereign-temple/data/queen_sign.key
+sovereign-temple/data/os_telemetry.jsonl
+sovereign-charters/csoai-outreach/sme-kb.db
+_alignment/sovereign_merge_kit/.runtime.env
+founder.digest
+_alignment/sovereign_merge_kit/identity_demo.json
+# --- SOVOS monorepo curation ---
+agentsociety/
+councilof-ai/
+aiverify-moonshot-data/
+oowm-v8-e2e/
+sovereign-temple/
+meok/
+mcp-marketplace/
+csoai-org-v2/
+sim-world-data/
+**/.backups/
+**/honey_all_producers.jsonl
+*.safetensors
+*.gguf
+**/sov-minimal-output*/
