@@ -115,7 +115,8 @@ const TILE_HELP: Record<TileState, string> = {
 
 /** The board, compact: the count line WITH its separation line, the model count, one dot per axis. */
 function WorkspaceBoardCard() {
-  const { data, error } = useGspcBoard();
+  const { data, error, readAt } = useGspcBoard();
+  const readDate = typeof readAt === "string" && Number.isFinite(Date.parse(readAt)) ? new Date(readAt) : null;
   const models = useModelsCount();
   const tiles = boardTiles(data);
   const sep = separationRead(data);
@@ -138,7 +139,20 @@ function WorkspaceBoardCard() {
       <h2 id="ws-board-h" className="mt-2 text-xl font-black tracking-tight text-foreground">
         What the tests show today
       </h2>
-      {error ? (
+      {error && data ? (
+        <p role="status" className="mt-4 rounded-2xl border border-amber-500/50 bg-amber-50 px-4 py-3 text-sm text-amber-950" data-testid="ws-board-refresh-error">
+          The board could not be refreshed ({error}). Showing the last successful read.{" "}
+          <a href="/api/gspc" className="font-bold underline underline-offset-2">Read GET /api/gspc directly</a>.
+        </p>
+      ) : null}
+      {readDate ? (
+        <p className="mt-3 text-xs leading-snug text-muted-foreground" data-testid="ws-board-read-at">
+          Last successful read:{" "}
+          <time dateTime={readAt}>{new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeStyle: "short", timeZone: "UTC" }).format(readDate)} UTC</time>.
+          {" "}This is the client read time; the published runs keep their own measurement dates.
+        </p>
+      ) : null}
+      {error && !data ? (
         <p className="mt-4 rounded-2xl border border-amber-500/50 bg-amber-50 px-4 py-3 text-sm text-amber-950" data-testid="ws-board-error">
           The board is unread right now ({error}). Nothing is shown in its place.{" "}
           <a href="/api/gspc" className="font-bold underline underline-offset-2">Read GET /api/gspc directly</a>.

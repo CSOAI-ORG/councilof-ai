@@ -125,6 +125,7 @@
   color: inherit;
 }
 .gspc-summary dd {
+  min-height: 1.2em;
   font:
     750 36px/1.25 ui-monospace,
     SFMono-Regular,
@@ -265,6 +266,20 @@
   list-style: none;
   padding: 0;
   margin: 0;
+}
+/* Reserve the original responsive board footprint only during the first read. */
+.gspc-axis-grid.is-loading {
+  min-height: 17rem;
+}
+@media (max-width: 1023.98px) {
+  .gspc-axis-grid.is-loading {
+    min-height: 34rem;
+  }
+}
+@media (max-width: 639.98px) {
+  .gspc-axis-grid.is-loading {
+    min-height: 52rem;
+  }
 }
 .gspc-axis-grid li {
   min-width: 0;

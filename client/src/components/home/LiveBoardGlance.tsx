@@ -672,8 +672,9 @@ export default function LiveBoardGlance({
               </p>
               <div className="gspc-explorer-body">
                 <ul
-                  className="gspc-axis-grid"
-                  aria-label="Published measurement axes"
+                  className={"gspc-axis-grid" + (loading ? " is-loading" : "")}
+                  aria-busy={loading}
+                  aria-label={loading ? "Loading the board" : "Published measurement axes"}
                 >
                   {filtered.map((t) => {
                     const metric = axisMetric(t);
