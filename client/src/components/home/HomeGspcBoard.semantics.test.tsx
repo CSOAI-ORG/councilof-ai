@@ -10,7 +10,9 @@ import { AXES_FIN } from "../../../../functions/api/_gspc_axes_fin";
 import { evaluateMeasurementFreshness, withMeasurementTime } from "../../../../functions/api/_gspc_measurement_time";
 
 // The same public-view and timing producers used by GET /api/gspc; no network reads.
-const produced = publicView([...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN]).map(withMeasurementTime);
+const produced = publicView([...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN])
+  .map(withMeasurementTime)
+  .map((row) => ({ ...row }) satisfies GspcAxis);
 const axis = (name: string) => produced.find((row) => row.axis === name)!;
 const payload = (rows: GspcAxis[]): GspcPayload => ({
   axes: rows,
