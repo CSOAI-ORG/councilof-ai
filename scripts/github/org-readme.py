@@ -506,9 +506,11 @@ pipx run --spec 'csoai-gspc[verify]' csoai-gspc verify "$(curl -s https://counci
 ```"""
 
 WHO_WE_ARE = (
-    f"**{WORDMARK} — Council of AI (CSOAI Ltd) — is an independent AI-measurement body: we run AI systems against frozen, "
-    "published instruments, grade them deterministically, and sign every result with Ed25519 so anyone can check it without an account.** "
-    "We publish what we cannot yet measure as UNMEASURED, keep a public corrections ledger, and do not certify, sell a rank, or take money from anything we rank."
+    f"**{WORDMARK} — Council of AI — is the public measurement service operated by CSOAI Ltd, "
+    "a company incorporated in England and Wales on 2 January 2026 (Companies House 16939677), founded by Nicholas Templeman.** "
+    "We run AI systems and digital rails against published instruments, grade deterministically where the method permits it, "
+    "publish signed evidence and corrections, and keep unmeasured or uncheckable states visible. Verification is free. "
+    "We measure; we do not certify, accredit, issue legal-compliance determinations, sell a rank, or take money from anything we rank."
 )
 
 
@@ -626,6 +628,12 @@ def councilof_top(f: dict, product_index: Path | None) -> str:
     parts = [
         BEGIN,
         f"# {WORDMARK} — Council of AI",
+        "",
+        WHO_WE_ARE,
+        "",
+        "**How to read the board:** measurement coverage and model-ranking separation are different determinations. "
+        "TIE means the evidence does not justify a hierarchy; UNTESTED means no separation test is published yet; "
+        "deterministic-fact axes have no model leader by design.",
         "",
         f"> **{f['lid']}**",
         "",

@@ -74,14 +74,17 @@ function Separation() {
   if (!sep) return null;
   return (
     <div className="mt-8 max-w-3xl rounded-2xl border border-amber-500/40 bg-amber-50 px-5 py-4 dark:bg-amber-950/30" data-testid="about-separation">
-      <p className="text-[15px] font-bold text-amber-950 dark:text-amber-100">Measured is not the same as separated.</p>
+      <p className="text-[15px] font-bold text-amber-950 dark:text-amber-100">Measurement coverage and ranking power are different determinations.</p>
       <p className="mt-2 text-sm leading-relaxed text-amber-950/90 dark:text-amber-100/85">
-        A slot on the board counts as measured when a real run sits behind it. Whether the axis actually told two models
-        apart is a second question, and across the <span className="font-mono font-bold">{sep.comparison}</span>{" "}
-        model-comparison axes the answer today is <span className="font-mono font-bold">{sep.separated}</span> separated,{" "}
-        <span className="font-mono font-bold">{sep.ties}</span> tied and <span className="font-mono font-bold">{sep.untested}</span>{" "}
-        untested. A tie stays a tie and an untested axis stays untested; neither is rounded up into a ranking. The fact-run
-        axes grade public records by rule, so they have no leader and no separation at all.
+        A slot on the board counts as measured when a real run sits behind it. On model-comparison axes, separation asks
+        a different question: whether any public leader is statistically distinguishable from its fleet. Across the{" "}
+        <span className="font-mono font-bold">{sep.comparison}</span> model-comparison axes the current state is{" "}
+        <span className="font-mono font-bold">{sep.separated}</span> separated,{" "}
+        <span className="font-mono font-bold">{sep.ties}</span> TIE and{" "}
+        <span className="font-mono font-bold">{sep.untested}</span> UNTESTED. TIE means the evidence does not justify a
+        hierarchy; UNTESTED means no separation test is published yet. The deterministic fact-run axes measure public
+        records by rule and have no model leader by design. These states are why the board can publish full measurement
+        coverage without manufacturing a ranking.
       </p>
     </div>
   );

@@ -149,7 +149,7 @@ export default function About() {
     document.title = "About the Council of AI — a UK measurement body | Council of AI";
     let m = document.querySelector('meta[name="description"]') as HTMLMetaElement | null;
     if (!m) { m = document.createElement("meta"); m.name = "description"; document.head.appendChild(m); }
-    m.content = "The Council of AI (CSOAI LTD, UK Companies House 16939677) is an independent AI measurement body: deterministic measurement, Ed25519-signed records, no certification and no accreditation chain. Live board counts: GET /api/gspc.";
+    m.content = "Council of AI is the public measurement service of CSOAI LTD (UK Companies House 16939677, incorporated 2 January 2026): deterministic measurement, signed records, free verification, public corrections and no certification claim. Live board counts: GET /api/gspc.";
   }, []);
   return (
     <div className="min-h-screen bg-white">
@@ -172,13 +172,14 @@ export default function About() {
             , founded by Nicholas Templeman. The company is accountable for everything published on this site.
           </p>
           <p className="text-xl text-gray-300 leading-relaxed mb-8">
-            In 2024, as artificial intelligence began transforming every industry, a critical question emerged:
-            <span className="text-emerald-300 font-semibold"> Who watches the watchmen?</span> Governments scrambled to regulate.
-            Companies rushed to comply. But one thing was missing: <span className="font-semibold">trained professionals who could actually monitor AI systems for safety.</span>
+            <strong className="text-white">CSOAI Ltd was incorporated in England and Wales on 2 January 2026.</strong>{" "}
+            Council of AI is the public measurement service it operates. The premise is simple: claims about AI
+            behaviour should be independently checkable rather than accepted from the vendor that made them.
           </p>
           <p className="text-xl text-gray-300 leading-relaxed">
-            That's when CSOAI was born—not as another AI company, but as <span className="text-emerald-300 font-semibold">the solution to two problems at once</span>:
-            making AI behaviour checkable by people who are not the vendor, and training the people who will have to do the checking.
+            We publish the tests, evidence and corrections so a buyer, regulator, researcher or agent can reproduce
+            the claim in the same units. Where the evidence does not support a ranking or conclusion, the public state
+            stays TIE, UNTESTED, UNMEASURED or UNCHECKABLE rather than being rounded up.
           </p>
           <HeroStatsBar />
         </div>
