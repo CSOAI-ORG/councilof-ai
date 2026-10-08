@@ -190,4 +190,109 @@ describe("revenue consumer: source identity, unknown states and settlement-only 
       assert.match(String(row.reason), /byte cap/);
     }
   });
+
+  it("preserves compatibility when the settlement total is unpublished", async () => {
+    const [economic, repeat] = await rows(fixture());
+    assert.equal(economic.state, "READ");
+    assert.equal(economic.value, 3);
+    assert.equal(repeat.state, "READ");
+    assert.equal(repeat.value, 1);
+  });
+
+  const max = Number.MAX_SAFE_INTEGER;
+  for (const [label, distinct, repeated, settlements, recent, repeatedRecent] of [
+    ["measured zero", 0, 0, 0, 0, 0],
+    ["exact record bound", 3, 2, 5, 2, 1],
+    ["observed producer count pattern", 2, 0, 2, 2, 0],
+    ["maximum distinct count", max, 0, max, 0, 0],
+    ["maximum exact record bound", max - 1, 1, max, 0, 0],
+  ] as const) {
+    it("retains checkable counts at " + label, async () => {
+      const f = fixture(fixtureBody({
+        all_time: distinct,
+        last_30d: recent,
+        settlements,
+        repeat_nonself_payers: {
+          all_time: repeated,
+          last_30d: repeatedRecent,
+        },
+      }));
+      const [economic, repeat] = await rows(f);
+      const digest = createHash("sha256").update(f.raw).digest("hex");
+      assert.equal(economic.value, distinct);
+      assert.equal(repeat.value, repeated);
+      assert.equal(economic.last_30d, recent);
+      assert.equal(repeat.last_30d, repeatedRecent);
+      for (const row of [economic, repeat]) {
+        assert.equal(row.state, "READ");
+        assert.equal(row.last_30d_state, "READ");
+        assert.equal(row.as_of, null);
+        assert.equal(row.source_time_state, "UNPUBLISHED");
+        assert.equal(row.checked_at, OBSERVED);
+        assert.equal(row.source_body_sha256, digest);
+        assert.equal(row.records_unreadable, 0);
+        assert.equal(row.custody_state, "UNQUALIFIED");
+        assert.match(String(row.qualification), /no independent.*buyer identity/);
+      }
+      assert.equal(
+        f.calls.filter(url => url.endsWith("/api/revenue")).length,
+        1,
+      );
+    });
+  }
+
+  it("withholds both wallet counts when positive distinct counts contradict zero settlements", async () => {
+    for (const row of await rows(fixture(fixtureBody({ settlements: 0 })))) {
+      assert.equal(row.state, "UNCHECKABLE");
+      assert.equal(row.value, null);
+      assert.match(String(row.reason), /Distinct settlement wallets exceed/);
+    }
+  });
+
+  for (const [label, settlements] of [
+    ["negative", -1],
+    ["fractional", 0.5],
+    ["string", "4"],
+    ["null", null],
+    ["unsafe integer", max + 1],
+  ] as const) {
+    it("withholds both counts for a published " + label + " settlement total", async () => {
+      for (const row of await rows(fixture(fixtureBody({ settlements })))) {
+        assert.equal(row.state, "UNCHECKABLE");
+        assert.equal(row.value, null);
+        assert.match(String(row.reason), /settlements is not a non-negative safe integer/);
+      }
+    });
+  }
+
+  for (const [label, distinct, repeated, settlements] of [
+    ["no additional records", 3, 1, 3],
+    ["one record beyond the maximum exact bound", max - 1, 2, max],
+    ["maximum counts without additional records", max, max, max],
+  ] as const) {
+    it("withholds only repeat counts at " + label, async () => {
+      const f = fixture(fixtureBody({
+        all_time: distinct,
+        last_30d: 0,
+        settlements,
+        repeat_nonself_payers: { all_time: repeated, last_30d: 0 },
+      }));
+      const [economic, repeat] = await rows(f);
+      assert.equal(economic.state, "READ");
+      assert.equal(economic.value, distinct);
+      assert.equal(economic.last_30d, 0);
+      assert.equal(economic.last_30d_state, "READ");
+      assert.equal(repeat.state, "UNCHECKABLE");
+      assert.equal(repeat.value, null);
+      assert.match(String(repeat.reason), /available additional non-self settlement records/);
+      for (const row of [economic, repeat]) {
+        assert.equal(row.checked_at, OBSERVED);
+        assert.equal(
+          row.source_body_sha256,
+          createHash("sha256").update(f.raw).digest("hex"),
+        );
+        assert.equal(row.custody_state, "UNQUALIFIED");
+      }
+    });
+  }
 });

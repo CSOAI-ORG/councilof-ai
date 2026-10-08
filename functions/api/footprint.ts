@@ -433,6 +433,18 @@ export async function revenueRows(deps: Deps): Promise<{ economic_use: Row; repe
   if (count.status !== "MEASURED") return failed(reason);
   if (!isCount(count.records_unreadable)) return failed("one_number.records_unreadable is absent or invalid; record coverage is uncheckable");
   if (count.records_unreadable !== 0) return failed("one_number reports unreadable settlement records; partial counts are withheld");
+  // Optional in older producer bodies. A published total must support this snapshot.
+  let settlementCount: number | null = null;
+  if (Object.prototype.hasOwnProperty.call(count, "settlements")) {
+    const settlements = count.settlements;
+    if (!isCount(settlements)) {
+      return failed("one_number.settlements is not a non-negative safe integer");
+    }
+    settlementCount = settlements;
+    if (isCount(count.all_time) && count.all_time > settlements) {
+      return failed("Distinct settlement wallets exceed the published non-self settlement records");
+    }
+  }
   const time = revenueTime(body);
   const common = { ...time, producer_source: typeof count.source === "string" ? count.source : null,
     records_unreadable: count.records_unreadable };
@@ -454,6 +466,14 @@ export async function revenueRows(deps: Deps): Promise<{ economic_use: Row; repe
     const value = rcount.all_time as number;
     if (!isCount(count.all_time) || value > count.all_time) {
       repeat_payers = uncheckable("Repeat settlement wallets exceed or lack the distinct-wallet count in this snapshot", repeat);
+    } else if (
+      settlementCount !== null &&
+      value > settlementCount - count.all_time
+    ) {
+      repeat_payers = uncheckable(
+        "Repeat settlement wallets exceed the available additional non-self settlement records",
+        repeat,
+      );
     } else {
       const repeatWindow = window(value, rcount.last_30d);
       // Two settlements within this window require at least one settlement in it.
