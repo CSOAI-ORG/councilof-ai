@@ -1,1 +1,83 @@
-{"x402Version":2,"error":"Payment required","resource":{"url":"https://councilof.ai/api/wrapper?id=usdc.e%3Aarbitrum","description":"Wrapped-asset parity evidence: one signed card of one bridged or wrapped token pair, read live from public RPC. Reads the wrapped totalSupply and the origin-chain bridge-escrow balance at finalized blocks whose hash a second RPC operator confirmed, raw reads hashed. States: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.","mimeType":"application/json","serviceName":"SovX Wrapped-Asset Read","tags":["stablecoin","bridge","wrapped","parity","evidence"]},"accepts":[{"scheme":"exact","network":"eip155:8453","amount":"10000","maxAmountRequired":"10000","asset":"0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913","payTo":"0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31","maxTimeoutSeconds":300,"extra":{"name":"USD Coin","version":"2","decimals":6,"symbol":"USDC"},"csoai_pricing":{"product_id":"csoai.product.request_attestation","sku_id":"request_attestation","pricing_basis":"PROMO_EXISTING_DATA","campaign_id":"csoai-launch-30d-20260911","normal_amount_atomic":"20000","offered_amount_atomic":"10000","starts_at":"2026-09-11T00:00:00Z","ends_at":"2026-10-11T00:00:00Z","fresh_compute_excluded":true},"resource":"https://councilof.ai/api/wrapper?id=usdc.e%3Aarbitrum","description":"Wrapped-asset parity evidence: one signed card of one bridged or wrapped token pair, read live from public RPC. Reads the wrapped totalSupply and the origin-chain bridge-escrow balance at finalized blocks whose hash a second RPC operator confirmed, raw reads hashed. States: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.","mimeType":"application/json"}],"extensions":{"bazaar":{"info":{"input":{"type":"http","method":"GET","queryParams":{"id":"usdc.e:arbitrum"}},"output":{"type":"json","example":{"schema":"https://councilof.ai/schema/card-v0.json","surface":"public.notice","subject":"wrapped <SYMBOL> on <chain> vs <escrow> — ESCROW_PARITY_READ","payload":{"kind":"csoai.wrapper.parity/0.1","state":"ESCROW_PARITY_READ","reads":{"wrapped_total_supply":{},"escrow_balance":{}},"escrow_over_wrapped":"<decimal>","inputs_sha256":"<hex>"},"sha256":"<hex>","sig_ed25519":"<hex or null>","unmeasured":[]}}},"schema":{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","properties":{"input":{"type":"object","properties":{"type":{"type":"string","const":"http"},"method":{"type":"string","enum":["GET","HEAD","DELETE"]},"queryParams":{"type":"object","properties":{"id":{"type":"string","description":"roster id <wrapped-symbol>:<chain>, e.g. usdc.e:arbitrum (free ledger lists them)"}},"required":["id"]}},"required":["type","method"],"additionalProperties":false},"output":{"type":"object","properties":{"type":{"type":"string"},"example":{"type":"object"}},"required":["type"]}},"required":["input"]}},"offer-receipt":{"info":{"offers":[{"format":"jws","acceptIndex":0,"signature":"eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS93cmFwcGVyP2lkPXVzZGMuZSUzQWFyYml0cnVtIiwic2NoZW1lIjoiZXhhY3QiLCJ2YWxpZFVudGlsIjoxNzkxMjk0NjU2LCJ2ZXJzaW9uIjoxfQ.GiIIvypOtXYBdck0D0c0yn7bDETL0kf39LFPWQo_Jp6e2Wfzfnj3lJDmo0ui_Dv2LxjbJ55I4p3gBpou418PAw"}]},"schema":{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","properties":{"offers":{"type":"array","items":{"type":"object","properties":{"format":{"type":"string","const":"jws"},"acceptIndex":{"type":"integer"},"signature":{"type":"string","description":"JWS compact serialization containing the offer payload"}},"required":["format","signature"]}}},"required":["offers"]}}},"csoai":{"schema":"csoai.wrapper-parity/0.1","per":"pair-request","lid":"SovX wrapped-asset read · public chain state at pinned blocks · a read, not a measurement · UNMEASURED is never charged · not a rating, a reserve attestation or a certificate.","scope":"signed parity observation only","deliverable":"one card-v0 leaf (public.notice / csoai.wrapper.parity/0.1), canonical ≤3072 bytes, signed when the Pages key is present","free_preview":"https://councilof.ai/api/wrapper?id=usdc.e%3Aarbitrum&preview=1","free_ledger":"https://councilof.ai/interop/wrapped-asset-parity-2026-09-13.json","rail":{"mode":"live","pay_to_configured":true,"facilitator_configured":true,"note":"A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free."},"not_paid_reason":"no x-payment header","never_charged_for":"UNMEASURED — an unreadable pair answers 200 preview-only, never 402","catalog":"https://councilof.ai/api/x402","state_at_challenge":"ESCROW_PARITY_READ","read_at":"2026-10-06T13:35:53Z","offer_receipt":{"extension":"offer-receipt","spec":"https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md","spec_commit":"69652a69798f0b08f95bef33318896e36e210f7e","format":"jws","alg":"EdDSA","kid":"did:web:csoai.org#board-attestation-1","signed":true,"reason":"1 of 1 accepts entries signed","verify":"base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run the same-site https://councilof.ai/verifier/verify_receipt.py checker. Default mode reads the public DID document; saved-key replay can be offline. Signature validity is not proof of settlement."}}}
+{
+  "schema": "csoai.wrapper-parity/0.1",
+  "kind": "preview",
+  "preview_only": true,
+  "id": "usdc.e:arbitrum",
+  "state": "UNMEASURED",
+  "reason": "arbitrum: eth_call to 0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8 failed on every endpoint (drpc.org: HTTP 400; arbitrum.io: HTTP 429; 1rpc.io: The operation was aborted due to timeout; publicnode.com: HTTP 403)",
+  "card": {
+    "schema": "https://councilof.ai/schema/card-v0.json",
+    "surface": "public.notice",
+    "subject": "wrapped USDC.e on arbitrum vs Arbitrum One ERC-20 gateway escrow — UNMEASURED",
+    "as_of": "2026-10-08T13:59:43Z",
+    "source_urls": [
+      "https://arbitrum.drpc.org"
+    ],
+    "payload": {
+      "kind": "csoai.wrapper.parity/0.1",
+      "attests": "point-in-time reads at the pinned blocks named below — a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+      "id": "usdc.e:arbitrum",
+      "backing_model": "escrow",
+      "wrapped": {
+        "chain": "arbitrum",
+        "symbol": "USDC.e",
+        "address": "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8",
+        "chainId": 42161,
+        "rpc": "https://arbitrum.drpc.org",
+        "block": {
+          "number": 512897332,
+          "hex": "0x1e923134",
+          "hash": "0x52944cb4031a821c813fe3a06259a91848767637f4bd22927e108ad2c8d55a56",
+          "timestamp": 1791466916,
+          "finality": "RPC_FINALIZED_TAG_HASH_MATCHED_BY_SECOND_OPERATOR_NOT_INDEPENDENTLY_PROVEN_FINAL",
+          "operators": [
+            "drpc.org",
+            "arbitrum.io"
+          ]
+        }
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "USDC",
+        "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "chainId": 1,
+        "rpc": "https://eth.drpc.org"
+      },
+      "escrow": "0xcEe284F754E854890e311e3280b767F80797180d",
+      "escrow_name": "Arbitrum One ERC-20 gateway escrow",
+      "note": null,
+      "fetched_at": "2026-10-08T13:59:43Z",
+      "reads": {},
+      "state": "UNMEASURED",
+      "error": "arbitrum: eth_call to 0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8 failed on every endpoint (drpc.org: HTTP 400; arbitrum.io: HTTP 429; 1rpc.io: The operation was aborted due to timeout; publicnode.com: HTTP 403)",
+      "unmeasured": [
+        "chain reads (rpc failed or the finalized block was not confirmed by a second operator; nothing inferred)"
+      ]
+    },
+    "tags": [
+      "eater:wrapper-parity",
+      "axis:distribution-integrity",
+      "backing:escrow",
+      "state:UNMEASURED"
+    ],
+    "unmeasured": [
+      "chain reads (rpc failed or the finalized block was not confirmed by a second operator; nothing inferred)"
+    ],
+    "did_intended": "did:web:csoai.org#board-attestation-1",
+    "preview": true,
+    "preview_note": "unsigned preview — no signature, no raw-read hashes. The signed pack (same schema, sig_ed25519 + inputs_sha256 + per-read sha256) is the metered artefact."
+  },
+  "not_sold": "Nothing is sold while the state is UNMEASURED: this answer is 200, not 402, and no payment is requested. The free preview stays free; read it again later — public RPC endpoints recover on their own.",
+  "payment": {
+    "requested": false,
+    "presented": false,
+    "sent_to_facilitator": false,
+    "settled": false
+  },
+  "rail": {
+    "mode": "live",
+    "pay_to_configured": true,
+    "facilitator_configured": true,
+    "note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free."
+  }
+}
