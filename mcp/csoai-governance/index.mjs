@@ -12,6 +12,7 @@
  * Gateway is the live Sovereign brain; override with CSOAI_GATEWAY.
  * No API key required for the public governance surface.
  */
+import { catalogResult } from "./catalog.mjs";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
@@ -68,7 +69,7 @@ const TOOLS = [
   },
   {
     name: "csoai_catalog",
-    description: "Search the CSOAI catalog of published governed tools / MCPs (framework-compliance, cyber, evidence, identity, and more). Returns matching governed tools with their cluster and install hint.",
+    description: "Search the CSOAI catalog of published governed tools / MCPs (framework-compliance, cyber, evidence, identity, and more). Returns matching probed server-tool rows and their query total; inventory counts are separate.",
     inputSchema: {
       type: "object",
       properties: { query: { type: "string", description: "Optional keyword (e.g. 'eu ai act', 'nist', 'evidence')." } },
@@ -105,12 +106,7 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
     }
     if (name === "csoai_catalog") {
       const r = await api("/tools?q=" + encodeURIComponent(String(a.query || "")));
-      if (!r.json) return err("catalog gateway unreachable (status " + r.status + ")");
-      const j = r.json;
-      const probed = Array.isArray(j.tools) && j.tools.length ? j.tools : null;
-      const raw = j.matches || j.mcps || probed || j.distinct_tools || j.tools || (Array.isArray(j) ? j : []);
-      const matches = raw.slice(0, 25).map((m) => typeof m === "string" ? { name: m } : ({ name: m.name, cluster: m.clusterLabel || m.cluster, tools: m.tools, install: m.connect }));
-      return out({ total: j.total || j.catalogue_total || matches.length, showing: matches.length, matches });
+      return out(catalogResult(r));
     }
     return err("unknown tool: " + name);
   } catch (e) {
