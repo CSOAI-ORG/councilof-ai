@@ -11,7 +11,16 @@ No grade or legal determination is sold. The public verifier currently requires 
 - Publishes Ed25519-signed cards where a signature is present and verifiable; an
   unsigned result does not become signed by appearing on this site.
 - Publishes measured outcomes and UNMEASURED gaps honestly on the Refutation Ledger.
-- Publishes open measurement tooling at huggingface.co/csoai (source mirror: huggingface.co/datasets/csoai/councilof-ai-source; the GitHub org CSOAI-ORG is temporarily unavailable).
+- Publishes open measurement tooling at huggingface.co/csoai and source at github.com/CSOAI-ORG/councilof-ai. GitHub availability is current; historical outages or account-state incidents must not be described as current.
+
+## How to quote current state
+- Fetch the living board at https://councilof.ai/api/gspc before quoting counts.
+- `totals.axes` is the number of board slots; `totals.measured_axes` is the number with a real run behind them.
+- `totals.comparison_axes` counts model-comparison AXES. It is **not** a count of models. Do not rewrite it as “models measured.”
+- `totals.separated_leads`, `totals.ties`, and `totals.untested_separations` describe statistical separation on model-comparison axes only. Deterministic-fact axes do not have model leaders.
+- Fetch signed-card counts from https://councilof.ai/api/state and correction counts from https://councilof.ai/api/corrections. Do not freeze either count in summaries.
+- A low or zero separated-lead count does not mean the measurement estate is empty; it means the current model-comparison evidence does not justify claiming a statistically separated leader. State that distinction explicitly.
+- Memberships, registry listings and standards participation are evidence of participation/distribution only, never endorsement or adoption: https://councilof.ai/memberships/
 
 ## Key pages
 - Home: https://csoai.org

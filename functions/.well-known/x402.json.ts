@@ -302,8 +302,10 @@ export const onRequestGet: PagesFunction<X402Env> = async ({ request, env }) => 
     // RAS doors without paying: verifying any receipt, and the daily conformance index. They are
     // not in resources[] because they never answer 402; they carry no accepts[] and no amount.
     free_doors: [
-      { method: "GET", url: `${origin}/api/verify?record_url=https://councilof.ai/signed/card_index.json`, free: true,
-        description: "Verify a published CSOAI record — re-fetches a councilof.ai / csoai.org record, recomputes its sha256 and checks its signature under the pinned board keys. Free forever; POST a RAS receipt to verify it.",
+      // Immutable, supported example from the published signed corpus. The index is a discovery
+      // envelope, not a measurement card; handing it to /api/verify returns UNCHECKABLE.
+      { method: "GET", url: `${origin}/api/verify?record_url=https://councilof.ai/signed/cards/66856aca4a1f9390f0f51d89b8b96d984ab902852ed77b0254730758260ad1da.json`, free: true,
+        description: "Verify a published CSOAI record — this URL verifies a historical measurement-card example dated 2026-08-19. Re-fetches a councilof.ai / csoai.org record, recomputes its sha256 and checks its signature under the pinned keys. Free forever; POST a RAS receipt to verify it.",
         outputSchema: RAS_OUTPUT_SCHEMAS.verify },
       { method: "GET", url: `${origin}/api/x402/index`, free: true,
         description: "Daily x402 conformance index — serves the latest SIGNED daily run when one exists; until then says INDEX_PENDING and points at the latest unsigned census run, never an invented list. Free.",
