@@ -11,4 +11,9 @@ const txt = sign.content?.[0]?.text || "";
 console.log("SIGN → " + txt.slice(0, 220).replace(/\s+/g, " "));
 const cat = await c.callTool({ name: "csoai_catalog", arguments: { query: "eu ai act" } });
 console.log("CATALOG → " + (cat.content?.[0]?.text || "").slice(0, 160).replace(/\s+/g, " "));
+
+const gov = await c.callTool({ name: "csoai_govern", arguments: { question: "What is the EU AI Act Article 50 transparency deadline for AI-generated content?" } });
+console.log("GOVERN -> " + (gov.content?.[0]?.text || "").slice(0, 300).replace(/\s+/g, " "));
+const ver = await c.callTool({ name: "csoai_verify", arguments: { artifact: "x", signature: "00", publicKey: "00" } });
+console.log("VERIFY -> " + (ver.content?.[0]?.text || "").slice(0, 180).replace(/\s+/g, " "));
 await c.close();
