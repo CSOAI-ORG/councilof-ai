@@ -16,6 +16,10 @@ test("llms install guide matches the canonical MCP identity and tool catalog", a
     json("functions/mcp/gspc-tools.json"),
     json("functions/mcp/paid-tools.json"),
   ]);
+  assert.equal(
+    await readFile(new URL("public/llms-install.md", root), "utf8"), guide,
+    "the published install guide must match its canonical source",
+  );
 
   const remote = descriptor.remotes.find(
     (candidate) => candidate.type === "streamable-http",
@@ -25,8 +29,8 @@ test("llms install guide matches the canonical MCP identity and tool catalog", a
     (match) => JSON.parse(match[1]),
   );
   const configs = examples.filter((example) => example.mcpServers);
-  // One remote configuration only: every published npm release is marked deprecated on npm and
-  // carries fewer tools, so the guide no longer offers a local stdio configuration (6 Oct 2026).
+  // Stable npm releases are deprecated; prerelease publication alone does not establish tool parity.
+  // Keep one canonical remote configuration rather than implying local stdio compatibility.
   assert.equal(configs.length, 1, "one remote configuration, no local stdio configuration");
   assert.deepEqual(configs[0], {
     mcpServers: {
