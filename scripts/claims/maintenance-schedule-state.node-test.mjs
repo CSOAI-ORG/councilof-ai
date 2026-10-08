@@ -116,3 +116,12 @@ test("entry point generates and checks a pinned local projection without a netwo
     const invalid = run(["--checks-dir"]); assert.notEqual(invalid.status, 0);
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
+
+test("presence-bearing v0.2 rows can follow historical rows, while an unknown schema is rejected", () => {
+  const first = fixture();
+  const newer = fixture({ schema: "csoai.claim-maintenance-check/0.2", checked_at: "2026-10-01T01:00:00Z" }, first.rows);
+  assert.equal(newer.rows.length, 2);
+  assert.equal(newer.rows[0].row_sha256, first.rows[0].row_sha256);
+  assert.equal(state(newer).state, "COMPLETED");
+  assert.throws(() => fixture({ schema: "csoai.claim-maintenance-check/99" }), /schema/);
+});

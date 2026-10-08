@@ -57,7 +57,7 @@ import time
 import urllib.request
 from pathlib import Path
 
-SCHEMA_ROW = "csoai.claim-maintenance-check/0.1"
+SCHEMA_ROW = "csoai.claim-maintenance-check/0.2"
 SCHEMA_LATEST = "csoai.claim-maintenance-checks/0.1"
 REGISTER = "https://councilof.ai/api/claims/register"
 UA = "csoai-claim-maintenance-scheduler/0.1 (+https://councilof.ai/corrections)"
@@ -141,6 +141,20 @@ def due_now(rows: list[dict], last: dict[str, dict], today: str) -> list[dict]:
     return [r for r in rows if r["due"] <= today and state_of(r, last, today) not in COMPLETED]
 
 
+def confirmed_quote_absence(first: dict, second: dict) -> bool:
+    """Two comparable literal-quote misses; never infer absence from page movement alone."""
+    a, b = first.get("claim_presence") or {}, second.get("claim_presence") or {}
+    if not isinstance(a, dict) or not isinstance(b, dict):
+        return False
+    valid_hash = lambda x: isinstance(x, str) and len(x) == 64 and all(c in "0123456789abcdef" for c in x)
+    return (first.get("claim_present") is False and second.get("claim_present") is False
+            and a.get("mode") == b.get("mode") == "NOT_LOCATED"
+            and valid_hash(a.get("claim_sha256")) and a.get("claim_sha256") == b.get("claim_sha256")
+            and a.get("extractor") == b.get("extractor")
+            and a.get("search_surface") in {"VISIBLE_TEXT", "RAW_UTF8_RESPONSE"} and a.get("search_surface") == b.get("search_surface")
+            and valid_hash(a.get("source_content_sha256")) and a.get("source_content_sha256") == b.get("source_content_sha256"))
+
+
 def classify(first: list[dict], second: dict[str, dict]) -> tuple[str, list[dict], list[str], list[str]]:
     """first = reread readings; second = confirming readings by claim_id for claims that moved."""
     changed, unconfirmed, failed = [], [], []
@@ -150,7 +164,9 @@ def classify(first: list[dict], second: dict[str, dict]) -> tuple[str, list[dict
         if r.get("changed") is True:
             s = second.get(cid)
             if s and s.get("changed") is True and s.get("current_hash") == r.get("current_hash"):
-                changed.append({"claim_id": cid, "url": r.get("url"), "recorded_hash": r.get("recorded_hash"), "current_hash": r.get("current_hash")})
+                changed.append({"claim_id": cid, "url": r.get("url"), "recorded_hash": r.get("recorded_hash"), "current_hash": r.get("current_hash"),
+                                "claim_present": r.get("claim_present"), "claim_presence": r.get("claim_presence"),
+                                "claim_absence_confirmed": confirmed_quote_absence(r, s)})
             else:
                 unconfirmed.append(cid)
             comparable += 1
@@ -234,7 +250,7 @@ def build_latest(rows: list[dict], outcomes: list[dict], today: str, run_at: str
         "outcome_vocabulary": {
             "UNCHANGED": "every comparable claim reproduced its recorded digest",
             "READ_NOT_COMPARABLE": "read; the registry records no comparable digest",
-            "CHANGED_CONFIRMED": "a source moved on two reads at least the confirm gap apart; a correction candidate was written for review",
+            "CHANGED_CONFIRMED": "a source moved on two reads at least the confirm gap apart; page movement is retained; a review candidate requires the literal quote to be unlocated on both comparable reads",
             "UNCONFIRMED": "a move seen once; retried next run; not a change",
             "FETCH_FAILED": "a source could not be read; retried next run; not an absence",
             "DUE_NOT_RUN": "the date has passed and no run has completed it",
@@ -348,6 +364,8 @@ def run(a) -> int:
             os.unlink(t.name)
         cands = []
         for c in changed:
+            if c.get("claim_absence_confirmed") is not True:
+                continue  # retain page movement in outcomes; no literal-claim absence was established
             prior_id = existing_candidate(candidates, rid, sha(rb), c)
             if prior_id:
                 cands.append(prior_id)
@@ -356,6 +374,8 @@ def run(a) -> int:
             cands.append(cid)
             candidate = {"candidate_id": cid, "detected_at": run_at, "detected_by": f"claim-maintenance scheduler @ {HOST}",
                          "registry_id": rid, "registry_url": url, "registry_sha256": sha(rb), **c,
+                         "kind": "EXACT_QUOTE_NOT_LOCATED_TWICE",
+                         "boundary": "A literal-quote miss in two comparable readable responses; not a finding of retraction, falsity or intent.",
                          "state": "CANDIDATE - for review; not an allegation and not a ledger entry"}
             with cpath.open("a") as f:
                 f.write(json.dumps(candidate, sort_keys=True) + "\n")

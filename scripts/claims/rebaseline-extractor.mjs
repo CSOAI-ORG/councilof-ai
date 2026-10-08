@@ -74,9 +74,7 @@ function inclusionProof(entries, m) {
 }
 
 /** The same locating rule capture-growth.mjs uses, so a mode here means what it means there. */
-const norm = (x) => x.replace(/\[\s*\d+\s*\]/g, ' ').replace(/\s+([,.;:!?])/g, '$1').replace(/\s+/g, ' ').trim();
-const locate = (text, verbatim) => (text.includes(verbatim) ? 'EXACT'
-  : norm(text).includes(norm(verbatim)) ? 'MATCHED_AFTER_NORMALISING_EXTRACTOR_ARTEFACTS' : 'NOT_LOCATED');
+import { normalizeLocatedText as norm, locateClaim as locate } from './claim-presence.mjs';
 
 async function read(url) {
   try {
