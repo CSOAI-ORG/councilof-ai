@@ -76,7 +76,11 @@ and [function-group workflow references](https://docs.nvidia.com/nemo/agent-tool
 
 For new connections, use the canonical remote configuration above.
 
-The npm package `csoai-gspc-mcp@0.2.2` was publicly available when checked on
+The package identity is `csoai-gspc-mcp`. Every stable release published to npm so far is marked deprecated on npm
+(registry checked 2026-10-08); `latest` remains `0.2.2`. Read the current deprecation
+with `npm view csoai-gspc-mcp@latest deprecated`.
+
+The npm package `csoai-gspc-mcp` version `0.2.2` was publicly available when checked on
 2026-10-03, but npm marks it **deprecated**. The publisher directs users to the
 measurement-only successor at `councilof.ai`. See the
 [exact version metadata](https://registry.npmjs.org/csoai-gspc-mcp/0.2.2).
@@ -89,6 +93,19 @@ establish catalog parity, current runtime support, or native-client compatibilit
 The earlier `0.2.1` installation examples were last publicly verified here on
 2026-09-09 and remain historical. This guide's current setup uses the canonical
 remote rather than installing a deprecated package.
+
+The repository currently prepares `0.2.3`, but that source version is **not a
+published npm release** (registry checked 2026-10-08). Check exact-version
+publication with `npm view csoai-gspc-mcp@0.2.3 version`; check the stable release's
+deprecation separately with `npm view csoai-gspc-mcp@latest deprecated`. Do not
+install or advertise `0.2.3` from npm before those independent checks.
+
+The separate prerelease `next` tag points to `0.2.3-rc.2`, which has no deprecation
+flag (registry checked 2026-10-08). Check its version with
+`npm view csoai-gspc-mcp@next version`. That prerelease is not the stable source
+version `0.2.3`; its publication does not establish tool parity, runtime support,
+or native-client compatibility. New connections should use the canonical remote
+configuration above.
 
 ## Exact reviewed tool catalog
 

@@ -32,7 +32,7 @@
   },
   "free_doors": [
     {
-      "description": "Verify a published CSOAI record — re-fetches a councilof.ai / csoai.org record, recomputes its sha256 and checks its signature under the pinned board keys. Free forever; POST a RAS receipt to verify it.",
+      "description": "Verify a published CSOAI record — this URL verifies a historical measurement-card example dated 2026-08-19. Re-fetches a councilof.ai / csoai.org record, recomputes its sha256 and checks its signature under the pinned keys. Free forever; POST a RAS receipt to verify it.",
       "free": true,
       "method": "GET",
       "outputSchema": {
@@ -90,7 +90,7 @@
         ],
         "type": "object"
       },
-      "url": "https://councilof.ai/api/verify?record_url=https://councilof.ai/signed/card_index.json"
+      "url": "https://councilof.ai/api/verify?record_url=https://councilof.ai/signed/cards/66856aca4a1f9390f0f51d89b8b96d984ab902852ed77b0254730758260ad1da.json"
     },
     {
       "description": "Daily x402 conformance index — serves the latest SIGNED daily run when one exists; until then says INDEX_PENDING and points at the latest unsigned census run, never an invented list. Free.",

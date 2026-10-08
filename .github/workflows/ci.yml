@@ -6,9 +6,13 @@ on:
   pull_request:
     branches: [main, master]
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - name: Verify repo structure
@@ -16,3 +20,97 @@ jobs:
           echo "CSOAI-ORG repository CI check passed"
           test -f README.md && echo "README.md exists"
           test -f LICENSE && echo "LICENSE exists"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install verification test dependencies
+        run: python -m pip install --disable-pip-version-check --only-binary=cryptography 'jsonschema==4.25.1' 'rfc3339-validator==0.1.4' 'cryptography==50.0.2'
+      - name: Require verification dependencies and sources
+        run: |
+          python - <<'PY'
+          from importlib.metadata import version
+          from pathlib import Path
+          import jsonschema, rfc3339_validator, cryptography
+          from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+          if version('jsonschema') != '4.25.1' or version('rfc3339-validator') != '0.1.4' or version('cryptography') != '50.0.2':
+              raise SystemExit('Unexpected verification dependency version')
+          for source in (
+              'packages/evidence-fabric/safe_pack_verify.py',
+              'packages/evidence-fabric/tests/test_safe_pack_verify.py',
+              'docs/standards/osaia-safe-reverification/test_hitl_authority_effect.py',
+              'docs/standards/osaia-safe-reverification/test_approval_dependency_binding.py',
+              'docs/standards/osaia-safe-reverification/hitl-authority-effect-v0.1.schema.json',
+              'docs/standards/osaia-safe-reverification/hitl-authority-effect.example.json',
+              'docs/standards/osaia-safe-reverification/csoai-alliance-control-plugin-v0.2.json',
+              'docs/standards/osaia-safe-reverification/verify_safe_evidence.py',
+              'docs/standards/osaia-safe-reverification/examples/example-pass-a2a-card-census-integrity.json',
+              'packages/evidence-fabric/safe_freeze_v2.py',
+              'packages/evidence-fabric/safe_pack.py',
+              'packages/evidence-fabric/event.py',
+              'packages/evidence-fabric/ingest/__init__.py',
+              'packages/evidence-fabric/ingest/safe_in.py',
+              'packages/evidence-fabric/render/__init__.py',
+              'packages/evidence-fabric/render/ocsf.py',
+              'packages/evidence-fabric/render/otel.py',
+              'packages/evidence-fabric/render/sarif.py',
+              'packages/evidence-fabric/render/intoto.py',
+              'packages/evidence-fabric/render/ecs_hec.py',
+              'docs/standards/osaia-safe-reverification/safe-reverification-record-v0.1.schema.json',
+              'docs/standards/osaia-safe-evidence-pack/records/C-2026-0928-01.post-fix.safe-rv.json',
+              'docs/standards/osaia-safe-evidence-pack/records/C-2026-0928-01.pre-fix.safe-rv.json',
+          ):
+              if not Path(source).is_file():
+                  raise SystemExit('Missing verification source: ' + source)
+          checker = jsonschema.FormatChecker()
+          if 'date-time' not in checker.checkers:
+              raise SystemExit('Missing date-time validator')
+          checker.check('2026-10-07T00:00:00Z', 'date-time')
+          if checker.conforms('not-a-date-time', 'date-time'):
+              raise SystemExit('Malformed date-time accepted')
+          PY
+      - name: HITL schema cases, plugin assertions and added controls
+        working-directory: docs/standards/osaia-safe-reverification
+        run: python test_hitl_authority_effect.py
+      - name: Approval byte-binding controls
+        working-directory: docs/standards/osaia-safe-reverification
+        run: |
+          python -B - <<'PY'
+          import unittest
+          suite = unittest.defaultTestLoader.loadTestsFromName('test_approval_dependency_binding')
+          discovered = suite.countTestCases()
+          if discovered < 11:
+              raise SystemExit('Missing qualified approval controls: ' + str(discovered))
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          print('Approval controls: discovered=' + str(discovered) + ', executed=' + str(result.testsRun)
+                + ', skipped=' + str(len(result.skipped)) + ', expected_failures=' + str(len(result.expectedFailures))
+                + ', unexpected_successes=' + str(len(result.unexpectedSuccesses)))
+          if (not result.wasSuccessful() or result.testsRun != discovered
+                  or result.skipped or result.expectedFailures or result.unexpectedSuccesses):
+              raise SystemExit('Approval control coverage incomplete or unsuccessful')
+          PY
+      - name: SAFE whole-pack reader regression controls
+        run: |
+          python -I -B - <<'PY'
+          import importlib.util
+          import sys
+          import unittest
+          from pathlib import Path
+          path = Path('packages/evidence-fabric/tests/test_safe_pack_verify.py').resolve()
+          spec = importlib.util.spec_from_file_location('csoai_ci_safe_reader_tests', path)
+          if spec is None or spec.loader is None:
+              raise SystemExit('Reader test module is unavailable')
+          module = importlib.util.module_from_spec(spec)
+          sys.modules[spec.name] = module
+          spec.loader.exec_module(module)
+          suite = unittest.defaultTestLoader.loadTestsFromModule(module)
+          discovered = suite.countTestCases()
+          if discovered < 35:
+              raise SystemExit('Missing qualified reader controls: ' + str(discovered))
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          print('Reader controls: discovered=' + str(discovered) + ', executed=' + str(result.testsRun)
+                + ', skipped=' + str(len(result.skipped)) + ', expected_failures=' + str(len(result.expectedFailures))
+                + ', unexpected_successes=' + str(len(result.unexpectedSuccesses)))
+          if (not result.wasSuccessful() or result.testsRun != discovered
+                  or result.skipped or result.expectedFailures or result.unexpectedSuccesses):
+              raise SystemExit('Reader control coverage incomplete or unsuccessful')
+          PY

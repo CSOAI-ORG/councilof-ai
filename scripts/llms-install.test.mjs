@@ -57,7 +57,11 @@ test("llms install guide matches the canonical MCP identity and tool catalog", a
 
   // The version the guide names is the source package's, read from package.json, never typed here.
   const v = packageJson.version.replace(/\./g, "\\.");
-  assert.match(guide, /Every release published to npm so far is marked deprecated on npm/);
+  assert.match(guide, /Every stable release published to npm so far is marked deprecated on npm/);
+  // Stable releases and the separately tagged prerelease have different npm states.
+  assert.match(guide, /prerelease `next` tag points to `0\.2\.3-rc\.2`, which has no deprecation\s+flag/);
+  assert.match(guide, /That prerelease is not the stable source\s+version `0\.2\.3`/);
+  assert.match(guide, /npm view csoai-gspc-mcp@next version/);
   assert.doesNotMatch(guide, /"args":\s*\[\s*"-y",\s*"csoai-gspc-mcp/);
   assert.match(
     guide,
