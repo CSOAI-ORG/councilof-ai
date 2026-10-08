@@ -1,17 +1,17 @@
 {
   "kind": "csoai.publisher-health/v0",
-  "as_of": "2026-09-30T05:05:34Z",
+  "as_of": "2026-10-08T04:56:25Z",
   "writer": "scripts/publish_public_root.py",
   "dry_run": false,
   "key": "present",
-  "signer_path": "pod-token",
+  "signer_path": "github-oidc",
   "envelope": "signed",
   "halt": {
     "split": false,
     "unsigned_new_leaves": 0,
     "missing_key": false
   },
-  "xrpl_basket_merkle": "5b210200574a95beba6520adc180a285667849245e5419eb1424f20158a4823c",
+  "xrpl_basket_merkle": "9c45aaf325e26c1856b4f148244ce546c680c21f463e9c2f5ef0590b935b6c64",
   "represented_tvl": {
     "usd": 1075447304.2899997,
     "source": "https://xrpl.fi/api/metrics",
@@ -42,10 +42,10 @@
       "listing_state": "DISCOVERED",
       "n_measured": 0,
       "note": "Cited in publisher-health.json / status only. Not a card-v0 leaf. Not MEASURED. listings.jsonl is never committed.",
-      "as_of": "2026-09-14T10:43:23Z",
-      "n": 2148,
-      "n_unique_ids": 2148,
-      "sha256_jsonl": "b8a61a8efe7a7703afb83b146d0640586dcbcb1c7ff29e92e51215ae8abfd1af",
+      "as_of": "2026-10-06T11:26:53Z",
+      "n": 2525,
+      "n_unique_ids": 2525,
+      "sha256_jsonl": "38f28f68d2eb1b46db9b53fe1cac10e6e031407a6b5888517d8a1f5ed5092771",
       "complete": true,
       "mode": "delta",
       "source": "public/signed/hub-census-delta.json"
@@ -59,13 +59,13 @@
       "totals_axes": 23,
       "totals_measured_axes": 23,
       "totals_unmeasured_axes": 0,
-      "public_count": "23 axis · 23 measured",
+      "public_count": "23 axes · 23 measured",
       "measured_on": {
-        "model": "Behavioural (model-comparison) axis with published per-item rows: 13 of 14 (csoai/gspc-peritem-rows-2026-08-12). The rows hold a 19-model fleet: 6 base models, compared (deepseek-r1:8b, gemma3:12b, llama3.2:3b, mistral:7b, qwen2.5:0.5b-instruct, qwen2.5:3b), and 13 CSOAI own fine-tunes, excluded before comparison and never counted in a comparison; no other model is in the rows. Counted from the rows, not typed. swarm: the published rows are a retired bank; the served row states its own fleet on the axis. Not in the rows — jail: 7-model fleet, stated on the axis; never conflated with the rows fleet. Financial/domain axis (8): not a model comparison — measured as deterministic facts (issuer-account reads + public series), with no fleet, no leader and no accuracy.",
+        "model": "Behavioural (model-comparison) axis with published per-item rows: 13 of 14 (csoai/gspc-peritem-rows-2026-08-12). The rows hold a 19-model fleet: 6 base models, compared (deepseek-r1:8b, gemma3:12b, llama3.2:3b, mistral:7b, qwen2.5:0.5b-instruct, qwen2.5:3b), and 13 of our own models — prompt overlays on stock base models (system prompts, not trained weights; C-2026-0930-11) — excluded before comparison and never counted in a comparison; no other model is in the rows. Counted from the rows, not typed. swarm: the published rows are a retired bank; the served row states its own fleet on the axis. Not in the rows — jail: 7-model fleet, stated on the axis; never conflated with the rows fleet. Financial/domain axis (8): not a model comparison — measured as deterministic facts (issuer-account reads + public series), with no fleet, no leader and no accuracy.",
         "endpoint": "A100 · local Ollama (board v2) · 3090 pod (jail)",
-        "date": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+        "date": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes: see each axis facts_as_of / measurement_time",
         "grading": "deterministic grading on 15,580 per-item rows (0 transport errors) — reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
-        "note": "GSPC (Governance · Safety · Provenance · Continuity) board. Slot counts live in totals (public_count, measured_axes, quotable_axes) and are derived, never typed. The measured canonical axes used the same fleet, same rows, same grader. Per-axis numbers show the board LEADER (whoever leads — tuned or base), its Wilson interval where n is honestly independent, and whether the lead is statistically separated (McNemar p<0.05) or a TIE. fleet_mean and mean_harm show the fleet, not the leader. Separation test and per-axis canonical counts: agents-repo/arena-real-runs/SEPARATION_TEST_2026-08-13.md and GSPC_AXIS_REGISTRY.json v2. Jail carries its per-model rows verbatim from the signed living board; its separation is TIE (determined 2026-08-25) — a TIE is not a separated leader. slot15 and human-vs-ai are measured in-lane only — see measured_in_lane, not the board.",
+        "note": "GSPC (Governance · Safety · Provenance · Continuity) board. Slot counts live in totals (public_count, measured_axes, quotable_axes) and are derived, never typed. The measured canonical axes used the same fleet, same rows, same grader. Per-axis numbers show the top observed row — a separated leader only where separation reads SEPARATED — its Wilson interval where n is honestly independent, and whether the top row is statistically separated (McNemar p<0.05), a TIE or UNTESTED. fleet_mean and mean_harm show the fleet, not the top row. Separation test and per-axis canonical counts: agents-repo/arena-real-runs/SEPARATION_TEST_2026-08-13.md and GSPC_AXIS_REGISTRY.json v2. Jail carries its per-model rows verbatim from the signed living board; its separation is UNTESTED since 2026-09-29 (C-2026-0929-02; a row-level TIE before) — neither is a separated leader. slot15 and human-vs-ai are measured in-lane only — see measured_in_lane, not the board.",
         "living_stamp": {
           "schema": "csoai.gspc-living/0.2",
           "gold_run": "2026-08-18T03:22:16Z",
@@ -353,7 +353,7 @@
     "note": "Staged unsigned atoms read from disk; no network. Signed only by the public-root writer in GHA. PROBED/DISCOVERED/UNMEASURED stay on the payload under the signature. Never MEASURED. Not a grade."
   },
   "witness_queue": {
-    "kv": "NOT_YET: CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID / WITNESS_KV_NAMESPACE_ID not all set",
+    "kv": "bound; errors: list_keys HTTP 401",
     "n_kv": 0,
     "n_mirror": 0,
     "n_leaves": 0,
@@ -363,8 +363,8 @@
   },
   "provider_diff": {
     "dir": "public/feeds/provider-diff/leaves",
-    "n_files": 69,
-    "n_leaves": 69,
+    "n_files": 70,
+    "n_leaves": 70,
     "n_skipped": 0,
     "skipped": [],
     "note": "Hash-only provider document diffs, staged unsigned by scripts/watch/provider_watch.py; signed only by the public-root writer in GHA. A leaf attests that bytes at a URL changed between two captures — nothing about what or why. Content never stored. Not a grade."
@@ -376,8 +376,8 @@
   },
   "evm_permissions": {
     "schema": "csoai.evm.permission-state/0.1",
-    "n_leaves": 32,
-    "n_proofs": 29,
+    "n_leaves": 31,
+    "n_proofs": 28,
     "n_roster": 32,
     "n_unverified": 33,
     "aum_source": "https://app.rwa.xyz/treasuries",
@@ -385,54 +385,58 @@
     "chains": {
       "arbitrum": {
         "rpc": "arbitrum-one-rpc.publicnode.com",
-        "block": 510248344,
-        "block_hash": "0xa9f1aca3f97fe5d26c250de7866fb01c21a332103cc69182c09574f577550647",
-        "block_time": "2026-09-30T05:02:57Z"
+        "block": 512780776,
+        "block_hash": "0x5cdc374a8201ede96ac4daa682e1cf5d6ca8392ce7679acc54377c8cae3e453c",
+        "block_time": "2026-10-08T04:52:46Z"
       },
       "avalanche": {
         "rpc": "api.avax.network",
-        "block": 96434786,
-        "block_hash": "0x872e64c2352481dcd5ae2cf5e5c39168cadade740d60e28b02523801bf18072a",
-        "block_time": "2026-09-30T05:02:56Z"
+        "block": 97009240,
+        "block_hash": "0x0863554bc0d074821763d31355761fedae9dbcad2cc8fb50dcd254e5e906d1dc",
+        "block_time": "2026-10-08T04:52:43Z"
       },
       "base": {
         "rpc": "base-rpc.publicnode.com",
-        "block": 51977615,
-        "block_hash": "0xe4024806c3acf59731d023271fac082afe6fa25fc3431713cc61ff53e8bf4918",
-        "block_time": "2026-09-30T05:02:57Z"
+        "block": 52322910,
+        "block_hash": "0x34b0a51f802a95b4389d64510e9b2559f1dd871e66b4ac6e3260a53b2bcacc42",
+        "block_time": "2026-10-08T04:52:47Z"
       },
       "bsc": {
         "rpc": "bsc-rpc.publicnode.com",
-        "block": 124849208,
-        "block_hash": "0xbc1b031b11f5574b3a9145170e0601c492a7832367c8828e93c5cf0a095b31d8",
-        "block_time": "2026-09-30T05:02:58Z"
+        "block": 126383231,
+        "block_hash": "0xa5e578ce7e0ddc076e9d9f04b7d33ca926cb5d8f5011c9b5070d410cd3076de0",
+        "block_time": "2026-10-08T04:52:46Z"
       },
       "ethereum": {
         "rpc": "ethereum-rpc.publicnode.com",
-        "block": 26088076,
-        "block_hash": "0x5d3df7a175417d1396aa12bd1849a148ab23e2c5273fb16bc1010f52830b5c35",
-        "block_time": "2026-09-30T05:02:47Z"
+        "block": 26145409,
+        "block_hash": "0xe4339eb21e0e1db644d18a9bcb4267c568c769f4b4c1032e8cae52cf588d009c",
+        "block_time": "2026-10-08T04:52:35Z"
       },
       "mantle": {
         "rpc": "mantle-rpc.publicnode.com",
-        "block": 101307133,
-        "block_hash": "0xddaa6d968eb629f14d5504d843cbbcf2e7671f0c3ea092360b76cbcb9d267c3a",
-        "block_time": "2026-09-30T05:02:58Z"
+        "block": 101652427,
+        "block_hash": "0xe5ee0df857f59a8d891e6f8b860f3a7a37c8dc0085a87f390548482a48eaceea",
+        "block_time": "2026-10-08T04:52:46Z"
       },
       "optimism": {
         "rpc": "optimism-rpc.publicnode.com",
-        "block": 157572901,
-        "block_hash": "0xa39d89ca9824cacb461f229f6a058d16c388cd1aeecd69220435783eba4bd15f",
-        "block_time": "2026-09-30T05:02:59Z"
+        "block": 157918195,
+        "block_hash": "0xea4fae2b47f37e47d42b8f0f2954d0b982953c783b61dcbfa31b1189a7d01ce9",
+        "block_time": "2026-10-08T04:52:47Z"
       },
       "polygon": {
         "rpc": "1rpc.io",
-        "block": 94692960,
-        "block_hash": "0x0b6f7bc3bce88a814878b242746c305c1272f6b098ae07b53954b2c6752ed1cd",
-        "block_time": "2026-09-30T05:03:00Z"
+        "block": 95153319,
+        "block_hash": "0xc4151a12f7efcc01f0f4b3d5a28ff8b4d69bc28929aa796bcf6407600e432680",
+        "block_time": "2026-10-08T04:52:58Z"
       }
     },
     "failures": [
+      {
+        "subject": "evm:BUIDL:polygon",
+        "reason": "no endpoint answered"
+      },
       {
         "subject": "evm:USYC:bsc",
         "reason": "no endpoint answered eth_getProof"
@@ -450,42 +454,42 @@
   },
   "evm_permission_events": {
     "schema": "csoai.evm.permission-event/0.1",
-    "n_leaves": 5,
-    "n_contracts_scanned": 9,
+    "n_leaves": 3,
+    "n_contracts_scanned": 7,
     "n_roster": 32,
     "requests_used": 80,
     "chains": {
       "arbitrum": {
-        "block": 510248440,
+        "block": 512781035,
         "rpc": "arbitrum-one-rpc.publicnode.com"
       },
       "avalanche": {
-        "block": 96434809,
+        "block": 97009313,
         "rpc": "api.avax.network"
       },
       "base": {
-        "block": 51977629,
+        "block": 52322945,
         "rpc": "base-rpc.publicnode.com"
       },
       "bsc": {
-        "block": 124849269,
+        "block": 126383391,
         "rpc": "bsc-rpc.publicnode.com"
       },
       "ethereum": {
-        "block": 26088078,
+        "block": 26145415,
         "rpc": "ethereum-rpc.publicnode.com"
       },
       "mantle": {
-        "block": 101307147,
+        "block": 101652463,
         "rpc": "mantle-rpc.publicnode.com"
       },
       "optimism": {
-        "block": 157572915,
+        "block": 157918231,
         "rpc": "optimism-rpc.publicnode.com"
       },
       "polygon": {
-        "block": 94692990,
-        "rpc": "polygon-bor-rpc.publicnode.com"
+        "block": 95153361,
+        "rpc": "1rpc.io"
       }
     },
     "failures": [
@@ -495,6 +499,10 @@
       },
       {
         "subject": "evm-events:BUIDL-I:ethereum",
+        "reason": "dark"
+      },
+      {
+        "subject": "evm-events:BUIDL:polygon",
         "reason": "dark"
       },
       {
@@ -550,8 +558,12 @@
         "reason": "dark"
       },
       {
+        "subject": "evm-events:mTBILL:base",
+        "reason": "dark"
+      },
+      {
         "subject": "evm-events:VBILL:ethereum",
-        "reason": "budget"
+        "reason": "dark"
       },
       {
         "subject": "evm-events:VBILL:bsc",
@@ -593,14 +605,14 @@
     "hits": 26,
     "not_in_verified_set": 22,
     "unmeasured": 0,
-    "mirrors_written": 22
+    "mirrors_written": 23
   },
   "xrpl_state_matrix": {
     "status": "CHANGED",
     "pack": "xrpl-16-state-matrix",
-    "matrix_sha256": "9fa8ac7545a1143160f9ac328e5ce096f154169245f82eb0356506672390080f",
-    "ledger_index": 107330229,
-    "n_changed": 12,
+    "matrix_sha256": "3764e19d88fb544be93499c3f2da96ef64749f14f88a90d1d381ddc754d519cb",
+    "ledger_index": 107509466,
+    "n_changed": 10,
     "rpc_dark": 0,
     "rpc_uncheckable": 0,
     "metrics_ok": true
@@ -621,7 +633,7 @@
     "n_generators": 4,
     "payload_bytes": 601
   },
-  "card_count": 319,
+  "card_count": 315,
   "xrpl_asset_state_count": 16,
   "note": "hub.census.digest and gspc.board.cite live here, not on card-v0. Never MEASURED. Never certify. Never partnered with SWIFT. Never 17-banks-on-our-feed."
 }
