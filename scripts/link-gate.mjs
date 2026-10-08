@@ -228,11 +228,11 @@ export function isServed(pathname, files, routes, redirects = new Map(), options
   return false; // an excessive chain or cycle is not evidence of service
 }
 
-export function readRedirects(root) {
+export function readRedirects(root, contents) {
   const redirects = new Map();
   redirects.statuses = new Map();
   try {
-    for (const line of readFileSync(join(root, "public/_redirects"), "utf8").split("\n")) {
+    for (const line of (contents ?? readFileSync(join(root, "public/_redirects"), "utf8")).split("\n")) {
       const text = line.trim();
       if (!text || text.startsWith("#")) continue;
       const [from, to, status = "302", extra] = text.split(/\s+/);
@@ -240,6 +240,11 @@ export function readRedirects(root) {
       // Unsupported/malformed lines are not evidence.
       if (!from || !to || extra || !/^(?:30[12378]|200)$/.test(status) || !from.startsWith("/") ||
           from.startsWith("//") || from.includes("?") || from.includes("#")) continue;
+      // Pages uses the default HTML handling: relative index targets with a wildcard
+      // or trailing-slash source are rejected as loops before matching or duplicate checks.
+      // Match the upstream parser against the raw destination; a query changes this rule.
+      if (to.startsWith("/") && !to.startsWith("//") && /\/index(.html)?$/.test(to) &&
+          (from.endsWith("/*") || from.endsWith("/"))) continue;
       if (!redirects.has(from)) {
         redirects.set(from, to);
         redirects.statuses.set(from, status);
@@ -323,6 +328,42 @@ if (SELFTEST && process.argv[1] && resolve(process.argv[1]) === fileURLToPath(im
   must("a SPA200 rejects an unknown JSON path even if its original asset exists", !isServed("/missing.json", new Set(["/index.html", "/missing.json"]), new Set(), spa));
   must("a SPA200 rejects an undeclared page", !isServed("/unknown-page", new Set(["/index.html"]), new Set(), spa));
   must("a SPA200 cannot render a declared app page without its index", !isServed("/known-page", new Set(), new Set(["/known-page"]), spa, { functionPaths: new Set(), appPaths: new Set(["/known-page"]) }));
+
+  const rejectedIndexes = readRedirects(REPO, [
+    "/* /index.html 200", "/nested/* /target/index 302", "/slash/ /target/index.html 308",
+  ].join("\n"));
+  must("parser ignores wildcard-to-index HTML rewrites", !rejectedIndexes.has("/*"));
+  must("parser ignores nested wildcard-to-index redirects", !rejectedIndexes.has("/nested/*"));
+  must("parser ignores trailing-slash-to-index under Pages HTML handling", !rejectedIndexes.has("/slash/"));
+  must("the configured inert catch-all is ignored by the parser", !readRedirects(REPO).has("/*"));
+  const validIndexes = readRedirects(REPO, [
+    "/exact /index.html 200", "/named/:name /index.html 200",
+    "/query/* /index.html?spa=1 200", "/external/* https://example.com/index.html 302",
+  ].join("\n"));
+  must("parser preserves exact, named, query and external index destinations",
+    validIndexes.size === 4 && validIndexes.get("/named/:name") === "/index.html" &&
+    validIndexes.get("/query/*") === "/index.html?spa=1" &&
+    validIndexes.get("/external/*") === "https://example.com/index.html");
+  const publishedAssets = new Set(["/index.html", "/schema/card-v1.json", "/llms.txt", "/root.json"]);
+  for (const path of ["/schema/card-v1.json", "/llms.txt", "/root.json"]) {
+    must(`a rejected index rule cannot mask the published asset ${path}`,
+      isServed(path, publishedAssets, new Set(), rejectedIndexes));
+  }
+  must("ignoring an invalid rewrite does not invent a missing JSON asset",
+    !isServed("/absent.json", publishedAssets, new Set(), rejectedIndexes));
+  const validAssetRedirect = readRedirects(REPO, "/schema/card-v1.json /missing.json 302");
+  must("a valid redirect still overrides an existing JSON asset",
+    !isServed("/schema/card-v1.json", publishedAssets, new Set(), validAssetRedirect));
+  must("an accepted query rewrite still cannot replace a JSON asset with HTML",
+    !isServed("/query/card.json", new Set(["/index.html", "/query/card.json"]), new Set(), validIndexes));
+  const rejectedBeforeMirror = readRedirects(REPO,
+    `/cards/* /index.html 200\n/cards/* ${MIRROR}cards/:splat 302`);
+  must("a rejected rule does not consume the source before an approved mirror rule",
+    isServed(asset, files, routes, rejectedBeforeMirror, mirrorOptions));
+  const validBeforeMirror = readRedirects(REPO,
+    `/cards/:name /index.html 200\n/cards/* ${MIRROR}cards/:splat 302`);
+  must("an accepted first rewrite still blocks a later approved mirror rule",
+    !isServed(asset, new Set(["/index.html"]), routes, validBeforeMirror, mirrorOptions));
   if (bad) { console.error(`✖ link-gate selftest FAILED (${bad})`); process.exit(1); }
   console.log(`✓ link-gate selftest: ${CASES}/${CASES} — catches the dead link it was written for, passes what we serve`);
   process.exit(0);
