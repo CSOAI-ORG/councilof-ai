@@ -93,6 +93,7 @@ describe("OpenAPI free verifier contract against actual handler responses", () =
     matches(parameter.schema, sampleUrl());
     for (const operation of [get, post]) {
       expect(operation.security).toEqual([]);
+      expect(operation["x-csoai-lifecycle"]).toBe("LIVE");
       expect(operation["x-payment-info"]).toBeUndefined();
       expect(operation.responses["402"]).toBeUndefined();
     }

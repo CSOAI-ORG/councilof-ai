@@ -395,6 +395,7 @@ def verifier_contract(manifest: dict) -> tuple[dict, dict]:
             "summary": "Verify a published record for free, or read verifier instructions",
             "description": "Without record_url, returns instructions without judging a record. With record_url, re-fetches the exact served bytes and verifies a supported Council record, including measurement cards and card-v0/v1 receipts, under pinned keys. Only HTTPS councilof.ai, csoai.org and www.csoai.org URLs are fetched; off-origin redirects are refused. Signed-run evidence records are supported by POST. Verification is free and is never certification.",
             "security": [],
+            "x-csoai-lifecycle": "LIVE",
             "parameters": [{
                 "name": "record_url", "in": "query", "required": False,
                 "description": "Published record to fetch and verify. The example is the historical measurement card advertised by the discovery manifest, not a claim about current board freshness. Omit this parameter to read instructions.",
@@ -413,6 +414,7 @@ def verifier_contract(manifest: dict) -> tuple[dict, dict]:
             "summary": "Verify a posted measurement or signed evidence record for free",
             "description": "POST a supported record object or JSON string, directly or in a supported wrapper. Allowed HTTPS record URLs are also accepted. Supported families include measurement cards, card-v0/v1 receipts and csoai.signed-run/0.1 records, each using its existing pinned-key rule. For signed runs, compare retained record bytes with artifact.sha256 yourself; this endpoint checks the payload signature. Unsupported shapes are UNCHECKABLE. No payment or account is required; verification certifies nothing.",
             "security": [],
+            "x-csoai-lifecycle": "LIVE",
             "requestBody": {"required": True, "content": {"application/json": {
                 "schema": ref("CSOAIVerificationInput"),
                 "examples": {"published_record_url": {
@@ -857,9 +859,9 @@ def compose(fix: Path = FIX) -> dict:
             "revenue_truth": cat.get("revenue_truth"),
             "doors": door_paths,
             "public_operations": sum(1 for p, item in paths.items() if p not in door_paths
-                                     for op in item.values() if op.get("security") == [] and "x-csoai-lifecycle" not in op),
+                                     for op in item.values() if op.get("security") == [] and op.get("x-csoai-lifecycle", "LIVE") == "LIVE"),
             "unauthenticated_facades": sum(1 for p, item in paths.items() if p not in door_paths
-                                           for op in item.values() if op.get("security") == [] and "x-csoai-lifecycle" in op),
+                                           for op in item.values() if op.get("security") == [] and op.get("x-csoai-lifecycle", "LIVE") != "LIVE"),
         },
     }
     if proofs_doc and proofs_doc.get("proofs"):

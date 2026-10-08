@@ -9174,7 +9174,8 @@
           }
         },
         "security": [],
-        "summary": "Verify a published record for free, or read verifier instructions"
+        "summary": "Verify a published record for free, or read verifier instructions",
+        "x-csoai-lifecycle": "LIVE"
       },
       "post": {
         "description": "POST a supported record object or JSON string, directly or in a supported wrapper. Allowed HTTPS record URLs are also accepted. Supported families include measurement cards, card-v0/v1 receipts and csoai.signed-run/0.1 records, each using its existing pinned-key rule. For signed runs, compare retained record bytes with artifact.sha256 yourself; this endpoint checks the payload signature. Unsupported shapes are UNCHECKABLE. No payment or account is required; verification certifies nothing.",
@@ -9246,7 +9247,8 @@
           }
         },
         "security": [],
-        "summary": "Verify a posted measurement or signed evidence record for free"
+        "summary": "Verify a posted measurement or signed evidence record for free",
+        "x-csoai-lifecycle": "LIVE"
       }
     },
     "/api/verify-batch": {
