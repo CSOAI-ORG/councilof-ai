@@ -666,8 +666,8 @@ describe("Last measured replaces the LIVE status word", () => {
       html.indexOf('data-testid="gspc-last-measured"'),
       html.indexOf('data-testid="gspc-tiles-as-of"'),
     );
-    expect(tile).toContain("Models last tested");
-    expect(tile).toMatch(/Models last tested<\/p><p[^>]*>2026-08-12/);
+    expect(tile).toContain("Latest dated model run");
+    expect(tile).toMatch(/Latest dated model run<\/p><p[^>]*>2026-08-12/);
     expect(tile).toContain("fact checks last read 2026-09-22");
     expect(tile).not.toContain(">LIVE<");
   });
@@ -679,7 +679,7 @@ describe("Last measured replaces the LIVE status word", () => {
       html.indexOf('data-testid="gspc-last-measured"'),
       html.indexOf('data-testid="gspc-tiles-as-of"'),
     );
-    expect(tile).toContain("Last measured");
+    expect(tile).toContain("Latest dated run");
     expect(tile).toContain("oldest result");
   });
 

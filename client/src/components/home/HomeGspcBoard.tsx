@@ -34,36 +34,38 @@ export const STRIP_N = 9;
 /** A board date older than this many days carries a STALE chip. A UI threshold, not a board count. */
 export const STALE_AFTER_DAYS = 30;
 
-const ISO_DAY = /\b(\d{4}-\d{2}-\d{2})/g;
-
-/**
- * The newest and oldest measurement dates the board payload itself states: every axis's
- * measurement_time (observed_on / observed_at / not_after) and facts_as_of, and the ISO dates in
- * measured_on.date. Read, never typed; null when the payload states none.
- */
+/** Observed run dates only. An upper bound or prose date never becomes a run date. */
 export function boardMeasuredRange(
   data: GspcPayload | null | undefined,
-  /** Only axes of this kind ("model-comparison", "deterministic-facts"); measured_on.date is then not read. */
   kind?: string,
 ): { newest: string; oldest: string } | null {
   const days: string[] = [];
   const take = (v: unknown) => {
     if (typeof v !== "string") return;
-    for (const m of v.matchAll(ISO_DAY)) days.push(m[1]);
+    const match = /^(\d{4}-\d{2}-\d{2})(?:T|$)/.exec(v);
+    if (match) days.push(match[1]);
   };
-  for (const a of (Array.isArray(data?.axes) ? data!.axes : []) as Record<string, any>[]) {
-    if (kind && a?.kind !== kind) continue;
-    const mt = a?.measurement_time;
-    if (mt && typeof mt === "object") {
-      take(mt.observed_on);
-      take(mt.observed_at);
-      take(mt.not_after);
-    }
-    take(a?.facts_as_of);
+  for (const a of Array.isArray(data?.axes) ? data.axes : []) {
+    if (a.status !== "MEASURED" || (kind && a.kind !== kind)) continue;
+    const mt = a.measurement_time as { state?: unknown; observed_at?: unknown; observed_on?: unknown } | undefined;
+    if (mt?.state === "EXACT") take(mt.observed_at);
+    else if (mt?.state === "DAY") take(mt.observed_on);
+    // Legacy fact rows carry an explicit producer stamp. Never override a structured state.
+    else if (!mt && a.kind === "deterministic-facts") take(a.facts_as_of);
   }
-  if (!kind) take((data?.measured_on as { date?: unknown } | undefined)?.date);
   const sorted = days.filter((d) => !Number.isNaN(Date.parse(`${d}T00:00:00Z`))).sort();
   return sorted.length ? { newest: sorted[sorted.length - 1], oldest: sorted[0] } : null;
+}
+
+/** Keep the source's original upper-bound timestamp separate from observed dates. */
+export function boardMeasurementBounds(data: GspcPayload | null | undefined): { axis: string; notAfter: string }[] {
+  return (Array.isArray(data?.axes) ? data.axes : []).flatMap((a) => {
+    const mt = a.measurement_time as { state?: unknown; not_after?: unknown } | undefined;
+    return a.status === "MEASURED" && mt?.state === "NOT_AFTER" &&
+      typeof mt.not_after === "string" && Number.isFinite(Date.parse(mt.not_after))
+      ? [{ axis: a.axis, notAfter: mt.not_after }]
+      : [];
+  });
 }
 
 /** Whole days from an ISO day to `now`. */
@@ -75,7 +77,7 @@ function StaleChip({ day }: { day: string }) {
   return (
     <span
       className="ml-1.5 inline-flex cursor-help items-center rounded-full border border-amber-700/30 bg-amber-50 px-1.5 py-0.5 align-middle font-mono text-[10px] font-bold uppercase tracking-wide text-amber-900 dark:border-amber-400/40 dark:bg-amber-950 dark:text-amber-100"
-      title={`Measured on ${day}, more than ${STALE_AFTER_DAYS} days ago. Older results are not re-run automatically.`}
+      title={`Observed date ${day}, more than ${STALE_AFTER_DAYS} days ago. Older results are not re-run automatically. Rows with only upper bounds keep an unknown run date.`}
       data-testid="gspc-stale"
     >
       STALE
@@ -200,8 +202,15 @@ export function separationLabel(a: GspcAxis): string {
   const s = String(a.separation ?? "UNTESTED");
   if (s === "TIE") return "TIE · not a measured advantage";
   // The state word itself stays visible: UNTESTED is first-class, not paraphrased away.
-  if (s === "UNTESTED") return "UNTESTED · no separation test has run";
+  if (s === "UNTESTED") return "UNTESTED · no public separation determination";
   return s;
+}
+
+/** A producer may withhold a public determination even when its published rows were tested. */
+function SeparationReason({ a }: { a: GspcAxis }) {
+  const reason = a.separation_untested_reason;
+  if (a.kind === "deterministic-facts" || a.separation !== "UNTESTED" || typeof reason !== "string" || !reason.trim()) return null;
+  return <p className="mt-1 text-xs leading-relaxed text-slate-600 dark:text-emerald-100/70" data-axis-separation-reason={a.axis}>{reason}</p>;
 }
 
 /** The public count line, verbatim. Null rather than a guess. */
@@ -365,7 +374,7 @@ export function BoardStrip({
                   <td className={`${td} whitespace-nowrap`}>{String(a.kind ?? "")}</td>
                   <td className={`${td} whitespace-nowrap`}>{nText(a)}</td>
                   <td className={`${td} whitespace-nowrap`}>{String(a.status ?? "UNMEASURED")}</td>
-                  <td className={td}>{separationLabel(a)}</td>
+                  <td className={td}>{separationLabel(a)}<SeparationReason a={a} /></td>
                   <td className={td}>
                     <LeaderText a={a} />
                   </td>
@@ -402,6 +411,7 @@ export function BoardStrip({
                   <Badge>{String(a.status ?? "UNMEASURED")}</Badge>
                   <Badge tone={sep}>{separationLabel(a)}</Badge>
                 </p>
+                <SeparationReason a={a} />
                 <p className="mt-1 text-xs text-slate-700 dark:text-emerald-100/80">
                   <LeaderText a={a} />
                 </p>
@@ -585,6 +595,7 @@ export default function HomeGspcBoard({
   const modelRange = unread ? null : boardMeasuredRange(data, "model-comparison");
   const factRange = unread ? null : boardMeasuredRange(data, "deterministic-facts");
   const range = modelRange ?? (unread ? null : boardMeasuredRange(data));
+  const measurementBounds = unread ? [] : boardMeasurementBounds(data);
   const newestStale = range ? daysSince(range.newest) > STALE_AFTER_DAYS : false;
   const oldestStale = range ? daysSince(range.oldest) > STALE_AFTER_DAYS : false;
 
@@ -661,7 +672,7 @@ export default function HomeGspcBoard({
         ))}
         <div className="rounded-2xl border border-slate-200/80 bg-slate-50/70 px-3.5 py-3 dark:border-emerald-900/40 dark:bg-white/[0.035]" data-testid="gspc-last-measured">
           <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-emerald-100/55">
-            {modelRange ? "Models last tested" : "Last measured"}
+            {modelRange ? "Latest dated model run" : "Latest dated run"}
           </p>
           <p className="mt-1 text-xl font-black tracking-tight text-slate-950 dark:text-emerald-50">
             {error ? "UNREACHABLE" : loading ? "…" : range ? range.newest : "UNCHECKABLE"}
@@ -680,7 +691,7 @@ export default function HomeGspcBoard({
             ) : loading ? (
               "reading"
             ) : (
-              "the board states no date"
+              measurementBounds.length ? "run date unavailable; only upper bounds are published" : "the board states no observed run date"
             )}
           </p>
         </div>
@@ -694,6 +705,18 @@ export default function HomeGspcBoard({
           {" · "}source:{" "}
           <a href="/api/gspc" className="font-mono underline underline-offset-2">GET /api/gspc</a>
           {" → totals, measured_on.date"}
+        </p>
+      ) : null}
+
+      {measurementBounds.length ? (
+        <p className="mt-2 text-xs text-slate-600 dark:text-emerald-100/65" data-testid="gspc-measurement-bounds">
+          {measurementBounds.map((bound) => (
+            <span key={bound.axis} className="block">
+              {boardAxisLabel(bound.axis)}: measured no later than{" "}
+              <time dateTime={bound.notAfter}>{bound.notAfter}</time>; run date unknown.
+            </span>
+          ))}
+          An upper bound does not establish freshness.
         </p>
       ) : null}
 

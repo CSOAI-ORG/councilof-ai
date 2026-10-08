@@ -144,6 +144,7 @@
   line-height: 1.6;
   color: #b7d0c1;
   margin: 6px 0 0;
+  min-height: 4.8em;
 }
 .gspc-separation {
   display: flex;
@@ -185,6 +186,9 @@
   background: #eff4ef;
   color: #132b20;
   padding: 22px;
+  height: clamp(32rem, 75vh, 48rem);
+  display: flex;
+  flex-direction: column;
 }
 .gspc-toolbar {
   display: flex;
@@ -252,12 +256,23 @@
     monospace;
   color: #58695e;
   margin: 14px 0 18px;
+  min-height: 3.2em;
+  flex: none;
 }
 .gspc-explorer-body {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 292px;
   gap: 20px;
   align-items: start;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  padding: 4px;
+}
+.gspc-explorer-body:focus-visible {
+  outline: 3px solid #38644a;
+  outline-offset: 3px;
 }
 .gspc-axis-grid {
   display: grid;
@@ -266,20 +281,6 @@
   list-style: none;
   padding: 0;
   margin: 0;
-}
-/* Reserve the original responsive board footprint only during the first read. */
-.gspc-axis-grid.is-loading {
-  min-height: 17rem;
-}
-@media (max-width: 1023.98px) {
-  .gspc-axis-grid.is-loading {
-    min-height: 34rem;
-  }
-}
-@media (max-width: 639.98px) {
-  .gspc-axis-grid.is-loading {
-    min-height: 52rem;
-  }
 }
 .gspc-axis-grid li {
   min-width: 0;
@@ -392,7 +393,7 @@
 }
 .gspc-detail {
   position: sticky;
-  top: 90px;
+  top: 0;
   padding: 22px 19px;
   border: 1px solid #c8d7c8;
   border-radius: 12px;
@@ -509,6 +510,7 @@
     monospace;
   color: #bad0c1;
   max-width: 690px;
+  min-height: 6.6em;
   margin: 0;
 }
 .gspc-board-foot nav {
@@ -623,6 +625,7 @@
     padding: 16px 13px;
   }
   .gspc-explorer {
+    height: clamp(44rem, 90vh, 56rem);
     padding: 15px;
   }
   .gspc-explorer-body {
@@ -630,10 +633,12 @@
     flex-direction: column;
   }
   .gspc-axis-grid {
+    flex-shrink: 0;
     width: 100%;
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .gspc-detail {
+    flex-shrink: 0;
     width: 100%;
     position: static;
     order: -1;

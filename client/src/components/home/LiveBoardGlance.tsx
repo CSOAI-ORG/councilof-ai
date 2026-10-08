@@ -391,8 +391,7 @@ export default function LiveBoardGlance({
   const [selected, setSelected] = useState("");
   const [selectionIntent, setSelectionIntent] = useState(0);
   useEffect(() => {
-    if (!selectionIntent || !window.matchMedia("(max-width: 760px)").matches)
-      return;
+    if (!selectionIntent) return;
     const heading = document.getElementById("gspc-detail-title");
     heading?.focus({ preventScroll: true });
     heading?.scrollIntoView({
@@ -572,41 +571,39 @@ export default function LiveBoardGlance({
                 </p>
               </div>
             </dl>
-            {sep ? (
-              <div
-                className="gspc-separation"
-                aria-label="Comparison separation"
-              >
-                <p>
-                  <strong>Measured is not the same as separated.</strong> A tie
-                  stays a tie; an untested separation is not a win.
-                </p>
-                <div className="gspc-separation-track" aria-hidden="true">
-                  {sep.comparison ? (
-                    <>
-                      <span
-                        className="separated"
-                        style={{
-                          width: (sep.separated / sep.comparison) * 100 + "%",
-                        }}
-                      />
-                      <span
-                        className="tied"
-                        style={{
-                          width: (sep.ties / sep.comparison) * 100 + "%",
-                        }}
-                      />
-                      <span
-                        className="untested"
-                        style={{
-                          width: (sep.untested / sep.comparison) * 100 + "%",
-                        }}
-                      />
-                    </>
-                  ) : null}
-                </div>
+            <div
+              className="gspc-separation"
+              aria-label="Comparison separation"
+            >
+              <p>
+                <strong>Measured is not the same as separated.</strong> A tie
+                stays a tie; an untested separation is not a win.
+              </p>
+              <div className="gspc-separation-track" aria-hidden="true">
+                {sep && sep.comparison ? (
+                  <>
+                    <span
+                      className="separated"
+                      style={{
+                        width: (sep.separated / sep.comparison) * 100 + "%",
+                      }}
+                    />
+                    <span
+                      className="tied"
+                      style={{
+                        width: (sep.ties / sep.comparison) * 100 + "%",
+                      }}
+                    />
+                    <span
+                      className="untested"
+                      style={{
+                        width: (sep.untested / sep.comparison) * 100 + "%",
+                      }}
+                    />
+                  </>
+                ) : null}
               </div>
-            ) : null}
+            </div>
             <div className="gspc-explorer">
               <div className="gspc-toolbar">
                 <div
@@ -618,9 +615,7 @@ export default function LiveBoardGlance({
                     ["all", "All axes"],
                     ["comparison", "Model comparisons"],
                     ["facts", "Fact runs"],
-                    ...(tiles.some((t) => t.group === "declared")
-                      ? [["declared", "Declared slots"]]
-                      : []),
+                    ["declared", "Declared slots"],
                   ].map(([id, label]) => (
                     <button
                       key={id}
@@ -670,7 +665,12 @@ export default function LiveBoardGlance({
                     tiles.length +
                     " axes shown · select an axis to inspect its record"}
               </p>
-              <div className="gspc-explorer-body">
+              <div
+                className="gspc-explorer-body"
+                role="region"
+                aria-label="Measurement records"
+                tabIndex={0}
+              >
                 <ul
                   className={"gspc-axis-grid" + (loading ? " is-loading" : "")}
                   aria-busy={loading}
