@@ -1,20 +1,5 @@
-/**
- * HomeSteps — how it works, as four sections with an image each: measure, sign, re-check, correct.
- *
- * Owner, 30 Sep 2026: the front door should be end-user focused, built around what makes this
- * different, in sections with our own images, with the technical detail moved to About and the
- * deeper pages. These four sections ARE the "how it works" line and the main strengths at once,
- * so the page says each thing once.
- *
- * NO FIGURES HERE. Each figure on the home page is printed in one place (the board band or the
- * proof strip); these sections carry words and a link to the page that holds the evidence.
- *
- * IMAGES. Our own renders, served as WebP at 480px, 800px and the source's own width (never
- * upscaled), with width/height set so the browser reserves the box before the bytes arrive, and
- * loading="lazy" because every one of them is below the first screen.
- */
+/** Four practical checks, using the existing evidence pages and image assets. */
 import { Link } from "wouter";
-
 export interface Step {
   id: string;
   kicker: string;
@@ -22,95 +7,139 @@ export interface Step {
   body: string;
   href: string;
   cta: string;
-  img: { base: string; widths: number[]; width: number; height: number; alt: string };
+  img: {
+    base: string;
+    widths: number[];
+    width: number;
+    height: number;
+    alt: string;
+  };
 }
-
 export const STEPS: Step[] = [
   {
     id: "measure",
-    kicker: "1 · Measure",
-    title: "The same frozen questions, graded by a rule",
-    body:
-      "Every model answers the same published question bank, frozen before the run. A fixed rule grades each answer, never another AI's opinion. When two models cannot be told apart we say tie, and when an axis has not been tested we say untested.",
+    kicker: "1 · Read + inspect",
+    title: "Read the run behind a result",
+    body: "Start with the task, method and measurement date. Model comparisons use frozen questions and fixed grading rules. A TIE or UNTESTED comparison stays that way.",
     href: "/methodology",
     cta: "How a measurement is made",
-    img: { base: "/images/home/arena", widths: [480, 900], width: 900, height: 506, alt: "Figures in a bright arena facing a row of glowing test stations" },
+    img: {
+      base: "/images/home/arena",
+      widths: [480, 900],
+      width: 900,
+      height: 506,
+      alt: "Figures in a bright arena facing a row of glowing test stations",
+    },
   },
   {
     id: "sign",
-    kicker: "2 · Sign",
-    title: "Checkable evidence, free to verify",
-    body:
-      "Measurement cards that carry an Ed25519 signature are independently checkable with a key we publish. Other measurement artifacts declare their attestation state explicitly, including content-addressed unsigned records, so we never imply a signature where none exists. Paste a signed card into the verifier: the record stays in your browser, while the browser may retrieve public-key metadata. No account is needed, and verification is free forever. A rank is never for sale, and our own models are listed apart and never counted in.",
+    kicker: "2 · Verify",
+    title: "Check the record yourself",
+    body: "Ed25519-signed cards and content-addressed unsigned records are labelled separately. The browser verifier returns VALID, INVALID or UNCHECKABLE. Your record stays in the browser, which may retrieve public-key metadata; verification is free.",
     href: "/gspc-verify",
     cta: "Check a record yourself",
-    img: { base: "/images/home/evidence-card", widths: [480, 800, 1376], width: 1376, height: 768, alt: "Two hands holding a glass card showing a verified signed record" },
+    img: {
+      base: "/images/home/evidence-card",
+      widths: [480, 800, 1376],
+      width: 1376,
+      height: 768,
+      alt: "Two hands holding a glass card showing a verified signed record",
+    },
   },
   {
     id: "recheck",
-    kicker: "3 · Re-check",
-    title: "Kept current, not filed away",
-    body:
-      "A published claim carries its date. We re-read claims against their sources on a schedule; when a source moves, the claim is re-measured, marked stale or retired. The rules we follow are an open specification anyone can adopt.",
+    kicker: "3 · Maintain",
+    title: "Keep the original date in view",
+    body: "A live fetch is not a new measurement. Read the maintenance rules for freshness, scope and changes to a source before relying on a published claim.",
     href: "/claim-maintenance/",
     cta: "How a claim is kept current",
-    img: { base: "/images/home/clock", widths: [480, 620], width: 620, height: 464, alt: "A white wall clock with a single green hand" },
+    img: {
+      base: "/images/home/clock",
+      widths: [480, 620],
+      width: 620,
+      height: 464,
+      alt: "A white wall clock with a single green hand",
+    },
   },
   {
     id: "correct",
     kicker: "4 · Correct",
-    title: "Our mistakes are public",
-    body:
-      "When we get something wrong, the corrections ledger says what was wrong, how it was caught and what changed, with the date. Signed records are superseded, never quietly edited, because editing them would break the signature that makes them checkable.",
+    title: "Follow what changed",
+    body: "The public corrections ledger records what was wrong and what changed. Signed records are superseded rather than quietly edited, keeping the earlier evidence available to inspect.",
     href: "/corrections/",
     cta: "Read the corrections ledger",
-    img: { base: "/images/home/watchdog", widths: [480, 800, 1376], width: 1376, height: 768, alt: "People dropping reports into a funnel labelled public watchdog reporting" },
+    img: {
+      base: "/images/home/watchdog",
+      widths: [480, 800, 1376],
+      width: 1376,
+      height: 768,
+      alt: "People dropping reports into a funnel labelled public watchdog reporting",
+    },
   },
 ];
-
 function StepImage({ img }: { img: Step["img"] }) {
-  const srcSet = img.widths.map((w) => `${img.base}-${w}.webp ${w}w`).join(", ");
-  const fallback = `${img.base}-${img.widths[0]}.webp`;
   return (
     <img
-      src={fallback}
-      srcSet={srcSet}
-      sizes="(min-width: 1024px) 34rem, calc(100vw - 2rem)"
+      src={img.base + "-" + img.widths[0] + ".webp"}
+      srcSet={img.widths
+        .map((w) => img.base + "-" + w + ".webp " + w + "w")
+        .join(", ")}
+      sizes="(min-width: 640px) 7rem, 6rem"
       width={img.width}
       height={img.height}
       alt={img.alt}
       loading="lazy"
       decoding="async"
-      className="aspect-[16/10] h-auto w-full rounded-3xl border border-border bg-muted object-cover shadow-[0_24px_50px_-38px_rgba(4,18,12,.55)]"
+      className="h-20 w-24 shrink-0 rounded-xl border border-border bg-muted object-cover sm:h-24 sm:w-28"
     />
   );
 }
-
 export default function HomeSteps() {
   return (
-    <section aria-labelledby="home-steps-h" className="surface-sunken section-y border-t border-border" data-testid="home-steps">
+    <section
+      aria-labelledby="home-steps-h"
+      className="surface-sunken section-y border-t border-border"
+      data-testid="home-steps"
+    >
       <div className="section-shell">
-        <p className="t-kicker text-emerald-800 dark:text-emerald-300">How it works</p>
+        <p className="t-kicker text-emerald-800 dark:text-emerald-300">
+          How to use the evidence
+        </p>
         <h2 id="home-steps-h" className="t-band mt-3 max-w-3xl text-foreground">
-          Measure, sign, re-check, correct.
+          Read it. Verify it. Keep checking.
         </h2>
-        <ol className="mt-12 list-none space-y-16 p-0 sm:space-y-20">
-          {STEPS.map((s, i) => (
-            <li key={s.id} id={`step-${s.id}`} className="grid items-center gap-7 lg:grid-cols-2 lg:gap-14" data-testid={`home-step-${s.id}`}>
-              <div className={i % 2 === 1 ? "lg:order-2" : ""}>
+        <p className="mt-4 max-w-3xl text-base leading-relaxed text-muted-foreground">
+          Inspect the scope of a run, check its record and follow its changes.
+          Each step keeps the method and its limits visible.
+        </p>
+        <ol className="mt-8 grid list-none gap-4 p-0 md:grid-cols-2">
+          {STEPS.map((s) => (
+            <li
+              key={s.id}
+              id={"step-" + s.id}
+              className="flex min-w-0 flex-col rounded-2xl border border-border bg-card p-5 sm:p-6"
+              data-testid={"home-step-" + s.id}
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div className="min-w-0">
+                  <p className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-emerald-800 dark:text-emerald-300">
+                    {s.kicker}
+                  </p>
+                  <h3 className="mt-2 text-xl font-bold leading-tight tracking-tight text-foreground sm:text-2xl">
+                    {s.title}
+                  </h3>
+                </div>
                 <StepImage img={s.img} />
               </div>
-              <div className={"min-w-0 " + (i % 2 === 1 ? "lg:order-1" : "")}>
-                <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-emerald-800 dark:text-emerald-300">{s.kicker}</p>
-                <h3 className="mt-2 text-2xl font-black leading-tight tracking-tight text-foreground sm:text-3xl">{s.title}</h3>
-                <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">{s.body}</p>
-                <Link
-                  href={s.href}
-                  className="mt-5 inline-flex min-h-11 items-center text-base font-bold text-emerald-800 underline underline-offset-4 hover:text-emerald-950 dark:text-emerald-300 dark:hover:text-emerald-200"
-                >
-                  {s.cta} →
-                </Link>
-              </div>
+              <p className="mt-4 flex-1 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                {s.body}
+              </p>
+              <Link
+                href={s.href}
+                className="mt-4 inline-flex min-h-11 items-center text-sm font-bold text-emerald-800 underline underline-offset-4 hover:text-emerald-950 dark:text-emerald-300 dark:hover:text-emerald-200"
+              >
+                {s.cta} →
+              </Link>
             </li>
           ))}
         </ol>

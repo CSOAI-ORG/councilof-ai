@@ -259,7 +259,7 @@ describe("the count is never published without the separation that qualifies it"
     expect(hero).toContain("comparison_axes");
     expect(hero).toContain("separated_leads");
     expect(hero).toContain("untested_separations");
-    expect(hero).toMatch(/if \(comparison === null \|\| separated === null \|\| ties === null \|\| untested === null\) return null;/);
+    expect(hero).toMatch(/if\s*\(\s*comparison === null\s*\|\|\s*separated === null\s*\|\|\s*ties === null\s*\|\|\s*untested === null\s*\)\s*return null;/);
   });
 
   it("says in words that measured is not separated, on the first screen", () => {

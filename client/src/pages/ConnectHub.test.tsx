@@ -11,6 +11,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { Router } from "wouter";
 import ConnectHub, { A2A_ENDPOINT, FULL_DOOR } from "./ConnectHub";
 import { FREE_DOOR } from "./ConnectClaude";
+import LiveBoardGlance from "../components/home/LiveBoardGlance";
 import HomeHero from "../components/home/HomeHero";
 import HomeWaysIn from "../components/home/HomeWaysIn";
 import FREE_TOOLS from "../../../functions/mcp/gspc-tools.json";
@@ -109,9 +110,18 @@ describe("the home board keeps its height while the board read lands", () => {
   // 2026-09-30: the hero no longer carries live figures (home-v2); the figures and tiles are in
   // LiveBoardGlance, which reserves the tiles' box while GET /api/gspc lands.
   it("reserves the tile area and each figure's line", () => {
-    const board = read("client/src/components/home/LiveBoardGlance.tsx");
-    expect(board).toMatch(/min-h-\[[0-9.]+rem\][^"]*" aria-busy="true" aria-label="Loading the board"/);
-    expect(board).toMatch(/<dd className="order-first min-h-\[1\.2em\]/);
+    const loading = render(<LiveBoardGlance />);
+    const css = read("client/src/components/home/livingBoard.css");
+    expect(loading).toContain('class="gspc-axis-grid is-loading" aria-busy="true" aria-label="Loading the board"');
+    expect(loading).toContain('class="gspc-explorer-body" role="region" aria-label="Measurement records" tabindex="0"');
+    expect(css).toMatch(/\.gspc-explorer\s*\{[^}]*height:\s*clamp\(32rem, 75vh, 48rem\)/);
+    expect(css).toMatch(/@media \(max-width: 760px\)[\s\S]*?\.gspc-explorer\s*\{[^}]*height:\s*clamp\(44rem, 90vh, 56rem\)/);
+    expect(css).toMatch(/\.gspc-explorer-body\s*\{[^}]*min-height:\s*0;[^}]*overflow-y:\s*auto;[^}]*scrollbar-gutter:\s*stable;/);
+    expect(css).not.toMatch(/\.gspc-axis-grid\.is-loading\s*\{/);
+    expect(css).toMatch(/\.gspc-summary dd\s*\{\s*min-height:\s*1\.2em;/);
+    const figures = loading.match(/<dl class="gspc-summary"[\s\S]*?<\/dl>/)?.[0] ?? "";
+    expect(figures.match(/<dd\b/g)).toHaveLength(4);
+    expect(figures.match(/>—(?:<span>[\s\S]*?<\/span>)?<\/dd>/g)).toHaveLength(4);
   });
 });
 

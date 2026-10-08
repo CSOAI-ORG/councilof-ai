@@ -34,12 +34,18 @@ import HomeHero from "@/components/home/HomeHero";
 import LiveBoardGlance from "@/components/home/LiveBoardGlance";
 import HomeSteps from "@/components/home/HomeSteps";
 import HomeWaysIn from "@/components/home/HomeWaysIn";
+import HomeEvidencePaths from "@/components/home/HomeEvidencePaths";
 import MomentumStrip from "@/components/momentum/MomentumStrip";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
 import { setMetaDescription } from "@/lib/utils";
 
 /** The proof strip: the four figures a first-time visitor cares about. The rest are on /about/#numbers. */
-export const HOME_PROOF_IDS = ["signed_cards", "corrections", "mcp_tools", "hf_datasets"];
+export const HOME_PROOF_IDS = [
+  "signed_cards",
+  "corrections",
+  "mcp_tools",
+  "hf_datasets",
+];
 
 /**
  * schema.org for the front door. Four nodes an answer engine can use without reading the page:
@@ -114,7 +120,8 @@ const HOME_LD = {
 
 export default function HomeVerify() {
   useEffect(() => {
-    document.title = "Council of AI — independent measurement of AI systems, signed and free to re-check";
+    document.title =
+      "Council of AI — independent measurement of AI systems, signed and free to re-check";
     setMetaDescription(
       "We measure how AI systems behave against frozen, published tests and publish checkable evidence. Issued measurement cards are signed; unsigned supporting runs are labelled. Read the live board and corrections ledger.",
     );
@@ -122,19 +129,31 @@ export default function HomeVerify() {
 
   return (
     <div data-testid="home-verify">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(HOME_LD) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(HOME_LD) }}
+      />
 
       <HomeHero />
       <LiveBoardGlance />
+      <HomeEvidencePaths />
       <HomeSteps />
       <HomeWaysIn />
 
       {/* Proof: four live figures a first-time visitor can open at the source. Everything else is
           behind "More numbers", on /about/#numbers. The board's own figures are in the board band
           above and are not repeated here. */}
-      <section aria-label="Live figures" className="surface-sunken border-t border-border" data-testid="home-proof-strip">
+      <section
+        aria-label="Live figures"
+        className="surface-sunken border-t border-border"
+        data-testid="home-proof-strip"
+      >
         <div className="section-shell pb-10 pt-2 sm:pb-14">
-          <MomentumStrip variant="panel" title="The work, counted live at the source" ids={HOME_PROOF_IDS} />
+          <MomentumStrip
+            variant="panel"
+            title="The work, counted live at the source"
+            ids={HOME_PROOF_IDS}
+          />
           <a
             href="/about/#numbers"
             className="inline-flex min-h-11 items-center text-base font-bold text-emerald-800 underline underline-offset-4 dark:text-emerald-300"
@@ -146,17 +165,31 @@ export default function HomeVerify() {
       </section>
 
       {/* The accountable entity: always visible, never mid-flow (owner, 30 Sep 2026). */}
-      <section aria-label="Who runs Council of AI" className="surface-base border-t border-border" data-testid="home-company-strip">
+      <section
+        aria-label="Who runs Council of AI"
+        className="surface-base border-t border-border"
+        data-testid="home-company-strip"
+      >
         <div className="section-shell flex flex-col gap-3 py-8 sm:flex-row sm:items-center sm:justify-between">
-          <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground" data-testid="home-accountable-entity">
-            Council of AI is operated by CSOAI Ltd (UK Companies House 16939677), founded by Nicholas Templeman. We
-            measure; we do not certify, and verification is free.
+          <p
+            className="max-w-3xl text-sm leading-relaxed text-muted-foreground"
+            data-testid="home-accountable-entity"
+          >
+            Council of AI is operated by CSOAI Ltd (UK Companies House
+            16939677), founded by Nicholas Templeman. We measure; we do not
+            certify, and verification is free.
           </p>
           <div className="flex flex-wrap gap-x-6 text-sm font-bold">
-            <Link href="/about/" className="inline-flex min-h-11 items-center text-emerald-800 underline underline-offset-4 dark:text-emerald-300">
+            <Link
+              href="/about/"
+              className="inline-flex min-h-11 items-center text-emerald-800 underline underline-offset-4 dark:text-emerald-300"
+            >
               Who we are →
             </Link>
-            <Link href="/how-we-work" className="inline-flex min-h-11 items-center text-emerald-800 underline underline-offset-4 dark:text-emerald-300">
+            <Link
+              href="/how-we-work"
+              className="inline-flex min-h-11 items-center text-emerald-800 underline underline-offset-4 dark:text-emerald-300"
+            >
               How we work →
             </Link>
           </div>

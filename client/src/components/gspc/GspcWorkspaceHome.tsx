@@ -85,6 +85,7 @@ const TILE_DOT: Record<TileState, string> = {
   UNTESTED: "bg-slate-500",
   FACT_RUN: "bg-teal-600",
   UNMEASURED: "bg-amber-600",
+  UNKNOWN: "bg-slate-400",
 };
 const TILE_WORD: Record<TileState, string> = {
   SEPARATED: "separated",
@@ -92,6 +93,7 @@ const TILE_WORD: Record<TileState, string> = {
   UNTESTED: "untested",
   FACT_RUN: "fact run",
   UNMEASURED: "unmeasured",
+  UNKNOWN: "state unavailable",
 };
 const TILE_LABEL: Record<TileState, string> = {
   SEPARATED: "Separated",
@@ -99,6 +101,7 @@ const TILE_LABEL: Record<TileState, string> = {
   UNTESTED: "Untested",
   FACT_RUN: "Fact checks",
   UNMEASURED: "Unmeasured",
+  UNKNOWN: "State unavailable",
 };
 // Jargon lives here, in the tooltip, not in the face of the card.
 const TILE_HELP: Record<TileState, string> = {
@@ -107,11 +110,13 @@ const TILE_HELP: Record<TileState, string> = {
   UNTESTED: "Model-comparison tests with too little data to test for a gap yet (UNTESTED).",
   FACT_RUN: "Tests that check facts about servers and public records rather than compare models (deterministic fact runs).",
   UNMEASURED: "Tests with no published run yet (UNMEASURED).",
+  UNKNOWN: "The published axis state is unavailable. No run or comparison result is inferred (UNKNOWN).",
 };
 
 /** The board, compact: the count line WITH its separation line, the model count, one dot per axis. */
 function WorkspaceBoardCard() {
-  const { data, error } = useGspcBoard();
+  const { data, error, readAt } = useGspcBoard();
+  const readDate = typeof readAt === "string" && Number.isFinite(Date.parse(readAt)) ? new Date(readAt) : null;
   const models = useModelsCount();
   const tiles = boardTiles(data);
   const sep = separationRead(data);
@@ -134,7 +139,20 @@ function WorkspaceBoardCard() {
       <h2 id="ws-board-h" className="mt-2 text-xl font-black tracking-tight text-foreground">
         What the tests show today
       </h2>
-      {error ? (
+      {error && data ? (
+        <p role="status" className="mt-4 rounded-2xl border border-amber-500/50 bg-amber-50 px-4 py-3 text-sm text-amber-950" data-testid="ws-board-refresh-error">
+          The board could not be refreshed ({error}). Showing the last successful read.{" "}
+          <a href="/api/gspc" className="font-bold underline underline-offset-2">Read GET /api/gspc directly</a>.
+        </p>
+      ) : null}
+      {readDate ? (
+        <p className="mt-3 text-xs leading-snug text-muted-foreground" data-testid="ws-board-read-at">
+          Last successful read:{" "}
+          <time dateTime={readAt}>{new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeStyle: "short", timeZone: "UTC" }).format(readDate)} UTC</time>.
+          {" "}This is the client read time; the published runs keep their own measurement dates.
+        </p>
+      ) : null}
+      {error && !data ? (
         <p className="mt-4 rounded-2xl border border-amber-500/50 bg-amber-50 px-4 py-3 text-sm text-amber-950" data-testid="ws-board-error">
           The board is unread right now ({error}). Nothing is shown in its place.{" "}
           <a href="/api/gspc" className="font-bold underline underline-offset-2">Read GET /api/gspc directly</a>.
@@ -159,7 +177,7 @@ function WorkspaceBoardCard() {
           </p>
           <dl className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4 xl:grid-cols-2 2xl:grid-cols-4" data-testid="ws-board-tiles">
             {(Object.keys(TILE_WORD) as TileState[])
-              .filter((s) => s !== "UNMEASURED" || tiles.some((t) => t.state === s))
+              .filter((s) => (s !== "UNMEASURED" && s !== "UNKNOWN") || tiles.some((t) => t.state === s))
               .map((s) => (
                 <div key={s} className="rounded-xl bg-muted/70 px-3 py-2" title={TILE_HELP[s]}>
                   <dt className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
