@@ -12,6 +12,7 @@ import LiveBoardGlance, {
 } from "./LiveBoardGlance";
 import HomeEvidencePaths from "./HomeEvidencePaths";
 import type { GspcPayload } from "../board/useGspcBoard";
+import { ROWS_SEPARATION } from "../../../../functions/api/_gspc_rows_separation";
 const render = (node: React.ReactNode) =>
   renderToStaticMarkup(<Router ssrPath="/">{node}</Router>);
 const payload = (rows: any[], totals: any = {}): GspcPayload => ({
@@ -346,6 +347,8 @@ describe("producer supplied evidence links", () => {
             dataset: "csoai/GovBench",
             dataset_url: "https://huggingface.co/datasets/csoai/GovBench",
             leader_card_url: "/cards/public-model.json",
+            leader_card_state: "SIGNED_PER_MODEL_CARD",
+            leader_card_note: "Inspect the declared card's measurement scope.",
           },
         ])}
         models={null}
@@ -356,6 +359,10 @@ describe("producer supplied evidence links", () => {
     );
     expect(html).toContain('href="/cards/public-model.json"');
     expect(html).toContain("Inspect public model card");
+    expect(html).toContain("Source declares a matching signed per-model card");
+    expect(html).toContain("Check its signature and measurement scope");
+    expect(html).toContain("Inspect the declared card&#x27;s measurement scope.");
+    expect(html).not.toMatch(/current.run verified|issuer.authenticated/i);
     expect(html).toContain("Run attestation not declared");
     expect(html).toContain("No run link published on this row");
   });
@@ -379,6 +386,84 @@ describe("producer supplied evidence links", () => {
     expect(html).toContain("Source marks the dataset URL unresolved");
     expect(html).toContain("published: csoai/goldbank");
     expect(html).not.toContain("https://huggingface.co/datasets/published");
+  });
+});
+
+describe("model-card evidence qualification", () => {
+  const panel = (card: Record<string, unknown>) =>
+    render(
+      <LiveBoardGlance
+        data={payload([{
+          axis: "care", kind: "model-comparison", status: "MEASURED",
+          separation: "TIE", leader: "published-model", accuracy: 0.405,
+          ...card,
+        }])}
+        models={null}
+      />,
+    );
+
+  it.each(["care", "safety"] as const)(
+    "shows the actual producer's %s card qualification beside its evidence",
+    (axis) => {
+      const measurement = ROWS_SEPARATION.axes[axis];
+      const card = measurement.leader_card;
+      const html = panel({
+        axis,
+        leader: measurement.test.leader.model,
+        accuracy: measurement.test.leader.accuracy,
+        leader_card_state: card.state,
+        leader_card_note: card.note,
+        leader_card_url: "card_url" in card ? card.card_url : undefined,
+      });
+      const evidence = html.slice(html.indexOf('class="gspc-evidence-box"'));
+      expect(evidence).toContain('data-card-state="' + card.state + '"');
+      expect(evidence).toContain(card.note);
+      expect(evidence.indexOf(card.note)).toBeLessThan(evidence.indexOf("Open the free verifier"));
+      expect(html).toContain(measurement.test.leader.model);
+      expect(html).toContain((measurement.test.leader.accuracy * 100).toFixed(1) + "%");
+      if (axis === "care") {
+        expect(evidence).toContain('href="' + ROWS_SEPARATION.axes.care.leader_card.card_url + '"');
+        expect(evidence).toContain("Inspect different-measurement card");
+        expect(evidence).toContain("does not back the result shown");
+      } else {
+        expect(evidence).toContain("No signed per-model card is published for this result");
+        expect(evidence).not.toContain("Inspect public model card");
+      }
+    },
+  );
+
+  it.each([undefined, null, "FUTURE_CARD_STATE"])(
+    "does not promote a supplied URL with undeclared or unknown state %s",
+    (leader_card_state) => {
+      const html = panel({leader_card_state, leader_card_url: "/signed/cards/reference.json"});
+      expect(html).toContain('href="/signed/cards/reference.json"');
+      expect(html).toContain("Inspect supplied model card");
+      expect(html).toContain("Signed per-model card support for this result is unconfirmed");
+      expect(html).not.toContain("Source declares a matching signed per-model card");
+    },
+  );
+
+  it.each([undefined, "javascript:alert(1)"])(
+    "preserves a signed-card declaration without inventing a usable URL %s",
+    (leader_card_url) => {
+      const html = panel({leader_card_state: "SIGNED_PER_MODEL_CARD", leader_card_url});
+      expect(html).toContain("Source declares a matching signed per-model card");
+      expect(html).toContain("No usable model-card link is published on this row");
+      expect(html).not.toContain('href="javascript:');
+      expect(html).not.toContain("Inspect public model card");
+    },
+  );
+
+  it("keeps a historical warning and escaped producer note when its URL is unsafe", () => {
+    const html = panel({
+      leader_card_state: "CARD_RECORDS_A_DIFFERENT_MEASUREMENT",
+      leader_card_url: "javascript:alert(1)",
+      leader_card_note: "Historical scope <script>example</script>",
+    });
+    expect(html).toContain("does not back the result shown");
+    expect(html).toContain("Historical scope &lt;script&gt;example&lt;/script&gt;");
+    expect(html).not.toContain("<script>");
+    expect(html).not.toContain('href="javascript:');
   });
 });
 

@@ -234,6 +234,20 @@ function AxisDetail({ tile }: { tile: Tile }) {
   const evidence = evidenceHref(a.evidence_url),
     dataset = datasetHref(a),
     modelCard = evidenceHref(a.leader_card_url);
+  const cardState =
+    typeof a.leader_card_state === "string" ? a.leader_card_state : null;
+  const cardNote =
+    typeof a.leader_card_note === "string" && a.leader_card_note.trim()
+      ? a.leader_card_note
+      : null;
+  const cardQualification =
+    cardState === "SIGNED_PER_MODEL_CARD"
+      ? "Source declares a matching signed per-model card. Check its signature and measurement scope."
+      : cardState === "CARD_RECORDS_A_DIFFERENT_MEASUREMENT"
+        ? "This card records a different measurement and does not back the result shown."
+        : cardState === "NO_SIGNED_PER_MODEL_CARD"
+          ? "No signed per-model card is published for this result."
+          : "Signed per-model card support for this result is unconfirmed.";
   const attestation =
     a.run_attestation === "ED25519_SIGNED"
       ? "Run declares an Ed25519 signature"
@@ -347,8 +361,23 @@ function AxisDetail({ tile }: { tile: Tile }) {
         {a.dataset_url_state === "UNRESOLVABLE" ? (
           <p>Source marks the dataset URL unresolved.</p>
         ) : null}
-        {modelCard ? (
-          <a href={modelCard}>Inspect public model card ↗</a>
+        {tile.group === "comparison" || modelCard || cardState || cardNote ? (
+          <div className="gspc-model-card" data-card-state={cardState ?? undefined}>
+            {modelCard ? (
+              <a href={modelCard}>
+                {cardState === "CARD_RECORDS_A_DIFFERENT_MEASUREMENT"
+                  ? "Inspect different-measurement card"
+                  : cardState === "SIGNED_PER_MODEL_CARD"
+                    ? "Inspect public model card"
+                    : "Inspect supplied model card"}{" "}
+                ↗
+              </a>
+            ) : cardState === "SIGNED_PER_MODEL_CARD" ? (
+              <p>No usable model-card link is published on this row.</p>
+            ) : null}
+            <p>{cardQualification}</p>
+            {cardNote ? <p>{cardNote}</p> : null}
+          </div>
         ) : null}
         <Link href="/gspc-verify">Open the free verifier →</Link>
       </div>
