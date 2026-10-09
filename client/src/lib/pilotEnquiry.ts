@@ -1,5 +1,5 @@
 /** Local email-draft preparation only. No fetch, storage, payment or send action. */
-import { CONTACT_MAILBOX } from '@/lib/buying';
+import { BUYING_ENQUIRIES, CONTACT_MAILBOX } from '@/lib/buying';
 
 export const ENQUIRY_EMAIL = CONTACT_MAILBOX;
 export const ENQUIRY_LIMITS = { name: 100, email: 254, subject: 160, message: 5000 } as const;
@@ -16,7 +16,27 @@ export const PILOT_MESSAGE = [
 ].join('\n');
 
 export function enquiryPreset(search: string): Pick<EnquiryFields, 'subject' | 'message'> | null {
-  const arm = new URLSearchParams(search).get('arm');
+  const params = new URLSearchParams(search);
+  const arm = params.get('arm');
+  if (arm === 'invoice') {
+    const product = BUYING_ENQUIRIES.find((p) => p.product === params.get('product'));
+    if (!product) return null;
+    return {
+      subject: `${product.label} — written scope and invoice enquiry`,
+      message: [
+        `Product: ${product.label}`,
+        'Public output URL or subject to check:',
+        'Date, period or history needed:',
+        'What will you use the evidence for?',
+        'Organisation:',
+        'Billing contact:',
+        'Existing invoice reference, if you have one:',
+        '',
+        'Please reply with the scope, available deliverable and invoice terms before I order.',
+        'This is an enquiry, not a purchase or a booked fresh measurement.',
+      ].join('\n'),
+    };
+  }
   if (arm === 'pilot') return { subject: PILOT_SUBJECT, message: PILOT_MESSAGE };
   const subjects: Record<string, string> = {
     ledger: 'Ledger enquiry', data: 'Data enquiry', run: 'Run / re-attest enquiry',
