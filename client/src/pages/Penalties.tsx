@@ -55,7 +55,7 @@ export default function Penalties() {
           </div>
           <h2 className="mt-8 text-lg font-bold text-gray-900">2. Global annual turnover</h2>
           <div className="mt-3 flex items-center justify-between text-sm"><span className="font-semibold text-gray-700">EUR {turnover}m</span><span className="text-xs text-gray-400">10m - 50bn</span></div>
-          <input type="range" min={10} max={50000} step={10} value={turnover} onChange={(e) => setTurnover(parseInt(e.target.value, 10))} className="mt-2 w-full accent-emerald-600" />
+          <input type="range" aria-label="Global annual turnover in millions of euros" min={10} max={50000} step={10} value={turnover} onChange={(e) => setTurnover(parseInt(e.target.value, 10))} className="mt-2 w-full accent-emerald-600" />
         </div>
         <div className="rounded-2xl border border-gray-200 p-6 text-center">
           <div className="text-xs font-bold uppercase tracking-wide text-gray-400">Maximum exposure</div>
