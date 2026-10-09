@@ -146,6 +146,10 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     resourceUrl,
     description: DESCRIPTION,
     serviceName: "CSOAI Free Door",
+    // Service-level metadata the Bazaar persists alongside description and mimeType
+    // (docs.payai.network/x402/facilitators/bazaar). No amount lives here: the price of this door
+    // is stated by accepts[] (0), never by a tag.
+    tags: ["board", "public-root", "discovery", "x402"],
     accepts,
     bazaar,
   });
