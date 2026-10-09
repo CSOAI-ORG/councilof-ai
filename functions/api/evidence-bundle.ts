@@ -202,10 +202,33 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     .filter(({ l }) => isRelevant(l, subject, ob))
     .sort((a, b) => a.sha.localeCompare(b.sha));
 
+  // A `subject` is a SUBSTRING match over card subject/surface/tags (isRelevant, _obligations.ts),
+  // so a buyer who follows the documented contract and passes a model id can match NOTHING while the
+  // same obligation holds hundreds of signed cards. The preview already has to say "empty"
+  // (EMPTY IS EMPTY, above) — but a bare zero is a dead end: the buyer cannot see what the obligation
+  // does match, so discovery stops before the paid door is ever considered. When a subject was given
+  // and matched nothing, name the subjects this obligation DOES match so the free preview hands back
+  // a purchase path instead of a stop. Absent on every successful selection — additive only.
+  const availableSubjects = ((): string[] | undefined => {
+    if (!subject || selected.length) return undefined;
+    const obligationWide = Object.entries(corpus.wrappers)
+      .map(([sha, w]) => ({ sha, w, l: lite(sha, w) }))
+      .filter(({ l }) => isRelevant(l, "", ob));
+    if (!obligationWide.length) return undefined;
+    return Array.from(new Set(obligationWide.map(({ l }) => l.subject).filter(Boolean))).slice(0, 20);
+  })();
+
   const preview = {
     obligation: { id: ob.id, control_id: ob.control_id, title: ob.title, obligation: ob.obligation, regulator: ob.regulator, counsel_confirmed: ob.counsel_confirmed, honesty: ob.honesty, ...(ob.review_note ? { review_note: ob.review_note } : {}), existing_pack: ob.existing_pack ? `${origin}${ob.existing_pack}` : null },
     subject: subject || null,
     relevant_signed_cards: selected.length,
+    ...(availableSubjects
+      ? {
+          available_subjects: availableSubjects,
+          available_subjects_note:
+            "`subject` matches a card's subject, surface or tags as a substring, so a model id can match nothing. These are the subjects this obligation does match; omit `subject` for the whole obligation selection.",
+        }
+      : {}),
     cards: selected.slice(0, 40).map(({ sha, l }) => ({ sha256: sha, surface: l.surface, subject: l.subject, as_of: l.as_of, url: `${origin}/cards/${sha.slice(0, 16)}.json` })),
     corpus: { as_of: corpus.as_of, merkle_root: corpus.merkle_root, read_from: corpus.source, signed_cards_total: Object.keys(corpus.wrappers).length },
     relation: "relevant-to — never a determination",
