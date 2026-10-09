@@ -5462,6 +5462,35 @@
     },
     {
       "audience": "agent",
+      "description": "POST /api/wrapper/changes — the unpaid probe a directory validator sends (POST {}, no payment header). Answers this door's own 402 challenge before any id validation, because x402scan's discovery spec treats \"Expected 402, got 404 from request validation running before payment challenge\" as a disqualifying failure. A POST that carries a payment header keeps the /api catch-all 404 it has always answered: this door has never served POST.",
+      "description_state": "DOCUMENTED",
+      "id": "api-wrapper-changes-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "method": "POST",
+      "name": "Wrapper changes (POST)",
+      "path": "/api/wrapper/changes",
+      "payment": "x402",
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "POST",
+        "request": "/api/wrapper/changes",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "schema_refs": [
+        "csoai.wrapper.changes/0.1"
+      ],
+      "source": "functions/api/wrapper/changes.ts",
+      "surfaces": [
+        "llms",
+        "nav"
+      ]
+    },
+    {
+      "audience": "agent",
       "description": "GET /api/wrapper/index.json \u2014 every asset on the wrapped-asset roster and in the per-deployment archives, keyed by CAIP-19, with the lookup URL for each. The sides that have no CAIP-19 id (a fund register, bank deposits) are listed separately with the reason, never dropped.",
       "description_state": "DOCUMENTED",
       "id": "api-wrapper-index-json",
