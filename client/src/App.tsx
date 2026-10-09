@@ -3,7 +3,7 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch, useLocation, Redirect } from "wouter";
 import RequireAuth from "./components/RequireAuth";
 import { useEffect, useLayoutEffect, lazy, Suspense } from "react";
-import { applyHead, resolveHead } from "./lib/seoHead";
+import { maintainHead, resolveHead } from "./lib/seoHead";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { SectionLoader } from "./components/PageLoader";
 // Keeps the prerendered page on screen while the first route chunk loads (CLS 0.33 -> ~0; see file).
@@ -449,13 +449,14 @@ function ScrollToTop() {
  * client/src/lib/seoHead.ts resolves it synchronously from client/src/data/seo-head.json, the
  * route manifest and the publication manifest, so the prerender snapshot never carries the
  * shell title, a shared withdrawal title or the string "undefined". A page that knows better
- * (a note's own headline, the board's live count) still overwrites it after it mounts.
+ * (a note's own headline) can refine parametrised routes after it mounts. Reviewed
+ * static-route metadata stays consistent across search and social tags.
  * The canonical is the URL the edge serves ("<route>/"), matching the prerender's rewrite.
  */
 function RouteHead() {
   const [location] = useLocation();
   useLayoutEffect(() => {
-    applyHead(resolveHead(location));
+    return maintainHead(resolveHead(location));
   }, [location]);
   return null;
 }
