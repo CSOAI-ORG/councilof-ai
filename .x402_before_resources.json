@@ -1,0 +1,561 @@
+{
+  "schema": "csoai.x402-catalog/0.3",
+  "one_line": "Verification is free forever. Agents pay per artefact: issuance, assembly, cadence \u2014 never a grade.",
+  "rail": {
+    "mode": "live",
+    "pay_to_configured": true,
+    "facilitator_configured": true,
+    "note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free.",
+    "scheme": "exact",
+    "network": "eip155:8453",
+    "asset": {
+      "symbol": "USDC",
+      "contract": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "decimals": 6
+    },
+    "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+    "amounts": "only inside each resource's 402 challenge (accepts[].amount) \u2014 never on this catalog, never in prose",
+    "well_known": "https://councilof.ai/.well-known/x402.json",
+    "offer_receipt": {
+      "emission": "conditional",
+      "board_signing_key_configured": true,
+      "facilitator_configured": true,
+      "offers": "signed only when BOARD_SIGN_KEY_PKCS8_B64 is provisioned and an accepts[] entry can be committed; otherwise csoai.offer_receipt names the gap and no offer-receipt block is attached",
+      "receipts": "signed only after facilitator-confirmed settlement when the facilitator names a payer and BOARD_SIGN_KEY_PKCS8_B64 is provisioned; otherwise receiptGap names why no signed receipt was attached",
+      "format": "jws (EdDSA)",
+      "kid": "did:web:csoai.org#board-attestation-1",
+      "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
+      "verify_free": "https://councilof.ai/api/receipts/verify",
+      "verify_without_us": "https://councilof.ai/verifier/verify_receipt.py \u2014 checks JWS bytes under the public or retained DID key; no payment verification; guide https://councilof.ai/verifier/receipt-toolkit.md",
+      "by_payer": "https://councilof.ai/api/receipts?payer=0x\u2026"
+    }
+  },
+  "resources": [
+    {
+      "id": "free_door",
+      "name": "Free board + public-root discovery door",
+      "resource": "https://councilof.ai/api/free-door",
+      "free_preview": "https://councilof.ai/api/free-door",
+      "deliverable": "Live board totals and the signed public root, free: the axis totals and Merkle root, served through a real x402 settle. It reads nothing new: the totals are the board's own and the root is the published one. States: each axis MEASURED or UNMEASURED exactly as the board states it. Verification is free forever; the same bytes answer 200 at /api/gspc and /root.json.",
+      "never": [
+        "a paid artefact",
+        "a grade",
+        "a rank",
+        "a certificate"
+      ]
+    },
+    {
+      "id": "subject_discovery",
+      "name": "Named-subject Bazaar discovery doors",
+      "resource": "https://councilof.ai/api/discover/<chainlink|ondo|ondo-ousg>",
+      "free_preview": "https://councilof.ai/api/discover/<chainlink|ondo|ondo-ousg>",
+      "subjects": {
+        "chainlink": [
+          "Chainlink",
+          "LINK"
+        ],
+        "ondo": [
+          "Ondo Finance",
+          "ONDO"
+        ],
+        "ondo-ousg": [
+          "Ondo Finance OUSG",
+          "OUSG",
+          "xrpl:OUSG"
+        ]
+      },
+      "deliverable": "Subject identity plus links to existing evidence, board and verification routes through a genuine x402 challenge whose amount is zero.",
+      "index_state": "PENDING_CONFIRMED_SETTLEMENT_AND_BAZAAR_READBACK",
+      "never": [
+        "a paid SKU",
+        "a measurement",
+        "a rating",
+        "an endorsement",
+        "a certificate"
+      ]
+    },
+    {
+      "id": "issuance",
+      "name": "Commission a signed card (request-attestation)",
+      "resource": "https://councilof.ai/api/request-attestation?subject=<id>&axis=<slug>",
+      "free_preview": "https://councilof.ai/api/request-attestation?subject=<id>",
+      "free_preview_note": "the 402 body carries csoai.preview: signed cards already on file",
+      "deliverable": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Without that key: sig_ed25519:null, unsigned_reason. Check csoai.signer before paying. Paid reserve: up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The interop root in the free preview is not included in the paid reserve. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.",
+      "never": [
+        "a score",
+        "a rank",
+        "a certificate",
+        "a MEASURED cell minted by payment"
+      ]
+    },
+    {
+      "id": "evidence_bundle",
+      "name": "Evidence bundle mapped to an obligation",
+      "resource": "https://councilof.ai/api/evidence-bundle?obligation=article-50|article-53|dora|cra&subject=<model-id>&bundle=1",
+      "free_preview": "https://councilof.ai/api/evidence-bundle?obligation=<dora|cra|article-50|article-53>&subject=<model-id>",
+      "deliverable": "Signed evidence bundle for one obligation: EU AI Act Article 50 or 53, DORA or EU-CRA, as OSCAL results. Built only from already-signed measurement cards, each with its full bytes and Merkle inclusion proof, plus one signed manifest card. States: ASSEMBLED, or zero relevant cards stated as zero; never a finding that an obligation is met. Verification is free at /gspc-verify.",
+      "never": [
+        "a conformity determination",
+        "satisfied/not-satisfied findings",
+        "a certificate"
+      ]
+    },
+    {
+      "id": "data_feed",
+      "name": "Signed data feed (assembly + cadence)",
+      "resource": "https://councilof.ai/api/signed-data-feed?feed=1",
+      "free_preview": "https://councilof.ai/api/signed-data-feed",
+      "deliverable": "Signed derivative data feed: the signed streams already on the public root, assembled into one document per request. Carries the signals index, the first-fine watch feed, the root and the card index, each block with its own signature and key id and its as_of read from the file. States: each stream as signed, or UNCHECKABLE where its signature cannot be checked. Data only; verification is free and every stream is public at its own URL.",
+      "never": [
+        "scores as a product",
+        "a ranking",
+        "a rating"
+      ],
+      "also": {
+        "proof_bundle": "https://councilof.ai/api/proof?bundle=1",
+        "one_inclusion_free": "https://councilof.ai/api/proof?sha=<64-hex>"
+      }
+    },
+    {
+      "id": "proof_bundle",
+      "name": "Public-root inclusion-proof bundle",
+      "resource": "https://councilof.ai/api/proof?bundle=1",
+      "free_preview": "https://councilof.ai/api/proof?sha=<64-hex>",
+      "free_preview_note": "one inclusion proof is free for any leaf in the current public root",
+      "deliverable": "Inclusion proof bundle for leaves available in the last published Merkle root, read from that root. Each leaf comes with its hash, index and proof path, plus the root and the signed card count. States: included with a path, or absent from the root. Verification is free: recompute any path against /root.json.",
+      "never": [
+        "a grade",
+        "a rank",
+        "a certificate",
+        "a private evidence claim"
+      ]
+    },
+    {
+      "id": "rwa_evidence",
+      "name": "XRPL asset evidence card (per request)",
+      "resource": "https://councilof.ai/api/rwa/evidence?asset=<symbol|issuer_address>",
+      "free_preview": "https://councilof.ai/api/rwa/evidence?asset=<symbol>&preview=1",
+      "free_preview_note": "unsigned state, no raw-fetch hashes; symbols at /api/xrpl",
+      "deliverable": "RWA asset evidence: one signed card of one XRPL issued asset's on-ledger state, read live per request. Reads the AccountRoot flags, Domain, the two-way xrp-ledger.toml check and the gateway obligation, each raw fetch hashed. States: PROBED, UNCHECKABLE (an unreachable source is never a failure) or UNMEASURED. Free unsigned preview; verification is free.",
+      "never": [
+        "a rating",
+        "a guarantee",
+        "a verdict",
+        "a rank",
+        "a paywall on /api/xrpl or /root.json"
+      ]
+    },
+    {
+      "id": "wrapper_parity",
+      "name": "Wrapped-asset parity card (per pair)",
+      "resource": "https://councilof.ai/api/wrapper?id=<wrapped-symbol:chain>",
+      "free_preview": "https://councilof.ai/api/wrapper?id=<wrapped-symbol:chain>&preview=1",
+      "free_preview_note": "unsigned state, no raw-read hashes; pair ids in /interop/wrapped-asset-parity-2026-09-13.json",
+      "deliverable": "Wrapped-asset parity evidence: one signed card of one bridged or wrapped token pair, read live from public RPC. Reads the wrapped totalSupply and the origin-chain bridge-escrow balance at finalized blocks whose hash a second RPC operator confirmed, raw reads hashed. States: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
+      "never": [
+        "a rating",
+        "a guarantee",
+        "a verdict",
+        "a rank",
+        "a reserve attestation",
+        "a paywall on the free ledger or /root.json"
+      ]
+    },
+    {
+      "id": "wrapper_changes",
+      "name": "Wrapped-asset change feed (per pair)",
+      "resource": "https://councilof.ai/api/wrapper/changes?id=<wrapped-symbol:chain>",
+      "free_preview": "https://councilof.ai/api/wrapper/changes?id=<wrapped-symbol:chain>&preview=1",
+      "free_preview_note": "delta of wrapped supply and escrow since the previous ledger snapshot; pair ids in /interop/wrapped-asset-parity-*.json",
+      "deliverable": "Wrapped-asset parity evidence: change record for one pair between the two latest published ledger snapshots. Returns per-field deltas of wrapped supply, escrow balance and ratio, with both snapshot dates read from the files. States: DELTA_READ, or UNCHECKABLE when only one snapshot exists. Free preview; verification is free.",
+      "never": [
+        "a rating",
+        "a guarantee",
+        "a verdict",
+        "a rank",
+        "a reserve attestation",
+        "a paywall on the free ledger or /root.json"
+      ]
+    },
+    {
+      "id": "wrapper_asset_usdc",
+      "name": "Wrapped-asset parity pack (every USDC pair)",
+      "resource": "https://councilof.ai/api/wrapper/asset/usdc",
+      "free_preview": "https://councilof.ai/api/wrapper/asset/usdc?preview=1",
+      "free_preview_note": "every pair's unsigned card and the counts by state; an asset whose every pair is UNMEASURED answers 200 preview-only, never 402",
+      "deliverable": "Wrapped-asset parity evidence for USDC: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
+      "never": [
+        "a rating",
+        "a guarantee",
+        "a verdict",
+        "a rank",
+        "a reserve attestation",
+        "a charge for an UNMEASURED read"
+      ]
+    },
+    {
+      "id": "wrapper_asset_usdt",
+      "name": "Wrapped-asset parity pack (every USDT pair)",
+      "resource": "https://councilof.ai/api/wrapper/asset/usdt",
+      "free_preview": "https://councilof.ai/api/wrapper/asset/usdt?preview=1",
+      "free_preview_note": "every pair's unsigned card and the counts by state; an asset whose every pair is UNMEASURED answers 200 preview-only, never 402",
+      "deliverable": "Wrapped-asset parity evidence for USDT: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
+      "never": [
+        "a rating",
+        "a guarantee",
+        "a verdict",
+        "a rank",
+        "a reserve attestation",
+        "a charge for an UNMEASURED read"
+      ]
+    },
+    {
+      "id": "wrapper_asset_dai",
+      "name": "Wrapped-asset parity pack (every DAI pair)",
+      "resource": "https://councilof.ai/api/wrapper/asset/dai",
+      "free_preview": "https://councilof.ai/api/wrapper/asset/dai?preview=1",
+      "free_preview_note": "every pair's unsigned card and the counts by state; an asset whose every pair is UNMEASURED answers 200 preview-only, never 402",
+      "deliverable": "Wrapped-asset parity evidence for DAI: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
+      "never": [
+        "a rating",
+        "a guarantee",
+        "a verdict",
+        "a rank",
+        "a reserve attestation",
+        "a charge for an UNMEASURED read"
+      ]
+    },
+    {
+      "id": "fresh_capsule",
+      "name": "Fresh measurement capsule (one MCP endpoint, one claim)",
+      "resource": "https://councilof.ai/api/measurement/fresh-capsule?endpoint=<https-mcp-url>&dimension=<TOOLS|VERSION|PROTOCOL>",
+      "free_preview": "https://councilof.ai/api/measurement/fresh-capsule?endpoint=<https-mcp-url>&dimension=TOOLS&preview=1",
+      "free_preview_note": "the same measurement, unsigned and without source digests; verification (MCP verify_capsule, server_evidence) stays free",
+      "deliverable": "Fresh measurement capsule: re-measures one declared-vs-observed claim about one MCP endpoint, live. Compares the endpoint's own discovery documents with its initialize and tools/list answers for TOOLS, VERSION or PROTOCOL, each read hashed; no tool is ever called. States: CONSISTENT, INCONSISTENT, or UNCHECKABLE with the reason. Free unsigned preview; verification is free.",
+      "never": [
+        "a rating",
+        "a guarantee",
+        "a verdict",
+        "a rank",
+        "an endorsement",
+        "a certificate",
+        "a call beyond the discovery boundary"
+      ]
+    },
+    {
+      "id": "art50_marking_evidence",
+      "name": "Article 50 machine-readable marking evidence",
+      "resource": "https://councilof.ai/api/art50/marking-evidence?url=<https-output-url>",
+      "free_preview": "https://councilof.ai/api/art50/marking-evidence?url=<https-output-url>&preview=1",
+      "free_preview_note": "the same point-in-time detection is returned unsigned before purchase",
+      "deliverable": "Art. 50 marking evidence: one signed pack for one generative output at a named URL, measured from its bytes. Detects C2PA and IPTC metadata only (C2PA manifest, assertion hashes, hard binding, claim signature; IPTC digitalSourceType); no watermark is read. States: DETECTED, NOT_DETECTED (not proof the output is unmarked) or UNCHECKABLE; never a legal determination. CSOAI is a C2PA member. Free unsigned preview; verification is free.",
+      "never": [
+        "a conformity opinion",
+        "a guarantee about the generator",
+        "a certificate",
+        "legal advice"
+      ]
+    },
+    {
+      "id": "provider_diff_feed",
+      "name": "Provider document diff feed (signed historical batch / bespoke partner feed)",
+      "resource": "https://councilof.ai/api/feeds/provider-diff?history=1",
+      "free_preview": "https://councilof.ai/api/feeds/provider-diff",
+      "free_preview_note": "recent diffs + latest state per target, free; leaves in /feeds/provider-diff/leaves/",
+      "deliverable": "Provider change record: the signed history of document changes the daily watcher recorded for tracked model providers. Each diff leaf comes with its Merkle inclusion proof, assembled per request. States: each diff exactly as the watcher recorded it; the latest state per provider is free at the same path without history=1. Verification is free.",
+      "never": [
+        "a verdict on any change",
+        "the content of any page (never captured)",
+        "a grade"
+      ]
+    },
+    {
+      "id": "receipts_batch",
+      "name": "Historical measurement-card batch (assembly)",
+      "resource": "https://councilof.ai/api/receipts/batch?from=<iso>&to=<iso>",
+      "free_preview": "https://councilof.ai/api/receipts/batch?from=<iso>&to=<iso>&preview=1",
+      "free_preview_note": "count, span, root count and the sha256 of the exact batch bytes \u2014 no leaves",
+      "deliverable": "Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves. Each signed card-v0 leaf comes with its inclusion path and the root that carried it. States: the leaves found in the window, or an empty batch stated as empty. Not payment or settlement receipts. Free preview (count, span, batch sha256); verification is free.",
+      "recent_free": [
+        "https://councilof.ai/root.json",
+        "https://councilof.ai/cards/<sha16>.json",
+        "https://councilof.ai/api/proof?sha=<64-hex>",
+        "https://councilof.ai/receipts/root-history.json"
+      ],
+      "honesty": "no settlement-receipt stream exists (/api/receipts/latest is UNPUBLISHED); these are measurement leaves, not payment receipts",
+      "never": [
+        "a conclusion about any leaf",
+        "a grade",
+        "a certificate",
+        "a settlement-receipt claim"
+      ]
+    },
+    {
+      "id": "ras_mcp_probe",
+      "name": "MCP discovery probe (per endpoint)",
+      "resource": "https://councilof.ai/api/ras/mcp-probe?url=<https-mcp-endpoint>",
+      "deliverable": "MCP discovery probe receipt: one live, read-only discovery of a public https MCP endpoint, signed. Runs server/discover, else initialize and tools/list, and never calls a tool: protocol version requested and negotiated, tool count, tool-names sha256. States include LISTED, PARTIAL, AUTH_REQUIRED, NOT_MCP, TIMEOUT and UNREACHABLE, delivered as found. Verification is free at /api/verify.",
+      "free_preview": "https://councilof.ai/evidence/mcp-remote-census/",
+      "verify_free": "https://councilof.ai/api/verify",
+      "never": [
+        "a tool call",
+        "a grade",
+        "a rank",
+        "a safety judgement",
+        "a certificate",
+        "a board cell"
+      ]
+    },
+    {
+      "id": "ras_x402_check",
+      "name": "x402 challenge conformance check (per resource)",
+      "resource": "https://councilof.ai/api/ras/x402-check?url=<https-x402-resource>",
+      "deliverable": "x402 challenge conformance receipt: one live GET of a public x402 resource, checked and signed. The rule is the daily census's: HTTP 402, a PAYMENT-REQUIRED header, x402Version 2 and extensions.bazaar in the body. States: CONFORMANT, NOT_CONFORMANT, TIMEOUT, UNREACHABLE or BLOCKED, delivered as found. Verification is free at /api/verify.",
+      "free_preview": "https://councilof.ai/api/x402/index",
+      "verify_free": "https://councilof.ai/api/verify",
+      "daily_index_free": "https://councilof.ai/api/x402/index",
+      "never": [
+        "a payment to the target",
+        "a judgement of the seller",
+        "a grade",
+        "a certificate"
+      ]
+    },
+    {
+      "id": "ras_supply",
+      "name": "Token supply read with state proof (per deployment)",
+      "resource": "https://councilof.ai/api/ras/supply?asset=<USDC>&ledger=<evm-ledger-on-issuer-list>",
+      "deliverable": "Token supply read receipt: one fresh totalSupply() read of an issuer-listed EVM deployment, signed. The address is parsed from the issuer's own page on the request (USDC). States: STATE_PROOF_VERIFIED on Ethereum (EIP-1186 proof checked against the block stateRoot), OPERATOR_API elsewhere, or UNCHECKABLE with the reason. Not a reserve attestation. Verification is free at /api/verify.",
+      "free_preview": "https://councilof.ai/evidence/cross-ledger-usdc/",
+      "verify_free": "https://councilof.ai/api/verify",
+      "never": [
+        "a reserve attestation",
+        "a proof of backing",
+        "a rate",
+        "a grade",
+        "a certificate"
+      ]
+    },
+    {
+      "id": "pop_stablecoins",
+      "name": "Population slice: Stablecoin universe",
+      "resource": "https://councilof.ai/api/pop/stablecoins",
+      "free_preview": "https://councilof.ai/api/pop/stablecoins?preview=1",
+      "free_preview_note": "state, n, as_of, source paths and caveats, read from the artifact on the request; the source artifacts themselves are free files",
+      "deliverable": "Stablecoin universe slice: every asset the frozen discovery index catalogues, read from the published artifact. Carries each reader's per-chain deployment reads and every unmeasured asset's own reason. Assets, never supply; a read, not a reserve attestation. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
+      "never": [
+        "a grade",
+        "a rank",
+        "a verdict about any row",
+        "a paywall on the source artifact",
+        "a certificate"
+      ]
+    },
+    {
+      "id": "pop_swift",
+      "name": "Population slice: SWIFT-linked bank census",
+      "resource": "https://councilof.ai/api/pop/swift",
+      "free_preview": "https://councilof.ai/api/pop/swift?preview=1",
+      "free_preview_note": "state, n, as_of, source paths and caveats, read from the artifact on the request; the source artifacts themselves are free files",
+      "deliverable": "SWIFT-linked bank census slice: every bank named in a dated public notice about the Swift digital-asset MVP. Each row keeps its notice's own wording (LIVE, COMMITTED, DISCOVERED) and a hashed press URL; mixed identity by design, never a client list. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
+      "never": [
+        "a grade",
+        "a rank",
+        "a verdict about any row",
+        "a paywall on the source artifact",
+        "a certificate"
+      ]
+    },
+    {
+      "id": "pop_xrpl",
+      "name": "Population slice: XRPL issued-asset set",
+      "resource": "https://councilof.ai/api/pop/xrpl",
+      "free_preview": "https://councilof.ai/api/pop/xrpl?preview=1",
+      "free_preview_note": "state, n, as_of, source paths and caveats, read from the artifact on the request; the source artifacts themselves are free files",
+      "deliverable": "XRPL issued-asset slice: the assets whose signed xrpl.asset.state card sits on the current public root. Read from the live reader, with the issuer registry artifact beside it and never merged. States: INDEXED, UNCHECKABLE or UNMEASURED (a reader that cannot find the locked set is UNMEASURED, never zero). Free preview; verification is free.",
+      "never": [
+        "a grade",
+        "a rank",
+        "a verdict about any row",
+        "a paywall on the source artifact",
+        "a certificate"
+      ]
+    },
+    {
+      "id": "pop_x402-bazaar",
+      "name": "Population slice: x402 Bazaar listings",
+      "resource": "https://councilof.ai/api/pop/x402-bazaar",
+      "free_preview": "https://councilof.ai/api/pop/x402-bazaar?preview=1",
+      "free_preview_note": "state, n, as_of, source paths and caveats, read from the artifact on the request; the source artifacts themselves are free files",
+      "deliverable": "x402 Bazaar listings slice: the payable resources the two public discovery indexes catalogue, from the census artifact. Counted within each frame, with the overlap published, plus the estate's own door census. Appearing in an index is not delivery. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
+      "never": [
+        "a grade",
+        "a rank",
+        "a verdict about any row",
+        "a paywall on the source artifact",
+        "a certificate"
+      ]
+    },
+    {
+      "id": "pop_mcp-registry",
+      "name": "Population slice: MCP registry listings",
+      "resource": "https://councilof.ai/api/pop/mcp-registry",
+      "free_preview": "https://councilof.ai/api/pop/mcp-registry?preview=1",
+      "free_preview_note": "state, n, as_of, source paths and caveats, read from the artifact on the request; the source artifacts themselves are free files",
+      "deliverable": "MCP registry listings slice: every server name the estate publishes in the official registry, from the census artifact. Each is classified on its latest version, beside the registry's full-walk census and the effect-binding server probe's counts. Distribution, not adoption. States: INDEXED, UNCHECKABLE or UNMEASURED. Free preview; verification is free.",
+      "never": [
+        "a grade",
+        "a rank",
+        "a verdict about any row",
+        "a paywall on the source artifact",
+        "a certificate"
+      ]
+    },
+    {
+      "id": "pop_a2a",
+      "name": "Population slice: A2A agent registry population",
+      "resource": "https://councilof.ai/api/pop/a2a",
+      "free_preview": "https://councilof.ai/api/pop/a2a?preview=1",
+      "free_preview_note": "state, n, as_of, source paths and caveats, read from the artifact on the request; the source artifacts themselves are free files",
+      "deliverable": "A2A registry population slice: the agents enumerable without a credential from the public A2A registry frame. Counted within that frame, with the estate's own directory-listing state beside it; a frame count, not a global count. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
+      "never": [
+        "a grade",
+        "a rank",
+        "a verdict about any row",
+        "a paywall on the source artifact",
+        "a certificate"
+      ]
+    },
+    {
+      "id": "pop_ots-proofs",
+      "name": "Population slice: OpenTimestamps proof manifest",
+      "resource": "https://councilof.ai/api/pop/ots-proofs",
+      "free_preview": "https://councilof.ai/api/pop/ots-proofs?preview=1",
+      "free_preview_note": "state, n, as_of, source paths and caveats, read from the artifact on the request; the source artifacts themselves are free files",
+      "deliverable": "OpenTimestamps proof manifest slice: every published .ots proof of an estate artifact, each state read from its bytes. Rows are Bitcoin-attested, calendar-pending or subject absent; a pending proof is not anchored. States: MEASURED when the rows agree with the manifest, else UNCHECKABLE, or UNMEASURED. Free preview; verification is free.",
+      "never": [
+        "a grade",
+        "a rank",
+        "a verdict about any row",
+        "a paywall on the source artifact",
+        "a certificate"
+      ]
+    },
+    {
+      "id": "pop_layer0",
+      "name": "Population slice: Layer-0 machine-surface ceremony",
+      "resource": "https://councilof.ai/api/pop/layer0",
+      "free_preview": "https://councilof.ai/api/pop/layer0?preview=1",
+      "free_preview_note": "state, n, as_of, source paths and caveats, read from the artifact on the request; the source artifacts themselves are free files",
+      "deliverable": "Layer-0 ceremony slice: every rail and probe of the estate's own machine surface at the ceremony's as_of. Carries the HTTP status each returned and the ceremony artifact's .ots state; self-attestation, dated. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
+      "never": [
+        "a grade",
+        "a rank",
+        "a verdict about any row",
+        "a paywall on the source artifact",
+        "a certificate"
+      ]
+    },
+    {
+      "id": "pop_corrections",
+      "name": "Population slice: Corrections ledger",
+      "resource": "https://councilof.ai/api/pop/corrections",
+      "free_preview": "https://councilof.ai/api/pop/corrections?preview=1",
+      "free_preview_note": "state, n, as_of, source paths and caveats, read from the artifact on the request; the source artifacts themselves are free files",
+      "deliverable": "Corrections ledger slice: the same entries as free /api/corrections, packaged with per-entry digests. Each entry states what was wrong, how it was caught, the fix and the date; /api/corrections stays free. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
+      "never": [
+        "a grade",
+        "a rank",
+        "a verdict about any row",
+        "a paywall on the source artifact",
+        "a certificate"
+      ]
+    },
+    {
+      "id": "pop_claim-watch",
+      "name": "Population slice: Claim-maintenance registries",
+      "resource": "https://councilof.ai/api/pop/claim-watch",
+      "free_preview": "https://councilof.ai/api/pop/claim-watch?preview=1",
+      "free_preview_note": "state, n, as_of, source paths and caveats, read from the artifact on the request; the source artifacts themselves are free files",
+      "deliverable": "Claim-maintenance registries slice: each published registry of a vendor's public claims, captured verbatim. Each claim is hashed, source-cited and paired with a measurement plan; file digest, reproducibility and .ots state are read from bytes. CLAIM_CAPTURED, never a claim of falsity. States: INDEXED, UNCHECKABLE or UNMEASURED. Free preview; verification is free.",
+      "never": [
+        "a grade",
+        "a rank",
+        "a verdict about any row",
+        "a paywall on the source artifact",
+        "a certificate"
+      ]
+    }
+  ],
+  "free_forever": [
+    "https://councilof.ai/gspc-verify",
+    "https://councilof.ai/api/gspc",
+    "https://councilof.ai/root.json",
+    "https://councilof.ai/api/fines",
+    "https://councilof.ai/api/proof?sha=<64-hex>",
+    "https://councilof.ai/api/witness/status?sha256=<64-hex>",
+    "https://councilof.ai/api/receipts/batch?from=<iso>&preview=1",
+    "https://councilof.ai/receipts/root-history.json",
+    "https://councilof.ai/api/commissions",
+    "https://councilof.ai/methodology",
+    "https://councilof.ai/api/verify?record_url=<https-councilof-record-url>",
+    "https://councilof.ai/api/x402/index"
+  ],
+  "mcp": {
+    "url": "https://councilof.ai/mcp",
+    "free_tools": [
+      "board_totals",
+      "get_axis",
+      "verify_card",
+      "list_cards",
+      "get_root",
+      "get_card",
+      "verify_inclusion",
+      "x402_trust",
+      "mcp_trust",
+      "measurement_index",
+      "verify_capsule",
+      "server_evidence",
+      "evidence_bundle_preview",
+      "route"
+    ],
+    "paid_tools": [
+      {
+        "name": "commission_card",
+        "route": "https://councilof.ai/api/request-attestation",
+        "sells": "issuance"
+      },
+      {
+        "name": "art50_marking_evidence",
+        "route": "https://councilof.ai/api/art50/marking-evidence",
+        "sells": "issuance"
+      },
+      {
+        "name": "rwa_evidence",
+        "route": "https://councilof.ai/api/rwa/evidence",
+        "sells": "issuance"
+      },
+      {
+        "name": "receipts_batch",
+        "route": "https://councilof.ai/api/receipts/batch",
+        "sells": "assembly"
+      },
+      {
+        "name": "evidence_bundle",
+        "route": "https://councilof.ai/api/evidence-bundle",
+        "sells": "assembly"
+      }
+    ],
+    "how": "tools/call without x_payment \u2192 the route's 402 challenge per the x402 MCP transport (isError:true; structuredContent carries x402Version, accepts[], resource); pay from your wallet; call again with x_payment. Payment travels as the x_payment ARGUMENT and this door sets the X-PAYMENT header itself, so carrying a paid tool is a packaging choice, never a property of the transport. Every paid tool is measurement, not certification \u2014 no tool carries or awards a trust label of any kind. The catalogue (tools/list) is free."
+  },
+  "invariants": {
+    "measurement_not_certification": "CSOAI LTD (UK 16939677) is an independent measurement body. It issues measurements and signed attestations, never certificates of conformity.",
+    "never_a_grade": "No resource sells a grade, a score, a pass/fail verdict, or a place on the board.",
+    "recomputable_for_free": "Every artefact is independently recomputable; a buyer pays for issuance, assembly and a durable independent signature \u2014 not for the answer.",
+    "no_public_price": "Amounts appear only in a 402 challenge.",
+    "financial_firewall": "No token, credit, or cash-settled index. Attestation is not tokenisation and confers no ownership."
+  },
+  "lid": "23 axes measured \u00b7 14 model comparisons: 0 separated \u00b7 7 TIE \u00b7 7 UNTESTED \u00b7 9 fact runs \u00b7 TIE is TIE \u00b7 not a certificate.",
+  "explainer": "https://councilof.ai/pricing",
+  "revenue_truth": "https://councilof.ai/api/revenue"
+}
