@@ -197,7 +197,7 @@ export default function About() {
             , founded by Nicholas Templeman. The company is accountable for everything published on this site.
           </p>
           <p className="text-xl text-gray-300 leading-relaxed mb-6">
-            The problem predates the company. <strong className="text-white">CSOAI Ltd was incorporated in 2026</strong> to make AI behaviour checkable by someone other than the vendor: frozen test banks, deterministic grading, signed evidence, public corrections and dated re-measurement.
+            The problem predates the company. <strong className="text-white">CSOAI Ltd was incorporated in England and Wales on 2 January 2026</strong> to make AI behaviour checkable by someone other than the vendor: frozen test banks, deterministic grading, signed evidence, public corrections and dated re-measurement.
           </p>
           <p className="text-xl text-gray-300 leading-relaxed mb-8">
             Training is a separate, free programme. The commercial product is evidence work performed on request — never a better grade, never a place on the board, and never a certificate.
