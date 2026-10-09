@@ -54,8 +54,8 @@
       "data": {
         "card_schema_version": "1.0",
         "card_data": {
-          "name": "Council of AI — Measurement Agent",
-          "description": "Independent AI-governance MEASUREMENT body. Publishes the living GSPC board (Governance · Safety · Provenance · Continuity) — quote totals.lid and totals.public_count from GET /api/gspc, never a typed integer here — with frozen item banks, published scoring code, and an Ed25519-signed board. Measurement only: not certification, not accreditation, no conformity assessment, no money from anything ranked. A2A v1.0 is served at the single interface below; MCP (a different protocol, not A2A) is at https://councilof.ai/mcp.",
+          "name": "Council of AI \u2014 Measurement Agent",
+          "description": "Independent AI-governance MEASUREMENT body. Publishes the living GSPC board (Governance \u00b7 Safety \u00b7 Provenance \u00b7 Continuity) \u2014 quote totals.lid and totals.public_count from GET /api/gspc, never a typed integer here \u2014 with frozen item banks, published scoring code, and an Ed25519-signed board. Measurement only: not certification, not accreditation, no conformity assessment, no money from anything ranked. A2A v1.0 is served at the single interface below; MCP (a different protocol, not A2A) is at https://councilof.ai/mcp.",
           "version": "1.5.0",
           "provider": {
             "organization": "CSOAI Ltd",
@@ -78,7 +78,7 @@
               {
                 "uri": "https://councilof.ai/a2a/extensions/signed-receipts/v1/",
                 "required": false,
-                "description": "A DRAFT WE PUBLISH AND DO NOT YET EMIT: this agent attaches no receipt to a response today. Declared because we author the specification, not because the door implements it. Ed25519-signed task-outcome receipts plus a did:web key-trust convention for AgentCard signing (A2A v1.0 §8.4). A receipt is evidence of what was claimed, not a certification, and a signature over it is an integrity claim rather than a truth claim."
+                "description": "A DRAFT WE PUBLISH AND DO NOT YET EMIT: this agent attaches no receipt to a response today. Declared because we author the specification, not because the door implements it. Ed25519-signed task-outcome receipts plus a did:web key-trust convention for AgentCard signing (A2A v1.0 \u00a78.4). A receipt is evidence of what was claimed, not a certification, and a signature over it is an integrity claim rather than a truth claim."
               },
               {
                 "uri": "https://councilof.ai/.well-known/x402.json",
@@ -88,7 +88,7 @@
               {
                 "uri": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
                 "required": false,
-                "description": "x402 Offer & Receipt extension (v0.6), JWS profile — CONDITIONALLY EMITTED. A signed offer is attached only when BOARD_SIGN_KEY_PKCS8_B64 is provisioned and an accepts[] entry can be committed; otherwise the 402 carries csoai.offer_receipt with the gap and no offer-receipt extension block. A signed receipt is attached only after facilitator-confirmed settlement when the facilitator names a payer and the board key is available; otherwise the paid artefact still delivers and receiptGap states why no signed receipt was attached. When emitted, the format is jws, alg EdDSA, kid did:web:csoai.org#board-attestation-1, resolvable at https://csoai.org/.well-known/did.json (an authorization mechanism the extension names in section 4.5.1). eip712 is NOT emitted: the edge has no secp256k1 signer; when the optional Ed25519 board key is provisioned it signs JWS. A format we cannot produce is better declared missing than faked. A receipt proves this server signed those bytes; it is not by itself proof that money moved, and the transaction field, when present, is a claim to check against the chain."
+                "description": "x402 Offer & Receipt extension (v0.6), JWS profile \u2014 CONDITIONALLY EMITTED. A signed offer is attached only when BOARD_SIGN_KEY_PKCS8_B64 is provisioned and an accepts[] entry can be committed; otherwise the 402 carries csoai.offer_receipt with the gap and no offer-receipt extension block. A signed receipt is attached only after facilitator-confirmed settlement when the facilitator names a payer and the board key is available; otherwise the paid artefact still delivers and receiptGap states why no signed receipt was attached. When emitted, the format is jws, alg EdDSA, kid did:web:csoai.org#board-attestation-1, resolvable at https://csoai.org/.well-known/did.json (an authorization mechanism the extension names in section 4.5.1). eip712 is NOT emitted: the edge has no secp256k1 signer; when the optional Ed25519 board key is provisioned it signs JWS. A format we cannot produce is better declared missing than faked. A receipt proves this server signed those bytes; it is not by itself proof that money moved, and the transaction field, when present, is a claim to check against the chain."
               }
             ]
           },
@@ -113,13 +113,13 @@
               "examples": [
                 "SendMessage with Part.data {\"skill\":\"gspc-board\",\"input\":{}}",
                 "Legacy compatibility: one text Part containing exactly \"board\"",
-                "GET /api/gspc — the same board, outside A2A"
+                "GET /api/gspc \u2014 the same board, outside A2A"
               ]
             },
             {
               "id": "east-west-crosswalk",
               "name": "East-West crosswalk & cross-border card",
-              "description": "One signed GSPC measurement mapped across EU, UK, US, Illinois, and China GB/T alignment surfaces. Crosswalk v1 JSON, cross-border signed card, and stranger verify at /gspc-verify. Measurement only — determination stays with authorities.",
+              "description": "One signed GSPC measurement mapped across EU, UK, US, Illinois, and China GB/T alignment surfaces. Crosswalk v1 JSON, cross-border signed card, and stranger verify at /gspc-verify. Measurement only \u2014 determination stays with authorities.",
               "tags": [
                 "cross-border",
                 "crosswalk",
@@ -128,7 +128,7 @@
               ],
               "examples": [
                 "SendMessage with Part.data {\"skill\":\"east-west-crosswalk\",\"input\":{}}",
-                "GET /api/cross — cross-border signed card"
+                "GET /api/cross \u2014 cross-border signed card"
               ]
             },
             {
@@ -148,7 +148,7 @@
             {
               "id": "benchmark-quality-register",
               "name": "Benchmark-quality register",
-              "description": "Signed register of what third-party AI benchmarks disclose about their own process integrity. Deterministic predicates only — no language model judges. Records are unsolicited; nothing on the register is certification or endorsement.",
+              "description": "Signed register of what third-party AI benchmarks disclose about their own process integrity. Deterministic predicates only \u2014 no language model judges. Records are unsolicited; nothing on the register is certification or endorsement.",
               "tags": [
                 "meta-evaluation",
                 "benchmark-quality",
@@ -193,7 +193,7 @@
             {
               "id": "x402-discovery",
               "name": "x402 discovery + free door",
-              "description": "Agents discover paid artefact rails via GET https://councilof.ai/.well-known/x402.json (mode is reported from runtime env, Base eip155:8453, USDC; amounts from challenge only — no invent price). Catalog GET /api/x402. Free door GET /api/free-door amount 0 settles and charges nothing — proves the rail. Living board GET /api/gspc. Verification stays free at /gspc-verify. payTo is merchant receive, never the signer. Self-settle proves the rail; stranger revenue is separate (do not invent buyers). Coming—Paddle not live. No card-processor invent. Measurement, never certification. Signed offers and receipts are conditional: a 402 carries extensions['offer-receipt'].info.offers[] only when BOARD_SIGN_KEY_PKCS8_B64 is provisioned and an accepts[] entry can be committed; otherwise csoai.offer_receipt names the gap. A signed receipt appears in the X-PAYMENT-RESPONSE SettlementResponse only after facilitator-confirmed settlement when the facilitator names a payer and the board key is available; otherwise receiptGap states why no signed receipt was attached. Emitted signatures use format jws, alg EdDSA, kid did:web:csoai.org#board-attestation-1. Verify one without trusting us: POST it to /api/receipts/verify, or run scripts/verify_receipt.py against https://csoai.org/.well-known/did.json. Your own receipts: GET /api/receipts?payer=0x... (status UNRECORDED means no store is bound on that deployment, never that you did not pay). No eip712 is emitted — the edge has no secp256k1 signer.",
+              "description": "Agents discover paid artefact rails via GET https://councilof.ai/.well-known/x402.json (mode is reported from runtime env, Base eip155:8453, USDC; amounts from challenge only \u2014 no invent price). Catalog GET /api/x402. Free door GET /api/free-door amount 0 settles and charges nothing \u2014 proves the rail. Living board GET /api/gspc. Verification stays free at /gspc-verify. payTo is merchant receive, never the signer. Self-settle proves the rail; stranger revenue is separate (do not invent buyers). Coming\u2014Paddle not live. No card-processor invent. Measurement, never certification. Signed offers and receipts are conditional: a 402 carries extensions['offer-receipt'].info.offers[] only when BOARD_SIGN_KEY_PKCS8_B64 is provisioned and an accepts[] entry can be committed; otherwise csoai.offer_receipt names the gap. A signed receipt appears in the X-PAYMENT-RESPONSE SettlementResponse only after facilitator-confirmed settlement when the facilitator names a payer and the board key is available; otherwise receiptGap states why no signed receipt was attached. Emitted signatures use format jws, alg EdDSA, kid did:web:csoai.org#board-attestation-1. Verify one without trusting us: POST it to /api/receipts/verify, or run scripts/verify_receipt.py against https://csoai.org/.well-known/did.json. Your own receipts: GET /api/receipts?payer=0x... (status UNRECORDED means no store is bound on that deployment, never that you did not pay). No eip712 is emitted \u2014 the edge has no secp256k1 signer.",
               "tags": [
                 "x402",
                 "discovery",
@@ -201,7 +201,7 @@
                 "measurement"
               ],
               "examples": [
-                "SendMessage with Part.data {\"skill\":\"x402-discovery\",\"input\":{}} — catalog only; it makes no payment",
+                "SendMessage with Part.data {\"skill\":\"x402-discovery\",\"input\":{}} \u2014 catalog only; it makes no payment",
                 "GET https://councilof.ai/.well-known/x402.json",
                 "GET https://councilof.ai/api/free-door",
                 "GET https://councilof.ai/api/gspc",
@@ -222,7 +222,7 @@
                 "measurement"
               ],
               "examples": [
-                "SendMessage with Part.data {\"skill\":\"estate-index\",\"input\":{}} — returns the summary, not the 7,940 rows",
+                "SendMessage with Part.data {\"skill\":\"estate-index\",\"input\":{}} \u2014 returns the summary, not the 7,940 rows",
                 "GET https://councilof.ai/api/state  # estate_index.merkle_root and the counts",
                 "GET https://councilof.ai/interop/master-consolidation-2026-09-16.json",
                 "GET https://councilof.ai/interop/master-consolidation-2026-09-16.json.ots",
@@ -232,7 +232,7 @@
             {
               "id": "measurement-capsules",
               "name": "Measurement capsules: index and verify (free)",
-              "description": "Read the latest signed measurement-capsule index, or verify one capsule. {\"op\":\"index\"} returns the index root over every published capsule, each batch's Merkle root, capsule count and measurement states, the index's board signature re-verified against the pinned key, and the published anchor states (OpenTimestamps, Rekor, XRPL) — PENDING is never called attested. {\"op\":\"verify\",\"capsule_json\":...} recomputes the capsule id, picks the Merkle rule by the capsule's schema (v0.2: RFC 6962 with domain separation) and returns the audit path against the batch root the signed index names: INCLUDED, NOT_INCLUDED, ID_MISMATCH, UNCHECKABLE or NOT_PUBLISHED. The same module as the MCP tools measurement_index and verify_capsule. Verification is free forever. Measurement, not endorsement: no verdict, score or ranking.",
+              "description": "Read the latest signed measurement-capsule index, or verify one capsule. {\"op\":\"index\"} returns the index root over every published capsule, each batch's Merkle root, capsule count and measurement states, the index's board signature re-verified against the pinned key, and the published anchor states (OpenTimestamps, Rekor, XRPL) \u2014 PENDING is never called attested. {\"op\":\"verify\",\"capsule_json\":...} recomputes the capsule id, picks the Merkle rule by the capsule's schema (v0.2: RFC 6962 with domain separation) and returns the audit path against the batch root the signed index names: INCLUDED, NOT_INCLUDED, ID_MISMATCH, UNCHECKABLE or NOT_PUBLISHED. The same module as the MCP tools measurement_index and verify_capsule. Verification is free forever. Measurement, not endorsement: no verdict, score or ranking.",
               "tags": [
                 "measurement",
                 "merkle",
@@ -309,7 +309,7 @@
           ],
           "instrument": {
             "name": "GSPC",
-            "full_name": "Governance · Safety · Provenance · Continuity",
+            "full_name": "Governance \u00b7 Safety \u00b7 Provenance \u00b7 Continuity",
             "axes": 23,
             "measured_axes": 23,
             "unmeasured_axes": 0,
@@ -319,7 +319,7 @@
             "untested_separations": 7,
             "fact_runs": 9,
             "as_of": "2026-10-08",
-            "note": "Read live from GET https://councilof.ai/api/gspc — do not cache these numbers. TIE is TIE; UNTESTED is not a win. Not a certificate.",
+            "note": "Read live from GET https://councilof.ai/api/gspc \u2014 do not cache these numbers. TIE is TIE; UNTESTED is not a win. Not a certificate.",
             "api_endpoint": "https://councilof.ai/api/gspc"
           },
           "mcp_servers": [
@@ -343,7 +343,7 @@
           "registry_listings": [
             {
               "registry": "MCP Registry",
-              "name": "io.github.CSOAI-ORG/gspc",
+              "name": "ai.councilof/gspc",
               "url": "https://registry.modelcontextprotocol.io/v0.1/servers/io.github.CSOAI-ORG%2Fgspc",
               "version": "1.4.4",
               "status": "ACTIVE",
