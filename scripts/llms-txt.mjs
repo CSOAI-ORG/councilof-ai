@@ -192,7 +192,11 @@ function paidDoorsSection() {
   const lines = doors.map((c) => {
     const req = c.probe?.request ?? c.path;
     const preview = c.free_preview ? ` · free preview: ${SITE}${c.free_preview}` : "";
-    return `  - ${SITE}${req}${preview}\n    ${c.description}`;
+    // llms.txt spec form is `[Title](url)`: an agent crawler extracts a bare `https://…` as text, not
+    // as a link, so the 31 paid doors were listed but not linkable. The URL stays verbatim inside the
+    // parens — `x402-descriptions.test.ts` checks `llms.includes(canonical text)` and the free-door
+    // check tests `llms.includes("https://councilof.ai" + path)`, both of which still hold.
+    return `  - [${c.name || c.id || req}](${SITE}${req})${preview}\n    ${c.description}`;
   });
   // Dedupe by path: capabilities.json declares GET and POST variants of the same route
   // (e.g. /api/discover/* have both), but this render is a methodless path line — without
@@ -201,7 +205,7 @@ function paidDoorsSection() {
   const freeDoors = reg.capabilities
     .filter((c) => c.kind !== "mcp_tool" && c.kind !== "a2a_skill" && c.payment === "free" && (c.probe?.expect_status ?? []).includes(402))
     .filter((c) => { if (seenFreePaths.has(c.path)) return false; seenFreePaths.add(c.path); return true; })
-    .map((c) => `  - ${SITE}${c.path} — a live 402 route priced at zero: it settles, and charges nothing.`);
+    .map((c) => `  - [${c.name || c.id || c.path}](${SITE}${c.path}) — a live 402 route priced at zero: it settles, and charges nothing.`);
   return `- HTTP doors (GET or POST -> 402 unless \`X-PAYMENT\` / facilitator settlement). Derived from
   council-os/capabilities.json at generation; the same declaration renders /.well-known/x402.json
   and every operation in /openapi.json carrying x-payment-info. Do not count this list to learn how
