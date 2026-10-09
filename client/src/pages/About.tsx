@@ -60,6 +60,31 @@ function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: str
   );
 }
 
+function LiveModelCount() {
+  const [count, setCount] = useState<number | null>(null);
+  useEffect(() => {
+    fetchWithRetry("/interop/models-measured.json")
+      .then((r) => r.json())
+      .then((d) => {
+        const n = d?.headline?.third_party_models;
+        setCount(typeof n === "number" && Number.isFinite(n) ? n : null);
+      })
+      .catch(() => setCount(null));
+  }, []);
+  return (
+    <div className="rounded-2xl border border-emerald-400/30 bg-emerald-950/30 p-5" data-testid="about-model-count-boundary">
+      <p className="text-sm font-bold uppercase tracking-wider text-emerald-300">Do not confuse axes with models</p>
+      <p className="mt-2 text-lg leading-relaxed text-gray-200">
+        {count !== null ? <><strong className="text-white">{count.toLocaleString()} third-party models</strong> currently have at least one signed, quotable measurement on a frozen bank.</> : <>The distinct model count is derived from signed cards and published separately.</>}{" "}
+        The <strong className="text-white">14</strong> on the GSPC board is the number of model-comparison <em>axes</em> — one fleet per axis — not the number of models measured.
+      </p>
+      <Link href="/models-measured/" className="mt-3 inline-block text-sm font-bold text-emerald-300 underline">
+        Open the derived model register →
+      </Link>
+    </div>
+  );
+}
+
 function LiveBoardCount() {
   const [label, setLabel] = useState("…");
   useEffect(() => {
@@ -149,7 +174,7 @@ export default function About() {
     document.title = "About the Council of AI — a UK measurement body | Council of AI";
     let m = document.querySelector('meta[name="description"]') as HTMLMetaElement | null;
     if (!m) { m = document.createElement("meta"); m.name = "description"; document.head.appendChild(m); }
-    m.content = "The Council of AI (CSOAI LTD, UK Companies House 16939677) is an independent AI measurement body: deterministic measurement, Ed25519-signed records, no certification and no accreditation chain. Live board counts: GET /api/gspc.";
+    m.content = "Council of AI (CSOAI Ltd, UK Companies House 16939677) publishes independent AI measurements: frozen banks, deterministic grading, signed evidence, a derived third-party model register, public corrections and free verification. Measurement, not certification.";
   }, []);
   return (
     <div className="min-h-screen bg-white">
@@ -171,15 +196,13 @@ export default function About() {
             </a>
             , founded by Nicholas Templeman. The company is accountable for everything published on this site.
           </p>
+          <p className="text-xl text-gray-300 leading-relaxed mb-6">
+            The problem predates the company. <strong className="text-white">CSOAI Ltd was incorporated in 2026</strong> to make AI behaviour checkable by someone other than the vendor: frozen test banks, deterministic grading, signed evidence, public corrections and dated re-measurement.
+          </p>
           <p className="text-xl text-gray-300 leading-relaxed mb-8">
-            In 2024, as artificial intelligence began transforming every industry, a critical question emerged:
-            <span className="text-emerald-300 font-semibold"> Who watches the watchmen?</span> Governments scrambled to regulate.
-            Companies rushed to comply. But one thing was missing: <span className="font-semibold">trained professionals who could actually monitor AI systems for safety.</span>
+            Training is a separate, free programme. The commercial product is evidence work performed on request — never a better grade, never a place on the board, and never a certificate.
           </p>
-          <p className="text-xl text-gray-300 leading-relaxed">
-            That's when CSOAI was born—not as another AI company, but as <span className="text-emerald-300 font-semibold">the solution to two problems at once</span>:
-            making AI behaviour checkable by people who are not the vendor, and training the people who will have to do the checking.
-          </p>
+          <LiveModelCount />
           <HeroStatsBar />
         </div>
       </div>
@@ -737,22 +760,24 @@ export default function About() {
       <div className="bg-white py-20">
         <div className="container max-w-4xl">
           <Card className="p-12 border-[var(--ink-border)] bg-[var(--ink)] text-white text-center">
-            <h2 className="text-4xl font-bold mb-6">Start with the free rail</h2>
+            <h2 className="text-4xl font-bold mb-6">Verify free. Pay only for work we do on request.</h2>
             <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-              Training is free and the whole verification rail is free forever. A grade is never
-              sold, we do not certify anyone, and we cannot determine anyone's compliance — that
-              stays with the competent authorities. What we can do is measure, sign, and publish
-              what we could not measure.
+              Checking our evidence is free forever. Existing paid work is issuance and evidence assembly — including Article 50 marking evidence, evidence bundles and supported feeds — never a better grade, a ranking position or a certificate.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/academy">
+              <Link href="/contact/?arm=data">
                 <Button size="lg" className="bg-emerald-700 hover:bg-emerald-800 text-white">
-                  Start Free Training
+                  Buy signed evidence
                 </Button>
               </Link>
-              <Link href="/dashboard?task=enterprise-start&tab=measured">
+              <Link href="/services/">
                 <Button size="lg" variant="outline" className="border-white bg-transparent text-white hover:bg-white/10 hover:text-white">
-                  Enterprise lobby
+                  Browse supported evidence doors
+                </Button>
+              </Link>
+              <Link href="/gspc-verify">
+                <Button size="lg" variant="outline" className="border-white bg-transparent text-white hover:bg-white/10 hover:text-white">
+                  Verify free
                 </Button>
               </Link>
             </div>
