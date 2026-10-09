@@ -1,6 +1,6 @@
 {
  "kind": "csoai.root-witness-pointer/v0",
- "as_of": "2026-10-08T23:18:30Z",
+ "as_of": "2026-10-09T01:19:39Z",
  "note": "Timestamped pointer for the witnessed root. Drift is an observation at checked_at, not a standing all-clear. Existence/time of bytes — not certification, not endorsement, not a rank sale. Never mint a token.",
  "live_root": {
   "url": "https://councilof.ai/root.json",
@@ -24,11 +24,11 @@
   "url": "https://councilof.ai/interop/root-witness-latest.json",
   "path": "public/interop/root-witness-latest.json",
   "status": "PUBLISHED",
-  "dated_copy": "public/interop/root-witness-2026-10-08-7d5967a4.json"
+  "dated_copy": "public/interop/root-witness-2026-10-09-7d5967a4.json"
  },
  "drift": {
   "status": "DRIFTED",
-  "checked_at": "2026-10-08T23:18:34Z",
+  "checked_at": "2026-10-09T01:19:41Z",
   "checked_against": "https://councilof.ai/root.json",
   "witness_artifact_sha256": "7d5967a4c5d08aa6db35103f5b1ce67fb98f3bd735edeed977cc3184d8165585",
   "live_root_sha256": "555161d5acbbca8e19d2230ebd309e27698b6048c07a422240fa6e290f68b3b8",
@@ -39,7 +39,7 @@
   "match_merkle_root": false,
   "reason": "the live root differs from the witnessed bytes; this observation does not establish which is newer — publish the witnessed candidate or witness the live root before treating either as current"
  },
- "witness_status_observed_at": "2026-10-08T23:18:29Z",
+ "witness_status_observed_at": "2026-10-09T01:19:38Z",
  "witnesses": {
   "rekor": "WITNESSED",
   "ots": "CONFIRMED_BITCOIN",
@@ -57,7 +57,7 @@
   "rule": "equal as_of + unequal merkle_root among this publisher's witnessed roots = CONFLICT; a reader must treat neither as current",
   "as_of": "2026-10-08T17:56:41Z",
   "merkle_root": "259c19fc93e539b548114aa196daeb75a8dde764f88b0e170f75cf2db94c77bc",
-  "sidecars_scanned": 57,
+  "sidecars_scanned": 58,
   "conflicts": [],
   "byte_variants": [],
   "limit": "sees only roots this publisher witnessed and kept; independent witnesses cover the hidden-root case"
