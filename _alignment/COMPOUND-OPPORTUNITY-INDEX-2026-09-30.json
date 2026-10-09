@@ -1,0 +1,113 @@
+{
+  "schema": "csoai.compound-opportunity-index/0.1",
+  "as_of": "2026-09-30T04:45:00Z",
+  "doctrine": "one canonical system; absorb external primitives only when they improve evidence, routing, confinement, discovery, distribution, or measured economics",
+  "candidates": [
+    {
+      "id": "ag-ui-1.0",
+      "state": "MEASURE",
+      "source": "https://github.com/ag-ui-protocol/ag-ui/releases",
+      "observed": "AG-UI core/client/encoder/proto 1.0.0 released 2026-09-17; 2026-09-23 adapters adopt 1.0 model part renames",
+      "fit": [
+        "AX",
+        "AG-UI",
+        "MEOK"
+      ],
+      "next": "run protocol-1.0 compatibility fixtures against current /api/agui/run; do not claim 1.0 conformance until wire/schema tests pass"
+    },
+    {
+      "id": "openshell-0.1.1",
+      "state": "MEASURE",
+      "source": "https://github.com/NVIDIA/OpenShell/releases",
+      "observed": "v0.1.1 released 2026-09-26; stable 0.1 cadence, mTLS snap gateway requirement, opt-in WebSocket tunnel",
+      "fit": [
+        "Condor",
+        "execution-confinement",
+        "independent-witness"
+      ],
+      "next": "run declared-policy-vs-observed-effect witness on a host with required VM/container privileges; keep GSPC independent"
+    },
+    {
+      "id": "lfx-public-apis",
+      "state": "ADAPT",
+      "source": "https://changelog.lfx.dev/",
+      "observed": "new public project onboarding/catalog and additional project activity/popularity APIs in September 2026",
+      "fit": [
+        "Layer O",
+        "public-signals",
+        "project discovery"
+      ],
+      "next": "build read-only source adapter with source timestamp, denominators and API lifecycle/version headers; no ranking without method"
+    },
+    {
+      "id": "lfdt-proof-of-control",
+      "state": "MEASURE",
+      "source": "Linux Foundation Decentralized Trust",
+      "observed": "Proof-of-Control introduced as an open verification standard for verifiable execution",
+      "fit": [
+        "GSPC",
+        "conformance",
+        "Claim Maintenance",
+        "execution evidence"
+      ],
+      "next": "ingest canonical specification and create declared-vs-observed conformance fixtures before integration claims"
+    },
+    {
+      "id": "opensharing",
+      "state": "ADAPT",
+      "source": "https://www.linuxfoundation.org/press/linux-foundation-announces-opensharing-project-to-standardize-ai-asset-and-data-exchange",
+      "observed": "vendor-neutral protocol for agent skills, models and data across platforms",
+      "fit": [
+        "N-sites",
+        "datasets",
+        "models",
+        "Layer O distribution"
+      ],
+      "next": "prototype a read-only CSOAI artifact share manifest for public datasets/model/evidence packages; preserve canonical hashes"
+    },
+    {
+      "id": "dns-agent-discovery",
+      "state": "WATCH",
+      "source": "Linux Foundation DNS-AID / Agent Name Service",
+      "observed": "DNS-based agent/MCP discovery and trusted identity/discovery initiatives",
+      "fit": [
+        "permissionless discovery",
+        "MCP",
+        "A2A",
+        "AI Catalog"
+      ],
+      "next": "compare DNS records/discovery semantics with AI Catalog and existing well-known cards; add only if it creates independent discovery rather than alias spam"
+    },
+    {
+      "id": "trace-agent-evidence",
+      "state": "MEASURE",
+      "source": "Linux Foundation ecosystem",
+      "observed": "portable/verifiable runtime and compliance evidence direction",
+      "fit": [
+        "SovSpace",
+        "GSPC",
+        "OpenShell",
+        "receipts"
+      ],
+      "next": "compare evidence envelope fields against measurement capsules, signed runs and SCITT; map gaps without replacing canonical evidence grammar"
+    }
+  ],
+  "compound_loops": [
+    "claim->dependency graph->watch->event->reaction->counter-reaction->bounded recheck->receipt->delivery->watch",
+    "measurement->machine-readable artifact->N-site distribution->indexing->calls->usage signal->better routing->measurement",
+    "correction->affected dependencies->reverification->propagation latency->public trust signal",
+    "tool/model drift->measurement capsule->routing update->lower failure/cost->more jobs->more drift history",
+    "public dataset->benchmark/reproduction->citation->external user->new claim/evidence source->dataset growth",
+    "free verification->qualified repeat use->paid maintenance where authorized->receipt->repeat-payer signal"
+  ],
+  "moat_fields": [
+    "longitudinal claim histories",
+    "dependency graph",
+    "correction propagation history",
+    "model/tool/runtime drift history",
+    "measured routing cost-latency-success",
+    "independent witness history",
+    "public citation/backlink history",
+    "repeat-use and repeat-payer history kept separate"
+  ]
+}

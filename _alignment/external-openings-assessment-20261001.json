@@ -1,0 +1,65 @@
+{
+  "schema": "csoai.external-openings-assessment/0.1",
+  "assessed_at": "2026-10-01T13:45:00Z",
+  "lane": "mimocode-session",
+  "phase": "Phase 9 \u2014 New external openings to exploit (Compound CEO mandate, 2026-09-30)",
+  "openings": {
+    "nvidia_openshell": {
+      "name": "NVIDIA OpenShell",
+      "launched": "2026-09-28",
+      "live": true,
+      "url": "https://github.com/NVIDIA/OpenShell",
+      "docs": "https://docs.nvidia.com/openshell/latest/",
+      "language": "Rust",
+      "license": "Apache License 2.0",
+      "stars": 13759,
+      "last_push": "2026-10-01T14:23:21Z",
+      "description": "OpenShell is the safe, private runtime for autonomous AI agents.",
+      "csoai_wedge": "Treat OpenShell as a confinement substrate and a measurement target, not a Council OS replacement.",
+      "csoai_relevance": "High. OpenShell provides agent confinement; CSOAI provides measurement and governance of what agents do inside any runtime. A measurement capsule on OpenShell-confined agent behaviour would be a concrete product demo.",
+      "action": "Add OpenShell to the Harness X measurement targets. A bounded measurement of agent behaviour under OpenShell confinement would demonstrate the GSPC measurement substrate works on third-party runtimes."
+    },
+    "lfx_community_data_platform": {
+      "name": "LFX Community Data Platform",
+      "noted": "2026-09-24 (catalog/onboarding APIs), 2026-09-23/25 (provenance/reliability)",
+      "live": true,
+      "url": "https://lfx.linuxfoundation.org/",
+      "note": "Redirects from lfx.dev and community.lfx.dev to lfx.linuxfoundation.org. Linux Foundation platform.",
+      "csoai_wedge": "Project discovery/growth signal ingest once API-key access is available.",
+      "csoai_relevance": "Medium. LFX catalogs open-source projects. Could feed project discovery into the estate index and growth signals.",
+      "action": "Request API-key access. Explore project catalog/onboarding APIs for estate index enrichment."
+    },
+    "agntcy_identity": {
+      "name": "AGNTCY Identity",
+      "noted_in_mandate": "v0.0.25 released 2026-09-28",
+      "current_version": "v0.0.26 (released 2026-09-29)",
+      "live": true,
+      "url": "https://github.com/agntcy/identity",
+      "docs": "https://docs.agntcy.org/",
+      "stars": 104,
+      "description": "AGNTCY Identity allows to onboard, create and verify identities for Agents, Model Context Protocol (MCP) Servers and Multi-Agent Systems (MASs).",
+      "v0_0_26_changes": "Signed build provenance for CLI artifacts, OpenPGP security fix, scorecard quick wins",
+      "csoai_wedge": "Measure/adapt only where it improves identity/interop; do not duplicate existing AGNTCY catalog work.",
+      "csoai_relevance": "Medium-high. AGNTCY identity handles agent/MCP/MAS identity \u2014 CSOAI's agent-identity-trust MCP does similar work. Interop opportunity: CSOAI measurement capsules could attest to AGNTCY identity verification results.",
+      "action": "Evaluate AGNTCY identity v0.0.26 signed build provenance for interop with CSOAI's SIGIL attestation. Do not duplicate \u2014 interoperate."
+    },
+    "lfdt_proof_of_control": {
+      "name": "LFDT / Advanced AI Society \u2014 Proof-of-Control",
+      "live": true,
+      "url": "https://advancedaisociety.org/",
+      "github": "https://github.com/LFDT-ProofOfControl/ov-poc-standard",
+      "stars": 14,
+      "last_push": "2026-09-19T16:01:12Z",
+      "description": "The Proof-of-Control Standard (PoC) is a catalogue of verifiable requirements for AI agent systems: independent, tamper-evident evidence of what an agent actually did \u2014 the data it touched, the authority it exercised, the tools it invoked \u2014 in a form anyone can check without trusting the operator.",
+      "csoai_wedge": "Independent conformance/reproduction instrument, not endorsement.",
+      "csoai_relevance": "Very high. The PoC standard's goals align directly with CSOAI's SIGIL hash-chain audit + GSPC measurement substrate. CSOAI could be the independent conformance/reproduction instrument that tests whether an agent system meets PoC requirements.",
+      "action": "Study the PoC standard catalogue. Identify which requirements CSOAI's existing measurement capsules can already verify. Position CSOAI as the conformance instrument for PoC \u2014 measure, never certify."
+    }
+  },
+  "cross_cutting_themes": [
+    "Agent runtime governance is converging (NVIDIA OpenShell, AGNTCY, LFDT PoC). CSOAI's gap-to-fill: independent measurement and conformance, not another runtime.",
+    "Identity + provenance + attestation (AGNTCY signed provenance, PoC tamper-evident evidence) maps to CSOAI's SIGIL + Ed25519 + GSPC measurement capsules.",
+    "None of these have adopted CSOAI. Do not describe any as having adopted GSPC."
+  ],
+  "honesty_note": "External research from GitHub API + public URLs. No partnerships, endorsements, or integrations claimed. Stars/counts are point-in-time observations. CSOAI wedge assessments are proposals, not established positions."
+}

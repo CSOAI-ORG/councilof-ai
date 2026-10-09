@@ -1,0 +1,70 @@
+{
+  "schema": "csoai.product-integration-readiness/0.1",
+  "assessed_at": "2026-10-01T13:15:00Z",
+  "lane": "mimocode-session",
+  "phase": "Phase 5 \u2014 One action envelope (Compound CEO mandate)",
+  "envelope_chain": "MEOK \u2192 Layer O \u2192 OM Router \u2192 Condor \u2192 GSPC \u2192 SovSpace",
+  "gspc_job_contract": {
+    "status": "LOCAL_ONLY_NOT_WIRED",
+    "local_state": "ras_hive_os.gspc_job tested across 9 channel projections (per 2026-09-30 alignment doc)",
+    "live_state": "gspcjob: identity NOT present in live MCP tools/call responses. Route tool returns urn:gspc:route:<uuid> locator, not gspcjob:.",
+    "gspcreq_scope_key": "NOT present in live handlers",
+    "next_acceptance_slice": "Wire one existing Council OS action + one existing MCP tools/call to gspcjob: ID, store the record, replay through API"
+  },
+  "route_planner": {
+    "status": "LIVE_DECIDE_ONLY",
+    "tool_name": "route (mcp:route)",
+    "mode": "decide (execute answers NOT_ENABLED)",
+    "record_schema": "csoai.evidence-event/0.1 (profile: csoai.route-evidence/0.1)",
+    "candidates_considered": 18,
+    "policy_presets": [
+      "read-only",
+      "local-only",
+      "eu-only",
+      "no-unmeasured"
+    ],
+    "policy_floors": [
+      "floor:paid-needs-caller-wallet"
+    ],
+    "signed": false,
+    "preview": true,
+    "verified_working": true,
+    "note": "Route selection with policy enforcement is functional. Task text is hashed (never stored). Returns unsigned preview with chosen candidate + basis + full evidence record."
+  },
+  "envelope_components": {
+    "MEOK (natural language input)": {
+      "status": "NOT_ON_PUBLIC_SURFACE",
+      "note": "MEOK/king_ask runs on GCP VM :8077 (localhost). Not exposed as a public API. This lane cannot reach it from the public web."
+    },
+    "Layer O (resource resolution)": {
+      "status": "NOT_ON_PUBLIC_SURFACE",
+      "note": "Layer O resolves resources. No public endpoint found. Internal to the meok-one stack."
+    },
+    "OM Router (route selection)": {
+      "status": "LIVE",
+      "note": "The route tool IS the public surface of the route planner. 18 candidates, policy enforcement working."
+    },
+    "Condor (execution)": {
+      "status": "NOT_ENABLED",
+      "note": "Route tool mode: 'execute is not enabled and answers NOT_ENABLED'. Execution layer is not live on the public surface."
+    },
+    "GSPC (measurement)": {
+      "status": "LIVE",
+      "note": "23/23 axes measured. Evidence gate, corrections ledger, signed cards all functional. board_totals, get_axis, verify_card tools working."
+    },
+    "SovSpace (recording)": {
+      "status": "NOT_ON_PUBLIC_SURFACE",
+      "note": "SovSpace records outcomes. No public endpoint found. Internal to the stack."
+    }
+  },
+  "channel_projections": {
+    "MCP": "14 tools live (board_totals \u2192 route). tools/call verified working. Job ID NOT wired.",
+    "API": "/api/gspc, /api/state, /api/corrections live. Job ID NOT wired.",
+    "A2A": "/api/a2a returns 200. A2A transport not exercised in job contract tests.",
+    "Council OS": "Public dashboard says NOT LIVE. No account PDCA cycle recorded.",
+    "Plugin X": "chatgpt-plugin.json live (10 paths). Job ID NOT wired.",
+    "A2UI / AG-UI / AX": "Local projections tested per alignment doc. Not verified live in this audit."
+  },
+  "next_acceptance_slice_from_alignment": "Wire one existing Council OS action + one existing MCP tools/call to gspcjob: ID. Store the resulting record. Replay it through the API. Then add A2A and agent-UI renderers against that same stored record.",
+  "honesty_note": "Read-only assessment against publicly served bytes and live MCP tools/call. No code written, no deploy, no signing. The route tool's route record is unsigned decide-only preview \u2014 it is not a measurement or a receipt. gspcjob: contract is tested locally but not wired to live handlers."
+}

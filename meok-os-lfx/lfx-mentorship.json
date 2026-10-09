@@ -1,0 +1,183 @@
+{
+  "program": "LFX Mentorship 2026 H1",
+  "project": "meok-ai-os",
+  "project_slug": "meok-ai-os",
+  "duration": {
+    "start": "2026-03-01",
+    "end": "2026-05-31"
+  },
+  "stipend_usd_per_mentee": 6600,
+  "mentor_allowance_usd": 1500,
+  "hives_total": 33,
+  "mentees_per_mentor": 4,
+  "mentor_pool_size": 9,
+  "pairings": [
+    {
+      "hive": "meok-hive-01",
+      "hive_role": "edge-control",
+      "mentor": {
+        "name": "Aïda Benali",
+        "github": "aida-benali",
+        "affiliation": "INRIA",
+        "expertise": ["k8s operators", "BMC firmware", "attestation"]
+      },
+      "mentees": [
+        {"name": "TBD-01A", "github": "tbd-01a", "track": "operator"},
+        {"name": "TBD-01B", "github": "tbd-01b", "track": "attestation"},
+        {"name": "TBD-01C", "github": "tbd-01c", "track": "ci"},
+        {"name": "TBD-01D", "github": "tbd-01d", "track": "docs"}
+      ],
+      "project": "MEOK OpenShell admission webhook",
+      "issues": ["#meok-ai-os/421", "#meok-ai-os/422"]
+    },
+    {
+      "hive": "meok-hive-02",
+      "hive_role": "edge-ai",
+      "mentor": {
+        "name": "Ravi Subramanian",
+        "github": "ravi-sub",
+        "affiliation": "IIT Bombay",
+        "expertise": ["ML serving", "ARM", "quantization"]
+      },
+      "mentees": [
+        {"name": "TBD-02A", "github": "tbd-02a", "track": "inference"},
+        {"name": "TBD-02B", "github": "tbd-02b", "track": "quantization"},
+        {"name": "TBD-02C", "github": "tbd-02c", "track": "evaluation"},
+        {"name": "TBD-02D", "github": "tbd-02d", "track": "benchmarks"}
+      ],
+      "project": "MEOK on aarch64 Grace boxes",
+      "issues": ["#meok-ai-os/510"]
+    },
+    {
+      "hive": "meok-hive-03",
+      "hive_role": "sovereign-store",
+      "mentor": {
+        "name": "Lina Voß",
+        "github": "lina-voss",
+        "affiliation": "Hetzner",
+        "expertise": ["storage", "LUKS", "KMS"]
+      },
+      "mentees": [
+        {"name": "TBD-03A", "github": "tbd-03a", "track": "storage"},
+        {"name": "TBD-03B", "github": "tbd-03b", "track": "kms"},
+        {"name": "TBD-03C", "github": "tbd-03c", "track": "bench"},
+        {"name": "TBD-03D", "github": "tbd-03d", "track": "docs"}
+      ],
+      "project": "MEOK CSI driver + sovereign KMS",
+      "issues": ["#meok-ai-os/617"]
+    },
+    {
+      "hive": "meok-hive-04",
+      "hive_role": "sovereign-bft",
+      "mentor": {
+        "name": "Marcus Okonkwo",
+        "github": "marcus-o",
+        "affiliation": "Ethereum Foundation (alum)",
+        "expertise": ["BFT", "consensus", "signature schemes"]
+      },
+      "mentees": [
+        {"name": "TBD-04A", "github": "tbd-04a", "track": "bft"},
+        {"name": "TBD-04B", "github": "tbd-04b", "track": "sig"},
+        {"name": "TBD-04C", "github": "tbd-04c", "track": "perf"},
+        {"name": "TBD-04D", "github": "tbd-04d", "track": "fuzz"}
+      ],
+      "project": "MEOK BFT verifier on top of sovereign Substrate",
+      "issues": ["#meok-ai-os/720"]
+    },
+    {
+      "hive": "meok-hive-05",
+      "hive_role": "care-first-kernel",
+      "mentor": {
+        "name": "Sofía Marín",
+        "github": "sofia-marin",
+        "affiliation": "LF AI",
+        "expertise": ["AI safety", "evaluation", "policy"]
+      },
+      "mentees": [
+        {"name": "TBD-05A", "github": "tbd-05a", "track": "policy"},
+        {"name": "TBD-05B", "github": "tbd-05b", "track": "evals"},
+        {"name": "TBD-05C", "github": "tbd-05c", "track": "docs"},
+        {"name": "TBD-05D", "github": "tbd-05d", "track": "i18n"}
+      ],
+      "project": "Care-First kernel evaluation harness",
+      "issues": ["#meok-ai-os/801"]
+    },
+    {
+      "hive": "meok-hive-06",
+      "hive_role": "compliance-gateway",
+      "mentor": {
+        "name": "Hugo Lefevre",
+        "github": "hugo-lefevre",
+        "affiliation": "ANSSI",
+        "expertise": ["EU AI Act", "GDPR", "secure-by-design"]
+      },
+      "mentees": [
+        {"name": "TBD-06A", "github": "tbd-06a", "track": "reg"},
+        {"name": "TBD-06B", "github": "tbd-06b", "track": "policy"},
+        {"name": "TBD-06C", "github": "tbd-06c", "track": "audits"},
+        {"name": "TBD-06D", "github": "tbd-06d", "track": "docs"}
+      ],
+      "project": "12-framework compliance operator",
+      "issues": ["#meok-ai-os/910"]
+    },
+    {
+      "hive": "meok-hive-07",
+      "hive_role": "redfish-api",
+      "mentor": {
+        "name": "Priya Iyer",
+        "github": "priya-iyer",
+        "affiliation": "OpenBMC",
+        "expertise": ["Redfish", "BMC firmware", "C"]
+      },
+      "mentees": [
+        {"name": "TBD-07A", "github": "tbd-07a", "track": "redfish"},
+        {"name": "TBD-07B", "github": "tbd-07b", "track": "tls"},
+        {"name": "TBD-07C", "github": "tbd-07c", "track": "tests"},
+        {"name": "TBD-07D", "github": "tbd-07d", "track": "docs"}
+      ],
+      "project": "MEOK Redfish API extensions",
+      "issues": ["#meok-ai-os/1001"]
+    },
+    {
+      "hive": "meok-hive-08",
+      "hive_role": "sovereign-net",
+      "mentor": {
+        "name": "Niko Saarinen",
+        "github": "niko-saarinen",
+        "affiliation": "Cilium / Isovalent",
+        "expertise": ["CNI", "eBPF", "service mesh"]
+      },
+      "mentees": [
+        {"name": "TBD-08A", "github": "tbd-08a", "track": "cni"},
+        {"name": "TBD-08B", "github": "tbd-08b", "track": "mesh"},
+        {"name": "TBD-08C", "github": "tbd-08c", "track": "perf"},
+        {"name": "TBD-08D", "github": "tbd-08d", "track": "docs"}
+      ],
+      "project": "MEOK sovereign CNI profile",
+      "issues": ["#meok-ai-os/1110"]
+    },
+    {
+      "hive": "meok-hive-09",
+      "hive_role": "sovereign-key-rotation",
+      "mentor": {
+        "name": "Aiko Tanaka",
+        "github": "aiko-tanaka",
+        "affiliation": "Sigstore",
+        "expertise": ["key rotation", "transparency logs", "TUF"]
+      },
+      "mentees": [
+        {"name": "TBD-09A", "github": "tbd-09a", "track": "tuf"},
+        {"name": "TBD-09B", "github": "tbd-09b", "track": "rot"},
+        {"name": "TBD-09C", "github": "tbd-09c", "track": "ops"},
+        {"name": "TBD-09D", "github": "tbd-09d", "track": "docs"}
+      ],
+      "project": "MEOK sovereign key rotation",
+      "issues": ["#meok-ai-os/1212"]
+    }
+  ],
+  "metrics": {
+    "expected_graduations": 36,
+    "expected_prs_merged": 90,
+    "expected_first_time_contributors": 36
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "schema": "csoai.revenue-compounding-assessment/0.1",
+  "assessed_at": "2026-10-01T14:15:00Z",
+  "lane": "mimocode-session",
+  "phase": "Phase 10 \u2014 Revenue compounding (Compound CEO mandate)",
+  "revenue_ladder": {
+    "VERIFY": {
+      "status": "LIVE",
+      "pricing": "Free forever",
+      "note": "gspc-verify, verify_card, verify_inclusion, verify_capsule, /api/verify"
+    },
+    "Claim_Maintenance": {
+      "status": "LIVE",
+      "pricing": "Free read (not sold)",
+      "note": "28 subjects, 99 claims. v0.2 spec published. Gate date satisfied 2026-10-01."
+    },
+    "Monitor": {
+      "status": "PARTIAL",
+      "pricing": "Not sold",
+      "note": "Scheduler running (day-7/30/90) but 2 days stale. No monitoring SKU."
+    },
+    "Reproduce": {
+      "status": "PARTIAL",
+      "pricing": "Free verification only",
+      "note": "How-to-verify + verify-card.mjs + claim-capture.mjs reference impl. No paid reproduction."
+    },
+    "Conformance": {
+      "status": "PARTIAL",
+      "pricing": "x402_check behind 402 (20,000 atomic)",
+      "note": "Instruments exist (x402 census, MCP capsules, PoC alignment). Not packaged as product."
+    },
+    "Evidence_Packs": {
+      "status": "LIVE",
+      "pricing": "x402 paid",
+      "note": "28 paid resources. 12 issuances + 1 proof settled. Closest to live paid product."
+    },
+    "Lag_Index": {
+      "status": "NOT_FOUND",
+      "pricing": "N/A",
+      "note": "No measurement freshness/staleness index."
+    },
+    "Rescue": {
+      "status": "NOT_FOUND",
+      "pricing": "N/A",
+      "note": "No rescue product."
+    },
+    "Private_Deployment": {
+      "status": "NOT_FOUND",
+      "pricing": "N/A",
+      "note": "No self-hosted/air-gapped offering."
+    },
+    "Audits": {
+      "status": "NOT_FOUND",
+      "pricing": "N/A",
+      "note": "Claim maintenance spec \u00a72.3 says it is NOT auditing. Separate offering."
+    }
+  },
+  "ladder_summary": {
+    "LIVE": 3,
+    "PARTIAL": 3,
+    "NOT_FOUND": 4,
+    "total": 10
+  },
+  "payer_tracking": {
+    "viewers": "NOT TRACKED",
+    "callers": "NOT TRACKED (MCP census shows reachability only)",
+    "repeat_callers": "NOT TRACKED",
+    "qualified_buyers": "NOT TRACKED",
+    "distinct_payers": "1 (historical non-self settlement)",
+    "repeat_payers": "0 (no repeat evidence per 2026-09-30 readback)",
+    "note": "Phase 10 requires tracking all 6 dimensions separately. Only distinct_payers and repeat_payers have any data (and it's minimal)."
+  },
+  "revenue_state": {
+    "sku_issuance": {
+      "count": 12,
+      "status": "MEASURED"
+    },
+    "sku_proofs": {
+      "count": 1,
+      "status": "MEASURED"
+    },
+    "sku_licences": {
+      "count": null,
+      "status": "UNMEASURED"
+    },
+    "north_of_truth": "settled_usdc on Base (chain adjudicates, not CRM)",
+    "rail": "LIVE (pay-to + facilitator configured)",
+    "philosophy": "Revenue on issuance/assembly/signature \u2014 never a grade. No prices on free surfaces."
+  },
+  "compounding_loops_active": {
+    "claim_loop": "PARTIAL (capture + recheck running, no claim dependency graph)",
+    "reaction_loop": "PARTIAL (18 CONTROL jobs created, held for review)",
+    "counter_reaction_loop": "PARTIAL (EAT/DREAM/3KB engine runs 16-branch counterfactuals)",
+    "corrections_loop": "LIVE (89 entries, latency partially measured)",
+    "routing_loop": "NOT ACTIVE (route tool generates records but not persisted)",
+    "distribution_loop": "PARTIAL (N-sites audited, IndexNow submissions, but no calls/citations tracking)",
+    "data_loop": "NOT ACTIVE (time-series evidence graph not built)",
+    "research_loop": "PARTIAL (Phase 9 openings identified, ABSORB/ADAPT decisions pending)",
+    "ecosystem_loop": "PARTIAL (x402 census, MCP fleet probe, but no Layer O bounded measurement)",
+    "revenue_loop": "PARTIAL (free proof surfaces exist, paid evidence packs live, repeat-payer gate not met)",
+    "trust_loop": "LIVE (Ed25519 signatures, corrections discipline, Rekor + OTS anchors)",
+    "compute_loop": "NOT ACTIVE (no measured economics or provider allocation)"
+  },
+  "loop_summary": {
+    "LIVE": 2,
+    "PARTIAL": 7,
+    "NOT_ACTIVE": 3,
+    "total": 12
+  },
+  "recommendation": {
+    "highest_leverage": "The revenue funnel is blocked on tracking. The 6 tracking dimensions (viewers\u2192repeat_payers) are the gate to every monetisation decision. Implement tracking in the x402 rail before adding new SKUs.",
+    "quick_wins": [
+      "Persist route records (routing_loop \u2192 data_loop backbone)",
+      "Add viewer/caller counters to /api/state (public, honest counts)",
+      "Package Monitor as a paid SKU (claim-maintenance is already built, just needs pricing)"
+    ],
+    "revenue_gate": "Repeat-payer gate from the GSPC job contract: do not invent a tier or new SKU before a repeat payer exists. Currently 1 non-self payer, 0 repeat. Hold."
+  },
+  "honesty_note": "Read-only assessment. No prices published (per revenue contract). No SKUs created. Revenue on issuance/assembly/signature \u2014 never a grade. The 12 compounding loops are named in the Compound CEO mandate; this audit maps their current activity status."
+}

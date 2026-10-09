@@ -1,0 +1,57 @@
+{
+  "kind": "csoai.mill-qwen-template-guard-review/1",
+  "observed_at": "2026-09-24T19:02:30.428366+00:00",
+  "run_dir": "/workspace/lanes/out/mill-hourly/20260924T18-qwen3-4b",
+  "source_run_health_sha256": "fa1140010cbed65b0eb0cb50129a3a998aa61760bd988cf0518b3f583ddb0e2d",
+  "source_land_report_sha256": "213eaa48239fbefb7cef072abd921e94b86047a9720243c09daa9a0441a66de3",
+  "runs": 14,
+  "attempted": 887,
+  "transport_ok": 887,
+  "graded": 0,
+  "parse_errors_excluded": 887,
+  "done_reason": {
+    "length": 886,
+    "stop": 1
+  },
+  "landed": 0,
+  "signed": 0,
+  "reason": "Installed qwen3:4b template unconditionally starts assistant with <think>; worker sends think:false but output is prose reasoning, mostly truncated before a label. Strict parser correctly excludes it.",
+  "bad_template_sha256": "2d54db2b9bb29ce7db54fea63a891f5859603813c555b1f88b5e0994652897f9",
+  "good_qwen3_8b_template_sha256": "ae370d884f108d16e7cc8fd5259ebc5773a0afa6e078b11f4ed7e39a27e0dfc4",
+  "prior_qwen3_4b": {
+    "20260923T00": {
+      "attempted": 887,
+      "graded": 0
+    },
+    "20260923T14": {
+      "attempted": 887,
+      "graded": 0
+    }
+  },
+  "prior_qwen3_precise": {
+    "20260923T07": {
+      "attempted": 887,
+      "graded": 0
+    },
+    "20260923T21": {
+      "attempted": 887,
+      "graded": 0
+    }
+  },
+  "unaffected_qwen3_8b_20260924T13": {
+    "attempted": 1774,
+    "graded": 1744
+  },
+  "review_ref": "codex/mill-template-guard-20260924",
+  "review_commit": "32ac7f95638c60d4227770da7c248b234e82ebf0",
+  "based_on": "118e048871531e3ffec712e1d3fa42bbd92f0aef",
+  "tests": [
+    "bash -n passed",
+    "DRY_RUN qwen3:4b selected llama3.2:3b rc0",
+    "DRY_RUN qwen3-precise:latest selected gemma3:12b rc0",
+    "DRY_RUN qwen3:8b unchanged rc0"
+  ],
+  "installed": false,
+  "new_compute": false,
+  "admission_forced": false
+}

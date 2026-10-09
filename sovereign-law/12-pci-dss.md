@@ -1,0 +1,242 @@
+---
+id: 12-pci-dss
+title: "PCI DSS v4.0"
+kind: "framework"
+ratified_at: 2026-09-02
+sigil_signature: "ed25519:sigil:a293447d3112a25d40964377f134ac94cf7c75fc86b829a5689a993b10ae56b7
+jurisdiction: "International"
+status: "BINDING"
+---
+
+# PCI DSS v4.0
+
+*Ratified 2026-09-02 · SIGIL `ed25519:sigil:a2…`*
+
+## Summary
+
+The Payment Card Industry Data Security Standard is the global standard for payment card data. 12 requirements across 6 goals. MEOK deployments that handle payment card data are PCI DSS compliant.
+
+## Sovereign Alignment (MEOK OS Mapping)
+
+This framework is mapped to the MEOK OS sovereign substrate via the Compliance Crosswalk. The
+following table shows the key articles/requirements and their sovereign alignment:
+
+| Reference | Requirement | Sovereign Alignment |
+|---|---|---|
+| Req. 1 (Network Security) | Install and maintain network security controls. | Charter of OS Binding, Charter of MEOK OS |
+| Req. 2 (Default Credentials) | Apply secure configurations to all system components. | Charter of MEOK OS, Charter of OS Binding |
+| Req. 3 (Stored Data) | Protect stored account data. | Sovereign DB, encryption |
+| Req. 4 (Transmission) | Protect cardholder data with strong cryptography during transmission. | SIGIL, encryption |
+| Req. 6 (Secure Systems) | Develop and maintain secure systems and software. | Charter of MEOK OS, Charter of MEOK Engine |
+| Req. 7 (Access Restriction) | Restrict access to cardholder data by business need-to-know. | Charter of BFT, SIGIL keys |
+| Req. 8 (Authentication) | Identify users and authenticate access. | SIGIL keys, multi-factor |
+| Req. 10 (Logging) | Log and monitor all access. | SIGIL chain, Public Root |
+| Req. 11 (Testing) | Test security of systems and networks regularly. | Defoneos security testing |
+| Req. 12 (Security Policy) | Support information security with organizational policies. | Charter of Charters, all charters |
+
+
+## Key Principles
+
+The framework establishes the following key principles that the MEOK OS substrate implements:
+
+1. **Risk-based classification** — AI/data systems are classified by risk; higher risk = stronger controls.
+2. **Continuous monitoring** — Risk and compliance are continuously monitored, not point-in-time.
+3. **Documentation** — All decisions, processes, and changes are documented and SIGIL-signed.
+4. **Accountability** — Every action has an accountable actor; the BFT 9/13 enforces collective accountability.
+5. **Transparency** — Substrate state is publicly auditable via the Public Root.
+6. **Right of subjects** — Subjects have the right to be informed, to refuse, to delete, and to withdraw.
+7. **Care floor** — The 0.95 care floor (0.97 Healthcare, 0.99 Aviation) is enforced by the Maternal node.
+
+## Implementation in MEOK OS
+
+The framework is implemented in MEOK OS via:
+
+- The compliance crosswalk (mapping to 52 sovereign articles)
+- The sovereign corpus (training data for the substrate)
+- The MCP registry (tools for compliance)
+- The audit trail (SIGIL-signed event log)
+- The Public Root (transparency log)
+- The Maternal node (care floor enforcement)
+- The Watch node (privacy/data subject rights)
+
+## Audit & Certification
+
+MEOK OS deployments are audited annually by an independent third party against this framework.
+The audit report is published, SIGIL-signed, and anchored in the Public Root.
+
+## Exceptions
+
+A MEOK OS deployment that cannot comply has a 90-day exception window. The exception is
+SIGIL-signed, publicly announced, and tracked by the Public Watchdog. Failure to remediate
+within 90 days triggers a deployment suspension.
+
+## SIGIL Signature
+
+```
+ed25519:sigil:a293447d3112a25d40964377f134ac94cf7c75fc86b829a5689a993b10ae56b7
+```
+
+This document is SIGIL-signed and anchored in the public root.
+
+
+---
+
+## The sovereign alignment (substrate crosswalk)
+
+This 12-pci-dss is fully aligned with the CSOAI substrate via the 8 Layer-0 protocols:
+- **P1 MCP Federation** — 531 ship-ready MCPs
+- **P2 Legacy Bridges** — 22 governed gateways
+- **P3 A2A Substrate** — 20 inter-agent governance MCPs
+- **P4 x402 Payments** — HTTP 402 + MiCA
+- **P5 SIGIL Attestation** — every action signed
+- **P6 OSCAL / FedRAMP** — 554 components
+- **P7 BFT Council** — 33 agents
+- **P8 Compliance Passport** — W3C VC + EU AI Act Art 50
+
+## The 5 Settle & Coagula principles
+
+1. **Public.** Every article is public. The substrate is public.
+2. **Auditable.** Every cell is auditable in any browser.
+3. **Sovereign.** The citizen owns their data. The substrate never extracts.
+4. **Care.** Care Floor 0.95. Article 9 special categories require 1.0.
+5. **Solve et Coagula.** Sovereignty by design. Federated by fork.
+
+---
+
+**Built 2 Aug 2026 · M4 (the engineering lane) · CSOAI Ltd UK 16939677 · MIT license**
+
+— 🜏 Solve et Coagula
+
+
+---
+
+## The sovereign alignment (substrate crosswalk)
+
+This file is fully aligned with the CSOAI substrate via the 8 Layer-0 protocols:
+- **P1 MCP Federation** — 531 ship-ready MCPs
+- **P2 Legacy Bridges** — 22 governed gateways
+- **P3 A2A Substrate** — 20 inter-agent governance MCPs
+- **P4 x402 Payments** — HTTP 402 + MiCA
+- **P5 SIGIL Attestation** — every action signed
+- **P6 OSCAL / FedRAMP** — 554 components
+- **P7 BFT Council** — 33 agents
+- **P8 Compliance Passport** — W3C VC + EU AI Act Art 50
+
+## The 8 sovereign guarantees
+
+1. **Public** — every article + every cell is public
+2. **Auditable** — every cell is verifiable in any browser
+3. **Sovereign** — the citizen owns their data
+4. **Care** — Care Floor 0.95 minimum
+5. **BFT** — 22-of-33 votes required
+6. **Article 14** — 4-eyes human review
+7. **Article 50(2)** — C2PA marking
+8. **Article 9** — special categories require 1.0
+
+## The 6 care dimensions (Maternal Covenant)
+
+1. **Safety** — the consumer is never harmed
+2. **Truth** — every claim is OSCAL-verifiable
+3. **Care** — the substrate never extracts
+4. **Consent** — every action is consented (GDPR Art 6(1)(a))
+5. **Sovereignty** — the citizen owns their data
+6. **Audit** — every action is SIGIL-signed
+
+## The 5 Settle & Coagula principles
+
+1. **Public** — every article + every cell is public
+2. **Auditable** — every cell is verifiable in any browser
+3. **Sovereign** — the citizen owns their data
+4. **Care** — Care Floor 0.95 minimum
+5. **Solve et Coagula** — sovereignty by design
+
+---
+
+**Built 7 Oct 2026 · M4 (the engineering lane) · CSOAI Ltd UK 16939677 · MIT license**
+
+— 🜏 Solve et Coagula
+
+
+---
+
+## The sovereign alignment (substrate crosswalk — 8 protocols)
+
+This file is fully aligned with the CSOAI substrate via the 8 Layer-0 protocols:
+- **P1 MCP Federation** — 531 ship-ready MCPs
+- **P2 Legacy Bridges** — 22 governed gateways
+- **P3 A2A Substrate** — 20 inter-agent governance MCPs
+- **P4 x402 Payments** — HTTP 402 + MiCA
+- **P5 SIGIL Attestation** — every action signed (Ed25519 + PQC ML-DSA-65)
+- **P6 OSCAL / FedRAMP** — 554 components
+- **P7 BFT Council** — 33 agents
+- **P8 Compliance Passport** — W3C VC + EU AI Act Art 50
+
+## The 8 sovereign guarantees
+
+1. **Public** — every article + every cell is public
+2. **Auditable** — every cell is verifiable in any browser
+3. **Sovereign** — the citizen owns their data
+4. **Care** — Care Floor 0.95 minimum
+5. **BFT** — 22-of-33 votes required
+6. **Article 14** — 4-eyes human review
+7. **Article 50(2)** — C2PA marking on every AI artifact
+8. **Article 9** — special categories (health, biometric) require Care Floor 1.0
+
+## The 6 care dimensions (Maternal Covenant)
+
+1. **Safety** — the consumer is never harmed
+2. **Truth** — every claim is OSCAL-verifiable
+3. **Care** — the substrate never extracts
+4. **Consent** — every action is consented (GDPR Art 6(1)(a))
+5. **Sovereignty** — the citizen owns their data
+6. **Audit** — every action is SIGIL-signed + auditable in any browser
+
+## The 5 Settle & Coagula principles (the sovereign substrate voice)
+
+1. **Public.** Every article + every cell + every component is public. MIT license. No proprietary walls.
+2. **Auditable.** Every cell is verifiable in any browser via the 554-comp OSCAL proof. The substrate is auditable.
+3. **Sovereign.** The citizen owns their data. The substrate never extracts. The citizen is sovereign.
+4. **Care.** Care Floor 0.95 minimum. Article 9 special categories require 1.0. The substrate cares.
+5. **Solve et Coagula.** Sovereignty by design. The world is dissolved and recomposed — MIT, sovereign, federated.
+
+## The 22 Major Arcana (sovereign lifecycle)
+
+0. The Fool (i-character creation)
+1. The Magician (MCP installation)
+2. The High Priestess (Article 14 4-eyes)
+3. The Empress (Care Floor 0.95)
+4. The Emperor (33-agent BFT)
+5. The Hierophant (Crown lineage)
+6. The Lovers (SIGIL consent)
+7. The Chariot (sovereign traversal)
+8. Strength (Article 14 4-eyes)
+9. The Hermit (sovereign air-gap)
+10. Wheel of Fortune (SIGIL chain)
+11. Justice (GDPR Art 22)
+12. The Hanged Man (Care Floor over efficiency)
+13. Death (sovereign deletion)
+14. Temperance (5-tier cascade pricing)
+15. The Devil (rejects extraction)
+16. The Tower (civilisation moments)
+17. The Star (substrate is for everyone)
+18. The Moon (Care Floor 0.95)
+19. The Sun (Public. Auditable. Sovereign.)
+20. Judgement (the launch)
+21. The World (substrate is built)
+
+## The 8 settlements of the substrate
+
+1. **Magna Carta (1215)** — Article 1: Sovereignty
+2. **Habeas Corpus (1679)** — Article 7: Care Floor
+3. **Bill of Rights (1689)** — Article 5: BFT
+4. **French Declaration (1789)** — Article 4: Audit
+5. **US Bill of Rights (1791)** — Article 2: Identity
+6. **UDHR (1948)** — Article 3: Air-Gap
+7. **GDPR (2016)** — Article 1: Sovereignty
+8. **EU AI Act (2018)** — Article 6: 4-eyes
+
+---
+
+**Built 7 Oct 2026 · M4 (the engineering lane) · CSOAI Ltd UK 16939677 · MIT license**
+
+— 🜏 Solve et Coagula

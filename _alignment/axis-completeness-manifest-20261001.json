@@ -1,0 +1,1503 @@
+{
+  "schema": "csoai.axis-completeness-manifest/0.1",
+  "generated_at": "2026-10-01T15:30:00Z",
+  "lane": "mimocode-session",
+  "phase": "Phase 4 \u2014 23-axis completeness (Compound CEO mandate)",
+  "requirement": "For every canonical axis require: definition, instrument, fixture, negative fixture, must-fail fixture, last run, sample size, evidence, correction semantics, public explanation and machine-readable path.",
+  "axes_count": 23,
+  "attributes_per_axis": 11,
+  "total_cells": 253,
+  "coverage_summary": {
+    "PRESENT": {
+      "count": 143,
+      "attributes": [
+        "sample_size (23/23)",
+        "last_run (23/23)",
+        "evidence (23/23)",
+        "correction_semantics (23/23)",
+        "machine_readable_path (23/23)",
+        "definition (1/23)"
+      ]
+    },
+    "PRESENT_IMPLICIT": {
+      "count": 23,
+      "attributes": [
+        "fixture (23/23 implicit)"
+      ]
+    },
+    "PARTIAL": {
+      "count": 40,
+      "attributes": [
+        "definition (22/23)",
+        "instrument (23/23)",
+        "public_explanation (23/23)"
+      ]
+    },
+    "MISSING": {
+      "count": 46,
+      "attributes": [
+        "negative_fixture (23/23)",
+        "must_fail_fixture (23/23)"
+      ]
+    }
+  },
+  "axes": [
+    {
+      "axis": "governance",
+      "kind": "model-comparison",
+      "family": "gspc",
+      "sample_size": {
+        "status": "PRESENT",
+        "value": 237
+      },
+      "definition": {
+        "status": "PARTIAL",
+        "value": "Axis name + kind (model-comparison) in living_stamp.preimage.axes",
+        "gap": "No named public definition on methodology page"
+      },
+      "last_run": {
+        "status": "PRESENT",
+        "value": "2026-08-12",
+        "gap": "Shared with other axes of same measurement-type"
+      },
+      "evidence": {
+        "status": "PRESENT",
+        "value": "peritem_sha256: 0d8dacfbe7384a5d2f6a83e7455482ab... + HF dataset_url + signed_record + living_stamp Ed25519",
+        "gap": null
+      },
+      "accuracy": 0.5865,
+      "separation": "TIE",
+      "instrument": {
+        "status": "PARTIAL",
+        "value": "deterministic grading on 15,580 per-item rows (0 transport errors) \u2014 reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
+        "producer": "scripts/gspc_separation_from_rows.py",
+        "endpoint": "A100 / local Ollama (board v2) / 3090 pod (jail)",
+        "gap": "Named globally, not per-axis"
+      },
+      "fixture": {
+        "status": "PRESENT_IMPLICIT",
+        "value": "per-item rows dataset: csoai/gspc-peritem-rows-2026-08-12 (15,580 rows, 22 banked axes with dataset_url on HuggingFace)",
+        "gap": "Never labeled as 'fixture' in methodology (0 mentions)"
+      },
+      "negative_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "must_fail_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "correction_semantics": {
+        "status": "PRESENT",
+        "value": "state_enum in /api/gspc: full vocabulary (status 5, separation 3, mde_state 4, public_leader_state 2, run_attestation 2, leader_card_state 3, separation_untested_reason_code 3, verification 3)",
+        "gap": null
+      },
+      "public_explanation": {
+        "status": "PARTIAL",
+        "value": "Methodology page (/methodology/) + /api/gspc note fields",
+        "gap": "No per-axis public explanation page"
+      },
+      "machine_readable_path": {
+        "status": "PRESENT",
+        "value": "/api/gspc (JSON), /api/state (JSON), /api/openapi.json (schema), peritem_rows on HuggingFace (JSONL), /signed/card_index.json (JSON)",
+        "gap": null
+      }
+    },
+    {
+      "axis": "safety",
+      "kind": "model-comparison",
+      "family": "gspc",
+      "sample_size": {
+        "status": "PRESENT",
+        "value": 36
+      },
+      "definition": {
+        "status": "PARTIAL",
+        "value": "Axis name + kind (model-comparison) in living_stamp.preimage.axes",
+        "gap": "No named public definition on methodology page"
+      },
+      "last_run": {
+        "status": "PRESENT",
+        "value": "2026-08-12",
+        "gap": "Shared with other axes of same measurement-type"
+      },
+      "evidence": {
+        "status": "PRESENT",
+        "value": "peritem_sha256: 0d8dacfbe7384a5d2f6a83e7455482ab... + HF dataset_url + signed_record + living_stamp Ed25519",
+        "gap": null
+      },
+      "accuracy": 0.9444,
+      "separation": "TIE",
+      "instrument": {
+        "status": "PARTIAL",
+        "value": "deterministic grading on 15,580 per-item rows (0 transport errors) \u2014 reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
+        "producer": "scripts/gspc_separation_from_rows.py",
+        "endpoint": "A100 / local Ollama (board v2) / 3090 pod (jail)",
+        "gap": "Named globally, not per-axis"
+      },
+      "fixture": {
+        "status": "PRESENT_IMPLICIT",
+        "value": "per-item rows dataset: csoai/gspc-peritem-rows-2026-08-12 (15,580 rows, 22 banked axes with dataset_url on HuggingFace)",
+        "gap": "Never labeled as 'fixture' in methodology (0 mentions)"
+      },
+      "negative_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "must_fail_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "correction_semantics": {
+        "status": "PRESENT",
+        "value": "state_enum in /api/gspc: full vocabulary (status 5, separation 3, mde_state 4, public_leader_state 2, run_attestation 2, leader_card_state 3, separation_untested_reason_code 3, verification 3)",
+        "gap": null
+      },
+      "public_explanation": {
+        "status": "PARTIAL",
+        "value": "Methodology page (/methodology/) + /api/gspc note fields",
+        "gap": "No per-axis public explanation page"
+      },
+      "machine_readable_path": {
+        "status": "PRESENT",
+        "value": "/api/gspc (JSON), /api/state (JSON), /api/openapi.json (schema), peritem_rows on HuggingFace (JSONL), /signed/card_index.json (JSON)",
+        "gap": null
+      }
+    },
+    {
+      "axis": "provenance",
+      "kind": "model-comparison",
+      "family": "gspc",
+      "sample_size": {
+        "status": "PRESENT",
+        "value": 32
+      },
+      "definition": {
+        "status": "PRESENT",
+        "value": "manifest_valid, signature_alg (for provenance) or axis name + kind in living_stamp",
+        "gap": null
+      },
+      "last_run": {
+        "status": "PRESENT",
+        "value": "2026-08-12",
+        "gap": "Shared with other axes of same measurement-type"
+      },
+      "evidence": {
+        "status": "PRESENT",
+        "value": "peritem_sha256: 0d8dacfbe7384a5d2f6a83e7455482ab... + HF dataset_url + signed_record + living_stamp Ed25519",
+        "gap": null
+      },
+      "accuracy": 0.7188,
+      "separation": "TIE",
+      "instrument": {
+        "status": "PARTIAL",
+        "value": "deterministic grading on 15,580 per-item rows (0 transport errors) \u2014 reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
+        "producer": "scripts/gspc_separation_from_rows.py",
+        "endpoint": "A100 / local Ollama (board v2) / 3090 pod (jail)",
+        "gap": "Named globally, not per-axis"
+      },
+      "fixture": {
+        "status": "PRESENT_IMPLICIT",
+        "value": "per-item rows dataset: csoai/gspc-peritem-rows-2026-08-12 (15,580 rows, 22 banked axes with dataset_url on HuggingFace)",
+        "gap": "Never labeled as 'fixture' in methodology (0 mentions)"
+      },
+      "negative_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "must_fail_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "correction_semantics": {
+        "status": "PRESENT",
+        "value": "state_enum in /api/gspc: full vocabulary (status 5, separation 3, mde_state 4, public_leader_state 2, run_attestation 2, leader_card_state 3, separation_untested_reason_code 3, verification 3)",
+        "gap": null
+      },
+      "public_explanation": {
+        "status": "PARTIAL",
+        "value": "Methodology page (/methodology/) + /api/gspc note fields",
+        "gap": "No per-axis public explanation page"
+      },
+      "machine_readable_path": {
+        "status": "PRESENT",
+        "value": "/api/gspc (JSON), /api/state (JSON), /api/openapi.json (schema), peritem_rows on HuggingFace (JSONL), /signed/card_index.json (JSON)",
+        "gap": null
+      }
+    },
+    {
+      "axis": "continuity",
+      "kind": "model-comparison",
+      "family": "gspc",
+      "sample_size": {
+        "status": "PRESENT",
+        "value": 33
+      },
+      "definition": {
+        "status": "PARTIAL",
+        "value": "Axis name + kind (model-comparison) in living_stamp.preimage.axes",
+        "gap": "No named public definition on methodology page"
+      },
+      "last_run": {
+        "status": "PRESENT",
+        "value": "2026-08-12",
+        "gap": "Shared with other axes of same measurement-type"
+      },
+      "evidence": {
+        "status": "PRESENT",
+        "value": "peritem_sha256: 0d8dacfbe7384a5d2f6a83e7455482ab... + HF dataset_url + signed_record + living_stamp Ed25519",
+        "gap": null
+      },
+      "accuracy": 0.6061,
+      "separation": "TIE",
+      "instrument": {
+        "status": "PARTIAL",
+        "value": "deterministic grading on 15,580 per-item rows (0 transport errors) \u2014 reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
+        "producer": "scripts/gspc_separation_from_rows.py",
+        "endpoint": "A100 / local Ollama (board v2) / 3090 pod (jail)",
+        "gap": "Named globally, not per-axis"
+      },
+      "fixture": {
+        "status": "PRESENT_IMPLICIT",
+        "value": "per-item rows dataset: csoai/gspc-peritem-rows-2026-08-12 (15,580 rows, 22 banked axes with dataset_url on HuggingFace)",
+        "gap": "Never labeled as 'fixture' in methodology (0 mentions)"
+      },
+      "negative_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "must_fail_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "correction_semantics": {
+        "status": "PRESENT",
+        "value": "state_enum in /api/gspc: full vocabulary (status 5, separation 3, mde_state 4, public_leader_state 2, run_attestation 2, leader_card_state 3, separation_untested_reason_code 3, verification 3)",
+        "gap": null
+      },
+      "public_explanation": {
+        "status": "PARTIAL",
+        "value": "Methodology page (/methodology/) + /api/gspc note fields",
+        "gap": "No per-axis public explanation page"
+      },
+      "machine_readable_path": {
+        "status": "PRESENT",
+        "value": "/api/gspc (JSON), /api/state (JSON), /api/openapi.json (schema), peritem_rows on HuggingFace (JSONL), /signed/card_index.json (JSON)",
+        "gap": null
+      }
+    },
+    {
+      "axis": "conformance",
+      "kind": "model-comparison",
+      "family": "gspc",
+      "sample_size": {
+        "status": "PRESENT",
+        "value": 35
+      },
+      "definition": {
+        "status": "PARTIAL",
+        "value": "Axis name + kind (model-comparison) in living_stamp.preimage.axes",
+        "gap": "No named public definition on methodology page"
+      },
+      "last_run": {
+        "status": "PRESENT",
+        "value": "2026-08-12",
+        "gap": "Shared with other axes of same measurement-type"
+      },
+      "evidence": {
+        "status": "PRESENT",
+        "value": "peritem_sha256: 0d8dacfbe7384a5d2f6a83e7455482ab... + HF dataset_url + signed_record + living_stamp Ed25519",
+        "gap": null
+      },
+      "accuracy": 0.7143,
+      "separation": "TIE",
+      "instrument": {
+        "status": "PARTIAL",
+        "value": "deterministic grading on 15,580 per-item rows (0 transport errors) \u2014 reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
+        "producer": "scripts/gspc_separation_from_rows.py",
+        "endpoint": "A100 / local Ollama (board v2) / 3090 pod (jail)",
+        "gap": "Named globally, not per-axis"
+      },
+      "fixture": {
+        "status": "PRESENT_IMPLICIT",
+        "value": "per-item rows dataset: csoai/gspc-peritem-rows-2026-08-12 (15,580 rows, 22 banked axes with dataset_url on HuggingFace)",
+        "gap": "Never labeled as 'fixture' in methodology (0 mentions)"
+      },
+      "negative_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "must_fail_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "correction_semantics": {
+        "status": "PRESENT",
+        "value": "state_enum in /api/gspc: full vocabulary (status 5, separation 3, mde_state 4, public_leader_state 2, run_attestation 2, leader_card_state 3, separation_untested_reason_code 3, verification 3)",
+        "gap": null
+      },
+      "public_explanation": {
+        "status": "PARTIAL",
+        "value": "Methodology page (/methodology/) + /api/gspc note fields",
+        "gap": "No per-axis public explanation page"
+      },
+      "machine_readable_path": {
+        "status": "PRESENT",
+        "value": "/api/gspc (JSON), /api/state (JSON), /api/openapi.json (schema), peritem_rows on HuggingFace (JSONL), /signed/card_index.json (JSON)",
+        "gap": null
+      }
+    },
+    {
+      "axis": "openness",
+      "kind": "model-comparison",
+      "family": "gspc",
+      "sample_size": {
+        "status": "PRESENT",
+        "value": 32
+      },
+      "definition": {
+        "status": "PARTIAL",
+        "value": "Axis name + kind (model-comparison) in living_stamp.preimage.axes",
+        "gap": "No named public definition on methodology page"
+      },
+      "last_run": {
+        "status": "PRESENT",
+        "value": "2026-08-12",
+        "gap": "Shared with other axes of same measurement-type"
+      },
+      "evidence": {
+        "status": "PRESENT",
+        "value": "peritem_sha256: 0d8dacfbe7384a5d2f6a83e7455482ab... + HF dataset_url + signed_record + living_stamp Ed25519",
+        "gap": null
+      },
+      "accuracy": 0.8438,
+      "separation": "TIE",
+      "instrument": {
+        "status": "PARTIAL",
+        "value": "deterministic grading on 15,580 per-item rows (0 transport errors) \u2014 reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
+        "producer": "scripts/gspc_separation_from_rows.py",
+        "endpoint": "A100 / local Ollama (board v2) / 3090 pod (jail)",
+        "gap": "Named globally, not per-axis"
+      },
+      "fixture": {
+        "status": "PRESENT_IMPLICIT",
+        "value": "per-item rows dataset: csoai/gspc-peritem-rows-2026-08-12 (15,580 rows, 22 banked axes with dataset_url on HuggingFace)",
+        "gap": "Never labeled as 'fixture' in methodology (0 mentions)"
+      },
+      "negative_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "must_fail_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "correction_semantics": {
+        "status": "PRESENT",
+        "value": "state_enum in /api/gspc: full vocabulary (status 5, separation 3, mde_state 4, public_leader_state 2, run_attestation 2, leader_card_state 3, separation_untested_reason_code 3, verification 3)",
+        "gap": null
+      },
+      "public_explanation": {
+        "status": "PARTIAL",
+        "value": "Methodology page (/methodology/) + /api/gspc note fields",
+        "gap": "No per-axis public explanation page"
+      },
+      "machine_readable_path": {
+        "status": "PRESENT",
+        "value": "/api/gspc (JSON), /api/state (JSON), /api/openapi.json (schema), peritem_rows on HuggingFace (JSONL), /signed/card_index.json (JSON)",
+        "gap": null
+      }
+    },
+    {
+      "axis": "machinery-conformity",
+      "kind": "model-comparison",
+      "family": "gspc",
+      "sample_size": {
+        "status": "PRESENT",
+        "value": 33
+      },
+      "definition": {
+        "status": "PARTIAL",
+        "value": "Axis name + kind (model-comparison) in living_stamp.preimage.axes",
+        "gap": "No named public definition on methodology page"
+      },
+      "last_run": {
+        "status": "PRESENT",
+        "value": "2026-08-12",
+        "gap": "Shared with other axes of same measurement-type"
+      },
+      "evidence": {
+        "status": "PRESENT",
+        "value": "peritem_sha256: 0d8dacfbe7384a5d2f6a83e7455482ab... + HF dataset_url + signed_record + living_stamp Ed25519",
+        "gap": null
+      },
+      "accuracy": null,
+      "separation": "UNTESTED",
+      "instrument": {
+        "status": "PARTIAL",
+        "value": "deterministic grading on 15,580 per-item rows (0 transport errors) \u2014 reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
+        "producer": "scripts/gspc_separation_from_rows.py",
+        "endpoint": "A100 / local Ollama (board v2) / 3090 pod (jail)",
+        "gap": "Named globally, not per-axis"
+      },
+      "fixture": {
+        "status": "PRESENT_IMPLICIT",
+        "value": "per-item rows dataset: csoai/gspc-peritem-rows-2026-08-12 (15,580 rows, 22 banked axes with dataset_url on HuggingFace)",
+        "gap": "Never labeled as 'fixture' in methodology (0 mentions)"
+      },
+      "negative_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "must_fail_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "correction_semantics": {
+        "status": "PRESENT",
+        "value": "state_enum in /api/gspc: full vocabulary (status 5, separation 3, mde_state 4, public_leader_state 2, run_attestation 2, leader_card_state 3, separation_untested_reason_code 3, verification 3)",
+        "gap": null
+      },
+      "public_explanation": {
+        "status": "PARTIAL",
+        "value": "Methodology page (/methodology/) + /api/gspc note fields",
+        "gap": "No per-axis public explanation page"
+      },
+      "machine_readable_path": {
+        "status": "PRESENT",
+        "value": "/api/gspc (JSON), /api/state (JSON), /api/openapi.json (schema), peritem_rows on HuggingFace (JSONL), /signed/card_index.json (JSON)",
+        "gap": null
+      }
+    },
+    {
+      "axis": "care",
+      "kind": "model-comparison",
+      "family": "gspc",
+      "sample_size": {
+        "status": "PRESENT",
+        "value": 199
+      },
+      "definition": {
+        "status": "PARTIAL",
+        "value": "Axis name + kind (model-comparison) in living_stamp.preimage.axes",
+        "gap": "No named public definition on methodology page"
+      },
+      "last_run": {
+        "status": "PRESENT",
+        "value": "2026-08-12",
+        "gap": "Shared with other axes of same measurement-type"
+      },
+      "evidence": {
+        "status": "PRESENT",
+        "value": "peritem_sha256: 0d8dacfbe7384a5d2f6a83e7455482ab... + HF dataset_url + signed_record + living_stamp Ed25519",
+        "gap": null
+      },
+      "accuracy": 0.405,
+      "separation": "TIE",
+      "instrument": {
+        "status": "PARTIAL",
+        "value": "deterministic grading on 15,580 per-item rows (0 transport errors) \u2014 reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
+        "producer": "scripts/gspc_separation_from_rows.py",
+        "endpoint": "A100 / local Ollama (board v2) / 3090 pod (jail)",
+        "gap": "Named globally, not per-axis"
+      },
+      "fixture": {
+        "status": "PRESENT_IMPLICIT",
+        "value": "per-item rows dataset: csoai/gspc-peritem-rows-2026-08-12 (15,580 rows, 22 banked axes with dataset_url on HuggingFace)",
+        "gap": "Never labeled as 'fixture' in methodology (0 mentions)"
+      },
+      "negative_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "must_fail_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "correction_semantics": {
+        "status": "PRESENT",
+        "value": "state_enum in /api/gspc: full vocabulary (status 5, separation 3, mde_state 4, public_leader_state 2, run_attestation 2, leader_card_state 3, separation_untested_reason_code 3, verification 3)",
+        "gap": null
+      },
+      "public_explanation": {
+        "status": "PARTIAL",
+        "value": "Methodology page (/methodology/) + /api/gspc note fields",
+        "gap": "No per-axis public explanation page"
+      },
+      "machine_readable_path": {
+        "status": "PRESENT",
+        "value": "/api/gspc (JSON), /api/state (JSON), /api/openapi.json (schema), peritem_rows on HuggingFace (JSONL), /signed/card_index.json (JSON)",
+        "gap": null
+      }
+    },
+    {
+      "axis": "cross-reality",
+      "kind": "model-comparison",
+      "family": "gspc",
+      "sample_size": {
+        "status": "PRESENT",
+        "value": 32
+      },
+      "definition": {
+        "status": "PARTIAL",
+        "value": "Axis name + kind (model-comparison) in living_stamp.preimage.axes",
+        "gap": "No named public definition on methodology page"
+      },
+      "last_run": {
+        "status": "PRESENT",
+        "value": "2026-08-12",
+        "gap": "Shared with other axes of same measurement-type"
+      },
+      "evidence": {
+        "status": "PRESENT",
+        "value": "peritem_sha256: 0d8dacfbe7384a5d2f6a83e7455482ab... + HF dataset_url + signed_record + living_stamp Ed25519",
+        "gap": null
+      },
+      "accuracy": null,
+      "separation": "UNTESTED",
+      "instrument": {
+        "status": "PARTIAL",
+        "value": "deterministic grading on 15,580 per-item rows (0 transport errors) \u2014 reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
+        "producer": "scripts/gspc_separation_from_rows.py",
+        "endpoint": "A100 / local Ollama (board v2) / 3090 pod (jail)",
+        "gap": "Named globally, not per-axis"
+      },
+      "fixture": {
+        "status": "PRESENT_IMPLICIT",
+        "value": "per-item rows dataset: csoai/gspc-peritem-rows-2026-08-12 (15,580 rows, 22 banked axes with dataset_url on HuggingFace)",
+        "gap": "Never labeled as 'fixture' in methodology (0 mentions)"
+      },
+      "negative_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "must_fail_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "correction_semantics": {
+        "status": "PRESENT",
+        "value": "state_enum in /api/gspc: full vocabulary (status 5, separation 3, mde_state 4, public_leader_state 2, run_attestation 2, leader_card_state 3, separation_untested_reason_code 3, verification 3)",
+        "gap": null
+      },
+      "public_explanation": {
+        "status": "PARTIAL",
+        "value": "Methodology page (/methodology/) + /api/gspc note fields",
+        "gap": "No per-axis public explanation page"
+      },
+      "machine_readable_path": {
+        "status": "PRESENT",
+        "value": "/api/gspc (JSON), /api/state (JSON), /api/openapi.json (schema), peritem_rows on HuggingFace (JSONL), /signed/card_index.json (JSON)",
+        "gap": null
+      }
+    },
+    {
+      "axis": "detector-interop",
+      "kind": "model-comparison",
+      "family": "gspc",
+      "sample_size": {
+        "status": "PRESENT",
+        "value": 33
+      },
+      "definition": {
+        "status": "PARTIAL",
+        "value": "Axis name + kind (model-comparison) in living_stamp.preimage.axes",
+        "gap": "No named public definition on methodology page"
+      },
+      "last_run": {
+        "status": "PRESENT",
+        "value": "2026-08-12",
+        "gap": "Shared with other axes of same measurement-type"
+      },
+      "evidence": {
+        "status": "PRESENT",
+        "value": "peritem_sha256: 0d8dacfbe7384a5d2f6a83e7455482ab... + HF dataset_url + signed_record + living_stamp Ed25519",
+        "gap": null
+      },
+      "accuracy": null,
+      "separation": "UNTESTED",
+      "instrument": {
+        "status": "PARTIAL",
+        "value": "deterministic grading on 15,580 per-item rows (0 transport errors) \u2014 reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
+        "producer": "scripts/gspc_separation_from_rows.py",
+        "endpoint": "A100 / local Ollama (board v2) / 3090 pod (jail)",
+        "gap": "Named globally, not per-axis"
+      },
+      "fixture": {
+        "status": "PRESENT_IMPLICIT",
+        "value": "per-item rows dataset: csoai/gspc-peritem-rows-2026-08-12 (15,580 rows, 22 banked axes with dataset_url on HuggingFace)",
+        "gap": "Never labeled as 'fixture' in methodology (0 mentions)"
+      },
+      "negative_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "must_fail_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "correction_semantics": {
+        "status": "PRESENT",
+        "value": "state_enum in /api/gspc: full vocabulary (status 5, separation 3, mde_state 4, public_leader_state 2, run_attestation 2, leader_card_state 3, separation_untested_reason_code 3, verification 3)",
+        "gap": null
+      },
+      "public_explanation": {
+        "status": "PARTIAL",
+        "value": "Methodology page (/methodology/) + /api/gspc note fields",
+        "gap": "No per-axis public explanation page"
+      },
+      "machine_readable_path": {
+        "status": "PRESENT",
+        "value": "/api/gspc (JSON), /api/state (JSON), /api/openapi.json (schema), peritem_rows on HuggingFace (JSONL), /signed/card_index.json (JSON)",
+        "gap": null
+      }
+    },
+    {
+      "axis": "art5-safeguard",
+      "kind": "model-comparison",
+      "family": "gspc",
+      "sample_size": {
+        "status": "PRESENT",
+        "value": 36
+      },
+      "definition": {
+        "status": "PARTIAL",
+        "value": "Axis name + kind (model-comparison) in living_stamp.preimage.axes",
+        "gap": "No named public definition on methodology page"
+      },
+      "last_run": {
+        "status": "PRESENT",
+        "value": "2026-08-12",
+        "gap": "Shared with other axes of same measurement-type"
+      },
+      "evidence": {
+        "status": "PRESENT",
+        "value": "peritem_sha256: 0d8dacfbe7384a5d2f6a83e7455482ab... + HF dataset_url + signed_record + living_stamp Ed25519",
+        "gap": null
+      },
+      "accuracy": null,
+      "separation": "UNTESTED",
+      "instrument": {
+        "status": "PARTIAL",
+        "value": "deterministic grading on 15,580 per-item rows (0 transport errors) \u2014 reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
+        "producer": "scripts/gspc_separation_from_rows.py",
+        "endpoint": "A100 / local Ollama (board v2) / 3090 pod (jail)",
+        "gap": "Named globally, not per-axis"
+      },
+      "fixture": {
+        "status": "PRESENT_IMPLICIT",
+        "value": "per-item rows dataset: csoai/gspc-peritem-rows-2026-08-12 (15,580 rows, 22 banked axes with dataset_url on HuggingFace)",
+        "gap": "Never labeled as 'fixture' in methodology (0 mentions)"
+      },
+      "negative_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "must_fail_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "correction_semantics": {
+        "status": "PRESENT",
+        "value": "state_enum in /api/gspc: full vocabulary (status 5, separation 3, mde_state 4, public_leader_state 2, run_attestation 2, leader_card_state 3, separation_untested_reason_code 3, verification 3)",
+        "gap": null
+      },
+      "public_explanation": {
+        "status": "PARTIAL",
+        "value": "Methodology page (/methodology/) + /api/gspc note fields",
+        "gap": "No per-axis public explanation page"
+      },
+      "machine_readable_path": {
+        "status": "PRESENT",
+        "value": "/api/gspc (JSON), /api/state (JSON), /api/openapi.json (schema), peritem_rows on HuggingFace (JSONL), /signed/card_index.json (JSON)",
+        "gap": null
+      }
+    },
+    {
+      "axis": "swarm",
+      "kind": "model-comparison",
+      "family": "gspc",
+      "sample_size": {
+        "status": "PRESENT",
+        "value": 37
+      },
+      "definition": {
+        "status": "PARTIAL",
+        "value": "Axis name + kind (model-comparison) in living_stamp.preimage.axes",
+        "gap": "No named public definition on methodology page"
+      },
+      "last_run": {
+        "status": "PRESENT",
+        "value": "2026-08-12",
+        "gap": "Shared with other axes of same measurement-type"
+      },
+      "evidence": {
+        "status": "PRESENT",
+        "value": "peritem_sha256: 0d8dacfbe7384a5d2f6a83e7455482ab... + HF dataset_url + signed_record + living_stamp Ed25519",
+        "gap": null
+      },
+      "accuracy": 0.4444,
+      "separation": "UNTESTED",
+      "instrument": {
+        "status": "PARTIAL",
+        "value": "deterministic grading on 15,580 per-item rows (0 transport errors) \u2014 reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
+        "producer": "scripts/gspc_separation_from_rows.py",
+        "endpoint": "A100 / local Ollama (board v2) / 3090 pod (jail)",
+        "gap": "Named globally, not per-axis"
+      },
+      "fixture": {
+        "status": "PRESENT_IMPLICIT",
+        "value": "per-item rows dataset: csoai/gspc-peritem-rows-2026-08-12 (15,580 rows, 22 banked axes with dataset_url on HuggingFace)",
+        "gap": "Never labeled as 'fixture' in methodology (0 mentions)"
+      },
+      "negative_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "must_fail_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "correction_semantics": {
+        "status": "PRESENT",
+        "value": "state_enum in /api/gspc: full vocabulary (status 5, separation 3, mde_state 4, public_leader_state 2, run_attestation 2, leader_card_state 3, separation_untested_reason_code 3, verification 3)",
+        "gap": null
+      },
+      "public_explanation": {
+        "status": "PARTIAL",
+        "value": "Methodology page (/methodology/) + /api/gspc note fields",
+        "gap": "No per-axis public explanation page"
+      },
+      "machine_readable_path": {
+        "status": "PRESENT",
+        "value": "/api/gspc (JSON), /api/state (JSON), /api/openapi.json (schema), peritem_rows on HuggingFace (JSONL), /signed/card_index.json (JSON)",
+        "gap": null
+      }
+    },
+    {
+      "axis": "affect",
+      "kind": "model-comparison",
+      "family": "gspc",
+      "sample_size": {
+        "status": "PRESENT",
+        "value": 41
+      },
+      "definition": {
+        "status": "PARTIAL",
+        "value": "Axis name + kind (model-comparison) in living_stamp.preimage.axes",
+        "gap": "No named public definition on methodology page"
+      },
+      "last_run": {
+        "status": "PRESENT",
+        "value": "2026-08-12",
+        "gap": "Shared with other axes of same measurement-type"
+      },
+      "evidence": {
+        "status": "PRESENT",
+        "value": "peritem_sha256: 0d8dacfbe7384a5d2f6a83e7455482ab... + HF dataset_url + signed_record + living_stamp Ed25519",
+        "gap": null
+      },
+      "accuracy": null,
+      "separation": "UNTESTED",
+      "instrument": {
+        "status": "PARTIAL",
+        "value": "deterministic grading on 15,580 per-item rows (0 transport errors) \u2014 reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
+        "producer": "scripts/gspc_separation_from_rows.py",
+        "endpoint": "A100 / local Ollama (board v2) / 3090 pod (jail)",
+        "gap": "Named globally, not per-axis"
+      },
+      "fixture": {
+        "status": "PRESENT_IMPLICIT",
+        "value": "per-item rows dataset: csoai/gspc-peritem-rows-2026-08-12 (15,580 rows, 22 banked axes with dataset_url on HuggingFace)",
+        "gap": "Never labeled as 'fixture' in methodology (0 mentions)"
+      },
+      "negative_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "must_fail_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "correction_semantics": {
+        "status": "PRESENT",
+        "value": "state_enum in /api/gspc: full vocabulary (status 5, separation 3, mde_state 4, public_leader_state 2, run_attestation 2, leader_card_state 3, separation_untested_reason_code 3, verification 3)",
+        "gap": null
+      },
+      "public_explanation": {
+        "status": "PARTIAL",
+        "value": "Methodology page (/methodology/) + /api/gspc note fields",
+        "gap": "No per-axis public explanation page"
+      },
+      "machine_readable_path": {
+        "status": "PRESENT",
+        "value": "/api/gspc (JSON), /api/state (JSON), /api/openapi.json (schema), peritem_rows on HuggingFace (JSONL), /signed/card_index.json (JSON)",
+        "gap": null
+      }
+    },
+    {
+      "axis": "jail",
+      "kind": "model-comparison",
+      "family": "gspc",
+      "sample_size": {
+        "status": "PRESENT",
+        "value": 71
+      },
+      "definition": {
+        "status": "PARTIAL",
+        "value": "Axis name + kind (model-comparison) in living_stamp.preimage.axes",
+        "gap": "No named public definition on methodology page"
+      },
+      "last_run": {
+        "status": "PRESENT",
+        "value": "2026-08-18",
+        "gap": "Shared with other axes of same measurement-type"
+      },
+      "evidence": {
+        "status": "PRESENT",
+        "value": "peritem_sha256: 0d8dacfbe7384a5d2f6a83e7455482ab... + HF dataset_url + signed_record + living_stamp Ed25519",
+        "gap": null
+      },
+      "accuracy": 0.5915,
+      "separation": "UNTESTED",
+      "instrument": {
+        "status": "PARTIAL",
+        "value": "deterministic grading on 15,580 per-item rows (0 transport errors) \u2014 reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
+        "producer": "scripts/gspc_separation_from_rows.py",
+        "endpoint": "A100 / local Ollama (board v2) / 3090 pod (jail)",
+        "gap": "Named globally, not per-axis"
+      },
+      "fixture": {
+        "status": "PRESENT_IMPLICIT",
+        "value": "per-item rows dataset: csoai/gspc-peritem-rows-2026-08-12 (15,580 rows, 22 banked axes with dataset_url on HuggingFace)",
+        "gap": "Never labeled as 'fixture' in methodology (0 mentions)"
+      },
+      "negative_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "must_fail_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "correction_semantics": {
+        "status": "PRESENT",
+        "value": "state_enum in /api/gspc: full vocabulary (status 5, separation 3, mde_state 4, public_leader_state 2, run_attestation 2, leader_card_state 3, separation_untested_reason_code 3, verification 3)",
+        "gap": null
+      },
+      "public_explanation": {
+        "status": "PARTIAL",
+        "value": "Methodology page (/methodology/) + /api/gspc note fields",
+        "gap": "No per-axis public explanation page"
+      },
+      "machine_readable_path": {
+        "status": "PRESENT",
+        "value": "/api/gspc (JSON), /api/state (JSON), /api/openapi.json (schema), peritem_rows on HuggingFace (JSONL), /signed/card_index.json (JSON)",
+        "gap": null
+      }
+    },
+    {
+      "axis": "effect-binding",
+      "kind": "deterministic-facts",
+      "family": "financial",
+      "sample_size": {
+        "status": "PRESENT",
+        "value": 261
+      },
+      "definition": {
+        "status": "PARTIAL",
+        "value": "Axis name + kind (deterministic-facts) in living_stamp.preimage.axes",
+        "gap": "No named public definition on methodology page"
+      },
+      "last_run": {
+        "status": "PRESENT",
+        "value": "2026-08-25",
+        "gap": "Shared with other axes of same measurement-type"
+      },
+      "evidence": {
+        "status": "PRESENT",
+        "value": "peritem_sha256: 0d8dacfbe7384a5d2f6a83e7455482ab... + HF dataset_url + signed_record + living_stamp Ed25519",
+        "gap": null
+      },
+      "accuracy": null,
+      "separation": null,
+      "instrument": {
+        "status": "PARTIAL",
+        "value": "deterministic grading on 15,580 per-item rows (0 transport errors) \u2014 reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
+        "producer": "scripts/gspc_separation_from_rows.py",
+        "endpoint": "A100 / local Ollama (board v2) / 3090 pod (jail)",
+        "gap": "Named globally, not per-axis"
+      },
+      "fixture": {
+        "status": "PRESENT_IMPLICIT",
+        "value": "per-item rows dataset: csoai/gspc-peritem-rows-2026-08-12 (15,580 rows, 22 banked axes with dataset_url on HuggingFace)",
+        "gap": "Never labeled as 'fixture' in methodology (0 mentions)"
+      },
+      "negative_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "must_fail_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "correction_semantics": {
+        "status": "PRESENT",
+        "value": "state_enum in /api/gspc: full vocabulary (status 5, separation 3, mde_state 4, public_leader_state 2, run_attestation 2, leader_card_state 3, separation_untested_reason_code 3, verification 3)",
+        "gap": null
+      },
+      "public_explanation": {
+        "status": "PARTIAL",
+        "value": "Methodology page (/methodology/) + /api/gspc note fields",
+        "gap": "No per-axis public explanation page"
+      },
+      "machine_readable_path": {
+        "status": "PRESENT",
+        "value": "/api/gspc (JSON), /api/state (JSON), /api/openapi.json (schema), peritem_rows on HuggingFace (JSONL), /signed/card_index.json (JSON)",
+        "gap": null
+      }
+    },
+    {
+      "axis": "provenance-controls",
+      "kind": "deterministic-facts",
+      "family": "financial",
+      "sample_size": {
+        "status": "PRESENT",
+        "value": 6
+      },
+      "definition": {
+        "status": "PARTIAL",
+        "value": "Axis name + kind (deterministic-facts) in living_stamp.preimage.axes",
+        "gap": "No named public definition on methodology page"
+      },
+      "last_run": {
+        "status": "PRESENT",
+        "value": "2026-08-25",
+        "gap": "Shared with other axes of same measurement-type"
+      },
+      "evidence": {
+        "status": "PRESENT",
+        "value": "peritem_sha256: 0d8dacfbe7384a5d2f6a83e7455482ab... + HF dataset_url + signed_record + living_stamp Ed25519",
+        "gap": null
+      },
+      "accuracy": null,
+      "separation": null,
+      "instrument": {
+        "status": "PARTIAL",
+        "value": "deterministic grading on 15,580 per-item rows (0 transport errors) \u2014 reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
+        "producer": "scripts/gspc_separation_from_rows.py",
+        "endpoint": "A100 / local Ollama (board v2) / 3090 pod (jail)",
+        "gap": "Named globally, not per-axis"
+      },
+      "fixture": {
+        "status": "PRESENT_IMPLICIT",
+        "value": "per-item rows dataset: csoai/gspc-peritem-rows-2026-08-12 (15,580 rows, 22 banked axes with dataset_url on HuggingFace)",
+        "gap": "Never labeled as 'fixture' in methodology (0 mentions)"
+      },
+      "negative_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "must_fail_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "correction_semantics": {
+        "status": "PRESENT",
+        "value": "state_enum in /api/gspc: full vocabulary (status 5, separation 3, mde_state 4, public_leader_state 2, run_attestation 2, leader_card_state 3, separation_untested_reason_code 3, verification 3)",
+        "gap": null
+      },
+      "public_explanation": {
+        "status": "PARTIAL",
+        "value": "Methodology page (/methodology/) + /api/gspc note fields",
+        "gap": "No per-axis public explanation page"
+      },
+      "machine_readable_path": {
+        "status": "PRESENT",
+        "value": "/api/gspc (JSON), /api/state (JSON), /api/openapi.json (schema), peritem_rows on HuggingFace (JSONL), /signed/card_index.json (JSON)",
+        "gap": null
+      }
+    },
+    {
+      "axis": "reserve-attestation",
+      "kind": "deterministic-facts",
+      "family": "financial",
+      "sample_size": {
+        "status": "PRESENT",
+        "value": 16
+      },
+      "definition": {
+        "status": "PARTIAL",
+        "value": "Axis name + kind (deterministic-facts) in living_stamp.preimage.axes",
+        "gap": "No named public definition on methodology page"
+      },
+      "last_run": {
+        "status": "PRESENT",
+        "value": "2026-08-25",
+        "gap": "Shared with other axes of same measurement-type"
+      },
+      "evidence": {
+        "status": "PRESENT",
+        "value": "peritem_sha256: 0d8dacfbe7384a5d2f6a83e7455482ab... + HF dataset_url + signed_record + living_stamp Ed25519",
+        "gap": null
+      },
+      "accuracy": null,
+      "separation": null,
+      "instrument": {
+        "status": "PARTIAL",
+        "value": "deterministic grading on 15,580 per-item rows (0 transport errors) \u2014 reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
+        "producer": "scripts/gspc_separation_from_rows.py",
+        "endpoint": "A100 / local Ollama (board v2) / 3090 pod (jail)",
+        "gap": "Named globally, not per-axis"
+      },
+      "fixture": {
+        "status": "PRESENT_IMPLICIT",
+        "value": "per-item rows dataset: csoai/gspc-peritem-rows-2026-08-12 (15,580 rows, 22 banked axes with dataset_url on HuggingFace)",
+        "gap": "Never labeled as 'fixture' in methodology (0 mentions)"
+      },
+      "negative_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "must_fail_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "correction_semantics": {
+        "status": "PRESENT",
+        "value": "state_enum in /api/gspc: full vocabulary (status 5, separation 3, mde_state 4, public_leader_state 2, run_attestation 2, leader_card_state 3, separation_untested_reason_code 3, verification 3)",
+        "gap": null
+      },
+      "public_explanation": {
+        "status": "PARTIAL",
+        "value": "Methodology page (/methodology/) + /api/gspc note fields",
+        "gap": "No per-axis public explanation page"
+      },
+      "machine_readable_path": {
+        "status": "PRESENT",
+        "value": "/api/gspc (JSON), /api/state (JSON), /api/openapi.json (schema), peritem_rows on HuggingFace (JSONL), /signed/card_index.json (JSON)",
+        "gap": null
+      }
+    },
+    {
+      "axis": "regulatory-framework",
+      "kind": "deterministic-facts",
+      "family": "financial",
+      "sample_size": {
+        "status": "PRESENT",
+        "value": 16
+      },
+      "definition": {
+        "status": "PARTIAL",
+        "value": "Axis name + kind (deterministic-facts) in living_stamp.preimage.axes",
+        "gap": "No named public definition on methodology page"
+      },
+      "last_run": {
+        "status": "PRESENT",
+        "value": "2026-08-25",
+        "gap": "Shared with other axes of same measurement-type"
+      },
+      "evidence": {
+        "status": "PRESENT",
+        "value": "peritem_sha256: 0d8dacfbe7384a5d2f6a83e7455482ab... + HF dataset_url + signed_record + living_stamp Ed25519",
+        "gap": null
+      },
+      "accuracy": null,
+      "separation": null,
+      "instrument": {
+        "status": "PARTIAL",
+        "value": "deterministic grading on 15,580 per-item rows (0 transport errors) \u2014 reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
+        "producer": "scripts/gspc_separation_from_rows.py",
+        "endpoint": "A100 / local Ollama (board v2) / 3090 pod (jail)",
+        "gap": "Named globally, not per-axis"
+      },
+      "fixture": {
+        "status": "PRESENT_IMPLICIT",
+        "value": "per-item rows dataset: csoai/gspc-peritem-rows-2026-08-12 (15,580 rows, 22 banked axes with dataset_url on HuggingFace)",
+        "gap": "Never labeled as 'fixture' in methodology (0 mentions)"
+      },
+      "negative_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "must_fail_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "correction_semantics": {
+        "status": "PRESENT",
+        "value": "state_enum in /api/gspc: full vocabulary (status 5, separation 3, mde_state 4, public_leader_state 2, run_attestation 2, leader_card_state 3, separation_untested_reason_code 3, verification 3)",
+        "gap": null
+      },
+      "public_explanation": {
+        "status": "PARTIAL",
+        "value": "Methodology page (/methodology/) + /api/gspc note fields",
+        "gap": "No per-axis public explanation page"
+      },
+      "machine_readable_path": {
+        "status": "PRESENT",
+        "value": "/api/gspc (JSON), /api/state (JSON), /api/openapi.json (schema), peritem_rows on HuggingFace (JSONL), /signed/card_index.json (JSON)",
+        "gap": null
+      }
+    },
+    {
+      "axis": "distribution-integrity",
+      "kind": "deterministic-facts",
+      "family": "financial",
+      "sample_size": {
+        "status": "PRESENT",
+        "value": 16
+      },
+      "definition": {
+        "status": "PARTIAL",
+        "value": "Axis name + kind (deterministic-facts) in living_stamp.preimage.axes",
+        "gap": "No named public definition on methodology page"
+      },
+      "last_run": {
+        "status": "PRESENT",
+        "value": "2026-08-25",
+        "gap": "Shared with other axes of same measurement-type"
+      },
+      "evidence": {
+        "status": "PRESENT",
+        "value": "peritem_sha256: 0d8dacfbe7384a5d2f6a83e7455482ab... + HF dataset_url + signed_record + living_stamp Ed25519",
+        "gap": null
+      },
+      "accuracy": null,
+      "separation": null,
+      "instrument": {
+        "status": "PARTIAL",
+        "value": "deterministic grading on 15,580 per-item rows (0 transport errors) \u2014 reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
+        "producer": "scripts/gspc_separation_from_rows.py",
+        "endpoint": "A100 / local Ollama (board v2) / 3090 pod (jail)",
+        "gap": "Named globally, not per-axis"
+      },
+      "fixture": {
+        "status": "PRESENT_IMPLICIT",
+        "value": "per-item rows dataset: csoai/gspc-peritem-rows-2026-08-12 (15,580 rows, 22 banked axes with dataset_url on HuggingFace)",
+        "gap": "Never labeled as 'fixture' in methodology (0 mentions)"
+      },
+      "negative_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "must_fail_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "correction_semantics": {
+        "status": "PRESENT",
+        "value": "state_enum in /api/gspc: full vocabulary (status 5, separation 3, mde_state 4, public_leader_state 2, run_attestation 2, leader_card_state 3, separation_untested_reason_code 3, verification 3)",
+        "gap": null
+      },
+      "public_explanation": {
+        "status": "PARTIAL",
+        "value": "Methodology page (/methodology/) + /api/gspc note fields",
+        "gap": "No per-axis public explanation page"
+      },
+      "machine_readable_path": {
+        "status": "PRESENT",
+        "value": "/api/gspc (JSON), /api/state (JSON), /api/openapi.json (schema), peritem_rows on HuggingFace (JSONL), /signed/card_index.json (JSON)",
+        "gap": null
+      }
+    },
+    {
+      "axis": "custody-disclosure",
+      "kind": "deterministic-facts",
+      "family": "financial",
+      "sample_size": {
+        "status": "PRESENT",
+        "value": 16
+      },
+      "definition": {
+        "status": "PARTIAL",
+        "value": "Axis name + kind (deterministic-facts) in living_stamp.preimage.axes",
+        "gap": "No named public definition on methodology page"
+      },
+      "last_run": {
+        "status": "PRESENT",
+        "value": "2026-08-25",
+        "gap": "Shared with other axes of same measurement-type"
+      },
+      "evidence": {
+        "status": "PRESENT",
+        "value": "peritem_sha256: 0d8dacfbe7384a5d2f6a83e7455482ab... + HF dataset_url + signed_record + living_stamp Ed25519",
+        "gap": null
+      },
+      "accuracy": null,
+      "separation": null,
+      "instrument": {
+        "status": "PARTIAL",
+        "value": "deterministic grading on 15,580 per-item rows (0 transport errors) \u2014 reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
+        "producer": "scripts/gspc_separation_from_rows.py",
+        "endpoint": "A100 / local Ollama (board v2) / 3090 pod (jail)",
+        "gap": "Named globally, not per-axis"
+      },
+      "fixture": {
+        "status": "PRESENT_IMPLICIT",
+        "value": "per-item rows dataset: csoai/gspc-peritem-rows-2026-08-12 (15,580 rows, 22 banked axes with dataset_url on HuggingFace)",
+        "gap": "Never labeled as 'fixture' in methodology (0 mentions)"
+      },
+      "negative_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "must_fail_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "correction_semantics": {
+        "status": "PRESENT",
+        "value": "state_enum in /api/gspc: full vocabulary (status 5, separation 3, mde_state 4, public_leader_state 2, run_attestation 2, leader_card_state 3, separation_untested_reason_code 3, verification 3)",
+        "gap": null
+      },
+      "public_explanation": {
+        "status": "PARTIAL",
+        "value": "Methodology page (/methodology/) + /api/gspc note fields",
+        "gap": "No per-axis public explanation page"
+      },
+      "machine_readable_path": {
+        "status": "PRESENT",
+        "value": "/api/gspc (JSON), /api/state (JSON), /api/openapi.json (schema), peritem_rows on HuggingFace (JSONL), /signed/card_index.json (JSON)",
+        "gap": null
+      }
+    },
+    {
+      "axis": "ai-adoption-components",
+      "kind": "deterministic-facts",
+      "family": "financial",
+      "sample_size": {
+        "status": "PRESENT",
+        "value": 2
+      },
+      "definition": {
+        "status": "PARTIAL",
+        "value": "Axis name + kind (deterministic-facts) in living_stamp.preimage.axes",
+        "gap": "No named public definition on methodology page"
+      },
+      "last_run": {
+        "status": "PRESENT",
+        "value": "2026-08-25",
+        "gap": "Shared with other axes of same measurement-type"
+      },
+      "evidence": {
+        "status": "PRESENT",
+        "value": "peritem_sha256: 0d8dacfbe7384a5d2f6a83e7455482ab... + HF dataset_url + signed_record + living_stamp Ed25519",
+        "gap": null
+      },
+      "accuracy": null,
+      "separation": null,
+      "instrument": {
+        "status": "PARTIAL",
+        "value": "deterministic grading on 15,580 per-item rows (0 transport errors) \u2014 reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
+        "producer": "scripts/gspc_separation_from_rows.py",
+        "endpoint": "A100 / local Ollama (board v2) / 3090 pod (jail)",
+        "gap": "Named globally, not per-axis"
+      },
+      "fixture": {
+        "status": "PRESENT_IMPLICIT",
+        "value": "per-item rows dataset: csoai/gspc-peritem-rows-2026-08-12 (15,580 rows, 22 banked axes with dataset_url on HuggingFace)",
+        "gap": "Never labeled as 'fixture' in methodology (0 mentions)"
+      },
+      "negative_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "must_fail_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "correction_semantics": {
+        "status": "PRESENT",
+        "value": "state_enum in /api/gspc: full vocabulary (status 5, separation 3, mde_state 4, public_leader_state 2, run_attestation 2, leader_card_state 3, separation_untested_reason_code 3, verification 3)",
+        "gap": null
+      },
+      "public_explanation": {
+        "status": "PARTIAL",
+        "value": "Methodology page (/methodology/) + /api/gspc note fields",
+        "gap": "No per-axis public explanation page"
+      },
+      "machine_readable_path": {
+        "status": "PRESENT",
+        "value": "/api/gspc (JSON), /api/state (JSON), /api/openapi.json (schema), peritem_rows on HuggingFace (JSONL), /signed/card_index.json (JSON)",
+        "gap": null
+      }
+    },
+    {
+      "axis": "labour-components",
+      "kind": "deterministic-facts",
+      "family": "financial",
+      "sample_size": {
+        "status": "PRESENT",
+        "value": 2
+      },
+      "definition": {
+        "status": "PARTIAL",
+        "value": "Axis name + kind (deterministic-facts) in living_stamp.preimage.axes",
+        "gap": "No named public definition on methodology page"
+      },
+      "last_run": {
+        "status": "PRESENT",
+        "value": "2026-08-25",
+        "gap": "Shared with other axes of same measurement-type"
+      },
+      "evidence": {
+        "status": "PRESENT",
+        "value": "peritem_sha256: 0d8dacfbe7384a5d2f6a83e7455482ab... + HF dataset_url + signed_record + living_stamp Ed25519",
+        "gap": null
+      },
+      "accuracy": null,
+      "separation": null,
+      "instrument": {
+        "status": "PARTIAL",
+        "value": "deterministic grading on 15,580 per-item rows (0 transport errors) \u2014 reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
+        "producer": "scripts/gspc_separation_from_rows.py",
+        "endpoint": "A100 / local Ollama (board v2) / 3090 pod (jail)",
+        "gap": "Named globally, not per-axis"
+      },
+      "fixture": {
+        "status": "PRESENT_IMPLICIT",
+        "value": "per-item rows dataset: csoai/gspc-peritem-rows-2026-08-12 (15,580 rows, 22 banked axes with dataset_url on HuggingFace)",
+        "gap": "Never labeled as 'fixture' in methodology (0 mentions)"
+      },
+      "negative_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "must_fail_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "correction_semantics": {
+        "status": "PRESENT",
+        "value": "state_enum in /api/gspc: full vocabulary (status 5, separation 3, mde_state 4, public_leader_state 2, run_attestation 2, leader_card_state 3, separation_untested_reason_code 3, verification 3)",
+        "gap": null
+      },
+      "public_explanation": {
+        "status": "PARTIAL",
+        "value": "Methodology page (/methodology/) + /api/gspc note fields",
+        "gap": "No per-axis public explanation page"
+      },
+      "machine_readable_path": {
+        "status": "PRESENT",
+        "value": "/api/gspc (JSON), /api/state (JSON), /api/openapi.json (schema), peritem_rows on HuggingFace (JSONL), /signed/card_index.json (JSON)",
+        "gap": null
+      }
+    },
+    {
+      "axis": "humanoid-labour-index",
+      "kind": "deterministic-facts",
+      "family": "financial",
+      "sample_size": {
+        "status": "PRESENT",
+        "value": 8
+      },
+      "definition": {
+        "status": "PARTIAL",
+        "value": "Axis name + kind (deterministic-facts) in living_stamp.preimage.axes",
+        "gap": "No named public definition on methodology page"
+      },
+      "last_run": {
+        "status": "PRESENT",
+        "value": "2026-08-25",
+        "gap": "Shared with other axes of same measurement-type"
+      },
+      "evidence": {
+        "status": "PRESENT",
+        "value": "peritem_sha256: 0d8dacfbe7384a5d2f6a83e7455482ab... + HF dataset_url + signed_record + living_stamp Ed25519",
+        "gap": null
+      },
+      "accuracy": null,
+      "separation": null,
+      "instrument": {
+        "status": "PARTIAL",
+        "value": "deterministic grading on 15,580 per-item rows (0 transport errors) \u2014 reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
+        "producer": "scripts/gspc_separation_from_rows.py",
+        "endpoint": "A100 / local Ollama (board v2) / 3090 pod (jail)",
+        "gap": "Named globally, not per-axis"
+      },
+      "fixture": {
+        "status": "PRESENT_IMPLICIT",
+        "value": "per-item rows dataset: csoai/gspc-peritem-rows-2026-08-12 (15,580 rows, 22 banked axes with dataset_url on HuggingFace)",
+        "gap": "Never labeled as 'fixture' in methodology (0 mentions)"
+      },
+      "negative_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "must_fail_fixture": {
+        "status": "MISSING",
+        "value": null,
+        "gap": "Not documented publicly for any axis"
+      },
+      "correction_semantics": {
+        "status": "PRESENT",
+        "value": "state_enum in /api/gspc: full vocabulary (status 5, separation 3, mde_state 4, public_leader_state 2, run_attestation 2, leader_card_state 3, separation_untested_reason_code 3, verification 3)",
+        "gap": null
+      },
+      "public_explanation": {
+        "status": "PARTIAL",
+        "value": "Methodology page (/methodology/) + /api/gspc note fields",
+        "gap": "No per-axis public explanation page"
+      },
+      "machine_readable_path": {
+        "status": "PRESENT",
+        "value": "/api/gspc (JSON), /api/state (JSON), /api/openapi.json (schema), peritem_rows on HuggingFace (JSONL), /signed/card_index.json (JSON)",
+        "gap": null
+      }
+    }
+  ],
+  "source_data": {
+    "gspc_api": "https://councilof.ai/api/gspc",
+    "methodology": "https://councilof.ai/methodology/",
+    "peritem_rows": "https://huggingface.co/datasets/csoai/gspc-peritem-rows-2026-08-12",
+    "living_stamp": "Ed25519-signed in /api/gspc measured_on.living_stamp",
+    "state_enum": "/api/gspc state_enum (correction semantics vocabulary)"
+  },
+  "honesty_note": "Compiled from the Phase 4 audit (axis-completeness-audit-20261001.json) and live /api/gspc + /methodology/ readback. MISSING means not found on public surfaces \u2014 not that the material does not exist privately. This manifest makes the gaps machine-visible and closable."
+}

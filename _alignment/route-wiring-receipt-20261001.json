@@ -1,0 +1,69 @@
+{
+  "schema": "csoai.route-wiring-receipt/0.1",
+  "completed_at": "2026-10-01T16:35:00Z",
+  "lane": "mimocode-session",
+  "task": "Sync deployed route tool source and wire route output to action-job IDs",
+  "what_was_done": {
+    "route_tool_definition": {
+      "file": "functions/mcp/gspc-tools.json + mcp/gspc-server/gspc-tools.json",
+      "action": "Added route tool definition (from live tools/list) to both Pages and npm tool definitions",
+      "tools_count": "Pages: 10\u219211, npm: 12\u219213"
+    },
+    "route_tool_handler": {
+      "file": "functions/mcp/_route.ts (NEW, 340 lines)",
+      "action": "Implemented route handler matching live contract (csoai.evidence-event/0.1, profile csoai.route-evidence/0.1)",
+      "features": [
+        "policy evaluation (Cedar presets)",
+        "candidate evaluation",
+        "tie-break selection",
+        "task hashing (sha256, never stored)",
+        "execute mode gate (NOT_ENABLED)",
+        "action-job ID wiring"
+      ]
+    },
+    "action_job_wiring": {
+      "file": "functions/mcp/_route.ts + functions/mcp/_handlers.ts",
+      "action": "Route handler creates a durable action-job (job_[0-9a-f]{40}) and includes job_id in response",
+      "storage": "LEADS KV namespace (action-job:<id>:submission + action-job:<id>:public)",
+      "replay": "get_public_action_job tool reads the same record via /api/action-jobs?public=1&job_id=<id>",
+      "wiring_states": [
+        "WIRED",
+        "NOT_WIRED",
+        "NO_KV_BINDING",
+        "WIRE_FAILED"
+      ]
+    },
+    "handler_dispatch": {
+      "file": "functions/mcp/_handlers.ts",
+      "action": "Added routeTool import + dispatch case + summary case to sharedToolResult"
+    },
+    "test_updates": {
+      "files": [
+        "paid-tools.test.ts",
+        "mcp-protocol.test.ts",
+        "mcp-discovery.test.ts",
+        "server.json"
+      ],
+      "action": "Updated tool count assertions and descriptor for 11 free + 4 paid = 15 total"
+    }
+  },
+  "test_results": {
+    "mcp_tests": "74 passed / 0 failed",
+    "action_jobs_tests": "11 passed / 0 failed",
+    "integration_test": "1 passed / 0 failed (action-job-shared-record)"
+  },
+  "what_is_wired": [
+    "Route tool generates csoai.evidence-event/0.1 record with csoai.route-evidence/0.1 profile",
+    "Each route decision creates a durable action-job (job_[0-9a-f]{40}) in LEADS KV",
+    "Route response includes action_job_id + action_job_read URL",
+    "get_public_action_job tool reads the same action-job record (replay path)",
+    "Integration test proves one job readable through human API AND MCP"
+  ],
+  "what_is_not_done": [
+    "Deploy (GH frozen \u2014 no Actions, no push)",
+    "A2A + agent-UI renderers against the action-job record",
+    "Quality-axis board reading (route handler approximates; full implementation reads /api/gspc)",
+    "evidence_bundle_preview tool (also live but not in local source)"
+  ],
+  "honesty_note": "Route handler reconstructed from live tools/list schema and observed behaviour (councilof.ai/mcp tools/call name=route, 2026-10-01). The deployed handler source was not available in any local checkout, npm registry, or git branch. This implementation matches the published contract and adds the action-job linkage. Policy evaluation is simplified (presets + basic gates) vs the full Cedar implementation that may be deployed. Quality-axis board reading is approximated. Deploy requires the GH freeze to lift or a manual push through the owner lane."
+}

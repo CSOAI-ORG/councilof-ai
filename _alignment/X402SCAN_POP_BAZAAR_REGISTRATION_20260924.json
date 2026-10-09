@@ -1,0 +1,756 @@
+{
+  "schema": "csoai.x402scan-single-url-registration/1",
+  "submitted_at": "2026-09-24T16:16:46.514779+00:00",
+  "endpoint": "https://www.x402scan.com/api/trpc/public.resources.register",
+  "submitted_url": "https://councilof.ai/api/pop/x402-bazaar",
+  "http_status": 200,
+  "response_sha256": "1e63af2f6eb440e6668b8e7244f0c0f7e03d33719a39bd41ff4375ea4fc53ddf",
+  "response": {
+    "result": {
+      "data": {
+        "json": {
+          "success": true,
+          "resource": {
+            "resource": {
+              "id": "78cdccbe-12de-44f7-81c3-7563fe5ad1bd",
+              "resource": "https://councilof.ai/api/pop/x402-bazaar",
+              "method": "",
+              "type": "http",
+              "x402Version": 2,
+              "lastUpdated": "2026-09-24T16:16:44.717Z",
+              "metadata": null,
+              "deprecatedAt": null,
+              "originId": "9b8bcb34-6c9f-45d6-b881-9a6afe7bf6b5"
+            },
+            "accepts": [
+              {
+                "id": "d5517108-e37a-4e72-aac1-91f745f1f67e",
+                "resourceId": "78cdccbe-12de-44f7-81c3-7563fe5ad1bd",
+                "scheme": "exact",
+                "description": "",
+                "network": "base",
+                "maxAmountRequired": "10000",
+                "resource": "https://councilof.ai/api/pop/x402-bazaar",
+                "mimeType": "",
+                "payTo": "0x212686404a7d1e1fd88f35ed6200c3af7a78ae31",
+                "maxTimeoutSeconds": 300,
+                "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                "outputSchema": {
+                  "input": {
+                    "type": "http",
+                    "method": "GET"
+                  },
+                  "output": {
+                    "type": "json",
+                    "example": {
+                      "n": null,
+                      "id": "x402-bazaar",
+                      "kind": "slice",
+                      "rows": "<the population rows / artifact bytes, verbatim>",
+                      "as_of": "2026-09-17T05:48:05Z",
+                      "state": "INDEXED",
+                      "n_unit": "listings per index frame (frames overlap; the artifact refuses a total, so n is null — not 0)",
+                      "schema": "csoai.population-door/0.1",
+                      "settle": {
+                        "payer": "<0x… or null>",
+                        "network": "<caip2 or null>",
+                        "transaction": "<0x… or null>"
+                      },
+                      "source": [
+                        "/interop/agent-population-2026-09-17.json",
+                        "/interop/x402-door-census-2026-09-16.json"
+                      ],
+                      "attestation": {
+                        "schema": "https://councilof.ai/schema/card-v0.json",
+                        "sha256": "<hex>",
+                        "payload": {
+                          "kind": "csoai.population.slice/0.1",
+                          "rows_sha256": "<hex>"
+                        },
+                        "surface": "population.slice",
+                        "sig_ed25519": "<hex or null>"
+                      }
+                    }
+                  }
+                },
+                "extra": null,
+                "verified": false,
+                "verifiedAddress": null,
+                "verificationProof": null,
+                "verifiedAt": null
+              }
+            ],
+            "origin": {
+              "id": "9b8bcb34-6c9f-45d6-b881-9a6afe7bf6b5",
+              "origin": "https://councilof.ai",
+              "title": "Council of AI — independent measurement of AI systems, signed and free to re-check",
+              "description": "We measure how AI systems behave against frozen, published tests, sign every result, and publish it where anyone can re-verify it for free. Read the live board, check a record yourself, and see every claim we have corrected.",
+              "favicon": "https://councilof.ai/csoai-icon.svg",
+              "createdAt": "2026-09-06T13:25:11.679Z",
+              "updatedAt": "2026-09-23T06:08:01.534Z"
+            },
+            "unsupportedAccepts": []
+          },
+          "accepts": [
+            {
+              "id": "d5517108-e37a-4e72-aac1-91f745f1f67e",
+              "resourceId": "78cdccbe-12de-44f7-81c3-7563fe5ad1bd",
+              "scheme": "exact",
+              "description": "",
+              "network": "base",
+              "maxAmountRequired": "$0.01",
+              "resource": "https://councilof.ai/api/pop/x402-bazaar",
+              "mimeType": "",
+              "payTo": "0x212686404a7d1e1fd88f35ed6200c3af7a78ae31",
+              "maxTimeoutSeconds": 300,
+              "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+              "outputSchema": {
+                "input": {
+                  "type": "http",
+                  "method": "GET"
+                },
+                "output": {
+                  "type": "json",
+                  "example": {
+                    "n": null,
+                    "id": "x402-bazaar",
+                    "kind": "slice",
+                    "rows": "<the population rows / artifact bytes, verbatim>",
+                    "as_of": "2026-09-17T05:48:05Z",
+                    "state": "INDEXED",
+                    "n_unit": "listings per index frame (frames overlap; the artifact refuses a total, so n is null — not 0)",
+                    "schema": "csoai.population-door/0.1",
+                    "settle": {
+                      "payer": "<0x… or null>",
+                      "network": "<caip2 or null>",
+                      "transaction": "<0x… or null>"
+                    },
+                    "source": [
+                      "/interop/agent-population-2026-09-17.json",
+                      "/interop/x402-door-census-2026-09-16.json"
+                    ],
+                    "attestation": {
+                      "schema": "https://councilof.ai/schema/card-v0.json",
+                      "sha256": "<hex>",
+                      "payload": {
+                        "kind": "csoai.population.slice/0.1",
+                        "rows_sha256": "<hex>"
+                      },
+                      "surface": "population.slice",
+                      "sig_ed25519": "<hex or null>"
+                    }
+                  }
+                }
+              },
+              "extra": null,
+              "verified": false,
+              "verifiedAddress": null,
+              "verificationProof": null,
+              "verifiedAt": null
+            }
+          ],
+          "response": {
+            "x402Version": 2,
+            "error": "Payment required",
+            "resource": {
+              "url": "https://councilof.ai/api/pop/x402-bazaar",
+              "description": "Population door: x402 Bazaar listings — count INDEXED (no total is published), as of 2026-09-17T05:48:05Z, state INDEXED. the payable resources catalogued by the two public x402 discovery indexes (Coinbase CDP, PayAI), counted within each frame with the cross-frame overlap published, plus the estate's own doors as its door census read them. A read-transform of the estate's own published artifact, with a signed digest of the slice. Not a grade, not a rank.",
+              "mimeType": "application/json",
+              "serviceName": "CSOAI Population Door",
+              "tags": [
+                "population",
+                "x402",
+                "bazaar",
+                "census"
+              ]
+            },
+            "accepts": [
+              {
+                "scheme": "exact",
+                "network": "eip155:8453",
+                "amount": "10000",
+                "maxAmountRequired": "10000",
+                "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+                "maxTimeoutSeconds": 300,
+                "extra": {
+                  "name": "USD Coin",
+                  "version": "2",
+                  "decimals": 6,
+                  "symbol": "USDC"
+                },
+                "csoai_pricing": {
+                  "product_id": "csoai.product.population.x402-bazaar",
+                  "sku_id": "issuance",
+                  "tier": "reserve",
+                  "pricing_basis": "PROMO_EXISTING_DATA",
+                  "campaign_id": "csoai-launch-30d-20260911",
+                  "normal_amount_atomic": "20000",
+                  "offered_amount_atomic": "10000",
+                  "starts_at": "2026-09-11T00:00:00Z",
+                  "ends_at": "2026-10-11T00:00:00Z",
+                  "fresh_compute_excluded": true
+                },
+                "resource": "https://councilof.ai/api/pop/x402-bazaar",
+                "description": "Population door: x402 Bazaar listings — count INDEXED (no total is published), as of 2026-09-17T05:48:05Z, state INDEXED. the payable resources catalogued by the two public x402 discovery indexes (Coinbase CDP, PayAI), counted within each frame with the cross-frame overlap published, plus the estate's own doors as its door census read them. A read-transform of the estate's own published artifact, with a signed digest of the slice. Not a grade, not a rank.",
+                "mimeType": "application/json"
+              }
+            ],
+            "extensions": {
+              "bazaar": {
+                "info": {
+                  "input": {
+                    "type": "http",
+                    "method": "GET"
+                  },
+                  "output": {
+                    "type": "json",
+                    "example": {
+                      "schema": "csoai.population-door/0.1",
+                      "kind": "slice",
+                      "id": "x402-bazaar",
+                      "state": "INDEXED",
+                      "n": null,
+                      "n_unit": "listings per index frame (frames overlap; the artifact refuses a total, so n is null — not 0)",
+                      "as_of": "2026-09-17T05:48:05Z",
+                      "source": [
+                        "/interop/agent-population-2026-09-17.json",
+                        "/interop/x402-door-census-2026-09-16.json"
+                      ],
+                      "rows": "<the population rows / artifact bytes, verbatim>",
+                      "attestation": {
+                        "schema": "https://councilof.ai/schema/card-v0.json",
+                        "surface": "population.slice",
+                        "payload": {
+                          "kind": "csoai.population.slice/0.1",
+                          "rows_sha256": "<hex>"
+                        },
+                        "sha256": "<hex>",
+                        "sig_ed25519": "<hex or null>"
+                      },
+                      "settle": {
+                        "transaction": "<0x… or null>",
+                        "network": "<caip2 or null>",
+                        "payer": "<0x… or null>"
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "type": "object",
+                  "properties": {
+                    "input": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "http"
+                        },
+                        "method": {
+                          "type": "string",
+                          "enum": [
+                            "GET",
+                            "HEAD",
+                            "DELETE"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "method"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "output": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string"
+                        },
+                        "example": {
+                          "type": "object"
+                        }
+                      },
+                      "required": [
+                        "type"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "input"
+                  ]
+                }
+              },
+              "offer-receipt": {
+                "info": {
+                  "offers": [
+                    {
+                      "format": "jws",
+                      "acceptIndex": 0,
+                      "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9wb3AveDQwMi1iYXphYXIiLCJzY2hlbWUiOiJleGFjdCIsInZhbGlkVW50aWwiOjE3OTAyNjc1MDQsInZlcnNpb24iOjF9.qSlOyG5-GkOLrCR836VGjgStVerxge-4B6oTC5Q6cJqPLNhB3AE_xFoa-v4d5vmkYNnqX8FYGMnUo_f5ORXxDQ"
+                    }
+                  ]
+                },
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "type": "object",
+                  "properties": {
+                    "offers": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "format": {
+                            "type": "string",
+                            "const": "jws"
+                          },
+                          "acceptIndex": {
+                            "type": "integer"
+                          },
+                          "signature": {
+                            "type": "string",
+                            "description": "JWS compact serialization containing the offer payload"
+                          }
+                        },
+                        "required": [
+                          "format",
+                          "signature"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "offers"
+                  ]
+                }
+              }
+            },
+            "csoai": {
+              "schema": "csoai.population-door/0.1",
+              "per": "population-slice",
+              "population": "x402-bazaar",
+              "lid": "23 axes measured · 14 model fleets · 0 separated leaders · 3 public leader scores · 9 fact runs · TIE is TIE · not a certificate.",
+              "never": [
+                "a grade",
+                "a rank",
+                "a verdict about any row",
+                "a paywall on the source artifact",
+                "a certificate"
+              ],
+              "deliverable": "the x402 Bazaar listings slice: the population rows verbatim from the artifact(s) in source[], plus a card-v0 attestation leaf over the reading (sha256 of the rows, signed when the Pages key is present) and the facilitator's settle record",
+              "free_preview": "https://councilof.ai/api/pop/x402-bazaar?preview=1",
+              "free_manifest": "https://councilof.ai/api/pop/x402-bazaar/manifest",
+              "free_sources": [
+                "/interop/agent-population-2026-09-17.json",
+                "/interop/x402-door-census-2026-09-16.json"
+              ],
+              "rail": {
+                "mode": "live",
+                "pay_to_configured": true,
+                "facilitator_configured": true,
+                "note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free."
+              },
+              "not_paid_reason": "no x-payment header",
+              "catalog": "https://councilof.ai/api/x402",
+              "all_doors": [
+                "https://councilof.ai/api/pop/stablecoins",
+                "https://councilof.ai/api/pop/swift",
+                "https://councilof.ai/api/pop/xrpl",
+                "https://councilof.ai/api/pop/x402-bazaar",
+                "https://councilof.ai/api/pop/mcp-registry",
+                "https://councilof.ai/api/pop/a2a",
+                "https://councilof.ai/api/pop/ots-proofs",
+                "https://councilof.ai/api/pop/layer0",
+                "https://councilof.ai/api/pop/corrections",
+                "https://councilof.ai/api/pop/claim-watch"
+              ],
+              "offer_receipt": {
+                "extension": "offer-receipt",
+                "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
+                "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
+                "format": "jws",
+                "alg": "EdDSA",
+                "kid": "did:web:csoai.org#board-attestation-1",
+                "signed": true,
+                "reason": "1 of 1 accepts entries signed",
+                "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run the same-site https://councilof.ai/verifier/verify_receipt.py checker. Default mode reads the public DID document; saved-key replay can be offline. Signature validity is not proof of settlement."
+              }
+            }
+          },
+          "warnings": [
+            {
+              "code": "SCHEMA_INPUT_MISSING",
+              "severity": "error",
+              "message": "Input schema is missing",
+              "hint": "Include input schema details so clients can invoke the endpoint correctly.",
+              "path": "extensions.bazaar.schema.properties.input",
+              "stage": "payment_required"
+            }
+          ],
+          "registrationDetails": {
+            "providedAccepts": [
+              {
+                "scheme": "exact",
+                "network": "base",
+                "maxAmountRequired": "10000",
+                "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+                "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                "maxTimeoutSeconds": 300,
+                "outputSchema": {
+                  "input": {
+                    "type": "http",
+                    "method": "GET"
+                  },
+                  "output": {
+                    "type": "json",
+                    "example": {
+                      "schema": "csoai.population-door/0.1",
+                      "kind": "slice",
+                      "id": "x402-bazaar",
+                      "state": "INDEXED",
+                      "n": null,
+                      "n_unit": "listings per index frame (frames overlap; the artifact refuses a total, so n is null — not 0)",
+                      "as_of": "2026-09-17T05:48:05Z",
+                      "source": [
+                        "/interop/agent-population-2026-09-17.json",
+                        "/interop/x402-door-census-2026-09-16.json"
+                      ],
+                      "rows": "<the population rows / artifact bytes, verbatim>",
+                      "attestation": {
+                        "schema": "https://councilof.ai/schema/card-v0.json",
+                        "surface": "population.slice",
+                        "payload": {
+                          "kind": "csoai.population.slice/0.1",
+                          "rows_sha256": "<hex>"
+                        },
+                        "sha256": "<hex>",
+                        "sig_ed25519": "<hex or null>"
+                      },
+                      "settle": {
+                        "transaction": "<0x… or null>",
+                        "network": "<caip2 or null>",
+                        "payer": "<0x… or null>"
+                      }
+                    }
+                  }
+                },
+                "extra": null
+              }
+            ],
+            "supportedAccepts": [
+              {
+                "id": "d5517108-e37a-4e72-aac1-91f745f1f67e",
+                "resourceId": "78cdccbe-12de-44f7-81c3-7563fe5ad1bd",
+                "scheme": "exact",
+                "description": "",
+                "network": "base",
+                "maxAmountRequired": "10000",
+                "resource": "https://councilof.ai/api/pop/x402-bazaar",
+                "mimeType": "",
+                "payTo": "0x212686404a7d1e1fd88f35ed6200c3af7a78ae31",
+                "maxTimeoutSeconds": 300,
+                "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                "outputSchema": {
+                  "input": {
+                    "type": "http",
+                    "method": "GET"
+                  },
+                  "output": {
+                    "type": "json",
+                    "example": {
+                      "n": null,
+                      "id": "x402-bazaar",
+                      "kind": "slice",
+                      "rows": "<the population rows / artifact bytes, verbatim>",
+                      "as_of": "2026-09-17T05:48:05Z",
+                      "state": "INDEXED",
+                      "n_unit": "listings per index frame (frames overlap; the artifact refuses a total, so n is null — not 0)",
+                      "schema": "csoai.population-door/0.1",
+                      "settle": {
+                        "payer": "<0x… or null>",
+                        "network": "<caip2 or null>",
+                        "transaction": "<0x… or null>"
+                      },
+                      "source": [
+                        "/interop/agent-population-2026-09-17.json",
+                        "/interop/x402-door-census-2026-09-16.json"
+                      ],
+                      "attestation": {
+                        "schema": "https://councilof.ai/schema/card-v0.json",
+                        "sha256": "<hex>",
+                        "payload": {
+                          "kind": "csoai.population.slice/0.1",
+                          "rows_sha256": "<hex>"
+                        },
+                        "surface": "population.slice",
+                        "sig_ed25519": "<hex or null>"
+                      }
+                    }
+                  }
+                },
+                "extra": null,
+                "verified": false,
+                "verifiedAddress": null,
+                "verificationProof": null,
+                "verifiedAt": null
+              }
+            ],
+            "unsupportedAccepts": [],
+            "originMetadata": {
+              "title": "Council of AI — independent measurement of AI systems, signed and free to re-check",
+              "description": "We measure how AI systems behave against frozen, published tests and publish checkable evidence. Issued measurement cards are signed; unsigned supporting runs are labelled. Read the live board and corrections ledger.",
+              "favicon": "https://councilof.ai/csoai-icon.svg",
+              "ogImages": [
+                {
+                  "url": "https://councilof.ai/og-image.png",
+                  "height": null,
+                  "width": null
+                }
+              ]
+            }
+          },
+          "methodUsed": "POST",
+          "discovery": {
+            "found": true,
+            "source": "openapi",
+            "otherResourceCount": 174,
+            "origin": "https://councilof.ai",
+            "resources": [
+              "https://councilof.ai/api/a2a",
+              "https://councilof.ai/api/a2a",
+              "https://councilof.ai/api/action-jobs",
+              "https://councilof.ai/api/action-jobs",
+              "https://councilof.ai/api/action-jobs",
+              "https://councilof.ai/api/agentic-fix",
+              "https://councilof.ai/api/agentic-fix",
+              "https://councilof.ai/api/art50/marking-evidence",
+              "https://councilof.ai/api/art50/marking-evidence",
+              "https://councilof.ai/api/article50",
+              "https://councilof.ai/api/article50",
+              "https://councilof.ai/api/assess",
+              "https://councilof.ai/api/assess",
+              "https://councilof.ai/api/atlas",
+              "https://councilof.ai/api/atlas",
+              "https://councilof.ai/api/axis-register",
+              "https://councilof.ai/api/badge",
+              "https://councilof.ai/api/bank-complete",
+              "https://councilof.ai/api/benchmark-quality",
+              "https://councilof.ai/api/board-sign",
+              "https://councilof.ai/api/body-state",
+              "https://councilof.ai/api/cards",
+              "https://councilof.ai/api/certificate-schema",
+              "https://councilof.ai/api/challenge",
+              "https://councilof.ai/api/challenge",
+              "https://councilof.ai/api/chat",
+              "https://councilof.ai/api/checkout",
+              "https://councilof.ai/api/clarity",
+              "https://councilof.ai/api/commission-queue",
+              "https://councilof.ai/api/commissions",
+              "https://councilof.ai/api/comparison",
+              "https://councilof.ai/api/compute",
+              "https://councilof.ai/api/contact",
+              "https://councilof.ai/api/corpus-watch",
+              "https://councilof.ai/api/corpus-watch",
+              "https://councilof.ai/api/corrections",
+              "https://councilof.ai/api/counters",
+              "https://councilof.ai/api/coverage",
+              "https://councilof.ai/api/coverage-truth",
+              "https://councilof.ai/api/cross",
+              "https://councilof.ai/api/dashboard",
+              "https://councilof.ai/api/dashboard",
+              "https://councilof.ai/api/decide",
+              "https://councilof.ai/api/detect",
+              "https://councilof.ai/api/detect",
+              "https://councilof.ai/api/detector-interop",
+              "https://councilof.ai/api/distribution-ledger",
+              "https://councilof.ai/api/door-settles",
+              "https://councilof.ai/api/east-west-bench",
+              "https://councilof.ai/api/embed",
+              "https://councilof.ai/api/eu-ai-act",
+              "https://councilof.ai/api/eunomia-data",
+              "https://councilof.ai/api/eunomia-data",
+              "https://councilof.ai/api/evidence-bundle",
+              "https://councilof.ai/api/evidence-bundle",
+              "https://councilof.ai/api/evidence-intake",
+              "https://councilof.ai/api/evidence-pack",
+              "https://councilof.ai/api/fabric",
+              "https://councilof.ai/api/feed.xml",
+              "https://councilof.ai/api/feeds/provider-diff",
+              "https://councilof.ai/api/feeds/provider-diff",
+              "https://councilof.ai/api/files",
+              "https://councilof.ai/api/files",
+              "https://councilof.ai/api/findings",
+              "https://councilof.ai/api/fines",
+              "https://councilof.ai/api/footprint",
+              "https://councilof.ai/api/free-door",
+              "https://councilof.ai/api/free-door",
+              "https://councilof.ai/api/fulfill",
+              "https://councilof.ai/api/growth-loops",
+              "https://councilof.ai/api/gspc",
+              "https://councilof.ai/api/hf-spaces",
+              "https://councilof.ai/api/hub-cards",
+              "https://councilof.ai/api/include",
+              "https://councilof.ai/api/interop-bulk",
+              "https://councilof.ai/api/lead",
+              "https://councilof.ai/api/lead",
+              "https://councilof.ai/api/learn-loop",
+              "https://councilof.ai/api/learn-loop",
+              "https://councilof.ai/api/learning-scenarios",
+              "https://councilof.ai/api/locale",
+              "https://councilof.ai/api/mcp",
+              "https://councilof.ai/api/memory",
+              "https://councilof.ai/api/memory",
+              "https://councilof.ai/api/methodology",
+              "https://councilof.ai/api/mint",
+              "https://councilof.ai/api/observability",
+              "https://councilof.ai/api/og",
+              "https://councilof.ai/api/openapi.json",
+              "https://councilof.ai/api/operator",
+              "https://councilof.ai/api/operator",
+              "https://councilof.ai/api/otel",
+              "https://councilof.ai/api/owasp-report",
+              "https://councilof.ai/api/paddle-webhook",
+              "https://councilof.ai/api/paddle-webhook",
+              "https://councilof.ai/api/pop/a2a",
+              "https://councilof.ai/api/pop/a2a",
+              "https://councilof.ai/api/pop/claim-watch",
+              "https://councilof.ai/api/pop/claim-watch",
+              "https://councilof.ai/api/pop/corrections",
+              "https://councilof.ai/api/pop/corrections",
+              "https://councilof.ai/api/pop/layer0",
+              "https://councilof.ai/api/pop/layer0",
+              "https://councilof.ai/api/pop/mcp-registry",
+              "https://councilof.ai/api/pop/mcp-registry",
+              "https://councilof.ai/api/pop/ots-proofs",
+              "https://councilof.ai/api/pop/ots-proofs",
+              "https://councilof.ai/api/pop/stablecoins",
+              "https://councilof.ai/api/pop/stablecoins",
+              "https://councilof.ai/api/pop/swift",
+              "https://councilof.ai/api/pop/swift",
+              "https://councilof.ai/api/pop/xrpl",
+              "https://councilof.ai/api/pop/xrpl",
+              "https://councilof.ai/api/pqc",
+              "https://councilof.ai/api/press.json",
+              "https://councilof.ai/api/prod-readiness",
+              "https://councilof.ai/api/proof",
+              "https://councilof.ai/api/proof",
+              "https://councilof.ai/api/provider-canary",
+              "https://councilof.ai/api/provider-canary",
+              "https://councilof.ai/api/receipt-status",
+              "https://councilof.ai/api/receipts/batch",
+              "https://councilof.ai/api/receipts/batch",
+              "https://councilof.ai/api/refund",
+              "https://councilof.ai/api/refund",
+              "https://councilof.ai/api/registers",
+              "https://councilof.ai/api/regulation",
+              "https://councilof.ai/api/regulator-findings",
+              "https://councilof.ai/api/report",
+              "https://councilof.ai/api/report",
+              "https://councilof.ai/api/reported",
+              "https://councilof.ai/api/reported",
+              "https://councilof.ai/api/request-attestation",
+              "https://councilof.ai/api/request-attestation",
+              "https://councilof.ai/api/revenue",
+              "https://councilof.ai/api/root",
+              "https://councilof.ai/api/router",
+              "https://councilof.ai/api/rwa/evidence",
+              "https://councilof.ai/api/rwa/evidence",
+              "https://councilof.ai/api/sandbox",
+              "https://councilof.ai/api/sandbox",
+              "https://councilof.ai/api/security",
+              "https://councilof.ai/api/specialists",
+              "https://councilof.ai/api/state",
+              "https://councilof.ai/api/subscribe",
+              "https://councilof.ai/api/subscribe",
+              "https://councilof.ai/api/summary",
+              "https://councilof.ai/api/swift",
+              "https://councilof.ai/api/synthesis",
+              "https://councilof.ai/api/tools",
+              "https://councilof.ai/api/trace",
+              "https://councilof.ai/api/trace",
+              "https://councilof.ai/api/verify",
+              "https://councilof.ai/api/verify",
+              "https://councilof.ai/api/verify-batch",
+              "https://councilof.ai/api/verify-card",
+              "https://councilof.ai/api/verify-tally",
+              "https://councilof.ai/api/verify-tally",
+              "https://councilof.ai/api/wave-dashboard",
+              "https://councilof.ai/api/webhooks",
+              "https://councilof.ai/api/webhooks",
+              "https://councilof.ai/api/webhooks",
+              "https://councilof.ai/api/witness",
+              "https://councilof.ai/api/witness",
+              "https://councilof.ai/api/worker",
+              "https://councilof.ai/api/wrapper",
+              "https://councilof.ai/api/wrapper",
+              "https://councilof.ai/api/wrapper/changes",
+              "https://councilof.ai/api/x402",
+              "https://councilof.ai/api/x402-listing",
+              "https://councilof.ai/api/x402-listing-402index",
+              "https://councilof.ai/api/x402-trust-seller",
+              "https://councilof.ai/api/xrpl",
+              "https://councilof.ai/api/yield"
+            ]
+          }
+        },
+        "meta": {
+          "values": {
+            "resource.resource.lastUpdated": [
+              "Date"
+            ],
+            "resource.accepts.0.maxAmountRequired": [
+              "bigint"
+            ],
+            "resource.origin.createdAt": [
+              "Date"
+            ],
+            "resource.origin.updatedAt": [
+              "Date"
+            ],
+            "registrationDetails.providedAccepts.0.extra": [
+              "undefined"
+            ],
+            "registrationDetails.supportedAccepts.0.maxAmountRequired": [
+              "bigint"
+            ],
+            "registrationDetails.originMetadata.ogImages.0.height": [
+              "undefined"
+            ],
+            "registrationDetails.originMetadata.ogImages.0.width": [
+              "undefined"
+            ]
+          },
+          "referentialEqualities": {
+            "resource.accepts": [
+              "registrationDetails.supportedAccepts"
+            ],
+            "accepts.0.outputSchema": [
+              "resource.accepts.0.outputSchema"
+            ],
+            "resource.unsupportedAccepts": [
+              "registrationDetails.unsupportedAccepts"
+            ]
+          },
+          "v": 1
+        }
+      }
+    }
+  },
+  "anonymous_readback": {
+    "observed_at": "2026-09-24T16:17:53.714660+00:00",
+    "resource_getbyid_url": "https://www.x402scan.com/api/trpc/public.resources.getById?input=%7B%22json%22%3A%2278cdccbe-12de-44f7-81c3-7563fe5ad1bd%22%7D",
+    "resource_http_status": 200,
+    "resource_body_sha256": "b07348f693b1627d63bcabfa351b09992684bc3d9aff4ca7aa044cae19603e9b",
+    "resource_id": "78cdccbe-12de-44f7-81c3-7563fe5ad1bd",
+    "resource_url": "https://councilof.ai/api/pop/x402-bazaar",
+    "method": "",
+    "output_schema_method": "GET",
+    "origin_id": "9b8bcb34-6c9f-45d6-b881-9a6afe7bf6b5",
+    "server_page_url": "https://www.x402scan.com/server/9b8bcb34-6c9f-45d6-b881-9a6afe7bf6b5",
+    "server_page_http_status": 200,
+    "server_page_body_sha256": "f5c36e4fdf9d68e2a43bb3b0b3b357753c093792ba0c975f67d7f8625c1ffae4",
+    "server_page_contains_resource_id": true,
+    "server_page_contains_exact_url": true
+  }
+}

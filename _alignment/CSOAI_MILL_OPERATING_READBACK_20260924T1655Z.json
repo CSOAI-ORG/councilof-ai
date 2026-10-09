@@ -1,0 +1,94 @@
+{
+  "schema": "csoai.mill-operating-readback/1",
+  "checked_at": "2026-09-24T16:55:40Z",
+  "method": "Read-only SSH to existing pod fpowppss5ngtkw, process and cron readback, and independent public GET /api/revenue. No pod, worker, key, signing, publication, or payment mutation.",
+  "pod": {
+    "id": "fpowppss5ngtkw",
+    "runtime_status": "running",
+    "ssh_reachable": true,
+    "gspc_worker_process_alive": true,
+    "gspc_worker_pid_at_check": 1410072,
+    "ollama_process_alive": true,
+    "local_model_count_reported": 14
+  },
+  "observer": {
+    "file": "/workspace/csoai-operations/state/latest.json",
+    "file_sha256": "ff11b7be5f6087b4218dabc9d3fbd704458ef90bd16a37a76b994892748e7a62",
+    "observed_at": "2026-09-24T16:45:04Z",
+    "age_seconds_at_first_read": 564.5,
+    "under_30_minutes": true,
+    "status": "ATTENTION_REQUIRED",
+    "configured_cron_cadence_minutes": 15
+  },
+  "revenue": {
+    "public_source": "https://councilof.ai/api/revenue",
+    "distinct_nonself_payers_30d": 1,
+    "nonself_nonzero_settlements": 1,
+    "settled_usdc": "0.02",
+    "self_settlements_excluded": 22,
+    "zero_value_settlements_excluded": 7,
+    "repeat_payers": null,
+    "change_from_prior_observation": 0,
+    "basis_limit": "The mill observer reads settlement aggregates and does not independently verify Base chain transactions. Aggregate payer count cannot establish repeat purchases."
+  },
+  "worker": {
+    "reported_state": "WAITING",
+    "heartbeat_updated_at": "2026-09-24T16:44:45.745286Z",
+    "last_success_at": "2026-09-23T21:58:11.299473Z",
+    "last_failure_at": "2026-09-23T03:29:35.898694Z",
+    "next_due_estimate": "2026-09-24T17:28:21.702873Z",
+    "process_lifetime_successful_runs": 351,
+    "process_lifetime_failed_runs": 169,
+    "transport_errors_on_current_reported_run": 0,
+    "verified_run_records": 169,
+    "fully_graded_candidates": 66,
+    "partly_graded_candidates": 66,
+    "no_graded_output": 24,
+    "requires_review": 13,
+    "admitted": null,
+    "published": null,
+    "quality_state": "REVIEW_REQUIRED",
+    "quality_audit_exit_code": 1,
+    "quality_limit": "Candidate counts and process counters are neither admitted measurements nor public GSPC updates."
+  },
+  "publication_readiness": {
+    "status": "ATTENTION_REQUIRED",
+    "public_root_endpoint": "https://councilof.ai/root.json",
+    "public_root_sha256": "ae8bbfcedf7cc30172498110e7df66a4f6c98c4aae69c9f47cdcba2abc1d334e",
+    "root_source_as_of": "2026-09-22T08:54:02Z",
+    "root_age_hours_reported": 55.85,
+    "root_card_count": 305,
+    "root_merkle_recomputation": "MATCH",
+    "root_signature_state_in_observer": "UNCHECKED",
+    "board_signed_snapshot_agrees": false,
+    "board_reported_artifact_state": "SUPERSEDED_KNOWN_CLAIM_DEFECT",
+    "may_claim_fresh_signed_measurement": false,
+    "scope_limit": "This observer checks /root.json. A newer dated, unsigned card root is a separate artifact and does not refresh this signed endpoint."
+  },
+  "sources": {
+    "file": "/workspace/csoai-operations/state/sources.json",
+    "file_sha256": "157ad361452955236c2e403f4300f64d2d23514b72ec2a22412938efe4241864",
+    "attempted_at": "2026-09-24T14:00:10Z",
+    "changed_unclassified": [
+      "https://www.enisa.europa.eu/topics/product-security/single-reporting-platform-srp",
+      "https://aievaluatorforum.org/initiatives/embedded-evaluation-letter"
+    ],
+    "unchanged": [
+      "https://digital-strategy.ec.europa.eu/en/policies/cra-reporting",
+      "https://www.enisa.europa.eu/topics/cra-srp-status",
+      "https://digital-strategy.ec.europa.eu/en/consultations/targeted-consultation-safeguarding-eus-data-sovereignty",
+      "https://www.nist.gov/artificial-intelligence/nist-ai-consortium",
+      "https://www.nist.gov/artificial-intelligence/nists-ai-standards-zero-drafts-pilot-project-accelerate-standardization"
+    ],
+    "interpretation": "Changed normalized text hashes require review; the observer does not establish a new rule or deadline."
+  },
+  "install_receipt": {
+    "file": "/workspace/csoai-operations/install-receipt.json",
+    "file_sha256": "be0bc86a352821f6efe5fd7529aeaf6e53ecc28325f420e4a71cde25eb4fbee3",
+    "receipt_installed_at": "2026-09-20T05:59:22.037937+00:00",
+    "receipt_revision": "ec61ba579212ef6d",
+    "current_observer_cron_release": "/workspace/csoai-operations/releases/workerquality-96caf878c-20260924/observe.py",
+    "discrepancy": "The top-level install receipt predates current cron configuration and is not evidence of the current observer release."
+  },
+  "next_action": "At the next scheduled worker due time, inspect completed run admission and quality before any public claim. Review ENISA and AEF source diffs against official pages. Keep the old signed root and newer unsigned dated root distinct."
+}

@@ -1,0 +1,159 @@
+{
+  "schema": "csoai.claim-spine-readiness/0.1",
+  "assessed_at": "2026-10-01T12:15:00Z",
+  "lane": "mimocode-session",
+  "phase": "Phase 2 \u2014 Claim Maintenance product spine (Compound CEO mandate)",
+  "spec_version": "v0.2 (published draft, 2026-09-25)",
+  "v03_status": "PROPOSED (not yet written)",
+  "fields_assessed": 16,
+  "field_coverage": {
+    "claim_id": {
+      "phase2_required": "Unique identifier for the claim",
+      "current_location": "artifact.id (e.g. 'CL-1', 'ON-1')",
+      "status": "PRESENT",
+      "note": "Short-form ID per registry (e.g. CL-1). Not globally unique across registries \u2014 would need registry_id + id for global uniqueness."
+    },
+    "subject": {
+      "phase2_required": "Organisation whose claim is being maintained",
+      "current_location": "registry.subjects key (e.g. 'chainlink', 'ondo') + registry-level subject identity",
+      "status": "PRESENT",
+      "note": "At registry level, not per-artifact. A claim artifact inherits its subject from the registry."
+    },
+    "claim_text": {
+      "phase2_required": "The verbatim claim text",
+      "current_location": "artifact.text",
+      "status": "PRESENT",
+      "note": "Verbatim capture per spec \u00a71.5. Also artifact.type classifies it."
+    },
+    "state": {
+      "phase2_required": "Current state in the lifecycle",
+      "current_location": "artifact.state (CLAIM_CAPTURED / CLAIM_MEASURED / UNMEASURED / UNCHECKABLE)",
+      "status": "PRESENT (v0.2 model)",
+      "note": "4-state evidence model (v0.2). Phase 2's 12-state lifecycle model is a different scope \u2014 see state machine analysis below."
+    },
+    "dependencies": {
+      "phase2_required": "What other claims/records this claim depends on",
+      "current_location": "Not explicitly modeled",
+      "status": "MISSING",
+      "note": "No dependency graph between claims exists in the v0.2 artifact schema."
+    },
+    "source_rights": {
+      "phase2_required": "Rights to read and record the source",
+      "current_location": "Implicit in spec \u00a71.3 (public claims only). artifact.sources lists URLs.",
+      "status": "PARTIAL",
+      "note": "Sources are listed as URLs. No explicit rights/licence declaration per source. Spec \u00a71.3 constrains to public surfaces but no per-source rights field."
+    },
+    "extractor": {
+      "phase2_required": "How the claim was extracted from the source",
+      "current_location": "artifact.method (for measurement). Capture method is described in spec \u00a76.3.1.",
+      "status": "PARTIAL",
+      "note": "method field describes the measurement method. The capture/extractor (how text was pulled from HTML) is described in spec but not recorded per-artifact."
+    },
+    "prior_reads": {
+      "phase2_required": "History of previous reads with hashes",
+      "current_location": "artifact.observed_changes (hash diffs). Registry-level created_utc.",
+      "status": "PARTIAL",
+      "note": "observed_changes records hash differences between reads. Full prior read history (every read's hash + timestamp) is not kept \u2014 only observed changes."
+    },
+    "next_read": {
+      "phase2_required": "When the next scheduled read is",
+      "current_location": "Claim-maintenance scheduler (ledgers.claim_maintenance.checks[].due). Spec \u00a71.1 requires next_read_utc.",
+      "status": "PRESENT",
+      "note": "Scheduler tracks day-7/30/90 checks with due dates. Spec requires every claim to publish next_read_utc."
+    },
+    "changed_dependencies": {
+      "phase2_required": "Dependencies that changed since last read",
+      "current_location": "observed_changes at the source level. Not at a dependency level.",
+      "status": "MISSING",
+      "note": "Without a dependency graph (field 5), changed_dependencies cannot be tracked."
+    },
+    "affected_products": {
+      "phase2_required": "What products/conclusions this claim affects",
+      "current_location": "Not modeled in v0.2.",
+      "status": "MISSING",
+      "note": "No product dependency tracking in the claim artifact."
+    },
+    "recheck_plan": {
+      "phase2_required": "How and when to recheck the claim",
+      "current_location": "Scheduler: day-7/30/90 after created. spec \u00a71.1 continuous requirement.",
+      "status": "PRESENT",
+      "note": "Recheck schedule exists at the scheduler level (day-7/30/90). No per-claim recheck plan beyond the uniform schedule."
+    },
+    "correction_pointer": {
+      "phase2_required": "Link to correction if one exists",
+      "current_location": "Corrections ledger at /api/corrections (89 entries). Cross-reference by ID (e.g. C-2026-0930-11 referenced in artifact note).",
+      "status": "PARTIAL",
+      "note": "Corrections exist as a separate ledger. Cross-references appear in note fields (e.g. 'C-2026-0930-11') but there is no formal correction_pointer field linking a claim to its corrections."
+    },
+    "evidence_refs": {
+      "phase2_required": "References to supporting evidence",
+      "current_location": "artifact.sources (URLs), artifact.measurement (results), peritem_rows dataset, signed_record",
+      "status": "PRESENT",
+      "note": "Sources and measurement data serve as evidence refs. Multiple evidence channels: source URLs, measurement results, signed per-item rows."
+    },
+    "delivery_refs": {
+      "phase2_required": "References to deliveries of this claim to buyers/users",
+      "current_location": "Not modeled in v0.2.",
+      "status": "MISSING",
+      "note": "No delivery tracking in the claim artifact. Revenue SKU counts exist separately but are not linked to individual claims."
+    },
+    "billing_state": {
+      "phase2_required": "Whether this claim is billed/delivered/awaiting payment",
+      "current_location": "Revenue API (/api/revenue) tracks SKU counts. Not linked to individual claims.",
+      "status": "MISSING",
+      "note": "Revenue is tracked at SKU level (issuance/proofs/licences). No per-claim billing state."
+    }
+  },
+  "coverage_summary": {
+    "PRESENT": 5,
+    "PARTIAL": 5,
+    "MISSING": 6
+  },
+  "state_machine_analysis": {
+    "v0_2_model": {
+      "states": [
+        "CLAIM_CAPTURED",
+        "CLAIM_MEASURED",
+        "UNMEASURED",
+        "UNCHECKABLE"
+      ],
+      "scope": "Claim evidence state \u2014 is there a measurement against public evidence?",
+      "philosophy": "4 states, only 4, MUST NOT invent a fifth (spec \u00a74)"
+    },
+    "phase2_model": {
+      "states": [
+        "REGISTERED",
+        "BASELINED",
+        "WATCHING",
+        "CHANGE_OBSERVED",
+        "RECHECK_REQUIRED",
+        "CONFIRMED",
+        "SUPERSEDED",
+        "CORRECTED",
+        "CONFLICTING",
+        "UNMEASURED",
+        "DELIVERED",
+        "WATCHING"
+      ],
+      "scope": "Full claim lifecycle \u2014 registration through delivery and maintenance",
+      "philosophy": "12-state lifecycle with dependency tracking and delivery"
+    },
+    "assessment": "These are different scopes. v0.2's 4-state model is about evidence availability. Phase 2's 12-state model is about lifecycle management. v0.3 would need to either (a) extend the 4-state evidence model with lifecycle metadata fields, or (b) define a separate lifecycle state machine alongside it. Option (a) preserves v0.2's 'there are 4 and only 4' discipline while adding lifecycle as metadata."
+  },
+  "recommendation": {
+    "for_v03": "Extend v0.2's 4-state evidence model with lifecycle metadata fields (dependencies, source_rights, changed_dependencies, affected_products, correction_pointer, delivery_refs, billing_state) rather than replacing the state machine. The 4-state model is the load-bearing honesty discipline \u2014 adding states would weaken it. Lifecycle states can be a separate orthogonal dimension.",
+    "biggest_gaps": [
+      "dependencies",
+      "changed_dependencies",
+      "affected_products",
+      "delivery_refs",
+      "billing_state"
+    ],
+    "quick_wins": [
+      "correction_pointer (formalize the cross-references already in note fields)",
+      "source_rights (add per-source licence/rights field)",
+      "prior_reads (keep full read history, not just observed changes)"
+    ]
+  },
+  "honesty_note": "This is a schema readiness assessment against the Phase 2 mandate requirements. It does not write code, change the spec, or publish anything. The v0.2 spec's 4-state model is a deliberate design choice (spec \u00a74: 'There are four, there are only four') \u2014 the gap is lifecycle metadata, not a flaw in the evidence model."
+}

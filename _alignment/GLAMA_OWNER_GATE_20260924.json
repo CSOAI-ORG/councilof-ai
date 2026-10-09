@@ -1,0 +1,27 @@
+{
+  "schema": "csoai.glama-claim-correction-readback/1",
+  "observed_at": "2026-09-24T16:22:19.098087+00:00",
+  "listing": {
+    "url": "https://glama.ai/mcp/servers/CSOAI-ORG/councilof-ai",
+    "http_status": 200,
+    "body_sha256": "647ed9a9cb394d428a26699ec11a80979c97ed09627290dfd517f245c6bbb558",
+    "contains_old_22_axis_text": true,
+    "contains_MEOK_link": true,
+    "contains_measurement_not_certification": true
+  },
+  "admin": {
+    "url": "https://glama.ai/mcp/servers/CSOAI-ORG/councilof-ai/admin",
+    "http_status": 200,
+    "body_sha256": "cacb70aaf61c1f0b00d72e87b7d5c73797ce04ea1da1dd6d7bbf3e23d813f464",
+    "requires_github_login": true,
+    "offers_repo_glama_json": true,
+    "claim_excerpt": "How to claim it Access comes from the repository itself, so there is no form to fill in. Either of these works. If you own CSOAI-ORG/councilof-ai Sign in as that GitHub account and this page becomes yours immediately. If it belongs to an organization Add glama.json to the root of the repository with your GitHub username under maintainers , then sign in. Glama recognises you on the next sync. {\n  \"$schema\": \"https://glama.ai/mcp/schemas/server.json\",\n  \"maintainers\": [\n    \"your-github-username\"\n  ]\n} What is glama.json? Was this helpful? Yes No MCP MCP Servers MCP Connectors MCP Clients MCP Tools Best MCP Servers Products Chat MCP Directory API MCP Gateway MCP Hosting MCP Inspector Policies Terms of Service Privacy Policy VDP Resources Support Careers Blog Newsletter Advertise Glama – all-in-one AI workspace. All systems online Help"
+  },
+  "live_board": {
+    "url": "https://councilof.ai/api/gspc",
+    "totals_lid": "23 axes measured · 14 model fleets · 0 separated leaders · 3 public leader scores · 9 fact runs · TIE is TIE · not a certificate.",
+    "axis_count": "23 axis · 23 measured"
+  },
+  "outcome": "BLOCKED_OWNER_PROOF: Glama profile edit and resync require GitHub repository-owner authentication or maintainer listed in a glama.json file at CSOAI-ORG/councilof-ai repository root. No edit, duplicate listing, login bypass or support message attempted.",
+  "precise_correction": "Replace frozen 22-axis copy with dynamic /api/gspc totals.lid and current measurement-only positioning; remove MEOK OS cross-link from Council listing if no longer canonical; replace regulatory risk-assessment example with board retrieval and signed-card verification. Claim/resync only after repository access returns."
+}

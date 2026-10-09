@@ -1,0 +1,276 @@
+diff --git a/client/src/components/DashboardEmbeddedView.tsx b/client/src/components/DashboardEmbeddedView.tsx
+index 07f740d1e..f3605618d 100644
+--- a/client/src/components/DashboardEmbeddedView.tsx
++++ b/client/src/components/DashboardEmbeddedView.tsx
+@@ -15,7 +15,7 @@ export default function DashboardEmbeddedView({
+       aria-label={`${label} workspace view`}
+     >
+       <h1 className="sr-only">{label}</h1>
+-      <div className="absolute right-3 top-16 z-10 flex items-center gap-1 rounded-xl border border-border bg-card/95 p-1 shadow-sm backdrop-blur xl:top-3">
++      <div className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-xl border border-border bg-card/95 p-1 shadow-sm backdrop-blur">
+         <a
+           href={path}
+           target="_blank"
+diff --git a/client/src/components/DashboardLayout.test.ts b/client/src/components/DashboardLayout.test.ts
+index efa682646..27fd834d0 100644
+--- a/client/src/components/DashboardLayout.test.ts
++++ b/client/src/components/DashboardLayout.test.ts
+@@ -26,12 +26,12 @@ describe("dashboard consolidation details", () => {
+     expect(source).toMatch(/results:\s*HomeGspcBoard/);
+   });
+ 
+-  it("keeps embedded page controls below the mobile Workspace button", () => {
++  it("places embedded page controls opposite the left Workspace drawer trigger", () => {
+     const source = readFileSync(
+       resolve(__dirname, "./DashboardEmbeddedView.tsx"),
+       "utf8",
+     );
+-    expect(source).toContain("top-16");
+-    expect(source).toContain("xl:top-3");
++    expect(source).toContain("absolute right-3 top-3");
++    expect(source).not.toContain("top-16");
+   });
+ });
+diff --git a/client/src/components/DashboardLayout.tsx b/client/src/components/DashboardLayout.tsx
+index 5d00ddc54..9ce2f5d5b 100644
+--- a/client/src/components/DashboardLayout.tsx
++++ b/client/src/components/DashboardLayout.tsx
+@@ -1,6 +1,6 @@
+ import { useEffect, useRef, useState } from "react";
+ import { Link, useLocation, useSearch } from "wouter";
+-import { ChevronLeft, Menu, Moon, Search, Settings, Sun } from "lucide-react";
++import { ChevronLeft, Menu, Moon, PanelLeftOpen, Search, Settings, Sun } from "lucide-react";
+ import { cn } from "@/lib/utils";
+ import { Button } from "@/components/ui/button";
+ import { useTheme } from "@/contexts/ThemeContext";
+@@ -45,6 +45,8 @@ export default function DashboardLayout({
+   const search = useSearch();
+   const navRef = useRef<HTMLElement>(null);
+   const menuButtonRef = useRef<HTMLButtonElement>(null);
++  const workspaceButtonRef = useRef<HTMLButtonElement>(null);
++  const workspaceHeaderButtonRef = useRef<HTMLButtonElement>(null);
+   const [isSmall, setIsSmall] = useState(
+     () =>
+       typeof window !== "undefined" && window.matchMedia?.(SMALL_QUERY).matches,
+@@ -57,6 +59,7 @@ export default function DashboardLayout({
+       ),
+   );
+   const [navQuery, setNavQuery] = useState("");
++  const [workspaceRailOpen, setWorkspaceRailOpen] = useState(false);
+   const { theme, toggleTheme } = useTheme();
+   const framed = isEmbedded();
+ 
+@@ -188,6 +191,21 @@ export default function DashboardLayout({
+             />
+           </label>
+ 
++          <button
++            ref={workspaceButtonRef}
++            type="button"
++            onClick={() => {
++              if (isSmall) setSidebarOpen(false);
++              setWorkspaceRailOpen(true);
++            }}
++            aria-expanded={workspaceRailOpen}
++            aria-controls={workspaceRailOpen ? "dashboard-workspace-drawer" : undefined}
++            className="mx-3 mt-3 flex min-h-11 items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-3 text-left text-sm font-semibold text-emerald-950 transition hover:border-emerald-300 hover:bg-emerald-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
++          >
++            <PanelLeftOpen className="h-4 w-4 shrink-0" aria-hidden="true" />
++            <span>Workspace, tasks &amp; chats</span>
++          </button>
++
+           <nav
+             id={NAV_ID}
+             ref={navRef}
+@@ -285,7 +303,10 @@ export default function DashboardLayout({
+               ref={menuButtonRef}
+               variant="ghost"
+               size="icon"
+-              onClick={() => setSidebarOpen((open) => !open)}
++              onClick={() => {
++                if (!sidebarOpen) setWorkspaceRailOpen(false);
++                setSidebarOpen((open) => !open);
++              }}
+               aria-expanded={sidebarOpen}
+               aria-controls={NAV_ID}
+               aria-label={
+@@ -297,6 +318,20 @@ export default function DashboardLayout({
+             >
+               <Menu className="h-4 w-4" aria-hidden="true" />
+             </Button>
++            {!sidebarOpen ? (
++              <Button
++                ref={workspaceHeaderButtonRef}
++                variant="ghost"
++                size="icon"
++                onClick={() => setWorkspaceRailOpen(true)}
++                aria-expanded={workspaceRailOpen}
++                aria-controls={workspaceRailOpen ? "dashboard-workspace-drawer" : undefined}
++                aria-label="Open workspace, tasks and chats"
++                className="h-10 w-10 shrink-0 text-emerald-100 hover:bg-white/10 hover:text-white"
++              >
++                <PanelLeftOpen className="h-4 w-4" aria-hidden="true" />
++              </Button>
++            ) : null}
+             <div className="min-w-0">
+               <p className="truncate text-sm font-semibold text-emerald-50">
+                 {activeLabel}
+@@ -344,6 +379,13 @@ export default function DashboardLayout({
+             activePane={pane}
+             activeTab={activeTab}
+             activeLabel={activeLabel}
++            railOpen={workspaceRailOpen}
++            onRailOpenChange={setWorkspaceRailOpen}
++            railBesideNav={sidebarOpen && !isSmall}
++            onRailCloseFocus={() => {
++              if (sidebarOpen && !isSmall) workspaceButtonRef.current?.focus();
++              else workspaceHeaderButtonRef.current?.focus();
++            }}
+           >
+             {children}
+           </DashboardWorkspace>
+diff --git a/client/src/components/DashboardRightRail.tsx b/client/src/components/DashboardRightRail.tsx
+index d137a9c27..15e5d7e2f 100644
+--- a/client/src/components/DashboardRightRail.tsx
++++ b/client/src/components/DashboardRightRail.tsx
+@@ -146,7 +146,7 @@ export default function DashboardRightRail({
+       >
+         <TabsList
+           aria-label="Workspace rail"
+-          className="grid h-auto w-full grid-cols-3 gap-1 rounded-none border-b border-border bg-transparent p-2"
++          className="grid h-auto w-full grid-cols-3 gap-1 rounded-none border-b border-border bg-transparent py-2 pl-2 pr-12"
+         >
+           <TabsTrigger value="workspace" className="px-2 py-1.5 text-xs">
+             Workspace
+diff --git a/client/src/components/DashboardWorkspace.tsx b/client/src/components/DashboardWorkspace.tsx
+index 235250b54..714dfe1cd 100644
+--- a/client/src/components/DashboardWorkspace.tsx
++++ b/client/src/components/DashboardWorkspace.tsx
+@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+ import {
+   ArrowRight,
+   BookOpenCheck,
+-  PanelRightOpen,
++  PanelLeftOpen,
+   PlugZap,
+   ShieldCheck,
+   Swords,
+@@ -53,11 +53,19 @@ export default function DashboardWorkspace({
+   activeTab,
+   activeLabel,
+   children,
++  railOpen,
++  onRailOpenChange,
++  railBesideNav = false,
++  onRailCloseFocus,
+ }: {
+   activePane: React.ReactNode | null;
+   activeTab: string;
+   activeLabel: string | null;
+   children: React.ReactNode;
++  railOpen?: boolean;
++  onRailOpenChange?: (open: boolean) => void;
++  railBesideNav?: boolean;
++  onRailCloseFocus?: () => void;
+ }) {
+   const [, setLocation] = useLocation();
+   const search = useSearch();
+@@ -66,6 +74,10 @@ export default function DashboardWorkspace({
+   const [tools, setTools] = useState<ComposerTool[]>([]);
+   const [toolPhase, setToolPhase] = useState<ToolPhase>("loading");
+   const [candidate, setCandidate] = useState<CandidateObservation | null>(null);
++  const [embeddedRailOpen, setEmbeddedRailOpen] = useState(false);
++  const embeddedRail = railOpen === undefined;
++  const drawerOpen = railOpen ?? embeddedRailOpen;
++  const setDrawerOpen = onRailOpenChange ?? setEmbeddedRailOpen;
+   const intentParams = useMemo(
+     () =>
+       new URLSearchParams(search.startsWith("?") ? search.slice(1) : search),
+@@ -171,24 +183,36 @@ export default function DashboardWorkspace({
+       className="relative flex h-full min-h-0 bg-[var(--surface-canvas,#fafaf7)]"
+       data-testid="dashboard-workspace"
+     >
+-      <Dialog>
+-        <DialogTrigger asChild>
+-          <button
+-            type="button"
+-            className="absolute right-3 top-3 z-20 inline-flex h-10 items-center gap-2 rounded-lg border border-border bg-card px-3 text-xs font-semibold text-foreground shadow-sm hover:bg-accent xl:hidden"
+-            aria-label="Open workspaces, tasks and chat history"
+-          >
+-            <PanelRightOpen className="h-4 w-4" aria-hidden="true" /> Workspace
+-          </button>
+-        </DialogTrigger>
+-        <DialogContent className="!bottom-0 !left-auto !right-0 !top-0 h-dvh w-[min(22rem,92vw)] max-w-none !translate-x-0 !translate-y-0 gap-0 rounded-none p-0">
++      <Dialog open={drawerOpen} onOpenChange={setDrawerOpen}>
++        {embeddedRail ? (
++          <DialogTrigger asChild>
++            <button
++              type="button"
++              className="absolute left-3 top-3 z-20 inline-flex h-10 items-center gap-2 rounded-lg border border-border bg-card px-3 text-xs font-semibold text-foreground shadow-sm hover:bg-accent"
++              aria-label="Open workspace, tasks and chats"
++            >
++              <PanelLeftOpen className="h-4 w-4" aria-hidden="true" /> Workspace
++            </button>
++          </DialogTrigger>
++        ) : null}
++        <DialogContent
++          id="dashboard-workspace-drawer"
++          style={{ left: railBesideNav ? "17.5rem" : 0 }}
++          overlayClassName="bg-black/30"
++          onCloseAutoFocus={(event) => {
++            if (!onRailCloseFocus) return;
++            event.preventDefault();
++            onRailCloseFocus();
++          }}
++          className="!bottom-0 !right-auto !top-0 h-dvh w-[min(22rem,92vw)] max-w-none !translate-x-0 !translate-y-0 gap-0 rounded-none p-0"
++        >
+           <DialogTitle className="sr-only">
+             Workspace, tasks and chat history
+           </DialogTitle>
+           <DialogDescription className="sr-only">
+             Review the current workspace, task activity and local chat threads.
+           </DialogDescription>
+-          <DashboardRightRail chat={chat} className="w-full border-l-0" />
++          <DashboardRightRail chat={chat} className="w-full border-l-0 border-r" />
+         </DialogContent>
+       </Dialog>
+       <section
+@@ -198,7 +222,7 @@ export default function DashboardWorkspace({
+         <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+           {activePane ? (
+             <div
+-              className="min-h-0 flex-1 overflow-y-auto bg-background pt-14 xl:pt-0"
++              className={`min-h-0 flex-1 overflow-y-auto bg-background${embeddedRail ? " pt-14" : ""}`}
+               data-testid="dashboard-tool-canvas"
+             >
+               {activePane}
+@@ -450,9 +474,6 @@ export default function DashboardWorkspace({
+           seedNonce={search.length}
+         />
+       </section>
+-      <div className="hidden min-h-0 xl:block">
+-        <DashboardRightRail chat={chat} />
+-      </div>
+     </div>
+   );
+ }
+diff --git a/client/src/components/ui/dialog.tsx b/client/src/components/ui/dialog.tsx
+index 7a3090ca8..01d1a40e7 100644
+--- a/client/src/components/ui/dialog.tsx
++++ b/client/src/components/ui/dialog.tsx
+@@ -25,10 +25,12 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
+ 
+ const DialogContent = React.forwardRef<
+   React.ElementRef<typeof DialogPrimitive.Content>,
+-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
+->(({ className, children, ...props }, ref) => (
++  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
++    overlayClassName?: string
++  }
++>(({ className, overlayClassName, children, ...props }, ref) => (
+   <DialogPortal>
+-    <DialogOverlay />
++    <DialogOverlay className={overlayClassName} />
+     <DialogPrimitive.Content
+       ref={ref}
+       className={cn(

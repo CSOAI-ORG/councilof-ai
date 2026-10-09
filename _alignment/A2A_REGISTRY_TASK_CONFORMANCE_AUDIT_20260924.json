@@ -1,0 +1,53 @@
+{
+  "checked_at_utc": "2026-09-24T18:22:20.198165+00:00",
+  "scope": "Public A2A registry task probe discrepancy; read-only",
+  "registry": {
+    "url": "https://a2aregistry.org/api/agents/48e5bba6-8848-4adc-8f92-b5fa2c0744e0",
+    "is_healthy": true,
+    "conformance": true,
+    "task_conformance": {
+      "category": "OTHER",
+      "passed": false,
+      "checked_at": "2026-09-24T02:05:09.992163Z",
+      "response_ms": 982
+    },
+    "last_health_check": "2026-09-24T18:05:53.028991Z"
+  },
+  "agent_card": {
+    "url": "https://councilof.ai/.well-known/agent-card.json",
+    "sha256": "b6474156e927483e5e156780f2e0fbd82f12e86d7efd25edc22be597a73aed19",
+    "supportedInterfaces": [
+      {
+        "url": "https://councilof.ai/api/a2a",
+        "protocolBinding": "JSONRPC",
+        "protocolVersion": "1.0"
+      }
+    ]
+  },
+  "probe": {
+    "url": "https://councilof.ai/api/a2a",
+    "method": "SendMessage",
+    "a2a_version": "1.0",
+    "text": "Hello, what can you do?",
+    "http_status": 200,
+    "response_sha256": "ec17c4ae9c640e78beb55663b0f67bc5c3c05f6072b3bf4bc50bc07b4b7fb380",
+    "response_kind": "CAPABILITY_HELP",
+    "response_state": "DESCRIPTIVE_ONLY",
+    "has_error": false,
+    "has_measurement": false
+  },
+  "source_and_tests": {
+    "registry_source_commit": "19a44e5408a622ed8b61dde795bf3ff19b3b4cd9",
+    "registry_smoke_source": "https://github.com/prassanna-ravishankar/a2a-registry/blob/19a44e5408a622ed8b61dde795bf3ff19b3b4cd9/backend/app/smoke_test.py",
+    "local_handler": "/workspace/lanes/review/verifier-use-state-20260924/functions/api/a2a.ts",
+    "focused_test": "functions/api/a2a.test.ts",
+    "focused_tests_passed": "40/40"
+  },
+  "official_spec": {
+    "version": "1.0",
+    "url": "https://a2a-protocol.org/v1.0.0/specification/",
+    "skill_selector_status": "No standard client-directed skill selection field in v1.0; project tracks optional skill_id hint for future 1.1 in a2aproject/A2A issue 1942."
+  },
+  "conclusion": "The registry task status is historical: checked 02:05Z before the current generic capability-help handler. Direct protocol-shaped HTTP response works now. Actual registry SDK parse result has not been rerun or observed; do not claim task_conformance passed. No source change warranted yet.",
+  "next_gate": "Recheck the next registry daily task_conformance.checked_at. If a post-fix probe still fails, capture its classified category and exact SDK exception or reproduce a2a-sdk==1.1.2 smoke; patch only the observed mismatch."
+}

@@ -1,0 +1,47 @@
+{
+  "schema": "csoai.payai-proof-route-triage/1",
+  "observed_at": "2026-09-24T09:21:42.868143+00:00",
+  "payai_list_url": "https://facilitator.payai.network/discovery/resources?payTo=0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+  "payai_listed_resource": "https://councilof.ai/api/proof",
+  "payai_input_schema_query_params": {
+    "bundle": "1"
+  },
+  "payai_last_updated": "2026-09-07T04:58:52.174Z",
+  "payai_listed_probe": {
+    "status_url": "https://facilitator.payai.network/discovery/listing-status?resource=https%3A%2F%2Fcouncilof.ai%2Fapi%2Fproof",
+    "listed": true,
+    "hidden": false,
+    "last_probe_status": "alive",
+    "last_probe_http_status": 400,
+    "last_probe_at": "2026-09-23T18:55:41.729Z"
+  },
+  "paid_canonical_url": "https://councilof.ai/api/proof?bundle=1",
+  "paid_probe": {
+    "http_status": 402,
+    "resource_url": "https://councilof.ai/api/proof?bundle=1",
+    "bazaar_extension": true,
+    "amount_usdc_atomic": "10000",
+    "network": "eip155:8453",
+    "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31"
+  },
+  "bare_probe": {
+    "http_status": 400,
+    "error": "bad_request",
+    "reason": "pass sha=<64-hex> for one free inclusion, or bundle=1 for x402"
+  },
+  "free_probe": {
+    "url": "https://councilof.ai/api/proof?sha=72547cd2ff8e9e7c48826d1f7697b8c19172531e6315d01a752bb91ad3b5d918",
+    "http_status": 200,
+    "kind": "inclusion"
+  },
+  "canonical_listing_status": {
+    "http_status": 404,
+    "detail": "No catalog row or recent write outcome exists"
+  },
+  "source": "/Users/nicholas/clawd/councilof-ai-work/functions/api/proof.ts",
+  "source_disposition": "The bare path is intentional free/validation flow; changing it to a paid default would change the public API. The current /api/x402 and /.well-known/x402.json already name ?bundle=1.",
+  "first_broken_buyer_step": "Direct GET of PayAI item.resource returns 400 instead of the 402 needed to begin payment. A client using inputSchema.queryParams.bundle=1 can still reach the paid challenge.",
+  "repair_path": "PayAI docs say entries refresh forward-only on a /verify or /settle payload that echoes the current Bazaar declaration; /verify moves no funds but requires a signed payment payload. No re-index endpoint or public direct listing edit is documented.",
+  "blocked_by": "No wallet signing, no spend, no new credentials, and no outreach in this lane. No source code change or facilitator write made.",
+  "official_docs": "https://docs.payai.network/x402/facilitators/bazaar"
+}

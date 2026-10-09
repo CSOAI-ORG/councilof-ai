@@ -1,0 +1,55 @@
+{
+  "observed_utc": "2026-09-23T06:34:20.071232+00:00",
+  "catalogue_endpoint": "https://api.cdp.coinbase.com/platform/v2/x402/discovery/resources",
+  "first_total": 15702,
+  "pages_attempted": 158,
+  "pages_ok": 158,
+  "pages_error": [],
+  "min_total": 15702,
+  "max_total": 15702,
+  "rows_returned": 15702,
+  "distinct_resource_urls": 15699,
+  "duplicate_urls_count": 3,
+  "matching_resources": [],
+  "elapsed_seconds": 10.4,
+  "scope": "unauthenticated paginated catalogue read; concurrent offsets can move during scan; absence is conditional on stable pagination",
+  "stablecoin_door": {
+    "url": "https://councilof.ai/api/pop/stablecoins",
+    "http_status": 402,
+    "payment_required_sha256": "40745fe953ec13b80018a3ab506dff37dca319916175c969fbd27ce0483764e4",
+    "declared_version": 2,
+    "bazaar_extension_present": true,
+    "bazaar_input": {
+      "type": "http",
+      "method": "GET"
+    },
+    "amount_atomic": "10000",
+    "network": "eip155:8453",
+    "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+    "resource_description": "Population door: Stablecoin universe \u2014 425 assets catalogued in the frozen universe (not supply, not a sum), as of 2026-09-16T12:06:54Z, state INDEXED. one row per stablecoin asset in the frozen discovery universe, with each reader's per-chain deployment reads and every unmeasured asset's own reason. A read-transform of the estate's own published artifact, with a signed digest of the slice. Not a grade, not a rank."
+  },
+  "search_readback": {
+    "csoai": {
+      "http_status": 200,
+      "resource_count": 0,
+      "partialResults": false
+    },
+    "councilof.ai": {
+      "http_status": 200,
+      "resource_count": 0,
+      "partialResults": false
+    },
+    "GSPC": {
+      "http_status": 200,
+      "resource_count": 0,
+      "partialResults": false
+    }
+  },
+  "official_documentation": [
+    "https://github.com/x402-foundation/x402/blob/main/docs/extensions/bazaar.mdx",
+    "https://docs.cdp.coinbase.com/api-reference/v2/rest-api/x402-facilitator/list-x402-resources",
+    "https://docs.cdp.coinbase.com/api-reference/v2/rest-api/x402-facilitator/search-resources"
+  ],
+  "registration_gate": "x402 Foundation Bazaar docs: cataloging happens when CDP facilitator processes PaymentPayload that echoes bazaar extension; server-side 402 declaration alone catalogs nothing. No documented direct free submit-URL API in CDP discovery endpoints.",
+  "action": "No registration, wallet action, payment, payment-setting edit, or duplicate listing created."
+}

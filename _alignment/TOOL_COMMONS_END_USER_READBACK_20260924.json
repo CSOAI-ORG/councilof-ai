@@ -1,0 +1,25 @@
+{
+  "schema": "csoai.end-user-readback/0.1",
+  "page": "https://councilof.ai/tool-commons/",
+  "method": "anonymous browser UI, clicked the public MCP tool runner",
+  "board_totals": {
+    "observed_at": "2026-09-24T15:39:49.773Z",
+    "tool": "board_totals",
+    "state": "LIVE",
+    "public_count": "23 axis · 23 measured",
+    "source": "https://councilof.ai/api/gspc"
+  },
+  "card_verification": {
+    "observed_at": "2026-09-24T15:44:36.271Z",
+    "tool": "verify_card",
+    "card_url": "https://councilof.ai/signed/cards/cff1aaf070acb97c224177809856bc20310f4958eb44bdffab7d4b04836535f4.json",
+    "verdict": "VALID",
+    "pinned_key": "did:web:csoai.org#card-attestation-1",
+    "not_a_certification": true
+  },
+  "separate_defect": {
+    "surface": "governance npm MCP install panel",
+    "problem": "Default csoai-governance-mcp signing gateway returned HTTP 405 when used; installation is not signing execution.",
+    "fix_state": "SOURCE_ONLY_PENDING_GUARDED_RELEASE"
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "schema": "csoai.bazaar-independent-readback/1",
+  "scope": "Anonymous read-only catalogue and 402 probes; CDP read-only validate POST; no payment, settlement, registration, wallet, production or source change",
+  "started_at": "2026-09-24T16:15:56.113010+00:00",
+  "cdp": {
+    "search": {
+      "url": "https://api.cdp.coinbase.com/platform/v2/x402/discovery/search?urlSubstring=councilof.ai&limit=20",
+      "observed_at": "2026-09-24T16:15:56.440802+00:00",
+      "http_status": 200,
+      "body_sha256": "e5468edaf02ba12ae12d1b0877605ae2deea4aa7d887bb969a069ee82e93ad79",
+      "resources_count": 0,
+      "partialResults": false
+    },
+    "merchant": {
+      "url": "https://api.cdp.coinbase.com/platform/v2/x402/discovery/merchant?payTo=0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31&limit=20",
+      "observed_at": "2026-09-24T16:15:56.573187+00:00",
+      "http_status": 200,
+      "body_sha256": "aa5599ab6e8760fdbef65495f5f2a8ef6f6f0bd0d0132ab5eeb166874ba8e878",
+      "resources_count": 0,
+      "total": 0
+    }
+  },
+  "x402scan": {
+    "stablecoin": {
+      "url": "https://www.x402scan.com/api/trpc/public.resources.search?input=%7B%22json%22%3A%7B%22search%22%3A%22councilof.ai/api/pop/stablecoins%22%2C%22limit%22%3A20%7D%7D",
+      "observed_at": "2026-09-24T16:15:58.961520+00:00",
+      "http_status": 200,
+      "body_sha256": "117ea5dba6d1f104d887dd4a0ecedc55237c16b4b1f45c2774a586256fc1f206",
+      "exact_query": "councilof.ai/api/pop/stablecoins",
+      "matches": [
+        {
+          "id": "998a3842-0bb1-4210-b638-0a5dee3867e5",
+          "resource": "https://councilof.ai/api/pop/stablecoins",
+          "method": "",
+          "lastUpdated": "2026-09-23T06:08:00.769Z",
+          "deprecatedAt": null,
+          "originId": "9b8bcb34-6c9f-45d6-b881-9a6afe7bf6b5"
+        }
+      ]
+    },
+    "x402_bazaar": {
+      "url": "https://www.x402scan.com/api/trpc/public.resources.search?input=%7B%22json%22%3A%7B%22search%22%3A%22councilof.ai/api/pop/x402-bazaar%22%2C%22limit%22%3A20%7D%7D",
+      "observed_at": "2026-09-24T16:15:59.124731+00:00",
+      "http_status": 200,
+      "body_sha256": "2485e74dd82a729476c358bb9ad59c0322ee42bfeeac9805606cb9da39a47f98",
+      "exact_query": "councilof.ai/api/pop/x402-bazaar",
+      "matches": []
+    },
+    "proof": {
+      "url": "https://www.x402scan.com/api/trpc/public.resources.search?input=%7B%22json%22%3A%7B%22search%22%3A%22councilof.ai/api/proof%22%2C%22limit%22%3A20%7D%7D",
+      "observed_at": "2026-09-24T16:15:59.277695+00:00",
+      "http_status": 200,
+      "body_sha256": "ebb79b4bd2da61ca9db250e5c49d77a2344f46fdaf000c40e7180f2fac9c8b8b",
+      "exact_query": "councilof.ai/api/proof",
+      "matches": [
+        {
+          "id": "48f9b864-f429-4ab7-ab2a-3aa577cbe969",
+          "resource": "https://councilof.ai/api/proof",
+          "method": "GET",
+          "lastUpdated": "2026-09-14T10:27:25.481Z",
+          "deprecatedAt": null,
+          "originId": "9b8bcb34-6c9f-45d6-b881-9a6afe7bf6b5"
+        }
+      ]
+    }
+  },
+  "doors": [
+    {
+      "url": "https://councilof.ai/api/pop/stablecoins",
+      "observed_at": "2026-09-24T16:15:56.661512+00:00",
+      "http_status": 402,
+      "body_sha256": "eecc8872448e4b8df015e02d2f77282b25cdc0dfe3dd205d835ed890e0b14917",
+      "x402Version": 2,
+      "accepts_count": 1,
+      "resource_url": "https://councilof.ai/api/pop/stablecoins",
+      "bazaar_extension_in_body": true,
+      "payment_required_header_present": true,
+      "header_bazaar_extension": true,
+      "header_resource_url": "https://councilof.ai/api/pop/stablecoins",
+      "description_length": 418,
+      "cdp_validation": {
+        "url": "https://api.cdp.coinbase.com/platform/v2/x402/validate",
+        "http_status": 200,
+        "body_sha256": "02a033ca5cb4ac38de3dfc16497980047c8dc9ee9ca9e144c578902cedef6b5a",
+        "valid": true,
+        "simulation_outcome": "accepted",
+        "index": null,
+        "required_failures": []
+      }
+    },
+    {
+      "url": "https://councilof.ai/api/pop/x402-bazaar",
+      "observed_at": "2026-09-24T16:15:57.355212+00:00",
+      "http_status": 402,
+      "body_sha256": "103041b4c3f3c255ab7370d924426930607fad367b49ac73aa0ee1265937238e",
+      "x402Version": 2,
+      "accepts_count": 1,
+      "resource_url": "https://councilof.ai/api/pop/x402-bazaar",
+      "bazaar_extension_in_body": true,
+      "payment_required_header_present": true,
+      "header_bazaar_extension": true,
+      "header_resource_url": "https://councilof.ai/api/pop/x402-bazaar",
+      "description_length": 459,
+      "cdp_validation": {
+        "url": "https://api.cdp.coinbase.com/platform/v2/x402/validate",
+        "http_status": 200,
+        "body_sha256": "6e892196fa90a4d06d7d42acca0590e314eec35d40679122349c9a39f437d85a",
+        "valid": true,
+        "simulation_outcome": "accepted",
+        "index": null,
+        "required_failures": []
+      }
+    },
+    {
+      "url": "https://councilof.ai/api/proof?bundle=1",
+      "observed_at": "2026-09-24T16:15:58.234942+00:00",
+      "http_status": 402,
+      "body_sha256": "d52bc4fdec9de11e54c44638ade11ef1202f7f3260ab61bd510e496e2c6fc88c",
+      "x402Version": 2,
+      "accepts_count": 1,
+      "resource_url": "https://councilof.ai/api/proof?bundle=1",
+      "bazaar_extension_in_body": true,
+      "payment_required_header_present": true,
+      "header_bazaar_extension": true,
+      "header_resource_url": "https://councilof.ai/api/proof?bundle=1",
+      "description_length": 170,
+      "cdp_validation": {
+        "url": "https://api.cdp.coinbase.com/platform/v2/x402/validate",
+        "http_status": 200,
+        "body_sha256": "0b94be9666cf649aa4e715cc23464dacd9d6a52a60cda649f12ecba76e491b17",
+        "valid": true,
+        "simulation_outcome": "accepted",
+        "index": null,
+        "required_failures": []
+      }
+    }
+  ],
+  "official_sources": [
+    "https://docs.cdp.coinbase.com/x402/seller/get-discovered",
+    "https://github.com/x402-foundation/x402/blob/main/docs/extensions/bazaar.mdx",
+    "https://github.com/Merit-Systems/x402scan/blob/main/apps/scan/src/trpc/routers/public/resources.ts"
+  ],
+  "finished_at": "2026-09-24T16:15:59.277782+00:00",
+  "conclusion": "CDP Bazaar index not observed; CDP validator accepts live doors, but official seller docs require a settled CDP payment to index. Existing x402scan stablecoin and proof records are discoverable; x402-bazaar route absent in exact search. A broad x402scan origin refresh is deferred because served OpenAPI marks GET and POST as paid, while route behavior and registry stored method require reconciliation."
+}

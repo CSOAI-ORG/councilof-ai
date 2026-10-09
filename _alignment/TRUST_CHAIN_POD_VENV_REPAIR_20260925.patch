@@ -1,0 +1,45 @@
+--- a/scripts/pod-loops/trust-chain.sh
++++ b/scripts/pod-loops/trust-chain.sh
+@@ -53,6 +53,12 @@
+ : >"$RUN_LOG"
+ 
+ log trust-chain "START branch=$BRANCH base=$BASE_REF pace=$PACE"
++# The system Python lost OpenTimestamps on pod restart. Pin the existing pod venv.
++OTS_PYTHON="${TRUST_CHAIN_PYTHON:-/workspace/pod-venv/bin/python}"
++if [ ! -x "$OTS_PYTHON" ] || ! "$OTS_PYTHON" -c 'from opentimestamps.calendar import RemoteCalendar; from opentimestamps.core.serialize import BytesDeserializationContext' >>"$RUN_LOG" 2>&1; then
++  log trust-chain "RESULT rc=1 | OTS Python unavailable: $OTS_PYTHON; no checkout or publish"
++  exit 1
++fi
+ 
+ if [ ! -d "$REPO_DIR/.git" ]; then
+   git clone --no-checkout "$REMOTE" "$REPO_DIR" >>"$RUN_LOG" 2>&1 || {
+@@ -71,10 +77,14 @@
+ # script: the repo clone is the TREE being measured, and a tree that has not merged the producer
+ # yet must not silently disable the loop that measures it. scripts/ots_trust_upgrade.py and
+ # scripts/verify_corrections_signature.py in the repository are the reviewable copies of these.
+-( cd "$REPO_DIR" && python3 "$LOOPS/ots_trust_upgrade.py" \
++( cd "$REPO_DIR" && "$OTS_PYTHON" "$LOOPS/ots_trust_upgrade.py" \
+     --dir public/interop --dir public/interop/ots \
+     --report "$RUN_JSON" --pace "$PACE" --cache "$OUT_DIR/cache" ) >>"$RUN_LOG" 2>&1
+ rc_ots=$?
++if [ "$rc_ots" -ne 0 ]; then
++  log trust-chain "RESULT rc=1 | OTS upgrade failed rc=$rc_ots; no manifest, commit or publish"
++  exit 1
++fi
+ 
+ # The guard that exists because fifteen text stubs were once published with an .ots name. It must
+ # keep passing; an upgrade can only ever make a proof MORE of a proof, so a failure here means
+@@ -88,8 +98,12 @@
+ 
+ # The manifest is rebuilt by ITS OWN producer over the bytes on disk, never edited to agree with
+ # the run above. If the two ever disagree, the producer is right and the run report is the bug.
+-( cd "$REPO_DIR" && python3 scripts/ots_manifest_rebuild.py --apply ) >>"$RUN_LOG" 2>&1
++( cd "$REPO_DIR" && "$OTS_PYTHON" scripts/ots_manifest_rebuild.py --apply ) >>"$RUN_LOG" 2>&1
+ rc_man=$?
++if [ "$rc_man" -ne 0 ]; then
++  log trust-chain "RESULT rc=1 | OTS manifest rebuild failed rc=$rc_man; no commit or publish"
++  exit 1
++fi
+ MANIFEST="$REPO_DIR/public/interop/ots/manifest.json"
+ [ -s "$MANIFEST" ] || { log trust-chain "RESULT rc=1 | manifest not written"; exit 1; }
+ 

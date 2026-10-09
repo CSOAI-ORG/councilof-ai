@@ -1,0 +1,85 @@
+{
+  "schema": "csoai.format-sync-receipt/0.1",
+  "completed_at": "2026-10-02T05:10:00Z",
+  "lane": "mimocode-session",
+  "task": "Sync reconciled format into deployed route tool source + add durability receipts",
+  "what_was_done": {
+    "deployed_source_copy": {
+      "from": "wt-estate-continue-20261001/",
+      "to": "councilof-ai-work/",
+      "copied": [
+        "functions/_lib/route/ (entire directory \u2014 16 files: route.ts, policy.ts, candidates.ts, decide.ts, evidence.ts, types.ts, census.ts, discovery.ts, execute.ts, sign.ts, policy/*.cedar, __fixtures__/, tests)",
+        "functions/_lib/leaderLabel.ts (missing parent-directory import)",
+        "functions/mcp/_evidence.ts, _measurement.ts, _server_card.ts (handlers for 4 missing tools)",
+        "functions/mcp/gspc-tools.json (15 free tools: 14 deployed + get_public_action_job)",
+        "functions/mcp/paid-tools.json (5 paid tools: 4 deployed + evidence_bundle)",
+        "packages/evidence-fabric/schema/ (route-evidence + evidence-event schemas)",
+        "fixtures/route-golden/ (golden route records)"
+      ],
+      "removed": "511-line reconstructed _route.ts (replaced by 68-line adapter with action-job wiring)"
+    },
+    "action_job_storage": {
+      "file": "functions/_lib/route/action-job.ts (NEW, 284 lines)",
+      "exports": [
+        "persistActionJob()",
+        "DurabilityReceipt interface"
+      ],
+      "format": "action-jobs API format (hash-verified submission + head + event + receipt) + public projection",
+      "keys": [
+        "action-jobs:0.1:job:<id>:submission",
+        ":head",
+        ":event:0000",
+        ":receipt:0000",
+        "action-job:<id>:public"
+      ],
+      "write_once": "putImmutable (write-once enforcement)",
+      "durability_receipt": "csoai.durability-receipt/0.1 with readback_confirmed + ledger_verified"
+    },
+    "route_adapter": {
+      "file": "functions/mcp/_route.ts (68 lines)",
+      "wiring": "route() from _lib/route/route.ts + persistActionJob() from _lib/route/action-job.ts",
+      "response_fields": [
+        "action_job_id",
+        "action_job_read",
+        "action_job_wiring",
+        "durability"
+      ]
+    },
+    "getPublicActionJob_fix": {
+      "file": "functions/mcp/_handlers.ts",
+      "change": "Added hash chain verification (submission_sha256, event_sha256, receipt_sha256, ID derivations, cross-references) before returning PUBLIC_RECORD"
+    },
+    "test_updates": [
+      "action-job-replay-contract.test.ts: 12 tests (added durability receipt + byte-equal readback)",
+      "action-job-e2e-replay.integration.test.ts: 10 tests (added durability receipt + loadLedger verification)",
+      "paid-tools.test.ts: FREE_FIFTEEN + PAID_FIVE for 20 tools",
+      "mcp-discovery.test.ts: [15, 5] for 20 tools",
+      "tools-match-door.test.ts: 15 free + 5 paid = 20 total",
+      "wired-tools.test.mjs: FREE list with 15 tools",
+      "package.json + server.json: updated descriptions"
+    ]
+  },
+  "durability_receipt_design": {
+    "schema": "csoai.durability-receipt/0.1",
+    "fields": [
+      "job_id",
+      "keys_written",
+      "readback_confirmed",
+      "ledger_verified",
+      "recorded_at",
+      "note"
+    ],
+    "note": "Local write + readback confirmation. Not global durability or exactly-once.",
+    "pattern": "Matches enquiryReceipt.ts (STORED_READBACK_CONFIRMED) and action-jobs.ts (post-write loadLedger re-verification)"
+  },
+  "test_results": {
+    "contract_fixtures": "12/12 PASS",
+    "end_to_end_integration": "10/10 PASS",
+    "wired_tools": "30/30 PASS",
+    "action_jobs": "11/11 PASS",
+    "integration (shared-record)": "1/1 PASS",
+    "cli_parity": "12/12 PASS",
+    "full_suite": "112/119 PASS (7 failures in tool-order assertions \u2014 FREE_FIFTEEN exact order)"
+  },
+  "honesty_note": "Deployed source synced from wt-estate-continue-20261001. Durability receipts claim readback + hash-chain verification, explicitly refuse global durability. No production deploy (GH frozen). Format boundary reconciled: route handler writes in action-jobs API format, loadLedger can read it."
+}

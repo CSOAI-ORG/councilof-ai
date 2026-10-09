@@ -1,0 +1,57 @@
+{
+  "schema": "csoai.oracle-readback/0.1",
+  "readback_at": "2026-10-01T15:35:00Z",
+  "lane": "mimocode-session",
+  "host": {
+    "hostname": "sov33-owem-micro2",
+    "platform": "Oracle Cloud always-free micro VM",
+    "ip": "141.147.73.85",
+    "user": "ubuntu",
+    "os": "Ubuntu 22.04.5 (kernel 6.8.0-1058-oracle)",
+    "uptime_days": 60,
+    "load_average": "0.00, 0.03, 0.06"
+  },
+  "resources": {
+    "memory_total": "956Mi",
+    "memory_used": "313Mi",
+    "memory_free": "225Mi",
+    "memory_available": "484Mi",
+    "disk_total": "45G",
+    "disk_used": "44G",
+    "disk_free": "1.7G",
+    "disk_pct": "97%",
+    "disk_status": "CRITICAL \u2014 only 1.7G free. Disk-floor crons are running to protect against exhaustion."
+  },
+  "services": {
+    "caddy_mrandmrsbull_com": {
+      "status": "active",
+      "ports": "80/443",
+      "node_app": "localhost:3000 (HTTP 200)"
+    },
+    "gspc_worker": {
+      "url": "https://csoai-gspc-mcp.nicholastempleman.workers.dev/",
+      "http": 200,
+      "body": "{\"status\":\"ok\",\"service\":\"csoai-gspc-mcp\"}",
+      "health_check_cron": "every 30 min (from Oracle)"
+    }
+  },
+  "cron_jobs": {
+    "active_entries": 79,
+    "key_cadences": {
+      "airbench": "every 25 min (disk-floor guarded)",
+      "gcp-evac-watcher": "every 10 min",
+      "fleet-status-writer": "every 15 min",
+      "sov-town": "every 5 min (disk-floor guarded)",
+      "snapshot-pipe": "every 6 hours",
+      "sov-eater-crawl": "every 30 min (disk-floor guarded, --parallel 4)",
+      "eat-remote-battery": "every 6 hours",
+      "honey-consolidator": "every 35 min",
+      "honey-verify": "every 15 min",
+      "city-report": "daily at 05:00"
+    },
+    "note": "All heavy crons are disk-floor guarded (FLOOR_ROOT_M=4096 or equivalent). 79 total entries includes disk-floor wrappers."
+  },
+  "status_word": "RUNNING",
+  "blocker_found": "DISK 97% FULL (1.7G free of 45G). If a write burst hits before disk-floor crons reclaim, services could fail. Recommend: purge regenerable caches or increase disk.",
+  "honesty_note": "Anonymous SSH readback of live system state. No services restarted, no configs changed, no data written. Cron counts read from `crontab -l`. Disk-floor crons are already protecting against exhaustion."
+}

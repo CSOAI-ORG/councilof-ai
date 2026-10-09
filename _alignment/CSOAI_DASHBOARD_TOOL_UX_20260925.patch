@@ -1,0 +1,275 @@
+From 05051e1fe2a71fafb5780935ecfad08426c80fad Mon Sep 17 00:00:00 2001
+From: CSOAI <nicholas@csoai.org>
+Date: Fri, 25 Sep 2026 00:11:04 +0100
+Subject: [PATCH] Improve current MCP tool choice and evidence guidance
+
+---
+ client/src/components/DashboardToolsPane.tsx | 28 ++++--
+ client/src/components/ToolRunner.tsx         | 45 +++++++--
+ client/src/lib/mcpTools.test.ts              | 14 +++
+ client/src/lib/sovTools.ts                   | 99 ++++++++++++++++++--
+ 4 files changed, 164 insertions(+), 22 deletions(-)
+
+diff --git a/client/src/components/DashboardToolsPane.tsx b/client/src/components/DashboardToolsPane.tsx
+index 0c2d840b2..a54616f40 100644
+--- a/client/src/components/DashboardToolsPane.tsx
++++ b/client/src/components/DashboardToolsPane.tsx
+@@ -7,6 +7,7 @@ import {
+ } from "lucide-react";
+ import ToolRunner from "./ToolRunner";
+ import { FREE_TOOL_NAMES, PAID_TOOL_NAMES } from "@/lib/mcpTools";
++import { TOOL_META } from "@/lib/sovTools";
+ import { useSearch } from "wouter";
+ 
+ // Derived from the two files the /mcp door reads, not typed. This list was correct on
+@@ -50,9 +51,10 @@ export default function DashboardToolsPane() {
+             The runner reads the current catalogue from{" "}
+             <code className="font-mono text-xs">POST /mcp</code>, builds inputs
+             from each tool’s JSON Schema, and prints the endpoint’s reply.
+-            The current runtime advertises {PUBLISHED_TOOL_COUNT} tools: {FREE_TOOLS.length} free
+-            reads and {METERED_TOOLS.length} metered paths. The quarantined
+-            witness path is not advertised.
++            This published build declares {PUBLISHED_TOOL_COUNT} tools: {FREE_TOOLS.length} free
++            reads and {METERED_TOOLS.length} metered paths. The runner checks the
++            callable list again when you open it. The quarantined witness path
++            is not in this build’s manifest.
+             Discovery is <strong className="text-foreground">CATALOGUED</strong>
+             ; only a completed call is{" "}
+             <strong className="text-foreground">RUNTIME_OBSERVED</strong>. It is
+@@ -90,9 +92,13 @@ export default function DashboardToolsPane() {
+             public-root reads and Merkle-inclusion checks. Verification remains
+             free.
+           </p>
+-          <p className="mt-2 break-words font-mono text-[10px] leading-relaxed text-emerald-900/65">
+-            {FREE_TOOLS.join(" · ")}
+-          </p>
++          <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="Free tool names">
++            {FREE_TOOLS.map((name) => (
++              <li key={name} title={name} className="rounded-full border border-emerald-800/15 bg-white/80 px-2.5 py-1 text-[10px] font-medium text-emerald-950">
++                {TOOL_META[name]?.label || name}
++              </li>
++            ))}
++          </ul>
+         </article>
+ 
+         <article className="rounded-2xl border border-amber-800/15 bg-amber-50/65 p-4">
+@@ -115,9 +121,13 @@ export default function DashboardToolsPane() {
+             button signs it in your wallet and retries — this page never asks
+             for a seed phrase or private key.
+           </p>
+-          <p className="mt-2 break-words font-mono text-[10px] leading-relaxed text-amber-950/65">
+-            {METERED_TOOLS.join(" · ")}
+-          </p>
++          <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="Metered tool names">
++            {METERED_TOOLS.map((name) => (
++              <li key={name} title={name} className="rounded-full border border-amber-800/15 bg-white/80 px-2.5 py-1 text-[10px] font-medium text-amber-950">
++                {TOOL_META[name]?.label || name}
++              </li>
++            ))}
++          </ul>
+         </article>
+       </div>
+ 
+diff --git a/client/src/components/ToolRunner.tsx b/client/src/components/ToolRunner.tsx
+index 1c72ad65b..297a03926 100644
+--- a/client/src/components/ToolRunner.tsx
++++ b/client/src/components/ToolRunner.tsx
+@@ -735,9 +735,9 @@ export default function ToolRunner({
+               Public MCP tool runner
+             </h2>
+             <p className="mt-0.5 text-xs leading-relaxed text-slate-600">
+-              JSON-RPC <code className="font-mono text-[11px]">tools/list</code>{" "}
+-              and <code className="font-mono text-[11px]">tools/call</code>{" "}
+-              against <code className="font-mono text-[11px]">POST /mcp</code>.
++              Choose a tool, supply its required inputs, then inspect the
++              actual reply. The catalogue and calls come from{" "}
++              <code className="font-mono text-[11px]">POST /mcp</code>.
+             </p>
+           </div>
+         </div>
+@@ -861,9 +861,42 @@ export default function ToolRunner({
+                   CATALOGUED
+                 </span>
+               </div>
+-              <p className="mt-3 max-w-3xl text-xs leading-relaxed text-slate-700">
+-                {active.description}
+-              </p>
++              {TOOL_META[active.name] ? (
++                <div className="mt-4 rounded-2xl border border-emerald-900/15 bg-emerald-50/55 p-4">
++                  <div className="grid gap-3 sm:grid-cols-2">
++                    <div>
++                      <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-emerald-900">
++                        Use this for
++                      </p>
++                      <p className="mt-1 text-xs leading-relaxed text-slate-800">
++                        {TOOL_META[active.name].useFor}
++                      </p>
++                    </div>
++                    <div>
++                      <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-emerald-900">
++                        What you get
++                      </p>
++                      <p className="mt-1 text-xs leading-relaxed text-slate-800">
++                        {TOOL_META[active.name].returns}
++                      </p>
++                    </div>
++                  </div>
++                  <p className="mt-3 border-t border-emerald-900/10 pt-3 text-xs leading-relaxed text-slate-700">
++                    <strong>Keep in mind:</strong> {TOOL_META[active.name].boundary}
++                  </p>
++                </div>
++              ) : null}
++              <details
++                className="mt-3 rounded-xl border border-slate-900/10 bg-slate-50/60 px-3.5 py-2.5"
++                open={!TOOL_META[active.name]}
++              >
++                <summary className="cursor-pointer text-xs font-semibold text-slate-700">
++                  Full endpoint description
++                </summary>
++                <p className="mt-2 max-w-3xl break-words text-xs leading-relaxed text-slate-700">
++                  {active.description}
++                </p>
++              </details>
+ 
+               {isPaidTool(active) ? (
+                 <div className="mt-4 flex gap-2.5 rounded-xl border border-amber-700/20 bg-amber-50 px-3.5 py-3">
+diff --git a/client/src/lib/mcpTools.test.ts b/client/src/lib/mcpTools.test.ts
+index 12084e59b..43e62b1db 100644
+--- a/client/src/lib/mcpTools.test.ts
++++ b/client/src/lib/mcpTools.test.ts
+@@ -1,6 +1,7 @@
+ import { describe, expect, it } from "vitest";
+ import { readFileSync } from "node:fs";
+ import { ALL_TOOL_NAMES, FREE_TOOL_NAMES, PAID_TOOL_NAMES, toolSummary } from "./mcpTools";
++import { TOOL_META } from "./sovTools";
+ 
+ const J = (rel: string) => JSON.parse(readFileSync(new URL(rel, import.meta.url), "utf8"));
+ 
+@@ -57,3 +58,16 @@ describe("no component keeps its own copy of the door's tool set", () => {
+     });
+   }
+ });
++
++describe("the callable fleet has an end-user explanation", () => {
++  it("covers every tool in the manifests without falling back to code names", () => {
++    expect(ALL_TOOL_NAMES.filter((name) => !TOOL_META[name])).toEqual([]);
++    for (const name of ALL_TOOL_NAMES) {
++      const guide = TOOL_META[name];
++      expect(guide.label).not.toBe(name);
++      expect(guide.useFor.length).toBeGreaterThan(20);
++      expect(guide.returns.length).toBeGreaterThan(20);
++      expect(guide.boundary.length).toBeGreaterThan(20);
++    }
++  });
++});
+diff --git a/client/src/lib/sovTools.ts b/client/src/lib/sovTools.ts
+index c96626f53..917b06098 100644
+--- a/client/src/lib/sovTools.ts
++++ b/client/src/lib/sovTools.ts
+@@ -100,11 +100,96 @@ export async function sealArtifact(artifact: string): Promise<ToolResult> {
+   return { ok: false, text: "Seal unavailable." };
+ }
+ 
+-// Friendly labels for the known live tools.
+-export const TOOL_META: Record<string, { glyph: string; label: string }> = {
+-  meok_govern: { glyph: "⚖", label: "What governs this?" },
+-  meok_sign: { glyph: "✶", label: "Seal to Layer 0" },
+-  meok_verify: { glyph: "✓", label: "Verify a seal" },
+-  meok_talk: { glyph: "◉", label: "Ask the Council" },
+-  meok_agent_card: { glyph: "🪪", label: "Agent card" },
++// Human guidance for the current published MCP fleet. The live tools/list
++// remains the authority for availability, inputs and payment state; this copy
++// only helps a reader choose a tool. A test compares these names with the two
++// manifests used by /mcp so a fleet change cannot silently leave raw names in
++// the interface again.
++export type ToolPresentation = {
++  glyph: string;
++  label: string;
++  useFor: string;
++  returns: string;
++  boundary: string;
++};
++
++export const TOOL_META: Record<string, ToolPresentation> = {
++  board_totals: {
++    glyph: "#", label: "Board totals",
++    useFor: "See how many axis positions exist and how many have admitted measurements.",
++    returns: "Separately labelled slot and measured counts, with board and fetch dates.",
++    boundary: "A declared slot is not a measured result.",
++  },
++  get_axis: {
++    glyph: "1", label: "Read one GSPC axis",
++    useFor: "Inspect the evidence and status behind a named axis on the public board.",
++    returns: "That axis row, its run or bank reference, and its dates.",
++    boundary: "An UNMEASURED axis remains a visible gap, never a zero score.",
++  },
++  verify_card: {
++    glyph: "✓", label: "Verify a signed card",
++    useFor: "Check one published measurement card or a card you paste.",
++    returns: "VALID, INVALID or UNCHECKABLE after hash and pinned-key signature checks.",
++    boundary: "A valid signature binds bytes; it does not certify a subject.",
++  },
++  list_cards: {
++    glyph: "▤", label: "Browse signed cards",
++    useFor: "Find recent cards, optionally filtered to one axis.",
++    returns: "Index rows and separately labelled index/store counts.",
++    boundary: "Index presence is not independent verification of every card.",
++  },
++  get_root: {
++    glyph: "◇", label: "Read the public root",
++    useFor: "Get the current public-root snapshot and its date.",
++    returns: "Root hash, card count and stated gaps.",
++    boundary: "Fetching the root is not a signature or Bitcoin-anchor check.",
++  },
++  get_card: {
++    glyph: "□", label: "Fetch a root card",
++    useFor: "Retrieve a public-root leaf by its full SHA-256 digest.",
++    returns: "One card-v0 leaf or an explicit unavailable state.",
++    boundary: "A root leaf is not the same as a signed GSPC measurement card.",
++  },
++  verify_inclusion: {
++    glyph: "⊂", label: "Check root inclusion",
++    useFor: "Test whether a digest is included in the current public root.",
++    returns: "VALID, INVALID or UNCHECKABLE for the Merkle inclusion check.",
++    boundary: "Inclusion alone does not verify an Ed25519 signature.",
++  },
++  x402_trust: {
++    glyph: "402", label: "x402 catalogue checks",
++    useFor: "Read the latest public census of x402 resources that answer on the wire.",
++    returns: "Dated aggregate challenge and phantom counts.",
++    boundary: "An HTTP 402 is not proof of paid delivery or customer use.",
++  },
++  mcp_trust: {
++    glyph: "M", label: "MCP handshake checks",
++    useFor: "Read the latest public MCP initialize-handshake census.",
++    returns: "Dated aggregate reachable, auth-challenge and unreachable counts.",
++    boundary: "A handshake is not a completed tool call or security verdict.",
++  },
++  commission_card: {
++    glyph: "+", label: "Commission a card",
++    useFor: "Request a scoped receipt for a named subject already represented on the frozen bank.",
++    returns: "A free preview or 402 challenge first; the paid route assembles existing evidence.",
++    boundary: "Payment does not create a new measured cell or guarantee a fresh run.",
++  },
++  art50_marking_evidence: {
++    glyph: "50", label: "Check output marking",
++    useFor: "Inspect one generative output for detectable machine-readable marking.",
++    returns: "A free unsigned preview or a challenged evidence pack for supplied bytes.",
++    boundary: "This is point-in-time detection, not a legal compliance opinion.",
++  },
++  rwa_evidence: {
++    glyph: "X", label: "XRPL asset evidence",
++    useFor: "Inspect one XRPL issued asset's deterministic ledger state.",
++    returns: "A free unsigned preview or a challenged signed evidence card.",
++    boundary: "Ledger state is not a risk rating, guarantee or conformity mark.",
++  },
++  receipts_batch: {
++    glyph: "↧", label: "Assemble card history",
++    useFor: "Collect historical measurement cards and root paths for a time window.",
++    returns: "A free count-and-hash preview or a challenged batch with inclusion paths.",
++    boundary: "These are measurement records, not payment-settlement receipts.",
++  },
+ };
+-- 
+2.50.1 (Apple Git-155)
+

@@ -1,0 +1,74 @@
+{
+  "schema": "csoai.gspcjob-wiring-assessment/0.1",
+  "assessed_at": "2026-10-01T16:00:00Z",
+  "lane": "mimocode-session",
+  "task": "gspcjob wiring acceptance slice \u2014 wire one MCP tools/call + one Council OS action to gspcjob: ID",
+  "finding": "Acceptance slice is PARTIALLY IMPLEMENTED. The action-jobs system already provides the shared record pattern. The route tool source is NOT in the local checkout (stale).",
+  "what_exists": {
+    "action_jobs_api": {
+      "file": "functions/api/action-jobs.ts (1,312 lines)",
+      "endpoint": "/api/action-jobs",
+      "submit_schema": "csoai.action-job-submit/0.1",
+      "job_id_format": "job_[0-9a-f]{40}",
+      "storage": "LEADS KV namespace",
+      "features": [
+        "idempotency",
+        "event chain",
+        "receipts",
+        "heads",
+        "public_release flag"
+      ],
+      "status": "IMPLEMENTED"
+    },
+    "mcp_get_public_action_job": {
+      "file": "functions/mcp/_handlers.ts (line 119-137)",
+      "tool_name": "get_public_action_job",
+      "input": "job_id (regex: job_[0-9a-f]{40})",
+      "output_states": [
+        "PUBLIC_RECORD",
+        "NOT_PUBLIC_OR_NOT_FOUND",
+        "UNAVAILABLE",
+        "UNCHECKABLE",
+        "UNREACHABLE",
+        "INVALID_ARGUMENT"
+      ],
+      "reads_from": "/api/action-jobs?public=1&job_id=<id>",
+      "status": "IMPLEMENTED"
+    },
+    "integration_test": {
+      "file": "functions/mcp/action-job-shared-record.integration.test.ts",
+      "proves": "One submit \u2192 same record readable through human API AND MCP tools/call",
+      "status": "PASSING (in source)"
+    }
+  },
+  "what_is_missing": {
+    "route_tool_source": {
+      "live_tools": [
+        "route",
+        "evidence_bundle_preview"
+      ],
+      "local_sources_checked": [
+        "functions/mcp/gspc-tools.json (10 tools, no route)",
+        "mcp/gspc-server/gspc-tools.json (12 tools, no route)",
+        "functions/mcp/paid-tools.json (4 paid tools, no route)"
+      ],
+      "finding": "Route tool is deployed live (14 free tools) but source is NOT in the local checkout. Local checkout is stale at commit 3dfb20e36.",
+      "gap": "Cannot wire route tool's urn:gspc:route:<uuid> output to the job_[0-9a-f]{40} action-job system without the route tool source."
+    },
+    "gspcjob_namespace": {
+      "alignment_doc_says": "gspcjob: identity + gspcreq: scope key",
+      "actual_implementation": "job_[0-9a-f]{40} (action-jobs system)",
+      "gap": "The gspcjob:/gspcreq: naming from the alignment doc is not used in the code. The action-jobs system uses job_[0-9a-f]{40}. These may be the same concept with different names, or the gspcjob: naming may be planned but not yet implemented."
+    }
+  },
+  "acceptance_slice_status": {
+    "wire_one_mcp_tools_call": "DONE \u2014 get_public_action_job reads action-job records by job_id",
+    "wire_one_council_os_action": "DONE \u2014 action-jobs POST accepts submissions",
+    "store_record": "DONE \u2014 LEADS KV namespace persists records",
+    "replay_through_api": "DONE \u2014 action-jobs GET with public=1 returns stored records",
+    "connect_route_to_job_id": "NOT DONE \u2014 route tool source not in local checkout",
+    "a2a_and_agent_ui_renderers": "NOT DONE \u2014 not attempted"
+  },
+  "recommendation": "The core acceptance slice (submit \u2192 store \u2192 replay through API + MCP) is already implemented and tested. The remaining work is: (1) sync local source with deployed code (route tool source is missing), (2) wire route tool output to action-job IDs, (3) add A2A + agent-UI renderers. Priority (1) requires access to the current deployed source \u2014 likely on the RunPod mill or a newer branch.",
+  "honesty_note": "This is a code-architecture assessment against the local checkout. The live deployment may have newer code that includes the route tool. The local source is at commit 3df20e36 but the live MCP server serves 14 free tools vs 10+3 in local source. Do not claim the acceptance slice is complete without verifying against the deployed code."
+}

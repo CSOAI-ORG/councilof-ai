@@ -1,0 +1,95 @@
+{
+  "project": {
+    "name": "MEOK AI OS",
+    "slug": "meok-ai-os",
+    "former_name": "Council of AI OS",
+    "description": "MEOK AI OS is a sovereign, attested, Care-First operating system for human-first AI. It unifies a hardware-rooted trust plane, a 33-hive compliance substrate, and a Care-First enforcement kernel.",
+    "tagline": "Sovereign AI that refuses to be a black box.",
+    "homepage_url": "https://meok.ai",
+    "logo_url": "https://meok.ai/assets/meok-logo.svg",
+    "maturity": "sandbox",
+    "category": "ai",
+    "subcategories": ["edge", "security", "compliance", "sovereignty"],
+    "license": "Apache-2.0",
+    "license_spdx": "Apache-2.0",
+    "primary_language": "rust",
+    "languages": ["rust", "python", "go", "typescript", "c", "yaml"],
+    "governance": {
+      "type": "open",
+      "document": "https://github.com/meok-ai/meok-ai-os/blob/main/GOVERNANCE.md",
+      "voting_members": 7,
+      "bft_required": true,
+      "bft_threshold": "2-of-3",
+      "decision_log": "https://github.com/meok-ai/meok-ai-os/tree/main/adr"
+    },
+    "cla": {
+      "required": true,
+      "type": "apache-cla-2.0",
+      "signed_automatically": true,
+      "cla_portal": "https://contributoragreements.org"
+    },
+    "dco": {
+      "required": true,
+      "sign_off": "Signed-off-by:",
+      "bot": "meok-dco-bot"
+    },
+    "code_of_conduct": "https://github.com/meok-ai/meok-ai-os/blob/main/CODE_OF_CONDUCT.md",
+    "security": {
+      "policy": "https://github.com/meok-ai/meok-ai-os/security/policy",
+      "email": "security@meok.ai",
+      "pgp": "https://meok.ai/security/pgp-key.asc",
+      "disclosure_sla_days": 3,
+      "embargo_days": 14
+    },
+    "repos": [
+      {
+        "name": "meok-ai-os",
+        "url": "https://github.com/meok-ai/meok-ai-os",
+        "primary": true,
+        "license": "Apache-2.0"
+      },
+      {
+        "name": "meok-sovereign-substrate",
+        "url": "https://github.com/meok-ai/meok-sovereign-substrate",
+        "license": "Apache-2.0"
+      },
+      {
+        "name": "meok-compliance-operator",
+        "url": "https://github.com/meok-ai/meok-compliance-operator",
+        "license": "Apache-2.0"
+      },
+      {
+        "name": "meok-bmc-daemon",
+        "url": "https://github.com/meok-ai/meok-bmc-daemon",
+        "license": "Apache-2.0"
+      }
+    ],
+    "communication": {
+      "slack": "https://slack.meok.ai",
+      "mailing_list": {
+        "main": "meok-ai-os@lists.meok.ai",
+        "dev": "meok-dev@lists.meok.ai",
+        "announce": "meok-announce@lists.meok.ai"
+      },
+      "discord": "https://discord.gg/meok",
+      "office_hours": "Wednesdays 16:00 UTC"
+    },
+    "funding": {
+      "sponsors": [
+        {"name": "MEOK Ltd", "type": "primary"},
+        {"name": "Sovereign Edge Coalition", "type": "silver"}
+      ],
+      "open_collective": "https://opencollective.com/meok-ai-os"
+    },
+    "social_media": {
+      "x": "https://x.com/meok_ai",
+      "linkedin": "https://linkedin.com/company/meok-ai",
+      "youtube": "https://youtube.com/@meok-ai"
+    },
+    "artwork": {
+      "ascii_logo": "MEOK OS",
+      "color_primary": "#0B1F3A",
+      "color_accent": "#2EC4B6"
+    }
+  }
+}

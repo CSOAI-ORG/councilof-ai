@@ -1,0 +1,234 @@
+{
+  "schema": "csoai.mirror-drift-triage/0.1",
+  "observed_at": "2026-09-24T12:20:31Z",
+  "input_manifest_as_of": "2026-09-24T11:53:23Z",
+  "input_manifest_path": "/Users/nicholas/clawd/csoai-mirror-lane/public/interop/mirror-manifest.json",
+  "input_manifest_current_sha256": "6f66f38ef3b166245812303fa21857bcddfefc0c46d981c1e002fd5aa4847427",
+  "runpod_bare_master_observed": "680a0a90ec11ddef6fd800daa8f7ae04116602b2",
+  "summary": {
+    "manifest_artifacts": 546,
+    "mismatch_probes": 12,
+    "mismatch_artifacts": 10,
+    "canonical_live_hf_stale": 8,
+    "uncommitted_local_revision": 1,
+    "self_reference": 1
+  },
+  "writer_state": "No HF or Cloudflare write performed by this triage. Existing M4 15-minute fanout was running and performs anonymous probes only; Kaggle refresh guard runs first.",
+  "safe_next_action": "Use an isolated branch based on current RunPod bare master as source of truth. Verify each candidate file SHA against live Cloudflare, then use the existing single-commit HF mirror publisher after coordinating the one writer; read back anonymous HF bytes. Never upload the stale M4 clone or its uncommitted PayAI revision. Exclude generated mirror-manifest from its own digest-entry discovery or handle self-reference explicitly in a source-isolated fix.",
+  "rows": [
+    {
+      "path": "interop/door-demand-payai-2026-09-22.json",
+      "classification": "UNCOMMITTED_LOCAL_REVISION_PUBLIC_AND_CANONICAL_MATCH",
+      "local_source_sha256": "cbdd37f70d6db762875058afc0fdd78b2652983f6d29faceba999599863e2f80",
+      "local_source_bytes": 5252,
+      "huggingface": {
+        "state": "REACHABLE_DIGEST_MISMATCH",
+        "sha256": "1c541b980dd763b868fe06341e61a9c5109137d98cd69b3ec8f07df8ffc8baa6",
+        "bytes": 5248,
+        "url": "https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/interop__door-demand-payai-2026-09-22.json"
+      },
+      "cloudflare": {
+        "state": "REACHABLE_DIGEST_MISMATCH",
+        "sha256": "1c541b980dd763b868fe06341e61a9c5109137d98cd69b3ec8f07df8ffc8baa6",
+        "bytes": 5248,
+        "url": "https://councilof.ai/interop/door-demand-payai-2026-09-22.json"
+      },
+      "proof": {
+        "runpod_master_sha256": "1c541b980dd763b868fe06341e61a9c5109137d98cd69b3ec8f07df8ffc8baa6",
+        "runpod_master_bytes": 5248
+      }
+    },
+    {
+      "path": "interop/financial-axes.json",
+      "classification": "STALE_HF_MIRROR_LOCAL_SOURCE_BEHIND_CANONICAL",
+      "local_source_sha256": "db7ac65810ca9b861ae80522571025ae3e4fa685d507b4a093fa78d5ca1dda14",
+      "local_source_bytes": 6121,
+      "huggingface": {
+        "state": "VERIFIED_MATCHING_DIGEST",
+        "sha256": "db7ac65810ca9b861ae80522571025ae3e4fa685d507b4a093fa78d5ca1dda14",
+        "bytes": 6121,
+        "url": "https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/interop__financial-axes.json"
+      },
+      "cloudflare": {
+        "state": "REACHABLE_DIGEST_MISMATCH",
+        "sha256": "af29ad18d5fa95bed36042cdd06711a266175b00673820122e9e9163be610b41",
+        "bytes": 6574,
+        "url": "https://councilof.ai/interop/financial-axes.json"
+      },
+      "proof": {
+        "runpod_master_sha256": "af29ad18d5fa95bed36042cdd06711a266175b00673820122e9e9163be610b41"
+      }
+    },
+    {
+      "path": "interop/financial-measure-compact.json",
+      "classification": "STALE_HF_MIRROR_LOCAL_SOURCE_BEHIND_CANONICAL",
+      "local_source_sha256": "3f1e60925923878c62db1efa4dd3a84fc7bbfdd3ec8e682e09154b749ae4a875",
+      "local_source_bytes": 7352,
+      "huggingface": {
+        "state": "VERIFIED_MATCHING_DIGEST",
+        "sha256": "3f1e60925923878c62db1efa4dd3a84fc7bbfdd3ec8e682e09154b749ae4a875",
+        "bytes": 7352,
+        "url": "https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/interop__financial-measure-compact.json"
+      },
+      "cloudflare": {
+        "state": "REACHABLE_DIGEST_MISMATCH",
+        "sha256": "4053d71972e87a247d5095be28de6dd2212d95ccd42403e7548c154bccc2e650",
+        "bytes": 7251,
+        "url": "https://councilof.ai/interop/financial-measure-compact.json"
+      },
+      "proof": {
+        "runpod_master_sha256": "4053d71972e87a247d5095be28de6dd2212d95ccd42403e7548c154bccc2e650"
+      }
+    },
+    {
+      "path": "interop/financial-measure-run-ai-adoption-components.json",
+      "classification": "STALE_HF_MIRROR_LOCAL_SOURCE_BEHIND_CANONICAL",
+      "local_source_sha256": "2b8844ad4ef354a74253e1ed01bfc1a88a6ef8f1d95ebc96f648ea7650464716",
+      "local_source_bytes": 1478,
+      "huggingface": {
+        "state": "VERIFIED_MATCHING_DIGEST",
+        "sha256": "2b8844ad4ef354a74253e1ed01bfc1a88a6ef8f1d95ebc96f648ea7650464716",
+        "bytes": 1478,
+        "url": "https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/interop__financial-measure-run-ai-adoption-components.json"
+      },
+      "cloudflare": {
+        "state": "REACHABLE_DIGEST_MISMATCH",
+        "sha256": "f8848b37afb14f1d43e26abb6949878aca41e4c960024fc805f9b44cdde14728",
+        "bytes": 1600,
+        "url": "https://councilof.ai/interop/financial-measure-run-ai-adoption-components.json"
+      },
+      "proof": {
+        "runpod_master_sha256": "f8848b37afb14f1d43e26abb6949878aca41e4c960024fc805f9b44cdde14728"
+      }
+    },
+    {
+      "path": "interop/financial-measure-run-labour-components.json",
+      "classification": "STALE_HF_MIRROR_LOCAL_SOURCE_BEHIND_CANONICAL",
+      "local_source_sha256": "c3cf51ab94d609892ae69f2966c6080586b450222c42253606b9ac607f4edf94",
+      "local_source_bytes": 1247,
+      "huggingface": {
+        "state": "VERIFIED_MATCHING_DIGEST",
+        "sha256": "c3cf51ab94d609892ae69f2966c6080586b450222c42253606b9ac607f4edf94",
+        "bytes": 1247,
+        "url": "https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/interop__financial-measure-run-labour-components.json"
+      },
+      "cloudflare": {
+        "state": "REACHABLE_DIGEST_MISMATCH",
+        "sha256": "44e057b43a567270794f4ad78d05dde45d76777d7aa0020f5ec85bf052abfa16",
+        "bytes": 1514,
+        "url": "https://councilof.ai/interop/financial-measure-run-labour-components.json"
+      },
+      "proof": {
+        "runpod_master_sha256": "44e057b43a567270794f4ad78d05dde45d76777d7aa0020f5ec85bf052abfa16"
+      }
+    },
+    {
+      "path": "interop/footprint-packages.json",
+      "classification": "STALE_HF_MIRROR_LOCAL_SOURCE_BEHIND_CANONICAL",
+      "local_source_sha256": "29285ea4995edab66f34ab708e9b4752a38cc30d838efda3c7a28cfb1767c709",
+      "local_source_bytes": 2774,
+      "huggingface": {
+        "state": "VERIFIED_MATCHING_DIGEST",
+        "sha256": "29285ea4995edab66f34ab708e9b4752a38cc30d838efda3c7a28cfb1767c709",
+        "bytes": 2774,
+        "url": "https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/interop__footprint-packages.json"
+      },
+      "cloudflare": {
+        "state": "REACHABLE_DIGEST_MISMATCH",
+        "sha256": "fcd129fde86d88751e84a5be5ce2d08e318f6d997acce5e46096e7efe8738f01",
+        "bytes": 209042,
+        "url": "https://councilof.ai/interop/footprint-packages.json"
+      },
+      "proof": {
+        "runpod_master_sha256": "fcd129fde86d88751e84a5be5ce2d08e318f6d997acce5e46096e7efe8738f01"
+      }
+    },
+    {
+      "path": "interop/mill-receipt-readiness.json",
+      "classification": "STALE_HF_MIRROR_LOCAL_SOURCE_BEHIND_CANONICAL",
+      "local_source_sha256": "0a86e7bc261dd18cfb7cf86a506b7f99343bff9df7c3718f0e4d54acd2a0e389",
+      "local_source_bytes": 27260,
+      "huggingface": {
+        "state": "VERIFIED_MATCHING_DIGEST",
+        "sha256": "0a86e7bc261dd18cfb7cf86a506b7f99343bff9df7c3718f0e4d54acd2a0e389",
+        "bytes": 27260,
+        "url": "https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/interop__mill-receipt-readiness.json"
+      },
+      "cloudflare": {
+        "state": "REACHABLE_DIGEST_MISMATCH",
+        "sha256": "63748253bf29cde9e5852816d9637135a756de55126260f5f18b07ad366e60a2",
+        "bytes": 31031,
+        "url": "https://councilof.ai/interop/mill-receipt-readiness.json"
+      },
+      "proof": {
+        "runpod_master_sha256": "63748253bf29cde9e5852816d9637135a756de55126260f5f18b07ad366e60a2"
+      }
+    },
+    {
+      "path": "interop/mirror-manifest.json",
+      "classification": "GENERATED_SELF_REFERENCE",
+      "local_source_sha256": "8e1a83db5bbd8a57ee5ae48f8e186b9a9c97a92d8b083046053ab81c00112b38",
+      "local_source_bytes": 1982628,
+      "huggingface": {
+        "state": "REACHABLE_DIGEST_MISMATCH",
+        "sha256": "8a3e791b5d3adfbbbf0f17223acd57f124925b49143a78211ce393c4f67032db",
+        "bytes": 1932560,
+        "url": "https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/interop__mirror-manifest.json"
+      },
+      "cloudflare": {
+        "state": "REACHABLE_DIGEST_MISMATCH",
+        "sha256": "8a3e791b5d3adfbbbf0f17223acd57f124925b49143a78211ce393c4f67032db",
+        "bytes": 1932560,
+        "url": "https://councilof.ai/interop/mirror-manifest.json"
+      },
+      "proof": {
+        "current_local_sha256": "6f66f38ef3b166245812303fa21857bcddfefc0c46d981c1e002fd5aa4847427",
+        "current_local_bytes": 1982531,
+        "self_entry_sha256": "8e1a83db5bbd8a57ee5ae48f8e186b9a9c97a92d8b083046053ab81c00112b38",
+        "self_entry_bytes": 1982628
+      }
+    },
+    {
+      "path": "interop/root-witness-latest.json",
+      "classification": "STALE_HF_MIRROR_LOCAL_SOURCE_BEHIND_CANONICAL",
+      "local_source_sha256": "b33ece29a5c8804a55587926177eeb0c96634db36e93ca02a82e9581225d454c",
+      "local_source_bytes": 3521,
+      "huggingface": {
+        "state": "VERIFIED_MATCHING_DIGEST",
+        "sha256": "b33ece29a5c8804a55587926177eeb0c96634db36e93ca02a82e9581225d454c",
+        "bytes": 3521,
+        "url": "https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/interop__root-witness-latest.json"
+      },
+      "cloudflare": {
+        "state": "REACHABLE_DIGEST_MISMATCH",
+        "sha256": "50b5ec23872b3494fb49514e4018dba20b90765e28014b2e607f5e77210d8729",
+        "bytes": 4825,
+        "url": "https://councilof.ai/interop/root-witness-latest.json"
+      },
+      "proof": {
+        "runpod_master_sha256": "50b5ec23872b3494fb49514e4018dba20b90765e28014b2e607f5e77210d8729"
+      }
+    },
+    {
+      "path": "interop/root-witness-pointer.json",
+      "classification": "STALE_HF_MIRROR_LOCAL_SOURCE_BEHIND_CANONICAL",
+      "local_source_sha256": "c53c6a7159e13f292029fa25d7c1ca72d97a692730176639ef30b0e356d8552a",
+      "local_source_bytes": 3158,
+      "huggingface": {
+        "state": "VERIFIED_MATCHING_DIGEST",
+        "sha256": "c53c6a7159e13f292029fa25d7c1ca72d97a692730176639ef30b0e356d8552a",
+        "bytes": 3158,
+        "url": "https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/interop__root-witness-pointer.json"
+      },
+      "cloudflare": {
+        "state": "REACHABLE_DIGEST_MISMATCH",
+        "sha256": "d2b90a50bcc1b7db7cbcf0b8447f7de2bed58f2df1c39ac71cfa568a3c15daf5",
+        "bytes": 3063,
+        "url": "https://councilof.ai/interop/root-witness-pointer.json"
+      },
+      "proof": {
+        "runpod_master_sha256": "d2b90a50bcc1b7db7cbcf0b8447f7de2bed58f2df1c39ac71cfa568a3c15daf5"
+      }
+    }
+  ]
+}

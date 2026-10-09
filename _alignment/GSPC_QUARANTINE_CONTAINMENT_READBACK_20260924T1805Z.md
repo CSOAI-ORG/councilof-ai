@@ -1,0 +1,18 @@
+# GSPC mill-card quarantine containment — 24 September 2026
+
+This receipt distinguishes cryptographic validity, public serving, admission and quotability. It records observed state, not a claim that the static GSPC board has been refreshed.
+
+| Check | Observed result |
+|---|---|
+| 16:23 mill cohort | 14 signed cards from natural RunPod batch `mill/auto-20260924T16`, source commit `095a465fbe2b52d517538eec4d28000d675504f6`; all 14 were anonymously served before admission. Intake receipts still say `VERIFIED_QUARANTINE` and `authority.admitted=false`. |
+| Correction release | Source commit `17da2f12187f47f9654001e77fe5e81cc214d1b3`, Cloudflare alias `https://11bdad74.councilof-ai.pages.dev`, deploy completed 17:50:35Z. Historical signed bytes remain available. |
+| Withdrawal notice | [`/corrections/mill16-unadmitted-2026-09-24.json`](https://councilof.ai/corrections/mill16-unadmitted-2026-09-24.json) HTTP 200, 14 IDs, `board_admission=false`; 8,484 bytes, SHA-256 `b4d0031cadccafab32e32e71756eb81934cfe7f800cd4d4aafb0b0f0aa9ac6be`. Exact bytes matched the release alias at ~18:05Z. |
+| Withdrawal ledger | [`/interop/mill-cards-signed/WITHDRAWN.jsonl`](https://councilof.ai/interop/mill-cards-signed/WITHDRAWN.jsonl) HTTP 200, 58 rows total including 14 new C-2026-0924-03 entries; 51,602 bytes, SHA-256 `6abd1c3e625a58bc6333d69750df9b7ea5234ec0984e926fb30909a1fb82322e`. Exact bytes matched alias. |
+| Corrections API | [`/api/corrections`](https://councilof.ai/api/corrections) HTTP 200 on apex and alias, 66 corrections, exactly one `C-2026-0924-03` whose status says withdrawn from quotable use, signed bytes preserved, GSPC board unchanged. Raw bytes differ only in dynamic `signature_check.checked_at`; content-equivalent, not exact-byte identical. |
+| Signals | [`/signals/`](https://councilof.ai/signals/) rendered in Chrome with the visible 24 September correction banner and link to exact-ID notice. Apex and alias HTML both contain correction text and use the same main JS asset; host-specific Cloudflare HTML injection changes raw bytes. Chrome alias rendering was blocked by client; only apex rendered UI is independently confirmed. |
+| Root/OTS | [`/interop/ots/manifest.json`](https://councilof.ai/interop/ots/manifest.json) HTTP 200, 631 proofs and latest 16:23 root entry `PENDING`. It does not claim Bitcoin anchoring. Manifest SHA-256 `4ed9d7ab2bf697c5d85b58e1da055564f952183a1f6fc104caa2d486067a8719`; exact root JSON SHA-256 `0d3be673ff22448fccaf6ada6454fab9bf54f0acdd26115ce3170a5c9f3ac29e`. Both matched release alias. |
+| 17:10 next cohort | All 14 signed-card paths from RunPod commit `e666b7d0b` returned anonymous HTTP 404 after the 17:50 tick. Installed lander admission gate rejected that branch: 14 HOLD, exit 1; bare master stayed at `17da2f121`. Root signature operator receipt: `/workspace/lanes/out/codex-quarantine-hold-20260924/containment-release-readback.json` (SHA-256 prefix `c1a0463ae5a4`). |
+
+The future-publication gate is in the released lander and rejects new or changed signed cards without an `ADMITTED` intake receipt and `authority.admitted=true`. It does not grant admission. The static public `/api/gspc` board was not rewritten by this correction.
+
+Follow-up verifier review only: RunPod bare branch `codex/verifier-use-state-20260924`, commit `663f790ed02e43713142d67573965f68372cb511`, based on `17da2f12187f47f9654001e77fe5e81cc214d1b3`. It displays signature validity separately from public withdrawal/use status, links C-2026-0924-03 for withdrawn cards, and fails closed when the ledger is unavailable. `recordVerify.test.ts`: 9/9 passed; component esbuild syntax and `git diff --check` passed. The branch is clean. This review ref was not merged or deployed as of this receipt.

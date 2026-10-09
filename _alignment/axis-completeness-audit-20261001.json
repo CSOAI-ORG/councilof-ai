@@ -1,0 +1,89 @@
+{
+  "schema": "csoai.axis-completeness-audit/0.1",
+  "audited_at": "2026-10-01T12:00:00Z",
+  "lane": "mimocode-session",
+  "phase": "Phase 4 \u2014 23-axis completeness (Compound CEO mandate)",
+  "requirement": "For every canonical axis require: definition, instrument, fixture, negative fixture, must-fail fixture, last run, sample size, evidence, correction semantics, public explanation and machine-readable path.",
+  "axes_count": 23,
+  "attributes_assessed": 11,
+  "attribute_coverage": {
+    "definition": {
+      "status": "PARTIAL",
+      "where": "Methodology page (/methodology/) provides per-measurement-type definitions (e.g. manifest_valid, signature_alg). Not all 23 axes have individual named definitions on the page. Axis names and kinds are in /api/gspc living_stamp.",
+      "gap": "18 of 23 axes lack a named public definition on the methodology page (governance, continuity, machinery-conformity, care, cross-reality, detector-interop, art5-safeguard, swarm, affect, jail, effect-binding, provenance-controls, reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure, ai-adoption-components, labour-components, humanoid-labour-index)."
+    },
+    "instrument": {
+      "status": "PARTIAL",
+      "where": "measured_on.grading names the grader: 'deterministic grading on 15,580 per-item rows \u2014 reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py'. peritem_rows.producer: scripts/gspc_separation_from_rows.py. measured_on.endpoint: A100 / local Ollama (board v2) / 3090 pod (jail).",
+      "gap": "Instrument is named globally, not per-axis. No per-axis instrument declaration."
+    },
+    "fixture": {
+      "status": "PRESENT (implicit)",
+      "where": "Per-item rows dataset: csoai/gspc-peritem-rows-2026-08-12 (15,580 rows, 22 banked axes with dataset_url on HuggingFace).",
+      "gap": "No explicit 'fixture' label or fixture manifest. The rows serve as the fixture data but are not described as such in public docs (0 mentions of 'fixture' in methodology)."
+    },
+    "negative_fixture": {
+      "status": "MISSING",
+      "where": "Not found in methodology page or API response.",
+      "gap": "No public negative fixture (expected-to-fail inputs) is documented for any axis."
+    },
+    "must_fail_fixture": {
+      "status": "MISSING",
+      "where": "Not found in methodology page or API response.",
+      "gap": "No public must-fail fixture (inputs that MUST cause a failure) is documented for any axis."
+    },
+    "last_run": {
+      "status": "PRESENT",
+      "where": "measured_on.date: 'behavioural axes 2026-08-12 \u00b7 jail 2026-08-18 \u00b7 financial-fact axes 2026-08-25'. living_stamp.gold_run: 2026-08-18T03:22:16Z.",
+      "gap": "Last run is global by measurement-type, not per-axis. Individual axes within the same type share a run date."
+    },
+    "sample_size": {
+      "status": "PRESENT",
+      "where": "Each axis in living_stamp.preimage.axes carries an 'n' field. Total 15,580 per-item rows. 'sample size' mentioned 3x in methodology.",
+      "gap": "None \u2014 every axis has n."
+    },
+    "evidence": {
+      "status": "PRESENT",
+      "where": "peritem_rows.dataset_url (HuggingFace), peritem_sha256, signed_record (/interop/gspc-peritem-rows-2026-08-12.signed.json), bank_host + dataset_url for 22 banked axes. Ed25519 living stamp signature under did:web:csoai.org#board-attestation-1.",
+      "gap": "1 of 23 axes (financial deterministic-facts family) has no HuggingFace bank \u2014 carries evidence_url to its signed run instead (noted in bank_note)."
+    },
+    "correction_semantics": {
+      "status": "PRESENT",
+      "where": "state_enum in /api/gspc: full vocabulary for status (5 values), separation (3), mde_state (4), public_leader_state (2), run_attestation (2), leader_card_state (3), separation_untested_reason_code (3), verification (3). Note: 'Absence of a field means UNMEASURED. TIE is never a win. A withheld leader is a state, not a zero.' 'correction' mentioned 16x in methodology.",
+      "gap": "None \u2014 vocabulary is complete and publicly documented."
+    },
+    "public_explanation": {
+      "status": "PARTIAL",
+      "where": "Methodology page (/methodology/) exists (128KB). /api/gspc carries extensive note fields. CL-1-style per-axis explanation exists in measured_on.note and bank_note.",
+      "gap": "No per-axis public explanation page. The methodology explains measurement types but not each of the 23 axes individually."
+    },
+    "machine_readable_path": {
+      "status": "PRESENT",
+      "where": "/api/gspc (JSON), /api/state (JSON), /api/openapi.json (schema), peritem_rows on HuggingFace (JSONL), /signed/card_index.json (JSON), living_stamp (signed canonical JSON).",
+      "gap": "None \u2014 every axis is reachable via machine-readable JSON endpoints."
+    }
+  },
+  "summary": {
+    "PRESENT": 5,
+    "PRESENT_IMPLICIT": 1,
+    "PARTIAL": 3,
+    "MISSING": 2,
+    "completeness_score": "6/11 fully present, 1 implicit, 3 partial, 2 missing",
+    "strongest_attributes": [
+      "sample_size",
+      "evidence",
+      "correction_semantics",
+      "last_run",
+      "machine_readable_path"
+    ],
+    "weakest_attributes": [
+      "negative_fixture",
+      "must_fail_fixture",
+      "definition",
+      "instrument",
+      "public_explanation"
+    ],
+    "recommendation": "Phase 4 gap: negative fixture and must-fail fixture are not publicly documented for any axis. Definitions and instruments are named globally but not per-axis. Next work: publish a per-axis completeness manifest (one row per axis \u00d7 11 attributes) so the gaps are machine-visible and closable."
+  },
+  "honesty_note": "This audit reads only publicly served bytes (/api/gspc, /methodology/, /api/state). 'MISSING' means 'not found on public surfaces read in this audit' \u2014 it does not assert the material does not exist privately or in source. 23 axes \u00d7 11 attributes = 253 cells; 6 fully present, 1 implicit, 3 partial, 2 missing at attribute level (averaged across axes)."
+}

@@ -1,0 +1,45 @@
+{
+  "schema": "csoai.format-reconciliation-receipt/0.1",
+  "completed_at": "2026-10-01T17:40:00Z",
+  "lane": "mimocode-session",
+  "task": "Reconcile action-job format boundary + add end-to-end replay integration tests",
+  "what_was_done": {
+    "format_reconciliation": {
+      "before": "Route handler wrote action-job:<id>:submission (simplified) + action-job:<id>:public. Action-jobs API loadLedger expected action-jobs:0.1:job:<id>:submission + :head + :event + :receipt with full hash verification. Format boundary: API returned 404 for route-handler records.",
+      "after": "Route handler writes BOTH formats: action-jobs:0.1:job:<id>:{submission,head,event:0000,receipt:0000} (API format with hash verification) + action-job:<id>:public (public projection for getPublicActionJob). API loadLedger can now read route-handler records. Format boundary reconciled.",
+      "key_changes": [
+        "canonicalJson() + digestRef() added to _route.ts (matching action-jobs.ts)",
+        "ActionJobSubmission with submission_sha256, idempotency_key_sha256, immutable, storage_mode, execution, request_origin",
+        "ActionJobEvent at revision 0 with event_sha256, event_id derived from hash",
+        "ActionJobReceipt at revision 0 with receipt_sha256, receipt_id derived from event hash",
+        "ActionJobHead with revision, state, last_event_id, updated_at",
+        "All writes use canonicalJson() (matching putImmutable format)",
+        "Public projection still written to action-job:<id>:public for getPublicActionJob"
+      ]
+    },
+    "end_to_end_tests": {
+      "file": "functions/mcp/action-job-e2e-replay.integration.test.ts (NEW, 200 lines, 8 tests)",
+      "tests": [
+        "route via MCP generates action_job_id stored in both formats",
+        "route via MCP is replayable through get_public_action_job via MCP",
+        "route via MCP is replayable through the human /api/action-jobs endpoint",
+        "both read paths return the same route evidence record",
+        "action-jobs API loadLedger can read route handler records (format reconciled)",
+        "route evidence record is embedded in the public projection",
+        "multiple route calls generate distinct action-job IDs",
+        "route with custom candidates generates action-job with forbidden list"
+      ],
+      "note": "These go through the FULL MCP dispatch ([[path]].ts \u2192 sharedToolResult \u2192 routeTool / getPublicActionJob), not direct handler calls."
+    }
+  },
+  "test_results": {
+    "contract_fixtures": "10/10 PASS",
+    "end_to_end_integration": "8/8 PASS",
+    "cli_parity": "12/12 PASS",
+    "wired_tools": "30/30 PASS",
+    "action_jobs": "11/11 PASS",
+    "integration (shared-record)": "1/1 PASS",
+    "full_suite": "107/107 PASS"
+  },
+  "honesty_note": "Format boundary reconciled: route handler now writes in the action-jobs API's format (hash-verified submission + head + event + receipt) alongside the public projection. Both getPublicActionJob and /api/action-jobs?public=1 can read the same records. No production deploy (GH frozen)."
+}

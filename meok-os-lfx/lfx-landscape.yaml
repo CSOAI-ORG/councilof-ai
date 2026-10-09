@@ -1,0 +1,98 @@
+apiVersion: meok.io/v1
+kind: LFXLandscapePlacement
+metadata:
+  name: meok-lfx-landscape
+  labels:
+    meok.io/care-class: carer
+spec:
+  landscape_url: https://landscape.lfai.foundation
+  project: meok-ai-os
+  slug: meok-ai-os
+  categories:
+    - landscape: CNCF
+      path: App Definition and Development
+      sub: Application Definition & Image Build
+      x: 540
+      y: 320
+      logo: https://meok.ai/assets/landscape/cncf.svg
+    - landscape: CNCF
+      path: Orchestration & Management
+      sub: Scheduling & Orchestration
+      x: 760
+      y: 420
+      logo: https://meok.ai/assets/landscape/orchestration.svg
+    - landscape: CNCF
+      path: Runtime
+      sub: Cloud Native Storage
+      x: 800
+      y: 360
+      logo: https://meok.ai/assets/landscape/storage.svg
+    - landscape: LF AI
+      path: Applications
+      sub: AI/ML Operations
+      x: 300
+      y: 600
+      logo: https://meok.ai/assets/landscape/lfai-mlops.svg
+    - landscape: LF AI
+      path: Foundations
+      sub: Model Serving & Inference
+      x: 280
+      y: 700
+      logo: https://meok.ai/assets/landscape/lfai-serving.svg
+    - landscape: LF AI
+      path: Governance
+      sub: AI Safety & Alignment
+      x: 360
+      y: 880
+      logo: https://meok.ai/assets/landscape/lfai-safety.svg
+    - landscape: LF Edge
+      path: Edge Orchestration
+      sub: StarlingX-Compatible
+      x: 1200
+      y: 460
+      logo: https://meok.ai/assets/landscape/edge-orch.svg
+    - landscape: LF Edge
+      path: Device Edge
+      sub: Edge AI Gateways
+      x: 1240
+      y: 540
+      logo: https://meok.ai/assets/landscape/edge-gw.svg
+    - landscape: LF Security
+      path: Supply Chain Security
+      sub: Attestation
+      x: 940
+      y: 800
+      logo: https://meok.ai/assets/landscape/lfsec-attest.svg
+    - landscape: LF Security
+      path: Compliance
+      sub: Compliance-as-Code
+      x: 980
+      y: 870
+      logo: https://meok.ai/assets/landscape/lfsec-cac.svg
+  colors:
+    primary: "#0B1F3A"
+    accent: "#2EC4B6"
+    ink: "#0E0E0E"
+  motto: "Sovereign AI that refuses to be a black box."
+  short_description: >
+    MEOK AI OS is a sovereign, attested, Care-First operating system for
+    human-first AI. It unifies a hardware-rooted trust plane, a 33-hive
+    compliance substrate, and a Care-First enforcement kernel, and lands
+    across cloud-native, edge, AI/ML, and security quadrants of the
+    Linux Foundation landscape.
+  cross_quadrant_memberships:
+    - CNCF
+    - LF AI
+    - LF Edge
+    - LF Security
+  linked_lf_projects:
+    - starlingx
+    - akraino
+    - openbmc
+    - sigstore
+    - kyverno
+  notes: >
+    MEOK's distinctive value is the cross-quadrant spread: a single
+    project that simultaneously qualifies as Cloud-Native (operators,
+    storage, CNI), Edge (StarlingX, OpenBMC), AI/ML (serving, safety,
+    governance), and Security (attestation, compliance-as-code).

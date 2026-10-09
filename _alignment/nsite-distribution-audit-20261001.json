@@ -1,0 +1,132 @@
+{
+  "schema": "csoai.nsite-distribution-audit/0.1",
+  "audited_at": "2026-10-01T11:00:00Z",
+  "lane": "mimocode-session",
+  "method": "Anonymous HTTP readback + public API queries. No writes, no submissions, no payments.",
+  "ladder_states": "DISCOVERED -> PREPARED -> AUTH_BLOCKED -> SUBMITTED -> PUBLISHED -> INDEXED -> INSTALLED/CONNECTED -> CALLED -> REPEATED -> CITED -> PAID -> REPEATED_PAID",
+  "channels": {
+    "canonical_web": {
+      "url": "https://councilof.ai/",
+      "state": "PUBLISHED",
+      "http": 200,
+      "bytes": 125722,
+      "note": "Homepage live. Site serves full GSPC board + estate + doctrine."
+    },
+    "canonical_api_gspc": {
+      "url": "https://councilof.ai/api/gspc",
+      "state": "PUBLISHED",
+      "http": 200,
+      "bytes": 130496,
+      "sha256": "a7782d9a9f3334a9d5ea5952504a0c3d7c8fd6b8850673dbb8064ef1ac05ea24",
+      "note": "23/23 axes measured. Living stamp Ed25519-signed + verifiable. DOI UNAVAILABLE."
+    },
+    "canonical_api_state": {
+      "url": "https://councilof.ai/api/state",
+      "state": "PUBLISHED",
+      "http": 200,
+      "bytes": 71534,
+      "note": "Card chain 335 bodies. Estate index 7,973 entries. Doctrine: quote by field name."
+    },
+    "mcp_council_free": {
+      "url": "https://councilof.ai/mcp/free",
+      "state": "RUNNING",
+      "http": 200,
+      "note": "csoai-gspc-mcp v1.4.4, streamable-http, free door. Tools: board_totals, get_axis, verify_card, list_cards, get_root, get_card, verify_inclusion, x402_trust, mcp_trust, measurement_index + more."
+    },
+    "mcp_census": {
+      "url": "https://councilof.ai/api/mcp",
+      "state": "RUNNING",
+      "http": 200,
+      "note": "10 servers catalogued, 2 reachable, 0 unreachable. Probe host: pod."
+    },
+    "x402_marketplace": {
+      "url": "https://councilof.ai/api/x402",
+      "state": "RUNNING",
+      "http": 200,
+      "resources": 28,
+      "free_surfaces": 12,
+      "rail_mode": "live",
+      "pay_to_configured": true,
+      "facilitator_configured": true,
+      "note": "Verification free forever. Agents pay per artefact: issuance, assembly, cadence. 28 paid resources listed. Revenue at /api/revenue."
+    },
+    "signed_surfaces": {
+      "root_json": {
+        "url": "/root.json",
+        "http": 200,
+        "bytes": 25513,
+        "state": "PUBLISHED"
+      },
+      "card_index": {
+        "url": "/signed/card_index.json",
+        "http": 200,
+        "bytes": 197471,
+        "state": "PUBLISHED"
+      },
+      "note": "Merkle root + signed card index live. Ed25519 attestation under did:web:csoai.org#board-attestation-1."
+    },
+    "huggingface": {
+      "url": "https://huggingface.co/csoai",
+      "state": "PUBLISHED",
+      "http": 200,
+      "note": "csoai org + gspc-board dataset live. Claim-maintenance bundle at /public/interop/claim-maintenance/ (requires auth for raw)."
+    },
+    "github": {
+      "url": "https://github.com/CSOAI-ORG",
+      "state": "PUBLISHED",
+      "http": 200,
+      "repo_count": 751,
+      "note": "751 public repos. User account (not org). Topic+description metadata on flagship repos."
+    },
+    "pypi": {
+      "url": "https://pypi.org/project/csoai-gspc/",
+      "state": "PUBLISHED",
+      "http": 200,
+      "version": "0.2.20260930.1",
+      "note": "Live. Summary: Read the live GSPC AI-governance board and verify its Ed25519-signed measurement."
+    },
+    "npm": {
+      "url": "https://www.npmjs.com/package/csoai-gspc-mcp",
+      "state": "PUBLISHED",
+      "registry_api": 200,
+      "version": "0.2.2",
+      "versions_count": 6,
+      "note": "Live via registry API. Website returns 403 (Cloudflare)."
+    },
+    "a2a": {
+      "url": "https://councilof.ai/api/a2a",
+      "state": "PARTIAL",
+      "http_api": 200,
+      "http_directory": 404,
+      "note": "/api/a2a live. /a2a directory page 404."
+    },
+    "kaggle": {
+      "url": "https://www.kaggle.com/csoai",
+      "state": "NOT_FOUND",
+      "http": 404,
+      "note": "No csoai profile found at this URL. May need different handle or not yet created."
+    },
+    "external_registries": {
+      "glama_ai": {
+        "state": "REACHABLE",
+        "http": 200
+      },
+      "mcp_so": {
+        "state": "REACHABLE",
+        "http": 200
+      },
+      "note": "Reachable but listing state not verified in this readback."
+    }
+  },
+  "summary": {
+    "channels_checked": 13,
+    "published_running": 10,
+    "partial": 1,
+    "not_found": 1,
+    "reachable_unverified": 1,
+    "highest_state_achieved": "PUBLISHED (canonical web/API, signed surfaces, HF, GitHub, PyPI, npm)",
+    "not_yet_indexed_called_paid": "No channel independently verified as INDEXED, CALLED, REPEATED, or PAID in this readback. Revenue API reports historical 1 non-self settlement (0.02 USDC) \u2014 not attributed to this audit.",
+    "distribution_lever": "Per estate scan + Compound CEO mandate: the lever is distribution (push to more channels) + deploy, not engineering. Publish, don't build."
+  },
+  "honesty_note": "Anonymous readback only. HTTP 200 = surface reachable, not user traction. No submissions, writes, payments, or indexing claims made."
+}

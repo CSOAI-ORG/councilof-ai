@@ -1,0 +1,300 @@
+diff -ruN '--exclude=__pycache__' '--exclude=.pytest_cache' /workspace/SOVOS/packages/sovos-layer0-harness-kernel/README.md /workspace/lanes/out/codex-layer0-public-root-review-20260925/README.md
+--- /workspace/SOVOS/packages/sovos-layer0-harness-kernel/README.md	2026-09-23 05:56:35.090168581 +0000
++++ /workspace/lanes/out/codex-layer0-public-root-review-20260925/README.md	2026-09-25 06:17:07.480607648 +0000
+@@ -69,3 +69,21 @@
+ layer should remain common. This avoids hundreds of duplicated MCP servers and
+ lets one improvement to authentication, receipts, SDKs or A2A benefit every
+ pack at once.
++
++## Explicit public-root verifier candidate
++
++This isolated copy adds one real read-only command: `sovos-l0 verify-public-root`.
++It fetches the public apex root, Hugging Face mirror and board DID; then checks
++exact bytes, the ordered listed-leaf Merkle commitment and Ed25519 signature.
++The three public sources are fixed by the command, so a caller cannot redirect
++the DID lookup to an arbitrary signing key. The output reports each check
++separately and includes the source-fetch errors when a source is unavailable.
++`sovos-l0 verify-public-root --selftest` exercises valid and tampered fixtures
++without network access. Its exit code is 0 only for three VALID checks; code 2
++means INVALID or UNCHECKABLE. No private key, stamp, transaction or write is
++used. OTS/Rekor, leaf truth and estate coverage remain explicitly unassessed.
++
++This is an isolated review copy, not installed in the shared SOVOS package,
++not wired to MCP/A2A/HTTP and not deployed to Council OS. The inherited
++protocol names in `packs.v1.json` still describe a planning surface, not
++working network services.
+diff -ruN '--exclude=__pycache__' '--exclude=.pytest_cache' /workspace/SOVOS/packages/sovos-layer0-harness-kernel/pyproject.toml /workspace/lanes/out/codex-layer0-public-root-review-20260925/pyproject.toml
+--- /workspace/SOVOS/packages/sovos-layer0-harness-kernel/pyproject.toml	2026-09-23 05:55:21.270802272 +0000
++++ /workspace/lanes/out/codex-layer0-public-root-review-20260925/pyproject.toml	2026-09-25 06:14:14.362050045 +0000
+@@ -7,6 +7,7 @@
+ version = "0.1.0"
+ description = "Shared Layer-0 harness fabric for frameworks, charters, regulations and evidence systems"
+ requires-python = ">=3.10"
++dependencies = ["cryptography>=3.4"]
+ authors = [{name = "Nicholas Templeman"}]
+ 
+ [project.scripts]
+diff -ruN '--exclude=__pycache__' '--exclude=.pytest_cache' /workspace/SOVOS/packages/sovos-layer0-harness-kernel/src/sovos_layer0_harness/cli.py /workspace/lanes/out/codex-layer0-public-root-review-20260925/src/sovos_layer0_harness/cli.py
+--- /workspace/SOVOS/packages/sovos-layer0-harness-kernel/src/sovos_layer0_harness/cli.py	2026-09-23 05:56:15.586336008 +0000
++++ /workspace/lanes/out/codex-layer0-public-root-review-20260925/src/sovos_layer0_harness/cli.py	2026-09-25 06:17:07.520607314 +0000
+@@ -25,7 +25,25 @@
+     sp = sub.add_parser("surface")
+     sp.add_argument("pack_id")
+ 
++    rv = sub.add_parser("verify-public-root", help="read-only served-byte, Merkle and board-signature check")
++    rv.add_argument("--selftest", action="store_true", help="run local positive and negative controls")
++
+     args = p.parse_args()
++
++    if args.command == "verify-public-root":
++        from . import root_verify
++        if args.selftest:
++            root_verify.selftest()
++            return 0
++        root, root_error = root_verify.fetch(root_verify.ROOT_URL)
++        mirror, mirror_error = root_verify.fetch(root_verify.MIRROR_URL)
++        did, did_error = root_verify.fetch(root_verify.DID_URL)
++        result = root_verify.verify_bytes(root, mirror, did)
++        result["sources"] = {"root": root_verify.ROOT_URL, "mirror": root_verify.MIRROR_URL, "did": root_verify.DID_URL}
++        result["fetch_errors"] = {"root": root_error, "mirror": mirror_error, "did": did_error}
++        print(json.dumps(result, indent=2))
++        return 0 if result["overall"] == "VALID" else 2
++
+     k = Layer0HarnessKernel.load()
+ 
+     if args.command == "validate":
+diff -ruN '--exclude=__pycache__' '--exclude=.pytest_cache' /workspace/SOVOS/packages/sovos-layer0-harness-kernel/src/sovos_layer0_harness/root_verify.py /workspace/lanes/out/codex-layer0-public-root-review-20260925/src/sovos_layer0_harness/root_verify.py
+--- /workspace/SOVOS/packages/sovos-layer0-harness-kernel/src/sovos_layer0_harness/root_verify.py	1970-01-01 00:00:00.000000000 +0000
++++ /workspace/lanes/out/codex-layer0-public-root-review-20260925/src/sovos_layer0_harness/root_verify.py	2026-09-25 06:13:39.906337075 +0000
+@@ -0,0 +1,186 @@
++#!/usr/bin/env python3
++"""Read-only Council public-root check. No key access, writes, or publication.
++
++This is an isolated candidate for a Layer-0 measurement pack. The existing
++SOVOS kernel only plans packs; it does not execute them. Do not claim this
++script is installed behind MCP, A2A, HTTP, or Council OS.
++"""
++from __future__ import annotations
++
++import argparse
++import base64
++import hashlib
++import json
++import re
++import sys
++import urllib.request
++from datetime import datetime, timezone
++
++from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
++
++
++ROOT_URL = "https://councilof.ai/root.json"
++MIRROR_URL = "https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/root.json"
++DID_URL = "https://csoai.org/.well-known/did.json"
++KEY_ID = "did:web:csoai.org#board-attestation-1"
++PREIMAGE_KEYS = ("kind", "schema", "as_of", "merkle_root", "card_count", "did_intended")
++HEX64 = re.compile(r"^[0-9a-f]{64}$")
++UA = "csoai-layer0-root-readonly/0.1 (+https://councilof.ai/root.json)"
++
++
++def canonical(obj: dict) -> bytes:
++    return json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
++
++
++def state(name: str, status: str, reason: str) -> dict:
++    return {"check": name, "status": status, "reason": reason}
++
++
++def merkle_root(leaves: list[str]) -> str:
++    level = [bytes.fromhex(x) for x in leaves]
++    if not level:
++        return hashlib.sha256(b"").hexdigest()
++    while len(level) > 1:
++        level = [
++            hashlib.sha256(level[i] + (level[i + 1] if i + 1 < len(level) else level[i])).digest()
++            for i in range(0, len(level), 2)
++        ]
++    return level[0].hex()
++
++
++def verify_bytes(root_bytes: bytes | None, mirror_bytes: bytes | None, did_bytes: bytes | None) -> dict:
++    """Classify exact served bytes, leaf commitment, and board signature separately."""
++    observed = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
++    out = {
++        "schema": "csoai.layer0.public-root-readonly/0.1",
++        "observed_at": observed,
++        "scope": "PUBLIC_ROOT_BYTES_ONLY",
++        "sources": {"root": ROOT_URL, "mirror": MIRROR_URL, "did": DID_URL},
++        "root_sha256": hashlib.sha256(root_bytes).hexdigest() if root_bytes is not None else None,
++        "mirror_sha256": hashlib.sha256(mirror_bytes).hexdigest() if mirror_bytes is not None else None,
++        "checks": [],
++        "not_assessed": ["Bitcoin OTS proof", "Rekor inclusion", "leaf/card correctness",
++                         "all-estate coverage", "GSPC admission", "regulatory compliance"],
++    }
++    checks = out["checks"]
++    if root_bytes is None:
++        checks += [state(x, "UNCHECKABLE", "public root could not be fetched") for x in
++                   ("served_bytes", "merkle_commitment", "board_signature")]
++        out["overall"] = "UNCHECKABLE"
++        return out
++    if mirror_bytes is None:
++        checks.append(state("served_bytes", "UNCHECKABLE", "independent mirror could not be fetched"))
++    elif root_bytes == mirror_bytes:
++        checks.append(state("served_bytes", "VALID", "apex and Hugging Face returned identical bytes"))
++    else:
++        checks.append(state("served_bytes", "INVALID", "apex and Hugging Face returned different bytes"))
++
++    try:
++        root = json.loads(root_bytes)
++        if not isinstance(root, dict):
++            raise ValueError("root is not a JSON object")
++        leaves = root["card_sha256"]
++        if not isinstance(leaves, list) or not all(isinstance(x, str) and HEX64.fullmatch(x) for x in leaves):
++            raise ValueError("card_sha256 is not a list of SHA-256 hex digests")
++        count = root["card_count"]
++        if not isinstance(count, int) or isinstance(count, bool) or count != len(leaves):
++            raise ValueError("signed card_count does not equal the number of listed leaves")
++        computed = merkle_root(leaves)
++        if computed != root["merkle_root"]:
++            raise ValueError("Merkle root does not match ordered listed leaves")
++        checks.append(state("merkle_commitment", "VALID", f"{count} leaves match the declared Merkle root"))
++        out["card_count"] = count
++        out["merkle_root"] = computed
++        out["as_of"] = root.get("as_of")
++    except (KeyError, ValueError, TypeError) as exc:
++        checks.append(state("merkle_commitment", "INVALID", str(exc)))
++
++    if did_bytes is None:
++        checks.append(state("board_signature", "UNCHECKABLE", "DID document could not be fetched"))
++    else:
++        try:
++            did = json.loads(did_bytes)
++            if root["did_intended"] != KEY_ID:
++                raise ValueError("root names a different intended board key")
++            method = next((m for m in did.get("verificationMethod", []) if m.get("id") == KEY_ID), None)
++            if not method:
++                raise ValueError("board key absent from DID document")
++            jwk = method["publicKeyJwk"]
++            if jwk.get("kty") != "OKP" or jwk.get("crv") != "Ed25519":
++                raise ValueError("board key is not an Ed25519 JWK")
++            x = jwk["x"]
++            public = base64.urlsafe_b64decode(x + "=" * (-len(x) % 4))
++            signature = bytes.fromhex(root["sig_ed25519"])
++            if len(public) != 32 or len(signature) != 64:
++                raise ValueError("board key or signature has the wrong length")
++            preimage = {k: root[k] for k in PREIMAGE_KEYS}
++            Ed25519PublicKey.from_public_bytes(public).verify(signature, canonical(preimage))
++            checks.append(state("board_signature", "VALID", "Ed25519 verifies over the declared six-field preimage"))
++        except Exception as exc:
++            checks.append(state("board_signature", "INVALID", type(exc).__name__ + ": " + str(exc)[:160]))
++
++    outcomes = {c["status"] for c in checks}
++    out["overall"] = "INVALID" if "INVALID" in outcomes else ("VALID" if outcomes == {"VALID"} else "UNCHECKABLE")
++    return out
++
++
++def fetch(url: str, timeout: int = 20) -> tuple[bytes | None, str | None]:
++    req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "application/json"})
++    try:
++        with urllib.request.urlopen(req, timeout=timeout) as response:
++            body = response.read(2_000_001)
++        if len(body) > 2_000_000:
++            raise ValueError("response exceeds 2 MB cap")
++        return body, None
++    except Exception as exc:
++        return None, type(exc).__name__ + ": " + str(exc)[:160]
++
++
++def selftest() -> None:
++    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
++    from cryptography.hazmat.primitives import serialization
++    key = Ed25519PrivateKey.generate()  # test key in memory only
++    public = key.public_key().public_bytes(serialization.Encoding.Raw, serialization.PublicFormat.Raw)
++    did = {"verificationMethod": [{"id": KEY_ID, "publicKeyJwk": {
++        "kty": "OKP", "crv": "Ed25519", "x": base64.urlsafe_b64encode(public).rstrip(b"=").decode()}}]}
++    root = {"kind": "test", "schema": "test", "as_of": "2000-01-01T00:00:00Z",
++            "merkle_root": "11" * 32, "card_count": 1,
++            "card_sha256": ["11" * 32], "did_intended": KEY_ID}
++    root["sig_ed25519"] = key.sign(canonical({k: root[k] for k in PREIMAGE_KEYS})).hex()
++    encoded = json.dumps(root).encode()
++    did_encoded = json.dumps(did).encode()
++    assert verify_bytes(encoded, encoded, did_encoded)["overall"] == "VALID"
++    assert verify_bytes(encoded, b"other", did_encoded)["overall"] == "INVALID"
++    altered = dict(root, card_count=2)
++    assert verify_bytes(json.dumps(altered).encode(), encoded, did_encoded)["overall"] == "INVALID"
++    altered = dict(root, card_sha256=["22" * 32])
++    checked = verify_bytes(json.dumps(altered).encode(), encoded, did_encoded)
++    assert next(c for c in checked["checks"] if c["check"] == "merkle_commitment")["status"] == "INVALID"
++    altered = dict(root, sig_ed25519="00" * 64)
++    assert verify_bytes(json.dumps(altered).encode(), encoded, did_encoded)["overall"] == "INVALID"
++    assert verify_bytes(encoded, encoded, None)["overall"] == "UNCHECKABLE"
++    print("selftest PASS: valid, mirror mismatch, count tamper, leaf tamper, signature tamper, missing DID")
++
++
++def main() -> int:
++    ap = argparse.ArgumentParser()
++    ap.add_argument("--selftest", action="store_true")
++    ap.add_argument("--root-url", default=ROOT_URL)
++    ap.add_argument("--mirror-url", default=MIRROR_URL)
++    ap.add_argument("--did-url", default=DID_URL)
++    args = ap.parse_args()
++    if args.selftest:
++        selftest()
++        return 0
++    root, root_error = fetch(args.root_url)
++    mirror, mirror_error = fetch(args.mirror_url)
++    did, did_error = fetch(args.did_url)
++    result = verify_bytes(root, mirror, did)
++    result["sources"] = {"root": args.root_url, "mirror": args.mirror_url, "did": args.did_url}
++    result["fetch_errors"] = {"root": root_error, "mirror": mirror_error, "did": did_error}
++    print(json.dumps(result, indent=2))
++    return 0 if result["overall"] == "VALID" else 2
++
++
++if __name__ == "__main__":
++    sys.exit(main())
+diff -ruN '--exclude=__pycache__' '--exclude=.pytest_cache' /workspace/SOVOS/packages/sovos-layer0-harness-kernel/tests/test_root_verify_cli.py /workspace/lanes/out/codex-layer0-public-root-review-20260925/tests/test_root_verify_cli.py
+--- /workspace/SOVOS/packages/sovos-layer0-harness-kernel/tests/test_root_verify_cli.py	1970-01-01 00:00:00.000000000 +0000
++++ /workspace/lanes/out/codex-layer0-public-root-review-20260925/tests/test_root_verify_cli.py	2026-09-25 06:17:07.480607648 +0000
+@@ -0,0 +1,41 @@
++"""Fail-closed controls for the isolated public-root CLI adapter."""
++
++import contextlib
++import io
++import json
++import sys
++import unittest
++from unittest import mock
++
++from sovos_layer0_harness import cli, root_verify
++
++
++class PublicRootCliTests(unittest.TestCase):
++    def test_unavailable_sources_exit_nonzero_and_remain_uncheckable(self):
++        seen = []
++
++        def unavailable(url):
++            seen.append(url)
++            return None, "test: unavailable"
++
++        output = io.StringIO()
++        with mock.patch.object(sys, "argv", ["sovos-l0", "verify-public-root"]), \
++                mock.patch.object(root_verify, "fetch", side_effect=unavailable), \
++                contextlib.redirect_stdout(output):
++            self.assertEqual(cli.main(), 2)
++
++        result = json.loads(output.getvalue())
++        self.assertEqual(result["overall"], "UNCHECKABLE")
++        self.assertEqual(seen, [root_verify.ROOT_URL, root_verify.MIRROR_URL, root_verify.DID_URL])
++        self.assertEqual({c["status"] for c in result["checks"]}, {"UNCHECKABLE"})
++
++    def test_cli_cannot_redirect_trust_sources(self):
++        with mock.patch.object(sys, "argv", ["sovos-l0", "verify-public-root", "--did-url", "https://example.com/did.json"]), \
++                contextlib.redirect_stderr(io.StringIO()):
++            with self.assertRaises(SystemExit) as exit_state:
++                cli.main()
++        self.assertEqual(exit_state.exception.code, 2)
++
++
++if __name__ == "__main__":
++    unittest.main()

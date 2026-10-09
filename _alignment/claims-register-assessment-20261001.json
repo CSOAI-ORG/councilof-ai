@@ -1,0 +1,82 @@
+{
+  "schema": "csoai.claims-register-assessment/0.1",
+  "assessed_at": "2026-10-01T11:15:00Z",
+  "lane": "mimocode-session",
+  "material_capability_claims": {
+    "source": "https://councilof.ai/claims-register.json",
+    "generated_at": "2026-09-23",
+    "total": 20,
+    "by_status": {
+      "live": 5,
+      "planned": 6,
+      "devnet": 1,
+      "retired": 7,
+      "unmeasured": 1
+    },
+    "unmeasured_claim": {
+      "id": "CR-020",
+      "status": "unmeasured",
+      "evidence_path": "/rating-the-raters",
+      "note": "The thing exists but we have not measured it. First-class state per doctrine."
+    }
+  },
+  "claim_maintenance_scheduler": {
+    "source": "https://councilof.ai/api/state -> ledgers.claim_maintenance",
+    "scheduler": "scripts/claims/maintenance_due.py in daily claim-watch job (cron 50 7 * * *)",
+    "last_run": "2026-09-29T16:55:06Z",
+    "staleness": "2 days stale (daily job should have run 2026-09-30 and 2026-10-01)",
+    "stale_reason": "GitHub Actions account-level disabled since 2026-09-15 \u2014 daily claim-watch job cannot fire",
+    "counts": {
+      "CHANGED_CONFIRMED": 1,
+      "FETCH_FAILED": 1,
+      "NOT_YET_DUE": 9
+    },
+    "checks": [
+      {
+        "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
+        "check": "scheduled-read",
+        "due": "2026-09-28",
+        "outcome": "CHANGED_CONFIRMED",
+        "note": "Source claim changed \u2014 feeds reaction loop / claim maintenance"
+      },
+      {
+        "registry_id": "claimreg-ondo-chainlink-2026-09-22-rev2",
+        "check": "day-7",
+        "due": "2026-09-29",
+        "outcome": "FETCH_FAILED",
+        "note": "Read failed \u2014 creates retry work. Investigate source availability."
+      },
+      {
+        "registry_id": "claimreg-hiring-platforms-2026-09-24-rev2",
+        "check": "scheduled-read",
+        "due": "2026-10-01",
+        "outcome": "NOT_YET_DUE",
+        "note": "Due TODAY. Would fire if Actions were enabled."
+      },
+      {
+        "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
+        "check": "day-7",
+        "due": "2026-10-02",
+        "outcome": "NOT_YET_DUE"
+      },
+      {
+        "registry_id": "claimreg-hiring-platforms-2026-09-24-rev2",
+        "check": "day-7",
+        "due": "2026-10-02",
+        "outcome": "NOT_YET_DUE"
+      }
+    ]
+  },
+  "corrections_ledger": {
+    "count": 89,
+    "head_id": "C-2026-0930-12",
+    "signature_state": "VALID"
+  },
+  "actions_identified": [
+    "The daily claim-watch job (cron 50 7 * * *) has not run for 2 days due to Actions being disabled. When Actions resume, it will fire for claimreg-hiring-platforms (due today) and the day-7 checks (due tomorrow).",
+    "FETCH_FAILED on claimreg-ondo-chainlink needs investigation \u2014 source read failed at day-7 check.",
+    "CHANGED_CONFIRMED on claimreg-ai-assurance-and-settlement (due 2026-09-28) feeds the reaction loop \u2014 18 CONTROL jobs already created per 2026-09-30 readback.",
+    "CR-020 (unmeasured) is the only material capability claim without measurement \u2014 candidate for a bounded measurement task."
+  ],
+  "honesty_note": "Read-only assessment. No claims published, measured, or modified. Scheduler state is PROBED from served bytes."
+}

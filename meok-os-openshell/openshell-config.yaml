@@ -1,0 +1,103 @@
+# MEOK × OpenShell — 3-node Sovereign Edge cluster
+# Inspired by StarlingX AIO-SX but minimal: 1 control + 2 workers.
+# All nodes must run the MEOK BMC daemon and pass TPM 2.0 attestation
+# before the kubelet will accept the node certificate.
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: meok-openshell-config
+  namespace: meok-system
+  labels:
+    app.kubernetes.io/name: meok-openshell
+    app.kubernetes.io/part-of: meok-ai-os
+    meok.io/care-class: carer
+data:
+  cluster.yaml: |
+    cluster:
+      name: meok-sovereign-edge-01
+      domain: meok.local
+      ca: meok-sovereign-ca
+      bft:
+        quorum: 2-of-3
+        verifier: meok-bft-verifier.meok-system.svc:8443
+      attestation:
+        required: true
+        provider: tpm2
+        pcr-policy:
+          - pcr: 0
+            expected: "measured-boot"
+          - pcr: 7
+            expected: "secure-boot"
+          - pcr: 11
+            expected: "meok-bmc-daemon"
+      egress:
+        gateway: meok-compliance-gateway.meok-system.svc:9443
+        default-deny: true
+        signed-only: true
+    nodes:
+      - hostname: meok-control-01
+        role: control
+        arch: x86_64
+        tpm: 2.0
+        bmc: openbmc-2.14.0-meok
+        meok-agent: enabled
+      - hostname: meok-edge-01
+        role: worker
+        arch: aarch64
+        tpm: 2.0
+        bmc: openbmc-2.14.0-meok
+        meok-agent: enabled
+        care-class: carer
+        harm-budget-uharm: 50
+      - hostname: meok-edge-02
+        role: worker
+        arch: aarch64
+        tpm: 2.0
+        bmc: openbmc-2.14.0-meok
+        meok-agent: enabled
+        care-class: cared
+        harm-budget-uharm: 100
+    networking:
+      cni: cilium
+      policy: kube-aware
+      mtls: strict
+      sovereign-substrate:
+        url: meok-sovereign-substrate.meok-system.svc:7700
+        protocol: grpc
+    storage:
+      csi: meok-csi
+      encryption: luks2
+      kms: meok-sovereign-kms
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: meok-system
+  labels:
+    name: meok-system
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
+    meok.io/care-class: carer
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: meok-sovereign-bootstrap
+rules:
+  - apiGroups: [""]
+    resources: ["nodes", "namespaces", "configmaps", "secrets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["daemonsets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["meok.io"]
+    resources: ["complianceprofiles", "compliancescans", "sovereignpolicies"]
+    verbs: ["*"]
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: meok-sovereign-bootstrap
+  namespace: meok-system

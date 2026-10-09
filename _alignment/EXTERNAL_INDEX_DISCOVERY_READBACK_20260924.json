@@ -1,0 +1,80 @@
+{
+  "schema": "csoai.external-index-readback/1",
+  "observed_at_utc": "2026-09-24T18:49:22.763493+00:00",
+  "scope": "Public readback only; no registration, settlement, payment, message or publication performed.",
+  "payai": {
+    "search_url": "https://facilitator.payai.network/discovery/search?query=councilof.ai",
+    "search_matching_rows": 1,
+    "resource": "https://councilof.ai/api/free-door",
+    "description": "CSOAI free door: the live GSPC board totals and the public signed root, at a price of zero because it is free forever. That is the real price, not a promotion — a grade is never sold. Paid artefacts are catalogued at https://councilof.ai/api/x402. Measurement, not certification.",
+    "service_name": "CSOAI Free Door",
+    "last_updated": "2026-09-24T13:01:01.339Z",
+    "listing_status_url": "https://facilitator.payai.network/discovery/listing-status?resource=https%3A%2F%2Fcouncilof.ai%2Fapi%2Ffree-door",
+    "listed": true,
+    "hidden": false,
+    "last_probe": {
+      "at": "2026-09-24T18:23:08.486Z",
+      "status": "alive",
+      "httpStatus": 402
+    },
+    "last_write": {
+      "status": "updated",
+      "at": "2026-09-24T13:01:01.384Z",
+      "source": "verify"
+    },
+    "interpretation": "Listing and a 402 reachability probe establish discoverability/availability of the challenge, not buyer use, settlement, or revenue."
+  },
+  "a2a_community": {
+    "url": "https://a2aregistry.org/agents/48e5bba6-8848-4adc-8f92-b5fa2c0744e0/",
+    "name": "Council of AI — Measurement Agent",
+    "status_observed": "Reachable; page showed last sweep about 12 minutes earlier and 100/100 recent checks at observation.",
+    "interpretation": "Reachability checks do not establish independent use."
+  },
+  "a2a_global": {
+    "url": "https://www.a2a-registry.org/agent/ai.councilof.council_of_ai__measurement_agent",
+    "name": "Council of AI — Measurement Agent",
+    "status_observed": "Unclaimed; last checked September 20, 2026; page showed 609 suggestions.",
+    "interpretation": "Suggestions are a directory metric, not verified adoption or buyer activity."
+  },
+  "smithery": {
+    "url": "https://smithery.ai/servers/csoai/gspc",
+    "name": "Council of AI GSPC",
+    "status_observed": "Public listing; 84/100 display score; advertises canonical remote POST https://councilof.ai/mcp.",
+    "interpretation": "Listing score is not a CSOAI measurement score or proof of usage."
+  },
+  "x402scan": {
+    "registration_url": "https://www.x402scan.com/resources/register",
+    "status": "UNCHECKABLE in this readback: x402scan origin and search read APIs returned HTTP 402; no public CSOAI listing was independently established."
+  },
+  "root_signature_verification": {
+    "root_url": "https://councilof.ai/root.json",
+    "root_sha256": "ae8bbfcedf7cc30172498110e7df66a4f6c98c4aae69c9f47cdcba2abc1d334e",
+    "root_kind": "csoai.public-root/v1",
+    "root_as_of": "2026-09-22T08:54:02Z",
+    "root_merkle_root": "40ce3833118fab76a98c55429a5b06c7c3051915780893f3ab60a25cb31ac0a4",
+    "did_url": "https://csoai.org/.well-known/did.json",
+    "did_sha256": "1231cee4d60b518d95eb33d752c12940fc6436c39269c5c02bf57b7e19ddbe0b",
+    "key_id": "did:web:csoai.org#board-attestation-1",
+    "assertion_method_present": true,
+    "signed_preimage_fields": [
+      "kind",
+      "schema",
+      "as_of",
+      "merkle_root",
+      "card_count",
+      "did_intended"
+    ],
+    "preimage_canonicalization": "UTF-8 JSON, sort_keys=true, separators=(comma,colon), no surrounding whitespace",
+    "preimage_sha256": "c977dc8a51cf4952436d075734cb9d8970f371aab2d4c38b69201f123a79a340",
+    "signature_encoding": "hex Ed25519",
+    "verdict": "VALID"
+  },
+  "distinct_root_caveat": {
+    "current_card_root_url": "https://councilof.ai/interop/card-root-2026-09-24-d9195149ce5e.json",
+    "current_card_root_sha256": "0d3be673ff22448fccaf6ada6454fab9bf54f0acdd26115ce3170a5c9f3ac29e",
+    "current_card_root_signature_state": "UNSIGNED (no signature or attestation field in the served JSON)",
+    "explanation": "The PayAI free-door 402 discovery example names /root.json, which is a distinct, earlier signed public root. Its phrase public signed root does not refer to the newer /interop/card-root-2026-09-24-d9195149ce5e.json. No description patch is warranted on this evidence.",
+    "current_card_root_signature_fields": []
+  },
+  "source_documentation": "https://docs.payai.network/x402/facilitators/bazaar"
+}

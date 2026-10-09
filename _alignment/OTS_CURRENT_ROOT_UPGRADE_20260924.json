@@ -1,0 +1,74 @@
+{
+  "schema": "csoai.ots-upgrade-review/1",
+  "observed_at_utc": "2026-09-24T16:48:15.150673+00:00",
+  "subject_url": "https://councilof.ai/interop/card-root-2026-09-24-00c77687a558.json",
+  "subject_sha256": "5907709c265926df7da395ef550fdfa919b9a7c277f620510b28c08a8787fd42",
+  "subject_bytes": 546241,
+  "subject_as_of": "2026-09-24T15:24:53Z",
+  "subject_leaves": 1423,
+  "public_original_ots_url": "https://councilof.ai/interop/card-root-2026-09-24-00c77687a558.json.ots",
+  "public_original_ots_sha256": "68fd3bd3ebc163144ca7ee7206458966d37a57fd11100d212cdf0c095194b547",
+  "public_original_state": "CALENDAR_PENDING",
+  "public_manifest_url": "https://councilof.ai/interop/ots/manifest.json",
+  "public_manifest_sha256": "c5a35f1b6b8773d2ed3fbf85ab043bdd242b29dd51c60ad84ed804c40023c63e",
+  "public_manifest_as_of": "2026-09-24T15:52:49Z",
+  "public_manifest_counts": {
+    "proofs": 630,
+    "bitcoin_attested": 627,
+    "calendar_pending": 3,
+    "quarantined_not_proofs": 0,
+    "subject_absent": 60
+  },
+  "upgraded_local_proof_path": "/Users/nicholas/clawd/_alignment/ots-upgrades-2026-09-24/card-root-2026-09-24-00c77687a558.json.ots",
+  "upgraded_local_proof_sha256": "250bb37a916b810d6938867ddb01b4c1b86f86087c1d1aac88ce4a81f2cb7ec7",
+  "upgrade_tool": "opentimestamps-client 0.7.2 ots upgrade, run on a temporary copy",
+  "proof_file_hash_matches_subject_sha256": true,
+  "bitcoin_block_header_attestations": [
+    {
+      "height": 968418,
+      "block_hash": "00000000000000000000daa788b7bd7c1737d8123f51801a78c92063183a4b7a",
+      "ots_computed_merkle_root": "b4c1e4850cea4b262e0e84d4af6eef626256bd1a0de16e80b6ce7119faadaa21",
+      "block_timestamp_utc": "2026-09-24T15:59:37Z",
+      "matching_sources": [
+        "https://blockstream.info/api/block/00000000000000000000daa788b7bd7c1737d8123f51801a78c92063183a4b7a",
+        "https://mempool.space/api/block/00000000000000000000daa788b7bd7c1737d8123f51801a78c92063183a4b7a"
+      ]
+    },
+    {
+      "height": 968420,
+      "block_hash": "00000000000000000000e56abcf49f0d2d4276fff0d6468c0c4583718912464d",
+      "ots_computed_merkle_root": "ca307529cee41033af8495d0cce2b16042a6d456b874e5e9a9248572c3fd80de",
+      "block_timestamp_utc": "2026-09-24T16:11:28Z",
+      "matching_sources": [
+        "https://blockstream.info/api/block/00000000000000000000e56abcf49f0d2d4276fff0d6468c0c4583718912464d",
+        "https://mempool.space/api/block/00000000000000000000e56abcf49f0d2d4276fff0d6468c0c4583718912464d"
+      ]
+    }
+  ],
+  "block_tip_height_both_sources": 968426,
+  "independent_full_node_verification": "NOT_RUN_NO_LOCAL_BITCOIN_NODE",
+  "public_upgraded_proof": "NOT_PUBLISHED",
+  "old_signed_root": {
+    "url": "https://councilof.ai/root.json",
+    "sha256": "ae8bbfcedf7cc30172498110e7df66a4f6c98c4aae69c9f47cdcba2abc1d334e",
+    "as_of": "2026-09-22T08:54:02Z",
+    "card_count": 305,
+    "public_ots_sidecar": "HTTP_404",
+    "manifest_entry": false
+  },
+  "claim_boundary": "The newest dated root now has a locally upgraded proof with Bitcoin block-header attestations matching two independent public explorers. The public proof and manifest still say pending; a Bitcoin Core full-node verification was unavailable. Do not present the old signed root as the new root.",
+  "public_latest_pointer": {
+    "url": "https://councilof.ai/interop/card-root-latest.json",
+    "sha256": "412d1a162b869f9b84adb55e4b1d209e80c8b9795a0761f5f53d4ad515703bde",
+    "root_url": "/interop/card-root-2026-09-24-00c77687a558.json",
+    "root_sha256": "5907709c265926df7da395ef550fdfa919b9a7c277f620510b28c08a8787fd42",
+    "as_of": "2026-09-24T15:24:53Z"
+  },
+  "remote_staging": {
+    "path": "/workspace/lanes/out/codex-ots-current-root-20260924/card-root-2026-09-24-00c77687a558.json.ots",
+    "sha256_verified_on_runpod": "250bb37a916b810d6938867ddb01b4c1b86f86087c1d1aac88ce4a81f2cb7ec7",
+    "bytes_verified_on_runpod": 2794,
+    "public_status": "NOT_PUBLISHED"
+  },
+  "manifest_regeneration_recipe": "From isolated reviewed RunPod repo root, after staging proof in public/interop/: python3 scripts/ots_manifest_rebuild.py (dry run) then python3 scripts/ots_manifest_rebuild.py --apply. It scans public/interop and public/interop/ots, writes public/interop/ots/manifest.json."
+}

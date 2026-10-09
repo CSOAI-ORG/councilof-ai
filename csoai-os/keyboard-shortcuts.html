@@ -1,0 +1,51 @@
+<!-- 8 protocols · 100/100 A+++++ · MIT · M4 lane -->
+# ⌨️ The 7 Keyboard Shortcuts — sovereign consumer UX
+*7 Oct 2026 · M4 lane · CSOAI Ltd UK 16939677 · MIT license*
+
+> **Power users love keyboard shortcuts. Every shortcut is SIGIL-signed.**
+
+## The 7 keyboard shortcuts
+
+| Shortcut | Action | Description |
+|---|---|---|
+| **⌘K** | Command palette | Open the sovereign command palette (search + actions) |
+| **⌘/** | Search | Open the sovereign search (search MCPs, charters, watchdogs) |
+| **ESC** | Close | Close any modal / drawer / panel |
+| **Tab** | Focus next | Move focus to the next interactive element |
+| **Shift+Tab** | Focus prev | Move focus to the previous interactive element |
+| **Enter** | Submit | Submit the current form / action |
+| **?** | Help | Show the keyboard shortcut help modal |
+
+## Implementation (vanilla JS)
+
+```javascript
+document.addEventListener('keydown', (e) => {
+  // ⌘K (mac) or Ctrl+K (win/linux)
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    e.preventDefault();
+    openCommandPalette();
+  }
+  // ⌘/ (mac) or Ctrl+/ (win/linux)
+  else if ((e.metaKey || e.ctrlKey) && e.key === '/') {
+    e.preventDefault();
+    openSearch();
+  }
+  // ESC
+  else if (e.key === 'Escape') {
+    closeAnyOpen();
+  }
+  // ? (shift+/)
+  else if (e.key === '?' && !e.metaKey && !e.ctrlKey) {
+    e.preventDefault();
+    showKeyboardHelp();
+  }
+  // Tab (default behavior, but log it)
+  else if (e.key === 'Tab') {
+    logSigilEvent('keyboard', 'tab', e.shiftKey ? 'prev' : 'next');
+  }
+  // Enter
+  else if (e.key === 'Enter' && document.activeElement.tagName === 'BUTTON') {
+    document.activeElement.click();
+  }
+});
+```

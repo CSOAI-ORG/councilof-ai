@@ -1,0 +1,74 @@
+{
+  "schema": "csoai.claim-maintenance-gate/0.1",
+  "assessed_at": "2026-10-01T10:45:00Z",
+  "lane": "mimocode-session",
+  "gate": "first consented maintained-claim publication",
+  "date_gate": {
+    "mandate": "30 September owner mandate holds first consented publication until 2026-10-01",
+    "today": "2026-10-01",
+    "status": "OPEN (date constraint satisfied)"
+  },
+  "operational_readiness": {
+    "status": "NOT_READY",
+    "reason": "Deploy pipeline blocked; one correction pending production deploy/readback",
+    "blockers": [
+      {
+        "id": "mill-blocked",
+        "detail": "No hub-queue-mill workflow runs found. GitHub Actions last activity 2026-09-15 (pr-gates failures). Account-level Actions appear disabled or reduced.",
+        "resolution": "Nick: re-enable GitHub Actions (billing/spending limit)",
+        "agent_can_fix": false
+      },
+      {
+        "id": "pod-unreachable",
+        "detail": "SSH 194.26.196.156:22081 timeout. RunPod pod csoai-build-cpu-writer-recovery-20261001 is RUNNING per runpodctl but SSH not reachable from this host.",
+        "resolution": "Nick: check pod / restart if needed",
+        "agent_can_fix": false
+      },
+      {
+        "id": "C-2026-0930-01-pending-deploy",
+        "detail": "ChatGPT plugin manifest fix is CORRECTED IN SOURCE but PRODUCTION DEPLOY/READBACK PENDING",
+        "resolution": "Deploy through normal writer lane, then anonymous readback",
+        "agent_can_fix": "once mill/pod or manual deploy path available"
+      }
+    ]
+  },
+  "corrections_ledger": {
+    "total_entries": 89,
+    "signature_state": "VALID",
+    "signature_verified": true,
+    "key": "did:web:csoai.org#board-attestation-1",
+    "content_id_matches": true,
+    "status_breakdown": {
+      "CORRECTED": 41,
+      "FIXED": 23,
+      "PENDING_DEPLOY": 6,
+      "IN_PROGRESS": 2,
+      "UNKNOWN": 8,
+      "other_noted": 9
+    }
+  },
+  "gspc_board": {
+    "axes": 23,
+    "measured_axes": 23,
+    "unmeasured_axes": 0,
+    "separated_leaders": 0,
+    "tie": 7,
+    "untested": 7,
+    "doi": "10.5281/zenodo.21991104",
+    "doi_status": "UNAVAILABLE (Zenodo blocked 2026-09-29)",
+    "living_stamp_signed": true,
+    "living_stamp_verifiable": true
+  },
+  "card_chain": {
+    "bodies_published": 335,
+    "public_root_leaves": 319
+  },
+  "open_items_requiring_nick": [
+    "Re-enable GitHub Actions (billing/spending limit at github.com/settings/billing/summary)",
+    "Check RunPod pod SSH 194.26.196.156:22081",
+    "Appeal to Zenodo support (account blocked 2026-09-29, only account owner can appeal)",
+    "Product decision: meok/ui pricing-client.tsx tangled mixed pricing"
+  ],
+  "recommendation": "Do NOT proceed with first consented publication until C-2026-0930-01 is deployed and anonymously read back. The date gate is open but the deploy path is blocked. When mill/pod resume: land source master, deploy C-2026-0930-01, anonymous-readback, then release.",
+  "honesty_note": "This is an operational assessment, not a measurement, signature, or publication event. No claim was published, admitted, or signed in this run."
+}

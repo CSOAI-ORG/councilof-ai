@@ -1,0 +1,290 @@
+# MEOK Compliance Operator — watches 12 frameworks in real time.
+# Emits signed ComplianceScan resources every 60 s; a violation flips
+# a `meok.io/compliance-state: breached` label that the MEOK agent then
+# propagates to its care-class harm budget.
+
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: complianceprofiles.meok.io
+  labels:
+    meok.io/care-class: carer
+spec:
+  group: meok.io
+  scope: Cluster
+  names:
+    plural: complianceprofiles
+    singular: complianceprofile
+    kind: ComplianceProfile
+    shortNames: [cp]
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          required: [spec]
+          properties:
+            spec:
+              type: object
+              required: [framework, controls, severity]
+              properties:
+                framework:
+                  type: string
+                  enum:
+                    - eu-ai-act
+                    - gdpr
+                    - hipaa
+                    - soc2
+                    - iso-27001
+                    - iso-42001
+                    - nist-ai-rmf
+                    - pci-dss
+                    - iso-21434
+                    - nis2
+                    - cra
+                    - eu-accessibility-act
+                controls:
+                  type: array
+                  items: {type: string}
+                severity:
+                  type: string
+                  enum: [info, low, medium, high, critical]
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: compliancescans.meok.io
+spec:
+  group: meok.io
+  scope: Namespaced
+  names:
+    plural: compliancescans
+    singular: compliancescan
+    kind: ComplianceScan
+    shortNames: [cs]
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          required: [spec, status]
+          properties:
+            spec:
+              type: object
+              required: [profile]
+              properties:
+                profile:
+                  type: object
+                  required: [framework]
+                  properties:
+                    framework: {type: string}
+                intervalSeconds: {type: integer, default: 60}
+            status:
+              type: object
+              properties:
+                state:
+                  type: string
+                  enum: [ok, warn, breached, error]
+                lastRun: {type: string, format: date-time}
+                signedReceipt: {type: string}
+                breaches:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      control: {type: string}
+                      severity: {type: string}
+                      message: {type: string}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: meok-compliance-operator
+  namespace: meok-system
+  labels:
+    app: meok-compliance-operator
+    meok.io/care-class: carer
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: meok-compliance-operator
+  template:
+    metadata:
+      labels:
+        app: meok-compliance-operator
+        meok.io/care-class: carer
+      annotations:
+        meok.io/harm-budget: "10"
+    spec:
+      serviceAccountName: meok-compliance-operator
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: operator
+          image: ghcr.io/meok-ai/meok-compliance-operator:0.1.0
+          imagePullPolicy: IfNotPresent
+          args:
+            - --frameworks=eu-ai-act,gdpr,hipaa,soc2,iso-27001,iso-42001,nist-ai-rmf,pci-dss,iso-21434,nis2,cra,eu-accessibility-act
+            - --scan-interval=60s
+            - --substrate=meok-sovereign-substrate.meok-system.svc:7700
+          ports:
+            - name: https
+              containerPort: 8443
+          resources:
+            requests: {cpu: 100m, memory: 128Mi}
+            limits: {cpu: 500m, memory: 512Mi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: {drop: ["ALL"]}
+---
+# The 12 frameworks, as Cluster-scoped ComplianceProfile CRs.
+---
+apiVersion: meok.io/v1
+kind: ComplianceProfile
+metadata:
+  name: eu-ai-act
+spec:
+  framework: eu-ai-act
+  controls: ["art-9-risk-mgmt", "art-10-data-governance", "art-12- logging", "art-14-human-oversight", "art-50-transparency", "art-53-gpai"]
+  severity: high
+---
+apiVersion: meok.io/v1
+kind: ComplianceProfile
+metadata:
+  name: gdpr
+spec:
+  framework: gdpr
+  controls: ["art-5-lawfulness", "art-6-consent", "art-25-dpia", "art-32-security", "art-33-breach-notify"]
+  severity: critical
+---
+apiVersion: meok.io/v1
+kind: ComplianceProfile
+metadata:
+  name: hipaa
+spec:
+  framework: hipaa
+  controls: ["164.308-admin", "164.312-technical", "164.316-policies"]
+  severity: high
+---
+apiVersion: meok.io/v1
+kind: ComplianceProfile
+metadata:
+  name: soc2
+spec:
+  framework: soc2
+  controls: ["CC1-control-env", "CC2-comm", "CC3-risk", "CC6-access", "CC7-monitoring"]
+  severity: high
+---
+apiVersion: meok.io/v1
+kind: ComplianceProfile
+metadata:
+  name: iso-27001
+spec:
+  framework: iso-27001
+  controls: ["A.5-policies", "A.8-asset-mgmt", "A.12-ops-security", "A.16-incident-mgmt", "A.18-compliance"]
+  severity: high
+---
+apiVersion: meok.io/v1
+kind: ComplianceProfile
+metadata:
+  name: iso-42001
+spec:
+  framework: iso-42001
+  controls: ["A.5-policy", "A.6-risks", "A.8-impact", "A.9-third-party", "A.10-data"]
+  severity: high
+---
+apiVersion: meok.io/v1
+kind: ComplianceProfile
+metadata:
+  name: nist-ai-rmf
+spec:
+  framework: nist-ai-rmf
+  controls: ["GOVERN", "MAP", "MEASURE", "MANAGE"]
+  severity: high
+---
+apiVersion: meok.io/v1
+kind: ComplianceProfile
+metadata:
+  name: pci-dss
+spec:
+  framework: pci-dss
+  controls: ["req-1-firewall", "req-3-cardholder-data", "req-6-secure-dev", "req-10-logging"]
+  severity: critical
+---
+apiVersion: meok.io/v1
+kind: ComplianceProfile
+metadata:
+  name: iso-21434
+spec:
+  framework: iso-21434
+  controls: ["clause-8-cybersecurity-mgmt", "clause-9-risk-mgmt", "clause-15-distribution"]
+  severity: high
+---
+apiVersion: meok.io/v1
+kind: ComplianceProfile
+metadata:
+  name: nis2
+spec:
+  framework: nis2
+  controls: ["art-21-cyber-risk-mgmt", "art-23-incident-handling", "art-24-vulnerability"]
+  severity: high
+---
+apiVersion: meok.io/v1
+kind: ComplianceProfile
+metadata:
+  name: cra
+spec:
+  framework: cra
+  controls: ["annex-I-essential-cyber", "annex-II-vulnerability-handling"]
+  severity: high
+---
+apiVersion: meok.io/v1
+kind: ComplianceProfile
+metadata:
+  name: eu-accessibility-act
+spec:
+  framework: eu-accessibility-act
+  controls: ["art-4-product-safety", "annex-I-accessibility-requirements"]
+  severity: medium
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: meok-compliance-operator
+  namespace: meok-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: meok-compliance-operator
+rules:
+  - apiGroups: ["meok.io"]
+    resources: ["complianceprofiles", "compliancescans"]
+    verbs: ["*"]
+  - apiGroups: [""]
+    resources: ["events", "configmaps", "secrets"]
+    verbs: ["*"]
+  - apiGroups: ["admissionregistration.k8s.io"]
+    resources: ["validatingwebhookconfigurations"]
+    verbs: ["*"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: meok-compliance-operator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: meok-compliance-operator
+subjects:
+  - kind: ServiceAccount
+    name: meok-compliance-operator
+    namespace: meok-system

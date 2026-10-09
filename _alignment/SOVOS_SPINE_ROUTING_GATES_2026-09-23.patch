@@ -1,0 +1,264 @@
+--- a/packages/sovos-product-spine/src/sovos_product_spine/spine.py
++++ b/packages/sovos-product-spine/src/sovos_product_spine/spine.py
+@@ -1,17 +1,31 @@
+ from __future__ import annotations
+ 
+ import json
++import re
+ from dataclasses import dataclass
+ from pathlib import Path
+ from typing import Any
+ 
+ 
++# Free text is only a routing hint. Mutation words always win over read/draft
++# words, including in mixed requests such as "draft and send". The router does
++# not authorize or execute a tool; the downstream policy and constitutional
++# gates still have to evaluate a structured intent before any side effect.
++MUTATION_WORDS = frozenset({
++    "send", "publish", "post", "submit", "upload", "deploy", "merge",
++    "commit", "push", "delete", "remove", "erase", "write", "edit", "update",
++    "modify", "change", "execute", "run", "pay", "purchase", "transfer",
++    "trade", "order", "sign", "anchor", "mint", "issue", "configure", "install",
++    "start", "stop", "release", "approve", "grant", "rotate", "invite",
++    "archive", "restore", "redact", "share", "dispatch", "notify",
++})
+ ROUTE_HINTS = {
+-    "evidence_request": ("measure", "verify", "audit", "evidence", "claim", "receipt", "proof"),
+-    "security_incident": ("incident", "contain", "revoke", "quarantine", "breach", "attack", "compromise"),
+-    "remediation_request": ("fix", "remediate", "patch", "harden", "repair"),
+-    "cognition": ("read", "search", "inspect", "reason", "draft", "summarize", "analyse", "analyze", "plan"),
++    "security_incident": frozenset({"incident", "contain", "revoke", "quarantine", "breach", "attack", "compromise", "compromised"}),
++    "remediation_request": frozenset({"fix", "remediate", "patch", "harden", "repair"}),
++    "evidence_request": frozenset({"measure", "verify", "audit", "evidence", "claim", "receipt", "proof"}),
++    "cognition": frozenset({"read", "search", "inspect", "reason", "draft", "summarize", "analyse", "analyze", "plan"}),
+ }
++EFFECTS = frozenset({"read_only", "local_write", "external_write"})
+ 
+ 
+ @dataclass(frozen=True)
+@@ -42,22 +56,41 @@
+         if planes["asisecurity"].get("runtime") != "defoneos-v2":
+             raise ValueError("ASISecurity must bind DefOneOS v2 runtime")
+ 
+-        chain = self.manifest["routes"]["consequential_action"]
+-        for left, right in (("csoai", "agisafe"), ("agisafe", "sovos"), ("sovos", "asisecurity")):
+-            if chain.index(left) >= chain.index(right):
+-                raise ValueError(f"bad consequential order: {left} must precede {right}")
++        for required_route in ("consequential_action", "security_incident", "remediation_request"):
++            if "asisecurity" not in self.manifest["routes"][required_route]:
++                raise ValueError(f"unsafe {required_route}: enforcement plane missing")
++        for route_name, chain in self.manifest["routes"].items():
++            if "asisecurity" not in chain:
++                continue
++            for gate in ("agisafe", "sovos"):
++                if gate not in chain or chain.index(gate) >= chain.index("asisecurity"):
++                    raise ValueError(f"unsafe {route_name}: {gate} must precede asisecurity")
++            if not any(i > chain.index("asisecurity") for i, plane in enumerate(chain) if plane == "csoai"):
++                raise ValueError(f"unsafe {route_name}: post-action csoai receipt missing")
+ 
+-    def classify(self, action: str, consequential: bool | None = None) -> str:
+-        text = action.lower().strip()
++    def classify(self, action: str, consequential: bool | None = None, effect: str | None = None) -> str:
++        if effect is not None and effect not in EFFECTS:
++            raise ValueError(f"unknown effect: {effect}")
++        tokens = frozenset(re.findall(r"[a-z0-9]+", action.lower()))
++        if not tokens:
++            raise ValueError("action is empty")
++        gated_hints = ROUTE_HINTS["security_incident"] | ROUTE_HINTS["remediation_request"]
++        if effect == "read_only" and (consequential is True or tokens & (MUTATION_WORDS | gated_hints)):
++            raise ValueError("read_only conflicts with a consequential action")
++        if effect in {"local_write", "external_write"}:
++            return "consequential_action"
+         if consequential is True:
+             return "consequential_action"
++        if tokens & MUTATION_WORDS:
++            return "consequential_action"
+         for route_type, words in ROUTE_HINTS.items():
+-            if any(word in text for word in words):
++            if tokens & words:
+                 return route_type
++        # Unknown free text is never assumed to be harmless.
+         return "consequential_action"
+ 
+-    def route(self, action: str, consequential: bool | None = None) -> RoutePlan:
+-        route_type = self.classify(action, consequential=consequential)
++    def route(self, action: str, consequential: bool | None = None, effect: str | None = None) -> RoutePlan:
++        route_type = self.classify(action, consequential=consequential, effect=effect)
+         planes = tuple(self.manifest["routes"][route_type])
+         return RoutePlan(
+             route_type=route_type,
+--- a/packages/sovos-product-spine/src/sovos_product_spine/cli.py
++++ b/packages/sovos-product-spine/src/sovos_product_spine/cli.py
+@@ -22,6 +22,7 @@
+     p.add_argument("--manifest")
+     p.add_argument("--validate", action="store_true")
+     p.add_argument("--consequential", action="store_true")
++    p.add_argument("--effect", choices=("read_only", "local_write", "external_write"))
+     args = p.parse_args()
+ 
+     spine = ProductSpine.load(args.manifest or default_manifest())
+@@ -30,7 +31,7 @@
+         return 0
+     if not args.action:
+         p.error("action is required unless --validate is used")
+-    plan = spine.route(args.action, consequential=True if args.consequential else None)
++    plan = spine.route(args.action, consequential=True if args.consequential else None, effect=args.effect)
+     print(json.dumps({"route_type": plan.route_type, "planes": list(plan.planes), "reason": plan.reason}, indent=2))
+     return 0
+ 
+--- a/packages/sovos-product-spine/tests/test_spine.py
++++ b/packages/sovos-product-spine/tests/test_spine.py
+@@ -2,12 +2,13 @@
+ 
+ import json
+ import unittest
++from copy import deepcopy
+ from pathlib import Path
+ 
+ from sovos_product_spine import ProductSpine
+ 
+ 
+-MANIFEST = Path("/workspace/SOVOS/architecture/open-sovereign-stack-20260923/stack-manifest.json")
++MANIFEST = Path(__file__).resolve().parents[3] / "architecture/open-sovereign-stack-20260923/stack-manifest.json"
+ 
+ 
+ class SpineTests(unittest.TestCase):
+@@ -36,20 +37,60 @@
+         self.assertEqual(p.route_type, "evidence_request")
+         self.assertEqual(p.planes, ("csoai",))
+ 
+-    def test_incident_starts_with_enforcement(self):
++    def test_incident_gates_precede_enforcement(self):
+         p = self.spine.route("contain compromised agent and revoke token")
+         self.assertEqual(p.route_type, "security_incident")
+-        self.assertEqual(p.planes[0], "asisecurity")
++        self.assertLess(p.planes.index("agisafe"), p.planes.index("sovos"))
++        self.assertLess(p.planes.index("sovos"), p.planes.index("asisecurity"))
+ 
+     def test_fix_uses_measure_decide_enforce_measure(self):
+         p = self.spine.route("fix and harden this agent")
+         self.assertEqual(p.route_type, "remediation_request")
+-        self.assertEqual(p.planes, ("csoai", "agisafe", "asisecurity", "csoai"))
++        self.assertEqual(p.planes, ("csoai", "agisafe", "sovos", "asisecurity", "csoai"))
+ 
+     def test_read_only_cognition_stays_light(self):
+         p = self.spine.route("read and summarize this local file")
+         self.assertEqual(p.route_type, "cognition")
+         self.assertEqual(p.planes, ("meok", "oowm", "sovos"))
++
++    def test_email_draft_is_not_send(self):
++        self.assertEqual(self.spine.route("draft a customer email").route_type, "cognition")
++
++    def test_mixed_draft_and_send_cannot_bypass_gates(self):
++        self.assertEqual(self.spine.route("draft and send customer email").route_type, "consequential_action")
++
++    def test_evidence_publication_and_deletion_are_consequential(self):
++        for action in ("publish evidence card", "delete old evidence", "archive old evidence"):
++            with self.subTest(action=action):
++                self.assertEqual(self.spine.route(action).route_type, "consequential_action")
++
++    def test_deployment_is_consequential_even_when_fix_is_present(self):
++        self.assertEqual(self.spine.route("fix and deploy production patch").route_type, "consequential_action")
++
++    def test_declared_read_only_conflict_fails_closed(self):
++        with self.assertRaises(ValueError):
++            self.spine.route("send customer email", effect="read_only")
++        with self.assertRaises(ValueError):
++            self.spine.route("revoke token", effect="read_only")
++
++    def test_declared_external_write_is_consequential(self):
++        self.assertEqual(self.spine.route("handle item", effect="external_write").route_type, "consequential_action")
++
++    def test_unknown_effect_fails_closed(self):
++        with self.assertRaises(ValueError):
++            self.spine.route("inspect evidence", effect="unrestricted")
++
++    def test_manifest_rejects_enforcement_without_constitution(self):
++        manifest = deepcopy(self.spine.manifest)
++        manifest["routes"]["remediation_request"].remove("sovos")
++        with self.assertRaises(ValueError):
++            ProductSpine(manifest)
++
++    def test_manifest_rejects_route_without_enforcement(self):
++        manifest = deepcopy(self.spine.manifest)
++        manifest["routes"]["security_incident"].remove("asisecurity")
++        with self.assertRaises(ValueError):
++            ProductSpine(manifest)
+ 
+     def test_constitutional_bridge_allow(self):
+         from sovos_product_spine import constitutional_to_agisafe
+--- a/architecture/open-sovereign-stack-20260923/stack-manifest.json
++++ b/architecture/open-sovereign-stack-20260923/stack-manifest.json
+@@ -47,9 +47,9 @@
+   "routes": {
+     "cognition": ["meok", "oowm", "sovos"],
+     "consequential_action": ["meok", "oowm", "csoai", "agisafe", "sovos", "asisecurity", "csoai"],
+-    "security_incident": ["asisecurity", "agisafe", "sovos", "csoai", "oowm"],
++    "security_incident": ["agisafe", "sovos", "asisecurity", "csoai", "oowm"],
+     "evidence_request": ["csoai"],
+-    "remediation_request": ["csoai", "agisafe", "asisecurity", "csoai"]
++    "remediation_request": ["csoai", "agisafe", "sovos", "asisecurity", "csoai"]
+   },
+   "existing_assets": {
+     "agisafe_hive": "/workspace/codebases/gspc-os/apps/agisafe-hive",
+--- a/architecture/open-sovereign-stack-20260923/demo_e2e.py
++++ b/architecture/open-sovereign-stack-20260923/demo_e2e.py
+@@ -2,13 +2,15 @@
+ 
+ import hashlib
+ import json
++import os
+ from datetime import datetime, timezone
+ from pathlib import Path
+ import sys
+ 
+-ROOT = Path("/workspace/SOVOS")
++ROOT = Path(os.environ.get("SOVOS_STACK_ROOT", "/workspace/SOVOS"))
++CONSTITUTIONAL_ROOT = Path(os.environ.get("SOVOS_CONSTITUTIONAL_ROOT", "/workspace/SOVOS"))
+ sys.path.insert(0, str(ROOT / "packages/sovos-product-spine/src"))
+-sys.path.insert(0, str(ROOT / "packages/sovos-constitutional-harness/src"))
++sys.path.insert(0, str(CONSTITUTIONAL_ROOT / "packages/sovos-constitutional-harness/src"))
+ 
+ from sovos_product_spine import ProductSpine, constitutional_to_agisafe
+ from sovos_constitutional_harness import ActionIntent, ConstitutionalHarness
+@@ -35,6 +37,10 @@
+     }
+     spine = ProductSpine.load(MANIFEST)
+     route = spine.route(task["request"])
++    runtime_profile = json.loads((HERE / "defoneos-v2.profile.json").read_text())
++    mode = "observe"
++    if runtime_profile["modes"][mode]["side_effects"] is not False:
++        raise ValueError("demo mode must have no side effects")
+     pre_evidence = {
+         "plane": "csoai",
+         "kind": "pre_action_observation",
+@@ -59,10 +65,11 @@
+     enforcement = {
+         "plane": "asisecurity",
+         "runtime": "defoneos-v2",
+-        "mode": "simulate",
++        "mode": mode,
+         "action": "sandbox_hardening_patch",
+         "resource": intent.resource,
+         "executed_side_effect": False,
++        "adapter_invoked": False,
+         "released_by": agisafe.decision,
+         "constitutional_receipt": constitutional.receipt_hash,
+     }
+@@ -77,6 +84,7 @@
+     ok, chain_head = harness.receipts.verify()
+     bundle = {
+         "schema": "sovos.open-sovereign-demo/1.0",
++        "simulation_only": True,
+         "timestamp": datetime.now(timezone.utc).isoformat(),
+         "task": task,
+         "route": {"type": route.route_type, "planes": list(route.planes)},
+@@ -86,7 +94,7 @@
+             "reasons": list(constitutional.reasons),
+             "receipt_hash": constitutional.receipt_hash,
+         },
+-        "agisafe": {"decision": agisafe.decision, "reason": agisafe.reason},
++        "agisafe": {"decision": agisafe.decision, "reason": agisafe.reason, "source": "constitutional_bridge_only", "service_invoked": False},
+         "asisecurity": enforcement,
+         "post_evidence": post_evidence,
+         "receipt_chain": {"ok": ok, "head": chain_head},

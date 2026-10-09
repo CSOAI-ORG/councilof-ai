@@ -1,0 +1,9 @@
+# CSOAI Kaggle distribution readback — 24 September 2026
+
+Checked at 15:01 UTC against public, anonymous downloads. The canonical [GSPC living-board Kaggle dataset](https://www.kaggle.com/datasets/nicktempleman/csoai-gspc-living-board) has a Ready version 33, public metadata last updated 2026-09-24T11:07:20.837Z, and describes the 2026-09-22T08:54:02Z snapshot. This is a dated mirror of [the live board](https://councilof.ai/api/gspc), not a new admitted measurement.
+
+The existing `scripts/spray/verify-gspc-parity.py` downloaded the newest Ready Kaggle archive and [the Hugging Face snapshot](https://huggingface.co/datasets/csoai/gspc-board/tree/main/snapshot) anonymously. All eight files matched byte-for-byte; each archive's manifest and root fields passed its integrity checks. The mirrored `root.json` also matched the then-served [Council public root](https://councilof.ai/root.json): as_of `2026-09-22T08:54:02Z`, 305 cards, Merkle root `40ce3833118fab76a98c55429a5b06c7c3051915780893f3ab60a25cb31ac0a4`, root SHA-256 `ae8bbfcedf7cc30172498110e7df66a4f6c98c4aae69c9f47cdcba2abc1d334e`. Full file hashes and byte counts: [parity receipt](/Users/nicholas/clawd/_alignment/receipts/csoai-kaggle-parity-20260924.json).
+
+The public [dated-evidence-reader notebook](https://www.kaggle.com/code/nicktempleman/csoai-dated-evidence-reader) is marked COMPLETE and correctly labels its 21 September capture and 15 September root as historical; it does not claim to be the current board or to verify signatures/witnesses. The separate compute probe is private, so it is not a public distribution result.
+
+No Kaggle version was pushed because the canonical dataset already passed exact-current parity. Kaggle download/listing counts are platform activity, not evidence of independent adoption or paying customers. This check does not make the separate mill card root a canonical GSPC admission.

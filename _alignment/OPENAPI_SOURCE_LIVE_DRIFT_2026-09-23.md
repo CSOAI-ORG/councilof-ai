@@ -1,0 +1,20 @@
+# OpenAPI source/live release gate — 23 September 2026
+
+Observed 07:12–07:16 BST (06:12–06:16 UTC). Read-only requests; no settlement or deploy.
+
+| Surface | Commit/source | SHA-256 of `openapi.json` | Bytes | Paths | x402 paid doors |
+| --- | --- | --- | ---: | ---: | ---: |
+| Served `https://councilof.ai/openapi.json` | byte-identical to `pod/master` at `101e1bad141e8627186b4019dd602175e1aa1497` | `8c90587dba3940cec50d29039fe87688a65f0353fb4ffa1ec7da98d69f327373` | 574224 | 127 | 21 |
+| GitHub `origin/master` at `077f72dc888e156f85e2ce7fd1805b18676fcc3c` | `public/openapi.json` | `df41c72ad15c6a57b91937c1dbc8185c475598654aa2a6ec2e86e695002e1b0b` | 204024 | 113 | 10 |
+
+The 14 live-only paths are `/api/door-settles`, `/api/pop/a2a`, `/api/pop/claim-watch`, `/api/pop/corrections`, `/api/pop/layer0`, `/api/pop/mcp-registry`, `/api/pop/ots-proofs`, `/api/pop/stablecoins`, `/api/pop/swift`, `/api/pop/x402-bazaar`, `/api/pop/xrpl`, `/api/wrapper/changes`, `/api/x402-listing`, and `/api/x402-listing-402index`. The ten `/api/pop/*` paths plus `/api/wrapper/changes` are the 11 live-only paid doors. The canonical `/.well-known/x402.json` served 21 resources during this readback.
+
+The 11 doors were individually probed: each free `preview=1` URL returned HTTP 200; each bare paid URL returned HTTP 402 with `PAYMENT-REQUIRED`. The wrapper door was probed with `id=usdc.e:arbitrum`. These establish reachable preview and challenge behavior, not paid fulfilment or customer use.
+
+Validation completed: both source and served documents parsed as JSON; the 11 preview and 11 challenge probes above passed. `python3 scripts/build_openapi.py --check` passed for the **dirty working checkout** at 112 paths/10 doors, which confirms its local producer is internally consistent but does not close master/live drift. Vitest could not run in that checkout because `node_modules/.bin/vitest` is absent; no test-pass claim is made for an integration branch.
+
+Provenance: `ce050d503` introduced ten population door handlers; `1ab7220cc` added their capability declarations, OpenAPI producer changes and captured challenges; `32e4d19ff` added census-backed manifests. Served OpenAPI bytes exactly match `pod/master`, not a hand-edited local artifact. `pod/master` is 149 commits ahead of GitHub `origin/master` in this checkout. GitHub master lacks the ten population handlers, `_population.ts`, `door-settles.ts`, and `x402-listing-402index.ts`; copying only the JSON would advertise unserved routes after a source deploy. There are 42 changed files across the relevant generator, fixtures, capabilities and population route scopes. A source deploy from current GitHub master would remove the 11 paid doors and 14 OpenAPI paths from the served catalog. Current working checkout has unrelated uncommitted modifications to `public/openapi.json`, `scripts/build_openapi.py` and `capabilities/registry.json`; do not treat its clean generator check as a deploy candidate.
+
+**Release gate:** Keep the currently served pod-backed artifact. Before any GitHub-master site release, prepare a dependency-closed isolated branch that contains the 11 handlers and their shared modules, catalog fixtures, capability declarations, and generated OpenAPI bytes. Run `python3 scripts/build_openapi.py --check`, `functions/api/openapi-artifact.test.ts`, `functions/api/metered-endpoints.test.ts`, population/census tests, and a build. Compare candidate against the 21 served paid doors and 127 paths, with explicit review for any intentional removal. On preview, read back all 11 free URLs as 200 and paid URLs as 402 with `PAYMENT-REQUIRED`, without payment. Only then release and repeat served-byte comparison. Do not transplant `pod/master` wholesale or publish the JSON alone.
+
+I attempted an isolated full worktree checkout; it failed at 100% disk use with `No space left on device`. I removed only that incomplete worktree and its branch; existing files were not touched. The machine had ~504 MiB available after cleanup. A future integration attempt should use a sparse checkout or free disk space without deleting other operators' work.

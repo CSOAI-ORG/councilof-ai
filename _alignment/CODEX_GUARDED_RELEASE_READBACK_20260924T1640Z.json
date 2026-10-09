@@ -1,0 +1,27 @@
+{
+  "schema": "csoai.release-readback/1",
+  "observed_at_utc": "2026-09-24T16:40:34Z",
+  "source_commit": "392700b0bce7930e660dd5f5bccd20e9d30ab778",
+  "deployment": "https://687e14aa.councilof-ai.pages.dev",
+  "deploy_completed_at_utc": "2026-09-24T16:36:44Z",
+  "independent_devices": ["NICHOLASs-MacBook-Air-2.local", "IOKs-MacBook-Air.local"],
+  "hosts_read_back": ["https://councilof.ai", "https://687e14aa.councilof-ai.pages.dev"],
+  "exact_matching_sha256": {
+    "/interop/card-root-latest.json": "412d1a162b869f9b84adb55e4b1d209e80c8b9795a0761f5f53d4ad515703bde",
+    "/interop/card-root-2026-09-24-00c77687a558.json": "5907709c265926df7da395ef550fdfa919b9a7c277f620510b28c08a8787fd42",
+    "/interop/ots/manifest.json": "c5a35f1b6b8773d2ed3fbf85ab043bdd242b29dd51c60ad84ed804c40023c63e",
+    "/root.json": "ae8bbfcedf7cc30172498110e7df66a4f6c98c4aae69c9f47cdcba2abc1d334e"
+  },
+  "semantic_readback": {
+    "/signals/": "HTTP 200 on both hosts and devices; historical 13:10 UTC marker and latest-root-pointer marker present",
+    "/api/proof?bundle=1": "HTTP 402; resource.url, accepts.resource and decoded signed offer resourceUrl match exact bundle URL; accurate signed-root/free-envelope and Bazaar-processing wording",
+    "/pay/": "HTTP 200; main buyer copy independently checked in browser by coordinating agent; one lower false cataloguing sentence remains for source-only followup",
+    "/tool-commons/": "HTTP 200; live browser readback by coordinating agent showed third-party listing caveat; raw SPA shell does not carry all text"
+  },
+  "distribution": "Changed-only IndexNow submitted 19 URLs (1 new, 18 changed) to two endpoints, two endpoint acceptances; indexing not verified.",
+  "limits": [
+    "The signed /root.json is an older 305-leaf root; the latest 1423-leaf dated root is unsigned and its OTS proof remains pending.",
+    "No payment, settlement, paid-proof completeness test or Bazaar listing was produced by this release.",
+    "A followup for the remaining /pay sentence and /.well-known/ard.json exists only as review ref 693d7a9a07247bc5b3b408740515b93894af1d29 at this observation."
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "schema": "csoai.a2a-two-directory-readback/1",
+  "observed_at": "2026-09-24T16:26:06.541002+00:00",
+  "scope": "Anonymous read-only registry/card access plus one benign public A2A generic greeting; no registration, ownership claim, DNS, payment or message",
+  "surfaces": {
+    "community_api": {
+      "url": "https://councilof.ai/api/a2a",
+      "http_status": 200,
+      "body_sha256": "45598a3c9e8886f94106aad7cdcb451586f2e04dff159007322493bae49e00ac",
+      "name": "Council of AI — Measurement Agent",
+      "wellKnownURI": "https://councilof.ai/.well-known/agent-card.json",
+      "is_healthy": true,
+      "last_health_check": "2026-09-24T16:01:40.821913Z",
+      "conformance": true,
+      "task_conformance": {
+        "category": "OTHER",
+        "passed": false,
+        "checked_at": "2026-09-24T02:05:09.992163Z",
+        "response_ms": 982
+      }
+    },
+    "community_page": {
+      "url": "https://a2aregistry.org/agents/48e5bba6-8848-4adc-8f92-b5fa2c0744e0/",
+      "http_status": 200,
+      "body_sha256": "18e66cbf9388c5b54fd7f3369cf45370ecd71c9e19558073bb69864483367cd7"
+    },
+    "commercial_api": {
+      "url": "https://api.a2a-registry.org/public/agents/ai.councilof.council_of_ai__measurement_agent",
+      "http_status": 200,
+      "body_sha256": "c01f80551dc5332eb08cfe74801c02b28c1d0ba4ffa165c66ee91f223e220a2a",
+      "displayName": "Council of AI — Measurement Agent",
+      "manifestUrl": "https://councilof.ai/.well-known/agent-card.json",
+      "status": "ACTIVE",
+      "visibility": "public",
+      "verification_level": "unclaimed",
+      "owner_org": "Unknown System (Unclaimed)",
+      "lastCheckStatus": "changed",
+      "consecutiveFailures": 0,
+      "lastCheckedAt": 1789870400,
+      "updatedAt": 1789870400
+    },
+    "commercial_page": {
+      "url": "https://www.a2a-registry.org/agent/ai.councilof.council_of_ai__measurement_agent",
+      "http_status": 200,
+      "body_sha256": "cbe258a493e2f285be5fb12086f7dbc927553c9abe4192a51f76e3123074d720"
+    },
+    "card": {
+      "url": "https://councilof.ai/.well-known/agent-card.json",
+      "http_status": 200,
+      "body_sha256": "b6474156e927483e5e156780f2e0fbd82f12e86d7efd25edc22be597a73aed19",
+      "name": "Council of AI — Measurement Agent",
+      "version": "1.1.0",
+      "supportedInterfaces": [
+        {
+          "url": "https://councilof.ai/api/a2a",
+          "protocolBinding": "JSONRPC",
+          "protocolVersion": "1.0"
+        }
+      ]
+    }
+  },
+  "generic_greeting": {
+    "url": "https://councilof.ai/api/a2a",
+    "http_status": 200,
+    "body_sha256": "cfa6728b0eadb690428e7968f4fdae8093f58b97c0ed17cf87614644094260d6",
+    "jsonrpc_error_code": -32602,
+    "jsonrpc_error_reason": "INVALID_SKILL_SELECTOR",
+    "result_present": false
+  },
+  "management_gate": {
+    "community": "Existing entry PUT refresh requires registry admin key; anonymous register may create a duplicate; none invoked.",
+    "commercial": "Existing unclaimed entry requires sign-in and owner verification, including DNS TXT/GitHub route; neither authorized under this focused request. No duplicate submission."
+  }
+}

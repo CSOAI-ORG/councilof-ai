@@ -1,0 +1,9 @@
+# Governance discovery release reference correction — 25 September 2026
+
+The prepared eight-site governance bundle is **not public**. Its canonical `https://councilof.ai/governance/manifest.json` and site `/.well-known/csoai-governance.json` routes were unavailable in the latest public readback; do not call the bundle deployed.
+
+A pre-release audit found three membership evidence references to `https://councilof.ai/institutional-record/` and one manifest component to `/institutional-record.json`; both paths return HTTP 404. The actual public record `https://councilof.ai/memberships/` returns HTTP 200, with `#osaia` and `#linux-foundation` anchors present. The source correction is commit `5671e20c9` on isolated branch `codex/governance-reference-fix-20260924`, based on governance-fabric commit `f34ce2954`. Reviewable patch: `CSOAI_GOVERNANCE_REFERENCE_FIX_20260924.patch` (SHA-256 `a938c968b579e1916082432b5219cfd4898cd96718b9cca506d1c4e19acec011`). It also changes the internal authority-role reference to the authority model that ships in the same bundle.
+
+The governance validator passed (`valid:true`, eight sites, nine routes, seven committee rows, ten correction triggers); `git diff --check` passed; live membership URLs and both anchors returned 200. These checks validate the prepared content, **not publication**.
+
+At this check, Runpodctl reported publisher pod `fpowppss5ngtkw` as `EXITED`/`stopped_by_runpod` since 2026-09-24 19:08 UTC, and the account balance negative. Do not start billable compute or deploy an older checkout. When the existing guarded publisher is available, apply this patch to its current source, run current build/release checks, publish, and read back exact JSON at the canonical path and all eight site discovery paths. The existing N-site loop reports zero valid governance discovery documents until that public readback passes.

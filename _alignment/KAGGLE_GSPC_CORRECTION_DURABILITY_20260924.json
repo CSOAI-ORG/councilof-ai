@@ -1,0 +1,29 @@
+{
+  "kind": "csoai.kaggle-correction-durability/1",
+  "observed_at": "2026-09-24T18:33:08.285729+00:00",
+  "dataset": "https://www.kaggle.com/datasets/nicktempleman/csoai-gspc-living-board",
+  "public_version": 38,
+  "public_board_sha256": "be45a7ed47dc7f43a0ab83b75d3ce60909f918ecf386af7c11a78c0d5a708cca",
+  "public_description_sha256": "001789d205ef18a4334f7c2c630f658c153c81ed93ec070c11e7f0a0aedb41ea",
+  "correction": "C-2026-0924-03",
+  "installed_source": "/Users/nicholas/.csoai/kaggle-publisher-source",
+  "installed_commit": "88d6f13e1d0aae016660c18df6dfac6c24d241a9",
+  "review_commit": "c9db9ecf81f231a55a7f9ffece28ad2b2940347b",
+  "source_clean": true,
+  "focused_test": "3 passed, 13 deselected (Python 3.11)",
+  "generator_exact_public_description_match": true,
+  "guard_dry_run": "UNCHANGED",
+  "guard_receipt": "/Users/nicholas/.csoai/kaggle-refresh-state/latest.json",
+  "no_new_dataset_version": true,
+  "source_changes": [
+    "scripts/spray/gspc-spray.py",
+    "scripts/spray/test_gspc_spray_skip.py"
+  ],
+  "note": "Installed into dedicated Kaggle publisher checkout under writer lock; no Cloudflare, GitHub, protected master, or shared worker changes.",
+  "scheduled_tick_readback": {
+    "observed_at": "2026-09-24T18:45:03.377379+00:00",
+    "decision": "UNCHANGED",
+    "source_commit": "88d6f13e1d0aae016660c18df6dfac6c24d241a9",
+    "ready_version": 38
+  }
+}

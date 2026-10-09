@@ -1,0 +1,89 @@
+# MEOK × OpenBMC — firmware spec for the 33 sovereign hives
+# 33 hives = 33 BMC firmware builds. Each is built from the same OpenBMC
+# commit and layered with the MEOK sovereign extensions.
+
+apiVersion: meok.io/v1
+kind: BMCFirmwareMatrix
+metadata:
+  name: meok-sovereign-bmc
+  labels:
+    meok.io/care-class: carer
+    openbmc.version: 2.14.0
+spec:
+  base:
+    upstream: https://github.com/openbmc/openbmc
+    commit: "v2.14.0"
+    distro: openbmc
+    init: systemd
+    userland: busybox + systemd
+  security:
+    secure-boot: required
+    measured-boot: required
+    tpm: 2.0
+    pcr-policy:
+      - pcr: 0   # firmware code
+      - pcr: 2   # option ROMs
+      - pcr: 4   # bootloader (u-boot/grub)
+      - pcr: 7   # secure boot state
+      - pcr: 11  # meok-bmc-daemon
+    tpm-key-custody:
+      ek: tpm2-createek
+      ak: tpm2-createak
+      attestation-key-policy: restricted
+      sign-only-with-tpm: true
+  signing:
+    method: cosign
+    key: meok-sovereign-bmc-signing-v1
+    transparency-log: sigstore-rekor
+    artifact: oci://registry.meok.local/meok-bmc
+  layers:
+    - name: openbmc-base
+      url: https://github.com/openbmc/openbmc
+      type: git
+    - name: meok-bmc-daemon
+      type: binary
+      path: meok-bmc-daemon
+      version: 0.1.0
+    - name: meok-redfish-api
+      type: python
+      path: meok-redfish-api.py
+      version: 0.1.0
+    - name: trust-anchor
+      type: config
+      path: trust-anchor.yaml
+    - name: meok-attestation-hook
+      type: systemd-unit
+      unit: |
+        [Unit]
+        Description=MEOK hardware attestation daemon
+        After=tpm2-abrmd.service
+        Requires=tpm2-abrmd.service
+
+        [Service]
+        Type=simple
+        ExecStart=/usr/bin/meok-bmc-daemon --socket=/var/run/meok-bmc/attest.sock --interval=30
+        Restart=on-failure
+        RestartSec=5
+        User=root
+        ProtectSystem=strict
+        ProtectHome=true
+        NoNewPrivileges=true
+        PrivateTmp=true
+
+        [Install]
+        WantedBy=multi-user.target
+  hives:
+    count: 33
+    naming: meok-hive-{01..33}
+    profile:
+      - hive-01..hive-08:  edge-control   (x86_64, 2× EPYC, 256GB)
+      - hive-09..hive-16: edge-ai        (aarch64, 2× Grace, 128GB)
+      - hive-17..hive-24: sovereign-store (x86_64, 1× Xeon, 64GB, NVMe-rots)
+      - hive-25..hive-33: sovereign-bft   (aarch64, 1× Graviton3, 32GB)
+  attestation:
+    quote-interval-seconds: 30
+    nonce-source: meok-sovereign-substrate
+    receipt-format: sigil-v1
+    publish:
+      - unix:///var/run/meok-bmc/attest.sock      # local agent
+      - https://meok-compliance-gateway/api/v1/attest  # upstream

@@ -1,0 +1,143 @@
+From 2ef109732b7da957e040054883c9e388e6b2d6ce Mon Sep 17 00:00:00 2001
+From: CSOAI <nicholas@csoai.org>
+Date: Fri, 25 Sep 2026 00:48:13 +0100
+Subject: [PATCH] fix: rebuild root witness pointer without stale prior fields
+
+---
+ scripts/test_witness_public_root_pointer.py | 49 ++++++++++++++++++
+ scripts/witness_public_root.py              | 55 ++++++++++++++-------
+ 2 files changed, 86 insertions(+), 18 deletions(-)
+ create mode 100644 scripts/test_witness_public_root_pointer.py
+
+diff --git a/scripts/test_witness_public_root_pointer.py b/scripts/test_witness_public_root_pointer.py
+new file mode 100644
+index 000000000..dcb3304a3
+--- /dev/null
++++ b/scripts/test_witness_public_root_pointer.py
+@@ -0,0 +1,49 @@
++"""Regression coverage for refreshing a public-root witness pointer."""
++import json
++import tempfile
++import unittest
++from pathlib import Path
++
++from scripts.witness_public_root import write_witness_pointer
++
++
++class WitnessPointerTest(unittest.TestCase):
++    def test_new_witness_drops_instructions_from_prior_root(self):
++        with tempfile.TemporaryDirectory() as directory:
++            repo = Path(directory)
++            interop = repo / "public" / "interop"
++            interop.mkdir(parents=True)
++            pointer = interop / "root-witness-pointer.json"
++            pointer.write_text(json.dumps({
++                "kind": "csoai.root-witness-pointer/v0",
++                "hard_stops": ["Do not claim the published OTS/Rekor verify current live root bytes."],
++                "old_root_only": True,
++            }))
++            latest = interop / "root-witness-latest.json"
++            dated = interop / "root-witness-2026-09-23-ae8bbfce.json"
++            side = {
++                "as_of": "2026-09-23T05:23:04Z",
++                "artifact": {"sha256": "ae" * 32, "merkle_root": "40" * 32},
++                "conflict": {"status": "NONE"},
++                "corpus_scope": {"ots_covers": "PUBLIC_ROOT_BYTES_ONLY"},
++                "witnesses": {
++                    "rekor": {"status": "WITNESSED"},
++                    "ots": {"status": "CONFIRMED_BITCOIN", "observed_at": "2026-09-23T05:23:04Z"},
++                    "eas_base": {"status": "NOT_YET"},
++                },
++            }
++            drift = {"status": "MATCH", "checked_at": "2026-09-23T05:26:34Z"}
++
++            written = write_witness_pointer(pointer, side, latest, dated, repo, drift)
++            saved = json.loads(pointer.read_text())
++            self.assertEqual(saved, written)
++            self.assertNotIn("hard_stops", saved)
++            self.assertNotIn("old_root_only", saved)
++            self.assertEqual(saved["live_root"], side["artifact"])
++            self.assertEqual(saved["drift"], drift)
++            self.assertEqual(saved["witnesses"]["ots"], "CONFIRMED_BITCOIN")
++            self.assertEqual(saved["witness_sidecar"]["path"], "public/interop/root-witness-latest.json")
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/scripts/witness_public_root.py b/scripts/witness_public_root.py
+index 5389e5747..d6029aa4d 100644
+--- a/scripts/witness_public_root.py
++++ b/scripts/witness_public_root.py
+@@ -594,6 +594,39 @@ def selftest() -> int:
+     return 1 if fails else 0
+ 
+ 
++def write_witness_pointer(
++    pointer_path: Path, side: dict, latest: Path, dated: Path, repo_root: Path, drift: dict
++) -> dict:
++    """Write only fields derived from this witness; old pointer prose can be obsolete."""
++    ots = side["witnesses"]["ots"]
++    ptr = {
++        "kind": "csoai.root-witness-pointer/v0",
++        "as_of": now(),
++        "note": "Timestamped pointer for the witnessed root. Drift is an observation at checked_at, not a standing all-clear. Existence/time of bytes — not certification, not endorsement, not a rank sale. Never mint a token.",
++        "live_root": side["artifact"],
++        "witness_sidecar": {
++            "url": "https://councilof.ai/interop/root-witness-latest.json",
++            "path": str(latest.relative_to(repo_root)),
++            "status": "PUBLISHED",
++            "dated_copy": str(dated.relative_to(repo_root)),
++        },
++        "drift": drift,
++        "conflict": side["conflict"],
++        "corpus_scope": side["corpus_scope"],
++        # A pending proof has no Bitcoin header, so its own observation time
++        # remains authoritative until the proof is upgraded.
++        "witness_status_observed_at": ots.get("observed_at") or (ots.get("bitcoin_header") or {}).get("verified_at") or side["as_of"],
++        "witnesses": {
++            "rekor": side["witnesses"]["rekor"].get("status"),
++            "ots": ots.get("status"),
++            "eas_base": side["witnesses"]["eas_base"].get("status", "UNCHECKABLE"),
++            "xrpl_memo": "NOT_YET",
++        },
++    }
++    pointer_path.write_text(json.dumps(ptr, indent=1, ensure_ascii=False) + "\n")
++    return ptr
++
++
+ def main() -> int:
+     parser = argparse.ArgumentParser()
+     parser.add_argument("--selftest", action="store_true")
+@@ -683,25 +716,11 @@ def main() -> int:
+     }
+     latest = INTEROP / "root-witness-latest.json"; dated = INTEROP / f"root-witness-{now()[:10]}-{short}.json"
+     for p in (latest, dated): p.write_text(json.dumps(side, indent=1, ensure_ascii=False) + "\n")
++    # Compute against the live root a reader fetches, never against the local
++    # candidate. Before deployment this may legitimately read DRIFTED.
++    drift = compute_drift(sha, root["merkle_root"])
+     ptr_path = INTEROP / "root-witness-pointer.json"
+-    ptr = json.loads(ptr_path.read_text()) if ptr_path.exists() else {"kind": "csoai.root-witness-pointer/v0"}
+-    ptr.update({"as_of": now(),
+-                "note": "Timestamped pointer for the witnessed root. Drift is an observation at checked_at, not a standing all-clear. Existence/time of bytes — not certification, not endorsement, not a rank sale. Never mint a token.",
+-                "live_root": side["artifact"],
+-                "witness_sidecar": {"url": "https://councilof.ai/interop/root-witness-latest.json", "path": str(latest.relative_to(ROOT)), "status": "PUBLISHED", "dated_copy": str(dated.relative_to(ROOT))},
+-                # Computed against the LIVE root a reader fetches — never against the local bytes
+-                # we just witnessed, which is a comparison of a value with itself. Before the
+-                # candidate is deployed this may legitimately read DRIFTED. checked_at makes this
+-                # a timestamped observation; it is never published as a standing live verdict.
+-                "drift": compute_drift(sha, root["merkle_root"]),
+-                "conflict": side["conflict"],
+-                "corpus_scope": corpus_scope,
+-                # Proof observation exists before Bitcoin confirmation.  A
+-                # pending proof has no bitcoin_header by definition, so its own
+-                # observed_at is the authoritative timestamp for this state.
+-                "witness_status_observed_at": ots.get("observed_at") or (ots.get("bitcoin_header") or {}).get("verified_at") or side["as_of"],
+-                "witnesses": {"rekor": side["witnesses"]["rekor"].get("status"), "ots": ots.get("status"), "eas_base": side["witnesses"]["eas_base"].get("status", "UNCHECKABLE"), "xrpl_memo": "NOT_YET"}})
+-    ptr_path.write_text(json.dumps(ptr, indent=1, ensure_ascii=False) + "\n")
++    write_witness_pointer(ptr_path, side, latest, dated, ROOT, drift)
+     print("wrote", latest.name, dated.name, ptr_path.name)
+     return 0
+ 
+-- 
+2.50.1 (Apple Git-155)
+

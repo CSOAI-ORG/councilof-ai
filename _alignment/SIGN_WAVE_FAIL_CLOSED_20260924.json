@@ -1,0 +1,20 @@
+{
+  "checked_at_utc": "2026-09-24T15:58:14.774461+00:00",
+  "source_fix_local_commit": "426028ba0a35491e085bb7939aaa59ec14e2333f",
+  "source_fix_state": "LOCAL_ISOLATED_BRANCH_NOT_MERGED_NOT_DEPLOYED",
+  "existing_historical_placeholder_rows": 119,
+  "historical_files": [
+    {
+      "path": "/Users/nicholas/clawd/councilof-ai-work/scripts/badger/_queue/1000-moves/signed/signed-wave1-20260903T115251Z.jsonl",
+      "sha256": "2eae5e011fa76ed29a9647a7e47280d31daa3bf3629c28520690547dd6915879",
+      "placeholder_rows": 40
+    },
+    {
+      "path": "/Users/nicholas/clawd/councilof-ai-work/scripts/badger/_queue/1000-moves/signed/signed-wave2-20260903T115316Z.jsonl",
+      "sha256": "1deb0aac4773dd030295b5159738423f0f4c2829eb60844d840ef2f2cae95928",
+      "placeholder_rows": 79
+    }
+  ],
+  "correction": "SHA-256 digests in a signature field are not Ed25519 signatures. Existing historical rows are unchanged; never count them as signed or anchored. The source fix prevents new placeholder outputs when key is absent.",
+  "validation": "3 unittest controls passed; py_compile passed; git diff --check passed"
+}

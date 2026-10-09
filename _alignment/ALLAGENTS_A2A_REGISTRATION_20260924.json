@@ -1,0 +1,41 @@
+{
+  "schema": "csoai.public-a2a-directory-registration/1",
+  "observed_at": "2026-09-24T16:40:34.083953+00:00",
+  "action": "One existing public CSOAI A2A card registered via free no-account POST /register after apex capability-help response succeeded; no payment, message, DNS or security-setting change.",
+  "source_release": "392700b",
+  "generic_greeting": {
+    "url": "https://councilof.ai/api/a2a",
+    "observed_at": "2026-09-24T16:39:38.936199Z",
+    "jsonrpc_error": null,
+    "result_kind": "CAPABILITY_HELP",
+    "state": "DESCRIPTIVE_ONLY",
+    "body_sha256": "23831bea11d360e4c3e495cc4c6eae5b2be22a2230a883b840d4ee63149d52da"
+  },
+  "directory": {
+    "page_url": "https://allagents.app/agent/council-of-ai-measurement-agent",
+    "json_url": "https://allagents.app/agent/council-of-ai-measurement-agent?format=json",
+    "http_status": 200,
+    "body_sha256": "ca188a44da626c805865bfbb393613730c6ef53ea901f8668a1d8e5c4d4540d6",
+    "slug": "council-of-ai-measurement-agent",
+    "name": "Council of AI — Measurement Agent",
+    "description": "Public AI-governance measurement agent operated by CSOAI Ltd. Provides the live GSPC board and evidence links through its A2A endpoint. Measurement only; no certification or regulatory approval.",
+    "endpoints": {
+      "a2a": "https://councilof.ai/api/a2a",
+      "site": "https://councilof.ai/"
+    },
+    "protocols": [
+      "A2A"
+    ],
+    "country": "GB",
+    "claimed": true,
+    "source": "self",
+    "listed_at": "2026-09-24T16:40:00.683Z"
+  },
+  "registration": {
+    "http_status": 201,
+    "response_sha256": "a05b31f179d5573dbfd9016453f3ceb2f3442059f9b6e6ebaab5ea35cea50161",
+    "private_edit_credentials_path": "/Users/nicholas/.config/csoai/allagents-registration-20260924.json",
+    "private_edit_credentials_mode": "0600; containing directory edit token and recovery phrase; excluded from public receipt"
+  },
+  "limits": "Listing and anonymous readback establish public presence, not independent use, adoption, payment, endorsement, or official A2A conformance. a2aregistry.org task_conformance remains separately pending its next daily sweep."
+}

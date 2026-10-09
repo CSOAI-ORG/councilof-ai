@@ -1,0 +1,55 @@
+{
+  "schema": "csoai.readback/0.1",
+  "timestamp": "2026-10-01T10:37:36Z",
+  "lane": "mimocode-session-readback-20261001",
+  "surfaces": {
+    "gspc": {
+      "url": "https://councilof.ai/api/gspc",
+      "http": 200,
+      "bytes": 130496,
+      "sha256": "a7782d9a9f3334a9d5ea5952504a0c3d7c8fd6b8850673dbb8064ef1ac05ea24",
+      "totals": {
+        "axes": 23,
+        "measured_axes": 23,
+        "unmeasured_axes": 0,
+        "quotable_axes": 23
+      },
+      "separation": "0 of 14 model-comparison axes separated a leader (7 TIE, 7 UNTESTED)",
+      "doi": "10.5281/zenodo.21991104",
+      "doi_status": "UNAVAILABLE (Zenodo account blocked 2026-09-29, appeal pending)",
+      "doi_alternative": "https://councilof.ai/methodology/",
+      "living_stamp_signed": true,
+      "living_stamp_verifiable": true
+    },
+    "x402": {
+      "url": "https://councilof.ai/api/x402",
+      "http": 200,
+      "bytes": 31984,
+      "sha256_prefix": "5005c62595abf41e"
+    },
+    "revenue": {
+      "url": "https://councilof.ai/api/revenue",
+      "http": 200,
+      "bytes": 5104,
+      "sha256": "bf5388176efc99802e96cd1404cdb7079d55cc22190cd08ecf12de316c39fbcb",
+      "note": "Matches 2026-09-30 readback SHA exactly - unchanged"
+    },
+    "press": {
+      "url": "https://councilof.ai/api/press.json",
+      "http": 200,
+      "bytes": 44457,
+      "sha256_prefix": "3f2329ce20aa2b9c"
+    },
+    "proof_bundle": {
+      "url": "https://councilof.ai/api/proof?bundle=1",
+      "http": 402,
+      "bytes": 5462,
+      "note": "x402 payment required (10000 USDC atomic units on Base eip155:8453) - expected"
+    }
+  },
+  "blockers": {
+    "mill": "No hub-queue-mill workflow found; Actions last run 2026-09-15 (pr-gates failures)",
+    "pod": "SSH 194.26.196.156:22081 timeout - unreachable"
+  },
+  "honesty_note": "Source observation only. No measurement, card, signature, anchor, or payment created."
+}

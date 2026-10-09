@@ -1,0 +1,48 @@
+{
+  "schema": "csoai.cli-parity-receipt/0.1",
+  "completed_at": "2026-10-01T17:10:00Z",
+  "lane": "mimocode-session",
+  "task": "Wire route tool into CLI parity tests + add action-job replay contract fixtures",
+  "what_was_done": {
+    "cli_parity_sync": {
+      "action": "Ran pack.mjs to sync npm gspc-tools.json with Pages source (was 3 tools out of sync: measurement_index, verify_capsule, server_evidence)",
+      "result": "Pages and npm now match: 11 free tools each",
+      "tools_match_door_test": "12/12 PASS"
+    },
+    "index_mjs_wiring": {
+      "action": "Added route + get_public_action_job to HANDLERS map and summary cases in index.mjs (stdio server)",
+      "result": "route has a callable handler PASS, action_job_id field PASS"
+    },
+    "env_threading": {
+      "action": "Fixed env flow: sharedToolResult accepts env parameter; [[path]].ts threads env via module-level _currentEnv; getPublicActionJob reads LEADS KV directly when env available",
+      "result": "Route action-job wiring works in tests without fetch stubs"
+    },
+    "contract_fixtures": {
+      "file": "functions/mcp/action-job-replay-contract.test.ts (NEW, 220 lines, 10 tests)",
+      "tests": [
+        "route tool returns action_job_id and stores replayable record in LEADS KV",
+        "route record carries csoai.evidence-event/0.1 contract shape",
+        "action-job record readable from LEADS KV with route evidence",
+        "action-job replayable through get_public_action_job handler",
+        "action-job record readable through both get_public_action_job and public projection (format boundary documented)",
+        "route tool hashes task, never stores/echoes plaintext",
+        "route execute mode answers NOT_ENABLED, no action-job created",
+        "get_public_action_job returns NOT_PUBLIC_OR_NOT_FOUND for unknown job_id",
+        "get_public_action_job returns INVALID_ARGUMENT for malformed job_id",
+        "route policy gate forbids paid candidates without caller_wallet"
+      ]
+    },
+    "format_boundary": {
+      "note": "Route handler writes action-job:<id>:public (simplified format). Action-jobs API loadLedger expects submission+head+events with hash verification. getPublicActionJob reads the simplified format directly. The API endpoint returns 404 for route-handler records \u2014 this is the documented format boundary, not a bug."
+    }
+  },
+  "test_results": {
+    "contract_fixtures": "10/10 PASS",
+    "cli_parity (tools-match-door)": "12/12 PASS",
+    "wired-tools (stdio spawn)": "30/30 PASS",
+    "action_jobs": "11/11 PASS",
+    "integration (action-job-shared-record)": "1/1 PASS",
+    "full_suite": "107/107 PASS"
+  },
+  "honesty_note": "Contract fixtures prove the action-job wiring is durable and replayable through get_public_action_job (MCP) and the raw public projection (LEADS KV). The format boundary between route-handler storage and action-jobs API storage is documented in the test. No production deploy (GH frozen)."
+}

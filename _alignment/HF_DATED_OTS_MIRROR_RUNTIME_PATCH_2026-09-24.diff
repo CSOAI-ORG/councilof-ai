@@ -1,0 +1,104 @@
+diff --git a/scripts/mirror_fanout.py b/scripts/mirror_fanout.py
+index 593d50b9..e245274f 100644
+--- a/scripts/mirror_fanout.py
++++ b/scripts/mirror_fanout.py
+@@ -175,14 +175,13 @@ PUBLISH_GLOBS = [
+     "public/press/*.md",              # published prose, which brand-gate does not scan
+     "public/root.json",               # the signed Merkle root
+     "public/signed/card_index.json",  # the signed card index
++    "public/interop/card-root-2026-09-24-2eb8f4992a13.json.ots",  # reviewed dated OTS sidecar
++    "public/llms.txt",                # served machine-readable guide
+ ]
+ 
+-# Only rules that CAN fire live here. An earlier draft also excluded "\.ots$",
+-# "\.ots\.invalid$" and "/ots/" -- all three were dead, because PUBLISH_GLOBS
+-# matches *.json and *.md and a proof sidecar ends in .ots, so those paths are
+-# never surfaced in the first place and the regexes could never run. A guard
+-# that cannot fire reads as protection and provides none; the exclusion is
+-# structural, and saying so here beats a rule that never executes.
++# Only rules that CAN fire live here. General .ots sidecars remain outside the
++# discovery set; the dated root sidecar above was admitted by exact path after
++# its public byte readback. A guard that cannot fire is not protection.
+ # test_mirror_discovery.py asserts every rule below actually fires.
+ PUBLISH_EXCLUDE = [
+     (re.compile(r"-unsigned\.json$"),  "unsigned staging drafts; the signed sibling is the artifact"),
+@@ -192,6 +191,9 @@ PUBLISH_EXCLUDE = [
+ ARTIFACT_FLOOR = [
+     "public/root.json",
+     "public/signed/card_index.json",
++    "public/interop/card-root-2026-09-24-2eb8f4992a13.json.ots",
++    "public/interop/card-root-2026-09-24-2eb8f4992a13.header-audit.json",
++    "public/llms.txt",
+     "public/interop/agent-population-2026-09-17.json",
+     "public/interop/master-consolidation-rollup-v0.1.json",
+     "public/interop/verifiability-census-2026-09-17.json",
+diff --git a/scripts/test_mirror_discovery.py b/scripts/test_mirror_discovery.py
+index a8bf75c1..d02632ce 100644
+--- a/scripts/test_mirror_discovery.py
++++ b/scripts/test_mirror_discovery.py
+@@ -6,7 +6,7 @@ paths. On 2026-09-17 a whole day's published output went to one provider because
+ nobody added four lines to it. Discovery replaces the list -- so discovery itself
+ now needs a test that fires in BOTH directions.
+ """
+-import pathlib, sys, tempfile
++import os, pathlib, sys, tempfile
+ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+ import mirror_fanout as mf
+ 
+@@ -78,8 +78,12 @@ def main():
+     # was never run. A test that never enters the entry point does not test the program.
+     import subprocess
+     repo = pathlib.Path(__file__).resolve().parent.parent
++    # The M4 checkout may lag the active RunPod bare master. Test the same
++    # immutable sparse source the standing mirror actually consumes when set.
++    cli_root = pathlib.Path(os.environ.get("MIRROR_TEST_ROOT", str(repo)))
+     r = subprocess.run([sys.executable, "scripts/mirror_fanout.py", "--no-write",
+-                        "--surface", "huggingface", "--out", "/dev/null"],
++                        "--root", str(cli_root), "--surface", "huggingface",
++                        "--out", "/dev/null"],
+                        cwd=repo, capture_output=True, text=True, timeout=900)
+     check("main() runs without an unhandled exception", "Traceback" not in r.stderr, True)
+     check("main() reports the discovery line", "[discover]" in (r.stdout + r.stderr), True)
+
+# Source-cache helper diff (absolute paths)
+--- /Users/nicholas/clawd/_alignment/mirror_current_source_20260924.py.backup-ots-20260924T1322Z	2026-09-24 13:33:55
++++ /Users/nicholas/clawd/_alignment/mirror_current_source_20260924.py	2026-09-24 14:22:23
+@@ -22,10 +22,11 @@
+ 
+ ALIAS = "rp-3090-now"
+ BARE = "/workspace/git/councilof-ai.git"
+-CACHE = pathlib.Path("/Users/nicholas/.csoai/mirror-source-cache")
++CACHE = pathlib.Path("/Users/nicholas/.csoai/mirror-source-cache-v2")
+ SAFE_PATH = re.compile(r"^public/[A-Za-z0-9._/-]+$")
+ HEX40 = re.compile(r"^[0-9a-f]{40}$")
+ EXCLUDED_GENERATED = "public/interop/mirror-manifest.json"
++DATED_OTS = "public/interop/card-root-2026-09-24-2eb8f4992a13.json.ots"
+ 
+ 
+ def ssh(command: str) -> bytes:
+@@ -42,7 +43,7 @@
+         and (
+             (p.parent.as_posix() == "public/interop" and p.suffix == ".json")
+             or (p.parent.as_posix() == "public/press" and p.suffix == ".md")
+-            or path in ("public/root.json", "public/signed/card_index.json")
++            or path in ("public/root.json", "public/signed/card_index.json", "public/llms.txt", DATED_OTS)
+         )
+     )
+ 
+@@ -50,7 +51,7 @@
+ def listing(commit: str) -> dict[str, tuple[str, int]]:
+     raw = ssh(
+         f"git --git-dir={shlex.quote(BARE)} ls-tree -r --long -z {commit} -- "
+-        "public/interop public/press public/root.json public/signed/card_index.json"
++        "public/interop public/press public/root.json public/signed/card_index.json public/llms.txt"
+     )
+     found = {}
+     for row in raw.split(b"\0"):
+@@ -68,6 +69,7 @@
+         found[path] = (oid, int(size))
+     required = {
+         "public/root.json", "public/signed/card_index.json",
++        "public/llms.txt", DATED_OTS,
+         "public/interop/agent-population-2026-09-17.json",
+         "public/interop/master-consolidation-rollup-v0.1.json",
+         "public/interop/verifiability-census-2026-09-17.json",

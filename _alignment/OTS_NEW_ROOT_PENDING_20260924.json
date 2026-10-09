@@ -1,0 +1,39 @@
+{
+  "schema": "csoai.ots-root-pending-review/1",
+  "checked_at_utc": "2026-09-24T16:56:28.119812+00:00",
+  "source_state": "RUNPOD_CI_MERGE_READ_ONLY",
+  "source_root_path": "/workspace/ci/merge/public/interop/card-root-2026-09-24-d9195149ce5e.json",
+  "root_sha256": "0d3be673ff22448fccaf6ada6454fab9bf54f0acdd26115ce3170a5c9f3ac29e",
+  "root_bytes": 546241,
+  "root_as_of": "2026-09-24T16:23:03Z",
+  "root_leaves": 1423,
+  "merkle_root": "d9195149ce5e96596b9f4279f9532b7115915766998bd57124d2eb82b8025c35",
+  "source_ots_sha256": "e8aa162264dc06bee78309e167fe29c6adac625f87a6d2b6697a12854d5b4cc7",
+  "source_ots_bytes": 686,
+  "ots_file_hash_matches_root": true,
+  "ots_current_state": "CALENDAR_PENDING",
+  "ots_dry_run_upgrade": "FAILED_NOT_COMPLETE_WAITING_FOR_SIX_CONFIRMATIONS",
+  "calendar_transactions": [
+    {
+      "txid": "4c963bdb717f79888e75957225ef00a3dc42c0b45068b43986b4c3a0a0ab3542",
+      "block_height": 968424,
+      "status": "CONFIRMED_ON_TWO_PUBLIC_EXPLORERS",
+      "six_confirmation_tip_threshold": 968429
+    },
+    {
+      "txid": "d07ded86cb8ce8edcd49b3b97163d871d9db83e7c703b396eed098fb9bc2df9e",
+      "block_height": 968423,
+      "status": "CONFIRMED_ON_TWO_PUBLIC_EXPLORERS",
+      "six_confirmation_tip_threshold": 968428
+    }
+  ],
+  "explorers": [
+    "https://blockstream.info/api",
+    "https://mempool.space/api"
+  ],
+  "public_site_pointer_observed": "15:24:53Z older root SHA5907709c; 16:23 root not served yet during active guarded deploy",
+  "public_site_root_status": "HTTP_404_FOR_DATED_NEW_ROOT_AT_CHECK",
+  "public_site_ots_status": "HTTP_404_FOR_DATED_NEW_OTS_AT_CHECK",
+  "proof_upgrade_created": false,
+  "claim_boundary": "The calendar transactions are in Bitcoin blocks, but the new root OTS proof is pending and has not been upgraded/published. Do not call this new root Bitcoin anchored from the current proof. The older 15:24 upgraded proof is historical."
+}

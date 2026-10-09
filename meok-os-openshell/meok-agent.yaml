@@ -1,0 +1,147 @@
+# MEOK Agent — K8s DaemonSet, one pod per node.
+# Responsibilities:
+#   1. Report node-level care class + harm budget to the sovereign substrate.
+#   2. Forward BMC attestation events to the MEOK compliance operator.
+#   3. Enforce egress through the MEOK compliance gateway.
+#   4. Sign and emit heartbeats every 30 s using the node's TPM 2.0 key.
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: meok-agent
+  namespace: meok-system
+  labels:
+    app: meok-agent
+    app.kubernetes.io/name: meok-agent
+    app.kubernetes.io/part-of: meok-ai-os
+    meok.io/care-class: carer
+spec:
+  selector:
+    matchLabels:
+      app: meok-agent
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: meok-agent
+        meok.io/care-class: carer
+      annotations:
+        meok.io/harm-budget: "50"
+        meok.io/bmc-attestation: required
+    spec:
+      serviceAccountName: meok-agent
+      priorityClassName: system-node-critical
+      hostNetwork: true
+      hostPID: false
+      dnsPolicy: ClusterFirstWithHostNet
+      tolerations:
+        - operator: Exists
+      nodeSelector:
+        kubernetes.io/os: linux
+      containers:
+        - name: agent
+          image: ghcr.io/meok-ai/meok-agent:0.1.0
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            runAsGroup: 65532
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            seccompProfile:
+              type: RuntimeDefault
+          command: ["/usr/local/bin/meok-agent"]
+          args:
+            - --substrate=meok-sovereign-substrate.meok-system.svc:7700
+            - --compliance-gateway=meok-compliance-gateway.meok-system.svc:9443
+            - --heartbeat-seconds=30
+            - --attestation=tpm2
+            - --care-class=carer
+            - --harm-budget-uharm=50
+          ports:
+            - name: metrics
+              containerPort: 9100
+              protocol: TCP
+          env:
+            - name: MEOK_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: MEOK_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: MEOK_TPM_DEVICE
+              value: /dev/tpm0
+            - name: MEOK_BMC_SOCKET
+              value: /var/run/meok-bmc/attest.sock
+          resources:
+            requests:
+              cpu: 50m
+              memory: 96Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          livenessProbe:
+            exec:
+              command: ["meok-agent", "healthz"]
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command: ["meok-agent", "readyz"]
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          volumeMounts:
+            - name: tpm
+              mountPath: /dev/tpm0
+            - name: bmc-sock
+              mountPath: /var/run/meok-bmc
+              readOnly: true
+            - name: host-proc
+              mountPath: /host/proc
+              readOnly: true
+            - name: agent-cache
+              mountPath: /var/cache/meok-agent
+      volumes:
+        - name: tpm
+          hostPath:
+            path: /dev/tpm0
+            type: CharDevice
+        - name: bmc-sock
+          hostPath:
+            path: /var/run/meok-bmc
+            type: DirectoryOrCreate
+        - name: host-proc
+          hostPath:
+            path: /proc
+            type: Directory
+        - name: agent-cache
+          emptyDir: {}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: meok-agent
+  namespace: meok-system
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: meok-agent
+  namespace: meok-system
+  labels:
+    app: meok-agent
+spec:
+  selector:
+    matchLabels:
+      app: meok-agent
+  endpoints:
+    - port: metrics
+      interval: 30s
+      path: /metrics

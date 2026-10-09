@@ -1,0 +1,69 @@
+From dc5bf06d12949f5912ccc241c6f2a832a7b9db73 Mon Sep 17 00:00:00 2001
+From: CSOAI <nicholas@csoai.org>
+Date: Fri, 25 Sep 2026 07:46:11 +0100
+Subject: [PATCH] fix: fail closed retired root ceremony shortcut
+
+---
+ docs/operations/root-ceremony/NICK-RUNBOOK.md | 11 ++++++++---
+ scripts/ceremony/run_ceremony.sh              | 11 ++++++++++-
+ 2 files changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/docs/operations/root-ceremony/NICK-RUNBOOK.md b/docs/operations/root-ceremony/NICK-RUNBOOK.md
+index 38eeb7d5d..e31594b67 100644
+--- a/docs/operations/root-ceremony/NICK-RUNBOOK.md
++++ b/docs/operations/root-ceremony/NICK-RUNBOOK.md
+@@ -1,7 +1,12 @@
+ # Nick's Runbook — Unblocking the Four Gates
+ 
+ **Generated:** 2026-09-15T04:10Z
+-**Status:** All PRs merged, deploy running, all permissionless goals complete.
++**Historical note:** This 15 September runbook is superseded for the real
++ROOT-α/ROOT-β genesis ceremony. Its one-command shortcut is disabled because
++it cannot satisfy the independent Shamir check, offline medium, custody and
++destruction gates in `ROOT-CEREMONY-CHECKLIST-2026-09-12.md`. Do not use this
++runbook as proof that a physical ceremony occurred or as an instruction to run
++the disabled shortcut.
+ 
+ ---
+ 
+@@ -21,8 +26,8 @@ Everything is built, tested, and proven. The dry-run passed all 8 checks.
+ # 1. Clone/check out the repo on the ceremony machine
+ cd /path/to/councilof-ai
+ 
+-# 2. Run the ceremony
+-bash scripts/ceremony/run_ceremony.sh
++# 2. Follow the canonical checklist phase by phase on the approved airgapped
++# disposable medium. The old run_ceremony.sh shortcut deliberately refuses.
+ ```
+ 
+ It will prompt you:
+diff --git a/scripts/ceremony/run_ceremony.sh b/scripts/ceremony/run_ceremony.sh
+index 70d341441..3fb5b08f0 100755
+--- a/scripts/ceremony/run_ceremony.sh
++++ b/scripts/ceremony/run_ceremony.sh
+@@ -1,5 +1,5 @@
+ #!/usr/bin/env bash
+-# run_ceremony.sh — one-shot ROOT ceremony runner.
++# run_ceremony.sh — retired one-shot ROOT ceremony runner.
+ #
+ # Runs phases 0–6 of the ceremony checklist. You provide the dice rolls;
+ # everything else is automated.
+@@ -15,6 +15,15 @@
+ # responsibility to physically destroy after Phase 6 distribution.
+ set -euo pipefail
+ 
++# This historical shortcut is NOT a production genesis ceremony. It used the
++# same Shamir implementation for both sides of its purported independent
++# cross-check, accepted roll material through process arguments, created a
++# directory without proving disposable-medium placement, and printed
++# "CEREMONY COMPLETE" before custody/disposal. Never let it mint a card #0.
++printf '%s\n' 'REFUSING: run_ceremony.sh cannot establish ROOT-alpha/ROOT-beta custody.' >&2
++printf '%s\n' 'Use docs/operations/root-ceremony/ROOT-CEREMONY-CHECKLIST-2026-09-12.md on an airgapped disposable medium with an independently pinned Shamir checker.' >&2
++exit 78
++
+ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+ TEMPLATE="$REPO_ROOT/docs/operations/root-ceremony/card0-genesis.template.json"
+-- 
+2.50.1 (Apple Git-155)
+

@@ -1,0 +1,80 @@
+{
+  "schema": "csoai.revenue-path-assessment/0.1",
+  "assessed_at": "2026-10-01T11:50:00Z",
+  "lane": "mimocode-session",
+  "buyer_journey": {
+    "discovery": {
+      "surface": "https://councilof.ai/api/x402/index",
+      "state": "SIGNED",
+      "free": true,
+      "description": "Public x402 index: census of both bazars (CDP + PayAI), signed. A buyer discovers what's available before paying."
+    },
+    "challenge": {
+      "surface": "GET any paid resource -> HTTP 402",
+      "example": "https://councilof.ai/api/proof?bundle=1 -> 402 with x402Version 2, accepts array (USDC on Base eip155:8453), extensions.bazaar",
+      "conformant": true,
+      "note": "Proper x402 v2 challenge. Buyer sees exact price (10000 atomic = 0.01 USDC), network, asset contract, payTo address."
+    },
+    "payment": {
+      "rail_mode": "live",
+      "pay_to_configured": true,
+      "facilitator_configured": true,
+      "scheme": "exact",
+      "network": "eip155:8453 (Base)",
+      "token": "USDC (0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913)",
+      "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "settlement_flow": "facilitator /verify then /settle unlocks the paid artefact"
+    },
+    "delivery": {
+      "rule": "Verification of every artefact stays free. Revenue is earned on issuance, assembly, and a durable signature \u2014 never a grade.",
+      "one_resource_check": "https://councilof.ai/api/ras/x402-check?url=<https-x402-resource> (also 402-gated at 20000 atomic)"
+    }
+  },
+  "revenue_state": {
+    "source": "https://councilof.ai/api/revenue",
+    "derivation": "Counts read from counters.json + REVENUE_KV tallies. Nothing typed by hand. Null never 0.",
+    "skus": {
+      "issuance": {
+        "sku": "SKU-1",
+        "count": 12,
+        "status": "MEASURED"
+      },
+      "proofs": {
+        "sku": "SKU-2",
+        "count": 1,
+        "status": "MEASURED"
+      },
+      "licences": {
+        "sku": "SKU-3",
+        "count": null,
+        "status": "UNMEASURED"
+      }
+    },
+    "north_of_truth": "settled_usdc is the honest revenue number: USDC that cleared to the estate pay_to on Base. Chain adjudicates, not the CRM.",
+    "note": "Revenue API does not publish prices. Metered amounts appear only in 402 challenges."
+  },
+  "x402_census": {
+    "as_of": "2026-09-27T01:11:37Z",
+    "hosts_distinct": 2722,
+    "hosts_probed": 2722,
+    "conformant": 477,
+    "conformant_pct": 17.52,
+    "by_index": {
+      "cdp": {
+        "hosts": 1815,
+        "conformant": 355
+      },
+      "payai": {
+        "hosts": 697,
+        "conformant": 77
+      },
+      "cdp+payai": {
+        "hosts": 210,
+        "conformant": 45
+      }
+    },
+    "conformance_rule": "HTTP 402 AND PAYMENT-REQUIRED header AND x402Version 2 in body AND extensions.bazaar",
+    "note": "Not a seller's honesty, product quality, or price. Measurement, not certification."
+  },
+  "honesty_note": "Anonymous readback of public surfaces. No payment made, no receipt settled, no buyer journey completed end-to-end. The 402 challenge shape is verified as conformant. Actual settlement remains unmeasured from this lane (1 historical non-self settlement reported in revenue: 12 issuances + 1 proof)."
+}

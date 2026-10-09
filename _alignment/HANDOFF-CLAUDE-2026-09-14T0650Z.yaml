@@ -1,0 +1,45 @@
+as_of_utc: 2026-09-14T06:50Z
+agent: claude (governor, M4)
+branch: master (governor PRs from governor/* branches; landing PRs from bot branches)
+head_sha: f592f534
+objective: Goal-mode Claude — production integrator and closure owner (GOAL-MODES-CLAUDE-GROK-2026-09-14.md)
+authoritative_inputs:
+  - CSOAI-ORG/councilof-ai master + GitHub Actions run logs and artifacts
+  - live https://councilof.ai (/api/commissions, /api/hub-cards, /api/worker, /root.json, /gspc-verify)
+  - https://csoai.org/.well-known/did.json (signature verification)
+  - HF csoai/hub-queue queue.jsonl, csoai/gspc-hub-cards, csoai/gspc-board snapshot
+changes_made:
+  - "#2287 + #2296: commission run report and priority fallback accept csoai.commissions/0.2"
+  - "#2292: hub-mill priority = hub-routable subjects only (Ollama tags stay on the RunPod rail)"
+  - "#2302: HF-router tries the model's live Hub providers before the static suffix list"
+  - "#2298: static-shell header stacks on ≤520px (22 pages regenerated)"
+  - "#2303: card-root-2026-09-14 OTS proof upgraded to Bitcoin block 966920"
+  - "#2304 (governor-verified, REST-merged): first admitted v0.2 Hub card — Qwen/Qwen3-14B × care, n=30"
+  - "#2305 (rebased: SUPERSEDED.jsonl union; REST-merged): second admitted v0.2 card — Mistral-7B-Instruct-v0.2 × safety, n=12 UNMEASURED"
+  - "hub-queue-mill.yml re-enabled (active) 06:44Z after the admitted run"
+  - "closed as superseded by lane work: #2289 (verifier freshness ← #2288), #2307 (hub retrieval ← #2284)"
+tests_and_results:
+  - "commission_run_report 4 tests OK; commission_priority 7 tests OK; infer_hub live-providers 3 OK; static-shell node 3 OK; verifyFreshness 14 OK (PR closed, lane's 10 stand on master)"
+  - "signed-care-eda16a8fc969 + signed-safety-df60dbfea858: VALID under live did.json; validate_signed_admission OK; tamper controls (sha flipped / file swapped / evidence digest changed) rejected"
+  - "card_root.py --verify: MATCH, leaf drift 0; .ots digest binds to file; Bitcoin attestations [966920]"
+  - "hub-queue-flip 34814292666: cells 1142 → 1, legacy_cells_retired 1141 (v0.1 = UNCHECKABLE)"
+  - "verifier live check on /gspc-verify: VERIFIED with bound Input SHA-256; one edit → verdict gone"
+  - "mobile 390×844: home, /quickstart, /gspc-verify OK; /pay header fixed by #2298"
+external_actions:
+  - "none outward. W3C CG joins done earlier in Nick's browser (both groups). No email sent. No settlement. No spend."
+public_urls_checked:
+  - "https://councilof.ai/api/hub-cards?model=Qwen/Qwen3-14B → care MEASURED n=30 card_url"
+  - "https://councilof.ai/api/commissions → llama3.2:3b 14 cards / governance 1 card"
+  - "https://councilof.ai/interop/mill-cards-signed/signed-care-eda16a8fc969.json → 404 until deploy f592f534 lands (watcher closes #2075 on 200)"
+  - "https://csoai.org/x → 308 councilof.ai (ticker checks every 5 min)"
+claim_evidence_disagreements:
+  - "outward-claims guard (CHECK_REGISTRY=1) on master: 27 ok · 0 FAIL · 4 skip; Smithery deployment URL 401 is a disclosed OWNER_ACTION_REQUIRED"
+  - "Hub census now shows 1 MEASURED cell (was 1,142): public wording must say INDEXED/UNCHECKABLE for legacy cells, never 'lost'"
+  - "csoai/hub-queue top-level row status for Qwen/Qwen3-14B still 'UNMEASURED' (as_of 29 Aug) while measured_axes.care is MEASURED — top-level aggregate is stale; read measured_axes"
+revenue_truth: "1 non-self payer, 1 settlement, 0.02 USDC (project-reported ledger). No new payer, no delivery event today; requester retrieval now resolves receipts to cards."
+remaining_blockers:
+  - "#2075 closes automatically when the deploy serves the card + receipt (200)"
+  - "root candidate #2293 OTS STAMPED_PENDING_BITCOIN (ticker flags CONFIRMED → REST merge)"
+  - "OpenRouter credits (owner 23) would widen admissible routes; HF org inference billing (owner 19)"
+  - "mailbox nicholas@csoai.org: Namecheap ticket NC-VLX-8765 (subscription ACTIVE, mailbox on; server-side 'Temporary authentication failure')"
+next_single_action: "deploy 6f36dad1 lands → card + receipt URLs 200 → #2075 closes on live bytes; then merge candidate #2293 when the ticker reports CONFIRMED_BITCOIN"

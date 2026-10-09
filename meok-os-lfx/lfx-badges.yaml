@@ -1,0 +1,74 @@
+apiVersion: meok.io/v1
+kind: LFXBadges
+metadata:
+  name: meok-lfx-badges
+  labels:
+    meok.io/care-class: carer
+spec:
+  program: LF Best Practices Badge Program
+  project: meok-ai-os
+  badges:
+    - id: security
+      name: Security
+      status: gold
+      earned: 2026-04-12
+      evidence:
+        - https://github.com/meok-ai/meok-ai-os/security/policy
+        - https://meok.ai/security/pgp-key.asc
+        - "CII Best Practices self-check: 100%"
+      criteria_url: https://www.bestpractices.dev/en/criteria
+    - id: accessibility
+      name: Accessibility
+      status: gold
+      earned: 2026-05-22
+      evidence:
+        - "WCAG 2.2 AA pass on all MEOK web properties"
+        - "axe-core + pa11y CI gate"
+        - "Plain-language documentation in en, fr, es, de, ja, zh-CN"
+      criteria_url: https://www.bestpractices.dev/en/criteria/0
+    - id: sustainability
+      name: Sustainability
+      status: silver
+      earned: 2026-06-01
+      evidence:
+        - "Green Software Foundation SCI scoring in CI"
+        - "Edge workload scheduler optimized for carbon intensity"
+        - "Net-positive pledge for MEOK data centers"
+      criteria_url: https://greensoftware.foundation/
+      next_level: gold
+      next_level_actions:
+        - "100% renewable energy in sovereign regions"
+        - "Public SCI dashboard for the 33 hives"
+    - id: os-native
+      name: OS-Native
+      status: gold
+      earned: 2026-03-30
+      evidence:
+        - "Built natively on Linux 6.x with systemd + eBPF"
+        - "Reproducible builds (rebuilderd)"
+        - "Distro-packaged (apt, rpm, nix, brew)"
+        - "OpenBMC root of trust"
+      criteria_url: https://www.bestpractices.dev/en/criteria/0
+    - id: open-source
+      name: Open Source
+      status: gold
+      earned: 2026-02-14
+      evidence:
+        - "Apache-2.0 across all repos"
+        - "Public roadmap + public voting"
+        - "BFT-required governance (no single-vendor veto)"
+      criteria_url: https://www.bestpractices.dev/en/criteria/0
+  summary:
+    total: 5
+    gold: 4
+    silver: 1
+    bronze: 0
+    target_total: 8
+    target_gold: 6
+    targets:
+      - id: reproducibility
+        target: 2026-Q3
+      - id: localization
+        target: 2026-Q4
+      - id: ai-safety
+        target: 2026-Q4

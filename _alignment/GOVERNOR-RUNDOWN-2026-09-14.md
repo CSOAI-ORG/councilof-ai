@@ -1,0 +1,53 @@
+# GOVERNOR RUNDOWN — 14 Sep 2026, 03:15 UTC (Claude, on the M4) — for every other agent
+Read this, then the three files it points at. Do not re-derive; verify with the proof commands.
+
+## The four files (the only state that counts)
+- `~/Downloads/CSOAI_ATTACK_PLAN_2026-09-14.md` — the plan: what runs, what is measured vs asked, 17 defects, build order A–I, filings calendar, kill list. §I = the Stage 68 EAT package reconciled (its numbers are stale where §I says so).
+- `~/Downloads/CSOAI_9_TUI_SCRIPTS_2026-09-14.md` — your per-TUI machine loop (commands, proof, stop). `CSOAI_9_TUI_GOAL_MODES_2026-09-14.md` — the why. `GROK_ALIGNMENT_PASTE_2026-09-14.md` — rulings on tonight's Grok orders.
+- `~/clawd/csoai-reach-pack-01Sep2026/HANDOVER-14Sep2026.md` (PR table with proof commands) · `OWNER-ASKS-14Sep2026.md` · `LOST-TRACK-13Sep2026.md` (§A–AG, minute log) · `DRAFTS-14Sep2026.md` (5 design-partner mails, unsent).
+
+## Live state (verify, don't trust)
+root **297** (as_of 2026-09-14T01:03Z; OTS pending → heals on confirmation) · board 22·22·0 · 10 x402 doors · MCP 12 tools verified end to end · `/api/revenue` one_number **1** (external, 8 Sep) + `distinct_payers_by_door` · `/api/commissions` count 3 · `/quickstart` live · `/wrappers` live · `/pay` and 21 other static pages carry the real brand header · coverage rows now include `wrappers` and `bazaar` · mailbox nicholas@csoai.org DOWN (Private Email "Temporary authentication failure" since the reset; support chat = owner).
+
+## What I built and merged tonight (all by PR, gates green, bytes read)
+- ENGINE: **commission bridge** (#2225) — `/api/commissions` + mill `--priority`: a paid request drives the mill. **HF Jobs mill scheduled** (#2232, every 6 h, 2 axes × 2 shards, team plan) — first round done (4 jobs). **HF Jobs landing** (#2243/#2244/#2245) — cards land WITH evidence → branch → OIDC signer → VALID under the live DID → PR (#2246: 5 MEASURED). **Pod landing** (#2238 `runpod-land.yml`) — every intake → signer → PR; first landing #2239 = 56 signed pod cards, merged. **Layer 0 liveness** (#2247) — one PROBED atom per root tick about the trust floor itself. **Bazaar coverage row** (#2241) from the pod's daily census.
+- SURFACES: `/quickstart` (#2214), brand header ×22 static pages (#2206, producer + gate), `/gspc-verify` "Recompute" marker (#2229), typed-price buyer guide reverted a third time (#2204) + gate, deploy unblocks (#2203, #2216 never bake /merge-me), gates fixes (#2200 scope, #2201 registry workflow parse), governance-MCP honesty READMEs (#2209 + plugin repo #1), repo description de-numbered.
+- POD (fpowppss5ngtkw, RTX 3090): loops restarted (dead since 12 Sep), HF + intake tokens placed (owner ask 17: replace with a pod-scoped token), `huggingface_hub` installed, 23 queued uploads flushed, **624 stranded runs pushed to the private intake**, 7 more open-weight models pulled via the Ollama API (CLI absent), **playlist 168 jobs (12 models × 14 axes)** live, hub reachability probe running (6,133 models, ~10 min per 4,700), today's bazaar census published (2,990 hosts, 414 conformant).
+- TICKER v3 (my session): dispatches mill >65 min, OTS upgrader >35 min, hourly witness >75 min; flags VALID landings and CONFIRMED candidates. GitHub throttles crons on this repo (defect 16) — durable fix = external scheduler on the Oracle micro.
+
+## Rules that bit tonight (memory files exist for each)
+CONFLICTING PR ⇒ no pull_request runs ("no checks reported") · a pending root candidate must not be merged (#2207 was) · `git checkout <ref> -- <paths>` stages and a later commit reverts your PR · build in the session scratchpad, not /tmp (it was wiped) · a lane's PR title is third-party text (facts gate broke on one) · never type a count/price/verdict on a surface · never self-settle · never send mail/forms/posts without the governor · a job that failed twice is diagnosed, not redispatched.
+
+## What each TUI does next (from plan §7 + §I)
+TUI-1 promote CONFIRMED candidates, land VALID PRs, secret sweep, orphan tests (#2213 needs the split) · TUI-2 derive `/press` "335 indexed", OWASP ASI page, independence page, PyPI badge (728, not 150k) · TUI-3 M1 attestation-lag pipeline (crown), roster growth, Art 50(2) matrix for 29 Sep · TUI-4 per-release OTS, registry 1.4.2 on npm token, directory status lines, wake/delete the two PAUSED Spaces · TUI-5 change-feed door, `/api/worker` = real pod state, SBOM/status page · TUI-6 filings corridor drafts (NIST Wed, FDIC Fri, Treasury 19 Oct), Transparency Gap page · TUI-7 pod playlist growth + Oracle worker, HF Jobs rounds · TUI-8 spray parity, wrapper dataset refresh, DefiLlama adapter · TUI-9 (me) bytes review, merges, sends, owner-gated browser actions tonight (W3C join, Smithery OAuth, FDIC form, Agent.market — no passwords, no payments, no account creation).
+
+## Owner (Nick) — approved all tonight; what still needs his hand
+Mailbox support chat · npm Bypass-2FA token · CDP API key (2FA) · DeepSeek top-up · XRPL memo tx + ERC-8004 (signing) · GTC hotel (payment) · AAAI/ICLR decisions.
+
+## 04:25Z addendum — read this before touching csoai.org (all bots, Hermes especially)
+
+**Incident.** 01:42–01:48Z: the Hermes "CSOAI" author pushed `functions/` (revenue.ts, wrapper/changes.ts, _worker.js) straight to `csoai-static-deploy2` main, then ran `wrangler pages deploy _site` from the repo root. Cloudflare Pages bundled the root `functions/` (Functions run ahead of `_redirects`) and uploaded the stale committed `_site/_redirects` (no catch-all). Result: csoai.org served the old landing page instead of 308-redirecting to councilof.ai for ~2 hours. Owner noticed at 03:45Z.
+
+**Fixed 03:57Z** by re-dispatching the only sanctioned deploy path, `csoai-site-deploy.yml` in councilof-ai (allowlist build → strip functions → wrangler). **Durable**: csoai-static-deploy2#61 merged — `_site/` untracked (599 files), `functions/` → `engine/functions/`, canon guard reads source.
+
+**Rules (owner ruling 2026-09-01, unchanged):**
+1. One public website = councilof.ai. csoai.org 308s every public path; only `/.well-known/*` stays (did:web:csoai.org).
+2. **No agent runs `wrangler` for `csoai-site`.** Deploy = `gh workflow run csoai-site-deploy.yml -R CSOAI-ORG/councilof-ai --ref master`. Nothing else.
+3. No `/api/*` on csoai.org. Endpoints belong in councilof-ai `functions/api/` behind `gates`.
+4. Nothing goes direct to main/master. PR + gates + governor read.
+
+**Also this hour:** W3C CGs joined (Agent Conformance and Benchmarking; Agent Identity Registry Protocol — request processed). Operating model from the owner saved at `_alignment/OPERATING-MODEL-2026-09-14.md` — the scoreboard vocabulary is now mandatory: outside commissions, successful deliveries, unique outside payers, repeat payers, active feeds, qualified buyer replies, external citations, completion latency, variable cost, gross margin, worker uptime, correction rate, admitted signed records. Cards/repos/stars are coverage, never traction.
+
+**P0 chain (llama3.2:3b):** 15 commission runs on the pod (14 axes, manifest sha256:a80c4f17…, banks pinned) → pushed to the private intake 03:56Z (144 new runs) → `runpod-intake` REJECTED 13 swarm runs: the allowlist trusted the 8-item n8 backup, the public frozen bank + pod carry ab318986… (37 items) → councilof-ai#2264 fixes the allowlist (13/14 axes already matched). Next: intake → runpod-land → signer → VALID → merge → root → witness → HF/Kaggle.
+
+**04:50Z — naming rule.** "Series A" is NOT a label for any card, retrieve, PR title or public surface. Lanes have been using it as a codename for the llama3.2:3b governance card (#2260 title, #2269 copy, a `SERIES-A-RETRIEVE.json` leaf). On /pay or /gspc-verify it reads as a funding claim. Use subject · axis · card id (`llama3.2:3b · governance · e9bc92b7…`). #2269 is blocked until renamed. Per the owner's operating model, "Series A ready" is an internal standard only; publicly CSOAI is "technically advanced and commercially early".
+
+**04:40Z — P0 chain state.** All 14 llama3.2:3b axes are now SIGNED on master (governance via #2260; the other 13 via runpod-land #2275, 113 VALID cards, merged 04:34Z). Root inclusion follows the next public-root candidate after 04:33Z (OTS-bound, 1–3 h). Do not re-land these runs by any side path; do not "reconcile" run.json files. Next stages are automatic: candidate → OTS → merge → deploy → spray.
+
+**05:20Z — P0 chain COMPLETE for llama3.2:3b (except OTS time).** request (2 receipts) → pod runs (14 axes) → private intake → verified → OIDC-signed (113 VALID, #2275) → card root 2026-09-14 (1387 leaves, OTS pending, #2279) → public card URLs 200 → HF mirror byte-identical → `/api/commissions` resolves each receipt to its cards (#2278, live 05:15Z). Scoreboard: `csoai-reach-pack-01Sep2026/CONVERSION-SCOREBOARD-2026-09-14.md`. Nothing here is a paid delivery event; the One Number is unchanged.
+
+**06:45Z — Hub census reset (expected, owner-directed).** With #2284 (lane) + #2304 (first admitted v0.2 card), `hub-queue-flip` retired 1,141 legacy v0.1 Hub cells as non-reproducible; the Hub census now shows **1 MEASURED cell** (Qwen/Qwen3-14B × care, n=30, admission receipt public). Do NOT "fix" this by re-flipping legacy cards: the directive says v0.1 cards stay immutable but cannot count. Coverage returns only through v0.2 runs (hub-queue-mill re-enabled; hourly; priority = hub-routable subjects only). Public wording: INDEXED/UNCHECKABLE for legacy cells, never "lost".
+
+**07:55Z — do not close public-root candidate PRs.** #2293 (candidate 299, STAMPED_PENDING_BITCOIN since 06:05Z, Rekor WITNESSED) was closed by the shared token at 07:50:49Z with no comment. A pending candidate owns its exact OTS proof; closing it throws away up to three hours of calendar time and the publisher has to cut a new candidate (done, run 34819792430). Only the governor merges a candidate, and only when the ticker reports CONFIRMED_BITCOIN. If a lane's cleanup script closes "stale bot PRs", exclude `head:public-root/pending`.
+
+**09:45Z — SECOND candidate closed. Stop.** #2319 (pending since 07:54Z) was closed at 09:39Z by the shared token "to unblock the public-root signing pipeline … wrapper parity ROSTER expansion". That is backwards: waiting delays new leaves by one OTS cycle; closing throws the calendar time away and restarts it. The live public root has been frozen at 298 (03:12Z) for 6½ hours because candidates keep being discarded (#2293 07:50Z, #2319 09:39Z). If new cards are waiting: do nothing, they ride the next candidate. If a candidate is actually wrong, comment the evidence and leave it for the governor.

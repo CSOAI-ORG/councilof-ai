@@ -1,0 +1,27 @@
+{
+  "checked_at_utc": "2026-09-24T16:10:25Z",
+  "source_state": "ISOLATED_LOCAL_COMMIT_NOT_PUBLISHED",
+  "branch": "codex/governance-mcp-offline-verify-20260924",
+  "commit": "1c3a3e48a",
+  "changes": [
+    "csoai_verify now verifies exact UTF-8 text locally with Ed25519 and no gateway call",
+    "csoai_sign rejects missing or mismatched gateway seals instead of claiming sealed",
+    "signing result no longer claims a Bitcoin anchor or certificate"
+  ],
+  "tests": {
+    "node_tests_passed": 4,
+    "syntax_checks_passed": 2,
+    "npm_pack_dry_run": "PASS; verify-seal.mjs included",
+    "public_root_actual_signature": "VALID",
+    "public_root_as_of": "2026-09-22T08:54:02Z",
+    "public_root_card_count": 305,
+    "public_root_sha256": "ae8bbfcedf7cc30172498110e7df66a4f6c98c4aae69c9f47cdcba2abc1d334e",
+    "did_document_sha256": "1231cee4d60b518d95eb33d752c12940fc6436c39269c5c02bf57b7e19ddbe0b",
+    "canonical_preimage_sha256": "c977dc8a51cf4952436d075734cb9d8970f371aab2d4c38b69201f123a79a340"
+  },
+  "npm_registry_current_version": "0.1.0",
+  "npm_auth": "401_UNAUTHORIZED",
+  "public_status": "NOT_PUBLISHED",
+  "new_signature_issued": false,
+  "bitcoin_anchor_verified": false
+}

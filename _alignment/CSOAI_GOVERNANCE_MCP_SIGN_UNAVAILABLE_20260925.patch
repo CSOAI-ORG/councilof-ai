@@ -1,0 +1,335 @@
+From 6c5a0fd4d799225207795cda805e7cf3e6f9a152 Mon Sep 17 00:00:00 2001
+From: CSOAI <nicholas@csoai.org>
+Date: Fri, 25 Sep 2026 07:06:40 +0100
+Subject: [PATCH] Fail closed when governance MCP signer is unavailable
+
+---
+ mcp/csoai-governance/README.md             | 35 +++++++---
+ mcp/csoai-governance/gateway-sign.mjs      | 65 +++++++++++++++++++
+ mcp/csoai-governance/gateway-sign.test.mjs | 74 ++++++++++++++++++++++
+ mcp/csoai-governance/index.mjs             | 26 ++++----
+ mcp/csoai-governance/package.json          |  5 +-
+ 5 files changed, 182 insertions(+), 23 deletions(-)
+ create mode 100644 mcp/csoai-governance/gateway-sign.mjs
+ create mode 100644 mcp/csoai-governance/gateway-sign.test.mjs
+
+diff --git a/mcp/csoai-governance/README.md b/mcp/csoai-governance/README.md
+index 73001aa41..7d9a728c0 100644
+--- a/mcp/csoai-governance/README.md
++++ b/mcp/csoai-governance/README.md
+@@ -6,8 +6,9 @@
+ 
+ 
+ Give an MCP-capable agent access to the CSOAI governance tools. Verify Ed25519
+-seals locally; request a new seal when a working signing gateway is configured;
+-ask governance questions and search the published tool catalog.
++seals locally. New signing is **not advertised by default**: it requires an
++explicit HTTPS signing endpoint and a pinned Ed25519 public key. Governance
++questions and catalog lookup use a separately configured gateway.
+ 
+ A valid seal establishes who signed exact bytes. It does not establish that the
+ underlying work is correct or that a measurement was admitted to GSPC.
+@@ -16,15 +17,29 @@ underlying work is correct or that a measurement was admitted to GSPC.
+ 
+ | Tool | What it does |
+ |------|--------------|
+-| `csoai_sign` | Ask the configured gateway to sign an artifact; return a seal only after local Ed25519 verification of the exact submitted text |
++| `csoai_sign` | Listed only when `CSOAI_SIGN_ENDPOINT` and `CSOAI_SIGNER_PUBLIC_KEY` are configured. Requests a seal; accepts it only after exact-byte verification against that pinned key |
+ | `csoai_verify` | Verify the exact UTF-8 artifact against an Ed25519 signature and public key locally, with no gateway call |
+ | `csoai_govern` | Ask the CSOAI Sovereign a governance/cyber question (EU AI Act, NIST, ISO 42001, NIS2, DORA, GDPR) — role-locked |
+ | `csoai_catalog` | Search the published governed CSOAI tools / MCPs |
+ 
+-No API key required for the public governance surface. Override the backend with
+-`CSOAI_GATEWAY` (default `https://os.meok.ai/api`).
+-
+-> **Gateway state (checked 2026-09-24):** the default gateway's signing route returned HTTP 405. Signing is unavailable there; this package does not fake a seal. `csoai_verify` works without a gateway in this source version. The separate GSPC MCP at `https://councilof.ai/mcp` exposes 13 tools today. Set `CSOAI_GATEWAY` only to a signing gateway you control and have verified.
++The governance/catalog backend can be overridden with `CSOAI_GATEWAY` (default
++`https://os.meok.ai/api`). This setting does **not** configure signing.
++
++> **Gateway state (checked 2026-09-25):** `https://os.meok.ai/api/sign` has no
++> working signing API: reads return HTML and non-GET requests return HTTP 405.
++> The MCP does not infer a signing URL from `CSOAI_GATEWAY`, list `csoai_sign`
++> without explicit signing configuration, or issue a substitute seal.
++> `csoai_verify` works offline. `https://councilof.ai/api/board-sign` is a
++> distinct card/root signer with GitHub Actions OIDC and a different payload;
++> it is not a drop-in endpoint for this tool.
++
++To enable `csoai_sign` in an authorised deployment, configure both
++`CSOAI_SIGN_ENDPOINT` (a full HTTPS URL with no query-string credentials) and
++`CSOAI_SIGNER_PUBLIC_KEY` (the expected 32-byte Ed25519 key in hex). Verify
++the signing service and the key's real-world authority separately. This MCP
++does not provide an authenticated signing service or grant board-DID authority.
++An HTTP error, HTML fallback, unexpected key, or invalid signature returns
++an error and no accepted seal.
+ 
+ ## Install
+ 
+@@ -66,13 +81,15 @@ claude mcp add csoai-governance -- node /absolute/path/to/mcp/csoai-governance/i
+ 
+ ## Example flow inside Claude Science
+ 1. Run your analysis → produce a figure + conclusion.
+-2. If a working signing gateway is configured, `csoai_sign` the conclusion (or the figure's SHA-256).
++2. If an authorised signing endpoint and pinned key are configured, request a
++   signature on the conclusion (or the figure's SHA-256).
+ 3. Publish the exact signed text, signature and public key so reviewers can run `csoai_verify` offline.
+ 4. `csoai_govern` — "is this model use high-risk under the EU AI Act?" before you publish/deploy.
+ 
+ ## Honesty
+ An Ed25519 seal proves only that the stated key signed the exact artifact bytes. It is
+ not a Bitcoin anchor, timestamp, safety assessment, or certificate. If the signing
+-gateway is unreachable or returns a mismatched seal, `csoai_sign` returns an error.
++endpoint is absent, unreachable, serves HTML, or returns a mismatched seal,
++`csoai_sign` returns `UNAVAILABLE` or `INVALID`, with no accepted seal.
+ `csoai_verify` performs local verification even when the gateway is down. `csoai_govern`
+ rejects out-of-role / companion-style replies and answers only on AI governance & cyber.
+diff --git a/mcp/csoai-governance/gateway-sign.mjs b/mcp/csoai-governance/gateway-sign.mjs
+new file mode 100644
+index 000000000..cb8f96a8b
+--- /dev/null
++++ b/mcp/csoai-governance/gateway-sign.mjs
+@@ -0,0 +1,65 @@
++import { validateGatewaySeal } from "./verify-seal.mjs";
++
++const HEX_32 = /^[0-9a-fA-F]{64}$/;
++
++/** A signing tool is advertised only when an operator names both its endpoint and expected key. */
++export function signingConfigured(endpoint, expectedPublicKey) {
++  if (!HEX_32.test(expectedPublicKey || "")) return false;
++  try {
++    const url = new URL(endpoint);
++    return url.protocol === "https:" && !url.username && !url.password && !url.search && !url.hash;
++  } catch {
++    return false;
++  }
++}
++
++export function advertisedTools(tools, endpoint, expectedPublicKey) {
++  return signingConfigured(endpoint, expectedPublicKey)
++    ? tools
++    : tools.filter((tool) => tool.name !== "csoai_sign");
++}
++
++/** Request a seal without treating an HTML fallback or a self-declared key as authority. */
++export async function requestGatewaySeal(artifact, { endpoint, expectedPublicKey, fetchImpl = fetch } = {}) {
++  if (typeof artifact !== "string" || !artifact.length) {
++    return { verdict: "UNCHECKABLE", reason: "artifact must be nonempty text" };
++  }
++  if (!signingConfigured(endpoint, expectedPublicKey)) {
++    return {
++      verdict: "UNAVAILABLE",
++      reason: "signing is not configured: an HTTPS CSOAI_SIGN_ENDPOINT and pinned CSOAI_SIGNER_PUBLIC_KEY are required; no signature was issued",
++    };
++  }
++
++  let response;
++  try {
++    response = await fetchImpl(endpoint, {
++      method: "POST",
++      headers: { "content-type": "application/json", accept: "application/json", "user-agent": "csoai-governance-mcp/0.1" },
++      body: JSON.stringify({ message: artifact }),
++    });
++  } catch {
++    return { verdict: "UNAVAILABLE", reason: "configured signing endpoint could not be reached; no signature was issued" };
++  }
++  if (!response.ok) {
++    return { verdict: "UNAVAILABLE", reason: `configured signing endpoint returned HTTP ${response.status}; no signature was issued` };
++  }
++  const contentType = response.headers?.get?.("content-type") || "";
++  if (!/^application\/(?:[\w.-]+\+)?json(?:\s*;|\s*$)/i.test(contentType)) {
++    return { verdict: "UNAVAILABLE", reason: "configured signing endpoint returned non-JSON content (possibly a static HTML fallback); no signature was issued" };
++  }
++  let seal;
++  try {
++    seal = await response.json();
++  } catch {
++    return { verdict: "UNAVAILABLE", reason: "configured signing endpoint returned invalid JSON; no signature was issued" };
++  }
++  if (typeof seal?.publicKey !== "string" || seal.publicKey.toLowerCase() !== expectedPublicKey.toLowerCase()) {
++    return { verdict: "INVALID", reason: "gateway public key does not match the pinned signer; no seal accepted" };
++  }
++  const check = validateGatewaySeal(artifact, seal);
++  if (check.verdict !== "VALID") {
++    return { verdict: check.verdict, reason: `gateway seal failed exact-byte verification: ${check.reason || check.verdict}` };
++  }
++  return { verdict: "VALID", seal };
++}
+diff --git a/mcp/csoai-governance/gateway-sign.test.mjs b/mcp/csoai-governance/gateway-sign.test.mjs
+new file mode 100644
+index 000000000..045259498
+--- /dev/null
++++ b/mcp/csoai-governance/gateway-sign.test.mjs
+@@ -0,0 +1,74 @@
++import assert from "node:assert/strict";
++import { generateKeyPairSync, sign } from "node:crypto";
++import test from "node:test";
++import { advertisedTools, requestGatewaySeal, signingConfigured } from "./gateway-sign.mjs";
++
++const { privateKey, publicKey } = generateKeyPairSync("ed25519");
++const expectedPublicKey = publicKey.export({ format: "der", type: "spki" }).subarray(-32).toString("hex");
++const artifact = "sha256:77caae06\n";
++const endpoint = "https://signer.example.invalid/api/sign";
++
++function response(status, contentType, payload) {
++  return {
++    ok: status >= 200 && status < 300,
++    status,
++    headers: { get: () => contentType },
++    json: async () => payload,
++  };
++}
++
++test("unconfigured signer is unavailable without making a request", async () => {
++  let called = false;
++  const result = await requestGatewaySeal(artifact, { fetchImpl: async () => { called = true; } });
++  assert.equal(result.verdict, "UNAVAILABLE");
++  assert.match(result.reason, /no signature was issued/);
++  assert.equal(called, false);
++  assert.equal(signingConfigured("https://os.meok.ai/api/sign", ""), false);
++  assert.deepEqual(advertisedTools([{ name: "csoai_sign" }, { name: "csoai_verify" }], "", ""), [{ name: "csoai_verify" }]);
++  assert.equal(advertisedTools([{ name: "csoai_sign" }], endpoint, expectedPublicKey).length, 1);
++});
++
++test("a 405 from the absent POST /api/sign route is unavailable, not signed", async () => {
++  const result = await requestGatewaySeal(artifact, {
++    endpoint,
++    expectedPublicKey,
++    fetchImpl: async (url, options) => {
++      assert.equal(url, endpoint);
++      assert.equal(options.method, "POST");
++      assert.equal(options.headers["content-type"], "application/json");
++      assert.deepEqual(JSON.parse(options.body), { message: artifact });
++      return response(405, "text/html; charset=utf-8", null);
++    },
++  });
++  assert.equal(result.verdict, "UNAVAILABLE");
++  assert.match(result.reason, /HTTP 405.*no signature was issued/);
++  assert.equal(result.seal, undefined);
++});
++
++test("a 200 static HTML /api/sign fallback is unavailable, not a valid seal", async () => {
++  const result = await requestGatewaySeal(artifact, {
++    endpoint,
++    expectedPublicKey,
++    fetchImpl: async () => response(200, "text/html; charset=utf-8", "<html>SPA</html>"),
++  });
++  assert.equal(result.verdict, "UNAVAILABLE");
++  assert.match(result.reason, /non-JSON content.*no signature was issued/);
++  assert.equal(result.seal, undefined);
++});
++
++test("a valid gateway signature must match the pinned key and exact bytes", async () => {
++  const seal = {
++    canonical: artifact,
++    publicKey: expectedPublicKey,
++    signature: sign(null, Buffer.from(artifact, "utf8"), privateKey).toString("hex"),
++  };
++  const fetchImpl = async () => response(200, "application/json; charset=utf-8", seal);
++  assert.equal((await requestGatewaySeal(artifact, { endpoint, expectedPublicKey, fetchImpl })).verdict, "VALID");
++  assert.equal((await requestGatewaySeal(artifact + "!", { endpoint, expectedPublicKey, fetchImpl })).verdict, "INVALID");
++  assert.equal((await requestGatewaySeal(artifact, { endpoint, expectedPublicKey: "00".repeat(32), fetchImpl })).verdict, "INVALID");
++});
++
++test("non-HTTPS and query-string credentials never enable signing", () => {
++  assert.equal(signingConfigured("http://signer.example.invalid/api/sign", expectedPublicKey), false);
++  assert.equal(signingConfigured("https://signer.example.invalid/api/sign?token=secret", expectedPublicKey), false);
++});
+diff --git a/mcp/csoai-governance/index.mjs b/mcp/csoai-governance/index.mjs
+index a19e02074..6a340fbae 100644
+--- a/mcp/csoai-governance/index.mjs
++++ b/mcp/csoai-governance/index.mjs
+@@ -4,21 +4,23 @@
+  * ---------------------
+  * Exposes the CSOAI Sovereign's governance layer to ANY MCP client — Claude
+  * Science, Claude Code, Cursor, or your own agent. Four tools:
+- *   csoai_sign     — Ed25519-seal an artifact to CSOAI Layer 0 (auditable + reproducible)
++ *   csoai_sign     — available only with an explicit signing endpoint and pinned key
+  *   csoai_verify   — verify a seal offline against its public key
+  *   csoai_govern   — ask the CSOAI Sovereign a governance / cybersecurity question (role-guarded)
+  *   csoai_catalog  — search the published governed CSOAI tools / MCPs
+  *
+- * Gateway is the live Sovereign brain; override with CSOAI_GATEWAY.
+- * No API key required for the public governance surface.
++ * The default governance gateway is not a signer. Never infer a signing route from it.
+  */
+ import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+ import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
+-import { validateGatewaySeal, verifySeal } from "./verify-seal.mjs";
++import { verifySeal } from "./verify-seal.mjs";
++import { advertisedTools, requestGatewaySeal } from "./gateway-sign.mjs";
+ 
+ const GW = (process.env.CSOAI_GATEWAY || "https://os.meok.ai/api").replace(/\/$/, "");
+ const UA = "csoai-governance-mcp/0.1";
++const SIGN_ENDPOINT = process.env.CSOAI_SIGN_ENDPOINT || "";
++const SIGNER_PUBLIC_KEY = process.env.CSOAI_SIGNER_PUBLIC_KEY || "";
+ 
+ async function api(path, body) {
+   const r = await fetch(GW + path, {
+@@ -37,7 +39,7 @@ const TOOLS = [
+   {
+     name: "csoai_sign",
+     description:
+-      "Seal an AI artifact (a decision, figure, report, dataset hash, or any text) to CSOAI Layer 0 with an Ed25519 signature — making it auditable, tamper-evident and reproducible. Use this on the OUTPUT of a science/code/analysis task so it carries a governance seal. Returns the signature, public key and a human-readable fingerprint (SOV:…).",
++      "Request an Ed25519 signature on exact UTF-8 text from an explicitly configured HTTPS signing endpoint. Available only when CSOAI_SIGN_ENDPOINT and a pinned CSOAI_SIGNER_PUBLIC_KEY are set; signing does not establish measurement, a timestamp, or Layer-0 authority by itself.",
+     inputSchema: {
+       type: "object",
+       properties: { artifact: { type: "string", description: "The exact content/text to seal (e.g. a conclusion, a manuscript section, a JSON result, or a SHA-256 of a large file)." } },
+@@ -80,19 +82,19 @@ const TOOLS = [
+ const BAD = /travell?er|companion|walks beside|i'?m sorry|can'?t help|as an ai language model|on your journey|dear friend|kindred/i;
+ 
+ const server = new Server({ name: "csoai-governance", version: "0.1.0" }, { capabilities: { tools: {} } });
+-server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: TOOLS }));
++server.setRequestHandler(ListToolsRequestSchema, async () => ({
++  tools: advertisedTools(TOOLS, SIGN_ENDPOINT, SIGNER_PUBLIC_KEY),
++}));
+ 
+ server.setRequestHandler(CallToolRequestSchema, async (req) => {
+   const { name, arguments: a = {} } = req.params;
+   try {
+     if (name === "csoai_sign") {
+       if (typeof a.artifact !== "string" || !a.artifact.length) return err("artifact must be nonempty text");
+-      const r = await api("/sign", { message: String(a.artifact || "") });
+-      if (!r.ok || !r.json) return err("signing gateway unreachable (status " + r.status + ")");
+-      const j = r.json;
+-      const check = validateGatewaySeal(a.artifact, j);
+-      if (check.verdict !== "VALID") return err("gateway seal not verified locally: " + (check.reason || check.verdict));
+-      return out({ sealed: true, alg: "Ed25519", fingerprint: j.fingerprint, signature: j.signature, publicKey: j.publicKey, canonical: a.artifact, verify: "csoai_verify (offline)", note: "Signature over exact artifact bytes; no timestamp, Bitcoin anchor, or certification is implied." });
++      const result = await requestGatewaySeal(a.artifact, { endpoint: SIGN_ENDPOINT, expectedPublicKey: SIGNER_PUBLIC_KEY });
++      if (result.verdict !== "VALID") return err(result.verdict + ": " + result.reason);
++      const j = result.seal;
++      return out({ sealed: true, alg: "Ed25519", signature: j.signature, publicKey: j.publicKey, canonical: a.artifact, verify: "csoai_verify (offline)", note: "Verified against the configured public key and exact artifact bytes; no timestamp, Bitcoin anchor, board-DID authority, or certification is implied." });
+     }
+     if (name === "csoai_verify") {
+       return out(verifySeal(a.artifact, a.signature, a.publicKey));
+diff --git a/mcp/csoai-governance/package.json b/mcp/csoai-governance/package.json
+index ef4e9cf3d..0ab3b2230 100644
+--- a/mcp/csoai-governance/package.json
++++ b/mcp/csoai-governance/package.json
+@@ -1,7 +1,7 @@
+ {
+   "name": "csoai-governance-mcp",
+   "version": "0.1.1",
+-  "description": "CSOAI Sovereign governance MCP — seal any AI artifact to CSOAI Layer 0 with Ed25519, verify seals offline, get governed AI-governance/cyber answers, and search the published governed-tool catalog. Lets any Claude Science / Claude Code / MCP agent make its outputs auditable, reproducible and council-governed.",
++  "description": "CSOAI governance MCP — verify Ed25519 seals offline, use configured governance and catalog services, and request signing only through an explicit HTTPS endpoint with a pinned public key.",
+   "type": "module",
+   "bin": {
+     "csoai-governance-mcp": "index.mjs"
+@@ -9,6 +9,7 @@
+   "main": "index.mjs",
+   "files": [
+     "index.mjs",
++    "gateway-sign.mjs",
+     "verify-seal.mjs",
+     "README.md"
+   ],
+@@ -40,6 +41,6 @@
+     "node": ">=18"
+   },
+   "scripts": {
+-    "test": "node --test verify-seal.test.mjs"
++    "test": "node --test verify-seal.test.mjs gateway-sign.test.mjs"
+   }
+ }
+-- 
+2.50.1 (Apple Git-155)
+

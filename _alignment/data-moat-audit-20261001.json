@@ -1,0 +1,84 @@
+{
+  "schema": "csoai.data-moat-audit/0.1",
+  "audited_at": "2026-10-01T14:00:00Z",
+  "lane": "mimocode-session",
+  "phase": "Phase 8 \u2014 Data moat (Compound CEO mandate)",
+  "requirement": "Persist longitudinally: source diffs, dependency edges, correction propagation, provider latency, failures, model differences, tool/protocol drift, routing outcomes, cost, evidence quality, repeated claim changes, public discovery and citations. The moat is the time-series evidence graph.",
+  "dimensions": 12,
+  "coverage": {
+    "source_diffs": {
+      "status": "SCHEMA_READY_DATA_EMPTY",
+      "where": "claim-maintenance registries have observed_changes[] schema (hash diffs between reads)",
+      "detail": "ondo-chainlink registry: 8 claims, 0 observed_changes, 0 prior_reads. Schema supports it but no longitudinal data yet \u2014 registries created 2026-09-22, day-7 check FETCH_FAILED.",
+      "action": "Will populate as claim-maintenance scheduler runs accumulate reads."
+    },
+    "dependency_edges": {
+      "status": "MISSING",
+      "where": "No claim dependency graph in any public surface.",
+      "detail": "Phase 2 claim spine readiness also flagged this as MISSING. No depends_on / affects fields in claim artifacts."
+    },
+    "correction_propagation": {
+      "status": "PARTIAL",
+      "where": "/api/corrections has 89 entries with what_changed + old_values + new_values + open_items. No formal propagation tracking (propagated_to, affected_claims, derived_from).",
+      "detail": "Correction latency: 1 exact, 5 upper_bound, 83 unmeasured, 51 detected_at_unrecorded, 0 detection_producer_stamped. Median 4600s for the one exact entry.",
+      "action": "Add propagated_to / affected_products fields to corrections schema."
+    },
+    "provider_latency": {
+      "status": "MISSING",
+      "where": "No public time-series of provider/model latency.",
+      "detail": "GSPC board has accuracy + separation per axis but no latency time-series."
+    },
+    "failures": {
+      "status": "PARTIAL",
+      "where": "Correction ledger captures failures (what_was_wrong + how_caught). FETCH_FAILED tracked in claim-maintenance scheduler. But no longitudinal failure rate or MTTR.",
+      "detail": "89 corrections over ~1 month = failure log exists. No aggregate failure metrics."
+    },
+    "model_differences": {
+      "status": "PRESENT",
+      "where": "living_stamp.preimage.axes[23]: per-axis accuracy + separation (TIE/UNTESTED/SEPARATED). fleet_mean + mean_harm show fleet.",
+      "detail": "23 axes, 15,580 per-item rows, 19-model fleet. Data is persisted and Ed25519-signed.",
+      "action": "Longitudinal version (compare across gold_run dates) not yet available."
+    },
+    "tool_protocol_drift": {
+      "status": "MISSING",
+      "where": "No public tracking of tool/protocol drift over time.",
+      "detail": "MCP census is point-in-time (2026-09-27). x402 census is point-in-time. No drift detection."
+    },
+    "routing_outcomes": {
+      "status": "MISSING",
+      "where": "Route tool returns unsigned preview records (csoai.evidence-event/0.1) but these are NOT persisted publicly.",
+      "detail": "Each route call generates a record with task/policy/candidates hashes but no public storage or replay."
+    },
+    "cost": {
+      "status": "PARTIAL",
+      "where": "/api/revenue tracks SKU counts (issuance=12, proofs=1). No per-operation cost tracking.",
+      "detail": "Revenue is at SKU level. Cost per measurement / per route is not tracked."
+    },
+    "evidence_quality": {
+      "status": "PRESENT",
+      "where": "peritem_rows: 15,580 rows, SHA-256 bound. living_stamp: Ed25519-signed + verifiable. Corrections: signature VALID. Public root: Merkle tree with Rekor + OTS.",
+      "detail": "Strong. Evidence quality is the strongest dimension."
+    },
+    "repeated_claim_changes": {
+      "status": "SCHEMA_READY_DATA_EMPTY",
+      "where": "observed_changes[] would capture this. Currently 0 (registries are new).",
+      "detail": "Same as source_diffs \u2014 will populate as scheduler runs accumulate."
+    },
+    "public_discovery_and_citations": {
+      "status": "PARTIAL",
+      "where": "hub_census: 3,032,028 listings catalogued (all DISCOVERED). No citation tracking. No external discovery measurement.",
+      "detail": "C-2026-0930-12 noted ~130 HF cards need scrubbing. No inbound citation count."
+    }
+  },
+  "summary": {
+    "PRESENT": 2,
+    "SCHEMA_READY_DATA_EMPTY": 2,
+    "PARTIAL": 4,
+    "MISSING": 4,
+    "strongest": "evidence_quality, model_differences",
+    "weakest": "dependency_edges, provider_latency, tool_protocol_drift, routing_outcomes",
+    "time_series_evidence_graph": "NOT YET BUILT. The flywheel (CAPTURE\u2192RECHECK\u2192MEASURE\u2192CORRECT\u2192QUOTE) is defined with 5 stages and authorities, but the time-series graph linking events across stages does not exist as a public artifact.",
+    "recommendation": "The highest-leverage gap is routing_outcomes persistence \u2014 every route call already generates a structured record (csoai.evidence-event/0.1) but it's discarded. Persisting these would start the routing loop (Phase 2 compounding loop #5) and create the time-series evidence graph backbone. Second priority: claim dependency edges (unblocks correction propagation and affected_products)."
+  },
+  "honesty_note": "Read-only audit of publicly served bytes. SCHEMA_READY_DATA_EMPTY means the schema supports it but no longitudinal data has accumulated yet. MISSING means no public schema or data found. The flywheel stages are defined in the state API's contract.flywheel field."
+}

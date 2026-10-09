@@ -1,0 +1,120 @@
+{
+  "schema": "csoai.external-directory-readback/1",
+  "observed_at_utc": "2026-09-24T13:53:32.313355+00:00",
+  "state": "READ_ONLY_AUDIT_NO_DIRECTORY_SUBMISSION",
+  "observations": {
+    "community_a2a": {
+      "url": "https://a2aregistry.org/agents/48e5bba6-8848-4adc-8f92-b5fa2c0744e0/",
+      "status": 200,
+      "sha256": "18e66cbf9388c5b54fd7f3369cf45370ecd71c9e19558073bb69864483367cd7",
+      "bytes": 77458,
+      "rendered_last_sweep": "2026-09-14T23:27:14.369126Z",
+      "maintainer_note": "Smoke test against `message/send` failed with an unrecognised error.",
+      "task_verified": "not observed"
+    },
+    "community_api": {
+      "url": "https://a2aregistry.org/api/agents/48e5bba6-8848-4adc-8f92-b5fa2c0744e0",
+      "status": 200,
+      "sha256": "6151e537230a329dc6da4e21d8f7bdd063be50509bd3cd68a5fc48f1bd797049",
+      "bytes": 12596,
+      "agent_version": "1.1.0",
+      "endpoint": "https://councilof.ai/api/a2a"
+    },
+    "commercial_a2a": {
+      "url": "https://www.a2a-registry.org/agent/ai.councilof.council_of_ai__measurement_agent",
+      "status": 200,
+      "sha256": "b7a98f62dd581087e5ca6944f0fbb12a82feb3e382e782ad8b9d5b3bfac8438c",
+      "bytes": 137481,
+      "unclaimed": true,
+      "last_checked": "Sep 20, 2026",
+      "last_updated": "Sep 20, 2026",
+      "old_worker_url_in_html": false
+    },
+    "current_card": {
+      "url": "https://councilof.ai/.well-known/agent-card.json",
+      "status": 200,
+      "sha256": "b6474156e927483e5e156780f2e0fbd82f12e86d7efd25edc22be597a73aed19",
+      "bytes": 13018,
+      "agent_version": "1.1.0",
+      "interfaces": [
+        {
+          "url": "https://councilof.ai/api/a2a",
+          "protocolBinding": "JSONRPC",
+          "protocolVersion": "1.0"
+        }
+      ]
+    },
+    "current_a2a": {
+      "url": "https://councilof.ai/api/a2a",
+      "status": 200,
+      "sha256": "3a115ae91fea7cb2823d4f59ad74b012d6eaf70bdbadc9a883da16833f9970e9",
+      "bytes": 2424,
+      "version_rule": "Send `A2A-Version: 1.0`. An absent header is served as 1.0 for v1.0 method names; any other version, and the 0.3 method names such as message/send, get VersionNotSupportedError -32009."
+    },
+    "mcp_registry_latest": {
+      "url": "https://registry.modelcontextprotocol.io/v0.1/servers/io.github.CSOAI-ORG%2Fgspc/versions/latest",
+      "status": 200,
+      "sha256": "ff195113034d5a6679c1686c0528153016ae2da6d18320d5cfaa2f3915a04971",
+      "bytes": 850,
+      "registered_version": "1.4.2",
+      "description": "12 HTTP tools (8 free, 4 x402). GSPC board + Ed25519 + trust counts. Measure, never certify.",
+      "remotes": [
+        {
+          "type": "streamable-http",
+          "url": "https://councilof.ai/mcp"
+        }
+      ]
+    },
+    "mcp_live": {
+      "url": "https://councilof.ai/mcp",
+      "status": 200,
+      "sha256": "b8bff9298a25c57dcf9a124148ae9100a10062ca14e61989f2300455ea60af9f",
+      "bytes": 1618,
+      "served_version": "1.4.2"
+    },
+    "mcp_manifest": {
+      "url": "https://councilof.ai/.well-known/mcp.json",
+      "status": 200,
+      "sha256": "55921e1a93dbb8f65c49cf8e2af211ce43ee2be16158c1b8bd85b1129b0cd247",
+      "bytes": 2358,
+      "registry_version": "1.4.0"
+    },
+    "mcp_server_card": {
+      "url": "https://councilof.ai/.well-known/mcp/server-card.json",
+      "status": 200,
+      "sha256": "2ba81b89ae9b674d948a8af118cd2e2e18f7bb95b7d8d556f0e2877dcf479694",
+      "bytes": 2658,
+      "mentions_1_4_0": true
+    },
+    "glama": {
+      "url": "https://glama.ai/mcp/servers/CSOAI-ORG/councilof-ai",
+      "status": 200,
+      "sha256": "86154b78524d9ef235c9af5a70b05b9a73a80be6633760597acb16197aa935f3",
+      "bytes": 420668
+    },
+    "old_worker": {
+      "url": "https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp",
+      "status": 404,
+      "sha256": "d2dfdc9511fbeaa0701d1f8730f4989313b062ca1b61a2bd8bed8f4f5d654b5d",
+      "bytes": 21
+    }
+  },
+  "scan_ui": {
+    "url": "https://www.a2a-registry.org/submit",
+    "input": "https://councilof.ai/.well-known/agent-card.json",
+    "result": "Preview Agent for existing Council of AI Measurement Agent",
+    "final_action": "Confirm & Register",
+    "final_action_taken": false,
+    "reason": "Could create a duplicate; in-place refresh is not demonstrated"
+  },
+  "protocol_primary_sources": [
+    "https://github.com/a2aproject/A2A/blob/main/docs/whats-new-v1.md",
+    "https://github.com/a2aproject/A2A/blob/main/docs/specification.md"
+  ],
+  "protocol_finding": "A2A v0.3 uses message/send; v1.0 uses SendMessage. v1.0 clients send A2A-Version: 1.0; absent is interpreted as 0.3 by the specification. The CSOAI endpoint documents absent as 1.0.",
+  "next_actions": [
+    "Do not press Confirm & Register unless the registry proves that it updates the existing ID in place.",
+    "Site owner should correct public MCP manifest/server-card version from 1.4.0 to live registry 1.4.2 after verifying current tool inventory.",
+    "Site owner should decide whether to add a distinct 0.3 interface or clarify lack of 0.3 compatibility; do not relabel a 1.0 endpoint as 0.3."
+  ]
+}

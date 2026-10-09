@@ -1,0 +1,57 @@
+From 5671e20c97984f7b6c878fbc294cb12959957609 Mon Sep 17 00:00:00 2001
+From: CSOAI <nicholas@csoai.org>
+Date: Thu, 24 Sep 2026 23:59:55 +0100
+Subject: [PATCH] fix: point governance evidence at live membership record
+
+---
+ public/governance/committee-registry.json | 6 +++---
+ public/governance/manifest.json           | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/public/governance/committee-registry.json b/public/governance/committee-registry.json
+index c9760ee97..90715168f 100644
+--- a/public/governance/committee-registry.json
++++ b/public/governance/committee-registry.json
+@@ -13,7 +13,7 @@
+   "external_participation": [
+     {
+       "body": "Open Secure AI Alliance",
+-      "evidence": "https://councilof.ai/institutional-record/#memberships",
++      "evidence": "https://councilof.ai/memberships/#osaia",
+       "id": "osaa-general-member",
+       "role": "General Member",
+       "status": "REPORTED"
+@@ -34,7 +34,7 @@
+     },
+     {
+       "body": "The Linux Foundation",
+-      "evidence": "https://councilof.ai/institutional-record/#memberships",
++      "evidence": "https://councilof.ai/memberships/#linux-foundation",
+       "id": "linux-foundation-silver",
+       "role": "Silver Member",
+       "status": "REPORTED"
+@@ -43,7 +43,7 @@
+   "internal_roles": [
+     {
+       "body": "CSOAI Ltd",
+-      "evidence": "https://councilof.ai/institutional-record/",
++      "evidence": "https://councilof.ai/governance/authority-model.json",
+       "id": "owner-authorised-lane",
+       "role": "owner-authorised deployment and publication lane",
+       "status": "VERIFIED"
+diff --git a/public/governance/manifest.json b/public/governance/manifest.json
+index 4f7ef318d..24311c529 100644
+--- a/public/governance/manifest.json
++++ b/public/governance/manifest.json
+@@ -8,7 +8,7 @@
+     "correction_policy": "/governance/correction-policy.json",
+     "corrections": "/api/corrections",
+     "gspc": "/api/gspc",
+-    "institutional_record": "/institutional-record.json",
++    "institutional_record": "/memberships/",
+     "root": "/root.json",
+     "state": "/api/state",
+     "work_evidence_schema": "/interop/work-evidence-capsule-v0.1.schema.json"
+-- 
+2.50.1 (Apple Git-155)
+

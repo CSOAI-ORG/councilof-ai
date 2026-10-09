@@ -1,0 +1,116 @@
+From 742174f56f75291d1e020cc7d73bdb59991973af Mon Sep 17 00:00:00 2001
+From: CSOAI <nicholas@csoai.org>
+Date: Fri, 25 Sep 2026 00:48:30 +0100
+Subject: [PATCH] fix: require payer-level evidence before declaring repeat
+ purchase
+
+---
+ scripts/gspc_site_spray.py    | 23 +++++++++++++----------
+ tests/test_gspc_site_spray.py | 27 +++++++++++++++++++++++----
+ 2 files changed, 36 insertions(+), 14 deletions(-)
+
+diff --git a/scripts/gspc_site_spray.py b/scripts/gspc_site_spray.py
+index a6bb482..06b891e 100755
+--- a/scripts/gspc_site_spray.py
++++ b/scripts/gspc_site_spray.py
+@@ -33,7 +33,13 @@ def _fetch_json(
+     )
+     try:
+         with urllib.request.urlopen(req, timeout=timeout) as res:
+-            return res.status, json.loads(res.read().decode("utf-8"))
++            try:
++                payload = json.loads(res.read().decode("utf-8"))
++            except (UnicodeDecodeError, json.JSONDecodeError):
++                # An SPA fallback can serve HTML with HTTP 200 at a JSON path.
++                # Preserve that status so the report identifies a soft 404.
++                return res.status, None
++            return res.status, payload
+     except urllib.error.HTTPError as exc:
+         if (
+             exc.code in {301, 302, 303, 307, 308}
+@@ -269,18 +275,14 @@ def build_report(
+     payers_by_door = one.get("distinct_payers_by_door", {})
+     rail_live = x402.get("rail", {}).get("mode") == "live"
+     doors = x402.get("resources", [])
+-    repeat_observed = bool(
+-        isinstance(distinct_30d, int)
+-        and isinstance(settlements, int)
+-        and settlements > distinct_30d
+-    )
++    # The API exposes aggregate all-time settlements and a 30-day distinct
++    # payer count. Their difference cannot establish that the same non-self
++    # wallet paid twice, or even that both events fell in the same window.
++    repeat_observed = None
+     threshold = config.get("revenue_rule", {}).get(
+         "product_threshold_distinct_payers_30d", 5
+     )
+-    open_next = bool(
+-        config.get("revenue_rule", {}).get("open_next_door_on_repeat_payer")
+-        and repeat_observed
+-    )
++    open_next = False
+ 
+     focus_door = None
+     if isinstance(payers_by_door, dict) and payers_by_door:
+@@ -294,6 +296,7 @@ def build_report(
+         "focus_door": focus_door,
+         "existing_paid_resource_count": len(doors) if isinstance(doors, list) else None,
+         "repeat_purchase_observed": repeat_observed,
++        "repeat_purchase_evidence": "not exposed by aggregate /api/revenue; requires same non-self payer with two nonzero settlements in the stated window",
+         "open_next_door": open_next,
+         "product_threshold_distinct_payers_30d": threshold,
+         "product_threshold_met": isinstance(distinct_30d, int)
+diff --git a/tests/test_gspc_site_spray.py b/tests/test_gspc_site_spray.py
+index 2c99a0a..06aae8e 100644
+--- a/tests/test_gspc_site_spray.py
++++ b/tests/test_gspc_site_spray.py
+@@ -1,7 +1,8 @@
+ import json
+ from pathlib import Path
++from unittest.mock import patch
+ 
+-from scripts.gspc_site_spray import build_report
++from scripts.gspc_site_spray import _fetch_json, build_report
+ 
+ 
+ def config():
+@@ -107,11 +108,12 @@ def test_stale_signed_board_blocks_spray_and_does_not_open_new_revenue_door():
+     assert report["value_ledger"]["correction_records"] == 2
+ 
+ 
+-def test_repeat_payer_opens_next_door_when_board_is_current():
++def test_aggregate_settlements_do_not_prove_repeat_payer():
+     report = build_report(config(), fetch_json_repeat, fetch_status)
+     assert report["operational"]
+-    assert report["revenue_loop"]["repeat_purchase_observed"] is True
+-    assert report["revenue_loop"]["open_next_door"] is True
++    assert report["revenue_loop"]["repeat_purchase_observed"] is None
++    assert report["revenue_loop"]["open_next_door"] is False
++    assert "same non-self payer" in report["revenue_loop"]["repeat_purchase_evidence"]
+     assert (
+         report["revenue_loop"]["ras"]["meaning"]
+         == "results_receipts_reverification_as_a_service"
+@@ -132,3 +134,20 @@ def test_missing_governance_projection_is_warning_not_false_success():
+         and x["site"] == "https://b.example"
+         for x in report["warnings"]
+     )
++
++
++def test_json_discovery_retains_http_200_when_spa_returns_html():
++    class Response:
++        status = 200
++
++        def __enter__(self):
++            return self
++
++        def __exit__(self, *_args):
++            return False
++
++        def read(self):
++            return b"<!doctype html><title>Site home</title>"
++
++    with patch("scripts.gspc_site_spray.urllib.request.urlopen", return_value=Response()):
++        assert _fetch_json("https://example.test/.well-known/csoai-governance.json") == (200, None)
+-- 
+2.50.1 (Apple Git-155)
+

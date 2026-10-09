@@ -1,0 +1,11 @@
+# A2A registry smoke-note triage — 23 September 2026
+
+The existing [Council of AI A2A listing](https://a2aregistry.org/agents/48e5bba6-8848-4adc-8f92-b5fa2c0744e0/) was opened anonymously at about 06:52 UTC. It named the correct canonical card, `https://councilof.ai/.well-known/agent-card.json`, and endpoint, `https://councilof.ai/api/a2a`, showed **Reachable** and a sweep just now. It also retained this maintainer note: `Smoke test against message/send failed with an unrecognised error. See full message in the registry's worker logs.` Its evidence label says task verification was not observed. The page's proxy test interface connected and reported Protocol A2A v1.0; no message was sent through that interface.
+
+Three anonymous, unpaid direct POSTs to the canonical endpoint distinguish the request shapes:
+
+1. JSON-RPC `method: "message/send"` without `A2A-Version` returned HTTP 200 with error `-32009 VERSION_NOT_SUPPORTED`: `message/send is a 0.3 method name; send A2A-Version: 1.0 and the v1.0 name (for example SendMessage)`.
+2. `method: "SendMessage"`, header `A2A-Version: 1.0`, and a plain text part returned HTTP 200 with error `-32602 INVALID_SKILL_SELECTOR`: structured `Part.data {skill,input}` required.
+3. `method: "SendMessage"`, header `A2A-Version: 1.0`, and data part `{"skill":"gspc-board","input":{}}` returned HTTP 200 with a JSON-RPC **result**. It quoted the live lid `23 axes measured · 14 model fleets · 0 separated leaders · 3 public leader scores · 9 fact runs · TIE is TIE · not a certificate.` and `public_count: 23 axis · 23 measured`, derived from `/api/gspc` at `2026-09-23T06:52:54.545Z`.
+
+The registry note is **consistent with** a probe using an obsolete method or wrong request part. Its worker logs were not available, so the exact cause is not proven. The public listing is already present and freshly reachable. Its `Report this listing` UI offers abuse/moderation reasons (`Potentially harmful`, `Spam`, `Impersonation`, `Other`), not a technical correction channel; no report was sent. Re-submitting the same card risks a duplicate and is not a justified correction. The linked feedback route is a GitHub issue, unavailable under the current GitHub account state. No directory mutation was made here.

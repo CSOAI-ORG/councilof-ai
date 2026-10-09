@@ -1,0 +1,215 @@
+#!/usr/bin/env python3
+"""Fetch only mirrorable committed bytes from the active RunPod bare source.
+
+This keeps the existing M4 read-only mirror audit off its stale local checkout.
+No GitHub, full clone, HF writer, scheduler, or production deploy is involved.
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import pathlib
+import re
+import shlex
+import shutil
+import subprocess
+import sys
+import tarfile
+from datetime import datetime, timezone
+
+
+ALIAS = "rp-3090-now"
+BARE = "/workspace/git/councilof-ai.git"
+CACHE = pathlib.Path("/Users/nicholas/.csoai/mirror-source-cache")
+SAFE_PATH = re.compile(r"^public/[A-Za-z0-9._/-]+$")
+HEX40 = re.compile(r"^[0-9a-f]{40}$")
+EXCLUDED_GENERATED = "public/interop/mirror-manifest.json"
+
+
+def ssh(command: str) -> bytes:
+    return subprocess.check_output(
+        ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=8", ALIAS, command],
+        timeout=45,
+    )
+
+
+def selected(path: str) -> bool:
+    p = pathlib.PurePosixPath(path)
+    return (
+        path != EXCLUDED_GENERATED
+        and (
+            (p.parent.as_posix() == "public/interop" and p.suffix == ".json")
+            or (p.parent.as_posix() == "public/press" and p.suffix == ".md")
+            or path in ("public/root.json", "public/signed/card_index.json")
+        )
+    )
+
+
+def listing(commit: str) -> dict[str, tuple[str, int]]:
+    raw = ssh(
+        f"git --git-dir={shlex.quote(BARE)} ls-tree -r --long -z {commit} -- "
+        "public/interop public/press public/root.json public/signed/card_index.json"
+    )
+    found = {}
+    for row in raw.split(b"\0"):
+        if not row:
+            continue
+        meta, path_bytes = row.split(b"\t", 1)
+        path = path_bytes.decode("utf-8")
+        if not selected(path):
+            continue
+        if not SAFE_PATH.fullmatch(path):
+            raise RuntimeError("unsafe source path: " + path)
+        mode, kind, oid, size = meta.decode().split()
+        if kind != "blob" or not HEX40.fullmatch(oid):
+            raise RuntimeError("not a SHA-1 Git blob: " + path)
+        found[path] = (oid, int(size))
+    required = {
+        "public/root.json", "public/signed/card_index.json",
+        "public/interop/agent-population-2026-09-17.json",
+        "public/interop/master-consolidation-rollup-v0.1.json",
+        "public/interop/verifiability-census-2026-09-17.json",
+        "public/interop/verifiability-census-2026-09-17-v0.2.json",
+        "public/interop/paired-arm-arc-agi-2-2026-09-17.json",
+        "public/press/2026-09-17-can-you-check-their-work.md",
+    }
+    if not required.issubset(found):
+        raise RuntimeError("artifact floor missing from RunPod bare source")
+    return found
+
+
+def blob_oid(data: bytes) -> str:
+    return hashlib.sha1(b"blob " + str(len(data)).encode() + b"\0" + data).hexdigest()
+
+
+def validate_cache(dest: pathlib.Path, commit: str, files: dict[str, tuple[str, int]]) -> bool:
+    marker = dest / ".source.json"
+    if not marker.is_file():
+        return False
+    try:
+        state = json.loads(marker.read_text())
+        if state.get("commit") != commit or state.get("file_count") != len(files):
+            return False
+        snapshot = subprocess.check_output(
+            ["git", "-C", str(dest), "rev-parse", "HEAD"], stderr=subprocess.DEVNULL
+        ).decode().strip()
+        if snapshot != state.get("snapshot_commit"):
+            return False
+        for path, (oid, size) in files.items():
+            f = dest / path
+            if not f.is_file() or f.stat().st_size != size or blob_oid(f.read_bytes()) != oid:
+                return False
+    except (OSError, ValueError):
+        return False
+    return True
+
+
+def stage_archive(dest: pathlib.Path, commit: str, files: dict[str, tuple[str, int]]) -> None:
+    CACHE.mkdir(parents=True, exist_ok=True)
+    temp = CACHE / (commit + ".tmp." + str(os.getpid()))
+    temp.mkdir()
+    command = (
+        f"git --git-dir={shlex.quote(BARE)} archive {commit} -- "
+        + " ".join(shlex.quote(path) for path in files)
+    )
+    proc = subprocess.Popen(
+        ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=8", ALIAS, command],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+    )
+    seen = set()
+    try:
+        assert proc.stdout is not None
+        with tarfile.open(fileobj=proc.stdout, mode="r|") as tar:
+            for member in tar:
+                if member.isdir():
+                    continue
+                path = member.name.rstrip("/")
+                if path not in files or not member.isfile():
+                    raise RuntimeError("unexpected archive member: " + path)
+                if path in seen:
+                    raise RuntimeError("duplicate archive member: " + path)
+                stream = tar.extractfile(member)
+                if stream is None:
+                    raise RuntimeError("unreadable archive member: " + path)
+                data = stream.read()
+                oid, size = files[path]
+                if len(data) != size or blob_oid(data) != oid:
+                    raise RuntimeError("archive byte mismatch: " + path)
+                output = temp / path
+                output.parent.mkdir(parents=True, exist_ok=True)
+                output.write_bytes(data)
+                seen.add(path)
+        stderr = proc.stderr.read() if proc.stderr else b""
+        if proc.wait(timeout=45) != 0 or seen != set(files):
+            raise RuntimeError("source archive incomplete: " + stderr.decode("utf-8", "replace")[:200])
+        marker = {
+            "schema": "csoai.runpod-current-mirror-source/0.1",
+            "commit": commit,
+            "file_count": len(files),
+            "source": BARE,
+            "selected_bytes": sum(size for _, size in files.values()),
+            "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "checks": "every extracted file matched its pinned Git blob SHA-1 and byte length",
+            "generated_self_reference_excluded": EXCLUDED_GENERATED,
+        }
+        subprocess.run(["git", "init", "-q", str(temp)], check=True)
+        subprocess.run(["git", "-C", str(temp), "add", "--", *sorted(files)], check=True)
+        subprocess.run(
+            ["git", "-C", str(temp), "-c", "user.name=CSOAI Mirror Snapshot",
+             "-c", "user.email=no-reply@csoai.org", "commit", "-q", "-m",
+             "Verified sparse source from RunPod " + commit],
+            check=True,
+        )
+        marker["snapshot_commit"] = subprocess.check_output(
+            ["git", "-C", str(temp), "rev-parse", "HEAD"]
+        ).decode().strip()
+        (temp / ".source.json").write_text(json.dumps(marker, sort_keys=True) + "\n")
+        os.replace(temp, dest)
+    except Exception:
+        proc.kill()
+        proc.wait()
+        shutil.rmtree(temp, ignore_errors=True)
+        raise
+
+
+def prune(current: pathlib.Path) -> None:
+    """Keep the current and one previous immutable cache; wrapper holds lockf."""
+    others = sorted(
+        (p for p in CACHE.iterdir() if p.is_dir() and HEX40.fullmatch(p.name) and p != current),
+        key=lambda p: p.stat().st_mtime,
+        reverse=True,
+    )
+    for old in others[1:]:
+        shutil.rmtree(old)
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--prune", action="store_true")
+    args = parser.parse_args()
+    commit = ssh(f"git --git-dir={shlex.quote(BARE)} rev-parse master").decode().strip()
+    if not HEX40.fullmatch(commit):
+        raise RuntimeError("invalid RunPod bare master")
+    files = listing(commit)
+    dest = CACHE / commit
+    if not validate_cache(dest, commit, files):
+        if dest.exists():
+            raise RuntimeError("existing immutable cache failed validation: " + str(dest))
+        stage_archive(dest, commit, files)
+        if not validate_cache(dest, commit, files):
+            raise RuntimeError("staged source cache failed readback validation")
+    if args.prune:
+        prune(dest)
+    print("current mirror source", commit, len(files), "files", file=sys.stderr)
+    print(dest)
+    return 0
+
+
+if __name__ == "__main__":
+    try:
+        sys.exit(main())
+    except Exception as error:
+        print("current mirror source held:", type(error).__name__, error, file=sys.stderr)
+        sys.exit(2)

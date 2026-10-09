@@ -1,0 +1,45 @@
+{
+  "schema": "csoai.correction-readback/0.1",
+  "correction_id": "C-2026-0930-01",
+  "readback_at": "2026-10-01T11:40:00Z",
+  "lane": "mimocode-session",
+  "observation": "The correction status reads 'CORRECTED IN SOURCE; PRODUCTION DEPLOY/READBACK PENDING'. Anonymous readback of live served bytes shows the defect is no longer present. The fix appears to be deployed; the correction status field is stale relative to the served bytes.",
+  "what_was_fixed_verified": {
+    "stale_22_axis_removed": true,
+    "unbacked_measure_route_removed": true,
+    "unbacked_anchor_route_removed": true,
+    "references_canonical_openapi": true,
+    "references_claims_register_and_corrections": true
+  },
+  "note_on_measurement_fresh_capsule": "The plugin manifest declares /measurement/fresh-capsule (GET). This is NOT one of the unbacked routes the correction targeted (which were /measure and /anchor). Live GET /api/measurement/fresh-capsule returns HTTP 402 (x402 payment rail) \u2014 it is backed by a paid endpoint, not a phantom route. The canonical OpenAPI at /api/openapi.json correctly does not list it (it lists only the free public read surfaces).",
+  "live_manifest": {
+    "url": "https://councilof.ai/interop/chatgpt-plugin.json",
+    "http": 200,
+    "bytes": 6088,
+    "sha256_prefix": "cb384ea7f02b18d6",
+    "paths_count": 10
+  },
+  "canonical_openapi": {
+    "url": "https://councilof.ai/api/openapi.json",
+    "http": 200,
+    "bytes": 8065,
+    "paths_count": 12
+  },
+  "source_re_read_bonus": {
+    "note": "FETCH_FAILED on claimreg-ondo-chainlink day-7 was transient. Sources re-read successfully on 2026-10-01.",
+    "chain_link": {
+      "http": 200,
+      "sha256": "0d4a0310d546605cd2c70710036d63a137fa8574fcf8213bc50416e99d1bf000"
+    },
+    "ondo_finance": {
+      "http": 200,
+      "sha256": "d062d5a83f97f87e94eb1c04e80bc5e0ed2ab97f075ff54be47b6556678576f4"
+    },
+    "api_llama_ondo": {
+      "http": 200,
+      "sha256": "8b68b8481c10762895c9911424fde42f695a16af81712728a35f3c64ed5a2d20"
+    },
+    "cl1_visible_number_unchanged": "34,177,623,388,199 (same as captured 2026-09-22 \u2014 observed, not alleged)"
+  },
+  "honesty_note": "Anonymous readback of served bytes. Does not update the corrections ledger status field. Establishes the live bytes match the intended correction. The FETCH_FAILED retry work is resolved: sources are reachable."
+}

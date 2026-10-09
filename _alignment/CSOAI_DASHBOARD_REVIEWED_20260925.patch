@@ -1,0 +1,2014 @@
+diff --git a/client/src/components/DashboardArenaPane.tsx b/client/src/components/DashboardArenaPane.tsx
+index c8dc52d36..c502c86b3 100644
+--- a/client/src/components/DashboardArenaPane.tsx
++++ b/client/src/components/DashboardArenaPane.tsx
+@@ -6,6 +6,7 @@ import {
+   ShieldCheck,
+   Swords,
+ } from "lucide-react";
++import { Link } from "wouter";
+ 
+ export const ARENA_SCOREBOARD_ENDPOINT = "/api/arena/scoreboard";
+ export const ARENA_SCOREBOARD_FALLBACK = "/signed/arena_scoreboard.json";
+@@ -681,9 +682,15 @@ export default function DashboardArenaPane({
+             below remains a separate read-only artefact and never updates the
+             living GSPC board.
+           </p>
+-          <a href="/world/observatory/" className="mt-3 inline-flex text-sm font-semibold text-emerald-800 underline-offset-4 hover:underline focus-visible:underline">
+-            Explore the dated, source-linked simulation observatory →
+-          </a>
++          <Link
++            href="/dashboard?tab=city"
++            className="mt-3 inline-flex text-sm font-semibold text-emerald-800 underline-offset-4 hover:underline focus-visible:underline"
++          >
++            Explore the dated Council City observatory in this workspace →
++          </Link>
++          <p className="mt-1 text-xs text-muted-foreground">
++            Source-linked simulation snapshots; no live multiplayer or real-world verdict.
++          </p>
+         </div>
+       </header>
+ 
+diff --git a/client/src/components/DashboardCataloguePane.test.ts b/client/src/components/DashboardCataloguePane.test.ts
+index 9d2ba6205..e5e980a57 100644
+--- a/client/src/components/DashboardCataloguePane.test.ts
++++ b/client/src/components/DashboardCataloguePane.test.ts
+@@ -33,6 +33,8 @@ describe("Council master catalogue", () => {
+     expect(new Set(hrefs).size).toBe(hrefs.length);
+     expect(framedPaths).not.toContain("/dashboard");
+     expect(framedPaths).not.toContain("/os");
++    expect(framedPaths).not.toContain("/watchdog-hub");
++    expect(entries.some((entry) => entry.href === "/dashboard?tab=watchdog")).toBe(true);
+   });
+ 
+   it("keeps supporting routes in the centre pane", () => {
+@@ -40,6 +42,13 @@ describe("Council master catalogue", () => {
+     expect(crosswalk?.href).toContain("/dashboard?tab=explore&view=%2Fcrosswalk");
+   });
+ 
++  it("shows actual audience doors instead of an empty industries filter", () => {
++    const audience = entries.filter((entry) => entry.kind === "audience");
++    expect(audience.length).toBeGreaterThan(0);
++    expect(audience.some((entry) => entry.path === "/regulators")).toBe(true);
++    expect(audience.some((entry) => entry.path === "/insurers")).toBe(true);
++  });
++
+   it("opens every supporting destination through the canonical dashboard", () => {
+     for (const entry of entries) {
+       expect(entry.href, entry.id).toMatch(/^\/dashboard\?/);
+diff --git a/client/src/components/DashboardCataloguePane.tsx b/client/src/components/DashboardCataloguePane.tsx
+index 8065a5c91..d05ca15bd 100644
+--- a/client/src/components/DashboardCataloguePane.tsx
++++ b/client/src/components/DashboardCataloguePane.tsx
+@@ -30,7 +30,7 @@ import {
+   normalizeDashboardView,
+ } from "@/lib/dashboardView";
+ 
+-type CatalogueKind = "workflow" | "surface" | "industry" | "library";
++type CatalogueKind = "workflow" | "surface" | "audience" | "library";
+ 
+ export type DashboardCatalogueEntry = {
+   id: string;
+@@ -72,6 +72,7 @@ const CANONICAL_ALIAS_PATHS = new Set([
+   "/sov-os",
+   "/standards",
+   "/try",
++  "/watchdog-hub",
+ ]);
+ 
+ export function buildDashboardCatalogue(): DashboardCatalogueEntry[] {
+@@ -111,7 +112,7 @@ export function buildDashboardCatalogue(): DashboardCatalogueEntry[] {
+       label: route.label,
+       description: route.blurb,
+       group: ROUTE_GROUP_LABELS[route.group],
+-      kind: "surface",
++      kind: route.group === "audience" ? "audience" : "surface",
+       href,
+       path: route.path,
+     });
+@@ -139,7 +140,9 @@ export function buildDashboardCatalogue(): DashboardCatalogueEntry[] {
+       label,
+       description: "Current published Council of AI surface.",
+       group: classify(route.path, label).title,
+-      kind: "surface",
++      kind: ["/industries", "/sectors"].includes(route.path)
++        ? "audience"
++        : "surface",
+       href: dashboardViewHref(route.path, label),
+       path: route.path,
+     });
+@@ -172,7 +175,7 @@ const KIND_FILTERS: { id: "all" | CatalogueKind; label: string }[] = [
+   { id: "all", label: "All" },
+   { id: "workflow", label: "Workflows" },
+   { id: "surface", label: "Current pages" },
+-  { id: "industry", label: "Industries" },
++  { id: "audience", label: "Audiences & sectors" },
+   { id: "library", label: "Library" },
+ ];
+ 
+@@ -182,7 +185,7 @@ export default function DashboardCataloguePane() {
+   const embeddedLabel =
+     dashboardViewLabel(search) || embeddedPath || "Published surface";
+   const [query, setQuery] = useState("");
+-  const [kind, setKind] = useState<"all" | CatalogueKind>("workflow");
++  const [kind, setKind] = useState<"all" | CatalogueKind>("all");
+   const catalogue = useMemo(buildDashboardCatalogue, []);
+   const filtered = useMemo(() => {
+     const needle = query.trim().toLowerCase();
+@@ -204,17 +207,19 @@ export default function DashboardCataloguePane() {
+   if (embeddedPath)
+     return <DashboardEmbeddedView path={embeddedPath} label={embeddedLabel} />;
+ 
+-  const counts = KIND_FILTERS.slice(1).map((filter) => ({
+-    ...filter,
+-    count: catalogue.filter((entry) => entry.kind === filter.id).length,
+-  }));
++  const counts = KIND_FILTERS.slice(1)
++    .map((filter) => ({
++      ...filter,
++      count: catalogue.filter((entry) => entry.kind === filter.id).length,
++    }))
++    .filter(({ count }) => count > 0);
+ 
+   return (
+     <section
+-      className="mx-auto max-w-6xl px-5 py-7 sm:px-8"
++      className="mx-auto max-w-6xl px-4 py-4 sm:px-8 sm:py-7"
+       aria-labelledby="dashboard-catalogue-title"
+     >
+-      <div className="rounded-2xl border border-emerald-900/10 bg-[linear-gradient(135deg,#04120c_0%,#073b2b_100%)] p-6 text-white shadow-sm">
++      <div className="rounded-2xl border border-emerald-900/10 bg-[linear-gradient(135deg,#04120c_0%,#073b2b_100%)] p-4 text-white shadow-sm sm:p-6">
+         <div className="flex flex-wrap items-start justify-between gap-5">
+           <div className="max-w-2xl">
+             <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-200">
+@@ -222,15 +227,14 @@ export default function DashboardCataloguePane() {
+             </p>
+             <h1
+               id="dashboard-catalogue-title"
+-              className="mt-2 text-3xl font-semibold tracking-tight"
++              className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl"
+             >
+-              Everything useful. One door.
++              Find the right Council workspace
+             </h1>
+-            <p className="mt-3 text-sm leading-relaxed text-emerald-50/80">
+-              Search working instruments, current pages, sectors and the dated
+-              library. Core workflows open natively; supporting pages stay in
+-              this centre pane so the composer and workspace history remain
+-              available.
++            <p className="mt-3 hidden text-sm leading-relaxed text-emerald-50/80 sm:block">
++              Search available workflows, public records, audience pages and
++              dated references. Each destination opens here in the workspace;
++              its page explains what is actually measured or available.
+             </p>
+           </div>
+           <Link
+@@ -241,7 +245,7 @@ export default function DashboardCataloguePane() {
+             <ArrowRight className="h-4 w-4" aria-hidden="true" />
+           </Link>
+         </div>
+-        <dl className="mt-6 grid grid-cols-2 gap-2 text-center sm:max-w-2xl sm:grid-cols-4">
++        <dl className="mt-6 hidden grid-cols-2 gap-2 text-center sm:grid sm:max-w-2xl sm:grid-cols-4">
+           {counts.map(({ id, label, count }) => (
+             <div
+               key={id}
+@@ -277,7 +281,10 @@ export default function DashboardCataloguePane() {
+           className="mt-2 flex flex-wrap gap-1.5"
+           aria-label="Filter catalogue"
+         >
+-          {KIND_FILTERS.map((filter) => (
++          {KIND_FILTERS.filter(
++            (filter) =>
++              filter.id === "all" || counts.some(({ id }) => id === filter.id),
++          ).map((filter) => (
+             <button
+               key={filter.id}
+               type="button"
+@@ -317,7 +324,7 @@ export default function DashboardCataloguePane() {
+                     className="group flex min-h-28 items-start gap-3 rounded-xl border border-border bg-card p-4 transition hover:border-emerald-700/35 hover:shadow-sm"
+                   >
+                     <span className="mt-0.5 rounded-lg bg-emerald-50 p-2 text-emerald-800">
+-                      {entry.kind === "industry" ? (
++                      {entry.kind === "audience" ? (
+                         <Building2 className="h-4 w-4" />
+                       ) : entry.kind === "workflow" ? (
+                         <Wrench className="h-4 w-4" />
+@@ -344,8 +351,8 @@ export default function DashboardCataloguePane() {
+                         <span>
+                           {entry.kind === "workflow"
+                             ? "Workspace"
+-                            : entry.kind === "industry"
+-                              ? "Sector view"
++                            : entry.kind === "audience"
++                              ? "Audience or sector"
+                               : entry.kind === "library"
+                                 ? "Reference"
+                                 : "In-frame page"}
+diff --git a/client/src/components/DashboardLayout.tsx b/client/src/components/DashboardLayout.tsx
+index 162da5807..5d00ddc54 100644
+--- a/client/src/components/DashboardLayout.tsx
++++ b/client/src/components/DashboardLayout.tsx
+@@ -1,6 +1,6 @@
+ import { useEffect, useRef, useState } from "react";
+ import { Link, useLocation, useSearch } from "wouter";
+-import { ChevronLeft, Menu, Moon, Settings, Sun } from "lucide-react";
++import { ChevronLeft, Menu, Moon, Search, Settings, Sun } from "lucide-react";
+ import { cn } from "@/lib/utils";
+ import { Button } from "@/components/ui/button";
+ import { useTheme } from "@/contexts/ThemeContext";
+@@ -56,6 +56,7 @@ export default function DashboardLayout({
+         window.matchMedia?.(SMALL_QUERY).matches
+       ),
+   );
++  const [navQuery, setNavQuery] = useState("");
+   const { theme, toggleTheme } = useTheme();
+   const framed = isEmbedded();
+ 
+@@ -99,6 +100,17 @@ export default function DashboardLayout({
+   const rawTab = params.get("tab") || "home";
+   const activeTab = normalizeLobbyTabId(rawTab);
+   const activeLabel = dashboardActiveLabel(activeTab, search);
++  const navNeedle = navQuery.trim().toLowerCase();
++  const visibleNavGroups = DASHBOARD_NAV_GROUPS.map((group) => ({
++    ...group,
++    tabs: navNeedle
++      ? group.tabs.filter((tab) =>
++          `${tab.label} ${tab.blurb} ${group.label}`
++            .toLowerCase()
++            .includes(navNeedle),
++        )
++      : group.tabs,
++  })).filter((group) => group.tabs.length > 0);
+   const pane =
+     activeTab === "home" || activeTab === "software" ? null : (
+       <DashboardPane id={activeTab} />
+@@ -136,6 +148,9 @@ export default function DashboardLayout({
+           <div className="flex h-[4.75rem] items-center justify-between border-b border-emerald-950/10 bg-[linear-gradient(135deg,#f8fffb_0%,#f1faf5_100%)] px-4">
+             <Link
+               href="/dashboard?tab=home"
++              onClick={() => {
++                if (isSmall) setSidebarOpen(false);
++              }}
+               className="min-w-0 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+             >
+               <CouncilBrand
+@@ -158,6 +173,21 @@ export default function DashboardLayout({
+             </Button>
+           </div>
+ 
++          <label className="relative mx-3 mt-3 block">
++            <span className="sr-only">Find a workspace tool</span>
++            <Search
++              className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
++              aria-hidden="true"
++            />
++            <input
++              type="search"
++              value={navQuery}
++              onChange={(event) => setNavQuery(event.target.value)}
++              placeholder="Find a workspace tool…"
++              className="h-10 w-full rounded-lg border border-border bg-card pl-9 pr-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/20"
++            />
++          </label>
++
+           <nav
+             id={NAV_ID}
+             ref={navRef}
+@@ -165,7 +195,7 @@ export default function DashboardLayout({
+             aria-label="Workspace destinations"
+             className="min-h-0 flex-1 overflow-y-auto px-3 py-5"
+           >
+-            {DASHBOARD_NAV_GROUPS.map((group) => (
++            {visibleNavGroups.map((group) => (
+               <section
+                 key={group.id}
+                 className="mb-4"
+@@ -202,11 +232,19 @@ export default function DashboardLayout({
+                 </div>
+               </section>
+             ))}
++            {visibleNavGroups.length === 0 ? (
++              <p role="status" className="px-3 py-4 text-sm text-muted-foreground">
++                No workspace tool matches. Search all published pages below.
++              </p>
++            ) : null}
+           </nav>
+ 
+           <div className="border-t border-border p-3">
+             <Link
+               href="/dashboard?tab=explore"
++              onClick={() => {
++                if (isSmall) setSidebarOpen(false);
++              }}
+               className="mb-3 flex min-h-11 items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2.5 text-sm font-semibold text-emerald-950 shadow-sm transition hover:border-emerald-300 hover:bg-emerald-100"
+             >
+               All tools
+@@ -218,6 +256,9 @@ export default function DashboardLayout({
+               <DashboardAccountMenu />
+               <Link
+                 href={dashboardViewHref("/settings", "Settings")}
++                onClick={() => {
++                  if (isSmall) setSidebarOpen(false);
++                }}
+                 aria-label="Open settings in workspace"
+                 className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground"
+               >
+diff --git a/client/src/components/DashboardLearningPane.tsx b/client/src/components/DashboardLearningPane.tsx
+index 1b352639f..fa5f4e711 100644
+--- a/client/src/components/DashboardLearningPane.tsx
++++ b/client/src/components/DashboardLearningPane.tsx
+@@ -24,6 +24,12 @@ import {
+   regulationStateLabel,
+ } from "@/data/learningDisplayLabels";
+ import { dashboardViewHref } from "@/lib/dashboardView";
++import {
++  learningBoardUrl,
++  learningCoverageLabel,
++  readBoardAxisCount,
++  readBoardAxisIds,
++} from "@/lib/learningCoverage";
+ 
+ type ReviewDecision = "READY_FOR_REVIEW" | "RETURN_FOR_REVISION" | "DISCARD";
+ 
+@@ -122,6 +128,8 @@ export default function DashboardLearningPane() {
+   const [scenario, setScenario] = useState<LearningScenario | null>(null);
+   const [scenarioState, setScenarioState] = useState("READING");
+   const [scenarioNote, setScenarioNote] = useState("Reading current sources…");
++  const [boardAxisCount, setBoardAxisCount] = useState<number | null>(null);
++  const [boardAxisIds, setBoardAxisIds] = useState<string[] | null>(null);
+ 
+   const selected =
+     GSPC_LEARNING_PATHS.find((path) => path.axis.id === axisId) ??
+@@ -147,6 +155,36 @@ export default function DashboardLearningPane() {
+         .includes(needle),
+     );
+   }, [query]);
++  const missingPracticeAxes = boardAxisIds?.filter(
++    (id) => !GSPC_LEARNING_PATHS.some((path) => path.axis.id === id),
++  );
++
++  useEffect(() => {
++    const controller = new AbortController();
++    fetch(
++      learningBoardUrl(
++        typeof window === "undefined" ? undefined : window.location.hostname,
++      ),
++      { headers: { accept: "application/json" }, signal: controller.signal },
++    )
++      .then(async (response) => {
++        if (!response.ok) {
++          throw new Error(`Board endpoint HTTP ${response.status}`);
++        }
++        const board = await response.json();
++        const count = readBoardAxisCount(board);
++        if (count === null) throw new Error("Board axis count unavailable");
++        setBoardAxisCount(count);
++        setBoardAxisIds(readBoardAxisIds(board));
++      })
++      .catch(() => {
++        if (!controller.signal.aborted) {
++          setBoardAxisCount(null);
++          setBoardAxisIds(null);
++        }
++      });
++    return () => controller.abort();
++  }, []);
+ 
+   useEffect(() => {
+     if (!selected) return;
+@@ -224,8 +262,7 @@ export default function DashboardLearningPane() {
+   if (!selected || !progress) return null;
+ 
+   const pointers = scenario?.regulation_context?.pointers ?? [];
+-  const publishedState =
+-    scenario?.evidence?.published_state ?? "UNCHECKABLE";
++  const publishedState = scenario?.evidence?.published_state ?? "UNCHECKABLE";
+   const boardState = scenario?.board_measurement?.status ?? "UNCHECKABLE";
+ 
+   return (
+@@ -280,14 +317,39 @@ export default function DashboardLearningPane() {
+             Learn the problem. Play it. Explain it. Fix it—with approval.
+           </h1>
+           <p className="mx-auto mt-3 max-w-2xl text-xs leading-relaxed text-muted-foreground sm:text-sm">
+-            One practice path for every canonical GSPC axis. The Council can
+-            coach and draft remediation, but a person owns the final decision.
+-            Practice never becomes evidence, a score, or model training by
+-            itself.
++            These {CANONICAL_AXIS_COUNT} practice paths come from a committed
++            GSPC board snapshot. The live board can include axes without a
++            lesson here. The Council can coach and draft remediation, but a
++            person owns the final decision. Practice never becomes evidence, a
++            score, or model training by itself.
+           </p>
++          {boardAxisCount !== null &&
++          boardAxisCount !== CANONICAL_AXIS_COUNT ? (
++            <p
++              className="mx-auto mt-3 max-w-2xl rounded-lg border border-amber-700/25 bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-950"
++              data-testid="learning-coverage-gap"
++            >
++              {CANONICAL_AXIS_COUNT} learning paths; {boardAxisCount} axes on
++              the current board. The counts differ, so check the{" "}
++              <Link
++                href="/dashboard?tab=board"
++                className="font-semibold underline"
++              >
++                live board
++              </Link>{" "}
++              for its full axis list.
++              {missingPracticeAxes && missingPracticeAxes.length > 0 ? (
++                <>
++                  {" "}
++                  No practice path yet for:{" "}
++                  {missingPracticeAxes.map(boardAxisLabel).join(", ")}.
++                </>
++              ) : null}
++            </p>
++          ) : null}
+           <div className="mt-4 hidden flex-wrap items-center justify-center gap-2 text-[10px] font-semibold uppercase tracking-wide sm:flex">
+             <span className="rounded-full border border-emerald-700/20 bg-emerald-50 px-2.5 py-1 text-emerald-900">
+-              {CANONICAL_AXIS_COUNT} canonical paths
++              {learningCoverageLabel(CANONICAL_AXIS_COUNT, boardAxisCount)}
+             </span>
+             <span className="rounded-full border border-slate-700/15 bg-white px-2.5 py-1 text-slate-700">
+               session-only progress
+@@ -318,13 +380,16 @@ export default function DashboardLearningPane() {
+             >
+               {GSPC_LEARNING_PATHS.map((path, index) => (
+                 <option key={path.axis.id} value={path.axis.id}>
+-                  {String(index + 1).padStart(2, "0")} · {boardAxisLabel(path.axis.id)} ·{" "}
+-                  {completedByAxis[path.axis.id]?.length ?? 0}/{path.stages.length}
++                  {String(index + 1).padStart(2, "0")} ·{" "}
++                  {boardAxisLabel(path.axis.id)} ·{" "}
++                  {completedByAxis[path.axis.id]?.length ?? 0}/
++                  {path.stages.length}
+                 </option>
+               ))}
+             </select>
+             <p className="mt-2 px-1 text-[11px] text-muted-foreground">
+-              {CANONICAL_AXIS_COUNT} canonical paths. The selected lesson opens directly below.
++              {learningCoverageLabel(CANONICAL_AXIS_COUNT, boardAxisCount)}. The
++              selected lesson opens directly below.
+             </p>
+           </div>
+           <aside
+@@ -384,7 +449,7 @@ export default function DashboardLearningPane() {
+               })}
+               {!visiblePaths.length ? (
+                 <p className="rounded-xl border border-dashed border-border p-4 text-xs text-muted-foreground">
+-                  No canonical axis matches that search.
++                  No snapshot learning path matches that search.
+                 </p>
+               ) : null}
+             </div>
+@@ -463,7 +528,11 @@ export default function DashboardLearningPane() {
+                     Regulation mapping
+                   </p>
+                   <p className="mt-1 text-xs font-semibold text-foreground">
+-                    {regulationStateLabel(scenario?.regulation_context?.state ?? "UNCHECKABLE").label}
++                    {
++                      regulationStateLabel(
++                        scenario?.regulation_context?.state ?? "UNCHECKABLE",
++                      ).label
++                    }
+                   </p>
+                 </div>
+               </div>
+@@ -473,12 +542,15 @@ export default function DashboardLearningPane() {
+                   aria-labelledby="related-framework-sources-h"
+                   data-testid="related-framework-sources"
+                 >
+-                  <h4 id="related-framework-sources-h" className="text-xs font-semibold text-foreground">
++                  <h4
++                    id="related-framework-sources-h"
++                    className="text-xs font-semibold text-foreground"
++                  >
+                     Related framework sources
+                   </h4>
+                   <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">
+-                    These links explain the framework relevant to this lesson. A link is not a
+-                    determination that an obligation applies.
++                    These links explain the framework relevant to this lesson. A
++                    link is not a determination that an obligation applies.
+                   </p>
+                   <ul className="mt-2 space-y-2">
+                     {pointers.slice(0, 3).map((pointer, index) => {
+@@ -488,19 +560,34 @@ export default function DashboardLearningPane() {
+                           key={`${pointer.regulator_name ?? "regulator"}-${index}`}
+                           className="text-[11px] leading-relaxed text-slate-700"
+                         >
+-                          <strong>{pointer.regulator_name ?? "Published pointer"}</strong> —{" "}
+-                          {pointer.obligation ?? "No obligation text published."}
+-                          <span className="block text-muted-foreground">{tier.label}</span>
++                          <strong>
++                            {pointer.regulator_name ?? "Published pointer"}
++                          </strong>{" "}
++                          —{" "}
++                          {pointer.obligation ??
++                            "No obligation text published."}
++                          <span className="block text-muted-foreground">
++                            {tier.label}
++                          </span>
+                         </li>
+                       );
+                     })}
+                   </ul>
+                   <details className="mt-2 text-[11px] text-muted-foreground">
+-                    <summary className="cursor-pointer font-semibold">Technical details</summary>
++                    <summary className="cursor-pointer font-semibold">
++                      Technical details
++                    </summary>
+                     <ul className="mt-1 space-y-1 font-mono">
+                       <li>
+-                        mapping state: <code>{scenario?.regulation_context?.state ?? "UNCHECKABLE"}</code>
+-                        {" · "}source: <code>{scenario?.regulation_context?.source ?? "not published"}</code>
++                        mapping state:{" "}
++                        <code>
++                          {scenario?.regulation_context?.state ?? "UNCHECKABLE"}
++                        </code>
++                        {" · "}source:{" "}
++                        <code>
++                          {scenario?.regulation_context?.source ??
++                            "not published"}
++                        </code>
+                       </li>
+                       {pointers.slice(0, 3).map((pointer, index) => (
+                         <li key={`raw-${index}`}>
+@@ -527,9 +614,9 @@ export default function DashboardLearningPane() {
+                     data-testid="learning-progress"
+                   >
+                     Practice progress: {progress.completedStageIds.length} of{" "}
+-                    {selected.stages.length} stages reviewed. Progress lasts for this session.
+-                    Completing practice does not create an independently measured result or a
+-                    regulatory credential.
++                    {selected.stages.length} stages reviewed. Progress lasts for
++                    this session. Completing practice does not create an
++                    independently measured result or a regulatory credential.
+                   </p>
+                 </div>
+                 <span className="font-mono text-[10px] text-muted-foreground">
+@@ -652,7 +739,10 @@ export default function DashboardLearningPane() {
+                   </button>
+                   {/* Coaching is secondary: an expandable control beside the primary action,
+                       not a rail competing with the lesson for reading space. */}
+-                  <details className="w-full sm:w-auto" data-testid="learning-coaching">
++                  <details
++                    className="w-full sm:w-auto"
++                    data-testid="learning-coaching"
++                  >
+                     <summary className="cursor-pointer rounded-xl border border-amber-800/25 bg-white px-4 py-2.5 text-xs font-semibold text-amber-950 hover:border-amber-800/50">
+                       Coaching (optional)
+                     </summary>
+diff --git a/client/src/components/DashboardPane.tsx b/client/src/components/DashboardPane.tsx
+index eb8ed1656..7d4564334 100644
+--- a/client/src/components/DashboardPane.tsx
++++ b/client/src/components/DashboardPane.tsx
+@@ -68,10 +68,13 @@ const DashboardArenaPane = lazy(
+ const DashboardLearningPane = lazy(
+   () => import("@/components/DashboardLearningPane"),
+ );
++const DashboardWatchdogPane = lazy(
++  () => import("@/components/DashboardWatchdogPane"),
++);
+ 
+ const PANES: Record<string, React.LazyExoticComponent<any>> = {
+   // home: DashboardWorkspace owns the chat-first landing — no separate pane.
+-  board: HomeGspcBoard, // canonical GET /api/gspc board + 22-axis strip, inside the shell (owner ruling 2 Sep)
++  board: HomeGspcBoard, // canonical GET /api/gspc board + its current axis strip, inside the shell
+   results: HomeGspcBoard, // Stale iframe retired: one canonical native result surface.
+   leaderboard: Page_Leaderboard, // the full model x axis table, in-shell
+   terminal: LobbyBoardPane, // GSPC terminal
+@@ -94,6 +97,7 @@ const PANES: Record<string, React.LazyExoticComponent<any>> = {
+   measured: DashboardRequestPane,
+   space: DashboardArenaPane,
+   learn: DashboardLearningPane,
++  watchdog: DashboardWatchdogPane, // the legacy /watchdog-hub redirects; keep this read-only view native
+   // software: signed-in dashboard at /dashboard, the layout redirects there
+   play: LobbyPlay, // gold local-play gallery (local kind)
+   art50: LobbyArt50Pane, // Article 50 marking evidence — native workflow pane, no standalone URL
+diff --git a/client/src/components/DashboardToolsPane.tsx b/client/src/components/DashboardToolsPane.tsx
+index 0c2d840b2..23c268a8d 100644
+--- a/client/src/components/DashboardToolsPane.tsx
++++ b/client/src/components/DashboardToolsPane.tsx
+@@ -7,7 +7,9 @@ import {
+ } from "lucide-react";
+ import ToolRunner from "./ToolRunner";
+ import { FREE_TOOL_NAMES, PAID_TOOL_NAMES } from "@/lib/mcpTools";
++import { TOOL_META } from "@/lib/sovTools";
+ import { useSearch } from "wouter";
++import { useMemo } from "react";
+ 
+ // Derived from the two files the /mcp door reads, not typed. This list was correct on
+ // 2026-09-05 and that is exactly the problem: a hand-kept duplicate of the door's tool set is
+@@ -21,15 +23,19 @@ export const PUBLISHED_TOOL_COUNT = FREE_TOOLS.length + METERED_TOOLS.length;
+ 
+ export default function DashboardToolsPane() {
+   const search = useSearch();
+-  const params = new URLSearchParams(
+-    search.startsWith("?") ? search.slice(1) : search,
+-  );
+-  const selectedTool = params.get("tool") || undefined;
+-  const initialArguments = Object.fromEntries(
+-    [...params.entries()].filter(
+-      ([name]) => !["tab", "tool", "view"].includes(name),
+-    ),
+-  );
++  const { selectedTool, initialArguments } = useMemo(() => {
++    const params = new URLSearchParams(
++      search.startsWith("?") ? search.slice(1) : search,
++    );
++    return {
++      selectedTool: params.get("tool") || undefined,
++      initialArguments: Object.fromEntries(
++        [...params.entries()].filter(
++          ([name]) => !["tab", "tool", "view"].includes(name),
++        ),
++      ),
++    };
++  }, [search]);
+   return (
+     <section
+       className="mx-auto max-w-6xl px-5 py-7 sm:px-8"
+@@ -50,9 +56,10 @@ export default function DashboardToolsPane() {
+             The runner reads the current catalogue from{" "}
+             <code className="font-mono text-xs">POST /mcp</code>, builds inputs
+             from each tool’s JSON Schema, and prints the endpoint’s reply.
+-            The current runtime advertises {PUBLISHED_TOOL_COUNT} tools: {FREE_TOOLS.length} free
+-            reads and {METERED_TOOLS.length} metered paths. The quarantined
+-            witness path is not advertised.
++            This published build declares {PUBLISHED_TOOL_COUNT} tools: {FREE_TOOLS.length} free
++            reads and {METERED_TOOLS.length} metered paths. The runner checks the
++            callable list again when you open it. The quarantined witness path
++            is not in this build’s manifest.
+             Discovery is <strong className="text-foreground">CATALOGUED</strong>
+             ; only a completed call is{" "}
+             <strong className="text-foreground">RUNTIME_OBSERVED</strong>. It is
+@@ -90,9 +97,13 @@ export default function DashboardToolsPane() {
+             public-root reads and Merkle-inclusion checks. Verification remains
+             free.
+           </p>
+-          <p className="mt-2 break-words font-mono text-[10px] leading-relaxed text-emerald-900/65">
+-            {FREE_TOOLS.join(" · ")}
+-          </p>
++          <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="Free tool names">
++            {FREE_TOOLS.map((name) => (
++              <li key={name} title={name} className="rounded-full border border-emerald-800/15 bg-white/80 px-2.5 py-1 text-[10px] font-medium text-emerald-950">
++                {TOOL_META[name]?.label || name}
++              </li>
++            ))}
++          </ul>
+         </article>
+ 
+         <article className="rounded-2xl border border-amber-800/15 bg-amber-50/65 p-4">
+@@ -115,9 +126,13 @@ export default function DashboardToolsPane() {
+             button signs it in your wallet and retries — this page never asks
+             for a seed phrase or private key.
+           </p>
+-          <p className="mt-2 break-words font-mono text-[10px] leading-relaxed text-amber-950/65">
+-            {METERED_TOOLS.join(" · ")}
+-          </p>
++          <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="Metered tool names">
++            {METERED_TOOLS.map((name) => (
++              <li key={name} title={name} className="rounded-full border border-amber-800/15 bg-white/80 px-2.5 py-1 text-[10px] font-medium text-amber-950">
++                {TOOL_META[name]?.label || name}
++              </li>
++            ))}
++          </ul>
+         </article>
+       </div>
+ 
+@@ -153,7 +168,8 @@ export default function DashboardToolsPane() {
+           <p className="text-[11px] leading-relaxed text-muted-foreground">
+             <strong className="text-foreground">Payment stays explicit.</strong>{" "}
+             The endpoint carries the challenge; the Pay button signs it in your
+-            wallet. Only the signature is sent.
++            wallet. The signed x402 payment payload goes with the same tool
++            request; your private key stays in the wallet.
+           </p>
+         </div>
+       </div>
+diff --git a/client/src/components/DashboardWatchdogPane.tsx b/client/src/components/DashboardWatchdogPane.tsx
+new file mode 100644
+index 000000000..90431b273
+--- /dev/null
++++ b/client/src/components/DashboardWatchdogPane.tsx
+@@ -0,0 +1,96 @@
++import {
++  ArrowRight,
++  FileSearch,
++  ShieldCheck,
++  TriangleAlert,
++} from "lucide-react";
++import { Link } from "wouter";
++
++const EVIDENCE_DOORS = [
++  {
++    title: "Read the measurement board",
++    description:
++      "See what has been measured, the source for each axis, and the limits of each result.",
++    href: "/dashboard?tab=board",
++    icon: FileSearch,
++  },
++  {
++    title: "Verify a signed card",
++    description:
++      "Check an existing card's signature and body hash in the free verifier.",
++    href: "/dashboard?tab=verify",
++    icon: ShieldCheck,
++  },
++  {
++    title: "Read the corrections ledger",
++    description:
++      "Review published corrections and the evidence behind the Council's own claims.",
++    href: "/dashboard?tab=attestations",
++    icon: TriangleAlert,
++  },
++] as const;
++
++export default function DashboardWatchdogPane() {
++  return (
++    <section
++      aria-labelledby="dashboard-watchdog-title"
++      className="mx-auto max-w-5xl px-5 py-8 pb-[calc(13rem+env(safe-area-inset-bottom))] sm:px-8 lg:pb-8"
++      data-testid="dashboard-watchdog-pane"
++    >
++      <header className="max-w-3xl">
++        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-800">
++          Public evidence · read only
++        </p>
++        <h1
++          id="dashboard-watchdog-title"
++          className="mt-2 text-3xl font-semibold tracking-tight text-foreground"
++        >
++          Watchdog evidence
++        </h1>
++        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
++          Follow the public record from a measurement to any available signed
++          card and published correction. These are evidence-reading tools;
++          viewing them does not file an incident or create a case.
++        </p>
++      </header>
++
++      <div className="mt-7 grid gap-3 md:grid-cols-3">
++        {EVIDENCE_DOORS.map(({ title, description, href, icon: Icon }) => (
++          <Link
++            key={href}
++            href={href}
++            className="group rounded-2xl border border-border bg-card p-5 shadow-sm transition hover:border-emerald-700/35 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700"
++          >
++            <Icon className="h-5 w-5 text-emerald-800" aria-hidden="true" />
++            <h2 className="mt-4 text-sm font-semibold text-foreground">
++              {title}
++            </h2>
++            <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
++              {description}
++            </p>
++            <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-800 group-hover:underline">
++              Open in dashboard
++              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
++            </span>
++          </Link>
++        ))}
++      </div>
++
++      <aside
++        aria-label="Incident report availability"
++        className="mt-6 rounded-2xl border border-amber-700/25 bg-amber-50 p-5 text-amber-950"
++        data-testid="watchdog-intake-state"
++      >
++        <p className="text-[10px] font-bold uppercase tracking-[0.16em]">
++          Incident filing · unavailable
++        </p>
++        <h2 className="mt-2 text-base font-semibold">No report is filed here</h2>
++        <p className="mt-2 max-w-3xl text-xs leading-relaxed">
++          Durable report submission, storage, case numbers and signed
++          acknowledgements are not implemented. Nothing entered in Council chat
++          should be treated as a filed incident report.
++        </p>
++      </aside>
++    </section>
++  );
++}
+diff --git a/client/src/components/DashboardWorkspace.tsx b/client/src/components/DashboardWorkspace.tsx
+index bbf9b4458..235250b54 100644
+--- a/client/src/components/DashboardWorkspace.tsx
++++ b/client/src/components/DashboardWorkspace.tsx
+@@ -225,6 +225,12 @@ export default function DashboardWorkspace({
+                     >
+                       Model arena
+                     </Link>
++                    <Link
++                      href="/dashboard?tab=city"
++                      className="shrink-0 rounded-full px-2.5 py-1.5 text-[11px] font-semibold text-muted-foreground hover:bg-muted sm:px-3 sm:text-xs"
++                    >
++                      City records
++                    </Link>
+                     <Link
+                       href="/dashboard?tab=learn"
+                       className="shrink-0 rounded-full px-2.5 py-1.5 text-[11px] font-semibold text-muted-foreground hover:bg-muted sm:px-3 sm:text-xs"
+diff --git a/client/src/components/ToolRunner.tsx b/client/src/components/ToolRunner.tsx
+index 1c72ad65b..297a03926 100644
+--- a/client/src/components/ToolRunner.tsx
++++ b/client/src/components/ToolRunner.tsx
+@@ -735,9 +735,9 @@ export default function ToolRunner({
+               Public MCP tool runner
+             </h2>
+             <p className="mt-0.5 text-xs leading-relaxed text-slate-600">
+-              JSON-RPC <code className="font-mono text-[11px]">tools/list</code>{" "}
+-              and <code className="font-mono text-[11px]">tools/call</code>{" "}
+-              against <code className="font-mono text-[11px]">POST /mcp</code>.
++              Choose a tool, supply its required inputs, then inspect the
++              actual reply. The catalogue and calls come from{" "}
++              <code className="font-mono text-[11px]">POST /mcp</code>.
+             </p>
+           </div>
+         </div>
+@@ -861,9 +861,42 @@ export default function ToolRunner({
+                   CATALOGUED
+                 </span>
+               </div>
+-              <p className="mt-3 max-w-3xl text-xs leading-relaxed text-slate-700">
+-                {active.description}
+-              </p>
++              {TOOL_META[active.name] ? (
++                <div className="mt-4 rounded-2xl border border-emerald-900/15 bg-emerald-50/55 p-4">
++                  <div className="grid gap-3 sm:grid-cols-2">
++                    <div>
++                      <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-emerald-900">
++                        Use this for
++                      </p>
++                      <p className="mt-1 text-xs leading-relaxed text-slate-800">
++                        {TOOL_META[active.name].useFor}
++                      </p>
++                    </div>
++                    <div>
++                      <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-emerald-900">
++                        What you get
++                      </p>
++                      <p className="mt-1 text-xs leading-relaxed text-slate-800">
++                        {TOOL_META[active.name].returns}
++                      </p>
++                    </div>
++                  </div>
++                  <p className="mt-3 border-t border-emerald-900/10 pt-3 text-xs leading-relaxed text-slate-700">
++                    <strong>Keep in mind:</strong> {TOOL_META[active.name].boundary}
++                  </p>
++                </div>
++              ) : null}
++              <details
++                className="mt-3 rounded-xl border border-slate-900/10 bg-slate-50/60 px-3.5 py-2.5"
++                open={!TOOL_META[active.name]}
++              >
++                <summary className="cursor-pointer text-xs font-semibold text-slate-700">
++                  Full endpoint description
++                </summary>
++                <p className="mt-2 max-w-3xl break-words text-xs leading-relaxed text-slate-700">
++                  {active.description}
++                </p>
++              </details>
+ 
+               {isPaidTool(active) ? (
+                 <div className="mt-4 flex gap-2.5 rounded-xl border border-amber-700/20 bg-amber-50 px-3.5 py-3">
+diff --git a/client/src/components/home/ToolStack.tsx b/client/src/components/home/ToolStack.tsx
+index 70d2ebf89..eb939fa7b 100644
+--- a/client/src/components/home/ToolStack.tsx
++++ b/client/src/components/home/ToolStack.tsx
+@@ -1,5 +1,5 @@
+ import { useMemo } from "react";
+-import { LOBBY_TABS } from "@/components/lobby/tabs";
++import { DASHBOARD_TABS } from "@/components/lobby/tabs";
+ import { type LobbyTaskId } from "@/lib/lobbyLink";
+ import { EUNOMIA_AXES } from "@/data/eunomia";
+ import type { LobbyTabId } from "@/components/lobby/tabs";
+@@ -25,7 +25,7 @@ import HomeUnderstand from "./HomeUnderstand";
+  * that promises a surface that does not exist, is the exact defect this instrument
+  * exists to catch, committed on our own front door.
+  *
+- * NO NUMBER IS TYPED HERE. The OS tile counts the rail registry. The register tile
++ * NO NUMBER IS TYPED HERE. The OS tile counts the dashboard rail. The register tile
+  * reads its row out of the register data. If a tool has no honest number it shows none.
+  * The board tile shows NO count: the homepage prints totals.public_count exactly once,
+  * on HomeGspcTable, and this tile used to be a second copy of it read through a second
+@@ -234,7 +234,7 @@ export function hrefFor(door: Door): string {
+     if (door.pane === "measured" || door.pane === "ras" || door.pane === "assess") return "/assess";
+     if (door.pane === "evidence") return "/gpai-evidence";
+     if (door.pane === "embed") return "/embed";
+-    if (door.pane === "watchdog") return "/watchdog-hub";
++    if (door.pane === "watchdog") return "/dashboard?tab=watchdog";
+     if (door.pane === "cards" || door.pane === "harness" || door.pane === "space") {
+       return `/dashboard?tab=${door.pane}`;
+     }
+@@ -263,8 +263,8 @@ function useLiveFigures() {
+ 
+   return {
+     "tool-os": {
+-      value: `${LOBBY_TABS.length} panes in the rail`,
+-      source: "counted from the Council OS rail registry",
++      value: `${DASHBOARD_TABS.length} workspace destinations`,
++      source: "counted from the current dashboard navigation",
+     },
+     // No "tool-board" figure: the count line is printed once, on the living board above.
+     "tool-registers": registers
+diff --git a/client/src/components/lobby/LobbyEvidencePane.tsx b/client/src/components/lobby/LobbyEvidencePane.tsx
+index 2c2972ce9..e80ff480a 100644
+--- a/client/src/components/lobby/LobbyEvidencePane.tsx
++++ b/client/src/components/lobby/LobbyEvidencePane.tsx
+@@ -14,10 +14,10 @@ import { composeEvidenceIndex } from "./evidenceIndex";
+  * LobbyEvidencePane — the Evidence-pack workflow, NATIVE in Council OS.
+  *
+  * WHY THIS IS A PANE AND NOT A FRAMED PAGE. /gpai-evidence explains what an
+- * evidence pack is. It cannot tell a reader what evidence actually exists for
+- * THEIR system today, because that answer lives on the live board. This pane does
+- * the work: name the system, tick the axes that bear on the claim, and it compiles
+- * a real evidence index from GET /api/gspc — every row carrying the bank's
++ * evidence pack is. The public board cannot tell a reader what evidence exists
++ * for THEIR system without subject-to-run binding. This pane lets a reader name
++ * the system as planning context, choose relevant axes, and compiles a board
++ * reference from GET /api/gspc — every row carrying the bank's
+  * resolvable dataset_url, the leader, the item count, and whether the lead is
+  * statistically separated or a tie.
+  *
+@@ -170,14 +170,14 @@ export default function LobbyEvidencePane({
+   return (
+     <div className={`${SP.panel} h-full overflow-y-auto`}>
+       <PaneHead
+-        eyebrow="Evidence pack"
+-        title="Compile the evidence index for one system"
++        eyebrow="Evidence reference"
++        title="Explore board evidence for a planned assessment"
+       >
+-        Name the system, tick the axes that bear on the claim, and this pane
+-        compiles a real index from the live board — bank URL, item count,
+-        leader, and whether the lead is statistically separated or a tie. Every
+-        axis you leave out is named in the output, so an omission is never
+-        invisible. We measure; we do not certify.
++        Name the system as your own context and choose relevant axes. This pane
++        shows published board-wide results and their source banks; it does not
++        check whether your system was measured. Board leaders belong to the
++        published runs, not to the system you enter here. A subject-specific
++        result needs its own run and admitted receipt.
+       </PaneHead>
+ 
+       {wire.phase !== "ready" ? (
+@@ -197,16 +197,16 @@ export default function LobbyEvidencePane({
+           <div className="mt-6 grid gap-4 sm:grid-cols-2">
+             <Field
+               id="coai-ev-system"
+-              label="System or model"
+-              hint="What this index is about. It is printed verbatim into the artefact."
++              label="System you want to assess"
++              hint="Planning context supplied by you. This does not match board results to your system."
+               value={system}
+               onChange={setSystem}
+               placeholder="e.g. Acme Foundation Model v4"
+             />
+             <Field
+               id="coai-ev-provider"
+-              label="Provider (legal entity)"
+-              hint="Optional. Who is answering for the system."
++              label="Provider (optional)"
++              hint="Planning context supplied by you; not independently checked."
+               value={provider}
+               onChange={setProvider}
+               placeholder="e.g. Acme AI GmbH"
+@@ -253,7 +253,7 @@ export default function LobbyEvidencePane({
+ 
+           <div className="mt-8 rounded-2xl border border-slate-900/10 bg-white/90 p-5">
+             <h3 className="text-[15px] font-semibold text-slate-900">
+-              The index
++              Board-axis reference
+             </h3>
+             {included.length === 0 ? (
+               <p className={`mt-2 ${MEASURE} ${TYPE.body}`}>
+@@ -268,7 +268,7 @@ export default function LobbyEvidencePane({
+                   {notQuotable.length} named as not quotable on this board.
+                   Counts are the arrays' own lengths.
+                 </p>
+-                <CopyBlock text={artefact} label="evidence index · JSON" />
++                <CopyBlock text={artefact} label="board-axis reference · JSON" />
+               </>
+             )}
+             <div className="mt-5 flex flex-wrap gap-2.5">
+diff --git a/client/src/components/lobby/LobbyPlay.tsx b/client/src/components/lobby/LobbyPlay.tsx
+index 88e8d956f..5764a02d4 100644
+--- a/client/src/components/lobby/LobbyPlay.tsx
++++ b/client/src/components/lobby/LobbyPlay.tsx
+@@ -42,7 +42,7 @@ export default function LobbyPlay() {
+         <div className="flex flex-wrap items-start justify-between gap-4">
+           <div className="max-w-2xl">
+             <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-800">
+-              Guided curriculum · every canonical axis
++              Guided curriculum · dated practice paths
+             </p>
+             <h3 className="mt-2 text-xl font-semibold tracking-tight text-slate-950">
+               Council Learning Arena
+@@ -115,7 +115,11 @@ export default function LobbyPlay() {
+ 
+                 {live ? (
+                   <Link
+-                    href={dashboardViewHref(c.route!, c.title)}
++                    href={
++                      c.route!.startsWith("/dashboard?tab=")
++                        ? c.route!
++                        : dashboardViewHref(c.route!, c.title)
++                    }
+                     className={`mt-3 inline-flex items-center gap-1.5 rounded-xl bg-amber-800 px-4 py-2 text-[12.5px] font-semibold text-white transition hover:bg-amber-900 motion-reduce:transition-none ${FOCUS}`}
+                   >
+                     {c.chip === "playable now"
+@@ -134,10 +138,9 @@ export default function LobbyPlay() {
+       </ul>
+ 
+       <p className={`mt-6 ${MEASURE} ${TYPE.fine}`}>
+-        Evidence and verification surfaces are the emerald ones in the left
+-        rail. For a number you can re-check, use an independently admitted card;
+-        the current admission matrix has no quotable cells, and this gallery
+-        invents none.
++        This gallery contains practice and read-only demonstrations, not GSPC
++        measurements. For a result you can re-check, open the current board and
++        follow its evidence to a verifiable card.
+       </p>
+     </section>
+   );
+diff --git a/client/src/components/lobby/evidenceIndex.test.ts b/client/src/components/lobby/evidenceIndex.test.ts
+index 32d10477d..fa159be35 100644
+--- a/client/src/components/lobby/evidenceIndex.test.ts
++++ b/client/src/components/lobby/evidenceIndex.test.ts
+@@ -158,9 +158,23 @@ describe("evidence index — no count is ever typed", () => {
+     const text = JSON.stringify(
+       composeEvidenceIndex({ board: board([a]), included: [a], system: "", provider: "", now: "T" }),
+     );
+-    expect(text).toMatch(/this index is not itself signed/i);
++    expect(text).toMatch(/this index is not signed/i);
+     expect(text).toMatch(/[Nn]ot a certification/);
+   });
++
++  it("keeps reader-supplied subject context separate from board leaders", () => {
++    const a = axis({ leader: "board model" });
++    const out = composeEvidenceIndex({
++      board: board([a]), included: [a], system: "Acme v4", provider: "Acme", now: "T",
++    });
++    expect(out.evidence_scope).toBe("BOARD_AXIS_REFERENCE_ONLY");
++    expect(out.subject).toMatchObject({
++      system: "Acme v4", supplied_by_reader: true, board_row_binding: "NOT_CHECKED",
++    });
++    expect(rows(out, "included")[0].leader).toBe("board model");
++    expect(String(out.what_this_is)).toMatch(/No lookup binds any board row or leader/);
++    expect(String(out.what_this_is_not)).toMatch(/Not a measurement of the named system/);
++  });
+ });
+ 
+ describe("boardWire — the failure path reports, it does not paper over", () => {
+diff --git a/client/src/components/lobby/evidenceIndex.ts b/client/src/components/lobby/evidenceIndex.ts
+index 4ae77e234..38f7617c7 100644
+--- a/client/src/components/lobby/evidenceIndex.ts
++++ b/client/src/components/lobby/evidenceIndex.ts
+@@ -84,19 +84,22 @@ export function composeEvidenceIndex(input: EvidenceInput): Record<string, unkno
+   return {
+     schema: "csoai.evidence-index/0.1",
+     what_this_is:
+-      "An index of the PUBLISHED Council of AI measurements a reader can retrieve and recompute " +
+-      "for the named subject. Compiled on this device from GET /api/gspc — this index is not " +
+-      "itself signed. The signed objects are the per-axis cards; they verify against the " +
+-      "published key at /gspc-verify without contacting us.",
++      "A selection of published GSPC board-axis reference results compiled on this device " +
++      "from GET /api/gspc. The named system and provider are reader-supplied context only. " +
++      "No lookup binds any board row or leader to that system, and this index is not signed. " +
++      "A subject-specific result requires a separately identified run and admitted receipt.",
+     what_this_is_not:
+-      "Not a certification, not a conformity assessment, not an accreditation, and not legal " +
+-      "advice. Council of AI is a measurement body. A determination of compliance stays with " +
+-      "the authorities.",
++      "Not a measurement of the named system or a signed evidence pack. " +
++      "Not a certification, conformity assessment, accreditation, or legal advice. " +
++      "A determination of compliance stays with the authorities.",
++    evidence_scope: "BOARD_AXIS_REFERENCE_ONLY",
+     compiled_on: now,
+     compiled_on_note: "This device's clock. The measurement dates are the board's, below.",
+     subject: {
+       system: system.trim() || "UNNAMED — fill in the system this index is about",
+       provider: provider.trim() || "UNNAMED",
++      supplied_by_reader: true,
++      board_row_binding: "NOT_CHECKED",
+     },
+     board: {
+       source: "GET https://councilof.ai/api/gspc",
+diff --git a/client/src/components/lobby/play.ts b/client/src/components/lobby/play.ts
+index eedcd0d74..b8e8bfb76 100644
+--- a/client/src/components/lobby/play.ts
++++ b/client/src/components/lobby/play.ts
+@@ -44,20 +44,33 @@ export const PLAY_CARDS: PlayCard[] = [
+     id: "coliseum",
+     title: "The Coliseum",
+     blurb:
+-      "Recorded frontier-system runs over frozen statutory text with deterministic grading.",
++      "Local eight-round practice, with a separate dated replay of recorded runs.",
+     image: "/images/coliseum_hero_arena.jpg",
+     alt: "Clay figures and green verification seals gathered in a marble arena",
+     status: "route",
+     route: "/dashboard?tab=space",
+     reality:
+-      "Opens the recorded arena replay in this workspace. It compares legacy runs for inspection; it is not a live prompt battle or a currently admitted ranking.",
++      "Opens Council Space with a local practice round. A historical replay is available when its source loads; neither is a live model battle or a currently admitted ranking.",
++  },
++  {
++    id: "council-city-observatory",
++    title: "Council City · simulation observatory",
++    blurb:
++      "Browse dated city-design and simulation records with their source links.",
++    image: "/images/coliseum_hero_arena.jpg",
++    alt: "Illustrated Council arena used as a visual for the read-only simulation observatory",
++    status: "route",
++    route: "/dashboard?tab=city",
++    chip: "dated observatory",
++    reality:
++      "Opens the public, read-only Simulation Observatory inside this workspace. Its city data is a dated DESIGN snapshot, not a live city tick, multiplayer session, or GSPC measurement.",
+   },
+   {
+     id: "gspc-quests",
+     title: "GSPC Quests — play frozen challenge banks",
+     blurb:
+-      "Twelve behavioural axes, each a quest over a frozen GSPC challenge bank. Your answers are read by a " +
+-      "deterministic rule and scored with macro-F1; published legacy figures are labelled as historical context.",
++      "Play twelve frozen practice banks from the 2026-09-01 quest selection. This is not the current board's axis count or measurement coverage. " +
++      "Your answers are graded locally by deterministic rules and macro-F1; legacy figures are historical context.",
+     // Reuses the duel art deliberately: this is the graded-items half of that idea,
+     // playable today — the live networked match half stays honestly in-build below.
+     image: "/images/coliseum_logic_duel.jpg",
+@@ -67,7 +80,7 @@ export const PLAY_CARDS: PlayCard[] = [
+     chip: "playable now",
+     reality:
+       "Opens the real quest page in the centre pane. You actually play: pick an axis, answer its items, and the " +
+-      "page grades you in-browser and keeps historical board references separate from current admitted evidence. It also " +
++      "page grades you in-browser. Its twelve playable axes belong to the dated practice selection, separate from current board axes and admitted evidence. It also " +
+       "carries a board-history view, a daily quest with a local streak, and an on-device co-op round. Your score stays local " +
+       "unless you explicitly create and submit a candidate receipt. Candidate evidence is not training data or a GSPC measurement; " +
+       "independent reproduction and admission are still required.",
+@@ -122,16 +135,17 @@ export const PLAY_CARDS: PlayCard[] = [
+     id: "compliance-training",
+     title: "Compliance Training World",
+     blurb:
+-      "Industry quests — Art 50(2), bank, insurance, equity, bond, cross-border — graded in-browser. " +
+-      "They are practice exercises, not legal advice or certification.",
++      "Four in-browser evidence-practice quests: Article 50 roles, banking, equity and cross-border. " +
++      "Insurance and bond are withdrawn while their rubrics are reviewed.",
+     image: "/images/literacy_training_arena.jpg",
+     alt: "Compliance training quests across regulated industries",
+     status: "route",
+     route: "/compliance-training-world/catalog.html",
+     chip: "playable now",
+     reality:
+-      "Opens the live quest catalog in the centre pane. You pick a quest, answer cases, and the page " +
+-      "grades you with a deterministic predicate. A pass is a local practice result only.",
++      "Opens the live quest catalog in the centre pane. Four linked quests grade answers " +
++      "with deterministic practice keys. Insurance and bond have no playable links. " +
++      "A score is a local practice result, not a legal verdict or certification.",
+   },
+ ];
+ 
+diff --git a/client/src/components/lobby/tabs.test.ts b/client/src/components/lobby/tabs.test.ts
+index f2446e067..67f5cfc0e 100644
+--- a/client/src/components/lobby/tabs.test.ts
++++ b/client/src/components/lobby/tabs.test.ts
+@@ -1,5 +1,6 @@
+ import { describe, expect, it } from "vitest";
+ import {
++  DASHBOARD_NAV_GROUPS,
+   DASHBOARD_TABS,
+   DEFAULT_TAB,
+   isDashboardTab,
+@@ -69,6 +70,8 @@ describe("Council OS tabs", () => {
+     expect(matchTab("open local play")?.id).toBe("play");
+     expect(matchTab("open the learning arena")?.id).toBe("learn");
+     expect(matchTab("show the GSPC learning path")?.id).toBe("learn");
++    expect(matchTab("open Council City")?.id).toBe("city");
++    expect(tabById("city").path).toBe("/world/observatory/");
+   });
+ 
+   it("does not turn ordinary questions containing navigation words into pane switches", () => {
+@@ -89,7 +92,7 @@ describe("Council OS tabs", () => {
+     expect(matchTab("Can you please open Council Space?")?.id).toBe("space");
+     expect(matchTab("I'd like to view the model registry")?.id).toBe("models");
+     expect(matchTab("verify a card")?.id).toBe("verify");
+-    expect(matchTab("get measured")?.id).toBe("measured");
++    expect(matchTab("open existing-card proof")?.id).toBe("measured");
+   });
+ 
+   it("opens Software for a dashboard command", () => {
+@@ -150,7 +153,7 @@ describe("Council OS tabs", () => {
+     ];
+     const seen = new Map<string, number>();
+     for (const p of paths) seen.set(p, (seen.get(p) ?? 0) + 1);
+-    // measured + ras both name /assess (Get-measured vs Readiness). Not on the OS rail.
++    // measured + ras both name /assess (existing-card proof vs Readiness). Not on the OS rail.
+     expect([...seen.entries()].filter(([, n]) => n > 1)).toEqual([]);
+   });
+ 
+@@ -174,7 +177,6 @@ describe("Council OS tabs", () => {
+     // Framed product routes.
+     for (const p of [
+       "/products",
+-      "/watchdog-hub",
+       "/honesty",
+       "/regulators",
+       "/cra-readiness",
+@@ -187,6 +189,7 @@ describe("Council OS tabs", () => {
+     // …and the two whose product IS a workflow are native panes, not framed pages.
+     expect(tabById("evidence").kind).toBe("native");
+     expect(tabById("embed").kind).toBe("native");
++    expect(tabById("watchdog")).toMatchObject({ kind: "native", path: "" });
+   });
+ 
+   it("gives a native workflow pane no standalone path, so a framed page cannot bounce onto it", () => {
+@@ -228,36 +231,52 @@ describe("Council OS tabs", () => {
+     expect(matchRoute("show insurers")?.path).toBe("/insurers");
+   });
+ 
+-  it("gives the canonical dashboard one curated permanent rail", () => {
++  it("gives the dashboard one searchable rail of working destinations", () => {
++    expect(DASHBOARD_NAV_GROUPS.map((group) => group.id)).toEqual([
++      "start",
++      "measure",
++      "proof",
++      "operate",
++      "govern",
++      "explore",
++    ]);
+     const ids = DASHBOARD_TABS.map((t) => t.id);
+     expect(ids).toEqual([
+       "home",
+       "measured",
+       "verify",
+       "board",
++      "models",
+       "evidence-index",
++      "xrpl",
+       "swift",
++      "state",
++      "cards",
++      "attestations",
++      "archive",
+       "evidence",
++      "art50",
++      "embed",
+       "tools",
++      "harness",
++      "fabric",
++      "space",
++      "city",
+       "learn",
++      "play",
+       "watchdog",
+       "standards",
+-      "fabric",
+-    ]);
+-    expect(DASHBOARD_TABS.map((t) => t.label)).toEqual([
+-      "Ask",
+-      "Requests",
+-      "Verify",
+-      "GSPC board",
+-      "Evidence index",
+-      "SWIFT · x402",
+-      "Evidence",
+-      "Improve",
+-      "Learning",
+-      "Watchdog",
+-      "Standards",
+-      "Connections",
++      "matrix",
++      "claimguard",
++      "products",
++      "library",
++      "workbench",
+     ]);
++    expect(ids).toHaveLength(29);
++    expect(new Set(ids).size).toBe(ids.length);
++    expect(DASHBOARD_TABS.find((tab) => tab.id === "measured")?.label).toBe(
++      "Existing-card proof",
++    );
+     expect(
+       LOBBY_TABS.filter(isDashboardTab)
+         .map((t) => t.id)
+@@ -323,10 +342,10 @@ describe("the two panes added by the OS-tools sweep", () => {
+     expect(matchTab("show the estate state")?.id).toBe("state");
+   });
+ 
+-  it("keeps signed cards and diagnostic state in All tools", () => {
++  it("keeps signed cards and diagnostic state visible in the dashboard rail", () => {
+     const ids = DASHBOARD_TABS.map((t) => t.id);
+-    expect(ids).not.toContain("cards");
+-    expect(ids).not.toContain("state");
++    expect(ids).toContain("cards");
++    expect(ids).toContain("state");
+   });
+ 
+   it("gives the newly-opened pages a real route to open", () => {
+diff --git a/client/src/components/lobby/tabs.ts b/client/src/components/lobby/tabs.ts
+index 8c1beb2af..0badef5ba 100644
+--- a/client/src/components/lobby/tabs.ts
++++ b/client/src/components/lobby/tabs.ts
+@@ -57,6 +57,7 @@ export type LobbyTabId =
+   | "standards"
+   | "products"
+   | "space"
++  | "city"
+   | "measured"
+   | "harness"
+   | "watchdog"
+@@ -125,7 +126,7 @@ export const LOBBY_TABS: LobbyTab[] = [
+     id: "learn",
+     label: "Learning arena",
+     blurb:
+-      "Human-guided learning across every canonical GSPC axis: learn, play, explain, propose a fix, then require human review.",
++      "Human-guided, dated GSPC practice paths: learn, play, explain, propose a fix, then stop for human review. Coverage may differ from the current board.",
+     path: "",
+     kind: "native",
+     accent: "gold",
+@@ -322,27 +323,36 @@ export const LOBBY_TABS: LobbyTab[] = [
+     id: "space",
+     label: "Council Space",
+     blurb:
+-      "The governed arena — rounds graded deterministically, never by a model jury.",
++      "Local eight-round practice with deterministic grading, plus a separate dated replay when available.",
+     path: "/gspc-arena",
+     cues: /\b(arena|space|council space|rounds|match|towns|globe)\b/i,
+   },
++  {
++    id: "city",
++    label: "City observatory",
++    blurb:
++      "Dated, source-linked city-design and simulation snapshots. Read-only; no live multiplayer or GSPC score.",
++    path: "/world/observatory/",
++    cues: /\b(council city|city observatory|simulation observatory|world observatory)\b/i,
++  },
+   {
+     id: "measured",
+-    label: "Request attestation",
++    label: "Existing-card proof",
+     blurb:
+-      "RAS intake: describe a system and request a scoped measurement whose admitted output can become a signed attestation.",
++      "Check a named subject's existing signed-card availability and payment challenge. This does not start a new measurement run.",
+     path: "/assess",
+     // NOT a bare "readiness": three destinations answer to that word (this
+     // assessment, the guided Readiness assessment, and the CRA Readiness Kit), so
+     // the bare cue silently swallowed the other two. Each now owns a phrase.
+-    cues: /\b(assess|assessment|get measured|measure me|measure my)\b|\b(ras|readiness assessment|booking|human.?rail)\b/i,
++    cues: /\b(assess|assessment|existing.card proof|proof pack|paid proof)\b|\b(ras|readiness assessment)\b/i,
+   },
+   {
+     id: "watchdog",
+     label: "Watchdog evidence",
+     blurb:
+-      "Read the current public Watchdog material. Durable report filing and signed acknowledgements are not live yet.",
+-    path: "/watchdog-hub",
++      "Read board evidence, signed-card checks and corrections in the native pane. Incident filing is unavailable.",
++    path: "",
++    kind: "native",
+     cues: /\b(watchdog|incident|report(?:ed)?|complaint|heat.?map)\b/i,
+   },
+   {
+@@ -382,7 +392,7 @@ export const LOBBY_TABS: LobbyTab[] = [
+     id: "play",
+     label: "Play gallery",
+     blurb:
+-      "Arena previews with honest in-build labels — measurement surfaces, not live multiplayer yet.",
++      "Practice games and read-only arena previews with clear availability labels; this is not a measurement surface.",
+     path: "",
+     kind: "local",
+     accent: "gold",
+@@ -761,14 +771,9 @@ export function routesIn(group: LobbyRouteGroup): LobbyRoute[] {
+   return LOBBY_ROUTES.filter((r) => r.group === group);
+ }
+ 
+-/**
+- * The OS destinations that have a standalone URL — the DSH sidebar links to
+- * `tab.path`, so a pane with no page of its own (Home, Play, and the native
+- * workflow panes, which carry `path: ""`) cannot appear there. That is honest:
+- * they exist only inside the OS. Software is excluded because it IS this surface.
+- */
++/** The sidebar links to dashboard tab ids, including native in-process panes. */
+ export type DashboardNavGroupId =
+-  "start" | "work" | "govern";
++  "start" | "measure" | "proof" | "operate" | "govern" | "explore";
+ 
+ export type DashboardNavGroup = {
+   id: DashboardNavGroupId;
+@@ -786,20 +791,45 @@ const DASHBOARD_NAV_DEFINITION: {
+     label: "Start",
+     tabs: [
+       { id: "home", label: "Ask" },
+-      { id: "measured", label: "Requests" },
++      { id: "measured", label: "Existing-card proof" },
+       { id: "verify", label: "Verify" },
+     ],
+   },
+   {
+-    id: "work",
+-    label: "Work",
++    id: "measure",
++    label: "Measure",
+     tabs: [
+       { id: "board", label: "GSPC board" },
++      { id: "models", label: "Model registry" },
+       { id: "evidence-index", label: "Evidence index" },
++      { id: "xrpl", label: "XRPL instruments" },
+       { id: "swift", label: "SWIFT · x402" },
+-      { id: "evidence", label: "Evidence" },
+-      { id: "tools", label: "Improve" },
++      { id: "state", label: "Estate state" },
++    ],
++  },
++  {
++    id: "proof",
++    label: "Evidence & proof",
++    tabs: [
++      { id: "cards", label: "Signed cards" },
++      { id: "attestations", label: "Attestations" },
++      { id: "archive", label: "Provable archive" },
++      { id: "evidence", label: "Evidence pack" },
++      { id: "art50", label: "Article 50 marking" },
++      { id: "embed", label: "Embed kit" },
++    ],
++  },
++  {
++    id: "operate",
++    label: "Operate",
++    tabs: [
++      { id: "tools", label: "MCP tools" },
++      { id: "harness", label: "Measurement harness" },
++      { id: "fabric", label: "Connections" },
++      { id: "space", label: "Council Space" },
++      { id: "city", label: "City observatory" },
+       { id: "learn", label: "Learning" },
++      { id: "play", label: "Play gallery" },
+       { id: "watchdog", label: "Watchdog" },
+     ],
+   },
+@@ -826,7 +856,17 @@ const DASHBOARD_NAV_DEFINITION: {
+     label: "Govern",
+     tabs: [
+       { id: "standards", label: "Standards" },
+-      { id: "fabric", label: "Connections" },
++      { id: "matrix", label: "Regulation matrix" },
++      { id: "claimguard", label: "Honesty gate" },
++    ],
++  },
++  {
++    id: "explore",
++    label: "Explore",
++    tabs: [
++      { id: "products", label: "Products" },
++      { id: "library", label: "Library" },
++      { id: "workbench", label: "Workbench · sign in" },
+     ],
+   },
+ ];
+@@ -843,7 +883,7 @@ export const DASHBOARD_NAV_GROUPS: DashboardNavGroup[] =
+       .filter((tab): tab is LobbyTab => Boolean(tab)),
+   }));
+ 
+-/** The intentionally small permanent rail. Every other destination remains in All tools. */
++/** Working destinations only. The full page catalogue remains in All tools. */
+ export const DASHBOARD_TABS: LobbyTab[] = DASHBOARD_NAV_GROUPS.flatMap(
+   (group) => group.tabs,
+ );
+@@ -853,27 +893,13 @@ export function isDashboardTab(tab: LobbyTab): boolean {
+ }
+ 
+ const DASHBOARD_HIDDEN_GROUPS: Record<string, DashboardNavGroupId> = {
+-  archive: "work",
+-  state: "work",
+-  embed: "work",
+-  cards: "work",
+-  attestations: "work",
+-  claimguard: "work",
+-  results: "work",
+-  models: "work",
+-  matrix: "govern",
+-  art50: "govern",
+-  leaderboard: "work",
+-  ras: "work",
+-  terminal: "work",
+-  console: "work",
+-  harness: "work",
+-  space: "work",
+-  play: "work",
+-  explore: "work",
+-  products: "work",
+-  library: "work",
+-  workbench: "work",
++  results: "measure",
++  leaderboard: "measure",
++  ras: "start",
++  terminal: "operate",
++  console: "operate",
++  explore: "explore",
++  software: "explore",
+ };
+ 
+ export function dashboardNavGroupOf(id: string): DashboardNavGroup | null {
+diff --git a/client/src/data/library-ia.ts b/client/src/data/library-ia.ts
+index d19533f29..ace4d05af 100644
+--- a/client/src/data/library-ia.ts
++++ b/client/src/data/library-ia.ts
+@@ -28,6 +28,7 @@ import { ROUTE_MANIFEST, type RouteEntry } from "./route-manifest";
+ export const PRIMARY_PATHS = new Set<string>([
+   "/estate", // the estate census; a primary index page, never an archived one
+   "/compliance-training-world/catalog.html", // games-catalog entry; a catalogued path ships primary, never archived
++  "/world/observatory/", // dated, read-only Council City source view linked from the dashboard
+   "/",
+   // Measure
+   // /board is the navigator ACROSS every axis set — the one route that is allowed
+diff --git a/client/src/lib/attestations.ts b/client/src/lib/attestations.ts
+index 57a7a13a5..243d9b3f4 100644
+--- a/client/src/lib/attestations.ts
++++ b/client/src/lib/attestations.ts
+@@ -593,7 +593,6 @@ export const HOW_TO_VERIFY: RailLink[] = [
+   { href: "/root.json", label: "root.json — the one signed root" },
+   { href: "/interop/root-witness-latest.json", label: "root-witness-latest.json — the witness sidecar" },
+   { href: "/interop/root-witness-pointer.json", label: "root-witness-pointer.json — drift: witnessed bytes vs live bytes" },
+-  { href: "/api/proof?sha=", label: "GET /api/proof?sha=<64-hex> — one free inclusion proof" },
+   { href: "/api/corrections", label: "GET /api/corrections — the appended-only ledger" },
+   { href: "/.well-known/did.json", label: "did.json — the published keys" },
+ ];
+diff --git a/client/src/lib/learningCoverage.ts b/client/src/lib/learningCoverage.ts
+new file mode 100644
+index 000000000..2a6aa1ce5
+--- /dev/null
++++ b/client/src/lib/learningCoverage.ts
+@@ -0,0 +1,41 @@
++export function learningBoardUrl(hostname?: string): string {
++  const path = "/api/gspc";
++  const local = hostname === "127.0.0.1" || hostname === "localhost";
++  return local ? `https://councilof.ai${path}` : path;
++}
++
++/** A count is displayed only when the current public board supplied it. */
++export function readBoardAxisCount(value: unknown): number | null {
++  if (!value || typeof value !== "object") return null;
++  const totals = (value as { totals?: unknown }).totals;
++  if (!totals || typeof totals !== "object") return null;
++  const count = (totals as { axes?: unknown }).axes;
++  return typeof count === "number" && Number.isSafeInteger(count) && count >= 0
++    ? count
++    : null;
++}
++
++/** Current IDs are shown only when the public board supplied a valid axis list. */
++export function readBoardAxisIds(value: unknown): string[] | null {
++  if (!value || typeof value !== "object") return null;
++  const axes = (value as { axes?: unknown }).axes;
++  if (!Array.isArray(axes)) return null;
++  const ids = axes.map((row) =>
++    row && typeof row === "object" ? (row as { axis?: unknown }).axis : null,
++  );
++  if (
++    ids.some((id) => typeof id !== "string" || id.trim().length === 0) ||
++    new Set(ids).size !== ids.length
++  )
++    return null;
++  return ids as string[];
++}
++
++export function learningCoverageLabel(
++  lessonCount: number,
++  boardAxes: number | null,
++): string {
++  return boardAxes === null
++    ? `${lessonCount} snapshot paths`
++    : `${lessonCount} snapshot paths · ${boardAxes} live board axes`;
++}
+diff --git a/client/src/lib/mcpTools.test.ts b/client/src/lib/mcpTools.test.ts
+index 12084e59b..43e62b1db 100644
+--- a/client/src/lib/mcpTools.test.ts
++++ b/client/src/lib/mcpTools.test.ts
+@@ -1,6 +1,7 @@
+ import { describe, expect, it } from "vitest";
+ import { readFileSync } from "node:fs";
+ import { ALL_TOOL_NAMES, FREE_TOOL_NAMES, PAID_TOOL_NAMES, toolSummary } from "./mcpTools";
++import { TOOL_META } from "./sovTools";
+ 
+ const J = (rel: string) => JSON.parse(readFileSync(new URL(rel, import.meta.url), "utf8"));
+ 
+@@ -57,3 +58,16 @@ describe("no component keeps its own copy of the door's tool set", () => {
+     });
+   }
+ });
++
++describe("the callable fleet has an end-user explanation", () => {
++  it("covers every tool in the manifests without falling back to code names", () => {
++    expect(ALL_TOOL_NAMES.filter((name) => !TOOL_META[name])).toEqual([]);
++    for (const name of ALL_TOOL_NAMES) {
++      const guide = TOOL_META[name];
++      expect(guide.label).not.toBe(name);
++      expect(guide.useFor.length).toBeGreaterThan(20);
++      expect(guide.returns.length).toBeGreaterThan(20);
++      expect(guide.boundary.length).toBeGreaterThan(20);
++    }
++  });
++});
+diff --git a/client/src/lib/sovTools.ts b/client/src/lib/sovTools.ts
+index c96626f53..917b06098 100644
+--- a/client/src/lib/sovTools.ts
++++ b/client/src/lib/sovTools.ts
+@@ -100,11 +100,96 @@ export async function sealArtifact(artifact: string): Promise<ToolResult> {
+   return { ok: false, text: "Seal unavailable." };
+ }
+ 
+-// Friendly labels for the known live tools.
+-export const TOOL_META: Record<string, { glyph: string; label: string }> = {
+-  meok_govern: { glyph: "⚖", label: "What governs this?" },
+-  meok_sign: { glyph: "✶", label: "Seal to Layer 0" },
+-  meok_verify: { glyph: "✓", label: "Verify a seal" },
+-  meok_talk: { glyph: "◉", label: "Ask the Council" },
+-  meok_agent_card: { glyph: "🪪", label: "Agent card" },
++// Human guidance for the current published MCP fleet. The live tools/list
++// remains the authority for availability, inputs and payment state; this copy
++// only helps a reader choose a tool. A test compares these names with the two
++// manifests used by /mcp so a fleet change cannot silently leave raw names in
++// the interface again.
++export type ToolPresentation = {
++  glyph: string;
++  label: string;
++  useFor: string;
++  returns: string;
++  boundary: string;
++};
++
++export const TOOL_META: Record<string, ToolPresentation> = {
++  board_totals: {
++    glyph: "#", label: "Board totals",
++    useFor: "See how many axis positions exist and how many have admitted measurements.",
++    returns: "Separately labelled slot and measured counts, with board and fetch dates.",
++    boundary: "A declared slot is not a measured result.",
++  },
++  get_axis: {
++    glyph: "1", label: "Read one GSPC axis",
++    useFor: "Inspect the evidence and status behind a named axis on the public board.",
++    returns: "That axis row, its run or bank reference, and its dates.",
++    boundary: "An UNMEASURED axis remains a visible gap, never a zero score.",
++  },
++  verify_card: {
++    glyph: "✓", label: "Verify a signed card",
++    useFor: "Check one published measurement card or a card you paste.",
++    returns: "VALID, INVALID or UNCHECKABLE after hash and pinned-key signature checks.",
++    boundary: "A valid signature binds bytes; it does not certify a subject.",
++  },
++  list_cards: {
++    glyph: "▤", label: "Browse signed cards",
++    useFor: "Find recent cards, optionally filtered to one axis.",
++    returns: "Index rows and separately labelled index/store counts.",
++    boundary: "Index presence is not independent verification of every card.",
++  },
++  get_root: {
++    glyph: "◇", label: "Read the public root",
++    useFor: "Get the current public-root snapshot and its date.",
++    returns: "Root hash, card count and stated gaps.",
++    boundary: "Fetching the root is not a signature or Bitcoin-anchor check.",
++  },
++  get_card: {
++    glyph: "□", label: "Fetch a root card",
++    useFor: "Retrieve a public-root leaf by its full SHA-256 digest.",
++    returns: "One card-v0 leaf or an explicit unavailable state.",
++    boundary: "A root leaf is not the same as a signed GSPC measurement card.",
++  },
++  verify_inclusion: {
++    glyph: "⊂", label: "Check root inclusion",
++    useFor: "Test whether a digest is included in the current public root.",
++    returns: "VALID, INVALID or UNCHECKABLE for the Merkle inclusion check.",
++    boundary: "Inclusion alone does not verify an Ed25519 signature.",
++  },
++  x402_trust: {
++    glyph: "402", label: "x402 catalogue checks",
++    useFor: "Read the latest public census of x402 resources that answer on the wire.",
++    returns: "Dated aggregate challenge and phantom counts.",
++    boundary: "An HTTP 402 is not proof of paid delivery or customer use.",
++  },
++  mcp_trust: {
++    glyph: "M", label: "MCP handshake checks",
++    useFor: "Read the latest public MCP initialize-handshake census.",
++    returns: "Dated aggregate reachable, auth-challenge and unreachable counts.",
++    boundary: "A handshake is not a completed tool call or security verdict.",
++  },
++  commission_card: {
++    glyph: "+", label: "Commission a card",
++    useFor: "Request a scoped receipt for a named subject already represented on the frozen bank.",
++    returns: "A free preview or 402 challenge first; the paid route assembles existing evidence.",
++    boundary: "Payment does not create a new measured cell or guarantee a fresh run.",
++  },
++  art50_marking_evidence: {
++    glyph: "50", label: "Check output marking",
++    useFor: "Inspect one generative output for detectable machine-readable marking.",
++    returns: "A free unsigned preview or a challenged evidence pack for supplied bytes.",
++    boundary: "This is point-in-time detection, not a legal compliance opinion.",
++  },
++  rwa_evidence: {
++    glyph: "X", label: "XRPL asset evidence",
++    useFor: "Inspect one XRPL issued asset's deterministic ledger state.",
++    returns: "A free unsigned preview or a challenged signed evidence card.",
++    boundary: "Ledger state is not a risk rating, guarantee or conformity mark.",
++  },
++  receipts_batch: {
++    glyph: "↧", label: "Assemble card history",
++    useFor: "Collect historical measurement cards and root paths for a time window.",
++    returns: "A free count-and-hash preview or a challenged batch with inclusion paths.",
++    boundary: "These are measurement records, not payment-settlement receipts.",
++  },
+ };
+diff --git a/client/src/pages/PublicWatchdogHub.tsx b/client/src/pages/PublicWatchdogHub.tsx
+index d6e5957aa..8e6d43617 100644
+--- a/client/src/pages/PublicWatchdogHub.tsx
++++ b/client/src/pages/PublicWatchdogHub.tsx
+@@ -1,9 +1,8 @@
+ import { Redirect } from "wouter";
+ 
+ /**
+- * /watchdog-hub used to sell leftover watchdog-global marketing.
+- * The public door is Council OS Home. Deep-link stays ?lobby= &task=.
++ * Keep older /watchdog-hub links pointed at the native, read-only Watchdog pane.
+  */
+ export default function PublicWatchdogHub() {
+-  return <Redirect to="/dashboard?tab=home" />;
++  return <Redirect to="/dashboard?tab=watchdog" />;
+ }
+diff --git a/public/compliance-training-world/art50-2-quest.html b/public/compliance-training-world/art50-2-quest.html
+index 72e367819..d3a6125eb 100644
+--- a/public/compliance-training-world/art50-2-quest.html
++++ b/public/compliance-training-world/art50-2-quest.html
+@@ -1,6 +1,6 @@
+ <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+-<title>Art 50(2) Compliance Quest — Compliance Training World</title>
+-<meta name="description" content="Practice exercise on EU AI Act Art 50(2): decide which content must be marked as AI-generated. Scored in your browser; it issues no attestation."><style>
++<title>Article 50 Transparency Practice — Compliance Training World</title>
++<meta name="description" content="Practice distinguishing provider output marking under EU AI Act Article 50(2) from deployer disclosure under Article 50(4). No compliance verdict or attestation."><style>
+ body{margin:0;background:radial-gradient(900px 500px at 75% -10%,rgba(16,185,129,.15),transparent),#07080d;color:#eef1f5;font-family:-apple-system,'Avenir Next',Avenir,Helvetica,Arial,sans-serif}
+ .wrap{max-width:860px;margin:0 auto;padding:54px 24px}
+ .badge{color:#10B981;font-size:12px;letter-spacing:2px;text-transform:uppercase}
+@@ -20,37 +20,37 @@ h1{font-size:32px;margin:10px 0 6px;background:linear-gradient(90deg,#fff,#10B98
+ .result.pass{border-color:#10B981}.result.fail{border-color:#e5534b}
+ .cid{font-family:monospace;font-size:13px;color:#9aa2b1;word-break:break-all}
+ .foot{color:#565d6b;font-size:12px;margin-top:40px}
+-</style></head><body><div class="wrap">
+-<div class="badge">Council of AI · Compliance Training World · City Quest</div>
+-<h1>Art 50(2) — Synthetic Content Marking Quest</h1>
+-<div class="rule"><b>Rule (EU AI Act Art 50(2)):</b> Deployers of generative AI must mark synthetic content (deepfakes, AI text/images) as artificially generated. Retrofit deadline for in-service systems: <b>2 Aug 2026</b>. Fail = enforcement exposure. Mark what is synthetic; leave what is genuinely human. <span class="cid">Quest: art50-2-retrofit-marking · bench: ProvBench</span></div>
+-<div class="badge" style="margin-top:6px">Grade the samples (deterministic predicate).</div>
++</style></head><body><div class="wrap"><a href="catalog.html" style="display:inline-block;color:#6ee7b7;font-size:13px;margin-bottom:18px">← All practice exercises</a>
++<div class="badge">Council of AI · Compliance Training World · Evidence practice</div>
++<h1>Article 50 — who has which transparency duty?</h1>
++<div class="rule"><p><b>Provider marking · Article 50(2):</b> providers of AI systems that generate synthetic audio, images, video or text must ensure outputs are machine-readable and detectable as artificially generated or manipulated, subject to the provision's limits and exceptions.</p><p><b>Deployer disclosure · Article 50(4):</b> deployers have separate disclosure duties for deepfakes and certain public-interest text, subject to its exceptions. A visual guess cannot establish whether a machine-readable mark exists.</p><p>This is a role-matching practice exercise, not an assessment of a real system or a legal compliance verdict. <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-50" target="_blank" rel="noopener noreferrer" style="color:#6ee7b7">Read Article 50</a> before relying on the distinction.</p><span class="cid">Practice: art50-role-distinction</span></div>
++<div class="badge" style="margin-top:6px">Choose the duty or evidence limit described in each scenario.</div>
+ 
+ <div id="qs"></div>
+ <button class="btn" onclick="grade()">Submit &amp; grade</button>
+-<div class="score" id="score"></div>
++<div class="score" id="score" role="status" aria-live="polite"></div>
+ <div class="result" id="res"></div>
+ 
+ <div class="foot">Council of AI · csoai.org · practice only · no attestation or ledger write</div>
+ </div>
+ <script>
+ const ITEMS=[
+- {txt:"A photorealistic 'CEO is leaving' image, 5 high-res AI artifacts, no watermark.", syn:true},
+- {txt:"A hand-drawn whiteboard photo from an internal workshop, EXIF intact.", syn:false},
+- {txt:"A 1080p video of an official speech, lipsync-smooth but audio 0.3s off.", syn:true},
+- {txt:"An editorial photo with an embedded C2PA provenance manifest proving human capture.", syn:false},
+- {txt:"A press release: 'Our model helps police find suspects' — no identity-safe model card.", syn:true}
++ {txt:"A company provides an AI system that generates synthetic images. Who must ensure its outputs are machine-readable and detectable under Article 50(2)?", answer:"provider"},
++ {txt:"An organisation deploys an AI system to publish a deepfake video. Assuming no applicable exception, who has the Article 50(4) disclosure duty?", answer:"deployer"},
++ {txt:"You can see only a screenshot of an image, with no original output file or marking data. Can you decide whether an Article 50(2) machine-readable mark is present?", answer:"unknown"},
++ {txt:"A company provides an AI system generating synthetic text. Which role is addressed by the Article 50(2) output-marking duty?", answer:"provider"},
++ {txt:"An organisation deploys an AI system to publish AI-generated text on a matter of public interest. Assuming no editorial-control or other exception applies, which role has the Article 50(4) disclosure duty?", answer:"deployer"}
+ ];
+ let qs=document.getElementById('qs');
+-ITEMS.forEach((it,i)=>{qs.innerHTML+=`<div class=\"q\"><div class=\"lbl\">Sample ${i+1}</div><div class=\"txt\">${it.txt}</div><div class=\"opt\">
+-<label><input type=\"radio\" name=\"q${i}\" value=\"syn\">Marked synthetic</label>
+-<label><input type=\"radio\" name=\"q${i}\" value=\"hum\">Genuine human</label></div></div>`;});
++ITEMS.forEach((it,i)=>{qs.innerHTML+=`<div class=\"q\" role=\"group\" aria-labelledby=\"q-title-${i}\"><div class=\"lbl\">Scenario ${i+1}</div><div class=\"txt\" id=\"q-title-${i}\">${it.txt}</div><div class=\"opt\">
++<label><input type=\"radio\" name=\"q${i}\" value=\"provider\">Provider marking</label>
++<label><input type=\"radio\" name=\"q${i}\" value=\"deployer\">Deployer disclosure</label>
++<label><input type=\"radio\" name=\"q${i}\" value=\"unknown\">Cannot establish from these facts</label></div></div>`;});
+ function grade(){
+- let c=0; ITEMS.forEach((it,i)=>{let v=document.querySelector(`input[name=\"q${i}\"]:checked`);if(v&&(v.value==="syn")===it.syn)c++;});
++ let c=0; ITEMS.forEach((it,i)=>{let v=document.querySelector(`input[name=\"q${i}\"]:checked`);if(v&&v.value===it.answer)c++;});
+  let p=Math.round(c/ITEMS.length*100);let pass=p>=80;
+- document.getElementById('score').textContent=`Score: ${c}/${ITEMS.length} (${p}%) — ${pass?'PASS':'NEEDS TRAINING'}`;
++ document.getElementById('score').textContent=`Practice score: ${c}/${ITEMS.length} (${p}%) — ${pass?'threshold met':'review the distinctions'}`;
+  let r=document.getElementById('res');r.style.display='block';r.className='result '+(pass?'pass':'fail');
+- r.innerHTML=pass?`<b>Practice complete.</b> Score ${p}%. This page does not issue an attestation or write to a ledger.`
+- :`<b>Keep practising.</b> Score ${p}% &lt; 80%. Review the misses and try again. This page does not issue an attestation or write to a ledger.`;
++ r.innerHTML=`<b>Answer key:</b> provider, deployer, insufficient evidence, provider, deployer. Your practice score is ${p}%. This page does not decide compliance, issue an attestation, or write to a ledger.`;
+ }
+ </script></body></html>
+diff --git a/public/compliance-training-world/bank-quest.html b/public/compliance-training-world/bank-quest.html
+index 12d6c43a9..55623fe40 100644
+--- a/public/compliance-training-world/bank-quest.html
++++ b/public/compliance-training-world/bank-quest.html
+@@ -1,17 +1,17 @@
+ <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+-<title>Banking Compliance Quest — Compliance Training World</title>
+-<meta name="description" content="Practice exercise for banking: classify AI uses in credit scoring, KYC and AML under the EU AI Act and FCA/EBA rules. Scored in your browser."><style>body{margin:0;background:radial-gradient(900px 500px at 75% -10%,rgba(16,185,129,.15),transparent),#07080d;color:#eef1f5;font-family:-apple-system,'Avenir Next',Avenir,Helvetica,Arial,sans-serif}.wrap{max-width:860px;margin:0 auto;padding:54px 24px}.badge{color:#10B981;font-size:12px;letter-spacing:2px;text-transform:uppercase}h1{font-size:32px;margin:10px 0 6px;background:linear-gradient(90deg,#fff,#10B981);-webkit-background-clip:text;background-clip:text;color:transparent}.rule{background:#0e1118;border:1px solid rgba(16,185,129,.28);border-radius:16px;padding:22px 26px;margin:20px 0}.q{margin:18px 0;background:#0e1118;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:18px}.lbl{font-size:13px;color:#9aa2b1}.txt{font-size:17px;margin:8px 0 12px;font-weight:600}.opt{display:flex;gap:10px;flex-wrap:wrap}.opt label{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.35);border-radius:20px;padding:8px 16px;cursor:pointer;font-size:14px}button{margin-top:20px;background:#10B981;color:#04140c;border:none;padding:13px 28px;font-size:16px;font-weight:700;border-radius:12px;cursor:pointer}.res{display:none;margin-top:22px;padding:20px;border-radius:14px;border:1px solid rgba(16,185,129,.4)}.cid{font-family:monospace;font-size:12px;color:#9aa2b1;word-break:break-all}.foot{color:#565d6b;font-size:12px;margin-top:38px}</style></head><body><div class="wrap">
+-<div class="badge">Compliance Training World · Industry Quest</div>
+-<h1>Banking Compliance Quest</h1>
+-<div class="rule"><b>FCA / EBA + EU AI Act Art 6(Annex III-credit).</b> AI in credit scoring, KYC, and AML. Classify which AI use cases are high-risk and what obligations apply. <span class="cid">quest: training_quest:bank</span></div>
+-<div class="badge">Grade each case (deterministic predicate).</div>
+-<div class='q'><div class='lbl'>Case 1</div><div class='txt'>A credit-scoring model decides loan eligibility at scale.</div><div class='opt'><label><input type='radio' name='q0' value='c'>Compliant</label><label><input type='radio' name='q0' value='v'>Violation</label></div></div><div class='q'><div class='lbl'>Case 2</div><div class='txt'>An internal document-summarisation tool for staff, no external decisions.</div><div class='opt'><label><input type='radio' name='q1' value='c'>Compliant</label><label><input type='radio' name='q1' value='v'>Violation</label></div></div><div class='q'><div class='lbl'>Case 3</div><div class='txt'>Automated KYC screening of customers for AML risk.</div><div class='opt'><label><input type='radio' name='q2' value='c'>Compliant</label><label><input type='radio' name='q2' value='v'>Violation</label></div></div><div class='q'><div class='lbl'>Case 4</div><div class='txt'>A bank-wide AI-governance register naming the models in production.</div><div class='opt'><label><input type='radio' name='q3' value='c'>Compliant</label><label><input type='radio' name='q3' value='v'>Violation</label></div></div><div class='q'><div class='lbl'>Case 5</div><div class='txt'>A model card absent for a deployed high-risk credit model.</div><div class='opt'><label><input type='radio' name='q4' value='c'>Compliant</label><label><input type='radio' name='q4' value='v'>Violation</label></div></div>
+-<button onclick="grade()">Submit &amp; grade</button><div class="res" id="res"></div>
++<title>Banking Evidence Triage — Compliance Training World</title>
++<meta name="description" content="Practice separating narrow banking AI evidence claims from conclusions that need more evidence. No legal compliance verdict."><style>body{margin:0;background:radial-gradient(900px 500px at 75% -10%,rgba(16,185,129,.15),transparent),#07080d;color:#eef1f5;font-family:-apple-system,'Avenir Next',Avenir,Helvetica,Arial,sans-serif}.wrap{max-width:860px;margin:0 auto;padding:54px 24px}.badge{color:#10B981;font-size:12px;letter-spacing:2px;text-transform:uppercase}h1{font-size:32px;margin:10px 0 6px;background:linear-gradient(90deg,#fff,#10B981);-webkit-background-clip:text;background-clip:text;color:transparent}.rule{background:#0e1118;border:1px solid rgba(16,185,129,.28);border-radius:16px;padding:22px 26px;margin:20px 0}.q{margin:18px 0;background:#0e1118;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:18px}.lbl{font-size:13px;color:#9aa2b1}.txt{font-size:17px;margin:8px 0 12px;font-weight:600}.opt{display:flex;gap:10px;flex-wrap:wrap}.opt label{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.35);border-radius:20px;padding:8px 16px;cursor:pointer;font-size:14px}button{margin-top:20px;background:#10B981;color:#04140c;border:none;padding:13px 28px;font-size:16px;font-weight:700;border-radius:12px;cursor:pointer}.res{display:none;margin-top:22px;padding:20px;border-radius:14px;border:1px solid rgba(16,185,129,.4)}.cid{font-family:monospace;font-size:12px;color:#9aa2b1;word-break:break-all}.foot{color:#565d6b;font-size:12px;margin-top:38px}</style></head><body><div class="wrap"><a href="catalog.html" style="display:inline-block;color:#6ee7b7;font-size:13px;margin-bottom:18px">← All practice exercises</a>
++<div class="badge">Compliance Training World · Evidence practice</div>
++<h1>Banking evidence triage</h1>
++<div class="rule"><b>Read only what the evidence supports.</b> A use-case description, inventory row or missing document is not a legal compliance verdict. For each narrow question, choose whether the stated facts support it or whether more evidence is needed. This is practice, not an assessment of a bank. <span class="cid">practice: evidence_triage:bank</span></div>
++<div class="badge">Choose the evidence state for each question.</div>
++<div class='q' role='group' aria-labelledby='case-1'><div class='lbl'>Case 1</div><div class='txt' id='case-1'>A credit model is used for loan eligibility. Does this fact alone establish that the model meets every applicable requirement?</div><div class='opt'><label><input type='radio' name='q0' value='s'>Supported narrow claim</label><label><input type='radio' name='q0' value='n'>More evidence needed</label></div></div><div class='q' role='group' aria-labelledby='case-2'><div class='lbl'>Case 2</div><div class='txt' id='case-2'>A dated inventory names an internal summarisation tool, its owner and version. Does it support the narrow claim that the tool was listed in that inventory?</div><div class='opt'><label><input type='radio' name='q1' value='s'>Supported narrow claim</label><label><input type='radio' name='q1' value='n'>More evidence needed</label></div></div><div class='q' role='group' aria-labelledby='case-3'><div class='lbl'>Case 3</div><div class='txt' id='case-3'>A bank says it uses automated KYC screening. Is that enough to establish the system's error rate or human review process?</div><div class='opt'><label><input type='radio' name='q2' value='s'>Supported narrow claim</label><label><input type='radio' name='q2' value='n'>More evidence needed</label></div></div><div class='q' role='group' aria-labelledby='case-4'><div class='lbl'>Case 4</div><div class='txt' id='case-4'>A signed receipt verifies against a published key and the downloaded bytes match its digest. Does that support the narrow claim that these receipt bytes were signed by the key holder?</div><div class='opt'><label><input type='radio' name='q3' value='s'>Supported narrow claim</label><label><input type='radio' name='q3' value='n'>More evidence needed</label></div></div><div class='q' role='group' aria-labelledby='case-5'><div class='lbl'>Case 5</div><div class='txt' id='case-5'>You cannot find a public model card for a credit model. Does that alone establish a legal violation?</div><div class='opt'><label><input type='radio' name='q4' value='s'>Supported narrow claim</label><label><input type='radio' name='q4' value='n'>More evidence needed</label></div></div>
++<button onclick="grade()">Submit &amp; grade</button><div class="res" id="res" role="status" aria-live="polite"></div>
+ <div class="foot">Council of AI · csoai.org · practice only · no attestation or ledger write</div>
+ </div><script>
+-const T=[true, false, true, true, false];
+-function grade(){let c=0;T.forEach((ok,i)=>{let v=document.querySelector(`input[name=\"q${i}\"]:checked`);if(v&&(v.value==='c')===ok)c++;});
++const T=[false, true, false, true, false];
++function grade(){let c=0;T.forEach((ok,i)=>{let v=document.querySelector(`input[name=\"q${i}\"]:checked`);if(v&&(v.value==='s')===ok)c++;});
+ let p=Math.round(c/T.length*100),pass=p>=80;let r=document.getElementById('res');r.style.display='block';
+ r.style.borderColor=pass?'#10B981':'#e5534b';
+-r.innerHTML=pass?`<b>Practice complete.</b> Score ${p}%. This page does not issue an attestation or write to a ledger.`
+-:`<b>Keep practising.</b> ${p}% &lt; 80%. Review the misses and try again. This page does not issue an attestation or write to a ledger.`}</script></body></html>
++r.innerHTML=pass?`<b>Practice threshold met.</b> Score ${p}%. Answer key: needs evidence, supported, needs evidence, supported, needs evidence. This is not a compliance verdict or attestation.`
++:`<b>Review the evidence limits.</b> ${p}%. Answer key: needs evidence, supported, needs evidence, supported, needs evidence. This is not a compliance verdict or attestation.`}</script></body></html>
+diff --git a/public/compliance-training-world/catalog.html b/public/compliance-training-world/catalog.html
+index 9f8198ac5..804a00e0d 100644
+--- a/public/compliance-training-world/catalog.html
++++ b/public/compliance-training-world/catalog.html
+@@ -1,8 +1,8 @@
+ <!doctype html><html lang="en"><head><meta charset="utf-8"><title>Compliance Training World — Catalog</title>
+-<meta name="description" content="Industry practice packs for EU AI Act compliance. Each scores your answers in this browser; none issues an attestation or writes to a ledger.">
++<meta name="description" content="Evidence and transparency practice exercises. In-browser scores are practice results, not legal verdicts or attestations.">
+ <style>body{margin:0;background:radial-gradient(900px 500px at 75% -10%,rgba(16,185,129,.15),transparent),#07080d;color:#eef1f5;font-family:-apple-system,'Avenir Next',Avenir,Helvetica,Arial,sans-serif}.wrap{max-width:860px;margin:0 auto;padding:54px 24px}.badge{color:#10B981;font-size:12px;letter-spacing:2px;text-transform:uppercase}h1{font-size:32px;margin:10px 0 6px;background:linear-gradient(90deg,#fff,#10B981);-webkit-background-clip:text;background-clip:text;color:transparent}.rule{background:#0e1118;border:1px solid rgba(16,185,129,.28);border-radius:16px;padding:22px 26px;margin:20px 0}.q{margin:18px 0;background:#0e1118;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:18px}.lbl{font-size:13px;color:#9aa2b1}.txt{font-size:17px;margin:8px 0 12px;font-weight:600}.opt{display:flex;gap:10px;flex-wrap:wrap}.opt label{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.35);border-radius:20px;padding:8px 16px;cursor:pointer;font-size:14px}button{margin-top:20px;background:#10B981;color:#04140c;border:none;padding:13px 28px;font-size:16px;font-weight:700;border-radius:12px;cursor:pointer}.res{display:none;margin-top:22px;padding:20px;border-radius:14px;border:1px solid rgba(16,185,129,.4)}.cid{font-family:monospace;font-size:12px;color:#9aa2b1;word-break:break-all}.foot{color:#565d6b;font-size:12px;margin-top:38px}.c{display:block;background:#0e1118;border:1px solid rgba(16,185,129,.25);border-radius:16px;padding:22px 26px;margin:16px 0;color:#eef1f5;text-decoration:none}
+ .i{color:#10B981;font-weight:700;text-transform:uppercase;font-size:13px;letter-spacing:1px}</style></head><body><div class="wrap">
+-<div class="badge">Compliance Training World</div><h1>Industry Compliance Packs</h1>
+-<p class="badge" style="margin-top:0">Practice exercises only. Each industry pack scores responses in this browser; it does not issue an attestation or write to a ledger.</p>
+-<a href='art50-2-quest.html' class='c'><div class='i'>ART 50(2)</div><div>Synthetic Content Marking Quest</div></a><a href='bank-quest.html' class='c'><div class='i'>BANK</div><div>Banking Compliance Quest</div></a><div class='c'><div class='i'>INSURANCE · WITHDRAWN</div><div>Rubric under evidence review.</div></div><a href='equity-quest.html' class='c'><div class='i'>EQUITY</div><div>Capital Markets Compliance Quest</div></a><div class='c'><div class='i'>BOND · WITHDRAWN</div><div>Rubric under evidence review.</div></div><a href='crossborder-quest.html' class='c'><div class='i'>CROSSBORDER</div><div>Cross-Border Compliance Quest</div></a>
++<div class="badge">Compliance Training World</div><h1>Evidence practice</h1>
++<p class="badge" style="margin-top:0">Four in-browser exercises. They teach role distinctions and evidence limits; scores are practice results, not legal compliance findings. No attestation or ledger write.</p>
++<a href='art50-2-quest.html' class='c'><div class='i'>ARTICLE 50</div><div>Provider marking and deployer disclosure</div></a><a href='bank-quest.html' class='c'><div class='i'>BANK</div><div>Banking evidence triage</div></a><div class='c'><div class='i'>INSURANCE · WITHDRAWN</div><div>Rubric under evidence review.</div></div><a href='equity-quest.html' class='c'><div class='i'>EQUITY</div><div>Capital markets evidence triage</div></a><div class='c'><div class='i'>BOND · WITHDRAWN</div><div>Rubric under evidence review.</div></div><a href='crossborder-quest.html' class='c'><div class='i'>CROSS-BORDER</div><div>Cross-border evidence triage</div></a>
+ <div class="foot">Council of AI · csoai.org · practice only · no attestation or ledger write</div></div></body></html>
+diff --git a/public/compliance-training-world/crossborder-quest.html b/public/compliance-training-world/crossborder-quest.html
+index 313af14c7..8d2987fb4 100644
+--- a/public/compliance-training-world/crossborder-quest.html
++++ b/public/compliance-training-world/crossborder-quest.html
+@@ -1,17 +1,17 @@
+ <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+-<title>Cross-Border Compliance Quest — Compliance Training World</title>
+-<meta name="description" content="Practice exercise on cross-border AI content: marking, provenance and mirrored integrity under EU AI Act Art 50(2). Scored in your browser."><style>body{margin:0;background:radial-gradient(900px 500px at 75% -10%,rgba(16,185,129,.15),transparent),#07080d;color:#eef1f5;font-family:-apple-system,'Avenir Next',Avenir,Helvetica,Arial,sans-serif}.wrap{max-width:860px;margin:0 auto;padding:54px 24px}.badge{color:#10B981;font-size:12px;letter-spacing:2px;text-transform:uppercase}h1{font-size:32px;margin:10px 0 6px;background:linear-gradient(90deg,#fff,#10B981);-webkit-background-clip:text;background-clip:text;color:transparent}.rule{background:#0e1118;border:1px solid rgba(16,185,129,.28);border-radius:16px;padding:22px 26px;margin:20px 0}.q{margin:18px 0;background:#0e1118;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:18px}.lbl{font-size:13px;color:#9aa2b1}.txt{font-size:17px;margin:8px 0 12px;font-weight:600}.opt{display:flex;gap:10px;flex-wrap:wrap}.opt label{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.35);border-radius:20px;padding:8px 16px;cursor:pointer;font-size:14px}button{margin-top:20px;background:#10B981;color:#04140c;border:none;padding:13px 28px;font-size:16px;font-weight:700;border-radius:12px;cursor:pointer}.res{display:none;margin-top:22px;padding:20px;border-radius:14px;border:1px solid rgba(16,185,129,.4)}.cid{font-family:monospace;font-size:12px;color:#9aa2b1;word-break:break-all}.foot{color:#565d6b;font-size:12px;margin-top:38px}</style></head><body><div class="wrap">
+-<div class="badge">Compliance Training World · Industry Quest</div>
+-<h1>Cross-Border Compliance Quest</h1>
+-<div class="rule"><b>EU AI Act Art 50(2) + N-SITES.</b> Cross-border AI content and artifacts — marking, provenance, and mirrored integrity. <span class="cid">quest: training_quest:crossborder</span></div>
+-<div class="badge">Grade each case (deterministic predicate).</div>
+-<div class='q'><div class='lbl'>Case 1</div><div class='txt'>Synthetic content marked as artificially generated, as Art 50(2) requires.</div><div class='opt'><label><input type='radio' name='q0' value='c'>Compliant</label><label><input type='radio' name='q0' value='v'>Violation</label></div></div><div class='q'><div class='lbl'>Case 2</div><div class='txt'>An AI artifact with a signed provenance manifest and time anchor.</div><div class='opt'><label><input type='radio' name='q1' value='c'>Compliant</label><label><input type='radio' name='q1' value='v'>Violation</label></div></div><div class='q'><div class='lbl'>Case 3</div><div class='txt'>An unmarked deepfake deployed across borders.</div><div class='opt'><label><input type='radio' name='q2' value='c'>Compliant</label><label><input type='radio' name='q2' value='v'>Violation</label></div></div><div class='q'><div class='lbl'>Case 4</div><div class='txt'>A mirrored registry where the record survives node loss.</div><div class='opt'><label><input type='radio' name='q3' value='c'>Compliant</label><label><input type='radio' name='q3' value='v'>Violation</label></div></div>
+-<button onclick="grade()">Submit &amp; grade</button><div class="res" id="res"></div>
++<title>Cross-Border Evidence Triage — Compliance Training World</title>
++<meta name="description" content="Practice separating AI content marking, disclosure and byte-integrity evidence. No legal compliance verdict."><style>body{margin:0;background:radial-gradient(900px 500px at 75% -10%,rgba(16,185,129,.15),transparent),#07080d;color:#eef1f5;font-family:-apple-system,'Avenir Next',Avenir,Helvetica,Arial,sans-serif}.wrap{max-width:860px;margin:0 auto;padding:54px 24px}.badge{color:#10B981;font-size:12px;letter-spacing:2px;text-transform:uppercase}h1{font-size:32px;margin:10px 0 6px;background:linear-gradient(90deg,#fff,#10B981);-webkit-background-clip:text;background-clip:text;color:transparent}.rule{background:#0e1118;border:1px solid rgba(16,185,129,.28);border-radius:16px;padding:22px 26px;margin:20px 0}.q{margin:18px 0;background:#0e1118;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:18px}.lbl{font-size:13px;color:#9aa2b1}.txt{font-size:17px;margin:8px 0 12px;font-weight:600}.opt{display:flex;gap:10px;flex-wrap:wrap}.opt label{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.35);border-radius:20px;padding:8px 16px;cursor:pointer;font-size:14px}button{margin-top:20px;background:#10B981;color:#04140c;border:none;padding:13px 28px;font-size:16px;font-weight:700;border-radius:12px;cursor:pointer}.res{display:none;margin-top:22px;padding:20px;border-radius:14px;border:1px solid rgba(16,185,129,.4)}.cid{font-family:monospace;font-size:12px;color:#9aa2b1;word-break:break-all}.foot{color:#565d6b;font-size:12px;margin-top:38px}</style></head><body><div class="wrap"><a href="catalog.html" style="display:inline-block;color:#6ee7b7;font-size:13px;margin-bottom:18px">← All practice exercises</a>
++<div class="badge">Compliance Training World · Evidence practice</div>
++<h1>Cross-border evidence triage</h1>
++<div class="rule"><b>Keep separate claims separate.</b> Article 50(2) concerns provider output marking; Article 50(4) has separate deployer disclosure duties. A signature or replica can support byte integrity but cannot by itself establish legal compliance. <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-50" target="_blank" rel="noopener noreferrer" style="color:#6ee7b7">Read Article 50</a>. This is evidence practice, not a legal verdict. <span class="cid">practice: evidence_triage:crossborder</span></div>
++<div class="badge">Choose the evidence state for each question.</div>
++<div class='q' role='group' aria-labelledby='case-1'><div class='lbl'>Case 1</div><div class='txt' id='case-1'>The original AI-generated output file contains a machine-readable mark that was read back. Does this support the narrow claim that this output file carries a mark?</div><div class='opt'><label><input type='radio' name='q0' value='s'>Supported narrow claim</label><label><input type='radio' name='q0' value='n'>More evidence needed</label></div></div><div class='q' role='group' aria-labelledby='case-2'><div class='lbl'>Case 2</div><div class='txt' id='case-2'>An AI artifact has a valid signed provenance manifest and time anchor. Does that alone establish all Article 50 marking and disclosure duties were met?</div><div class='opt'><label><input type='radio' name='q1' value='s'>Supported narrow claim</label><label><input type='radio' name='q1' value='n'>More evidence needed</label></div></div><div class='q' role='group' aria-labelledby='case-3'><div class='lbl'>Case 3</div><div class='txt' id='case-3'>Only a screenshot of a deepfake is available. Can you decide from it whether the provider output had a machine-readable mark and whether the deployer disclosed the deepfake?</div><div class='opt'><label><input type='radio' name='q2' value='s'>Supported narrow claim</label><label><input type='radio' name='q2' value='n'>More evidence needed</label></div></div><div class='q' role='group' aria-labelledby='case-4'><div class='lbl'>Case 4</div><div class='txt' id='case-4'>Two mirrored registry records have matching raw-byte digests. Does that support the narrow claim that these two records contain identical bytes?</div><div class='opt'><label><input type='radio' name='q3' value='s'>Supported narrow claim</label><label><input type='radio' name='q3' value='n'>More evidence needed</label></div></div>
++<button onclick="grade()">Submit &amp; grade</button><div class="res" id="res" role="status" aria-live="polite"></div>
+ <div class="foot">Council of AI · csoai.org · practice only · no attestation or ledger write</div>
+ </div><script>
+-const T=[true, true, false, true];
+-function grade(){let c=0;T.forEach((ok,i)=>{let v=document.querySelector(`input[name="q${i}"]:checked`);if(v&&(v.value==='c')===ok)c++;});
++const T=[true, false, false, true];
++function grade(){let c=0;T.forEach((ok,i)=>{let v=document.querySelector(`input[name="q${i}"]:checked`);if(v&&(v.value==='s')===ok)c++;});
+ let p=Math.round(c/T.length*100),pass=p>=80;let r=document.getElementById('res');r.style.display='block';
+ r.style.borderColor=pass?'#10B981':'#e5534b';
+-r.innerHTML=pass?`<b>Practice complete.</b> Score ${p}%. This page does not issue an attestation or write to a ledger.`
+-:`<b>Keep practising.</b> ${p}% &lt; 80%. Review the misses and try again. This page does not issue an attestation or write to a ledger.`}</script></body></html>
++r.innerHTML=pass?`<b>Practice threshold met.</b> Score ${p}%. Answer key: supported, needs evidence, needs evidence, supported. This is not a compliance verdict or attestation.`
++:`<b>Review the evidence limits.</b> ${p}%. Answer key: supported, needs evidence, needs evidence, supported. This is not a compliance verdict or attestation.`}</script></body></html>
+diff --git a/public/compliance-training-world/equity-quest.html b/public/compliance-training-world/equity-quest.html
+index fe81230f3..02a41b34a 100644
+--- a/public/compliance-training-world/equity-quest.html
++++ b/public/compliance-training-world/equity-quest.html
+@@ -1,17 +1,17 @@
+ <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+-<title>Capital Markets Compliance Quest — Compliance Training World</title>
+-<meta name="description" content="Practice exercise for capital markets: spot perimeter and reporting issues for AI in analytics and trading under FCA/ESMA and the EU AI Act."><style>body{margin:0;background:radial-gradient(900px 500px at 75% -10%,rgba(16,185,129,.15),transparent),#07080d;color:#eef1f5;font-family:-apple-system,'Avenir Next',Avenir,Helvetica,Arial,sans-serif}.wrap{max-width:860px;margin:0 auto;padding:54px 24px}.badge{color:#10B981;font-size:12px;letter-spacing:2px;text-transform:uppercase}h1{font-size:32px;margin:10px 0 6px;background:linear-gradient(90deg,#fff,#10B981);-webkit-background-clip:text;background-clip:text;color:transparent}.rule{background:#0e1118;border:1px solid rgba(16,185,129,.28);border-radius:16px;padding:22px 26px;margin:20px 0}.q{margin:18px 0;background:#0e1118;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:18px}.lbl{font-size:13px;color:#9aa2b1}.txt{font-size:17px;margin:8px 0 12px;font-weight:600}.opt{display:flex;gap:10px;flex-wrap:wrap}.opt label{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.35);border-radius:20px;padding:8px 16px;cursor:pointer;font-size:14px}button{margin-top:20px;background:#10B981;color:#04140c;border:none;padding:13px 28px;font-size:16px;font-weight:700;border-radius:12px;cursor:pointer}.res{display:none;margin-top:22px;padding:20px;border-radius:14px;border:1px solid rgba(16,185,129,.4)}.cid{font-family:monospace;font-size:12px;color:#9aa2b1;word-break:break-all}.foot{color:#565d6b;font-size:12px;margin-top:38px}</style></head><body><div class="wrap">
+-<div class="badge">Compliance Training World · Industry Quest</div>
+-<h1>Capital Markets Compliance Quest</h1>
+-<div class="rule"><b>FCA / ESMA + EU AI Act Art 6.</b> AI in market-facing analytics and trading. Spot the perimeter / reporting issues. <span class="cid">quest: training_quest:equity</span></div>
+-<div class="badge">Grade each case (deterministic predicate).</div>
+-<div class='q'><div class='lbl'>Case 1</div><div class='txt'>A market-facing AI research signal used in client communication.</div><div class='opt'><label><input type='radio' name='q0' value='c'>Compliant</label><label><input type='radio' name='q0' value='v'>Violation</label></div></div><div class='q'><div class='lbl'>Case 2</div><div class='txt'>An AI-driven execution algorithm with no surveillance/audit trail.</div><div class='opt'><label><input type='radio' name='q1' value='c'>Compliant</label><label><input type='radio' name='q1' value='v'>Violation</label></div></div><div class='q'><div class='lbl'>Case 3</div><div class='txt'>A signed data feed provenance line for the model's inputs.</div><div class='opt'><label><input type='radio' name='q2' value='c'>Compliant</label><label><input type='radio' name='q2' value='v'>Violation</label></div></div><div class='q'><div class='lbl'>Case 4</div><div class='txt'>An investment-rating-style AI output presented as a rating.</div><div class='opt'><label><input type='radio' name='q3' value='c'>Compliant</label><label><input type='radio' name='q3' value='v'>Violation</label></div></div>
+-<button onclick="grade()">Submit &amp; grade</button><div class="res" id="res"></div>
++<title>Capital Markets Evidence Triage — Compliance Training World</title>
++<meta name="description" content="Practice identifying what market-facing AI evidence does and does not support. No legal compliance verdict."><style>body{margin:0;background:radial-gradient(900px 500px at 75% -10%,rgba(16,185,129,.15),transparent),#07080d;color:#eef1f5;font-family:-apple-system,'Avenir Next',Avenir,Helvetica,Arial,sans-serif}.wrap{max-width:860px;margin:0 auto;padding:54px 24px}.badge{color:#10B981;font-size:12px;letter-spacing:2px;text-transform:uppercase}h1{font-size:32px;margin:10px 0 6px;background:linear-gradient(90deg,#fff,#10B981);-webkit-background-clip:text;background-clip:text;color:transparent}.rule{background:#0e1118;border:1px solid rgba(16,185,129,.28);border-radius:16px;padding:22px 26px;margin:20px 0}.q{margin:18px 0;background:#0e1118;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:18px}.lbl{font-size:13px;color:#9aa2b1}.txt{font-size:17px;margin:8px 0 12px;font-weight:600}.opt{display:flex;gap:10px;flex-wrap:wrap}.opt label{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.35);border-radius:20px;padding:8px 16px;cursor:pointer;font-size:14px}button{margin-top:20px;background:#10B981;color:#04140c;border:none;padding:13px 28px;font-size:16px;font-weight:700;border-radius:12px;cursor:pointer}.res{display:none;margin-top:22px;padding:20px;border-radius:14px;border:1px solid rgba(16,185,129,.4)}.cid{font-family:monospace;font-size:12px;color:#9aa2b1;word-break:break-all}.foot{color:#565d6b;font-size:12px;margin-top:38px}</style></head><body><div class="wrap"><a href="catalog.html" style="display:inline-block;color:#6ee7b7;font-size:13px;margin-bottom:18px">← All practice exercises</a>
++<div class="badge">Compliance Training World · Evidence practice</div>
++<h1>Capital markets evidence triage</h1>
++<div class="rule"><b>Keep the conclusion within the evidence.</b> A model signal, log, signature or research label does not itself settle trading rules or disclosure duties. For each narrow question, choose whether the stated facts support it or whether more evidence is needed. This is practice, not a market or legal verdict. <span class="cid">practice: evidence_triage:equity</span></div>
++<div class="badge">Choose the evidence state for each question.</div>
++<div class='q' role='group' aria-labelledby='case-1'><div class='lbl'>Case 1</div><div class='txt' id='case-1'>A market-facing AI research signal is used in client communication. Does that fact alone establish that all relevant disclosures and controls were met?</div><div class='opt'><label><input type='radio' name='q0' value='s'>Supported narrow claim</label><label><input type='radio' name='q0' value='n'>More evidence needed</label></div></div><div class='q' role='group' aria-labelledby='case-2'><div class='lbl'>Case 2</div><div class='txt' id='case-2'>An execution log identifies each order, model version and timestamp. Does the log support the narrow claim that these fields were recorded for those orders?</div><div class='opt'><label><input type='radio' name='q1' value='s'>Supported narrow claim</label><label><input type='radio' name='q1' value='n'>More evidence needed</label></div></div><div class='q' role='group' aria-labelledby='case-3'><div class='lbl'>Case 3</div><div class='txt' id='case-3'>A provenance line says a data feed was signed, but the signature and source have not been verified. Does the line alone establish that the feed came from the named source?</div><div class='opt'><label><input type='radio' name='q2' value='s'>Supported narrow claim</label><label><input type='radio' name='q2' value='n'>More evidence needed</label></div></div><div class='q' role='group' aria-labelledby='case-4'><div class='lbl'>Case 4</div><div class='txt' id='case-4'>A dated source snapshot and a read-back copy have the same digest. Does that support the narrow claim that the archived bytes match the source snapshot?</div><div class='opt'><label><input type='radio' name='q3' value='s'>Supported narrow claim</label><label><input type='radio' name='q3' value='n'>More evidence needed</label></div></div>
++<button onclick="grade()">Submit &amp; grade</button><div class="res" id="res" role="status" aria-live="polite"></div>
+ <div class="foot">Council of AI · csoai.org · practice only · no attestation or ledger write</div>
+ </div><script>
+-const T=[true, false, true, false];
+-function grade(){let c=0;T.forEach((ok,i)=>{let v=document.querySelector(`input[name="q${i}"]:checked`);if(v&&(v.value==='c')===ok)c++;});
++const T=[false, true, false, true];
++function grade(){let c=0;T.forEach((ok,i)=>{let v=document.querySelector(`input[name="q${i}"]:checked`);if(v&&(v.value==='s')===ok)c++;});
+ let p=Math.round(c/T.length*100),pass=p>=80;let r=document.getElementById('res');r.style.display='block';
+ r.style.borderColor=pass?'#10B981':'#e5534b';
+-r.innerHTML=pass?`<b>Practice complete.</b> Score ${p}%. This page does not issue an attestation or write to a ledger.`
+-:`<b>Keep practising.</b> ${p}% &lt; 80%. Review the misses and try again. This page does not issue an attestation or write to a ledger.`}</script></body></html>
++r.innerHTML=pass?`<b>Practice threshold met.</b> Score ${p}%. Answer key: needs evidence, supported, needs evidence, supported. This is not a compliance verdict or attestation.`
++:`<b>Review the evidence limits.</b> ${p}%. Answer key: needs evidence, supported, needs evidence, supported. This is not a compliance verdict or attestation.`}</script></body></html>
+diff --git a/public/gspc-quests.html b/public/gspc-quests.html
+index 87cd38fd1..7d43ab79a 100644
+--- a/public/gspc-quests.html
++++ b/public/gspc-quests.html
+@@ -531,7 +531,7 @@ pulled from the published Hugging Face banks on 2026-09-01. That is <b>not</b> t
+ <b>Not yet playable:</b> swarm and detector-interop have public banks, but their bank items state the mechanism's own
+ component outputs in the prompt, so answering reads a lookup rule rather than exercising a judgment — and the swarm
+ bank is 39 of 41 a single label, which any one-answer strategy would ace. They stay honestly out until a
+-judgment-form bank ships. The eight deterministic fact axes (issuer, ledger and domain facts) are excluded because
++judgment-form bank ships. Fact-oriented axes (issuer, ledger and domain facts) are excluded because
+ they are computed facts, not human-answerable questions.</p>
+ </div><!-- /questsHome -->
+ <div id="run" style="display:none;margin-top:18px"></div>
+diff --git a/public/world/observatory/index.html b/public/world/observatory/index.html
+index 2c7e1bfc7..bac176f24 100644
+--- a/public/world/observatory/index.html
++++ b/public/world/observatory/index.html
+@@ -9,6 +9,11 @@
+   <link rel="alternate" type="application/json" href="./index.json" title="Council simulation index data">
+   <link rel="alternate" type="application/json" href="./city-2026-09-23.json" title="Dated Micropolis DESIGN city projection">
+   <title>Simulation Observatory | Council of AI</title>
++  <script>
++    if (new URLSearchParams(location.search).get('embed') === '1') {
++      document.documentElement.classList.add('embedded');
++    }
++  </script>
+   <style>
+     :root { color-scheme: dark; --bg:#081017; --panel:#101d29; --line:#293b48; --ink:#eaf3f6; --muted:#acc0ca; --accent:#74e6c0; --blue:#9cbeff; }
+     * { box-sizing:border-box; }
+@@ -17,6 +22,8 @@
+     a:focus-visible, input:focus-visible, select:focus-visible, button:focus-visible { outline:3px solid var(--blue); outline-offset:3px; }
+     .shell { max-width:1120px; padding:0 24px; margin:0 auto; }
+     header { border-bottom:1px solid var(--line); }
++    html.embedded body > header, html.embedded body > footer { display:none; }
++    html.embedded body > main { padding-top:24px; }
+     header .shell { display:flex; align-items:center; justify-content:space-between; gap:20px; min-height:68px; }
+     .brand { color:var(--ink); text-decoration:none; font-weight:750; letter-spacing:.01em; }
+     nav { display:flex; flex-wrap:wrap; gap:18px; font-size:14px; }
+diff --git a/scripts/learning-coverage.node-test.mjs b/scripts/learning-coverage.node-test.mjs
+new file mode 100644
+index 000000000..201205aa8
+--- /dev/null
++++ b/scripts/learning-coverage.node-test.mjs
+@@ -0,0 +1,51 @@
++import assert from "node:assert/strict";
++import { test } from "node:test";
++import {
++  learningBoardUrl,
++  learningCoverageLabel,
++  readBoardAxisCount,
++  readBoardAxisIds,
++} from "../client/src/lib/learningCoverage.ts";
++
++test("learning coverage uses only the current board's numeric axis count", () => {
++  assert.equal(readBoardAxisCount({ totals: { axes: 23 } }), 23);
++  for (const value of [
++    null,
++    {},
++    { totals: { axes: "23" } },
++    { totals: { axes: -1 } },
++  ]) {
++    assert.equal(readBoardAxisCount(value), null);
++  }
++});
++
++test("learning gap names only validated live board axis ids", () => {
++  assert.deepEqual(
++    readBoardAxisIds({
++      axes: [{ axis: "governance" }, { axis: "effect-binding" }],
++    }),
++    ["governance", "effect-binding"],
++  );
++  for (const value of [
++    null,
++    {},
++    { axes: [{}] },
++    { axes: [{ axis: "" }] },
++    { axes: [{ axis: "same" }, { axis: "same" }] },
++  ]) {
++    assert.equal(readBoardAxisIds(value), null);
++  }
++});
++
++test("learning copy distinguishes snapshot lessons from current board axes", () => {
++  assert.equal(
++    learningCoverageLabel(22, 23),
++    "22 snapshot paths · 23 live board axes",
++  );
++  assert.equal(learningCoverageLabel(22, null), "22 snapshot paths");
++});
++
++test("local review reads the public board", () => {
++  assert.equal(learningBoardUrl("localhost"), "https://councilof.ai/api/gspc");
++  assert.equal(learningBoardUrl("councilof.ai"), "/api/gspc");
++});

@@ -1,0 +1,99 @@
+{
+  "schema": "csoai.x402-directory-readback/1",
+  "observed_at": "2026-09-24T08:07:23.516565Z",
+  "methods": "public read-only GET; Coinbase documented read-only POST /v2/x402/validate; no payment, registration, account change, or listing edit",
+  "402index": {
+    "list_url": "https://402index.io/api/v1/services?q=councilof.ai&limit=200",
+    "matching_url_count": 23,
+    "healthy": 22,
+    "degraded": 1,
+    "domain_verified_1": 0,
+    "all_source_self_registered": true,
+    "degraded_listing": {
+      "id": "204b90d1-30ef-425e-888c-51adbd391584",
+      "url": "https://councilof.ai/api/pop/x402-bazaar",
+      "health_status": "degraded",
+      "x402_payment_valid": 1,
+      "approval_reason": "domain-verified",
+      "domain_verified": 0,
+      "last_checked": "2026-09-24 03:35:49",
+      "health_checks": [
+        {
+          "id": 67553451,
+          "checked_at": "2026-09-24 03:35:49",
+          "status": "degraded",
+          "response_time_ms": 729,
+          "http_status": 402,
+          "error_message": null
+        },
+        {
+          "id": 67445308,
+          "checked_at": "2026-09-23 20:52:34",
+          "status": "healthy",
+          "response_time_ms": 606,
+          "http_status": 402,
+          "error_message": null
+        }
+      ]
+    },
+    "well_known_url": "https://councilof.ai/.well-known/402index-verify.txt",
+    "well_known_http_status": 200,
+    "well_known_body_sha256": "3e1c08fca9f6a9d1c6b278517eb9561247e71b74411814cf1173e5bf7bbe176e"
+  },
+  "coinbase_bazaar": {
+    "merchant_url": "https://api.cdp.coinbase.com/platform/v2/x402/discovery/merchant?payTo=0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31&limit=20",
+    "merchant_http_status": 200,
+    "merchant_total": 0,
+    "merchant_resource_count": 0,
+    "search_url": "https://api.cdp.coinbase.com/platform/v2/x402/discovery/search?urlSubstring=councilof.ai&limit=20",
+    "search_http_status": 200,
+    "search_resource_count": 0,
+    "search_partial_results": false,
+    "validation": [
+      {
+        "resource": "https://councilof.ai/api/proof?bundle=1",
+        "http_status": 200,
+        "valid": true,
+        "simulation": {
+          "outcome": "accepted"
+        },
+        "index": null,
+        "required_failed": [],
+        "preflight_count": 25,
+        "body_sha256": "ddc363b904e45a2dc69ec084eba4ee11e4680a4f4eed6ee82af03debd2a81845"
+      },
+      {
+        "resource": "https://councilof.ai/api/request-attestation",
+        "http_status": 200,
+        "valid": true,
+        "simulation": {
+          "outcome": "accepted"
+        },
+        "index": null,
+        "required_failed": [],
+        "preflight_count": 25,
+        "body_sha256": "8f641ca6110afd4d06b66bf6cd189dccabb4c2dd1a7d8c1043b946cacf99e8f7"
+      },
+      {
+        "resource": "https://councilof.ai/api/pop/x402-bazaar",
+        "http_status": 200,
+        "valid": true,
+        "simulation": {
+          "outcome": "accepted"
+        },
+        "index": null,
+        "required_failed": [],
+        "preflight_count": 25,
+        "body_sha256": "194f2308dcade708da3a704c6bfe04d33b984c5cf268d48d8b9bfdadd266a41d"
+      }
+    ]
+  },
+  "interpretation": "CSOAI is listed in 402 Index, not observed in Coinbase CDP Bazaar. Three public doors pass CDP read-only preflight; CDP settlement and Bazaar indexing are separate unobserved gates. Directory presence is not buyer usage. 402 Index approval_reason/domain_verified fields conflict.",
+  "official_docs": [
+    "https://402index.io/api-docs",
+    "https://402index.io/verify",
+    "https://docs.cdp.coinbase.com/x402/buyer/discover-services",
+    "https://docs.cdp.coinbase.com/x402/seller/get-discovered",
+    "https://docs.cdp.coinbase.com/api-reference/v2/rest-api/x402-facilitator/validate-x402-endpoint"
+  ]
+}

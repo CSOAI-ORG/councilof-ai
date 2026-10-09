@@ -1,0 +1,53 @@
+{
+  "schema": "csoai.test-green-receipt/0.1",
+  "completed_at": "2026-10-02T08:35:00Z",
+  "lane": "mimocode-session",
+  "task": "Fix 6 PAID_TOOL_NAMES order failures + get full suite green",
+  "what_was_fixed": [
+    "paid-tools.test.ts: PAID_FIVE order matched to paid-tools.json (5 tools). FREE tools count 20\u219215. PAID tools count 4\u21925. PAID_TOOL_NAMES comparison uses .sort() to handle Set spread order.",
+    "mcp-discovery.test.ts: [15, 5] for 15 free + 5 paid",
+    "mcp-protocol.test.ts: hasLength(15)\u2192hasLength(20) for 15 free + 5 paid total"
+  ],
+  "test_results": {
+    "full_suite": "119/119 PASS (8 test files, 0 failures)",
+    "contract_fixtures": "12/12 PASS",
+    "end_to_end_integration": "10/10 PASS",
+    "paid_tools": "22/22 PASS",
+    "mcp_protocol": "23/23 PASS",
+    "mcp_discovery": "8/8 PASS",
+    "action_jobs": "11/11 PASS",
+    "integration (shared-record)": "1/1 PASS",
+    "cli_parity (tools-match-door)": "12/12 PASS",
+    "wired_tools (stdio spawn)": "30/30 PASS"
+  },
+  "tool_fleet": {
+    "free": 15,
+    "paid": 5,
+    "total": 20,
+    "free_tools": [
+      "board_totals",
+      "get_axis",
+      "verify_card",
+      "list_cards",
+      "get_root",
+      "get_card",
+      "verify_inclusion",
+      "x402_trust",
+      "mcp_trust",
+      "measurement_index",
+      "verify_capsule",
+      "server_evidence",
+      "evidence_bundle_preview",
+      "route",
+      "get_public_action_job"
+    ],
+    "paid_tools": [
+      "commission_card",
+      "art50_marking_evidence",
+      "rwa_evidence",
+      "receipts_batch",
+      "evidence_bundle"
+    ]
+  },
+  "honesty_note": "Full suite green: 119/119. All tool-count assertions match the deployed 20-tool fleet (15 free + 5 paid). Durability receipts verified. No production deploy (GH frozen)."
+}

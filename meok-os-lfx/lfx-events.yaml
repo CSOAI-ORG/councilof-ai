@@ -1,0 +1,108 @@
+apiVersion: meok.io/v1
+kind: LFXEventMatrix
+metadata:
+  name: meok-lfx-events
+  labels:
+    meok.io/care-class: carer
+spec:
+  year: 2026
+  events:
+    - id: lfn-dev-forum-2026-na
+      name: LFN Developer Forum 2026 — North America
+      venue: "San Jose Convention Center, CA, USA"
+      start: 2026-06-09
+      end: 2026-06-11
+      track: "Edge & Sovereign AI"
+      cfp_status: accepted
+      booth: B-42
+      sessions:
+        - title: "Sovereign AI at the Edge: MEOK OS on OpenBMC"
+          speakers: ["Aïda Benali", "Priya Iyer"]
+          track: Edge
+          duration_min: 30
+          type: lightning
+        - title: "Hardware-Rooted Trust for LF Edge Hives"
+          speakers: ["Lina Voß"]
+          track: Edge
+          duration_min: 45
+          type: talk
+        - title: "Workshop: Build a Care-First Compliance Operator"
+          speakers: ["Sofía Marín", "Hugo Lefevre"]
+          duration_min: 180
+          type: workshop
+          capacity: 40
+    - id: ossummit-2026-na
+      name: Open Source Summit North America 2026
+      venue: "Vancouver Convention Centre, BC, Canada"
+      start: 2026-06-22
+      end: 2026-06-25
+      track: "AI / Security / Edge"
+      cfp_status: accepted
+      booth: B-17
+      sessions:
+        - title: "MEOK AI OS: a Sovereign, Attested, Care-First Operating System"
+          speakers: ["MEOK maintainers"]
+          track: AI
+          duration_min: 45
+          type: keynote-track-talk
+        - title: "BMC-Rooted Attestation: lessons from OpenBMC + MEOK"
+          speakers: ["Marcus Okonkwo", "Priya Iyer"]
+          track: Security
+          duration_min: 40
+          type: talk
+        - title: "Panel: Sovereign AI in 2026 — what does it actually mean?"
+          speakers: ["Sofía Marín", "industry panel"]
+          track: AI
+          duration_min: 60
+          type: panel
+    - id: ossummit-2026-eu
+      name: Open Source Summit Europe 2026
+      venue: "Amsterdam RAI, Netherlands"
+      start: 2026-08-24
+      end: 2026-08-27
+      track: "AI / Security"
+      cfp_status: pending
+      booth: TBD
+      sessions:
+        - title: "EU AI Act compliance as code: the MEOK operator"
+          speakers: ["Hugo Lefevre"]
+          track: Regulatory
+          duration_min: 40
+          type: talk
+        - title: "Care-First AI: an enforceable doctrine"
+          speakers: ["Sofía Marín"]
+          track: AI
+          duration_min: 30
+          type: talk
+    - id: kubecon-2026-eu
+      name: KubeCon + CloudNativeCon Europe 2026
+      venue: "ExCeL London, UK"
+      start: 2026-04-01
+      end: 2026-04-03
+      track: "Edge / Operators"
+      cfp_status: accepted
+      booth: TBD
+      sessions:
+        - title: "MEOK: a Care-First Operator Stack on Kubernetes"
+          speakers: ["Ravi Subramanian", "Niko Saarinen"]
+          track: Operators
+          duration_min: 30
+          type: talk
+    - id: lf-member-summit-2026
+      name: LF Member Summit 2026
+      venue: "Monterey Conference Center, CA, USA"
+      start: 2026-03-18
+      end: 2026-03-20
+      track: "Member / Sandboxes"
+      cfp_status: invited
+      sessions:
+        - title: "MEOK AI OS — sandbox update"
+          speakers: ["MEOK TSC"]
+          track: Sandboxes
+          duration_min: 25
+          type: invited-talk
+  metrics:
+    total_talks: 8
+    total_workshops: 1
+    total_panels: 1
+    total_booth_days: 12

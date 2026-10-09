@@ -1,0 +1,190 @@
+# Sovereignty constraints — PodSecurityStandards (restricted + sovereign)
+# plus Kyverno policies enforcing MEOK's Care-First doctrine.
+# A workload that violates ANY of these is refused admission to the cluster.
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: meok-sovereignty-baseline
+  namespace: meok-system
+  labels:
+    app.kubernetes.io/name: meok-sovereignty
+    meok.io/care-class: carer
+data:
+  pod-security-baseline.yaml: |
+    # PSS `restricted` profile plus MEOK sovereign extensions.
+    apiVersion: pod-security.kubernetes.io/v1
+    kind: PodSecurityStandards
+    metadata:
+      name: meok-sovereign-baseline
+    spec:
+      enforce: restricted
+      audit: restricted
+      warn: restricted
+      exemptions: []
+      extensions:
+        # Sovereign extensions — non-negotiable.
+        requireCareClass: true                # must set meok.io/care-class
+        requireHarmBudget: true               # must set meok.io/harm-budget
+        requireSignedImage: true              # cosign-verified
+        requireTPMAttestation: true           # kubelet verifies TPM PCRs
+        requireBMCAttestation: true           # MEOK BMC must be live
+        denyHostNetwork: true
+        denyHostPID: true
+        denyHostIPC: true
+        denyPrivileged: true
+        denyPrivilegeEscalation: true
+        denyAllCapabilities: true
+        readOnlyRootFilesystem: true
+        runAsNonRoot: true
+        seccompProfile: RuntimeDefault
+        allowedCareClasses:
+          - carer
+          - cared
+          - observer
+        maxHarmBudgetUharmPerDecision: 1000
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: meok-require-care-class
+  annotations:
+    policies.kyverno.io/title: Require meok.io/care-class
+    policies.kyverno.io/category: MEOK Sovereign
+    policies.kyverno.io/severity: high
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+    - name: care-class-required
+      match:
+        any:
+          - resources:
+              kinds: ["Pod"]
+      validate:
+        message: "Every pod must declare meok.io/care-class in {carer, cared, observer}."
+        pattern:
+          metadata:
+            labels:
+              meok.io/care-class: "?*"
+    - name: care-class-valid-value
+      match:
+        any:
+          - resources:
+              kinds: ["Pod"]
+      validate:
+        message: "meok.io/care-class must be one of carer, cared, observer."
+        pattern:
+          metadata:
+            labels:
+              meok.io/care-class: "carer | cared | observer"
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: meok-require-harm-budget
+  annotations:
+    policies.kyverno.io/title: Require meok.io/harm-budget
+    policies.kyverno.io/category: MEOK Sovereign
+    policies.kyverno.io/severity: high
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+    - name: harm-budget-required
+      match:
+        any:
+          - resources:
+              kinds: ["Pod"]
+      validate:
+        message: "Every pod must declare a meok.io/harm-budget annotation (µharm/decision)."
+        pattern:
+          metadata:
+            annotations:
+              meok.io/harm-budget: "?*"
+    - name: harm-budget-numeric
+      match:
+        any:
+          - resources:
+              kinds: ["Pod"]
+      context:
+        - name: budget
+          apiCall:
+            urlPath: "/api/v1/namespaces/{{request.namespace}}/pods/{{request.name}}"
+            jmesPath: "metadata.annotations.\"meok.io/harm-budget\""
+      validate:
+        message: "harm-budget must be a non-negative integer in µharm/decision."
+        deny:
+          conditions:
+            all:
+              - key: "{{ budget || '' }}"
+                operator: NotEquals
+                value: ""
+              - key: "{{ budget || '' }}"
+                operator: AnyNotIn
+                value:
+                  - "0"
+                  - "1"
+                  - "5"
+                  - "10"
+                  - "20"
+                  - "50"
+                  - "100"
+                  - "200"
+                  - "500"
+                  - "1000"
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: meok-deny-host-namespaces
+  annotations:
+    policies.kyverno.io/title: Deny hostNetwork / hostPID / hostIPC
+    policies.kyverno.io/category: MEOK Sovereign
+    policies.kyverno.io/severity: high
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+    - name: deny-host-escapes
+      match:
+        any:
+          - resources:
+              kinds: ["Pod"]
+      validate:
+        message: "MEOK sovereignty forbids host network/PID/IPC. Use the sovereign substrate instead."
+        pattern:
+          spec:
+            =(hostNetwork): false
+            =(hostPID): false
+            =(hostIPC): false
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: meok-require-cosign-signature
+  annotations:
+    policies.kyverno.io/title: Require signed container images (cosign)
+    policies.kyverno.io/category: MEOK Sovereign
+    policies.kyverno.io/severity: high
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+    - name: verify-image-signature
+      match:
+        any:
+          - resources:
+              kinds: ["Pod"]
+      verifyImages:
+        - imageReferences:
+            - "ghcr.io/meok-ai/*:*"
+            - "registry.meok.local/*:*"
+          attestors:
+            - entries:
+                - keys:
+                    publicKeys: |-
+                      -----BEGIN PUBLIC KEY-----
+                      MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAESo+oHXXiTpLwJ8lPxxJK7Z8Q3yH2
+                      meok-sovereign-cosign-pub-v1
+                      -----END PUBLIC KEY-----

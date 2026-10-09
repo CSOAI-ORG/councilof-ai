@@ -1,0 +1,506 @@
+From a1138de32ccdfc5726f3676bd4cce8dc8d1dac66 Mon Sep 17 00:00:00 2001
+From: CSOAI <nicholas@csoai.org>
+Date: Fri, 25 Sep 2026 07:29:13 +0100
+Subject: [PATCH] fix(mcp): distinguish fetched public root from verified
+ evidence
+
+---
+ functions/mcp/_board.node-test.ts    | 65 ++++++++++++++++++++++++++++
+ functions/mcp/_board.ts              | 50 ++++++++++++++++++---
+ functions/mcp/_handlers.ts           |  2 +-
+ functions/mcp/gspc-tools.json        |  6 +--
+ functions/mcp/mcp-protocol.test.ts   |  6 +--
+ mcp/gspc-server/README.md            |  9 ++--
+ mcp/gspc-server/gspc-tools.json      |  6 +--
+ mcp/gspc-server/index.mjs            | 54 ++++++++++++++++++-----
+ mcp/gspc-server/smoke.mjs            |  6 +--
+ mcp/gspc-server/wired-tools.test.mjs | 40 +++++++++++++++--
+ 10 files changed, 206 insertions(+), 38 deletions(-)
+ create mode 100644 functions/mcp/_board.node-test.ts
+
+diff --git a/functions/mcp/_board.node-test.ts b/functions/mcp/_board.node-test.ts
+new file mode 100644
+index 000000000..6f5137e9b
+--- /dev/null
++++ b/functions/mcp/_board.node-test.ts
+@@ -0,0 +1,65 @@
++import assert from "node:assert/strict";
++import { test } from "node:test";
++import { getRootTool, verifyInclusionTool } from "./_board.ts";
++
++const origin = "https://fixture.invalid";
++const sha = "a".repeat(64);
++const merkle = "b".repeat(64);
++
++async function callWithFetch<T>(response: Response | Error, fn: () => Promise<T>): Promise<T> {
++  const previous = globalThis.fetch;
++  globalThis.fetch = async () => {
++    if (response instanceof Error) throw response;
++    return response;
++  };
++  try {
++    return await fn();
++  } finally {
++    globalThis.fetch = previous;
++  }
++}
++
++const json = (body: unknown, status = 200) => Response.json(body, { status });
++
++test("HTTP get_root reports fetched fields without a verification verdict", async () => {
++  const result = await callWithFetch(json({ kind: "public-root", card_count: 2, merkle_root: merkle }), () => getRootTool(origin));
++  assert.equal(result.state, "RETRIEVED_UNVERIFIED");
++  assert.equal(result.verification, "NOT_PERFORMED");
++  assert.match(result.reason, /not checked.*Merkle tree.*Ed25519/i);
++  assert.equal(result.card_count, 2);
++});
++
++test("HTTP get_root rejects a syntactically incomplete root", async () => {
++  const result = await callWithFetch(json({ merkle_root: merkle }), () => getRootTool(origin));
++  assert.equal(result.state, "UNCHECKABLE");
++});
++
++test("HTTP get_root reports an unreachable source distinctly", async () => {
++  const result = await callWithFetch(new Error("offline"), () => getRootTool(origin));
++  assert.equal(result.state, "UNREACHABLE");
++});
++
++test("HTTP inclusion reports endpoint inclusion without certifying the path", async () => {
++  const body = { kind: "inclusion", sha256: sha, index: 0, card_count: 1, proof: [], merkle_root: merkle };
++  const result = await callWithFetch(json(body), () => verifyInclusionTool(origin, { sha256: sha }));
++  assert.equal(result.state, "REPORTED_UNVERIFIED");
++  assert.equal(result.reported_inclusion, true);
++  assert.match(result.reason, /not recomputed.*verified/i);
++});
++
++test("HTTP inclusion reports endpoint absence without claiming INVALID", async () => {
++  const result = await callWithFetch(json({ error: "not_found", sha }), () => verifyInclusionTool(origin, { sha256: sha }));
++  assert.equal(result.state, "REPORTED_UNVERIFIED");
++  assert.equal(result.reported_inclusion, false);
++});
++
++test("HTTP inclusion rejects a mismatched digest and does not treat 404 as proof", async () => {
++  const mismatched = { kind: "inclusion", sha256: "c".repeat(64), index: 0, card_count: 1, proof: [], merkle_root: merkle };
++  assert.equal((await callWithFetch(json(mismatched), () => verifyInclusionTool(origin, { sha256: sha }))).state, "UNCHECKABLE");
++  assert.equal((await callWithFetch(json({ error: "not_found" }, 404), () => verifyInclusionTool(origin, { sha256: sha }))).state, "UNCHECKABLE");
++});
++
++test("HTTP inclusion reports transport failure as UNREACHABLE", async () => {
++  const result = await callWithFetch(new Error("offline"), () => verifyInclusionTool(origin, { sha256: sha }));
++  assert.equal(result.state, "UNREACHABLE");
++});
+diff --git a/functions/mcp/_board.ts b/functions/mcp/_board.ts
+index c75fd5371..77b4a91ae 100644
+--- a/functions/mcp/_board.ts
++++ b/functions/mcp/_board.ts
+@@ -1,7 +1,7 @@
+ /**
+  * Shared MCP tool handlers for Pages /mcp.
+  * Definitions stay in ./gspc-tools.json (byte-for-byte with npm csoai-gspc-mcp).
+- * Do not edit mcp/gspc-server — four-tool npm package stays honest.
++ * Keep retrieval and verification states identical across HTTP and stdio.
+  */
+ export const UPSTREAM = "https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp";
+ 
+@@ -168,18 +168,34 @@ export async function listCardsTool(origin: string, args: Record<string, unknown
+ export async function getRootTool(origin: string) {
+   try {
+     const d = (await fetchOriginJson(origin, "/root.json")) as Record<string, unknown>;
++    if (!d || typeof d !== "object" || Array.isArray(d) ||
++        !/^[0-9a-f]{64}$/i.test(String(d.merkle_root ?? "")) ||
++        !Number.isSafeInteger(d.card_count) || (d.card_count as number) < 0) {
++      return {
++        state: "UNCHECKABLE",
++        source: `${origin}/root.json`,
++        reason: "Fetched body is not a recognizable public root (merkle_root/card_count).",
++        not_a_certification: true,
++        not_gspc: true,
++      };
++    }
+     return {
+-      state: "VALID",
++      state: "RETRIEVED_UNVERIFIED",
+       source: `${origin}/root.json`,
+       kind: d.kind ?? null,
+       as_of: d.as_of ?? null,
+       card_count: d.card_count ?? null,
+       merkle_root: d.merkle_root ?? null,
+       note: d.note ?? null,
++      verification: "NOT_PERFORMED",
++      reason: "Fetched root fields only; this tool has not checked the leaf count, Merkle tree, or Ed25519 signature.",
+       not_a_certification: true,
+       not_gspc: true,
+     };
+   } catch (e) {
++    if (e instanceof SyntaxError) {
++      return { state: "UNCHECKABLE", source: `${origin}/root.json`, reason: "Root response is not readable JSON.", not_a_certification: true, not_gspc: true };
++    }
+     return { ...unreachablePayload(origin, "/root.json", e), state: "UNREACHABLE", not_gspc: true };
+   }
+ }
+@@ -261,13 +277,33 @@ export async function verifyInclusionTool(origin: string, args: Record<string, u
+   }
+   try {
+     const d = (await fetchOriginJson(origin, `/api/proof?sha=${sha}`)) as Record<string, unknown>;
+-    if (d.kind === "inclusion") return { state: "VALID", sha256: sha, merkle_root: d.merkle_root ?? null, not_a_certification: true };
+-    if (d.error === "not_found") return { state: "INVALID", sha256: sha, reason: d.reason ?? "not a leaf", not_a_certification: true };
+-    return { state: "UNCHECKABLE", sha256: sha, reason: d.reason ?? "unexpected proof body", not_a_certification: true };
++    if (d && typeof d === "object" && !Array.isArray(d) && d.kind === "inclusion") {
++      if (String(d.sha256 ?? d.sha ?? "").toLowerCase() !== sha ||
++          !Number.isSafeInteger(d.index) || (d.index as number) < 0 ||
++          !Number.isSafeInteger(d.card_count) || (d.card_count as number) <= (d.index as number) ||
++          !Array.isArray(d.proof) || !/^[0-9a-f]{64}$/i.test(String(d.merkle_root ?? ""))) {
++        return { state: "UNCHECKABLE", sha256: sha, reason: "Proof response is missing or contradicts required inclusion fields.", not_a_certification: true };
++      }
++      return {
++        state: "REPORTED_UNVERIFIED",
++        reported_inclusion: true,
++        sha256: sha,
++        merkle_root: d.merkle_root,
++        reason: "The proof endpoint reports inclusion; this tool has not recomputed the path or verified the signed root.",
++        not_a_certification: true,
++      };
++    }
++    if (d && typeof d === "object" && !Array.isArray(d) && d.error === "not_found") {
++      return { state: "REPORTED_UNVERIFIED", reported_inclusion: false, sha256: sha, reason: "The proof endpoint reports no leaf in its current root; absence is not independently verified.", not_a_certification: true };
++    }
++    return { state: "UNCHECKABLE", sha256: sha, reason: d?.reason ?? "unexpected proof body", not_a_certification: true };
+   } catch (e) {
+     if (isHttp404(e)) {
+-      return { state: "INVALID", sha256: sha, reason: "not a leaf", not_a_certification: true };
++      return { state: "UNCHECKABLE", sha256: sha, reason: "Proof endpoint returned HTTP 404; this does not prove non-inclusion.", not_a_certification: true };
++    }
++    if (e instanceof SyntaxError) {
++      return { state: "UNCHECKABLE", sha256: sha, reason: "Proof response is not readable JSON.", not_a_certification: true };
+     }
+-    return { ...unreachablePayload(origin, `/api/proof?sha=${sha}`, e), state: "UNCHECKABLE", sha256: sha };
++    return { ...unreachablePayload(origin, `/api/proof?sha=${sha}`, e), sha256: sha, not_a_certification: true };
+   }
+ }
+diff --git a/functions/mcp/_handlers.ts b/functions/mcp/_handlers.ts
+index 016ea22bb..3dce73e69 100644
+--- a/functions/mcp/_handlers.ts
++++ b/functions/mcp/_handlers.ts
+@@ -100,7 +100,7 @@ function sharedToolSummary(
+     case "get_card":
+       return `${payload.state ?? "?"} — card-v0 leaf ${String(payload.sha256 || "").slice(0, 16) || "?"}.`;
+     case "verify_inclusion":
+-      return `${payload.state ?? "?"} — inclusion against live merkle.`;
++      return `${payload.state ?? "?"} — ${payload.reason ?? "proof endpoint result; no local Merkle or signature check"}`;
+     case "x402_trust":
+       return `${payload.state ?? "?"} — ${(payload.headline as string) || "catalog trust counts"}.`;
+     case "mcp_trust":
+diff --git a/functions/mcp/gspc-tools.json b/functions/mcp/gspc-tools.json
+index 82ddae90f..e3a32835d 100644
+--- a/functions/mcp/gspc-tools.json
++++ b/functions/mcp/gspc-tools.json
+@@ -74,7 +74,7 @@
+     },
+     {
+       "name": "get_root",
+-      "description": "GET the permissionless public-root at https://councilof.ai/root.json. Returns merkle_root, card_count, as_of, and UNMEASURED notes. Separate from GSPC. Three states: VALID (fetched), UNREACHABLE (could not fetch), UNCHECKABLE (body unreadable). Never a certificate.",
++      "description": "GET the permissionless public-root at https://councilof.ai/root.json. Returns reported merkle_root, card_count and as_of. RETRIEVED_UNVERIFIED means fetched, not that count, Merkle tree or Ed25519 signature passed verification; UNCHECKABLE means required fields are missing; UNREACHABLE means fetch failed. Separate from GSPC. Never a certificate.",
+       "inputSchema": {
+         "type": "object",
+         "properties": {},
+@@ -100,7 +100,7 @@
+     },
+     {
+       "name": "verify_inclusion",
+-      "description": "Check a sha256 against the live public-root merkle via GET /api/proof?sha=. Three states only: VALID (included), INVALID (not a leaf), UNCHECKABLE (proof endpoint unreachable). Does not claim Ed25519 unless sig_ed25519 is present and checked separately. Never a grade.",
++      "description": "Fetch the live public-root proof endpoint at GET /api/proof?sha=. REPORTED_UNVERIFIED with reported_inclusion true/false describes the endpoint's claim only; this tool does not recompute the Merkle path or verify the signed root. UNCHECKABLE covers malformed/error responses; UNREACHABLE covers fetch failures. Never a grade.",
+       "inputSchema": {
+         "type": "object",
+         "properties": {
+@@ -165,4 +165,4 @@
+       }
+     }
+   ]
+-}
+\ No newline at end of file
++}
+diff --git a/functions/mcp/mcp-protocol.test.ts b/functions/mcp/mcp-protocol.test.ts
+index 00c3a4019..a84f8589e 100644
+--- a/functions/mcp/mcp-protocol.test.ts
++++ b/functions/mcp/mcp-protocol.test.ts
+@@ -137,7 +137,7 @@ describe("MCP per-request protocol contract", () => {
+   it("completes a direct modern tool call without invented tool-call caching hints", async () => {
+     mockRoot();
+     const result = completed(await send(modern("tools/call", { name: "get_root", arguments: {} })), "modern");
+-    expect(result.structuredContent).toMatchObject({ state: "VALID", card_count: 2 });
++    expect(result.structuredContent).toMatchObject({ state: "RETRIEVED_UNVERIFIED", verification: "NOT_PERFORMED", card_count: 2 });
+     expect(result.ttlMs).toBeUndefined();
+     expect(result.cacheScope).toBeUndefined();
+     expect(network).toHaveBeenCalledTimes(1);
+@@ -221,7 +221,7 @@ describe("MCP per-request protocol contract", () => {
+     expect(listed.message?.result?.resultType).toBeUndefined();
+     mockRoot();
+     const result = await send(legacy("tools/call", { name: "get_root", arguments: {} }, "call", withVersion));
+-    expect(result.message).toMatchObject({ id: "call", result: { structuredContent: { state: "VALID", card_count: 2 } } });
++    expect(result.message).toMatchObject({ id: "call", result: { structuredContent: { state: "RETRIEVED_UNVERIFIED", card_count: 2 } } });
+     expect(result.message?.result?.resultType).toBeUndefined();
+     expect(network).toHaveBeenCalledTimes(1);
+   });
+@@ -294,7 +294,7 @@ describe("official SDK client interoperability (no external network)", () => {
+       expect(listed.tools).toHaveLength(13);
+       const result = await client.callTool({ name: "get_root", arguments: {} });
+       expect(result.isError).not.toBe(true);
+-      expect(result.structuredContent).toMatchObject({ state: "VALID", card_count: 2 });
++      expect(result.structuredContent).toMatchObject({ state: "RETRIEVED_UNVERIFIED", card_count: 2 });
+       expect(network).toHaveBeenCalledTimes(1);
+       const post = requests.filter((request) => request.method === "POST");
+       const methods = post.map((request) => request.body?.method);
+diff --git a/mcp/gspc-server/README.md b/mcp/gspc-server/README.md
+index 9d1808508..31fc76209 100644
+--- a/mcp/gspc-server/README.md
++++ b/mcp/gspc-server/README.md
+@@ -11,8 +11,9 @@ Stdio MCP server for the live GSPC board and the signed measurement cards at
+ [councilof.ai](https://councilof.ai). Zero dependencies. Node >= 20.
+ 
+ **Doctrine, enforced in the tools, not just stated here:** we measure, never
+-certify. Verdicts are three-state — VALID / INVALID (with the reason) /
+-UNCHECKABLE — never two-state. An unmeasured axis is a first-class answer, not
++certify. Cryptographic `verify_card` verdicts are three-state — VALID /
++INVALID (with the reason) / UNCHECKABLE. Retrieval results use separate,
++explicitly unverified states. An unmeasured axis is a first-class answer, not
+ an error and not a zero. A fetch failure is a distinct UNREACHABLE state; no
+ cached number is ever presented as live. Two surfaces that count the same thing
+ are reported as two labelled numbers and never reconciled.
+@@ -25,9 +26,9 @@ are reported as two labelled numbers and never reconciled.
+ | `get_axis` | One axis row from the live board: `n`, `accuracy`, `interval`, MEASURED/UNMEASURED status, dates. Args: `{ "axis": "jail" }`. |
+ | `verify_card` | Verify a signed `gspc.measurement-card` under the published rule — recompute the id from the canonical body, check the Ed25519 signature under the **pinned** key `did:web:csoai.org#card-attestation-1`. A card signed with its own freshly-made key is INVALID, not valid. Args: `{ "card": <object | JSON string | councilof.ai URL> }`. |
+ | `list_cards` | What the published index (`/signed/card_index.json`) declares next to what the card store endpoint (`/api/cards`) reports — two labelled numbers, never reconciled. Optional `axis`, `limit`. |
+-| `get_root` | GET `https://councilof.ai/root.json`. Three states: VALID / UNREACHABLE / UNCHECKABLE. Separate from GSPC. Never a certificate. |
++| `get_root` | GET `https://councilof.ai/root.json`. `RETRIEVED_UNVERIFIED` reports root fields without checking leaf count, tree or signature; `UNCHECKABLE` covers missing fields, `UNREACHABLE` a failed fetch. Separate from GSPC. Never a certificate. |
+ | `get_card` | GET one card-v0 leaf by sha256. VALID / INVALID (not a leaf) / UNCHECKABLE (fetch failed). A 404 leaf is INVALID, not UNCHECKABLE. |
+-| `verify_inclusion` | GET `/api/proof?sha=`. VALID (included) / INVALID (not a leaf) / UNCHECKABLE (proof endpoint unreachable). |
++| `verify_inclusion` | GET `/api/proof?sha=`. `REPORTED_UNVERIFIED` reports the endpoint's inclusion/non-inclusion claim; no Merkle path or signed-root verification is performed. Malformed/404 responses are `UNCHECKABLE`; transport failure is `UNREACHABLE`. |
+ | `x402_trust` | Latest x402 catalog trust snapshot: counts of correct challenges and phantom resources. A 402 is a challenge, not delivery. |
+ 
+ Eight free tools above; four metered ones below. `tools/list` returns all twelve, and
+diff --git a/mcp/gspc-server/gspc-tools.json b/mcp/gspc-server/gspc-tools.json
+index 82ddae90f..e3a32835d 100644
+--- a/mcp/gspc-server/gspc-tools.json
++++ b/mcp/gspc-server/gspc-tools.json
+@@ -74,7 +74,7 @@
+     },
+     {
+       "name": "get_root",
+-      "description": "GET the permissionless public-root at https://councilof.ai/root.json. Returns merkle_root, card_count, as_of, and UNMEASURED notes. Separate from GSPC. Three states: VALID (fetched), UNREACHABLE (could not fetch), UNCHECKABLE (body unreadable). Never a certificate.",
++      "description": "GET the permissionless public-root at https://councilof.ai/root.json. Returns reported merkle_root, card_count and as_of. RETRIEVED_UNVERIFIED means fetched, not that count, Merkle tree or Ed25519 signature passed verification; UNCHECKABLE means required fields are missing; UNREACHABLE means fetch failed. Separate from GSPC. Never a certificate.",
+       "inputSchema": {
+         "type": "object",
+         "properties": {},
+@@ -100,7 +100,7 @@
+     },
+     {
+       "name": "verify_inclusion",
+-      "description": "Check a sha256 against the live public-root merkle via GET /api/proof?sha=. Three states only: VALID (included), INVALID (not a leaf), UNCHECKABLE (proof endpoint unreachable). Does not claim Ed25519 unless sig_ed25519 is present and checked separately. Never a grade.",
++      "description": "Fetch the live public-root proof endpoint at GET /api/proof?sha=. REPORTED_UNVERIFIED with reported_inclusion true/false describes the endpoint's claim only; this tool does not recompute the Merkle path or verify the signed root. UNCHECKABLE covers malformed/error responses; UNREACHABLE covers fetch failures. Never a grade.",
+       "inputSchema": {
+         "type": "object",
+         "properties": {
+@@ -165,4 +165,4 @@
+       }
+     }
+   ]
+-}
+\ No newline at end of file
++}
+diff --git a/mcp/gspc-server/index.mjs b/mcp/gspc-server/index.mjs
+index 180e0cfd0..fd59e146c 100644
+--- a/mcp/gspc-server/index.mjs
++++ b/mcp/gspc-server/index.mjs
+@@ -8,8 +8,8 @@
+  *
+  * DOCTRINE (carried into every tool, not just this comment):
+  *   - We measure, never certify. No tool here issues a certification.
+- *   - Three-state verdicts: VALID / INVALID (with the reason) / UNCHECKABLE.
+- *     "I could not check" is a different claim from "this is forged".
++ *   - Cryptographic verify_card verdicts: VALID / INVALID (with the reason) /
++ *     UNCHECKABLE. Retrieval tools use separate, explicitly unverified states.
+  *   - Unmeasured is first-class. A declared slot with no run behind it is an
+  *     honest answer, never an error, never a zero, never rounded up.
+  *   - Live means live. A fetch failure returns a distinct UNREACHABLE state;
+@@ -299,18 +299,34 @@ async function listCards(args) {
+ async function getRoot() {
+   try {
+     const d = await fetchJson("/root.json");
++    if (!d || typeof d !== "object" || Array.isArray(d) ||
++        !/^[0-9a-f]{64}$/i.test(String(d.merkle_root ?? "")) ||
++        !Number.isSafeInteger(d.card_count) || d.card_count < 0) {
++      return {
++        state: "UNCHECKABLE",
++        source: `${ORIGIN}/root.json`,
++        reason: "Fetched body is not a recognizable public root (merkle_root/card_count).",
++        not_a_certification: true,
++        not_gspc: true,
++      };
++    }
+     return {
+-      state: "VALID",
++      state: "RETRIEVED_UNVERIFIED",
+       source: `${ORIGIN}/root.json`,
+       kind: d.kind ?? null,
+       as_of: d.as_of ?? null,
+       card_count: d.card_count ?? null,
+       merkle_root: d.merkle_root ?? null,
+       note: d.note ?? null,
++      verification: "NOT_PERFORMED",
++      reason: "Fetched root fields only; this tool has not checked the leaf count, Merkle tree, or Ed25519 signature.",
+       not_a_certification: true,
+       not_gspc: true,
+     };
+   } catch (e) {
++    if (e instanceof SyntaxError) {
++      return { state: "UNCHECKABLE", source: `${ORIGIN}/root.json`, reason: "Root response is not readable JSON.", not_a_certification: true, not_gspc: true };
++    }
+     return { ...unreachable("/root.json", e), state: "UNREACHABLE", not_gspc: true };
+   }
+ }
+@@ -356,18 +372,34 @@ async function verifyInclusion(args) {
+   }
+   try {
+     const d = await fetchJson(`/api/proof?sha=${sha}`);
+-    if (d.kind === "inclusion") {
+-      return { state: "VALID", sha256: sha, merkle_root: d.merkle_root ?? null, not_a_certification: true };
++    if (d && typeof d === "object" && !Array.isArray(d) && d.kind === "inclusion") {
++      if (String(d.sha256 ?? d.sha ?? "").toLowerCase() !== sha ||
++          !Number.isSafeInteger(d.index) || d.index < 0 ||
++          !Number.isSafeInteger(d.card_count) || d.card_count <= d.index ||
++          !Array.isArray(d.proof) || !/^[0-9a-f]{64}$/i.test(String(d.merkle_root ?? ""))) {
++        return { state: "UNCHECKABLE", sha256: sha, reason: "Proof response is missing or contradicts required inclusion fields.", not_a_certification: true };
++      }
++      return {
++        state: "REPORTED_UNVERIFIED",
++        reported_inclusion: true,
++        sha256: sha,
++        merkle_root: d.merkle_root,
++        reason: "The proof endpoint reports inclusion; this tool has not recomputed the path or verified the signed root.",
++        not_a_certification: true,
++      };
+     }
+-    if (d.error === "not_found") {
+-      return { state: "INVALID", sha256: sha, reason: d.reason ?? "not a leaf", not_a_certification: true };
++    if (d && typeof d === "object" && !Array.isArray(d) && d.error === "not_found") {
++      return { state: "REPORTED_UNVERIFIED", reported_inclusion: false, sha256: sha, reason: "The proof endpoint reports no leaf in its current root; absence is not independently verified.", not_a_certification: true };
+     }
+-    return { state: "UNCHECKABLE", sha256: sha, reason: d.reason ?? "unexpected proof body", not_a_certification: true };
++    return { state: "UNCHECKABLE", sha256: sha, reason: d?.reason ?? "unexpected proof body", not_a_certification: true };
+   } catch (e) {
+     if (e && e.status === 404) {
+-      return { state: "INVALID", sha256: sha, reason: "not a leaf", not_a_certification: true };
++      return { state: "UNCHECKABLE", sha256: sha, reason: "Proof endpoint returned HTTP 404; this does not prove non-inclusion.", not_a_certification: true };
++    }
++    if (e instanceof SyntaxError) {
++      return { state: "UNCHECKABLE", sha256: sha, reason: "Proof response is not readable JSON.", not_a_certification: true };
+     }
+-    return { ...unreachable(`/api/proof?sha=${sha}`, e), state: "UNCHECKABLE", sha256: sha };
++    return { ...unreachable(`/api/proof?sha=${sha}`, e), sha256: sha, not_a_certification: true };
+   }
+ }
+ 
+@@ -693,7 +725,7 @@ function summaryLine(name, payload) {
+     case "get_card":
+       return `${payload.state ?? "?"} — card-v0 leaf ${String(payload.sha256 || "").slice(0, 16) || "?"}.`;
+     case "verify_inclusion":
+-      return `${payload.state ?? "?"} — inclusion against live merkle.`;
++      return `${payload.state ?? "?"} — ${payload.reason ?? "proof endpoint result; no local Merkle or signature check"}`;
+     case "x402_trust":
+       return `${payload.state ?? "?"} — ${payload.headline || "catalog trust counts"}.`;
+     case "mcp_trust":
+diff --git a/mcp/gspc-server/smoke.mjs b/mcp/gspc-server/smoke.mjs
+index bdd584b5c..3c09c0823 100644
+--- a/mcp/gspc-server/smoke.mjs
++++ b/mcp/gspc-server/smoke.mjs
+@@ -97,12 +97,12 @@ const axis = await rpc("tools/call", { name: "get_axis", arguments: { axis: "jai
+ const cards = await rpc("tools/call", { name: "list_cards", arguments: { limit: 2 } });
+ const root = await rpc("tools/call", { name: "get_root", arguments: {} });
+ expect("get_root not unknown-tool", root.error ? "error" : "ok", "ok");
+-expect("get_root state", root.result?.structuredContent?.state, "VALID");
++expect("get_root state", root.result?.structuredContent?.state, "RETRIEVED_UNVERIFIED");
+ const missing = await rpc("tools/call", { name: "verify_inclusion", arguments: { sha256: "0".repeat(64) } });
+ expect("verify_inclusion not unknown-tool", missing.error ? "error" : "ok", "ok");
+ const missState = missing.result?.structuredContent?.state;
+-const missOk = missState === "INVALID" || missState === "UNCHECKABLE";
+-console.log(`${missOk ? "PASS" : "FAIL"}  verify_inclusion missing-sha state=${missState} (INVALID|UNCHECKABLE)`);
++const missOk = missState === "REPORTED_UNVERIFIED" || missState === "UNCHECKABLE" || missState === "UNREACHABLE";
++console.log(`${missOk ? "PASS" : "FAIL"}  verify_inclusion missing-sha state=${missState} (reported, uncheckable or unreachable)`);
+ if (!missOk) process.exitCode = 1;
+ 
+ // ---- verify_card: three inputs, three verdicts ----
+diff --git a/mcp/gspc-server/wired-tools.test.mjs b/mcp/gspc-server/wired-tools.test.mjs
+index ffeb3918a..f18ba9d02 100644
+--- a/mcp/gspc-server/wired-tools.test.mjs
++++ b/mcp/gspc-server/wired-tools.test.mjs
+@@ -28,6 +28,11 @@ const PAID = [
+   "receipts_batch",
+ ];
+ const ALL = [...FREE, ...PAID];
++const INCLUDED_SHA = "a".repeat(64);
++const ABSENT_SHA = "b".repeat(64);
++const HTTP_404_SHA = "c".repeat(64);
++const MISMATCH_SHA = "d".repeat(64);
++let rootFixture = { kind: "public-root", card_count: 0, merkle_root: "0".repeat(64) };
+ 
+ const routeReceipt = Buffer.from(
+   JSON.stringify({
+@@ -59,7 +64,14 @@ const routeServer = createServer((req, res) => {
+   }
+   if (url.pathname === "/signed/card_index.json") return answer(res, 200, { n_cards: 0, cards: [] });
+   if (url.pathname === "/api/cards") return answer(res, 200, { cards: { count: 0, signed: 0 } });
+-  if (url.pathname === "/root.json") return answer(res, 200, { kind: "public-root", card_count: 0, merkle_root: "0".repeat(64) });
++  if (url.pathname === "/root.json") return answer(res, 200, rootFixture);
++  if (url.pathname === "/api/proof") {
++    const sha = url.searchParams.get("sha");
++    if (sha === INCLUDED_SHA) return answer(res, 200, { kind: "inclusion", sha256: sha, index: 0, card_count: 1, proof: [], merkle_root: "0".repeat(64) });
++    if (sha === ABSENT_SHA) return answer(res, 200, { error: "not_found", sha, reason: "not in current root" });
++    if (sha === HTTP_404_SHA) return answer(res, 404, { error: "not_found", sha });
++    if (sha === MISMATCH_SHA) return answer(res, 200, { kind: "inclusion", sha256: INCLUDED_SHA, index: 0, card_count: 1, proof: [], merkle_root: "0".repeat(64) });
++  }
+   if (url.pathname === "/interop/x402-trust/latest.json") {
+     return answer(res, 200, { kind: "x402-trust", counts: { payable: 1 }, headline: "fixture measurement" });
+   }
+@@ -152,7 +164,29 @@ for (const name of FREE) {
+ }
+ 
+ const root = freeResults.get("get_root");
+-check("get_root VALID", root.result?.structuredContent?.state === "VALID");
++check(
++  "get_root retrieval is not a cryptographic verdict",
++  root.result?.structuredContent?.state === "RETRIEVED_UNVERIFIED" &&
++    root.result?.structuredContent?.verification === "NOT_PERFORMED" &&
++    !root.result?.content?.[0]?.text?.includes("VALID"),
++);
++rootFixture = { kind: "public-root", card_count: 0, merkle_root: "bad" };
++const malformedRoot = (await rpc("tools/call", { name: "get_root", arguments: {} })).result;
++check("200 with malformed root is UNCHECKABLE", malformedRoot?.structuredContent?.state === "UNCHECKABLE");
++rootFixture = { kind: "public-root", card_count: 0, merkle_root: "0".repeat(64) };
++const included = (await rpc("tools/call", { name: "verify_inclusion", arguments: { sha256: INCLUDED_SHA } })).result;
++check(
++  "reported inclusion never becomes VALID",
++  included?.structuredContent?.state === "REPORTED_UNVERIFIED" &&
++    included?.structuredContent?.reported_inclusion === true &&
++    !included?.content?.[0]?.text?.includes("against live merkle"),
++);
++const absent = (await rpc("tools/call", { name: "verify_inclusion", arguments: { sha256: ABSENT_SHA } })).result;
++check("reported absence never becomes INVALID", absent?.structuredContent?.state === "REPORTED_UNVERIFIED" && absent?.structuredContent?.reported_inclusion === false);
++const missing = (await rpc("tools/call", { name: "verify_inclusion", arguments: { sha256: HTTP_404_SHA } })).result;
++check("HTTP 404 is not proof of non-inclusion", missing?.structuredContent?.state === "UNCHECKABLE");
++const mismatch = (await rpc("tools/call", { name: "verify_inclusion", arguments: { sha256: MISMATCH_SHA } })).result;
++check("wrong digest in reported proof is uncheckable", mismatch?.structuredContent?.state === "UNCHECKABLE");
+ 
+ const trust = freeResults.get("x402_trust")?.result?.structuredContent;
+ check(
+@@ -170,7 +204,7 @@ check(
+   mcpTrust?.state === "VALID" &&
+     mcpTrust?.source === `${fixtureOrigin}/interop/mcp-trust/latest.json` &&
+     mcpTrust?.counts && typeof mcpTrust.counts === "object" &&
+-    typeof mcpTrust?.headline === "string" && mcpTrust.headline.length > 0 &&
++    mcpTrust?.partial === false &&
+     mcpTrust?.not_a_certification === true,
+ );
+ 
+-- 
+2.50.1 (Apple Git-155)
+

@@ -1,0 +1,17 @@
+# External MCP index sweep — 24 September 2026, 15:59 UTC
+
+The canonical remote MCP server is `https://councilof.ai/mcp` (HTTP 200). Its public manifest at `https://councilof.ai/.well-known/mcp/server.json` is HTTP 200, SHA-256 `04ccc31fbbc4b08757c88e854bda41083fef65e4d127b328146128a309e95cdd`, and advertises 13 tools. The live board at `https://councilof.ai/api/gspc` is HTTP 200, SHA-256 `be45a7ed47dc7f43a0ab83b75d3ce60909f918ecf386af7c11a78c0d5a708cca`, with `23 axis · 23 measured`. These observations are reachability and current content, not independent use.
+
+| Directory | Anonymous observed state | Action this turn |
+|---|---|---|
+| [mcpi](https://mcpi.app/servers/council-of-ai-gspc) | Exact endpoint already listed; search result says 13 tools and checked 24 September. | No duplicate. |
+| [mcpservers.org](https://mcpservers.org/servers/councilof-ai-mcp) | Existing listing falsely says 11 tools, board `22·22·0`, Hub `885/885/0`; a second [CSOAI listing](https://mcpservers.org/servers/csoai-org/councilof-ai) also exists. | Clicked **Request update** on the stale exact-endpoint entry; UI changed to **Requested**. Correction and publication are **not confirmed**. No new listing submitted. |
+| [mcpub](https://mcpub.dev/) | `get` for exact endpoint finds an archived listing dated 14 September with stale `22-axis` copy. Its `search_live` query for GSPC returned zero at this readback, despite canonical endpoint being reachable. | No duplicate; submission code rejects URLs already registered and offers no edit route. |
+| [Glama](https://glama.ai/mcp/servers/CSOAI-ORG/councilof-ai) | Existing GitHub-sourced server listing; ownership/edit route depends on GitHub. | No duplicate. |
+| [mcp.so](https://mcp.so/search?q=councilof.ai) | Existing `CSOAI GSPC measurement` listing. | No duplicate. |
+| [MCP Harbor](https://ai.mcpharbor.dev/api/v0/servers?q=gspc) | Official-registry mirror already carries `io.github.csoai-org/gspc`; the mirror's `updated_at` field is 2026-09-24T13:48:35Z. | No duplicate. |
+| [AllMCPs](https://allmcps.com/api/v1/search?q=gspc) | Existing `gspc` entry points at an older CSOAI GitHub repository. | No duplicate. |
+| [Neuronto](https://neuronto.com/ard-publishers/councilof.ai) | Read-only audit reports the domain already indexed, but no `/.well-known/ard.json` and only 1 of 6 federated registries returns it. | No duplicate; a canonical ARD manifest and subsequent anonymous readback would be a separate site-release task. |
+| [Official MCP Registry](https://registry.modelcontextprotocol.io/) | Domain-namespace candidate `ai.councilof/gspc` validated locally but was **not published**. Existing publisher token is expired and GitHub-scoped; no matching private key for current HTTP-domain auth was found. Official list/read request timed out in this sweep. | No token rotation, security change, or unsafe publish attempt. |
+
+One bounded outward action occurred: a refresh request on an existing stale listing. This sweep did **not** produce a new verified listing or a traffic/adoption signal. The smallest worthwhile next actions are to serve a valid ARD manifest through the guarded site-release lane, obtain a domain-auth publisher credential through the normal owner-controlled process, and correct stale listings through their owner edit channels as available. Do not equate catalog presence, request acceptance, or a returned HTTP 200 with adoption.

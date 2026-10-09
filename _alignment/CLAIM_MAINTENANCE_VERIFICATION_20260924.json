@@ -1,0 +1,34 @@
+{
+  "schema": "csoai.independent-claim-register-readback/1",
+  "checked_at": "2026-09-24T14:32:32.135051+00:00",
+  "registry_url": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23.json",
+  "sidecar_url": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23.signed.json",
+  "did_url": "https://councilof.ai/.well-known/did.json",
+  "register_url": "https://councilof.ai/api/claims/register",
+  "registry_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+  "payload_sha256": "6e5baf491fd356af5cc53ff691677b87b0218f9ce8119c672fadb7be9bf83952",
+  "signature_did": "did:web:csoai.org#board-attestation-1",
+  "ed25519_valid": true,
+  "mutated_payload_rejected": true,
+  "aggregate_totals": {
+    "registries": 2,
+    "registry_files_on_disk": 3,
+    "registries_superseded": 1,
+    "subjects": 23,
+    "claims": 70,
+    "by_state": {
+      "CLAIM_CAPTURED": 1,
+      "CLAIM_MEASURED": 25,
+      "UNMEASURED": 34,
+      "UNCHECKABLE": 10
+    },
+    "claims_conforming_to_artifact_schema": 62,
+    "subjects_with_a_scheduled_next_read": 21
+  },
+  "scope": "main 0.3 registry exact bytes and sidecar signature; aggregate totals read back but individual claim measurements not independently reproduced",
+  "limitations": [
+    "signature is byte provenance, not truth or certification",
+    "OTS/Bitcoin anchor not independently verified",
+    "two subjects in older 0.2 registry have no scheduled next read"
+  ]
+}

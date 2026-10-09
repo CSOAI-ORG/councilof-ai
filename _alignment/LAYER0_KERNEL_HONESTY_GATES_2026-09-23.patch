@@ -1,0 +1,573 @@
+--- a/packages/sovos-layer0-harness-kernel/src/sovos_layer0_harness/kernel.py
++++ b/packages/sovos-layer0-harness-kernel/src/sovos_layer0_harness/kernel.py
+@@ -1,6 +1,7 @@
+ from __future__ import annotations
+ 
+ import json
++import re
+ from dataclasses import dataclass
+ from importlib.resources import files
+ from pathlib import Path
+@@ -49,6 +50,12 @@
+     tags: tuple[str, ...]
+     stages: dict[str, tuple[str, ...]]
+     warnings: tuple[str, ...]
++    reference_packs: tuple[str, ...] = ()
++    unbound_packs: tuple[str, ...] = ()
++    ready_packs: tuple[str, ...] = ()
++    execution_state: str = "NOT_EXECUTED"
++    execution_ready: bool = False
++    requires_human_review: bool = False
+ 
+ 
+ class Layer0HarnessKernel:
+@@ -90,9 +97,16 @@
+                 raise ValueError(f"measurement pack {p.id} must not gain decision authority")
+             if p.maturity == "reference" and any(s in p.stages for s in ("decide", "authorize", "fix", "enforce", "contain")):
+                 raise ValueError(f"reference-only pack {p.id} cannot perform consequential stages")
+-        required_protocols = {"mcp", "a2a", "http_api", "sdk_python", "sdk_typescript", "cli"}
+-        if not required_protocols.issubset(self.protocols):
+-            raise ValueError("kernel protocol surface incomplete")
++        current_protocols = {
++            "mcp": "not_implemented",
++            "a2a": "not_implemented",
++            "http_api": "not_implemented",
++            "sdk_python": "planner_only",
++            "sdk_typescript": "not_implemented",
++            "cli": "planner_only",
++        }
++        if self.protocols != current_protocols:
++            raise ValueError("kernel protocol status does not match implemented planner interfaces")
+ 
+     def get(self, pack_id: str) -> HarnessPack:
+         return self.by_id[pack_id]
+@@ -117,6 +131,7 @@
+         rules = {
+             "eu-ai-act": ("eu ai act", "article 5", "article 50", "high-risk", "high risk"),
+             "security": ("attack", "breach", "injection", "credential", "exploit", "security"),
++            "incident": ("incident", "active attack", "confirmed breach", "compromise", "contain"),
+             "safety": ("safety", "harm", "care", "frontier"),
+             "governance": ("governance", "policy", "framework", "charter"),
+             "regulation": ("regulation", "compliance", "obligation", "law"),
+@@ -125,12 +140,16 @@
+         for tag, needles in rules.items():
+             if any(n in text for n in needles):
+                 tags.add(tag)
++        if re.search(r"\b(?:send|publish|post|deploy|delete|transfer|sign|approve|merge|trade|buy|submit)\b", text):
++            tags.add("external_action")
+         return tuple(sorted(tags))
+ 
+     def plan(self, event: str, tags: Iterable[str] | None = None, consequential: bool = False) -> HarnessPlan:
+-        event_tags = tuple(sorted(set(tags or self.infer_tags(event))))
++        # Caller tags add context; they cannot suppress safety-relevant inferred tags.
++        event_tags = tuple(sorted(set(self.infer_tags(event)) | {str(t).strip().lower() for t in (tags or ()) if str(t).strip()}))
+         stages: dict[str, list[str]] = {s: [] for s in self.STAGE_ORDER}
+         warnings: list[str] = []
++        reference_packs: list[str] = []
+ 
+         # Always-on estate packs
+         always = ("gspc", "sovos-crosswalk", "claim-maintenance", "sovos-constitutional")
+@@ -154,11 +173,17 @@
+             selected["csoai-charter-52"] = self.by_id["csoai-charter-52"]
+ 
+         for p in selected.values():
++            if p.maturity == "reference":
++                reference_packs.append(p.id)
++                warnings.append(f"{p.id}: reference-only; excluded from actionable stages")
++                continue
+             for stage in p.stages:
++                # Containment is reserved for security incidents, never a generic
++                # compliance or remediation request.
++                if stage == "contain" and not {"security", "incident"}.issubset(event_tags):
++                    continue
+                 if stage in stages:
+                     stages[stage].append(p.id)
+-            if p.maturity == "reference":
+-                warnings.append(f"{p.id}: reference-only; cannot be treated as executable")
+             if p.id == "eu-ai-act":
+                 warnings.append("eu-ai-act: current MCP corpus is partial/scaffolded; legal coverage is not complete")
+ 
+@@ -172,7 +197,24 @@
+             stages["receipt"].append("corrections-ledger")
+ 
+         clean = {k: tuple(dict.fromkeys(v)) for k, v in stages.items() if v}
+-        return HarnessPlan(event=event, tags=event_tags, stages=clean, warnings=tuple(dict.fromkeys(warnings)))
++        warnings.append("PLAN_ONLY: no pack invoked, authority granted, action executed, measurement produced, or receipt issued")
++        warnings.append("All planned pack entries are UNBOUND metadata; no callable adapters are registered in this kernel")
++        if "external_action" in event_tags:
++            warnings.append("EXTERNAL_ACTION: human review and a bound authority gate are required before any future executor; this planner cannot send or publish")
++        if consequential:
++            warnings.append("The consequential flag is a planning hint, not authorization")
++        return HarnessPlan(
++            event=event,
++            tags=event_tags,
++            stages=clean,
++            warnings=tuple(dict.fromkeys(warnings)),
++            reference_packs=tuple(reference_packs),
++            unbound_packs=tuple(p.id for p in selected.values() if p.maturity != "reference"),
++            ready_packs=(),
++            execution_state="NOT_EXECUTED",
++            execution_ready=False,
++            requires_human_review=consequential or "external_action" in event_tags,
++        )
+ 
+     def protocol_surface(self, pack_id: str) -> dict[str, str]:
+         self.get(pack_id)
+--- a/packages/sovos-layer0-harness-kernel/src/sovos_layer0_harness/packs.v1.json
++++ b/packages/sovos-layer0-harness-kernel/src/sovos_layer0_harness/packs.v1.json
+@@ -1,14 +1,20 @@
+ {
+   "schema": "sovos.layer0-harness-registry/1.0",
+   "kernel_protocols": {
+-    "mcp": "inherited",
+-    "a2a": "inherited",
+-    "http_api": "inherited",
+-    "sdk_python": "inherited",
+-    "sdk_typescript": "inherited",
+-    "cli": "inherited"
++    "mcp": "not_implemented",
++    "a2a": "not_implemented",
++    "http_api": "not_implemented",
++    "sdk_python": "planner_only",
++    "sdk_typescript": "not_implemented",
++    "cli": "planner_only"
+   },
+-  "maturity_order": ["reference", "mapped", "measured", "executable", "enforcing"],
++  "maturity_order": [
++    "reference",
++    "mapped",
++    "measured",
++    "executable",
++    "enforcing"
++  ],
+   "packs": [
+     {
+       "id": "gspc",
+@@ -16,9 +22,22 @@
+       "maturity": "executable",
+       "authority": "measure_only",
+       "source": "/workspace/codebases/gspc-os/apps/gspc-harness",
+-      "tags": ["gspc", "governance", "safety", "agentic", "measurement"],
+-      "stages": ["measure", "remeasure"],
+-      "outputs": ["measurement", "unmeasured", "evidence"],
++      "tags": [
++        "gspc",
++        "governance",
++        "safety",
++        "agentic",
++        "measurement"
++      ],
++      "stages": [
++        "measure",
++        "remeasure"
++      ],
++      "outputs": [
++        "measurement",
++        "unmeasured",
++        "evidence"
++      ],
+       "notes": "Runnable Inspect harness; measurement is not certification."
+     },
+     {
+@@ -27,9 +46,23 @@
+       "maturity": "enforcing",
+       "authority": "authority_gate",
+       "source": "/workspace/SOVOS/packages/sovos-constitutional-harness",
+-      "tags": ["authority", "constitution", "approval", "receipt"],
+-      "stages": ["decide", "authorize", "receipt"],
+-      "outputs": ["ALLOW", "HOLD", "DENY", "receipt"]
++      "tags": [
++        "authority",
++        "constitution",
++        "approval",
++        "receipt"
++      ],
++      "stages": [
++        "decide",
++        "authorize",
++        "receipt"
++      ],
++      "outputs": [
++        "ALLOW",
++        "HOLD",
++        "DENY",
++        "receipt"
++      ]
+     },
+     {
+       "id": "sovos-crosswalk",
+@@ -37,9 +70,22 @@
+       "maturity": "executable",
+       "authority": "map_only",
+       "source": "/workspace/SOVOS/packages/sovos-crosswalk",
+-      "tags": ["regulation", "crosswalk", "mapping", "nist", "iso", "eu-ai-act"],
+-      "stages": ["map"],
+-      "outputs": ["coverage", "obstruction", "alignment_cost"]
++      "tags": [
++        "regulation",
++        "crosswalk",
++        "mapping",
++        "nist",
++        "iso",
++        "eu-ai-act"
++      ],
++      "stages": [
++        "map"
++      ],
++      "outputs": [
++        "coverage",
++        "obstruction",
++        "alignment_cost"
++      ]
+     },
+     {
+       "id": "eu-ai-act",
+@@ -47,9 +93,20 @@
+       "maturity": "mapped",
+       "authority": "reference_and_map",
+       "source": "/workspace/SOVOS/packages/sovos-mcp-servers/eu-ai-act-mcp",
+-      "tags": ["eu", "eu-ai-act", "regulation", "compliance"],
+-      "stages": ["map", "claim_check"],
+-      "outputs": ["obligation_refs", "risk_tier_refs"],
++      "tags": [
++        "eu",
++        "eu-ai-act",
++        "regulation",
++        "compliance"
++      ],
++      "stages": [
++        "map",
++        "claim_check"
++      ],
++      "outputs": [
++        "obligation_refs",
++        "risk_tier_refs"
++      ],
+       "notes": "Current SOVOS MCP package is an honest scaffold with 13 articles, not the full Act."
+     },
+     {
+@@ -58,8 +115,15 @@
+       "maturity": "mapped",
+       "authority": "governance_reference",
+       "source": "/workspace/frameworks-drum/charters/csoai-charter-52.md",
+-      "tags": ["csoai", "charter", "governance"],
+-      "stages": ["map", "claim_check"]
++      "tags": [
++        "csoai",
++        "charter",
++        "governance"
++      ],
++      "stages": [
++        "map",
++        "claim_check"
++      ]
+     },
+     {
+       "id": "safetyof-charter",
+@@ -67,8 +131,15 @@
+       "maturity": "mapped",
+       "authority": "governance_reference",
+       "source": "/workspace/frameworks-drum/charters/safetyof-charter.md",
+-      "tags": ["safety", "care", "charter"],
+-      "stages": ["map", "decide"]
++      "tags": [
++        "safety",
++        "care",
++        "charter"
++      ],
++      "stages": [
++        "map",
++        "decide"
++      ]
+     },
+     {
+       "id": "agisafe",
+@@ -76,9 +147,23 @@
+       "maturity": "executable",
+       "authority": "policy_decision",
+       "source": "/workspace/SOVOS/architecture/open-sovereign-stack-20260923/agisafe-policy.v1.json",
+-      "tags": ["agisafe", "safety", "decision", "remediation"],
+-      "stages": ["decide", "fix"],
+-      "outputs": ["ALLOW", "RESTRICT", "REQUIRE_HUMAN", "STOP", "remediation_plan"]
++      "tags": [
++        "agisafe",
++        "safety",
++        "decision",
++        "remediation"
++      ],
++      "stages": [
++        "decide",
++        "fix"
++      ],
++      "outputs": [
++        "ALLOW",
++        "RESTRICT",
++        "REQUIRE_HUMAN",
++        "STOP",
++        "remediation_plan"
++      ]
+     },
+     {
+       "id": "asisecurity-defoneos",
+@@ -86,9 +171,20 @@
+       "maturity": "executable",
+       "authority": "bounded_enforcement",
+       "source": "/workspace/SOVOS/architecture/open-sovereign-stack-20260923/defoneos-v2.profile.json",
+-      "tags": ["security", "asisecurity", "defoneos", "enforcement"],
+-      "stages": ["enforce", "contain"],
+-      "outputs": ["enforcement_receipt", "containment_state"]
++      "tags": [
++        "security",
++        "asisecurity",
++        "defoneos",
++        "enforcement"
++      ],
++      "stages": [
++        "enforce",
++        "contain"
++      ],
++      "outputs": [
++        "enforcement_receipt",
++        "containment_state"
++      ]
+     },
+     {
+       "id": "claim-maintenance",
+@@ -96,9 +192,19 @@
+       "maturity": "executable",
+       "authority": "claim_state_only",
+       "source": "estate://m4/_alignment/claim-maintenance-security-20260919/topology-component/claim_maintenance.py",
+-      "tags": ["claims", "maintenance", "corrections"],
+-      "stages": ["claim_check", "correct"],
+-      "outputs": ["claim_state", "correction"]
++      "tags": [
++        "claims",
++        "maintenance",
++        "corrections"
++      ],
++      "stages": [
++        "claim_check",
++        "correct"
++      ],
++      "outputs": [
++        "claim_state",
++        "correction"
++      ]
+     },
+     {
+       "id": "corrections-ledger",
+@@ -106,8 +212,15 @@
+       "maturity": "mapped",
+       "authority": "append_only_evidence",
+       "source": "estate://micro2/home/ubuntu/rag/csoai-mine/corrections-ledger.md",
+-      "tags": ["claims", "corrections", "evidence"],
+-      "stages": ["correct", "receipt"]
++      "tags": [
++        "claims",
++        "corrections",
++        "evidence"
++      ],
++      "stages": [
++        "correct",
++        "receipt"
++      ]
+     },
+     {
+       "id": "eu-ai-act-417-frozen",
+@@ -115,8 +228,16 @@
+       "maturity": "reference",
+       "authority": "none",
+       "source": "referenced://frameworks-corpus/EU-AI-Act-417-frozen-provisions",
+-      "tags": ["eu", "eu-ai-act", "417", "frozen", "provisions"],
+-      "stages": ["map"],
++      "tags": [
++        "eu",
++        "eu-ai-act",
++        "417",
++        "frozen",
++        "provisions"
++      ],
++      "stages": [
++        "map"
++      ],
+       "outputs": [],
+       "notes": "Referenced by MASTER_FRAMEWORK.md but exact canonical corpus directory was not located in the current estate scan; do not treat as loaded."
+     }
+--- a/packages/sovos-layer0-harness-kernel/tests/test_kernel.py
++++ b/packages/sovos-layer0-harness-kernel/tests/test_kernel.py
+@@ -1,5 +1,6 @@
+ from __future__ import annotations
+ 
++import copy
+ import unittest
+ 
+ from sovos_layer0_harness import Layer0HarnessKernel
+@@ -55,6 +56,60 @@
+         surfaces = [self.k.protocol_surface(p.id) for p in self.k.packs]
+         self.assertTrue(all(s == surfaces[0] for s in surfaces))
+ 
++    def test_transport_protocols_are_not_claimed_as_implemented(self):
++        surface = self.k.protocol_surface("gspc")
++        for name in ("mcp", "a2a", "http_api", "sdk_typescript"):
++            self.assertEqual(surface[name], "not_implemented")
++        self.assertEqual(surface["sdk_python"], "planner_only")
++        self.assertEqual(surface["cli"], "planner_only")
++
++    def test_registry_rejects_unearned_protocol_claim(self):
++        registry = copy.deepcopy(self.k.registry)
++        registry["kernel_protocols"]["mcp"] = "inherited"
++        with self.assertRaisesRegex(ValueError, "protocol status"):
++            Layer0HarnessKernel(registry)
++
++    def test_caller_tags_cannot_suppress_inferred_security_or_remediation(self):
++        plan = self.k.plan("repair prompt injection security incident", tags=["governance"])
++        self.assertIn("security", plan.tags)
++        self.assertIn("remediation", plan.tags)
++        self.assertIn("governance", plan.tags)
++        self.assertIn("asisecurity-defoneos", plan.stages["enforce"])
++
++    def test_reference_only_pack_is_excluded_from_actionable_stages(self):
++        plan = self.k.plan("EU AI Act Article 50 review")
++        self.assertIn("eu-ai-act-417-frozen", plan.reference_packs)
++        self.assertFalse(any("eu-ai-act-417-frozen" in ids for ids in plan.stages.values()))
++        self.assertNotIn("eu-ai-act-417-frozen", plan.unbound_packs)
++
++    def test_generic_compliance_fix_does_not_plan_containment(self):
++        plan = self.k.plan("Check EU AI Act evidence and fix compliance gaps", consequential=True)
++        self.assertIn("asisecurity-defoneos", plan.stages["enforce"])
++        self.assertNotIn("contain", plan.stages)
++
++    def test_security_incident_can_plan_containment_but_cannot_execute(self):
++        plan = self.k.plan("prompt injection security incident")
++        self.assertIn("asisecurity-defoneos", plan.stages["contain"])
++        self.assertFalse(plan.execution_ready)
++        self.assertFalse(plan.ready_packs)
++
++    def test_draft_and_send_email_is_blocked_pending_review(self):
++        plan = self.k.plan("draft and send customer email", consequential=False)
++        self.assertIn("external_action", plan.tags)
++        self.assertTrue(plan.requires_human_review)
++        self.assertFalse(plan.execution_ready)
++        self.assertEqual(plan.ready_packs, ())
++        self.assertTrue(any("EXTERNAL_ACTION" in warning for warning in plan.warnings))
++
++    def test_plan_reports_unbound_and_never_executed(self):
++        plan = self.k.plan("repair prompt injection security incident", consequential=True)
++        self.assertEqual(plan.execution_state, "NOT_EXECUTED")
++        self.assertFalse(plan.execution_ready)
++        self.assertEqual(plan.ready_packs, ())
++        self.assertIn("agisafe", plan.unbound_packs)
++        self.assertIn("asisecurity-defoneos", plan.unbound_packs)
++        self.assertTrue(any("PLAN_ONLY" in warning for warning in plan.warnings))
++
+ 
+ if __name__ == "__main__":
+     unittest.main()
+--- a/packages/sovos-layer0-harness-kernel/README.md
++++ b/packages/sovos-layer0-harness-kernel/README.md
+@@ -1,17 +1,21 @@
+ # SOVOS Layer-0 Harness Kernel
+ 
+-One shared protocol/runtime surface for many governance, safety, security,
+-measurement, regulation, charter and evidence harness packs.
++A registry and planning kernel for governance, safety, security, measurement,
++regulation, charter and evidence harness packs. This package currently exposes
++a Python planner API and CLI. It does not call the referenced packs.
+ 
+ ## Core rule
+ 
+ **Do not build one MCP/API/SDK server per framework.**
+ 
+-Each framework is a **pack**. The kernel supplies MCP, A2A, HTTP/API, Python SDK,
+-TypeScript SDK and CLI façades once. Packs contribute source, rules, tests,
+-maturity, authority, lifecycle stages and outputs.
++Each framework is a **pack**. The current kernel supplies a read-only Python
++planner API and CLI. MCP, A2A, HTTP/API and TypeScript SDK adapters are
++**not implemented** here; the registry reports those statuses explicitly.
++Pack rows describe sources, claimed maturity, authority, lifecycle stages and
++outputs. They are not executable bindings.
+ 
+-This lets MEOK/OOWM consume hundreds of frameworks through a stable contract.
++A future shared contract could let MEOK/OOWM consume packs without duplicating
++transports. That integration has not been demonstrated by this package.
+ 
+ ## Continuous loop
+ 
+@@ -29,8 +33,13 @@
+   -> repeat
+ ```
+ 
+-The loop is continuous assessment and claim maintenance. It is **not automatic
+-legal certification**.
++This is a proposed lifecycle. `plan` returns stage assignments with
++`execution_state=NOT_EXECUTED`, `execution_ready=false`, and all planned
++packs marked unbound. External-action language, including email sending,
++sets `requires_human_review=true`; the caller's `consequential` flag is not
++authorization. It does not perform assessment, authorization, remediation,
++enforcement, remeasurement, claim correction or receipt issuance. It is **not
++automatic legal certification**.
+ 
+ ## Pack maturity
+ 
+@@ -40,8 +49,9 @@
+ - `executable` — deterministic code/test/action plan exists.
+ - `enforcing` — allowed to participate in authority enforcement.
+ 
+-A pack may only graduate with evidence. Naming a document a harness does not
+-make it executable.
++A pack may only graduate with evidence. The seed maturity values are registry
++assertions, not evidence verified by this package. Naming a document a harness
++does not make it executable.
+ 
+ ## Current seed packs
+ 
+@@ -69,3 +79,15 @@
+ layer should remain common. This avoids hundreds of duplicated MCP servers and
+ lets one improvement to authentication, receipts, SDKs or A2A benefit every
+ pack at once.
++
++
++## Binding and source cautions
++
++All packs currently have `UNBOUND` planner status. In particular, AGISafe and
++ASISecurity/DefOneOS point to JSON policy/profile files, not callable adapters.
++The registry's Claim Maintenance source points to an M4 estate URI; the active
++RunPod wrapper observed separately on 23 September is
++`/workspace/lanes/loops/claim-watch-measure.sh`. The Corrections Ledger
++source URI was not found at its stated path. These sources require reconciliation
++before any pack may be marked ready. Reference-only packs are reported separately
++and excluded from plan stages, including the unlocated EU AI Act 417 corpus.
+--- a/architecture/layer0-harness-fabric-20260923/LAYER0-HARNESS-FABRIC.md
++++ b/architecture/layer0-harness-fabric-20260923/LAYER0-HARNESS-FABRIC.md
+@@ -1,7 +1,21 @@
+ # Layer-0 Harness Fabric
+ 
+ Date: 2026-09-23
+-Status: canonical architecture
++Status: target architecture; current implementation is a planning-only kernel
++
++## Current implementation boundary
++
++The diagram and continuous cycle below describe the **target architecture**.
++As of 23 September, the Layer-0 kernel implements a Python registry/planning
++API and a CLI that display proposed stages. Its MCP, A2A, HTTP/API and
++TypeScript SDK adapters are not implemented. Protocol keys in the registry
++are status metadata, not proof that a server or SDK exists.
++
++No pack is bound to a callable adapter in this kernel. Its plans report
++`NOT_EXECUTED`, `execution_ready=false`, empty ready packs and the unbound
++pack list. A planned decision, authorization, fix, containment, measurement or
++receipt is not an observed one. The unlocated 417-provision corpus is shown
++only as a reference and excluded from stage assignments.
+ 
+ ## Thesis
+ 
+@@ -65,7 +79,7 @@
+ 10. **Receipt** the full causal chain.
+ 11. Repeat on event, source change, deployment change or scheduled cadence.
+ 
+-This is the continuous measurement/conformance/claim/fix loop.
++This is the intended continuous measurement/conformance/claim/fix loop; the current planner does not execute it.
+ 
+ ## Important independence boundaries
+ 

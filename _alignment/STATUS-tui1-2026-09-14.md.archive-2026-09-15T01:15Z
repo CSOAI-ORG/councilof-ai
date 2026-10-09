@@ -1,0 +1,186 @@
+# TUI-1 Status — 2026-09-14
+
+| UTC | Goal | Proof |
+|-----|------|-------|
+
+| 01:17 UTC | ROOT | 291 leaves · as_of 2026-09-13T19:27:08Z · live_root sha 8d3284b2 · bytes 23446 · pointer_as_of=2026-09-13T22:21:58Z |
+| 01:17 UTC | ROOT-WITNESS | live_witness_card_count=291 · ots_status=CONFIRMED_BITCOIN · ots_path=root-8d3284b2.json.ots · proof_sha256=4a50cdd5… |
+| 01:17 UTC | PENDING-CANDIDATE | #2207 public-root/pending OPEN 2026-09-14T01:03 · branch_witness=STAMPED_PENDING_BITCOIN · pending_root=297 leaves (vs 291 live) · as_of=2026-09-14T01:03:07Z |
+| 01:17 UTC | LANDINGS | 0 mill/land PRs open |
+| 01:17 UTC | SECRETS | PASSWORD= → CSOAI-ORG/mcp-servers docs/deployment.md (REAL VALUE — investigate) · PRIVATEMAIL → CSOAI-ORG/sovos-harness scripts/README.md + revenue/BLOCKERS_2026-04-27.md · hf_ → CSOAI-ORG/csoai-static-deploy2 scripts/hf_submit.py + 2 more · sk- → CSOAI-ORG/meok-ai docs/DEPLOYMENT.md + CSOAI-ORG/sovereign-temple start_chat.sh (REAL VALUES) · RUNPOD_API → CSOAI-ORG/sovos-harness scripts/runpod-key-guard.sh (real but guard exists) |
+| 01:17 UTC | ORPHANS | 14 truly orphaned test files (corrected: 226/253 covered by blanket vitest, 8 by card-verifier step, 2 by mcp step, 2 by verify-card.yml, 1 partial) (client/src/\*\*/\*.test.ts: ~200, functions/\*\*/\*.test.ts: ~40, scripts/\*\*/test_\*.py: ~10, misc .test.mjs: ~3) |
+
+
+| 01:17 UTC | PROOF | curl root.json → card_count=291 · as_of=2026-09-13T19:27:08Z |
+| 01:17 UTC | OPEN-PRS | 2207 public-root: Bitcoin-pending signed candidate 2195 honesty(products): kill prerendered seven-empty claim + 2181 interop: UNSIGNED x402 facilitator SR dry expand 2118 draft: continuity cards held for replay-provenance comp  |
+
+| 01:29 UTC | DONE-WHEN | landing_prs_gt_60min=0 ✓ · confirmed_candidates_flagged=0 (none CONFIRMED) · real_secrets=0 (all placeholders) · orphaned_tests=14 (PR needed) |
+| 01:29 UTC | SECRETS-CORRECTION | All 5 query hits are placeholders or service-name references. 0 real secrets. |
+| 01:29 UTC | ORPHAN-CORRECTION | 253→14: blanket vitest covers client/src+functions+scripts (226), card-verifier step covers 8, mcp step covers 2, verify-card.yml covers 2 |
+
+| 01:31 UTC | DONE-WHEN-FINAL | landing_prs_gt_60min=0 ✓ · confirmed_candidates_flagged=0 ✓ · real_secrets=0 ✓ · orphan_tests_14=PR#2213 OPEN (pending gates) |
+| 01:31 UTC | ORPHAN-PR | PR #2213 fix(gates): add orphan coverage for 14 test files — OPEN, gates pending |
+01:39 UTC: LANDINGS=0
+01:39 UTC: SECRETS check complete (all placeholders, no real values)
+01:39 UTC: ORPHANS=14 (PR#2213 open, gates fail on drift test — fixing)
+01:54 UTC: ROOT=291 pending=0
+01:54 UTC: LANDINGS=0
+01:54 UTC: SECRETS+ORPHANS skipped (already run today)
+
+| 08:07 UTC | ORPHAN-PR-MERGED | PR #2213 MERGED · orphan coverage step added · deploy.sh + public-root.sh drift fixed |
+| 08:07 UTC | DONE-WHEN-FINAL | landing_prs_gt_60min=0 ✓ · confirmed_candidates_flagged=0 ✓ (no CONFIRMED) · real_secrets=0 ✓ · orphan_tests_handled=PR#2213 MERGED ✓ |
+| 08:07 UTC | REPO-STATE | master: 0f58e591 · 14+37=51 test files now covered (previously orphan) |
+| 08:07 UTC | PROOF | curl root.json → card_count=298 · open_prs=1 |
+08:25 UTC: ROOT=298 pending=0
+08:26 UTC: landing #2321 no signer verdict yet
+08:26 UTC: SECRETS+ORPHANS skipped (already run today, #2213 merged)
+08:26 UTC: PROOF · curl root.json → card_count=298 · open_prs=2
+08:26 UTC: #2319 public-root/pending STAMPED_PENDING (0.5378492002777778h, <4h — watching)
+08:46 UTC: ROOT=298 pending=0
+08:46 UTC: LANDINGS=0
+08:46 UTC: SECRETS+ORPHANS skipped (once/day, already done today)
+08:46 UTC: PROOF · curl root.json → card_count=298 · open_prs=1
+08:47 UTC: #2319 public-root/pending STAMPED_PENDING (0.86h, <4h — no flag)
+09:05 UTC: candidate #2319 STAMPED_PENDING (1.1988689780555557h, <4h — no action)
+09:06 UTC: LANDINGS=0
+09:06 UTC: SECRETS+ORPHANS skipped (once/day, already done)
+09:06 UTC: PROOF · curl root.json → card_count=298 · open_prs=1
+09:25 UTC: candidate #2319 STAMPED_PENDING (1.5334969458333332h, <4h — no action)
+09:26 UTC: LANDINGS=0
+09:26 UTC: SECRETS+ORPHANS skipped (once/day, already done)
+09:26 UTC: PROOF · curl root.json → card_count=298 · open_prs=3
+09:44 UTC: ROOT-SHA-CHECK: live_raw_sha=14ed12e5aacf20a3 = pointer_sha (MATCH)
+09:44 UTC: ROOT: card_count=298, as_of=2026-09-14T03:12:56Z, pointer_as_of=2026-09-14T04:13:39Z, sha=14ed12e5aacf20a372e5…
+09:44 UTC: candidate #2319 STAMPED_PENDING (1.8h) — .ots file missing on branch, witness sidecar claim unverifiable
+10:06 UTC: LANDINGS=0
+10:06 UTC: SECRETS+ORPHANS skipped (once/day, already done)
+10:06 UTC: PROOF · curl root.json → card_count=298 · open_prs=6
+10:06 UTC: candidate #2332 ots=STAMPED_PENDING_BITCOIN age=h .ots_file=FOUND
+10:07 UTC: #2319 CLOSED (OTS upgrade loop closed it — .ots file was missing as flagged)
+10:07 UTC: #2332 STAMPED_PENDING, 21min old, pending_sha=2896b28b, .ots_file=FOUND (different from #2319 which was MISSING)
+10:25 UTC: LANDINGS=0
+10:25 UTC: SECRETS+ORPHANS skipped (once/day, already done)
+10:25 UTC: PROOF · live=298 · open_prs=7 · sha=MATCH
+10:26 UTC: #2332 MERGED at 10:20 UTC but live_root sha UNCHANGED — #2332 merged before OTS confirmed, pending root did not promote
+10:32 UTC: TUI-1 EIGHT-TUI BRIEF ACCEPTED — live root 298 leaves sha=14ed12e5... CONFIRMED_BLOCK=966906, witness Rekor WITNESSED
+10:32 UTC: CRITICAL FINDING — historical root fe3a9e24 ledger claim CONFIRMED_BITCOIN but .ots file has no Bitcoin attestation (only calendar)
+10:46 UTC: LANDINGS=0
+10:46 UTC: SECRETS+ORPHANS skipped (once/day)
+10:46 UTC: PROOF · live=298 · open_prs=19 · sha=MATCH
+
+## CONSOLIDATED PASSES 11:05-15:05 UTC (12 fires)
+15:06 UTC: ROOT=304 leaves (advanced from 298 at 12:34 UTC), as_of=2026-09-14T12:34:56Z, sha=8794213353b3bf13… (matches pointer)
+15:06 UTC: OTS upgraded to CONFIRMED_BITCOIN blocks [966966, 966969] (from single block 966906)
+15:06 UTC: PENDING=0 (queue empty after #2332 merge at 10:20)
+15:06 UTC: LANDINGS=0
+15:06 UTC: SECRETS+ORPHANS skipped (once/day, already done today)
+15:06 UTC: PROOF · live=304 · open_prs=14 (sibling-lane burst: TUI-8, gspc-spray, hf-card, hf-coverage etc.)
+15:06 UTC: PR #2355 (TUI-1 brief acceptance) OPEN, awaiting governor merge
+15:06 UTC: PR #2432 (card-root: review OTS Bitcoin-attestation upgrades) MERGED 14:27 UTC — bounded maintainer workflow
+15:26 UTC: LANDINGS: 2437 2026-09-14T15:14
+15:26 UTC: SECRETS+ORPHANS skipped (once/day)
+15:26 UTC: PROOF · live=304 · open_prs=17 · sha=MATCH
+15:26 UTC: PENDING #2438 STAMPED_PENDING (9min, <4h) — .ots file FOUND on branch (pending_sha=0f46d4a3). Watching.
+15:26 UTC: LANDING #2437 (12min, <60min) — gates running, no VALID verdict yet (bot-checks-sweeper operator comment only). Under threshold.
+15:46 UTC: LANDINGS=0
+15:46 UTC: SECRETS+ORPHANS skipped (once/day)
+15:46 UTC: PROOF · live=304 · open_prs=17 · sha=MATCH
+15:46 UTC: #2437 MERGED at 15:33 UTC — VALID: 76 from signer (76 HF Jobs mill cards landed). Governor-merge flow working correctly.
+15:46 UTC: #2438 (still OPEN) — pending candidate STAMPED_PENDING 28min, .ots file FOUND (correct pattern)
+15:46 UTC: #2442 (OPEN) — card-root: current signed-card commitment (STAMPED). New card-root cycle starting.
+16:05 UTC: LANDINGS=0
+16:05 UTC: SECRETS+ORPHANS skipped (once/day)
+16:05 UTC: PROOF · live=304 · open_prs=17 · sha=MATCH
+16:25 UTC: LANDINGS=0
+16:25 UTC: SECRETS+ORPHANS skipped (once/day)
+16:25 UTC: PROOF · live=304 · open_prs=17 · sha=MATCH
+16:26 UTC: #2438 age=69min STAMPED_PENDING (.ots FOUND) — under 4h threshold, watching
+16:46 UTC: candidate #2438 CONFIRMED_BITCOIN → governor merge
+16:46 UTC: LANDINGS=0
+16:46 UTC: SECRETS+ORPHANS skipped (once/day)
+16:46 UTC: PROOF · live=304 · open_prs=17 · sha=MATCH
+16:46 UTC: #2438 DETAILS — created=2026-09-14T15:17:09Z (88min old), branch=public-root/pending, pending_sha=0f46d4a3, .ots=FOUND, witness sidecar OTS=CONFIRMED_BITCOIN (just confirmed)
+17:05 UTC: LANDINGS=0
+17:05 UTC: SECRETS+ORPHANS skipped (once/day)
+17:05 UTC: PROOF · live=304 · open_prs=21 · sha=MATCH
+17:06 UTC: #2438 MERGED at 16:51:27Z (governor-merge flow confirmed working). #2443 new pending candidate (STAMPED_PENDING, 7min old, .ots FOUND).
+17:06 UTC: Live root still 304 — publisher hasn't run since #2438 merge. Next publisher fire at :07 UTC (~62min).
+17:26 UTC: LANDINGS=0
+17:26 UTC: SECRETS+ORPHANS skipped (once/day)
+17:26 UTC: PROOF · live=300 · open_prs=18 · sha=MATCH
+17:27 UTC: ROOT ADVANCE NOTE — live=300 (not 308). #2438 commit 426045e0 has root.json with 300 leaves as_of=15:16:53 — publisher ran at 15:16 BEFORE #2438 merged at 16:51.
+17:27 UTC: #2438's 4 signed cards are in the branch's root.json but not yet on live. Publisher will pick them up at 18:07 UTC cron fire.
+17:46 UTC: LANDINGS=0
+17:46 UTC: SECRETS+ORPHANS skipped (once/day)
+17:46 UTC: PROOF · live=300 · open_prs=18 · sha=MATCH
+18:06 UTC: candidate #2443 CONFIRMED_BITCOIN → governor merge
+18:06 UTC: LANDINGS=0
+18:06 UTC: SECRETS+ORPHANS skipped (once/day)
+18:06 UTC: PROOF · live=300 · open_prs=17 · sha=MATCH
+18:06 UTC: #2443 DETAILS — created=2026-09-14T16:58:20Z (67min old), pending_sha=93d4850b, .ots=FOUND, OTS=CONFIRMED_BITCOIN
+18:26 UTC: LANDINGS=0
+18:26 UTC: SECRETS+ORPHANS skipped (once/day)
+18:26 UTC: PROOF · live=300 · open_prs=17 · sha=MATCH
+18:26 UTC: #2443 MERGED at 18:12:48Z (governor-merge confirmed working, 6 min from CONFIRMED detection). #2451 new pending.
+18:26 UTC: #2443 was 80min old at merge. Live root still 300 — publisher runs at :07 UTC (~41min wait for next live advance).
+18:46 UTC: candidate #2451 CONFIRMED_BITCOIN → governor merge
+18:46 UTC: LANDINGS=0
+18:46 UTC: SECRETS+ORPHANS skipped (once/day)
+18:46 UTC: PROOF · live=300 · open_prs=17 · sha=MATCH
+18:46 UTC: #2451 CONFIRMED_BITCOIN (3rd confirmed today). pending_sha=e8cb1d24. Governor merge required.
+19:05 UTC: LANDINGS=0
+19:05 UTC: SECRETS+ORPHANS skipped (once/day)
+19:05 UTC: PROOF · live=304 · open_prs=16 · sha=MATCH
+19:06 UTC: ROOT ADVANCED 300→304 leaves. #2451 MERGED at 18:48:08Z (governor-merge: 2min from CONFIRMED detection). New OTS block [967007]. 42 sidecars scanned (was 36).
+19:06 UTC: LIVE ROOT sha=fd59e88507febd19 as_of=2026-09-14T18:17:38Z, CONFIRMED_BITCOIN
+19:25 UTC: LANDINGS=0
+19:25 UTC: SECRETS+ORPHANS skipped (once/day)
+19:25 UTC: PROOF · live=304 · open_prs=17 · sha=MATCH
+19:45 UTC: LANDINGS=0
+19:45 UTC: SECRETS+ORPHANS skipped (once/day)
+19:45 UTC: PROOF · live=304 · open_prs=18 · sha=MATCH
+20:05 UTC: LANDINGS=0
+20:05 UTC: SECRETS+ORPHANS skipped (once/day)
+20:05 UTC: PROOF · live=304 · open_prs=18 · sha=MATCH
+20:25 UTC: LANDINGS=0
+20:25 UTC: SECRETS+ORPHANS skipped (once/day)
+20:25 UTC: PROOF · live=304 · open_prs=18 · sha=MATCH
+20:45 UTC: LANDINGS=0
+20:45 UTC: SECRETS+ORPHANS skipped (once/day)
+20:45 UTC: PROOF · live=304 · open_prs=18 · sha=MATCH
+21:06 UTC: LANDINGS=0
+21:06 UTC: SECRETS+ORPHANS skipped (once/day)
+21:06 UTC: PROOF · live=304 · open_prs=18 · sha=MATCH
+21:26 UTC: LANDINGS=0
+21:26 UTC: SECRETS+ORPHANS skipped (once/day)
+21:26 UTC: PROOF · live=304 · open_prs=18 · sha=MATCH
+21:46 UTC: LANDINGS=0
+21:46 UTC: SECRETS+ORPHANS skipped (once/day)
+21:46 UTC: PROOF · live=304 · open_prs=18 · sha=MATCH
+22:06 UTC: LANDINGS=0
+22:06 UTC: SECRETS+ORPHANS skipped (once/day)
+22:06 UTC: PROOF · live=304 · open_prs=19 · sha=MATCH
+22:26 UTC: LANDINGS=0
+22:26 UTC: SECRETS+ORPHANS skipped (once/day)
+22:26 UTC: PROOF · live=304 · open_prs=19 · sha=MATCH
+22:26 UTC: #2453 MERGED at 22:14:56Z (4h 6min old at merge — crossed 4h threshold). #2458 new pending (4min).
+22:26 UTC: Live root unchanged at 304 — publisher runs at :07 UTC (~9h wait after last merge).
+22:45 UTC: LANDINGS=0
+22:45 UTC: SECRETS+ORPHANS skipped (once/day)
+22:45 UTC: PROOF · live=304 · open_prs=19 · sha=MATCH
+23:06 UTC: LANDINGS=0
+23:06 UTC: SECRETS+ORPHANS skipped (once/day)
+23:06 UTC: PROOF · live=305 · open_prs=19 · sha=MATCH
+23:06 UTC: ROOT ADVANCED 304→305 leaves after #2453 merge. New sha=ed3e19b381e77598, as_of=2026-09-14T19:23:07Z
+23:26 UTC: LANDINGS=0
+23:26 UTC: SECRETS+ORPHANS skipped (once/day)
+23:26 UTC: PROOF · live=305 · open_prs=19 · sha=MATCH
+23:46 UTC: candidate #2458 CONFIRMED_BITCOIN → governor merge
+23:46 UTC: LANDINGS=0
+23:46 UTC: SECRETS+ORPHANS skipped (once/day)
+23:46 UTC: PROOF · live=305 · open_prs=19 · sha=MATCH
+23:46 UTC: #2458 CONFIRMED_BITCOIN (4th today). pending_sha=ca0adcef. Governor merge required.
+00:06 UTC: #2458 MERGED at 23:50:57Z (4 min after CONFIRMED detection). Live root still 305 — next publisher fire at 00:07 UTC (~1h).
+00:27 UTC: ROOT COUNT CHANGE 305→303. as_of=22:21:53Z (after #2458 merge at 23:50:57, publisher fired). 14323+3363 changes — publisher ran full rebuild.
+00:27 UTC: Pointer sha MATCH ✓ — publisher produced new content with different card set, not a corruption.
+00:46 UTC: #2459 STAMPED_PENDING (120min, pending_sha=85e4335e, .ots FOUND) — watching.

@@ -1,0 +1,82 @@
+# MEOK × OpenBMC — Hardware Root of Trust
+# This file is the SINGLE source of truth for what "trusted" means on
+# a sovereign MEOK hive. It is consumed by:
+#   - meok-bmc-daemon (PCRs to attest)
+#   - the OpenShell meok-agent (kubelet admission)
+#   - the compliance-operator (Sovereign policy)
+#
+# In production, every line below is itself signed (cosign + Rekor).
+
+apiVersion: meok.io/v1
+kind: TrustAnchor
+metadata:
+  name: meok-sovereign-trust-anchor
+  labels:
+    meok.io/care-class: carer
+    meok.io/hardware-class: bmc
+spec:
+  version: 1
+  description: >
+    MEOK sovereign root-of-trust. A node that fails any of these checks
+    must NOT be admitted to a hive, and any running MEOK agent must mark
+    itself as `meok.io/attestation: failed`.
+  measuredBoot:
+    enabled: true
+    tpm: 2.0
+    algorithm: sha256
+    pcrs:
+      - index: 0
+        meaning: "BIOS / firmware code"
+        required: true
+      - index: 2
+        meaning: "Option ROMs"
+        required: true
+      - index: 4
+        meaning: "Bootloader (u-boot / systemd-boot)"
+        required: true
+      - index: 7
+        meaning: "Secure Boot state"
+        required: true
+      - index: 11
+        meaning: "MEOK BMC daemon image"
+        required: true
+  secureBoot:
+    enabled: true
+    db: "meok-secureboot-db-v1"
+    dbx: "meok-secureboot-dbx-v1"
+    pk: "meok-platform-key-v1"
+    kek: "meok-key-exchange-key-v1"
+  attestation:
+    provider: tpm2
+    algorithm: rsa-2048
+    ak:
+      policy: restricted
+      parent: "meok-ek-v1"
+      extractable: false
+      bound-to-tpm: true
+    quote:
+      intervalSeconds: 30
+      nonce-source: "meok-sovereign-substrate:7700/v1/nonce"
+      receipt-format: sigil-v1
+      publishTargets:
+        - "unix:///var/run/meok-bmc/attest.sock"
+        - "https://meok-compliance-gateway.meok-system.svc:9443/api/v1/attest"
+  keys:
+    signing:
+      algorithm: ed25519
+      custody: tpm
+      pub: "meok-sovereign-pub-v1"
+    encryption:
+      algorithm: aes-256-gcm
+      custody: tpm
+      binding: "tpm2-createprimary"
+  revocation:
+    crl: "https://meok-compliance-gateway.meok-system.svc:9443/api/v1/crl.pem"
+    check-interval-seconds: 300
+  fallback:
+    # If no TPM is present (dev / CI), the daemon must still emit
+    # *deterministic* placeholders so the cluster boots. The compliance
+    # operator flags these nodes as `attestation=fallback` and refuses
+    # to promote them to production hives.
+    policy: placeholder-allowed
+    promotion: blocked-until-real-tpm
