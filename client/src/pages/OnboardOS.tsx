@@ -90,7 +90,7 @@ export default function OnboardOS() {
               { href: "/owasp-asi", label: "OWASP mapping", desc: "Board axes → OWASP AI Exchange categories" },
               { href: "/evaluator-access", label: "Evaluator access", desc: "Conditions for independent evaluation" },
               { href: "/press", label: "Press", desc: "Corrections, root, signed index, FAQs" },
-              { href: "/products", label: "Products", desc: "Existing verification, evidence services and enquiry routes" }
+              { href: "/products", label: "Products", desc: "Existing verification, evidence services and enquiry routes" },
               { href: "/methodology", label: "Methodology", desc: "The frozen rules every number is computed under" },
             ].map((link) => (
               <a
