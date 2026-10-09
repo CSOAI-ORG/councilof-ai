@@ -17,7 +17,7 @@ describe("declareDiscoveryExtension — the discovery emission every route confi
       inputSchema: { type: "object", properties: {}, additionalProperties: false },
       outputSchema: { required: ["schema"], properties: { schema: { type: "string" } } },
       outputExample: { schema: "csoai.example/0.1" },
-    });
+    }) as { info: any; schema: any };
     const input = ext.schema.properties.input as Record<string, any>;
     expect(input.properties.body).toMatchObject({ type: "object", additionalProperties: false });
     expect(input.properties.method).toMatchObject({ enum: ["POST", "PUT", "PATCH"] });
@@ -39,7 +39,7 @@ describe("declareDiscoveryExtension — the discovery emission every route confi
         properties: { schema: { type: "string" }, note: { type: "string" } },
       },
       outputExample: { schema: "csoai.example/0.1", note: "measurement, never a grade" },
-    });
+    }) as { info: any; schema: any };
     const out = (ext.schema.properties.output as Record<string, any>).properties.example;
     expect(out.type).toBe("object");
     expect(out.required).toEqual(["schema", "note"]);
