@@ -1,6 +1,6 @@
 {
   "name": "ai.councilof/measurement-agent",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "schema_version": "1.1.0",
   "description": "A2A agent for GSPC measurement and evidence workflows: board reads, card and capsule verification, server evidence. Measurement, not certification.",
   "authors": [
@@ -56,7 +56,7 @@
         "card_data": {
           "name": "Council of AI — Measurement Agent",
           "description": "Independent AI-governance MEASUREMENT body. Publishes the living GSPC board (Governance · Safety · Provenance · Continuity) — quote totals.lid and totals.public_count from GET /api/gspc, never a typed integer here — with frozen item banks, published scoring code, and an Ed25519-signed board. Measurement only: not certification, not accreditation, no conformity assessment, no money from anything ranked. A2A v1.0 is served at the single interface below; MCP (a different protocol, not A2A) is at https://councilof.ai/mcp.",
-          "version": "1.4.0",
+          "version": "1.5.0",
           "provider": {
             "organization": "CSOAI Ltd",
             "url": "https://councilof.ai"
@@ -306,7 +306,68 @@
               "protected": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2NhcmQtYXR0ZXN0YXRpb24tMiIsInR5cCI6IkpPU0UifQ",
               "signature": "EEmnLz2PbJppVHOBXRpRC0lvKoWffwGjSwuRn8kbGLVSOdh4h3oVftHh40GOVWOnE3NICstoLwHDOjBKZZ-PDQ"
             }
-          ]
+          ],
+          "instrument": {
+            "name": "GSPC",
+            "full_name": "Governance · Safety · Provenance · Continuity",
+            "axes": 23,
+            "measured_axes": 23,
+            "unmeasured_axes": 0,
+            "comparison_axes": 14,
+            "separated_leads": 0,
+            "ties": 7,
+            "untested_separations": 7,
+            "fact_runs": 9,
+            "as_of": "2026-10-08",
+            "note": "Read live from GET https://councilof.ai/api/gspc — do not cache these numbers. TIE is TIE; UNTESTED is not a win. Not a certificate.",
+            "api_endpoint": "https://councilof.ai/api/gspc"
+          },
+          "mcp_servers": [
+            {
+              "name": "Council of AI GSPC (free)",
+              "url": "https://councilof.ai/mcp/free",
+              "transport": "streamable-http",
+              "version": "1.4.4",
+              "tools": 14,
+              "description": "Read-only measurement tools. No account needed, no key needed. Verification stays free."
+            },
+            {
+              "name": "Council of AI GSPC (full)",
+              "url": "https://councilof.ai/mcp",
+              "transport": "streamable-http",
+              "version": "1.4.4",
+              "tools": 31,
+              "description": "Full MCP endpoint with x402 paid evidence doors. Free reads + paid evidence bundles."
+            }
+          ],
+          "registry_listings": [
+            {
+              "registry": "MCP Registry",
+              "name": "io.github.CSOAI-ORG/gspc",
+              "url": "https://registry.modelcontextprotocol.io/v0.1/servers/io.github.CSOAI-ORG%2Fgspc",
+              "version": "1.4.4",
+              "status": "ACTIVE",
+              "published": "2026-10-08T00:52:17Z"
+            },
+            {
+              "registry": "Smithery",
+              "name": "csoai/gspc-mcp",
+              "url": "https://smithery.ai/servers/csoai/gspc-mcp"
+            },
+            {
+              "registry": "Glama",
+              "name": "csoai/gspc",
+              "url": "https://glama.ai/mcp/servers/csoai/gspc"
+            }
+          ],
+          "momentum": {
+            "huggingface_downloads_30d": 90358,
+            "signed_measurement_capsules": 11518,
+            "signed_cards": 335,
+            "public_corrections": 93,
+            "as_of": "2026-10-08",
+            "source": "https://councilof.ai/api/momentum"
+          }
         }
       }
     },
