@@ -377,7 +377,19 @@ const allOutputs = manifest.files.map((f) => f.path).concat(["distribution/MANIF
   });
   const b = spawnSync(process.execPath, [join(REPO, "scripts/brand-gate.mjs"), tmp], { encoding: "utf8" });
   let detail = (b.stdout + b.stderr).trim().split("\n").pop();
-  if (b.status !== 0) detail = (b.stderr || "").replace(/f(\d{3})\.(txt|json)/g, (_, n) => allOutputs[Number(n)]).trim().split("\n").slice(0, 6).join(" | ");
+  if (b.status !== 0) {
+    const unmapped = (b.stderr || "")
+      .replace(/f(\d{3})\.(txt|json)/g, (_, n) => allOutputs[Number(n)])
+      .trim()
+      .split("\n");
+    // brand-gate prints `⚠ HELD rules (not enforced)` BEFORE the `✖` failure block, so a head
+    // slice always reported held-rule noise (`certificate_term … never a … certificate`) and hid
+    // the failing rule entirely — the two real `agent_instruction_leak` hits were unrecoverable
+    // from this line alone. Start at the failure marker instead.
+    const at = unmapped.findIndex((l) => l.includes("✖") || l.includes("forbidden DISPLAY"));
+    const from = at >= 0 ? at : 0;
+    detail = unmapped.slice(from, from + 6).join(" | ");
+  }
   rec("*", `brand-gate over all ${allOutputs.length} outputs (flattened .txt/.json copy)`, b.status === 0, detail);
   rmSync(tmp, { recursive: true, force: true });
 
