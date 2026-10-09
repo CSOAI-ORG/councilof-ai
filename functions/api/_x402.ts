@@ -1349,7 +1349,6 @@ export async function paymentlessProbe402(opts: {
     description,
     ...(offer.productId ? { productId: offer.productId } : {}),
   });
-  const queryParams = ordered.length ? { queryParams: query } : {};
   const bazaar = declareDiscoveryExtension({
     method: "POST",
     bodyType: "json",
@@ -1379,6 +1378,5 @@ export async function paymentlessProbe402(opts: {
       free_verification: `${url.origin}/gspc-verify`,
     },
   });
-  void queryParams;
   return paymentRequiredResponseSigned(paymentRequired, env);
 }
