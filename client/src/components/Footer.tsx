@@ -98,6 +98,7 @@ export function Footer() {
       title: 'Company',
       links: [
         { name: 'About', href: '/about/' },
+        { name: 'Evidence and reuse rights', href: '/licensing-agreement/#rights' },
         { name: 'Independence and conflicts', href: '/independence/' },
         { name: 'Contact', href: '/contact/' },
         { name: 'Where we take part', href: '/memberships/' },

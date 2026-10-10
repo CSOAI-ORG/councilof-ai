@@ -210,7 +210,7 @@ export default function EstateIndex() {
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="a repository, a dataset, a file path"
+            aria-label="Search public repositories, datasets and records" placeholder="a repository, a dataset, a file path"
             className="mt-3 w-full rounded-md border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
           />
           {q.trim() && (

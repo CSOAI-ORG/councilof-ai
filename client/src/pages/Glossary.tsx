@@ -1101,7 +1101,7 @@ export default function Glossary() {
             <Search className="absolute left-4 top-4 h-5 w-5 text-gray-400" />
             <Input
               type="text"
-              placeholder="Search terms by name or definition..."
+              aria-label="Search glossary terms" placeholder="Search terms by name or definition..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-12 py-4 bg-white text-gray-900 placeholder-gray-500 rounded-xl shadow-lg focus:ring-2 focus:ring-emerald-400 border-0"

@@ -4,13 +4,14 @@
  * 141 shared withdrawal titles, 14 literal "undefined" titles and 14 missing descriptions.
  * Everything here runs with no fetch, no DOM library and no page component mounted.
  */
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   applyHead,
   COMPONENT_HEAD,
   DESCRIPTION_MAX,
   DESCRIPTION_MIN,
   fitDescription,
+  maintainHead,
   resolveHead,
   ROUTE_HEAD,
   SHELL_TITLE,
@@ -155,21 +156,24 @@ describe("applyHead writes title, description, OG and canonical into a document"
   function stubDocument() {
     const nodes: Record<string, Map<string, string>> = {};
     const appended: string[] = [];
+    const writes: string[] = [];
     const el = (key: string) => {
       const attrs = (nodes[key] ||= new Map());
-      return { setAttribute: (n: string, v: string) => { attrs.set(n, v); }, getAttribute: (n: string) => attrs.get(n) ?? null };
+      return { setAttribute: (n: string, v: string) => { writes.push(`${key}:${n}`); attrs.set(n, v); }, getAttribute: (n: string) => attrs.get(n) ?? null };
     };
     const keyOf = (selector: string) => selector.replace(/^(meta|link)\[/, "").replace(/\]$/, "").replace(/"/g, "");
-    const doc: HeadDocument & { nodes: typeof nodes; appended: string[] } = {
+    const doc: HeadDocument & { nodes: typeof nodes; appended: string[]; writes: string[] } = {
       title: "Council of AI — we measure, we sign, we re-attest",
       nodes,
       appended,
+      writes,
       head: { appendChild: (n: unknown) => { appended.push(String((n as { __key?: string }).__key ?? "")); return n; } },
       querySelector: (selector) => (nodes[keyOf(selector)] ? el(keyOf(selector)) : null),
       createElement: (tag) => {
         const created = { __tag: tag, __key: "", attrs: new Map<string, string>() };
         return {
           setAttribute: (n: string, v: string) => {
+            writes.push(`${tag}:${n}`);
             created.attrs.set(n, v);
             if ((n === "name" || n === "property" || n === "rel")) { created.__key = `${n}=${v}`; nodes[created.__key] = created.attrs; }
           },
@@ -196,5 +200,55 @@ describe("applyHead writes title, description, OG and canonical into a document"
     const doc = stubDocument();
     applyHead({ ...resolveHead("/about"), title: undefined as unknown as string, ogTitle: "" }, doc);
     expect(doc.title).not.toBe("undefined");
+  });
+
+  it("does not mutate an already correct head when an observer sees its own update", () => {
+    const doc = stubDocument();
+    const h = resolveHead("/standards");
+    applyHead(h, doc);
+    doc.writes.length = 0;
+    const appended = doc.appended.length;
+    applyHead(h, doc);
+    expect(doc.writes).toEqual([]);
+    expect(doc.appended.length).toBe(appended);
+  });
+
+  it("repairs a delayed legacy title and description, including social tags, and disconnects", () => {
+    const doc = stubDocument();
+    let onChange = () => {};
+    const disconnect = vi.fn();
+    vi.stubGlobal("MutationObserver", class {
+      constructor(callback: () => void) { onChange = callback; }
+      observe() {}
+      disconnect = disconnect;
+    });
+    try {
+      const h = resolveHead("/standards");
+      const cleanup = maintainHead(h, doc as unknown as Document);
+      doc.title = "Legacy institution equivalence";
+      doc.nodes["name=description"].set("content", "Legacy coverage promise");
+      onChange();
+      expect(doc.title).toBe(h.title);
+      expect(doc.nodes["name=description"].get("content")).toBe(h.description);
+      expect(doc.nodes["property=og:title"].get("content")).toBe(h.title);
+      expect(doc.nodes["property=og:description"].get("content")).toBe(h.description);
+      doc.writes.length = 0;
+      onChange();
+      expect(doc.writes).toEqual([]);
+      cleanup();
+      expect(disconnect).toHaveBeenCalledOnce();
+    } finally { vi.unstubAllGlobals(); }
+  });
+
+  it("allows a record page to refine its own title after data arrives", () => {
+    const doc = stubDocument();
+    const observer = vi.fn();
+    vi.stubGlobal("MutationObserver", observer);
+    try {
+      maintainHead(resolveHead("/notes/a-specific-record"), doc as unknown as Document);
+      doc.title = "The record's loaded headline | Council of AI";
+      expect(observer).not.toHaveBeenCalled();
+      expect(doc.title).toContain("loaded headline");
+    } finally { vi.unstubAllGlobals(); }
   });
 });

@@ -1,58 +1,24 @@
-/**
- * Australia AI Governance Landing Page
- * Framework-specific landing page for Australian AI regulation
- */
-
-import { FrameworkLandingPage } from './FrameworkLandingPage';
+import { FrameworkReferencePage } from "./FrameworkLandingPage";
 
 export default function AustraliaAIGovernancePage() {
   return (
-    <FrameworkLandingPage
-      frameworkId="australia-ai"
-      frameworkName="Australia AI Governance"
+    <FrameworkReferencePage
       region="Australia"
-      description="Master Australia's AI governance framework. Understand mandatory AI impact assessments, transparency requirements, and compliance obligations for AI systems deployed in Australian markets."
-      deadline="2026-12-31"
-      threats={[
-        'Regulatory penalties and enforcement action for non-compliant AI systems',
-        'Mandatory AI impact assessments for high-risk applications',
-        'Public disclosure requirements for AI system failures',
-        'Consumer protection violations and liability exposure',
-        'Market access restrictions and trading restrictions',
-        'Reputational damage from AI-related incidents',
-      ]}
-      keyRequirements={[
-        'Mandatory AI impact assessments for high-risk systems',
-        'Transparency and explainability requirements',
-        'Human oversight and accountability mechanisms',
-        'Bias detection and mitigation strategies',
-        'Data governance and quality standards',
-        'Regular compliance audits and monitoring',
-        'Incident notification and reporting obligations',
-      ]}
-      trainingModules={[
+      introduction="Use official Australian guidance to support a review of AI accountability, impacts, testing and oversight. Guidance does not by itself establish a universal mandatory AI assessment regime or a December 2026 compliance deadline."
+      sources={[
         {
-          title: 'Australia AI Governance Overview',
-          description: 'Introduction to Australian AI regulation, impact assessments, and compliance framework',
-          duration: '2-3 hours',
+          title: "Guidance for AI adoption",
+          status: "Current government guidance",
+          description: "The National AI Centre's implementation guidance describes six essential practices for organisations building, customising or using AI in more complex and higher-risk settings. Use the official guidance to inspect the practices and their scope.",
+          href: "https://www.ai.gov.au/staying-safe-and-responsible/essential-ai-practices/guidance-ai-adoption-implementation-guidance",
         },
         {
-          title: 'High-Risk AI Applications',
-          description: 'Requirements for high-risk AI systems, transparency, and human oversight',
-          duration: '3-4 hours',
-        },
-        {
-          title: 'Compliance & Auditing',
-          description: 'Practical guidance on audits, documentation, and incident reporting',
-          duration: '2-3 hours',
+          title: "Voluntary AI Safety Standard",
+          status: "Earlier voluntary reference",
+          description: "The earlier ten-guardrail standard is voluntary and does not create new legal duties. Its official page directs readers to the updated Guidance for AI Adoption published on 21 October 2025.",
+          href: "https://www.industry.gov.au/publications/voluntary-ai-safety-standard/10-guardrails",
         },
       ]}
-      comingSoon={true}
-      certificationInfo={{
-        examLength: 90,
-        passingScore: 70,
-        validity: '2 years',
-      }}
     />
   );
 }
