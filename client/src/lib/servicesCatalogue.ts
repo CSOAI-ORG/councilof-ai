@@ -71,6 +71,7 @@ const ROUTES: ReadonlyArray<[string, GroupId]> = [
   ["/api/evidence-bundle", "compliance"],
   ["/api/art50/", "compliance"],
   ["/api/eunomia-data", "compliance"],
+  ["/api/signed-data-feed", "compliance"],
   ["/api/request-attestation", "model-measurement"],
   ["/api/feeds/provider-diff", "model-measurement"],
   ["/api/proof", "model-measurement"],

@@ -27,6 +27,7 @@ export const NODE_TEST_FILES = [
   'scripts/build-models-measured.test.mjs',
   'scripts/contract-convergence.test.mjs',
   'scripts/feed-delivery-kit.test.mjs',
+  'scripts/historical-door-routing.test.mjs',
   'scripts/harness-x/render.test.mjs',
   'scripts/review/deploy-target-wiring.test.mjs',
   'scripts/review/pages-release-target.test.mjs',

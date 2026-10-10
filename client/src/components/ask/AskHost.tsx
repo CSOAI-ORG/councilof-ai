@@ -6,12 +6,34 @@
  * A page that owns ⌘K itself (DemoOS, marked data-own-cmdk) keeps it. If the viewer already
  * granted agent consent in this tab, the in-page agent bridge (window.councilUi) is installed.
  */
-import { lazy, Suspense, useEffect, useState } from "react";
+import { Component, lazy, Suspense, useEffect, useRef, useState, type ReactNode } from "react";
 import { useLocation, useSearch } from "wouter";
-import { ASK_OPEN, PALETTE_OPEN, recordRecent, type AskOpenDetail } from "@/components/ask/askBus";
+import { ASK_OPEN, PALETTE_OPEN, recordRecent, type AskOpenDetail, type AskRequest } from "@/components/ask/askBus";
 
-const AskPane = lazy(() => import("@/components/ask/AskPane"));
+import { createAskRequests } from "@/lib/askRequests";
+
+const loadAskPane = () => import("@/components/ask/AskPane");
 const CommandPalette = lazy(() => import("@/components/ask/CommandPalette"));
+
+class AskLoadBoundary extends Component<{
+  children: ReactNode; open: boolean; onError: (error: Error) => void; onRetry: () => void; onClose: () => void;
+}, { error: Error | null }> {
+  state = { error: null as Error | null };
+  static getDerivedStateFromError(error: Error) { return { error }; }
+  componentDidCatch(error: Error) { this.props.onError(error); }
+  render() {
+    if (!this.state.error) return this.props.children;
+    if (!this.props.open) return null;
+    return <aside role="alert" className="fixed bottom-4 right-4 z-[80] max-w-sm rounded-xl border border-border bg-background p-4 shadow-xl">
+      <p className="font-semibold">Ask could not open.</p>
+      <p className="mt-1 text-sm">Any results already returned are kept. Opening Ask again does not resend your question.</p>
+      <div className="mt-3 flex gap-2">
+        <button type="button" onClick={this.props.onRetry} className="min-h-11 rounded-lg border px-3">Open Ask again</button>
+        <button type="button" onClick={this.props.onClose} className="min-h-11 rounded-lg border px-3">Close</button>
+      </div>
+    </aside>;
+  }
+}
 
 export default function AskHost() {
   const [location] = useLocation();
@@ -19,7 +41,30 @@ export default function AskHost() {
   const [palette, setPalette] = useState(false);
   const [askMounted, setAskMounted] = useState(false);
   const [askOpen, setAskOpen] = useState(false);
-  const [question, setQuestion] = useState<{ text: string; n: number } | null>(null);
+  const [question, setQuestion] = useState<AskRequest | null>(null);
+  const [AskPane, setAskPane] = useState(() => lazy(loadAskPane));
+  const [loadAttempt, setLoadAttempt] = useState(0);
+  const loadFailed = useRef(false);
+  const retryPane = () => {
+    loadFailed.current = false;
+    setAskPane(() => lazy(loadAskPane));
+    setLoadAttempt((n) => n + 1);
+  };
+  const requests = useRef<ReturnType<typeof createAskRequests> | null>(null);
+  if (!requests.current) requests.current = createAskRequests(() => {
+    if (loadFailed.current) retryPane();
+    setAskMounted(true); setAskOpen(true);
+  }, setQuestion);
+  const paneFailed = (error: Error) => {
+    loadFailed.current = true;
+    requests.current!.failed(error.message);
+    setQuestion(null);
+  };
+  const cancelWaiting = () => {
+    requests.current!.cancelPending();
+    setQuestion(null);
+    setAskOpen(false);
+  };
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -30,10 +75,8 @@ export default function AskHost() {
     };
     const onPalette = () => setPalette(true);
     const onAsk = (e: Event) => {
-      const q = (e as CustomEvent<AskOpenDetail>).detail?.question;
-      setAskMounted(true);
-      setAskOpen(true);
-      if (q) setQuestion((prev) => ({ text: q, n: (prev?.n ?? 0) + 1 }));
+      const detail = (e as CustomEvent<AskOpenDetail>).detail;
+      if (detail) requests.current!.receive(detail);
     };
     window.addEventListener("keydown", onKey);
     window.addEventListener(PALETTE_OPEN, onPalette);
@@ -75,9 +118,16 @@ export default function AskHost() {
         </Suspense>
       ) : null}
       {askMounted ? (
-        <Suspense fallback={null}>
-          <AskPane open={askOpen} onClose={() => setAskOpen(false)} question={question} />
-        </Suspense>
+        <AskLoadBoundary key={loadAttempt} open={askOpen} onError={paneFailed}
+          onRetry={retryPane} onClose={() => setAskOpen(false)}>
+          <Suspense fallback={askOpen ? <aside role="status" className="fixed bottom-4 right-4 z-[80] rounded-xl border border-border bg-background p-4 shadow-xl">
+            <p>Opening Ask… Your question is kept while the panel loads.</p>
+            <button type="button" onClick={cancelWaiting} className="mt-2 min-h-11 rounded-lg border px-3">Cancel question</button>
+          </aside> : null}>
+            <AskPane open={askOpen} onClose={() => setAskOpen(false)} question={question}
+              onReady={requests.current!.attach} onQuestionTaken={requests.current!.taken} />
+          </Suspense>
+        </AskLoadBoundary>
       ) : null}
     </>
   );

@@ -237,13 +237,14 @@ export default function GetResults({
 }: {
   /** Send the free question to the Answers panel. The host saves the lookup to My results when the
    *  run finishes, with the state the tool returned (see GspcWorkspaceHome). */
-  onAsk?: (question: string, subject: string) => void;
+  onAsk?: (question: string, subject: string) => boolean | void;
 }) {
   const search = useSearch();
   const [value, setValue] = useState("");
   const [subject, setSubject] = useState<string | null>(null);
   const [watch, setWatch] = useState<WatchState>({ state: "idle" });
   const [asked, setAsked] = useState(0);
+  const [askNote, setAskNote] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const kind: SubjectKind = subject ? classifySubject(subject) : "empty";
 
@@ -272,17 +273,22 @@ export default function GetResults({
       inputRef.current?.focus();
       return;
     }
+    const k = classifySubject(s);
+    const q = freeQuestion(k, s);
+    if (q && onAsk && onAsk(q, k === "question" ? "" : s) === false) {
+      setAskNote("An answer is still running. Your input has been kept; press Get results when it finishes.");
+      return;
+    }
+    setAskNote(null);
     setValue(s);
     setSubject(s);
     setAsked((n) => n + 1);
     setWatch({ state: "idle" });
-    const k = classifySubject(s);
-    const q = freeQuestion(k, s);
     // A server or record lookup is saved to My results by the host once its run has finished,
     // with the state the tool returned. Saving it here, before any answer, stored a row with no
     // state, which My results then searched for in the paid-request queue and reported missing.
     // A question is answered but not saved to My results as a lookup (it names no subject).
-    if (q && onAsk) onAsk(q, k === "question" ? "" : s);
+
   };
 
   // "Look up again" from My results (a model lookup) lands here with ?lookup=<subject>: the box is
@@ -367,6 +373,7 @@ export default function GetResults({
           Get results <ArrowRight className="h-4 w-4" aria-hidden="true" />
         </button>
       </form>
+      {askNote ? <p role="status" className="mt-2 text-sm text-muted-foreground">{askNote}</p> : null}
       <p className="mt-2 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
         <span>Try:</span>
         {EXAMPLES.map((x) => (

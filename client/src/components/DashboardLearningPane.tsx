@@ -9,7 +9,7 @@ import {
   Swords,
   Wrench,
 } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useSearch } from "wouter";
 import {
   GSPC_LEARNING_PATHS,
   buildLearningPaths,
@@ -27,7 +27,13 @@ import {
 import { dashboardViewHref } from "@/lib/dashboardView";
 import { openAsk } from "@/components/ask/askBus";
 
-type ReviewDecision = "READY_FOR_REVIEW" | "RETURN_FOR_REVISION" | "DISCARD";
+import {
+  clearLearningChallenge,
+  learningChallengePath,
+  readLearningReturn,
+  rememberLearningChallenge,
+  type LearningReviewDecision as ReviewDecision,
+} from "@/lib/learningChallenge";
 
 /**
  * One plain question per axis, shown under its question-bank name. It restates the bank's
@@ -167,10 +173,12 @@ function badgeTone(value: string): string {
 }
 
 export default function DashboardLearningPane() {
+  const search = useSearch();
+  const [returned] = useState(() => readLearningReturn(search));
   // The roster comes from the live board; the committed freeze is only the fallback, so the
   // path count below is derived from whichever roster is actually shown, never typed.
-  const [livePaths, setLivePaths] = useState<readonly GspcLearningPath[] | null>(null);
-  const [rosterState, setRosterState] = useState<RosterState>("READING");
+  const [livePaths, setLivePaths] = useState<readonly GspcLearningPath[] | null>(returned?.paths ?? null);
+  const [rosterState, setRosterState] = useState<RosterState>(returned?.rosterState ?? "READING");
   const paths = livePaths ?? GSPC_LEARNING_PATHS;
   const rosterLabel =
     rosterState === "LIVE"
@@ -178,17 +186,19 @@ export default function DashboardLearningPane() {
       : rosterState === "READING"
         ? "reading the live board…"
         : "from the committed board freeze; the live board could not be read";
-  const [axisId, setAxisId] = useState(GSPC_LEARNING_PATHS[0]?.axis.id ?? "");
+  const [axisId, setAxisId] = useState(returned?.axisId ?? GSPC_LEARNING_PATHS[0]?.axis.id ?? "");
   const [query, setQuery] = useState("");
   const [completedByAxis, setCompletedByAxis] = useState<
     Record<string, string[]>
-  >({});
+  >(returned?.completedByAxis ?? {});
   const [reviewByAxis, setReviewByAxis] = useState<
     Record<string, ReviewDecision>
-  >({});
+  >(returned?.reviewByAxis ?? {});
   const [scenario, setScenario] = useState<LearningScenario | null>(null);
   const [scenarioState, setScenarioState] = useState("READING");
   const [scenarioNote, setScenarioNote] = useState("Reading current sources…");
+
+  useEffect(clearLearningChallenge, []);
 
   const selected =
     paths.find((path) => path.axis.id === axisId) ?? paths[0];
@@ -312,6 +322,12 @@ export default function DashboardLearningPane() {
   }
 
   if (!selected || !progress) return null;
+
+  const challengeState = activeStage ? {
+    axisId: selected.axis.id, stageId: activeStage.id, paths, rosterState,
+    completedByAxis, reviewByAxis,
+  } : null;
+  const challengePath = challengeState ? learningChallengePath(challengeState) : null;
 
   const pointers = scenario?.regulation_context?.pointers ?? [];
   const publishedState =
@@ -781,12 +797,12 @@ export default function DashboardLearningPane() {
                       >
                         See how this test measured (opens beside the lesson)
                       </button>
-                      {activeStage.id === "play" ? (
+                      {activeStage.id === "play" && challengeState && challengePath ? (
                         <Link
-                          href={dashboardViewHref(
-                            "/gspc-quests.html",
-                            "GSPC Quests",
-                          )}
+                          href={dashboardViewHref(challengePath, "GSPC Quests")}
+                          onClick={(event) => {
+                            if (!rememberLearningChallenge(challengeState)) event.preventDefault();
+                          }}
                           className="rounded-xl border border-amber-800/25 bg-white px-4 py-2.5 text-xs font-semibold text-amber-950 hover:border-amber-800/50"
                         >
                           Open available challenge banks

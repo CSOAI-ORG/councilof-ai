@@ -10,10 +10,33 @@
 export const ASK_OPEN = "council:ask-open";
 export const PALETTE_OPEN = "council:palette-open";
 
-export type AskOpenDetail = { question?: string };
+import type { TalkOrigin, TalkRun } from "@/lib/aguiTalk";
 
-export function openAsk(question?: string): void {
-  window.dispatchEvent(new CustomEvent<AskOpenDetail>(ASK_OPEN, { detail: { question } }));
+export type AskRequest = { text: string; n: number; origin?: TalkOrigin; onUpdate?: (run: TalkRun) => void };
+export type AskOpenDetail = {
+  question?: string; origin?: TalkOrigin; onUpdate?: (run: TalkRun) => void;
+  action?: "busy" | "confirm" | "cancel" | "stop";
+  run?: TalkRun | string;
+  /** The mounted host acknowledges synchronously, including a reserved lazy-load request. */
+  accepted?: boolean;
+};
+
+export function openAsk(question?: string, options?: Pick<AskOpenDetail, "origin" | "onUpdate">): boolean {
+  const detail: AskOpenDetail = { question, ...options, accepted: false };
+  window.dispatchEvent(new CustomEvent<AskOpenDetail>(ASK_OPEN, { detail }));
+  return detail.accepted === true;
+}
+
+export function askIsBusy(): boolean {
+  const detail: AskOpenDetail = { action: "busy", accepted: false };
+  window.dispatchEvent(new CustomEvent<AskOpenDetail>(ASK_OPEN, { detail }));
+  return detail.accepted === true;
+}
+
+export function controlAsk(action: "confirm" | "cancel" | "stop", run: TalkRun | string): boolean {
+  const detail: AskOpenDetail = { action, run, accepted: false };
+  window.dispatchEvent(new CustomEvent<AskOpenDetail>(ASK_OPEN, { detail }));
+  return detail.accepted === true;
 }
 
 export function openPalette(): void {
