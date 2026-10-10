@@ -101,6 +101,31 @@ export default function Services() {
         </div>
       </section>
 
+      <section aria-labelledby="services-human-buyer" className="mx-auto max-w-6xl px-6 pt-10">
+        <div className="rounded-2xl border border-emerald-400/30 bg-emerald-950/30 p-6 sm:p-8">
+          <p className="font-mono text-xs uppercase tracking-widest text-emerald-300">For organisations and procurement teams</p>
+          <h2 id="services-human-buyer" className="mt-3 text-2xl font-bold">Need a written scope and a human invoice?</h2>
+          <p className="mt-3 max-w-3xl leading-7 text-slate-300">
+            CSOAI can discuss a GBP invoice for an existing Article 50 evidence pack, evidence bundle
+            or provider-diff feed. Describe the named subject, the evidence you need and the desired
+            delivery date. Availability, scope and terms must be confirmed before any order.
+          </p>
+          <div className="mt-5 flex flex-wrap gap-3">
+            <a href="/contact/?arm=data" className="inline-flex min-h-11 items-center rounded-lg bg-emerald-400 px-5 py-2 font-semibold text-slate-950 hover:bg-emerald-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300">
+              Request a written evidence scope
+            </a>
+            <a href="/gspc-verify/" className="inline-flex min-h-11 items-center rounded-lg border border-slate-600 px-5 py-2 font-semibold text-slate-100 hover:border-emerald-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300">
+              Verify evidence free
+            </a>
+          </div>
+          <p className="mt-4 text-sm leading-6 text-slate-400">
+            This is an enquiry, not checkout or a reservation. The current contact page opens an
+            email draft or lets you copy an enquiry; it does not silently submit or store your details.
+            The exact x402 price, where applicable, is disclosed by the individual door.
+          </p>
+        </div>
+      </section>
+
       <section id="supported-feeds" className="mx-auto max-w-6xl scroll-mt-24 px-6 py-12">
         {load.state === "loading" ? (
           <p role="status" className="text-slate-400">Reading the manifest…</p>
