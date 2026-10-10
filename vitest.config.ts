@@ -33,6 +33,7 @@ export const NODE_TEST_FILES = [
   'scripts/surface/facts-scope.test.mjs',
   'scripts/surface/prerender-io.test.mjs',
   'scripts/surface/render-board-reference.test.mjs',
+  'spaces/gspc-board/table.node-test.mjs',
   // A bare assert script (no test framework): node --test runs it as one test; vitest reported
   // "No test suite found" in the orphan-coverage step (`npx vitest run council-os ...`).
   'council-os/gspc-pontius-boundary.test.mjs',
