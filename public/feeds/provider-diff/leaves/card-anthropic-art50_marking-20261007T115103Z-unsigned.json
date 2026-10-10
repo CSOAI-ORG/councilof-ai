@@ -1,0 +1,55 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "public.notice",
+ "subject": "Anthropic — art50_marking: bytes changed 2026-10-07",
+ "as_of": "2026-10-07T11:51:11Z",
+ "source_urls": [
+  "https://support.claude.com/en/articles/16266773-how-claude-marks-ai-generated-content"
+ ],
+ "payload": {
+  "kind": "csoai.diff.provider-terms/0.1",
+  "state": "PROBED",
+  "provider": "anthropic",
+  "surface": "art50_marking",
+  "url": "https://support.claude.com/en/articles/16266773-how-claude-marks-ai-generated-content",
+  "prev_sha256": "1dc146806bdde83c60d2caac459b291eff549445574aa505154e1c5ca216d92a",
+  "new_sha256": "b37dced6549ab4fab9259601d932f83cb69e943366d2fac2a60bb0c03b6b3e22",
+  "prev_bytes_sha256": "fb44c63cb365fbecb13d5bdcc9f89f796a8c4b0630b0fc445a8eb360b3784baf",
+  "new_bytes_sha256": "0943eea57fcdd3e4ba53f0ebb41cafae18706eb9309650651464043acf44097b",
+  "prev_fetched_at": "2026-09-14T10:50:14Z",
+  "fetched_at": "2026-10-07T11:51:11Z",
+  "http_status": 200,
+  "robots": "allow",
+  "normaliser": "csoai-norm-v1",
+  "byte_length": {
+   "prev": 355806,
+   "new": 231884
+  },
+  "etag": {
+   "prev": null,
+   "new": null
+  },
+  "last_modified": {
+   "prev": null,
+   "new": null
+  },
+  "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+  "not_a_grade": true,
+  "writes_board": false,
+  "content_stored": false
+ },
+ "sha256": "9117e7bc92c7f7f618b17500e0ed217916512cd0cf705e81f1a046e50f2ac456",
+ "sig_ed25519": null,
+ "unmeasured": [
+  "what changed (content is never stored)",
+  "why it changed",
+  "whether the change is material to anyone",
+  "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+ ],
+ "tags": [
+  "provider-diff",
+  "provider:anthropic",
+  "surface:art50_marking",
+  "hash-only"
+ ]
+}
