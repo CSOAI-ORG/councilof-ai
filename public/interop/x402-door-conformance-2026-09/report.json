@@ -245,27 +245,14 @@
   },
   {
    "catalog_amount": null,
-   "challenge": {
-    "amount": "10000",
-    "checks": {
-     "amount_present": true,
-     "asset_usdc": true,
-     "network_base": true,
-     "payto_matches": true,
-     "resource_named": true,
-     "scheme_exact": true
-    },
-    "conformant": true,
-    "facilitator_seen": true,
-    "n_accepts": 1,
-    "notes": [],
-    "x402Version": 2
-   },
    "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
-   "http": 402,
+   "http": 200,
    "i": 9,
+   "notes": [
+    "expected 402 challenge, got HTTP 200"
+   ],
    "paid_for": "issuance",
-   "state": "PROBED",
+   "state": "DISCOVERED",
    "url": "https://councilof.ai/api/wrapper?id=usdc.e:arbitrum"
   },
   {
@@ -794,7 +781,7 @@
    "url": "https://councilof.ai/api/ras/supply?asset=USDC&ledger=ethereum"
   }
  ],
- "generated_at": "2026-10-06T13:35:47Z",
+ "generated_at": "2026-10-08T13:59:41Z",
  "limitations": [
   "402 challenge shape only \u2014 fulfillment bytes and settlement are not exercised without an authorized payment",
   "challenge conformance is not a delivery guarantee",
@@ -802,9 +789,9 @@
  ],
  "schema": "csoai.x402-door-conformance/0.1",
  "summary": {
-  "discovered_mismatch": 0,
+  "discovered_mismatch": 1,
   "n_doors": 31,
-  "probed_conformant": 31,
+  "probed_conformant": 30,
   "uncheckable": 0
  }
 }
