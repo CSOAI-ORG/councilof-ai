@@ -365,11 +365,46 @@ export async function economicUse(deps: Deps): Promise<Row> {
 
 export async function repeatPayers(deps: Deps): Promise<Row> {
   const url = new URL("/api/revenue", deps.origin).toString();
-  return unmeasured(
-    "/api/revenue publishes distinct payers and settlement totals, not per-wallet settlement counts; " +
-      "a repeat payer cannot be derived from what it exposes, and nothing else records one.",
-    { unit: "wallets that paid more than once", source_url: url },
-  );
+  const got = await fetchJson(deps, url);
+  const base = {
+    unit: "distinct non-self payer wallets with multiple recorded transactions, all time",
+    kind: "settlement-record aggregate",
+    source_url: url,
+    source_field: "one_number.repeat_nonself_payers.all_time",
+    note: "Recorded non-self wallets are not identified organisations; a repeated wallet alone does not establish an independent customer.",
+  };
+  if (!got.ok) return uncheckable(`/api/revenue: ${got.reason}`, base);
+  const one = (got.body as { one_number?: Record<string, unknown> } | null)?.one_number;
+  if (!one || typeof one !== "object" || Array.isArray(one)) {
+    return uncheckable("/api/revenue carries no valid one_number", base);
+  }
+  if (one.status === "UNMEASURED") {
+    return unmeasured(`one_number is UNMEASURED: ${String(one.source ?? "no measured count")}`, base);
+  }
+  if (one.status !== "MEASURED" && one.status !== "PARTIAL") {
+    return uncheckable(`one_number is ${String(one.status ?? "absent")}: ${String(one.source ?? "no measured count")}`, base);
+  }
+  const repeat = one.repeat_nonself_payers;
+  if (!repeat || typeof repeat !== "object" || Array.isArray(repeat)) {
+    return unmeasured("/api/revenue does not publish one_number.repeat_nonself_payers; no repeat count is inferred from payer or settlement totals.", base);
+  }
+  const counts = repeat as Record<string, unknown>;
+  const isCount = (value: unknown): value is number =>
+    typeof value === "number" && Number.isSafeInteger(value) && value >= 0;
+  if (!isCount(counts.all_time)) {
+    return uncheckable("/api/revenue carries no valid repeat_nonself_payers.all_time count", base);
+  }
+  return {
+    state: one.status === "PARTIAL" ? "PARTIAL" : "READ",
+    value: counts.all_time,
+    as_of: deps.now(),
+    as_of_field: "read time (the repeat aggregate carries no measurement timestamp)",
+    last_30d: isCount(counts.last_30d) && counts.last_30d <= counts.all_time ? counts.last_30d : null,
+    last_30d_source_field: "one_number.repeat_nonself_payers.last_30d",
+    ...(typeof counts.definition === "string" ? { definition: counts.definition } : {}),
+    ...(one.status === "PARTIAL" ? { reason: `one_number is PARTIAL: ${String(one.source ?? "settlement-record coverage is incomplete")}` } : {}),
+    ...base,
+  };
 }
 
 export async function board(deps: Deps): Promise<Row> {

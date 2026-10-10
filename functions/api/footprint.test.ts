@@ -30,6 +30,7 @@ import {
   getFootprint,
   grossDistribution,
   onRequestGet,
+  repeatPayers,
   registryListings,
   type Deps,
 } from "./footprint";
@@ -56,7 +57,7 @@ function fakeFetch(routes: Record<string, Route>, calls: string[] = []): typeof 
 }
 
 const healthy = (): Record<string, Route> => ({
-  "/api/revenue": () => Response.json({ one_number: { status: "MEASURED", all_time: 2, last_30d: 1 } }),
+  "/api/revenue": () => Response.json({ one_number: { status: "MEASURED", all_time: 2, last_30d: 1, repeat_nonself_payers: { all_time: 1, last_30d: 0 } } }),
   "/api/gspc": () =>
     Response.json({
       as_of: "2026-09-21T00:00:00Z",
@@ -322,7 +323,7 @@ describe("/api/footprint — the same-origin rows", () => {
     expect(p.github_stars).toMatchObject({ state: "READ", value: 4 });
     expect(p.qualified_distribution.state).toBe("UNMEASURED");
     expect(p.observed_execution.state).toBe("UNMEASURED");
-    expect(p.repeat_payers.state).toBe("UNMEASURED");
+    expect(p.repeat_payers).toMatchObject({ state: "READ", value: 1, last_30d: 0 });
     expect(p.institutional_use.state).toBe("UNMEASURED");
   });
 
@@ -361,6 +362,79 @@ describe("/api/footprint — the same-origin rows", () => {
     );
     expect(p.github_stars.state).toBe("UNCHECKABLE");
     expect(p.economic_use.state).toBe("READ");
+  });
+});
+
+describe("repeat_payers — the revenue authority's named aggregate", () => {
+  const withRevenue = (one_number: unknown) => deps({
+    "/api/revenue": () => Response.json({ one_number }),
+  });
+
+  it("preserves measured zero without inferring a customer or organisation", async () => {
+    const row = await repeatPayers(withRevenue({
+      status: "MEASURED", all_time: 2, settlements: 2,
+      repeat_nonself_payers: { all_time: 0, last_30d: 0 },
+    }));
+    expect(row).toMatchObject({
+      state: "READ", value: 0, last_30d: 0, as_of: NOW,
+      source_url: `${ORIGIN}/api/revenue`,
+      source_field: "one_number.repeat_nonself_payers.all_time",
+    });
+    expect(String(row.note)).toContain("does not establish an independent customer");
+  });
+
+  it("does not derive repeat payers from distinct-payer or settlement totals", async () => {
+    const row = await repeatPayers(withRevenue({ status: "MEASURED", all_time: 2, settlements: 20 }));
+    expect(row).toMatchObject({ state: "UNMEASURED", value: null, as_of: null });
+    expect(String(row.reason)).toContain("no repeat count is inferred");
+  });
+
+  it("preserves an unmeasured authority and its reason rather than turning null into zero", async () => {
+    const row = await repeatPayers(withRevenue({
+      status: "UNMEASURED", source: "no REVENUE_KV bound",
+      repeat_nonself_payers: { all_time: null, last_30d: null },
+    }));
+    expect(row).toMatchObject({ state: "UNMEASURED", value: null, as_of: null });
+    expect(String(row.reason)).toContain("no REVENUE_KV bound");
+  });
+
+  it("keeps unavailable or unqualified revenue responses UNCHECKABLE", async () => {
+    for (const routes of [
+      { "/api/revenue": () => new Response("no", { status: 401 }) },
+      { "/api/revenue": () => { throw new TypeError("network"); } },
+    ]) {
+      expect(await repeatPayers(deps(routes))).toMatchObject({ state: "UNCHECKABLE", value: null });
+    }
+    for (const one of [null, [], { status: "UNCHECKABLE" }, { status: "UNCHECKABLE", repeat_nonself_payers: { all_time: 0 } },
+      { status: "UNKNOWN", repeat_nonself_payers: { all_time: 0 } }]) {
+      expect(await repeatPayers(withRevenue(one))).toMatchObject({ state: "UNCHECKABLE", value: null });
+    }
+  });
+
+  it("rejects malformed all-time counts and never substitutes a window count", async () => {
+    for (const all_time of [null, "0", -1, 0.5, Number.MAX_SAFE_INTEGER + 1]) {
+      const row = await repeatPayers(withRevenue({
+        status: "MEASURED", repeat_nonself_payers: { all_time, last_30d: 1 },
+      }));
+      expect(row).toMatchObject({ state: "UNCHECKABLE", value: null });
+    }
+  });
+
+  it("keeps a valid all-time count while withholding an absent or impossible window count", async () => {
+    for (const last_30d of [null, "0", -1, 0.5, 3]) {
+      expect(await repeatPayers(withRevenue({
+        status: "MEASURED", repeat_nonself_payers: { all_time: 2, last_30d },
+      }))).toMatchObject({ state: "READ", value: 2, last_30d: null });
+    }
+  });
+
+  it("carries a partial authority as PARTIAL rather than upgrading its coverage", async () => {
+    const row = await repeatPayers(withRevenue({
+      status: "PARTIAL", source: "one settlement record unreadable",
+      repeat_nonself_payers: { all_time: 1, last_30d: null },
+    }));
+    expect(row).toMatchObject({ state: "PARTIAL", value: 1, last_30d: null });
+    expect(String(row.reason)).toContain("one settlement record unreadable");
   });
 });
 
