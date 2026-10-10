@@ -1,0 +1,1113 @@
+{
+ "schema": "csoai.canonical-estate-view/0.1",
+ "kind": "reconciled-estate-view",
+ "title": "Canonical estate view — 2026-10-08",
+ "compiled_on": "2026-10-08",
+ "issuer": "CSOAI Ltd (Council of AI), registered in England and Wales, no. 16939677",
+ "doctrine": "Measurement, never certification. UNMEASURED and UNCHECKABLE are first-class states, never zeros and never errors.",
+ "counts_are_pointers": "Every count is quoted with its as_of and source exactly as published; counts are pointers to live sources, never typed integers. Where two sources disagree both values are kept and neither is picked. Rows marked counted_by_view were counted 2026-10-08 from the cited file at read time.",
+ "mirror_of": "view.md (same directory)",
+ "registers": [
+  {
+   "id": "REG-01",
+   "name": "Claims register",
+   "source": "public/claims-register.json",
+   "kind": "claims",
+   "counts": {
+    "claims": 20,
+    "statuses": 5
+   },
+   "as_of": "2026-09-23 (generated_at)",
+   "owner": "UNSTATED"
+  },
+  {
+   "id": "REG-02",
+   "name": "Corrections feed (repo copy)",
+   "source": "public/interop/corrections-feed.json",
+   "kind": "corrections",
+   "counts": {
+    "total_field": 9,
+    "array_length": 10
+   },
+   "as_of": "20260905T062637Z",
+   "owner": "Council of AI (publisher)",
+   "note": "internal contradiction total 9 vs array 10 — see D4"
+  },
+  {
+   "id": "REG-03",
+   "name": "Correction watch (Sep)",
+   "source": "public/interop/correction-watch-2026-09-18.json",
+   "kind": "correction-inventory",
+   "counts": {
+    "scans": 58
+   },
+   "as_of": "2026-09-17T14:28:37.515625+00:00 (generated_at)",
+   "owner": "UNSTATED"
+  },
+  {
+   "id": "REG-04",
+   "name": "Correction watch (Oct)",
+   "source": "public/interop/correction-watch-2026-10-07.json",
+   "kind": "correction-inventory",
+   "counts": {
+    "scans": 93
+   },
+   "as_of": "2026-10-07T04:32:07.663795+00:00 (generated_at)",
+   "owner": "UNSTATED",
+   "note": "signature_state VALID; propagation_state NOT_CHECKED"
+  },
+  {
+   "id": "REG-05",
+   "name": "Corrections ledger (live)",
+   "source": "https://councilof.ai/api/corrections",
+   "kind": "corrections",
+   "counts": {
+    "entries_captured": 13,
+    "live_total": "UNMEASURED (capture truncated at 50,000 chars)"
+   },
+   "as_of": "2026-10-08 (fetch)",
+   "owner": "Council of AI (publisher)",
+   "note": "source of truth functions/api/corrections.ts#LEDGER.corrections; licence CC-BY-4.0"
+  },
+  {
+   "id": "REG-06",
+   "name": "Canonical 23-axis index",
+   "source": "public/interop/canonical-23-axis-index-v0.1.json",
+   "kind": "axis-index",
+   "counts": {
+    "axes": 23,
+    "measured_axes": 22,
+    "rejected_claims": 6
+   },
+   "as_of": "2026-09-17T11:20:43.882361+00:00 (frozen_at)",
+   "owner": "UNSTATED",
+   "licence": "CC-BY-4.0 (board data)"
+  },
+  {
+   "id": "REG-07",
+   "name": "GSPC board (live)",
+   "source": "https://councilof.ai/api/gspc",
+   "kind": "measurement-board",
+   "counts": {
+    "axes": 23,
+    "measured_axes": 23
+   },
+   "as_of": "2026-10-08 (fetch)",
+   "owner": "board authority (evidence-manifest authority.board)"
+  },
+  {
+   "id": "REG-08",
+   "name": "MCP registry census",
+   "source": "public/interop/mcp-registry-2026-09-23/census.json",
+   "kind": "census",
+   "counts": {
+    "servers": 354,
+    "version_rows": 1342
+   },
+   "as_of": "2026-09-23T05:23:59Z (measured_utc)",
+   "owner": "UNSTATED"
+  },
+  {
+   "id": "REG-09",
+   "name": "MCP directories survey",
+   "source": "public/interop/mcp-directories-20260914T110800Z.json",
+   "kind": "census",
+   "counts": {
+    "directories": 8,
+    "registry_version_entries": 1272,
+    "known_defects": 12
+   },
+   "as_of": "20260914T110800Z",
+   "owner": "UNSTATED"
+  },
+  {
+   "id": "REG-10",
+   "name": "Tool census (live)",
+   "source": "https://councilof.ai/api/tools",
+   "kind": "tool-census",
+   "counts": {
+    "probed_records": 38,
+    "distinct_tool_names": 19,
+    "servers": 2,
+    "catalogued_not_probed_servers": 6,
+    "gspc_os_vendored_directories": 363
+   },
+   "as_of": "2026-09-30T17:20:50.056Z (probe_finished)",
+   "owner": "UNSTATED",
+   "note": "gspc-os count UNVERIFIABLE off-pod"
+  },
+  {
+   "id": "REG-11",
+   "name": "Capability registry",
+   "source": "council-os/capabilities.json",
+   "kind": "capability-declaration",
+   "counts": {
+    "capabilities": 258,
+    "http": 212,
+    "mcp_tool": 19,
+    "a2a_skill": 12,
+    "population_door": 10,
+    "well_known": 5,
+    "LIVE": 220
+   },
+   "as_of": "2026-10-08 (capability-registry.mjs --stats derived)",
+   "owner": "UNSTATED"
+  },
+  {
+   "id": "REG-12",
+   "name": "PRODUCERS",
+   "source": "docs/operations/PRODUCERS.json",
+   "kind": "producer-registry",
+   "counts": {
+    "producers": 15,
+    "not_yet_classified_approx": 28
+   },
+   "as_of": "2026-09-06T10:20:00Z",
+   "owner": "UNSTATED",
+   "note": "file note says 12 entries were RUN — see D7"
+  },
+  {
+   "id": "REG-13",
+   "name": "Verified listings",
+   "source": "public/verified-listings.md",
+   "kind": "listings",
+   "counts": {
+    "verified_listings": 6,
+    "pending_submissions": 5
+   },
+   "as_of": "2026-10-07 (compiled)",
+   "owner": "UNSTATED"
+  },
+  {
+   "id": "REG-14",
+   "name": "Signed card index",
+   "source": "public/signed/card_index.json",
+   "kind": "signed-cards",
+   "counts": {
+    "n_cards": 335
+   },
+   "as_of": "2026-08-19T09:24:39.174287+00:00 (created)",
+   "owner": "card-attestation signer"
+  },
+  {
+   "id": "REG-15",
+   "name": "Cards bundle",
+   "source": "public/cards-bundle.json",
+   "kind": "cards",
+   "counts": {
+    "card_count": 4331,
+    "root_card_count": 319
+   },
+   "as_of": "2026-09-30T05:05:34Z",
+   "owner": "scripts/generate-cards-bundle.mjs"
+  },
+  {
+   "id": "REG-16",
+   "name": "Public root",
+   "source": "https://councilof.ai/root.json",
+   "kind": "merkle-root",
+   "counts": {
+    "card_count": 50
+   },
+   "as_of": "2026-09-02T04:22:20Z (fetched 2026-10-08)",
+   "owner": "UNSTATED"
+  },
+  {
+   "id": "REG-17",
+   "name": "Evidence manifest",
+   "source": "public/evidence-manifest.json",
+   "kind": "population-manifest",
+   "counts": {
+    "public_root": 319,
+    "signed_card_index": 335,
+    "corrections": 90,
+    "claim_registry_heads": 3
+   },
+   "as_of": "2026-10-03T11:10:52.808709Z (derived_at_utc)",
+   "owner": "UNSTATED"
+  },
+  {
+   "id": "REG-18",
+   "name": "Chain facts",
+   "source": "public/signed/chain-facts.json",
+   "kind": "derived-facts",
+   "counts": {
+    "derived_from": 4
+   },
+   "as_of": "2026-08-19T09:24:39.174287+00:00",
+   "owner": "scripts/derive-chain-facts.mjs"
+  },
+  {
+   "id": "REG-19",
+   "name": "Findings index",
+   "source": "public/signed/findings_index.json",
+   "kind": "findings",
+   "counts": {
+    "findings": 335,
+    "models": 64,
+    "axes": 16,
+    "regulators": 4
+   },
+   "as_of": "2026-08-19T09:24:39.174226+00:00",
+   "owner": "UNSTATED"
+  },
+  {
+   "id": "REG-20",
+   "name": "Frozen board snapshots",
+   "source": "public/signed/gspc-board*.signed.json + *.status.json",
+   "kind": "frozen-boards",
+   "counts": {
+    "freezes": 3
+   },
+   "as_of": "2026-09-02 (frozen; superseded 2026-09-25 by .2026-09-25. freeze)",
+   "owner": "current_authority /api/gspc"
+  },
+  {
+   "id": "REG-21",
+   "name": "Living board (legacy)",
+   "source": "public/signed/board_living.json",
+   "kind": "board",
+   "counts": {
+    "boards": 1
+   },
+   "as_of": "2026-08-18T03:22:16Z (updated)",
+   "owner": "signer 8f9a00a2… (not anchored)",
+   "note": "verification_state UNVERIFIABLE — see D8"
+  },
+  {
+   "id": "REG-22",
+   "name": "Rulings",
+   "source": "public/signed/rulings/ (+ index.json)",
+   "kind": "rulings",
+   "counts": {
+    "rulings": 8
+   },
+   "as_of": "2026-09-28/29 (dated ids)",
+   "owner": "UNSTATED",
+   "counts_note": "counted_by_view 2026-10-08"
+  },
+  {
+   "id": "REG-23",
+   "name": "Quest instruments",
+   "source": "public/signed/gspc-quest-instruments.json",
+   "kind": "instruments",
+   "counts": {
+    "instruments": 12
+   },
+   "as_of": "2026-09-04 (generated_at; version gspc-quest-pack/2026-09-04)",
+   "owner": "UNSTATED"
+  },
+  {
+   "id": "REG-24",
+   "name": "Hub census baseline",
+   "source": "public/signed/hub-census-baseline.json",
+   "kind": "census",
+   "counts": {
+    "models": 3032028,
+    "measured": 0
+   },
+   "as_of": "2026-08-31T03:58:08Z",
+   "owner": "UNSTATED"
+  },
+  {
+   "id": "REG-25",
+   "name": "Swift census",
+   "source": "public/interop/swift-census.json",
+   "kind": "census",
+   "counts": {
+    "banks": 26,
+    "LIVE": 3,
+    "COMMITTED": 9,
+    "DISCOVERED": 14
+   },
+   "as_of": "2026-09-01",
+   "owner": "UNSTATED",
+   "note": "'not a 50'; NOT MEASURED — no ISO 20022 artifact fetched"
+  },
+  {
+   "id": "REG-26",
+   "name": "Art50 census",
+   "source": "public/interop/art50-census-2026-09/census.json",
+   "kind": "census",
+   "counts": {
+    "generators": 4
+   },
+   "as_of": "2026-09-12T17:09:06Z",
+   "owner": "UNSTATED"
+  },
+  {
+   "id": "REG-27",
+   "name": "HF census",
+   "source": "public/interop/hf-census.json",
+   "kind": "census",
+   "counts": {
+    "cards": 0,
+    "badges": 0
+   },
+   "as_of": "2026-09-05T124000Z",
+   "owner": "UNSTATED",
+   "note": "status NO_MEASUREMENT_CARDS"
+  },
+  {
+   "id": "REG-28",
+   "name": "Regulator census",
+   "source": "public/interop/regulator-census.json",
+   "kind": "census",
+   "counts": {
+    "targets": 6
+   },
+   "as_of": "2026-09-06T04:21:32Z",
+   "owner": "UNSTATED"
+  },
+  {
+   "id": "REG-29",
+   "name": "Agent discovery census",
+   "source": "public/interop/agent-discovery-census.json",
+   "kind": "census",
+   "counts": {
+    "canonical_agent_cards": 1,
+    "tool_scoped_cards": 12
+   },
+   "as_of": "UNSTATED in file (revision field only)",
+   "owner": "UNSTATED"
+  },
+  {
+   "id": "REG-30",
+   "name": "State report numbers",
+   "source": "public/state/2026-09/numbers.json",
+   "kind": "state-report",
+   "counts": {
+    "OPERATOR_API": 20,
+    "STATE_PROOF_VERIFIED": 16,
+    "STATE_PROOF_RECORDED": 6,
+    "UNCHECKABLE": 6,
+    "measurement_batches": 8
+   },
+   "as_of": "2026-09-26T10:34:15Z",
+   "owner": "CSOAI Ltd (publisher field)"
+  },
+  {
+   "id": "REG-31",
+   "name": "Pipelines index",
+   "source": "public/pipelines/index.json",
+   "kind": "pipelines",
+   "counts": {
+    "pipelines": 6
+   },
+   "as_of": "20260905T052052Z",
+   "owner": "UNSTATED"
+  },
+  {
+   "id": "REG-32",
+   "name": "Fleet-b lock",
+   "source": "public/fleet-b-lock.json",
+   "kind": "leftover-honesty",
+   "counts": {
+    "measured": false
+   },
+   "as_of": "2026-08-31T15:55:00+01:00 (fetched)",
+   "owner": "UNSTATED"
+  },
+  {
+   "id": "REG-33",
+   "name": "GSPC overlays",
+   "source": "public/gspc-overlays.json",
+   "kind": "overlays",
+   "counts": {
+    "board_slots": 23,
+    "overlays": 1,
+    "labelled_facts": 5
+   },
+   "as_of": "2026-09-01",
+   "owner": "UNSTATED"
+  },
+  {
+   "id": "REG-34",
+   "name": "Schemas",
+   "source": "public/schemas/*.schema.json",
+   "kind": "schemas",
+   "counts": {
+    "files": 6
+   },
+   "as_of": "counted_by_view 2026-10-08",
+   "owner": "UNSTATED"
+  },
+  {
+   "id": "REG-35",
+   "name": "Revenue counters (live)",
+   "source": "https://councilof.ai/api/revenue",
+   "kind": "revenue",
+   "counts": {
+    "issuances": 15,
+    "proofs": 1,
+    "licences": null,
+    "settled_usdc_atomic": 30000,
+    "distinct_nonself_payers": 2,
+    "settlements": 2,
+    "self_settlements": 22,
+    "zero_value_settlements": 8,
+    "repeat_nonself_payers": 0
+   },
+   "as_of": "2026-10-08 (fetch)",
+   "owner": "Revenue (source field)"
+  },
+  {
+   "id": "REG-36",
+   "name": "Competitor intelligence packet",
+   "source": "~/Downloads/CSOAI_Competitor_Intelligence_2026-10-08.md (+ ~/clawd/_alignment/competitor-intel-20261008/ copy)",
+   "kind": "research-packet",
+   "counts": {
+    "profiles": 26,
+    "sources": 57,
+    "candidate_tests": 14,
+    "runtime_results": 0
+   },
+   "as_of": "2026-10-08",
+   "owner": "prepared for Nicholas Templeman"
+  },
+  {
+   "id": "REG-37",
+   "name": "Master EAT blueprint",
+   "source": "~/Downloads/MASTER_EAT_BLUEPRINT.md",
+   "kind": "blueprint",
+   "counts": {
+    "capability_rows": 10,
+    "product_families": 3
+   },
+   "as_of": "2026-09-21 (references checked)",
+   "owner": "UNSTATED"
+  },
+  {
+   "id": "REG-38",
+   "name": "Catalog of catalogs",
+   "source": "/Users/nicholas/_alignment/CATALOG-OF-CATALOGS-2026-09-28.md",
+   "kind": "catalogue-census",
+   "counts": {
+    "inventory_rows": 105,
+    "families": 8,
+    "regulator_rows_R1_R10": 10
+   },
+   "as_of": "2026-09-28 (read window 14:28-15:2xZ)",
+   "owner": "lane-owned research; publication HELD",
+   "note": "literal R1-R10 ids live HERE (third-party regulator registers) — different population from this view's service R-ids"
+  },
+  {
+   "id": "REG-39",
+   "name": "Catapult shape",
+   "source": "public/interop/catapult-shape-2026-09-18.md",
+   "kind": "design",
+   "counts": {
+    "surfaces": 17
+   },
+   "as_of": "2026-09-18",
+   "owner": "signer-gated",
+   "note": "state GATE_BLOCKED; nothing deployed"
+  },
+  {
+   "id": "REG-40",
+   "name": "Agent work orders",
+   "source": "~/Downloads/AGENT_WORK_ORDERS.json",
+   "kind": "work-orders",
+   "counts": {
+    "referenced_programme_tasks": "C/I/M/H/D/R01-R11"
+   },
+   "as_of": "UNSTATED",
+   "owner": "dispatch_enabled: false",
+   "note": "R-series task definitions live in the pod programme/plan.json, not on this host"
+  }
+ ],
+ "service_families_provenance": "R-ids are view-local canonical ids minted 2026-10-08 over the ten capability rows of MASTER_EAT_BLUEPRINT §3 (~/Downloads/MASTER_EAT_BLUEPRINT.md). No mined register carries a literal R1-R10 label for CSOAI services; the only literal R1-R10 register found is third-party regulator rows in /Users/nicholas/_alignment/CATALOG-OF-CATALOGS-2026-09-28.md §1.8 (REG-38). Family verbs are from the reconciliation brief.",
+ "r_catalogue": [
+  {
+   "id": "R1",
+   "capability": "VERIFY",
+   "family": "Verify",
+   "boundary": "Free institutional rail. Check existing public evidence; batch/private integration may be a paid service. No new public per-call price approved.",
+   "source": "MASTER_EAT_BLUEPRINT §3"
+  },
+  {
+   "id": "R2",
+   "capability": "CLAIM MAINTENANCE",
+   "family": "Maintain",
+   "boundary": "Core tested; private own-claim projection active; paid public fulfilment not established.",
+   "source": "MASTER_EAT_BLUEPRINT §3"
+  },
+  {
+   "id": "R3",
+   "capability": "MONITOR",
+   "family": "Operate",
+   "boundary": "Source change, cadence and freshness information. Detection is not automatically a measured legal or factual change.",
+   "source": "MASTER_EAT_BLUEPRINT §3"
+  },
+  {
+   "id": "R4",
+   "capability": "REPRODUCE",
+   "family": "Measure",
+   "boundary": "Version-bound reproduction and disclosed divergence. Same-code repetition, cross-environment repetition and independent implementation are separate.",
+   "source": "MASTER_EAT_BLUEPRINT §3"
+  },
+  {
+   "id": "R5",
+   "capability": "CONFORMANCE",
+   "family": "Verify",
+   "boundary": "Run a pinned protocol suite and return a portable result. Passing a finite suite is not certification of every runtime behavior.",
+   "source": "MASTER_EAT_BLUEPRINT §3"
+  },
+  {
+   "id": "R6",
+   "capability": "EVIDENCE PACKS",
+   "family": "Assemble",
+   "boundary": "Assemble a defined source/claim/history packet for a relying party. Not automatically insurance-grade or accepted by a regulator.",
+   "source": "MASTER_EAT_BLUEPRINT §3"
+  },
+  {
+   "id": "R7",
+   "capability": "LAG / FRESHNESS FEED",
+   "family": "Operate",
+   "boundary": "Disclosed population, timestamps, limits and revisions. Index design and benchmark-regulatory perimeter require review.",
+   "source": "MASTER_EAT_BLUEPRINT §3"
+  },
+  {
+   "id": "R8",
+   "capability": "EVAL CONTINUITY",
+   "family": "Recover",
+   "boundary": "Archive and migrate authorized hosted evals, preserving versions and parity limits. Official deadline verified; client-specific execution not yet commissioned.",
+   "source": "MASTER_EAT_BLUEPRINT §3"
+  },
+  {
+   "id": "R9",
+   "capability": "PRIVATE DEPLOYMENT",
+   "family": "Operate",
+   "boundary": "Customer-controlled evidence sidecar and qualified adapters. Legacy access and production changes need scoped authorization.",
+   "source": "MASTER_EAT_BLUEPRINT §3"
+  },
+  {
+   "id": "R10",
+   "capability": "ASSISTED EVALUATION",
+   "family": "Review",
+   "boundary": "Human/domain-reviewed evaluation of an agreed claim set. No accredited-audit or compliance verdict implied; no public price band approved.",
+   "source": "MASTER_EAT_BLUEPRINT §3"
+  }
+ ],
+ "families": [
+  {
+   "family": "Verify",
+   "members": [
+    "R1",
+    "R5"
+   ],
+   "precise_output": "Three-state verdict VALID/INVALID/UNCHECKABLE over a signed measurement card, Merkle inclusion, or public-root leaf; free forever.",
+   "method_version_pointer": "/signed/HOW-TO-VERIFY.md; pinned did:web:csoai.org keys #card-attestation-1, #card-attestation-2 (rotation 2026-09-27), #board-attestation-1; csoai.gspc-card-index/0.1.",
+   "freshness": "Verdicts re-read live bytes at call time; a card names its signing key; an old timestamp proof can still verify (age is not invalidity).",
+   "failure_state": "Inline key outside pinned set -> INVALID; DID key outside pinned set -> UNCHECKABLE; source unreachable -> UNREACHABLE; 'could not check' is never 'forged'.",
+   "verification_route": "https://councilof.ai/gspc-verify; MCP tools verify_card, verify_inclusion, get_root, verify_capsule (probed 2026-09-30).",
+   "status": "routinely-operated",
+   "status_justification": "Endpoint + tools enumerated 2026-10-07 (public/verified-listings.md #6) and probed 2026-09-30 (https://councilof.ai/api/tools); CR-001 status live (public/claims-register.json, 2026-09-23)."
+  },
+  {
+   "family": "Maintain",
+   "members": [
+    "R2"
+   ],
+   "precise_output": "Maintained claim record: predicate+scope, bound evidence dependencies, freshness policy, correction history, declared delivery audience.",
+   "method_version_pointer": "Claim Maintenance spec (CC0) + reference implementation scripts/claim_maintenance/claim_maintenance.py (MIT) — licences from the reconciliation brief, UNSTATED in mined files; lifecycle register->bind->qualify->observe->change/expiry->recheck->review->maintain/correct/supersede/unresolved->deliver->read back->learn (MASTER_EAT_BLUEPRINT §2).",
+   "freshness": "Per-claim cadence and expiry; no universal half-life (MASTER_EAT_BLUEPRINT §2).",
+   "failure_state": "Claim remains visible while uncheckable: scoped unavailable result with reasons, never a green badge; a source outage is never recoded as failed compliance.",
+   "verification_route": "Private readbacks state/latest.json, state/preview.html, state/cascade.sqlite (MASTER_EAT_BLUEPRINT §15 [I07]); public corrections at https://councilof.ai/api/corrections.",
+   "status": "demonstrated",
+   "status_justification": "52 synthetic tests passed on two hosts, same implementation (MASTER_EAT_BLUEPRINT [I02]); own-estate projection returned three contradictions and two uncheckable states ([I07]). Paid public fulfilment separately being-qualified ('not established', §3 row)."
+  },
+  {
+   "family": "Measure",
+   "members": [
+    "R4"
+   ],
+   "precise_output": "GSPC axis rows (MEASURED/UNMEASURED, n, accuracy where meaningful, Wilson interval, SEPARATED/TIE/UNTESTED), deterministic financial fact runs, signed measurement cards and capsules.",
+   "method_version_pointer": "GSPC Methodology HB.0, DOI 10.5281/zenodo.21991104 (UNAVAILABLE since 2026-09-29; alternative https://councilof.ai/methodology/ is not the deposit's bytes); GSPC_AXIS_REGISTRY.json v2; separation rule fixed 2026-08-13 (exact McNemar p<0.05); deterministic grading on 15,580 per-item rows (live /api/gspc measured_on).",
+   "freshness": "behavioural axes 2026-08-12, jail 2026-08-18, financial 2026-08-25 (run as_of 2026-09-07T11:30:35Z); living stamp gold_run 2026-08-18T03:22:16Z.",
+   "failure_state": "UNMEASURED is a published slot and not evidence of measurement; a TIE is not a win; UNTESTED is not a tie; null never 0.",
+   "verification_route": "GET https://councilof.ai/api/gspc; tools get_axis, board_totals; board stamp at /gspc-verify#board-stamp.",
+   "status": "routinely-operated",
+   "status_justification": "Board 'live, machine-readable, reports UNMEASURED honestly' (CR-010 live, public/claims-register.json). Caveat: no signed measurement card produced since 2026-09-23T03:24:19Z per open item in https://councilof.ai/api/corrections (free-space fault) — card-signing lane stalled as of that record."
+  },
+  {
+   "family": "Assemble",
+   "members": [
+    "R6"
+   ],
+   "precise_output": "OSCAL 1.1.0 evidence bundle assembled only from already-signed measurement cards plus one manifest card-v0; or historical receipts batch with Merkle inclusion paths and root index.",
+   "method_version_pointer": "/api/evidence-bundle; csoai.measurement-capsule/0.2 (RFC 6962 Merkle, 0x00/0x01 domain separation); receipts_batch <=200 leaves per window.",
+   "freshness": "Assembled at request time from already-signed cards; free preview states what the paid call returns (sha256 of exact bytes).",
+   "failure_state": "Zero relevant cards ships EMPTY — never an error and never a clean bill; manifest unsigned when the signing key is absent; never a conformity assessment or compliance determination.",
+   "verification_route": "Every shipped card verifies free at https://councilof.ai/gspc-verify; tools evidence_bundle, evidence_bundle_preview, receipts_batch (probed 2026-09-30).",
+   "status": "demonstrated",
+   "status_justification": "Tools live and probed 2026-09-30 (https://councilof.ai/api/tools). Commercial routine being-qualified: no bundle sale on record — /api/revenue one_number shows 2 non-self settlements across the art50 and eunomia-data doors (2026-10-08)."
+  },
+  {
+   "family": "Recover",
+   "members": [
+    "R8"
+   ],
+   "precise_output": "Correction and supersession records, fix-receipt chains, bank-restoration receipts; hosted-eval continuity/migration packets (designed).",
+   "method_version_pointer": "docs/operations/CORRECTION_RUNBOOK_2026-08-25.md; /interop/fix-receipts/fix-receipt-chain.jsonl; corrections_ref<->draft_id join rule (C-2026-0923 series); Promptfoo migration path (MASTER_EAT_BLUEPRINT §12 [W14,W15]).",
+   "freshness": "Correction-inventory runs 2026-09-18 (58 rows) and 2026-10-07 (93 rows); hosted OpenAI Evals read-only 2026-10-31, API shutdown 2026-11-30.",
+   "failure_state": "Cured state not holding (C-2026-0929-04); propagation_state NOT_CHECKED and global_propagation_rate null with 0 of 93 readbacks (correction-watch-2026-10-07 verdict).",
+   "verification_route": "GET https://councilof.ai/api/corrections; public/interop/correction-watch-*.json; fix receipts.",
+   "status": "being-qualified",
+   "status_justification": "Detection and repair on record, but propagation re-check is future work ('the next iteration adds the re-check loop', correction-watch-2026-10-07 disclaimers) and eval-continuity execution is 'not yet commissioned' (MASTER_EAT_BLUEPRINT §3)."
+  },
+  {
+   "family": "Operate",
+   "members": [
+    "R3",
+    "R7",
+    "R9"
+   ],
+   "precise_output": "Trust snapshots (MCP handshake, x402 catalog), census runs, state-report numbers, freshness/lag feeds (designed), private evidence sidecars (designed).",
+   "method_version_pointer": "docs/operations/MCP-PROTOCOL-CONTRACT.md, PUBLICATION-BUS.md, BODY-RUNBOOK.md; probe method 'JSON-RPC 2.0 over HTTPS POST: initialize -> tools/list' (/api/tools probe_method); capability-registry daily-loop probe sets (160 safe / 98 may-not-run).",
+   "freshness": "Snapshots per round at /interop/mcp-trust/latest.json; state report as_of 2026-09-26T10:34:15Z; probes last run 2026-09-30T17:20:50Z.",
+   "failure_state": "UNREACHABLE and UNCHECKABLE are distinct and never folded; counts-only doctrine (host details withheld); heartbeat NOT_DEAD_INFERRED vs CONFIRMED_LIVE (catapult-shape-2026-09-18.md).",
+   "verification_route": "/interop/mcp-trust/latest.json; /api/tools probe log (evidence/mcp-registry.json); /state/2026-09/.",
+   "status": "routinely-operated",
+   "status_justification": "Dated recurring artefacts across 2026-09 (censuses 09-01 to 09-23), state report 09-26, probe run 09-30, correction watch 10-07 — all cited in this view's register inventory."
+  },
+  {
+   "family": "Review",
+   "members": [
+    "R10"
+   ],
+   "precise_output": "Signed rulings, adjudicated corrections entries (what was wrong / how caught / what changed), counsel-gate statuses inside evidence bundles; assisted evaluation (designed).",
+   "method_version_pointer": "public/schemas/csoai-ruling-0.1.schema.json; GSPC adjudication; corrections timing contract (detected_at/published_at/time_to_correct, /api/corrections timing_fields).",
+   "freshness": "8 rulings dated 2026-09-28/29; corrections carry detected_by categories; published_at UNRECORDED where the first-serving deploy is unknown.",
+   "failure_state": "Missing or rejected approval cannot cause the protected effect (test contract T14, competitor packet §6 — DESIGN ONLY, NOT EXECUTED); a persona audit is not an accredited audit.",
+   "verification_route": "/signed/rulings/index.json and each ruling; https://councilof.ai/api/corrections#<id>.",
+   "status": "demonstrated",
+   "status_justification": "8 signed rulings on record (public/signed/rulings/, counted 2026-10-08). Customer-facing assisted evaluation being-qualified — competitor packet 2026-10-08: 'The runtime result count is zero.'"
+  }
+ ],
+ "assets": [
+  {
+   "asset": "Claim Maintenance spec",
+   "kind": "instrument(spec)",
+   "source": "named in reconciliation brief; core scripts/claim_maintenance/claim_maintenance.py (MASTER_EAT_BLUEPRINT [I02])",
+   "licence": "CC0 (stated in brief; UNSTATED in mined files)"
+  },
+  {
+   "asset": "Claim Maintenance reference implementation",
+   "kind": "adapter/code",
+   "source": "scripts/claim_maintenance/claim_maintenance.py",
+   "licence": "MIT (stated in brief; UNSTATED in mined files)"
+  },
+  {
+   "asset": "GSPC board data (23-axis payloads)",
+   "kind": "dataset",
+   "source": "https://councilof.ai/api/gspc; public/interop/canonical-23-axis-index-v0.1.json",
+   "licence": "CC-BY-4.0 (index totals.license)"
+  },
+  {
+   "asset": "Corrections ledger",
+   "kind": "dataset",
+   "source": "https://councilof.ai/api/corrections",
+   "licence": "CC-BY-4.0 (payload license field)"
+  },
+  {
+   "asset": "csoai.gspc-axes/0.5",
+   "kind": "schema",
+   "source": "https://councilof.ai/api/gspc schema field",
+   "licence": "UNSTATED (board data CC-BY-4.0)"
+  },
+  {
+   "asset": "csoai.gspc-living/0.2 (supersedes 0.1)",
+   "kind": "schema",
+   "source": "living_stamp / public/signed/board_living.json",
+   "licence": "UNSTATED"
+  },
+  {
+   "asset": "csoai.gspc-card-index/0.1",
+   "kind": "schema",
+   "source": "public/signed/card_index.json",
+   "licence": "UNSTATED"
+  },
+  {
+   "asset": "csoai.corrections/0.1",
+   "kind": "schema",
+   "source": "https://councilof.ai/api/corrections",
+   "licence": "CC-BY-4.0 (payload licence)"
+  },
+  {
+   "asset": "csoai.measurement-capsule/0.2 (v0.1 superseded)",
+   "kind": "schema",
+   "source": "/api/tools measurement_index + verify_capsule",
+   "licence": "UNSTATED"
+  },
+  {
+   "asset": "csoai.capability-registry/1",
+   "kind": "schema",
+   "source": "council-os/capabilities.json",
+   "licence": "UNSTATED"
+  },
+  {
+   "asset": "csoai.claim-registry/0.3",
+   "kind": "schema",
+   "source": "public/evidence-manifest.json claim_registry_heads",
+   "licence": "UNSTATED"
+  },
+  {
+   "asset": "public/schemas/* (csoai-ruling-0.1, csoai-completion-record-0.1, csoai-certificate-0.1, csoai-refund-record-0.1, mirror-connector-envelope-1.0)",
+   "kind": "schemas",
+   "source": "public/schemas/*.schema.json",
+   "licence": "UNSTATED"
+  },
+  {
+   "asset": "GSPC per-item rows corpus (csoai/gspc-peritem-rows-2026-08-12, 15,580 rows)",
+   "kind": "dataset",
+   "source": "/api/gspc mde.source (revision 294e4cf9...)",
+   "licence": "UNSTATED"
+  },
+  {
+   "asset": "csoai/gspc-prv, csoai/gspc-asi",
+   "kind": "datasets (HF)",
+   "source": "dataset_url fields on live axes",
+   "licence": "per-repo; UNSTATED here"
+  },
+  {
+   "asset": "csoai/erc8004-agent-census",
+   "kind": "dataset (HF)",
+   "source": "/Users/nicholas/_alignment/CATALOG-OF-CATALOGS-2026-09-28.md A6",
+   "licence": "UNSTATED"
+  },
+  {
+   "asset": "Gold banks (e.g. gspc-jail 71 rows, pinned digest 0b45b620...)",
+   "kind": "instrument input",
+   "source": "C-2026-0923-series fix receipt (/api/corrections)",
+   "licence": "UNSTATED"
+  },
+  {
+   "asset": "GSPC quest instruments (gspc-quest-pack/2026-09-04)",
+   "kind": "instruments (12)",
+   "source": "public/signed/gspc-quest-instruments.json",
+   "licence": "UNSTATED"
+  },
+  {
+   "asset": "Separation-test rule + GSPC_AXIS_REGISTRY.json v2",
+   "kind": "instrument",
+   "source": "SEPARATION_TEST_2026-08-13.md via /api/gspc note",
+   "licence": "UNSTATED"
+  },
+  {
+   "asset": "csoai-gspc-mcp (npm 0.1.0; served v1.4.4)",
+   "kind": "adapter",
+   "source": "/api/tools server_endpoint; public/verified-listings.md #6",
+   "licence": "UNSTATED"
+  },
+  {
+   "asset": "x402 paid doors (art50-marking-evidence, evidence-bundle, rwa-evidence, receipts-batch, commission-card)",
+   "kind": "adapters (services)",
+   "source": "/api/tools paid tools; /api/revenue distinct_payers_by_door",
+   "licence": "n/a (metered; terms only in the 402 challenge)"
+  },
+  {
+   "asset": "Probe scripts (scripts/mcp-stdio-probe.py, scripts/interop/x402-bazaar-audit.py)",
+   "kind": "adapters",
+   "source": "/api/tools external_catalogues note; /api/revenue indexing.note",
+   "licence": "UNSTATED"
+  },
+  {
+   "asset": "Official MCP Registry data",
+   "kind": "external dataset",
+   "source": "CATALOG-OF-CATALOGS M1 (ToS §10)",
+   "licence": "CC0"
+  },
+  {
+   "asset": "MCP Toplist cross-catalog dataset",
+   "kind": "external dataset",
+   "source": "CATALOG-OF-CATALOGS M12",
+   "licence": "CC-BY-4.0"
+  },
+  {
+   "asset": "a2aregistry code / Docker MCP catalog repo",
+   "kind": "external code",
+   "source": "CATALOG-OF-CATALOGS A1, M6",
+   "licence": "MIT"
+  }
+ ],
+ "confirmed_divergences": [
+  {
+   "id": "D1",
+   "topic": "board axis count across surfaces",
+   "values": [
+    {
+     "value": "23 axes · 23 measured",
+     "source": "https://councilof.ai/api/gspc totals",
+     "as_of": "2026-10-08 (fetch)"
+    },
+    {
+     "value": "23 axis · 22 measured",
+     "source": "public/interop/canonical-23-axis-index-v0.1.json",
+     "as_of": "2026-09-17T11:20:43Z (frozen_at)"
+    },
+    {
+     "value": "22 axis · 22 measured; gspc_registry_axes 14",
+     "source": "https://councilof.ai/api/cards",
+     "as_of": "stamp 2026-08-18, packaged 2026-08-24"
+    }
+   ],
+   "notes": "Pre-sweep the endpoint reported 14 (live totals sweep_note, ADR-001 sweep 2026-08-26). gspc-overlays.json board_slots 23 (2026-09-01) called effect-binding a declared slot with no run; live board shows effect-binding MEASURED n=261."
+  },
+  {
+   "id": "D2",
+   "topic": "separation states of the 14 model-comparison axes",
+   "values": [
+    {
+     "value": "0 of 14 separated · 7 TIE · 7 UNTESTED",
+     "source": "https://councilof.ai/api/gspc totals",
+     "as_of": "2026-10-08 (fetch)"
+    },
+    {
+     "value": "separated_leads 0 · ties 2 · untested_separations 12 · public_leader_count 3",
+     "source": "public/interop/canonical-23-axis-index-v0.1.json totals",
+     "as_of": "2026-09-17"
+    }
+   ],
+   "notes": "Each derives from its own axis array at its own date. jail separation UNTESTED since 2026-09-29 (C-2026-0929-02)."
+  },
+  {
+   "id": "D3",
+   "topic": "public-root / card population counts",
+   "values": [
+    {
+     "value": "card_count 50",
+     "source": "https://councilof.ai/root.json",
+     "as_of": "2026-09-02T04:22:20Z"
+    },
+    {
+     "value": "319 (count_field public/root.json#card_count)",
+     "source": "public/evidence-manifest.json",
+     "as_of": "2026-10-03T11:10:52Z"
+    },
+    {
+     "value": "root_card_count 319; card_count 4331",
+     "source": "public/cards-bundle.json",
+     "as_of": "2026-09-30T05:05:34Z"
+    },
+    {
+     "value": "signed index n_cards 335",
+     "source": "public/signed/card_index.json",
+     "as_of": "2026-08-19T09:24:39Z"
+    }
+   ],
+   "notes": "Manifest relationships declare these as separate populations never to be added; the 50-vs-319 pair cites the SAME field and is a genuine contradiction (stale served root vs manifest reading)."
+  },
+  {
+   "id": "D4",
+   "topic": "corrections counts",
+   "values": [
+    {
+     "value": "total 9 vs array length 10 (internal contradiction)",
+     "source": "public/interop/corrections-feed.json",
+     "as_of": "20260905T062637Z"
+    },
+    {
+     "value": "58 scans",
+     "source": "public/interop/correction-watch-2026-09-18.json",
+     "as_of": "2026-09-17T14:28:37Z"
+    },
+    {
+     "value": "90",
+     "source": "public/evidence-manifest.json (functions/api/corrections.ts#LEDGER.corrections)",
+     "as_of": "2026-10-03T11:10:52Z"
+    },
+    {
+     "value": "93 inventory rows",
+     "source": "public/interop/correction-watch-2026-10-07.json",
+     "as_of": "2026-10-07T04:32:07Z"
+    },
+    {
+     "value": "27 unique C-ids in the local checkout",
+     "source": "functions/api/corrections.ts",
+     "as_of": "2026-10-08 (counted)"
+    },
+    {
+     "value": "live total UNMEASURED by this view (capture truncated at 50,000 chars; 13 entries seen)",
+     "source": "https://councilof.ai/api/corrections",
+     "as_of": "2026-10-08 (fetch)"
+    }
+   ],
+   "notes": "Five distinct numbers over one ledger concept. Populations and dates differ; the feed's own total-vs-array mismatch is a defect in that file."
+  },
+  {
+   "id": "D5",
+   "topic": "MCP tool and registry counts",
+   "values": [
+    {
+     "value": "19 distinct tools / 38 probed records / 2 servers (14 free + 5 paid)",
+     "source": "https://councilof.ai/api/tools; public/verified-listings.md",
+     "as_of": "probe 2026-09-30; listings 2026-10-07"
+    },
+    {
+     "value": "12 tools advertised (stale listing)",
+     "source": "Claude Connectors Directory via public/verified-listings.md row 2",
+     "as_of": "2026-10-07 (retrieval)"
+    },
+    {
+     "value": "registry version entries 1272",
+     "source": "public/interop/mcp-directories-20260914T110800Z.json",
+     "as_of": "20260914T110800Z"
+    },
+    {
+     "value": "354 servers / 1342 version rows",
+     "source": "public/interop/mcp-registry-2026-09-23/census.json",
+     "as_of": "2026-09-23T05:23:59Z"
+    },
+    {
+     "value": "one service, two registry names disagreeing on version (1.4.3 vs 1.4.2) and remote spelling; served v1.4.4",
+     "source": "CATALOG-OF-CATALOGS M1 (2026-09-28); public/verified-listings.md #6 (2026-10-07)",
+     "as_of": "2026-09-28 / 2026-10-07"
+    },
+    {
+     "value": "gspc-os 363 server directories UNVERIFIABLE off-pod",
+     "source": "https://councilof.ai/api/tools external_catalogues_not_probed",
+     "as_of": "2026-09-30"
+    }
+   ],
+   "notes": "Catalogued tools are never added to probed tools (/api/tools note)."
+  },
+  {
+   "id": "D6",
+   "topic": "revenue counters vs 2 Oct baseline",
+   "values": [
+    {
+     "value": "1 non-self payer, 1 settlement, 0.02 USDC",
+     "source": "CSOAI_Competitor_Intelligence_2026-10-08.md §2 (retained 2 Oct baseline)",
+     "as_of": "2026-10-02"
+    },
+    {
+     "value": "distinct_nonself_payers 2, settlements 2, settled_usdc 30000 atomic (0.03 USDC), self_settlements 22, zero_value 8, repeat_nonself_payers 0",
+     "source": "https://councilof.ai/api/revenue",
+     "as_of": "2026-10-08 (fetch)"
+    }
+   ],
+   "notes": "Baseline is explicitly a historical checkpoint. repeat_nonself_payers 0 means the '>=1 repeat: open the next door' gate is not cleared."
+  },
+  {
+   "id": "D7",
+   "topic": "PRODUCERS row count vs its own note",
+   "values": [
+    {
+     "value": "producers array 15",
+     "source": "docs/operations/PRODUCERS.json",
+     "as_of": "2026-09-06T10:20:00Z"
+    },
+    {
+     "value": "'The 12 entries above are the ones actually RUN'; not_yet_classified ~28",
+     "source": "docs/operations/PRODUCERS.json (same file)",
+     "as_of": "2026-09-06T10:20:00Z"
+    }
+   ],
+   "notes": "Internal contradiction 15 vs 12 in one file."
+  },
+  {
+   "id": "D8",
+   "topic": "legacy living-board signatures",
+   "values": [
+    {
+     "value": "signature 53aa09fa... (board_living.json / api/cards board block)",
+     "source": "public/signed/board_living.json; https://councilof.ai/api/cards",
+     "as_of": "updated 2026-08-18T03:22:16Z"
+    },
+    {
+     "value": "signature bd199fd3... (/api/gspc measured_on.living_stamp v0.1)",
+     "source": "https://councilof.ai/api/gspc",
+     "as_of": "same stamp"
+    }
+   ],
+   "notes": "Two signatures for one stamp; both UNVERIFIABLE ('58,184 readings ... Zero verified'); signer 8f9a00a2... not anchored in did.json. Superseded by csoai.gspc-living/0.2 signed under did:web:csoai.org#board-attestation-1."
+  },
+  {
+   "id": "D9",
+   "topic": "stablecoin measured counts",
+   "values": [
+    {
+     "value": "'all 425 stablecoins measured' REJECTED — 302 measured / 123 unmeasured",
+     "source": "public/interop/canonical-23-axis-index-v0.1.json rejected_claims",
+     "as_of": "2026-09-16"
+    },
+    {
+     "value": "425 stablecoin catalogue (dated inventory)",
+     "source": "MASTER_EAT_BLUEPRINT §3",
+     "as_of": "2026-09-21"
+    }
+   ],
+   "notes": "425 is inventory size, never the measured count."
+  },
+  {
+   "id": "D10",
+   "topic": "bank population",
+   "values": [
+    {
+     "value": "26 named banks (3 LIVE / 9 COMMITTED / 14 DISCOVERED), 'not a 50'",
+     "source": "public/interop/swift-census.json",
+     "as_of": "2026-09-01"
+    },
+    {
+     "value": "historical 17-bank scope vs 26-disclosure run to be reconciled",
+     "source": "MASTER_EAT_BLUEPRINT §3",
+     "as_of": "2026-09-21"
+    }
+   ],
+   "notes": "NOT MEASURED: no ISO 20022 / copybook / MT artifact fetched (swift-census honest_count_statement)."
+  },
+  {
+   "id": "D11",
+   "topic": "legal inventory",
+   "values": [
+    {
+     "value": "417 provision hashes across six instruments; NOT 427 complete legal frameworks",
+     "source": "MASTER_EAT_BLUEPRINT §3",
+     "as_of": "2026-09-21"
+    }
+   ],
+   "notes": "Underlying historical source-text bytes unresolved."
+  },
+  {
+   "id": "D12",
+   "topic": "DOI availability",
+   "values": [
+    {
+     "value": "canonical DOI 10.5281/zenodo.21991104 (supersedes stale 21755656)",
+     "source": "https://councilof.ai/api/gspc doi block",
+     "as_of": "2026-10-08 (fetch)"
+    },
+    {
+     "value": "doi_status UNAVAILABLE since 2026-09-29T15:47Z (Zenodo account blocked; appeal pending)",
+     "source": "https://councilof.ai/api/gspc doi_status; https://councilof.ai/interop/zenodo-status.json",
+     "as_of": "since 2026-09-29T15:47Z"
+    }
+   ],
+   "notes": "Fallback https://councilof.ai/methodology/ is not the deposit's bytes."
+  },
+  {
+   "id": "D13",
+   "topic": "HF hub populations",
+   "values": [
+    {
+     "value": "3,032,028 models, 0 measured",
+     "source": "public/signed/hub-census-baseline.json",
+     "as_of": "2026-08-31T03:58:08Z"
+    },
+    {
+     "value": "3,102,926 models",
+     "source": "CATALOG-OF-CATALOGS-2026-09-28.md top-10 (HF /api/models)",
+     "as_of": "2026-09-28"
+    },
+    {
+     "value": "csoai-org scope: 2 models, 106 datasets, 38 Spaces",
+     "source": "canonical-23-axis-index rejected_claims",
+     "as_of": "2026-09-17"
+    }
+   ],
+   "notes": "Three populations: global walk, global API count, org scope. 'all HF models scanned' is rejected on every surface."
+  }
+ ],
+ "not_a_claim": "This document is not a certification, conformity assessment or grade. Inclusion of any third-party name is not endorsement. Status demonstrated = one artefact on record; being-qualified = missing evidence is named in the row. Nothing here is asserted current after 2026-10-08."
+}
