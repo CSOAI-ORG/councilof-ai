@@ -47,6 +47,31 @@ import { currentBoardLid } from "./gspc";
 import { facilitatorDialect, toDialectPayload } from "./_x402_negotiate";
 import { attachOffers } from "./_x402_offer";
 import {
+  declareDiscoveryExtension,
+  descriptionForPath,
+  onBeforeSettle,
+} from "./_x402_discovery";
+import {
+  ART50_MARKING_EVIDENCE_DESCRIPTION,
+  DATA_FEED_DESCRIPTION,
+  EVIDENCE_BUNDLE_DESCRIPTION,
+  FREE_DOOR_DESCRIPTION,
+  FRESH_CAPSULE_DESCRIPTION,
+  POPULATION_DESCRIPTIONS,
+  PROOF_BUNDLE_DESCRIPTION,
+  PROVIDER_DIFF_DESCRIPTION,
+  RAS_MCP_PROBE_DESCRIPTION,
+  RAS_SUPPLY_DESCRIPTION,
+  RAS_X402_CHECK_DESCRIPTION,
+  RECEIPTS_BATCH_DESCRIPTION,
+  REQUEST_ATTESTATION_DESCRIPTION,
+  RWA_EVIDENCE_DESCRIPTION,
+  WRAPPER_CHANGES_DESCRIPTION,
+  WRAPPER_DESCRIPTION,
+  wrapperAssetDescription,
+} from "./_x402_descriptions";
+import WRAPPER_ASSET_DOORS from "./_wrapper_asset_doors.json";
+import {
   buildReceiptRecord,
   receiptExtension,
   receiptPayload,
@@ -646,10 +671,18 @@ export async function verifyX402Payment(
         : undefined;
     return JSON.stringify({
       x402Version: v,
-      paymentPayload: toDialectPayload(
-        payload as Record<string, unknown>,
-        v,
-        v2ctx,
+      // ON_BEFORE_SETTLE: THE PAYMENTPAYLOAD.RESOURCE BACKFILL (x402-foundation/x402#2156,
+      // PayAINetwork/x402-solana#36). PaymentPayload.resource must be non-null at /settle or
+      // the resource is never catalogued — the rail settles every payment and stays invisible.
+      // The server fills the field only when the buyer's envelope left it null; a value the
+      // buyer signed keeps precedence. Same body goes to /verify and /settle, so both carry it.
+      paymentPayload: onBeforeSettle(
+        toDialectPayload(
+          payload as Record<string, unknown>,
+          v,
+          v2ctx,
+        ),
+        resourceUrl,
       ),
       paymentRequirements: reqs,
     });
@@ -1211,4 +1244,139 @@ export function withinHeaderBudget(paymentRequired: Record<string, unknown>): Re
       },
     },
   };
+}
+// ─── the paymentless-probe 402 (x402 discovery repair) ──────────────────────────────────────
+// Built here (not in a door file) because this module is where every door builds its challenge;
+// the middleware calls it so a paymentless empty-body POST sees the 402 envelope BEFORE any input
+// validation can answer in front of it (the payment check is mounted above validation).
+
+/** The canonical deliverable description per door path — the same text each door's own 402 reads. */
+const PROBE_DESCRIPTION_BY_PATH: Record<string, string> = {
+  "/api/free-door": FREE_DOOR_DESCRIPTION,
+  "/api/request-attestation": REQUEST_ATTESTATION_DESCRIPTION,
+  "/api/evidence-bundle": EVIDENCE_BUNDLE_DESCRIPTION,
+  "/api/signed-data-feed": DATA_FEED_DESCRIPTION,
+  "/api/proof": PROOF_BUNDLE_DESCRIPTION,
+  "/api/rwa/evidence": RWA_EVIDENCE_DESCRIPTION,
+  "/api/wrapper": WRAPPER_DESCRIPTION,
+  "/api/wrapper/changes": WRAPPER_CHANGES_DESCRIPTION,
+  "/api/art50/marking-evidence": ART50_MARKING_EVIDENCE_DESCRIPTION,
+  "/api/feeds/provider-diff": PROVIDER_DIFF_DESCRIPTION,
+  "/api/receipts/batch": RECEIPTS_BATCH_DESCRIPTION,
+  "/api/measurement/fresh-capsule": FRESH_CAPSULE_DESCRIPTION,
+  "/api/ras/mcp-probe": RAS_MCP_PROBE_DESCRIPTION,
+  "/api/ras/x402-check": RAS_X402_CHECK_DESCRIPTION,
+  "/api/ras/supply": RAS_SUPPLY_DESCRIPTION,
+};
+
+const PROBE_ASSET_SYMBOLS: Record<string, string> = {};
+for (const d of (WRAPPER_ASSET_DOORS as { doors: { asset: string; symbol: string }[] }).doors) {
+  PROBE_ASSET_SYMBOLS[d.asset] = d.symbol;
+}
+
+/**
+ * The deliverable envelope SHAPE for a probe challenge — never a fabricated measurement. Each
+ * door's own 402 carries its precise output declaration; this states the shape every deliverable
+ * shares (content address, the independent signature or its declared absence, unmeasured[], and
+ * the free verification path), so an indexer reading the probe envelope learns the payload shape.
+ */
+const PROBE_OUTPUT_EXAMPLE: Record<string, unknown> = {
+  schema: "<the door's csoai artifact schema>",
+  artifact: {
+    sha256: "<64-hex content address>",
+    sig_ed25519: "<Ed25519 under did:web:csoai.org#board-attestation-1 when the Pages key is provisioned, else null with unsigned_reason>",
+    unmeasured: [],
+  },
+  verify: "https://councilof.ai/gspc-verify",
+  note: "Measurement artefact — never a grade, rank, score, or certificate.",
+};
+
+const PROBE_OUTPUT_SCHEMA: Record<string, unknown> = {
+  required: ["schema", "artifact", "note"],
+  properties: {
+    schema: { type: "string" },
+    artifact: { type: "object" },
+    verify: { type: "string" },
+    note: { type: "string" },
+  },
+};
+
+/**
+ * paymentlessProbe402 — the 402 envelope for a paymentless empty-body POST probe
+ * (x402-foundation/x402#2156, PayAINetwork/x402-solana#36). Complete challenge: accepts[] via
+ * x402Accepts (the same terms the door's own 402 advertises), extensions.bazaar via
+ * declareDiscoveryExtension (input + inputSchema + outputSchema at the paths indexers read), and
+ * the signed offers via paymentRequiredResponseSigned when the Pages key is provisioned. The
+ * door's own GET challenge stays canonical — this envelope answers the probe before any input
+ * validation, which is what makes an empty-body POST discoverable at all.
+ */
+export async function paymentlessProbe402(opts: {
+  request: Request;
+  env: X402Env;
+  offer: {
+    skuId: string;
+    tier: string;
+    productId?: string;
+    amountAtomic?: string;
+    pathScoped?: true;
+  };
+}): Promise<Response> {
+  const { request, env, offer } = opts;
+  const url = new URL(request.url);
+  // Canonicalize like the listing does: a path-scoped door charges its path, never a concrete
+  // example URL (x402-ras-doors 64e556117); other doors carry the caller's input params.
+  const query: Record<string, string> = {};
+  if (!offer.pathScoped) {
+    url.searchParams.forEach((v, k) => {
+      if (/^[A-Za-z0-9_.-]{1,40}$/.test(k) && v.length > 0 && v.length <= 200) query[k] = v;
+    });
+  }
+  const ordered = Object.keys(query).sort();
+  const search = ordered.length
+    ? "?" + ordered.map((k) => `${encodeURIComponent(k)}=${encodeURIComponent(query[k])}`).join("&")
+    : "";
+  const resourceUrl = `${url.origin}${url.pathname}${search}`;
+  const description = descriptionForPath(url.pathname, {
+    byPath: PROBE_DESCRIPTION_BY_PATH,
+    pop: POPULATION_DESCRIPTIONS as Record<string, string>,
+    wrapperAsset: wrapperAssetDescription,
+    assetSymbols: PROBE_ASSET_SYMBOLS,
+  });
+  const probeEnv: X402Env = offer.amountAtomic === "0" ? { ...env, X402_AMOUNT: "0" } : env;
+  const accepts = x402Accepts(probeEnv, resourceUrl, {
+    skuId: offer.skuId,
+    tier: offer.tier,
+    description,
+    ...(offer.productId ? { productId: offer.productId } : {}),
+  });
+  const bazaar = declareDiscoveryExtension({
+    method: "POST",
+    bodyType: "json",
+    input: {},
+    inputSchema: { type: "object", properties: {}, additionalProperties: false },
+    ...(ordered.length
+      ? { queryParams: query, queryParamsSchema: { type: "object", additionalProperties: { type: "string" } } }
+      : {}),
+    outputSchema: PROBE_OUTPUT_SCHEMA,
+    outputExample: PROBE_OUTPUT_EXAMPLE,
+  });
+  const paymentRequired = buildPaymentRequiredV2({
+    resourceUrl,
+    description,
+    serviceName: "CSOAI",
+    tags: ["x402", "measurement", "signed", "verified"],
+    accepts,
+    bazaar,
+    csoai: {
+      schema: "csoai.x402.probe-402/0.1",
+      why:
+        "a paymentless empty-body POST is answered with this 402 BEFORE any input validation — " +
+        "the payment check is mounted above validation (x402-foundation/x402#2156, PayAINetwork/x402-solana#36)",
+      canonical_challenge: `GET ${resourceUrl} serves this door's own challenge; amounts live only in accepts[]`,
+      preview_route: `${url.origin}${url.pathname}/preview`,
+      measurement_not_certification: "measurement artifacts, never grades",
+      free_verification: `${url.origin}/gspc-verify`,
+    },
+  });
+  return paymentRequiredResponseSigned(paymentRequired, env);
 }
