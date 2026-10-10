@@ -7,18 +7,43 @@
   <title>Pay for evidence | Council of AI</title>
   <meta property="og:title" content="Pay for evidence | Council of AI" />
   <meta property="og:description" content="Buy already-public measurement evidence through an x402 door. Payment mints no new measurement and buys no score, grade, or certificate." />
-  <meta property="og:image" content="https://councilof.ai/og-card.png" />
+  <meta property="og:image" content="https://councilof.ai/og-image.png" />
   <meta name="description" content="Buy already-public measurement evidence through an x402 door. Payment mints no new measurement and buys no score, grade, or certificate.">
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://councilof.ai/pay" />
+  <meta name="twitter:title" content="Pay for evidence | Council of AI" />
+  <meta name="twitter:description" content="Buy already-public measurement evidence through an x402 door. Payment mints no new measurement and buys no score, grade, or certificate." />
+  <meta name="twitter:image" content="https://councilof.ai/og-image.png" />
   <style>
-    body { font: 16px/1.5 system-ui, sans-serif; margin: 2rem auto; max-width: 42rem; padding: 0 1rem; color: #111; }
-    h1 { font-size: 1.5rem; }
-    .never { border: 1px solid #ccc; padding: 1rem; margin: 1.5rem 0; }
-    code { background: #f4f4f4; padding: 0.1em 0.3em; }
+    :root{--bg:#0a0e17;--surface:#11161f;--border:#1f2937;--text:#f8fafc;--muted:#94a3b8;--gold:#c8a05c;--teal:#0fa98c}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;padding:0 2rem;max-width:880px;margin:0 auto}
+    h1,h2{font-family:'Space Grotesk',Inter,sans-serif;letter-spacing:-0.02em}
+    nav{padding:1rem 0;border-bottom:1px solid var(--border);margin-bottom:2rem}
+    nav a{color:var(--muted);text-decoration:none;margin-right:1.5rem;font-size:0.9rem}
+    nav a:hover{color:var(--text)}
+    .hero{padding:3rem 0 2rem}
+    .hero h1{font-size:clamp(2rem,5vw,3rem);margin-bottom:0.5rem}
+    .hero h1 em{font-style:normal;color:var(--gold)}
+    .hero p{color:var(--muted);max-width:640px;font-size:1.1rem}
+    .never{border:1px solid var(--border);background:var(--surface);border-radius:12px;padding:1.2rem 1.4rem;margin:1.5rem 0}
+    .never strong{color:var(--gold);display:block;margin-bottom:0.7rem}
+    .never ul{margin:0;padding-left:1.2rem;color:var(--muted)}
+    .never li{margin:0.35rem 0}
+    code{background:var(--surface);padding:0.15rem 0.4rem;border-radius:6px;font-size:0.88em;color:var(--gold);font-family:'JetBrains Mono',monospace}
+    a{color:var(--teal);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .foot{margin:2.5rem 0 3rem;padding-top:1rem;border-top:1px solid var(--border);color:var(--muted);font-size:0.9rem}
   </style>
 </head>
 <body>
-  <h1>Pay for evidence</h1>
-  <p>This is the buyer page. You settle an x402 door to receive an already-public evidence pack. Amounts appear only in the 402 challenge — never on this page.</p>
+  <nav>
+    <a href="/">Home</a><a href="/pricing">Pricing</a><a href="/.well-known/x402.json">x402</a><a href="/api/gspc">Board</a><a href="/docs">Docs</a>
+  </nav>
+  <section class="hero">
+    <h1>Pay for <em>evidence</em></h1>
+    <p>This is the buyer page. You settle an x402 door to receive an already-public evidence pack. Amounts appear only in the 402 challenge — never on this page.</p>
+  </section>
   <p>Discover doors via the <a href="/.well-known/x402.json">x402 discovery manifest</a>, or start from the <a href="/x402-buyer-guide.html">buyer guide</a>. Inspect the free preview before you pay.</p>
   <div class="never">
     <strong>What a payment never buys:</strong>
@@ -31,6 +56,6 @@
     </ul>
   </div>
   <p>Owner wallet tool (not this page): <code>/pay-all</code> — one settle per door from the estate wallet.</p>
-  <p>Measurement, not certification.</p>
+  <p class="foot">Measurement, not certification.</p>
 </body>
 </html>

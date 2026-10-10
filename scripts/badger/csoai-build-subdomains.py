@@ -190,7 +190,7 @@ def build_html(slug: str, title: str, description: str, schema_type: str,
 <meta property="og:description" content="{description}" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="{canonical}" />
-<meta property="og:image" content="https://councilof.ai/og-default.png" />
+<meta property="og:image" content="https://councilof.ai/og-image.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <script type="application/ld+json">{jsonld}</script>
 <style>
