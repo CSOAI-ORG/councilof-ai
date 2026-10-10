@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { ZENODO_NOTICE, ZENODO_STATUS_PATH } from "@/lib/zenodoStatus";
 import { Link } from "wouter";
+import { claimScheduleLabel } from "@/lib/claimSchedule";
 import seoHead from "../data/seo-head.json";
 
 /**
@@ -343,7 +344,7 @@ export default function ClaimMaintenance() {
                     <td className="px-4 py-3 font-mono text-xs">{day(s.first_captured) ?? "—"}</td>
                     <td className="px-4 py-3 font-mono text-xs">{day(s.last_read) ?? "—"}</td>
                     <td className="px-4 py-3 font-mono text-xs">
-                      {s.next_scheduled_read_state === "SCHEDULED" ? day(s.next_scheduled_read) : "UNSCHEDULED"}
+                      {claimScheduleLabel(s)}
                     </td>
                     <td className="px-4 py-3">
                       <a className="underline decoration-emerald-600 underline-offset-4" href={s.registry_url}>artifact</a>
