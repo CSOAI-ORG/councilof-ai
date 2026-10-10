@@ -55,8 +55,12 @@ function fakeFetch(routes: Record<string, Route>, calls: string[] = []): typeof 
   }) as unknown as typeof fetch;
 }
 
+const revenueBody = (over: Record<string, unknown> = {}) => ({
+  schema: "csoai.revenue/0.1",
+  one_number: { id: "distinct_nonself_payers", status: "MEASURED", records_unreadable: 0, all_time: 2, last_30d: 1, ...over },
+});
 const healthy = (): Record<string, Route> => ({
-  "/api/revenue": () => Response.json({ one_number: { status: "MEASURED", all_time: 2, last_30d: 1 } }),
+  "/api/revenue": () => Response.json(revenueBody()),
   "/api/gspc": () =>
     Response.json({
       as_of: "2026-09-21T00:00:00Z",
@@ -328,7 +332,7 @@ describe("/api/footprint — the same-origin rows", () => {
 
   it("null one_number → UNCHECKABLE with the revenue surface's own reason", async () => {
     const p = await buildFootprint(
-      deps({ ...healthy(), "/api/revenue": () => Response.json({ one_number: { status: "UNCHECKABLE", all_time: null, source: "kv unavailable" } }) }),
+      deps({ ...healthy(), "/api/revenue": () => Response.json(revenueBody({ status: "UNCHECKABLE", all_time: null, source: "kv unavailable" })) }),
     );
     expect(p.economic_use).toMatchObject({ state: "UNCHECKABLE", value: null });
     expect(String(p.economic_use.reason)).toContain("kv unavailable");
@@ -341,7 +345,7 @@ describe("/api/footprint — the same-origin rows", () => {
   });
 
   it("a measured zero is a real zero only when the store answered", async () => {
-    const p = await buildFootprint(deps({ ...healthy(), "/api/revenue": () => Response.json({ one_number: { status: "MEASURED", all_time: 0 } }) }));
+    const p = await buildFootprint(deps({ ...healthy(), "/api/revenue": () => Response.json(revenueBody({ all_time: 0, last_30d: 0 })) }));
     expect(p.economic_use).toMatchObject({ state: "READ", value: 0 });
   });
 
