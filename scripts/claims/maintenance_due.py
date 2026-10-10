@@ -124,6 +124,12 @@ def latest_outcomes(outcomes: list[dict]) -> dict[str, dict]:
 
 def state_of(row: dict, last: dict[str, dict], today: str) -> str:
     o = last.get(key(row))
+    # A confirmed sibling change does not complete claims that failed or were seen only once.
+    # Keep the original outcome/candidate in the immutable row, while retaining retry work.
+    if o and o.get("claims_fetch_failed"):
+        return "FETCH_FAILED"
+    if o and o.get("claims_unconfirmed"):
+        return "UNCONFIRMED"
     if o and o["outcome"] in COMPLETED:
         return o["outcome"]
     if row["due"] > today:
@@ -198,13 +204,23 @@ def candidate_id(registry_id: str, run_id: str, claim_id: str) -> str:
     return f"cand-{sha(registry_id.encode())[:16]}-{run_id}-{claim_id}"
 
 
+def existing_candidate(candidates: list[dict], registry_id: str, registry_sha256: str, change: dict) -> str | None:
+    """A retry references the original candidate for the same exact source transition."""
+    fields = ("claim_id", "recorded_hash", "current_hash")
+    for prior in candidates:
+        if (prior.get("registry_id") == registry_id and prior.get("registry_sha256") == registry_sha256
+                and all(prior.get(k) == change.get(k) for k in fields) and prior.get("candidate_id")):
+            return str(prior["candidate_id"])
+    return None
+
+
 def build_latest(rows: list[dict], outcomes: list[dict], today: str, run_at: str) -> dict:
     last = latest_outcomes(outcomes)
     checks = []
     for r in rows:
         o = last.get(key(r)) or {}
         checks.append({"registry_id": r["registry_id"], "check": r["check"], "due": r["due"],
-                       "outcome": state_of(r, last, today), "checked_at": o.get("checked_at"),
+                       "outcome": state_of(r, last, today), "producer_outcome": o.get("outcome"), "checked_at": o.get("checked_at"),
                        "row_sha256": o.get("row_sha256"), "correction_status": o.get("correction_status", "NONE")})
     counts: dict[str, int] = {}
     for c in checks:
@@ -300,6 +316,7 @@ def run(a) -> int:
     run_id = run_at.replace("-", "").replace(":", "")
     opath, cpath = data / "outcomes.jsonl", data / "candidates.jsonl"
     outcomes = [json.loads(l) for l in opath.read_text().splitlines() if l.strip()] if opath.exists() else []
+    candidates = [json.loads(l) for l in cpath.read_text().splitlines() if l.strip()] if cpath.exists() else []
     bad = verify_chain(outcomes)
     if bad:
         print("ABORT outcomes chain broken:", bad[:3]); return 1
@@ -331,12 +348,18 @@ def run(a) -> int:
             os.unlink(t.name)
         cands = []
         for c in changed:
+            prior_id = existing_candidate(candidates, rid, sha(rb), c)
+            if prior_id:
+                cands.append(prior_id)
+                continue
             cid = candidate_id(rid, run_id, c["claim_id"])
             cands.append(cid)
+            candidate = {"candidate_id": cid, "detected_at": run_at, "detected_by": f"claim-maintenance scheduler @ {HOST}",
+                         "registry_id": rid, "registry_url": url, "registry_sha256": sha(rb), **c,
+                         "state": "CANDIDATE - for review; not an allegation and not a ledger entry"}
             with cpath.open("a") as f:
-                f.write(json.dumps({"candidate_id": cid, "detected_at": run_at, "detected_by": f"claim-maintenance scheduler @ {HOST}",
-                                    "registry_id": rid, "registry_url": url, "registry_sha256": sha(rb), **c,
-                                    "state": "CANDIDATE - for review; not an allegation and not a ledger entry"}, sort_keys=True) + "\n")
+                f.write(json.dumps(candidate, sort_keys=True) + "\n")
+            candidates.append(candidate)
         for ck in checks:  # one completed read satisfies every check of this registry that is due today
             row = chain_append(opath, {
                 "registry_id": rid, "registry_url": url, "registry_sha256": sha(rb) if rb else None,
@@ -351,7 +374,7 @@ def run(a) -> int:
             })
             outcomes.append(row)
         n_changed += outcome == "CHANGED_CONFIRMED"
-        n_failed += outcome in ("FETCH_FAILED", "UNCONFIRMED")
+        n_failed += outcome in ("FETCH_FAILED", "UNCONFIRMED") or bool(failed or unconfirmed)
         print(f"{rid}: {','.join(c['check'] for c in checks)} -> {outcome} ({len(first)} claims read)")
     latest = build_latest(rows, outcomes, today, run_at)
     (data / "latest.json").write_text(json.dumps(latest, indent=1, ensure_ascii=True) + "\n")

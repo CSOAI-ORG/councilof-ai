@@ -23,11 +23,18 @@ import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { readOutcomes, scheduledReadState } from "./claims/maintenance-schedule-state.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CLAIMS_DIR = join(ROOT, "public/claims");
 const OUT = join(ROOT, "public/spec/claim-maintenance/register.json");
 const CHECK = process.argv.includes("--check");
+const checksArg = process.argv.indexOf("--checks-dir");
+if (checksArg >= 0 && (!process.argv[checksArg + 1] || process.argv[checksArg + 1].startsWith("--"))) {
+  throw new Error("--checks-dir requires a path to a pinned local check ledger");
+}
+const CHECKS_DIR = checksArg >= 0 ? process.argv[checksArg + 1] : join(ROOT, "public/interop/claim-maintenance");
+const checkLedger = readOutcomes(CHECKS_DIR);
 const BASE = "https://councilof.ai";
 const STATES = ["CLAIM_CAPTURED", "CLAIM_MEASURED", "UNMEASURED", "UNCHECKABLE"];
 /** Every published artifact schema. A v0.1 artifact stays conforming to v0.1 forever (spec 12). */
@@ -126,6 +133,7 @@ function readRegistry(file) {
   return {
     file,
     registry_url,
+    registry_sha256: sha256(Buffer.from(raw, "utf8")),
     registry_id: doc.registry_id || file.replace(/\.json$/, ""),
     schema: doc.schema ?? null,
     created,
@@ -228,6 +236,12 @@ for (const r of live) {
   for (const s of r.subjects) {
     const min = (a) => (a.length ? a.slice().sort()[0] : null);
     const max = (a) => (a.length ? a.slice().sort().slice(-1)[0] : null);
+    const scheduleState = scheduledReadState({
+      next: min(s.nexts), asOf,
+      registry: { id: r.registry_id, url: r.registry_url, sha256: r.registry_sha256 },
+      claimIds: [...new Set(s.claims.map((c) => c?.claim_id).filter((id) => typeof id === "string" && id))],
+      ledger: checkLedger,
+    });
     subjectRows.push({
       subject: s.name,
       subject_key: s.key,
@@ -243,16 +257,11 @@ for (const r of live) {
       last_read: max(s.reads) || r.created,
       last_read_basis: s.reads.length ? "artifact.access_date" : "registry.created_utc",
       next_scheduled_read: min(s.nexts),
-      // A named date that is already before this register's as_of is not "SCHEDULED" — the
-      // weekly pod loop that owned those reads was retired 2026-09-28 and the dates passed
-      // without a completed run. DUE_NOT_RUN is the same word the one scheduler uses
-      // (scripts/claims/maintenance_due.py). This field is derived from (next, as_of) only;
-      // run outcomes stay in the checks ledger, never inferred here.
-      next_scheduled_read_state: !s.nexts.length
-        ? "UNSCHEDULED"
-        : min(s.nexts) < asOf
-          ? "DUE_NOT_RUN"
-          : "SCHEDULED",
+      // A date alone cannot establish that no run occurred. Join the existing check ledger's
+      // exact pinned bytes by registry digest, claim ids and read time; never infer completion
+      // from a different registry version, a partial run, or a fresh build timestamp.
+      next_scheduled_read_state: scheduleState.state,
+      next_scheduled_read_evidence: scheduleState.evidence,
       registry_id: r.registry_id,
       registry_url: r.registry_url,
       registry_schema: r.schema,
@@ -280,6 +289,9 @@ const totals = {
   claims_conforming_to_artifact_schema: subjectRows.reduce((n, s) => n + s.conforming_artifacts, 0),
   subjects_with_a_scheduled_next_read: subjectRows.filter((s) => s.next_scheduled_read_state === "SCHEDULED").length,
   subjects_with_a_due_unrun_next_read: subjectRows.filter((s) => s.next_scheduled_read_state === "DUE_NOT_RUN").length,
+  subjects_with_a_completed_scheduled_read: subjectRows.filter((s) => s.next_scheduled_read_state === "COMPLETED").length,
+  subjects_with_a_retry_required: subjectRows.filter((s) => s.next_scheduled_read_state === "RETRY_REQUIRED").length,
+  subjects_with_due_execution_unverified: subjectRows.filter((s) => s.next_scheduled_read_state === "DUE_EXECUTION_UNVERIFIED").length,
 };
 
 /**
@@ -313,6 +325,16 @@ const register = {
   specification_licence: "CC0-1.0",
   maintainer: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   generated_by: "scripts/claim-maintenance-register.mjs — generated from the registry files on disk, never hand-listed (spec 7.5)",
+  scheduled_read_projection: {
+    authority: "scripts/claims/maintenance_due.py outcomes.jsonl; this is a derived view, never a second scheduler",
+    source: checkLedger.capture?.source_url ?? null,
+    captured_at: checkLedger.capture?.captured_at ?? null,
+    bytes_sha256: checkLedger.capture?.bytes_sha256 ?? null,
+    outcomes_head_sha256: checkLedger.capture?.outcomes_head_sha256 ?? null,
+    entries: checkLedger.rows.length,
+    rule: "COMPLETED requires the exact registry digest, every subject claim id, a read at or after its signed due time, and no failed/unconfirmed claims. Missing matching local proof is DUE_EXECUTION_UNVERIFIED, never an assertion that no read ran.",
+    boundary: "Unsigned producer reports; internal chain integrity is not independent source truth, a signature, or Bitcoin inclusion. Claim evidence states and per-claim cadence are unchanged.",
+  },
   what_this_is:
     "The continuous, independent observation of public claims these organisations make about themselves: " +
     "captured verbatim with source and date, hashed, re-read on a schedule, every observed change recorded, " +
