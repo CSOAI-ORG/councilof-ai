@@ -1,0 +1,97 @@
+{
+  "schema": "csoai.tui3-mill-promotion-pipeline/0.1",
+  "tui": 3,
+  "subject": "How a model measurement card travels mill -> signed -> Merkle-committed, and what feeds which root",
+  "observed_at": "2026-10-07",
+  "source": "CSOAI-ORG/councilof-ai@master — scripts + .github/workflows, read directly",
+  "resolves_blocker": "2 (mill -> index -> root promotion path: TRACED — the path exists and works)",
+
+  "pipeline": [
+    {
+      "stage": 1,
+      "name": "mill",
+      "entry": ".github/workflows/hub-queue-mill.yml (GHA) or scripts/pod-loops/mill-hourly.sh (RunPod)",
+      "code": "harness/gspc-top100/mill_hub_queue.py",
+      "produces": "unsigned card artifacts attached to the workflow run",
+      "gates": "cell flips only when the signed card verifies VALID under the DID and n>=30; ollama: model class skips HF admission"
+    },
+    {
+      "stage": 2,
+      "name": "land (unsigned)",
+      "entry": "scripts/land_mill_cards.py",
+      "produces": "public/interop/mill-cards-unsigned/ (2,111 files today)",
+      "gates": "signature null, status UNMEASURED, id == sha256(canonical body), <=3KB, brand-gate clean; a (model, axis) cell already carrying a signed card is SKIPPED — one cell, one card",
+      "human_gate": "Never touches master: lands on a BRANCH and opens a PR; a human merge is the gate.",
+      "note": "Never signs. Never stamps MEASURED."
+    },
+    {
+      "stage": 3,
+      "name": "sign",
+      "entry": "scripts/sign_mill_cards.py (run under .github/workflows/hf-fin-shells-measure.yml)",
+      "produces": "public/interop/mill-cards-signed/ (2,869 files = 2,868 cards + 1 pointer stub)",
+      "gates": "freeze_body() writes the state that survives the signature — status MEASURED at n>=30, UNMEASURED with reason below; signature_state SIGNED. Signs via GitHub OIDC -> Pages /api/board-sign. The PKCS8 never leaves Pages.",
+      "supersession": "re-signing a cell writes a NEW content-addressed file and appends to mill-cards-signed/SUPERSEDED.jsonl (superseded_id -> by_id). Old bytes are never rewritten."
+    },
+    {
+      "stage": 4,
+      "name": "Merkle commitment (the actual 'in a root' step)",
+      "entry": "scripts/card_root.py",
+      "produces": "public/interop/card-root-<date>-<merkle12>.json + .ots sidecar; pointer public/interop/card-root-latest.json",
+      "leaf_rule": "sha256 over canonical JSON (sorted keys, no whitespace, ensure_ascii=False) of the WHOLE signed card — body, id, signature, did — NOT the body alone and NOT the card id",
+      "tree_rule": "sha256(left + right), positional, siblings only",
+      "excludes": "any card listed as superseded_id in SUPERSEDED.jsonl — one live card per (model, axis) cell",
+      "latest_observed": {"file": "card-root-2026-10-01-35544212115c.json", "as_of": "2026-10-01T06:51:30Z", "n_leaves": 1466, "n_skipped": 1402, "merkle_root": "35544212115c8dad442dad0c146cc241354e9aa569dce22b56501cabb5d10512"},
+      "accounting_check": "1466 leaves + 1402 superseded = 2868 = every signed mill card. No card is lost.",
+      "docs": "scripts/card_root.py module docstring — '2026-09-03 there were 208 signed measurement cards ... and not one of them appeared in any Merkle root' (the gap this closed)"
+    },
+    {
+      "stage": 5,
+      "name": "OTS stamp",
+      "entry": "scripts/card_root.py --stamp (workflows card-root.yml, card-root-ots-upgrade.yml)",
+      "state": "COMMITMENT ONLY. Reads pending until a calendar commits it to a Bitcoin block; STAMPED_PENDING_BITCOIN is a calendar receipt, never Bitcoin-confirmed.",
+      "owner_gated": true
+    }
+  ],
+
+  "three_roots_are_different_surfaces": {
+    "public_root_json": {"file": "public/root.json", "leaves": 319, "as_of": "2026-09-30T05:05:34Z", "merkle": "47277a6f2034e80b…", "content": "notice / RWA / stablecoin / XRPL leaves — NOT model measurement cards", "builder": "scripts/publish_public_root.py"},
+    "card_root": {"file": "public/interop/card-root-*.json", "leaves": 1466, "as_of": "2026-10-01T06:51:30Z", "content": "signed GSPC mill measurement cards", "builder": "scripts/card_root.py"},
+    "signed_index": {"file": "public/signed/card_index.json", "rows": 335, "packaged_at": "2026-08-28T15:39:25Z", "content": "historical 16-axis / 64-model chain (gspc.card-chain), 2026-08-19 cards", "note": "NOT fed by the mill. The mill never writes this index."},
+    "rule": "Never sum these, never conflate them, never say 'the root' without naming which."
+  },
+
+  "pr1888_correction": {
+    "previous_claim_by_tui3": "PR#1888's 36 cards are STAGED: 0 in index, 0 in root, still after 26 days.",
+    "corrected": "All 36 are SUPERSEDED_EXCLUDED — every one was replaced by a later signed card for the same (model, axis) cell.",
+    "evidence": {
+      "ledger": "public/interop/mill-cards-signed/SUPERSEDED.jsonl — 1402 entries, 1402 unique superseded_id, 1393 unique by_id",
+      "all_36_in_ledger": true,
+      "replacements_live_in_card_root": "34/36 (card-root-2026-10-01)",
+      "replacements_superseded_again": "2/36 (multi-hop chains, both on the frequently re-measured affect axis)",
+      "sample_chains": [
+        "signed-affect-6bc329116310.json -> signed-affect-3dbc8461a6a8.json (file exists)",
+        "signed-care-9cadd5fbfdfd.json  -> signed-care-0939abe04536.json  (file exists)",
+        "signed-jail-103d69855ec5.json  -> signed-jail-5bec88ac433c.json  (file exists)",
+        "signed-safety-32bb6e601009.json -> signed-safety-514172f55310.json (file exists)"
+      ]
+    },
+    "why_it_matters": "'Not in the root' was true of root.json but the WRONG test: measurement cards belong to card-root, not public-root. Their absence from root.json is correct, and their absence from card-root is deliberate supersession, not a stalled promotion.",
+    "still_true": "They are NOT in signed/card_index.json (0/36) — but nothing promotes mill cards into that index; it is a frozen 2026-08-19 historical corpus."
+  },
+
+  "integrity_invariants_verified": [
+    "1466 + 1402 = 2868 signed cards — every signed card is either a live leaf or an explicitly named supersession",
+    "leaf commits to the WHOLE card, so signature or DID reference cannot be swapped without breaking the root",
+    "old signed bytes are never rewritten (content-addressed; write_immutable / supersession ledger)",
+    "a card root build is a COMMITMENT, not an anchor: .ots sidecar state governs, file existence does not"
+  ],
+
+  "remaining_gates_not_traversable_here": [
+    "Stage 2 human merge of the landing PR (owner)",
+    "Stage 5 OTS stamping + Bitcoin confirmation (owner; STAMPED_PENDING_BITCOIN until then)",
+    "Promoting mill cards into signed/card_index.json is not part of this pipeline at all — by design, not by omission"
+  ],
+
+  "costs": {"actual_spend_usd": 0.0, "revenue_usd": 0.0, "classification": "INTERNAL_SELF_FUNDED"},
+  "not_a_certificate": true
+}
