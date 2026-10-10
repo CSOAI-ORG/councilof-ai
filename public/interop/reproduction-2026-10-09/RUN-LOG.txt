@@ -1,0 +1,68 @@
+# RUN-LOG — csoai reproduction package (public/interop/reproduction-2026-10-09)
+# Real runs of the shipped verify.py against the live trust root. Executed 2026-10-09T04:05:46Z.
+# No-filesystem harness: `python3 -` executes the exact verify.py bytes (sha256 b11d2d651c52bf6776dcaa53179a21810d95f87ada198ff0e4c98f971057b8ba)
+# from stdin; fixtures enter as --card-b64 / --card-json, byte-identical to the committed
+# fixture files (pins in EXPECTED-OUTPUTS.txt). The file-based forms are the documented
+# equivalents shown with each run. Verdicts/exits: VALID=0, INVALID=2, UNCHECKABLE=3.
+# Measurement, never certification.
+
+$ python3 verify.py --card-url https://councilof.ai/signed/cards/8b3d291763561e3f66adf6a9941f2ade8adf7b2fd856f237241354d3b4e1aed7.json --kid card-attestation-1
+# harness form actually executed: python3 - --card-url <same URL> (the exact verify.py bytes on stdin)
+[exit 0]
+csoai.card-verify/0.1
+self-test: rfc8032-TEST1 PASS
+source: url https://councilof.ai/signed/cards/8b3d291763561e3f66adf6a9941f2ade8adf7b2fd856f237241354d3b4e1aed7.json
+did: https://councilof.ai/.well-known/did.json sha256=3a0ace2b1d72f53180d9226da194eb842177f4426a6c84717d4af2550fdd035e
+kid: card-attestation-1 -> did:web:csoai.org#card-attestation-1
+key-x: 1MsOqhbV9Qv3Yzo2qjT-CaVeEkuTFt7Sq9sSK7nDfjg
+preimage-rule: canonical-json-v1
+preimage-sha256: 8b3d291763561e3f66adf6a9941f2ade8adf7b2fd856f237241354d3b4e1aed7
+naive-file-bytes-sha256: 47123dd319e2f8872b783645f53f7afb9381283f61ebba61075f0ac08148924d (informational; expected NOT to equal the card id)
+id-check: PASS
+pubkey-check: PASS (card.pubkey vs the DID key resolved for card-attestation-1)
+signature-check: PASS (Ed25519 over the canonical preimage bytes)
+verdict: VALID
+
+$ python3 verify.py --fixture fixtures/valid-card.json --kid card-attestation-1
+# harness form actually executed: python3 - --card-b64 <fixtures/valid-card.json bytes> (sha256-pinned, byte-identical)
+[exit 0]
+csoai.card-verify/0.1
+self-test: rfc8032-TEST1 PASS
+source: b64 <base64 payload>
+did: https://councilof.ai/.well-known/did.json sha256=3a0ace2b1d72f53180d9226da194eb842177f4426a6c84717d4af2550fdd035e
+kid: card-attestation-1 -> did:web:csoai.org#card-attestation-1
+key-x: 1MsOqhbV9Qv3Yzo2qjT-CaVeEkuTFt7Sq9sSK7nDfjg
+preimage-rule: canonical-json-v1
+preimage-sha256: 8b3d291763561e3f66adf6a9941f2ade8adf7b2fd856f237241354d3b4e1aed7
+naive-file-bytes-sha256: 47123dd319e2f8872b783645f53f7afb9381283f61ebba61075f0ac08148924d (informational; expected NOT to equal the card id)
+id-check: PASS
+pubkey-check: PASS (card.pubkey vs the DID key resolved for card-attestation-1)
+signature-check: PASS (Ed25519 over the canonical preimage bytes)
+verdict: VALID
+
+$ python3 verify.py --fixture fixtures/tampered-card.json --kid card-attestation-1
+# harness form actually executed: python3 - --card-b64 <fixtures/tampered-card.json bytes> (sha256-pinned, byte-identical)
+[exit 2]
+csoai.card-verify/0.1
+self-test: rfc8032-TEST1 PASS
+source: b64 <base64 payload>
+did: https://councilof.ai/.well-known/did.json sha256=3a0ace2b1d72f53180d9226da194eb842177f4426a6c84717d4af2550fdd035e
+kid: card-attestation-1 -> did:web:csoai.org#card-attestation-1
+key-x: 1MsOqhbV9Qv3Yzo2qjT-CaVeEkuTFt7Sq9sSK7nDfjg
+preimage-rule: canonical-json-v1
+preimage-sha256: c3ee8aeefe2f21e957e92b0008c4169544fd39e141cb5a92ec58708bbdad88f6
+naive-file-bytes-sha256: 1bb19364af0aa67056064fa7533f2f97ca7efccac2919729f436c159e6fe5a98 (informational; expected NOT to equal the card id)
+id-check: FAIL
+pubkey-check: PASS (card.pubkey vs the DID key resolved for card-attestation-1)
+signature-check: FAIL (Ed25519 over the canonical preimage bytes)
+verdict: INVALID reason=id-mismatch,signature-mismatch
+
+$ python3 verify.py --fixture fixtures/unreachable-fetch.json --kid card-attestation-1
+# harness form actually executed: python3 - --card-json <fixtures/unreachable-fetch.json bytes> (sha256-pinned, byte-identical)
+[exit 3]
+csoai.card-verify/0.1
+self-test: rfc8032-TEST1 PASS
+source: inline <inline JSON>
+fetch-spec: https://unreachable.invalid/signed/cards/0000000000000000000000000000000000000000000000000000000000000000.json (fixture expectation: UNCHECKABLE)
+card: FETCH-FAILED https://unreachable.invalid/signed/cards/0000000000000000000000000000000000000000000000000000000000000000.json
+verdict: UNCHECKABLE reason=card-fetch-failed
