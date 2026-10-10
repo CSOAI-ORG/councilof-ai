@@ -1,0 +1,94 @@
+{
+  "card": {
+    "as_of": "2026-10-08T17:52:55Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-scan/0.1",
+      "subject": "evm-events:scan:optimism",
+      "chain": "optimism",
+      "chain_id": 10,
+      "head": {
+        "block": 157941599,
+        "block_hash": "0x7ca39568419c6873ca4568c868b6856b230d0ecd2cb5888a939d19d81a063b23",
+        "block_time": "2026-10-08T17:52:55Z"
+      },
+      "n_contracts": 1,
+      "coverage": [
+        {
+          "subject": "evm-events:BUIDL:optimism",
+          "from": 156962970,
+          "to": 156974969,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 156365618,
+          "rpc": "mainnet.optimism.io"
+        }
+      ],
+      "unmeasured": [
+        "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+      ],
+      "attests": "the block ranges of each roster contract on optimism that this run read with eth_getLogs for the listed permission events, and how many it found; absence in a range is stated only for that range",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "c7f72bfedd016aaa06d07c068b353285ad1a383c1011b37ac62382414047c737",
+    "sig_ed25519": "c6a440d034bc192fece626f4cb9f2feeed0a3ac167490b568f66bf81030793e97eeead0d007dd3154b003f4d82ffdb9fd0035f0a7a7b2486e9f2a3fb84567601",
+    "source_urls": [
+      "https://mainnet.optimism.io"
+    ],
+    "subject": "evm-events:scan:optimism coverage at block 157941599",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:optimism",
+      "coverage:permission-events"
+    ],
+    "unmeasured": [
+      "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "ae54e44f214d483a30271dddda08bacbbc5f9b38c7aab27ddc63987a369f7193",
+    "fc3193953499dbb7ab915072d732452cb89c255af4388c00d76248f53a52f802",
+    "01465789a23b9a34fbc6ff7466f694004f74c3cf6a1301655889e46db6fd4ddc",
+    "5a4ba3e9a0f839500a0483ea94593cc07e60f8d28b310318a52badf2b1870e13",
+    "583ed862731ff67bf74bf1e36040566064d1f222afc4c62104641b7487be12ef",
+    "c8059b0b8f403bca709430a1ea7c671cb126b79c6350ec31d9c6fd5ba7958065",
+    "67c365bb9ee1ca108a254ab0f1af4f8a1de96576dd7454e9627f40083b838eb0",
+    "d0b5212e9ad1a67191a61c767965c0c126bc32d3643c668815abe195f1c1fc57",
+    "47bccf495196964ef38f8946d5d5c9b929e5362de292b24c56cc2c2a32f99142"
+  ]
+}
