@@ -1,6 +1,228 @@
 {
   "components": {
     "schemas": {
+      "CSOAIVerificationInput": {
+        "anyOf": [
+          {
+            "type": "object"
+          },
+          {
+            "type": "string"
+          }
+        ],
+        "description": "A supported record object, its JSON string, or an allowed HTTPS record URL. Objects may wrap the input in card, record, json, url or input (first non-null field in that order). Unreadable input returns UNCHECKABLE, never an invented verdict."
+      },
+      "CSOAIVerificationInstructions": {
+        "not": {
+          "required": [
+            "state"
+          ]
+        },
+        "properties": {
+          "also_reads": {
+            "type": "string"
+          },
+          "card_v0": {
+            "type": "string"
+          },
+          "endpoint": {
+            "const": "/api/verify"
+          },
+          "free": {
+            "const": true
+          },
+          "how": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "const": true
+          },
+          "note": {
+            "type": "string"
+          },
+          "pinned_keys": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "record_url": {
+            "description": "Instructions for the optional query parameter, not a fetched record URL.",
+            "type": "string"
+          },
+          "rule": {
+            "type": "string"
+          },
+          "schema": {
+            "const": "csoai.verify/0.1"
+          },
+          "states": {
+            "properties": {
+              "INVALID": {
+                "type": "string"
+              },
+              "UNCHECKABLE": {
+                "type": "string"
+              },
+              "VALID": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "VALID",
+              "INVALID",
+              "UNCHECKABLE"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "schema",
+          "endpoint",
+          "states",
+          "free",
+          "not_a_certification"
+        ],
+        "type": "object"
+      },
+      "CSOAIVerificationResult": {
+        "properties": {
+          "artifact": {
+            "description": "Artifact metadata copied from a POST signed-run payload, without validating its fields or retained artifact bytes.",
+            "type": [
+              "object",
+              "array",
+              "null"
+            ]
+          },
+          "checks": {
+            "items": {
+              "properties": {
+                "check": {
+                  "type": "string"
+                },
+                "code": {
+                  "type": "string"
+                },
+                "detail": {
+                  "type": "string"
+                },
+                "ok": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "check",
+                "ok",
+                "code",
+                "detail"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "did": {
+            "description": "Signer declared by a POST signed-run record; an unpinned or malformed declaration can be echoed.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "family": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "fetched": {
+            "description": "Exact served-byte digest when read. Null on URL refusal or fetch failure; redirect refusal supplies only HTTP status and final URL.",
+            "properties": {
+              "bytes": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "final_url": {
+                "type": "string"
+              },
+              "http_status": {
+                "type": "integer"
+              },
+              "sha256": {
+                "pattern": "^[0-9a-f]{64}$",
+                "type": "string"
+              }
+            },
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "free": {
+            "const": true
+          },
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "not_a_certification": {
+            "const": true
+          },
+          "note": {
+            "type": "string"
+          },
+          "payload_sha256": {
+            "description": "Digest computed for a POST signed-run payload when that check is reached.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reasons": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "record_url": {
+            "type": "string"
+          },
+          "rule": {
+            "type": "string"
+          },
+          "schema": {
+            "const": "csoai.verify/0.1"
+          },
+          "state": {
+            "description": "VALID authenticates the supported record under pinned keys; INVALID names a failure of its rule; UNCHECKABLE means the check could not be completed. No state certifies a system or proves claims inside the record.",
+            "enum": [
+              "VALID",
+              "INVALID",
+              "UNCHECKABLE"
+            ],
+            "type": "string"
+          },
+          "trust_anchor": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "schema",
+          "state",
+          "not_a_certification"
+        ],
+        "type": "object"
+      },
       "X402Accept": {
         "properties": {
           "amount": {
@@ -8829,32 +9051,204 @@
     },
     "/api/verify": {
       "get": {
-        "description": "POST /api/verify \u2014 verify a posted measurement card. GET explains how.",
+        "description": "Without record_url, returns instructions without judging a record. With record_url, re-fetches the exact served bytes and verifies a supported Council record, including measurement cards and card-v0/v1 receipts, under pinned keys. Only HTTPS councilof.ai, csoai.org and www.csoai.org URLs are fetched; off-origin redirects are refused. Signed-run evidence records are supported by POST. Verification is free and is never certification.",
         "operationId": "get__api_verify",
+        "parameters": [
+          {
+            "description": "Published record to fetch and verify. The example is the historical measurement card advertised by the discovery manifest, not a claim about current board freshness. Omit this parameter to read instructions.",
+            "example": "https://councilof.ai/signed/cards/66856aca4a1f9390f0f51d89b8b96d984ab902852ed77b0254730758260ad1da.json",
+            "in": "query",
+            "name": "record_url",
+            "required": false,
+            "schema": {
+              "format": "uri",
+              "pattern": "^https://(councilof\\.ai|csoai\\.org|www\\.csoai\\.org)/",
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/CSOAIVerificationInstructions"
+                    },
+                    {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/CSOAIVerificationResult"
+                        },
+                        {
+                          "required": [
+                            "free",
+                            "record_url",
+                            "fetched"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
             },
-            "description": "OK"
+            "description": "Instructions when record_url is absent; otherwise VALID, INVALID or UNCHECKABLE. An upstream non-200 response, oversized record or non-JSON record also returns UNCHECKABLE at HTTP 200."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/CSOAIVerificationResult"
+                        },
+                        {
+                          "required": [
+                            "free",
+                            "record_url",
+                            "fetched"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "properties": {
+                        "reason": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "const": "UNCHECKABLE"
+                        }
+                      },
+                      "required": [
+                        "reason"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Record URL or final redirect is outside the allowed HTTPS origins; no record body is read."
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/CSOAIVerificationResult"
+                        },
+                        {
+                          "required": [
+                            "free",
+                            "record_url",
+                            "fetched"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "properties": {
+                        "reason": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "const": "UNCHECKABLE"
+                        }
+                      },
+                      "required": [
+                        "reason"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "The record could not be fetched, including timeout; state is UNCHECKABLE and fetched is null."
           }
         },
         "security": [],
-        "summary": "POST /api/verify \u2014 verify a posted measurement card. GET explains how."
+        "summary": "Verify a published record for free, or read verifier instructions",
+        "x-csoai-lifecycle": "LIVE"
       },
       "post": {
-        "description": "POST /api/verify \u2014 verify a posted measurement card. GET explains how.",
+        "description": "POST a supported record object or JSON string, directly or in a supported wrapper. Allowed HTTPS record URLs are also accepted. Supported families include measurement cards, card-v0/v1 receipts and csoai.signed-run/0.1 records, each using its existing pinned-key rule. For signed runs, compare retained record bytes with artifact.sha256 yourself; this endpoint checks the payload signature. Unsupported shapes are UNCHECKABLE. No payment or account is required; verification certifies nothing.",
         "operationId": "post__api_verify",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "examples": {
+                "published_record_url": {
+                  "summary": "Verify the manifest's published historical measurement-card example",
+                  "value": {
+                    "card": "https://councilof.ai/signed/cards/66856aca4a1f9390f0f51d89b8b96d984ab902852ed77b0254730758260ad1da.json"
+                  }
+                }
+              },
+              "schema": {
+                "$ref": "#/components/schemas/CSOAIVerificationInput"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/CSOAIVerificationResult"
+                    },
+                    {
+                      "required": [
+                        "free"
+                      ]
+                    }
+                  ]
+                }
+              }
             },
-            "description": "OK"
+            "description": "The record's three-state verdict under its existing verification rule; verification remains free."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/CSOAIVerificationResult"
+                    },
+                    {
+                      "properties": {
+                        "reason": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "const": "UNCHECKABLE"
+                        }
+                      },
+                      "required": [
+                        "reason"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Malformed or unreadable input, disallowed URL, or a record URL that could not be read; state is UNCHECKABLE. This early error does not carry a free field."
           }
         },
         "security": [],
-        "summary": "POST /api/verify \u2014 verify a posted measurement card. GET explains how."
+        "summary": "Verify a posted measurement or signed evidence record for free",
+        "x-csoai-lifecycle": "LIVE"
       }
     },
     "/api/verify-batch": {

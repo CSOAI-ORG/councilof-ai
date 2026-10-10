@@ -319,6 +319,124 @@ def fetch_challenges(budget: Budget) -> None:
     idx_path.write_text(json.dumps({"_what": "one entry per door whose live 402 was captured by build_openapi.py --fetch-challenges; header bytes matter because x402scan warns above 16 KiB (HEADERS_OVERFLOW)", "doors": index}, indent=2, sort_keys=True) + "\n")
 
 
+# ───────────────────────────── free verifier contract ─────────────────────────────
+def verifier_contract(manifest: dict) -> tuple[dict, dict]:
+    """Describe functions/api/verify.ts; the runnable example comes from its discovery door."""
+    door = next(d for d in manifest["free_doors"]
+                if urllib.parse.urlsplit(d["url"]).path == "/api/verify")
+    sample = urllib.parse.parse_qs(urllib.parse.urlsplit(door["url"]).query)["record_url"][0]
+    ref = lambda name: {"$ref": f"#/components/schemas/{name}"}
+    schemas = {
+        "CSOAIVerificationResult": {
+            "type": "object",
+            # Early POST 400s omit free; early GET results omit reasons/checks/family/id.
+            "required": ["schema", "state", "not_a_certification"],
+            "properties": {
+                "schema": {"const": "csoai.verify/0.1"},
+                "state": {"type": "string", "enum": ["VALID", "INVALID", "UNCHECKABLE"],
+                          "description": "VALID authenticates the supported record under pinned keys; INVALID names a failure of its rule; UNCHECKABLE means the check could not be completed. No state certifies a system or proves claims inside the record."},
+                "free": {"const": True},
+                "not_a_certification": {"const": True},
+                "record_url": {"type": "string"},
+                "reason": {"type": ["string", "null"]},
+                "reasons": {"type": "array", "items": {"type": "string"}},
+                "family": {"type": ["string", "null"]},
+                "id": {"type": ["string", "null"]},
+                "did": {"type": ["string", "null"], "description": "Signer declared by a POST signed-run record; an unpinned or malformed declaration can be echoed."},
+                "payload_sha256": {"type": ["string", "null"], "description": "Digest computed for a POST signed-run payload when that check is reached."},
+                "artifact": {"type": ["object", "array", "null"], "description": "Artifact metadata copied from a POST signed-run payload, without validating its fields or retained artifact bytes."},
+                "rule": {"type": "string"},
+                "trust_anchor": {"type": "string"},
+                "note": {"type": "string"},
+                "checks": {"type": "array", "items": {
+                    "type": "object", "required": ["check", "ok", "code", "detail"],
+                    "properties": {"check": {"type": "string"}, "ok": {"type": ["boolean", "null"]},
+                                   "code": {"type": "string"}, "detail": {"type": "string"}},
+                }},
+                "fetched": {"type": ["object", "null"],
+                            "description": "Exact served-byte digest when read. Null on URL refusal or fetch failure; redirect refusal supplies only HTTP status and final URL.",
+                            "properties": {"http_status": {"type": "integer"}, "final_url": {"type": "string"},
+                                           "bytes": {"type": "integer", "minimum": 0},
+                                           "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}},
+            },
+        },
+        "CSOAIVerificationInstructions": {
+            "type": "object",
+            "required": ["schema", "endpoint", "states", "free", "not_a_certification"],
+            "properties": {
+                "schema": {"const": "csoai.verify/0.1"},
+                "endpoint": {"const": "/api/verify"},
+                "how": {"type": "string"}, "also_reads": {"type": "string"},
+                "record_url": {"type": "string", "description": "Instructions for the optional query parameter, not a fetched record URL."},
+                "card_v0": {"type": "string"}, "rule": {"type": "string"}, "note": {"type": "string"},
+                "pinned_keys": {"type": "array", "items": {"type": "string"}},
+                "states": {"type": "object", "required": ["VALID", "INVALID", "UNCHECKABLE"],
+                           "properties": {state: {"type": "string"} for state in ["VALID", "INVALID", "UNCHECKABLE"]}},
+                "free": {"const": True}, "not_a_certification": {"const": True},
+            },
+            "not": {"required": ["state"]},
+        },
+        "CSOAIVerificationInput": {
+            "anyOf": [{"type": "object"}, {"type": "string"}],
+            "description": "A supported record object, its JSON string, or an allowed HTTPS record URL. Objects may wrap the input in card, record, json, url or input (first non-null field in that order). Unreadable input returns UNCHECKABLE, never an invented verdict.",
+        },
+    }
+    get_result = {"allOf": [ref("CSOAIVerificationResult"), {
+        "required": ["free", "record_url", "fetched"],
+    }]}
+    get_error = {"allOf": [get_result, {
+        "required": ["reason"], "properties": {"state": {"const": "UNCHECKABLE"}, "reason": {"type": "string"}},
+    }]}
+    response = lambda description, schema: {
+        "description": description, "content": {"application/json": {"schema": schema}},
+    }
+    operations = {
+        "get": {
+            "summary": "Verify a published record for free, or read verifier instructions",
+            "description": "Without record_url, returns instructions without judging a record. With record_url, re-fetches the exact served bytes and verifies a supported Council record, including measurement cards and card-v0/v1 receipts, under pinned keys. Only HTTPS councilof.ai, csoai.org and www.csoai.org URLs are fetched; off-origin redirects are refused. Signed-run evidence records are supported by POST. Verification is free and is never certification.",
+            "security": [],
+            "x-csoai-lifecycle": "LIVE",
+            "parameters": [{
+                "name": "record_url", "in": "query", "required": False,
+                "description": "Published record to fetch and verify. The example is the historical measurement card advertised by the discovery manifest, not a claim about current board freshness. Omit this parameter to read instructions.",
+                "schema": {"type": "string", "format": "uri", "pattern": r"^https://(councilof\.ai|csoai\.org|www\.csoai\.org)/"},
+                "example": sample,
+            }],
+            "responses": {
+                "200": response("Instructions when record_url is absent; otherwise VALID, INVALID or UNCHECKABLE. An upstream non-200 response, oversized record or non-JSON record also returns UNCHECKABLE at HTTP 200.", {
+                    "anyOf": [ref("CSOAIVerificationInstructions"), get_result],
+                }),
+                "400": response("Record URL or final redirect is outside the allowed HTTPS origins; no record body is read.", get_error),
+                "502": response("The record could not be fetched, including timeout; state is UNCHECKABLE and fetched is null.", get_error),
+            },
+        },
+        "post": {
+            "summary": "Verify a posted measurement or signed evidence record for free",
+            "description": "POST a supported record object or JSON string, directly or in a supported wrapper. Allowed HTTPS record URLs are also accepted. Supported families include measurement cards, card-v0/v1 receipts and csoai.signed-run/0.1 records, each using its existing pinned-key rule. For signed runs, compare retained record bytes with artifact.sha256 yourself; this endpoint checks the payload signature. Unsupported shapes are UNCHECKABLE. No payment or account is required; verification certifies nothing.",
+            "security": [],
+            "x-csoai-lifecycle": "LIVE",
+            "requestBody": {"required": True, "content": {"application/json": {
+                "schema": ref("CSOAIVerificationInput"),
+                "examples": {"published_record_url": {
+                    "summary": "Verify the manifest's published historical measurement-card example",
+                    "value": {"card": sample},
+                }},
+            }}},
+            "responses": {
+                "200": response("The record's three-state verdict under its existing verification rule; verification remains free.", {
+                    "allOf": [ref("CSOAIVerificationResult"), {"required": ["free"]}],
+                }),
+                "400": response("Malformed or unreadable input, disallowed URL, or a record URL that could not be read; state is UNCHECKABLE. This early error does not carry a free field.", {
+                    "allOf": [ref("CSOAIVerificationResult"), {
+                        "required": ["reason"], "properties": {"state": {"const": "UNCHECKABLE"}, "reason": {"type": "string"}},
+                    }],
+                }),
+            },
+        },
+    }
+    return operations, schemas
+
+
 # ───────────────────────────── compose ─────────────────────────────
 def compose(fix: Path = FIX) -> dict:
     wk = load(fix / "well_known_x402.json")
@@ -382,6 +500,12 @@ def compose(fix: Path = FIX) -> dict:
         for op in item.values():
             if "security" not in op:
                 op["security"] = []
+
+    # The walker identifies handlers, but cannot infer the verifier's optional GET or POST body.
+    # Keep its stable operation ids while declaring the actual free contract from one producer.
+    verify_operations, verify_schemas = verifier_contract(wk)
+    for method, contract in verify_operations.items():
+        paths["/api/verify"][method].update(contract)
 
     # 2. the doors
     shape_donor = None  # the smallest captured challenge lends accepts[0]'s constant fields to uncaptured doors
@@ -635,6 +759,7 @@ def compose(fix: Path = FIX) -> dict:
         "components": {
             "securitySchemes": base["components"]["securitySchemes"],
             "schemas": {
+                **verify_schemas,
                 "X402Accept": {
                     "type": "object",
                     "required": ["scheme", "network", "asset", "payTo", "amount", "maxTimeoutSeconds"],
@@ -734,9 +859,9 @@ def compose(fix: Path = FIX) -> dict:
             "revenue_truth": cat.get("revenue_truth"),
             "doors": door_paths,
             "public_operations": sum(1 for p, item in paths.items() if p not in door_paths
-                                     for op in item.values() if op.get("security") == [] and "x-csoai-lifecycle" not in op),
+                                     for op in item.values() if op.get("security") == [] and op.get("x-csoai-lifecycle", "LIVE") == "LIVE"),
             "unauthenticated_facades": sum(1 for p, item in paths.items() if p not in door_paths
-                                           for op in item.values() if op.get("security") == [] and "x-csoai-lifecycle" in op),
+                                           for op in item.values() if op.get("security") == [] and op.get("x-csoai-lifecycle", "LIVE") != "LIVE"),
         },
     }
     if proofs_doc and proofs_doc.get("proofs"):
