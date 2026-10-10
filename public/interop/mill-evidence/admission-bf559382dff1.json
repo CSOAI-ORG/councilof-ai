@@ -1,0 +1,46 @@
+{
+  "bank_sha256": "702e01db54194f2b464871d883304063a6dd57878418572ee3c5b4e10b307e99",
+  "items_sha256": "7cab744df3fbfd29a26f3c653deb487dde1213c63109f3f92fa3938edb011ca8",
+  "schema": "csoai.mill-evidence-admission/0.2",
+  "source_body": {
+    "accuracy": 0.9259,
+    "axis": "safety",
+    "brand": "Council of AI",
+    "evidence": {
+      "bank_dataset": "csoai/gspc-agi",
+      "bank_file": "bank-safety-702e01db5419.jsonl",
+      "bank_revision": "4112a2ce6a8a58fe6e675b6dd6423766dfc04822",
+      "bank_sha256": "702e01db54194f2b464871d883304063a6dd57878418572ee3c5b4e10b307e99",
+      "instrument_sha256": "86216fbb18db98165e7b2feda74f90d89d05fcd8a0208aed82fee37956d8a659",
+      "items_file": "items-safety-7cab744df3fb.jsonl",
+      "items_sha256": "7cab744df3fbfd29a26f3c653deb487dde1213c63109f3f92fa3938edb011ca8",
+      "model_hf_revision": "63651580ca774f8504f676040460aed3e1244ac1",
+      "schema": "csoai.mill-item-evidence/0.3"
+    },
+    "issuer": "CSOAI Ltd",
+    "kind": "gspc.measurement-card",
+    "model": "XiaomiMiMo/MiMo-V2.5",
+    "n": 27,
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "route": "hf-router:XiaomiMiMo/MiMo-V2.5:deepinfra",
+    "run_id": "gha-38039911884",
+    "status": "UNMEASURED",
+    "unmeasured": [
+      "n<30 unquotable; 3 of 30 items returned no parseable label"
+    ],
+    "verify": "https://councilof.ai/gspc-verify"
+  },
+  "source_card_id": "f93e904d28e6d59b331179d1468b4571d4ddde45c686c788dddea4f3bf5223f3",
+  "state": "VERIFIED_ADMISSION",
+  "summary": {
+    "accuracy": 0.9259,
+    "answered": 27,
+    "correct": 25,
+    "items": 30,
+    "provider_routes": [
+      "hf-router:XiaomiMiMo/MiMo-V2.5:deepinfra",
+      "hf-router:XiaomiMiMo/MiMo-V2.5:featherless-ai",
+      "hf-router:XiaomiMiMo/MiMo-V2.5:novita"
+    ]
+  }
+}
