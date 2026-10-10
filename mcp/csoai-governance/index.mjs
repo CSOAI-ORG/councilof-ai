@@ -5,13 +5,14 @@
  * Exposes the CSOAI Sovereign's governance layer to ANY MCP client — Claude
  * Science, Claude Code, Cursor, or your own agent. Four tools:
  *   csoai_sign     — Ed25519-seal an artifact to CSOAI Layer 0 (auditable + reproducible)
- *   csoai_verify   — verify a seal offline against its public key
+ *   csoai_verify   — request verification through /api/verify against the supplied public key
  *   csoai_govern   — ask the CSOAI Sovereign a governance / cybersecurity question (role-guarded)
  *   csoai_catalog  — search the published governed CSOAI tools / MCPs
  *
  * Gateway is the live Sovereign brain; override with CSOAI_GATEWAY.
  * No API key required for the public governance surface.
  */
+import { catalogResult } from "./catalog.mjs";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
@@ -45,7 +46,7 @@ const TOOLS = [
   },
   {
     name: "csoai_verify",
-    description: "Verify a CSOAI Layer-0 Ed25519 seal offline: confirm the signature matches the artifact and public key. Use to check provenance of anything previously sealed with csoai_sign.",
+    description: "Request verification through /api/verify: confirm whether the signature matches the artifact and supplied public key. This client uses a network request; signature validity alone does not establish issuer identity. Use to check provenance of anything previously sealed with csoai_sign.",
     inputSchema: {
       type: "object",
       properties: {
@@ -68,7 +69,7 @@ const TOOLS = [
   },
   {
     name: "csoai_catalog",
-    description: "Search the CSOAI catalog of published governed tools / MCPs (framework-compliance, cyber, evidence, identity, and more). Returns matching governed tools with their cluster and install hint.",
+    description: "Search the CSOAI catalog of published governed tools / MCPs (framework-compliance, cyber, evidence, identity, and more). Returns matching probed server-tool rows and their query total; inventory counts are separate.",
     inputSchema: {
       type: "object",
       properties: { query: { type: "string", description: "Optional keyword (e.g. 'eu ai act', 'nist', 'evidence')." } },
@@ -78,7 +79,7 @@ const TOOLS = [
 
 const BAD = /travell?er|companion|walks beside|i'?m sorry|can'?t help|as an ai language model|on your journey|dear friend|kindred/i;
 
-const server = new Server({ name: "csoai-governance", version: "0.1.0" }, { capabilities: { tools: {} } });
+const server = new Server({ name: "csoai-governance", version: "0.1.1" }, { capabilities: { tools: {} } });
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: TOOLS }));
 
 server.setRequestHandler(CallToolRequestSchema, async (req) => {
@@ -105,12 +106,7 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
     }
     if (name === "csoai_catalog") {
       const r = await api("/tools?q=" + encodeURIComponent(String(a.query || "")));
-      if (!r.json) return err("catalog gateway unreachable (status " + r.status + ")");
-      const j = r.json;
-      const probed = Array.isArray(j.tools) && j.tools.length ? j.tools : null;
-      const raw = j.matches || j.mcps || probed || j.distinct_tools || j.tools || (Array.isArray(j) ? j : []);
-      const matches = raw.slice(0, 25).map((m) => typeof m === "string" ? { name: m } : ({ name: m.name, cluster: m.clusterLabel || m.cluster, tools: m.tools, install: m.connect }));
-      return out({ total: j.total || j.catalogue_total || matches.length, showing: matches.length, matches });
+      return out(catalogResult(r));
     }
     return err("unknown tool: " + name);
   } catch (e) {
