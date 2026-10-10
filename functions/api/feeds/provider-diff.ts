@@ -23,6 +23,7 @@ import {
   buildPaymentRequiredV2,
   declareBazaarHttpGet,
   paymentRequiredResponseSigned,
+  hasPaymentHeader,
   CSOAI_LID,
   type X402Env,
 } from "../_x402";
@@ -89,7 +90,16 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const origin = url.origin;
   const provider = (url.searchParams.get("provider") || "").toLowerCase().trim();
   const surface = (url.searchParams.get("surface") || "").toLowerCase().trim();
-  const wantHistory = url.searchParams.get("history") === "1";
+  // 402 BY DEFAULT ON AN UNPAID POST — INDEX ELIGIBILITY (2026-10-09). The alias at the bottom of
+  // this file says it out loud: "Gold-402's gate POSTs {}". A directory validator does the same
+  // thing, and it read this door's bare-path 200 free preview as "not payable" (x402scan common
+  // failure: expected 402, got 200). So an unpaid POST selects the historical batch and reaches
+  // the challenge below. A POST that carries a payment header is untouched — it still answers the
+  // free preview exactly as before — and GET is untouched too: the published free preview at
+  // /api/feeds/provider-diff stays 200.
+  const wantHistory =
+    url.searchParams.get("history") === "1" ||
+    (request.method === "POST" && !hasPaymentHeader(request));
   const wantInvoice = (url.searchParams.get("invoice") || "").toLowerCase() === "gbp";
   const commissionedBy = refToken(url.searchParams.get("commissioned_by"));
   const resourceUrl = new URL("/api/feeds/provider-diff?history=1", origin).toString();

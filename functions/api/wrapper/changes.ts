@@ -19,6 +19,7 @@ import {
   type X402Env,
 } from "../_x402";
 import { WRAPPER_LID } from "../wrapper";
+import { NOT_FOUND_HINT } from "../[[path]].js";
 import { railMode } from "../_x402_config";
 import { WRAPPER_CHANGES_DESCRIPTION } from "../_x402_descriptions";
 
@@ -103,6 +104,66 @@ function normalizedRead(record: Record<string, unknown>, name: "wrapped_total_su
   return Number.isFinite(numeric) ? numeric : null;
 }
 
+/**
+ * THE 402 THIS DOOR OFFERS — ONE BUILD, SHARED BY GET AND BY THE UNPAID-POST PROBE.
+ *
+ * Index eligibility (2026-10-09): this file exported no POST handler, so a directory validator's
+ * `POST {}` fell through to the /api catch-all's 404 — and x402scan lists exactly that shape as a
+ * common failure ("Expected 402, got 404 … before payment challenge"). The probe now gets the
+ * challenge. Everything is built here, once, so the two entry points cannot drift apart.
+ */
+function doorAccepts(env: Env, resourceUrl: string, description: string) {
+  return x402Accepts(env, resourceUrl, { skuId: "request_attestation", tier: "per_request", description });
+}
+
+// Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
+// object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
+// Behavior) — that echo is what gets a resource catalogued.
+function doorBazaar(id: string) {
+  return declareBazaarHttpGet({
+    method: "GET",
+    queryParams: { id },
+    queryParamsSchema: { properties: { id: { type: "string", description: "pair id (e.g. usdc.e:arbitrum)" } }, required: ["id"] },
+    outputExample: { schema: "csoai.wrapper.changes/0.1", id, wrapped_supply_delta: "<decimal>", escrow_delta: "<decimal>", state: "DELTA_READ" },
+  });
+}
+
+async function doorChallenge(
+  request: Request,
+  env: Env,
+  args: {
+    resourceUrl: string;
+    description: string;
+    accepts: ReturnType<typeof doorAccepts>;
+    bazaar: ReturnType<typeof doorBazaar>;
+    notPaidReason: string;
+  },
+): Promise<Response> {
+  const origin = new URL(request.url).origin;
+  return paymentRequiredResponseSigned(
+    buildPaymentRequiredV2({
+      resourceUrl: args.resourceUrl,
+      description: args.description,
+      serviceName: "CSOAI Wrapped-Asset Changes",
+      tags: ["stablecoin", "bridge", "wrapped", "changes", "delta", "x402"],
+      accepts: args.accepts,
+      bazaar: args.bazaar,
+      csoai: {
+        schema: "csoai.wrapper.changes/0.1",
+        per: "pair-request",
+        lid: WRAPPER_LID,
+        never: ["rating", "guarantee", "verdict", "rank", "certificate"],
+        deliverable: "delta of wrapped supply and escrow between two ledger snapshots",
+        free_preview: `${args.resourceUrl}&preview=1`,
+        rail: railMode(env),
+        not_paid_reason: args.notPaidReason,
+        catalog: `${origin}/api/x402`,
+      },
+    }),
+    env,
+  );
+}
+
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const url = new URL(request.url);
   const origin = url.origin;
@@ -122,41 +183,12 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   }
 
   // x402 setup
-  const accepts = x402Accepts(env, resourceUrl, { skuId: "request_attestation", tier: "per_request", description });
-  // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
-  // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
-  // Behavior) — that echo is what gets a resource catalogued.
-  const bazaar = declareBazaarHttpGet({
-    method: "GET",
-    queryParams: { id },
-    queryParamsSchema: { properties: { id: { type: "string", description: "pair id (e.g. usdc.e:arbitrum)" } }, required: ["id"] },
-    outputExample: { schema: "csoai.wrapper.changes/0.1", id, wrapped_supply_delta: "<decimal>", escrow_delta: "<decimal>", state: "DELTA_READ" },
-  });
+  const accepts = doorAccepts(env, resourceUrl, description);
+  const bazaar = doorBazaar(id);
   const payment = preview ? { ok: false as const, reason: "preview" } : await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar });
 
   if (!preview && !payment.ok) {
-    return paymentRequiredResponseSigned(
-      buildPaymentRequiredV2({
-        resourceUrl,
-        description,
-        serviceName: "CSOAI Wrapped-Asset Changes",
-        tags: ["stablecoin", "bridge", "wrapped", "changes", "delta", "x402"],
-        accepts,
-        bazaar,
-        csoai: {
-          schema: "csoai.wrapper.changes/0.1",
-          per: "pair-request",
-          lid: WRAPPER_LID,
-          never: ["rating", "guarantee", "verdict", "rank", "certificate"],
-          deliverable: "delta of wrapped supply and escrow between two ledger snapshots",
-          free_preview: `${resourceUrl}&preview=1`,
-          rail: railMode(env),
-          not_paid_reason: payment.reason,
-          catalog: `${origin}/api/x402`,
-        },
-      }),
-      env,
-    );
+    return doorChallenge(request, env, { resourceUrl, description, accepts, bazaar, notPaidReason: payment.reason });
   }
 
   // Fetch snapshots
@@ -255,3 +287,30 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
 // HEAD answers as GET would, with no body and never with a payment (functions/api/_head.ts).
 export const onRequestHead = headFromGet(onRequestGet);
+
+/**
+ * POST /api/wrapper/changes — INDEX ELIGIBILITY (2026-10-09).
+ *
+ * This door never exported a POST handler, so the platform routed POST to the /api catch-all's
+ * 404. A directory validator probes with `POST {}` and no payment header, and x402scan names that
+ * shape as a common failure ("Expected 402, got 404 …"), which Coinbase's Bazaar validator reads
+ * as "this resource is not payable". The unpaid POST therefore gets the challenge first — with or
+ * without an `id`, because an absent id is input validation and the challenge comes before it.
+ *
+ * A POST that DOES carry a payment header keeps the answer it has always had: this door has never
+ * served POST, so it is still the /api catch-all's 404, body for body (same json() shape, same
+ * NOT_FOUND_HINT). No paying client sees a changed byte.
+ */
+export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
+  if (hasPaymentHeader(request)) {
+    return json({ error: "not_found", path: "/api/wrapper/changes", hint: NOT_FOUND_HINT }, 404);
+  }
+  const url = new URL(request.url);
+  const id = (url.searchParams.get("id") || "").trim().toLowerCase();
+  const resourceUrl = `${url.origin}/api/wrapper/changes?id=${encodeURIComponent(id || "<pair>")}`;
+  const description = WRAPPER_CHANGES_DESCRIPTION;
+  const accepts = doorAccepts(env, resourceUrl, description);
+  const bazaar = doorBazaar(id);
+  const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar });
+  return doorChallenge(request, env, { resourceUrl, description, accepts, bazaar, notPaidReason: payment.reason });
+};
