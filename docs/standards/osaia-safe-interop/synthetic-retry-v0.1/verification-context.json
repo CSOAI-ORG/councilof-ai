@@ -1,0 +1,39 @@
+{
+  "custody": {
+    "availability": "accepted_available",
+    "external_effect_not_established_by_custody_alone": true,
+    "subject": "RCPT1"
+  },
+  "evidence": [
+    {
+      "availability": "available",
+      "id": "LOG1",
+      "kind": "synthetic transport timeout"
+    },
+    {
+      "availability": "available",
+      "effect_ref": "SINK1",
+      "id": "RCPT1",
+      "kind": "synthetic provider effect receipt",
+      "operation_id": "OP1"
+    },
+    {
+      "availability": "available",
+      "id": "SINK1",
+      "kind": "synthetic independent sink record",
+      "operation_id": "OP1"
+    }
+  ],
+  "fixture_id": "CSOAI-SAFE-GALC-RETRY-001",
+  "limit": "no real signatures, execution, time proofs or independent attestation",
+  "nature": "declared synthetic test double, not external truth",
+  "provider_operations": [
+    {
+      "effect_refs": [
+        "SINK1"
+      ],
+      "id": "OP1",
+      "idempotency_key": "IDEMP-1"
+    }
+  ]
+}
