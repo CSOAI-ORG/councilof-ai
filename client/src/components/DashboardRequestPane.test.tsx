@@ -83,7 +83,7 @@ describe("request-attestation dashboard pane", () => {
         <DashboardRequestPane />
       </Router>,
     );
-    expect(html).toContain(">Request a fresh run</h1>");
+    expect(html).toContain(">Request a commission receipt</h1>");
     expect(html).not.toContain("Never mistake it for a fresh measurement");
     expect(html).toContain("We can&#x27;t run a new test on demand.");
     expect(html).toContain("nothing is charged by asking");
