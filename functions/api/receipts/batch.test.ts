@@ -104,7 +104,8 @@ describe("/api/receipts/batch — free preview", () => {
     expect(b.items).toBeUndefined();
     expect(JSON.stringify(b)).not.toMatch(/"proof"/);
     // Honest about what a receipt is on this estate.
-    expect(b.sources.settlement_receipts).toMatch(/NONE published/);
+    expect(b.sources.settlement_receipts).toContain("aggregate-only receipt-store state");
+    expect(JSON.stringify(b)).not.toMatch(/UNPUBLISHED|NONE published|none are published/);
     expect(JSON.stringify(b)).not.toMatch(/[£$€]\s?\d|"amount"/);
   });
 
@@ -137,7 +138,7 @@ describe("/api/receipts/batch — 402 shape", () => {
     expect(b.extensions.bazaar.schema.properties.input.properties.queryParams.required).toEqual(["from"]);
     expect(b.csoai.preview.batch_sha256).toMatch(/^[0-9a-f]{64}$/);
     expect(b.csoai.rail.mode).toBe("challenge-only");
-    expect(b.csoai.never.join(" ")).toMatch(/settlement or payment receipts — none are published/);
+    expect(b.csoai.never.join(" ")).toMatch(/settlement or payment receipts — this batch contains measurement leaves only/);
     expect(JSON.stringify(b)).not.toMatch(/"proof":\s*\[/);
     expect(JSON.stringify(b)).not.toMatch(/\bsafe\b|certified/i);
   });

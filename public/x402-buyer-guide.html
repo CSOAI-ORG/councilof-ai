@@ -105,6 +105,27 @@ curl "https://councilof.ai/api/evidence-bundle?obligation=article-50&amp;subject
 curl "https://councilof.ai/api/proof?sha=&lt;64-hex&gt;"
 # Multiple leaves: paid batch (settle the 402)
 curl "https://councilof.ai/api/proof?bundle=1"</code></pre>
+<h3 id="historical-measurement-batch">"I need a verifiable historical measurement batch"</h3>
+<p><code>receipts_batch</code> assembles selected, already-published card-v0 measurement leaves and their available inclusion evidence for your review window. It does not run new measurements or provide payment receipts. Preview and verification are free.</p>
+<ol>
+<li><strong>Fix the scope and preview it.</strong> For this recipe, set both <code>from</code> and <code>to</code> to whole-second UTC ISO-8601 instants ending in <code>Z</code>, with no fractional seconds; the bounds are inclusive. The current route filters fractional instants but omits milliseconds from its returned window and buy URL. Fractional-window replay remains unresolved; do not silently round those inputs. Save the returned <code>window</code>, <code>count</code>, <code>matched</code>, <code>cap</code>, <code>truncated</code>, <code>next_from</code>, <code>span</code>, <code>sources</code>, <code>batch_sha256</code> and <code>batch_bytes</code>. Decide whether the selected leaves answer your review question before paying.
+<pre><code># Historical example; replace both dates with your review window.
+curl "https://councilof.ai/api/receipts/batch?from=2026-10-01T00:00:00Z&amp;to=2026-10-09T00:00:00Z&amp;preview=1"
+# MCP equivalent: receipts_batch({from, to, preview: true})</code></pre>
+<p>The cap is 200 leaves per batch. Counts describe the current published inputs, not every measurement ever made. If <code>truncated</code> is true, this is partial coverage. A <code>next_from</code> timestamp can overlap the previous batch: deduplicate by leaf <code>sha256</code> and check that the cursor advances. If it does not advance, or same-time leaves prevent complete coverage, keep coverage unresolved and use the <a href="/contact/">existing enquiry route</a>.</p></li>
+<li><strong>Read fresh terms, then choose whether to pay.</strong> Request the same window without <code>preview=1</code>. Use the fresh 402 <code>accepts[]</code> terms and verify its offer JWS as described above. Confirm <code>csoai.preview.batch_sha256</code> still matches your saved preview; the published inputs can change. The offer JWS commits payment terms and the resource URL, not the batch digest. Use your own compatible x402 client and wallet to authorize payment and retry the same resource. In HTTP use the challenge's supported payment header; in MCP pass the payment payload as <code>x_payment</code>. Save the settlement result separately from the delivered artifact.</li>
+<li><strong>Check the delivered bytes and evidence.</strong> Save the complete response. Hash <code>response.batch</code> using the canonicalization below, then require that digest to equal your saved preview, <code>response.batch_sha256</code> and <code>response.manifest_card.payload.batch_sha256</code>. Require the canonical byte length to equal <code>manifest_card.payload.batch_bytes</code> and your saved preview. Do not hash the outer response or pretty-printed JSON.
+<pre><code>// Same recursive key ordering as the published cardSign canonicalizer.
+const ordered = v =&gt; Array.isArray(v) ? v.map(ordered)
+  : v &amp;&amp; typeof v === "object"
+    ? Object.fromEntries(Object.keys(v).sort().map(k =&gt; [k, ordered(v[k])]))
+    : v;
+const bytes = new TextEncoder().encode(JSON.stringify(ordered(response.batch)));
+const digest = [...new Uint8Array(await crypto.subtle.digest("SHA-256", bytes))]
+  .map(b =&gt; b.toString(16).padStart(2, "0")).join("");</code></pre>
+<p>Separately verify the manifest and each included card signature under your expected signer policy, and fold each leaf's proof against its carrying root using the <a href="/signed/HOW-TO-VERIFY-ROOT.md">published root-verification instructions</a>. A digest match proves byte consistency; it does not prove signatures, root inclusion, or the truth of a measurement. A missing signature, unavailable root or failed check stays unresolved or invalid. Manifest root inclusion can remain unmeasured.</p></li>
+<li><strong>Record acceptance and a real next use.</strong> The reviewer records whether the verified leaves answer the agreed question, with the accepted batch digest, window, coverage limits and an attributable acknowledgement. Preserve the linked settlement and delivery evidence; payment alone is not acceptance. For a later review, repeat with a second actual window and retain a second delivery and acceptance record. Operator checks of the preview or verifier are QA, not outside-user use or revenue.</li>
+</ol>
 <h2>MCP integration</h2>
 <p>Connect a Streamable HTTP MCP client to <code>https://councilof.ai/mcp</code>. Use <code>tools/list</code> for its current tool definitions; the <a href="/.well-known/x402.json">discovery manifest</a> also lists free and paid tools. Paid tools use the same x402 rail.</p>
 <div class="never">

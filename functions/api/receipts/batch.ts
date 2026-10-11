@@ -2,9 +2,9 @@
  * GET /api/receipts/batch?from=<iso>&to=<iso> — a historical batch of the estate's measurement
  * receipts, sold over the existing x402 rail (SKU receipts_batch, x402-or-invoice).
  *
- * WHAT A "RECEIPT" IS HERE, HONESTLY: /api/receipts/latest is an UNPUBLISHED stub — no settlement-
- * receipt stream exists on Pages, so there is no payment-receipt history to serve and this endpoint
- * never pretends there is. The receipts the estate does publish, hourly, are card-v0 LEAVES: signed
+ * WHAT A "RECEIPT" IS HERE, HONESTLY: this endpoint assembles measurement leaves, not payment
+ * receipts. /api/receipts/latest reports aggregate receipt-store state when available; its counts
+ * do not verify a particular payment, delivery or buyer acceptance. Published card-v0 LEAVES are
  * measurement records under a signed Merkle root (public/root.json), each shipping its inclusion
  * path. Recent = the current root, free forever at /root.json, /cards/<sha16>.json and
  * /api/proof?sha=. What this endpoint assembles — and sells — is HISTORY: every leaf whose as_of
@@ -156,7 +156,7 @@ export function assembleBatch(opts: {
     items,
     what_this_is: "card-v0 measurement leaves published under signed public roots, assembled for a time window with their inclusion paths and carrying roots",
     what_this_is_not: [
-      "settlement or payment receipts — none are published (/api/receipts/latest is UNPUBLISHED)",
+      "settlement or payment receipts — this batch contains measurement leaves only",
       "a conclusion about any leaf, subject or asset",
       "a grade, a rank, a certificate",
     ],
@@ -249,7 +249,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     leaves: `${origin}/cards-bundle.json`,
     roots: history.ok ? `${origin}/receipts/root-history.json` : `${origin}/receipts/root-history.json unreadable (${history.reason}) — roots_carrying empty, declared`,
     current_root: root.ok ? `${origin}/root.json` : `${origin}/root.json unreadable (${root.reason})`,
-    settlement_receipts: "NONE published — /api/receipts/latest is UNPUBLISHED; this is a batch of measurement leaves, not payment receipts",
+    settlement_receipts: "not included in this batch; /api/receipts/latest reports aggregate-only receipt-store state when available, which does not verify a particular payment, delivery or buyer acceptance",
   };
   const previewBody = {
     window: batch.window,
