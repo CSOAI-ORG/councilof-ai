@@ -231,6 +231,15 @@ jobs:
           # The candidate is not live yet, so DRIFTED is valid when it is a real,
           # internally consistent comparison with the old apex root.
           python scripts/root-witness-release-gate.py --phase candidate
+      - name: Regenerate cards-bundle for the tree this run just wrote
+        # /api/xrpl resolves root shas ONLY through /cards-bundle.json (one-fetch read path);
+        # the bundle used to regenerate only at client build, so a fresh root shipped a stale
+        # bundle, the reader counted 14 of the locked 16, /api/xrpl 404'd, pop_xrpl's honest
+        # UNMEASURED sentence hit 287 chars and pr-gates' 260-char guard failed the candidate
+        # (runs 37730042893/37737907167, 2026-10-08). Superset-from-disk is harmless; a subset
+        # 404s a leaf (documented in generate-cards-bundle.mjs). Idempotent, no .ots involved.
+        if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
+        run: node scripts/generate-cards-bundle.mjs
       - name: commit published tree
         id: commit_tree
         if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
@@ -240,7 +249,7 @@ jobs:
           set -euo pipefail
           git config user.name "csoai-public-root"
           git config user.email "board@csoai.org"
-          git add public/root.json public/cards public/proofs public/publisher-health.json
+          git add public/root.json public/cards public/proofs public/publisher-health.json public/cards-bundle.json
           git add public/interop/stablecoin-universe-2026-09/readiness.json
           git add public/archive
           mapfile -d '' witness_files < <(find public/interop -maxdepth 1 -type f \

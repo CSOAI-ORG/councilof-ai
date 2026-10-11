@@ -3,6 +3,7 @@
 
 | lane | owner | files/territory | state |
 |---|---|---|---|
+| invoice-enquiry-20261009 | Codex root, session d1917a3555ff | client/src/lib/{buying,pilotEnquiry}.ts, client/src/lib/buyingEnquiries.test.ts, functions/api/_buying.ts, functions/api/_buying.test.ts only. Existing invoice products: scoped contact presets and direct buying-answer links. No Contact/DashboardRequestPane edits, payment, persistence, price, SKU or deploy change. | RUNNING |
 | home-films | grok (tui-2) | homepage films from NotebookLM Downloads + demo loop | RUNNING |
 | epic-home | grok (tui-2) | restore mega-menu + OS + HeroSlides + 9-product ToolStack + LivingStages on home | RUNNING |
 | weekend-must | grok (tui-2) | MUST 1–25 lean surface: OS FAB, products four lines, assess insurer, mcp four tools | RUNNING |
