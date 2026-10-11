@@ -312,7 +312,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         per: "batch",
         lid: CSOAI_LID,
         never: batch.what_this_is_not,
-        deliverable: "the canonical batch (hashes to preview.batch_sha256) + one signed manifest card-v0 (surface receipts.batch)",
+        deliverable: "the canonical batch (hashes to preview.batch_sha256) + one manifest card-v0 (surface receipts.batch); signing is conditional: inspect manifest_card.sig_ed25519 and unsigned_reason; absent or failed signing is unmeasured; manifest root inclusion remains unmeasured",
         preview: previewBody,
         free_preview: `${resourceUrl}&preview=1`,
         rail: railMode(env),
