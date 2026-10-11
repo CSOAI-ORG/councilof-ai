@@ -765,9 +765,9 @@ export default function About() {
               Checking our evidence is free forever. Existing paid work is issuance and evidence assembly — including Article 50 marking evidence, evidence bundles and supported feeds — never a better grade, a ranking position or a certificate.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/contact/?arm=data">
+              <Link href="/contact/?arm=invoice&product=evidence-bundle">
                 <Button size="lg" className="bg-emerald-700 hover:bg-emerald-800 text-white">
-                  Buy signed evidence
+                  Enquire about an evidence bundle
                 </Button>
               </Link>
               <Link href="/services/">
