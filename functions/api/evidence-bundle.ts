@@ -253,7 +253,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         subject: subject || null,
         relevant_signed_cards: preview.relevant_signed_cards,
         corpus_merkle_root: preview.corpus.merkle_root,
-        artifact: "<bench>.json + <bench>.sig.json (detached Ed25519) + <bench>_oscal.json (OSCAL 1.1.0 assessment-results)",
+        artifact: "evidence-bundle assembly requested; scope, deliverables and delivery terms require owner confirmation before ordering",
       },
       next: [
         // "CSOAI LTD issues the invoice against this reference" used to stand alone here, and a
@@ -308,7 +308,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       bazaar,
       csoai: { schema: "csoai.evidence-bundle/0.1", per: "bundle", lid: CSOAI_LID, never: ["conformity determination", "certificate", "score", "rank"], preview,
         free_preview: previewUrl.toString(),
-        deliverable: "one pack for this subject and obligation: the bench JSON, its detached Ed25519 signature, and the OSCAL assessment-results wrapper — assembled from already-signed cards, never a conformity determination",
+        deliverable: "selected existing card objects for this subject and obligation, the OSCAL assessment-results wrapper, and an assembly manifest; assembly does not verify input-card signatures; the response reports manifest signing status and any unsigned reason; zero selected cards stays zero; any existing_pack link is separate; no new measurement or conformity determination",
         rail: railMode(env), not_paid_reason: payment.reason, catalog: `${origin}/api/x402`, invoice: { how: `${resourceUrl}&invoice=gbp&commissioned_by=<legal entity>`, note: "a buyer who cannot pay USDC can ask for a CSOAI LTD invoice — the reference is issued here, the amount only on the invoice" } },
     });
     return paymentRequiredResponseSigned(paymentRequired, env);
