@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "wouter";
+import { wrapperEnquiryHref } from "@/lib/pilotEnquiry";
 
 const CANONICAL = "https://councilof.ai/wrappers/";
 const LEDGER = "/interop/wrapped-asset-parity-latest.json";
@@ -258,6 +259,7 @@ export default function Wrappers() {
                     <td className="px-3 py-2">
                       <a className="block text-emerald-700 underline underline-offset-4" href={`/w/${encodeURIComponent(r.id)}`}>Published record</a>
                       <a className="mt-1 block text-emerald-700 underline underline-offset-4" href={`${DOOR}${encodeURIComponent(r.id)}&preview=1`}>Free live preview</a>
+                      <Link className="mt-1 block text-emerald-700 underline underline-offset-4" href={wrapperEnquiryHref(r.id, ledger.as_of)}>Enquire about this pair</Link>
                     </td>
                   </tr>
                 ))}
