@@ -95,6 +95,11 @@ jobs:
           ref: public-root/pending
           fetch-depth: 0
 
+      - uses: actions/setup-node@v4
+        if: steps.candidate.outputs.exists == 'true'
+        with:
+          node-version: 20
+
       - uses: actions/setup-python@v5
         if: steps.candidate.outputs.exists == 'true'
         with:
@@ -182,6 +187,11 @@ jobs:
           # release"). Rebuild it from the bytes in the same commit; the manifest is
           # generated from what the files are, never from the intention.
           python3 scripts/ots_manifest_rebuild.py --apply
+          # Refresh only the section derived from the manifest just rebuilt.
+          # Do not fetch a different board or hand-edit published counts.
+          node scripts/llms-txt.mjs --timestamps-only
+          node scripts/llms-txt.mjs --timestamps-only --check
+          git add public/llms.txt public/llms-full.txt
           git add public/interop/ots
           git add public/interop/root-*.json.ots
           git add public/interop/root-witness-*.json public/interop/root-witness-pointer.json

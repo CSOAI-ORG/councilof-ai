@@ -426,6 +426,30 @@ function render(tmpl, t, snapshotJson, corpora, axisDoors, axisDeep) {
   return out;
 }
 
+// A proof upgrade changes only the on-disk timestamp manifest. Refresh that
+// section without fetching a new board or changing unrelated dated snapshots.
+if (process.argv.includes("--timestamps-only")) {
+  const plans = ["public/llms.txt", "public/llms-full.txt"].map((file) => {
+    const have = fs.readFileSync(p(file), "utf8");
+    const marker = "Derived at generation from https://councilof.ai/interop/ots/manifest.json";
+    const start = have.indexOf(marker);
+    if (start < 0 || have.indexOf(marker, start + marker.length) >= 0) {
+      throw new Error(`${file}: expected exactly one timestamp section`);
+    }
+    const end = have.indexOf("\n## ", start);
+    if (end < 0) throw new Error(`${file}: timestamp section boundary missing`);
+    return { file, have, want: have.slice(0, start) + otsSection().trimEnd() + "\n" + have.slice(end) };
+  });
+  // Validate both section boundaries before writing either output.
+  let drift = 0;
+  for (const { file, have, want } of plans) {
+    if (have !== want) drift++;
+    if (!CHECK) fs.writeFileSync(p(file), want);
+    console.log(`${file}: timestamp section ${have === want ? "unchanged" : CHECK ? "drift" : "refreshed"}`);
+  }
+  process.exit(CHECK && drift ? 1 : 0);
+}
+
 let b;
 try {
   b = await board();
