@@ -15,7 +15,9 @@
  * catalogue, and disjoint from the quarantine list.
  */
 import { describe, expect, it } from "vitest";
-import { onRequestGet } from "./x402.json";
+import { onRequestGet, onRequestHead } from "./x402.json";
+import { onRequestGet as directGet, onRequestHead as directHead } from "./x402";
+import { onRequestGet as trailingGet, onRequestHead as trailingHead } from "./x402/index";
 import { PROOF_BUNDLE_DESCRIPTION, RECEIPTS_BATCH_DESCRIPTION } from "../api/_x402_descriptions";
 import FREE from "../mcp/gspc-tools.json";
 import PAID from "../mcp/paid-tools.json";
@@ -224,4 +226,67 @@ describe("resources carry the live v2 accepts[] and a v1 projection of the same 
       expect(v1.outputSchema).toBeTruthy();
     }
   });
+});
+
+describe("well-known discovery aliases preserve the canonical GET and HEAD response", () => {
+  const aliases = [
+    { path: "/.well-known/x402", get: directGet, head: directHead },
+    { path: "/.well-known/x402/", get: trailingGet, head: trailingHead },
+  ];
+  const environments: { name: string; env: Record<string, string> }[] = [
+    { name: "unprovisioned", env: { X402_PROMO_NOW: "2026-10-11T00:00:00.000Z" } },
+    {
+      name: "provisioned",
+      env: {
+        X402_PROMO_NOW: "2026-10-11T00:00:00.000Z",
+        X402_FACILITATOR_URL: "https://f.example",
+        BOARD_SIGN_KEY_PKCS8_B64: "fixture-present",
+      },
+    },
+  ];
+  const invoke = (handler: unknown, path: string, method: "GET" | "HEAD", env: Record<string, string>) =>
+    (handler as (context: unknown) => Promise<Response>)({
+      request: new Request(`${ORIGIN}${path}`, {
+        method,
+        headers: { "x-payment": "not-a-real-payment", "payment-signature": "not-a-real-signature" },
+      }),
+      env,
+      params: {},
+    });
+  const headers = (response: Response) => Array.from(response.headers.entries()).sort();
+
+  for (const alias of aliases) {
+    for (const { name, env } of environments) {
+      it(`${alias.path} GET matches canonical bytes, status and headers (${name}), without redirect`, async () => {
+        const canonical = await invoke(onRequestGet, "/.well-known/x402.json", "GET", env);
+        const actual = await invoke(alias.get, alias.path, "GET", env);
+
+        expect(canonical.status).toBe(200);
+        expect(actual.status).toBe(canonical.status);
+        expect(actual.statusText).toBe(canonical.statusText);
+        expect(actual.headers.get("content-type")).toMatch(/^application\/json\b/);
+        expect(actual.headers.get("location")).toBeNull();
+        expect(actual.redirected).toBe(false);
+        expect(headers(actual)).toEqual(headers(canonical));
+        expect(new Uint8Array(await actual.arrayBuffer())).toEqual(new Uint8Array(await canonical.arrayBuffer()));
+      });
+
+      it(`${alias.path} HEAD matches canonical GET/HEAD metadata and has no body (${name}), without redirect`, async () => {
+        const canonicalGet = await invoke(onRequestGet, "/.well-known/x402.json", "GET", env);
+        const canonicalHead = await invoke(onRequestHead, "/.well-known/x402.json", "HEAD", env);
+        const actual = await invoke(alias.head, alias.path, "HEAD", env);
+
+        expect(canonicalHead.status).toBe(200);
+        expect(actual.status).toBe(canonicalHead.status);
+        expect(actual.status).toBe(canonicalGet.status);
+        expect(actual.statusText).toBe(canonicalHead.statusText);
+        expect(actual.headers.get("location")).toBeNull();
+        expect(actual.redirected).toBe(false);
+        expect(headers(actual)).toEqual(headers(canonicalHead));
+        expect(headers(actual)).toEqual(headers(canonicalGet));
+        expect(actual.body).toBeNull();
+        expect(await actual.text()).toBe("");
+      });
+    }
+  }
 });

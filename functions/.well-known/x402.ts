@@ -4,4 +4,7 @@
  * registerFromOrigin treats a redirect as noDiscovery; the IronBridge validator
  * requires 200 application/json with no redirects). Same payload as x402.json.
  */
-export { onRequest } from "./x402.json";
+import { onRequestGet as manifestGet, onRequestHead as manifestHead } from "./x402.json";
+
+export const onRequestGet: typeof manifestGet = (context) => manifestGet(context);
+export const onRequestHead: typeof manifestHead = (context) => manifestHead(context);
