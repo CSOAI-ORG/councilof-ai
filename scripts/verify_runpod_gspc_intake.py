@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import os
 import re
@@ -23,6 +24,7 @@ import unicodedata
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 WORKER_SCHEMA = "csoai.runpod-gspc-worker/0.1"
@@ -334,6 +336,86 @@ def _load_allowlist(path: Path, source_dir: Path) -> tuple[set[tuple[str, str]],
     return allowed, sha256_bytes(snapshot.raw)
 
 
+@dataclass(frozen=True)
+class _FrozenBankSnapshot:
+    """Path-shaped, read-only adapter for the already bounded trusted bytes.
+
+    The existing worker loader consumes this snapshot instead of rereading a
+    mutable path. It retains the actual source suffix and exact bytes; it never
+    reconstructs a bank from transferred evidence.
+    """
+
+    raw: bytes
+    suffix: str
+
+    def is_symlink(self) -> bool:
+        return False
+
+    def read_bytes(self) -> bytes:
+        return self.raw
+
+
+def _load_trusted_bank(
+    path: Path | None,
+    source_dir: Path,
+    bank_sha256: str,
+    labels: tuple[str, ...],
+) -> list[Any]:
+    if path is None:
+        raise IntakeError(
+            "MISSING_TRUSTED_BANK", "control-plane trusted bank bytes are required"
+        )
+    _require_absolute_clean_path(path, "trusted bank")
+    if path.is_symlink() or _is_within(path.resolve(strict=False), source_dir):
+        raise IntakeError(
+            "UNTRUSTED_BANK_PATH", "trusted bank must be separate from the transferred run"
+        )
+    snapshot = _safe_snapshot(path, MAX_ITEMS_BYTES, "BAD_TRUSTED_BANK")
+    if sha256_bytes(snapshot.raw) != bank_sha256:
+        raise IntakeError(
+            "TRUSTED_BANK_DIGEST_MISMATCH",
+            "trusted bank bytes do not match the allowlisted run digest",
+        )
+
+    # Reuse only the existing frozen-bank loader and prompt adapter. Importing
+    # this stdlib-only module does not run its guarded worker entry point.
+    module_name = "_runpod_gspc_intake_bank_worker"
+    worker = sys.modules.get(module_name)
+    if worker is None:
+        spec = importlib.util.spec_from_file_location(
+            module_name, Path(__file__).resolve().with_name("runpod_gspc_worker.py")
+        )
+        if spec is None or spec.loader is None:
+            raise IntakeError("TRUSTED_BANK_UNCHECKABLE", "frozen-bank loader unavailable")
+        worker = importlib.util.module_from_spec(spec)
+        sys.modules[module_name] = worker
+        spec.loader.exec_module(worker)
+    config = SimpleNamespace(
+        bank_path=_FrozenBankSnapshot(snapshot.raw, path.suffix),
+        expected_bank_sha256=bank_sha256,
+        allowed_labels=labels,
+    )
+    try:
+        items, loaded_sha256 = worker.load_frozen_bank(config)
+    except worker.WorkerError as error:
+        raise IntakeError(
+            "TRUSTED_BANK_UNSUPPORTED",
+            "trusted bank is not supported by the pinned worker loader",
+        ) from error
+    if loaded_sha256 != bank_sha256:
+        raise IntakeError("TRUSTED_BANK_DIGEST_MISMATCH", "bank loader digest disagrees")
+    return [
+        (
+            item.item_id,
+            worker.compose_prompt(item, labels),
+            item.expected,
+            item.predicate,
+            list(item.required_keywords),
+        )
+        for item in items
+    ]
+
+
 def _validate_source_directory(path: Path) -> dict[str, Snapshot]:
     _require_absolute_clean_path(path, "run directory")
     try:
@@ -424,6 +506,8 @@ def _parse_items(
     model_digest: str,
     instrument_sha256: str,
     instrument: dict[str, Any],
+    trusted_bank_path: Path | None,
+    source_dir: Path,
 ) -> ItemCounts:
     if not raw.endswith(b"\n") or raw.startswith(b"\n"):
         raise IntakeError("BAD_ITEMS", "items JSONL must be newline-terminated")
@@ -471,6 +555,7 @@ def _parse_items(
 
     graders = instrument.get("graders")
     keyword_grader = graders.get("keyword_match") if isinstance(graders, dict) else None
+    trusted_items = _load_trusted_bank(trusted_bank_path, source_dir, bank_sha256, labels)
     correct = 0
     parse_errors = 0
     seen_items: set[str] = set()
@@ -512,6 +597,22 @@ def _parse_items(
             or row.get("prompt_sha256") != sha256_bytes(prompt.encode("utf-8"))
         ):
             raise IntakeError("PROMPT_HASH_MISMATCH", "item prompt hash does not match")
+        if index > len(trusted_items):
+            raise IntakeError("BANK_COVERAGE_MISMATCH", "run exceeds its frozen bank")
+        trusted_id, trusted_prompt, trusted_expected, trusted_predicate, trusted_keywords = (
+            trusted_items[index - 1]
+        )
+        if item_id != trusted_id:
+            raise IntakeError("BANK_ITEM_MISMATCH", "item ID or order differs from frozen bank")
+        if prompt != trusted_prompt:
+            raise IntakeError("BANK_PROMPT_MISMATCH", "prompt differs from frozen bank adapter")
+        if row.get("expected") != trusted_expected:
+            raise IntakeError("BANK_EXPECTED_MISMATCH", "answer key differs from frozen bank")
+        if (
+            row.get("predicate") != trusted_predicate
+            or row.get("required_keywords") != trusted_keywords
+        ):
+            raise IntakeError("BANK_PREDICATE_MISMATCH", "predicate differs from frozen bank")
         if row.get("decode") != expected_decode:
             raise IntakeError(
                 "ROW_PIN_MISMATCH", "item decode does not match instrument"
@@ -599,6 +700,12 @@ def _parse_items(
             raise IntakeError("GRADE_MISMATCH", "stored grade does not recompute")
         correct += int(computed_grade)
 
+    if len(lines) != len(trusted_items):
+        raise IntakeError(
+            "BANK_COVERAGE_MISMATCH",
+            "a complete run must contain all supported items from its exact pinned bank",
+        )
+
     return ItemCounts(
         attempted=len(lines),
         transport_ok=len(lines),
@@ -620,6 +727,7 @@ def _validate_semantics(
     snapshots: dict[str, Snapshot],
     allowed_banks: set[tuple[str, str]],
     allowlist_sha256: str,
+    trusted_bank_path: Path | None = None,
 ) -> dict[str, Any]:
     run = _require_dict(
         parse_json_bytes(snapshots["run"].raw, "BAD_RUN"), "BAD_RUN", "run"
@@ -726,6 +834,8 @@ def _validate_semantics(
         model_digest=model_digest,
         instrument_sha256=instrument_sha256,
         instrument=instrument,
+        trusted_bank_path=trusted_bank_path,
+        source_dir=source_dir.resolve(strict=False),
     )
     run_counts = _require_dict(run.get("counts"), "BAD_COUNTS", "run counts")
     expected_counts = {
@@ -856,6 +966,7 @@ def _validate_semantics(
         "card_file_sha256": sha256_bytes(snapshots["card"].raw),
         "card_id": card_id,
         "bank_allowlist_sha256": allowlist_sha256,
+        "trusted_bank_sha256": bank_sha256,
     }
     bundle_sha256 = sha256_bytes(
         canonical_json_bytes(
@@ -878,6 +989,7 @@ def _validate_semantics(
         "subject": subject,
         "model_manifest_digest": model_digest,
         "bank_sha256": bank_sha256,
+        "bank_binding": "trusted-exact-bytes-and-complete-item-set-v1",
         "card_hash_mode": card_hash_mode,
         "source_hashes": source_hashes,
         "counts": expected_counts,
@@ -907,7 +1019,10 @@ def _write_private_file(path: Path, raw: bytes) -> None:
 
 
 def verify_to_quarantine(
-    run_dir: Path, allowlist_path: Path, quarantine_root: Path
+    run_dir: Path,
+    allowlist_path: Path,
+    quarantine_root: Path,
+    trusted_bank_path: Path | None = None,
 ) -> tuple[Path, dict[str, Any]]:
     run_dir = _require_absolute_clean_path(run_dir, "run directory")
     quarantine_root = _require_absolute_clean_path(quarantine_root, "quarantine root")
@@ -920,7 +1035,7 @@ def verify_to_quarantine(
     snapshots = _validate_source_directory(run_dir)
     allowed_banks, allowlist_sha256 = _load_allowlist(allowlist_path, source_resolved)
     verification = _validate_semantics(
-        run_dir, snapshots, allowed_banks, allowlist_sha256
+        run_dir, snapshots, allowed_banks, allowlist_sha256, trusted_bank_path
     )
 
     if quarantine_root.exists():
@@ -968,6 +1083,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run-dir", required=True, type=Path)
     parser.add_argument("--bank-allowlist", required=True, type=Path)
+    parser.add_argument(
+        "--trusted-bank",
+        type=Path,
+        help="separate control-plane frozen bank bytes; required for verification",
+    )
     parser.add_argument("--quarantine-root", required=True, type=Path)
     return parser
 
@@ -976,7 +1096,7 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
         destination, verification = verify_to_quarantine(
-            args.run_dir, args.bank_allowlist, args.quarantine_root
+            args.run_dir, args.bank_allowlist, args.quarantine_root, args.trusted_bank
         )
     except IntakeError as error:
         print(f"REJECT {error.code}: {error}", file=sys.stderr)
