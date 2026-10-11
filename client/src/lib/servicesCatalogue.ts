@@ -122,6 +122,7 @@ export interface ManifestResource {
   paid_for?: string | null;
   amount?: string | number | null;
   note?: string | null;
+  description?: string | null;
   free_preview?: string | null;
   indexed_in?: string | null;
 }
@@ -131,7 +132,7 @@ export interface ServiceCard {
   path: string;
   method: string;
   group: GroupId;
-  /** From the manifest's own paid_for/note — never written here. */
+  /** Published description, then legacy note/paid_for fallback; never invented here. */
   measures: string;
   freePreview: string | null;
   /** True only when the manifest itself says the amount is zero. */
@@ -148,7 +149,7 @@ export function toCard(r: ManifestResource, group: GroupId): ServiceCard {
     path: pathOf(r.url),
     method: r.method || "GET",
     group,
-    measures: r.note?.trim() || (r.paid_for ? `Paid for ${r.paid_for}.` : "Free forever."),
+    measures: (typeof r.description === "string" ? r.description.trim() : "") || r.note?.trim() || (r.paid_for ? `Paid for ${r.paid_for}.` : "Free forever."),
     freePreview: r.free_preview ?? null,
     freeForever: zero,
     payLine: zero ? "Free forever — it settles and charges nothing." : PAY_LINE,
