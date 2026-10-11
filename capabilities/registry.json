@@ -2528,6 +2528,19 @@
       "payment": "free_preview_then_x402"
     },
     {
+      "id": "api-wrapper-changes-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "Wrapper changes (POST)",
+      "description": "POST /api/wrapper/changes — the unpaid probe a directory validator sends (POST {}, no payment header). Answers this door's own 402 challenge before any id validation, because x402scan's discovery spec treats \"Expected 402, got 404 from request validation running before payment challenge\" as a disqualifying failure. A POST that carries a payment header keeps the /api catch-all 404 it has always answered: this door has never served POST.",
+      "endpoint": "/api/wrapper/changes",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "x402"
+    },
+    {
       "id": "api-wrapper-index-json",
       "protocols": [
         "http"

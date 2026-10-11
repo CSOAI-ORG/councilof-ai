@@ -24,6 +24,7 @@
       "api-request-attestation-post",
       "api-rwa-evidence-post",
       "api-state",
+      "api-wrapper-changes-post",
       "api-wrapper-post",
       "api-wrapper-asset-usdc-post",
       "api-wrapper-asset-usdt-post",
@@ -251,6 +252,17 @@
       "payment": "free",
       "path": "/api/state",
       "method": "GET"
+    },
+    {
+      "id": "api-wrapper-changes-post",
+      "kind": "http",
+      "name": "Wrapper changes (POST)",
+      "description": "POST /api/wrapper/changes — the unpaid probe a directory validator sends (POST {}, no payment header). Answers this door's own 402 challenge before any id validation, because x402scan's discovery spec treats \"Expected 402, got 404 from request validation running before payment challenge\" as a disqualifying failure. A POST that carries a payment header keeps the /api catch-all 404 it has always answered: this door has never served POST.",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "x402",
+      "path": "/api/wrapper/changes",
+      "method": "POST"
     },
     {
       "id": "api-wrapper-post",

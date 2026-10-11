@@ -135,6 +135,31 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const description = POPULATION_DESCRIPTIONS[entry.id] ?? liveSentence;
   const accepts = x402Accepts(env, resourceUrl, { ...SKU, description, productId: `csoai.product.population.${entry.id}` });
 
+  // THE DISCOVERY BLOCK IS COMPUTED ONCE AND USED TWICE (the free-door pattern). The 402 advertises
+  // it, and verifyX402Payment echoes the SAME object into the v2 PaymentPayload the facilitator
+  // catalogs from — specs/extensions/bazaar.md: "If the extension is omitted, discovery cataloging
+  // will not occur." Until 2026-10-09 this block was built inside challenge() only, so every one of
+  // the ten population doors advertised a conformant extensions.bazaar and then sent a settle
+  // WITHOUT it: settleable, and permanently unindexed (PayAI catalogs off /verify and /settle, never
+  // off a 402 — docs.payai.network/x402/facilitators/bazaar).
+  const bazaar = declareBazaarHttpGet({
+    method: "GET",
+    // Path-scoped: no queryParams, no queryParamsSchema. The door IS the URL.
+    outputExample: {
+      schema: SCHEMA,
+      kind: "slice",
+      id: entry.id,
+      state: head.state,
+      n: head.n,
+      n_unit: head.n_unit,
+      as_of: head.as_of,
+      source: head.source,
+      rows: "<the population rows / artifact bytes, verbatim>",
+      attestation: { schema: "https://councilof.ai/schema/card-v0.json", surface: "population.slice", payload: { kind: LEAF_KIND, rows_sha256: "<hex>" }, sha256: "<hex>", sig_ed25519: "<hex or null>" },
+      settle: { transaction: "<0x… or null>", network: "<caip2 or null>", payer: "<0x… or null>" },
+    },
+  });
+
   const challenge = (notPaidReason: string, extra: { error?: string; csoai?: Record<string, unknown> } = {}) => {
     const pr = buildPaymentRequiredV2({
       resourceUrl,
@@ -142,23 +167,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       serviceName: "CSOAI Population Door",
       tags: entry.tags.slice(0, 5),
       accepts,
-      // Path-scoped: no queryParams, no queryParamsSchema. The door IS the URL.
-      bazaar: declareBazaarHttpGet({
-        method: "GET",
-        outputExample: {
-          schema: SCHEMA,
-          kind: "slice",
-          id: entry.id,
-          state: head.state,
-          n: head.n,
-          n_unit: head.n_unit,
-          as_of: head.as_of,
-          source: head.source,
-          rows: "<the population rows / artifact bytes, verbatim>",
-          attestation: { schema: "https://councilof.ai/schema/card-v0.json", surface: "population.slice", payload: { kind: LEAF_KIND, rows_sha256: "<hex>" }, sha256: "<hex>", sig_ed25519: "<hex or null>" },
-          settle: { transaction: "<0x… or null>", network: "<caip2 or null>", payer: "<0x… or null>" },
-        },
-      }),
+      bazaar,
       csoai: {
         schema: SCHEMA,
         per: "population-slice",
@@ -186,6 +195,11 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     return paymentRequiredResponseSigned(extra.error ? { ...pr, error: extra.error } : pr, env);
   };
 
+  // ONE WIRING POINT for both call sites below: the unpaid challenge asks verifyX402Payment only for
+  // its refusal reason, the paid path for the settle — but both must hand the facilitator the same
+  // discovery block, and only a settle that carries it is catalogued.
+  const attemptPayment = () => verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar });
+
   if (preview) {
     return json({
       schema: SCHEMA,
@@ -201,7 +215,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   }
 
   if (!paid) {
-    return challenge((await verifyX402Payment(request, env, resourceUrl, accepts[0])).reason);
+    return challenge((await attemptPayment()).reason);
   }
 
   // READ BEFORE SETTLE: a slice that could not be read is never charged for.
@@ -257,7 +271,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     unmeasured: [...reading.unmeasured, ...(leaf.sig_ed25519 ? [] : [/absent/.test(leaf.unsigned_reason || "") ? "sig_ed25519 (no Pages key)" : "sig_ed25519 (sign failed)"])],
   };
 
-  const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0]);
+  const payment = await attemptPayment();
   if (!payment.ok) return challenge(payment.reason);
 
   if (env.REVENUE_KV) {

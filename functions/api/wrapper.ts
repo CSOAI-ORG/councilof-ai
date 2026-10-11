@@ -388,6 +388,17 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     return paymentRequiredResponseSigned(extra.error ? { ...pr, error: extra.error } : pr, env);
   };
 
+  // 402 BEFORE INPUT VALIDATION, UNPAID POST ONLY — INDEX ELIGIBILITY (2026-10-09). A directory
+  // validator probes with POST {} and no payment header; a malformed or off-roster pair used to
+  // answer 400/404 first, which x402scan lists as a common failure ("Expected 402, got 400 from
+  // request validation running before payment challenge") and which reads as "not payable". GET is
+  // untouched — a human or a link that asks for an unknown pair still gets the 404 that names
+  // known_ids — and a POST that carries a payment header skips this line and takes the paid path
+  // (still 404/400 for an unusable pair: no payment is ever requested or taken for one).
+  if (request.method === "POST" && !paid && id && (!ID_RE.test(id) || !findEntry(id))) {
+    return challenge((await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar })).reason);
+  }
+
   // No id at all: the abstract door. Nothing is read, so the unpaid answer is the discovery 402
   // (an indexer needs a payable resource to list); a preview or a payment needs a pair first.
   if (!id) {

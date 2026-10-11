@@ -302,6 +302,49 @@ async function invoiceReference(org: string, subjectSha: string | null, fetched_
   return `CSOAI-A50-${h.slice(0, 10).toUpperCase()}`;
 }
 
+/**
+ * THE UNPAID CHALLENGE — ONE BUILD, USED BY BOTH ENTRY POINTS (2026-10-09).
+ *
+ * Index eligibility: a directory validator probes a door with `POST {}` and no payment header, and
+ * x402scan names the failure verbatim — "Expected 402, got 400 from request validation running
+ * before payment challenge". This door used to parse the body first and answer 400
+ * ("JSON body needs url, bytes_b64 or manifest_b64"), so it was read as not-payable. The same
+ * builder now answers (a) an unpaid POST whose input cannot be used and (b) the no-input branch
+ * below, so the two paths can never drift apart. Nothing here touches a request that carries a
+ * payment header: those still fall through to the unchanged paid path.
+ */
+async function unpaidChallenge(env: Env, challengeUrl: string): Promise<Response> {
+  const description = ART50_MARKING_EVIDENCE_DESCRIPTION;
+  const accepts = x402Accepts(env, challengeUrl, { skuId: "request_attestation", tier: "per_request", description });
+  // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
+  // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
+  // Behavior) — that echo is what gets a resource catalogued.
+  const bazaar = declareBazaarHttpGet({
+    method: "GET",
+    queryParams: { url: "https://councilof.ai/og-image.png" },
+    queryParamsSchema: {
+      properties: {
+        url: { type: "string", format: "uri", description: "HTTPS URL of the output to measure" },
+        preview: { type: "string", const: "1" },
+      },
+      required: ["url"],
+    },
+    outputExample: { schema: KIND, measurement: { checked: [] } },
+  });
+  return paymentRequiredResponseSigned(
+    buildPaymentRequiredV2({
+      resourceUrl: challengeUrl,
+      description,
+      serviceName: "CSOAI Art50 Marking",
+      tags: ["art50", "marking", "c2pa", "x402"],
+      accepts,
+      bazaar,
+      csoai: { schema: KIND, lid: CSOAI_LID, never: ["conformity", "certificate"] },
+    }),
+    env,
+  );
+}
+
 // ───────────────────────────── handler ─────────────────────────────
 const handle: PagesFunction<Env> = async ({ request, env }) => {
   const url = new URL(request.url);
@@ -327,7 +370,30 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
     return u.toString();
   })();
 
+  // 402 BEFORE THE INPUT-VALIDATION ANSWER — INDEX ELIGIBILITY (2026-10-09). A directory
+  // validator probes with `POST {}` and no payment header; readInput used to answer it 400
+  // "JSON body needs url, bytes_b64 or manifest_b64", and x402scan names exactly that as a common
+  // failure — "Expected 402, got 400 from request validation running before payment challenge" —
+  // which the Coinbase Bazaar validator reads as "this resource is not payable". So for an unpaid
+  // POST the validation result is never returned: the challenge is, whatever the body said.
+  //
+  // Three cases stay outside this rule, deliberately, because they are not the probe:
+  //   • a payment header present — the paying path below is untouched (no drift for a buyer);
+  //   • ?preview=1 — the published free preview, which must keep answering 400 "supply url=…"
+  //     when there is nothing to preview and 200 when there is;
+  //   • ?invoice=gbp — the GBP invoice rail moves no x402 payment at all, so it has no challenge
+  //     to issue; a malformed invoice request is still the 400 that says what is missing.
+  // GET is untouched throughout: every published free-preview URL keeps the answer it had.
   const input = await readInput(request, url);
+  if (
+    request.method === "POST" &&
+    !hasPaymentHeader(request) &&
+    !preview &&
+    !invoice &&
+    (input.error || !input.source)
+  ) {
+    return unpaidChallenge(env, challengeUrl);
+  }
   if (input.error) return json({ schema: KIND, error: "uncheckable", reason: input.error, url: input.url, http: input.http }, input.error.includes("cap") ? 413 : 400);
   if (!input.source) {
     if (preview) {
@@ -350,46 +416,10 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
         400,
       );
     }
-    const description = ART50_MARKING_EVIDENCE_DESCRIPTION;
-    const accepts = x402Accepts(env, challengeUrl, { skuId: "request_attestation", tier: "per_request", description });
-    // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
-    // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
-    // Behavior) — that echo is what gets a resource catalogued.
-    const bazaar = declareBazaarHttpGet({
-      method: "GET",
-      queryParams: { url: "https://councilof.ai/og-image.png" },
-      queryParamsSchema: {
-        properties: {
-          url: { type: "string", format: "uri", description: "HTTPS URL of the output to measure" },
-          preview: { type: "string", const: "1" },
-        },
-        required: ["url"],
-      },
-      outputExample: { schema: KIND, measurement: { checked: [] } },
-    });
-    const payment = await verifyX402Payment(request, env, challengeUrl, accepts[0], { bazaar });
-    if (!payment.ok) {
-      return paymentRequiredResponseSigned(
-        buildPaymentRequiredV2({
-          resourceUrl: challengeUrl,
-          description,
-          serviceName: "CSOAI Art50 Marking",
-          tags: ["art50", "marking", "c2pa", "x402"],
-          accepts,
-          bazaar,
-          csoai: { schema: KIND, lid: CSOAI_LID, never: ["conformity", "certificate"] },
-        }),
-        env,
-      );
-    }
-    return json(
-      {
-        schema: KIND,
-        error: "bad_request",
-        reason: "supply url=<https://…> or POST the bytes / a manifest to measure",
-      },
-      400,
-    );
+    // No payment header can reach this line (the branch above returns 400 when one is present),
+    // so there is no payment to present to the facilitator: the challenge IS the answer. The
+    // builder is shared with the unpaid-POST challenge above, so the two bodies cannot drift.
+    return unpaidChallenge(env, challengeUrl);
   }
   const fetched_at = new Date().toISOString();
   const m = await measure(input);
