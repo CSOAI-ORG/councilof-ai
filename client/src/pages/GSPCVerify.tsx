@@ -246,6 +246,17 @@ export default function GSPCVerify() {
             <strong>UNCHECKABLE</strong> (the check could not be completed). Could-not-check is never
             reported as a failure.
           </p>
+          <p className="mt-3 max-w-3xl text-sm text-emerald-200/75 leading-relaxed">
+            <a
+              href="https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/public/independent-verifier-trial.md"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-emerald-300 underline decoration-emerald-500/40 hover:decoration-emerald-300"
+            >
+              Try the verifier and report your result
+            </a>{" "}
+            (instructions on GitHub; opens a new tab).
+          </p>
           <div className="mt-6 grid gap-2 sm:grid-cols-3" aria-label="What verification checks">
             {[
               ["01", "Hash", "Recompute the content identifier from the exact bytes."],
