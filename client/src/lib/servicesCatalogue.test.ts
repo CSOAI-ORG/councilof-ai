@@ -18,6 +18,38 @@ import {
 } from "./servicesCatalogue";
 
 describe("every published door is grouped", () => {
+
+  it("classifies all observed 10 October 2026 live x402 resource families", () => {
+    // Uses observed, existing paths only; unknown future paths remain ungrouped.
+    const observed: Array<[string, string]> = [
+      ["/api/discover/chainlink", "finance-rwa"],
+      ["/api/discover/ondo-ousg", "finance-rwa"],
+      ["/api/discover/ondo", "finance-rwa"],
+      ["/api/wrapper/asset/", "finance-rwa"],
+      ["/api/wrapper/changes", "finance-rwa"],
+      ["/api/wrapper", "finance-rwa"],
+      ["/api/pop/stablecoins", "finance-rwa"],
+      ["/api/pop/xrpl", "finance-rwa"],
+      ["/api/pop/corrections", "compliance"],
+      ["/api/pop/claim-watch", "compliance"],
+      ["/api/measurement/fresh-capsule", "model-measurement"],
+      ["/api/signed-data-feed", "model-measurement"],
+      ["/api/pop/x402-bazaar", "agent-rails"],
+      ["/api/pop/mcp-registry", "agent-rails"],
+      ["/api/pop/a2a", "agent-rails"],
+      ["/api/pop/ots-proofs", "agent-rails"],
+      ["/api/pop/layer0", "agent-rails"],
+      ["/api/ras/mcp-probe", "agent-rails"],
+      ["/api/ras/x402-check", "agent-rails"],
+      ["/api/ras/supply", "agent-rails"],
+      ["/api/pop/swift", "legacy-systems"],
+    ];
+    for (const [path, group] of observed) {
+      expect(groupFor("https://councilof.ai" + path), path).toBe(group);
+    }
+    expect(groupFor("https://councilof.ai/api/nonexistent-new-door")).toBeNull();
+  });
+
   it("leaves nothing ungrouped", () => {
     const c = buildCatalogue(manifest);
     // if this fails it names the door that would have vanished from the page
