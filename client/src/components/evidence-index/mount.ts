@@ -413,7 +413,7 @@ export function mountEvidenceIndex(host: HTMLElement, options: MountOptions): ()
       const ids = new Set(state.data.rows.map((r) => r.id));
       state.compare = state.compare.filter((id) => ids.has(id));
     }
-    if (w.outcome.ok) {
+    if (w.outcome.ok === true) {
       try {
         workerView(w.outcome.body);
         state.worker = w.outcome.body;
