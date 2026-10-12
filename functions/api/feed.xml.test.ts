@@ -16,12 +16,13 @@ const report = (i: number, status = "UNMEASURED") => ({
   api: `/api/report?subject=model-${i}&axis=governance`, canonical_sha256: "f".repeat(64),
 });
 
-const install = (opts: { gspc?: boolean; gspcCount?: string; index?: any; findings?: any } = {}) => {
+const install = (opts: { gspc?: boolean; gspcCount?: string; index?: any; findings?: any; cardRoot?: any } = {}) => {
   vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request) => {
     const url = new URL(typeof input === "string" ? input : input instanceof URL ? input : input.url);
     if (url.pathname === "/api/gspc") return opts.gspc === false ? new Response("down", { status: 503 }) : Response.json({ totals: { public_count: opts.gspcCount ?? "23 axis · 23 measured", model_fleets: 1, fact_runs: 9, items: 900 } });
     if (url.pathname === "/reports/index.json") return opts.index === null ? new Response("nf", { status: 404 }) : Response.json(opts.index ?? { reports: [report(1, "MEASURED"), report(2)] });
     if (url.pathname === "/signed/findings_index.json") return opts.findings === null ? new Response("nf", { status: 404 }) : Response.json(opts.findings ?? { as_of: "2026-08-19T09:24:39Z", counts: { findings: 335, models: 64, axes: 16, regulators: 3, possible_cells: 1024, unmeasured_cells: 689 } });
+    if (url.pathname === "/interop/card-root-latest.json" && opts.cardRoot !== undefined) return opts.cardRoot === null ? new Response("nf", { status: 404 }) : typeof opts.cardRoot === "string" ? new Response(opts.cardRoot, { status: 200 }) : Response.json(opts.cardRoot);
     return new Response("nf", { status: 404 });
   }));
 };
@@ -87,5 +88,35 @@ describe("/api/feed.xml derives its items", () => {
     const changed = await read();
     expect(changed).not.toBe(before);
     expect(changed.match(/<item>[\s\S]*?<\/item>/)?.[0]).not.toBe(boardItem);
+  });
+
+  describe("mill card root item", () => {
+    const pointer = {
+      schema: "csoai.card-root-pointer/1", as_of: "2026-10-01T06:51:30Z",
+      root_url: "/interop/card-root-2026-10-01-35544212115c.json",
+      root_sha256: "c445fc6b80f22535e5c1f894856083854c7ec3d4eb0184915a70502e41846f55", n_leaves: 1466,
+      scope: "This unsigned pointer selects immutable mill-card root bytes. Its count is separate from /signed/card_index.json, /root.json and /api/gspc.",
+    };
+
+    it("a readable pointer yields the mill item first after the board line, dated by as_of", async () => {
+      install({ cardRoot: pointer });
+      const items = await deriveItems("https://councilof.ai");
+      expect(items[1].title).toBe("Mill card root: 1466 leaves");
+      expect(items[1].date).toBe("Thu, 01 Oct 2026 06:51:30 GMT");
+      expect(items[1].link).toBe("https://councilof.ai/interop/card-root-2026-10-01-35544212115c.json");
+      expect(items[1].desc).toContain(pointer.root_sha256);
+      expect(items[1].desc).toContain("separate from /signed/card_index.json, /root.json and /api/gspc");
+    });
+
+    it("a 404 or unparseable pointer yields no mill item and leaves the existing items unchanged", async () => {
+      install();
+      const baseline = await deriveItems("https://councilof.ai");
+      for (const cardRoot of [null, "not json{", { n_leaves: "many" }]) {
+        install({ cardRoot });
+        const items = await deriveItems("https://councilof.ai");
+        expect(items.some((i) => i.title.startsWith("Mill card root"))).toBe(false);
+        expect(items).toEqual(baseline);
+      }
+    });
   });
 });
