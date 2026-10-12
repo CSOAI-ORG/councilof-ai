@@ -162,7 +162,17 @@ export function onBeforeSettle<T extends Record<string, unknown>>(envelope: T, r
  */
 export function isEmptyProbeBody(text: string): boolean {
   const t = (text || "").trim();
-  return t === "" || t === "{}" || t === "[]";
+  if (t === "") return true;
+  if (!t.startsWith("{") && !t.startsWith("[")) return false;
+  // A probe can contain harmless JSON whitespace; a populated JSON body is
+  // always a real buyer request and must reach the original route unchanged.
+  try {
+    const parsed: unknown = JSON.parse(t);
+    if (Array.isArray(parsed)) return parsed.length === 0;
+    return parsed !== null && typeof parsed === "object" && Object.keys(parsed).length === 0;
+  } catch {
+    return false;
+  }
 }
 
 const GENERIC_DESCRIPTION =

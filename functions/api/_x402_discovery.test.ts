@@ -103,7 +103,7 @@ describe("descriptionForPath — canonical descriptions, generic fallback", () =
 
 describe("the middleware mounts the payment gate above input validation", () => {
   it("paymentless empty-body POST to an x402 door gets the 402 envelope first (x402#2156)", async () => {
-    const { onRequest } = await import("./_middleware");
+    const { onRequest } = await import("../_middleware");
     let nextCalled = false;
     const res = await onRequest({
       request: new Request("https://councilof.ai/api/request-attestation?subject=qwen3", {
@@ -132,7 +132,7 @@ describe("the middleware mounts the payment gate above input validation", () => 
   });
 
   it("a POST with a real body, a payment header, or a non-door path falls through", async () => {
-    const { onRequest } = await import("./_middleware");
+    const { onRequest } = await import("../_middleware");
     for (const [url, headers, body] of [
       ["https://councilof.ai/api/art50/marking-evidence", {}, '{"manifest_b64":"AA=="}'],
       ["https://councilof.ai/api/request-attestation", { "x-payment": "e30=" }, ""],
