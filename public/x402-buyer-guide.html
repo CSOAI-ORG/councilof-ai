@@ -100,6 +100,7 @@ curl "https://councilof.ai/api/evidence-bundle?obligation=article-50&amp;subject
 # Paid: use the same subject and add bundle=1 to request the 402.
 curl "https://councilof.ai/api/evidence-bundle?obligation=article-50&amp;subject=model-id&amp;bundle=1"</code></pre>
 <p>Replace <code>model-id</code> with the subject you need. Check <code>relevant_signed_cards</code> before paying: zero means the selection is empty, and payment creates no new measurements.</p>
+<p>Before ordering, inspect the native record family and limits of each selected card. <code>relevant_signed_cards</code> counts records, not independent measurements. Provider-page byte-change notices report a change in observed bytes; their meaning, cause and materiality require separate evidence. Marking-census notices that report no detector or sample probes do not establish fresh marking-test results. Different wrappers may contain equal payloads; retain their distinct identities. Assembly reuses existing records and does not verify input-card signatures. Check the selected records and applicable attribution and notices, and review payment and delivery terms before ordering.</p>
 <h3>"I want to prove this card is in your canonical Merkle root"</h3>
 <pre><code># One leaf: free
 curl "https://councilof.ai/api/proof?sha=&lt;64-hex&gt;"

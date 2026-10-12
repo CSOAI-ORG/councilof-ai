@@ -6,7 +6,7 @@
  * A page that owns ⌘K itself (DemoOS, marked data-own-cmdk) keeps it. If the viewer already
  * granted agent consent in this tab, the in-page agent bridge (window.councilUi) is installed.
  */
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { useLocation, useSearch } from "wouter";
 import { ASK_OPEN, PALETTE_OPEN, recordRecent, type AskOpenDetail } from "@/components/ask/askBus";
 
@@ -20,6 +20,23 @@ export default function AskHost() {
   const [askMounted, setAskMounted] = useState(false);
   const [askOpen, setAskOpen] = useState(false);
   const [question, setQuestion] = useState<{ text: string; n: number } | null>(null);
+  const enteredRoute = useRef<string | null>(null);
+
+  // Human entrypoints open the existing Ask conversation after hydration. A close lasts until
+  // navigation; opening never submits a question or changes Watch, voice or agent consent.
+  useEffect(() => {
+    if ((window as Window & { __CSOAI_PRERENDER__?: boolean }).__CSOAI_PRERENDER__) return;
+    const route = location + "?" + search;
+    if (enteredRoute.current === route) return;
+    enteredRoute.current = route;
+    const path = location.replace(/\/+$/, "") || "/";
+    const params = new URLSearchParams(search.startsWith("?") ? search.slice(1) : search);
+    const home = path === "/dashboard" && !params.has("view") && (!params.get("tab") || params.get("tab") === "home");
+    if (path === "/" || path === "/tools" || home) {
+      setAskMounted(true);
+      setAskOpen(true);
+    }
+  }, [location, search]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
