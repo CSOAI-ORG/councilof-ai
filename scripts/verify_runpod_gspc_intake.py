@@ -271,7 +271,13 @@ def _ruled_instrument_id(
     _check_instrument_identity; it is ruled only if that id is on RULED_INSTRUMENT_IDS. A
     legacy run with no id counts as exact-label-t128 only when ALL hold: exact-label reader,
     max_tokens == 128, and an otherwise standard T0 decode (temperature 0, seed 0, no stream,
-    no think, no num_ctx override). Anything else -- t64 included -- is None. Fails closed.
+    no think). Anything else -- t64 included -- is None. Fails closed.
+
+    num_ctx is the run's context window, not a decode parameter, so it is not part of the
+    T0 test. The real serial t128 runs (2026-10-12) record num_ctx=3072, num_parallel=1;
+    an earlier `num_ctx is None` condition here rejected every one of them (#3049 intake
+    38217331403: 1272/1272 UNRULED_INSTRUMENT). t4096@3072 stays SUPERSEDED via
+    _check_instrument_identity; that ruling is about t4096 output truncation, not t128.
     """
     instrument_id = run.get("instrument_id")
     if instrument_id is not None:
@@ -287,7 +293,6 @@ def _ruled_instrument_id(
         and decode.get("seed") == 0
         and decode.get("stream") is False
         and decode.get("think") is False
-        and run.get("num_ctx") is None
     ):
         return EXACT_LABEL_T128_ID
     return None
