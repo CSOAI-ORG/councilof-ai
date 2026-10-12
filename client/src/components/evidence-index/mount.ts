@@ -29,6 +29,16 @@ import {
   type ViewState,
 } from "./evidenceIndex";
 
+import {
+  SOURCE_REFRESH_BUDGET_MS,
+  SOURCE_RECEIPT_STALE_AFTER_MS,
+  applySourceRefresh,
+  emptySourceRefresh,
+  sourceRefreshView,
+  type SourceReadOutcome,
+  type SourceRefreshState,
+} from "./sourceRefresh";
+
 export type MountOptions = {
   /** Stylesheet text injected into the shadow root (bundled from ./style.css). */
   cssText: string;
@@ -101,6 +111,8 @@ export const CLIENT_GUIDES: ClientGuide[] = [
 
 type State = ViewState &
   CoverageReadState & {
+    coverageRefresh: SourceRefreshState;
+    workerRefresh: SourceRefreshState;
     worker: unknown;
     workerError: string;
     workerObservedAt: string | null;
@@ -123,6 +135,8 @@ export function mountEvidenceIndex(host: HTMLElement, options: MountOptions): ()
     observedAt: null,
     mode: "not loaded",
     error: "",
+    coverageRefresh: emptySourceRefresh(),
+    workerRefresh: emptySourceRefresh(),
     worker: null,
     workerError: "",
     workerObservedAt: null,
@@ -211,6 +225,30 @@ export function mountEvidenceIndex(host: HTMLElement, options: MountOptions): ()
   <details><summary>Read the relationships as a table</summary><div class="tablewrap" tabindex="0"><table><thead><tr><th>From</th><th>Relation</th><th>To / field</th></tr></thead><tbody>${edges.map((e) => `<tr><td>${esc(e.from)}</td><td>${esc(e.relation)}</td><td>${esc(e.to)}<br>${esc(e.field)}</td></tr>`).join("")}</tbody></table></div></details><p class="legend">Schema proposal for deeper graph work: subject → version → method → observation → admitted card → scoped commitment → witness → publication. Only add an edge when a record establishes it.</p>`;
   }
 
+  function receiptFreshnessText(receipt: SourceRefreshState) {
+    const view = sourceRefreshView(receipt);
+    return `${view.freshness}${view.ageMs === null ? "" : ` · ${Math.floor(view.ageMs / 1000)} s since reader refresh`}`;
+  }
+
+  function updateSourceRefreshAges() {
+    for (const [kind, receipt] of [["coverage", state.coverageRefresh], ["worker", state.workerRefresh]] as const) {
+      const node = root.querySelector<HTMLElement>(`#ei-${kind}-freshness`);
+      const text = receiptFreshnessText(receipt);
+      if (node && node.textContent !== text) node.textContent = text;
+    }
+  }
+
+  function sourceRefreshTable() {
+    const reads = [
+      ["coverage", "Coverage reader", state.coverageRefresh, "No envelope evidence date published"],
+      ["worker", "Worker health reader", state.workerRefresh, "worker.updated_at (reported health time)"],
+    ] as const;
+    return `<section aria-labelledby="ei-refresh-title"><h4 id="ei-refresh-title">Source refresh and evidence dates</h4><p class="muted">A successful reader refresh records a schema-valid response, including an offline or stale worker response. It does not refresh the underlying evidence date. Source status is the reader’s declaration, not an independent attestation. Client deadline: ${SOURCE_REFRESH_BUDGET_MS / 1000} seconds; receipt-age window: ${SOURCE_RECEIPT_STALE_AFTER_MS / 1000} seconds (view policy, not a service SLA). Refresh is manual; only the displayed age updates automatically.</p><div class="tablewrap" tabindex="0"><table data-testid="ei-source-refresh"><thead><tr><th>Reader</th><th>Connection and freshness</th><th>Last successful reader refresh</th><th>Latest read latency / client budget</th><th>Source evidence date</th><th>Source read date</th></tr></thead><tbody>${reads.map(([kind, label, receipt, evidenceScope]) => {
+      const r = sourceRefreshView(receipt);
+      return `<tr><th scope="row">${label}</th><td>Reader: ${esc(r.transport)}<br>Source: ${esc(r.sourceState)}<br><span id="ei-${kind}-freshness">${esc(receiptFreshnessText(receipt))}</span></td><td>${date(r.lastSuccessfulRefreshAt)}<br><span class="muted">Last attempt: ${date(r.lastAttemptAt)}</span></td><td>${r.lastLatencyMs === null ? "—" : `${formatCount(r.lastLatencyMs)} ms`} / ${formatCount(r.budgetMs)} ms${r.overBudget === true ? " · exceeded" : ""}</td><td>${date(r.sourceEvidenceAt)}<br><span class="muted">${evidenceScope}</span></td><td>${date(r.sourceReadAt)}<br><span class="muted">worker read_at, when published</span></td></tr>`;
+    }).join("")}</tbody></table></div><p><strong>Attestation:</strong> Not verified by this view. <strong>Current-run evidence:</strong> Not established by these readers. Process counters, a recent health timestamp and an HTTP success do not establish a same-run signed result.</p></section>`;
+  }
+
   function computeView() {
     let w: ReturnType<typeof workerView> | null = null;
     try {
@@ -220,7 +258,8 @@ export function mountEvidenceIndex(host: HTMLElement, options: MountOptions): ()
     }
     const retained = state.workerMode === "retained, not live";
     return `<div class="eyebrow">Compute is not publication</div><h3>Know which part is working</h3><p class="network-desc muted">RunPod executes jobs. The evidence pipeline admits and publishes results. Hugging Face provides public repositories and interfaces; a Bucket is working storage.</p>
-  <p class="time">Worker observation: ${date(state.workerObservedAt)} · ${esc(state.workerMode)}</p>
+  ${sourceRefreshTable()}
+  <p class="time">Worker reader refresh: ${date(state.workerObservedAt)} · ${esc(state.workerMode)}</p>
   ${state.workerError ? `<div class="callout" role="alert">Worker source unavailable: ${esc(state.workerError)}. ${w ? "The previous observation is retained, not live." : "No worker values substituted."}</div>` : ""}
   <div class="compute"><article><h4>RunPod endpoint</h4><div class="big">${esc(w?.endpoint || "UNKNOWN")}</div><p>Worker state: <strong>${esc(w?.state || "UNKNOWN")}</strong></p><p class="muted">${esc(w?.reason || "No response loaded")}</p><p class="time">Heartbeat: ${date(w?.heartbeat)}</p></article>
   <article><h4>Last successful execution</h4><p class="time">${date(w?.lastSuccess)}</p><div class="big">${!w || w.minutesSinceSuccess === null ? "—" : `${w.minutesSinceSuccess} min`}</div><p class="muted">Age at view time${retained ? " (from a retained, not-live observation)" : ""}, not a published-result count.</p></article>
@@ -353,30 +392,32 @@ export function mountEvidenceIndex(host: HTMLElement, options: MountOptions): ()
     render();
     const signal = controller.signal;
     const now = () => new Date().toISOString();
-    const [c, w] = await Promise.allSettled([
-      readJSON(coverageURL, { signal, fetchImpl: options.fetchImpl }),
-      readJSON(workerURL, { signal, fetchImpl: options.fetchImpl }),
-    ]);
+    const timedRead = async (url: string) => {
+      const started = performance.now();
+      let outcome: SourceReadOutcome;
+      try {
+        outcome = { ok: true, body: await readJSON(url, { signal, fetchImpl: options.fetchImpl, timeout: SOURCE_REFRESH_BUDGET_MS }) };
+      } catch (e) {
+        outcome = { ok: false, error: e instanceof Error ? e.message : "Source request failed." };
+      }
+      return { outcome, finishedAt: now(), elapsedMs: performance.now() - started };
+    };
+    const [c, w] = await Promise.all([timedRead(coverageURL), timedRead(workerURL)]);
     if (disposed || signal.aborted) return;
-    const next = applyCoverageRead(
-      state,
-      c.status === "fulfilled"
-        ? { ok: true, body: c.value }
-        : { ok: false, error: (c.reason as Error)?.message || "Coverage request failed." },
-      now(),
-      origin,
-    );
+    state.coverageRefresh = applySourceRefresh(state.coverageRefresh, "coverage", c.outcome, c.finishedAt, c.elapsedMs);
+    state.workerRefresh = applySourceRefresh(state.workerRefresh, "worker", w.outcome, w.finishedAt, w.elapsedMs);
+    const next = applyCoverageRead(state, c.outcome, c.finishedAt, origin);
     Object.assign(state, next);
     if (state.data) {
       updateSelection();
       const ids = new Set(state.data.rows.map((r) => r.id));
       state.compare = state.compare.filter((id) => ids.has(id));
     }
-    if (w.status === "fulfilled") {
+    if (w.outcome.ok) {
       try {
-        workerView(w.value);
-        state.worker = w.value;
-        state.workerObservedAt = now();
+        workerView(w.outcome.body);
+        state.worker = w.outcome.body;
+        state.workerObservedAt = w.finishedAt;
         state.workerMode = "live read";
         state.workerError = "";
       } catch (e) {
@@ -384,7 +425,7 @@ export function mountEvidenceIndex(host: HTMLElement, options: MountOptions): ()
         state.workerMode = state.worker ? "retained, not live" : "not loaded";
       }
     } else {
-      state.workerError = (w.reason as Error)?.message || "Worker request failed.";
+      state.workerError = w.outcome.error || "Worker request failed.";
       state.workerMode = state.worker ? "retained, not live" : "not loaded";
     }
     state.loading = false;
@@ -507,8 +548,13 @@ export function mountEvidenceIndex(host: HTMLElement, options: MountOptions): ()
   root.addEventListener("input", input);
   window.addEventListener("popstate", pop);
   void refresh();
+  // Display-only clock: no polling, network call, or background worker is created.
+  const ageClock = setInterval(() => {
+    if (!disposed && state.view === "compute" && !state.loading && document.visibilityState !== "hidden") updateSourceRefreshAges();
+  }, 10000);
 
   return () => {
+    clearInterval(ageClock);
     disposed = true;
     controller?.abort();
     root.removeEventListener("click", click);
