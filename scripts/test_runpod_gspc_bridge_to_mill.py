@@ -17,10 +17,10 @@ BANK = "b" * 64
 INSTR = "c" * 64
 
 
-def body(run_id, *, n=40, acc=0.5, parse=0, axis="safety", model=MODEL, bank=BANK, instr=INSTR):
+def body(run_id, *, n=40, acc=0.5, parse=0, transport=0, axis="safety", model=MODEL, bank=BANK, instr=INSTR):
     return {"model": model, "axis": axis, "n": n, "accuracy": acc,
             "compute_evidence": {"run_id": run_id, "bank_sha256": bank, "instrument_sha256": instr,
-                                 "parse_errors_excluded": parse, "transport_errors_excluded": 0}}
+                                 "parse_errors_excluded": parse, "transport_errors_excluded": transport}}
 
 
 class BridgeGates(unittest.TestCase):
@@ -81,7 +81,7 @@ class BridgeGates(unittest.TestCase):
     def test_held_cell_is_never_staged(self):
         self.put(body("20260923T000000Z-a"))
         self.put(body("20260923T000000Z-b", axis="care"))
-        staged, aside = self.run_collect(held={(MODEL, "safety")})
+        staged, aside = self.run_collect(held={("qwen2.5:7b", "any", "safety")})
         self.assertEqual([s["body"]["axis"] for s in staged], ["care"])
         self.assertEqual(aside[0]["reason"], "HELD_LIST")
 
@@ -92,11 +92,46 @@ class BridgeGates(unittest.TestCase):
         self.assertEqual([s["run_id"] for s in staged], ["20260914T000000Z-old"])
         self.assertTrue(aside[0]["reason"].startswith("NOT_RUN_OF_RECORD"))
 
-    def test_failing_earlier_run_does_not_block_later_passing_run(self):
+    def test_exact_0_1_blocks_its_whole_cell(self):
+        """R5: a later re-run may not dislodge an exact-0/1 hold."""
         self.put(body("20260914T000000Z-old", acc=1))
         self.put(body("20260923T000000Z-new"))
+        self.put(body("20260924T000000Z-newer"))
+        staged, aside = self.run_collect()
+        self.assertEqual(staged, [])
+        reasons = {a["run_id"]: a["reason"] for a in aside}
+        self.assertEqual(reasons["20260914T000000Z-old"], "HOLD_EXACT_0_1")
+        self.assertEqual(reasons["20260923T000000Z-new"], "HELD_CELL_EXACT_0_1 (20260914T000000Z-old)")
+        self.assertEqual(reasons["20260924T000000Z-newer"], "HELD_CELL_EXACT_0_1 (20260914T000000Z-old)")
+
+    def test_exact_0_1_block_is_scoped_to_bank_and_instrument(self):
+        self.put(body("20260914T000000Z-old", acc=0))
+        self.put(body("20260923T000000Z-other", instr="9" * 64))
         staged, _ = self.run_collect()
-        self.assertEqual([s["run_id"] for s in staged], ["20260923T000000Z-new"])
+        self.assertEqual([s["run_id"] for s in staged], ["20260923T000000Z-other"])
+
+    def test_transport_over_five_percent_is_incomplete_run(self):
+        # 3 transport of 53 attempted = 5.7%
+        self.put(body("20260923T000000Z-a", n=50, transport=3))
+        staged, aside = self.run_collect()
+        self.assertEqual(staged, [])
+        self.assertTrue(aside[0]["reason"].startswith("UNMEASURED_incomplete_run"))
+
+    def test_transport_at_five_percent_passes(self):
+        self.put(body("20260923T000000Z-a", n=95, transport=5))  # exactly 5%
+        staged, _ = self.run_collect()
+        self.assertEqual(len(staged), 1)
+
+    def test_held_list_matches_model_tag_any_digest(self):
+        self.put(body("20260923T000000Z-a", model="ollama:qwen2.5:7b@sha256:" + "f" * 64))
+        staged, aside = self.run_collect(held={("qwen2.5:7b", "any", "safety")})
+        self.assertEqual(staged, [])
+        self.assertEqual(aside[0]["reason"], "HELD_LIST")
+
+    def test_held_list_pinned_digest_only_holds_that_build(self):
+        self.put(body("20260923T000000Z-a", model="ollama:qwen2.5:7b@sha256:" + "f" * 64))
+        staged, _ = self.run_collect(held={("qwen2.5:7b", "e" * 64, "safety")})
+        self.assertEqual(len(staged), 1)
 
     def test_cells_split_by_bank_and_instrument(self):
         self.put(body("20260914T000000Z-a", axis="swarm", bank="1" * 64))
@@ -109,7 +144,9 @@ class BridgeGates(unittest.TestCase):
 
     def test_shipped_held_list_loads_and_is_nonempty(self):
         held = bridge.load_held()
-        self.assertGreaterEqual(len(held), 6)
+        self.assertGreaterEqual(len(held), 15)
+        self.assertIn(("phi3.5:3.8b", "any", "governance"), held)
+        self.assertIn(("hf.co/openbmb/MiniCPM5-2B-GGUF:Q8_0", "any", "swarm"), held)
 
     def test_det_and_affect_banks_are_off_allowlist(self):
         allow = json.loads((HERE / "runpod_gspc_bank_allowlist.current.json").read_text())

@@ -711,7 +711,8 @@ class SerialOptionalFieldTests(unittest.TestCase):
             intake.verify_to_quarantine(self.fixture.source, self.fixture.allowlist, quarantine)
             # Byte-transport check only; house gates (exact 0/1, unparsed, held) are
             # covered in test_runpod_gspc_bridge_to_mill.py and would set this tiny fixture aside.
-            with mock.patch.object(bridge, "house_gate", lambda *_a: None):
+            with mock.patch.object(bridge, "run_gate", lambda *_a: None), \
+                    mock.patch.object(bridge, "is_exact_0_1", lambda *_a: False):
                 staged, _, problems = bridge.collect(quarantine, set())
             self.assertEqual(problems, [])
             out = self.root / f"out-{extras}"
@@ -921,7 +922,8 @@ class ReadLabelInstrumentTests(unittest.TestCase):
         source_body = json.loads((self.fixture.source / "card-unsigned.json").read_text())["body"]
         self.verify()
         # Byte-transport check only; house gates are covered in test_runpod_gspc_bridge_to_mill.py.
-        with mock.patch.object(bridge, "house_gate", lambda *_a: None):
+        with mock.patch.object(bridge, "run_gate", lambda *_a: None), \
+                    mock.patch.object(bridge, "is_exact_0_1", lambda *_a: False):
             staged, _, problems = bridge.collect(self.fixture.quarantine, set())
         self.assertEqual(problems, [])
         out = self.root / "out"

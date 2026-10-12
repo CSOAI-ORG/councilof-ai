@@ -21,9 +21,9 @@ WHAT IT DOES NOT DO, DELIBERATELY:
     what that produced. A run that never passed verification never reaches here.
   * It does not delete or move anything on the pod.
 
-HOUSE GATES (Measure ruling on #3047, 2026-10-12). Before a run may stage it must pass:
-held list (`runpod_gspc_held_cells.json`), unparsed <= 10% of attempted items, and an
-accuracy that is not exactly 0 or 1 (exact 0/1 is HOLD). Detector-interop (label leak) and
+HOUSE GATES (Measure rulings on #3047/#3049, 2026-10-12). Before a run may stage it must pass:
+held list (`runpod_gspc_held_cells.json`, matched on model tag), transport loss <= 5% and
+unparsed <= 10% of attempted items. An exact 0/1 run is HOLD and blocks its whole cell (R5). Detector-interop (label leak) and
 affect (provisional) are refused earlier: their banks are off the intake allowlist.
 
 ONE RUN OF RECORD PER CELL (R6). A cell is (model, axis, bank_sha256, instrument_sha256).
@@ -60,41 +60,70 @@ def cell_key(body: dict) -> str:
 
 
 HELD_CELLS_PATH = pathlib.Path(__file__).with_name("runpod_gspc_held_cells.json")
-HELD_SCHEMA = "csoai.runpod-gspc-held-cells/0.1"
-MAX_UNPARSED_FRACTION = 0.10  # Measure house rule: more than 10% unparsed is an instrument failure
+HELD_SCHEMA = "csoai.runpod-gspc-held-cells/0.2"
+MAX_UNPARSED_FRACTION = 0.10   # Measure: more than 10% unparsed is an instrument failure
+MAX_TRANSPORT_FRACTION = 0.05  # Measure: more than 5% transport loss is an incomplete run
 
 
-def load_held(path: pathlib.Path | None = None) -> set[tuple[str, str]]:
-    """Measure's held list as {(model, axis)}. Absent or malformed is a hard error, never empty."""
+def model_tag(model: str) -> str:
+    """`ollama:qwen2.5:7b@sha256:..` -> `qwen2.5:7b` (prefix and digest stripped)."""
+    return str(model).split("@")[0].removeprefix("ollama:")
+
+
+def model_digest(model: str) -> str:
+    m = str(model)
+    return m.split("@sha256:", 1)[1] if "@sha256:" in m else ""
+
+
+def load_held(path: pathlib.Path | None = None) -> set[tuple[str, str, str]]:
+    """Measure's held list as {(model_tag, digest|'any', axis)}. Malformed is a hard error."""
     path = path or HELD_CELLS_PATH
     data = json.loads(path.read_text(encoding="utf-8"))
     if data.get("schema") != HELD_SCHEMA or not isinstance(data.get("cells"), list):
         raise ValueError(f"{path}: not a {HELD_SCHEMA} file")
-    return {(str(c["model"]), str(c["axis"])) for c in data["cells"]}
+    held = set()
+    for c in data["cells"]:
+        digest = str(c.get("digest") or "any").removeprefix("sha256:")
+        held.add((model_tag(c["model"]), digest, str(c["axis"])))
+    return held
+
+
+def is_held(body: dict, held: set[tuple[str, str, str]]) -> bool:
+    tag, axis = model_tag(body.get("model") or ""), str(body.get("axis"))
+    return (tag, "any", axis) in held or (tag, model_digest(body.get("model") or ""), axis) in held
+
+
+def _counts(body: dict) -> tuple[int, int, int]:
+    ce = body.get("compute_evidence") or {}
+    n = int(body.get("n") or 0)
+    return n, int(ce.get("parse_errors_excluded") or 0), int(ce.get("transport_errors_excluded") or 0)
 
 
 def unparsed_fraction(body: dict) -> float:
-    ce = body.get("compute_evidence") or {}
-    n = int(body.get("n") or 0)
-    parse = int(ce.get("parse_errors_excluded") or 0)
-    transport = int(ce.get("transport_errors_excluded") or 0)
+    n, parse, transport = _counts(body)
     attempted = n + parse + transport
     return (parse / attempted) if attempted else 1.0
 
 
-def house_gate(body: dict, held: set[tuple[str, str]]) -> str | None:
-    """Return the drop/hold reason for one verified run, or None if it may stage.
+def transport_fraction(body: dict) -> float:
+    n, parse, transport = _counts(body)
+    attempted = n + parse + transport
+    return (transport / attempted) if attempted else 1.0
 
-    These are Measure's house gates (ruling on #3047). They do not decide MEASURED --
-    the signer still owns that from n -- they only decide whether a run may be staged."""
-    if (str(body.get("model")), str(body.get("axis"))) in held:
-        return "HELD_LIST"
+
+def is_exact_0_1(body: dict) -> bool:
+    acc = body.get("accuracy")
+    return isinstance(acc, (int, float)) and not isinstance(acc, bool) and acc in (0, 1)
+
+
+def run_gate(body: dict) -> str | None:
+    """Per-run drop reason (not cell-level), or None. Exact 0/1 is handled per cell."""
+    frac = transport_fraction(body)
+    if frac > MAX_TRANSPORT_FRACTION:
+        return f"UNMEASURED_incomplete_run_transport_{frac * 100:.1f}pct"
     frac = unparsed_fraction(body)
     if frac > MAX_UNPARSED_FRACTION:
         return f"INSTRUMENT_FAILURE_unparsed_{frac * 100:.1f}pct"
-    acc = body.get("accuracy")
-    if isinstance(acc, (int, float)) and acc in (0, 1):
-        return "HOLD_EXACT_0_1"
     return None
 
 
@@ -105,7 +134,7 @@ def ror_key(body: dict) -> tuple[str, str, str, str]:
             str(ce.get("bank_sha256") or ""), str(ce.get("instrument_sha256") or ""))
 
 
-def collect(intake: pathlib.Path, held: set[tuple[str, str]] | None = None
+def collect(intake: pathlib.Path, held: set[tuple[str, str, str]] | None = None
             ) -> tuple[list[dict], list[dict], list[str]]:
     """Return verified, house-gated candidates, one run of record per cell.
 
@@ -113,10 +142,12 @@ def collect(intake: pathlib.Path, held: set[tuple[str, str]] | None = None
     ``verification.json`` receipt in a private quarantine directory.  Reading
     the original ``card-unsigned.json`` tree here would bypass that boundary,
     so the bridge accepts only that paired output and rechecks the copied-file
-    digest. It then applies Measure's house gates (held list, >10% unparsed,
-    exact 0/1 HOLD) and keeps the EARLIEST passing run per
-    (model, axis, bank_sha256, instrument_sha256): the run of record (R6).
-    Set-aside runs are reported in the second list with a reason, never silently.
+    digest. Then, per cell (model, axis, bank_sha256, instrument_sha256), in run_id order:
+    held cells stage nothing (HELD_LIST); runs over 5% transport loss
+    (UNMEASURED_incomplete_run) or 10% unparsed (INSTRUMENT_FAILURE) are set aside; the
+    first remaining run is the run of record (R6) unless it is exact 0/1, in which case
+    it is HOLD_EXACT_0_1 and BLOCKS the cell: every later run is HELD_CELL_EXACT_0_1 until
+    Measure clears it (R5: a re-run may not dislodge a hold). Nothing is dropped silently.
     """
     if held is None:
         held = load_held()
@@ -148,9 +179,8 @@ def collect(intake: pathlib.Path, held: set[tuple[str, str]] | None = None
         if not run_id or run_id != verification.get("run_id"):
             problems.append(f"{card}: run id does not match verification receipt")
             continue
-        reason = house_gate(body, held)
-        if reason:
-            set_aside.append({"cell": cell_key(body), "run_id": run_id, "reason": reason})
+        if is_held(body, held):
+            set_aside.append({"cell": cell_key(body), "run_id": run_id, "reason": "HELD_LIST"})
             continue
         by_cell[ror_key(body)].append((run_id, body, card))
 
@@ -161,14 +191,27 @@ def collect(intake: pathlib.Path, held: set[tuple[str, str]] | None = None
     staged = []
     for key, runs in sorted(by_cell.items()):
         runs.sort(key=lambda t: t[0])  # run_id is time-ordered
-        first = runs[0]
-        name = cell_key(first[1])
+        name = cell_key(runs[0][1])
         if names[name] > 1:
             name = f"{name}-b{key[2][:8]}-i{key[3][:8]}"
-        for later in runs[1:]:
-            set_aside.append({"cell": name, "run_id": later[0],
-                              "reason": f"NOT_RUN_OF_RECORD (earlier passing run {first[0]})"})
-        staged.append({"cell": name, "run_id": first[0], "body": first[1], "src": str(first[2])})
+        record: tuple[str, dict, pathlib.Path] | None = None
+        blocker: str | None = None
+        for run_id, body, card in runs:
+            if blocker:
+                set_aside.append({"cell": name, "run_id": run_id,
+                                  "reason": f"HELD_CELL_EXACT_0_1 ({blocker})"})
+            elif record:
+                set_aside.append({"cell": name, "run_id": run_id,
+                                  "reason": f"NOT_RUN_OF_RECORD (earlier passing run {record[0]})"})
+            elif (reason := run_gate(body)):
+                set_aside.append({"cell": name, "run_id": run_id, "reason": reason})
+            elif is_exact_0_1(body):
+                blocker = run_id
+                set_aside.append({"cell": name, "run_id": run_id, "reason": "HOLD_EXACT_0_1"})
+            else:
+                record = (run_id, body, card)
+        if record:
+            staged.append({"cell": name, "run_id": record[0], "body": record[1], "src": str(record[2])})
     return staged, set_aside, problems
 
 
@@ -246,7 +289,7 @@ def selftest() -> int:
 def _tally(rows: list[dict]) -> dict[str, int]:
     out: dict[str, int] = defaultdict(int)
     for r in rows:
-        out[r["reason"].split(" (")[0].split("_unparsed_")[0]] += 1
+        out[r["reason"].split(" (")[0].split("_unparsed_")[0].split("_transport_")[0]] += 1
     return dict(out)
 
 
