@@ -6,6 +6,7 @@ import json
 import sys
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 from typing import Any
 
@@ -708,7 +709,12 @@ class SerialOptionalFieldTests(unittest.TestCase):
                 self.fixture.write_run()
             quarantine = self.root / f"q-{extras}"
             intake.verify_to_quarantine(self.fixture.source, self.fixture.allowlist, quarantine)
-            staged, _, problems = bridge.collect(quarantine)
+            # Byte-transport check only; house gates (exact 0/1, unparsed, held) are
+            # covered in test_runpod_gspc_bridge_to_mill.py and would set this tiny fixture aside.
+            with mock.patch.object(bridge, "run_gate", lambda *_a: None), \
+                    mock.patch.object(bridge, "is_exact_0_1", lambda *_a: False), \
+                    mock.patch.object(bridge, "RULED_INSTRUMENT_IDS", bridge.RULED_INSTRUMENT_IDS | {None}):
+                staged, _, problems = bridge.collect(quarantine, set())
             self.assertEqual(problems, [])
             out = self.root / f"out-{extras}"
             written, oversize = bridge.write(staged, out)
@@ -916,7 +922,11 @@ class ReadLabelInstrumentTests(unittest.TestCase):
     def test_staged_card_bytes_equal_the_worker_card(self) -> None:
         source_body = json.loads((self.fixture.source / "card-unsigned.json").read_text())["body"]
         self.verify()
-        staged, _, problems = bridge.collect(self.fixture.quarantine)
+        # Byte-transport check only; house gates are covered in test_runpod_gspc_bridge_to_mill.py.
+        with mock.patch.object(bridge, "run_gate", lambda *_a: None), \
+                    mock.patch.object(bridge, "is_exact_0_1", lambda *_a: False), \
+                    mock.patch.object(bridge, "RULED_INSTRUMENT_IDS", bridge.RULED_INSTRUMENT_IDS | {None}):
+            staged, _, problems = bridge.collect(self.fixture.quarantine, set())
         self.assertEqual(problems, [])
         out = self.root / "out"
         bridge.write(staged, out)
@@ -956,6 +966,39 @@ class ExactLabelT128Tests(unittest.TestCase):
         f.run["instrument_id"] = "exact-label-t128"
         f.write_run()
         intake.verify_to_quarantine(f.source, f.allowlist, f.quarantine)
+
+
+    def _legacy_receipt(self, max_tokens: int, *, seed: int = 0, instrument_id=None):
+        f = self.fixture
+        f.instrument["decode"]["max_tokens"] = max_tokens
+        f.instrument["decode"]["seed"] = seed
+        f.instrument_sha = intake.sha256_bytes(intake.canonical_json_bytes(f.instrument))
+        for row in f.rows:
+            row["instrument_sha256"] = f.instrument_sha
+            row["decode"]["max_tokens"] = max_tokens
+            row["decode"]["seed"] = seed
+        f.rebuild()
+        if instrument_id is not None:
+            f.run["instrument_id"] = instrument_id
+        else:
+            f.run.pop("instrument_id", None)
+        f.write_run()
+        _path, receipt = intake.verify_to_quarantine(f.source, f.allowlist, f.quarantine)
+        return receipt
+
+    def test_receipt_names_ruled_t128_id(self) -> None:
+        self.assertEqual(self._legacy_receipt(128, instrument_id="exact-label-t128")["instrument_id"],
+                         "exact-label-t128")
+
+    def test_legacy_t128_without_id_is_ruled_t128(self) -> None:
+        self.assertEqual(self._legacy_receipt(128)["instrument_id"], "exact-label-t128")
+
+    def test_legacy_t64_is_unruled(self) -> None:
+        """gemma3:12b cross-reality (80ef7439) ran at max_tokens 64: not citable."""
+        self.assertIsNone(self._legacy_receipt(64)["instrument_id"])
+
+    def test_legacy_t128_nonstandard_decode_is_unruled(self) -> None:
+        self.assertIsNone(self._legacy_receipt(128, seed=7)["instrument_id"])
 
 
 class ReadLabelPortParityTests(unittest.TestCase):
