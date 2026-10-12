@@ -2,7 +2,7 @@
  "schema": "csoai.models-measured/0.1",
  "what": "Distinct AI models with at least one signed, quotable measurement on a frozen bank, split by whose model it is.",
  "headline": {
-  "third_party_models": 163,
+  "third_party_models": 165,
   "own_models_excluded": 48,
   "own_unconfirmed": 3,
   "third_party_with_admission_receipt": 48,
@@ -23,8 +23,8 @@
   },
   "mill_cards_signed": {
    "path": "/interop/mill-cards-signed/",
-   "files_read": 3142,
-   "cards_counted": 1209,
+   "files_read": 3154,
+   "cards_counted": 1221,
    "cards_counted_with_admission_receipt": 269,
    "cards_not_counted": {
     "signature_not_valid": 0,
@@ -38,7 +38,7 @@
    "rule": "Ed25519 signature verifies under the did:web:csoai.org key it names, id == sha256(canonical body), status MEASURED, quotable, n >= 30, not STAGED_UNSIGNED, not withdrawn, not superseded"
   }
  },
- "inputs_sha256": "9e325231a32f71d9e64711bba08abc93acac8e8b6c3d424cb4e76d1664ff29d8",
+ "inputs_sha256": "6de5e867aae39770f6a07a5c2da0b625c83e447f7d67cca815adda6c319ef1e2",
  "models": [
   {
    "id": "clan-law-plain",
@@ -1922,6 +1922,21 @@
    ]
   },
   {
+   "id": "granite4.2:3b",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 9,
+   "axes": 9,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "first_signed_card": null,
+   "recorded_as": [
+    "ollama:granite4.2:3b@sha256:40577dc168a3a9ad34e9a1234e0c2570be86097fa75a236d4574ae985705d3c4"
+   ]
+  },
+  {
    "id": "mistralai/Mistral-7B-Instruct-v0.2",
    "name_published": true,
    "kind": "third_party",
@@ -2536,6 +2551,21 @@
    "first_signed_card": null,
    "recorded_as": [
     "unsloth/Llama-3.1-8B-Instruct"
+   ]
+  },
+  {
+   "id": "ministral-3:8b",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 3,
+   "axes": 3,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "first_signed_card": null,
+   "recorded_as": [
+    "ollama:ministral-3:8b@sha256:1922accd5827ebe6829e536369195db25eaf664528dc66206d646ea3bb386b71"
    ]
   },
   {
