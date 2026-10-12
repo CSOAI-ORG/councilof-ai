@@ -1,4 +1,5 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect, type Page, type Request } from "@playwright/test";
+import { writeFile } from "node:fs/promises";
 
 /**
  * The first question typed on the Council OS start screen gets an answer (tools audit, 6 Oct 2026).
@@ -91,21 +92,97 @@ for (const vp of VIEWPORTS) {
       if (r.url().includes("/api/agui/run")) aborted.push(r.failure()?.errorText ?? "failed");
     });
 
-    await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
-    await page.locator('[data-testid="dashboard-shell"]').waitFor({ state: "visible", timeout: 60_000 });
-    const composer = page.getByLabel("Ask the Council, or name a pane to open");
-    await expect(composer).toBeEnabled({ timeout: 30_000 });
-    await composer.fill(QUESTION);
-    await page.getByRole("button", { name: "Ask", exact: true }).click();
 
-    const answered = page.getByTestId("talk-tool-card").or(page.getByTestId("talk-answer")).first();
-    await expect(answered).toBeVisible({ timeout: 10_000 });
-    expect(aborted, "POST /api/agui/run was not aborted").toEqual([]);
-    // The answer stays on the start screen; the question did not swap the canvas to the chat log.
-    await expect(page.getByTestId("gspc-workspace-home")).toBeVisible();
-    await expect(page.getByRole("log", { name: "Council of AI conversation" })).toHaveCount(0);
-    // One server question, one card: no census card about other hosts beside it.
-    await expect(page.getByTestId("talk-tool-card")).toHaveCount(1);
-    await expect(page.getByTestId("talk-tool-card").getByTestId("talk-state")).toHaveText(/NOT.MEASURED/);
+    const postRequests: Request[] = [];
+    const completedPostRequests: Request[] = [];
+    const requestIds = new Map<Request, number>();
+    const events: Record<string, unknown>[] = [];
+    const eventLimit = 50;
+    let eventsTruncated = false;
+    const isRunPost = (r: Request) =>
+      r.method() === "POST" && new URL(r.url()).pathname === "/api/agui/run";
+    const record = (event: string, r: Request) => {
+      if (!r.url().includes("/api/agui/run")) return;
+      if (!requestIds.has(r)) requestIds.set(r, requestIds.size + 1);
+      if (events.length >= eventLimit) {
+        eventsTruncated = true;
+        return;
+      }
+      let frameUrl: string | null = null;
+      try {
+        frameUrl = r.frame().url();
+      } catch {
+        // Service-worker requests may not expose a frame.
+      }
+      const body = r.postData();
+      events.push({
+        requestId: requestIds.get(r),
+        event,
+        observedAt: new Date().toISOString(),
+        method: r.method(),
+        url: r.url(),
+        frameUrl,
+        body: body?.slice(0, 4096) ?? null,
+        bodyTruncated: body !== null && body.length > 4096,
+        failure: event === "requestfailed" ? r.failure()?.errorText ?? "failed" : null,
+      });
+    };
+    const onRequest = (r: Request) => {
+      record("request", r);
+      if (isRunPost(r)) postRequests.push(r);
+    };
+    const onFinished = (r: Request) => {
+      record("requestfinished", r);
+      if (isRunPost(r)) completedPostRequests.push(r);
+    };
+    const onFailed = (r: Request) => record("requestfailed", r);
+    page.on("request", onRequest);
+    page.on("requestfinished", onFinished);
+    page.on("requestfailed", onFailed);
+
+    try {
+      await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
+      await page.locator('[data-testid="dashboard-shell"]').waitFor({ state: "visible", timeout: 60_000 });
+      const composer = page.getByLabel("Ask the Council, or name a pane to open");
+      await expect(composer).toBeEnabled({ timeout: 30_000 });
+      await composer.fill(QUESTION);
+      await page.getByRole("button", { name: "Ask", exact: true }).click();
+  
+      const answered = page.getByTestId("talk-tool-card").or(page.getByTestId("talk-answer")).first();
+      await expect(answered).toBeVisible({ timeout: 10_000 });
+      expect(aborted, "POST /api/agui/run was not aborted").toEqual([]);
+      // The answer stays on the start screen; the question did not swap the canvas to the chat log.
+      await expect(page.getByTestId("gspc-workspace-home")).toBeVisible();
+      await expect(page.getByRole("log", { name: "Council of AI conversation" })).toHaveCount(0);
+      // One server question, one card: no census card about other hosts beside it.
+      await expect(page.getByTestId("talk-tool-card")).toHaveCount(1);
+      await expect(page.getByTestId("talk-tool-card").getByTestId("talk-state")).toHaveText(/NOT.MEASURED/);
+      // A visible partial card is not complete-run acceptance.
+      await expect.poll(() => completedPostRequests.length, "Question POST completed").toBe(1);
+      expect(postRequests, "Exactly one question POST").toHaveLength(1);
+      expect(completedPostRequests[0]).toBe(postRequests[0]);
+      expect(aborted, "POST /api/agui/run was not aborted").toEqual([]);
+    } finally {
+      page.off("request", onRequest);
+      page.off("requestfinished", onFinished);
+      page.off("requestfailed", onFailed);
+      const lifecyclePath = testInfo.outputPath("agui-request-lifecycle.json");
+      await writeFile(lifecyclePath, JSON.stringify({
+          question: QUESTION,
+          project: testInfo.project.name,
+          retry: testInfo.retry,
+          viewport: vp.size,
+          localFixture: !process.env.BASE_URL,
+          postRequests: postRequests.length,
+          completedPostRequests: completedPostRequests.length,
+          eventLimit,
+          eventsTruncated,
+          events,
+        }, null, 2));
+      await testInfo.attach("agui-request-lifecycle", {
+        path: lifecyclePath,
+        contentType: "application/json",
+      });
+    }
   });
 }

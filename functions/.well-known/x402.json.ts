@@ -199,6 +199,7 @@ export const onRequestGet: PagesFunction<X402Env> = async ({ request, env }) => 
       // endpoint does return the valid list in its 404 body, so the buyer can recover — but a
       // placeholder that names what it wants costs nothing and spends no round trip.
       { method: "GET", url: `${origin}/api/evidence-bundle?obligation=article-50&bundle=1`, paid_for: "assembly",
+        free_preview: `${origin}/api/evidence-bundle?obligation=article-50`,
         description: EVIDENCE_BUNDLE_DESCRIPTION,
         ...req(`${origin}/api/evidence-bundle?obligation=article-50&bundle=1`, EVIDENCE_BUNDLE_DESCRIPTION)  },
       { method: "GET", url: `${origin}/api/signed-data-feed?feed=1`, paid_for: "assembly",

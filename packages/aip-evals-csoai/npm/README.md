@@ -3,10 +3,16 @@
 Apache-2.0. One ES module with no dependencies that verifies a CSOAI board-signed record (`csoai.signed-run/0.1`) **offline**. sha256, sha512 and Ed25519 (RFC 8032) are implemented in the file. It is written for places where an evaluator gets its inputs passed in and has no network egress (for example a custom TypeScript evaluator), and it runs in browsers, Node, Deno and Bun.
 
 ```js
-import { verifyCard, keysFromDid } from "https://councilof.ai/lib/csoai-verify.mjs";   // or: npm install csoai-verify
+import { verifyCard, keysFromDid } from "https://councilof.ai/lib/csoai-verify.mjs";
 const keys = keysFromDid(savedDidJson);   // a saved copy of https://csoai.org/.well-known/did.json; pin it
 const r = verifyCard({ signed: signedEnvelope, recordText: exactRecordText, keys });
 // r = { verified: boolean, state: "VALID" | "INVALID" | "UNVERIFIABLE_KEY", debug: string }
+```
+
+**Node in a local checkout.** `csoai-verify` is not published on npm. Use the built module already checked into this repository. From a `.mjs` file at the repository root:
+
+```js
+import { verifyCard, keysFromDid } from "./public/lib/csoai-verify.mjs";
 ```
 
 It checks, in order: the sha256 of the canonical payload, the record's sha256, that the key is pinned (if not: UNVERIFIABLE_KEY, never VALID), and the Ed25519 signature.
