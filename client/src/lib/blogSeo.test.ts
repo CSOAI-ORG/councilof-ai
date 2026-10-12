@@ -162,3 +162,21 @@ describe("restored posts never point at the withdrawn /blog/ index", () => {
     expect(items[1].name).toBe("Blog");
   });
 });
+
+describe("restored posts render inside the app's single <main> (content-promise-gate check 6)", () => {
+  const slugs = ["how-to-verify-an-ai-measurement", "keeping-ai-claims-current"];
+  const strip = (h: string) => h.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  it("the rendered body has no <main> of its own, and the article text is unchanged", () => {
+    for (const slug of slugs) {
+      const entry = blogdata.find((e) => e.slug === slug)!;
+      expect(entry, slug).toBeTruthy();
+      expect(entry.content).toMatch(/^<main\b/i); // the data keeps its legacy wrapper
+      const body = bodyWithoutH1(entry.content);
+      expect(body).not.toMatch(/<\/?main\b/i);
+      expect(strip(body)).toBe(strip(entry.content.replace(/<h1\b[^>]*>[\s\S]*?<\/h1>/i, "")));
+      // App.tsx's <main id="main-content"> + this body = exactly one landmark, as the gate counts it.
+      const page = `<main id="main-content"><article>${body}</article></main>`;
+      expect((page.match(/<main\b/gi) ?? []).length).toBe(1);
+    }
+  });
+});
