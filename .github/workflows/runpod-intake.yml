@@ -72,41 +72,68 @@ jobs:
       - name: Verify every run independently
         run: |
           set -euo pipefail
-          ok=0; legacy=0; bad=0
+          ok=0; legacy=0; bad=0; fatal=0
+          # Every non-VERIFIED run is RECORDED (path + reason code) in intake-rejections.tsv
+          # and uploaded as an artifact. A recorded per-run rejection no longer fails the job:
+          # the stage step reads ONLY $GITHUB_WORKSPACE/quarantine/verified-*, which the
+          # verifier writes only after a run fully verifies, so a rejected run can never be
+          # staged or signed. The job still FAILS CLOSED when:
+          #   - the verifier crashes or prints no "REJECT <CODE>:" line (unknown state);
+          #   - the reason is environmental / caller-side (UNSAFE_PATH, IO_ERROR,
+          #     BAD_ALLOWLIST) -- that would mean the check itself is not trustworthy;
+          #   - nothing verified at all.
+          # The walk is pinned to intake/gspc-24x7 and any path containing /quarantine/ is
+          # explicitly excluded, so runs moved aside in the dataset are never re-walked.
+          printf 'state\tcode\trun_dir\tdetail\n' > intake-rejections.tsv
           : > legacy-intake.txt
-          # EVERY path handed to the verifier must be absolute -- it refuses a relative one
-          # for --run-dir exactly as it does for --bank-allowlist. Search from the absolute root
-          # so `find` emits absolute paths rather than post-fixing them.
-          for d in $(find "$GITHUB_WORKSPACE/intake/gspc-24x7" -name card-unsigned.json -exec dirname {} \;); do
-            # The allowlist path MUST be absolute: the verifier refuses a relative one with
-            # "REJECT UNSAFE_PATH: bank allowlist must be an absolute path without '..'". The
-            # first run of this workflow passed a repo-relative path and rejected all 112 runs
-            # that had just verified locally -- the verifier was right and the caller was wrong.
-            # Keep the reason on failure; discarding stderr is what hid the cause for a whole run.
-            if out=$(python3 scripts/verify_runpod_gspc_intake.py \
+          while IFS= read -r -d '' card; do
+            d=$(dirname "$card")
+            case "$d" in */quarantine/*) echo "SKIP_QUARANTINED_PATH $d"; continue;; esac
+            rc=0
+            out=$(python3 scripts/verify_runpod_gspc_intake.py \
                  --run-dir "$d" \
                  --bank-allowlist "$GITHUB_WORKSPACE/scripts/runpod_gspc_bank_allowlist.current.json" \
-                 --quarantine-root "$GITHUB_WORKSPACE/quarantine" 2>&1); then
-              ok=$((ok+1))
-            else
-              # Runs emitted before the parse-error denominator fix cannot satisfy the
-              # current schema. They stay rejected and never reach staging, but must not
-              # prevent an independently valid new run from landing. Everything else is
-              # still a hard failure. The bridge below reads verified quarantine output,
-              # never this source tree, so this exception cannot bypass verification.
-              if printf '%s' "$out" | grep -q 'parse_errors_excluded'; then
-                legacy=$((legacy+1))
-                printf '%s\n' "$d" >> legacy-intake.txt
-                echo "LEGACY_QUARANTINED $d :: $out"
-              else
-                bad=$((bad+1)); echo "REJECTED $d :: $out"
-              fi
+                 --quarantine-root "$GITHUB_WORKSPACE/quarantine" 2>&1) || rc=$?
+            rel=${d#"$GITHUB_WORKSPACE/intake/"}
+            if [ "$rc" -eq 0 ]; then
+              ok=$((ok+1)); continue
             fi
-          done
-          echo "VERIFIED $ok · LEGACY_QUARANTINED $legacy · REJECTED $bad"
+            line=$(printf '%s\n' "$out" | grep -m1 -E '^REJECT [A-Z_]+: ' || true)
+            code=$(printf '%s' "$line" | sed -E 's/^REJECT ([A-Z_]+): .*/\1/')
+            detail=$(printf '%s' "${line#*: }" | tr '\t\n' '  ')
+            if [ "$rc" -ne 2 ] || [ -z "$code" ]; then
+              fatal=$((fatal+1)); echo "FATAL_UNKNOWN rc=$rc $d :: $out"; continue
+            fi
+            case "$code" in
+              UNSAFE_PATH|IO_ERROR|BAD_ALLOWLIST)
+                fatal=$((fatal+1)); echo "FATAL_$code $d :: $out"; continue;;
+            esac
+            if printf '%s' "$out" | grep -q 'parse_errors_excluded'; then
+              legacy=$((legacy+1)); state=LEGACY_QUARANTINED
+              printf '%s\n' "$d" >> legacy-intake.txt
+            else
+              bad=$((bad+1)); state=REJECTED
+            fi
+            printf '%s\t%s\t%s\t%s\n' "$state" "$code" "$rel" "$detail" >> intake-rejections.tsv
+          done < <(find "$GITHUB_WORKSPACE/intake/gspc-24x7" -name card-unsigned.json -not -path '*/quarantine/*' -print0)
+          echo "VERIFIED $ok · LEGACY_QUARANTINED $legacy · REJECTED $bad · FATAL $fatal"
+          echo "Reasons (recorded, not staged):"; tail -n +2 intake-rejections.tsv | cut -f1,2 | sort | uniq -c || true
           echo "verified=$ok" >> "$GITHUB_OUTPUT"
+          [ "$fatal" -eq 0 ] || { echo "verifier could not decide $fatal run(s) safely; failing closed"; exit 1; }
           [ "$ok" -gt 0 ] || { echo "no current-schema run verified; refusing an empty stage"; exit 1; }
-          [ "$bad" -eq 0 ] || { echo "a run failed intake verification"; exit 1; }
+          staged=$(find "$GITHUB_WORKSPACE/quarantine" -maxdepth 1 -type d -name 'verified-*' | wc -l)
+          [ "$staged" -ge 1 ] && [ "$staged" -le "$ok" ] || { echo "verified output count $staged inconsistent with verified $ok; failing closed"; exit 1; }
+
+      - name: Publish the intake rejection manifest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: runpod-intake-rejections-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            intake-rejections.tsv
+            legacy-intake.txt
+          if-no-files-found: warn
+          retention-days: 30
 
       - name: Stage the verified runs for the signer
         env:
