@@ -49,7 +49,7 @@ test("a digest from another registry version or a read missing a subject claim c
   assert.equal(state(fixture({ registry_sha256: "c".repeat(64) })).state, "DUE_EXECUTION_UNVERIFIED");
   assert.equal(state(fixture({ claim_ids_read: ["B"] })).state, "DUE_EXECUTION_UNVERIFIED");
 });
-test("a read before the exact signed due time or in the future cannot complete", () => {
+test("a read before the exact recorded due time or in the future cannot complete", () => {
   assert.equal(state(fixture({ checked_at: "2026-09-28T09:19:59Z" })).state, "DUE_EXECUTION_UNVERIFIED");
   assert.equal(state(fixture({ checked_at: "2026-10-08T12:00:01Z" })).state, "DUE_EXECUTION_UNVERIFIED");
 });
@@ -115,4 +115,13 @@ test("entry point generates and checks a pinned local projection without a netwo
     const checked = run(["--check"]); assert.equal(checked.status, 0, checked.stderr);
     const invalid = run(["--checks-dir"]); assert.notEqual(invalid.status, 0);
   } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test("presence-bearing v0.2 rows can follow historical rows, while an unknown schema is rejected", () => {
+  const first = fixture();
+  const newer = fixture({ schema: "csoai.claim-maintenance-check/0.2", checked_at: "2026-10-01T01:00:00Z" }, first.rows);
+  assert.equal(newer.rows.length, 2);
+  assert.equal(newer.rows[0].row_sha256, first.rows[0].row_sha256);
+  assert.equal(state(newer).state, "COMPLETED");
+  assert.throws(() => fixture({ schema: "csoai.claim-maintenance-check/99" }), /schema/);
 });

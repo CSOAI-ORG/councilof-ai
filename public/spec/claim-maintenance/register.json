@@ -1,11 +1,20 @@
 {
   "schema": "csoai.claim-maintenance.register/0.1",
   "title": "Claim maintenance register — the subjects Council of AI maintains public claims on",
-  "as_of": "2026-10-08T04:30:30Z",
+  "as_of": "2026-10-08T05:40:55Z",
   "specification": "https://councilof.ai/spec/claim-maintenance/v0.2/",
   "specification_licence": "CC0-1.0",
   "maintainer": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   "generated_by": "scripts/claim-maintenance-register.mjs — generated from the registry files on disk, never hand-listed (spec 7.5)",
+  "signature_projection": {
+    "authority": "Local material presence and sidecar SHA256 binding only",
+    "verification": "UNCHECKABLE",
+    "compatibility_fields": {
+      "signed": "Legacy material-presence or sidecar-digest-match flag; never cryptographic signature validity or signer authentication.",
+      "sidecar_pin_verified": "Exact SHA256 comparison only; it does not verify a signature or authenticate a signer."
+    },
+    "boundary": "Signature source wording is quoted verbatim. No cryptographic signature verification or signer authentication is performed by this register."
+  },
   "scheduled_read_projection": {
     "authority": "scripts/claims/maintenance_due.py outcomes.jsonl; this is a derived view, never a second scheduler",
     "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/3ffd3ad38c3f943a2b19d243063d5ee29b0bdfe7/public/interop/claim-maintenance/outcomes.jsonl",
@@ -13,7 +22,7 @@
     "bytes_sha256": "4dca248083f1062d45feab5718f1a6972f52769f990496ec81fb80b0d6024613",
     "outcomes_head_sha256": "41b3b255a19e1fec2aca734e12c6891e898b55d74f8e274b1147521ff2075b51",
     "entries": 9,
-    "rule": "COMPLETED requires the exact registry digest, every subject claim id, a read at or after its signed due time, and no failed/unconfirmed claims. Missing matching local proof is DUE_EXECUTION_UNVERIFIED, never an assertion that no read ran.",
+    "rule": "COMPLETED requires the exact registry digest, every subject claim id, a read at or after its recorded due time, and no failed/unconfirmed claims. Missing matching local proof is DUE_EXECUTION_UNVERIFIED, never an assertion that no read ran.",
     "boundary": "Unsigned producer reports; internal chain integrity is not independent source truth, a signature, or Bitcoin inclusion. Claim evidence states and per-claim cadence are unchanged."
   },
   "what_this_is": "The continuous, independent observation of public claims these organisations make about themselves: captured verbatim with source and date, hashed, re-read on a schedule, every observed change recorded, and measured only where public evidence can settle it.",
@@ -1214,6 +1223,10 @@
       "signature_state_verbatim": "SIGNED BY SIDECAR. The signature is over these bytes, not inside them, because signed bytes are superseded and never edited (spec 9.4). See /claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.signed.json, which pins this file by sha256 and carries the Ed25519 signature by did:web:csoai.org#board-attestation-1. A signature proves these bytes were signed at that time; it grades nothing, certifies nobody, and says nothing about any party named here (spec 9.5).",
       "signed": true,
       "signature_binding": "sidecar",
+      "signature_material_present": true,
+      "signature_binding_state": "SIDECAR_SHA256_MATCH",
+      "signature_verification": "UNCHECKABLE",
+      "signature_verification_note": "This register checks material presence and SHA256 binding only. Cryptographic signature validity and signer authentication have not been verified here.",
       "signature_sidecar_url": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.signed.json",
       "sidecar_pin_verified": true,
       "subjects": 21,
@@ -1231,6 +1244,10 @@
       "signature_state_verbatim": "SIGNED BY SIDECAR. The signature is over these bytes, not inside them, because signed bytes are superseded and never edited (spec 9.4). See /claims/claimreg-ai-assurance-and-settlement-2026-09-23.signed.json, which pins this file by sha256 and carries the Ed25519 signature by did:web:csoai.org#board-attestation-1. A signature proves these bytes were signed at that time; it grades nothing, certifies nobody, and says nothing about any party named here (spec 9.5).",
       "signed": true,
       "signature_binding": "sidecar",
+      "signature_material_present": true,
+      "signature_binding_state": "SIDECAR_SHA256_MATCH",
+      "signature_verification": "UNCHECKABLE",
+      "signature_verification_note": "This register checks material presence and SHA256 binding only. Cryptographic signature validity and signer authentication have not been verified here.",
       "signature_sidecar_url": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23.signed.json",
       "sidecar_pin_verified": true,
       "subjects": 21,
@@ -1245,6 +1262,10 @@
       "signature_state_verbatim": "SIGNED BY SIDECAR. The signature is over these bytes, not inside them, because signed bytes are superseded and never edited (spec 9.4). See /claims/claimreg-hiring-platforms-2026-09-24-rev2.signed.json, which pins this file by sha256 and carries the Ed25519 signature by did:web:csoai.org#board-attestation-1. A signature proves these bytes were signed at that time; it grades nothing, certifies nobody, and says nothing about any party named here (spec 9.5).",
       "signed": true,
       "signature_binding": "sidecar",
+      "signature_material_present": true,
+      "signature_binding_state": "SIDECAR_SHA256_MATCH",
+      "signature_verification": "UNCHECKABLE",
+      "signature_verification_note": "This register checks material presence and SHA256 binding only. Cryptographic signature validity and signer authentication have not been verified here.",
       "signature_sidecar_url": "https://councilof.ai/claims/claimreg-hiring-platforms-2026-09-24-rev2.signed.json",
       "sidecar_pin_verified": true,
       "subjects": 5,
@@ -1262,6 +1283,10 @@
       "signature_state_verbatim": "UNSIGNED DRAFT. This registry has not been signed. It was built on a lane branch for review and has no .signed.json sidecar; nothing in it may be described as signed until a sidecar that pins these bytes by sha256 exists (spec 9.1, 9.4). A signature, when one exists, will prove only that these bytes were committed to at that time; it grades nothing and certifies nobody (spec 9.5).",
       "signed": false,
       "signature_binding": "none",
+      "signature_material_present": false,
+      "signature_binding_state": "NO_MATERIAL",
+      "signature_verification": "UNCHECKABLE",
+      "signature_verification_note": "This register checks material presence and SHA256 binding only. Cryptographic signature validity and signer authentication have not been verified here.",
       "subjects": 5,
       "claims": 29
     },
@@ -1277,6 +1302,10 @@
       "signature_state_verbatim": "SIGNED BY SIDECAR — the signature is over these bytes, not inside them. See /claims/claimreg-ondo-chainlink-2026-09-22-rev2.signed.json, which pins this file by sha256 and carries the Ed25519 signature by did:web:csoai.org#board-attestation-1. A signature proves these bytes were signed at that time; it grades nothing and certifies nobody.",
       "signed": true,
       "signature_binding": "sidecar",
+      "signature_material_present": true,
+      "signature_binding_state": "SIDECAR_SHA256_MATCH",
+      "signature_verification": "UNCHECKABLE",
+      "signature_verification_note": "This register checks material presence and SHA256 binding only. Cryptographic signature validity and signer authentication have not been verified here.",
       "signature_sidecar_url": "https://councilof.ai/claims/claimreg-ondo-chainlink-2026-09-22-rev2.signed.json",
       "sidecar_pin_verified": true,
       "subjects": 2,
@@ -1294,6 +1323,10 @@
       "signature_state_verbatim": "UNSIGNED — signer ceremony pending; OTS-anchored instead (no key required)",
       "signed": false,
       "signature_binding": "none",
+      "signature_material_present": false,
+      "signature_binding_state": "NO_MATERIAL",
+      "signature_verification": "UNCHECKABLE",
+      "signature_verification_note": "This register checks material presence and SHA256 binding only. Cryptographic signature validity and signer authentication have not been verified here.",
       "subjects": 2,
       "claims": 8
     },
@@ -1306,6 +1339,10 @@
       "signature_state_verbatim": "SIGNED BY SIDECAR — the signature is over these bytes, not inside them. See /claims/claimreg-ondo-chainlink-maintenance-20260928T023900Z.signed.json, which pins this file by sha256 and carries the Ed25519 signature by did:web:csoai.org#board-attestation-1. A signature proves these bytes were signed at that time; it grades nothing and certifies nobody.",
       "signed": true,
       "signature_binding": "sidecar",
+      "signature_material_present": true,
+      "signature_binding_state": "SIDECAR_SHA256_MATCH",
+      "signature_verification": "UNCHECKABLE",
+      "signature_verification_note": "This register checks material presence and SHA256 binding only. Cryptographic signature validity and signer authentication have not been verified here.",
       "signature_sidecar_url": "https://councilof.ai/claims/claimreg-ondo-chainlink-maintenance-20260928T023900Z.signed.json",
       "sidecar_pin_verified": true,
       "subjects": 2,
@@ -1317,7 +1354,8 @@
     "that a claim in CLAIM_CAPTURED or UNMEASURED has been checked; it has not",
     "that the subjects here are the only organisations making claims worth observing — this is what we maintain, not a survey",
     "that a superseded registry was wrong; it was replaced, its bytes are unchanged, and it is still served at its own URL",
-    "that a timestamp receipt is anchored in a block; a receipt file is submitted, not confirmed, until its upgrade is verified"
+    "that a timestamp receipt is anchored in a block; a receipt file is submitted, not confirmed, until its upgrade is verified",
+    "that a legacy signed flag or a sidecar SHA256 match verifies a cryptographic signature or authenticates its signer; verification here is UNCHECKABLE"
   ],
-  "register_digest": "85a29c8d613553670cb985702206f90dcd08476b4c901ede8775e83714c27d72"
+  "register_digest": "14847816b14c23fc09c07619d7d9452c6b4306857a383800146a05a190bb2447"
 }

@@ -7,6 +7,7 @@ const digest = (bytes) => createHash("sha256").update(bytes).digest("hex");
 const COMPLETED = new Set(["UNCHANGED", "READ_NOT_COMPARABLE", "CHANGED_CONFIRMED"]);
 const OUTCOMES = new Set([...COMPLETED, "FETCH_FAILED", "UNCONFIRMED"]);
 const HASH = /^[0-9a-f]{64}$/;
+const SCHEMAS = new Set(["csoai.claim-maintenance-check/0.1", "csoai.claim-maintenance-check/0.2"]);
 
 // maintenance_due.py hashes Python json.dumps(sort_keys=True, ensure_ascii=True).
 // All schema keys are ASCII and all numeric ledger fields are integers.
@@ -34,7 +35,7 @@ export function verifyOutcomes(raw, capture) {
   let prev = "0".repeat(64);
   for (const [seq, row] of rows.entries()) {
     const { row_sha256, ...body } = row;
-    if (row.schema !== "csoai.claim-maintenance-check/0.1" || row.seq !== seq || row.prev_hash !== prev ||
+    if (!SCHEMAS.has(row.schema) || row.seq !== seq || row.prev_hash !== prev ||
         !HASH.test(row_sha256 ?? "") || digest(ledgerCanonical(body)) !== row_sha256 ||
         typeof row.registry_id !== "string" || typeof row.registry_url !== "string" ||
         !/^\d{4}-\d{2}-\d{2}$/.test(row.due ?? "") ||
