@@ -4,6 +4,7 @@
 | lane | owner | files/territory | state |
 |---|---|---|---|
 | free-vscode-install-20261008 | Codex root/free-verifier, thread 01a11937-b6c3-73a0-8745-881b0bb8f7b3 | Existing VS Code free row, harness-x installer derivation and renderer, generated connect matrix/manifest, ConnectHub action and tests; preserves aliases, HTTP free endpoint, all other clients and copy fallback. Own homepage #2947 test overlap is disjoint and must compose. | READY FOR REVIEW; baseline/generation parity PASS106 outputs with exactly2 generated changes; 40 native helper/SSR checks and 3 producer checks PASS; private homepage test composition PASS; full CI pending; native-client use untested |
+| invoice-enquiry-20261009 | Codex root, session d1917a3555ff | client/src/lib/{buying,pilotEnquiry}.ts, client/src/lib/buyingEnquiries.test.ts, functions/api/_buying.ts, functions/api/_buying.test.ts only. Existing invoice products: scoped contact presets and direct buying-answer links. No Contact/DashboardRequestPane edits, payment, persistence, price, SKU or deploy change. | RUNNING |
 | home-films | grok (tui-2) | homepage films from NotebookLM Downloads + demo loop | RUNNING |
 | epic-home | grok (tui-2) | restore mega-menu + OS + HeroSlides + 9-product ToolStack + LivingStages on home | RUNNING |
 | weekend-must | grok (tui-2) | MUST 1–25 lean surface: OS FAB, products four lines, assess insurer, mcp four tools | RUNNING |

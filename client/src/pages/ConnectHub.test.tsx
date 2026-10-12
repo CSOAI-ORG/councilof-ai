@@ -64,6 +64,15 @@ describe("/connect is the connector hub, not a withdrawal notice", () => {
     expect(html.match(/data-testid="connect-install-/g)).toHaveLength(1);
   });
 
+  it("keeps the ChatGPT custom MCP instructions on the current official plugin path", () => {
+    const row = PLATFORMS.find((c) => c.id === "chatgpt")!;
+    expect(row.platform).toBe("ChatGPT");
+    expect(row.where).toBe("ChatGPT Plugins → + → Add custom MCP server — checked 12 Oct 2026");
+    expect(row.docs).toBe("https://developers.openai.com/api/docs/guides/custom-mcp-server");
+    expect(row.snippet).toContain("MCP server URL: https://councilof.ai/mcp/free");
+    expect(row.snippet).toContain("Authentication: No authentication");
+  });
+
   it("names the A2A endpoint the served agent card declares", () => {
     const card = JSON.parse(read("public/.well-known/agent.json")) as {
       supportedInterfaces: { url: string; protocolVersion: string }[];
