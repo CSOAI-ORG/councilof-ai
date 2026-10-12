@@ -136,9 +136,17 @@ export function answerParagraph(post: BlogIndexPost, contentHtml: string): strin
   return clampWords(first || post.description, 50);
 }
 
-/** The article body without its own leading <h1>, so the page's single H1 is the headline. */
+/**
+ * The article body without its own leading <h1>, so the page's single H1 is the headline, and
+ * without the legacy <main> wrapper every blog-content.ts entry carries: the page already sits
+ * inside App.tsx's <main id="main-content">, and a second <main> fails content-promise-gate
+ * check 6 (one <main> per rendered page; deploy 38273305229, 2026-10-12). Only the wrapper
+ * tags are removed; the article's own markup and words are unchanged.
+ */
 export function bodyWithoutH1(contentHtml: string): string {
-  return contentHtml.replace(/<h1\b[^>]*>[\s\S]*?<\/h1>/i, "");
+  return contentHtml
+    .replace(/<h1\b[^>]*>[\s\S]*?<\/h1>/i, "")
+    .replace(/<\/?main\b[^>]*>/gi, "");
 }
 
 /** Serialise a JSON-LD node for a <script type="application/ld+json"> without closing the tag early. */
