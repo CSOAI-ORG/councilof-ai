@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -14,6 +14,8 @@ export default function Contact() {
     subject: '',
     message: '',
   });
+  const [copyFeedback, setCopyFeedback] = useState("");
+  const copyRevision = useRef(0);
 
   useEffect(() => {
     document.title = 'Contact — Council of AI';
@@ -37,9 +39,23 @@ export default function Contact() {
     if (emailDraft.mailto) window.location.href = emailDraft.mailto;
   };
 
+  const copyEnquiry = async () => {
+    const revision = ++copyRevision.current;
+    try {
+      await navigator.clipboard.writeText(emailDraft.copyText);
+      if (revision !== copyRevision.current) return;
+      setCopyFeedback("Enquiry copied. Paste it into an email to nicholas@csoai.org. Nothing has been sent.");
+    } catch {
+      if (revision !== copyRevision.current) return;
+      setCopyFeedback("Clipboard access is unavailable. Use the selectable enquiry text below to copy manually.");
+    }
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    ++copyRevision.current;
     setFormData(prev => ({ ...prev, [name]: value }));
+    setCopyFeedback("");
   };
 
   const contactInfo = [
@@ -189,6 +205,12 @@ export default function Contact() {
                   <Send className="h-4 w-4 mr-2" />
                   {emailDraft.mailto ? "Open email draft" : "Copy draft below"}
                 </Button>
+                <div className="flex flex-wrap items-center gap-3">
+                  <Button type="button" variant="outline" onClick={() => void copyEnquiry()} data-testid="contact-copy-button">
+                    Copy enquiry text
+                  </Button>
+                  {copyFeedback ? <p role="status" aria-live="polite" className="text-sm text-muted-foreground">{copyFeedback}</p> : null}
+                </div>
                 <p className="text-xs text-muted-foreground">
                   This form opens your email client when the draft fits safely in an email link. There is no silent backend, and nothing you type here is stored by this site.
                 </p>
