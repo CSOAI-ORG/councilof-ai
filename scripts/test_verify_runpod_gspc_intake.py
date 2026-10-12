@@ -6,6 +6,7 @@ import json
 import sys
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 from typing import Any
 
@@ -708,7 +709,10 @@ class SerialOptionalFieldTests(unittest.TestCase):
                 self.fixture.write_run()
             quarantine = self.root / f"q-{extras}"
             intake.verify_to_quarantine(self.fixture.source, self.fixture.allowlist, quarantine)
-            staged, _, problems = bridge.collect(quarantine)
+            # Byte-transport check only; house gates (exact 0/1, unparsed, held) are
+            # covered in test_runpod_gspc_bridge_to_mill.py and would set this tiny fixture aside.
+            with mock.patch.object(bridge, "house_gate", lambda *_a: None):
+                staged, _, problems = bridge.collect(quarantine, set())
             self.assertEqual(problems, [])
             out = self.root / f"out-{extras}"
             written, oversize = bridge.write(staged, out)
@@ -916,7 +920,9 @@ class ReadLabelInstrumentTests(unittest.TestCase):
     def test_staged_card_bytes_equal_the_worker_card(self) -> None:
         source_body = json.loads((self.fixture.source / "card-unsigned.json").read_text())["body"]
         self.verify()
-        staged, _, problems = bridge.collect(self.fixture.quarantine)
+        # Byte-transport check only; house gates are covered in test_runpod_gspc_bridge_to_mill.py.
+        with mock.patch.object(bridge, "house_gate", lambda *_a: None):
+            staged, _, problems = bridge.collect(self.fixture.quarantine, set())
         self.assertEqual(problems, [])
         out = self.root / "out"
         bridge.write(staged, out)

@@ -1,0 +1,12 @@
+{
+  "schema": "csoai.runpod-gspc-held-cells/0.1",
+  "note": "Measure's held list (ruling on #3047, 2026-10-12). A held (model, axis) cell is never staged until Measure removes it here. Reason HELD_REPRO_SPREAD_CROSSES_GATE: the Sep parallel-run repro spread crosses the MEASURED gate, so no run in the cell is run of record (R6).",
+  "cells": [
+    {"model": "ollama:llama3.1:8b@sha256:46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e", "axis": "art5-safeguard", "reason": "HELD_REPRO_SPREAD_CROSSES_GATE", "seen_run_id": "20260923T195226.689736Z-e3912ec5ed"},
+    {"model": "ollama:llama3.2:3b@sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72", "axis": "art5-safeguard", "reason": "HELD_REPRO_SPREAD_CROSSES_GATE", "seen_run_id": "20260924T173521.291018Z-6aa67c5118"},
+    {"model": "ollama:mistral-nemo:12b@sha256:e7e06d107c6c86ed0cf45445f1790720b5092149c4c95f4d965844e9afbfdc89", "axis": "care", "reason": "HELD_REPRO_SPREAD_CROSSES_GATE", "seen_run_id": "20260923T214311.410471Z-48e1718a1b"},
+    {"model": "ollama:llama3.2:3b@sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72", "axis": "openness", "reason": "HELD_REPRO_SPREAD_CROSSES_GATE", "seen_run_id": "20260924T172839.998340Z-bec6b1b9b0"},
+    {"model": "ollama:qwen3:8b@sha256:500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41", "axis": "safety", "reason": "HELD_REPRO_SPREAD_CROSSES_GATE", "seen_run_id": "20260923T200149.091374Z-1a5849af6b"},
+    {"model": "ollama:gemma3:12b@sha256:f4031aab637d1ffa37b42570452ae0e4fad0314754d17ded67322e4b95836f8a", "axis": "safety", "reason": "HELD_REPRO_SPREAD_CROSSES_GATE", "seen_run_id": "20260923T214632.996662Z-674bdbb374"}
+  ]
+}

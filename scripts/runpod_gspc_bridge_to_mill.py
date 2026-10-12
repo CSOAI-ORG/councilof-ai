@@ -21,11 +21,16 @@ WHAT IT DOES NOT DO, DELIBERATELY:
     what that produced. A run that never passed verification never reaches here.
   * It does not delete or move anything on the pod.
 
-ONE RUN PER CELL. A cell may hold several runs (112 runs over 70 cells on 2026-09-05). Staging
-all of them would ask the signer to supersede its own output inside a single pass. This stages
-the LATEST run per (model, axis) by run_id, which is lexicographically time-ordered
-(`20260905T004322.164202Z-ebc942c120`), and reports the ones it set aside rather than dropping
-them silently.
+HOUSE GATES (Measure ruling on #3047, 2026-10-12). Before a run may stage it must pass:
+held list (`runpod_gspc_held_cells.json`), unparsed <= 10% of attempted items, and an
+accuracy that is not exactly 0 or 1 (exact 0/1 is HOLD). Detector-interop (label leak) and
+affect (provisional) are refused earlier: their banks are off the intake allowlist.
+
+ONE RUN OF RECORD PER CELL (R6). A cell is (model, axis, bank_sha256, instrument_sha256).
+Of the passing runs in a cell this stages the EARLIEST by run_id, which is lexicographically
+time-ordered (`20260905T004322.164202Z-ebc942c120`). The original run is the run of record;
+a later rerun is a reproduction, not a replacement. Every run set aside is reported with
+its reason rather than dropped silently.
 
     python3 scripts/runpod_gspc_bridge_to_mill.py --intake <dir> --out public/interop/mill-cards-unsigned
     python3 scripts/runpod_gspc_bridge_to_mill.py --selftest
@@ -54,17 +59,70 @@ def cell_key(body: dict) -> str:
     return f"{short}-{axis}"
 
 
-def collect(intake: pathlib.Path) -> tuple[list[dict], list[dict], list[str]]:
-    """Return verified candidates only.
+HELD_CELLS_PATH = pathlib.Path(__file__).with_name("runpod_gspc_held_cells.json")
+HELD_SCHEMA = "csoai.runpod-gspc-held-cells/0.1"
+MAX_UNPARSED_FRACTION = 0.10  # Measure house rule: more than 10% unparsed is an instrument failure
+
+
+def load_held(path: pathlib.Path | None = None) -> set[tuple[str, str]]:
+    """Measure's held list as {(model, axis)}. Absent or malformed is a hard error, never empty."""
+    path = path or HELD_CELLS_PATH
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if data.get("schema") != HELD_SCHEMA or not isinstance(data.get("cells"), list):
+        raise ValueError(f"{path}: not a {HELD_SCHEMA} file")
+    return {(str(c["model"]), str(c["axis"])) for c in data["cells"]}
+
+
+def unparsed_fraction(body: dict) -> float:
+    ce = body.get("compute_evidence") or {}
+    n = int(body.get("n") or 0)
+    parse = int(ce.get("parse_errors_excluded") or 0)
+    transport = int(ce.get("transport_errors_excluded") or 0)
+    attempted = n + parse + transport
+    return (parse / attempted) if attempted else 1.0
+
+
+def house_gate(body: dict, held: set[tuple[str, str]]) -> str | None:
+    """Return the drop/hold reason for one verified run, or None if it may stage.
+
+    These are Measure's house gates (ruling on #3047). They do not decide MEASURED --
+    the signer still owns that from n -- they only decide whether a run may be staged."""
+    if (str(body.get("model")), str(body.get("axis"))) in held:
+        return "HELD_LIST"
+    frac = unparsed_fraction(body)
+    if frac > MAX_UNPARSED_FRACTION:
+        return f"INSTRUMENT_FAILURE_unparsed_{frac * 100:.1f}pct"
+    acc = body.get("accuracy")
+    if isinstance(acc, (int, float)) and acc in (0, 1):
+        return "HOLD_EXACT_0_1"
+    return None
+
+
+def ror_key(body: dict) -> tuple[str, str, str, str]:
+    """Run-of-record cell: model + axis + bank_sha + instrument_sha (R6)."""
+    ce = body.get("compute_evidence") or {}
+    return (str(body.get("model") or "unknown"), str(body.get("axis") or "unknown"),
+            str(ce.get("bank_sha256") or ""), str(ce.get("instrument_sha256") or ""))
+
+
+def collect(intake: pathlib.Path, held: set[tuple[str, str]] | None = None
+            ) -> tuple[list[dict], list[dict], list[str]]:
+    """Return verified, house-gated candidates, one run of record per cell.
 
     ``verify_runpod_gspc_intake.py`` writes ``candidate.json`` beside a
     ``verification.json`` receipt in a private quarantine directory.  Reading
     the original ``card-unsigned.json`` tree here would bypass that boundary,
     so the bridge accepts only that paired output and rechecks the copied-file
-    digest before selecting the newest run for each cell.
+    digest. It then applies Measure's house gates (held list, >10% unparsed,
+    exact 0/1 HOLD) and keeps the EARLIEST passing run per
+    (model, axis, bank_sha256, instrument_sha256): the run of record (R6).
+    Set-aside runs are reported in the second list with a reason, never silently.
     """
-    by_cell: dict[str, list[tuple[str, dict, pathlib.Path]]] = defaultdict(list)
+    if held is None:
+        held = load_held()
+    by_cell: dict[tuple[str, str, str, str], list[tuple[str, dict, pathlib.Path]]] = defaultdict(list)
     problems: list[str] = []
+    set_aside: list[dict] = []
     for card in sorted(intake.rglob("candidate.json")):
         try:
             raw = card.read_bytes()
@@ -90,16 +148,28 @@ def collect(intake: pathlib.Path) -> tuple[list[dict], list[dict], list[str]]:
         if not run_id or run_id != verification.get("run_id"):
             problems.append(f"{card}: run id does not match verification receipt")
             continue
-        by_cell[cell_key(body)].append((run_id, body, card))
+        reason = house_gate(body, held)
+        if reason:
+            set_aside.append({"cell": cell_key(body), "run_id": run_id, "reason": reason})
+            continue
+        by_cell[ror_key(body)].append((run_id, body, card))
 
-    staged, superseded = [], []
-    for cell, runs in sorted(by_cell.items()):
+    # File names stay (model, axis) unless two run-of-record cells share it (e.g. two swarm banks).
+    names: dict[str, int] = defaultdict(int)
+    for key, runs in by_cell.items():
+        names[cell_key(runs[0][1])] += 1
+    staged = []
+    for key, runs in sorted(by_cell.items()):
         runs.sort(key=lambda t: t[0])  # run_id is time-ordered
-        newest = runs[-1]
-        for older in runs[:-1]:
-            superseded.append({"cell": cell, "run_id": older[0], "reason": "older run in same cell"})
-        staged.append({"cell": cell, "run_id": newest[0], "body": newest[1], "src": str(newest[2])})
-    return staged, superseded, problems
+        first = runs[0]
+        name = cell_key(first[1])
+        if names[name] > 1:
+            name = f"{name}-b{key[2][:8]}-i{key[3][:8]}"
+        for later in runs[1:]:
+            set_aside.append({"cell": name, "run_id": later[0],
+                              "reason": f"NOT_RUN_OF_RECORD (earlier passing run {first[0]})"})
+        staged.append({"cell": name, "run_id": first[0], "body": first[1], "src": str(first[2])})
+    return staged, set_aside, problems
 
 
 def write(staged: list[dict], out: pathlib.Path) -> tuple[int, list[str]]:
@@ -122,7 +192,7 @@ def selftest() -> int:
     """Prove the two decisions this file makes can go the other way."""
     bad = 0
     a = {"model": "ollama:qwen2.5:7b@sha256:aa", "axis": "safety",
-         "compute_evidence": {"run_id": "20260905T000000.0Z-aaa"}, "n": 36}
+         "compute_evidence": {"run_id": "20260905T000000.0Z-aaa"}, "n": 36, "accuracy": 0.5}
     b = dict(a); b["compute_evidence"] = {"run_id": "20260905T010000.0Z-bbb"}
     import tempfile
     with tempfile.TemporaryDirectory() as td:
@@ -139,8 +209,8 @@ def selftest() -> int:
             }))
         staged, sup, probs = collect(root)
         if len(staged) != 1: print(f"selftest FAIL: one cell must stage once, got {len(staged)}"); bad += 1
-        if staged and staged[0]["run_id"] != "20260905T010000.0Z-bbb":
-            print("selftest FAIL: newest run must win"); bad += 1
+        if staged and staged[0]["run_id"] != "20260905T000000.0Z-aaa":
+            print("selftest FAIL: earliest run (run of record) must win"); bad += 1
         if len(sup) != 1: print(f"selftest FAIL: older run must be reported, got {len(sup)}"); bad += 1
         if probs: print(f"selftest FAIL: unexpected problems {probs}"); bad += 1
         # A candidate without a receipt is never bridge input.
@@ -173,6 +243,13 @@ def selftest() -> int:
     return 1 if bad else 0
 
 
+def _tally(rows: list[dict]) -> dict[str, int]:
+    out: dict[str, int] = defaultdict(int)
+    for r in rows:
+        out[r["reason"].split(" (")[0].split("_unparsed_")[0]] += 1
+    return dict(out)
+
+
 def main() -> int:
     p = argparse.ArgumentParser()
     p.add_argument("--intake"); p.add_argument("--out")
@@ -193,7 +270,9 @@ def main() -> int:
     print(f"cells staged      : {written}")
     print(f"  n>=30 (signer will mark MEASURED)   : {n_meas}")
     print(f"  n<30  (signer will mark UNMEASURED) : {written - n_meas}")
-    print(f"older runs set aside (same cell)      : {len(sup)}")
+    print(f"runs set aside (house gates / not run of record): {len(sup)}")
+    for reason, count in sorted(_tally(sup).items()):
+        print(f"  {reason}: {count}")
     if oversize: print(f"REFUSED over {MAX_PAYLOAD_BYTES}B: {oversize}")
     if probs: print(f"unreadable: {probs}")
     return 1 if (oversize or probs) else 0
