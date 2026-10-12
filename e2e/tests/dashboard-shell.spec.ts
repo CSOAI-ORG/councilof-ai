@@ -71,6 +71,11 @@ async function openTab(page: Page, id: string, trailingSlash = false) {
   // separately accepts the default Ask pane; close it intentionally before using the canvas.
   if (id === "home") {
     const entryAsk = page.getByTestId("ask-pane");
+    // 12 Oct 2026: mobile keeps Ask closed on entry; open it from the launcher, as a reader would.
+    if ((page.viewportSize()?.width ?? 1280) <= 640) {
+      await expect(entryAsk).toHaveCount(0);
+      await page.getByRole("button", { name: "Open Council of AI chat", exact: true }).click();
+    }
     await expect(entryAsk).toBeVisible({ timeout: 30_000 });
     await entryAsk.getByRole("button", { name: "Close Ask", exact: true }).click();
     await expect(entryAsk).toBeHidden();
