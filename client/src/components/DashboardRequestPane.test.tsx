@@ -220,7 +220,7 @@ describe("the fresh-run terms name the network in words", () => {
 describe("RAS booking CTA on the measured pane (/assess doors here)", () => {
   const render = (q: string) =>
     renderToStaticMarkup(
-      <Router ssrSearch={q}>
+      <Router ssrPath="/dashboard" ssrSearch={q}>
         <DashboardRequestPane />
       </Router>,
     );
