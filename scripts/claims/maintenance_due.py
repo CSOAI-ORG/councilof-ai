@@ -246,7 +246,7 @@ def build_latest(rows: list[dict], outcomes: list[dict], today: str, run_at: str
         "run_at": run_at,
         "run_date": today,
         "scheduler": f"scripts/claims/maintenance_due.py inside the daily claim-watch job ({HOST}, cron 50 7 * * *)",
-        "rule": "LIVE registries in GET /api/claims/register: scheduled-read (signed next_read_utc) and created + 7, 30, 90 days; a passed date with no completed run reads DUE_NOT_RUN",
+        "rule": "LIVE registries in GET /api/claims/register: scheduled-read (recorded next_read_utc) and created + 7, 30, 90 days; a passed date with no completed run reads DUE_NOT_RUN",
         "outcome_vocabulary": {
             "UNCHANGED": "every comparable claim reproduced its recorded digest",
             "READ_NOT_COMPARABLE": "read; the registry records no comparable digest",
