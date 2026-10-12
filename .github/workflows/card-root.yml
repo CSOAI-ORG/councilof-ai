@@ -9,6 +9,8 @@ on:
       - "scripts/card_root.py"
       - "scripts/maintain_card_root_ots.py"
       - "scripts/test_card_root_automation.py"
+      - "scripts/card_root_guard.py"
+      - "scripts/test_card_root_guard.py"
       - ".github/workflows/card-root*.yml"
   push:
     branches: [master]
@@ -35,7 +37,7 @@ jobs:
           python-version: "3.11"
       - run: pip install -q opentimestamps-client==0.7.2
       - name: Offline immutability, binding, and state regressions
-        run: PYTHONPATH=scripts python3 -m unittest scripts/test_card_root_automation.py scripts/test_ots_maintenance.py -v
+        run: PYTHONPATH=scripts python3 -m unittest scripts/test_card_root_automation.py scripts/test_ots_maintenance.py scripts/test_card_root_guard.py -v
 
   build:
     needs: test
@@ -66,20 +68,12 @@ jobs:
               with open(os.environ["GITHUB_OUTPUT"], "a") as out:
                   out.write("changed=false\n")
               raise SystemExit(0)
-          if any(not row.startswith("?? ") for row in rows):
-              raise SystemExit("refusing to modify an existing card root or OTS proof")
-          names = sorted(row[3:] for row in rows)
-          roots = [name for name in names if name.endswith(".json")]
-          proofs = [name for name in names if name.endswith(".json.ots")]
-          if len(roots) != 1 or proofs != [roots[0] + ".ots"]:
-              raise SystemExit(f"expected one new exact root/proof pair, got {names}")
-          if not re.fullmatch(
-              r"public/interop/card-root-[0-9]{4}-[0-9]{2}-[0-9]{2}(?:-[a-f0-9]{12})?\.json",
-              roots[0],
-          ):
-              raise SystemExit(f"unexpected root path: {roots[0]}")
-          import hashlib, json, sys
+          import sys
           sys.path.insert(0, "scripts")
+          from card_root_guard import check
+          picked = check(rows, Path("."))
+          roots, proofs = [picked["root"]], [picked["proof"]]
+          import hashlib
           from maintain_card_ots import parse, proof_state
           root_raw = Path(roots[0]).read_bytes()
           subject = hashlib.sha256(root_raw).hexdigest()
@@ -88,6 +82,7 @@ jobs:
               out.write("changed=true\n")
               out.write(f"root={roots[0]}\n")
               out.write(f"proof={proofs[0]}\n")
+              out.write(f"pointer={picked['pointer']}\n")
               out.write(f"slug={Path(roots[0]).stem}\n")
               out.write(f"subject={subject}\n")
               out.write(f"status={status}\n")
@@ -101,6 +96,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           ROOT: ${{ steps.root.outputs.root }}
           PROOF: ${{ steps.root.outputs.proof }}
+          POINTER: ${{ steps.root.outputs.pointer }}
           SLUG: ${{ steps.root.outputs.slug }}
           SUBJECT: ${{ steps.root.outputs.subject }}
           STATUS: ${{ steps.root.outputs.status }}
@@ -110,7 +106,7 @@ jobs:
           git config user.name "csoai-card-root"
           git config user.email "board@csoai.org"
           git checkout -b "$branch"
-          git add -- "$ROOT" "$PROOF"
+          git add -- "$ROOT" "$PROOF" "$POINTER"
           git commit -m "card-root: current signed-card commitment ($STATUS)"
           git push origin "HEAD:$branch"
           gh pr create --base master --head "$branch" \
