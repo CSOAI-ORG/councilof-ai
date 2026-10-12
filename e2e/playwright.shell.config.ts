@@ -29,7 +29,7 @@ export default defineConfig({
   timeout: 45_000,
   use: {
     baseURL: base,
-    trace: "on-first-retry",
+    trace: "retain-on-failure",
     screenshot: "only-on-failure",
   },
   webServer: local
