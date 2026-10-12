@@ -142,3 +142,23 @@ describe("posts restored by exact route (blog-published.json)", () => {
     expect(blogPostingLd(other)).toHaveProperty("isPartOf");
   });
 });
+
+describe("restored posts never point at the withdrawn /blog/ index", () => {
+  const slugs = ["how-to-verify-an-ai-measurement", "keeping-ai-claims-current"];
+  it("BlogPosting and BreadcrumbList omit https://councilof.ai/blog/ for both", () => {
+    for (const slug of slugs) {
+      const p = BLOG_INDEX.find((x) => x.slug === slug)!;
+      expect(JSON.stringify(blogPostingLd(p))).not.toContain('https://councilof.ai/blog/"');
+      const crumbs = blogBreadcrumbLd(p);
+      expect(JSON.stringify(crumbs)).not.toContain('https://councilof.ai/blog/"');
+      const items = crumbs.itemListElement as { position: number }[];
+      expect(items.map((i) => i.position)).toEqual([1, 2]);
+    }
+  });
+  it("a withdrawn slug keeps the three-item breadcrumb with Blog", () => {
+    const other = BLOG_INDEX.find((x) => !slugs.includes(x.slug))!;
+    const items = blogBreadcrumbLd(other).itemListElement as { name: string }[];
+    expect(items).toHaveLength(3);
+    expect(items[1].name).toBe("Blog");
+  });
+});

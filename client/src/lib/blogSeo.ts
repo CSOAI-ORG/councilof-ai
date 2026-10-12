@@ -82,10 +82,9 @@ export function blogPostingLd(post: BlogIndexPost): Record<string, unknown> {
 
 /** Home → Blog → Post. */
 export function blogBreadcrumbLd(post?: BlogIndexPost): Record<string, unknown> {
-  const items = [
-    { name: "Home", item: `${SITE_ORIGIN}/` },
-    { name: "Blog", item: `${SITE_ORIGIN}${BLOG_BASE}/` },
-  ];
+  const items = [{ name: "Home", item: `${SITE_ORIGIN}/` }];
+  // The /blog/ index is withdrawn; an exact-route restored post (blog-published.json) skips the Blog crumb.
+  if (!(post && PUBLISHED_SLUGS.has(post.slug))) items.push({ name: "Blog", item: `${SITE_ORIGIN}${BLOG_BASE}/` });
   if (post) items.push({ name: post.headline, item: postUrl(post.slug) });
   return {
     "@context": "https://schema.org",
