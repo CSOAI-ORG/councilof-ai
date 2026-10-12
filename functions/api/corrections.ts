@@ -44,6 +44,32 @@ export const LEDGER = {
   },
   corrections: [
     {
+      "id": "C-2026-1012-01",
+      "date": "2026-10-12",
+      "detected_at": "2026-10-09T15:55Z",
+      "detected_by": "internal monitor",
+      "published_at": "UNRECORDED",
+      "timing_evidence": [
+        "ALERTS.md entry 2026-10-09 15:55Z first recorded the stale index against its own daily note",
+        "published_at is UNRECORDED: the deploy that first serves this correction had not happened when this entry was written"
+      ],
+      "what_was_wrong": "The signed measurement-capsule index publication block claimed it was \"published daily by the owner's approval (recorded 2026-09-26)\" while as_of stayed at 2026-10-01. On 2026-10-12 that is roughly eleven days stale against its own cadence claim. Free verification of existing cards is unaffected; the defect is a false publication promise on our own evidence index.",
+      "how_caught": "Estate health reviews on 2026-10-09 and 2026-10-10 compared the index as_of with the publication note and with the calendar; ALERTS.md 2026-10-09 15:55Z filed the gap.",
+      "what_changed": "Cadence language is amended from a hard \"published daily\" claim to a best-effort continuous target with as_of as the only source of truth for last successful signed publication. Public outreach copy that said \"signed weekly\" was softened to \"published re-measurement cadence\". When the daily publisher is restored the note may say daily cadence target, never a guarantee. The next signed index supersedes the old note; prior indexes are not rewritten. Cards themselves remain valid and free to verify at councilof.ai.",
+      "status": "CORRECTED - claim language amended; publisher restore paired; signed indexes not rewritten",
+      "reached_the_public": true,
+      "open_items": [
+        "Restore the daily measurement-index publisher (owner key + job); until as_of advances, treat daily cadence as degraded",
+        "Next signed index must carry the amended note (daily cadence target, not guarantee)"
+      ],
+      "evidence": [
+        "https://councilof.ai/measurement-capsules/latest.json (as_of and publication note)",
+        "clawd/_alignment/PUBLISHED-CADENCE-CLAIM-DECISION-2026-10-12.md",
+        "clawd/_alignment/PUBLISHER-RESTORE-RUNBOOK-2026-10-12.md",
+        "ALERTS.md 2026-10-09 15:55Z"
+      ]
+    },
+    {
       "id": "C-2026-1006-13",
       "date": "2026-10-06",
       "detected_at": "2026-10-06",
