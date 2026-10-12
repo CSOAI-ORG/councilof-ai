@@ -230,7 +230,8 @@ async function readyAsk(page: Page) {
   const pane = page.getByTestId("ask-pane");
   await expect(pane).toBeVisible({ timeout: 30_000 });
   await expect(pane.getByLabel("Your question", { exact: true })).toBeFocused({ timeout: 10_000 });
-  await expect(pane.getByTestId("ask-introduction")).toContainText("Hi, I’m MEOK. How can I help?");
+  await expect(pane.getByTestId("ask-introduction")).toContainText("Hi, this is Council of AI. How can I help?");
+  await expect(pane.getByTestId("ask-introduction")).not.toContainText("MEOK");
   await expect(pane.getByTestId("ask-introduction")).toContainText("saved customer cases are not connected here");
   await expect(pane.getByTestId("ask-rule-based")).toContainText("never from an AI model");
   await expect(pane.getByRole("switch", { name: "Let it move the page for me" })).toHaveAttribute("aria-checked", "false");

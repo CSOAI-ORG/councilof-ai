@@ -123,7 +123,7 @@ test.beforeEach(async ({ context }) => {
   await context.route(/hf\.space/, (r) => r.abort());
 });
 
-test("sidebar exposes eight plainly named sections as direct /dashboard?tab= links", async ({
+test("sidebar exposes seven plainly named sections (no sov-* name) as direct /dashboard?tab= links", async ({
   page,
 }) => {
   await openTab(page, "board");
@@ -145,9 +145,10 @@ test("sidebar exposes eight plainly named sections as direct /dashboard?tab= lin
     "/dashboard?tab=board",
     "/dashboard?tab=connect",
     "/dashboard?tab=learn",
-    "/dashboard?tab=sovx",
     "/dashboard?tab=corrections",
   ]);
+  // Surface inspection, 12 Oct 2026: no sov-* label in the public nav; the pane stays reachable by link.
+  expect(await navigation.innerText()).not.toMatch(/sov/i);
   for (const h of hrefs) expect(h).toMatch(/^\/dashboard\?tab=[a-z0-9-]+$/);
   // "Check a result" section contains two panes: Check a result and Evidence pack. Evidence index
   // moved to "For developers" (tools audit, 6 Oct 2026): it is an API coverage index, not a check.
