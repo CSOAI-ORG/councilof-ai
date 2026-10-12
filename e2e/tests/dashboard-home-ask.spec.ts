@@ -1,5 +1,6 @@
 import { test, expect, type Page, type Request } from "@playwright/test";
 import { writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
 
 /**
  * The first question typed on the Council OS start screen gets an answer (tools audit, 6 Oct 2026).
@@ -143,6 +144,12 @@ for (const vp of VIEWPORTS) {
     try {
       await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
       await page.locator('[data-testid="dashboard-shell"]').waitFor({ state: "visible", timeout: 60_000 });
+      // The original inline first-question regression remains covered after intentionally
+      // closing the new default view of the existing Ask conversation.
+      const entryAsk = page.getByTestId("ask-pane");
+      await expect(entryAsk).toBeVisible({ timeout: 30_000 });
+      await entryAsk.getByRole("button", { name: "Close Ask", exact: true }).click();
+      await expect(entryAsk).toBeHidden();
       const composer = page.getByLabel("Ask the Council, or name a pane to open");
       await expect(composer).toBeEnabled({ timeout: 30_000 });
       await composer.fill(QUESTION);
@@ -186,3 +193,334 @@ for (const vp of VIEWPORTS) {
     }
   });
 }
+
+const PUBLIC_ASK = "https://councilof.ai/api/agui/run";
+const BOARD_QUESTION = "What does Council measure?";
+
+/** Controlled SPA navigation exercises the actual route owner before tools are prerendered. */
+async function navigateInApp(page: Page, href: string) {
+  await page.evaluate((next) => {
+    window.history.pushState(null, "", next);
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  }, href);
+  await expect(page).toHaveURL(new RegExp(href.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "$"));
+}
+
+async function readyAsk(page: Page) {
+  const pane = page.getByTestId("ask-pane");
+  await expect(pane).toBeVisible({ timeout: 30_000 });
+  await expect(pane.getByLabel("Your question", { exact: true })).toBeFocused({ timeout: 10_000 });
+  await expect(pane.getByTestId("ask-introduction")).toContainText("Hi, I’m MEOK. How can I help?");
+  await expect(pane.getByTestId("ask-introduction")).toContainText("saved customer cases are not connected here");
+  await expect(pane.getByTestId("ask-rule-based")).toContainText("never from an AI model");
+  await expect(pane.getByRole("switch", { name: "Let it move the page for me" })).toHaveAttribute("aria-checked", "false");
+  await expect(pane.getByRole("switch", { name: /^Voice\b/ })).toHaveAttribute("aria-checked", "false");
+  return pane;
+}
+
+/** MCP route discovery is a read-only POST, separate from invoking an Ask/tool/payment. */
+function isMcpDiscovery(request: Request, localOrigin: string): boolean {
+  if (request.method() !== "POST" || !new Set([`${localOrigin}/mcp`, "https://councilof.ai/mcp"]).has(request.url())) return false;
+  try {
+    const body = request.postDataJSON();
+    return body !== null && typeof body === "object" && !Array.isArray(body) &&
+      body.jsonrpc === "2.0" &&
+      ["initialize", "tools/list", "notifications/initialized"].includes(body.method) &&
+      Object.keys(body).every(key => ["jsonrpc", "id", "method", "params"].includes(key));
+  } catch { return false; }
+}
+
+type NativeAskCapture = {
+  state: "pending" | "reading" | "complete" | "failed";
+  started_at_utc: string;
+  finished_at_utc: string | null;
+  url: string | null;
+  status: number | null;
+  response_type: string | null;
+  complete_eof: boolean;
+  bytes: number;
+  sha256: string | null;
+  raw_base64: string;
+  error: string | null;
+  byte_limit: number;
+  deadline_ms: number;
+};
+type AskCaptureWindow = Window & { __CSOAI_ASK_NATIVE_CAPTURE__?: NativeAskCapture };
+
+test("root, Council OS home and plugin tools open the existing Ask only after hydration", async ({ page, baseURL }, info) => {
+  test.setTimeout(120_000);
+  const posts: Request[] = [];
+  const localOrigin = new URL(baseURL || "http://127.0.0.1:4180").origin;
+  page.on("request", request => { if (request.method() === "POST") posts.push(request); });
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  let pane = await readyAsk(page);
+  await pane.getByLabel("Your question", { exact: true }).press("Escape");
+  await expect(pane).toBeHidden();
+  // A rerender/close must not reopen or send the previous question. Navigation opens once.
+  await page.evaluate(() => window.dispatchEvent(new Event("resize")));
+  await expect(pane).toBeHidden();
+  await navigateInApp(page, "/dashboard?tab=home");
+  pane = await readyAsk(page);
+  await pane.getByRole("button", { name: "Close Ask", exact: true }).click();
+  await expect(pane).toBeHidden();
+  await navigateInApp(page, "/dashboard?tab=board");
+  await expect(pane).toBeHidden();
+  await navigateInApp(page, "/tools");
+  pane = await readyAsk(page);
+  await expect(page.getByTestId("tools-mcp")).toBeVisible();
+  await expect(pane.getByTestId("talk-transcript")).toHaveCount(0);
+  const discovery = posts.filter(request => isMcpDiscovery(request, localOrigin));
+  const unexpected = posts.filter(request => !isMcpDiscovery(request, localOrigin));
+  const postPath = info.outputPath("published-source-route-opening-posts.json");
+  await writeFile(postPath, JSON.stringify({
+    schema: "csoai.ask-route-opening-posts/1", observed_at_utc: new Date().toISOString(),
+    discovery: discovery.map(request => ({ url: request.url(), method: request.postDataJSON().method })),
+    unexpected: unexpected.map(request => ({ url: request.url(), method: request.method() })),
+    allowed_discovery_methods: ["initialize", "tools/list", "notifications/initialized"],
+    ask_tool_call_or_payment_allowed: false,
+  }, null, 2));
+  await info.attach("published-source-route-opening-posts", { path: postPath, contentType: "application/json" });
+  expect(unexpected, "Only exact read-only MCP discovery may POST while routes open; no Ask, tools/call, payment or voice dispatch").toEqual([]);
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+  expect(overflow).toBeLessThanOrEqual(1);
+});
+
+test("prerender never opens or focuses the Ask conversation", async ({ page }) => {
+  await page.addInitScript(() => { (window as Window & { __CSOAI_PRERENDER__?: boolean }).__CSOAI_PRERENDER__ = true; });
+  const posts: string[] = [];
+  page.on("request", request => { if (request.method() === "POST") posts.push(request.url()); });
+  await page.goto("/dashboard?tab=home", { waitUntil: "domcontentloaded" });
+  await expect(page.getByTestId("gspc-workspace-home")).toBeVisible({ timeout: 60_000 });
+  // Wait for existing hydration effects, not a fixed delay or an SSR-only DOM snapshot.
+  await expect(page.getByLabel("Ask the Council, or name a pane to open")).toBeDisabled();
+  await navigateInApp(page, "/tools");
+  await expect(page.getByTestId("tools-mcp")).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByTestId("ask-pane")).toHaveCount(0);
+  expect(posts).toEqual([]);
+});
+
+test("existing Ask renders one genuine free public AGUI answer and retains its complete response", async ({ page, baseURL }, info) => {
+  test.setTimeout(90_000);
+  const requests: Request[] = [], completed: Request[] = [], failures: string[] = [];
+  const sha = (bytes: Buffer) => createHash("sha256").update(bytes).digest("hex");
+  let raw: Buffer | null = null;
+  let requestRecord: Record<string, unknown> | null = null;
+  let responseRecord: Record<string, unknown> | null = null;
+  let accepted = false;
+  let browserCapture: NativeAskCapture | null = null;
+  const retainBrowserCapture = async () => {
+    const capture = await page.evaluate(() => (window as AskCaptureWindow).__CSOAI_ASK_NATIVE_CAPTURE__ ?? null).catch(() => null);
+    if (!capture) return;
+    browserCapture = capture;
+    raw = Buffer.from(capture.raw_base64, "base64");
+    if (responseRecord) Object.assign(responseRecord, {
+      complete: capture.state === "complete" && capture.complete_eof,
+      bytes: raw.length, sha256: sha(raw), raw_base64: raw.toString("base64"),
+      browser_capture: { ...capture, raw_base64: undefined },
+    });
+  };
+  // The production component keeps its existing same-origin transport. This test-only adapter
+  // maps that one free question to a DIRECT browser CORS POST, never a runner/server proxy.
+  await page.addInitScript(({ endpoint, question }) => {
+    const originalFetch = window.fetch.bind(window);
+    let publicCalls = 0;
+    window.fetch = async (input, init) => {
+      if (input !== "/api/agui/run") return originalFetch(input, init);
+      const body = typeof init?.body === "string" ? JSON.parse(init.body) : null;
+      const users = Array.isArray(body?.messages) ? body.messages.filter((message: { role?: string }) => message.role === "user") : [];
+      if (init?.method !== "POST" || users.length !== 1 || users[0].content !== question ||
+          body?.forwardedProps?.confirm || body?.forwardedProps?.consent || ++publicCalls !== 1) {
+        throw new Error("Only the single unconfirmed free board question is allowed by this acceptance adapter.");
+      }
+      const capture: NativeAskCapture = {
+        state: "pending", started_at_utc: new Date().toISOString(), finished_at_utc: null,
+        url: null, status: null, response_type: null, complete_eof: false,
+        bytes: 0, sha256: null, raw_base64: "", error: null,
+        byte_limit: 512 * 1024, deadline_ms: 15_000,
+      };
+      (window as AskCaptureWindow).__CSOAI_ASK_NATIVE_CAPTURE__ = capture;
+      const controller = new AbortController();
+      const upstreamSignal = init?.signal;
+      const relayAbort = () => controller.abort();
+      if (upstreamSignal?.aborted) controller.abort();
+      else upstreamSignal?.addEventListener("abort", relayAbort, { once: true });
+      let reader: ReadableStreamDefaultReader<Uint8Array> | null = null;
+      const fail = (error: unknown) => {
+        if (capture.state === "complete" || capture.state === "failed") return;
+        capture.state = "failed"; capture.complete_eof = false;
+        capture.error = error instanceof Error ? error.message : String(error);
+        capture.finished_at_utc = new Date().toISOString();
+        controller.abort();
+        void reader?.cancel().catch(() => undefined);
+      };
+      let timer = 0;
+      const deadline = new Promise<never>((_, reject) => {
+        timer = window.setTimeout(() => {
+          controller.abort();
+          reject(new Error("Native browser SSE capture did not reach complete EOF within 15000ms."));
+        }, capture.deadline_ms);
+      });
+      const cleanup = () => {
+        window.clearTimeout(timer);
+        upstreamSignal?.removeEventListener("abort", relayAbort);
+      };
+      try {
+        const response = await Promise.race([originalFetch(endpoint, {
+          ...init, signal: controller.signal, credentials: "omit", redirect: "error", referrerPolicy: "no-referrer",
+        }), deadline]);
+        Object.assign(capture, { state: "reading", url: response.url, status: response.status, response_type: response.type });
+        const clone = response.clone();
+        const readCapture = async () => {
+          if (!clone.body) throw new Error("Native browser response has no readable SSE body.");
+          const streamReader = clone.body.getReader();
+          reader = streamReader;
+          const chunks: Uint8Array[] = [];
+          const joined = () => {
+            const bytes = new Uint8Array(capture.bytes); let offset = 0;
+            for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.length; }
+            return bytes;
+          };
+          const encode = (bytes: Uint8Array) => {
+            let text = "";
+            for (let offset = 0; offset < bytes.length; offset += 32_768) text += String.fromCharCode(...bytes.subarray(offset, offset + 32_768));
+            return btoa(text);
+          };
+          try {
+            for (;;) {
+              const next = await streamReader.read();
+              if (controller.signal.aborted) throw new Error("Native browser SSE capture was aborted before complete EOF.");
+              if (next.done) break;
+              if (capture.bytes + next.value.length > capture.byte_limit) throw new Error("Native browser SSE body exceeds 512KiB; retained bytes are incomplete.");
+              chunks.push(next.value); capture.bytes += next.value.length;
+              capture.raw_base64 = encode(joined()); // Retain bounded partial bytes even if the stream later fails.
+            }
+            const bytes = joined();
+            const digest = await crypto.subtle.digest("SHA-256", bytes);
+            if (controller.signal.aborted || capture.state === "failed") throw new Error("Native browser capture expired before its receipt completed.");
+            capture.sha256 = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
+            capture.complete_eof = true; capture.state = "complete";
+            capture.finished_at_utc = new Date().toISOString();
+          } finally { try { streamReader.releaseLock(); } catch { /* A timed-out read remains explicitly incomplete. */ } }
+        };
+        // The product receives its original Response. A native cloned stream, not CDP's
+        // EventSource completion notification, establishes complete body acceptance.
+        void Promise.race([readCapture(), deadline]).catch(fail).finally(cleanup);
+        return response;
+      } catch (error) { fail(error); cleanup(); throw error; }
+    };
+  }, { endpoint: PUBLIC_ASK, question: BOARD_QUESTION });
+  // Bound external traffic: the public question is the sole permitted production request.
+  const localOrigin = new URL(baseURL || "http://127.0.0.1:4180").origin;
+  let allowedPublicPosts = 0;
+  await page.route(/^https:\/\//, async route => {
+    const request = route.request();
+    if (request.url() === PUBLIC_ASK) {
+      if (request.method() === "OPTIONS") return route.continue();
+      if (request.method() === "POST") {
+        try {
+          const body = request.postDataJSON();
+          const users = Array.isArray(body?.messages) ? body.messages.filter((message: { role?: string }) => message.role === "user") : [];
+          if (users.length === 1 && users[0].content === BOARD_QUESTION &&
+              !body?.forwardedProps?.confirm && !body?.forwardedProps?.consent && ++allowedPublicPosts === 1) return route.continue();
+        } catch { /* Invalid requests are never forwarded to the public endpoint. */ }
+      }
+      return route.abort("blockedbyclient");
+    }
+    if (new URL(request.url()).origin === localOrigin) return route.continue();
+    return route.abort("blockedbyclient");
+  });
+  page.on("request", request => {
+    if (request.url() === PUBLIC_ASK && request.method() === "POST") requests.push(request);
+  });
+  page.on("requestfinished", request => {
+    if (request.url() === PUBLIC_ASK && request.method() === "POST") completed.push(request);
+  });
+  page.on("requestfailed", request => {
+    if (request.url() === PUBLIC_ASK) failures.push(request.failure()?.errorText ?? "failed");
+  });
+  try {
+    await page.goto("/dashboard?tab=home", { waitUntil: "domcontentloaded" });
+    expect(new URL(page.url()).origin, "This case must actually exercise cross-origin browser CORS").not.toBe(new URL(PUBLIC_ASK).origin);
+    const pane = await readyAsk(page);
+    expect(requests).toHaveLength(0);
+    const responsePending = page.waitForResponse(response => response.url() === PUBLIC_ASK && response.request().method() === "POST");
+    await pane.getByLabel("Your question", { exact: true }).fill(BOARD_QUESTION);
+    await pane.getByLabel("Your question", { exact: true }).press("Enter");
+    const response = await responsePending;
+    const headers = await response.allHeaders();
+    const request = response.request(), sent = await request.allHeaders();
+    const body = request.postDataJSON();
+    // Retain actual transport observations before schema/UI assertions, including on failure.
+    requestRecord = { url: request.url(), method: request.method(), body, origin: sent.origin ?? null, credentials_present: Boolean(sent.authorization || sent.cookie), transport: "DIRECT_BROWSER_CORS_POST_TEST_ONLY_ENDPOINT_MAPPING" };
+    responseRecord = { status: response.status(), url: response.url(), headers: Object.fromEntries(["content-type", "access-control-allow-origin", "date", "cache-control", "x-csoai-agui"].filter(key => headers[key] !== undefined).map(key => [key, headers[key]])), complete: false };
+    await page.waitForFunction(() => {
+      const state = (window as AskCaptureWindow).__CSOAI_ASK_NATIVE_CAPTURE__?.state;
+      return state === "complete" || state === "failed";
+    }, null, { timeout: 20_000 });
+    await retainBrowserCapture();
+    const capture = browserCapture as NativeAskCapture | null;
+    expect(capture, "The browser retained its own native Response clone").not.toBeNull();
+    if (!capture) throw new Error("No native browser response capture was retained.");
+    expect(capture.state, capture.error || "Native browser capture must reach complete EOF").toBe("complete");
+    expect(capture?.complete_eof).toBe(true); expect(capture?.error).toBeNull();
+    expect(capture?.url).toBe(PUBLIC_ASK); expect(capture?.status).toBe(200); expect(capture?.response_type).toBe("cors");
+    expect(raw).not.toBeNull();
+    const completeRaw = Buffer.from(capture.raw_base64, "base64");
+    expect(completeRaw.length).toBeGreaterThan(0); expect(completeRaw.length).toBeLessThanOrEqual(512 * 1024);
+    expect(capture?.bytes).toBe(completeRaw.length); expect(capture?.sha256).toBe(sha(completeRaw));
+    expect(response.status()).toBe(200);
+    expect(headers["content-type"]).toMatch(/^text\/event-stream/);
+    expect(headers["access-control-allow-origin"]).toBe("*");
+    expect(sent.authorization).toBeUndefined(); expect(sent.cookie).toBeUndefined();
+    expect(sent.origin).toBe(new URL(page.url()).origin);
+    expect(body.messages.filter((message: { role?: string }) => message.role === "user")).toEqual([{ id: "m1", role: "user", content: BOARD_QUESTION }]);
+    expect(body.forwardedProps?.confirm).toBeUndefined(); expect(body.forwardedProps?.consent).toBeUndefined();
+    const events = completeRaw.toString("utf8").replace(/\r\n/g, "\n").split("\n\n")
+      .flatMap(block => { const data = block.split("\n").filter(line => line.startsWith("data:")).map(line => line.slice(5).trimStart()).join("\n"); return data ? [JSON.parse(data)] : []; });
+    const started = events.filter(event => event.type === "RUN_STARTED");
+    const finished = events.filter(event => event.type === "RUN_FINISHED");
+    expect(started).toHaveLength(1); expect(finished).toHaveLength(1);
+    expect(finished[0].threadId).toBe(started[0].threadId); expect(finished[0].runId).toBe(started[0].runId);
+    expect(events.filter(event => event.type === "RUN_ERROR")).toHaveLength(0);
+    const results = events.filter(event => event.type === "TOOL_CALL_RESULT").map(event => JSON.parse(event.content));
+    expect(results).toHaveLength(1); expect(results[0].tool).toBe("board_totals");
+    expect(events.filter(event => event.type === "TOOL_CALL_START").map(event => event.toolCallName)).toEqual(["board_totals"]);
+    expect(events.filter(event => event.type === "CUSTOM" && ["confirm_required", "consent_required"].includes(event.name))).toHaveLength(0);
+    expect(finished[0].result.answered_by).toBe("tool:board_totals");
+    expect(finished[0].result.grounded).toBe(true);
+    expect(finished[0].result.awaiting_confirmation).not.toBe(true);
+    expect(Array.isArray(results[0].output?.counts)).toBe(true);
+    const measured = results[0].output.counts.find((count: { name?: string }) => count.name === "measured")?.value;
+    const slots = results[0].output.counts.find((count: { name?: string }) => count.name === "axis_slots")?.value;
+    expect(Number.isInteger(measured)).toBe(true); expect(Number.isInteger(slots)).toBe(true);
+    expect(measured).toBeGreaterThanOrEqual(0); expect(slots).toBeGreaterThan(0); expect(measured).toBeLessThanOrEqual(slots);
+    expect(typeof results[0].summary).toBe("string"); expect(results[0].summary.length).toBeGreaterThan(0);
+    const card = pane.getByTestId("talk-tool-card");
+    await expect(card).toHaveCount(1); await expect(card).toBeVisible();
+    await expect(card.getByTestId("talk-state")).toHaveText(results[0].label);
+    await expect(card).toContainText(results[0].summary);
+    await expect(pane.getByTestId("talk-answer")).toBeVisible();
+    // Playwright requestfinished remains an observation; native EOF + byte/digest/schema/UI
+    // joins above are the required completion proof for this actual browser SSE response.
+    expect(requests).toHaveLength(1); expect(allowedPublicPosts).toBe(1); expect(response.request()).toBe(requests[0]); expect(failures).toEqual([]);
+    // Closing and reopening the SAME mounted view retains the actual answer. Refresh/case
+    // persistence is not supplied by this existing component and is not asserted here.
+    await pane.getByLabel("Your question", { exact: true }).press("Escape");
+    await expect(pane).toBeHidden();
+    await page.evaluate(() => window.dispatchEvent(new CustomEvent("council:ask-open")));
+    await expect(pane).toBeVisible(); await expect(card).toBeVisible(); expect(requests).toHaveLength(1);
+    Object.assign(responseRecord, { server_thread_id: started[0].threadId, server_run_id: started[0].runId, tool: results[0].tool, label: results[0].label });
+    await page.screenshot({ path: info.outputPath("published-source-agui-ready.png"), fullPage: true });
+    accepted = true;
+  } finally {
+    await retainBrowserCapture();
+    const retainedRaw = raw as Buffer | null;
+    const retainedCapture = browserCapture as NativeAskCapture | null;
+    const bodyPath = info.outputPath("published-source-agui-http-body.json");
+    const lifecyclePath = info.outputPath("published-source-agui-request-lifecycle.json");
+    await writeFile(bodyPath, JSON.stringify({ schema: "csoai.public-ask-browser-http-evidence/2", observed_at_utc: new Date().toISOString(), request: requestRecord, response: responseRecord, browser_capture: browserCapture, incomplete_body: retainedRaw && !responseRecord ? { bytes: retainedRaw.length, sha256: sha(retainedRaw), raw_base64: retainedRaw.toString("base64") } : null }, null, 2));
+    await writeFile(lifecyclePath, JSON.stringify({ schema: "csoai.public-ask-browser-acceptance/2", observed_at_utc: new Date().toISOString(), accepted, question: BOARD_QUESTION, project: info.project.name, retry: info.retry, exact_url: PUBLIC_ASK, boundary: "Actual browser direct CORS POST to fixed public free route via test-only endpoint mapping; production AskHost keeps existing relative transport.", requests: requests.length, allowed_public_posts: allowedPublicPosts, playwright_requestfinished_observed: completed.length, native_complete_eof: retainedCapture?.complete_eof === true, completion_basis: "Native browser Response.clone() EOF within 15000ms and 512KiB, full byte/SHA/schema/UI join; Playwright requestfinished is observational.", failures, same_view_close_reopen: accepted, refresh_or_customer_case_durability: false, model_inference: false, fresh_measurement: false, signature_verification: false, source_commit_of_served_backend: null, unsigned: true }, null, 2));
+    await info.attach("published-source-agui-http-body", { path: bodyPath, contentType: "application/json" });
+    await info.attach("published-source-agui-request-lifecycle", { path: lifecyclePath, contentType: "application/json" });
+  }
+});
