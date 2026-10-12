@@ -1001,6 +1001,35 @@ class ExactLabelT128Tests(unittest.TestCase):
         self.assertIsNone(self._legacy_receipt(128, seed=7)["instrument_id"])
 
 
+class RealRunInstrumentIdTests(unittest.TestCase):
+    """Regression for intake 38217331403: metadata copied from real gspc-24x7 run.json files."""
+
+    def setUp(self) -> None:
+        self.runs = json.loads((HERE / "fixtures" / "runpod_real_run_instrument_meta.json").read_text())
+
+    def ruled(self, name: str):
+        run = self.runs[name]["run"]
+        return intake._ruled_instrument_id(run, run["instrument"], "exact")
+
+    def test_real_serial_t128_with_num_ctx_3072_is_exact_label_t128(self) -> None:
+        self.assertEqual(self.ruled("t128_serial_num_ctx_3072"), "exact-label-t128")
+
+    def test_real_t64_gemma3_12b_cross_reality_is_unruled(self) -> None:
+        self.assertIsNone(self.ruled("t64_gemma3_12b_cross_reality"))
+
+    def test_real_t16_legacy_is_unruled(self) -> None:
+        self.assertIsNone(self.ruled("t16_legacy"))
+
+    def test_real_t128_nonstandard_decode_is_unruled(self) -> None:
+        run = json.loads(json.dumps(self.runs["t128_serial_num_ctx_3072"]["run"]))
+        run["instrument"]["decode"]["temperature"] = 1
+        self.assertIsNone(intake._ruled_instrument_id(run, run["instrument"], "exact"))
+
+    def test_real_t128_read_label_reader_is_not_legacy_t128(self) -> None:
+        run = self.runs["t128_serial_num_ctx_3072"]["run"]
+        self.assertIsNone(intake._ruled_instrument_id(run, run["instrument"], "read-label"))
+
+
 class ReadLabelPortParityTests(unittest.TestCase):
     """The verifier's read-label-v1 must equal the harness reader, case by case."""
 
