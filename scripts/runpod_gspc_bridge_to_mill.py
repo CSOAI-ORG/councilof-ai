@@ -62,6 +62,13 @@ def cell_key(body: dict) -> str:
 HELD_CELLS_PATH = pathlib.Path(__file__).with_name("runpod_gspc_held_cells.json")
 HELD_SCHEMA = "csoai.runpod-gspc-held-cells/0.2"
 MAX_UNPARSED_FRACTION = 0.10   # Measure: more than 10% unparsed is an instrument failure
+# Measure ruling on #3049 (Option A): only these receipt instrument ids may stage.
+# The verifier derives the id; a missing or null id is UNRULED_INSTRUMENT (fail closed).
+RULED_INSTRUMENT_IDS = frozenset({
+    "gspc-read-label-v1-t2048", "gspc-read-label-v1-t4096-c8192",
+    "exact-keyword-t1024", "exact-keyword-t2048", "exact-keyword-t4096-c8192",
+    "exact-label-t128",
+})
 MAX_TRANSPORT_FRACTION = 0.05  # Measure: more than 5% transport loss is an incomplete run
 
 
@@ -179,6 +186,10 @@ def collect(intake: pathlib.Path, held: set[tuple[str, str, str]] | None = None
         if not run_id or run_id != verification.get("run_id"):
             problems.append(f"{card}: run id does not match verification receipt")
             continue
+        if verification.get("instrument_id") not in RULED_INSTRUMENT_IDS:
+            set_aside.append({"cell": cell_key(body), "run_id": run_id,
+                              "reason": f"UNRULED_INSTRUMENT ({verification.get('instrument_id')})"})
+            continue
         if is_held(body, held):
             set_aside.append({"cell": cell_key(body), "run_id": run_id, "reason": "HELD_LIST"})
             continue
@@ -246,7 +257,7 @@ def selftest() -> int:
             (d / "candidate.json").write_bytes(raw)
             (d / "verification.json").write_text(json.dumps({
                 "schema": "csoai.runpod-gspc-intake-verification/0.1",
-                "state": "VERIFIED_QUARANTINE",
+                "state": "VERIFIED_QUARANTINE", "instrument_id": "exact-label-t128",
                 "run_id": body["compute_evidence"]["run_id"],
                 "source_hashes": {"card_file_sha256": hashlib.sha256(raw).hexdigest()},
             }))

@@ -32,7 +32,7 @@ class BridgeGates(unittest.TestCase):
     def tearDown(self):
         self.td.cleanup()
 
-    def put(self, b):
+    def put(self, b, instrument_id="exact-label-t128"):
         self.i += 1
         d = self.root / f"r{self.i}"
         d.mkdir()
@@ -40,6 +40,7 @@ class BridgeGates(unittest.TestCase):
         (d / "candidate.json").write_bytes(raw)
         (d / "verification.json").write_text(json.dumps({
             "schema": "csoai.runpod-gspc-intake-verification/0.1", "state": "VERIFIED_QUARANTINE",
+            "instrument_id": instrument_id,
             "run_id": b["compute_evidence"]["run_id"],
             "source_hashes": {"card_file_sha256": hashlib.sha256(raw).hexdigest()}}))
 
@@ -53,6 +54,23 @@ class BridgeGates(unittest.TestCase):
         staged, aside = self.run_collect()
         self.assertEqual([s["run_id"] for s in staged], ["20260923T000000Z-a"])
         self.assertEqual(aside, [])
+
+    def test_unruled_instrument_is_not_staged(self):
+        self.put(body("20260923T000000Z-a"), instrument_id=None)
+        staged, aside = self.run_collect()
+        self.assertEqual(staged, [])
+        self.assertTrue(aside[0]["reason"].startswith("UNRULED_INSTRUMENT"))
+
+    def test_receipt_without_instrument_id_fails_closed(self):
+        self.put(body("20260923T000000Z-a"), instrument_id="exact-label-t64")
+        staged, _ = self.run_collect()
+        self.assertEqual(staged, [])
+
+    def test_every_ruled_id_stages(self):
+        for i, iid in enumerate(sorted(bridge.RULED_INSTRUMENT_IDS)):
+            self.put(body(f"20260923T00000{i}Z-a", axis=f"ax{i}"), instrument_id=iid)
+        staged, _ = self.run_collect()
+        self.assertEqual(len(staged), 6)
 
     def test_exact_one_is_hold(self):
         self.put(body("20260923T000000Z-a", acc=1))
