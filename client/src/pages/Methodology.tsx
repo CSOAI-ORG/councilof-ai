@@ -397,6 +397,9 @@ export default function Methodology() {
           <Link href="/mechanism/" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
             The open measurement mechanism and its coverage →
           </Link>
+          <Link href="/blog/how-to-verify-an-ai-measurement/" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
+            How to verify an AI measurement without confusing it with certification →
+          </Link>
         </div>
       </div>
     </div>

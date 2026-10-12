@@ -625,12 +625,19 @@ try {
   console.error("[sitemap] ERROR: scripts/prerender.mjs unreadable — cannot tell which blog pages are built.");
   process.exit(1);
 }
+// Posts restored by name while /blog/:slug stays withdrawn (client/src/data/blog-published.json).
+let publishedBlog = new Set();
+try {
+  publishedBlog = new Set((JSON.parse(readFileSync(join(ROOT, "client/src/data/blog-published.json"), "utf8")).published || []).map((p) => p && p.slug).filter(Boolean));
+} catch {
+  console.warn("[sitemap] blog-published.json unreadable — no restored /blog/<slug> entries emitted");
+}
 let blogSkipped = 0;
 let blogUnbuilt = 0;
 for (const slug of blogSlugs) {
   const bp = `/blog/${slug}`;
   // A prerendered withdrawal notice is not an indexable article.
-  if (reviewNoticePaths.has("/blog/:slug")) { blogSkipped++; continue; }
+  if (reviewNoticePaths.has("/blog/:slug") && !publishedBlog.has(slug)) { blogSkipped++; continue; }
   // Not snapshotted → the static host 404s it → it must not be in the sitemap.
   if (!builtBlog.has(slug)) { blogUnbuilt++; continue; }
   if (redirectRules.has(bp) || redirectRules.has(bp + "/")) { blogSkipped++; continue; }

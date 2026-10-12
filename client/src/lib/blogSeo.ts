@@ -15,6 +15,9 @@
  */
 import index from "../data/blog-index.json";
 import { SITE_ORIGIN } from "./seoHead";
+import published from "../data/blog-published.json";
+
+const PUBLISHED_SLUGS = new Set<string>(published.published.map((p) => p.slug));
 
 export interface BlogIndexPost {
   slug: string;
@@ -63,8 +66,12 @@ export function blogPostingLd(post: BlogIndexPost): Record<string, unknown> {
     url,
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
     publisher: PUBLISHER,
-    isPartOf: { "@type": "Blog", name: "Council of AI blog", url: `${SITE_ORIGIN}${BLOG_BASE}/` },
   };
+  // The /blog/ index is withdrawn (publication-state.json); a post restored by exact route
+  // (blog-published.json) must not claim to be part of it.
+  if (!PUBLISHED_SLUGS.has(post.slug)) {
+    node.isPartOf = { "@type": "Blog", name: "Council of AI blog", url: `${SITE_ORIGIN}${BLOG_BASE}/` };
+  }
   if (post.datePublished) node.datePublished = post.datePublished;
   if (post.dateModified) node.dateModified = post.dateModified;
   const author = authorNode(post);

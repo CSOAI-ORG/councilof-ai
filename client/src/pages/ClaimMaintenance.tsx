@@ -431,6 +431,10 @@ node claim-capture.mjs --verify artifact.json`}</Code>
             <Link href="/methodology" className="underline decoration-emerald-600 underline-offset-4">How we measure</Link> — the
             measurement discipline this specification borrows its vocabulary from. We measure; we do not certify.
           </li>
+          <li>
+            <Link href="/blog/keeping-ai-claims-current/" className="underline decoration-emerald-600 underline-offset-4">Keeping AI claims current: dates, missed reads and corrections</Link>{" "}
+            — a reader's guide to observation dates, missed reads and the corrections trail.
+          </li>
         </ul>
         <p className="mt-8 rounded-lg border border-slate-200 bg-slate-50 px-4 py-4 text-sm leading-6 text-slate-700">
           If a record here does not match what you can check, that is a defect and we want it. Write to{" "}
