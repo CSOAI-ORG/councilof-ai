@@ -352,11 +352,6 @@ export default function AskPane({ open, onClose, question }: { open: boolean; on
       ) : null}
 
       <div className={`min-h-0 flex-1 overflow-y-auto px-4 py-3 ${collapsed ? "hidden" : ""}`}>
-        <p className="mb-3 text-sm leading-relaxed text-foreground" data-testid="ask-introduction">
-          <strong>Hi, I’m MEOK. How can I help?</strong>{" "}
-          Ask about the board, a test, a published card or a server. I use Council’s published tools and records.
-          Private staff workspaces and saved customer cases are not connected here.
-        </p>
         <p className="rounded-lg border border-border bg-muted px-3 py-2 text-sm text-foreground" data-testid="ask-rule-based">
           Answers come only from our published records, by fixed rules, never from an AI model.{" "}
           <a href="/ai-transparency" className="font-medium underline underline-offset-2">
