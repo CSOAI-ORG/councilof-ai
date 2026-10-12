@@ -250,6 +250,54 @@ SUPERSEDED_INSTRUMENT_IDS = frozenset(
 EXACT_LABEL_T128_ID = "exact-label-t128"
 
 
+RULED_INSTRUMENT_IDS = frozenset(
+    {
+        "gspc-read-label-v1-t2048",
+        "gspc-read-label-v1-t4096-c8192",
+        "exact-keyword-t1024",
+        "exact-keyword-t2048",
+        "exact-keyword-t4096-c8192",
+        EXACT_LABEL_T128_ID,
+    }
+)
+
+
+def _ruled_instrument_id(
+    run: dict[str, Any], instrument: dict[str, Any], reader: str
+) -> str | None:
+    """The ruled instrument id written into the receipt, or None (UNRULED_INSTRUMENT).
+
+    Measure ruling on #3049 (Option A). A run that carries an id has already been pinned by
+    _check_instrument_identity; it is ruled only if that id is on RULED_INSTRUMENT_IDS. A
+    legacy run with no id counts as exact-label-t128 only when ALL hold: exact-label reader,
+    max_tokens == 128, and an otherwise standard T0 decode (temperature 0, seed 0, no stream,
+    no think). Anything else -- t64 included -- is None. Fails closed.
+
+    num_ctx is the run's context window, not a decode parameter, so it is not part of the
+    T0 test. The real serial t128 runs (2026-10-12) record num_ctx=3072, num_parallel=1;
+    an earlier `num_ctx is None` condition here rejected every one of them (#3049 intake
+    38217331403: 1272/1272 UNRULED_INSTRUMENT). t4096@3072 stays SUPERSEDED via
+    _check_instrument_identity; that ruling is about t4096 output truncation, not t128.
+    """
+    instrument_id = run.get("instrument_id")
+    if instrument_id is not None:
+        return instrument_id if instrument_id in RULED_INSTRUMENT_IDS else None
+    decode = instrument.get("decode")
+    if not isinstance(decode, dict):
+        return None
+    if (
+        reader == "exact"
+        and "label_parser" not in instrument
+        and decode.get("max_tokens") == 128
+        and decode.get("temperature") == 0
+        and decode.get("seed") == 0
+        and decode.get("stream") is False
+        and decode.get("think") is False
+    ):
+        return EXACT_LABEL_T128_ID
+    return None
+
+
 def _check_instrument_identity(run: dict[str, Any], instrument: dict[str, Any]) -> str:
     """Return the label reader ("exact" or "read-label") after pinning identity.
 
@@ -1031,6 +1079,7 @@ def _validate_semantics(
         )
 
     reader = _check_instrument_identity(run, instrument)
+    ruled_instrument_id = _ruled_instrument_id(run, instrument, reader)
 
     items_sha256 = sha256_bytes(snapshots["items"].raw)
     if run.get("items_sha256") != items_sha256:
@@ -1215,6 +1264,7 @@ def _validate_semantics(
         },
         "review": "human/GHA review required; this bundle is not mill input",
         "candidate_file": "candidate.json",
+        "instrument_id": ruled_instrument_id,
     }
 
 
