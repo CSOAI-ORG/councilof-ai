@@ -67,6 +67,14 @@ async function openTab(page: Page, id: string, trailingSlash = false) {
     .waitForLoadState("networkidle", { timeout: 15_000 })
     .catch(() => undefined);
   await page.waitForTimeout(400);
+  // These existing journeys exercise the inline workspace/composer. The entrypoint spec
+  // separately accepts the default Ask pane; close it intentionally before using the canvas.
+  if (id === "home") {
+    const entryAsk = page.getByTestId("ask-pane");
+    await expect(entryAsk).toBeVisible({ timeout: 30_000 });
+    await entryAsk.getByRole("button", { name: "Close Ask", exact: true }).click();
+    await expect(entryAsk).toBeHidden();
+  }
 }
 
 async function expectColdDoor(page: Page, path: string, tab: string) {
