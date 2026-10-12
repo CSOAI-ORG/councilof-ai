@@ -121,3 +121,44 @@ describe("answer paragraph, H1 and body", () => {
     expect(bodyWithoutH1(entry.content)).not.toMatch(/<h1\b/i);
   });
 });
+
+describe("posts restored by exact route (blog-published.json)", () => {
+  const slugs = ["how-to-verify-an-ai-measurement", "keeping-ai-claims-current"];
+  it("carry H1 headline, date, CSOAI author and canonical, with no isPartOf the withdrawn /blog/", () => {
+    for (const slug of slugs) {
+      const post = BLOG_INDEX.find((p) => p.slug === slug)!;
+      expect(post, slug).toBeTruthy();
+      expect(post.datePublished).toBe("2026-10-12");
+      expect(post.author?.name).toBe("CSOAI");
+      const ld = blogPostingLd(post);
+      expect((ld.mainEntityOfPage as { "@id": string })["@id"]).toBe(`https://councilof.ai/blog/${slug}/`);
+      expect(ld).not.toHaveProperty("isPartOf");
+      expect(ld).not.toHaveProperty("image");
+      expect(ld).not.toHaveProperty("aggregateRating");
+    }
+  });
+  it("a still-withdrawn post keeps its isPartOf", () => {
+    const other = BLOG_INDEX.find((p) => !slugs.includes(p.slug))!;
+    expect(blogPostingLd(other)).toHaveProperty("isPartOf");
+  });
+});
+
+describe("restored posts never point at the withdrawn /blog/ index", () => {
+  const slugs = ["how-to-verify-an-ai-measurement", "keeping-ai-claims-current"];
+  it("BlogPosting and BreadcrumbList omit https://councilof.ai/blog/ for both", () => {
+    for (const slug of slugs) {
+      const p = BLOG_INDEX.find((x) => x.slug === slug)!;
+      expect(JSON.stringify(blogPostingLd(p))).not.toContain('https://councilof.ai/blog/"');
+      const crumbs = blogBreadcrumbLd(p);
+      expect(JSON.stringify(crumbs)).not.toContain('https://councilof.ai/blog/"');
+      const items = crumbs.itemListElement as { position: number }[];
+      expect(items.map((i) => i.position)).toEqual([1, 2]);
+    }
+  });
+  it("a withdrawn slug keeps the three-item breadcrumb with Blog", () => {
+    const other = BLOG_INDEX.find((x) => !slugs.includes(x.slug))!;
+    const items = blogBreadcrumbLd(other).itemListElement as { name: string }[];
+    expect(items).toHaveLength(3);
+    expect(items[1].name).toBe("Blog");
+  });
+});
