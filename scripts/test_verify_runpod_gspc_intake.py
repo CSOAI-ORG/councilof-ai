@@ -598,3 +598,122 @@ class IntakeTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+BRIDGE_SPEC = importlib.util.spec_from_file_location(
+    "runpod_gspc_bridge_for_intake_test", HERE / "runpod_gspc_bridge_to_mill.py"
+)
+assert BRIDGE_SPEC and BRIDGE_SPEC.loader
+bridge = importlib.util.module_from_spec(BRIDGE_SPEC)
+sys.modules[BRIDGE_SPEC.name] = bridge
+BRIDGE_SPEC.loader.exec_module(bridge)
+
+
+class SerialOptionalFieldTests(unittest.TestCase):
+    """runpod_gspc_worker_serial.py records num_parallel / num_ctx / ollama_version."""
+
+    def setUp(self) -> None:
+        self.temporary = tempfile.TemporaryDirectory()
+        self.root = Path(self.temporary.name).resolve()
+        self.fixture = Fixture(self.root)
+
+    def tearDown(self) -> None:
+        self.temporary.cleanup()
+
+    def verify(self):
+        return intake.verify_to_quarantine(
+            self.fixture.source, self.fixture.allowlist, self.fixture.quarantine
+        )
+
+    def assert_rejects(self, code: str) -> None:
+        with self.assertRaises(intake.IntakeError) as caught:
+            self.verify()
+        self.assertEqual(caught.exception.code, code)
+
+    def set_serial(self, run_np: Any, instrument_np: Any = "same") -> None:
+        if instrument_np == "same":
+            instrument_np = run_np
+        if instrument_np is not None:
+            self.fixture.instrument["num_parallel"] = instrument_np
+        self.fixture.instrument_sha = intake.sha256_bytes(
+            intake.canonical_json_bytes(self.fixture.instrument)
+        )
+        for row in self.fixture.rows:
+            row["instrument_sha256"] = self.fixture.instrument_sha
+        self.fixture.rebuild()
+        self.fixture.run["num_parallel"] = run_np
+        self.fixture.run["num_ctx"] = 8192
+        self.fixture.run["ollama_version"] = "0.35.0"
+        self.fixture.write_run()
+
+    def test_serial_worker_field_set_verifies(self) -> None:
+        self.set_serial(1)
+        _, verification = self.verify()
+        self.assertEqual(verification["state"], "VERIFIED_QUARANTINE")
+
+    def test_null_serial_records_verify(self) -> None:
+        self.fixture.run.update(num_parallel=None, num_ctx=None, ollama_version=None)
+        self.fixture.write_run()
+        self.verify()
+
+    def test_num_parallel_two_is_not_serial(self) -> None:
+        self.set_serial(2)
+        self.assert_rejects("NOT_SERIAL")
+
+    def test_boolean_num_parallel_is_not_serial(self) -> None:
+        self.set_serial(True)
+        self.assert_rejects("NOT_SERIAL")
+
+    def test_run_and_instrument_num_parallel_must_agree(self) -> None:
+        self.set_serial(None, instrument_np=1)
+        self.assert_rejects("NOT_SERIAL")
+
+    def test_instrument_num_parallel_without_run_record_is_not_serial(self) -> None:
+        self.set_serial(1)
+        del self.fixture.run["num_parallel"]
+        self.fixture.write_run()
+        self.assert_rejects("NOT_SERIAL")
+
+    def test_bad_num_ctx_and_version_are_rejected(self) -> None:
+        self.set_serial(1)
+        self.fixture.run["num_ctx"] = "8192"
+        self.fixture.write_run()
+        self.assert_rejects("BAD_RUN")
+        self.fixture.run["num_ctx"] = 8192
+        self.fixture.run["ollama_version"] = "0.35.0; rm -rf /"
+        self.fixture.write_run()
+        self.assert_rejects("BAD_RUN")
+
+    def test_execution_policy_is_still_unexpected(self) -> None:
+        self.fixture.run["execution_policy"] = {"profile": "bounded-transport-v1"}
+        self.fixture.write_run()
+        self.assert_rejects("UNEXPECTED_FIELDS")
+
+    def test_unknown_instrument_key_is_still_unexpected(self) -> None:
+        self.fixture.instrument["num_ctx"] = 8192
+        self.fixture.instrument_sha = intake.sha256_bytes(
+            intake.canonical_json_bytes(self.fixture.instrument)
+        )
+        for row in self.fixture.rows:
+            row["instrument_sha256"] = self.fixture.instrument_sha
+        self.fixture.rebuild()
+        self.assert_rejects("UNEXPECTED_FIELDS")
+
+    def test_staged_card_is_byte_identical_with_or_without_run_extras(self) -> None:
+        """The bridge reads candidate.json only: run.json extras never reach a card."""
+        staged_bytes = []
+        for extras in (False, True):
+            if extras:
+                self.fixture.run.update(num_parallel=None, num_ctx=8192, ollama_version="0.35.0")
+                self.fixture.write_run()
+            quarantine = self.root / f"q-{extras}"
+            intake.verify_to_quarantine(self.fixture.source, self.fixture.allowlist, quarantine)
+            staged, _, problems = bridge.collect(quarantine)
+            self.assertEqual(problems, [])
+            out = self.root / f"out-{extras}"
+            written, oversize = bridge.write(staged, out)
+            self.assertEqual((written, oversize), (1, []))
+            staged_bytes.append({p.name: p.read_bytes() for p in sorted(out.iterdir())})
+        self.assertEqual(staged_bytes[0], staged_bytes[1])
+        self.assertNotIn(b"ollama_version", b"".join(staged_bytes[1].values()))
+        self.assertNotIn(b"num_ctx", b"".join(staged_bytes[1].values()))

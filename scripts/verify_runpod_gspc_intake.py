@@ -83,6 +83,14 @@ RUN_FIELDS = {
     "signature",
     "detail_code",
 }
+# Optional serial-protocol records written by runpod_gspc_worker_serial.py (Measure's
+# serial house gate, 6 Oct). They describe how the run executed; none of them enters the
+# card body, so accepting them cannot change what gets signed. Anything else stays an
+# UNEXPECTED_FIELDS rejection (e.g. execution_policy).
+RUN_OPTIONAL_FIELDS = frozenset({"num_parallel", "num_ctx", "ollama_version"})
+INSTRUMENT_OPTIONAL_FIELDS = frozenset({"num_parallel"})
+OLLAMA_VERSION_RE = re.compile(r"^[0-9A-Za-z.+-]{1,32}$")
+MAX_NUM_CTX = 32768
 INSTRUMENT_FIELDS = {
     "schema",
     "axis",
@@ -272,6 +280,25 @@ def _require_exact_keys(value: dict[str, Any], expected: set[str], label: str) -
             "UNEXPECTED_FIELDS",
             f"{label} fields do not match the pinned worker protocol",
         )
+
+
+def _require_keys_with_optional(
+    value: dict[str, Any], required: set[str], optional: frozenset[str], label: str
+) -> None:
+    actual = set(value)
+    if not required <= actual or not actual <= (required | optional):
+        raise IntakeError(
+            "UNEXPECTED_FIELDS",
+            f"{label} fields do not match the pinned worker protocol",
+        )
+
+
+def _check_num_parallel(value: Any, label: str) -> None:
+    """Serial house gate: absent/null, or exactly the integer 1."""
+    if value is None:
+        return
+    if type(value) is not int or value != 1:
+        raise IntakeError("NOT_SERIAL", f"{label} num_parallel must be 1")
 
 
 def _require_dict(value: Any, code: str, label: str) -> dict[str, Any]:
@@ -629,7 +656,19 @@ def _validate_semantics(
     )
     if run.get("schema") != RUN_SCHEMA:
         raise IntakeError("BAD_RUN", "run schema is not supported")
-    _require_exact_keys(run, RUN_FIELDS, "run")
+    _require_keys_with_optional(run, RUN_FIELDS, RUN_OPTIONAL_FIELDS, "run")
+    _check_num_parallel(run.get("num_parallel"), "run")
+    num_ctx = run.get("num_ctx")
+    if num_ctx is not None and (
+        type(num_ctx) is not int or not 1 <= num_ctx <= MAX_NUM_CTX
+    ):
+        raise IntakeError("BAD_RUN", "run num_ctx must be null or a positive integer")
+    ollama_version = run.get("ollama_version")
+    if ollama_version is not None and (
+        not isinstance(ollama_version, str)
+        or not OLLAMA_VERSION_RE.fullmatch(ollama_version)
+    ):
+        raise IntakeError("BAD_RUN", "run ollama_version is not a safe version string")
     run_id = run.get("run_id")
     if (
         not isinstance(run_id, str)
@@ -681,7 +720,16 @@ def _validate_semantics(
         )
 
     instrument = _require_dict(run.get("instrument"), "BAD_INSTRUMENT", "instrument")
-    _require_exact_keys(instrument, INSTRUMENT_FIELDS, "instrument")
+    _require_keys_with_optional(
+        instrument, INSTRUMENT_FIELDS, INSTRUMENT_OPTIONAL_FIELDS, "instrument"
+    )
+    _check_num_parallel(instrument.get("num_parallel"), "instrument")
+    if ("num_parallel" in run or "num_parallel" in instrument) and run.get(
+        "num_parallel"
+    ) != instrument.get("num_parallel"):
+        raise IntakeError(
+            "NOT_SERIAL", "run and instrument num_parallel records disagree"
+        )
     required_instrument_pins = {
         "schema": WORKER_SCHEMA,
         "axis": axis,
