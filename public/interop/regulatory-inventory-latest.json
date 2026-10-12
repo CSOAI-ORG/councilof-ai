@@ -1,12 +1,12 @@
 {
   "schema": "csoai.regulatory-inventory-pointer/1",
   "kind": "DISCOVERY_POINTER_ONLY",
-  "versioned_at": "2026-10-07T09:47:57.481Z",
-  "index_url": "/interop/regulatory-inventory-2026-10-07-019dca73240b.json",
-  "index_sha256": "d8e4b380a2d1319eafa9f971e644509f4ab9ae8b7ee896698e36a0cdf86048f9",
-  "content_sha256": "019dca73240bab7fa9b86e45b21704a4cd53c7e542e9bf93dea3807ef60eb154",
+  "versioned_at": "2026-10-12T05:44:32.618Z",
+  "index_url": "/interop/regulatory-inventory-2026-10-12-a6c28e9f09a4.json",
+  "index_sha256": "5260110c97bf4eb68c42611d8d43476d28b2a73b3061322d9d01651a730f3121",
+  "content_sha256": "a6c28e9f09a4b541f182df8086d1bd6e0ee8883c771afca0b408ae2125a06309",
   "crosswalk_assets": 25,
-  "ots_url": "/interop/regulatory-inventory-2026-10-07-019dca73240b.json.ots",
+  "ots_url": "/interop/regulatory-inventory-2026-10-12-a6c28e9f09a4.json.ots",
   "versions": [
     {
       "index_url": "/interop/regulatory-inventory.json",
@@ -23,6 +23,14 @@
       "content_sha256": "019dca73240bab7fa9b86e45b21704a4cd53c7e542e9bf93dea3807ef60eb154",
       "crosswalk_assets": 25,
       "versioned_at": "2026-10-07T09:47:57.481Z"
+    },
+    {
+      "index_url": "/interop/regulatory-inventory-2026-10-12-a6c28e9f09a4.json",
+      "index_sha256": "5260110c97bf4eb68c42611d8d43476d28b2a73b3061322d9d01651a730f3121",
+      "ots_url": "/interop/regulatory-inventory-2026-10-12-a6c28e9f09a4.json.ots",
+      "content_sha256": "a6c28e9f09a4b541f182df8086d1bd6e0ee8883c771afca0b408ae2125a06309",
+      "crosswalk_assets": 25,
+      "versioned_at": "2026-10-12T05:44:32.618Z"
     }
   ],
   "scope": "This unsigned pointer selects the stamped regulatory inventory whose derived-statement rows match the in-toto crosswalk index (public/interop/crosswalk/intoto/index.json) on this commit; scripts/build-regulatory-inventory.mjs derives it and scripts/regulatory-inventory-gate.mjs checks it in every build. Every listed file is immutable and has its own OpenTimestamps proof; earlier versions stay published as history and are not current. A proof file's existence is not a Bitcoin anchor: read its verified state. The inventory's own truth_boundaries still apply: 25 heterogeneous crosswalk assets are not 25 signed legal crosswalks."
