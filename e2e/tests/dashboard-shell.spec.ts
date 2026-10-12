@@ -636,3 +636,15 @@ test("the 22-axis learning arena keeps coaching, practice and human review in on
   );
   await expect(page).toHaveURL(/tab=learn/);
 });
+
+test("a cold /assess door lands on the measured pane with the RAS booking link", async ({ page }) => {
+  await expectColdDoor(page, "/assess/", "measured");
+  const cta = page.locator('[data-testid="ras-booking-cta"]');
+  await expect(cta).toBeVisible({ timeout: 30_000 });
+  const href = (await cta.getAttribute("href")) || "";
+  expect(
+    href.startsWith("mailto:nicholas@csoai.org?subject=RAS%20booking%20request") ||
+      (/^https:\/\//.test(href) && !/stripe/i.test(href)),
+    href,
+  ).toBe(true);
+});
