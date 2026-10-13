@@ -107,10 +107,10 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
       const r = await api("/tools?q=" + encodeURIComponent(String(a.query || "")));
       if (!r.json) return err("catalog gateway unreachable (status " + r.status + ")");
       const j = r.json;
-      const probed = Array.isArray(j.tools) && j.tools.length ? j.tools : null;
-      const raw = j.matches || j.mcps || probed || j.distinct_tools || j.tools || (Array.isArray(j) ? j : []);
+      const probed = Array.isArray(j.tools) ? j.tools : null;
+      const raw = probed || j.matches || j.mcps || j.distinct_tools || j.tools || (Array.isArray(j) ? j : []);
       const matches = raw.slice(0, 25).map((m) => typeof m === "string" ? { name: m } : ({ name: m.name, cluster: m.clusterLabel || m.cluster, tools: m.tools, install: m.connect }));
-      return out({ total: j.total || j.catalogue_total || matches.length, showing: matches.length, matches });
+      return out({ total: j.total ?? j.catalogue_total ?? matches.length, showing: matches.length, matches });
     }
     return err("unknown tool: " + name);
   } catch (e) {

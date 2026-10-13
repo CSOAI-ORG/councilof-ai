@@ -150,8 +150,22 @@ jobs:
       # threw ReferenceError on every /dashboard render. With that fixed and the spec
       # adapted, the gate is re-enabled.
       - name: Council OS shell smoke — gating; all desktop + mobile journeys must pass
+        id: council_os_shell_smoke
         run: |
           npm run test:e2e:shell
+
+      - name: Retain Council OS shell acceptance evidence
+        if: ${{ always() && (steps.council_os_shell_smoke.outcome == 'success' || steps.council_os_shell_smoke.outcome == 'failure') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: council-os-shell-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            test-results/**/trace.zip
+            test-results/**/agui-request-lifecycle.json
+            test-results/**/published-source-*.json
+            test-results/**/*.png
+          retention-days: 3
+          if-no-files-found: warn
 
       - name: Prerender all routes
         run: |

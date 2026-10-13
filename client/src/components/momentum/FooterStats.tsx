@@ -10,13 +10,13 @@
  */
 import { useLocation } from "wouter";
 import { LiveDot } from "./MomentumStrip";
+import PypiLiveBadge from "./PypiLiveBadge";
 import { fmtStamp, isExternal, pick, useMomentum, type MomentumRead } from "./momentum";
 
-export const FOOTER_IDS = ["pypi_csoai_all_time", "hf_downloads_30d_other", "capsules", "signed_cards", "corrections"];
+export const FOOTER_IDS = ["hf_downloads_30d_other", "capsules", "signed_cards", "corrections"];
 
 /** Short labels for a narrow row; the full label travels in the link title and the screen-reader text. */
 const SHORT: Record<string, string> = {
-  pypi_csoai_all_time: "PyPI downloads, CSOAI packages",
   hf_downloads_30d_other: "other dataset downloads, 30 days",
   capsules: "signed measurement capsules",
   signed_cards: "signed cards, all verify",
@@ -58,6 +58,7 @@ export default function FooterStats({ injected }: { injected?: MomentumRead }) {
           </li>
         ))}
       </ul>
+      <PypiLiveBadge className="mt-4" />
       <p className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11.5px] text-muted-foreground">
         <LiveDot live={live} />
         <span>
