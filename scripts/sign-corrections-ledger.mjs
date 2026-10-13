@@ -22,16 +22,18 @@
  * did:web:csoai.org#board-attestation-1 (9367cf59…), the key /api/board-sign holds. Both are
  * published in the same DID document; the new signature names which one it used.
  *
- * SPLIT-HOST RUN. The signing token lives only on the pod (mode 600) and node lives only on the
- * Mac, so the two halves can be run separately and the token never moves:
- *     node scripts/sign-corrections-ledger.mjs --emit-payload /tmp/att.json
- *     # on the pod: curl -sS -X POST https://councilof.ai/api/board-sign \
- *     #   -H "authorization: Bearer $(cat /workspace/secrets/board-sign-pod-token)" \
- *     #   -H 'content-type: application/json' \
- *     #   -d "{\"payload\": $(cat /tmp/att.json)}" > /tmp/att.sig.json
- *     node scripts/sign-corrections-ledger.mjs --signature /tmp/att.sig.json --write
- * Single-host run, where a token file is readable:
- *     node scripts/sign-corrections-ledger.mjs --token-file /workspace/secrets/board-sign-pod-token --write
+ * SPLIT RUN, BY GITHUB OIDC (the route to use). No machine that runs this script needs a signing
+ * credential. Emit the payload here, have the board signer sign it inside a GitHub Actions job on
+ * master (.github/workflows/hf-fin-shells-attest.yml), then apply the job's reply here:
+ *     node scripts/sign-corrections-ledger.mjs --emit-payload att.json
+ *     gh workflow run hf-fin-shells-attest.yml -R CSOAI-ORG/councilof-ai --ref master \
+ *       -f kind=corrections \
+ *       -f payloads_b64="$(node -e 'process.stdout.write(Buffer.from(JSON.stringify([JSON.parse(require("fs").readFileSync("att.json","utf8"))])).toString("base64"))')"
+ *     gh run download <run id> -R CSOAI-ORG/councilof-ai -n board-sign-<run id> -D out
+ *     node scripts/sign-corrections-ledger.mjs --payload att.json --signature out/<sha256>.board-sign.json --write
+ * The job (scripts/sign-attest/sign.mjs) checks the payload's shape before it asks, and keeps a
+ * reply only when the digest, the DID, signer_auth and the Ed25519 signature all check.
+ * The older single-host route, --token-file <f> --write, is still in the code below.
  *
  * Nothing here edits a signed payload. The ledger body is untouched; only the detached signature
  * block beside it is replaced, which is what re-issuing a signature means.
@@ -219,7 +221,15 @@ async function main() {
     });
     resp = await r.json();
   } else {
-    console.error("\nneed one of --emit-payload <f>, --signature <f>, --token-file <f>");
+    console.error(
+      "\nneed one of --emit-payload <f>, --payload <f> --signature <f>, --token-file <f>.\n" +
+      "To sign by GitHub OIDC, with no stored credential:\n" +
+      "  node scripts/sign-corrections-ledger.mjs --emit-payload att.json\n" +
+      "  gh workflow run hf-fin-shells-attest.yml -R CSOAI-ORG/councilof-ai --ref master -f kind=corrections -f payloads_b64=<base64 of the JSON array [att.json]>\n" +
+      "  gh run download <run id> -R CSOAI-ORG/councilof-ai -n board-sign-<run id> -D out\n" +
+      "  node scripts/sign-corrections-ledger.mjs --payload att.json --signature out/<sha256>.board-sign.json --write\n" +
+      "The exact base64 command is in the header of this file.",
+    );
     return 2;
   }
   if (!resp.sig_ed25519) {

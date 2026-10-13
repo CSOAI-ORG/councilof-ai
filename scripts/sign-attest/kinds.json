@@ -1,0 +1,83 @@
+{
+  "about": "What scripts/sign-attest/sign.mjs will ask the board signer to sign. A payload is admitted by its exact key set and by the value rule on every key, never by its schema label alone. Any extra, missing or mistyped key is a refusal. Every key of a kind has exactly one rule: equals (a pinned string), patterns (a string matching an anchored regular expression), integers (a non-negative safe integer) or enums (one of a list of strings).",
+  "max_payloads": 10,
+  "max_bytes": 3072,
+  "kinds": {
+    "corrections": {
+      "producer": "scripts/sign-corrections-ledger.mjs buildAttestation",
+      "keys": [
+        "artifact",
+        "content_id",
+        "content_id_rule",
+        "entries",
+        "latest_entry_id",
+        "ledger_canonical_bytes",
+        "note",
+        "schema",
+        "signed_at"
+      ],
+      "equals": {
+        "schema": "csoai.corrections-attestation/0.1",
+        "artifact": "csoai.corrections/0.1",
+        "content_id_rule": "sha256(json.dumps(served body minus keys [\"signature\",\"signature_state\",\"signature_check\",\"correction_latency\",\"note\",\"fix_requires\"], sort_keys=True, separators=(',',':'), ensure_ascii=True))",
+        "note": "Detached. The Ed25519 signature covers THIS object; the ledger body is committed to by content_id because it is larger than the signer's 3KB payload cap. Both must check: the digest must still describe the body a reader just fetched, and this object must verify."
+      },
+      "patterns": {
+        "content_id": "^[0-9a-f]{64}$",
+        "latest_entry_id": "^C-\\d{4}-\\d{4}-\\d{2}$",
+        "signed_at": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+      },
+      "integers": ["entries", "ledger_canonical_bytes"],
+      "enums": {}
+    },
+    "ruling": {
+      "producer": "scripts/rulings/ruling-lib.mjs buildAttestation",
+      "keys": [
+        "schema",
+        "ruling_id",
+        "class",
+        "decided_at",
+        "content_id",
+        "content_id_rule",
+        "record_canonical_bytes",
+        "signed_at"
+      ],
+      "equals": {
+        "schema": "csoai.ruling-attestation/0.1",
+        "content_id_rule": "sha256(RFC 8785 JCS of the record without its 'signature' key)"
+      },
+      "patterns": {
+        "ruling_id": "^R-\\d{4}-\\d{4}-\\d{2}$",
+        "decided_at": "^(\\d{4}-\\d{2}-\\d{2}(T\\d{2}:\\d{2}(:\\d{2})?Z)?|UNRECORDED)$",
+        "content_id": "^[0-9a-f]{64}$",
+        "signed_at": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+      },
+      "integers": ["record_canonical_bytes"],
+      "enums": {
+        "class": ["admission", "state-name", "board-change", "naming", "dispute", "publication", "other"]
+      }
+    },
+    "rulings-index": {
+      "producer": "scripts/rulings/ruling-lib.mjs buildIndexAttestation",
+      "keys": [
+        "schema",
+        "content_id",
+        "content_id_rule",
+        "count",
+        "latest_ruling_id",
+        "signed_at"
+      ],
+      "equals": {
+        "schema": "csoai.rulings-index-attestation/0.1",
+        "content_id_rule": "sha256(RFC 8785 JCS of the index without its 'signature' key)"
+      },
+      "patterns": {
+        "content_id": "^[0-9a-f]{64}$",
+        "latest_ruling_id": "^R-\\d{4}-\\d{4}-\\d{2}$",
+        "signed_at": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+      },
+      "integers": ["count"],
+      "enums": {}
+    }
+  }
+}
