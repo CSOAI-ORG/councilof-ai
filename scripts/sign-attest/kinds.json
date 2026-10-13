@@ -1,7 +1,9 @@
 {
-  "about": "What scripts/sign-attest/sign.mjs will ask the board signer to sign. A payload is admitted by its exact key set and by the value rule on every key, never by its schema label alone. Any extra, missing or mistyped key is a refusal. Every key of a kind has exactly one rule: equals (a pinned string), patterns (a string matching an anchored regular expression), integers (a non-negative safe integer) or enums (one of a list of strings).",
+  "about": "What scripts/sign-attest/sign.mjs will ask the board signer to sign. A payload is admitted by its exact key set and by the value rule on every key, never by its schema label alone. Any extra, missing or mistyped key is a refusal. Every key of a kind has exactly one rule: equals (a pinned string), patterns (a string matching an anchored regular expression), integers (a non-negative safe integer), enums (one of a list of strings) or instants (a real UTC time to the second, written YYYY-MM-DDTHH:MM:SSZ). The job also refuses a signed_at that is more than signed_at_max_age_seconds before its own clock, or more than signed_at_max_ahead_seconds ahead of it. That date rule is the job's; the signer does not hold it.",
   "max_payloads": 10,
   "max_bytes": 3072,
+  "signed_at_max_age_seconds": 86400,
+  "signed_at_max_ahead_seconds": 300,
   "kinds": {
     "corrections": {
       "producer": "scripts/sign-corrections-ledger.mjs buildAttestation",
@@ -24,11 +26,11 @@
       },
       "patterns": {
         "content_id": "^[0-9a-f]{64}$",
-        "latest_entry_id": "^C-\\d{4}-\\d{4}-\\d{2}$",
-        "signed_at": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        "latest_entry_id": "^C-\\d{4}-\\d{4}-\\d{2}$"
       },
       "integers": ["entries", "ledger_canonical_bytes"],
-      "enums": {}
+      "enums": {},
+      "instants": ["signed_at"]
     },
     "ruling": {
       "producer": "scripts/rulings/ruling-lib.mjs buildAttestation",
@@ -49,13 +51,13 @@
       "patterns": {
         "ruling_id": "^R-\\d{4}-\\d{4}-\\d{2}$",
         "decided_at": "^(\\d{4}-\\d{2}-\\d{2}(T\\d{2}:\\d{2}(:\\d{2})?Z)?|UNRECORDED)$",
-        "content_id": "^[0-9a-f]{64}$",
-        "signed_at": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        "content_id": "^[0-9a-f]{64}$"
       },
       "integers": ["record_canonical_bytes"],
       "enums": {
         "class": ["admission", "state-name", "board-change", "naming", "dispute", "publication", "other"]
-      }
+      },
+      "instants": ["signed_at"]
     },
     "rulings-index": {
       "producer": "scripts/rulings/ruling-lib.mjs buildIndexAttestation",
@@ -73,11 +75,11 @@
       },
       "patterns": {
         "content_id": "^[0-9a-f]{64}$",
-        "latest_ruling_id": "^R-\\d{4}-\\d{4}-\\d{2}$",
-        "signed_at": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        "latest_ruling_id": "^R-\\d{4}-\\d{4}-\\d{2}$"
       },
       "integers": ["count"],
-      "enums": {}
+      "enums": {},
+      "instants": ["signed_at"]
     }
   }
 }

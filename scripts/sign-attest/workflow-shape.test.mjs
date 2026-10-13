@@ -4,7 +4,8 @@
  * The job can ask the board signer for a signature, so what it can reach matters more than what
  * it does. These tests read the workflow as text (this repo carries no YAML parser) and pin:
  * one OIDC grant and no write grant, no stored credential, no install step, master's code only,
- * and the two inputs reaching the script as environment variables and never inside a shell line.
+ * actions named by commit, no block that could change how the script is run, and the two inputs
+ * reaching the script as environment variables and never inside a shell line.
  */
 import { describe, expect, it } from "vitest";
 import { spawnSync } from "node:child_process";
@@ -98,18 +99,40 @@ describe("hf-fin-shells-attest.yml - what the job can reach", () => {
     expect(code).not.toMatch(/\bgit\s+(push|commit|add)\b|\bgh\s/);
   });
 
-  it("checks out master's code, and does not leave a credential in the checkout", () => {
-    expect(WF).toContain("ref: master");
+  it("checks out master's code by its full ref name, and does not leave a credential in the checkout", () => {
+    // A bare "master" makes the checkout action fetch every branch and tag whose name starts with it.
+    expect(WF).toContain("ref: refs/heads/master");
     expect(WF).toContain("persist-credentials: false");
-    const checkout = steps.find((s) => s.includes("actions/checkout@v4"));
-    expect(checkout).toMatch(/uses: actions\/checkout@v4\n        with:\n          ref: master\n          persist-credentials: false\n/);
+    const checkout = steps.find((s) => s.includes("actions/checkout@"));
+    expect(checkout).toMatch(/uses: actions\/checkout@[0-9a-f]{40} # v4\.\d+\.\d+\n        with:\n          ref: refs\/heads\/master\n          persist-credentials: false\n/);
     expect(count(code, "ref:")).toBe(1);
+    expect(code).not.toMatch(/^\s*ref: master\s*$/m);
   });
 
-  it("uses only the three actions the plan names", () => {
-    expect([...code.matchAll(/uses:\s*(\S+)/g)].map((m) => m[1])).toEqual([
-      "actions/checkout@v4", "actions/setup-node@v4", "actions/upload-artifact@v4",
-    ]);
+  it("uses only the three actions the plan names, each pinned by commit with its version beside it", () => {
+    const uses = [...code.matchAll(/^\s+- uses: (\S+)( # (\S+))?$/gm)].map((m) => ({ action: m[1], version: m[3] }));
+    expect(uses.map((u) => u.action.split("@")[0])).toEqual(["actions/checkout", "actions/setup-node", "actions/upload-artifact"]);
+    for (const u of uses) {
+      expect(u.action, u.action).toMatch(/^actions\/[a-z-]+@[0-9a-f]{40}$/); // a commit, not a tag that can move
+      expect(u.version, u.action).toMatch(/^v4\.\d+\.\d+$/);
+    }
+    expect(count(code, "uses:")).toBe(3);
+    expect(code).not.toMatch(/uses:\s*\S+@(v\d|main|master)/);
+    expect(code).not.toMatch(/docker:\/\//);
+  });
+
+  it("has no block that could change what the script runs under: only the keys listed here exist", () => {
+    // Top level, then the one job. A workflow-level or job-level env:, defaults:, container:,
+    // services: or strategy: block would be a new key in one of these two lists.
+    expect([...code.matchAll(/^([a-z][a-z0-9_-]*):/gm)].map((m) => m[1])).toEqual(["name", "on", "permissions", "jobs"]);
+    const job = code.slice(code.indexOf("\n  sign:\n"));
+    expect([...job.matchAll(/^    ([a-z][a-z0-9_-]*):/gm)].map((m) => m[1])).toEqual(["runs-on", "timeout-minutes", "permissions", "steps"]);
+    // Step level: a step is a name and a run, or a uses and a with. Only the signing step has env.
+    const stepKeys = steps.map((s) => [...s.matchAll(/^(?:      - |        )([a-z][a-z0-9_-]*):/gm)].map((m) => m[1]));
+    expect(stepKeys).toEqual([["name", "run"], ["uses", "with"], ["uses", "with"], ["name", "env", "run"], ["uses", "with"]]);
+    expect([...code.matchAll(/^\s*env:/gm)]).toHaveLength(1);
+    for (const word of ["defaults:", "container:", "services:", "strategy:", "shell:", "working-directory:", "environment:", "NODE_OPTIONS", "NODE_PATH", "GITHUB_ENV", "GITHUB_PATH", "LD_PRELOAD"])
+      expect(WF, word).not.toContain(word);
   });
 });
 
@@ -150,10 +173,11 @@ describe("hf-fin-shells-attest.yml - order of steps", () => {
   it("refuse the ref, check out, set up node, sign, upload", () => {
     expect(steps).toHaveLength(5);
     expect(steps[0]).toContain("Refuse any ref but master");
-    expect(steps[1]).toContain("actions/checkout@v4");
-    expect(steps[2]).toMatch(/actions\/setup-node@v4\n        with:\n          node-version: 20\n/);
+    expect(steps[1]).toContain("actions/checkout@");
+    // A Node line that still gets fixes. The script needs nothing newer than Node 18.
+    expect(steps[2]).toMatch(/actions\/setup-node@[0-9a-f]{40} # v4\.\d+\.\d+\n        with:\n          node-version: 22\n/);
     expect(steps[3]).toContain("node scripts/sign-attest/sign.mjs");
-    expect(steps[4]).toMatch(/actions\/upload-artifact@v4\n        with:\n          name: board-sign-\$\{\{ github\.run_id \}\}\n          path: \$\{\{ runner\.temp \}\}\/board-sign-out\n          if-no-files-found: error\n/);
+    expect(steps[4]).toMatch(/actions\/upload-artifact@[0-9a-f]{40} # v4\.\d+\.\d+\n        with:\n          name: board-sign-\$\{\{ github\.run_id \}\}\n          path: \$\{\{ runner\.temp \}\}\/board-sign-out\n          if-no-files-found: error\n/);
     for (const s of steps) expect(s).not.toMatch(/continue-on-error|if:\s*always\(\)|if:\s*failure\(\)/);
   });
 
@@ -187,5 +211,20 @@ describe("scripts/sign-attest/sign.mjs - what the job runs", () => {
   it("names the one signer address and the one audience", () => {
     expect(SRC).toContain('export const SIGN_URL = "https://councilof.ai/api/board-sign";');
     expect(SRC).toContain("export const AUDIENCE = SIGN_URL;");
+  });
+
+  it("every request that carries a credential refuses redirects, and only main() writes to the error stream", () => {
+    // Two requests carry an Authorization header; each must sit beside redirect: "error".
+    const withAuth = [...SRC.matchAll(/headers: \{ authorization: [^\n]+\n(?:[^\n]*\n){0,2}?\s*redirect: "error",/g)];
+    expect(withAuth).toHaveLength(2);
+    expect(count(SRC, "authorization:")).toBe(2);
+    expect(count(SRC, 'redirect: "error"')).toBe(2);
+    // One place prints a failure, and it goes through the line guard.
+    expect([...SRC.matchAll(/console\.(error|warn|info|debug)\(/g)]).toHaveLength(1);
+    expect(SRC).toContain("console.error(failureLines(");
+    expect(SRC).not.toMatch(/process\.(stdout|stderr)\.write/);
+    // Record lines are printed only through say(), which makes each call one line.
+    expect([...SRC.matchAll(/\blog\(/g)]).toHaveLength(1);
+    expect(SRC).toContain("const say = (line) => log(recordLine(line));");
   });
 });

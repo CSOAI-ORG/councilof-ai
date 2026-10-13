@@ -24,7 +24,17 @@
  *
  * THE TOKEN. It is held in one local variable per payload. It is never printed, never written and
  * never put in an error message. No log-masking command is emitted either: that command line would
- * itself carry the token.
+ * itself carry the token. The two requests that carry a credential refuse to follow a redirect. A
+ * reply that repeats the token, or any part of it, is refused whole.
+ *
+ * THE LOG. A run that reached the signer leaves record lines: CHECKED, CLAIMS, SIGNED, WROTE. Text
+ * that came from a payload, an input or the network cannot start a line. A name from a payload is
+ * printed quoted, with every character outside letters, digits, "_", "." and "-" written as
+ * \uXXXX. Network text is quoted. Every line of a failure starts with "FAILED: ".
+ *
+ * THE DATE. signed_at must be a real UTC time, not more than a day before this job's clock and
+ * not more than five minutes ahead of it (the limits are in kinds.json). This is the job's own
+ * rule. The signer does not hold it yet, so it is not a boundary.
  *
  * Node built-ins only. main() runs only when this file is the entry script.
  */
@@ -54,6 +64,71 @@ export const CLAIM_NAMES = [
 const hasOwn = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
 const isObject = (v) => v !== null && typeof v === "object" && !Array.isArray(v);
 const sha256Hex = (text) => createHash("sha256").update(text, "utf8").digest("hex");
+
+// ---- what may reach a log line ---------------------------------------------------------------
+
+const NAME_CHARS_SHOWN = 80;
+const NAMES_LISTED = 12;
+const escapeUnit = (c) => "\\u" + c.charCodeAt(0).toString(16).padStart(4, "0");
+
+/** Any text as one line of printable ASCII: a line break or a control character becomes \uXXXX. */
+export function oneLine(text) {
+  return String(text).replace(/[^\x20-\x7e]/g, escapeUnit);
+}
+
+/**
+ * A name that came from a payload or an input, made safe to print. Only letters, digits, "_", "."
+ * and "-" are printed as themselves. Every other character is printed as \uXXXX, so a name cannot
+ * carry a line break, a space, "::" or "##[" into the log. At most 80 characters are shown.
+ */
+export function quoteName(name) {
+  const s = String(name);
+  const shown = s.slice(0, NAME_CHARS_SHOWN).replace(/[^A-Za-z0-9_.-]/g, escapeUnit);
+  return `"${shown}"${s.length > NAME_CHARS_SHOWN ? ` (+${s.length - NAME_CHARS_SHOWN} more characters)` : ""}`;
+}
+const listNames = (names) =>
+  names.slice(0, NAMES_LISTED).map(quoteName).join(", ") +
+  (names.length > NAMES_LISTED ? ` and ${names.length - NAMES_LISTED} more` : "");
+
+// "##[" is the runner's older command form and is read anywhere in a line, so it is broken up.
+const recordLine = (line) => oneLine(line).split("##[").join("#\\u0023[");
+
+export const FAILED_PREFIX = "FAILED: ";
+/**
+ * What main() prints when a run fails. Every line carries the prefix, so no line of a failure can
+ * begin with "::" (a runner command) or with CHECKED, CLAIMS, SIGNED or WROTE (the record lines of
+ * a run that reached the signer), whatever the message holds.
+ */
+export function failureLines(message) {
+  return String(message).split("\n").map((l) => FAILED_PREFIX + recordLine(l)).join("\n");
+}
+
+// ---- the date rule ---------------------------------------------------------------------------
+
+const INSTANT = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;
+/** A real UTC time to the second, written YYYY-MM-DDTHH:MM:SSZ. 2026-02-30 and 99:99:99 are not. */
+export function isInstant(v) {
+  if (typeof v !== "string" || !INSTANT.test(v)) return false;
+  const ms = Date.parse(v);
+  return Number.isFinite(ms) && new Date(ms).toISOString() === v.replace(/Z$/, ".000Z");
+}
+
+/**
+ * Why a payload's signed_at is not acceptable at `nowMs` (this job's clock), or null when it is.
+ * Without it, a dispatch on master could collect a board signature over an attestation dated in
+ * any year. This is the job's rule only: the signer does not hold it, so it is not a boundary.
+ */
+export function freshnessDefect(payload, kinds, nowMs) {
+  const maxAge = kinds?.signed_at_max_age_seconds;
+  const maxAhead = kinds?.signed_at_max_ahead_seconds;
+  if (!Number.isSafeInteger(maxAge) || !Number.isSafeInteger(maxAhead)) return "the kind registry carries no signed_at limits";
+  if (!Number.isFinite(nowMs)) return "this job's clock is unreadable, so the age of signed_at cannot be checked";
+  if (!isObject(payload) || !isInstant(payload.signed_at)) return "signed_at is not a real UTC time, so its age cannot be checked";
+  const age = Math.floor((nowMs - Date.parse(payload.signed_at)) / 1000);
+  if (age > maxAge) return `signed_at is ${age} seconds before this job's clock; the limit is ${maxAge}. Emit the payload again`;
+  if (-age > maxAhead) return `signed_at is ${-age} seconds ahead of this job's clock; the limit is ${maxAhead}`;
+  return null;
+}
 
 /** The signer's preimage rule, copied from functions/_lib/cardSign.ts canonicalBytes. */
 export function canonSigner(obj) {
@@ -90,7 +165,7 @@ export function loadKinds(file = new URL("./kinds.json", import.meta.url)) {
 export function registryDefects(kinds) {
   const bad = [];
   if (!isObject(kinds) || !isObject(kinds.kinds)) return ["kinds.json has no kinds object"];
-  for (const lim of ["max_payloads", "max_bytes"])
+  for (const lim of ["max_payloads", "max_bytes", "signed_at_max_age_seconds", "signed_at_max_ahead_seconds"])
     if (!Number.isSafeInteger(kinds[lim]) || kinds[lim] < 1) bad.push(`${lim} must be a positive integer`);
   for (const [name, spec] of Object.entries(kinds.kinds)) {
     const keys = Array.isArray(spec.keys) ? spec.keys : [];
@@ -101,6 +176,7 @@ export function registryDefects(kinds) {
       ...Object.keys(spec.patterns || {}),
       ...(spec.integers || []),
       ...Object.keys(spec.enums || {}),
+      ...(spec.instants || []),
     ];
     for (const k of keys) {
       const n = ruled.filter((r) => r === k).length;
@@ -121,20 +197,23 @@ export function registryDefects(kinds) {
 
 /**
  * Throws with every reason a payload may not be signed as `kind`. Returns the preimage facts when
- * it may: { kind, schema, canonical, bytes, payload_sha256 }. Makes no network call.
+ * it may: { kind, schema, canonical, bytes, payload_sha256 }. Makes no network call. The message
+ * is always one line. With `nowMs` (the job's clock) the age of signed_at is checked as well;
+ * run() always passes it.
  */
-export function validatePayload(kind, payload, kinds) {
+export function validatePayload(kind, payload, kinds, { nowMs } = {}) {
   const defects = registryDefects(kinds);
-  if (defects.length) throw new Error(`REFUSED: the kind registry is not usable: ${defects.join("; ")}`);
+  if (defects.length) throw new Error(oneLine(`REFUSED: the kind registry is not usable: ${defects.join("; ")}`));
   if (typeof kind !== "string" || !hasOwn(kinds.kinds, kind))
-    throw new Error(`REFUSED: unknown kind ${JSON.stringify(kind)}; known kinds: ${Object.keys(kinds.kinds).join(", ")}`);
+    throw new Error(`REFUSED: unknown kind ${quoteName(kind)}; known kinds: ${Object.keys(kinds.kinds).join(", ")}`);
   if (!isObject(payload)) throw new Error(`REFUSED kind=${kind}: the payload is not a JSON object`);
   const spec = kinds.kinds[kind];
   const bad = [];
   const have = Object.keys(payload);
   const extra = have.filter((k) => !spec.keys.includes(k)).sort();
   const missing = spec.keys.filter((k) => !hasOwn(payload, k)).sort();
-  if (extra.length) bad.push(`extra key(s): ${extra.join(", ")}`);
+  // A key name is the one piece of free text a payload can put into a refusal, so it is quoted.
+  if (extra.length) bad.push(`extra key(s): ${listNames(extra)}`);
   if (missing.length) bad.push(`missing key(s): ${missing.join(", ")}`);
   for (const k of spec.keys) {
     if (!hasOwn(payload, k)) continue;
@@ -147,7 +226,13 @@ export function validatePayload(kind, payload, kinds) {
       if (typeof v !== "number" || !Number.isSafeInteger(v) || v < 0) bad.push(`${k} is not a non-negative integer`);
     } else if (hasOwn(spec.enums || {}, k)) {
       if (typeof v !== "string" || !spec.enums[k].includes(v)) bad.push(`${k} is not one of ${spec.enums[k].join("|")}`);
+    } else if ((spec.instants || []).includes(k)) {
+      if (!isInstant(v)) bad.push(`${k} is not a real UTC time written YYYY-MM-DDTHH:MM:SSZ`);
     }
+  }
+  if (nowMs !== undefined) {
+    const stale = freshnessDefect(payload, kinds, nowMs);
+    if (stale && !bad.some((b) => b.startsWith("signed_at "))) bad.push(stale);
   }
   const canonical = canonSigner(payload);
   const bytes = Buffer.byteLength(canonical, "utf8");
@@ -155,7 +240,7 @@ export function validatePayload(kind, payload, kinds) {
   if (/[^\x20-\x7e]/.test(canonical)) bad.push("the canonical form is not printable ASCII");
   const label = labelViolation(canonical);
   if (label) bad.push(`never-sign label ${label}`);
-  if (bad.length) throw new Error(`REFUSED kind=${kind}: ${bad.join("; ")}`);
+  if (bad.length) throw new Error(oneLine(`REFUSED kind=${kind}: ${bad.join("; ")}`));
   return { kind, schema: payload.schema, canonical, bytes, payload_sha256: sha256Hex(canonical) };
 }
 
@@ -223,7 +308,7 @@ const redact = (text, secrets) =>
 
 const timeout = (ms) => (typeof AbortSignal !== "undefined" && AbortSignal.timeout ? AbortSignal.timeout(ms) : undefined);
 
-/** The board key as published in the DID document, as 64 lowercase hex. */
+/** The board key as published in the DID document, as 64 lowercase hex. This request carries no credential. */
 export async function fetchDidKeyHex({ fetchImpl = globalThis.fetch } = {}) {
   const res = await fetchImpl(DID_URL, {
     headers: { accept: "application/json", "user-agent": USER_AGENT },
@@ -236,9 +321,12 @@ export async function fetchDidKeyHex({ fetchImpl = globalThis.fetch } = {}) {
   } catch {
     throw new Error(`${DID_URL} did not return JSON`);
   }
-  const vm = (doc.verificationMethod || []).find((v) => v.id === BOARD_DID || String(v.id).endsWith("#board-attestation-1"));
-  if (!vm?.publicKeyJwk?.x) throw new Error(`no publicKeyJwk for ${BOARD_DID} in ${DID_URL}`);
-  return Buffer.from(vm.publicKeyJwk.x, "base64url").toString("hex");
+  if (!isObject(doc) || !Array.isArray(doc.verificationMethod)) throw new Error(`${DID_URL} carries no verificationMethod list`);
+  const vm = doc.verificationMethod.find((v) => isObject(v) && typeof v.id === "string" && v.id.endsWith("#board-attestation-1"));
+  const x = isObject(vm) && isObject(vm.publicKeyJwk) ? vm.publicKeyJwk.x : undefined;
+  // 32 bytes in base64url is 43 characters.
+  if (typeof x !== "string" || !/^[A-Za-z0-9_-]{43}=?$/.test(x)) throw new Error(`no 32-byte publicKeyJwk.x for ${BOARD_DID} in ${DID_URL}`);
+  return Buffer.from(x, "base64url").toString("hex");
 }
 
 /** One fresh OIDC token for the signer's audience (request pattern of scripts/sign_financial_runs.py). */
@@ -249,6 +337,7 @@ async function requestOidcToken({ env, fetchImpl }) {
   const sep = reqUrl.includes("?") ? "&" : "?";
   const res = await fetchImpl(reqUrl + sep + "audience=" + encodeURIComponent(AUDIENCE), {
     headers: { authorization: `Bearer ${reqTok}`, accept: "application/json" },
+    redirect: "error", // the request token goes to this address and nowhere else
     signal: timeout(20000),
   });
   if (res.status !== 200) throw new Error(`the OIDC token request answered HTTP ${res.status}`);
@@ -282,6 +371,7 @@ export async function signOne({
   didKeyHex, onClaims, verifyImpl = verifyRaw,
 } = {}) {
   const secrets = [env.ACTIONS_ID_TOKEN_REQUEST_TOKEN];
+  const repeatsASecret = (text) => secrets.some((s) => typeof s === "string" && s.length >= 8 && text.includes(s));
   try {
     if (!isObject(payload)) throw new Error("the payload is not a JSON object");
     const signUrl = env.BOARD_SIGN_URL || SIGN_URL;
@@ -303,12 +393,18 @@ export async function signOne({
       method: "POST",
       headers: { authorization: `Bearer ${token}`, "content-type": "application/json", "user-agent": USER_AGENT },
       body: JSON.stringify({ payload }),
+      redirect: "error", // the OIDC token goes to this address and nowhere else
       signal: timeout(30000),
     });
     const raw = await res.text();
     // Network text is quoted before it can reach a log line (a newline cannot start a new one).
     if (res.status !== 200)
       throw new Error(`board-sign answered HTTP ${res.status} ${JSON.stringify(redact(raw, secrets).slice(0, 300))}`);
+    // The reply is kept as received and uploaded as a run artifact, and anyone signed in to GitHub
+    // can download the artifacts of a public repository. So a reply that repeats this job's token,
+    // or any of its three parts, is refused whole. Today's signer does not echo it.
+    const echoed = `the board-sign reply repeats this job's token or a part of it; the reply is not kept (payload ${digest})`;
+    if (repeatsASecret(raw)) throw new Error(echoed);
     let reply;
     try {
       reply = JSON.parse(raw);
@@ -316,6 +412,7 @@ export async function signOne({
       throw new Error("the board-sign reply is not JSON");
     }
     if (!isObject(reply)) throw new Error("the board-sign reply is not a JSON object");
+    if (repeatsASecret(JSON.stringify(reply))) throw new Error(echoed); // the same text under JSON escapes
     if (reply.payload_sha256 !== digest)
       throw new Error(`preimage disagreement: the signer hashed ${JSON.stringify(String(reply.payload_sha256).slice(0, 64))}, this job computes ${digest}`);
     if (reply.did !== BOARD_DID) throw new Error(`the signer named ${JSON.stringify(String(reply.did).slice(0, 80))}, expected ${BOARD_DID}`);
@@ -338,7 +435,9 @@ export async function signOne({
 
     return { payload, canonical, bytes, payload_sha256: digest, reply, raw, claims, controls };
   } catch (e) {
-    throw new Error(redact(e?.message || e, secrets));
+    // The engine's reason for a failed request (a refused redirect, a closed socket) is in `cause`.
+    const cause = typeof e?.cause?.message === "string" ? ` (${e.cause.message})` : "";
+    throw new Error(redact(`${e?.message || e}${cause}`, secrets));
   }
 }
 
@@ -354,24 +453,27 @@ function headCommit() {
 }
 
 /**
- * The whole run. Order: decode, check EVERY payload, require the OIDC variables, read the DID
- * document, then sign one payload at a time. Files are written only after every payload passed.
+ * The whole run. Order: decode, check EVERY payload (shape and date), require the OIDC variables,
+ * read the DID document, then sign one payload at a time. Files are written only after every
+ * payload passed. `now` is the job's clock; a test passes its own.
  */
 export async function run({
   env = process.env, fetchImpl = globalThis.fetch, outDir, log = console.log,
-  kinds = loadKinds(), pinnedKeyHex = PINNED_KEY_HEX,
+  kinds = loadKinds(), pinnedKeyHex = PINNED_KEY_HEX, now = Date.now,
 } = {}) {
+  const say = (line) => log(recordLine(line)); // one call, one line
   const kind = String(env.KIND ?? "");
   if (!isObject(kinds?.kinds) || !hasOwn(kinds.kinds, kind))
-    throw new Error(`REFUSED: unknown kind ${JSON.stringify(kind)}; known kinds: ${Object.keys(kinds?.kinds || {}).join(", ")}`);
+    throw new Error(`REFUSED: unknown kind ${quoteName(kind)}; known kinds: ${Object.keys(kinds?.kinds || {}).join(", ")}`);
   const payloads = decodePayloads(env.PAYLOADS_B64, kinds);
 
+  const nowMs = Number(now());
   const refusals = [];
   const checked = payloads.map((p, i) => {
     try {
-      return validatePayload(kind, p, kinds);
+      return validatePayload(kind, p, kinds, { nowMs });
     } catch (e) {
-      refusals.push(`payload ${i + 1} of ${payloads.length}: ${e.message}`);
+      refusals.push(`payload ${i + 1} of ${payloads.length}: ${oneLine(e.message)}`); // one line per payload
       return null;
     }
   });
@@ -379,7 +481,7 @@ export async function run({
   const digests = checked.map((c) => c.payload_sha256);
   if (new Set(digests).size !== digests.length) throw new Error("REFUSED: the same payload appears twice in this run");
 
-  log(`CHECKED kind=${kind} payloads=${payloads.length} bytes=${checked.map((c) => c.bytes).join(",")} (before any network call)`);
+  say(`CHECKED kind=${kind} payloads=${payloads.length} bytes=${checked.map((c) => c.bytes).join(",")} (before any network call)`);
 
   if (!env.ACTIONS_ID_TOKEN_REQUEST_URL || !env.ACTIONS_ID_TOKEN_REQUEST_TOKEN) throw new Error(NO_OIDC);
   if ((env.BOARD_SIGN_URL || SIGN_URL) !== SIGN_URL) throw new Error(`BOARD_SIGN_URL must be ${SIGN_URL}; a token is never sent anywhere else`);
@@ -406,15 +508,15 @@ export async function run({
         onClaims: (c) => {
           if (firstClaims) return;
           firstClaims = c;
-          log(`CLAIMS ${JSON.stringify(c)}`);
+          say(`CLAIMS ${JSON.stringify(c)}`);
         },
       });
     } catch (e) {
       const kept = signed.map((x) => x.payload_sha256).join(", ") || "none";
-      throw new Error(`payload ${i + 1} of ${payloads.length}: ${e.message}\nnothing was written. Signatures already returned in this run and discarded: ${kept}`);
+      throw new Error(`payload ${i + 1} of ${payloads.length}: ${oneLine(e.message)}\nnothing was written. Signatures already returned in this run and discarded: ${kept}`);
     }
     signed.push(s);
-    log(`SIGNED kind=${kind} schema=${checked[i].schema} bytes=${s.bytes} payload_sha256=${s.payload_sha256} signer_auth=${s.reply.signer_auth} signed_at=${isoOrUnreadable(s.reply.signed_at)}`);
+    say(`SIGNED kind=${kind} schema=${checked[i].schema} bytes=${s.bytes} payload_sha256=${s.payload_sha256} signer_auth=${s.reply.signer_auth} signed_at=${isoOrUnreadable(s.reply.signed_at)}`);
   }
 
   fs.mkdirSync(dir, { recursive: true });
@@ -447,6 +549,7 @@ export async function run({
     run_attempt: env.GITHUB_RUN_ATTEMPT ?? null,
     commit: env.GITHUB_SHA ?? null,
     checked_out_commit: headCommit(),
+    checked_at: new Date(nowMs).toISOString(), // the clock the signed_at rule was judged against
     repository: env.GITHUB_REPOSITORY ?? null,
     workflow: env.GITHUB_WORKFLOW ?? null,
     ref: env.GITHUB_REF ?? null,
@@ -458,7 +561,7 @@ export async function run({
     signatures,
   };
   fs.writeFileSync(path.join(dir, "receipt.json"), JSON.stringify(receipt, null, 2) + "\n");
-  log(`WROTE ${signatures.length} signature(s) and receipt.json to ${dir}`);
+  say(`WROTE ${signatures.length} signature(s) and receipt.json to ${dir}`);
   return receipt;
 }
 
@@ -467,7 +570,7 @@ async function main() {
     await run();
     return 0;
   } catch (e) {
-    console.error(redact(e?.message || e, [process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN]));
+    console.error(failureLines(redact(e?.message || e, [process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN])));
     return 1;
   }
 }

@@ -33,6 +33,8 @@
  *     node scripts/sign-corrections-ledger.mjs --payload att.json --signature out/<sha256>.board-sign.json --write
  * The job (scripts/sign-attest/sign.mjs) checks the payload's shape before it asks, and keeps a
  * reply only when the digest, the DID, signer_auth and the Ed25519 signature all check.
+ * Dispatch soon after emitting: the job refuses a payload whose signed_at is more than a day
+ * before its own clock (or more than five minutes ahead). If it says so, emit again.
  * The older single-host route, --token-file <f> --write, is still in the code below.
  *
  * Nothing here edits a signed payload. The ledger body is untouched; only the detached signature
