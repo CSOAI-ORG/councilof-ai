@@ -85,7 +85,10 @@ describe("request-attestation dashboard pane", () => {
     );
     expect(html).toContain(">Request a commission receipt</h1>");
     expect(html).not.toContain("Never mistake it for a fresh measurement");
-    expect(html).toContain("We can&#x27;t run a new test on demand.");
+    expect(html).toContain("Commission a receipt for cards already on file.");
+    expect(html).not.toContain("run a new test on demand");
+    // Still no fresh-run promise.
+    expect(html).toContain("A fresh run remains UNMEASURED until a published measurement exists; no run date is promised.");
     expect(html).toContain("nothing is charged by asking");
     expect(html).toContain("never a result");
     // The plain card comes before the developer details, and carries the three tiles.

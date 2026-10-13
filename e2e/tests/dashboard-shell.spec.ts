@@ -71,6 +71,11 @@ async function openTab(page: Page, id: string, trailingSlash = false) {
   // separately accepts the default Ask pane; close it intentionally before using the canvas.
   if (id === "home") {
     const entryAsk = page.getByTestId("ask-pane");
+    // 12 Oct 2026: mobile keeps Ask closed on entry; open it from the launcher, as a reader would.
+    if ((page.viewportSize()?.width ?? 1280) <= 640) {
+      await expect(entryAsk).toHaveCount(0);
+      await page.getByRole("button", { name: "Open Council of AI chat", exact: true }).click();
+    }
     await expect(entryAsk).toBeVisible({ timeout: 30_000 });
     await entryAsk.getByRole("button", { name: "Close Ask", exact: true }).click();
     await expect(entryAsk).toBeHidden();
@@ -118,7 +123,7 @@ test.beforeEach(async ({ context }) => {
   await context.route(/hf\.space/, (r) => r.abort());
 });
 
-test("sidebar exposes eight plainly named sections as direct /dashboard?tab= links", async ({
+test("sidebar exposes seven plainly named sections (no sov-* name) as direct /dashboard?tab= links", async ({
   page,
 }) => {
   await openTab(page, "board");
@@ -140,9 +145,10 @@ test("sidebar exposes eight plainly named sections as direct /dashboard?tab= lin
     "/dashboard?tab=board",
     "/dashboard?tab=connect",
     "/dashboard?tab=learn",
-    "/dashboard?tab=sovx",
     "/dashboard?tab=corrections",
   ]);
+  // Surface inspection, 12 Oct 2026: no sov-* label in the public nav; the pane stays reachable by link.
+  expect(await navigation.innerText()).not.toMatch(/sov/i);
   for (const h of hrefs) expect(h).toMatch(/^\/dashboard\?tab=[a-z0-9-]+$/);
   // "Check a result" section contains two panes: Check a result and Evidence pack. Evidence index
   // moved to "For developers" (tools audit, 6 Oct 2026): it is an API coverage index, not a check.
