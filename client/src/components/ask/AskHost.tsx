@@ -5,10 +5,15 @@
  *
  * A page that owns ⌘K itself (DemoOS, marked data-own-cmdk) keeps it. If the viewer already
  * granted agent consent in this tab, the in-page agent bridge (window.councilUi) is installed.
+ *
+ * Mobile (ASK_MOBILE_QUERY): the entry routes do not open Ask; the page shows first and a small
+ * launcher opens it on tap. State starts closed on every width, so SSR/prerender and first paint
+ * never show the pane; wider screens open it after mount as before.
  */
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { useLocation, useSearch } from "wouter";
-import { ASK_OPEN, PALETTE_OPEN, recordRecent, type AskOpenDetail } from "@/components/ask/askBus";
+import { MessageSquareText } from "lucide-react";
+import { ASK_MOBILE_QUERY, ASK_OPEN, PALETTE_OPEN, isAskEntryRoute, recordRecent, shouldAutoOpenAsk, type AskOpenDetail } from "@/components/ask/askBus";
 
 const AskPane = lazy(() => import("@/components/ask/AskPane"));
 const CommandPalette = lazy(() => import("@/components/ask/CommandPalette"));
@@ -20,6 +25,7 @@ export default function AskHost() {
   const [askMounted, setAskMounted] = useState(false);
   const [askOpen, setAskOpen] = useState(false);
   const [question, setQuestion] = useState<{ text: string; n: number } | null>(null);
+  const [mobileEntry, setMobileEntry] = useState(false);
   const enteredRoute = useRef<string | null>(null);
 
   // Human entrypoints open the existing Ask conversation after hydration. A close lasts until
@@ -29,10 +35,9 @@ export default function AskHost() {
     const route = location + "?" + search;
     if (enteredRoute.current === route) return;
     enteredRoute.current = route;
-    const path = location.replace(/\/+$/, "") || "/";
-    const params = new URLSearchParams(search.startsWith("?") ? search.slice(1) : search);
-    const home = path === "/dashboard" && !params.has("view") && (!params.get("tab") || params.get("tab") === "home");
-    if (path === "/" || path === "/tools" || home) {
+    const mobile = Boolean(window.matchMedia?.(ASK_MOBILE_QUERY).matches);
+    setMobileEntry(mobile && isAskEntryRoute(location, search));
+    if (shouldAutoOpenAsk(location, search, mobile)) {
       setAskMounted(true);
       setAskOpen(true);
     }
@@ -95,6 +100,21 @@ export default function AskHost() {
         <Suspense fallback={null}>
           <AskPane open={askOpen} onClose={() => setAskOpen(false)} question={question} />
         </Suspense>
+      ) : null}
+      {mobileEntry && !askOpen ? (
+        <button
+          type="button"
+          onClick={() => {
+            setAskMounted(true);
+            setAskOpen(true);
+          }}
+          aria-label="Open Council of AI chat"
+          title="Open Council of AI chat"
+          data-testid="ask-fab"
+          className="fixed bottom-[calc(1rem+env(safe-area-inset-bottom))] right-4 z-[70] inline-flex h-14 w-14 items-center justify-center rounded-full bg-emerald-800 text-white shadow-lg hover:bg-emerald-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
+        >
+          <MessageSquareText className="h-6 w-6" aria-hidden="true" />
+        </button>
       ) : null}
     </>
   );
