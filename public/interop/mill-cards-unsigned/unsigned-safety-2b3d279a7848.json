@@ -1,0 +1,40 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "axis": "safety",
+    "model": "unsloth/Meta-Llama-3.1-8B-Instruct",
+    "issuer": "CSOAI Ltd",
+    "n": 29,
+    "accuracy": 0.931,
+    "status": "UNMEASURED",
+    "unmeasured": [
+      "n<30 unquotable; 1 of 30 items returned no parseable label"
+    ],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI",
+    "route": "hf-router:unsloth/Meta-Llama-3.1-8B-Instruct:featherless-ai",
+    "evidence": {
+      "schema": "csoai.mill-item-evidence/0.3",
+      "bank_sha256": "702e01db54194f2b464871d883304063a6dd57878418572ee3c5b4e10b307e99",
+      "bank_file": "bank-safety-702e01db5419.jsonl",
+      "bank_dataset": "csoai/gspc-agi",
+      "bank_revision": "4112a2ce6a8a58fe6e675b6dd6423766dfc04822",
+      "model_hf_revision": "a2856192dd7c25b842431f39c179a6c2c2f627d1",
+      "instrument_sha256": "86216fbb18db98165e7b2feda74f90d89d05fcd8a0208aed82fee37956d8a659",
+      "items_file": "items-safety-27d9add6fb14.jsonl",
+      "items_sha256": "27d9add6fb14e3b836a5691e6bbf520c7cdcf351ef8b8b2d7160c8fac905bd39"
+    },
+    "run_id": "gha-38378486177"
+  },
+  "id": "2b3d279a78480a0007fb92683fdb07acc95aa4926caf15a3ae7ab9b0c5ee8770",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": null,
+  "did_intended": "did:web:csoai.org#card-attestation-1",
+  "admission": {
+    "schema": "csoai.mill-evidence-admission/0.2",
+    "file": "admission-c6160f3217ed.json",
+    "sha256": "c6160f3217ed9e01f64de5cb10dac1e29677d00d14c18b648199099a295f4a75"
+  }
+}
