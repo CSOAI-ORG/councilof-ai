@@ -113,7 +113,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     outputExample: { schema: KIND, asset: { defillama_id: "373", symbol: "USDT", name: "Tether", chain: "Ethereum" }, state: "DEEP_MEASURED" },
   });
   const isPreview = url.searchParams.get("preview") === "1";
-  const accepts = x402Accepts(env, resourceUrl, { skuId: SKU_ID, tier: TIER, description: COVERAGE_EVIDENCE_DESCRIPTION, productId: PRODUCT_ID });
+  const accepts = x402Accepts(env, resourceUrl, { skuId: "coverage_evidence", tier: "per_request", description: COVERAGE_EVIDENCE_DESCRIPTION, productId: PRODUCT_ID });
   // PATH-SCOPED DOCTRINE (x402-ras-doors 64e556117): a stranger or index — and the parity test
   // that impersonates one — gets a priced challenge with the PATH only, never a raw input error
   // and never the buyer's query echoed back. Input errors ride the challenge as a hint; they are
