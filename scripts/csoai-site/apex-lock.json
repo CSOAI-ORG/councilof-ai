@@ -1,6 +1,13 @@
 {
-  "schema": "csoai.apex-lock/0.1",
-  "about": "What the csoai-site deploy may ship to https://csoai.org (the did:web:csoai.org origin). csoai-site-deploy.yml builds the source at source.commit and scripts/csoai-site/apex-gate.mjs refuses the deploy unless the built /.well-known tree is exactly well_known below. To change what csoai.org serves, change this file in a reviewed pull request: the pin and the hashes are the review surface.",
+  "schema": "csoai.apex-lock/0.2",
+  "about": "What the csoai-site deploy may ship to https://csoai.org (the did:web:csoai.org origin). csoai-site-deploy.yml builds the source at source.commit in a job that holds no credential, and scripts/csoai-site/apex-gate.mjs refuses the upload unless the deploy folder is exactly this file: every /.well-known file at its sha256, the fallback page at its sha256, the reviewed middleware, and nothing else. To change what csoai.org serves, change this file in a reviewed pull request.",
+  "rules": [
+    "1. Every file is pinned by sha256. An entry with mirror names the file in this repository that holds those bytes (this repository is their producer). To change a mirrored file, change the file and its sha256 here in the same pull request; the required gates check fails until both agree.",
+    "2. Whenever a sha256 here changes, add the old value to that entry's replaces. Production serves the old bytes until the next deploy, and the gate refuses to write over bytes this file does not list. If that step is missed, the run after the merge is red with 'nor a sha256 the lock lists under replaces' and nothing is deployed.",
+    "3. A key change at the DID origin is rules 1 and 2 for did.json: public/.well-known/did.json, its sha256 here, and the origin's current sha256 under replaces, in one pull request. The pull-request check 'apex-gate.mjs drift' passes a key difference only when all three are done. The source repository must ship the same bytes at source.commit, or the gate refuses.",
+    "4. To stop this route writing production, set hold to a sentence that says why. Every run then refuses before any upload, and is red. null means not held. After a rollback in the Cloudflare dashboard, set hold FIRST: production is then back on bytes listed under replaces, which the next run would replace again."
+  ],
+  "hold": null,
   "source": {
     "repository": "CSOAI-ORG/csoai-static-deploy2",
     "commit": "f98e154b0bb45adce8453f3c929edbaf9ffc5d86",
@@ -18,6 +25,10 @@
     "deployment": "8c45f262",
     "how": "curl --path-as-is, one GET per path, sha256 of the body. Absent means the 1,740-byte HTML fallback with HTTP 200."
   },
+  "fallback_page": {
+    "sha256": "a873ee8a107e3d501ec0850d7a5b61c60cc93833b281a9c5399e6513e0c65795",
+    "note": "index.html of the source, 1,740 bytes. Cloudflare Pages answers a path that has no file with this page and HTTP 200, so these bytes are what https://csoai.org/.well-known/<any name not listed here> serves (read 13 Oct 2026 on csoai.org and in the source at the pin). Pinned so the source cannot change them. null here means: ship no index.html, and such a path must answer 404."
+  },
   "well_known": {
     "agent-card.json": { "sha256": "fc5f75a3b7ec5fac1150a038afc5d703af066ea9612458b46c0de5ac772919df" },
     "agent.json": { "sha256": "241a024f640b79f5569d7877fa8c0bbc65c26f94d0822c558d756eb2c94450fa" },
@@ -30,9 +41,10 @@
     },
     "did.json": {
       "mirror": "public/.well-known/did.json",
+      "sha256": "3a0ace2b1d72f53180d9226da194eb842177f4426a6c84717d4af2550fdd035e",
       "gspc_board_key_note_sha256": "4cfa7aa5564d72025730fed786362db7de4179c48402d7853b416a3ed20aa0c6",
       "replaces": ["d55d13f6a7920348ed57ff641063af55cffbe72b049d5bf40b88d284629bb7ad"],
-      "note": "Must be byte-identical to this repository's own copy. gspc_board_key_note_sha256 is the sha256 of the corrected _gspcBoardKeyNote text (622 bytes, correction C-2026-0925-01). replaces is the document production served on 13 Oct 2026 with the withdrawn note."
+      "note": "sha256 is the whole document in this repository (6,028 bytes, seven verification methods). The built file must be byte-identical to it. gspc_board_key_note_sha256 is the sha256 of the corrected _gspcBoardKeyNote text (622 bytes, correction C-2026-0925-01). replaces is the document production served on 13 Oct 2026 with the withdrawn note (5,891 bytes, the same seven verification methods)."
     },
     "llm-manifest.json": { "sha256": "9c491a19c708d58c4fb5128ba9de71048d7c9e53a684d80f2c0565f83d1ee57c" },
     "llm-policy.txt": { "sha256": "11546bd44202f43f07bf99168d0db88a422a65e0c647be7d140bbb5cb912f5c3" },
@@ -40,7 +52,8 @@
     "mcp/server-card.json": { "sha256": "f50c21d327d3e86b808e2f87f5d33252b407fd1310ed2182af35c3b1c85d3937" },
     "scitt-keys": {
       "mirror": "public/.well-known/scitt-keys",
-      "note": "Twinned from councilof.ai by the workflow; must equal this repository's own copy. Production served the HTML fallback at this path on 13 Oct 2026, which is why the workflow's post-deploy check has been red since 6 Oct."
+      "sha256": "f954613e2258124499e2ce491f8b61933a22309c40969221ed7687333397f53d",
+      "note": "2,021 bytes. Copied from this repository's checkout by the workflow; the source does not ship it. Production served the HTML fallback page at this path on 13 Oct 2026, which is why six of the seven scheduled runs from 6 to 12 Oct 2026 failed their post-deploy check (the seventh was cancelled in the build step)."
     },
     "security.txt": { "sha256": "8abd707cc62500d7ef0c45df39cbfa63ea07cccc39959a9e1ff2e8574b5f1024" }
   },

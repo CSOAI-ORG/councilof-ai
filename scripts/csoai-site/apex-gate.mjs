@@ -12,25 +12,32 @@
 // csoai-governance.json had it reached production.
 //
 // WHAT IT CHECKS, from scripts/csoai-site/apex-lock.json:
+//   hold       the lock is not on hold (hold: "<why>" stops every upload until a reviewed change clears it)
 //   pin        the source checkout is exactly source.commit
 //   did.json   built bytes equal this repository's public/.well-known/did.json: the same
 //              verificationMethod entries, the same custody note (whose sha256 the lock pins), the
-//              same bytes
-//   well-known the built /.well-known tree is exactly the lock's list: nothing missing, nothing
-//              changed, nothing extra, and no Pages control file (_redirects, _headers, ...) in the site
+//              same bytes. The lock also pins the sha256 of the whole document, so the repository
+//              copy cannot change without the lock changing in the same pull request.
+//   upload     the deploy folder is exactly the lock: every /.well-known file at its sha256, the
+//              fallback page (index.html) at its sha256, the reviewed middleware, and nothing else.
+//              No Pages control file, no symlink, no wrangler.toml / package.json / .npmrc beside it.
 //   redirects  the middleware file answers every recorded request path as production did on
 //              13 Oct 2026, and never redirects to a host other than councilof.ai
 //   live       path by path against the live origin: production may only serve bytes the lock knows
-//              (the bytes about to ship, or the bytes they replace). Unknown bytes mean someone wrote
-//              production outside this route since the lock was reviewed: refuse, and list them.
+//              (the bytes about to ship, or bytes listed under replaces). Unknown bytes are refused
+//              and listed. That has two possible causes and the gate cannot tell them apart:
+//              production was written outside this route, or a pinned file changed in a pull
+//              request that did not add the sha256 it replaced to replaces.
 //
 //   node apex-gate.mjs --selftest
-//   node apex-gate.mjs pin       [--lock f]                     print source.commit (validates the lock)
+//   node apex-gate.mjs pin       [--field f]                    print source.commit (validates the lock)
 //   node apex-gate.mjs target                                   read-only: the Pages project's production branch
 //                                                              must be the branch the lock deploys to
 //                                                              (needs CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_API_TOKEN)
-//   node apex-gate.mjs predeploy --site d --source-head sha [--installed-middleware f] [--offline]
-//   node apex-gate.mjs readback  --base https://host [--attempts 6] [--wait 10]
+//   node apex-gate.mjs predeploy --site d --source-head sha [--deploy-root d] [--installed-middleware f] [--offline]
+//   node apex-gate.mjs readback  --base https://host [--hostile] [--attempts 6] [--wait 10]
+//   node apex-gate.mjs drift                                    pull-request check: this repository's DID
+//                                                              document against the live origin (one GET)
 //   common: [--lock f] [--repo-root d] [--middleware f] [--origin https://csoai.org] [--json out.json]
 //
 // Exit 0 = pass. Exit 1 = refused, with every difference listed. It writes to no host: it reads files
@@ -39,12 +46,13 @@
 
 import { createHash, randomBytes } from 'node:crypto';
 import {
-  appendFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync,
+  appendFileSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, symlinkSync,
+  writeFileSync,
 } from 'node:fs';
 import { createServer, request as httpRequest } from 'node:http';
 import { request as httpsRequest } from 'node:https';
 import { tmpdir } from 'node:os';
-import { dirname, join, resolve } from 'node:path';
+import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -52,12 +60,16 @@ const REPO_ROOT = resolve(HERE, '..', '..');
 const DEFAULT_LOCK = join(HERE, 'apex-lock.json');
 const DEFAULT_MIDDLEWARE = join(HERE, 'apex-middleware.mjs');
 
-export const LOCK_SCHEMA = 'csoai.apex-lock/0.1';
+export const LOCK_SCHEMA = 'csoai.apex-lock/0.2';
 export const TARGET_ORIGIN = 'https://councilof.ai';
 export const DID_ID = 'did:web:csoai.org';
 // Files Cloudflare Pages reads as routing or header rules. The source may not ship one: it would
 // change what /.well-known answers without changing a single hash in the lock.
 export const CONTROL_FILES = ['_redirects', '_headers', '_routes.json', '_worker.js', '_worker.bundle', 'functions'];
+// The one page the upload may hold outside /.well-known. Pages answers a path that has no file with
+// it (HTTP 200) when the upload holds no 404.html, so its bytes are what every unknown
+// /.well-known/<name> serves. The lock pins them, or says there is none.
+export const FALLBACK_FILE = 'index.html';
 
 const HEX64 = /^[0-9a-f]{64}$/;
 const HEX40 = /^[0-9a-f]{40}$/;
@@ -75,6 +87,9 @@ export function lockProblems(lock) {
   const p = [];
   if (!lock || typeof lock !== 'object' || Array.isArray(lock)) return ['lock is not a JSON object'];
   if (lock.schema !== LOCK_SCHEMA) p.push(`schema must be ${LOCK_SCHEMA}`);
+  // hold: null = not held. A sentence = every upload is refused until a reviewed change clears it.
+  if (!Object.prototype.hasOwnProperty.call(lock, 'hold')) p.push('hold must be present: null, or a sentence saying why the route is held');
+  else if (lock.hold !== null && (typeof lock.hold !== 'string' || lock.hold.trim().length < 8)) p.push('hold must be null, or a sentence (8 characters or more) saying why the route is held');
   if (!/^[\w.-]+\/[\w.-]+$/.test(lock.source?.repository ?? '')) p.push('source.repository must be owner/name');
   if (!HEX40.test(lock.source?.commit ?? '')) p.push('source.commit must be a full 40-hex commit id, not a branch or a short id');
   const pages = lock.pages ?? {};
@@ -90,13 +105,17 @@ export function lockProblems(lock) {
   } else {
     for (const [name, entry] of Object.entries(wk)) {
       if (!/^[A-Za-z0-9._-]+(\/[A-Za-z0-9._-]+)*$/.test(name) || name.split('/').includes('..')) p.push(`well_known "${name}": not a plain relative path`);
-      const hasSha = typeof entry?.sha256 === 'string';
-      const hasMirror = typeof entry?.mirror === 'string';
-      if (hasSha === hasMirror) p.push(`well_known "${name}": needs exactly one of sha256 or mirror`);
-      if (hasSha && !HEX64.test(entry.sha256)) p.push(`well_known "${name}": sha256 is not 64 lowercase hex`);
-      if (hasMirror && !/^public\/\.well-known\/[A-Za-z0-9._/-]+$/.test(entry.mirror)) p.push(`well_known "${name}": mirror must be a file under public/.well-known/`);
-      if (hasMirror && entry.mirror.split('/').includes('..')) p.push(`well_known "${name}": mirror may not contain ..`);
-      for (const r of entry?.replaces ?? []) if (!HEX64.test(r)) p.push(`well_known "${name}": replaces holds a value that is not a sha256`);
+      // Every file is pinned by sha256. A mirror entry also names the file in this repository that
+      // must hold those bytes, so a change to that file without a change here fails before merge.
+      const hasMirror = Object.prototype.hasOwnProperty.call(entry ?? {}, 'mirror');
+      if (!HEX64.test(entry?.sha256 ?? '')) p.push(`well_known "${name}": sha256 must be 64 lowercase hex (mirror entries pin the repository copy's sha256 too)`);
+      if (hasMirror && !/^public\/\.well-known\/[A-Za-z0-9._/-]+$/.test(String(entry.mirror))) p.push(`well_known "${name}": mirror must be a file under public/.well-known/`);
+      if (hasMirror && String(entry.mirror).split('/').includes('..')) p.push(`well_known "${name}": mirror may not contain ..`);
+      if (entry?.replaces !== undefined && !Array.isArray(entry.replaces)) p.push(`well_known "${name}": replaces must be a list of sha256 values`);
+      for (const r of Array.isArray(entry?.replaces) ? entry.replaces : []) {
+        if (!HEX64.test(r)) p.push(`well_known "${name}": replaces holds a value that is not a sha256`);
+        else if (r === entry.sha256) p.push(`well_known "${name}": replaces lists the sha256 the entry pins; a file cannot replace itself`);
+      }
     }
     const did = wk['did.json'];
     if (!did) p.push('well_known must name did.json');
@@ -108,6 +127,10 @@ export function lockProblems(lock) {
   for (const name of lock.well_known_absent ?? []) {
     if (wk && Object.prototype.hasOwnProperty.call(wk, name)) p.push(`well_known_absent "${name}" is also in well_known`);
   }
+  // fallback_page: {sha256} = the upload holds index.html with these bytes, and an unknown
+  // /.well-known path answers HTTP 200 with them. null = no index.html, and such a path answers 404.
+  if (!Object.prototype.hasOwnProperty.call(lock, 'fallback_page')) p.push('fallback_page must be present: {"sha256": ...} or null');
+  else if (lock.fallback_page !== null && !HEX64.test(lock.fallback_page?.sha256 ?? '')) p.push('fallback_page must be null or pin the sha256 of index.html');
 
   const rd = lock.redirects ?? {};
   if (!Array.isArray(rd.exact) || rd.exact.length === 0) p.push('redirects.exact must hold at least one row');
@@ -129,6 +152,13 @@ export function readLock(file) {
   return { lock, problems: lockProblems(lock).map((m) => `lock: ${m}`) };
 }
 
+/** A mirrored file and the lock must move together, in one pull request. Says exactly what to edit. */
+export function mirrorPinMessage(name, entry, got, size) {
+  return `${name}: the repository copy ${entry.mirror} is sha256 ${got} (${size} bytes); the lock pins ${entry.sha256}. `
+    + `A change to this file needs the lock changed in the same pull request: set well_known["${name}"].sha256 to ${got} `
+    + `and add ${entry.sha256} to its replaces (production serves the old bytes until the next deploy, and the gate refuses to write over bytes the lock does not list).`;
+}
+
 /**
  * What each /.well-known path must be, as bytes on disk.
  * @returns {{ expected: Map<string, {sha256:string, rule:string, replaces:string[], bytes?:Buffer}>, problems: string[] }}
@@ -142,7 +172,9 @@ export function resolveExpected(lock, repoRoot) {
       const file = join(repoRoot, entry.mirror);
       if (!existsSync(file)) { problems.push(`${name}: the repository copy ${entry.mirror} is missing from this checkout`); continue; }
       const bytes = readFileSync(file);
-      expected.set(name, { sha256: sha256(bytes), rule: `= ${entry.mirror}`, replaces, bytes });
+      const got = sha256(bytes);
+      if (got !== entry.sha256) problems.push(mirrorPinMessage(name, entry, got, bytes.length));
+      expected.set(name, { sha256: entry.sha256, rule: `= ${entry.mirror}`, replaces, bytes, mirror: entry.mirror });
     } else {
       expected.set(name, { sha256: entry.sha256, rule: 'sha256 in lock', replaces });
     }
@@ -192,30 +224,42 @@ export function didProblems(builtBytes, mirrorBytes, noteSha256) {
 }
 
 // ---------------------------------------------------------------------------------------------
-// The built /.well-known tree
+// The upload: /.well-known, the fallback page, and nothing else
 // ---------------------------------------------------------------------------------------------
 
-function listFiles(dir, prefix = '') {
+/** Every entry under dir: {rel, kind}. kind is file, dir or other; a symlink is other, never followed. */
+function walk(dir, prefix = '') {
   if (!existsSync(dir)) return [];
   const out = [];
   for (const name of readdirSync(dir).sort()) {
     const full = join(dir, name);
     const rel = prefix ? `${prefix}/${name}` : name;
-    if (statSync(full).isDirectory()) out.push(...listFiles(full, rel));
-    else out.push(rel);
+    const st = lstatSync(full);
+    if (st.isSymbolicLink() || (!st.isDirectory() && !st.isFile())) out.push({ rel, kind: 'other' });
+    else if (st.isDirectory()) { out.push({ rel, kind: 'dir' }); out.push(...walk(full, rel)); } else out.push({ rel, kind: 'file' });
   }
   return out;
 }
 
-/** @returns {{ problems: string[], rows: object[] }} */
-export function siteProblems(siteDir, expected) {
+/**
+ * The upload must be exactly the lock: each /.well-known file at its sha256, the fallback page at
+ * its sha256 (or absent, when the lock says there is none), and no other file of any kind.
+ * @returns {{ problems: string[], rows: object[] }}
+ */
+export function siteProblems(siteDir, expected, lock = {}) {
   const problems = [];
   const rows = [];
+  if (!existsSync(siteDir) || lstatSync(siteDir).isSymbolicLink() || !lstatSync(siteDir).isDirectory()) {
+    return { problems: [`upload: ${siteDir} is not a plain directory`], rows };
+  }
   for (const name of CONTROL_FILES) {
     if (existsSync(join(siteDir, name))) problems.push(`site: the build ships ${name}, a Cloudflare Pages control file; the lock does not allow one`);
   }
+  const entries = walk(siteDir);
+  for (const e of entries) if (e.kind === 'other') problems.push(`upload: ${e.rel} is a symlink or a special file; only regular files may be uploaded`);
+  const files = new Set(entries.filter((e) => e.kind === 'file').map((e) => e.rel));
   const wkDir = join(siteDir, '.well-known');
-  const built = new Set(listFiles(wkDir));
+  const built = new Set([...files].filter((f) => f.startsWith('.well-known/')).map((f) => f.slice('.well-known/'.length)));
   for (const [name, want] of expected) {
     if (!built.has(name)) {
       rows.push({ path: name, built: null, expected: want.sha256, rule: want.rule, ok: false });
@@ -234,7 +278,51 @@ export function siteProblems(siteDir, expected) {
       problems.push(`/.well-known/${name}: the build ships a file the lock does not name`);
     }
   }
+  // The fallback page: what Pages serves, with HTTP 200, for every /.well-known path that has no file.
+  const fb = lock.fallback_page ?? null;
+  if (fb) {
+    if (!files.has(FALLBACK_FILE)) {
+      rows.push({ path: `/${FALLBACK_FILE}`, built: null, expected: fb.sha256, rule: 'fallback page', ok: false });
+      problems.push(`/${FALLBACK_FILE}: missing from the upload (the lock pins the fallback page at sha256 ${short(fb.sha256)})`);
+    } else {
+      const bytes = readFileSync(join(siteDir, FALLBACK_FILE));
+      const got = sha256(bytes);
+      rows.push({ path: `/${FALLBACK_FILE}`, built: got, size: bytes.length, expected: fb.sha256, rule: 'fallback page', ok: got === fb.sha256 });
+      if (got !== fb.sha256) problems.push(`/${FALLBACK_FILE}: sha256 ${short(got)} (${bytes.length} bytes) is not the fallback page the lock pins (${short(fb.sha256)}). These bytes are what every /.well-known path with no file would serve.`);
+    }
+  } else if (files.has(FALLBACK_FILE)) {
+    problems.push(`/${FALLBACK_FILE}: the upload holds a fallback page; the lock says there is none`);
+  }
+  for (const f of files) {
+    if (f.startsWith('.well-known/') || f === FALLBACK_FILE || CONTROL_FILES.includes(f.split('/')[0])) continue;
+    problems.push(`upload: ${f} is not named by the lock; the upload may hold only /.well-known and ${FALLBACK_FILE}`);
+  }
   return { problems, rows };
+}
+
+/**
+ * The folder wrangler runs in. wrangler holds the Cloudflare token and reads its settings from its
+ * working directory (wrangler.toml, wrangler.jsonc, package.json, .npmrc, .env, node_modules), so
+ * anything beside the upload is an instruction to it. Allowed: the site folder and
+ * functions/_middleware.js. Run before the first upload; wrangler writes its own cache there later.
+ * @returns {string[]}
+ */
+export function deployRootProblems(rootDir, siteDir) {
+  const root = resolve(rootDir);
+  const site = resolve(siteDir);
+  if (dirname(site) !== root) return [`deploy folder: the site ${siteDir} must be a direct child of ${rootDir}`];
+  if (!existsSync(root) || lstatSync(root).isSymbolicLink() || !lstatSync(root).isDirectory()) return [`deploy folder: ${rootDir} is not a plain directory`];
+  const siteName = basename(site);
+  const p = [];
+  for (const e of walk(root)) {
+    if (e.rel === siteName && e.kind === 'dir') continue;
+    if (e.rel.startsWith(`${siteName}/`)) continue; // file by file in siteProblems
+    if (e.rel === 'functions' && e.kind === 'dir') continue;
+    if (e.rel === 'functions/_middleware.js' && e.kind === 'file') continue;
+    if (e.kind === 'other') p.push(`deploy folder: ${e.rel} is a symlink or a special file`);
+    else p.push(`deploy folder: holds ${e.rel}, which is not part of the deploy. Only ${siteName}/ and functions/_middleware.js may be there: the tool that holds the Cloudflare token reads its settings from this folder.`);
+  }
+  return p;
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -336,6 +424,7 @@ export function rawGet(base, path, { timeoutMs = 20000 } = {}) {
           contentType: res.headers['content-type'] ?? null,
           size: body.length,
           sha256: sha256(body),
+          body,
         });
       });
       res.on('error', reject);
@@ -357,8 +446,16 @@ async function getRetry(base, path, { tries = 3, timeoutMs = 20000 } = {}) {
 /** What the host answers for a /.well-known path it does not have (Pages: HTTP 200 and the HTML index). */
 async function absentSignature(base, opts) {
   const a = await getRetry(base, `/.well-known/apex-gate-absent-${randomBytes(8).toString('hex')}`, opts);
-  return { status: a.status, sha256: a.sha256 };
+  return { status: a.status, sha256: a.sha256, size: a.size };
 }
+
+/** Does the host answer a /.well-known path with no file the way the lock says? */
+export function fallbackMatches(absent, lock) {
+  const fb = lock.fallback_page ?? null;
+  return fb ? (absent.status === 200 && absent.sha256 === fb.sha256) : absent.status === 404;
+}
+const fallbackWords = (lock) => (lock.fallback_page ? `HTTP 200 with the pinned fallback page (sha256 ${short(lock.fallback_page.sha256)})` : 'HTTP 404');
+const answerWords = (a) => `HTTP ${a.status}${a.status === 200 ? ` sha256 ${short(a.sha256)}${a.size === undefined ? '' : ` (${a.size} bytes)`}` : ''}`;
 
 /** same | absent | replaces | unknown */
 export function classifyLive(answer, want, absent) {
@@ -369,21 +466,39 @@ export function classifyLive(answer, want, absent) {
   return 'unknown';
 }
 
+/** Says what was measured, both possible causes, and the two ways out. */
+export function unknownLiveMessage(name, a, want) {
+  const entry = `well_known["${name}"]`;
+  return `/.well-known/${name}: production serves sha256 ${a.sha256} (${a.size} bytes, HTTP ${a.status}), which is neither what would ship (${short(want.sha256)}) `
+    + `nor a sha256 the lock lists under replaces. Two possible causes: production was written outside this route, or ${want.mirror ?? 'this pinned file'} changed in a pull request `
+    + `that did not add the sha256 it replaced to ${entry}.replaces. Nothing is uploaded and nothing is repaired until one of two things happens: `
+    + `a reviewed pull request adds ${a.sha256} to ${entry}.replaces (first find out where those bytes came from), or production is put back to bytes the lock lists.`;
+}
+
 /**
  * Path by path: what the live origin serves now against what is about to ship.
- * Blocking: bytes at a /.well-known path that the lock has never seen, or a file at a path the lock
+ * Blocking: bytes at a /.well-known path that the lock does not list, or a file at a path the lock
  * says is absent. Everything else is a change this deploy makes, and is listed.
+ *
+ * A block here also means the route repairs nothing: if someone holding the Cloudflare token
+ * replaces a file on csoai.org, every run goes red and names the path, and production stays as
+ * that write left it until a reviewed pull request lists the hash under replaces or the account
+ * holder rolls back. That is deliberate. The gate cannot tell an outside write from a pinned file
+ * that changed without its old sha256 being listed, so it does not guess.
  */
 export async function liveCompare(base, lock, expected, opts = {}) {
   const rows = [];
   const blocking = [];
   const changes = [];
   const absent = await absentSignature(base, opts);
+  const fbSame = fallbackMatches(absent, lock);
+  rows.push({ path: '/.well-known/(a name with no file)', live_status: absent.status, live_sha256: absent.status === 200 ? absent.sha256 : null, live_size: absent.size, will_sha256: lock.fallback_page?.sha256 ?? null, rule: 'fallback page', verdict: fbSame ? 'same' : 'differs' });
+  if (!fbSame) changes.push(`a /.well-known path with no file: production answers ${answerWords(absent)}; after the deploy it answers ${fallbackWords(lock)}`);
   for (const [name, want] of expected) {
     const a = await getRetry(base, `/.well-known/${name}`, opts);
     const verdict = classifyLive(a, want, absent);
     rows.push({ path: `/.well-known/${name}`, live_status: a.status, live_sha256: verdict === 'absent' ? null : a.sha256, live_size: a.size, will_sha256: want.sha256, rule: want.rule, verdict });
-    if (verdict === 'unknown') blocking.push(`/.well-known/${name}: production serves sha256 ${a.sha256} (${a.size} bytes, HTTP ${a.status}), which is neither what would ship (${short(want.sha256)}) nor bytes the lock says it replaces. Someone changed production outside this route.`);
+    if (verdict === 'unknown') blocking.push(unknownLiveMessage(name, a, want));
     else if (verdict === 'absent') changes.push(`/.well-known/${name}: production does not serve it; the deploy adds it (sha256 ${short(want.sha256)})`);
     else if (verdict === 'replaces') changes.push(`/.well-known/${name}: production serves sha256 ${short(a.sha256)}; the deploy replaces it with ${short(want.sha256)}`);
   }
@@ -404,10 +519,15 @@ export async function liveCompare(base, lock, expected, opts = {}) {
   return { rows, blocking, changes, absent };
 }
 
-/** After a deploy: the host must serve exactly the lock, and the redirect rules, as real HTTP answers. */
-export async function readbackOnce(base, lock, expected, opts = {}) {
+/**
+ * After a deploy: the host must serve exactly the lock, and the redirect rules, as real HTTP answers.
+ * hostile: also send every path in HOSTILE_PATHS (used on the candidate, the first time the
+ * middleware runs on Cloudflare; all 46 were answered by csoai.org over HTTP on 13 Oct 2026).
+ */
+export async function readbackOnce(base, lock, expected, opts = {}, { hostile = false } = {}) {
   const p = [];
   const absent = await absentSignature(base, opts);
+  if (!fallbackMatches(absent, lock)) p.push(`a /.well-known path with no file: ${base} answers ${answerWords(absent)}; the lock says ${fallbackWords(lock)}`);
   for (const [name, want] of expected) {
     const a = await getRetry(base, `/.well-known/${name}`, opts);
     if (a.status !== 200 || a.sha256 !== want.sha256) p.push(`/.well-known/${name}: ${base} serves HTTP ${a.status} sha256 ${short(a.sha256)} (${a.size} bytes); expected ${short(want.sha256)} (${want.rule})`);
@@ -420,7 +540,7 @@ export async function readbackOnce(base, lock, expected, opts = {}) {
   p.push(...await redirectProblems(async (path) => {
     const a = await getRetry(base, path, opts);
     return { status: a.status, location: a.location, sha256: a.sha256 };
-  }, lock, { didSha256: did?.sha256 }));
+  }, lock, { didSha256: did?.sha256, hostile: hostile ? HOSTILE_PATHS : [] }));
   return p;
 }
 
@@ -459,15 +579,111 @@ export async function readProject({ accountId, token, project, fetcher = fetch }
 }
 
 // ---------------------------------------------------------------------------------------------
+// Pull-request check: this repository's DID document against the live origin
+// ---------------------------------------------------------------------------------------------
+
+const stable = (v) => {
+  if (Array.isArray(v)) return `[${v.map(stable).join(',')}]`;
+  if (v && typeof v === 'object') return `{${Object.keys(v).sort().map((k) => `${JSON.stringify(k)}:${stable(v[k])}`).join(',')}}`;
+  return JSON.stringify(v) ?? 'null';
+};
+
+/** id and every verification method, whatever the list order and the key order inside an entry. */
+export function didKeyView(doc) {
+  const vms = Array.isArray(doc?.verificationMethod) ? doc.verificationMethod : [];
+  const methods = vms.map((m) => [String(m?.id), stable(m)]).sort((a, b) => (a.join('\u0000') < b.join('\u0000') ? -1 : 1));
+  return { id: doc?.id ?? null, methods };
+}
+
+function keyDifferences(liveView, committedView) {
+  const kid = (id) => String(id).split('#').pop();
+  const live = new Map(liveView.methods);
+  const mine = new Map(committedView.methods);
+  const out = [];
+  if (liveView.id !== committedView.id) out.push(`id: origin ${JSON.stringify(liveView.id)}, committed ${JSON.stringify(committedView.id)}`);
+  for (const [id] of mine) if (!live.has(id)) out.push(`added (committed, not at the origin): #${kid(id)}`);
+  for (const [id] of live) if (!mine.has(id)) out.push(`removed (at the origin, not committed): #${kid(id)}`);
+  for (const [id, v] of mine) if (live.has(id) && live.get(id) !== v) out.push(`changed: #${kid(id)}`);
+  if (out.length === 0) out.push('the same entries, with one of them listed twice on one side');
+  return out;
+}
+
+/**
+ * WHY. The required `gates` check used to run `verify-estate.mjs --did-drift`, which fails any pull
+ * request whose committed id or keys differ from the live origin. A key change therefore had to
+ * reach https://csoai.org first, from outside this repository, and be copied here afterwards. The
+ * deploy route now ships only bytes equal to this repository's copy, so that order is closed; with
+ * the old check left in place nothing could change a key at all. The copy could not go first and
+ * the origin could not go first.
+ *
+ * THE RULE. The committed document must be the one the lock pins (whole-document sha256). Then:
+ *   pass        the origin serves the same bytes;
+ *   pass        the origin serves other bytes with the same id and verification methods (some other
+ *               field differs). A warning is printed when the lock does not list those bytes;
+ *   pass        id or verification methods differ AND the lock lists the origin's document under
+ *               replaces: a planned change, named by both hashes in one reviewed pull request;
+ *   fail        id or verification methods differ and the lock does not name the origin's document;
+ *   cannot-run  the origin did not answer with a DID document. Neither a pass nor a failure.
+ * @param {{lock: object, committedBytes: Buffer, live: {status?: number, body?: Buffer, error?: string}, origin?: string}} input
+ * @returns {{verdict: 'pass'|'fail'|'cannot-run', lines: string[], warnings: string[]}}
+ */
+export function driftVerdict({ lock, committedBytes, live, origin = lock?.pages?.origin }) {
+  const url = `${origin}/.well-known/did.json`;
+  const entry = lock.well_known['did.json'];
+  const mine = sha256(committedBytes);
+  const out = (verdict, lines, warnings = []) => ({ verdict, lines, warnings });
+  if (mine !== entry.sha256) return out('fail', [`FAIL: ${mirrorPinMessage('did.json', entry, mine, committedBytes.length)}`]);
+  let committed;
+  try { committed = JSON.parse(committedBytes.toString('utf8')); } catch (e) { return out('fail', [`FAIL: ${entry.mirror} is not JSON (${e.message})`]); }
+
+  if (live?.error) return out('cannot-run', [`CANNOT-RUN: ${url} is unreachable (${live.error}). Nothing was compared.`]);
+  if (live?.status !== 200 || !Buffer.isBuffer(live.body)) return out('cannot-run', [`CANNOT-RUN: ${url} answered HTTP ${live?.status}. Nothing was compared.`]);
+  let liveDoc;
+  try { liveDoc = JSON.parse(live.body.toString('utf8')); } catch { liveDoc = null; }
+  if (!liveDoc || typeof liveDoc !== 'object' || Array.isArray(liveDoc)) return out('cannot-run', [`CANNOT-RUN: ${url} answered HTTP 200 with ${live.body.length} bytes that are not a JSON object. Nothing was compared.`]);
+
+  const theirs = sha256(live.body);
+  if (theirs === mine) return out('pass', [`DID origin: ${url} is byte-identical to ${entry.mirror} (sha256 ${mine}).`]);
+
+  const listed = (entry.replaces ?? []).includes(theirs);
+  const a = didKeyView(liveDoc);
+  const b = didKeyView(committed);
+  const sameKeys = JSON.stringify(a) === JSON.stringify(b);
+  const both = `origin sha256 ${theirs} (${live.body.length} bytes); committed sha256 ${mine} (${committedBytes.length} bytes)`;
+  if (sameKeys) {
+    const lines = [`DID origin: same id and the same ${b.methods.length} verification methods as ${entry.mirror}; another field differs. ${both}.`];
+    if (listed) return out('pass', [...lines, 'The lock lists the origin\'s document under replaces: the next deploy of csoai.org replaces it.']);
+    return out('pass', lines, [`${url} serves sha256 ${theirs}, which scripts/csoai-site/apex-lock.json does not list under well_known["did.json"].replaces. The keys are equal, so this check passes, but the deploy route will refuse to write csoai.org until a reviewed pull request lists that sha256 or production is put back.`]);
+  }
+  const diffs = keyDifferences(a, b);
+  if (listed) {
+    return out('pass', [
+      `DID origin: PLANNED CHANGE of id or verification methods, named by hash in the lock. ${both}.`,
+      ...diffs.map((d) => `  - ${d}`),
+      'The lock pins the committed document and lists the origin\'s document under replaces. The merge of this pull request is what changes the keys at the origin: review it as that.',
+    ]);
+  }
+  return out('fail', [
+    `FAIL: ${entry.mirror} and ${url} disagree on id or verification methods, and the lock does not name the origin's document. ${both}.`,
+    ...diffs.map((d) => `  - ${d}`),
+    `A planned key change is one pull request that changes ${entry.mirror}, sets well_known["did.json"].sha256 in scripts/csoai-site/apex-lock.json to its sha256, and adds the origin's sha256 (${theirs}) to well_known["did.json"].replaces.`,
+    'If nobody planned a change, the origin was written outside this route: find out by whom before changing the lock.',
+  ]);
+}
+
+// ---------------------------------------------------------------------------------------------
 // The pre-deploy decision
 // ---------------------------------------------------------------------------------------------
 
-export async function predeploy({ lockFile, repoRoot, siteDir, sourceHead, middlewareFile, installedMiddleware, origin, offline, getOpts, onRequest: loaded }) {
+export async function predeploy({ lockFile, repoRoot, siteDir, deployRoot, sourceHead, middlewareFile, installedMiddleware, origin, offline, getOpts, onRequest: loaded }) {
   const report = { mode: 'predeploy', at: new Date().toISOString(), problems: [], changes: [], well_known: [], live: [] };
   const { lock, problems: lp } = readLock(lockFile);
   report.problems.push(...lp);
   if (!lock || lp.length) return report;
   report.source = lock.source;
+
+  // A hold is checked first and reported with everything else, so a held run still shows the state.
+  if (lock.hold) report.problems.push(`hold: the lock is on hold: ${JSON.stringify(lock.hold)}. Nothing is uploaded until a reviewed pull request sets hold back to null.`);
 
   if (sourceHead !== lock.source.commit) report.problems.push(`pin: the source checkout is at ${sourceHead || '(unknown)'}; the lock pins ${lock.source.commit}`);
 
@@ -482,15 +698,20 @@ export async function predeploy({ lockFile, repoRoot, siteDir, sourceHead, middl
     report.problems.push('did.json: the build has no /.well-known/did.json');
   }
 
-  const site = siteProblems(siteDir, expected);
+  const site = siteProblems(siteDir, expected, lock);
   report.well_known = site.rows;
   // did.json is reported once, by the DID check above, with the reason.
   report.problems.push(...site.problems.filter((m) => !(m.startsWith('/.well-known/did.json:') && report.problems.some((x) => x.startsWith('did.json:')))));
 
+  if (deployRoot) {
+    report.problems.push(...deployRootProblems(deployRoot, siteDir));
+    installedMiddleware = installedMiddleware ?? join(deployRoot, 'functions', '_middleware.js');
+  }
+
   try {
     if (installedMiddleware) {
       if (!existsSync(installedMiddleware)) report.problems.push(`middleware: ${installedMiddleware} is missing from the deploy folder`);
-      else if (!readFileSync(installedMiddleware).equals(readFileSync(middlewareFile))) report.problems.push('middleware: the file in the deploy folder is not byte-identical to scripts/csoai-site/apex-middleware.mjs');
+      else if (lstatSync(installedMiddleware).isSymbolicLink() || !readFileSync(installedMiddleware).equals(readFileSync(middlewareFile))) report.problems.push('middleware: the file in the deploy folder is not byte-identical to scripts/csoai-site/apex-middleware.mjs');
     }
     const onRequest = loaded ?? await loadMiddleware(middlewareFile);
     report.problems.push(...(await redirectProblems((path) => simulate(onRequest, path, lock.pages.origin), lock, { hostile: HOSTILE_PATHS })).map((m) => `middleware: ${m}`));
@@ -565,9 +786,13 @@ const WITHDRAWN_MIDDLEWARE = async (context) => {
 function fixture() {
   const dir = mkdtempSync(join(tmpdir(), 'apex-gate-'));
   const repo = join(dir, 'repo');
-  const site = join(dir, 'site');
+  // The deploy folder as the workflow assembles it: apex/_site and apex/functions/_middleware.js.
+  const root = join(dir, 'apex');
+  const site = join(root, '_site');
   mkdirSync(join(repo, 'public', '.well-known'), { recursive: true });
   mkdirSync(join(site, '.well-known', 'mcp'), { recursive: true });
+  mkdirSync(join(root, 'functions'), { recursive: true });
+  writeFileSync(join(root, 'functions', '_middleware.js'), readFileSync(DEFAULT_MIDDLEWARE));
   const note = 'The corrected note.';
   const did = { id: DID_ID, verificationMethod: [{ id: `${DID_ID}#k1`, type: 'JsonWebKey2020', publicKeyJwk: { kty: 'OKP', crv: 'Ed25519', x: 'AAAA' } }], _gspcBoardKeyNote: note };
   const didBytes = Buffer.from(`${JSON.stringify(did, null, 2)}\n`);
@@ -578,14 +803,17 @@ function fixture() {
   writeFileSync(join(site, '.well-known', 'did.json'), didBytes);
   writeFileSync(join(site, '.well-known', 'scitt-keys'), keys);
   writeFileSync(join(site, '.well-known', 'mcp', 'server-card.json'), card);
-  writeFileSync(join(site, 'index.html'), '<!doctype html><title>fallback</title>\n');
+  const page = Buffer.from('<!doctype html><title>fallback</title>\n');
+  writeFileSync(join(site, 'index.html'), page);
   const lock = {
     schema: LOCK_SCHEMA,
+    hold: null,
     source: { repository: 'o/r', commit: 'a'.repeat(40) },
     pages: { project: 'p', production_branch: 'master', candidate_branch: 'apex-candidate', origin: 'https://csoai.org' },
+    fallback_page: { sha256: sha256(page) },
     well_known: {
-      'did.json': { mirror: 'public/.well-known/did.json', gspc_board_key_note_sha256: sha256(Buffer.from(note)), replaces: ['b'.repeat(64)] },
-      'scitt-keys': { mirror: 'public/.well-known/scitt-keys' },
+      'did.json': { mirror: 'public/.well-known/did.json', sha256: sha256(didBytes), gspc_board_key_note_sha256: sha256(Buffer.from(note)), replaces: ['b'.repeat(64)] },
+      'scitt-keys': { mirror: 'public/.well-known/scitt-keys', sha256: sha256(keys) },
       'mcp/server-card.json': { sha256: sha256(card) },
     },
     well_known_absent: ['scitt.json'],
@@ -602,7 +830,9 @@ function fixture() {
   };
   const lockFile = join(dir, 'lock.json');
   writeFileSync(lockFile, JSON.stringify(lock));
-  return { dir, repo, site, lock, lockFile, did, didBytes, note, cleanup: () => rmSync(dir, { recursive: true, force: true }) };
+  // relock: write the lock again after a test changed it (or a mirrored file it pins).
+  const relock = (mutate) => { mutate(lock); writeFileSync(lockFile, JSON.stringify(lock)); };
+  return { dir, repo, root, site, lock, lockFile, relock, did, didBytes, note, cleanup: () => rmSync(dir, { recursive: true, force: true }) };
 }
 
 /** A local stand-in for a Pages deployment: the middleware, then static files, then the HTML fallback. */
@@ -631,7 +861,7 @@ const mentions = (list, re) => list.some((m) => re.test(m));
  */
 export function selftestCases(given = {}) {
   const middleware = async () => given.onRequest ?? loadMiddleware(DEFAULT_MIDDLEWARE);
-  const offline = async (f, over = {}) => predeploy({ lockFile: f.lockFile, repoRoot: f.repo, siteDir: f.site, sourceHead: f.lock.source.commit, middlewareFile: DEFAULT_MIDDLEWARE, offline: true, onRequest: await middleware(), ...over });
+  const offline = async (f, over = {}) => predeploy({ lockFile: f.lockFile, repoRoot: f.repo, siteDir: f.site, deployRoot: f.root, sourceHead: f.lock.source.commit, middlewareFile: DEFAULT_MIDDLEWARE, offline: true, onRequest: await middleware(), ...over });
   const withFixture = (fn) => async () => { const f = fixture(); try { await fn(f); } finally { f.cleanup(); } };
   return [
     ['a build that is exactly the lock passes', withFixture(async (f) => {
@@ -708,8 +938,130 @@ export function selftestCases(given = {}) {
         must(bad((l) => { l.redirects.exact[0].location = 'https://councilof.ai.example.com/'; }).length > 0, 'look-alike host accepted');
         must(bad((l) => { l.well_known['../x'] = { sha256: 'd'.repeat(64) }; }).length > 0, 'path escape accepted');
         must(bad((l) => { l.pages.candidate_branch = 'master'; }).length > 0, 'candidate branch equal to production accepted');
+        must(bad((l) => { delete l.well_known['scitt-keys'].sha256; }).length > 0, 'a mirrored file without a pinned sha256 accepted');
+        must(bad((l) => { delete l.well_known['did.json'].sha256; }).length > 0, 'did.json without a whole-document sha256 accepted');
+        must(bad((l) => { l.well_known['did.json'].replaces = [l.well_known['did.json'].sha256]; }).length > 0, 'a file listed as replacing itself accepted');
+        must(bad((l) => { l.well_known['did.json'].replaces = 'b'.repeat(64); }).length > 0, 'replaces that is not a list accepted');
+        must(bad((l) => { delete l.hold; }).length > 0, 'a lock with no hold field accepted');
+        must(bad((l) => { l.hold = ''; }).length > 0, 'an empty hold accepted');
+        must(bad((l) => { l.hold = true; }).length > 0, 'a hold that says nothing accepted');
+        must(bad((l) => { l.hold = 'Rolled back by hand on 14 Oct; cause not yet known.'; }).length === 0, 'a lock on hold must still be a usable lock');
+        must(bad((l) => { delete l.fallback_page; }).length > 0, 'a lock with no fallback_page field accepted');
+        must(bad((l) => { l.fallback_page = { sha256: 'zz' }; }).length > 0, 'a fallback page without a sha256 accepted');
+        must(bad((l) => { l.fallback_page = null; }).length === 0, 'fallback_page: null (no page, 404) must be allowed');
       } finally { f.cleanup(); }
     }],
+    ['a lock on hold refuses every upload, whatever else is true', withFixture(async (f) => {
+      f.relock((l) => { l.hold = 'Rolled back by hand on 14 Oct; cause not yet known.'; });
+      const r = await offline(f);
+      must(r.problems.length === 1 && /^hold: the lock is on hold: "Rolled back by hand/.test(r.problems[0]), `expected only the hold, got: ${r.problems.join(' | ')}`);
+      f.relock((l) => { l.hold = null; });
+      must((await offline(f)).problems.length === 0, 'a cleared hold still refused');
+    })],
+    ['a mirrored file that changed without the lock is refused, and the message says what to edit', withFixture(async (f) => {
+      const oldKeys = f.lock.well_known['scitt-keys'].sha256;
+      const newKeys = Buffer.from('{"we_operate_a_ts":false,"keys":[1,2]}\n');
+      writeFileSync(join(f.repo, 'public', '.well-known', 'scitt-keys'), newKeys);
+      writeFileSync(join(f.site, '.well-known', 'scitt-keys'), newKeys);
+      const r = await offline(f);
+      must(mentions(r.problems, new RegExp(`scitt-keys: the repository copy public/\\.well-known/scitt-keys is sha256 ${sha256(newKeys)} .* set well_known\\["scitt-keys"\\]\\.sha256 to ${sha256(newKeys)} and add ${oldKeys} to its replaces`)), `mirror pin not enforced: ${r.problems.join(' | ')}`);
+      // The same pull request edits the lock: new sha256, old one under replaces. Then it passes.
+      f.relock((l) => { l.well_known['scitt-keys'].sha256 = sha256(newKeys); l.well_known['scitt-keys'].replaces = [oldKeys]; });
+      must((await offline(f)).problems.length === 0, 'a mirror change made together with the lock was refused');
+
+      const newDid = Buffer.from(`${JSON.stringify({ ...f.did, verificationMethod: [...f.did.verificationMethod, { id: `${DID_ID}#k2`, type: 'JsonWebKey2020', publicKeyJwk: { kty: 'OKP', crv: 'Ed25519', x: 'CCCC' } }] }, null, 2)}\n`);
+      writeFileSync(join(f.repo, 'public', '.well-known', 'did.json'), newDid);
+      writeFileSync(join(f.site, '.well-known', 'did.json'), newDid);
+      must(mentions((await offline(f)).problems, /did\.json: the repository copy public\/\.well-known\/did\.json is sha256 .* the lock pins/), 'a DID document that changed without the lock was accepted');
+    })],
+    ['the upload holds only what the lock names: a stray page, another fallback page or a symlink is refused', withFixture(async (f) => {
+      writeFileSync(join(f.site, 'portal.html'), '<p>not in the lock</p>');
+      must(mentions((await offline(f)).problems, /upload: portal\.html is not named by the lock/), 'a stray page was accepted');
+      rmSync(join(f.site, 'portal.html'));
+
+      const page = readFileSync(join(f.site, 'index.html'));
+      writeFileSync(join(f.site, 'index.html'), '<p>another page for every unknown /.well-known path</p>');
+      must(mentions((await offline(f)).problems, /\/index\.html: sha256 .* is not the fallback page the lock pins/), 'a changed fallback page was accepted');
+      rmSync(join(f.site, 'index.html'));
+      must(mentions((await offline(f)).problems, /\/index\.html: missing from the upload/), 'a missing fallback page was accepted');
+      f.relock((l) => { l.fallback_page = null; });
+      must((await offline(f)).problems.length === 0, 'fallback_page: null with no index.html must pass');
+      writeFileSync(join(f.site, 'index.html'), page);
+      must(mentions((await offline(f)).problems, /the upload holds a fallback page; the lock says there is none/), 'a fallback page the lock rules out was accepted');
+      f.relock((l) => { l.fallback_page = { sha256: sha256(page) }; });
+
+      symlinkSync(join(f.repo, 'public', '.well-known', 'scitt-keys'), join(f.site, '.well-known', 'link.json'));
+      must(mentions((await offline(f)).problems, /upload: \.well-known\/link\.json is a symlink or a special file/), 'a symlink in the upload was accepted');
+    })],
+    ['the folder wrangler runs in holds the upload and the middleware, and nothing that could steer it', withFixture(async (f) => {
+      must(deployRootProblems(f.root, f.site).length === 0, `clean deploy folder refused: ${deployRootProblems(f.root, f.site).join(' | ')}`);
+      for (const stray of ['wrangler.toml', 'wrangler.jsonc', 'package.json', '.npmrc', '.env', 'functions/api.js']) {
+        writeFileSync(join(f.root, stray), 'x');
+        must(mentions((await offline(f)).problems, new RegExp(`deploy folder: holds ${stray.replace(/[.]/g, '\\.')}, which is not part of the deploy`)), `${stray} beside the upload was accepted`);
+        rmSync(join(f.root, stray));
+      }
+      mkdirSync(join(f.root, 'node_modules', 'wrangler'), { recursive: true });
+      must(mentions(deployRootProblems(f.root, f.site), /deploy folder: holds node_modules/), 'node_modules beside the upload was accepted');
+      rmSync(join(f.root, 'node_modules'), { recursive: true });
+      must(deployRootProblems(f.dir, f.site).length === 1, 'a site that is not a direct child of the deploy folder was accepted');
+      rmSync(join(f.root, 'functions', '_middleware.js'));
+      must(mentions((await offline(f)).problems, /middleware: .* is missing from the deploy folder/), 'a deploy folder with no middleware was accepted');
+    })],
+    ['a pull request changes a key at the DID origin only by naming both documents in the lock', withFixture(async (f) => {
+      const lock = JSON.parse(JSON.stringify(f.lock));
+      const entry = lock.well_known['did.json'];
+      const doc = (d) => Buffer.from(`${JSON.stringify(d, null, 2)}\n`);
+      const at = (bytes, status = 200) => ({ status, body: bytes });
+      const run = (committedBytes, live, l = lock) => driftVerdict({ lock: l, committedBytes, live });
+
+      let v = run(f.didBytes, at(f.didBytes));
+      must(v.verdict === 'pass' && /byte-identical/.test(v.lines[0]) && v.warnings.length === 0, 'identical documents did not pass');
+
+      // A note differs, keys equal: passes as it always did. Listed under replaces: no warning.
+      const oldNote = doc({ ...f.did, _gspcBoardKeyNote: 'An earlier note.' });
+      entry.replaces = [sha256(oldNote)];
+      v = run(f.didBytes, at(oldNote));
+      must(v.verdict === 'pass' && v.warnings.length === 0 && mentions(v.lines, /lists the origin's document under replaces/), `note-only difference, listed: ${JSON.stringify(v)}`);
+      entry.replaces = [];
+      v = run(f.didBytes, at(oldNote));
+      must(v.verdict === 'pass' && v.warnings.length === 1 && /does not list under well_known\["did\.json"\]\.replaces/.test(v.warnings[0]), 'note-only difference the lock does not list must pass with a warning');
+
+      // The same keys in another list order, and another key order inside an entry, are the same keys.
+      const k2 = { id: `${DID_ID}#k2`, type: 'JsonWebKey2020', publicKeyJwk: { kty: 'OKP', crv: 'Ed25519', x: 'CCCC' } };
+      const two = { ...f.did, verificationMethod: [f.did.verificationMethod[0], k2] };
+      const twoBytes = doc(two);
+      const reordered = doc({ ...f.did, verificationMethod: [{ publicKeyJwk: { x: 'CCCC', crv: 'Ed25519', kty: 'OKP' }, type: 'JsonWebKey2020', id: `${DID_ID}#k2` }, f.did.verificationMethod[0]] });
+      const lock2 = JSON.parse(JSON.stringify(lock));
+      lock2.well_known['did.json'].sha256 = sha256(twoBytes);
+      must(run(twoBytes, at(reordered), lock2).verdict === 'pass', 'the same keys in another order were read as a key change');
+
+      // Branch 1 of the rule: a key is added here and the lock does not name the origin's document.
+      v = run(twoBytes, at(f.didBytes), lock2);
+      must(v.verdict === 'fail' && mentions(v.lines, /added \(committed, not at the origin\): #k2/) && mentions(v.lines, new RegExp(`adds the origin's sha256 \\(${sha256(f.didBytes)}\\) to well_known\\["did\\.json"\\]\\.replaces`)), `an unplanned key change did not fail with the instruction: ${JSON.stringify(v)}`);
+      // Branch 2: the same change, with the origin's document listed under replaces.
+      lock2.well_known['did.json'].replaces = [sha256(f.didBytes)];
+      v = run(twoBytes, at(f.didBytes), lock2);
+      must(v.verdict === 'pass' && /PLANNED CHANGE/.test(v.lines[0]) && mentions(v.lines, /added \(committed, not at the origin\): #k2/), `a key change named by both hashes did not pass: ${JSON.stringify(v)}`);
+      // Removal and rotation are named too.
+      lock2.well_known['did.json'].replaces = [];
+      const rotated = doc({ ...f.did, verificationMethod: [{ ...f.did.verificationMethod[0], publicKeyJwk: { kty: 'OKP', crv: 'Ed25519', x: 'BBBB' } }, k2] });
+      v = run(twoBytes, at(rotated), lock2);
+      must(v.verdict === 'fail' && mentions(v.lines, /changed: #k1/), 'a rotated key was not named');
+      v = run(f.didBytes, at(twoBytes));
+      must(v.verdict === 'fail' && mentions(v.lines, /removed \(at the origin, not committed\): #k2/), 'a removed key was not named');
+      v = run(f.didBytes, at(doc({ ...f.did, id: 'did:web:example.com' })));
+      must(v.verdict === 'fail' && mentions(v.lines, /id: origin "did:web:example\.com"/), 'another DID at the origin was not named');
+
+      // The committed copy must be the document the lock pins, whatever the origin serves.
+      v = run(twoBytes, at(twoBytes));
+      must(v.verdict === 'fail' && /the lock pins/.test(v.lines[0]), 'a committed document the lock does not pin was accepted');
+
+      // An origin that does not answer with a DID document is neither a pass nor a failure.
+      for (const live of [{ error: 'no answer in 20000 ms' }, at(Buffer.from('<!doctype html>'), 200), at(Buffer.from(''), 404), at(Buffer.from('[]'), 200), at(f.didBytes, 503)]) {
+        v = run(f.didBytes, live);
+        must(v.verdict === 'cannot-run' && /^CANNOT-RUN: /.test(v.lines[0]), `expected cannot-run for ${JSON.stringify({ ...live, body: live.body?.toString().slice(0, 20) })}, got ${v.verdict}`);
+      }
+    })],
     ['the reviewed middleware never leaves councilof.ai; the withdrawn one does', async () => {
       const onRequest = await middleware();
       const f = fixture();
@@ -750,7 +1102,9 @@ export function selftestCases(given = {}) {
 
         writeFileSync(join(f.site, '.well-known', 'did.json'), `${JSON.stringify({ ...f.did, _gspcBoardKeyNote: 'An earlier note.' }, null, 2)}\n`);
         must(mentions(await readbackOnce(s.base, f.lock, expected, opts), /\/\.well-known\/did\.json: .* expected/), 'readback missed other DID bytes');
-        must(mentions((await liveCompare(s.base, f.lock, expected, opts)).blocking, /Someone changed production outside this route/), 'unknown live bytes did not block');
+        const unknown = (await liveCompare(s.base, f.lock, expected, opts)).blocking;
+        must(mentions(unknown, /nor a sha256 the lock lists under replaces\. Two possible causes: production was written outside this route, or public\/\.well-known\/did\.json changed in a pull request/), `unknown live bytes did not block with both causes named: ${unknown.join(' | ')}`);
+        must(mentions(unknown, /adds [0-9a-f]{64} to well_known\["did\.json"\]\.replaces/), 'the block does not say which sha256 to list');
 
         const replaced = Buffer.from('the document being replaced\n');
         writeFileSync(join(f.site, '.well-known', 'did.json'), replaced);
@@ -767,14 +1121,28 @@ export function selftestCases(given = {}) {
 
         writeFileSync(join(f.site, '.well-known', 'scitt.json'), '{"stray":true}\n');
         must(mentions((await liveCompare(s.base, f.lock, expected, opts)).blocking, /scitt\.json: production serves a file here/), 'a stray file did not block');
+        rmSync(join(f.site, '.well-known', 'scitt.json'));
+        writeFileSync(join(f.site, '.well-known', 'scitt-keys'), readFileSync(join(f.repo, 'public', '.well-known', 'scitt-keys')));
+
+        // All 46 hostile paths over HTTP: a faithful host sends none of them off councilof.ai.
+        const hard = await readbackOnce(s.base, f.lock, expected, opts, { hostile: true });
+        must(hard.length === 0, `faithful host, hostile paths over HTTP: ${hard.join(' | ')}`);
+
+        // Another page behind every unknown /.well-known path: readback fails; before a deploy it is a listed change.
+        const page = readFileSync(join(f.site, 'index.html'));
+        writeFileSync(join(f.site, 'index.html'), '<p>another page</p>');
+        must(mentions(await readbackOnce(s.base, f.lock, expected, opts), /a \/\.well-known path with no file: .* the lock says HTTP 200 with the pinned fallback page/), 'readback missed another fallback page');
+        const live4 = await liveCompare(s.base, f.lock, expected, opts);
+        must(live4.blocking.length === 0 && mentions(live4.changes, /a \/\.well-known path with no file: production answers HTTP 200 sha256/), 'another fallback page on the host must be a listed change');
+        writeFileSync(join(f.site, 'index.html'), page);
       } finally { await s.close(); }
 
-      rmSync(join(f.site, '.well-known', 'scitt.json'));
-      writeFileSync(join(f.site, '.well-known', 'scitt-keys'), readFileSync(join(f.repo, 'public', '.well-known', 'scitt-keys')));
       s = await serve(f.site, WITHDRAWN_MIDDLEWARE);
       try {
         const bad = await readbackOnce(s.base, f.lock, expected, opts);
         must(mentions(bad, /OPEN REDIRECT/) && mentions(bad, /redirect \/\/example\.com\/x: got 308 https:\/\/example\.com\/x/), `withdrawn middleware over HTTP not caught: ${bad.join(' | ')}`);
+        const worse = await readbackOnce(s.base, f.lock, expected, opts, { hostile: true });
+        must(worse.filter((m) => /OPEN REDIRECT/.test(m)).length > bad.filter((m) => /OPEN REDIRECT/.test(m)).length, 'the hostile paths found nothing more on the withdrawn middleware');
       } finally { await s.close(); }
     })],
     ['a Pages project whose production branch is not the branch we deploy is refused', async () => {
@@ -807,8 +1175,12 @@ export function selftestCases(given = {}) {
       const onRequest = await middleware();
       const diffs = await redirectProblems((p) => simulate(onRequest, p, lock.pages.origin), lock, { hostile: HOSTILE_PATHS });
       must(diffs.length === 0, diffs.join(' | '));
+      // This is the pre-merge check for the mirrored files: public/.well-known/did.json and
+      // public/.well-known/scitt-keys must hash to what the lock pins, so a pull request that
+      // changes one without the lock fails the required `gates` check with the edit to make.
       const { expected, problems: ep } = resolveExpected(lock, REPO_ROOT);
       must(ep.length === 0, ep.join(' | '));
+      must([...expected.values()].filter((e) => e.mirror).length >= 2, 'the committed lock mirrors fewer than two files');
       const did = expected.get('did.json');
       const own = didProblems(did.bytes, did.bytes, lock.well_known['did.json'].gspc_board_key_note_sha256);
       must(own.length === 0, `this repository's did.json is not the document the lock pins: ${own.join(' | ')}`);
@@ -836,7 +1208,7 @@ function parseArgs(argv) {
     const a = argv[i];
     if (!a.startsWith('--')) { args._.push(a); continue; }
     const key = a.slice(2);
-    if (['selftest', 'offline'].includes(key)) args[key] = true;
+    if (['selftest', 'offline', 'hostile'].includes(key)) args[key] = true;
     else { args[key] = argv[i + 1]; i += 1; }
   }
   return args;
@@ -853,8 +1225,37 @@ async function main(argv) {
   if (mode === 'pin') {
     const { lock, problems } = readLock(lockFile);
     if (problems.length) { for (const m of problems) console.error(m); return 1; }
-    console.log(args.field === 'candidate-branch' ? lock.pages.candidate_branch : args.field === 'production-branch' ? lock.pages.production_branch : args.field === 'project' ? lock.pages.project : args.field === 'repository' ? lock.source.repository : lock.source.commit);
+    const fields = {
+      'candidate-branch': lock.pages.candidate_branch,
+      'production-branch': lock.pages.production_branch,
+      project: lock.pages.project,
+      repository: lock.source.repository,
+      'fallback-page': lock.fallback_page ? lock.fallback_page.sha256 : 'none',
+      commit: lock.source.commit,
+    };
+    const field = args.field ?? 'commit';
+    if (!Object.prototype.hasOwnProperty.call(fields, field)) { console.error(`pin: unknown --field ${field}`); return 1; }
+    console.log(fields[field]);
     return 0;
+  }
+
+  if (mode === 'drift') {
+    const { lock, problems } = readLock(lockFile);
+    if (problems.length) { for (const m of problems) console.log(`FAIL: ${m}`); return 1; }
+    const entry = lock.well_known['did.json'];
+    const file = join(repoRoot, entry.mirror);
+    if (!existsSync(file)) { console.log(`FAIL: ${entry.mirror} is missing from this checkout`); return 1; }
+    const origin = args.origin ?? lock.pages.origin;
+    let live;
+    try { const a = await getRetry(origin, '/.well-known/did.json'); live = { status: a.status, body: a.body }; } catch (e) { live = { error: e.message }; }
+    const v = driftVerdict({ lock, committedBytes: readFileSync(file), live, origin });
+    for (const l of v.lines) console.log(l);
+    for (const w of v.warnings) console.log(process.env.GITHUB_ACTIONS ? `::warning title=csoai.org DID document::${w}` : `WARNING: ${w}`);
+    if (v.verdict === 'pass') return 0;
+    // Same convention as scripts/verify-estate.mjs (E-T5-01): an unreachable input is CANNOT-RUN,
+    // which does not fail a pull request for a network fault and is never printed as a pass.
+    if (v.verdict === 'cannot-run') return process.env.CI ? 0 : 2;
+    return 1;
   }
 
   if (mode === 'target') {
@@ -878,6 +1279,7 @@ async function main(argv) {
     if (!args.site) { console.error('predeploy needs --site <built site dir>'); return 1; }
     const report = await predeploy({
       lockFile, repoRoot, siteDir: resolve(args.site), sourceHead: String(args['source-head'] ?? ''), middlewareFile,
+      deployRoot: args['deploy-root'] ? resolve(args['deploy-root']) : null,
       installedMiddleware: args['installed-middleware'] ? resolve(args['installed-middleware']) : null,
       origin: args.origin, offline: Boolean(args.offline),
     });
@@ -897,9 +1299,9 @@ async function main(argv) {
     const wait = Math.max(0, Number(args.wait ?? 10));
     let last = [];
     for (let i = 1; i <= attempts; i += 1) {
-      try { last = await readbackOnce(args.base, lock, expected); } catch (e) { last = [`could not read ${args.base} (${e.message})`]; }
+      try { last = await readbackOnce(args.base, lock, expected, {}, { hostile: Boolean(args.hostile) }); } catch (e) { last = [`could not read ${args.base} (${e.message})`]; }
       if (last.length === 0) {
-        console.log(`readback ${args.base}: PASS on attempt ${i}. ${expected.size} /.well-known files match the lock (did.json sha256 ${expected.get('did.json').sha256}); ${lock.redirects.exact.length} redirect rules match; no path leaves councilof.ai.`);
+        console.log(`readback ${args.base}: PASS on attempt ${i}. ${expected.size} /.well-known files match the lock (did.json sha256 ${expected.get('did.json').sha256}); a path with no file answers ${fallbackWords(lock)}; ${lock.redirects.exact.length} redirect rules match; ${args.hostile ? `${HOSTILE_PATHS.length} hostile paths sent, ` : ''}no path leaves councilof.ai.`);
         if (args.json) writeFileSync(args.json, `${JSON.stringify({ mode: 'readback', base: args.base, at: new Date().toISOString(), problems: [] }, null, 2)}\n`);
         return 0;
       }
@@ -912,7 +1314,7 @@ async function main(argv) {
     return 1;
   }
 
-  console.error('usage: apex-gate.mjs --selftest | pin | target | predeploy --site <dir> --source-head <sha> | readback --base <origin>');
+  console.error('usage: apex-gate.mjs --selftest | pin | target | predeploy --site <dir> --source-head <sha> | readback --base <origin> | drift');
   return 1;
 }
 

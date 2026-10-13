@@ -10,8 +10,8 @@
 //
 // The Location is the literal origin plus the path. It is never built with
 // new URL(path, base): that call reads "//host/x" and "/\host/x" as another host. The
-// middleware this file replaces did exactly that, and https://csoai.org//example.com/x
-// left for example.com (found 28 Sep 2026; still true of the Actions build on 13 Oct 2026).
+// middleware this file replaces did exactly that. Measured on 13 Oct 2026 on the Actions build
+// of 12 Oct: https://7d3e302f.csoai-site.pages.dev//example.com/x answered 308 https://example.com/x.
 //
 // Runs of "/" are collapsed before anything else, as Cloudflare Pages itself does for the
 // deployment that served csoai.org on 13 Oct 2026: "//example.com/x" goes to
