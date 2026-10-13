@@ -67,6 +67,14 @@ async function openTab(page: Page, id: string, trailingSlash = false) {
     .waitForLoadState("networkidle", { timeout: 15_000 })
     .catch(() => undefined);
   await page.waitForTimeout(400);
+  // These existing journeys exercise the inline workspace/composer. The entrypoint spec
+  // separately accepts the default Ask pane; close it intentionally before using the canvas.
+  if (id === "home") {
+    const entryAsk = page.getByTestId("ask-pane");
+    await expect(entryAsk).toBeVisible({ timeout: 30_000 });
+    await entryAsk.getByRole("button", { name: "Close Ask", exact: true }).click();
+    await expect(entryAsk).toBeHidden();
+  }
 }
 
 async function expectColdDoor(page: Page, path: string, tab: string) {
@@ -627,4 +635,16 @@ test("the 22-axis learning arena keeps coaching, practice and human review in on
     /How did the governance test measure\?/i,
   );
   await expect(page).toHaveURL(/tab=learn/);
+});
+
+test("a cold /assess door lands on the measured pane with the RAS booking link", async ({ page }) => {
+  await expectColdDoor(page, "/assess/", "measured");
+  const cta = page.locator('[data-testid="ras-booking-cta"]');
+  await expect(cta).toBeVisible({ timeout: 30_000 });
+  const href = (await cta.getAttribute("href")) || "";
+  expect(
+    href.startsWith("mailto:nicholas@csoai.org?subject=RAS%20booking%20request") ||
+      (/^https:\/\//.test(href) && !/stripe/i.test(href)),
+    href,
+  ).toBe(true);
 });

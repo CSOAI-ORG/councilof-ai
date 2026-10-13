@@ -209,6 +209,11 @@ export default function LiveBoardGlance({
                 <dd className="order-first min-h-[1.2em] font-mono text-2xl font-black tracking-tight text-foreground sm:text-3xl" data-testid="board-public-count">
                   {count ?? "—"}
                 </dd>
+                {count && stamp ? (
+                  <dd className="text-[13px] text-muted-foreground" data-testid="board-public-count-measured-on">
+                    measured on {stamp}
+                  </dd>
+                ) : null}
               </div>
               <div className="flex flex-col">
                 <dt className="text-[13px] font-semibold text-muted-foreground">

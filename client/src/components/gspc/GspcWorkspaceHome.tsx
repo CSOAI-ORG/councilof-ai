@@ -554,16 +554,16 @@ export default function GspcWorkspaceHome({
           </h1>
           {/* Phone: one plain line, so the Get results box is on the first screen. */}
           <p className="mt-2 text-sm leading-relaxed text-emerald-50/90 sm:hidden">
-            Look up what is already measured (free), ask for a fresh run, and check any result yourself.
+            Look up what is already measured (free), enquire by email about a fresh measurement, and check published evidence yourself.
           </p>
           <ul className="mt-4 hidden max-w-5xl list-none gap-4 p-0 text-sm leading-relaxed text-emerald-50/90 sm:grid sm:grid-cols-3" data-testid="ws-plain">
             <li>
               <span className="block text-xs font-bold uppercase tracking-wide text-emerald-300">What this is</span>
-              We test AI models and the servers they use, publish every result with a signature anyone can check, and never sell a grade.
+              We test AI models and the servers they use, publish dated evidence with its attestation state, and never sell a grade.
             </li>
             <li>
               <span className="block text-xs font-bold uppercase tracking-wide text-emerald-300">What you can do</span>
-              Look up what is already measured (free), ask for a fresh run, track it, and check any result yourself.
+              Look up what is already measured (free), review commission terms, enquire by email about a fresh measurement, and check published evidence yourself.
             </li>
             <li>
               <span className="block text-xs font-bold uppercase tracking-wide text-emerald-300">Corrections</span>
