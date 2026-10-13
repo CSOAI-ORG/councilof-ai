@@ -4,8 +4,8 @@
  * One input — a model, a server address or a signed record id — then four plain choices, in the
  * order a stranger meets them:
  *   - See what we already know (free, read live);
- *   - Request a fresh run (terms first, from your own wallet; invoiced work is arranged by email;
- *     a receipt and a place in the public queue; paying never buys a result, and no date is promised);
+ *   - Request a commission receipt (terms first, from your own wallet; invoice enquiry by email;
+ *     existing measurement references where available; signing is conditional, with no fresh-run date promised);
  *   - Track a request (My results: status by receipt, the signed results once published, a free check);
  *   - Re-check every month (a watch request a person reviews; nothing is charged by asking).
  * Reader test, 6 Oct 2026: the earlier strip of five numbered steps ("Queued job", "Fresh run" ...)
@@ -415,8 +415,8 @@ export default function GetResults({
         <Choice
           id="fresh"
           icon={Zap}
-          title={kind === "record" ? "Check this result" : "Request a fresh run"}
-          hint={kind === "record" ? undefined : "Paid per run over x402 (USDC, from your own wallet); invoiced work is arranged by email. The exact amount appears only in the terms."}
+          title={kind === "record" ? "Check this result" : "Request a commission receipt"}
+          hint={kind === "record" ? undefined : "Commission receipt over x402 (USDC, from your own wallet); invoiced work is arranged by email. The exact amount appears only in the terms."}
           body={kind === "record" ? "A result id is already a result: check that it is genuine instead. Free." : `${FRESH_RUN_DOCTRINE} Invoiced work is arranged by email.`}
           active={active}
         >
