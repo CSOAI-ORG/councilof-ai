@@ -86,20 +86,59 @@ export function signerState(env: { BOARD_SIGN_KEY_PKCS8_B64?: string }) {
 /** Signed measurement cards already on file for this subject (× axis). Read, never typed. */
 type Reserve = { cells: Cell[]; as_of: string | null; source: string; read: boolean };
 
+/**
+ * BOUNDED READ, ONE RETRY (defect measured 2026-10-13).
+ *
+ * PayAI's /discovery/resources/{r}/stats reports this door at reliability 88 — its spec defines
+ * that as "percentage of settlement attempts that succeeded" — while free-door, eunomia-data and
+ * art50 read 100. The arithmetic is exact: 6 of 7 attempts = 86 on 17–21 Sep, then the 7th
+ * successful settle (~22 Sep) moved it to 7 of 8 = 88 — ONE attempt did not complete, and this
+ * door is the only one of the four whose paid deliverable waits on a same-origin fetch that had
+ * no timeout and no retry: the same /signed/card-matrix.json read the 2026-09-28 canary caught
+ * hanging 20–40 s on 3 of 4 probes while other doors answered at once. A buyer whose settle had
+ * already MOVED MONEY then waited on this read forever: the attempt settled at the facilitator
+ * and still did not complete at our door.
+ *
+ * Each read now gets RESERVE_FETCH_TIMEOUT_MS and exactly one retry, so the deliverable
+ * terminates within 2 × RESERVE_FETCH_TIMEOUT_MS + ε whatever the edge does, and a deploy-swap
+ * blip costs one retry instead of the whole attempt. Both attempts failing is reported honestly
+ * as UNCHECKABLE below (null count — never an empty reserve).
+ */
+export const RESERVE_FETCH_TIMEOUT_MS = 2000;
+
+/** `work`, or a rejection at `ms` — never a hang. */
+function byDeadline<T>(work: Promise<T>, ms: number, what: string): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const deadline = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => reject(new Error(`${what} did not answer within ${ms} ms`)), ms);
+  });
+  return Promise.race([work, deadline]).finally(() => clearTimeout(timer));
+}
+
 async function reserveFor(origin: string, subject: string, axis: string): Promise<Reserve> {
   const src = new URL("/signed/card-matrix.json", origin).toString();
-  try {
-    const r = await fetch(src);
-    if (!r.ok) return { cells: [], as_of: null, source: `${src} HTTP ${r.status}`, read: false };
-    const m = (await r.json()) as { as_of?: string; cells?: Cell[] };
-    const s = subject.toLowerCase();
-    const cells = (m.cells || []).filter(
-      (c) => c.signed && String(c.model || "").toLowerCase().includes(s) && (!axis || c.axis === axis),
-    );
-    return { cells, as_of: m.as_of || null, source: src, read: true };
-  } catch (e) {
-    return { cells: [], as_of: null, source: `${src} unreadable: ${(e as Error).message}`, read: false };
+  let last = "";
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    try {
+      const r = await byDeadline(fetch(src), RESERVE_FETCH_TIMEOUT_MS, src);
+      if (!r.ok) {
+        last = `HTTP ${r.status}`;
+        continue;
+      }
+      const m = (await byDeadline(r.json(), RESERVE_FETCH_TIMEOUT_MS, `${src} body`)) as {
+        as_of?: string;
+        cells?: Cell[];
+      };
+      const s = subject.toLowerCase();
+      const cells = (m.cells || []).filter(
+        (c) => c.signed && String(c.model || "").toLowerCase().includes(s) && (!axis || c.axis === axis),
+      );
+      return { cells, as_of: m.as_of || null, source: src, read: true };
+    } catch (e) {
+      last = (e as Error).message;
+    }
   }
+  return { cells: [], as_of: null, source: `${src} unreadable after 2 attempts: ${last}`, read: false };
 }
 
 /**
@@ -116,8 +155,11 @@ async function reserveFor(origin: string, subject: string, axis: string): Promis
  * Now the two preview reads run side by side and the challenge waits at most PREVIEW_BUDGET_MS for
  * each. A read that is late is reported as not read (null count, UNCHECKABLE) — never as an empty
  * reserve. The late read is left to finish after the response (waitUntil), so the isolate's root
- * cache still warms for the next caller. The PAID path is unchanged: a paying buyer's receipt waits
- * for the full reserve read, because a budget there would shrink a deliverable someone paid for.
+ * cache still warms for the next caller. The PAID path still waits for the REAL read — a budget
+ * there would shrink a deliverable someone paid for — but since 2026-10-13 the read itself is
+ * bounded (RESERVE_FETCH_TIMEOUT_MS, one retry) so a stalled edge can no longer hang a deliverable
+ * whose money has already moved; if both attempts fail, the receipt ships with reserve_count null
+ * (UNCHECKABLE, never 0) and the failure named, not an empty reserve.
  */
 export const PREVIEW_BUDGET_MS = 2500;
 
@@ -452,8 +494,12 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     axis_known: knownAxis,
     settle: { network: payment.settlement?.network || null, transaction: tx, payer: payment.settlement?.payer || null },
     reserve: reserve.cells.slice(0, 24).map((c) => ({ axis: c.axis, card: c.card })),
-    reserve_count: reserve.cells.length,
-    reserve_returned: Math.min(reserve.cells.length, 24),
+    // NULL, NEVER 0, WHEN THE MATRIX WAS NOT READ (the same doctrine the 402 preview carries
+    // above): after the bounded retry, `read: false` means UNCHECKABLE — it must never read as
+    // "no cards on file" on a receipt someone paid for.
+    reserve_read: reserve.read,
+    reserve_count: reserve.read ? reserve.cells.length : null,
+    reserve_returned: reserve.read ? Math.min(reserve.cells.length, 24) : null,
     reserve_limit: 24,
     fresh_run: "UNMEASURED",
     never: ["rank", "certificate", "grade"],

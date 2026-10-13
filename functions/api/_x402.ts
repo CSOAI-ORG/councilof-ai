@@ -498,6 +498,44 @@ export async function recordSettlement(
  * facilitator, which is what the bazaar spec says gets catalogued; a door that omits it stays
  * settleable and stays unindexed, exactly as before 2026-09-22.
  */
+/**
+ * FACILITATOR ROUND TRIP — BOUNDED, RETRIED ONCE ON TRANSIENT FAILURE ONLY (2026-10-13).
+ *
+ * Every settlement attempt on this rail travels the /verify and /settle fetches below, and until
+ * now they had no timeout and no retry: a dropped connection, a hung socket or one 5xx became a
+ * permanently failed attempt ("facilitator error: …" at the catch below) — a buyer who signed
+ * correctly turned away for an infrastructure blip. That is exactly what PayAI's reliability stat
+ * ("percentage of settlement attempts that succeeded") reads: api/request-attestation at 88
+ * (7 of 8 attempts — the 17–21 Sep snapshots show the same failure at 6 of 7 = 86) while
+ * free-door reads 100 across 20 attempts. Zero-value settles are trivially reliable ("no balance
+ * to be insufficient"), so real-value doors are the only ones exercising these failure modes.
+ *
+ * RETRY IS IDEMPOTENT, EVEN FOR /settle: the body carries the buyer's EIP-3009 authorization and
+ * an authorization funds at most ONE transfer (its nonce is consumed on success), so a repeat
+ * after a lost response can observe the settlement but can never double-charge.
+ *
+ * NEVER RETRIED: a 4xx, or a well-formed verdict (isValid:false / success:false) — those are
+ * answers about the payment itself, and repeating them changes nothing. A 429 or 5xx is the
+ * facilitator saying "not now", which is worth exactly one more try.
+ */
+const FACILITATOR_TIMEOUT_MS = 10_000;
+
+async function facilitatorFetch(url: string, init: RequestInit): Promise<Response> {
+  let last: Response | null = null;
+  let lastError: Error | null = null;
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    try {
+      const r = await fetch(url, { ...init, signal: AbortSignal.timeout(FACILITATOR_TIMEOUT_MS) });
+      if (r.status !== 429 && r.status < 500) return r;
+      last = r;
+    } catch (e) {
+      lastError = e as Error;
+    }
+  }
+  if (last) return last;
+  throw lastError ?? new Error("facilitator fetch failed");
+}
+
 export async function verifyX402Payment(
   request: Request,
   env: X402Env,
@@ -661,7 +699,7 @@ export async function verifyX402Payment(
     let lastStatus = 0;
     for (const cand of candidates) {
       const attempt = bodyFor(cand);
-      const r = await fetch(`${facilitator}/verify`, {
+      const r = await facilitatorFetch(`${facilitator}/verify`, {
         method: "POST",
         headers: await headersFor("/verify"),
         body: attempt,
@@ -686,7 +724,7 @@ export async function verifyX402Payment(
       };
     }
     // Verified ≠ settled. Settle moves the USDC; only then is the artefact paid for.
-    const sr = await fetch(`${facilitator}/settle`, {
+    const sr = await facilitatorFetch(`${facilitator}/settle`, {
       method: "POST",
       headers: await headersFor("/settle"),
       body,
