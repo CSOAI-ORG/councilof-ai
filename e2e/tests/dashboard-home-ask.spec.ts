@@ -147,6 +147,8 @@ for (const vp of VIEWPORTS) {
       // The original inline first-question regression remains covered after intentionally
       // closing the new default view of the existing Ask conversation.
       const entryAsk = page.getByTestId("ask-pane");
+      // 12 Oct 2026: on mobile the entry route keeps Ask closed; the launcher opens it on tap.
+      if (vp.project === "mobile") await openFromLauncher(page);
       await expect(entryAsk).toBeVisible({ timeout: 30_000 });
       await entryAsk.getByRole("button", { name: "Close Ask", exact: true }).click();
       await expect(entryAsk).toBeHidden();
@@ -206,11 +208,30 @@ async function navigateInApp(page: Page, href: string) {
   await expect(page).toHaveURL(new RegExp(href.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "$"));
 }
 
+/**
+ * 12 Oct 2026 (Nick, item 1): on mobile an entry route shows the page first, Ask stays closed and
+ * nothing is POSTed; the floating launcher opens the same pane on tap.
+ */
+async function openFromLauncher(page: Page) {
+  const fab = page.getByRole("button", { name: "Open Council of AI chat", exact: true });
+  await expect(fab).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByTestId("ask-pane")).toBeHidden();
+  await fab.click();
+  await expect(fab).toBeHidden();
+}
+
+/** Desktop entry routes open Ask by themselves; mobile ones need the launcher tap first. */
+async function enterAsk(page: Page, mobile: boolean) {
+  if (mobile) await openFromLauncher(page);
+  return readyAsk(page);
+}
+
 async function readyAsk(page: Page) {
   const pane = page.getByTestId("ask-pane");
   await expect(pane).toBeVisible({ timeout: 30_000 });
   await expect(pane.getByLabel("Your question", { exact: true })).toBeFocused({ timeout: 10_000 });
-  await expect(pane.getByTestId("ask-introduction")).toContainText("Hi, I’m MEOK. How can I help?");
+  await expect(pane.getByTestId("ask-introduction")).toContainText("Hi, this is Council of AI. How can I help?");
+  await expect(pane.getByTestId("ask-introduction")).not.toContainText("MEOK");
   await expect(pane.getByTestId("ask-introduction")).toContainText("saved customer cases are not connected here");
   await expect(pane.getByTestId("ask-rule-based")).toContainText("never from an AI model");
   await expect(pane.getByRole("switch", { name: "Let it move the page for me" })).toHaveAttribute("aria-checked", "false");
@@ -252,21 +273,28 @@ test("root, Council OS home and plugin tools open the existing Ask only after hy
   const posts: Request[] = [];
   const localOrigin = new URL(baseURL || "http://127.0.0.1:4180").origin;
   page.on("request", request => { if (request.method() === "POST") posts.push(request); });
+  const mobile = info.project.name === "mobile";
   await page.goto("/", { waitUntil: "domcontentloaded" });
-  let pane = await readyAsk(page);
+  if (mobile) {
+    // Hero first: no Ask overlay on a cold / at 375px, only the launcher.
+    await expect(page.getByRole("heading", { level: 1 }).first()).toBeInViewport({ timeout: 30_000 });
+    await expect(page.getByRole("button", { name: "Open Council of AI chat", exact: true })).toBeVisible();
+    await expect(page.getByTestId("ask-pane")).toHaveCount(0);
+  }
+  let pane = await enterAsk(page, mobile);
   await pane.getByLabel("Your question", { exact: true }).press("Escape");
   await expect(pane).toBeHidden();
   // A rerender/close must not reopen or send the previous question. Navigation opens once.
   await page.evaluate(() => window.dispatchEvent(new Event("resize")));
   await expect(pane).toBeHidden();
   await navigateInApp(page, "/dashboard?tab=home");
-  pane = await readyAsk(page);
+  pane = await enterAsk(page, mobile);
   await pane.getByRole("button", { name: "Close Ask", exact: true }).click();
   await expect(pane).toBeHidden();
   await navigateInApp(page, "/dashboard?tab=board");
   await expect(pane).toBeHidden();
   await navigateInApp(page, "/tools");
-  pane = await readyAsk(page);
+  pane = await enterAsk(page, mobile);
   await expect(page.getByTestId("tools-mcp")).toBeVisible();
   await expect(pane.getByTestId("talk-transcript")).toHaveCount(0);
   const discovery = posts.filter(request => isMcpDiscovery(request, localOrigin));
@@ -441,7 +469,7 @@ test("existing Ask renders one genuine free public AGUI answer and retains its c
   try {
     await page.goto("/dashboard?tab=home", { waitUntil: "domcontentloaded" });
     expect(new URL(page.url()).origin, "This case must actually exercise cross-origin browser CORS").not.toBe(new URL(PUBLIC_ASK).origin);
-    const pane = await readyAsk(page);
+    const pane = await enterAsk(page, info.project.name === "mobile");
     expect(requests).toHaveLength(0);
     const responsePending = page.waitForResponse(response => response.url() === PUBLIC_ASK && response.request().method() === "POST");
     await pane.getByLabel("Your question", { exact: true }).fill(BOARD_QUESTION);
