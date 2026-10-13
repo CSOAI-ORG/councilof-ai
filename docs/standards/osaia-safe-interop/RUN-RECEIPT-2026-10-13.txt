@@ -1,0 +1,281 @@
+RUN RECEIPT: CSOAI / SAFE-GALC synthetic fixtures
+Written by a script at 2026-10-13T07:45:32Z. Lines after a $ line are command output, not typed.
+Work area base: CSOAI-ORG/councilof-ai master at 8c89bfccf83cf70200dfd7f1bb36bed30a18c81a
+Host: Linux x86_64. python3 is 3.8.10. python3.11 is 3.11.8.
+Structural checks only. No SAFE-GALC verifier was run. Every record in both fixtures is invented.
+
+== 1. synthetic-retry-v0.1 ==
+
+$ sha256sum -c MANIFEST.sha256
+README.md: OK
+expected-output.json: OK
+scenario-input.json: OK
+validate_fixture.py: OK
+verification-context.json: OK
+[exit 0]
+
+$ python3 -I -B validate_fixture.py
+test_basis_cites_unknown_record (__main__.Tests) ... ok
+test_cannot_infer_two_executions (__main__.Tests) ... ok
+test_correction_basis_without_receipt (__main__.Tests) ... ok
+test_correction_basis_without_sink_record (__main__.Tests) ... ok
+test_correction_on_two_observations_only (__main__.Tests) ... ok
+test_correction_status_differs_from_expected_output (__main__.Tests) ... ok
+test_correction_with_empty_basis (__main__.Tests) ... ok
+test_early_finding_deleted (__main__.Tests) ... ok
+test_early_finding_rewritten (__main__.Tests) ... ok
+test_links_and_correction (__main__.Tests) ... ok
+test_missing_effect_receipt (__main__.Tests) ... ok
+test_orphaned_observation (__main__.Tests) ... ok
+test_receipt_declared_unavailable (__main__.Tests) ... ok
+test_sink_record_declared_unavailable (__main__.Tests) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.002s
+
+OK
+[exit 0]
+
+== 2. The defect in the first version of that checker ==
+The first version is commit da7899226be8b7e9a6263994a2009572be4b8c4d (CSOAI-ORG/councilof-ai pull request 3003).
+Its validate_fixture.py was fetched from that commit. The three data files are byte-identical to that commit:
+
+$ sha256sum /root/safe39-scratch/first/validate_fixture.py | sed 's# .*/#  first-version/#'
+b32d9b0119898b8f5de1822cae6bc2af185eb9eb0b46248b744a97b7d5d3eca1  first-version/validate_fixture.py
+[exit 0]
+
+$ sha256sum scenario-input.json verification-context.json expected-output.json
+326dc535a24a1c76d229955b7f697da528b32b1192fe4dd004161b580cc45ca0  scenario-input.json
+23b79dec07e0e03af48cce4b31384dd3b2a4d6a56cb683b236f7bb263a4eacb3  verification-context.json
+9f1b3e11de204829d5713c29e363f1338b98923881f9e6d5d0af291fb2940141  expected-output.json
+[exit 0]
+
+2a. Seven tampered fixtures given to the first version of check(). A sound checker rejects all seven.
+
+$ python3 -I -B /root/safe39-scratch/repro_defect.py /root/safe39-scratch/first
+1 F2 'observed' on two observations only (basis O1,O2)                     ACCEPTED
+2 F2 'observed' with receipt but no sink record (basis O1,O2,RCPT1)        ACCEPTED
+3 F2 'observed' with sink but no receipt (basis O1,O2,SINK1)               ACCEPTED
+4 F2 'observed' with an empty basis                                        ACCEPTED
+5 receipt RCPT1 declared unavailable in the context                        ACCEPTED
+6 sink record SINK1 declared unavailable in the context                    ACCEPTED
+7 F2 status changed to 'not_observed'; expected-output still says observed ACCEPTED
+accepted 7 of 7 tampered fixtures
+[exit 0]
+
+2b. The controls in the new validate_fixture.py, run against the first version of check().
+    A FAIL or ERROR here is a tampered fixture that the first version did not cleanly reject.
+
+$ python3 -I -B /root/safe39-scratch/prove_fails_without_fix.py /root/lanes-20261013/safe39-fixture/docs/standards/osaia-safe-interop/synthetic-retry-v0.1/validate_fixture.py /root/safe39-scratch/first/validate_fixture.py 2>&1 | grep -E ' \.\.\. |^Ran |^FAILED|^OK|NEW CONTROLS'
+test_basis_cites_unknown_record (new_checker.Tests) ... FAIL
+test_cannot_infer_two_executions (new_checker.Tests) ... ok
+test_correction_basis_without_receipt (new_checker.Tests) ... FAIL
+test_correction_basis_without_sink_record (new_checker.Tests) ... FAIL
+test_correction_on_two_observations_only (new_checker.Tests) ... FAIL
+test_correction_status_differs_from_expected_output (new_checker.Tests) ... FAIL
+test_correction_with_empty_basis (new_checker.Tests) ... FAIL
+test_early_finding_deleted (new_checker.Tests) ... ERROR
+test_early_finding_rewritten (new_checker.Tests) ... ok
+test_links_and_correction (new_checker.Tests) ... ok
+test_missing_effect_receipt (new_checker.Tests) ... ok
+test_orphaned_observation (new_checker.Tests) ... ok
+test_receipt_declared_unavailable (new_checker.Tests) ... FAIL
+test_sink_record_declared_unavailable (new_checker.Tests) ... FAIL
+Ran 14 tests in 0.002s
+FAILED (failures=8, errors=1)
+NEW CONTROLS vs ORIGINAL check(): ran=14 failures=8 errors=1
+[exit 0]
+
+== 3. synthetic-galc-record-link-v0.1 ==
+
+$ sha256sum -c MANIFEST.sha256
+README.md: OK
+build_scenario.py: OK
+expected-output.json: OK
+record-link-mapping.json: OK
+scenario-input.json: OK
+validate_fixture.py: OK
+verification-context.json: OK
+[exit 0]
+
+$ python3 -I -B build_scenario.py --check
+scenario-input.json matches what build_scenario.py builds
+[exit 0]
+
+3a. Standard library only. The schema check is skipped and reported NOT_EVALUATED.
+
+$ python3 -I -B validate_fixture.py
+test_authority_evidence_not_declared (__main__.Tests) ... ok
+test_candidate_schema_objects_only_to_the_two_absent_verifier_outputs (__main__.Tests) ... skipped 'NOT_EVALUATED: set GALC_SCHEMA to safe-galc-v0.1.schema.json at commit b5c12f358fc281fc4beec1528a8db4d125edd879'
+test_comparison_marked_as_evaluated (__main__.Tests) ... ok
+test_comparison_part_marked_as_evaluated (__main__.Tests) ... ok
+test_comparison_removed_from_the_mapping (__main__.Tests) ... ok
+test_containment_check_without_an_operand (__main__.Tests) ... ok
+test_containment_check_without_its_method (__main__.Tests) ... ok
+test_containment_method_marked_as_run (__main__.Tests) ... ok
+test_containment_operand_removed_from_the_context (__main__.Tests) ... ok
+test_context_changed_after_the_fixture_was_built (__main__.Tests) ... ok
+test_correction_drops_evidence_the_earlier_record_compared (__main__.Tests) ... ok
+test_correction_no_longer_names_what_it_supersedes (__main__.Tests) ... ok
+test_denied_attempt_deleted (__main__.Tests) ... ok
+test_earlier_reconciliation_deleted (__main__.Tests) ... ok
+test_evaluations_added_to_scenario_input (__main__.Tests) ... ok
+test_execution_invented_for_the_denied_attempt (__main__.Tests) ... ok
+test_external_effect_status_copied_into_a_galc_field (__main__.Tests) ... ok
+test_first_determination_and_denied_attempt_deleted (__main__.Tests) ... ok
+test_fixture_as_written (__main__.Tests) ... ok
+test_fresh_evidence_used_to_accept_an_expired_determination (__main__.Tests) ... ok
+test_independence_claimed_with_no_verifier_run (__main__.Tests) ... ok
+test_later_attempt_rides_on_the_expired_determination (__main__.Tests) ... ok
+test_later_determination_overlaps_the_first_window (__main__.Tests) ... ok
+test_later_determination_reuses_the_first_approval (__main__.Tests) ... ok
+test_link_carries_a_stale_digest (__main__.Tests) ... ok
+test_link_relation_does_not_fit_the_record_types (__main__.Tests) ... ok
+test_manifest_lists_every_file_with_its_hash (__main__.Tests) ... ok
+test_mapping_points_at_a_field_that_does_not_exist (__main__.Tests) ... ok
+test_overall_result_added_to_expected_output (__main__.Tests) ... ok
+test_overall_result_added_to_scenario_input (__main__.Tests) ... ok
+test_reaction_without_limitations (__main__.Tests) ... ok
+test_rebind_leaves_the_untouched_fixture_unchanged (__main__.Tests) ... ok
+test_reconciles_links_differ_from_record_refs (__main__.Tests) ... ok
+test_reconciliation_result_rewritten_to_matched (__main__.Tests) ... ok
+test_record_position_names_an_unknown_link (__main__.Tests) ... ok
+test_reference_carries_a_stale_digest (__main__.Tests) ... ok
+test_repeat_reaction_counted_as_a_second_reported_state (__main__.Tests) ... ok
+test_repeat_reaction_deleted (__main__.Tests) ... ok
+test_scenario_input_is_what_the_builder_writes (__main__.Tests) ... ok
+test_source_payload_removed (__main__.Tests) ... ok
+test_source_status_changed_without_changing_expected_output (__main__.Tests) ... ok
+test_supersedes_points_at_a_later_record (__main__.Tests) ... ok
+test_uninstantiated_part_hides_its_gap (__main__.Tests) ... ok
+test_unknown_execution_given_a_completion_time (__main__.Tests) ... ok
+test_unknown_execution_rewritten_as_completed (__main__.Tests) ... ok
+test_window_extended_by_editing_the_first_determination (__main__.Tests) ... ok
+
+----------------------------------------------------------------------
+Ran 46 tests in 0.123s
+
+OK (skipped=1)
+[exit 0]
+
+3b. With the candidate JSON Schema, unmodified, from OpenSecureAIAlliance/RFCs PR 39 head commit b5c12f358fc281fc4beec1528a8db4d125edd879
+    (fetched from https://raw.githubusercontent.com/Gary-Gayle/RFCs/b5c12f358fc281fc4beec1528a8db4d125edd879/candidates/safe-galc/v0.1/safe-galc-v0.1.schema.json).
+
+$ sha256sum /root/safe39-scratch/galc/safe-galc-v0.1.schema.json | sed 's# .*/#  #'
+cef899e957fd8a62f1538d2aba5cf434e9c6e0dad410bb96d02a8d8c454d08b4  safe-galc-v0.1.schema.json
+[exit 0]
+
+$ PYTHONPATH=/root/safe39-scratch/pylib python3.11 -c 'from importlib.metadata import version; print("jsonschema", version("jsonschema"), "rfc3339-validator", version("rfc3339-validator"))'
+jsonschema 4.25.1 rfc3339-validator 0.1.4
+[exit 0]
+
+$ GALC_SCHEMA=/root/safe39-scratch/galc/safe-galc-v0.1.schema.json PYTHONPATH=/root/safe39-scratch/pylib python3.11 -B validate_fixture.py 2>&1 | grep -E 'schema|^Ran |^OK|^FAILED'
+test_candidate_schema_objects_only_to_the_two_absent_verifier_outputs (__main__.Tests.test_candidate_schema_objects_only_to_the_two_absent_verifier_outputs) ... ok
+Ran 46 tests in 0.229s
+OK
+[exit 0]
+
+3c. What the unmodified schema says about scenario-input.json, listed in full.
+
+$ PYTHONPATH=/root/safe39-scratch/pylib python3.11 -B -c 'import json
+from jsonschema import Draft202012Validator, FormatChecker
+v = Draft202012Validator(json.load(open("/root/safe39-scratch/galc/safe-galc-v0.1.schema.json")), format_checker=FormatChecker())
+errors = sorted(v.iter_errors(json.load(open("scenario-input.json"))), key=lambda e: e.message)
+for e in errors: print("objection at", list(e.absolute_path), "-", e.message)
+print("objections:", len(errors))'
+objection at [] - 'evaluations' is a required property
+objection at [] - 'overall_result' is a required property
+objections: 2
+[exit 0]
+
+== 4. The candidate's own harness, unmodified, at b5c12f358fc281fc4beec1528a8db4d125edd879, in this environment ==
+This runs the candidate's 22 vectors, not our fixture. It shows the schema and harness behave here as the PR describes.
+
+$ sha256sum safe-galc-v0.1.schema.json safe-galc-v0.1.conformance-vectors.json validate_safe_galc_vectors.py test_safe_galc_vectors.py
+cef899e957fd8a62f1538d2aba5cf434e9c6e0dad410bb96d02a8d8c454d08b4  safe-galc-v0.1.schema.json
+650f0cc0b652035b9a17010b7d2e3e4653c57037d6f380eeaf7900d10f0b8f70  safe-galc-v0.1.conformance-vectors.json
+f9f03521c25f69b5048411af24d7ca8607becb425d542d159ae2ace4c5d30cf8  validate_safe_galc_vectors.py
+6325b12b5e4d8bc1474154b8bcc80bd9ce33ee6e3dc226ffb5a67d2ca22a05b4  test_safe_galc_vectors.py
+[exit 0]
+
+$ PYTHONPATH=/root/safe39-scratch/pylib python3.11 -B validate_safe_galc_vectors.py | grep -c '^PASS: GALC-'
+22
+[exit 0]
+
+$ PYTHONPATH=/root/safe39-scratch/pylib python3.11 -B validate_safe_galc_vectors.py | tail -3
+PASS: eligible semantic oracles are consistent for identical inputs/context
+PASS: 22 ordered vectors materialized with expected structural outcomes
+LIMIT: no cryptographic, semantic, or runtime conformance is claimed
+[exit 0]
+
+$ PYTHONPATH=/root/safe39-scratch/pylib python3.11 -B -m unittest test_safe_galc_vectors 2>&1 | tail -3
+Ran 11 tests in 0.734s
+
+OK
+[exit 0]
+
+== NOT_EVALUATED ==
+- Every SAFE-GALC property, for both fixtures. No evaluations and no overall_result exist.
+- The six proposed comparisons C1 to C6 in synthetic-galc-record-link-v0.1/record-link-mapping.json.
+- The declared containment method. It was not run.
+- Our fixture through the candidate's own harness. That harness reads its own vectors file.
+- Signatures, time proofs, anchoring, custody, observer independence. None exists in either fixture.
+
+== Appendix: the two helper scripts used in section 2 ==
+--- repro_defect.py
+"""Reproduce the checker defect in the ORIGINAL validate_fixture.py (commit da7899226b).
+Each case tampers the fixture so the correction F2 no longer has the evidence the fixture says it needs.
+A sound checker must reject every case. Run from inside the fixture directory."""
+import copy, importlib.util, json, sys
+from pathlib import Path
+here = Path(sys.argv[1]).resolve()
+spec = importlib.util.spec_from_file_location("orig_checker", here / "validate_fixture.py")
+m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+A = json.loads((here / "scenario-input.json").read_text())
+C = json.loads((here / "verification-context.json").read_text())
+E = json.loads((here / "expected-output.json").read_text())
+def case(name, mutate):
+    a, c, e = copy.deepcopy(A), copy.deepcopy(C), copy.deepcopy(E)
+    mutate(a, c, e)
+    try:
+        m.check(a, c, e); verdict = "ACCEPTED"
+    except AssertionError:
+        verdict = "rejected"
+    print("%-74s %s" % (name, verdict)); return verdict
+def set_basis(v):
+    def f(a, c, e): a["findings"][1]["basis"] = v
+    return f
+def unavailable(i):
+    def f(a, c, e):
+        for x in c["evidence"]:
+            if x["id"] == i: x["availability"] = "unavailable"
+    return f
+def status(v):
+    def f(a, c, e): a["findings"][1]["external_effect_status"] = v
+    return f
+r = [
+ case("1 F2 'observed' on two observations only (basis O1,O2)", set_basis(["O1", "O2"])),
+ case("2 F2 'observed' with receipt but no sink record (basis O1,O2,RCPT1)", set_basis(["O1", "O2", "RCPT1"])),
+ case("3 F2 'observed' with sink but no receipt (basis O1,O2,SINK1)", set_basis(["O1", "O2", "SINK1"])),
+ case("4 F2 'observed' with an empty basis", set_basis([])),
+ case("5 receipt RCPT1 declared unavailable in the context", unavailable("RCPT1")),
+ case("6 sink record SINK1 declared unavailable in the context", unavailable("SINK1")),
+ case("7 F2 status changed to 'not_observed'; expected-output still says observed", status("not_observed")),
+]
+print("accepted %d of %d tampered fixtures" % (r.count("ACCEPTED"), len(r)))
+--- prove_fails_without_fix.py
+"""Run the NEW test suite against the ORIGINAL check() (da7899226b) to show which controls fail without the fix.
+usage: prove_fails_without_fix.py NEW_validate_fixture.py ORIGINAL_validate_fixture.py"""
+import importlib.util, sys, unittest
+def load(name, path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m
+new, orig = load("new_checker", sys.argv[1]), load("orig_checker", sys.argv[2])
+new.check = orig.check                       # the old checker under the new controls
+def rejected(self, pattern):                 # the old checker raises bare asserts, so do not match on wording
+    with self.assertRaises(AssertionError):
+        new.check(self.a, self.c, self.e)
+new.Tests.rejected = rejected
+suite = unittest.defaultTestLoader.loadTestsFromTestCase(new.Tests)
+result = unittest.TextTestRunner(verbosity=2).run(suite)
+print("NEW CONTROLS vs ORIGINAL check(): ran=%d failures=%d errors=%d" % (result.testsRun, len(result.failures), len(result.errors)))
