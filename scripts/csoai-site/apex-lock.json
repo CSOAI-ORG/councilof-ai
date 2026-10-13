@@ -1,0 +1,106 @@
+{
+  "schema": "csoai.apex-lock/0.1",
+  "about": "What the csoai-site deploy may ship to https://csoai.org (the did:web:csoai.org origin). csoai-site-deploy.yml builds the source at source.commit and scripts/csoai-site/apex-gate.mjs refuses the deploy unless the built /.well-known tree is exactly well_known below. To change what csoai.org serves, change this file in a reviewed pull request: the pin and the hashes are the review surface.",
+  "source": {
+    "repository": "CSOAI-ORG/csoai-static-deploy2",
+    "commit": "f98e154b0bb45adce8453f3c929edbaf9ffc5d86",
+    "note": "Head of the source's default branch at 2026-10-13T07:16Z. This commit still carries the withdrawn custody note in .well-known/did.json and lacks three keys production serves in csoai-governance.json, so the gate refuses it. Move the pin only to a commit that is merged in the source repository."
+  },
+  "pages": {
+    "project": "csoai-site",
+    "production_branch": "master",
+    "candidate_branch": "apex-candidate",
+    "origin": "https://csoai.org"
+  },
+  "recorded_from_production": {
+    "at": "2026-10-13T07:24:46Z",
+    "origin": "https://csoai.org",
+    "deployment": "8c45f262",
+    "how": "curl --path-as-is, one GET per path, sha256 of the body. Absent means the 1,740-byte HTML fallback with HTTP 200."
+  },
+  "well_known": {
+    "agent-card.json": { "sha256": "fc5f75a3b7ec5fac1150a038afc5d703af066ea9612458b46c0de5ac772919df" },
+    "agent.json": { "sha256": "241a024f640b79f5569d7877fa8c0bbc65c26f94d0822c558d756eb2c94450fa" },
+    "ai-plugin.json": { "sha256": "3dbe45ed34aa4dce9b933a3b4011fc642afcd47d26b98b4beb3b89c4da8232e6" },
+    "api-catalog": { "sha256": "4a7c4dc90396f7edc6949096e9c703fc9f52f0eb47f81e47e95696b1057e013f" },
+    "change-log.txt": { "sha256": "1d7c82311eeb366f011e0da6369bb79134084d232775babcf37094e4c2614b59" },
+    "csoai-governance.json": {
+      "sha256": "0fdc1edefc012e1d2a59282288095c8b960c4ff24579fac8d35146a7f7774923",
+      "note": "984 bytes, as served on 13 Oct 2026. The source at the pin holds an 860-byte file (sha256 cd3bbea8...) without the keys role, board and root."
+    },
+    "did.json": {
+      "mirror": "public/.well-known/did.json",
+      "gspc_board_key_note_sha256": "4cfa7aa5564d72025730fed786362db7de4179c48402d7853b416a3ed20aa0c6",
+      "replaces": ["d55d13f6a7920348ed57ff641063af55cffbe72b049d5bf40b88d284629bb7ad"],
+      "note": "Must be byte-identical to this repository's own copy. gspc_board_key_note_sha256 is the sha256 of the corrected _gspcBoardKeyNote text (622 bytes, correction C-2026-0925-01). replaces is the document production served on 13 Oct 2026 with the withdrawn note."
+    },
+    "llm-manifest.json": { "sha256": "9c491a19c708d58c4fb5128ba9de71048d7c9e53a684d80f2c0565f83d1ee57c" },
+    "llm-policy.txt": { "sha256": "11546bd44202f43f07bf99168d0db88a422a65e0c647be7d140bbb5cb912f5c3" },
+    "mcp.json": { "sha256": "02ac3d0facfd502aac0443151d55db262c97a9bbf7781fa294bb2b9d80cb93a1" },
+    "mcp/server-card.json": { "sha256": "f50c21d327d3e86b808e2f87f5d33252b407fd1310ed2182af35c3b1c85d3937" },
+    "scitt-keys": {
+      "mirror": "public/.well-known/scitt-keys",
+      "note": "Twinned from councilof.ai by the workflow; must equal this repository's own copy. Production served the HTML fallback at this path on 13 Oct 2026, which is why the workflow's post-deploy check has been red since 6 Oct."
+    },
+    "security.txt": { "sha256": "8abd707cc62500d7ef0c45df39cbfa63ea07cccc39959a9e1ff2e8574b5f1024" }
+  },
+  "well_known_absent": ["scitt-configuration", "scitt.json"],
+  "redirects": {
+    "about": "The redirect rules production served on 13 Oct 2026 (07:17Z to 07:29Z), one row per request path. The candidate must answer each path with exactly this status and Location.",
+    "exact": [
+      { "path": "/", "status": 308, "location": "https://councilof.ai/" },
+      { "path": "/some-page", "status": 308, "location": "https://councilof.ai/some-page" },
+      { "path": "/some-page?x=1&y=2", "status": 308, "location": "https://councilof.ai/some-page?x=1&y=2" },
+      { "path": "/a/b/", "status": 308, "location": "https://councilof.ai/a/b/" },
+      { "path": "/A/B", "status": 308, "location": "https://councilof.ai/A/B" },
+      { "path": "/index.html", "status": 308, "location": "https://councilof.ai/index.html" },
+      { "path": "/robots.txt", "status": 308, "location": "https://councilof.ai/robots.txt" },
+      { "path": "/sitemap.xml", "status": 308, "location": "https://councilof.ai/sitemap.xml" },
+      { "path": "/root.json", "status": 308, "location": "https://councilof.ai/root.json" },
+      { "path": "/cards/x.json", "status": 308, "location": "https://councilof.ai/cards/x.json" },
+      { "path": "/api/health", "status": 308, "location": "https://councilof.ai/api/health" },
+      { "path": "/api/health?x=//y", "status": 308, "location": "https://councilof.ai/api/health?x=//y" },
+      { "path": "/.env", "status": 308, "location": "https://councilof.ai/.env" },
+      { "path": "/.well-known", "status": 308, "location": "https://councilof.ai/.well-known" },
+      { "path": "/.well-knownX", "status": 308, "location": "https://councilof.ai/.well-knownX" },
+      { "path": "/.WELL-KNOWN/did.json", "status": 308, "location": "https://councilof.ai/.WELL-KNOWN/did.json" },
+      { "path": "/.well-known/../x", "status": 308, "location": "https://councilof.ai/x" },
+      { "path": "/a//b", "status": 308, "location": "https://councilof.ai/a/b" },
+      { "path": "/a/./b/../c", "status": 308, "location": "https://councilof.ai/a/c" },
+      { "path": "/x%20y?z=%20", "status": 308, "location": "https://councilof.ai/x%20y?z=%20" },
+      { "path": "/a%2Fb", "status": 308, "location": "https://councilof.ai/a%2Fb" },
+      { "path": "/%E2%9C%93/x", "status": 308, "location": "https://councilof.ai/%E2%9C%93/x" },
+      { "path": "/@example.com", "status": 308, "location": "https://councilof.ai/@example.com" },
+      { "path": "/x?next=//example.com", "status": 308, "location": "https://councilof.ai/x?next=//example.com" },
+      { "path": "/?u=//example.com", "status": 308, "location": "https://councilof.ai/?u=//example.com" },
+      { "path": "//example.com", "status": 308, "location": "https://councilof.ai/example.com" },
+      { "path": "//example.com/", "status": 308, "location": "https://councilof.ai/example.com/" },
+      { "path": "//example.com/x", "status": 308, "location": "https://councilof.ai/example.com/x" },
+      { "path": "///example.com/x", "status": 308, "location": "https://councilof.ai/example.com/x" },
+      { "path": "//example.com?x=1", "status": 308, "location": "https://councilof.ai/example.com?x=1" },
+      { "path": "//example.com:443/x", "status": 308, "location": "https://councilof.ai/example.com:443/x" },
+      { "path": "//user@example.com/x", "status": 308, "location": "https://councilof.ai/user@example.com/x" },
+      { "path": "//example.com/..%2f", "status": 308, "location": "https://councilof.ai/example.com/..%2f" },
+      { "path": "/https://example.com", "status": 308, "location": "https://councilof.ai/https:/example.com" },
+      { "path": "/%5Cexample.com/x", "status": 308, "location": "https://councilof.ai/%5Cexample.com/x" },
+      { "path": "/%2F%2Fexample.com/x", "status": 308, "location": "https://councilof.ai/%2F%2Fexample.com/x" },
+      { "path": "/%2F/example.com", "status": 308, "location": "https://councilof.ai/%2F/example.com" },
+      { "path": "/%09//example.com", "status": 308, "location": "https://councilof.ai/%09/example.com" },
+      { "path": "/http:%5C%5Cexample.com", "status": 308, "location": "https://councilof.ai/http:%5C%5Cexample.com" }
+    ],
+    "served_as_did_json": [
+      "/.well-known/did.json",
+      "/.well-known/did.json?x=1",
+      "//.well-known/did.json",
+      "/.well-known//did.json",
+      "/.well-known/./did.json"
+    ],
+    "never_off_host_about": "Request paths where production's exact answer is an artefact of Cloudflare's own path handling (it keeps a raw backslash; the middleware sees it as a slash). Only the rule is checked: the answer must not be a redirect to any host but councilof.ai. On 13 Oct 2026 production answered the first three with 308 to https://councilof.ai/\\example.com/x, https://councilof.ai/\\/example.com and https://councilof.ai/\\\\example.com, and the fourth with HTTP 200 (the HTML fallback).",
+    "never_off_host": [
+      "/\\example.com/x",
+      "/\\/example.com",
+      "/\\\\example.com",
+      "/.well-known/%2e%2e/x"
+    ]
+  }
+}
