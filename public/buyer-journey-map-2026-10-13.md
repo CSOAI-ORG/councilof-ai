@@ -50,7 +50,7 @@ or certificate. Measurement, never certification. Counts on any surface are poin
 - `/pay` and `/x402-buyer-guide.html` are touched by open PRs (2928, 3034) and were left
   alone here; once those land, add the `/services` catalogue link there too.
 - `/tools` links `/api/gspc` and `/quickstart` but no buyable door; it also carries the
-  deliberate negation "GSPC certified" (there is none) which the brand gate's banned-word
+  deliberate negation of a GSPC certification claim (there is none) which the brand gate's banned-word
   scan flags — the cross-link there waits for that wording to be settled.
 - `/start` (OnboardOS) is touched by open PR 2994 — same cross-link is owed there.
 - A stranger landing on any single benchmark page (e.g. `/machbench.html`) still has no
