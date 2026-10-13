@@ -189,6 +189,62 @@
     {
       "accepts": [
         {
+          "amount": "20000",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "csoai_pricing": {
+            "campaign_id": null,
+            "fresh_compute_excluded": true,
+            "normal_amount_atomic": "20000",
+            "offered_amount_atomic": "20000",
+            "pricing_basis": "STANDARD",
+            "product_id": "csoai.product.coverage_evidence",
+            "sku_id": "coverage_evidence"
+          },
+          "description": "Coverage evidence: one assembled row for one named asset from the dated coverage record, not a live chain read. Returns identity, measurement state with method and measured_at, provenance digests, and this record's honest anchor state: evidence packs UNSIGNED (0 signed) until signing runs. States exactly as recorded: DEEP_MEASURED, UNMEASURED_REASON_DOCUMENTED (reason included) or INDEXED_METADATA_ONLY. Free preview gives identity, state and as_of; verification is free on the public board.",
+          "extra": {
+            "decimals": 6,
+            "name": "USD Coin",
+            "symbol": "USDC",
+            "version": "2"
+          },
+          "maxAmountRequired": "20000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "eip155:8453",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/coverage-evidence",
+          "scheme": "exact"
+        }
+      ],
+      "accepts_v1": [
+        {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "description": "Coverage evidence: one assembled row for one named asset from the dated coverage record, not a live chain read. Returns identity, measurement state with method and measured_at, provenance digests, and this record's honest anchor state: evidence packs UNSIGNED (0 signed) until signing runs. States exactly as recorded: DEEP_MEASURED, UNMEASURED_REASON_DOCUMENTED (reason included) or INDEXED_METADATA_ONLY. Free preview gives identity, state and as_of; verification is free on the public board.",
+          "extra": {
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxAmountRequired": "20000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "base",
+          "outputSchema": {
+            "type": "object"
+          },
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/coverage-evidence",
+          "scheme": "exact"
+        }
+      ],
+      "description": "Coverage evidence: one assembled row for one named asset from the dated coverage record, not a live chain read. Returns identity, measurement state with method and measured_at, provenance digests, and this record's honest anchor state: evidence packs UNSIGNED (0 signed) until signing runs. States exactly as recorded: DEEP_MEASURED, UNMEASURED_REASON_DOCUMENTED (reason included) or INDEXED_METADATA_ONLY. Free preview gives identity, state and as_of; verification is free on the public board.",
+      "free_preview": "https://councilof.ai/api/coverage-evidence?asset=tether&preview=1",
+      "method": "GET",
+      "paid_for": "assembly",
+      "url": "https://councilof.ai/api/coverage-evidence?asset=tether"
+    },
+    {
+      "accepts": [
+        {
           "amount": "0",
           "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
           "csoai_pricing": {

@@ -2047,6 +2047,19 @@
       "payment": "x402"
     },
     {
+      "id": "api-coverage-evidence",
+      "protocols": [
+        "http"
+      ],
+      "title": "Coverage evidence row",
+      "description": "Coverage evidence: one assembled row for one named asset from the dated coverage record, not a live chain read. Returns identity, measurement state with method and measured_at, provenance digests, and this record's honest anchor state: evidence packs UNSIGNED (0 signed) until signing runs. States exactly as recorded: DEEP_MEASURED, UNMEASURED_REASON_DOCUMENTED (reason included) or INDEXED_METADATA_ONLY. Free preview gives identity, state and as_of; verification is free on the public board.",
+      "endpoint": "/api/coverage-evidence",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "x402"
+    },
+    {
       "id": "api-request-attestation-post",
       "protocols": [
         "http"
