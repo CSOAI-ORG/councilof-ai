@@ -120,6 +120,8 @@ export default function AssessTool() {
           Waitlist and scope live on <a href="/measure" className="font-semibold text-emerald-800 underline-offset-2 hover:underline">/measure</a>.
           Verify a published card at <a href="/gspc-verify" className="font-semibold text-emerald-800 underline-offset-2 hover:underline">/gspc-verify</a> — free, no account.
           {" "}
+          The published x402 doors are listed at <a href="/services" className="font-semibold text-emerald-800 underline-offset-2 hover:underline">/services</a>. The exact x402 price, where applicable, is disclosed by the individual door.
+          {" "}
           <a href="/contact?arm=ledger" className="font-semibold text-emerald-800 underline-offset-2 hover:underline">
             Need this for an insurer?
           </a>
