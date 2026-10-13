@@ -1,7 +1,10 @@
 /**
  * GET /.well-known/x402 and /.well-known/x402/ — serve the discovery manifest at 200.
- * Was a 308 to x402.json; strict indexers do not follow redirects (x402scan
- * registerFromOrigin treats a redirect as noDiscovery; the IronBridge validator
- * requires 200 application/json with no redirects). Same payload as x402.json.
+ * Strict indexers (x402scan registerFromOrigin, the IronBridge validator) do not follow
+ * redirects, so the suffix-less path must answer 200 application/json itself.
+ *
+ * NOTE the explicit .ts extension: without it, `./x402.json` resolves to a JSON import in
+ * the bundler and the route silently serves empty (caught 2026-10-13 by the IronBridge
+ * grade: "not JSON / empty"). The regression test below asserts the handler identity.
  */
-export { onRequestGet, onRequestHead } from "./x402.json";
+export { onRequestGet } from "./x402.json.ts";
