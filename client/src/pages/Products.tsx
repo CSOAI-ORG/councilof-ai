@@ -222,6 +222,11 @@ export default function Products() {
         <p className="mt-4 text-sm leading-relaxed text-slate-400">
           The board this rail publishes today:{" "}
           <span className="font-semibold text-emerald-300">{board.public_count}</span>{" "}
+          {board.live && board.measured_on ? (
+            <span className="text-slate-300" data-testid="products-board-measured-on">
+              (measured on {board.measured_on}){" "}
+            </span>
+          ) : null}
           {board.live ? (
             <span className="text-slate-500">— read from GET /api/gspc as this page loaded.</span>
           ) : (

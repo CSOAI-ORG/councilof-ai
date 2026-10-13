@@ -90,6 +90,13 @@ describe("/claim-maintenance — the page states the category and links every ar
     expect(page).not.toMatch(/CLAIM_DISPUTED|CLAIM_FALSE|CLAIM_REFUTED|CLAIM_VERIFIED/);
   });
 
+  it("keeps the honest UNSCHEDULED state visible and explains it without promising a read", () => {
+    expect(page).toContain("Next scheduled read");
+    expect(page).toContain("UNSCHEDULED</code> means this registry has no next read currently scheduled");
+    expect(page).toContain("It does not mean a read failed");
+    expect(page).toContain("does not mean a monitoring service was commissioned");
+  });
+
   it("types no count, no price and no verdict — every number is read from the live register", () => {
     expect(page).toContain("read(REGISTER)");
     expect(page).toContain("read(REGISTER_STATIC)");
