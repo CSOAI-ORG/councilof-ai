@@ -167,6 +167,7 @@
   "mode": "challenge-only",
   "mode_note": "402 challenges are complete (asset, amount, payTo) but no facilitator is provisioned, so no receipt can settle and no paid artefact is granted. Nothing is charged. Verification stays free.",
   "network": "eip155:8453",
+  "no_sale_answers": "A resource that carries no_sale reads live state before it offers anything. Unpaid, it answers 402 with this entry's accepts[] when that read succeeds; otherwise it answers no_sale.status with a JSON body that contains every field of no_sale.body, requests no payment and sends nothing to a facilitator. Read that answer as the door declining to sell. Any other non-402 answer from a listed resource is a mismatch between this manifest and the door.",
   "not": [
     "score",
     "certificate",
@@ -760,6 +761,20 @@
       "description": "Wrapped-asset parity evidence: one signed card of one bridged or wrapped token pair, read live from public RPC. Reads the wrapped totalSupply and the origin-chain bridge-escrow balance at finalized blocks whose hash a second RPC operator confirmed, raw reads hashed. States: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
       "free_preview": "https://councilof.ai/api/wrapper?id=<wrapped-symbol:chain>&preview=1",
       "method": "GET",
+      "no_sale": {
+        "body": {
+          "payment": {
+            "requested": false,
+            "sent_to_facilitator": false,
+            "settled": false
+          },
+          "preview_only": true,
+          "state": "UNMEASURED"
+        },
+        "note": "Nothing is sold while the state is UNMEASURED: this answer is 200, not 402, and no payment is requested. The free preview stays free; read it again later — public RPC endpoints recover on their own.",
+        "status": 200,
+        "when": "nothing this request asks for could be read from the chain: the state is UNMEASURED"
+      },
       "paid_for": "issuance",
       "url": "https://councilof.ai/api/wrapper?id=usdc.e:arbitrum"
     },
@@ -877,6 +892,20 @@
       "description": "Wrapped-asset parity evidence for USDC: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
       "free_preview": "https://councilof.ai/api/wrapper/asset/usdc?preview=1",
       "method": "GET",
+      "no_sale": {
+        "body": {
+          "payment": {
+            "requested": false,
+            "sent_to_facilitator": false,
+            "settled": false
+          },
+          "preview_only": true,
+          "state": "UNMEASURED"
+        },
+        "note": "Nothing is sold while the state is UNMEASURED: this answer is 200, not 402, and no payment is requested. The free preview stays free; read it again later — public RPC endpoints recover on their own.",
+        "status": 200,
+        "when": "nothing this request asks for could be read from the chain: the state is UNMEASURED"
+      },
       "paid_for": "issuance",
       "url": "https://councilof.ai/api/wrapper/asset/usdc"
     },
@@ -936,6 +965,20 @@
       "description": "Wrapped-asset parity evidence for USDT: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
       "free_preview": "https://councilof.ai/api/wrapper/asset/usdt?preview=1",
       "method": "GET",
+      "no_sale": {
+        "body": {
+          "payment": {
+            "requested": false,
+            "sent_to_facilitator": false,
+            "settled": false
+          },
+          "preview_only": true,
+          "state": "UNMEASURED"
+        },
+        "note": "Nothing is sold while the state is UNMEASURED: this answer is 200, not 402, and no payment is requested. The free preview stays free; read it again later — public RPC endpoints recover on their own.",
+        "status": 200,
+        "when": "nothing this request asks for could be read from the chain: the state is UNMEASURED"
+      },
       "paid_for": "issuance",
       "url": "https://councilof.ai/api/wrapper/asset/usdt"
     },
@@ -995,6 +1038,20 @@
       "description": "Wrapped-asset parity evidence for DAI: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
       "free_preview": "https://councilof.ai/api/wrapper/asset/dai?preview=1",
       "method": "GET",
+      "no_sale": {
+        "body": {
+          "payment": {
+            "requested": false,
+            "sent_to_facilitator": false,
+            "settled": false
+          },
+          "preview_only": true,
+          "state": "UNMEASURED"
+        },
+        "note": "Nothing is sold while the state is UNMEASURED: this answer is 200, not 402, and no payment is requested. The free preview stays free; read it again later — public RPC endpoints recover on their own.",
+        "status": 200,
+        "when": "nothing this request asks for could be read from the chain: the state is UNMEASURED"
+      },
       "paid_for": "issuance",
       "url": "https://councilof.ai/api/wrapper/asset/dai"
     },

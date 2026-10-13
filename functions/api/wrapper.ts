@@ -54,6 +54,7 @@ import { signPayload, canonicalBytes, sha256Hex, PAYLOAD_CAP_BYTES } from "../_l
 import { VERDICT_RE } from "./rwa/evidence";
 import { WRAPPER_ROSTER } from "./_wrapper_roster";
 import { WRAPPER_DESCRIPTION } from "./_x402_descriptions";
+import { NO_SALE_UNMEASURED, noSale } from "./_x402_no_sale";
 import RPC_LIST from "./_evm_rpcs.json";
 
 type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string; REVENUE_KV?: KVNamespace };
@@ -337,8 +338,10 @@ export async function previewCardFor(entry: RosterEntry, built: Awaited<ReturnTy
   return toPreview({ ...envelopeFor(entry, built), sha256, sig_ed25519: null });
 }
 
-export const NOT_SOLD =
-  "Nothing is sold while the state is UNMEASURED: this answer is 200, not 402, and no payment is requested. The free preview stays free; read it again later — public RPC endpoints recover on their own.";
+// The no-sale answer — its text, its declared shape and its builder — lives in ./_x402_no_sale, so
+// /.well-known/x402.json can publish the same object without importing this door. Re-exported here:
+// the per-asset door reads it from this module.
+export { NOT_SOLD, NO_SALE_UNMEASURED, noSale } from "./_x402_no_sale";
 
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const url = new URL(request.url);
@@ -408,15 +411,12 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     return json({
       schema: "csoai.wrapper-parity/0.1",
       kind: "preview",
-      preview_only: true,
       id,
-      state: "UNMEASURED",
       reason: payload.error ?? null,
       card: await previewCardFor(entry, built),
-      not_sold: NOT_SOLD,
-      payment: { requested: false, presented: paid, sent_to_facilitator: false, settled: false },
+      ...noSale(paid), // preview_only, state, not_sold, payment — the answer the manifest declares as no_sale
       rail: railMode(env),
-    });
+    }, NO_SALE_UNMEASURED.status);
   }
 
   if (preview) {

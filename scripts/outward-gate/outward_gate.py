@@ -1068,6 +1068,35 @@ def x402_compare(manifest, challenges):
     return bad, n
 
 
+def _contains(got, want):
+    """Every field of `want` is in `got` with the same value, at any depth. Lists and scalars compare whole."""
+    if isinstance(want, dict):
+        return isinstance(got, dict) and all(k in got and _contains(got[k], v) for k, v in want.items())
+    return type(got) is type(want) and got == want
+
+
+def x402_no_sale(res, status, body, payment_required_header=False):
+    """Is this non-402 answer the no-sale answer the manifest entry declares (resources[].no_sale)?
+
+    A door that reads live state before it offers has two honest unpaid answers: the 402, and a
+    declared answer that requests nothing (the wrapper doors answer 200 preview-only while a chain
+    read is UNMEASURED). On 13 Oct 2026 this gate read that 200 as a paid door with four wrong
+    fields. It is neither four mismatches nor a pass by default: it passes only when the manifest
+    declares it and the live body carries every declared field. A declaration that does not say
+    payment.requested is false is not a no-sale declaration and excuses nothing.
+    """
+    d = res.get("no_sale")
+    if not isinstance(d, dict) or not isinstance(d.get("body"), dict):
+        return False
+    if (d["body"].get("payment") or {}).get("requested") is not False:
+        return False
+    if status == 402 or status != d.get("status") or not isinstance(body, dict):
+        return False
+    if "accepts" in body or payment_required_header:
+        return False
+    return _contains(body, d["body"])
+
+
 def x402_artifact(ctx):
     h, m = ctx.http, ctx.x402
     c = []
@@ -1076,19 +1105,36 @@ def x402_artifact(ctx):
                 "checks": [R("hygiene.resolves", FAIL, "x402.json not served as JSON", OWN_DEV)]}
     c.append(R("hygiene.resolves", PASS, f"{len(m.get('resources', []))} resources"))
     paid = [res for res in m.get("resources", []) if str(res.get("amount", "")) != "0"]
-    chal = {}
+    # One unpaid GET per paid resource. Three outcomes, kept apart: a 402 (its four fields are compared
+    # below), the no-sale answer the manifest declares for that resource, or neither — ONE mismatch,
+    # named for what it is, not four invented field differences against a challenge that never came.
+    chal, declined, unanswered = {}, [], []
     for res in paid:
         if res.get("method", "GET") != "GET":
             continue
         r = h.get(res["url"], max_bytes=400_000, cache=False)
-        chal[res["url"]] = decode_402(r) if r.status == 402 else None
-        if r.status != 402:
-            chal[res["url"]] = {"accepts": [{"network": f"<HTTP {r.status or r.error}>"}]}
+        if r.status == 402:
+            chal[res["url"]] = decode_402(r)
+            continue
+        path = urllib.parse.urlsplit(res["url"]).path
+        try:
+            body = r.json()
+        except Exception:
+            body = None
+        if x402_no_sale(res, r.status, body, bool(r.headers.get("payment-required"))):
+            declined.append(path)
+        else:
+            unanswered.append(f"{path}: no 402 challenge (HTTP {r.status or r.error}) and not a no-sale answer the manifest declares")
     bad, n = x402_compare(m, chal)
     fields = collections.Counter(b.split(": ", 1)[1].split(" ")[0] for b in bad if ": " in b)
+    bad = unanswered + bad
+    seen = len(chal) + len(unanswered) + len(declined)
+    said_no = (f"; {len(declined)} gave the no-sale answer the manifest declares for it, nothing requested "
+               f"({', '.join(declined)})") if declined else ""
     c.append(R("consistency.x402_manifest_vs_live_402", FAIL if bad else PASS,
-               (f"{len(bad)} mismatches over {n} paid resources (by field {dict(fields)}); e.g. " + "; ".join(bad[:4])) if bad
-               else f"network/amount/asset/extra.name equal on all {n} paid resources", OWN_DEV))
+               (f"{len(bad)} mismatches over {seen} paid resources ({len(unanswered)} without a 402 challenge; "
+                f"by field {dict(fields)}){said_no}; e.g. " + "; ".join(bad[:4])) if bad
+               else f"{seen} paid resources: {n} answered 402 with network/amount/asset/extra.name equal to the manifest{said_no}", OWN_DEV))
     # MCP lists in the manifest vs live tools/list
     mm = m.get("mcp") or {}
     if ctx.tools is not None and (mm.get("free_tools") or mm.get("paid_tools")):
