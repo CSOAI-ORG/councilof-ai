@@ -1,8 +1,20 @@
 name: hf-fin-shells-measure
+# The run title says what is signed and for which branch. A master dispatch always has head
+# branch master, so the landers find their own run by this title (scripts/sign_land_branch.py).
+run-name: sign ${{ inputs.target || 'financial' }} ${{ inputs.land_branch || github.ref_name }}
 
 # Sign compact financial-measure payloads via OIDC → /api/board-sign.
 # Filename contains hf-fin-shells so Pages OIDC allowlist matches.
 # Never laptop-sign. Never invent a %. Risk verdict stays UNMEASURED.
+#
+# Card targets (mill, runpod) have two dispatch forms.
+#   Master mode (the one the landers use): dispatch on master with land_branch set. The
+#     workspace is master, so master's scripts ask for the signature. The landing branch is
+#     data: for mill, two directories are read from it; for runpod, nothing is (the cards come
+#     from the intake artifact). The signed files are committed onto that branch.
+#   Branch mode (the old form, kept as the fallback): dispatch on the landing branch with no
+#     land_branch. That branch's own copy of this file and of scripts/ runs. It goes when
+#     /api/board-sign accepts only master.
 
 on:
   workflow_dispatch:
@@ -24,6 +36,10 @@ on:
         description: "Exact body.run_id to sign when target=mill; required to avoid signing the whole legacy inbox"
         type: string
         required: false
+      land_branch:
+        description: "Master dispatch only (mill, runpod): the landing branch that is read as data and receives the signed files. runpod/land-<intake_run_id> or mill/land-<name>"
+        type: string
+        required: false
 
 concurrency:
   group: hf-fin-shells-measure
@@ -43,22 +59,47 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          # mill cards batch to the dispatch branch (auto-eat-feed / mill PR), never 90s-push master
+          # mill cards batch to the dispatch branch (auto-eat-feed / mill PR), never 90s-push master.
+          # On a master dispatch this is master's commit: the workspace, and every script run
+          # below, is master's. The landing branch is never checked out here.
           ref: ${{ (inputs.target == 'mill' || inputs.target == 'runpod') && github.sha || 'master' }}
           fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      # master: dispatched on master with a landing branch named in the input (checked: the name
+      #         pattern, runpod bound to the intake run id, the branch exists).
+      # branch: the old form, dispatched on the landing branch itself.
+      # direct: financial and ledger. A mill or runpod dispatch on master with no landing
+      #         branch is refused: it would have nowhere to push but master.
+      - name: Resolve the signing mode (master's code with the landing branch as data, or the old branch dispatch)
+        id: mode
+        env:
+          SIGN_TARGET: ${{ inputs.target || 'financial' }}
+          LAND_BRANCH: ${{ inputs.land_branch }}
+          INTAKE_RUN_ID: ${{ inputs.intake_run_id }}
+          DISPATCH_REF: ${{ github.ref }}
+        run: |
+          set -euo pipefail
+          python3 scripts/sign_land_branch.py mode --target "$SIGN_TARGET" --dispatch-ref "$DISPATCH_REF" \
+            --land-branch "$LAND_BRANCH" --intake-run-id "$INTAKE_RUN_ID" --remote origin \
+            --github-output "$GITHUB_OUTPUT"
+      - name: Self-test the landing-branch helper before it reads or writes a branch (master dispatch only)
+        if: steps.mode.outputs.mode == 'master'
+        run: python3 -m unittest discover -s scripts -p test_sign_land_branch.py
       - name: Prepare only the verified RunPod artifact
         if: inputs.target == 'runpod'
         env:
           GH_TOKEN: ${{ github.token }}
           INTAKE_RUN_ID: ${{ inputs.intake_run_id }}
           DISPATCH_REF: ${{ github.ref }}
+          SIGN_MODE: ${{ steps.mode.outputs.mode }}
         run: |
           set -euo pipefail
-          [[ "$DISPATCH_REF" == refs/heads/* && "$DISPATCH_REF" != refs/heads/master ]] || {
-            echo "RunPod signing must dispatch on a review branch; signed output never pushes master directly"
+          # Master is admitted only in master mode: the signed files then go to the landing
+          # branch the mode step checked, never to master.
+          [[ "$SIGN_MODE" == master || ( "$DISPATCH_REF" == refs/heads/* && "$DISPATCH_REF" != refs/heads/master ) ]] || {
+            echo "RunPod signing dispatches on master with land_branch set, or on a review branch; signed output never pushes master directly"
             exit 1
           }
           [[ "$INTAKE_RUN_ID" =~ ^[1-9][0-9]*$ ]] || { echo "A numeric intake run ID is required"; exit 1; }
@@ -67,6 +108,17 @@ jobs:
             --run-id "$INTAKE_RUN_ID" \
             --out "$RUNNER_TEMP/runpod-signing-approved" \
             --allowlist "$GITHUB_WORKSPACE/scripts/runpod_gspc_bank_allowlist.current.json"
+      # Master mode, mill: the unsigned cards and their evidence are on the landing branch. Only
+      # what that branch added under public/interop/mill-cards-unsigned and
+      # public/interop/mill-evidence is written into the workspace (regular files only). Its
+      # scripts, workflows and everything else are neither read nor run.
+      - name: Read the landing branch as data (two directories only; master's code stays in the workspace)
+        if: steps.mode.outputs.mode == 'master' && inputs.target == 'mill'
+        env:
+          LAND_BRANCH: ${{ inputs.land_branch }}
+        run: |
+          set -euo pipefail
+          python3 scripts/sign_land_branch.py overlay --land-branch "$LAND_BRANCH"
       - name: Select one exact mill run
         if: inputs.target == 'mill'
         env:
@@ -165,8 +217,27 @@ jobs:
           out=$(node scripts/build-regulatory-inventory.mjs --version); echo "$out"
           case "$out" in *VERSIONED*) python3 scripts/ots_manifest_rebuild.py --apply && node scripts/llms-txt.mjs ;; esac
           node scripts/regulatory-inventory-gate.mjs   # the build:client step must now pass
-      - name: commit signed cards
+      # Master mode: the workspace is master, so nothing is committed here. The output files this
+      # run changed (the same path lists as the step below) are committed on top of the landing
+      # branch tip and pushed there. Master is refused as a target. Master is not merged into the
+      # branch: that push could carry workflow-file changes, which a workflow token is expected
+      # to be refused for (not tested here), and the commit needs none of it.
+      - name: commit signed cards onto the landing branch (master dispatch; the branch is data)
+        id: land_commit
+        if: steps.mode.outputs.mode == 'master'
+        env:
+          SIGN_TARGET: ${{ inputs.target }}
+          LAND_BRANCH: ${{ inputs.land_branch }}
+          INTAKE_RUN_ID: ${{ inputs.intake_run_id }}
+        run: |
+          set -euo pipefail
+          python3 scripts/sign_land_branch.py commit --target "$SIGN_TARGET" --land-branch "$LAND_BRANCH" \
+            --intake-run-id "$INTAKE_RUN_ID" \
+            --message "${SIGN_TARGET}-measure: sign compact cards via OIDC board-sign" \
+            --github-output "$GITHUB_OUTPUT"
+      - name: commit signed cards (branch dispatch, or financial and ledger)
         id: commit
+        if: steps.mode.outputs.mode != 'master'
         env:
           SIGN_TARGET: ${{ inputs.target || 'financial' }}
           DISPATCH_BRANCH: ${{ github.ref_name }}

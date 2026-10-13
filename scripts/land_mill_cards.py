@@ -372,8 +372,9 @@ def pr_body(rep: dict, mill_report: dict | None, run_id: str) -> str:
         f"Lands **{len(rep['landed'])}** UNSIGNED mill cards from `hub-queue-mill` run `{run_id}` into "
         "`public/interop/mill-cards-unsigned/` (the inbox `scripts/sign_mill_cards.py` reads).",
         "",
-        "Sign: `hf-fin-shells-measure.yml` (target=mill) was dispatched on this branch — OIDC → `/api/board-sign`, "
-        "signed cards are pushed back here as `public/interop/mill-cards-signed/signed-*.json`.",
+        "Sign: `hf-fin-shells-measure.yml` (target=mill) is dispatched for this branch — OIDC → `/api/board-sign`, "
+        "signed cards are pushed back here as `public/interop/mill-cards-signed/signed-*.json`. "
+        "The signer's run is titled `sign mill <this branch>`; head branch master means master's code signed.",
         "",
         "Nothing here is MEASURED. A hub-queue (id, axis) cell flips only after merge, and only if the signed card "
         "verifies VALID under the live DID with n≥30 and its current v0.2 admission receipt revalidates "

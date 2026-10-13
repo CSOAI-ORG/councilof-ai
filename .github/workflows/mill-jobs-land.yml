@@ -14,6 +14,9 @@ name: HF-Jobs mill — land the staged cards
 #
 # It does NOT sign, does not decide MEASURED (sign_mill_cards.py sets status from n), does not
 # touch the pod, deletes nothing from the dataset, and never writes master.
+#
+# The signer is dispatched on master with the landing branch as an input (land_branch), so
+# master's code requests the signature and the branch is data. scripts/sign_land_branch.py.
 
 on:
   schedule:
@@ -98,7 +101,7 @@ jobs:
           python3 scripts/land_mill_cards.py --staged staged --run-id "$RUN_ID" --require-evidence --pr-body staged/PR-BODY.md --github-output "$GITHUB_OUTPUT"
           echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
 
-      - name: branch, push, PR, dispatch the OIDC signer on the branch
+      - name: branch, push, PR, dispatch the OIDC signer for the branch (on master; the branch is data)
         id: pr
         if: steps.land.outputs.landed != '0'
         env:
@@ -116,23 +119,30 @@ jobs:
           gh pr create --base master --head "$BR" \
             --title "mill: ${{ steps.land.outputs.landed }} cards from HF Jobs (run ${{ github.run_id }}) — OIDC sign pending, nothing MEASURED" \
             --body-file staged/PR-BODY.md
-          gh workflow run hf-fin-shells-measure.yml --ref "$BR" -f target=mill -f mill_run_id="${RUN_ID}"
+          # The signer is dispatched on master with this branch as an input: master's scripts read
+          # the cards here as data and ask for the signature; this branch's own code is not run.
+          # The script writes signer_mode and signer_after for the wait step.
+          python3 scripts/sign_land_branch.py dispatch --target mill --land-branch "$BR" --run-id "${RUN_ID}" \
+            --github-output "$GITHUB_OUTPUT"
           if ! gh workflow run pr-gates.yml --ref "$BR" 2>/dev/null; then
             echo "OPERATOR ACTION REQUIRED: run: gh workflow run pr-gates.yml --ref $BR" >&2
           fi
 
+      # The run is on master, so it is found by its run-name ("sign mill <branch>") among runs newer
+      # than the dispatch, not by --branch. If it completes without success the old branch dispatch
+      # is started once, with a SIGNER FALLBACK warning in this log and the summary. As before,
+      # the verdict table below is written whatever the signer's conclusion was.
       - name: wait for signer, then verify DID signature and current admission (no key here)
         if: steps.land.outputs.landed != '0'
+        env:
+          RUN_ID: ${{ steps.land.outputs.run_id }}
+          SIGNER_MODE: ${{ steps.pr.outputs.signer_mode }}
+          SIGNER_AFTER: ${{ steps.pr.outputs.signer_after }}
         run: |
           set -euo pipefail
           BR="${{ steps.pr.outputs.branch }}"
-          sleep 20
-          for i in $(seq 1 40); do
-            ST=$(gh run list --workflow hf-fin-shells-measure.yml --branch "$BR" --json status -L 1 -q '.[0].status' || true)
-            echo "signer status=${ST:-?}"
-            [ "$ST" = "completed" ] && break
-            sleep 15
-          done
+          python3 scripts/sign_land_branch.py wait --target mill --land-branch "$BR" --run-id "${RUN_ID}" \
+            --mode "$SIGNER_MODE" --after "$SIGNER_AFTER" --initial-sleep 20 --tries 40 --interval 15
           git fetch origin "$BR"
           git checkout -q FETCH_HEAD -- public/interop/mill-cards-signed || true
           curl -fsSL -A "Mozilla/5.0 csoai-mill-jobs-land" https://councilof.ai/.well-known/did.json -o did.json

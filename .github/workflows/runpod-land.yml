@@ -7,6 +7,8 @@ name: runpod-land
 # 624 pod runs had sat in the private intake unsigned). This does those steps on every
 # successful intake: review branch, signer dispatch, wait, verify VALID under the live DID,
 # PR. Human merge is the only gate. Never signs here. Never stamps MEASURED.
+# The signer is dispatched on master with the review branch as an input (land_branch), so
+# master's code requests the signature and the branch is data. scripts/sign_land_branch.py.
 
 on:
   workflow_run:
@@ -67,7 +69,7 @@ jobs:
             --intake-completed-at "$at" --status-json runpod-land-status.json \
             --github-output "$GITHUB_OUTPUT"
 
-      - name: review branch (idempotent) + dispatch the OIDC signer on it
+      - name: review branch (idempotent) + dispatch the OIDC signer for it (on master; the branch is data)
         id: br
         if: steps.art.outputs.cards != '0'
         run: |
@@ -83,26 +85,29 @@ jobs:
             git commit --allow-empty -m "runpod: landing branch for intake run ${RUN_ID} (${{ steps.art.outputs.cards }} verified unsigned pod cards) — OIDC sign pending, nothing MEASURED"
             git push origin "HEAD:$BR"
           fi
-          # The signer refuses master and requires the numeric intake run id (its own guards).
-          gh workflow run hf-fin-shells-measure.yml --ref "$BR" -f target=runpod -f intake_run_id="${RUN_ID}"
-          echo "dispatched hf-fin-shells-measure target=runpod intake_run_id=${RUN_ID} on $BR"
+          # The signer is dispatched on master with this branch as an input: master's scripts ask
+          # for the signature and this branch only receives the signed files. It still requires
+          # the numeric intake run id, and it accepts no branch but runpod/land-<that id>.
+          # The script writes signer_mode and signer_after for the wait step.
+          python3 scripts/sign_land_branch.py dispatch --target runpod --land-branch "$BR" --run-id "${RUN_ID}" \
+            --github-output "$GITHUB_OUTPUT"
 
+      # The run is on master, so it is found by its run-name ("sign runpod <branch>") among runs
+      # newer than the dispatch, not by --branch. If it completes without success the old branch
+      # dispatch is started once, with a SIGNER FALLBACK warning in this log and the summary.
       - name: wait for the signer
         id: wait
         if: steps.art.outputs.cards != '0'
+        env:
+          SIGNER_MODE: ${{ steps.br.outputs.signer_mode }}
+          SIGNER_AFTER: ${{ steps.br.outputs.signer_after }}
         run: |
           set -euo pipefail
           BR="${{ steps.br.outputs.branch }}"
-          sleep 30
-          CO=""
-          for i in $(seq 1 60); do
-            read -r RID ST CO <<< "$(gh run list --workflow hf-fin-shells-measure.yml --branch "$BR" --json databaseId,status,conclusion -L 1 -q '.[0]|"\(.databaseId) \(.status) \(.conclusion)"' || echo "")"
-            echo "signer run=${RID:-?} status=${ST:-?} conclusion=${CO:-?}"
-            [ "${ST:-}" = "completed" ] && break
-            sleep 20
-          done
-          echo "conclusion=${CO:-unknown}" >> "$GITHUB_OUTPUT"
-          [ "${CO:-}" = "success" ] || { echo "signer did not succeed (${CO:-unknown}) — no PR; the branch stays for inspection"; exit 1; }
+          python3 scripts/sign_land_branch.py wait --target runpod --land-branch "$BR" --run-id "${RUN_ID}" \
+            --mode "$SIGNER_MODE" --after "$SIGNER_AFTER" --initial-sleep 30 --tries 60 --interval 20 \
+            --require-success --github-output "$GITHUB_OUTPUT" \
+            || { echo "signer did not succeed — no PR; the branch stays for inspection"; exit 1; }
 
       - name: verify VALID under the live DID (verification only — no key here), then PR
         if: steps.art.outputs.cards != '0' && steps.wait.outputs.conclusion == 'success'
@@ -167,6 +172,7 @@ jobs:
           {
             echo "## runpod-land"
             echo "- intake run: $RUN_ID · artifact outcome: ${{ steps.art.outputs.outcome || 'step failed before classification' }} · cards in artifact: ${{ steps.art.outputs.cards || 'unknown' }} · signer: ${{ steps.wait.outputs.conclusion || 'not dispatched' }} · branch: ${{ steps.br.outputs.branch || '-' }}"
+            echo "- signer mode: ${{ steps.wait.outputs.signer_mode || steps.br.outputs.signer_mode || '-' }} (master = master's code signed; branch-fallback = the master run did not succeed and the old branch dispatch was used) · signer run: ${{ steps.wait.outputs.signer_run_id || '-' }}"
             echo "- reason: ${ART_REASON:-none recorded}"
             if [ -f runpod-land-status.json ]; then
               echo '```json'; cat runpod-land-status.json; echo '```'
