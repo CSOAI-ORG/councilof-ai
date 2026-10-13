@@ -300,6 +300,8 @@ function discover() {
     // AEO regulatory-explainer seed pages (22) — regulator/procurement citation surface.
     // Absent from heuristic discovery (blog deep links are only reachable via /blog/:slug),
     // so each needs an explicit snapshot or the static host serves an honest-404.
+    "/blog/how-to-verify-an-ai-measurement", // restored 2026-10-12 (blog-published.json)
+    "/blog/keeping-ai-claims-current", // restored 2026-10-12 (blog-published.json)
     "/blog/ai-insurance-verified-measurement",
     "/blog/ai-audit-best-practices", // listed on /blog but 404 live (Pages serves 404.html for non-prerendered paths); brand-gate-checked
     "/blog/ai-risk-register",
