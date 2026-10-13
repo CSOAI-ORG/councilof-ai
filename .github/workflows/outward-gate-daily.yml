@@ -1,0 +1,145 @@
+# The daily outward gate scorecard for the live site, made on a GitHub runner.
+#
+# WHY. The owner's rule: nothing goes out (no email, no notice, no new publication) unless its artifact
+# scores 100% on the outward gate. The daily scorecard came from an Oracle cron (06:40Z,
+# scripts/outward-gate/run.sh). That box fell under its free-disk floor: the last run that wrote a
+# scorecard was 8 Oct 2026 07:14Z, and every day after it was skipped (12 Oct: FAILED_DISK_FLOOR).
+# With no scorecard nothing can meet the rule. Since 6 Oct 2026 GitHub master is the single writer, so
+# the daily read now runs here: master's gate, a clean runner, no disk to fill.
+#
+# WHAT IT DOES. Checks out master, runs the gate over the live surfaces, uploads scorecard.json and
+# SCORECARD.md as a workflow artifact, and writes the scorecard to the job summary.
+#
+# WHAT IT DOES NOT DO. It measures only. It holds one permission (contents: read) and no secret, so it
+# cannot commit, push, open a pull request, send or publish.
+#
+# GREEN DOES NOT MEAN 100%. A score below 100% is the report, not a failure: the gate exits 0 on any
+# score and this job stays green. The job goes red only when the gate could not measure: its rules did
+# not load, it crashed, it wrote no scorecard, or it could not read the live board. Red means
+# UNMEASURED today. It never means a low score. Read the summary table for the scores.
+#
+# SCOPE. --artifacts live: the site pages, text surfaces, agent card, x402 manifest, MCP server,
+# registry entries, DID and APIs. The Oracle job ran --artifacts all. Datasets and packages are not
+# scored here yet. The capsule batches and the notice queue live on the Oracle disk, and notice drafts
+# name their recipients, so they must not be scored on a public runner.
+#
+# POLITE. The gate sends at most one request per second per host as CSOAI-outward-gate/0.1. One run at
+# a time: a second run waits instead of doubling the rate.
+#
+# TRIGGERS. Once a day, by hand, and once on a pull request that edits this file, so a change to the
+# workflow is tried on a runner before it merges. Every trigger scores master's gate, never the branch.
+
+name: outward-gate-daily
+
+on:
+  schedule:
+    - cron: "52 4 * * *"   # daily 04:52 UTC: off the hour, 92 min after the 03:20 deploy cron, before the 06:00-07:15 pile-up
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/outward-gate-daily.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: outward-gate-daily
+  cancel-in-progress: false
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+
+      - name: Gate dependency (signature checks)
+        run: python3 -m pip install -q cryptography
+
+      # The gate reads its banned strings from scripts/brand-gate.mjs through node. When they do not load
+      # (no node, or a rule Python cannot read, which is how the gate sat broken until #3106) it fails
+      # closed on every artifact and nothing can score 100%. In a job that reports and does not block,
+      # that would be a green run with a scorecard that is wrong for a reason nobody sees. So it stops
+      # here, before a single request is sent.
+      - name: Preflight - the gate can load its rules and verify signatures
+        run: |
+          set -euo pipefail
+          node --version
+          python3 --version
+          python3 - <<'PY'
+          import sys
+          import cryptography
+          sys.path.insert(0, "scripts/outward-gate")
+          import outward_gate as og
+          try:
+              rules = og.load_brand_rules()
+          except Exception as e:
+              print("load_brand_rules raised", type(e).__name__, e, file=sys.stderr)
+              rules = False
+          if not rules:
+              sys.exit("UNMEASURED: the scripts/brand-gate.mjs rules did not load, so no artifact could score 100%")
+          print("cryptography", cryptography.__version__, "- brand-gate rules loaded:", len(rules))
+          PY
+
+      # The exit code is the gate's own. It is 0 on any score. Do not add continue-on-error or a
+      # "|| true" here: a crash must show as a red run, not as a missing scorecard on a green one.
+      - name: Run the outward gate over the live surfaces (measures only)
+        run: python3 scripts/outward-gate/outward_gate.py run --artifacts live --out out/
+
+      - name: Scorecard to the job summary
+        if: always()
+        run: |
+          set -euo pipefail
+          {
+            echo "## Outward gate, daily: live surfaces"
+            echo
+            echo "Gate code: master at \`$(git rev-parse HEAD)\`. Command: \`python3 scripts/outward-gate/outward_gate.py run --artifacts live --out out/\`."
+            echo
+            echo "Report only. A score below 100% does not fail this job. A red run means the gate could not measure."
+            echo
+            if [ -s out/SCORECARD.md ]; then
+              head -c 900000 out/SCORECARD.md
+            else
+              echo "**UNMEASURED.** The gate wrote no scorecard in this run. Read the log of the step that failed."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the scorecard
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: outward-gate-scorecard
+          path: |
+            out/scorecard.json
+            out/SCORECARD.md
+          if-no-files-found: warn
+          retention-days: 90
+          overwrite: true
+
+      # Last, so the summary and the artifact above are written either way. This does not look at the
+      # scores. It asks one thing: did the gate read the site? If the runner was refused at the edge, or
+      # the site was down, every artifact fails for a reason that is not the artifact, and the scorecard
+      # is not a reading. That is UNMEASURED, and it must not sit on a green run.
+      - name: The gate measured - a scorecard exists and the live board was read
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import os
+          import sys
+          if not os.path.exists("out/scorecard.json"):
+              sys.exit("UNMEASURED: the gate wrote no scorecard")
+          d = json.load(open("out/scorecard.json", encoding="utf-8"))
+          s = d["summary"]
+          live = (d.get("meta") or {}).get("live") or {}
+          if not s.get("artifacts"):
+              sys.exit("UNMEASURED: the gate scored no artifact")
+          if live.get("axes") is None:
+              sys.exit("UNMEASURED: the gate could not read https://councilof.ai/api/gspc from this runner, so this scorecard is not a reading of the site")
+          print("measured:", s["at_100"], "of", s["artifacts"], "artifacts at 100%;", s["fails"], "FAILs; live board:", live)
+          PY
