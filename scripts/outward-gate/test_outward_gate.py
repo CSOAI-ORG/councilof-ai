@@ -148,6 +148,187 @@ class TestIntegrity(unittest.TestCase):
         self.assertEqual(Status.of(g.ots_state_check(d, {"record.v0.1.1.json.ots": ots_bytes(d)}, "BITCOIN_ATTESTED at block 5", "x"), "integrity.ots_state_truthful"), [g.FAIL])
 
 
+# ---- A2A agent card signature (A2A specification 8.4). The expected signed form is WRITTEN OUT BY HAND
+# below, never computed by the gate, so the gate cannot agree with itself about what was signed.
+CARD_KID = "did:web:csoai.org#card-attestation-2"
+
+
+def a2a_card():
+    """Shaped like the served card: one default-valued field of each presence kind."""
+    return {
+        "name": "T", "description": "d", "version": "1.0.0",
+        "provider": {"organization": "CSOAI Ltd", "url": "https://councilof.ai"},
+        "supportedInterfaces": [{"url": "https://councilof.ai/api/a2a", "protocolBinding": "JSONRPC",
+                                 "protocolVersion": "1.0", "tenant": ""}],                 # plain string, default
+        "capabilities": {"streaming": False, "pushNotifications": False,                   # `optional`, set
+                         "extensions": [{"uri": "https://e/x", "required": False, "description": "x"}]},  # plain bool
+        "defaultInputModes": ["text/plain"], "defaultOutputModes": ["text/plain"],
+        "skills": [{"id": "s", "name": "S", "description": "sd", "tags": [], "examples": []}],  # REQUIRED [] / plain []
+        "explicitly_not": ["grading"],                                               # not in the proto
+    }
+
+
+def a2a_signed_form():
+    """What A2A 8.4.3 step 3 leaves of a2a_card(): `tenant: ""`, `required: false` and `examples: []` are
+    gone (no presence, default value). `streaming: false` (optional, set), `tags: []` (REQUIRED) and
+    `explicitly_not` (unknown to the proto) stay."""
+    return {
+        "name": "T", "description": "d", "version": "1.0.0",
+        "provider": {"organization": "CSOAI Ltd", "url": "https://councilof.ai"},
+        "supportedInterfaces": [{"url": "https://councilof.ai/api/a2a", "protocolBinding": "JSONRPC", "protocolVersion": "1.0"}],
+        "capabilities": {"streaming": False, "pushNotifications": False,
+                         "extensions": [{"uri": "https://e/x", "description": "x"}]},
+        "defaultInputModes": ["text/plain"], "defaultOutputModes": ["text/plain"],
+        "skills": [{"id": "s", "name": "S", "description": "sd", "tags": []}],
+        "explicitly_not": ["grading"],
+    }
+
+
+def card_keypair(kid=CARD_KID):
+    sk = ed25519.Ed25519PrivateKey.generate()
+    raw = sk.public_key().public_bytes(serialization.Encoding.Raw, serialization.PublicFormat.Raw)
+    return sk, g.Did({"id": "did:web:csoai.org", "verificationMethod": [{
+        "id": kid, "type": "JsonWebKey2020",
+        "publicKeyJwk": {"kty": "OKP", "crv": "Ed25519", "x": base64.urlsafe_b64encode(raw).rstrip(b"=").decode()}}]})
+
+
+def sign_a2a(sk, card, signed_form, kid=CARD_KID):
+    """Serve `card`, sign `signed_form`: JWS over b64u(protected) + "." + b64u(sorted-key compact JSON)."""
+    e = lambda b: base64.urlsafe_b64encode(b).rstrip(b"=").decode()
+    j = lambda o: json.dumps(o, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
+    prot = e(j({"alg": "EdDSA", "kid": kid, "typ": "JOSE"}))
+    out = dict(card)
+    out["signatures"] = [{"protected": prot, "signature": e(sk.sign((prot + "." + e(j(signed_form))).encode()))}]
+    return out
+
+
+class TestAgentCardSignature(unittest.TestCase):
+    """integrity.agent_card_signed. Before 2026-10-13 the gate canonicalised the card as served and so
+    failed every card that carries a default-valued property and is signed the way A2A 8.4 says."""
+
+    def setUp(self):
+        self.sk, self.did = card_keypair()
+        self.card = sign_a2a(self.sk, a2a_card(), a2a_signed_form())
+
+    def ok(self, card, did=None):
+        return g.verify_jws_card(card, did or self.did, None)
+
+    def test_card_signed_per_a2a_8_4_verifies(self):
+        ok, det = self.ok(self.card)
+        self.assertTrue(ok, det)
+        self.assertIn(CARD_KID, det)
+
+    def test_default_valued_property_is_not_signed_content(self):
+        # served without `"required": false`: the same payload, so the same signature still verifies
+        c = json.loads(json.dumps(self.card))
+        del c["capabilities"]["extensions"][0]["required"]
+        self.assertTrue(self.ok(c)[0])
+        # ...but a NON-default value in that property is signed content
+        c["capabilities"]["extensions"][0]["required"] = True
+        self.assertFalse(self.ok(c)[0])
+
+    def test_one_byte_edit_fails(self):
+        c = dict(self.card, description="e")
+        ok, det = self.ok(c)
+        self.assertFalse(ok, det)
+        self.assertIn("InvalidSignature", det)
+
+    def test_optional_required_and_unknown_fields_are_signed_content(self):
+        for edit in (lambda c: c["capabilities"].pop("streaming"),          # `optional`, explicitly false
+                     lambda c: c["skills"][0].pop("tags"),                  # REQUIRED, empty
+                     lambda c: c["explicitly_not"].append("ranking")):      # not in the proto: kept as served
+            c = json.loads(json.dumps(self.card))
+            edit(c)
+            self.assertFalse(self.ok(c)[0])
+
+    def test_signature_over_the_card_as_served_fails_and_says_so(self):
+        # the reading the gate used to take: defaults kept. A client that follows 8.4.3 rejects it.
+        served = sign_a2a(self.sk, a2a_card(), a2a_card())
+        ok, det = self.ok(served)
+        self.assertFalse(ok, det)
+        self.assertIn("default-valued properties kept", det)
+
+    def test_wrong_key_unknown_kid_and_unsigned_fail(self):
+        _, other = card_keypair()
+        self.assertFalse(self.ok(self.card, other)[0])
+        _, elsewhere = card_keypair("did:web:csoai.org#site-release-1")
+        ok, det = self.ok(self.card, elsewhere)
+        self.assertFalse(ok)
+        self.assertIn("key not in did.json", det)
+        ok, det = self.ok(a2a_card())
+        self.assertFalse(ok)
+        self.assertIn("no signatures", det)
+
+    def test_gate_payload_equals_the_independent_verifier(self):
+        """scripts/verify_agent_card_jws.py has its own table and its own JCS. Same bytes, or one is wrong."""
+        path = os.path.join(g.REPO, "scripts", "verify_agent_card_jws.py")
+        if not os.path.exists(path):
+            self.skipTest("scripts/verify_agent_card_jws.py not in this checkout")
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("verify_agent_card_jws", path)
+        v = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(v)
+        self.assertEqual(g.a2a_signed_payload(self.card), v.canonical_payload(self.card))
+        self.assertEqual(g.a2a_signed_payload(self.card), g.canon(a2a_signed_form()))
+        wk = os.path.join(g.REPO, "public", ".well-known")
+        if not os.path.exists(os.path.join(wk, "agent-card.json")):
+            return
+        # the committed card and DID document: both verifiers reach the same verdict on the same bytes
+        with open(os.path.join(wk, "agent-card.json"), "rb") as f:
+            raw = f.read()
+        with open(os.path.join(wk, "did.json"), encoding="utf-8") as f:
+            did_doc = json.load(f)
+        card = json.loads(raw)
+        self.assertEqual(g.a2a_signed_payload(card), v.canonical_payload(card))
+        ok, det = g.verify_jws_card(card, g.Did(did_doc), None)
+        self.assertEqual(ok, v.verify_card_bytes(raw, did_doc)["state"] == "VALID", det)
+
+
+class CardHttp:
+    def __init__(self, by_url):
+        self.by_url = by_url
+
+    def get(self, url, headers=None, **k):
+        b = self.by_url.get(url)
+        return g.Resp(url, 404 if b is None else 200, {}, b or b"")
+
+
+class TestAgentCardArtifact(unittest.TestCase):
+    URLS = [g.SITE + "/.well-known/agent-card.json", g.SITE + "/.well-known/agent.json",
+            "https://csoai.org/.well-known/agent-card.json"]
+
+    def run_gate(self, apex_card):
+        sk, did = card_keypair()
+        card = sign_a2a(sk, a2a_card(), a2a_signed_form())
+        body = json.dumps(card).encode()
+        apex = body if apex_card is None else json.dumps(apex_card(sk)).encode()
+        ctx = type("Ctx", (), {"http": CardHttp({self.URLS[0]: body, self.URLS[1]: body, self.URLS[2]: apex}),
+                               "did": did, "live": TestCurrency.LIVE})()
+        return g.agent_card_artifact(ctx)["checks"]
+
+    def test_same_signed_card_everywhere_passes(self):
+        res = self.run_gate(None)
+        self.assertEqual(Status.of(res, "consistency.agent_card_same_across_domains"), [g.PASS])
+        signed = [r for r in res if r["check"].startswith("integrity.agent_card_signed[")]
+        self.assertEqual([r["status"] for r in signed], [g.PASS] * 3, signed)
+
+    def test_an_older_card_on_the_apex_fails_both_checks_there_only(self):
+        # a different card, signed under some other rule (Ed25519 over the hex digest): not an A2A JWS
+        def older(sk):
+            c = dict(a2a_card(), version="0.1.0")
+            sig = sk.sign(g.sha(g.canon(c)).encode())
+            e = lambda b: base64.urlsafe_b64encode(b).rstrip(b"=").decode()
+            c["signatures"] = [{"protected": e(json.dumps({"alg": "EdDSA", "kid": CARD_KID, "typ": "JWT"}).encode()),
+                                "signature": e(sig)}]
+            return c
+        res = self.run_gate(older)
+        self.assertEqual(Status.of(res, "consistency.agent_card_same_across_domains"), [g.FAIL])
+        by = {r["check"]: r["status"] for r in res if r["check"].startswith("integrity.agent_card_signed[")}
+        self.assertEqual(by["integrity.agent_card_signed[csoai.org/.well-known/agent-card.json]"], g.FAIL)
+        self.assertEqual(by["integrity.agent_card_signed[councilof.ai/.well-known/agent-card.json]"], g.PASS)
+        self.assertEqual(by["integrity.agent_card_signed[councilof.ai/.well-known/agent.json]"], g.PASS)
+
+
 class TestVenturi(unittest.TestCase):
     def build(self, tmp, sk, decision=False):
         caps = []
