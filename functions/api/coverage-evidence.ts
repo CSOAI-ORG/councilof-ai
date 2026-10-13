@@ -21,6 +21,7 @@
  * this door sells assembly (the packaged row), never access to truth.
  */
 import { buildPaymentRequiredV2, declareBazaarHttpGet, hasPaymentHeader, paymentRequiredResponseSigned, verifyX402Payment, x402Accepts, CSOAI_LID, type X402Env } from "./_x402";
+import { headFromGet } from "./_head";
 import { COVERAGE_EVIDENCE_DESCRIPTION } from "./_x402_descriptions";
 import { COVERAGE, type CoverageRow } from "./_coverage_rows";
 
@@ -195,3 +196,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   };
   return json(fullBody(id, row, payment), 200, paid.paymentResponse ? { "x-payment-response": paid.paymentResponse } : {});
 };
+
+// HEAD must answer exactly as GET would (same status, PAYMENT-REQUIRED on the 402,
+// no body): Pages answers HEAD with 404 unless the route exports it (_head.test).
+export const onRequestHead = headFromGet(onRequestGet);
