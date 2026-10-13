@@ -160,3 +160,33 @@ describe("the section names its source", () => {
     expect(card.freeForever).toBe(false);
   });
 });
+
+
+describe("published commercial descriptions", () => {
+  const base: ManifestResource = { url: "https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1", paid_for: "assembly" };
+  it("preserves the manifest description and its limitations", () => {
+    expect(toCard({ ...base, description: "  Signed evidence, not compliance.  " }, "compliance").measures).toBe("Signed evidence, not compliance.");
+  });
+  it("prefers product description to a discovery note", () => {
+    expect(toCard({ ...base, description: "Product scope.", note: "Directory note." }, "compliance").measures).toBe("Product scope.");
+  });
+  it("retains fallback for blank, absent and malformed descriptions", () => {
+    for (const description of [" ", undefined, null, 42]) {
+      expect(toCard({ ...base, description, note: "Legacy scope." } as unknown as ManifestResource, "compliance").measures).toBe("Legacy scope.");
+    }
+  });
+  it("leaves paid URL, payment classification and missing preview unchanged", () => {
+    const card = toCard({ ...base, description: "Existing scope." }, "compliance");
+    expect(card.url).toBe(base.url);
+    expect(card.freeForever).toBe(false);
+    expect(card.freePreview).toBeNull();
+    expect(card.payLine).toBe("Pay-as-you-go x402 at the 402.");
+  });
+  it("carries the explicit preview while keeping the paid resource distinct", () => {
+    const url = "https://councilof.ai/api/evidence-bundle?obligation=article-50";
+    const card = toCard({ ...base, free_preview: url }, "compliance");
+    expect(card.freePreview).toBe(url);
+    expect(card.url).toBe(base.url);
+    expect(card.freeForever).toBe(false);
+  });
+});

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ServicePreview } from "@/components/ServicePreview";
 import { Helmet } from "react-helmet-async";
 import { buildCatalogue, type Catalogue } from "@/lib/servicesCatalogue";
+import { BUYING_ENQUIRIES } from "@/lib/buying";
 
 /**
  * /services — the doors the rail actually publishes, read at run time.
@@ -111,9 +112,11 @@ export default function Services() {
             delivery date. Availability, scope and terms must be confirmed before any order.
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
-            <a href="/contact/?arm=data" className="inline-flex min-h-11 items-center rounded-lg bg-emerald-400 px-5 py-2 font-semibold text-slate-950 hover:bg-emerald-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300">
-              Request a written evidence scope
-            </a>
+            {BUYING_ENQUIRIES.map((product) => (
+              <a key={product.product} href={product.href} className="inline-flex min-h-11 items-center rounded-lg bg-emerald-400 px-5 py-2 font-semibold text-slate-950 hover:bg-emerald-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300">
+                Enquire about {product.label}
+              </a>
+            ))}
             <a href="/gspc-verify/" className="inline-flex min-h-11 items-center rounded-lg border border-slate-600 px-5 py-2 font-semibold text-slate-100 hover:border-emerald-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300">
               Verify evidence free
             </a>
