@@ -63,6 +63,7 @@ import fs from "fs";
 import { createHash } from "node:crypto";
 import path from "path";
 import { fileURLToPath } from "url";
+import { isPlaceholderLink } from "./internal-links-check.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const CHECK = process.argv.includes("--check");
@@ -191,7 +192,16 @@ function paidDoorsSection() {
   if (!doors.length) throw new Error("council-os/capabilities.json declares no paid door — absent is not zero");
   const lines = doors.map((c) => {
     const req = c.probe?.request ?? c.path;
-    const preview = c.free_preview ? ` · free preview: ${SITE}${c.free_preview}` : "";
+    // A TEMPLATE IS NOT A LINK. Three declared previews carry a <slot> (…?id=<wrapped-symbol:chain>…).
+    // Printed after the origin they were URLs a reader follows: the outward gate fetched them on
+    // 2026-10-13 and got a 400. So a preview with a slot is printed as code text with no origin, and
+    // only a concrete preview is printed as an address. The door's own link, built from the request
+    // the probe really makes, must be concrete — a slot there is a declaration error, said out loud.
+    if (isPlaceholderLink(req)) throw new Error(`${c.id}: the door's request "${req}" carries a template slot — a link must be an address that answers`);
+    const previewPath = c.free_preview?.startsWith(SITE) ? c.free_preview.slice(SITE.length) : c.free_preview;
+    const preview = !previewPath ? ""
+      : isPlaceholderLink(previewPath) ? ` · free preview, as a pattern (replace the <…> part; not a link): \`GET ${previewPath}\``
+      : ` · free preview: ${SITE}${previewPath}`;
     // llms.txt spec form is `[Title](url)`: an agent crawler extracts a bare `https://…` as text, not
     // as a link, so the paid doors were listed but not linkable. The URL stays verbatim inside the
     // parens — `x402-descriptions.test.ts` checks `llms.includes(canonical text)` and the free-door

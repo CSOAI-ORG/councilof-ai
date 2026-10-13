@@ -181,11 +181,11 @@ Each record below is a dated account of what public sources state, with its sour
 
 Each page shows declared vs observed, the dates, the evidence level and its signed source, and has a machine twin at <page>index.json. None says anything about security, quality or safety, and none is a rating. Operators who opted out, or whose robots.txt refuses CSOAI-census, have no page. Objections and context: https://councilof.ai/census/
 
-- MCP servers (contract parity per host): https://councilof.ai/mcp-servers/ — https://councilof.ai/mcp-servers/<host>/
-- A2A agent cards (listed vs served, signature state): https://councilof.ai/agent-cards/ — https://councilof.ai/agent-cards/<host>/
-- x402 doors and settlement-census hosts: https://councilof.ai/x402/ — https://councilof.ai/x402/<door-or-host>/
-- Tokenised-asset deployments (issuer list vs ledger read): https://councilof.ai/stablecoins/deployments/ — https://councilof.ai/stablecoins/<asset>/<chain>/
-- Sitemap index of all of them: https://councilof.ai/sitemaps/index.xml
+- MCP servers (contract parity per host): https://councilof.ai/mcp-servers/ — one page per host, at the path pattern `/mcp-servers/<host>/`
+- A2A agent cards (listed vs served, signature state): https://councilof.ai/agent-cards/ — one page per host, at `/agent-cards/<host>/`
+- x402 doors and settlement-census hosts: https://councilof.ai/x402/ — one page per door or host, at `/x402/<door-or-host>/`
+- Tokenised-asset deployments (issuer list vs ledger read): https://councilof.ai/stablecoins/deployments/ — one page per deployment, at `/stablecoins/<asset>/<chain>/`
+- Sitemap index of all of them (the real addresses behind the `<…>` patterns above; a pattern is not an address): https://councilof.ai/sitemaps/index.xml
 - Press, machine-readable — what changed in the window, with the command that proves each line, and a named list of what we are NOT announcing: https://councilof.ai/api/press.json (human: https://councilof.ai/press/)
 
 The older https://councilof.ai/feed.xml is a hand-maintained item list kept for its subscribers; its historical titles freeze counts that the live board has moved past. Quote the board, not a feed title.
@@ -262,7 +262,7 @@ Lid (quote live `totals.lid`): {{LID}}
 ## For agents
 
 - One human-readable page for agent builders, rendered from the machine files themselves (ai-catalog, agent card, tools/list, x402.json): https://councilof.ai/agents/
-- A2UI v0.9.1 (the current A2UI release) surfaces: GET https://councilof.ai/api/a2ui/board (the board card) and GET https://councilof.ai/api/a2ui/verify?card=<64-hex card id> (a verify result). Add ?version=v1.0 for the v1.0 Candidate form. AG-UI runs carry the same surface as a CUSTOM event named a2ui.
+- A2UI v0.9.1 (the current A2UI release) surfaces: GET https://councilof.ai/api/a2ui/board (the board card) and, on the same origin, `GET /api/a2ui/verify?card=<64-hex card id>` (a verify result; a pattern, so replace the <…> part with a card id). Add ?version=v1.0 for the v1.0 Candidate form. AG-UI runs carry the same surface as a CUSTOM event named a2ui.
 
 Prefer the keyless board API and verify.
 Cite live `totals.public_count` — never freeze axis counts in prompts.
