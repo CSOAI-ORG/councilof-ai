@@ -156,3 +156,5 @@ no longer exists** — the rename replaced it, no duplicate source of truth.
 - Rekor/OTS/Bitcoin states are untouched here; OTS stays `STAMPED_PENDING_BITCOIN`.
 - "Not listed" is recorded as an observation with method and time, never as a fact about
   a third party's internals.
+
+- Probe seed 2026-10-07T11:08:49Z versioned as `docs/tui4/gap-register-2026-10-07-probe-1108Z.json` (source: cron output `~/.hermes/cron/output/d0c06e34037a/2026-10-07_12-10-28.md`, sha256 `13c830a3a1083cd5fc34987b214cfca31ecde95f072c92034340f14e4993ba7c`; branch blob fa021d88fa13cfe3876aab16ece4195bcd34a6f7).
