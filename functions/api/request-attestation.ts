@@ -25,6 +25,12 @@
  * mints a MEASURED cell; fresh cells appear only when a published run exists. Root inclusion of
  * the receipt is the public-root workflow's job (one writer) — listed in unmeasured[] until then.
  *
+ * INCOMPLETE IS AN EXPLICIT STATE, NEVER A SILENT PARTIAL (fixed 2026-10-13). If the reserve
+ * read fails, the paid receipt says so — reserve_state UNCHECKABLE, reserve_count null (never 0),
+ * deliverable_state INCOMPLETE_RESERVE_UNREAD, "reserve" in unmeasured[] — instead of reporting an
+ * empty reserve a buyer cannot tell from "no cards on file". A settled payment whose receipt then
+ * fails to issue answers SETTLED_DELIVERABLE_NOT_ISSUED with the x-payment-response echoed.
+ *
  * Bazaar: declares extensions.bazaar (info + schema) — the conformant discovery block. No
  * `discoverable: true` (not in the spec; x402 #2112 / #2207).
  */
@@ -116,8 +122,11 @@ async function reserveFor(origin: string, subject: string, axis: string): Promis
  * Now the two preview reads run side by side and the challenge waits at most PREVIEW_BUDGET_MS for
  * each. A read that is late is reported as not read (null count, UNCHECKABLE) — never as an empty
  * reserve. The late read is left to finish after the response (waitUntil), so the isolate's root
- * cache still warms for the next caller. The PAID path is unchanged: a paying buyer's receipt waits
- * for the full reserve read, because a budget there would shrink a deliverable someone paid for.
+ * cache still warms for the next caller. The PAID path is unchanged: a paying
+ * buyer's receipt waits for the full reserve read, because a budget there would shrink a deliverable
+ * someone paid for. If that read ultimately fails, the receipt is still issued — with the reserve's
+ * read state explicit (reserve_state/reserve_unread_reason/deliverable_state), never as a silent
+ * empty reserve.
  */
 export const PREVIEW_BUDGET_MS = 2500;
 
@@ -431,10 +440,13 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
   // verify/settle above, so this branch cannot charge and then discover an invalid request.
   const as_of = new Date().toISOString();
   const tx = payment.settlement?.transaction || null;
+  // reserve.source is a DIAGNOSTIC when the read failed ("…/signed/card-matrix.json HTTP 503",
+  // "… unreadable: …"), not a URL — a signed receipt must never cite an unparseable URL. Cite the
+  // URL that was attempted; the diagnostic travels in reserve_unread_reason below.
   const source_urls = [
     resourceUrl,
     ...(tx ? [`https://basescan.org/tx/${tx}`] : []),
-    reserve.source.startsWith("http") ? reserve.source : `${origin}/signed/card-matrix.json`,
+    reserve.read ? reserve.source : `${origin}/signed/card-matrix.json`,
   ];
   const target = targetEarly ?? classifyCommissionTarget(subject);
   const queue_ref = `${origin}/api/commission-queue`;
@@ -452,9 +464,20 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     axis_known: knownAxis,
     settle: { network: payment.settlement?.network || null, transaction: tx, payer: payment.settlement?.payer || null },
     reserve: reserve.cells.slice(0, 24).map((c) => ({ axis: c.axis, card: c.card })),
-    reserve_count: reserve.cells.length,
-    reserve_returned: Math.min(reserve.cells.length, 24),
+    // THE PAID DELIVERABLE'S OWN READ STATE. Until 2026-10-13 a failed or stalled matrix read
+    // reached the buyer as reserve_count 0 / reserve_returned 0 / reserve: [] — indistinguishable
+    // from a subject that genuinely has no cards on file. That is a silent partial on a PAID
+    // receipt (reported: request-attestation reliability 88%, 1-in-8 requests returning an
+    // incomplete deliverable). An unread reserve is UNCHECKABLE, never an empty reserve: the
+    // count goes null, never 0, the reason travels with it, and "reserve" joins unmeasured[] on
+    // the card below. The unpaid preview has said this since 2026-09-28 (signed_cards_on_file:
+    // null); the paid path now says it too.
+    reserve_state: reserve.read ? "READ" : "UNCHECKABLE",
+    reserve_count: reserve.read ? reserve.cells.length : null,
+    reserve_returned: reserve.read ? Math.min(reserve.cells.length, 24) : null,
     reserve_limit: 24,
+    reserve_unread_reason: reserve.read ? null : reserve.source,
+    deliverable_state: reserve.read ? "COMPLETE" : "INCOMPLETE_RESERVE_UNREAD",
     fresh_run: "UNMEASURED",
     never: ["rank", "certificate", "grade"],
     lid: CSOAI_LID,
@@ -463,7 +486,25 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
   try {
     leaf = await signPayload(payload, env.BOARD_SIGN_KEY_PKCS8_B64);
   } catch (e) {
-    return json({ schema: "csoai.request-attestation/0.2", error: "uncheckable", reason: (e as Error).message }, 500);
+    // PAYMENT IS ALREADY SETTLED at this point. The old shape returned a bare 500 with no
+    // x-payment-response, i.e. a payer was charged and answered with neither the deliverable nor
+    // the settlement receipt the x402 spec says to echo. The failure is now an explicit state and
+    // the payment receipt travels with it, so a settled-but-undelivered request is a recorded,
+    // checkable outcome — never a silent partial.
+    return json(
+      {
+        schema: "csoai.request-attestation/0.2",
+        error: "uncheckable",
+        state: "SETTLED_DELIVERABLE_NOT_ISSUED",
+        reason: (e as Error).message,
+        settle: { network: payment.settlement?.network || null, transaction: tx, payer: payment.settlement?.payer || null },
+        reserve_state: reserve.read ? "READ" : "UNCHECKABLE",
+        deliverable_state: "INCOMPLETE_ISSUANCE_FAILED",
+        note: "Payment settled; the commission receipt could not be issued. The x-payment-response header carries the settlement receipt. Re-request issues the commission; measurement never depends on a payment.",
+      },
+      500,
+      payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {},
+    );
   }
   const card = cardV0({
     surface: "ras.commission",
@@ -473,7 +514,9 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     payload,
     leaf,
     tags: ["rail:x402", "sku:request_attestation"],
-    unmeasured: ["fresh_run_schedule"],
+    // "reserve" is unmeasured exactly when the matrix was not read: the receipt admits what it
+    // could not see, the same way an unsigned card admits "sig_ed25519".
+    unmeasured: reserve.read ? ["fresh_run_schedule"] : ["fresh_run_schedule", "reserve"],
   });
 
   // Tally + mill-visible enqueue when a store is bound. Absent store ⇒ nothing counted (null, never 0).
