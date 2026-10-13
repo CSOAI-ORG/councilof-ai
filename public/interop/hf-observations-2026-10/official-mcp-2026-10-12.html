@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hugging Face MCP initialization observation — 12 October 2026 | Council of AI</title>
+  <meta name="description" content="A bounded anonymous observation of Hugging Face MCP initialization on 12 October 2026. One endpoint, one initialize attempt, three HTTP requests; tool discovery was not attempted.">
+  <link rel="canonical" href="https://councilof.ai/interop/hf-observations-2026-10/official-mcp-2026-10-12.html">
+  <style>
+    :root{color-scheme:light dark;font-family:system-ui,sans-serif;line-height:1.6}
+    body{max-width:54rem;margin:auto;padding:2rem 1.25rem;background:#10141d;color:#edf1f7}
+    a{color:#9fc9ff}h1,h2{line-height:1.2}h1{font-size:clamp(1.8rem,4vw,2.6rem)}
+    h2{margin-top:2rem;font-size:1.35rem}.label{font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;color:#b4c4da}
+    .status{border-left:4px solid #d9b66e;padding:.75rem 1rem;background:#1b2230}
+    table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{text-align:left;vertical-align:top;border-bottom:1px solid #3a465b;padding:.7rem .5rem}
+    code{overflow-wrap:anywhere;font-size:.9em}dl{display:grid;grid-template-columns:minmax(7rem,1fr) 3fr;gap:.5rem 1rem}
+    dt{font-weight:650}dd{margin:0;overflow-wrap:anywhere}footer{margin-top:2.5rem;border-top:1px solid #3a465b;padding-top:1rem;color:#b4c4da}
+    @media(max-width:36rem){dl{display:block}dd{margin:.2rem 0 1rem}th,td{padding:.5rem .25rem}}
+  </style>
+</head>
+<body>
+<header>
+  <p class="label">Council of AI · Public procedural observation</p>
+  <h1>Hugging Face MCP initialization</h1>
+  <p>Observed 12 October 2026, 11:21 UTC.</p>
+</header>
+<main>
+  <div class="status">
+    <strong>UNSIGNED · NOT_ADMITTED · UNCHECKABLE</strong>
+    <p>This authored report describes one bounded capture. Tool discovery and tool behaviour remain unobserved. Council measurement admission, signature verification and a conformance assessment are separate steps.</p>
+  </div>
+  <p>One anonymous initialize request returned HTTP 200, negotiated protocol <code>2025-11-25</code>, and reported server <code>huggingface.co/mcp</code> version <code>0.4.28</code>. The following initialized notification returned HTTP 202 with a nonempty JSON body. The bounded adapter stopped at that body; it did not attempt <code>tools/list</code> or invoke a tool.</p>
+
+  <h2>Capture scope</h2>
+  <dl>
+    <dt>Endpoint</dt><dd><a href="https://huggingface.co/mcp">https://huggingface.co/mcp</a></dd>
+    <dt>Window, UTC</dt><dd><code>2026-10-12T11:21:15.820485+00:00</code> to <code>2026-10-12T11:21:18.070424+00:00</code></dd>
+    <dt>Sample</dt><dd>One explicitly selected official public endpoint, one initialize attempt, three HTTP requests. This was not a random sample.</dd>
+    <dt>Execution</dt><dd>Existing RunPod CPU pod, CPython 3.8.10. Executor region and deployed server implementation digest were unavailable.</dd>
+    <dt>Profile</dt><dd>A stricter four-request limit using components of the existing census instrument. The full census command was not run.</dd>
+  </dl>
+
+  <h2>What was observed</h2>
+  <table>
+    <thead><tr><th scope="col">Step</th><th scope="col">Recorded result</th><th scope="col">Interpretation limit</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Initialize</th><td>HTTP 200; offered and negotiated protocol <code>2025-11-25</code>; reported server version <code>0.4.28</code>.</td><td>A response in this execution window. Reliability and behaviour across other clients or sessions were not measured.</td></tr>
+      <tr><th scope="row">Initialized notification</th><td>HTTP 202 with a nonempty JSON body.</td><td>The adapter classified the unexpected nonempty body with its internal stop token <code>INITIALIZED_NOTIFICATION_REJECTED</code>. That token does not establish HTTP refusal or an authentication requirement.</td></tr>
+      <tr><th scope="row">Tool discovery</th><td><code>tools/list</code> was not attempted. Tool count and completeness are unknown.</td><td>No advertised tool inventory, tool behaviour or completed interoperability claim follows from this capture.</td></tr>
+      <tr><th scope="row">Tool calls</th><td>Zero.</td><td>No user prompt, account credential, payment or private resource was supplied.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Limits and reuse</h2>
+  <ul>
+    <li>The result covers one endpoint and one execution window. Population, safety, score, compliance and general service reliability conclusions are outside this capture.</li>
+    <li>The profile used no retries, redirects, pagination, protocol fallback or session deletion. Response size and ten-second request deadlines bounded the capture.</li>
+    <li>The raw files preserve plaintext HTTP application bytes consumed or sent by the frozen instrument, rather than TLS packets. SSE capture ends at the matching response frame.</li>
+    <li>Raw exchanges and any definitions remain private. Public access to an endpoint does not establish permission to republish its underlying material.</li>
+    <li>This page is an authored factual summary, not a native validated observation record or a signed card. Independent replay and Council admission remain separate. No held RunPod measurement result was used.</li>
+  </ul>
+
+  <h2>Procedure and provenance</h2>
+  <p>The bounded capture reused the census instrument's session, host gate, request builder, parser, legacy protocol constants and initialize classifier. Its adapter applied the stricter request limit described above.</p>
+  <dl>
+    <dt>Instrument</dt><dd><a href="https://github.com/CSOAI-ORG/councilof-ai/blob/5d364d1b8601fbef180bff40c379bd1e138ee676/scripts/census/mcp-remote-probe.py"><code>scripts/census/mcp-remote-probe.py</code></a>, <code>csoai.census-probe/0.2</code>, source commit <code>5d364d1b8601fbef180bff40c379bd1e138ee676</code>.</dd>
+    <dt>Instrument SHA-256</dt><dd><code>d2f61a90bb28defa8626af441f733321054d2905255ffb083b08cf7a2e5b37c6</code></dd>
+    <dt>Adapter SHA-256</dt><dd><code>6ee956659b22c6e7a472a36b15b257abb7514ccad8e5ecbb5e74f4ed54d0dfa8</code></dd>
+    <dt>Capture manifest SHA-256</dt><dd><code>7a454e4b784c153d30a9b4187d87480ae8b8aa92e1fc14fdf8075b77efadf2b0</code></dd>
+    <dt>Cleared summary input</dt><dd>5,374 bytes; SHA-256 <code>ba2f6a0a40d727f6e5f67fec836ad0a5caa7628e4f559524f4fe33081bf50819</code>.</dd>
+  </dl>
+  <p>The frozen input retains the historical candidate flag <code>PREPARED_NOT_PUBLISHED_PENDING_IP_REPLAY_ADMISSION</code>. That flag records the input's preparation state; it is not a statement that this HTML report is a validated record. The unsigned and <code>NOT_ADMITTED</code> boundaries remain. These digests identify retained inputs; they do not make private capture bytes publicly replayable.</p>
+</main>
+<footer>
+  <p><a href="https://councilof.ai/">Council of AI</a> · Dated protocol observation · 12 October 2026</p>
+</footer>
+</body>
+</html>
