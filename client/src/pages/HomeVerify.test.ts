@@ -307,7 +307,12 @@ describe("no in-page anchor on the front door points at nothing", () => {
   const anchors = [...joined.matchAll(/href="#([a-z0-9-]+)"/g)].map((m) => m[1]);
 
   it("finds at least the anchors we know are there", () => {
-    expect(anchors).toContain("board");
+    // 12 Oct 2026 (surface inspection, #3084): the hero's one primary CTA now routes to /board
+    // instead of scrolling to #board, so no front-door href points in-page today. The board band
+    // must still render id="board" (Footer/HomeNavigator/HomeCredibility link to it) and the hero
+    // must reach the board by route; any in-page anchor added later is checked by the next test.
+    expect(ids.has("board")).toBe(true);
+    expect(joined).toContain('href="/board"');
   });
 
   it("every in-page anchor resolves to an id rendered on the same page", () => {

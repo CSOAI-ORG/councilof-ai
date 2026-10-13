@@ -6,6 +6,7 @@ import RecordVerifyForm from "@/components/gspc/RecordVerifyForm";
 import { setMetaDescription } from "@/lib/utils";
 import BoardAttestation from "@/components/board/BoardAttestation";
 import { CARD_PARAM_MAX_BYTES, resolveCardParam } from "@/lib/cardParam";
+import { GOVERNANCE_RETRIEVE, loadPublicCardExample } from "@/lib/publicCardExample";
 import { takeCheckerSeed } from "@/lib/myResults";
 
 /**
@@ -20,9 +21,6 @@ import { takeCheckerSeed } from "@/lib/myResults";
  */
 
 type PublishedRef = { id: string; url: string };
-
-/** Live governance retrieve — free preview only; not a certificate. */
-const GOVERNANCE_RETRIEVE = "/interop/mill-cards-signed/signed-governan-e9bc92b7b39b.json";
 
 async function pickPublishedCard(signal?: AbortSignal): Promise<PublishedRef> {
   // Prefer the signed chain links with a published body; fall back to card_index.
@@ -71,11 +69,20 @@ export default function GSPCVerify() {
     | { state: "refused" | "failed"; href: string; reason: string }
     | null
   >(null);
+  const [publicReopenHref, setPublicReopenHref] = useState<string | null>(null);
   const linkedRequest = useRef<AbortController | null>(null);
   const clearLinkedSource = useCallback(() => {
     linkedRequest.current?.abort();
     linkedRequest.current = null;
     setLinked(null);
+    setPublicReopenHref(null);
+    setTryBusy(false);
+    setTryErr(null);
+  }, []);
+
+  useEffect(() => () => {
+    linkedRequest.current?.abort();
+    linkedRequest.current = null;
   }, []);
 
   useEffect(() => {
@@ -130,42 +137,40 @@ export default function GSPCVerify() {
     };
   }, []);
 
-  const tryPublished = useCallback(async () => {
+  const tryExample = useCallback(async (choose: (signal: AbortSignal) => Promise<string>) => {
     clearLinkedSource();
+    const ac = new AbortController();
+    linkedRequest.current = ac;
     setTryBusy(true);
-    setTryErr(null);
     try {
-      const ref = await pickPublishedCard();
-      const r = await fetch(ref.url, { headers: { accept: "application/json" } });
-      if (!r.ok) throw new Error(`GET ${ref.url} → HTTP ${r.status}`);
-      const raw = await r.text();
+      const ref = await choose(ac.signal);
+      const example = await loadPublicCardExample(ref, window.location.origin, ac.signal);
+      if (ac.signal.aborted || linkedRequest.current !== ac) return;
+      setPublicReopenHref(example.href);
       setAutoVerify(false);
-      setSeed(raw);
+      setSeed(example.raw);
       setSeedNonce((n) => n + 1);
     } catch (e: any) {
-      setTryErr(String(e?.message ?? e));
+      if (!ac.signal.aborted && linkedRequest.current === ac) {
+        setTryErr(String(e?.message ?? e));
+      }
     } finally {
-      setTryBusy(false);
+      if (linkedRequest.current === ac) {
+        linkedRequest.current = null;
+        setTryBusy(false);
+      }
     }
   }, [clearLinkedSource]);
 
-  const tryGovernanceRetrieve = useCallback(async () => {
-    clearLinkedSource();
-    setTryBusy(true);
-    setTryErr(null);
-    try {
-      const r = await fetch(GOVERNANCE_RETRIEVE, { headers: { accept: "application/json" } });
-      if (!r.ok) throw new Error(`GET ${GOVERNANCE_RETRIEVE} → HTTP ${r.status}`);
-      const raw = await r.text();
-      setAutoVerify(false);
-      setSeed(raw);
-      setSeedNonce((n) => n + 1);
-    } catch (e: any) {
-      setTryErr(String(e?.message ?? e));
-    } finally {
-      setTryBusy(false);
-    }
-  }, [clearLinkedSource]);
+  const tryPublished = useCallback(
+    () => tryExample(async (signal) => (await pickPublishedCard(signal)).url),
+    [tryExample],
+  );
+
+  const tryGovernanceRetrieve = useCallback(
+    () => tryExample(async () => GOVERNANCE_RETRIEVE),
+    [tryExample],
+  );
 
   useEffect(() => {
     document.title = "Verify a signed card — client-side | Council of AI";
@@ -331,8 +336,9 @@ export default function GSPCVerify() {
           <h2 className="text-2xl font-bold text-emerald-50">Verify a single estate record</h2>
           <p className="mt-1 text-[13px] text-emerald-100/60">
             Paste any one estate record — hash and signature are recomputed here, in your browser,
-            against the published keys. Share a permalink and the recipient&apos;s browser re-runs
-            the same check on the same bytes.
+            against the published keys. This page does not save pasted records or their results.
+            Reloading clears them. A public-record link fetches the currently published record and
+            checks it again; it does not restore a saved verdict.
           </p>
           <div className="mt-4 flex flex-wrap items-center gap-3">
             <button
@@ -357,6 +363,20 @@ export default function GSPCVerify() {
               Each loads one published card into the box, unaltered. Both are free.
             </span>
           </div>
+          {publicReopenHref && (
+            <p className="mt-3 text-[13px] text-emerald-100/80">
+              <a
+                href={publicReopenHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-testid="public-card-reopen"
+                className="text-emerald-300 underline decoration-emerald-500/40 hover:decoration-emerald-300"
+              >
+                Reopen public record
+              </a>{" "}
+              in a new tab. Share that tab&apos;s address to let someone check the published record again.
+            </p>
+          )}
           {linked && (
             <div
               data-testid="linked-card"
