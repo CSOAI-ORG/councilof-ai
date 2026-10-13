@@ -19,7 +19,7 @@ import { callTool } from "@/lib/sovTools";
 import { rasBookingFromCatalog, RAS_BOOKING_MAILTO, type RasBooking } from "@/lib/rasBooking";
 
 const COMMISSION_DOCTRINE =
-  "We can't run a new test on demand. You can review a commission for a named subject: nothing is charged by asking. Payment buys a commission receipt and references to existing measurement cards where available, never a result. Signing is conditional; verify the returned signature. A fresh run remains UNMEASURED until a published measurement exists; no run date is promised.";
+  "Commission a receipt for cards already on file. You can review a commission for a named subject: nothing is charged by asking. Payment buys a commission receipt and references to existing measurement cards where available, never a result. Signing is conditional; verify the returned signature. A fresh run remains UNMEASURED until a published measurement exists; no run date is promised.";
 
 const FOCUS =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
