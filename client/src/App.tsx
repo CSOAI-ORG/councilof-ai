@@ -265,6 +265,7 @@ const Quickstart = lazy(() => import("./pages/Quickstart"));
 // reader who never leaves the home page should not pay for LivingStages or the film band.
 const HowWeWork = lazy(() => import("./pages/HowWeWork"));
 const ClaimMaintenance = lazy(() => import("./pages/ClaimMaintenance"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
 const GamesRuler = lazy(() => import("./pages/GamesRuler"));
 const Insurers = lazy(() => import("./pages/Insurers"));
 const Coliseum = lazy(() => import("./pages/Coliseum"));
@@ -882,6 +883,10 @@ function AppShell() {
                   <Route path="/frameworks/:slug" component={ContentReviewNotice} />
                   <Route path="/sectors/:slug" component={ContentReviewNotice} />
                   <Route path="/industries/:slug" component={ContentReviewNotice} />
+                  {/* Two reviewed posts restored 2026-10-12 (client/src/data/blog-published.json).
+                      Exact paths placed BEFORE /blog/:slug: every other slug and /blog itself stay withdrawn. */}
+                  <Route path="/blog/how-to-verify-an-ai-measurement">{() => <BlogPost slug="how-to-verify-an-ai-measurement" />}</Route>
+                  <Route path="/blog/keeping-ai-claims-current">{() => <BlogPost slug="keeping-ai-claims-current" />}</Route>
                   <Route path="/blog/:slug" component={ContentReviewNotice} />
                   <Route path="/models" component={ModelRegistry} />
                   <Route path="/framework-catalog" component={FrameworkCatalog} />

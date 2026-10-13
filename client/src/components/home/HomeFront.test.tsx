@@ -120,6 +120,24 @@ describe("HomeHero", () => {
     expect(html).toContain('data-testid="hero-cta-check"');
     expect(html).toContain('data-testid="hero-cta-agents"');
   });
+
+  it("has exactly one primary CTA, Live board, with Verify as the outlined secondary", () => {
+    const html = render(<HomeHero />);
+    expect(html.match(/data-cta="primary"/g)).toHaveLength(1);
+    expect(html.match(/data-cta="secondary"/g)).toHaveLength(1);
+    // Only the primary carries the filled button style.
+    expect(html.match(/bg-emerald-400 px-6/g)).toHaveLength(1);
+    const tag = (id: string) => html.match(new RegExp(`<a[^>]*data-testid="${id}"[^>]*>([^<]*)<`)) ?? [];
+    const [board, boardText] = tag("hero-cta-board");
+    expect(board).toContain('href="/board"');
+    expect(board).toContain('data-cta="primary"');
+    expect(boardText).toBe("Live board");
+    const [check, checkText] = tag("hero-cta-check");
+    expect(check).toContain('href="/gspc-verify"');
+    expect(check).toContain('data-cta="secondary"');
+    expect(check).not.toContain("bg-emerald-400 px-6");
+    expect(checkText).toBe("Verify a record");
+  });
 });
 
 describe("LiveBoardGlance", () => {
