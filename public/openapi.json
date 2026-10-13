@@ -1237,7 +1237,7 @@
         "operationId": "x402_coverage_evidence",
         "parameters": [
           {
-            "description": "XRPL asset symbol or issuer address to evidence (required). Example RLUSD. Use preview=1 for free unsigned measurement.",
+            "description": "DefiLlama stablecoin id, symbol, or exact asset name (required). Example tether. Collisions answer 409 with candidate ids. Use preview=1 for the free evaluation row.",
             "example": "tether",
             "in": "query",
             "name": "asset",
@@ -1268,7 +1268,7 @@
                 }
               }
             },
-            "description": ""
+            "description": "The assembled coverage-evidence row for the named asset: canonical identity, measurement state with method and measured_at (or the published reason), provenance digests (canonical version and SHA-256), this record's honest anchor state with signed packs counted as 0, the settlement echo, and the measurement-is-not-certification disclaimer."
           },
           "402": {
             "content": {
@@ -1276,7 +1276,7 @@
                 "example": {
                   "accepts": [
                     {
-                      "amount": null,
+                      "amount": "20000",
                       "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
                       "extra": {
                         "decimals": 6,
@@ -1284,7 +1284,7 @@
                         "symbol": "USDC",
                         "version": "2"
                       },
-                      "maxAmountRequired": null,
+                      "maxAmountRequired": "20000",
                       "maxTimeoutSeconds": 300,
                       "network": "eip155:8453",
                       "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
