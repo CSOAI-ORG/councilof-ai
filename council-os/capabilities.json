@@ -892,9 +892,7 @@
         "csoai.retired-endpoint/0.1"
       ],
       "source": "functions/api/atlas.ts",
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -920,9 +918,7 @@
         "csoai.retired-endpoint/0.1"
       ],
       "source": "functions/api/atlas.ts",
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -1139,9 +1135,7 @@
         "csoai.retired-endpoint/0.1"
       ],
       "source": "functions/api/certificate-schema.ts",
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -1336,14 +1330,14 @@
       "description_state": "DOCUMENTED",
       "id": "api-checkout-post",
       "kind": "http",
-      "lifecycle": "LIVE",
+      "lifecycle": "DOOR_CLOSED",
       "method": "POST",
       "name": "Checkout (POST)",
       "path": "/api/checkout",
       "payment": "free",
       "probe": {
         "expect_status": [
-          200
+          404
         ],
         "method": "POST",
         "request": "/api/checkout",
@@ -1352,9 +1346,7 @@
       },
       "schema_refs": [],
       "source": "functions/api/checkout.ts",
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "both",
@@ -2439,7 +2431,7 @@
       "description_state": "DOCUMENTED",
       "id": "api-files",
       "kind": "http",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "method": "GET",
       "name": "Files",
       "path": "/api/files",
@@ -2456,9 +2448,7 @@
         "csoai.retired-endpoint/0.1"
       ],
       "source": "functions/api/files.ts",
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -2466,7 +2456,7 @@
       "description_state": "DOCUMENTED",
       "id": "api-files-post",
       "kind": "http",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "method": "POST",
       "name": "Files (POST)",
       "path": "/api/files",
@@ -2484,9 +2474,7 @@
         "csoai.retired-endpoint/0.1"
       ],
       "source": "functions/api/files.ts",
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -2648,9 +2636,7 @@
       },
       "schema_refs": [],
       "source": "functions/api/fulfill.ts",
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -2675,9 +2661,7 @@
         "csoai.retired-endpoint/0.1"
       ],
       "source": "functions/api/growth-loops.ts",
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "both",
@@ -3018,7 +3002,7 @@
       "description_state": "DOCUMENTED",
       "id": "api-memory",
       "kind": "http",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "method": "GET",
       "name": "Memory",
       "path": "/api/memory",
@@ -3035,9 +3019,7 @@
         "csoai.retired-endpoint/0.1"
       ],
       "source": "functions/api/memory.ts",
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -3045,7 +3027,7 @@
       "description_state": "DOCUMENTED",
       "id": "api-memory-post",
       "kind": "http",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "method": "POST",
       "name": "Memory (POST)",
       "path": "/api/memory",
@@ -3063,9 +3045,7 @@
         "csoai.retired-endpoint/0.1"
       ],
       "source": "functions/api/memory.ts",
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -3312,7 +3292,7 @@
       "description_state": "DOCUMENTED",
       "id": "api-operator",
       "kind": "http",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "method": "GET",
       "name": "Operator",
       "path": "/api/operator",
@@ -3329,9 +3309,7 @@
         "csoai.retired-endpoint/0.1"
       ],
       "source": "functions/api/operator.ts",
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -3339,7 +3317,7 @@
       "description_state": "DOCUMENTED",
       "id": "api-operator-post",
       "kind": "http",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "method": "POST",
       "name": "Operator (POST)",
       "path": "/api/operator",
@@ -3357,9 +3335,7 @@
         "csoai.retired-endpoint/0.1"
       ],
       "source": "functions/api/operator.ts",
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -3463,9 +3439,7 @@
         "csoai.retired-endpoint/0.1"
       ],
       "source": "functions/api/paddle-webhook.ts",
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -3491,9 +3465,7 @@
         "csoai.retired-endpoint/0.1"
       ],
       "source": "functions/api/paddle-webhook.ts",
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -3814,9 +3786,7 @@
         "csoai.retired-endpoint/0.1"
       ],
       "source": "functions/api/prod-readiness.ts",
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -4635,7 +4605,7 @@
       "description_state": "DOCUMENTED",
       "id": "api-sandbox",
       "kind": "http",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "method": "GET",
       "name": "Sandbox",
       "path": "/api/sandbox",
@@ -4652,9 +4622,7 @@
         "csoai.retired-endpoint/0.1"
       ],
       "source": "functions/api/sandbox.ts",
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -4662,7 +4630,7 @@
       "description_state": "DOCUMENTED",
       "id": "api-sandbox-post",
       "kind": "http",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "method": "POST",
       "name": "Sandbox (POST)",
       "path": "/api/sandbox",
@@ -4680,9 +4648,7 @@
         "csoai.retired-endpoint/0.1"
       ],
       "source": "functions/api/sandbox.ts",
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -4919,9 +4885,7 @@
         "csoai.retired-endpoint/0.1"
       ],
       "source": "functions/api/synthesis.ts",
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -7512,6 +7476,114 @@
       "path": "/api/discover/ondo-ousg",
       "method": "POST",
       "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-atlas",
+      "path": "/api/atlas",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-atlas-post",
+      "path": "/api/atlas",
+      "method": "POST",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-certificate-schema",
+      "path": "/api/certificate-schema",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-checkout-post",
+      "path": "/api/checkout",
+      "method": "POST",
+      "reason": "withdrawn (DOOR_CLOSED): the handler still answers its fail-closed 404, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-files",
+      "path": "/api/files",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-files-post",
+      "path": "/api/files",
+      "method": "POST",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-fulfill",
+      "path": "/api/fulfill",
+      "method": "GET",
+      "reason": "withdrawn (DOOR_CLOSED): the handler still answers its fail-closed 404, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-growth-loops",
+      "path": "/api/growth-loops",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-memory",
+      "path": "/api/memory",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-memory-post",
+      "path": "/api/memory",
+      "method": "POST",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-operator",
+      "path": "/api/operator",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-operator-post",
+      "path": "/api/operator",
+      "method": "POST",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-paddle-webhook",
+      "path": "/api/paddle-webhook",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-paddle-webhook-post",
+      "path": "/api/paddle-webhook",
+      "method": "POST",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-prod-readiness",
+      "path": "/api/prod-readiness",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-sandbox",
+      "path": "/api/sandbox",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-sandbox-post",
+      "path": "/api/sandbox",
+      "method": "POST",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-synthesis",
+      "path": "/api/synthesis",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
     }
   ],
   "rules": [

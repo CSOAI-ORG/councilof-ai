@@ -586,7 +586,7 @@
       "description": "POST /api/checkout — public door is closed.",
       "endpoint": "/api/checkout",
       "method": "POST",
-      "lifecycle": "LIVE",
+      "lifecycle": "DOOR_CLOSED",
       "audience": "agent",
       "payment": "free"
     },
@@ -1106,7 +1106,7 @@
       "description": "files — retired until its response can be derived from current evidence.",
       "endpoint": "/api/files",
       "method": "GET",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "audience": "agent",
       "payment": "free"
     },
@@ -1119,7 +1119,7 @@
       "description": "files — retired until its response can be derived from current evidence.",
       "endpoint": "/api/files",
       "method": "POST",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "audience": "agent",
       "payment": "free"
     },
@@ -1379,7 +1379,7 @@
       "description": "memory — retired until its response can be derived from current evidence.",
       "endpoint": "/api/memory",
       "method": "GET",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "audience": "agent",
       "payment": "free"
     },
@@ -1392,7 +1392,7 @@
       "description": "memory — retired until its response can be derived from current evidence.",
       "endpoint": "/api/memory",
       "method": "POST",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "audience": "agent",
       "payment": "free"
     },
@@ -1522,7 +1522,7 @@
       "description": "operator — retired until its response can be derived from current evidence.",
       "endpoint": "/api/operator",
       "method": "GET",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "audience": "agent",
       "payment": "free"
     },
@@ -1535,7 +1535,7 @@
       "description": "operator — retired until its response can be derived from current evidence.",
       "endpoint": "/api/operator",
       "method": "POST",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "audience": "agent",
       "payment": "free"
     },
@@ -2146,7 +2146,7 @@
       "description": "sandbox — retired until its response can be derived from current evidence.",
       "endpoint": "/api/sandbox",
       "method": "GET",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "audience": "agent",
       "payment": "free"
     },
@@ -2159,7 +2159,7 @@
       "description": "sandbox — retired until its response can be derived from current evidence.",
       "endpoint": "/api/sandbox",
       "method": "POST",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "audience": "agent",
       "payment": "free"
     },

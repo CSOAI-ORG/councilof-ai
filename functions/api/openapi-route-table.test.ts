@@ -3,6 +3,8 @@ import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import registry from "../../evidence/mcp-registry.json";
+import { onRequestPost as checkout } from "./checkout";
+import { onRequestGet as fulfill } from "./fulfill";
 
 /**
  * G-2 (2026-09-22), second half. public/openapi.json documents 113 paths and the MCP
@@ -16,12 +18,19 @@ import registry from "../../evidence/mcp-registry.json";
  * state NOT_IMPLEMENTED, /api/atlas answers 503 with csoai.retired-endpoint/0.1 and
  * code RETIRED, /api/checkout and /api/fulfill answer 404 because the public door is
  * deliberately closed, and /api/contact answers 404 to GET because it is POST-only.
- * All five have handlers, and openapi already documents each one's real status code and
- * marks it with x-csoai-lifecycle (NOT_IMPLEMENTED / DOOR_CLOSED / QUARANTINED_PRE_RELEASE).
- * A route that states its own absence is not a dead surface; a route that is documented
- * as working and has no code behind it is. That second class is what this guards, and it
- * also holds the lifecycle markers in place so the first class cannot quietly become the
- * second.
+ * All five have handlers. A route that states its own absence is not a dead surface; a
+ * route that is documented as working and has no code behind it is. That second class is
+ * what this guards.
+ *
+ * WHAT IS LISTED (13 Oct 2026). A route that is not released yet (NOT_IMPLEMENTED,
+ * QUARANTINED_PRE_RELEASE) is listed with its real status code and its x-csoai-lifecycle
+ * marker, and this test holds those markers in place. A route that has been WITHDRAWN
+ * (RETIRED, DOOR_CLOSED) is not listed at all: the marker is ours, and every other reader
+ * of the document lists a path as an API. This header said openapi "already documents"
+ * /api/checkout's real status code. It did not: checkout.ts carried no marker, so the
+ * document published POST /api/checkout as a plain 200 while the handler answered 404 —
+ * and the marker test below, which only reads operations whose documented codes are all
+ * absence codes, could not see it. The handler is now called, below.
  */
 
 const REPO = join(fileURLToPath(new URL(".", import.meta.url)), "..", "..");
@@ -126,6 +135,38 @@ describe("public/openapi.json documents no path this repo does not serve", () =>
       }
     }
     expect(unmarked).toEqual([]);
+  });
+
+  it("no withdrawn route is listed: nothing marked RETIRED or DOOR_CLOSED, nothing documented as only 404/410", () => {
+    const listed: string[] = [];
+    for (const [path, item] of Object.entries(SPEC.paths)) {
+      for (const [method, op] of Object.entries(item)) {
+        if (!HTTP_METHODS.includes(method.toLowerCase())) continue;
+        const codes = Object.keys(op.responses ?? {});
+        const gone = codes.length > 0 && codes.every((c) => c === "404" || c === "410");
+        if (gone || ["RETIRED", "DOOR_CLOSED"].includes(op["x-csoai-lifecycle"] ?? "")) {
+          listed.push(`${method.toUpperCase()} ${path}`);
+        }
+      }
+    }
+    // The fix is a deletion at the producer (scripts/build_openapi.py drops them), never a relabel.
+    expect(listed).toEqual([]);
+  });
+});
+
+describe("a closed door says so in its own source, and is not listed", () => {
+  // The handler is CALLED: a marker that the handler's own answer contradicts is the defect
+  // this was written for (POST /api/checkout: 404 on the wire, 200 in the document).
+  it.each([
+    ["/api/checkout", "post", checkout],
+    ["/api/fulfill", "get", fulfill],
+  ] as const)("%s (%s) answers 404, carries @openapi-closed, and has no operation in the document", async (path, _method, handler) => {
+    const res = await (handler as unknown as (c: unknown) => Promise<Response>)({});
+    expect(res.status).toBe(404);
+    expect(await res.json()).toMatchObject({ configured: false, public_prices: false });
+    const src = readFileSync(join(REPO, "functions", `${path}.ts`), "utf8");
+    expect(src).toContain("@openapi-closed");
+    expect(SPEC.paths[path]).toBeUndefined();
   });
 });
 

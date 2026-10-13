@@ -676,52 +676,6 @@
         "summary": "GET /api/assess/key \u2014 the verification half of the signed assessment. AssessTool's copy tells readers to fetch the public key from here and check the signature themselves; until now the path\u2026"
       }
     },
-    "/api/atlas": {
-      "get": {
-        "description": "atlas \u2014 retired until its response can be derived from current evidence.",
-        "operationId": "get__api_atlas",
-        "responses": {
-          "503": {
-            "content": {
-              "application/json": {
-                "example": {
-                  "code": "RETIRED",
-                  "endpoint": "/api/atlas",
-                  "schema": "csoai.retired-endpoint/0.1",
-                  "status": "UNAVAILABLE"
-                }
-              }
-            },
-            "description": "Retired \u2014 withdrawn, not pre-release. csoai.retired-endpoint/0.1, code RETIRED"
-          }
-        },
-        "security": [],
-        "summary": "atlas \u2014 retired until its response can be derived from current evidence.",
-        "x-csoai-lifecycle": "RETIRED"
-      },
-      "post": {
-        "description": "atlas \u2014 retired until its response can be derived from current evidence.",
-        "operationId": "post__api_atlas",
-        "responses": {
-          "503": {
-            "content": {
-              "application/json": {
-                "example": {
-                  "code": "RETIRED",
-                  "endpoint": "/api/atlas",
-                  "schema": "csoai.retired-endpoint/0.1",
-                  "status": "UNAVAILABLE"
-                }
-              }
-            },
-            "description": "Retired \u2014 withdrawn, not pre-release. csoai.retired-endpoint/0.1, code RETIRED"
-          }
-        },
-        "security": [],
-        "summary": "atlas \u2014 retired until its response can be derived from current evidence.",
-        "x-csoai-lifecycle": "RETIRED"
-      }
-    },
     "/api/axis-register": {
       "get": {
         "description": "GET /api/axis-register \u2014 the GSPC axis register (canonical scored rows).",
@@ -841,30 +795,6 @@
         "summary": "GET /api/cards \u2014 live signed-measurement surface (G4 fix)."
       }
     },
-    "/api/certificate-schema": {
-      "get": {
-        "description": "certificate-schema \u2014 withdrawn; the record is csoai.completion-record/0.1.",
-        "operationId": "get__api_certificate-schema",
-        "responses": {
-          "503": {
-            "content": {
-              "application/json": {
-                "example": {
-                  "code": "RETIRED",
-                  "endpoint": "/api/certificate-schema",
-                  "schema": "csoai.retired-endpoint/0.1",
-                  "status": "UNAVAILABLE"
-                }
-              }
-            },
-            "description": "Retired \u2014 withdrawn, not pre-release. csoai.retired-endpoint/0.1, code RETIRED"
-          }
-        },
-        "security": [],
-        "summary": "certificate-schema \u2014 withdrawn; the record is csoai.completion-record/0.1.",
-        "x-csoai-lifecycle": "RETIRED"
-      }
-    },
     "/api/challenge": {
       "get": {
         "description": "",
@@ -923,22 +853,6 @@
         },
         "security": [],
         "summary": "The reply's state, reduced to the words /api/usage counts (grounded / unknown / needs_input / ...)."
-      }
-    },
-    "/api/checkout": {
-      "post": {
-        "description": "POST /api/checkout \u2014 public door is closed.",
-        "operationId": "post__api_checkout",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {}
-            },
-            "description": "OK"
-          }
-        },
-        "security": [],
-        "summary": "POST /api/checkout \u2014 public door is closed."
       }
     },
     "/api/claims/events": {
@@ -2389,38 +2303,6 @@
         }
       }
     },
-    "/api/files": {
-      "get": {
-        "description": "files \u2014 retired until its response can be derived from current evidence.",
-        "operationId": "get__api_files",
-        "responses": {
-          "503": {
-            "content": {
-              "application/json": {}
-            },
-            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
-          }
-        },
-        "security": [],
-        "summary": "files \u2014 retired until its response can be derived from current evidence.",
-        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
-      },
-      "post": {
-        "description": "files \u2014 retired until its response can be derived from current evidence.",
-        "operationId": "post__api_files",
-        "responses": {
-          "503": {
-            "content": {
-              "application/json": {}
-            },
-            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
-          }
-        },
-        "security": [],
-        "summary": "files \u2014 retired until its response can be derived from current evidence.",
-        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
-      }
-    },
     "/api/findings": {
       "get": {
         "description": "",
@@ -2693,52 +2575,6 @@
             "x402"
           ]
         }
-      }
-    },
-    "/api/fulfill": {
-      "get": {
-        "description": "GET /api/fulfill \u2014 public fulfillment door is closed.",
-        "operationId": "get__api_fulfill",
-        "responses": {
-          "404": {
-            "content": {
-              "application/json": {
-                "example": {
-                  "configured": false,
-                  "public_prices": false
-                }
-              }
-            },
-            "description": "Door closed \u2014 no public prices; a grade is never sold"
-          }
-        },
-        "security": [],
-        "summary": "GET /api/fulfill \u2014 public fulfillment door is closed.",
-        "x-csoai-lifecycle": "DOOR_CLOSED"
-      }
-    },
-    "/api/growth-loops": {
-      "get": {
-        "description": "/api/growth-loops \u2014 retired until loop status is derived from current evidence.",
-        "operationId": "get__api_growth-loops",
-        "responses": {
-          "503": {
-            "content": {
-              "application/json": {
-                "example": {
-                  "code": "RETIRED",
-                  "endpoint": "/api/growth-loops",
-                  "schema": "csoai.retired-endpoint/0.1",
-                  "status": "UNAVAILABLE"
-                }
-              }
-            },
-            "description": "Retired \u2014 withdrawn, not pre-release. csoai.retired-endpoint/0.1, code RETIRED"
-          }
-        },
-        "security": [],
-        "summary": "/api/growth-loops \u2014 retired until loop status is derived from current evidence.",
-        "x-csoai-lifecycle": "RETIRED"
       }
     },
     "/api/gspc": {
@@ -3232,38 +3068,6 @@
         }
       }
     },
-    "/api/memory": {
-      "get": {
-        "description": "memory \u2014 retired until its response can be derived from current evidence.",
-        "operationId": "get__api_memory",
-        "responses": {
-          "503": {
-            "content": {
-              "application/json": {}
-            },
-            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
-          }
-        },
-        "security": [],
-        "summary": "memory \u2014 retired until its response can be derived from current evidence.",
-        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
-      },
-      "post": {
-        "description": "memory \u2014 retired until its response can be derived from current evidence.",
-        "operationId": "post__api_memory",
-        "responses": {
-          "503": {
-            "content": {
-              "application/json": {}
-            },
-            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
-          }
-        },
-        "security": [],
-        "summary": "memory \u2014 retired until its response can be derived from current evidence.",
-        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
-      }
-    },
     "/api/methodology": {
       "get": {
         "description": "",
@@ -3370,38 +3174,6 @@
         "summary": "GET /api/openapi.json \u2014 an OpenAPI 3.1 description of the PUBLIC read endpoints that already exist, for ChatGPT / Custom-GPT Actions and any other schema importer."
       }
     },
-    "/api/operator": {
-      "get": {
-        "description": "operator \u2014 retired until its response can be derived from current evidence.",
-        "operationId": "get__api_operator",
-        "responses": {
-          "503": {
-            "content": {
-              "application/json": {}
-            },
-            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
-          }
-        },
-        "security": [],
-        "summary": "operator \u2014 retired until its response can be derived from current evidence.",
-        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
-      },
-      "post": {
-        "description": "operator \u2014 retired until its response can be derived from current evidence.",
-        "operationId": "post__api_operator",
-        "responses": {
-          "503": {
-            "content": {
-              "application/json": {}
-            },
-            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
-          }
-        },
-        "security": [],
-        "summary": "operator \u2014 retired until its response can be derived from current evidence.",
-        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
-      }
-    },
     "/api/otel": {
       "get": {
         "description": "GET /api/otel \u2014 collector presence. LIVE only if a collector answers. Else UNCHECKABLE. Not a 23rd axis.",
@@ -3448,52 +3220,6 @@
         },
         "security": [],
         "summary": "GET /api/owm \u2014 the outer world model snapshot: every observed subject (own surfaces included), its state (CONSISTENT / INCONSISTENT / SINGLE_SURFACE / UNCHECKABLE / UNMEASURED), last change\u2026"
-      }
-    },
-    "/api/paddle-webhook": {
-      "get": {
-        "description": "paddle-webhook \u2014 withdrawn: records are free and are never called certificates.",
-        "operationId": "get__api_paddle-webhook",
-        "responses": {
-          "503": {
-            "content": {
-              "application/json": {
-                "example": {
-                  "code": "RETIRED",
-                  "endpoint": "/api/paddle-webhook",
-                  "schema": "csoai.retired-endpoint/0.1",
-                  "status": "UNAVAILABLE"
-                }
-              }
-            },
-            "description": "Retired \u2014 withdrawn, not pre-release. csoai.retired-endpoint/0.1, code RETIRED"
-          }
-        },
-        "security": [],
-        "summary": "paddle-webhook \u2014 withdrawn: records are free and are never called certificates.",
-        "x-csoai-lifecycle": "RETIRED"
-      },
-      "post": {
-        "description": "paddle-webhook \u2014 withdrawn: records are free and are never called certificates.",
-        "operationId": "post__api_paddle-webhook",
-        "responses": {
-          "503": {
-            "content": {
-              "application/json": {
-                "example": {
-                  "code": "RETIRED",
-                  "endpoint": "/api/paddle-webhook",
-                  "schema": "csoai.retired-endpoint/0.1",
-                  "status": "UNAVAILABLE"
-                }
-              }
-            },
-            "description": "Retired \u2014 withdrawn, not pre-release. csoai.retired-endpoint/0.1, code RETIRED"
-          }
-        },
-        "security": [],
-        "summary": "paddle-webhook \u2014 withdrawn: records are free and are never called certificates.",
-        "x-csoai-lifecycle": "RETIRED"
       }
     },
     "/api/pop/a2a": {
@@ -6085,30 +5811,6 @@
         "summary": "GET /api/press.json \u2014 what changed, with the command that proves each line."
       }
     },
-    "/api/prod-readiness": {
-      "get": {
-        "description": "/api/prod-readiness \u2014 retired until readiness is derived from current evidence.",
-        "operationId": "get__api_prod-readiness",
-        "responses": {
-          "503": {
-            "content": {
-              "application/json": {
-                "example": {
-                  "code": "RETIRED",
-                  "endpoint": "/api/prod-readiness",
-                  "schema": "csoai.retired-endpoint/0.1",
-                  "status": "UNAVAILABLE"
-                }
-              }
-            },
-            "description": "Retired \u2014 withdrawn, not pre-release. csoai.retired-endpoint/0.1, code RETIRED"
-          }
-        },
-        "security": [],
-        "summary": "/api/prod-readiness \u2014 retired until readiness is derived from current evidence.",
-        "x-csoai-lifecycle": "RETIRED"
-      }
-    },
     "/api/proof": {
       "get": {
         "description": "Inclusion proof bundle for leaves available in the last published Merkle root, read from that root. Each leaf comes with its hash, index and proof path, plus the root and the signed card count. States: included with a path, or absent from the root. Verification is free: recompute any path against /root.json. Bare path is validation (HTTP 400 naming sha or bundle). Free inclusion via optional sha. Paid root bundle when bundle=1 (HTTP 402).",
@@ -8424,38 +8126,6 @@
         }
       }
     },
-    "/api/sandbox": {
-      "get": {
-        "description": "sandbox \u2014 retired until its response can be derived from current evidence.",
-        "operationId": "get__api_sandbox",
-        "responses": {
-          "503": {
-            "content": {
-              "application/json": {}
-            },
-            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
-          }
-        },
-        "security": [],
-        "summary": "sandbox \u2014 retired until its response can be derived from current evidence.",
-        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
-      },
-      "post": {
-        "description": "sandbox \u2014 retired until its response can be derived from current evidence.",
-        "operationId": "post__api_sandbox",
-        "responses": {
-          "503": {
-            "content": {
-              "application/json": {}
-            },
-            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
-          }
-        },
-        "security": [],
-        "summary": "sandbox \u2014 retired until its response can be derived from current evidence.",
-        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
-      }
-    },
     "/api/security": {
       "get": {
         "description": "",
@@ -8738,30 +8408,6 @@
         },
         "security": [],
         "summary": "GET /api/swift \u2014 reader of public/interop/swift-census.json. Three-state census tape (LIVE / COMMITTED / DISCOVERED). DISCOVERED-first, not MEASURED. Not a SWIFT client feed. writes_board=false\u2026"
-      }
-    },
-    "/api/synthesis": {
-      "get": {
-        "description": "/api/synthesis \u2014 retired until mappings is derived from current evidence.",
-        "operationId": "get__api_synthesis",
-        "responses": {
-          "503": {
-            "content": {
-              "application/json": {
-                "example": {
-                  "code": "RETIRED",
-                  "endpoint": "/api/synthesis",
-                  "schema": "csoai.retired-endpoint/0.1",
-                  "status": "UNAVAILABLE"
-                }
-              }
-            },
-            "description": "Retired \u2014 withdrawn, not pre-release. csoai.retired-endpoint/0.1, code RETIRED"
-          }
-        },
-        "security": [],
-        "summary": "/api/synthesis \u2014 retired until mappings is derived from current evidence.",
-        "x-csoai-lifecycle": "RETIRED"
       }
     },
     "/api/tools": {
@@ -10150,7 +9796,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 118,
+    "public_operations": 117,
     "quarantined": [
       {
         "buyable": false,
@@ -10166,7 +9812,7 @@
       "well_known": "csoai.x402/0.2"
     },
     "scheme": "exact",
-    "unauthenticated_facades": 38,
+    "unauthenticated_facades": 21,
     "well_known": "https://councilof.ai/.well-known/x402.json"
   }
 }
