@@ -54,14 +54,6 @@ jobs:
         with: { python-version: '3.12' }
       - name: Fetch source of truth (csoai-static-deploy2 main)
         run: git clone --depth 1 https://github.com/CSOAI-ORG/csoai-static-deploy2.git src
-      - name: Fetch the apex middleware and its builder (this repository)
-        uses: actions/checkout@v4
-        with:
-          path: apex
-          sparse-checkout: |
-            scripts/csoai-site/
-          sparse-checkout-cone-mode: false
-          persist-credentials: false
       - name: Build allowlisted _site
         working-directory: src
         run: |
@@ -84,6 +76,25 @@ jobs:
           print('did.json kids OK:', kids)
           print('did.json services OK:', types)
           PY
+      - name: Leave the source's index.html out of the upload (no fallback page)
+        working-directory: src
+        run: |
+          # 2026-10-13: https://csoai.org/.well-known/<anything> answered 200 with a
+          # page. Pages answers a path that has no file with the upload's /index.html
+          # and status 200 when the upload holds one and no top-level 404.html. The
+          # source ships an index.html, and the middleware passes every
+          # /.well-known/* path to the asset server, so a path with no file came
+          # back as that page: scitt-configuration, x402.json, openid-configuration,
+          # any typo. Nothing on this host serves /index.html on purpose (the
+          # middleware answers it with a 308), so it is left out of the upload.
+          # Read live on 13 Oct: the two deployments of this project that held no
+          # index.html (4371cb20 of 28 Sep, 2451e6fc of 1 Oct) answer 404 for those
+          # paths; the two that hold it (8c45f262, and this workflow's own upload)
+          # answer 200 with the page.
+          rm -f _site/index.html
+          test ! -e _site/index.html
+          test -f _site/.well-known/did.json
+          echo "no index.html in the upload: a /.well-known/ path with no file answers 404"
       - name: Twin living cards+proofs from councilof.ai (not SPA)
         working-directory: src
         run: |
@@ -127,20 +138,21 @@ jobs:
           # middleware that 308s everything except /.well-known/* (did:web).
           rm -rf functions _site/functions
           mkdir -p functions
-          # 2026-10-13: the handler written here by hand passed EVERY /.well-known/*
-          # path to the asset server. Pages answers a path that has no file with
-          # /index.html and 200 (this upload has no top-level 404.html), so
-          # csoai.org/.well-known/<anything> returned the csoai-static-deploy2
-          # index.html as if it were the document asked for: scitt-configuration,
-          # x402.json, openid-configuration, any typo. The handler is now built
-          # from the files this upload holds (scripts/csoai-site/ in this
-          # repository): a listed file is served by the asset server untouched,
-          # any other /.well-known/ path is 404, everything else is a 308 to
-          # councilof.ai. The builder runs its own check on what it wrote and
-          # exits 1 if did.json or an agent card would not be served.
-          # Keep this the LAST step before the upload: a file added to
-          # .well-known after it is not on the list and would answer 404.
-          node ../apex/scripts/csoai-site/build-apex-functions.mjs _site functions
+          cat > functions/_middleware.js <<'JS'
+          export async function onRequest(context) {
+            const url = new URL(context.request.url);
+            const p = url.pathname;
+            // 308 everything except /.well-known/* (did:web + scitt-keys key
+            // discovery — slow-moving, safe to twin as bytes). The hourly-moving
+            // trust surface (root.json, cards, proofs, schema) redirects to the
+            // canonical host; verifiers follow the 308 to identical bytes.
+            if (p === '/.well-known' || p.startsWith('/.well-known/')) {
+              return context.next();
+            }
+            const dest = new URL(url.pathname + url.search + url.hash, 'https://councilof.ai');
+            return Response.redirect(dest.toString(), 308);
+          }
+          JS
           test -f functions/_middleware.js
           test -f _site/.well-known/did.json
           echo "redirect-only middleware ready"
@@ -220,7 +232,7 @@ jobs:
           sys.exit(1)
           PY
           # 2026-10-13: a /.well-known/ path with no file behind it is 404 on the
-          # apex, never a page. It answered 200 with the fallback index.html.
+          # apex, never a page. It answered 200 with the source's index.html.
           probe="https://csoai.org/.well-known/no-such-file-${GITHUB_RUN_ID}"
           code=$(curl -sS -o /dev/null -w "%{http_code}" --max-time 20 "$probe")
           echo "apex unknown /.well-known/ path: $code ($probe)"
