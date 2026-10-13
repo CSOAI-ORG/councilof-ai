@@ -1,0 +1,13 @@
+# KEYLESS BLOCKER PROBE (sigstore-python 4.5.0, macOS, no CI environment)
+retrieved_at=2026-09-20T01:57:15Z
+
+sigstore-python: 4.5.0
+detect_credential() -> None
+production OIDC issuer (sigstore docs): https://oauth2.sigstore.dev/auth
+
+RESULT: no ambient OIDC credential (not GitHub Actions/GCP/Buildkite).
+`sigstore sign` would fall back to the interactive OAuth2 browser flow,
+binding a PERSONAL account identity into a Fulcio certificate, published
+permanently in public Rekor. Declined (operator decision 2026-09-20):
+identity-bound bundle leg = UNCHECKABLE, not failed, not passed.
+exit=0

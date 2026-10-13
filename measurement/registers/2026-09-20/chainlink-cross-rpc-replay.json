@@ -1,0 +1,102 @@
+{
+  "endpoints": {
+    "cloudflare": "https://cloudflare-eth.com",
+    "drpc": "https://eth.drpc.org",
+    "publicnode": "https://ethereum.publicnode.com"
+  },
+  "endpoints_used": [
+    "publicnode",
+    "drpc"
+  ],
+  "overall": "PASS",
+  "pinned_block": 26015635,
+  "publication": "disabled",
+  "recorded_at": "2026-09-20T02:08:38.214174+00:00",
+  "required_endpoints": 2,
+  "residual_limitation": "Both replays ran from one physical seat; endpoint operators differ but the network path does not. A second-seat replay remains open.",
+  "schema": "csoai.chainlink-cross-rpc-replay/0.1",
+  "signing": "disabled",
+  "steps": [
+    {
+      "raw_sha256": "76b7a6f058b0321b998087686f3cece461ccaa79aafbb655b847ad16b9b1faa3",
+      "state": "OBSERVED",
+      "step": "eth_blockNumber:publicnode",
+      "value": 26015635
+    },
+    {
+      "error_type": "TypeError",
+      "state": "UNCHECKABLE",
+      "step": "eth_blockNumber:cloudflare"
+    },
+    {
+      "raw_sha256": "ad199a33e3a84e8840ee5c4514bf1183988ae4a5094a63a90b9bcdb129bb45b5",
+      "state": "OBSERVED",
+      "step": "eth_blockNumber:drpc",
+      "value": 26015636
+    },
+    {
+      "raw_sha256": "0177de4facb6c7ebde453ba15a73b3a547a8814b5dbff4884f2cf6df1e17b988",
+      "state": "OBSERVED",
+      "step": "block_hash:publicnode",
+      "value": "0xec51741432fba26e7fb2f404ffb9a51ca7a7e825625dbadf93d9d61eeca2bd7a"
+    },
+    {
+      "raw_sha256": "886b7b4e8286d7b4b010a1a14d9964fb99d71039ef392071a431ea7e27e01014",
+      "state": "OBSERVED",
+      "step": "block_hash:drpc",
+      "value": "0xec51741432fba26e7fb2f404ffb9a51ca7a7e825625dbadf93d9d61eeca2bd7a"
+    },
+    {
+      "state": "PASS",
+      "step": "same_chain_view_at_pinned_block"
+    },
+    {
+      "raw_sha256": "805ba6aeb31ea94fff491ebff30ed31b007f79102974f8f8772149dd366ebcb9",
+      "result_sha256": "305ff371d146a72e0c2e4ebdfdb745e96e7f85727dd7eaf0233c2124ba0befaf",
+      "state": "OBSERVED",
+      "step": "description:publicnode"
+    },
+    {
+      "raw_sha256": "0997e7cc60541e75dc861a426f111ba3a4c58ee364aa8ed2201b9bede341d1bb",
+      "result_sha256": "305ff371d146a72e0c2e4ebdfdb745e96e7f85727dd7eaf0233c2124ba0befaf",
+      "state": "OBSERVED",
+      "step": "description:drpc"
+    },
+    {
+      "state": "PASS",
+      "step": "description:cross_rpc_agreement"
+    },
+    {
+      "raw_sha256": "2649b788efe6b43a6c0000ed7ac73f1823e9ec2e73eaa4c63f765efa96fa6c18",
+      "result_sha256": "c669e82f0cd861e379a593f2322061b9fc478bbf562cfd9bc7671b56cb066909",
+      "state": "OBSERVED",
+      "step": "decimals:publicnode"
+    },
+    {
+      "raw_sha256": "f2ffff183bb6a444296ad1496b29982e20615e6e8dbed94da4135c5c8bded9f3",
+      "result_sha256": "c669e82f0cd861e379a593f2322061b9fc478bbf562cfd9bc7671b56cb066909",
+      "state": "OBSERVED",
+      "step": "decimals:drpc"
+    },
+    {
+      "state": "PASS",
+      "step": "decimals:cross_rpc_agreement"
+    },
+    {
+      "raw_sha256": "46c0b4eddc95bbd7e8d2e589ac1ea5c6e1a93953e60242136069f48f9e296f70",
+      "result_sha256": "09e4945a92e81a43e34c38f9166601c00ff78717d3c4d1c430fc2fb0b5dea90f",
+      "state": "OBSERVED",
+      "step": "latestRoundData:publicnode"
+    },
+    {
+      "raw_sha256": "0475161e585bfa573379eb6c6a66686f2bcb8c441ff7d955d4c55319b02e9620",
+      "result_sha256": "09e4945a92e81a43e34c38f9166601c00ff78717d3c4d1c430fc2fb0b5dea90f",
+      "state": "OBSERVED",
+      "step": "latestRoundData:drpc"
+    },
+    {
+      "state": "PASS",
+      "step": "latestRoundData:cross_rpc_agreement"
+    }
+  ]
+}

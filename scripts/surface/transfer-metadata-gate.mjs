@@ -1,0 +1,5 @@
+/** Build-only guard: do not serve archive transport metadata or mistake it for evidence. */
+import {readdirSync,lstatSync,readFileSync} from 'node:fs';import {join,resolve,relative} from 'node:path';import {fileURLToPath} from 'node:url';
+export function transportMetadata(root){root=resolve(root);const matches=[];function walk(dir){for(const name of readdirSync(dir)){const p=join(dir,name),st=lstatSync(p);if(st.isSymbolicLink())throw new Error('SYMLINK_IN_SERVED_TREE: '+relative(root,p));if(name.startsWith('._')||name==='.AppleDouble'){matches.push(relative(root,p));continue;}if(st.isDirectory())walk(p);}}walk(root);return matches;}
+export function checkTransferMetadata(root){const files=transportMetadata(root);if(files.length)throw new Error(`TRANSPORT_METADATA_IN_SERVED_TREE: ${files.length}; ${files.slice(0,4).join(', ')}`);return {state:'PASS',transport_metadata_files:0};}
+if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))console.log(JSON.stringify(checkTransferMetadata(process.argv[2]??'dist/client')));

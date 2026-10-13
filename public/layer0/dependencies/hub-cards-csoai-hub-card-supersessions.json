@@ -1,0 +1,97 @@
+{
+  "authority": {
+    "dependency_registration": true,
+    "effect_authority": false,
+    "endorsement": false,
+    "gspc_measurement": false,
+    "source_truth": false
+  },
+  "capability_id": "hub-cards",
+  "implementation": {
+    "fixture_path": "scripts/layer0/hub-cards-ledger-dependency-fixture.ts",
+    "fixture_sha256": "a06aa2bb067ee85c30e5b49589e491fe06edc7efc2939a931836ed1e7f88a249",
+    "handler_path": "functions/api/hub-cards.ts",
+    "handler_sha256": "2a85165af1067c80d5fbf6ea8095c47bbe31e6c58a76b35b15b8b255a66a4868"
+  },
+  "inputs": {
+    "baseline_source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "changed_source_sha256": "7d25302a48e33f4a224153e7b12495ae1b5ebb7112b46789ed498cad2e5eb585",
+    "invariant_hub_index_sha256": "98b5fe846642050e8de010ad68ab5e4d29b8894e573e1f53b13567206dae4358",
+    "invariant_other_ledger_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "invariant_tree_sha256": "787d5d45453450a31506eb94308d96e98ee7e62eb68f3ea941ad5e5721e6b348"
+  },
+  "law": "This receipt proves output dependence on the named ledger bytes only.",
+  "method": "synthetic fetch fixture; change only the named local ledger",
+  "outputs": {
+    "baseline_counts": {
+      "cells": 1,
+      "complete": true,
+      "duplicates_collapsed": 1,
+      "indexes_all_read": true,
+      "indexes_discovered": true,
+      "indexes_read": 1,
+      "indexes_total": 1,
+      "indexes_unread": [],
+      "measured": 0,
+      "other": 0,
+      "read_so_far": {
+        "cells": 1,
+        "measured": 0,
+        "other": 0,
+        "unmeasured": 1
+      },
+      "rows_served_by_indexes": 2,
+      "superseded_excluded": 0,
+      "superseded_ledger_read": true,
+      "supersessions_resolved": true,
+      "supersessions_unresolved": [],
+      "unmeasured": 1,
+      "withdrawals_resolved": true,
+      "withdrawals_unresolved": [],
+      "withdrawn_excluded": 0,
+      "withdrawn_ledger_read": true
+    },
+    "baseline_sha256": "bebcf63849089ded19a8684561def2ec526bd1bc807217042d3bb613be4e3b6d",
+    "changed": true,
+    "changed_counts": {
+      "cells": 1,
+      "complete": true,
+      "duplicates_collapsed": 0,
+      "indexes_all_read": true,
+      "indexes_discovered": true,
+      "indexes_read": 1,
+      "indexes_total": 1,
+      "indexes_unread": [],
+      "measured": 1,
+      "other": 0,
+      "read_so_far": {
+        "cells": 1,
+        "measured": 1,
+        "other": 0,
+        "unmeasured": 0
+      },
+      "rows_served_by_indexes": 2,
+      "superseded_excluded": 1,
+      "superseded_ledger_read": true,
+      "supersessions_resolved": true,
+      "supersessions_unresolved": [],
+      "unmeasured": 0,
+      "withdrawals_resolved": true,
+      "withdrawals_unresolved": [],
+      "withdrawn_excluded": 0,
+      "withdrawn_ledger_read": true
+    },
+    "changed_sha256": "c61b11ad30050c4164f82746880de90ed7ab8c4af77e83345a0a3f7f8e8ae156",
+    "replay_sha256": "bebcf63849089ded19a8684561def2ec526bd1bc807217042d3bb613be4e3b6d",
+    "replay_stable": true
+  },
+  "schema": "csoai.layer0-dependency-fixture/0.1",
+  "scope_match_required": true,
+  "source_id": "csoai-hub-card-supersessions",
+  "source_scope": "https://councilof.ai/interop/mill-cards-signed/SUPERSEDED.jsonl",
+  "state": "VERIFIED_DIRECT_DEPENDENCY",
+  "watch": {
+    "kind": "http_artifact",
+    "url": "https://councilof.ai/interop/mill-cards-signed/SUPERSEDED.jsonl"
+  }
+}

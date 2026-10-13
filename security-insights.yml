@@ -1,0 +1,60 @@
+header:
+  schema-version: 2.2.0
+  last-updated: '2026-09-28'
+  last-reviewed: '2026-09-28'
+  url: https://councilof.ai/security-insights.yml
+  comment: Public self-reported project security snapshot; describes this published snapshot and does not constitute certification.
+project:
+  name: Council of AI
+  homepage: https://councilof.ai/
+  administrators:
+    - name: Nicholas Templeman
+      affiliation: CSOAI Ltd
+      email: nicholas@csoai.org
+      primary: true
+  repositories:
+    - name: councilof-ai
+      url: https://github.com/CSOAI-ORG/councilof-ai
+      comment: Public Council of AI application, GSPC verifier/evidence, MCP/A2A and supporting source.
+  vulnerability-reporting:
+    reports-accepted: true
+    bug-bounty-available: false
+    contact:
+      name: Nicholas Templeman
+      affiliation: CSOAI Ltd
+      email: nicholas@csoai.org
+      primary: true
+    policy: https://councilof.ai/security/
+    in-scope:
+      - Public Council of AI source, web/API, MCP/A2A, verifier and signed-evidence tooling when the issue is specific and reproducible.
+    out-of-scope:
+      - Destructive testing, denial-of-service, credential attacks, unrelated personal data access, or charge-creating actions without explicit permission.
+    comment: No published bug bounty or guaranteed response SLA.
+  documentation:
+    design: https://councilof.ai/constitutional-harness/
+    quickstart-guide: https://councilof.ai/quickstart/
+    signature-verification: https://councilof.ai/gspc-verify/
+    support-policy: https://councilof.ai/security/
+repository:
+  url: https://github.com/CSOAI-ORG/councilof-ai
+  status: active
+  accepts-change-request: false
+  accepts-automated-change-request: false
+  core-team:
+    - name: Nicholas Templeman
+      affiliation: CSOAI Ltd
+      email: nicholas@csoai.org
+      primary: true
+  license:
+    expression: MIT
+    url: https://github.com/CSOAI-ORG/councilof-ai/blob/master/LICENSE
+  documentation:
+    governance: https://councilof.ai/constitutional-harness/
+    review-policy: https://councilof.ai/security/
+  security:
+    assessments:
+      self:
+        name: Public security posture statement
+        date: '2026-09-28'
+        evidence: https://councilof.ai/security/
+        comment: Formal repository security self-assessment has not yet been published. Public verifier/runtime evidence is not a security certification.

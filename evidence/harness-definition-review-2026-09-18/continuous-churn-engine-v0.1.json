@@ -1,0 +1,295 @@
+{
+  "schema": "csoai.continuous-churn-engine/0.1",
+  "generated_at": "2026-09-17T04:31:04.218894+00:00",
+  "title": "Continuous Churn Engine \u2014 Permissionless, Relentless, Up-to-Date",
+  "purpose": "Every time the estate changes, the engine fires one canonical-object adapter per affected source. Every adapter emits the same canonical object. The roll-up indexes the universe. Nothing waits for owner approval.",
+  "principle": "MEASURE EVERYTHING. DECIDE NOTHING. Measure before the model is released, not after. Permissionless: any source anyone can read without asking. Relentless: re-churn every source on every tick. Continuous: no pause, no batch window.",
+  "adapters": [
+    {
+      "id": "reg.clarity",
+      "source": "CLARITY Act H.R. 3633",
+      "tick": "daily",
+      "credential": "none",
+      "fetch": "https://www.congress.gov/bill/118th-congress/house-bill/968"
+    },
+    {
+      "id": "reg.regcryptoassets",
+      "source": "SEC RegCryptoAssets",
+      "tick": "daily",
+      "credential": "none",
+      "fetch": "https://www.sec.gov/rules/proposed/"
+    },
+    {
+      "id": "reg.gpa-art50",
+      "source": "EU AI Act Art 50",
+      "tick": "daily",
+      "credential": "none",
+      "fetch": "https://digital-strategy.ec.europa.eu/en/factpages/quick-facts-transparency-rules-ai-systems"
+    },
+    {
+      "id": "reg.gpa-art53",
+      "source": "EU AI Act Art 53 (GPAI)",
+      "tick": "daily",
+      "credential": "none",
+      "fetch": "https://artificialintelligenceact.eu/"
+    },
+    {
+      "id": "reg.nist-ai-rmf",
+      "source": "NIST AI RMF 1.0",
+      "tick": "weekly",
+      "credential": "none",
+      "fetch": "https://www.nist.gov/itl/ai-risk-management-framework"
+    },
+    {
+      "id": "reg.osaia-safe",
+      "source": "OSAIA SAFE RFC",
+      "tick": "on-publish",
+      "credential": "none",
+      "fetch": "https://github.com/ossf/osaia-safe"
+    },
+    {
+      "id": "reg.gpa-cdrf",
+      "source": "UK DRCF",
+      "tick": "weekly",
+      "credential": "none"
+    },
+    {
+      "id": "reg.gpa-dora",
+      "source": "DORA",
+      "tick": "weekly",
+      "credential": "none"
+    },
+    {
+      "id": "reg.gpa-ca-sb942",
+      "source": "CA SB 942",
+      "tick": "weekly",
+      "credential": "none"
+    },
+    {
+      "id": "reg.cftc-itf",
+      "source": "CFTC Innovation TF",
+      "tick": "weekly",
+      "credential": "none",
+      "fetch": "https://www.cftc.gov/innovation-task-force"
+    },
+    {
+      "id": "reg.sec-cftc-joint",
+      "source": "SEC/CFTC Joint 2026",
+      "tick": "weekly",
+      "credential": "none"
+    },
+    {
+      "id": "infra.swift-ledger",
+      "source": "SWIFT Blockchain Ledger",
+      "tick": "5min",
+      "credential": "none",
+      "fetch": "https://www.swift.com/"
+    },
+    {
+      "id": "infra.xrpl-onchain",
+      "source": "XRPL on-chain state (16 instruments)",
+      "tick": "5min",
+      "credential": "none",
+      "fetch": "https://xrpl.org/"
+    },
+    {
+      "id": "infra.xrpl-two-way",
+      "source": "XRPL two-way check",
+      "tick": "1h",
+      "credential": "none"
+    },
+    {
+      "id": "stable.universe",
+      "source": "Stablecoin universe (425)",
+      "tick": "1h",
+      "credential": "none"
+    },
+    {
+      "id": "stable.deep",
+      "source": "Stablecoin deep corpus",
+      "tick": "1h",
+      "credential": "none"
+    },
+    {
+      "id": "stable.supply",
+      "source": "Stablecoin on-chain supply",
+      "tick": "5min",
+      "credential": "none"
+    },
+    {
+      "id": "agent.tui-a",
+      "source": "TUI A enumeration",
+      "tick": "daily",
+      "credential": "none"
+    },
+    {
+      "id": "agent.tui-b",
+      "source": "TUI B measurement",
+      "tick": "daily",
+      "credential": "none"
+    },
+    {
+      "id": "agent.a2a",
+      "source": "a2a engine cards (12 engines)",
+      "tick": "daily",
+      "credential": "none"
+    },
+    {
+      "id": "agent.erc8004",
+      "source": "ERC-8004 trustless agents",
+      "tick": "1h",
+      "credential": "none",
+      "fetch": "https://eip-8004.org/"
+    },
+    {
+      "id": "agent.x402",
+      "source": "x402 doors",
+      "tick": "1h",
+      "credential": "none",
+      "fetch": "https://www.x402.org/"
+    },
+    {
+      "id": "agent.mcp",
+      "source": "MCP registry",
+      "tick": "daily",
+      "credential": "none",
+      "fetch": "https://modelcontextprotocol.io/"
+    },
+    {
+      "id": "agent.a2a-mining",
+      "source": "A2A Mining Summary",
+      "tick": "daily",
+      "credential": "none"
+    },
+    {
+      "id": "gspc.measurements",
+      "source": "GSPC measurement cards (3,998)",
+      "tick": "per-model",
+      "credential": "none"
+    },
+    {
+      "id": "gspc.whitepapers",
+      "source": "GSPC white papers (1,051)",
+      "tick": "per-paper",
+      "credential": "none"
+    },
+    {
+      "id": "gspc.root",
+      "source": "GSPC measurement-root",
+      "tick": "daily",
+      "credential": "none"
+    },
+    {
+      "id": "gspc.board",
+      "source": "GSPC board (22 axis slots)",
+      "tick": "per-run",
+      "credential": "none"
+    },
+    {
+      "id": "rwa.attest",
+      "source": "RWA attestation cards",
+      "tick": "1h",
+      "credential": "none"
+    },
+    {
+      "id": "rwa.benji",
+      "source": "Benji on-chain supply (9 chains)",
+      "tick": "5min",
+      "credential": "none"
+    },
+    {
+      "id": "rwa.wrapped",
+      "source": "Wrapped-asset parity",
+      "tick": "1h",
+      "credential": "none"
+    },
+    {
+      "id": "ai-lab.providers",
+      "source": "AI labs (12)",
+      "tick": "daily",
+      "credential": "varies"
+    },
+    {
+      "id": "ai-lab.reports",
+      "source": "Sovereign model reports",
+      "tick": "per-model",
+      "credential": "none"
+    },
+    {
+      "id": "goal.customer-protection",
+      "source": "Customer Protection Adapter",
+      "tick": "on-rule-change",
+      "credential": "none",
+      "covers": [
+        "customer_protection"
+      ]
+    },
+    {
+      "id": "goal.market-integrity",
+      "source": "Market Integrity Adapter",
+      "tick": "on-rule-change",
+      "credential": "none",
+      "covers": [
+        "market_integrity"
+      ]
+    }
+  ],
+  "engine_loop": [
+    "1. Tick fires (per-adapter schedule).",
+    "2. Adapter fetches source \u2014 public, permissionless.",
+    "3. Adapter diffs against last-known state (sha256 of canonical object).",
+    "4. If changed: write new unsigned card \u2192 submit to OTS calendar \u2192 sign Ed25519 \u2192 write signed card.",
+    "5. Append to ledger-cards-compact.json AND auto-eat/cards-compact.json.",
+    "6. Update roll-up deltas.",
+    "7. Submit PR via gh CLI."
+  ],
+  "honest_findings": [
+    "Permissionless = any source we can read without asking. We do NOT crawl authenticated registries.",
+    "Relentless = no batch window. Each adapter fires on its own tick.",
+    "Up-to-date = state at time of fetch, not at time of next manual review.",
+    "Measuring what AI companies do BEFORE they release = scrape model release notes, pre-publication papers, safety reports, evals from open weights. The estate has model reports in /public/reports/ \u2014 these are post-release. Pre-release coverage needs new adapters.",
+    "OTS calendar is currently degraded \u2014 submissions get rejected. Pipeline continues; signatures/roots may be incomplete."
+  ],
+  "next_pre_release_adapters": [
+    {
+      "id": "pre.arxiv-preprints",
+      "source": "arXiv preprints cs.AI + cs.LG + cs.CR",
+      "tick": "6h",
+      "credential": "none",
+      "fetch": "https://arxiv.org/list/cs.AI/recent"
+    },
+    {
+      "id": "pre.huggingface-models",
+      "source": "HuggingFace new model releases",
+      "tick": "1h",
+      "credential": "none",
+      "fetch": "https://huggingface.co/api/models?full=false"
+    },
+    {
+      "id": "pre.kaggle-models",
+      "source": "Kaggle new model uploads",
+      "tick": "6h",
+      "credential": "varies"
+    },
+    {
+      "id": "pre.openrouter",
+      "source": "OpenRouter new model listings",
+      "tick": "1h",
+      "credential": "varies"
+    },
+    {
+      "id": "pre.evaluations",
+      "source": "Public evals (HELM, lm-eval-harness)",
+      "tick": "6h",
+      "credential": "none"
+    },
+    {
+      "id": "pre.model-cards",
+      "source": "Provider model cards (OpenAI/Anthropic/Google)",
+      "tick": "6h",
+      "credential": "varies"
+    }
+  ],
+  "sha256": "6a32c31c8250aa956aa281e3134320f51651fc05888a0de01dd23afc26d7d7ac",
+  "byte_size": 6359
+}

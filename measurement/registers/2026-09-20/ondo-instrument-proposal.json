@@ -1,0 +1,75 @@
+{
+  "schema": "csoai.ondo-instrument-proposal/0.1",
+  "as_of": "2026-09-20",
+  "subject_id": "issuer:ondo",
+  "board_ref": "23 axes / 22 measured / 1 UNMEASURED slot (effect-binding), fetched live from https://councilof.ai/api/gspc on 2026-09-20",
+  "stop_rule": "Every row is CANDIDATE_UNMEASURED. No row may flip to MEASURED until the pinned instrument, deterministic grader, complete denominator, run output, and signed card all exist and reconcile. Measurement is never certification.",
+  "doctrine": [
+    "Map to existing GSPC axes only; no new axis is proposed here.",
+    "Asset performance (yield, TVL change, price) is never governance quality and feeds no axis.",
+    "ADR-003 (axis 24, issued-supply) is DRAFT and not ruled; supply observations are held off-board.",
+    "effect-binding is a declared UNMEASURED slot in the model-comparison family; nothing in this pack maps to it."
+  ],
+  "proposed_instruments": [
+    {
+      "instrument_id": "INST-ONDO-001",
+      "target_axis": "reserve-attestation",
+      "state": "CANDIDATE_UNMEASURED",
+      "inputs": ["ONDO-EV-013", "ONDO-EV-014", "ONDO-EV-015", "ONDO-EV-016", "ONDO-EV-017", "ONDO-EV-031", "ONDO-EV-032", "ONDO-EV-033", "ONDO-EV-034", "ONDO-EV-036", "ONDO-EV-037", "ONDO-EV-038", "ONDO-EV-039", "ONDO-EV-040", "ONDO-EV-042", "ONDO-EV-043", "ONDO-EV-044"],
+      "sketch": "Grade per attestation period: document present, hash-pinned, attestor named, period stated, ratio fields internally consistent, period contiguous with prior (market-holiday calendar applied). The USDY (Ondo USDY LLC) daily+monthly inventory already exists as rerun-reproducible input (ondo-attestation-inventory.json). Verdicts PASS / FAIL / UNCHECKABLE per period; unreachable is UNCHECKABLE, never FAIL.",
+      "denominator": "All attestation periods the issuer claims to publish, for EVERY issuing entity — currently known: Ondo USDY LLC daily (744 files, 2023-09-28..2026-09-15) and monthly (36 files, 2023-09..2026-08), INCOMPLETE until the OGM (BVI) series (GAP-09), OUSG NAV reports (GAP-01c) and Ondo Stocks Ankura attestations (GAP-08) are included; missing periods count as explicit gaps, never dropped.",
+      "blocked_by": ["GAP-01", "GAP-08", "GAP-09"],
+      "never_claims": "That attestation documents prove reserve sufficiency, solvency, or redemption capacity. Mechanism pinned (Dropbox/Drive/Ankura surfaces); document bytes not yet pinned."
+    },
+    {
+      "instrument_id": "INST-ONDO-002",
+      "target_axis": "provenance-controls",
+      "state": "CANDIDATE_UNMEASURED",
+      "inputs": ["ONDO-EV-001", "ONDO-EV-002", "ONDO-EV-008", "ONDO-EV-009", "ONDO-EV-010", "ONDO-EV-026", "ONDO-EV-027", "ONDO-EV-028", "ONDO-EV-029"],
+      "sketch": "For every docs-claimed contract address on every claimed chain: read-only eth_call-equivalent readback (code-exists, name, symbol) at a pinned block, compared against the docs assertion; plus hash-pinned audit PDFs with auditor/date extracted. Rehearsed here for OUSG Ethereum only (4 of 4 selectors agree at retrieval time; block not pinned).",
+      "denominator": "Every address asserted on docs.ondo.finance/addresses across every claimed chain, plus every audit PDF linked from docs.ondo.finance/audits.",
+      "blocked_by": ["GAP-02", "GAP-05", "GAP-06"],
+      "never_claims": "That docs-chain agreement proves authentic issuance authority (see REJ-06)."
+    },
+    {
+      "instrument_id": "INST-ONDO-003",
+      "target_axis": "custody-disclosure",
+      "state": "CANDIDATE_UNMEASURED",
+      "inputs": ["ONDO-EV-006", "ONDO-EV-018"],
+      "sketch": "Inventory custody disclosures (custodian names, custodian addresses, legal-structure statements) across product docs; grade disclosure presence and internal consistency; every custodian attribution that is not publicly checkable is recorded as UNCHECKABLE, not failed.",
+      "denominator": "Every custody-related disclosure field found in the frozen docs set.",
+      "blocked_by": ["GAP-01"],
+      "never_claims": "That disclosure of a custodian proves custody is actually performed as described."
+    },
+    {
+      "instrument_id": "INST-ONDO-004",
+      "target_axis": "distribution-integrity",
+      "state": "CANDIDATE_UNMEASURED",
+      "inputs": ["ONDO-EV-003", "ONDO-EV-019", "ONDO-EV-020", "ONDO-EV-021"],
+      "sketch": "Cross-check redemption-rail and chain-availability disclosures across product pages, docs and contract-address tables; grade completeness and consistency of what is disclosed. Behavioural verification (executing mints/redemptions) is excluded by doctrine: no wallet, no transaction.",
+      "denominator": "Every product x chain x rail combination the docs assert.",
+      "blocked_by": ["GAP-05"],
+      "never_claims": "That disclosed redemption rails execute as described."
+    },
+    {
+      "instrument_id": "INST-ONDO-005",
+      "target_axis": "regulatory-framework",
+      "state": "CANDIDATE_UNMEASURED",
+      "inputs": ["ONDO-EV-017", "ONDO-EV-021", "ONDO-EV-024"],
+      "sketch": "Freeze regulatory self-descriptions (Regulation S reliance, non-US redemption restriction, affiliate/ecosystem boundary) as versioned citations; grade citation stability across re-fetches. Legal mapping stays separate from technical behaviour; no legal determination is produced.",
+      "denominator": "Every regulatory self-description field found in the frozen docs set.",
+      "blocked_by": ["GAP-04"],
+      "never_claims": "Any legal or regulatory determination about the issuer."
+    },
+    {
+      "instrument_id": "INST-ONDO-006",
+      "target_axis": "issued-supply (ADR-003 DRAFT — NOT A BOARD AXIS)",
+      "state": "BLOCKED_AXIS_NOT_RULED",
+      "inputs": ["ONDO-EV-012"],
+      "sketch": "Per-block-pinned totalSupply readback for OUSG and USDY on every claimed chain, modelled on public/interop/xrpl-supply-2026-09-16.json. Held entirely off-board: ADR-003 is a draft and no axis 24 exists on the live board.",
+      "denominator": "Every token contract x chain with a successful identity pin.",
+      "blocked_by": ["REJ-05", "GAP-05", "GAP-06"],
+      "never_claims": "That issued supply is reserve backing or board evidence of anything."
+    }
+  ]
+}

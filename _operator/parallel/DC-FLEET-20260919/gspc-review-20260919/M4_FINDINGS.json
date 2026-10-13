@@ -1,0 +1,184 @@
+{
+  "case_count": 14,
+  "cases": [
+    {
+      "blockers": [],
+      "case": "synthetic_positive_control",
+      "claimed_independent_groups": 2,
+      "confidence_label": 0.9,
+      "estimated_cost_bps": 25.0,
+      "net_edge_bps": 75.0,
+      "real_execution_attempted": false,
+      "scorer_allowed": true,
+      "side": "buy"
+    },
+    {
+      "blockers": [],
+      "case": "missing_cost_components",
+      "claimed_independent_groups": 2,
+      "confidence_label": 0.9,
+      "estimated_cost_bps": 0.0,
+      "net_edge_bps": 100.0,
+      "real_execution_attempted": false,
+      "scorer_allowed": true,
+      "side": "buy"
+    },
+    {
+      "blockers": [],
+      "case": "missing_risk_state",
+      "claimed_independent_groups": 2,
+      "confidence_label": 0.9,
+      "estimated_cost_bps": 25.0,
+      "net_edge_bps": 75.0,
+      "real_execution_attempted": false,
+      "scorer_allowed": true,
+      "side": "buy"
+    },
+    {
+      "blockers": [],
+      "case": "seven_day_old_proposals",
+      "claimed_independent_groups": 2,
+      "confidence_label": 0.9,
+      "estimated_cost_bps": 25.0,
+      "net_edge_bps": 75.0,
+      "real_execution_attempted": false,
+      "scorer_allowed": true,
+      "side": "buy"
+    },
+    {
+      "blockers": [],
+      "case": "future_dated_proposals",
+      "claimed_independent_groups": 2,
+      "confidence_label": 0.9,
+      "estimated_cost_bps": 25.0,
+      "net_edge_bps": 75.0,
+      "real_execution_attempted": false,
+      "scorer_allowed": true,
+      "side": "buy"
+    },
+    {
+      "blockers": [],
+      "case": "missing_evidence",
+      "claimed_independent_groups": 2,
+      "confidence_label": 0.9,
+      "estimated_cost_bps": 25.0,
+      "net_edge_bps": 75.0,
+      "real_execution_attempted": false,
+      "scorer_allowed": true,
+      "side": "buy"
+    },
+    {
+      "blockers": [],
+      "case": "same_source_two_self_assigned_groups",
+      "claimed_independent_groups": 2,
+      "confidence_label": 0.9,
+      "estimated_cost_bps": 25.0,
+      "net_edge_bps": 75.0,
+      "real_execution_attempted": false,
+      "scorer_allowed": true,
+      "side": "buy"
+    },
+    {
+      "blockers": [],
+      "case": "incompatible_horizons",
+      "claimed_independent_groups": 2,
+      "confidence_label": 0.9,
+      "estimated_cost_bps": 25.0,
+      "net_edge_bps": 75.0,
+      "real_execution_attempted": false,
+      "scorer_allowed": true,
+      "side": "buy"
+    },
+    {
+      "blockers": [],
+      "case": "nonfinite_expected_edge",
+      "claimed_independent_groups": 2,
+      "confidence_label": 0.9,
+      "estimated_cost_bps": 25.0,
+      "net_edge_bps": "NONFINITE",
+      "real_execution_attempted": false,
+      "scorer_allowed": true,
+      "side": "buy"
+    },
+    {
+      "blockers": [
+        "kill_switch"
+      ],
+      "case": "explicit_kill_switch_control",
+      "claimed_independent_groups": 2,
+      "confidence_label": 0.9,
+      "estimated_cost_bps": 25.0,
+      "net_edge_bps": 75.0,
+      "real_execution_attempted": false,
+      "scorer_allowed": false,
+      "side": "hold"
+    },
+    {
+      "blockers": [
+        "stale_data"
+      ],
+      "case": "explicit_stale_flag_control",
+      "claimed_independent_groups": 2,
+      "confidence_label": 0.9,
+      "estimated_cost_bps": 25.0,
+      "net_edge_bps": 75.0,
+      "real_execution_attempted": false,
+      "scorer_allowed": false,
+      "side": "hold"
+    },
+    {
+      "blockers": [
+        "insufficient_net_edge"
+      ],
+      "case": "known_cost_exceeds_edge_control",
+      "claimed_independent_groups": 2,
+      "confidence_label": 0.9,
+      "estimated_cost_bps": 200.0,
+      "net_edge_bps": -100.0,
+      "real_execution_attempted": false,
+      "scorer_allowed": false,
+      "side": "hold"
+    },
+    {
+      "blockers": [
+        "low_calibrated_confidence"
+      ],
+      "case": "duplicate_source_low_first",
+      "claimed_independent_groups": 2,
+      "confidence_label": 0.5,
+      "estimated_cost_bps": 25.0,
+      "net_edge_bps": 75.0,
+      "real_execution_attempted": false,
+      "scorer_allowed": false,
+      "side": "hold"
+    },
+    {
+      "blockers": [],
+      "case": "duplicate_source_high_first",
+      "claimed_independent_groups": 2,
+      "confidence_label": 0.9,
+      "estimated_cost_bps": 25.0,
+      "net_edge_bps": 75.0,
+      "real_execution_attempted": false,
+      "scorer_allowed": true,
+      "side": "buy"
+    }
+  ],
+  "network_calls": 0,
+  "next_review": "Validate provenance, freshness, finite inputs, known costs/risk and order invariance; keep scoring separate from authority",
+  "observed_at": "2026-09-19T17:01:36.588862+00:00",
+  "production_files_modified": false,
+  "real_orders": 0,
+  "schema": "csoai.offline-scorer-review/0.1",
+  "scope": "Pure score_swarm behaviour, not whole-application exploit or execution proof",
+  "source_is_snapshot": true,
+  "source_manifest": {
+    "captured_at": "2026-09-19T17:00:45.339582+00:00",
+    "scope": "offline source snapshot; no application configuration or credentials",
+    "sha256": {
+      "models.py": "7d4d40f87a32fe7e5431a7e5b94dd73b8402c46ce35c27b69ca9818c36add921",
+      "scoring.py": "6b091642cea79a6801f18a762336c6b67dd5fd5f1456a859ab1a4013ba699e30"
+    },
+    "source_directory": "/Users/nicholas/clawd/councilof-ai-work/condor/condor/gspc_swarm"
+  }
+}

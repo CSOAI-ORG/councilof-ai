@@ -1,0 +1,88 @@
+{
+  "dry_run_default_count": 10,
+  "paper_scorecard_source_sha256": "dcd2de06e43a6cb5a76c52d751b818ff95733cde67bfd85b507f7de978805f11",
+  "profiles": [
+    {
+      "execution_mode": "dry_run",
+      "limits": {
+        "max_open_executors": 1,
+        "max_position_size_quote": 100
+      },
+      "path": "agents/adaptive_grid_trader/strategies/btc_usdt_adaptive_grid/strategy.md"
+    },
+    {
+      "execution_mode": "dry_run",
+      "limits": {
+        "max_open_executors": 1,
+        "max_position_size_quote": 100
+      },
+      "path": "agents/adaptive_grid_trader/strategies/sol_usdt_adaptive_grid/strategy.md"
+    },
+    {
+      "execution_mode": "dry_run",
+      "limits": {},
+      "path": "agents/directional_trader/strategies/ema_trend_loop/strategy.md"
+    },
+    {
+      "execution_mode": "dry_run",
+      "limits": {},
+      "path": "agents/gspc_market_judge/strategies/opportunity_hunt/strategy.md"
+    },
+    {
+      "execution_mode": "dry_run",
+      "limits": {
+        "max_open_executors": 1,
+        "max_position_size_quote": 100
+      },
+      "path": "agents/market_making_expert/strategies/hip_3_mm_operator/strategy.md"
+    },
+    {
+      "execution_mode": "dry_run",
+      "limits": {
+        "max_open_executors": 1,
+        "max_position_size_quote": 100
+      },
+      "path": "agents/market_making_expert/strategies/pmm_mister_operator/strategy.md"
+    },
+    {
+      "execution_mode": "dry_run",
+      "limits": {},
+      "path": "agents/meteora_launch_lp/strategies/launch_lp_operator/strategy.md"
+    },
+    {
+      "execution_mode": "dry_run",
+      "limits": {
+        "max_drawdown_pct": 8,
+        "max_leverage": 1,
+        "max_open_executors": 1,
+        "max_position_size_quote": 50
+      },
+      "path": "agents/smart_money_flow/strategies/derive_flow_trader/strategy.md"
+    },
+    {
+      "execution_mode": "dry_run",
+      "limits": {},
+      "path": "agents/solana_dex_lp_expert/strategies/lp_slot_operator/strategy.md"
+    },
+    {
+      "execution_mode": "dry_run",
+      "limits": {
+        "max_drawdown_pct": 5,
+        "max_open_executors": 1,
+        "max_position_size_quote": 100,
+        "shutdown_drawdown_pct": 8
+      },
+      "path": "agents/xrpl_market_maker/strategies/rlusd_xrp_maker/strategy.md"
+    }
+  ],
+  "real_orders_sent": 0,
+  "runtime_settings_changed": false,
+  "scope": "Static defaults and synthetic scorecard, not active sessions",
+  "scorecard_counterexample": {
+    "fixture_rows": 2,
+    "interpretation": "Missing-return row is included in numerator but not denominator",
+    "reported_win_rate": 2.0,
+    "valid_numeric_outcomes": 1
+  },
+  "strategy_definition_count": 10
+}

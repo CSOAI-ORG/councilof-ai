@@ -1,0 +1,198 @@
+{
+  "schema": "csoai.catalog-hive-sources/0.2",
+  "as_of": "2026-09-28",
+  "purpose": "Provenance-preserving discovery inventory for Layer 0 / Harness X source onboarding. A source entry is not proof that records were fetched, endpoints work, or any resource passed measurement.",
+  "ingest_ready": [
+    {
+      "id": "cisco-ai-catalog",
+      "family": "agent_directory",
+      "adapter": "ard_manifest",
+      "endpoint": "https://ai-catalog.outshift.io/.well-known/ard.json",
+      "access": "public read; live fetch not verified in this run",
+      "ui_observation": {
+        "observed_at": "2026-09-28",
+        "surface": "https://ai-catalog.outshift.io/",
+        "displayed_index_count": 3087,
+        "displayed_search_result_count": 3087,
+        "source_wording": "3087 AI cards indexed; secure directory of verified public records published to the Agent Directory Service",
+        "evidence_class": "first_party_ui_observation_only",
+        "interpretation": "Cisco's displayed count and wording; not a fetched/reconciled manifest count and not independent CSOAI verification"
+      },
+      "retrieval_status": "UI count observed 2026-09-28; pinned manifest fetch failed local DNS resolution; no records ingested",
+      "claim_boundary": "Directory record and ARD publisher claims only; no endpoint health, publisher identity, safety, or quality verdict"
+    },
+    {
+      "id": "official-mcp-registry",
+      "family": "protocol_registry",
+      "adapter": "mcp_registry",
+      "endpoint": "https://registry.modelcontextprotocol.io/v0.1/servers",
+      "pagination": "opaque cursor from metadata.nextCursor; updated_since can support incremental sync",
+      "access": "public read; publishing uses namespace authentication",
+      "claim_boundary": "MCP metadata only; no endpoint health, safety, conformance, or quality verdict"
+    },
+    {
+      "id": "huggingface-hub",
+      "family": "model_dataset_demo_hub",
+      "adapter": "huggingface_hub",
+      "endpoints": [
+        "https://huggingface.co/api/models",
+        "https://huggingface.co/api/datasets",
+        "https://huggingface.co/api/spaces"
+      ],
+      "access": "public metadata read subject to Hub rate limits; private/gated assets excluded",
+      "claim_boundary": "Repository metadata and publisher-supplied card fields only; downloads, execution, licence suitability, and safety are not implied"
+    }
+  ],
+  "catalogued_not_ingest_ready": [
+    {
+      "id": "nvidia-ngc",
+      "family": "software_model_container_catalog",
+      "url": "https://catalog.ngc.nvidia.com/",
+      "access": "public browse; some downloads require NVIDIA account, entitlement, or API key",
+      "official_docs": "https://docs.nvidia.com/ngc/latest/ngc-catalog-user-guide.html",
+      "retrieval_status": "official_docs_verified_2026-09-28; public search/browse documented; artifact metadata, VEX, SBOM, and downloads use authenticated APIs; no anonymous bulk-list endpoint verified",
+      "next_gate": "Keep browse-only until a supported public listing feed is documented; any API adapter must use an owner-authorized NGC key and a bounded organization/resource scope",
+      "claim_boundary": "NGC listing is a catalog record, not proof a model/container is callable, maintained, safe, or compatible"
+    },
+    {
+      "id": "redhat-ecosystem-catalog",
+      "family": "software_product_certification_catalog",
+      "url": "https://catalog.redhat.com/",
+      "access": "Public product browsing; official Pyxis REST and GraphQL APIs are documented; some content requires a Red Hat partner API key scoped to the partner's own content",
+      "api_docs": "https://catalog.redhat.com/api/containers/docs/",
+      "retrieval_status": "official_api_docs_verified_2026-09-28; live API response and public record fields not verified in this run",
+      "next_gate": "Fixture-test a bounded public read response and field meanings; keep certification scope, version, platform, and expiry as separate source claims",
+      "claim_boundary": "Red Hat catalog certification applies to the named product/configuration and must not be generalized to an agent or its behavior"
+    },
+    {
+      "id": "palantir-aip-model-catalog",
+      "family": "tenant_model_catalog",
+      "url": "https://palantir.com/docs/foundry/model-catalog/overview/",
+      "access": "Official docs verified: the AIP Model Catalog lists Palantir-provided models available within a Foundry enrollment; tenant-scoped, no public global feed identified",
+      "official_docs": "https://www.palantir.com/docs/foundry/model-catalog",
+      "retrieval_status": "docs_verified_2026-09-28; external discovery requires an explicitly authorized enrollment integration",
+      "next_gate": "Only connect through an explicitly authorized tenant integration and least-privilege credentials",
+      "claim_boundary": "Do not enumerate or copy customer enrollment data"
+    },
+    {
+      "id": "crowdstrike-marketplace-and-falcon-mcp",
+      "family": "security_marketplace_and_tenant_api",
+      "url": "https://marketplace.crowdstrike.com/",
+      "access": "Public marketplace browse; Falcon data and MCP operations require customer tenant authorization; no official public bulk listing feed verified",
+      "retrieval_status": "browse_page_known; bulk API not verified in this run",
+      "next_gate": "Use public pages only for bounded discovery; treat marketplace listings separately from tenant API connectors; no Falcon telemetry collection without customer authorization",
+      "claim_boundary": "A listed integration or MCP server is not evidence of an independently measured security outcome"
+    },
+    {
+      "id": "oracle-ai-marketplace",
+      "family": "software_product_marketplace",
+      "url": "https://marketplace.oracle.com/ai",
+      "access": "Public browse; Oracle documents Marketplace listing APIs, but API access is OCI IAM-controlled and is not an anonymous global discovery feed",
+      "official_docs": "https://docs.oracle.com/en-us/iaas/Content/Marketplace/overview-marketplace.htm",
+      "retrieval_status": "docs_verified_2026-09-28; public API read path and unauthenticated scope not verified",
+      "next_gate": "Validate the IAM read API and terms in an authorized OCI tenancy before ingestion; do not confuse partner publishing APIs with public discovery",
+      "claim_boundary": "Listings do not imply OCI agent availability or performance"
+    },
+    {
+      "id": "oracle-oci-generative-ai",
+      "family": "tenant_model_and_agent_inventory",
+      "url": "https://docs.oracle.com/en-us/iaas/Content/generative-ai/overview.htm",
+      "access": "Service documentation is public; deployed models, agents, projects, and endpoints are tenant-scoped",
+      "next_gate": "Use a customer-authorized OCI tenancy connector only; catalog docs separately from live tenant resources",
+      "claim_boundary": "Product documentation is not a live inventory or a measured endpoint"
+    },
+    {
+      "id": "aws-bedrock-foundation-models",
+      "family": "regional_tenant_model_catalog",
+      "url": "https://docs.aws.amazon.com/bedrock/latest/APIReference/API_ListFoundationModels.html",
+      "access": "Official ListFoundationModels API returns model IDs, providers, modalities, supported inference types, and lifecycle metadata; calls are AWS SigV4 authenticated and regional",
+      "retrieval_status": "official_api_docs_verified_2026-09-28; no AWS account readback performed",
+      "next_gate": "Use a read-only, explicitly authorized AWS role per selected region; record region and retrieval time because availability differs by region",
+      "claim_boundary": "A model listed for a region does not mean enabled, entitled, deployed, or measured in a customer account"
+    },
+    {
+      "id": "microsoft-foundry-models",
+      "family": "tenant_and_subscription_model_catalog",
+      "url": "https://learn.microsoft.com/en-us/rest/api/microsoft-foundry/aiproject",
+      "access": "Official Foundry APIs list project deployments and subscription/location models; the documented endpoints are scoped to a resource, project, subscription, or location and require Azure authentication",
+      "retrieval_status": "official_api_docs_verified_2026-09-28; no Azure resource readback performed",
+      "next_gate": "Use an explicitly authorized, read-only Azure identity and preserve the endpoint, project, subscription, and region scope",
+      "claim_boundary": "Global model availability, subscription eligibility, project deployment, and endpoint health are distinct states"
+    },
+    {
+      "id": "google-vertex-model-garden",
+      "family": "cloud_model_catalog_and_tenant_deployment",
+      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/model-garden/explore-models",
+      "access": "Public product documentation and browse surface; enabling or deploying models is project, region, IAM, and sometimes publisher-agreement scoped",
+      "retrieval_status": "catalog_docs_not_live_fetched_2026-09-28",
+      "next_gate": "Use public docs for discovery; inventory actual enabled/deployed models only through an owner-authorized project API",
+      "claim_boundary": "Model Garden presence is not proof a model is enabled, available in the project, deployed, or measured"
+    },
+    {
+      "id": "google-cloud-agent-registry",
+      "family": "tenant_agent_and_mcp_registry",
+      "url": "https://docs.cloud.google.com/agent-registry/overview",
+      "access": "Official docs verified: project-scoped Agent Registry API for agents, MCP servers, skills, and endpoints; requires API enablement and IAM viewer permission",
+      "official_docs": "https://docs.cloud.google.com/agent-registry/reference/rest",
+      "retrieval_status": "docs_verified_2026-09-28; project-local API, not a public global directory",
+      "next_gate": "Use project-scoped OAuth/IAM after owner authorization; do not attempt anonymous enumeration",
+      "claim_boundary": "An inventory of one authorized Google Cloud project is not a global public directory"
+    },
+    {
+      "id": "jfrog-ai-catalog",
+      "family": "tenant_ai_asset_registry",
+      "url": "https://jfrog.com/ai-catalog/",
+      "access": "Product description is public; governed assets and policy decisions belong to customer registry instances",
+      "next_gate": "Validate a documented customer-authorized export/API before integration",
+      "claim_boundary": "Do not infer a public global asset feed from product marketing"
+    },
+    {
+      "id": "github-agent-finder",
+      "family": "agent_directory",
+      "access": "Public discovery is described; connector request/response fixture not validated",
+      "next_gate": "Add only after schema, pagination, attribution, rate limits, and terms are tested against an official public endpoint"
+    },
+    {
+      "id": "smithery",
+      "family": "mcp_directory",
+      "access": "Public discovery exists; stable public read API not selected and fixture-tested",
+      "next_gate": "Validate documented API and source attribution before adapter"
+    },
+    {
+      "id": "glama",
+      "family": "mcp_directory",
+      "access": "Public discovery exists; stable public read API not selected and fixture-tested",
+      "next_gate": "Validate documented API and source attribution before adapter"
+    }
+  ],
+  "regulatory_sources": [
+    {
+      "id": "nist-ai-rmf",
+      "family": "official_framework_and_guidance",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "access": "Public official publications, profiles, crosswalks, and resource links",
+      "ingestion_mode": "Versioned document/source inventory; source-specific parsers and publication dates required",
+      "claim_boundary": "Framework mapping is not legal advice, regulatory approval, or proof of implementation"
+    },
+    {
+      "id": "oecd-ai-policy-observatory",
+      "family": "international_policy_and_tools_catalog",
+      "url": "https://oecd.ai/en/",
+      "access": "Public policy initiatives, country material, and trustworthy-AI tools/metrics catalogue",
+      "ingestion_mode": "Public pages/documents; structured API not validated in this run",
+      "claim_boundary": "OECD policy records are source material, not binding law or an exhaustive global register"
+    },
+    {
+      "id": "eu-ai-act-information",
+      "family": "official_regulatory_information",
+      "url": "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai",
+      "access": "Public Commission information and links to the enacted legal text and service desk",
+      "ingestion_mode": "Official page + EUR-Lex legal text version/date tracking; not a private regulator portal scraper",
+      "claim_boundary": "A public information page is not a complete register of regulated systems or a compliance determination"
+    }
+  ],
+  "admission_boundary": "Catalog rows remain QUARANTINED_DISCOVERY_ONLY until source validation, provenance checks, scoped protocol tests, evidence review, and Layer 0 admission. Catalog presence, vendor badges, counts, or model downloads do not become GSPC measurements.",
+  "deferred_sources": [
+    {"id": "cisco-ai-catalog-live-fetch", "reason": "The page UI displayed 3,087 indexed cards and 3,087 search results on 2026-09-28, but the pinned ARD manifest fetch failed local DNS resolution; no records were ingested and the UI count is not a reconciled snapshot"}
+  ]
+}
