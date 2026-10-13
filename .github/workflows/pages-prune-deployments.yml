@@ -20,6 +20,11 @@ name: Pages deployments — prune superseded (dry run by default)
 #
 # A deleted deployment cannot be restored. Site rollback is a revert PR and a deploy.
 #
+# BEFORE THE FIRST DELETE RUN. The owner's ruling on deleting old deployments must be in
+# OWNER-DECISIONS. And if production was ever rolled back in the Cloudflare dashboard, deploy
+# first: this tool takes the project's canonical_deployment as current production, and that has
+# not been compared with a rolled-back project.
+#
 # The job installs nothing: the script and its tests use Node built-ins only, so no third-party
 # package runs in the job that holds the Cloudflare token.
 

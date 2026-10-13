@@ -24,6 +24,11 @@
  * deployment (Pages "Known issues", read 13 Oct 2026). That was not tested here; the rules above
  * do not rely on it.
  *
+ * ONE CASE NOT COVERED. "Current production" here is what the project calls canonical_deployment.
+ * If production was rolled back in the Cloudflare dashboard, that field has not been compared with
+ * what the site serves. Deploy first, then prune. Rollback by dashboard is already ruled out by the
+ * single-writer ruling; this note is for the day someone does it anyway.
+ *
  * FAILS CLOSED. If the project, the branch, a row's shape or the listing is not what this file
  * expects, it stops before the first delete and exits 2.
  *
@@ -399,6 +404,7 @@ export function renderSummary(report) {
   } else {
     table('Would delete', report.selected);
   }
+  table('Kept because not older than the kept deployment', k.not_older_than_kept);
   table('Kept because an alias points at it', k.has_alias);
   return out.join('\n') + '\n';
 }

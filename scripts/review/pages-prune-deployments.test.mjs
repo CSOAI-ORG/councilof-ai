@@ -315,6 +315,10 @@ test('a confirmed delete on a master dispatch removes the superseded ones and no
   assert.equal(report.not_attempted, 0);
   assert.equal(report.outcome_unknown, 0);
   for (const kept of [current, newerFailure, aliased, preview]) assert.ok(cf.state.rows.some((d) => d.id === kept.id), 'kept');
+  const summary = renderSummary(report);
+  assert.match(summary, /^## Pages deployment prune: DELETE RUN\./);
+  assert.ok(summary.includes('### Kept because not older than the kept deployment') && summary.includes('| `' + newerFailure.short_id + '` |'), 'every kept deployment is named');
+  assert.ok(summary.includes('### Kept because an alias points at it') && summary.includes('| `' + aliased.short_id + '` |'));
   for (const call of cf.deletes()) assert.equal(call.search, '', 'no force, no query at all');
   assert.equal(cf.state.slept, 4 * DELETE_SPACING_MS, 'one pause after each delete');
   assert.equal(cf.state.projectReads, 2, 'the project is read again just before deleting');
