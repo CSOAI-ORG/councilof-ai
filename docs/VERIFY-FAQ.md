@@ -24,9 +24,9 @@ To keep evidence you can re-check in a year:
    pretty-print or re-save it through a JSON tool. The id is a hash of those bytes.
 2. **Download the DID document once** (`https://csoai.org/.well-known/did.json`)
    and store it next to the card. That copy is the public key you pinned on that
-   day. Note the key id the card names: the published cards use
-   `did:web:csoai.org#card-attestation-1` (see HOW-TO-VERIFY.md); the board root
-   (/root.json) uses `#board-attestation-1`.
+   day. Check the key id (kid) in the card's signature: the 335 cards in
+   public/signed use `#card-attestation-1`, while the G2 comparison-group cards and
+   the board root (/root.json) use `#board-attestation-1`.
 3. **Keep the verifier file** you used (`/verifier/gspc-verify.mjs` or
    `/signed/verify-card.mjs`), so a later check uses the same rules.
 4. **Record a sha256 of each file** and the date you fetched it.
