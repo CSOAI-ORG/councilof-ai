@@ -1,0 +1,92 @@
+{
+  "card": {
+    "as_of": "2026-10-13T11:50:34Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.xrpl-identity-delta/0.1",
+      "status": "DISCOVERED",
+      "symbol": "XAU.gh",
+      "change_kind": "changed",
+      "changed_fields": [
+        {
+          "field": "source_reported_holders",
+          "from": 582,
+          "to": 581
+        },
+        {
+          "field": "transfer_controls",
+          "from": {
+            "allow_trustline_clawback": false,
+            "default_ripple": true,
+            "global_freeze": true,
+            "no_freeze": false,
+            "require_auth": false
+          },
+          "to": null
+        }
+      ],
+      "ledger_index": 107627663,
+      "observed_at": "2026-10-13T11:50:34Z",
+      "note": "a source change, recorded — never a verdict"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "41de03140ad6d17a2c5cfee148044c18376b84035bb98ea2c854995b7a4d4fbc",
+    "sig_ed25519": "435b288e5b26ebbe8a9e7c548b76bcffd207bbf07e038d1aa35fddf9cb031459efd2b0dea3a935e60b47745d0138ad539a7002c99b47f0bc53fb41bd84322400",
+    "source_urls": [
+      "https://s1.ripple.com:51234/",
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL identity delta: XAU.gh changed",
+    "surface": "public.notice",
+    "tags": [
+      "xrpl",
+      "identity-delta",
+      "xrpl-16-state-matrix",
+      "symbol:XAU.gh"
+    ],
+    "unmeasured": [],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "cdf57a65b7c85b1fc834ac0e6c73644892d531b1192bc474fb4cfdd1092f053c",
+    "451bc7cf062f801041394f223ceba65184f1c3088afb6f1cb40f26adbd940c48",
+    "fad3daee6b11dddb637fe4341ca48167092d64f636e34daf7b175c71434872e5",
+    "53dc20a173d74a64b461a04917fe7bda13c575b3c836c086ad5feff4e9c6c28d",
+    "80411a42a8e2adeedb5854aa65f0a04c944da332c922b7026545328209459a88",
+    "1c62635fba0e9a5cc4ceca555f1f6ff0f1880feac307218461074179e5156098",
+    "29a3b663e523fe147254dfc4ed68d59fc2989950c4f2b6c4f25df1c558046208",
+    "092933ab538090d0e0c74b34d93ff0e5d421c6daaae8af9d288276d4c3406878",
+    "d5430867ff656ba56f6d640edecab4318f5e554a9493af61e5887ccf575e099f"
+  ]
+}
