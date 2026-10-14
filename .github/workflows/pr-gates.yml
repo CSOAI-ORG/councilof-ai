@@ -273,7 +273,7 @@ jobs:
       # BEGIN TEMPORARY PR3034 GENERATED OUTPUT CAPTURE V2
       - name: PR3034 canonical public generated output packet V2
         id: pr3034_generated_capture
-        if: ${{ github.event_name == 'pull_request' && github.event.pull_request.number == 3034 && steps.scope.outputs.gated == 'true' }}
+        if: ${{ !cancelled() && github.event_name == 'pull_request' && github.event.pull_request.number == 3034 && steps.scope.outputs.gated == 'true' }}
         env:
           PR3034_CAPTURE_DIR: ${{ runner.temp }}/pr3034-generated-output-packet
           PR3034_REQUEST_HEAD: ${{ github.event.pull_request.head.sha }}
