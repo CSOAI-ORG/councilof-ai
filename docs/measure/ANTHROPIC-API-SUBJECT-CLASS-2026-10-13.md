@@ -7,7 +7,7 @@ measured.** Nothing here signs, admits, or publishes anything.
 
 | Piece | Path | State |
 |---|---|---|
-| Compute-only worker | `scripts/anthropic_gspc_worker.py` | 14 offline tests pass (`scripts/test_anthropic_gspc_worker.py`) |
+| Compute-only worker | `scripts/anthropic_gspc_worker.py` | 28 offline tests pass on RunPod, 14 Oct (`scripts/test_anthropic_gspc_worker.py`); original 14 preserved |
 | Provider terms archive | `measurement/provider-terms/anthropic/2026-10-13/terms.json` | verbatim quotes, each checked as a substring of the fetched bytes; raw HTML sha256 pinned; raw bytes kept on the measurement pod, not republished |
 | Intake acceptance of the new subject class | `scripts/verify_runpod_gspc_intake.py` | **not changed** — see "What intake must decide" |
 
@@ -97,14 +97,38 @@ w --model claude-haiku-5-5 --model claude-sonnet-5-5 --model claude-opus-5-5 --b
 w --model claude-fable-5-1 --budget-usd 90
 ```
 
-Worst case from `--estimate` on the pod's frozen banks (every item uses its
-whole `max_tokens`): Haiku $0.86, Sonnet $17.25, Opus $34.49, Fable $86.23 —
-$138.83 for all four. Label answers are a few tokens, so real spend sits far
-below this unless adaptive thinking runs long.
+Historical illustrative cost calculation from `--estimate` on the pod's frozen banks (600 assumed input tokens per item plus its whole `max_tokens`): Haiku $0.86, Sonnet $17.25, Opus $34.49, Fable $86.23 —
+$138.83 for all four under those assumptions. This is not a verified upper
+bound or a real-spend receipt; prompt size, pricing and thinking can differ.
 
-`--budget-usd` is a hard cap **per model**, computed from returned usage ×
-list price; a capped run ends `BUDGET_CAP`, unlandable. Order cheapest first
-so a cap never starves the cheap models.
+Budget admission now requires `--request-cost-bound-usd <qualified-bound>`
+for a real API run. Before **each HTTP attempt**, including a retry, an atomic
+reservation checks that known usage estimates + retained unknown attempts +
+all in-flight reservations + the new bound fit `--budget-usd` **per model**.
+A refusal or an insufficient remainder sends no request. A non-success HTTP
+attempt or timeout retains its full bound; retries cannot reuse that money.
+Missing/invalid usage or actual priced usage above the bound halts further
+admission and makes the candidate unlandable. A different or missing response
+model is never graded or priced as the requested model.
+
+The operator must establish a conservative bound that covers the complete
+request under the actual provider's prices and billing rules, and use an
+independently enforced provider spend cap. This local admission budget is
+**not a provider-enforced invoice ceiling**. It cannot guarantee charges if
+the supplied bound, price table or provider reporting is wrong. The token
+counting endpoint itself supplies an estimate, so its count alone is not a
+proof of a hard monetary bound:
+https://platform.claude.com/docs/en/build-with-claude/token-counting
+
+No bound or API spend is authorized by this change. The earlier example
+commands deliberately remain ineligible for paid execution without a qualified
+bound. Multiple `--model` arguments receive separate budgets; their total may
+be the sum of those budgets, not one invocation-wide ceiling.
+
+Refusal, max-token and context-window terminal states are excluded before
+either grader, even when a complete-looking label or all keywords are present.
+Evidence retains the original text and stop reason; excluded answers do not
+increase `n` or correctness.
 
 `--dry-run` exercises the whole pipeline with no network and writes runs that
 are marked `dry_run` and never landable.
