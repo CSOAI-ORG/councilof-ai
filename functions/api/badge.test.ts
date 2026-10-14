@@ -262,10 +262,28 @@ describe("/api/badge issued verified measured claims", () => {
       vi.mocked(verifyCard).mockResolvedValue(verdict as never);
       for (const claim of ["verified", "measured", ""]) {
         const { json, shields, svg } = await claimsOf(claim);
-        expect(["invalid", "unmeasured"]).toContain(json.state);
+        expect(json.state).toBe(verdict === UNSUPPORTED ? "unavailable" : claim === "measured" ? "unmeasured" : "invalid");
         expect(json.color).toBe("#9ca3af");
         expect(shields.message).not.toMatch(/^(verified|measured|valid)/);
         expect(svg).not.toMatch(/<title>[^<]*: (verified|measured|valid)/);
+      }
+    }
+  });
+
+  it("a RETURNED UNCHECKABLE verdict reads unchecked, not 'invalid signature', in JSON, Shields and SVG", async () => {
+    installFetch();
+    for (const [verdict, expected] of [
+      [UNSUPPORTED, "unchecked"],
+      [INVALID, "invalid signature"],
+      [HASH_ONLY, "invalid signature"],
+    ] as const) {
+      vi.mocked(verifyCard).mockResolvedValue(verdict as never);
+      for (const claim of ["verified", ""]) {
+        const { json, shields, svg } = await claimsOf(claim);
+        expect(json.message).toBe(expected);
+        expect(json.state).toBe(expected === "unchecked" ? "unavailable" : "invalid");
+        expect(shields.message).toBe(expected);
+        expect(svg).toContain(expected);
       }
     }
   });

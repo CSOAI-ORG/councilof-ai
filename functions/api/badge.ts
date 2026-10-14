@@ -269,6 +269,11 @@ const cardBadge = async (
     const signature = verdict.checks?.find((c) => c.label === "Signature");
     const signedValid =
       verdict.valid === true && verdict.id === h && signature?.ok === true && signature.code === "signature_valid";
+    // A verdict the verifier could not reach (UNCHECKABLE: e.g. ed25519_unsupported, key_not_pinned)
+    // is not evidence of a bad signature: say it was not checked, never "invalid signature".
+    if (!signedValid && verdict.state === "UNCHECKABLE") {
+      return { label, message: "unchecked", colour: GREY, state: "unavailable" };
+    }
     if (claimNorm === "measured") {
       if (!signedValid) {
         return { label: axis, message: "unmeasured", colour: GREY, state: "unmeasured" };

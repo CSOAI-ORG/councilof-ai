@@ -75,6 +75,31 @@ describe("/api/badge with the real verifier: no signature, no verified or measur
     }
   }
 
+  // What each control actually reads as, not only "not verified": the real verifier RETURNS
+  // UNCHECKABLE (key_not_pinned, no throw) for a DID key outside its pin set, INVALID
+  // (untrusted_signer) for an inline unpublished key or a bad signature, and valid:true with an
+  // unsigned Signature row for an empty one.
+  const noKey = { id, body, signature: "" };
+  const expected: [string, unknown, string, string][] = [
+    ["DID key not pinned (returned UNCHECKABLE)", { ...noKey, did: "did:web:example.invalid#k", signature: "00".repeat(64) }, "unavailable", "unchecked"],
+    ["untrusted inline public key", { ...base, pubkey: "00".repeat(32), signature: "00".repeat(64) }, "invalid", "invalid signature"],
+    ["genuinely invalid Ed25519 signature", { ...base, signature: "00".repeat(64) }, "invalid", "invalid signature"],
+    ["empty signature", base, "invalid", "invalid signature"],
+  ];
+  for (const [name, card, state, message] of expected) {
+    it(`${name} reads "${message}" in JSON, Shields and SVG`, async () => {
+      install(id, card, true);
+      expect(await badge(id, "verified", "json")).toMatchObject({ state, message, color: "#9ca3af" });
+      expect(((await badge(id, "verified", "shields")) as { message: string }).message).toBe(message);
+      expect(await badge(id, "verified", "svg")).toContain(message);
+    });
+  }
+
+  it("the control holds: a DID key outside the pin set is RETURNED as UNCHECKABLE, not thrown", async () => {
+    const v = await verifyCard({ ...noKey, did: "did:web:example.invalid#k", signature: "00".repeat(64) }, []);
+    expect(v).toMatchObject({ valid: false, state: "UNCHECKABLE", reasons: ["key_not_pinned"] });
+  });
+
   it("issued stays presence-only for the same card", async () => {
     install(id, base, true);
     expect(await badge(id, "issued", "json")).toMatchObject({ state: "issued", message: "issued" });
