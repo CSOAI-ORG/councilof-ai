@@ -17,6 +17,8 @@ const digest = (value: unknown): value is string => typeof value === "string" &&
 
 export type CompanyCaseClientOptions = {
   subject: string;
+  /** Token paired with subject by the existing server session verifier. */
+  token: string;
   getToken: () => string | null;
 };
 
@@ -49,8 +51,7 @@ async function sha256(raw: Uint8Array): Promise<string> {
   return Array.from(new Uint8Array(value), (byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
-function safeToken(getToken: () => string | null): string {
-  const token = getToken();
+function safeToken(token: unknown): string {
   if (typeof token !== "string" || !token || token.length > 8185 || !/^[\x21-\x7e]+$/.test(token)) throw new CompanyCaseClientError("unauthorized");
   return token;
 }
@@ -352,31 +353,35 @@ async function verifiedView(
 
 /** Side-effect-free construction. Bearer values are sent only to fixed same-origin case routes. */
 export function createCompanyCaseClient(options: CompanyCaseClientOptions): CompanyCaseClient {
-  const { subject, getToken } = options;
+  // Copy the verified capsule; later storage or options mutations cannot rebind it.
+  const { subject, token: verifiedToken, getToken } = options;
   const subjectValid = typeof subject === "string" && subject.length > 0 && subject.length <= 254 && subject.trim() === subject &&
     !/[\u0000-\u0020\u007f-\u009f]/.test(subject) && wellFormed(subject) && !["demo@csoai.com", "demo", "default"].includes(subject.toLowerCase());
   function ready(): void {
     if (!subjectValid || typeof getToken !== "function") throw new CompanyCaseClientError("unauthorized");
+    const token = safeToken(verifiedToken);
+    if (safeToken(getToken()) !== token) throw new CompanyCaseClientError("session_changed");
   }
   async function caseIdForRequest(requestId: string): Promise<string> {
     ready();
     if (typeof requestId !== "string" || !REQUEST_ID.test(requestId)) throw new CompanyCaseClientError("invalid_request");
-    const token = safeToken(getToken);
+    const token = safeToken(verifiedToken);
     return boundedOperation(new AbortController().signal, async (signal) => {
       const id = "case_" + await sha256(new TextEncoder().encode(`meok.library-case/1\0${subject}\0${requestId}`));
       ensureSession(getToken, token, signal);
       return id;
     });
   }
-  async function operation(method: "GET" | "POST", caseId: string, signal: AbortSignal, body?: { request: string; request_id: string }): Promise<CompanyCase> {
+  async function operation(method: "GET" | "POST", caseId: string, signal: AbortSignal, body?: { request: string; request_id: string }, onPostAttempt?: () => void): Promise<CompanyCase> {
     ready();
-    const token = safeToken(getToken);
+    const token = safeToken(verifiedToken);
     let postAttempted = false;
     try {
       return await boundedOperation(signal, async (boundedSignal) => {
         ensureSession(getToken, token, boundedSignal);
         const path = method === "POST" ? PREFIX : `${PREFIX}/${encodeURIComponent(caseId)}`;
         postAttempted = method === "POST";
+        if (postAttempted) onPostAttempt?.();
         const response = await fetch(path, { method, redirect: "error", credentials: "omit", cache: "no-store", signal: boundedSignal,
           headers: { authorization: `Bearer ${token}`, accept: "application/json", ...(body ? { "content-type": "application/json" } : {}) },
           ...(body ? { body: JSON.stringify(body) } : {}) });
@@ -414,8 +419,7 @@ export function createCompanyCaseClient(options: CompanyCaseClientOptions): Comp
         return await boundedOperation(signal, async (boundedSignal) => {
           caseId = await caseIdForRequest(requestId);
           if (boundedSignal.aborted) throw new CompanyCaseClientError("aborted", caseId);
-          postStarted = true;
-          return operation("POST", caseId, boundedSignal, { request, request_id: requestId });
+          return operation("POST", caseId, boundedSignal, { request, request_id: requestId }, () => { postStarted = true; });
         });
       } catch (error) {
         const code = error instanceof CompanyCaseClientError ? error.code : "unavailable";

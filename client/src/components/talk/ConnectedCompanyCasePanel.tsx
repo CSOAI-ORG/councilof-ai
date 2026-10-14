@@ -66,7 +66,7 @@ const ConnectedCompanyCasePanel = forwardRef<CompanyCasePanelHandle, Props>(
               authenticated = true;
               setConnection({
                 session: { status: "ready", subject },
-                client: createCompanyCaseClient({ subject, getToken }),
+                client: createCompanyCaseClient({ subject, token: session.token, getToken }),
               });
             } else {
               setConnection({ session: { status: unavailable ? "unavailable" : "signed_out" } });
