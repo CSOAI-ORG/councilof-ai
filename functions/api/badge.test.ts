@@ -28,6 +28,25 @@ const card = {
   signature: "signature",
 };
 
+// Mocked verdicts carry the real CardVerdict shape (functions/_lib/cardVerify.ts), Signature row included.
+const verdictOf = (valid: boolean, signature: { ok: boolean | null; code: string }) => ({
+  family: "gspc.measurement-card",
+  valid,
+  state: valid ? "VALID" : signature.code === "ed25519_unsupported" ? "UNCHECKABLE" : "INVALID",
+  reasons: valid ? [] : [signature.code],
+  checks: [
+    { label: "Card id", ok: true, code: "id_match", detail: "" },
+    { label: "Trust anchor", ok: true, code: "anchor_match", detail: "" },
+    { label: "Signature", ok: signature.ok, code: signature.code, detail: "" },
+  ],
+  id: HASH,
+});
+const VALID = verdictOf(true, { ok: true, code: "signature_valid" });
+const INVALID = verdictOf(false, { ok: false, code: "signature_invalid" });
+/** What the real verifier returns for signature: "" — valid:true, but nothing was signed. */
+const HASH_ONLY = verdictOf(true, { ok: null, code: "unsigned" });
+const UNSUPPORTED = verdictOf(false, { ok: null, code: "ed25519_unsupported" });
+
 const invoke = (query: string) =>
   onRequestGet({
     request: new Request(`https://councilof.ai/api/badge?${query}`),
@@ -75,7 +94,7 @@ describe("/api/badge card binding", () => {
 
   it("returns one VALID subject-bound meaning across JSON, Shields and SVG", async () => {
     installFetch();
-    vi.mocked(verifyCard).mockResolvedValue({ valid: true, id: HASH } as never);
+    vi.mocked(verifyCard).mockResolvedValue(VALID as never);
     const base = `card=${HASH}&subject=${encodeURIComponent(SUBJECT)}`;
 
     const json = await (await invoke(`${base}&format=json`)).json();
@@ -99,7 +118,7 @@ describe("/api/badge card binding", () => {
 
   it("does not let an index signed flag substitute for cryptographic validity", async () => {
     installFetch();
-    vi.mocked(verifyCard).mockResolvedValue({ valid: false, id: HASH } as never);
+    vi.mocked(verifyCard).mockResolvedValue(INVALID as never);
 
     const body = await (
       await invoke(`card=${HASH}&subject=${encodeURIComponent(SUBJECT)}&format=json`)
@@ -110,7 +129,7 @@ describe("/api/badge card binding", () => {
 
   it("rejects subject mismatches and non-canonical card paths", async () => {
     installFetch();
-    vi.mocked(verifyCard).mockResolvedValue({ valid: true, id: HASH } as never);
+    vi.mocked(verifyCard).mockResolvedValue(VALID as never);
 
     const mismatch = await (
       await invoke(
@@ -173,9 +192,9 @@ describe("/api/badge issued verified measured claims", () => {
     }
   });
 
-  it("issued means the card exists; verified means subject-bound; neither says certified", async () => {
+  it("issued means the card exists; verified needs a verifying signature; neither says certified", async () => {
     installFetch();
-    vi.mocked(verifyCard).mockResolvedValue({ valid: false, id: HASH } as never);
+    vi.mocked(verifyCard).mockResolvedValue(INVALID as never);
 
     const issued = await (await invoke(`${base}&claim=issued&format=json`)).json();
     expect(issued).toMatchObject({
@@ -186,6 +205,11 @@ describe("/api/badge issued verified measured claims", () => {
     expect(String(issued.message).toLowerCase()).not.toContain("measured");
     assertNoCertificationClaim(issued);
 
+    // Before 14 Oct 2026 this expected VERIFIED with verifier.valid:false — the false positive.
+    const refused = await (await invoke(`${base}&claim=verified&format=json`)).json();
+    expect(refused).toMatchObject({ state: "invalid", message: "invalid signature", color: "#9ca3af" });
+
+    vi.mocked(verifyCard).mockResolvedValue(VALID as never);
     const verified = await (await invoke(`${base}&claim=verified&format=json`)).json();
     expect(verified).toMatchObject({
       state: "verified",
@@ -202,7 +226,7 @@ describe("/api/badge issued verified measured claims", () => {
 
   it("measured is absent unless the card is signed-valid", async () => {
     installFetch();
-    vi.mocked(verifyCard).mockResolvedValue({ valid: false, id: HASH } as never);
+    vi.mocked(verifyCard).mockResolvedValue(INVALID as never);
     const unsignedMeasured = await (
       await invoke(`${base}&claim=measured&format=json`)
     ).json();
@@ -211,7 +235,7 @@ describe("/api/badge issued verified measured claims", () => {
     expect(unsignedMeasured.message).toBe("unmeasured");
     assertNoCertificationClaim(unsignedMeasured);
 
-    vi.mocked(verifyCard).mockResolvedValue({ valid: true, id: HASH } as never);
+    vi.mocked(verifyCard).mockResolvedValue(VALID as never);
     const measured = await (await invoke(`${base}&claim=measured&format=json`)).json();
     expect(measured).toMatchObject({
       state: "measured",
@@ -223,6 +247,38 @@ describe("/api/badge issued verified measured claims", () => {
     const shields = await (await invoke(`${base}&claim=measured&format=shields`)).json();
     expect(shields.message).toBe("measured");
     assertNoCertificationClaim(shields);
+  });
+
+  const claimsOf = async (claim: string) => {
+    const json = await (await invoke(`${base}&claim=${claim}&format=json`)).json();
+    const shields = await (await invoke(`${base}&claim=${claim}&format=shields`)).json();
+    const svg = await (await invoke(`${base}&claim=${claim}`)).text();
+    return { json, shields, svg };
+  };
+
+  it("valid:true with an unsigned or unsupported Signature check is neither verified nor measured, in any format", async () => {
+    for (const verdict of [HASH_ONLY, UNSUPPORTED]) {
+      installFetch();
+      vi.mocked(verifyCard).mockResolvedValue(verdict as never);
+      for (const claim of ["verified", "measured", ""]) {
+        const { json, shields, svg } = await claimsOf(claim);
+        expect(["invalid", "unmeasured"]).toContain(json.state);
+        expect(json.color).toBe("#9ca3af");
+        expect(shields.message).not.toMatch(/^(verified|measured|valid)/);
+        expect(svg).not.toMatch(/<title>[^<]*: (verified|measured|valid)/);
+      }
+    }
+  });
+
+  it("an index that is unavailable never yields verified or measured", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => new Response("down", { status: 503 })));
+    for (const claim of ["verified", "measured"]) {
+      const { json, shields, svg } = await claimsOf(claim);
+      expect(json).toMatchObject({ state: "unavailable", color: "#9ca3af" });
+      expect(shields.message).toBe("index unavailable");
+      expect(svg).toContain("index unavailable");
+    }
+    expect(verifyCard).not.toHaveBeenCalled();
   });
 
   it("never claims certified, even when asked", async () => {
