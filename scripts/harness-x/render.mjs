@@ -1010,7 +1010,7 @@ emit("public/.well-known/mcp/server-card.json", j({
   doi_status_url: "https://councilof.ai/interop/zenodo-status.json",
   doi_alternative: { url: "https://councilof.ai/methodology/", relation: "the live methodology page; not the deposit's bytes" },
   explicitly_not: ["certification", "accreditation", "conformity-assessment", "legal-determination", "enforcement"],
-  discovery: { well_known_mcp: `${ID.website}/.well-known/mcp.json`, agent_card: `${ID.website}/.well-known/agent-card.json` },
+  discovery: { well_known_mcp: `${ID.website}/.well-known/mcp.json`, agent_card: `${ID.website}/.well-known/agent-card.json`, catalog: `${ID.website}/catalog.json` },
   doctrine: DOCTRINE,
   generated_by: WELL_KNOWN_GENERATOR,
 }));
