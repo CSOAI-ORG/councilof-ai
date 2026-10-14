@@ -132,3 +132,9 @@ increase `n` or correctness.
 
 `--dry-run` exercises the whole pipeline with no network and writes runs that
 are marked `dry_run` and never landable.
+
+## Transport correction — 14 October 2026
+
+The API worker now uses its own urllib opener with `ProxyHandler({})` and a redirect-refusing handler, following the existing sibling worker's pattern. Environment proxies and automatic redirects cannot silently forward the API key through another route. Redirect responses stop that attempt without an automatic retry; its conservative unknown-cost reservation remains retained. TLS verification remains enabled.
+
+All 31 offline worker tests passed on existing RunPod B3, with sockets and DNS blocked. Added controls cover same-host/cross-host/downgrade redirects, ambient proxy settings, the unchanged original request and one-attempt refusal. This is synthetic transport qualification, not an API call, model availability result, provider invoice cap or control-plane admission. The existing required gates now invoke this suite alongside the delivery runner; final-head hosted results and main Claude M4's disposition of the existing security review remain required.
