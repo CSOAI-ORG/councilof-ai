@@ -404,7 +404,7 @@ for (const vp of VIEWPORTS) {
   
       const answered = page.getByTestId("talk-tool-card").or(page.getByTestId("talk-answer")).first();
       await expect(answered).toBeVisible({ timeout: 10_000 });
-      await expect(page.getByTestId("talk-live")).toHaveText(/^Answer ready\./);
+      await expect(page.getByTestId("gspc-workspace-home").getByTestId("talk-live")).toHaveText(/^Answer ready\./);
       // The answer stays on the start screen; the question did not swap the canvas to the chat log.
       await expect(page.getByTestId("gspc-workspace-home")).toBeVisible();
       await expect(page.getByRole("log", { name: "Council of AI conversation" })).toHaveCount(0);
@@ -440,7 +440,7 @@ for (const vp of VIEWPORTS) {
           networkEvents: events, eventsTruncated,
           nativeTransport, eofReceipts, eofReceiptsTruncated,
           expectedReadyText: "Answer ready. " + RESULT.tool + ": " + RESULT.label,
-          readyText: await page.getByTestId("talk-live").textContent(),
+          readyText: await page.getByTestId("gspc-workspace-home").getByTestId("talk-live").textContent(),
           answerFaceVisible: await page.getByTestId("talk-answer").isVisible(),
           fullAnswerRetained: (await page.getByTestId("talk-tool-card").textContent() ?? "")
             .replace(/\s+/g, " ").trim().includes(RESULT.summary.replace(/\s+/g, " ").trim()),
