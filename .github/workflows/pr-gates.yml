@@ -262,6 +262,7 @@ jobs:
           test "$(git rev-parse 10046fd8b60d75be66bd1f9dbf54155cca26dec3^{commit})" = 10046fd8b60d75be66bd1f9dbf54155cca26dec3
           node --version
           python3 scripts/test_anthropic_gspc_worker.py
+          python3 -m unittest discover -s scripts -p test_chatgpt_plan_gspc_worker.py
           node --experimental-vm-modules --unhandled-rejections=strict scripts/test_paid_delivery_records.mjs
 
       - name: Restore existing Node 20 build runtime
