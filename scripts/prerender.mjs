@@ -302,6 +302,7 @@ function discover() {
     // so each needs an explicit snapshot or the static host serves an honest-404.
     "/blog/how-to-verify-an-ai-measurement", // restored 2026-10-12 (blog-published.json)
     "/blog/keeping-ai-claims-current", // restored 2026-10-12 (blog-published.json)
+    "/blog/gspc-g2-comparison-group-2026-10-14", // restored YYYY-MM-DD (blog-published.json)
     "/blog/ai-insurance-verified-measurement",
     "/blog/ai-audit-best-practices", // listed on /blog but 404 live (Pages serves 404.html for non-prerendered paths); brand-gate-checked
     "/blog/ai-risk-register",
