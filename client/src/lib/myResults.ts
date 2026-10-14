@@ -160,9 +160,17 @@ export function normaliseRow(r: unknown, i: number): MyResult | null {
 
 export function readMyResults(): MyResult[] {
   try {
-    const raw = window.localStorage.getItem(MY_RESULTS_KEY);
+    return parseRows(window.localStorage.getItem(MY_RESULTS_KEY)) ?? [];
+  } catch {
+    return [];
+  }
+}
+
+/** The rows in one stored snapshot, or null when the snapshot is not a readable list. */
+function parseRows(raw: string | null): MyResult[] | null {
+  try {
     const list = raw ? (JSON.parse(raw) as unknown) : [];
-    if (!Array.isArray(list)) return [];
+    if (!Array.isArray(list)) return null;
     const seen = new Set<string>();
     const out: MyResult[] = [];
     list.forEach((r, i) => {
@@ -175,7 +183,7 @@ export function readMyResults(): MyResult[] {
     });
     return out;
   } catch {
-    return [];
+    return null;
   }
 }
 
@@ -183,7 +191,7 @@ export function readMyResults(): MyResult[] {
 const precious = (r: MyResult) => r.kind === "paid" && typeof r.record === "string";
 
 /**
- * Which rows to keep when the list is over MAX. Before 15 Oct 2026 this dropped the newest row
+ * Which rows to keep when the list is over MAX. Before 14 Oct 2026 this dropped the newest row
  * when MAX paid copies filled the list (and saveMyResult still said saved), and a 51st paid copy
  * evicted an older one. Now every paid row that holds its record is kept, even past MAX; only
  * other rows (oldest first) give way to them, and a non-paid row that finds no room is dropped
@@ -209,7 +217,7 @@ function sameResult(a: MyResult, b: MyResult): boolean {
 let seq = 0;
 
 /**
- * Save one row, and say truthfully what happened (15 Oct 2026). Every paid record already stored
+ * Save one row, and say truthfully what happened (14 Oct 2026). Every paid record already stored
  * is kept byte-for-byte: the cap never drops one, and a full browser store is never "fixed" by
  * shedding stored record bodies (the old fallback stripped older, then all, purchased records).
  * If the new row cannot be stored without that, the old store is left exactly as it was and the
@@ -228,20 +236,18 @@ export function saveMyResult(entry: Omit<MyResult, "id" | "at"> & { at?: string 
   } catch {
     return failed(); // storage disabled: nothing was written, nothing is claimed
   }
+  // The one snapshot everything below works from (no second read that could fail into "empty").
   // A stored value that cannot be read as a list is not an empty list: overwriting it would destroy
   // whatever it holds (paid records included). Fail honestly and leave it as it is.
-  if (before !== null) {
-    try {
-      if (!Array.isArray(JSON.parse(before))) return failed();
-    } catch {
-      return failed();
-    }
-  }
-  const all = readMyResults();
+  const all = parseRows(before);
+  if (!all) return failed();
   // A repeat save of a paid result that arrives without its record keeps the stored record.
   const older = all.find((r) => sameResult(r, row));
   if (older && precious(older) && row.record === undefined) row = { ...row, record: older.record };
-  const prev = all.filter((r) => !sameResult(r, row));
+  // An older paid copy is replaced only by the exact same bytes; different bytes for the same
+  // ref never overwrite it (both rows are kept).
+  const replaced = older && precious(older) && row.record === older.record ? older : undefined;
+  const prev = all.filter((r) => !(sameResult(r, row) && (!precious(r) || r === replaced)));
   const kept = new Map(all.filter(precious).map((r) => [r.id, r.record as string]));
   const write = (rows: MyResult[]) => window.localStorage.setItem(MY_RESULTS_KEY, JSON.stringify(rows));
   const restore = () => {
@@ -274,7 +280,8 @@ export function saveMyResult(entry: Omit<MyResult, "id" | "at"> & { at?: string 
   };
   // Store the row whole; if that does not fit, store it without its record (recordKept: false, so
   // the page says "download it"); otherwise store nothing and leave the old list untouched.
-  return attempt(row) ?? (row.record !== undefined ? attempt({ ...row, record: undefined }) : null) ?? failed();
+  // The record-less fallback is refused when the row replaces a stored paid copy: it would delete it.
+  return attempt(row) ?? (row.record !== undefined && !replaced ? attempt({ ...row, record: undefined }) : null) ?? failed();
 }
 
 /** Kept for existing callers: returns the rows actually stored (not an unsaved list). */

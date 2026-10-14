@@ -142,7 +142,7 @@ describe("My results — saved-result defects (14 Oct 2026)", () => {
 });
 
 /**
- * Retention contract (15 Oct 2026): automatic cap and quota handling keeps every stored paid record
+ * Retention contract (14 Oct 2026): automatic cap and quota handling keeps every stored paid record
  * byte-for-byte; when the new row cannot be stored safely the old store is left as it was and the
  * outcome says so. Every case reads the store back rather than trusting the return value.
  */
@@ -280,6 +280,55 @@ describe("My results — paid records are never shed", () => {
     expect(kept.store[MY_RESULTS_KEY]).toBe(before);
   });
 
+  it("a repeat save of a paid ref over quota never strips the stored paid copy", async () => {
+    const env = install();
+    const { saveMyResult, MY_RESULTS_KEY } = await import("./myResults");
+    await seedPaid(2);
+    const before = env.store[MY_RESULTS_KEY];
+    env.opts.quotaChars = 10; // every write fails
+    for (const record of [body(0), undefined]) {
+      expect(saveMyResult({ kind: "paid", subject: "door0", ref: "sha0", ...(record ? { record } : {}) })).toMatchObject({ saved: false, recordKept: false });
+      expect(env.store[MY_RESULTS_KEY]).toBe(before);
+    }
+    // Room for a bare replacement row only, not for the full one: the bare fallback is refused.
+    env.opts.quotaChars = before.length - JSON.stringify(body(0)).length + 60;
+    expect(saveMyResult({ kind: "paid", subject: "door0", ref: "sha0" }).saved).toBe(false);
+    expect(env.store[MY_RESULTS_KEY]).toBe(before);
+    expectAllOld(await paidBodies(), 2);
+  });
+
+  it("same ref with different record bytes never overwrites the stored paid copy", async () => {
+    install();
+    const { saveMyResult, readMyResults } = await import("./myResults");
+    await seedPaid(1);
+    const out = saveMyResult({ kind: "paid", subject: "door0", ref: "sha0", record: "DIFFERENT" });
+    expect(out).toMatchObject({ saved: true, recordKept: true });
+    const recs = readMyResults().filter((r) => r.ref === "sha0").map((r) => r.record);
+    expect(recs).toEqual(["DIFFERENT", body(0)]);
+  });
+
+  it("first read succeeds, a later read fails, writes allowed: the old paid bytes remain", async () => {
+    const env = install();
+    const { saveMyResult, MY_RESULTS_KEY } = await import("./myResults");
+    await seedPaid(2);
+    const before = env.store[MY_RESULTS_KEY];
+    const ls = (globalThis as unknown as { window: { localStorage: { getItem: (k: string) => string | null } } }).window.localStorage;
+    const real = ls.getItem;
+    let reads = 0;
+    ls.getItem = (k: string) => {
+      reads++;
+      if (reads === 1) return real(k);
+      throw new Error("SecurityError");
+    };
+    const out = saveMyResult({ kind: "watch", subject: "w", ref: "r" });
+    // Whatever it reports, nothing stored may be lost, and "saved" needs a successful read-back.
+    ls.getItem = real;
+    const stored = JSON.parse(env.store[MY_RESULTS_KEY]) as { ref?: string; record?: string }[];
+    for (let i = 0; i < 2; i++) expect(stored.find((r) => r.ref === `sha${i}`)?.record).toBe(body(i));
+    expect(out.saved).toBe(false);
+    expect(env.store[MY_RESULTS_KEY]).toBe(before);
+  });
+
   it("a repeat save keeps one row with the exact record, and never loses it to a record-less retry", async () => {
     install();
     const { saveMyResult, readMyResults } = await import("./myResults");
@@ -291,12 +340,12 @@ describe("My results — paid records are never shed", () => {
     expect(rows[0].record).toBe(body(0));
   });
 
-  it("reload, reopen and download hand back the SAME bytes that were delivered", async () => {
+  it("mocked reopen and download hand back the SAME bytes that were delivered (store re-read, not a browser reload)", async () => {
     const env = install();
     const { saveMyResult, readMyResults, MY_RESULTS_KEY } = await import("./myResults");
     const delivered = body(7);
     saveMyResult({ kind: "paid", subject: "door7", ref: "sha7", record: delivered });
-    // "Reload": a fresh module instance reading the persisted string.
+    // Mocked reopen: a new mock store holding the persisted string, re-read by the same module.
     const raw = env.store[MY_RESULTS_KEY];
     install().store[MY_RESULTS_KEY] = raw;
     const again = readMyResults().find((r) => r.ref === "sha7")!;
