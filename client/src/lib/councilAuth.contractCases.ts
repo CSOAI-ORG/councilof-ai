@@ -13,6 +13,10 @@ function deferred<T>() {
   const promise = new Promise<T>((yes, no) => { resolve = yes; reject = no; });
   return { promise, resolve, reject };
 }
+const bearer = (init: RequestInit) => (init.headers as Record<string, string> | undefined)?.Authorization;
+/** Fresh responses per call: POST returns the candidate session, GET /me verifies it by Bearer. */
+const verifying = (post: (url: string, init: RequestInit) => Promise<Response>, me: (token: string | undefined, init: RequestInit) => Promise<Response> = async () => response({ user: owner })) =>
+  async (url: string, init: RequestInit) => (init.method === "GET" ? me(bearer(init), init) : post(url, init));
 function fixture(fetcher: (url: string, init: RequestInit) => Promise<Response>, options: { token?: string; user?: unknown; authApiBase?: string } = {}) {
   const cache = new Map<string, string>();
   if (options.token !== undefined) cache.set(COUNCIL_TOKEN_KEY, options.token);
@@ -111,7 +115,8 @@ export function registerCouncilAuthContractCases(test: UnitCase) {
 
   test("a new login wins over an older restored token", async () => {
     const old = deferred<Response>();
-    const f = fixture(async (url) => url === "/api/auth/me" ? old.promise : session("unit-new"), { token: "unit-old", user: owner });
+    const f = fixture(async (_url, init) => init.method === "POST" ? session("unit-new")
+      : bearer(init) === "Bearer unit-old" ? old.promise : response({ user: owner }), { token: "unit-old", user: owner });
     const restoring = f.controller.restore();
     await f.controller.login(owner.email, "unit-password");
     old.resolve(response({ user: { email: "old@example.test", name: "Old unit owner" } }));
@@ -192,8 +197,8 @@ export function registerCouncilAuthContractCases(test: UnitCase) {
   test("a late first login cannot overwrite a newer login", async () => {
     const first = deferred<Response>();
     const second = deferred<Response>();
-    let calls = 0;
-    const f = fixture(async () => (++calls === 1 ? first.promise : second.promise));
+    let posts = 0;
+    const f = fixture(verifying(async () => (++posts === 1 ? first.promise : second.promise)));
     const oldLogin = f.controller.login(owner.email, "unit-password");
     const rejected = assert.rejects(oldLogin, { name: "AbortError" });
     const newLogin = f.controller.login(owner.email, "unit-password");
@@ -457,12 +462,14 @@ export function registerCouncilAuthContractCases(test: UnitCase) {
 
   test("a token write failure cannot publish an untracked authenticated identity", async () => {
     for (const writeBehavior of ["throw", "ignore"] as const) {
+      const methods: string[] = [];
       const published: CouncilSessionState[] = [];
       const controller = createCouncilSessionController({
         storage: { getItem: () => null, setItem: () => { if (writeBehavior === "throw") throw new Error("unit write denied"); }, removeItem: () => {} },
-        fetcher: async () => session(), publish: value => { published.push(value); },
+        fetcher: async (_url, init) => { methods.push(String(init.method)); return init.method === "GET" ? response({ user: owner }) : session(); }, publish: value => { published.push(value); },
       });
       await assert.rejects(controller.login(owner.email, "unit-password"), { name: "AbortError" });
+      assert.deepEqual(methods, ["POST", "GET"]);
       assert.deepEqual(published.at(-1), { user: null, token: null, loading: false });
     }
   });
@@ -530,7 +537,7 @@ export function registerCouncilAuthContractCases(test: UnitCase) {
   test("login, registration and restore preserve canonical normalized subject IDs", async () => {
     const mixed = { email: "OWNER@EXAMPLE.TEST", name: "Unit owner" };
     for (const action of ["login", "signup"] as const) {
-      const f = fixture(async () => session("unit-issued", mixed));
+      const f = fixture(verifying(async () => session("unit-issued", mixed), async (token) => token === "Bearer unit-issued" ? response({ user: mixed }) : response({}, 401)));
       await f.controller[action](owner.email, "unit-password");
       assert.equal(f.latest()?.user?.id, owner.email);
       assert.equal(f.latest()?.user?.email, owner.email);
@@ -541,5 +548,144 @@ export function registerCouncilAuthContractCases(test: UnitCase) {
     assert.equal(restored.latest()?.user?.id, owner.email);
     assert.equal(restored.latest()?.user?.email, owner.email);
   });
+
+
+  // ---- Post-login/register same-origin /me verification (new behavior beyond the donor) ----
+  const actions = ["login", "signup"] as const;
+  const run = (f: ReturnType<typeof fixture>, action: (typeof actions)[number]) =>
+    action === "login" ? f.controller.login(owner.email, "unit-password") : f.controller.signup(owner.email, "unit-password", "Unit supplied name");
+  const unrelated = (f: ReturnType<typeof fixture>) => f.cache.set("unit-unrelated", "kept");
+  const expectNoCandidate = (f: ReturnType<typeof fixture>, priorToken: string | undefined) => {
+    assert.equal(f.cache.get(COUNCIL_TOKEN_KEY), priorToken);
+    assert.equal(f.cache.has(COUNCIL_USER_KEY), false);
+    assert.equal(f.cache.get("unit-unrelated"), "kept");
+    assert.equal(f.published.some(value => value.token === "unit-candidate" || (value.user !== null && value.token !== null)), false);
+  };
+
+  for (const action of actions) {
+    test(`${action}: the verified /me name wins over the POST response`, async () => {
+      const f = fixture(verifying(async () => session("unit-candidate", { ...owner, name: "POST name" }),
+        async token => token === "Bearer unit-candidate" ? response({ user: { ...owner, name: "Verified name" } }) : response({}, 401)));
+      await run(f, action);
+      assert.equal(f.latest()?.user?.name, "Verified name");
+      assert.equal(f.latest()?.user?.role, "user");
+      assert.equal(f.latest()?.user?.subscriptionTier, "free");
+      assert.equal(JSON.parse(f.cache.get(COUNCIL_USER_KEY)!).name, "Verified name");
+      assert.equal(f.cache.get(COUNCIL_TOKEN_KEY), "unit-candidate");
+    });
+
+    test(`${action}: verification is a relative same-origin GET with the candidate Bearer, no-store and the same signal`, async () => {
+      const calls: { url: string; init: RequestInit }[] = [];
+      const f = fixture(async (url, init) => { calls.push({ url, init }); return init.method === "GET" ? response({ user: owner }) : session("unit-candidate"); },
+        { authApiBase: "https://existing-api.example.test" });
+      await run(f, action);
+      assert.equal(calls.length, 2);
+      assert.equal(calls[0].url, `https://existing-api.example.test/api/auth/${action === "login" ? "login" : "register"}`);
+      assert.equal(calls[1].url, "/api/auth/me");
+      assert.equal(calls[1].init.method, "GET");
+      assert.deepEqual(calls[1].init.headers, { Authorization: "Bearer unit-candidate" });
+      assert.equal(calls[1].init.cache, "no-store");
+      assert.ok(calls[1].init.signal);
+      assert.equal(calls[1].init.signal, calls[0].init.signal);
+    });
+
+    test(`${action}: the candidate is neither cached nor published while /me is pending`, async () => {
+      const me = deferred<Response>();
+      const asked = deferred<void>();
+      const f = fixture(verifying(async () => session("unit-candidate"), async () => { asked.resolve(); return me.promise; }), { token: "unit-prior" });
+      unrelated(f);
+      const authenticating = run(f, action);
+      await asked.promise;
+      expectNoCandidate(f, "unit-prior");
+      me.resolve(response({ user: owner }));
+      await authenticating;
+      assert.equal(f.cache.get(COUNCIL_TOKEN_KEY), "unit-candidate");
+      assert.equal(f.latest()?.user?.email, owner.email);
+    });
+
+    const failures: [string, () => Promise<Response>][] = [
+      ["401", async () => response({ error: "invalid or expired token" }, 401)],
+      ["403", async () => response({ error: "denied" }, 403)],
+      ["503", async () => response({ error: "unavailable" }, 503)],
+      ["network failure", async () => { throw new TypeError("unit network failure"); }],
+      ["bad JSON", async () => new Response("not JSON", { status: 200 })],
+      ["missing user", async () => response({})],
+      ["malformed user", async () => response({ user: { email: owner.email } })],
+      ["wrong subject", async () => response({ user: { email: "other@example.test", name: "Other" } })],
+    ];
+    for (const [variant, me] of failures) {
+      test(`${action}: /me ${variant} rejects the candidate without caching or publishing it`, async () => {
+        const f = fixture(verifying(async () => session("unit-candidate"), me), { token: "unit-prior" });
+        unrelated(f);
+        await assert.rejects(run(f, action));
+        expectNoCandidate(f, "unit-prior");
+        assert.equal(f.latest()?.loading, false);
+      });
+    }
+
+    test(`${action}: a failed or malformed POST stops before any /me request`, async () => {
+      for (const post of [response({ error: "invalid credentials" }, 401), response({}), new Response("not JSON", { status: 200 }),
+        response({ token: "unit-candidate", user: { email: "other@example.test", name: "Other" } })]) {
+        const methods: string[] = [];
+        const f = fixture(async (_url, init) => { methods.push(String(init.method)); return init.method === "GET" ? response({ user: owner }) : post; });
+        await assert.rejects(run(f, action));
+        assert.deepEqual(methods, ["POST"]);
+        assert.equal(f.cache.size, 0);
+      }
+    });
+
+    const interruptions = ["logout", "dispose", "newer login", "cross-tab replacement", "cross-tab removal", "unreadable storage"] as const;
+    for (const stage of ["response", "JSON"] as const) {
+      for (const interruption of interruptions) {
+        test(`${action}: a late /me ${stage} after ${interruption} cannot revive or overwrite identity`, async () => {
+          const cache = new Map<string, string>([[COUNCIL_TOKEN_KEY, "unit-prior"], ["unit-unrelated", "kept"]]);
+          let readable = true;
+          const published: CouncilSessionState[] = [];
+          const me = deferred<Response>();
+          const body = deferred<unknown>();
+          const asked = deferred<void>();
+          const reading = deferred<void>();
+          const late = response({});
+          late.json = () => { reading.resolve(); return body.promise; };
+          let posts = 0;
+          const controller = createCouncilSessionController({
+            storage: { getItem: key => { if (!readable) throw new Error("unit storage denied"); return cache.get(key) ?? null; }, setItem: (key, value) => { cache.set(key, value); }, removeItem: key => { cache.delete(key); } },
+            fetcher: async (_url, init) => {
+              if (init.method === "POST") return session(++posts === 1 ? "unit-candidate" : "unit-newer");
+              if (bearer(init) === "Bearer unit-candidate") { asked.resolve(); return stage === "JSON" ? late : me.promise; }
+              return response({ user: owner });
+            },
+            publish: value => { published.push(value); },
+          });
+          const authenticating = action === "login" ? controller.login(owner.email, "unit-password") : controller.signup(owner.email, "unit-password");
+          const outcome = authenticating.then(() => "resolved", (error: unknown) => (error as Error).name);
+          await asked.promise;
+          if (stage === "JSON") await reading.promise;
+          let newer: Promise<void> | null = null;
+          if (interruption === "logout") controller.logout();
+          else if (interruption === "dispose") controller.dispose();
+          else if (interruption === "newer login") newer = controller.login(owner.email, "unit-password-2");
+          else if (interruption === "cross-tab replacement") { cache.set(COUNCIL_TOKEN_KEY, otherToken); cache.set(COUNCIL_USER_KEY, JSON.stringify(nextOwner)); }
+          else if (interruption === "cross-tab removal") cache.delete(COUNCIL_TOKEN_KEY);
+          else readable = false;
+          if (stage === "response") me.resolve(response({ user: owner }));
+          else body.resolve({ user: owner });
+          assert.equal(await outcome, "AbortError");
+          if (newer) await newer;
+          readable = true;
+          assert.equal(cache.get("unit-unrelated"), "kept");
+          const expectedToken = { logout: undefined, dispose: "unit-prior", "newer login": "unit-newer", "cross-tab replacement": otherToken, "cross-tab removal": undefined, "unreadable storage": "unit-prior" }[interruption];
+          assert.equal(cache.get(COUNCIL_TOKEN_KEY), expectedToken);
+          if (interruption === "cross-tab replacement") assert.equal(cache.get(COUNCIL_USER_KEY), JSON.stringify(nextOwner));
+          if (interruption === "newer login") {
+            assert.equal(published.at(-1)?.token, "unit-newer");
+            assert.equal(published.some(value => value.token === "unit-candidate"), false);
+          } else {
+            assert.equal(published.some(value => value.user !== null), false);
+          }
+        });
+      }
+    }
+  }
 
 }

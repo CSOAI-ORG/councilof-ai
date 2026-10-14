@@ -196,13 +196,33 @@ export function createCouncilSessionController(options: {
         throw new Error("Authentication returned an invalid session");
       }
       if (!currentStorage(operation, expected)) throw cancelled();
+      // Verify the candidate with the Council origin before caching or publishing anything.
+      // Same-origin and independent of any login API override; same AbortSignal as the POST.
+      // This does not call restore(): restore would invalidate this operation and reuse the old token.
+      const verification = await options.fetcher("/api/auth/me", {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+        cache: "no-store",
+        signal: operation.abort.signal,
+      });
+      if (!currentStorage(operation, expected)) throw cancelled();
+      if (!verification.ok) throw new Error("Authentication could not be verified");
+      const verifiedBody: unknown = await verification.json().catch(() => null);
+      if (!currentStorage(operation, expected)) throw cancelled();
+      const verified = responseUser(verifiedBody);
+      // The verified /me subject must be the requested and candidate subject. This authenticates the
+      // account only; it is not a verified email, profile, private-case or reviewer grant.
+      if (!verified || verified.email !== email.toLowerCase() || verified.email !== user.email) {
+        throw new Error("Authentication could not be verified");
+      }
+      if (!currentStorage(operation, expected)) throw cancelled();
       try { options.storage!.setItem(COUNCIL_TOKEN_KEY, token); }
       catch { invalidate(); emit(emptySession()); throw cancelled(); }
       expected = { readable: true, token };
       if (!currentStorage(operation, expected)) throw cancelled();
-      cacheUser(user);
+      cacheUser(verified);
       if (!currentStorage(operation, expected)) throw cancelled();
-      emit({ user, token, loading: false });
+      emit({ user: verified, token, loading: false });
     } catch (error) {
       if (!currentStorage(operation, expected)) throw cancelled();
       emit({ ...state, loading: false });
