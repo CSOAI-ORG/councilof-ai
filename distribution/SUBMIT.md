@@ -6,7 +6,7 @@ published, submitted or registered. Every step is an owner action.
 Targets: 22. Owner approval needed: 21.
 Affected by the flagged CSOAI-ORG GitHub account (blocked, re-routed to CouncilofAI-CSOAI, or losing GitHub-based provenance): 12 (`mcp-registry-github`, `claude-plugin`, `cursor-plugin`, `grok-plugin`, `gemini-extension`, `pypi-langchain-csoai`, `pypi-llama-index-tools-csoai`, `pypi-crewai-csoai`, `npm-ai-sdk-gspc`, `npm-mastra-gspc`, `docker-mcp-catalog`, `dify-plugin`).
 Remote server version: 1.4.4 (from `mcp/gspc-server/server.json`; `scripts/harness-x/check.mjs` requires it to equal the live serverInfo.version).
-Fleet: 19 tools (14 free, 5 x402-metered). Doctrine sha256 `845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a`.
+Fleet: 19 tools (14 free, 5 x402-metered) at https://councilof.ai/mcp; https://councilof.ai/mcp/free serves the 14 free tools only. Doctrine sha256 `845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a`.
 
 Before any step: `node scripts/harness-x/render.mjs --check && node scripts/harness-x/check.mjs`.
 After any step: `python3 scripts/harness-x/parity_live.py` reads every live channel in `published_channels` and says

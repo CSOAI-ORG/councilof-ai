@@ -5,7 +5,7 @@ description: Read the Council of AI GSPC board and verify signed measurement car
 
 # GSPC (Council of AI, Layer 0)
 
-The `gspc` MCP server (https://councilof.ai/mcp) exposes 19 tools (14 free, 5 x402-metered).
+The `gspc` MCP server exposes 19 tools (14 free, 5 x402-metered) at https://councilof.ai/mcp; https://councilof.ai/mcp/free serves the 14 free tools only.
 
 Free:
 - `board_totals` — Live GSPC board totals from https://councilof.ai/api/gspc.
