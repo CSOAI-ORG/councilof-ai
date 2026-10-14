@@ -113,10 +113,15 @@ describe("Council OS auth tokens", () => {
     }
   });
 
-  it("refuses the fixed demo account unless DEMO_LOGIN_ENABLED is set", async () => {
+  it("rejects the retired demo credentials even with DEMO_LOGIN_ENABLED set", async () => {
+    const get = vi.fn(async () => null);
     const response = await onRequest({
       params: { path: ["login"] },
-      env: { ASSESS_SIGNING_KEY_PKCS8_B64: await signingKey() },
+      env: {
+        ASSESS_SIGNING_KEY_PKCS8_B64: await signingKey(),
+        DEMO_LOGIN_ENABLED: "1",
+        SOV_ARENA_STATE: { get, put: vi.fn() },
+      },
       request: new Request("https://councilof.ai/api/auth/login", {
         method: "POST",
         headers: { "content-type": "application/json" },
@@ -124,6 +129,25 @@ describe("Council OS auth tokens", () => {
       }),
     } as never);
     expect(response.status).toBe(401);
+    expect(await response.json()).not.toHaveProperty("token");
+  });
+
+  it("refuses to register the retired demo address", async () => {
+    const put = vi.fn(async () => undefined);
+    const response = await onRequest({
+      params: { path: ["register"] },
+      env: {
+        ASSESS_SIGNING_KEY_PKCS8_B64: await signingKey(),
+        SOV_ARENA_STATE: { get: vi.fn(async () => null), put },
+      },
+      request: new Request("https://councilof.ai/api/auth/register", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email: "Demo@CSOAI.com", password: "demo123" }),
+      }),
+    } as never);
+    expect(response.status).toBe(409);
+    expect(put).not.toHaveBeenCalled();
   });
 
   it("fails login closed when the session signing key is unavailable", async () => {

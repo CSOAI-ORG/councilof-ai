@@ -8,13 +8,13 @@
  * POST /api/auth/register { email, password, name? } -> { token, user }
  * GET  /api/auth/me       Authorization: Bearer <token> -> { user, entitlements }
  *
- * demo@csoai.com / demo123 always works. Registered users persist in SOV_ARENA_STATE KV.
+ * There is no demo or shared login. Only registered users (SOV_ARENA_STATE KV) can sign in.
  */
 
 import {
   type AuthEnv,
   type StoredUser,
-  DEMO_USER,
+  RESERVED_EMAILS,
   hashPassword,
   issueToken,
   verifyToken,
@@ -88,11 +88,7 @@ export const onRequest: PagesFunction<AuthEnv> = async (ctx) => {
     const password = String(body.password || "");
     if (!email || !password) return json({ error: "email and password required" }, 400);
 
-    // The fixed demo account is a working production login unless explicitly enabled (found 06 Sep audit).
-    if ((ctx.env as { DEMO_LOGIN_ENABLED?: string }).DEMO_LOGIN_ENABLED === "1" && email === DEMO_USER.email && password === DEMO_USER.password) {
-      const user = { email: DEMO_USER.email, name: DEMO_USER.name };
-      return authenticatedSession(ctx.env, user);
-    }
+    if (RESERVED_EMAILS.has(email)) return json({ error: "invalid credentials" }, 401);
 
     const stored = await findUser(ctx.env, email);
     if (!stored || (await hashPassword(password, stored.salt)) !== stored.pw) {
@@ -116,7 +112,7 @@ export const onRequest: PagesFunction<AuthEnv> = async (ctx) => {
     const name = String(body.name || "");
     if (!email || !password) return json({ error: "email and password required" }, 400);
     if (password.length < 6) return json({ error: "password must be >= 6 chars" }, 400);
-    if (email === DEMO_USER.email) return json({ error: "account reserved" }, 409);
+    if (RESERVED_EMAILS.has(email)) return json({ error: "account reserved" }, 409);
 
     const existing = await findUser(ctx.env, email);
     if (existing) return json({ error: "account already exists" }, 409);
