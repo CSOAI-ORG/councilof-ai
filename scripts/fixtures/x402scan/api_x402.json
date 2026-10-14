@@ -471,6 +471,20 @@
         "a certificate"
       ],
       "resource": "https://councilof.ai/api/pop/claim-watch"
+    },
+    {
+      "deliverable": "Coverage evidence: one assembled row for one named asset from the dated coverage record, not a live chain read. Returns identity, measurement state with method and measured_at, provenance digests, and this record's honest anchor state: evidence packs UNSIGNED (0 signed) until signing runs. States exactly as recorded: DEEP_MEASURED, UNMEASURED_REASON_DOCUMENTED (reason included) or INDEXED_METADATA_ONLY. Free preview gives identity, state and as_of; verification is free on the public board.",
+      "free_preview": "https://councilof.ai/api/coverage-evidence?asset=tether&preview=1",
+      "id": "coverage_evidence",
+      "name": "Coverage evidence row (assembled)",
+      "never": [
+        "a grade",
+        "a score",
+        "a rank",
+        "a certificate",
+        "a fresh measurement"
+      ],
+      "resource": "https://councilof.ai/api/coverage-evidence?asset=tether"
     }
   ],
   "revenue_truth": "https://councilof.ai/api/revenue",

@@ -176,7 +176,7 @@
       "url": "https://creativecommons.org/licenses/by/4.0/"
     },
     "title": "Council of AI \u2014 Public API",
-    "version": "0.3+4a141228c8ec",
+    "version": "0.3+95fcf3d208a6",
     "x-guidance": "Free board: GET /api/gspc \u2014 quote totals.lid verbatim, never compose a count. Paid doors are the operations carrying x-payment-info: GET without payment answers HTTP 402 with the x402 v2 challenge (accepts[0]: scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31); pay it and retry with the X-PAYMENT header. Required query parameters carry an example that reaches the 402. Free previews are named per door under x-csoai.free_preview. Catalog: https://councilof.ai/.well-known/x402.json and https://councilof.ai/api/x402. Verify is free: https://councilof.ai/gspc-verify. Offer & Receipt emission is conditional: a 402 carries server-signed offers only when the Pages signing key is available; a settled 200 carries a signed receipt only when settlement exposes the required payer and transaction evidence and that key is available. The extension uses JWS/EdDSA, kid did:web:csoai.org#board-attestation-1, published at https://csoai.org/.well-known/did.json. Check either without trusting this document: POST it to /api/receipts/verify, or download https://councilof.ai/verifier/verify_receipt.py; default mode reads the public DID document, and a retained key document allows offline replay. 23 axes measured \u00b7 14 model fleets \u00b7 0 separated leaders \u00b7 9 public leader scores \u00b7 9 fact runs \u00b7 TIE is TIE \u00b7 not a certificate."
   },
   "openapi": "3.1.0",
@@ -1229,6 +1229,132 @@
         },
         "security": [],
         "summary": "GET /api/coverage \u2014 one machine-readable lifecycle view over the estate."
+      }
+    },
+    "/api/coverage-evidence": {
+      "get": {
+        "description": "Coverage evidence: one assembled row for one named asset from the dated coverage record, not a live chain read. Returns identity, measurement state with method and measured_at, provenance digests, and this record's honest anchor state: evidence packs UNSIGNED (0 signed) until signing runs. States exactly as recorded: DEEP_MEASURED, UNMEASURED_REASON_DOCUMENTED (reason included) or INDEXED_METADATA_ONLY. Free preview gives identity, state and as_of; verification is free on the public board.",
+        "operationId": "x402_coverage_evidence",
+        "parameters": [
+          {
+            "description": "XRPL asset symbol or issuer address to evidence (required). Example RLUSD. Use preview=1 for free unsigned measurement.",
+            "example": "tether",
+            "in": "query",
+            "name": "asset",
+            "required": true,
+            "schema": {
+              "const": "tether",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Free preview: same request, no payment, no signature",
+            "in": "query",
+            "name": "preview",
+            "required": false,
+            "schema": {
+              "const": "1",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Coverage evidence: one assembled row for one named asset from the dated coverage record, not a live chain read. Returns identity, measurement state with method and measured_at, provenance digests, and this record's honest anchor state: evidence packs UNSIGNED (0 signed) until signing runs. States exactly as recorded: DEEP_MEASURED, UNMEASURED_REASON_DOCUMENTED (reason included) or INDEXED_METADATA_ONLY. Free preview gives identity, state and as_of; verification is free on the public board.",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Coverage evidence: one assembled row for one named asset from the dated coverage record, not a live chain read. Returns identity, measurement state with method and measured_at, provenance digests, and this record's honest anchor state: evidence packs UNSIGNED (0 signed) until signing runs. States exactly as recorded: DEEP_MEASURED, UNMEASURED_REASON_DOCUMENTED (reason included) or INDEXED_METADATA_ONLY. Free preview gives identity, state and as_of; verification is free on the public board."
+          },
+          "402": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepts": [
+                    {
+                      "amount": "20000",
+                      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                      "extra": {
+                        "decimals": 6,
+                        "name": "USD Coin",
+                        "symbol": "USDC",
+                        "version": "2"
+                      },
+                      "maxAmountRequired": "20000",
+                      "maxTimeoutSeconds": 300,
+                      "network": "eip155:8453",
+                      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+                      "scheme": "exact"
+                    }
+                  ],
+                  "error": "Payment required",
+                  "extensions": {
+                    "bazaar": {
+                      "info": {
+                        "input": {
+                          "method": "GET",
+                          "queryParams": {
+                            "asset": "tether"
+                          },
+                          "type": "http"
+                        }
+                      }
+                    }
+                  },
+                  "resource": {
+                    "description": "Coverage evidence: one assembled row for one named asset from the dated coverage record, not a live chain read. Returns identity, measurement state with method and measured_at, provenance digests, and this record's honest anchor state: evidence packs UNSIGNED (0 signed) until signing runs. States exactly as recorded: DEEP_MEASURED, UNMEASURED_REASON_DOCUMENTED (reason included) or INDEXED_METADATA_ONLY. Free preview gives identity, state and as_of; verification is free on the public board.",
+                    "mimeType": "application/json",
+                    "url": "https://councilof.ai/api/coverage-evidence?asset=tether"
+                  },
+                  "x402Version": 2
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/X402PaymentRequired"
+                }
+              }
+            },
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free. The example is a captured challenge: its amount and any csoai_pricing dates are as captured, not a standing price. Amounts are set per request in the challenge and can change, so read accepts[] from a live 402 on every call.",
+            "headers": {
+              "PAYMENT-REQUIRED": {
+                "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Coverage evidence row (assembled)",
+        "tags": [
+          "x402",
+          "assembly"
+        ],
+        "x-csoai": {
+          "challenge": {
+            "amount_source": "functions/api/_skus.ts default band coverage_evidence.per_request (owner env override not visible offline)",
+            "captured": false
+          },
+          "door": "https://councilof.ai/api/coverage-evidence?asset=tether",
+          "free_preview": "https://councilof.ai/api/coverage-evidence?asset=tether&preview=1",
+          "never": [
+            "a grade",
+            "a score",
+            "a rank",
+            "a certificate",
+            "a fresh measurement"
+          ],
+          "paid_for": "assembly",
+          "tier": "coverage_evidence"
+        },
+        "x-payment-info": {
+          "protocols": [
+            "x402"
+          ]
+        }
       }
     },
     "/api/coverage-truth": {
@@ -10083,6 +10209,7 @@
     },
     "catalog": "https://councilof.ai/api/x402",
     "doors": [
+      "/api/coverage-evidence",
       "/api/free-door",
       "/api/discover/chainlink",
       "/api/discover/ondo",

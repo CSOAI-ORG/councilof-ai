@@ -48,6 +48,7 @@ import {
   FRESH_CAPSULE_DESCRIPTION,
   ART50_MARKING_EVIDENCE_DESCRIPTION,
   PROVIDER_DIFF_DESCRIPTION,
+  COVERAGE_EVIDENCE_DESCRIPTION,
   wrapperAssetDescription,
 } from "./_x402_descriptions";
 import WRAPPER_ASSET_DOORS from "./_wrapper_asset_doors.json";
@@ -129,6 +130,14 @@ export const onRequestGet: PagesFunction<{
         free_preview_note: "the 402 body carries csoai.preview: signed cards already on file",
         deliverable: REQUEST_ATTESTATION_DESCRIPTION,
         never: ["a score", "a rank", "a certificate", "a MEASURED cell minted by payment"],
+      },
+      {
+        id: "coverage_evidence",
+        name: "Coverage evidence row (assembled)",
+        resource: u("/api/coverage-evidence?asset=tether"),
+        free_preview: u("/api/coverage-evidence?asset=tether&preview=1"),
+        deliverable: COVERAGE_EVIDENCE_DESCRIPTION,
+        never: ["a grade", "a score", "a rank", "a certificate", "a fresh measurement"],
       },
       {
         id: "evidence_bundle",
