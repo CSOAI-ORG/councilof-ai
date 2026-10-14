@@ -6,6 +6,8 @@ import json
 import os
 import sys
 import tempfile
+import concurrent.futures
+import threading
 import unittest
 from pathlib import Path
 
@@ -84,7 +86,7 @@ class WorkerTests(unittest.TestCase):
         return aw.AnthropicClient("test-key-not-real", transport=transport, sleep=lambda _s: None)
 
     def go(self, job, transport, budget=50.0):
-        return aw.run_job(job, self.client(transport), budget=aw.BudgetGuard(job.model, budget),
+        return aw.run_job(job, self.client(transport), budget=aw.BudgetGuard(job.model, budget, 0.01),
                           concurrency=1, log=lambda _m: None)
 
     def run_dir(self, manifest) -> Path:
@@ -214,6 +216,183 @@ class WorkerTests(unittest.TestCase):
         evidence = "".join(path.read_text() for path in self.run_dir(manifest).iterdir())
         self.assertNotIn("test-key-not-real", evidence)
         self.assertEqual(transport.headers_seen[0]["x-api-key"], "test-key-not-real")
+
+
+    def test_terminal_states_precede_exact_label_grading(self) -> None:
+        for stop in ("refusal", "max_tokens", "model_context_window_exceeded"):
+            with self.subTest(stop=stop):
+                transport = ScriptedTransport([(200, {}, response("PERMITTED", stop=stop)),
+                                               (200, {}, response("PROHIBITED")),
+                                               (200, {}, response("PROHIBITED"))])
+                manifest = self.go(self.job("art5-safeguard"), transport)
+                self.assertEqual(manifest["counts"]["graded_n"], 2)
+                self.assertEqual(manifest["counts"]["correct"], 2)
+                self.assertEqual(manifest["counts"]["parse_errors_excluded"], 1)
+                rows = [json.loads(s) for s in (self.run_dir(manifest) / "items.jsonl").read_text().splitlines()]
+                self.assertIsNone(rows[0]["parsed_label"])
+                self.assertIsNone(rows[0]["grade"])
+                self.assertEqual(rows[0]["raw_output"], "PERMITTED")
+                card = json.loads((self.run_dir(manifest) / manifest["candidate_file"]).read_text())
+                self.assertEqual((card["body"]["n"], card["body"]["accuracy"]), (2, 1))
+
+    def test_terminal_states_precede_keyword_grading(self) -> None:
+        for stop in ("refusal", "max_tokens", "model_context_window_exceeded"):
+            with self.subTest(stop=stop):
+                transport = ScriptedTransport([(200, {}, response("red blue", stop=stop)),
+                                               (200, {}, response("apple"))])
+                manifest = self.go(self.job("swarm"), transport)
+                self.assertEqual(manifest["counts"]["graded_n"], 1)
+                self.assertEqual(manifest["counts"]["correct"], 1)
+                card = json.loads((self.run_dir(manifest) / manifest["candidate_file"]).read_text())
+                self.assertEqual((card["body"]["n"], card["body"]["accuracy"]), (1, 1))
+
+    def test_missing_null_empty_model_is_never_attributed(self) -> None:
+        for missing in ("absent", None, ""):
+            with self.subTest(model=missing):
+                payload = json.loads(response("PERMITTED"))
+                if missing == "absent":
+                    del payload["model"]
+                else:
+                    payload["model"] = missing
+                transport = ScriptedTransport([(200, {}, json.dumps(payload).encode()),
+                                               (200, {}, response("PROHIBITED")),
+                                               (200, {}, response("PROHIBITED"))])
+                manifest = self.go(self.job("art5-safeguard"), transport)
+                self.assertEqual(manifest["counts"]["transport_errors_excluded"], 1)
+                self.assertEqual(manifest["counts"]["graded_n"], 2)
+                self.assertFalse(manifest["landable_candidate"])
+                first = json.loads((self.run_dir(manifest) / "items.jsonl").read_text().splitlines()[0])
+                self.assertEqual(first["transport_error_code"], "API_MODEL_MISMATCH")
+                self.assertIsNone(first["grade"])
+
+    def test_atomic_reservations_bound_four_contenders(self) -> None:
+        budget = aw.BudgetGuard("claude-haiku-5-5", 2, 1)
+        barrier = threading.Barrier(4)
+        def contender():
+            barrier.wait(timeout=5)
+            return budget.reserve()
+        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
+            tickets = list(pool.map(lambda _: contender(), range(4)))
+        self.assertEqual(sum(t is not None for t in tickets), 2)
+        self.assertEqual(budget.committed_usd, 2)
+
+    def test_run_job_reserves_before_concurrent_transport(self) -> None:
+        denied = threading.Event()
+        class ObservedBudget(aw.BudgetGuard):
+            def reserve(self):
+                ticket = super().reserve()
+                if ticket is None:
+                    denied.set()
+                return ticket
+        class BlockingTransport(ScriptedTransport):
+            def __call__(self, method, url, headers, body, timeout):
+                if method == "POST":
+                    if not denied.wait(timeout=5):
+                        raise AssertionError("third contender never reached the reservation guard")
+                return super().__call__(method, url, headers, body, timeout)
+        transport = BlockingTransport([(200, {}, response("PERMITTED"))] * 3)
+        budget = ObservedBudget("claude-haiku-5-5", 2, 1)
+        manifest = aw.run_job(self.job("art5-safeguard"), self.client(transport),
+                              budget=budget, concurrency=3, log=lambda _: None)
+        self.assertEqual(len(transport.bodies), 2)
+        self.assertEqual(manifest["detail_code"], "BUDGET_CAP")
+        self.assertFalse(manifest["landable_candidate"])
+        self.assertLessEqual(budget.committed_usd, 2)
+
+    def test_insufficient_remaining_budget_sends_nothing(self) -> None:
+        transport = ScriptedTransport([(200, {}, response("PERMITTED"))] * 3)
+        manifest = aw.run_job(self.job("art5-safeguard"), self.client(transport),
+                              budget=aw.BudgetGuard("claude-haiku-5-5", 0.005, 0.01),
+                              concurrency=1, log=lambda _: None)
+        self.assertEqual(transport.bodies, [])
+        self.assertEqual(manifest["detail_code"], "BUDGET_CAP")
+
+    def test_missing_request_bound_sends_nothing(self) -> None:
+        transport = ScriptedTransport([(200, {}, response("PERMITTED"))] * 3)
+        manifest = aw.run_job(self.job("art5-safeguard"), self.client(transport),
+                              budget=aw.BudgetGuard("claude-haiku-5-5", 1),
+                              concurrency=1, log=lambda _: None)
+        self.assertEqual(transport.bodies, [])
+        self.assertEqual(manifest["detail_code"], "BUDGET_BOUND_REQUIRED")
+
+    def test_retry_requires_another_full_reservation(self) -> None:
+        transport = ScriptedTransport([(429, {}, b"{}"), (200, {}, response("PERMITTED"))])
+        budget = aw.BudgetGuard("claude-haiku-5-5", 0.01, 0.01)
+        manifest = aw.run_job(self.job("art5-safeguard"), self.client(transport),
+                              budget=budget, concurrency=1, log=lambda _: None)
+        self.assertEqual(len(transport.bodies), 1)
+        self.assertEqual(budget.committed_usd, 0.01)
+        self.assertEqual(budget.spent_usd, 0)
+        self.assertEqual(manifest["detail_code"], "BUDGET_CAP")
+        self.assertFalse(manifest["landable_candidate"])
+
+    def test_timeout_retains_bound_instead_of_zero_charge(self) -> None:
+        class TimeoutTransport(ScriptedTransport):
+            def __call__(self, method, url, headers, body, timeout):
+                if method == "POST":
+                    self.bodies.append(json.loads(body))
+                    raise TimeoutError
+                return super().__call__(method, url, headers, body, timeout)
+        transport = TimeoutTransport([])
+        budget = aw.BudgetGuard("claude-haiku-5-5", 0.02, 0.01)
+        manifest = aw.run_job(self.job("art5-safeguard"), self.client(transport),
+                              budget=budget, concurrency=1, log=lambda _: None)
+        self.assertEqual(len(transport.bodies), 2)
+        self.assertEqual(budget.committed_usd, 0.02)
+        self.assertEqual(manifest["detail_code"], "BUDGET_CAP")
+
+    def test_missing_or_invalid_usage_stops_further_sends(self) -> None:
+        for usage in (None, {}, {"input_tokens": -1, "output_tokens": 3},
+                      {"input_tokens": True, "output_tokens": 3},
+                      {"input_tokens": 40.5, "output_tokens": 3}):
+            with self.subTest(usage=usage):
+                payload = json.loads(response("PERMITTED"))
+                payload["usage"] = usage
+                transport = ScriptedTransport([(200, {}, json.dumps(payload).encode())] * 3)
+                budget = aw.BudgetGuard("claude-haiku-5-5", 1, 0.01)
+                manifest = aw.run_job(self.job("art5-safeguard"), self.client(transport),
+                                      budget=budget, concurrency=1, log=lambda _: None)
+                self.assertEqual(len(transport.bodies), 1)
+                self.assertEqual(budget.committed_usd, 0.01)
+                self.assertEqual(manifest["detail_code"], "BUDGET_USAGE_UNKNOWN")
+                self.assertEqual(manifest["counts"]["graded_n"], 0)
+                self.assertFalse(manifest["landable_candidate"])
+
+    def test_exceeded_operator_bound_halts_and_remains_unlandable(self) -> None:
+        transport = ScriptedTransport([(200, {}, response("PERMITTED"))] * 3)
+        budget = aw.BudgetGuard("claude-haiku-5-5", 1, 0.000001)
+        manifest = aw.run_job(self.job("art5-safeguard"), self.client(transport),
+                              budget=budget, concurrency=1, log=lambda _: None)
+        self.assertEqual(len(transport.bodies), 1)
+        self.assertEqual(manifest["detail_code"], "BUDGET_BOUND_EXCEEDED")
+        self.assertFalse(manifest["landable_candidate"])
+        self.assertGreater(budget.spent_usd, 0.000001)
+
+    def test_valid_usage_releases_only_unused_reservation(self) -> None:
+        budget = aw.BudgetGuard("claude-haiku-5-5", 0.02, 0.01)
+        first, second = budget.reserve(), budget.reserve()
+        self.assertIsNone(budget.reserve())
+        self.assertIsNone(budget.reconcile(first, response("PERMITTED")))
+        self.assertAlmostEqual(budget.spent_usd, 0.0000055)
+        self.assertAlmostEqual(budget.committed_usd, 0.0100055)
+        self.assertIsNone(budget.reserve(), "second reservation must remain charged")
+        budget.retain(second)
+        self.assertAlmostEqual(budget.committed_usd, 0.0100055)
+
+    def test_nonfinite_negative_and_zero_bound_configs_refused(self) -> None:
+        for cap, bound in ((float("nan"), 1), (float("inf"), 1), (-1, 1),
+                           (1, float("nan")), (1, float("inf")), (1, 0), (1, -1)):
+            with self.subTest(cap=cap, bound=bound), self.assertRaises(aw.WorkerError) as caught:
+                aw.BudgetGuard("claude-haiku-5-5", cap, bound)
+            self.assertEqual(caught.exception.code, "BUDGET_CONFIG")
+
+    def test_models_have_separate_explicit_budgets(self) -> None:
+        a = aw.BudgetGuard("claude-haiku-5-5", 1, 1)
+        b = aw.BudgetGuard("claude-sonnet-5-5", 1, 1)
+        self.assertIsNotNone(a.reserve())
+        self.assertIsNotNone(b.reserve())
+        self.assertIsNone(a.reserve())
+        self.assertIsNone(b.reserve())
 
 
 if __name__ == "__main__":
