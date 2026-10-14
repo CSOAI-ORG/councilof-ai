@@ -262,10 +262,11 @@ export default function GSPCVerify() {
             A valid signature confirms the record's integrity. It does not certify a model's safety or compliance.
           </p>
           <p className="mt-3 max-w-3xl text-sm text-emerald-200/75 leading-relaxed">
-            Every check ends in one of three results: <strong>VALID</strong> (the signature and the
-            content match), <strong>INVALID</strong> (a check failed, and it says which), or{" "}
+            Every check ends in one of three results: <strong>VALID</strong> (the completed record
+            checks passed), <strong>INVALID</strong> (a check failed, and it says which), or{" "}
             <strong>UNCHECKABLE</strong> (the check could not be completed). Could-not-check is never
-            reported as a failure.
+            reported as a failure. Read the signature result separately: a hash-only VALID result is
+            labelled unsigned and does not prove who wrote the record.
           </p>
           <details className="mt-4 max-w-3xl rounded-xl border border-emerald-400/20 bg-white/[0.035] px-4 py-3">
             <summary className="cursor-pointer text-sm font-semibold text-emerald-200">
