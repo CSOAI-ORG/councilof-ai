@@ -715,6 +715,134 @@ def kinds_index(cards: list[dict], *, as_of: str, merkle_root: str) -> dict:
         ),
     }
 
+# ---------------------------------------------------------------------------
+# /data/v1 versioned feed (additive, 2026-10-14). Runs AFTER root.json is on disk.
+# Byte-copies only: never re-serialises, never touches root math, never touches
+# public/signed/card_index.json or any signed manifest. CHANGELOG is add-only and
+# enforced here: a changed or removed prior entry raises and fails the run.
+# ---------------------------------------------------------------------------
+DATA_V1 = ROOT / "public" / "data" / "v1"
+DATA_V1_BASE_URL = "https://councilof.ai/data/v1"
+# (snapshot file name, source path relative to ROOT). Missing sources are skipped and listed.
+DATA_V1_SOURCES = (
+    ("root.json", "public/root.json"),
+    ("root-kinds.json", "public/interop/root-kinds.json"),
+    ("models-measured.json", "public/interop/models-measured.json"),
+    ("catalog.json", "public/catalog.json"),
+)
+DATA_V1_FORBIDDEN = ("public/signed/",)
+
+
+def _canon(obj: Any) -> str:
+    return json.dumps(obj, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+
+
+def assert_changelog_append_only(prior: list, new: list) -> None:
+    """Raise ValueError unless `new` keeps every prior entry byte-identical, in order."""
+    if len(new) < len(prior):
+        raise ValueError(f"data/v1 CHANGELOG: {len(prior) - len(new)} prior entr(y/ies) removed — add-only")
+    for i, (a, b) in enumerate(zip(prior, new)):
+        if _canon(a) != _canon(b):
+            raise ValueError(f"data/v1 CHANGELOG: prior entry {i} rewritten — add-only")
+
+
+def write_data_v1_snapshot(repo_root: Path | None = None) -> dict | None:
+    """Snapshot the committed root/index/manifest under public/data/v1/snapshots/<date>/.
+
+    Returns the new CHANGELOG entry, or None when this merkle_root is already recorded.
+    """
+    base = repo_root or ROOT
+    out = base / "public" / "data" / "v1"
+    root_bytes = (base / "public" / "root.json").read_bytes()
+    root = json.loads(root_bytes)
+    merkle, as_of, count = root["merkle_root"], root["as_of"], root["card_count"]
+
+    cl_path = out / "CHANGELOG.json"
+    prior_doc = json.loads(cl_path.read_text(encoding="utf-8")) if cl_path.exists() else None
+    prior = list(prior_doc["entries"]) if prior_doc else []
+    if any(e.get("merkle_root") == merkle for e in prior):
+        return None
+
+    date = as_of[:10]
+    version = date
+    n = 2
+    while (out / "snapshots" / version).exists():
+        version = f"{date}.{n}"
+        n += 1
+    snap = out / "snapshots" / version
+    snap.mkdir(parents=True)
+
+    files, skipped = [], []
+    for name, rel in DATA_V1_SOURCES:
+        assert not any(rel.startswith(f) for f in DATA_V1_FORBIDDEN), rel
+        src = base / rel
+        if not src.exists():
+            skipped.append(rel)
+            continue
+        data = src.read_bytes()
+        (snap / name).write_bytes(data)  # byte-copy, no re-serialisation
+        files.append({"name": name, "source": rel, "bytes": len(data), "sha256": sha256_hex(data),
+                      "url": f"{DATA_V1_BASE_URL}/snapshots/{version}/{name}"})
+
+    url = f"{DATA_V1_BASE_URL}/snapshots/{version}/"
+    citation = {
+        "schema": "csoai.data-v1-citation/0.1",
+        "title": f"GSPC public root snapshot {version}",
+        "author": "CSOAI (Council of AI)",
+        "version": version,
+        "date_released": date,
+        "as_of": as_of,
+        "merkle_root": merkle,
+        "card_count": count,
+        "url": url,
+        "doi": None,  # no DOI exists; never invent one (Zenodo record returns 410)
+        "license_data": "CC-BY-4.0",
+        "preferred_citation": f"CSOAI. GSPC public root snapshot {version} (merkle_root {merkle}, "
+                              f"{count} cards, as_of {as_of}). {url}",
+        "note": "Measured, not certified. CSOAI is not a notified body.",
+    }
+    manifest = {"schema": "csoai.data-v1-snapshot/0.1", "version": version, "as_of": as_of,
+                "merkle_root": merkle, "card_count": count, "files": files, "skipped": skipped,
+                "note": "Files are byte-copies of the committed sources; sha256 is over the exact bytes."}
+    write_pretty(snap / "citation.json", citation)
+    write_pretty(snap / "manifest.json", manifest)
+    man_sha = sha256_hex((snap / "manifest.json").read_bytes())
+
+    entry = {"version": version, "as_of": as_of, "merkle_root": merkle, "card_count": count,
+             "card_count_delta": count - prior[-1]["card_count"] if prior else None,
+             "snapshot_url": url, "manifest_sha256": man_sha,
+             "citation": citation["preferred_citation"]}
+    new = prior + [entry]
+    assert_changelog_append_only(prior, new)
+    write_pretty(cl_path, {"schema": "csoai.data-v1-changelog/0.1",
+                           "rule": "add-only: entries are appended, never rewritten or removed",
+                           "entries": new})
+    write_pretty(out / "latest.json", {"schema": "csoai.data-v1-latest/0.1", "version": version,
+                                       "as_of": as_of, "merkle_root": merkle, "card_count": count,
+                                       "snapshot_url": url, "manifest_url": url + "manifest.json",
+                                       "manifest_sha256": man_sha, "citation_url": url + "citation.json",
+                                       "changelog_url": f"{DATA_V1_BASE_URL}/CHANGELOG.json"})
+    return entry
+
+
+def check_data_v1_changelog_against(ref: str) -> int:
+    """CI guard: the working CHANGELOG must be add-only relative to `ref` (e.g. origin/master)."""
+    import subprocess
+    rel = "public/data/v1/CHANGELOG.json"
+    try:
+        old = subprocess.run(["git", "show", f"{ref}:{rel}"], cwd=ROOT, capture_output=True, check=True).stdout
+    except subprocess.CalledProcessError:
+        print(f"data/v1 CHANGELOG: absent at {ref}; nothing to compare")
+        return EXIT_OK
+    cur = (ROOT / rel)
+    if not cur.exists():
+        print("data/v1 CHANGELOG removed", file=sys.stderr)
+        return EXIT_BAD
+    assert_changelog_append_only(json.loads(old)["entries"], json.loads(cur.read_text(encoding="utf-8"))["entries"])
+    print(f"data/v1 CHANGELOG: add-only vs {ref} OK")
+    return EXIT_OK
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="One writer for csoai.public-root/v1")
     ap.add_argument("--dry-run", action="store_true", help="run adapters + halts; do not write")
@@ -729,7 +857,17 @@ def main() -> int:
         action="store_true",
         help="only verify the committed tree + split check",
     )
+    ap.add_argument("--data-v1-snapshot", action="store_true",
+                    help="only snapshot the committed public/root.json into public/data/v1 (no adapters, no signing)")
+    ap.add_argument("--check-data-v1-changelog", metavar="REF", default=None,
+                    help="fail if public/data/v1/CHANGELOG.json is not add-only relative to git REF")
     args = ap.parse_args()
+    if args.check_data_v1_changelog:
+        return check_data_v1_changelog_against(args.check_data_v1_changelog)
+    if args.data_v1_snapshot:
+        e = write_data_v1_snapshot()
+        print(f"data/v1: {'new snapshot ' + e['version'] if e else 'merkle_root already recorded; no change'}")
+        return EXIT_OK
 
     # Never print the secret. Presence only.
     print(
@@ -1137,6 +1275,8 @@ def main() -> int:
     # the leaves point at (content-addressed) and the event-indexer cursor, which
     # advances ONLY once the root carrying its leaves is on disk.
     n_proofs = len(evm_permissions.write_proof_blobs(ROOT, evm_out.get("proof_blobs") or {}))
+    v1 = write_data_v1_snapshot()
+    print(f"data/v1: {'snapshot ' + v1['version'] if v1 else 'unchanged root; no snapshot'}")
     state_path = evm_permission_events.save_state(ROOT, evm_events_out["state"]) if evm_events_out.get("state") else None
     print(
         "wrote public/root.json public/cards/ public/proofs/ public/publisher-health.json "
