@@ -140,3 +140,188 @@ describe("My results — saved-result defects (14 Oct 2026)", () => {
     expect(out.rows).toEqual(readMyResults());
   });
 });
+
+/**
+ * Retention contract (15 Oct 2026): automatic cap and quota handling keeps every stored paid record
+ * byte-for-byte; when the new row cannot be stored safely the old store is left as it was and the
+ * outcome says so. Every case reads the store back rather than trusting the return value.
+ */
+describe("My results — paid records are never shed", () => {
+  type Store = Record<string, string>;
+  const install = (opts: { quotaChars?: number; disabled?: boolean; failWrites?: boolean } = {}) => {
+    const store: Store = {};
+    const ls = {
+      getItem: (k: string) => {
+        if (opts.disabled) throw new Error("SecurityError");
+        return k in store ? store[k] : null;
+      },
+      setItem: (k: string, v: string) => {
+        if (opts.disabled || opts.failWrites) throw new Error("SecurityError");
+        if (opts.quotaChars !== undefined && v.length > opts.quotaChars) throw new Error("QuotaExceededError");
+        store[k] = v;
+      },
+      removeItem: (k: string) => void delete store[k],
+    };
+    const events: string[] = [];
+    (globalThis as unknown as { window: unknown }).window = { localStorage: ls, dispatchEvent: (e: { type: string }) => (events.push(e.type), true) };
+    (globalThis as unknown as { Event: unknown }).Event ??= class { constructor(public type: string) {} };
+    return { store, events, opts };
+  };
+  const body = (i: number) => JSON.stringify({ payload: { n: i, note: "é\u2028" }, sha256: `sha${i}`, sig_ed25519: `sig${i}` }, null, 2);
+  const seedPaid = async (n: number) => {
+    const { saveMyResult } = await import("./myResults");
+    for (let i = 0; i < n; i++) expect(saveMyResult({ kind: "paid", subject: `door${i}`, ref: `sha${i}`, record: body(i) }).saved).toBe(true);
+  };
+  const paidBodies = async () => {
+    const { readMyResults } = await import("./myResults");
+    return Object.fromEntries(readMyResults().filter((r) => r.kind === "paid").map((r) => [r.ref, r.record]));
+  };
+  const expectAllOld = (got: Record<string, string | undefined>, n: number) => {
+    for (let i = 0; i < n; i++) expect(got[`sha${i}`]).toBe(body(i));
+  };
+
+  it("50 paid copies + a new lookup: the lookup is not saved, the outcome says so, the store is unchanged", async () => {
+    const { store } = install();
+    const { saveMyResult, readMyResults, MY_RESULTS_KEY } = await import("./myResults");
+    await seedPaid(50);
+    const before = store[MY_RESULTS_KEY];
+    const out = saveMyResult({ kind: "lookup", subject: "github.com", question: "q" });
+    expect(out.saved).toBe(false);
+    expect(store[MY_RESULTS_KEY]).toBe(before);
+    expect(readMyResults().some((r) => r.kind === "lookup")).toBe(false);
+    expectAllOld(await paidBodies(), 50);
+  });
+
+  it("a 51st paid copy is kept and evicts no older paid copy", async () => {
+    install();
+    const { saveMyResult, readMyResults } = await import("./myResults");
+    await seedPaid(50);
+    const out = saveMyResult({ kind: "paid", subject: "door50", ref: "sha50", record: body(50) });
+    expect(out).toMatchObject({ saved: true, recordKept: true });
+    expect(readMyResults().length).toBe(51);
+    expectAllOld(await paidBodies(), 51);
+  });
+
+  it("non-paid rows still give way, oldest first, to keep the list at the cap", async () => {
+    install();
+    const { saveMyResult, readMyResults } = await import("./myResults");
+    await seedPaid(2);
+    for (let i = 0; i < 48; i++) saveMyResult({ kind: "watch", subject: `w${i}`, ref: `r${i}` });
+    const out = saveMyResult({ kind: "watch", subject: "new", ref: "rn" });
+    expect(out.saved).toBe(true);
+    const rows = readMyResults();
+    expect(rows.length).toBe(50);
+    expect(rows[0].subject).toBe("new");
+    expect(rows.some((r) => r.subject === "w0")).toBe(false);
+    expectAllOld(await paidBodies(), 2);
+  });
+
+  it("first write over quota: no slim or bare rewrite sheds stored paid bodies; the new row is stored without its record, truthfully", async () => {
+    const env = install();
+    const { saveMyResult, readMyResults, MY_RESULTS_KEY } = await import("./myResults");
+    await seedPaid(3);
+    const before = env.store[MY_RESULTS_KEY];
+    // Room for the old list plus a bare row, not for the new record: the old fallbacks would have
+    // "succeeded" here by stripping older (slim) or all (bare) purchased records.
+    env.opts.quotaChars = before.length + 400;
+    const big = "x".repeat(2000);
+    const out = saveMyResult({ kind: "paid", subject: "door-new", ref: "shaN", record: big });
+    expect(out).toMatchObject({ saved: true, recordKept: false });
+    const rows = readMyResults();
+    expect(rows[0]).toMatchObject({ ref: "shaN" });
+    expect(rows[0].record).toBeUndefined();
+    expectAllOld(await paidBodies(), 3);
+  });
+
+  it("no room even for a bare row: nothing is written, the old store is byte-identical, saved: false", async () => {
+    const env = install();
+    const { saveMyResult, MY_RESULTS_KEY } = await import("./myResults");
+    await seedPaid(3);
+    const before = env.store[MY_RESULTS_KEY];
+    env.opts.quotaChars = before.length + 10;
+    const out = saveMyResult({ kind: "paid", subject: "door-new", ref: "shaN", record: "y".repeat(500) });
+    expect(out).toMatchObject({ saved: false, recordKept: false });
+    expect(env.store[MY_RESULTS_KEY]).toBe(before);
+    expectAllOld(await paidBodies(), 3);
+  });
+
+  it("storage switched off or every write failing: saved: false, nothing claimed", async () => {
+    install({ disabled: true });
+    const { saveMyResult, saveNote } = await import("./myResults");
+    const off = saveMyResult({ kind: "paid", subject: "d", ref: "s", record: "{}" });
+    expect(off).toMatchObject({ saved: false, recordKept: false, rows: [] });
+    expect(saveNote(off)).toMatch(/could NOT be saved/);
+    const env = install();
+    await seedPaid(1);
+    const before = env.store["coai:my-results"];
+    env.opts.failWrites = true;
+    expect(saveMyResult({ kind: "watch", subject: "w", ref: "r" }).saved).toBe(false);
+    expect(env.store["coai:my-results"]).toBe(before);
+  });
+
+  it("a storage-read error or unreadable store is never treated as empty and overwritten", async () => {
+    const env = install();
+    const { saveMyResult, MY_RESULTS_KEY } = await import("./myResults");
+    env.store[MY_RESULTS_KEY] = '[{"kind":"paid","subject":"d","at":"t","record":"KEEP"'; // truncated JSON
+    expect(saveMyResult({ kind: "watch", subject: "w", ref: "r" }).saved).toBe(false);
+    expect(env.store[MY_RESULTS_KEY]).toBe('[{"kind":"paid","subject":"d","at":"t","record":"KEEP"');
+    env.store[MY_RESULTS_KEY] = '{"not":"a list"}';
+    expect(saveMyResult({ kind: "watch", subject: "w", ref: "r" }).saved).toBe(false);
+    expect(env.store[MY_RESULTS_KEY]).toBe('{"not":"a list"}');
+    // getItem throws but setItem would work: nothing is written.
+    const kept = install();
+    await seedPaid(1);
+    const before = kept.store[MY_RESULTS_KEY];
+    const ls = (globalThis as unknown as { window: { localStorage: { getItem: unknown } } }).window.localStorage;
+    ls.getItem = () => {
+      throw new Error("SecurityError");
+    };
+    expect(saveMyResult({ kind: "paid", subject: "n", ref: "n", record: "{}" })).toMatchObject({ saved: false, recordKept: false });
+    expect(kept.store[MY_RESULTS_KEY]).toBe(before);
+  });
+
+  it("a repeat save keeps one row with the exact record, and never loses it to a record-less retry", async () => {
+    install();
+    const { saveMyResult, readMyResults } = await import("./myResults");
+    saveMyResult({ kind: "paid", subject: "door0", ref: "sha0", record: body(0) });
+    expect(saveMyResult({ kind: "paid", subject: "door0", ref: "sha0", record: body(0) })).toMatchObject({ saved: true, recordKept: true });
+    expect(saveMyResult({ kind: "paid", subject: "door0", ref: "sha0" })).toMatchObject({ saved: true, recordKept: true });
+    const rows = readMyResults().filter((r) => r.ref === "sha0");
+    expect(rows.length).toBe(1);
+    expect(rows[0].record).toBe(body(0));
+  });
+
+  it("reload, reopen and download hand back the SAME bytes that were delivered", async () => {
+    const env = install();
+    const { saveMyResult, readMyResults, MY_RESULTS_KEY } = await import("./myResults");
+    const delivered = body(7);
+    saveMyResult({ kind: "paid", subject: "door7", ref: "sha7", record: delivered });
+    // "Reload": a fresh module instance reading the persisted string.
+    const raw = env.store[MY_RESULTS_KEY];
+    install().store[MY_RESULTS_KEY] = raw;
+    const again = readMyResults().find((r) => r.ref === "sha7")!;
+    expect(again.record).toBe(delivered);
+    // Download path: downloadText is handed exactly the stored text.
+    const blobs: string[] = [];
+    const g = globalThis as unknown as Record<string, unknown>;
+    const saved = { Blob: g.Blob, URL: g.URL, document: g.document };
+    g.Blob = class { constructor(parts: string[]) { blobs.push(parts.join("")); } };
+    g.URL = { createObjectURL: () => "blob:x", revokeObjectURL: () => undefined };
+    g.document = { createElement: () => ({ click() {}, remove() {} }), body: { appendChild() {} } };
+    try {
+      const { downloadText } = await import("./myResults");
+      downloadText(again.record!, "r.json");
+      expect(blobs).toEqual([delivered]);
+    } finally {
+      Object.assign(g, saved);
+    }
+  });
+
+  it("the buyer note follows the outcome, never a guessed 'saved'", async () => {
+    const { saveNote } = await import("./myResults");
+    expect(saveNote({ rows: [], saved: true, recordKept: true })).toMatch(/saved to My results/);
+    expect(saveNote({ rows: [], saved: true, recordKept: false })).toMatch(/download it now/);
+    expect(saveNote({ rows: [], saved: false, recordKept: false })).toMatch(/could NOT be saved/);
+    expect(saveNote(null)).toBeNull();
+  });
+});
