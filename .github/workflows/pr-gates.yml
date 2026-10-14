@@ -334,10 +334,39 @@ jobs:
               state["github_sha"]=os.environ.get("GITHUB_SHA")
               state["checkout_context"]="synthetic-merge" if commit!=pr["head"]["sha"] else "direct-pr-head"
               if state["github_sha"]!=commit: stop("CHECKOUT_DIFFERS_FROM_EVENT_REVISION")
-              if commit!=pr["head"]["sha"] and state["input_parents"]!=[pr["base"]["sha"],pr["head"]["sha"]]:
+              parents=state["input_parents"]
+              if commit!=pr["head"]["sha"] and (len(parents)!=2 or parents[1]!=pr["head"]["sha"]):
                   stop("SYNTHETIC_MERGE_PARENT_BINDING_MISMATCH")
+              actual_base=parents[0] if commit!=pr["head"]["sha"] else pr["base"]["sha"]
+              event_base=pr["base"]["sha"]
+              if not all(re.fullmatch(r"[0-9a-f]{40}",sha) for sha in (actual_base,event_base)):
+                  stop("BASE_COMMIT_ID_UNQUALIFIED")
+              state["actual_base_sha"]=actual_base
+              state["base_ancestry"]={"event_base_sha":event_base,"actual_base_sha":actual_base,
+                                      "qualified":False,"history_fetch_attempts":0}
+              def base_is_qualified():
+                  check=subprocess.run(["git","-c","protocol.allow=never","merge-base","--is-ancestor",event_base,actual_base],
+                                       cwd=root,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=10)
+                  return check.returncode==0 and git("merge-base",event_base,actual_base).decode().strip()==event_base
+              if not base_is_qualified():
+                  # The event base can lag the synthetic merge's actual first parent; the depth-2 checkout can omit it.
+                  # Fetch only that exact parent from the existing canonical origin, once, then require real ancestry.
+                  state["base_ancestry"].update(history_fetch_attempts=1,history_depth_limit=256,history_timeout_seconds=30)
+                  history_env=dict(os.environ,GIT_TERMINAL_PROMPT="0")
+                  history=subprocess.run(["git","-c","protocol.allow=never","-c","protocol.https.allow=always",
+                                          "-c","submodule.recurse=false","fetch","--no-tags","--no-recurse-submodules",
+                                          "--depth=256","--filter=blob:none","--no-write-fetch-head",
+                                          "https://github.com/CSOAI-ORG/councilof-ai.git",actual_base],
+                                         cwd=root,env=history_env,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=30)
+                  state["base_ancestry"]["history_fetch_returncode"]=history.returncode
+                  if history.returncode: stop("BOUNDED_BASE_HISTORY_FETCH_FAILED")
+                  if not base_is_qualified(): stop("EVENT_BASE_NOT_PROVEN_ANCESTOR_OF_ACTUAL_BASE")
+              if git("rev-parse","HEAD").decode().strip()!=commit or git("rev-parse","HEAD^{tree}").decode().strip()!=state["input_tree"]:
+                  stop("CHECKOUT_CHANGED_DURING_BASE_QUALIFICATION")
+              state["base_ancestry"].update(qualified=True,merge_base=event_base)
               state["pr_head_tree"]=git("rev-parse",pr["head"]["sha"]+"^{tree}").decode().strip()
-              state["event_base_tree"]=git("rev-parse",pr["base"]["sha"]+"^{tree}").decode().strip()
+              state["event_base_tree"]=git("rev-parse",event_base+"^{tree}").decode().strip()
+              state["actual_base_tree"]=git("rev-parse",actual_base+"^{tree}").decode().strip()
               tree={}
               for entry in git("ls-tree","-r","-z","HEAD").split(bytes([0])):
                   if entry:
