@@ -584,6 +584,8 @@ const MACHINE_PATHS = [
   // sitemap-built held every deploy until it was listed. If the page is ever withdrawn, remove this
   // line in the same change (a sitemap lists what the edge serves).
   ["/extension/", "weekly", "0.5"],
+  // /interop/mill-cards-signed/: Pages Function index of the signed mill cards, derived from the card root.
+  ["/interop/mill-cards-signed/", "weekly", "0.5"],
 ];
 for (const [mp, cf, pr] of MACHINE_PATHS) {
   if (!seen.has(mp)) { seen.add(mp); paths.push(mp); }
