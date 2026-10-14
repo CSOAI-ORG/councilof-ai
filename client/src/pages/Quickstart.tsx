@@ -32,7 +32,7 @@ const PAGE_LD = {
   step: [
     { "@type": "HowToStep", name: "Explore measurements", text: "GET /api/gspc — read the current public measurement board and its honest empty states." },
     { "@type": "HowToStep", name: "See what changed", text: "GET /api/feed.xml — follow published measurement, correction and regulation-change events." },
-    { "@type": "HowToStep", name: "Verify evidence", text: "Verify the Ed25519 signature offline and the card's inclusion in the public Merkle root." },
+    { "@type": "HowToStep", name: "Verify evidence", text: "For a signed measurement card, check its signature; verify inclusion only when a proof is supplied. Other artifact types require their own checks." },
     { "@type": "HowToStep", name: "Access supported feeds", text: "Read /.well-known/x402.json for supported doors and use the canonical MCP endpoint for tool discovery." },
     { "@type": "HowToStep", name: "Commission an output", text: "Optionally: discover → request → 402 → settle (non-self wallet) → receive → verify. Self-settlements and zero-value settlements are recorded but never counted as buyers (/api/revenue settled_usdc.excludes_self)." },
     { "@type": "HowToStep", name: "Correct", text: "If a read is wrong, the correction path is public and the correction is published beside the record." },
@@ -231,7 +231,7 @@ curl -s -H 'Content-Type: application/json' -H 'Accept: application/json, text/e
         <h2 id="s5" className="text-2xl font-bold">5 · Optional: commission an output</h2>
         <p className="mt-3 leading-7 text-slate-700">
           The whole paid path, in six steps: discover → request → 402 → settle → receive → verify. One worked door is used
-          so every command copy-pastes; any other door in the manifest follows the same steps. Response shapes below come
+          so its commands form one example, not a universal delivery contract. Other doors have product-specific outputs, receipts and retrieval paths. Response shapes below come
           from live calls on 2026-09-14 and are truncated. Amounts and counts are shown as placeholders: the 402 you
           receive is the only authority on an amount, and the amount can change between calls, so read accepts[] each
           time. A settlement of zero is not a purchase.
@@ -241,9 +241,14 @@ curl -s -H 'Content-Type: application/json' -H 'Accept: application/json, text/e
           (<code className="font-mono">settled_usdc.excludes_self=true</code> on{" "}
           <a href="/api/revenue" className="underline decoration-emerald-600 underline-offset-4">/api/revenue</a>
           ). The count of outside payers, with self-settlements listed separately, is on that same contract.
-          After settle, fulfillment state is also listed at{" "}
+          Use{" "}
           <a href="/api/commissions" className="underline decoration-emerald-600 underline-offset-4">/api/commissions</a>
-          {" "}(<code className="font-mono">RETRIEVABLE</code> + <code className="font-mono">CARDS_PUBLISHED</code>).
+          {" "}for request-attestation records only; it is not a ledger of all paid products.
+          For other products, retain the response bytes and follow that product's retrieval instructions.
+          An empty or unreadable lookup does not prove failed delivery.
+          Do not make another payment solely because a lookup is empty.
+          Recorded fulfillment states such as <code className="font-mono">RETRIEVABLE</code> or{" "}
+          <code className="font-mono">CARDS_PUBLISHED</code> are not buyer acceptance.
           Machine-readable version of these steps:{" "}
           <a href="/quickstart.json" className="underline decoration-emerald-600 underline-offset-4">/quickstart.json</a>.
         </p>

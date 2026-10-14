@@ -8,13 +8,13 @@
  * POST /api/auth/register { email, password, name? } -> { token, user }
  * GET  /api/auth/me       Authorization: Bearer <token> -> { user, entitlements }
  *
- * demo@csoai.com / demo123 always works. Registered users persist in SOV_ARENA_STATE KV.
+ * There is no demo or shared login. Only registered users (SOV_ARENA_STATE KV) can sign in.
  */
 
 import {
   type AuthEnv,
   type StoredUser,
-  DEMO_USER,
+  RESERVED_EMAILS,
   hashPassword,
   issueToken,
   verifyToken,
@@ -32,12 +32,6 @@ async function findUser(env: AuthEnv, email: string): Promise<StoredUser | null>
   }
 }
 
-async function saveUser(env: AuthEnv, user: StoredUser): Promise<boolean> {
-  if (!env.SOV_ARENA_STATE) return false;
-  await env.SOV_ARENA_STATE.put(userKey(user.email), JSON.stringify(user));
-  return true;
-}
-
 function json(data: unknown, status = 200): Response {
   return Response.json(data, {
     status,
@@ -49,15 +43,24 @@ async function authenticatedSession(
   env: AuthEnv,
   user: { email: string; name: string },
 ): Promise<Response> {
-  const token = await issueToken(env, user);
-  return token
-    ? json({ token, user })
-    : json(
-        {
-          error: "authentication signing is unavailable; no session was issued",
-        },
-        503,
-      );
+  const token = await signedSession(env, user);
+  return token ? json({ token, user }) : signingUnavailable();
+}
+
+function signingUnavailable(): Response {
+  return json({ error: "authentication signing is unavailable; no session was issued" }, 503);
+}
+
+/** Missing, malformed, or throwing signing material all mean: no session. */
+async function signedSession(
+  env: AuthEnv,
+  user: { email: string; name: string },
+): Promise<string | null> {
+  try {
+    return await issueToken(env, user);
+  } catch {
+    return null;
+  }
 }
 
 export const onRequest: PagesFunction<AuthEnv> = async (ctx) => {
@@ -88,11 +91,7 @@ export const onRequest: PagesFunction<AuthEnv> = async (ctx) => {
     const password = String(body.password || "");
     if (!email || !password) return json({ error: "email and password required" }, 400);
 
-    // The fixed demo account is a working production login unless explicitly enabled (found 06 Sep audit).
-    if ((ctx.env as { DEMO_LOGIN_ENABLED?: string }).DEMO_LOGIN_ENABLED === "1" && email === DEMO_USER.email && password === DEMO_USER.password) {
-      const user = { email: DEMO_USER.email, name: DEMO_USER.name };
-      return authenticatedSession(ctx.env, user);
-    }
+    if (RESERVED_EMAILS.has(email)) return json({ error: "invalid credentials" }, 401);
 
     const stored = await findUser(ctx.env, email);
     if (!stored || (await hashPassword(password, stored.salt)) !== stored.pw) {
@@ -116,7 +115,7 @@ export const onRequest: PagesFunction<AuthEnv> = async (ctx) => {
     const name = String(body.name || "");
     if (!email || !password) return json({ error: "email and password required" }, 400);
     if (password.length < 6) return json({ error: "password must be >= 6 chars" }, 400);
-    if (email === DEMO_USER.email) return json({ error: "account reserved" }, 409);
+    if (RESERVED_EMAILS.has(email)) return json({ error: "account reserved" }, 409);
 
     const existing = await findUser(ctx.env, email);
     if (existing) return json({ error: "account already exists" }, 409);
@@ -129,13 +128,19 @@ export const onRequest: PagesFunction<AuthEnv> = async (ctx) => {
       pw: await hashPassword(password, salt),
       created_at: new Date().toISOString(),
     };
-    if (!(await saveUser(ctx.env, user))) {
-      return json({ error: "store unavailable" }, 503);
+    if (!ctx.env.SOV_ARENA_STATE) return json({ error: "store unavailable" }, 503);
+    const sessionUser = { email: user.email, name: user.name };
+    // Sign first: if no valid session can be issued, nothing is written.
+    const token = await signedSession(ctx.env, sessionUser);
+    if (!token) return signingUnavailable();
+    // KV is eventually consistent; this is not an atomic uniqueness check and
+    // there is no rollback. A failed write returns no token and no success.
+    try {
+      await ctx.env.SOV_ARENA_STATE.put(userKey(user.email), JSON.stringify(user));
+    } catch {
+      return json({ error: "account store write could not be confirmed; no session was returned" }, 503);
     }
-    return authenticatedSession(ctx.env, {
-      email: user.email,
-      name: user.name,
-    });
+    return json({ token, user: sessionUser });
   }
 
   if (method === "GET" && action === "me") {

@@ -48,13 +48,13 @@
     },
     {
       "id": "chatgpt",
-      "platform": "ChatGPT (developer mode)",
+      "platform": "ChatGPT",
       "group": "Chat apps",
       "door": "free",
-      "where": "Settings → Apps & Connectors → Advanced settings → Developer mode → Create",
+      "where": "ChatGPT Plugins → + → Add custom MCP server — checked 12 Oct 2026",
       "kind": "text",
       "snippet": "Name: GSPC\nMCP server URL: https://councilof.ai/mcp/free\nAuthentication: No authentication",
-      "docs": "https://platform.openai.com/docs/guides/developer-mode",
+      "docs": "https://developers.openai.com/api/docs/guides/custom-mcp-server",
       "url": "https://councilof.ai/mcp/free"
     },
     {
@@ -81,6 +81,7 @@
     },
     {
       "id": "cursor",
+      "installer": "cursor",
       "platform": "Cursor",
       "group": "Coding agents",
       "door": "free",
@@ -88,10 +89,15 @@
       "kind": "json",
       "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
       "docs": "https://cursor.com/docs/context/mcp",
-      "url": "https://councilof.ai/mcp/free"
+      "url": "https://councilof.ai/mcp/free",
+      "install_action": {
+        "kind": "cursor",
+        "href": "cursor://anysphere.cursor-deeplink/mcp/install?name=gspc&config=eyJ1cmwiOiJodHRwczovL2NvdW5jaWxvZi5haS9tY3AvZnJlZSJ9"
+      }
     },
     {
       "id": "vscode",
+      "installer": "vscode",
       "platform": "VS Code (GitHub Copilot agent mode)",
       "group": "Coding agents",
       "door": "free",
@@ -99,7 +105,11 @@
       "kind": "json",
       "snippet": "{\n  \"servers\": {\n    \"gspc\": { \"type\": \"http\", \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
       "docs": "https://code.visualstudio.com/docs/agent-customization/mcp-servers",
-      "url": "https://councilof.ai/mcp/free"
+      "url": "https://councilof.ai/mcp/free",
+      "install_action": {
+        "kind": "vscode",
+        "href": "vscode:mcp/install?%7B%22name%22%3A%22gspc%22%2C%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fcouncilof.ai%2Fmcp%2Ffree%22%7D"
+      }
     },
     {
       "id": "windsurf",

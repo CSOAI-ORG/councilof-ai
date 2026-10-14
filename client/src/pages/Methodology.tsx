@@ -328,16 +328,21 @@ export default function Methodology() {
           </p>
         </section>
 
-        {/* WHITEPAPER */}
+        {/* CURRENT METHOD AND ARCHIVE */}
         <section className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6">
-          <h2 className="text-2xl font-bold text-emerald-50">Whitepaper</h2>
+          <h2 className="text-2xl font-bold text-emerald-50">Method documentation</h2>
           <p className="mt-2 text-[13px] text-emerald-100/70 leading-relaxed">
-            The full measured findings, the refutations, and the knowledge-base paradox are
-            documented in the whitepaper.
+            Read the current mechanism and coverage alongside the rules on this page.
+            The earlier workbench architecture paper is retained as an archive.
+          </p>
+          <p className="mt-3 text-[13px]">
+            <Link href="/mechanism" className="text-amber-300 hover:underline">
+              Read the open measurement mechanism and coverage →
+            </Link>
           </p>
           <p className="mt-3 text-[13px]">
             <Link href="/workbench-paper" className="text-amber-300 hover:underline">
-              Read the whitepaper: &ldquo;Measuring What AI Actually Does Under the Law&rdquo; →
+              Archive: &ldquo;Growth by Accretion&rdquo; · 12 July 2026 →
             </Link>
           </p>
         </section>
@@ -391,6 +396,9 @@ export default function Methodology() {
           </Link>
           <Link href="/mechanism/" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
             The open measurement mechanism and its coverage →
+          </Link>
+          <Link href="/blog/how-to-verify-an-ai-measurement/" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
+            How to verify an AI measurement without confusing it with certification →
           </Link>
         </div>
       </div>

@@ -5,23 +5,23 @@ import { Link } from "wouter";
 import RecordVerifyForm from "@/components/gspc/RecordVerifyForm";
 import { setMetaDescription } from "@/lib/utils";
 import BoardAttestation from "@/components/board/BoardAttestation";
-import { CARD_PARAM_MAX_BYTES, resolveCardParam } from "@/lib/cardParam";
+import { CARD_PARAM_MAX_BYTES, resolveCardParam, verifyCardHref } from "@/lib/cardParam";
+import { GOVERNANCE_RETRIEVE, loadPublicCardExample } from "@/lib/publicCardExample";
 import { takeCheckerSeed } from "@/lib/myResults";
+import { artifactCitation } from "@/lib/artifactCite";
 
 /**
  * /gspc-verify — verify published card bytes yourself.
  *
  * The estate-card mode verifies exact pasted card bytes against the published
- * Ed25519 key. The public-root mode checks membership in the current unsigned
- * catalogue. A former local replay demo was removed because it generated both
+ * Ed25519 key. The public-root mode verifies the signed root envelope and
+ * checks inclusion without implying an individual leaf signature.
+ * A former local replay demo was removed because it generated both
  * its bodies and expected hashes in the same bundle and therefore could not
  * prove a published chain.
  */
 
 type PublishedRef = { id: string; url: string };
-
-/** Live governance retrieve — free preview only; not a certificate. */
-const GOVERNANCE_RETRIEVE = "/interop/mill-cards-signed/signed-governan-e9bc92b7b39b.json";
 
 async function pickPublishedCard(signal?: AbortSignal): Promise<PublishedRef> {
   // Prefer the signed chain links with a published body; fall back to card_index.
@@ -55,6 +55,24 @@ async function pickPublishedCard(signal?: AbortSignal): Promise<PublishedRef> {
   return { id: String(c.id || c.card || url), url };
 }
 
+/** Deep-link actions for a ?card= record: copy this page's link, download the exact bytes, re-run the check. */
+export function LinkedCardActions({ href }: { href: string }) {
+  const [copied, setCopied] = useState<"" | "ok" | "fail">("");
+  const btn = "inline-flex min-h-[44px] items-center rounded-lg border border-emerald-400/40 px-3 py-2 font-semibold text-emerald-100 hover:bg-white/5";
+  const name = href.split("/").pop() || "card.json";
+  return (
+    <div className="mt-3 flex flex-wrap gap-2" data-testid="linked-card-actions">
+      <button type="button" className={btn} data-testid="linked-copy" onClick={() => {
+        navigator.clipboard?.writeText(window.location.href).then(() => setCopied("ok"), () => setCopied("fail"));
+      }}>
+        {copied === "ok" ? "Link copied" : copied === "fail" ? "Copy failed: use the address bar" : "Copy link"}
+      </button>
+      <a className={btn} href={href} download={name} data-testid="linked-download">Download the record</a>
+      <a className={btn} href={verifyCardHref(href)} data-testid="linked-reverify">Verify again</a>
+    </div>
+  );
+}
+
 export default function GSPCVerify() {
   const [boardData, setBoardData] = useState<any>(null);
   const [mode, setMode] = useState<"estate" | "public-root">("estate");
@@ -70,11 +88,20 @@ export default function GSPCVerify() {
     | { state: "refused" | "failed"; href: string; reason: string }
     | null
   >(null);
+  const [publicReopenHref, setPublicReopenHref] = useState<string | null>(null);
   const linkedRequest = useRef<AbortController | null>(null);
   const clearLinkedSource = useCallback(() => {
     linkedRequest.current?.abort();
     linkedRequest.current = null;
     setLinked(null);
+    setPublicReopenHref(null);
+    setTryBusy(false);
+    setTryErr(null);
+  }, []);
+
+  useEffect(() => () => {
+    linkedRequest.current?.abort();
+    linkedRequest.current = null;
   }, []);
 
   useEffect(() => {
@@ -129,42 +156,40 @@ export default function GSPCVerify() {
     };
   }, []);
 
-  const tryPublished = useCallback(async () => {
+  const tryExample = useCallback(async (choose: (signal: AbortSignal) => Promise<string>) => {
     clearLinkedSource();
+    const ac = new AbortController();
+    linkedRequest.current = ac;
     setTryBusy(true);
-    setTryErr(null);
     try {
-      const ref = await pickPublishedCard();
-      const r = await fetch(ref.url, { headers: { accept: "application/json" } });
-      if (!r.ok) throw new Error(`GET ${ref.url} → HTTP ${r.status}`);
-      const raw = await r.text();
+      const ref = await choose(ac.signal);
+      const example = await loadPublicCardExample(ref, window.location.origin, ac.signal);
+      if (ac.signal.aborted || linkedRequest.current !== ac) return;
+      setPublicReopenHref(example.href);
       setAutoVerify(false);
-      setSeed(raw);
+      setSeed(example.raw);
       setSeedNonce((n) => n + 1);
     } catch (e: any) {
-      setTryErr(String(e?.message ?? e));
+      if (!ac.signal.aborted && linkedRequest.current === ac) {
+        setTryErr(String(e?.message ?? e));
+      }
     } finally {
-      setTryBusy(false);
+      if (linkedRequest.current === ac) {
+        linkedRequest.current = null;
+        setTryBusy(false);
+      }
     }
   }, [clearLinkedSource]);
 
-  const tryGovernanceRetrieve = useCallback(async () => {
-    clearLinkedSource();
-    setTryBusy(true);
-    setTryErr(null);
-    try {
-      const r = await fetch(GOVERNANCE_RETRIEVE, { headers: { accept: "application/json" } });
-      if (!r.ok) throw new Error(`GET ${GOVERNANCE_RETRIEVE} → HTTP ${r.status}`);
-      const raw = await r.text();
-      setAutoVerify(false);
-      setSeed(raw);
-      setSeedNonce((n) => n + 1);
-    } catch (e: any) {
-      setTryErr(String(e?.message ?? e));
-    } finally {
-      setTryBusy(false);
-    }
-  }, [clearLinkedSource]);
+  const tryPublished = useCallback(
+    () => tryExample(async (signal) => (await pickPublishedCard(signal)).url),
+    [tryExample],
+  );
+
+  const tryGovernanceRetrieve = useCallback(
+    () => tryExample(async () => GOVERNANCE_RETRIEVE),
+    [tryExample],
+  );
 
   useEffect(() => {
     document.title = "Verify a signed card — client-side | Council of AI";
@@ -227,24 +252,46 @@ export default function GSPCVerify() {
       <section className="border-b border-emerald-500/15">
         <div className="mx-auto max-w-4xl px-6 pt-14 pb-10">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">
-            Verify · nothing sent · no account
+            Free verification · no account
           </p>
           <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">
             Paste a signed card. Recompute it here.
           </h1>
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
-            Two modes. Cards recompute Ed25519 against the key the card names: estate cards use
-            did:web:csoai.org#card-attestation-1, and mill and pod measurement cards use
-            did:web:csoai.org#board-attestation-1.
-            Public-root mode loads GET /root.json, verifies its Ed25519 envelope against the pinned
-            board key, and binds inclusion proofs to that root. Root membership does not individually
-            sign a leaf. This is not a certificate, and it is not a training record.
+            Paste a signed card or try a published example below. The check runs in your browser;
+            your record is not uploaded. Your browser may read published records and public-key metadata.
+            A valid signature confirms the record's integrity. It does not certify a model's safety or compliance.
           </p>
           <p className="mt-3 max-w-3xl text-sm text-emerald-200/75 leading-relaxed">
-            Every check ends in one of three results: <strong>VALID</strong> (the signature and the
-            content match), <strong>INVALID</strong> (a check failed, and it says which), or{" "}
+            Every check ends in one of three results: <strong>VALID</strong> (the completed record
+            checks passed), <strong>INVALID</strong> (a check failed, and it says which), or{" "}
             <strong>UNCHECKABLE</strong> (the check could not be completed). Could-not-check is never
-            reported as a failure.
+            reported as a failure. Read the signature result separately: a hash-only VALID result is
+            labelled unsigned and does not prove who wrote the record.
+          </p>
+          <details className="mt-4 max-w-3xl rounded-xl border border-emerald-400/20 bg-white/[0.035] px-4 py-3">
+            <summary className="cursor-pointer text-sm font-semibold text-emerald-200">
+              Signing keys and root inclusion
+            </summary>
+            <p className="mt-3 text-sm leading-relaxed text-emerald-100/80">
+              Cards check Ed25519 against the key the card names: estate cards use
+              did:web:csoai.org#card-attestation-1, and mill and pod measurement cards use
+              did:web:csoai.org#board-attestation-1. Public-root mode loads GET /root.json,
+              verifies its Ed25519 envelope against the pinned board key, and binds inclusion
+              proofs to that root. Root membership does not individually sign a leaf.
+              This is not a certificate, and it is not a training record.
+            </p>
+          </details>
+          <p className="mt-3 max-w-3xl text-sm text-emerald-200/75 leading-relaxed">
+            <a
+              href="https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/public/independent-verifier-trial.md"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-emerald-300 underline decoration-emerald-500/40 hover:decoration-emerald-300"
+            >
+              Try the verifier and report your result
+            </a>{" "}
+            (instructions on GitHub; opens a new tab).
           </p>
           <div className="mt-6 grid gap-2 sm:grid-cols-3" aria-label="What verification checks">
             {[
@@ -309,8 +356,9 @@ export default function GSPCVerify() {
           <h2 className="text-2xl font-bold text-emerald-50">Verify a single estate record</h2>
           <p className="mt-1 text-[13px] text-emerald-100/60">
             Paste any one estate record — hash and signature are recomputed here, in your browser,
-            against the published keys. Share a permalink and the recipient&apos;s browser re-runs
-            the same check on the same bytes.
+            against the published keys. This page does not save pasted records or their results.
+            Reloading clears them. A public-record link fetches the currently published record and
+            checks it again; it does not restore a saved verdict.
           </p>
           <div className="mt-4 flex flex-wrap items-center gap-3">
             <button
@@ -335,6 +383,20 @@ export default function GSPCVerify() {
               Each loads one published card into the box, unaltered. Both are free.
             </span>
           </div>
+          {publicReopenHref && (
+            <p className="mt-3 text-[13px] text-emerald-100/80">
+              <a
+                href={publicReopenHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-testid="public-card-reopen"
+                className="text-emerald-300 underline decoration-emerald-500/40 hover:decoration-emerald-300"
+              >
+                Reopen public record
+              </a>{" "}
+              in a new tab. Share that tab&apos;s address to let someone check the published record again.
+            </p>
+          )}
           {linked && (
             <div
               data-testid="linked-card"
@@ -357,6 +419,14 @@ export default function GSPCVerify() {
                 <p className="mt-1 break-all font-mono text-[12px] text-emerald-100/80">
                   {linked.bytes} bytes{linked.sha256 ? ` · sha256 ${linked.sha256}` : ""}
                 </p>
+              )}
+              {linked.state === "loaded" && <LinkedCardActions href={linked.href} />}
+              {linked.state === "loaded" && (
+                <details className="mt-3" data-testid="linked-cite">
+                  <summary className="flex min-h-[44px] cursor-pointer items-center font-semibold">Cite this record</summary>
+                  <pre className="mt-1 whitespace-pre-wrap break-all font-mono text-[12px] text-emerald-100/90">{artifactCitation(linked, new Date())}</pre>
+                  <p className="mt-1 text-[12px] text-emerald-100/70">Built from <a className="underline" href="/CITATION.cff">CITATION.cff</a> and the bytes loaded here. A matching sha256 shows you hold the cited bytes, not that the result is good.</p>
+                </details>
               )}
               {(linked.state === "refused" || linked.state === "failed") && (
                 <p className="mt-1">Reason: {linked.reason}. No VALID or INVALID result has been established. Paste still works.</p>

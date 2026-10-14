@@ -179,6 +179,7 @@ export function buildPaidRequest(
     req: new Request(u.toString(), {
       method,
       headers,
+      redirect: "error", // A paid authorization must not follow a route redirect.
       ...(body ? { body } : {}),
     }),
     route,
@@ -286,9 +287,9 @@ export async function paidToolResult(
         http_status: res.status,
         reason: "same-origin evidence route response could not be read",
         delivery_state: "UNKNOWN",
-        ...settlementFields(),
+        ...settlementFields(res.headers.get("x-payment-response")),
       },
-      `UNREADABLE_RESPONSE — ${tool.csoai.route} answered, but delivery could not be established. ${retryWarning}`,
+      `UNREADABLE_RESPONSE — ${tool.csoai.route} answered, but delivery could not be established. ${res.headers.get("x-payment-response") ? "The route reported settlement; inspect the wallet, chain and facilitator before signing or retrying. The opaque header is not independently verified." : retryWarning}`,
       true,
     );
   }
@@ -353,12 +354,24 @@ export async function paidToolResult(
       `NOT_DEPLOYED — ${tool.csoai.route} is 404 on this origin. Nothing invented. ${retryWarning}`,
     );
   }
+  const deliveryRecordFields = {
+    delivery_record_state: res.headers.get("x-csoai-delivery-record-state"),
+    delivery_record_scope: "unsigned bookkeeping for the underlying HTTP body; not this MCP JSON-RPC envelope",
+  };
+  if (res.ok && res.headers.get("x-csoai-delivery-state") === "PAID_NOT_DELIVERED") {
+    return reply({
+      ...base, ...deliveryRecordFields, status: "PAID_NOT_DELIVERED", http_status: res.status,
+      delivery_state: "NOT_DELIVERED", body,
+      ...settlementFields(res.headers.get("x-payment-response")),
+    }, "Settlement was reported but the requested output was not delivered; inspect the route before retrying.", true);
+  }
   if (res.ok) {
     const paymentResponse = res.headers.get("x-payment-response");
     const delivered = deliveryFields(paymentPresented, paymentResponse);
     const payload = {
       ...base,
       status: "DELIVERED",
+      ...deliveryRecordFields,
       http_status: res.status,
       delivery_state: "DELIVERED",
       deliverable: body,

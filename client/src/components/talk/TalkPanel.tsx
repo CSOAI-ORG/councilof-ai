@@ -15,7 +15,12 @@
  */
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { ArrowUp, Loader2, Mic, MicOff, ShieldAlert, Eye } from "lucide-react";
+import { useSearch } from "wouter";
+import CompanyCasePanel from "./CompanyCasePanel";
+import ConnectedCompanyCasePanel from "./ConnectedCompanyCasePanel";
+import { companyWorkspaceSelection, type CompanyCaseConnection } from "./companyCaseModel";
 import ResultCard from "@/components/talk/ResultCard";
+import Inline from "@/components/talk/TalkInline";
 import { answerSections, checkedLine, chipFor, firstSentence, plainAnswer, statTiles, toolTitle, verifyLink } from "@/lib/resultCard";
 import type { PageContext } from "../../../../functions/_lib/uiTools";
 import { LISTEN_PRIVACY_NOTE, isListenSupported, startListening, stopListening } from "@/lib/councilListen";
@@ -53,28 +58,6 @@ function StateLabel({ label }: { label?: string }) {
     >
       {label}
     </span>
-  );
-}
-
-/** Inline **bold**, `code` and _emphasis_, rendered as elements (never as HTML). */
-function Inline({ text }: { text: string }) {
-  const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`|\b_[^_]+_\b)/g).filter(Boolean);
-  return (
-    <>
-      {parts.map((p, i) =>
-        p.startsWith("**") && p.endsWith("**") ? (
-          <strong key={i}>{p.slice(2, -2)}</strong>
-        ) : p.startsWith("`") && p.endsWith("`") ? (
-          <code key={i} className="rounded bg-muted px-1 font-mono text-[0.85em] break-all">
-            {p.slice(1, -1)}
-          </code>
-        ) : p.startsWith("_") && p.endsWith("_") && p.length > 2 ? (
-          <em key={i}>{p.slice(1, -1)}</em>
-        ) : (
-          <span key={i}>{p}</span>
-        ),
-      )}
-    </>
   );
 }
 
@@ -304,9 +287,11 @@ type Props = {
   listen?: boolean;
   /** Hide the built-in suggestions (the host shows its own). */
   hideSuggestions?: boolean;
+  /** Injected owner-authenticated company adapter; never a public-lookup fallback. */
+  company?: CompanyCaseConnection;
 };
 
-const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel(
+const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPanel(
   { variant = "standalone", labelledBy, className = "", page, declareUi, watch, onRunDone, onEnableWatch, listen, hideSuggestions },
   ref,
 ) {
@@ -516,6 +501,25 @@ const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel(
       </p>
     </section>
   );
+});
+
+/** The explicit company workspace selects a separate authorized request path and one composer. */
+const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel(props, ref) {
+  const search = useSearch();
+  const company = companyWorkspaceSelection(search);
+  if (company.enabled) {
+    const companyProps = {
+      caseId: company.caseId,
+      invalidCase: company.invalidCase,
+      variant: props.variant,
+      labelledBy: props.labelledBy,
+      className: props.className,
+    };
+    return props.company
+      ? <CompanyCasePanel {...companyProps} ref={ref} connection={props.company} />
+      : <ConnectedCompanyCasePanel {...companyProps} ref={ref} />;
+  }
+  return <PublicTalkPanel {...props} ref={ref} />;
 });
 
 export default TalkPanel;

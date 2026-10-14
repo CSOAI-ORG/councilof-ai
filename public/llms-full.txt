@@ -15,7 +15,24 @@ AI-verification or AI-auditor scheme, we have never applied for one, and we clai
 falsity about anyone. Where something is unmeasured we publish it as UNMEASURED, and an empty cell
 stays empty.
 
-## 1. THE LID
+## Canonical company summary
+
+Council of AI is the public measurement service operated by CSOAI Ltd, a company incorporated in
+England and Wales on 2 January 2026 (Companies House 16939677), founded by Nicholas Templeman. It
+publishes independent measurement and claim-maintenance infrastructure for AI systems, agents and
+the endpoints they call: published test instruments, signed records, free verification, a dated
+corrections ledger and machine-readable interfaces. CSOAI measures; it does not certify, accredit or
+issue legal-compliance determinations.
+
+For operating figures, fetch the named live endpoints rather than freezing a search snippet. The
+417-entry legal corpus is a provision-hash manifest, not a claim that 417 provisions are active
+measurement predicates; /mechanism/ publishes its current linkage and limitations. Likewise, a
+model-comparison separation state asks whether a leader was statistically distinguished from its
+fleet. It is separate from whether a measurement run exists. Deterministic-fact axes intentionally
+have no model leader. A TIE or UNTESTED separation state is therefore not an absent measurement and
+must not be rewritten as one.
+
+## 1. CURRENT MEASUREMENT COVERAGE
 
 The GSPC board: **23 axes · 23 measured** = 14 model-comparison + 9 deterministic-fact.
 Measurement, not certification. Anyone can re-check.
@@ -725,7 +742,7 @@ translated without our permission: https://councilof.ai/spec/claim-maintenance/v
   · version index (a published version is never edited; v0.2 supersedes by existing):
     https://councilof.ai/spec/claim-maintenance/
   · cite as: Council of AI. Claim Maintenance, version 0.1. CSOAI Ltd, 2026-09-22.
-    DOI 10.5281/zenodo.22901908 · all versions 10.5281/zenodo.22901781 — UNAVAILABLE since 29 Sep 2026: Zenodo blocked the CSOAI account and every CSOAI record returns HTTP 410 (appeal pending; status at https://councilof.ai/interop/zenodo-status.json).
+    DOI 10.5281/zenodo.22901908 · all versions 10.5281/zenodo.22901781 — UNAVAILABLE since 29 Sep 2026: Zenodo blocked the CSOAI account and every CSOAI record returns HTTP 410 (status UNCHECKABLE; see https://councilof.ai/interop/zenodo-status.json).
     The deposited bytes and the served bytes are identical (same SHA-256), which is why the DOI is
     recorded in a sidecar rather than written into the document of record.
 
@@ -843,16 +860,16 @@ it yourself; we did not vet it.
 ## 10. TIMESTAMP PROOFS — anchored is not the same claim as submitted
 
 Derived at generation from https://councilof.ai/interop/ots/manifest.json (same bytes on disk at
-public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-10-08T16:56:41Z). An upgrade loop
+public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-10-14T15:11:55Z). An upgrade loop
 keeps advancing these, so read the manifest for a fresher count rather than quoting this line alone.
 
-- Detached OpenTimestamps proofs that actually deserialize: 665. The manifest is built by
+- Detached OpenTimestamps proofs that actually deserialize: 668. The manifest is built by
   reading every .ots file in its scanned directories and keeping only those that parse — never from a
   list of files we intended to stamp.
-- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 647.
-- Still calendar-pending: 18. A calendar-pending proof is a submitted request, not
+- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 667.
+- Still calendar-pending: 1. A calendar-pending proof is a submitted request, not
   evidence of a time. `submitted` is not `anchored`.
-- Proofs whose subject is not served beside them: 65 — an anchor a reader cannot check
+- Proofs whose subject is not served beside them: 67 — an anchor a reader cannot check
   what was stamped against. Published as a count rather than hidden.
 - This producer does not check block headers against a Bitcoin node. `ots verify` against your own
   node does that, and an .ots is not a proof because of its file extension.

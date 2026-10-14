@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { ZENODO_NOTICE, ZENODO_STATUS_PATH } from "@/lib/zenodoStatus";
 import { Link } from "wouter";
+import { claimScheduleLabel } from "@/lib/claimSchedule";
 import seoHead from "../data/seo-head.json";
 
 /**
@@ -316,7 +317,11 @@ export default function ClaimMaintenance() {
         )}
 
         {subjects.length > 0 && (
-          <div role="region" aria-label="Subjects under claim maintenance" tabIndex={0} className="mt-6 overflow-x-auto rounded-lg border border-slate-200">
+          <>
+            <p className="mt-4 text-sm leading-6 text-slate-600">
+              <code className="font-mono text-xs">UNSCHEDULED</code> means this registry has no next read currently scheduled. It does not mean a read failed, and being listed here does not mean a monitoring service was commissioned.
+            </p>
+            <div role="region" aria-label="Subjects under claim maintenance" tabIndex={0} className="mt-4 overflow-x-auto rounded-lg border border-slate-200">
             <table className="w-full text-left text-sm">
               <thead className="bg-slate-100 text-xs uppercase tracking-wide text-slate-600">
                 <tr>
@@ -325,7 +330,7 @@ export default function ClaimMaintenance() {
                   <th scope="col" className="px-4 py-3">States</th>
                   <th scope="col" className="px-4 py-3">First captured</th>
                   <th scope="col" className="px-4 py-3">Last read</th>
-                  <th scope="col" className="px-4 py-3">Next read</th>
+                  <th scope="col" className="px-4 py-3">Next scheduled read</th>
                   <th scope="col" className="px-4 py-3">Registry</th>
                 </tr>
               </thead>
@@ -343,7 +348,7 @@ export default function ClaimMaintenance() {
                     <td className="px-4 py-3 font-mono text-xs">{day(s.first_captured) ?? "—"}</td>
                     <td className="px-4 py-3 font-mono text-xs">{day(s.last_read) ?? "—"}</td>
                     <td className="px-4 py-3 font-mono text-xs">
-                      {s.next_scheduled_read_state === "SCHEDULED" ? day(s.next_scheduled_read) : "UNSCHEDULED"}
+                      {claimScheduleLabel(s)}
                     </td>
                     <td className="px-4 py-3">
                       <a className="underline decoration-emerald-600 underline-offset-4" href={s.registry_url}>artifact</a>
@@ -353,6 +358,7 @@ export default function ClaimMaintenance() {
               </tbody>
             </table>
           </div>
+          </>
         )}
 
         {reg?.disclosures && reg.disclosures.length > 0 && (
@@ -424,6 +430,10 @@ node claim-capture.mjs --verify artifact.json`}</Code>
           <li>
             <Link href="/methodology" className="underline decoration-emerald-600 underline-offset-4">How we measure</Link> — the
             measurement discipline this specification borrows its vocabulary from. We measure; we do not certify.
+          </li>
+          <li>
+            <Link href="/blog/keeping-ai-claims-current/" className="underline decoration-emerald-600 underline-offset-4">Keeping AI claims current: dates, missed reads and corrections</Link>{" "}
+            — a reader's guide to observation dates, missed reads and the corrections trail.
           </li>
         </ul>
         <p className="mt-8 rounded-lg border border-slate-200 bg-slate-50 px-4 py-4 text-sm leading-6 text-slate-700">

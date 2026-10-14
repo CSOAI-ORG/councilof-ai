@@ -1,3 +1,4 @@
+import { recordPaidResponse, markPaidUndeliveredResponse } from "./_x402_delivery_record";
 /**
  * GET /api/evidence-bundle — Tier 2: an evidence bundle mapped to ONE regulatory obligation.
  *
@@ -253,7 +254,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         subject: subject || null,
         relevant_signed_cards: preview.relevant_signed_cards,
         corpus_merkle_root: preview.corpus.merkle_root,
-        artifact: "<bench>.json + <bench>.sig.json (detached Ed25519) + <bench>_oscal.json (OSCAL 1.1.0 assessment-results)",
+        artifact: "evidence-bundle assembly requested; scope, deliverables and delivery terms require owner confirmation before ordering",
       },
       next: [
         // "CSOAI LTD issues the invoice against this reference" used to stand alone here, and a
@@ -308,7 +309,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       bazaar,
       csoai: { schema: "csoai.evidence-bundle/0.1", per: "bundle", lid: CSOAI_LID, never: ["conformity determination", "certificate", "score", "rank"], preview,
         free_preview: previewUrl.toString(),
-        deliverable: "one pack for this subject and obligation: the bench JSON, its detached Ed25519 signature, and the OSCAL assessment-results wrapper — assembled from already-signed cards, never a conformity determination",
+        deliverable: "selected existing card objects for this subject and obligation, the OSCAL assessment-results wrapper, and an assembly manifest; assembly does not verify input-card signatures; the response reports manifest signing status and any unsigned reason; zero selected cards stays zero; any existing_pack link is separate; no new measurement or conformity determination",
         rail: railMode(env), not_paid_reason: payment.reason, catalog: `${origin}/api/x402`, invoice: { how: `${resourceUrl}&invoice=gbp&commissioned_by=<legal entity>`, note: "a buyer who cannot pay USDC can ask for a CSOAI LTD invoice — the reference is issued here, the amount only on the invoice" } },
     });
     return paymentRequiredResponseSigned(paymentRequired, env);
@@ -317,7 +318,17 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   // Paid path — assemble. Empty stays empty (and the preview already said so).
   const as_of = new Date().toISOString();
   const tx = payment.settlement?.transaction || null;
-  const body = await oscal(ob, subject || "(unspecified subject)", selected, corpus.merkle_root, origin);
+  const paidFailure = (reason: string) => markPaidUndeliveredResponse(json({
+    schema: "csoai.evidence-bundle/0.1", error: "uncheckable", state: "PAID_NOT_DELIVERED",
+    reason, settle: payment.settlement || null,
+    note: "Payment settled, but this output was not delivered. Preserve the settlement receipt and reconcile the transaction with CSOAI before any reissue; do not automatically retry or pay again.",
+  }, 500), payment.ok, payment.paymentResponse);
+  let body: Awaited<ReturnType<typeof oscal>>;
+  try {
+    body = await oscal(ob, subject || "(unspecified subject)", selected, corpus.merkle_root, origin);
+  } catch (e) {
+    return paidFailure(e instanceof Error ? e.message : String(e));
+  }
   const cards: Record<string, Wrapper> = {};
   for (const { sha, w } of selected) cards[sha] = w;
   const payload: Record<string, unknown> = {
@@ -338,7 +349,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   try {
     leaf = await signPayload(payload, env.BOARD_SIGN_KEY_PKCS8_B64);
   } catch (e) {
-    return json({ schema: "csoai.evidence-bundle/0.1", error: "uncheckable", reason: (e as Error).message }, 500);
+    return paidFailure(e instanceof Error ? e.message : String(e));
   }
   const manifest_card = cardV0({
     surface: "evidence.bundle",
@@ -360,7 +371,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     }
   }
 
-  return json(
+  return recordPaidResponse(json(
     {
       schema: "csoai.evidence-bundle/0.1",
       kind: "bundle",
@@ -377,7 +388,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     },
     200,
     payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {},
-  );
+  ), { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
 };
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */

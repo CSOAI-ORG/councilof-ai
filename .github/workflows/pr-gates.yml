@@ -176,7 +176,7 @@ jobs:
             exit 0
           fi
           changed=$(gh api --paginate "repos/$REPO/pulls/$PR/files" --jq '.[].filename')
-          gated=$(printf '%s\n' "$changed" | grep -E '^(client/|public/|functions/|scripts/|harness/x402-census/|docs/operations/PRODUCERS\.json$|package\.json$|package-lock\.json$|wrangler\.jsonc$|\.github/workflows/pr-gates\.yml$)' || true)
+          gated=$(printf '%s\n' "$changed" | grep -E '^(client/|public/|functions/|scripts/|harness/x402-census/|docs/operations/PRODUCERS\.json$|package\.json$|package-lock\.json$|vitest\.config\.ts$|wrangler\.jsonc$|\.github/workflows/pr-gates\.yml$)' || true)
           if [ -n "$gated" ]; then
             echo "gated=true" >> "$GITHUB_OUTPUT"
             echo "gated paths in this PR:"; printf '  %s\n' $gated
@@ -243,6 +243,31 @@ jobs:
           files=$(sed -n '/^export const NODE_TEST_FILES = \[/,/^\];/p' vitest.config.ts | grep -o "'[^']*'" | tr -d "'")
           test -n "$files" || { echo "NODE_TEST_FILES is empty or unreadable"; exit 1; }
           node --test $files
+
+      # Same required gates job: the delivery runner uses Node's TS transformer and VM modules.
+      - name: Paid delivery regression runtime
+        if: steps.scope.outputs.gated == 'true'
+        uses: actions/setup-node@v4
+        with: { node-version: '22.23.3' }
+
+      - name: Paid delivery and API worker offline regressions
+        if: steps.scope.outputs.gated == 'true'
+        env:
+          CODEX_DELIVERY_PR_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          echo "PR source revision: $CODEX_DELIVERY_PR_HEAD"
+          echo "Checked-out test revision: $(git rev-parse HEAD)"
+          git fetch --no-tags --depth=1 origin 10046fd8b60d75be66bd1f9dbf54155cca26dec3
+          test "$(git rev-parse 10046fd8b60d75be66bd1f9dbf54155cca26dec3^{commit})" = 10046fd8b60d75be66bd1f9dbf54155cca26dec3
+          node --version
+          python3 scripts/test_anthropic_gspc_worker.py
+          node --experimental-vm-modules --unhandled-rejections=strict scripts/test_paid_delivery_records.mjs
+
+      - name: Restore existing Node 20 build runtime
+        if: always() && steps.scope.outputs.gated == 'true'
+        uses: actions/setup-node@v4
+        with: { node-version: 20 }
 
       - name: Build client
         if: steps.scope.outputs.gated == 'true'
@@ -453,6 +478,9 @@ jobs:
           python3 -m pytest -q harness/gspc-top100/test_priority_pick.py harness/gspc-top100/test_inflight_cells.py
           # The pre-send mail check: no address but the one being checked may ever be put to a mail server.
           python3 -m pytest -q scripts/outward-gate/test_contact_reachability.py
+          # The outward gate itself. Its tests were not in CI: from the day brand-gate.mjs gained a look-behind
+          # that Python cannot read, the gate could score nothing at 100% and one of these tests sat red unseen.
+          python3 -m pytest -q scripts/outward-gate/test_outward_gate.py scripts/outward-gate/test_gate_draft.py
           # C-2026-0914-01: a one-option exact-label menu is refused, and every signed card
           # graded by one is in WITHDRAWN.jsonl (derived from the bound bank bytes).
           python3 -m pytest -q harness/gspc-top100/test_one_option_menu.py
