@@ -887,6 +887,7 @@ function AppShell() {
                       Exact paths placed BEFORE /blog/:slug: every other slug and /blog itself stay withdrawn. */}
                   <Route path="/blog/how-to-verify-an-ai-measurement">{() => <BlogPost slug="how-to-verify-an-ai-measurement" />}</Route>
                   <Route path="/blog/keeping-ai-claims-current">{() => <BlogPost slug="keeping-ai-claims-current" />}</Route>
+                  <Route path="/blog/gspc-g2-comparison-group-2026-10-14">{() => <BlogPost slug="gspc-g2-comparison-group-2026-10-14" />}</Route>
                   <Route path="/blog/:slug" component={ContentReviewNotice} />
                   <Route path="/models" component={ModelRegistry} />
                   <Route path="/framework-catalog" component={FrameworkCatalog} />
