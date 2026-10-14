@@ -71,3 +71,72 @@ describe("My results — paid results", () => {
     expect(paidSubject("not a url")).toBe("not a url");
   });
 });
+
+describe("My results — saved-result defects (14 Oct 2026)", () => {
+  type Store = Record<string, string>;
+  const install = (opts: { quotaChars?: number } = {}) => {
+    const store: Store = {};
+    const ls = {
+      getItem: (k: string) => (k in store ? store[k] : null),
+      setItem: (k: string, v: string) => {
+        if (opts.quotaChars !== undefined && v.length > opts.quotaChars) throw new Error("QuotaExceededError");
+        store[k] = v;
+      },
+      removeItem: (k: string) => void delete store[k],
+    };
+    (globalThis as unknown as { window: unknown }).window = { localStorage: ls, dispatchEvent: () => true };
+    (globalThis as unknown as { Event: unknown }).Event ??= class { constructor(public type: string) {} };
+    return store;
+  };
+
+  it("two saves with the same timestamp get distinct ids", async () => {
+    install();
+    const { saveMyResult, readMyResults } = await import("./myResults");
+    saveMyResult({ kind: "watch", subject: "a", ref: "r1", at: "2026-10-14T00:00:00Z" });
+    saveMyResult({ kind: "watch", subject: "a", ref: "r2", at: "2026-10-14T00:00:00Z" });
+    const ids = readMyResults().map((r) => r.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("malformed stored rows are not rendered; a row without an id gets one", async () => {
+    const store = install();
+    const { readMyResults, MY_RESULTS_KEY } = await import("./myResults");
+    store[MY_RESULTS_KEY] = JSON.stringify([
+      { kind: "nope", subject: "x", at: "t" },
+      { kind: "paid", subject: "x", at: "t", record: { not: "a string" } },
+      { kind: "watch", subject: "ok", at: "t" },
+      { id: "dup", kind: "watch", subject: "a", at: "t" },
+      { id: "dup", kind: "watch", subject: "b", at: "t" },
+    ]);
+    const rows = readMyResults();
+    expect(rows.map((r) => r.subject)).toEqual(["ok", "a", "b"]);
+    expect(rows.every((r) => typeof r.id === "string" && r.id)).toBe(true);
+    expect(new Set(rows.map((r) => r.id)).size).toBe(3);
+  });
+
+  it("the cap never evicts a paid row holding its only signed record before other rows", async () => {
+    const { capRows } = await import("./myResults");
+    const paid = { id: "p", kind: "paid" as const, subject: "door", at: "t", record: "{}" };
+    const others = Array.from({ length: 60 }, (_, i) => ({ id: `w${i}`, kind: "watch" as const, subject: `s${i}`, at: "t" }));
+    const kept = capRows([...others, paid], 50);
+    expect(kept.length).toBe(50);
+    expect(kept).toContain(paid);
+  });
+
+  it("a re-saved paid result replaces its earlier row instead of stacking", async () => {
+    install();
+    const { saveMyResult, readMyResults } = await import("./myResults");
+    saveMyResult({ kind: "paid", subject: "art50", ref: "abc", record: "{}" });
+    saveMyResult({ kind: "paid", subject: "art50", ref: "abc", record: "{}" });
+    expect(readMyResults().filter((r) => r.ref === "abc").length).toBe(1);
+  });
+
+  it("when storage is full the outcome says so, and the returned rows are what was actually stored", async () => {
+    install({ quotaChars: 10 });
+    const { saveMyResult, readMyResults } = await import("./myResults");
+    const out = saveMyResult({ kind: "paid", subject: "art50", ref: "abc", record: "x".repeat(100) });
+    expect(out.saved).toBe(false);
+    expect(out.recordKept).toBe(false);
+    expect(out.rows).toEqual(readMyResults());
+  });
+});
