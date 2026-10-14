@@ -143,10 +143,22 @@ def freeze_body(body: dict) -> dict:
     return body
 
 
-def prior_cards(model: str, axis: str, digest: str) -> list[dict]:
-    """Signed cards for the same (model, axis) that this one replaces. Superseded
-    cards stay on disk and keep resolving — a card_id already published must not
-    404 — but the ledger records that they are no longer the live card."""
+def _cell(body: dict) -> tuple[str, str, str, str]:
+    ce = body.get("compute_evidence") if isinstance(body.get("compute_evidence"), dict) else {}
+    return (str(body.get("model") or ""), str(body.get("axis") or ""),
+            str(ce.get("bank_sha256") or ""), str(ce.get("instrument_sha256") or ""))
+
+
+def prior_cards(body: dict, digest: str) -> list[dict]:
+    """Signed cards for the same (model, axis, bank_sha256, instrument_sha256) cell that
+    this one replaces. A card on a different bank or instrument (another comparison
+    group) is a different measurement and coexists. A card missing either sha
+    supersedes nothing. Superseded cards stay on disk and keep resolving — a card_id
+    already published must not 404 — but the ledger records that they are no longer
+    the live card."""
+    cell = _cell(body)
+    if not all(cell):
+        return []
     out = []
     for f in sorted(DST.glob("signed-*.json")):
         try:
@@ -154,7 +166,7 @@ def prior_cards(model: str, axis: str, digest: str) -> list[dict]:
         except Exception:
             continue
         b = w.get("body") if isinstance(w.get("body"), dict) else {}
-        if b.get("model") == model and b.get("axis") == axis and w.get("id") != digest and w.get("signature"):
+        if _cell(b) == cell and w.get("id") != digest and w.get("signature"):
             out.append({"file": f.name, "id": w.get("id")})
     return out
 
@@ -417,7 +429,7 @@ def main(argv: list[str] | None = None) -> int:
                 )
                 failures += 1
                 continue
-        replaces = prior_cards(str(body.get("model") or ""), str(body.get("axis") or ""), digest)
+        replaces = prior_cards(body, digest)
         out = {
             "alg": "Ed25519",
             "body": body,
@@ -453,6 +465,8 @@ def main(argv: list[str] | None = None) -> int:
                                 "by_file": dest.name,
                                 "model": body.get("model"),
                                 "axis": body.get("axis"),
+                                "bank_sha256": _cell(body)[2],
+                                "instrument_sha256": _cell(body)[3],
                                 "reason": supersede_reason,
                                 "at": now_iso(),
                             }
