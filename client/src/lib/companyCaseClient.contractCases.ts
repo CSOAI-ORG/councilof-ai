@@ -14,7 +14,7 @@ const requestId = unit.reply.case.request_id;
 const caseId = unit.expected.caseId;
 const originalFetch = globalThis.fetch;
 const client = (getToken: () => string | null = () => "unit-token-only") => createClient({ subject, token: "unit-token-only", getToken });
-const response = (body: unknown = fixture(), status = 200) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json; charset=utf-8" } });
+const response = (body = fixture(), status = 200) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json; charset=utf-8" } });
 async function withFetch(fake: (...args: any[]) => Promise<Response>, work: () => Promise<unknown>) { globalThis.fetch = fake; try { return await work(); } finally { globalThis.fetch = originalFetch; } }
 const read = (current = client()) => current.read(caseId, { signal: new AbortController().signal });
 const submit = (current = client()) => current.submit(request, { requestId, signal: new AbortController().signal });
@@ -174,7 +174,7 @@ test("valid MCP SSE frames preserve exact raw hashes and one matching message", 
     setRaw(observation, `: unit keepalive\nevent: message\ndata: ${JSON.stringify(observation.response)}\n\n`, "text/event-stream; charset=utf-8");
   }
   rebind(body);
-  await withFetch(async () => response(body), async () => { const saved = await read(); assert.equal((saved as Record<string, unknown>).sources, undefined); assert.equal(saved.result.sources[1].sha256, body.case.result.gspc.raw_sha256); });
+  await withFetch(async () => response(body), async () => { const saved = await read(); assert.equal("sources" in saved ? saved.sources : undefined, undefined); assert.equal(saved.result.sources[1].sha256, body.case.result.gspc.raw_sha256); });
 });
 
 test("SSE duplicate expected responses and ignored error events fail closed", async () => {
