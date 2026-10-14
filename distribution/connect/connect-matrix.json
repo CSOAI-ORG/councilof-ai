@@ -81,6 +81,7 @@
     },
     {
       "id": "cursor",
+      "installer": "cursor",
       "platform": "Cursor",
       "group": "Coding agents",
       "door": "free",
@@ -88,7 +89,11 @@
       "kind": "json",
       "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
       "docs": "https://cursor.com/docs/context/mcp",
-      "url": "https://councilof.ai/mcp/free"
+      "url": "https://councilof.ai/mcp/free",
+      "install_action": {
+        "kind": "cursor",
+        "href": "cursor://anysphere.cursor-deeplink/mcp/install?name=gspc&config=eyJ1cmwiOiJodHRwczovL2NvdW5jaWxvZi5haS9tY3AvZnJlZSJ9"
+      }
     },
     {
       "id": "vscode",
