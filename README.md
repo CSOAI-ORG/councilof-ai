@@ -83,6 +83,8 @@ Four populations appear above on purpose and are never reconciled here: the **si
 
 ## Install the readers
 
+Add CSOAI to Cursor. Inspect an existing measurement. Keep the evidence. [Add to Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=gspc&config=eyJ1cmwiOiJodHRwczovL2NvdW5jaWxvZi5haS9tY3AvZnJlZSJ9) (free, read-only door `https://councilof.ai/mcp/free`, no key; the link is generated in `distribution/connect/connect-matrix.json`; copy-paste setup at https://councilof.ai/connect#connect-cursor).
+
 ```bash
 pip install csoai-gspc          # 0.2.20261007.1 — board, axis, verify, root, snapshot
 npx csoai-gspc-mcp              # 0.2.2 — stdio MCP server over the same endpoints

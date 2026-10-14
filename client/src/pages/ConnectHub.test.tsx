@@ -60,8 +60,22 @@ describe("/connect is the connector hub, not a withdrawal notice", () => {
     expect(block).toContain("Add to VS Code");
     expect(block).toContain('aria-label="Copy: VS Code (GitHub Copilot agent mode)"');
     expect(block).toContain(row.snippet.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#x27;"));
-    expect(PLATFORMS.filter((c) => c.id !== "vscode").every((c) => c.install_action === undefined)).toBe(true);
-    expect(html.match(/data-testid="connect-install-/g)).toHaveLength(1);
+    expect(PLATFORMS.filter((c) => c.id !== "vscode" && c.id !== "cursor").every((c) => c.install_action === undefined)).toBe(true);
+    expect(html.match(/data-testid="connect-install-/g)).toHaveLength(2);
+  });
+
+  it("renders the generated Cursor deeplink for the free door and keeps its copy-paste fallback", () => {
+    const row = PLATFORMS.find((c) => c.id === "cursor")!;
+    const html = render(<ConnectHub />);
+    const block = html.match(/<details\b[^>]*data-testid="connect-platform-cursor"[^>]*>([\s\S]*?)<\/details>/)?.[1] ?? "";
+    const href = (block.match(/<a\b[^>]*data-testid="connect-install-cursor"[^>]*>/)?.[0] ?? "").match(/href="([^"]+)"/)?.[1]?.replaceAll("&amp;", "&") ?? "";
+    expect(row.install_action?.kind).toBe("cursor");
+    expect(href).toBe(row.install_action!.href);
+    const u = new URL(href);
+    expect(`${u.protocol}//${u.host}${u.pathname}`).toBe("cursor://anysphere.cursor-deeplink/mcp/install");
+    expect(u.searchParams.get("name")).toBe("gspc");
+    expect(JSON.parse(atob(u.searchParams.get("config")!))).toEqual({ url: FREE_DOOR });
+    expect(block).toContain("Add to Cursor");
   });
 
   it("keeps the ChatGPT custom MCP instructions on the current official plugin path", () => {
