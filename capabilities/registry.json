@@ -3358,6 +3358,19 @@
       "lifecycle": "LIVE",
       "audience": "agent",
       "payment": "free"
+    },
+    {
+      "id": "quote_dataset_version",
+      "protocols": [
+        "mcp"
+      ],
+      "title": "quote_dataset_version",
+      "description": "Quote one published data/v1 dataset version from https://councilof.ai/data/v1/: version (YYYY-MM-DD, default latest), card_count, merkle_root, the snapshot file URLs with their sha256, the manifest's sha256 (published value and the value recomputed here over the served bytes), the citation exactly as published (doi null until one is minted) and the data licence (CC-BY-4.0). Read-only; free. States only: measurement, not endorsement; no verdict, score or ranking. NOT_PUBLISHED when the version is not in latest.json or CHANGELOG.json; UNREACHABLE when the source could not be fetched.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
     }
   ]
 }

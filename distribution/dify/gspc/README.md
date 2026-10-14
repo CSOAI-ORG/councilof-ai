@@ -1,6 +1,6 @@
 # GSPC for Dify
 
-GSPC: read the live measurement board, verify Ed25519-signed measurement cards and capsules, and list the already-signed cards relevant to one obligation. 14 read-only tools, each a direct call to the free MCP door https://councilof.ai/mcp/free (no sign-in).
+GSPC: read the live measurement board, verify Ed25519-signed measurement cards and capsules, and list the already-signed cards relevant to one obligation. 15 read-only tools, each a direct call to the free MCP door https://councilof.ai/mcp/free (no sign-in).
 Dify can also add the same door with no plugin at all: Tools → MCP → Add MCP Server (HTTP) → https://councilof.ai/mcp/free.
 
 - `board_totals` — Live GSPC board totals from https://councilof.ai/api/gspc.
@@ -17,6 +17,7 @@ Dify can also add the same door with no plugin at all: Tools → MCP → Add MCP
 - `server_evidence` — Trust per server, not totals: every published measurement capsule about ONE endpoint URL across all batches — MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A card-signature state, self-parity cells for CSOAI's own doors, and any later adapter (e.g.
 - `evidence_bundle_preview` — For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject: the obligation record, its counsel-gate status and the already-signed measurement cards that are relevant to it (count plus the first cards, each with its verify link), read live from https://councilof.ai/api/evidence-bundle.
 - `route` — GSPC Route (free, decide-only).
+- `quote_dataset_version` — Quote one published data/v1 dataset version from https://councilof.ai/data/v1/: version (YYYY-MM-DD, default latest), card_count, merkle_root, the snapshot file URLs with their sha256, the manifest's sha256 (published value and the value recomputed here over the served bytes), the citation exactly as published (doi null until one is minted) and the data licence (CC-BY-4.0).
 
 RENDERED, NOT SUBMITTED: the Marketplace route is a PR of `gspc.difypkg` to langgenius/dify-plugins from a public account (owner step).
 

@@ -32,17 +32,18 @@
         "verify_capsule",
         "server_evidence",
         "evidence_bundle_preview",
-        "route"
+        "route",
+        "quote_dataset_version"
       ],
-      "free_tool_names_sha256": "7fb2fb0272381f3608eaa1af1c4ff2ca0603026575429fab2b0510cb184449f5"
+      "free_tool_names_sha256": "acd410c9d09f28e2918a798a3cde2a4c4dae736610db5ddfb04761eb245a9980"
     }
   ],
   "catalogue": "https://councilof.ai/mcp",
   "gspc_board": "https://councilof.ai/api/gspc",
   "server_card": "https://councilof.ai/.well-known/mcp/server-card.json",
   "measured": {
-    "total_tools": 19,
-    "free_tools": 14,
+    "total_tools": 20,
+    "free_tools": 15,
     "metered_tools": 5,
     "server_count": 1,
     "tools": [
@@ -60,15 +61,16 @@
       "server_evidence",
       "evidence_bundle_preview",
       "route",
+      "quote_dataset_version",
       "commission_card",
       "art50_marking_evidence",
       "rwa_evidence",
       "receipts_batch",
       "evidence_bundle"
     ],
-    "tool_counts": "14 free tools at /mcp/free; 19 at /mcp (14 free + 5 metered). The npm package is versioned separately.",
-    "note": "POST /mcp tools/list: fourteen free readers plus five x402-metered evidence tools. witness_hash remains quarantined and is not advertised. MCP Registry server 1.4.4 points here. A listing does not prove paid settlement or delivery.",
-    "tool_names_sha256": "8f17c442a39c7a8fb0d6342077335c13319fd38419ebdc9910d1dfd40385a60a",
+    "tool_counts": "15 free tools at /mcp/free; 20 at /mcp (15 free + 5 metered). The npm package is versioned separately.",
+    "note": "POST /mcp tools/list: fifteen free readers plus five x402-metered evidence tools. witness_hash remains quarantined and is not advertised. MCP Registry server 1.4.4 points here. A listing does not prove paid settlement or delivery.",
+    "tool_names_sha256": "629b4b5d71560fd4a964c13153a12d09515a4b5fb226aaf3cc8447e92e4e86af",
     "tool_names_sha256_rule": "sha256 of the tool names from tools/list, sorted, joined by \"\\n\" (UTF-8)",
     "derived_from": "tools/list of https://councilof.ai/mcp: functions/mcp/gspc-tools.json + paid-tools.json"
   },
@@ -88,6 +90,7 @@
       "server_evidence",
       "evidence_bundle_preview",
       "route",
+      "quote_dataset_version",
       "commission_card",
       "art50_marking_evidence",
       "rwa_evidence",
@@ -95,7 +98,7 @@
       "evidence_bundle"
     ],
     "url": "https://councilof.ai/mcp",
-    "note": "The product door: fourteen free readers plus five x402-metered evidence tools. The public-root readers answer VALID / INVALID / NOT_IN_THIS_CORPUS / UNCHECKABLE, never a GSPC grade. No jail run from MCP."
+    "note": "The product door: fifteen free readers plus five x402-metered evidence tools. The public-root readers answer VALID / INVALID / NOT_IN_THIS_CORPUS / UNCHECKABLE, never a GSPC grade. No jail run from MCP."
   },
   "provider": {
     "name": "CSOAI Ltd",

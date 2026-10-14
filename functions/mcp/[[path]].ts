@@ -24,6 +24,7 @@ import { toolSpan, withTraceHeader } from "./_otel";
 import { MEASUREMENT_TOOL_NAMES, measurementToolResult } from "./_measurement";
 import { EVIDENCE_TOOL_NAMES, evidenceToolResult } from "./_evidence";
 import { ROUTE_TOOL_NAMES, routeToolResult } from "./_route";
+import { DATASET_TOOL_NAMES, datasetToolResult } from "./_dataset";
 import { buildServerCard, serverCardDoor, SERVER_CARD_MEDIA_TYPE } from "./_server_card";
 import { recordUsage } from "../_lib/usage";
 
@@ -158,7 +159,9 @@ function buildMcp(
                 ? evidenceToolResult(definition.name, args, origin)
                 : ROUTE_TOOL_NAMES.has(definition.name)
                   ? routeToolResult(args, origin)
-                  : sharedToolResult(definition.name, args, origin),
+                  : DATASET_TOOL_NAMES.has(definition.name)
+                    ? datasetToolResult(args, origin)
+                    : sharedToolResult(definition.name, args, origin),
       );
     }
     // Historical unlisted alias; it is not in tools/list and does not inflate the canonical count.
