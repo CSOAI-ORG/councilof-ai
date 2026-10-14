@@ -1,6 +1,6 @@
 """Offline checks of exact selected publisher functions; no network or source-runtime imports."""
 from __future__ import annotations
-import argparse, ast, copy, json, os, re, shutil, sys, tempfile, types, unittest
+import argparse, ast, copy, importlib.metadata, json, os, re, shutil, sys, tempfile, types, unittest
 from pathlib import Path
 from unittest.mock import patch
 
@@ -21,7 +21,7 @@ def selected(path, names, extra=None):
 
 def kaggle():
     return selected(ROOT / "scripts/spray/gspc-spray.py",
-        {"KAGGLE_ID", "KAGGLE_LICENCE_NAMES", "Refused", "kaggle_licences", "kaggle_metadata_payload",
+        {"KAGGLE_ID", "KAGGLE_LICENCE_NAMES", "KAGGLE_TYPED_READ_VERSIONS", "Refused", "kaggle_licences", "kaggle_read_metadata", "kaggle_metadata_payload",
          "kaggle_metadata_drift", "kaggle_page_text", "spray_kaggle", "BANNED", "BOARD_URL", "DID_URL",
          "VERIFY_URL", "HOWTO_URL", "ZENODO_METHODOLOGY_DOI", "ZENODO_CONCEPT"})
 
@@ -106,7 +106,8 @@ class KaggleGuards(unittest.TestCase):
                 if corrupt: info[corrupt]=False if corrupt=="isPrivate" else []
             else: (directory/"dataset-metadata.json").write_text(json.dumps(info))
             return types.SimpleNamespace(returncode=0,stdout="",stderr="")
-        self.ns.update(run=run,kaggle_public_files=lambda:remote,kaggle_page_text=lambda tr:("new sub","new desc"),
+        self.ns.update(run=run,kaggle_read_metadata=lambda:{"info":copy.deepcopy(info)},
+                       kaggle_public_files=lambda:remote,kaggle_page_text=lambda tr:("new sub","new desc"),
                        unchanged=lambda *a:"same",built_files=lambda p:remote,log=lambda *a:None,
                        byte_parity_reason=lambda a,b:"mismatch" if mismatch else None,
                        wait_for=lambda check,**kw:check(),result=lambda surface,status,*a,**kw:dict(status=status))
@@ -128,6 +129,55 @@ class KaggleGuards(unittest.TestCase):
         for field in ("isPrivate","collaborators"):
             result,_=self.invoke(corrupt=field)
             self.assertEqual(result[0]["status"],"PUBLISHED-METADATA-UNCONFIRMED")
+
+
+    def typed_read(self, info=None, error=None, versions=("2.2.4","0.1.35")):
+        if info is None:
+            info=dict(ownerUser="nicktempleman",datasetSlug="csoai-gspc-living-board",
+                      isPrivate=False,collaborators=[],licenses=[dict(name="CC0-1.0")])
+        captured={}
+        class Response:
+            error_message=error
+            def to_json(self, **kw):
+                captured.update(kw)
+                return json.dumps(dict(info=info))
+        def get(request):
+            captured["owner"]=request.owner_slug; captured["slug"]=request.dataset_slug
+            return Response()
+        client=types.SimpleNamespace(datasets=types.SimpleNamespace(dataset_api_client=types.SimpleNamespace(get_dataset_metadata=get)))
+        class Context:
+            def __enter__(self): return client
+            def __exit__(self,*a): return False
+        api=types.SimpleNamespace(build_kaggle_client=lambda:Context())
+        modules={"kaggle":types.SimpleNamespace(api=api),
+                 "kagglesdk":types.ModuleType("kagglesdk"),
+                 "kagglesdk.datasets":types.ModuleType("kagglesdk.datasets"),
+                 "kagglesdk.datasets.types":types.ModuleType("kagglesdk.datasets.types"),
+                 "kagglesdk.datasets.types.dataset_api_service":types.SimpleNamespace(ApiGetDatasetMetadataRequest=types.SimpleNamespace)}
+        with patch.dict(sys.modules,modules),patch.object(importlib.metadata,"version",side_effect=lambda name:versions[0 if name=="kaggle" else 1]):
+            result=self.api.kaggle_read_metadata()
+        return result,captured
+
+    def test_typed_metadata_preserves_false_and_empty_without_defaults_guessing(self):
+        result,captured=self.typed_read()
+        self.assertIs(result["info"]["isPrivate"],False)
+        self.assertEqual(result["info"]["collaborators"],[])
+        self.assertIs(captured["ignore_defaults"],False)
+        self.assertEqual((captured["owner"],captured["slug"]),("nicktempleman","csoai-gspc-living-board"))
+
+    def test_unknown_sdk_schema_refuses_before_request(self):
+        with self.assertRaises(self.api.Refused):
+            self.typed_read(versions=("2.2.4","different"))
+
+    def test_typed_metadata_error_or_other_owner_refuses(self):
+        with self.assertRaises(self.api.Refused): self.typed_read(error="not permitted")
+        with self.assertRaises(self.api.Refused):
+            self.typed_read(info=dict(ownerUser="other",datasetSlug="csoai-gspc-living-board",isPrivate=False,collaborators=[]))
+
+    def test_missing_or_malformed_typed_settings_refuse(self):
+        for fields in ({},{"isPrivate":False},{"isPrivate":None,"collaborators":[]},{"isPrivate":False,"collaborators":None}):
+            info=dict(ownerUser="nicktempleman",datasetSlug="csoai-gspc-living-board",**fields)
+            with self.subTest(fields=fields),self.assertRaises(self.api.Refused): self.typed_read(info=info)
 
 class CardGuards(unittest.TestCase):
     def setUp(self): self.api,self.ns=cards()

@@ -1090,6 +1090,39 @@ def kaggle_licences(board: dict, info: dict, approved_change: tuple[str, str] | 
     return [{"name": target}]
 
 
+# Qualified against the existing owner's CLI/typed SDK on 14 October 2026.
+# The CLI exporter passes a truthy object as ignore_defaults and drops False/[].
+KAGGLE_TYPED_READ_VERSIONS = ("2.2.4", "0.1.35")
+
+
+def kaggle_read_metadata() -> dict:
+    """Read the same owned dataset with the existing authenticated SDK, retaining typed defaults."""
+    from importlib.metadata import PackageNotFoundError, version
+    try:
+        actual = (version("kaggle"), version("kagglesdk"))
+    except PackageNotFoundError as exc:
+        raise Refused("existing Kaggle publisher environment lacks its qualified typed SDK") from exc
+    if actual != KAGGLE_TYPED_READ_VERSIONS:
+        raise Refused(f"Kaggle metadata schema/serializer versions {actual!r} need owner qualification")
+    from kaggle import api
+    from kagglesdk.datasets.types.dataset_api_service import ApiGetDatasetMetadataRequest
+    owner, slug = KAGGLE_ID.split("/", 1)
+    request = ApiGetDatasetMetadataRequest()
+    request.owner_slug, request.dataset_slug = owner, slug
+    with api.build_kaggle_client() as client:
+        response = client.datasets.dataset_api_client.get_dataset_metadata(request)
+    if response.error_message:
+        raise Refused(f"Kaggle metadata read refused: {response.error_message}")
+    # These are the qualified response type's defaults, never invented for arbitrary missing JSON.
+    metadata = json.loads(response.to_json(ignore_defaults=False))
+    info = metadata.get("info")
+    if not isinstance(info, dict) or info.get("ownerUser") != owner or info.get("datasetSlug") != slug:
+        raise Refused("Kaggle metadata response does not identify the exact owned dataset")
+    if type(info.get("isPrivate")) is not bool or type(info.get("collaborators")) is not list:
+        raise Refused("qualified Kaggle response did not expose typed privacy/collaborator settings")
+    return metadata
+
+
 def kaggle_metadata_payload(info: dict, subtitle: str, description: str, licenses: list[dict]) -> dict:
     """Preserve existing metadata, including privacy and collaborators, during a copy-only repair."""
     missing = [k for k in ("title", "isPrivate", "collaborators") if k not in info]
@@ -1146,14 +1179,8 @@ def spray_kaggle(tr: dict, snap: Path, *, dry_run: bool, force: bool,
     if not (have_env or have_file):
         return [result("kaggle", "BLOCKED", page, detail="no Kaggle credential: no OAuth access_token and no legacy KAGGLE_USERNAME/KAGGLE_KEY or kaggle.json")]
 
-    def read_meta() -> dict | None:
-        with tempfile.TemporaryDirectory() as d:
-            p = run([kaggle, "datasets", "metadata", KAGGLE_ID, "-p", d], check=False)
-            f = Path(d) / "dataset-metadata.json"
-            if f.exists():
-                return json.loads(f.read_text())
-            log(f"    kaggle metadata: {p.stdout[-300:]} {p.stderr[-300:]}")
-            return None
+    def read_meta() -> dict:
+        return kaggle_read_metadata()
 
     meta = read_meta()
     if meta is None:
