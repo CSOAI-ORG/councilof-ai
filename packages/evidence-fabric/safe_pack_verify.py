@@ -181,6 +181,8 @@ def check_sums():
 def _cross_errors(records):
     by_id = {record["record_id"]: record for record in records.values()}
     errors = []
+    if len(by_id) != len(records):
+        errors.append("duplicate record_id: retest and supersession references are ambiguous")
     for name, record in records.items():
         for prior in record.get("supersedes", []):
             if prior["record_id"] in by_id and _canonical_record_sha(by_id[prior["record_id"]]) != prior["sha256"]:
@@ -190,7 +192,57 @@ def _cross_errors(records):
             retest = by_id.get(remediation.get("retest_record_id"))
             if not retest or retest["result"]["state"] != "PASS" or retest["negative_control"]["observed"] != "FAIL":
                 errors.append(f"{name}: VERIFIED_BY_RETEST lacks a PASS record with a failed-as-designed control")
+            elif _measured_at(retest) and _measured_at(record) and _measured_at(retest) < _measured_at(record):
+                errors.append(f"{name}: VERIFIED_BY_RETEST names a retest measured before the original")
     return errors
+
+
+def _measured_at(record):
+    from datetime import datetime
+    try:
+        return datetime.fromisoformat(record["result"]["measured_at"].replace("Z", "+00:00"))
+    except (KeyError, TypeError, AttributeError, ValueError):
+        return None
+
+
+def _cross_unresolved(records):
+    """Retest closures whose linkage to the original cannot be established.
+
+    A PASS retest closes a finding only when it explicitly supersedes the
+    original record (digest-pinned), keeps the claim type and scope, uses the
+    same method or records substitutions, and has known chronology. Subject and
+    claim_id may change across a repair; the supersedes link is the explicit
+    successor statement, never string equality. Unestablished linkage leaves the
+    closure UNRESOLVED (UNCHECKABLE), not passed.
+    """
+    by_id = {record["record_id"]: record for record in records.values()}
+    unresolved = []
+    for name, record in records.items():
+        remediation = record.get("remediation") or {}
+        if remediation.get("state") != "VERIFIED_BY_RETEST":
+            continue
+        retest = by_id.get(remediation.get("retest_record_id"))
+        if not retest:
+            continue  # already an error in _cross_errors
+        why = []
+        link = [p for p in retest.get("supersedes", []) if p.get("record_id") == record["record_id"]]
+        if not link or link[0].get("sha256") != _canonical_record_sha(record):
+            why.append("retest does not explicitly supersede the original record by digest")
+        old_claim, new_claim = record.get("claim") or {}, retest.get("claim") or {}
+        for key in ("claim_type", "scope"):
+            if old_claim.get(key) != new_claim.get(key):
+                why.append(f"claim {key} differs without a reviewed equivalence")
+        if ((record.get("test") or {}).get("method_id") != (retest.get("test") or {}).get("method_id")
+                and not (retest.get("test") or {}).get("substitutions")):
+            why.append("method differs and no substitution is recorded")
+        if not _measured_at(record) or not _measured_at(retest):
+            why.append("chronology unavailable")
+        control = retest.get("negative_control") or {}
+        if not control.get("description") or not control.get("negatives_observed"):
+            why.append("negative-control provenance is a label only")
+        if why:
+            unresolved.append(f"{name}: retest closure UNRESOLVED: " + "; ".join(why))
+    return unresolved
 
 
 def _canonical_record_sha(record):
@@ -216,6 +268,9 @@ def check_validate():
     cross_errors = _cross_errors(records)
     if cross_errors:
         return False, cross_errors[0]
+    unresolved = _cross_unresolved(records)
+    if unresolved:
+        return None, unresolved[0]
     # These nine reader-side controls preserve the existing profile validation.
     try:
         p = next(name for name, record in records.items() if record["result"]["state"] == "PASS")

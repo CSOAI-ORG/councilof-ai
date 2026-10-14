@@ -83,6 +83,151 @@ test.beforeEach(async ({ context }) => {
   await context.route(/hf\.space/, (r) => r.abort());
 });
 
+/** Passive test diagnostics only: never clone, consume, cancel, or replace native transport. */
+async function observeRunTransport(page: Page) {
+  await page.addInitScript(() => {
+    type Run = {
+      nativeFetchId: number; signalId: number | null; url: string;
+      signalAbortedAtFetch: boolean | null; signalReasonAtFetch: unknown;
+      nativeReadCalls: number; nativeBytesObserved: number; nativeEOFObserved: boolean;
+    };
+    const diagnostics = {
+      schema: "csoai.agui-native-transport-diagnostic/0.1", eventLimit: 50,
+      eventsTruncated: false, faultsTruncated: false, events: [] as Record<string, unknown>[],
+      requests: [] as Run[], faults: [] as unknown[],
+    };
+    (window as Window & { __aguiNativeTransport?: unknown }).__aguiNativeTransport = diagnostics;
+    const reason = (value: unknown): unknown => {
+      try {
+        if (value instanceof DOMException || value instanceof Error)
+          return { name: value.name.slice(0, 80), message: value.message.slice(0, 512) };
+        if (value === null || value === undefined) return null;
+        if (typeof value === "string") return { type: "string", value: value.slice(0, 512) };
+        if (typeof value === "number" || typeof value === "boolean") return value;
+        return { type: typeof value };
+      } catch { return { type: "unreadable" }; }
+    };
+    const observe = (read: () => void) => {
+      try { read(); } catch (error) {
+        if (diagnostics.faults.length < 10) diagnostics.faults.push(reason(error));
+        else diagnostics.faultsTruncated = true;
+      }
+    };
+    const record = (run: Run, event: string, detail: Record<string, unknown> = {}) => observe(() => {
+      if (diagnostics.events.length >= diagnostics.eventLimit) {
+        diagnostics.eventsTruncated = true; return;
+      }
+      diagnostics.events.push({
+        nativeFetchId: run.nativeFetchId, signalId: run.signalId, event,
+        observedAt: new Date().toISOString(), monotonicMs: performance.now(), ...detail,
+      });
+    });
+    const signalIds = new WeakMap<AbortSignal, number>();
+    const signalRuns = new WeakMap<AbortSignal, Run[]>();
+    const controllerIds = new WeakMap<AbortController, number>();
+    const bodies = new WeakMap<object, Run>();
+    const readers = new WeakMap<object, Run>();
+    let nextSignalId = 0, nextControllerId = 0;
+    const nativeFetch = window.fetch;
+    const nativeAbort = AbortController.prototype.abort;
+    const nativeGetReader = ReadableStream.prototype.getReader;
+    const nativeRead = ReadableStreamDefaultReader.prototype.read;
+
+    observe(() => {
+      window.fetch = function (this: Window, ...args: Parameters<typeof fetch>) {
+        const promise = Reflect.apply(nativeFetch, this, args) as ReturnType<typeof fetch>;
+        observe(() => {
+          const [input, init] = args;
+          const request = input instanceof Request ? input : null;
+          const url = new URL(request ? request.url : String(input), location.href);
+          if ((init?.method ?? request?.method ?? "GET").toUpperCase() !== "POST" ||
+              url.origin !== location.origin || url.pathname !== "/api/agui/run") return;
+          if (diagnostics.requests.length >= diagnostics.eventLimit) {
+            diagnostics.eventsTruncated = true; return;
+          }
+          const signal = init && "signal" in init ? init.signal ?? null : request?.signal ?? null;
+          if (signal && !signalIds.has(signal)) signalIds.set(signal, ++nextSignalId);
+          const run: Run = {
+            nativeFetchId: diagnostics.requests.length + 1,
+            signalId: signal ? signalIds.get(signal)! : null, url: url.href,
+            signalAbortedAtFetch: signal?.aborted ?? null,
+            signalReasonAtFetch: signal ? reason(signal.reason) : null,
+            nativeReadCalls: 0, nativeBytesObserved: 0, nativeEOFObserved: false,
+          };
+          diagnostics.requests.push(run);
+          record(run, "fetch", {
+            aborted: signal?.aborted ?? null, reason: run.signalReasonAtFetch,
+            stack: new Error("AGUI native fetch").stack?.slice(0, 8192) ?? null,
+            earlierAbortCallerUnavailable: signal?.aborted ?? false,
+          });
+          if (signal) {
+            signalRuns.set(signal, [...(signalRuns.get(signal) ?? []), run]);
+            signal.addEventListener("abort", () => observe(() => record(run, "signal.abort", {
+              aborted: signal.aborted, reason: reason(signal.reason),
+              stack: new Error("AGUI signal abort event").stack?.slice(0, 8192) ?? null,
+            })), { once: true });
+          }
+          void promise.then(
+            (response) => observe(() => {
+              if (response.body) bodies.set(response.body, run);
+              record(run, "fetch.resolved", { status: response.status, bodyPresent: response.body !== null });
+            }),
+            (error: unknown) => record(run, "fetch.rejected", { error: reason(error) }),
+          );
+        });
+        return promise;
+      };
+      AbortController.prototype.abort = function (this: AbortController, ...args: Parameters<typeof nativeAbort>) {
+        observe(() => {
+          const runs = signalRuns.get(this.signal);
+          if (!runs) return;
+          if (!controllerIds.has(this)) controllerIds.set(this, ++nextControllerId);
+          for (const run of runs) record(run, "controller.abort.call", {
+            controllerId: controllerIds.get(this), abortedBeforeCall: this.signal.aborted,
+            requestedReason: reason(args[0]), argumentCount: args.length,
+            stack: new Error("AGUI controller abort caller").stack?.slice(0, 8192) ?? null,
+          });
+        });
+        return Reflect.apply(nativeAbort, this, args);
+      };
+      Object.defineProperty(ReadableStream.prototype, "getReader", {
+        ...Object.getOwnPropertyDescriptor(ReadableStream.prototype, "getReader"),
+        value: function (this: ReadableStream<unknown>, ...args: unknown[]) {
+          const reader = Reflect.apply(nativeGetReader, this, args) as object;
+          observe(() => {
+            const run = bodies.get(this);
+            if (run) { readers.set(reader, run); record(run, "body.getReader"); }
+          });
+          return reader;
+        },
+      });
+      Object.defineProperty(ReadableStreamDefaultReader.prototype, "read", {
+        ...Object.getOwnPropertyDescriptor(ReadableStreamDefaultReader.prototype, "read"),
+        value: function (this: ReadableStreamDefaultReader<unknown>, ...args: unknown[]) {
+          const promise = Reflect.apply(nativeRead, this, args) as Promise<ReadableStreamReadResult<unknown>>;
+          observe(() => {
+            const run = readers.get(this);
+            if (!run) return;
+            run.nativeReadCalls += 1;
+            void promise.then(
+              (chunk) => observe(() => {
+                if (chunk.done === true) {
+                  run.nativeEOFObserved = true; record(run, "body.nativeEOF");
+                } else {
+                  const bytes = ArrayBuffer.isView(chunk.value) ? chunk.value.byteLength : 0;
+                  run.nativeBytesObserved += bytes; record(run, "body.nativeChunk", { bytes });
+                }
+              }),
+              (error: unknown) => record(run, "body.nativeReadRejected", { error: reason(error) }),
+            );
+          });
+          return promise;
+        },
+      });
+    });
+  });
+}
+
 for (const vp of VIEWPORTS) {
   test(`the first question typed on the start screen gets an answer at ${vp.name}px`, async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== vp.project, `${vp.name}px runs in the ${vp.project} project`);
@@ -142,6 +287,7 @@ for (const vp of VIEWPORTS) {
     page.on("requestfailed", onFailed);
 
     try {
+      await observeRunTransport(page);
       await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
       await page.locator('[data-testid="dashboard-shell"]').waitFor({ state: "visible", timeout: 60_000 });
       // The original inline first-question regression remains covered after intentionally
@@ -187,6 +333,9 @@ for (const vp of VIEWPORTS) {
           eventLimit,
           eventsTruncated,
           events,
+          nativeTransport: await page.evaluate(() =>
+            (window as Window & { __aguiNativeTransport?: unknown }).__aguiNativeTransport ?? null,
+          ).catch((error: unknown) => ({ unavailable: true, error: String(error).slice(0, 1024) })),
         }, null, 2));
       await testInfo.attach("agui-request-lifecycle", {
         path: lifecyclePath,
