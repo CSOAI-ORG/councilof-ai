@@ -76,7 +76,7 @@ function AskPanel({ desk, onClose }: { desk: DeskId; onClose: () => void }) {
 export default function Team() {
   const [open, setOpen] = useState<DeskId | null>(null);
   return (
-    <main className="mx-auto max-w-5xl px-4 py-16 text-emerald-50">
+    <div className="mx-auto max-w-5xl px-4 py-16 text-emerald-50">
       <h1 className="mb-4 text-3xl font-bold sm:text-4xl">Team</h1>
       <p className="mb-8 text-gray-300">
         The people who run Council of AI, and the AI agents that answer questions from our published records.
@@ -124,6 +124,6 @@ export default function Team() {
         </div>
       </section>
       {open && <AskPanel desk={open} onClose={() => setOpen(null)} />}
-    </main>
+    </div>
   );
 }
