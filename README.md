@@ -48,6 +48,10 @@ _derived 2026-10-07T10:35:32Z by [`scripts/github/org-readme.py`](https://huggin
 
 Counted from the `axes` array at derive time: 23 rows — MEASURED 23 — agrees with `totals.axes`. Separation over the 14 model-comparison axes: SEPARATED 0 · TIE 7 · UNTESTED 7. A TIE is not a win; UNTESTED is not a win; a facts run has no leader. Living stamp: **SIGNED** (`did:web:csoai.org#board-attestation-1`). Board data: CC-BY-4.0.
 
+## Card inventory (14 Oct 2026)
+
+Dated snapshot, not a live count — the live count is `/signed/card_index.json`. A one-off scan of 8 of 9 storage locations on 14 Oct 2026 found **11,929 unique signed measurement cards**, **7,994 with a VALID signature**, and **335 live and verifiable** on councilof.ai. Method, scope and the source summary: [`evidence/card-inventory-2026-10-14.md`](evidence/card-inventory-2026-10-14.md).
+
 ## What a stranger can verify in four curls
 
 ```bash
