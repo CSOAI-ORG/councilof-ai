@@ -1,6 +1,7 @@
 import { test, expect, type Page, type Request } from "@playwright/test";
 import { writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
+import { qualifyLocalFirstAskCompletion } from "../../scripts/review/first-ask-completion.mjs";
 
 /**
  * The first question typed on the Council OS start screen gets an answer (tools audit, 6 Oct 2026).
@@ -68,10 +69,17 @@ function aguiStream(): string {
 }
 
 async function answerLocally(page: Page) {
-  if (process.env.BASE_URL) return;
-  await page.route("**/api/agui/run", (route) =>
-    route.fulfill({ status: 200, headers: { "content-type": "text/event-stream", "cache-control": "no-store" }, body: aguiStream() }),
-  );
+  if (process.env.BASE_URL) return null;
+  const fixture = { count: 0, request: null as Request | null, url: "", requestBody: null as string | null,
+    body: "", status: 200, contentType: "text/event-stream" };
+  await page.route("**/api/agui/run", async (route) => {
+    // Date.now is part of the fixture: retain exactly the body supplied in THIS attempt.
+    const body = aguiStream();
+    fixture.count += 1; fixture.request = route.request(); fixture.url = fixture.request.url();
+    fixture.requestBody = fixture.request.postData(); fixture.body = body;
+    await route.fulfill({ status: 200, headers: { "content-type": "text/event-stream", "cache-control": "no-store" }, body });
+  });
+  return fixture;
 }
 
 const VIEWPORTS = [
@@ -87,12 +95,15 @@ test.beforeEach(async ({ context }) => {
 async function observeRunTransport(page: Page) {
   await page.addInitScript(() => {
     type Run = {
-      nativeFetchId: number; signalId: number | null; url: string;
+      nativeFetchId: number; signalId: number | null; method: string; url: string;
+      requestBody: string | null; requestBodyTruncated: boolean;
       signalAbortedAtFetch: boolean | null; signalReasonAtFetch: unknown;
+      signalAbortedAtEOF: boolean | null; signalReasonAtEOF: unknown;
       nativeReadCalls: number; nativeBytesObserved: number; nativeEOFObserved: boolean;
+      nativeBytesTruncated: boolean; nativeDigestState: string; nativeSHA256: string | null;
     };
     const diagnostics = {
-      schema: "csoai.agui-native-transport-diagnostic/0.1", eventLimit: 50,
+      schema: "csoai.agui-native-transport-diagnostic/0.2", eventLimit: 50, byteLimit: 512 * 1024,
       eventsTruncated: false, faultsTruncated: false, events: [] as Record<string, unknown>[],
       requests: [] as Run[], faults: [] as unknown[],
     };
@@ -127,11 +138,15 @@ async function observeRunTransport(page: Page) {
     const controllerIds = new WeakMap<AbortController, number>();
     const bodies = new WeakMap<object, Run>();
     const readers = new WeakMap<object, Run>();
+    const signals = new WeakMap<Run, AbortSignal | null>();
+    const chunks = new WeakMap<Run, Uint8Array[]>();
     let nextSignalId = 0, nextControllerId = 0;
     const nativeFetch = window.fetch;
     const nativeAbort = AbortController.prototype.abort;
     const nativeGetReader = ReadableStream.prototype.getReader;
     const nativeRead = ReadableStreamDefaultReader.prototype.read;
+    const nativeReaderCancel = ReadableStreamDefaultReader.prototype.cancel;
+    const nativeBodyCancel = ReadableStream.prototype.cancel;
 
     observe(() => {
       window.fetch = function (this: Window, ...args: Parameters<typeof fetch>) {
@@ -149,11 +164,16 @@ async function observeRunTransport(page: Page) {
           if (signal && !signalIds.has(signal)) signalIds.set(signal, ++nextSignalId);
           const run: Run = {
             nativeFetchId: diagnostics.requests.length + 1,
-            signalId: signal ? signalIds.get(signal)! : null, url: url.href,
+            signalId: signal ? signalIds.get(signal)! : null, method: "POST", url: url.href,
+            requestBody: typeof init?.body === "string" ? init.body.slice(0, 4096) : null,
+            requestBodyTruncated: typeof init?.body === "string" && init.body.length > 4096,
             signalAbortedAtFetch: signal?.aborted ?? null,
             signalReasonAtFetch: signal ? reason(signal.reason) : null,
+            signalAbortedAtEOF: null, signalReasonAtEOF: null,
             nativeReadCalls: 0, nativeBytesObserved: 0, nativeEOFObserved: false,
+            nativeBytesTruncated: false, nativeDigestState: "pending", nativeSHA256: null,
           };
+          signals.set(run, signal); chunks.set(run, []);
           diagnostics.requests.push(run);
           record(run, "fetch", {
             aborted: signal?.aborted ?? null, reason: run.signalReasonAtFetch,
@@ -170,7 +190,9 @@ async function observeRunTransport(page: Page) {
           void promise.then(
             (response) => observe(() => {
               if (response.body) bodies.set(response.body, run);
-              record(run, "fetch.resolved", { status: response.status, bodyPresent: response.body !== null });
+              record(run, "fetch.resolved", { status: response.status, bodyPresent: response.body !== null,
+                 url: response.url, redirected: response.redirected, responseType: response.type,
+                 contentType: response.headers.get("content-type") });
             }),
             (error: unknown) => record(run, "fetch.rejected", { error: reason(error) }),
           );
@@ -212,10 +234,48 @@ async function observeRunTransport(page: Page) {
             void promise.then(
               (chunk) => observe(() => {
                 if (chunk.done === true) {
-                  run.nativeEOFObserved = true; record(run, "body.nativeEOF");
+                  const signal = signals.get(run);
+                  const observedAt = new Date().toISOString();
+                  run.nativeEOFObserved = true;
+                  run.signalAbortedAtEOF = signal?.aborted ?? null;
+                  run.signalReasonAtEOF = signal ? reason(signal.reason) : null;
+                  record(run, "body.nativeEOF", {
+                    observedAt, aborted: run.signalAbortedAtEOF, reason: run.signalReasonAtEOF,
+                  });
+                  // A single Node receipt sequence orders this observation and requestfailed.
+                  // Never await the binding or the hash; return the original native read promise.
+                  const notify = (window as Window & {
+                    __csoaiObserveRunDone?: (value: Record<string, unknown>) => Promise<unknown>;
+                  }).__csoaiObserveRunDone;
+                  if (!notify) throw new Error("Native read-done observer binding is missing.");
+                  void notify({ nativeFetchId: run.nativeFetchId, signalId: run.signalId, url: run.url,
+                    requestBody: run.requestBody, observedAt, aborted: run.signalAbortedAtEOF,
+                    reason: run.signalReasonAtEOF }).catch((error: unknown) => observe(() => { throw error; }));
+                  if (run.nativeBytesTruncated) { run.nativeDigestState = "too_large"; return; }
+                  const joined = new Uint8Array(run.nativeBytesObserved);
+                  let offset = 0;
+                  for (const value of chunks.get(run) ?? []) { joined.set(value, offset); offset += value.length; }
+                  chunks.delete(run);
+                  void crypto.subtle.digest("SHA-256", joined).then(
+                    (digest) => observe(() => {
+                      run.nativeSHA256 = Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+                      run.nativeDigestState = "complete";
+                      record(run, "body.nativeDigest", { bytes: joined.length, sha256: run.nativeSHA256 });
+                    }),
+                    (error: unknown) => observe(() => {
+                      run.nativeDigestState = "unavailable"; record(run, "body.nativeDigestRejected", { error: reason(error) });
+                    }),
+                  );
                 } else {
-                  const bytes = ArrayBuffer.isView(chunk.value) ? chunk.value.byteLength : 0;
+                  const view = chunk.value;
+                  const bytes = ArrayBuffer.isView(view) ? view.byteLength : 0;
                   run.nativeBytesObserved += bytes; record(run, "body.nativeChunk", { bytes });
+                  if (!ArrayBuffer.isView(view) || run.nativeBytesObserved > diagnostics.byteLimit) {
+                    run.nativeBytesTruncated = true; chunks.delete(run);
+                  } else if (!run.nativeBytesTruncated) {
+                    // Copy only bytes already delivered to the application's original reader.
+                    chunks.get(run)?.push(new Uint8Array(view.buffer, view.byteOffset, view.byteLength).slice());
+                  }
                 }
               }),
               (error: unknown) => record(run, "body.nativeReadRejected", { error: reason(error) }),
@@ -224,15 +284,38 @@ async function observeRunTransport(page: Page) {
           return promise;
         },
       });
+      Object.defineProperty(ReadableStreamDefaultReader.prototype, "cancel", {
+        ...Object.getOwnPropertyDescriptor(ReadableStreamDefaultReader.prototype, "cancel"),
+        value: function (this: ReadableStreamDefaultReader<unknown>, ...args: unknown[]) {
+          observe(() => {
+            const run = readers.get(this);
+            if (run) record(run, "reader.cancel.call", { reason: reason(args[0]),
+              stack: new Error("AGUI reader cancel caller").stack?.slice(0, 8192) ?? null });
+          });
+          return Reflect.apply(nativeReaderCancel, this, args);
+        },
+      });
+      Object.defineProperty(ReadableStream.prototype, "cancel", {
+        ...Object.getOwnPropertyDescriptor(ReadableStream.prototype, "cancel"),
+        value: function (this: ReadableStream<unknown>, ...args: unknown[]) {
+          observe(() => {
+            const run = bodies.get(this);
+            if (run) record(run, "body.cancel.call", { reason: reason(args[0]),
+              stack: new Error("AGUI body cancel caller").stack?.slice(0, 8192) ?? null });
+          });
+          return Reflect.apply(nativeBodyCancel, this, args);
+        },
+      });
     });
   });
 }
 
 for (const vp of VIEWPORTS) {
-  test(`the first question typed on the start screen gets an answer at ${vp.name}px`, async ({ page }, testInfo) => {
+  test(`the first question typed on the start screen gets an answer at ${vp.name}px`, async ({ page, baseURL }, testInfo) => {
     test.skip(testInfo.project.name !== vp.project, `${vp.name}px runs in the ${vp.project} project`);
     await page.setViewportSize(vp.size);
-    await answerLocally(page);
+    const localFixture = await answerLocally(page);
+    const origin = new URL(baseURL || "http://127.0.0.1:4180").origin;
     const aborted: string[] = [];
     page.on("requestfailed", (r) => {
       if (r.url().includes("/api/agui/run")) aborted.push(r.failure()?.errorText ?? "failed");
@@ -241,12 +324,17 @@ for (const vp of VIEWPORTS) {
 
     const postRequests: Request[] = [];
     const completedPostRequests: Request[] = [];
+    const failedPostRequests: Request[] = [];
+    const eofReceipts: Record<string, unknown>[] = [];
+    let eofReceiptsTruncated = false;
+    let receiptSequence = 0;
+    let completionQualification: unknown = null;
     const requestIds = new Map<Request, number>();
     const events: Record<string, unknown>[] = [];
     const eventLimit = 50;
     let eventsTruncated = false;
     const isRunPost = (r: Request) =>
-      r.method() === "POST" && new URL(r.url()).pathname === "/api/agui/run";
+      r.method() === "POST" && new URL(r.url()).origin === origin && new URL(r.url()).pathname === "/api/agui/run";
     const record = (event: string, r: Request) => {
       if (!r.url().includes("/api/agui/run")) return;
       if (!requestIds.has(r)) requestIds.set(r, requestIds.size + 1);
@@ -255,19 +343,22 @@ for (const vp of VIEWPORTS) {
         return;
       }
       let frameUrl: string | null = null;
+      let mainFrame = false;
       try {
         frameUrl = r.frame().url();
+        mainFrame = r.frame() === page.mainFrame();
       } catch {
         // Service-worker requests may not expose a frame.
       }
       const body = r.postData();
       events.push({
         requestId: requestIds.get(r),
+        receiptSequence: ++receiptSequence,
         event,
         observedAt: new Date().toISOString(),
         method: r.method(),
         url: r.url(),
-        frameUrl,
+        frameUrl, mainFrame,
         body: body?.slice(0, 4096) ?? null,
         bodyTruncated: body !== null && body.length > 4096,
         failure: event === "requestfailed" ? r.failure()?.errorText ?? "failed" : null,
@@ -281,12 +372,20 @@ for (const vp of VIEWPORTS) {
       record("requestfinished", r);
       if (isRunPost(r)) completedPostRequests.push(r);
     };
-    const onFailed = (r: Request) => record("requestfailed", r);
+    const onFailed = (r: Request) => {
+      record("requestfailed", r);
+      if (isRunPost(r)) failedPostRequests.push(r);
+    };
     page.on("request", onRequest);
     page.on("requestfinished", onFinished);
     page.on("requestfailed", onFailed);
 
     try {
+      await page.exposeBinding("__csoaiObserveRunDone", (source, value: Record<string, unknown>) => {
+        if (eofReceipts.length >= eventLimit) { eofReceiptsTruncated = true; return; }
+        eofReceipts.push({ ...value, receiptSequence: ++receiptSequence,
+          mainFrame: source.frame === page.mainFrame(), samePage: source.page === page });
+      });
       await observeRunTransport(page);
       await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
       await page.locator('[data-testid="dashboard-shell"]').waitFor({ state: "visible", timeout: 60_000 });
@@ -305,18 +404,55 @@ for (const vp of VIEWPORTS) {
   
       const answered = page.getByTestId("talk-tool-card").or(page.getByTestId("talk-answer")).first();
       await expect(answered).toBeVisible({ timeout: 10_000 });
-      expect(aborted, "POST /api/agui/run was not aborted").toEqual([]);
+      await expect(page.getByTestId("talk-live")).toHaveText(/^Answer ready\./);
       // The answer stays on the start screen; the question did not swap the canvas to the chat log.
       await expect(page.getByTestId("gspc-workspace-home")).toBeVisible();
       await expect(page.getByRole("log", { name: "Council of AI conversation" })).toHaveCount(0);
       // One server question, one card: no census card about other hosts beside it.
       await expect(page.getByTestId("talk-tool-card")).toHaveCount(1);
       await expect(page.getByTestId("talk-tool-card").getByTestId("talk-state")).toHaveText(/NOT.MEASURED/);
-      // A visible partial card is not complete-run acceptance.
-      await expect.poll(() => completedPostRequests.length, "Question POST completed").toBe(1);
-      expect(postRequests, "Exactly one question POST").toHaveLength(1);
-      expect(completedPostRequests[0]).toBe(postRequests[0]);
-      expect(aborted, "POST /api/agui/run was not aborted").toEqual([]);
+      // A visible partial card or done:true alone is not complete-run acceptance.
+      expect(postRequests, "Exactly one same-origin question POST").toHaveLength(1);
+      if (localFixture) {
+        await expect(page.getByTestId("talk-answer")).toBeVisible();
+        await expect(page.getByTestId("talk-answer")).toHaveText("We have no published checks for https://github.com/mcp yet.");
+        // The full tool summary remains in the mounted details DOM; it need not be expanded.
+        await expect(page.getByTestId("talk-tool-card")).toContainText(RESULT.summary);
+        await expect.poll(() => completedPostRequests.length + failedPostRequests.length,
+          "Question POST has one browser terminal observation").toBe(1);
+        await expect.poll(() => eofReceipts.length, "Native read-done receipt arrived").toBe(1);
+        await expect.poll(() => page.evaluate(() => {
+          const native = (window as Window & { __aguiNativeTransport?: { requests?: { nativeDigestState?: string }[] } }).__aguiNativeTransport;
+          return native?.requests?.[0]?.nativeDigestState;
+        }), "Actual consumed-byte digest completed").toBe("complete");
+        expect(localFixture.request, "The fulfilled fixture is the exact question Request").toBe(postRequests[0]);
+        const request = postRequests[0], requestId = requestIds.get(request);
+        const nativeTransport = await page.evaluate(() =>
+          (window as Window & { __aguiNativeTransport?: unknown }).__aguiNativeTransport ?? null);
+        completionQualification = qualifyLocalFirstAskCompletion({
+          localFixture: true, orderingBasis: "one-node-receipt-sequence", origin, question: QUESTION,
+          fixture: { count: localFixture.count, requestId: requestIds.get(localFixture.request!),
+            url: localFixture.url, requestBody: localFixture.requestBody, body: localFixture.body,
+            status: localFixture.status, contentType: localFixture.contentType },
+          request: { count: postRequests.length, id: requestId, url: request.url(), method: request.method(),
+            frameUrl: request.frame().url(), mainFrame: request.frame() === page.mainFrame(),
+            body: request.postData(), bodyTruncated: false },
+          networkEvents: events, eventsTruncated,
+          nativeTransport, eofReceipts, eofReceiptsTruncated,
+          expectedReadyText: "Answer ready. " + RESULT.tool + ": " + RESULT.label,
+          readyText: await page.getByTestId("talk-live").textContent(),
+          answerFaceVisible: await page.getByTestId("talk-answer").isVisible(),
+          fullAnswerRetained: (await page.getByTestId("talk-tool-card").textContent() ?? "")
+            .replace(/\s+/g, " ").trim().includes(RESULT.summary.replace(/\s+/g, " ").trim()),
+        });
+        expect(completionQualification, "Complete finite local fixture; raw browser verdict remains separate")
+          .toMatchObject({ accepted: true });
+      } else {
+        // BASE_URL uses the real endpoint: no local-fixture browser-error exception.
+        await expect.poll(() => completedPostRequests.length, "Question POST completed").toBe(1);
+        expect(completedPostRequests[0]).toBe(postRequests[0]);
+        expect(aborted, "POST /api/agui/run was not aborted").toEqual([]);
+      }
     } finally {
       page.off("request", onRequest);
       page.off("requestfinished", onFinished);
@@ -328,6 +464,8 @@ for (const vp of VIEWPORTS) {
           retry: testInfo.retry,
           viewport: vp.size,
           localFixture: !process.env.BASE_URL,
+          completionQualification, eofReceipts, eofReceiptsTruncated,
+          rawBrowserFailures: aborted,
           postRequests: postRequests.length,
           completedPostRequests: completedPostRequests.length,
           eventLimit,
