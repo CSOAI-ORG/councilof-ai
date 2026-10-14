@@ -1,0 +1,37 @@
+{
+ "schema": "csoai.signed-run/0.1",
+ "payload": {
+  "schema": "csoai.signed-artifact/0.1",
+  "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+  "not_a_grade": "The signature proves these bytes were signed by the board key on the date below; it does not prove any claim inside beyond what the record's own sources and instruments show.",
+  "artifact": {
+   "path": "docs/standards/osaia-safe-evidence-pack/FREEZE.json",
+   "sha256": "855164ee8402f81281ea214226e1e3bc2a5ba808d35430347d9ce4d8d128ecd9",
+   "schema": "csoai.safe-evidence-pack/0.1",
+   "as_of": "2026-09-30T10:05:00Z"
+  },
+  "what": "SAFE evidence pack freeze: FREEZE.json names the sha256 of SHA256SUMS, which lists every file in the pack.",
+  "lane": "lane/evidence-fabric-20260930",
+  "verify": "python3 verify.py --offline inside the pack"
+ },
+ "signature": {
+  "did": "did:web:csoai.org#board-attestation-1",
+  "alg": "Ed25519",
+  "sig_ed25519": "21ca7f8265bb8d8524febaedf523aac4383ef182f746e5f407f9ba714cd049d873647b00911e11707ac2a56d788d4663086ce1442b9331ae12002cd8e392e803",
+  "payload_sha256": "9e070fc1fe51ad361535c40072d608dab04b24fa3c248fa3d0123a7f4247a617",
+  "signer_auth": "pod-token",
+  "signed_at": "2026-09-30T10:01:08.764Z",
+  "canonical": "JSON, keys sorted, no whitespace, UTF-8, non-ASCII unescaped"
+ },
+ "local_verification": {
+  "did_document": "https://csoai.org/.well-known/did.json",
+  "key_x": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA",
+  "result": "VERIFIES",
+  "altered_preimage_controls": {
+   "trailing byte appended to the record": "rejected (control holds)",
+   "artifact sha256 altered in the payload": "rejected (control holds)",
+   "signature bit flipped": "rejected (control holds)"
+  }
+ },
+ "verify": "canonicalise payload (JSON, keys sorted, no whitespace, UTF-8); sha256 must equal signature.payload_sha256; payload.artifact.sha256 must equal sha256 of the record's bytes; verify sig_ed25519 (hex) with the #board-attestation-1 Ed25519 key in https://csoai.org/.well-known/did.json"
+}
