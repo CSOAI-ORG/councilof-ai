@@ -180,6 +180,29 @@ jobs:
           PY
           gh pr comment "$BR" --body-file verify.md
 
+      # The signer appends SUPERSEDED.jsonl rows on this branch, and land_mill_cards only treats a
+      # *quotable* signed card as closing a cell — so an UNMEASURED cell is legitimately re-run and
+      # superseded on every landing. Any evidence note citing such a card then fails
+      # evidence-notes.cards.test.ts, and one red unit test blocked four landing PRs (557 signed
+      # cards) on 2026-10-07. Signed bytes are never edited, so the citing side is refreshed here:
+      # the note names the replacing card beside the original, inside its own copy limits.
+      - name: refresh evidence-note citations so supersession cannot red-gate the landing
+        if: steps.land.outputs.landed != '0'
+        run: |
+          set -euo pipefail
+          BR="${{ steps.pr.outputs.branch }}"
+          git fetch origin "$BR" --quiet
+          git checkout -q -B "$BR" "origin/$BR"
+          if python3 scripts/refresh_evidence_note_citations.py --check; then
+            echo "every note already cites the card that currently replaces it"
+            exit 0
+          fi
+          python3 scripts/refresh_evidence_note_citations.py
+          git add client/src/data/evidence-notes.json
+          git -c user.name="csoai-mill-jobs-land" -c user.email="board@csoai.org" \
+            commit -m "notes: name the replacing card beside superseded citations (copy rule; nothing MEASURED)"
+          git push origin "HEAD:$BR"
+
       - name: upload the land report
         if: always()
         uses: actions/upload-artifact@v4

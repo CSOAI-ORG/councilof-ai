@@ -1,3 +1,4 @@
+import { recordPaidResponse, markPaidUndeliveredResponse } from "./_x402_delivery_record";
 /**
  * GET /api/evidence-bundle — Tier 2: an evidence bundle mapped to ONE regulatory obligation.
  *
@@ -7,7 +8,7 @@
  *   402    &bundle=1                            → x402 challenge (amount lives ONLY here).
  *   paid   &bundle=1 + settled X-PAYMENT        → OSCAL 1.1.0 assessment-results assembled from the
  *                                                already-signed public/cards leaves (full card bytes
- *                                                + inclusion proof each), plus ONE manifest card-v0
+ *                                                + any retained inclusion proofs), plus ONE manifest card-v0
  *                                                (surface evidence.bundle, ≤3KB) signed when the Pages
  *                                                key is present, else sig_ed25519:null.
  *
@@ -92,7 +93,7 @@ async function oscal(ob: Obligation, subject: string, selected: { sha: string; w
       types: ["signed-measurement-card"],
       collected: l.as_of,
       subjects: [{ type: "component", title: l.subject }],
-      relevant_evidence: [{ href: `${origin}/cards/${sha.slice(0, 16)}.json`, description: "card-v0 leaf + Merkle inclusion proof (verify free at /gspc-verify)" }],
+      relevant_evidence: [{ href: `${origin}/cards/${sha.slice(0, 16)}.json`, description: "card-v0 leaf with any retained Merkle inclusion proof (verify supported cards free at /gspc-verify)" }],
       props: [
         { name: "sha256", value: sha },
         { name: "sig_ed25519", value: String(w.card.sig_ed25519) },
@@ -317,7 +318,17 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   // Paid path — assemble. Empty stays empty (and the preview already said so).
   const as_of = new Date().toISOString();
   const tx = payment.settlement?.transaction || null;
-  const body = await oscal(ob, subject || "(unspecified subject)", selected, corpus.merkle_root, origin);
+  const paidFailure = (reason: string) => markPaidUndeliveredResponse(json({
+    schema: "csoai.evidence-bundle/0.1", error: "uncheckable", state: "PAID_NOT_DELIVERED",
+    reason, settle: payment.settlement || null,
+    note: "Payment settled, but this output was not delivered. Preserve the settlement receipt and reconcile the transaction with CSOAI before any reissue; do not automatically retry or pay again.",
+  }, 500), payment.ok, payment.paymentResponse);
+  let body: Awaited<ReturnType<typeof oscal>>;
+  try {
+    body = await oscal(ob, subject || "(unspecified subject)", selected, corpus.merkle_root, origin);
+  } catch (e) {
+    return paidFailure(e instanceof Error ? e.message : String(e));
+  }
   const cards: Record<string, Wrapper> = {};
   for (const { sha, w } of selected) cards[sha] = w;
   const payload: Record<string, unknown> = {
@@ -338,7 +349,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   try {
     leaf = await signPayload(payload, env.BOARD_SIGN_KEY_PKCS8_B64);
   } catch (e) {
-    return json({ schema: "csoai.evidence-bundle/0.1", error: "uncheckable", reason: (e as Error).message }, 500);
+    return paidFailure(e instanceof Error ? e.message : String(e));
   }
   const manifest_card = cardV0({
     surface: "evidence.bundle",
@@ -360,7 +371,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     }
   }
 
-  return json(
+  return recordPaidResponse(json(
     {
       schema: "csoai.evidence-bundle/0.1",
       kind: "bundle",
@@ -377,7 +388,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     },
     200,
     payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {},
-  );
+  ), { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
 };
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */

@@ -1,3 +1,4 @@
+import { recordPaidResponse, markPaidUndeliveredResponse } from "../_x402_delivery_record";
 /**
  * GET /api/receipts/batch?from=<iso>&to=<iso> — a historical batch of the estate's measurement
  * receipts, sold over the existing x402 rail (SKU receipts_batch, x402-or-invoice).
@@ -15,9 +16,11 @@
  *   ?from=&to=&preview=1   FREE: count, span, root count, cap/truncation, and the sha256 of the
  *                          exact canonical batch bytes the paid path returns. No leaves.
  *   ?from=&to=             402 challenge (the amount lives ONLY here) + the same preview in csoai.
- *   + settled X-PAYMENT    200: the batch (deterministic; sha256 matches the preview) + one signed
- *                          manifest card-v0 (surface receipts.batch) citing batch sha256 and the
- *                          settle tx + X-PAYMENT-RESPONSE.
+ *   + settled X-PAYMENT    200 on delivery: the batch (sha256 matches the preview) + one manifest
+ *                          card-v0 (surface receipts.batch) citing batch sha256 and settle tx.
+ *                          A returned unsigned manifest declares sig_ed25519:null and unsigned_reason.
+ *                          A thrown signing failure returns 500 PAID_NOT_DELIVERED with no batch or
+ *                          manifest delivered; reconcile the settlement before any reissue or repayment.
  *
  * Determinism: the hashed `batch` object carries nothing request-time (no timestamps, no settle
  * data); the manifest card wraps it and is the only thing that changes per purchase. A leaf's
@@ -143,7 +146,7 @@ export function assembleBatch(opts: {
   return {
     schema: SCHEMA,
     kind: "batch",
-    window: { from: opts.from.toISOString().replace(/\.\d{3}Z$/, "Z"), to: opts.to.toISOString().replace(/\.\d{3}Z$/, "Z") },
+    window: { from: opts.from.toISOString().replace(/\.000Z$/, "Z"), to: opts.to.toISOString().replace(/\.000Z$/, "Z") },
     count: items.length,
     matched,
     cap: BATCH_CAP,
@@ -312,7 +315,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         per: "batch",
         lid: CSOAI_LID,
         never: batch.what_this_is_not,
-        deliverable: "the canonical batch (hashes to preview.batch_sha256) + one manifest card-v0 (surface receipts.batch); signing is conditional: inspect manifest_card.sig_ed25519 and unsigned_reason; absent or failed signing is unmeasured; manifest root inclusion remains unmeasured",
+        deliverable: "on delivery, the canonical batch (hashes to preview.batch_sha256) + one manifest card-v0 (surface receipts.batch); a returned unsigned manifest declares sig_ed25519:null and unsigned_reason, with signature unmeasured; manifest root inclusion remains unmeasured; a thrown signing failure after settlement returns PAID_NOT_DELIVERED with no batch or manifest delivered; preserve the settlement receipt and reconcile before reissue; do not automatically retry or pay again",
         preview: previewBody,
         free_preview: `${resourceUrl}&preview=1`,
         rail: railMode(env),
@@ -324,7 +327,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     return paymentRequiredResponseSigned(paymentRequired, env);
   }
 
-  // Paid: wrap the deterministic batch in one signed manifest leaf. Never re-sign the leaves.
+  // Paid: wrap the deterministic batch in one manifest leaf; sign when available. Never re-sign the leaves.
   const as_of = nowIso();
   const payload: Record<string, unknown> = {
     kind: SCHEMA,
@@ -340,7 +343,16 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     settle_tx: payment.settlement?.transaction || null,
     attests: "assembly of already-published leaves and roots for this window — nothing about their content",
   };
-  const leaf = await signPayload(payload, env.BOARD_SIGN_KEY_PKCS8_B64);
+  let leaf: Awaited<ReturnType<typeof signPayload>>;
+  try {
+    leaf = await signPayload(payload, env.BOARD_SIGN_KEY_PKCS8_B64);
+  } catch (e) {
+    return markPaidUndeliveredResponse(json({
+      schema: SCHEMA, error: "uncheckable", state: "PAID_NOT_DELIVERED",
+      reason: e instanceof Error ? e.message : String(e), settle: payment.settlement || null,
+      note: "Payment settled, but this output was not delivered. Preserve the settlement receipt and reconcile the transaction with CSOAI before any reissue; do not automatically retry or pay again.",
+    }, 500), payment.ok, payment.paymentResponse);
+  }
   const source_urls = [sources.leaves, `${origin}/receipts/root-history.json`, `${origin}/root.json`];
   if (payment.settlement?.transaction) source_urls.push(`https://basescan.org/tx/${payment.settlement.transaction}`);
   const manifest_card = cardV0({ surface: SURFACE, subject: `receipts batch ${batch.window.from}/${batch.window.to}`, as_of, source_urls, payload, leaf, tags: ["receipts", "history", "assembly"] });
@@ -354,11 +366,11 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     }
   }
 
-  return json(
+  return recordPaidResponse(json(
     { schema: SCHEMA, kind: "batch", batch, batch_sha256, manifest_card, manifest_bytes: leaf.bytes, unsigned_reason: leaf.unsigned_reason, sources, settle: payment.settlement || null, verify: `${origin}/gspc-verify` },
     200,
     payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {},
-  );
+  ), { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
 };
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */

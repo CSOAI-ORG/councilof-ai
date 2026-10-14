@@ -4,6 +4,7 @@ import { ArrowRight, CheckCircle2, Copy, PlugZap, ShieldCheck, Terminal } from "
 import WatchlistPane from "@/components/WatchlistPane";
 import { ALL_TOOL_NAMES, FREE_TOOL_NAMES, PAID_TOOL_NAMES } from "@/lib/mcpTools";
 import { setMetaDescription } from "@/lib/utils";
+import PypiLiveBadge from "@/components/momentum/PypiLiveBadge";
 import EXTENSION_MANIFEST from "../../../extensions/chrome-gspc-verify/manifest.json";
 
 // The free door is the default everywhere a config is offered (audit 2026-09-28 #10): the first
@@ -281,8 +282,9 @@ export default function ToolsPage() {
       <MomentumStrip
         variant="panel"
         title="The tools, and how far they travel"
-        ids={["mcp_tools", "x402_doors", "pypi_csoai_all_time", "hf_downloads_30d_other"]}
+        ids={["mcp_tools", "x402_doors", "hf_downloads_30d_other"]}
       />
+      <PypiLiveBadge className="mt-4" />
       {/* SignedAgentTravel and TwoSpeed (internal strategy notes) moved to /status/internal, 6 Oct 2026. */}
       <WatchlistPane />
     </section>
