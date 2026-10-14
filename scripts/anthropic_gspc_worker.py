@@ -259,12 +259,24 @@ class Transport(Protocol):
     ) -> tuple[int, dict[str, str], bytes]: ...
 
 
+class RejectRedirects(urllib.request.HTTPRedirectHandler):
+    """Do not forward the API key to any redirect target, including the same host."""
+
+    def redirect_request(self, request, file_pointer, code, message, headers, new_url):
+        raise urllib.error.HTTPError(
+            request.full_url, code, "Anthropic API redirect blocked", headers, file_pointer
+        )
+
+
 def urllib_transport(
     method: str, url: str, headers: dict[str, str], body: bytes | None, timeout: int
 ) -> tuple[int, dict[str, str], bytes]:
     request = urllib.request.Request(url, data=body, method=method, headers=headers)
+    # Match the sibling worker's explicit transport boundary: no ambient proxy
+    # and no automatic redirect carrying the credential outside this attempt.
+    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), RejectRedirects())
     try:
-        with urllib.request.urlopen(request, timeout=timeout) as response:
+        with opener.open(request, timeout=timeout) as response:
             raw = response.read(MAX_HTTP_RESPONSE_BYTES + 1)
             return response.status, {k.lower(): v for k, v in response.headers.items()}, raw
     except urllib.error.HTTPError as error:
