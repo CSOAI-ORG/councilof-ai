@@ -138,7 +138,7 @@ export const onRequest: PagesFunction<AuthEnv> = async (ctx) => {
     try {
       await ctx.env.SOV_ARENA_STATE.put(userKey(user.email), JSON.stringify(user));
     } catch {
-      return json({ error: "account store write failed; no account or session was created" }, 503);
+      return json({ error: "account store write could not be confirmed; no session was returned" }, 503);
     }
     return json({ token, user: sessionUser });
   }

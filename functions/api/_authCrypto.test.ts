@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { canonical, issueToken, verifyToken } from "./_authCrypto";
+import { canonical, hashPassword, issueToken, verifyToken } from "./_authCrypto";
 import { onRequest } from "./auth/[[path]]";
 
 async function signingKey(): Promise<string> {
@@ -369,18 +369,69 @@ describe("auth foundation: register signs before it writes", () => {
     expect(await verifyToken(env, token)).toEqual({ sub: "person@example.test", name: "山田 🙂" });
   });
 
-  it("fails login closed (503, no token) when signing throws", async () => {
-    const env = { ASSESS_SIGNING_KEY_PKCS8_B64: "not-a-key" };
+  it("returns 503 without a token when the put records the account and then throws", async () => {
+    const attempted: string[] = [];
+    const put = vi.fn(async (key: string, value: string) => {
+      attempted.push(key, value);
+      throw new Error("kv write not confirmed");
+    });
+    const response = await registerRequest({
+      ASSESS_SIGNING_KEY_PKCS8_B64: await signingKey(),
+      SOV_ARENA_STATE: { get: vi.fn(async () => null), put },
+    });
+    expect(attempted.length).toBe(2);
+    expect(response.status).toBe(503);
+    const body = await response.json();
+    expect(body).toEqual({ error: "account store write could not be confirmed; no session was returned" });
+    expect(body).not.toHaveProperty("token");
+    expect(body).not.toHaveProperty("user");
+  });
+
+  it("fails login with an exact 503 when the password matches but signing rejects", async () => {
+    const salt = "fixturesalt";
+    const pw = await hashPassword("strong-password", salt);
+    const stored = { email: "person@example.test", name: "Person", salt, pw, created_at: "2026-10-14T00:00:00.000Z" };
+    const put = vi.fn();
+    const sign = vi.spyOn(crypto.subtle, "sign").mockRejectedValue(new Error("sign failed"));
+    try {
+      const response = await onRequest({
+        params: { path: ["login"] },
+        env: {
+          ASSESS_SIGNING_KEY_PKCS8_B64: await signingKey(),
+          SOV_ARENA_STATE: { get: vi.fn(async () => JSON.stringify(stored)), put },
+        },
+        request: new Request("https://councilof.ai/api/auth/login", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ email: "person@example.test", password: "strong-password" }),
+        }),
+      } as never);
+      expect(response.status).toBe(503);
+      expect(await response.json()).toEqual(SIGNING_UNAVAILABLE);
+      expect(sign).toHaveBeenCalled();
+      expect(put).not.toHaveBeenCalled();
+    } finally {
+      vi.restoreAllMocks();
+    }
+  });
+
+  it("rejects a wrong password with exactly 401 and no token", async () => {
+    const salt = "fixturesalt";
+    const pw = await hashPassword("strong-password", salt);
+    const stored = { email: "person@example.test", name: "Person", salt, pw, created_at: "2026-10-14T00:00:00.000Z" };
     const response = await onRequest({
       params: { path: ["login"] },
-      env: { ...env, SOV_ARENA_STATE: { get: vi.fn(async () => JSON.stringify({ email: "p@example.test", name: "P", salt: "s", pw: "x" })), put: vi.fn() } },
+      env: {
+        ASSESS_SIGNING_KEY_PKCS8_B64: await signingKey(),
+        SOV_ARENA_STATE: { get: vi.fn(async () => JSON.stringify(stored)), put: vi.fn() },
+      },
       request: new Request("https://councilof.ai/api/auth/login", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ email: "p@example.test", password: "wrong" }),
+        body: JSON.stringify({ email: "person@example.test", password: "wrong-password" }),
       }),
     } as never);
-    expect([401, 503]).toContain(response.status);
+    expect(response.status).toBe(401);
     expect(await response.json()).not.toHaveProperty("token");
   });
 });
