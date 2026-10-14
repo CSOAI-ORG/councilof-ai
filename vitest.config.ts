@@ -30,6 +30,7 @@ export const NODE_TEST_FILES = [
   'scripts/harness-x/render.test.mjs',
   'scripts/review/deploy-target-wiring.test.mjs',
   'scripts/review/pages-release-target.test.mjs',
+  'scripts/sitemap-withdrawal.node-test.mjs',
   'scripts/surface/facts-scope.test.mjs',
   'scripts/surface/prerender-io.test.mjs',
   'scripts/surface/render-board-reference.test.mjs',
