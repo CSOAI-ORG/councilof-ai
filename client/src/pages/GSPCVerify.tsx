@@ -583,6 +583,24 @@ export default function GSPCVerify() {
             </li>
           </ul>
         </details>
+        {/* CARD INVENTORY SNAPSHOT — dated, not live; see evidence/card-inventory-2026-10-14.md */}
+        <section data-testid="card-inventory-snapshot">
+          <h2 className="text-2xl font-bold text-emerald-50">Card inventory (14 Oct 2026)</h2>
+          <p className="mt-2 text-[13px] leading-relaxed text-emerald-100/75">
+            Dated snapshot, not a live count. A one-off scan of 8 of 9 storage locations on
+            14 Oct 2026 found <strong className="text-emerald-50">11,929</strong> unique signed
+            measurement cards, <strong className="text-emerald-50">7,994</strong> with a VALID
+            signature, and <strong className="text-emerald-50">335</strong> live and verifiable
+            here. The live count is always <code>/signed/card_index.json</code>.{" "}
+            <a
+              href="https://github.com/CSOAI-ORG/councilof-ai/blob/master/evidence/card-inventory-2026-10-14.md"
+              className="text-emerald-300 underline decoration-emerald-500/40 hover:decoration-emerald-300"
+            >
+              Method and scope →
+            </a>
+          </p>
+        </section>
+
 
         {/* LINKS */}
         <div className="flex flex-wrap gap-x-4 gap-y-1 pb-4 text-[13px]">
