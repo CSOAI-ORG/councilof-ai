@@ -2,8 +2,8 @@
   "schema": "csoai.zenodo-status/0.1",
   "title": "Zenodo availability of CSOAI's DOIs",
   "as_of": "2026-09-29T16:46Z",
-  "notice": "Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending.",
-  "event": "At 15:47Z on 29 Sep 2026 Zenodo blocked the account that held CSOAI's deposits as spam, after one of our own automated lanes bulk-published 54 datasets there at roughly 15-second intervals. Every record on the account began answering HTTP 410 ('User was blocked'), including records deposited weeks earlier. The owner is appealing; the outcome is unknown. We do not contact Zenodo from automation.",
+  "notice": "Zenodo record unavailable since 29 Sep 2026: every CSOAI Zenodo record returns HTTP 410 (account blocked by Zenodo). Status UNCHECKABLE.",
+  "event": "At 15:47Z on 29 Sep 2026 Zenodo blocked the account that held CSOAI's deposits as spam, after one of our own automated lanes bulk-published 54 datasets there at roughly 15-second intervals. Every record on the account began answering HTTP 410 ('User was blocked'), including records deposited weeks earlier. No appeal is on record; status UNCHECKABLE. We do not contact Zenodo from automation.",
   "rule": "The DOIs are kept: they are the permanent names and may resolve again. No surface we publish links one as available. Each prints the identifier, this notice, and the artifact's other live copy where one exists. 'Same bytes' is claimed only where the served file's sha256 equals the digest the deposit itself recorded.",
   "method": "For each DOI: anonymous GET https://doi.org/10.5281/zenodo.<id> following redirects; http_status is the final hop. Alternatives: anonymous GET, HTTP status and sha256 of the body.",
   "signed_files_not_edited": {
