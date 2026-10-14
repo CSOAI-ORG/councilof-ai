@@ -8,6 +8,7 @@ import BoardAttestation from "@/components/board/BoardAttestation";
 import { CARD_PARAM_MAX_BYTES, resolveCardParam, verifyCardHref } from "@/lib/cardParam";
 import { GOVERNANCE_RETRIEVE, loadPublicCardExample } from "@/lib/publicCardExample";
 import { takeCheckerSeed } from "@/lib/myResults";
+import { artifactCitation } from "@/lib/artifactCite";
 
 /**
  * /gspc-verify — verify published card bytes yourself.
@@ -262,10 +263,11 @@ export default function GSPCVerify() {
             A valid signature confirms the record's integrity. It does not certify a model's safety or compliance.
           </p>
           <p className="mt-3 max-w-3xl text-sm text-emerald-200/75 leading-relaxed">
-            Every check ends in one of three results: <strong>VALID</strong> (the signature and the
-            content match), <strong>INVALID</strong> (a check failed, and it says which), or{" "}
+            Every check ends in one of three results: <strong>VALID</strong> (the completed record
+            checks passed), <strong>INVALID</strong> (a check failed, and it says which), or{" "}
             <strong>UNCHECKABLE</strong> (the check could not be completed). Could-not-check is never
-            reported as a failure.
+            reported as a failure. Read the signature result separately: a hash-only VALID result is
+            labelled unsigned and does not prove who wrote the record.
           </p>
           <details className="mt-4 max-w-3xl rounded-xl border border-emerald-400/20 bg-white/[0.035] px-4 py-3">
             <summary className="cursor-pointer text-sm font-semibold text-emerald-200">
@@ -419,6 +421,13 @@ export default function GSPCVerify() {
                 </p>
               )}
               {linked.state === "loaded" && <LinkedCardActions href={linked.href} />}
+              {linked.state === "loaded" && (
+                <details className="mt-3" data-testid="linked-cite">
+                  <summary className="flex min-h-[44px] cursor-pointer items-center font-semibold">Cite this record</summary>
+                  <pre className="mt-1 whitespace-pre-wrap break-all font-mono text-[12px] text-emerald-100/90">{artifactCitation(linked, new Date())}</pre>
+                  <p className="mt-1 text-[12px] text-emerald-100/70">Built from <a className="underline" href="/CITATION.cff">CITATION.cff</a> and the bytes loaded here. A matching sha256 shows you hold the cited bytes, not that the result is good.</p>
+                </details>
+              )}
               {(linked.state === "refused" || linked.state === "failed") && (
                 <p className="mt-1">Reason: {linked.reason}. No VALID or INVALID result has been established. Paste still works.</p>
               )}
