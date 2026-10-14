@@ -5,7 +5,7 @@ import { Link } from "wouter";
 import RecordVerifyForm from "@/components/gspc/RecordVerifyForm";
 import { setMetaDescription } from "@/lib/utils";
 import BoardAttestation from "@/components/board/BoardAttestation";
-import { CARD_PARAM_MAX_BYTES, resolveCardParam } from "@/lib/cardParam";
+import { CARD_PARAM_MAX_BYTES, resolveCardParam, verifyCardHref } from "@/lib/cardParam";
 import { GOVERNANCE_RETRIEVE, loadPublicCardExample } from "@/lib/publicCardExample";
 import { takeCheckerSeed } from "@/lib/myResults";
 
@@ -52,6 +52,24 @@ async function pickPublishedCard(signal?: AbortSignal): Promise<PublishedRef> {
   const c = withUrl[Math.floor(Math.random() * withUrl.length)];
   const url = c.card_url || c.url;
   return { id: String(c.id || c.card || url), url };
+}
+
+/** Deep-link actions for a ?card= record: copy this page's link, download the exact bytes, re-run the check. */
+export function LinkedCardActions({ href }: { href: string }) {
+  const [copied, setCopied] = useState<"" | "ok" | "fail">("");
+  const btn = "inline-flex min-h-[44px] items-center rounded-lg border border-emerald-400/40 px-3 py-2 font-semibold text-emerald-100 hover:bg-white/5";
+  const name = href.split("/").pop() || "card.json";
+  return (
+    <div className="mt-3 flex flex-wrap gap-2" data-testid="linked-card-actions">
+      <button type="button" className={btn} data-testid="linked-copy" onClick={() => {
+        navigator.clipboard?.writeText(window.location.href).then(() => setCopied("ok"), () => setCopied("fail"));
+      }}>
+        {copied === "ok" ? "Link copied" : copied === "fail" ? "Copy failed: use the address bar" : "Copy link"}
+      </button>
+      <a className={btn} href={href} download={name} data-testid="linked-download">Download the record</a>
+      <a className={btn} href={verifyCardHref(href)} data-testid="linked-reverify">Verify again</a>
+    </div>
+  );
 }
 
 export default function GSPCVerify() {
@@ -400,6 +418,7 @@ export default function GSPCVerify() {
                   {linked.bytes} bytes{linked.sha256 ? ` · sha256 ${linked.sha256}` : ""}
                 </p>
               )}
+              {linked.state === "loaded" && <LinkedCardActions href={linked.href} />}
               {(linked.state === "refused" || linked.state === "failed") && (
                 <p className="mt-1">Reason: {linked.reason}. No VALID or INVALID result has been established. Paste still works.</p>
               )}
