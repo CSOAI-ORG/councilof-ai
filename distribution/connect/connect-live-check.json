@@ -1,9 +1,9 @@
 {
   "schema": "csoai.connect-live-check/1",
   "generated_by": "scripts/harness-x/connect-live.mjs",
-  "checked_at": "2026-10-14T12:53:19.100Z",
+  "checked_at": "2026-10-14T12:54:42.483Z",
   "scope": "live: the doors were contacted at https://councilof.ai",
-  "matrix_sha256": "736328a6e6eafb8e89e0e4816395b89ede045cba5cbcd6a6faec41a4bf13b4dc",
+  "matrix_sha256": "e197ecbc0a9292dd88ab95a22bece16023d2ee99e38740ea4ac7195a0ea427ff",
   "doors": {
     "https://councilof.ai/mcp/free": {
       "state": "PASS",
@@ -187,6 +187,26 @@
     {
       "id": "vscode",
       "platform": "VS Code (GitHub Copilot agent mode)",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "14 tools, server 1.4.4"
+        },
+        {
+          "check": "json parses",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://code.visualstudio.com/docs/agent-customization/mcp-servers"
+    },
+    {
+      "id": "vscode-portable",
+      "platform": "VS Code (portable .mcp.json)",
       "door": "free",
       "state": "PASS",
       "checks": [
@@ -586,8 +606,8 @@
     }
   ],
   "totals": {
-    "clients": 26,
-    "pass": 26,
+    "clients": 27,
+    "pass": 27,
     "fail": 0
   },
   "doctrine": "measurement, not certification"
