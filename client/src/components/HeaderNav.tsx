@@ -6,6 +6,15 @@ export { HOME_NAV };
 interface NavItem { name: string; href: string; description: string; external?: boolean; section?: string }
 interface NavGroup { name: string; href: string; icon: typeof Globe2; description: string; submenu: NavItem[] }
 
+/**
+ * The one booking door in the header (desktop button + mobile menu). /assess/ prerenders the
+ * measured pane with the ras-booking-cta, whose target comes from /catalog.json via
+ * lib/rasBooking.ts (prefilled email until ras-booking is live on Paddle). Measurement only,
+ * never a certificate; no price here. Kept out of PRIMARY_LINKS so the static-shell header
+ * on committed public pages is unchanged.
+ */
+export const BOOK_MEASUREMENT_LINK = { name: "Book a measurement", href: "/assess/" } as const;
+
 export const PRIMARY_LINKS: { name: string; href: string }[] = [
   { name: "Verify", href: "/gspc-verify" },
   // Services sits between Board and Verify: it is the list of doors the rail
