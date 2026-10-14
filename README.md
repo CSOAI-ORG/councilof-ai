@@ -120,6 +120,15 @@ _Pushed by `scripts/spray/gspc-spray.py` (daily, idempotent by `as_of` and finge
 
 <!-- org-readme:end -->
 
+## G2 signed cards — 14 Oct 2026
+
+29 new signed measurement cards (G2, merged in #3164) are served at https://councilof.ai/interop/mill-cards-signed/ and mirrored with an index at https://huggingface.co/datasets/csoai/gspc-signed-boards/tree/main/g2-2026-10-14.
+
+- **Root inclusion pending (#3165).** These cards are not yet in a card root.
+- Excluded: 2 `care` cards, whose results are parse-confounded and not citable. The qwen3:8b `safety` result is held and is not listed.
+- Axes: governance 7 · conformance 6 · continuity 6 · openness 5 · provenance 4 · safety 1. Public base models: gemma3:12b, llama3.2:3b, mistral:7b, qwen2.5:0.5b, qwen2.5:3b, qwen2.5:7b, qwen3:8b.
+- Verify any card free at https://councilof.ai/gspc-verify/. Measurement, not certification.
+
 > **Source mirror.** This repository is the GitHub source of record for source changes. A public mirror is also available at
 > https://huggingface.co/datasets/csoai/councilof-ai-source; live public evidence remains at https://councilof.ai.
 
