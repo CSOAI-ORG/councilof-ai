@@ -103,20 +103,20 @@ export default function Challenge() {
           <input
             value={target}
             onChange={(e) => setTarget(e.target.value)}
-            placeholder="target content_id or URL"
+            aria-label="Contested measurement record or URL" placeholder="target content_id or URL"
             className="mt-3 w-full rounded-lg border border-emerald-500/30 bg-black/40 px-3 py-2 text-sm"
           />
           <textarea
             value={reason}
             onChange={(e) => setReason(e.target.value)}
-            placeholder="why is the measurement contended?"
+            aria-label="Reason for the challenge" placeholder="why is the measurement contended?"
             rows={3}
             className="mt-2 w-full rounded-lg border border-emerald-500/30 bg-black/40 px-3 py-2 text-sm"
           />
           <input
             value={challenger}
             onChange={(e) => setChallenger(e.target.value)}
-            placeholder="contact (optional)"
+            aria-label="Contact details (optional)" placeholder="contact (optional)"
             className="mt-2 w-full rounded-lg border border-emerald-500/30 bg-black/40 px-3 py-2 text-sm"
           />
           <button

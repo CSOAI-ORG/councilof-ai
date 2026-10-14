@@ -122,7 +122,7 @@ export default function LicensingAgreement() {
               Agreement”, which described certification marks and a licence to operate
               AI systems. CSOAI does not certify, does not issue conformity marks, and
               does not authorise anyone to operate an AI system. A deal is not binding
-              until Nick countersigns a licence manifest.
+              until CSOAI's authorised signatory countersigns a licence manifest.
             </p>
           </motion.div>
         </div>
@@ -209,7 +209,7 @@ export default function LicensingAgreement() {
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b">
-                        <th className="text-left py-3 px-3 font-semibold">SKU</th>
+                        <th className="text-left py-3 px-3 font-semibold">Delivery object</th>
                         <th className="text-left py-3 px-3 font-semibold">Who</th>
                         <th className="text-left py-3 px-3 font-semibold">Term</th>
                         <th className="text-left py-3 px-3 font-semibold">Fee</th>
@@ -232,7 +232,7 @@ export default function LicensingAgreement() {
                 <p className="text-xs text-muted-foreground mt-4">
                   Binding figures live on the countersigned manifest, not on this page.
                   Stripe Checkout links from earlier catalogues do not sell access to the
-                  rail and a grade is never sold. Until live-flip, paid SKUs are on enquiry.
+                  rail and a grade is never sold. Commercial delivery scope and fees are agreed on enquiry.
                 </p>
               </CardContent>
             </Card>
@@ -243,7 +243,7 @@ export default function LicensingAgreement() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <FileCheck className="h-5 w-5 text-primary" />
-                  4. Council Data — corpus tiers
+                  4. Council Data — permitted delivery scope
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -306,12 +306,74 @@ export default function LicensingAgreement() {
                 <ul className="list-disc pl-5 space-y-1">
                   <li>Presenting a measurement as a certification, accreditation, or conformity assessment.</li>
                   <li>Paying, or being paid, to alter a public rank.</li>
-                  <li>Republishing licensed data as a standalone dataset without a separate licence.</li>
+                  <li>Republishing commercially licensed data beyond the permissions in its governing licence. Existing open licences retain their permissions.</li>
                   <li>Displaying any certified-by-Council mark. No such mark is issued; we do not certify.</li>
                 </ul>
               </CardContent>
             </Card>
           </motion.section>
+
+          <section id="rights" aria-labelledby="rights-heading" className="scroll-mt-24">
+            <Card>
+              <CardHeader>
+                <CardTitle id="rights-heading" className="flex items-center gap-2">
+                  <Scale className="h-5 w-5 text-primary" />
+                  Published assets and reuse rights
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-5 text-sm leading-relaxed text-muted-foreground">
+                <p className="text-xs font-medium text-foreground">Public reuse note · updated 9 October 2026. The licence and version attached to an asset determine its open permissions; an agreed manifest determines commercial delivery rights.</p>
+                <p>
+                  CSOAI's published methods, verification software and maintained evidence are
+                  available to inspect. Reuse depends on the licence attached to the exact version
+                  or dataset. A paid service agreement covers the agreed delivery, maintenance or
+                  permitted data; it does not remove permissions already granted by an open licence.
+                </p>
+                <dl className="grid gap-4 sm:grid-cols-2">
+                  <div className="rounded-xl border p-4">
+                    <dt className="font-semibold text-foreground">Claim Maintenance specification</dt>
+                    <dd className="mt-2">
+                      The published specification carries CC0 1.0. Read the version and its
+                      licence before using or adapting it.{" "}
+                      <a href="/spec/claim-maintenance/v0.1/claim-maintenance-v0.1.md" className="font-medium text-primary underline">Read the specification and licence</a>.
+                    </dd>
+                  </div>
+                  <div className="rounded-xl border p-4">
+                    <dt className="font-semibold text-foreground">Reference software</dt>
+                    <dd className="mt-2">
+                      The published Claim Maintenance reference implementation identifies MIT as
+                      its code licence. Keep the applicable licence and attribution notices.{" "}
+                      <a href="/spec/claim-maintenance/v0.2/reference/claim-capture.mjs" className="font-medium text-primary underline">Inspect the reference implementation</a>.
+                    </dd>
+                  </div>
+                  <div className="rounded-xl border p-4">
+                    <dt className="font-semibold text-foreground">Evidence and datasets</dt>
+                    <dd className="mt-2">
+                      Records identify their source, method, date and attestation state. Dataset
+                      and upstream-source permissions must be checked separately; public access
+                      and a valid signature do not grant ownership of the underlying material.{" "}
+                      <Link href="/where-the-record-lives/" className="font-medium text-primary underline">Find the evidence record</Link>.
+                    </dd>
+                  </div>
+                  <div className="rounded-xl border p-4">
+                    <dt className="font-semibold text-foreground">An agreed commercial licence</dt>
+                    <dd className="mt-2">
+                      Identify the asset, version, permitted uses, attribution, upstream terms
+                      and any rights CSOAI is entitled to grant in the agreement. No blanket
+                      exclusivity over public laws, open standards or third-party materials is offered.
+                    </dd>
+                  </div>
+                </dl>
+                <p>
+                  Published signatures and timestamp proofs let readers check stated integrity and
+                  existence properties. They do not establish an IP valuation, a patent or a
+                  transfer of rights. For a licence or diligence request, link the asset and
+                  describe the intended use.{" "}
+                  <Link href="/contact/" className="font-medium text-primary underline">Discuss the existing evidence service</Link>.
+                </p>
+              </CardContent>
+            </Card>
+          </section>
 
           <motion.section {...fadeInUp}>
             <div className="grid md:grid-cols-3 gap-6">
@@ -368,7 +430,7 @@ export default function LicensingAgreement() {
                 <h3 className="text-xl font-semibold mb-4">Licence a feed or a corpus</h3>
                 <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
                   Tell us which paid arm. We send a manifest. Nothing is a certificate.
-                  Verification stays free. Fee blank until Nick countersigns.
+                  Verification stays free. Fees and rights require a countersigned manifest.
                 </p>
                 <div className="flex flex-wrap gap-4 justify-center">
                   <Link href="/licence-manifest">

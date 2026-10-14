@@ -35,7 +35,6 @@ const ALLOW_PRICE: Allow[] = [
   { file: "pages/GpaiEvidencePack.tsx", why: "GPAI penalty ceiling from the regulation" },
   { file: "pages/Training-v2.tsx", why: "other providers' published rates, quoted as comparison; ours reads FREE" },
   { file: "pages/CobolBridge.tsx", why: "market-size statistic cited to Communications of the ACM" },
-  { file: "pages/RegulatoryAuthority.tsx", why: "third-party revenue statistic" },
   { file: "pages/CaseStudies.tsx", why: "a customer's reported saving, not our price" },
   { file: "pages/ProsperityFund.tsx", why: "fund mechanics illustrated with worked examples" },
   { file: "pages/legal/TermsOfService.tsx", why: "liability cap — a legal necessity" },

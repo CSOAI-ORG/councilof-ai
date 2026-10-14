@@ -5,6 +5,8 @@
 const ARCHIVE_PATH = "/archive/retired-proof-bytes-v1.json";
 const ARCHIVE_SCHEMA = "csoai.retired-proof-bytes/0.1";
 const INVALID_PATH = /^\/interop\/[A-Za-z0-9_./-]+\.invalid$/;
+const MIRROR_PATH = /^\/interop\/[^/]+\/mirrors\//;
+const CAPTURE_POLICY = "sandbox; default-src 'none'; style-src 'unsafe-inline'; img-src data:";
 
 type ArchiveMember = { sha256: string; bytes: number; body_base64: string };
 type Archive = {
@@ -34,6 +36,21 @@ function unavailable(): Response {
 export const onRequest: PagesFunction<AssetEnv> = async (ctx) => {
   const url = new URL(ctx.request.url);
   const path = url.pathname;
+  // Captured third-party HTML is retained evidence, not an application on our
+  // origin. Preserve its exact body while blocking scripts, forms and remote
+  // resources. _headers does not cover responses passing through Functions.
+  if (MIRROR_PATH.test(path)) {
+    const response = await ctx.next();
+    const headers = new Headers(response.headers);
+    headers.set("x-robots-tag", "noindex, nofollow");
+    headers.set("x-content-type-options", "nosniff");
+    headers.set("referrer-policy", "no-referrer");
+    if (headers.get("content-type")?.toLowerCase().includes("text/html")) {
+      const existing = headers.get("content-security-policy");
+      headers.set("content-security-policy", existing ? `${existing}, ${CAPTURE_POLICY}` : CAPTURE_POLICY);
+    }
+    return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+  }
   if (!path.endsWith(".invalid")) return ctx.next();
   if (!validPath(path) || path.includes("%")) return new Response("Not found", { status: 404 });
   if (ctx.request.method !== "GET" && ctx.request.method !== "HEAD") {

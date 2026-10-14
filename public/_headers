@@ -168,6 +168,9 @@
 # index them under this domain. Added 2026-09-24; the sitemap leaves them out by the same pattern.
 /interop/:report/mirrors/*
   X-Robots-Tag: noindex, nofollow
+  Content-Security-Policy: sandbox; default-src 'none'; style-src 'unsafe-inline'; img-src data:
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
 
 # Operator notes (health inventory, governance terminal, revenue funnels, external and playbook
 # audits, agent travel, two-speed) moved off /products and /tools to this page on 6 Oct 2026. The

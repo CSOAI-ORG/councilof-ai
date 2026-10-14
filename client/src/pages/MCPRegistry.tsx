@@ -148,7 +148,7 @@ export default function MCPRegistry() {
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder={`Search ${registry.total} MCP tools…`}
+            aria-label="Search MCP tools" placeholder={`Search ${registry.total} MCP tools…`}
             className="pl-11 h-12 text-base"
           />
         </div>

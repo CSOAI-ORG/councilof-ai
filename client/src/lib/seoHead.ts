@@ -15,8 +15,8 @@
  * already in the bundle — the hand-written map (client/src/data/seo-head.json), the route
  * manifest, the publication manifest and the path itself — so RouteHead in App.tsx can apply
  * it in a layout effect on every navigation, BEFORE any page mounts or any fetch resolves.
- * A page that knows better (a note's own title, the board's live count) still overwrites it
- * afterwards; the fallback is never wrong, only less specific.
+ * Mapped static routes retain this reviewed head after lazy components mount. Parametrised
+ * pages can still refine their own headline once their record loads.
  *
  * Doctrine: no typed count anywhere in here. A title or description that wants a number
  * renders it in the page body from the artifact that owns it.
@@ -293,7 +293,7 @@ export interface HeadDocument {
 function upsert(doc: HeadDocument, selector: string, create: () => { setAttribute(name: string, value: string): void; getAttribute(name: string): string | null }, attr: string, value: string) {
   let el = doc.querySelector(selector);
   if (!el) { el = create(); doc.head.appendChild(el); }
-  el.setAttribute(attr, value);
+  if (el.getAttribute(attr) !== value) el.setAttribute(attr, value);
 }
 
 /** Write a resolved head into the document. Never writes a non-string or empty value. */
@@ -304,7 +304,7 @@ export function applyHead(h: ResolvedHead, doc: HeadDocument | null = typeof doc
     el.setAttribute(attr, key);
     return el;
   };
-  if (typeof h.title === "string" && h.title) doc.title = h.title;
+  if (typeof h.title === "string" && h.title && doc.title !== h.title) doc.title = h.title;
   if (typeof h.description === "string" && h.description) {
     upsert(doc, 'meta[name="description"]', meta("name", "description"), "content", h.description);
     upsert(doc, 'meta[property="og:description"]', meta("property", "og:description"), "content", h.ogDescription || h.description);
@@ -319,4 +319,23 @@ export function applyHead(h: ResolvedHead, doc: HeadDocument | null = typeof doc
     upsert(doc, 'meta[property="og:url"]', meta("property", "og:url"), "content", h.canonical);
     upsert(doc, 'meta[name="twitter:url"]', meta("name", "twitter:url"), "content", h.canonical);
   }
+}
+
+/** Keep reviewed static-route metadata consistent when a lazy page writes a legacy head.
+ * Family/derived routes keep their record-specific titles. Disconnect on navigation so an
+ * old route can never restore its metadata over the next page. applyHead is idempotent,
+ * which lets the observer see its own changes without producing a mutation loop.
+ */
+export function maintainHead(h: ResolvedHead, doc: Document = document): () => void {
+  applyHead(h, doc);
+  if (h.source === "family" || h.source === "derived") return () => {};
+  const observer = new MutationObserver(() => applyHead(h, doc));
+  observer.observe(doc.head, {
+    childList: true,
+    subtree: true,
+    characterData: true,
+    attributes: true,
+    attributeFilter: ["content", "href", "name", "property", "rel"],
+  });
+  return () => observer.disconnect();
 }

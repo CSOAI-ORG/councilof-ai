@@ -246,10 +246,10 @@ export default function Disclaimers() {
                 </p>
                 <div className="space-y-3 text-gray-700">
                   <p>
-                    CSOAI is pre-launch and publishes no earnings figures for AI Safety Analysts.
-                    Any historical marketing references to typical hourly rates were illustrative
-                    and have been removed. When the analyst marketplace is live, rate data will be
-                    published as measured, anonymised aggregates. Users should understand:
+                    CSOAI publishes AI measurement evidence and verification tools. An analyst
+                    marketplace is not an operating service, and CSOAI publishes no analyst
+                    earnings or job-placement figures. Historical illustrative hourly rates have
+                    been removed. Users should understand:
                   </p>
                   <ul className="list-disc pl-6 space-y-2">
                     <li>
@@ -262,12 +262,12 @@ export default function Disclaimers() {
                       should not be relied upon.
                     </li>
                     <li>
-                      <strong>Results vary significantly.</strong> Some analysts may earn more or less than
-                      quoted figures depending on their expertise, availability, and market conditions.
+                      <strong>Individual outcomes vary.</strong> Earnings depend on expertise,
+                      availability and market conditions; there are no CSOAI earnings figures to compare against.
                     </li>
                     <li>
-                      <strong>Training or participation does not guarantee employment.</strong> While we facilitate
-                      connections between analysts and organizations, we do not guarantee job placement.
+                      <strong>Training or participation does not guarantee employment.</strong>
+                      CSOAI does not promise job placement or a paid analyst engagement.
                     </li>
                     <li>
                       <strong>Market conditions change.</strong> Demand for AI Safety Analysts may fluctuate

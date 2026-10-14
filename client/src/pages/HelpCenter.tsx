@@ -134,7 +134,7 @@ export default function HelpCenter() {
               <Search className="absolute left-4 top-4 h-5 w-5 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search for help..."
+                aria-label="Search help articles" placeholder="Search for help..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"

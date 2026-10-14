@@ -41,7 +41,7 @@ export default function GovGraph() {
           <p className="mt-4 mx-auto max-w-xl text-lg text-emerald-100/80">Explore a starting map of jurisdiction, frameworks and possible obligations. The result is indicative, may be incomplete, and is not a signed verdict or legal advice.</p>
           <div className="mt-6 mx-auto max-w-xl text-left"><AISystemNotice route="/governance-graph" /></div>
           <div className="mt-7 flex gap-2">
-            <input value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") run(); }} placeholder="Ask about any company, place, or AI system..." className="flex-1 rounded-xl border border-emerald-500/30 bg-black/40 px-5 py-4 text-base text-emerald-50 placeholder-emerald-300/30 focus:border-emerald-400 focus:outline-none" />
+            <input value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") run(); }} aria-label="Question about a company, place or AI system" placeholder="Ask about any company, place, or AI system..." className="flex-1 rounded-xl border border-emerald-500/30 bg-black/40 px-5 py-4 text-base text-emerald-50 placeholder-emerald-300/30 focus:border-emerald-400 focus:outline-none" />
             <button onClick={() => run()} className="rounded-xl bg-emerald-500 px-6 py-4 text-base font-bold text-[#03110b] hover:bg-emerald-400">{loading ? "..." : "Map it"}</button>
           </div>
           <div className="mt-3 flex flex-wrap justify-center gap-2">

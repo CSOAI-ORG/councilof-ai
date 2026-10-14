@@ -342,7 +342,7 @@ export default function Instrument() {
                   value={q}
                   onChange={(e) => setQ(e.target.value)}
                   onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); run(); } }}
-                  placeholder="Describe the AI system…"
+                  aria-label="Describe the system for this instrument" placeholder="Describe the AI system…"
                   className="flex-1 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-900 px-4 py-2.5 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
                 />
                 <button
