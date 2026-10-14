@@ -1,3 +1,4 @@
+import { recordPaidResponse } from "./_x402_delivery_record";
 /**
  * GET /api/evidence-bundle — Tier 2: an evidence bundle mapped to ONE regulatory obligation.
  *
@@ -360,7 +361,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     }
   }
 
-  return json(
+  return recordPaidResponse(json(
     {
       schema: "csoai.evidence-bundle/0.1",
       kind: "bundle",
@@ -377,7 +378,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     },
     200,
     payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {},
-  );
+  ), { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
 };
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */
