@@ -343,7 +343,7 @@ def derive() -> dict:
          "read_back": (f"as_of `{dig(gm, 'as_of')}` · merkle `{short(dig(gm, 'merkle_root'), 12)}` · {n_or_unc(dig(gm, 'card_count'))} leaves" if gm else UNCHECKABLE),
          "as_of": dig(gm, "as_of"), "current": cur(dig(gm, "as_of"))},
         {"surface": "Zenodo", "id": ZENODO_SNAPSHOT_CONCEPT, "url": f"https://doi.org/{ZENODO_SNAPSHOT_CONCEPT}",
-         "lands": f"a new version under the concept DOI, `isDerivedFrom` the methodology record {ZENODO_METHOD_CONCEPT}",
+         "lands": "a new version under the concept DOI, `isDerivedFrom` the [methodology](https://councilof.ai/methodology/)",
          "read_back": (f"{n_or_unc(zs['total_versions'])} versions · latest `{zs['doi']}` = as_of `{zs['version']}` ({zs['date']})" if zs["doi"] != UNCHECKABLE else UNCHECKABLE),
          "as_of": zs["version"] if zs["version"] != UNCHECKABLE else None, "current": cur(zs["version"])},
         {"surface": "PyPI", "id": "csoai-gspc", "url": "https://pypi.org/project/csoai-gspc/",
@@ -378,7 +378,9 @@ def badge_row(f: dict) -> str:
         # publish links one as available. Each prints the identifier, this notice, and the
         # artifact's other live copy where one exists." The identifier stays in the alt text;
         # the link now lands on the dated notice, which carries the appeal state and the mirror.
-        f"[![DOI {ZENODO_METHOD_CONCEPT} — record unavailable, see notice](https://zenodo.org/badge/DOI/{ZENODO_METHOD_CONCEPT}.svg)](https://councilof.ai/interop/zenodo-status.json)",
+        # 2026-10-14: the dead methodology DOI badge is removed from the row (mirrors such as
+        # mcpservers.org copied it as a live link); the methodology now links to its live page.
+        f"[![Methodology](https://img.shields.io/badge/methodology-councilof.ai-{GREEN}?style=flat-square)](https://councilof.ai/methodology/)",
         f"[![License MIT](https://img.shields.io/badge/license-MIT-{GREEN}?style=flat-square)](https://huggingface.co/datasets/csoai/councilof-ai-source/blob/main/source/LICENSE)",
     ])
 
@@ -505,6 +507,11 @@ curl -s https://csoai.org/.well-known/did.json | python3 -c 'import sys,json,bas
 pipx run --spec 'csoai-gspc[verify]' csoai-gspc verify "$(curl -s https://councilof.ai/signed/card_index.json | python3 -c 'import sys,json; print(json.load(sys.stdin)["cards"][0]["card"])')"
 ```"""
 
+LEAD_LINE = (
+    "**Verify any signed card free at [councilof.ai/gspc-verify](https://councilof.ai/gspc-verify/) · "
+    "machine-readable catalog: [councilof.ai/catalog.json](https://councilof.ai/catalog.json).**"
+)
+
 WHO_WE_ARE = (
     f"**{WORDMARK} — Council of AI — is the public measurement service operated by CSOAI Ltd, "
     "a company incorporated in England and Wales on 2 January 2026 (Companies House 16939677), founded by Nicholas Templeman.** "
@@ -628,6 +635,8 @@ def councilof_top(f: dict, product_index: Path | None) -> str:
     parts = [
         BEGIN,
         f"# {WORDMARK} — Council of AI",
+        "",
+        LEAD_LINE,
         "",
         WHO_WE_ARE,
         "",
