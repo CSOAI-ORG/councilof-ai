@@ -140,33 +140,109 @@ export const MY_RESULTS_KEY = "coai:my-results";
 export const MY_RESULTS_EVENT = "coai:my-results";
 const MAX = 50;
 
+const KINDS: readonly MyResultKind[] = ["lookup", "fresh-run", "watch", "paid"];
+const optStr = (v: unknown) => v === undefined || typeof v === "string";
+
+/**
+ * A stored row is shown only when every field it carries has the shape the pane relies on. Before
+ * 14 Oct 2026 only `subject` and `at` were checked, so a row with no `id` (React key undefined), an
+ * unknown `kind`, or a non-string `record` (handed to seedChecker / downloadText) was rendered.
+ * A row without an id is given one derived from its contents instead of being dropped.
+ */
+export function normaliseRow(r: unknown, i: number): MyResult | null {
+  if (!r || typeof r !== "object" || Array.isArray(r)) return null;
+  const x = r as Record<string, unknown>;
+  if (typeof x.subject !== "string" || typeof x.at !== "string" || !KINDS.includes(x.kind as MyResultKind)) return null;
+  for (const k of ["state", "ref", "question", "door", "tx", "record"]) if (!optStr(x[k])) return null;
+  const id = typeof x.id === "string" && x.id ? x.id : `${x.kind}:${x.subject}:${x.at}:${i}`;
+  return { ...(x as MyResult), id };
+}
+
 export function readMyResults(): MyResult[] {
   try {
     const raw = window.localStorage.getItem(MY_RESULTS_KEY);
     const list = raw ? (JSON.parse(raw) as unknown) : [];
     if (!Array.isArray(list)) return [];
-    return list.filter(
-      (r): r is MyResult =>
-        !!r && typeof r === "object" && typeof (r as MyResult).subject === "string" && typeof (r as MyResult).at === "string",
-    );
+    const seen = new Set<string>();
+    const out: MyResult[] = [];
+    list.forEach((r, i) => {
+      const row = normaliseRow(r, i);
+      if (!row) return;
+      // Duplicate ids (two saves in the same millisecond) made duplicate React keys.
+      if (seen.has(row.id)) row.id = `${row.id}#${i}`;
+      seen.add(row.id);
+      out.push(row);
+    });
+    return out;
   } catch {
     return [];
   }
 }
 
-export function addMyResult(entry: Omit<MyResult, "id" | "at"> & { at?: string }): MyResult[] {
+/**
+ * Which rows to keep when the list is over MAX. A paid row that holds its signed record is the
+ * buyer's only copy, so it outlives other rows; it is dropped only when MAX such rows exist.
+ */
+export function capRows(rows: MyResult[], max = MAX): MyResult[] {
+  if (rows.length <= max) return rows;
+  const precious = (r: MyResult) => r.kind === "paid" && typeof r.record === "string";
+  const keepPrecious = rows.filter(precious).slice(0, max);
+  const room = max - keepPrecious.length;
+  const keepOther = new Set(rows.filter((r) => !precious(r)).slice(0, room));
+  const keep = new Set(keepPrecious);
+  return rows.filter((r) => keep.has(r) || keepOther.has(r));
+}
+
+export type SaveOutcome = { rows: MyResult[]; saved: boolean; recordKept: boolean };
+
+/** True when the new row is the same result as an older one and replaces it instead of stacking. */
+function sameResult(a: MyResult, b: MyResult): boolean {
+  if (a.kind !== b.kind) return false;
+  if (a.kind === "lookup") return a.subject === b.subject;
+  // A paid or fresh-run result re-saved (reload, retry) carries the same record id / receipt.
+  return !!a.ref && a.ref === b.ref && a.subject === b.subject;
+}
+
+let seq = 0;
+
+export function saveMyResult(entry: Omit<MyResult, "id" | "at"> & { at?: string }): SaveOutcome {
   const at = entry.at ?? new Date().toISOString();
-  const row: MyResult = { ...entry, at, id: `${entry.kind}:${entry.subject}:${at}` };
-  // One lookup row per subject: a repeated lookup refreshes it instead of stacking duplicates.
-  const prev = readMyResults().filter((r) => !(r.kind === "lookup" && row.kind === "lookup" && r.subject === row.subject));
-  const next = [row, ...prev].slice(0, MAX);
+  // A counter keeps ids unique when two rows are saved in the same millisecond (or with one `at`).
+  const row: MyResult = { ...entry, at, id: `${entry.kind}:${entry.subject}:${at}:${(seq = (seq + 1) % 1e6)}` };
+  const prev = readMyResults().filter((r) => !sameResult(r, row));
+  const next = capRows([row, ...prev]);
+  const write = (rows: MyResult[]) => {
+    window.localStorage.setItem(MY_RESULTS_KEY, JSON.stringify(rows));
+  };
   try {
-    window.localStorage.setItem(MY_RESULTS_KEY, JSON.stringify(next));
+    write(next);
     window.dispatchEvent(new Event(MY_RESULTS_EVENT));
+    return { rows: next, saved: true, recordKept: true };
   } catch {
-    /* storage blocked: the list stays empty; every result is still reachable live */
+    // Storage full: before 14 Oct 2026 the failure was swallowed and the unsaved list returned as
+    // if saved, so a paid record vanished on reload with no word. Keep the new row, shed the
+    // stored record bodies of OLDER rows (each still has its ref/tx), and say what happened.
+    try {
+      const slim = next.map((r, i) => (i === 0 ? r : { ...r, record: undefined }));
+      write(slim);
+      window.dispatchEvent(new Event(MY_RESULTS_EVENT));
+      return { rows: readMyResults(), saved: true, recordKept: true };
+    } catch {
+      try {
+        const bare = [{ ...row, record: undefined }, ...prev.map((r) => ({ ...r, record: undefined }))];
+        write(capRows(bare));
+        window.dispatchEvent(new Event(MY_RESULTS_EVENT));
+        return { rows: readMyResults(), saved: true, recordKept: !row.record };
+      } catch {
+        return { rows: readMyResults(), saved: false, recordKept: false };
+      }
+    }
   }
-  return next;
+}
+
+/** Kept for existing callers: returns the rows actually stored (not an unsaved list). */
+export function addMyResult(entry: Omit<MyResult, "id" | "at"> & { at?: string }): MyResult[] {
+  return saveMyResult(entry).rows;
 }
 
 export function clearMyResults(): void {
