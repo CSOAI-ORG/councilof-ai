@@ -366,6 +366,25 @@ describe("My results — paid records are never shed", () => {
     }
   });
 
+  it("a signed leaf over 32 KiB: never claimed kept; the note says download, and the delivered bytes stay downloadable", async () => {
+    install();
+    const { paidResult, saveMyResult, saveNote, readMyResults, signedRecordOf, PAID_RECORD_MAX_CHARS } = await import("./myResults");
+    const leaf = { payload: { blob: "z".repeat(PAID_RECORD_MAX_CHARS) }, sha256: "ff".repeat(32), sig_ed25519: "aa".repeat(64) };
+    const deliveredBody = { card: leaf };
+    const entry = paidResult({ doorUrl: "https://councilof.ai/api/art50/marking-evidence?url=x", body: deliveredBody, transaction: "0xtx" });
+    expect(entry.record).toBeUndefined();
+    const out = saveMyResult(entry);
+    expect(out).toMatchObject({ saved: true, recordKept: false });
+    const row = readMyResults().find((r) => r.ref === leaf.sha256)!;
+    expect(row.record).toBeUndefined();
+    expect("recordNotKept" in row).toBe(false);
+    expect(saveNote(out)).toMatch(/no room for the record itself: download it now/);
+    // Recovery: the page still holds the delivered body, and its download is the exact leaf bytes.
+    expect(JSON.stringify(signedRecordOf(deliveredBody), null, 2)).toBe(JSON.stringify(leaf, null, 2));
+    // A repeat save of the same oversize result still never claims the record was kept.
+    expect(saveMyResult(entry).recordKept).toBe(false);
+  });
+
   it("the buyer note follows the outcome, never a guessed 'saved'", async () => {
     const { saveNote } = await import("./myResults");
     expect(saveNote({ rows: [], saved: true, recordKept: true })).toMatch(/saved to My results/);

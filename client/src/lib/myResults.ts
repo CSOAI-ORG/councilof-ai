@@ -71,7 +71,7 @@ export function paidSubject(doorUrl: string): string {
  * reads DELIVERED (signed) or DELIVERED (unsigned) from the record itself; `ref` is the record id
  * (sha256), which for a request-attestation receipt is also its receipt id in the public queue.
  */
-export function paidResult(args: { doorUrl: string; body: unknown; transaction: string | null }): Omit<MyResult, "id" | "at"> {
+export function paidResult(args: { doorUrl: string; body: unknown; transaction: string | null }): Omit<MyResult, "id" | "at"> & { recordNotKept?: true } {
   const rec = signedRecordOf(args.body);
   const text = rec ? JSON.stringify(rec, null, 2) : null;
   return {
@@ -82,6 +82,8 @@ export function paidResult(args: { doorUrl: string; body: unknown; transaction: 
     ...(rec ? { ref: rec.sha256 } : args.transaction ? { ref: args.transaction } : {}),
     ...(args.transaction ? { tx: args.transaction } : {}),
     ...(text && text.length <= PAID_RECORD_MAX_CHARS ? { record: text } : {}),
+    // A signed record too large to keep here: the save outcome must say it was not kept.
+    ...(text && text.length > PAID_RECORD_MAX_CHARS ? { recordNotKept: true as const } : {}),
   };
 }
 
@@ -225,7 +227,10 @@ let seq = 0;
  * `saved` is read back from storage (the new row is there), and `recordKept` means the exact
  * record text intended for the row is there too.
  */
-export function saveMyResult(entry: Omit<MyResult, "id" | "at"> & { at?: string }): SaveOutcome {
+export function saveMyResult(entry: Omit<MyResult, "id" | "at"> & { at?: string; recordNotKept?: true }): SaveOutcome {
+  // recordNotKept: the caller had a record it could not hand over (too large), so "kept" is never claimed.
+  const { recordNotKept, ...fields } = entry;
+  entry = fields;
   const at = entry.at ?? new Date().toISOString();
   // A counter keeps ids unique when two rows are saved in the same millisecond (or with one `at`).
   let row: MyResult = { ...entry, at, id: `${entry.kind}:${entry.subject}:${at}:${(seq = (seq + 1) % 1e6)}` };
@@ -276,7 +281,7 @@ export function saveMyResult(entry: Omit<MyResult, "id" | "at"> & { at?: string 
       return null;
     }
     window.dispatchEvent(new Event(MY_RESULTS_EVENT));
-    return { rows: back, saved: true, recordKept: row.record === undefined || mine.record === row.record };
+    return { rows: back, saved: true, recordKept: !recordNotKept && (row.record === undefined || mine.record === row.record) };
   };
   // Store the row whole; if that does not fit, store it without its record (recordKept: false, so
   // the page says "download it"); otherwise store nothing and leave the old list untouched.
@@ -285,7 +290,7 @@ export function saveMyResult(entry: Omit<MyResult, "id" | "at"> & { at?: string 
 }
 
 /** Kept for existing callers: returns the rows actually stored (not an unsaved list). */
-export function addMyResult(entry: Omit<MyResult, "id" | "at"> & { at?: string }): MyResult[] {
+export function addMyResult(entry: Omit<MyResult, "id" | "at"> & { at?: string; recordNotKept?: true }): MyResult[] {
   return saveMyResult(entry).rows;
 }
 
