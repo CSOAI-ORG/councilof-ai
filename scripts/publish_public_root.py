@@ -784,7 +784,10 @@ def write_data_v1_snapshot(repo_root: Path | None = None) -> dict | None:
         files.append({"name": name, "source": rel, "bytes": len(data), "sha256": sha256_hex(data),
                       "url": f"{DATA_V1_BASE_URL}/snapshots/{version}/{name}"})
 
-    url = f"{DATA_V1_BASE_URL}/snapshots/{version}/"
+    # Every published URL names a FILE that is served. A bare directory URL (".../<version>/") has no
+    # index document on Pages and fails scripts/link-gate.mjs, so the snapshot is addressed by its manifest.
+    snap_base = f"{DATA_V1_BASE_URL}/snapshots/{version}/"
+    url = snap_base + "manifest.json"
     citation = {
         "schema": "csoai.data-v1-citation/0.1",
         "title": f"GSPC public root snapshot {version}",
@@ -819,8 +822,8 @@ def write_data_v1_snapshot(repo_root: Path | None = None) -> dict | None:
                            "entries": new})
     write_pretty(out / "latest.json", {"schema": "csoai.data-v1-latest/0.1", "version": version,
                                        "as_of": as_of, "merkle_root": merkle, "card_count": count,
-                                       "snapshot_url": url, "manifest_url": url + "manifest.json",
-                                       "manifest_sha256": man_sha, "citation_url": url + "citation.json",
+                                       "snapshot_url": url, "manifest_url": url,
+                                       "manifest_sha256": man_sha, "citation_url": snap_base + "citation.json",
                                        "changelog_url": f"{DATA_V1_BASE_URL}/CHANGELOG.json"})
     return entry
 

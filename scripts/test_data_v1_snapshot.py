@@ -68,3 +68,15 @@ def test_append_only_guard_rejects_rewrite_and_removal() -> None:
 
 def test_never_snapshots_signed_index() -> None:
     assert not any(rel.startswith("public/signed/") for _, rel in ppr.DATA_V1_SOURCES)
+
+
+def test_no_bare_directory_urls(tmp_path: Path) -> None:
+    """scripts/link-gate.mjs fails a directory URL with no index file; publish files only."""
+    import re
+    base = _tree(tmp_path)
+    ppr.write_data_v1_snapshot(base)
+    for f in (base / "public/data/v1").rglob("*.json"):
+        if f.parent.name == "2026-10-13" and f.name not in ("manifest.json", "citation.json"):
+            continue  # byte-copies of sources, not authored here
+        for u in re.findall(r"https://councilof\.ai/data/v1[^\"\s)]*", f.read_text()):
+            assert not u.endswith("/"), (f, u)
