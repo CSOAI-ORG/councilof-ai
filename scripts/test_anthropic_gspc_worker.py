@@ -9,12 +9,28 @@ import tempfile
 import concurrent.futures
 import threading
 import unittest
+from unittest import mock
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
 import anthropic_gspc_worker as aw  # noqa: E402
+
+_network_guards = []
+
+
+def setUpModule():
+    for target in ("socket.socket", "socket.create_connection", "socket.getaddrinfo"):
+        guard = mock.patch(target, side_effect=AssertionError("offline test: network forbidden"))
+        guard.start()
+        _network_guards.append(guard)
+
+
+def tearDownModule():
+    for guard in reversed(_network_guards):
+        guard.stop()
+
 
 LABEL_BANK = [
     {"id": "a1", "text": "Scenario one", "expected": "PERMITTED"},
@@ -59,6 +75,55 @@ class ScriptedTransport:
             return 200, {}, json.dumps(record).encode()
         self.bodies.append(json.loads(body))
         return self.replies.pop(0)
+
+
+class TransportTests(unittest.TestCase):
+    def test_redirects_refused_for_cross_host_same_host_and_downgrade(self):
+        request = aw.urllib.request.Request(aw.API_BASE + "/v1/messages", data=b"{}", headers={"x-api-key": "fixture-not-a-key"})
+        for code in (301, 302, 303, 307, 308):
+            for target in ("https://other.invalid/", aw.API_BASE + "/other", "http://api.anthropic.com/"):
+                with self.subTest(code=code, target=target):
+                    with self.assertRaises(aw.urllib.error.HTTPError) as caught:
+                        aw.RejectRedirects().redirect_request(request, None, code, "redirect", {"Location": target}, target)
+                    self.assertEqual(caught.exception.code, code)
+                    self.assertEqual(caught.exception.url, request.full_url)
+
+    def test_transport_ignores_ambient_proxies_and_keeps_original_request(self):
+        class Reply:
+            status = 200
+            headers = {"X-Fixture": "yes"}
+            def __enter__(self): return self
+            def __exit__(self, *_): return False
+            def read(self, limit):
+                self.limit = limit
+                return b"fixture response"
+        reply = Reply()
+        opener = mock.Mock()
+        opener.open.return_value = reply
+        proxies = {"HTTP_PROXY": "http://untrusted.invalid:8080", "HTTPS_PROXY": "http://untrusted.invalid:8080", "ALL_PROXY": "http://untrusted.invalid:8080"}
+        with mock.patch.dict(os.environ, proxies), mock.patch.object(aw.urllib.request, "urlopen", side_effect=AssertionError("default opener forbidden")), mock.patch.object(aw.urllib.request, "build_opener", return_value=opener) as build:
+            status, headers, raw = aw.urllib_transport("POST", aw.API_BASE + "/v1/messages", {"x-api-key": "fixture-not-a-key"}, b"{}", 7)
+        handlers = build.call_args.args
+        self.assertEqual(handlers[0].proxies, {})
+        self.assertIsInstance(handlers[1], aw.RejectRedirects)
+        sent = opener.open.call_args.args[0]
+        self.assertEqual(sent.full_url, aw.API_BASE + "/v1/messages")
+        self.assertEqual(sent.get_method(), "POST")
+        self.assertEqual(sent.get_header("X-api-key"), "fixture-not-a-key")
+        self.assertEqual(sent.data, b"{}")
+        self.assertEqual(opener.open.call_args.kwargs["timeout"], 7)
+        self.assertEqual(reply.limit, aw.MAX_HTTP_RESPONSE_BYTES + 1)
+        self.assertEqual((status, headers, raw), (200, {"x-fixture": "yes"}, b"fixture response"))
+
+    def test_redirect_is_one_attempt_without_automatic_retry(self):
+        opener = mock.Mock()
+        opener.open.side_effect = aw.urllib.error.HTTPError(aw.API_BASE + "/v1/messages", 302, "redirect blocked", {"Location": "https://other.invalid"}, None)
+        client = aw.AnthropicClient("fixture-not-a-key", transport=aw.urllib_transport, sleep=lambda _: self.fail("redirect must not retry"))
+        budget = aw.BudgetGuard("claude-haiku-5-5", 1, 0.01)
+        with mock.patch.object(aw.urllib.request, "build_opener", return_value=opener):
+            status, raw, attempts, error = client._call("POST", "/v1/messages", b"{}", 7, budget=budget)
+        self.assertEqual((status, raw, attempts, error), (302, b"", 1, "API_HTTP_302"))
+        self.assertEqual(opener.open.call_count, 1)
 
 
 class WorkerTests(unittest.TestCase):
