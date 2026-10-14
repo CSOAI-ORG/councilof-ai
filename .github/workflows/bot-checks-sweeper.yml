@@ -74,10 +74,11 @@ jobs:
               cr = json.loads(gh(["api", f"repos/{REPO}/commits/{sha}/check-runs?per_page=100"]).stdout)
               all_gates = [r for r in (cr.get("check_runs") or []) if r.get("name") == "gates"]
               green_gates = [r for r in all_gates if r.get("conclusion") == "success"]
-              if green_gates:
-                  continue  # already has a passing protected context on the current head
-              # Failed or in-progress gates exist but none passed — re-dispatch
-              # (the earlier dispatch may have failed, or a newer head invalidated it)
+              active_gates = [r for r in all_gates if r.get("status") in ("queued", "in_progress")]
+              if green_gates or active_gates:
+                  continue  # passing or queued/running gates already exist on this head
+              # Re-dispatch only completed unsuccessful or missing gates.
+              # (the earlier dispatch may have failed, or this head has no gates)
               swept.append(n)
               r = gh(["workflow", "run", "pr-gates.yml", "--repo", REPO,
                       "--ref", branch, "-f", f"pr={n}"])

@@ -238,7 +238,7 @@ export const onRequestGet: PagesFunction<{
         free_preview_note: "count, span, root count and the sha256 of the exact batch bytes — no leaves",
         deliverable: RECEIPTS_BATCH_DESCRIPTION,
         recent_free: [u("/root.json"), u("/cards/<sha16>.json"), u("/api/proof?sha=<64-hex>"), u("/receipts/root-history.json")],
-        honesty: "no settlement-receipt stream exists (/api/receipts/latest is UNPUBLISHED); these are measurement leaves, not payment receipts",
+        honesty: "these are historical measurement leaves, not payment receipts; /api/receipts/latest reports aggregate receipt-store state when available; aggregate counts do not verify a particular payment, delivery or buyer acceptance",
         never: ["a conclusion about any leaf", "a grade", "a certificate", "a settlement-receipt claim"],
       },
       // Self-serve RAS doors — fresh computation. A computation that has not run cannot be previewed, so
