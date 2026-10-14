@@ -47,20 +47,6 @@ export default function Login() {
     }
   };
 
-  // Demo login for testing
-  const handleDemoLogin = async () => {
-    setIsSubmitting(true);
-    try {
-      await login('demo@csoai.com', 'demo123');
-      toast.success('Welcome to the demo!');
-      setLocation('/dashboard');
-    } catch (error) {
-      toast.error('Demo login failed');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -140,6 +126,8 @@ export default function Login() {
                 <Input
                   id="email"
                   type="email"
+                  name="email"
+                  autoComplete="username"
                   placeholder="you@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -152,6 +140,8 @@ export default function Login() {
                 <Input
                   id="password"
                   type="password"
+                  name="password"
+                  autoComplete="current-password"
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -184,18 +174,12 @@ export default function Login() {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-white text-gray-500">Or try the demo</span>
+                <span className="px-4 bg-white text-gray-500">Browse without signing in</span>
               </div>
             </div>
 
-            <Button
-              variant="outline"
-              size="lg"
-              className="w-full"
-              onClick={handleDemoLogin}
-              disabled={isSubmitting}
-            >
-              Demo Login (No Password Required)
+            <Button variant="outline" size="lg" className="w-full" asChild>
+              <a href="/dashboard">Browse public results</a>
             </Button>
 
             <div className="relative">
