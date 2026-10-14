@@ -1053,7 +1053,7 @@ def kaggle_page_text(tr: dict) -> tuple[str, str]:
         "(digests, derived counts, bank rows) · gspc-axes.csv / .jsonl (one row per slot) · check-board.sh (re-derive the "
         "totals and the Merkle root yourself) · README.md (the axes, the counts, how to verify).\n\n"
         f"VERIFY: {VERIFY_URL} (free, no account) · {HOWTO_URL} · pip install \"csoai-gspc[verify]\" then csoai-gspc verify "
-        f"CARD_ID · keys resolve via did:web:csoai.org ({DID_URL}).\n\n"
+        f"CARD_ID · keys resolve via did:web:csoai.org: [DID document]({DID_URL}).\n\n"
         "Not a certification, not a rating, not an endorsement, not legal advice. Measurement, not certification.\n\n"
         f"Methodology DOI: https://doi.org/{ZENODO_METHODOLOGY_DOI} · snapshot series: https://doi.org/10.5281/zenodo.{ZENODO_CONCEPT}\n"
         f"Issuer: {tr['board'].get('issuer', 'CSOAI Ltd')}.\n\n"
@@ -1062,7 +1062,54 @@ def kaggle_page_text(tr: dict) -> tuple[str, str]:
     return subtitle, description
 
 
-def kaggle_metadata_drift(info: dict, subtitle: str, description: str) -> str | None:
+# Kaggle uses SPDX names in metadata, not the display label returned by its view API.
+KAGGLE_LICENCE_NAMES = {
+    "CC-BY-4.0": "CC-BY-4.0",
+    "CC0-1.0": "CC0-1.0",
+    "CC0: Public Domain": "CC0-1.0",
+}
+
+
+def kaggle_licences(board: dict, info: dict, approved_change: tuple[str, str] | None = None) -> list[dict]:
+    """Refuse unknown/conflicting rights; an existing label change needs explicit owner approval."""
+    target = board.get("totals", {}).get("license")
+    if target not in ("CC-BY-4.0", "CC0-1.0"):
+        raise Refused(f"unsupported board licence for Kaggle: {target!r}")
+    declarations = info.get("licenses")
+    if declarations is None:
+        declarations = [{"name": info.get("licenseName")}]
+    if not isinstance(declarations, list) or len(declarations) != 1 or not isinstance(declarations[0], dict):
+        raise Refused("Kaggle must declare exactly one known licence before metadata can be changed")
+    current = KAGGLE_LICENCE_NAMES.get(declarations[0].get("name"))
+    if current is None:
+        raise Refused("unknown existing Kaggle licence; do not default to CC0")
+    if info.get("licenseName") is not None and KAGGLE_LICENCE_NAMES.get(info["licenseName"]) != current:
+        raise Refused("conflicting existing Kaggle licence declarations")
+    if current != target and approved_change != (current, target):
+        raise Refused(f"Kaggle licence {current} differs from board {target}; existing owner must explicitly approve this metadata repair")
+    return [{"name": target}]
+
+
+def kaggle_metadata_payload(info: dict, subtitle: str, description: str, licenses: list[dict]) -> dict:
+    """Preserve existing metadata, including privacy and collaborators, during a copy-only repair."""
+    missing = [k for k in ("title", "isPrivate", "collaborators") if k not in info]
+    if missing:
+        raise Refused("complete existing Kaggle metadata required; missing " + ", ".join(missing))
+    if not isinstance(info["title"], str) or not info["title"].strip() or not isinstance(info["isPrivate"], bool):
+        raise Refused("Kaggle title/privacy settings are malformed; do not replace unknown state")
+    if not isinstance(info["collaborators"], list) or any(
+        not isinstance(c, dict) or any(not isinstance(c.get(k), str) or not c[k].strip() for k in ("username", "role"))
+        for c in info["collaborators"]
+    ):
+        raise Refused("Kaggle collaborator settings are incomplete; absent/null is not an empty list")
+    payload = dict(info)
+    payload.update(id=KAGGLE_ID, subtitle=subtitle, description=description, licenses=licenses)
+    return payload
+
+
+def kaggle_metadata_drift(info: dict, subtitle: str, description: str,
+                          licenses: list[dict] | None = None,
+                          expected_metadata: dict | None = None) -> str | None:
     """Why the visible Kaggle page differs from the producer's text, or None when it does not.
 
     Whitespace is normalised (Kaggle may re-wrap), nothing else is: an appended or edited line is drift."""
@@ -1073,10 +1120,23 @@ def kaggle_metadata_drift(info: dict, subtitle: str, description: str) -> str | 
         reasons.append(f"subtitle is {info.get('subtitle')!r}, producer says {subtitle!r}")
     if norm(info.get("description")) != norm(description):
         reasons.append("description differs from the producer's text")
+    if licenses is not None:
+        try:
+            if kaggle_licences({"totals": {"license": licenses[0]["name"]}}, info) != licenses:
+                reasons.append("licence differs from the approved metadata")
+        except (Refused, IndexError, KeyError, TypeError):
+            reasons.append("licence differs from the approved metadata")
+    for field in ("title", "isPrivate", "collaborators", "keywords", "resources", "userSpecifiedSources", "expectedUpdateFrequency"):
+        if expected_metadata is not None and field in expected_metadata and (
+            type(info.get(field)) is not type(expected_metadata[field]) or info.get(field) != expected_metadata[field]
+        ):
+            reasons.append(f"preserved {field} differs from the original metadata")
     return "; ".join(reasons) or None
 
 
-def spray_kaggle(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[dict]:
+def spray_kaggle(tr: dict, snap: Path, *, dry_run: bool, force: bool,
+                 metadata_only: bool = False,
+                 approved_licence_change: tuple[str, str] | None = None) -> list[dict]:
     page = f"https://www.kaggle.com/datasets/{KAGGLE_ID}"
     kaggle = shutil.which("kaggle")
     have_env = bool(os.environ.get("KAGGLE_USERNAME") and os.environ.get("KAGGLE_KEY"))
@@ -1107,8 +1167,8 @@ def spray_kaggle(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[di
     except Exception as e:  # noqa: BLE001
         raise Refused(f"cannot parse Kaggle's downloadable SNAPSHOT.json before publish ({e})")
     subtitle, description = kaggle_page_text(tr)
-    keywords = (info.get("keywords") or ["government", "law", "artificial intelligence", "internet", "benchmark"])[:5]
-    licenses = info.get("licenses") or [{"name": "CC0-1.0"}]
+    licenses = kaggle_licences(tr["board"], info, approved_licence_change)
+    desired_metadata = kaggle_metadata_payload(info, subtitle, description, licenses)
     if BANNED.search(description):
         return [result("kaggle", "FAILED", page, detail="description would carry a banned word")]
 
@@ -1118,27 +1178,29 @@ def spray_kaggle(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[di
         if bp:
             log(f"[kaggle] {why} — but byte parity fails ({bp}); republishing to hold the byte-strict gate")
             why = None
+    if metadata_only and not why:
+        raise Refused("metadata-only repair requires identical captured/downloadable snapshot bytes; no version upload permitted")
     if why:
         # Bytes are current. The visible page is a separate record: it is editable by hand and
         # was, on 2026-09-14, still claiming as_of 2026-09-12 plus a typed legacy Hub triple while
         # the archive carried 2026-09-14. UNCHANGED bytes must not leave that page stale.
-        drift = kaggle_metadata_drift(info, subtitle, description)
+        drift = kaggle_metadata_drift(info, subtitle, description, licenses)
         if not drift:
             return [result("kaggle", "UNCHANGED", page, tr["as_of"], why)]
         log(f"[kaggle] {why} — but the visible page metadata drifted ({drift}); repairing metadata only")
         if dry_run:
             return [result("kaggle", "DRY-RUN", page, detail=f"bytes unchanged; would repair page metadata ({drift})")]
         with tempfile.TemporaryDirectory() as d:
-            (Path(d) / "dataset-metadata.json").write_text(json.dumps({
-                "id": KAGGLE_ID, "title": info.get("title") or "GSPC living board", "subtitle": subtitle,
-                "description": description, "keywords": keywords, "licenses": licenses,
-            }, ensure_ascii=False, indent=1))
+            (Path(d) / "dataset-metadata.json").write_text(json.dumps(desired_metadata, ensure_ascii=False, indent=1))
             updated = run([kaggle, "datasets", "metadata", "--update", KAGGLE_ID, "-p", d], check=False)
         if updated.returncode != 0:
             return [result("kaggle", "PUBLISHED-METADATA-UNCONFIRMED", page, tr["as_of"],
                            f"bytes unchanged; metadata repair failed: {updated.stdout[-300:]} {updated.stderr[-300:]}")]
         repaired = wait_for(lambda: kaggle_metadata_drift((lambda m: m.get("info", m))(read_meta() or {}),
-                                                          subtitle, description) is None, tries=12, delay=10)
+                                                          subtitle, description, licenses, desired_metadata) is None, tries=12, delay=10)
+        if repaired and byte_parity_reason(remote_files, kaggle_public_files()) is not None:
+            return [result("kaggle", "PUBLISHED-UNCONFIRMED", page, tr["as_of"],
+                           "metadata update sent but downloadable bytes changed; do not claim metadata-only parity")]
         return [result("kaggle", "PUBLISHED" if repaired else "PUBLISHED-METADATA-UNCONFIRMED", page, tr["as_of"],
                        "bytes unchanged; page metadata repaired to the producer's text" if repaired
                        else "bytes unchanged; metadata update sent but the drift is still visible")]
@@ -1148,21 +1210,12 @@ def spray_kaggle(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[di
     with tempfile.TemporaryDirectory() as d:
         for f in SNAPSHOT_FILES:
             shutil.copy2(snap / f, Path(d) / f)
-        desired_metadata = {
-            "id": KAGGLE_ID, "title": info.get("title") or "GSPC living board", "subtitle": subtitle,
-            "description": description, "keywords": keywords, "licenses": licenses,
-        }
         # A Kaggle version upload also edits the public page. Keep the already-visible metadata
         # during the byte upload; the current-root claim is applied only after the downloadable
         # archive and the Hugging Face twin pass exact parity verification below.
-        staged_metadata = {
-            "id": KAGGLE_ID,
-            "title": info.get("title") or "GSPC living board",
-            "subtitle": info.get("subtitle") or subtitle,
-            "description": info.get("description") or "GSPC living board snapshot.",
-            "keywords": keywords,
-            "licenses": licenses,
-        }
+        staged_metadata = dict(desired_metadata)
+        staged_metadata.update(subtitle=info.get("subtitle") or subtitle,
+                               description=info.get("description") or "GSPC living board snapshot.")
         metadata_path = Path(d) / "dataset-metadata.json"
         metadata_path.write_text(json.dumps(staged_metadata, ensure_ascii=False, indent=1))
         p = run([kaggle, "datasets", "version", "-p", d, "-m", f"gspc-spray: board snapshot as_of {tr['as_of']}",
@@ -1188,12 +1241,12 @@ def spray_kaggle(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[di
         if updated.returncode != 0:
             return [result("kaggle", "PUBLISHED-METADATA-UNCONFIRMED", page, seen,
                            detail=f"exact bytes verified but metadata update failed: {updated.stdout[-300:]} {updated.stderr[-300:]}")]
-    def metadata_has_as_of():
+    def metadata_matches():
         latest = read_meta() or {}
         latest_info = latest.get("info", latest)
-        return (tr["as_of"] in (latest_info.get("subtitle") or "")) and tr["as_of"]
+        return kaggle_metadata_drift(latest_info, subtitle, description, licenses, desired_metadata) is None and tr["as_of"]
 
-    metadata_seen = wait_for(metadata_has_as_of, tries=12, delay=10)
+    metadata_seen = wait_for(metadata_matches, tries=12, delay=10)
     return [result("kaggle", "PUBLISHED" if metadata_seen else "PUBLISHED-METADATA-UNCONFIRMED", page,
                    metadata_seen or tr["as_of"],
                    None if metadata_seen else "exact bytes verified; Kaggle metadata update has not appeared yet")]
@@ -1768,6 +1821,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--build-only", action="store_true", help="build the snapshot directory and stop")
     ap.add_argument("--dry-run", action="store_true", help="read live truth, build, decide — but push nothing")
     ap.add_argument("--force", action="store_true", help="republish when only the root's clock moved (same fingerprint)")
+    ap.add_argument("--kaggle-metadata-only", action="store_true", help="refuse any Kaggle version upload; repair only metadata over identical bytes")
+    ap.add_argument("--kaggle-approved-licence-change", nargs=2, metavar=("FROM_SPDX", "TO_SPDX"),
+                    help="existing owner-approved repair of a conflicting Kaggle label; does not establish rights")
     ap.add_argument("--out", default=None, help="snapshot directory (default: a temp dir under $RUNNER_TEMP or /tmp)")
     ap.add_argument("--report", default=None, help="write the per-surface results as JSON here")
     ap.add_argument("--zenodo-stage", default=None, metavar="DIR",
@@ -1789,7 +1845,11 @@ def main(argv: list[str] | None = None) -> int:
         refuse_newer_remote(chosen, tr)
         for s in chosen:
             try:
-                results.extend(SURFACES[s](tr, snap, dry_run=args.dry_run, force=args.force))
+                options = {"dry_run": args.dry_run, "force": args.force}
+                if s == "kaggle":
+                    options.update(metadata_only=args.kaggle_metadata_only,
+                                   approved_licence_change=tuple(args.kaggle_approved_licence_change) if args.kaggle_approved_licence_change else None)
+                results.extend(SURFACES[s](tr, snap, **options))
             except Exception as e:  # noqa: BLE001 — one surface failing must not hide the others
                 results.append(result(s, "FAILED", detail=f"{type(e).__name__}: {e}"))
 
