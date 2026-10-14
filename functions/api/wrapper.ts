@@ -1,3 +1,4 @@
+import { recordPaidResponse } from "./_x402_delivery_record";
 /**
  * GET /api/wrapper?id=<roster id> — per-request signed evidence card of ONE wrapped/bridged
  * stablecoin pair: the wrapped token's totalSupply on its chain and the canonical token's
@@ -442,7 +443,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     } catch { /* never blocks a paid deliverable */ }
   }
 
-  return new Response(signed.text, {
+  return recordPaidResponse(new Response(signed.text, {
     status: 200,
     headers: {
       "content-type": "application/json; charset=utf-8",
@@ -452,7 +453,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       "x-csoai-signed": signed.signed ? "true" : "false",
       ...(payment.ok && payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {}),
     },
-  });
+  }), { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
 };
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */

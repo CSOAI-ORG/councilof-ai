@@ -244,6 +244,31 @@ jobs:
           test -n "$files" || { echo "NODE_TEST_FILES is empty or unreadable"; exit 1; }
           node --test $files
 
+      # Same required gates job: the delivery runner uses Node's TS transformer and VM modules.
+      - name: Paid delivery regression runtime
+        if: steps.scope.outputs.gated == 'true'
+        uses: actions/setup-node@v4
+        with: { node-version: '22.23.3' }
+
+      - name: Paid delivery and API worker offline regressions
+        if: steps.scope.outputs.gated == 'true'
+        env:
+          CODEX_DELIVERY_PR_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          echo "PR source revision: $CODEX_DELIVERY_PR_HEAD"
+          echo "Checked-out test revision: $(git rev-parse HEAD)"
+          git fetch --no-tags --depth=1 origin 10046fd8b60d75be66bd1f9dbf54155cca26dec3
+          test "$(git rev-parse 10046fd8b60d75be66bd1f9dbf54155cca26dec3^{commit})" = 10046fd8b60d75be66bd1f9dbf54155cca26dec3
+          node --version
+          python3 scripts/test_anthropic_gspc_worker.py
+          node --experimental-vm-modules --unhandled-rejections=strict scripts/test_paid_delivery_records.mjs
+
+      - name: Restore existing Node 20 build runtime
+        if: always() && steps.scope.outputs.gated == 'true'
+        uses: actions/setup-node@v4
+        with: { node-version: 20 }
+
       - name: Build client
         if: steps.scope.outputs.gated == 'true'
         run: npm run build:client
