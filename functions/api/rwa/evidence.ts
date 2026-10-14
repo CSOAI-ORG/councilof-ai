@@ -1,3 +1,4 @@
+import { recordPaidResponse } from "../_x402_delivery_record";
 /**
  * GET /api/rwa/evidence?asset=<symbol|issuer_address> — per-request signed evidence card of ONE
  * XRPL asset's deterministic on-ledger state. Sold to machines over the existing x402 rail
@@ -422,7 +423,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   }
 
   // The body IS the canonical card bytes (as the eater stores them): the file a buyer saves is the leaf.
-  return new Response(text, {
+  return recordPaidResponse(new Response(text, {
     status: 200,
     headers: {
       "content-type": "application/json; charset=utf-8",
@@ -432,7 +433,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       "x-csoai-signed": leaf.sig_ed25519 ? "true" : "false",
       ...(payment.ok && payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {}),
     },
-  });
+  }), { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
 };
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */

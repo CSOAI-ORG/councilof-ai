@@ -1,3 +1,4 @@
+import { recordPaidResponse } from "../_x402_delivery_record";
 /**
  * GET /api/receipts/batch?from=<iso>&to=<iso> — a historical batch of the estate's measurement
  * receipts, sold over the existing x402 rail (SKU receipts_batch, x402-or-invoice).
@@ -354,11 +355,11 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     }
   }
 
-  return json(
+  return recordPaidResponse(json(
     { schema: SCHEMA, kind: "batch", batch, batch_sha256, manifest_card, manifest_bytes: leaf.bytes, unsigned_reason: leaf.unsigned_reason, sources, settle: payment.settlement || null, verify: `${origin}/gspc-verify` },
     200,
     payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {},
-  );
+  ), { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
 };
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */
