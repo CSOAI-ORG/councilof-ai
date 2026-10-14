@@ -1,4 +1,4 @@
-import { recordPaidResponse } from "../_x402_delivery_record";
+import { recordPaidResponse, markPaidUndeliveredResponse } from "../_x402_delivery_record";
 /**
  * GET /api/receipts/batch?from=<iso>&to=<iso> — a historical batch of the estate's measurement
  * receipts, sold over the existing x402 rail (SKU receipts_batch, x402-or-invoice).
@@ -341,7 +341,16 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     settle_tx: payment.settlement?.transaction || null,
     attests: "assembly of already-published leaves and roots for this window — nothing about their content",
   };
-  const leaf = await signPayload(payload, env.BOARD_SIGN_KEY_PKCS8_B64);
+  let leaf: Awaited<ReturnType<typeof signPayload>>;
+  try {
+    leaf = await signPayload(payload, env.BOARD_SIGN_KEY_PKCS8_B64);
+  } catch (e) {
+    return markPaidUndeliveredResponse(json({
+      schema: SCHEMA, error: "uncheckable", state: "PAID_NOT_DELIVERED",
+      reason: e instanceof Error ? e.message : String(e), settle: payment.settlement || null,
+      note: "Payment settled, but this output was not delivered. Preserve the settlement receipt and reconcile the transaction with CSOAI before any reissue; do not automatically retry or pay again.",
+    }, 500), payment.ok, payment.paymentResponse);
+  }
   const source_urls = [sources.leaves, `${origin}/receipts/root-history.json`, `${origin}/root.json`];
   if (payment.settlement?.transaction) source_urls.push(`https://basescan.org/tx/${payment.settlement.transaction}`);
   const manifest_card = cardV0({ surface: SURFACE, subject: `receipts batch ${batch.window.from}/${batch.window.to}`, as_of, source_urls, payload, leaf, tags: ["receipts", "history", "assembly"] });
