@@ -6,11 +6,18 @@ WHAT IT DERIVES, AND FROM WHERE (nothing in the artefact is typed here):
                       reused as a library — never a second walker). Every operation whose only
                       declared response is 200 gets `security: []`: OpenAPI's way of saying "no
                       authentication", except for the explicitly reviewed bearer/conditional contracts below. This is what x402scan (@agentcash/discovery) reads as
-                      "public, do not probe". 404/405/501/503 facades (retired, quarantined, not implemented)
+                      "public, do not probe". 405/501/503 facades (quarantined, not implemented)
                       are ALSO `security: []` — they require no authentication either — and keep their
                       x-csoai-lifecycle marker, which is what says they are not public reads. Left
                       unclassified, x402scan probed each one as a candidate paid endpoint and aggregators
                       counted ~39 free routes as "x402 endpoints" (28 Sep 2026).
+  NOT PUBLISHED       a WITHDRAWN route: lifecycle RETIRED or DOOR_CLOSED (WITHDRAWN_LIFECYCLES below). Its
+                      handler stays deployed and answers its fail-closed 503 or 404, and
+                      council-os/capabilities.json names it in openapi_gap; it is not an operation in this
+                      document. A reader of an OpenAPI document lists every path as an API it can call: the
+                      x-csoai-lifecycle marker is ours and nobody else reads it. An independent profile built
+                      from this document kept listing a withdrawn certificate-schema route and a closed
+                      checkout route for that reason (api-evangelist/councilof-ai#1, 12 Oct 2026).
   x402 doors          functions/.well-known/x402.json.ts — the Pages Function that serves /.well-known/x402.json,
                       RENDERED offline by scripts/render_x402_manifest.mjs into
                       scripts/fixtures/x402scan/well_known_x402.json on every build (and compared on --check).
@@ -82,6 +89,13 @@ MANIFEST_RENDERER = HERE / "render_x402_manifest.mjs"
 DESCRIPTION_SOURCE = REPO / "functions" / "api" / "x402-descriptions.json"
 WRAPPER_ASSET_DOORS = REPO / "functions" / "api" / "_wrapper_asset_doors.json"
 DISCOVERY_SUBJECTS = REPO / "functions" / "api" / "discover" / "subjects.json"
+# WITHDRAWN: the handler is still deployed and answers a fail-closed status, and the route is no
+# longer offered. RETIRED = @openapi-retired, 503 csoai.retired-endpoint/0.1; DOOR_CLOSED =
+# @openapi-closed, 404 by contract. Such a route is not published as an operation (see NOT PUBLISHED
+# above). QUARANTINED_PRE_RELEASE and NOT_IMPLEMENTED are a different statement — not released yet —
+# and stay listed with their marker. scripts/capability-registry.mjs carries the same set
+# (WITHDRAWN_LIFECYCLES); registry_crosscheck() below fails when the two sides disagree about a route.
+WITHDRAWN_LIFECYCLES = frozenset({"RETIRED", "DOOR_CLOSED"})
 DESCRIPTION_PATHS = {
     # Every door, not three (2026-09-28): the canonical text is the one source the manifest, each
     # door's 402 (and so the Bazaar extension's catalogue entry), capabilities.json and llms.txt read.
@@ -344,11 +358,18 @@ def compose(fix: Path = FIX) -> dict:
     walker = load_walker()
     base = walker.build_openapi(walker.discover_endpoints())
     paths: dict[str, dict] = {}
+    withdrawn: set[str] = set()  # paths with at least one withdrawn operation, for the door guard below
     for p, item in base["paths"].items():
-        for op in item.values():
+        # A withdrawn operation is enumerated by the walker and NOT published (WITHDRAWN_LIFECYCLES).
+        kept = {m: op for m, op in item.items() if op.get("x-csoai-lifecycle") not in WITHDRAWN_LIFECYCLES}
+        if len(kept) != len(item):
+            withdrawn.add(p)
+        if not kept:
+            continue
+        for op in kept.values():
             if list(op["responses"]) == ["200"]:
                 op["security"] = []  # explicitly public — x402scan lists, never probes
-        paths[p] = item
+        paths[p] = kept
 
     # Reviewed access contracts: a generic 200 response is not proof of public access.
     # Metadata only; access enforcement remains in the existing handlers.
@@ -375,7 +396,8 @@ def compose(fix: Path = FIX) -> dict:
 
     # Every other operation: no credential is required, so say so. `security: []` is OpenAPI's
     # "no authentication" — it does not say the route works; the x-csoai-lifecycle marker beside it
-    # (RETIRED / QUARANTINED_PRE_RELEASE / NOT_IMPLEMENTED / DOOR_CLOSED / METHOD_NOT_ALLOWED) does.
+    # (QUARANTINED_PRE_RELEASE / NOT_IMPLEMENTED / METHOD_NOT_ALLOWED) does. RETIRED and DOOR_CLOSED
+    # never reach this loop: a withdrawn route is not published at all.
     # Unclassified, these were probed by x402scan as candidate paid endpoints and counted by
     # aggregators as x402 routes (x402jp listed ~80 for this origin, most of them free).
     for item in paths.values():
@@ -395,6 +417,10 @@ def compose(fix: Path = FIX) -> dict:
     for r in wk["resources"]:
         path, params = split_template(r["url"])
         did = door_id(path)
+        if path in withdrawn:
+            # The door loop replaces the whole path item, which would publish the route again.
+            raise SystemExit(f"{path}: /.well-known/x402.json advertises a door whose own handler marks it withdrawn "
+                             "(@openapi-retired / @openapi-closed) — remove the door or the marker")
         method = (r.get("method") or "GET").lower()
         tier = tiers_by_path.get(path)
         entry = index.get(did) or {}
@@ -763,7 +789,9 @@ def registry_crosscheck(spec: dict) -> list[str]:
         /api/wrapper/changes sat in /.well-known/x402.json and in no OpenAPI operation until
         2026-09-22, invisible to every indexer that reads this document;
       · a capability's lifecycle and the document's x-csoai-lifecycle marker disagree — one route,
-        two vocabularies.
+        two vocabularies;
+      · a WITHDRAWN capability (RETIRED / DOOR_CLOSED) is listed in the document, or still claims the
+        openapi surface — a route we took away, advertised as an API to every reader of the document.
     A route the OpenAPI producer cannot reach at all is NAMED in registry.openapi_gap, never
     counted: a new one has to be added there deliberately, and a stale exemption fails here.
     """
@@ -789,6 +817,12 @@ def registry_crosscheck(spec: dict) -> list[str]:
             if c is None:
                 errs.append(f"{method.upper()} {path}: documented here and declared by no capability entry")
                 continue
+            if c["lifecycle"] in WITHDRAWN_LIFECYCLES:
+                errs.append(
+                    f"{method.upper()} {path}: the registry says {c['lifecycle']} — a withdrawn route "
+                    "may not be listed in the document"
+                )
+                continue
             if key in gap:
                 errs.append(
                     f"{method.upper()} {path}: named in registry.openapi_gap as unreachable by this producer, "
@@ -802,6 +836,18 @@ def registry_crosscheck(spec: dict) -> list[str]:
                 )
 
     for (path, method), c in sorted(declared.items()):
+        if c["lifecycle"] in WITHDRAWN_LIFECYCLES:
+            if "openapi" in c.get("surfaces", []):
+                errs.append(
+                    f"{method.upper()} {path} ({c['id']}): declared {c['lifecycle']} and still claims the openapi "
+                    "surface — a withdrawn route is named in registry.openapi_gap, not listed"
+                )
+            elif (path, method) not in gap:
+                errs.append(
+                    f"{method.upper()} {path} ({c['id']}): declared {c['lifecycle']} and absent from "
+                    "registry.openapi_gap — a withdrawn route is named there, never silently dropped"
+                )
+            continue
         if "openapi" in c.get("surfaces", []) and (path, method) not in documented:
             errs.append(
                 f"{method.upper()} {path} ({c['id']}): declared for the openapi surface and absent from the document"
@@ -846,14 +892,35 @@ def main() -> int:
         planted3 = compose()
         next(iter(planted3["paths"]["/api/gspc"].values()))["x-csoai-lifecycle"] = "RETIRED"
         e3 = registry_crosscheck(planted3)
+        # A withdrawn route put back into the document. The route is read from the walker, never typed:
+        # what the walker enumerates with a withdrawn marker is what the producer must have left out.
+        walker = load_walker()
+        walked = walker.build_openapi(walker.discover_endpoints())["paths"]
+        gone = sorted((p, m) for p, item in walked.items() for m, op in item.items()
+                      if op.get("x-csoai-lifecycle") in WITHDRAWN_LIFECYCLES)
+        clean = compose()
+        listed = {(p, m) for p, m in gone if m in clean["paths"].get(p, {})}
+        # isinstance: a path item may also carry non-operation keys (a path-level `security`, say).
+        listed |= {(p, m) for p, item in clean["paths"].items() for m, op in item.items()
+                   if isinstance(op, dict) and op.get("x-csoai-lifecycle") in WITHDRAWN_LIFECYCLES}
+        e4: list[str] = []
+        if gone:
+            planted4 = compose()
+            p4, m4 = gone[0]
+            planted4["paths"].setdefault(p4, {})[m4] = walked[p4][m4]
+            e4 = registry_crosscheck(planted4)
         checks = (
             (any("declared by no capability entry" in x for x in e1), "an operation no capability declares"),
             (any("absent from the document" in x for x in e2), "a declared door missing from the document"),
             (any("two vocabularies" in x for x in e3), "a lifecycle the registry contradicts"),
+            (any("withdrawn route may not be listed" in x for x in e4), "a withdrawn route listed in the document"),
         )
         for ok, label in checks:
             print(("✓ " if ok else "✖ ") + f"registry cross-check catches {label}")
-        return 0 if all(ok for ok, _ in checks) else 1
+        dropped = bool(gone) and not listed
+        print(("✓ " if dropped else "✖ ") + f"the walker enumerates {len(gone)} withdrawn operation(s) "
+              f"(RETIRED / DOOR_CLOSED) and the document lists {len(listed)} of them")
+        return 0 if all(ok for ok, _ in checks) and dropped else 1
 
     if args.fetch:
         budget = Budget(args.max_requests)
