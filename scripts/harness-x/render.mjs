@@ -25,6 +25,7 @@ import { createHash } from "node:crypto";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { vscodeInstallAction } from "./vscode-install.mjs";
+import { cursorInstallAction } from "./cursor-install.mjs";
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const args = process.argv.slice(2);
@@ -1485,7 +1486,7 @@ class GspcProvider(ToolProvider):
     doctrine: DOCTRINE,
     clients: cm.clients.map((c) => {
       const row = { ...c, url: c.door === "full" ? ID.door : FREE_URL, snippet: fill(c.snippet) };
-      const install_action = vscodeInstallAction(row, FREE_URL);
+      const install_action = row.installer === "cursor" ? cursorInstallAction(row, FREE_URL) : vscodeInstallAction(row, FREE_URL);
       return install_action ? { ...row, install_action } : row;
     }),
   }));
