@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
 import { verifyRecord } from "@/lib/recordVerify";
+// Shared with the server-side router (#3141): 4xx/5xx/timeout is UNCHECKABLE, never FAILED.
+import { retrievalState } from "../../../functions/_lib/watchdogRoute";
 import {
   CORRECTIONS_URL,
   REGISTER_URL,
@@ -41,7 +43,7 @@ async function getJson(url: string): Promise<Retrieval<{ json: unknown; text: st
   const fetchedAt = new Date().toISOString();
   try {
     const res = await fetch(url, { cache: "no-store", headers: { accept: "application/json" } });
-    if (!res.ok) return retrievalFailed(`HTTP ${res.status}`, fetchedAt, res.status);
+    if (retrievalState(res.status) === "UNCHECKABLE" || !res.ok) return retrievalFailed(`HTTP ${res.status}`, fetchedAt, res.status);
     const text = await res.text();
     try {
       return { state: "OK", value: { json: JSON.parse(text), text }, fetchedAt, status: res.status, sha256: await sha256Hex(text) };
@@ -49,6 +51,7 @@ async function getJson(url: string): Promise<Retrieval<{ json: unknown; text: st
       return retrievalFailed("The response was not JSON", fetchedAt, res.status);
     }
   } catch (e) {
+    // A network error or timeout maps through the same helper: retrievalState(null, true) is UNCHECKABLE.
     return retrievalFailed(e instanceof Error ? e.message : "Network error", fetchedAt);
   }
 }
