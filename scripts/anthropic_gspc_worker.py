@@ -36,6 +36,7 @@ from __future__ import annotations
 import argparse
 import concurrent.futures
 import dataclasses
+from decimal import Decimal, InvalidOperation
 import json
 import os
 import random
@@ -298,17 +299,42 @@ class AnthropicClient:
             "user-agent": "csoai-anthropic-gspc-worker",
         }
 
-    def _call(self, method: str, path: str, body: bytes | None, timeout: int) -> tuple[int, bytes, int, str | None]:
+    def _call(
+        self, method: str, path: str, body: bytes | None, timeout: int,
+        *, budget: BudgetGuard | None = None,
+    ) -> tuple[int, bytes, int, str | None]:
         attempts = 0
         last_code: str | None = None
         while attempts < self._max_attempts:
+            ticket = None
+            if method == "POST":
+                if budget is None:
+                    return 0, b"", attempts, "BUDGET_BOUND_REQUIRED"
+                ticket = budget.reserve()
+                if ticket is None:
+                    return 0, b"", attempts, budget.halted_reason or "BUDGET_CAP"
             attempts += 1
             try:
                 status, headers, raw = self._transport(method, f"{self._base}{path}", self._headers(), body, timeout)
             except (urllib.error.URLError, TimeoutError, OSError):
                 status, headers, raw, last_code = 0, {}, b"", "API_UNREACHABLE"
+            except Exception:
+                if ticket is not None:
+                    budget.retain(ticket)
+                raise
             if len(raw) > MAX_HTTP_RESPONSE_BYTES:
+                if ticket is not None:
+                    budget.retain(ticket)
                 return status, b"", attempts, "API_RESPONSE_TOO_LARGE"
+            if ticket is not None:
+                if status == 200:
+                    budget_error = budget.reconcile(ticket, raw)
+                    if budget_error:
+                        return status, raw, attempts, budget_error
+                else:
+                    # An error/timeout is not proof that an attempt was unbilled.
+                    # Keep its whole bound; a retry needs a new atomic reservation.
+                    budget.retain(ticket)
             if status == 200:
                 return status, raw, attempts, None
             if status and status not in RETRYABLE_STATUS:
@@ -333,10 +359,10 @@ class AnthropicClient:
             raise WorkerError("MODEL_RECORD_MISMATCH", "models API record does not name the configured model")
         return f"sha256:{sha256_bytes(canonical_json_bytes(record))}", record
 
-    def generate(self, job: AnthropicJob, prompt: str) -> ApiResult:
+    def generate(self, job: AnthropicJob, prompt: str, *, budget: BudgetGuard) -> ApiResult:
         body = {"model": job.model, "messages": [{"role": "user", "content": prompt}], **job.request_shape()}
         status, raw, attempts, error = self._call(
-            "POST", "/v1/messages", canonical_json_bytes(body), job.request_timeout_seconds
+            "POST", "/v1/messages", canonical_json_bytes(body), job.request_timeout_seconds, budget=budget
         )
         if error:
             return ApiResult(False, None, sha256_bytes(raw) if raw else None, error, attempts=attempts)
@@ -377,7 +403,7 @@ class DryRunClient:
         record = {"id": model, "type": "model", "dry_run": True}
         return f"sha256:{sha256_bytes(canonical_json_bytes(record))}", record
 
-    def generate(self, job: AnthropicJob, prompt: str) -> ApiResult:
+    def generate(self, job: AnthropicJob, prompt: str, *, budget: BudgetGuard) -> ApiResult:
         text = job.allowed_labels[0] if job.allowed_labels else prompt
         raw = canonical_json_bytes({"dry_run": True, "text": text})
         return ApiResult(True, text, sha256_bytes(raw), None, job.model, "end_turn", None, len(prompt) // 4, 1)
@@ -387,19 +413,85 @@ class DryRunClient:
 
 
 class BudgetGuard:
-    def __init__(self, model: str, cap_usd: float) -> None:
-        self.input_price, self.output_price = PRICE_PER_MTOK[model]
-        self.cap_usd = cap_usd
-        self.spent_usd = 0.0
+    """Atomic admission against an explicit per-attempt cost bound.
+
+    This is not a provider-enforced billing ceiling. The operator must establish
+    a conservative bound and an independent provider cap before any paid run.
+    Unknown attempts retain their full bound; returned usage never counts as zero
+    merely because it is missing. Decimal arithmetic avoids monetary round-off.
+    """
+
+    def __init__(self, model: str, cap_usd: float, request_cost_bound_usd: float | None = None) -> None:
+        self.model = model
+        self.input_price, self.output_price = (Decimal(str(v)) for v in PRICE_PER_MTOK[model])
+        try:
+            self.cap_usd = Decimal(str(cap_usd))
+            self.request_bound = Decimal(str(request_cost_bound_usd)) if request_cost_bound_usd is not None else None
+            if not self.cap_usd.is_finite() or self.cap_usd < 0:
+                raise ValueError
+            if self.request_bound is not None and (not self.request_bound.is_finite() or self.request_bound <= 0):
+                raise ValueError
+        except (InvalidOperation, ValueError):
+            raise WorkerError("BUDGET_CONFIG", "budget must be finite/non-negative and request bound finite/positive")
+        self._spent = Decimal(0)
+        self._unknown = Decimal(0)
+        self._reservations: dict[int, Decimal] = {}
+        self._next_ticket = 0
+        self.halted_reason: str | None = None
         self._lock = threading.Lock()
 
-    def charge(self, result: ApiResult) -> None:
+    @property
+    def spent_usd(self) -> float:
         with self._lock:
-            self.spent_usd += ((result.input_tokens or 0) * self.input_price + (result.output_tokens or 0) * self.output_price) / 1e6
+            return float(self._spent)
 
-    def exhausted(self) -> bool:
+    @property
+    def committed_usd(self) -> float:
         with self._lock:
-            return self.spent_usd >= self.cap_usd
+            return float(self._spent + self._unknown + sum(self._reservations.values(), Decimal(0)))
+
+    def reserve(self) -> int | None:
+        with self._lock:
+            if self.halted_reason:
+                return None
+            if self.request_bound is None:
+                self.halted_reason = "BUDGET_BOUND_REQUIRED"
+                return None
+            committed = self._spent + self._unknown + sum(self._reservations.values(), Decimal(0))
+            if committed + self.request_bound > self.cap_usd:
+                return None
+            self._next_ticket += 1
+            self._reservations[self._next_ticket] = self.request_bound
+            return self._next_ticket
+
+    def retain(self, ticket: int) -> None:
+        with self._lock:
+            self._unknown += self._reservations.pop(ticket)
+
+    def reconcile(self, ticket: int, raw: bytes) -> str | None:
+        with self._lock:
+            bound = self._reservations.pop(ticket)
+            try:
+                payload = json.loads(raw)
+                usage = payload.get("usage")
+                inp, out = usage["input_tokens"], usage["output_tokens"]
+                if type(inp) is not int or type(out) is not int or inp < 0 or out < 0:
+                    raise ValueError
+            except (ValueError, TypeError, KeyError, AttributeError):
+                self._unknown += bound
+                self.halted_reason = "BUDGET_USAGE_UNKNOWN"
+                return self.halted_reason
+            if payload.get("model") != self.model:
+                # We cannot price another/missing model as the configured model.
+                # Its response is rejected separately by run_job's attribution check.
+                self._unknown += bound
+                return None
+            actual = (inp * self.input_price + out * self.output_price) / Decimal(1_000_000)
+            self._spent += actual
+            if actual > bound:
+                self.halted_reason = "BUDGET_BOUND_EXCEEDED"
+                return self.halted_reason
+            return None
 
 
 def stage_card(
@@ -478,13 +570,10 @@ def run_job(
         prompt = compose_prompt(item, job.allowed_labels)
         t0 = time.monotonic()
         started_at = utc_now()
-        if budget.exhausted():
-            return sequence, item, prompt, ApiResult(False, None, None, "BUDGET_CAP"), started_at, utc_now(), 0.0
         try:
-            result = client.generate(job, prompt)
+            result = client.generate(job, prompt, budget=budget)
         except Exception:  # third-party failure is transport, never a wrong answer
             result = ApiResult(False, None, None, "CLIENT_EXCEPTION")
-        budget.charge(result)
         return sequence, item, prompt, result, started_at, utc_now(), round((time.monotonic() - t0) * 1000, 3)
 
     buffered: dict[int, tuple] = {}
@@ -500,20 +589,21 @@ def run_job(
                 counts["attempted"] += 1
                 if result.error_code == "BUDGET_CAP":
                     halted = "BUDGET_CAP"
-                if result.transport_ok and result.response_model and result.response_model != job.model:
+                if result.transport_ok and result.response_model != job.model:
                     result = dataclasses.replace(result, transport_ok=False, error_code="API_MODEL_MISMATCH")
                 parsed_label, grade = None, None
                 if result.transport_ok:
                     counts["transport_ok"] += 1
                     stop_reasons[result.stop_reason or "none"] = stop_reasons.get(result.stop_reason or "none", 0) + 1
                     text = result.raw_output or ""
-                    if item.predicate == "EXACT_LABEL":
+                    if result.stop_reason in ("refusal", "max_tokens", "model_context_window_exceeded"):
+                        # Terminal exclusion precedes BOTH graders, even if the text
+                        # happens to contain a complete label or every keyword.
+                        counts["parse_errors"] += 1
+                    elif item.predicate == "EXACT_LABEL":
                         parsed_label = parse_exact_label(text, job.allowed_labels)
                         grade = parsed_label == item.expected if parsed_label is not None else False
                         counts["parse_errors"] += int(parsed_label is None)
-                    elif result.stop_reason in ("max_tokens", "model_context_window_exceeded"):
-                        grade = False  # cut off before the keywords could be written: unanswered, leaves n
-                        counts["parse_errors"] += 1
                     else:
                         grade = grade_keyword_match(text, item.required_keywords)
                     counts["correct"] += int(bool(grade))
@@ -552,6 +642,7 @@ def run_job(
                     "elapsed_ms": elapsed_ms,
                 })
 
+    halted = budget.halted_reason or halted
     evidence_sha256 = sha256_file(evidence_path)
     if halted is None:
         try:
@@ -561,8 +652,8 @@ def run_job(
         if final_digest != model_record_digest:
             halted = "MODEL_RECORD_CHANGED_DURING_RUN"
     graded_n = counts["transport_ok"] - counts["parse_errors"]
-    if halted == "BUDGET_CAP":
-        reason = "run incomplete: budget cap reached; unsigned compute only"
+    if halted and halted.startswith("BUDGET_"):
+        reason = f"run incomplete: {halted}; unsigned compute only"
     elif halted == "MODEL_RECORD_CHANGED_DURING_RUN":
         reason = "run rejected: model record changed during compute"
     elif counts["transport_errors"]:
@@ -650,11 +741,13 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--max-tokens-keyword", type=int, default=DEFAULT_MAX_TOKENS_KEYWORD)
     parser.add_argument("--request-timeout", type=int, default=300)
     parser.add_argument("--concurrency", type=int, default=4)
-    parser.add_argument("--budget-usd", type=float, required=True, help="hard cap per model across all its axes")
+    parser.add_argument("--budget-usd", type=float, required=True, help="local reservation budget per model, not a provider billing ceiling")
+    parser.add_argument("--request-cost-bound-usd", type=float,
+                        help="operator-verified upper bound per HTTP attempt; required for paid runs")
     parser.add_argument("--api-key-file", help="chmod-600 file holding the key; else $ANTHROPIC_API_KEY")
     parser.add_argument("--terms-archive", type=Path, help="provider terms archive JSON; its sha256 is pinned in every instrument")
     parser.add_argument("--dry-run", action="store_true", help="no network; proves the pipeline; never landable")
-    parser.add_argument("--estimate", action="store_true", help="print worst-case cost (every item at max_tokens) and exit")
+    parser.add_argument("--estimate", action="store_true", help="illustrative cost estimate (600 input tokens/item, max output) and exit")
     return parser
 
 
@@ -664,6 +757,11 @@ def main(argv: list[str] | None = None) -> int:
         allowlist = load_allowlist(args.allowlist)
         axes = args.axis or sorted(axis for axis in allowlist)
         terms_sha256 = sha256_file(args.terms_archive) if args.terms_archive else None
+        if not (args.dry_run or args.estimate) and args.request_cost_bound_usd is None:
+            raise WorkerError("BUDGET_BOUND_REQUIRED", "paid runs require an independently qualified per-attempt bound and provider cap")
+        # Validate monetary inputs before accessing any key.
+        for model in args.model:
+            BudgetGuard(model, args.budget_usd, args.request_cost_bound_usd)
         client = DryRunClient() if (args.dry_run or args.estimate) else AnthropicClient(read_api_key(args.api_key_file))
         exit_code = 0
         for model in args.model:
@@ -676,19 +774,19 @@ def main(argv: list[str] | None = None) -> int:
                 inp, out = PRICE_PER_MTOK[model]
                 items = sum(len(load_frozen_bank(job)[0]) for job in jobs)
                 worst = sum(len(load_frozen_bank(job)[0]) * (600 * inp + job.max_tokens * out) / 1e6 for job in jobs)
-                print(f"{model}: {len(jobs)} axes, {items} items, worst case ${worst:.2f} (every item hits max_tokens)")
+                print(f"{model}: {len(jobs)} axes, {items} items, illustrative estimate ${worst:.2f} (600 input tokens/item, max output)")
                 continue
-            budget = BudgetGuard(model, args.budget_usd)
+            budget = BudgetGuard(model, args.budget_usd, args.request_cost_bound_usd)
             for job in jobs:
                 manifest = run_job(job, client, budget=budget, concurrency=args.concurrency,
                                    terms_sha256=terms_sha256, dry_run=args.dry_run)
                 if not manifest["landable_candidate"] and not args.dry_run:
                     exit_code = 3
-                if manifest["detail_code"] == "BUDGET_CAP":
-                    print(f"{model}: budget cap ${args.budget_usd:.2f} reached; stopping this model", file=sys.stderr)
+                if manifest["detail_code"].startswith("BUDGET_"):
+                    print(f"{model}: {manifest['detail_code']}; stopping this model", file=sys.stderr)
                     break
             if not args.dry_run:
-                print(f"{model}: approx spend ${budget.spent_usd:.2f} (from returned usage x list price)", file=sys.stderr)
+                print(f"{model}: known-usage estimate ${budget.spent_usd:.2f}; committed bound ${budget.committed_usd:.2f} (not a provider invoice)", file=sys.stderr)
         return exit_code
     except WorkerError as error:
         print(f"{error.code}: {error}", file=sys.stderr)
