@@ -100,7 +100,9 @@ export const FILL_ROWS: FillRow[] = [
     title: "Coverage index",
     fills: "N measured of M declared slots. Signed coverage index already published as a row count.",
     never: "A fused SOV grade. A forecast. An investable index. A bond coupon.",
-    href: "/signals/sov-signal.signed.json",
+    // Public name for the signed coverage index (public-names lock, 12 Oct 2026): the same signed
+    // bytes as /signals/sov-signal.signed.json, which stays served for existing verifiers.
+    href: "/signals/coverage-index.signed.json",
     status: "live",
   },
   {
