@@ -7,7 +7,8 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface User {
-  id: number;
+  /** Stable per-user id: the signed token subject (email). Never a shared constant. */
+  id: string;
   email: string | null;
   name?: string | null;
   role?: string;
@@ -69,7 +70,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw new Error(err.error || "Login failed");
     }
     const result = await r.json();
-    const u: User = { id: 0, email: result.user?.email ?? email, name: result.user?.name ?? "", role: "user", subscriptionTier: "free" };
+    const uid = String(result.user?.email ?? email).toLowerCase();
+    const u: User = { id: uid, email: uid, name: result.user?.name ?? "", role: "user", subscriptionTier: "free" };
     setToken(result.token); setUser(u);
     localStorage.setItem(TOKEN_KEY, result.token);
     localStorage.setItem(USER_KEY, JSON.stringify(u));
@@ -95,7 +97,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw new Error(err.error || "Registration failed");
     }
     const result = await r.json();
-    const u: User = { id: 0, email: result.user?.email ?? email, name: result.user?.name ?? "", role: "user", subscriptionTier: "free" };
+    const uid = String(result.user?.email ?? email).toLowerCase();
+    const u: User = { id: uid, email: uid, name: result.user?.name ?? "", role: "user", subscriptionTier: "free" };
     setToken(result.token); setUser(u);
     localStorage.setItem(TOKEN_KEY, result.token);
     localStorage.setItem(USER_KEY, JSON.stringify(u));

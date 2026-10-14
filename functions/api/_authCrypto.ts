@@ -123,11 +123,8 @@ export async function verifyToken(env: AuthEnv, token: string): Promise<{ sub: s
   }
 }
 
-export const DEMO_USER = {
-  email: "demo@csoai.com",
-  password: "demo123",
-  name: "Demo User",
-};
+/** Retired shared demo address: never a login, never registrable. */
+export const RESERVED_EMAILS: ReadonlySet<string> = new Set(["demo@csoai.com"]);
 
 export function userKey(email: string): string {
   return `auth:user:${String(email).toLowerCase()}`;
