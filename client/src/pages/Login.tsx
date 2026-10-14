@@ -3,29 +3,37 @@
  * Form-based authentication with CSOAI branding
  */
 
-import { useState, useEffect } from 'react';
-import { useLocation } from 'wouter';
+import { useState, useEffect, useRef } from 'react';
+import { useLocation, useSearch } from 'wouter';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Shield, ArrowRight, CheckCircle2, Loader2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { councilLoginDestination, councilLoginReturnFromSearch } from '@/lib/councilLoginReturn';
 import { toast } from 'sonner';
 
 export default function Login() {
   const [, setLocation] = useLocation();
+  const returnTo = councilLoginReturnFromSearch(useSearch());
   const { user, login, loading } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const mounted = useRef(false);
+
+  useEffect(() => {
+    mounted.current = true;
+    return () => { mounted.current = false; };
+  }, []);
 
   // Redirect if already logged in
   useEffect(() => {
-    if (user) {
-      setLocation('/dashboard');
+    if (!loading && user) {
+      setLocation(councilLoginDestination(returnTo, user.email));
     }
-  }, [user, setLocation]);
+  }, [user, loading, returnTo, setLocation]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,12 +46,14 @@ export default function Login() {
     setIsSubmitting(true);
     try {
       await login(email, password);
+      if (!mounted.current) return;
       toast.success('Welcome back!');
-      setLocation('/dashboard');
+      setLocation(councilLoginDestination(returnTo, email));
     } catch (error) {
+      if (!mounted.current || (error instanceof Error && error.name === 'AbortError')) return;
       toast.error('Login failed. Please try again.');
     } finally {
-      setIsSubmitting(false);
+      if (mounted.current) setIsSubmitting(false);
     }
   };
 
