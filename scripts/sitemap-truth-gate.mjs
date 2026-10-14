@@ -134,7 +134,7 @@ if (process.argv.includes("--selftest")) {
     ["/stripe-checkout.js", NON_PAGE_EXT.test("/stripe-checkout.js"), "asset route"],
     ["/blog/x", NON_PAGE_EXT.test("/blog/x") === false, "a page path is not an asset"],
     ["/about-credential", functionRedirects().has("/about-credential"), "function-backed 308"],
-    ["/watchdog/", functionRedirects().has("/watchdog/"), "index.ts serves the slash form too"],
+    ["/advisory/", functionRedirects().has("/advisory/"), "index.ts serves the slash form too"],
     ["/gspc-scoreboard", functionRedirects().has("/gspc-scoreboard"), "Response.redirect(...) form"],
     ["prerender set", prerenderedPaths().size > 30, "must derive the built blog paths, not zero"],
     ["duplicate predicate", new Set(["a", "a"]).size < ["a", "a"].length, "must detect repeated canonical URLs"],
