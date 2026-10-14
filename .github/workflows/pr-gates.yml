@@ -163,6 +163,9 @@ jobs:
     steps:
       # No checkout: the file list comes from the API, so an out-of-scope PR costs a few seconds
       # and pulls no history. This regex IS the old `paths:` filter - keep them in step.
+      # csoai-site-deploy.yml is listed by name: it writes the did:web:csoai.org origin, its merge
+      # starts it, and scripts/csoai-site/apex-gate.test.mjs pins its text (two jobs, master only,
+      # the token in one job). A PR that edits only that workflow must still run those tests.
       - name: Scope - does this PR touch a gated path?
         id: scope
         env:
@@ -176,7 +179,7 @@ jobs:
             exit 0
           fi
           changed=$(gh api --paginate "repos/$REPO/pulls/$PR/files" --jq '.[].filename')
-          gated=$(printf '%s\n' "$changed" | grep -E '^(client/|public/|functions/|scripts/|harness/x402-census/|docs/operations/PRODUCERS\.json$|package\.json$|package-lock\.json$|wrangler\.jsonc$|\.github/workflows/pr-gates\.yml$)' || true)
+          gated=$(printf '%s\n' "$changed" | grep -E '^(client/|public/|functions/|scripts/|harness/x402-census/|docs/operations/PRODUCERS\.json$|package\.json$|package-lock\.json$|wrangler\.jsonc$|\.github/workflows/pr-gates\.yml$|\.github/workflows/csoai-site-deploy\.yml$)' || true)
           if [ -n "$gated" ]; then
             echo "gated=true" >> "$GITHUB_OUTPUT"
             echo "gated paths in this PR:"; printf '  %s\n' $gated
@@ -390,7 +393,25 @@ jobs:
       # requests, inside the 20/hour budget, and still red on the regression this gate exists for.
       - name: Stranger verification — signed cards must verify from published bytes
         if: steps.scope.outputs.gated == 'true'
-        run: node scripts/verify-estate.mjs --limit 15 --did-drift public/.well-known/did.json
+        run: node scripts/verify-estate.mjs --limit 15
+
+      # This step replaces `--did-drift public/.well-known/did.json` on the line above (13 Oct 2026).
+      # That flag fails any PR whose committed id or keys differ from https://csoai.org. It was
+      # sound while keys reached the origin first, from outside this repository. Since
+      # csoai-site-deploy.yml ships only bytes equal to this repository's copy, that order is closed,
+      # and with the old flag no PR could add, rotate or remove a key: the copy could not go first
+      # and the origin could not go first. The next key incident would have met that wall.
+      #
+      # Same comparison, one more way to pass. Passes when the origin serves the committed bytes, or
+      # other bytes with the same id and verification methods (as before). Passes a key difference
+      # ONLY when scripts/csoai-site/apex-lock.json, in the same commit, pins the committed
+      # document's sha256 and lists the origin's sha256 under replaces: one reviewed PR that names
+      # both documents by hash. Fails every other key difference, and a committed document the
+      # lock does not pin. An unreachable origin is CANNOT-RUN (exit 0 under CI), as it was.
+      # One GET to csoai.org. Both branches are tested in scripts/csoai-site/apex-gate.test.mjs.
+      - name: DID origin — the committed DID document against https://csoai.org
+        if: steps.scope.outputs.gated == 'true'
+        run: node scripts/csoai-site/apex-gate.mjs drift
 
       # public/signed/gspc-board.signed.json is signed under #gspc-board-22axis-2026, an MPC key whose
       # three shares all sit on one host (see its status file), and the artefact NAMES its own

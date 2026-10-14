@@ -1,7 +1,8 @@
-name: csoai-site deploy — full static site from csoai-static-deploy2 main
+name: csoai-site deploy — static apex from a pinned csoai-static-deploy2 commit
 
 # THE ONE DEPLOYER for the Pages project csoai-site (owns csoai.org + www).
-# Source of truth: CSOAI-ORG/csoai-static-deploy2 main (allowlist build).
+# Source: CSOAI-ORG/csoai-static-deploy2 at the commit pinned in
+# scripts/csoai-site/apex-lock.json (allowlist build).
 # Replaces apex-redirect.yml (2-file bundle) — that deployer clobbered the
 # full site (incl. the did:web trust root) whenever it ran; two repos must
 # never deploy one Pages project. 2026-08-19: live apex served an orphan
@@ -13,14 +14,7 @@ name: csoai-site deploy — full static site from csoai-static-deploy2 main
 # built or live document advertises MCPMeasurementServer, or if
 # #card-attestation-1 is missing.
 #
-# 2026-08-31: deploy2 ca44ae1 allowlists root.json + schema/card-v0.json so csoai.org/root.json twins councilof.ai.
-# 2026-08-31 leftover: GHA copies living cards+proofs from councilof.ai onto _site
-# (root+schema+cards+proofs only; never SPA). Not wrangler from agents.
-# 2026-09-01 leftover: fleet A100 dark + cite harvest promote (no agent wrangler).
-# Push on this file starts a deploy.
-# 2026-09-01 leftover: strip cwd functions before pages deploy (fix #55 308) 1808Z.
-# 2026-09-01 leftover: drop functions so #55 _redirects 308 (#57) fire 1803Z.
-# 2026-09-01: Advanced Mode ignores _redirects — inject redirect-only
+# 2026-09-01: Advanced Mode ignores _redirects — ship a redirect-only
 # functions/_middleware.js (keep /.well-known for did:web).
 # 2026-09-11 (TUI-1): byte-serving parity at /root.json was tried and
 # REVERTED the same day — the apex deploys daily while the root republishes
@@ -28,9 +22,48 @@ name: csoai-site deploy — full static site from csoai-static-deploy2 main
 # public-root-watcher permanently red. The 2 Sep owner ruling stands:
 # 308 IS the parity mechanism for the hourly-moving surface; the watcher
 # follows it and compares post-redirect bytes. Only slow-moving content
-# (/.well-known/* incl. scitt-keys) is twinned as bytes.
-# this token does not have it. Merging a change to this workflow is the
-# agent-reachable path to refresh did:web:csoai.org.
+# (/.well-known/* incl. scitt-keys) is served as bytes.
+#
+# 2026-10-13: this workflow had not written production since 14 Sep. It
+# deployed with --branch=main; the Pages production branch is master, so each
+# run made a preview and then failed its own check of csoai.org. Of the seven
+# scheduled runs from 6 to 12 Oct, six failed that way; the seventh (7 Oct) was
+# cancelled after 15 minutes inside `pip install`. csoai.org was being written
+# from local checkouts. What changed, all enforced by scripts/csoai-site/apex-gate.mjs:
+#   - TWO JOBS. `build` runs the source's build_site.py and holds no credential.
+#     `deploy` holds the Cloudflare token and runs no code from the source: it
+#     takes the built files as data, and every byte it uploads is pinned by
+#     sha256 in apex-lock.json. Before this split the source's code ran beside
+#     the gate, the lock and the token, and could have rewritten all three.
+#   - MASTER ONLY. The first step of each job refuses any ref but
+#     refs/heads/master, so a dispatch on a branch cannot write production from
+#     that branch's lock. This stops accidents. It does not stop someone who
+#     edits this file on a branch: only a GitHub environment with a master-only
+#     branch rule on the token does (signing-move plan, PR 8).
+#   - production branch is master, and a read-only step proves that master is
+#     still the project's production branch before anything is uploaded;
+#   - the source is fetched at one pinned commit, never a moving branch, and
+#     `pip install -r requirements.txt` (an unrelated model stack) is gone;
+#   - the upload is exactly the lock: did.json byte-identical to this
+#     repository's public/.well-known/did.json, scitt-keys copied from this
+#     repository, every other /.well-known file and the fallback page at their
+#     recorded sha256, the reviewed middleware, and nothing else;
+#   - the redirect middleware is a reviewed file that cannot leave councilof.ai
+#     (the inline one sent https://csoai.org//example.com/x to example.com);
+#   - the candidate goes to a preview first and is read back there; production
+#     is written only if that passes, then read back the same way;
+#   - when csoai.org already serves the lock, nothing is deployed;
+#   - "hold" in apex-lock.json stops every upload (see the last step).
+#   The step that copied cards/ and proofs/ from councilof.ai is gone: every such
+#   path on csoai.org is a 308, so those bytes were uploaded and never served.
+#
+# A push to master that touches a path below starts a run. A run writes
+# production only when the gate passes and something on csoai.org would change.
+# To change what csoai.org serves, change apex-lock.json in a reviewed PR. For
+# the two files this repository produces (did.json, scitt-keys) change the file
+# and its sha256 in the lock together, and list the old sha256 under replaces.
+# A key change at the DID origin is one such PR; pr-gates.yml (step "DID origin")
+# passes it only when the lock names both documents.
 
 on:
   workflow_dispatch: {}
@@ -40,29 +73,156 @@ on:
     branches: [master]
     paths:
       - '.github/workflows/csoai-site-deploy.yml'
+      - 'scripts/csoai-site/**'
+      - 'public/.well-known/did.json'
+      - 'public/.well-known/scitt-keys'
 
-concurrency: { group: csoai-site-deploy, cancel-in-progress: true }
+permissions:
+  contents: read
+
+# A production write is never cancelled half way; a newer run waits for it.
+concurrency: { group: csoai-site-deploy, cancel-in-progress: false }
 
 jobs:
-  deploy:
+  # Runs code from another repository. Holds no secret, restores no cache, and hands on
+  # only files: the built /.well-known tree and the fallback page.
+  build:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
+    outputs:
+      source_head: ${{ steps.fetch.outputs.head }}
     steps:
+      - name: Refuse any ref but master
+        run: |
+          test "$GITHUB_REF" = refs/heads/master || { echo "refused: this workflow writes csoai.org only from master (this run is on $GITHUB_REF)"; exit 1; }
+      - name: Check out the lock (for the pin)
+        uses: actions/checkout@v4
+        with:
+          path: council
+          persist-credentials: false
+          sparse-checkout: |
+            scripts/csoai-site
+          sparse-checkout-cone-mode: false
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
       - uses: actions/setup-python@v5
         with: { python-version: '3.12' }
-      - name: Fetch source of truth (csoai-static-deploy2 main)
-        run: git clone --depth 1 https://github.com/CSOAI-ORG/csoai-static-deploy2.git src
+      - name: Fetch the source at the pinned commit (never a moving branch)
+        id: fetch
+        run: |
+          set -euo pipefail
+          PIN=$(node council/scripts/csoai-site/apex-gate.mjs pin)
+          REPO=$(node council/scripts/csoai-site/apex-gate.mjs pin --field repository)
+          git init -q src
+          git -C src remote add origin "https://github.com/${REPO}.git"
+          git -C src fetch -q --depth 1 origin "$PIN"
+          git -C src checkout -q --detach FETCH_HEAD
+          test "$(git -C src rev-parse HEAD)" = "$PIN"
+          echo "head=$(git -C src rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "source ${REPO} @ ${PIN}"
       - name: Build allowlisted _site
         working-directory: src
         run: |
-          pip install -r requirements.txt 2>/dev/null || true
+          # build_site.py uses the Python standard library only. The source's requirements.txt
+          # lists an unrelated model stack; it used to be pip-installed here, unpinned, on every
+          # run, for nothing. It is not installed any more.
           python3 build_site.py
           test -f _site/.well-known/did.json || { echo "FATAL: build lacks did.json"; exit 1; }
+      # Only two things leave this job: the built /.well-known tree and the fallback page. They go
+      # into a folder of their own, so the artifact holds nothing else the build made.
+      - name: Put the built /.well-known files and the fallback page in one folder
+        run: |
+          set -euo pipefail
+          mkdir handoff
+          cp -R src/_site/.well-known handoff/.well-known
+          if [ -f src/_site/index.html ]; then cp src/_site/index.html handoff/index.html; fi
+          (cd handoff && find . -type f | sort | xargs sha256sum)
+      # upload-artifact v4 drops dot-directories unless told to keep them, and /.well-known is one.
+      - name: Hand that folder to the deploy job
+        uses: actions/upload-artifact@v4
+        with:
+          name: csoai-site-built
+          path: handoff
+          include-hidden-files: true
+          if-no-files-found: error
+
+  # The only job that names the Cloudflare token. It runs this repository's reviewed files and
+  # the pinned wrangler; nothing from the source is executed here.
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Refuse any ref but master
+        run: |
+          test "$GITHUB_REF" = refs/heads/master || { echo "refused: this workflow writes csoai.org only from master (this run is on $GITHUB_REF)"; exit 1; }
+      # This repository at the workflow's commit: the gate, the lock, the middleware, and the two
+      # /.well-known files this repository is the producer of. A fresh checkout: the build job
+      # never touched it.
+      - name: Check out the gate, the lock and this repository's DID document
+        uses: actions/checkout@v4
+        with:
+          path: council
+          persist-credentials: false
+          sparse-checkout: |
+            scripts/csoai-site
+            public/.well-known/did.json
+            public/.well-known/scitt-keys
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      # --selftest first: a gate that has never been seen failing is decoration.
+      - name: Apex gate selftest
+        run: node council/scripts/csoai-site/apex-gate.mjs --selftest
+      - name: Fetch the built files (data only, outside the checkout)
+        uses: actions/download-artifact@v4
+        with:
+          name: csoai-site-built
+          path: built
+      # Four named pieces, into a folder that did not exist. wrangler runs in this folder, so it
+      # holds no wrangler.toml, package.json, .npmrc or node_modules: the gate below refuses any.
+      - name: Assemble the deploy folder from named pieces only
+        run: |
+          set -euo pipefail
+          test ! -e apex
+          mkdir -p apex/_site apex/functions
+          cp -R built/.well-known apex/_site/.well-known
+          # The fallback page ships only when the lock pins one. A missing or changed page is
+          # reported by the gate below, with the hash it expected.
+          if [ "$(node council/scripts/csoai-site/apex-gate.mjs pin --field fallback-page)" != "none" ] && [ -f built/index.html ]; then
+            cp built/index.html apex/_site/index.html
+          fi
+          # scitt-keys comes from this checkout, not from the live site: a merge that changes it
+          # starts this workflow and deploy.yml together, and councilof.ai still serves the old
+          # bytes while that deploy runs.
+          cp council/public/.well-known/scitt-keys apex/_site/.well-known/scitt-keys
+          # Advanced Mode ignores _redirects, so the 308s come from a middleware. It is
+          # scripts/csoai-site/apex-middleware.mjs, copied byte for byte: the gate runs that same
+          # file against every recorded redirect rule.
+          cp council/scripts/csoai-site/apex-middleware.mjs apex/functions/_middleware.js
+          find apex -type f | sort
+      # Fails closed, listing every difference: the hold, the pin, the DID document against this
+      # repository's copy, the upload file by file against the lock, the redirect rules, and the
+      # live origin path by path. Sets deploy=true only when it passes AND csoai.org would change.
+      # SOURCE_HEAD is a claim from the build job; it is passed as data, and nothing rests on it
+      # alone: every uploaded byte is hashed here.
+      - name: Apex gate — hold, pin, DID document, upload, redirects, live origin path by path
+        id: gate
+        env:
+          SOURCE_HEAD: '${{ needs.build.outputs.source_head }}'
+        run: |
+          node council/scripts/csoai-site/apex-gate.mjs predeploy \
+            --site apex/_site \
+            --deploy-root apex \
+            --source-head "$SOURCE_HEAD" \
+            --installed-middleware apex/functions/_middleware.js
+      # The 21 Aug rule, kept, on the bytes about to ship: the three canon key ids are present and
+      # no MCPMeasurementServer service is advertised (the 19 Aug three-key document did).
+      - name: DID document — canon key ids present, MCPMeasurementServer not advertised
+        run: |
           python3 - <<'PY'
           import json
-          d = json.load(open('_site/.well-known/did.json'))
+          d = json.load(open('apex/_site/.well-known/did.json'))
           kids = [m['id'] for m in d['verificationMethod']]
           required = [
               'did:web:csoai.org#site-release-1',
@@ -76,73 +236,51 @@ jobs:
           print('did.json kids OK:', kids)
           print('did.json services OK:', types)
           PY
-      - name: Twin living cards+proofs from councilof.ai (not SPA)
-        working-directory: src
-        run: |
-          python3 - <<'PY'
-          import json, pathlib, subprocess
-          root = json.loads(pathlib.Path('_site/root.json').read_text())
-          print('twin as_of', root.get('as_of'), 'merkle', root.get('merkle_root'), 'n', root.get('card_count'))
-          for dname in ('cards', 'proofs'):
-              pathlib.Path('_site', dname).mkdir(parents=True, exist_ok=True)
-          # 2026-09-11: twin the SCITT key-discovery doc as well (public key
-          # material only — never a transparency-service claim). Retry: this
-          # workflow races the main deploy when both fire off the same merge.
-          sk = pathlib.Path('_site/.well-known')
-          sk.mkdir(parents=True, exist_ok=True)
-          import time as _time
-          for _try in range(1, 7):
-              rc = subprocess.call(['curl', '-sS', '-f', '--max-time', '25', '-A', 'csoai-site-deploy',
-                                    '-o', str(sk / 'scitt-keys'),
-                                    'https://councilof.ai/.well-known/scitt-keys'])
-              if rc == 0:
-                  break
-              print(f'scitt-keys fetch attempt {_try} failed (rc={rc}); waiting for the main deploy')
-              _time.sleep(20)
-          else:
-              raise SystemExit('scitt-keys never became fetchable on councilof.ai')
-          print('twinned scitt-keys', (sk / 'scitt-keys').stat().st_size)
-          for sha in root['card_sha256']:
-              s16 = sha[:16]
-              for kind in ('cards', 'proofs'):
-                  url = f'https://councilof.ai/{kind}/{s16}.json'
-                  dest = pathlib.Path('_site') / kind / f'{s16}.json'
-                  subprocess.check_call(['curl', '-sS', '-f', '--max-time', '25', '-A', 'csoai-site-deploy', '-o', str(dest), url])
-                  print(kind, s16, dest.stat().st_size)
-          print('twinned cards+proofs only; no SPA')
-          PY
-      - name: Inject redirect-only middleware (OWNER one-site)
-        working-directory: src
-        run: |
-          # Advanced Mode ignores _redirects. Old API functions overrode
-          # redirects; bare strip left sticky 200 HTML. Ship ONLY a
-          # middleware that 308s everything except /.well-known/* (did:web).
-          rm -rf functions _site/functions
-          mkdir -p functions
-          cat > functions/_middleware.js <<'JS'
-          export async function onRequest(context) {
-            const url = new URL(context.request.url);
-            const p = url.pathname;
-            // 308 everything except /.well-known/* (did:web + scitt-keys key
-            // discovery — slow-moving, safe to twin as bytes). The hourly-moving
-            // trust surface (root.json, cards, proofs, schema) redirects to the
-            // canonical host; verifiers follow the 308 to identical bytes.
-            if (p === '/.well-known' || p.startsWith('/.well-known/')) {
-              return context.next();
-            }
-            const dest = new URL(url.pathname + url.search + url.hash, 'https://councilof.ai');
-            return Response.redirect(dest.toString(), 308);
-          }
-          JS
-          test -f functions/_middleware.js
-          test -f _site/.well-known/did.json
-          echo "redirect-only middleware ready"
-      - name: Deploy to csoai-site production
-        working-directory: src
+      # Read-only. `wrangler pages deploy --branch=X` is a production deploy only when X is the
+      # project's production branch; any other X makes a preview and exits 0. That is how this
+      # workflow stopped reaching csoai.org. Read the setting on every run; never assume it.
+      - name: Production target preflight — the Pages production branch must be the branch we deploy
         env:
           CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}'
           CLOUDFLARE_ACCOUNT_ID: '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}'
-        run: npx wrangler pages deploy _site --project-name=csoai-site --branch=main --commit-dirty=true
+        run: node council/scripts/csoai-site/apex-gate.mjs target
+      # wrangler is pinned to the version this workflow last ran (4.86.0, run 38279393489). The
+      # upload folder is not a git checkout, so the commit and the run are passed by hand: the
+      # Pages deployment list then shows which commit of this repository and which run wrote it.
+      - name: Deploy the candidate to a preview branch (not production)
+        id: candidate
+        if: steps.gate.outputs.deploy == 'true'
+        working-directory: apex
+        env:
+          CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}'
+          CLOUDFLARE_ACCOUNT_ID: '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}'
+        run: |
+          set -euo pipefail
+          npx --yes wrangler@4.86.0 pages deploy _site --project-name=csoai-site --branch=apex-candidate --commit-hash="$GITHUB_SHA" --commit-message="csoai-site-deploy run $GITHUB_RUN_ID (candidate)" --commit-dirty=true 2>&1 | tee "$RUNNER_TEMP/candidate-deploy.log"
+          CANDIDATE_URL=$(grep -Eo 'https://[0-9a-f]{8}\.csoai-site\.pages\.dev' "$RUNNER_TEMP/candidate-deploy.log" | tail -1 || true)
+          test -n "$CANDIDATE_URL" || { echo "FATAL: no deployment URL in the wrangler output; production has not been touched"; exit 1; }
+          echo "url=$CANDIDATE_URL" >> "$GITHUB_OUTPUT"
+          echo "candidate deployment: $CANDIDATE_URL"
+      # The same bytes and the same middleware, as Cloudflare serves them, before csoai.org changes.
+      # --hostile: this is the first time the middleware runs on Cloudflare, so all 46 hostile
+      # paths are sent as well as the recorded rules.
+      - name: Read the candidate back — bytes and redirects as Cloudflare serves them
+        if: steps.gate.outputs.deploy == 'true'
+        env:
+          CANDIDATE_URL: '${{ steps.candidate.outputs.url }}'
+        run: node council/scripts/csoai-site/apex-gate.mjs readback --base "$CANDIDATE_URL" --hostile --attempts 6 --wait 10
+      - name: Deploy to csoai-site production
+        id: production
+        if: steps.gate.outputs.deploy == 'true'
+        working-directory: apex
+        env:
+          CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}'
+          CLOUDFLARE_ACCOUNT_ID: '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}'
+        run: |
+          npx --yes wrangler@4.86.0 pages deploy _site --project-name=csoai-site --branch=master --commit-hash="$GITHUB_SHA" --commit-message="csoai-site-deploy run $GITHUB_RUN_ID" --commit-dirty=true
+      # Runs on every run, deploy or not: csoai.org must serve exactly the lock.
+      - name: Read production back — csoai.org must serve exactly the lock
+        run: node council/scripts/csoai-site/apex-gate.mjs readback --base https://csoai.org --attempts 9 --wait 10
       - name: Verify trust root live on the apex
         run: |
           # www lags apex by up to ~a minute of edge propagation — retry before failing
@@ -197,17 +335,25 @@ jobs:
                   args.insert(1, '-L')
               return subprocess.check_output(args)
           for i in range(1, 7):
+              # Name the URL that failed: from 6 Oct this printed only "JSONDecodeError" for six
+              # attempts, and the cause (csoai.org/.well-known/scitt-keys was an HTML page, because
+              # production was not this workflow's build) had to be found by hand.
+              step = 'start'
               try:
+                  step = 'https://csoai.org/root.json (following the 308)'
                   apex = json.loads(fetch('https://csoai.org/root.json', follow=True))
+                  step = 'https://councilof.ai/root.json'
                   canon = json.loads(fetch('https://councilof.ai/root.json'))
+                  step = 'https://csoai.org/.well-known/scitt-keys'
                   jsk = json.loads(fetch('https://csoai.org/.well-known/scitt-keys'))
+                  step = 'comparison'
                   assert apex.get('merkle_root') == canon.get('merkle_root'), 'merkle differs after redirect'
                   assert apex.get('as_of') == canon.get('as_of'), 'as_of differs after redirect'
                   assert jsk.get('we_operate_a_ts') is False and jsk.get('keys'), 'scitt-keys malformed'
                   print(f'parity OK on attempt {i}: merkle {canon["merkle_root"][:16]}… (apex 308→identical), scitt-keys kids {len(jsk["keys"])}')
                   sys.exit(0)
               except Exception as e:
-                  print(f'parity attempt {i}: {type(e).__name__} {e}')
+                  print(f'parity attempt {i}: at {step}: {type(e).__name__} {e}')
                   time.sleep(10)
           print('FAIL: apex trust-surface parity not achieved')
           sys.exit(1)
@@ -219,3 +365,22 @@ jobs:
           echo "$code" | grep -q '^308$' || { echo "FAIL: expected 308 on /"; exit 1; }
           echo "$loc" | grep -q 'councilof.ai' || { echo "FAIL: Location must be councilof.ai"; exit 1; }
           curl -s -o /dev/null -w "redirect-path: %{http_code} -> %{redirect_url}\n" https://csoai.org/some-page
+      # Only when this run wrote production and a check after the write failed.
+      - name: A check failed after production was written — how to roll back
+        if: failure() && steps.production.outcome == 'success'
+        env:
+          CANDIDATE_URL: '${{ steps.candidate.outputs.url }}'
+        run: |
+          echo "::error::This run deployed csoai-site production and a later check failed. csoai.org may be serving this run's build."
+          echo "This run's build is also at $CANDIDATE_URL"
+          echo "Rollback, in this order:"
+          echo "  1. HOLD FIRST. Merge a pull request that sets \"hold\" in scripts/csoai-site/apex-lock.json to a sentence saying why."
+          echo "     Without it the rollback undoes itself: after a rollback csoai.org serves the old bytes again, the lock lists"
+          echo "     those bytes under replaces, and the next run (the daily schedule, which GitHub starts hours late, or any push"
+          echo "     to scripts/csoai-site/, this workflow, public/.well-known/did.json or public/.well-known/scitt-keys) uploads"
+          echo "     this same build to production again. With hold set, every run refuses before any upload and is red."
+          echo "  2. THEN roll back: Cloudflare dashboard > Workers & Pages > csoai-site > Deployments > the previous Production"
+          echo "     deployment > Rollback (an account-holder action)."
+          echo "  3. Fix the cause in a pull request to scripts/csoai-site/ that also sets hold back to null. Its merge deploys again."
+          echo "If the account holder is not there, step 1 alone stops further writes; csoai.org keeps this run's build until step 3."
+          echo "Reverting this workflow to its form before 13 Oct 2026 does NOT roll production back: that form deploys to a preview."
