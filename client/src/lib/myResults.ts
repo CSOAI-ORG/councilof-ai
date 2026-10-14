@@ -168,21 +168,30 @@ export function readMyResults(): MyResult[] {
   }
 }
 
-/** The rows in one stored snapshot, or null when the snapshot is not a readable list. */
-function parseRows(raw: string | null): MyResult[] | null {
+/**
+ * The rows in one stored snapshot, or null when the snapshot is not a readable list. Reading for
+ * display skips rows it cannot show; `strict` (the save path) returns null instead, because
+ * rewriting the store without a skipped row would delete it (a paid record included).
+ */
+function parseRows(raw: string | null, strict = false): MyResult[] | null {
   try {
     const list = raw ? (JSON.parse(raw) as unknown) : [];
     if (!Array.isArray(list)) return null;
     const seen = new Set<string>();
     const out: MyResult[] = [];
+    let bad = false;
     list.forEach((r, i) => {
       const row = normaliseRow(r, i);
-      if (!row) return;
+      if (!row) {
+        if (strict) bad = true;
+        return;
+      }
       // Duplicate ids (two saves in the same millisecond) made duplicate React keys.
       if (seen.has(row.id)) row.id = `${row.id}#${i}`;
       seen.add(row.id);
       out.push(row);
     });
+    if (bad) return null;
     return out;
   } catch {
     return null;
@@ -244,7 +253,7 @@ export function saveMyResult(entry: Omit<MyResult, "id" | "at"> & { at?: string;
   // The one snapshot everything below works from (no second read that could fail into "empty").
   // A stored value that cannot be read as a list is not an empty list: overwriting it would destroy
   // whatever it holds (paid records included). Fail honestly and leave it as it is.
-  const all = parseRows(before);
+  const all = parseRows(before, true);
   if (!all) return failed();
   // A repeat save of a paid result that arrives without its record keeps the stored record.
   const older = all.find((r) => sameResult(r, row));
@@ -299,7 +308,7 @@ export function saveNote(o: SaveOutcome | null | undefined): string | null {
   if (!o) return null;
   if (o.saved && o.recordKept) return "It is saved to My results in this browser only, so download it to keep it.";
   if (o.saved) return "It is listed in My results, but this browser had no room for the record itself: download it now to keep it.";
-  return "It could NOT be saved to My results in this browser (storage full or switched off). Your earlier results are untouched. Download it now: this page is your only copy.";
+  return "My results couldn't confirm this save in this browser, so treat it as not saved. Your earlier results were left as they were. Download it now: this page is your only copy.";
 }
 
 export function clearMyResults(): void {

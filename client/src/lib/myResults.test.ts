@@ -250,7 +250,7 @@ describe("My results — paid records are never shed", () => {
     const { saveMyResult, saveNote } = await import("./myResults");
     const off = saveMyResult({ kind: "paid", subject: "d", ref: "s", record: "{}" });
     expect(off).toMatchObject({ saved: false, recordKept: false, rows: [] });
-    expect(saveNote(off)).toMatch(/could NOT be saved/);
+    expect(saveNote(off)).toMatch(/couldn't confirm this save/);
     const env = install();
     await seedPaid(1);
     const before = env.store["coai:my-results"];
@@ -305,6 +305,18 @@ describe("My results — paid records are never shed", () => {
     expect(out).toMatchObject({ saved: true, recordKept: true });
     const recs = readMyResults().filter((r) => r.ref === "sha0").map((r) => r.record);
     expect(recs).toEqual(["DIFFERENT", body(0)]);
+  });
+
+  it("a valid list holding a paid row the display skips (state: null) is never rewritten", async () => {
+    const env = install();
+    const { saveMyResult, readMyResults, MY_RESULTS_KEY } = await import("./myResults");
+    const raw = JSON.stringify([{ id: "p", kind: "paid", subject: "door", at: "t", state: null, record: "ORIGINAL PAID BYTES" }]);
+    env.store[MY_RESULTS_KEY] = raw;
+    expect(readMyResults()).toEqual([]); // display validation unchanged: the row is not shown
+    for (const entry of [{ kind: "lookup" as const, subject: "github.com" }, { kind: "paid" as const, subject: "d2", ref: "s2", record: "{}" }]) {
+      expect(saveMyResult(entry)).toMatchObject({ saved: false, recordKept: false });
+      expect(env.store[MY_RESULTS_KEY]).toBe(raw);
+    }
   });
 
   it("first read succeeds, a later read fails, writes allowed: the old paid bytes remain", async () => {
@@ -389,7 +401,7 @@ describe("My results — paid records are never shed", () => {
     const { saveNote } = await import("./myResults");
     expect(saveNote({ rows: [], saved: true, recordKept: true })).toMatch(/saved to My results/);
     expect(saveNote({ rows: [], saved: true, recordKept: false })).toMatch(/download it now/);
-    expect(saveNote({ rows: [], saved: false, recordKept: false })).toMatch(/could NOT be saved/);
+    expect(saveNote({ rows: [], saved: false, recordKept: false })).toMatch(/couldn't confirm this save/);
     expect(saveNote(null)).toBeNull();
   });
 });
