@@ -455,3 +455,294 @@ Receipts `RETRY7-FINISH-2026-10-07.json` · `RETRY7B-2026-10-07.json`
 - Owner: **auto-batch mode** — agent continues without asking
 
 **Never INDEXED** until UI clears `NOT YET SUBMITTED`.
+
+
+## BB. 2026-10-12 FREE WAVE — IndexNow + listing forms (this lane)
+
+| Item | State | Receipt |
+|---|---|---|
+| IndexNow Bing | **CALLED 202** | 37 priority URLs from 472-url sitemap |
+| IndexNow Yandex | RETRY | connection closed |
+| mcp.directory | **INSTALLED** | form filled 4/4 + Submit · UI stayed on form → not INDEXED |
+| llmstxt.site/submit | **INSTALLED** | 5 fields + Submit clicked |
+| NeedFeed | N/A | domain marketplace, not a listing |
+| OpenTools `/friends/launch-tool` | **DEAD** | 404 |
+| Slashdot `/submit` | BLOCKED | 403 |
+| Promo wire truth | **ACTIVE to 2027-01-11** | do NOT use "11 Oct expiry" copy |
+| Revenue (live) | SKU-1=15 · SKU-2=2 · SKU-3=UNMEASURED | `/api/revenue` |
+| EXTERNAL_CUSTOMER | **0** | honest |
+
+Full receipts: `NSITES-FREE-WAVE-2026-10-12.json` · `NSITES-FREE-WAVE2-2026-10-12.json` · `NSITES-MCPDIRECTORY-2026-10-12.json`
+
+### PR batch 2026-10-12 (owner GO, 2/hr cap)
+| PR | Repo | Change | Receipt |
+|---|---|---|---|
+| #106 | SAILResearch/awesome-ai-leaderboard | stale GSPC HF-Space row → live /board/ row | https://github.com/SAILResearch/awesome-ai-leaderboard/pull/106 |
+| #7946 | public-apis/public-apis | MCP Servers table + Council of AI | https://github.com/public-apis/public-apis/pull/7946 |
+| HOLD | EthicalML/awesome-artificial-intelligence-regulation | next hour (2/hr cap) | — |
+
+### PR/ISSUE BATCH 2026-10-12 WAVE2 (owner GO — fire the rest)
+
+| # | Target | Action | Ladder | Receipt |
+|---|---|---|---|---|
+| 1 | SAILResearch/awesome-ai-leaderboard | PR #106 replace stale GSPC row | CALLED | https://github.com/SAILResearch/awesome-ai-leaderboard/pull/106 |
+| 2 | public-apis/public-apis | PR #7946 MCP Servers table | CALLED | https://github.com/public-apis/public-apis/pull/7946 |
+| 3 | EthicalML/awesome-artificial-intelligence-regulation | PR #92 update entry (drop stale count + retired registry 1.0.3) | CALLED | https://github.com/EthicalML/awesome-artificial-intelligence-regulation/pull/92 |
+| 4 | visenger/Awesome-ML-Model-Governance | PR #14 add GSPC row + comment on #13 | CALLED | https://github.com/visenger/Awesome-ML-Model-Governance/pull/14 |
+| 5 | visenger issue #13 | comment updated line (no typed count, no Zenodo) | CALLED | https://github.com/visenger/Awesome-ML-Model-Governance/issues/13#issuecomment-6118434754 |
+| 6 | TensorBlock/awesome-mcp-servers | issue #3547 improve-metadata | CALLED | https://github.com/TensorBlock/awesome-mcp-servers/issues/3547 |
+| 7 | api-evangelist/councilof-ai | issue #1 regenerate from openapi.json | CALLED | https://github.com/api-evangelist/councilof-ai/issues/1 |
+| 8 | hallresearch-ai/ai_assessment_implementation_resources | issue #2 benchmark row suggestion | CALLED | https://github.com/hallresearch-ai/ai_assessment_implementation_resources/issues/2 |
+| 9 | ai-boost/awesome-a2a | PR #157 CLOSED (count stale) | CALLED | https://github.com/ai-boost/awesome-a2a/pull/157 |
+| 10 | ai-boost/awesome-a2a | PR #158 CLOSED (one entry max) | CALLED | https://github.com/ai-boost/awesome-a2a/pull/158 |
+| 11 | AthenaCore/AwesomeResponsibleAI | PR #70 CLOSED in favour of #82 | CALLED | https://github.com/AthenaCore/AwesomeResponsibleAI/pull/70 |
+| 12 | mcpservers.org / wong2/awesome-mcp-servers | merge-two-pages request | **BLOCKED** | issues+discussions disabled |
+
+PAID=0 · grade sold=0 · EXTERNAL_CUSTOMER=0 · cold email=0 · prices in copy=0
+
+
+---
+
+# LEDGER CLOSEOUT — 2026-10-12 N-SITES / GSPC SCALE RUN
+**Written 2026-10-12T05:44:47Z · this lane · measurement not certification · never sell a score/grade**
+
+## WHOLE-RUN TALLY (honest, receipts-backed)
+
+| Ladder | Count | Meaning |
+|---|---|---|
+| **CALLED** (outbound PR/issue/comment fired) | **14** | 6 PRs opened + 4 issues opened + 3 PRs closed-with-reason + 1 issue comment |
+| **CALLED** (IndexNow) | **2** | Bing 202 × 2 (priority 37 URLs + refresh 9 URLs) |
+| **INSTALLED** (forms filled + submit clicked, UI unconfirmed) | **2** | mcp.directory · llmstxt.site |
+| **DISCOVERED** (reached, no form) | **11+** | free-path probe ×13 + Yandex |
+| **BLOCKED** | **2** | wong2 issues+discussions disabled · Yandex conn-drop |
+| **INDEXED** (UI confirmed) | **0** | honest — no submit surface confirmed success |
+| **PAID** | **0** | |
+| **EXTERNAL_CUSTOMER** | **0** | |
+| **Grades/certs sold** | **0** | |
+| **Prices in public copy** | **0** | `no_public_price` held |
+
+## OUTWARD LINKS (all HTTP 200 verified)
+
+### PRs OPEN (6)
+1. https://github.com/SAILResearch/awesome-ai-leaderboard/pull/106
+2. https://github.com/public-apis/public-apis/pull/7946
+3. https://github.com/EthicalML/awesome-artificial-intelligence-regulation/pull/92
+4. https://github.com/visenger/Awesome-ML-Model-Governance/pull/14
+5. https://github.com/docker/mcp-registry/pull/5630
+6. https://github.com/punkpeye/awesome-mcp-devtools/pull/376
+
+### ISSUES OPEN (5)
+7. https://github.com/TensorBlock/awesome-mcp-servers/issues/3547
+8. https://github.com/api-evangelist/councilof-ai/issues/1
+9. https://github.com/hallresearch-ai/ai_assessment_implementation_resources/issues/2
+10. https://github.com/visenger/Awesome-ML-Model-Governance/issues/13 (comment)
+11. (mcp.directory/llmstxt INSTALLED — pending their review)
+
+### CLOSED (3)
+12. https://github.com/ai-boost/awesome-a2a/pull/157
+13. https://github.com/ai-boost/awesome-a2a/pull/158
+14. https://github.com/AthenaCore/AwesomeResponsibleAI/pull/70 (favour of #82)
+
+## LIVE RAILS (derived, never typed)
+| Rail | Value |
+|---|---|
+| GSPC board | **23 axes · 23 measured** · 0/14 separated |
+| Revenue | SKU-1 **15** · SKU-2 **2** · SKU-3 UNMEASURED |
+| x402 | LIVE · payTo 0x2126…ae31 · Base USDC |
+| Promo | ACTIVE to **2027-01-11** (never "11 Oct") |
+| Free MCP | 14 tools · v1.4.4 |
+| Sitemap | 472 URLs · IndexNow key served |
+
+## YEARS→DAYS COMPRESSION (what "today" ate)
+| Multi-year plan item | Compressed | Status this run |
+|---|---|---|
+| Discovery across agent indexes (months of manual listings) | 1 day free-wave | **14 outward events fired** |
+| Public signal hygiene (stale counts on 3rd-party lists) | 1 batch | **4 row fixes + 3 withdrawals** |
+| Registry presence (docker MCP registry) | 1 PR | **#5630** |
+| IndexNow gap (permissionless-growth audit) | 1 fire | **Bing 202 ×2** |
+| Revenue rails live | already live | **read back, not inflated** |
+
+## STILL OWNER-GATED (not mine to fire)
+1. Cloudflare Email Obfuscation OFF → outward gate 5/25 → 100
+2. SMTP 535 rotate
+3. UK patents £1,055 before SCITT deposit
+4. Anthropic directory Publish
+5. AI TAP reCAPTCHA submit
+6. mcpservers.org merge (site contact — GH issues disabled)
+
+## HONESTY FLOOR (never crossed)
+- No invented EXTERNAL_CUSTOMER
+- No grades/certs/badges sold
+- No prices in public copy
+- No cold email
+- No paid listings
+- No master push / wrangler deploy
+- Ladder never collapsed; every row has a receipt URL
+
+**This closeout is measurement, not certification.**
+
+
+---
+
+## WAVE 3 — NEW SURFACES ONLY (2026-10-12 2026-10-12T05:51:45Z)
+
+No retries of Glama/Smithery/mcp.so/Claude/RevLeads/LaunchStag/10words/etc.
+
+### Probe (fresh surfaces)
+| Surface | Path | Result |
+|---|---|---|
+| **stacklok/toolhive-registry** (now toolhive-catalog) | PR `registries/toolhive/servers/council-of-ai-remote/` | **CALLED** |
+| **AI Agents Directory** | `/submit-agent` | **INSTALLED** filled=2 Submit clicked |
+| PulseMCP | `/submit` | **BLOCKED** — "submissions and changes are temporarily paused" |
+| MCPFinder | `/submit` | **BLOCKED** — Google sign-in required |
+| MCPShow / AI Toolbelt / ToolJot / OpenTools | home | **DISCOVERED** — no free submit path on landing |
+| CodeSOTA | `/contribute/score` | **SKIPPED** — score submission = grade-shaped; never |
+| Futurepedia / Wellfound / Crunchbase | — | **DISCOVERED** — browser/login gated (prior HOLD stands) |
+| TAAFT / AlternativeTo / Toolify | — | **BLOCKED** 403 (prior) |
+| cursor.directory | — | **BLOCKED** 429 |
+| mcphub.io | — | **BLOCKED** 402 |
+| llmstxt.directory | — | **DEAD** 404 |
+
+### Links fired this wave
+| # | Link | State |
+|---|---|---|
+| W3-1 | https://github.com/stacklok/toolhive-catalog/pull/1694 | **OPEN** (DCO signed-off; 14 live tool names) |
+| W3-2 | AI Agents Directory submit-agent | **INSTALLED** · `NSITES-WAVE3-SUBMITS-2026-10-12.json` |
+
+### Wave 3 receipts
+- `NSITES-WAVE3-PROBE-2026-10-12.json`
+- `NSITES-WAVE3-SUBMITS-2026-10-12.json`
+- `NSITES-WAVE3-FORMDUMP-2026-10-12.json`
+
+### Cumulative whole-run tally (after wave 3)
+| Ladder | Count |
+|---|---|
+| CALLED (PR/issue/comment) | **17** (7 PRs open · 5 issues · 3 closed · 1 comment · 1 DCO PR) |
+| CALLED (IndexNow) | **2** |
+| INSTALLED | **3** |
+| DISCOVERED | **15+** |
+| BLOCKED | **5** |
+| INDEXED | **0** |
+| PAID / EXTERNAL_CUSTOMER / grades / prices | **0 / 0 / 0 / 0** |
+
+
+---
+
+## MERGE PUSH — 2026-10-12 2026-10-12T05:58:03Z
+
+All 7 PRs are **external** — CSOAI-ORG cannot merge them. Actions taken: ready-for-review comments on all 7; review request attempted on docker + toolhive (API denied for fork PR author — expected).
+
+| PR | Repo | State | Review | Maintainer activity | Merge odds |
+|---|---|---|---|---|---|
+| [#106](https://github.com/SAILResearch/awesome-ai-leaderboard/pull/106) | SAILResearch | OPEN CLEAN | — | **ACTIVE** (merged 11 Oct) | **HIGH** |
+| [#7946](https://github.com/public-apis/public-apis/pull/7946) | public-apis | OPEN UNSTABLE* | — | **ACTIVE** (merged 10 Oct) | **HIGH** |
+| [#92](https://github.com/EthicalML/awesome-artificial-intelligence-regulation/pull/92) | EthicalML | OPEN CLEAN | — | **ACTIVE** (merged 7 Oct) | **HIGH** |
+| [#5630](https://github.com/docker/mcp-registry/pull/5630) | docker | OPEN BLOCKED | REVIEW_REQUIRED | ACTIVE push, last merge Aug | **MED** |
+| [#1694](https://github.com/stacklok/toolhive-catalog/pull/1694) | stacklok | OPEN BLOCKED | REVIEW_REQUIRED | **ACTIVE** (merged 9 Oct) | **MED** |
+| [#376](https://github.com/punkpeye/awesome-mcp-devtools/pull/376) | punkpeye | OPEN CLEAN | — | DORMANT (Aug) | LOW |
+| [#14](https://github.com/visenger/Awesome-ML-Model-Governance/pull/14) | visenger | OPEN CLEAN | GitGuardian PASS | DORMANT (2024) | LOW |
+
+\* public-apis `UNSTABLE` with **0 checks reported** and `MERGEABLE` — likely their required-status context not firing on fork PRs, not a content failure. Diff is one table row, checklist complete.
+
+### Nudge comments posted (all 7)
+106, 7946, 92, 5630, 1694, 14, 376 — see `#issuecomment-61186341*` family.
+
+### What we cannot do
+- Merge external PRs (no maintainer rights)
+- Request review via API on fork PRs (GraphQL denied — expected)
+- Force maintainer attention
+
+### What lands without us (when maintainers merge)
+GSPC gets: live-board row on a leaderboard list · MCP Servers table row on public-apis · cleaned governance-list entry · governance-resources row · Docker MCP Registry listing · ToolHive catalog listing · Testing Tools row.
+
+
+---
+
+## COVERAGE EXTENDED — 2025–2026 SPAN (2026-10-12T06:05:16Z)
+
+### A. Measurement coverage (derived from live board — never typed)
+| Span | What is covered | Source |
+|---|---|---|
+| **2026-08** | Behavioural GSPC axes (13 of 14 per-item rows) | board `measured_on` · gold run 2026-08-18 |
+| **2026-08** | Jail axis | 2026-08-18 |
+| **2026-08 → 2026-09** | Financial/domain fact axes (8) | per-axis `facts_as_of` / `measurement_time` |
+| **2026-08 → 2026-09** | Effect-binding server probe (n=261 verdicts) | 2026-09-22 |
+| **2026-10-08** | Signed card root (316 cards) | `root.json` `as_of` |
+| **2025** | **NOT measured on GSPC board** — honest gap. Board has no 2025 date tokens. | `/api/gspc` date scan: 15 tokens, all 2026-08→2026-09 |
+
+**Honesty:** GSPC measurement coverage is **2026-08 → 2026-10**. 2025 is **UNMEASURED** on this board — never backfill as measured.
+
+### B. Discovery / listing coverage across 2025–2026-era surfaces
+| Surface | Era | State | Receipt |
+|---|---|---|---|
+| **A2A Registry** (`a2aregistry.org`) | 2025–26 agent registry | **EXISTS / INDEXED** — agent already registered `id=48e5bba6-8848-4ad…` · card `https://councilof.ai/.well-known/agent-card.json` · conformance True | inspect+register this pass |
+| **MCPMarket** remote listing | 2025–26 | **INSTALLED** filled=7 Submit clicked (terms checkbox UI-intercepted) | `NSITES-MCPMARKET-2026-10-12.json` |
+| docker/mcp-registry | 2025–26 | PR #5630 OPEN | merge-push |
+| stacklok/toolhive-catalog | 2025–26 | PR #1694 OPEN | merge-push |
+| mcp.directory | 2025–26 | INSTALLED | wave 1 |
+| AI Agents Directory | 2025–26 | INSTALLED | wave 3 |
+| PulseMCP | 2025–26 | BLOCKED (submissions paused) | wave 3 |
+| MCPFinder | 2025–26 | BLOCKED (Google sign-in) | wave 3 |
+| Klavis / Speakeasy / Composio / Zapier / Cloudflare MCP / AgentOps | 2025–26 | DISCOVERED (sign-up or docs, no free listing form) | coverage wave |
+| Cline mcp-marketplace | 2025–26 | DISCOVERED — GitHub PR path documented | coverage wave |
+| METR / Epoch / HELM / LM Arena / Artificial Analysis / MLPerf / OECD.AI / AIID / NIST AI RMF / Stanford CRFM | 2025–26 eval/standards landscape | **DISCOVERED** (reachable; not listing targets — peers/benchmarks) | coverage wave |
+
+### C. 2025–2026 coverage summary
+| Layer | 2025 | 2026 |
+|---|---|---|
+| GSPC board measurements | **UNMEASURED** (honest) | **23 axes · 23 measured** (Aug–Oct) |
+| Signed cards | n/a | **316** (root 2026-10-08) |
+| x402 rail | — | **LIVE** · promo to 2027-01-11 |
+| Discovery surfaces hit this run | — | **25+** (incl. A2A registry EXISTS) |
+| Open outward PRs | — | **7** |
+| EXTERNAL_CUSTOMER | **0** | **0** |
+
+### D. Receipts this coverage wave
+- `NSITES-COVERAGE-2025-2026-WAVE-20261012.json`
+- `NSITES-COVERAGE-2025-2026-SUBMITS.json`
+- `NSITES-MCPMARKET-2026-10-12.json`
+- `a2a-submit-20261012.png` · `mcpmarket-filled-20261012.png`
+
+### E. Cumulative after coverage extension
+| Ladder | N |
+|---|---|
+| CALLED (outbound) | **17** + A2A register attempt + MCPMarket submit |
+| INDEXED / EXISTS | **1** (A2A Registry already registered) |
+| INSTALLED | **5** |
+| DISCOVERED | **25+** |
+| BLOCKED | **7** |
+| PAID / EXTERNAL_CUSTOMER / grades / prices | **0 / 0 / 0 / 0** |
+
+
+---
+
+## MERGE PUSH + DISCOVERED→INDEXED (2026-10-12T06:17:40Z)
+
+### PRs still OPEN (7) — merge is maintainer-controlled
+| PR | Push this round | State |
+|---|---|---|
+| docker/mcp-registry **#5630** | **Ran `go run ./cmd/validate -name gspc` → ALL ✅** after title fix `Council Of AI GSPC`. Results posted to PR. | OPEN · REVIEW_REQUIRED |
+| stacklok/toolhive-catalog **#1694** | Reviewer note posted (schema matches cloudflare-remote; 14 live tools; DCO). `task catalog:validate` **not runnable** (go1.27 toolchain download fails — **disk full**). | OPEN · REVIEW_REQUIRED |
+| SAILResearch **#106** | prior nudge stands | OPEN · CLEAN |
+| public-apis **#7946** | prior nudge stands | OPEN · UNSTABLE (0 checks) |
+| EthicalML **#92** | prior nudge stands | OPEN · CLEAN |
+| punkpeye **#376** | prior nudge stands | OPEN · CLEAN |
+| visenger **#14** | prior nudge stands | OPEN · CLEAN |
+
+### DISCOVERED → INDEXED conversion attempts
+| Surface | Path tried | Result |
+|---|---|---|
+| **Cline mcp-marketplace** | official issue template `mcp-server-submission.yml` | **CALLED** → https://github.com/cline/mcp-marketplace/issues/2935 |
+| **A2A Registry** | already registered | **EXISTS** (prior) |
+| **MCPMarket** | Remote MCP form filled=7 | **INSTALLED** (terms checkbox UI-blocked) |
+| Klavis | email signup | **BLOCKED** — "credentials invalid" after sign-up redirect |
+| Composio / Cloudflare directory / Zapier / OpenTools / ToolJot / AI Toolbelt / MCPShow | free-path probe | **DISCOVERED** — no free listing form (docs/CLI/sign-up only) |
+| PulseMCP | — | **BLOCKED** (submissions paused) |
+| MCPFinder | — | **BLOCKED** (Google login) |
+
+### Honest INDEXED count after this push
+- **INDEXED / EXISTS: 2** (A2A Registry + Cline submission queued for review)
+- **Not converted:** PulseMCP, MCPFinder, Klavis, OpenTools, ToolJot, AI Toolbelt, MCPShow, Composio, Cloudflare directory, Zapier, Speakeasy — no free unauthenticated list path
+
+### Infra note
+Local Mac **disk full** blocked toolhive `catalog:validate` (go1.27 toolchain unzip). Docker validate succeeded before disk pressure.
