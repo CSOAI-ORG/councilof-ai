@@ -11,6 +11,7 @@
  * AND BUSABASE_INTAKE_URL are all set. The operator flips it on only after KYC passes.
  */
 import { intakeConfigured, proposeRecord, json, type IntakeEnv } from "../_lib/busabaseIntake";
+import { headFromGet } from "./_head";
 
 interface Env extends IntakeEnv {
   BOOKING_WEBHOOK_ENABLED?: string;
@@ -47,6 +48,7 @@ export async function verifyPaddleSignature(header: string | null, raw: string, 
 }
 
 export const onRequestGet: PagesFunction<Env> = async () => closed();
+export const onRequestHead = headFromGet(onRequestGet);
 
 export const onRequestPost: PagesFunction<Env> = async ({ env, request }) => {
   if (!enabled(env)) return closed();

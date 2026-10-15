@@ -8,6 +8,7 @@
  * DOOR_CLOSED (503) until the operator sets BUSABASE_INTAKE_URL.
  */
 import { intakeConfigured, proposeRecord, sha256Hex, json, type IntakeEnv } from "../_lib/busabaseIntake";
+import { headFromGet } from "./_head";
 
 const SCHEMA = "csoai.waitlist/0.1";
 const PRODUCTS = new Set(["ras-booking", "claimguard", "meok"]);
@@ -25,6 +26,7 @@ export const onRequestGet: PagesFunction<IntakeEnv> = async ({ env }) =>
         body: { email: "string", product: "string", note: "string (optional)" },
         note: "Joining the waitlist is free and commits you to nothing. No price is shown here." })
     : closed();
+export const onRequestHead = headFromGet(onRequestGet);
 
 export const onRequestPost: PagesFunction<IntakeEnv> = async ({ env, request }) => {
   if (!intakeConfigured(env)) return closed();
