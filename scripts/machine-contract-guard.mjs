@@ -46,6 +46,16 @@ const EXEMPT = /sov-arena/gi;
  */
 const PLACEHOLDER = /[\u2026<>{}]|\.\.\./;
 
+/**
+ * Third-party hosts that answer 403 to every non-browser client (bot walls), so a 403 from
+ * them says nothing about whether the cited page exists. leginfo.legislature.ca.gov (the
+ * California legislature bill-text site cited in llms.txt for SB 813 / AB 1405) 403s the
+ * runner's fetch while serving browsers 200. Only a 403 from these exact hosts is tolerated;
+ * 404/410/5xx from them still fail, and every other host keeps the strict 200 rule.
+ */
+const BOT_WALLED_403 = new Set(["leginfo.legislature.ca.gov"]);
+const botWalled = (u, status) => { try { return status === 403 && BOT_WALLED_403.has(new URL(u).hostname); } catch { return false; } };
+
 const fails = [];
 const pass = (m) => console.log(`  ✓ ${m}`);
 const fail = (m) => { console.log(`  ✗ ${m}`); fails.push(m); };
@@ -98,6 +108,7 @@ try {
       try {
         const r = await get(rehost(u));
         if (r.status === 402) pass(`/llms.txt link ${u} → 402, the paid door issuing its challenge`);
+        else if (botWalled(u, r.status)) pass(`/llms.txt link ${u} → 403 from a bot-walled third-party host (not a dead link)`);
         else if (r.status !== 200) fail(`/llms.txt link dead: ${u} → HTTP ${r.status}`);
         else pass(`/llms.txt link ${u}`);
       } catch (e) { fail(`/llms.txt link unreachable: ${u} — ${e.message}`); }
