@@ -178,6 +178,17 @@
       "url": "https://councilof.ai/mcp/free"
     },
     {
+      "id": "openai-responses-free",
+      "platform": "OpenAI Responses API (free door)",
+      "group": "Agent frameworks and APIs",
+      "door": "free",
+      "where": "tools[] of a Responses API request",
+      "kind": "json",
+      "snippet": "{\n  \"type\": \"mcp\",\n  \"server_label\": \"gspc\",\n  \"server_url\": \"https://councilof.ai/mcp/free\",\n  \"require_approval\": \"always\"\n}",
+      "docs": "https://platform.openai.com/docs/guides/tools-remote-mcp",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
       "id": "openai-responses",
       "platform": "OpenAI Responses API",
       "group": "Agent frameworks and APIs",
@@ -200,6 +211,17 @@
       "url": "https://councilof.ai/mcp/free"
     },
     {
+      "id": "google-adk-free",
+      "platform": "Google ADK (Vertex AI Agent Builder, free door)",
+      "group": "Agent frameworks and APIs",
+      "door": "free",
+      "where": "your ADK agent's tools",
+      "kind": "python",
+      "snippet": "from google.adk.tools.mcp_tool.mcp_toolset import McpToolset\nfrom google.adk.tools.mcp_tool.mcp_session_manager import StreamableHTTPConnectionParams\n\ngspc = McpToolset(connection_params=StreamableHTTPConnectionParams(url=\"https://councilof.ai/mcp/free\"))",
+      "docs": "https://google.github.io/adk-docs/tools/mcp-tools/",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
       "id": "google-adk",
       "platform": "Google ADK (Vertex AI Agent Builder)",
       "group": "Agent frameworks and APIs",
@@ -209,6 +231,17 @@
       "snippet": "from google.adk.tools.mcp_tool.mcp_toolset import McpToolset\nfrom google.adk.tools.mcp_tool.mcp_session_manager import StreamableHTTPConnectionParams\n\ngspc = McpToolset(connection_params=StreamableHTTPConnectionParams(url=\"https://councilof.ai/mcp\"))",
       "docs": "https://google.github.io/adk-docs/tools/mcp-tools/",
       "url": "https://councilof.ai/mcp"
+    },
+    {
+      "id": "langchain-free",
+      "platform": "LangChain / LangGraph (free door)",
+      "group": "Agent frameworks and APIs",
+      "door": "free",
+      "where": "pip install langchain-mcp-adapters",
+      "kind": "python",
+      "snippet": "from langchain_mcp_adapters.client import MultiServerMCPClient\n\nclient = MultiServerMCPClient({\"gspc\": {\"transport\": \"streamable_http\", \"url\": \"https://councilof.ai/mcp/free\"}})\ntools = await client.get_tools()",
+      "docs": "https://github.com/langchain-ai/langchain-mcp-adapters",
+      "url": "https://councilof.ai/mcp/free"
     },
     {
       "id": "langchain",

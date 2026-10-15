@@ -1,9 +1,9 @@
 {
   "schema": "csoai.connect-live-check/1",
   "generated_by": "scripts/harness-x/connect-live.mjs",
-  "checked_at": "2026-10-14T14:17:19.662Z",
+  "checked_at": "2026-10-14T14:17:29.130Z",
   "scope": "live: the doors were contacted at https://councilof.ai",
-  "matrix_sha256": "207a1ff954ddbc68e5853fb4e630d2dce7663a57fcb693e58d678e67fbc7e723",
+  "matrix_sha256": "18e907f99b76d313a835a477e2566cc08fd8aa7331148d05fb89ac530ad3926e",
   "doors": {
     "https://councilof.ai/mcp/free": {
       "state": "PASS",
@@ -325,6 +325,26 @@
       "docs": "https://www.jetbrains.com/help/ai-assistant/mcp.html"
     },
     {
+      "id": "openai-responses-free",
+      "platform": "OpenAI Responses API (free door)",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "14 tools, server 1.4.4"
+        },
+        {
+          "check": "json parses",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://platform.openai.com/docs/guides/tools-remote-mcp"
+    },
+    {
       "id": "openai-responses",
       "platform": "OpenAI Responses API",
       "door": "full",
@@ -365,6 +385,26 @@
       "docs": "https://docs.x.ai/docs/guides/tools/remote-mcp-tools"
     },
     {
+      "id": "google-adk-free",
+      "platform": "Google ADK (Vertex AI Agent Builder, free door)",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "14 tools, server 1.4.4"
+        },
+        {
+          "check": "python parses (ast)",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://google.github.io/adk-docs/tools/mcp-tools/"
+    },
+    {
       "id": "google-adk",
       "platform": "Google ADK (Vertex AI Agent Builder)",
       "door": "full",
@@ -383,6 +423,26 @@
       ],
       "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
       "docs": "https://google.github.io/adk-docs/tools/mcp-tools/"
+    },
+    {
+      "id": "langchain-free",
+      "platform": "LangChain / LangGraph (free door)",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "14 tools, server 1.4.4"
+        },
+        {
+          "check": "python parses (ast)",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://github.com/langchain-ai/langchain-mcp-adapters"
     },
     {
       "id": "langchain",
@@ -606,8 +666,8 @@
     }
   ],
   "totals": {
-    "clients": 27,
-    "pass": 27,
+    "clients": 30,
+    "pass": 30,
     "fail": 0
   },
   "doctrine": "measurement, not certification"
