@@ -36,7 +36,7 @@ type ConnectClient = {
   snippet: string;
   docs: string;
   url: string;
-  install_action?: { kind: "vscode"; href: string };
+  install_action?: { kind: "vscode" | "cursor"; href: string };
 };
 export const PLATFORMS = (CONNECT_MATRIX as { clients: ConnectClient[] }).clients;
 const GROUPS = [...new Set(PLATFORMS.map((c) => c.group))];
@@ -221,6 +221,17 @@ export default function ConnectHub() {
                             data-testid={`connect-install-${c.id}`}
                           >
                             Add to VS Code
+                          </a>
+                        </p>
+                      )}
+                      {c.install_action?.kind === "cursor" && (
+                        <p className="mt-2 text-[13px] leading-snug">
+                          <a
+                            href={c.install_action.href}
+                            className="font-semibold text-emerald-800 underline underline-offset-2"
+                            data-testid={`connect-install-${c.id}`}
+                          >
+                            Add to Cursor
                           </a>
                         </p>
                       )}
