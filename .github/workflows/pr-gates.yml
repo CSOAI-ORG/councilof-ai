@@ -189,7 +189,7 @@ jobs:
       - uses: actions/checkout@v4
         if: steps.scope.outputs.gated == 'true'
         with:
-          fetch-depth: 2   # HEAD^1 = the base this PR merges into, for the stamped-bytes step
+          fetch-depth: 0   # Canonical SBOM generation history; HEAD^1 remains this PR merge base.
       - uses: actions/setup-node@v4
         if: steps.scope.outputs.gated == 'true'
         with: { node-version: 20 }
