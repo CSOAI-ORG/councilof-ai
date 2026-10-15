@@ -96,7 +96,7 @@ export const VERIFY_SEED_HREF = "/gspc-verify?seed=mine";
 export function seedChecker(recordText: string): boolean {
   try {
     window.sessionStorage.setItem(VERIFY_SEED_KEY, recordText);
-    return true;
+    return window.sessionStorage.getItem(VERIFY_SEED_KEY) === recordText;
   } catch {
     return false;
   }
@@ -165,6 +165,23 @@ export function readMyResults(): MyResult[] {
     return parseRows(window.localStorage.getItem(MY_RESULTS_KEY)) ?? [];
   } catch {
     return [];
+  }
+}
+
+/** Additive display outcome: unreadable storage is not a readable empty list.
+ * The existing save/retention implementation and readMyResults compatibility stay unchanged. */
+export type MyResultsReadStatus = { state: "ok"; rows: MyResult[] } | { state: "error"; rows: MyResult[] };
+export function readMyResultsStatus(): MyResultsReadStatus {
+  try {
+    const raw = window.localStorage.getItem(MY_RESULTS_KEY);
+    if (raw === "") return { state: "error", rows: [] };
+    const rows = parseRows(raw);
+    const readable = (rows ?? []).filter((r) => r.subject.trim() && r.at.trim() && Number.isFinite(Date.parse(r.at)));
+    const complete = parseRows(raw, true);
+    if (!complete || readable.length !== complete.length) return { state: "error", rows: readable };
+    return { state: "ok", rows: complete };
+  } catch {
+    return { state: "error", rows: [] };
   }
 }
 
@@ -311,13 +328,21 @@ export function saveNote(o: SaveOutcome | null | undefined): string | null {
   return "My results couldn't confirm this save in this browser, so treat it as not saved. Your earlier results were left as they were. Download it now: this page is your only copy.";
 }
 
-export function clearMyResults(): void {
+export type ClearMyResultsStatus = { cleared: boolean };
+export function clearMyResultsStatus(): ClearMyResultsStatus {
   try {
     window.localStorage.removeItem(MY_RESULTS_KEY);
+    if (window.localStorage.getItem(MY_RESULTS_KEY) !== null) return { cleared: false };
     window.dispatchEvent(new Event(MY_RESULTS_EVENT));
+    return { cleared: true };
   } catch {
-    /* nothing to clear */
+    return { cleared: false };
   }
+}
+
+/** Existing callers keep the void API; only confirmed removal emits the change event. */
+export function clearMyResults(): void {
+  clearMyResultsStatus();
 }
 
 /** Save text as a file in the reader's own browser (a delivered record they must keep). */
