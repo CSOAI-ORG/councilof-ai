@@ -197,6 +197,10 @@ describe("the zero price must survive verifyX402Payment itself", () => {
   // hold both halves of that: the free door passes it, and nothing else may.
   it("still refuses a zero amount when the caller has NOT declared it deliberate", async () => {
     const { verifyX402Payment } = await import("./_x402");
+    // No facilitator is reachable from a unit test; refuse the network at once instead of
+    // waiting on a real DNS/TCP timeout (this test used to exceed vitest's 5000ms default).
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockRejectedValue(new Error("network down"));
+    try {
     const r = await verifyX402Payment(
       new Request("https://councilof.ai/api/anything", { headers: { "x-payment": "e30=" } }),
       { X402_FACILITATOR_URL: "https://facilitator.example" } as never,
@@ -221,7 +225,10 @@ describe("the zero price must survive verifyX402Payment itself", () => {
     // It may still fail further along (no reachable facilitator in a unit test) — the point is
     // that it must get PAST the amount guard, which is what blocked the live door.
     expect(r.reason ?? "").not.toMatch(/no amount configured/i);
-  });
+    } finally {
+      fetchSpy.mockRestore();
+    }
+  }, 20000);
 
   it("tells a caller who presented a payment WHY it was not accepted", async () => {
     const res = (await (onRequestGet as unknown as (c: unknown) => Promise<Response>)({
