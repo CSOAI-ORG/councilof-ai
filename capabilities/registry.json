@@ -6,6 +6,58 @@
   "generated_by": "scripts/capability-render.mjs legacy",
   "capabilities": [
     {
+      "id": "api-booking-webhook",
+      "protocols": [
+        "http"
+      ],
+      "title": "Booking webhook",
+      "description": "booking-webhook — Paddle booking intake skeleton: signature check then a Busabase bookings proposal; never issues anything. Closed until KYC.",
+      "endpoint": "/api/booking-webhook",
+      "method": "GET",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-booking-webhook-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "Booking webhook (POST)",
+      "description": "booking-webhook — Paddle booking intake skeleton: signature check then a Busabase bookings proposal; never issues anything. Closed until KYC.",
+      "endpoint": "/api/booking-webhook",
+      "method": "POST",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-waitlist",
+      "protocols": [
+        "http"
+      ],
+      "title": "Waitlist",
+      "description": "waitlist — join the waitlist for a product not on sale yet; proposes a Busabase record, shows no price.",
+      "endpoint": "/api/waitlist",
+      "method": "GET",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "audience": "human",
+      "payment": "free"
+    },
+    {
+      "id": "api-waitlist-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "Waitlist (POST)",
+      "description": "waitlist — join the waitlist for a product not on sale yet; proposes a Busabase record, shows no price.",
+      "endpoint": "/api/waitlist",
+      "method": "POST",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "audience": "human",
+      "payment": "free"
+    },
+    {
       "id": "article50-detect",
       "protocols": [
         "a2a"
@@ -3354,6 +3406,32 @@
       "title": "Ondo OUSG discovery (POST)",
       "description": "POST alias for the zero-priced Ondo Finance OUSG discovery door. Discovery only, not measurement.",
       "endpoint": "/api/discover/ondo-ousg",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-sign",
+      "protocols": [
+        "http"
+      ],
+      "title": "Sign",
+      "description": "POST /api/sign — seal an artifact (text or sha256) with Ed25519 under did:web:csoai.org#artifact-seal-1. GET explains how. Fails closed (503) until the key is provisioned. Certifies nothing.",
+      "endpoint": "/api/sign",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-sign-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "Sign (POST)",
+      "description": "POST /api/sign — seal an artifact (text or sha256) with Ed25519 under did:web:csoai.org#artifact-seal-1. GET explains how. Fails closed (503) until the key is provisioned. Certifies nothing.",
+      "endpoint": "/api/sign",
       "method": "POST",
       "lifecycle": "LIVE",
       "audience": "agent",
