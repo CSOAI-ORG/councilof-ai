@@ -825,6 +825,38 @@
         "summary": "/api/body-state \u2014 returns SOURCE_RETIRED for the former GitHub workflow observer; current separate surfaces are /api/worker and /api/observability."
       }
     },
+    "/api/booking-webhook": {
+      "get": {
+        "description": "POST /api/booking-webhook \u2014 Paddle booking intake (SKELETON, disabled until Paddle KYC passes).",
+        "operationId": "get__api_booking-webhook",
+        "responses": {
+          "503": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
+          }
+        },
+        "security": [],
+        "summary": "POST /api/booking-webhook \u2014 Paddle booking intake (SKELETON, disabled until Paddle KYC passes).",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
+      },
+      "post": {
+        "description": "POST /api/booking-webhook \u2014 Paddle booking intake (SKELETON, disabled until Paddle KYC passes).",
+        "operationId": "post__api_booking-webhook",
+        "responses": {
+          "503": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
+          }
+        },
+        "security": [],
+        "summary": "POST /api/booking-webhook \u2014 Paddle booking intake (SKELETON, disabled until Paddle KYC passes).",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
+      }
+    },
     "/api/cards": {
       "get": {
         "description": "GET /api/cards \u2014 live signed-measurement surface (G4 fix).",
@@ -8969,6 +9001,38 @@
         "summary": ""
       }
     },
+    "/api/waitlist": {
+      "get": {
+        "description": "POST /api/waitlist \u2014 join the waitlist for a product that is not on sale yet (RAS booking desk first). The entry is proposed into the Busabase `waitlist` base for review; nothing is sold, priced, charged or issued, and no price is shown. GET describes the door.",
+        "operationId": "get__api_waitlist",
+        "responses": {
+          "503": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
+          }
+        },
+        "security": [],
+        "summary": "POST /api/waitlist \u2014 join the waitlist for a product that is not on sale yet (RAS booking desk first). The entry is proposed into the Busabase `waitlist` base for review; nothing is sold, priced\u2026",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
+      },
+      "post": {
+        "description": "POST /api/waitlist \u2014 join the waitlist for a product that is not on sale yet (RAS booking desk first). The entry is proposed into the Busabase `waitlist` base for review; nothing is sold, priced, charged or issued, and no price is shown. GET describes the door.",
+        "operationId": "post__api_waitlist",
+        "responses": {
+          "503": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
+          }
+        },
+        "security": [],
+        "summary": "POST /api/waitlist \u2014 join the waitlist for a product that is not on sale yet (RAS booking desk first). The entry is proposed into the Busabase `waitlist` base for review; nothing is sold, priced\u2026",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
+      }
+    },
     "/api/wave-dashboard": {
       "get": {
         "description": "",
@@ -10196,7 +10260,7 @@
       "well_known": "csoai.x402/0.2"
     },
     "scheme": "exact",
-    "unauthenticated_facades": 38,
+    "unauthenticated_facades": 42,
     "well_known": "https://councilof.ai/.well-known/x402.json"
   }
 }

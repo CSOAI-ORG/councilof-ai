@@ -12,6 +12,116 @@
   "capabilities": [
     {
       "audience": "agent",
+      "description": "booking-webhook \u2014 Paddle booking intake skeleton: signature check then a Busabase bookings proposal; never issues anything. Closed until KYC.",
+      "description_state": "DOCUMENTED",
+      "id": "api-booking-webhook",
+      "kind": "http",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "method": "GET",
+      "name": "Booking webhook",
+      "path": "/api/booking-webhook",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          503
+        ],
+        "method": "GET",
+        "request": "/api/booking-webhook",
+        "safe": true
+      },
+      "schema_refs": [
+        "csoai.booking-intake/0.1"
+      ],
+      "source": "functions/api/booking-webhook.ts",
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "booking-webhook \u2014 Paddle booking intake skeleton: signature check then a Busabase bookings proposal; never issues anything. Closed until KYC.",
+      "description_state": "DOCUMENTED",
+      "id": "api-booking-webhook-post",
+      "kind": "http",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "method": "POST",
+      "name": "Booking webhook (POST)",
+      "path": "/api/booking-webhook",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          503
+        ],
+        "method": "POST",
+        "request": "/api/booking-webhook",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "schema_refs": [
+        "csoai.booking-intake/0.1"
+      ],
+      "source": "functions/api/booking-webhook.ts",
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "human",
+      "description": "waitlist \u2014 join the waitlist for a product not on sale yet; proposes a Busabase record, shows no price.",
+      "description_state": "DOCUMENTED",
+      "id": "api-waitlist",
+      "kind": "http",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "method": "GET",
+      "name": "Waitlist",
+      "path": "/api/waitlist",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          503
+        ],
+        "method": "GET",
+        "request": "/api/waitlist",
+        "safe": true
+      },
+      "schema_refs": [
+        "csoai.waitlist/0.1"
+      ],
+      "source": "functions/api/waitlist.ts",
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "human",
+      "description": "waitlist \u2014 join the waitlist for a product not on sale yet; proposes a Busabase record, shows no price.",
+      "description_state": "DOCUMENTED",
+      "id": "api-waitlist-post",
+      "kind": "http",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "method": "POST",
+      "name": "Waitlist (POST)",
+      "path": "/api/waitlist",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          503
+        ],
+        "method": "POST",
+        "request": "/api/waitlist",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "schema_refs": [
+        "csoai.waitlist/0.1"
+      ],
+      "source": "functions/api/waitlist.ts",
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
       "description": "Verify a C2PA-style signed manifest for AI-generated content (EU AI Act Article 50) at POST https://councilof.ai/api/detect. Deterministically checks the Ed25519-signed metadata layer and the IPTC/schema.org digitalSourceType; returns AI_MARKED / NOT_AI_MARKED / UNVERIFIABLE with a signed verdict receipt (in-toto/DSSE when a board key is bound). The imperceptible-watermark layer we cannot see is declared, never claimed. Free for all; unrestricted for authorities, media, fact-checkers, researchers and civil society. Not certification.",
       "description_state": "DOCUMENTED",
       "examples": [

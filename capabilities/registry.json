@@ -6,6 +6,58 @@
   "generated_by": "scripts/capability-render.mjs legacy",
   "capabilities": [
     {
+      "id": "api-booking-webhook",
+      "protocols": [
+        "http"
+      ],
+      "title": "Booking webhook",
+      "description": "booking-webhook — Paddle booking intake skeleton: signature check then a Busabase bookings proposal; never issues anything. Closed until KYC.",
+      "endpoint": "/api/booking-webhook",
+      "method": "GET",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-booking-webhook-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "Booking webhook (POST)",
+      "description": "booking-webhook — Paddle booking intake skeleton: signature check then a Busabase bookings proposal; never issues anything. Closed until KYC.",
+      "endpoint": "/api/booking-webhook",
+      "method": "POST",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-waitlist",
+      "protocols": [
+        "http"
+      ],
+      "title": "Waitlist",
+      "description": "waitlist — join the waitlist for a product not on sale yet; proposes a Busabase record, shows no price.",
+      "endpoint": "/api/waitlist",
+      "method": "GET",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "audience": "human",
+      "payment": "free"
+    },
+    {
+      "id": "api-waitlist-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "Waitlist (POST)",
+      "description": "waitlist — join the waitlist for a product not on sale yet; proposes a Busabase record, shows no price.",
+      "endpoint": "/api/waitlist",
+      "method": "POST",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "audience": "human",
+      "payment": "free"
+    },
+    {
       "id": "article50-detect",
       "protocols": [
         "a2a"
