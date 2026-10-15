@@ -194,6 +194,10 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         with: { node-version: 20 }
 
+      - name: Outward claims — offline manifest contract selftest
+        if: steps.scope.outputs.gated == 'true'
+        run: node scripts/outward-claims-guard.mjs --selftest
+
       # Runs before `npm ci` so a stamped-byte edit fails in seconds. See the stamped-bytes job above
       # for why (#2871 / deploy run 37590160574). Verified to fail: the selftest goes red when any one
       # of its four guards is removed, and replaying f4487608d against its parent exits 1 naming

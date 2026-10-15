@@ -280,6 +280,8 @@ const EXISTING = [
   "/verify-card/           /gspc-verify/                308",
   "/datasets               /datasets/gspc-axis-v0.1.0/dataset.json  308",
   "/datasets/              /datasets/gspc-axis-v0.1.0/dataset.json  308",
+  "/data/v1                /data/v1/latest.json                     308",
+  "/data/v1/               /data/v1/latest.json                     308",
   "/corpus                 /signals/                    308",
   "/corpus/                /signals/                    308",
   "/first-fine             /first-fine-watch/           308",

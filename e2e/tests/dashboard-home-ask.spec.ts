@@ -68,17 +68,25 @@ function aguiStream(): string {
   return events.map((e) => `event: ${e.type}\ndata: ${JSON.stringify(e)}\n\n`).join("");
 }
 
-async function answerLocally(page: Page) {
+async function answerLocally(page: Page, origin: string) {
   if (process.env.BASE_URL) return null;
   const fixture = { count: 0, request: null as Request | null, url: "", requestBody: null as string | null,
-    body: "", status: 200, contentType: "text/event-stream" };
-  await page.route("**/api/agui/run", async (route) => {
-    // Date.now is part of the fixture: retain exactly the body supplied in THIS attempt.
-    const body = aguiStream();
-    fixture.count += 1; fixture.request = route.request(); fixture.url = fixture.request.url();
-    fixture.requestBody = fixture.request.postData(); fixture.body = body;
-    await route.fulfill({ status: 200, headers: { "content-type": "text/event-stream", "cache-control": "no-store" }, body });
+    body: aguiStream(), status: 200, contentType: "text/event-stream", dispose: () => {} };
+  // Freeze THIS attempt's exact bytes, then send them through the existing loopback HTTP server.
+  // APIRequestContext configures the fixture outside the page; the page still makes one real POST.
+  const configured = await page.request.put(origin + "/__e2e/first-ask-fixture", {
+    headers: { "content-type": fixture.contentType, "x-csoai-e2e-fixture": "first-ask" },
+    data: fixture.body,
   });
+  expect(configured.status(), "One-use local HTTP fixture configured").toBe(204);
+  await configured.dispose();
+  const capture = (request: Request) => {
+    if (request.method() !== "POST" || request.url() !== origin + "/api/agui/run") return;
+    fixture.count += 1; fixture.request = request; fixture.url = request.url();
+    fixture.requestBody = request.postData();
+  };
+  page.on("request", capture);
+  fixture.dispose = () => { page.off("request", capture); };
   return fixture;
 }
 
@@ -314,8 +322,8 @@ for (const vp of VIEWPORTS) {
   test(`the first question typed on the start screen gets an answer at ${vp.name}px`, async ({ page, baseURL }, testInfo) => {
     test.skip(testInfo.project.name !== vp.project, `${vp.name}px runs in the ${vp.project} project`);
     await page.setViewportSize(vp.size);
-    const localFixture = await answerLocally(page);
     const origin = new URL(baseURL || "http://127.0.0.1:4180").origin;
+    const localFixture = await answerLocally(page, origin);
     const aborted: string[] = [];
     page.on("requestfailed", (r) => {
       if (r.url().includes("/api/agui/run")) aborted.push(r.failure()?.errorText ?? "failed");
@@ -425,7 +433,7 @@ for (const vp of VIEWPORTS) {
           const native = (window as Window & { __aguiNativeTransport?: { requests?: { nativeDigestState?: string }[] } }).__aguiNativeTransport;
           return native?.requests?.[0]?.nativeDigestState;
         }), "Actual consumed-byte digest completed").toBe("complete");
-        expect(localFixture.request, "The fulfilled fixture is the exact question Request").toBe(postRequests[0]);
+        expect(localFixture.request, "The served fixture is the exact question Request").toBe(postRequests[0]);
         const request = postRequests[0], requestId = requestIds.get(request);
         const nativeTransport = await page.evaluate(() =>
           (window as Window & { __aguiNativeTransport?: unknown }).__aguiNativeTransport ?? null);
@@ -454,6 +462,7 @@ for (const vp of VIEWPORTS) {
         expect(aborted, "POST /api/agui/run was not aborted").toEqual([]);
       }
     } finally {
+      localFixture?.dispose();
       page.off("request", onRequest);
       page.off("requestfinished", onFinished);
       page.off("requestfailed", onFailed);

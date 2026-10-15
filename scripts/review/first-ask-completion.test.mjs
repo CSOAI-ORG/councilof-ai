@@ -1,3 +1,5 @@
+import { createServer, request as httpRequest } from "node:http";
+import { createFirstAskHttpFixture } from "../../e2e/first-ask-http-fixture.mjs";
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
@@ -113,4 +115,180 @@ for (const [label, mutate] of negative) test("rejects " + label, () => {
 });
 test("malformed input fails closed", () => {
   assert.equal(qualifyLocalFirstAskCompletion(null).accepted, false);
+});
+
+
+/** Real loopback HTTP controls for the test-only finite response transport. */
+async function withFirstAskHttpFixture(run) {
+  const fixture = createFirstAskHttpFixture();
+  const server = createServer((req, res) => {
+    if (fixture(req, res)) return;
+    res.writeHead(404); res.end("Unrelated test route.");
+  });
+  await new Promise((resolve, reject) => {
+    server.once("error", reject);
+    server.listen(0, "127.0.0.1", resolve);
+  });
+  try { await run("http://127.0.0.1:" + server.address().port, server); }
+  finally {
+    await new Promise((resolve, reject) => {
+      server.close((error) => error ? reject(error) : resolve());
+      server.closeAllConnections();
+    });
+  }
+}
+function fixtureHttpRequest(base, pathname, method, data = "", headers = {}, holdUntil = null) {
+  return new Promise((resolve, reject) => {
+    const req = httpRequest(base + pathname, { method,
+      headers: { "content-length": Buffer.byteLength(data), ...headers } }, (res) => {
+      const chunks = [];
+      res.on("data", (chunk) => chunks.push(chunk));
+      res.on("error", reject);
+      res.on("end", () => resolve({ status: res.statusCode, headers: res.headers, body: Buffer.concat(chunks) }));
+    });
+    req.on("error", reject);
+    req.setTimeout(3000, () => req.destroy(new Error("Fixture HTTP request timed out.")));
+    if (holdUntil) { req.flushHeaders(); holdUntil.then(() => req.end(data), (error) => req.destroy(error)); }
+    else req.end(data);
+  });
+}
+const setupFixture = (base, data = fixtureBody, headers = {}) =>
+  fixtureHttpRequest(base, "/__e2e/first-ask-fixture", "PUT", data,
+    { "content-type": "text/event-stream", "x-csoai-e2e-fixture": "first-ask", ...headers });
+const askFixture = (base, data = body) =>
+  fixtureHttpRequest(base, "/api/agui/run", "POST", data);
+
+test("HTTP fixture delivers exact Unicode SSE bytes once with ordinary HTTP completion", { timeout: 5000 }, async () => {
+  await withFirstAskHttpFixture(async (base) => {
+    assert.equal((await setupFixture(base)).status, 204);
+    const answer = await askFixture(base);
+    assert.equal(answer.status, 200);
+    assert.equal(answer.headers["content-type"], "text/event-stream");
+    assert.equal(Number(answer.headers["content-length"]), Buffer.byteLength(fixtureBody));
+    assert.deepEqual(answer.body, Buffer.from(fixtureBody));
+    assert.equal(createHash("sha256").update(answer.body).digest("hex"),
+      createHash("sha256").update(fixtureBody).digest("hex"));
+    assert.equal((await askFixture(base)).status, 409);
+  });
+});
+test("HTTP fixture rejects empty or non-SSE setup and disarms the previous attempt", { timeout: 5000 }, async () => {
+  await withFirstAskHttpFixture(async (base) => {
+    for (const [data, headers, status] of [["", {}, 400], [fixtureBody, { "content-type": "text/plain" }, 415]]) {
+      assert.equal((await setupFixture(base)).status, 204);
+      assert.equal((await setupFixture(base, data, headers)).status, status);
+      assert.equal((await askFixture(base)).status, 409);
+    }
+  });
+});
+test("HTTP fixture control rejects browser Origin and missing control header", { timeout: 5000 }, async () => {
+  await withFirstAskHttpFixture(async (base) => {
+    assert.equal((await setupFixture(base, fixtureBody, { origin: base })).status, 403);
+    assert.equal((await fixtureHttpRequest(base, "/__e2e/first-ask-fixture", "PUT", fixtureBody,
+      { "content-type": "text/event-stream" })).status, 403);
+    assert.equal((await askFixture(base)).status, 409);
+  });
+});
+test("HTTP fixture bounds response bytes before arming", { timeout: 5000 }, async () => {
+  await withFirstAskHttpFixture(async (base) => {
+    assert.equal((await setupFixture(base, "x".repeat(512 * 1024 + 1))).status, 413);
+    assert.equal((await askFixture(base)).status, 409);
+  });
+});
+test("HTTP fixture bounds the question and does not reuse a rejected attempt", { timeout: 5000 }, async () => {
+  await withFirstAskHttpFixture(async (base) => {
+    assert.equal((await setupFixture(base)).status, 204);
+    assert.equal((await askFixture(base, "x".repeat(4097))).status, 413);
+    assert.equal((await askFixture(base)).status, 409);
+  });
+});
+test("HTTP fixture reserves one response across concurrent question requests", { timeout: 5000 }, async () => {
+  await withFirstAskHttpFixture(async (base) => {
+    assert.equal((await setupFixture(base)).status, 204);
+    const answers = await Promise.all([askFixture(base), askFixture(base)]);
+    assert.deepEqual(answers.map((answer) => answer.status).sort(), [200, 409]);
+    assert.deepEqual(answers.find((answer) => answer.status === 200).body, Buffer.from(fixtureBody));
+  });
+});
+test("HTTP fixture leaves other paths and methods to static fallback without consuming the fixture", { timeout: 5000 }, async () => {
+  await withFirstAskHttpFixture(async (base) => {
+    assert.equal((await setupFixture(base)).status, 204);
+    for (const pathname of ["/__e2e/first-ask-fixture", "/api/agui/run"]) {
+      for (const method of ["GET", "HEAD", "OPTIONS"]) {
+        assert.equal((await fixtureHttpRequest(base, pathname, method)).status, 404);
+      }
+    }
+    assert.equal((await fixtureHttpRequest(base, "/unrelated", "GET")).status, 404);
+    assert.equal((await fixtureHttpRequest(base, "/__e2e/first-ask-fixture?other", "PUT")).status, 404);
+    assert.equal((await fixtureHttpRequest(base, "/api/agui/run?other", "POST")).status, 404);
+    assert.deepEqual((await askFixture(base)).body, Buffer.from(fixtureBody));
+    assert.equal((await askFixture(base)).status, 409);
+  });
+});
+test("HTTP fixture rejects another setup while the original setup body is active", { timeout: 5000 }, async () => {
+  await withFirstAskHttpFixture(async (base, server) => {
+    let release;
+    const hold = new Promise((resolve) => { release = resolve; });
+    const arrived = new Promise((resolve) => server.once("request", resolve));
+    const setup = fixtureHttpRequest(base, "/__e2e/first-ask-fixture", "PUT", fixtureBody,
+      { "content-type": "text/event-stream", "x-csoai-e2e-fixture": "first-ask" }, hold);
+    await arrived;
+    assert.equal((await setupFixture(base, "newer bytes")).status, 409);
+    release();
+    assert.equal((await setup).status, 204);
+    assert.deepEqual((await askFixture(base)).body, Buffer.from(fixtureBody));
+  });
+});
+test("HTTP fixture reserves the response before a slow question can overlap another setup", { timeout: 5000 }, async () => {
+  await withFirstAskHttpFixture(async (base, server) => {
+    assert.equal((await setupFixture(base)).status, 204);
+    let release;
+    const hold = new Promise((resolve) => { release = resolve; });
+    const arrived = new Promise((resolve) => server.once("request", resolve));
+    const answer = fixtureHttpRequest(base, "/api/agui/run", "POST", body, {}, hold);
+    await arrived;
+    assert.equal((await setupFixture(base, "newer bytes")).status, 409);
+    release();
+    assert.deepEqual((await answer).body, Buffer.from(fixtureBody));
+    assert.equal((await askFixture(base)).status, 409);
+    assert.equal((await setupFixture(base, "next attempt")).status, 204);
+    assert.deepEqual((await askFixture(base)).body, Buffer.from("next attempt"));
+  });
+});
+
+async function abortPartialFixtureRequest(base, pathname, method, data, headers, server) {
+  let observeAborted;
+  const aborted = new Promise((resolve) => { observeAborted = resolve; });
+  const partial = new Promise((resolve) => {
+    server.once("request", (req) => {
+      req.once("aborted", observeAborted);
+      req.once("data", (chunk) => resolve(chunk.length));
+    });
+  });
+  const bytes = Buffer.from(data);
+  const client = httpRequest(base + pathname, { method,
+    headers: { "content-length": bytes.length, ...headers } }, (res) => res.resume());
+  const clientError = new Promise((resolve) => client.once("error", resolve));
+  client.write(bytes.subarray(0, 16));
+  const partialBytes = await partial;
+  assert.ok(partialBytes > 0 && partialBytes < bytes.length);
+  client.destroy(new Error("Intentional partial fixture request cancellation."));
+  await Promise.all([aborted, clientError]);
+}
+test("HTTP fixture does not arm partial bytes after an interrupted setup and can recover", { timeout: 5000 }, async () => {
+  await withFirstAskHttpFixture(async (base, server) => {
+    await abortPartialFixtureRequest(base, "/__e2e/first-ask-fixture", "PUT", fixtureBody,
+      { "content-type": "text/event-stream", "x-csoai-e2e-fixture": "first-ask" }, server);
+    assert.equal((await askFixture(base)).status, 409);
+    assert.equal((await setupFixture(base)).status, 204);
+    assert.deepEqual((await askFixture(base)).body, Buffer.from(fixtureBody));
+  });
+});
+test("HTTP fixture consumes only its interrupted question reservation and can recover", { timeout: 5000 }, async () => {
+  await withFirstAskHttpFixture(async (base, server) => {
+    assert.equal((await setupFixture(base)).status, 204);
+    await abortPartialFixtureRequest(base, "/api/agui/run", "POST", body, {}, server);
+    assert.equal((await askFixture(base)).status, 409);
+    assert.equal((await setupFixture(base, "fresh attempt")).status, 204);
+    assert.deepEqual((await askFixture(base)).body, Buffer.from("fresh attempt"));
+  });
 });
