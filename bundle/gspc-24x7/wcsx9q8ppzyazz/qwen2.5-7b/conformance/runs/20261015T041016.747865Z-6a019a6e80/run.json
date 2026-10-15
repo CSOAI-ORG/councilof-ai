@@ -1,0 +1,58 @@
+{
+  "axis": "conformance",
+  "bank_sha256": "dc494ae6d1cb8abe3fe9a9424a2b37631a3d15ebdde000b7a0409a67c757420f",
+  "candidate_file": "card-unsigned.json",
+  "candidate_status": "UNMEASURED",
+  "card_sha256": "040dc7b9bbb912c10dda725c51fdc550e43c4c3f17ff7d85f55bfc46a7dcf68e",
+  "complete": true,
+  "compute_only": true,
+  "counts": {
+    "attempted": 35,
+    "bank_items": 35,
+    "correct": 23,
+    "graded_n": 35,
+    "parse_errors_excluded": 0,
+    "transport_errors_excluded": 0,
+    "transport_ok": 35
+  },
+  "detail_code": "COMPLETE_UNSIGNED",
+  "finished_at": "2026-10-15T04:10:18.597157Z",
+  "instrument": {
+    "allowed_labels": [
+      "CONFORMS",
+      "VIOLATES"
+    ],
+    "axis": "conformance",
+    "bank_sha256": "dc494ae6d1cb8abe3fe9a9424a2b37631a3d15ebdde000b7a0409a67c757420f",
+    "decode": {
+      "max_tokens": 128,
+      "seed": 0,
+      "stream": false,
+      "temperature": 0,
+      "think": false
+    },
+    "graders": {
+      "exact_label": "unicode-exact-after-outer-whitespace-v1",
+      "keyword_match": "all-nfkc-casefold-whitespace-normalized-substrings-v2-length-unanswered"
+    },
+    "model_manifest_digest": "sha256:845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "model_transport": "qwen2.5:7b",
+    "num_parallel": 1,
+    "prompt_adapter": "frozen-prompt-plus-public-label-set-v1",
+    "schema": "csoai.runpod-gspc-worker/0.1",
+    "subject": "ollama:qwen2.5:7b@sha256:845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  "instrument_sha256": "945350f5886deee149687269feea2ced26a24b4e2ceef453350865bd133e8bf3",
+  "items_sha256": "93ffcf69c50af45edbfbd19e63aef4c204eea0479f7985797c5873a291436be3",
+  "landable_candidate": true,
+  "model": "ollama:qwen2.5:7b@sha256:845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+  "model_manifest_digest": "sha256:845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+  "model_transport": "qwen2.5:7b",
+  "num_ctx": 3072,
+  "num_parallel": 1,
+  "ollama_version": "0.35.0",
+  "run_id": "20261015T041016.747865Z-6a019a6e80",
+  "schema": "csoai.runpod-gspc-run/0.1",
+  "signature": null,
+  "started_at": "2026-10-15T04:10:16.748031Z"
+}

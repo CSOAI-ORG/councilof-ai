@@ -1,0 +1,60 @@
+{
+  "axis": "governance",
+  "bank_sha256": "b93f9808f01416737a5944fec0ab8c3eda1dbba808daf7dda33a516b0cd61997",
+  "candidate_file": "card-unsigned.json",
+  "candidate_status": "UNMEASURED",
+  "card_sha256": "6ccacf8c9f3c24832cb0996e52f735a02be584828480eaf7fb568d2d8a6fd2ed",
+  "complete": true,
+  "compute_only": true,
+  "counts": {
+    "attempted": 237,
+    "bank_items": 237,
+    "correct": 118,
+    "graded_n": 237,
+    "parse_errors_excluded": 0,
+    "transport_errors_excluded": 0,
+    "transport_ok": 237
+  },
+  "detail_code": "COMPLETE_UNSIGNED",
+  "finished_at": "2026-10-15T04:10:10.670502Z",
+  "instrument": {
+    "allowed_labels": [
+      "HIGH_RISK",
+      "LIMITED_RISK",
+      "MINIMAL_RISK",
+      "PROHIBITED"
+    ],
+    "axis": "governance",
+    "bank_sha256": "b93f9808f01416737a5944fec0ab8c3eda1dbba808daf7dda33a516b0cd61997",
+    "decode": {
+      "max_tokens": 128,
+      "seed": 0,
+      "stream": false,
+      "temperature": 0,
+      "think": false
+    },
+    "graders": {
+      "exact_label": "unicode-exact-after-outer-whitespace-v1",
+      "keyword_match": "all-nfkc-casefold-whitespace-normalized-substrings-v2-length-unanswered"
+    },
+    "model_manifest_digest": "sha256:845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "model_transport": "qwen2.5:7b",
+    "num_parallel": 1,
+    "prompt_adapter": "frozen-prompt-plus-public-label-set-v1",
+    "schema": "csoai.runpod-gspc-worker/0.1",
+    "subject": "ollama:qwen2.5:7b@sha256:845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  "instrument_sha256": "46d9235ee4b9676e8a5a65ba4b357e0ddd38b3916f911c7a43cbd9618bce04b0",
+  "items_sha256": "2218da784d7dfc1249ec9e0065d052026dbd6b75f8a03000f4d9676e5cebe9cf",
+  "landable_candidate": true,
+  "model": "ollama:qwen2.5:7b@sha256:845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+  "model_manifest_digest": "sha256:845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+  "model_transport": "qwen2.5:7b",
+  "num_ctx": 3072,
+  "num_parallel": 1,
+  "ollama_version": "0.35.0",
+  "run_id": "20261015T040950.809701Z-bec3a83fe7",
+  "schema": "csoai.runpod-gspc-run/0.1",
+  "signature": null,
+  "started_at": "2026-10-15T04:09:50.809893Z"
+}

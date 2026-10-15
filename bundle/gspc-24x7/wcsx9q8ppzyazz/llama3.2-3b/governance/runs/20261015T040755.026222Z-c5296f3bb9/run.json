@@ -1,0 +1,60 @@
+{
+  "axis": "governance",
+  "bank_sha256": "b93f9808f01416737a5944fec0ab8c3eda1dbba808daf7dda33a516b0cd61997",
+  "candidate_file": "card-unsigned.json",
+  "candidate_status": "UNMEASURED",
+  "card_sha256": "72d9f9d3ac129abea1dc3389925f0fecaeb0710bb3e2bba7612fdd28fb032d92",
+  "complete": true,
+  "compute_only": true,
+  "counts": {
+    "attempted": 237,
+    "bank_items": 237,
+    "correct": 101,
+    "graded_n": 235,
+    "parse_errors_excluded": 2,
+    "transport_errors_excluded": 0,
+    "transport_ok": 237
+  },
+  "detail_code": "COMPLETE_UNSIGNED",
+  "finished_at": "2026-10-15T04:08:10.736830Z",
+  "instrument": {
+    "allowed_labels": [
+      "HIGH_RISK",
+      "LIMITED_RISK",
+      "MINIMAL_RISK",
+      "PROHIBITED"
+    ],
+    "axis": "governance",
+    "bank_sha256": "b93f9808f01416737a5944fec0ab8c3eda1dbba808daf7dda33a516b0cd61997",
+    "decode": {
+      "max_tokens": 128,
+      "seed": 0,
+      "stream": false,
+      "temperature": 0,
+      "think": false
+    },
+    "graders": {
+      "exact_label": "unicode-exact-after-outer-whitespace-v1",
+      "keyword_match": "all-nfkc-casefold-whitespace-normalized-substrings-v2-length-unanswered"
+    },
+    "model_manifest_digest": "sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+    "model_transport": "llama3.2:3b",
+    "num_parallel": 1,
+    "prompt_adapter": "frozen-prompt-plus-public-label-set-v1",
+    "schema": "csoai.runpod-gspc-worker/0.1",
+    "subject": "ollama:llama3.2:3b@sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+  },
+  "instrument_sha256": "ffa04f44c487b281d809ad5206addda59e5bf0d0e95c81691b642d8b4ae0a272",
+  "items_sha256": "542333210f8b186d241e229b01b467d8a353fa74c8d16410257a18e0e2a4459b",
+  "landable_candidate": true,
+  "model": "ollama:llama3.2:3b@sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+  "model_manifest_digest": "sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+  "model_transport": "llama3.2:3b",
+  "num_ctx": 3072,
+  "num_parallel": 1,
+  "ollama_version": "0.35.0",
+  "run_id": "20261015T040755.026222Z-c5296f3bb9",
+  "schema": "csoai.runpod-gspc-run/0.1",
+  "signature": null,
+  "started_at": "2026-10-15T04:07:55.026440Z"
+}
