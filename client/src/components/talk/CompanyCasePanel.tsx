@@ -1,6 +1,7 @@
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { ArrowUp, CheckCircle2, Loader2, LockKeyhole, RotateCw } from "lucide-react";
 import { companyWorkspaceHref, councilLoginHref } from "@/lib/councilLoginReturn";
+import ResultFollowUp from "./ResultFollowUp";
 import {
   companyCaseFailure,
   companyCaseReadFailure,
@@ -228,6 +229,14 @@ const OwnerCompanyCasePanel = forwardRef<CompanyCasePanelHandle, CompanyCasePane
       ) : null}
       {state.status === "reading" ? <p role="status" className="inline-flex items-center gap-2 text-sm text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin motion-reduce:animate-none" aria-hidden="true" /> Reading this authorized case’s storage and review status…</p> : null}
       {(state.status === "saved" || state.status === "awaiting_review") && connected && state.value.ownerSubject === subject ? <CompanyCaseResult value={state.value} busy={busy} onRead={() => void readCase(state.value.caseId)} /> : null}
+      {state.status === "saved" && connected && subject !== undefined && !invalidCase && state.value.ownerSubject === subject ? (
+        <ResultFollowUp
+          key={JSON.stringify([subject, state.value.caseId, state.value.requestId, state.value.result.id, state.value.result.sha256, state.value.receipt.id, state.value.receipt.sha256, state.value.persistence.nativeCommitId])}
+          source="company"
+          value={state.value}
+          expectedOwnerSubject={subject}
+        />
+      ) : null}
       {state.status === "failed" ? (
         <div className="rounded-lg border border-rose-700/30 bg-rose-50 p-3 text-sm text-rose-900 dark:border-rose-400/40 dark:bg-rose-950 dark:text-rose-100">
           <p role="alert">{state.message}</p>

@@ -101,7 +101,7 @@
       "platform": "VS Code (GitHub Copilot agent mode)",
       "group": "Coding agents",
       "door": "free",
-      "where": ".vscode/mcp.json",
+      "where": ".vscode/mcp.json (legacy VS Code format; still read)",
       "kind": "json",
       "snippet": "{\n  \"servers\": {\n    \"gspc\": { \"type\": \"http\", \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
       "docs": "https://code.visualstudio.com/docs/agent-customization/mcp-servers",
@@ -110,6 +110,17 @@
         "kind": "vscode",
         "href": "vscode:mcp/install?%7B%22name%22%3A%22gspc%22%2C%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fcouncilof.ai%2Fmcp%2Ffree%22%7D"
       }
+    },
+    {
+      "id": "vscode-portable",
+      "platform": "VS Code (portable .mcp.json)",
+      "group": "Coding agents",
+      "door": "free",
+      "where": ".mcp.json at the project root (portable format; VS Code and other compatible tools read it)",
+      "kind": "json",
+      "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"type\": \"http\", \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
+      "docs": "https://code.visualstudio.com/docs/agent-customization/mcp-servers",
+      "url": "https://councilof.ai/mcp/free"
     },
     {
       "id": "windsurf",

@@ -875,9 +875,19 @@
         "platform": "VS Code (GitHub Copilot agent mode)",
         "group": "Coding agents",
         "door": "free",
-        "where": ".vscode/mcp.json",
+        "where": ".vscode/mcp.json (legacy VS Code format; still read)",
         "kind": "json",
         "snippet": "{\n  \"servers\": {\n    \"gspc\": { \"type\": \"http\", \"url\": \"{free}\" }\n  }\n}",
+        "docs": "https://code.visualstudio.com/docs/agent-customization/mcp-servers"
+      },
+      {
+        "id": "vscode-portable",
+        "platform": "VS Code (portable .mcp.json)",
+        "group": "Coding agents",
+        "door": "free",
+        "where": ".mcp.json at the project root (portable format; VS Code and other compatible tools read it)",
+        "kind": "json",
+        "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"type\": \"http\", \"url\": \"{free}\" }\n  }\n}",
         "docs": "https://code.visualstudio.com/docs/agent-customization/mcp-servers"
       },
       {
