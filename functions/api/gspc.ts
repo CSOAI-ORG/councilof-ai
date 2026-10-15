@@ -892,7 +892,7 @@ export const onRequestGet: PagesFunction = async (context) => {
       // overlays on stock base models (C-2026-0930-11). The signed bytes stay as signed; the served
       // sentence is corrected here and names the correction, so a reader of both sees why they differ.
       own_model_exclusion:
-        "Our own models (sov6-*-v3-light in the rows; council-*-v3-light on the board) are prompt overlays " +
+        "Our own models (own-model *-v3-light in the rows; council-*-v3-light on the board) are prompt overlays " +
         "on stock base models (system prompts, not trained weights). They are removed before comparison. " +
         "Base fleet of 6.",
       own_model_exclusion_correction:
