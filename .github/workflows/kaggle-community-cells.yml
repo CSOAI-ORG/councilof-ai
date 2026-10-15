@@ -11,6 +11,11 @@ on:
         description: "Build and test only — do not kaggle kernels push"
         type: boolean
         default: false
+  # Refresh the Kaggle cells after every successful production deploy.
+  workflow_run:
+    workflows: ["Build + deploy site (gated production branch)"]
+    types: [completed]
+    branches: [master]
 
 concurrency:
   group: kaggle-community-cells
@@ -22,6 +27,7 @@ permissions:
 
 jobs:
   push:
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'master') }}
     runs-on: ubuntu-latest
     timeout-minutes: 50
     steps:
