@@ -6,8 +6,9 @@ policy declares, what the enforcer recorded and what the witness saw. It signs t
 `signed-receipts/v1` objects. OpenShell is published by NVIDIA under Apache-2.0
 (github.com/NVIDIA/OpenShell). This is not an NVIDIA integration.
 
-Design, sources and limits: [DESIGN.md](DESIGN.md). Pinned to OpenShell v0.1.2; what changed from
-v0.1.1 is in [requalify/v0.1.2/REQUALIFY.md](requalify/v0.1.2/REQUALIFY.md).
+Design, sources and limits: [DESIGN.md](DESIGN.md). Pinned to OpenShell v0.1.4, **qualified for the adapter's input
+paths only** (policy fields read, shorthand log, OCSF JSONL file, OCSF-JSON console stream, prover JSON schema 1); what changed from v0.1.2 is in
+[requalify/v0.1.4/REQUALIFY.md](requalify/v0.1.4/REQUALIFY.md), and from v0.1.1 in [requalify/v0.1.2/REQUALIFY.md](requalify/v0.1.2/REQUALIFY.md).
 
 `declared_observed.py` puts OpenShell's own policy prover (`openshell-prover check --output json`) on the
 declared side and this adapter on the observed side. The prover says whether a policy stays inside a
@@ -46,6 +47,8 @@ exceeded boundary, 2 input error, 3 UNMEASURED.
 | `fixtures/control-deny-held/` | the same inputs with nothing leaving: must return CONSISTENT |
 | `fixtures/must-fail-file-syscall/`, `fixtures/must-fail-landlock-degraded/` | file and syscall rows |
 | `prover-fixtures/` | boundaries, and real `openshell-prover` 0.1.2 outputs over the fixtures (`runs/`); one synthetic inconclusive output, labelled |
+| `fixtures/console-ocsf-json-v014/` | the must-fail inputs in the v0.1.4 console form `<UTC ts> OCSF-JSON {json}`: must parse all 3 records |
+| `requalify/v0.1.4/` | the v0.1.2 → v0.1.4 delta of the interfaces the adapter reads (input paths only) |
 | `requalify/v0.1.2/` | the v0.1.1 → v0.1.2 delta of every declared control the adapter reads |
 
 Receipts made with the default key are signed by a **published test key** and attest nothing.
