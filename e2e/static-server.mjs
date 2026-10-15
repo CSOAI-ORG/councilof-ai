@@ -17,6 +17,7 @@
 import http from "node:http";
 import fs from "node:fs";
 import path from "node:path";
+import { createFirstAskHttpFixture } from "./first-ask-http-fixture.mjs";
 
 const root = path.resolve(process.argv[2] ?? "dist/client");
 const port = Number(process.argv[3] ?? 4180);
@@ -76,7 +77,9 @@ if (!isFile(path.join(root, "index.html"))) {
   process.exit(1);
 }
 
+const firstAskFixture = createFirstAskHttpFixture();
 const server = http.createServer((req, res) => {
+  if (firstAskFixture(req, res)) return;
   const pathname = new URL(req.url, `http://${host}:${port}`).pathname;
   const file = resolveFile(pathname) ?? path.join(root, "index.html");
   const ext = path.extname(file).toLowerCase();
