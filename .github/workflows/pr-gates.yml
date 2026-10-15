@@ -189,7 +189,7 @@ jobs:
       - uses: actions/checkout@v4
         if: steps.scope.outputs.gated == 'true'
         with:
-          fetch-depth: 2   # HEAD^1 = the base this PR merges into, for the stamped-bytes step
+          fetch-depth: 0   # Canonical SBOM generation history; HEAD^1 remains this PR merge base.
       - uses: actions/setup-node@v4
         if: steps.scope.outputs.gated == 'true'
         with: { node-version: 20 }
@@ -197,6 +197,229 @@ jobs:
       - name: Outward claims — offline manifest contract selftest
         if: steps.scope.outputs.gated == 'true'
         run: node scripts/outward-claims-guard.mjs --selftest
+
+      # TEMPORARY V4 capture: genuine canonical worktree plus exact reviewed source overlay.
+      # Main checkout is unchanged. Remove this capture only after authentic output adoption;
+      # the explicit full-history settings remain for generation-commit input verification.
+      - name: Temporary SBOM V4 canonical overlay and genuine CLI capture
+        id: sbom_v4_capture
+        if: steps.scope.outputs.gated == 'true' && github.event_name == 'pull_request'
+        timeout-minutes: 5
+        run: |
+          python3 - <<'PY'
+          import datetime, hashlib, json, os, pathlib, subprocess, sys
+          root = pathlib.Path(os.environ["GITHUB_WORKSPACE"]).resolve()
+          runner_temp = pathlib.Path(os.environ["RUNNER_TEMP"])
+          capture = runner_temp / "sbom-v4-capture"
+          worktree = runner_temp / "sbom-v4-canonical-worktree"
+          capture.mkdir(mode=0o700, exist_ok=False)
+          child_env = {key: os.environ[key] for key in ("PATH", "HOME", "LANG") if key in os.environ}
+          child_env.update({"PYTHONDONTWRITEBYTECODE": "1", "GIT_TERMINAL_PROMPT": "0"})
+          receipt = {
+              "schema": "csoai.sbom-v4-canonical-overlay-capture/1",
+              "state": "STARTED",
+              "at_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+              "github_run_id": os.environ["GITHUB_RUN_ID"],
+              "github_run_attempt": os.environ["GITHUB_RUN_ATTEMPT"],
+              "event_name": os.environ["GITHUB_EVENT_NAME"],
+              "python": sys.version,
+              "commands": [], "files": {}, "source_pins": {}, "input_pins": {},
+              "history": {"capture_issued_fetches": 0, "clones": 0,
+                  "caller_checkout": "Main PR checkout explicitly uses fetch-depth:0; capture does not fetch.",
+                  "generation_binding": "Genuine canonical commit with separately pinned reviewed source overlay."},
+          }
+          success = False
+          def digest(raw):
+              return hashlib.sha256(raw).hexdigest()
+          def pin(raw):
+              return {"bytes": len(raw), "sha256": digest(raw),
+                  "git_blob": hashlib.sha1(b"blob " + str(len(raw)).encode() + b"\0" + raw).hexdigest()}
+          def git(*args, cwd=root):
+              return subprocess.run(["git", *args], cwd=cwd, env=child_env, check=True,
+                  stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=30).stdout
+          def command(label, argv, cwd):
+              log = capture / (label + ".log")
+              timed_out = False
+              with log.open("xb") as output:
+                  try:
+                      result = subprocess.run(argv, cwd=cwd, env=child_env,
+                          stdout=output, stderr=subprocess.STDOUT, timeout=60)
+                      code = result.returncode
+                  except subprocess.TimeoutExpired:
+                      timed_out, code = True, 124
+              raw = log.read_bytes()
+              record = {"label": label, "argv": argv, "cwd": str(cwd), "exit_code": code,
+                  "timed_out": timed_out, "log": {"path": log.name, "bytes": len(raw), "sha256": digest(raw)},
+                  "log_bound_exceeded": len(raw) > 1024 * 1024}
+              receipt["commands"].append(record)
+              print(label + ": exit=" + str(code) + " log_bytes=" + str(len(raw)))
+              return code == 0 and not record["log_bound_exceeded"]
+          try:
+              if os.environ["GITHUB_EVENT_NAME"] != "pull_request":
+                  raise ValueError("Only an ordinary pull_request capture is admitted")
+              expected_repository = "CSOAI-ORG/councilof-ai"
+              if os.environ.get("GITHUB_REPOSITORY") != expected_repository:
+                  raise ValueError("Workflow repository differs from the canonical Source repository")
+              event = json.loads(pathlib.Path(os.environ["GITHUB_EVENT_PATH"]).read_bytes())
+              if event.get("repository", {}).get("full_name") != expected_repository or event["pull_request"]["head"].get("repo", {}).get("full_name") != expected_repository:
+                  raise ValueError("Event or PR head repository differs from the canonical Source repository")
+              event_base = event["pull_request"]["base"]["sha"]
+              event_head = event["pull_request"]["head"]["sha"]
+              if any(len(value) != 40 or any(character not in "0123456789abcdef" for character in value) for value in (event_base, event_head)):
+                  raise ValueError("Event base/head needs exact full Git commit identifiers")
+              generation = "42ef9c9ccd9a9954bbd5b75154abc0b470ace831"
+              checked_out = git("rev-parse", "HEAD").decode().strip()
+              if checked_out != os.environ["GITHUB_SHA"]:
+                  raise ValueError("Main checkout differs from the workflow event SHA")
+              merge_raw = git("cat-file", "commit", checked_out)
+              parents = [line[7:].decode() for line in merge_raw.split(b"\n\n", 1)[0].splitlines()
+                  if line.startswith(b"parent ")]
+              if len(parents) != 2 or parents[1] != event_head:
+                  raise ValueError("Main checkout needs exactly two ordered parents and the exact event PR head second")
+              actual_base = parents[0]
+              event_base_relation = "equal"
+              if event_base != actual_base:
+                  git("merge-base", "--is-ancestor", event_base, actual_base)
+                  event_base_relation = "verified-ancestor"
+              git("merge-base", "--is-ancestor", generation, actual_base)
+              actual_base_tree = git("rev-parse", actual_base + "^{tree}").decode().strip()
+              receipt["history"].update({"generation_commit": generation, "hosted_merge": checked_out,
+                  "hosted_merge_parents": parents, "actual_base": actual_base, "actual_base_tree": actual_base_tree,
+                  "event_base": event_base, "event_head": event_head, "event_base_relation_to_actual_base": event_base_relation,
+                  "canonical_generation_ancestor_of_actual_base": True, "repository": expected_repository,
+                  "event_head_repository": event["pull_request"]["head"]["repo"]["full_name"]})
+              for label, revision in (("canonical-generation", generation), ("hosted-merge", checked_out),
+                      ("actual-base", actual_base), ("event-base", event_base), ("event-head", event_head)):
+                  raw = git("cat-file", "commit", revision)
+                  calculated = hashlib.sha1(b"commit " + str(len(raw)).encode() + b"\0" + raw).hexdigest()
+                  if calculated != revision:
+                      raise ValueError("Genuine raw commit identity mismatch: " + label)
+                  target = capture / (label + ".commit.raw")
+                  target.write_bytes(raw)
+                  receipt["history"][label + "_commit_data"] = {
+                      "path": target.name, "git_commit": revision, "bytes": len(raw),
+                      "sha256": digest(raw), "recomputed_git_commit": calculated}
+              main_status = git("status", "--porcelain=v1", "--untracked-files=all")
+              if main_status:
+                  raise ValueError("Main hosted checkout is not clean before capture")
+              receipt["main_worktree_before"] = {"text": "", "sha256": digest(main_status)}
+              expected_inputs = {"package-lock.json": {"git_blob": "a25bd4ab08e08492c6e94cdfc190db17343a4959"}, "package.json": {"git_blob": "06457e417da6e39c4c8a510b56fc94d905d59d30"}}
+              expected_sources = {"docs/operations/PRODUCERS.json": {"git_blob": "491982bdc5bdecad570878f3c3a350f65d299865", "sha256": "3eda4a55216307bea2aabaa781647250435b18b0561ebb48dc51def9ae07b848"}, "scripts/gen_sbom.py": {"git_blob": "dc481690ab3dd893771dd9a751c1c29cbe25e472", "sha256": "9697a5f5b7602fbc7de686b6da19fe495b5ba3182885df0a878a6ae152f2404f"}, "scripts/test_gen_sbom.py": {"git_blob": "47faae8343599f995f46f7363b4758365dcc7e59", "sha256": "c47da01fa81df3f39f0fcb5d57182db7ae0e047886dc213689c62b38d43831d0"}}
+              overlay = {}
+              for relative, expected in {**expected_inputs, **expected_sources}.items():
+                  working = (root / relative).read_bytes()
+                  tracked = git("show", checked_out + ":" + relative)
+                  actual = pin(working)
+                  if working != tracked or actual["git_blob"] != expected["git_blob"]:
+                      raise ValueError("Main input/source differs from frozen publication: " + relative)
+                  if "sha256" in expected and actual["sha256"] != expected["sha256"]:
+                      raise ValueError("Frozen reviewed source SHA mismatch: " + relative)
+                  receipt["input_pins" if relative in expected_inputs else "source_pins"][relative] = actual
+                  if relative in expected_sources:
+                      overlay[relative] = working
+                  else:
+                      canonical = git("show", generation + ":" + relative)
+                      if canonical != working:
+                          raise ValueError("Canonical generation input differs from main input: " + relative)
+              workflow_path = ".github/workflows/pr-gates.yml"
+              workflow_raw = (root / workflow_path).read_bytes()
+              if workflow_raw != git("show", checked_out + ":" + workflow_path):
+                  raise ValueError("Main workflow differs from its checked-out commit")
+              receipt["source_pins"][workflow_path] = pin(workflow_raw)
+              original_path = root / "public/interop/sbom-councilof-ai.json"
+              if original_path.stat().st_size > 4 * 1024 * 1024:
+                  raise ValueError("Committed BOM exceeds capture byte bound")
+              original = original_path.read_bytes()
+              (capture / "committed-sbom.before.json").write_bytes(original)
+              receipt["files"]["committed_before"] = pin(original)
+              if worktree.exists():
+                  raise ValueError("Canonical worktree destination already exists; no reuse or overwrite")
+              if not command("canonical-worktree-add",
+                      ["git", "worktree", "add", "--detach", str(worktree), generation], root):
+                  raise ValueError("Genuine canonical worktree creation failed")
+              if git("rev-parse", "HEAD", cwd=worktree).decode().strip() != generation:
+                  raise ValueError("Canonical worktree HEAD differs")
+              if git("status", "--porcelain=v1", "--untracked-files=all", cwd=worktree):
+                  raise ValueError("Canonical worktree was not clean before reviewed overlay")
+              for relative, raw in overlay.items():
+                  destination = worktree / relative
+                  destination.parent.mkdir(parents=True, exist_ok=True)
+                  destination.write_bytes(raw)
+                  if destination.read_bytes() != raw:
+                      raise ValueError("Overlay readback differs: " + relative)
+              expected_status = sorted([" M docs/operations/PRODUCERS.json",
+                  " M scripts/gen_sbom.py", "?? scripts/test_gen_sbom.py"])
+              overlay_status = git("status", "--porcelain=v1", "--untracked-files=all", cwd=worktree)
+              if sorted(overlay_status.decode().splitlines()) != expected_status:
+                  raise ValueError("Canonical dirty boundary is not exactly the three reviewed overlays")
+              receipt["overlay"] = {"worktree": str(worktree), "head": generation,
+                  "status": overlay_status.decode(), "source_checkout": checked_out, "source_pr_head": event_head,
+                  "sources": {relative: pin(raw) for relative, raw in overlay.items()},
+                  "boundary": "Inputs are canonical generation-commit bytes. Producer/test/registry are explicit reviewed dirty overlays, not asserted to be in that canonical commit. Worktree is outside the uploaded capture folder."}
+              for relative in expected_inputs:
+                  raw = (worktree / relative).read_bytes()
+                  if raw != git("show", generation + ":" + relative, cwd=worktree):
+                      raise ValueError("Canonical worktree input binding failed: " + relative)
+              tests_ok = command("stdlib-tests", ["python3", "scripts/test_gen_sbom.py"], worktree)
+              generated = capture / "generated-sbom.json"
+              generation_ok = command("genuine-producer", ["python3", "scripts/gen_sbom.py",
+                  "--root", str(worktree), "--output", str(generated)], worktree)
+              check_ok = command("genuine-check", ["python3", "scripts/gen_sbom.py",
+                  "--root", str(worktree), "--output", str(generated), "--check"], worktree)
+              if generated.is_file():
+                  if generated.stat().st_size > 4 * 1024 * 1024:
+                      raise ValueError("Generated BOM exceeds capture byte bound")
+                  output_raw = generated.read_bytes()
+                  receipt["files"]["generated"] = pin(output_raw)
+                  body = json.loads(output_raw)
+                  commits = [entry.get("value") for entry in body.get("metadata", {}).get("properties", [])
+                      if entry.get("name") == "commit"]
+                  receipt["generated"] = {"recorded_commits": commits,
+                      "component_count": len(body.get("components", []))}
+                  if commits != [generation]:
+                      raise ValueError("Generated BOM is not bound to the genuine canonical commit")
+              elif generation_ok:
+                  raise ValueError("Producer returned success without output")
+              for relative in expected_inputs:
+                  if (worktree / relative).read_bytes() != git("show", generation + ":" + relative, cwd=worktree):
+                      raise ValueError("Canonical input changed during capture: " + relative)
+              for relative, raw in overlay.items():
+                  if (worktree / relative).read_bytes() != raw:
+                      raise ValueError("Reviewed source overlay changed during capture: " + relative)
+              final_overlay_status = git("status", "--porcelain=v1", "--untracked-files=all", cwd=worktree)
+              if final_overlay_status != overlay_status or git("rev-parse", "HEAD", cwd=worktree).decode().strip() != generation:
+                  raise ValueError("Canonical worktree boundary changed during capture")
+              main_after = git("status", "--porcelain=v1", "--untracked-files=all")
+              main_unchanged = main_after == main_status and git("rev-parse", "HEAD").decode().strip() == checked_out
+              receipt["main_worktree_after"] = {"text": main_after.decode(), "sha256": digest(main_after)}
+              receipt["main_checkout_unchanged"] = main_unchanged
+              original_unchanged = original_path.read_bytes() == original
+              receipt["committed_output_unchanged"] = original_unchanged
+              success = tests_ok and generation_ok and check_ok and main_unchanged and original_unchanged
+              receipt["state"] = "CANONICAL_OVERLAY_CAPTURE_SUCCEEDED" if success else "CAPTURE_FAILED"
+          except Exception as error:
+              receipt["state"] = "CAPTURE_FAILED"
+              receipt["error"] = {"type": type(error).__name__, "message": str(error)}
+              if isinstance(error, subprocess.CalledProcessError):
+                  receipt["error"]["exit_code"] = error.returncode
+                  if error.stderr:
+                      receipt["error"]["stderr_utf8"] = error.stderr.decode("utf-8", errors="replace")
+              print("SBOM capture failed: " + type(error).__name__ + ": " + str(error), file=sys.stderr)
+          finally:
+              receipt["finished_at_utc"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
+              receipt["capture_exit_code"] = 0 if success else 1
+              (capture / "CAPTURE_RECEIPT.json").write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n")
+          raise SystemExit(0 if success else 1)
+          PY
+      - name: Retain temporary SBOM V4 capture
+        if: ${{ always() && steps.scope.outputs.gated == 'true' && github.event_name == 'pull_request' && (steps.sbom_v4_capture.outcome == 'success' || steps.sbom_v4_capture.outcome == 'failure') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-v4-current-input-capture-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/sbom-v4-capture
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 6
 
       # Runs before `npm ci` so a stamped-byte edit fails in seconds. See the stamped-bytes job above
       # for why (#2871 / deploy run 37590160574). Verified to fail: the selftest goes red when any one
