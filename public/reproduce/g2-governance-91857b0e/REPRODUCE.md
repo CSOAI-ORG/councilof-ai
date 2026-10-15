@@ -6,6 +6,15 @@ Artifact (one admitted, signed G2 card):
 
 Group: GSPC-G2 (its own comparison group; not board v2 and never mixed with it). Measurement, not certification.
 
+
+## Inspect one dated result
+
+Inspect one dated result. Start with an existing GSPC-G2 measurement card. Inspect its original date and limitations, then use the verifier linked to this example to check the card ID and signature. This does not rerun the model, establish that the reported result is true, or prove Merkle-root inclusion.
+
+- Artifact: [signed-governan-91857b0eb93f.json](https://councilof.ai/interop/mill-cards-signed/signed-governan-91857b0eb93f.json)
+- Guide: [REPRODUCE.md](https://councilof.ai/reproduce/g2-governance-91857b0e/REPRODUCE.md) (this file)
+- Verifier script: [verify-card.mjs](https://councilof.ai/reproduce/g2-governance-91857b0e/verify-card.mjs)
+
 ## What you check
 1. **Id.** `id == sha256(canonical(body))`. Canonical = JavaScript JSON with object keys sorted recursively, no whitespace (`{"a":1,"b":[2]}`), UTF-8. The card states this as `preimage_rule: "sha256(canonical body)"`.
 2. **Signature.** `signature` (hex, 64 bytes) is Ed25519 over the same canonical body bytes, under the key named in `did`: `did:web:csoai.org#board-attestation-1`, resolved from `https://csoai.org/.well-known/did.json` (`publicKeyJwk`, OKP/Ed25519).
