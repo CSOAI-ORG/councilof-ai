@@ -194,7 +194,8 @@ export default function About() {
             >
               16939677
             </a>
-            , founded by Nicholas Templeman. The company is accountable for everything published on this site.
+            , founded by Nicholas Templeman. The company is accountable for everything published on this site.{" "}
+            <Link href="/team" className="text-emerald-300 underline">Meet the team and the AI agents</Link>.
           </p>
           <p className="text-xl text-gray-300 leading-relaxed mb-6">
             The problem predates the company. <strong className="text-white">CSOAI Ltd was incorporated in England and Wales on 2 January 2026</strong> to make AI behaviour checkable by someone other than the vendor: frozen test banks, deterministic grading, signed evidence, public corrections and dated re-measurement.

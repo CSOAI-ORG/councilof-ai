@@ -64,7 +64,28 @@ async function j(url, init = {}) {
   return { status: r.status, headers: r.headers, body, text };
 }
 
-/** 1. Every resource the discovery manifest advertises must answer 402 with a price. */
+/** 1. Offered resources must challenge; a declared UNMEASURED wrapper is not for sale. */
+// No machine-readable availability field is currently published for this row. Match the
+// exact canonical declaration and concrete GET contract; any declaration drift fails closed.
+const WRAPPER_UNMEASURED_DESCRIPTION = "Wrapped-asset parity evidence: one signed card of one bridged or wrapped token pair, read live from public RPC. Reads the wrapped totalSupply and the origin-chain bridge-escrow balance at finalized blocks whose hash a second RPC operator confirmed, raw reads hashed. States: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.";
+function declaredWrapperUnmeasured(res, url, response) {
+  if (response.status !== 200 || response.headers.get("payment-required") ||
+      res.method !== "GET" || res.description !== WRAPPER_UNMEASURED_DESCRIPTION ||
+      res.paid_for !== "issuance" || res.url !== url) return false;
+  const origin = new URL(SITE).origin;
+  if (url !== origin + "/api/wrapper?id=usdc.e:arbitrum" ||
+      res.free_preview !== origin + "/api/wrapper?id=<wrapped-symbol:chain>&preview=1") return false;
+  const body = response.body;
+  const payment = body?.payment;
+  return body?.schema === "csoai.wrapper-parity/0.1" &&
+    body.kind === "preview" && body.preview_only === true &&
+    body.id === "usdc.e:arbitrum" && body.state === "UNMEASURED" &&
+    payment !== null && typeof payment === "object" &&
+    Object.keys(payment).length === 4 &&
+    ["requested", "presented", "sent_to_facilitator", "settled"]
+      .every((key) => Object.hasOwn(payment, key) && payment[key] === false);
+}
+
 async function checkManifest() {
   const m = await j(`${SITE}/.well-known/x402.json`);
   if (!m.body) return bad("well-known/x402.json", `not JSON (HTTP ${m.status})`);
@@ -103,6 +124,8 @@ async function checkManifest() {
     const r = await j(url);
     const challenge = r.headers.get("payment-required");
     if (r.status === 402 && challenge) ok(`manifest ${path}`, "402 with a challenge");
+    else if (declaredWrapperUnmeasured(res, url, r)) skip("manifest " + path,
+      "UNMEASURED preview only — not buyable; no payment requested, presented, forwarded or settled; no 402 availability claim");
     else bad(`manifest ${path}`, `advertised as buyable but answered HTTP ${r.status}${challenge ? "" : " with no PAYMENT-REQUIRED header"}`);
   }
   // and nothing quarantined may also be advertised
@@ -1143,7 +1166,673 @@ async function main() {
       }
     }
 
-    console.log(bad ? `selftest: ${bad} case(s) wrong` : "selftest OK — 38 decision cases, all correct");
+    // Replay the actual manifest reader and classifier with finite, deny-by-default fetch
+    // fixtures. This exercises j(), JSON decoding, request identity and result reporting.
+    const wrapperOrigin = new URL(SITE).origin;
+    const wrapperResource = {
+      method: "GET", url: wrapperOrigin + "/api/wrapper?id=usdc.e:arbitrum",
+      paid_for: "issuance",
+      free_preview: wrapperOrigin + "/api/wrapper?id=<wrapped-symbol:chain>&preview=1",
+      description: WRAPPER_UNMEASURED_DESCRIPTION,
+    };
+    const manifestCases = [
+      {
+        "name": "declared UNMEASURED is SKIP, never buyable",
+        "want": "SKIP",
+        "status": 200,
+        "challenge": false,
+        "resource": {},
+        "body": {
+          "schema": "csoai.wrapper-parity/0.1",
+          "kind": "preview",
+          "preview_only": true,
+          "id": "usdc.e:arbitrum",
+          "state": "UNMEASURED",
+          "payment": {
+            "requested": false,
+            "presented": false,
+            "sent_to_facilitator": false,
+            "settled": false
+          }
+        }
+      },
+      {
+        "name": "actual manifest 402 with challenge stays OK",
+        "want": "OK",
+        "status": 402,
+        "challenge": true,
+        "resource": {},
+        "body": {}
+      },
+      {
+        "name": "bare 402 is not a challenge",
+        "want": "FAIL",
+        "status": 402,
+        "challenge": false,
+        "resource": {},
+        "body": {
+          "schema": "csoai.wrapper-parity/0.1",
+          "kind": "preview",
+          "preview_only": true,
+          "id": "usdc.e:arbitrum",
+          "state": "UNMEASURED",
+          "payment": {
+            "requested": false,
+            "presented": false,
+            "sent_to_facilitator": false,
+            "settled": false
+          }
+        }
+      },
+      {
+        "name": "plain 200 is not buyable",
+        "want": "FAIL",
+        "status": 200,
+        "challenge": false,
+        "resource": {},
+        "body": null
+      },
+      {
+        "name": "undeclared exception fails",
+        "want": "FAIL",
+        "status": 200,
+        "challenge": false,
+        "resource": {
+          "description": null
+        },
+        "body": {
+          "schema": "csoai.wrapper-parity/0.1",
+          "kind": "preview",
+          "preview_only": true,
+          "id": "usdc.e:arbitrum",
+          "state": "UNMEASURED",
+          "payment": {
+            "requested": false,
+            "presented": false,
+            "sent_to_facilitator": false,
+            "settled": false
+          }
+        }
+      },
+      {
+        "name": "description drift fails closed",
+        "want": "FAIL",
+        "status": 200,
+        "challenge": false,
+        "resource": {
+          "description": "Wrapped-asset parity evidence: one signed card of one bridged or wrapped token pair, read live from public RPC. Reads the wrapped totalSupply and the origin-chain bridge-escrow balance at finalized blocks whose hash a second RPC operator confirmed, raw reads hashed. States: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free. Changed availability."
+        },
+        "body": {
+          "schema": "csoai.wrapper-parity/0.1",
+          "kind": "preview",
+          "preview_only": true,
+          "id": "usdc.e:arbitrum",
+          "state": "UNMEASURED",
+          "payment": {
+            "requested": false,
+            "presented": false,
+            "sent_to_facilitator": false,
+            "settled": false
+          }
+        }
+      },
+      {
+        "name": "wrong path cannot borrow wrapper exception",
+        "want": "FAIL",
+        "status": 200,
+        "challenge": false,
+        "resource": {
+          "url": "/api/other?id=usdc.e:arbitrum"
+        },
+        "body": {
+          "schema": "csoai.wrapper-parity/0.1",
+          "kind": "preview",
+          "preview_only": true,
+          "id": "usdc.e:arbitrum",
+          "state": "UNMEASURED",
+          "payment": {
+            "requested": false,
+            "presented": false,
+            "sent_to_facilitator": false,
+            "settled": false
+          }
+        }
+      },
+      {
+        "name": "non-GET declaration cannot borrow exception",
+        "want": "FAIL",
+        "status": 200,
+        "challenge": false,
+        "resource": {
+          "method": "POST"
+        },
+        "body": {
+          "schema": "csoai.wrapper-parity/0.1",
+          "kind": "preview",
+          "preview_only": true,
+          "id": "usdc.e:arbitrum",
+          "state": "UNMEASURED",
+          "payment": {
+            "requested": false,
+            "presented": false,
+            "sent_to_facilitator": false,
+            "settled": false
+          }
+        }
+      },
+      {
+        "name": "missing method declaration fails",
+        "want": "FAIL",
+        "status": 200,
+        "challenge": false,
+        "resource": {
+          "method": null
+        },
+        "body": {
+          "schema": "csoai.wrapper-parity/0.1",
+          "kind": "preview",
+          "preview_only": true,
+          "id": "usdc.e:arbitrum",
+          "state": "UNMEASURED",
+          "payment": {
+            "requested": false,
+            "presented": false,
+            "sent_to_facilitator": false,
+            "settled": false
+          }
+        }
+      },
+      {
+        "name": "different query pair cannot borrow exception",
+        "want": "FAIL",
+        "status": 200,
+        "challenge": false,
+        "resource": {
+          "url": "/api/wrapper?id=other:arbitrum"
+        },
+        "body": {
+          "schema": "csoai.wrapper-parity/0.1",
+          "kind": "preview",
+          "preview_only": true,
+          "id": "usdc.e:arbitrum",
+          "state": "UNMEASURED",
+          "payment": {
+            "requested": false,
+            "presented": false,
+            "sent_to_facilitator": false,
+            "settled": false
+          }
+        }
+      },
+      {
+        "name": "response pair must match advertised pair",
+        "want": "FAIL",
+        "status": 200,
+        "challenge": false,
+        "resource": {},
+        "body": {
+          "schema": "csoai.wrapper-parity/0.1",
+          "kind": "preview",
+          "preview_only": true,
+          "id": "other:arbitrum",
+          "state": "UNMEASURED",
+          "payment": {
+            "requested": false,
+            "presented": false,
+            "sent_to_facilitator": false,
+            "settled": false
+          }
+        }
+      },
+      {
+        "name": "wrong response schema fails",
+        "want": "FAIL",
+        "status": 200,
+        "challenge": false,
+        "resource": {},
+        "body": {
+          "schema": "other",
+          "kind": "preview",
+          "preview_only": true,
+          "id": "usdc.e:arbitrum",
+          "state": "UNMEASURED",
+          "payment": {
+            "requested": false,
+            "presented": false,
+            "sent_to_facilitator": false,
+            "settled": false
+          }
+        }
+      },
+      {
+        "name": "wrong response kind fails",
+        "want": "FAIL",
+        "status": 200,
+        "challenge": false,
+        "resource": {},
+        "body": {
+          "schema": "csoai.wrapper-parity/0.1",
+          "kind": "paid",
+          "preview_only": true,
+          "id": "usdc.e:arbitrum",
+          "state": "UNMEASURED",
+          "payment": {
+            "requested": false,
+            "presented": false,
+            "sent_to_facilitator": false,
+            "settled": false
+          }
+        }
+      },
+      {
+        "name": "preview_only must be true",
+        "want": "FAIL",
+        "status": 200,
+        "challenge": false,
+        "resource": {},
+        "body": {
+          "schema": "csoai.wrapper-parity/0.1",
+          "kind": "preview",
+          "preview_only": false,
+          "id": "usdc.e:arbitrum",
+          "state": "UNMEASURED",
+          "payment": {
+            "requested": false,
+            "presented": false,
+            "sent_to_facilitator": false,
+            "settled": false
+          }
+        }
+      },
+      {
+        "name": "readable state cannot be a no-sale exception",
+        "want": "FAIL",
+        "status": 200,
+        "challenge": false,
+        "resource": {},
+        "body": {
+          "schema": "csoai.wrapper-parity/0.1",
+          "kind": "preview",
+          "preview_only": true,
+          "id": "usdc.e:arbitrum",
+          "state": "ESCROW_PARITY_READ",
+          "payment": {
+            "requested": false,
+            "presented": false,
+            "sent_to_facilitator": false,
+            "settled": false
+          }
+        }
+      },
+      {
+        "name": "200 carrying a challenge is contradictory",
+        "want": "FAIL",
+        "status": 200,
+        "challenge": true,
+        "resource": {},
+        "body": {
+          "schema": "csoai.wrapper-parity/0.1",
+          "kind": "preview",
+          "preview_only": true,
+          "id": "usdc.e:arbitrum",
+          "state": "UNMEASURED",
+          "payment": {
+            "requested": false,
+            "presented": false,
+            "sent_to_facilitator": false,
+            "settled": false
+          }
+        }
+      },
+      {
+        "name": "foreign origin cannot borrow exception",
+        "want": "FAIL",
+        "status": 200,
+        "challenge": false,
+        "resource": {
+          "url": "https://foreign.invalid/api/wrapper?id=usdc.e:arbitrum"
+        },
+        "body": {
+          "schema": "csoai.wrapper-parity/0.1",
+          "kind": "preview",
+          "preview_only": true,
+          "id": "usdc.e:arbitrum",
+          "state": "UNMEASURED",
+          "payment": {
+            "requested": false,
+            "presented": false,
+            "sent_to_facilitator": false,
+            "settled": false
+          }
+        }
+      },
+      {
+        "name": "free preview query cannot replace paid resource",
+        "want": "FAIL",
+        "status": 200,
+        "challenge": false,
+        "resource": {
+          "url": "/api/wrapper?id=usdc.e:arbitrum&preview=1"
+        },
+        "body": {
+          "schema": "csoai.wrapper-parity/0.1",
+          "kind": "preview",
+          "preview_only": true,
+          "id": "usdc.e:arbitrum",
+          "state": "UNMEASURED",
+          "payment": {
+            "requested": false,
+            "presented": false,
+            "sent_to_facilitator": false,
+            "settled": false
+          }
+        }
+      },
+      {
+        "name": "paid_for declaration must match",
+        "want": "FAIL",
+        "status": 200,
+        "challenge": false,
+        "resource": {
+          "paid_for": null
+        },
+        "body": {
+          "schema": "csoai.wrapper-parity/0.1",
+          "kind": "preview",
+          "preview_only": true,
+          "id": "usdc.e:arbitrum",
+          "state": "UNMEASURED",
+          "payment": {
+            "requested": false,
+            "presented": false,
+            "sent_to_facilitator": false,
+            "settled": false
+          }
+        }
+      },
+      {
+        "name": "free preview declaration must match",
+        "want": "FAIL",
+        "status": 200,
+        "challenge": false,
+        "resource": {
+          "free_preview": null
+        },
+        "body": {
+          "schema": "csoai.wrapper-parity/0.1",
+          "kind": "preview",
+          "preview_only": true,
+          "id": "usdc.e:arbitrum",
+          "state": "UNMEASURED",
+          "payment": {
+            "requested": false,
+            "presented": false,
+            "sent_to_facilitator": false,
+            "settled": false
+          }
+        }
+      },
+      {
+        "name": "missing payment object fails",
+        "want": "FAIL",
+        "status": 200,
+        "challenge": false,
+        "resource": {},
+        "body": {
+          "schema": "csoai.wrapper-parity/0.1",
+          "kind": "preview",
+          "preview_only": true,
+          "id": "usdc.e:arbitrum",
+          "state": "UNMEASURED",
+          "payment": null
+        }
+      },
+      {
+        "name": "extra payment assertion fails closed",
+        "want": "FAIL",
+        "status": 200,
+        "challenge": false,
+        "resource": {},
+        "body": {
+          "schema": "csoai.wrapper-parity/0.1",
+          "kind": "preview",
+          "preview_only": true,
+          "id": "usdc.e:arbitrum",
+          "state": "UNMEASURED",
+          "payment": {
+            "requested": false,
+            "presented": false,
+            "sent_to_facilitator": false,
+            "settled": false,
+            "charged": true
+          }
+        }
+      },
+      {
+        "name": "missing requested flag fails",
+        "want": "FAIL",
+        "status": 200,
+        "challenge": false,
+        "resource": {},
+        "body": {
+          "schema": "csoai.wrapper-parity/0.1",
+          "kind": "preview",
+          "preview_only": true,
+          "id": "usdc.e:arbitrum",
+          "state": "UNMEASURED",
+          "payment": {
+            "presented": false,
+            "sent_to_facilitator": false,
+            "settled": false
+          }
+        }
+      },
+      {
+        "name": "true requested flag fails",
+        "want": "FAIL",
+        "status": 200,
+        "challenge": false,
+        "resource": {},
+        "body": {
+          "schema": "csoai.wrapper-parity/0.1",
+          "kind": "preview",
+          "preview_only": true,
+          "id": "usdc.e:arbitrum",
+          "state": "UNMEASURED",
+          "payment": {
+            "requested": true,
+            "presented": false,
+            "sent_to_facilitator": false,
+            "settled": false
+          }
+        }
+      },
+      {
+        "name": "missing presented flag fails",
+        "want": "FAIL",
+        "status": 200,
+        "challenge": false,
+        "resource": {},
+        "body": {
+          "schema": "csoai.wrapper-parity/0.1",
+          "kind": "preview",
+          "preview_only": true,
+          "id": "usdc.e:arbitrum",
+          "state": "UNMEASURED",
+          "payment": {
+            "requested": false,
+            "sent_to_facilitator": false,
+            "settled": false
+          }
+        }
+      },
+      {
+        "name": "true presented flag fails",
+        "want": "FAIL",
+        "status": 200,
+        "challenge": false,
+        "resource": {},
+        "body": {
+          "schema": "csoai.wrapper-parity/0.1",
+          "kind": "preview",
+          "preview_only": true,
+          "id": "usdc.e:arbitrum",
+          "state": "UNMEASURED",
+          "payment": {
+            "requested": false,
+            "presented": true,
+            "sent_to_facilitator": false,
+            "settled": false
+          }
+        }
+      },
+      {
+        "name": "missing sent_to_facilitator flag fails",
+        "want": "FAIL",
+        "status": 200,
+        "challenge": false,
+        "resource": {},
+        "body": {
+          "schema": "csoai.wrapper-parity/0.1",
+          "kind": "preview",
+          "preview_only": true,
+          "id": "usdc.e:arbitrum",
+          "state": "UNMEASURED",
+          "payment": {
+            "requested": false,
+            "presented": false,
+            "settled": false
+          }
+        }
+      },
+      {
+        "name": "true sent_to_facilitator flag fails",
+        "want": "FAIL",
+        "status": 200,
+        "challenge": false,
+        "resource": {},
+        "body": {
+          "schema": "csoai.wrapper-parity/0.1",
+          "kind": "preview",
+          "preview_only": true,
+          "id": "usdc.e:arbitrum",
+          "state": "UNMEASURED",
+          "payment": {
+            "requested": false,
+            "presented": false,
+            "sent_to_facilitator": true,
+            "settled": false
+          }
+        }
+      },
+      {
+        "name": "missing settled flag fails",
+        "want": "FAIL",
+        "status": 200,
+        "challenge": false,
+        "resource": {},
+        "body": {
+          "schema": "csoai.wrapper-parity/0.1",
+          "kind": "preview",
+          "preview_only": true,
+          "id": "usdc.e:arbitrum",
+          "state": "UNMEASURED",
+          "payment": {
+            "requested": false,
+            "presented": false,
+            "sent_to_facilitator": false
+          }
+        }
+      },
+      {
+        "name": "true settled flag fails",
+        "want": "FAIL",
+        "status": 200,
+        "challenge": false,
+        "resource": {},
+        "body": {
+          "schema": "csoai.wrapper-parity/0.1",
+          "kind": "preview",
+          "preview_only": true,
+          "id": "usdc.e:arbitrum",
+          "state": "UNMEASURED",
+          "payment": {
+            "requested": false,
+            "presented": false,
+            "sent_to_facilitator": false,
+            "settled": true
+          }
+        }
+      },
+      {
+        "name": "string false is not payment false",
+        "want": "FAIL",
+        "status": 200,
+        "challenge": false,
+        "resource": {},
+        "body": {
+          "schema": "csoai.wrapper-parity/0.1",
+          "kind": "preview",
+          "preview_only": true,
+          "id": "usdc.e:arbitrum",
+          "state": "UNMEASURED",
+          "payment": {
+            "requested": "false",
+            "presented": false,
+            "sent_to_facilitator": false,
+            "settled": false
+          }
+        }
+      }
+    ];
+    for (const c of manifestCases) {
+      const originalFetch = globalThis.fetch;
+      const savedResults = results.splice(0);
+      const calls = [];
+      const resource = { ...wrapperResource, ...c.resource };
+      resource.url = new URL(resource.url, SITE).href;
+      try {
+        globalThis.fetch = async (url, init = {}) => {
+          const requested = String(url);
+          calls.push({ url: requested, init });
+          if (calls.length === 1 && requested === SITE + "/.well-known/x402.json") {
+            return new Response(JSON.stringify({ resources: [resource] }), {
+              status: 200, headers: { "content-type": "application/json" },
+            });
+          }
+          if (calls.length === 2 && requested === resource.url) {
+            return new Response(JSON.stringify(c.body), {
+              status: c.status,
+              headers: { "content-type": "application/json",
+                ...(c.challenge ? { "payment-required": "offline-mock-challenge" } : {}) },
+            });
+          }
+          throw new Error("unexpected offline manifest request: " + requested);
+        };
+        await checkManifest();
+        const requestIdentity = calls.length === 2 &&
+          calls[0].url === SITE + "/.well-known/x402.json" &&
+          calls[1].url === resource.url &&
+          calls.every(({ init }) => (init.method ?? "GET") === "GET" &&
+            init.body === undefined &&
+            Object.keys(init.headers ?? {}).every((name) =>
+              ["user-agent", "accept"].includes(name.toLowerCase())));
+        if (!requestIdentity || results.length !== 1 || results[0].state !== c.want ||
+            (c.want === "SKIP" && !results[0].detail.includes("not buyable"))) {
+          console.error("selftest FAIL: manifest " + c.name + " -> " +
+            JSON.stringify(results) + ", wanted " + c.want);
+          bad++;
+        }
+      } catch (error) {
+        console.error("selftest FAIL: manifest " + c.name + " threw " + String(error));
+        bad++;
+      } finally {
+        globalThis.fetch = originalFetch;
+        results.splice(0, results.length, ...savedResults);
+      }
+    }
+
+    console.log(bad ? `selftest: ${bad} case(s) wrong` : ("selftest OK — 38 existing decision cases + " + manifestCases.length + " manifest controls, all correct"));
     process.exit(bad ? 1 : 0);
   }
   await checkManifest();
