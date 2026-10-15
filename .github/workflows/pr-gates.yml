@@ -219,7 +219,7 @@ jobs:
           python3 -m pip install -q cryptography opentimestamps-client
 
       # BEGIN TEMPORARY PR3229 DERIVED CAPTURE
-      # Genuine immutable94042 worktree; preserve all seven permanent paths.
+      # Genuine current ordered hosted preview; frozen94042 semantic source pins.
       # Remove exactly this block only after authentic selected derived output adoption.
       - name: Temporary PR3229 genuine OTS manifest and llms capture
         id: pr3229_derived_capture
@@ -227,13 +227,14 @@ jobs:
         timeout-minutes: 5
         run: |
           python3 -B - <<'PY'
-          import datetime, hashlib, importlib.metadata, json, os, pathlib, re, selectors, shutil, signal, subprocess, sys, time
+          import datetime, hashlib, importlib.metadata, json, os, pathlib, re, selectors, shutil, signal, stat, subprocess, sys, time
           root = pathlib.Path(os.environ["GITHUB_WORKSPACE"]).resolve()
           runner_temp = pathlib.Path(os.environ["RUNNER_TEMP"]).resolve()
           capture = runner_temp / "pr3229-derived-capture"
           worktree = runner_temp / "pr3229-derived-worktree"
           node_control_path = runner_temp / "pr3229-llms-capture-control.mjs"
-          generation = "94042a80cae0cf1af7c5921a4e3d0d40b95fd506"
+          frozen_source_head = "94042a80cae0cf1af7c5921a4e3d0d40b95fd506"
+          generation = os.environ["GITHUB_SHA"]
           frozen_base = "d754c9516909022eccab00212d6213c870fc0d45"
           workflow_path = ".github/workflows/pr-gates.yml"
           allowed = {"public/interop/ots/manifest.json", "public/llms.txt", "public/llms-full.txt"}
@@ -245,7 +246,7 @@ jobs:
           child_env = {key: os.environ[key] for key in ("PATH", "HOME", "LANG") if key in os.environ}
           child_env.update({"PYTHONDONTWRITEBYTECODE":"1", "GIT_TERMINAL_PROMPT":"0", "CSOAI_BOARD_URL":"https://councilof.ai/api/gspc", "SOURCE_CAPTURE_DIR":str(capture), "SOURCE_CAPTURE_WORKTREE":str(worktree), "NODE_OPTIONS":"--max-old-space-size=256"})
           deadline = time.monotonic() + 210
-          receipt = {"schema":"csoai.pr3229.genuine-derived-capture/1", "state":"STARTED", "at_utc":datetime.datetime.now(datetime.timezone.utc).isoformat(), "run_id":os.environ["GITHUB_RUN_ID"], "run_attempt":os.environ["GITHUB_RUN_ATTEMPT"], "event_name":os.environ["GITHUB_EVENT_NAME"], "generation_commit":generation, "frozen_base":frozen_base, "commands":[], "input_pins":{}, "source_pins":{}, "history":{"capture_issued_fetches":0,"clones":0,"caller_checkout":"Existing main checkout fetch-depth:0; no capture fetch or clone."}, "limits":{"command_seconds":60,"total_control_seconds":210,"log_bytes":1048576,"input_file_bytes":16777216,"input_total_bytes":268435456,"artifact_bytes":33554432,"board_bytes":8388608}}
+          receipt = {"schema":"csoai.pr3229.genuine-derived-capture/1", "state":"STARTED", "at_utc":datetime.datetime.now(datetime.timezone.utc).isoformat(), "run_id":os.environ["GITHUB_RUN_ID"], "run_attempt":os.environ["GITHUB_RUN_ATTEMPT"], "event_name":os.environ["GITHUB_EVENT_NAME"], "generation_commit":generation, "generation_policy":"Actual checked-out ordered hosted preview; no input overlays", "frozen_source_head":frozen_source_head, "frozen_base":frozen_base, "commands":[], "input_pins":{}, "source_pins":{}, "history":{"capture_issued_fetches":0,"clones":0,"caller_checkout":"Existing main checkout fetch-depth:0; no capture fetch or clone."}, "limits":{"command_seconds":60,"total_control_seconds":210,"log_bytes":1048576,"input_file_bytes":33554432,"input_stream_chunk_bytes":1048576,"other_raw_read_default_bytes":16777216,"git_metadata_stdout_bytes":16777216,"input_total_bytes":268435456,"artifact_bytes":33554432,"board_bytes":8388608}}
           success = False
           created_worktree = False
           def pin(raw):
@@ -313,6 +314,47 @@ jobs:
               print(label+": actual_exit="+str(code)+" log_bytes="+str(len(raw)),flush=True)
               if code!=0 or timed_out or overflow:raise ValueError("Command did not qualify: "+label)
               return raw
+          def generation_tree():
+              raw=git("ls-tree","-r","-z",generation,cwd=worktree)
+              if not raw or not raw.endswith(b"\0"):raise ValueError("Incomplete genuine generation Git tree metadata")
+              entries={}
+              for record in raw[:-1].split(b"\0"):
+                  metadata,separator,path=record.partition(b"\t")
+                  fields=metadata.split(b" ")
+                  if not separator or not path or len(fields)!=3 or not re.fullmatch(rb"[0-7]{6}",fields[0]) or fields[1] not in (b"blob",b"commit",b"tree") or not re.fullmatch(rb"[a-f0-9]{40}",fields[2]) or path in entries:
+                      raise ValueError("Malformed or duplicate genuine generation Git tree metadata")
+                  entries[path]=(fields[0].decode("ascii"),fields[1].decode("ascii"),fields[2].decode("ascii"))
+              receipt["generation_tree_metadata"]={"generation_commit":generation,"bytes":len(raw),"sha256":hashlib.sha256(raw).hexdigest(),"entries":len(entries),"command":["git","ls-tree","-r","-z",generation],"calls":1,"stdout_cap_bytes":16777216,"scope":"Native committed path/mode/blob metadata only, reused for both inventories; no per-file git show, full repository content or Git-object archive."}
+              return entries
+          def stream_selected(path,remaining):
+              initial=path.lstat()
+              if not stat.S_ISREG(initial.st_mode) or initial.st_size>33554432 or initial.st_size>remaining:
+                  raise ValueError("Nonregular, symlinked or oversized selected input: "+str(path))
+              parent=path.parent
+              while parent!=worktree:
+                  if not parent.is_relative_to(worktree) or not stat.S_ISDIR(parent.lstat().st_mode):
+                      raise ValueError("Unsafe selected input parent: "+str(parent))
+                  parent=parent.parent
+              identity=lambda value:(value.st_dev,value.st_ino,value.st_mode,value.st_size,value.st_mtime_ns,value.st_ctime_ns)
+              fd=os.open(path,os.O_RDONLY|os.O_NOFOLLOW|os.O_CLOEXEC)
+              try:
+                  opened=os.fstat(fd)
+                  if identity(opened)!=identity(initial) or not stat.S_ISREG(opened.st_mode):raise ValueError("Selected input changed before read: "+str(path))
+                  sha256=hashlib.sha256();blob=hashlib.sha1(b"blob "+str(opened.st_size).encode("ascii")+b"\0");count=0
+                  while True:
+                      budget()
+                      chunk=os.read(fd,1048576)
+                      if not chunk:break
+                      count+=len(chunk)
+                      if count>opened.st_size or count>33554432 or count>remaining:raise ValueError("Selected input grew beyond streamed bound: "+str(path))
+                      sha256.update(chunk);blob.update(chunk)
+                  finished=os.fstat(fd)
+                  final_path=path.lstat()
+                  if count!=opened.st_size or identity(finished)!=identity(opened) or identity(final_path)!=identity(opened):
+                      raise ValueError("Selected input changed during streamed read: "+str(path))
+                  return {"bytes":count,"sha256":sha256.hexdigest(),"git_blob":blob.hexdigest()}
+              finally:
+                  os.close(fd)
           def inventory():
               selected=set(expected_sources)|set(permanent)|{
                   "package.json","package-lock.json","scripts/llms/llms.txt.tmpl","scripts/llms/llms-full.txt.tmpl",
@@ -339,15 +381,20 @@ jobs:
               if len(selected|optional)>4096:raise ValueError("Input inventory path bound exceeded")
               out={};total=0
               for relative in sorted(selected|optional):
+                  parts=pathlib.PurePosixPath(relative)
+                  if parts.is_absolute() or ".." in parts.parts or parts.as_posix()!=relative:raise ValueError("Unsafe selected input path")
                   p=worktree/relative
-                  if not p.exists():
-                      if relative in selected:raise ValueError("Required input absent: "+relative)
+                  tracked=committed_tree.get(relative.encode("utf-8"))
+                  try:
+                      p.lstat()
+                  except FileNotFoundError:
+                      if relative in selected or tracked is not None:raise ValueError("Required or committed input absent: "+relative)
                       out[relative]={"exists":False};continue
-                  raw=read(p);total+=len(raw)
-                  if total>268435456:raise ValueError("Selected input byte bound exceeded")
-                  tracked=git("show",generation+":"+relative,cwd=worktree)
-                  if relative not in allowed and raw!=tracked:raise ValueError("Selected input differs from genuine commit: "+relative)
-                  out[relative]={"exists":True,**pin(raw)}
+                  if tracked is None or tracked[0] not in ("100644","100755") or tracked[1]!="blob":
+                      raise ValueError("Selected input lacks regular genuine committed blob: "+relative)
+                  actual=stream_selected(p,268435456-total);total+=actual["bytes"]
+                  if relative not in allowed and actual["git_blob"]!=tracked[2]:raise ValueError("Selected streamed input differs from genuine committed blob: "+relative)
+                  out[relative]={"exists":True,**actual}
               return {"files":out,"total_bytes":total,"proof_paths":proof_names,"proof_subject_paths":sorted(set(proof_subjects)),"quarantine_paths":quarantine_names,"proof_scan":"Immediate *.ots in public/interop and public/interop/ots; exact canonical producer scope."}
           try:
               receipt["resource_before"]=guard()
@@ -355,22 +402,23 @@ jobs:
               event=json.loads(pathlib.Path(os.environ["GITHUB_EVENT_PATH"]).read_bytes());pr=event["pull_request"]
               if event.get("repository",{}).get("full_name")!="CSOAI-ORG/councilof-ai" or pr["head"].get("repo",{}).get("full_name")!="CSOAI-ORG/councilof-ai" or event.get("number")!=3229 or pr["base"].get("ref")!="master":raise ValueError("Wrong event repository, PR, head repository or base branch")
               event_base=pr["base"]["sha"];event_head=pr["head"]["sha"]
-              if not all(re.fullmatch(r"[a-f0-9]{40}",x) for x in (event_base,event_head)):raise ValueError("Full exact event IDs required")
+              if not all(re.fullmatch(r"[a-f0-9]{40}",x) for x in (event_base,event_head,generation,frozen_source_head)):raise ValueError("Full exact event and generation IDs required")
               if git("rev-parse","--is-shallow-repository").decode().strip()!="false":raise ValueError("Full caller history required; no capture fetch")
               checked_out=git("rev-parse","HEAD").decode().strip()
-              if checked_out!=os.environ["GITHUB_SHA"]:raise ValueError("Checkout differs from workflow event")
+              if checked_out!=generation:raise ValueError("Genuine generation differs from checked-out workflow event")
               merge_raw=git("cat-file","commit",checked_out);parents=[line[7:].decode() for line in merge_raw.split(b"\n\n",1)[0].splitlines() if line.startswith(b"parent ")]
               if len(parents)!=2 or parents[1]!=event_head:raise ValueError("Expected two ordered preview parents, PR head second")
               actual_base=parents[0];relation="equal"
               if event_base!=actual_base:
                   git("merge-base","--is-ancestor",event_base,actual_base);relation="verified-ancestor"
               git("merge-base","--is-ancestor",frozen_base,actual_base)
-              git("merge-base","--is-ancestor",generation,event_head)
-              if git("diff","--name-status",generation,event_head).decode().splitlines()!=["M\t"+workflow_path]:raise ValueError("PR append differs beyond temporary workflow capture")
+              git("merge-base","--is-ancestor",frozen_source_head,event_head)
+              git("merge-base","--is-ancestor",event_head,generation)
+              if git("diff","--name-status",frozen_source_head,event_head).decode().splitlines()!=["M\t"+workflow_path]:raise ValueError("PR append differs beyond temporary workflow capture")
               if git("status","--porcelain=v1","--untracked-files=all"):raise ValueError("Main hosted checkout not clean")
               main_before=git("status","--porcelain=v1","--untracked-files=all")
               main_tree=git("rev-parse","HEAD^{tree}").decode().strip()
-              receipt["history"].update({"hosted_merge":checked_out,"parents":parents,"actual_base":actual_base,"actual_base_tree":git("rev-parse",actual_base+"^{tree}").decode().strip(),"event_base":event_base,"event_head":event_head,"event_base_relation":relation,"generation_ancestor_of_event_head":True,"frozen_base_ancestor_of_actual_base":True,"generation_tree":git("rev-parse",generation+"^{tree}").decode().strip()})
+              receipt["history"].update({"hosted_merge":checked_out,"parents":parents,"actual_base":actual_base,"actual_base_tree":git("rev-parse",actual_base+"^{tree}").decode().strip(),"event_base":event_base,"event_head":event_head,"event_base_relation":relation,"frozen_source_head":frozen_source_head,"frozen_source_head_ancestor_of_event_head":True,"event_head_ancestor_of_generation":True,"generation_equals_checked_out_hosted_merge":True,"frozen_base_ancestor_of_actual_base":True,"generation_tree":git("rev-parse",generation+"^{tree}").decode().strip()})
               for label,revision in (("generation",generation),("frozen-base",frozen_base),("hosted-merge",checked_out),("actual-base",actual_base),("event-base",event_base),("event-head",event_head)):
                   raw=git("cat-file","commit",revision)
                   if hashlib.sha1(b"commit "+str(len(raw)).encode()+b"\0"+raw).hexdigest()!=revision:raise ValueError("Raw commit identity mismatch")
@@ -381,12 +429,18 @@ jobs:
               if active.count(begin)!=1 or active.count(end)!=1:raise ValueError("Temporary removal markers not unique")
               left=active.index(begin);right=active.index(end,left)+len(end)
               restored=active[:left]+active[right:]
-              if pin(restored)!=permanent[workflow_path] or restored!=git("show",generation+":"+workflow_path):raise ValueError("Exact temporary-block removal does not restore frozen workflow")
+              if pin(restored)!=permanent[workflow_path] or restored!=git("show",frozen_source_head+":"+workflow_path):raise ValueError("Exact temporary-block removal does not restore frozen workflow")
               receipt["active_workflow"]=pin(active);receipt["removal_restores_permanent_workflow"]=pin(restored)
+              receipt["workflow_pin_scope"]={"physical_generation_workflow":pin(active),"virtual_exact_block_removal":pin(restored),"permanent_workflow_pin_is_virtual":True,"physical_file_modified":False,"scope":"Actual preview/eventhead workflow includes the unique temporary block; virtual removal alone reproduces permanenteb7. Inventory hashes the actual unchanged physical workflow."}
               for relative,expected in {**permanent,**expected_sources}.items():
                   original=git("show",generation+":"+relative)
-                  if pin(original)!=expected:raise ValueError("Immutable generation source pin mismatch: "+relative)
-                  if relative!=workflow_path and read(root/relative)!=original:raise ValueError("Main protected/source bytes differ: "+relative)
+                  if relative==workflow_path:
+                      if original!=active:raise ValueError("Genuine generation physical workflow differs from active workflow")
+                      qualified=restored
+                  else:
+                      qualified=original
+                      if read(root/relative)!=original:raise ValueError("Main protected/source bytes differ: "+relative)
+                  if pin(qualified)!=expected:raise ValueError("Immutable generation source pin mismatch: "+relative)
                   receipt["source_pins"][relative]=expected
               from email.parser import Parser
               receipt["runtime_dependencies"]={}
@@ -435,6 +489,8 @@ jobs:
               created_worktree=True
               command("genuine-worktree-add",["git","worktree","add","--detach",str(worktree),generation],root)
               if git("rev-parse","HEAD",cwd=worktree).decode().strip()!=generation or git("status","--porcelain=v1","--untracked-files=all",cwd=worktree):raise ValueError("Genuine generation worktree not clean")
+              committed_tree=generation_tree()
+              receipt["selected_input_fingerprint_contract"]={"input_only_file_cap_bytes":33554432,"chunk_bytes":1048576,"total_bytes_cap":268435456,"path_cap":4096,"mutation_checks":"Regular/no-symlink selected paths; O_NOFOLLOW descriptor; lstat/open/final fstat and final path device/inode/mode/size/mtime_ns/ctime_ns; exact read bytecount.","committed_binding":"Each actual nonallowed selected file streaming true-NUL Gitblob equals the native generation ls-tree blob; before/after SHA256 and byte pins remain exact. Allowed derived paths remain bound by existing three-output and proof-subject guards.","limits_unchanged":"Other raw reads and Git metadata stdout remain16MiB; artifact32MiB, Node256MiB and all existing time/resource/output/producer/oneGET controls unchanged.","not_claimed":"No whole-file in-RAM equality comparison or independent verification of all repository content."}
               before=inventory();receipt["input_inventory_before"]=save("INPUT_INVENTORY_BEFORE.json",(json.dumps(before,indent=2,sort_keys=True)+"\n").encode())
               for relative in sorted(allowed):save("before-"+relative.rsplit("/",1)[-1],read(worktree/relative))
               dry=command("ots-real-dry-run",["python3","scripts/ots_manifest_rebuild.py"],worktree)
@@ -472,7 +528,12 @@ jobs:
               for relative in sorted(allowed):receipt["outputs"][relative]=save("generated-"+relative.rsplit("/",1)[-1],read(worktree/relative,4194304))
               if git("rev-parse","HEAD",cwd=worktree).decode().strip()!=generation:raise ValueError("Generation worktree HEAD changed")
               for relative,expected in permanent.items():
-                  if pin(read(worktree/relative))!=expected:raise ValueError("Permanent source/BOM/proof changed: "+relative)
+                  actual=read(worktree/relative)
+                  if relative==workflow_path:
+                      if actual!=active or actual.count(begin)!=1 or actual.count(end)!=1:raise ValueError("Physical generation workflow or removal markers changed")
+                      start=actual.index(begin);stop=actual.index(end,start)+len(end)
+                      actual=actual[:start]+actual[stop:]
+                  if pin(actual)!=expected:raise ValueError("Permanent source/BOM/proof changed: "+relative)
               if git("status","--porcelain=v1","--untracked-files=all")!=main_before or git("rev-parse","HEAD").decode().strip()!=checked_out or git("rev-parse","HEAD^{tree}").decode().strip()!=main_tree:raise ValueError("Main checkout/status/HEAD/tree changed")
               receipt["main_checkout_and_all7_permanent_pins_unchanged"]=True
               last=guard();receipt["resource_after"]=last
