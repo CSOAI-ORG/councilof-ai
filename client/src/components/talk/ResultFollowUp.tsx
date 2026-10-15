@@ -133,7 +133,7 @@ export default function ResultFollowUp(props: ResultFollowUpProps) {
         <button type="button" aria-pressed={useful} onClick={() => setUseful((v) => !v)} className={BUTTON}>
           {useful ? "Marked useful" : "Useful for this task"}
         </button>
-        {props.source !== "company" ? <button type="button" onClick={() => { if (props.source !== "company") props.onEdit(props.run.question); }} className={BUTTON}>Edit question</button> : null}
+        {props.source !== "company" ? <button type="button" onClick={() => props.onEdit(props.run.question)} className={BUTTON}>Edit question</button> : null}
         <button type="button" onClick={() => {
           revision.current++;
           setBrief(props.source === "company" ? companyMeokBrief(props.value, props.expectedOwnerSubject) : meokBrief(props.run));
