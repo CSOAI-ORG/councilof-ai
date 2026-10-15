@@ -218,6 +218,257 @@ jobs:
           npm ci --no-audit --no-fund
           python3 -m pip install -q cryptography opentimestamps-client
 
+      # BEGIN TEMPORARY PR3229 DERIVED CAPTURE
+      # Genuine immutable94042 worktree; preserve all seven permanent paths.
+      # Remove exactly this block only after authentic selected derived output adoption.
+      - name: Temporary PR3229 genuine OTS manifest and llms capture
+        id: pr3229_derived_capture
+        if: steps.scope.outputs.gated == 'true' && github.event_name == 'pull_request'
+        timeout-minutes: 5
+        run: |
+          python3 -B - <<'PY'
+          import datetime, hashlib, importlib.metadata, json, os, pathlib, re, selectors, shutil, signal, subprocess, sys, time
+          root = pathlib.Path(os.environ["GITHUB_WORKSPACE"]).resolve()
+          runner_temp = pathlib.Path(os.environ["RUNNER_TEMP"]).resolve()
+          capture = runner_temp / "pr3229-derived-capture"
+          worktree = runner_temp / "pr3229-derived-worktree"
+          node_control_path = runner_temp / "pr3229-llms-capture-control.mjs"
+          generation = "94042a80cae0cf1af7c5921a4e3d0d40b95fd506"
+          frozen_base = "d754c9516909022eccab00212d6213c870fc0d45"
+          workflow_path = ".github/workflows/pr-gates.yml"
+          allowed = {"public/interop/ots/manifest.json", "public/llms.txt", "public/llms-full.txt"}
+          expected_sources = {'scripts/ots_manifest_rebuild.py': {'bytes': 8226, 'sha256': 'f856510de2f08782668deda38a244c7e59f1bc85eb0ac4b2d4b244b6fff3327e', 'git_blob': '8bec54c92773863c9d73c7b0074886245d545834'}, 'scripts/pod-loops/root_ots_manifest_gate.py': {'bytes': 4328, 'sha256': '26544843fd237a12f70798c8b13c0d16061ac305352d48af1ceafbc5190cdca5', 'git_blob': 'ba81e23e7004d34b0d8862d2bb336a51794075b0'}, 'scripts/llms-txt.mjs': {'bytes': 31989, 'sha256': '2e2b7b41414dab85218b7c8f3b88501f37ef4d77d4b42182851c0bb7fc63629b', 'git_blob': '20bd8b0611e0ede6b0536e3c76f9ccad8bc7e766'}, 'scripts/maintain_card_ots.py': {'bytes': 12896, 'sha256': 'ba998398615b2019d809d210950db1d5e41a66bbf8877c6d8a56ed05d17ccfdd', 'git_blob': 'cc2d63e6e66237eabc5d43503cfba9c7a4453835'}, 'scripts/maintain_card_root_ots.py': {'bytes': 9012, 'sha256': 'c2e3416392705c8cc730f43260897ab2ecb9ffc6edd424ac2c4d75c9cc4e4bdb', 'git_blob': 'f474b197863b92e0fff2d6ae1069fe3c41a381fc'}}
+          permanent = {'scripts/gen_sbom.py': {'bytes': 11933, 'sha256': '9697a5f5b7602fbc7de686b6da19fe495b5ba3182885df0a878a6ae152f2404f', 'git_blob': 'dc481690ab3dd893771dd9a751c1c29cbe25e472'}, 'scripts/test_gen_sbom.py': {'bytes': 11230, 'sha256': 'c47da01fa81df3f39f0fcb5d57182db7ae0e047886dc213689c62b38d43831d0', 'git_blob': '47faae8343599f995f46f7363b4758365dcc7e59'}, 'docs/operations/PRODUCERS.json': {'bytes': 15210, 'sha256': '3eda4a55216307bea2aabaa781647250435b18b0561ebb48dc51def9ae07b848', 'git_blob': '491982bdc5bdecad570878f3c3a350f65d299865'}, '.github/workflows/pr-gates.yml': {'bytes': 35782, 'sha256': '7e776df319fadeb6fa9752cdedd7df441403e721297adfa631993f915cd97433', 'git_blob': 'eb7ed3fa0357ee228373fd6dc6f66cce57767434'}, '.github/workflows/deploy.yml': {'bytes': 30120, 'sha256': '9105602f5d380cf366a6716893e8446f6b1bb6b93e50e60aa452b64e46ec7ed3', 'git_blob': 'd310b9f06f5b982ac0042cd65610b70253e1576b'}, 'public/interop/sbom-councilof-ai.json': {'bytes': 1219156, 'sha256': 'fd8fce8c9b4514e30c853506542cfc42fc3948f447535276dc2527a7666818d0', 'git_blob': '02969b9f2ab1d7f0c552092eb8af6fc4f622fda0'}, 'public/interop/sbom-councilof-ai.json.ots': {'bytes': 721, 'sha256': '17eb7ce012db7a88cdd239893d2c24234603e4d36fdacf9ca0f4543edf451749', 'git_blob': '9e185b526c4ae774d1995ffab1f80f3ed855f984'}}
+          node_control_text = 'import fs from "node:fs";\nimport path from "node:path";\nimport { createHash } from "node:crypto";\nimport { pathToFileURL } from "node:url";\n\nconst capture = process.env.SOURCE_CAPTURE_DIR;\nconst worktree = process.env.SOURCE_CAPTURE_WORKTREE;\nconst expectedURL = "https://councilof.ai/api/gspc";\nif (!capture || !worktree || process.env.CSOAI_BOARD_URL !== expectedURL) throw new Error("Unbound capture environment");\nconst sha = (b) => createHash("sha256").update(b).digest("hex");\nconst receiptPath = path.join(capture, "PUBLIC_BOARD_AND_LLMS_RECEIPT.json");\nconst receipt = {\n  schema: "csoai.ots-llms-one-public-board-capture/1",\n  native_fetch_calls: 0, canonical_consumptions: 0,\n  write_completed: false, check_completed: false,\n  board_url: expectedURL, source_worktree: worktree,\n  source_file: "scripts/llms-txt.mjs", node: process.version,\n  actual_request_policy: "One native GET; redirect:error, no application retry, 15s timeout, 8MiB body cap. Same freshly received native Response clones supply write/check."\n};\nconst persist = () => fs.writeFileSync(receiptPath, JSON.stringify(receipt, null, 2) + "\\n");\nconst originalFetch = globalThis.fetch.bind(globalThis);\nlet reservedForCheck = null;\nlet phase = "write";\nconst cap = 8 * 1024 * 1024;\nconst readBounded = async (response, controller) => {\n  if (!response.body) throw new Error("Public board has no response body");\n  const declared = response.headers.get("content-length");\n  if (declared !== null && (!/^\\d+$/.test(declared) || Number(declared) > cap)) {\n    controller?.abort(); throw new Error("Public board declared body exceeds bound");\n  }\n  const reader = response.body.getReader();\n  const chunks = []; let n = 0;\n  try {\n    while (true) {\n      const item = await reader.read();\n      if (item.done) break;\n      n += item.value.byteLength;\n      if (n > cap) { controller?.abort(); void reader.cancel().catch(() => {}); throw new Error("Public board body bound exceeded"); }\n      chunks.push(Buffer.from(item.value));\n    }\n  } finally { reader.releaseLock(); }\n  return Buffer.concat(chunks, n);\n};\nglobalThis.fetch = async (input, init) => {\n  const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;\n  const method = (init?.method ?? (typeof input === "object" && input !== null && "method" in input ? input.method : "GET")).toUpperCase();\n  if (url !== expectedURL || method !== "GET") throw new Error("Unexpected producer transport");\n  receipt.canonical_consumptions += 1;\n  if (receipt.canonical_consumptions > 2) throw new Error("Canonical board-consumption cap exceeded");\n  if (phase === "write") {\n    if (receipt.native_fetch_calls !== 0 || receipt.canonical_consumptions !== 1) throw new Error("Repeated native board request");\n    receipt.native_fetch_calls += 1; persist();\n    const controller = new AbortController();\n    const timer = setTimeout(() => controller.abort(), 15000);\n    try {\n      const response = await originalFetch(input, { ...(init ?? {}), redirect: "error", signal: controller.signal });\n      receipt.response = { status: response.status, status_text: response.statusText, final_url: response.url,\n        redirected: response.redirected, headers: Array.from(response.headers.entries()), body_used_before_clone: response.bodyUsed };\n      reservedForCheck = response.clone();\n      const raw = await readBounded(response.clone(), controller);\n      fs.writeFileSync(path.join(capture, "public-board-response.body"), raw);\n      receipt.response.raw_bytes = raw.byteLength;\n      receipt.response.raw_sha256 = sha(raw);\n      receipt.response.body_used_before_return = response.bodyUsed;\n      persist();\n      if (!response.ok || response.status !== 200 || response.redirected || response.url !== expectedURL || response.bodyUsed) throw new Error("Public board response is not a clean unchanged200");\n      const text = new TextDecoder("utf-8", { fatal: true }).decode(raw);\n      const board = JSON.parse(text);\n      if (!board || typeof board !== "object" || Array.isArray(board) ||\n          typeof board.schema !== "string" || !board.schema.trim() ||\n          !board.totals || typeof board.totals !== "object" || Array.isArray(board.totals) ||\n          !Array.isArray(board.axes)) throw new Error("Invalid public board object; no fallback permitted");\n      receipt.response.JSON_shape_validated = true; persist();\n      return response;\n    } finally { clearTimeout(timer); }\n  }\n  if (phase !== "check" || !receipt.write_completed || receipt.native_fetch_calls !== 1 ||\n      receipt.canonical_consumptions !== 2 || !reservedForCheck || reservedForCheck.bodyUsed) throw new Error("Check has no unchanged fresh native Response");\n  const raw = await readBounded(reservedForCheck.clone(), null);\n  if (sha(raw) !== receipt.response.raw_sha256 || raw.byteLength !== receipt.response.raw_bytes) throw new Error("Public board byte drift between write/check");\n  receipt.check_uses_same_actual_response_bytes = true; persist();\n  return reservedForCheck;\n};\nclass CanonicalExit extends Error {\n  constructor(code) { super("Canonical process.exit requested"); this.code = code; }\n}\nasync function runCanonicalPhase(name, script, args) {\n  const savedExit = process.exit;\n  const saved = { log: console.log, error: console.error, warn: console.warn };\n  const observed = { phase: name, normal_module_return: false, requested_exit_code: null, process_exitCode_after: null, lines: [] };\n  receipt.canonical_phases ??= [];\n  receipt.canonical_phases.push(observed);\n  let byteCount = 0; let overflow = false;\n  for (const key of Object.keys(saved)) {\n    console[key] = function (...values) {\n      Reflect.apply(saved[key], console, values);\n      const text = values.map((value) => typeof value === "string" ? value : "[non-string diagnostic]").join(" ");\n      byteCount += Buffer.byteLength(text);\n      if (byteCount > 65536 || observed.lines.length >= 64) { overflow = true; return; }\n      observed.lines.push({ channel: key, text });\n    };\n  }\n  process.exit = function (code) {\n    throw new CanonicalExit(Number(code ?? process.exitCode ?? 0));\n  };\n  try {\n    process.argv = [process.execPath, script, ...args];\n    await import(pathToFileURL(script).href + "?source-capture-phase=" + name);\n    observed.normal_module_return = true;\n  } catch (error) {\n    if (!(error instanceof CanonicalExit)) throw error;\n    observed.requested_exit_code = error.code;\n    if (error.code !== 0) throw error;\n  } finally {\n    observed.process_exitCode_after = process.exitCode ?? 0;\n    process.exit = savedExit;\n    for (const key of Object.keys(saved)) console[key] = saved[key];\n    observed.log_bytes = byteCount; observed.log_overflow = overflow;\n    persist();\n  }\n  if (overflow || observed.process_exitCode_after !== 0 ||\n      observed.lines.some((row) => /UNCHECKABLE|fallback|NOT verified/i.test(row.text))) {\n    throw new Error("Canonical phase is nonzero, bounded-out, fallback or UNCHECKABLE");\n  }\n  const files = ["public/llms.txt", "public/llms-full.txt"];\n  const prefix = name === "write" ? "wrote " : "\\u2713 ";\n  const suffix = name === "write" ? "  (" : " matches live (";\n  if (!files.every((file) => observed.lines.filter((row) =>\n      row.channel === "log" && row.text.startsWith(prefix + file + suffix)).length === 1)) {\n    throw new Error("Canonical phase lacks both actual completion lines");\n  }\n  observed.qualified_completion = true; persist();\n}\n\npersist();\ntry {\n  const script = path.join(worktree, "scripts/llms-txt.mjs");\n  await runCanonicalPhase("write", script, []);\n  receipt.write_completed = true; persist();\n  phase = "check";\n  await runCanonicalPhase("check", script, ["--check"]);\n  receipt.check_completed = true;\n  if (receipt.native_fetch_calls !== 1 || receipt.canonical_consumptions !== 2 ||\n      !receipt.check_uses_same_actual_response_bytes || !receipt.response?.JSON_shape_validated ||\n      !receipt.write_completed || !receipt.check_completed || receipt.canonical_phases?.length !== 2 ||\n      !receipt.canonical_phases.every((row) => row.qualified_completion && row.process_exitCode_after === 0 && !row.log_overflow)) {\n    throw new Error("Incomplete actual one-GET derivation/check, JSON shape or phase completion");\n  }\n  receipt.state = "GENUINE_WRITE_AND_CHECK_COMPLETED_ONE_ACTUAL_PUBLIC_BOARD_GET";\n} catch (error) {\n  receipt.state = "FAILED"; receipt.error = String(error); process.exitCode = 1;\n} finally { persist(); }\n'
+          os.umask(0o077)
+          capture.mkdir(mode=0o700, exist_ok=False)
+          child_env = {key: os.environ[key] for key in ("PATH", "HOME", "LANG") if key in os.environ}
+          child_env.update({"PYTHONDONTWRITEBYTECODE":"1", "GIT_TERMINAL_PROMPT":"0", "CSOAI_BOARD_URL":"https://councilof.ai/api/gspc", "SOURCE_CAPTURE_DIR":str(capture), "SOURCE_CAPTURE_WORKTREE":str(worktree), "NODE_OPTIONS":"--max-old-space-size=256"})
+          deadline = time.monotonic() + 210
+          receipt = {"schema":"csoai.pr3229.genuine-derived-capture/1", "state":"STARTED", "at_utc":datetime.datetime.now(datetime.timezone.utc).isoformat(), "run_id":os.environ["GITHUB_RUN_ID"], "run_attempt":os.environ["GITHUB_RUN_ATTEMPT"], "event_name":os.environ["GITHUB_EVENT_NAME"], "generation_commit":generation, "frozen_base":frozen_base, "commands":[], "input_pins":{}, "source_pins":{}, "history":{"capture_issued_fetches":0,"clones":0,"caller_checkout":"Existing main checkout fetch-depth:0; no capture fetch or clone."}, "limits":{"command_seconds":60,"total_control_seconds":210,"log_bytes":1048576,"input_file_bytes":16777216,"input_total_bytes":268435456,"artifact_bytes":33554432,"board_bytes":8388608}}
+          success = False
+          created_worktree = False
+          def pin(raw):
+              return {"bytes":len(raw),"sha256":hashlib.sha256(raw).hexdigest(),"git_blob":hashlib.sha1(b"blob "+str(len(raw)).encode()+b"\0"+raw).hexdigest()}
+          def read(path, cap=16777216):
+              if path.is_symlink() or not path.is_file() or path.stat().st_size > cap:
+                  raise ValueError("Missing, symlinked or oversized selected file: "+str(path))
+              return path.read_bytes()
+          def save(name, raw):
+              if len(raw)>8388608 or sum(p.stat().st_size for p in capture.iterdir() if p.is_file())+len(raw)>32505856:raise ValueError("Artifact write bound exceeded")
+              target = capture / name
+              with target.open("xb") as f:
+                  os.chmod(target,0o600)
+                  f.write(raw)
+              return {"path":name,**pin(raw)}
+          def budget():
+              left=deadline-time.monotonic()
+              if left<=0:raise TimeoutError("Total capture time bound exceeded")
+              return left
+          def git(*args,cwd=root):
+              p=subprocess.run(["git",*args],cwd=cwd,env=child_env,stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=min(30,budget()))
+              if len(p.stdout)>16777216 or len(p.stderr)>1048576:raise ValueError("Git metadata byte bound exceeded")
+              if p.returncode:raise subprocess.CalledProcessError(p.returncode,p.args,p.stdout,p.stderr)
+              return p.stdout
+          def guard():
+              available=int(next(l.split()[1] for l in pathlib.Path("/proc/meminfo").read_text().splitlines() if l.startswith("MemAvailable:")))*1024
+              cg=pathlib.Path("/sys/fs/cgroup");effective=available
+              if (cg/"memory.max").is_file() and (cg/"memory.current").is_file():
+                  maximum=(cg/"memory.max").read_text().strip()
+                  if maximum!="max":effective=min(effective,int(maximum)-int((cg/"memory.current").read_text()))
+              psi={}
+              for line in pathlib.Path("/proc/pressure/memory").read_text().splitlines():
+                  parts=line.split();psi[parts[0]]={k:float(v) for k,v in (part.split("=") for part in parts[1:])}
+              events={}
+              if (cg/"memory.events").is_file():events=dict((k,int(v)) for k,v in (line.split() for line in (cg/"memory.events").read_text().splitlines()))
+              record={"effective_available":effective,"hostMemAvailable":available,"root_free":shutil.disk_usage(runner_temp).free,"PSI":psi,"events":events}
+              if effective<536870912 or record["root_free"]<2147483648 or any(row["avg10"]>=1 for row in psi.values()):raise ValueError("Hosted capture resource admission failed: "+json.dumps(record))
+              return record
+          def command(label,argv,cwd):
+              log=capture/(label+".log");total=0;timed_out=False;overflow=False;code=None
+              until=time.monotonic()+min(60,budget())
+              child=subprocess.Popen(argv,cwd=cwd,env=child_env,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,start_new_session=True)
+              try:
+                  with log.open("xb") as f:
+                      os.chmod(log,0o600)
+                      selector=selectors.DefaultSelector();selector.register(child.stdout,selectors.EVENT_READ)
+                      while selector.get_map():
+                          if time.monotonic()>until:timed_out=True;break
+                          for key,_ in selector.select(min(0.1,max(0,until-time.monotonic()))):
+                              chunk=os.read(key.fd,65536)
+                              if not chunk:selector.unregister(key.fileobj);continue
+                              if total+len(chunk)>1048576:
+                                  f.write(chunk[:max(0,1048576-total)]);overflow=True;break
+                              f.write(chunk);total+=len(chunk)
+                          if overflow:break
+                      selector.close()
+                      if timed_out or overflow:os.killpg(child.pid,signal.SIGKILL)
+                      code=child.wait(timeout=5)
+              finally:
+                  if child.poll() is None:
+                      os.killpg(child.pid,signal.SIGKILL);child.wait(timeout=5)
+                  if child.stdout:child.stdout.close()
+                  raw=read(log,1048576)
+                  receipt["commands"].append({"label":label,"argv":argv,"cwd":str(cwd),"pid":child.pid,"exit_code":code,"timed_out":timed_out,"log_cap_exceeded":overflow,"log":{"path":log.name,**pin(raw)}})
+              print(label+": actual_exit="+str(code)+" log_bytes="+str(len(raw)),flush=True)
+              if code!=0 or timed_out or overflow:raise ValueError("Command did not qualify: "+label)
+              return raw
+          def inventory():
+              selected=set(expected_sources)|set(permanent)|{
+                  "package.json","package-lock.json","scripts/llms/llms.txt.tmpl","scripts/llms/llms-full.txt.tmpl",
+                  "functions/mcp/gspc-tools.json","functions/mcp/paid-tools.json","public/cards-bundle.json","public/root.json",
+                  "public/signed/card_index.json","council-os/capabilities.json","public/interop/distribution-latest.json",
+                  "public/interop/card-root-latest.json",*allowed}
+              optional={"public/evidence/published-records.json"}
+              proof_names=[];proof_subjects=[];quarantine_names=[]
+              for directory in ("public/interop","public/interop/ots"):
+                  d=worktree/directory
+                  if not d.is_dir() or d.is_symlink():raise ValueError("Unsafe proof scan directory")
+                  for p in sorted(d.glob("*.ots")):
+                      relative=p.relative_to(worktree).as_posix();proof_names.append(relative);selected.add(relative)
+                      subject=p.with_suffix("") if p.with_suffix("").suffix else None
+                      if subject is not None:
+                          relative_subject=subject.relative_to(worktree).as_posix();optional.add(relative_subject);proof_subjects.append(relative_subject)
+                  for p in sorted(d.glob("*.ots.invalid")):
+                      quarantine_names.append(p.relative_to(worktree).as_posix());selected.add(p.relative_to(worktree).as_posix())
+              pointer=json.loads(read(worktree/"public/interop/card-root-latest.json",8192))
+              url=pointer.get("root_url")
+              if not isinstance(url,str) or not re.fullmatch(r"/interop/card-root-[0-9]{4}-[0-9]{2}-[0-9]{2}(?:-[a-f0-9]{12})?\.json",url):raise ValueError("Unsafe pointer root")
+              selected.update({"public"+url,"public"+url+".ots"})
+              optional.add("public"+url.removesuffix(".json")+".header-audit.json")
+              if len(selected|optional)>4096:raise ValueError("Input inventory path bound exceeded")
+              out={};total=0
+              for relative in sorted(selected|optional):
+                  p=worktree/relative
+                  if not p.exists():
+                      if relative in selected:raise ValueError("Required input absent: "+relative)
+                      out[relative]={"exists":False};continue
+                  raw=read(p);total+=len(raw)
+                  if total>268435456:raise ValueError("Selected input byte bound exceeded")
+                  tracked=git("show",generation+":"+relative,cwd=worktree)
+                  if relative not in allowed and raw!=tracked:raise ValueError("Selected input differs from genuine commit: "+relative)
+                  out[relative]={"exists":True,**pin(raw)}
+              return {"files":out,"total_bytes":total,"proof_paths":proof_names,"proof_subject_paths":sorted(set(proof_subjects)),"quarantine_paths":quarantine_names,"proof_scan":"Immediate *.ots in public/interop and public/interop/ots; exact canonical producer scope."}
+          try:
+              receipt["resource_before"]=guard()
+              if os.environ["GITHUB_EVENT_NAME"]!="pull_request" or os.environ.get("GITHUB_REPOSITORY")!="CSOAI-ORG/councilof-ai":raise ValueError("Only canonical ordinary PR event admitted")
+              event=json.loads(pathlib.Path(os.environ["GITHUB_EVENT_PATH"]).read_bytes());pr=event["pull_request"]
+              if event.get("repository",{}).get("full_name")!="CSOAI-ORG/councilof-ai" or pr["head"].get("repo",{}).get("full_name")!="CSOAI-ORG/councilof-ai" or event.get("number")!=3229 or pr["base"].get("ref")!="master":raise ValueError("Wrong event repository, PR, head repository or base branch")
+              event_base=pr["base"]["sha"];event_head=pr["head"]["sha"]
+              if not all(re.fullmatch(r"[a-f0-9]{40}",x) for x in (event_base,event_head)):raise ValueError("Full exact event IDs required")
+              if git("rev-parse","--is-shallow-repository").decode().strip()!="false":raise ValueError("Full caller history required; no capture fetch")
+              checked_out=git("rev-parse","HEAD").decode().strip()
+              if checked_out!=os.environ["GITHUB_SHA"]:raise ValueError("Checkout differs from workflow event")
+              merge_raw=git("cat-file","commit",checked_out);parents=[line[7:].decode() for line in merge_raw.split(b"\n\n",1)[0].splitlines() if line.startswith(b"parent ")]
+              if len(parents)!=2 or parents[1]!=event_head:raise ValueError("Expected two ordered preview parents, PR head second")
+              actual_base=parents[0];relation="equal"
+              if event_base!=actual_base:
+                  git("merge-base","--is-ancestor",event_base,actual_base);relation="verified-ancestor"
+              git("merge-base","--is-ancestor",frozen_base,actual_base)
+              git("merge-base","--is-ancestor",generation,event_head)
+              if git("diff","--name-status",generation,event_head).decode().splitlines()!=["M\t"+workflow_path]:raise ValueError("PR append differs beyond temporary workflow capture")
+              if git("status","--porcelain=v1","--untracked-files=all"):raise ValueError("Main hosted checkout not clean")
+              main_before=git("status","--porcelain=v1","--untracked-files=all")
+              main_tree=git("rev-parse","HEAD^{tree}").decode().strip()
+              receipt["history"].update({"hosted_merge":checked_out,"parents":parents,"actual_base":actual_base,"actual_base_tree":git("rev-parse",actual_base+"^{tree}").decode().strip(),"event_base":event_base,"event_head":event_head,"event_base_relation":relation,"generation_ancestor_of_event_head":True,"frozen_base_ancestor_of_actual_base":True,"generation_tree":git("rev-parse",generation+"^{tree}").decode().strip()})
+              for label,revision in (("generation",generation),("frozen-base",frozen_base),("hosted-merge",checked_out),("actual-base",actual_base),("event-base",event_base),("event-head",event_head)):
+                  raw=git("cat-file","commit",revision)
+                  if hashlib.sha1(b"commit "+str(len(raw)).encode()+b"\0"+raw).hexdigest()!=revision:raise ValueError("Raw commit identity mismatch")
+                  receipt["history"][label+"_commit_data"]=save(label+".commit.raw",raw)
+              active=read(root/workflow_path)
+              if active!=git("show",checked_out+":"+workflow_path) or active!=git("show",event_head+":"+workflow_path):raise ValueError("Active workflow content binding failed")
+              begin=b"      # BEGIN TEMPORARY PR3229 DERIVED CAPTURE\n";end=b"      # END TEMPORARY PR3229 DERIVED CAPTURE\n"
+              if active.count(begin)!=1 or active.count(end)!=1:raise ValueError("Temporary removal markers not unique")
+              left=active.index(begin);right=active.index(end,left)+len(end)
+              restored=active[:left]+active[right:]
+              if pin(restored)!=permanent[workflow_path] or restored!=git("show",generation+":"+workflow_path):raise ValueError("Exact temporary-block removal does not restore frozen workflow")
+              receipt["active_workflow"]=pin(active);receipt["removal_restores_permanent_workflow"]=pin(restored)
+              for relative,expected in {**permanent,**expected_sources}.items():
+                  original=git("show",generation+":"+relative)
+                  if pin(original)!=expected:raise ValueError("Immutable generation source pin mismatch: "+relative)
+                  if relative!=workflow_path and read(root/relative)!=original:raise ValueError("Main protected/source bytes differ: "+relative)
+                  receipt["source_pins"][relative]=expected
+              receipt["runtime_dependencies"]={}
+              for name in ("opentimestamps","opentimestamps-client","cryptography"):
+                  dist=importlib.metadata.distribution(name);records=[p for p in (dist.files or []) if str(p).endswith(".dist-info/RECORD")]
+                  if len(records)!=1:raise ValueError("Missing unambiguous installed dependency RECORD")
+                  receipt["runtime_dependencies"][name]={"version":dist.version,"RECORD":pin(read(pathlib.Path(dist.locate_file(records[0]))))}
+              if worktree.exists() or node_control_path.exists():raise ValueError("No temporary path reuse or overwrite")
+              if capture.is_relative_to(root) or worktree.is_relative_to(root) or worktree.is_relative_to(capture):raise ValueError("Unsafe temporary path overlap")
+              created_worktree=True
+              command("genuine-worktree-add",["git","worktree","add","--detach",str(worktree),generation],root)
+              if git("rev-parse","HEAD",cwd=worktree).decode().strip()!=generation or git("status","--porcelain=v1","--untracked-files=all",cwd=worktree):raise ValueError("Genuine generation worktree not clean")
+              before=inventory();receipt["input_inventory_before"]=save("INPUT_INVENTORY_BEFORE.json",(json.dumps(before,indent=2,sort_keys=True)+"\n").encode())
+              for relative in sorted(allowed):save("before-"+relative.rsplit("/",1)[-1],read(worktree/relative))
+              dry=command("ots-real-dry-run",["python3","scripts/ots_manifest_rebuild.py"],worktree)
+              if len(re.findall(rb"(?m)^  NOT proofs    : 0\r?$",dry))!=1:raise ValueError("Canonical dry run did not establish drop0")
+              if git("status","--porcelain=v1","--untracked-files=all",cwd=worktree):raise ValueError("Dry run changed worktree")
+              receipt["actual_dry_run_drop0_before_apply"]=True
+              command("ots-real-apply",["python3","scripts/ots_manifest_rebuild.py","--apply"],worktree)
+              manifest=json.loads(read(worktree/"public/interop/ots/manifest.json",4194304))
+              if manifest["counts"]["quarantined_not_proofs"]!=0 or len(manifest["proofs"])!=manifest["counts"]["proofs"]:raise ValueError("Apply quarantined inputs or inconsistent counts")
+              gate=command("root-ots-real-gate",["python3","scripts/pod-loops/root_ots_manifest_gate.py","--public-dir","public"],worktree)
+              gate_result=json.loads(gate.strip())
+              if gate_result.get("state")!="VALID_PREIMAGE_ONLY" or gate_result.get("chain_verified") is not False:raise ValueError("Root gate did not return exact offline boundary")
+              receipt["root_gate"]=gate_result
+              with node_control_path.open("x") as f:os.chmod(node_control_path,0o600);f.write(node_control_text)
+              receipt["Node_control"]=pin(read(node_control_path));receipt["Node_control_source"]="Existing Source partial transport reused; minimal per-phase exit/log/final-state completion guards added."
+              command("llms-real-write-and-same-input-check",["node",str(node_control_path)],worktree)
+              board_receipt=json.loads(read(capture/"PUBLIC_BOARD_AND_LLMS_RECEIPT.json",1048576))
+              board_raw=read(capture/"public-board-response.body",8388608)
+              if board_receipt.get("state")!="GENUINE_WRITE_AND_CHECK_COMPLETED_ONE_ACTUAL_PUBLIC_BOARD_GET" or board_receipt.get("native_fetch_calls")!=1 or board_receipt.get("canonical_consumptions")!=2 or board_receipt.get("write_completed") is not True or board_receipt.get("check_completed") is not True or board_receipt.get("check_uses_same_actual_response_bytes") is not True or len(board_receipt.get("canonical_phases",[]))!=2 or not all(p.get("qualified_completion") is True and p.get("process_exitCode_after")==0 and not p.get("log_overflow") for p in board_receipt.get("canonical_phases",[])):raise ValueError("Incomplete genuine Node write/check; UNCHECKABLE0 is not capture success")
+              response=board_receipt["response"]
+              if response.get("status")!=200 or response.get("redirected") or response.get("final_url")!="https://councilof.ai/api/gspc" or response.get("raw_bytes")!=len(board_raw) or response.get("raw_sha256")!=pin(board_raw)["sha256"] or response.get("JSON_shape_validated") is not True:raise ValueError("Actual native board response binding failed")
+              json.loads(board_raw.decode("utf-8"))
+              if not board_receipt.get("node","").startswith("v20."):raise ValueError("Existing Node20 runtime not preserved")
+              receipt["public_board"]=board_receipt;receipt["real_write_and_same_response_check"]=True
+              after=inventory();receipt["input_inventory_after"]=save("INPUT_INVENTORY_AFTER.json",(json.dumps(after,indent=2,sort_keys=True)+"\n").encode())
+              if before["proof_paths"]!=after["proof_paths"] or before["proof_subject_paths"]!=after["proof_subject_paths"] or before["quarantine_paths"]!=after["quarantine_paths"]:raise ValueError("Proof, subject or quarantine path membership changed")
+              if any(before["files"][p]!=after["files"][p] for p in before["proof_subject_paths"]):raise ValueError("A proof subject changed, including any derived subject")
+              if {k:v for k,v in before["files"].items() if k not in allowed}!={k:v for k,v in after["files"].items() if k not in allowed}:raise ValueError("Proof, subject, template, source or other selected input bytes changed")
+              status=git("status","--porcelain=v1","--untracked-files=all",cwd=worktree).decode().splitlines()
+              changed=[]
+              for line in status:
+                  if not line.startswith(" M ") or line[3:] not in allowed:raise ValueError("Dirty boundary is not only allowed three derived outputs: "+line)
+                  changed.append(line[3:])
+              receipt["actual_changed_subset"]=sorted(changed);receipt["isolated_final_status"]=status;receipt["outputs"]={}
+              for relative in sorted(allowed):receipt["outputs"][relative]=save("generated-"+relative.rsplit("/",1)[-1],read(worktree/relative,4194304))
+              if git("rev-parse","HEAD",cwd=worktree).decode().strip()!=generation:raise ValueError("Generation worktree HEAD changed")
+              for relative,expected in permanent.items():
+                  if pin(read(worktree/relative))!=expected:raise ValueError("Permanent source/BOM/proof changed: "+relative)
+              if git("status","--porcelain=v1","--untracked-files=all")!=main_before or git("rev-parse","HEAD").decode().strip()!=checked_out or git("rev-parse","HEAD^{tree}").decode().strip()!=main_tree:raise ValueError("Main checkout/status/HEAD/tree changed")
+              receipt["main_checkout_and_all7_permanent_pins_unchanged"]=True
+              last=guard();receipt["resource_after"]=last
+              if any(last["events"].get(k,0)!=receipt["resource_before"]["events"].get(k,0) for k in ("oom","oom_kill","oom_group_kill")):raise ValueError("OOM event changed during capture")
+              files=list(capture.iterdir())
+              if any(p.is_symlink() or not p.is_file() for p in files) or sum(p.stat().st_size for p in files)>32505856:raise ValueError("Capture artifact boundary exceeded")
+              receipt["files"]={p.name:pin(read(p,8388608)) for p in files}
+              success=True;receipt["state"]="GENUINE_DERIVED_OUTPUT_CAPTURE_SUCCEEDED_NOT_ADOPTED"
+          except Exception as error:
+              receipt["state"]="CAPTURE_FAILED";receipt["error"]={"type":type(error).__name__,"message":str(error)}
+              print("Derived capture failed: "+type(error).__name__+": "+str(error),file=sys.stderr)
+          finally:
+              if created_worktree:
+                  try:
+                      result=subprocess.run(["git","worktree","remove","--force",str(worktree)],cwd=root,env=child_env,stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=20)
+                      receipt["owned_worktree_cleanup"]={"exit_code":result.returncode,"removed":not worktree.exists()}
+                      if result.returncode or worktree.exists():success=False;receipt["state"]="CAPTURE_FAILED"
+                  except Exception as error:success=False;receipt["state"]="CAPTURE_FAILED";receipt["cleanup_error"]=str(error)
+              receipt["finished_at_utc"]=datetime.datetime.now(datetime.timezone.utc).isoformat();receipt["capture_exit_code"]=0 if success else 1
+              with (capture/"CAPTURE_RECEIPT.json").open("x") as f:
+                  os.chmod(capture/"CAPTURE_RECEIPT.json",0o600);f.write(json.dumps(receipt,indent=2,sort_keys=True)+"\n")
+          raise SystemExit(0 if success else 1)
+          PY
+      - name: Retain temporary PR3229 derived output capture
+        if: ${{ always() && steps.scope.outputs.gated == 'true' && github.event_name == 'pull_request' && (steps.pr3229_derived_capture.outcome == 'success' || steps.pr3229_derived_capture.outcome == 'failure') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr3229-derived-output-capture-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/pr3229-derived-capture
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 6
+      # END TEMPORARY PR3229 DERIVED CAPTURE
       # This used to run only after merge in deploy.yml. PR #1847 passed every hosted
       # PR check and then the master deployment stopped because TypeScript errors had
       # risen above the committed ceiling. Keep the same non-mutating ratchet on both
