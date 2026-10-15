@@ -388,11 +388,48 @@ jobs:
                   if pin(original)!=expected:raise ValueError("Immutable generation source pin mismatch: "+relative)
                   if relative!=workflow_path and read(root/relative)!=original:raise ValueError("Main protected/source bytes differ: "+relative)
                   receipt["source_pins"][relative]=expected
+              from email.parser import Parser
               receipt["runtime_dependencies"]={}
+              normalize_name=lambda value: re.sub(r"[-_.]+","-",value).lower()
               for name in ("opentimestamps","opentimestamps-client","cryptography"):
-                  dist=importlib.metadata.distribution(name);records=[p for p in (dist.files or []) if str(p).endswith(".dist-info/RECORD")]
-                  if len(records)!=1:raise ValueError("Missing unambiguous installed dependency RECORD")
-                  receipt["runtime_dependencies"][name]={"version":dist.version,"RECORD":pin(read(pathlib.Path(dist.locate_file(records[0]))))}
+                  row={"requested_name":name,"inspection_state":"distribution_lookup"}
+                  receipt["runtime_dependencies"][name]=row
+                  dist=importlib.metadata.distribution(name)
+                  row["inspection_state"]="record_candidate_inspection"
+                  records=[p for p in (dist.files or []) if str(p).endswith(".dist-info/RECORD")]
+                  row.update({"record_candidates_count":len(records),"record_candidates":[str(p)[:256] for p in records[:8]],"record_candidates_truncated":len(records)>8 or any(len(str(p))>256 for p in records[:8]),"inspection_state":"version_inspection"})
+                  version=dist.version
+                  row.update({"version":version,"inspection_state":"record_and_identity_validation"})
+                  if not isinstance(version,str) or not version or len(version)>128 or any(c in version for c in "\r\n\0"):
+                      raise ValueError("Invalid installed dependency version: "+name)
+                  if len(records)>1:raise ValueError("Multiple installed dependency RECORDs: "+name)
+                  if records:
+                      metadata=dist.metadata
+                      names=metadata.get_all("Name",[]);versions=metadata.get_all("Version",[])
+                      if len(names)!=1 or len(versions)!=1 or normalize_name(str(names[0]))!=normalize_name(name) or str(versions[0])!=version:
+                          raise ValueError("Ambiguous or mismatched installed dependency identity: "+name)
+                      row.update({"distribution_name":str(names[0]),"normalized_name":normalize_name(name),"RECORD":pin(read(pathlib.Path(dist.locate_file(records[0])))),"RECORD_absent":False,"inspection_state":"complete_record_fingerprint","fingerprint_scope":"Exact raw RECORD bytes; installed file contents not independently verified."})
+                  else:
+                      candidates=[]
+                      row["metadata_candidates"]=[]
+                      for filename in ("METADATA","PKG-INFO"):
+                          row["inspection_state"]="metadata_read:"+filename
+                          text=dist.read_text(filename)
+                          if text is None:continue
+                          if not isinstance(text,str):raise ValueError("Non-text installed dependency metadata: "+name)
+                          raw=text.encode("utf-8")
+                          row["metadata_candidates"].append({"format":filename,"text_utf8_bytes":len(raw)})
+                          if not raw or len(raw)>1048576:raise ValueError("Installed dependency metadata acceptance cap exceeded: "+name)
+                          candidates.append((filename,text,raw))
+                      row["inspection_state"]="metadata_identity_validation"
+                      if len(candidates)!=1:raise ValueError("Missing or multiple installed dependency metadata documents: "+name)
+                      filename,text,raw=candidates[0]
+                      metadata=Parser().parsestr(text,headersonly=True)
+                      names=metadata.get_all("Name",[]);versions=metadata.get_all("Version",[])
+                      if metadata.defects or len(names)!=1 or len(versions)!=1 or normalize_name(names[0])!=normalize_name(name) or versions[0]!=version:
+                          raise ValueError("Ambiguous or mismatched dependency metadata identity: "+name)
+                      artifact=save("dependency-"+name+"-"+filename+".txt",raw)
+                      row.update({"distribution_name":names[0],"normalized_name":normalize_name(name),"RECORD":None,"RECORD_absent":True,"metadata_format":filename,"metadata_text_utf8":artifact,"inspection_state":"complete_metadata_text_fingerprint","fingerprint_scope":"Exact UTF8 encoding of public importlib.metadata read_text result, not physical raw file bytes or installed-file verification.","acceptance_cap_bytes":1048576,"cap_limit":"read_text returns complete decoded text before the acceptance cap; no pre-read or peak-memory bound claimed."})
               if worktree.exists() or node_control_path.exists():raise ValueError("No temporary path reuse or overwrite")
               if capture.is_relative_to(root) or worktree.is_relative_to(root) or worktree.is_relative_to(capture):raise ValueError("Unsafe temporary path overlap")
               created_worktree=True
@@ -441,6 +478,17 @@ jobs:
               last=guard();receipt["resource_after"]=last
               if any(last["events"].get(k,0)!=receipt["resource_before"]["events"].get(k,0) for k in ("oom","oom_kill","oom_group_kill")):raise ValueError("OOM event changed during capture")
               files=list(capture.iterdir())
+              original_members={"generation.commit.raw","frozen-base.commit.raw","hosted-merge.commit.raw","actual-base.commit.raw","event-base.commit.raw","event-head.commit.raw","genuine-worktree-add.log","ots-real-dry-run.log","ots-real-apply.log","root-ots-real-gate.log","llms-real-write-and-same-input-check.log","INPUT_INVENTORY_BEFORE.json","INPUT_INVENTORY_AFTER.json","before-manifest.json","before-llms.txt","before-llms-full.txt","generated-manifest.json","generated-llms.txt","generated-llms-full.txt","public-board-response.body","PUBLIC_BOARD_AND_LLMS_RECEIPT.json"}
+              metadata_members=set()
+              for name,row in receipt["runtime_dependencies"].items():
+                  if row.get("RECORD_absent") is True:
+                      filename=row.get("metadata_format")
+                      if name not in ("opentimestamps","opentimestamps-client","cryptography") or filename not in ("METADATA","PKG-INFO"):raise ValueError("Unexpected dependency metadata artifact declaration")
+                      expected="dependency-"+name+"-"+filename+".txt"
+                      if row.get("metadata_text_utf8",{}).get("path")!=expected:raise ValueError("Dependency metadata artifact binding differs")
+                      metadata_members.add(expected)
+              if len(metadata_members)>3 or {p.name for p in files}!=original_members|metadata_members:raise ValueError("Actual artifact membership differs from original21 plus declared0-3 dependency metadata texts")
+              receipt["artifact_member_contract"]={"original_final_members":sorted(original_members|{"CAPTURE_RECEIPT.json"}),"declared_dependency_metadata_members":sorted(metadata_members),"expected_final_member_count":22+len(metadata_members),"scope":"Only exact actual declared Name/format metadata rows add artifacts; no arbitrary prefix, full repository or Git archive."}
               if any(p.is_symlink() or not p.is_file() for p in files) or sum(p.stat().st_size for p in files)>32505856:raise ValueError("Capture artifact boundary exceeded")
               receipt["files"]={p.name:pin(read(p,8388608)) for p in files}
               success=True;receipt["state"]="GENUINE_DERIVED_OUTPUT_CAPTURE_SUCCEEDED_NOT_ADOPTED"
