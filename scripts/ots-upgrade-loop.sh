@@ -107,13 +107,12 @@ Coverage re-audited after the upgrade and still holds; the commit is refused oth
 $(grep -iE 'bitcoin|upgraded' /tmp/ots-upgrade.out | head -6)" 2>/dev/null
   # Busy-master race (measured 2026-09-12): master moves dozens of commits a day,
   # so a blind push rejects and the upgrades stay stranded locally (backfilled via
-  # PR #2072). Rebase onto the fetched remote first; if master is branch-protected,
-  # push to origin/ots/pending-upgrades so upgrades are never stranded locally.
+  # PR #2072). Rebase onto the fetched remote first, then publish only to the existing
+  # origin/ots/pending-upgrades review branch. Master changes require a gated human merge.
   git fetch -q origin master 2>/dev/null
   git rebase -q origin/master 2>/dev/null
-  CSOAI_ALLOW_MASTER_PUSH=1 git push -q origin master 2>/dev/null && echo "$(TS) pushed upgrades" >> "$LOG" \
-    || git push -q origin HEAD:refs/heads/ots/pending-upgrades --force-with-lease 2>/dev/null && echo "$(TS) pushed upgrades to origin/ots/pending-upgrades" >> "$LOG" \
-    || echo "$(TS) upgrades committed locally; push deferred (remote moved) — next run retries" >> "$LOG"
+  git push -q origin HEAD:refs/heads/ots/pending-upgrades --force-with-lease 2>/dev/null && echo "$(TS) pushed upgrades to origin/ots/pending-upgrades" >> "$LOG" \
+    || echo "$(TS) review-branch push failed; candidate state needs owner review; no master push attempted" >> "$LOG"
 fi
 
 # Flush stranded commits even on quiet runs. A deferred push otherwise waits for the
@@ -126,9 +125,8 @@ if [ "${OTS_NO_GIT:-0}" != "1" ] && [ "$(git rev-list --count origin/master..mas
   STASH_AFTER=$(git rev-parse -q --verify refs/stash 2>/dev/null || true)
   git fetch -q origin master 2>/dev/null
   if git rebase -q origin/master 2>/dev/null; then
-    CSOAI_ALLOW_MASTER_PUSH=1 git push -q origin master 2>/dev/null && echo "$(TS) flushed stranded upgrade commit(s)" >> "$LOG" \
-      || git push -q origin HEAD:refs/heads/ots/pending-upgrades --force-with-lease 2>/dev/null && echo "$(TS) synced stranded upgrade commit(s) to origin/ots/pending-upgrades" >> "$LOG" \
-      || echo "$(TS) stranded commit(s) still local; push deferred — next run retries" >> "$LOG"
+    git push -q origin HEAD:refs/heads/ots/pending-upgrades --force-with-lease 2>/dev/null && echo "$(TS) synced stranded upgrade commit(s) to origin/ots/pending-upgrades" >> "$LOG" \
+      || echo "$(TS) review-branch push failed; stranded candidate state needs owner review; no master push attempted" >> "$LOG"
   else
     git rebase --abort 2>/dev/null
     echo "$(TS) stranded commit(s) could not rebase cleanly — left local, needs an operator" >> "$LOG"
