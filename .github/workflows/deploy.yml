@@ -3,7 +3,7 @@ name: Build + deploy site (gated production branch)
 on:
   push:
     branches: [master]
-    paths: ['client/**', 'public/**', 'functions/**', 'scripts/**', 'package.json', 'wrangler.jsonc', '.github/workflows/deploy.yml']
+    paths: ['client/**', 'e2e/**', 'public/**', 'functions/**', 'scripts/**', 'package.json', 'wrangler.jsonc', '.github/workflows/deploy.yml']
   workflow_dispatch:
     inputs:
       check_registry:
