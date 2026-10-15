@@ -18,6 +18,7 @@
  * never returns key bytes; only the public half is returned.
  */
 import { canonicalBytes, sha256Hex } from "../_lib/cardSign";
+import { headFromGet } from "./_head";
 
 export const ARTIFACT_SEAL_KID = "did:web:csoai.org#artifact-seal-1";
 export const ARTIFACT_SEAL_PROFILE = "csoai.artifact-seal/0.1";
@@ -95,3 +96,5 @@ export const onRequestPost = async ({ request, env }: { request: Request; env: E
   if ("error" in r) return json({ error: r.error, sealed: false }, r.status);
   return json(r);
 };
+
+export const onRequestHead = headFromGet(onRequestGet);
