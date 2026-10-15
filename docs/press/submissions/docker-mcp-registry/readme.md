@@ -8,7 +8,7 @@ as the source in `mcp/gspc-server/`.
 
 ## Tools
 
-Fourteen free tools require no account, key or payment:
+Fifteen free tools require no account, key or payment:
 
 - `board_totals` — read live board totals with their source kind and `as_of` date.
 - `get_axis` — read one axis row, including sample size, interval and MEASURED/UNMEASURED state.
@@ -24,6 +24,7 @@ Fourteen free tools require no account, key or payment:
 - `server_evidence` — every published capsule about one endpoint URL; an unknown URL is NOT_MEASURED.
 - `evidence_bundle_preview` — the already-signed cards relevant to one obligation; observations, never a determination.
 - `route` — GSPC Route, decide-only: your policy applied to published measurements; returns the chosen candidate and an unsigned route record. Routing is not ranking.
+- `quote_dataset_version` — quote one published data/v1 dataset version: card count, Merkle root, snapshot file URLs and hashes, manifest sha256 (published and recomputed), citation and CC-BY-4.0 licence.
 
 Five optional x402-metered evidence tools are also discoverable:
 

@@ -40,6 +40,7 @@ export const ONE_LINE: Record<string, string> = {
   server_evidence: "Every published measurement capsule about one MCP or agent endpoint URL, or NOT_MEASURED.",
   evidence_bundle_preview: "The already-signed cards relevant to one obligation (Article 50, Article 53, DORA or CRA). Observations, never a determination.",
   route: "GSPC Route, decide-only: your policy applied to published measurements. TIE and UNTESTED stated; nothing executed.",
+  quote_dataset_version: "Quote one published data/v1 dataset version: card count, Merkle root, snapshot hashes, citation and CC-BY-4.0 licence.",
 };
 
 export const EXAMPLE_PROMPTS = [
