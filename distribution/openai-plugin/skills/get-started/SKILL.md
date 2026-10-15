@@ -6,7 +6,7 @@ description: Start with GSPC — read the live measurement board, verify a signe
 # Get started with GSPC
 
 GSPC is the measurement board published by CSOAI Ltd at https://councilof.ai. This plugin connects its free MCP door,
-https://councilof.ai/mcp/free: 14 read-only tools, no sign-in, nothing on it moves money.
+https://councilof.ai/mcp/free: 15 read-only tools, no sign-in, nothing on it moves money.
 
 1. Ask for the board: `board_totals` returns the slot count and the measured count as two labelled numbers. Quote both; never add them.
 2. Ask about one axis: `get_axis` returns its status and run, or UNMEASURED. UNMEASURED is an answer, not a zero.
@@ -28,6 +28,7 @@ Tools on this door:
 - `server_evidence` — Trust per server, not totals: every published measurement capsule about ONE endpoint URL across all batches — MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A card-signature state, self-parity cells for CSOAI's own doors, and any later adapter (e.g.
 - `evidence_bundle_preview` — For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject: the obligation record, its counsel-gate status and the already-signed measurement cards that are relevant to it (count plus the first cards, each with its verify link), read live from https://councilof.ai/api/evidence-bundle.
 - `route` — GSPC Route (free, decide-only).
+- `quote_dataset_version` — Quote one published data/v1 dataset version from https://councilof.ai/data/v1/: version (YYYY-MM-DD, default latest), card_count, merkle_root, the snapshot file URLs with their sha256, the manifest's sha256 (published value and the value recomputed here over the served bytes), the citation exactly as published (doi null until one is minted) and the data licence (CC-BY-4.0).
 
 Measurement, not certification: every answer is evidence with its state (VALID, INVALID, UNCHECKABLE, UNMEASURED, NOT_MEASURED, UNREACHABLE), never a grade, mark or status. Doctrine sha256 845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a (https://councilof.ai/doctrine/).
 

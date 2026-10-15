@@ -1,0 +1,55 @@
+{
+  "name": "Council of AI — quote_dataset_version",
+  "description": "Quote one published data/v1 dataset version from https://councilof.ai/data/v1/: version (YYYY-MM-DD, default latest), card_count, merkle_root, the snapshot file URLs with their sha256, the manifest's sha256 (published value and the value recomputed here over the served bytes), the citation exactly as published (doi null until one is minted) and the data licence (CC-BY-4.0). Read-only; free. States only: measurement, not endorsement; no verdict, score or ranking. NOT_PUBLISHED when the version is not in latest.json or CHANGELOG.json; UNREACHABLE when the source could not be fetched.",
+  "version": "1.0.0",
+  "provider": {
+    "organization": "CSOAI Ltd",
+    "url": "https://councilof.ai"
+  },
+  "supportedInterfaces": [
+    {
+      "url": "https://councilof.ai/api/a2a",
+      "protocolBinding": "JSONRPC",
+      "protocolVersion": "1.0"
+    }
+  ],
+  "documentationUrl": "https://councilof.ai/llms.txt",
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "extendedAgentCard": false
+  },
+  "defaultInputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "defaultOutputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "skills": [
+    {
+      "id": "quote_dataset_version",
+      "name": "quote_dataset_version",
+      "description": "Quote one published data/v1 dataset version from https://councilof.ai/data/v1/: version (YYYY-MM-DD, default latest), card_count, merkle_root, the snapshot file URLs with their sha256, the manifest's sha256 (published value and the value recomputed here over the served bytes), the citation exactly as published (doi null until one is minted) and the data licence (CC-BY-4.0). Read-only; free. States only: measurement, not endorsement; no verdict, score or ranking. NOT_PUBLISHED when the version is not in latest.json or CHANGELOG.json; UNREACHABLE when the source could not be fetched.",
+      "tags": [
+        "dataset",
+        "mcp",
+        "citation"
+      ],
+      "examples": [
+        "POST https://councilof.ai/mcp tools/call {\"name\":\"quote_dataset_version\",\"arguments\":{}}",
+        "POST https://councilof.ai/mcp tools/call {\"name\":\"quote_dataset_version\",\"arguments\":{\"version\":\"2026-10-13\"}}",
+        "GET https://councilof.ai/data/v1/latest.json"
+      ]
+    }
+  ],
+  "explicitly_not": [
+    "certification",
+    "accreditation",
+    "conformity-assessment"
+  ],
+  "mcp_tool": "quote_dataset_version",
+  "paid": false,
+  "did": "did:web:councilof.ai:agents:quote_dataset_version"
+}

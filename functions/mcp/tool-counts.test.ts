@@ -41,10 +41,10 @@ describe("#19 one tool-count sentence, every number derived", () => {
   });
 
   it("with today's fleet it reads exactly the audit's sentence", () => {
-    // The fleet lock (tool-fleet.lock.json) is 14 + 5 since 2026-09-30 (evidence_bundle_preview + evidence_bundle, then route, GSPC Route decide-only);
+    // The fleet lock (tool-fleet.lock.json) is 15 + 5 since 2026-10-14 (evidence_bundle_preview + evidence_bundle, then route, GSPC Route decide-only, then quote_dataset_version, data/v1);
     // if the fleet changes, the lock changes in the same commit and this literal is the one line to update.
-    expect([nFree, nPaid]).toEqual([14, 5]);
-    expect(EXPECTED).toBe("14 free tools at /mcp/free; 19 at /mcp (14 free + 5 metered). The npm package is versioned separately.");
+    expect([nFree, nPaid]).toEqual([15, 5]);
+    expect(EXPECTED).toBe("15 free tools at /mcp/free; 20 at /mcp (15 free + 5 metered). The npm package is versioned separately.");
   });
 
   it("GET /mcp (JSON and page) carries it; GET /mcp/free stays free of payment words", async () => {

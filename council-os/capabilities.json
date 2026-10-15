@@ -6124,13 +6124,13 @@
     },
     {
       "audience": "agent",
-      "description": "PAID (x402 or CSOAI LTD invoice). Article 50 marking-evidence pack via https://councilof.ai/api/art50/marking-evidence: which machine-readable marks the named methods DETECT in these bytes right now. Scope: C2PA and IPTC metadata only (C2PA manifest store, assertion hashes, hard binding, claim signature; IPTC digitalSourceType); no watermark, fingerprint or other kind of mark is read. NOT_DETECTED is not unmarked: Article 50(2) is technology-neutral, so a mark this pack cannot read may be present, and metadata is often stripped on re-save. Disclosure: CSOAI is a member of the C2PA, whose specification is one of the two methods read. The pack carries the verbatim Art 50(2) text hash and the dates it turns on. Point-in-time detection — never a conformity opinion, never a compliance word of any kind. preview=true is free and returns the same measurement unsigned. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED rather than inventing a result.",
+      "description": "PAID (x402 or CSOAI LTD invoice). Article 50 marking-evidence pack via https://councilof.ai/api/art50/marking-evidence: which machine-readable marks the named methods DETECT in these bytes right now. Scope: C2PA and IPTC metadata only (C2PA manifest store, assertion hashes, hard binding, claim signature; IPTC digitalSourceType); no watermark, fingerprint or other kind of mark is read. NOT_DETECTED is not unmarked: Article 50(2) is technology-neutral, so a mark this pack cannot read may be present, and metadata is often stripped on re-save. Disclosure: CSOAI is a member of the C2PA, whose specification is one of the two methods read. The pack carries the verbatim Art 50(2) text hash and the dates it turns on. Point-in-time detection \u2014 never a conformity opinion, never a compliance word of any kind. preview=true is free and returns the same measurement unsigned. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED rather than inventing a result.",
       "description_state": "DOCUMENTED",
       "id": "art50_marking_evidence",
       "kind": "mcp_tool",
       "lifecycle": "LIVE",
       "name": "art50_marking_evidence",
-      "order": 15,
+      "order": 16,
       "payment": "x402",
       "probe": {
         "expect_status": [
@@ -6183,7 +6183,7 @@
       "kind": "mcp_tool",
       "lifecycle": "LIVE",
       "name": "commission_card",
-      "order": 14,
+      "order": 15,
       "payment": "x402",
       "probe": {
         "expect_status": [
@@ -6436,7 +6436,7 @@
       "kind": "mcp_tool",
       "lifecycle": "LIVE",
       "name": "receipts_batch",
-      "order": 17,
+      "order": 18,
       "payment": "x402",
       "probe": {
         "expect_status": [
@@ -6465,7 +6465,7 @@
       "kind": "mcp_tool",
       "lifecycle": "LIVE",
       "name": "rwa_evidence",
-      "order": 16,
+      "order": 17,
       "payment": "x402",
       "probe": {
         "expect_status": [
@@ -6635,7 +6635,7 @@
       "kind": "mcp_tool",
       "lifecycle": "LIVE",
       "name": "evidence_bundle",
-      "order": 18,
+      "order": 19,
       "payment": "x402",
       "probe": {
         "expect_status": [
@@ -7297,6 +7297,36 @@
       ],
       "source": "functions/api/discover/ondo-ousg.ts",
       "surfaces": []
+    },
+    {
+      "audience": "agent",
+      "description": "Quote one published data/v1 dataset version from https://councilof.ai/data/v1/: version (YYYY-MM-DD, default latest), card_count, merkle_root, the snapshot file URLs with their sha256, the manifest's sha256 (published value and the value recomputed here over the served bytes), the citation exactly as published (doi null until one is minted) and the data licence (CC-BY-4.0). Read-only; free. States only: measurement, not endorsement; no verdict, score or ranking. NOT_PUBLISHED when the version is not in latest.json or CHANGELOG.json; UNREACHABLE when the source could not be fetched.",
+      "description_state": "DOCUMENTED",
+      "id": "quote_dataset_version",
+      "kind": "mcp_tool",
+      "lifecycle": "LIVE",
+      "name": "quote_dataset_version",
+      "order": 14,
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/mcp",
+        "safe": false,
+        "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
+      },
+      "required_args": [],
+      "schema_refs": [
+        "csoai.data-v1-latest/0.1",
+        "csoai.data-v1-snapshot/0.1",
+        "csoai.data-v1-citation/0.1"
+      ],
+      "surfaces": [
+        "mcp",
+        "llms"
+      ]
     }
   ],
   "generator": "scripts/capability-seed.mjs (mechanical fields) plus hand-authored editorial fields",

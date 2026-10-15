@@ -1204,6 +1204,102 @@
         "idempotentHint": true,
         "openWorldHint": true
       }
+    },
+    {
+      "name": "quote_dataset_version",
+      "title": "Dataset version quote (data/v1)",
+      "description": "Quote one published data/v1 dataset version from https://councilof.ai/data/v1/: version (YYYY-MM-DD, default latest), card_count, merkle_root, the snapshot file URLs with their sha256, the manifest's sha256 (published value and the value recomputed here over the served bytes), the citation exactly as published (doi null until one is minted) and the data licence (CC-BY-4.0). Read-only; free. States only: measurement, not endorsement; no verdict, score or ranking. NOT_PUBLISHED when the version is not in latest.json or CHANGELOG.json; UNREACHABLE when the source could not be fetched.",
+      "annotations": {
+        "title": "Dataset version quote (data/v1)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "description": "Snapshot version, YYYY-MM-DD, or \"latest\" (default).",
+            "pattern": "^(latest|\\d{4}-\\d{2}-\\d{2})$"
+          }
+        },
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "enum": [
+              "PUBLISHED",
+              "NOT_PUBLISHED",
+              "UNREACHABLE",
+              "UNCHECKABLE",
+              "INVALID_VERSION"
+            ]
+          },
+          "doctrine": {
+            "type": "string",
+            "const": "measurement, not endorsement"
+          },
+          "version": {
+            "type": "string"
+          },
+          "latest_version": {
+            "type": "string"
+          },
+          "versions_published": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "card_count": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "merkle_root": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "manifest_url": {
+            "type": "string"
+          },
+          "manifest_sha256": {
+            "type": "object"
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "citation": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "license": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      }
     }
   ]
 }

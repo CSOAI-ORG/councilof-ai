@@ -68,7 +68,8 @@ payment. Its three possible verdict classes are `VALID`, `INVALID`, and
     "verify_capsule",
     "server_evidence",
     "evidence_bundle_preview",
-    "route"
+    "route",
+    "quote_dataset_version"
   ],
   "x402_metered": [
     "commission_card",

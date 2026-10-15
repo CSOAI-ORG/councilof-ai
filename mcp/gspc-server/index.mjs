@@ -849,6 +849,8 @@ const HANDLERS = {
   evidence_bundle_preview: (a) => doorTool("evidence_bundle_preview", a),
   // GSPC Route (decide-only): the door answers it (functions/_lib/route), so the two cannot disagree.
   route: (a) => doorTool("route", a),
+  // data/v1 version quote: the door answers it (functions/_lib/dataV1.ts).
+  quote_dataset_version: (a) => doorTool("quote_dataset_version", a),
 };
 
 /* ----------------------------------------------------------------- transport */
@@ -904,6 +906,8 @@ function summaryLine(name, payload) {
       return `${payload.state ?? "?"}${payload.reason ? " — " + payload.reason : ""} — ${payload.relevant_signed_cards ?? 0} already-signed card(s) relevant-to the obligation; observations only, never a determination.${payload.review_note ? " " + payload.review_note : ""}`;
     case "route":
       return `${payload.state ?? "?"}${payload.chosen ? " — " + payload.chosen.id + " on basis " + payload.chosen.choice_basis : ""}; separation ${payload.separation ?? "?"}. Unsigned decide-only preview; routing is not ranking.`;
+    case "quote_dataset_version":
+      return `${payload.state ?? "?"}${payload.version ? " — data/v1 " + payload.version + ", " + payload.card_count + " cards" : ""}${payload.reason ? " — " + payload.reason : ""} (${MEASUREMENT_DOCTRINE}).`;
     case "measurement_index":
     case "verify_capsule":
     case "server_evidence":
