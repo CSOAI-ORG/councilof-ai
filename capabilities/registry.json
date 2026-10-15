@@ -3410,6 +3410,32 @@
       "lifecycle": "LIVE",
       "audience": "agent",
       "payment": "free"
+    },
+    {
+      "id": "api-sign",
+      "protocols": [
+        "http"
+      ],
+      "title": "Sign",
+      "description": "POST /api/sign — seal an artifact (text or sha256) with Ed25519 under did:web:csoai.org#artifact-seal-1. GET explains how. Fails closed (503) until the key is provisioned. Certifies nothing.",
+      "endpoint": "/api/sign",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-sign-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "Sign (POST)",
+      "description": "POST /api/sign — seal an artifact (text or sha256) with Ed25519 under did:web:csoai.org#artifact-seal-1. GET explains how. Fails closed (503) until the key is provisioned. Certifies nothing.",
+      "endpoint": "/api/sign",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
     }
   ]
 }
