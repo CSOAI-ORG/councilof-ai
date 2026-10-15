@@ -8,7 +8,7 @@ import { recordPaidResponse, markPaidUndeliveredResponse } from "./_x402_deliver
  *   402    &bundle=1                            → x402 challenge (amount lives ONLY here).
  *   paid   &bundle=1 + settled X-PAYMENT        → OSCAL 1.1.0 assessment-results assembled from the
  *                                                already-signed public/cards leaves (full card bytes
- *                                                + inclusion proof each), plus ONE manifest card-v0
+ *                                                + any retained inclusion proofs), plus ONE manifest card-v0
  *                                                (surface evidence.bundle, ≤3KB) signed when the Pages
  *                                                key is present, else sig_ed25519:null.
  *
@@ -93,7 +93,7 @@ async function oscal(ob: Obligation, subject: string, selected: { sha: string; w
       types: ["signed-measurement-card"],
       collected: l.as_of,
       subjects: [{ type: "component", title: l.subject }],
-      relevant_evidence: [{ href: `${origin}/cards/${sha.slice(0, 16)}.json`, description: "card-v0 leaf + Merkle inclusion proof (verify free at /gspc-verify)" }],
+      relevant_evidence: [{ href: `${origin}/cards/${sha.slice(0, 16)}.json`, description: "card-v0 leaf with any retained Merkle inclusion proof (verify supported cards free at /gspc-verify)" }],
       props: [
         { name: "sha256", value: sha },
         { name: "sig_ed25519", value: String(w.card.sig_ed25519) },

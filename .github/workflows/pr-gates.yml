@@ -176,7 +176,7 @@ jobs:
             exit 0
           fi
           changed=$(gh api --paginate "repos/$REPO/pulls/$PR/files" --jq '.[].filename')
-          gated=$(printf '%s\n' "$changed" | grep -E '^(client/|public/|functions/|scripts/|harness/x402-census/|docs/operations/PRODUCERS\.json$|package\.json$|package-lock\.json$|vitest\.config\.ts$|wrangler\.jsonc$|\.github/workflows/pr-gates\.yml$)' || true)
+          gated=$(printf '%s\n' "$changed" | grep -E '^(client/|e2e/|public/|functions/|scripts/|harness/x402-census/|docs/operations/PRODUCERS\.json$|package\.json$|package-lock\.json$|vitest\.config\.ts$|wrangler\.jsonc$|\.github/workflows/pr-gates\.yml$)' || true)
           if [ -n "$gated" ]; then
             echo "gated=true" >> "$GITHUB_OUTPUT"
             echo "gated paths in this PR:"; printf '  %s\n' $gated
@@ -193,6 +193,10 @@ jobs:
       - uses: actions/setup-node@v4
         if: steps.scope.outputs.gated == 'true'
         with: { node-version: 20 }
+
+      - name: Outward claims — offline manifest contract selftest
+        if: steps.scope.outputs.gated == 'true'
+        run: node scripts/outward-claims-guard.mjs --selftest
 
       # Runs before `npm ci` so a stamped-byte edit fails in seconds. See the stamped-bytes job above
       # for why (#2871 / deploy run 37590160574). Verified to fail: the selftest goes red when any one
@@ -272,6 +276,29 @@ jobs:
       - name: Build client
         if: steps.scope.outputs.gated == 'true'
         run: npm run build:client
+
+      - name: Prepare Council OS first-question browser check
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          npx playwright install --with-deps chromium
+          npm run prerender:dashboard
+
+      - name: Council OS first question — desktop and mobile
+        id: council_os_first_question
+        if: steps.scope.outputs.gated == 'true'
+        run: npm run test:e2e:shell -- e2e/tests/dashboard-home-ask.spec.ts --grep 'the first question typed on the start screen gets an answer at (1440|375)px$'
+
+      - name: Retain Council OS first-question premerge evidence
+        if: ${{ always() && steps.scope.outputs.gated == 'true' && (steps.council_os_first_question.outcome == 'success' || steps.council_os_first_question.outcome == 'failure') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: council-os-first-question-premerge-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            test-results/**/trace.zip
+            test-results/**/agui-request-lifecycle.json
+            test-results/**/*.png
+          retention-days: 3
+          if-no-files-found: warn
 
       # --selftest first: a gate that has never been seen failing is decoration,
       # so it proves it can go red on every run before it is trusted on our bytes.

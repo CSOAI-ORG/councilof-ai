@@ -29,6 +29,7 @@ export const NODE_TEST_FILES = [
   'scripts/feed-delivery-kit.test.mjs',
   'scripts/harness-x/render.test.mjs',
   'scripts/review/deploy-target-wiring.test.mjs',
+  'scripts/review/first-ask-completion.test.mjs',
   'scripts/review/pages-release-target.test.mjs',
   'scripts/sitemap-withdrawal.node-test.mjs',
   'scripts/surface/facts-scope.test.mjs',

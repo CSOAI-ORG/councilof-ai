@@ -10,10 +10,35 @@ import { companyWorkspaceSelection, type CommittedCompanyCase, type PendingCompa
 describe("company case pending navigation", () => {
   let root: Root | undefined;
   let container: HTMLDivElement | undefined;
+  const clipboardDescriptor = Object.getOwnPropertyDescriptor(navigator, "clipboard");
+
+  async function prepareEnquiry(): Promise<HTMLTextAreaElement> {
+    const followUp = container!.querySelector<HTMLElement>('[data-testid="result-follow-up"]')!;
+    expect(followUp).not.toBeNull();
+    const prepare = Array.from(followUp.querySelectorAll("button")).find((button) => button.textContent === "Prepare a MEOK enquiry")!;
+    expect(prepare).toBeDefined();
+    await act(async () => { prepare.click(); });
+    const textarea = followUp.querySelector("textarea")!;
+    expect(textarea).not.toBeNull();
+    return textarea;
+  }
+
+  async function editEnquiry(text: string): Promise<void> {
+    const textarea = container!.querySelector<HTMLTextAreaElement>('[data-testid="result-follow-up"] textarea')!;
+    const setValue = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, "value")!.set!;
+    await act(async () => {
+      setValue.call(textarea, text);
+      textarea.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+    expect(textarea.value).toBe(text);
+  }
+
   afterEach(async () => {
     if (root) await act(async () => root?.unmount());
     container?.remove();
     vi.restoreAllMocks();
+    if (clipboardDescriptor) Object.defineProperty(navigator, "clipboard", clipboardDescriptor);
+    else Reflect.deleteProperty(navigator, "clipboard");
     window.history.replaceState(null, "", "/dashboard/?workspace=company");
   });
 
@@ -21,6 +46,8 @@ describe("company case pending navigation", () => {
     window.history.replaceState(null, "", "/dashboard/?workspace=company");
     const owner = "unit-owner@example.invalid";
     const question = "  Synthetic GSPC history regression request  ";
+    const fetcher = vi.spyOn(globalThis, "fetch").mockRejectedValue(new Error("Unexpected backend fetch"));
+    Object.defineProperty(navigator, "clipboard", { configurable: true, value: undefined });
     const caseId = "unit-case-history-1";
     vi.spyOn(globalThis.crypto, "randomUUID").mockReturnValue("00000000-0000-4000-8000-000000000001");
     let complete: ((value: CommittedCompanyCase) => void) | undefined;
@@ -59,12 +86,43 @@ describe("company case pending navigation", () => {
     expect(container.querySelector('[data-testid="company-case-saved"]')).not.toBeNull();
     expect(submit).toHaveBeenCalledTimes(1);
     expect(read).not.toHaveBeenCalled();
+
+    expect(container.querySelector('[data-testid="result-follow-up"]')).not.toBeNull();
+    expect(container.textContent).not.toContain("Edit question");
+    const firstBrief = (await prepareEnquiry()).value;
+    expect(firstBrief).toContain("Case: " + caseId);
+    expect(firstBrief).toContain("Native result record: unit-native-result");
+    expect(firstBrief).toContain("Native receipt record: unit-native-receipt");
+    expect(firstBrief).not.toContain("Synthetic result");
+    const enquiryLink = container.querySelector<HTMLAnchorElement>('[data-testid="result-follow-up"] a')!;
+    expect(enquiryLink.getAttribute("href")).toBe("https://meok.ai/request-job");
+    expect(enquiryLink.rel).toContain("noopener");
+    expect(enquiryLink.rel).toContain("noreferrer");
+    const copy = Array.from(container.querySelectorAll<HTMLButtonElement>('[data-testid="result-follow-up"] button')).find((button) => button.textContent === "Copy brief")!;
+    await act(async () => { copy.click(); });
+    expect(container.textContent).toContain("Copy is unavailable.");
+    expect(container.textContent).toContain("Nothing has been sent.");
+    const useful = Array.from(container.querySelectorAll<HTMLButtonElement>('[data-testid="result-follow-up"] button')).find((button) => button.textContent === "Useful for this task")!;
+    await act(async () => { useful.click(); });
+    expect(useful.getAttribute("aria-pressed")).toBe("true");
+    await editEnquiry("PRIVATE_EDITED_DRAFT_BEFORE_REOPEN");
+    expect(submit).toHaveBeenCalledTimes(1);
+    expect(read).not.toHaveBeenCalled();
+    expect(fetcher).not.toHaveBeenCalled();
+
     await act(async () => { root!.unmount(); });
     root = createRoot(container);
     await act(async () => { root!.render(<Harness />); });
     expect(read).toHaveBeenCalledTimes(1);
     expect(read.mock.calls[0][0]).toBe(caseId);
     expect(container.querySelector('[data-testid="company-case-saved"]')).not.toBeNull();
+    expect(container.querySelector('[data-testid="result-follow-up"] textarea')).toBeNull();
+    expect(container.textContent).not.toContain("PRIVATE_EDITED_DRAFT_BEFORE_REOPEN");
+    expect((await prepareEnquiry()).value).toBe(firstBrief);
+    expect(container.querySelector('[data-testid="result-follow-up"] button[aria-pressed="true"]')).toBeNull();
+    expect(submit).toHaveBeenCalledTimes(1);
+    expect(fetcher).not.toHaveBeenCalled();
+
   });
 
   it("keeps a proposal awaiting review across remount and promotes only on a later GET", async () => {
@@ -104,16 +162,20 @@ describe("company case pending navigation", () => {
     await act(async () => { handle.current?.ask(committed.request); });
     expect(container.querySelector('[data-testid="company-case-awaiting-review"]')).not.toBeNull();
     expect(container.querySelector('[data-testid="company-case-saved"]')).toBeNull();
+    expect(container.querySelector('[data-testid="result-follow-up"]')).toBeNull();
     expect(container.textContent).toContain("has not been merged");
     expect(container.querySelector<HTMLInputElement>("#talk-input")?.disabled).toBe(true);
     await act(async () => { handle.current?.ask(committed.request); });
     expect(submit).toHaveBeenCalledTimes(1);
     expect(read).not.toHaveBeenCalled();
+    nextRead = { ...proposed, persistence: { ...proposed.persistence, reviewStatus: "approved" } };
     await act(async () => { root!.unmount(); });
     root = createRoot(container);
     await act(async () => { root!.render(<Harness />); });
     expect(read).toHaveBeenCalledTimes(1);
     expect(container.querySelector('[data-testid="company-case-awaiting-review"]')).not.toBeNull();
+    expect(container.textContent).toContain("Approval reported; awaiting verified merge");
+    expect(container.querySelector('[data-testid="result-follow-up"]')).toBeNull();
     expect(container.querySelector<HTMLAnchorElement>('[data-testid="company-case-reopen"]')?.href).toContain(encodeURIComponent(caseId));
     nextRead = committed;
     await act(async () => { container!.querySelector<HTMLButtonElement>('[data-testid="company-case-awaiting-review"] button')!.click(); });
@@ -121,6 +183,63 @@ describe("company case pending navigation", () => {
     expect(submit).toHaveBeenCalledTimes(1);
     expect(container.querySelector('[data-testid="company-case-saved"]')).not.toBeNull();
     expect(container.querySelector('[data-testid="company-case-awaiting-review"]')).toBeNull();
+    expect(container.querySelector('[data-testid="result-follow-up"]')).not.toBeNull();
+    const committedBrief = (await prepareEnquiry()).value;
+    expect(committedBrief).toContain("Native result record: native-result");
+    expect(committedBrief).toContain("Native receipt record: native-receipt");
+    expect(committedBrief).not.toContain("proposal-result-head");
+    expect(committedBrief).not.toContain("proposal-receipt-head");
+    expect(submit).toHaveBeenCalledTimes(1);
+  });
+
+
+  it("remounts away the previous owner's draft and refuses crossed readback before a valid owner GET", async () => {
+    const ownerA = "owner-a@example.invalid", ownerB = "owner-b@example.invalid";
+    const fixture = (ownerSubject: string, caseId: string, suffix: string): CommittedCompanyCase => ({
+      caseId, requestId: "request-" + suffix, ownerSubject, request: "Synthetic GSPC request " + suffix,
+      result: { id: "result-" + suffix, text: "DISPLAY_" + suffix, fetchedAt: "2026-10-14T20:00:00Z", sha256: "a".repeat(64), sources: [{ title: "Source " + suffix, reference: "source-" + suffix, recordedAt: "2026-10-14T19:59:00Z" }] },
+      receipt: { id: "receipt-" + suffix, caseId, resultId: "result-" + suffix, resultSha256: "a".repeat(64), sha256: "b".repeat(64), createdAt: "2026-10-14T20:00:01Z", integrity: "unsigned" },
+      persistence: { merged: true, nativeReadbackVerified: true, nativeCommitId: "case-head-" + suffix },
+      verification: { resultDigestVerified: true, receiptDigestVerified: true, receiptBindingVerified: true },
+    });
+    const a = fixture(ownerA, "owner-case-a", "a"), b = fixture(ownerB, "owner-case-b", "b");
+    const submitA = vi.fn(async () => a), submitB = vi.fn(async () => b);
+    const readA = vi.fn(async () => a);
+    let nextB: CompanyCase = { ...b, ownerSubject: ownerA };
+    const readB = vi.fn(async () => nextB);
+    const fetcher = vi.spyOn(globalThis, "fetch").mockRejectedValue(new Error("Unexpected backend fetch"));
+    let selectedCaseId = a.caseId;
+    let connection: CompanyCaseConnection = { session: { status: "ready", subject: ownerA }, client: { caseIdForRequest: async () => a.caseId, submit: submitA, read: readA } };
+    function Harness() { return <CompanyCasePanel connection={connection} caseId={selectedCaseId} />; }
+    container = document.createElement("div"); document.body.append(container); root = createRoot(container);
+    await act(async () => { root!.render(<Harness />); });
+    expect(readA).toHaveBeenCalledTimes(1);
+    expect((await prepareEnquiry()).value).toContain("Native result record: result-a");
+    await editEnquiry("PRIVATE_OWNER_A_DRAFT");
+    selectedCaseId = b.caseId;
+    connection = { session: { status: "ready", subject: ownerB }, client: { caseIdForRequest: async () => b.caseId, submit: submitB, read: readB } };
+    await act(async () => { root!.render(<Harness />); });
+    expect(readB).toHaveBeenCalledTimes(1);
+    expect(container.querySelector('[data-testid="result-follow-up"]')).toBeNull();
+    expect(container.querySelector('[data-testid="company-case-saved"]')).toBeNull();
+    expect(container.textContent).not.toContain("PRIVATE_OWNER_A_DRAFT");
+    expect(container.textContent).not.toContain(a.request);
+    nextB = b;
+    const check = Array.from(container.querySelectorAll("button")).find((button) => button.textContent === "Check this case’s saved status")!;
+    expect(check).toBeDefined();
+    await act(async () => { check.click(); });
+    expect(readB).toHaveBeenCalledTimes(2);
+    expect(container.querySelector('[data-testid="result-follow-up"] textarea')).toBeNull();
+    const briefB = (await prepareEnquiry()).value;
+    expect(briefB).toContain("Case: " + b.caseId);
+    expect(briefB).toContain("Native result record: result-b");
+    expect(briefB).not.toContain("result-a");
+    expect(briefB).not.toContain("PRIVATE_OWNER_A_DRAFT");
+    expect(briefB).not.toContain(ownerA);
+    expect(briefB).not.toContain(ownerB);
+    expect(submitA).not.toHaveBeenCalled();
+    expect(submitB).not.toHaveBeenCalled();
+    expect(fetcher).not.toHaveBeenCalled();
   });
 
 });
