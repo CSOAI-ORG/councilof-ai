@@ -143,6 +143,32 @@ const CORRECTION_CTX =
 // its C-id heading. The whole built page is correction context for the axis-count rule. Exactly this
 // one built path; every other rule still runs on it (selftest pins both directions).
 const CORRECTIONS_LEDGER_FILE = "corrections/index.html";
+// ---------------------------------------------------------------- historical count exemptions
+// Measure ruling on #3266 (16 Oct 2026). Dated and signed records state the board as it was on
+// their date and are never edited (signed ones stay byte-identical). They are exempted by an
+// EXPLICIT list in facts.json counts.historical_count_exemptions: exact paths, each with date,
+// reason and the one count it records. No glob, no date rule; a listed file is exempt only for
+// that count, and an unlisted file — including every live surface — still fails.
+const LIVE_SURFACES_NEVER_EXEMPT = ["llms-full.txt", "llms.txt", "interop/gspc-one.json", "owm/v0.1/latest.json", "publisher-health.json"];
+function historicalExemptions(facts) {
+  const files = facts.counts?.historical_count_exemptions?.files;
+  const map = new Map();
+  if (files === undefined) return map;
+  if (!Array.isArray(files)) throw new Error("facts.json counts.historical_count_exemptions.files must be a list");
+  for (const e of files) {
+    const p = e?.path;
+    if (typeof p !== "string" || !p || /[*?\[\]{}]/.test(p) || p.startsWith("/") || p.endsWith("/"))
+      throw new Error(`historical_count_exemptions: "${p}" is not one exact file path (no globs, no directories)`);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(e.date || "")) throw new Error(`historical_count_exemptions: ${p} has no date`);
+    if (typeof e.reason !== "string" || !e.reason.trim()) throw new Error(`historical_count_exemptions: ${p} has no reason`);
+    if (!Number.isInteger(e.historical_axes)) throw new Error(`historical_count_exemptions: ${p} has no historical_axes`);
+    if (LIVE_SURFACES_NEVER_EXEMPT.includes(p)) throw new Error(`historical_count_exemptions: ${p} is a live surface and may never be exempt`);
+    if (map.has(p)) throw new Error(`historical_count_exemptions: ${p} listed twice`);
+    map.set(p, e.historical_axes);
+  }
+  return map;
+}
+
 
 // "1 of 4 axes resolved", "the other 10 axes are ties" — breakdowns of a whole,
 // not an assertion of the board total.
@@ -200,10 +226,12 @@ function ruleAxisCount(facts, file, text, add, liveCount, rawContent = "") {
     if (Array.isArray(v.surfaces)) v.surfaces.forEach(declare);
   }
 
+  const historicalAxes = historicalExemptions(facts).get(file);
   let m;
   while ((m = COUNT_RE.exec(text))) {
     const n = Number(m[1]);
     if (n === liveCount) continue;
+    if (historicalAxes !== undefined && n === historicalAxes) continue;
     // A measured/quotable-qualified count is a claim about the MEASURED count, not
     // the board total. ruleMeasuredOverclaim owns it.
     if (/^(?:measured|quotable)\s*$/i.test(m[2] || "")) continue;
@@ -714,6 +742,34 @@ async function selftest(facts) {
         (ok ? "" : `  -> got ${didFail ? "CAUGHT" : "passed"}`)
     );
     if (!ok && didFail) console.log(`         ${violations[0].rule}: ${violations[0].text}`);
+  }
+  // Historical-exemption cases run against a board that has GROWN past the recorded count, so
+  // the exemption is what decides them (against the observed board a stale 23 would pass anyway).
+  {
+    const grown = liveCount + 10;
+    const listed = historicalExemptions(facts);
+    const [firstListed, firstCount] = [...listed.entries()][0] || [];
+    const cases = [];
+    if (firstListed) {
+      cases.push([`listed historical file keeps its recorded ${firstCount}`, `{"note":"Board has ${firstCount} axes."}`, false, firstListed]);
+      cases.push(["VIOLATION: a listed file is exempt only for its recorded count", `{"note":"Board has ${firstCount + 1} axes."}`, true, firstListed]);
+    }
+    cases.push([`VIOLATION: an unlisted file with ${firstCount ?? liveCount} axes fails`, `{"note":"Board has ${firstCount ?? liveCount} axes."}`, true, "interop/new-unlisted-file.json"]);
+    for (const live of LIVE_SURFACES_NEVER_EXEMPT)
+      cases.push([`VIOLATION: live surface ${live} is never exempt`, `Board has ${firstCount ?? liveCount} axes.`, true, live]);
+    for (const [name, body, shouldFail, file] of cases) {
+      const v = [];
+      ruleAxisCount(facts, file, body, (x) => v.push(x), grown, body);
+      const ok = (v.length > 0) === shouldFail;
+      ok ? pass++ : fail++;
+      console.log(`  ${ok ? "ok  " : "FAIL"}  ${shouldFail ? "must CATCH " : "must PASS  "} ${name} (board ${grown})`);
+    }
+    for (const bad of [[{ path: "interop/*.json", date: "2026-09-17", reason: "x", historical_axes: 23 }], [{ path: "llms-full.txt", date: "2026-09-17", reason: "x", historical_axes: 23 }], [{ path: "a.json", reason: "x", historical_axes: 23 }]]) {
+      let threw = false;
+      try { historicalExemptions({ counts: { historical_count_exemptions: { files: bad } } }); } catch { threw = true; }
+      threw ? pass++ : fail++;
+      console.log(`  ${threw ? "ok  " : "FAIL"}  must REFUSE exemption entry ${JSON.stringify(bad[0].path)}${bad[0].date ? "" : " (no date)"}`);
+    }
   }
   console.log(`\n  ${pass} passed, ${fail} failed`);
   if (fail) {
