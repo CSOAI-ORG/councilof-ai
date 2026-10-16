@@ -1,0 +1,1566 @@
+{
+  "kind": "csoai.hosted-api-lock/0.1",
+  "lane": "hosted-api, unsigned, not comparable",
+  "label": "hosted-api, unsigned, not comparable",
+  "writes_board": false,
+  "not_a_certification": true,
+  "source": "GET huggingface.co/api/models?inference_provider=all (text-generation,image-text-to-text,any-to-any,text2text-generation)",
+  "rate_source": "inferenceProviderMapping.providerDetails.pricing, else router.huggingface.co/v1/models (read live; not stored)",
+  "bank": {
+    "path": "gpu-offload/kaggle-gspc-batch/banks/gspc-gov.jsonl",
+    "sha256": "b93f9808f01416737a5944fec0ab8c3eda1dbba808daf7dda33a516b0cd61997",
+    "n": 237,
+    "temperature": 0,
+    "max_tokens": 16
+  },
+  "gate": {
+    "n_valid_min": 30,
+    "unparsed_plus_truncated_max": 0.1,
+    "transport_max": 0.05,
+    "full_bank": true,
+    "temperature": 0
+  },
+  "deduped_against": {
+    "deepseek-r1:8b": [
+      "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B",
+      "deepseek-ai/DeepSeek-R1-Distill-Llama-8B"
+    ],
+    "gemma3:12b": [
+      "google/gemma-3-12b-it"
+    ],
+    "llama3.2:3b": [
+      "meta-llama/Llama-3.2-3B-Instruct"
+    ],
+    "mistral:7b": [
+      "mistralai/Mistral-7B-Instruct-v0.3",
+      "mistralai/Mistral-7B-Instruct-v0.2"
+    ],
+    "qwen2.5:0.5b-instruct": [
+      "Qwen/Qwen2.5-0.5B-Instruct"
+    ],
+    "qwen2.5:3b": [
+      "Qwen/Qwen2.5-3B-Instruct"
+    ]
+  },
+  "n_pairs_live_conversational": 6955,
+  "n_excluded_no_listed_rate": 6758,
+  "n_excluded_already_measured": 8,
+  "n_locked": 189,
+  "n_models": 106,
+  "models": [
+    {
+      "pair": "prism-ml/Ternary-Bonsai-27B-AWQ-4bit:together",
+      "slug": "prism-ml/Ternary-Bonsai-27B-AWQ-4bit",
+      "provider": "together",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 1
+    },
+    {
+      "pair": "prism-ml/Ternary-Bonsai-27B-gguf:together",
+      "slug": "prism-ml/Ternary-Bonsai-27B-gguf",
+      "provider": "together",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 2
+    },
+    {
+      "pair": "Qwen/Qwen2.5-Coder-3B-Instruct:nscale",
+      "slug": "Qwen/Qwen2.5-Coder-3B-Instruct",
+      "provider": "nscale",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 3
+    },
+    {
+      "pair": "Qwen/Qwen2.5-Coder-7B-Instruct:nscale",
+      "slug": "Qwen/Qwen2.5-Coder-7B-Instruct",
+      "provider": "nscale",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 4
+    },
+    {
+      "pair": "Qwen/Qwen3-4B-Instruct-2507:nscale",
+      "slug": "Qwen/Qwen3-4B-Instruct-2507",
+      "provider": "nscale",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 5
+    },
+    {
+      "pair": "Qwen/Qwen3-4B-Thinking-2507:nscale",
+      "slug": "Qwen/Qwen3-4B-Thinking-2507",
+      "provider": "nscale",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 6
+    },
+    {
+      "pair": "meta-llama/Llama-3.1-8B-Instruct:deepinfra",
+      "slug": "meta-llama/Llama-3.1-8B-Instruct",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 7
+    },
+    {
+      "pair": "meta-llama/Llama-3.1-8B-Instruct:novita",
+      "slug": "meta-llama/Llama-3.1-8B-Instruct",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 8
+    },
+    {
+      "pair": "ibm-granite/granite-4.2-3b:deepinfra",
+      "slug": "ibm-granite/granite-4.2-3b",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 9
+    },
+    {
+      "pair": "openai/gpt-oss-20b:deepinfra",
+      "slug": "openai/gpt-oss-20b",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 10
+    },
+    {
+      "pair": "zai-org/AutoGLM-Phone-9B-Multilingual:novita",
+      "slug": "zai-org/AutoGLM-Phone-9B-Multilingual",
+      "provider": "novita",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 11
+    },
+    {
+      "pair": "openai/gpt-oss-120b:deepinfra",
+      "slug": "openai/gpt-oss-120b",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 12
+    },
+    {
+      "pair": "Sao10K/L3-8B-Stheno-v3.2:novita",
+      "slug": "Sao10K/L3-8B-Stheno-v3.2",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 13
+    },
+    {
+      "pair": "google/gemma-3-4b-it:deepinfra",
+      "slug": "google/gemma-3-4b-it",
+      "provider": "deepinfra",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 14
+    },
+    {
+      "pair": "openai/gpt-oss-20b:ovhcloud",
+      "slug": "openai/gpt-oss-20b",
+      "provider": "ovhcloud",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 15
+    },
+    {
+      "pair": "openai/gpt-oss-20b:nscale",
+      "slug": "openai/gpt-oss-20b",
+      "provider": "nscale",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 16
+    },
+    {
+      "pair": "meta-llama/Llama-3.1-8B-Instruct:nscale",
+      "slug": "meta-llama/Llama-3.1-8B-Instruct",
+      "provider": "nscale",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 17
+    },
+    {
+      "pair": "openai/gpt-oss-120b:novita",
+      "slug": "openai/gpt-oss-120b",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 18
+    },
+    {
+      "pair": "inclusionAI/Ling-3.0-flash:novita",
+      "slug": "inclusionAI/Ling-3.0-flash",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 19
+    },
+    {
+      "pair": "deepseek-ai/DeepSeek-V4-Flash-0731:deepinfra",
+      "slug": "deepseek-ai/DeepSeek-V4-Flash-0731",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 20
+    },
+    {
+      "pair": "inclusionAI/Ling-3.0-flash-Fin:deepinfra",
+      "slug": "inclusionAI/Ling-3.0-flash-Fin",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 21
+    },
+    {
+      "pair": "inclusionAI/Ling-3.0-flash-VL:deepinfra",
+      "slug": "inclusionAI/Ling-3.0-flash-VL",
+      "provider": "deepinfra",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 22
+    },
+    {
+      "pair": "inclusionAI/Ling-3.0-flash:deepinfra",
+      "slug": "inclusionAI/Ling-3.0-flash",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 23
+    },
+    {
+      "pair": "Qwen/Qwen2.5-Coder-32B-Instruct:nscale",
+      "slug": "Qwen/Qwen2.5-Coder-32B-Instruct",
+      "provider": "nscale",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 24
+    },
+    {
+      "pair": "ibm-granite/granite-4.2-8b:deepinfra",
+      "slug": "ibm-granite/granite-4.2-8b",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 25
+    },
+    {
+      "pair": "microsoft/phi-4:deepinfra",
+      "slug": "microsoft/phi-4",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 26
+    },
+    {
+      "pair": "Qwen/Qwen3-8B:nscale",
+      "slug": "Qwen/Qwen3-8B",
+      "provider": "nscale",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 27
+    },
+    {
+      "pair": "Qwen/Qwen3-14B:nscale",
+      "slug": "Qwen/Qwen3-14B",
+      "provider": "nscale",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 28
+    },
+    {
+      "pair": "zai-org/GLM-4.7-Flash:deepinfra",
+      "slug": "zai-org/GLM-4.7-Flash",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 29
+    },
+    {
+      "pair": "inclusionAI/Ling-3.0-flash-Fin:novita",
+      "slug": "inclusionAI/Ling-3.0-flash-Fin",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 30
+    },
+    {
+      "pair": "inclusionAI/Ling-3.0-flash-VL:novita",
+      "slug": "inclusionAI/Ling-3.0-flash-VL",
+      "provider": "novita",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 31
+    },
+    {
+      "pair": "google/gemma-3-27b-it:deepinfra",
+      "slug": "google/gemma-3-27b-it",
+      "provider": "deepinfra",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 32
+    },
+    {
+      "pair": "google/gemma-4-26B-A4B-it:deepinfra",
+      "slug": "google/gemma-4-26B-A4B-it",
+      "provider": "deepinfra",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 33
+    },
+    {
+      "pair": "zai-org/GLM-4.7-Flash:novita",
+      "slug": "zai-org/GLM-4.7-Flash",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 34
+    },
+    {
+      "pair": "Qwen/Qwen3-32B:nscale",
+      "slug": "Qwen/Qwen3-32B",
+      "provider": "nscale",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 35
+    },
+    {
+      "pair": "Qwen/Qwen3-32B:deepinfra",
+      "slug": "Qwen/Qwen3-32B",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 36
+    },
+    {
+      "pair": "meta-llama/Llama-4-Scout-17B-16E-Instruct:nscale",
+      "slug": "meta-llama/Llama-4-Scout-17B-16E-Instruct",
+      "provider": "nscale",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 37
+    },
+    {
+      "pair": "Qwen/Qwen3.5-9B:deepinfra",
+      "slug": "Qwen/Qwen3.5-9B",
+      "provider": "deepinfra",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 38
+    },
+    {
+      "pair": "swiss-ai/Apertus-8B-Instruct-2509:publicai",
+      "slug": "swiss-ai/Apertus-8B-Instruct-2509",
+      "provider": "publicai",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 39
+    },
+    {
+      "pair": "meta-llama/Llama-4-Scout-17B-16E-Instruct:deepinfra",
+      "slug": "meta-llama/Llama-4-Scout-17B-16E-Instruct",
+      "provider": "deepinfra",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 40
+    },
+    {
+      "pair": "stepfun-ai/Step-3.5-Flash:deepinfra",
+      "slug": "stepfun-ai/Step-3.5-Flash",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 41
+    },
+    {
+      "pair": "openai/gpt-oss-120b:ovhcloud",
+      "slug": "openai/gpt-oss-120b",
+      "provider": "ovhcloud",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 42
+    },
+    {
+      "pair": "Qwen/Qwen3-235B-A22B-Instruct-2507:deepinfra",
+      "slug": "Qwen/Qwen3-235B-A22B-Instruct-2507",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 43
+    },
+    {
+      "pair": "openai/gpt-oss-120b:nscale",
+      "slug": "openai/gpt-oss-120b",
+      "provider": "nscale",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 44
+    },
+    {
+      "pair": "Qwen/Qwen3.5-9B:ovhcloud",
+      "slug": "Qwen/Qwen3.5-9B",
+      "provider": "ovhcloud",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 45
+    },
+    {
+      "pair": "openai/gpt-oss-120b:baseten",
+      "slug": "openai/gpt-oss-120b",
+      "provider": "baseten",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 46
+    },
+    {
+      "pair": "openai/gpt-oss-20b:groq",
+      "slug": "openai/gpt-oss-20b",
+      "provider": "groq",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 47
+    },
+    {
+      "pair": "Qwen/Qwen3-14B:deepinfra",
+      "slug": "Qwen/Qwen3-14B",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 48
+    },
+    {
+      "pair": "deepseek-ai/DeepSeek-V4-Flash-0731:baseten",
+      "slug": "deepseek-ai/DeepSeek-V4-Flash-0731",
+      "provider": "baseten",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 49
+    },
+    {
+      "pair": "Qwen/Qwen3-30B-A3B:deepinfra",
+      "slug": "Qwen/Qwen3-30B-A3B",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 50
+    },
+    {
+      "pair": "google/gemma-4-26B-A4B-it:novita",
+      "slug": "google/gemma-4-26B-A4B-it",
+      "provider": "novita",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 51
+    },
+    {
+      "pair": "deepseek-ai/DeepSeek-V4-Flash-0731:together",
+      "slug": "deepseek-ai/DeepSeek-V4-Flash-0731",
+      "provider": "together",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 52
+    },
+    {
+      "pair": "XiaomiMiMo/MiMo-V2.5:deepinfra",
+      "slug": "XiaomiMiMo/MiMo-V2.5",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 53
+    },
+    {
+      "pair": "XiaomiMiMo/MiMo-V2.6-Flash-RL:novita",
+      "slug": "XiaomiMiMo/MiMo-V2.6-Flash-RL",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 54
+    },
+    {
+      "pair": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B:nscale",
+      "slug": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+      "provider": "nscale",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 55
+    },
+    {
+      "pair": "meta-llama/Llama-3.3-70B-Instruct:novita",
+      "slug": "meta-llama/Llama-3.3-70B-Instruct",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 56
+    },
+    {
+      "pair": "Qwen/Qwen3-Next-80B-A3B-Instruct:deepinfra",
+      "slug": "Qwen/Qwen3-Next-80B-A3B-Instruct",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 57
+    },
+    {
+      "pair": "Qwen/Qwen3.6-35B-A3B:deepinfra",
+      "slug": "Qwen/Qwen3.6-35B-A3B",
+      "provider": "deepinfra",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 58
+    },
+    {
+      "pair": "tencent/Hy3:deepinfra",
+      "slug": "tencent/Hy3",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 59
+    },
+    {
+      "pair": "google/gemma-4-31B-it:novita",
+      "slug": "google/gemma-4-31B-it",
+      "provider": "novita",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 60
+    },
+    {
+      "pair": "zai-org/GLM-5.3-Flash:deepinfra",
+      "slug": "zai-org/GLM-5.3-Flash",
+      "provider": "deepinfra",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 61
+    },
+    {
+      "pair": "zai-org/GLM-5.3-Flash:novita",
+      "slug": "zai-org/GLM-5.3-Flash",
+      "provider": "novita",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 62
+    },
+    {
+      "pair": "zai-org/GLM-5.3-Flash:together",
+      "slug": "zai-org/GLM-5.3-Flash",
+      "provider": "together",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 63
+    },
+    {
+      "pair": "zai-org/GLM-4.5-Air:novita",
+      "slug": "zai-org/GLM-4.5-Air",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 64
+    },
+    {
+      "pair": "Qwen/Qwen3.5-9B:together",
+      "slug": "Qwen/Qwen3.5-9B",
+      "provider": "together",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 65
+    },
+    {
+      "pair": "Qwen/Qwen3-VL-30B-A3B-Instruct:deepinfra",
+      "slug": "Qwen/Qwen3-VL-30B-A3B-Instruct",
+      "provider": "deepinfra",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 66
+    },
+    {
+      "pair": "openai/gpt-oss-120b:fireworks-ai",
+      "slug": "openai/gpt-oss-120b",
+      "provider": "fireworks-ai",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 67
+    },
+    {
+      "pair": "openai/gpt-oss-120b:together",
+      "slug": "openai/gpt-oss-120b",
+      "provider": "together",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 68
+    },
+    {
+      "pair": "XiaomiMiMo/MiMo-V2.5:novita",
+      "slug": "XiaomiMiMo/MiMo-V2.5",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 69
+    },
+    {
+      "pair": "meta-llama/Llama-Guard-4-12B:deepinfra",
+      "slug": "meta-llama/Llama-Guard-4-12B",
+      "provider": "deepinfra",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 70
+    },
+    {
+      "pair": "openai/gpt-oss-120b:groq",
+      "slug": "openai/gpt-oss-120b",
+      "provider": "groq",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 71
+    },
+    {
+      "pair": "ibm-granite/granite-4.2-30b:deepinfra",
+      "slug": "ibm-granite/granite-4.2-30b",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 72
+    },
+    {
+      "pair": "Qwen/Qwen3.5-35B-A3B:deepinfra",
+      "slug": "Qwen/Qwen3.5-35B-A3B",
+      "provider": "deepinfra",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 73
+    },
+    {
+      "pair": "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B:nscale",
+      "slug": "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
+      "provider": "nscale",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 74
+    },
+    {
+      "pair": "openai/gpt-oss-120b:scaleway",
+      "slug": "openai/gpt-oss-120b",
+      "provider": "scaleway",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 75
+    },
+    {
+      "pair": "meta-llama/Llama-4-Scout-17B-16E-Instruct:novita",
+      "slug": "meta-llama/Llama-4-Scout-17B-16E-Instruct",
+      "provider": "novita",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 76
+    },
+    {
+      "pair": "aisingapore/Gemma-SEA-LION-v4-27B-IT:publicai",
+      "slug": "aisingapore/Gemma-SEA-LION-v4-27B-IT",
+      "provider": "publicai",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 77
+    },
+    {
+      "pair": "google/gemma-4-31B-it:deepinfra",
+      "slug": "google/gemma-4-31B-it",
+      "provider": "deepinfra",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 78
+    },
+    {
+      "pair": "nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4:baseten",
+      "slug": "nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4",
+      "provider": "baseten",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 79
+    },
+    {
+      "pair": "Qwen/Qwen3-235B-A22B-Instruct-2507:nscale",
+      "slug": "Qwen/Qwen3-235B-A22B-Instruct-2507",
+      "provider": "nscale",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 80
+    },
+    {
+      "pair": "Qwen/Qwen3-235B-A22B:nscale",
+      "slug": "Qwen/Qwen3-235B-A22B",
+      "provider": "nscale",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 81
+    },
+    {
+      "pair": "deepseek-ai/DeepSeek-V4.1-Flash:deepinfra",
+      "slug": "deepseek-ai/DeepSeek-V4.1-Flash",
+      "provider": "deepinfra",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 82
+    },
+    {
+      "pair": "Qwen/Qwen3-VL-30B-A3B-Instruct:novita",
+      "slug": "Qwen/Qwen3-VL-30B-A3B-Instruct",
+      "provider": "novita",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 83
+    },
+    {
+      "pair": "Qwen/Qwen3-VL-235B-A22B-Instruct:deepinfra",
+      "slug": "Qwen/Qwen3-VL-235B-A22B-Instruct",
+      "provider": "deepinfra",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 84
+    },
+    {
+      "pair": "stepfun-ai/Step-3.7-Flash:deepinfra",
+      "slug": "stepfun-ai/Step-3.7-Flash",
+      "provider": "deepinfra",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 85
+    },
+    {
+      "pair": "aisingapore/Qwen-SEA-LION-v4-32B-IT:publicai",
+      "slug": "aisingapore/Qwen-SEA-LION-v4-32B-IT",
+      "provider": "publicai",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 86
+    },
+    {
+      "pair": "deepseek-ai/DeepSeek-V3.2:deepinfra",
+      "slug": "deepseek-ai/DeepSeek-V3.2",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 87
+    },
+    {
+      "pair": "Qwen/Qwen3-Coder-30B-A3B-Instruct:scaleway",
+      "slug": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
+      "provider": "scaleway",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 88
+    },
+    {
+      "pair": "deepseek-ai/DeepSeek-V3-0324:deepinfra",
+      "slug": "deepseek-ai/DeepSeek-V3-0324",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 89
+    },
+    {
+      "pair": "deepseek-ai/DeepSeek-V3.1:deepinfra",
+      "slug": "deepseek-ai/DeepSeek-V3.1",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 90
+    },
+    {
+      "pair": "MiniMaxAI/MiniMax-M2.7:deepinfra",
+      "slug": "MiniMaxAI/MiniMax-M2.7",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 91
+    },
+    {
+      "pair": "google/gemma-4-26B-A4B-it:scaleway",
+      "slug": "google/gemma-4-26B-A4B-it",
+      "provider": "scaleway",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 92
+    },
+    {
+      "pair": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8:novita",
+      "slug": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
+      "provider": "novita",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 93
+    },
+    {
+      "pair": "deepseek-ai/DeepSeek-V3.1-Terminus:deepinfra",
+      "slug": "deepseek-ai/DeepSeek-V3.1-Terminus",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 94
+    },
+    {
+      "pair": "MiniMaxAI/MiniMax-M3:deepinfra",
+      "slug": "MiniMaxAI/MiniMax-M3",
+      "provider": "deepinfra",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 95
+    },
+    {
+      "pair": "inclusionAI/Ling-3.1-flash:novita",
+      "slug": "inclusionAI/Ling-3.1-flash",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 96
+    },
+    {
+      "pair": "zai-org/GLM-4.6V-Flash:novita",
+      "slug": "zai-org/GLM-4.6V-Flash",
+      "provider": "novita",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 97
+    },
+    {
+      "pair": "Qwen/Qwen3.8-27B:deepinfra",
+      "slug": "Qwen/Qwen3.8-27B",
+      "provider": "deepinfra",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 98
+    },
+    {
+      "pair": "deepseek-ai/DeepSeek-V3:deepinfra",
+      "slug": "deepseek-ai/DeepSeek-V3",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 99
+    },
+    {
+      "pair": "MiniMaxAI/MiniMax-M2.5:novita",
+      "slug": "MiniMaxAI/MiniMax-M2.5",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 100
+    },
+    {
+      "pair": "MiniMaxAI/MiniMax-M2.7:novita",
+      "slug": "MiniMaxAI/MiniMax-M2.7",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 101
+    },
+    {
+      "pair": "MiniMaxAI/MiniMax-M3:fireworks-ai",
+      "slug": "MiniMaxAI/MiniMax-M3",
+      "provider": "fireworks-ai",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 102
+    },
+    {
+      "pair": "MiniMaxAI/MiniMax-M3:novita",
+      "slug": "MiniMaxAI/MiniMax-M3",
+      "provider": "novita",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 103
+    },
+    {
+      "pair": "MiniMaxAI/MiniMax-M3:together",
+      "slug": "MiniMaxAI/MiniMax-M3",
+      "provider": "together",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 104
+    },
+    {
+      "pair": "deepseek-ai/DeepSeek-V4.1-Flash:baseten",
+      "slug": "deepseek-ai/DeepSeek-V4.1-Flash",
+      "provider": "baseten",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 105
+    },
+    {
+      "pair": "deepseek-ai/DeepSeek-V4.1-Flash:novita",
+      "slug": "deepseek-ai/DeepSeek-V4.1-Flash",
+      "provider": "novita",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 106
+    },
+    {
+      "pair": "meta-models/Muse-Glimmer-30B:deepinfra",
+      "slug": "meta-models/Muse-Glimmer-30B",
+      "provider": "deepinfra",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 107
+    },
+    {
+      "pair": "Qwen/Qwen3-235B-A22B-Thinking-2507:deepinfra",
+      "slug": "Qwen/Qwen3-235B-A22B-Thinking-2507",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 108
+    },
+    {
+      "pair": "Qwen/Qwen3.5-35B-A3B:novita",
+      "slug": "Qwen/Qwen3.5-35B-A3B",
+      "provider": "novita",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 109
+    },
+    {
+      "pair": "Qwen/Qwen2.5-72B-Instruct:deepinfra",
+      "slug": "Qwen/Qwen2.5-72B-Instruct",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 110
+    },
+    {
+      "pair": "Qwen/Qwen3.6-35B-A3B:scaleway",
+      "slug": "Qwen/Qwen3.6-35B-A3B",
+      "provider": "scaleway",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 111
+    },
+    {
+      "pair": "openai/gpt-oss-120b:cerebras",
+      "slug": "openai/gpt-oss-120b",
+      "provider": "cerebras",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 112
+    },
+    {
+      "pair": "speakleash/Bielik-11B-v3.0-Instruct:publicai",
+      "slug": "speakleash/Bielik-11B-v3.0-Instruct",
+      "provider": "publicai",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 113
+    },
+    {
+      "pair": "Qwen/Qwen3.5-27B:deepinfra",
+      "slug": "Qwen/Qwen3.5-27B",
+      "provider": "deepinfra",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 114
+    },
+    {
+      "pair": "Qwen/Qwen3.5-122B-A10B:deepinfra",
+      "slug": "Qwen/Qwen3.5-122B-A10B",
+      "provider": "deepinfra",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 115
+    },
+    {
+      "pair": "meta-models/Muse-Glimmer-30B:together",
+      "slug": "meta-models/Muse-Glimmer-30B",
+      "provider": "together",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 116
+    },
+    {
+      "pair": "Qwen/Qwen3.5-27B:novita",
+      "slug": "Qwen/Qwen3.5-27B",
+      "provider": "novita",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 117
+    },
+    {
+      "pair": "XiaomiMiMo/MiMo-V2.6-Pro-RL:novita",
+      "slug": "XiaomiMiMo/MiMo-V2.6-Pro-RL",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 118
+    },
+    {
+      "pair": "zai-org/GLM-4.7:deepinfra",
+      "slug": "zai-org/GLM-4.7",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 119
+    },
+    {
+      "pair": "deepseek-ai/DeepSeek-V4-Flash-0731:novita",
+      "slug": "deepseek-ai/DeepSeek-V4-Flash-0731",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 120
+    },
+    {
+      "pair": "deepseek-ai/DeepSeek-V4-Flash-Vision-Exp:deepinfra",
+      "slug": "deepseek-ai/DeepSeek-V4-Flash-Vision-Exp",
+      "provider": "deepinfra",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 121
+    },
+    {
+      "pair": "Qwen/Qwen3.6-27B:deepinfra",
+      "slug": "Qwen/Qwen3.6-27B",
+      "provider": "deepinfra",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 122
+    },
+    {
+      "pair": "thinkingmachines/Inkling-Small:deepinfra",
+      "slug": "thinkingmachines/Inkling-Small",
+      "provider": "deepinfra",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 123
+    },
+    {
+      "pair": "XiaomiMiMo/MiMo-V2.5-Pro:novita",
+      "slug": "XiaomiMiMo/MiMo-V2.5-Pro",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 124
+    },
+    {
+      "pair": "moonshotai/Kimi-K2.5:deepinfra",
+      "slug": "moonshotai/Kimi-K2.5",
+      "provider": "deepinfra",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 125
+    },
+    {
+      "pair": "Qwen/Qwen3.5-122B-A10B:novita",
+      "slug": "Qwen/Qwen3.5-122B-A10B",
+      "provider": "novita",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 126
+    },
+    {
+      "pair": "Qwen/Qwen3.8-27B:novita",
+      "slug": "Qwen/Qwen3.8-27B",
+      "provider": "novita",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 127
+    },
+    {
+      "pair": "zai-org/GLM-4.6:deepinfra",
+      "slug": "zai-org/GLM-4.6",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 128
+    },
+    {
+      "pair": "deepseek-ai/DeepSeek-R1-0528:deepinfra",
+      "slug": "deepseek-ai/DeepSeek-R1-0528",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 129
+    },
+    {
+      "pair": "Qwen/Qwen3.5-397B-A17B:deepinfra",
+      "slug": "Qwen/Qwen3.5-397B-A17B",
+      "provider": "deepinfra",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 130
+    },
+    {
+      "pair": "alpindale/WizardLM-2-8x22B:novita",
+      "slug": "alpindale/WizardLM-2-8x22B",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 131
+    },
+    {
+      "pair": "Qwen/Qwen3.6-27B:ovhcloud",
+      "slug": "Qwen/Qwen3.6-27B",
+      "provider": "ovhcloud",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 132
+    },
+    {
+      "pair": "Qwen/Qwen3.8-27B:ovhcloud",
+      "slug": "Qwen/Qwen3.8-27B",
+      "provider": "ovhcloud",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 133
+    },
+    {
+      "pair": "MiniMaxAI/MiniMax-M1-80k:novita",
+      "slug": "MiniMaxAI/MiniMax-M1-80k",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 134
+    },
+    {
+      "pair": "zai-org/GLM-4.6:novita",
+      "slug": "zai-org/GLM-4.6",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 135
+    },
+    {
+      "pair": "zai-org/GLM-4.5V:novita",
+      "slug": "zai-org/GLM-4.5V",
+      "provider": "novita",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 136
+    },
+    {
+      "pair": "moonshotai/Kimi-K2-Instruct:novita",
+      "slug": "moonshotai/Kimi-K2-Instruct",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 137
+    },
+    {
+      "pair": "zai-org/GLM-5:deepinfra",
+      "slug": "zai-org/GLM-5",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 138
+    },
+    {
+      "pair": "zai-org/GLM-4.7:novita",
+      "slug": "zai-org/GLM-4.7",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 139
+    },
+    {
+      "pair": "NousResearch/Hermes-3-Llama-3.1-70B:deepinfra",
+      "slug": "NousResearch/Hermes-3-Llama-3.1-70B",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 140
+    },
+    {
+      "pair": "nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-NVFP4:fireworks-ai",
+      "slug": "nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-NVFP4",
+      "provider": "fireworks-ai",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 141
+    },
+    {
+      "pair": "moonshotai/Kimi-K2-Instruct-0905:novita",
+      "slug": "moonshotai/Kimi-K2-Instruct-0905",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 142
+    },
+    {
+      "pair": "meta-llama/Llama-3.3-70B-Instruct:ovhcloud",
+      "slug": "meta-llama/Llama-3.3-70B-Instruct",
+      "provider": "ovhcloud",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 143
+    },
+    {
+      "pair": "moonshotai/Kimi-K2.5:novita",
+      "slug": "moonshotai/Kimi-K2.5",
+      "provider": "novita",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 144
+    },
+    {
+      "pair": "Qwen/Qwen3.5-397B-A17B:novita",
+      "slug": "Qwen/Qwen3.5-397B-A17B",
+      "provider": "novita",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 145
+    },
+    {
+      "pair": "deepseek-ai/DeepSeek-R1-0528:novita",
+      "slug": "deepseek-ai/DeepSeek-R1-0528",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 146
+    },
+    {
+      "pair": "deepseek-ai/DeepSeek-R1:novita",
+      "slug": "deepseek-ai/DeepSeek-R1",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 147
+    },
+    {
+      "pair": "moonshotai/Kimi-K2.7-Code:deepinfra",
+      "slug": "moonshotai/Kimi-K2.7-Code",
+      "provider": "deepinfra",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 148
+    },
+    {
+      "pair": "zai-org/GLM-5.2:deepinfra",
+      "slug": "zai-org/GLM-5.2",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 149
+    },
+    {
+      "pair": "Qwen/Qwen3.5-397B-A17B:scaleway",
+      "slug": "Qwen/Qwen3.5-397B-A17B",
+      "provider": "scaleway",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 150
+    },
+    {
+      "pair": "moonshotai/Kimi-K2.6:deepinfra",
+      "slug": "moonshotai/Kimi-K2.6",
+      "provider": "deepinfra",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 151
+    },
+    {
+      "pair": "Qwen/Qwen3.5-397B-A17B:ovhcloud",
+      "slug": "Qwen/Qwen3.5-397B-A17B",
+      "provider": "ovhcloud",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 152
+    },
+    {
+      "pair": "tencent/Hy4-preview:deepinfra",
+      "slug": "tencent/Hy4-preview",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 153
+    },
+    {
+      "pair": "tencent/Hy4-preview:novita",
+      "slug": "tencent/Hy4-preview",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 154
+    },
+    {
+      "pair": "moonshotai/Kimi-K2.6:novita",
+      "slug": "moonshotai/Kimi-K2.6",
+      "provider": "novita",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 155
+    },
+    {
+      "pair": "Qwen/Qwen3-235B-A22B-Instruct-2507:scaleway",
+      "slug": "Qwen/Qwen3-235B-A22B-Instruct-2507",
+      "provider": "scaleway",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 156
+    },
+    {
+      "pair": "Qwen/Qwen2.5-VL-72B-Instruct:ovhcloud",
+      "slug": "Qwen/Qwen2.5-VL-72B-Instruct",
+      "provider": "ovhcloud",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 157
+    },
+    {
+      "pair": "Qwen/Qwen3.8-27B:cerebras",
+      "slug": "Qwen/Qwen3.8-27B",
+      "provider": "cerebras",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 158
+    },
+    {
+      "pair": "meta-llama/Llama-3.3-70B-Instruct:scaleway",
+      "slug": "meta-llama/Llama-3.3-70B-Instruct",
+      "provider": "scaleway",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 159
+    },
+    {
+      "pair": "meta-llama/Llama-3.3-70B-Instruct:together",
+      "slug": "meta-llama/Llama-3.3-70B-Instruct",
+      "provider": "together",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 160
+    },
+    {
+      "pair": "zai-org/GLM-5.3:deepinfra",
+      "slug": "zai-org/GLM-5.3",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 161
+    },
+    {
+      "pair": "XiaomiMiMo/MiMo-V2.5-Pro:deepinfra",
+      "slug": "XiaomiMiMo/MiMo-V2.5-Pro",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 162
+    },
+    {
+      "pair": "zai-org/GLM-5:novita",
+      "slug": "zai-org/GLM-5",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 163
+    },
+    {
+      "pair": "moonshotai/Kimi-K2.7-Code:novita",
+      "slug": "moonshotai/Kimi-K2.7-Code",
+      "provider": "novita",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 164
+    },
+    {
+      "pair": "thinkingmachines/Inkling:deepinfra",
+      "slug": "thinkingmachines/Inkling",
+      "provider": "deepinfra",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 165
+    },
+    {
+      "pair": "thinkingmachines/Inkling:together",
+      "slug": "thinkingmachines/Inkling",
+      "provider": "together",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 166
+    },
+    {
+      "pair": "zai-org/GLM-5.1:deepinfra",
+      "slug": "zai-org/GLM-5.1",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 167
+    },
+    {
+      "pair": "nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16:deepinfra",
+      "slug": "nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 168
+    },
+    {
+      "pair": "deepseek-ai/DeepSeek-V4-Pro-0813:deepinfra",
+      "slug": "deepseek-ai/DeepSeek-V4-Pro-0813",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 169
+    },
+    {
+      "pair": "deepseek-ai/DeepSeek-V4-Pro:deepinfra",
+      "slug": "deepseek-ai/DeepSeek-V4-Pro",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 170
+    },
+    {
+      "pair": "meta-models/Muse-Spark-Open-816B-A42B:baseten",
+      "slug": "meta-models/Muse-Spark-Open-816B-A42B",
+      "provider": "baseten",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 171
+    },
+    {
+      "pair": "deepseek-ai/DeepSeek-V4-Pro-0813:baseten",
+      "slug": "deepseek-ai/DeepSeek-V4-Pro-0813",
+      "provider": "baseten",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 172
+    },
+    {
+      "pair": "deepseek-ai/DeepSeek-V4-Pro-0813:novita",
+      "slug": "deepseek-ai/DeepSeek-V4-Pro-0813",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 173
+    },
+    {
+      "pair": "deepseek-ai/DeepSeek-V4-Pro-0813:together",
+      "slug": "deepseek-ai/DeepSeek-V4-Pro-0813",
+      "provider": "together",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 174
+    },
+    {
+      "pair": "zai-org/GLM-5.2:baseten",
+      "slug": "zai-org/GLM-5.2",
+      "provider": "baseten",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 175
+    },
+    {
+      "pair": "zai-org/GLM-5.2:novita",
+      "slug": "zai-org/GLM-5.2",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 176
+    },
+    {
+      "pair": "zai-org/GLM-5.2:together",
+      "slug": "zai-org/GLM-5.2",
+      "provider": "together",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 177
+    },
+    {
+      "pair": "zai-org/GLM-5.3:baseten",
+      "slug": "zai-org/GLM-5.3",
+      "provider": "baseten",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 178
+    },
+    {
+      "pair": "zai-org/GLM-5.3:novita",
+      "slug": "zai-org/GLM-5.3",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 179
+    },
+    {
+      "pair": "zai-org/GLM-5.3:together",
+      "slug": "zai-org/GLM-5.3",
+      "provider": "together",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 180
+    },
+    {
+      "pair": "deepseek-ai/DeepSeek-V4-Pro:novita",
+      "slug": "deepseek-ai/DeepSeek-V4-Pro",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 181
+    },
+    {
+      "pair": "Qwen/Qwen3.8-2.4T-A95B:deepinfra",
+      "slug": "Qwen/Qwen3.8-2.4T-A95B",
+      "provider": "deepinfra",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 182
+    },
+    {
+      "pair": "Qwen/Qwen3.8-2.4T-A95B:novita",
+      "slug": "Qwen/Qwen3.8-2.4T-A95B",
+      "provider": "novita",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 183
+    },
+    {
+      "pair": "Qwen/Qwen3.8-2.4T-A95B:together",
+      "slug": "Qwen/Qwen3.8-2.4T-A95B",
+      "provider": "together",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 184
+    },
+    {
+      "pair": "zai-org/GLM-5.2:scaleway",
+      "slug": "zai-org/GLM-5.2",
+      "provider": "scaleway",
+      "pipeline_tag": "text-generation",
+      "status": "UNMEASURED",
+      "cost_rank": 185
+    },
+    {
+      "pair": "moonshotai/Kimi-K3:deepinfra",
+      "slug": "moonshotai/Kimi-K3",
+      "provider": "deepinfra",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 186
+    },
+    {
+      "pair": "moonshotai/Kimi-K3:baseten",
+      "slug": "moonshotai/Kimi-K3",
+      "provider": "baseten",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 187
+    },
+    {
+      "pair": "moonshotai/Kimi-K3:fireworks-ai",
+      "slug": "moonshotai/Kimi-K3",
+      "provider": "fireworks-ai",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 188
+    },
+    {
+      "pair": "moonshotai/Kimi-K3:together",
+      "slug": "moonshotai/Kimi-K3",
+      "provider": "together",
+      "pipeline_tag": "image-text-to-text",
+      "status": "UNMEASURED",
+      "cost_rank": 189
+    }
+  ],
+  "membership_sha256": "42a2915df9f28dd44c9790c11d49df643bac6f407261d6a2fcd834734ce39f85",
+  "as_of": "2026-10-16T04:14:24Z"
+}
