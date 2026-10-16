@@ -1,0 +1,46 @@
+{
+  "bank_sha256": "9c9de457cdded0d8e176067d684b3dab0074cc0a8d14e497c7c0b6f7aa3b61b5",
+  "items_sha256": "968af2ebd8bb21c61036ddcbb5b8381abbae4f6b815014bf1d202a0f0d7dbe29",
+  "schema": "csoai.mill-evidence-admission/0.2",
+  "source_body": {
+    "accuracy": 0.5862,
+    "axis": "governance",
+    "brand": "Council of AI",
+    "evidence": {
+      "bank_dataset": "csoai/gspc-gov",
+      "bank_file": "bank-governan-9c9de457cdde.jsonl",
+      "bank_revision": "323f768543af8cf4475f5f3ddd3b5f5afabbe6b6",
+      "bank_sha256": "9c9de457cdded0d8e176067d684b3dab0074cc0a8d14e497c7c0b6f7aa3b61b5",
+      "instrument_sha256": "86216fbb18db98165e7b2feda74f90d89d05fcd8a0208aed82fee37956d8a659",
+      "items_file": "items-governan-968af2ebd8bb.jsonl",
+      "items_sha256": "968af2ebd8bb21c61036ddcbb5b8381abbae4f6b815014bf1d202a0f0d7dbe29",
+      "model_hf_revision": "63651580ca774f8504f676040460aed3e1244ac1",
+      "schema": "csoai.mill-item-evidence/0.3"
+    },
+    "issuer": "CSOAI Ltd",
+    "kind": "gspc.measurement-card",
+    "model": "XiaomiMiMo/MiMo-V2.5",
+    "n": 29,
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "route": "hf-router:XiaomiMiMo/MiMo-V2.5:deepinfra",
+    "run_id": "gha-38979103075",
+    "status": "UNMEASURED",
+    "unmeasured": [
+      "n<30 unquotable; 1 of 30 items returned no parseable label"
+    ],
+    "verify": "https://councilof.ai/gspc-verify"
+  },
+  "source_card_id": "f24db619db553c0a1b3b93ae605a59cb80b58107533137239cdf0fd33cab3b27",
+  "state": "VERIFIED_ADMISSION",
+  "summary": {
+    "accuracy": 0.5862,
+    "answered": 29,
+    "correct": 17,
+    "items": 30,
+    "provider_routes": [
+      "hf-router:XiaomiMiMo/MiMo-V2.5:deepinfra",
+      "hf-router:XiaomiMiMo/MiMo-V2.5:featherless-ai",
+      "hf-router:XiaomiMiMo/MiMo-V2.5:novita"
+    ]
+  }
+}
