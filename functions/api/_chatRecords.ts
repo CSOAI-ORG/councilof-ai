@@ -30,14 +30,14 @@ export async function recordsAnswer(q: string, f: Fetcher = fetch): Promise<stri
     const out = await callRecordsTool("get_record", { key: keyM[1] }, f);
     if (!out?.record) return `No record with key \`${keyM[1]}\` is in the GSPC records.` + tail;
     const r = out.record;
-    return `**${r.name}** (\`${r.key}\`, ${r.subject_class}, source ${r.source}): status **${status(r.status)}**; applicable axes: ${r.axes.length ? r.axes.join(", ") : "none yet"}; last checked: ${r.last_checked ?? "never"}.` + tail;
+    return `**${r.name}** (\`${r.key}\`, ${r.subject_class}, source ${r.source}): status **${status(r.status)}**; applicable axes: ${r.axes.length ? r.axes.join(", ") : "none yet"};${r.census ? ` census: ${r.census} (discovery only, not an axis result);` : ""} last checked: ${r.last_checked ?? "never"}.` + tail;
   }
   if (/\breport\b/i.test(q)) {
     const out = await callRecordsTool("get_report", {}, f);
     if (!out) return null;
     const s = out.summary;
     const lines = (out.breakdown || []).map((b: any) => `- ${b.subject_class}: ${b.n} ${status(b.status)}`).join("\n");
-    return `GSPC queue report${s ? ` for ${s.day}: ${s.queue_total} subjects, ${s.unmeasured} UNMEASURED, ${s.measured} measured` : ""}.\n\n${lines}` + tail;
+    return `GSPC queue report${s ? ` for ${s.day}: ${s.queue_total} subjects, ${s.unmeasured} UNMEASURED, ${s.census_done} with a census label` : ""}.\n\n${lines}` + tail;
   }
   const term = q.replace(RECORDS_INTENT, " ").replace(/\b(for|about|on|the|show|find|search|get|me|records?)\b/gi, " ").trim().split(/\s+/).slice(-3).join(" ");
   const out = await callRecordsTool("search_records", { query: term || "", limit: 5 }, f);
