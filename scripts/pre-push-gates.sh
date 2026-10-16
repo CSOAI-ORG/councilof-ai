@@ -48,7 +48,7 @@ node scripts/facts-gate.mjs --selftest >/dev/null 2>&1 \
 # Same scripts, not copies. Fails closed: no Chromium, a failed build/prerender, or an unreachable
 # production /api/gspc (board-production-anchor has no fallback) all block the push.
 board_ok=1
-if ! node -e "const{chromium}=require('playwright');const fs=require('fs');process.exit(fs.existsSync(chromium.executablePath())?0:1)" >/dev/null 2>&1; then
+if ! node -e "require('playwright').chromium.launch().then(b=>b.close()).then(()=>process.exit(0),()=>process.exit(1))" >/dev/null 2>&1; then
   echo "  ✖ Chromium for Playwright is not installed (npx playwright install chromium) — prerender cannot run"; fail=1; board_ok=0
 fi
 if [ "$board_ok" -eq 1 ]; then
