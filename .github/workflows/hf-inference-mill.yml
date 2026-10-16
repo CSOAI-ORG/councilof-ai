@@ -146,6 +146,16 @@ jobs:
         run: |
           set -uo pipefail
           mkdir -p ledger
+          # Cross-workflow Hub lock (ledger/mill.lock): only one mill bills at a
+          # time. Live lock held by another run, or any lock error -> bill nothing.
+          pip install --quiet "huggingface_hub>=0.25"
+          lock_out=$(python3 scripts/hub_mill_lock.py acquire "$RUN_KEY"); lock_rc=$?
+          echo "$lock_out" | tee -a "$GITHUB_STEP_SUMMARY"
+          if [ "$lock_rc" != "0" ]; then
+            echo "MILL_LOCK_NOT_HELD credit_only=0 (no billed shard)" | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "credit_only=0" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          release_lock() { python3 scripts/hub_mill_lock.py release "$RUN_KEY" | tee -a "$GITHUB_STEP_SUMMARY" || true; }
           # -L: once the ledger exists the Hub answers resolve/ with a 307 to
           # its file store (run 38851194973 failed closed on http=307).
           code=$(curl -sSL -o ledger/spend.json -w '%{http_code}' -H "Authorization: Bearer ${HF_TOKEN}" \
@@ -155,16 +165,15 @@ jobs:
             echo "LEDGER_BOOTSTRAP no ledger on Hub yet; seeding with pre-ledger smoke allowance" | tee -a "$GITHUB_STEP_SUMMARY"
           elif [ "$code" != "200" ]; then
             echo "LEDGER_UNREADABLE http=$code credit_only=0 (no billed shard)" | tee -a "$GITHUB_STEP_SUMMARY"
-            echo "credit_only=0" >> "$GITHUB_OUTPUT"; exit 0
+            echo "credit_only=0" >> "$GITHUB_OUTPUT"; release_lock; exit 0
           fi
           if ! out=$(python3 scripts/hf_spend_ledger.py reserve ledger/spend.json "$RUN_KEY"); then
             echo "LEDGER_BAD credit_only=0" | tee -a "$GITHUB_STEP_SUMMARY"
-            echo "credit_only=0" >> "$GITHUB_OUTPUT"; exit 0
+            echo "credit_only=0" >> "$GITHUB_OUTPUT"; release_lock; exit 0
           fi
           echo "LEDGER $out" | tee -a "$GITHUB_STEP_SUMMARY"
           budget=$(printf '%s' "$out" | python3 -c 'import json,sys; print(json.load(sys.stdin)["shard_budget_usd"])')
           if python3 -c "import sys; sys.exit(0 if float('$budget') > 0 else 1)"; then
-            pip install --quiet "huggingface_hub>=0.25"
             if python3 - <<'PY'
           import os
           from huggingface_hub import HfApi
@@ -179,11 +188,11 @@ jobs:
               echo "shard_budget=$budget" >> "$GITHUB_OUTPUT"
             else
               echo "LEDGER_RESERVE_NOT_PUBLISHED credit_only=0" | tee -a "$GITHUB_STEP_SUMMARY"
-              echo "credit_only=0" >> "$GITHUB_OUTPUT"
+              echo "credit_only=0" >> "$GITHUB_OUTPUT"; release_lock
             fi
           else
             echo "LEDGER_CAP_REACHED spent+reserved >= \$91.60; credit_only=0" | tee -a "$GITHUB_STEP_SUMMARY"
-            echo "credit_only=0" >> "$GITHUB_OUTPUT"
+            echo "credit_only=0" >> "$GITHUB_OUTPUT"; release_lock
           fi
       - name: upload probe (not a board rewrite)
         if: always()
@@ -313,6 +322,10 @@ jobs:
               repo_id="csoai/hub-queue", repo_type="dataset",
               commit_message=f"hosted-api results run {os.environ['RUN_KEY']} (unsigned, not comparable; not a board rewrite)")
           PY
+      # Release only after settle published; if settle failed the lock stays
+      # until expiry, so no other mill bills against an unsettled ledger.
+      - name: release Hub mill lock
+        run: python3 scripts/hub_mill_lock.py release "$RUN_KEY"
 
   # A failed transport probe must not leave old practice probes advertised as
   # measurements. This job performs a semantic count migration only; it does
