@@ -1,0 +1,25 @@
+name: gspc-interop-mill
+# Pulls QUEUED_FOR_MILL rows from D1 gspc-layer0 and runs the interop-conformance probe
+# (MCP initialize + tools/list over plain HTTP, $0). Results are unsigned and unpublished.
+# The queue is only filled when the gspc-records Worker has MILL_HANDOFF=on (Measure's ruling).
+on:
+  schedule: [{ cron: "20 * * * *" }]
+  workflow_dispatch: {}
+permissions: { contents: read }
+concurrency: { group: gspc-interop-mill, cancel-in-progress: false }
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Probe queued subjects
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          PROBE_LIMIT: "200"
+          SPEND_CAP_USD: "91.6"
+          SPEND_STOP_LEFT_USD: "5"
+        run: python3 scripts/gspc_interop_probe.py
