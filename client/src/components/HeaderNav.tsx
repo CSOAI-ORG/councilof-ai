@@ -140,6 +140,7 @@ export const navigation: NavGroup[] = [
     description: 'Council of AI — CSOAI Ltd',
     submenu: [
       { section: 'Who we are', name: 'About', href: '/about/', description: 'An independent measurement instrument — and what that deliberately excludes' },
+      { name: 'Team', href: '/team', description: 'The people, and the AI agents you can ask (labelled as AI)' },
       { name: 'Independence and conflicts', href: '/independence/', description: 'Who runs us, who pays, and where we have an interest' },
       { name: 'Contact', href: '/contact/', description: 'CSOAI Ltd, UK company 16939677' },
       { name: 'Legal and disclaimers', href: '/disclaimers', description: 'What a measurement card is not' },

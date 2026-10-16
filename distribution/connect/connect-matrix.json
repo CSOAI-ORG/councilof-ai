@@ -81,6 +81,7 @@
     },
     {
       "id": "cursor",
+      "installer": "cursor",
       "platform": "Cursor",
       "group": "Coding agents",
       "door": "free",
@@ -88,7 +89,11 @@
       "kind": "json",
       "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
       "docs": "https://cursor.com/docs/context/mcp",
-      "url": "https://councilof.ai/mcp/free"
+      "url": "https://councilof.ai/mcp/free",
+      "install_action": {
+        "kind": "cursor",
+        "href": "cursor://anysphere.cursor-deeplink/mcp/install?name=gspc&config=eyJ1cmwiOiJodHRwczovL2NvdW5jaWxvZi5haS9tY3AvZnJlZSJ9"
+      }
     },
     {
       "id": "vscode",
@@ -96,7 +101,7 @@
       "platform": "VS Code (GitHub Copilot agent mode)",
       "group": "Coding agents",
       "door": "free",
-      "where": ".vscode/mcp.json",
+      "where": ".vscode/mcp.json (legacy VS Code format; still read)",
       "kind": "json",
       "snippet": "{\n  \"servers\": {\n    \"gspc\": { \"type\": \"http\", \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
       "docs": "https://code.visualstudio.com/docs/agent-customization/mcp-servers",
@@ -105,6 +110,17 @@
         "kind": "vscode",
         "href": "vscode:mcp/install?%7B%22name%22%3A%22gspc%22%2C%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fcouncilof.ai%2Fmcp%2Ffree%22%7D"
       }
+    },
+    {
+      "id": "vscode-portable",
+      "platform": "VS Code (portable .mcp.json)",
+      "group": "Coding agents",
+      "door": "free",
+      "where": ".mcp.json at the project root (portable format; VS Code and other compatible tools read it)",
+      "kind": "json",
+      "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"type\": \"http\", \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
+      "docs": "https://code.visualstudio.com/docs/agent-customization/mcp-servers",
+      "url": "https://councilof.ai/mcp/free"
     },
     {
       "id": "windsurf",
@@ -162,6 +178,17 @@
       "url": "https://councilof.ai/mcp/free"
     },
     {
+      "id": "openai-responses-free",
+      "platform": "OpenAI Responses API (free door)",
+      "group": "Agent frameworks and APIs",
+      "door": "free",
+      "where": "tools[] of a Responses API request",
+      "kind": "json",
+      "snippet": "{\n  \"type\": \"mcp\",\n  \"server_label\": \"gspc\",\n  \"server_url\": \"https://councilof.ai/mcp/free\",\n  \"require_approval\": \"always\"\n}",
+      "docs": "https://platform.openai.com/docs/guides/tools-remote-mcp",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
       "id": "openai-responses",
       "platform": "OpenAI Responses API",
       "group": "Agent frameworks and APIs",
@@ -184,6 +211,17 @@
       "url": "https://councilof.ai/mcp/free"
     },
     {
+      "id": "google-adk-free",
+      "platform": "Google ADK (Vertex AI Agent Builder, free door)",
+      "group": "Agent frameworks and APIs",
+      "door": "free",
+      "where": "your ADK agent's tools",
+      "kind": "python",
+      "snippet": "from google.adk.tools.mcp_tool.mcp_toolset import McpToolset\nfrom google.adk.tools.mcp_tool.mcp_session_manager import StreamableHTTPConnectionParams\n\ngspc = McpToolset(connection_params=StreamableHTTPConnectionParams(url=\"https://councilof.ai/mcp/free\"))",
+      "docs": "https://google.github.io/adk-docs/tools/mcp-tools/",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
       "id": "google-adk",
       "platform": "Google ADK (Vertex AI Agent Builder)",
       "group": "Agent frameworks and APIs",
@@ -193,6 +231,17 @@
       "snippet": "from google.adk.tools.mcp_tool.mcp_toolset import McpToolset\nfrom google.adk.tools.mcp_tool.mcp_session_manager import StreamableHTTPConnectionParams\n\ngspc = McpToolset(connection_params=StreamableHTTPConnectionParams(url=\"https://councilof.ai/mcp\"))",
       "docs": "https://google.github.io/adk-docs/tools/mcp-tools/",
       "url": "https://councilof.ai/mcp"
+    },
+    {
+      "id": "langchain-free",
+      "platform": "LangChain / LangGraph (free door)",
+      "group": "Agent frameworks and APIs",
+      "door": "free",
+      "where": "pip install langchain-mcp-adapters",
+      "kind": "python",
+      "snippet": "from langchain_mcp_adapters.client import MultiServerMCPClient\n\nclient = MultiServerMCPClient({\"gspc\": {\"transport\": \"streamable_http\", \"url\": \"https://councilof.ai/mcp/free\"}})\ntools = await client.get_tools()",
+      "docs": "https://github.com/langchain-ai/langchain-mcp-adapters",
+      "url": "https://councilof.ai/mcp/free"
     },
     {
       "id": "langchain",

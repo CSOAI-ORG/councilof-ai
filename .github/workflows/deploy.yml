@@ -3,7 +3,7 @@ name: Build + deploy site (gated production branch)
 on:
   push:
     branches: [master]
-    paths: ['client/**', 'public/**', 'functions/**', 'scripts/**', 'package.json', 'wrangler.jsonc', '.github/workflows/deploy.yml']
+    paths: ['client/**', 'e2e/**', 'public/**', 'functions/**', 'scripts/**', 'package.json', 'wrangler.jsonc', '.github/workflows/deploy.yml']
   workflow_dispatch:
     inputs:
       check_registry:
@@ -27,6 +27,8 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # Keep canonical SBOM generation-time input commits available.
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
 
@@ -154,14 +156,16 @@ jobs:
         run: |
           npm run test:e2e:shell
 
-      - name: Retain Council OS shell failure evidence
-        if: ${{ failure() && steps.council_os_shell_smoke.outcome == 'failure' }}
+      - name: Retain Council OS shell acceptance evidence
+        if: ${{ always() && (steps.council_os_shell_smoke.outcome == 'success' || steps.council_os_shell_smoke.outcome == 'failure') }}
         uses: actions/upload-artifact@v4
         with:
-          name: council-os-shell-failure-${{ github.run_id }}-${{ github.run_attempt }}
+          name: council-os-shell-evidence-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             test-results/**/trace.zip
             test-results/**/agui-request-lifecycle.json
+            test-results/**/published-source-*.json
+            test-results/**/*.png
           retention-days: 3
           if-no-files-found: warn
 

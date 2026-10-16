@@ -218,7 +218,7 @@ const cardBadge = async (
   const label = "card";
   const claimNorm = (claim || "").trim().toLowerCase();
   // A hub badge must never claim certification. "issued" = the card exists;
-  // "verified" = a real subject-bound card; "measured" only after the signer signs.
+  // "verified" = a subject-bound card whose signature verifies; "measured" likewise.
   if (claimNorm === "certified" || claimNorm === "certification") {
     return { label, message: "not a certificate", colour: GREY, state: "refused" };
   }
@@ -255,9 +255,6 @@ const cardBadge = async (
     if (claimNorm === "issued") {
       return { label: axis, message: "issued", colour: LIME, state: "issued" };
     }
-    if (claimNorm === "verified") {
-      return { label: axis, message: "verified", colour: LIME, state: "verified" };
-    }
 
     if (entry.signed !== true) {
       if (claimNorm === "measured") {
@@ -266,7 +263,17 @@ const cardBadge = async (
       return { label, message: "unsigned", colour: GREY, state: "unsigned" };
     }
     const verdict = await verifyCard(card, []);
-    const signedValid = Boolean(verdict.valid && verdict.id === h);
+    // verdict.valid alone is not a signature: an empty signature leaves the Signature check at
+    // ok:null ("unsigned") and still comes back valid:true. "verified", "measured" and "valid"
+    // need the Signature check itself to have run and passed (14 Oct 2026).
+    const signature = verdict.checks?.find((c) => c.label === "Signature");
+    const signedValid =
+      verdict.valid === true && verdict.id === h && signature?.ok === true && signature.code === "signature_valid";
+    // A verdict the verifier could not reach (UNCHECKABLE: e.g. ed25519_unsupported, key_not_pinned)
+    // is not evidence of a bad signature: say it was not checked, never "invalid signature".
+    if (!signedValid && verdict.state === "UNCHECKABLE") {
+      return { label, message: "unchecked", colour: GREY, state: "unavailable" };
+    }
     if (claimNorm === "measured") {
       if (!signedValid) {
         return { label: axis, message: "unmeasured", colour: GREY, state: "unmeasured" };
@@ -275,6 +282,9 @@ const cardBadge = async (
     }
     if (!signedValid) {
       return { label, message: "invalid signature", colour: GREY, state: "invalid" };
+    }
+    if (claimNorm === "verified") {
+      return { label: axis, message: "verified", colour: LIME, state: "verified" };
     }
     return {
       label: axis,

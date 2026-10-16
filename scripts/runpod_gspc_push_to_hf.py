@@ -97,6 +97,37 @@ def freeze_runs(root: Path, runs: list[Path], staging: Path) -> list[FrozenRun]:
     return frozen
 
 
+def prepare_frozen_runs(
+    root: Path, runs: list[Path], staging: Path, manifest_root: Path | None = None,
+) -> list[FrozenRun]:
+    """Bind supervised manifest digests to private staged upload bytes before auth."""
+    manifest = None
+    if manifest_root is not None:
+        from validate_runpod_intake_manifest import validate
+        manifest_root = manifest_root.absolute()
+        if root.absolute() != manifest_root / "gspc-24x7":
+            raise IntakeError("manifest bundle and intake root do not match")
+        try:
+            manifest = validate(manifest_root, include_digests=True)
+        except (ValueError, OSError, UnicodeError):
+            raise IntakeError("bundle manifest validation failed; no authentication or upload") from None
+    frozen = freeze_runs(root, runs, staging)
+    if manifest is not None:
+        from validate_runpod_intake_manifest import sha256_file
+        staged_keys = {f"{run.relative}/{name}" for run in frozen for name in run.files}
+        if staged_keys != set(manifest["digests"]):
+            raise IntakeError("staged file set differs from manifest; no partial or extra files allowed")
+        for run in frozen:
+            for name, file in run.files.items():
+                key = f"{run.relative}/{name}"
+                if manifest["digests"].get(key) != sha256_file(file.path):
+                    raise IntakeError(f"staged file differs from bundle manifest: {key}")
+        print(f"manifest: {manifest['manifest_sha256']} · "
+              f"validated files {manifest['files']} · complete staged runs {len(frozen)}")
+    return frozen
+
+
+
 CURRENT_SCHEMA = "csoai.runpod-current-intake/0.1"
 CURRENT_FILES = (*REQUIRED, "gate.json", "HUMAN_RELEASE.json")
 
@@ -471,6 +502,8 @@ def main() -> int:
     ap.add_argument("--review-current", type=Path, help="offline: validate pinned latest source/gate snapshots")
     ap.add_argument("--review-out", type=Path)
     ap.add_argument("--repo", default=REPO)
+    ap.add_argument("--manifest-root", type=Path,
+                    help="supervised bundle root: bind its exact manifest to staged bytes before auth")
     ap.add_argument("--token-file", type=Path,
                     help="use only this owner-only private-intake credential; never fall back")
     ap.add_argument("--dry-run", action="store_true", help="compare and list commits; never upload")
@@ -507,14 +540,15 @@ def main() -> int:
     try:
         runs = complete_runs(root) if root.is_dir() else []
         partial = len(list(root.rglob("card-unsigned.json"))) - len(runs)
-        if not runs and args.current_root is None:
+        if not runs and args.current_root is None and args.manifest_root is None:
             print(f"nothing complete to push ({partial} partial)")
             return 0
         with tempfile.TemporaryDirectory(prefix="runpod-intake-") as temporary:
+            # Validate/freeze the legacy bundle before any connection or authentication.
+            frozen = prepare_frozen_runs(root, runs, Path(temporary), args.manifest_root)
             # Pin the remote head BEFORE observing current source. A delayed older
             # invocation cannot adopt a newer writer's head and rewind its pointer.
             api, revision, upstream = connect(args.repo, HfApi, args.token_file)
-            frozen = freeze_runs(root, runs, Path(temporary))
             if current_available:
                 frozen.extend(freeze_current_runs(args.current_root.absolute(), Path(temporary)))
             if not frozen:

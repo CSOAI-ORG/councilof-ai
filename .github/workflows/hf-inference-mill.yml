@@ -36,6 +36,8 @@ jobs:
     timeout-minutes: 10
     outputs:
       ok: ${{ steps.probe.outputs.ok }}
+      credit_only: ${{ steps.billing.outputs.credit_only }}
+      shard_budget: ${{ steps.billing.outputs.shard_budget }}
     env:
       HF_INFERENCE_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN || secrets.HF_TOKEN }}
       HF_TOKEN: ${{ secrets.HF_TOKEN || secrets.HUGGINGFACE_TOKEN }}
@@ -77,9 +79,12 @@ jobs:
               emit("0")
               sys.exit(0)
           payload = json.dumps({
-              "model": "Qwen/Qwen3-8B:featherless-ai",
+              # Qwen3-8B is a reasoning model: max_tokens 4 was spent on
+              # thinking and content came back empty (HTTP 200), so every run
+              # since skipped all shards while staying green.
+              "model": "meta-llama/Llama-3.1-8B-Instruct",
               "messages": [{"role": "user", "content": "Reply with EXACTLY one token: HELLO"}],
-              "max_tokens": 4,
+              "max_tokens": 64,
               "temperature": 0,
           }).encode()
           req = urllib.request.Request(
@@ -99,7 +104,8 @@ jobs:
               # 6 Sep 17:01 cron: json.loads Extra data col 316 skipped mill
               # while the job stayed green. First object is the verdict.
               d, _ = json.JSONDecoder().raw_decode(raw.decode("utf-8", "replace").lstrip())
-              txt = (((d.get("choices") or [{}])[0].get("message") or {}).get("content") or "").strip()
+              msg = ((d.get("choices") or [{}])[0].get("message") or {})
+              txt = (msg.get("content") or msg.get("reasoning_content") or "").strip()
               if not txt:
                   out["status"] = "INFERENCE_FAIL"
                   out["http"] = 200
@@ -125,6 +131,60 @@ jobs:
               emit("0")
               sys.exit(0)
           PY
+      # HF has no prepaid-balance endpoint (huggingface_hub has none; the
+      # documented org billing API returns usage, lagging ~2 h). The guessed
+      # /billing/balance and /billing raised HTTPError in run 38846917865.
+      # So spend is a local ledger on the Hub (scripts/hf_spend_ledger.py),
+      # priced per call from router.huggingface.co/v1/models. Cap: $91.60
+      # spent since 16 Oct 00:00 BST (leaves $5 of $96.60; Nick 04:27 BST).
+      # Fail closed: unreadable ledger or nothing left -> no billed shard.
+      - name: spend ledger reserve (Hub; fail closed)
+        id: billing
+        if: steps.probe.outputs.ok == '1'
+        env:
+          RUN_KEY: ${{ github.run_id }}-${{ github.run_attempt }}
+        run: |
+          set -uo pipefail
+          mkdir -p ledger
+          # -L: once the ledger exists the Hub answers resolve/ with a 307 to
+          # its file store (run 38851194973 failed closed on http=307).
+          code=$(curl -sSL -o ledger/spend.json -w '%{http_code}' -H "Authorization: Bearer ${HF_TOKEN}" \
+            "https://huggingface.co/datasets/csoai/hub-queue/resolve/main/ledger/hf-inference-spend.json" || echo 000)
+          if [ "$code" = "404" ]; then
+            rm -f ledger/spend.json
+            echo "LEDGER_BOOTSTRAP no ledger on Hub yet; seeding with pre-ledger smoke allowance" | tee -a "$GITHUB_STEP_SUMMARY"
+          elif [ "$code" != "200" ]; then
+            echo "LEDGER_UNREADABLE http=$code credit_only=0 (no billed shard)" | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "credit_only=0" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          if ! out=$(python3 scripts/hf_spend_ledger.py reserve ledger/spend.json "$RUN_KEY"); then
+            echo "LEDGER_BAD credit_only=0" | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "credit_only=0" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          echo "LEDGER $out" | tee -a "$GITHUB_STEP_SUMMARY"
+          budget=$(printf '%s' "$out" | python3 -c 'import json,sys; print(json.load(sys.stdin)["shard_budget_usd"])')
+          if python3 -c "import sys; sys.exit(0 if float('$budget') > 0 else 1)"; then
+            pip install --quiet "huggingface_hub>=0.25"
+            if python3 - <<'PY'
+          import os
+          from huggingface_hub import HfApi
+          HfApi(token=os.environ["HF_TOKEN"].strip()).upload_file(
+              path_or_fileobj="ledger/spend.json",
+              path_in_repo="ledger/hf-inference-spend.json",
+              repo_id="csoai/hub-queue", repo_type="dataset",
+              commit_message=f"spend ledger reserve run {os.environ['RUN_KEY']} (no inference)")
+          PY
+            then
+              echo "credit_only=1" >> "$GITHUB_OUTPUT"
+              echo "shard_budget=$budget" >> "$GITHUB_OUTPUT"
+            else
+              echo "LEDGER_RESERVE_NOT_PUBLISHED credit_only=0" | tee -a "$GITHUB_STEP_SUMMARY"
+              echo "credit_only=0" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            echo "LEDGER_CAP_REACHED spent+reserved >= \$91.60; credit_only=0" | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "credit_only=0" >> "$GITHUB_OUTPUT"
+          fi
       - name: upload probe (not a board rewrite)
         if: always()
         uses: actions/upload-artifact@v4
@@ -178,10 +238,29 @@ jobs:
             echo "HUB_LOCK_MISS mill will use git lock (all UNMEASURED)"
           fi
       - name: mill HF2200 shard via router
+        env:
+          CREDIT_ONLY: ${{ needs.probe.outputs.credit_only }}
+          SHARD_BUDGET: ${{ needs.probe.outputs.shard_budget }}
         run: |
           set -euo pipefail
           mkdir -p mill-out
-          python3 scripts/mill_hf_inference.py
+          # Ledger gate: nothing is billed unless the probe job reserved budget
+          # on the Hub ledger. Every call is priced; unknown price = not sent.
+          if [ "${CREDIT_ONLY:-0}" != "1" ] || [ -z "${SHARD_BUDGET:-}" ]; then
+            echo "NO_BUDGET ledger reserve absent; shard ${MILL_SHARD} skipped (no spend)"
+            exit 0
+          fi
+          export MILL_SHARD_BUDGET_USD="$SHARD_BUDGET"
+          # Measure ruling 1: full frozen bank, T=0, serial; hosted-api lane,
+          # unsigned, not comparable to signed cells; one row per model:provider.
+          # Hosted-api lane: HOSTED-API.lock.json (NOT HF2200), one row per
+          # model:provider pair, cheapest first, full frozen governance bank
+          # (sha-checked), T=0, serial. Pairs already graded are skipped.
+          curl -fsSL -H "Authorization: Bearer ${HF_TOKEN}" -o /tmp/hosted-results.json \
+            "https://huggingface.co/datasets/csoai/hub-queue/resolve/main/hosted-api/results.json" \
+            || echo "HOSTED_RESULTS_NONE first hosted run"
+          export HOSTED_DONE=/tmp/hosted-results.json MILL_LIMIT="${HOSTED_LIMIT:-10}"
+          python3 scripts/mill_hosted_api.py
       - name: upload mill JSON (not a board rewrite)
         if: always()
         uses: actions/upload-artifact@v4
@@ -189,6 +268,51 @@ jobs:
           name: hf-inference-mill-${{ matrix.shard }}
           path: mill-out
           if-no-files-found: warn
+
+  # Settle the reservation with what shards proved they spent. A shard with
+  # no spend file is charged its whole slice (fail closed).
+  ledger-settle:
+    needs: [probe, mill]
+    if: always() && needs.probe.outputs.credit_only == '1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      RUN_KEY: ${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: hf-inference-mill-*
+          path: mill-shards
+      - name: settle and publish ledger
+        run: |
+          set -euo pipefail
+          curl -fsSL -H "Authorization: Bearer ${HF_TOKEN}" -o /tmp/spend.json \
+            "https://huggingface.co/datasets/csoai/hub-queue/resolve/main/ledger/hf-inference-spend.json"
+          files=$(find mill-shards -name 'spend_s*.json' | sort)
+          out=$(python3 scripts/hf_spend_ledger.py settle /tmp/spend.json "$RUN_KEY" $files)
+          echo "LEDGER_SETTLED $out" | tee -a "$GITHUB_STEP_SUMMARY"
+          curl -fsSL -H "Authorization: Bearer ${HF_TOKEN}" -o /tmp/hosted-results.json \
+            "https://huggingface.co/datasets/csoai/hub-queue/resolve/main/hosted-api/results.json" \
+            || rm -f /tmp/hosted-results.json
+          res=$(python3 scripts/merge_hosted_results.py /tmp/hosted-results.json mill-shards)
+          echo "HOSTED_RESULTS $res (hosted-api, unsigned, not comparable)" | tee -a "$GITHUB_STEP_SUMMARY"
+          pip install --quiet "huggingface_hub>=0.25"
+          python3 - <<'PY'
+          import os
+          from huggingface_hub import HfApi
+          HfApi(token=os.environ["HF_TOKEN"].strip()).upload_file(
+              path_or_fileobj="/tmp/spend.json",
+              path_in_repo="ledger/hf-inference-spend.json",
+              repo_id="csoai/hub-queue", repo_type="dataset",
+              commit_message=f"spend ledger settle run {os.environ['RUN_KEY']} (no inference)")
+          HfApi(token=os.environ["HF_TOKEN"].strip()).upload_file(
+              path_or_fileobj="/tmp/hosted-results.json",
+              path_in_repo="hosted-api/results.json",
+              repo_id="csoai/hub-queue", repo_type="dataset",
+              commit_message=f"hosted-api results run {os.environ['RUN_KEY']} (unsigned, not comparable; not a board rewrite)")
+          PY
 
   # A failed transport probe must not leave old practice probes advertised as
   # measurements. This job performs a semantic count migration only; it does
@@ -256,9 +380,11 @@ jobs:
           )
           PY
 
+  # HF2200 membership lock. The billed lane is hosted-api only, so this job
+  # never runs on a billed run; land-lock's n_locked == 2200 check is unchanged.
   land-lock:
     needs: [probe, mill]
-    if: always() && needs.probe.outputs.ok == '1'
+    if: always() && needs.probe.outputs.ok == '1' && needs.probe.outputs.credit_only != '1'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:

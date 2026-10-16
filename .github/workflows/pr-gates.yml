@@ -176,7 +176,7 @@ jobs:
             exit 0
           fi
           changed=$(gh api --paginate "repos/$REPO/pulls/$PR/files" --jq '.[].filename')
-          gated=$(printf '%s\n' "$changed" | grep -E '^(client/|public/|functions/|scripts/|harness/x402-census/|docs/operations/PRODUCERS\.json$|package\.json$|package-lock\.json$|wrangler\.jsonc$|\.github/workflows/pr-gates\.yml$)' || true)
+          gated=$(printf '%s\n' "$changed" | grep -E '^(client/|e2e/|public/|functions/|scripts/|harness/x402-census/|docs/operations/PRODUCERS\.json$|package\.json$|package-lock\.json$|vitest\.config\.ts$|wrangler\.jsonc$|\.github/workflows/pr-gates\.yml$)' || true)
           if [ -n "$gated" ]; then
             echo "gated=true" >> "$GITHUB_OUTPUT"
             echo "gated paths in this PR:"; printf '  %s\n' $gated
@@ -189,10 +189,14 @@ jobs:
       - uses: actions/checkout@v4
         if: steps.scope.outputs.gated == 'true'
         with:
-          fetch-depth: 2   # HEAD^1 = the base this PR merges into, for the stamped-bytes step
+          fetch-depth: 0   # Canonical SBOM generation history; HEAD^1 remains this PR merge base.
       - uses: actions/setup-node@v4
         if: steps.scope.outputs.gated == 'true'
         with: { node-version: 20 }
+
+      - name: Outward claims — offline manifest contract selftest
+        if: steps.scope.outputs.gated == 'true'
+        run: node scripts/outward-claims-guard.mjs --selftest
 
       # Runs before `npm ci` so a stamped-byte edit fails in seconds. See the stamped-bytes job above
       # for why (#2871 / deploy run 37590160574). Verified to fail: the selftest goes red when any one
@@ -213,6 +217,87 @@ jobs:
         run: |
           npm ci --no-audit --no-fund
           python3 -m pip install -q cryptography opentimestamps-client
+
+      - name: Offline uploader regressions — isolated network namespace
+        if: steps.scope.outputs.gated == 'true'
+        timeout-minutes: 10
+        shell: bash
+        run: |
+          set -euo pipefail
+          runner_uid="$(id -u)"
+          runner_gid="$(id -g)"
+          test "$runner_uid" -ne 0
+          host_netns="$(readlink /proc/self/ns/net)"
+          offline_home="$(mktemp -d "$RUNNER_TEMP/csoai-intake-offline.XXXXXX")"
+          echo "Uploader test checkout: $(git rev-parse HEAD)"
+          # Fail closed if this hosted runner cannot create the isolated namespace.
+          # Clear inherited credentials/proxies before unshare; load tests only after
+          # dropping the runner's supplementary groups and all privilege escalation.
+          /usr/bin/sudo -n /usr/bin/env -i PATH=/usr/bin:/bin \
+            HOME="$offline_home" TMPDIR="$offline_home" \
+            HF_HUB_OFFLINE=1 HF_DATASETS_OFFLINE=1 \
+            /usr/bin/unshare --net -- /usr/bin/setpriv \
+            --reuid="$runner_uid" --regid="$runner_gid" --clear-groups \
+            --bounding-set=-all --inh-caps=-all --ambient-caps=-all --no-new-privs \
+            /usr/bin/python3 -I -B -u - "$host_netns" "$runner_uid" "$runner_gid" <<'PY'
+          import errno
+          import os
+          from pathlib import Path
+          import socket
+          import subprocess
+          import sys
+
+          host_netns, runner_uid, runner_gid = sys.argv[1], int(sys.argv[2]), int(sys.argv[3])
+          if os.readlink('/proc/self/ns/net') == host_netns:
+              raise SystemExit('Network guard failed: still in the host namespace')
+          if runner_uid == 0 or os.getresuid() != (runner_uid,) * 3 or os.getresgid() != (runner_gid,) * 3 or os.getgroups():
+              raise SystemExit('Network guard failed: runner privileges were not dropped')
+          status = dict(line.split(':', 1) for line in Path('/proc/self/status').read_text().splitlines() if ':' in line)
+          if status['NoNewPrivs'].strip() != '1' or any(int(status[key].strip(), 16) for key in ('CapInh', 'CapPrm', 'CapEff', 'CapBnd', 'CapAmb')):
+              raise SystemExit('Network guard failed: capabilities or privilege escalation remain')
+          if {name for _, name in socket.if_nameindex()} != {'lo'}:
+              raise SystemExit('Network guard failed: a non-loopback interface exists')
+          for family, address in ((socket.AF_INET, ('192.0.2.1', 443)), (socket.AF_INET6, ('2001:db8::1', 443))):
+              try:
+                  probe = socket.socket(family, socket.SOCK_STREAM)
+              except OSError as exc:
+                  if family == socket.AF_INET6 and exc.errno in (errno.EAFNOSUPPORT, errno.EPROTONOSUPPORT):
+                      print('Network guard: IPv6 unavailable', flush=True)
+                      continue
+                  raise
+              with probe:
+                  probe.settimeout(2)
+                  denied = probe.connect_ex(address)
+              if denied not in (errno.ENETUNREACH, errno.EHOSTUNREACH):
+                  raise SystemExit(f'Network guard failed: unexpected connect result {denied} for {address}')
+              print(f'Network guard: external connect denied ({family.name}, errno={denied})', flush=True)
+          print('Network guard verified before loading uploader tests', flush=True)
+
+          # Every child inherits the same isolated network namespace and restrictions.
+          # Explicit modules plus a nonzero collection check prevent discover-zero passes.
+          test_driver = '''
+          import sys
+          import unittest
+          from pathlib import Path
+          sys.path.insert(0, str(Path('scripts').resolve()))
+          suite = unittest.defaultTestLoader.loadTestsFromName(sys.argv[1])
+          count = suite.countTestCases()
+          if count == 0:
+              raise SystemExit('No tests collected for ' + sys.argv[1])
+          print(f'{sys.argv[1]}: {count} collected tests', flush=True)
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          raise SystemExit(0 if result.wasSuccessful() else 1)
+          '''
+          for module in (
+              'test_intake_manifest',
+              'test_intake_snapshot',
+              'test_runpod_current_intake',
+              'test_intake_composition',
+              'test_runpod_gspc_push_to_hf',
+              'test_runpod_gspc_upload_heartbeat',
+          ):
+              subprocess.run([sys.executable, '-I', '-B', '-u', '-c', test_driver, module], check=True, timeout=90)
+          PY
 
       # This used to run only after merge in deploy.yml. PR #1847 passed every hosted
       # PR check and then the master deployment stopped because TypeScript errors had
@@ -244,9 +329,57 @@ jobs:
           test -n "$files" || { echo "NODE_TEST_FILES is empty or unreadable"; exit 1; }
           node --test $files
 
+      # Same required gates job: the delivery runner uses Node's TS transformer and VM modules.
+      - name: Paid delivery regression runtime
+        if: steps.scope.outputs.gated == 'true'
+        uses: actions/setup-node@v4
+        with: { node-version: '22.23.3' }
+
+      - name: Paid delivery and API worker offline regressions
+        if: steps.scope.outputs.gated == 'true'
+        env:
+          CODEX_DELIVERY_PR_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          echo "PR source revision: $CODEX_DELIVERY_PR_HEAD"
+          echo "Checked-out test revision: $(git rev-parse HEAD)"
+          git fetch --no-tags --depth=1 origin 10046fd8b60d75be66bd1f9dbf54155cca26dec3
+          test "$(git rev-parse 10046fd8b60d75be66bd1f9dbf54155cca26dec3^{commit})" = 10046fd8b60d75be66bd1f9dbf54155cca26dec3
+          node --version
+          python3 scripts/test_anthropic_gspc_worker.py
+          node --experimental-vm-modules --unhandled-rejections=strict scripts/test_paid_delivery_records.mjs
+
+      - name: Restore existing Node 20 build runtime
+        if: always() && steps.scope.outputs.gated == 'true'
+        uses: actions/setup-node@v4
+        with: { node-version: 20 }
+
       - name: Build client
         if: steps.scope.outputs.gated == 'true'
         run: npm run build:client
+
+      - name: Prepare Council OS first-question browser check
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          npx playwright install --with-deps chromium
+          npm run prerender:dashboard
+
+      - name: Council OS first question — desktop and mobile
+        id: council_os_first_question
+        if: steps.scope.outputs.gated == 'true'
+        run: npm run test:e2e:shell -- e2e/tests/dashboard-home-ask.spec.ts --grep 'the first question typed on the start screen gets an answer at (1440|375)px$'
+
+      - name: Retain Council OS first-question premerge evidence
+        if: ${{ always() && steps.scope.outputs.gated == 'true' && (steps.council_os_first_question.outcome == 'success' || steps.council_os_first_question.outcome == 'failure') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: council-os-first-question-premerge-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            test-results/**/trace.zip
+            test-results/**/agui-request-lifecycle.json
+            test-results/**/*.png
+          retention-days: 3
+          if-no-files-found: warn
 
       # --selftest first: a gate that has never been seen failing is decoration,
       # so it proves it can go red on every run before it is trusted on our bytes.
@@ -265,7 +398,19 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         run: |
           node scripts/facts-gate.mjs --selftest
-          node scripts/facts-gate.mjs dist/client
+          node scripts/facts-gate.mjs dist/client --board-reference prerender-board-reference.json
+
+      # Measure ruling on #3266 (16 Oct 2026): the facts-gate above now judges against the board
+      # THIS commit rendered (prerender-board-reference.json, written and bound by the
+      # `npm run prerender:dashboard` step above, the same prerender.mjs deploy uses; never
+      # committed, see .gitignore). This anchor keeps the measured part of that board pinned to
+      # PRODUCTION /api/gspc: measured_axes, the measured set, every measured n and score, and
+      # card_index are unchanged; only the count of unmeasured axes may grow.
+      - name: Board production anchor — measured axes and card_index unchanged from production
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/board-production-anchor.mjs --selftest
+          node scripts/board-production-anchor.mjs dist/client --board-reference prerender-board-reference.json
 
       # Persona audit T06 (2026-10-06): /axis/jail said TIE while the board said UNTESTED, /axes
       # disagreed with both, and /benchmarks repeated a corrected claim. facts-gate reads counts;
@@ -453,6 +598,9 @@ jobs:
           python3 -m pytest -q harness/gspc-top100/test_priority_pick.py harness/gspc-top100/test_inflight_cells.py
           # The pre-send mail check: no address but the one being checked may ever be put to a mail server.
           python3 -m pytest -q scripts/outward-gate/test_contact_reachability.py
+          # The outward gate itself. Its tests were not in CI: from the day brand-gate.mjs gained a look-behind
+          # that Python cannot read, the gate could score nothing at 100% and one of these tests sat red unseen.
+          python3 -m pytest -q scripts/outward-gate/test_outward_gate.py scripts/outward-gate/test_gate_draft.py
           # C-2026-0914-01: a one-option exact-label menu is refused, and every signed card
           # graded by one is in WITHDRAWN.jsonl (derived from the bound bank bytes).
           python3 -m pytest -q harness/gspc-top100/test_one_option_menu.py
