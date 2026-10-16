@@ -579,21 +579,21 @@ for sku in payload["known_skus"]:
     challenge_row = next(row for row in results if row["id"] == sku + "/challenge-preview")
     unavailable = next(row for row in results if row["id"] == sku + "/unavailable")
     text = baseline["markdown"]
-    identity = next(line for line in text.splitlines() if line.startswith("`" + sku + "` — endpoint observations recorded on "))
+    identity = next(line for line in text.splitlines() if line.startswith(chr(96) + sku + chr(96) + " — endpoint observations recorded on "))
     classification = next(line for line in text.splitlines() if line.startswith("**UNPAID RESPONSE OBSERVED."))
     challenge_classification = next(line for line in challenge_row["markdown"].splitlines() if line.startswith("**PAYMENT CHALLENGE OBSERVED."))
     unavailable_classification = next(line for line in unavailable["markdown"].splitlines() if line.startswith("**UNVERIFIED."))
     boundary = "Payment, returned artifact bytes, verification, receipt by the buyer and acceptance remain separate."
     mutations = [
-        ("mismatched-identity", text.replace(identity, identity.replace("`" + sku + "`", "`different-sku`", 1), 1)),
+        ("mismatched-identity", text.replace(identity, identity.replace(chr(96) + sku + chr(96), chr(96) + "different-sku" + chr(96), 1), 1)),
         ("duplicate-identity", text.replace(identity, identity + "\n" + identity, 1)),
-        ("conflicting-identity", text.replace(identity, identity + "\n" + identity.replace("`" + sku + "`", "`different-sku`", 1), 1)),
+        ("conflicting-identity", text.replace(identity, identity + "\n" + identity.replace(chr(96) + sku + chr(96), chr(96) + "different-sku" + chr(96), 1), 1)),
         ("duplicate-observation-heading", text.replace("## Unpaid preview or challenge observation", "## Unpaid preview or challenge observation\n## Unpaid preview or challenge observation", 1)),
         ("duplicate-resource-heading", text.replace("## 402 door", "## 402 door\n## 402 door", 1)),
         ("duplicate-scope-heading", text.replace("## Buyer and paid output scope", "## Buyer and paid output scope\n## Buyer and paid output scope", 1)),
-        ("unfenced-sample", text.replace("```json\n", "```text\n", 1)),
-        ("injected-sample-fence", text.replace("```json\n", "```json\n```\n", 1)),
-        ("injected-sample-heading", text.replace("```json\n", "```json\n## 402 door\n", 1)),
+        ("unfenced-sample", text.replace(chr(96) * 3 + "json\n", chr(96) * 3 + "text\n", 1)),
+        ("injected-sample-fence", text.replace(chr(96) * 3 + "json\n", chr(96) * 3 + "json\n" + chr(96) * 3 + "\n", 1)),
+        ("injected-sample-heading", text.replace(chr(96) * 3 + "json\n", chr(96) * 3 + "json\n## 402 door\n", 1)),
         ("unsupported-legacy-verdict", text.replace(classification, "**DELIVERABLE — free preview answers with real bytes.** Advertised.", 1)),
         ("appended-verdict-success-claim", text.replace(classification, classification + " DELIVERABLE: every paid artifact is signed and included in the public root.", 1)),
         ("positive-status-contradiction", text.replace(" — status **200**", " — status **503**", 1)),
@@ -815,7 +815,7 @@ METHODS = {
     "resolve", "is_absolute", "strip", "count", "monotonic", "now", "strftime", "loads", "dumps", "get", "add", "read_text",
     "open", "fsync", "close", "NamedTemporaryFile", "write", "flush", "fileno",
     "unlink", "replace", "stat", "fdopen", "time", "time_ns", "mkdir", "append",
-    "flock", "getpid", "items", "Request", "urlopen", "read", "sha256", "hexdigest", "decode",
+    "flock", "getpid", "items", "Request", "urlopen", "read", "sha256", "hexdigest", "decode", "join",
 }
 
 def check(value, detail):
