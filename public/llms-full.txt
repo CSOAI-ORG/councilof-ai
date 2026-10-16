@@ -34,7 +34,7 @@ must not be rewritten as one.
 
 ## 1. CURRENT MEASUREMENT COVERAGE
 
-The GSPC board: **23 axes · 23 measured** = 14 model-comparison + 9 deterministic-fact.
+The GSPC board: **33 axes · 23 measured** = 14 model-comparison + 9 deterministic-fact.
 Measurement, not certification. Anyone can re-check.
 
 ### 1a. What MEASURED means here, and what it does not mean
@@ -53,7 +53,7 @@ its own live fields on GET /api/gspc. Read from the same fetch as the snapshot i
 The 9 deterministic-fact axes have no fleet and no leader, so no separation test applies to
 them; they are not counted as untested and they enter no mean.
 
-Therefore: "23 measured of 23" means a run exists behind every slot. It is NOT a claim that
+Therefore: "23 measured of 33" means a run exists behind 23 of the 33 slots and 10 are declared slots with none. It is NOT a claim that
 any axis can tell two models apart, and any phrasing a reader could take that way is wrong. When you
 quote the measured count, quote the four separation fields beside it. TIE is TIE and UNTESTED is not
 a win; both are first-class states and neither is hidden. This section describes the board as it
@@ -98,22 +98,27 @@ board moves, so treat this as a copy and re-fetch for current values.
   "schema": "csoai.gspc-axes/0.5",
   "as_of": null,
   "totals": {
-    "axes": 23,
+    "axes": 33,
     "measured_axes": 23,
-    "unmeasured_axes": 0,
+    "unmeasured_axes": 10,
     "quotable_axes": 23,
-    "public_count": "23 axes · 23 measured",
+    "public_count": "33 axes · 23 measured",
     "separation_public_count": "0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED",
     "separation_public_count_note": "Read with public_count, never instead of it. measured_axes counts axes with a RUN behind them; it is not a count of axes with a separated result. SEPARATED, TIE and UNTESTED are three states and none is folded into another. Derived from the axis array, never typed. The same three numbers appear below as separated_leads / ties / untested_separations and in limitations[0]; there is one derivation.",
     "model_fleets": 14,
     "model_fleets_note": "Counts model-comparison AXES (one fleet per axis), not models. The number of distinct models measured is a different quantity, derived from the signed cards: /interop/models-measured.json (list at /models-measured/).",
     "fact_runs": 9,
-    "count_grammar": "23 axes are on the board and every one carries a measurement — no declared slot is empty. Both counts are DERIVED from the axis array, never typed; if a future slot is added with no run behind it, this line separates the two again on its own. A measurement is not a separated leader: 0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED. A point-estimate lead is not a measured advantage, and UNTESTED is not a tie.",
+    "count_grammar": "33 axes are on the board; 23 of them carry a measurement and 10 are declared slots with no run behind them. The larger number counts slots, the smaller counts measurements — quote both or quote the smaller. A published slot exists so the gap is visible; it is not evidence of anything having been measured. A measurement is not a separated leader either: 0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED.",
     "by_family": {
       "gspc": {
         "axes": 15,
         "measured": 15,
         "note": "The 14 behavioural axes: a model fleet answers a frozen bank, graded deterministically. Plus effect-binding (ADR-002), a deterministic-facts probe of tool-call SERVERS, not a fleet: n counts servers probed, it has no leader, no accuracy and no separation, and it joins no mean."
+      },
+      "subject": {
+        "axes": 10,
+        "measured": 0,
+        "note": "The subject axes (2026-10-16): each applies to ONE subject type (applies_to). Declared slots, UNMEASURED until a frozen sha-pinned bank with n_valid >= 30 passes the gate. Census checks are a DISCOVERED check grid, never scores here. No aggregate score and no overall rank."
       },
       "financial": {
         "axes": 8,
@@ -184,7 +189,7 @@ board moves, so treat this as a copy and re-fetch for current values.
     "mean_unparsed_rate": 0.0541,
     "mean_note": "Means are over MEASURED MODEL-COMPARISON axes that carry the field. mean_accuracy averages the per-axis LEADERS; mean_fleet_mean averages each axis's measured fleet — the difference is selection, not skill. mean_harm is the severity-weighted failure mass the mean accuracy hides; it exists only for the measured board-v2 axes. No financial axis enters any of these means: an axis with no accuracy contributes nothing rather than a zero."
   },
-  "axes_count": 23,
+  "axes_count": 32,
   "axes": [
     {
       "axis": "governance",
@@ -392,12 +397,93 @@ board moves, so treat this as a copy and re-fetch for current values.
       "n": 8,
       "accuracy": null,
       "separation": null
+    },
+    {
+      "axis": "lab-practice",
+      "status": "UNMEASURED",
+      "family": "subject",
+      "kind": "declared-slot",
+      "n": 0,
+      "accuracy": null,
+      "separation": null
+    },
+    {
+      "axis": "company-practice",
+      "status": "UNMEASURED",
+      "family": "subject",
+      "kind": "declared-slot",
+      "n": 0,
+      "accuracy": null,
+      "separation": null
+    },
+    {
+      "axis": "measurer-integrity",
+      "status": "UNMEASURED",
+      "family": "subject",
+      "kind": "declared-slot",
+      "n": 0,
+      "accuracy": null,
+      "separation": null
+    },
+    {
+      "axis": "harness-fidelity",
+      "status": "UNMEASURED",
+      "family": "subject",
+      "kind": "declared-slot",
+      "n": 0,
+      "accuracy": null,
+      "separation": null
+    },
+    {
+      "axis": "interop-conformance",
+      "status": "UNMEASURED",
+      "family": "subject",
+      "kind": "declared-slot",
+      "n": 0,
+      "accuracy": null,
+      "separation": null
+    },
+    {
+      "axis": "humanoid-deployment",
+      "status": "UNMEASURED",
+      "family": "subject",
+      "kind": "declared-slot",
+      "n": 0,
+      "accuracy": null,
+      "separation": null
+    },
+    {
+      "axis": "interpretability-reproducibility",
+      "status": "UNMEASURED",
+      "family": "subject",
+      "kind": "declared-slot",
+      "n": 0,
+      "accuracy": null,
+      "separation": null
+    },
+    {
+      "axis": "claim-maintenance",
+      "status": "UNMEASURED",
+      "family": "subject",
+      "kind": "declared-slot",
+      "n": 0,
+      "accuracy": null,
+      "separation": null
+    },
+    {
+      "axis": "serving-fidelity",
+      "status": "UNMEASURED",
+      "family": "subject",
+      "kind": "declared-slot",
+      "n": 0,
+      "accuracy": null,
+      "separation": null
     }
   ]
 }
 ```
 
-## 3. THE AXES — deep reference (23 axes · 23 measured, read live at generation)
+## 3. THE AXES — deep reference (33 axes · 23 measured, read live at generation)
 
 Every block below is rendered from the same GET /api/gspc fetch as the snapshot above; nothing in it is typed. The `row` URL filters the live board to that one axis; `page` is the per-axis reference page; `bank`/`evidence` is what stands behind the row.
 
@@ -629,6 +715,78 @@ Every block below is rendered from the same GET /api/gspc fetch as the snapshot 
 - page: https://councilof.ai/axis/humanoid-labour-index
 - bank: https://huggingface.co/datasets/csoai/gspc-humanoid-labour-index
 - evidence: https://councilof.ai/interop/financial-measure-run-humanoid-labour-index.json
+
+### lab-practice
+- family: `subject`
+- kind: `declared-slot`
+- status: `UNMEASURED`
+- n: 0
+- row: https://councilof.ai/api/gspc?axis=lab-practice
+- page: https://councilof.ai/axis/lab-practice
+
+### company-practice
+- family: `subject`
+- kind: `declared-slot`
+- status: `UNMEASURED`
+- n: 0
+- row: https://councilof.ai/api/gspc?axis=company-practice
+- page: https://councilof.ai/axis/company-practice
+
+### measurer-integrity
+- family: `subject`
+- kind: `declared-slot`
+- status: `UNMEASURED`
+- n: 0
+- row: https://councilof.ai/api/gspc?axis=measurer-integrity
+- page: https://councilof.ai/axis/measurer-integrity
+
+### harness-fidelity
+- family: `subject`
+- kind: `declared-slot`
+- status: `UNMEASURED`
+- n: 0
+- row: https://councilof.ai/api/gspc?axis=harness-fidelity
+- page: https://councilof.ai/axis/harness-fidelity
+
+### interop-conformance
+- family: `subject`
+- kind: `declared-slot`
+- status: `UNMEASURED`
+- n: 0
+- row: https://councilof.ai/api/gspc?axis=interop-conformance
+- page: https://councilof.ai/axis/interop-conformance
+
+### humanoid-deployment
+- family: `subject`
+- kind: `declared-slot`
+- status: `UNMEASURED`
+- n: 0
+- row: https://councilof.ai/api/gspc?axis=humanoid-deployment
+- page: https://councilof.ai/axis/humanoid-deployment
+
+### interpretability-reproducibility
+- family: `subject`
+- kind: `declared-slot`
+- status: `UNMEASURED`
+- n: 0
+- row: https://councilof.ai/api/gspc?axis=interpretability-reproducibility
+- page: https://councilof.ai/axis/interpretability-reproducibility
+
+### claim-maintenance
+- family: `subject`
+- kind: `declared-slot`
+- status: `UNMEASURED`
+- n: 0
+- row: https://councilof.ai/api/gspc?axis=claim-maintenance
+- page: https://councilof.ai/axis/claim-maintenance
+
+### serving-fidelity
+- family: `subject`
+- kind: `declared-slot`
+- status: `UNMEASURED`
+- n: 0
+- row: https://councilof.ai/api/gspc?axis=serving-fidelity
+- page: https://councilof.ai/axis/serving-fidelity
 
 ## 3a. DATED EFFECT-BINDING PROBE ACCOUNT
 
