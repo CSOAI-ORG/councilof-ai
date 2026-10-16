@@ -5,7 +5,7 @@ on:
   schedule: [{cron: "17 2 * * *"}]
   workflow_dispatch: {}
   push:
-    branches: [main]
+    branches: [master]
     paths: ["public/interop/gspc-one.json", "scripts/gspc-one/**", ".github/workflows/gspc-one-publish.yml"]
 permissions: {contents: read}
 concurrency: {group: gspc-one-publish, cancel-in-progress: false}
