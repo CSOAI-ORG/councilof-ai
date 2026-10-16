@@ -2,8 +2,9 @@ name: gspc-mcp-reachability-census
 # Pre-axis census (DISCOVERED grid): initialize + notifications/initialized + tools/list only, no credentials,
 # 1 in-flight request per host, global rate cap, opt-out deny list, <=1 retry. Never feeds any axis score or n.
 # Results stay unsigned and unpublished in D1 gspc-layer0. $0: no model/provider calls.
+# Hourly schedule disabled 16 Oct 2026: the repo CLOUDFLARE_API_TOKEN secret has no D1 write (403).
+# The same script (same method sha) runs from the ops box loop instead. Manual dispatch kept.
 on:
-  schedule: [{ cron: "20 * * * *" }]
   workflow_dispatch: {}
 permissions: { contents: read }
 concurrency: { group: gspc-mcp-reachability-census, cancel-in-progress: false }
