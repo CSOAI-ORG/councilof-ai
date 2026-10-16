@@ -251,8 +251,14 @@ jobs:
           export MILL_SHARD_BUDGET_USD="$SHARD_BUDGET"
           # Measure ruling 1: full frozen bank, T=0, serial; hosted-api lane,
           # unsigned, not comparable to signed cells; one row per model:provider.
-          export MILL_BANK_N=9999 MILL_LANE="hosted-api, unsigned, not comparable to signed cells"
-          python3 scripts/mill_hf_inference.py
+          # Hosted-api lane: HOSTED-API.lock.json (NOT HF2200), one row per
+          # model:provider pair, cheapest first, full frozen governance bank
+          # (sha-checked), T=0, serial. Pairs already graded are skipped.
+          curl -fsSL -H "Authorization: Bearer ${HF_TOKEN}" -o /tmp/hosted-results.json \
+            "https://huggingface.co/datasets/csoai/hub-queue/resolve/main/hosted-api/results.json" \
+            || echo "HOSTED_RESULTS_NONE first hosted run"
+          export HOSTED_DONE=/tmp/hosted-results.json MILL_LIMIT="${HOSTED_LIMIT:-10}"
+          python3 scripts/mill_hosted_api.py
       - name: upload mill JSON (not a board rewrite)
         if: always()
         uses: actions/upload-artifact@v4
@@ -285,6 +291,11 @@ jobs:
           files=$(find mill-shards -name 'spend_s*.json' | sort)
           out=$(python3 scripts/hf_spend_ledger.py settle /tmp/spend.json "$RUN_KEY" $files)
           echo "LEDGER_SETTLED $out" | tee -a "$GITHUB_STEP_SUMMARY"
+          curl -fsSL -H "Authorization: Bearer ${HF_TOKEN}" -o /tmp/hosted-results.json \
+            "https://huggingface.co/datasets/csoai/hub-queue/resolve/main/hosted-api/results.json" \
+            || rm -f /tmp/hosted-results.json
+          res=$(python3 scripts/merge_hosted_results.py /tmp/hosted-results.json mill-shards)
+          echo "HOSTED_RESULTS $res (hosted-api, unsigned, not comparable)" | tee -a "$GITHUB_STEP_SUMMARY"
           pip install --quiet "huggingface_hub>=0.25"
           python3 - <<'PY'
           import os
@@ -294,6 +305,11 @@ jobs:
               path_in_repo="ledger/hf-inference-spend.json",
               repo_id="csoai/hub-queue", repo_type="dataset",
               commit_message=f"spend ledger settle run {os.environ['RUN_KEY']} (no inference)")
+          HfApi(token=os.environ["HF_TOKEN"].strip()).upload_file(
+              path_or_fileobj="/tmp/hosted-results.json",
+              path_in_repo="hosted-api/results.json",
+              repo_id="csoai/hub-queue", repo_type="dataset",
+              commit_message=f"hosted-api results run {os.environ['RUN_KEY']} (unsigned, not comparable; not a board rewrite)")
           PY
 
   # A failed transport probe must not leave old practice probes advertised as
@@ -362,9 +378,11 @@ jobs:
           )
           PY
 
+  # HF2200 membership lock. The billed lane is hosted-api only, so this job
+  # never runs on a billed run; land-lock's n_locked == 2200 check is unchanged.
   land-lock:
     needs: [probe, mill]
-    if: always() && needs.probe.outputs.ok == '1'
+    if: always() && needs.probe.outputs.ok == '1' && needs.probe.outputs.credit_only != '1'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
