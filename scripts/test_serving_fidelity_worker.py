@@ -10,12 +10,14 @@ G = {"ground_truth": [{"math.hypot": {"x": [4], "y": [5], "z": ["", 0], "pts": [
 
 
 def test_gsm8k_parse():
-    assert w.parse_gsm8k("work\nANSWER: $1,234.00", "stop") == ("ok", 1234)
-    assert w.parse_gsm8k("ANSWER: 1\nANSWER: 18 %", "stop") == ("ok", 18)
+    assert w.parse_gsm8k("work\nANSWER: $1,234.00", "stop") == ("ok", 1234, "answer_line")
+    assert w.parse_gsm8k("ANSWER: 1\nANSWER: 18 %", "stop")[:2] == ("ok", 18)
     assert w.parse_gsm8k("ANSWER: 2.50", "stop")[1] == w.Decimal("2.50")
-    assert w.parse_gsm8k("no line", "stop") == ("unparsed", None)
-    assert w.parse_gsm8k("no line", "length") == ("truncated", None)
-    assert w.parse_gsm8k("ANSWER: about ten", "stop") == ("unparsed", None)
+    assert w.parse_gsm8k("no line 42", "stop") == ("unparsed", None, None)  # bare trailing number
+    assert w.parse_gsm8k("no line", "length") == ("truncated", None, None)
+    assert w.parse_gsm8k("ANSWER: about ten", "stop")[0] == "unparsed"
+    assert w.parse_gsm8k("so \\boxed{5} then \\boxed{$70,000}", "stop") == ("ok", 70000, "boxed")
+    assert w.parse_gsm8k("\\boxed{9}\nANSWER: 7", "stop") == ("ok", 7, "answer_line")  # ANSWER first
     assert w.grade_gsm8k(18, "18") and not w.grade_gsm8k(17, "18")
     assert w.grade_gsm8k(w.Decimal("2.5"), "2.50")
 

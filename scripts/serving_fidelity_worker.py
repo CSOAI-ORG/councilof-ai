@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""serving-fidelity-worker-v0.1 -- GSPC serving-fidelity cells (Measure ruling 16 Oct 2026).
+"""serving-fidelity-worker-v0.2 -- GSPC serving-fidelity cells (Measure rulings 16 Oct 2026; v0.2 adds \\boxed{} fallback + provenance).
 
 Scores two sub-banks of the frozen serving-fidelity bank as SEPARATE cells, each exactly 30 items, never padded:
   gsm8k-30  (sub_bank "a-closed-form")  numeric answer, parsed from the last "ANSWER:" line
@@ -21,9 +21,12 @@ from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
-WORKER_VERSION = "serving-fidelity-worker-v0.1"
-RUN_SCHEMA = "csoai.serving-fidelity-run/0.1"
-ITEM_SCHEMA = "csoai.serving-fidelity-item/0.1"
+WORKER_VERSION = "serving-fidelity-worker-v0.2"
+RUN_SCHEMA = "csoai.serving-fidelity-run/0.2"
+ITEM_SCHEMA = "csoai.serving-fidelity-item/0.2"
+BFCL_SCHEMA_MAPPING = {"dict": "object", "float": "number", "tuple": "array"}
+BFCL_UPSTREAM = {"repo": "ShishirPatil/gorilla", "file": "berkeley-function-call-leaderboard/bfcl_eval/data/possible_answer/BFCL_v4_simple_python.json", "commit": "f7cf7359b7ac615a0b294831c5ba2bc95ee4a000", "licence": "Apache-2.0"}
+GSM8K_PARSE_ORDER = ["last ANSWER: line", "else last \\boxed{...}", "else UNPARSED (bare trailing number is UNPARSED)"]
 SUB_BANKS = {"gsm8k-30": "a-closed-form", "bfcl-30": "b-tool-call"}
 CELL_N = 30
 GSM8K_SUFFIX = "End with a line: ANSWER: <number>"
@@ -89,15 +92,20 @@ def normalize_number(s: str):
     return d
 
 
+_BOXED_RE = re.compile(r"\\boxed\{([^{}]*)\}")
+
+
 def parse_gsm8k(content: str, done_reason: str | None):
-    """-> (parse_status, parsed_value). Last ANSWER: line wins."""
+    """-> (parse_status, parsed_value, parsed_via). Last ANSWER: line first; else last \\boxed{...}; else UNPARSED/TRUNCATED."""
     matches = _ANSWER_RE.findall(content or "")
-    if not matches:
-        return ("truncated" if done_reason == "length" else "unparsed"), None
-    v = normalize_number(matches[-1])
-    if v is None:
-        return "unparsed", None
-    return "ok", v
+    if matches:
+        v = normalize_number(matches[-1])
+        return ("ok", v, "answer_line") if v is not None else ("unparsed", None, "answer_line")
+    boxed = _BOXED_RE.findall(content or "")
+    if boxed:
+        v = normalize_number(boxed[-1])
+        return ("ok", v, "boxed") if v is not None else ("unparsed", None, "boxed")
+    return ("truncated" if done_reason == "length" else "unparsed"), None, None
 
 
 def grade_gsm8k(parsed, gold: str) -> bool:
@@ -109,7 +117,7 @@ def grade_gsm8k(parsed, gold: str) -> bool:
 
 # ---------------------------------------------------------------- BFCL
 
-_TYPE_MAP = {"dict": "object", "float": "number", "tuple": "array", "any": "string"}
+_TYPE_MAP = {**BFCL_SCHEMA_MAPPING}
 
 
 def to_ollama_schema(node):
@@ -333,12 +341,12 @@ def run(a) -> dict:
         raise Refuse(f"REFUSE: bank sha mismatch {bsha} != {a.expected_bank_sha256}")
     gold = None
     gsha = None
+    if not a.gold or not a.expected_gold_sha256:
+        raise Refuse("REFUSE: --gold and --expected-gold-sha256 are required (recorded on every row)")
+    gsha = sha256_file(Path(a.gold))
+    if gsha != a.expected_gold_sha256:
+        raise Refuse(f"REFUSE: gold sha mismatch {gsha}")
     if a.cell == "bfcl-30":
-        if not a.gold or not a.expected_gold_sha256:
-            raise Refuse("REFUSE: bfcl-30 needs --gold and --expected-gold-sha256")
-        gsha = sha256_file(Path(a.gold))
-        if gsha != a.expected_gold_sha256:
-            raise Refuse(f"REFUSE: gold sha mismatch {gsha}")
         gold = {r["id"]: r for r in (json.loads(l) for l in Path(a.gold).read_text().splitlines() if l.strip())}
     mf = Path(a.model_manifest)
     dg = model_digest(mf)
@@ -353,7 +361,8 @@ def run(a) -> dict:
     run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S.%fZ") + "-" + uuid.uuid4().hex[:10]
     out = Path(a.output_dir) / run_id
     out.mkdir(parents=True, exist_ok=False)
-    common = {"method_sha256": msha, "bank_sha256": bsha, "model_digest": dg, "worker_version": WORKER_VERSION}
+    common = {"method_sha256": msha, "bank_sha256": bsha, "gold_sha256": a.expected_gold_sha256, "model_digest": dg, "worker_version": WORKER_VERSION,
+              "bfcl_upstream_commit": BFCL_UPSTREAM["commit"], "bfcl_upstream_licence": BFCL_UPSTREAM["licence"]}
     rows, na = [], None
     opts = {"temperature": 0, "seed": 0}
     with open(out / "items.jsonl", "w") as f:
@@ -379,8 +388,8 @@ def run(a) -> dict:
                 msg, dr = resp.get("message", {}), resp.get("done_reason")
                 row.update(raw_response_sha256=sha256_text(raw), done_reason=dr, content=msg.get("content", ""), tool_calls=msg.get("tool_calls"))
                 if a.cell == "gsm8k-30":
-                    ps, val = parse_gsm8k(msg.get("content", ""), dr)
-                    row.update(parse_status=ps, parsed=str(val) if val is not None else None, gold=it["answer"],
+                    ps, val, via = parse_gsm8k(msg.get("content", ""), dr)
+                    row.update(parse_status=ps, parsed=str(val) if val is not None else None, parsed_via=via, gold=it["answer"],
                                correct=grade_gsm8k(val, it["answer"]) if ps == "ok" else None)
                 else:
                     ps, call, src = extract_call(msg, dr)
@@ -394,7 +403,8 @@ def run(a) -> dict:
             f.write(json.dumps(row, sort_keys=True) + "\n")
             f.flush()
     dg_after = model_digest(mf)
-    run = {"schema": RUN_SCHEMA, "run_id": run_id, "cell": a.cell, "model": a.model, **common, "gold_sha256": gsha,
+    run = {"schema": RUN_SCHEMA, "run_id": run_id, "cell": a.cell, "model": a.model, **common, "gold_sha256_checked": gsha,
+           "bfcl_schema_mapping": BFCL_SCHEMA_MAPPING, "bfcl_upstream": BFCL_UPSTREAM, "gsm8k_parse_order": GSM8K_PARSE_ORDER,
            "model_digest_after": dg_after, "temperature": 0, "seed": 0, "num_parallel": 1, "serial": True,
            "max_tokens": GSM8K_MAX_TOKENS if a.cell == "gsm8k-30" else BFCL_MAX_TOKENS,
            "run_of_record": bool(a.run_of_record), "duplicate_of": a.duplicate_of, "dry_run": bool(a.limit),
