@@ -17,6 +17,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: "3.12"}
+      - name: Guard self-test
+        run: python3 -m unittest discover -s scripts/gspc-one -p 'test_check_export.py' -v
       - name: Guard (no unsigned row presented as signed; planned classes empty)
         run: python3 scripts/gspc-one/check_export.py public/interop/gspc-one.json
       - name: Leaderboard pages match the export (pages are committed; Cloudflare Pages serves public/)
