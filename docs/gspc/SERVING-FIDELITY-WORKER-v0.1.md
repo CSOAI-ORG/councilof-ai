@@ -1,0 +1,10 @@
+# serving-fidelity-worker-v0.1
+
+Built to Measure's ruling of 16 Oct 2026. UNSIGNED, never writes the board. Not merged until Measure reviews.
+
+- Cells: `gsm8k-30` (sub_bank `a-closed-form`) and `bfcl-30` (sub_bank `b-tool-call`) of the frozen serving-fidelity bank (`43a6c708…bc58`, n=60). Each cell must have exactly 30 items, or the run is refused. Cells are never padded.
+- G2 invariants: serial, T=0, seed 0, NUM_PARALLEL=1. Model manifest digest is pinned and checked before and after the run. Bank sha, and the BFCL gold sha (`2ccaded3…4147`, the 30 ids from gorilla `possible_answer/BFCL_v4_simple_python.json` @ f7cf7359), are checked before the first prompt; a mismatch refuses the run. `run_of_record`/`duplicate_of` are recorded, and a duplicate can never be a run of record. `score_scale: fraction`. Gate: n_valid ≥ 30, unparsed+truncated ≤ 10%, transport ≤ 5%, score not 0 or 1.
+- GSM8K: question + `End with a line: ANSWER: <number>`, max_tokens 512. The last `ANSWER:` line is parsed after stripping `, $ %` and whitespace, then matched as a decimal (integers as ints). No ANSWER line = UNPARSED; length stop without an ANSWER line = TRUNCATED.
+- BFCL: the frozen schema goes in Ollama's `tools` field, with BFCL's documented type mapping only (dict→object, float→number, tuple→array). Correct means exactly one tool_call with the right name, required args present, and values matching gold under AST rules: type-coerced, strings case-sensitive, list order significant unless the schema marks `unordered`, `""` in gold = may omit. If there is no tool_call but the content has a JSON object, that object is parsed as one attempt. Neither = UNPARSED. A template without tools = NOT_APPLICABLE, never 0. BFCL max_tokens is 512; the ruling did not set it.
+- Every row records `raw_response_sha256`, `parse_status` (ok/unparsed/truncated/transport), `method_sha256` (sha of the worker file), `bank_sha256`, `model_digest`, and `worker_version`.
+- `--limit` is a dry run only and can never be a run of record.
