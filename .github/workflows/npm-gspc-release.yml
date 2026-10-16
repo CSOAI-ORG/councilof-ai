@@ -12,7 +12,8 @@ on:
   # After every successful production deploy, publish the package version in
   # package.json if (and only if) it is not on npm yet. Already published = no-op.
   workflow_run:
-    workflows: ["Build + deploy site (gated production branch)"]
+    # "+" is a glob operator in workflow_run filters; escape it so the name matches.
+    workflows: ['Build \+ deploy site (gated production branch)']
     types: [completed]
     branches: [master]
 
