@@ -15,8 +15,23 @@ import {
 } from "./_board_snapshot";
 import { onRequestGet as stateGet } from "./state";
 import { onRequestGet as countersGet } from "./counters";
+import { onRequestGet as gspcGet } from "./gspc";
 
 const LIVE_AXES = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN, ...AXES_D];
+// Measure ruling on #3266 (16 Oct 2026): the EXACT declared-UNMEASURED ids, typed on purpose so any
+// other difference from the 2026-09-29 signed freeze fails.
+const DECLARED_IDS = [
+  "lab-practice",
+  "company-practice",
+  "measurer-integrity",
+  "harness-fidelity",
+  "interop-conformance",
+  "humanoid-deployment",
+  "regulator-transparency",
+  "interpretability-reproducibility",
+  "claim-maintenance",
+  "serving-fidelity",
+] as const;
 const live = {
   axis_slots: LIVE_AXES.length,
   measured_axes: LIVE_AXES.filter((a) => a.status === "MEASURED").length,
@@ -82,13 +97,15 @@ describe("signed board freeze vs live axis arrays", () => {
     const r = crosscheckBoardSnapshot(live);
     expect(r.source).toBe("public/signed/gspc-board.2026-09-29.signed.json");
     // The 2026-09-29 freeze predates the declared subject slots (2026-10-16). Until a new freeze is
-    // signed the comparison must DISAGREE, and only by those slots: measured is identical, and the
-    // slot gap is exactly the declared-slot count derived from the arrays.
-    const declared = LIVE_AXES.filter((a) => a.kind === "declared-slot" && a.status === "UNMEASURED").length;
-    expect(r.measured_axes ?? live.measured_axes).toBe(live.measured_axes);
-    expect(live.axis_slots - (r.axis_slots as number)).toBe(declared);
-    expect(r.counts_agree).toBe(declared === 0);
-    expect(r.agrees).toBe(declared === 0);
+    // signed (a separate step) the comparison must DISAGREE by exactly the 10 declared axis ids and
+    // nothing else: measured stays exactly 23, and every n, score, card or root field is unchanged.
+    expect(LIVE_AXES.filter((a) => a.status === "UNMEASURED").map((a) => a.axis).sort()).toEqual([...DECLARED_IDS].sort());
+    expect(live.measured_axes).toBe(23);
+    expect(r.measured_axes).toBe(23);
+    expect(r.axis_slots).toBe(23);
+    expect(live.axis_slots).toBe(23 + DECLARED_IDS.length);
+    expect(r.counts_agree).toBe(false);
+    expect(r.agrees).toBe(false);
     // The 2026-09-02 freeze is kept as history, superseded — never deleted.
     const mpc = r.history.find((h) => h.source === "public/signed/gspc-board.signed.json");
     expect(mpc?.claim_state).toBe("SUPERSEDED_BY");
@@ -137,5 +154,54 @@ describe("signed board freeze vs live axis arrays", () => {
     expect(s.board.signature.custody).not.toMatch(/3-party MPC/);
     expect(c.board_crosscheck.signed_source).toBe(x.signed_snapshot.source);
     expect(c.board_crosscheck.signed_snapshot_agrees).toBe(x.signed_snapshot_agrees);
+  });
+});
+
+describe("served /api/gspc vs the 2026-09-29 signed freeze (Measure ruling on #3266)", () => {
+  it("differs only by the 10 declared UNMEASURED axes: measured exactly 23, no n, score, card or root change", async () => {
+    (globalThis as unknown as { caches: unknown }).caches = {
+      default: { match: async () => undefined, put: async () => undefined },
+    };
+    const res = await (gspcGet as unknown as (c: unknown) => Promise<Response>)({
+      request: new Request("https://councilof.ai/api/gspc"),
+      env: {},
+      waitUntil: () => undefined,
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const body: any = await res.json();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const freeze: any = JSON.parse(readFileSync("public/signed/gspc-board.2026-09-29.signed.json", "utf8"));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const frozen = new Map<string, any>(freeze.axes.map((a: any) => [a.axis, a]));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const served = body.axes as any[];
+    const extra = served.filter((a) => !frozen.has(a.axis));
+    expect(extra.map((a) => a.axis)).toEqual([...DECLARED_IDS]);
+    for (const a of extra) {
+      expect(a.status).toBe("UNMEASURED");
+      expect(a.n ?? 0).toBe(0);
+    }
+    for (const id of frozen.keys()) expect(served.map((a) => a.axis)).toContain(id);
+    expect(body.totals.measured_axes).toBe(23);
+    expect(freeze.totals.measured_axes).toBe(23);
+    expect(served.filter((a) => a.status === "MEASURED").map((a) => a.axis).sort()).toEqual([...frozen.keys()].sort());
+    // Every n, numeric score, status, separation result, card or root field on the 23 frozen rows is unchanged.
+    // method_status is additive only: absent from the freeze, present on every served row.
+    const watched = (k: string, a: unknown, b: unknown) =>
+      typeof a === "number" || typeof b === "number" || /card|root|^n$|^status$|^separation$/i.test(k);
+    const drift: string[] = [];
+    for (const a of served) {
+      const f = frozen.get(a.axis);
+      if (!f) continue;
+      expect(f.method_status).toBeUndefined();
+      expect(typeof a.method_status).toBe("string");
+      for (const k of new Set([...Object.keys(f), ...Object.keys(a)])) {
+        if (k === "method_status") continue;
+        if (watched(k, f[k], a[k]) && canonical(f[k]) !== canonical(a[k])) drift.push(`${a.axis}.${k}`);
+      }
+    }
+    for (const k of new Set([...Object.keys(freeze), ...Object.keys(body)]))
+      if (/card|root/i.test(k) && canonical(freeze[k]) !== canonical(body[k])) drift.push(`board.${k}`);
+    expect(drift).toEqual([]);
   });
 });
