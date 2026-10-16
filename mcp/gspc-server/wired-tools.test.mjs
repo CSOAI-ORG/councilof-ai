@@ -23,12 +23,15 @@ const FREE = [
   "measurement_index",
   "verify_capsule",
   "server_evidence",
+  "evidence_bundle_preview",
+  "route",
 ];
 const PAID = [
   "commission_card",
   "art50_marking_evidence",
   "rwa_evidence",
   "receipts_batch",
+  "evidence_bundle",
 ];
 const ALL = [...FREE, ...PAID];
 
