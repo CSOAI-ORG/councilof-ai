@@ -524,6 +524,24 @@ function ruleCapabilityTense(facts, file, text, add) {
 }
 
 // ---------------------------------------------------------------- driver
+// Owner-gated axes (public_pages HIDDEN_PENDING_OWNER_GO) are in GET /api/gspc and its counts,
+// but no public page may render them as a tile or a board row until the owner's go.
+// Ids come from the SAME board reference the count rules use; markers are the exact render hooks.
+export const OWNER_GATED = "HIDDEN_PENDING_OWNER_GO";
+export function ownerGatedIds(boardRaw) {
+  const b = JSON.parse(Buffer.isBuffer(boardRaw) ? boardRaw.toString("utf8") : String(boardRaw));
+  return (Array.isArray(b?.axes) ? b.axes : []).filter((a) => a?.public_pages === OWNER_GATED && typeof a.axis === "string").map((a) => a.axis);
+}
+function ruleOwnerGated(file, raw, gatedIds, add) {
+  if (!/\.html?$/i.test(file) && file !== "selftest") return;
+  for (const id of gatedIds) {
+    const esc = id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const re = new RegExp(`data-axis=["']${esc}["']|data-testid=["'][a-z-]*row-[a-z-]*-${esc}["']|data-testid=["']row-board-${esc}["']`, "g");
+    let m;
+    while ((m = re.exec(raw))) add({ rule: "owner-gated-axis", file, text: m[0], why: `Axis "${id}" is owner-gated (public_pages ${OWNER_GATED}); it may appear in the API only, never as a public tile or row.`, ctx: ctx(raw, m.index, m.index + m[0].length) });
+  }
+}
+
 function walk(dir, out = []) {
   for (const e of readdirSync(dir)) {
     const p = join(dir, e);
@@ -545,7 +563,7 @@ function pick(obj, path) {
   return String(path || "").split(".").reduce((o, k) => (o == null ? o : o[k]), obj);
 }
 
-function runRules(facts, files, rootDir, liveCount, liveMeasured) {
+function runRules(facts, files, rootDir, liveCount, liveMeasured, gatedIds = []) {
   const violations = [];
   const add = (v) => violations.push(v);
   for (const f of files) {
@@ -559,6 +577,7 @@ function runRules(facts, files, rootDir, liveCount, liveMeasured) {
     ruleMeasuredOverclaim(facts, rel, text, add, liveMeasured);
     ruleCapabilityTense(facts, rel, text, add);
     ruleAnchorCount(facts, rel, text, add);
+    ruleOwnerGated(rel, raw, gatedIds, add);
   }
   return violations;
 }
@@ -771,6 +790,23 @@ async function selftest(facts) {
       console.log(`  ${threw ? "ok  " : "FAIL"}  must REFUSE exemption entry ${JSON.stringify(bad[0].path)}${bad[0].date ? "" : " (no date)"}`);
     }
   }
+  for (const [name, html, shouldFail] of [
+    ["owner-gated homepage tile", '<li data-axis="regulator-transparency">x</li>', true],
+    ["owner-gated board row", '<tr data-testid="row-board-regulator-transparency">x</tr>', true],
+    ["owner-gated id in prose only", '<p>regulator-transparency is held</p>', false],
+    ["public axis tile", '<li data-axis="care">x</li>', false],
+  ]) {
+    const v = [];
+    ruleOwnerGated("selftest", html, ["regulator-transparency"], (x) => v.push(x));
+    const ok = (v.length > 0) === shouldFail;
+    ok ? pass++ : fail++;
+    console.log(`  ${ok ? "ok  " : "FAIL"}  ${shouldFail ? "must CATCH " : "must PASS  "} ${name}`);
+  }
+  {
+    const ids = ownerGatedIds(JSON.stringify({ axes: [{ axis: "a", public_pages: OWNER_GATED }, { axis: "b" }] }));
+    const ok = ids.length === 1 && ids[0] === "a"; ok ? pass++ : fail++;
+    console.log(`  ${ok ? "ok  " : "FAIL"}  owner-gated ids read from the board reference`);
+  }
   console.log(`\n  ${pass} passed, ${fail} failed`);
   if (fail) {
     console.error("\nfacts-gate SELFTEST FAILED — the gate does not behave as specified.");
@@ -801,24 +837,25 @@ if (!root || !existsSync(root)) {
 
 const referenceFlag=args.indexOf('--board-reference');
 const referenceFile=referenceFlag<0?null:args[referenceFlag+1];
-let counts,referenceScope;
+let counts,referenceScope,gatedIds;
 if(referenceFlag>=0){
   if(!referenceFile)throw new Error('Explicit board-reference path required');
-  const reference=verifyBoardReference(referenceFile,root);counts=reference.counts;referenceScope=reference.scope+' '+reference.board_sha256;
+  const reference=verifyBoardReference(referenceFile,root);counts=reference.counts;referenceScope=reference.scope+' '+reference.board_sha256;gatedIds=ownerGatedIds(Buffer.from(JSON.parse(readFileSync(referenceFile,'utf8')).board_base64,'base64'));
 }else{
   // A live-only invocation requires one successful response, never a stale recorded count.
   if(process.env.FACTS_GATE_OFFLINE==='1')throw new Error('Offline facts check requires an exact --board-reference from the completed render');
   const ep=facts.counts?.axis_count?.endpoint;if(!ep)throw new Error('Board endpoint missing');
   const response=await fetch(ep,{signal:AbortSignal.timeout(20000),redirect:'error'});
   if(!response.ok||!response.headers.get('content-type')?.includes('application/json'))throw new Error('Board reference unavailable; no historical fallback');
-  const raw=Buffer.from(await response.arrayBuffer());counts=boardCounts(raw);referenceScope='ONE_CURRENT_RESPONSE_NOT_RENDER_BOUND';
+  const raw=Buffer.from(await response.arrayBuffer());counts=boardCounts(raw);gatedIds=ownerGatedIds(raw);referenceScope='ONE_CURRENT_RESPONSE_NOT_RENDER_BOUND';
 }
 const liveCount=counts.axes,liveMeasured=counts.measured_axes;
 console.log('facts-gate reference scope:',referenceScope);
 const files = walk(root);
 console.log(`facts-gate: scanning ${files.length} prerendered files in ${root} (reference axis count = ${liveCount})`);
 
-const violations = runRules(facts, files, root, liveCount, liveMeasured);
+console.log(`facts-gate: owner-gated axes from the reference: ${gatedIds.join(', ') || 'none'}`);
+const violations = runRules(facts, files, root, liveCount, liveMeasured, gatedIds);
 report(violations);
 
 if (violations.length) {
