@@ -36,6 +36,7 @@ jobs:
     timeout-minutes: 10
     outputs:
       ok: ${{ steps.probe.outputs.ok }}
+      credit_only: ${{ steps.billing.outputs.credit_only }}
     env:
       HF_INFERENCE_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN || secrets.HF_TOKEN }}
       HF_TOKEN: ${{ secrets.HF_TOKEN || secrets.HUGGINGFACE_TOKEN }}
@@ -77,9 +78,12 @@ jobs:
               emit("0")
               sys.exit(0)
           payload = json.dumps({
-              "model": "Qwen/Qwen3-8B:featherless-ai",
+              # Qwen3-8B is a reasoning model: max_tokens 4 was spent on
+              # thinking and content came back empty (HTTP 200), so every run
+              # since skipped all shards while staying green.
+              "model": "meta-llama/Llama-3.1-8B-Instruct",
               "messages": [{"role": "user", "content": "Reply with EXACTLY one token: HELLO"}],
-              "max_tokens": 4,
+              "max_tokens": 64,
               "temperature": 0,
           }).encode()
           req = urllib.request.Request(
@@ -99,7 +103,8 @@ jobs:
               # 6 Sep 17:01 cron: json.loads Extra data col 316 skipped mill
               # while the job stayed green. First object is the verdict.
               d, _ = json.JSONDecoder().raw_decode(raw.decode("utf-8", "replace").lstrip())
-              txt = (((d.get("choices") or [{}])[0].get("message") or {}).get("content") or "").strip()
+              msg = ((d.get("choices") or [{}])[0].get("message") or {})
+              txt = (msg.get("content") or msg.get("reasoning_content") or "").strip()
               if not txt:
                   out["status"] = "INFERENCE_FAIL"
                   out["http"] = 200
@@ -124,6 +129,45 @@ jobs:
               note(f"INFERENCE_FAIL {code} {body}")
               emit("0")
               sys.exit(0)
+          PY
+      - name: org billing check (read-only; Measure ruling 3)
+        id: billing
+        if: steps.probe.outputs.ok == '1'
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          tok = (os.environ.get("HF_INFERENCE_TOKEN") or "").strip()
+          org = os.environ.get("HF_BILL_TO") or "csoai"
+          fields = {}
+          balance = None
+          # Nick 04:27 16 Oct: spend the prepaid org credit, stop at ~$5.
+          # Fail closed: an unreadable balance means smoke only.
+          for url in (f"https://huggingface.co/api/organizations/{org}/billing/balance",
+                      f"https://huggingface.co/api/organizations/{org}/billing"):
+              try:
+                  req = urllib.request.Request(url, headers={"Authorization": f"Bearer {tok}"})
+                  d = json.load(urllib.request.urlopen(req, timeout=30))
+                  for k in ("balance", "credits", "remainingCredits", "prepaidBalance"):
+                      v = d.get(k)
+                      if isinstance(v, dict):
+                          v = v.get("amount", v.get("value"))
+                      if isinstance(v, (int, float)):
+                          balance = float(v) / (100.0 if v > 1000 else 1.0)
+                          break
+                  fields["endpoint"] = url.rsplit("/", 1)[-1]
+                  if balance is not None:
+                      break
+              except Exception as e:
+                  fields["error"] = type(e).__name__
+          fields["balance_usd"] = balance
+          credit_only = balance is not None and balance > 5.0
+          line = f"ORG_BILLING org={org} fields={json.dumps(fields, sort_keys=True)} credit_only={credit_only}"
+          print(line)
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as fh:
+              fh.write(line + "\n")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as fh:
+              fh.write(f"credit_only={'1' if credit_only else '0'}\n")
           PY
       - name: upload probe (not a board rewrite)
         if: always()
@@ -178,9 +222,26 @@ jobs:
             echo "HUB_LOCK_MISS mill will use git lock (all UNMEASURED)"
           fi
       - name: mill HF2200 shard via router
+        env:
+          CREDIT_ONLY: ${{ needs.probe.outputs.credit_only }}
         run: |
           set -euo pipefail
           mkdir -p mill-out
+          # Measure ruling 3 (2026-10-16): until csoai billing is confirmed
+          # free credit, nothing beyond a smoke test is billed to csoai.
+          # Smoke = shard 0 only, 5 models, MILL_BANK_N=1. n=1 is never public.
+          if [ "${CREDIT_ONLY:-0}" != "1" ]; then
+            if [ "${MILL_SHARD}" != "0" ]; then
+              echo "SMOKE_ONLY billing unconfirmed; shard ${MILL_SHARD} skipped"
+              exit 0
+            fi
+            export MILL_LIMIT=5 MILL_BANK_N=1
+            echo "SMOKE_ONLY billing unconfirmed; shard 0 limit 5 n=1 (not public)" | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            # Measure ruling 1: full frozen bank, T=0, serial; hosted-api lane,
+            # unsigned, not comparable to signed cells; one row per model:provider.
+            export MILL_BANK_N=9999 MILL_LANE="hosted-api, unsigned, not comparable to signed cells"
+          fi
           python3 scripts/mill_hf_inference.py
       - name: upload mill JSON (not a board rewrite)
         if: always()
