@@ -37,6 +37,7 @@ jobs:
     outputs:
       ok: ${{ steps.probe.outputs.ok }}
       credit_only: ${{ steps.billing.outputs.credit_only }}
+      shard_budget: ${{ steps.billing.outputs.shard_budget }}
     env:
       HF_INFERENCE_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN || secrets.HF_TOKEN }}
       HF_TOKEN: ${{ secrets.HF_TOKEN || secrets.HUGGINGFACE_TOKEN }}
@@ -130,45 +131,58 @@ jobs:
               emit("0")
               sys.exit(0)
           PY
-      - name: org billing check (read-only; Measure ruling 3)
+      # HF has no prepaid-balance endpoint (huggingface_hub has none; the
+      # documented org billing API returns usage, lagging ~2 h). The guessed
+      # /billing/balance and /billing raised HTTPError in run 38846917865.
+      # So spend is a local ledger on the Hub (scripts/hf_spend_ledger.py),
+      # priced per call from router.huggingface.co/v1/models. Cap: $91.60
+      # spent since 16 Oct 00:00 BST (leaves $5 of $96.60; Nick 04:27 BST).
+      # Fail closed: unreadable ledger or nothing left -> no billed shard.
+      - name: spend ledger reserve (Hub; fail closed)
         id: billing
         if: steps.probe.outputs.ok == '1'
+        env:
+          RUN_KEY: ${{ github.run_id }}-${{ github.run_attempt }}
         run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          import json, os, urllib.request
-          tok = (os.environ.get("HF_INFERENCE_TOKEN") or "").strip()
-          org = os.environ.get("HF_BILL_TO") or "csoai"
-          fields = {}
-          balance = None
-          # Nick 04:27 16 Oct: spend the prepaid org credit, stop at ~$5.
-          # Fail closed: an unreadable balance means smoke only.
-          for url in (f"https://huggingface.co/api/organizations/{org}/billing/balance",
-                      f"https://huggingface.co/api/organizations/{org}/billing"):
-              try:
-                  req = urllib.request.Request(url, headers={"Authorization": f"Bearer {tok}"})
-                  d = json.load(urllib.request.urlopen(req, timeout=30))
-                  for k in ("balance", "credits", "remainingCredits", "prepaidBalance"):
-                      v = d.get(k)
-                      if isinstance(v, dict):
-                          v = v.get("amount", v.get("value"))
-                      if isinstance(v, (int, float)):
-                          balance = float(v) / (100.0 if v > 1000 else 1.0)
-                          break
-                  fields["endpoint"] = url.rsplit("/", 1)[-1]
-                  if balance is not None:
-                      break
-              except Exception as e:
-                  fields["error"] = type(e).__name__
-          fields["balance_usd"] = balance
-          credit_only = balance is not None and balance > 5.0
-          line = f"ORG_BILLING org={org} fields={json.dumps(fields, sort_keys=True)} credit_only={credit_only}"
-          print(line)
-          with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as fh:
-              fh.write(line + "\n")
-          with open(os.environ["GITHUB_OUTPUT"], "a") as fh:
-              fh.write(f"credit_only={'1' if credit_only else '0'}\n")
+          set -uo pipefail
+          mkdir -p ledger
+          code=$(curl -sS -o ledger/spend.json -w '%{http_code}' -H "Authorization: Bearer ${HF_TOKEN}" \
+            "https://huggingface.co/datasets/csoai/hub-queue/resolve/main/ledger/hf-inference-spend.json" || echo 000)
+          if [ "$code" = "404" ]; then
+            rm -f ledger/spend.json
+            echo "LEDGER_BOOTSTRAP no ledger on Hub yet; seeding with pre-ledger smoke allowance" | tee -a "$GITHUB_STEP_SUMMARY"
+          elif [ "$code" != "200" ]; then
+            echo "LEDGER_UNREADABLE http=$code credit_only=0 (no billed shard)" | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "credit_only=0" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          if ! out=$(python3 scripts/hf_spend_ledger.py reserve ledger/spend.json "$RUN_KEY"); then
+            echo "LEDGER_BAD credit_only=0" | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "credit_only=0" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          echo "LEDGER $out" | tee -a "$GITHUB_STEP_SUMMARY"
+          budget=$(printf '%s' "$out" | python3 -c 'import json,sys; print(json.load(sys.stdin)["shard_budget_usd"])')
+          if python3 -c "import sys; sys.exit(0 if float('$budget') > 0 else 1)"; then
+            pip install --quiet "huggingface_hub>=0.25"
+            if python3 - <<'PY'
+          import os
+          from huggingface_hub import HfApi
+          HfApi(token=os.environ["HF_TOKEN"].strip()).upload_file(
+              path_or_fileobj="ledger/spend.json",
+              path_in_repo="ledger/hf-inference-spend.json",
+              repo_id="csoai/hub-queue", repo_type="dataset",
+              commit_message=f"spend ledger reserve run {os.environ['RUN_KEY']} (no inference)")
           PY
+            then
+              echo "credit_only=1" >> "$GITHUB_OUTPUT"
+              echo "shard_budget=$budget" >> "$GITHUB_OUTPUT"
+            else
+              echo "LEDGER_RESERVE_NOT_PUBLISHED credit_only=0" | tee -a "$GITHUB_STEP_SUMMARY"
+              echo "credit_only=0" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            echo "LEDGER_CAP_REACHED spent+reserved >= \$91.60; credit_only=0" | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "credit_only=0" >> "$GITHUB_OUTPUT"
+          fi
       - name: upload probe (not a board rewrite)
         if: always()
         uses: actions/upload-artifact@v4
@@ -224,24 +238,20 @@ jobs:
       - name: mill HF2200 shard via router
         env:
           CREDIT_ONLY: ${{ needs.probe.outputs.credit_only }}
+          SHARD_BUDGET: ${{ needs.probe.outputs.shard_budget }}
         run: |
           set -euo pipefail
           mkdir -p mill-out
-          # Measure ruling 3 (2026-10-16): until csoai billing is confirmed
-          # free credit, nothing beyond a smoke test is billed to csoai.
-          # Smoke = shard 0 only, 5 models, MILL_BANK_N=1. n=1 is never public.
-          if [ "${CREDIT_ONLY:-0}" != "1" ]; then
-            if [ "${MILL_SHARD}" != "0" ]; then
-              echo "SMOKE_ONLY billing unconfirmed; shard ${MILL_SHARD} skipped"
-              exit 0
-            fi
-            export MILL_LIMIT=5 MILL_BANK_N=1
-            echo "SMOKE_ONLY billing unconfirmed; shard 0 limit 5 n=1 (not public)" | tee -a "$GITHUB_STEP_SUMMARY"
-          else
-            # Measure ruling 1: full frozen bank, T=0, serial; hosted-api lane,
-            # unsigned, not comparable to signed cells; one row per model:provider.
-            export MILL_BANK_N=9999 MILL_LANE="hosted-api, unsigned, not comparable to signed cells"
+          # Ledger gate: nothing is billed unless the probe job reserved budget
+          # on the Hub ledger. Every call is priced; unknown price = not sent.
+          if [ "${CREDIT_ONLY:-0}" != "1" ] || [ -z "${SHARD_BUDGET:-}" ]; then
+            echo "NO_BUDGET ledger reserve absent; shard ${MILL_SHARD} skipped (no spend)"
+            exit 0
           fi
+          export MILL_SHARD_BUDGET_USD="$SHARD_BUDGET"
+          # Measure ruling 1: full frozen bank, T=0, serial; hosted-api lane,
+          # unsigned, not comparable to signed cells; one row per model:provider.
+          export MILL_BANK_N=9999 MILL_LANE="hosted-api, unsigned, not comparable to signed cells"
           python3 scripts/mill_hf_inference.py
       - name: upload mill JSON (not a board rewrite)
         if: always()
@@ -250,6 +260,41 @@ jobs:
           name: hf-inference-mill-${{ matrix.shard }}
           path: mill-out
           if-no-files-found: warn
+
+  # Settle the reservation with what shards proved they spent. A shard with
+  # no spend file is charged its whole slice (fail closed).
+  ledger-settle:
+    needs: [probe, mill]
+    if: always() && needs.probe.outputs.credit_only == '1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      RUN_KEY: ${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: hf-inference-mill-*
+          path: mill-shards
+      - name: settle and publish ledger
+        run: |
+          set -euo pipefail
+          curl -fsSL -H "Authorization: Bearer ${HF_TOKEN}" -o /tmp/spend.json \
+            "https://huggingface.co/datasets/csoai/hub-queue/resolve/main/ledger/hf-inference-spend.json"
+          files=$(find mill-shards -name 'spend_s*.json' | sort)
+          out=$(python3 scripts/hf_spend_ledger.py settle /tmp/spend.json "$RUN_KEY" $files)
+          echo "LEDGER_SETTLED $out" | tee -a "$GITHUB_STEP_SUMMARY"
+          pip install --quiet "huggingface_hub>=0.25"
+          python3 - <<'PY'
+          import os
+          from huggingface_hub import HfApi
+          HfApi(token=os.environ["HF_TOKEN"].strip()).upload_file(
+              path_or_fileobj="/tmp/spend.json",
+              path_in_repo="ledger/hf-inference-spend.json",
+              repo_id="csoai/hub-queue", repo_type="dataset",
+              commit_message=f"spend ledger settle run {os.environ['RUN_KEY']} (no inference)")
+          PY
 
   # A failed transport probe must not leave old practice probes advertised as
   # measurements. This job performs a semantic count migration only; it does
