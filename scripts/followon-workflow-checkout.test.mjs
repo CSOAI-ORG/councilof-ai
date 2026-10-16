@@ -15,15 +15,15 @@ const WORKFLOWS = [
     path: ".github/workflows/npm-gspc-release.yml",
     relative: "../.github/workflows/npm-gspc-release.yml",
     checkout: "      - uses: actions/checkout@v6",
-    before: { bytes: 2826, sha256: "60b2f343d25712d11c88214fd1f380572d6eece117971820ac41464a156a483c" },
-    after: { bytes: 2950, sha256: "585f6f5d1e6048f7d309fe3ebddc39fa73206f223f682946bdfb8fe089408e36" },
+    before: { bytes: 2912, sha256: "3338f611fc09471818128df71a6396087facaf55dcd26a08d5a7d2e5fdc3b23f" },
+    after: { bytes: 3036, sha256: "9e831dbaa2ee1c8e58f613a219af1b5c46b1b0c3620f7ad6bdf74cdc2bc66482" },
   },
   {
     path: ".github/workflows/kaggle-community-cells.yml",
     relative: "../.github/workflows/kaggle-community-cells.yml",
     checkout: "      - uses: actions/checkout@v4",
-    before: { bytes: 6382, sha256: "d1cad74f5aad1335f45bf9d88019f53d91f903fea597177ce4824fdec4d5a950" },
-    after: { bytes: 6506, sha256: "c0d8173d70c8dde7c8b08f4f3801b187de6712f2aa1fe9b119480be86dfa3b65" },
+    before: { bytes: 6249, sha256: "f36471c9d6a4ece308202409f887490151f587ac5c114e2d7a9c6c42792f7bc9" },
+    after: { bytes: 6373, sha256: "7646806e2acfd41c3e1b167d488361b1cb74bbf4754dc4c9d98aad449be18a67" },
   },
 ];
 const digest = (text) => createHash("sha256").update(text, "utf8").digest("hex");
