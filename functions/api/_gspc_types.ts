@@ -31,7 +31,14 @@ export interface AxisScore {
   //                               Absent fields are honest absence, never a zero.
   //   kind "declared-slot"      — the slot is published so the gap is public. No
   //                               measurement exists. status is UNMEASURED.
-  family: "gspc" | "financial";
+  //   family "subject"   — the subject axes (2026-10-16), each applying to ONE subject
+  //                        type named in applies_to. Declared slots until a frozen bank exists.
+  family: "gspc" | "financial" | "subject";
+  applies_to?: string;
+  // Live axes only (Measure ruling 2026-10-16): "meets-rule" (frozen sha-pinned bank/method, n_valid >= 30)
+  // or "legacy: <exact gap>". Does not change status or the measured count.
+  method_status?: "meets-rule" | `legacy: ${string}`;        // subject-family axes: the one subject type the axis measures
+  public_pages?: "HIDDEN_PENDING_OWNER_GO"; // present in the API, hidden from public pages until the owner's go
   kind: "model-comparison" | "deterministic-facts" | "declared-slot";
 
   // n is the size of whatever was actually measured (items, or instruments for a

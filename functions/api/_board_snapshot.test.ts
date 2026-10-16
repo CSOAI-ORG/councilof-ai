@@ -6,6 +6,7 @@ import { AXES_A } from "./_gspc_axes_a";
 import { AXES_B } from "./_gspc_axes_b";
 import { AXES_C } from "./_gspc_axes_c";
 import { AXES_FIN } from "./_gspc_axes_fin";
+import { AXES_D } from "./_gspc_axes_d";
 import {
   SIGNED_BOARD_SNAPSHOTS,
   crosscheckBoardSnapshot,
@@ -15,7 +16,7 @@ import {
 import { onRequestGet as stateGet } from "./state";
 import { onRequestGet as countersGet } from "./counters";
 
-const LIVE_AXES = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN];
+const LIVE_AXES = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN, ...AXES_D];
 const live = {
   axis_slots: LIVE_AXES.length,
   measured_axes: LIVE_AXES.filter((a) => a.status === "MEASURED").length,
@@ -80,8 +81,14 @@ describe("signed board freeze vs live axis arrays", () => {
   it("the committed newest freeze agrees with the committed axis arrays", () => {
     const r = crosscheckBoardSnapshot(live);
     expect(r.source).toBe("public/signed/gspc-board.2026-09-29.signed.json");
-    expect(r.counts_agree).toBe(true);
-    expect(r.agrees).toBe(true);
+    // The 2026-09-29 freeze predates the declared subject slots (2026-10-16). Until a new freeze is
+    // signed the comparison must DISAGREE, and only by those slots: measured is identical, and the
+    // slot gap is exactly the declared-slot count derived from the arrays.
+    const declared = LIVE_AXES.filter((a) => a.kind === "declared-slot" && a.status === "UNMEASURED").length;
+    expect(r.measured_axes ?? live.measured_axes).toBe(live.measured_axes);
+    expect(live.axis_slots - (r.axis_slots as number)).toBe(declared);
+    expect(r.counts_agree).toBe(declared === 0);
+    expect(r.agrees).toBe(declared === 0);
     // The 2026-09-02 freeze is kept as history, superseded — never deleted.
     const mpc = r.history.find((h) => h.source === "public/signed/gspc-board.signed.json");
     expect(mpc?.claim_state).toBe("SUPERSEDED_BY");
@@ -123,7 +130,7 @@ describe("signed board freeze vs live axis arrays", () => {
     const c = await (await (countersGet as unknown as () => Promise<Response>)()).json();
     const x = s.board.live_derivation_crosscheck;
     expect(x.signed_snapshot.source).toBe("public/signed/gspc-board.2026-09-29.signed.json");
-    expect(x.signed_snapshot_agrees).toBe(true);
+    expect(x.signed_snapshot_agrees).toBe(LIVE_AXES.every((a) => a.kind !== "declared-slot"));
     expect(x.signed_snapshot.claim_state).toBe("CURRENT");
     expect(x.history.map((h: { source: string }) => h.source)).toContain("public/signed/gspc-board.signed.json");
     expect(s.board.signature.signer).toBe("did:web:csoai.org#board-attestation-1");
