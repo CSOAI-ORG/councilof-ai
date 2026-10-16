@@ -23,15 +23,18 @@ links = []
 for cls, rows in sorted(by.items()):
     groups = collections.defaultdict(list)
     for r in rows: groups[r["group"]].append(r)
-    body = f"<p>{esc(NOTE.get(cls,''))}</p>"
+    body = f"<p>{esc(NOTE.get(cls,''))}</p><p>{esc(d['no_aggregate'])}</p>"
+    man = d["axes_manifest"]["classes"].get(cls)
+    if man is not None:
+        body += f"<p>Applicable axes (manifest {esc(d['axes_manifest']['version'])}): {esc(', '.join(man['applicable']) or 'none yet')}. {esc(man.get('note') or man.get('check_grid') or '')}</p>"
     if cls == "mcp-server": body += f"<p>Endpoint key scheme: {esc(d['mcp_endpoint_key_scheme'])}</p>"
     for g, gr in sorted(groups.items()):
         gr = sorted(gr, key=lambda r: (r["subject"].lower(), r["axis"]))  # alphabetical, never by result
         nnote = " — insufficient n" if cls == "mcp-server" and len(gr) < 30 else ""
-        body += f"<h2>Group: {esc(g)}{esc(nnote)}</h2><table><tr><th>Subject</th><th>Axis / check</th><th>Result / state</th><th>Lane</th><th>Evidence</th><th>As of</th></tr>"
+        body += f"<h2>Group: {esc(g)}{esc(nnote)}</h2><table><tr><th>Subject</th><th>Axis / check</th><th>Result / state</th><th>n</th><th>Wilson 95% CI</th><th>Lane</th><th>Evidence</th><th>As of</th></tr>"
         for r in gr:
             lane = "<span class=s>signed</span>" if r["lane"] == "signed" else "<span class=u>UNSIGNED</span>"
-            body += f"<tr><td>{esc(r['subject'])}</td><td>{esc(r['axis'])}</td><td>{esc(r['result'])}</td><td>{lane}</td><td><a href='{esc(r['evidence_url'])}'>evidence</a></td><td>{esc(r['as_of'])}</td></tr>"
+            body += f"<tr><td>{esc(r['subject'])}</td><td>{esc(r['axis'])}</td><td>{esc(r['result'])}</td><td>{esc(r.get('n','-'))}</td><td>{esc(r.get('wilson95') or '-')}</td><td>{lane}</td><td><a href='{esc(r['evidence_url'])}'>evidence</a></td><td>{esc(r['as_of'])}</td></tr>"
         body += "</table>"
     os.makedirs(os.path.join(out, cls), exist_ok=True)
     open(os.path.join(out, cls, "index.html"), "w", encoding="utf-8").write(page(f"GSPC leaderboard: {cls}", body))
