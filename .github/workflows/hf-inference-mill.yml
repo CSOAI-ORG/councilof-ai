@@ -146,7 +146,9 @@ jobs:
         run: |
           set -uo pipefail
           mkdir -p ledger
-          code=$(curl -sS -o ledger/spend.json -w '%{http_code}' -H "Authorization: Bearer ${HF_TOKEN}" \
+          # -L: once the ledger exists the Hub answers resolve/ with a 307 to
+          # its file store (run 38851194973 failed closed on http=307).
+          code=$(curl -sSL -o ledger/spend.json -w '%{http_code}' -H "Authorization: Bearer ${HF_TOKEN}" \
             "https://huggingface.co/datasets/csoai/hub-queue/resolve/main/ledger/hf-inference-spend.json" || echo 000)
           if [ "$code" = "404" ]; then
             rm -f ledger/spend.json
