@@ -262,7 +262,10 @@ ${table(facts)}
 }
 
 /** Every file this generator owns, keyed by repo-relative path. */
-export function renderAll(board) {
+export function renderAll(boardIn) {
+  // Owner-gated rows (public_pages HIDDEN_PENDING_OWNER_GO) stay in GET /api/gspc but get no public
+  // page and no row on any page until the owner's go. Totals are left as served.
+  const board = { ...boardIn, axes: (Array.isArray(boardIn?.axes) ? boardIn.axes : []).filter((a) => a?.public_pages !== "HIDDEN_PENDING_OWNER_GO") };
   const out = {};
   for (const row of Array.isArray(board?.axes) ? board.axes : []) {
     if (typeof row?.axis !== "string" || !/^[a-z0-9-]+$/.test(row.axis)) throw Error(`AXIS_ID_NOT_A_SLUG ${row?.axis}`);
