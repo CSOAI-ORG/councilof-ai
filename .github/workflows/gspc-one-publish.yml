@@ -1,0 +1,49 @@
+name: gspc-one publish
+# Publishes the GSPC-one export (public rows only, from the Busabase `gspc` base) to
+# councilof.ai leaderboards, HF dataset csoai/gspc-one and the Kaggle dataset.
+on:
+  schedule: [{cron: "17 2 * * *"}]
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths: ["public/interop/gspc-one.json", "scripts/gspc-one/**", ".github/workflows/gspc-one-publish.yml"]
+permissions: {contents: read}
+concurrency: {group: gspc-one-publish, cancel-in-progress: false}
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Guard (no unsigned row presented as signed; planned classes empty)
+        run: python3 scripts/gspc-one/check_export.py public/interop/gspc-one.json
+      - name: Leaderboard pages match the export (pages are committed; Cloudflare Pages serves public/)
+        run: |
+          python3 scripts/gspc-one/build_pages.py .
+          git diff --exit-code -- public/leaderboards
+      - name: Push HF dataset csoai/gspc-one
+        env: {HF_TOKEN: "${{ secrets.HF_TOKEN }}"}
+        run: |
+          pip install -q "huggingface_hub>=0.25"
+          mkdir -p out/hf && cp public/interop/gspc-one.json out/hf/ && cp scripts/gspc-one/HF_README.md out/hf/README.md
+          python3 - <<'PY'
+          import os
+          from huggingface_hub import HfApi
+          api = HfApi(token=os.environ["HF_TOKEN"])
+          api.create_repo("csoai/gspc-one", repo_type="dataset", exist_ok=True)
+          api.upload_folder(folder_path="out/hf", repo_id="csoai/gspc-one", repo_type="dataset", commit_message="gspc-one nightly export")
+          PY
+      - name: Push Kaggle dataset
+        env:
+          KAGGLE_API_TOKEN: "${{ secrets.KAGGLE_ACCESS_TOKEN }}"
+        run: |
+          pip install -q "kaggle>=1.7"
+          mkdir -p out/kg && cp public/interop/gspc-one.json out/kg/
+          printf '{"title":"GSPC one: Council of AI (CSOAI) measurements","id":"nicktempleman/gspc-one","licenses":[{"name":"CC-BY-4.0"}]}' > out/kg/dataset-metadata.json
+          if kaggle datasets status nicktempleman/gspc-one >/dev/null 2>&1; then
+            kaggle datasets version -p out/kg -m "gspc-one nightly export"
+          else
+            kaggle datasets create -p out/kg --public
+          fi
