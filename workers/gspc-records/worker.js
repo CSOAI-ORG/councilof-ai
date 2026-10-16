@@ -8,7 +8,7 @@ const NOTE = "Measurement only. Every subject here is UNMEASURED unless a status
 function pub(r) {
   if (!r) return null;
   return { key: r.subject_key || r.key, name: r.name, source: r.source, subject_class: r.subject_class,
-    status: r.status || AXIS_LABEL, axes: JSON.parse(r.axes || "[]"), priority: r.priority,
+    status: r.status || AXIS_LABEL, census: r.census || null, axes: JSON.parse(r.axes || "[]"), priority: r.priority,
     last_checked: r.last_checked || null, first_seen: r.first_seen || null, note: r.note || null };
 }
 async function searchRecords(env, q, limit = 20, status) {
@@ -51,23 +51,25 @@ async function mcp(env, body) {
   }
   return J({ jsonrpc: "2.0", id, error: { code: -32601, message: "method not found" } });
 }
-// Advance: hand the next small batch to the existing measuring pipeline (HF mill pulls QUEUED_FOR_MILL).
-// The Worker itself makes no paid calls; spend happens only in the mill under its own cap.
+// Advance: queue the next small batch for the mcp-reachability census (pre-axis, DISCOVERED grid; never feeds an axis score or n).
+// The census runner is the gspc-mcp-reachability-census GitHub workflow; the Worker itself makes no paid calls.
 async function advance(env) {
   const cap = +(env.SPEND_CAP_USD || 91.6), floor = +(env.SPEND_STOP_LEFT_USD || 5);
   const spent = +((await env.DB.prepare("SELECT value FROM queue_kv WHERE key='spend_usd'").first())?.value || 0);
   if (env.MILL_HANDOFF !== "on") { await log(env, "advance", 0, "handoff off (MILL_HANDOFF!=on); no batch moved"); return; }
   if (cap - spent <= floor) { await log(env, "advance", 0, `stopped: $${(cap - spent).toFixed(2)} left <= $${floor}`); return; }
-  const r = await env.DB.prepare(`UPDATE measurement_queue SET status='QUEUED_FOR_MILL', last_checked=?1, attempts=attempts+1 WHERE subject_key IN (SELECT subject_key FROM measurement_queue WHERE status='UNMEASURED' AND axes!='[]' ORDER BY priority, last_checked NULLS FIRST LIMIT ${BATCH})`).bind(now()).run();
-  await log(env, "advance", r.meta.changes, "handed to mill");
+  const backlog = (await env.DB.prepare("SELECT count(*) n FROM measurement_queue WHERE status='QUEUED_FOR_CENSUS'").first()).n;
+  if (backlog >= 400) { await log(env, "advance", 0, `census backlog ${backlog}; not adding`); return; }
+  const r = await env.DB.prepare(`UPDATE measurement_queue SET status='QUEUED_FOR_CENSUS', last_checked=?1 WHERE subject_key IN (SELECT subject_key FROM measurement_queue WHERE status='UNMEASURED' AND census='mcp-reachability' ORDER BY priority, last_checked NULLS FIRST LIMIT ${BATCH})`).bind(now()).run();
+  await log(env, "advance", r.meta.changes, "queued for mcp-reachability census");
 }
 async function log(env, kind, n, d) { await env.DB.prepare("INSERT INTO queue_runs(ts,kind,picked,detail) VALUES(?1,?2,?3,?4)").bind(now(), kind, n, d).run(); }
 async function daily(env) {
   const day = now().slice(0, 10);
-  const c = await env.DB.prepare(`SELECT count(*) t, sum(status='UNMEASURED') u, sum(status IN ('QUEUED_FOR_MILL','IN_PROGRESS')) p, sum(status='MEASURED') m FROM measurement_queue`).first();
+  const c = await env.DB.prepare(`SELECT count(*) t, sum(status='UNMEASURED') u, sum(status='QUEUED_FOR_CENSUS') p, sum(census='mcp-reachability' AND status NOT IN ('UNMEASURED','QUEUED_FOR_CENSUS')) d FROM measurement_queue`).first();
   const adv = await env.DB.prepare("SELECT coalesce(sum(picked),0) n FROM queue_runs WHERE kind='advance' AND ts>=?1").bind(day).first();
   const sp = +((await env.DB.prepare("SELECT value FROM queue_kv WHERE key='spend_usd'").first())?.value || 0);
-  await env.DB.prepare("INSERT OR REPLACE INTO daily_summary VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9)").bind(day, now(), c.t, c.u, c.p, c.m, adv.n, sp, NOTE).run();
+  await env.DB.prepare("INSERT OR REPLACE INTO daily_summary VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9)").bind(day, now(), c.t, c.u, c.p, c.d, adv.n, sp, NOTE).run();
 }
 async function weeklyRefresh(env) {
   // Light source-count refresh: records upstream totals; full re-harvest stays in the Layer 0 loader.
