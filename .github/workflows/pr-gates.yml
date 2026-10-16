@@ -268,6 +268,11 @@ jobs:
               with probe:
                   probe.settimeout(2)
                   denied = probe.connect_ex(address)
+              if family == socket.AF_INET6 and denied == errno.EADDRNOTAVAIL:
+                  if Path('/proc/net/if_inet6').read_text().strip():
+                      raise SystemExit('Network guard failed: IPv6 addresses exist despite EADDRNOTAVAIL')
+                  print('Network guard: IPv6 denied (EADDRNOTAVAIL; no configured IPv6 addresses)', flush=True)
+                  continue
               if denied not in (errno.ENETUNREACH, errno.EHOSTUNREACH):
                   raise SystemExit(f'Network guard failed: unexpected connect result {denied} for {address}')
               print(f'Network guard: external connect denied ({family.name}, errno={denied})', flush=True)
