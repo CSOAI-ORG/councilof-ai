@@ -12,7 +12,7 @@ G2 (every check must pass; any missing field is a FAIL — fail closed):
   1. n_valid >= 30
   2. (unparsed + truncated) / n_total <= 10%
   3. transport_errors / n_total <= 5%
-  4. score is neither 0% nor 100%
+  4. score_scale is explicit ('fraction' or 'percent'); score is neither endpoint (0/1.0 for fraction, 0/100 for percent)
   5. run of record: no duplicate_of, not stitched, serial, temperature 0, seed 0
   6. not hit by the hold rule (scripts/runpod_gspc_held_cells.json)
   7. not a det (deterministic) cell
@@ -89,10 +89,16 @@ def g2_reasons(item_id: str, p: dict, held: list[dict]) -> list[str]:
         elif terr / n_total > 0.05:
             r.append(f"transport_errors={terr / n_total:.1%} > 5%")
     score = _num(m, "score", "pass_rate")
+    # Measure ruling 2026-10-16: never assume scale. Require explicit score_scale.
+    scale = m.get("score_scale")
     if score is None:
         r.append("no score")
-    elif score in (0, 1) or score in (0.0, 100.0):
-        r.append(f"score={score} is 0% or 100%")
+    elif scale not in ("fraction", "percent"):
+        r.append("no score_scale (must be 'fraction' or 'percent')")
+    elif scale == "fraction" and score in (0, 1, 0.0, 1.0):
+        r.append(f"score={score} is endpoint for fraction (0 or 1.0)")
+    elif scale == "percent" and score in (0, 100, 0.0, 100.0):
+        r.append(f"score={score} is endpoint for percent (0 or 100)")
     rr = p.get("run") if isinstance(p.get("run"), dict) else p
     if p.get("duplicate_of") or rr.get("duplicate_of"):
         r.append("duplicate_of set (re-run, not run of record)")
