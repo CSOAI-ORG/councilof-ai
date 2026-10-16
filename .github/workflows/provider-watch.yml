@@ -61,7 +61,7 @@ jobs:
       - name: commit state + index + staged leaves (never signs; public-root.yml signs)
         if: github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.SNAPSHOT_PR_TOKEN || secrets.GITHUB_TOKEN }}  # SNAPSHOT_PR_TOKEN: a PR opened with it fires pull_request checks; GITHUB_TOKEN cannot
         run: |
           set -euo pipefail
           git config user.name "csoai-provider-watch"
