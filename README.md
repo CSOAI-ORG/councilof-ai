@@ -50,6 +50,10 @@ _derived 2026-10-07T10:35:32Z by [`scripts/github/org-readme.py`](https://huggin
 
 Counted from the `axes` array at derive time: 23 rows — MEASURED 23 — agrees with `totals.axes`. Separation over the 14 model-comparison axes: SEPARATED 0 · TIE 7 · UNTESTED 7. A TIE is not a win; UNTESTED is not a win; a facts run has no leader. Living stamp: **SIGNED** (`did:web:csoai.org#board-attestation-1`). Board data: CC-BY-4.0.
 
+## Card inventory (14 Oct 2026)
+
+Dated snapshot, not a live count — the live count is `/signed/card_index.json`. A one-off scan of 8 of 9 storage locations on 14 Oct 2026 found **11,929 unique signed measurement cards**, **7,994 with a VALID signature**, and **335 live and verifiable** on councilof.ai. Method, scope and the source summary: [`evidence/card-inventory-2026-10-14.md`](evidence/card-inventory-2026-10-14.md).
+
 ## What a stranger can verify in four curls
 
 ```bash
@@ -81,14 +85,15 @@ pipx run --spec 'csoai-gspc[verify]' csoai-gspc verify "$(curl -s https://counci
 
 Four populations appear above on purpose and are never reconciled here: the **signed-card index** (335 via `/signed/card_index.json`), the **living `/api/cards` registry** (336), the **public-root leaf count** (319 via `/root.json`), and the **Hub cells** (live GET `/api/hub-cards` → `.counts`; currently 411/411/0). Quote each with its URL. Ceremony: card verify ≠ root inclusion — signed-index/root identifier overlap = 0; never sell “335 in the root.”
 
-**Buyers (the one number):** `distinct_nonself_payers` = **2** all-time · 2 in 30 d · 2 settlements · status MEASURED — read from [`/api/revenue`](https://councilof.ai/api/revenue). Published because a measurement body that hides its own zero has no standing to publish anyone else's.
+**Non-self payers (publisher metric):** `distinct_nonself_payers` = **2** all-time · 2 in 30 d · 2 settlements · publisher status MEASURED — read from [`/api/revenue`](https://councilof.ai/api/revenue). Payment principals do not establish independent customers, delivery, buyer acceptance or repeat use.
 
 ## Install the readers
 
 ```bash
 pip install csoai-gspc          # 0.2.20261007.1 — board, axis, verify, root, snapshot
-npx csoai-gspc-mcp              # 0.2.2 — stdio MCP server over the same endpoints
 ```
+
+**MCP:** use the hosted [free-reader endpoint](https://councilof.ai/mcp/free). [Client setup, current tool list and examples](https://councilof.ai/connect/claude/).
 
 ## Products
 
@@ -163,18 +168,19 @@ The board and verification stay free. Metered artefacts (issuance, evidence asse
 - Manifest: https://councilof.ai/.well-known/x402.json
 - MCP: https://councilof.ai/mcp (`commission_card` and the other paid tools return a 402 as `structuredContent` until paid)
 
-### Verified week-one revenue (PayAI bazaar, 2026-09-16)
+### Independent evidence, free checks and paid artifacts
 
-| Metric | Value |
-|--------|------:|
-| External USDC settled | $0.02 |
-| Distinct external payers | 1 (paid), 10+ (free-door) |
-| Issuances | 8 |
-| CSOAI /api/free-door settlements/30d | 18 |
-| CSOAI uptime | 100% |
-| csoai-gspc-mcp npm downloads (last-month) | 776 |
+CSOAI is an independent evidence layer. The evidence contract follows identity → authority → policy → execution → effect → evidence → verification → freshness/correction → delivery/acceptance. Each link needs its own attributable record; a missing link stays unknown. Existing identity, policy, orchestration, telemetry and payment systems keep their roles. Current measurement methods and limits are published in the [methodology](https://councilof.ai/methodology/) and [corrections ledger](https://councilof.ai/api/corrections).
 
-Source: `GET https://councilof.ai/api/revenue` and PayAI bazaar stats.
+Start with [free verification](https://councilof.ai/gspc-verify) or [connect the free MCP tools](https://councilof.ai/connect-gspc). Inspect a dated result and its stated signature, issuer, scope and freshness limits before requesting a paid artifact. Verification checks the supported evidence contract; it does not establish that every claimed action occurred, certify a system or establish legal compliance.
+
+For a paid request, choose an existing artifact from the [live catalogue](https://councilof.ai/api/x402), inspect that endpoint's HTTP 402 challenge, and decide whether its stated input, output, amount and limits meet your need. Payment covers the stated service, never a favourable grade, board position or certification. A 402 challenge is an offer, not a payment or a delivered result.
+
+### Commercial evidence
+
+Record the UTC time of your read. Use [the live revenue ledger](https://councilof.ai/api/revenue) for all-time and rolling-window non-self wallet-principal counts, settled amounts and repeat-payer counts. A wallet principal does not by itself identify an independent customer. Free requests, downloads, listings, operator tests and signatures do not establish sales or adoption.
+
+Keep the stages separate: request → settlement → delivered artifact → buyer acceptance → repeat use. Delivery needs the requested output and its digest joined to the operation; acceptance needs an attributable buyer record. A settlement alone does not establish delivery, acceptance, recurring earnings or an IP valuation. SAFE contribution status is separate from CSOAI product use and must not be presented as adoption or endorsement.
 
 ### Buyer integration guides
 
@@ -183,7 +189,7 @@ Source: `GET https://councilof.ai/api/revenue` and PayAI bazaar stats.
 - Revenue catalog: https://github.com/CSOAI-ORG/csoai-x402-revenue
 - Week-one report: https://github.com/CSOAI-ORG/csoai-blog-x402-revenue
 
-Network: Base (eip155:8453) · Asset: USDC · Pay-to: 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31 · Promo $0.01 until 2027-01-11 (extended 7 Oct 2026; was 2026-10-11).
+Network and payment terms: read the existing endpoint's current HTTP 402 challenge and the [live x402 manifest](https://councilof.ai/.well-known/x402.json). Do not reuse a historical promotion or copied payment terms as a current quote.
 
 ## Documentation
 

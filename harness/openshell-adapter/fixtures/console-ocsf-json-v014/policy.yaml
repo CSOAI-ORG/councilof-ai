@@ -1,0 +1,21 @@
+# SPDX-License-Identifier: Apache-2.0
+# Synthetic fixture (not a capture). Written against OpenShell's documented policy
+# schema: curl may read one package index; every other destination is default-deny.
+version: 1
+filesystem_policy:
+  include_workdir: true
+  read_only: [/usr, /lib, /etc]
+  read_write: [/tmp]
+landlock:
+  compatibility: hard_requirement
+network_policies:
+  pkg_index:
+    name: pkg-index-readonly
+    endpoints:
+      - host: pypi.example
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        access: read-only
+    binaries:
+      - { path: /usr/bin/curl }

@@ -3,7 +3,7 @@ name: Build + deploy site (gated production branch)
 on:
   push:
     branches: [master]
-    paths: ['client/**', 'public/**', 'functions/**', 'scripts/**', 'package.json', 'wrangler.jsonc', '.github/workflows/deploy.yml']
+    paths: ['client/**', 'e2e/**', 'public/**', 'functions/**', 'scripts/**', 'package.json', 'wrangler.jsonc', '.github/workflows/deploy.yml']
   workflow_dispatch:
     inputs:
       check_registry:
@@ -27,6 +27,8 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # Keep canonical SBOM generation-time input commits available.
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
 

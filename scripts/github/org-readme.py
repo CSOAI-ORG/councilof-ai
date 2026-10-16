@@ -475,10 +475,10 @@ def integrity_table(f: dict) -> str:
 def revenue_line(f: dict) -> str:
     o = f["one_number"]
     if not o["present"]:
-        return f"**Buyers:** {UNCHECKABLE} — `/api/revenue` did not answer at derive time."
-    return (f"**Buyers (the one number):** `{o['id']}` = **{n_or_unc(o['all_time'])}** all-time · {n_or_unc(o['last_30d'])} in 30 d · "
-            f"{n_or_unc(o['settlements'])} settlements · status {o['status']} — read from [`/api/revenue`](https://councilof.ai/api/revenue). "
-            "Published because a measurement body that hides its own zero has no standing to publish anyone else's.")
+        return f"**Non-self payers:** {UNCHECKABLE} — `/api/revenue` did not answer at derive time."
+    return (f"**Non-self payers (publisher metric):** `{o['id']}` = **{n_or_unc(o['all_time'])}** all-time · {n_or_unc(o['last_30d'])} in 30 d · "
+            f"{n_or_unc(o['settlements'])} settlements · publisher status {o['status']} — read from [`/api/revenue`](https://councilof.ai/api/revenue). "
+            "Payment principals do not establish independent customers, delivery, buyer acceptance or repeat use.")
 
 
 def surfaces_table(f: dict) -> str:
@@ -679,8 +679,9 @@ def councilof_top(f: dict, product_index: Path | None) -> str:
         "",
         "```bash",
         f"pip install csoai-gspc          # {f['pypi']['version']} — board, axis, verify, root, snapshot",
-        f"npx csoai-gspc-mcp              # {f['npm']['version']} — stdio MCP server over the same endpoints",
         "```",
+        "",
+        "**MCP:** use the hosted [free-reader endpoint](https://councilof.ai/mcp/free). [Client setup, current tool list and examples](https://councilof.ai/connect/claude/).",
         "",
         "## Products",
         "",
