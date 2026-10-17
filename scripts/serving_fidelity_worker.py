@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""serving-fidelity-worker-v0.2 -- GSPC serving-fidelity cells (Measure rulings 16 Oct 2026; v0.2 adds \\boxed{} fallback + provenance).
+"""serving-fidelity-worker-v0.3 -- GSPC serving-fidelity cells (Measure rulings 16+17 Oct 2026; v0.3: length=TRUNCATED, strict one-number ANSWER line, markdown/echo cleanup, max_tokens 2048).
 
 Scores two sub-banks of the frozen serving-fidelity bank as SEPARATE cells, each exactly 30 items, never padded:
   gsm8k-30  (sub_bank "a-closed-form")  numeric answer, parsed from the last "ANSWER:" line
@@ -21,17 +21,19 @@ from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
-WORKER_VERSION = "serving-fidelity-worker-v0.2"
-RUN_SCHEMA = "csoai.serving-fidelity-run/0.2"
-ITEM_SCHEMA = "csoai.serving-fidelity-item/0.2"
+WORKER_VERSION = "serving-fidelity-worker-v0.3"
+RUN_SCHEMA = "csoai.serving-fidelity-run/0.3"
+ITEM_SCHEMA = "csoai.serving-fidelity-item/0.3"
 BFCL_SCHEMA_MAPPING = {"dict": "object", "float": "number", "tuple": "array"}
 BFCL_UPSTREAM = {"repo": "ShishirPatil/gorilla", "file": "berkeley-function-call-leaderboard/bfcl_eval/data/possible_answer/BFCL_v4_simple_python.json", "commit": "f7cf7359b7ac615a0b294831c5ba2bc95ee4a000", "licence": "Apache-2.0"}
-GSM8K_PARSE_ORDER = ["last ANSWER: line", "else last \\boxed{...}", "else UNPARSED (bare trailing number is UNPARSED)"]
+GSM8K_PARSE_ORDER = ["done_reason=length -> TRUNCATED (regardless of content)", "clean: strip * _ ` and leading whitespace per line; drop lines containing 'End with a line:'",
+                     "last line starting ANSWER: -> exactly one number (optional $ , %), trailing text without digits allowed; a second number -> UNPARSED",
+                     "else last \\boxed{...}", "else UNPARSED (bare trailing number is UNPARSED)"]
 SUB_BANKS = {"gsm8k-30": "a-closed-form", "bfcl-30": "b-tool-call"}
 CELL_N = 30
 GSM8K_SUFFIX = "End with a line: ANSWER: <number>"
-GSM8K_MAX_TOKENS = 512
-BFCL_MAX_TOKENS = 512
+GSM8K_MAX_TOKENS = 2048  # v0.3: uniform across models and both sub-banks
+BFCL_MAX_TOKENS = 2048
 TIMEOUT_S = 300
 LOOPBACK = ("127.0.0.1", "localhost", "::1")
 
@@ -72,7 +74,9 @@ def load_cell_items(bank: Path, sub_bank_cell: str) -> list[dict]:
 
 # ---------------------------------------------------------------- GSM8K
 
-_ANSWER_RE = re.compile(r"^\s*ANSWER:\s*(.*?)\s*$", re.MULTILINE)
+_ANSWER_LINE_RE = re.compile(r"^ANSWER:(.*)$")
+_ONE_NUMBER_RE = re.compile(r"^\s*(-?\$?-?\d[\d,]*(?:\.\d+)?)\s*%?(.*)$")
+_ECHO = "End with a line:"
 
 
 def normalize_number(s: str):
@@ -92,20 +96,42 @@ def normalize_number(s: str):
     return d
 
 
+def clean_lines(content: str) -> list[str]:
+    """v0.3 (b): per line strip markdown emphasis (* _) and backticks, then leading whitespace; drop prompt-echo lines."""
+    out = []
+    for line in (content or "").splitlines():
+        c = re.sub(r"[*_`]", "", line).lstrip()
+        if _ECHO in c:
+            continue
+        out.append(c)
+    return out
+
+
+def parse_answer_value(rest: str):
+    """v0.3 (c): exactly ONE number (optional $, commas, %); trailing text allowed only if it has no other digits."""
+    m = _ONE_NUMBER_RE.match(rest)
+    if not m or re.search(r"\d", m.group(2)):
+        return None
+    return normalize_number(m.group(1))
+
+
 _BOXED_RE = re.compile(r"\\boxed\{([^{}]*)\}")
 
 
 def parse_gsm8k(content: str, done_reason: str | None):
-    """-> (parse_status, parsed_value, parsed_via). Last ANSWER: line first; else last \\boxed{...}; else UNPARSED/TRUNCATED."""
-    matches = _ANSWER_RE.findall(content or "")
-    if matches:
-        v = normalize_number(matches[-1])
+    """-> (parse_status, parsed_value, parsed_via). v0.3: length = TRUNCATED first; then last cleaned ANSWER: line; else last \\boxed{...}; else UNPARSED."""
+    if done_reason == "length":  # (a) regardless of content
+        return "truncated", None, None
+    lines = clean_lines(content)
+    answers = [m.group(1) for m in (_ANSWER_LINE_RE.match(l) for l in lines) if m]
+    if answers:
+        v = parse_answer_value(answers[-1])
         return ("ok", v, "answer_line") if v is not None else ("unparsed", None, "answer_line")
-    boxed = _BOXED_RE.findall(content or "")
+    boxed = _BOXED_RE.findall("\n".join(lines))
     if boxed:
         v = normalize_number(boxed[-1])
         return ("ok", v, "boxed") if v is not None else ("unparsed", None, "boxed")
-    return ("truncated" if done_reason == "length" else "unparsed"), None, None
+    return "unparsed", None, None
 
 
 def grade_gsm8k(parsed, gold: str) -> bool:
@@ -156,7 +182,10 @@ def _first_json_object(text: str):
 
 
 def extract_call(message: dict, done_reason: str | None):
-    """-> (parse_status, call|None, source). Exactly one tool_call required; >1 is a parsed, wrong attempt."""
+    """-> (parse_status, call|None, source). Exactly one tool_call required; >1 is a parsed, wrong attempt.
+    v0.3 (a): done_reason=length -> TRUNCATED regardless of tool_calls/content."""
+    if done_reason == "length":
+        return "truncated", None, None
     tcs = message.get("tool_calls") or []
     if tcs:
         if len(tcs) != 1:
@@ -179,7 +208,7 @@ def extract_call(message: dict, done_reason: str | None):
             except ValueError:
                 args = None
         return "ok", {"name": name, "arguments": args, "n_calls": 1}, "content_json"
-    return ("truncated" if done_reason == "length" else "unparsed"), None, None
+    return "unparsed", None, None
 
 
 def _coerce(v, typ):
