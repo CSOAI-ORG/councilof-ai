@@ -1,0 +1,24 @@
+{
+  "as_of": "2026-09-20T01:48:59.629217+00:00",
+  "bank_file": "measurement/registers/2026-09-20/chainlink-feed-bank.jsonl",
+  "bank_sha256": "a8f0fca5c98142729db952a9b5e2f2a85c147ca459e586c4ea9d01d381339387",
+  "completeness_note": "Denominator = every entry parseable from the frozen registry page at the pinned hash; exclusions are counted by stage, never dropped silently.",
+  "counts": {
+    "bank_rows": 253,
+    "chunks": 6372,
+    "entries_with_proxy": 4412,
+    "excluded_duplicate_proxy": 250,
+    "excluded_testnet_marker": 1,
+    "excluded_wrong_chain": 3908
+  },
+  "filter_rule": "blockchainName == Ethereum AND no sepolia/testnet marker in entry chunk; first occurrence per proxyAddress",
+  "publication": "disabled",
+  "schema": "csoai.chainlink-feed-bank-manifest/0.1",
+  "signing": "disabled",
+  "source": {
+    "locator": "https://docs.chain.link/data-feeds/price-feeds/addresses?network=ethereum",
+    "raw_sha256": "9e2de906158f8e5014ff1662bd0b48d2e9b7fa324bacf081aaa9b28c8080e156",
+    "retrieved_at": "2026-09-20T01:48:59.629217+00:00"
+  },
+  "status": "CANDIDATE_UNMEASURED"
+}

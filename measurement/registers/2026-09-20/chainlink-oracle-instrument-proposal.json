@@ -1,0 +1,60 @@
+{
+  "schema": "csoai.chainlink-oracle-instrument-proposal/0.1",
+  "as_of": "2026-09-20T00:00:00Z",
+  "status": "CANDIDATE_UNMEASURED",
+  "purpose": "Proposed instrument rows for the oracle-boundary measurement, mapped to existing GSPC axes only. No new axis is proposed. Nothing here is a run, a score, or a card.",
+  "axis_mapping": [
+    {
+      "axis": "provenance-controls",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "fit": "Feed contract identity, chain pinning, freshness, and round-metadata completeness are deterministic on-chain facts, the same shape as ChainFacts issuer-control rows.",
+      "proposed_rows": [
+        {"row_id": "ob-identity-triple", "fact": "(chainId, proxyAddress, description()) readback agrees with the frozen issuer registry entry", "verdict_enum": ["PASS", "FAIL", "UNCHECKABLE"]},
+        {"row_id": "ob-decimals", "fact": "decimals() readback matches the registry-declared decimals", "verdict_enum": ["PASS", "FAIL", "UNCHECKABLE"]},
+        {"row_id": "ob-freshness", "fact": "latestRoundData().updatedAt within declared heartbeat + grace at read time", "verdict_enum": ["PASS", "FAIL", "UNCHECKABLE"]},
+        {"row_id": "ob-round-metadata", "fact": "answeredInRound >= roundId and startedAt > 0 and updatedAt > 0", "verdict_enum": ["PASS", "FAIL", "UNCHECKABLE"]},
+        {"row_id": "ob-registry-agreement", "fact": "issuer registry row for (name, path) resolves to exactly one proxyAddress and it equals the read address", "verdict_enum": ["PASS", "FAIL", "UNCHECKABLE"]}
+      ]
+    },
+    {
+      "axis": "reserve-attestation",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "fit": "Only the boundary question: does oracle-published PoR data constitute independently checkable reserve evidence? Estate precedent (signed card de15a9f881955973, WBTC) answers: custodian-fed oracle values are not independently readable; INDEXED, no parity claimed.",
+      "proposed_rows": [
+        {"row_id": "ob-por-boundary", "fact": "PoR feed value is issuer/custodian-fed and not independently readable from the consumer path", "verdict_enum": ["PASS", "FAIL", "UNCHECKABLE"], "note": "PASS means the boundary was correctly reported as UNCHECKABLE-for-reserves, not that reserves exist"}
+      ],
+      "blocker": "GAP-01: PoR documentation 404 at collection time; no PoR feed content frozen. Rows stay UNMEASURED until a frozen PoR source exists."
+    }
+  ],
+  "axes_considered_and_rejected": [
+    {"axis": "regulatory-framework", "reason": "No governing-regime evidence collected for Chainlink in this pack; do not stretch."},
+    {"axis": "distribution-integrity", "reason": "Reader-classification construct does not fit oracle reads."},
+    {"axis": "custody-disclosure", "reason": "No custodian/auditor naming evidence frozen (GAP-01 blocks the PoR path)."},
+    {"axis": "effect-binding", "reason": "Declared slot about MCP declared-vs-executed scope; unrelated to oracle reads."}
+  ],
+  "denominator_proposal": {
+    "bank": "chainlink-feed-bank.jsonl: every Ethereum-mainnet entry parseable from the frozen registry page (raw_sha256 9e2de906158f8e5014ff1662bd0b48d2e9b7fa324bacf081aaa9b28c8080e156), deduplicated by proxyAddress, testnet-marked entries excluded by rule.",
+    "bank_sha256": "a8f0fca5c98142729db952a9b5e2f2a85c147ca459e586c4ea9d01d381339387",
+    "n": 253,
+    "filter_counts": {"entries_with_proxy": 4412, "excluded_wrong_chain": 3908, "excluded_testnet_marker": 1, "excluded_duplicate_proxy": 250, "bank_rows": 253},
+    "minimum_n": 30,
+    "minimum_n_basis": "ADR-002 precedent: no MEASURED status below n >= 30 probed subjects. Bank n=253 satisfies the floor; all 253 rows must be attempted in any run.",
+    "completeness_rule": "The denominator is the full parsed registry set at the frozen hash, not a sample; n reported = rows attempted, with unreachable feeds kept as UNCHECKABLE rows, never dropped."
+  },
+  "grader_proposal": {
+    "type": "deterministic decoder + comparator, no model in the loop",
+    "file": "tools/grade_chainlink_oracle_boundary.py",
+    "inputs": ["frozen registry page hash", "pinned block readbacks (eth_chainId, description, decimals, latestRoundData per feed)"],
+    "smoke_test": "chainlink-grader-smoke-eth-usd.json: all five control facts PASS on the frozen canary read; smoke output is a grader-execution proof, not a measurement run"
+  },
+  "run_output_proposal": "Shape per public/interop/financial-measure-run-v2.json (csoai.financial-measure-run/0.2): per-feed control_facts with three-state verdicts, risk_verdict_status UNMEASURED, supersedes pointer on correction, UNREACHABLE never FAIL.",
+  "blocking_conditions_for_measured": [
+    "Full-bank run exists but is UNSIGNED (chainlink-oracle-boundary-run-unsigned.json, run_attestation CONTENT_ADDRESSED_UNSIGNED); a candidate run is not a measurement",
+    "Second-seat replay (GAP-07 closed at endpoint level only; physical seat is shared)",
+    "PoR naming-mismatch policy: the 14 abbreviation-family identity FAILs need a pinned, pre-ruled normalisation rule or they stand as FAIL",
+    "Run output signed into the public root by the board signer (nothing local signs)",
+    "Signed card and run reconcile with the board slot"
+  ]
+}

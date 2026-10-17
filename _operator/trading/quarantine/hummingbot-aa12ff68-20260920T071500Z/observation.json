@@ -1,0 +1,35 @@
+{
+  "executor": {
+    "provider": "local-hummingbot-api",
+    "region": "local",
+    "runtime": "version-unreported"
+  },
+  "instrument": {
+    "digest": "88b963d245993435c405524f10886fdbab168a7a8d4778de7a414cefe22f57d3",
+    "id": "condor-hummingbot-paper-promotion-gate",
+    "version": "2026-09-20T06:39:48.533925+00:00"
+  },
+  "legal_review_required": false,
+  "limitations": [
+    "Historical backtest; not live profit and not a trading instruction.",
+    "Market-data payload and Hummingbot engine version were not supplied by this API response.",
+    "Sharpe ratio and drawdown remain source-reported; direct executor sums were reproduced only for positions, PnL, fees and volume.",
+    "This observation is quarantined and is not a GSPC measurement card."
+  ],
+  "result": {
+    "claim_type": "historical_backtest",
+    "payload_digest": "f2288e840fe7cdbd540de4033aec913d78b32088e41f1d2d9c131cc257241b60",
+    "status": "CANDIDATE_FINDING"
+  },
+  "schema": "csoai.evidence-observation/0.1",
+  "source": {
+    "kind": "runtime",
+    "observed_at": "2026-09-20T07:27:47.518918Z",
+    "uri": "local:hummingbot-api/backtesting/tasks/aa12ff68"
+  },
+  "subject": {
+    "digest": "0f5e27891bb35742d1dd613dcd85b13f8cb78220d1c98221dd57cbb48f5f0521",
+    "id": "bt_validate_30d_ondo_macd_bb_v1",
+    "kind": "tool"
+  }
+}

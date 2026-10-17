@@ -1,0 +1,30 @@
+# decisive test: does the entry the API serves at index 2719646948 carry a proof AT that index?
+retrieved_at=2026-09-20T01:55:42Z
+{
+  "logIndex": 2719646948,
+  "proofIndex": 2597742686,
+  "proofTreeSize": 2771977049
+}
+
+# and the committed entry C: full verification still VALID offline:
+{
+  "overall": "VALID",
+  "checks": [
+    {
+      "check": "log_identity",
+      "verdict": "VALID"
+    },
+    {
+      "check": "set",
+      "verdict": "VALID"
+    },
+    {
+      "check": "inclusion",
+      "verdict": "VALID"
+    },
+    {
+      "check": "checkpoint",
+      "verdict": "VALID"
+    }
+  ]
+}

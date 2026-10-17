@@ -1,0 +1,11 @@
+--- a/scripts/paper_scorecard.py
++++ b/scripts/paper_scorecard.py
+@@ -23,7 +23,7 @@
+ def score(rows: list[dict[str, Any]]) -> dict[str, Any]:
+     settled = [row for row in rows if row.get("execution") == "disabled"]
+     net = [float(row["net_return_bps"]) for row in settled if "net_return_bps" in row]
+-    wins = [row for row in settled if row.get("profitable_after_estimated_cost") is True]
++    wins = [value for value in net if value > 0]
+     by_symbol: dict[str, list[float]] = defaultdict(list)
+     for row in settled:
+         if "net_return_bps" in row:

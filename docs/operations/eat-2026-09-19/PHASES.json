@@ -1,0 +1,129 @@
+{
+  "schema": "csoai.eat-phase-register/0.1",
+  "observed_at": "2026-09-19T04:12:16.808041+00:00",
+  "phases": [
+    {
+      "id": "P0",
+      "title": "Recover, pin and protect",
+      "state": "COMPLETE_LOCAL",
+      "depends_on": [],
+      "done_when": "Input packages, current repo and lane preimages recorded."
+    },
+    {
+      "id": "P1",
+      "title": "Absorb claim maintenance and watcher",
+      "state": "PARTIAL_LOCAL",
+      "depends_on": [
+        "P0"
+      ],
+      "done_when": "Watcher adopted locally; full plugin package requires exact-file transfer and owner-path replay."
+    },
+    {
+      "id": "P2",
+      "title": "Canonical registry and 23-axis plan",
+      "state": "REVIEW_REQUIRED",
+      "depends_on": [
+        "P1"
+      ],
+      "done_when": "Separate emerging research dimensions from existing financial axes; resolve six undeclared goals and adapter pointers."
+    },
+    {
+      "id": "P3",
+      "title": "Qualify instruments",
+      "state": "NOT_RUN",
+      "depends_on": [
+        "P2"
+      ],
+      "done_when": "Exact bank/grader/config/system/domain; utility and failure controls; failed subject distinct from invalid instrument."
+    },
+    {
+      "id": "P4",
+      "title": "Host identity, authority and effect binding",
+      "state": "NOT_RUN",
+      "depends_on": [
+        "P3"
+      ],
+      "done_when": "Authenticated host context, scoped leases, audience, final normalized request, cancellation and replay contracts."
+    },
+    {
+      "id": "P5",
+      "title": "Owned correction readbacks",
+      "state": "PARTIAL_LOCAL",
+      "depends_on": [
+        "P1"
+      ],
+      "done_when": "Operator-defined source/target revision contracts; current expected bytes observed from two owned surfaces; unknown global coverage."
+    },
+    {
+      "id": "P6",
+      "title": "Authorized FIX and remeasurement",
+      "state": "NOT_RUN",
+      "depends_on": [
+        "P3",
+        "P4",
+        "P5"
+      ],
+      "done_when": "Baseline/candidate/patch/instrument binding, separate reviewer, holdout/regression evidence and rollback."
+    },
+    {
+      "id": "P7",
+      "title": "One reviewed public surface release",
+      "state": "NOT_RELEASED",
+      "depends_on": [
+        "P2",
+        "P5"
+      ],
+      "done_when": "Preserve other lanes UI/MCP repairs; one status source, existing full release gates, served-byte readback."
+    },
+    {
+      "id": "P8",
+      "title": "All requested axes accounted for",
+      "state": "NOT_RUN",
+      "depends_on": [
+        "P3",
+        "P4",
+        "P6"
+      ],
+      "done_when": "Fresh/reused/partial/unchecked/unsupported/blocked disposition for every axis; budget and sampling units preserved."
+    },
+    {
+      "id": "P9",
+      "title": "RunPod staging, HF projection, automation",
+      "state": "NOT_ACTIVATED",
+      "depends_on": [
+        "P1"
+      ],
+      "done_when": "Private no-inference replay first; existing worker only after P4/P6/P7; no duplicate scheduler or private-data publication."
+    },
+    {
+      "id": "P10",
+      "title": "Group and regulator evidence packets",
+      "state": "DRAFT_ONLY",
+      "depends_on": [
+        "P5",
+        "P6"
+      ],
+      "done_when": "Small reproducible contribution; confirm current venue/IPR/privacy/consent/authority and suppress duplicate replies."
+    },
+    {
+      "id": "P11",
+      "title": "Measurement-only and measurement-plus-FIX",
+      "state": "NOT_STARTED",
+      "depends_on": [
+        "P7",
+        "P8"
+      ],
+      "done_when": "Specific deliverable and customer acceptance; wallet/settlement/API counter not independent delivery evidence."
+    }
+  ],
+  "EAT_operating_chain": "recover \u2192 deduplicate \u2192 pin \u2192 replay \u2192 compare \u2192 adopt scoped source \u2192 reviewed release \u2192 readback \u2192 learn",
+  "authority_note": "Planning record is not execution or release authorization. No new spending, inference, signing, anchoring, submitting or publishing is authorized by this file.",
+  "existing_source_changes": [
+    "scripts/watch_corrections.py"
+  ],
+  "other_lanes_preserved": true,
+  "scheduler_changed": false,
+  "HF_published": false,
+  "frontend_deployed": false,
+  "test_counts_are_separate": true
+}
