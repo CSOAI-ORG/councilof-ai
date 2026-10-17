@@ -352,7 +352,15 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
       );
     }
     const description = ART50_MARKING_EVIDENCE_DESCRIPTION;
-    const accepts = x402Accepts(env, challengeUrl, { skuId: "request_attestation", tier: "per_request", description });
+    // THIS DOOR'S OWN SKU (fixed 2026-10-13; same defect class as free-door's fix #29). The
+    // no-input challenge used to borrow request_attestation's identity — `skuId:
+    // "request_attestation", tier: "per_request"` — so every 402 here claimed
+    // csoai.product.request_attestation and a settle through this challenge was recorded in the
+    // settlement ledger against the attestation product. It also advertised request_attestation's
+    // per-request atom while the paid path below settles THIS door's own pack price, so a payment
+    // signed against this challenge could not complete a real commission. Each door carries its
+    // own sku; the challenge now advertises exactly what the paid path charges.
+    const accepts = x402Accepts(env, challengeUrl, { skuId: SKU, tier: "pack", description });
     // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
     // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
     // Behavior) — that echo is what gets a resource catalogued.
