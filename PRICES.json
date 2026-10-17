@@ -1,0 +1,256 @@
+{
+  "schema": "csoai.PRICES/0.1",
+  "notice": "Measurement artifacts, never grades. Every row sells issuance, assembly, an independent signature, or cadence \u2014 never a grade, score, pass/fail verdict, certificate, or a place on the board. Verification is free forever (/gspc-verify, /root.json, /api/proof?sha=, /api/verify, /api/receipts/verify).",
+  "rail": {
+    "scheme": "exact",
+    "network": "eip155:8453",
+    "network_note": "Base; v1 clients read the slug `base` for the same chain",
+    "asset": {
+      "symbol": "USDC",
+      "contract": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "decimals": 6
+    },
+    "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31"
+  },
+  "what_this_file_is": "PRICE POINTS with their basis \u2014 one point per priced endpoint, inside the researched per-call bands (data artifacts $0.005\u2013$0.05/call; probe/audit-grade artifacts $0.10\u2013$0.50/call). A price here is a published decision with its comparables, not a promise and not a quote.",
+  "what_this_file_is_not": "Not a price list rendered to buyers and not a revenue forecast. The AUTHORITATIVE amount for any call is the accepts[].amount of the live 402 challenge for that request (amounts live only inside a 402, per the estate's no-public-prices rule); challenges derive from functions/api/_skus.ts with per-tier owner overrides via the X402_PRICE_* env vars. Where a SKU band and this manifest differ, the challenge wins and this manifest is the researched basis for revising the SKU.",
+  "floor": {
+    "min_price_usdc": 0.005,
+    "why": "the CDP facilitator fee is $0.001/tx after 1,000 settles/mo; below $0.005 a call sells at a loss"
+  },
+  "bands": {
+    "data-artifact": "$0.005\u2013$0.05 per call",
+    "probe-artifact": "$0.10\u2013$0.50 per call",
+    "audit-artifact": "$0.10\u2013$0.50 per call"
+  },
+  "comps": {
+    "402arcade": {
+      "lint": 0.05,
+      "audit": 0.25
+    },
+    "x402-data-api": {
+      "mcp_scan": 0.1
+    },
+    "CoinGecko": {
+      "flat": 0.01
+    }
+  },
+  "rows": [
+    {
+      "route": "/api/signed-data-feed",
+      "price_usdc": 0.02,
+      "basis": "CoinGecko data API $0.01/flat call (data comp) \u00d7 four-stream assembly",
+      "preview_route": "https://councilof.ai/api/signed-data-feed/preview",
+      "artifact_type": "data-artifact",
+      "notice": "Measurement artifact, never a grade, score, pass/fail verdict, or certificate. Verification is free forever."
+    },
+    {
+      "route": "/api/proof",
+      "price_usdc": 0.01,
+      "basis": "CoinGecko data API $0.01/flat call (data comp)",
+      "preview_route": "https://councilof.ai/api/proof/preview",
+      "artifact_type": "data-artifact",
+      "notice": "Measurement artifact, never a grade, score, pass/fail verdict, or certificate. Verification is free forever."
+    },
+    {
+      "route": "/api/receipts/batch",
+      "price_usdc": 0.05,
+      "basis": "402arcade $0.05 lint (data-band top comp) (assembles up to 200 leaves with inclusion paths)",
+      "preview_route": "https://councilof.ai/api/receipts/batch/preview",
+      "artifact_type": "data-artifact",
+      "notice": "Measurement artifact, never a grade, score, pass/fail verdict, or certificate. Verification is free forever."
+    },
+    {
+      "route": "/api/feeds/provider-diff",
+      "price_usdc": 0.05,
+      "basis": "402arcade $0.05 lint (data-band top comp) (signed historical batch)",
+      "preview_route": "https://councilof.ai/api/feeds/provider-diff/preview",
+      "artifact_type": "data-artifact",
+      "notice": "Measurement artifact, never a grade, score, pass/fail verdict, or certificate. Verification is free forever."
+    },
+    {
+      "route": "/api/wrapper/changes",
+      "price_usdc": 0.02,
+      "basis": "CoinGecko data API $0.01/flat call (data comp) (delta of two ledger snapshots)",
+      "preview_route": "https://councilof.ai/api/wrapper/changes/preview",
+      "artifact_type": "data-artifact",
+      "notice": "Measurement artifact, never a grade, score, pass/fail verdict, or certificate. Verification is free forever."
+    },
+    {
+      "route": "/api/wrapper/asset/usdc",
+      "price_usdc": 0.05,
+      "basis": "402arcade $0.05 lint (data-band top comp) (per-pair parity pack)",
+      "preview_route": "https://councilof.ai/api/wrapper/asset/usdc/preview",
+      "artifact_type": "data-artifact",
+      "notice": "Measurement artifact, never a grade, score, pass/fail verdict, or certificate. Verification is free forever."
+    },
+    {
+      "route": "/api/wrapper/asset/usdt",
+      "price_usdc": 0.05,
+      "basis": "402arcade $0.05 lint (data-band top comp) (per-pair parity pack)",
+      "preview_route": "https://councilof.ai/api/wrapper/asset/usdt/preview",
+      "artifact_type": "data-artifact",
+      "notice": "Measurement artifact, never a grade, score, pass/fail verdict, or certificate. Verification is free forever."
+    },
+    {
+      "route": "/api/wrapper/asset/dai",
+      "price_usdc": 0.05,
+      "basis": "402arcade $0.05 lint (data-band top comp) (per-pair parity pack)",
+      "preview_route": "https://councilof.ai/api/wrapper/asset/dai/preview",
+      "artifact_type": "data-artifact",
+      "notice": "Measurement artifact, never a grade, score, pass/fail verdict, or certificate. Verification is free forever."
+    },
+    {
+      "route": "/api/pop/stablecoins",
+      "price_usdc": 0.01,
+      "basis": "CoinGecko data API $0.01/flat call (data comp) (cross-ledger supply slice)",
+      "preview_route": "https://councilof.ai/api/pop/stablecoins/preview",
+      "artifact_type": "data-artifact",
+      "notice": "Measurement artifact, never a grade, score, pass/fail verdict, or certificate. Verification is free forever."
+    },
+    {
+      "route": "/api/pop/swift",
+      "price_usdc": 0.01,
+      "basis": "CoinGecko data API $0.01/flat call (data comp) (bank adoption slice)",
+      "preview_route": "https://councilof.ai/api/pop/swift/preview",
+      "artifact_type": "data-artifact",
+      "notice": "Measurement artifact, never a grade, score, pass/fail verdict, or certificate. Verification is free forever."
+    },
+    {
+      "route": "/api/pop/xrpl",
+      "price_usdc": 0.01,
+      "basis": "CoinGecko data API $0.01/flat call (data comp) (XRPL issued-asset slice)",
+      "preview_route": "https://councilof.ai/api/pop/xrpl/preview",
+      "artifact_type": "data-artifact",
+      "notice": "Measurement artifact, never a grade, score, pass/fail verdict, or certificate. Verification is free forever."
+    },
+    {
+      "route": "/api/pop/x402-bazaar",
+      "price_usdc": 0.01,
+      "basis": "CoinGecko data API $0.01/flat call (data comp) (x402 Bazaar listings slice)",
+      "preview_route": "https://councilof.ai/api/pop/x402-bazaar/preview",
+      "artifact_type": "data-artifact",
+      "notice": "Measurement artifact, never a grade, score, pass/fail verdict, or certificate. Verification is free forever."
+    },
+    {
+      "route": "/api/pop/mcp-registry",
+      "price_usdc": 0.01,
+      "basis": "CoinGecko data API $0.01/flat call (data comp) (MCP registry slice)",
+      "preview_route": "https://councilof.ai/api/pop/mcp-registry/preview",
+      "artifact_type": "data-artifact",
+      "notice": "Measurement artifact, never a grade, score, pass/fail verdict, or certificate. Verification is free forever."
+    },
+    {
+      "route": "/api/pop/a2a",
+      "price_usdc": 0.01,
+      "basis": "CoinGecko data API $0.01/flat call (data comp) (agent-card slice)",
+      "preview_route": "https://councilof.ai/api/pop/a2a/preview",
+      "artifact_type": "data-artifact",
+      "notice": "Measurement artifact, never a grade, score, pass/fail verdict, or certificate. Verification is free forever."
+    },
+    {
+      "route": "/api/pop/ots-proofs",
+      "price_usdc": 0.01,
+      "basis": "CoinGecko data API $0.01/flat call (data comp) (OpenTimestamps proof slice)",
+      "preview_route": "https://councilof.ai/api/pop/ots-proofs/preview",
+      "artifact_type": "data-artifact",
+      "notice": "Measurement artifact, never a grade, score, pass/fail verdict, or certificate. Verification is free forever."
+    },
+    {
+      "route": "/api/pop/layer0",
+      "price_usdc": 0.01,
+      "basis": "CoinGecko data API $0.01/flat call (data comp) (layer-0 anchor slice)",
+      "preview_route": "https://councilof.ai/api/pop/layer0/preview",
+      "artifact_type": "data-artifact",
+      "notice": "Measurement artifact, never a grade, score, pass/fail verdict, or certificate. Verification is free forever."
+    },
+    {
+      "route": "/api/pop/corrections",
+      "price_usdc": 0.01,
+      "basis": "CoinGecko data API $0.01/flat call (data comp) (correction-history slice)",
+      "preview_route": "https://councilof.ai/api/pop/corrections/preview",
+      "artifact_type": "data-artifact",
+      "notice": "Measurement artifact, never a grade, score, pass/fail verdict, or certificate. Verification is free forever."
+    },
+    {
+      "route": "/api/pop/claim-watch",
+      "price_usdc": 0.01,
+      "basis": "CoinGecko data API $0.01/flat call (data comp) (claims watch slice)",
+      "preview_route": "https://councilof.ai/api/pop/claim-watch/preview",
+      "artifact_type": "data-artifact",
+      "notice": "Measurement artifact, never a grade, score, pass/fail verdict, or certificate. Verification is free forever."
+    },
+    {
+      "route": "/api/request-attestation",
+      "price_usdc": 0.25,
+      "basis": "402arcade $0.25 audit (probe/audit comp) (per-request recompute + signed receipt)",
+      "preview_route": "https://councilof.ai/api/request-attestation/preview",
+      "artifact_type": "probe-artifact",
+      "notice": "Measurement artifact, never a grade, score, pass/fail verdict, or certificate. Verification is free forever."
+    },
+    {
+      "route": "/api/evidence-bundle",
+      "price_usdc": 0.5,
+      "basis": "402arcade $0.25 audit (probe/audit comp) \u00d7 obligation-mapped bundle (top of band)",
+      "preview_route": "https://councilof.ai/api/evidence-bundle/preview",
+      "artifact_type": "audit-artifact",
+      "notice": "Measurement artifact, never a grade, score, pass/fail verdict, or certificate. Verification is free forever."
+    },
+    {
+      "route": "/api/rwa/evidence",
+      "price_usdc": 0.25,
+      "basis": "402arcade $0.25 audit (probe/audit comp) (live on-ledger read with raw-fetch hashes)",
+      "preview_route": "https://councilof.ai/api/rwa/evidence/preview",
+      "artifact_type": "probe-artifact",
+      "notice": "Measurement artifact, never a grade, score, pass/fail verdict, or certificate. Verification is free forever."
+    },
+    {
+      "route": "/api/wrapper",
+      "price_usdc": 0.25,
+      "basis": "402arcade $0.25 audit (probe/audit comp) (two-RPC-confirmed escrow read)",
+      "preview_route": "https://councilof.ai/api/wrapper/preview",
+      "artifact_type": "probe-artifact",
+      "notice": "Measurement artifact, never a grade, score, pass/fail verdict, or certificate. Verification is free forever."
+    },
+    {
+      "route": "/api/measurement/fresh-capsule",
+      "price_usdc": 0.25,
+      "basis": "402arcade $0.25 audit (probe/audit comp) (fresh probe run)",
+      "preview_route": "https://councilof.ai/api/measurement/fresh-capsule/preview",
+      "artifact_type": "probe-artifact",
+      "notice": "Measurement artifact, never a grade, score, pass/fail verdict, or certificate. Verification is free forever."
+    },
+    {
+      "route": "/api/art50/marking-evidence",
+      "price_usdc": 0.25,
+      "basis": "402arcade $0.25 audit (probe/audit comp) (C2PA/IPTC detection over real bytes)",
+      "preview_route": "https://councilof.ai/api/art50/marking-evidence/preview",
+      "artifact_type": "probe-artifact",
+      "notice": "Measurement artifact, never a grade, score, pass/fail verdict, or certificate. Verification is free forever."
+    },
+    {
+      "route": "/api/ras/mcp-probe",
+      "price_usdc": 0.1,
+      "basis": "x402-data-api $0.10 MCP scan (probe comp)",
+      "preview_route": "https://councilof.ai/api/ras/mcp-probe/preview",
+      "artifact_type": "probe-artifact",
+      "notice": "Measurement artifact, never a grade, score, pass/fail verdict, or certificate. Verification is free forever."
+    },
+    {
+      "route": "/api/ras/x402-check",
+      "price_usdc": 0.25,
+      "basis": "402arcade $0.25 audit (probe/audit comp) (census-rule conformance check)",
+      "preview_route": "https://councilof.ai/api/ras/x402-check/preview",
+      "artifact_type": "probe-artifact",
+      "notice": "Measurement artifact, never a grade, score, pass/fail verdict, or certificate. Verification is free forever."
+    },
+    {
+      "route": "/api/ras/supply",
+      "price_usdc": 0.25,
+      "basis": "402arcade $0.25 audit (probe/audit comp) (totalSupply read with state proof)",
+      "preview_route": "https://councilof.ai/api/ras/supply/preview",
+      "artifact_type": "probe-artifact",
+      "notice": "Measurement artifact, never a grade, score, pass/fail verdict, or certificate. Verification is free forever."
+    }
+  ]
+}
