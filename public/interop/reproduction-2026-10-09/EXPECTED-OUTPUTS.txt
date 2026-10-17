@@ -1,0 +1,27 @@
+# EXPECTED-OUTPUTS — input pins (sha256) and expected verdicts. as_of 2026-10-09T04:05:46Z.
+# Inputs are pinned byte-for-byte. The two live inputs (DID document, card URL) are pinned
+# AS OBSERVED at run time; the trust root and the card registry are living surfaces, so a
+# later fetch may legitimately differ — the pin is what tells you so.
+
+sha256 b11d2d651c52bf6776dcaa53179a21810d95f87ada198ff0e4c98f971057b8ba  verify.py
+sha256 47123dd319e2f8872b783645f53f7afb9381283f61ebba61075f0ac08148924d  fixtures/valid-card.json
+sha256 1bb19364af0aa67056064fa7533f2f97ca7efccac2919729f436c159e6fe5a98  fixtures/tampered-card.json
+sha256 845cd2bdc9615717099cf3b75b9acc571b3ebb7253fb6cea26f9edd19c9a443e  fixtures/unreachable-fetch.json
+sha256 3a0ace2b1d72f53180d9226da194eb842177f4426a6c84717d4af2550fdd035e  LIVE INPUT https://councilof.ai/.well-known/did.json (as observed 2026-10-09T04:05:46Z)
+sha256 47123dd319e2f8872b783645f53f7afb9381283f61ebba61075f0ac08148924d  LIVE INPUT https://councilof.ai/signed/cards/8b3d291763561e3f66adf6a9941f2ade8adf7b2fd856f237241354d3b4e1aed7.json (as observed 2026-10-09T04:05:46Z; byte-identical to fixtures/valid-card.json)
+
+run 1  --card-url <live card URL above>          expect VALID        exit 0
+run 2  fixtures/valid-card.json                  expect VALID        exit 0
+run 3  fixtures/tampered-card.json               expect INVALID      exit 2   reasons=id-mismatch,signature-mismatch
+run 4  fixtures/unreachable-fetch.json           expect UNCHECKABLE  exit 3   reason=card-fetch-failed
+
+Cross-checks expected in every run-1/run-2 output:
+  self-test: rfc8032-TEST1 PASS
+  kid: card-attestation-1 -> did:web:csoai.org#card-attestation-1
+  key-x: 1MsOqhbV9Qv3Yzo2qjT-CaVeEkuTFt7Sq9sSK7nDfjg
+  preimage-sha256 == card id == 8b3d291763561e3f66adf6a9941f2ade8adf7b2fd856f237241354d3b4e1aed7
+  naive-file-bytes-sha256 != card id (a hash of the card file bytes is NOT the preimage digest)
+
+Tamper definition: body.accuracy 0.0 -> 0.9 (single-character change in the raw card bytes)
+Fetch-spec definition (run 4): schema csoai.fixture-fetch/0.1 with fetch_url on the RFC 6761
+reserved .invalid TLD, which never resolves. A fetch failure is UNCHECKABLE — never INVALID, never 0.
