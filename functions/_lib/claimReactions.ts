@@ -18,6 +18,8 @@ export type ClaimReaction = {
   subject_sealed_id: string | null;
   claim_ref: string | null;
   event_state: string | null;
+  // Preserve the feed's signed-delivery state independently of any required recheck.
+  receipt_state: "DELIVERY_RECEIPT" | null;
   reaction_state: ReactionState;
   reason: string;
   recommended_checks: string[];
@@ -26,6 +28,13 @@ export type ClaimReaction = {
 
 const str = (v: unknown): string | null =>
   typeof v === "string" && v.trim() ? v.trim() : null;
+
+function sourceReadIncomplete(row: Row): boolean {
+  const objectState = str(row.object_state);
+  return str(row.kind) === "source_not_reachable_this_run" ||
+    objectState === "FETCH_FAILED" || objectState === "UNCONFIRMED" ||
+    str(row.change_state) === "UNCONFIRMED";
+}
 
 function planFor(row: Row, previousRecorded: string | undefined): ClaimReaction {
   const seq = Number.isInteger(row.seq) ? Number(row.seq) : -1;
@@ -37,12 +46,9 @@ function planFor(row: Row, previousRecorded: string | undefined): ClaimReaction 
   let reaction_state: ReactionState = "NO_CHANGE";
   let reason = "The event records no claim-state change that requires a bounded re-check.";
 
-  if (kind === "atoms" && row.baseline === true) {
-    reaction_state = "BASELINE_ONLY";
-    reason = "This atoms event establishes a baseline; a baseline is not evidence of a later change.";
-  } else if (objectState === "SIGNED") {
-    reaction_state = "DELIVERY_RECEIPT";
-    reason = "The event records a signed delivery state; signing is a receipt, not a new finding.";
+  if (sourceReadIncomplete(row)) {
+    reaction_state = "SOURCE_RETRY_REQUIRED";
+    reason = "The source observation did not complete strongly enough to support a change finding.";
   } else if (
     change === "CORRECTED" ||
     change === "QUARANTINED" ||
@@ -53,9 +59,15 @@ function planFor(row: Row, previousRecorded: string | undefined): ClaimReaction 
       change === "CORRECTED" || change === "QUARANTINED"
         ? "The event change_state is " + change + "; affected dependencies require bounded re-verification."
         : "The recorded claim state changed from " + previousRecorded + " to " + recorded + "; affected dependencies require bounded re-verification.";
-  } else if (objectState === "FETCH_FAILED" || change === "UNCONFIRMED" || objectState === "UNCONFIRMED") {
-    reaction_state = "SOURCE_RETRY_REQUIRED";
-    reason = "The source observation did not complete strongly enough to support a change finding.";
+  } else if (row.checks_all_pass === false) {
+    reaction_state = "RECHECK_REQUIRED";
+    reason = "One or more declared checks did not reproduce; review the bounded measurement before interpreting a claim-state change.";
+  } else if (kind === "atoms" && row.baseline === true) {
+    reaction_state = "BASELINE_ONLY";
+    reason = "This atoms event establishes a baseline; a baseline is not evidence of a later change.";
+  } else if (objectState === "SIGNED") {
+    reaction_state = "DELIVERY_RECEIPT";
+    reason = "The event records a signed delivery state; signing is a receipt, not a new finding.";
   }
 
   const challenge = reaction_state === "RECHECK_REQUIRED" || reaction_state === "SOURCE_RETRY_REQUIRED";
@@ -65,6 +77,7 @@ function planFor(row: Row, previousRecorded: string | undefined): ClaimReaction 
     subject_sealed_id: str(row.subject_sealed_id),
     claim_ref: str(row.claim),
     event_state: change ?? objectState,
+    receipt_state: objectState === "SIGNED" ? "DELIVERY_RECEIPT" : null,
     reaction_state,
     reason,
     recommended_checks: challenge
@@ -103,7 +116,8 @@ export function deriveClaimReactions(lines: string[], since = -1): ClaimReaction
     const prior = key ? previous.get(key) : undefined;
     const seq = Number.isInteger(row.seq) ? Number(row.seq) : -1;
     if (seq > since) out.push(planFor(row, prior));
-    if (key && recorded) previous.set(key, recorded);
+    // A failed/unconfirmed read cannot establish the prior state for a later comparison.
+    if (key && recorded && !sourceReadIncomplete(row)) previous.set(key, recorded);
   }
   return out;
 }
