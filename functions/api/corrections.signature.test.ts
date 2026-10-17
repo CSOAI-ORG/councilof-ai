@@ -19,12 +19,16 @@ import { LEDGER, checkSignature } from "./corrections";
 const clone = <T>(o: T): T => JSON.parse(JSON.stringify(o)) as T;
 const ledger = () => clone(LEDGER) as unknown as Record<string, unknown>;
 
+// Printed by a red check, so the next reader knows what to run. It changes no assertion.
+const RESIGN =
+  "the ledger moved and its signature was not re-issued. Re-sign by GitHub OIDC: node scripts/sign-corrections-ledger.mjs --emit-payload att.json; then gh workflow run hf-fin-shells-attest.yml -R CSOAI-ORG/councilof-ai --ref master -f kind=corrections -f payloads_b64=<base64 of the JSON array [att.json]>; then apply the run artifact with --payload att.json --signature <sha256>.board-sign.json --write (full recipe: header of scripts/sign-corrections-ledger.mjs)";
+
 describe("corrections signature, checked at request time", () => {
   it("VALID only after an Ed25519 verification that actually ran", async () => {
     const c = await checkSignature(ledger());
     expect(c.ed25519_verified).toBe(true); // not null, not skipped
-    expect(c.content_id_matches).toBe(true);
-    expect(c.state).toBe("VALID");
+    expect(c.content_id_matches, RESIGN).toBe(true);
+    expect(c.state, RESIGN).toBe("VALID");
     expect(c.recomputed_content_id).toBe(c.attested_content_id);
   });
 
