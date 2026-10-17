@@ -16,6 +16,46 @@ const ROOT = resolve(__dirname, "..");
 const R = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
 const J = (p: string) => JSON.parse(R(p));
 
+/**
+ * THE AS_OF A CHECK MAY USE (root-staleness root cause, 2026-10-12).
+ *
+ * scripts/ots_manifest_rebuild.py stamps public/interop/ots/manifest.json's as_of from
+ * datetime.now() — the RUN CLOCK — and public-root-candidate-upgrade runs `--apply` on every
+ * confirmed tick. The old assertion here (`toContain(ots.as_of)`) demanded that the FROZEN
+ * candidate bytes of llms.txt / llms-full.txt contain the manifest's CURRENT as_of, so a
+ * candidate whose published files had not been regenerated in the same run failed on wall-clock
+ * alone: no content had changed. pr-gates went red, "Merge only after pr-gates passed on these
+ * exact bytes" HALTed, 5/5 candidate-upgrade runs halted on 2026-10-12, and root.json went stale
+ * behind a deferral nothing could clear.
+ *
+ * The check now reads the artifact's OWN recorded as_of — the value the published section records
+ * at derivation ("artifact as_of <ts>", the one the producer prints from the manifest it read) —
+ * and never consults a clock. Where a run clock is genuinely needed it is PINNED, the way
+ * scripts/claims/claim_events_export.py takes `--as-of` and scripts/claims/claim-events.test.mjs
+ * passes `--as-of ${date}T09:00:00Z` — see the regression block at the foot of this file.
+ */
+const otsRecordedAsOf = (out: string): string | null =>
+  (out.match(/public\/interop\/ots\/manifest\.json[^\n]*artifact as_of (\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z)/) ?? [])[1] ?? null;
+
+/**
+ * What a re-check decides for a (published bytes, manifest as_of) pair without consulting any
+ * clock. null = the pair is checkable and consistent; a string = the reason it is not.
+ *
+ * The manifest may ADVANCE past the recorded as_of — the producer's own words: "An upgrade loop
+ * keeps advancing these, so read the manifest for a fresher count" — that is a fresher artifact,
+ * not a lie, and a frozen candidate must re-check green at any later wall-clock. What the bytes
+ * may never do is record an as_of the artifact has not reached: they cannot have derived from a
+ * manifest from the future.
+ */
+function otsAsOfVerdict(recorded: string | null, manifestAsOf: string): string | null {
+  if (!recorded) return "the timestamp section records no artifact as_of";
+  if (!Number.isFinite(Date.parse(recorded))) return `recorded as_of ${recorded} is not parseable`;
+  if (!Number.isFinite(Date.parse(manifestAsOf))) return `manifest as_of ${manifestAsOf} is not parseable`;
+  if (Date.parse(recorded) > Date.parse(manifestAsOf))
+    return `records as_of ${recorded}, later than the manifest's own ${manifestAsOf} — it cannot have derived from an artifact that did not exist yet`;
+  return null;
+}
+
 const free = J("functions/mcp/gspc-tools.json").tools.length;
 const paid = J("functions/mcp/paid-tools.json").tools.length;
 
@@ -262,7 +302,9 @@ describe("llms distribution and timestamp sections are derived, stated and bound
       const out = R(f);
       expect(out).toContain(fmt(ots.counts.proofs));
       expect(out).toContain(fmt(ots.counts.bitcoin_attested));
-      expect(out).toContain(ots.as_of);
+      // The artifact's OWN recorded as_of, read from the frozen bytes — never the run clock the
+      // manifest was last restamped with (see otsRecordedAsOf above for the 2026-10-12 failure).
+      expect(otsAsOfVerdict(otsRecordedAsOf(out), ots.as_of), `${f}: timestamp as_of`).toBeNull();
       expect(out, `${f} must say submitted is not anchored`).toMatch(/submitted.{0,20}not.{0,20}anchored|not\s+evidence\s+of\s+a\s+time/i);
     }
   });
@@ -368,4 +410,41 @@ describe("both files open with one quotable claim boundary", () => {
       for (const f of files) expect(R(f), `${f} is missing: ${name}`).toMatch(re);
     });
   }
+});
+
+/**
+ * REGRESSION — a frozen candidate must re-check green at a later wall-clock time (2026-10-12).
+ *
+ * public-root-candidate-upgrade halted 5/5 because the timestamp assertion demanded the manifest's
+ * CURRENT as_of inside frozen candidate bytes, and ots_manifest_rebuild.py restamps that field from
+ * the run clock on every confirmed tick. Every clock below is PINNED — the `--as-of` dated-files
+ * pattern this estate already uses (scripts/claims/claim_events_export.py `--as-of T`, its test
+ * passing `--as-of ${date}T09:00:00Z`) — and no assertion reads new Date(). The "manifest" here is
+ * just its recorded as_of, exactly what the re-check consults in production.
+ */
+describe("a frozen candidate re-checks green at a later wall-clock time", () => {
+  const CANDIDATE_AS_OF = "2026-10-12T16:09:45Z"; // the candidate's own recorded as_of at derivation
+  const LATER_WALL_CLOCK = "2026-10-13T09:00:00Z"; // a later tick of the upgrade loop (pinned, never now())
+  const frozenSection = (asOf: string) =>
+    `Derived at generation from https://councilof.ai/interop/ots/manifest.json (same bytes on disk at\n` +
+    `public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of ${asOf}). An upgrade loop`;
+
+  it("the re-check reads the recorded as_of out of the frozen bytes", () => {
+    expect(otsRecordedAsOf(frozenSection(CANDIDATE_AS_OF))).toBe(CANDIDATE_AS_OF);
+  });
+
+  it("the exact derivation pair checks green", () => {
+    expect(otsAsOfVerdict(otsRecordedAsOf(frozenSection(CANDIDATE_AS_OF)), CANDIDATE_AS_OF)).toBeNull();
+  });
+
+  it("an advance of the run clock alone — manifest restamped, bytes untouched — stays green", () => {
+    // The exact state the candidate-upgrade loop produced every tick: manifest.json restamped to
+    // the later run clock, llms.txt / llms-full.txt still the frozen bytes of the candidate.
+    expect(otsAsOfVerdict(otsRecordedAsOf(frozenSection(CANDIDATE_AS_OF)), LATER_WALL_CLOCK)).toBeNull();
+  });
+
+  it("the check still has teeth: a future as_of, or a section with none, is red", () => {
+    expect(otsAsOfVerdict(otsRecordedAsOf(frozenSection(LATER_WALL_CLOCK)), CANDIDATE_AS_OF)).toBeTruthy();
+    expect(otsAsOfVerdict(null, LATER_WALL_CLOCK)).toBeTruthy();
+  });
 });
