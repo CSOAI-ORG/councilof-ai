@@ -214,7 +214,7 @@ ${glossary}
 
   return shell({
     title: `${name} — GSPC axis | Council of AI`,
-    description: `${task ?? name}. State: ${state}. Read from GET /api/gspc. Measurement, not certification.`,
+    description: `Measurement question for the ${name} axis: ${(task ?? name).replace(/^([a-z])/, (m) => m.toUpperCase())}. State: ${state}. Read from GET /api/gspc. Measurement, not certification.`,
     canonical: `https://councilof.ai/axis/${name}`,
     body,
   });
