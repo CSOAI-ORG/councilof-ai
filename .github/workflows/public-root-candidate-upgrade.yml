@@ -182,7 +182,13 @@ jobs:
           # release"). Rebuild it from the bytes in the same commit; the manifest is
           # generated from what the files are, never from the intention.
           python3 scripts/ots_manifest_rebuild.py --apply
+          # public/llms.txt and llms-full.txt quote the manifest's counts and as_of, and
+          # pr-gates' llms-txt-derived test fails closed when they lag (hit 2026-10-12: #2967
+          # halted on "expected llms.txt to contain '2026-10-12T09:03:17Z'"). Regenerate them
+          # from their producer in the same commit, exactly as public-root.yml's re-stamp does.
+          node scripts/llms-txt.mjs
           git add public/interop/ots
+          git add -- public/llms.txt public/llms-full.txt
           git add public/interop/root-*.json.ots
           git add public/interop/root-witness-*.json public/interop/root-witness-pointer.json
           git add public/interop/stablecoin-universe-2026-09/readiness.json public/archive/index.json
