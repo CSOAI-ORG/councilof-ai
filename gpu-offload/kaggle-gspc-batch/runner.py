@@ -123,6 +123,14 @@ def preflight() -> None:
     for name, want in sums.items():
         assert sha(f"{KIT}/banks/{name}") == want, f"BANK_SHA_MISMATCH {name}"
     assert set(BANK_SHA.values()) <= set(sums.values()), "BANK_SET_MISMATCH"
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("gen", f"{KIT}/code/generate_runpod_gspc_playlist.py")
+    gen = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gen)
+    for _, bank_name in gen.AXES:
+        bank_path = f"{KIT}/banks/{bank_name}"
+        assert os.path.isfile(bank_path), f"GENERATOR_BANK_MISSING {bank_name}"
+        assert bank_name in sums, f"GENERATOR_BANK_NOT_IN_SHA256SUMS {bank_name}"
 
 
 def main() -> int:

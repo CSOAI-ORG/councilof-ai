@@ -36,6 +36,56 @@ class T(unittest.TestCase):
             self.assertNotIn("sign", src.replace("signed", "").lower().replace("design", ""))
         self.assertEqual(outs[0], outs[1])
 
+    def test_preflight_fails_on_missing_bank_in_sha256sums(self):
+        import shutil
+        runner.KIT = HERE
+        bank = f"{HERE}/banks/gspc-mach.jsonl"
+        backup = bank + ".bak"
+        shutil.move(bank, backup)
+        try:
+            with self.assertRaises(FileNotFoundError):
+                runner.preflight()
+        finally:
+            shutil.move(backup, bank)
+
+    def test_preflight_fails_on_missing_bank_not_in_sha256sums(self):
+        import shutil
+        runner.KIT = HERE
+        bank = f"{HERE}/banks/gspc-mach.jsonl"
+        sha_file = f"{HERE}/banks/SHA256SUMS"
+        backup = bank + ".bak"
+        shutil.move(bank, backup)
+        with open(sha_file, "r") as f:
+            sha_lines = f.readlines()
+        try:
+            with open(sha_file, "w") as f:
+                for line in sha_lines:
+                    if "gspc-mach.jsonl" not in line:
+                        f.write(line)
+            with self.assertRaises(AssertionError) as ctx:
+                runner.preflight()
+            self.assertIn("GENERATOR_BANK_MISSING", str(ctx.exception))
+            self.assertIn("gspc-mach.jsonl", str(ctx.exception))
+        finally:
+            shutil.move(backup, bank)
+            with open(sha_file, "w") as f:
+                f.writelines(sha_lines)
+
+    def test_preflight_fails_on_bank_sha_mismatch(self):
+        runner.KIT = HERE
+        bank = f"{HERE}/banks/gspc-mach.jsonl"
+        with open(bank, "rb") as f:
+            original = f.read()
+        try:
+            with open(bank, "wb") as f:
+                f.write(b"corrupted content\n")
+            with self.assertRaises(AssertionError) as ctx:
+                runner.preflight()
+            self.assertIn("BANK_SHA_MISMATCH", str(ctx.exception))
+        finally:
+            with open(bank, "wb") as f:
+                f.write(original)
+
 
 if __name__ == "__main__":
     unittest.main()
