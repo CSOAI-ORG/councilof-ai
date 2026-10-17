@@ -31,6 +31,20 @@ name: csoai-site deploy — full static site from csoai-static-deploy2 main
 # (/.well-known/* incl. scitt-keys) is twinned as bytes.
 # this token does not have it. Merging a change to this workflow is the
 # agent-reachable path to refresh did:web:csoai.org.
+#
+# 2026-10-13: the agent card is twinned from councilof.ai as bytes, like scitt-keys.
+# csoai-static-deploy2 main still holds the 0.1.0 card (2 skills, signed under the
+# card's own rule with #site-release-1, then edited on 23 Sep without re-signing), so
+# every build from it puts back the card that corrections entry C-2026-0927-05 says
+# csoai.org no longer serves. The card has one producer (councilof-ai:
+# scripts/agent-card-extensions.mjs + scripts/adapters/agent_card_jws.py). The apex
+# copies the bytes that producer serves, and refuses a copy that presents a signature
+# which does not verify under the DID document shipped in the same deploy.
+# The last step proves the apex serves those bytes. Read on 13 Oct, it would not have:
+# since 6 Oct the deploy step prints "Deployment alias URL: https://main.csoai-site.pages.dev"
+# (the 14 Sep run did not), and what these runs upload is served there and not on
+# csoai.org or csoai-site.pages.dev. That is what a PREVIEW deployment looks like. The
+# Pages project's production-branch setting was not read; it is the first thing to check.
 
 on:
   workflow_dispatch: {}
@@ -111,6 +125,38 @@ jobs:
                   print(kind, s16, dest.stat().st_size)
           print('twinned cards+proofs only; no SPA')
           PY
+      - name: Fetch the independent agent-card verifier (this repository)
+        uses: actions/checkout@v4
+        with:
+          path: canon
+          sparse-checkout: |
+            scripts/verify_agent_card_jws.py
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+      - name: Twin the agent card from councilof.ai (bytes, verified against the DID this deploy ships)
+        run: |
+          # One producer, two origins. Overwrites the 0.1.0 card that build_site.py copied
+          # from csoai-static-deploy2. Exit codes of the verifier: 0 VALID, 1 INVALID,
+          # 2 UNSIGNED, 4 tamper control failed. VALID ships. UNSIGNED ships with a warning
+          # (an unsigned card claims nothing, and parity is the point). Anything else stops
+          # the deploy: the apex never serves a card whose signature does not verify under
+          # the DID document served beside it.
+          python3 -m pip install --quiet --disable-pip-version-check "cryptography>=42"
+          wk=src/_site/.well-known
+          test -f "$wk/did.json"
+          for f in agent-card.json agent.json; do
+            curl -sS -f --retry 5 --retry-delay 20 --max-time 25 \
+              -A csoai-site-deploy -o "$wk/$f" "https://councilof.ai/.well-known/$f"
+            rc=0
+            python3 canon/scripts/verify_agent_card_jws.py --card "$wk/$f" --did "$wk/did.json" --tamper-control || rc=$?
+            case "$rc" in
+              0) echo "$f: VALID under the DID document this deploy ships" ;;
+              2) echo "::warning::councilof.ai serves $f UNSIGNED; twinned unsigned" ;;
+              *) echo "::error::councilof.ai $f does not verify under the DID document this deploy ships (verifier rc=$rc); refusing to publish it on csoai.org"
+                 exit 1 ;;
+            esac
+          done
+          sha256sum "$wk/agent-card.json" "$wk/agent.json"
       - name: Inject redirect-only middleware (OWNER one-site)
         working-directory: src
         run: |
@@ -138,6 +184,7 @@ jobs:
           test -f _site/.well-known/did.json
           echo "redirect-only middleware ready"
       - name: Deploy to csoai-site production
+        id: deploy
         working-directory: src
         env:
           CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}'
@@ -219,3 +266,25 @@ jobs:
           echo "$code" | grep -q '^308$' || { echo "FAIL: expected 308 on /"; exit 1; }
           echo "$loc" | grep -q 'councilof.ai' || { echo "FAIL: Location must be councilof.ai"; exit 1; }
           curl -s -o /dev/null -w "redirect-path: %{http_code} -> %{redirect_url}\n" https://csoai.org/some-page
+      - name: Verify the agent card on the apex (the bytes this run twinned)
+        # Reports whether or not the step above passed, so each red step names its own fact.
+        if: ${{ !cancelled() && steps.deploy.outcome == 'success' }}
+        run: |
+          wk=src/_site/.well-known
+          for i in 1 2 3 4 5 6; do
+            sleep 10
+            ok=1
+            for f in agent-card.json agent.json; do
+              curl -sS -f --max-time 20 -H 'Cache-Control: no-cache' -o "apex-$f" "https://csoai.org/.well-known/$f" || { ok=0; continue; }
+              cmp -s "apex-$f" "$wk/$f" || ok=0
+            done
+            if [ "$ok" = 1 ]; then
+              echo "csoai.org serves the twinned agent card on attempt $i"
+              sha256sum apex-agent-card.json apex-agent.json
+              exit 0
+            fi
+            echo "attempt $i: csoai.org does not serve the twinned bytes"
+          done
+          sha256sum "$wk/agent-card.json" "$wk/agent.json" apex-agent-card.json apex-agent.json || true
+          echo "::error::csoai.org does not serve the agent card this run deployed. If the deploy step printed 'Deployment alias URL', this run made a PREVIEW deployment: the Pages project's production branch is not 'main', and csoai.org was not updated."
+          exit 1
