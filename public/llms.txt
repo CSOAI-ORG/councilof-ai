@@ -176,7 +176,7 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
     OSCAL evidence bundle for one obligation: EU AI Act Article 50/53, DORA or EU-CRA. Returns selected card objects with signature fields, any retained inclusion proofs, an OSCAL wrapper and assembly manifest. Does not verify input-card signatures. Reports manifest signing status and any unsigned reason. States: ASSEMBLED or ASSEMBLED-EMPTY; zero selected cards stays zero. Supported-card verification is free at /gspc-verify. No new measurement or conformity determination.
   - [Feeds provider diff](https://councilof.ai/api/feeds/provider-diff?history=1)
     Provider change record: the signed history of document changes the daily watcher recorded for tracked model providers. Each diff leaf comes with its Merkle inclusion proof, assembled per request. States: each diff exactly as the watcher recorded it; the latest state per provider is free at the same path without history=1. Verification is free.
-  - [Fresh capsule](https://councilof.ai/api/measurement/fresh-capsule) · free preview: https://councilof.ai/api/measurement/fresh-capsule?endpoint=<https MCP URL>&dimension=TOOLS&preview=1
+  - [Fresh capsule](https://councilof.ai/api/measurement/fresh-capsule) · free preview, as a pattern (replace the <…> part; not a link): `GET /api/measurement/fresh-capsule?endpoint=<https MCP URL>&dimension=TOOLS&preview=1`
     Fresh measurement capsule: re-measures one declared-vs-observed claim about one MCP endpoint, live. Compares the endpoint's own discovery documents with its initialize and tools/list answers for TOOLS, VERSION or PROTOCOL, each read hashed; no tool is ever called. States: CONSISTENT, INCONSISTENT, or UNCHECKABLE with the reason. Free unsigned preview; verification is free.
   - [Fresh capsule (POST)](https://councilof.ai/api/measurement/fresh-capsule)
     POST alias of GET /api/measurement/fresh-capsule for gateways that POST {}; the query string selects the claim and the body is ignored.
@@ -218,11 +218,11 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
     Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves. Each signed card-v0 leaf comes with its inclusion path and the root that carried it. States: the leaves found in the window, or an empty batch stated as empty. Not payment or settlement receipts. Free preview (count, span, batch sha256); verification is free.
   - [Request attestation](https://councilof.ai/api/request-attestation?subject=model-or-subject-id)
     One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Without that key: sig_ed25519:null, unsigned_reason. Check csoai.signer before paying. Paid reserve: up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The interop root in the free preview is not included in the paid reserve. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.
-  - [Rwa evidence](https://councilof.ai/api/rwa/evidence?asset=RLUSD) · free preview: https://councilof.ai/api/rwa/evidence?asset=<symbol>&preview=1
+  - [Rwa evidence](https://councilof.ai/api/rwa/evidence?asset=RLUSD) · free preview, as a pattern (replace the <…> part; not a link): `GET /api/rwa/evidence?asset=<symbol>&preview=1`
     RWA asset evidence: one signed card of one XRPL issued asset's on-ledger state, read live per request. Reads the AccountRoot flags, Domain, the two-way xrp-ledger.toml check and the gateway obligation, each raw fetch hashed. States: PROBED, UNCHECKABLE (an unreachable source is never a failure) or UNMEASURED. Free unsigned preview; verification is free.
   - [Signed data feed](https://councilof.ai/api/signed-data-feed?feed=1)
     Signed derivative data feed: the signed streams already on the public root, assembled into one document per request. Carries the signals index, the first-fine watch feed, the root and the card index, each block with its own signature and key id and its as_of read from the file. States: each stream as signed, or UNCHECKABLE where its signature cannot be checked. Data only; verification is free and every stream is public at its own URL.
-  - [Wrapper](https://councilof.ai/api/wrapper?id=usdc.e:arbitrum) · free preview: https://councilof.ai/api/wrapper?id=<wrapped-symbol:chain>&preview=1
+  - [Wrapper](https://councilof.ai/api/wrapper?id=usdc.e:arbitrum) · free preview, as a pattern (replace the <…> part; not a link): `GET /api/wrapper?id=<wrapped-symbol:chain>&preview=1`
     Wrapped-asset parity evidence: one signed card of one bridged or wrapped token pair, read live from public RPC. Reads the wrapped totalSupply and the origin-chain bridge-escrow balance at finalized blocks whose hash a second RPC operator confirmed, raw reads hashed. States: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.
   - [Wrapper asset pack DAI](https://councilof.ai/api/wrapper/asset/dai) · free preview: https://councilof.ai/api/wrapper/asset/dai?preview=1
     Wrapped-asset parity evidence for DAI: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.
@@ -291,11 +291,11 @@ Each record below is a dated account of what public sources state, with its sour
 
 Each page shows declared vs observed, the dates, the evidence level and its signed source, and has a machine twin at <page>index.json. None says anything about security, quality or safety, and none is a rating. Operators who opted out, or whose robots.txt refuses CSOAI-census, have no page. Objections and context: https://councilof.ai/census/
 
-- MCP servers (contract parity per host): https://councilof.ai/mcp-servers/ — https://councilof.ai/mcp-servers/<host>/
-- A2A agent cards (listed vs served, signature state): https://councilof.ai/agent-cards/ — https://councilof.ai/agent-cards/<host>/
-- x402 doors and settlement-census hosts: https://councilof.ai/x402/ — https://councilof.ai/x402/<door-or-host>/
-- Tokenised-asset deployments (issuer list vs ledger read): https://councilof.ai/stablecoins/deployments/ — https://councilof.ai/stablecoins/<asset>/<chain>/
-- Sitemap index of all of them: https://councilof.ai/sitemaps/index.xml
+- MCP servers (contract parity per host): https://councilof.ai/mcp-servers/ — one page per host, at the path pattern `/mcp-servers/<host>/`
+- A2A agent cards (listed vs served, signature state): https://councilof.ai/agent-cards/ — one page per host, at `/agent-cards/<host>/`
+- x402 doors and settlement-census hosts: https://councilof.ai/x402/ — one page per door or host, at `/x402/<door-or-host>/`
+- Tokenised-asset deployments (issuer list vs ledger read): https://councilof.ai/stablecoins/deployments/ — one page per deployment, at `/stablecoins/<asset>/<chain>/`
+- Sitemap index of all of them (the real addresses behind the `<…>` patterns above; a pattern is not an address): https://councilof.ai/sitemaps/index.xml
 - Press, machine-readable — what changed in the window, with the command that proves each line, and a named list of what we are NOT announcing: https://councilof.ai/api/press.json (human: https://councilof.ai/press/)
 
 The older https://councilof.ai/feed.xml is a hand-maintained item list kept for its subscribers; its historical titles freeze counts that the live board has moved past. Quote the board, not a feed title.
@@ -443,7 +443,7 @@ index and it does not anchor GSPC.
 ## For agents
 
 - One human-readable page for agent builders, rendered from the machine files themselves (ai-catalog, agent card, tools/list, x402.json): https://councilof.ai/agents/
-- A2UI v0.9.1 (the current A2UI release) surfaces: GET https://councilof.ai/api/a2ui/board (the board card) and GET https://councilof.ai/api/a2ui/verify?card=<64-hex card id> (a verify result). Add ?version=v1.0 for the v1.0 Candidate form. AG-UI runs carry the same surface as a CUSTOM event named a2ui.
+- A2UI v0.9.1 (the current A2UI release) surfaces: GET https://councilof.ai/api/a2ui/board (the board card) and, on the same origin, `GET /api/a2ui/verify?card=<64-hex card id>` (a verify result; a pattern, so replace the <…> part with a card id). Add ?version=v1.0 for the v1.0 Candidate form. AG-UI runs carry the same surface as a CUSTOM event named a2ui.
 
 Prefer the keyless board API and verify.
 Cite live `totals.public_count` — never freeze axis counts in prompts.
