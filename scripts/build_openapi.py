@@ -175,7 +175,7 @@ FREE_TIER_OP_NOTE: dict[str, str] = {
     "/api/proof": "Bare path is validation (HTTP 400 naming sha or bundle). Free inclusion via optional sha. Paid root bundle when bundle=1 (HTTP 402).",
     "/api/signed-data-feed": "Bare path is the free preview (HTTP200). manifest=1 returns a free pre-payment blocks digest. feed=1 selects the assembled feed (HTTP402 without payment). Optional x-csoai-expected-feed-sha256 pins its content; mismatch409 and unavailable sources503 occur before settlement. Separate signatures and payment are not verified by the digest.",
     "/api/feeds/provider-diff": "Bare path is free recent diffs (HTTP 200). Paid historical batch requires history=1 (HTTP 402).",
-    "/api/evidence-bundle": "Preview = obligation(+subject) without bundle=1. Paid tier requires obligation + bundle=1 (HTTP 402). Incomplete bundle alone stays HTTP 400.",
+    "/api/evidence-bundle": "Default preview = obligation(+subject) without bundle=1. Paid tier requires obligation + bundle=1 (HTTP 402). Incomplete bundle alone stays HTTP 400. For EU obligations, format=procurement is a separate free view returning Article 53 and Article 50 rows together; it rejects bundle=1 and non-EU obligations with HTTP 400. This combined free view does not change the single-obligation paid assembly contract.",
     "/api/rwa/evidence": "preview=1 is free unsigned. Paid signed card requires asset (HTTP 402).",
     "/api/art50/marking-evidence": "preview=1 is free unsigned. Paid signed card requires url (HTTP 402).",
     "/api/receipts/batch": "preview=1 is free digest. Paid leaves require from (HTTP 402).",
@@ -578,6 +578,9 @@ def compose(fix: Path = FIX) -> dict:
             op["responses"]["503"] = {"description": "Required source unavailable or invalid; no payment settled."}
             op["x-csoai"]["free_manifest"] = BASE + "/api/signed-data-feed?manifest=1"
             op["x-csoai"]["offline_content_verifier"] = BASE + "/verifier/verify_feed_delivery.mjs"
+        if path == "/api/evidence-bundle":
+            op["responses"]["400"] = {"description": "Free format=procurement rejects bundle=1 and non-EU obligations; no paid assembly is performed by this view."}
+            op["x-csoai"]["free_procurement"] = BASE + "/api/evidence-bundle?obligation=article-53&format=procurement"
         # `indexed_in` is deliberately NOT carried (2026-09-26): /.well-known/x402.json no longer
         # types third-party index membership, which only a read of the index can establish.
         # ONE METHOD PER DOOR — the one the manifest names, which is also the method every door's

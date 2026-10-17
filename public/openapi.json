@@ -1791,7 +1791,7 @@
     },
     "/api/evidence-bundle": {
       "get": {
-        "description": "OSCAL evidence bundle for one obligation: EU AI Act Article 50/53, DORA or EU-CRA. Returns selected card objects with signature fields, any retained inclusion proofs, an OSCAL wrapper and assembly manifest. Does not verify input-card signatures. Reports manifest signing status and any unsigned reason. States: ASSEMBLED or ASSEMBLED-EMPTY; zero selected cards stays zero. Supported-card verification is free at /gspc-verify. No new measurement or conformity determination. Preview = obligation(+subject) without bundle=1. Paid tier requires obligation + bundle=1 (HTTP 402). Incomplete bundle alone stays HTTP 400.",
+        "description": "OSCAL evidence bundle for one obligation: EU AI Act Article 50/53, DORA or EU-CRA. Returns selected card objects with signature fields, any retained inclusion proofs, an OSCAL wrapper and assembly manifest. Does not verify input-card signatures. Reports manifest signing status and any unsigned reason. States: ASSEMBLED or ASSEMBLED-EMPTY; zero selected cards stays zero. Supported-card verification is free at /gspc-verify. No new measurement or conformity determination. Default preview = obligation(+subject) without bundle=1. Paid tier requires obligation + bundle=1 (HTTP 402). Incomplete bundle alone stays HTTP 400. For EU obligations, format=procurement is a separate free view returning Article 53 and Article 50 rows together; it rejects bundle=1 and non-EU obligations with HTTP 400. This combined free view does not change the single-obligation paid assembly contract.",
         "operationId": "x402_evidence_bundle",
         "parameters": [
           {
@@ -1843,6 +1843,9 @@
               }
             },
             "description": "OSCAL evidence bundle for one obligation: EU AI Act Article 50/53, DORA or EU-CRA. Returns selected card objects with signature fields, any retained inclusion proofs, an OSCAL wrapper and assembly manifest. Does not verify input-card signatures. Reports manifest signing status and any unsigned reason. States: ASSEMBLED or ASSEMBLED-EMPTY; zero selected cards stays zero. Supported-card verification is free at /gspc-verify. No new measurement or conformity determination."
+          },
+          "400": {
+            "description": "Free format=procurement rejects bundle=1 and non-EU obligations; no paid assembly is performed by this view."
           },
           "402": {
             "content": {
@@ -2066,6 +2069,7 @@
           },
           "door": "https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1",
           "free_preview": "https://councilof.ai/api/evidence-bundle?obligation=article-50",
+          "free_procurement": "https://councilof.ai/api/evidence-bundle?obligation=article-53&format=procurement",
           "never": [
             "a conformity determination",
             "satisfied/not-satisfied findings",

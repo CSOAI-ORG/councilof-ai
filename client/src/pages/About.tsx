@@ -252,7 +252,7 @@ export default function About() {
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-1 flex-shrink-0" />
-                  <span>Every published finding links to a signed, recomputable record</span>
+                  <span>Inspect each finding’s linked evidence, signature status and stated verification limits.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-1 flex-shrink-0" />
@@ -728,10 +728,12 @@ export default function About() {
                 council delivers decorrelated, unbiased review. The earlier DR-0007 experiment caused
                 us to withdraw that guarantee; the{" "}
                 <a href="/interop/council-independence.json" className="text-emerald-700 underline">latest point experiment measured rho=1 and n_eff=1 across three nominal legs</a>.
-                Trust us on the things
-                you can check instead: no model judges a model — every verdict is deterministic code
-                against pre-written gold labels; every published card verifies offline against a key
-                in our DID document, with no account and no permission; nobody we measure pays for
+                Inspect the instrument, inputs and limits for each result. A supported signed card
+                can be checked against its named key; unsigned or unsupported records are not
+                signature-verified. The browser verifier may fetch public key metadata. Offline
+                signature verification needs the original bytes and an appropriate pinned public key.
+                Integrity checks do not establish truth or freshness. Public evidence requires no
+                account or permission. Nobody we measure pays for
                 their place on the board, their score, or their removal from either; and what we got
                 wrong is appended in public at /api/corrections and never edited.
               </p>

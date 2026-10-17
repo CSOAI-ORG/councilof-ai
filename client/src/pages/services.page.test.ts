@@ -14,11 +14,19 @@ import { GROUPS, buildCatalogue } from "@/lib/servicesCatalogue";
 const raw = readFileSync(resolve(__dirname, "Services.tsx"), "utf8");
 const copy = raw.replace(/^\s*import[\s\S]*?\/\*[\s\S]*?\*\//, "");
 const nav = readFileSync(resolve(__dirname, "../components/HeaderNav.tsx"), "utf8");
+const seo = JSON.parse(readFileSync(resolve(__dirname, "../data/seo-head.json"), "utf8"));
 
 describe("/services reads the rail, never a typed list", () => {
   it("fetches the manifest", () => {
     expect(raw).toContain('"/.well-known/x402.json"');
     expect(raw).toContain("buildCatalogue");
+  });
+
+  it("leaves title and description ownership to the single seoHead producer", () => {
+    expect(seo.components.Services?.title).toBe("Supported feeds and evidence doors | Council of AI");
+    expect(raw).not.toContain("react-helmet-async");
+    expect(raw).not.toContain("<title>");
+    expect(raw).not.toContain("document.title");
   });
 
   it("carries no typed door list any more", () => {

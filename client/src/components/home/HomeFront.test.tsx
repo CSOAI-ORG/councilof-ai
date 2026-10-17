@@ -199,10 +199,10 @@ describe("HomeStrengths", () => {
   it("states the six strengths in the order they are worth saying", () => {
     const titles = strengthCards({ corrections, root, ots }).map((c) => c.title);
     expect(titles).toHaveLength(6);
-    expect(titles[0]).toMatch(/paying us/i); // independent, published signed, free to re-check
+    expect(titles[0]).toMatch(/nobody can buy a place or a score/i); // independence: neither placement nor score is for sale
     expect(titles[1]).toMatch(/bad results/i); // we publish our weak scores
     expect(titles[2]).toMatch(/wrong/i); // corrections ledger
-    expect(titles[3]).toMatch(/rewritten/i); // anchoring
+    expect(titles[3]).toMatch(/hashes expose changes to covered bytes/i); // integrity is scoped to covered bytes
     expect(titles[4]).toMatch(/rooms/i); // standards
     expect(titles[5]).toMatch(/machine/i); // runs on a schedule
   });
@@ -232,7 +232,8 @@ describe("HomeStrengths", () => {
     // /root.json.ots is a 404 and no proof in the timestamp manifest names /root.json as its
     // subject. The card said "signed and timestamped" until that was probed.
     const anchor = strengthCards({ corrections, root, ots })[3];
-    expect(anchor.body).toContain("whose root is signed");
+    expect(anchor.body).toContain("A signed root can bind the hashes of covered records.");
+    expect(anchor.body).toContain("signature presence alone is not verification");
     expect(anchor.body).not.toMatch(/signed and timestamped/i);
     expect(anchor.body).toContain("Separately");
     expect(anchorProof(root, ots).text).toContain("separately");
@@ -411,7 +412,9 @@ describe("the withdrawal record is reachable, but never the front door's first i
 describe("HomeReach presentation", () => {
   it("leads with what the work reaches, in the reader's words", () => {
     const html = render(<HomeReach state={estate} />);
-    expect(html).toContain("The work travels");
+    expect(html).toContain("Reach and verification evidence, shown separately.");
+    expect(html).toContain("Package distribution, listings and commercial use are different observations.");
+    expect(html).toMatch(/integrity check does\s+not establish adoption, buyer acceptance, freshness or revenue/i);
     expect(html).toContain("How far it reaches");
   });
 

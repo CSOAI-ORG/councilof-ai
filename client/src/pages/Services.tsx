@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { ServicePreview } from "@/components/ServicePreview";
-import { Helmet } from "react-helmet-async";
 import { buildCatalogue, type Catalogue } from "@/lib/servicesCatalogue";
 import { BUYING_ENQUIRIES } from "@/lib/buying";
 
@@ -39,7 +38,6 @@ export default function Services() {
   const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
-    document.title = "Supported feeds and evidence doors — Council of AI";
     let alive = true;
     void fetch(MANIFEST, { headers: { accept: "application/json" }, cache: "no-store" })
       .then((r) => {
@@ -62,14 +60,6 @@ export default function Services() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
-      <Helmet>
-        <title>Supported feeds and evidence doors | Council of AI</title>
-        <meta
-          name="description"
-          content="Start with public measurements, the change record and free verification, then read every supported machine feed and evidence door from the live manifest."
-        />
-      </Helmet>
-
       <section className="border-b border-slate-800 px-6 py-14">
         <div className="mx-auto max-w-6xl">
           <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-300">
