@@ -15,7 +15,7 @@ import datetime, glob, hashlib, json, os, shutil, subprocess, sys, time
 
 KIT = os.environ.get("GSPC_KIT", os.path.dirname(os.path.abspath(__file__)))
 WORKER_SHA = "ea59a9de4cb92b80910a4efddc7ab592c4d0bd2dc2a184eec811183f6b584491"
-GEN_SHA = "b8268c90e3f4f1574e2520138e038462db70ca21e5089a847e86a40f760ab929"
+GEN_SHA = "132b85e4e938e0720d64e32a7bdaa9f23ceee55daebff09304bd04889a6468b5"
 OLLAMA_VERSION = "0.35.0"
 AXES = ["governance", "safety", "provenance", "continuity", "conformance", "openness", "care"]
 BANK_SHA = {
@@ -116,21 +116,31 @@ def gate(rd: str, ctx: dict) -> dict:
     return out
 
 
+AXIS_TO_BANK = {
+    "governance": "gspc-gov.jsonl",
+    "safety": "gspc-agi.jsonl",
+    "provenance": "gspc-prv.jsonl",
+    "continuity": "gspc-asi.jsonl",
+    "conformance": "gspc-mcp.jsonl",
+    "openness": "gspc-oss.jsonl",
+    "care": "gspc-care.jsonl",
+}
+
+
 def preflight() -> None:
     assert sha(f"{KIT}/code/runpod_gspc_worker_serial.py") == WORKER_SHA, "WORKER_SHA_MISMATCH"
     assert sha(f"{KIT}/code/generate_runpod_gspc_playlist.py") == GEN_SHA, "GENERATOR_SHA_MISMATCH"
     sums = dict(reversed(l.split()) for l in open(f"{KIT}/banks/SHA256SUMS") if l.strip())
     for name, want in sums.items():
-        assert sha(f"{KIT}/banks/{name}") == want, f"BANK_SHA_MISMATCH {name}"
-    assert set(BANK_SHA.values()) <= set(sums.values()), "BANK_SET_MISMATCH"
-    import importlib.util
-    spec = importlib.util.spec_from_file_location("gen", f"{KIT}/code/generate_runpod_gspc_playlist.py")
-    gen = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(gen)
-    for _, bank_name in gen.AXES:
+        bank_path = f"{KIT}/banks/{name}"
+        assert os.path.isfile(bank_path), f"BANK_SHA_MISMATCH {name}: file missing"
+        assert sha(bank_path) == want, f"BANK_SHA_MISMATCH {name}"
+    for axis in AXES:
+        bank_name = AXIS_TO_BANK[axis]
         bank_path = f"{KIT}/banks/{bank_name}"
-        assert os.path.isfile(bank_path), f"GENERATOR_BANK_MISSING {bank_name}"
-        assert bank_name in sums, f"GENERATOR_BANK_NOT_IN_SHA256SUMS {bank_name}"
+        assert os.path.isfile(bank_path), f"SPEC_BANK_MISSING {bank_name}"
+        assert bank_name in sums, f"SPEC_BANK_NOT_IN_SHA256SUMS {bank_name}"
+        assert sums[bank_name] == BANK_SHA[axis], f"SPEC_BANK_SHA_MISMATCH {axis}"
 
 
 def main() -> int:
@@ -168,8 +178,8 @@ def main() -> int:
         mp = f"{models_dir}/manifests/registry.ollama.ai/library/{n_}/{t_}"
         got = sha(mp)
         if got != want:
-            rec["skipped"].append({"model": m, "why": f"DIGEST_MOVED pinned {want} got {got}"})
-            log(f"DRIFT {m}: skipped")
+            rec["skipped"].append({"model": m, "why": "DIGEST_CHANGED", "pinned": want, "got": got})
+            log(f"DIGEST_CHANGED {m}: pinned={want[:12]} got={got[:12]}, skipped")
             subprocess.run([ollama, "rm", m], env=env_o)
             continue
         jd = f"{G}/jobs/{slug(m)}-{got[:12]}"
@@ -178,7 +188,7 @@ def main() -> int:
                             "--workspace-root", "/", "--model-manifest-root", f"{models_dir}/manifests", "--jobs-dir", jd,
                             "--output-root", OUT, "--ollama-url", "http://127.0.0.1:11434", "--models", m,
                             "--max-tokens", str(MT), "--keyword-max-tokens", str(KMT),
-                            "--request-timeout-seconds", str(TO)], capture_output=True, text=True)
+                            "--request-timeout-seconds", str(TO), "--axes", ",".join(AXES)], capture_output=True, text=True)
         if g.returncode:
             rec["skipped"].append({"model": m, "why": "GEN_FAIL", "tail": (g.stdout + g.stderr)[-400:]}); continue
         cfgs = {json.load(open(p))["axis"]: p for p in glob.glob(f"{jd}/*.json")}
