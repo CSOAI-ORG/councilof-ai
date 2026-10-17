@@ -903,9 +903,9 @@
         "platform": "Gemini CLI",
         "group": "Coding agents",
         "door": "free",
-        "where": "~/.gemini/settings.json",
+        "where": "~/.gemini/settings.json (or .gemini/settings.json in a project). Gemini CLI loads MCP servers only in a trusted folder; in an untrusted one this server shows as Disabled, so trust the folder when asked or run /permissions in it. If you installed the csoai-gspc extension, skip this: it already adds a server named gspc, which is why this entry is named council-of-ai.",
         "kind": "json",
-        "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"httpUrl\": \"{free}\" }\n  }\n}",
+        "snippet": "{\n  \"mcpServers\": {\n    \"council-of-ai\": { \"httpUrl\": \"{free}\" }\n  }\n}",
         "docs": "https://geminicli.com/docs/tools/mcp-server/"
       },
       {
