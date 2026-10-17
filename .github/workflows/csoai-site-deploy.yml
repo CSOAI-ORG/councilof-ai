@@ -76,6 +76,25 @@ jobs:
           print('did.json kids OK:', kids)
           print('did.json services OK:', types)
           PY
+      - name: Leave the source's index.html out of the upload (no fallback page)
+        working-directory: src
+        run: |
+          # 2026-10-13: https://csoai.org/.well-known/<anything> answered 200 with a
+          # page. Pages answers a path that has no file with the upload's /index.html
+          # and status 200 when the upload holds one and no top-level 404.html. The
+          # source ships an index.html, and the middleware passes every
+          # /.well-known/* path to the asset server, so a path with no file came
+          # back as that page: scitt-configuration, x402.json, openid-configuration,
+          # any typo. Nothing on this host serves /index.html on purpose (the
+          # middleware answers it with a 308), so it is left out of the upload.
+          # Read live on 13 Oct: the two deployments of this project that held no
+          # index.html (4371cb20 of 28 Sep, 2451e6fc of 1 Oct) answer 404 for those
+          # paths; the two that hold it (8c45f262, and this workflow's own upload)
+          # answer 200 with the page.
+          rm -f _site/index.html
+          test ! -e _site/index.html
+          test -f _site/.well-known/did.json
+          echo "no index.html in the upload: a /.well-known/ path with no file answers 404"
       - name: Twin living cards+proofs from councilof.ai (not SPA)
         working-directory: src
         run: |
@@ -212,6 +231,12 @@ jobs:
           print('FAIL: apex trust-surface parity not achieved')
           sys.exit(1)
           PY
+          # 2026-10-13: a /.well-known/ path with no file behind it is 404 on the
+          # apex, never a page. It answered 200 with the source's index.html.
+          probe="https://csoai.org/.well-known/no-such-file-${GITHUB_RUN_ID}"
+          code=$(curl -sS -o /dev/null -w "%{http_code}" --max-time 20 "$probe")
+          echo "apex unknown /.well-known/ path: $code ($probe)"
+          [ "$code" = "404" ] || { echo "FAIL: $probe answered $code, expected 404"; exit 1; }
           # Prove OWNER one-site redirect (not twin HTML)
           code=$(curl -sS -o /dev/null -w "%{http_code}" --max-time 20 -I https://csoai.org/)
           loc=$(curl -sS -o /dev/null -w "%{redirect_url}" --max-time 20 -I https://csoai.org/)
