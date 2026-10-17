@@ -8,7 +8,9 @@
  * This guard runs on a schedule (and on demand) and goes RED the moment the live site drifts
  * from canon, so a clobber is visible within minutes instead of at diligence.
  *
- * The expected counts live in canon.json and NOWHERE ELSE — a guard must name the number it
+ * Board counts are NOT typed anywhere: the expected board is this commit's own /api/gspc, computed
+ * offline (Measure, 16 Oct 2026). Other expected values (title, routes, banned strings) live in canon.json.
+ * (Historical:) The expected counts lived in canon.json and NOWHERE ELSE — a guard must name the number it
  * checks for, but no rendered surface may type one (ADR-001). If a ruling moves the count,
  * move it in canon.json, read off the signed board, and the guard follows.
  *
@@ -20,8 +22,11 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { commitBoard } from "./surface/commit-board.mjs";
+import { judge, loadSignedSnapshots, selftest } from "./surface/board-drift.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+if (process.argv.includes("--selftest")) { console.log(selftest()); process.exit(0); }
 const canon = JSON.parse(readFileSync(join(ROOT, "canon.json"), "utf8"));
 const arg = (k, d) => { const i = process.argv.indexOf("--" + k); return i > 0 ? process.argv[i + 1] : d; };
 const HOST = (arg("host", "https://councilof.ai")).replace(/\/$/, "");
@@ -67,7 +72,9 @@ try {
   else pass(`/ title carries "${canon.title_contains}"`);
 } catch (e) { fail(`/ fetch error: ${e.message}`); }
 
-// 2. The API contract (the number that keeps drifting)
+// 2. The board contract. EXPECTED is this commit's own board (commit-board.mjs, the same
+// derivation prerender freezes for facts-gate), never live totals — a guard derived from live
+// only compares live with itself. Judged with the production-anchor rules in board-drift.mjs.
 try {
   const { status, body } = await get(canon.api.path);
   if (status !== 200) { fail(`${canon.api.path} returned HTTP ${status}`); }
@@ -75,26 +82,20 @@ try {
     let d; try { d = JSON.parse(body); } catch { d = null; }
     if (!d) fail(`${canon.api.path} is not JSON (an SPA/HTML build clobbered the Function?)`);
     else {
-      const t = d.totals || {};
-      if (d.schema !== canon.api.schema) fail(`schema ${d.schema} ≠ ruled ${canon.api.schema}`);
-      else pass(`schema ${d.schema}`);
-      if (t.axes !== canon.api.axes_total) fail(`totals.axes ${t.axes} ≠ ruled ${canon.api.axes_total} (the axis-count drift)`);
-      else pass(`totals.axes ${t.axes}`);
-      if (t.measured_axes !== canon.api.measured_axes) fail(`totals.measured_axes ${t.measured_axes} ≠ ruled ${canon.api.measured_axes}`);
-      else pass(`totals.measured_axes ${t.measured_axes}`);
-      // UNMEASURED is a first-class published value, not a leftover. Guarding it
-      // stops the one failure that would matter most: an unmeasured slot quietly
-      // being promoted to close a gap in the measured count.
-      if (typeof canon.api.unmeasured_axes === "number") {
-        if (t.unmeasured_axes !== canon.api.unmeasured_axes) fail(`totals.unmeasured_axes ${t.unmeasured_axes} ≠ ruled ${canon.api.unmeasured_axes} (an axis was promoted or dropped)`);
-        else pass(`totals.unmeasured_axes ${t.unmeasured_axes}`);
+      const cb = await commitBoard(ROOT);
+      if (cb.status !== 200) fail(`this commit's ${canon.api.path} answered HTTP ${cb.status} offline`);
+      else {
+        const expected = JSON.parse(cb.raw.toString("utf8"));
+        console.log(`  expected (commit board): ${expected.totals?.public_count}`);
+        console.log(`  live:                    ${d.totals?.public_count}`);
+        const { errors, notes } = judge(d, expected, loadSignedSnapshots(ROOT));
+        for (const n of notes) console.log(`  · ${n}`);
+        if (errors.length) errors.forEach(fail);
+        else pass(`live board agrees with this commit's board (production-anchor rules)`);
       }
-      const pc = String(t.public_count || "");
-      if (!pc.includes(canon.api.public_count_contains)) fail(`public_count lost "${canon.api.public_count_contains}" — got: ${pc.slice(0, 60)}`);
-      else pass(`public_count carries the ruling`);
     }
   }
-} catch (e) { fail(`${canon.api.path} fetch error: ${e.message}`); }
+} catch (e) { fail(`${canon.api.path} check error: ${e.message}`); }
 
 // 3. Required routes still present (Library / honesty gate)
 for (const [route, marker] of Object.entries(canon.required_routes)) {
