@@ -119,8 +119,8 @@ export function gspcBoardDataset(withParts = true): Record<string, unknown> {
     description:
       "Deterministic per-axis AI-governance measurement banks and their live results: per-item counts, leader accuracy, Wilson 95% intervals where n≥30, and McNemar-primary separation verdicts (ties stated as ties). Empty cells stay empty. The live count and stamps come from GET /api/gspc.",
     url: `${BASE}/gspc-scoreboard`,
-    identifier: GSPC_DOI,
-    ...(ZENODO_DOIS_RESOLVE ? { citation: `https://doi.org/${GSPC_DOI}` } : {}),
+    // The board's identifier is its own live dataset URL; the Zenodo concept DOI answers 410.
+    identifier: `${BASE}/api/gspc`,
     license: GSPC_LICENSE,
     isAccessibleForFree: true,
     creator: GSPC_CREATOR,
@@ -137,6 +137,12 @@ export function gspcBoardDataset(withParts = true): Record<string, unknown> {
     ],
     distribution: [
       { "@type": "DataDownload", encodingFormat: "application/json", contentUrl: `${BASE}/api/gspc` },
+      {
+        "@type": "DataDownload",
+        encodingFormat: "application/json",
+        contentUrl: `${BASE}/signed/card_index.json`,
+        name: "Signed card index (Ed25519-signed measurement cards)",
+      },
     ],
   };
   if (withParts) node.hasPart = gspcAxisDatasets();
