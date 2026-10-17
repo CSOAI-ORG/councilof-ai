@@ -38,7 +38,7 @@ import {
 import { railMode } from "../../_x402_config";
 import { sha256Hex } from "../../../_lib/cardSign";
 import { wrapperAssetDescription } from "../../_x402_descriptions";
-import { ROSTER, buildPayload, previewCardFor, signedCardFor, NOT_SOLD, SCHEMA, KIND, WRAPPER_LID, type PinMemo, type RosterEntry } from "../../wrapper";
+import { ROSTER, buildPayload, previewCardFor, signedCardFor, NO_SALE_UNMEASURED, noSale, SCHEMA, KIND, WRAPPER_LID, type PinMemo, type RosterEntry } from "../../wrapper";
 import DOORS from "../../_wrapper_asset_doors.json";
 
 type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string; REVENUE_KV?: KVNamespace };
@@ -181,16 +181,13 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     return json({
       schema: PACK_SCHEMA,
       kind: "preview",
-      preview_only: true,
       asset: door.symbol,
-      state: "UNMEASURED",
       counts,
       pairs: pairIds,
       cards: await previews(),
-      not_sold: NOT_SOLD,
-      payment: { requested: false, presented: paid, sent_to_facilitator: false, settled: false },
+      ...noSale(paid), // preview_only, state, not_sold, payment — the answer the manifest declares as no_sale
       rail: railMode(env),
-    });
+    }, NO_SALE_UNMEASURED.status);
   }
 
   if (preview) {
