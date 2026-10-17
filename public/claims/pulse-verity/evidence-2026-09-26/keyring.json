@@ -1,0 +1,26 @@
+{
+  "publisher": "Pulse Labs OpCo LLC",
+  "product": "Pulse Verity Index",
+  "purpose": "Public keys that verify Pulse Verity price signatures. A public key can only check a signature; it cannot create one. The private signing key is never published.",
+  "algorithm": "ECDSA P-256, SHA-256, IEEE-P1363 signature, base64",
+  "activeKid": "pvi-Sl40p5Gj2t_-JyKUhxyg",
+  "keys": [
+    {
+      "kid": "pvi-Sl40p5Gj2t_-JyKUhxyg",
+      "active": true,
+      "publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAECNLDAnTu+0263fuP4CF+5DlM3eKe\nP5hpfb+vE/ysOwyb5MT810mA81IhPXML3DEQn35/e9mEqGQI61IAlru2YA==\n-----END PUBLIC KEY-----\n",
+      "publicKeyJwk": {
+        "kty": "EC",
+        "x": "CNLDAnTu-0263fuP4CF-5DlM3eKeP5hpfb-vE_ysOww",
+        "y": "m-TE_NdJgPNSIT1zC9wxEJ9-f3vZhKhkCOtSAJa7tmA",
+        "crv": "P-256"
+      }
+    }
+  ],
+  "canonicalV1": "pulse-index-v1\n{symbol}\n{price}\n{at}\n{grade}",
+  "canonicalV2Format": "The first line is \"pulse-index-v2\". Then one line per field, in the fixed order of canonicalV2Fields for the print type, joined with REAL newline characters (0x0A), no trailing newline. Each line is <path>=<value>: <path> is the JSON field name, dotted for a sub-field (interval.lower, cadence.band); <value> is that field written as JSON, exactly the text the response carries: numbers as they appear on the wire, strings in double quotes, arrays and objects as compact JSON, and null when the field is null or absent from the print. Every listed field always has a line, so a field added after signing cannot pass as signed. The print carries the exact signed string in v2.canonical, so no verifier has to rebuild it.",
+  "apiKeyRing": "https://mcp.thepulse.markets/api/index/v1/pubkey",
+  "independentCopy": "This file is served by the thepulse.markets website, which is hosted separately from the API that signs prices. The two must list the same keys. If they ever disagree, trust neither and write to support@thepulse.markets.",
+  "rotation": "When the signing key changes, this file and the API key ring are updated the same day. A retired key stays listed here with active set to false for as long as prints it signed are served, so older prints keep verifying.",
+  "updated": "2026-09-25"
+}
