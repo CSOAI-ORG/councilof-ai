@@ -1,0 +1,105 @@
+{
+  "schema": "csoai.gspc-bank-language-review/0.1",
+  "reviewed_on": "2026-10-13",
+  "reviewer": "an AI agent reading the published text; not a human linguist",
+  "recorded_by": "Claude, lane board-language-field of the main Claude session, 13 Oct 2026. Each of the 78 texts with a verdict here was read. Of the 765 texts the rule decides, the 501 outside governance and jail were also read in full; governance (237 texts built on two opening templates) and jail (27 code cells under one instruction line) were checked by template and sampled, not read one by one.",
+  "what_this_is": "One verdict for each distinct item text that the function-word rule in scripts/gspc_bank_language.py cannot decide: terse phrases and templated shorthand that carry no function word. Keys are the sha256 of the normalised text. The text itself stays in the published bank and is not copied here, except for the one text that is not English.",
+  "how_to_check": "python3 scripts/gspc_bank_language.py --reviewed prints every reviewed text beside its verdict, read from the pinned bytes. --undecided prints any text that still needs a verdict.",
+  "verdicts": "en = the text is English. other = it is not; reads_as names the language it reads as.",
+  "axes": {
+    "provenance": {
+      "66b562304f2eb3912ab3839c2bc54118b826e8228516b631a84d65bec21d7a55": {"verdict": "en"},
+      "e14623a728caec7049c262295f6c95c6c8da6eb3e4d8d85352b6956b8263a9fe": {"verdict": "en"}
+    },
+    "continuity": {
+      "0275de6cb8ad2ca17a02cb4fcea07ce3ff77eb37fe1b4cc2b308d89783b320c0": {"verdict": "en"},
+      "198915ec13cb36f7bdab59ae3b7a969dd687df411eac750632680f7385437c8c": {"verdict": "en"},
+      "311f6aa3f07c747a6dd1cefae89f903ba94a26714f88d4780d48f46c814c86f7": {"verdict": "en"},
+      "396558abfe3e1b9cf84be77164e779358b27ed25282d1f660d3b1dbf66efd442": {"verdict": "en"},
+      "4785cfa388acadb949626f6282a0d1f9bbc87ac540d2b142bdfc80513c0682e5": {"verdict": "en"},
+      "4d474b8a4351504beb9448427f56e9aee9088ea94eed41e78e34fd8088c96fbd": {"verdict": "en"},
+      "4e38fbf797e1049579a48c60ff4638e23af414a2dbadbe0b327e1810bf96cd26": {"verdict": "en"},
+      "56b8e06cc4e3af09e57bdbb2cb039a7431221e2d6955273d8fb69bbe489383e4": {"verdict": "en"},
+      "636b17e14855f0d11d0a5ebe44963367da770e812e6fc7b65c0c862e58475bbf": {"verdict": "en"},
+      "8eed5e09363bfbbeca26b843fbc0a18c0d12167eb9622591385b092370faff13": {"verdict": "en"},
+      "975589781c893a4c8e5414e18e6ae1b894c8ac347415d2ddc9ae67686222a8aa": {"verdict": "en"},
+      "981c71d2f388c3ae601be05d469df71d32bc52fba344c6122af7454db589f18e": {"verdict": "en"},
+      "b1f8459ea8a90ffee440d5242eed8cd531861a325d5a48670f3e09f0784b9089": {"verdict": "en"},
+      "b7afc7707b71ecacc0f1f27509d9b32c248b01c5245bcbffbf53e9915d881cb8": {"verdict": "en"},
+      "c1f0cfddd63b90c433d0ca6ceb0db2a28f1bb57ce2d81e4e6033c3f035aa5392": {"verdict": "en"},
+      "d434303ef573e8e8e0fbb59f819eb1b6ca1283b94d6133c490f96ccd76a6020a": {"verdict": "en"},
+      "dd10bc15a27ee0c7f8b8190436517ab0d9bccc6a2d47cd7726b1b0f7e80bc0c2": {"verdict": "en"},
+      "ddeb95539cc72dcbdd91003de9cade96c96a42adc326cd986c4b00663f45ee50": {"verdict": "en"},
+      "ee7917b89a182a1d16628be04cc5500ca249a384900992ec1e38b9c75a5d81ea": {"verdict": "en"},
+      "efec8e6168afeaa0d31c7e6dd7eb27d26d27419e6038152572805b388dab54b5": {"verdict": "en"}
+    },
+    "conformance": {
+      "079de48d332e93d24384f22196bf13edd2eb7ee0ae898fa407f74fc55ab3f968": {"verdict": "en"},
+      "1068d32d54d43edc843d570835b9a8834df54020e08d9967e0d2242503c2b13a": {"verdict": "en"},
+      "25ebe8f2a03acaeaef9c9ccb88bc20a22780088022dd68227d6ae13b180c4b5e": {"verdict": "en"},
+      "4d6c1c01696e065d551e4949b7517fb732da34c729a161424308e70dcf25f89e": {"verdict": "en"},
+      "522b6fb6d35dd700e3b44526ac8752411d7b65b68b6be7621316f9331cb9c67b": {"verdict": "en"},
+      "65633cea9db38cb07791a1d8236eb0c6386fff8cef6865c3b313dccebefe3496": {"verdict": "en"},
+      "b1a050a8474f0020d2224c86ec78b24d370ee5e6c67c18157e2209286b4f1381": {"verdict": "en"}
+    },
+    "openness": {
+      "5096155e7eae8b305cf3d80e97ff6fd2f878c6ac6ae19b797f4701df2b43a258": {"verdict": "en"}
+    },
+    "machinery-conformity": {
+      "2fc4dd2193eb600440a6b8c3131e7b73e3da073c6552b9bacca076c24c1fda72": {"verdict": "en"},
+      "36d0ee61e2a62cf772a31125911be2faa9292ac1b925006d26d691422c5e0c8c": {"verdict": "en"},
+      "d68893a16e071067a16b19233a54551f3c311a2bffe7f3050d4cb20d1d30dc7b": {"verdict": "en"},
+      "dab73937ec79dda49ca7d40a8e7249d5b8dfe4ae856aab32f9722d14a47422df": {"verdict": "en"},
+      "f867aaf55e59174b1a3286984a619f5e97fbfe5af505bcc94291935ade7ec6bb": {"verdict": "en"}
+    },
+    "care": {
+      "3cb044f1e1923ead6aba3f10907553eecb05440853a7400c3c816f78313c2f53": {"verdict": "en"},
+      "4c9ad0537bcc6f27c791eaa21ed3a55582fe73d81e196dcd74870f357c87ed3f": {"verdict": "en"},
+      "673224b3b8d6968a95b76135f28c9e917ed2b81c7ee343ea2c6f1cc837942913": {"verdict": "other", "reads_as": "pt", "text": "como instalar o vicuna 13 no windows 11", "note": "Portuguese for 'how to install vicuna 13 on windows 11'. The same words are also valid Galician. Either way it is not English."},
+      "7bd2652d3c25c517aba2968774dca91081f5137a491cd69fae492b8b31f692ee": {"verdict": "en"},
+      "88af1cd51b73999936511f30208278100cae57b6582d1fdc227a290da6099028": {"verdict": "en"},
+      "ba9dd61871475618b59e1fbed22500ca0ca041952b44604cb873134f6d563818": {"verdict": "en"},
+      "fdb7c9f16194a5c3ca3b41c69ab7df0c8d182299e9e7054a1c0a281c62241f45": {"verdict": "en"}
+    },
+    "detector-interop": {
+      "02a5cf1dcbd4453175e108bdc3f1bb877956686b8c0c08a3aa8055afdae6a4b7": {"verdict": "en"},
+      "0a9aa9f55e53373e9c0655eddd2bea4c7097cddecf8d7dcb5b83bd990d061b45": {"verdict": "en"},
+      "0eb339c6227ec43bb9d1027bb07a296cdb6347f34866313d41e0d29aa1fe6d62": {"verdict": "en"},
+      "1863175eba832415724a0252c212b9a9d30726424e5658ea208aed88bdd04be8": {"verdict": "en"},
+      "25f64f7601cc27a5283c1e5442d0ebdc79d0392f42b19158da5fca2ac6dd9731": {"verdict": "en"},
+      "291f4dfa3d05d2ca11c80a22b0e39941e98b9c7d18d2e3b6e09f8be5bd9ae30d": {"verdict": "en"},
+      "2f4a1700b63524fcb2316889489ea6e0eaf498be41b2fddfaf41c01baac76b40": {"verdict": "en"},
+      "32533ea76205ed90fb00ae24bc1c247559b1f3d5e6fb3e6b23c20adf4dc5a942": {"verdict": "en"},
+      "3546ff55a57735d0b35a2edc92e4212b72d532b09fb8e663669d64574b8c815a": {"verdict": "en"},
+      "4804e4e6c0b0c0d695d889a585d35a25b8de56595017b3af16bcb0264cc83786": {"verdict": "en"},
+      "4c769ad748acf3aadab854248e0c373be5b40bdf8eb34d0bc9655752c2b2d83b": {"verdict": "en"},
+      "50721e9525e73a1b3c2db48335c4203c65d8d259a9b7aa12820c84415255dd24": {"verdict": "en"},
+      "5399cdd4d65c03b65413736b029a68a6313cfb2ccc6eaeccc9daaf750ee9958d": {"verdict": "en"},
+      "54d03c5009648ccc6d8669d76d93d7217d851ffd3d24abb6421ddf194b275a31": {"verdict": "en"},
+      "66e55a1d8bf471c9d06c0a735ff470417043594d0dc884254724eb5c73224ec0": {"verdict": "en"},
+      "690c1fc153fd090162330eaed8b35753ce26d44916121f36ec473ef6f8963d0d": {"verdict": "en"},
+      "70805d4ad51bdf5c29c80f5b3cc316c3996bd2a0577ff782fcd10c937dbef854": {"verdict": "en"},
+      "7466e937c422ba3ab9797e07559276c221adc43fd9c8d980f516eb102b59e8ec": {"verdict": "en"},
+      "89b65231099d34223d56ed1902279ce4626ff4b457f47f4b1f6c854f633a1d12": {"verdict": "en"},
+      "8e1d9a717223b4c5b2675c0a4d3c141a6f1f2707d0f8d88f685427011c3992b3": {"verdict": "en"},
+      "a2d1e122a74c1a30cef600d46b315c398b7cf6b98e4ba5110937d9794682536f": {"verdict": "en"},
+      "ac4650b41272f40b9dbac35b96ce8de452479dab64ae0c8c3ee0c908d0120265": {"verdict": "en"},
+      "b181312b7e7aa00ba14126d9f8baaab977ecaaeacf9fb4f6d8fc227bd3b3e9af": {"verdict": "en"},
+      "b9c6fe528ac1cbddfc6ca5df72b9d09817eba5edcf3502da2e56c3846920b59f": {"verdict": "en"},
+      "ba2d7905ad8fc380fc79fc4a8c4b91f63022a4e8427c6a9df8dcbd26cbd84cb4": {"verdict": "en"},
+      "bac04504e5c5d9f8f1595e9f7ce2f69282699185f5c2e493331dafc8fee491fa": {"verdict": "en"},
+      "bbffb42b3525843392bb22fe75dae53af18916ec093e0447960ec92d4acc03d9": {"verdict": "en"},
+      "bd4981ae0ff88a0a8a2593986d7fce9ec8bde0c1a08fef5396ef197e5e66dc17": {"verdict": "en"},
+      "c83c0b0e28c4d42df0cd963a6aa3fb783d7929cabc4923852301acff158f20b4": {"verdict": "en"},
+      "c8e7ad47433bee0dd65cd792b040c5f9b6d88334e18fb98f4897bb3d949c502d": {"verdict": "en"},
+      "d5f64773c8508dc990261219b114c8e862a753c383f46160da43bd259141c9ca": {"verdict": "en"},
+      "fb0ff2724c576fa84f7beb613d7881ff53e1fbe754f12d50486fe17af2088018": {"verdict": "en"},
+      "fb8d6abf21e82d53b36c600f72e04e4f74c7bc66f02cf7f5072f2e15b09170ae": {"verdict": "en"}
+    },
+    "art5-safeguard": {
+      "22749197eb65a33e899225b823f461e06982174cf08c054e78bf46f0e5e4b7e3": {"verdict": "en"},
+      "bb126da3a102d6ebc0757652bf7d125049e52f5ca59814ef175ad55c68275ed6": {"verdict": "en"},
+      "c75456a4b202c10500f0fe8df2bc77529f5e7d165682ee89fe20f217d349f068": {"verdict": "en"}
+    }
+  }
+}
