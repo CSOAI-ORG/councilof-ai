@@ -74,6 +74,11 @@ export const onRequestGet: PagesFunction<RevenueEnv> = async ({ env }) => {
 <meta property="og:title" content="Press — Council of AI">
 <meta property="og:description" content="What changed at the Council of AI, with the command that proves each line. Measurement, not certification.">
 <meta property="og:image" content="https://councilof.ai/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://councilof.ai/press/">
+<meta name="twitter:title" content="Press — Council of AI">
+<meta name="twitter:description" content="What changed at the Council of AI, with the command that proves each line. Measurement, not certification.">
+<meta name="twitter:image" content="https://councilof.ai/og-image.png">
 <link rel="alternate" type="application/rss+xml" title="Corrections" href="https://councilof.ai/feeds/corrections.xml">
 <link rel="alternate" type="application/rss+xml" title="Signed cards" href="https://councilof.ai/feeds/cards.xml">
 <link rel="alternate" type="application/rss+xml" title="Public root" href="https://councilof.ai/feeds/roots.xml">

@@ -32,12 +32,12 @@ HEAD = """<!doctype html>
 <meta property="og:description" content="{description}" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="{canonical}" />
-<meta property="og:image" content="https://councilof.ai/og-default.png" />
+<meta property="og:image" content="https://councilof.ai/og-image.png" />
 <meta property="og:site_name" content="CSOAI Ltd" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="{title}" />
 <meta name="twitter:description" content="{description}" />
-<meta name="twitter:image" content="https://councilof.ai/og-default.png" />
+<meta name="twitter:image" content="https://councilof.ai/og-image.png" />
 <meta name="theme-color" content="#16a34a" />
 <script type="application/ld+json">
 {jsonld}
