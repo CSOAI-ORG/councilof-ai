@@ -57,7 +57,7 @@ import time
 import urllib.request
 from pathlib import Path
 
-SCHEMA_ROW = "csoai.claim-maintenance-check/0.1"
+SCHEMA_ROW = "csoai.claim-maintenance-check/0.2"
 SCHEMA_LATEST = "csoai.claim-maintenance-checks/0.1"
 REGISTER = "https://councilof.ai/api/claims/register"
 UA = "csoai-claim-maintenance-scheduler/0.1 (+https://councilof.ai/corrections)"
@@ -124,6 +124,12 @@ def latest_outcomes(outcomes: list[dict]) -> dict[str, dict]:
 
 def state_of(row: dict, last: dict[str, dict], today: str) -> str:
     o = last.get(key(row))
+    # A confirmed sibling change does not complete claims that failed or were seen only once.
+    # Keep the original outcome/candidate in the immutable row, while retaining retry work.
+    if o and o.get("claims_fetch_failed"):
+        return "FETCH_FAILED"
+    if o and o.get("claims_unconfirmed"):
+        return "UNCONFIRMED"
     if o and o["outcome"] in COMPLETED:
         return o["outcome"]
     if row["due"] > today:
@@ -135,6 +141,20 @@ def due_now(rows: list[dict], last: dict[str, dict], today: str) -> list[dict]:
     return [r for r in rows if r["due"] <= today and state_of(r, last, today) not in COMPLETED]
 
 
+def confirmed_quote_absence(first: dict, second: dict) -> bool:
+    """Two comparable literal-quote misses; never infer absence from page movement alone."""
+    a, b = first.get("claim_presence") or {}, second.get("claim_presence") or {}
+    if not isinstance(a, dict) or not isinstance(b, dict):
+        return False
+    valid_hash = lambda x: isinstance(x, str) and len(x) == 64 and all(c in "0123456789abcdef" for c in x)
+    return (first.get("claim_present") is False and second.get("claim_present") is False
+            and a.get("mode") == b.get("mode") == "NOT_LOCATED"
+            and valid_hash(a.get("claim_sha256")) and a.get("claim_sha256") == b.get("claim_sha256")
+            and a.get("extractor") == b.get("extractor")
+            and a.get("search_surface") in {"VISIBLE_TEXT", "RAW_UTF8_RESPONSE"} and a.get("search_surface") == b.get("search_surface")
+            and valid_hash(a.get("source_content_sha256")) and a.get("source_content_sha256") == b.get("source_content_sha256"))
+
+
 def classify(first: list[dict], second: dict[str, dict]) -> tuple[str, list[dict], list[str], list[str]]:
     """first = reread readings; second = confirming readings by claim_id for claims that moved."""
     changed, unconfirmed, failed = [], [], []
@@ -144,7 +164,9 @@ def classify(first: list[dict], second: dict[str, dict]) -> tuple[str, list[dict
         if r.get("changed") is True:
             s = second.get(cid)
             if s and s.get("changed") is True and s.get("current_hash") == r.get("current_hash"):
-                changed.append({"claim_id": cid, "url": r.get("url"), "recorded_hash": r.get("recorded_hash"), "current_hash": r.get("current_hash")})
+                changed.append({"claim_id": cid, "url": r.get("url"), "recorded_hash": r.get("recorded_hash"), "current_hash": r.get("current_hash"),
+                                "claim_present": r.get("claim_present"), "claim_presence": r.get("claim_presence"),
+                                "claim_absence_confirmed": confirmed_quote_absence(r, s)})
             else:
                 unconfirmed.append(cid)
             comparable += 1
@@ -198,13 +220,23 @@ def candidate_id(registry_id: str, run_id: str, claim_id: str) -> str:
     return f"cand-{sha(registry_id.encode())[:16]}-{run_id}-{claim_id}"
 
 
+def existing_candidate(candidates: list[dict], registry_id: str, registry_sha256: str, change: dict) -> str | None:
+    """A retry references the original candidate for the same exact source transition."""
+    fields = ("claim_id", "recorded_hash", "current_hash")
+    for prior in candidates:
+        if (prior.get("registry_id") == registry_id and prior.get("registry_sha256") == registry_sha256
+                and all(prior.get(k) == change.get(k) for k in fields) and prior.get("candidate_id")):
+            return str(prior["candidate_id"])
+    return None
+
+
 def build_latest(rows: list[dict], outcomes: list[dict], today: str, run_at: str) -> dict:
     last = latest_outcomes(outcomes)
     checks = []
     for r in rows:
         o = last.get(key(r)) or {}
         checks.append({"registry_id": r["registry_id"], "check": r["check"], "due": r["due"],
-                       "outcome": state_of(r, last, today), "checked_at": o.get("checked_at"),
+                       "outcome": state_of(r, last, today), "producer_outcome": o.get("outcome"), "checked_at": o.get("checked_at"),
                        "row_sha256": o.get("row_sha256"), "correction_status": o.get("correction_status", "NONE")})
     counts: dict[str, int] = {}
     for c in checks:
@@ -214,11 +246,11 @@ def build_latest(rows: list[dict], outcomes: list[dict], today: str, run_at: str
         "run_at": run_at,
         "run_date": today,
         "scheduler": f"scripts/claims/maintenance_due.py inside the daily claim-watch job ({HOST}, cron 50 7 * * *)",
-        "rule": "LIVE registries in GET /api/claims/register: scheduled-read (signed next_read_utc) and created + 7, 30, 90 days; a passed date with no completed run reads DUE_NOT_RUN",
+        "rule": "LIVE registries in GET /api/claims/register: scheduled-read (recorded next_read_utc) and created + 7, 30, 90 days; a passed date with no completed run reads DUE_NOT_RUN",
         "outcome_vocabulary": {
             "UNCHANGED": "every comparable claim reproduced its recorded digest",
             "READ_NOT_COMPARABLE": "read; the registry records no comparable digest",
-            "CHANGED_CONFIRMED": "a source moved on two reads at least the confirm gap apart; a correction candidate was written for review",
+            "CHANGED_CONFIRMED": "a source moved on two reads at least the confirm gap apart; page movement is retained; a review candidate requires the literal quote to be unlocated on both comparable reads",
             "UNCONFIRMED": "a move seen once; retried next run; not a change",
             "FETCH_FAILED": "a source could not be read; retried next run; not an absence",
             "DUE_NOT_RUN": "the date has passed and no run has completed it",
@@ -300,6 +332,7 @@ def run(a) -> int:
     run_id = run_at.replace("-", "").replace(":", "")
     opath, cpath = data / "outcomes.jsonl", data / "candidates.jsonl"
     outcomes = [json.loads(l) for l in opath.read_text().splitlines() if l.strip()] if opath.exists() else []
+    candidates = [json.loads(l) for l in cpath.read_text().splitlines() if l.strip()] if cpath.exists() else []
     bad = verify_chain(outcomes)
     if bad:
         print("ABORT outcomes chain broken:", bad[:3]); return 1
@@ -331,12 +364,22 @@ def run(a) -> int:
             os.unlink(t.name)
         cands = []
         for c in changed:
+            if c.get("claim_absence_confirmed") is not True:
+                continue  # retain page movement in outcomes; no literal-claim absence was established
+            prior_id = existing_candidate(candidates, rid, sha(rb), c)
+            if prior_id:
+                cands.append(prior_id)
+                continue
             cid = candidate_id(rid, run_id, c["claim_id"])
             cands.append(cid)
+            candidate = {"candidate_id": cid, "detected_at": run_at, "detected_by": f"claim-maintenance scheduler @ {HOST}",
+                         "registry_id": rid, "registry_url": url, "registry_sha256": sha(rb), **c,
+                         "kind": "EXACT_QUOTE_NOT_LOCATED_TWICE",
+                         "boundary": "A literal-quote miss in two comparable readable responses; not a finding of retraction, falsity or intent.",
+                         "state": "CANDIDATE - for review; not an allegation and not a ledger entry"}
             with cpath.open("a") as f:
-                f.write(json.dumps({"candidate_id": cid, "detected_at": run_at, "detected_by": f"claim-maintenance scheduler @ {HOST}",
-                                    "registry_id": rid, "registry_url": url, "registry_sha256": sha(rb), **c,
-                                    "state": "CANDIDATE - for review; not an allegation and not a ledger entry"}, sort_keys=True) + "\n")
+                f.write(json.dumps(candidate, sort_keys=True) + "\n")
+            candidates.append(candidate)
         for ck in checks:  # one completed read satisfies every check of this registry that is due today
             row = chain_append(opath, {
                 "registry_id": rid, "registry_url": url, "registry_sha256": sha(rb) if rb else None,
@@ -351,7 +394,7 @@ def run(a) -> int:
             })
             outcomes.append(row)
         n_changed += outcome == "CHANGED_CONFIRMED"
-        n_failed += outcome in ("FETCH_FAILED", "UNCONFIRMED")
+        n_failed += outcome in ("FETCH_FAILED", "UNCONFIRMED") or bool(failed or unconfirmed)
         print(f"{rid}: {','.join(c['check'] for c in checks)} -> {outcome} ({len(first)} claims read)")
     latest = build_latest(rows, outcomes, today, run_at)
     (data / "latest.json").write_text(json.dumps(latest, indent=1, ensure_ascii=True) + "\n")
