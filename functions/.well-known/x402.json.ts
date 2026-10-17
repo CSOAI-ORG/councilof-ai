@@ -338,6 +338,8 @@ export const onRequestGet: PagesFunction<X402Env> = async ({ request, env }) => 
       "not asserted by this manifest — whether a third-party index lists a resource is measured by reading that index, never typed here",
     not: ["score", "certificate", "filled-cells", "pay-to-pass", "rank"],
     catalog: `${origin}/api/x402`,
+    // The public signed-card catalogue (free; distinct from `catalog`, the x402 resource list).
+    public_catalog: `${origin}/catalog.json`,
     board: `${origin}/api/gspc`,
     verify: `${origin}/gspc-verify`,
     explainer: `${origin}/pricing`,
