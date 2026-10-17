@@ -520,6 +520,9 @@ jobs:
           # The outward gate itself. Its tests were not in CI: from the day brand-gate.mjs gained a look-behind
           # that Python cannot read, the gate could score nothing at 100% and one of these tests sat red unseen.
           python3 -m pytest -q scripts/outward-gate/test_outward_gate.py scripts/outward-gate/test_gate_draft.py
+          # The daily scorecard workflow (outward-gate-daily.yml): it only reads, a low score never turns it
+          # red, and a run that could not measure never stays green. Its two inline scripts are run here.
+          python3 -m pytest -q scripts/outward-gate/test_daily_workflow.py
           # C-2026-0914-01: a one-option exact-label menu is refused, and every signed card
           # graded by one is in WITHDRAWN.jsonl (derived from the bound bank bytes).
           python3 -m pytest -q harness/gspc-top100/test_one_option_menu.py
