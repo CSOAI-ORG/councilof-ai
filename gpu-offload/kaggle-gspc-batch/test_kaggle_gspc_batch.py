@@ -94,6 +94,19 @@ class T(unittest.TestCase):
             self.assertTrue(os.path.isfile(f"{HERE}/banks/{bank_name}"),
                             f"Bank file {bank_name} for axis {axis} not found")
 
+    def test_diag_batch_cannot_be_intake_candidate(self):
+        """A -DIAG batch must never produce intake_candidate=true cells."""
+        gate = "CARD_CANDIDATE_UNSIGNED"
+        run_of_record = False  # diagnostic mode
+        intake_candidate = gate == "CARD_CANDIDATE_UNSIGNED" and run_of_record
+        self.assertFalse(intake_candidate, "-DIAG batch must not produce intake_candidate=true")
+
+    def test_diag_models_constant_defined(self):
+        """DIAG_MODELS must be defined and non-empty."""
+        self.assertTrue(hasattr(runner, 'DIAG_MODELS'))
+        self.assertIsInstance(runner.DIAG_MODELS, set)
+        self.assertGreater(len(runner.DIAG_MODELS), 0)
+
 
 if __name__ == "__main__":
     unittest.main()

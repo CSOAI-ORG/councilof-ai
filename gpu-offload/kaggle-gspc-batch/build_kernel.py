@@ -53,7 +53,7 @@ for _ in range(30):
 assert tags_ready, "OLLAMA_TAGS_NOT_READY after 60s"
 env.update({"GSPC_KIT": "/tmp/kit", "GSPC_BATCH": "__BATCH__", "GSPC_SHARD": "__SHARD__", "GSPC_SHARDS": "__SHARDS__",
             "GSPC_GPU": "kaggle-2xT4", "GSPC_OUT": "/kaggle/working/out", "GSPC_OLLAMA_BIN": "/tmp/ollama/bin/ollama",
-            "GSPC_OLLAMA_TARBALL_SHA256": ollama_tarball_sha256})
+            "GSPC_OLLAMA_TARBALL_SHA256": ollama_tarball_sha256, "GSPC_DIAGNOSTIC": "__DIAG__", "GSPC_ITEM_LIMIT": "__ITEM_LIMIT__"})
 rc = subprocess.call([sys.executable, "/tmp/kit/runner.py"], env=env)
 srv.terminate()
 with tarfile.open("/kaggle/working/intake-bundle.tgz", "w:gz") as t:
@@ -85,14 +85,21 @@ def main() -> int:
     ap.add_argument("--shards", type=int, default=3)
     ap.add_argument("--owner", default="nicktempleman")
     ap.add_argument("--out", required=True)
+    ap.add_argument("--diagnostic", action="store_true", help="Diagnostic mode: limit models and items")
+    ap.add_argument("--item-limit", type=int, default=2, help="Item limit per axis in diagnostic mode")
     a = ap.parse_args()
     raw = kit_bytes(a.batch)
     os.makedirs(a.out, exist_ok=True)
     slug = f"csoai-gspc-{a.batch.lower()}-{a.shard}"
+    if a.diagnostic:
+        slug = f"{slug}-diag"
+    diag_str = "true" if a.diagnostic else "false"
+    item_limit_str = str(a.item_limit) if a.diagnostic else "0"
     src = (KERNEL.replace("__KIT_SHA__", hashlib.sha256(raw).hexdigest())
            .replace("__KIT_B64__", base64.b64encode(raw).decode())
            .replace("__BATCH__", a.batch).replace("__SHARD__", a.shard).replace("__SHARDS__", str(a.shards))
-           .replace("__LABEL__", "GSPC-G3-Kaggle").replace("__OV__", OLLAMA_VERSION))
+           .replace("__LABEL__", "GSPC-G3-Kaggle").replace("__OV__", OLLAMA_VERSION)
+           .replace("__DIAG__", diag_str).replace("__ITEM_LIMIT__", item_limit_str))
     open(f"{a.out}/kernel.py", "w").write(src)
     meta = {"id": f"{a.owner}/{slug}", "title": slug.replace("-", " ").title(), "code_file": "kernel.py",
             "language": "python", "kernel_type": "script", "is_private": True, "enable_gpu": True,
