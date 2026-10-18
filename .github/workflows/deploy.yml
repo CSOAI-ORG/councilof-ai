@@ -313,6 +313,14 @@ jobs:
           test -f 'dist/client/functions/interop/[[path]].ts'
           node scripts/retired-proof-archive.mjs --dir dist/client
 
+      # HF mirror gate: directories in deploy-exclusions.json (without mirror_only) must exist on HF
+      # before they can safely leave the Pages upload (otherwise the 302 redirects land on 404s).
+      # The sync happens via hf-evidence-sync.yml; this gate blocks deploy until the mirror exists.
+      - name: HF mirror gate — excluded directories must exist on Hugging Face
+        run: |
+          node scripts/hf-mirror-gate.mjs --selftest
+          node scripts/hf-mirror-gate.mjs
+
       - name: Drop exclusions from dist (served via HF redirects)
         run: node scripts/drop-proofs-from-dist.mjs dist/client
 
