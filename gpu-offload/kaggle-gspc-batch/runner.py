@@ -11,12 +11,12 @@ RECEIPT.json under OUT_ROOT.
 """
 from __future__ import annotations
 
-import datetime, glob, hashlib, json, os, shutil, subprocess, sys, time
+import datetime, glob, hashlib, json, os, shutil, subprocess, sys, time, urllib.request, urllib.error
 
 KIT = os.environ.get("GSPC_KIT", os.path.dirname(os.path.abspath(__file__)))
 WORKER_SHA = "ea59a9de4cb92b80910a4efddc7ab592c4d0bd2dc2a184eec811183f6b584491"
 GEN_SHA = "132b85e4e938e0720d64e32a7bdaa9f23ceee55daebff09304bd04889a6468b5"
-OLLAMA_VERSION = "0.35.0"
+OLLAMA_VERSION = "0.40.6"
 AXES = ["governance", "safety", "provenance", "continuity", "conformance", "openness", "care"]
 BANK_SHA = {
     "governance": "b93f9808f01416737a5944fec0ab8c3eda1dbba808daf7dda33a516b0cd61997",
@@ -143,6 +143,40 @@ def preflight() -> None:
         assert sums[bank_name] == BANK_SHA[axis], f"SPEC_BANK_SHA_MISMATCH {axis}"
 
 
+def smoke_generate(model: str, ollama_url: str = "http://127.0.0.1:11434", timeout: int = 120) -> tuple[bool, str | None]:
+    """Verify model can generate text by running a one-prompt smoke test.
+
+    Returns (True, None) on success, (False, error_message) on failure.
+    """
+    payload = json.dumps({
+        "model": model,
+        "prompt": "Say hello.",
+        "stream": False,
+        "options": {"num_predict": 8},
+    }).encode("utf-8")
+    request = urllib.request.Request(
+        f"{ollama_url}/api/generate",
+        data=payload,
+        method="POST",
+        headers={"Content-Type": "application/json", "Accept": "application/json"},
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=timeout) as resp:
+            body = json.loads(resp.read(1024 * 1024))
+    except urllib.error.HTTPError as e:
+        return False, f"HTTP {e.code}"
+    except urllib.error.URLError as e:
+        return False, f"URL error: {e.reason}"
+    except (TimeoutError, OSError) as e:
+        return False, f"Timeout/OS error: {e}"
+    except json.JSONDecodeError:
+        return False, "Invalid JSON response"
+    response_text = body.get("response", "")
+    if not response_text or not response_text.strip():
+        return False, f"Empty response: done_reason={body.get('done_reason')}"
+    return True, None
+
+
 def main() -> int:
     batch_id = os.environ["GSPC_BATCH"]
     shard = os.environ.get("GSPC_SHARD", "all")
@@ -180,6 +214,13 @@ def main() -> int:
         if got != want:
             rec["skipped"].append({"model": m, "why": "DIGEST_CHANGED", "pinned": want, "got": got})
             log(f"DIGEST_CHANGED {m}: pinned={want[:12]} got={got[:12]}, skipped")
+            subprocess.run([ollama, "rm", m], env=env_o)
+            continue
+        log(f"SMOKE {m}")
+        smoke_ok, smoke_err = smoke_generate(m)
+        if not smoke_ok:
+            rec["skipped"].append({"model": m, "why": "SMOKE_FAIL", "error": smoke_err})
+            log(f"SMOKE_FAIL {m}: {smoke_err}")
             subprocess.run([ollama, "rm", m], env=env_o)
             continue
         jd = f"{G}/jobs/{slug(m)}-{got[:12]}"
