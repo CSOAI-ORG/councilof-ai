@@ -107,7 +107,7 @@ jobs:
       # scripts/pages-size-guard.mjs already existed and was wired into NOTHING. It is wired
       # here, on public/, so the answer arrives in two seconds instead of twenty minutes.
       - name: Pages size guard — 25 MiB per-file limit (source assets)
-        run: node scripts/pages-size-guard.mjs public --packed-history-projection --exclude proofs,cards
+        run: node scripts/pages-size-guard.mjs public --packed-history-projection --exclude proofs,cards,interop/mill-cards-signed,interop/mill-cards-unsigned,interop/mill-evidence,interop/ots
 
       - name: Install deps
         run: npm ci --no-audit --no-fund

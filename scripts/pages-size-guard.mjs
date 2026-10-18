@@ -21,30 +21,40 @@ const LIMIT = 25 * 1024 * 1024;
 const FILE_CAP = 20000;      // Cloudflare Pages: max files per deployment
 const FILE_WARN = 19000;     // print loudly once headroom is under 1,000 files
 const dist = process.argv[2] || "dist/client";
-// `--exclude <top-level dir>[,dir…]`: directories that are NOT part of the deployment and must not
-// count toward the cap. 2026-09-22 owner decision: public/proofs (3,993 .ots) leaves the site for the
+// `--exclude <path>[,path…]`: directories that are NOT part of the deployment and must not
+// count toward the cap. Supports both top-level (proofs) and nested paths (interop/mill-cards-signed).
+// 2026-09-22 owner decision: public/proofs (3,993 .ots) leaves the site for the
 // HF mirror (in-repo /proofs/* → 302 rule; scripts/drop-proofs-from-dist.mjs + the pod deploy pipeline
 // remove it from dist/). Counting it here would fail every build on a directory that never uploads.
 // 2026-09-28: cards/ too (`--exclude proofs,cards`), both served from HF csoai/councilof-ai-evidence.
+// 2026-10-18: interop/mill-cards-signed, interop/mill-cards-unsigned, interop/mill-evidence, interop/ots
+// also leave the site for the HF mirror (mill landing PRs exceeded 20,000 files).
 const exArg = process.argv.indexOf("--exclude");
-const EXCLUDE = new Set(exArg > 0 ? String(process.argv[exArg + 1] || "").split(",").filter(Boolean) : []);
+const EXCLUDE = exArg > 0 ? String(process.argv[exArg + 1] || "").split(",").filter(Boolean) : [];
 const over = [];
 let files = 0;
 let bytes = 0;
 const byTop = {};
+const excluded = new Set();
+
+const isExcluded = (relPath) => EXCLUDE.some(ex => relPath === ex || relPath.startsWith(ex + "/"));
 
 const walk = (d, top) => {
   for (const e of readdirSync(d, { withFileTypes: true })) {
     const p = join(d, e.name);
+    const relPath = relative(dist, p);
     const t = top ?? (e.isDirectory() ? e.name : ".");
-    if (top === undefined && e.isDirectory() && EXCLUDE.has(e.name)) { console.log(`pages-size-guard: excluding ${e.name}/ (not deployed)`); continue; }
+    if (e.isDirectory() && isExcluded(relPath)) {
+      if (!excluded.has(relPath)) { console.log(`pages-size-guard: excluding ${relPath}/ (not deployed)`); excluded.add(relPath); }
+      continue;
+    }
     if (e.isDirectory()) walk(p, t);
     else {
       const { size } = statSync(p);
       files += 1;
       bytes += size;
       byTop[t] = (byTop[t] || 0) + 1;
-      if (size > LIMIT) over.push({ path: relative(dist, p), size });
+      if (size > LIMIT) over.push({ path: relPath, size });
     }
   }
 };
