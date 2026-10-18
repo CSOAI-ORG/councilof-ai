@@ -344,12 +344,6 @@ const EXISTING = [
   "/interop/effect-binding-server-probe-2026-09-30.json  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/interop/effect-binding-server-probe-2026-09-30.json  302",
   "/proofs/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/proofs/:splat  302",
   "/cards/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/cards/:splat  302",
-  // 2026-10-18: bulk interop directories mirrored to HF for the 20,000-file cap. Initially mirror_only
-  // (synced but kept in bundle), then excluded once HF is populated.
-  "/interop/mill-cards-signed/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/interop/mill-cards-signed/:splat  302",
-  "/interop/mill-cards-unsigned/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/interop/mill-cards-unsigned/:splat  302",
-  "/interop/mill-evidence/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/interop/mill-evidence/:splat  302",
-  "/interop/ots/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/interop/ots/:splat  302",
 ];
 
 const STOREFRONT = [
