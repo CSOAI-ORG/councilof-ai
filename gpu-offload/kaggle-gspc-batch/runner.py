@@ -143,11 +143,12 @@ def preflight() -> None:
         assert sums[bank_name] == BANK_SHA[axis], f"SPEC_BANK_SHA_MISMATCH {axis}"
 
 
-def smoke_generate(model: str, ollama_url: str = "http://127.0.0.1:11434", timeout: int = 120) -> tuple[bool, str | None]:
+def smoke_generate(model: str, ollama_url: str = "http://127.0.0.1:11434", timeout: int = 120) -> dict:
     """Verify model can generate text by running a one-prompt smoke test.
 
-    Returns (True, None) on success, (False, error_message) on failure.
+    Returns dict with keys: passed, error, done_reason, response_length.
     """
+    result = {"passed": False, "error": None, "done_reason": None, "response_length": 0}
     payload = json.dumps({
         "model": model,
         "prompt": "Say hello.",
@@ -164,17 +165,25 @@ def smoke_generate(model: str, ollama_url: str = "http://127.0.0.1:11434", timeo
         with urllib.request.urlopen(request, timeout=timeout) as resp:
             body = json.loads(resp.read(1024 * 1024))
     except urllib.error.HTTPError as e:
-        return False, f"HTTP {e.code}"
+        result["error"] = f"HTTP {e.code}"
+        return result
     except urllib.error.URLError as e:
-        return False, f"URL error: {e.reason}"
+        result["error"] = f"URL error: {e.reason}"
+        return result
     except (TimeoutError, OSError) as e:
-        return False, f"Timeout/OS error: {e}"
+        result["error"] = f"Timeout/OS error: {e}"
+        return result
     except json.JSONDecodeError:
-        return False, "Invalid JSON response"
+        result["error"] = "Invalid JSON response"
+        return result
+    result["done_reason"] = body.get("done_reason")
     response_text = body.get("response", "")
+    result["response_length"] = len(response_text) if response_text else 0
     if not response_text or not response_text.strip():
-        return False, f"Empty response: done_reason={body.get('done_reason')}"
-    return True, None
+        result["error"] = f"Empty response: done_reason={result['done_reason']}"
+        return result
+    result["passed"] = True
+    return result
 
 
 def main() -> int:
@@ -185,6 +194,8 @@ def main() -> int:
     out_root = os.environ.get("GSPC_OUT", "/kaggle/working/out")
     models_dir = os.environ.get("OLLAMA_MODELS", "/tmp/ollama-models")
     ollama = os.environ.get("GSPC_OLLAMA_BIN", "ollama")
+    ollama_tarball_sha256 = os.environ.get("GSPC_OLLAMA_TARBALL_SHA256")
+    runtime_group = f"ollama-{OLLAMA_VERSION}"
     host = f"kaggle-{slug(batch_id).lower()}-{shard}"
     preflight()
     rows = read_batch(f"{KIT}/batches/{batch_id}.tsv", shard, shards)
@@ -194,12 +205,14 @@ def main() -> int:
         os.makedirs(d, exist_ok=True)
     tsv = f"{out_root}/cells.tsv"
     with open(tsv, "w") as f:
-        f.write("cell\tmodel\taxis\trun_id\tgate\taccuracy\tvalid\tn_total\tunparsed_plus_trunc_pct\ttransport_pct\tseconds\tattempt\tdigest\trun_dir\n")
+        f.write("cell\tmodel\taxis\trun_id\tgate\taccuracy\tvalid\tn_total\tunparsed_plus_trunc_pct\ttransport_pct\tseconds\tattempt\tdigest\trun_dir\truntime_group\n")
     rec = {"schema": "csoai.kaggle-gspc-batch-receipt/0.1", "label": LABEL, "batch": batch_id, "shard": shard,
            "host": host, "gpu": gpu, "started": now(), "worker_sha256": WORKER_SHA, "generator_sha256": GEN_SHA,
-           "ollama_version": OLLAMA_VERSION, "instrument": f"exact-label-t{MT}", "num_parallel": 1,
+           "ollama_version": OLLAMA_VERSION, "ollama_tarball_sha256": ollama_tarball_sha256,
+           "runtime_group": runtime_group, "instrument": f"exact-label-t{MT}", "num_parallel": 1,
            "max_loaded_models": 1, "temperature": 0, "seed": 0, "num_ctx": 3072, "think": False,
-           "signed": False, "writes_board": False, "models": [r["tag"] for r in rows], "cells": [], "skipped": []}
+           "signed": False, "writes_board": False, "models": [r["tag"] for r in rows], "cells": [], "skipped": [],
+           "smoke_results": []}
     env_o = {**os.environ, "OLLAMA_HOST": "127.0.0.1:11434"}
     k = 0
     for r in rows:
@@ -217,12 +230,18 @@ def main() -> int:
             subprocess.run([ollama, "rm", m], env=env_o)
             continue
         log(f"SMOKE {m}")
-        smoke_ok, smoke_err = smoke_generate(m)
-        if not smoke_ok:
-            rec["skipped"].append({"model": m, "why": "SMOKE_FAIL", "error": smoke_err})
-            log(f"SMOKE_FAIL {m}: {smoke_err}")
+        smoke_result = smoke_generate(m)
+        smoke_record = {"model": m, "passed": smoke_result["passed"], "done_reason": smoke_result["done_reason"],
+                        "response_length": smoke_result["response_length"]}
+        if smoke_result["error"]:
+            smoke_record["error"] = smoke_result["error"]
+        rec["smoke_results"].append(smoke_record)
+        if not smoke_result["passed"]:
+            rec["skipped"].append({"model": m, "why": "SMOKE_FAIL", "error": smoke_result["error"]})
+            log(f"SMOKE_FAIL {m}: {smoke_result['error']}")
             subprocess.run([ollama, "rm", m], env=env_o)
             continue
+        log(f"SMOKE_OK {m}: done_reason={smoke_result['done_reason']} response_length={smoke_result['response_length']}")
         jd = f"{G}/jobs/{slug(m)}-{got[:12]}"
         shutil.rmtree(jd, ignore_errors=True)
         g = subprocess.run([sys.executable, f"{KIT}/code/generate_runpod_gspc_playlist.py", "--bank-dir", f"{KIT}/banks",
@@ -257,21 +276,24 @@ def main() -> int:
                 new = sorted(set(glob.glob(f"{outdir}/runs/*/run.json")) - before, key=os.path.getmtime)
                 if not new:
                     with open(tsv, "a") as f:
-                        f.write(f"{cell}\t{m}\t{ax}\t-\tUNMEASURED_incomplete_run_NO_RUNJSON\t-\t-\t-\t-\t-\t{secs}\t{att}\t{got}\t-\n")
+                        f.write(f"{cell}\t{m}\t{ax}\t-\tUNMEASURED_incomplete_run_NO_RUNJSON\t-\t-\t-\t-\t-\t{secs}\t{att}\t{got}\t-\t{runtime_group}\n")
                     time.sleep(20); continue
                 rd = os.path.dirname(new[-1])
                 ajson(f"{rd}/runtime.json", {"host": host, "gpu": gpu, "cell": cell, "attempt": att, "worker_sha256": WORKER_SHA,
                                              "rc": rc, "seconds": secs, "num_parallel": 1, "max_loaded_models": 1, "num_ctx": 3072,
-                                             "think": False, "label": LABEL, "batch": batch_id, "signed": False, "recorded_at": now()})
+                                             "think": False, "label": LABEL, "batch": batch_id, "signed": False, "recorded_at": now(),
+                                             "ollama_version": OLLAMA_VERSION, "ollama_tarball_sha256": ollama_tarball_sha256,
+                                             "runtime_group": runtime_group})
                 gj = gate(rd, {"batch": batch_id, "shard": shard, "host": host, "gpu": gpu})
                 with open(tsv, "a") as f:
                     f.write(f"{cell}\t{m}\t{ax}\t{gj['run_id']}\t{gj['gate']}\t{gj['accuracy']}\t{gj['valid']}\t{gj['n_total']}\t"
-                            f"{gj['unparsed_plus_truncated_pct']}\t{gj['transport_pct']}\t{secs}\t{att}\t{got}\t{os.path.relpath(rd, out_root)}\n")
+                            f"{gj['unparsed_plus_truncated_pct']}\t{gj['transport_pct']}\t{secs}\t{att}\t{got}\t{os.path.relpath(rd, out_root)}\t{runtime_group}\n")
                 log(f"DONE {cell} gate={gj['gate']} acc={gj['accuracy']}")
                 if not gj["gate"].startswith("UNMEASURED_incomplete"):
                     rec["cells"].append({"cell": cell, "run_dir": os.path.relpath(rd, out_root), "gate": gj["gate"],
                                          "accuracy": gj["accuracy"], "valid": gj["valid"],
-                                         "intake_candidate": gj["gate"] == "CARD_CANDIDATE_UNSIGNED"})
+                                         "intake_candidate": gj["gate"] == "CARD_CANDIDATE_UNSIGNED",
+                                         "runtime_group": runtime_group})
                     break
         subprocess.run([ollama, "rm", m], env=env_o)  # free /tmp for the next model
         ajson(f"{out_root}/RECEIPT.json", rec)
