@@ -38,12 +38,6 @@ on:
         description: "Push CARD_CANDIDATE_UNSIGNED runs to csoai/runpod-gspc-intake"
         type: boolean
         default: true
-  # One-time G3-Kaggle run after the weekly GPU reset (Sun 00:00 UTC). The job
-  # refuses to act on any date other than 2026-10-18. Remove after the batch.
-  schedule:
-    - cron: "0 1 18 10 *"    # shard a, 01:00 UTC
-    - cron: "0 3 18 10 *"    # shard b, 03:00 UTC
-    - cron: "0 5 18 10 *"    # shard c, 05:00 UTC
 
 concurrency:
   group: kaggle-gspc-batch
@@ -68,8 +62,6 @@ jobs:
       - name: resolve run parameters
         id: p
         env:
-          EV: ${{ github.event_name }}
-          SCHED: ${{ github.event.schedule }}
           IN_BATCH: ${{ inputs.batch_id }}
           IN_SHARD: ${{ inputs.shard }}
           IN_MODE: ${{ inputs.mode }}
@@ -77,20 +69,7 @@ jobs:
           IN_PUSH: ${{ inputs.push_intake }}
         run: |
           set -euo pipefail
-          if [ "$EV" = "schedule" ]; then
-            today=$(date -u +%F)
-            if [ "$today" != "2026-10-18" ]; then
-              echo "one-time schedule: $today is not 2026-10-18, nothing to do"
-              echo "skip=true" >> "$GITHUB_OUTPUT"; exit 0
-            fi
-            case "$SCHED" in
-              "0 1 18 10 *") shard=a ;; "0 3 18 10 *") shard=b ;; "0 5 18 10 *") shard=c ;;
-              *) echo "unknown schedule $SCHED"; exit 1 ;;
-            esac
-            batch=G3-Kaggle; mode=push; dry=false; push=true
-          else
-            batch="$IN_BATCH"; shard="$IN_SHARD"; mode="$IN_MODE"; dry="$IN_DRY"; push="$IN_PUSH"
-          fi
+          batch="$IN_BATCH"; shard="$IN_SHARD"; mode="$IN_MODE"; dry="$IN_DRY"; push="$IN_PUSH"
           case "$batch" in *[!A-Za-z0-9._-]*|"") echo "bad batch id"; exit 1 ;; esac
           test -f "$KDIR/batches/$batch.tsv" || { echo "no such batch $batch"; exit 1; }
           slug=$(echo "csoai-gspc-$batch-$shard" | tr 'A-Z' 'a-z')
@@ -182,12 +161,15 @@ jobs:
           sha256sum -c intake-bundle.tgz.sha256
           tar -xzf intake-bundle.tgz
           python3 - <<'PY'
-          import json
+          import json, sys
           r = json.load(open("out/RECEIPT.json"))
           assert r["signed"] is False and r["writes_board"] is False
           c = r["cells"]
           print(f"cells={len(c)} candidates={sum(x['intake_candidate'] for x in c)} skipped={len(r['skipped'])} finished={r.get('finished')}")
           for s in r["skipped"]: print("SKIPPED", s)
+          if len(c) == 0:
+              print("FATAL: 0 cells recorded — kernel produced no valid runs", file=sys.stderr)
+              sys.exit(1)
           PY
           # Stage only gate-passing, unsigned candidate runs for intake.
           mkdir -p "$RUNNER_TEMP/intake"
