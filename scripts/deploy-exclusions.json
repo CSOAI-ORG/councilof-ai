@@ -1,6 +1,6 @@
 {
-  "schema": "csoai.deploy-exclusions/0.1",
-  "note": "Paths removed from dist/client before pages-size-guard and brand-gate. Each MUST have a matching redirect in public/_redirects so the URL keeps resolving (the drop script refuses otherwise). Nothing here leaves the repository.",
+  "schema": "csoai.deploy-exclusions/0.2",
+  "note": "Paths mirrored to HF and optionally removed from dist/client. Each MUST have a matching redirect in public/_redirects. When mirror_only is true, the path is synced to HF but NOT dropped from the Pages bundle (used to populate the mirror before excluding). Nothing here leaves the repository.",
   "entries": [
     {
       "path": "proofs",
@@ -25,6 +25,34 @@
       "kind": "dir",
       "since": "2026-09-28",
       "why": "4,164 card wrappers (grows with every root); Cloudflare Pages 20,000-file cap (the 28 Sep root built 20,042); served via 302 from HF csoai/councilof-ai-evidence, kept byte-equal by scripts/pod-loops/evidence_sync.py before each deploy"
+    },
+    {
+      "path": "interop/mill-cards-signed",
+      "kind": "dir",
+      "since": "2026-10-18",
+      "mirror_only": true,
+      "why": "3,196+ signed mill cards; Cloudflare Pages 20,000-file cap; served via 302 from HF csoai/councilof-ai-evidence. mirror_only=true until HF is populated."
+    },
+    {
+      "path": "interop/mill-cards-unsigned",
+      "kind": "dir",
+      "since": "2026-10-18",
+      "mirror_only": true,
+      "why": "2,386+ unsigned mill cards; Cloudflare Pages 20,000-file cap; served via 302 from HF csoai/councilof-ai-evidence. mirror_only=true until HF is populated."
+    },
+    {
+      "path": "interop/mill-evidence",
+      "kind": "dir",
+      "since": "2026-10-18",
+      "mirror_only": true,
+      "why": "2,091+ mill evidence bundles; Cloudflare Pages 20,000-file cap; served via 302 from HF csoai/councilof-ai-evidence. mirror_only=true until HF is populated."
+    },
+    {
+      "path": "interop/ots",
+      "kind": "dir",
+      "since": "2026-10-18",
+      "mirror_only": true,
+      "why": "1,912+ OTS proof files; Cloudflare Pages 20,000-file cap; served via 302 from HF csoai/councilof-ai-evidence. mirror_only=true until HF is populated."
     }
   ]
 }
