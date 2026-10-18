@@ -36,6 +36,64 @@ class T(unittest.TestCase):
             self.assertNotIn("sign", src.replace("signed", "").lower().replace("design", ""))
         self.assertEqual(outs[0], outs[1])
 
+    def test_preflight_halts_on_missing_spec_bank(self):
+        import shutil
+        runner.KIT = HERE
+        bank = f"{HERE}/banks/gspc-gov.jsonl"
+        sha_file = f"{HERE}/banks/SHA256SUMS"
+        backup = bank + ".bak"
+        shutil.move(bank, backup)
+        with open(sha_file, "r") as f:
+            sha_lines = f.readlines()
+        try:
+            with open(sha_file, "w") as f:
+                for line in sha_lines:
+                    if "gspc-gov.jsonl" not in line:
+                        f.write(line)
+            with self.assertRaises(AssertionError) as ctx:
+                runner.preflight()
+            self.assertIn("SPEC_BANK_MISSING", str(ctx.exception))
+        finally:
+            shutil.move(backup, bank)
+            with open(sha_file, "w") as f:
+                f.writelines(sha_lines)
+
+    def test_preflight_halts_on_spec_bank_sha_mismatch(self):
+        runner.KIT = HERE
+        bank = f"{HERE}/banks/gspc-gov.jsonl"
+        with open(bank, "rb") as f:
+            original = f.read()
+        try:
+            with open(bank, "wb") as f:
+                f.write(b"corrupted content\n")
+            with self.assertRaises(AssertionError) as ctx:
+                runner.preflight()
+            self.assertIn("BANK_SHA_MISMATCH", str(ctx.exception))
+        finally:
+            with open(bank, "wb") as f:
+                f.write(original)
+
+    def test_axes_allowlist_restricts_generator(self):
+        import tempfile, json
+        gen_path = f"{HERE}/code/generate_runpod_gspc_playlist.py"
+        result = subprocess.run(
+            [sys.executable, gen_path, "--help"],
+            capture_output=True, text=True
+        )
+        self.assertIn("--axes", result.stdout)
+        spec_axes = ",".join(runner.AXES)
+        self.assertEqual(spec_axes, "governance,safety,provenance,continuity,conformance,openness,care")
+
+    def test_spec_axes_matches_bank_sha_keys(self):
+        self.assertEqual(set(runner.AXES), set(runner.BANK_SHA.keys()))
+
+    def test_axis_to_bank_mapping(self):
+        for axis in runner.AXES:
+            self.assertIn(axis, runner.AXIS_TO_BANK)
+            bank_name = runner.AXIS_TO_BANK[axis]
+            self.assertTrue(os.path.isfile(f"{HERE}/banks/{bank_name}"),
+                            f"Bank file {bank_name} for axis {axis} not found")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1161,6 +1161,20 @@ safe_builtins = {name: getattr(builtins, name) for name in (
 )}
 safe_builtins["print"] = source_print
 
+def source_utc_strftime(wall, pattern):
+    # Keep product __import__ unavailable. Perform the one admitted UTC format
+    # in fixture-owned code rather than invoking a datetime C method from the
+    # product's restricted builtins frame. The audit hook still applies.
+    check(pattern == "%Y-%m-%dT%H:%M:%SZ", "unadmitted datetime format")
+    return datetime.fromtimestamp(wall, timezone.utc).strftime(pattern)
+
+
+def source_datetime_now(zone):
+    check(zone is timezone.utc, "unadmitted datetime timezone")
+    wall = current["wall"]
+    return SimpleNamespace(strftime=lambda pattern: source_utc_strftime(wall, pattern))
+
+
 def new_namespace(case_root):
     clock = SimpleNamespace(time=lambda: current["wall"], monotonic=lambda: current["clock"])
     safe_os = SimpleNamespace(
@@ -1175,7 +1189,7 @@ def new_namespace(case_root):
         "fcntl": SimpleNamespace(flock=source_flock, LOCK_EX=fcntl.LOCK_EX, LOCK_NB=fcntl.LOCK_NB),
         "json": SimpleNamespace(loads=json.loads, dumps=json.dumps), "hashlib": SimpleNamespace(sha256=hashlib.sha256),
         "sys": SimpleNamespace(argv=[], stderr=current["stderr"]), "time": clock,
-        "datetime": SimpleNamespace(now=lambda zone: datetime.fromtimestamp(current["wall"], zone)), "timezone": timezone,
+        "datetime": SimpleNamespace(now=source_datetime_now), "timezone": timezone,
         "urllib": SimpleNamespace(request=SimpleNamespace(Request=no_network, urlopen=no_network), error=SimpleNamespace(HTTPError=RuntimeError)),
     }
     exec(compile(module, "h1-controlled-main-source", "exec"), namespace)
@@ -1220,7 +1234,10 @@ try:
         finally:
             if holder is not None:
                 holder.close()
-        check(code == cfg["exit"], cfg["id"] + ": unexpected exit " + str(code))
+        check(code == cfg["exit"], cfg["id"] + ": unexpected exit " + str(code)
+              + "; captured_stderr=" + current["stderr"].getvalue()[-2000:]
+              + "; caller_attempts=" + str(len(current["calls"]))
+              + "; recent_effects=" + json.dumps(current["events"][-8:]))
         check(len(current["calls"]) == cfg["calls"], cfg["id"] + ": caller count")
         writes = [row for row in current["events"] if row["kind"] == "write-attempt"]
         if cfg.get("no_writes"):
