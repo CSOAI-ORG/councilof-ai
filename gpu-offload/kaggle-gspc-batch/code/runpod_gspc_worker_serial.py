@@ -781,8 +781,6 @@ class OllamaClient:
         accepted_names = {model}
         if ":" not in model:
             accepted_names.add(f"{model}:latest")
-        available_names = [(e.get("name"), e.get("model"), e.get("digest")) for e in candidates if isinstance(e, dict)]
-        print(f"MODEL_MANIFEST_DIGEST looking for {accepted_names} in {len(candidates)} entries: {available_names[:5]}", flush=True)
         for entry in candidates:
             if not isinstance(entry, dict):
                 continue
@@ -793,13 +791,10 @@ class OllamaClient:
                 continue
             digest = entry.get("digest")
             if not isinstance(digest, str):
-                print(f"MODEL_MANIFEST_DIGEST found entry but digest not string: {entry}", flush=True)
                 break
-            print(f"MODEL_MANIFEST_DIGEST found name={entry.get('name')} model={entry.get('model')} digest={digest}", flush=True)
             return normalized_manifest_digest(digest)
-        print(f"MODEL_MANIFEST_DIGEST FAIL MODEL_NOT_LOCAL model={model} available={available_names}", flush=True)
         raise WorkerError(
-            "MODEL_NOT_LOCAL", f"configured model is absent from loopback Ollama tags: looking for {accepted_names}, found {[n for n,m,d in available_names]}"
+            "MODEL_NOT_LOCAL", "configured model is absent from loopback Ollama tags"
         )
 
     def generate(
@@ -1196,40 +1191,27 @@ def stage_unsigned_card(
 
 
 def _verify_model_pin(config: WorkerConfig, client: InferenceClient) -> str:
-    print(f"VERIFY_MODEL_PIN model={config.model} expected={config.expected_model_manifest_digest}", flush=True)
-    try:
-        actual = normalized_manifest_digest(client.model_manifest_digest(config.model))
-    except WorkerError as e:
-        print(f"VERIFY_MODEL_PIN FAIL model_manifest_digest: {e.code} {e}", flush=True)
-        raise
-    print(f"VERIFY_MODEL_PIN actual_from_tags={actual}", flush=True)
+    actual = normalized_manifest_digest(client.model_manifest_digest(config.model))
     if actual != config.expected_model_manifest_digest:
-        print(f"VERIFY_MODEL_PIN FAIL MODEL_DIGEST_MISMATCH expected={config.expected_model_manifest_digest} actual={actual}", flush=True)
         raise WorkerError(
-            "MODEL_DIGEST_MISMATCH", f"local model manifest digest changed: expected={config.expected_model_manifest_digest} actual={actual}"
+            "MODEL_DIGEST_MISMATCH", "local model manifest digest changed"
         )
     if config.model_manifest_path is not None:
-        print(f"VERIFY_MODEL_PIN checking file={config.model_manifest_path}", flush=True)
         if config.model_manifest_path.is_symlink():
-            print(f"VERIFY_MODEL_PIN FAIL MODEL_MANIFEST_SYMLINK path={config.model_manifest_path}", flush=True)
             raise WorkerError(
                 "MODEL_MANIFEST_SYMLINK", "model manifest symlinks are not accepted"
             )
         try:
             file_digest = f"sha256:{sha256_file(config.model_manifest_path)}"
         except OSError as error:
-            print(f"VERIFY_MODEL_PIN FAIL MODEL_MANIFEST_UNREADABLE path={config.model_manifest_path} error={error}", flush=True)
             raise WorkerError(
-                "MODEL_MANIFEST_UNREADABLE", f"local model manifest cannot be read: {config.model_manifest_path}"
+                "MODEL_MANIFEST_UNREADABLE", "local model manifest cannot be read"
             ) from error
-        print(f"VERIFY_MODEL_PIN file_digest={file_digest}", flush=True)
         if file_digest != actual:
-            print(f"VERIFY_MODEL_PIN FAIL MODEL_MANIFEST_FILE_MISMATCH file={file_digest} tags={actual}", flush=True)
             raise WorkerError(
                 "MODEL_MANIFEST_FILE_MISMATCH",
-                f"local model manifest file does not match Ollama's advertised digest: file={file_digest} tags={actual}",
+                "local model manifest file does not match Ollama's advertised digest",
             )
-    print(f"VERIFY_MODEL_PIN OK", flush=True)
     return actual
 
 
