@@ -38,6 +38,10 @@ on:
         description: "Push CARD_CANDIDATE_UNSIGNED runs to csoai/runpod-gspc-intake"
         type: boolean
         default: true
+      diagnostic:
+        description: "DIAGNOSTIC MODE: run 3 models with item_limit=2, skip intake, never run of record"
+        type: boolean
+        default: false
 
 concurrency:
   group: kaggle-gspc-batch
@@ -67,15 +71,21 @@ jobs:
           IN_MODE: ${{ inputs.mode }}
           IN_DRY: ${{ inputs.dry_run }}
           IN_PUSH: ${{ inputs.push_intake }}
+          IN_DIAG: ${{ inputs.diagnostic }}
         run: |
           set -euo pipefail
-          batch="$IN_BATCH"; shard="$IN_SHARD"; mode="$IN_MODE"; dry="$IN_DRY"; push="$IN_PUSH"
+          batch="$IN_BATCH"; shard="$IN_SHARD"; mode="$IN_MODE"; dry="$IN_DRY"; push="$IN_PUSH"; diag="$IN_DIAG"
           case "$batch" in *[!A-Za-z0-9._-]*|"") echo "bad batch id"; exit 1 ;; esac
           test -f "$KDIR/batches/$batch.tsv" || { echo "no such batch $batch"; exit 1; }
           slug=$(echo "csoai-gspc-$batch-$shard" | tr 'A-Z' 'a-z')
+          # Diagnostic mode: always force push=false (code-enforced, not input-dependent)
+          if [ "$diag" = "true" ]; then
+            push="false"
+            slug="${slug}-diag"
+          fi
           { echo "skip=false"; echo "batch=$batch"; echo "shard=$shard"; echo "mode=$mode"
-            echo "dry=$dry"; echo "push=$push"; echo "kernel=nicktempleman/$slug"; } >> "$GITHUB_OUTPUT"
-          echo "batch=$batch shard=$shard mode=$mode dry=$dry push_intake=$push kernel=nicktempleman/$slug"
+            echo "dry=$dry"; echo "push=$push"; echo "diag=$diag"; echo "kernel=nicktempleman/$slug"; } >> "$GITHUB_OUTPUT"
+          echo "batch=$batch shard=$shard mode=$mode dry=$dry push_intake=$push diagnostic=$diag kernel=nicktempleman/$slug"
 
       - name: dedup guard + pin tests (no tokens)
         if: steps.p.outputs.skip != 'true'
@@ -87,8 +97,12 @@ jobs:
       - name: build kernel
         if: steps.p.outputs.skip != 'true'
         run: |
+          diag_flag=""
+          if [ "${{ steps.p.outputs.diag }}" = "true" ]; then
+            diag_flag="--diagnostic --item-limit 2"
+          fi
           python3 "$KDIR/build_kernel.py" --batch "${{ steps.p.outputs.batch }}" \
-            --shard "${{ steps.p.outputs.shard }}" --out "$RUNNER_TEMP/kernel"
+            --shard "${{ steps.p.outputs.shard }}" --out "$RUNNER_TEMP/kernel" $diag_flag
           cat "$RUNNER_TEMP/kernel/kernel-metadata.json"
 
       - name: kaggle auth from GHA secrets (never print values)
@@ -193,8 +207,18 @@ jobs:
           if-no-files-found: ignore
           retention-days: 30
 
+      - uses: actions/upload-artifact@v4
+        if: always() && steps.p.outputs.skip != 'true' && steps.p.outputs.diag == 'true'
+        with:
+          name: kaggle-gspc-diag-logs-${{ steps.p.outputs.batch }}-${{ steps.p.outputs.shard }}-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/kaggle-out/out/logs
+            ${{ runner.temp }}/kaggle-out/ollama.log
+          if-no-files-found: ignore
+          retention-days: 30
+
       - name: push unsigned candidates to private intake
-        if: steps.p.outputs.skip != 'true' && steps.p.outputs.dry != 'true' && steps.p.outputs.push == 'true' && steps.poll.outputs.state == 'complete'
+        if: steps.p.outputs.skip != 'true' && steps.p.outputs.dry != 'true' && steps.p.outputs.push == 'true' && steps.p.outputs.diag != 'true' && steps.poll.outputs.state == 'complete'
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
