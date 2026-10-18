@@ -188,6 +188,72 @@ def smoke_generate(model: str, ollama_url: str = "http://127.0.0.1:11434", timeo
 
 DIAG_MODELS = {"gemma3n:e4b", "gemma4:12b", "qwen3.5:4b"}
 
+PIN_FAILURE_PATTERNS = (
+    "MODEL_DIGEST_MISMATCH",
+    "MODEL_MANIFEST_FILE_MISMATCH",
+    "MODEL_MANIFEST_UNREADABLE",
+    "MODEL_MANIFEST_SYMLINK",
+    "MODEL_DIGEST_CHANGED_DURING_RUN",
+)
+
+
+def dump_pin_info(model: str, pinned_digest: str, models_dir: str, ollama: str, logs_dir: str, env_o: dict) -> None:
+    """Write pin-dump-<model>.json with diagnostic info for pin failures or NO_RUNJSON.
+    
+    Read-only: does not change how cells are scored or gated.
+    """
+    n_, t_ = (model.split(":", 1) + ["latest"])[:2]
+    mp = f"{models_dir}/manifests/registry.ollama.ai/library/{n_}/{t_}"
+    dump = {
+        "schema": "csoai.pin-dump/0.1",
+        "model": model,
+        "pinned_digest": pinned_digest,
+        "manifest_path": mp,
+        "manifest_sha256": None,
+        "manifest_layers": [],
+        "manifest_config": None,
+        "blob_shas": {},
+        "ollama_show": None,
+        "dumped_at": now(),
+    }
+    if os.path.isfile(mp):
+        dump["manifest_sha256"] = sha(mp)
+        try:
+            mj = json.load(open(mp))
+            if "layers" in mj:
+                dump["manifest_layers"] = [{"mediaType": l.get("mediaType"), "digest": l.get("digest"), "size": l.get("size")}
+                                           for l in mj.get("layers", []) if isinstance(l, dict)]
+            if "config" in mj and isinstance(mj["config"], dict):
+                dump["manifest_config"] = {"digest": mj["config"].get("digest"), "size": mj["config"].get("size")}
+            blobs_root = f"{models_dir}/blobs"
+            for layer in mj.get("layers", []):
+                if isinstance(layer, dict) and layer.get("digest"):
+                    d = layer["digest"]
+                    bp = f"{blobs_root}/{d.replace(':', '-')}"
+                    if os.path.isfile(bp):
+                        dump["blob_shas"][d] = sha(bp)
+                    else:
+                        dump["blob_shas"][d] = f"MISSING:{bp}"
+            if mj.get("config", {}).get("digest"):
+                cd = mj["config"]["digest"]
+                cp = f"{blobs_root}/{cd.replace(':', '-')}"
+                if os.path.isfile(cp):
+                    dump["blob_shas"][cd] = sha(cp)
+                else:
+                    dump["blob_shas"][cd] = f"MISSING:{cp}"
+        except (json.JSONDecodeError, OSError) as e:
+            dump["manifest_parse_error"] = str(e)
+    else:
+        dump["manifest_sha256"] = f"MISSING:{mp}"
+    try:
+        r = subprocess.run([ollama, "show", model], env=env_o, capture_output=True, text=True, timeout=30)
+        dump["ollama_show"] = r.stdout + r.stderr
+    except Exception as e:
+        dump["ollama_show"] = f"ERROR: {e}"
+    os.makedirs(logs_dir, exist_ok=True)
+    ajson(f"{logs_dir}/pin-dump-{slug(model)}.json", dump)
+    log(f"PIN_DUMP written to {logs_dir}/pin-dump-{slug(model)}.json")
+
 
 def main() -> int:
     batch_id_raw = os.environ["GSPC_BATCH"]
@@ -316,11 +382,25 @@ def main() -> int:
                     rc = subprocess.call([sys.executable, f"{KIT}/code/runpod_gspc_worker_serial.py", "--config", cfgs[ax],
                                           "--state-dir", st, "--once"], cwd=f"{KIT}/code", stdout=lf, stderr=subprocess.STDOUT, env=env)
                 secs = round(time.time() - t0, 1)
+                worker_log_path = f"{G}/logs/worker-{cell}-a{att}.log"
+                pin_failure_in_log = False
+                try:
+                    wlog = open(worker_log_path).read()
+                    for pat in PIN_FAILURE_PATTERNS:
+                        if pat in wlog:
+                            pin_failure_in_log = True
+                            log(f"PIN_FAILURE_DETECTED {cell} pattern={pat}")
+                            break
+                except OSError:
+                    pass
                 new = sorted(set(glob.glob(f"{outdir}/runs/*/run.json")) - before, key=os.path.getmtime)
                 if not new:
                     with open(tsv, "a") as f:
                         f.write(f"{cell}\t{m}\t{ax}\t-\tUNMEASURED_incomplete_run_NO_RUNJSON\t-\t-\t-\t-\t-\t{secs}\t{att}\t{got}\t-\t{runtime_group}\t{run_of_record}\n")
+                    dump_pin_info(m, want, models_dir, ollama, f"{out_root}/logs", env_o)
                     time.sleep(20); continue
+                if pin_failure_in_log:
+                    dump_pin_info(m, want, models_dir, ollama, f"{out_root}/logs", env_o)
                 rd = os.path.dirname(new[-1])
                 ajson(f"{rd}/runtime.json", {"host": host, "gpu": gpu, "cell": cell, "attempt": att, "worker_sha256": WORKER_SHA,
                                              "rc": rc, "seconds": secs, "num_parallel": 1, "max_loaded_models": 1, "num_ctx": 3072,

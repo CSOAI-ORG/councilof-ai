@@ -107,6 +107,26 @@ class T(unittest.TestCase):
         self.assertIsInstance(runner.DIAG_MODELS, set)
         self.assertGreater(len(runner.DIAG_MODELS), 0)
 
+    def test_worker_sha_matches_file(self):
+        """WORKER_SHA must match the actual sha256 of the worker file."""
+        worker_path = f"{HERE}/code/runpod_gspc_worker_serial.py"
+        actual_sha = hashlib.sha256(open(worker_path, "rb").read()).hexdigest()
+        self.assertEqual(
+            actual_sha, runner.WORKER_SHA,
+            f"WORKER_SHA_MISMATCH: runner.py says {runner.WORKER_SHA[:16]}... "
+            f"but file hashes to {actual_sha[:16]}..."
+        )
+
+    def test_generator_sha_matches_file(self):
+        """GEN_SHA must match the actual sha256 of the generator file."""
+        gen_path = f"{HERE}/code/generate_runpod_gspc_playlist.py"
+        actual_sha = hashlib.sha256(open(gen_path, "rb").read()).hexdigest()
+        self.assertEqual(
+            actual_sha, runner.GEN_SHA,
+            f"GEN_SHA_MISMATCH: runner.py says {runner.GEN_SHA[:16]}... "
+            f"but file hashes to {actual_sha[:16]}..."
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
