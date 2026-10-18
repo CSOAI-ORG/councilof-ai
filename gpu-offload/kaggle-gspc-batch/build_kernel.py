@@ -7,7 +7,7 @@ token or dataset. The kernel re-verifies every pin before the first prompt.
 """
 from __future__ import annotations
 
-import argparse, base64, hashlib, io, json, os, tarfile
+import argparse, base64, gzip, hashlib, io, json, os, tarfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OLLAMA_VERSION = "0.40.6"
@@ -67,7 +67,8 @@ sys.exit(rc)
 
 def kit_bytes(batch: str) -> bytes:
     buf = io.BytesIO()
-    with tarfile.open(fileobj=buf, mode="w:gz", format=tarfile.PAX_FORMAT) as t:
+    gz = gzip.GzipFile(fileobj=buf, mode="wb", mtime=0)
+    with tarfile.open(fileobj=gz, mode="w", format=tarfile.PAX_FORMAT) as t:
         for rel in ["runner.py", f"batches/{batch}.tsv", "banks/SHA256SUMS",
                     "code/runpod_gspc_worker_serial.py", "code/generate_runpod_gspc_playlist.py"] + \
                    sorted(f"banks/{n}" for n in os.listdir(f"{HERE}/banks") if n.endswith(".jsonl")):
@@ -75,6 +76,7 @@ def kit_bytes(batch: str) -> bytes:
             info.mtime = 0; info.uid = info.gid = 0; info.uname = info.gname = ""
             with open(f"{HERE}/{rel}", "rb") as f:
                 t.addfile(info, f)
+    gz.close()
     return buf.getvalue()
 
 
