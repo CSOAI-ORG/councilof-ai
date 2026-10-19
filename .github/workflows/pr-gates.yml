@@ -277,6 +277,12 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         run: npm run build:client
 
+      - name: HF mirror gate — excluded dirs must exist on HF before merge
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/hf-mirror-gate.mjs --selftest
+          node scripts/hf-mirror-gate.mjs
+
       - name: Prepare Council OS first-question browser check
         if: steps.scope.outputs.gated == 'true'
         run: |
