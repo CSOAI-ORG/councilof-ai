@@ -152,6 +152,38 @@ describe("LiveBoardGlance", () => {
     expect(boardTiles(null)).toEqual([]);
   });
 
+  it("separates unmeasured slots without inventing counts or exposing owner-held axes", () => {
+    const payload: GspcPayload = {
+      ...boardWithAxes,
+      totals: { ...boardWithAxes.totals, public_count: "7 axes · 4 measured (mock)", comparison_axes: 3, separated_leads: 1 },
+      axes: [
+        ...(boardWithAxes.axes ?? []).map((a) => a.axis === "mock-d" ? { ...a, n: 0 } : a),
+        { axis: "mock-unmeasured-model", kind: "model-comparison", status: "UNMEASURED", n: 0 },
+        { axis: "mock-separated", kind: "model-comparison", status: "MEASURED", separation: "SEPARATED", n: 41 },
+        { axis: "regulator-transparency", kind: "declared-slot", status: "UNMEASURED", n: 0, public_pages: "HIDDEN_PENDING_OWNER_GO" },
+      ],
+    };
+    const tiles = boardTiles(payload);
+    expect(tiles.map((t) => t.state).sort()).toEqual(["FACT_RUN", "SEPARATED", "TIE", "UNMEASURED", "UNMEASURED", "UNTESTED"]);
+    expect(tiles.filter((t) => t.state === "UNMEASURED").map((t) => t.n)).toEqual([null, null]);
+    expect(tiles.find((t) => t.axis === "mock-b")?.n).toBe(31);
+    const html = render(<LiveBoardGlance data={payload} models={models} />);
+    expect(html).toMatch(/Fact runs[\s\S]*?· 1 · a rule/);
+    expect(html).toMatch(/Unmeasured slots[\s\S]*?· 2 · no published run yet/);
+    expect(html).toMatch(/Model comparisons[\s\S]*?· 3 axes/);
+    expect(html.match(/<li\b[^>]*data-state=/g)).toHaveLength(6);
+    expect(html).toContain('aria-label="Unmeasured axes awaiting a run"');
+    expect(html).not.toContain('data-axis="regulator-transparency"');
+    expect(html).toContain(">n 31</span>");
+    for (const axis of ["mock-d", "mock-unmeasured-model"]) {
+      const tile = html.match(new RegExp('<li\\b[^>]*data-axis="' + axis + '"[\\s\\S]*?</li>'))?.[0];
+      expect(tile).toBeDefined();
+      expect(tile).not.toMatch(/>n /);
+    }
+    const measuredOnly: GspcPayload = { ...payload, axes: payload.axes?.filter((a) => a.status === "MEASURED") };
+    expect(render(<LiveBoardGlance data={measuredOnly} models={models} />)).not.toContain('aria-label="Unmeasured axes awaiting a run"');
+  });
+
   it("reads all four separation fields or none", () => {
     expect(separationRead(boardWithAxes)).toEqual({ comparison: 2, separated: 0, ties: 1, untested: 1 });
     expect(separationRead({ totals: { comparison_axes: 2, ties: 1 } })).toBeNull();
