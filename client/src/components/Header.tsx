@@ -18,7 +18,7 @@ import {
 // (components/ask/CommandPalette.tsx, loaded on first use) whose search falls through to Ask GSPC.
 import { openAsk, openPalette } from '@/components/ask/askBus';
 import CorpusChip from '@/components/CorpusChip';
-import { PRIMARY_LINKS, navigation } from '@/components/HeaderNav';
+import { BOOK_MEASUREMENT_LINK, PRIMARY_LINKS, navigation } from '@/components/HeaderNav';
 export { HOME_NAV, ARCHIVE_NAV } from '@/components/HeaderNav';
 
 // SPA hops keep this header mounted: it lives above the router in App.tsx.
@@ -227,6 +227,7 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
             <button type="button" onClick={() => openPalette()} className="inline-flex min-h-10 shrink-0 items-center rounded-xl p-2 text-slate-600 transition-colors hover:bg-emerald-50 hover:text-emerald-800" aria-label="Search pages and ask (Ctrl K)" title="Search pages and ask (Ctrl K / ⌘K)" aria-keyshortcuts="Control+K Meta+K" data-testid="palette-launcher">
               <Search className="h-5 w-5" aria-hidden="true" />
             </button>
+            <a href={BOOK_MEASUREMENT_LINK.href} className="inline-flex min-h-9 shrink-0 items-center whitespace-nowrap rounded-xl border border-emerald-700 px-3 text-sm font-semibold text-emerald-800 hover:bg-emerald-50" data-testid="header-book-measurement">{BOOK_MEASUREMENT_LINK.name}</a>
             {user ? (
               <>
                 <Suspense fallback={null}><NotificationCenter /></Suspense>
@@ -276,6 +277,7 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
               <a href="/" className={`block px-4 py-3 rounded-lg font-medium ${
                 location === '/' ? 'text-emerald-700 bg-emerald-50' : 'text-foreground/80'
               }`} onClick={() => setMobileMenuOpen(false)}>Home</a>
+              <a href={BOOK_MEASUREMENT_LINK.href} className="block px-4 py-3 rounded-lg font-semibold text-emerald-800" onClick={() => setMobileMenuOpen(false)} data-testid="mobile-book-measurement">{BOOK_MEASUREMENT_LINK.name}</a>
               {PRIMARY_LINKS.filter((item) => !navigation.some((g) => g.name === item.name)).map((item) => (
                 <a key={item.href} href={item.href} className={`block px-4 py-3 rounded-lg font-medium ${
                   isActive(item.href) ? "text-emerald-700 bg-emerald-50" : "text-foreground/80"
