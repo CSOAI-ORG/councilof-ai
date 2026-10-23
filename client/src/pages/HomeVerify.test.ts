@@ -77,7 +77,8 @@ describe("homepage is chat + GSPC list plus the estate", () => {
   });
 
   it("shows all nine product plates", () => {
-    expect(stack).toContain("Nine products");
+    expect(stack).toContain("Nine routes into the evidence.");
+    expect(stack.match(/^\s+id: "tool-[^"]+",$/gm)).toHaveLength(9);
     expect(stack).toContain("Council OS");
     expect(stack).toContain("The living board");
     expect(stack).toContain("Verify a card");
