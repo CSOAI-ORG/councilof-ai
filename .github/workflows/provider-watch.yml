@@ -40,11 +40,14 @@ jobs:
     timeout-minutes: 20
     env:
       GH_TOKEN: ${{ secrets.SNAPSHOT_PR_TOKEN || secrets.GITHUB_TOKEN }}
-      PROVIDER_BUNDLE: ${{ runner.temp }}/provider-watch-bundle
       PROVIDER_DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
       PROVIDER_ONLY: ${{ inputs.only || '' }}
       PYTHONUNBUFFERED: "1"
     steps:
+      - name: set retained capture path
+        shell: bash
+        run: |
+          printf 'PROVIDER_BUNDLE=%s/provider-watch-bundle\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
       - uses: actions/checkout@v4
         with:
           ref: master
