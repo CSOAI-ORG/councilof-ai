@@ -277,6 +277,12 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         run: npm run build:client
 
+      - name: HF mirror gate — excluded dirs must exist on HF before merge
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/hf-mirror-gate.mjs --selftest
+          node scripts/hf-mirror-gate.mjs
+
       - name: Prepare Council OS first-question browser check
         if: steps.scope.outputs.gated == 'true'
         run: |
@@ -317,7 +323,19 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         run: |
           node scripts/facts-gate.mjs --selftest
-          node scripts/facts-gate.mjs dist/client
+          node scripts/facts-gate.mjs dist/client --board-reference prerender-board-reference.json
+
+      # Measure ruling on #3266 (16 Oct 2026): the facts-gate above now judges against the board
+      # THIS commit rendered (prerender-board-reference.json, written and bound by the
+      # `npm run prerender:dashboard` step above, the same prerender.mjs deploy uses; never
+      # committed, see .gitignore). This anchor keeps the measured part of that board pinned to
+      # PRODUCTION /api/gspc: measured_axes, the measured set, every measured n and score, and
+      # card_index are unchanged; only the count of unmeasured axes may grow.
+      - name: Board production anchor — measured axes and card_index unchanged from production
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/board-production-anchor.mjs --selftest
+          node scripts/board-production-anchor.mjs dist/client --board-reference prerender-board-reference.json
 
       # Persona audit T06 (2026-10-06): /axis/jail said TIE while the board said UNTESTED, /axes
       # disagreed with both, and /benchmarks repeated a corrected claim. facts-gate reads counts;

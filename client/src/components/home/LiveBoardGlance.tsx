@@ -19,6 +19,7 @@ import { Link } from "wouter";
 import { useGspcBoard, type GspcAxis, type GspcPayload } from "../board/useGspcBoard";
 import { boardRunDates } from "@/lib/boardRunDates";
 import ModelCountKey from "@/components/ModelCountKey";
+import { isOwnerGated } from "@/lib/ownerGated";
 
 export interface SeparationRead {
   comparison: number;
@@ -53,7 +54,7 @@ export interface Tile {
 export function boardTiles(data: GspcPayload | null): Tile[] {
   const axes: GspcAxis[] = Array.isArray(data?.axes) ? (data!.axes as GspcAxis[]) : [];
   return axes
-    .filter((a) => typeof a?.axis === "string" && a.axis)
+    .filter((a) => typeof a?.axis === "string" && a.axis && !isOwnerGated(a))
     .map((a) => {
       const comparison = a.kind === "model-comparison";
       const measured = a.status === "MEASURED";

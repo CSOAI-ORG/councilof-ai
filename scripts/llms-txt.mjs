@@ -66,7 +66,11 @@ import { fileURLToPath } from "url";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const CHECK = process.argv.includes("--check");
-const BOARD = process.env.CSOAI_BOARD_URL || "https://councilof.ai/api/gspc";
+// The board is THIS commit's own /api/gspc, computed offline by the same commitBoard() the
+// prerender (and deploy) uses. Reading production here meant a PR that changes the board could
+// never regenerate these files to match itself (#3266, Measure ruling 16 Oct 2026: derive the
+// count from the data, fix the generator). CSOAI_BOARD_URL still selects a fetched board.
+const BOARD = process.env.CSOAI_BOARD_URL || "commit:functions/api/gspc.ts";
 const p = (...a) => path.join(REPO, ...a);
 const readJSON = (f) => JSON.parse(fs.readFileSync(p(f), "utf8"));
 
@@ -80,6 +84,12 @@ const mcpCounts = () => {
 };
 
 async function board() {
+  if (!process.env.CSOAI_BOARD_URL) {
+    const { commitBoard } = await import("./surface/commit-board.mjs");
+    const c = await commitBoard(REPO);
+    if (c.status !== 200) throw new Error(`${BOARD} -> HTTP ${c.status}`);
+    return JSON.parse(c.raw.toString("utf8"));
+  }
   const r = await fetch(BOARD, { headers: { accept: "application/json" } });
   if (!r.ok) throw new Error(`${BOARD} -> HTTP ${r.status}`);
   return r.json();
@@ -443,6 +453,10 @@ try {
   }
   throw e;
 }
+// Owner-gated rows (public_pages HIDDEN_PENDING_OWNER_GO) stay in GET /api/gspc but get no row,
+// door or deep entry in these public files until the owner's go — the same filter renderAll()
+// applies to the axis pages. Totals are left exactly as served.
+b = { ...b, axes: (Array.isArray(b.axes) ? b.axes : []).filter((a) => a?.public_pages !== "HIDDEN_PENDING_OWNER_GO") };
 // Do NOT mutate b.totals: the snapshot below must be a faithful copy of what the endpoint
 // returns. Writing doi into totals would put a key there that /api/gspc does not carry.
 const t = { ...(b.totals || {}), doi: b.doi ?? b.totals?.doi ?? null };
