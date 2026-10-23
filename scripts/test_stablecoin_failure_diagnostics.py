@@ -1,4 +1,5 @@
 import json
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -113,6 +114,59 @@ class StablecoinFailureDiagnosticsTest(unittest.TestCase):
         baseline = diag.snapshot(self.root)
         baseline["inputs"][0]["path"] = "/private/credential"
         self.assertIsNone(diag.clean_snapshot(baseline))
+
+
+    def test_unavailable_source_and_deep_collections_remain_unknown(self):
+        for rel, key in ((queue.SOURCES_REL, "sources"), (queue.DEEP_REL, "rows")):
+            original = self.inputs[rel]
+            for invalid in ({}, {key: "NOT_A_LIST"}, {key: [{}] * 426},
+                            {key: [original[key][0], original[key][0]]}):
+                with self.subTest(path=str(rel), shape=list(invalid)):
+                    self.write(rel, invalid)
+                    snapshot = diag.snapshot(self.root)
+                    receipt = next(r for r in snapshot["inputs"] if r["path"] == str(rel))
+                    self.assertEqual("INVALID_SHAPE", receipt["state"])
+                    if rel == queue.SOURCES_REL:
+                        self.assertTrue(all(r["source_registered"] is None and r["issuer_registered"] is None
+                                            for r in snapshot["rows"]))
+                    else:
+                        self.assertTrue(all(r["deep_state"] == "UNKNOWN" for r in snapshot["rows"]))
+            self.write(rel, original)
+        (self.root / queue.SOURCES_REL).unlink()
+        self.assertTrue(all(r["source_registered"] is None for r in diag.snapshot(self.root)["rows"]))
+
+    def test_unverified_or_missing_cohort_never_claims_425_row_changes(self):
+        before = diag.snapshot(self.root)
+        self.write(queue.INDEX_REL, {"assets": []})
+        after = diag.snapshot(self.root)
+        for current, baseline in ((after, before), (before, after)):
+            report = diag.failure_report(current, baseline)
+            self.assertEqual("UNAVAILABLE", report["comparison_state"])
+            self.assertEqual([], report["changed_ids"])
+
+    def test_claimed_pinned_baseline_must_contain_exact_complete_cohort(self):
+        for forged in ("missing", "different"):
+            before = diag.snapshot(self.root)
+            if forged == "missing":
+                before["rows"].pop()
+            else:
+                before["rows"][0]["id"] = "999999"
+            self.assertIsNone(diag.clean_snapshot(before))
+        before = diag.snapshot(self.root)
+        before["inputs"][0]["sha256"] = "f" * 64
+        report = diag.failure_report(diag.snapshot(self.root), before)
+        self.assertEqual("UNAVAILABLE", report["comparison_state"])
+        self.assertEqual([], report["changed_ids"])
+
+    def test_non_regular_inputs_are_refused_without_opening_a_blocking_reader(self):
+        path = self.root / "diagnostic.fifo"
+        os.mkfifo(path)
+        _, receipt, raw = diag.read_json(path)
+        self.assertEqual("NON_REGULAR", receipt["state"])
+        self.assertIsNone(raw)
+        _, receipt, raw = diag.read_json(self.root)
+        self.assertEqual("NON_REGULAR", receipt["state"])
+        self.assertIsNone(raw)
 
 
 if __name__ == "__main__":
