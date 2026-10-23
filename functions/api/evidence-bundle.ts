@@ -57,16 +57,19 @@ async function uuidFrom(name: string): Promise<string> {
   return `${s.slice(0, 8)}-${s.slice(8, 12)}-${s.slice(12, 16)}-${s.slice(16, 20)}-${s.slice(20, 32)}`;
 }
 
-async function loadCards(origin: string): Promise<{ wrappers: Record<string, Wrapper>; merkle_root: string | null; as_of: string | null; source: string }> {
+async function loadCards(origin: string): Promise<{ wrappers: Record<string, Wrapper>; merkle_root: string | null; as_of: string | null; source: string; read_ok: boolean }> {
   const src = new URL("/cards-bundle.json", origin).toString();
   const r = await fetch(src);
-  if (!r.ok) return { wrappers: {}, merkle_root: null, as_of: null, source: `${src} HTTP ${r.status}` };
+  if (!r.ok) return { wrappers: {}, merkle_root: null, as_of: null, source: `${src} HTTP ${r.status}`, read_ok: false };
   const b = (await r.json()) as { cards?: Record<string, Wrapper>; merkle_root?: string; as_of?: string };
+  // The canonical producer always owns a cards object; missing/array values establish no absence.
+  const read_ok = Object.prototype.hasOwnProperty.call(b, "cards") &&
+    b.cards !== null && typeof b.cards === "object" && !Array.isArray(b.cards);
   const wrappers: Record<string, Wrapper> = {};
   for (const [sha, w] of Object.entries(b.cards || {})) {
     if (w && w.card && w.card.sha256 && w.card.sig_ed25519) wrappers[sha] = w; // only real signed cards
   }
-  return { wrappers, merkle_root: b.merkle_root || null, as_of: b.as_of || null, source: src };
+  return { wrappers, merkle_root: b.merkle_root || null, as_of: b.as_of || null, source: src, read_ok };
 }
 
 function lite(sha: string, w: Wrapper): CardLite {
@@ -224,6 +227,18 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     }
     if (ob.regulator !== "eu-ai-act") {
       return json({ schema: "csoai.evidence-bundle/0.1", error: "procurement_view_scope", reason: "format=procurement covers the EU AI Act GPAI pack (article-53, with article-50 folded in)", obligations: ["article-53", "article-50"] }, 400);
+    }
+    // A failed corpus read establishes no zero-card observation. Keep this free view's HTTP
+    // response contract; the explicit state and unknown count carry the retrieval limitation.
+    if (!corpus.read_ok) {
+      return json({
+        schema: "csoai.evidence-bundle/0.1", kind: "procurement", format: "procurement",
+        status: "UNCHECKABLE", error: "corpus_unavailable", subject: subject || null, rows: [],
+        corpus: { ...preview.corpus, signed_cards_total: null, read_state: "UNCHECKABLE" },
+        reason: "The measurement corpus was unavailable or did not provide a cards object. No conclusion about the presence of relevant measurements was established.",
+        relation: preview.relation, free_verify: preview.free_verify, price: null,
+        statement: "Measurement, not certification.",
+      });
     }
     const rowFor = (o: Obligation) => {
       const sel = Object.entries(corpus.wrappers)
