@@ -372,6 +372,14 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         run: npm run guard:stablecoin-readiness
 
+      - name: Stablecoin contracts — retained inputs and controlled offline failures
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          PYTHONPATH=scripts python3 -m unittest -v \
+            scripts/test_stablecoin_deep_adapter.py \
+            scripts/test_stablecoin_promotion_queue.py \
+            scripts/test_stablecoin_failure_diagnostics.py
+
       - name: Mill receipt readiness — crypto, lifecycle and regulation stay separate
         if: steps.scope.outputs.gated == 'true'
         run: npm run guard:mill-receipt-readiness
