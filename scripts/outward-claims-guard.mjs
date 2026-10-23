@@ -251,24 +251,28 @@ async function firstCensusRow(response) {
   const decoder = new TextDecoder("utf-8", { fatal: true });
   let text = "", bytes = 0, reachedEof = false;
   try {
+    // Even a newline-terminated JSON object is not FIRST-row evidence when a 206
+    // response starts elsewhere. Require a supported, internally valid zero-start range.
+    const range = /^bytes 0-(\d+)\/(\d+|\*)$/.exec(response.headers.get("content-range") ?? "");
+    const end = range ? Number(range[1]) : NaN;
+    const total = range && range[2] !== "*" ? Number(range[2]) : NaN;
+    if (response.status === 206 && (!range || !Number.isSafeInteger(end) || end < 0 ||
+        (range[2] !== "*" && (!Number.isSafeInteger(total) || total <= end)))) return null;
     while (bytes < 4001 && !text.includes("\n")) {
       const { value, done } = await reader.read();
       if (done) { reachedEof = true; break; }
       const part = value.subarray(0, 4001 - bytes);
-      bytes += part.length;
       const newline = part.indexOf(10);
-      text += decoder.decode(newline < 0 ? part : part.subarray(0, newline + 1), { stream: true });
+      const linePart = newline < 0 ? part : part.subarray(0, newline + 1);
+      bytes += linePart.length;
+      text += decoder.decode(linePart, { stream: true });
     }
-    // A parseable prefix plus padding is not a complete JSONL row. At the byte cap,
-    // require an observed newline or genuine EOF; never accept unseen suffix bytes.
+    if (response.status === 206 && bytes > end + 1) return null;
     if (!text.includes("\n")) {
       // EOF of a partial 206 response is not EOF of models.jsonl. A newline-free
       // final row needs a whole 200 response or an exact, fully consumed 0..total-1 range.
-      const range = /^bytes 0-(\d+)\/(\d+)$/.exec(response.headers.get("content-range") ?? "");
-      const end = range ? Number(range[1]) : NaN;
-      const total = range ? Number(range[2]) : NaN;
-      const wholeRange = response.status === 206 && Number.isSafeInteger(end) &&
-        Number.isSafeInteger(total) && total > 0 && end === total - 1 && bytes === total;
+      const wholeRange = response.status === 206 && Number.isSafeInteger(total) &&
+        total > 0 && end === total - 1 && bytes === total;
       if (!reachedEof || (response.status !== 200 && !wholeRange)) return null;
     }
     if (reachedEof) text += decoder.decode();
@@ -1200,13 +1204,28 @@ async function main() {
       { name: "short partial206 EOF is not object EOF", revision: otherRevision,
         raw: JSON.stringify(currentRow) + " ".repeat(100), rangeKind: "partial", want: "SKIP" },
       { name: "missing206 range cannot prove final row", revision: otherRevision,
-        raw: JSON.stringify(currentRow), want: "SKIP" },
+        raw: JSON.stringify(currentRow), rangeKind: "missing", want: "SKIP" },
       { name: "wildcard206 total cannot prove final row", revision: otherRevision,
         raw: JSON.stringify(currentRow), rangeKind: "wildcard", want: "SKIP" },
       { name: "nonzero-start206 cannot prove first row", revision: otherRevision,
         raw: JSON.stringify(currentRow), rangeKind: "nonzero", want: "SKIP" },
       { name: "claimed whole206 size must equal received bytes", revision: otherRevision,
         raw: JSON.stringify(currentRow), rangeKind: "wrong-size", want: "SKIP" },
+      { name: "nonzero-start206 with newline cannot supply first row", revision: otherRevision,
+        row: currentRow, rangeKind: "nonzero", want: "SKIP" },
+      { name: "missing206 origin with newline stays unqualified", revision: otherRevision,
+        row: currentRow, rangeKind: "missing", want: "SKIP" },
+      { name: "malformed206 origin with newline stays unqualified", revision: otherRevision,
+        row: currentRow, rangeKind: "malformed", want: "SKIP" },
+      { name: "unsupported206 range unit stays unqualified", revision: otherRevision,
+        row: currentRow, rangeKind: "wrong-unit", want: "SKIP" },
+      { name: "first row must fit the declared206 range", revision: otherRevision,
+        row: currentRow, rangeKind: "too-short", want: "SKIP" },
+      { name: "206 range cannot end beyond total", revision: otherRevision,
+        row: currentRow, rangeKind: "bad-total", want: "SKIP" },
+      { name: "zero-start wildcard206 with complete newline qualifies count", revision: otherRevision,
+        row: currentRow, rangeKind: "wildcard", want: "OK" },
+
 
     ];
     for (const c of axisCases) {
@@ -1239,9 +1258,14 @@ async function main() {
               wildcard: "bytes 0-" + (size - 1) + "/*",
               nonzero: "bytes 1-" + size + "/" + (size + 1),
               "wrong-size": "bytes 0-" + size + "/" + (size + 1),
+              malformed: "bytes not-a-range",
+              "wrong-unit": "items 0-" + (size - 1) + "/" + size,
+              "too-short": "bytes 0-10/" + size,
+              "bad-total": "bytes 0-" + size + "/" + size,
             };
             return new Response(body, { status: c.rowStatus ?? 206,
-              headers: c.rangeKind ? { "content-range": ranges[c.rangeKind] } : {} });
+              headers: c.rangeKind === "missing" ? {} :
+                { "content-range": ranges[c.rangeKind ?? "partial"] } });
           }
           throw new Error("unexpected offline census request: " + requested);
         };
