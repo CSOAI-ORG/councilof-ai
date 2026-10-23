@@ -75,11 +75,21 @@ def http_json(url, payload=None, headers=None, timeout=REQUEST_TIMEOUT_S):
         return json.loads(resp.read().decode("utf-8"))
 
 
+def close_http_error(exc):
+    """Release error responses without inspecting or printing private details."""
+    if isinstance(exc, urllib.error.HTTPError):
+        try:
+            exc.close()
+        except Exception:
+            pass  # Cleanup errors must not reintroduce private details.
+
+
 def probe_up(url):
     try:
         with urllib.request.urlopen(url, timeout=PROBE_TIMEOUT_S) as resp:
             return 200 <= resp.status < 500
-    except Exception:
+    except Exception as exc:
+        close_http_error(exc)
         return False
 
 
@@ -190,13 +200,8 @@ def run_endpoint(endpoint, prompts, today):
         row["status"] = "HASHED"
     except Exception as exc:  # recorded without untrusted provider details
         row.update(safe_error_fields(exc))
-        if isinstance(exc, urllib.error.HTTPError):
-            # Release the response without reading it. An unclosed error can
-            # emit a finalizer warning containing its private repr.
-            try:
-                exc.close()
-            except Exception:
-                pass  # Cleanup errors must not reintroduce private details.
+        # Unclosed HTTP errors can emit a warning containing their private repr.
+        close_http_error(exc)
     finally:
         row["latency_ms"] = int((time.monotonic() - t0) * 1000)
     return row
