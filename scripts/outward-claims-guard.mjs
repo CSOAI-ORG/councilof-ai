@@ -249,15 +249,18 @@ async function firstCensusRow(response) {
   const reader = response.body?.getReader();
   if (!reader) return null;
   const decoder = new TextDecoder("utf-8", { fatal: true });
-  let text = "", bytes = 0;
+  let text = "", bytes = 0, reachedEof = false;
   try {
     while (bytes < 4001 && !text.includes("\n")) {
       const { value, done } = await reader.read();
-      if (done) break;
+      if (done) { reachedEof = true; break; }
       const part = value.subarray(0, 4001 - bytes);
       bytes += part.length;
       text += decoder.decode(part, { stream: true });
     }
+    // A parseable prefix plus padding is not a complete JSONL row. At the byte cap,
+    // require an observed newline or genuine EOF; never accept unseen suffix bytes.
+    if (!text.includes("\n") && !reachedEof) return null;
     return JSON.parse(text.split("\n")[0]);
   } catch {
     return null;
@@ -1171,6 +1174,10 @@ async function main() {
       { name: "malformed first row remains unqualified", raw: "{bad json}\n", want: "SKIP" },
       { name: "ignored Range is cancelled after first row", stream: true, rowStatus: 200, want: "SKIP", historical: true },
       { name: "oversized first line is bounded and unqualified", raw: "x".repeat(8000), stream: true, want: "SKIP" },
+      { name: "valid JSON prefix before unseen invalid suffix cannot pass", revision: otherRevision,
+        raw: JSON.stringify(currentRow) + " ".repeat(5000) + "invalid-suffix\n", stream: true, want: "SKIP" },
+      { name: "complete last row with confirmed EOF needs no newline", revision: otherRevision,
+        raw: JSON.stringify(currentRow), want: "OK" },
     ];
     for (const c of axisCases) {
       const originalFetch = globalThis.fetch;
