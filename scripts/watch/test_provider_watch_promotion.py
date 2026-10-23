@@ -421,6 +421,7 @@ class IndexTieTests(unittest.TestCase):
             for n in range(53, 0, -1)
         ]
         self.state = pw.empty_state()
+        self.state["created_at"] = "2026-10-19T00:00:00Z"
         self.state["updated_at"] = "2026-10-22T05:20:00Z"
         for i, target in enumerate(self.targets):
             day = 22 if i < 49 else 21 if i < 52 else 20
@@ -451,6 +452,17 @@ class IndexTieTests(unittest.TestCase):
         alternate = copy.deepcopy(self.index)
         alternate["recent_diffs"][-1] = self.full[50]
         promotion.validate_index(self.state, alternate, self.reconstructed)
+
+    def test_more_than_fifty_equal_time_diffs_keep_historical_cutoff(self):
+        state = copy.deepcopy(self.state)
+        for entry in state["targets"].values():
+            entry["history"][0]["at"] = state["updated_at"]
+        index = pw.build_index(state, self.targets)
+        regenerated = pw.build_index(state, self.reconstructed)
+        self.assertNotEqual(index["recent_diffs"], regenerated["recent_diffs"])
+        self.assertEqual(len(index["recent_diffs"]), pw.RECENT_N)
+        promotion.validate_index(state, index, self.reconstructed)
+        promotion.validate_index(state, regenerated, self.targets)
 
     def test_recent_diff_corruption_and_omissions_are_rejected(self):
         cases = []
@@ -501,6 +513,32 @@ class PublishedBaselineTests(unittest.TestCase):
         index_bytes = files[promotion.FEED + "index.json"]
         promotion.validate_snapshot(files)
         self.assertEqual(files[promotion.FEED + "index.json"], index_bytes)
+
+        # Run preparation with those exact published bytes in a temporary Git
+        # origin. Only GitHub listing is simulated; no index is reconstructed.
+        with tempfile.TemporaryDirectory() as temporary:
+            home = Path(temporary)
+            origin = home / "origin.git"
+            root = home / "checkout"
+            root.mkdir()
+            git(home, "init", "--bare", "--initial-branch=master", str(origin))
+            git(root, "init", "--initial-branch=master")
+            git(root, "config", "user.name", "fixture")
+            git(root, "config", "user.email", "fixture@example.test")
+            git(root, "remote", "add", "origin", str(origin))
+            feed = root / promotion.FEED
+            promotion.materialize(files, feed)
+            readme_path = promotion.FEED + "leaves/README.md"
+            (root / readme_path).write_bytes(repo.git("show", sha + ":" + readme_path))
+            git(root, "add", promotion.FEED)
+            git(root, "commit", "-m", "actual published provider baseline")
+            git(root, "push", "origin", "master")
+            bundle = home / "bundle"
+            bundle.mkdir()
+            receipt = promotion.prepare(LocalGitHub(root), bundle, "901")
+            self.assertEqual(receipt["state"], "PREPARED")
+            self.assertEqual(promotion.read_directory(bundle / "capture"), files)
+            self.assertFalse((bundle / "capture/leaves/README.md").exists())
 
 
 if __name__ == "__main__":
