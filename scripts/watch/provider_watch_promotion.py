@@ -15,6 +15,7 @@ import re
 import subprocess
 import sys
 from pathlib import Path
+from collections import Counter
 from typing import Any
 
 import provider_watch as pw
@@ -75,6 +76,50 @@ def materialize(files: dict[str, bytes], directory: Path) -> None:
         dest.write_bytes(data)
 
 
+def validate_index(
+    state: dict[str, Any],
+    index: dict[str, Any],
+    targets: list[dict[str, str]],
+) -> None:
+    # Sorted target rows cannot recover the historical input order used to
+    # break equal-timestamp ties, including ties at the recent-diff cutoff.
+    full_index = pw.build_index(
+        state,
+        targets,
+        recent_n=sum(len(t["history"]) for t in state["targets"].values()),
+    )
+    full_diffs = full_index.pop("recent_diffs")
+    recent = index.get("recent_diffs")
+    require(isinstance(recent, list), "Invalid recent provider diffs")
+    require(
+        {k: v for k, v in index.items() if k != "recent_diffs"} == full_index,
+        "Index is not the declared state's derived index",
+    )
+    count = min(pw.RECENT_N, len(full_diffs))
+    require(len(recent) == count, "Incorrect recent provider diff count")
+    available = Counter(pw.canonical_bytes(row) for row in full_diffs)
+    selected = Counter(pw.canonical_bytes(row) for row in recent)
+    require(
+        not (selected - available),
+        "Recent provider diff is absent or duplicated beyond state history",
+    )
+    # Full-row membership establishes structure and values before field access.
+    times = [row["fetched_at"] for row in recent]
+    require(times == sorted(times, reverse=True), "Recent provider diffs are not chronological")
+    if count:
+        cutoff = full_diffs[count - 1]["fetched_at"]
+        require(
+            all(at >= cutoff for at in times),
+            "Recent provider diffs include an older-than-cutoff row",
+        )
+        newer = Counter(
+            pw.canonical_bytes(row)
+            for row in full_diffs
+            if row["fetched_at"] > cutoff
+        )
+        require(not (newer - selected), "Recent provider diffs omit a newer-than-cutoff row")
+
+
 def validate_snapshot(files: dict[str, bytes]) -> dict[str, Any]:
     require(all(allowed(p) for p in files), "Unexpected path in provider snapshot")
     require(FEED + "state.json" in files and FEED + "index.json" in files, "State/index pair is missing")
@@ -89,7 +134,7 @@ def validate_snapshot(files: dict[str, bytes]) -> dict[str, Any]:
             require(all(isinstance(row.get(k), str) and row[k] for k in ("id", "provider", "surface", "url")), "Incomplete index target")
             targets.append({k: row[k] for k in ("id", "provider", "surface", "url", "provider_name") if k in row})
     require(len({t["id"] for t in targets}) == len(targets), "Duplicate index target")
-    require(index == pw.build_index(state, targets), "Index is not the declared state's derived index")
+    validate_index(state, index, targets)
     for path, data in files.items():
         if "/leaves/" not in path:
             continue
@@ -177,7 +222,12 @@ class Repository:
             fields, name = item.split(b"\t", 1)
             mode, kind, blob = fields.decode().split()
             path = name.decode()
-            require(mode == "100644" and kind == "blob" and allowed(path), f"Unexpected path or mode: {path}")
+            require(mode == "100644" and kind == "blob", f"Unexpected path or mode: {path}")
+            # Committed documentation is not captured data. It remains forbidden
+            # in pending-branch changes and retained capture directories.
+            if path == FEED + "leaves/README.md":
+                continue
+            require(allowed(path), f"Unexpected path or mode: {path}")
             require(int(self.git("cat-file", "-s", blob)) <= MAX_FILE, "Oversize provider blob")
             result[path] = self.git("cat-file", "blob", blob)
         require(sum(map(len, result.values())) <= MAX_TOTAL, "Oversize provider tree")

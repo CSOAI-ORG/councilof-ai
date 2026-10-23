@@ -101,13 +101,17 @@ class PromotionTests(unittest.TestCase):
         self.observation_count = 0
         self.observe(self.feed, 1, "original")
         self.observe(self.feed, 2, "original")
+        self.published = promotion.read_directory(self.feed)
+        # Include the real repository documentation in every baseline fixture.
+        self.readme = self.feed / "leaves/README.md"
+        source_readme = pw.ROOT / promotion.FEED / "leaves/README.md"
+        self.readme.write_bytes(source_readme.read_bytes())
         (self.root / "trusted-master-code.txt").write_text("master code\n")
         git(self.root, "add", "public/feeds/provider-diff", "trusted-master-code.txt")
         git(self.root, "commit", "-m", "fixture published baseline")
         git(self.root, "push", "origin", "master")
         self.master = git(self.root, "rev-parse", "HEAD")
         self.repo = LocalGitHub(self.root)
-        self.published = promotion.read_directory(self.feed)
 
     def write_state(self, directory, state):
         directory.mkdir(parents=True, exist_ok=True)
@@ -189,6 +193,43 @@ class PromotionTests(unittest.TestCase):
         self.assertEqual(git(self.root, "rev-parse", "HEAD"), self.master)
         self.assertEqual((self.root / "trusted-master-code.txt").read_text(), "master code\n")
         self.assertFalse(any("--force" in command for command in self.repo.commands))
+        self.assertEqual(
+            self.repo.git("show", second_result["commit_sha"] + ":" + promotion.FEED + "leaves/README.md"),
+            self.readme.read_bytes(),
+        )
+
+    def test_repository_readme_is_excluded_but_cannot_be_changed_by_branch(self):
+        self.assertEqual(self.repo.snapshot(self.master), self.published)
+        self.assertFalse(promotion.allowed(promotion.FEED + "leaves/README.md"))
+        bundle, _ = self.prepare("801")
+        retained_readme = bundle / "capture/leaves/README.md"
+        self.assertFalse(retained_readme.exists())
+        retained_readme.write_bytes(self.readme.read_bytes())
+        with self.assertRaisesRegex(ValueError, "Unexpected provider output"):
+            promotion.read_directory(bundle / "capture")
+
+        self.readme.write_text("Untrusted pending-branch documentation change.\n")
+        git(self.root, "add", promotion.FEED + "leaves/README.md")
+        git(self.root, "commit", "-m", "fixture forbidden README edit")
+        head = git(self.root, "rev-parse", "HEAD")
+        with self.assertRaisesRegex(ValueError, "Pending branch changes"):
+            self.repo.data_only(self.master, head)
+
+    def test_snapshot_rejects_unexpected_documentation_and_readme_symlink(self):
+        unexpected = self.feed / "leaves/NOTICE.md"
+        unexpected.write_text("This is not an exempt repository document.\n")
+        git(self.root, "add", promotion.FEED + "leaves/NOTICE.md")
+        git(self.root, "commit", "-m", "fixture unexpected document")
+        with self.assertRaisesRegex(ValueError, "Unexpected path or mode"):
+            self.repo.snapshot(git(self.root, "rev-parse", "HEAD"))
+
+        unexpected.unlink()
+        self.readme.unlink()
+        self.readme.symlink_to("../state.json")
+        git(self.root, "add", promotion.FEED + "leaves")
+        git(self.root, "commit", "-m", "fixture README symlink")
+        with self.assertRaisesRegex(ValueError, "Unexpected path or mode"):
+            self.repo.snapshot(git(self.root, "rev-parse", "HEAD"))
 
     def test_downloaded_pre_push_bundle_recreates_exact_commit(self):
         bundle, _ = self.completed("201", 3)
@@ -366,6 +407,100 @@ class PromotionTests(unittest.TestCase):
         (directory / "state.json").symlink_to(self.feed / "state.json")
         with self.assertRaisesRegex(ValueError, "Symlink"):
             promotion.read_directory(directory)
+
+
+class IndexTieTests(unittest.TestCase):
+    def setUp(self):
+        # Historical input order differs from the alphabetical index rows.
+        self.targets = [
+            {
+                "id": f"fixture/target-{n:02d}", "provider": "fixture",
+                "provider_name": "Fixture", "surface": f"target-{n:02d}",
+                "url": f"https://fixture.example/{n}",
+            }
+            for n in range(53, 0, -1)
+        ]
+        self.state = pw.empty_state()
+        self.state["updated_at"] = "2026-10-22T05:20:00Z"
+        for i, target in enumerate(self.targets):
+            day = 22 if i < 49 else 21 if i < 52 else 20
+            self.state["targets"][target["id"]] = {
+                "provider": target["provider"], "surface": target["surface"],
+                "url": target["url"], "latest": None, "last_ok": None,
+                "n_runs": 1,
+                "history": [{
+                    "kind": pw.KIND_CHANGED,
+                    "at": f"2026-10-{day}T05:20:00Z",
+                    "norm_sha256": f"{i + 1:064x}",
+                    "prev_norm_sha256": "0" * 64,
+                    "prev_fetched_at": "2026-10-19T05:20:00Z",
+                }],
+            }
+        self.index = pw.build_index(self.state, self.targets)
+        self.full = pw.build_index(self.state, self.targets, recent_n=100)["recent_diffs"]
+        self.reconstructed = [
+            {key: row[key] for key in ("id", "provider", "provider_name", "surface", "url")}
+            for row in self.index["targets"]
+        ]
+
+    def test_historical_order_and_cutoff_ties_preserve_published_bytes(self):
+        self.assertNotEqual(self.index, pw.build_index(self.state, self.reconstructed))
+        before = json.dumps(self.index)
+        promotion.validate_index(self.state, self.index, self.reconstructed)
+        self.assertEqual(json.dumps(self.index), before)
+        alternate = copy.deepcopy(self.index)
+        alternate["recent_diffs"][-1] = self.full[50]
+        promotion.validate_index(self.state, alternate, self.reconstructed)
+
+    def test_recent_diff_corruption_and_omissions_are_rejected(self):
+        cases = []
+        bad = copy.deepcopy(self.index)
+        bad["recent_diffs"][0]["new_sha256"] = "f" * 64
+        cases.append(("fabricated field", bad, "absent or duplicated"))
+
+        bad = copy.deepcopy(self.index)
+        bad["recent_diffs"][1] = bad["recent_diffs"][0]
+        cases.append(("duplicate", bad, "absent or duplicated"))
+
+        bad = copy.deepcopy(self.index)
+        bad["recent_diffs"][0] = self.full[50]
+        bad["recent_diffs"].sort(key=lambda row: row["fetched_at"], reverse=True)
+        cases.append(("newer omitted", bad, "omit a newer"))
+
+        bad = copy.deepcopy(self.index)
+        bad["recent_diffs"][-1] = self.full[-1]
+        cases.append(("older substituted", bad, "older-than-cutoff"))
+
+        bad = copy.deepcopy(self.index)
+        bad["recent_diffs"][0], bad["recent_diffs"][-1] = (
+            bad["recent_diffs"][-1], bad["recent_diffs"][0],
+        )
+        cases.append(("chronology", bad, "not chronological"))
+
+        for count in (49, 51):
+            bad = copy.deepcopy(self.index)
+            bad["recent_diffs"] = copy.deepcopy(self.full[:count])
+            cases.append((f"count {count}", bad, "Incorrect recent"))
+
+        bad = copy.deepcopy(self.index)
+        bad["n_runs"] += 1
+        cases.append(("other projection field", bad, "derived index"))
+
+        for name, index, message in cases:
+            with self.subTest(name=name):
+                with self.assertRaisesRegex(ValueError, message):
+                    promotion.validate_index(self.state, index, self.reconstructed)
+
+
+class PublishedBaselineTests(unittest.TestCase):
+    def test_committed_feed_is_accepted_without_rewriting_its_bytes(self):
+        repo = promotion.Repository(pw.ROOT, "CSOAI-ORG/councilof-ai")
+        sha = git(pw.ROOT, "rev-parse", "HEAD")
+        files = repo.snapshot(sha)
+        self.assertNotIn(promotion.FEED + "leaves/README.md", files)
+        index_bytes = files[promotion.FEED + "index.json"]
+        promotion.validate_snapshot(files)
+        self.assertEqual(files[promotion.FEED + "index.json"], index_bytes)
 
 
 if __name__ == "__main__":
