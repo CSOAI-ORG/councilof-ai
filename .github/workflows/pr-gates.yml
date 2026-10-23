@@ -543,6 +543,8 @@ jobs:
           # reasons and a step that is green only because nobody looks is the defect
           # this line exists to stop repeating.
           python3 -m pytest -q harness/gspc-top100/test_mill_honesty.py -k sign_mill_skips_already_signed
+          python3 scripts/watch/test_provider_watch.py
+          python3 scripts/watch/test_provider_watch_promotion.py
 
       # C-2026-0925-01: split-custody wording ("3-party", "2-of-3") may not return to a served or
       # producing surface without correction context or a PERFORMED ceremony record in
