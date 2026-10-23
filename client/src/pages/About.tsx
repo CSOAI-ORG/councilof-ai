@@ -208,6 +208,35 @@ export default function About() {
         </div>
       </div>
 
+      <section className="bg-white py-16 sm:py-20" aria-labelledby="about-evidence-maintenance">
+        <div className="container max-w-4xl">
+          <h2 id="about-evidence-maintenance" className="text-3xl sm:text-4xl font-bold mb-6">
+            CSOAI: keeping AI evidence useful as systems change
+          </h2>
+          <p className="text-lg text-gray-600 leading-relaxed mb-6">
+            CSOAI develops and maintains GSPC, software for inspecting evidence about AI systems and reviewing claims when systems change. The practical question is simple: what was checked, what changed, and what does the evidence still support?
+          </p>
+          <p className="text-lg text-gray-600 leading-relaxed mb-6">
+            Two dated milestones show this work in practice.
+          </p>
+          <p className="text-lg text-gray-600 leading-relaxed mb-6">
+            On 18 October 2026, the author of a SAFE candidate evidence template{" "}
+            <a href="https://github.com/OpenSecureAIAlliance/wg-safe/pull/60#issuecomment-6251270225" className="text-emerald-700 underline">publicly credited CSOAI Ltd</a>{" "}
+            for independently reproducing it. The candidate identifies the reproduced versions and remains under review.
+          </p>
+          <p className="text-lg text-gray-600 leading-relaxed mb-6">
+            On 14 October 2026, CSOAI{" "}
+            <a href="https://github.com/CSOAI-ORG/councilof-ai/pull/3207" className="text-emerald-700 underline">merged a repair to its SAFE-pack verifier</a>, strengthening the checks that connect an original finding to a later retest. An unrelated passing result should not close the wrong finding. This is a source-code milestone; it does not establish a new production run.
+          </p>
+          <p className="text-lg text-gray-600 leading-relaxed">
+            Explore the public methods and{" "}
+            <a href="https://councilof.ai/quickstart/" className="text-emerald-700 underline">existing quickstart</a>, or read{" "}
+            <a href="https://councilof.ai/how-we-work/" className="text-emerald-700 underline">how we work</a>{" "}
+            to discuss a defined evidence-review need. We measure; we do not certify.
+          </p>
+        </div>
+      </section>
+
       {/* The numbers, in full: everything that left the front door on 2026-09-30 (AboutNumbers). */}
       <AboutNumbers />
 
