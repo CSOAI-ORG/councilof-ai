@@ -6,6 +6,7 @@ silent on identical digests, the UNAVAILABLE path when no credential exists,
 THIN labelling on every artifact row, and the doctrine lock: nothing under
 scripts/canary touches signing or publisher code.
 """
+import gc
 import io
 import json
 import os
@@ -13,6 +14,7 @@ import sys
 import tempfile
 import unittest
 import urllib.error
+import warnings
 from contextlib import nullcontext, redirect_stderr, redirect_stdout
 from unittest import mock
 
@@ -142,15 +144,49 @@ class CanaryTest(unittest.TestCase):
             "FORBIDDEN", {"category": "HTTP_ERROR", "http_status": 403})
 
     def test_http_cleanup_failure_does_not_publish_its_error(self):
-        class BadCloseHTTPError(urllib.error.HTTPError):
+        class BadCloseBody(io.BytesIO):
             def close(self):
                 raise RuntimeError("SYNTHETIC_CANARY_PRIVATE_SENTINEL")
-        exc = BadCloseHTTPError("https://example.invalid", 403, "private", {}, None)
-        # Dispose of the synthetic broken-close object after the test without
-        # allowing its finalizer to produce an unrelated fixture warning.
-        self.addCleanup(urllib.error.HTTPError.close, exc)
+        body = BadCloseBody(b"synthetic-only")
+        exc = urllib.error.HTTPError("https://example.invalid", 403, "private", {}, body)
+        # Exercise the real HTTPError closer; only its underlying stream fails.
+        self.addCleanup(io.BytesIO.close, body)
         self.safe_failure_round_trip(
             exc, "FORBIDDEN", {"category": "HTTP_ERROR", "http_status": 403}, closes=False)
+
+    def test_probe_http_error_is_closed_without_reading_or_printing(self):
+        body = io.BytesIO(b"RAW_BODY SYNTHETIC_CANARY_PRIVATE_SENTINEL")
+        body.read = mock.Mock(wraps=body.read)
+        exc = urllib.error.HTTPError("https://example.invalid", 403,
+                                     "SYNTHETIC_CANARY_PRIVATE_SENTINEL", {}, body)
+        stdout, stderr = io.StringIO(), io.StringIO()
+        with mock.patch.object(canary_run.urllib.request, "urlopen", side_effect=exc), \
+                mock.patch.object(exc, "close", wraps=exc.close) as close, \
+                redirect_stdout(stdout), redirect_stderr(stderr):
+            self.assertFalse(canary_run.probe_up("https://example.invalid"))
+        close.assert_called_once_with()
+        body.read.assert_not_called()
+        self.assertTrue(exc.closed)
+        self.assertEqual(stdout.getvalue() + stderr.getvalue(), "")
+
+    def test_http_error_finalizers_do_not_emit_private_warnings(self):
+        # Let mocks, exceptions and their tracebacks leave scope before GC.
+        def release_errors():
+            exc = urllib.error.HTTPError("https://example.invalid", 403,
+                                         "SYNTHETIC_CANARY_PRIVATE_SENTINEL", {}, None)
+            self.safe_failure_round_trip(
+                exc, "FORBIDDEN", {"category": "HTTP_ERROR", "http_status": 403})
+            probe_error = urllib.error.HTTPError("https://example.invalid", 403,
+                                                 "SYNTHETIC_CANARY_PRIVATE_SENTINEL", {}, None)
+            with mock.patch.object(canary_run.urllib.request, "urlopen", side_effect=probe_error):
+                self.assertFalse(canary_run.probe_up("https://example.invalid"))
+        stderr = io.StringIO()
+        with warnings.catch_warnings(record=True) as seen, redirect_stderr(stderr):
+            warnings.simplefilter("always", ResourceWarning)
+            release_errors()
+            gc.collect()
+        self.assertEqual(seen, [], "HTTP error ownership must not escape into finalizer warnings")
+        self.assertEqual(stderr.getvalue(), "")
 
     def test_http_status_is_a_validated_integer_not_an_untrusted_value(self):
         for code in ("SYNTHETIC_CANARY_PRIVATE_SENTINEL", True, None, 99, 600):
