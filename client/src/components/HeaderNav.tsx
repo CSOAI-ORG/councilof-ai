@@ -146,7 +146,7 @@ export const navigation: NavGroup[] = [
       { name: 'Legal and disclaimers', href: '/disclaimers', description: 'What a measurement card is not' },
       { section: 'Read', name: 'The Library — full archive', href: '/library', description: 'Everything we have published, dated and organized by sector' },
       { name: 'Questions people ask', href: '/faq/', description: 'The plain-English answers, including the refusals' },
-      { section: 'Academy', name: 'Council Academy', href: '/academy', description: 'Learn the statute and the method. Completion attests training, never conformity' },
+      { section: 'Academy', name: 'Council Academy', href: '/academy', description: 'Learn the statute and the method. Completion-record issuance is not currently open' },
       { name: 'Accreditation — what we are not', href: '/accreditation', description: 'There is no accreditation chain behind us, and we say so' },
     ],
   },
