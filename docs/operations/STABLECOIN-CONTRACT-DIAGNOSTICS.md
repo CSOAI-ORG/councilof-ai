@@ -70,8 +70,11 @@ The projection accepts only the pinned numeric IDs, allowlisted state/action
 labels, booleans, integer HTTP status codes, input hashes and mirror hashes.
 It reads only fixed input paths and numeric-ID metadata paths. Inputs are
 bounded to 8 MiB, metadata to 64 KiB, and the final report to 2 MiB; symlinks
-are refused. Missing, invalid and oversized files carry explicit static states.
-Even a baseline is reprojected before being included.
+and non-regular files are refused without a blocking read. Missing, invalid and
+oversized files carry explicit static states; unavailable collections remain
+null or UNKNOWN. Even a baseline is reprojected before being included. Row
+comparison requires both complete pinned cohorts and the same index hash;
+otherwise comparison is UNAVAILABLE, never an inferred 425-row change.
 
 No URLs, query strings, response bodies, excerpts, findings, exception text,
 arbitrary environment values, raw mirrors or job logs enter the artifact.
