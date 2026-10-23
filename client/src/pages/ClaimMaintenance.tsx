@@ -188,7 +188,7 @@ export default function ClaimMaintenance() {
 
       <header className="surface-ink border-b border-[var(--ink-border)] text-slate-100">
         <div className="mx-auto max-w-4xl px-5 py-14">
-          <p className="text-xs font-semibold uppercase tracking-widest text-emerald-400">A named category, with a written specification</p>
+          <p className="text-xs font-semibold uppercase tracking-widest text-emerald-400">Track public claims, their sources and changes over time</p>
           <h1 className="mt-3 text-3xl font-bold leading-tight sm:text-4xl">Claim maintenance</h1>
           <p className="mt-5 max-w-3xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">
             The continuous, independent observation of the public claims an organisation makes about itself or its
@@ -199,8 +199,8 @@ export default function ClaimMaintenance() {
           </p>
           <div className="mt-7 flex flex-wrap gap-3 text-sm font-semibold">
             <a className="rounded-lg bg-emerald-400 px-4 py-2.5 text-slate-950 hover:bg-emerald-300" href={SPEC}>Read the specification (v0.1)</a>
-            <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href={REGISTER}>The register (JSON)</a>
-            <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href={IMPL}>Run the code</a>
+            <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href={REGISTER}>Claim register (JSON)</a>
+            <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href={IMPL}>View the reference code</a>
             <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href="mailto:nicholas@csoai.org?subject=Claim%20maintenance%20enquiry">Discuss a use case</a>
           </div>
           <p className="mt-4 max-w-3xl text-sm text-slate-400">
@@ -237,10 +237,10 @@ export default function ClaimMaintenance() {
 
       <section aria-labelledby="flywheel" className="mx-auto max-w-4xl px-5 py-12">
         <div className="rounded-2xl border border-emerald-200 bg-emerald-50/60 p-5 sm:p-6">
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-emerald-800">One flywheel · existing authorities</p>
-          <h2 id="flywheel" className="mt-2 text-2xl font-bold">Capture → recheck → measure → correct → quote</h2>
+          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-emerald-800">How the records fit together</p>
+          <h2 id="flywheel" className="mt-2 text-2xl font-bold">Capture → recheck → measure → correct → inspect</h2>
           <p className="mt-3 max-w-3xl leading-7 text-slate-700">
-            No second ledger lives on this page. The Claim Maintenance register owns maintained-claim state; the existing recheck ledger records whether scheduled reads ran; its <code className="font-mono text-[12px]">event_chain</code> points to the append-only claim-event history; GSPC owns measurements; corrections append our own defects; and <code className="font-mono text-[12px]">/api/state</code> joins those authorities without replacing them.
+            This page brings together the claim register, records of scheduled rechecks, measurement results and corrections. Each keeps its own history; the links below let you inspect the source records.
           </p>
           <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             {[
@@ -248,7 +248,7 @@ export default function ClaimMaintenance() {
               ["2 · Recheck", CLAIM_EVENTS, `${recheckCounts.CHANGED_CONFIRMED ?? 0} changed · ${recheckCounts.FETCH_FAILED ?? 0} not read (FETCH_FAILED) · ${eventCount ?? "—"} chained events`],
               ["3 · Measure", "/api/gspc", liveState?.public_count?.value ?? "live board"],
               ["4 · Correct", CORRECTIONS, `${correctionCount ?? "—"} corrections`],
-              ["5 · Quote", LIVE_STATE, "derived state by field name"],
+              ["5 · Inspect", LIVE_STATE, "Combined data from the source records"],
             ].map(([label, href, note]) => (
               <a key={String(label)} href={String(href)} className="rounded-xl border border-emerald-200 bg-white p-4 hover:border-emerald-400">
                 <p className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-emerald-800">{label}</p>
@@ -257,7 +257,7 @@ export default function ClaimMaintenance() {
             ))}
           </div>
           <p className="mt-4 text-sm text-slate-600">
-            Verify the event chain at <a className="font-semibold text-emerald-800 underline underline-offset-4" href={CLAIM_EVENTS_HEAD}>the signed head</a>. Our own material public capability claims remain a separate record type. <Link className="font-semibold text-emerald-800 underline underline-offset-4" href={PUBLIC_CLAIMS}>Open our claims register</Link>.
+            Verify the event chain at <a className="font-semibold text-emerald-800 underline underline-offset-4" href={CLAIM_EVENTS_HEAD}>the signed summary record</a>. Our own material public capability claims remain a separate record type. <Link className="font-semibold text-emerald-800 underline underline-offset-4" href={PUBLIC_CLAIMS}>Open our claims register</Link>.
           </p>
         </div>
       </section>
@@ -265,8 +265,7 @@ export default function ClaimMaintenance() {
       <section aria-labelledby="not" className="mx-auto max-w-4xl px-5 py-12">
         <h2 id="not" className="text-2xl font-bold">What this does not do</h2>
         <p className="mt-3 leading-7 text-slate-700">
-          Said first, because the category is easy to mistake for four older ones and because the discipline is the
-          product.
+          These limits explain how to interpret the records below.
         </p>
         <ul className="mt-5 space-y-3 text-slate-700">
           <li><strong className="text-slate-900">It is not fact-checking.</strong> No verdict is reached about any claim. Where public evidence exists, the claim and the measured value are published side by side; where it does not, that is said plainly.</li>
@@ -300,10 +299,10 @@ export default function ClaimMaintenance() {
       </section>
 
       <section aria-labelledby="register" className="mx-auto max-w-4xl px-5 py-12">
-        <h2 id="register" className="text-2xl font-bold">The register — every subject we maintain claims on</h2>
+        <h2 id="register" className="text-2xl font-bold">Claims and their latest recorded checks</h2>
         <p className="mt-3 leading-7 text-slate-700">
-          Generated from the registry files on disk, never hand-listed, and counting what exists rather than what we
-          wish existed. A small register that grows is worth more than a padded one.
+          This table is generated from the published claim registers. It shows recorded checks and scheduled reads,
+          where available; a listing does not mean a monitoring service has been commissioned.
           {asOf && <> This page is showing the register as of <span className="font-mono">{asOf}</span>.</>}
         </p>
 
@@ -351,7 +350,7 @@ export default function ClaimMaintenance() {
                       {claimScheduleLabel(s)}
                     </td>
                     <td className="px-4 py-3">
-                      <a className="underline decoration-emerald-600 underline-offset-4" href={s.registry_url}>artifact</a>
+                      <a className="underline decoration-emerald-600 underline-offset-4" href={s.registry_url}>View source record</a>
                     </td>
                   </tr>
                 ))}
