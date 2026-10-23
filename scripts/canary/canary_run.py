@@ -190,6 +190,13 @@ def run_endpoint(endpoint, prompts, today):
         row["status"] = "HASHED"
     except Exception as exc:  # recorded without untrusted provider details
         row.update(safe_error_fields(exc))
+        if isinstance(exc, urllib.error.HTTPError):
+            # Release the response without reading it. An unclosed error can
+            # emit a finalizer warning containing its private repr.
+            try:
+                exc.close()
+            except Exception:
+                pass  # Cleanup errors must not reintroduce private details.
     finally:
         row["latency_ms"] = int((time.monotonic() - t0) * 1000)
     return row
