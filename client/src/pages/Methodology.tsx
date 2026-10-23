@@ -137,7 +137,7 @@ export default function Methodology() {
           </h1>
           <div className="max-w-3xl"><DocMeta updated="2026-09-27" slug="methodology" /></div>
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
-            Each published result identifies what was tested, the test material, the grading rule and its limits.
+            Each published result identifies what was tested, the test material, the grading rule and its limits.{" "}
             <strong className="text-emerald-50">The published rule grades the result; another AI model does not act as judge.</strong>{" "}
             The rules and reference answers still need review. Results retain their sample sizes, uncertainty
             and incomplete status so you can see what the evidence supports. A test result is not a legal determination.
