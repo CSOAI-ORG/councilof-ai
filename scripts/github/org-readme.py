@@ -508,8 +508,9 @@ pipx run --spec 'csoai-gspc[verify]' csoai-gspc verify "$(curl -s https://counci
 ```"""
 
 LEAD_LINE = (
-    "**Verify any signed card free at [councilof.ai/gspc-verify](https://councilof.ai/gspc-verify/) · "
-    "machine-readable catalog: [councilof.ai/catalog.json](https://councilof.ai/catalog.json).**"
+    "**Check a supported signed measurement card free at [councilof.ai/gspc-verify](https://councilof.ai/gspc-verify/). "
+    "Try [one historical sample and return your result](https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/public/independent-verifier-trial.md). "
+    "Machine-readable catalogue: [councilof.ai/catalog.json](https://councilof.ai/catalog.json).**"
 )
 
 WHO_WE_ARE = (

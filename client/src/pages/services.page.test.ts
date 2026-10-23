@@ -23,7 +23,7 @@ describe("/services reads the rail, never a typed list", () => {
   });
 
   it("leaves title and description ownership to the single seoHead producer", () => {
-    expect(seo.components.Services?.title).toBe("Supported feeds and evidence doors | Council of AI");
+    expect(seo.components.Services?.title).toBe("Evidence services and public data | Council of AI");
     expect(raw).not.toContain("react-helmet-async");
     expect(raw).not.toContain("<title>");
     expect(raw).not.toContain("document.title");
@@ -43,7 +43,7 @@ describe("/services reads the rail, never a typed list", () => {
   it("renders all five groups, including any that are empty", () => {
     const c = buildCatalogue(manifest);
     expect(c.groups.map((g) => g.group.id)).toEqual(GROUPS.map((g) => g.id));
-    expect(raw).toContain("No door in this group is published on the rail today");
+    expect(raw).toContain("No services in this group are listed in the published catalogue.");
   });
 
   it("shows the nine live doors the fixture publishes", () => {
@@ -55,12 +55,12 @@ describe("/services reads the rail, never a typed list", () => {
 
   it("surfaces an ungrouped door loudly rather than dropping it", () => {
     expect(raw).toContain("services-ungrouped");
-    expect(raw).toContain("Published on the rail, not yet grouped here");
+    expect(raw).toContain("Other services in the published catalogue");
   });
 
   it("renders nothing rather than inventing doors when the manifest is unread", () => {
     expect(raw).toContain("services-unread");
-    expect(copy).toMatch(/listing a door we could not read/);
+    expect(copy).toMatch(/Services are shown only after the catalogue is read\./);
   });
 
   it("obeys the 6 Sep ruling: no prices, no tiers, no processor names", () => {
