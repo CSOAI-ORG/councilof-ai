@@ -256,11 +256,22 @@ async function firstCensusRow(response) {
       if (done) { reachedEof = true; break; }
       const part = value.subarray(0, 4001 - bytes);
       bytes += part.length;
-      text += decoder.decode(part, { stream: true });
+      const newline = part.indexOf(10);
+      text += decoder.decode(newline < 0 ? part : part.subarray(0, newline + 1), { stream: true });
     }
     // A parseable prefix plus padding is not a complete JSONL row. At the byte cap,
     // require an observed newline or genuine EOF; never accept unseen suffix bytes.
-    if (!text.includes("\n") && !reachedEof) return null;
+    if (!text.includes("\n")) {
+      // EOF of a partial 206 response is not EOF of models.jsonl. A newline-free
+      // final row needs a whole 200 response or an exact, fully consumed 0..total-1 range.
+      const range = /^bytes 0-(\d+)\/(\d+)$/.exec(response.headers.get("content-range") ?? "");
+      const end = range ? Number(range[1]) : NaN;
+      const total = range ? Number(range[2]) : NaN;
+      const wholeRange = response.status === 206 && Number.isSafeInteger(end) &&
+        Number.isSafeInteger(total) && total > 0 && end === total - 1 && bytes === total;
+      if (!reachedEof || (response.status !== 200 && !wholeRange)) return null;
+    }
+    if (reachedEof) text += decoder.decode();
     return JSON.parse(text.split("\n")[0]);
   } catch {
     return null;
@@ -1177,7 +1188,26 @@ async function main() {
       { name: "valid JSON prefix before unseen invalid suffix cannot pass", revision: otherRevision,
         raw: JSON.stringify(currentRow) + " ".repeat(5000) + "invalid-suffix\n", stream: true, want: "SKIP" },
       { name: "complete last row with confirmed EOF needs no newline", revision: otherRevision,
-        raw: JSON.stringify(currentRow), want: "OK" },
+        raw: JSON.stringify(currentRow), rowStatus: 200, want: "OK" },
+      { name: "incomplete UTF-8 at genuine EOF cannot hide after JSON", revision: otherRevision,
+        rawBytes: new Uint8Array([...new TextEncoder().encode(JSON.stringify(currentRow)), 0xE2]), rowStatus: 200, want: "SKIP" },
+      { name: "newline ends the first row before malformed later bytes",
+        rawBytes: new Uint8Array([...new TextEncoder().encode(JSON.stringify(frozenRow) + "\n"), 0xFF]), want: "SKIP", historical: true },
+      { name: "current first-row mismatch survives malformed second row", revision: otherRevision,
+        rawBytes: new Uint8Array([...new TextEncoder().encode(JSON.stringify({ ...frozenRow, scope: "current" }) + "\n"), 0xFF]), want: "FAIL" },
+      { name: "newline-free complete object in proven whole206 passes", revision: otherRevision,
+        raw: JSON.stringify(currentRow), rangeKind: "whole", want: "OK" },
+      { name: "short partial206 EOF is not object EOF", revision: otherRevision,
+        raw: JSON.stringify(currentRow) + " ".repeat(100), rangeKind: "partial", want: "SKIP" },
+      { name: "missing206 range cannot prove final row", revision: otherRevision,
+        raw: JSON.stringify(currentRow), want: "SKIP" },
+      { name: "wildcard206 total cannot prove final row", revision: otherRevision,
+        raw: JSON.stringify(currentRow), rangeKind: "wildcard", want: "SKIP" },
+      { name: "nonzero-start206 cannot prove first row", revision: otherRevision,
+        raw: JSON.stringify(currentRow), rangeKind: "nonzero", want: "SKIP" },
+      { name: "claimed whole206 size must equal received bytes", revision: otherRevision,
+        raw: JSON.stringify(currentRow), rangeKind: "wrong-size", want: "SKIP" },
+
     ];
     for (const c of axisCases) {
       const originalFetch = globalThis.fetch;
@@ -1185,7 +1215,7 @@ async function main() {
       const calls = [];
       const revision = Object.hasOwn(c, "revision") ? c.revision : FROZEN_CENSUS.revision;
       const row = c.row ?? { ...frozenRow, ...c.patch };
-      const raw = c.raw ?? JSON.stringify(row) + "\n";
+      const raw = c.rawBytes ?? c.raw ?? JSON.stringify(row) + "\n";
       let cancelled = false;
       try {
         globalThis.fetch = async (url, init = {}) => {
@@ -1202,7 +1232,16 @@ async function main() {
               start(controller) { controller.enqueue(new TextEncoder().encode(raw + "x".repeat(10000))); },
               cancel() { cancelled = true; },
             }) : raw;
-            return new Response(body, { status: c.rowStatus ?? 206 });
+            const size = typeof raw === "string" ? new TextEncoder().encode(raw).length : raw.length;
+            const ranges = {
+              whole: "bytes 0-" + (size - 1) + "/" + size,
+              partial: "bytes 0-" + (size - 1) + "/" + (size + 1000),
+              wildcard: "bytes 0-" + (size - 1) + "/*",
+              nonzero: "bytes 1-" + size + "/" + (size + 1),
+              "wrong-size": "bytes 0-" + size + "/" + (size + 1),
+            };
+            return new Response(body, { status: c.rowStatus ?? 206,
+              headers: c.rangeKind ? { "content-range": ranges[c.rangeKind] } : {} });
           }
           throw new Error("unexpected offline census request: " + requested);
         };
