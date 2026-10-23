@@ -74,16 +74,20 @@ def controlled_inputs() -> dict:
     }
 
 
-def build_fixture(inputs: dict) -> dict:
+def build_raw_fixture(inputs: dict) -> dict:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
         for rel, payload in inputs.items():
             path = root / rel
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(json.dumps(payload) + "\n")
-        document = queue.build(root)
-        queue.validate(document)
-        return document
+        return queue.build(root)
+
+
+def build_fixture(inputs: dict) -> dict:
+    document = build_raw_fixture(inputs)
+    queue.validate(document)
+    return document
 
 
 class StablecoinRetainedInputsTest(unittest.TestCase):
@@ -247,20 +251,30 @@ class StablecoinControlledContractTest(unittest.TestCase):
                     row.update(attestation_page=None, registration_state="ISSUER_SITE_REGISTERED")
                 else:
                     inputs[queue.DEEP_REL]["rows"] = [r for r in inputs[queue.DEEP_REL]["rows"] if r["id"] != "286"]
-                row = next(r for r in build_fixture(inputs)["rows"] if r["id"] == "286")
+                doc = build_raw_fixture(inputs)
+                row = next(r for r in doc["rows"] if r["id"] == "286")
                 self.assertFalse(row["states"]["replay_stage_ready"])
                 self.assertFalse(row["states"]["measured"])
                 self.assertTrue(row["replay_evidence"]["qualified_readings"])
+                if field == "source":
+                    # A stale DEEP_PROBED row cannot bypass missing-source validation.
+                    with self.assertRaises(AssertionError):
+                        queue.validate(doc)
+                else:
+                    queue.validate(doc)
+                    self.assertEqual("RUN_PRIMARY_SOURCE_DEEP_PROBE", row["next_action"])
 
-    def test_usdtb_registration_loss_keeps_identity_hold_evidence_without_skipping_review(self):
+    def test_usdtb_registration_loss_preserves_mismatch_but_rejects_stale_probe(self):
         inputs = controlled_inputs()
         source = next(r for r in inputs[queue.SOURCES_REL]["sources"] if r["id"] == "221")
         source.update(attestation_page=None, registration_state="ISSUER_SITE_REGISTERED")
-        row = next(r for r in build_fixture(inputs)["rows"] if r["id"] == "221")
-        self.assertEqual("REVIEW_ISSUER_SITE_FOR_ATTESTATION", row["next_action"])
+        doc = build_raw_fixture(inputs)
+        row = next(r for r in doc["rows"] if r["id"] == "221")
         self.assertFalse(row["states"]["replay_identity_hold"])
         self.assertIn("SUBJECT_SYMBOL_MISMATCH", row["replay_evidence"]["held_readings"][0]["hold_reasons"])
         self.assertFalse(row["states"]["measured"])
+        with self.assertRaises(AssertionError):
+            queue.validate(doc)
 
     def test_no_source_and_unanchored_measurement_have_distinct_actions(self):
         inputs = controlled_inputs()
