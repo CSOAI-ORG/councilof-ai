@@ -13,7 +13,7 @@ import sys
 import tempfile
 import unittest
 import urllib.error
-from contextlib import redirect_stderr, redirect_stdout
+from contextlib import nullcontext, redirect_stderr, redirect_stdout
 from unittest import mock
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -79,18 +79,25 @@ class CanaryTest(unittest.TestCase):
             self.assertEqual(drift["label"], "THIN")
             self.assertIn("not signed", drift["note"])
 
-    def safe_failure_round_trip(self, exc, expected_status, expected_error):
+    def safe_failure_round_trip(self, exc, expected_status, expected_error, closes=True):
         # These sentinels are synthetic, not provider-shaped credentials.
         sentinel = "SYNTHETIC_CANARY_PRIVATE_SENTINEL"
         endpoint = {"id": "synthetic", "model": "synthetic-model",
                     "env_key": "SYNTHETIC_CANARY_KEY", "base_url": "https://example.invalid"}
         cfg = {"endpoints": [endpoint], "prompts": [{"id": "p1", "text": "test"}]}
         stdout, stderr = io.StringIO(), io.StringIO()
-        with mock.patch.object(canary_run, "load_config", return_value=cfg), \
+        close_context = (mock.patch.object(exc, "close", wraps=exc.close)
+                         if isinstance(exc, urllib.error.HTTPError) else nullcontext())
+        with close_context as close, \
+                mock.patch.object(canary_run, "load_config", return_value=cfg), \
                 mock.patch.object(canary_run, "resolve_key", return_value=sentinel), \
                 mock.patch.object(canary_run, "call_endpoint", side_effect=exc), \
                 redirect_stdout(stdout), redirect_stderr(stderr):
             self.assertEqual(canary_run.real_run(), 0)
+        if isinstance(exc, urllib.error.HTTPError):
+            close.assert_called_once_with()
+            if closes:
+                self.assertTrue(exc.closed, "HTTP error resources must not escape into finalizers")
         with open(canary_run.BASELINE_PATH, encoding="utf-8") as stream:
             stored = stream.read()
         row = json.loads(stored.splitlines()[-1])
@@ -133,6 +140,17 @@ class CanaryTest(unittest.TestCase):
             HostileHTTPError("https://example.invalid/?key=SYNTHETIC_CANARY_PRIVATE_SENTINEL",
                              403, "SYNTHETIC_CANARY_PRIVATE_SENTINEL", {}, None),
             "FORBIDDEN", {"category": "HTTP_ERROR", "http_status": 403})
+
+    def test_http_cleanup_failure_does_not_publish_its_error(self):
+        class BadCloseHTTPError(urllib.error.HTTPError):
+            def close(self):
+                raise RuntimeError("SYNTHETIC_CANARY_PRIVATE_SENTINEL")
+        exc = BadCloseHTTPError("https://example.invalid", 403, "private", {}, None)
+        # Dispose of the synthetic broken-close object after the test without
+        # allowing its finalizer to produce an unrelated fixture warning.
+        self.addCleanup(urllib.error.HTTPError.close, exc)
+        self.safe_failure_round_trip(
+            exc, "FORBIDDEN", {"category": "HTTP_ERROR", "http_status": 403}, closes=False)
 
     def test_http_status_is_a_validated_integer_not_an_untrusted_value(self):
         for code in ("SYNTHETIC_CANARY_PRIVATE_SENTINEL", True, None, 99, 600):
@@ -242,7 +260,8 @@ class CanaryTest(unittest.TestCase):
         for name in os.listdir(HERE):
             if not name.endswith(".py") or name == os.path.basename(__file__):
                 continue
-            src = open(os.path.join(HERE, name), encoding="utf-8").read()
+            with open(os.path.join(HERE, name), encoding="utf-8") as stream:
+                src = stream.read()
             self.assertNotIn("publish_public_root", src, name)
             self.assertNotIn("board-sign", src, name)
             self.assertNotIn("sign_card", src, name)
