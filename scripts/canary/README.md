@@ -43,6 +43,27 @@ This is measurement, not certification.
 - Artifacts: `public/interop/silent-route-canary-2026-09/baseline.jsonl`
   (one row per endpoint-day) and `drift-dryrun.jsonl` (drift dry-run records).
 
+## Error records
+
+Provider failures retain the existing status labels and a fixed diagnostic
+category in `error.category`. HTTP failures may also carry a validated integer
+`error.http_status`. Error response bodies, URLs, headers, exception messages
+and dynamic exception names are discarded before either JSONL persistence or
+console output. There is no raw-detail fallback.
+
+Failed or unavailable calls keep `daily_digest: null` and never enter drift
+comparisons as completed measurements. A partial run may retain hashes for
+completed prompts, but its status remains an error. Successful hashes and
+daily digest calculations are unchanged.
+
+The regression suite uses synthetic errors, temporary output paths and a
+blocked default network transport. It covers both stored rows and printed
+output, including malformed JSON and credential-like text in provider errors:
+
+```bash
+python3 -B scripts/canary/test_canary.py
+```
+
 ## Run
 
 ```bash
