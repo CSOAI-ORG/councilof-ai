@@ -142,8 +142,12 @@ jobs:
               "run_attempt": os.environ["GITHUB_RUN_ATTEMPT"],
               "command": command,
               "source_sha256": hashlib.sha256(reader.read_bytes()).hexdigest(),
-              "freeze_sha256": hashlib.sha256((pack / "FREEZE.json").read_bytes()).hexdigest(),
           }
+          try:
+              receipt["freeze_sha256"] = hashlib.sha256((pack / "FREEZE.json").read_bytes()).hexdigest()
+          except OSError as exc:
+              receipt["freeze_sha256"] = None
+              receipt["freeze_read_error"] = str(exc)
           try:
               completed = subprocess.run(command, capture_output=True, timeout=120)
               stdout, stderr = completed.stdout, completed.stderr
