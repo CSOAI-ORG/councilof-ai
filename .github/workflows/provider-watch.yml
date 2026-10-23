@@ -52,6 +52,7 @@ jobs:
         with:
           ref: master
           fetch-depth: 0
+          token: ${{ env.GH_TOKEN }}
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
