@@ -121,6 +121,40 @@ def call_endpoint(endpoint, key, prompt_text):
     return call_openai_chat(endpoint, key, prompt_text)
 
 
+def safe_error_fields(exc):
+    """Allowlisted diagnostics only; provider bodies and exception text are private.
+
+    This projection is shared by the saved row and console output. Do not read
+    HTTP error bodies, stringify exceptions/reasons, or copy exception names.
+    Those values may contain credentials, URLs, headers or arbitrary text.
+    """
+    status = "ERROR"
+    error = {"category": "CALL_ERROR"}
+    note = "endpoint call failed; details withheld"
+    if isinstance(exc, urllib.error.HTTPError):
+        error = {"category": "HTTP_ERROR"}
+        code = exc.code
+        if type(code) is int and 100 <= code <= 599:
+            error["http_status"] = code
+            status = {
+                401: "BAD_CREDENTIALS", 402: "NO_BALANCE",
+                403: "FORBIDDEN", 429: "RATE_LIMITED",
+            }.get(code, "ERROR")
+            note = "HTTP %d; response details withheld" % code
+        else:
+            note = "HTTP failure; response details withheld"
+    elif isinstance(exc, (json.JSONDecodeError, UnicodeDecodeError)):
+        error = {"category": "RESPONSE_DECODE_ERROR"}
+        note = "response could not be decoded; details withheld"
+    elif isinstance(exc, TimeoutError):
+        error = {"category": "TIMEOUT"}
+        note = "endpoint call timed out; details withheld"
+    elif isinstance(exc, urllib.error.URLError):
+        error = {"category": "NETWORK_ERROR"}
+        note = "endpoint connection failed; details withheld"
+    return {"status": status, "error": error, "note": note}
+
+
 def run_endpoint(endpoint, prompts, today):
     """Return one baseline row for the endpoint. Never raises."""
     row = {
@@ -154,23 +188,8 @@ def run_endpoint(endpoint, prompts, today):
             row["prompt_hashes"][p["id"]] = sha256_hex(text)
         row["daily_digest"] = daily_digest(row["prompt_hashes"])
         row["status"] = "HASHED"
-    except urllib.error.HTTPError as exc:
-        code = exc.code
-        detail = str(exc.read()[:200]) if hasattr(exc, "read") else str(exc)[:200]
-        if code == 402:
-            row["status"] = "NO_BALANCE"
-        elif code == 401:
-            row["status"] = "BAD_CREDENTIALS"
-        elif code == 403:
-            row["status"] = "FORBIDDEN"
-        elif code == 429:
-            row["status"] = "RATE_LIMITED"
-        else:
-            row["status"] = "ERROR"
-        row["note"] = "HTTP %d: %s" % (code, detail)
-    except Exception as exc:  # recorded, never raised
-        row["status"] = "ERROR"
-        row["note"] = "%s: %s" % (type(exc).__name__, str(exc)[:200])
+    except Exception as exc:  # recorded without untrusted provider details
+        row.update(safe_error_fields(exc))
     finally:
         row["latency_ms"] = int((time.monotonic() - t0) * 1000)
     return row
