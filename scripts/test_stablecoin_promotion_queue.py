@@ -184,7 +184,7 @@ class StablecoinRetainedInputsTest(unittest.TestCase):
                    for reason in reading["hold_reasons"]}
         self.assertIn("SUBJECT_SYMBOL_MISMATCH", reasons)
         self.assertFalse(row["states"]["measured"])
-        if row["states"]["deep_probe"] == "DEEP_PROBED":
+        if row["states"]["deep_probe"] == "DEEP_PROBED" and row["states"]["primary_source_registered"]:
             self.assertEqual("RECONCILE_REPLAY_IDENTITY", row["next_action"])
 
 
@@ -251,6 +251,16 @@ class StablecoinControlledContractTest(unittest.TestCase):
                 self.assertFalse(row["states"]["replay_stage_ready"])
                 self.assertFalse(row["states"]["measured"])
                 self.assertTrue(row["replay_evidence"]["qualified_readings"])
+
+    def test_usdtb_registration_loss_keeps_identity_hold_evidence_without_skipping_review(self):
+        inputs = controlled_inputs()
+        source = next(r for r in inputs[queue.SOURCES_REL]["sources"] if r["id"] == "221")
+        source.update(attestation_page=None, registration_state="ISSUER_SITE_REGISTERED")
+        row = next(r for r in build_fixture(inputs)["rows"] if r["id"] == "221")
+        self.assertEqual("REVIEW_ISSUER_SITE_FOR_ATTESTATION", row["next_action"])
+        self.assertFalse(row["states"]["replay_identity_hold"])
+        self.assertIn("SUBJECT_SYMBOL_MISMATCH", row["replay_evidence"]["held_readings"][0]["hold_reasons"])
+        self.assertFalse(row["states"]["measured"])
 
     def test_no_source_and_unanchored_measurement_have_distinct_actions(self):
         inputs = controlled_inputs()
