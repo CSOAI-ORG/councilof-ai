@@ -216,7 +216,7 @@ jobs:
         # it the gate died on ImportError in 0.25 s and the unit step went red on every PR.
         run: |
           npm ci --no-audit --no-fund
-          python3 -m pip install -q cryptography opentimestamps-client
+          python3 -m pip install -q cryptography opentimestamps-client jsonschema==4.26.0
 
       # This used to run only after merge in deploy.yml. PR #1847 passed every hosted
       # PR check and then the master deployment stopped because TypeScript errors had
@@ -518,6 +518,9 @@ jobs:
           # opentimestamps-client: test_ots_restamp_ledger.py builds detached proofs offline and runs
           # the release gate's own .ots check over them.
           python3 -m pip install -q pytest cryptography pyarrow huggingface_hub opentimestamps-client
+          # Canary privacy, safe capture retention and verified PR proposal (offline only).
+          python3 -B scripts/canary/test_canary.py
+          python3 -B scripts/canary/test_canary_delivery.py
           python3 -m pytest -q scripts/spray/test_gspc_parity.py scripts/spray/test_gspc_spray_skip.py
           python3 -m pytest -q scripts/test_public_root.py -k kinds_index
           python3 -m pytest -q harness/gspc-top100/test_priority_pick.py harness/gspc-top100/test_inflight_cells.py
@@ -543,6 +546,8 @@ jobs:
           # reasons and a step that is green only because nobody looks is the defect
           # this line exists to stop repeating.
           python3 -m pytest -q harness/gspc-top100/test_mill_honesty.py -k sign_mill_skips_already_signed
+          python3 scripts/watch/test_provider_watch.py
+          python3 scripts/watch/test_provider_watch_promotion.py
 
       # C-2026-0925-01: split-custody wording ("3-party", "2-of-3") may not return to a served or
       # producing surface without correction context or a PERFORMED ceremony record in
