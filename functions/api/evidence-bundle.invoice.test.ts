@@ -11,10 +11,18 @@
  * must never carry the assembled pack, and must never carry an amount — a price on this estate
  * lives inside a 402 challenge or on the invoice, never on a plain GET.
  */
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { onRequestGet } from "./evidence-bundle";
 
 const ORIGIN = "https://councilof.ai";
+beforeEach(() => {
+  vi.stubGlobal("fetch", vi.fn(async (input: RequestInfo | URL) => {
+    expect(String(input)).toBe(`${ORIGIN}/cards-bundle.json`);
+    return Response.json({ cards: {}, merkle_root: null, as_of: null });
+  }));
+});
+afterEach(() => vi.unstubAllGlobals());
+
 const call = async (qs: string) => {
   const res = await (onRequestGet as unknown as (c: unknown) => Promise<Response>)({
     request: new Request(`${ORIGIN}/api/evidence-bundle?${qs}`),

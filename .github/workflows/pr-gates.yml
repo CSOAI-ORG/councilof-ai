@@ -218,6 +218,92 @@ jobs:
           npm ci --no-audit --no-fund
           python3 -m pip install -q cryptography opentimestamps-client
 
+      - name: Offline uploader regressions — isolated network namespace
+        if: steps.scope.outputs.gated == 'true'
+        timeout-minutes: 10
+        shell: bash
+        run: |
+          set -euo pipefail
+          runner_uid="$(id -u)"
+          runner_gid="$(id -g)"
+          test "$runner_uid" -ne 0
+          host_netns="$(readlink /proc/self/ns/net)"
+          offline_home="$(mktemp -d "$RUNNER_TEMP/csoai-intake-offline.XXXXXX")"
+          echo "Uploader test checkout: $(git rev-parse HEAD)"
+          # Fail closed if this hosted runner cannot create the isolated namespace.
+          # Clear inherited credentials/proxies before unshare; load tests only after
+          # dropping the runner's supplementary groups and all privilege escalation.
+          /usr/bin/sudo -n /usr/bin/env -i PATH=/usr/bin:/bin \
+            HOME="$offline_home" TMPDIR="$offline_home" \
+            HF_HUB_OFFLINE=1 HF_DATASETS_OFFLINE=1 \
+            /usr/bin/unshare --net -- /usr/bin/setpriv \
+            --reuid="$runner_uid" --regid="$runner_gid" --clear-groups \
+            --bounding-set=-all --inh-caps=-all --ambient-caps=-all --no-new-privs \
+            /usr/bin/python3 -I -B -u - "$host_netns" "$runner_uid" "$runner_gid" <<'PY'
+          import errno
+          import os
+          from pathlib import Path
+          import socket
+          import subprocess
+          import sys
+
+          host_netns, runner_uid, runner_gid = sys.argv[1], int(sys.argv[2]), int(sys.argv[3])
+          if os.readlink('/proc/self/ns/net') == host_netns:
+              raise SystemExit('Network guard failed: still in the host namespace')
+          if runner_uid == 0 or os.getresuid() != (runner_uid,) * 3 or os.getresgid() != (runner_gid,) * 3 or os.getgroups():
+              raise SystemExit('Network guard failed: runner privileges were not dropped')
+          status = dict(line.split(':', 1) for line in Path('/proc/self/status').read_text().splitlines() if ':' in line)
+          if status['NoNewPrivs'].strip() != '1' or any(int(status[key].strip(), 16) for key in ('CapInh', 'CapPrm', 'CapEff', 'CapBnd', 'CapAmb')):
+              raise SystemExit('Network guard failed: capabilities or privilege escalation remain')
+          if {name for _, name in socket.if_nameindex()} != {'lo'}:
+              raise SystemExit('Network guard failed: a non-loopback interface exists')
+          for family, address in ((socket.AF_INET, ('192.0.2.1', 443)), (socket.AF_INET6, ('2001:db8::1', 443))):
+              try:
+                  probe = socket.socket(family, socket.SOCK_STREAM)
+              except OSError as exc:
+                  if family == socket.AF_INET6 and exc.errno in (errno.EAFNOSUPPORT, errno.EPROTONOSUPPORT):
+                      print('Network guard: IPv6 unavailable', flush=True)
+                      continue
+                  raise
+              with probe:
+                  probe.settimeout(2)
+                  denied = probe.connect_ex(address)
+              if family == socket.AF_INET6 and denied == errno.EADDRNOTAVAIL:
+                  if Path('/proc/net/if_inet6').read_text().strip():
+                      raise SystemExit('Network guard failed: IPv6 addresses exist despite EADDRNOTAVAIL')
+                  print('Network guard: IPv6 denied (EADDRNOTAVAIL; no configured IPv6 addresses)', flush=True)
+                  continue
+              if denied not in (errno.ENETUNREACH, errno.EHOSTUNREACH):
+                  raise SystemExit(f'Network guard failed: unexpected connect result {denied} for {address}')
+              print(f'Network guard: external connect denied ({family.name}, errno={denied})', flush=True)
+          print('Network guard verified before loading uploader tests', flush=True)
+
+          # Every child inherits the same isolated network namespace and restrictions.
+          # Explicit modules plus a nonzero collection check prevent discover-zero passes.
+          test_driver = '''
+          import sys
+          import unittest
+          from pathlib import Path
+          sys.path.insert(0, str(Path('scripts').resolve()))
+          suite = unittest.defaultTestLoader.loadTestsFromName(sys.argv[1])
+          count = suite.countTestCases()
+          if count == 0:
+              raise SystemExit('No tests collected for ' + sys.argv[1])
+          print(f'{sys.argv[1]}: {count} collected tests', flush=True)
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          raise SystemExit(0 if result.wasSuccessful() else 1)
+          '''
+          for module in (
+              'test_intake_manifest',
+              'test_intake_snapshot',
+              'test_runpod_current_intake',
+              'test_intake_composition',
+              'test_runpod_gspc_push_to_hf',
+              'test_runpod_gspc_upload_heartbeat',
+          ):
+              subprocess.run([sys.executable, '-I', '-B', '-u', '-c', test_driver, module], check=True, timeout=90)
+          PY
+
       # This used to run only after merge in deploy.yml. PR #1847 passed every hosted
       # PR check and then the master deployment stopped because TypeScript errors had
       # risen above the committed ceiling. Keep the same non-mutating ratchet on both
