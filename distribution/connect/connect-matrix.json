@@ -145,6 +145,83 @@
       "url": "https://councilof.ai/mcp/free"
     },
     {
+      "id": "antigravity",
+      "platform": "Google Antigravity",
+      "group": "Coding agents",
+      "door": "free",
+      "where": "~/.gemini/antigravity/mcp_config.json (or ~/.gemini/config/plugins/csoai-gspc/mcp_config.json)",
+      "kind": "json",
+      "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"serverUrl\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
+      "docs": "https://antigravity.google/docs/mcp",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "minimax",
+      "platform": "MiniMax (Agent / Coding CLI)",
+      "group": "Coding agents",
+      "door": "free",
+      "where": "~/.minimax/mcp_config.json",
+      "kind": "json",
+      "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"type\": \"streamable-http\", \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
+      "docs": "https://platform.minimaxi.com/document/mcp",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "deepseek",
+      "platform": "DeepSeek (CLI / Agent Harness)",
+      "group": "Coding agents",
+      "door": "free",
+      "where": "~/.dsh/mcp.json",
+      "kind": "json",
+      "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"type\": \"streamable-http\", \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
+      "docs": "https://api-docs.deepseek.com/",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "kimi-code",
+      "platform": "Kimi Code (Moonshot AI)",
+      "group": "Coding agents",
+      "door": "free",
+      "where": "~/.kimi/mcp.json",
+      "kind": "json",
+      "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"type\": \"streamable-http\", \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
+      "docs": "https://platform.moonshot.ai/docs",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "qwen-cli",
+      "platform": "Qwen Code / Qwen-Agent",
+      "group": "Coding agents",
+      "door": "free",
+      "where": "~/.qwen/settings.json",
+      "kind": "json",
+      "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"httpUrl\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
+      "docs": "https://github.com/QwenLM/qwen-code",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "openclaw-hermes",
+      "platform": "OpenClaw / Hermes Agent",
+      "group": "Coding agents",
+      "door": "free",
+      "where": "~/.hermes/mcp.json (or ~/.openclaw/mcp.json)",
+      "kind": "json",
+      "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"type\": \"streamable-http\", \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
+      "docs": "https://github.com/NousResearch/hermes-agent",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "opencode",
+      "platform": "OpenCode",
+      "group": "Coding agents",
+      "door": "free",
+      "where": "~/.config/opencode/opencode.json",
+      "kind": "json",
+      "snippet": "{\n  \"mcp\": {\n    \"gspc\": { \"type\": \"remote\", \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
+      "docs": "https://opencode.ai/docs/mcp-servers/",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
       "id": "codex",
       "platform": "OpenAI Codex CLI",
       "group": "Coding agents",

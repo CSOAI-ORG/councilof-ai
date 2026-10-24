@@ -1,9 +1,9 @@
 {
   "schema": "csoai.connect-live-check/1",
   "generated_by": "scripts/harness-x/connect-live.mjs",
-  "checked_at": "2026-10-14T14:17:29.130Z",
+  "checked_at": "2026-10-24T05:40:47.762Z",
   "scope": "live: the doors were contacted at https://councilof.ai",
-  "matrix_sha256": "18e907f99b76d313a835a477e2566cc08fd8aa7331148d05fb89ac530ad3926e",
+  "matrix_sha256": "c3e0f9754dd29b42779c1c55b71455498896dea53ec7d86be0a7e8e4a1685a61",
   "doors": {
     "https://councilof.ai/mcp/free": {
       "state": "PASS",
@@ -263,6 +263,146 @@
       ],
       "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
       "docs": "https://geminicli.com/docs/tools/mcp-server/"
+    },
+    {
+      "id": "antigravity",
+      "platform": "Google Antigravity",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "14 tools, server 1.4.4"
+        },
+        {
+          "check": "json parses",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://antigravity.google/docs/mcp"
+    },
+    {
+      "id": "minimax",
+      "platform": "MiniMax (Agent / Coding CLI)",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "14 tools, server 1.4.4"
+        },
+        {
+          "check": "json parses",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://platform.minimaxi.com/document/mcp"
+    },
+    {
+      "id": "deepseek",
+      "platform": "DeepSeek (CLI / Agent Harness)",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "14 tools, server 1.4.4"
+        },
+        {
+          "check": "json parses",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://api-docs.deepseek.com/"
+    },
+    {
+      "id": "kimi-code",
+      "platform": "Kimi Code (Moonshot AI)",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "14 tools, server 1.4.4"
+        },
+        {
+          "check": "json parses",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://platform.moonshot.ai/docs"
+    },
+    {
+      "id": "qwen-cli",
+      "platform": "Qwen Code / Qwen-Agent",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "14 tools, server 1.4.4"
+        },
+        {
+          "check": "json parses",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://github.com/QwenLM/qwen-code"
+    },
+    {
+      "id": "openclaw-hermes",
+      "platform": "OpenClaw / Hermes Agent",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "14 tools, server 1.4.4"
+        },
+        {
+          "check": "json parses",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://github.com/NousResearch/hermes-agent"
+    },
+    {
+      "id": "opencode",
+      "platform": "OpenCode",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "14 tools, server 1.4.4"
+        },
+        {
+          "check": "json parses",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://opencode.ai/docs/mcp-servers/"
     },
     {
       "id": "codex",
@@ -666,8 +806,8 @@
     }
   ],
   "totals": {
-    "clients": 30,
-    "pass": 30,
+    "clients": 37,
+    "pass": 37,
     "fail": 0
   },
   "doctrine": "measurement, not certification"

@@ -148,6 +148,28 @@
       "flagged_org_affected": true
     },
     {
+      "id": "antigravity-plugin",
+      "format": "Google Antigravity IDE plugin (plugin.json + mcp_config.json + rules/AGENTS.md + skills/)",
+      "output": [
+        "distribution/plugin/plugin.json",
+        "distribution/plugin/mcp_config.json",
+        "distribution/plugin/rules/AGENTS.md",
+        "distribution/plugin/skills/gspc-verify/SKILL.md"
+      ],
+      "doctrine_carriers": [
+        "distribution/plugin/plugin.json",
+        "distribution/plugin/rules/AGENTS.md",
+        "distribution/plugin/skills/gspc-verify/SKILL.md"
+      ],
+      "licence": "Apache-2.0",
+      "version_source": "remote",
+      "listing_channel": "Google Antigravity plugin directory (~/.gemini/config/plugins/csoai-gspc/) or git repo",
+      "owner_approval_needed": true,
+      "approver": "Nick",
+      "flagged_org_impact": "Same repo as claude-plugin.",
+      "flagged_org_affected": true
+    },
+    {
       "id": "claude-connector",
       "format": "Claude connectors directory — remote MCP submission field values",
       "output": [
@@ -725,6 +747,12 @@
       "why": "rendered, not listed anywhere public: the owner step in distribution/SUBMIT.md is open"
     },
     {
+      "id": "antigravity-plugin",
+      "kind": "rendered-only",
+      "row": "antigravity-plugin",
+      "why": "rendered, not listed anywhere public: the owner step in distribution/SUBMIT.md is open"
+    },
+    {
       "id": "claude-connector",
       "kind": "rendered-only",
       "row": "claude-connector",
@@ -907,6 +935,76 @@
         "kind": "json",
         "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"httpUrl\": \"{free}\" }\n  }\n}",
         "docs": "https://geminicli.com/docs/tools/mcp-server/"
+      },
+      {
+        "id": "antigravity",
+        "platform": "Google Antigravity",
+        "group": "Coding agents",
+        "door": "free",
+        "where": "~/.gemini/antigravity/mcp_config.json (or ~/.gemini/config/plugins/csoai-gspc/mcp_config.json)",
+        "kind": "json",
+        "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"serverUrl\": \"{free}\" }\n  }\n}",
+        "docs": "https://antigravity.google/docs/mcp"
+      },
+      {
+        "id": "minimax",
+        "platform": "MiniMax (Agent / Coding CLI)",
+        "group": "Coding agents",
+        "door": "free",
+        "where": "~/.minimax/mcp_config.json",
+        "kind": "json",
+        "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"type\": \"streamable-http\", \"url\": \"{free}\" }\n  }\n}",
+        "docs": "https://platform.minimaxi.com/document/mcp"
+      },
+      {
+        "id": "deepseek",
+        "platform": "DeepSeek (CLI / Agent Harness)",
+        "group": "Coding agents",
+        "door": "free",
+        "where": "~/.dsh/mcp.json",
+        "kind": "json",
+        "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"type\": \"streamable-http\", \"url\": \"{free}\" }\n  }\n}",
+        "docs": "https://api-docs.deepseek.com/"
+      },
+      {
+        "id": "kimi-code",
+        "platform": "Kimi Code (Moonshot AI)",
+        "group": "Coding agents",
+        "door": "free",
+        "where": "~/.kimi/mcp.json",
+        "kind": "json",
+        "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"type\": \"streamable-http\", \"url\": \"{free}\" }\n  }\n}",
+        "docs": "https://platform.moonshot.ai/docs"
+      },
+      {
+        "id": "qwen-cli",
+        "platform": "Qwen Code / Qwen-Agent",
+        "group": "Coding agents",
+        "door": "free",
+        "where": "~/.qwen/settings.json",
+        "kind": "json",
+        "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"httpUrl\": \"{free}\" }\n  }\n}",
+        "docs": "https://github.com/QwenLM/qwen-code"
+      },
+      {
+        "id": "openclaw-hermes",
+        "platform": "OpenClaw / Hermes Agent",
+        "group": "Coding agents",
+        "door": "free",
+        "where": "~/.hermes/mcp.json (or ~/.openclaw/mcp.json)",
+        "kind": "json",
+        "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"type\": \"streamable-http\", \"url\": \"{free}\" }\n  }\n}",
+        "docs": "https://github.com/NousResearch/hermes-agent"
+      },
+      {
+        "id": "opencode",
+        "platform": "OpenCode",
+        "group": "Coding agents",
+        "door": "free",
+        "where": "~/.config/opencode/opencode.json",
+        "kind": "json",
+        "snippet": "{\n  \"mcp\": {\n    \"gspc\": { \"type\": \"remote\", \"url\": \"{free}\" }\n  }\n}",
+        "docs": "https://opencode.ai/docs/mcp-servers/"
       },
       {
         "id": "codex",
