@@ -28,7 +28,7 @@ class PriorityTests(unittest.TestCase):
         ))
 
 class ReactionTests(unittest.TestCase):
-    def _write_feed(self, directory: Path, second_state="QUARANTINED"):
+    def _write_feed(self, directory: Path, second_state="QUARANTINED", checks_all_pass=None, object_state="OBSERVED"):
         ev0 = {
             "schema": "csoai.claim-event/0.1", "seq": 0, "prev_sha256": None,
             "kind": "event", "at": "2026-10-01T00:00:00Z", "claim": "c1",
@@ -41,10 +41,12 @@ class ReactionTests(unittest.TestCase):
             "schema": "csoai.claim-event/0.1", "seq": 1,
             "prev_sha256": reaction.sha256(b0),
             "kind": "event", "at": "2026-10-01T00:00:01Z", "claim": "c2",
-            "change_state": second_state, "object_state": "OBSERVED",
+            "change_state": second_state, "object_state": object_state,
             "disclosure": "SEALED", "subject": None, "subject_sealed_id": "fixture1",
             "source": {"store": "history/events.jsonl", "line": 1, "line_sha256": "b" * 64},
         }
+        if checks_all_pass is not None:
+            ev1["checks_all_pass"] = checks_all_pass
         b1 = json.dumps(ev1, sort_keys=True, separators=(",", ":")).encode()
         raw = b0 + b"\n" + b1 + b"\n"
         (directory / "events.jsonl").write_bytes(raw)
@@ -75,6 +77,57 @@ class ReactionTests(unittest.TestCase):
             self.assertEqual(packet["subject"]["disclosure"], "SEALED")
             self.assertNotIn("subject", packet["subject"])
             self.assertEqual(packet["subject"]["subject_sealed_id"], "fixture1")
+
+    def test_confirmed_failed_checks_require_owner_review(self):
+        action, reason = reaction.reaction_for({
+            "kind": "event", "change_state": "CONFIRMED",
+            "object_state": "SIGNED", "checks_all_pass": False,
+        })
+        self.assertEqual(action, "OWNER_REVIEW")
+        self.assertIn("checks did not reproduce", reason)
+        self.assertNotIn("Pinned observation reproduced", reason)
+
+    def test_confirmed_failed_checks_emit_sealed_review_packet(self):
+        with tempfile.TemporaryDirectory() as td:
+            d = Path(td)
+            self._write_feed(d, second_state="CONFIRMED", checks_all_pass=False, object_state="SIGNED")
+            doc = reaction.build(d)
+            self.assertEqual(doc["counts"]["counter_evidence_packets"], 1)
+            self.assertEqual(doc["counts"]["object_states"]["SIGNED"], 1)
+            packet = doc["counter_evidence_packets"][0]
+            self.assertEqual(packet["action"], "OWNER_REVIEW")
+            self.assertEqual(packet["subject"], {"disclosure": "SEALED", "subject_sealed_id": "fixture1"})
+
+    def test_signed_corrections_and_quarantines_remain_bounded(self):
+        for change in ("CORRECTED", "QUARANTINED"):
+            with self.subTest(change=change):
+                action, _ = reaction.reaction_for({
+                    "kind": "event", "change_state": change,
+                    "object_state": "SIGNED", "checks_all_pass": False,
+                })
+                self.assertEqual(action, "BOUNDED_REMEASUREMENT")
+
+    def test_incomplete_reads_do_not_become_change_findings(self):
+        cases = (
+            {"kind": "source_not_reachable_this_run", "object_state": "SIGNED", "checks_all_pass": False},
+            {"kind": "event", "object_state": "FETCH_FAILED", "change_state": "CONFIRMED"},
+            {"kind": "event", "object_state": "UNCONFIRMED", "change_state": "CORRECTED"},
+            {"kind": "event", "object_state": "SIGNED", "change_state": "UNCONFIRMED"},
+        )
+        for event in cases:
+            with self.subTest(event=event):
+                action, reason = reaction.reaction_for(event)
+                self.assertEqual(action, "OBSERVE_ONLY")
+                self.assertIn("source/read failure", reason)
+
+    def test_confirmed_observations_do_not_infer_failed_checks(self):
+        for value in (True, None, "false"):
+            with self.subTest(checks_all_pass=value):
+                action, _ = reaction.reaction_for({
+                    "kind": "event", "change_state": "CONFIRMED",
+                    "object_state": "SIGNED", "checks_all_pass": value,
+                })
+                self.assertEqual(action, "NO_REMEASUREMENT")
 
     def test_feed_digest_tamper_fails_closed(self):
         with tempfile.TemporaryDirectory() as td:
