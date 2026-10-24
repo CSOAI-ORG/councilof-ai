@@ -120,6 +120,24 @@ describe("HomeHero", () => {
     expect(html).toContain('data-testid="hero-cta-check"');
     expect(html).toContain('data-testid="hero-cta-agents"');
   });
+
+  it("has exactly one primary CTA, Live board, with Verify as the outlined secondary", () => {
+    const html = render(<HomeHero />);
+    expect(html.match(/data-cta="primary"/g)).toHaveLength(1);
+    expect(html.match(/data-cta="secondary"/g)).toHaveLength(1);
+    // Only the primary carries the filled button style.
+    expect(html.match(/bg-emerald-400 px-6/g)).toHaveLength(1);
+    const tag = (id: string) => html.match(new RegExp(`<a[^>]*data-testid="${id}"[^>]*>([^<]*)<`)) ?? [];
+    const [board, boardText] = tag("hero-cta-board");
+    expect(board).toContain('href="/board"');
+    expect(board).toContain('data-cta="primary"');
+    expect(boardText).toBe("Live board");
+    const [check, checkText] = tag("hero-cta-check");
+    expect(check).toContain('href="/gspc-verify"');
+    expect(check).toContain('data-cta="secondary"');
+    expect(check).not.toContain("bg-emerald-400 px-6");
+    expect(checkText).toBe("Verify a record");
+  });
 });
 
 describe("LiveBoardGlance", () => {
@@ -132,6 +150,38 @@ describe("LiveBoardGlance", () => {
       ["mock-d", "facts", "UNMEASURED"],
     ]);
     expect(boardTiles(null)).toEqual([]);
+  });
+
+  it("separates unmeasured slots without inventing counts or exposing owner-held axes", () => {
+    const payload: GspcPayload = {
+      ...boardWithAxes,
+      totals: { ...boardWithAxes.totals, public_count: "7 axes · 4 measured (mock)", comparison_axes: 3, separated_leads: 1 },
+      axes: [
+        ...(boardWithAxes.axes ?? []).map((a) => a.axis === "mock-d" ? { ...a, n: 0 } : a),
+        { axis: "mock-unmeasured-model", kind: "model-comparison", status: "UNMEASURED", n: 0 },
+        { axis: "mock-separated", kind: "model-comparison", status: "MEASURED", separation: "SEPARATED", n: 41 },
+        { axis: "regulator-transparency", kind: "declared-slot", status: "UNMEASURED", n: 0, public_pages: "HIDDEN_PENDING_OWNER_GO" },
+      ],
+    };
+    const tiles = boardTiles(payload);
+    expect(tiles.map((t) => t.state).sort()).toEqual(["FACT_RUN", "SEPARATED", "TIE", "UNMEASURED", "UNMEASURED", "UNTESTED"]);
+    expect(tiles.filter((t) => t.state === "UNMEASURED").map((t) => t.n)).toEqual([null, null]);
+    expect(tiles.find((t) => t.axis === "mock-b")?.n).toBe(31);
+    const html = render(<LiveBoardGlance data={payload} models={models} />);
+    expect(html).toMatch(/Fact runs[\s\S]*?· 1 · a rule/);
+    expect(html).toMatch(/Unmeasured slots[\s\S]*?· 2 · no published run yet/);
+    expect(html).toMatch(/Model comparisons[\s\S]*?· 3 axes/);
+    expect(html.match(/<li\b[^>]*data-state=/g)).toHaveLength(6);
+    expect(html).toContain('aria-label="Unmeasured axes awaiting a run"');
+    expect(html).not.toContain('data-axis="regulator-transparency"');
+    expect(html).toContain(">n 31</span>");
+    for (const axis of ["mock-d", "mock-unmeasured-model"]) {
+      const tile = html.match(new RegExp('<li\\b[^>]*data-axis="' + axis + '"[\\s\\S]*?</li>'))?.[0];
+      expect(tile).toBeDefined();
+      expect(tile).not.toMatch(/>n /);
+    }
+    const measuredOnly: GspcPayload = { ...payload, axes: payload.axes?.filter((a) => a.status === "MEASURED") };
+    expect(render(<LiveBoardGlance data={measuredOnly} models={models} />)).not.toContain('aria-label="Unmeasured axes awaiting a run"');
   });
 
   it("reads all four separation fields or none", () => {
@@ -181,10 +231,10 @@ describe("HomeStrengths", () => {
   it("states the six strengths in the order they are worth saying", () => {
     const titles = strengthCards({ corrections, root, ots }).map((c) => c.title);
     expect(titles).toHaveLength(6);
-    expect(titles[0]).toMatch(/paying us/i); // independent, published signed, free to re-check
+    expect(titles[0]).toMatch(/nobody can buy a place or a score/i); // independence: neither placement nor score is for sale
     expect(titles[1]).toMatch(/bad results/i); // we publish our weak scores
     expect(titles[2]).toMatch(/wrong/i); // corrections ledger
-    expect(titles[3]).toMatch(/rewritten/i); // anchoring
+    expect(titles[3]).toMatch(/hashes expose changes to covered bytes/i); // integrity is scoped to covered bytes
     expect(titles[4]).toMatch(/rooms/i); // standards
     expect(titles[5]).toMatch(/machine/i); // runs on a schedule
   });
@@ -214,7 +264,8 @@ describe("HomeStrengths", () => {
     // /root.json.ots is a 404 and no proof in the timestamp manifest names /root.json as its
     // subject. The card said "signed and timestamped" until that was probed.
     const anchor = strengthCards({ corrections, root, ots })[3];
-    expect(anchor.body).toContain("whose root is signed");
+    expect(anchor.body).toContain("A signed root can bind the hashes of covered records.");
+    expect(anchor.body).toContain("signature presence alone is not verification");
     expect(anchor.body).not.toMatch(/signed and timestamped/i);
     expect(anchor.body).toContain("Separately");
     expect(anchorProof(root, ots).text).toContain("separately");
@@ -393,7 +444,9 @@ describe("the withdrawal record is reachable, but never the front door's first i
 describe("HomeReach presentation", () => {
   it("leads with what the work reaches, in the reader's words", () => {
     const html = render(<HomeReach state={estate} />);
-    expect(html).toContain("The work travels");
+    expect(html).toContain("Reach and verification evidence, shown separately.");
+    expect(html).toContain("Package distribution, listings and commercial use are different observations.");
+    expect(html).toMatch(/integrity check does\s+not establish adoption, buyer acceptance, freshness or revenue/i);
     expect(html).toContain("How far it reaches");
   });
 

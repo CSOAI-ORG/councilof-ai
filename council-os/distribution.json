@@ -828,13 +828,13 @@
       },
       {
         "id": "chatgpt",
-        "platform": "ChatGPT (developer mode)",
+        "platform": "ChatGPT",
         "group": "Chat apps",
         "door": "free",
-        "where": "Settings → Apps & Connectors → Advanced settings → Developer mode → Create",
+        "where": "ChatGPT Plugins → + → Add custom MCP server — checked 12 Oct 2026",
         "kind": "text",
         "snippet": "Name: GSPC\nMCP server URL: {free}\nAuthentication: No authentication",
-        "docs": "https://platform.openai.com/docs/guides/developer-mode"
+        "docs": "https://developers.openai.com/api/docs/guides/custom-mcp-server"
       },
       {
         "id": "le-chat",
@@ -858,6 +858,7 @@
       },
       {
         "id": "cursor",
+        "installer": "cursor",
         "platform": "Cursor",
         "group": "Coding agents",
         "door": "free",
@@ -868,12 +869,23 @@
       },
       {
         "id": "vscode",
+        "installer": "vscode",
         "platform": "VS Code (GitHub Copilot agent mode)",
         "group": "Coding agents",
         "door": "free",
-        "where": ".vscode/mcp.json",
+        "where": ".vscode/mcp.json (legacy VS Code format; still read)",
         "kind": "json",
         "snippet": "{\n  \"servers\": {\n    \"gspc\": { \"type\": \"http\", \"url\": \"{free}\" }\n  }\n}",
+        "docs": "https://code.visualstudio.com/docs/agent-customization/mcp-servers"
+      },
+      {
+        "id": "vscode-portable",
+        "platform": "VS Code (portable .mcp.json)",
+        "group": "Coding agents",
+        "door": "free",
+        "where": ".mcp.json at the project root (portable format; VS Code and other compatible tools read it)",
+        "kind": "json",
+        "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"type\": \"http\", \"url\": \"{free}\" }\n  }\n}",
         "docs": "https://code.visualstudio.com/docs/agent-customization/mcp-servers"
       },
       {
@@ -927,6 +939,16 @@
         "docs": "https://www.jetbrains.com/help/ai-assistant/mcp.html"
       },
       {
+        "id": "openai-responses-free",
+        "platform": "OpenAI Responses API (free door)",
+        "group": "Agent frameworks and APIs",
+        "door": "free",
+        "where": "tools[] of a Responses API request",
+        "kind": "json",
+        "snippet": "{\n  \"type\": \"mcp\",\n  \"server_label\": \"gspc\",\n  \"server_url\": \"{free}\",\n  \"require_approval\": \"always\"\n}",
+        "docs": "https://platform.openai.com/docs/guides/tools-remote-mcp"
+      },
+      {
         "id": "openai-responses",
         "platform": "OpenAI Responses API",
         "group": "Agent frameworks and APIs",
@@ -947,6 +969,16 @@
         "docs": "https://docs.x.ai/docs/guides/tools/remote-mcp-tools"
       },
       {
+        "id": "google-adk-free",
+        "platform": "Google ADK (Vertex AI Agent Builder, free door)",
+        "group": "Agent frameworks and APIs",
+        "door": "free",
+        "where": "your ADK agent's tools",
+        "kind": "python",
+        "snippet": "from google.adk.tools.mcp_tool.mcp_toolset import McpToolset\nfrom google.adk.tools.mcp_tool.mcp_session_manager import StreamableHTTPConnectionParams\n\ngspc = McpToolset(connection_params=StreamableHTTPConnectionParams(url=\"{free}\"))",
+        "docs": "https://google.github.io/adk-docs/tools/mcp-tools/"
+      },
+      {
         "id": "google-adk",
         "platform": "Google ADK (Vertex AI Agent Builder)",
         "group": "Agent frameworks and APIs",
@@ -955,6 +987,16 @@
         "kind": "python",
         "snippet": "from google.adk.tools.mcp_tool.mcp_toolset import McpToolset\nfrom google.adk.tools.mcp_tool.mcp_session_manager import StreamableHTTPConnectionParams\n\ngspc = McpToolset(connection_params=StreamableHTTPConnectionParams(url=\"{full}\"))",
         "docs": "https://google.github.io/adk-docs/tools/mcp-tools/"
+      },
+      {
+        "id": "langchain-free",
+        "platform": "LangChain / LangGraph (free door)",
+        "group": "Agent frameworks and APIs",
+        "door": "free",
+        "where": "pip install langchain-mcp-adapters",
+        "kind": "python",
+        "snippet": "from langchain_mcp_adapters.client import MultiServerMCPClient\n\nclient = MultiServerMCPClient({\"gspc\": {\"transport\": \"streamable_http\", \"url\": \"{free}\"}})\ntools = await client.get_tools()",
+        "docs": "https://github.com/langchain-ai/langchain-mcp-adapters"
       },
       {
         "id": "langchain",

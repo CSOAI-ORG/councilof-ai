@@ -30,8 +30,8 @@ WHAT IT DERIVES, AND FROM WHERE (nothing in the artefact is typed here):
 WHAT x402scan NEEDS (docs/DISCOVERY.md + apps/scan/src/lib/discovery, read 2026-09-06):
   top level      openapi, info.title, info.version, paths  (+ recommended info.x-guidance, info.contact.email)
   per paid op    x-payment-info (presence alone classifies the op as paid), responses.402, an input schema
-                 (query `parameters` with schemas; required ones carry const/enum/example so the probe can
-                 sample them and reach the 402), an output schema on 200
+                 (query `parameters` with schemas; required ones carry const/enum/example, but may select
+                 a free view on mixed-mode operations; use x-csoai.door for the paid URL), an output schema on 200
   per free op    security: []
   NOT here       x-payment-info.price — a decimal-USD price in the document. x402scan treats it as a
                  budgeting hint (info-level warning when absent); the estate publishes amounts ONLY inside
@@ -175,7 +175,7 @@ FREE_TIER_OP_NOTE: dict[str, str] = {
     "/api/proof": "Bare path is validation (HTTP 400 naming sha or bundle). Free inclusion via optional sha. Paid root bundle when bundle=1 (HTTP 402).",
     "/api/signed-data-feed": "Bare path is the free preview (HTTP200). manifest=1 returns a free pre-payment blocks digest. feed=1 selects the assembled feed (HTTP402 without payment). Optional x-csoai-expected-feed-sha256 pins its content; mismatch409 and unavailable sources503 occur before settlement. Separate signatures and payment are not verified by the digest.",
     "/api/feeds/provider-diff": "Bare path is free recent diffs (HTTP 200). Paid historical batch requires history=1 (HTTP 402).",
-    "/api/evidence-bundle": "Preview = obligation(+subject) without bundle=1. Paid tier requires obligation + bundle=1 (HTTP 402). Incomplete bundle alone stays HTTP 400.",
+    "/api/evidence-bundle": "A recognized obligation without bundle=1 selects the free preview. Paid OSCAL assembly requires a recognized obligation + bundle=1 (HTTP 402 without payment). Missing or unknown obligations without a payment header return a 402 discovery listing, not an assembled bundle; with a payment header they return 400 or 404 respectively before settlement. For EU obligations, format=procurement is a separate free view returning Article 53 and Article 50 rows together; it rejects bundle=1 and non-EU obligations with HTTP 400. This combined free view does not change the single-obligation paid assembly contract.",
     "/api/rwa/evidence": "preview=1 is free unsigned. Paid signed card requires asset (HTTP 402).",
     "/api/art50/marking-evidence": "preview=1 is free unsigned. Paid signed card requires url (HTTP 402).",
     "/api/receipts/batch": "preview=1 is free digest. Paid leaves require from (HTTP 402).",
@@ -702,6 +702,28 @@ def compose(fix: Path = FIX) -> dict:
             op["responses"]["503"] = {"description": "Required source unavailable or invalid; no payment settled."}
             op["x-csoai"]["free_manifest"] = BASE + "/api/signed-data-feed?manifest=1"
             op["x-csoai"]["offline_content_verifier"] = BASE + "/verifier/verify_feed_delivery.mjs"
+        if path == "/api/evidence-bundle":
+            # One operation has free and paid modes; paid-gate requirements must
+            # not exclude the separate free procurement view.
+            evidence_params = {p["name"]: p for p in op["parameters"]}
+            evidence_params["obligation"]["schema"].pop("const", None)
+            evidence_params["obligation"]["description"] = "Required recognized obligation for the documented preview and assembly modes. format=procurement supports article-50 and article-53 only."
+            evidence_params["bundle"]["required"] = False
+            evidence_params["bundle"]["description"] = "Optional paid-mode selector. Set to 1 with obligation to request paid OSCAL assembly (HTTP 402 before payment). Omit for the free preview and for format=procurement; procurement with bundle=1 returns HTTP 400."
+            op["parameters"].append({
+                "name": "format", "in": "query", "required": False,
+                "schema": {"type": "string", "enum": ["procurement"]},
+                "description": "Optional free EU procurement view. Use procurement only with obligation=article-50 or article-53 and omit bundle=1. Returns Article 53 and Article 50 rows together. Incompatible combinations return HTTP 400; these cross-parameter rules are not expressible by the individual parameter schemas.",
+            })
+            mixed_response = (
+                "Successful free preview or EU procurement view, or paid OSCAL assembly after settlement. "
+                "The query selects the mode; format=procurement does not request paid assembly. "
+                "Paid assembly: " + deliverable
+            )
+            op["responses"]["200"]["description"] = mixed_response
+            op["responses"]["200"]["content"]["application/json"]["schema"]["description"] = mixed_response
+            op["responses"]["400"] = {"description": "Free format=procurement rejects bundle=1 and non-EU obligations; no paid assembly is performed by this view."}
+            op["x-csoai"]["free_procurement"] = BASE + "/api/evidence-bundle?obligation=article-53&format=procurement"
         # `indexed_in` is deliberately NOT carried (2026-09-26): /.well-known/x402.json no longer
         # types third-party index membership, which only a read of the index can establish.
         # ONE METHOD PER DOOR — the one the manifest names, which is also the method every door's
@@ -723,9 +745,10 @@ def compose(fix: Path = FIX) -> dict:
     version = f"{cat['schema'].rsplit('/', 1)[-1]}+{sha12(*fixture_bytes)}"
     guidance = (
         f"Free board: GET /api/gspc — quote totals.lid verbatim, never compose a count. "
-        f"Paid doors are the operations carrying x-payment-info: GET without payment answers HTTP 402 with the x402 v2 challenge "
+        f"Operations carrying x-payment-info have a paid mode: request their x-csoai.door URL to select it. "
+        f"Without payment, that mode answers HTTP 402 with the x402 v2 challenge "
         f"(accepts[0]: scheme {rail['scheme']}, network {rail['network']}, {rail['asset']['symbol']} {rail['asset']['contract']}, payTo {rail['pay_to']}); "
-        f"pay it and retry with the X-PAYMENT header. Required query parameters carry an example that reaches the 402. "
+        f"pay it and retry with the X-PAYMENT header. Required query parameters alone may select a free view on mixed-mode operations. "
         f"Free previews are named per door under x-csoai.free_preview. Catalog: {rail['well_known']} and {cat['explainer'].rsplit('/', 1)[0]}/api/x402. "
         f"Verify is free: {wk['verify']}. "
         f"Offer & Receipt emission is conditional: a 402 carries server-signed offers only when the Pages signing key is available; "
