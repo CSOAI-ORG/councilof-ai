@@ -319,6 +319,31 @@ def signer_path() -> str:
     return "none"
 
 
+_CALLER_VERDICTS_PRINTED = set()
+
+
+def _log_board_sign_caller(reply) -> None:
+    """Print the signer's unsigned `caller` echo to stderr.
+
+    Once per run, and once more for each different strict verdict, so a run logs how a
+    later, stricter signer would treat it ("would-refuse" names the reason). Logging only:
+    it never raises, and it changes nothing that is signed or written.
+    """
+    try:
+        caller = reply.get("caller") if isinstance(reply, dict) else None
+        if not isinstance(caller, dict):
+            return
+        strict = caller.get("strict") if isinstance(caller.get("strict"), dict) else {}
+        verdict = {True: "pass", False: "would-refuse"}.get(strict.get("pass"), "none")
+        seen = f"{verdict}:{strict.get('reason')}"
+        if seen in _CALLER_VERDICTS_PRINTED:
+            return
+        _CALLER_VERDICTS_PRINTED.add(seen)
+        print(f"board-sign caller strict={verdict} {json.dumps(caller, sort_keys=True)}", file=sys.stderr)
+    except Exception:
+        pass
+
+
 def sign_via_oidc(payload: dict) -> str | None:
     """Ask Pages /api/board-sign using the job's GitHub OIDC token. Key stays on Pages."""
     req_url = os.environ.get("ACTIONS_ID_TOKEN_REQUEST_URL") or ""
@@ -362,6 +387,7 @@ def sign_via_oidc(payload: dict) -> str | None:
     except Exception as e:
         print(f"board-sign failed: {type(e).__name__}", file=sys.stderr)
         return None
+    _log_board_sign_caller(out)
     sig = out.get("sig_ed25519") if isinstance(out, dict) else None
     return sig if isinstance(sig, str) and len(sig) >= 64 else None
 

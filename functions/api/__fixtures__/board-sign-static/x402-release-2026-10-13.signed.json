@@ -1,0 +1,45 @@
+{
+ "schema": "csoai.signed-run/0.1",
+ "payload": {
+  "schema": "csoai.signed-artifact/0.1",
+  "artifact": {
+   "path": "datasets/csoai/x402-bazaar-conformance/release-2026-10-13.json",
+   "sha256": "2d02dd6a3fcc76ff10127f61af430d5cab3588e0a141138960b90d8662356223",
+   "schema": "csoai.x402-bazaar-conformance-release/0.1",
+   "as_of": "2026-10-13T01:26:47Z"
+  },
+  "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+  "not_a_grade": "The signature proves these bytes were signed by the board key on the date below; it does not prove any claim inside beyond what the record's own instruments measured.",
+  "rows": 3083,
+  "headline": {
+   "hosts_probed": 3083,
+   "conformant": 635,
+   "conformant_pct": 20.6,
+   "unreachable": 16,
+   "partial": false
+  },
+  "published_files": {
+   "snapshots/conformance-2026-10-13.jsonl": "4019b4f853537dd3d5744f0eefdb061f5dd0c4f012741ae9be78ea7bff9e9c78",
+   "summary-2026-10-13.json": "9ecb3d6ff0db69e31876e8f1739caa2d6086fd9ef66713ecef65d49105ab648c",
+   "diff-2026-10-13.json": "816ce3841a9bad3fe9c1db2d6557a96d8ec93a4ecdc9eed8017e799876a0d8be"
+  }
+ },
+ "signature": {
+  "did": "did:web:csoai.org#board-attestation-1",
+  "alg": "Ed25519",
+  "sig_ed25519": "c3e7432961c50ba866bab025519c96d713653c3ad90322bebb23b3e66e2af1d85542ba0e0b8e31fdb04169005e8ba0d89bacac52ef6cbf7bb69c7ca9181f7a0e",
+  "payload_sha256": "6d425f0f120f48d9ead02b8ac752b12846009e61a2721f47364dfa6e122b8183",
+  "canonical": "JSON.stringify of key-sorted object, UTF-8 (functions/_lib/cardSign.ts canonicalBytes)",
+  "signer_auth": "pod-token",
+  "signed_at": "2026-10-13T01:28:20.300Z"
+ },
+ "local_verification": {
+  "did_document": "https://csoai.org/.well-known/did.json",
+  "result": "VERIFIES",
+  "altered_preimage_controls": {
+   "trailing byte appended": "rejected (control holds)",
+   "artifact sha256 altered": "rejected (control holds)"
+  }
+ },
+ "verify": "canonicalise payload (JSON, keys sorted, no whitespace, UTF-8); sha256 must equal signature.payload_sha256; payload.artifact.sha256 must equal sha256 of the artifact; verify sig_ed25519 (hex) with the #board-attestation-1 Ed25519 key in https://csoai.org/.well-known/did.json"
+}
