@@ -444,6 +444,11 @@ node claim-capture.mjs --verify artifact.json`}</Code>
           one, write to <a className="underline" href="mailto:nicholas@csoai.org?subject=Claim%20maintenance%20engagement">nicholas@csoai.org</a>{" "}
           with the claims you want followed and the source you would accept as authoritative.
         </p>
+        <p className="mt-4 leading-7 text-slate-700">
+          Agents do not need an engagement. Every artefact is purchasable per request over{" "}
+          <a className="underline" href="/api/x402">x402</a> — issuance, assembly and cadence — and verification of every
+          artefact stays free forever. Payment never creates a measured board cell and never buys a grade.
+        </p>
       </section>
 
       <section aria-labelledby="elsewhere" className="mx-auto max-w-4xl px-5 py-12">
