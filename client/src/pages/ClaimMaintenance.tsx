@@ -412,6 +412,45 @@ node claim-capture.mjs --verify artifact.json`}</Code>
         </div>
       </section>
 
+      <section aria-labelledby="engagements" className="mx-auto max-w-4xl px-5 py-12">
+        <h2 id="engagements" className="text-2xl font-bold">Engagements</h2>
+        <p className="mt-3 leading-7 text-slate-700">
+          We are a RAS — receipts and evidence as a service. We run claim maintenance for organisations that have to keep their public claims defensible: AI labs,
+          regulated firms, procurement teams and standards bodies. Three sizes, one rule.
+        </p>
+        <ul className="mt-5 space-y-3 text-slate-700">
+          <li>
+            <strong>Pilot</strong> — ten claims, one full cycle: capture, frozen baseline, one re-read, one signed pack
+            and one adjudication. The cheapest way to see the record before committing to a cadence.
+          </li>
+          <li>
+            <strong>Standard</strong> — thirty claims, re-read every month, a signed pack per cycle, and an adjudication
+            note for every claim that changed.
+          </li>
+          <li>
+            <strong>Assurance</strong> — one hundred claims, monthly re-read, a 48-hour change notice, and a quarterly
+            standards pack suitable for a SAFE or RFC contribution that a human owns.
+          </li>
+        </ul>
+        <h3 className="mt-10 text-xl font-semibold">The human step is part of the product</h3>
+        <p className="mt-3 leading-7 text-slate-700">
+          Machines fetch, hash, diff, sign and package. A named human adjudicates every material change, approves every
+          correction and releases every pack. No automated path may publish a claim about a third party. That is why a
+          standards contribution stays a human act: the service produces the evidence a person needs to make it
+          defensibly, and never makes the act for them.
+        </p>
+        <p className="mt-4 leading-7 text-slate-700">
+          Scope, cadence and price are agreed in writing per engagement; nothing here is a public price list. To discuss
+          one, write to <a className="underline" href="mailto:nicholas@csoai.org?subject=Claim%20maintenance%20engagement">nicholas@csoai.org</a>{" "}
+          with the claims you want followed and the source you would accept as authoritative.
+        </p>
+        <p className="mt-4 leading-7 text-slate-700">
+          Agents do not need an engagement. Every artefact is purchasable per request over{" "}
+          <a className="underline" href="/api/x402">x402</a> — issuance, assembly and cadence — and verification of every
+          artefact stays free forever. Payment never creates a measured board cell and never buys a grade.
+        </p>
+      </section>
+
       <section aria-labelledby="elsewhere" className="mx-auto max-w-4xl px-5 py-12">
         <h2 id="elsewhere" className="text-2xl font-bold">Where the rest of the record lives</h2>
         <ul className="mt-5 space-y-3 text-slate-700">
