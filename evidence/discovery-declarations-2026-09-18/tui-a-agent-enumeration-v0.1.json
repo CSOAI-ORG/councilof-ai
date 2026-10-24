@@ -1,0 +1,362 @@
+{
+  "schema": "csoai.tui-a-agent-enumeration/0.1",
+  "generated_at": "2026-09-17T04:24:48.368479+00:00",
+  "task": "TUI A \u2014 establish the population before anyone measures it",
+  "boundary_rule": {
+    "schema": "csoai.agent-enumeration-boundary/0.1",
+    "rules": [
+      "Two hostnames serving same card body (sha256 match) = ONE agent.",
+      "One card declaring N skills = ONE agent with N capabilities.",
+      "Card behind authentication wall not read without owner consent = UNREACHABLE.",
+      "Registry pointer whose card body 404s = UNREACHABLE.",
+      "Agent card at well-known path with kind/agent_id/sha256 = ENUMERATED.",
+      "Registry entry whose target is a measurement/metric, not an agent = OUT_OF_SCOPE."
+    ],
+    "real_cases": [
+      {
+        "case": "Two hostnames same body",
+        "decision": "ONE",
+        "example": "csoai.org in well-known + agent-card-jws-input"
+      },
+      {
+        "case": "One card N skills",
+        "decision": "ONE with N skills",
+        "example": "mcp-directories entries"
+      },
+      {
+        "case": "Registry pointer, card 404",
+        "decision": "UNREACHABLE",
+        "example": "erc8004-callable pointers"
+      }
+    ]
+  },
+  "sources_provenance": [
+    {
+      "source": "a2a-engine-cards",
+      "url": "/public/interop/a2a-engine-cards.json",
+      "count": 12,
+      "credential": "none",
+      "note": "12 CSOAI-hosted engine cards"
+    },
+    {
+      "source": "csoai-self-card + well-known",
+      "url": "/public/.well-known/agent-card.json",
+      "count": 1,
+      "credential": "none",
+      "note": "CSOAI self card (1 agent across 305 well-known files)"
+    },
+    {
+      "source": "mcp-directories",
+      "url": "/public/interop/mcp-directories.json",
+      "count": 330,
+      "credential": "none",
+      "note": "REGISTRY catalog (8 registries, 1,272 versions). OUT_OF_SCOPE \u2014 registries, not agents."
+    },
+    {
+      "source": "erc8004-callable",
+      "url": "/public/interop/erc8004-callable/",
+      "count": 2,
+      "credential": "none",
+      "note": "ERC-8004 REGISTRY POINTER files. UNREACHABLE \u2014 cards live elsewhere, not enumerated here."
+    },
+    {
+      "source": "gsr-council",
+      "url": "/public/interop/gsr-*.json",
+      "count": 30,
+      "credential": "none",
+      "note": "CSOAI self-governance/security/research evidence. OUT_OF_SCOPE \u2014 not agents."
+    }
+  ],
+  "population": {
+    "ENUMERATED": 13,
+    "UNREACHABLE": 2,
+    "AMBIGUOUS": 0,
+    "OUT_OF_SCOPE": 2
+  },
+  "enumerated_agents": [
+    {
+      "agent_id": "anthropic",
+      "kind": "a2a-engine-card",
+      "source": "a2a-engine-cards",
+      "card_url": "https://councilof.ai/.well-known/anthropic.json",
+      "a2a_discovery": "https://councilof.ai/.well-known/agents/anthropic.json",
+      "mcp": "https://councilof.ai/mcp/anthropic.json"
+    },
+    {
+      "agent_id": "asi-evolve",
+      "kind": "a2a-engine-card",
+      "source": "a2a-engine-cards",
+      "card_url": "https://councilof.ai/.well-known/asi-evolve.json",
+      "a2a_discovery": "https://councilof.ai/.well-known/agents/asi-evolve.json",
+      "mcp": "https://councilof.ai/mcp/asi-evolve.json"
+    },
+    {
+      "agent_id": "council-os",
+      "kind": "a2a-engine-card",
+      "source": "a2a-engine-cards",
+      "card_url": "https://councilof.ai/.well-known/council-os.json",
+      "a2a_discovery": "https://councilof.ai/.well-known/agents/council-os.json",
+      "mcp": "https://councilof.ai/mcp/council-os.json"
+    },
+    {
+      "agent_id": "csoai.org",
+      "kind": "csoai-self",
+      "source": "csoai-self-card + well-known",
+      "card_url": "https://councilof.ai/.well-known/agent-card.json"
+    },
+    {
+      "agent_id": "google",
+      "kind": "a2a-engine-card",
+      "source": "a2a-engine-cards",
+      "card_url": "https://councilof.ai/.well-known/google.json",
+      "a2a_discovery": "https://councilof.ai/.well-known/agents/google.json",
+      "mcp": "https://councilof.ai/mcp/google.json"
+    },
+    {
+      "agent_id": "gspc",
+      "kind": "a2a-engine-card",
+      "source": "a2a-engine-cards",
+      "card_url": "https://councilof.ai/.well-known/gspc.json",
+      "a2a_discovery": "https://councilof.ai/.well-known/agents/gspc.json",
+      "mcp": "https://councilof.ai/mcp/gspc.json"
+    },
+    {
+      "agent_id": "huggingface",
+      "kind": "a2a-engine-card",
+      "source": "a2a-engine-cards",
+      "card_url": "https://councilof.ai/.well-known/huggingface.json",
+      "a2a_discovery": "https://councilof.ai/.well-known/agents/huggingface.json",
+      "mcp": "https://councilof.ai/mcp/huggingface.json"
+    },
+    {
+      "agent_id": "meta",
+      "kind": "a2a-engine-card",
+      "source": "a2a-engine-cards",
+      "card_url": "https://councilof.ai/.well-known/meta.json",
+      "a2a_discovery": "https://councilof.ai/.well-known/agents/meta.json",
+      "mcp": "https://councilof.ai/mcp/meta.json"
+    },
+    {
+      "agent_id": "microsoft",
+      "kind": "a2a-engine-card",
+      "source": "a2a-engine-cards",
+      "card_url": "https://councilof.ai/.well-known/microsoft.json",
+      "a2a_discovery": "https://councilof.ai/.well-known/agents/microsoft.json",
+      "mcp": "https://councilof.ai/mcp/microsoft.json"
+    },
+    {
+      "agent_id": "mistral",
+      "kind": "a2a-engine-card",
+      "source": "a2a-engine-cards",
+      "card_url": "https://councilof.ai/.well-known/mistral.json",
+      "a2a_discovery": "https://councilof.ai/.well-known/agents/mistral.json",
+      "mcp": "https://councilof.ai/mcp/mistral.json"
+    },
+    {
+      "agent_id": "nvidia",
+      "kind": "a2a-engine-card",
+      "source": "a2a-engine-cards",
+      "card_url": "https://councilof.ai/.well-known/nvidia.json",
+      "a2a_discovery": "https://councilof.ai/.well-known/agents/nvidia.json",
+      "mcp": "https://councilof.ai/mcp/nvidia.json"
+    },
+    {
+      "agent_id": "openai",
+      "kind": "a2a-engine-card",
+      "source": "a2a-engine-cards",
+      "card_url": "https://councilof.ai/.well-known/openai.json",
+      "a2a_discovery": "https://councilof.ai/.well-known/agents/openai.json",
+      "mcp": "https://councilof.ai/mcp/openai.json"
+    },
+    {
+      "agent_id": "oswao",
+      "kind": "a2a-engine-card",
+      "source": "a2a-engine-cards",
+      "card_url": "https://councilof.ai/.well-known/oswao.json",
+      "a2a_discovery": "https://councilof.ai/.well-known/agents/oswao.json",
+      "mcp": "https://councilof.ai/mcp/oswao.json"
+    }
+  ],
+  "unreachable": [
+    {
+      "source": "erc8004-callable",
+      "path": "erc8004-callable/",
+      "reason": "registry pointer; card body lives elsewhere"
+    },
+    {
+      "source": "erc8004-callable/manifests",
+      "path": "erc8004-callable/manifests",
+      "reason": "manifest file, not agent card"
+    }
+  ],
+  "ambiguous": [],
+  "out_of_scope": [
+    {
+      "source": "mcp-directories",
+      "count": 330,
+      "reason": "REGISTRY catalog, not agents"
+    },
+    {
+      "source": "gsr-council",
+      "count": 30,
+      "reason": "CSOAI self evidence, not agents"
+    }
+  ],
+  "overlap": {
+    "csoai.org appears_in": [
+      "csoai-self-card",
+      "well-known/*",
+      "agent-card-jws-input"
+    ],
+    "distinct_agents_in_overlap": 1,
+    "rule_applied": "per boundary rule #1: same body = ONE agent."
+  },
+  "merkle": {
+    "root_sha256": "e819a4ab9718b876f1a925c964895fe4926268ebfc99a1582dee0831861f134c",
+    "n_leaves": 13,
+    "leaves": [
+      {
+        "agent_id": "anthropic",
+        "leaf_sha256": "f28ce2582112be0ba365824d8e185048f269e0f810da1b52bc90c873ac3d41c5"
+      },
+      {
+        "agent_id": "asi-evolve",
+        "leaf_sha256": "44430dd10db09fe7fc3dfb149683438a4568e832ff7351066136a2dcd3369525"
+      },
+      {
+        "agent_id": "council-os",
+        "leaf_sha256": "14f42cb638054e03ab57edff0f0c566dc275f80830eb236b916451aa804c284d"
+      },
+      {
+        "agent_id": "csoai.org",
+        "leaf_sha256": "43b778d6a1ccf1945c948bd7510b031c83207d6d5116d72038b57fdc013fa81d"
+      },
+      {
+        "agent_id": "google",
+        "leaf_sha256": "407b77a6f82dd44d83cc67e4c3c22848bbf64e2ffac0ce29bc214cb8aaededc9"
+      },
+      {
+        "agent_id": "gspc",
+        "leaf_sha256": "edf6bec206e8db4c7f69db6eb3b167b9c11e93684c12737bdc22bebd4f8846fa"
+      },
+      {
+        "agent_id": "huggingface",
+        "leaf_sha256": "efe5745b9d2d07f597a4d0071bed4edf2801a45d5dddeecf9c3df83f440c1b61"
+      },
+      {
+        "agent_id": "meta",
+        "leaf_sha256": "dfcab842daa8d73fab6fc72b5ac155c0abc289e863cf7ed674ac96049d8db042"
+      },
+      {
+        "agent_id": "microsoft",
+        "leaf_sha256": "027b6a7d2c40a98f6cf067f9538771612671e56e23be12cd4eb1e6d59187c159"
+      },
+      {
+        "agent_id": "mistral",
+        "leaf_sha256": "5698f1550b26fe975ee259ff3282b6608c38864d000994e015feefb56ff5ab80"
+      },
+      {
+        "agent_id": "nvidia",
+        "leaf_sha256": "e6c2e750588fbd957d58050882565ac642e5771c34157ddf27cd0a168bea80ae"
+      },
+      {
+        "agent_id": "openai",
+        "leaf_sha256": "7bda2140e0c09419f9559ff2de31911a8c18a9a54a6f90b66776a548e0232496"
+      },
+      {
+        "agent_id": "oswao",
+        "leaf_sha256": "18da3eca86343189203a6c2931c49f62d8fdef2b6dac3c1ba03c4dff767ff065"
+      }
+    ],
+    "inclusion_proofs": {
+      "anthropic": [
+        "44430dd10db09fe7fc3dfb149683438a4568e832ff7351066136a2dcd3369525",
+        "3122e821445007252db1e60fcdcd2d4eeb1b9e05a8a717d014f0f6c1a9aee853",
+        "2bf0dca2739c2a295d6cffc706426ce46f0cbf0b9eb5f60ef73620614ca27bd7",
+        "21fa010a448f0c593ca2446304ae4d4089993c65124ce2119488c26414132a2a"
+      ],
+      "asi-evolve": [
+        "f28ce2582112be0ba365824d8e185048f269e0f810da1b52bc90c873ac3d41c5",
+        "3122e821445007252db1e60fcdcd2d4eeb1b9e05a8a717d014f0f6c1a9aee853",
+        "2bf0dca2739c2a295d6cffc706426ce46f0cbf0b9eb5f60ef73620614ca27bd7",
+        "21fa010a448f0c593ca2446304ae4d4089993c65124ce2119488c26414132a2a"
+      ],
+      "council-os": [
+        "43b778d6a1ccf1945c948bd7510b031c83207d6d5116d72038b57fdc013fa81d",
+        "c9f821d1fa205c4088630cbc18ad3630ed6b5947ed222d5c8a2429dbbf1245cc",
+        "2bf0dca2739c2a295d6cffc706426ce46f0cbf0b9eb5f60ef73620614ca27bd7",
+        "21fa010a448f0c593ca2446304ae4d4089993c65124ce2119488c26414132a2a"
+      ],
+      "csoai.org": [
+        "14f42cb638054e03ab57edff0f0c566dc275f80830eb236b916451aa804c284d",
+        "c9f821d1fa205c4088630cbc18ad3630ed6b5947ed222d5c8a2429dbbf1245cc",
+        "2bf0dca2739c2a295d6cffc706426ce46f0cbf0b9eb5f60ef73620614ca27bd7",
+        "21fa010a448f0c593ca2446304ae4d4089993c65124ce2119488c26414132a2a"
+      ],
+      "google": [
+        "edf6bec206e8db4c7f69db6eb3b167b9c11e93684c12737bdc22bebd4f8846fa",
+        "12e44c5fe5faf7da2b9f9c92d37bb3eaf0da8cc2f6cc406e4fa423d430da1a40",
+        "d9bdb98c834111ceab721a8c4a865359d914c6ccdd6f8b25540dd5bde2b7a045",
+        "21fa010a448f0c593ca2446304ae4d4089993c65124ce2119488c26414132a2a"
+      ],
+      "gspc": [
+        "407b77a6f82dd44d83cc67e4c3c22848bbf64e2ffac0ce29bc214cb8aaededc9",
+        "12e44c5fe5faf7da2b9f9c92d37bb3eaf0da8cc2f6cc406e4fa423d430da1a40",
+        "d9bdb98c834111ceab721a8c4a865359d914c6ccdd6f8b25540dd5bde2b7a045",
+        "21fa010a448f0c593ca2446304ae4d4089993c65124ce2119488c26414132a2a"
+      ],
+      "huggingface": [
+        "dfcab842daa8d73fab6fc72b5ac155c0abc289e863cf7ed674ac96049d8db042",
+        "79c9423a765e4ad3e0896b7f81513b053d46998a743f49d7000919b5a74c9d6d",
+        "d9bdb98c834111ceab721a8c4a865359d914c6ccdd6f8b25540dd5bde2b7a045",
+        "21fa010a448f0c593ca2446304ae4d4089993c65124ce2119488c26414132a2a"
+      ],
+      "meta": [
+        "efe5745b9d2d07f597a4d0071bed4edf2801a45d5dddeecf9c3df83f440c1b61",
+        "79c9423a765e4ad3e0896b7f81513b053d46998a743f49d7000919b5a74c9d6d",
+        "d9bdb98c834111ceab721a8c4a865359d914c6ccdd6f8b25540dd5bde2b7a045",
+        "21fa010a448f0c593ca2446304ae4d4089993c65124ce2119488c26414132a2a"
+      ],
+      "microsoft": [
+        "5698f1550b26fe975ee259ff3282b6608c38864d000994e015feefb56ff5ab80",
+        "d045dbf3335e55b33382faf5bc6835e17ddbd873958ad209179b1108d199b61f",
+        "18da3eca86343189203a6c2931c49f62d8fdef2b6dac3c1ba03c4dff767ff065",
+        "ae4d4cd8581d62a628855ce05d7c7964a570197abadfa4ad0ffe7b2dcbc57017"
+      ],
+      "mistral": [
+        "027b6a7d2c40a98f6cf067f9538771612671e56e23be12cd4eb1e6d59187c159",
+        "d045dbf3335e55b33382faf5bc6835e17ddbd873958ad209179b1108d199b61f",
+        "18da3eca86343189203a6c2931c49f62d8fdef2b6dac3c1ba03c4dff767ff065",
+        "ae4d4cd8581d62a628855ce05d7c7964a570197abadfa4ad0ffe7b2dcbc57017"
+      ],
+      "nvidia": [
+        "7bda2140e0c09419f9559ff2de31911a8c18a9a54a6f90b66776a548e0232496",
+        "d78d3619fb821ee6cd69e3f98075a3c72cad05ea728c73301284384e34d47219",
+        "18da3eca86343189203a6c2931c49f62d8fdef2b6dac3c1ba03c4dff767ff065",
+        "ae4d4cd8581d62a628855ce05d7c7964a570197abadfa4ad0ffe7b2dcbc57017"
+      ],
+      "openai": [
+        "e6c2e750588fbd957d58050882565ac642e5771c34157ddf27cd0a168bea80ae",
+        "d78d3619fb821ee6cd69e3f98075a3c72cad05ea728c73301284384e34d47219",
+        "18da3eca86343189203a6c2931c49f62d8fdef2b6dac3c1ba03c4dff767ff065",
+        "ae4d4cd8581d62a628855ce05d7c7964a570197abadfa4ad0ffe7b2dcbc57017"
+      ],
+      "oswao": [
+        "18da3eca86343189203a6c2931c49f62d8fdef2b6dac3c1ba03c4dff767ff065",
+        "18da3eca86343189203a6c2931c49f62d8fdef2b6dac3c1ba03c4dff767ff065",
+        "7c7f15bafe6503a26893b3812268a1b17051f02e6de44df7907773440094c59f",
+        "ae4d4cd8581d62a628855ce05d7c7964a570197abadfa4ad0ffe7b2dcbc57017"
+      ]
+    },
+    "selftest": "an unknown leaf with a stolen proof must NOT verify",
+    "selftest_passed": true
+  },
+  "disclaimers": [
+    "The figure 13 is derived from artifacts, not typed.",
+    "This enumeration does NOT include the 785,448 ERC-8004 agents \u2014 their cards live elsewhere and are UNREACHABLE here.",
+    "This enumeration does NOT include the 1,272 MCP server versions \u2014 those are registry pointers, not agent cards.",
+    "TUI B measures against THIS set and nothing else."
+  ],
+  "sha256": "2c78e5dbe939576b4aa1e41695ebb72391c798cf2ef431f756e540f2a25d648b",
+  "byte_size": 11413
+}

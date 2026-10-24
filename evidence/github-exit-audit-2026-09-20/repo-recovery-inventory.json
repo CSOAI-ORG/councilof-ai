@@ -1,0 +1,56 @@
+{
+ "schema": "csoai.repo-recovery-inventory/0.1",
+ "as_of": "2026-09-20T02:53:48Z",
+ "scope": "Read-only inventory of local repository candidates for recovery planning. Presence of a clone is NOT proof of complete canonical history; no fetch/push/gc was performed; object reachability checked via fsck --connectivity-only (failures reported, absence of failures is not a completeness proof).",
+ "workspace": "/Users/nicholas/clawd/councilof-ai-work",
+ "repositories": [
+  {
+   "path": ".",
+   "remotes": [
+    "https://github.com/CSOAI-ORG/councilof-ai.git"
+   ],
+   "head_commit": "3dfb20e36b20004024a1897481f66d9c9e4393ed",
+   "current_branch": "fix/deploy-trigger-coupling",
+   "commit_count_head": 1036,
+   "ref_count": 135,
+   "last_commit_at": "2026-09-20T03:21:43+01:00",
+   "worktree_modified_paths": 1034,
+   "worktrees": 9,
+   "fsck_connectivity": "CLEAN",
+   "fsck_dangling_objects": 46,
+   "licence_file": "LICENSE"
+  },
+  {
+   "path": "condor",
+   "remotes": [
+    "https://github.com/hummingbot/condor.git"
+   ],
+   "head_commit": "d89e74f2e3e273bea102c64e4977118e6a88084f",
+   "current_branch": "gspc-market-swarm-20260919",
+   "commit_count_head": 1,
+   "ref_count": 4,
+   "last_commit_at": "2026-09-16T16:36:52+03:00",
+   "worktree_modified_paths": 61,
+   "worktrees": 1,
+   "fsck_connectivity": "CLEAN",
+   "fsck_dangling_objects": 0,
+   "licence_file": "LICENSE"
+  },
+  {
+   "path": "hummingbot-api",
+   "remotes": [
+    "https://github.com/hummingbot/hummingbot-api.git"
+   ],
+   "head_commit": "2494e847538bb7b819495cbc30eb4ef828feaacd",
+   "current_branch": "main",
+   "commit_count_head": 1,
+   "ref_count": 3,
+   "last_commit_at": "2026-09-16T13:51:14+03:00",
+   "worktree_modified_paths": 1,
+   "worktrees": 1,
+   "fsck_connectivity": "CLEAN",
+   "fsck_dangling_objects": 0,
+   "licence_file": "LICENSE"
+  }
+ ]
+}

@@ -1,0 +1,1077 @@
+{
+  "axis_touch_contract": "scripts/standing_cycle.py already reads the live GSPC roster and each declared axis dataset on every existing cron tick; loop related_axes are dependency/context links, not claims that the loop itself measures the axis.",
+  "cadence": {
+    "deep": "on_delta",
+    "full_census": "06:50 UTC",
+    "target_minute_utc": 50,
+    "touch": "hourly"
+  },
+  "failure_contract": {
+    "auto_retry": false,
+    "missing_adapter": "INCONCLUSIVE",
+    "timeout": "INCONCLUSIVE"
+  },
+  "loops": [
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "root_freshness_reconcile",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "trust",
+      "id": "H-01",
+      "name": "Root freshness",
+      "probes": [
+        {
+          "kind": "http",
+          "url": "https://councilof.ai/root.json"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "provenance",
+        "provenance-controls"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "rekor_verify",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "trust",
+      "id": "H-02",
+      "name": "Rekor witness state",
+      "probes": [
+        {
+          "kind": "glob",
+          "pattern": "public/interop/rekor-root-*.json"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "provenance",
+        "provenance-controls"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "ots_verify",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "trust",
+      "id": "H-03",
+      "name": "OTS/BTC witness state",
+      "probes": [
+        {
+          "kind": "glob",
+          "pattern": "public/interop/root-*.json.ots"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "provenance",
+        "provenance-controls"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "signer_state_review",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "trust",
+      "id": "H-04",
+      "name": "Signer status",
+      "probes": [
+        {
+          "kind": "http",
+          "url": "https://councilof.ai/api/eunomia-data"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "governance",
+        "provenance-controls",
+        "custody-disclosure"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "claim_maintenance_propagation",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "trust",
+      "id": "H-05",
+      "name": "Corrections watch",
+      "probes": [
+        {
+          "kind": "http",
+          "signed_content_identity": "corrections-v1",
+          "url": "https://councilof.ai/api/corrections"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "governance",
+        "provenance",
+        "continuity"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "x402_challenge_diff",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "revenue",
+      "id": "H-06",
+      "name": "x402 challenge surfaces",
+      "probes": [
+        {
+          "kind": "http",
+          "url": "https://councilof.ai/.well-known/x402.json"
+        },
+        {
+          "allowed_status": [
+            402
+          ],
+          "kind": "http",
+          "url": "https://councilof.ai/api/proof?bundle=1"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "machinery-conformity",
+        "distribution-integrity"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "business_truth_refresh",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "revenue",
+      "id": "H-07",
+      "name": "Revenue counter",
+      "probes": [
+        {
+          "kind": "http",
+          "url": "https://councilof.ai/api/revenue"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "governance",
+        "distribution-integrity"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "payai_metadata_review",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "revenue",
+      "id": "H-08",
+      "name": "PayAI listing metadata",
+      "probes": [
+        {
+          "kind": "http",
+          "url": "https://facilitator.payai.network/discovery/resources?limit=1&offset=0"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "machinery-conformity",
+        "distribution-integrity"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "x402_index_deep_census",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "revenue",
+      "id": "H-09",
+      "name": "Bazaar presence",
+      "probes": [
+        {
+          "kind": "http",
+          "url": "https://api.cdp.coinbase.com/platform/v2/x402/discovery/resources?limit=1&offset=0"
+        },
+        {
+          "kind": "http",
+          "url": "https://facilitator.payai.network/discovery/resources?limit=1&offset=0"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "machinery-conformity",
+        "distribution-integrity"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "billing_lifecycle_reconcile",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "revenue",
+      "id": "H-10",
+      "name": "Billing lifecycle",
+      "probes": [
+        {
+          "kind": "file",
+          "path": "public/interop/commission-fulfillment/index.json"
+        },
+        {
+          "kind": "http",
+          "url": "https://councilof.ai/api/revenue"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "governance",
+        "provenance-controls"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "pypi_distribution_snapshot",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "distribution",
+      "id": "H-11",
+      "name": "PyPI distribution estate",
+      "probes": [
+        {
+          "kind": "glob",
+          "pattern": "public/interop/*pypi*"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "openness",
+        "distribution-integrity"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "npm_distribution_snapshot",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "distribution",
+      "id": "H-12",
+      "name": "npm distribution estate",
+      "probes": [
+        {
+          "kind": "glob",
+          "pattern": "public/interop/*npm*"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "openness",
+        "distribution-integrity"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "hf_distribution_snapshot",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "distribution",
+      "id": "H-13",
+      "name": "Hugging Face distribution estate",
+      "probes": [
+        {
+          "kind": "file",
+          "path": "public/interop/hf-census/SUMMARY.json"
+        },
+        {
+          "kind": "file",
+          "path": "public/interop/hf-census/org-register.json"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "openness",
+        "distribution-integrity",
+        "ai-adoption-components"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "mcp_own_deep_census",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "distribution",
+      "id": "H-14",
+      "name": "MCP registry own estate",
+      "probes": [
+        {
+          "kind": "file",
+          "path": "public/interop/mcp-registry-resolution.json"
+        },
+        {
+          "kind": "file",
+          "path": "public/interop/auto-eat/card-autoeat-mcp-registry-mining-unsigned.json"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "openness",
+        "machinery-conformity",
+        "distribution-integrity"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "github_distribution_readback",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "distribution",
+      "id": "H-15",
+      "name": "GitHub organisation aggregate",
+      "probes": [
+        {
+          "allowed_status": [
+            200,
+            404
+          ],
+          "kind": "http",
+          "url": "https://api.github.com/orgs/CSOAI-ORG"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "openness",
+        "distribution-integrity"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "endpoint_survival_recheck",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "distribution",
+      "id": "H-16",
+      "name": "Remote endpoint survival",
+      "probes": [
+        {
+          "kind": "file",
+          "path": "public/interop/mcp-liveness-2026-09/report.json"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "continuity",
+        "machinery-conformity",
+        "distribution-integrity"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "stablecoin_divergence_measure",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "ecosystem",
+      "id": "H-17",
+      "name": "Stablecoin universe",
+      "probes": [
+        {
+          "kind": "file",
+          "path": "public/interop/stablecoins-extended.json"
+        },
+        {
+          "kind": "file",
+          "path": "public/interop/stablecoin-universe-2026-09/index.json"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "reserve-attestation",
+        "custody-disclosure",
+        "distribution-integrity"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "xrpl_instrument_measure",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "ecosystem",
+      "id": "H-18",
+      "name": "XRPL instruments",
+      "probes": [
+        {
+          "kind": "file",
+          "path": "public/interop/xrpl-instruments.json"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "cross-reality",
+        "reserve-attestation",
+        "custody-disclosure"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "swift_identity_reconcile",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "ecosystem",
+      "id": "H-19",
+      "name": "SWIFT identity estate",
+      "probes": [
+        {
+          "kind": "file",
+          "path": "public/interop/swift-census-2026-09/index.json"
+        },
+        {
+          "kind": "file",
+          "path": "public/interop/coverage-xrpl-swift.json"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "cross-reality",
+        "regulatory-framework",
+        "custody-disclosure"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "wrapper_board_refresh",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "ecosystem",
+      "id": "H-20",
+      "name": "Wrapper/index board",
+      "probes": [
+        {
+          "kind": "file",
+          "path": "public/interop/index-reference-reverify.json"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "cross-reality",
+        "provenance-controls",
+        "distribution-integrity"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "mcp_ecosystem_recompute",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "ecosystem",
+      "id": "H-21",
+      "name": "MCP ecosystem",
+      "probes": [
+        {
+          "kind": "file",
+          "path": "public/interop/mcp-registry-resolution.json"
+        },
+        {
+          "kind": "file",
+          "path": "public/interop/mcp-directories.json"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "machinery-conformity",
+        "detector-interop",
+        "swarm"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "a2a_churn_measure",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "ecosystem",
+      "id": "H-22",
+      "name": "A2A agent ecosystem",
+      "probes": [
+        {
+          "kind": "file",
+          "path": "public/interop/agent-discovery-census.json"
+        },
+        {
+          "kind": "file",
+          "path": "public/interop/a2a-engine-cards.json"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "machinery-conformity",
+        "swarm",
+        "effect-binding"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "x402_adoption_recompute",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "ecosystem",
+      "id": "H-23",
+      "name": "x402 ecosystem",
+      "probes": [
+        {
+          "kind": "http",
+          "url": "https://api.cdp.coinbase.com/platform/v2/x402/discovery/resources?limit=1&offset=0"
+        },
+        {
+          "kind": "http",
+          "url": "https://facilitator.payai.network/discovery/resources?limit=1&offset=0"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "machinery-conformity",
+        "distribution-integrity"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "lab_drift_remeasure",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "ecosystem",
+      "id": "H-24",
+      "name": "AI lab/model drift",
+      "probes": [
+        {
+          "kind": "file",
+          "path": "public/interop/lab-card-census-2026-09-17.json"
+        },
+        {
+          "kind": "glob",
+          "pattern": "public/feeds/provider-diff/**/*.json"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "governance",
+        "safety",
+        "continuity",
+        "conformance",
+        "openness",
+        "care",
+        "art5-safeguard",
+        "affect",
+        "jail"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "x1_recompute",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [
+        "H-21"
+      ],
+      "execution_authority": "none",
+      "family": "index",
+      "id": "H-25",
+      "name": "X-1 MCP concentration",
+      "probes": [],
+      "publication_authority": "none",
+      "related_axes": [
+        "machinery-conformity",
+        "distribution-integrity"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "x2_recompute",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [
+        "H-23"
+      ],
+      "execution_authority": "none",
+      "family": "index",
+      "id": "H-26",
+      "name": "X-2 x402 adoption",
+      "probes": [],
+      "publication_authority": "none",
+      "related_axes": [
+        "machinery-conformity",
+        "distribution-integrity"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "x3_recompute",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [
+        "H-22"
+      ],
+      "execution_authority": "none",
+      "family": "index",
+      "id": "H-27",
+      "name": "X-3 A2A churn",
+      "probes": [],
+      "publication_authority": "none",
+      "related_axes": [
+        "swarm",
+        "effect-binding"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "x4_recompute",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [
+        "H-17"
+      ],
+      "execution_authority": "none",
+      "family": "index",
+      "id": "H-28",
+      "name": "X-4 stablecoin divergence",
+      "probes": [],
+      "publication_authority": "none",
+      "related_axes": [
+        "reserve-attestation",
+        "custody-disclosure"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "x5_recompute",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [
+        "H-01",
+        "H-05"
+      ],
+      "execution_authority": "none",
+      "family": "index",
+      "id": "H-29",
+      "name": "X-5 evidence freshness/correction latency",
+      "probes": [],
+      "publication_authority": "none",
+      "related_axes": [
+        "provenance",
+        "continuity",
+        "provenance-controls"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "x6_recompute",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [
+        "H-16"
+      ],
+      "execution_authority": "none",
+      "family": "index",
+      "id": "H-30",
+      "name": "X-6 endpoint survival",
+      "probes": [],
+      "publication_authority": "none",
+      "related_axes": [
+        "continuity",
+        "distribution-integrity"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "regulator_change_classification",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "institutional",
+      "id": "H-31",
+      "name": "Regulator corridor",
+      "probes": [
+        {
+          "kind": "file",
+          "path": "public/interop/deep-research-regulatory-2026-09.json"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "governance",
+        "regulatory-framework",
+        "art5-safeguard"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "standards_change_classification",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "institutional",
+      "id": "H-32",
+      "name": "Standards corridor",
+      "probes": [
+        {
+          "kind": "http",
+          "url": "https://datatracker.ietf.org/doc/draft-templeman-scitt-framing-space/"
+        },
+        {
+          "kind": "http",
+          "url": "https://www.w3.org/community/agent-conformance/"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "conformance",
+        "governance",
+        "detector-interop"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "deadline_alert_refresh",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "institutional",
+      "id": "H-33",
+      "name": "Deadline board",
+      "probes": [
+        {
+          "kind": "file",
+          "path": "scripts/business-operations/calendar.json"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "governance",
+        "regulatory-framework"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "grant_window_review",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "institutional",
+      "id": "H-34",
+      "name": "Grant/funding windows",
+      "probes": [
+        {
+          "kind": "glob",
+          "pattern": "public/grants/*"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "governance"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "claim_maintenance_dogfood",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "self-integrity",
+      "id": "H-35",
+      "name": "Public surface regression",
+      "probes": [
+        {
+          "kind": "http",
+          "url": "https://councilof.ai/"
+        },
+        {
+          "kind": "http",
+          "url": "https://councilof.ai/dashboard/?tab=measured&task=pricing-overview"
+        },
+        {
+          "kind": "http",
+          "url": "https://councilof.ai/assess/"
+        },
+        {
+          "kind": "http",
+          "url": "https://councilof.ai/llms.txt"
+        },
+        {
+          "kind": "http",
+          "url": "https://councilof.ai/.well-known/agent.json"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "governance",
+        "continuity",
+        "openness"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "count_consistency_review",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "self-integrity",
+      "id": "H-36",
+      "name": "Tool/count consistency",
+      "probes": [
+        {
+          "kind": "http",
+          "url": "https://councilof.ai/api/gspc"
+        },
+        {
+          "kind": "http",
+          "url": "https://councilof.ai/tools/"
+        },
+        {
+          "kind": "http",
+          "url": "https://councilof.ai/products/"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "governance",
+        "conformance",
+        "machinery-conformity"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "truth_register_regenerate",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "self-integrity",
+      "id": "H-37",
+      "name": "Truth-register projection",
+      "probes": [
+        {
+          "kind": "http",
+          "url": "https://councilof.ai/api/gspc"
+        },
+        {
+          "kind": "http",
+          "url": "https://councilof.ai/api/revenue"
+        },
+        {
+          "kind": "http",
+          "signed_content_identity": "corrections-v1",
+          "url": "https://councilof.ai/api/corrections"
+        },
+        {
+          "kind": "http",
+          "url": "https://councilof.ai/root.json"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "governance",
+        "provenance",
+        "provenance-controls"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "data_room_regenerate",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [],
+      "execution_authority": "none",
+      "family": "self-integrity",
+      "id": "H-38",
+      "name": "Data-room projection",
+      "probes": [
+        {
+          "kind": "glob",
+          "pattern": "**/*DATA*ROOM*.md"
+        },
+        {
+          "kind": "glob",
+          "pattern": "**/*SERIES*A*.md"
+        }
+      ],
+      "publication_authority": "none",
+      "related_axes": [
+        "governance",
+        "provenance-controls"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": "census_delta_classify",
+      "deep_policy": "QUEUE_INTERNAL_CANDIDATE_ONLY",
+      "depends_on": [
+        "H-17",
+        "H-21",
+        "H-22",
+        "H-23"
+      ],
+      "execution_authority": "none",
+      "family": "self-integrity",
+      "id": "H-39",
+      "name": "Census delta materiality",
+      "probes": [],
+      "publication_authority": "none",
+      "related_axes": [
+        "ai-adoption-components",
+        "labour-components",
+        "humanoid-labour-index"
+      ]
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "deep_action": null,
+      "deep_policy": "NONE",
+      "depends_on": [
+        "H-01",
+        "H-02",
+        "H-03",
+        "H-04",
+        "H-05",
+        "H-06",
+        "H-07",
+        "H-08",
+        "H-09",
+        "H-10",
+        "H-11",
+        "H-12",
+        "H-13",
+        "H-14",
+        "H-15",
+        "H-16",
+        "H-17",
+        "H-18",
+        "H-19",
+        "H-20",
+        "H-21",
+        "H-22",
+        "H-23",
+        "H-24",
+        "H-25",
+        "H-26",
+        "H-27",
+        "H-28",
+        "H-29",
+        "H-30",
+        "H-31",
+        "H-32",
+        "H-33",
+        "H-34",
+        "H-35",
+        "H-36",
+        "H-37",
+        "H-38",
+        "H-39"
+      ],
+      "execution_authority": "none",
+      "family": "self-integrity",
+      "id": "H-40",
+      "name": "Receipt of receipts",
+      "probes": [],
+      "publication_authority": "none",
+      "related_axes": [
+        "provenance",
+        "continuity",
+        "provenance-controls"
+      ]
+    }
+  ],
+  "review_handoff_contract": "Internal review work only; separate from observational depends_on. Upstream candidates must be reviewed with scoped result receipts before downstream work. No timer-based self-trigger, new scheduler, automatic payment/signing/execution/publication/training.",
+  "review_handoffs": {
+    "H-05": [
+      "H-37"
+    ],
+    "H-07": [
+      "H-10",
+      "H-37"
+    ],
+    "H-10": [
+      "H-38"
+    ],
+    "H-11": [
+      "H-36"
+    ],
+    "H-12": [
+      "H-36"
+    ],
+    "H-13": [
+      "H-36"
+    ],
+    "H-14": [
+      "H-36"
+    ],
+    "H-18": [
+      "H-20"
+    ],
+    "H-19": [
+      "H-20"
+    ],
+    "H-20": [
+      "H-37"
+    ],
+    "H-24": [
+      "H-36"
+    ],
+    "H-25": [
+      "H-37"
+    ],
+    "H-26": [
+      "H-37"
+    ],
+    "H-27": [
+      "H-37"
+    ],
+    "H-28": [
+      "H-37"
+    ],
+    "H-29": [
+      "H-37"
+    ],
+    "H-30": [
+      "H-37"
+    ],
+    "H-31": [
+      "H-35"
+    ],
+    "H-32": [
+      "H-35"
+    ],
+    "H-33": [
+      "H-38"
+    ],
+    "H-34": [
+      "H-38"
+    ],
+    "H-35": [
+      "H-37"
+    ],
+    "H-36": [
+      "H-37"
+    ],
+    "H-37": [
+      "H-38"
+    ],
+    "H-39": [
+      "H-37"
+    ]
+  },
+  "scheduler_contract": "reuse existing csoai-standing-cycle-cron; do not install a new scheduler",
+  "schema": "csoai.hourly-loop-manifest/0.1"
+}
