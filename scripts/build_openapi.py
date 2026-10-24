@@ -907,6 +907,19 @@ def main() -> int:
         wk_fixture.write_text(rendered)
 
     spec = compose()
+    # x402scan's prober excludes a path only when the PATH ITEM carries security: [];
+    # operation-level [] alone was not enough (GET /api/provider-canary already had it
+    # and was still probed - 5 endpoints skipped on the 2026-10-08 registration). This
+    # changes no auth semantics: every operation on these three paths declares its own
+    # security, and OpenAPI says an operation's declaration overrides the path's, so the
+    # bearer/OIDC contracts on the POSTs stay exactly as written. It is the path-level
+    # signal their own instruction asks for: add "security": [] to exclude free or
+    # non-x402 endpoints from probing. /api/board-sign stays githubOidc at operation
+    # level; nothing here marks it unauthenticated.
+    for probe_excluded in ("/api/action-jobs", "/api/board-sign", "/api/provider-canary"):
+        if probe_excluded in spec["paths"]:
+            spec["paths"][probe_excluded]["security"] = []
+
     text = render(spec)
     doors = spec["x-x402"]["doors"]
     xerrs = registry_crosscheck(spec)
