@@ -24,6 +24,7 @@ const PATHS: Path[] = [
   ] },
   { n: 3, title: "Apply", blurb: "Turn knowledge into governance — map, assess, generate.", ring: "border-blue-300", chip: "bg-blue-100 text-blue-800", modules: [
     { name: "Framework Crosswalks", href: "/crosswalks" },
+    { name: "THE RULER — local practice with published AI answers", href: "/games/ruler/" },
     { name: "Readiness Assessment (free)", href: "/assess" },
     { name: "Policy Generator", href: "/policy-generator" },
   ] },
