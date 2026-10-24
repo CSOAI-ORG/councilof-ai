@@ -415,7 +415,7 @@ node claim-capture.mjs --verify artifact.json`}</Code>
       <section aria-labelledby="engagements" className="mx-auto max-w-4xl px-5 py-12">
         <h2 id="engagements" className="text-2xl font-bold">Engagements</h2>
         <p className="mt-3 leading-7 text-slate-700">
-          We run claim maintenance for organisations that have to keep their public claims defensible: AI labs,
+          We are a RAS — receipts and evidence as a service. We run claim maintenance for organisations that have to keep their public claims defensible: AI labs,
           regulated firms, procurement teams and standards bodies. Three sizes, one rule.
         </p>
         <ul className="mt-5 space-y-3 text-slate-700">
