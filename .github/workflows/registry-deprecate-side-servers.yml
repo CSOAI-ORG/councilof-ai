@@ -1,0 +1,55 @@
+# Marks io.github.CSOAI-ORG/* MCP Registry entries DEPRECATED (never deleted).
+# CEO decision #4: deprecate, never delete; never touch ai.councilof/*; never change csoai-gspc-mcp's mcpName.
+# Manual only. dry_run defaults to true.
+name: registry-deprecate-side-servers
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Print the commands only (no registry writes)"
+        type: boolean
+        default: true
+permissions:
+  contents: read
+  id-token: write   # GitHub OIDC login to the MCP Registry (io.github.CSOAI-ORG namespace)
+concurrency:
+  group: registry-deprecate
+  cancel-in-progress: false
+jobs:
+  deprecate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install mcp-publisher
+        run: |
+          curl -fsSL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_linux_amd64.tar.gz" | tar xz mcp-publisher
+          ./mcp-publisher --help >/dev/null
+      - name: Validate list (guards)
+        run: |
+          set -euo pipefail
+          f=.github/registry/deprecate-io.github.CSOAI-ORG.txt
+          bad=$(grep -v '^io\.github\.CSOAI-ORG/[A-Za-z0-9._-]\+$' "$f" || true)
+          if [ -n "$bad" ]; then echo "Refusing: entries outside io.github.CSOAI-ORG/*:"; echo "$bad"; exit 1; fi
+          if grep -qi '^ai\.councilof/' "$f"; then echo "Refusing: ai.councilof/* must never be touched"; exit 1; fi
+          echo "$(wc -l < "$f") servers to deprecate"
+      - name: Login (GitHub OIDC)
+        if: ${{ !inputs.dry_run }}
+        run: ./mcp-publisher login github-oidc
+      - name: Deprecate (status only; never deleted)
+        env:
+          DRY: ${{ inputs.dry_run }}
+        run: |
+          set -uo pipefail
+          MSG="Superseded by ai.councilof/gspc (remote https://councilof.ai/mcp). Kept visible; not deleted."
+          fail=0
+          while IFS= read -r name; do
+            [ -z "$name" ] && continue
+            case "$name" in io.github.CSOAI-ORG/*) ;; *) echo "skip $name"; continue;; esac
+            cmd=(./mcp-publisher status --status deprecated --all-versions --yes --message "$MSG" "$name")
+            if [ "$DRY" = "true" ]; then echo "DRY: ${cmd[*]}"; continue; fi
+            if "${cmd[@]}"; then echo "OK $name"; else echo "FAIL $name"; fail=$((fail+1)); fi
+            sleep 2   # pace registry writes
+          done < .github/registry/deprecate-io.github.CSOAI-ORG.txt
+          echo "failures: $fail"
+          [ "$fail" -eq 0 ]
