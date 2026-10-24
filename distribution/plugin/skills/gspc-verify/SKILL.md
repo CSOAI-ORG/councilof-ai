@@ -46,3 +46,9 @@ python3 packages/evidence-fabric/portable_skill_verify.py --artifact <PATH> [--d
 ## Permission Boundary Note (`allowed-tools`)
 
 The Agent Skills `allowed-tools` frontmatter field is an experimental client declaration and **not** an execution grant. When running cross-client portability evaluations, pass `--client-boundary-observation <STATE>` (`ENFORCED`, `PROMPTED_FOR_APPROVAL`, `REJECTED_ACTION`, `IGNORED_EXPERIMENTAL_DECLARATION`, or `UNMEASURED`) to record how the host client treated the declared tool boundary.
+
+Measurement only: a card is evidence, never a grade, mark or endorsement. Verification is free.
+
+Data: https://councilof.ai/api/gspc · Corrections ledger: https://councilof.ai/corrections/ (JSON: https://councilof.ai/api/corrections) · Verify a card, free: https://councilof.ai/gspc-verify/
+
+Doctrine: `docs/DOCTRINE.md` sha256 `845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a` (human page https://councilof.ai/doctrine/).
