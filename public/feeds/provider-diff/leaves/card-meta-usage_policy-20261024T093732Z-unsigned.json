@@ -1,0 +1,55 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "public.notice",
+ "subject": "Meta — usage_policy: bytes changed 2026-10-24",
+ "as_of": "2026-10-24T09:37:48Z",
+ "source_urls": [
+  "https://www.llama.com/llama4/use-policy/"
+ ],
+ "payload": {
+  "kind": "csoai.diff.provider-terms/0.1",
+  "state": "PROBED",
+  "provider": "meta",
+  "surface": "usage_policy",
+  "url": "https://www.llama.com/llama4/use-policy/",
+  "prev_sha256": "cdf63b8a86647cbaf7b6af920db7a536aef1b794f0bb75f20aff3c003583f3ea",
+  "new_sha256": "200d390b95a77c98eee3a904a1f68c36303299dc57996acc6aed51355383e01c",
+  "prev_bytes_sha256": "220c7a6737edbb6715465de080f5b75519f23c91509b7fe4b43ae51873cb9f20",
+  "new_bytes_sha256": "9bc985185da3b09b15c149e03a4a693ea02d50b53fe8697ee93e02623415cdb2",
+  "prev_fetched_at": "2026-09-14T10:50:23Z",
+  "fetched_at": "2026-10-24T09:37:48Z",
+  "http_status": 200,
+  "robots": "allow",
+  "normaliser": "csoai-norm-v1",
+  "byte_length": {
+   "prev": 311068,
+   "new": 175426
+  },
+  "etag": {
+   "prev": null,
+   "new": null
+  },
+  "last_modified": {
+   "prev": null,
+   "new": null
+  },
+  "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+  "not_a_grade": true,
+  "writes_board": false,
+  "content_stored": false
+ },
+ "sha256": "2711616362fe8c83c53d26a8554442176e0a32fa6aea52220ea68e3258176ce6",
+ "sig_ed25519": null,
+ "unmeasured": [
+  "what changed (content is never stored)",
+  "why it changed",
+  "whether the change is material to anyone",
+  "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+ ],
+ "tags": [
+  "provider-diff",
+  "provider:meta",
+  "surface:usage_policy",
+  "hash-only"
+ ]
+}
