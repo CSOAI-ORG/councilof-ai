@@ -545,7 +545,14 @@ def validate(document: dict[str, Any]) -> None:
             assert row["measurement"]["measured_chains"] == ["XRPL"]
             assert row["measurement"]["match_rule"] == "UNIQUE_FROZEN_SYMBOL_WITH_XRPL_DEPLOYMENT"
             assert "XRPL" in row["chains"]
-            assert sum(str(peer["symbol"]).upper() == str(row["symbol"]).upper() for peer in assets) == 1
+            # Match the same chain-qualified uniqueness rule used by the builder.
+            # A same-symbol row on another chain remains UNMEASURED and does not
+            # make this XRPL deployment ambiguous.
+            assert sum(
+                str(peer["symbol"]).upper() == str(row["symbol"]).upper()
+                and "XRPL" in peer["chains"]
+                for peer in assets
+            ) == 1
             assert len(row["measurement"]["evidence_urls"]) == 1
             assert row["measurement"]["evidence_urls"][0].startswith("https://councilof.ai/cards/")
             assert row["signature_state"] == "ASSET_MEASUREMENT_SIGNED_ED25519"
