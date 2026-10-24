@@ -89,6 +89,12 @@ fails the job. An existing PR must match repository, base, head branch and
 exact commit, remain open, and have no automatic merge enabled.
 The workflow also retains the safe delivery status for seven days.
 
+This does not promise automatic recovery of a workflow rerun. A fresh checkout
+can create a different commit for the same run branch; its normal push may
+then reject non-fast-forward history. That remains an explicit failure with
+a retained safe capture. Existing-PR tests qualify matching pushed-head
+readback, not a real-Git rerun experiment. Existing work is never force-replaced.
+
 The regression uses synthetic errors corresponding to the 23 October push
 rejection, plus missing-retention and failed-publication controls. It does not
 read failed provider logs/artifacts, use real credentials, rewrite historical

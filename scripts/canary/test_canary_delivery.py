@@ -83,7 +83,8 @@ class DeliveryTest(unittest.TestCase):
         self.assertEqual(stdout.getvalue() + stderr.getvalue(), "")
         return result
 
-    def test_existing_exact_pr_is_idempotent_and_never_auto_merged(self):
+    def test_existing_pr_matching_pushed_head_is_reused_without_auto_merge(self):
+        # This stub qualifies exact PR readback, not fresh-checkout rerun history.
         fake = Commands()
         result = self.run_fake(fake)
         self.assertEqual(result["state"], "PROPOSED")
