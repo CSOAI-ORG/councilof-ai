@@ -397,11 +397,9 @@ for (const vp of VIEWPORTS) {
       await observeRunTransport(page);
       await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
       await page.locator('[data-testid="dashboard-shell"]').waitFor({ state: "visible", timeout: 60_000 });
-      // The original inline first-question regression remains covered after intentionally
-      // closing the new default view of the existing Ask conversation.
+      // Explicit opening alone must never submit a question on either width.
       const entryAsk = page.getByTestId("ask-pane");
-      // 12 Oct 2026: on mobile the entry route keeps Ask closed; the launcher opens it on tap.
-      if (vp.project === "mobile") await openFromLauncher(page);
+      await openFromLauncher(page);
       await expect(entryAsk).toBeVisible({ timeout: 30_000 });
       await entryAsk.getByRole("button", { name: "Close Ask", exact: true }).click();
       await expect(entryAsk).toBeHidden();
@@ -504,10 +502,7 @@ async function navigateInApp(page: Page, href: string) {
   await expect(page).toHaveURL(new RegExp(href.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "$"));
 }
 
-/**
- * 12 Oct 2026 (Nick, item 1): on mobile an entry route shows the page first, Ask stays closed and
- * nothing is POSTed; the floating launcher opens the same pane on tap.
- */
+/** Every entry route shows the page first; its launcher deliberately opens Ask. */
 async function openFromLauncher(page: Page) {
   const fab = page.getByRole("button", { name: "Open Council of AI chat", exact: true });
   await expect(fab).toBeVisible({ timeout: 30_000 });
@@ -516,9 +511,9 @@ async function openFromLauncher(page: Page) {
   await expect(fab).toBeHidden();
 }
 
-/** Desktop entry routes open Ask by themselves; mobile ones need the launcher tap first. */
-async function enterAsk(page: Page, mobile: boolean) {
-  if (mobile) await openFromLauncher(page);
+/** All entry widths use the same explicit launcher and existing conversation. */
+async function enterAsk(page: Page) {
+  await openFromLauncher(page);
   return readyAsk(page);
 }
 
@@ -564,33 +559,40 @@ type NativeAskCapture = {
 };
 type AskCaptureWindow = Window & { __CSOAI_ASK_NATIVE_CAPTURE__?: NativeAskCapture };
 
-test("root, Council OS home and plugin tools open the existing Ask only after hydration", async ({ page, baseURL }, info) => {
+test("root, Council OS home and plugin tools keep Ask closed until explicitly opened", async ({ page, baseURL }, info) => {
   test.setTimeout(120_000);
   const posts: Request[] = [];
   const localOrigin = new URL(baseURL || "http://127.0.0.1:4180").origin;
   page.on("request", request => { if (request.method() === "POST") posts.push(request); });
-  const mobile = info.project.name === "mobile";
   await page.goto("/", { waitUntil: "domcontentloaded" });
-  if (mobile) {
-    // Hero first: no Ask overlay on a cold / at 375px, only the launcher.
-    await expect(page.getByRole("heading", { level: 1 }).first()).toBeInViewport({ timeout: 30_000 });
-    await expect(page.getByRole("button", { name: "Open Council of AI chat", exact: true })).toBeVisible();
-    await expect(page.getByTestId("ask-pane")).toHaveCount(0);
-  }
-  let pane = await enterAsk(page, mobile);
+  await expect(page.getByRole("heading", { level: 1 }).first()).toBeInViewport({ timeout: 30_000 });
+  const launcher = page.getByRole("button", { name: "Open Council of AI chat", exact: true });
+  await expect(launcher).toBeVisible();
+  await expect(page.getByTestId("ask-pane")).toHaveCount(0);
+  let pane = await enterAsk(page);
   await pane.getByLabel("Your question", { exact: true }).press("Escape");
   await expect(pane).toBeHidden();
-  // A rerender/close must not reopen or send the previous question. Navigation opens once.
+  await expect(launcher).toBeFocused();
+  // Keyboard reopening keeps the mounted conversation and submits nothing.
+  await launcher.press("Enter");
+  pane = await readyAsk(page);
+  await pane.getByRole("button", { name: "Close Ask", exact: true }).click();
+  await expect(pane).toBeHidden();
+  await expect(launcher).toBeFocused();
+  // Resize and route changes never reopen a conversation the reader closed.
   await page.evaluate(() => window.dispatchEvent(new Event("resize")));
   await expect(pane).toBeHidden();
   await navigateInApp(page, "/dashboard?tab=home");
-  pane = await enterAsk(page, mobile);
+  await expect(pane).toBeHidden();
+  pane = await enterAsk(page);
   await pane.getByRole("button", { name: "Close Ask", exact: true }).click();
   await expect(pane).toBeHidden();
+  await expect(launcher).toBeFocused();
   await navigateInApp(page, "/dashboard?tab=board");
   await expect(pane).toBeHidden();
   await navigateInApp(page, "/tools");
-  pane = await enterAsk(page, mobile);
+  await expect(pane).toBeHidden();
+  pane = await enterAsk(page);
   await expect(page.getByTestId("tools-mcp")).toBeVisible();
   await expect(pane.getByTestId("talk-transcript")).toHaveCount(0);
   const discovery = posts.filter(request => isMcpDiscovery(request, localOrigin));
@@ -765,7 +767,7 @@ test("existing Ask renders one genuine free public AGUI answer and retains its c
   try {
     await page.goto("/dashboard?tab=home", { waitUntil: "domcontentloaded" });
     expect(new URL(page.url()).origin, "This case must actually exercise cross-origin browser CORS").not.toBe(new URL(PUBLIC_ASK).origin);
-    const pane = await enterAsk(page, info.project.name === "mobile");
+    const pane = await enterAsk(page);
     expect(requests).toHaveLength(0);
     const responsePending = page.waitForResponse(response => response.url() === PUBLIC_ASK && response.request().method() === "POST");
     await pane.getByLabel("Your question", { exact: true }).fill(BOARD_QUESTION);
@@ -831,7 +833,8 @@ test("existing Ask renders one genuine free public AGUI answer and retains its c
     // persistence is not supplied by this existing component and is not asserted here.
     await pane.getByLabel("Your question", { exact: true }).press("Escape");
     await expect(pane).toBeHidden();
-    await page.evaluate(() => window.dispatchEvent(new CustomEvent("council:ask-open")));
+    await expect(page.getByRole("button", { name: "Open Council of AI chat", exact: true })).toBeFocused();
+    await openFromLauncher(page);
     await expect(pane).toBeVisible(); await expect(card).toBeVisible(); expect(requests).toHaveLength(1);
     Object.assign(responseRecord, { server_thread_id: started[0].threadId, server_run_id: started[0].runId, tool: results[0].tool, label: results[0].label });
     await page.screenshot({ path: info.outputPath("published-source-agui-ready.png"), fullPage: true });

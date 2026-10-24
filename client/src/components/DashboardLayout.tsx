@@ -241,12 +241,15 @@ export default function DashboardLayout({
   const search = useSearch();
   const [, setLocation] = useLocation();
   const drawerRef = useRef<HTMLDivElement>(null);
+  const desktopNavigationRef = useRef<HTMLElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const [isSmall, setIsSmall] = useState(
     () =>
       typeof window !== "undefined" && window.matchMedia?.(SMALL_QUERY).matches,
   );
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [desktopNavOpen, setDesktopNavOpen] = useState(false);
+  const navigationOpen = isSmall ? drawerOpen : desktopNavOpen;
   const framed = isEmbedded();
 
   useEffect(() => {
@@ -271,18 +274,22 @@ export default function DashboardLayout({
     return () => query.removeEventListener?.("change", update);
   }, []);
 
-  // Mobile drawer: focus the first link on open, close on Escape, return focus to the trigger.
+  // Navigation opens deliberately on every width. Escape returns focus to its trigger.
   useEffect(() => {
-    if (!drawerOpen) return;
-    drawerRef.current?.querySelector<HTMLElement>("a")?.focus();
+    if (!navigationOpen) return;
+    const navigation = isSmall ? drawerRef.current : desktopNavigationRef.current;
+    navigation?.querySelector<HTMLElement>("a")?.focus();
     const close = (event: KeyboardEvent) => {
-      if (event.key !== "Escape") return;
+      if (event.key !== "Escape" || event.defaultPrevented) return;
+      if (!isSmall && !(event.target instanceof Node && navigation?.contains(event.target)) && event.target !== menuButtonRef.current) return;
+      event.preventDefault();
       setDrawerOpen(false);
+      setDesktopNavOpen(false);
       menuButtonRef.current?.focus();
     };
     window.addEventListener("keydown", close);
     return () => window.removeEventListener("keydown", close);
-  }, [drawerOpen]);
+  }, [isSmall, navigationOpen]);
 
   const params = new URLSearchParams(
     search.startsWith("?") ? search.slice(1) : search,
@@ -342,29 +349,32 @@ export default function DashboardLayout({
       <Header inApp />
 
       <div className="flex min-h-0 flex-1">
-        {/* Desktop: the sections are always visible. Mobile: the same list lives in a drawer. */}
-        <aside
-          className="hidden w-60 shrink-0 flex-col border-r border-emerald-950/10 bg-white md:flex"
-          aria-label="Council OS sections"
-        >
-          <div className="px-5 pb-3 pt-5">
-            <p className="text-base font-black tracking-tight text-slate-900">Council OS</p>
-            <p className="mt-0.5 text-xs text-slate-600">Independent AI measurements, on request</p>
-          </div>
-          <nav
-            id={isSmall ? undefined : NAV_ID}
-            aria-label="Workspace destinations"
-            className="min-h-0 flex-1 overflow-y-auto px-3 pb-4"
+        {/* Both navigation layouts start collapsed, leaving the full canvas available. */}
+        {!isSmall && desktopNavOpen ? (
+          <aside
+            ref={desktopNavigationRef}
+            className="flex w-60 shrink-0 flex-col border-r border-emerald-950/10 bg-white"
+            aria-label="Council OS sections"
           >
-            <SectionLinks activeGroup={group?.id ?? null} activeTab={activeTab} />
-            <div className="mt-5">
-              <SupportMenu />
+            <div className="px-5 pb-3 pt-5">
+              <p className="text-base font-black tracking-tight text-slate-900">Council OS</p>
+              <p className="mt-0.5 text-xs text-slate-600">Independent AI measurements, on request</p>
             </div>
-          </nav>
-          <div className="flex items-center justify-between gap-2 border-t border-border p-3">
-            <DashboardAccountMenu />
-          </div>
-        </aside>
+            <nav
+              id={isSmall ? undefined : NAV_ID}
+              aria-label="Workspace destinations"
+              className="min-h-0 flex-1 overflow-y-auto px-3 pb-4"
+            >
+              <SectionLinks activeGroup={group?.id ?? null} activeTab={activeTab} />
+              <div className="mt-5">
+                <SupportMenu />
+              </div>
+            </nav>
+            <div className="flex items-center justify-between gap-2 border-t border-border p-3">
+              <DashboardAccountMenu />
+            </div>
+          </aside>
+        ) : null}
 
         {isSmall && drawerOpen ? (
           <>
@@ -373,7 +383,10 @@ export default function DashboardLayout({
               aria-label="Close workspace navigation"
               tabIndex={-1}
               className="fixed inset-0 z-[60] bg-black/45"
-              onClick={() => setDrawerOpen(false)}
+              onClick={() => {
+                setDrawerOpen(false);
+                menuButtonRef.current?.focus();
+              }}
             />
             <div
               ref={drawerRef}
@@ -423,16 +436,20 @@ export default function DashboardLayout({
             <div className="flex min-h-12 items-center gap-2 py-1.5">
               <button
                 ref={menuButtonRef}
+                data-testid="workspace-sections-toggle"
                 type="button"
-                onClick={() => setDrawerOpen((open) => !open)}
-                aria-expanded={drawerOpen}
-                aria-controls={NAV_ID}
+                onClick={() => {
+                  if (isSmall) setDrawerOpen((open) => !open);
+                  else setDesktopNavOpen((open) => !open);
+                }}
+                aria-expanded={navigationOpen}
+                aria-controls={navigationOpen ? NAV_ID : undefined}
                 aria-label={
-                  drawerOpen
+                  navigationOpen
                     ? "Close workspace navigation"
                     : "Open workspace navigation"
                 }
-                className="inline-flex h-10 shrink-0 items-center gap-2 rounded-lg border border-border bg-white px-3 text-sm font-semibold text-slate-800 shadow-sm hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700 md:hidden"
+                className="inline-flex h-10 shrink-0 items-center gap-2 rounded-lg border border-border bg-white px-3 text-sm font-semibold text-slate-800 shadow-sm hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700"
               >
                 <Menu className="h-4 w-4" aria-hidden="true" />
                 Sections
