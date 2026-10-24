@@ -91,6 +91,24 @@ export default function HomeHero() {
             Verify a record
           </Link>
         </div>
+        <div className="mt-5 max-w-2xl text-sm leading-relaxed text-emerald-50/90" data-testid="hero-paid-services">
+          <p>Need an Article 50 pack, an evidence bundle or provider change history?</p>
+          <div className="mt-1 flex flex-col gap-x-6 sm:flex-row sm:flex-wrap">
+            <Link
+              href="/services/"
+              className="inline-flex min-h-11 items-center font-bold text-emerald-300 underline underline-offset-4 hover:text-emerald-200"
+            >
+              View paid services and x402 terms
+            </Link>
+            <Link
+              href="/contact/"
+              className="inline-flex min-h-11 items-center font-bold text-emerald-300 underline underline-offset-4 hover:text-emerald-200"
+            >
+              Request a GBP invoice by email
+            </Link>
+          </div>
+          <p>Scope and invoice terms are agreed by email. Opening these links does not place an order.</p>
+        </div>
         <p className="mt-5">
           <a
             href="/how-we-work/#machine-surface"
