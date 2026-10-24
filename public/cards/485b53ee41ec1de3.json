@@ -1,0 +1,80 @@
+{
+  "card": {
+    "as_of": "2026-10-24T05:12:31Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "axis": "humanoid-labour-index",
+      "cite": "https://councilof.ai/api/gspc",
+      "compute_composite": false,
+      "do_not_invent_percentage": true,
+      "kind": "gspc.coverage-card/0.1",
+      "metamask_is_signer": false,
+      "n": 0,
+      "not_a_grade": true,
+      "schema": "csoai.gspc-axes/0.5",
+      "status": "UNMEASURED",
+      "task": "NOT_BUILT; no input bank"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "485b53ee41ec1de3ac234b27d889f867488e6defc84c402d0289acee54731bb4",
+    "sig_ed25519": "d1c54c2180b4c16d0576dd6acb6746341e20fac1e0b52803202691006d5cd6b55fd1567f0974e30d97f94937a9b2e6cb2b43daafd2d5a79baf2829c31c649708",
+    "source_urls": [
+      "https://councilof.ai/api/gspc",
+      "https://huggingface.co/datasets/csoai/gspc-humanoid-labour-index"
+    ],
+    "subject": "GSPC humanoid-labour-index UNMEASURED coverage",
+    "surface": "public.notice",
+    "tags": [
+      "coverage:UNMEASURED",
+      "not-a-grade",
+      "no-composite"
+    ],
+    "unmeasured": [
+      "humanoid-labour-index",
+      "n=0"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "8b5c1f11eddd02ebc8de60b91068dd15aec08046b2e9161cdcce927a9832947f",
+    "8c7d1d9984dbe4825fc13d007d04f720718d558b6294ae78f878aaa3046a352d",
+    "084537a08193e2699070b9e58aca86e1caa6721ce47d2bb2b6e53afc6a7394e0",
+    "a4c31ecd2621f20a5a9db950ad636df56ca13ebc055be2eb5e688ee0aa2d22f3",
+    "47e82207ed926bb459877de2022332940282cddd7e6d9f4ee99d266f6d66839e",
+    "871136e59d56d5f7601626173c7b4492fc5b8ce6ae2cf6047214a9d9480cdcbe",
+    "07d3d60b103d10ec865a50030051f2310c32e2808c6ae2e4f7ffc475491706b7",
+    "de640508128e935edc5b4a7fe8cf49b3c28bc699ed82dd62d8115370185a6afa",
+    "8832209b590ed7d2b7fa6eca2456df293c697c0bb53b874c793d170a1f6f841c"
+  ]
+}
