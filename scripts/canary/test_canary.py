@@ -29,6 +29,7 @@ class CanaryTest(unittest.TestCase):
         # Never inspect retained provider artifacts or call real endpoints.
         tmp = tempfile.TemporaryDirectory()
         self.addCleanup(tmp.cleanup)
+        self.receipt_path = os.path.join(tmp.name, "capture-receipt.json")
         for name, value in (
             ("BASELINE_PATH", os.path.join(tmp.name, "baseline.jsonl")),
             ("DRIFT_PATH", os.path.join(tmp.name, "drift.jsonl")),
@@ -95,7 +96,7 @@ class CanaryTest(unittest.TestCase):
                 mock.patch.object(canary_run, "resolve_key", return_value=sentinel), \
                 mock.patch.object(canary_run, "call_endpoint", side_effect=exc), \
                 redirect_stdout(stdout), redirect_stderr(stderr):
-            self.assertEqual(canary_run.real_run(), 0)
+            self.assertEqual(canary_run.real_run(receipt_path=self.receipt_path), 0)
         if isinstance(exc, urllib.error.HTTPError):
             close.assert_called_once_with()
             if closes:
@@ -110,7 +111,12 @@ class CanaryTest(unittest.TestCase):
         self.assertEqual(row["label"], "THIN")
         self.assertFalse(os.path.exists(canary_run.DRIFT_PATH))
         # Check the actual two output boundaries, plus stderr, not just the helper.
-        output = stored + stdout.getvalue() + stderr.getvalue()
+        with open(self.receipt_path, encoding="utf-8") as stream:
+            retained = stream.read()
+        receipt = json.loads(retained)
+        self.assertEqual(receipt["measurement_state"], "NO_HASHED_ENDPOINTS")
+        self.assertEqual(receipt["publication_at_capture"], "NOT_ATTEMPTED")
+        output = stored + retained + stdout.getvalue() + stderr.getvalue()
         for forbidden in (sentinel, "example.invalid", "?key=", "Authorization", "RAW_BODY"):
             self.assertNotIn(forbidden, output)
         self.assertIn(expected_status, stdout.getvalue())
@@ -228,7 +234,7 @@ class CanaryTest(unittest.TestCase):
                 mock.patch.object(canary_run, "resolve_key", return_value="synthetic-only"), \
                 mock.patch.object(canary_run.urllib.request, "urlopen", return_value=response), \
                 redirect_stdout(stdout), redirect_stderr(stderr):
-            self.assertEqual(canary_run.real_run(), 0)
+            self.assertEqual(canary_run.real_run(receipt_path=self.receipt_path), 0)
         rows = canary_run.read_jsonl(canary_run.BASELINE_PATH)
         self.assertEqual(rows[0]["error"], {"category": "RESPONSE_DECODE_ERROR"})
         self.assertEqual(rows[0]["status"], "ERROR")
@@ -270,7 +276,7 @@ class CanaryTest(unittest.TestCase):
                     mock.patch.object(canary_run, "resolve_key", return_value=key), \
                     mock.patch.object(canary_run, "call_endpoint", return_value="answer") as call, \
                     redirect_stdout(io.StringIO()):
-                self.assertEqual(canary_run.real_run(), 0)
+                self.assertEqual(canary_run.real_run(receipt_path=self.receipt_path), 0)
             row = canary_run.read_jsonl(canary_run.BASELINE_PATH)[-1]
             self.assertEqual(row["status"], expected)
             self.assertNotIn("error", row)
@@ -291,6 +297,124 @@ class CanaryTest(unittest.TestCase):
             if os.path.exists(path):
                 for row in canary_run.read_jsonl(path):
                     self.assertEqual(row.get("label"), "THIN", path)
+
+    def capture_fixture(self):
+        cfg = {"endpoints": [{"id": "synthetic"}], "prompts": [{"id": "p1"}]}
+        hashes = {"p1": canary_run.sha256_hex("captured")}
+        row = {"date": "2026-10-24", "endpoint_id": "synthetic", "status": "HASHED",
+               "prompt_hashes": hashes, "daily_digest": canary_run.daily_digest(hashes),
+               "latency_ms": 1, "label": "THIN"}
+        return cfg, row
+
+    def test_receipt_rejects_unconfigured_duplicate_and_unsafe_identities(self):
+        cfg, row = self.capture_fixture()
+        cases = [(cfg, [dict(row, endpoint_id="not-configured")]), (cfg, []), (cfg, [row, row]),
+                 (dict(cfg, endpoints=[{"id": "synthetic"}]*2), [row]),
+                 (dict(cfg, prompts=[{"id": "p1"}]*2), [row]),
+                 (dict(cfg, endpoints=[{"id": "SYNTHETIC_PRIVATE/?key=x"}]), [row]),
+                 (dict(cfg, prompts=[{"id": "p1"}]*65), [row])]
+        for configuration, rows in cases:
+            with self.assertRaisesRegex(ValueError, "^invalid safe capture fields$"):
+                canary_run.capture_receipt(rows, configuration, "2026-10-24")
+
+    def test_receipt_projects_only_safe_current_fields(self):
+        cfg, row = self.capture_fixture()
+        secret = "SYNTHETIC_PRIVATE_DO_NOT_RETAIN"
+        row.update(status="ERROR", daily_digest=None, model=secret, note=secret,
+                   provider={"url": "https://example.invalid/?key=" + secret},
+                   error={"category": "CALL_ERROR", "message": secret, "headers": secret})
+        receipt = canary_run.capture_receipt([row], cfg, "2026-10-24")
+        self.assertNotIn(secret, json.dumps(receipt))
+        self.assertNotIn("example.invalid", json.dumps(receipt))
+        self.assertEqual(receipt["rows"][0]["error"], {"category": "CALL_ERROR"})
+        self.assertIsNone(receipt["rows"][0]["daily_digest"])
+        self.assertEqual(receipt["measurement_state"], "NO_HASHED_ENDPOINTS")
+        self.assertEqual(receipt["rows"][0]["prompt_hashes"], row["prompt_hashes"])
+
+    def test_receipt_does_not_upgrade_missing_or_partial_output(self):
+        cfg, row = self.capture_fixture()
+        for change in ({"daily_digest": None}, {"daily_digest": "0"*64},
+                       {"prompt_hashes": {}}, {"prompt_hashes": {"unknown": "a"*64}},
+                       {"status": "UNAVAILABLE"}, {"status": "ERROR"}, {"status": "UNKNOWN"}):
+            with self.assertRaises(ValueError):
+                canary_run.capture_receipt([dict(row, **change)], cfg, "2026-10-24")
+        hashes = {"p1": canary_run.sha256_hex("")}
+        empty = dict(row, prompt_hashes=hashes, daily_digest=canary_run.daily_digest(hashes))
+        accepted = canary_run.capture_receipt([empty], cfg, "2026-10-24")
+        self.assertEqual(accepted["measurement_state"], "ALL_ENDPOINTS_HASHED")
+        self.assertEqual(accepted["rows"][0]["prompt_hashes"], hashes)
+
+    def test_receipt_distinguishes_partial_and_all_unavailable(self):
+        cfg, success = self.capture_fixture()
+        cfg["endpoints"].append({"id": "second"})
+        missing = dict(success, endpoint_id="second", status="UNAVAILABLE",
+                       prompt_hashes={}, daily_digest=None, latency_ms=None)
+        mixed = canary_run.capture_receipt([success, missing], cfg, "2026-10-24")
+        self.assertEqual(mixed["measurement_state"], "PARTIAL")
+        self.assertEqual(mixed["hashed_endpoints"], 1)
+        self.assertEqual(sum(mixed["status_counts"].values()), 2)
+        rows = [dict(missing, endpoint_id=e["id"]) for e in cfg["endpoints"]]
+        receipt = canary_run.capture_receipt(rows, cfg, "2026-10-24")
+        self.assertEqual(receipt["measurement_state"], "NO_HASHED_ENDPOINTS")
+        self.assertEqual(receipt["hashed_endpoints"], 0)
+        self.assertTrue(all(r["daily_digest"] is None for r in receipt["rows"]))
+
+    def test_receipt_rejects_bad_types_dates_and_hashes_with_fixed_errors(self):
+        cfg, row = self.capture_fixture()
+        for value in (True, False, -1, 86400001, float("nan"), float("inf"), "private"):
+            with self.assertRaisesRegex(ValueError, "^invalid safe capture fields$"):
+                canary_run.capture_receipt([dict(row, latency_ms=value)], cfg, "2026-10-24")
+        for value in (True, None, 99, 600, "SYNTHETIC_PRIVATE"):
+            bad = dict(row, status="ERROR", daily_digest=None,
+                       error={"category": "HTTP_ERROR", "http_status": value})
+            with self.assertRaisesRegex(ValueError, "^invalid safe capture fields$"):
+                canary_run.capture_receipt([bad], cfg, "2026-10-24")
+        for value in ("a"*63, "A"*64, "z"*64, None, True, {"private": "value"}):
+            with self.assertRaisesRegex(ValueError, "^invalid safe capture fields$"):
+                canary_run.capture_receipt([dict(row, prompt_hashes={"p1": value})], cfg, "2026-10-24")
+        for value in ("PRIVATE___", "2026-02-30", None, True):
+            with self.assertRaisesRegex(ValueError, "^invalid safe capture fields$"):
+                canary_run.capture_receipt([row], cfg, value)
+
+    def test_receipt_excludes_history_and_precedes_drift_failure(self):
+        cfg, _ = self.capture_fixture()
+        cfg["prompts"][0]["text"] = "synthetic"
+        canary_run.append_jsonl(canary_run.BASELINE_PATH, {"note": "PRIVATE_HISTORY", "status": "ERROR"})
+        def fail_after_receipt(_rows, _today):
+            self.assertTrue(os.path.isfile(self.receipt_path))
+            raise RuntimeError("synthetic drift failure")
+        with mock.patch.object(canary_run, "load_config", return_value=cfg), \
+                mock.patch.object(canary_run, "resolve_key", return_value="synthetic"), \
+                mock.patch.object(canary_run, "call_endpoint", return_value="captured"), \
+                mock.patch.object(canary_run, "detect_drift", side_effect=fail_after_receipt), \
+                redirect_stdout(io.StringIO()):
+            with self.assertRaisesRegex(RuntimeError, "^synthetic drift failure$"):
+                canary_run.real_run(receipt_path=self.receipt_path)
+        with open(self.receipt_path, encoding="utf-8") as stream:
+            retained = stream.read()
+        self.assertNotIn("PRIVATE_HISTORY", retained)
+        self.assertEqual(len(json.loads(retained)["rows"]), 1)
+
+    def test_receipt_write_failure_and_size_limit_leave_no_partial_file(self):
+        cfg, row = self.capture_fixture()
+        with mock.patch.object(canary_run.os, "replace", side_effect=OSError("synthetic")):
+            with self.assertRaises(OSError):
+                canary_run.write_capture_receipt(self.receipt_path, [row], cfg, "2026-10-24")
+        self.assertFalse(os.path.exists(self.receipt_path))
+        self.assertFalse(any(n.startswith(".capture-") for n in os.listdir(os.path.dirname(self.receipt_path))))
+        with mock.patch.object(canary_run, "MAX_RECEIPT_BYTES", 1):
+            with self.assertRaisesRegex(ValueError, "^safe capture exceeds limit$"):
+                canary_run.write_capture_receipt(self.receipt_path, [row], cfg, "2026-10-24")
+        self.assertFalse(os.path.exists(self.receipt_path))
+
+    def test_receipt_preserves_exact_hashes_and_utc_capture_stamp(self):
+        cfg, row = self.capture_fixture()
+        canary_run.write_capture_receipt(self.receipt_path, [row], cfg, "2026-10-24")
+        with open(self.receipt_path, encoding="utf-8") as stream:
+            receipt = json.load(stream)
+        self.assertTrue(receipt["captured_at"].endswith("+00:00"))
+        self.assertEqual(receipt["rows"][0]["daily_digest"], row["daily_digest"])
+        self.assertEqual(receipt["rows"][0]["prompt_hashes"], row["prompt_hashes"])
 
     def test_never_touches_signing_or_publisher(self):
         for name in os.listdir(HERE):

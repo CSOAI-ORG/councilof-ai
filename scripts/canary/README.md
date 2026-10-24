@@ -64,6 +64,42 @@ output, including malformed JSON and credential-like text in provider errors:
 python3 -B scripts/canary/test_canary.py
 ```
 
+## Safe capture retention and PR proposal
+
+The daily workflow retains a separate receipt from only the current invocation's
+in-memory rows. Its explicit projection keeps configured endpoint/prompt IDs,
+typed status/timing fields and validated hashes. It excludes model labels,
+notes, bodies, URLs, headers and arbitrary error messages. Historical baseline
+rows are never copied into this receipt.
+
+Counts distinguish all endpoints hashed, partial capture and no hashed
+endpoints. These are unsigned THIN observations. A retained file does not mean
+successful measurement, publication, a protected merge or deployment.
+
+The workflow uploads that single file for seven days before proposing the data.
+Collector failure, missing output, failed upload or absent artifact ID blocks
+the proposal step. The safe receipt survives a later drift-analysis or
+publication failure without changing that failure into a successful job.
+
+The delivery helper uses the existing normal branch push and one pull request.
+It checks the configured remote and staged file scope; no force push is used.
+Command output is private on failure: only a static stage and integer exit code
+are retained. A rejected push stops before PR creation. A PR creation failure
+fails the job. An existing PR must match repository, base, head branch and
+exact commit, remain open, and have no automatic merge enabled.
+The workflow also retains the safe delivery status for seven days.
+
+The regression uses synthetic errors corresponding to the 23 October push
+rejection, plus missing-retention and failed-publication controls. It does not
+read failed provider logs/artifacts, use real credentials, rewrite historical
+baseline data or bypass GitHub secret protection. Historical exposure review
+remains with the credential owner.
+
+Offline checks:
+
+    python3 -B scripts/canary/test_canary.py
+    python3 -B scripts/canary/test_canary_delivery.py
+
 ## Run
 
 ```bash
@@ -75,11 +111,7 @@ python3 scripts/canary/canary_run.py
 python3 scripts/canary/canary_run.py --dry-run
 ```
 
-Daily cron one-liner:
-
-```cron
-17 6 * * * cd /path/to/councilof-ai && /usr/bin/python3 scripts/canary/canary_run.py >> public/interop/silent-route-canary-2026-09/cron.log 2>&1
-```
+The existing `canary-daily.yml` schedule remains daily at 03:17 UTC.
 
 ## Prompt design note
 

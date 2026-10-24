@@ -18,6 +18,8 @@ import argparse
 import hashlib
 import json
 import os
+import re
+import tempfile
 import sys
 import time
 import urllib.error
@@ -288,9 +290,115 @@ def dry_run():
     return 0
 
 
-def real_run():
+SAFE_STATUSES = frozenset(("HASHED", "UNAVAILABLE", "BAD_CREDENTIALS", "NO_BALANCE",
+                          "FORBIDDEN", "RATE_LIMITED", "ERROR"))
+SAFE_CATEGORIES = frozenset(("HTTP_ERROR", "RESPONSE_DECODE_ERROR", "TIMEOUT",
+                            "NETWORK_ERROR", "CALL_ERROR"))
+SAFE_ID = re.compile(r"[a-z0-9][a-z0-9_-]{0,63}\Z")
+SAFE_HASH = re.compile(r"[0-9a-f]{64}\Z")
+MAX_RECEIPT_BYTES = 262144
+
+
+def capture_receipt(rows, cfg, today):
+    """Project this invocation only; never read retained history or provider text."""
+    def reject():
+        raise ValueError("invalid safe capture fields")
+    if not isinstance(today, str) or len(today) != 10:
+        reject()
+    try:
+        if date.fromisoformat(today).isoformat() != today:
+            reject()
+    except ValueError:
+        reject()
+    configured = []
+    for section in ("endpoints", "prompts"):
+        items = cfg.get(section) if isinstance(cfg, dict) else None
+        if not isinstance(items, list) or not 1 <= len(items) <= 64:
+            reject()
+        ids = []
+        for item in items:
+            key = item.get("id") if isinstance(item, dict) else None
+            if not isinstance(key, str) or not SAFE_ID.fullmatch(key) or key in ids:
+                reject()
+            ids.append(key)
+        configured.append(ids)
+    endpoints, prompts = configured
+    if not isinstance(rows, list) or len(rows) != len(endpoints):
+        reject()
+    safe_rows, seen = [], set()
+    for row in rows:
+        if not isinstance(row, dict):
+            reject()
+        key, status = row.get("endpoint_id"), row.get("status")
+        hashes, digest, latency = row.get("prompt_hashes"), row.get("daily_digest"), row.get("latency_ms")
+        if (not isinstance(key, str) or key not in endpoints or key in seen
+                or row.get("date") != today or row.get("label") != THIN
+                or not isinstance(status, str) or status not in SAFE_STATUSES
+                or not isinstance(hashes, dict)):
+            reject()
+        seen.add(key)
+        if latency is not None and (type(latency) is not int or not 0 <= latency <= 86400000):
+            reject()
+        for prompt, value in hashes.items():
+            if prompt not in prompts or not isinstance(value, str) or not SAFE_HASH.fullmatch(value):
+                reject()
+        if status == "HASHED":
+            if (not isinstance(digest, str) or not SAFE_HASH.fullmatch(digest)
+                    or set(hashes) != set(prompts) or digest != daily_digest(hashes) or row.get("error")):
+                reject()
+        elif digest is not None:
+            reject()
+        if status == "UNAVAILABLE" and hashes:
+            reject()
+        clean = {"date": today, "endpoint_id": key, "status": status,
+                 "prompt_hashes": dict(hashes), "daily_digest": digest,
+                 "latency_ms": latency, "label": THIN}
+        error = row.get("error")
+        if error is not None:
+            if not isinstance(error, dict) or status in ("HASHED", "UNAVAILABLE"):
+                reject()
+            category = error.get("category")
+            if not isinstance(category, str) or category not in SAFE_CATEGORIES:
+                reject()
+            clean["error"] = {"category": category}
+            if "http_status" in error:
+                code = error["http_status"]
+                if category != "HTTP_ERROR" or type(code) is not int or not 100 <= code <= 599:
+                    reject()
+                clean["error"]["http_status"] = code
+        safe_rows.append(clean)
+    counts = {s: sum(row["status"] == s for row in safe_rows) for s in sorted(SAFE_STATUSES)}
+    return {"schema": "csoai.canary-capture-receipt/1", "label": THIN,
+            "date": today, "captured_at": datetime.now(timezone.utc).isoformat(),
+            "capture_complete": True, "endpoint_count": len(safe_rows),
+            "hashed_endpoints": counts["HASHED"], "status_counts": counts,
+            "measurement_state": ("ALL_ENDPOINTS_HASHED" if counts["HASHED"] == len(safe_rows)
+                                  else "PARTIAL" if counts["HASHED"] else "NO_HASHED_ENDPOINTS"),
+            "publication_at_capture": "NOT_ATTEMPTED", "rows": safe_rows}
+
+
+def write_capture_receipt(path, rows, cfg, today):
+    data = (json.dumps(capture_receipt(rows, cfg, today), sort_keys=True,
+                       indent=2, allow_nan=False) + "\n").encode("utf-8")
+    if len(data) > MAX_RECEIPT_BYTES:
+        raise ValueError("safe capture exceeds limit")
+    directory = os.path.dirname(os.path.abspath(path))
+    os.makedirs(directory, exist_ok=True)
+    pending = None
+    try:
+        with tempfile.NamedTemporaryFile(dir=directory, prefix=".capture-", delete=False) as stream:
+            pending = stream.name
+            stream.write(data)
+        os.replace(pending, path)
+        pending = None
+    finally:
+        if pending is not None:
+            os.unlink(pending)
+
+
+def real_run(receipt_path=None):
     cfg = load_config()
-    today = date.today().isoformat()
+    today = datetime.now(timezone.utc).date().isoformat()
     prompts = cfg["prompts"]
     today_rows = []
     for endpoint in cfg["endpoints"]:
@@ -303,6 +411,8 @@ def real_run():
         elif row.get("note"):
             extra = " (%s)" % row["note"]
         print("%-14s %-11s%s" % (row["endpoint_id"], row["status"], extra))
+    if receipt_path is not None:
+        write_capture_receipt(receipt_path, today_rows, cfg, today)
     fired = detect_drift(today_rows, today)
     from collections import Counter
     status_counts = Counter(r["status"] for r in today_rows)
@@ -317,10 +427,11 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description="silent-route canary (THIN)")
     ap.add_argument("--dry-run", action="store_true",
                     help="no network; synthesize two fake days to demonstrate drift firing")
+    ap.add_argument("--receipt", help="retain only this run\'s allowlisted capture fields")
     args = ap.parse_args(argv)
     if args.dry_run:
         return dry_run()
-    return real_run()
+    return real_run(receipt_path=args.receipt)
 
 
 if __name__ == "__main__":
