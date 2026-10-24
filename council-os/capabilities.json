@@ -12,6 +12,116 @@
   "capabilities": [
     {
       "audience": "agent",
+      "description": "booking-webhook \u2014 Paddle booking intake skeleton: signature check then a Busabase bookings proposal; never issues anything. Closed until KYC.",
+      "description_state": "DOCUMENTED",
+      "id": "api-booking-webhook",
+      "kind": "http",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "method": "GET",
+      "name": "Booking webhook",
+      "path": "/api/booking-webhook",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          503
+        ],
+        "method": "GET",
+        "request": "/api/booking-webhook",
+        "safe": true
+      },
+      "schema_refs": [
+        "csoai.booking-intake/0.1"
+      ],
+      "source": "functions/api/booking-webhook.ts",
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "booking-webhook \u2014 Paddle booking intake skeleton: signature check then a Busabase bookings proposal; never issues anything. Closed until KYC.",
+      "description_state": "DOCUMENTED",
+      "id": "api-booking-webhook-post",
+      "kind": "http",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "method": "POST",
+      "name": "Booking webhook (POST)",
+      "path": "/api/booking-webhook",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          503
+        ],
+        "method": "POST",
+        "request": "/api/booking-webhook",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "schema_refs": [
+        "csoai.booking-intake/0.1"
+      ],
+      "source": "functions/api/booking-webhook.ts",
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "human",
+      "description": "waitlist \u2014 join the waitlist for a product not on sale yet; proposes a Busabase record, shows no price.",
+      "description_state": "DOCUMENTED",
+      "id": "api-waitlist",
+      "kind": "http",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "method": "GET",
+      "name": "Waitlist",
+      "path": "/api/waitlist",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          503
+        ],
+        "method": "GET",
+        "request": "/api/waitlist",
+        "safe": true
+      },
+      "schema_refs": [
+        "csoai.waitlist/0.1"
+      ],
+      "source": "functions/api/waitlist.ts",
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "human",
+      "description": "waitlist \u2014 join the waitlist for a product not on sale yet; proposes a Busabase record, shows no price.",
+      "description_state": "DOCUMENTED",
+      "id": "api-waitlist-post",
+      "kind": "http",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "method": "POST",
+      "name": "Waitlist (POST)",
+      "path": "/api/waitlist",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          503
+        ],
+        "method": "POST",
+        "request": "/api/waitlist",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "schema_refs": [
+        "csoai.waitlist/0.1"
+      ],
+      "source": "functions/api/waitlist.ts",
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
       "description": "Verify a C2PA-style signed manifest for AI-generated content (EU AI Act Article 50) at POST https://councilof.ai/api/detect. Deterministically checks the Ed25519-signed metadata layer and the IPTC/schema.org digitalSourceType; returns AI_MARKED / NOT_AI_MARKED / UNVERIFIABLE with a signed verdict receipt (in-toto/DSSE when a board key is bound). The imperceptible-watermark layer we cannot see is declared, never claimed. Free for all; unrestricted for authorities, media, fact-checkers, researchers and civil society. Not certification.",
       "description_state": "DOCUMENTED",
       "examples": [
@@ -2171,7 +2281,7 @@
     },
     {
       "audience": "agent",
-      "description": "Signed evidence bundle for one obligation: EU AI Act Article 50 or 53, DORA or EU-CRA, as OSCAL results. Built only from already-signed measurement cards, each with its full bytes and Merkle inclusion proof, plus one signed manifest card. States: ASSEMBLED, or zero relevant cards stated as zero; never a finding that an obligation is met. Verification is free at /gspc-verify.",
+      "description": "OSCAL evidence bundle for one obligation: EU AI Act Article 50/53, DORA or EU-CRA. Returns selected card objects with signature fields, any retained inclusion proofs, an OSCAL wrapper and assembly manifest. Does not verify input-card signatures. Reports manifest signing status and any unsigned reason. States: ASSEMBLED or ASSEMBLED-EMPTY; zero selected cards stays zero. Supported-card verification is free at /gspc-verify. No new measurement or conformity determination.",
       "description_state": "DOCUMENTED",
       "id": "api-evidence-bundle",
       "kind": "http",
@@ -6124,7 +6234,7 @@
     },
     {
       "audience": "agent",
-      "description": "PAID (x402 or CSOAI LTD invoice). Article 50 marking-evidence pack via https://councilof.ai/api/art50/marking-evidence: which machine-readable marks the named methods DETECT in these bytes right now. Scope: C2PA and IPTC metadata only (C2PA manifest store, assertion hashes, hard binding, claim signature; IPTC digitalSourceType); no watermark, fingerprint or other kind of mark is read. NOT_DETECTED is not unmarked: Article 50(2) is technology-neutral, so a mark this pack cannot read may be present, and metadata is often stripped on re-save. Disclosure: CSOAI is a member of the C2PA, whose specification is one of the two methods read. The pack carries the verbatim Art 50(2) text hash and the dates it turns on. Point-in-time detection — never a conformity opinion, never a compliance word of any kind. preview=true is free and returns the same measurement unsigned. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED rather than inventing a result.",
+      "description": "PAID (x402 or CSOAI LTD invoice). Article 50 marking-evidence pack via https://councilof.ai/api/art50/marking-evidence: which machine-readable marks the named methods DETECT in these bytes right now. Scope: C2PA and IPTC metadata only (C2PA manifest store, assertion hashes, hard binding, claim signature; IPTC digitalSourceType); no watermark, fingerprint or other kind of mark is read. NOT_DETECTED is not unmarked: Article 50(2) is technology-neutral, so a mark this pack cannot read may be present, and metadata is often stripped on re-save. Disclosure: CSOAI is a member of the C2PA, whose specification is one of the two methods read. The pack carries the verbatim Art 50(2) text hash and the dates it turns on. Point-in-time detection \u2014 never a conformity opinion, never a compliance word of any kind. preview=true is free and returns the same measurement unsigned. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED rather than inventing a result.",
       "description_state": "DOCUMENTED",
       "id": "art50_marking_evidence",
       "kind": "mcp_tool",
@@ -6430,7 +6540,7 @@
     },
     {
       "audience": "agent",
-      "description": "PAID (x402 or CSOAI LTD invoice). A historical batch of the estate's measurement receipts via https://councilof.ai/api/receipts/batch: every signed card-v0 leaf whose as_of falls in [from,to] (\u2264200), each with its Merkle inclusion path and the public root(s) that carried it, plus the root index for the window and one signed manifest card citing the batch sha256. preview=true is free and returns count, span, root count and the sha256 of the exact bytes the paid call returns. Recent leaves are free at /root.json, /cards/ and /api/proof?sha= \u2014 the batch sells assembly across history, never a conclusion. No settlement-receipt stream exists (/api/receipts/latest is UNPUBLISHED) and this tool never claims one. Without x_payment the tool returns the 402 challenge.",
+      "description": "PAID (x402 or CSOAI LTD invoice). A historical batch of the estate's measurement receipts via https://councilof.ai/api/receipts/batch: every signed card-v0 leaf whose as_of falls in [from,to] (\u2264200), each with its Merkle inclusion path and the public root(s) that carried it, plus the root index for the window and one manifest card citing the batch sha256. Manifest signing is conditional: a returned unsigned manifest declares manifest_card.sig_ed25519:null and unsigned_reason, with signature unmeasured. Manifest root inclusion remains unmeasured. If signing throws after settlement, the route returns PAID_NOT_DELIVERED with no batch or manifest delivered; preserve the settlement receipt and reconcile before reissue, without automatically retrying or paying again. preview=true is free and returns count, span, root count and the sha256 of the exact bytes the paid call returns. Recent leaves are free at /root.json, /cards/ and /api/proof?sha= \u2014 the batch sells assembly across history, never a conclusion. This tool returns historical measurement leaves, not payment receipts. /api/receipts/latest reports aggregate receipt-store state when available; its counts do not verify a particular payment, delivery or buyer acceptance. Without x_payment the tool returns the 402 challenge.",
       "description_state": "DOCUMENTED",
       "id": "receipts_batch",
       "kind": "mcp_tool",
@@ -6629,7 +6739,7 @@
     },
     {
       "audience": "agent",
-      "description": "PAID (x402). An evidence bundle for ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject via https://councilof.ai/api/evidence-bundle: OSCAL 1.1.0 assessment-results assembled only from already-signed measurement cards (each with its card bytes and Merkle inclusion proof), plus one manifest card-v0, signed when the signing key is present. Observations are relevant-to the obligation, never satisfied or not satisfied; zero relevant cards ships as an empty bundle, and the free preview says so first (preview=true here, or the free tool evidence_bundle_preview). Article 53 output is evidence for review, not a legal determination. Evidence for obligation work \u2014 not a conformity assessment, certification, audit opinion or compliance determination; grants no status. Measurement, not certification. Without x_payment the tool returns the 402 challenge, which is the only place terms appear. Verification of any card is free at https://councilof.ai/gspc-verify.",
+      "description": "PAID (x402). For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject via https://councilof.ai/api/evidence-bundle: selected existing card objects with signature fields and any retained inclusion proofs, an OSCAL assessment-results wrapper and an assembly manifest. Assembly does not verify input-card signatures. A returned unsigned manifest reports its signing status and unsigned reason. If signing throws after settlement, the route returns PAID_NOT_DELIVERED without a delivered bundle or manifest; preserve the settlement receipt and reconcile before reissue, without automatically retrying or paying again. Zero selected cards stays an empty bundle; preview=true here, or the free evidence_bundle_preview tool, shows the count first. No new measurement, full OSCAL conformance or conformity determination is established. Article 53 output is evidence for review, not a legal determination; grants no status. Without x_payment the tool returns the actual 402 challenge; read its terms for each request. Supported-card verification is free at https://councilof.ai/gspc-verify. Measurement, not certification.",
       "description_state": "DOCUMENTED",
       "id": "evidence_bundle",
       "kind": "mcp_tool",
@@ -7297,6 +7407,61 @@
       ],
       "source": "functions/api/discover/ondo-ousg.ts",
       "surfaces": []
+    },
+    {
+      "audience": "agent",
+      "description": "POST /api/sign \u2014 seal an artifact (text or sha256) with Ed25519 under did:web:csoai.org#artifact-seal-1. GET explains how. Fails closed (503) until the key is provisioned. Certifies nothing.",
+      "description_state": "DOCUMENTED",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "path": "/api/sign",
+      "payment": "free",
+      "schema_refs": [
+        "csoai.artifact-seal/0.1"
+      ],
+      "source": "functions/api/sign.ts",
+      "surfaces": [
+        "openapi"
+      ],
+      "id": "api-sign",
+      "method": "GET",
+      "name": "Sign",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/sign",
+        "safe": true
+      }
+    },
+    {
+      "audience": "agent",
+      "description": "POST /api/sign \u2014 seal an artifact (text or sha256) with Ed25519 under did:web:csoai.org#artifact-seal-1. GET explains how. Fails closed (503) until the key is provisioned. Certifies nothing.",
+      "description_state": "DOCUMENTED",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "path": "/api/sign",
+      "payment": "free",
+      "schema_refs": [
+        "csoai.artifact-seal/0.1"
+      ],
+      "source": "functions/api/sign.ts",
+      "surfaces": [
+        "openapi"
+      ],
+      "id": "api-sign-post",
+      "method": "POST",
+      "name": "Sign (POST)",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/sign",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      }
     }
   ],
   "generator": "scripts/capability-seed.mjs (mechanical fields) plus hand-authored editorial fields",

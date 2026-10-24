@@ -1,0 +1,231 @@
+name: kaggle-gspc-batch
+
+# Runs one Measure-named GSPC batch shard as a private Kaggle GPU kernel (2x T4),
+# then harvests it and lands the unsigned runs in the existing private intake
+# (csoai/runpod-gspc-intake) via scripts/runpod_gspc_push_to_hf.py.
+#
+# It does NOT sign, verify-for-admission, write a board or stamp MEASURED:
+# runpod-intake.yml / runpod-land.yml and Measure's gate own that.
+# Fail-closed: dedup guard (no model with a run of record), frozen worker/bank
+# pins, full manifest sha256 re-check at run time (moved digests are skipped),
+# and a 2x T4 shape check inside the kernel.
+
+on:
+  workflow_dispatch:
+    inputs:
+      batch_id:
+        description: "Batch named by Measure (gpu-offload/kaggle-gspc-batch/batches/<id>.tsv)"
+        required: true
+        default: "G3-Kaggle"
+        type: string
+      shard:
+        description: "Shard a|b|c (batch split in three, each under one Kaggle session and one Actions job)"
+        required: true
+        default: "a"
+        type: choice
+        options: [a, b, c]
+      mode:
+        description: "push = push kernel then poll/harvest; harvest = only harvest an already-run shard"
+        required: true
+        default: "push"
+        type: choice
+        options: [push, harvest]
+      dry_run:
+        description: "Build and test only; no Kaggle or HF calls"
+        type: boolean
+        default: true
+      push_intake:
+        description: "Push CARD_CANDIDATE_UNSIGNED runs to csoai/runpod-gspc-intake"
+        type: boolean
+        default: true
+      diagnostic:
+        description: "DIAGNOSTIC MODE: run 3 models with item_limit=2, skip intake, never run of record"
+        type: boolean
+        default: false
+
+concurrency:
+  group: kaggle-gspc-batch
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  batch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    env:
+      KDIR: ${{ github.workspace }}/gpu-offload/kaggle-gspc-batch
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: resolve run parameters
+        id: p
+        env:
+          IN_BATCH: ${{ inputs.batch_id }}
+          IN_SHARD: ${{ inputs.shard }}
+          IN_MODE: ${{ inputs.mode }}
+          IN_DRY: ${{ inputs.dry_run }}
+          IN_PUSH: ${{ inputs.push_intake }}
+          IN_DIAG: ${{ inputs.diagnostic }}
+        run: |
+          set -euo pipefail
+          batch="$IN_BATCH"; shard="$IN_SHARD"; mode="$IN_MODE"; dry="$IN_DRY"; push="$IN_PUSH"; diag="$IN_DIAG"
+          case "$batch" in *[!A-Za-z0-9._-]*|"") echo "bad batch id"; exit 1 ;; esac
+          test -f "$KDIR/batches/$batch.tsv" || { echo "no such batch $batch"; exit 1; }
+          slug=$(echo "csoai-gspc-$batch-$shard" | tr 'A-Z' 'a-z')
+          # Diagnostic mode: always force push=false (code-enforced, not input-dependent)
+          if [ "$diag" = "true" ]; then
+            push="false"
+            slug="${slug}-diag"
+          fi
+          { echo "skip=false"; echo "batch=$batch"; echo "shard=$shard"; echo "mode=$mode"
+            echo "dry=$dry"; echo "push=$push"; echo "diag=$diag"; echo "kernel=nicktempleman/$slug"; } >> "$GITHUB_OUTPUT"
+          echo "batch=$batch shard=$shard mode=$mode dry=$dry push_intake=$push diagnostic=$diag kernel=nicktempleman/$slug"
+
+      - name: dedup guard + pin tests (no tokens)
+        if: steps.p.outputs.skip != 'true'
+        working-directory: gpu-offload/kaggle-gspc-batch
+        run: |
+          python3 dedup_guard.py "batches/${{ steps.p.outputs.batch }}.tsv"
+          python3 -m unittest test_kaggle_gspc_batch.py
+
+      - name: build kernel
+        if: steps.p.outputs.skip != 'true'
+        run: |
+          diag_flag=""
+          if [ "${{ steps.p.outputs.diag }}" = "true" ]; then
+            diag_flag="--diagnostic --item-limit 2"
+          fi
+          python3 "$KDIR/build_kernel.py" --batch "${{ steps.p.outputs.batch }}" \
+            --shard "${{ steps.p.outputs.shard }}" --out "$RUNNER_TEMP/kernel" $diag_flag
+          cat "$RUNNER_TEMP/kernel/kernel-metadata.json"
+
+      - name: kaggle auth from GHA secrets (never print values)
+        if: steps.p.outputs.skip != 'true' && steps.p.outputs.dry != 'true'
+        env:
+          KAGGLE_ACCESS_TOKEN: ${{ secrets.KAGGLE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          test -n "${KAGGLE_ACCESS_TOKEN:-}" || { echo "KAGGLE_ACCESS_TOKEN absent"; exit 1; }
+          pip install --quiet kaggle
+          mkdir -p ~/.kaggle && chmod 700 ~/.kaggle
+          printf '%s' "$KAGGLE_ACCESS_TOKEN" > ~/.kaggle/access_token
+          chmod 600 ~/.kaggle/access_token
+          echo "kaggle access_token written"
+
+      - name: refuse to overlap another shard
+        if: steps.p.outputs.skip != 'true' && steps.p.outputs.dry != 'true' && steps.p.outputs.mode == 'push'
+        env:
+          KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          b=$(echo "${{ steps.p.outputs.batch }}" | tr 'A-Z' 'a-z')
+          for s in a b c; do
+            k="nicktempleman/csoai-gspc-$b-$s"
+            for i in $(seq 1 60); do
+              st=$(kaggle kernels status "$k" 2>/dev/null || true)
+              case "$st" in *RUNNING*|*QUEUED*) echo "$k still $st, waiting ($i/60)"; sleep 60 ;; *) break ;; esac
+            done
+            case "$(kaggle kernels status "$k" 2>/dev/null || true)" in *RUNNING*|*QUEUED*) echo "OVERLAP: $k still running"; exit 1 ;; esac
+          done
+
+      - name: kaggle kernels push
+        if: steps.p.outputs.skip != 'true' && steps.p.outputs.dry != 'true' && steps.p.outputs.mode == 'push'
+        env:
+          KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          kaggle kernels push -p "$RUNNER_TEMP/kernel"
+          echo "pushed ${{ steps.p.outputs.kernel }}"
+
+      - name: poll (up to 320 min)
+        if: steps.p.outputs.skip != 'true' && steps.p.outputs.dry != 'true'
+        id: poll
+        env:
+          KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          K="${{ steps.p.outputs.kernel }}"
+          for i in $(seq 1 320); do
+            st=$(kaggle kernels status "$K" 2>/dev/null || true)
+            [ $((i % 10)) -eq 1 ] && echo "poll $i: $st"
+            case "$st" in
+              *COMPLETE*) echo "state=complete" >> "$GITHUB_OUTPUT"; exit 0 ;;
+              *ERROR*|*CANCEL*) echo "state=failed" >> "$GITHUB_OUTPUT"; echo "RUN FAILED: $st"; exit 0 ;;
+            esac
+            sleep 60
+          done
+          echo "state=running" >> "$GITHUB_OUTPUT"
+          echo "still running after 320 min; dispatch mode=harvest for this shard later"
+
+      - name: harvest
+        if: steps.p.outputs.skip != 'true' && steps.p.outputs.dry != 'true' && steps.poll.outputs.state != 'running'
+        env:
+          KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          OUT="$RUNNER_TEMP/kaggle-out"; mkdir -p "$OUT"
+          kaggle kernels output "${{ steps.p.outputs.kernel }}" -p "$OUT"
+          cd "$OUT"
+          sha256sum -c intake-bundle.tgz.sha256
+          tar -xzf intake-bundle.tgz
+          python3 - <<'PY'
+          import json, sys
+          r = json.load(open("out/RECEIPT.json"))
+          assert r["signed"] is False and r["writes_board"] is False
+          c = r["cells"]
+          print(f"cells={len(c)} candidates={sum(x['intake_candidate'] for x in c)} skipped={len(r['skipped'])} finished={r.get('finished')}")
+          for s in r["skipped"]: print("SKIPPED", s)
+          if len(c) == 0:
+              print("FATAL: 0 cells recorded — kernel produced no valid runs", file=sys.stderr)
+              sys.exit(1)
+          PY
+          # Stage only gate-passing, unsigned candidate runs for intake.
+          mkdir -p "$RUNNER_TEMP/intake"
+          python3 - "$RUNNER_TEMP/intake" <<'PY'
+          import json, os, shutil, sys
+          dst = sys.argv[1]; r = json.load(open("out/RECEIPT.json"))
+          for c in r["cells"]:
+              if c["intake_candidate"]:
+                  src = os.path.join("out", c["run_dir"])
+                  shutil.copytree(src, os.path.join(dst, c["run_dir"]))
+          print("staged", sum(1 for c in r["cells"] if c["intake_candidate"]))
+          PY
+
+      - uses: actions/upload-artifact@v4
+        if: always() && steps.p.outputs.skip != 'true'
+        with:
+          name: kaggle-gspc-${{ steps.p.outputs.batch }}-${{ steps.p.outputs.shard }}-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/kaggle-out
+            ${{ runner.temp }}/kernel/kernel-metadata.json
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - uses: actions/upload-artifact@v4
+        if: always() && steps.p.outputs.skip != 'true' && steps.p.outputs.diag == 'true'
+        with:
+          name: kaggle-gspc-diag-logs-${{ steps.p.outputs.batch }}-${{ steps.p.outputs.shard }}-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/kaggle-out/out/logs
+            ${{ runner.temp }}/kaggle-out/ollama.log
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: push unsigned candidates to private intake
+        if: steps.p.outputs.skip != 'true' && steps.p.outputs.dry != 'true' && steps.p.outputs.push == 'true' && steps.p.outputs.diag != 'true' && steps.poll.outputs.state == 'complete'
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          set -euo pipefail
+          test -n "$HF_TOKEN" || { echo "HF_TOKEN absent"; exit 1; }
+          if [ -z "$(find "$RUNNER_TEMP/intake" -name card-unsigned.json -print -quit)" ]; then
+            echo "no candidate runs to push"; exit 0
+          fi
+          pip install --quiet "huggingface_hub>=0.25"
+          python3 scripts/runpod_gspc_push_to_hf.py --root "$RUNNER_TEMP/intake" --repo csoai/runpod-gspc-intake
