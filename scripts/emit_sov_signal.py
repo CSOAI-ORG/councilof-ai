@@ -16,6 +16,11 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 KEY = "/root/.sovos/city_ed25519"
 SIG = "/workspace/councilof-ai-build/public/signals"
 OUT = "/workspace/councilof-ai-build/public/signals/sov-signal.signed.json"
+# Public name (public-names lock, 12 Oct 2026): the same signed bytes are also written here, and
+# chrome links this path. The signature is over content_id (sha256 of the canonical body), not over
+# a URL, so both copies verify identically; the old path stays for existing verifiers.
+# client/src/lib/coverageIndex.test.ts holds the two files byte-identical.
+OUT_PUBLIC = "/workspace/councilof-ai-build/public/signals/coverage-index.signed.json"
 
 
 def load(name):
@@ -34,7 +39,7 @@ def main():
     axis_rows = []
     for f in sorted(glob.glob(os.path.join(SIG, "*.signed.json"))):
         bn = os.path.basename(f)
-        if "sov-signal" in bn or "wave-dashboard" in bn:
+        if "sov-signal" in bn or "coverage-index" in bn or "wave-dashboard" in bn:
             continue
         try:
             d = json.load(open(f))
@@ -69,8 +74,10 @@ def main():
     index_body["signature"] = {"alg": "Ed25519", "content_id": cid, "sig": base64.b64encode(sig).decode(),
                                "pubkey": base64.b64encode(pub).decode(), "note": "The index about the index. Verify with PUBKEY."}
     Ed25519PublicKey.from_public_bytes(pub).verify(sig, cid.encode())
-    open(OUT, "w").write(json.dumps(index_body, indent=1, sort_keys=True))
-    print("SOV SIGNAL INDEX signed:", OUT)
+    body = json.dumps(index_body, indent=1, sort_keys=True)
+    open(OUT, "w").write(body)
+    open(OUT_PUBLIC, "w").write(body)  # same bytes, public name; never re-signed separately
+    print("SOV SIGNAL INDEX signed:", OUT, "(and", OUT_PUBLIC + ")")
     print("  measured_axes:", measured_axes, "| total signed rows:", total_rows, "| cid:", cid[:16])
 
 
