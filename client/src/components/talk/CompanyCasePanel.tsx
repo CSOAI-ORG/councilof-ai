@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useId, useRef, useState } from "react";
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useId, useLayoutEffect, useRef, useState } from "react";
 import { ArrowUp, CheckCircle2, Loader2, LockKeyhole, Mic, MicOff, RotateCw } from "lucide-react";
 import { companyWorkspaceHref, councilLoginHref } from "@/lib/councilLoginReturn";
 import ResultFollowUp from "./ResultFollowUp";
@@ -33,6 +33,7 @@ export type CompanyCasePanelProps = {
   className?: string;
   listen?: boolean;
   onCaseVerified?: CompanyCaseVerifiedCallback;
+  onContextInvalidated?: () => void;
 };
 
 const FOCUS = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
@@ -95,7 +96,7 @@ export function CompanyCaseResult({ value, onRead, busy }: { value: CompanyCase;
 }
 
 const OwnerCompanyCasePanel = forwardRef<CompanyCasePanelHandle, CompanyCasePanelProps>(function OwnerCompanyCasePanel(
-  { connection, caseId, invalidCase = false, variant = "standalone", labelledBy, className = "", listen = false, onCaseVerified },
+  { connection, caseId, invalidCase = false, variant = "standalone", labelledBy, className = "", listen = false, onCaseVerified, onContextInvalidated },
   ref,
 ) {
   const [state, setState] = useState<CompanyCaseViewState>({ status: "idle" });
@@ -107,6 +108,8 @@ const OwnerCompanyCasePanel = forwardRef<CompanyCasePanelHandle, CompanyCasePane
   const microphoneActive = useRef(false);
   const verifiedCallback = useRef(onCaseVerified);
   verifiedCallback.current = onCaseVerified;
+  const contextCallback = useRef(onContextInvalidated);
+  contextCallback.current = onContextInvalidated;
   const operation = useRef(0);
   const pending = useRef<AbortController | null>(null);
   const inFlight = useRef(false);
@@ -140,22 +143,28 @@ const OwnerCompanyCasePanel = forwardRef<CompanyCasePanelHandle, CompanyCasePane
     } catch { /* presentation is optional */ }
   }, []);
 
+  const invalidatePresentation = useCallback(() => {
+    try { void Promise.resolve(contextCallback.current?.()).catch(() => undefined); }
+    catch { /* presentation is optional */ }
+  }, []);
+
   useEffect(() => {
     if (!canListen) discardMicrophone();
   }, [canListen, discardMicrophone]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     alive.current = true;
     return () => {
       alive.current = false;
       operation.current += 1;
       pending.current?.abort();
+      invalidatePresentation();
       const owned = microphone.current;
       microphone.current = null;
       microphoneActive.current = false;
       owned?.abort();
     };
-  }, []);
+  }, [invalidatePresentation]);
 
   const readCase = useCallback(async (id: string, requestId?: string, reason: "read" | "initial-read" = "read") => {
     if (!client || !subject || !isCompanyCaseId(id)) return;
@@ -186,7 +195,9 @@ const OwnerCompanyCasePanel = forwardRef<CompanyCasePanelHandle, CompanyCasePane
   }, [client, subject, discardMicrophone, reportVerified]);
 
   // A reopened case is always read from the authorized adapter. Browser storage supplies no result.
-  useEffect(() => {
+  useLayoutEffect(() => {
+    // Retire old narration and operation ownership before an async result can reach a new context.
+    invalidatePresentation();
     const prepared = selfPreparedNavigation.current;
     if (connected && !invalidCase && prepared && prepared.caseId === caseId && prepared.operation === operation.current) {
       // wouter observes our pre-POST replaceState. It is still this in-flight operation,
@@ -201,7 +212,7 @@ const OwnerCompanyCasePanel = forwardRef<CompanyCasePanelHandle, CompanyCasePane
     inFlight.current = false;
     setState((current) => uncertainWrite.current && current.status === "failed" && current.outcomeUnknown ? current : { status: "idle" });
     if (connected && caseId && !invalidCase) void readCase(caseId, undefined, "initial-read");
-  }, [connected, caseId, invalidCase, readCase, discardMicrophone]);
+  }, [connected, caseId, invalidCase, readCase, discardMicrophone, invalidatePresentation]);
 
   const submit = useCallback(async (request: string) => {
     discardMicrophone();

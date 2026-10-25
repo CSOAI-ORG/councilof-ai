@@ -287,6 +287,11 @@ export default function AskPane({ open, onClose, question }: { open: boolean; on
     [voiceActive, prefs.watch, runWatch],
   );
 
+  const invalidateCompanyPresentation = useCallback(() => {
+    companySpeech.current = null;
+    stopVoice();
+  }, []);
+
   const onCaseVerified = useCallback<CompanyCaseVerifiedCallback>((value, reason, expected) => {
     const previousKey = companySpeech.current?.ownerSubject === expected.ownerSubject ? companySpeech.current.key : undefined;
     const presentation = getCompanyCaseSpeech({
@@ -458,6 +463,7 @@ export default function AskPane({ open, onClose, question }: { open: boolean; on
             onEnableWatch={enableWatchAndAsk}
             listen={voiceActive}
             onCaseVerified={onCaseVerified}
+            onContextInvalidated={invalidateCompanyPresentation}
           />
         </div>
 

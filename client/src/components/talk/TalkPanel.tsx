@@ -393,6 +393,7 @@ type Props = {
   /** Injected owner-authenticated company adapter; never a public-lookup fallback. */
   company?: CompanyCaseConnection;
   onCaseVerified?: CompanyCaseVerifiedCallback;
+  onContextInvalidated?: () => void;
 };
 
 const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPanel(
@@ -667,6 +668,7 @@ const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel(props, r
       className: props.className,
       listen: props.listen,
       onCaseVerified: props.onCaseVerified,
+      onContextInvalidated: props.onContextInvalidated,
     };
     return props.company
       ? <CompanyCasePanel {...companyProps} ref={ref} connection={props.company} />
