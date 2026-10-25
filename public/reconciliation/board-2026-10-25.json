@@ -1,0 +1,126 @@
+{
+ "schema": "csoai.reconciliation-record/1",
+ "generated_at": "2026-10-25T04:55:00Z",
+ "method": "public bytes only: download the dataset files, recompute git-blob SHA-1, compare declared numbers across surfaces",
+ "subject": "axis governance (csoai/gspc-gov) vs live board",
+ "checks": [
+  {
+   "check": "items.jsonl integrity",
+   "declared": "597930714f80",
+   "recomputed": "597930714f80",
+   "result": "MATCH",
+   "bytes": 106824
+  },
+  {
+   "check": "gov.json integrity",
+   "declared": "cdc2b679603a",
+   "recomputed": "cdc2b679603a",
+   "result": "MATCH",
+   "bytes": 1456
+  },
+  {
+   "check": "axis-live.jsonl integrity",
+   "declared": null,
+   "recomputed": "efd82d4a969d",
+   "result": "NOT_IN_MANIFEST",
+   "bytes": 1954
+  },
+  {
+   "check": "n",
+   "dataset": 237,
+   "board": 237,
+   "result": "MATCH"
+  },
+  {
+   "check": "fleet_mean",
+   "dataset": 0.49,
+   "board": 0.49,
+   "result": "MATCH"
+  },
+  {
+   "check": "mean_harm",
+   "dataset": 0.51,
+   "board": 0.51,
+   "result": "MATCH"
+  },
+  {
+   "check": "cvar05_harm",
+   "dataset": 0.8728,
+   "board": 0.8728,
+   "result": "MATCH"
+  },
+  {
+   "check": "separation",
+   "dataset": "UNTESTED",
+   "board": "TIE",
+   "result": "DIVERGENT"
+  }
+ ],
+ "findings": [
+  "The dataset's axis-live.jsonl says separation UNTESTED; the live board says TIE for the same axis and the same run. One of the two artefacts is stale.",
+  "axis-live.jsonl is not listed in manifest.jsonl, so its bytes are unverifiable against the dataset's own integrity record.",
+  "The per-item model results (csoai/gspc-peritem-rows-2026-08-12) return HTTP 401: the fleet_mean cannot be independently recomputed from public bytes."
+ ],
+ "limits": [
+  "This record checks published bytes; it does not re-run a model or validate that the run happened.",
+  "A separation label is a determination, not a measurement; disagreement between artefacts is a publication defect, not a numeric error."
+ ],
+ "summary": {
+  "measured_axes": 23,
+  "match": 14,
+  "divergent": 8,
+  "unavailable": 0,
+  "scope": "every MEASURED axis on GET /api/gspc compared to the public axis-live.jsonl of the dataset it names",
+  "divergences": [
+   {
+    "axis": "governance",
+    "dataset": "csoai/gspc-gov",
+    "dataset_says": "UNTESTED",
+    "board_says": "TIE"
+   },
+   {
+    "axis": "provenance",
+    "dataset": "csoai/gspc-prv",
+    "dataset_says": "UNTESTED",
+    "board_says": "TIE"
+   },
+   {
+    "axis": "continuity",
+    "dataset": "csoai/gspc-asi",
+    "dataset_says": "UNTESTED",
+    "board_says": "TIE"
+   },
+   {
+    "axis": "conformance",
+    "dataset": "csoai/gspc-mcp",
+    "dataset_says": "UNTESTED",
+    "board_says": "TIE"
+   },
+   {
+    "axis": "openness",
+    "dataset": "csoai/gspc-oss",
+    "dataset_says": "UNTESTED",
+    "board_says": "TIE"
+   },
+   {
+    "axis": "care",
+    "dataset": "csoai/gspc-care",
+    "dataset_says": "UNTESTED",
+    "board_says": "TIE"
+   },
+   {
+    "axis": "swarm",
+    "dataset": "csoai/gspc-swarm",
+    "dataset_says": "SEPARATED",
+    "board_says": "UNTESTED"
+   },
+   {
+    "axis": "jail",
+    "dataset": "csoai/gspc-jail-goldbank",
+    "dataset_says": "TIE",
+    "board_says": "UNTESTED"
+   }
+  ],
+  "impact": "the headline '0 of 14 separated \u00b7 7 TIE \u00b7 7 UNTESTED' is derived from board labels that disagree with 8 of the datasets they cite; one side is stale and the public cannot tell which"
+ }
+}
