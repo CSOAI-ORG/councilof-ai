@@ -6,9 +6,8 @@
  * A page that owns ⌘K itself (DemoOS, marked data-own-cmdk) keeps it. If the viewer already
  * granted agent consent in this tab, the in-page agent bridge (window.councilUi) is installed.
  *
- * Mobile (ASK_MOBILE_QUERY): the entry routes do not open Ask; the page shows first and a small
- * launcher opens it on tap. State starts closed on every width, so SSR/prerender and first paint
- * never show the pane; wider screens open it after mount as before.
+ * Entry routes show the page first on every width. A compact launcher opens Ask deliberately;
+ * hydration and navigation never open it. Closing keeps the mounted conversation available.
  */
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { useLocation, useSearch } from "wouter";
@@ -25,18 +24,20 @@ export default function AskHost() {
   const [askMounted, setAskMounted] = useState(false);
   const [askOpen, setAskOpen] = useState(false);
   const [question, setQuestion] = useState<{ text: string; n: number } | null>(null);
-  const [mobileEntry, setMobileEntry] = useState(false);
+  const [entryRoute, setEntryRoute] = useState(false);
+  const launcherRef = useRef<HTMLButtonElement>(null);
+  const returnFocusRef = useRef<HTMLElement | null>(null);
   const enteredRoute = useRef<string | null>(null);
 
-  // Human entrypoints open the existing Ask conversation after hydration. A close lasts until
-  // navigation; opening never submits a question or changes Watch, voice or agent consent.
+  // The launcher follows entry routes; opening remains user-initiated and never submits a
+  // question or changes Watch, voice or agent consent.
   useEffect(() => {
     if ((window as Window & { __CSOAI_PRERENDER__?: boolean }).__CSOAI_PRERENDER__) return;
     const route = location + "?" + search;
     if (enteredRoute.current === route) return;
     enteredRoute.current = route;
     const mobile = Boolean(window.matchMedia?.(ASK_MOBILE_QUERY).matches);
-    setMobileEntry(mobile && isAskEntryRoute(location, search));
+    setEntryRoute(isAskEntryRoute(location, search));
     if (shouldAutoOpenAsk(location, search, mobile)) {
       setAskMounted(true);
       setAskOpen(true);
@@ -52,6 +53,9 @@ export default function AskHost() {
     };
     const onPalette = () => setPalette(true);
     const onAsk = (e: Event) => {
+      if (!returnFocusRef.current && document.activeElement instanceof HTMLElement && document.activeElement !== document.body) {
+        returnFocusRef.current = document.activeElement;
+      }
       const q = (e as CustomEvent<AskOpenDetail>).detail?.question;
       setAskMounted(true);
       setAskOpen(true);
@@ -98,13 +102,27 @@ export default function AskHost() {
       ) : null}
       {askMounted ? (
         <Suspense fallback={null}>
-          <AskPane open={askOpen} onClose={() => setAskOpen(false)} question={question} />
+          <AskPane
+            open={askOpen}
+            onClose={() => {
+              setAskOpen(false);
+              const trigger = returnFocusRef.current;
+              returnFocusRef.current = null;
+              window.requestAnimationFrame(() => {
+                if (trigger?.isConnected) trigger.focus();
+                else launcherRef.current?.focus();
+              });
+            }}
+            question={question}
+          />
         </Suspense>
       ) : null}
-      {mobileEntry && !askOpen ? (
+      {entryRoute && !askOpen ? (
         <button
+          ref={launcherRef}
           type="button"
-          onClick={() => {
+          onClick={(event) => {
+            returnFocusRef.current = event.currentTarget;
             setAskMounted(true);
             setAskOpen(true);
           }}

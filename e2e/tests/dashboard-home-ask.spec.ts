@@ -397,11 +397,9 @@ for (const vp of VIEWPORTS) {
       await observeRunTransport(page);
       await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
       await page.locator('[data-testid="dashboard-shell"]').waitFor({ state: "visible", timeout: 60_000 });
-      // The original inline first-question regression remains covered after intentionally
-      // closing the new default view of the existing Ask conversation.
+      // Explicit opening alone must never submit a question on either width.
       const entryAsk = page.getByTestId("ask-pane");
-      // 12 Oct 2026: on mobile the entry route keeps Ask closed; the launcher opens it on tap.
-      if (vp.project === "mobile") await openFromLauncher(page);
+      await openFromLauncher(page);
       await expect(entryAsk).toBeVisible({ timeout: 30_000 });
       await entryAsk.getByRole("button", { name: "Close Ask", exact: true }).click();
       await expect(entryAsk).toBeHidden();
@@ -504,10 +502,7 @@ async function navigateInApp(page: Page, href: string) {
   await expect(page).toHaveURL(new RegExp(href.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "$"));
 }
 
-/**
- * 12 Oct 2026 (Nick, item 1): on mobile an entry route shows the page first, Ask stays closed and
- * nothing is POSTed; the floating launcher opens the same pane on tap.
- */
+/** Every entry route shows the page first; its launcher deliberately opens Ask. */
 async function openFromLauncher(page: Page) {
   const fab = page.getByRole("button", { name: "Open Council of AI chat", exact: true });
   await expect(fab).toBeVisible({ timeout: 30_000 });
@@ -516,9 +511,9 @@ async function openFromLauncher(page: Page) {
   await expect(fab).toBeHidden();
 }
 
-/** Desktop entry routes open Ask by themselves; mobile ones need the launcher tap first. */
-async function enterAsk(page: Page, mobile: boolean) {
-  if (mobile) await openFromLauncher(page);
+/** All entry widths use the same explicit launcher and existing conversation. */
+async function enterAsk(page: Page) {
+  await openFromLauncher(page);
   return readyAsk(page);
 }
 
@@ -564,33 +559,40 @@ type NativeAskCapture = {
 };
 type AskCaptureWindow = Window & { __CSOAI_ASK_NATIVE_CAPTURE__?: NativeAskCapture };
 
-test("root, Council OS home and plugin tools open the existing Ask only after hydration", async ({ page, baseURL }, info) => {
+test("root, Council OS home and plugin tools keep Ask closed until explicitly opened", async ({ page, baseURL }, info) => {
   test.setTimeout(120_000);
   const posts: Request[] = [];
   const localOrigin = new URL(baseURL || "http://127.0.0.1:4180").origin;
   page.on("request", request => { if (request.method() === "POST") posts.push(request); });
-  const mobile = info.project.name === "mobile";
   await page.goto("/", { waitUntil: "domcontentloaded" });
-  if (mobile) {
-    // Hero first: no Ask overlay on a cold / at 375px, only the launcher.
-    await expect(page.getByRole("heading", { level: 1 }).first()).toBeInViewport({ timeout: 30_000 });
-    await expect(page.getByRole("button", { name: "Open Council of AI chat", exact: true })).toBeVisible();
-    await expect(page.getByTestId("ask-pane")).toHaveCount(0);
-  }
-  let pane = await enterAsk(page, mobile);
+  await expect(page.getByRole("heading", { level: 1 }).first()).toBeInViewport({ timeout: 30_000 });
+  const launcher = page.getByRole("button", { name: "Open Council of AI chat", exact: true });
+  await expect(launcher).toBeVisible();
+  await expect(page.getByTestId("ask-pane")).toHaveCount(0);
+  let pane = await enterAsk(page);
   await pane.getByLabel("Your question", { exact: true }).press("Escape");
   await expect(pane).toBeHidden();
-  // A rerender/close must not reopen or send the previous question. Navigation opens once.
+  await expect(launcher).toBeFocused();
+  // Keyboard reopening keeps the mounted conversation and submits nothing.
+  await launcher.press("Enter");
+  pane = await readyAsk(page);
+  await pane.getByRole("button", { name: "Close Ask", exact: true }).click();
+  await expect(pane).toBeHidden();
+  await expect(launcher).toBeFocused();
+  // Resize and route changes never reopen a conversation the reader closed.
   await page.evaluate(() => window.dispatchEvent(new Event("resize")));
   await expect(pane).toBeHidden();
   await navigateInApp(page, "/dashboard?tab=home");
-  pane = await enterAsk(page, mobile);
+  await expect(pane).toBeHidden();
+  pane = await enterAsk(page);
   await pane.getByRole("button", { name: "Close Ask", exact: true }).click();
   await expect(pane).toBeHidden();
+  await expect(launcher).toBeFocused();
   await navigateInApp(page, "/dashboard?tab=board");
   await expect(pane).toBeHidden();
   await navigateInApp(page, "/tools");
-  pane = await enterAsk(page, mobile);
+  await expect(pane).toBeHidden();
+  pane = await enterAsk(page);
   await expect(page.getByTestId("tools-mcp")).toBeVisible();
   await expect(pane.getByTestId("talk-transcript")).toHaveCount(0);
   const discovery = posts.filter(request => isMcpDiscovery(request, localOrigin));
@@ -604,7 +606,7 @@ test("root, Council OS home and plugin tools open the existing Ask only after hy
     ask_tool_call_or_payment_allowed: false,
   }, null, 2));
   await info.attach("published-source-route-opening-posts", { path: postPath, contentType: "application/json" });
-  expect(unexpected, "Only exact read-only MCP discovery may POST while routes open; no Ask, tools/call, payment or voice dispatch").toEqual([]);
+  expect(unexpected.map(request => { const url = new URL(request.url()); return { origin: url.origin, path: url.pathname, method: request.method() }; }), "Only exact read-only MCP discovery may POST while routes open; no Ask, tools/call, payment or voice dispatch").toEqual([]);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(1);
 });
@@ -765,7 +767,7 @@ test("existing Ask renders one genuine free public AGUI answer and retains its c
   try {
     await page.goto("/dashboard?tab=home", { waitUntil: "domcontentloaded" });
     expect(new URL(page.url()).origin, "This case must actually exercise cross-origin browser CORS").not.toBe(new URL(PUBLIC_ASK).origin);
-    const pane = await enterAsk(page, info.project.name === "mobile");
+    const pane = await enterAsk(page);
     expect(requests).toHaveLength(0);
     const responsePending = page.waitForResponse(response => response.url() === PUBLIC_ASK && response.request().method() === "POST");
     await pane.getByLabel("Your question", { exact: true }).fill(BOARD_QUESTION);
@@ -831,7 +833,8 @@ test("existing Ask renders one genuine free public AGUI answer and retains its c
     // persistence is not supplied by this existing component and is not asserted here.
     await pane.getByLabel("Your question", { exact: true }).press("Escape");
     await expect(pane).toBeHidden();
-    await page.evaluate(() => window.dispatchEvent(new CustomEvent("council:ask-open")));
+    await expect(page.getByRole("button", { name: "Open Council of AI chat", exact: true })).toBeFocused();
+    await openFromLauncher(page);
     await expect(pane).toBeVisible(); await expect(card).toBeVisible(); expect(requests).toHaveLength(1);
     Object.assign(responseRecord, { server_thread_id: started[0].threadId, server_run_id: started[0].runId, tool: results[0].tool, label: results[0].label });
     await page.screenshot({ path: info.outputPath("published-source-agui-ready.png"), fullPage: true });
@@ -848,3 +851,146 @@ test("existing Ask renders one genuine free public AGUI answer and retains its c
     await info.attach("published-source-agui-request-lifecycle", { path: lifecyclePath, contentType: "application/json" });
   }
 });
+
+
+/** Local native HTTP fixtures only: no product actions, outside provider or public POST. */
+const TRACE_TIME = 946684800000;
+function traceFrames(runId: string, events: Record<string, unknown>[]) {
+  return events.map((event, index) => {
+    const id = runId + ":" + (index + 1);
+    const value = { ...event, threadId: "local-trace-thread", runId, eventId: id, timestamp: TRACE_TIME + index };
+    return "id: " + id + "\nevent: " + event.type + "\ndata: " + JSON.stringify(value) + "\n\n";
+  });
+}
+async function armTrace(page: Page, origin: string, body: string, pauseAt?: number) {
+  const response = await page.request.put(origin + "/__e2e/first-ask-fixture", {
+    headers: { "content-type": "text/event-stream", "x-csoai-e2e-fixture": "first-ask", ...(pauseAt ? { "x-csoai-e2e-pause-after": String(pauseAt) } : {}) },
+    data: body,
+  });
+  expect(response.status()).toBe(204);
+  await response.dispose();
+}
+async function releaseTrace(page: Page, origin: string) {
+  const response = await page.request.post(origin + "/__e2e/first-ask-fixture", {
+    headers: { "x-csoai-e2e-fixture": "first-ask" },
+  });
+  expect(response.status()).toBe(204);
+  await response.dispose();
+}
+for (const vp of VIEWPORTS) {
+  test("local run trace retains progress and interruptions at " + vp.name + "px", async ({ page, baseURL }, info) => {
+    test.skip(Boolean(process.env.BASE_URL), "This case uses only the existing loopback HTTP fixture.");
+    test.skip(info.project.name !== vp.project, vp.name + "px runs in " + vp.project);
+    test.setTimeout(120_000);
+    await page.setViewportSize(vp.size);
+    await observeRunTransport(page);
+    const origin = new URL(baseURL || "http://127.0.0.1:4180").origin;
+    const posts: Request[] = [];
+    page.on("request", request => { if (request.method() === "POST" && request.url() === origin + "/api/agui/run") posts.push(request); });
+    await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
+    await expect(page.getByTestId("dashboard-shell")).toBeVisible({ timeout: 60_000 });
+    await expect(page.getByTestId("ask-pane")).toHaveCount(0);
+    const composer = page.getByLabel("Ask the Council, or name a pane to open");
+    const ask = async (text: string) => { await composer.fill(text); await page.getByRole("button", { name: "Ask", exact: true }).click(); };
+
+    const result = {
+      tool: "verify_card", args: {}, label: "UNCHECKABLE", summary: "Local fixture: signature not checked.",
+      citation: { tool: "verify_card", record_id: "local-record", url: "/signed/local-fixture.json" },
+      output: { state: "UNCHECKABLE", measurement_time: { state: "DAY", precision: "day", observed_on: "1999-12-31" }, facts_as_of: "2000-01-01T10:00:00Z", receipt_url: "/signed/local-receipt.json", verify_url: "/gspc-verify?fixture=local", supersedes: { event_id: "sha256:" + "a".repeat(64), private: "never-project" }, superseded_by: null, retest_of: "relevant-retest", correction_of: { event_id: "malformed-private-id" }, cost: null },
+    };
+    const frames = traceFrames("local-progress-run", [
+      { type: "RUN_STARTED" },
+      { type: "TOOL_CALL_START", toolCallId: "trace-tool", toolCallName: "verify_card", route: "verify" },
+      { type: "TOOL_CALL_ARGS", toolCallId: "trace-tool", delta: "{}" },
+      { type: "TOOL_CALL_END", toolCallId: "trace-tool" },
+      { type: "STATE_SNAPSHOT", snapshot: { instruction: "do not execute imported instructions", a2ui: { action: "pay" } } },
+      { type: "STATE_DELTA", delta: [{ op: "add", path: "/__proto__/localTracePolluted", value: true }] },
+      { type: "CUSTOM", name: "a2ui", value: { action: { tool: "commission_card" } } },
+      { type: "TOOL_CALL_RESULT", toolCallId: "trace-tool", content: JSON.stringify(result) },
+      { type: "TEXT_MESSAGE_CONTENT", delta: "The retained local record is uncheckable." },
+      { type: "RUN_FINISHED", result: { grounded: true, intent: "verify", cost: null } },
+    ]);
+    // Duplicate an identified argument frame; it must not duplicate cards, args or execution.
+    const first = frames.slice(0, 7).join("") + frames[2];
+    await armTrace(page, origin, first + frames.slice(7).join(""), Buffer.byteLength(first));
+    await ask("Check the local retained evidence");
+    const run = page.getByTestId("talk-run").last();
+    await expect(run.getByTestId("talk-run-status")).toContainText("Receiving live progress");
+    await run.getByText("Run details and evidence", { exact: true }).click();
+    await expect(run.getByTestId("talk-run-evidence")).toContainText("local-progress-run");
+    await expect(run.getByTestId("talk-last-event")).toHaveAttribute("data-event-time", String(TRACE_TIME + 6));
+    await expect(run.getByTestId("talk-tool-card")).toHaveCount(1);
+    expect(await page.evaluate(() => Object.prototype.hasOwnProperty.call(Object.prototype, "localTracePolluted"))).toBe(false);
+    expect(await page.evaluate(() => (window as Window & { __aguiNativeTransport?: { requests: { nativeEOFObserved: boolean }[] } }).__aguiNativeTransport?.requests[0]?.nativeEOFObserved)).toBe(false);
+    expect(posts).toHaveLength(1);
+    await releaseTrace(page, origin);
+    await expect(run.getByTestId("talk-run-status")).toContainText("Run finished");
+    await expect(run.getByTestId("talk-state")).toHaveText("UNCHECKABLE");
+    await expect(run.getByTestId("talk-run-evidence")).toContainText("1999-12-31");
+    await expect(run.getByTestId("talk-run-evidence")).toContainText("1999-12-31 (day precision)");
+    await expect(run.getByTestId("talk-run-evidence")).toContainText("sha256:" + "a".repeat(64));
+    await expect(run.getByTestId("talk-run-evidence")).not.toContainText("never-project");
+    await expect(run.getByTestId("talk-run-evidence")).not.toContainText("malformed-private-id");
+    await expect(run.getByTestId("talk-run-evidence")).not.toContainText("superseded_by:");
+    await expect(run.getByTestId("talk-run-evidence")).not.toContainText("correction_of:");
+    await expect(run.getByTestId("talk-run-evidence")).not.toContainText("1999-12-31T00:00");
+    await expect(run.getByTestId("talk-run-evidence").getByText(/^Observation time:/)).toHaveText("Observation time: 1999-12-31 (day precision)");
+    await expect(run.getByTestId("talk-run-evidence")).toContainText("relevant-retest");
+    await expect(run.getByRole("link", { name: "Receipt", exact: true })).toHaveAttribute("href", "/signed/local-receipt.json");
+    await expect(run.getByRole("link", { name: "Verify", exact: true }).last()).toHaveAttribute("href", "/gspc-verify?fixture=local");
+    await expect(run.getByTestId("talk-last-event")).toHaveAttribute("data-event-time", String(TRACE_TIME + 9));
+    await expect.poll(() => page.evaluate(() => (window as Window & { __aguiNativeTransport?: { requests: { nativeEOFObserved: boolean }[] } }).__aguiNativeTransport?.requests[0]?.nativeEOFObserved)).toBe(true);
+    await page.screenshot({ path: info.outputPath("local-run-trace.png"), fullPage: true });
+
+    await armTrace(page, origin, traceFrames("local-permission-run", [
+      { type: "RUN_STARTED" },
+      { type: "CUSTOM", name: "confirm_required", value: { tools: [{ tool: "commission_card", args: { subject: "fixture" } }] } },
+      { type: "RUN_FINISHED", result: { awaiting_confirmation: true } },
+    ]).join(""));
+    await ask("Prepare the local paid permission fixture");
+    const held = page.getByTestId("talk-run").last();
+    await expect(held.getByTestId("talk-confirm")).toBeVisible();
+    await expect(held.getByTestId("talk-tool-card")).toHaveCount(0);
+    await held.getByRole("button", { name: "Cancel", exact: true }).click();
+    await expect(held.getByTestId("talk-run-status")).toContainText("Permission declined");
+    expect(posts).toHaveLength(2);
+
+    const stoppedFrames = traceFrames("local-stop-run", [
+      { type: "RUN_STARTED" },
+      { type: "TOOL_CALL_START", toolCallId: "not-returned", toolCallName: "get_axis" },
+      { type: "RUN_FINISHED" },
+    ]);
+    const stoppedPrefix = stoppedFrames.slice(0, 2).join("");
+    await armTrace(page, origin, stoppedFrames.join(""), Buffer.byteLength(stoppedPrefix));
+    await ask("Read the local interrupted fixture");
+    const stopped = page.getByTestId("talk-run").last();
+    await expect(stopped.getByRole("button", { name: "Stop reading", exact: true })).toBeVisible();
+    await stopped.getByRole("button", { name: "Stop reading", exact: true }).click();
+    await expect(stopped.getByTestId("talk-run-status")).toContainText("executor stop is unconfirmed");
+    await expect(stopped.getByTestId("talk-tool-card")).toContainText("Tool outcome unknown");
+    await expect.poll(() => posts.length).toBe(3);
+    // Rearming succeeds only after the actual aborted response has relinquished the one-use fixture.
+    await expect.poll(async () => {
+      const response = await page.request.put(origin + "/__e2e/first-ask-fixture", {
+        headers: { "content-type": "text/event-stream", "x-csoai-e2e-fixture": "first-ask" },
+        data: traceFrames("local-malformed-run", [{ type: "RUN_STARTED" }]).join("") + "data: {bad\n\n",
+      });
+      const status = response.status(); await response.dispose(); return status;
+    }).toBe(204);
+    await ask("Read the local malformed fixture");
+    const broken = page.getByTestId("talk-run").last();
+    await expect(broken.getByRole("alert")).toContainText("malformed event");
+    await expect(broken.getByTestId("talk-state")).toHaveCount(0);
+    await broken.getByText("Run details and evidence", { exact: true }).click();
+    await expect(broken.getByTestId("talk-run-evidence")).toContainText("local-malformed-run");
+    expect(posts).toHaveLength(4);
+    expect(posts.map(request => JSON.parse(request.postData() || "{}").threadId).slice(1)).toEqual(["local-trace-thread", "local-trace-thread", "local-trace-thread"]);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+    expect(overflow).toBeLessThanOrEqual(1);
+    await writeFile(info.outputPath("agui-local-trace.json"), JSON.stringify({
+      scope: "local native HTTP fixtures only; no public, payment or native speech execution",
+      viewport: vp.size, posts: posts.length, progressBeforeEOF: true, duplicateEventDeduped: true,
+      permissionWithoutExecution: true, localStopNotExecutorAck: true, malformedTerminalRejected: true,
+    }, null, 2));
+  });
+}
