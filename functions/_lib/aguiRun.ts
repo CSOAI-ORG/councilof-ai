@@ -205,11 +205,11 @@ export async function serveAguiRun(
       // A client reporting frontend-tool results: record them in /watch, call nothing else.
       if (returned.length) {
         await emit({
-          type: "STATE_DELTA",
-          delta: [
-            { op: "add", path: "/watch/reported", value: returned },
-            { op: "replace", path: "/watch/status", value: returned.every((r) => r.ok) ? "done" : "done_with_errors" },
-          ],
+          type: "STATE_SNAPSHOT",
+          snapshot: { watch: {
+            reported: returned,
+            status: returned.every((r) => r.ok) ? "done" : "done_with_errors",
+          } },
         });
         await emit({ type: "RUN_FINISHED", threadId, runId, result: { grounded: false, frontend_results: returned.length } });
         onState?.("unknown");

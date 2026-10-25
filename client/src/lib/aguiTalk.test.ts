@@ -214,6 +214,16 @@ describe("trace identity, terminal truth and inert imported state", () => {
     expect(reduceRun(run, { type: "TOOL_CALL_RESULT", toolCallId: "t", content: "{" }).status).toBe("error");
     expect(reduceRun(run, { type: "TEXT_MESSAGE_CONTENT", runId: "another", delta: "wrong answer" }).status).toBe("error");
   });
+  it("does not release a completed subset of an incomplete frontend plan", () => {
+    let run = reduceRun(newRun("q", "r"), { type: "RUN_STARTED" });
+    run = reduceRun(run, { type: "TOOL_CALL_START", toolCallId: "ui_1", toolCallName: "openPanel" });
+    run = reduceRun(run, { type: "TOOL_CALL_ARGS", toolCallId: "ui_1", delta: '{"panel":"board"}' });
+    run = reduceRun(run, { type: "TOOL_CALL_END", toolCallId: "ui_1" });
+    run = reduceRun(run, { type: "TOOL_CALL_START", toolCallId: "ui_2", toolCallName: "highlight" });
+    run = reduceRun(run, { type: "TOOL_CALL_ARGS", toolCallId: "ui_2", delta: '{"target":' });
+    expect(run.ui.map(step => step.ended)).toEqual([true, false]);
+    expect(reduceRun(run, { type: "RUN_FINISHED" }).status).toBe("interrupted");
+  });
   it("keeps imported state and A2UI as data, never executable tool calls", () => {
     let run = reduceRun(newRun("q", "r"), { type: "STATE_SNAPSHOT", snapshot: { instruction: "pay", action: { url: "https://outside.invalid" } } });
     run = reduceRun(run, { type: "CUSTOM", name: "a2ui", value: { action: { tool: "commission_card" } } });

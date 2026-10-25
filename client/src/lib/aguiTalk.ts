@@ -306,6 +306,7 @@ function reduceEvent(run: TalkRun, ev: Json): TalkRun {
       if (outcome === "error" || outcome === "failed") return interruptRun(next, "error", str(result?.message) ?? "The executor reported an error.");
       if (outcome && !["success", "completed", "done", "finished"].includes(outcome)) return interruptRun(next, "interrupted", "The run ended with an interrupt or unsupported outcome.");
       if (run.tools.some(tool => tool.status !== "done")) return interruptRun(next, "interrupted", "The run ended before every tool returned a result.");
+      if (run.ui.some(step => !step.ended)) return interruptRun(next, "interrupted", "The run ended before every page step was fully received.");
       if (run.confirm) return { ...next, status: "awaiting_confirmation" };
       return { ...next, status: "done" };
     }
