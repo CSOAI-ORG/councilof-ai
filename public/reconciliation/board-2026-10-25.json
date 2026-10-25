@@ -122,5 +122,32 @@
    }
   ],
   "impact": "the headline '0 of 14 separated \u00b7 7 TIE \u00b7 7 UNTESTED' is derived from board labels that disagree with 8 of the datasets they cite; one side is stale and the public cannot tell which"
- }
+ },
+ "fixes": [
+  {
+   "fix": "csoai/gspc-peritem-rows-2026-08-12 made public",
+   "why": "it is licensed CC-BY-4.0 yet was private:true, so no mean was recomputable from outside",
+   "how": "HfApi.update_repo_settings(private=False) on the host holding the token",
+   "verified": "unauthenticated GET returns 200"
+  },
+  {
+   "fix": "axis-live.jsonl added to csoai/gspc-gov manifest",
+   "how": "appended entry, uploaded, re-downloaded",
+   "verified": "manifest 8 lines; sha efd82d4a969d matches recompute"
+  }
+ ],
+ "verification": {
+  "axis": "governance",
+  "rows": 4503,
+  "models": 19,
+  "items_per_model": 237,
+  "recomputed_fleet_mean": 0.4903,
+  "board_fleet_mean": 0.49,
+  "result": "MATCH",
+  "rows_sha256": "3a1d3193d3651448dd311efe4c7efcbdffb19e07fba06c15e628b844bfbfa2a5",
+  "note": "sha256 equals the value cited in our own route fixtures, so the published rows are the same bytes the board cites"
+ },
+ "open": [
+  "separation label still diverges on 8 axes; the separation result file carries controls and row hashes but no final label, so neither surface is provably current \u2014 the board should publish separation + basis + as_of, and the datasets regenerate from it"
+ ]
 }
