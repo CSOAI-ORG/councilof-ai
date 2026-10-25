@@ -216,7 +216,7 @@ jobs:
         # it the gate died on ImportError in 0.25 s and the unit step went red on every PR.
         run: |
           npm ci --no-audit --no-fund
-          python3 -m pip install -q cryptography opentimestamps-client
+          python3 -m pip install -q cryptography opentimestamps-client jsonschema==4.26.0
 
       # This used to run only after merge in deploy.yml. PR #1847 passed every hosted
       # PR check and then the master deployment stopped because TypeScript errors had
@@ -292,7 +292,332 @@ jobs:
       - name: Council OS first question — desktop and mobile
         id: council_os_first_question
         if: steps.scope.outputs.gated == 'true'
-        run: npm run test:e2e:shell -- e2e/tests/dashboard-home-ask.spec.ts --grep 'the first question typed on the start screen gets an answer at (1440|375)px$'
+        run: npm run test:e2e:shell -- e2e/tests/dashboard-home-ask.spec.ts e2e/tests/dashboard-shell.spec.ts --grep 'the first question typed on the start screen gets an answer at (1440|375)px$|local run trace retains progress and interruptions at (1440|375)px$|root, Council OS home and plugin tools keep Ask closed until explicitly opened$|workspace navigation starts minimized and remains usable across layout boundaries
+
+      - name: Retain Council OS first-question premerge evidence
+        if: ${{ always() && steps.scope.outputs.gated == 'true' && (steps.council_os_first_question.outcome == 'success' || steps.council_os_first_question.outcome == 'failure') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: council-os-first-question-premerge-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            test-results/**/trace.zip
+            test-results/**/agui-request-lifecycle.json
+            test-results/**/agui-local-trace.json
+            test-results/**/*.png
+          retention-days: 3
+          if-no-files-found: warn
+
+      # --selftest first: a gate that has never been seen failing is decoration,
+      # so it proves it can go red on every run before it is trusted on our bytes.
+      - name: Brand gate — selftest, then the real dist
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/brand-gate.mjs --selftest
+          node scripts/brand-gate.mjs dist/client
+
+      # Defect #14 (attack plan F-21): deploy.yml runs facts-gate on the prerendered output,
+      # but pr-gates only ran brand-gate. A PR could introduce a typed fact that passes
+      # brand-gate (which checks display strings) but contradicts facts.json. Running it
+      # here catches the contradiction at PR time instead of at deploy time.
+      # The selftest proves the gate can fail before it is trusted on our bytes.
+      - name: Facts gate — no claim may contradict facts.json
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/facts-gate.mjs --selftest
+          node scripts/facts-gate.mjs dist/client --board-reference prerender-board-reference.json
+
+      # Measure ruling on #3266 (16 Oct 2026): the facts-gate above now judges against the board
+      # THIS commit rendered (prerender-board-reference.json, written and bound by the
+      # `npm run prerender:dashboard` step above, the same prerender.mjs deploy uses; never
+      # committed, see .gitignore). This anchor keeps the measured part of that board pinned to
+      # PRODUCTION /api/gspc: measured_axes, the measured set, every measured n and score, and
+      # card_index are unchanged; only the count of unmeasured axes may grow.
+      - name: Board production anchor — measured axes and card_index unchanged from production
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/board-production-anchor.mjs --selftest
+          node scripts/board-production-anchor.mjs dist/client --board-reference prerender-board-reference.json
+
+      # Persona audit T06 (2026-10-06): /axis/jail said TIE while the board said UNTESTED, /axes
+      # disagreed with both, and /benchmarks repeated a corrected claim. facts-gate reads counts;
+      # this compares each static axis pages state, separation and n with this commits board.
+      - name: Axis-state gate — static axis pages agree with the board
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/axis-state-gate.mjs --selftest
+          node scripts/axis-state-gate.mjs dist/client
+
+      # 2026-09-15 review: nine promoted articles resolved to the withdrawal notice, /status/
+      # rendered the homepage, enum keys shipped as teaching copy, a "no other body publishes"
+      # claim sat beside its own retraction, and the homepage carried two <main> landmarks.
+      # brand-gate reads display strings and facts-gate reads claims; neither binds a promise
+      # to the destination it points at. This gate does, in source and in rendered output.
+      # --selftest first: every check is proven to go red before it is trusted on our bytes.
+      - name: Content-promise gate — promises and destinations gated together
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/content-promise-gate.mjs --selftest
+          node scripts/content-promise-gate.mjs dist/client
+          node scripts/assert-dashboard-lazy-chunks.mjs --selftest
+          node scripts/assert-dashboard-lazy-chunks.mjs dist/client
+
+      # #1482 passed every PR check and then failed the deploy at the council-truth gate,
+      # which lived only in deploy.yml: a retired door (/cobol) was rewired to a real page and
+      # nothing on the PR could say so. Two deploys went red and nothing shipped for an hour.
+      # This is a source-level check (App.tsx + fixtures), so it can run on the PR.
+      - name: Council truth gate — no simulated BFT or phantom engine doors
+        if: steps.scope.outputs.gated == 'true'
+        run: npm run guard:council-truth
+
+      - name: Stablecoin readiness gate — indexed is never measured
+        if: steps.scope.outputs.gated == 'true'
+        run: npm run guard:stablecoin-readiness
+
+      - name: Mill receipt readiness — crypto, lifecycle and regulation stay separate
+        if: steps.scope.outputs.gated == 'true'
+        run: npm run guard:mill-receipt-readiness
+
+      - name: Signed-JSON guard — a stub or broken /signed/*.json blocks the deploy
+        if: steps.scope.outputs.gated == 'true'
+        run: node scripts/signed-json-guard.mjs dist/client
+
+      - name: Governance discovery — JSON, Council pointers and bound bytes
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node --test scripts/governance-discovery-gate.node-test.mjs
+          node scripts/governance-discovery-gate.mjs dist/client
+
+      # A private canary token (harness/instrument-guard) in any public file means a held-out
+      # slice has leaked. The gate holds only digests from the signed commitments record, prints
+      # the file and digest (never the token), and exits 2 when no record exists: an unread list
+      # is not a clean scan. Selftest first.
+      - name: Canary-leak gate — no private canary token in a public surface
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/canary-leak-gate.mjs --selftest
+          node scripts/canary-leak-gate.mjs dist/client public
+
+      # A door that serves 200 but is absent from /.well-known/index.json is live and
+      # UNDISCOVERABLE through the canonical route — a door a buyer cannot find. Until
+      # 2026-09-05 the index was append-only: ad-hoc scripts pushed their own doors onto
+      # the array and recomputed total_doors = doors.length, and nothing ever scanned the
+      # directory. Measured that day: 300 door files on disk, 292 entries in the index,
+      # 9 doors live at 200 and listed nowhere, plus `index` listing itself as a door.
+      # The generator derives the list from the directory; this gate stops it drifting again.
+      - name: Well-known index gate — the index must describe the directory
+        if: steps.scope.outputs.gated == 'true'
+        run: node scripts/wellknown-index-gen.mjs --check
+
+      # D45. On 2026-09-06 public/interop/agent-card-jws-input.json described a card nobody served.
+      # Its producer was correct the whole time; NOTHING RE-RAN IT. The gates job was red for every
+      # lane — four PRs across three lanes, two freshly rebased — until it was diagnosed by hand.
+      #
+      # docs/operations/PRODUCERS.json names source -> producer -> output. This step re-runs the
+      # producers proven deterministic and delegates to the --check the others already ship.
+      # The x402 census producers are Python and their --check is registered in PRODUCERS.json, but
+      # two of the three have nothing to compare until a second round exists — a check that cannot
+      # fail is decoration. Their --selftest CAN fail today: each renders twice, compares the bytes,
+      # then plants a single byte in the rows and asserts --check goes red. That is the half worth
+      # running on every PR, so it runs here rather than waiting for the gate to become real.
+      #
+      # Verified to fail: removing the `series` block from a leaf, or the `flipped` key from a delta,
+      # turns the matching selftest red and exits 1.
+      - name: x402 census producers — determinism, the n>=30 ladder, and a planted byte
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          python3 scripts/grants/x402_census_round.py --selftest
+          python3 scripts/grants/x402_census_delta.py --selftest
+          python3 harness/x402-census/build_cards.py --selftest
+
+      # It deliberately does NOT re-run signers (keys are not in CI and must not be) or byte-diff
+      # producers that stamp a timestamp or a random id — those are recorded ungated WITH THE
+      # REASON, which is the more useful half of the manifest.
+      #
+      # Verified to fail: bumping the source card's `version` without re-running the producer gives
+      #   "✗ agent-card-jws-input  STALE — re-running the producer changed its own output", exit 1.
+      - name: Producer manifest — committed outputs must still match their producers
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/producers-check.mjs --selftest
+          node scripts/producers-check.mjs
+
+      # The estate's central claim is that a stranger can recompute and verify the evidence from
+      # published bytes. public/signed/HOW-TO-VERIFY.md carried a JavaScript snippet offering to do
+      # exactly that, and on 2026-09-05 it was measured failing 85 of 335 cards (25.4%) — every one
+      # with accuracy === 0, because CPython emits "0.0" where JSON.stringify emits "0". Nobody had
+      # ever run it. A fix published as documentation and never executed is not a fix.
+      #
+      # Breaking the canonicalisation drops this from 335/335 to 218/335, so the gate demonstrably
+      # fails. An unreachable host exits CANNOT-RUN (0 under CI) rather than FAIL: a network flake
+      # is not a broken chain, and reporting it as one teaches everybody to ignore the gate.
+      # RATE BUDGET, added 2026-09-06. The v3 rules cap self-probes at 20/hour (Cloudflare free
+      # tier). This step as first written fetched all 335 cards on EVERY pull request — roughly
+      # 337 requests to councilof.ai per run, which breaches that budget by ~17x and would have
+      # done so silently. The full run moved to a schedule; the PR gate samples.
+      #
+      # 15 is not arbitrary. 117 of 335 cards (34.9%) carry a whole-number float, so a
+      # canonicalisation regression shows up in any small sample: measured with the break applied,
+      # --limit 10 fails 5/10 and --limit 20 fails 13/20. 15 cards + card_index + root = 17
+      # requests, inside the 20/hour budget, and still red on the regression this gate exists for.
+      - name: Stranger verification — signed cards must verify from published bytes
+        if: steps.scope.outputs.gated == 'true'
+        run: node scripts/verify-estate.mjs --limit 15 --did-drift public/.well-known/did.json
+
+      # public/signed/gspc-board.signed.json is signed under #gspc-board-22axis-2026, an MPC key whose
+      # three shares all sit on one host (see its status file), and the artefact NAMES its own
+      # verifier in its `verify` field:
+      #   node scripts/gspc-board-verify.mjs <this file>
+      # The script existed, worked, returned VERIFIED — and no workflow ran it. A verifier nobody
+      # runs is the same shape as the EMILIA vector pin and the published bundle, both found ungated
+      # earlier today: real, correct, and enforced by whoever happens to remember.
+      #
+      # Offline, no network, ~0.2s. Verified to fail: flipping one byte of the signature gives
+      # "signature does NOT verify", exit 1.
+      - name: Signed GSPC board must verify under its own published recipe
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/gspc-board-verify.mjs public/signed/gspc-board.signed.json --did public/.well-known/did.json
+          # The superseding dated freeze (2026-09-25, single key #board-attestation-1). Key anchored
+          # to the committed DID document, so a swapped key in the file fails here.
+          node scripts/gspc-board-verify.mjs public/signed/gspc-board.2026-09-25.signed.json --did public/.well-known/did.json
+          node scripts/gspc-board-verify.mjs public/signed/gspc-board.2026-09-29.signed.json --did public/.well-known/did.json
+
+      # packages/gspc-card-verifier/test/vectors is a FROZEN RECIPROCAL BOUNDARY with EMILIA: 33
+      # vectors (9 VALID, 17 INVALID, 7 UNCHECKABLE) pinned by sha256 in manifest.json, and the
+      # standing rule is that no vector changes without a new pin and a note to the counterparty.
+      #
+      # That rule was enforced only by whoever remembered to run the suite locally. `vitest` here is
+      # scoped to `client/src functions` and these are node:test .test.mjs files, so NO workflow ran
+      # them and a PR could have moved a vector on an agreed boundary with nothing going red.
+      #
+      # Verified to fail: tampering one field of one vector gives
+      #   "not ok 1 - corpus is pinned: every vector matches its manifest digest"  (35 pass / 1 fail)
+      # Untouched the suite is 134 pass / 0 fail, and it needs no network.
+      # Runs from the package directory, not the repo root. Two tests resolve fixture paths
+      # relative to cwd and fail from the root even on a clean tree (134/0 in-package vs 132/2 at
+      # the root). Shipping the root invocation would have added a PERMANENTLY RED gate, which is
+      # worse than no gate — a step that is always failing gets disabled, and then the boundary is
+      # unprotected while looking protected.
+      - name: Card-verifier package — 33-vector EMILIA boundary must still be pinned
+        if: steps.scope.outputs.gated == 'true'
+        working-directory: packages/gspc-card-verifier
+        run: node --test test/*.test.mjs
+      # Reader tests were never invoked by any gate (#2162 added the npm script; its workflow step
+      # did not land). Every scripts/readers/*.node-test.mjs runs here.
+      - name: Reader tests (scripts/readers/*.node-test.mjs)
+        if: steps.scope.outputs.gated == 'true'
+        run: npm run test:readers
+      # The Python test files (spray parity/skip rules, the publisher's kinds index) were never run
+      # by any workflow either — a test nobody runs is a comment. Offline tests only; the
+      # live-network publisher tests stay out of the gate on purpose.
+      - name: Python tests (spray parity + skip rules, publisher kinds index)
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          # pyarrow + huggingface_hub: scripts/spray/test_gspc_spray_skip.py exercises the HF viewer
+          # publish path offline and imports both. This step first ran on 2026-10-06 (step 7 had been
+          # red on every PR) and failed on ModuleNotFoundError: pyarrow / huggingface_hub.
+          # opentimestamps-client: test_ots_restamp_ledger.py builds detached proofs offline and runs
+          # the release gate's own .ots check over them.
+          python3 -m pip install -q pytest cryptography pyarrow huggingface_hub opentimestamps-client
+          # Canary privacy, safe capture retention and verified PR proposal (offline only).
+          python3 -B scripts/canary/test_canary.py
+          python3 -B scripts/canary/test_canary_delivery.py
+          python3 -m pytest -q scripts/spray/test_gspc_parity.py scripts/spray/test_gspc_spray_skip.py
+          python3 -m pytest -q scripts/test_public_root.py -k kinds_index
+          python3 -m pytest -q harness/gspc-top100/test_priority_pick.py harness/gspc-top100/test_inflight_cells.py
+          # The pre-send mail check: no address but the one being checked may ever be put to a mail server.
+          python3 -m pytest -q scripts/outward-gate/test_contact_reachability.py
+          # The outward gate itself. Its tests were not in CI: from the day brand-gate.mjs gained a look-behind
+          # that Python cannot read, the gate could score nothing at 100% and one of these tests sat red unseen.
+          python3 -m pytest -q scripts/outward-gate/test_outward_gate.py scripts/outward-gate/test_gate_draft.py
+          # C-2026-0914-01: a one-option exact-label menu is refused, and every signed card
+          # graded by one is in WITHDRAWN.jsonl (derived from the bound bank bytes).
+          python3 -m pytest -q harness/gspc-top100/test_one_option_menu.py
+          python3 scripts/withdraw_one_option_cards.py
+          python3 -m pytest -q scripts/readers/test_layer0_liveness_reader.py
+          # public-root halted on every run of 5-6 Oct 2026 on a stale ledger proof; the re-stamp
+          # producer must keep the old pair, roll back on failure and clear the gate's own check.
+          python3 -m pytest -q scripts/test_ots_restamp_ledger.py
+          # #2391: connector envelope validator (failing controls) + Kaggle adapter replay.
+          python3 -m pytest -q scripts/adapters/test_connector_envelope.py scripts/adapters/test_kaggle_envelopes.py
+          # The mill signer must not spend a signature on a card it has already signed.
+          # No gate ran test_mill_honesty.py, so this test sat RED on master from #1888
+          # (which renamed the entry point its stub patched) until 2026-09-22. Scoped to
+          # the one test on purpose: three others in that file are red for unrelated
+          # reasons and a step that is green only because nobody looks is the defect
+          # this line exists to stop repeating.
+          python3 -m pytest -q harness/gspc-top100/test_mill_honesty.py -k sign_mill_skips_already_signed
+          python3 scripts/watch/test_provider_watch.py
+          python3 scripts/watch/test_provider_watch_promotion.py
+
+      # C-2026-0925-01: split-custody wording ("3-party", "2-of-3") may not return to a served or
+      # producing surface without correction context or a PERFORMED ceremony record in
+      # council-os/custody-ceremonies.json. The publication bus tests run here too (no network).
+      - name: Custody wording guard + publication bus
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/custody-wording-guard.mjs
+          node --test scripts/custody-wording-guard.node-test.mjs scripts/pubbus/pubbus.node-test.mjs
+          python3 scripts/pubbus/test_publish_fleet_status.py
+
+      # TUI-1 (2026-09-14): 14 test files outside client/src, functions, scripts were never
+      # run by any gate. These test council-os compose locks, chrome extension verify vectors,
+      # incident register, HF job steps drift, x402 census cards, CLI check, and no-auto-stubs.
+      # They're cheap (no network, no signing). If a new test lands in these dirs, this step catches it.
+      - name: Orphan coverage — tests outside the blanket vitest dirs
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          npm install --ignore-scripts --no-audit --no-fund --prefix packages/gspc-cli
+          node --test council-os/embed-escape.node-test.mjs council-os/planned-ready.lock.test.mjs docs/incidents/register.test.mjs packages/gspc-cli/test/check.test.mjs
+          npx vitest run council-os/compose.lock.test.ts ci/hf-jobs/steps-drift.test.mjs public/no-auto-stubs.test.mjs harness/x402-census/build_cards.test.ts
+
+      # TUI-1 (2026-09-14): 14 test files outside client/src, functions, scripts were never
+      # run by any gate. These test council-os compose locks, chrome extension verify vectors,
+      # incident register, HF job steps drift, x402 census cards, CLI check, and no-auto-stubs.
+      # They're cheap (no network, no signing). If a new test lands in these dirs, this step catches it.
+      # TUI-1 (2026-09-14): truly orphaned tests — not in blanket vitest dirs, not in deploy.yml
+      # gates, not in any other gate step. If any of these fail, it reveals real issues.
+      # extensions/chrome-gspc-verify/ (6 files) excluded — needs Playwright browser env.
+      - name: Orphan coverage — tests outside blanket vitest + deploy gates
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          npx vitest run council-os docs/incidents ci/hf-jobs packages/gspc-cli public/no-auto-stubs.test.mjs
+
+      # public/verifier/gspc-verify.mjs is PUBLISHED — it serves at
+      # https://councilof.ai/verifier/gspc-verify.mjs and is the copy a stranger downloads to check
+      # our cards. Nothing rebuilt or compared it. It was current on 2026-09-06 (a fresh build was
+      # byte-identical and the live copy matched the committed sha 71923355…) — but by diligence,
+      # not by mechanism. A source change landing without a rebuild ships a verifier that disagrees
+      # with its own code, and the people who find out are the strangers using it.
+      #
+      # Verified to fail: appending one comment line gives "bundle is STALE", exit 1.
+      - name: Published verifier bundle must match a fresh build of its source
+        if: steps.scope.outputs.gated == 'true'
+        working-directory: packages/gspc-card-verifier
+        run: node scripts/bundle.mjs --check ../../public/verifier/gspc-verify.mjs
+
+      # llms.txt and llms-full.txt are DERIVED (scripts/llms-txt.mjs) from live
+      # GET /api/gspc and the three card corpora files. Both files used to tell their
+      # readers "do not freeze numbers in this file" while freezing the lid three times
+      # over, and llms-full.txt's embedded board snapshot had drifted from live — it was
+      # missing financial_run_attestations entirely. This check fails the PR when the
+      # committed bytes no longer match what they derive from. A network failure reports
+      # UNCHECKABLE and does not go red; it also does not report a pass.
+      - name: llms.txt / llms-full.txt match the live board
+        if: steps.scope.outputs.gated == 'true'
+        run: node scripts/llms-txt.mjs --check
+
+      # A same-origin URL published in a machine surface must be a path we serve. Nothing read
+      # link fields before: brand-gate reads display fields, facts-gate reads claims,
+      # signed-json-guard reads structure — so six badge images that 404 sat in a published index
+      # with every gate green. Ratcheted against a dated baseline: NEW dead links fail here, the
+      # 64 known-dead targets are a named debt that may only shrink.
+      - name: Link gate — published JSON must not point at 404s
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/link-gate.mjs --selftest
+          node scripts/link-gate.mjs dist/client
+
 
       - name: Retain Council OS first-question premerge evidence
         if: ${{ always() && steps.scope.outputs.gated == 'true' && (steps.council_os_first_question.outcome == 'success' || steps.council_os_first_question.outcome == 'failure') }}
@@ -518,6 +843,9 @@ jobs:
           # opentimestamps-client: test_ots_restamp_ledger.py builds detached proofs offline and runs
           # the release gate's own .ots check over them.
           python3 -m pip install -q pytest cryptography pyarrow huggingface_hub opentimestamps-client
+          # Canary privacy, safe capture retention and verified PR proposal (offline only).
+          python3 -B scripts/canary/test_canary.py
+          python3 -B scripts/canary/test_canary_delivery.py
           python3 -m pytest -q scripts/spray/test_gspc_parity.py scripts/spray/test_gspc_spray_skip.py
           python3 -m pytest -q scripts/test_public_root.py -k kinds_index
           python3 -m pytest -q harness/gspc-top100/test_priority_pick.py harness/gspc-top100/test_inflight_cells.py
@@ -543,6 +871,8 @@ jobs:
           # reasons and a step that is green only because nobody looks is the defect
           # this line exists to stop repeating.
           python3 -m pytest -q harness/gspc-top100/test_mill_honesty.py -k sign_mill_skips_already_signed
+          python3 scripts/watch/test_provider_watch.py
+          python3 scripts/watch/test_provider_watch_promotion.py
 
       # C-2026-0925-01: split-custody wording ("3-party", "2-of-3") may not return to a served or
       # producing surface without correction context or a PERFORMED ceremony record in

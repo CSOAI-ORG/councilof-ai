@@ -38,11 +38,13 @@ export type TalkToolCard = {
   name: string;
   /** The TOOL_CALL_ARGS deltas, concatenated as they arrived. */
   argsText: string;
-  status: "running" | "done";
+  status: "running" | "done" | "unknown";
   label?: string;
   summary?: string;
   citation?: Citation;
   output?: unknown;
+  startedAt?: number | string | null;
+  resultAt?: number | string | null;
 };
 
 export type ConfirmRequest = {
@@ -54,7 +56,17 @@ export type ConfirmRequest = {
 export type TalkRun = {
   id: string;
   question: string;
-  status: "streaming" | "done" | "error" | "awaiting_confirmation" | "cancelled";
+  status: "streaming" | "done" | "error" | "awaiting_confirmation" | "cancelled" | "interrupted" | "stop_requested" | "approved";
+  threadId?: string | null;
+  runId?: string | null;
+  startedAt?: number | string | null;
+  hasStarted?: boolean;
+  lastEventAt?: number | string | null;
+  route?: string | null;
+  trace?: { id: string | null; type: string; time: number | string | null; toolId: string | null }[];
+  seenEventIds?: string[];
+  terminal?: boolean;
+  cancellationSource?: "executor" | "permission";
   tools: TalkToolCard[];
   text: string;
   confirm: ConfirmRequest | null;
@@ -68,39 +80,44 @@ export type TalkRun = {
   consentRequired: { intent: string; steps: number } | null;
 };
 
-export type SseEvent = { event: string | null; data: Json };
+export type SseEvent = { event: string | null; data: Json; id?: string | null };
 
 const rec = (v: unknown): Json | null => (v && typeof v === "object" && !Array.isArray(v) ? (v as Json) : null);
 const str = (v: unknown): string | null => (typeof v === "string" ? v : null);
 
 /** Split complete SSE events off the front of `buffer`. Incomplete trailing text is returned as `rest`. */
-export function parseSse(buffer: string): { events: SseEvent[]; rest: string } {
+export function parseSse(buffer: string): { events: SseEvent[]; rest: string; malformed: number } {
   const norm = buffer.replace(/\r\n/g, "\n");
   const events: SseEvent[] = [];
   let rest = norm;
+  let malformed = 0;
   let cut: number;
   while ((cut = rest.indexOf("\n\n")) >= 0) {
     const block = rest.slice(0, cut);
     rest = rest.slice(cut + 2);
     let event: string | null = null;
+    let id: string | null = null;
     const data: string[] = [];
     for (const line of block.split("\n")) {
       if (line.startsWith("event:")) event = line.slice(6).trim();
+      else if (line.startsWith("id:")) id = line.slice(3).trim();
       else if (line.startsWith("data:")) data.push(line.slice(5).replace(/^ /, ""));
     }
     if (!data.length) continue;
     try {
       const parsed = rec(JSON.parse(data.join("\n")));
-      if (parsed) events.push({ event, data: parsed });
+      if (parsed && typeof parsed.type === "string" && (!event || event === parsed.type)) events.push({ event, data: parsed, ...(id ? { id } : {}) });
+      else { malformed++; break; }
     } catch {
-      /* a malformed event is dropped, never guessed at */
+      malformed++;
+      break; // Preserve the valid prefix; a malformed frame never blesses a later terminal.
     }
   }
-  return { events, rest };
+  return { events, rest, malformed };
 }
 
 export function newRun(question: string, id: string): TalkRun {
-  return { id, question, status: "streaming", tools: [], text: "", confirm: null, ui: [], state: {}, consentRequired: null };
+  return { id, question, status: "streaming", tools: [], text: "", confirm: null, ui: [], state: {}, consentRequired: null, threadId: null, runId: null, startedAt: null, lastEventAt: null, route: null, trace: [], seenEventIds: [] };
 }
 
 /**
@@ -108,42 +125,43 @@ export function newRun(question: string, id: string): TalkRun {
  * Pure: returns a new document. An operation on a path that does not exist is skipped, never
  * guessed at (the next STATE_SNAPSHOT resynchronises).
  */
+const own = (v: object, key: string) => Object.prototype.hasOwnProperty.call(v, key);
+const unsafeSegment = (key: string) => key === "__proto__" || key === "constructor" || key === "prototype";
+
 export function applyPatch(doc: Json, ops: unknown): Json {
   const out = JSON.parse(JSON.stringify(doc ?? {})) as Json;
-  for (const raw of Array.isArray(ops) ? ops : []) {
-    const op = rec(raw);
-    const path = str(op?.path);
-    if (!op || path === null || !/^(add|replace|remove)$/.test(String(op.op))) continue;
-    const keys = path.split("/").slice(1).map((k) => k.replace(/~1/g, "/").replace(/~0/g, "~"));
-    if (!keys.length) continue;
+  for (const raw of (Array.isArray(ops) ? ops : []).slice(0, 256)) {
+    const op = rec(raw), path = str(op?.path);
+    if (!op || path === null || !path.startsWith("/") || !/^(add|replace|remove)$/.test(String(op.op))) continue;
+    const encoded = path.split("/").slice(1);
+    if (encoded.some(k => /~(?:[^01]|$)/.test(k))) continue;
+    const keys = encoded.map(k => k.replace(/~1/g, "/").replace(/~0/g, "~"));
+    if (!keys.length || keys.some(unsafeSegment)) continue;
     let node: unknown = out;
     let ok = true;
-    for (const k of keys.slice(0, -1)) {
-      const next = Array.isArray(node) ? node[Number(k)] : rec(node)?.[k];
-      if (next === undefined || next === null || typeof next !== "object") {
-        if (op.op === "add" && !Array.isArray(node) && rec(node)) {
-          (node as Json)[k] = {};
-          node = (node as Json)[k];
-          continue;
-        }
-        ok = false;
-        break;
-      }
-      node = next;
+    for (const key of keys.slice(0, -1)) {
+      const object = rec(node);
+      if ((!Array.isArray(node) && !object) || !own(node as object, key)) { ok = false; break; }
+      if (Array.isArray(node) && !/^(0|[1-9]\d*)$/.test(key)) { ok = false; break; }
+      node = (node as Json)[key];
+      if (!node || typeof node !== "object") { ok = false; break; }
     }
     if (!ok) continue;
-    const last = keys[keys.length - 1];
+    const key = keys[keys.length - 1];
     if (Array.isArray(node)) {
-      const i = last === "-" ? node.length : Number(last);
-      if (!Number.isInteger(i) || i < 0 || i > node.length) continue;
-      if (op.op === "remove") node.splice(i, 1);
-      else if (op.op === "add") node.splice(i, 0, op.value);
-      else if (i < node.length) node[i] = op.value;
+      if (key !== "-" && !/^(0|[1-9]\d*)$/.test(key)) continue;
+      if (key === "-" && op.op !== "add") continue;
+      const index = key === "-" ? node.length : Number(key);
+      if (!Number.isSafeInteger(index) || index < 0 || index > node.length) continue;
+      if (op.op !== "add" && !own(node, String(index))) continue;
+      if (op.op === "remove") node.splice(index, 1);
+      else if (op.op === "add") node.splice(index, 0, op.value);
+      else node[index] = op.value;
     } else if (rec(node)) {
-      const n = node as Json;
-      if (op.op === "remove") delete n[last];
-      else if (op.op === "replace" && !(last in n)) continue;
-      else n[last] = op.value;
+      const object = node as Json;
+      if (op.op !== "add" && !own(object, key)) continue;
+      if (op.op === "remove") delete object[key];
+      else object[key] = op.value;
     }
   }
   return out;
@@ -171,10 +189,42 @@ function uiStepFrom(id: string, name: string, argsText: string, ended: boolean):
   };
 }
 
-/** Fold one AG-UI event into the run. Pure. Unknown event types leave the run unchanged. */
+/** A local interruption is not an acknowledgement that the remote executor stopped. */
+export function interruptRun(run: TalkRun, status: "error" | "interrupted" | "stop_requested" | "cancelled", error?: string): TalkRun {
+  return { ...run, status, terminal: true, ...(error ? { error } : {}), tools: run.tools.map(tool => tool.status === "running" ? { ...tool, status: "unknown" as const } : tool) };
+}
+function eventTime(value: unknown): number | string | null {
+  return typeof value === "number" && Number.isFinite(value) ? value : typeof value === "string" && value ? value : null;
+}
+
+/** Replay only updates the projection; it never executes imported state, A2UI or tools. */
 export function reduceRun(run: TalkRun, ev: Json): TalkRun {
+  const type = own(ev, "type") ? str(ev.type) : null;
+  if (!type || run.terminal) return run;
+  const id = str(ev.eventId);
+  const seen = run.seenEventIds ?? [];
+  if (id && seen.includes(id)) return run;
+  if (seen.length >= 2048) return interruptRun(run, "error", "The run exceeded its event limit.");
+  if ((run.runId && str(ev.runId) && run.runId !== ev.runId) || (run.threadId && str(ev.threadId) && run.threadId !== ev.threadId)) {
+    return interruptRun(run, "error", "The stream changed its run or thread identity.");
+  }
+  const time = eventTime(ev.timestamp);
+  const next: TalkRun = {
+    ...run,
+    lastEventAt: time,
+    route: str(ev.route) ?? str(rec(ev.result)?.intent) ?? run.route ?? null,
+    trace: [...(run.trace ?? []), { id, type, time, toolId: str(ev.toolCallId) }].slice(-64),
+    seenEventIds: id ? [...seen, id] : seen,
+  };
+  return reduceEvent(next, ev);
+}
+
+/** Fold one AG-UI event into the run. Pure. Unknown event types leave the run unchanged. */
+function reduceEvent(run: TalkRun, ev: Json): TalkRun {
   const type = str(ev.type);
   switch (type) {
+    case "RUN_STARTED":
+      return { ...run, threadId: str(ev.threadId) ?? run.threadId ?? null, runId: str(ev.runId) ?? run.runId ?? null, startedAt: run.hasStarted ? run.startedAt ?? null : eventTime(ev.timestamp), hasStarted: true };
     case "TOOL_CALL_START": {
       const name = str(ev.toolCallName) ?? "tool";
       if (FRONTEND_TOOL_NAMES.has(name)) {
@@ -184,7 +234,7 @@ export function reduceRun(run: TalkRun, ev: Json): TalkRun {
       }
       const id = str(ev.toolCallId) ?? `call_${run.tools.length + 1}`;
       if (run.tools.some((t) => t.id === id)) return run;
-      return { ...run, tools: [...run.tools, { id, name: str(ev.toolCallName) ?? "tool", argsText: "", status: "running" }] };
+      return { ...run, tools: [...run.tools, { id, name: str(ev.toolCallName) ?? "tool", argsText: "", status: "running", startedAt: eventTime(ev.timestamp) }] };
     }
     case "TOOL_CALL_ARGS": {
       const id = str(ev.toolCallId);
@@ -198,11 +248,13 @@ export function reduceRun(run: TalkRun, ev: Json): TalkRun {
       try {
         body = rec(JSON.parse(str(ev.content) ?? "{}")) ?? {};
       } catch {
-        body = {};
+        return interruptRun(run, "error", "A tool result was not valid JSON.");
       }
+      if (!str(ev.content) || !Object.keys(body).length) return interruptRun(run, "error", "The tool result was missing its payload.");
       const cit = rec(body.citation);
       const patch: Partial<TalkToolCard> = {
         status: "done",
+        resultAt: eventTime(ev.timestamp),
         label: str(body.label) ?? undefined,
         summary: str(body.summary) ?? undefined,
         citation: cit
@@ -245,10 +297,20 @@ export function reduceRun(run: TalkRun, ev: Json): TalkRun {
     }
     case "RUN_FINISHED": {
       const result = rec(ev.result) ?? undefined;
-      return { ...run, result, status: result?.awaiting_confirmation ? "awaiting_confirmation" : "done" };
+      const outcome = str(ev.outcome) ?? str(rec(ev.outcome)?.type) ?? str(result?.outcome) ?? str(rec(result?.outcome)?.type) ?? str(result?.status);
+      const next = { ...run, result, route: str(result?.intent) ?? run.route ?? null, terminal: true };
+      const malformedOutcome = (value: unknown) => !str(value) && !str(rec(value)?.type);
+      if ((own(ev, "result") && !result) || (own(ev, "outcome") && malformedOutcome(ev.outcome)) || (result && own(result, "outcome") && malformedOutcome(result.outcome)) || (result && own(result, "status") && !str(result.status)) || (result && own(result, "awaiting_confirmation") && typeof result.awaiting_confirmation !== "boolean") || (result && own(result, "cancelled") && typeof result.cancelled !== "boolean")) return interruptRun(next, "interrupted", "The run returned an unsupported terminal payload.");
+      if (result?.awaiting_confirmation === true) return { ...next, status: "awaiting_confirmation" };
+      if (result?.cancelled === true || outcome === "cancelled" || outcome === "canceled") return interruptRun({ ...next, cancellationSource: "executor" }, "cancelled");
+      if (outcome === "error" || outcome === "failed") return interruptRun(next, "error", str(result?.message) ?? "The executor reported an error.");
+      if (outcome && !["success", "completed", "done", "finished"].includes(outcome)) return interruptRun(next, "interrupted", "The run ended with an interrupt or unsupported outcome.");
+      if (run.tools.some(tool => tool.status !== "done")) return interruptRun(next, "interrupted", "The run ended before every tool returned a result.");
+      if (run.confirm) return { ...next, status: "awaiting_confirmation" };
+      return { ...next, status: "done" };
     }
     case "RUN_ERROR":
-      return { ...run, status: "error", error: str(ev.message) ?? "the run failed" };
+      return interruptRun(run, "error", str(ev.message) ?? "the run failed");
     default:
       return run;
   }
@@ -325,6 +387,7 @@ export const TALK_SUGGESTIONS: { text: string; tool: string }[] = [
 
 export type StreamOptions = {
   question: string;
+  threadId?: string;
   confirmTool?: string[];
   /** Where the reader is; lets "this" mean the page's subject. */
   page?: PageContext;
@@ -338,46 +401,84 @@ export type StreamOptions = {
   endpoint?: string;
   onEvent: (ev: Json) => void;
   fetchImpl?: typeof fetch;
+  timeoutMs?: number;
 };
 
-/** POST one question to the AG-UI run endpoint and feed every event to onEvent. */
+/** A single bounded POST. Connection loss never automatically replays an action. */
 export async function streamRun(o: StreamOptions): Promise<void> {
-  const body: Json = {
-    threadId: `web-${Date.now().toString(36)}`,
-    runId: `run-${Math.random().toString(36).slice(2, 10)}`,
-    messages: [
-      ...(o.question ? [{ id: "m1", role: "user", content: o.question }] : []),
-      ...(o.toolResults ?? []).map((r, i) => ({ id: `t${i + 1}`, role: "tool", toolCallId: r.toolCallId, content: r.content, ...(r.error ? { error: r.error } : {}) })),
-    ],
-  };
-  const fp: Json = {};
-  if (o.confirmTool?.length) fp.confirm = { tools: o.confirmTool, tool: o.confirmTool[0] };
-  if (o.page) fp.page = o.page;
-  if (o.declareUi || o.watch) body.tools = FRONTEND_TOOLS;
-  if (o.watch) fp.consent = { watch: true };
-  if (Object.keys(fp).length) body.forwardedProps = fp;
-  const f = o.fetchImpl ?? fetch;
-  const r = await f(o.endpoint ?? "/api/agui/run", {
-    method: "POST",
-    headers: { "content-type": "application/json", accept: "text/event-stream" },
-    body: JSON.stringify(body),
-    signal: o.signal,
+  const deadline = o.timeoutMs ?? 30_000;
+  if (!Number.isSafeInteger(deadline) || deadline < 1 || deadline > 30_000) throw new Error("Invalid run deadline.");
+  const controller = new AbortController();
+  const stop = () => controller.abort(o.signal?.reason);
+  if (o.signal?.aborted) stop(); else o.signal?.addEventListener("abort", stop, { once: true });
+  const timer = setTimeout(() => controller.abort(new Error("The answer stream timed out; executor state is unknown.")), deadline);
+  const wait = <T,>(promise: Promise<T>): Promise<T> => new Promise((resolve, reject) => {
+    const abort = () => reject(controller.signal.reason ?? new DOMException("Reading stopped; executor state is unknown.", "AbortError"));
+    if (controller.signal.aborted) { abort(); return; }
+    controller.signal.addEventListener("abort", abort, { once: true });
+    void promise.then(value => { controller.signal.removeEventListener("abort", abort); resolve(value); }, error => { controller.signal.removeEventListener("abort", abort); reject(error); });
   });
-  if (!r.ok) throw new Error(`HTTP ${r.status}`);
-  if (!r.body) {
-    const { events } = parseSse((await r.text()) + "\n\n");
-    for (const e of events) o.onEvent(e.data);
-    return;
-  }
-  const reader = r.body.getReader();
-  const dec = new TextDecoder();
-  let buf = "";
-  for (;;) {
-    const { done, value } = await reader.read();
-    if (value) buf += dec.decode(value, { stream: true });
-    const { events, rest } = parseSse(done ? buf + "\n\n" : buf);
-    buf = rest;
-    for (const e of events) o.onEvent(e.data);
-    if (done) break;
+  let reader: ReadableStreamDefaultReader<Uint8Array> | undefined;
+  let reachedEOF = false;
+  try {
+    if (controller.signal.aborted) throw controller.signal.reason ?? new DOMException("Reading stopped; executor state is unknown.", "AbortError");
+    const body: Json = {
+      threadId: o.threadId ?? "web-" + crypto.randomUUID(),
+      runId: "run-" + crypto.randomUUID(),
+      messages: [
+        ...(o.question ? [{ id: "m1", role: "user", content: o.question }] : []),
+        ...(o.toolResults ?? []).map((r, i) => ({ id: "t" + (i + 1), role: "tool", toolCallId: r.toolCallId, content: r.content, ...(r.error ? { error: r.error } : {}) })),
+      ],
+    };
+    const fp: Json = {};
+    if (o.confirmTool?.length) fp.confirm = { tools: o.confirmTool, tool: o.confirmTool[0] };
+    if (o.page) fp.page = o.page;
+    if (o.declareUi || o.watch) body.tools = FRONTEND_TOOLS;
+    if (o.watch) fp.consent = { watch: true };
+    if (Object.keys(fp).length) body.forwardedProps = fp;
+    const response = await wait((o.fetchImpl ?? fetch)(o.endpoint ?? "/api/agui/run", {
+      method: "POST", headers: { "content-type": "application/json", accept: "text/event-stream" },
+      body: JSON.stringify(body), signal: controller.signal, redirect: "error",
+    }));
+    if (!response.ok) throw new Error("HTTP " + response.status);
+    if (!/^text\/event-stream(?:\s*;|$)/i.test(response.headers.get("content-type") ?? "") || !response.body) throw new Error("The response was not a readable event stream.");
+    reader = response.body.getReader();
+    const decoder = new TextDecoder("utf-8", { fatal: true });
+    let buffer = "", bytes = 0, count = 0, terminal = false, started = false;
+    const seen = new Set<string>();
+    for (;;) {
+      const { done, value } = await wait(reader.read());
+      if (value) { bytes += value.byteLength; if (bytes > 2 * 1024 * 1024) throw new Error("The answer stream exceeded its byte limit."); }
+      buffer += value ? decoder.decode(value, { stream: true }) : "";
+      if (done) buffer += decoder.decode();
+      const parsed = parseSse(buffer);
+      buffer = parsed.rest;
+      if (buffer.length > 512 * 1024) throw new Error("An answer event exceeded its size limit.");
+      for (const event of parsed.events) {
+        const eventId = event.id ?? str(event.data.eventId);
+        if (event.id && str(event.data.eventId) && event.id !== event.data.eventId) throw new Error("The answer event identity did not match.");
+        if (eventId && seen.has(eventId)) continue;
+        if (terminal) throw new Error("The answer stream contained an event after its terminal event.");
+        if (!started && event.data.type !== "RUN_STARTED") throw new Error("The answer stream did not begin with RUN_STARTED.");
+        if (event.data.type === "RUN_STARTED") started = true;
+        if (++count > 2048) throw new Error("The answer stream exceeded its event limit.");
+        if (eventId) seen.add(eventId);
+        o.onEvent(eventId ? { ...event.data, eventId } : event.data);
+        if (event.data.type === "RUN_FINISHED" || event.data.type === "RUN_ERROR") terminal = true;
+      }
+      if (parsed.malformed) throw new Error("The answer stream contained a malformed event.");
+      if (done) {
+        if (!terminal || buffer.trim()) throw new Error("The stream closed before a complete terminal event; executor state is unknown.");
+        reachedEOF = true;
+        break;
+      }
+    }
+  } finally {
+    clearTimeout(timer);
+    o.signal?.removeEventListener("abort", stop);
+    if (reader) {
+      if (!reachedEOF) void reader.cancel().catch(() => undefined);
+      reader.releaseLock();
+    }
   }
 }

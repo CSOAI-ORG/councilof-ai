@@ -185,8 +185,12 @@ export async function serveAguiRun(
   const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>();
   const writer = writable.getWriter();
   const enc = new TextEncoder();
-  const emit = (ev: Json) =>
-    writer.write(enc.encode(`event: ${ev.type}\ndata: ${JSON.stringify({ ...ev, timestamp: Date.now() })}\n\n`));
+  let sequence = 0;
+  const emit = (ev: Json) => {
+    const eventId = runId + ":" + (++sequence);
+    const value = { ...ev, threadId, runId, eventId, timestamp: Object.prototype.hasOwnProperty.call(ev, "timestamp") ? ev.timestamp : Date.now() };
+    return writer.write(enc.encode("id: " + eventId + "\nevent: " + ev.type + "\ndata: " + JSON.stringify(value) + "\n\n"));
+  };
 
   const say = async (text: string) => {
     const messageId = crypto.randomUUID();
@@ -208,7 +212,7 @@ export async function serveAguiRun(
           ],
         });
         await emit({ type: "RUN_FINISHED", threadId, runId, result: { grounded: false, frontend_results: returned.length } });
-        onState?.("grounded");
+        onState?.("unknown");
         return;
       }
       if (!question.trim()) {
@@ -283,9 +287,9 @@ export async function serveAguiRun(
         return;
       }
       if (ui && plan.kind !== "tools") {
-        // The page moved; no data tool matched. Say so: nothing measured is quoted.
+        // The browser received a plan; execution is not acknowledged by this stream.
         await say(
-          `I moved the page: ${ui.intent} (${ui.steps.length} step${ui.steps.length === 1 ? "" : "s"}). ` +
+          `I prepared page steps: ${ui.intent} (${ui.steps.length} step${ui.steps.length === 1 ? "" : "s"}). The browser has not reported their execution here. ` +
             "No signed record was read for this question, so I give no number: not measured by this answer.",
         );
         await emit({ type: "RUN_FINISHED", threadId, runId, result: { grounded: false, intent: ui.intent, label: "NAVIGATION", answered_by: "ui planner (deterministic)", citations: [], ...uiResult } });
@@ -295,7 +299,7 @@ export async function serveAguiRun(
       const parentMessageId = crypto.randomUUID();
       const answer = await executePlan(plan, origin, async (e) => {
         if (e.phase === "start") {
-          await emit({ type: "TOOL_CALL_START", toolCallId: e.id, toolCallName: e.call.tool, parentMessageId });
+          await emit({ type: "TOOL_CALL_START", toolCallId: e.id, toolCallName: e.call.tool, parentMessageId, route: "intent" in plan && typeof plan.intent === "string" ? plan.intent : plan.kind });
           const shown: Json = {};
           for (const [k, v] of Object.entries(e.call.args)) if (!k.startsWith("_")) shown[k] = v;
           await emit({ type: "TOOL_CALL_ARGS", toolCallId: e.id, delta: JSON.stringify(shown) });

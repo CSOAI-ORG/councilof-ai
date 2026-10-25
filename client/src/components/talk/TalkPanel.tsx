@@ -29,6 +29,7 @@ import {
   argsOf,
   challengeOf,
   newRun,
+  interruptRun,
   reduceRun,
   streamRun,
   TALK_SUGGESTIONS,
@@ -146,6 +147,7 @@ function ToolCard({ card, answer }: { card: TalkToolCard; answer?: string }) {
       args={argText}
       raw={card.output ?? undefined}
     >
+      {card.status === "unknown" ? <p className="mt-2 text-sm text-muted-foreground">Tool outcome unknown: the connection ended before its result arrived.</p> : null}
       {card.label === "PAYMENT_REQUIRED" ? <ChallengeDetails output={card.output} /> : null}
     </ResultCard>
   );
@@ -176,16 +178,109 @@ export function faceSentence(run: Pick<TalkRun, "text" | "tools">): string {
   return firstSentence(run.text) || (run.tools.length ? "See the card above." : run.text);
 }
 
+const asRecord = (v: unknown): Record<string, unknown> | null => v && typeof v === "object" && !Array.isArray(v) ? v as Record<string, unknown> : null;
+const scalar = (v: unknown): string | null => typeof v === "string" ? v : typeof v === "number" && Number.isFinite(v) ? String(v) : null;
+function timeLabel(value: number | string | null | undefined): string {
+  if (value === null || value === undefined) return "Unknown";
+  if (typeof value === "number") {
+    const date = new Date(value);
+    if (!Number.isNaN(date.getTime())) return date.toISOString();
+  }
+  return String(value);
+}
+function evidenceHref(value: string): string | null {
+  try {
+    if (!/^https?:\/\//i.test(value) && !(value.startsWith("/") && !value.startsWith("//"))) return null;
+    const url = new URL(value, "https://councilof.ai");
+    if (!/^https?:$/.test(url.protocol) || url.username || url.password || [...url.searchParams.keys()].some(key => /^(access_token|api_key|token|password|secret|authorization)$/i.test(key))) return null;
+    return value.startsWith("/") && !value.startsWith("//") ? value : url.href;
+  } catch { return null; }
+}
+function evidenceFields(tool: TalkToolCard) {
+  const output = asRecord(tool.output) ?? {};
+  const links = [{ label: "Source", value: tool.citation?.url ?? null }];
+  for (const [label, key] of [["Source", "source_url"], ["Source", "source"], ["Receipt", "receipt_url"], ["Receipt", "receipt"], ["Verify", "verify_url"], ["Verify", "verification_url"]] as const) {
+    const value = scalar(output[key]) ?? scalar(asRecord(output[key])?.url);
+    if (value && !links.some(link => link.value === value)) links.push({ label, value });
+  }
+  const lineage = asRecord(output.lineage) ?? output;
+  return {
+    observed: scalar(output.observed_at ?? output.observation_time ?? output.measurement_time ?? output.as_of),
+    links: links.filter((link): link is { label: string; value: string } => Boolean(link.value)),
+    lineage: ["supersedes", "superseded_by", "retest_of", "correction_of"].flatMap(key => {
+      const value = scalar(lineage[key]);
+      return value === null ? [] : [{ key, value }];
+    }),
+  };
+}
+function statusText(run: TalkRun): string {
+  switch (run.status) {
+    case "streaming": return "Receiving live progress";
+    case "awaiting_confirmation": return "Waiting for permission; the paid tool has not been called";
+    case "approved": return "Permission granted; execution is tracked in the next run";
+    case "stop_requested": return "Stopped reading; executor stop is unconfirmed";
+    case "interrupted": return "Connection or run interrupted; incomplete tool outcomes remain unknown";
+    case "cancelled": return run.cancellationSource === "executor" ? "Executor reported cancellation" : "Permission declined; no tool was called";
+    case "error": return "Operational error; inspect the retained results";
+    default: return "Run finished; each result keeps its own evidence state";
+  }
+}
+function RunTrace({ run, onStop }: { run: TalkRun; onStop: (run: TalkRun) => void }) {
+  return (
+    <div className="min-w-0 space-y-2">
+      <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-muted-foreground" data-testid="talk-run-status">
+        <p role="status">{statusText(run)}</p>
+        {run.status === "streaming" ? <button type="button" onClick={() => onStop(run)} className={"min-h-11 rounded-lg border border-border px-3 font-medium " + FOCUS}>Stop reading</button> : null}
+      </div>
+      <details className="min-w-0 rounded-xl border border-border bg-card p-3 text-xs [overflow-wrap:anywhere]" data-testid="talk-run-evidence">
+        <summary className={"min-h-11 cursor-pointer py-2 text-sm font-semibold " + FOCUS}>Run details and evidence</summary>
+        <dl className="mt-2 grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-2">
+          <dt>Server run</dt><dd className="break-all font-mono">{run.runId ?? "Unknown"}</dd>
+          <dt>Thread</dt><dd className="break-all font-mono">{run.threadId ?? "Unknown"}</dd>
+          <dt>Route</dt><dd>{run.route ?? "Not reported"}</dd>
+          <dt>Started</dt><dd data-event-time={run.startedAt ?? undefined}>{timeLabel(run.startedAt)}</dd>
+          <dt>Last event</dt><dd data-testid="talk-last-event" data-event-time={run.lastEventAt ?? undefined}>{timeLabel(run.lastEventAt)}</dd>
+          <dt>Reported cost</dt><dd>{scalar(run.result?.cost) ?? "Unknown"}</dd>
+        </dl>
+        {run.trace?.length ? <ol className="mt-3 space-y-1" aria-label="Received run events">
+          {run.trace.map((event, index) => <li key={event.id ?? index} className="rounded-md bg-muted p-2">
+            <span>{event.type}</span>{event.toolId ? <span className="ml-2 break-all font-mono">{event.toolId}</span> : null}
+            <span className="block text-muted-foreground">{timeLabel(event.time)}{event.id ? " · " + event.id : ""}</span>
+          </li>)}
+        </ol> : null}
+        {run.tools.map(tool => {
+          const detail = evidenceFields(tool);
+          return <section key={tool.id} className="mt-3 space-y-1" aria-label={"Evidence from " + tool.name}>
+            <p className="font-semibold">{tool.name} · {tool.label ?? "No evidence state returned"}</p>
+            <p>Observation time: {detail.observed ?? "Unknown"}</p>
+            {detail.links.map(link => {
+              const href = evidenceHref(link.value);
+              return href ? <a key={link.label + link.value} href={href} target="_blank" rel="noreferrer" className={"mr-4 inline-flex min-h-11 items-center underline " + FOCUS}>{link.label}</a> : null;
+            })}
+            {detail.lineage.map(item => {
+              const href = evidenceHref(item.value);
+              return <p key={item.key}>{item.key}: {href && /^https?:|^\//.test(item.value) ? <a href={href} rel="noreferrer" target="_blank" className="underline">{item.value}</a> : item.value}</p>;
+            })}
+          </section>;
+        })}
+        <p className="mt-3 text-muted-foreground">Times and identifiers come from received events. Missing values remain unknown. This view does not verify a signature or replay disconnected actions. History here lasts only while this view stays open.</p>
+      </details>
+    </div>
+  );
+}
+
 function RunView({
   run,
   onConfirm,
   onCancel,
+  onStop,
   onEnableWatch,
   onEdit,
 }: {
   run: TalkRun;
   onConfirm: (run: TalkRun) => void;
   onCancel: (run: TalkRun) => void;
+  onStop: (run: TalkRun) => void;
   onEnableWatch?: (run: TalkRun) => void;
   onEdit?: (question: string) => void;
 }) {
@@ -194,6 +289,7 @@ function RunView({
       <p className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-sm bg-emerald-800 px-3 py-2 text-sm text-white [overflow-wrap:anywhere] dark:bg-emerald-700">
         {run.question}
       </p>
+      <RunTrace run={run} onStop={onStop} />
       {run.tools.length ? (
         <ul className="space-y-2" aria-label="Tools called">
           {run.tools.map((t, i) => (
@@ -227,7 +323,7 @@ function RunView({
           </div>
         </div>
       ) : null}
-      {run.status === "cancelled" ? <p className="text-sm text-muted-foreground">Cancelled. Nothing was called.</p> : null}
+      {run.status === "cancelled" ? <p className="text-sm text-muted-foreground">{statusText(run)}</p> : null}
       {run.consentRequired && onEnableWatch ? (
         <div className="rounded-xl border border-border bg-muted p-3 text-sm text-foreground" data-testid="talk-consent" role="group" aria-label="Moving the page is switched off">
           <p className="flex items-center gap-2 font-semibold">
@@ -262,9 +358,9 @@ function RunView({
         </p>
       ) : null}
       {run.status === "done" && run.tools.length > 0 && run.tools.every((tool) => tool.status === "done") && onEdit ? <ResultFollowUp run={run} onEdit={onEdit} /> : null}
-      {run.status === "error" ? (
+      {run.status === "error" || run.status === "interrupted" ? (
         <p className="rounded-lg border border-rose-700/30 bg-rose-50 p-3 text-sm text-rose-900 dark:border-rose-400/40 dark:bg-rose-950 dark:text-rose-100" role="alert">
-          No answer: {run.error}. No number is shown in its place.
+          {run.error ?? "The stream ended without a supported result."} Retained evidence keeps its own state.
         </p>
       ) : null}
     </article>
@@ -304,6 +400,7 @@ const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPa
   const [announce, setAnnounce] = useState("");
   const abortRef = useRef<AbortController | null>(null);
   const seq = useRef(0);
+  const threadRef = useRef<string | null>(null);
   const busy = runs.some((r) => r.status === "streaming");
   const [hearing, setHearing] = useState(false);
   const [micNote, setMicNote] = useState<string | null>(null);
@@ -318,51 +415,55 @@ const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPa
   }, []);
 
   const start = useCallback(
-    (question: string, confirmTool?: string[]) => {
+    (question: string, confirmTool?: string[], threadId?: string) => {
       const text = question.trim();
       if (!text) return;
       abortRef.current?.abort();
       const ctl = new AbortController();
       abortRef.current = ctl;
       const id = `run-${++seq.current}`;
-      setRuns((all) => [...all.slice(-9), newRun(text, id)]);
+      const sessionThread = threadId ?? threadRef.current ?? "web-" + crypto.randomUUID();
+      threadRef.current = sessionThread;
+      setRuns((all) => [...all.slice(-9).map(run => run.status === "streaming" ? interruptRun(run, "stop_requested") : run), newRun(text, id)]);
       setAnnounce(`Asking: ${text}`);
       let final: TalkRun = newRun(text, id);
       const o = opts.current;
       streamRun({
         question: text,
+        threadId: sessionThread,
         confirmTool,
         page: o.page?.(),
         declareUi: o.declareUi,
         watch: o.watch,
         signal: ctl.signal,
         onEvent: (ev) => {
+          if (ctl.signal.aborted || id !== "run-" + seq.current) return;
+          if (ev.type === "RUN_STARTED" && typeof ev.threadId === "string") threadRef.current = ev.threadId;
           final = reduceRun(final, ev);
           update(id, (r) => reduceRun(r, ev));
         },
       })
         .then(() => {
+          if (ctl.signal.aborted || id !== "run-" + seq.current) return;
           // A stream that closed without RUN_FINISHED is reported as such, not as success.
           if (final.status === "streaming") {
-            update(id, (r) => ({ ...r, status: "error", error: "the stream closed before the run finished" }));
+            update(id, (r) => interruptRun(r, "interrupted", "the stream closed before the run finished"));
             setAnnounce("The answer stream closed early.");
             return;
           }
-          opts.current.onRunDone?.(final);
+          if (final.status === "done") opts.current.onRunDone?.(final);
           const labels = final.tools.map((t) => `${t.name}: ${t.label ?? "no state"}`).join("; ");
           setAnnounce(
-            final.status === "awaiting_confirmation"
-              ? "A paid tool needs your confirmation. Nothing has been called."
-              : final.status === "error"
-                ? `No answer: ${final.error ?? "the run failed"}`
-                : `Answer ready. ${labels}`,
+            final.status === "done" && final.result?.grounded === true && final.tools.every(tool => tool.status === "done")
+              ? "Answer ready. " + labels
+              : statusText(final) + (labels ? ". " + labels : ""),
           );
         })
         .catch((e: unknown) => {
           if (ctl.signal.aborted) return;
           const msg = e instanceof Error ? e.message : String(e);
-          update(id, (r) => ({ ...r, status: "error", error: `the tools could not be reached (${msg})` }));
-          setAnnounce("No answer: the tools could not be reached.");
+          update(id, (r) => interruptRun(r, "interrupted", msg));
+          if (id === "run-" + seq.current) setAnnounce("The answer stream was interrupted. Executor state is unknown.");
         });
     },
     [update],
@@ -402,12 +503,20 @@ const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPa
 
   const confirm = (run: TalkRun) => {
     const tools = run.confirm?.tools.map((t) => t.tool) ?? [];
-    update(run.id, (r) => ({ ...r, status: "done", confirm: null }));
-    start(run.question, tools);
+    update(run.id, (r) => ({ ...r, status: "approved", confirm: null }));
+    start(run.question, tools, run.threadId ?? undefined);
   };
   const cancel = (run: TalkRun) => {
-    update(run.id, (r) => ({ ...r, status: "cancelled", confirm: null }));
+    if (run.status !== "awaiting_confirmation") return;
+    update(run.id, (r) => ({ ...r, status: "cancelled", cancellationSource: "permission", confirm: null }));
     setAnnounce("Cancelled. Nothing was called.");
+  };
+
+  const stop = (run: TalkRun) => {
+    if (run.status !== "streaming") return;
+    abortRef.current?.abort();
+    update(run.id, current => interruptRun(current, "stop_requested"));
+    setAnnounce("Stopped reading. Executor stop is unconfirmed.");
   };
 
   return (
@@ -415,7 +524,7 @@ const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPa
       {runs.length ? (
         <div className="space-y-6" data-testid="talk-transcript">
           {runs.map((r) => (
-            <RunView key={r.id} run={r} onConfirm={confirm} onCancel={cancel} onEnableWatch={onEnableWatch} onEdit={variant === "standalone" ? (question) => {
+            <RunView key={r.id} run={r} onConfirm={confirm} onCancel={cancel} onStop={stop} onEnableWatch={onEnableWatch} onEdit={variant === "standalone" ? (question) => {
               setQ(question);
               setAnnounce("Question ready to edit. Nothing has been run.");
               window.setTimeout(() => document.getElementById("talk-input")?.focus(), 0);

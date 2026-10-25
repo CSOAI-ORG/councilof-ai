@@ -292,3 +292,40 @@ test("HTTP fixture consumes only its interrupted question reservation and can re
     assert.deepEqual((await askFixture(base)).body, Buffer.from("fresh attempt"));
   });
 });
+
+test("HTTP progress fixture exposes native bytes before EOF and requires Node-side release", { timeout: 5000 }, async () => {
+  await withFirstAskHttpFixture(async base => {
+    const pauseAt = Buffer.byteLength(fixtureBody.slice(0, fixtureBody.indexOf("\n\n") + 2));
+    assert.equal((await setupFixture(base, fixtureBody, { "x-csoai-e2e-pause-after": String(pauseAt) })).status, 204);
+    let first, ended = false;
+    const visible = new Promise(resolve => { first = resolve; });
+    const answer = new Promise((resolve, reject) => {
+      const request = httpRequest(base + "/api/agui/run", { method: "POST", headers: { "content-length": Buffer.byteLength(body) } }, response => {
+        const chunks = [];
+        response.on("data", chunk => { chunks.push(chunk); first(); });
+        response.on("end", () => { ended = true; resolve(Buffer.concat(chunks)); });
+        response.on("error", reject);
+      });
+      request.on("error", reject); request.end(body);
+    });
+    try {
+      await visible;
+      assert.equal(ended, false, "The first native HTTP chunk must precede EOF.");
+      assert.equal((await setupFixture(base)).status, 409);
+      assert.equal((await fixtureHttpRequest(base, "/__e2e/first-ask-fixture", "POST", "", { origin: base, "x-csoai-e2e-fixture": "first-ask" })).status, 403);
+      assert.equal(ended, false);
+    } finally {
+      assert.equal((await fixtureHttpRequest(base, "/__e2e/first-ask-fixture", "POST", "", { "x-csoai-e2e-fixture": "first-ask" })).status, 204);
+    }
+    assert.deepEqual(await answer, Buffer.from(fixtureBody));
+    assert.equal((await askFixture(base)).status, 409);
+  });
+});
+test("HTTP progress fixture rejects invalid pause boundaries without leaving old bytes armed", { timeout: 5000 }, async () => {
+  await withFirstAskHttpFixture(async base => {
+    for (const value of ["-1", "0", "1e2", String(Buffer.byteLength(fixtureBody) + 1)]) {
+      assert.equal((await setupFixture(base, fixtureBody, { "x-csoai-e2e-pause-after": value })).status, 400);
+      assert.equal((await askFixture(base)).status, 409);
+    }
+  });
+});

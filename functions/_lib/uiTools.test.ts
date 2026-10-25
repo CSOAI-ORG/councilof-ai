@@ -214,3 +214,38 @@ describe("AG-UI watch mode — frontend tools, consent, STATE_SNAPSHOT / STATE_D
     expect(ev.find((e) => e.type === "TOOL_CALL_START")).toMatchObject({ toolCallName: "get_axis" });
   });
 });
+
+describe("AG-UI run trace identity and permission boundaries", () => {
+  it("stamps stable server IDs and unique event IDs without executing an unconfirmed paid plan", async () => {
+    const unexpected = vi.fn(async () => { throw new Error("No tool may execute in this held fixture."); });
+    vi.stubGlobal("fetch", unexpected);
+    const response = await serveAguiRun(new Request(ORIGIN + "/api/agui/run", { method: "POST", body: JSON.stringify({
+      threadId: "fixture-thread", runId: "fixture-run",
+      messages: [{ role: "user", content: "commission a card for https://example.com/mcp" }],
+    }) }));
+    const raw = await response.text();
+    const blocks = raw.trim().split("\n\n");
+    const events = blocks.map(block => JSON.parse(block.split("\n").find(line => line.startsWith("data: "))!.slice(6)));
+    expect(events[0]).toMatchObject({ type: "RUN_STARTED", threadId: "fixture-thread", runId: "fixture-run" });
+    expect(events.at(-1)).toMatchObject({ type: "RUN_FINISHED", result: { awaiting_confirmation: true } });
+    expect(events.some(event => event.type === "TOOL_CALL_START")).toBe(false);
+    expect(unexpected).not.toHaveBeenCalled();
+    expect(new Set(events.map(event => event.eventId)).size).toBe(events.length);
+    for (const [index, event] of events.entries()) {
+      expect(event.threadId).toBe("fixture-thread");
+      expect(event.runId).toBe("fixture-run");
+      expect(typeof event.timestamp).toBe("number");
+      expect(blocks[index]).toContain("id: " + event.eventId + "\n");
+    }
+  });
+  it("does not count a browser's reported page actions as grounded measurement", async () => {
+    const states: string[] = [];
+    const response = await serveAguiRun(new Request(ORIGIN + "/api/agui/run", { method: "POST", body: JSON.stringify({
+      messages: [{ role: "tool", toolCallId: "ui_1", content: "reported" }],
+    }) }), undefined, state => states.push(state));
+    const text = await response.text();
+    expect(text).toContain('"frontend_results":1');
+    expect(text).not.toContain('"type":"TOOL_CALL_START"');
+    expect(states).toEqual(["unknown"]);
+  });
+});

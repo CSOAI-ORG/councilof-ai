@@ -179,7 +179,7 @@ export function buildPaidRequest(
     req: new Request(u.toString(), {
       method,
       headers,
-      redirect: "error", // A paid authorization must not follow a route redirect.
+      redirect: "manual", // A paid authorization must not follow a route redirect; "error" throws on Cloudflare workerd.
       ...(body ? { body } : {}),
     }),
     route,
