@@ -28,7 +28,10 @@
       "api-wrapper-asset-usdc-post",
       "api-wrapper-asset-usdt-post",
       "api-wrapper-asset-dai-post",
-      "api-x402"
+      "api-x402",
+      "api-plugin",
+      "api-plugin-platforms",
+      "api-reports"
     ]
   },
   "capabilities": [
@@ -305,6 +308,39 @@
       "lifecycle": "LIVE",
       "payment": "free",
       "path": "/api/x402",
+      "method": "GET"
+    },
+    {
+      "id": "api-plugin",
+      "kind": "http",
+      "name": "Agent plugin",
+      "description": "GET /api/plugin — the Council of AI agent plugin: what it is, how to install it on any AI platform family, and where it lives. Free, forever, for everyone. Not a certification and not a badge.",
+      "audience": "both",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "path": "/api/plugin",
+      "method": "GET"
+    },
+    {
+      "id": "api-plugin-platforms",
+      "kind": "http",
+      "name": "Agent plugin platforms",
+      "description": "GET /api/plugin/platforms — every AI platform family the Council of AI plugin ships for, with its adapter, its install target and its state. A platform with no target is CATALOGUED, not LIVE; absence is an answer.",
+      "audience": "both",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "path": "/api/plugin/platforms",
+      "method": "GET"
+    },
+    {
+      "id": "api-reports",
+      "kind": "http",
+      "name": "Public reports",
+      "description": "GET /api/reports — the public report index, derived from the live board at request time so it auto-updates and cannot fall out of step. Carries the board's own measured_on provenance. Asserts no measurement of its own.",
+      "audience": "both",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "path": "/api/reports",
       "method": "GET"
     }
   ]

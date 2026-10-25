@@ -3436,6 +3436,45 @@
       "lifecycle": "LIVE",
       "audience": "agent",
       "payment": "free"
+    },
+    {
+      "id": "api-plugin",
+      "protocols": [
+        "http"
+      ],
+      "title": "Agent plugin",
+      "description": "GET /api/plugin — the Council of AI agent plugin: what it is, how to install it on any AI platform family, and where it lives. Free, forever, for everyone. Not a certification and not a badge.",
+      "endpoint": "/api/plugin",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "both",
+      "payment": "free"
+    },
+    {
+      "id": "api-plugin-platforms",
+      "protocols": [
+        "http"
+      ],
+      "title": "Agent plugin platforms",
+      "description": "GET /api/plugin/platforms — every AI platform family the Council of AI plugin ships for, with its adapter, its install target and its state. A platform with no target is CATALOGUED, not LIVE; absence is an answer.",
+      "endpoint": "/api/plugin/platforms",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "both",
+      "payment": "free"
+    },
+    {
+      "id": "api-reports",
+      "protocols": [
+        "http"
+      ],
+      "title": "Public reports",
+      "description": "GET /api/reports — the public report index, derived from the live board at request time so it auto-updates and cannot fall out of step. Carries the board's own measured_on provenance. Asserts no measurement of its own.",
+      "endpoint": "/api/reports",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "both",
+      "payment": "free"
     }
   ]
 }
