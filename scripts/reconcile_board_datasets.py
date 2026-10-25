@@ -30,6 +30,11 @@ def check(axis):
 def main():
     board = json.loads(get(BOARD))
     axes = [a for a in board.get("axes", []) if a.get("status") == "MEASURED"]
+    # A separation label without its basis cannot be audited. Count the coverage and print the gap; it is a
+    # warning, not a failure, until the board carries a basis on every model-comparison axis.
+    comparison = [a for a in axes if a.get("kind") == "model-comparison"]
+    with_basis = [a["axis"] for a in comparison if a.get("separation_basis")]
+    missing_basis = [a["axis"] for a in comparison if not a.get("separation_basis")]
     with cf.ThreadPoolExecutor(max_workers=8) as ex:
         rows = list(ex.map(check, axes))
     counts = {}
@@ -39,7 +44,9 @@ def main():
         if r["result"] not in ("MATCH", "NO_DATASET"):
             print(json.dumps(r, sort_keys=True))
     print(json.dumps({"measured_axes": len(axes), "counts": counts,
-                      "board_schema": board.get("schema")}, sort_keys=True))
+                      "board_schema": board.get("schema"),
+                      "separation_basis": {"with": len(with_basis), "missing": len(missing_basis),
+                                           "missing_axes": missing_basis}}, sort_keys=True))
     return 0 if counts.get("DIVERGENT", 0) == 0 and counts.get("UNREACHABLE", 0) == 0 else 1
 
 if __name__ == "__main__":
