@@ -61,6 +61,7 @@ describe("the fixtures are what the brief says they are (read from the served by
   it("the mill card is a leaf of the mill-card root and NOT of the public root; the real leaf is", () => {
     expect(ROOT.card_sha256).not.toContain(MILL_ID);
     expect(MILL_ROOT.leaves.some((l) => l.id === MILL_ID)).toBe(true);
+    expect(REAL_LEAF).toMatch(/^[0-9a-f]{64}$/);
     expect(ROOT.card_sha256).toContain(REAL_LEAF);
     expect(ROOT.card_sha256.length).toBe(ROOT.card_count);
   });
