@@ -66,8 +66,8 @@ describe("Health inventory — correct facts, not a score", () => {
     expect(boardHealthLine()).not.toMatch(/corrections touching this digest \d/);
     const blob = JSON.stringify({ HEALTH_RULING, HEALTH_NEVER, HEALTH_FACTS, LIVE_HEALTH_PIN });
     expect(blob).not.toMatch(/£79|£499|rank for sale|22\/22|dorado|cibola|sovos/i);
-    // Operator notes live on the noindex /status/internal page, never on /products (6 Oct 2026).
-    expect(internal).toContain("<HealthInventory ");
+    // Operator modules are not mounted on public product or reference pages.
+    expect(internal).not.toContain("<HealthInventory ");
     expect(products).not.toContain("<HealthInventory");
   });
 });
