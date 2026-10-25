@@ -57,7 +57,7 @@ describe("Health terms we can borrow", () => {
     expect(products).not.toContain("HealthTerms");
   });
   it("retains the four published offers", () => {
-    const offers = products.match(/export const SKUS = \[[\s\S]*?\n\];/)?.[0];
+    const offers = products.match(/export const SKUS = \[[\s\S]*?\n\](?: as const)?;/)?.[0];
     expect(offers).toBeDefined();
     expect(offers?.match(/id: "/g)).toHaveLength(4);
     for (const id of ["verify", "run", "ledger", "data"]) {

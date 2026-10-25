@@ -27,7 +27,7 @@ describe("Governance terminal moat", () => {
     // Operator modules are not mounted on public product or reference pages.
     expect(internal).not.toContain("<GovernanceTerminal ");
     expect(products).not.toContain("<GovernanceTerminal");
-    expect(products).toContain("HealthTerms");
+    expect(products).not.toContain("HealthTerms");
   });
   it("keeps the withdrawn reference limited to public guidance", () => {
     for (const component of [
