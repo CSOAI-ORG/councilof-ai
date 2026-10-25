@@ -20,7 +20,7 @@ import GSPC_TOOLS from "./gspc-tools.json";
 import STDIO_PACKAGE from "../../mcp/gspc-server/package.json";
 import { sharedToolResult, verifyToolResult } from "./_handlers";
 import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, paidToolResult } from "./_paid";
-import { toolSpan, withTraceHeader } from "./_otel";
+import { startToolRequestSpan, withTraceHeader } from "./_otel";
 import { MEASUREMENT_TOOL_NAMES, measurementToolResult } from "./_measurement";
 import { EVIDENCE_TOOL_NAMES, evidenceToolResult } from "./_evidence";
 import { ROUTE_TOOL_NAMES, routeToolResult } from "./_route";
@@ -564,9 +564,14 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
     const tool = typeof params.name === "string" && KNOWN_TOOL_NAMES.has(params.name) ? params.name : "not-a-tool";
     recordUsage({ request, env, waitUntil }, "mcp_tool", tool);
   }
-  const traceId =
+  const trace =
     call.method === "tools/call" && typeof params.name === "string"
-      ? toolSpan((env ?? {}) as Record<string, unknown>, params.name)
+      ? startToolRequestSpan(
+          (env ?? {}) as Record<string, unknown>,
+          KNOWN_TOOL_NAMES.has(params.name) || (door === "full" && params.name === "verify")
+            ? params.name
+            : null,
+        )
       : null;
   try {
     const boundedRequest = new Request(request.url, {
@@ -575,22 +580,27 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
       body,
       signal: request.signal,
     });
-    return withTraceHeader(
+    const response = withTraceHeader(
       withHeaders(
         await (door === "free" ? mcpFree : mcp).fetch(
           boundedRequest,
         ),
       ),
-      traceId,
+      trace?.traceId ?? null,
     );
+    // fetch resolves at response headers. A 200, including an SSE response or
+    // JSON-RPC tool error, does not establish tool completion or an external effect.
+    trace?.responseHeaders(response.status);
+    return response;
   } catch {
-    return jsonError(
+    trace?.transportError();
+    return withTraceHeader(jsonError(
       500,
       -32603,
       door === "free"
         ? "MCP request failed. Nothing was written; retry later or report it to contact@csoai.org."
         : "MCP request failed. Delivery and settlement are unconfirmed; inspect receipts before retrying paid work.",
       id,
-    );
+    ), trace?.traceId ?? null);
   }
 };
