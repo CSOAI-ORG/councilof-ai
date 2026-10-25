@@ -133,13 +133,17 @@ export async function relayCompanyCase(request: Request, env: Env): Promise<Resp
     const origin = request.headers.get("origin");
     if (origin !== null && origin !== url.origin) throw new RelayError(403, "forbidden");
     const authorization = request.headers.get("authorization") || "";
-    if (authorization.length > 2000 || !/^Bearer [A-Za-z0-9+/=]+$/.test(authorization)) {
+    if (authorization.length > 8192 || !/^Bearer [A-Za-z0-9+/=]+$/.test(authorization)) {
       throw new RelayError(401, "unauthorized");
     }
     // Screening only. The private gateway independently checks the actual account,
     // rejects the retired demo identity, and enforces its exact private admission.
     const user = await wait(verifyToken(env, authorization.slice(7)));
     if (!user) throw new RelayError(401, "unauthorized");
+    // The existing receiver accepts at most 2048 bytes per header line. A valid
+    // longer Council session is a transport limitation, not an invalid login.
+    // Leave framing room; never truncate/reissue its token or dispatch a write.
+    if (authorization.length > 2000) throw new RelayError(503, "private_library_connection_unavailable");
     let body: Uint8Array | undefined;
     if (create) {
       if (!jsonType(request.headers) ||

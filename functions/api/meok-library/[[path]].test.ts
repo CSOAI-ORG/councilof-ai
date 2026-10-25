@@ -59,12 +59,22 @@ describe("Company gateway transport boundary", () => {
       expect(await response.json()).toEqual({ error: "private_library_connection_unavailable", saved: false });
       expect(fetcher).not.toHaveBeenCalled();
     });
-  it.each(["", "Bearer nope", "Basic abc", "Bearer a b", "Bearer " + "a".repeat(2001)])(
+  it.each(["", "Bearer nope", "Basic abc", "Bearer a b", "Bearer " + "a".repeat(8193)])(
     "rejects invalid authorization before dispatch %s", async authorization => {
       const fetcher = transport();
       expect((await relayCompanyCase(request({ headers: { authorization } }), env)).status).toBe(401);
       expect(fetcher).not.toHaveBeenCalled();
     });
+  it("keeps a valid long session authenticated but unavailable for this receiver, without dispatch", async () => {
+    const longToken = (await issueToken(env, { email: "owner@example.test", name: "O".repeat(1500) }))!;
+    expect(longToken.length + 7).toBeGreaterThan(2000);
+    expect(longToken.length + 7).toBeLessThanOrEqual(8192);
+    const fetcher = transport();
+    const response = await relayCompanyCase(request({ headers: { authorization: "Bearer " + longToken } }), env);
+    expect(response.status).toBe(503);
+    expect(await response.json()).toEqual({ error: "private_library_connection_unavailable", saved: false });
+    expect(fetcher).not.toHaveBeenCalled();
+  });
   it.each([{ iss: "https://evil.test" }, { aud: "another-app" }, { schema: "other/1" }, { exp: 1 }])(
     "rejects cryptographically signed but invalid claims %j", async claims => {
       const fetcher = transport();
@@ -212,6 +222,23 @@ describe("Company gateway transport boundary", () => {
 });
 
 describe("one total deadline and no replay", () => {
+  it("does not restart the deadline when request reading finishes", async () => {
+    vi.useFakeTimers();
+    let open: ReadableStreamDefaultController<Uint8Array> | undefined;
+    const pull = vi.fn();
+    const body = new ReadableStream<Uint8Array>({ start(c) { open = c; }, pull }, { highWaterMark: 0 });
+    const fetcher = transport(new Promise<Response>(() => {}));
+    const pending = relayCompanyCase(request({ body }), env);
+    await vi.waitUntil(() => pull.mock.calls.length > 0);
+    await vi.advanceTimersByTimeAsync(20000);
+    open!.enqueue(encoder.encode(JSON.stringify(payload))); open!.close();
+    await vi.waitUntil(() => fetcher.mock.calls.length === 1);
+    await vi.advanceTimersByTimeAsync(5000);
+    const response = await pending;
+    expect(response.status).toBe(503);
+    expect(await response.json()).toMatchObject({ outcome_unknown: true, retry_post: false });
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
   it("settles a hung fetch and ignores late success", async () => {
     vi.useFakeTimers();
     let resolve: (response: Response) => void = () => {};
