@@ -52,23 +52,61 @@ export type ListenHooks = {
   onError?: (message: string) => void;
 };
 
-let active: Recognition | null = null;
+type ListenSession = {
+  recognition: Recognition;
+  stopping: boolean;
+  finish: (discard?: boolean) => void;
+};
 
-/** Start one push-to-talk utterance. Returns false (and calls onError) when unsupported. */
+let active: ListenSession | null = null;
+
+/** Start one push-to-talk utterance. Returns false (and calls onError) when unavailable. */
 export function startListening(hooks: ListenHooks, lang?: string): boolean {
+  // Replacement always discards the prior utterance. stop() alone may return
+  // buffered speech after it returns, which must not become a new question.
+  stopListening({ discard: true });
   const C = ctor();
   if (!C) {
     hooks.onError?.("This browser has no speech recognition. Type your question instead.");
     return false;
   }
-  stopListening();
-  const r = new C();
+  let r: Recognition;
+  try {
+    r = new C();
+  } catch (e) {
+    hooks.onError?.(e instanceof Error ? e.message : String(e));
+    return false;
+  }
   r.continuous = false;
   r.interimResults = true;
   r.maxAlternatives = 1;
   r.lang = lang || (typeof navigator !== "undefined" && navigator.language) || "en-GB";
-  r.addEventListener("start", () => hooks.onStart?.());
+  let ended = false;
+  let started = false;
+  let finalDelivered = false;
+  const session: ListenSession = {
+    recognition: r,
+    stopping: false,
+    finish: (discard = false) => {
+      if (ended) return;
+      ended = true;
+      if (active === session) active = null;
+      // Invalidate ownership before abort: browsers may dispatch events
+      // synchronously as well as after this call.
+      if (discard) {
+        try { r.abort(); } catch { /* already stopped */ }
+      }
+      hooks.onEnd?.();
+    },
+  };
+  const ownsSession = () => active === session && !ended;
+  r.addEventListener("start", () => {
+    if (!ownsSession() || started || session.stopping) return;
+    started = true;
+    hooks.onStart?.();
+  });
   r.addEventListener("result", (e) => {
+    if (!ownsSession() || finalDelivered) return;
     const ev = e as RecognitionResultEvent;
     let interim = "";
     let final = "";
@@ -78,40 +116,59 @@ export function startListening(hooks: ListenHooks, lang?: string): boolean {
       if (res?.isFinal) final += t;
       else interim += t;
     }
-    if (final) hooks.onTranscript(final.trim(), true);
-    else if (interim) hooks.onTranscript(interim.trim(), false);
+    if (final.trim()) {
+      // Latch before the callback: accepting a final may start a replacement.
+      finalDelivered = true;
+      hooks.onTranscript(final.trim(), true);
+    } else if (interim.trim()) hooks.onTranscript(interim.trim(), false);
   });
   r.addEventListener("error", (e) => {
+    if (!ownsSession()) return;
     const code = (e as RecognitionErrorEvent).error;
-    if (code === "aborted" || code === "no-speech") return;
-    hooks.onError?.(
-      code === "not-allowed" || code === "service-not-allowed"
-        ? "The microphone was not allowed. Type your question instead."
-        : `Speech recognition stopped (${code}).`,
-    );
+    // Settle even when the browser omits its following end event.
+    session.finish(true);
+    if (code !== "aborted" && code !== "no-speech") {
+      hooks.onError?.(
+        code === "not-allowed" || code === "service-not-allowed"
+          ? "The microphone was not allowed. Type your question instead."
+          : `Speech recognition stopped (${code}).`,
+      );
+    }
   });
   r.addEventListener("end", () => {
-    if (active === r) active = null;
-    hooks.onEnd?.();
+    if (ownsSession()) session.finish();
   });
-  active = r;
+  active = session;
   try {
     r.start();
   } catch (e) {
-    active = null;
-    hooks.onError?.(e instanceof Error ? e.message : String(e));
+    if (ownsSession()) {
+      session.finish(true);
+      hooks.onError?.(e instanceof Error ? e.message : String(e));
+    }
     return false;
   }
   return true;
 }
 
-export function stopListening(): void {
-  const r = active;
-  active = null;
+/**
+ * Finish the current utterance by default, accepting its one buffered final.
+ * Teardown, unmount and cancellation must pass { discard: true }; replacement
+ * does this internally. Discarded sessions cannot deliver further callbacks.
+ */
+export function stopListening(options: { discard?: boolean } = {}): void {
+  const session = active;
+  if (!session) return;
+  if (options.discard) {
+    session.finish(true);
+    return;
+  }
+  if (session.stopping) return;
+  session.stopping = true;
   try {
-    r?.stop();
+    session.recognition.stop();
   } catch {
-    /* already stopped */
+    session.finish(true);
   }
 }
 
