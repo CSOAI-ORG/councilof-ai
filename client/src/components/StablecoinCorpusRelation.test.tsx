@@ -66,16 +66,20 @@ describe("StablecoinCorpusRelation, loaded from the real files", () => {
     expect(v).toContain(`Of ${p.assets} assets in the record dated ${p.date}`);
     // No card carries another card's figure. Asserted per card, because a bare substring check on the sum
     // collides with ordinary numbers once the artifact's counts move (2026-10-24: the sum became "302").
-    const card = (id: string) => {
-      const at = loaded.indexOf(`data-corpus="${id}"`);
-      if (at < 0) return "";
-      const next = loaded.indexOf('data-corpus="', at + 1);
-      return text(loaded.slice(at, next < 0 ? undefined : next));
+    // Slice the rendered text by the cards' own visible headings; attribute-based selection depends on
+    // how the renderer serialises data-* props, which is not what this test is about.
+    const between = (from: string, to: string) => {
+      const a = v.indexOf(from);
+      if (a < 0) return "";
+      const b = v.indexOf(to, a + 1);
+      return v.slice(a, b < 0 ? undefined : b);
     };
-    expect(card("readiness")).toContain(`${r.measured_assets} of ${r.indexed_assets} indexed assets`);
-    expect(card("readiness")).not.toContain(`${s.assets_read} of ${s.universe_assets}`);
-    expect(card("supply")).toContain(`${s.assets_read} of ${s.universe_assets}`);
-    expect(card("supply")).not.toContain(`${r.measured_assets} of ${r.indexed_assets}`);
+    const readinessCard = between("Readiness", "Supply read");
+    const supplyCard = between("Supply read", "Parity");
+    expect(readinessCard).toContain(`${r.measured_assets} of ${r.indexed_assets} indexed assets`);
+    expect(readinessCard).not.toContain(`${s.assets_read} of ${s.universe_assets}`);
+    expect(supplyCard).toContain(`${s.assets_read} of ${s.universe_assets}`);
+    expect(supplyCard).not.toContain(`${r.measured_assets} of ${r.indexed_assets}`);
   });
 
   it("the cross-ledger section shows the record's own counts, evidence kinds and the not-read rows", () => {
