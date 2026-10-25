@@ -30,10 +30,12 @@ const INDEX = readPublic("/signed/card_index.json") as { head: string; n_cards: 
 const POINTER = readPublic("/interop/card-root-latest.json") as { root_url: string; ots_url: string };
 const MILL_ROOT = readPublic(POINTER.root_url) as { n_leaves: number; as_of: string; leaves: { id: string; leaf: string; card: string; index: number }[] };
 
-/** The mill card the anonymous test verified with verify_card, then saw INVALID from verify_inclusion. */
-const MILL_ID = "4ca9e0079d1d3c3a35184063c4221458866cd7c14bb508449fa4cce88676c05a";
-/** A real public-root leaf, named in the brief. */
-const REAL_LEAF = "056a1efd58d1324912ee3fcfced1c7308e7571348167dfe27e0e261701dbce54";
+/** The mill card the anonymous test verified with verify_card, then saw INVALID from verify_inclusion.
+ *  Derived from the served mill root, not pinned: a root candidate regenerates this corpus, and a pinned
+ *  id turns a correct regeneration into a failing gate. */
+const MILL_ID = MILL_ROOT.leaves[0].id;
+/** A real public-root leaf, derived from the served root for the same reason. */
+const REAL_LEAF = ROOT.card_sha256[0];
 const RANDOM = createHash("sha256").update("a sha in no corpus, 2026-09-30").digest("hex");
 
 function network(override?: (url: URL) => Response | undefined) {
