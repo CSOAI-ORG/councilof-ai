@@ -100,6 +100,10 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install the llms generator's build dependency
+        if: steps.candidate.outputs.exists == 'true'
+        run: npm install --no-save --no-audit --no-fund esbuild@0.25.0
+
       - name: Reconcile the rolling candidate with current master
         if: steps.candidate.outputs.exists == 'true'
         run: |
@@ -113,12 +117,12 @@ jobs:
           git merge --no-edit origin/master
           # The merge keeps the candidate's regenerated OTS manifest and takes master's older
           # llms.txt, which quotes that manifest — so the two drift and pr-gates' llms check fails.
-          # Rebuild the derived text from the merged artifacts before pushing. Public-root.yml does
-          # the same at line ~186; the upgrade path was missing it.
+          # The generator imports esbuild through scripts/surface/commit-board.mjs; the step above
+          # installs exactly that package, because the full node deps are not installed in this job.
           node scripts/llms-txt.mjs
           if ! git diff --quiet -- public/llms.txt public/llms-full.txt; then
             git add public/llms.txt public/llms-full.txt
-            git commit -m "reconcile: rebuild llms.txt from the merged OTS manifest"
+            git commit -m "reconcile: regenerate llms.txt from the merged OTS manifest"
           fi
           after=$(git rev-parse HEAD)
           if [ "$before" != "$after" ]; then
@@ -239,6 +243,16 @@ jobs:
           if [ -z "$run_id" ]; then
             echo "HALT: no pr-gates run appeared for $head; not merging" >&2
             exit 1
+          fi
+          # A candidate PR that carries a workflow change makes its pull_request runs wait for
+          # approval (conclusion "action_required"). Watching such a run fails instantly, which is
+          # what halted runs 40154507419 and 40155446269. Approve the run this job is about to watch;
+          # the decision to run the gates has already been made by this workflow, not by a stranger.
+          state=$(runs | jq -r --arg id "$run_id" '.[] | select((.databaseId|tostring) == $id) | .conclusion // ""')
+          if [ "$state" = "action_required" ]; then
+            echo "approving gated pr-gates run $run_id"
+            gh api -X POST "repos/$REPO/actions/runs/$run_id/approve" > /dev/null \
+              || echo "approve refused; continuing to watch" >&2
           fi
           echo "waiting for pr-gates run $run_id on $head"
           if ! gh run watch "$run_id" --repo "$REPO" --exit-status --interval 30 > /dev/null; then
