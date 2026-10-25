@@ -896,7 +896,7 @@ for (const vp of VIEWPORTS) {
     const result = {
       tool: "verify_card", args: {}, label: "UNCHECKABLE", summary: "Local fixture: signature not checked.",
       citation: { tool: "verify_card", record_id: "local-record", url: "/signed/local-fixture.json" },
-      output: { state: "UNCHECKABLE", as_of: "1999-12-31", receipt_url: "/signed/local-receipt.json", verify_url: "/gspc-verify?fixture=local", supersedes: "original-finding", retest_of: "relevant-retest", cost: null },
+      output: { state: "UNCHECKABLE", measurement_time: { state: "DAY", precision: "day", observed_on: "1999-12-31" }, facts_as_of: "2000-01-01T10:00:00Z", receipt_url: "/signed/local-receipt.json", verify_url: "/gspc-verify?fixture=local", supersedes: { event_id: "sha256:" + "a".repeat(64), private: "never-project" }, superseded_by: null, retest_of: "relevant-retest", correction_of: { event_id: "malformed-private-id" }, cost: null },
     };
     const frames = traceFrames("local-progress-run", [
       { type: "RUN_STARTED" },
@@ -927,7 +927,14 @@ for (const vp of VIEWPORTS) {
     await expect(run.getByTestId("talk-run-status")).toContainText("Run finished");
     await expect(run.getByTestId("talk-state")).toHaveText("UNCHECKABLE");
     await expect(run.getByTestId("talk-run-evidence")).toContainText("1999-12-31");
-    await expect(run.getByTestId("talk-run-evidence")).toContainText("original-finding");
+    await expect(run.getByTestId("talk-run-evidence")).toContainText("1999-12-31 (day precision)");
+    await expect(run.getByTestId("talk-run-evidence")).toContainText("sha256:" + "a".repeat(64));
+    await expect(run.getByTestId("talk-run-evidence")).not.toContainText("never-project");
+    await expect(run.getByTestId("talk-run-evidence")).not.toContainText("malformed-private-id");
+    await expect(run.getByTestId("talk-run-evidence")).not.toContainText("superseded_by:");
+    await expect(run.getByTestId("talk-run-evidence")).not.toContainText("correction_of:");
+    await expect(run.getByTestId("talk-run-evidence")).not.toContainText("1999-12-31T00:00");
+    await expect(run.getByTestId("talk-run-evidence")).not.toContainText("2000-01-01");
     await expect(run.getByTestId("talk-run-evidence")).toContainText("relevant-retest");
     await expect(run.getByRole("link", { name: "Receipt", exact: true })).toHaveAttribute("href", "/signed/local-receipt.json");
     await expect(run.getByRole("link", { name: "Verify", exact: true }).last()).toHaveAttribute("href", "/gspc-verify?fixture=local");

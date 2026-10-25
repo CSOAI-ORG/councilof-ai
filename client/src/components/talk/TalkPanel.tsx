@@ -30,6 +30,8 @@ import {
   challengeOf,
   newRun,
   interruptRun,
+  lineageIdentity,
+  observationTimeOf,
   reduceRun,
   streamRun,
   TALK_SUGGESTIONS,
@@ -205,10 +207,10 @@ function evidenceFields(tool: TalkToolCard) {
   }
   const lineage = asRecord(output.lineage) ?? output;
   return {
-    observed: scalar(output.observed_at ?? output.observation_time ?? output.measurement_time ?? output.as_of),
+    observed: observationTimeOf(output),
     links: links.filter((link): link is { label: string; value: string } => Boolean(link.value)),
     lineage: ["supersedes", "superseded_by", "retest_of", "correction_of"].flatMap(key => {
-      const value = scalar(lineage[key]);
+      const value = lineageIdentity(lineage[key]);
       return value === null ? [] : [{ key, value }];
     }),
   };

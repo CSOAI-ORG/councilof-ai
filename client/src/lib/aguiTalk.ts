@@ -65,6 +65,7 @@ export type TalkRun = {
   route?: string | null;
   trace?: { id: string | null; type: string; time: number | string | null; toolId: string | null }[];
   seenEventIds?: string[];
+  seenEvents?: { id: string; fingerprint: string }[];
   terminal?: boolean;
   cancellationSource?: "executor" | "permission";
   tools: TalkToolCard[];
@@ -197,13 +198,24 @@ function eventTime(value: unknown): number | string | null {
   return typeof value === "number" && Number.isFinite(value) ? value : typeof value === "string" && value ? value : null;
 }
 
+/** Deterministic JSON content per bounded event ID; this is replay identity, not a signature. */
+function eventFingerprint(value: unknown): string {
+  if (Array.isArray(value)) return "[" + value.map(eventFingerprint).join(",") + "]";
+  const object = rec(value);
+  if (object) return "{" + Object.keys(object).sort().map(key => JSON.stringify(key) + ":" + eventFingerprint(object[key])).join(",") + "}";
+  return JSON.stringify(value) ?? "undefined";
+}
+
 /** Replay only updates the projection; it never executes imported state, A2UI or tools. */
 export function reduceRun(run: TalkRun, ev: Json): TalkRun {
   const type = own(ev, "type") ? str(ev.type) : null;
-  if (!type || run.terminal) return run;
   const id = str(ev.eventId);
   const seen = run.seenEventIds ?? [];
-  if (id && seen.includes(id)) return run;
+  const fingerprint = id ? eventFingerprint(ev) : null;
+  const replay = id ? run.seenEvents?.find(event => event.id === id) : undefined;
+  if (replay) return replay.fingerprint === fingerprint ? run : interruptRun(run, "error", "An event ID was reused with changed content or identity.");
+  if (id && seen.includes(id)) return interruptRun(run, "error", "An event ID was replayed without retained content identity.");
+  if (!type || run.terminal) return run;
   if (seen.length >= 2048) return interruptRun(run, "error", "The run exceeded its event limit.");
   if ((run.runId && str(ev.runId) && run.runId !== ev.runId) || (run.threadId && str(ev.threadId) && run.threadId !== ev.threadId)) {
     return interruptRun(run, "error", "The stream changed its run or thread identity.");
@@ -215,6 +227,7 @@ export function reduceRun(run: TalkRun, ev: Json): TalkRun {
     route: str(ev.route) ?? str(rec(ev.result)?.intent) ?? run.route ?? null,
     trace: [...(run.trace ?? []), { id, type, time, toolId: str(ev.toolCallId) }].slice(-64),
     seenEventIds: id ? [...seen, id] : seen,
+    seenEvents: id && fingerprint ? [...(run.seenEvents ?? []), { id, fingerprint }] : run.seenEvents,
   };
   return reduceEvent(next, ev);
 }
@@ -355,6 +368,46 @@ export function challengeOf(output: unknown): Challenge | null {
   return { resource: str(res?.url) ?? str(p.resource), description: str(res?.description), accepts };
 }
 
+/** Source time text only. Day precision and upper bounds never become invented instants. */
+export function observationTimeOf(value: unknown): string | null {
+  const output = rec(value);
+  if (!output) return null;
+  for (const key of ["observed_at", "observation_time", "measurement_time", "facts_as_of", "as_of"]) {
+    const raw = output[key];
+    const scalar = typeof raw === "string" && raw ? raw : typeof raw === "number" && Number.isFinite(raw) ? String(raw) : null;
+    if (scalar) return key === "facts_as_of" || key === "as_of" ? key + ": " + scalar : scalar;
+    const time = rec(raw);
+    if (!time) continue;
+    const precision = str(time.precision);
+    const state = str(time.state) ?? ({ DAY: "DAY", day: "DAY", EXACT: "EXACT", instant: "EXACT", NOT_AFTER: "NOT_AFTER", "instant-upper-bound": "NOT_AFTER" } as Record<string, string>)[precision ?? ""];
+    if (state === "DAY" && (!precision || precision === "DAY" || precision === "day")) {
+      const day = str(time.observed_on);
+      if (day && /^\d{4}-\d{2}-\d{2}$/.test(day)) {
+        const parsed = new Date(day + "T00:00:00Z");
+        if (Number.isFinite(parsed.getTime()) && parsed.toISOString().slice(0, 10) === day) return day + " (day precision)";
+      }
+    }
+    if (state === "EXACT" && (!precision || precision === "EXACT" || precision === "instant")) {
+      const instant = str(time.observed_at);
+      if (instant && Number.isFinite(Date.parse(instant))) return instant + " (exact source time)";
+    }
+    if (state === "NOT_AFTER" && (!precision || precision === "NOT_AFTER" || precision === "instant-upper-bound")) {
+      const bound = str(time.not_after);
+      if (bound && Number.isFinite(Date.parse(bound))) return "Not after " + bound + " (upper bound)";
+    }
+  }
+  return null;
+}
+
+/** Display a declared relation identity only; unknown object fields are never projected. */
+export function lineageIdentity(value: unknown): string | null {
+  if (typeof value === "string") return value;
+  if (typeof value === "number" && Number.isFinite(value)) return String(value);
+  const relation = rec(value);
+  const id = relation && own(relation, "event_id") ? str(relation.event_id) : null;
+  return id && /^sha256:[0-9a-f]{64}$/.test(id) ? id : null;
+}
+
 export type Tone = "measured" | "unmeasured" | "payment" | "problem" | "neutral";
 
 /** Colour family for a state word. The word itself is always shown verbatim. */
@@ -446,7 +499,8 @@ export async function streamRun(o: StreamOptions): Promise<void> {
     reader = response.body.getReader();
     const decoder = new TextDecoder("utf-8", { fatal: true });
     let buffer = "", bytes = 0, count = 0, terminal = false, started = false;
-    const seen = new Set<string>();
+    const seen = new Map<string, string>();
+    let serverRun: string | null = null, serverThread: string | null = null;
     for (;;) {
       const { done, value } = await wait(reader.read());
       if (value) { bytes += value.byteLength; if (bytes > 2 * 1024 * 1024) throw new Error("The answer stream exceeded its byte limit."); }
@@ -458,13 +512,19 @@ export async function streamRun(o: StreamOptions): Promise<void> {
       for (const event of parsed.events) {
         const eventId = event.id ?? str(event.data.eventId);
         if (event.id && str(event.data.eventId) && event.id !== event.data.eventId) throw new Error("The answer event identity did not match.");
-        if (eventId && seen.has(eventId)) continue;
+        const data = eventId ? { ...event.data, eventId } : event.data;
+        const fingerprint = eventFingerprint(data);
+        if (eventId && seen.has(eventId)) {
+          if (seen.get(eventId) !== fingerprint) throw new Error("An event ID was reused with changed content or identity.");
+          continue;
+        }
+        if ((serverRun && str(data.runId) && data.runId !== serverRun) || (serverThread && str(data.threadId) && data.threadId !== serverThread)) throw new Error("The stream changed its run or thread identity.");
         if (terminal) throw new Error("The answer stream contained an event after its terminal event.");
         if (!started && event.data.type !== "RUN_STARTED") throw new Error("The answer stream did not begin with RUN_STARTED.");
-        if (event.data.type === "RUN_STARTED") started = true;
+        if (event.data.type === "RUN_STARTED") { started = true; serverRun = str(data.runId); serverThread = str(data.threadId); }
         if (++count > 2048) throw new Error("The answer stream exceeded its event limit.");
-        if (eventId) seen.add(eventId);
-        o.onEvent(eventId ? { ...event.data, eventId } : event.data);
+        if (eventId) seen.set(eventId, fingerprint);
+        o.onEvent(data);
         if (event.data.type === "RUN_FINISHED" || event.data.type === "RUN_ERROR") terminal = true;
       }
       if (parsed.malformed) throw new Error("The answer stream contained a malformed event.");

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { applyPatch, interruptRun, argsOf, challengeOf, newRun, parseSse, reduceRun, streamRun, TALK_SUGGESTIONS, toneOf, type TalkRun } from "./aguiTalk";
+import { applyPatch, interruptRun, lineageIdentity, observationTimeOf, argsOf, challengeOf, newRun, parseSse, reduceRun, streamRun, TALK_SUGGESTIONS, toneOf, type TalkRun } from "./aguiTalk";
 import { citationOf, labelOf, routeIntent } from "../../../functions/_lib/talkRouter";
 
 const sse = (type: string, extra: Record<string, unknown> = {}) =>
@@ -214,6 +214,19 @@ describe("trace identity, terminal truth and inert imported state", () => {
     expect(reduceRun(run, { type: "TOOL_CALL_RESULT", toolCallId: "t", content: "{" }).status).toBe("error");
     expect(reduceRun(run, { type: "TEXT_MESSAGE_CONTENT", runId: "another", delta: "wrong answer" }).status).toBe("error");
   });
+  it("ignores identical event content but rejects conflicting reuse, including after terminal", () => {
+    const event = { type: "RUN_STARTED", eventId: "same", runId: "r", threadId: "t", timestamp: 12 };
+    const run = reduceRun(newRun("q", "r"), event);
+    expect(reduceRun(run, { timestamp: 12, threadId: "t", runId: "r", eventId: "same", type: "RUN_STARTED" })).toBe(run);
+    for (const patch of [{ timestamp: 13 }, { runId: "other" }, { threadId: "other" }, { type: "RUN_ERROR", message: "changed" }]) {
+      expect(reduceRun(run, { ...event, ...patch }).status).toBe("error");
+    }
+    const terminal = { type: "RUN_FINISHED", eventId: "finish", result: { grounded: true } };
+    const done = reduceRun(run, terminal);
+    expect(done.status).toBe("done");
+    expect(reduceRun(done, terminal)).toBe(done);
+    expect(reduceRun(done, { ...terminal, result: { grounded: false } }).status).toBe("error");
+  });
   it("does not release a completed subset of an incomplete frontend plan", () => {
     let run = reduceRun(newRun("q", "r"), { type: "RUN_STARTED" });
     run = reduceRun(run, { type: "TOOL_CALL_START", toolCallId: "ui_1", toolCallName: "openPanel" });
@@ -301,6 +314,15 @@ describe("bounded single-request SSE transport", () => {
     expect(types).toEqual(["RUN_STARTED", "RUN_FINISHED"]);
     await expect(streamRun({ question: "q", fetchImpl: (async () => response(start.replace('"eventId":"one"', '"eventId":"other"'))) as typeof fetch, onEvent: () => {} })).rejects.toThrow(/identity/);
   });
+  it("rejects changed content, type or run/thread behind a reused transport event ID", async () => {
+    const event = { type: "RUN_STARTED", eventId: "same", runId: "r", threadId: "t" };
+    const frame = (data: Record<string, unknown>) => "id: same\nevent: " + data.type + "\ndata: " + JSON.stringify(data) + "\n\n";
+    for (const patch of [{ delta: "changed" }, { runId: "other" }, { threadId: "other" }, { type: "RUN_ERROR", message: "changed" }]) {
+      const seen: string[] = [];
+      await expect(streamRun({ question: "q", fetchImpl: (async () => response(frame(event) + frame({ ...event, ...patch }) + sse("RUN_FINISHED"))) as typeof fetch, onEvent: event => seen.push(String(event.type)) })).rejects.toThrow(/reused/);
+      expect(seen).toEqual(["RUN_STARTED"]);
+    }
+  });
   it("rejects an oversized incomplete event and a non-SSE response", async () => {
     await expect(streamRun({ question: "q", fetchImpl: (async () => response("x".repeat(512 * 1024 + 1))) as typeof fetch, onEvent: () => {} })).rejects.toThrow(/size limit/);
     await expect(streamRun({ question: "q", fetchImpl: (async () => Response.json({ success: true })) as typeof fetch, onEvent: () => {} })).rejects.toThrow(/event stream/);
@@ -312,5 +334,25 @@ describe("bounded single-request SSE transport", () => {
     await expect(streamRun({ question: "q", signal: controller.signal, fetchImpl, onEvent: () => {} })).rejects.toThrow();
     expect(requests).toBe(0);
     await expect(streamRun({ question: "q", timeoutMs: 10, fetchImpl: (() => new Promise<Response>(() => {})) as typeof fetch, onEvent: () => {} })).rejects.toThrow(/timed out/);
+  });
+});
+
+describe("source evidence time and relation projection", () => {
+  it("keeps canonical day, exact and upper-bound source time distinct", () => {
+    expect(observationTimeOf({ measurement_time: { state: "DAY", precision: "day", observed_on: "1999-12-31" }, as_of: "2026-10-25" })).toBe("1999-12-31 (day precision)");
+    expect(observationTimeOf({ measurement_time: { state: "EXACT", precision: "instant", observed_at: "2026-10-23T12:34:56+01:00" } })).toBe("2026-10-23T12:34:56+01:00 (exact source time)");
+    expect(observationTimeOf({ measurement_time: { state: "NOT_AFTER", precision: "instant-upper-bound", not_after: "2026-10-23T12:34:56Z" } })).toBe("Not after 2026-10-23T12:34:56Z (upper bound)");
+  });
+  it("does not let a malformed structured field mask labelled fallback or manufacture time", () => {
+    expect(observationTimeOf({ observed_at: {}, measurement_time: { state: "DAY", precision: "day", observed_on: "1999-02-31" }, facts_as_of: "2026-10-20" })).toBe("facts_as_of: 2026-10-20");
+    expect(observationTimeOf({ measurement_time: { state: "UNCHECKABLE", precision: "unknown" }, as_of: "2026-10-21" })).toBe("as_of: 2026-10-21");
+    expect(observationTimeOf({ measurement_time: { state: "DAY", observed_on: null } })).toBeNull();
+    expect(observationTimeOf(null)).toBeNull();
+  });
+  it("projects only the named canonical relation identity and keeps null or malformed objects unknown", () => {
+    const id = "sha256:" + "a".repeat(64);
+    expect(lineageIdentity({ event_id: id, sha256: "b".repeat(64), private: "never-project" })).toBe(id);
+    expect(lineageIdentity("original-finding")).toBe("original-finding");
+    for (const value of [null, {}, { event_id: 42 }, { event_id: "not-a-canonical-id" }, { secret: id }, Object.create({ event_id: id })]) expect(lineageIdentity(value)).toBeNull();
   });
 });
