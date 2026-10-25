@@ -470,6 +470,12 @@ function ruleAnchorCount(facts, file, text, add) {
 }
 
 function ruleCapabilityTense(facts, file, text, add) {
+  // Captured third-party pages under interop/…/mirrors/ are quotation, not our claims. The gate's own
+  // doctrine is that a quoted sentence is evidence of what the source served, not a statement we make.
+  // Case that exposed it (25 Oct 2026): a Flare FAssets paragraph captured in
+  // interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-6600.json contains "mainnet", and the gate
+  // read it as CSOAI describing a planned rail as live.
+  if (/(^|\/)mirrors\//.test(file)) return;
   const rails = (facts.rails || []).filter(
     (r) => r.status === "planned" || r.status === "devnet"
   );
