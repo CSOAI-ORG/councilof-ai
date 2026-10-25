@@ -25,7 +25,7 @@ test("committed distribution mirrors match the canonical producer before renderi
 
 test("portable skill uses text metadata and preserves the declared tool boundary", () => {
   const skill = readFileSync(join(REPO, "distribution/plugin/skills/gspc-verify/SKILL.md"), "utf8");
-  const header = /^---\\n([\\s\\S]*?)\\n---\\n/.exec(skill)?.[1];
+  const header = /^---\n([\s\S]*?)\n---\n/.exec(skill)?.[1];
   assert.ok(header, "missing portable skill frontmatter");
   const textField = (name) => {
     const encoded = new RegExp("^" + name + ": (.+)$", "m").exec(header)?.[1];
@@ -38,7 +38,7 @@ test("portable skill uses text metadata and preserves the declared tool boundary
   assert.ok(compatibility.length > 0 && compatibility.length <= 500);
   assert.equal(textField("allowed-tools"),
     "Bash(python3 packages/evidence-fabric/portable_skill_verify.py:*) Read");
-  assert.match(skill, /\\*\\*not\\*\\* an execution grant/);
+  assert.match(skill, /\*\*not\*\* an execution grant/);
   assert.match(skill, /caller-supplied label/);
   const manifest = JSON.parse(readFileSync(join(REPO, "distribution/MANIFEST.json"), "utf8"));
   const row = manifest.files.find((item) => item.path === "distribution/plugin/skills/gspc-verify/SKILL.md");
