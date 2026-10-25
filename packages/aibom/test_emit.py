@@ -27,9 +27,10 @@ def test_cyclonedx_shape_and_hash():
     metrics = model_comp["modelCard"]["quantitativeAnalysis"]["performanceMetrics"]
     assert metrics, "measured accuracy must appear as performance metrics"
     body = dict(bom)
-    body["x_csoai"] = {k: v for k, v in bom["x_csoai"].items() if k != "bom_sha256"}
-    assert bom["x_csoai"]["bom_sha256"] == hashlib.sha256(aibom.canonical(body)).hexdigest()
-    assert bom["x_csoai"]["writes_board"] is False
+    props = {p["name"]: p["value"] for p in bom["properties"]}
+    body = dict(bom, properties=[p for p in bom["properties"] if p["name"] != "csoai:bom_sha256"])
+    assert props["csoai:bom_sha256"] == hashlib.sha256(aibom.canonical(body)).hexdigest()
+    assert props["csoai:writes_board"] == "false"
     print("ok: CycloneDX 1.6 with measured metrics; bom_sha256 recomputes; writes_board false")
 
 
@@ -46,9 +47,10 @@ def test_card_is_queued_unsigned_and_folds_bom():
     lin = aibom.lineage(MODEL)
     bom = aibom.cyclonedx(lin)
     spdx = aibom.spdx3(lin)
-    card = aibom.queued_card(lin, bom["x_csoai"]["bom_sha256"], spdx["spdx_sha256"])
+    props = {p["name"]: p["value"] for p in bom["properties"]}
+    card = aibom.queued_card(lin, props["csoai:bom_sha256"], spdx["spdx_sha256"])
     assert card["sig_ed25519"] is None, "must be QUEUED, never laptop-signed"
-    assert card["payload"]["bom_sha256"] == bom["x_csoai"]["bom_sha256"], "BOM sha folded into card"
+    assert card["payload"]["bom_sha256"] == props["csoai:bom_sha256"], "BOM sha folded into card"
     assert card["sha256"] == hashlib.sha256(aibom.canonical(card["payload"])).hexdigest()
     print("ok: card is queued unsigned and folds bom_sha256")
 
