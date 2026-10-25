@@ -294,6 +294,86 @@ for(const route of ROUTES.filter(r=>r.documented_zero_amount)){
 }
 
 const headModule=await moduleFrom(current('functions/api/_head.ts'));
+// Receipt projection: actual receipt reader and delivery reader, synthetic KV only.
+const denyReceiptCrypto=()=>{throw Error('unexpected receipt signing or verification');};
+const receiptRecordModule=await moduleFrom(current('functions/api/_x402_receipt.ts'),{
+ './_x402_config':{toCaip2Network:denyReceiptCrypto},
+ './_x402_jws':{parseJws:denyReceiptCrypto,signJws:denyReceiptCrypto,verifyJwsSignature:denyReceiptCrypto,JWS_ALG:'EdDSA'},
+ './_x402_offer':{X402_SIGNER_KID:'fixture-key-no-signature',OFFER_RECEIPT_EXTENSION:'offer-receipt'}
+});
+const receiptProjectionModule=await moduleFrom(current('functions/api/receipts/index.ts'),{
+ '../_x402_receipt':receiptRecordModule,'../_x402_delivery_record':helperModule,'../_head':headModule
+});
+const receiptFixturePayer='0x1111111111111111111111111111111111111111';
+const receiptFixtureResource='https://example.test/api/evidence-bundle?obligation=article-50&bundle=1';
+const receiptFixtureTx='tx-resource-join-fixture';
+const receiptFixture=receiptRecordModule.namespace.buildReceiptRecord({
+ receipt:{format:'jws',signature:'FIXTURE_NOT_SIGNED'},kid:'fixture-key-no-signature',
+ payload:{version:1,network:'eip155:8453',resourceUrl:'https://example.test/api/evidence-bundle',payer:receiptFixturePayer,issuedAt:1792886400,transaction:receiptFixtureTx},
+ resource:receiptFixtureResource,amount_atomic:'1',asset:'fixture-asset',self:false,settlement_recorded:true
+});
+const deliveryFixture=h.buildDeliveryRecord({
+ transaction:receiptFixtureTx,resource:receiptFixtureResource,response_sha256:digest(Buffer.from('retained fixture body')),response_bytes:21,
+ content_type:'application/json; charset=utf-8',delivered_at:'2026-10-25T00:00:00Z'
+});
+const receiptProjectionExpected={
+ payer:receiptFixturePayer,txHash:receiptFixtureTx,network:'eip155:8453',amount:'1',asset:'fixture-asset',resource:receiptFixtureResource,
+ settledAt:'2026-10-25T00:00:00.000Z',receipt:{format:'jws',signature:'FIXTURE_NOT_SIGNED'},kid:'fixture-key-no-signature',
+ zero_value:false,self:false,record_schema:'csoai.x402.receipt-record/0.1',delivery:null
+};
+function receiptProjectionKv(delivery,includeReceipt=true){
+ const kv=new Kv();
+ kv.list=async({prefix})=>({keys:[...kv.map.keys()].filter(name=>name.startsWith(prefix)).map(name=>({name})),list_complete:true});
+ if(includeReceipt)kv.map.set(receiptRecordModule.namespace.receiptPayerKey(receiptFixturePayer,receiptFixture.payload.issuedAt,receiptFixtureTx),JSON.stringify(receiptFixture));
+ if(delivery!==null)kv.map.set(h.deliveryTxKey(receiptFixtureTx),JSON.stringify(delivery));
+ return kv;
+}
+async function readReceiptProjection(kv){
+ cx.fetch=denyFetch;
+ const response=await receiptProjectionModule.namespace.onRequestGet({request:new Request('https://example.test/api/receipts?payer='+receiptFixturePayer),env:{REVENUE_KV:kv}});
+ return{response,body:await response.json()};
+}
+await test('payer receipt projection attaches exact full-resource delivery metadata',async()=>{
+ const kv=receiptProjectionKv(deliveryFixture),before=JSON.stringify([...kv.map]);
+ const {response,body}=await readReceiptProjection(kv);
+ assert.equal(response.status,200);assert.equal(body.schema,'csoai.receipts.by-payer/0.1');assert.equal(body.status,'OK');assert.equal(body.count,1);
+ assert.deepEqual(body.items,[{...receiptProjectionExpected,delivery:{
+  schema:deliveryFixture.schema,response_sha256:deliveryFixture.response_sha256,response_bytes:deliveryFixture.response_bytes,
+  content_type:deliveryFixture.content_type,delivered_at:deliveryFixture.delivered_at,signed:false,claim_boundary:deliveryFixture.claim_boundary
+ }}]);
+ assert.equal(kv.gets,2);assert.equal(kv.puts,0);assert.equal(JSON.stringify([...kv.map]),before);
+});
+for(const [name,resource]of[
+ ['query','https://example.test/api/evidence-bundle?obligation=article-53&bundle=1'],
+ ['path','https://example.test/api/rwa/evidence?asset=fixture'],
+ ['origin','https://other.example/api/evidence-bundle?obligation=article-50&bundle=1']
+]){
+ await test('payer receipt projection refuses same-transaction different-'+name+' delivery attachment',async()=>{
+  const kv=receiptProjectionKv({...deliveryFixture,resource}),before=JSON.stringify([...kv.map]);
+  const {response,body}=await readReceiptProjection(kv);
+  assert.equal(response.status,200);assert.equal(body.schema,'csoai.receipts.by-payer/0.1');assert.equal(body.status,'OK');assert.equal(body.count,1);
+  assert.deepEqual(body.items,[receiptProjectionExpected]);
+  assert.equal(kv.gets,2);assert.equal(kv.puts,0);assert.equal(JSON.stringify([...kv.map]),before);
+ });
+}
+await test('payer receipt projection keeps an existing receipt with null delivery when no delivery row exists',async()=>{
+ const kv=receiptProjectionKv(null),before=JSON.stringify([...kv.map]);
+ const {response,body}=await readReceiptProjection(kv);
+ assert.equal(response.status,200);assert.equal(body.status,'OK');assert.equal(body.count,1);assert.deepEqual(body.items,[receiptProjectionExpected]);
+ assert.equal(kv.gets,2);assert.equal(kv.puts,0);assert.equal(JSON.stringify([...kv.map]),before);
+});
+await test('payer receipt projection preserves bound-empty items and measured zero count',async()=>{
+ const kv=receiptProjectionKv(null,false);
+ const {response,body}=await readReceiptProjection(kv);
+ assert.equal(response.status,200);assert.equal(body.schema,'csoai.receipts.by-payer/0.1');assert.equal(body.status,'OK');assert.deepEqual(body.items,[]);assert.equal(body.count,0);
+ assert.equal(kv.gets,0);assert.equal(kv.puts,0);assert.equal(kv.map.size,0);
+});
+await test('payer receipt projection preserves UNRECORDED null items and count without a store',async()=>{
+ const {response,body}=await readReceiptProjection(undefined);
+ assert.equal(response.status,200);assert.equal(body.schema,'csoai.receipts.by-payer/0.1');assert.equal(body.status,'UNRECORDED');assert.equal(body.items,null);assert.equal(body.count,null);
+ assert.equal(body.unavailable_capability.capability,'settlement-receipt persistence');
+});
+
 let paymentAllowed=true,settlements=0;
 const x402={
  verifyX402Payment:async req=>{
@@ -577,7 +657,7 @@ await test('paid MCP authorization refuses automatic redirects',async()=>{
  const built=paidModule.namespace.buildPaidRequest(feedTool.name,{subject:'fixture-subject',x_payment:'fixture-payment'},'https://example.test');
  assert.equal(built.req.redirect,'manual');assert.equal(built.req.headers.get('x-payment'),'fixture-payment');assert.equal(new URL(built.req.url).origin,'https://example.test');
 });
-const testedPaths=new Set([...Object.keys(FROZEN_SEAMS),'functions/api/_x402_delivery_record.ts','functions/mcp/_paid.ts','scripts/test_paid_delivery_records.mjs','scripts/fixtures/paid_delivery_seams.json']);
+const testedPaths=new Set([...Object.keys(FROZEN_SEAMS),'functions/api/_x402_delivery_record.ts','functions/api/_x402_receipt.ts','functions/api/receipts/index.ts','functions/mcp/_paid.ts','scripts/test_paid_delivery_records.mjs','scripts/fixtures/paid_delivery_seams.json']);
 const source_sha256=Object.fromEntries([...testedPaths].sort().map(p=>[p,digest(Buffer.from(current(p)))]));
 const test_revision=execFileSync('git',['-c','protocol.allow=never','rev-parse','HEAD'],{encoding:'utf8'}).trim();
 console.log(JSON.stringify({offline:true,test_revision,source_sha256,network_policy:'no external fetch; explicit synthetic transports only',passed:passed.length,cases:passed,paid_api_calls:0,production_changed:false,scope:'helper,27 advertised paid response-emission seams,4 unchanged free entrypoints,full wrapper changes/proof/provider/evidence mocks,actual MCP adapter; other full-route integrations and live acceptance unverified'}));
