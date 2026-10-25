@@ -20,7 +20,7 @@ SOURCE_DIR = os.path.dirname(os.path.abspath(__file__))
 HERE = SOURCE_DIR
 sys.path.insert(0, SOURCE_DIR)
 RECORD_SCHEMA_SHA256 = '4ae3befcf78b027f9f72e99c71602b4310de64f9fb299674f3621984007ff94d'
-READER_CODE_SHA256 = {'safe_pack.py': '7fc46f2bfe0d5c08390058d1c9e3a98f4a18120a284c7d2bf539c747ea24bd72', 'event.py': 'ea62aecba02fe25ebcfed5da774695318bedeaca810428872f41f0d08b622849', 'ingest/__init__.py': '1b6a0e1d1bb588ed344515b762d5a37ae429e31793998d7c6c58e6313e967459', 'ingest/safe_in.py': '8e6c98bcd17f114fe17d54176477a45b910e3e595d52bb7f5841b7ca34f6343b', 'render/__init__.py': '3268a50b4874018ad982b81db643a9f67ed7378d4ee08227698feeec592d2e03', 'render/ocsf.py': '98b767e9a2be9ee3df6083580c2dccc47c55ebf42abfb1af3c3d4f5159c1d20f', 'render/otel.py': 'b69cece4bbeae61e84a8b2af597f44757c767925020a32c80874cd94c2a52cce', 'render/sarif.py': 'be8d00f7e792a3ac2a021bee51c440ad4ed31e0e23a6e3178cf7b95748f4b375', 'render/intoto.py': 'e85c9dcbc2e0bc44b3d361ff642446704c1e16167b345a4f1cc65efde6a0a65a', 'render/ecs_hec.py': '5be743d87653447a45c949e07fce5a0a9d6731962795e7e089cfaea42952f839'}
+READER_CODE_SHA256 = {'safe_pack.py': '7fc46f2bfe0d5c08390058d1c9e3a98f4a18120a284c7d2bf539c747ea24bd72', 'event.py': 'ea62aecba02fe25ebcfed5da774695318bedeaca810428872f41f0d08b622849', 'ingest/__init__.py': '1b6a0e1d1bb588ed344515b762d5a37ae429e31793998d7c6c58e6313e967459', 'ingest/safe_in.py': '8e6c98bcd17f114fe17d54176477a45b910e3e595d52bb7f5841b7ca34f6343b', 'render/__init__.py': '66855801848b76ee79469355b5aea9915fb41f3d1d6afc57ba448e800b975c55', 'render/ocsf.py': '98b767e9a2be9ee3df6083580c2dccc47c55ebf42abfb1af3c3d4f5159c1d20f', 'render/otel.py': '2f65c9419b29137bb2f904153e2b40f5ec2caad39abda10536a2eec49b33c384', 'render/sarif.py': 'be8d00f7e792a3ac2a021bee51c440ad4ed31e0e23a6e3178cf7b95748f4b375', 'render/intoto.py': 'e85c9dcbc2e0bc44b3d361ff642446704c1e16167b345a4f1cc65efde6a0a65a', 'render/ecs_hec.py': '5be743d87653447a45c949e07fce5a0a9d6731962795e7e089cfaea42952f839'}
 
 UNKNOWN_ERRORS = (OSError, ImportError, ValueError, TypeError, KeyError, RecursionError)
 
@@ -181,6 +181,8 @@ def check_sums():
 def _cross_errors(records):
     by_id = {record["record_id"]: record for record in records.values()}
     errors = []
+    if len(by_id) != len(records):
+        errors.append("duplicate record_id: retest and supersession references are ambiguous")
     for name, record in records.items():
         for prior in record.get("supersedes", []):
             if prior["record_id"] in by_id and _canonical_record_sha(by_id[prior["record_id"]]) != prior["sha256"]:
@@ -190,7 +192,57 @@ def _cross_errors(records):
             retest = by_id.get(remediation.get("retest_record_id"))
             if not retest or retest["result"]["state"] != "PASS" or retest["negative_control"]["observed"] != "FAIL":
                 errors.append(f"{name}: VERIFIED_BY_RETEST lacks a PASS record with a failed-as-designed control")
+            elif _measured_at(retest) and _measured_at(record) and _measured_at(retest) < _measured_at(record):
+                errors.append(f"{name}: VERIFIED_BY_RETEST names a retest measured before the original")
     return errors
+
+
+def _measured_at(record):
+    from datetime import datetime
+    try:
+        return datetime.fromisoformat(record["result"]["measured_at"].replace("Z", "+00:00"))
+    except (KeyError, TypeError, AttributeError, ValueError):
+        return None
+
+
+def _cross_unresolved(records):
+    """Retest closures whose linkage to the original cannot be established.
+
+    A PASS retest closes a finding only when it explicitly supersedes the
+    original record (digest-pinned), keeps the claim type and scope, uses the
+    same method or records substitutions, and has known chronology. Subject and
+    claim_id may change across a repair; the supersedes link is the explicit
+    successor statement, never string equality. Unestablished linkage leaves the
+    closure UNRESOLVED (UNCHECKABLE), not passed.
+    """
+    by_id = {record["record_id"]: record for record in records.values()}
+    unresolved = []
+    for name, record in records.items():
+        remediation = record.get("remediation") or {}
+        if remediation.get("state") != "VERIFIED_BY_RETEST":
+            continue
+        retest = by_id.get(remediation.get("retest_record_id"))
+        if not retest:
+            continue  # already an error in _cross_errors
+        why = []
+        link = [p for p in retest.get("supersedes", []) if p.get("record_id") == record["record_id"]]
+        if not link or link[0].get("sha256") != _canonical_record_sha(record):
+            why.append("retest does not explicitly supersede the original record by digest")
+        old_claim, new_claim = record.get("claim") or {}, retest.get("claim") or {}
+        for key in ("claim_type", "scope"):
+            if old_claim.get(key) != new_claim.get(key):
+                why.append(f"claim {key} differs without a reviewed equivalence")
+        if ((record.get("test") or {}).get("method_id") != (retest.get("test") or {}).get("method_id")
+                and not (retest.get("test") or {}).get("substitutions")):
+            why.append("method differs and no substitution is recorded")
+        if not _measured_at(record) or not _measured_at(retest):
+            why.append("chronology unavailable")
+        control = retest.get("negative_control") or {}
+        if not control.get("description") or not control.get("negatives_observed"):
+            why.append("negative-control provenance is a label only")
+        if why:
+            unresolved.append(f"{name}: retest closure UNRESOLVED: " + "; ".join(why))
+    return unresolved
 
 
 def _canonical_record_sha(record):
@@ -216,6 +268,9 @@ def check_validate():
     cross_errors = _cross_errors(records)
     if cross_errors:
         return False, cross_errors[0]
+    unresolved = _cross_unresolved(records)
+    if unresolved:
+        return None, unresolved[0]
     # These nine reader-side controls preserve the existing profile validation.
     try:
         p = next(name for name, record in records.items() if record["result"]["state"] == "PASS")

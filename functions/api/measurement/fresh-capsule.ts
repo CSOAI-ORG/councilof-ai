@@ -1,3 +1,4 @@
+import { recordPaidResponse } from "../_x402_delivery_record";
 /**
  * GET /api/measurement/fresh-capsule?endpoint=<https MCP URL>&dimension=TOOLS|VERSION|PROTOCOL
  *
@@ -284,7 +285,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   }
   const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar });
   if (!payment.ok) return challenge(payment.reason);
-  return new Response(
+  return recordPaidResponse(new Response(
     JSON.stringify({ schema: SCHEMA, doctrine: DOCTRINE, capsule, reads, signature: { payload, did: leaf.did, sha256: leaf.sha256, sig_ed25519: leaf.sig_ed25519, unsigned_reason: leaf.unsigned_reason }, in_published_batch: false, verify_free: `${origin}/mcp (verify_capsule after a batch includes it)` }, null, 2),
     {
       status: 200,
@@ -297,7 +298,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         ...(payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {}),
       },
     },
-  );
+  ), { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
 };
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */

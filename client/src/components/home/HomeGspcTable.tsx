@@ -20,6 +20,7 @@
  *
  * White + green, mobile-first: a card list under `sm`, a table from `sm` up.
  */
+import { isOwnerGated } from "@/lib/ownerGated";
 import { useEffect, useState } from "react";
 import { useGspcBoard, type GspcAxis, type GspcPayload } from "../board/useGspcBoard";
 import {
@@ -266,7 +267,7 @@ export default function HomeGspcTable({
         <>
           {/* ── mobile: one card per axis ────────────────────────────────── */}
           <ol className="mt-6 space-y-2 sm:hidden" aria-label="GSPC board axes in board order" data-testid="home-board-cards">
-            {axes.map((a) => {
+            {axes.filter((a) => !isOwnerGated(a)).map((a) => {
               const active = want !== "" && a.axis.toLowerCase() === want;
               return (
                 <li key={a.axis} id={`axis-${a.axis.toLowerCase()}`} className={`rounded-xl border p-3 ${active ? "border-emerald-400 bg-emerald-50" : "border-slate-200 bg-white"}`}>
@@ -313,7 +314,7 @@ export default function HomeGspcTable({
                 </tr>
               </thead>
               <tbody>
-                {axes.map((a) => {
+                {axes.filter((a) => !isOwnerGated(a)).map((a) => {
                   const active = want !== "" && a.axis.toLowerCase() === want;
                   return [
                     <tr

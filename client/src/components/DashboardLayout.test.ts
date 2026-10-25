@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { dashboardActiveLabel } from "./DashboardLayout";
 import { hasPane } from "./DashboardPane";
 import { tabById } from "./lobby/tabs";
+import { NAV_ID } from "./lobby/LobbyPaneTabs";
 
 describe("dashboard consolidation details", () => {
   it("uses the embedded page label in the header", () => {
@@ -50,5 +51,12 @@ describe("dashboard consolidation details", () => {
       "utf8",
     );
     expect(workspace).not.toMatch(/aria-label="Council workspace modes"/);
+  });
+
+  it("keeps the workspace navigation id distinct from the site header", () => {
+    const header = readFileSync(resolve(__dirname, "./Header.tsx"), "utf8");
+    expect(header).toContain('id="navigation"');
+    expect(NAV_ID).toBe("coai-workspace-navigation");
+    expect(NAV_ID).not.toBe("navigation");
   });
 });

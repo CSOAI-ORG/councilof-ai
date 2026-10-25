@@ -1,3 +1,4 @@
+import { recordPaidResponse, markPaidUndeliveredResponse } from "../_x402_delivery_record";
 /**
  * GET /api/wrapper/changes?id=<pair> — delta of wrapped supply and escrow since the
  * previous ledger snapshot (from public/interop/wrapped-asset-parity-*.json).
@@ -159,11 +160,15 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     );
   }
 
+  const undeliveredJson = (body: unknown) => markPaidUndeliveredResponse(
+    json(body), payment.ok, payment.ok ? payment.paymentResponse : undefined,
+  );
+
   // Fetch snapshots
   const [current, previous] = await fetchLatestSnapshots();
 
   if (!current) {
-    return json({
+    return undeliveredJson({
       schema: "csoai.wrapper.changes/0.1",
       id,
       state: "UNCHECKABLE",
@@ -173,7 +178,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
   const currentData = extractPairData(current, id);
   if (!currentData) {
-    return json({
+    return undeliveredJson({
       schema: "csoai.wrapper.changes/0.1",
       id,
       state: "NOT_FOUND",
@@ -195,14 +200,14 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       wrapped_supply_delta: null,
       escrow_delta: null,
     };
-    return preview ? json({ ...result, preview: true }) : json(result);
+    return preview ? undeliveredJson({ ...result, preview: true }) : undeliveredJson(result);
   }
 
   const previousData = extractPairData(previous, id);
   const previousAsOf = (previous.as_of || previous.fetched_at || null) as string | null;
 
   if (!previousData) {
-    return json({
+    return undeliveredJson({
       schema: "csoai.wrapper.changes/0.1",
       id,
       state: "UNCHECKABLE",
@@ -221,7 +226,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const previousEscrow = normalizedRead(previousData, "escrow_balance");
 
   if ([currentSupply, previousSupply, currentEscrow, previousEscrow].some((value) => value === null)) {
-    return json({
+    return undeliveredJson({
       schema: "csoai.wrapper.changes/0.1",
       id,
       state: "UNCHECKABLE",
@@ -250,7 +255,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     return json({ ...result, preview: true, preview_note: "Full data requires payment." });
   }
 
-  return json(result);
+  return recordPaidResponse(json(result), { kv: env.REVENUE_KV, transaction: payment.ok ? payment.settlement?.transaction : null, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: result.state === "DELTA_READ", paymentResponse: payment.ok ? payment.paymentResponse : undefined });
 };
 
 // HEAD answers as GET would, with no body and never with a payment (functions/api/_head.ts).
