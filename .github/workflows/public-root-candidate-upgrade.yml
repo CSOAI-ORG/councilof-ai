@@ -100,6 +100,10 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install the llms generator's build dependency
+        if: steps.candidate.outputs.exists == 'true'
+        run: npm install --no-save --no-audit --no-fund esbuild@0.25.0
+
       - name: Reconcile the rolling candidate with current master
         if: steps.candidate.outputs.exists == 'true'
         run: |
@@ -113,13 +117,12 @@ jobs:
           git merge --no-edit origin/master
           # The merge keeps the candidate's regenerated OTS manifest and takes master's older
           # llms.txt, which quotes that manifest — so the two drift and pr-gates' llms check fails.
-          # The generator (scripts/llms-txt.mjs) imports a module that needs esbuild, which this job
-          # does not install: running it here fails with ERR_MODULE_NOT_FOUND (run 40153527846).
-          # The candidate generated its own llms.txt when it was minted, consistent with its manifest,
-          # so restore that first-parent copy instead of rebuilding it.
-          if git rev-parse HEAD^1 >/dev/null 2>&1 && ! git diff --quiet HEAD^1 -- public/llms.txt public/llms-full.txt; then
-            git checkout HEAD^1 -- public/llms.txt public/llms-full.txt
-            git commit -m "reconcile: keep the candidate's llms.txt, which quotes its own OTS manifest"
+          # The generator imports esbuild through scripts/surface/commit-board.mjs; the step above
+          # installs exactly that package, because the full node deps are not installed in this job.
+          node scripts/llms-txt.mjs
+          if ! git diff --quiet -- public/llms.txt public/llms-full.txt; then
+            git add public/llms.txt public/llms-full.txt
+            git commit -m "reconcile: regenerate llms.txt from the merged OTS manifest"
           fi
           after=$(git rev-parse HEAD)
           if [ "$before" != "$after" ]; then
