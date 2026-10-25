@@ -1,7 +1,9 @@
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
-import { ArrowUp, CheckCircle2, Loader2, LockKeyhole, RotateCw } from "lucide-react";
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useId, useRef, useState } from "react";
+import { ArrowUp, CheckCircle2, Loader2, LockKeyhole, Mic, MicOff, RotateCw } from "lucide-react";
 import { companyWorkspaceHref, councilLoginHref } from "@/lib/councilLoginReturn";
 import ResultFollowUp from "./ResultFollowUp";
+import { LISTEN_PRIVACY_NOTE, isListenSupported, startListening, stopListening } from "@/lib/councilListen";
+import { stopVoice } from "@/lib/councilVoice";
 import {
   companyCaseFailure,
   companyCaseReadFailure,
@@ -15,6 +17,13 @@ import {
 
 export type CompanyCasePanelHandle = { ask: (question: string) => void };
 
+/** Presentation only, after the current operation's verified identity and lifecycle guards. */
+export type CompanyCaseVerifiedCallback = (
+  value: CompanyCase,
+  reason: "submitted" | "read" | "initial-read",
+  expected: { ownerSubject: string; caseId: string; requestId: string },
+) => void;
+
 export type CompanyCasePanelProps = {
   connection?: CompanyCaseConnection;
   caseId?: string;
@@ -22,6 +31,8 @@ export type CompanyCasePanelProps = {
   variant?: "dock" | "standalone";
   labelledBy?: string;
   className?: string;
+  listen?: boolean;
+  onCaseVerified?: CompanyCaseVerifiedCallback;
 };
 
 const FOCUS = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
@@ -84,11 +95,18 @@ export function CompanyCaseResult({ value, onRead, busy }: { value: CompanyCase;
 }
 
 const OwnerCompanyCasePanel = forwardRef<CompanyCasePanelHandle, CompanyCasePanelProps>(function OwnerCompanyCasePanel(
-  { connection, caseId, invalidCase = false, variant = "standalone", labelledBy, className = "" },
+  { connection, caseId, invalidCase = false, variant = "standalone", labelledBy, className = "", listen = false, onCaseVerified },
   ref,
 ) {
   const [state, setState] = useState<CompanyCaseViewState>({ status: "idle" });
   const [question, setQuestion] = useState("");
+  const [hearing, setHearing] = useState(false);
+  const [micNote, setMicNote] = useState<string | null>(null);
+  const micNoteId = useId();
+  const microphone = useRef<AbortController | null>(null);
+  const microphoneActive = useRef(false);
+  const verifiedCallback = useRef(onCaseVerified);
+  verifiedCallback.current = onCaseVerified;
   const operation = useRef(0);
   const pending = useRef<AbortController | null>(null);
   const inFlight = useRef(false);
@@ -101,16 +119,47 @@ const OwnerCompanyCasePanel = forwardRef<CompanyCasePanelHandle, CompanyCasePane
   const connected = Boolean(subject && client);
   const busy = state.status === "preparing" || state.status === "submitting" || state.status === "reading";
   const blockedUnknownSave = state.status === "awaiting_review" || (state.status === "failed" && state.outcomeUnknown) || uncertainWrite.current;
+  const canListen = listen && variant === "standalone" && connected && !invalidCase && !busy && !blockedUnknownSave;
+  const listenAllowed = useRef(canListen);
+  listenAllowed.current = canListen;
   const returnHref = companyWorkspaceHref(caseId);
   const loginHref = councilLoginHref(returnHref);
 
-  useEffect(() => {
-    alive.current = true;
-    return () => { alive.current = false; operation.current += 1; pending.current?.abort(); };
+  const discardMicrophone = useCallback(() => {
+    const owned = microphone.current;
+    microphone.current = null;
+    microphoneActive.current = false;
+    owned?.abort();
+    setHearing(false);
   }, []);
 
-  const readCase = useCallback(async (id: string, requestId?: string) => {
+  const reportVerified = useCallback((...args: Parameters<CompanyCaseVerifiedCallback>) => {
+    try {
+      // Speech/presentation failure cannot turn a verified storage result into a failed save.
+      void Promise.resolve(verifiedCallback.current?.(...args)).catch(() => undefined);
+    } catch { /* presentation is optional */ }
+  }, []);
+
+  useEffect(() => {
+    if (!canListen) discardMicrophone();
+  }, [canListen, discardMicrophone]);
+
+  useEffect(() => {
+    alive.current = true;
+    return () => {
+      alive.current = false;
+      operation.current += 1;
+      pending.current?.abort();
+      const owned = microphone.current;
+      microphone.current = null;
+      microphoneActive.current = false;
+      owned?.abort();
+    };
+  }, []);
+
+  const readCase = useCallback(async (id: string, requestId?: string, reason: "read" | "initial-read" = "read") => {
     if (!client || !subject || !isCompanyCaseId(id)) return;
+    discardMicrophone();
     pending.current?.abort();
     const controller = new AbortController();
     pending.current = controller;
@@ -118,10 +167,14 @@ const OwnerCompanyCasePanel = forwardRef<CompanyCasePanelHandle, CompanyCasePane
     inFlight.current = true;
     setState({ status: "reading", caseId: id });
     try {
-      const value = requireVerifiedCompanyCase(await client.read(id, { signal: controller.signal }), { ownerSubject: subject, caseId: id });
+      const value = requireVerifiedCompanyCase(await client.read(id, { signal: controller.signal }), { ownerSubject: subject, caseId: id, requestId });
       if (!alive.current || sequence !== operation.current || controller.signal.aborted) return;
       uncertainWrite.current = false;
       setState(value.persistence.merged ? { status: "saved", value: value as Extract<CompanyCase, { persistence: { merged: true } }> } : { status: "awaiting_review", value: value as Extract<CompanyCase, { persistence: { merged: false } }> });
+      // Without a previously trusted request ID, this verified read is a silent baseline.
+      reportVerified(value, requestId === undefined ? "initial-read" : reason, {
+        ownerSubject: subject, caseId: id, requestId: requestId ?? value.requestId,
+      });
     } catch (error: unknown) {
       if (!alive.current || sequence !== operation.current || controller.signal.aborted) return;
       const failure = companyCaseReadFailure(error, id, requestId);
@@ -130,7 +183,7 @@ const OwnerCompanyCasePanel = forwardRef<CompanyCasePanelHandle, CompanyCasePane
     } finally {
       if (sequence === operation.current) inFlight.current = false;
     }
-  }, [client, subject]);
+  }, [client, subject, discardMicrophone, reportVerified]);
 
   // A reopened case is always read from the authorized adapter. Browser storage supplies no result.
   useEffect(() => {
@@ -142,14 +195,16 @@ const OwnerCompanyCasePanel = forwardRef<CompanyCasePanelHandle, CompanyCasePane
       return;
     }
     selfPreparedNavigation.current = null;
+    discardMicrophone();
     operation.current += 1;
     pending.current?.abort();
     inFlight.current = false;
     setState((current) => uncertainWrite.current && current.status === "failed" && current.outcomeUnknown ? current : { status: "idle" });
-    if (connected && caseId && !invalidCase) void readCase(caseId);
-  }, [connected, caseId, invalidCase, readCase]);
+    if (connected && caseId && !invalidCase) void readCase(caseId, undefined, "initial-read");
+  }, [connected, caseId, invalidCase, readCase, discardMicrophone]);
 
   const submit = useCallback(async (request: string) => {
+    discardMicrophone();
     const text = request;
     if (!client || !subject || invalidCase || !text.trim() || text.length > 2000 || busy || inFlight.current || uncertainWrite.current || blockedUnknownSave) return;
     if (typeof globalThis.crypto?.randomUUID !== "function") {
@@ -181,6 +236,7 @@ const OwnerCompanyCasePanel = forwardRef<CompanyCasePanelHandle, CompanyCasePane
       });
       if (!alive.current || sequence !== operation.current || controller.signal.aborted) return;
       setState(value.persistence.merged ? { status: "saved", value: value as Extract<CompanyCase, { persistence: { merged: true } }> } : { status: "awaiting_review", value: value as Extract<CompanyCase, { persistence: { merged: false } }> });
+      reportVerified(value, "submitted", { ownerSubject: subject, caseId: preparedCaseId, requestId });
     } catch (error: unknown) {
       if (!alive.current || sequence !== operation.current || controller.signal.aborted) return;
       const reported = companyCaseFailure(error, requestId);
@@ -193,9 +249,47 @@ const OwnerCompanyCasePanel = forwardRef<CompanyCasePanelHandle, CompanyCasePane
     } finally {
       if (sequence === operation.current) inFlight.current = false;
     }
-  }, [client, subject, invalidCase, busy, blockedUnknownSave]);
+  }, [client, subject, invalidCase, busy, blockedUnknownSave, discardMicrophone, reportVerified]);
 
   useImperativeHandle(ref, () => ({ ask: (request: string) => { void submit(request); } }), [submit]);
+
+  const mic = () => {
+    if (!canListen || inFlight.current) return;
+    const owned = microphone.current;
+    if (owned && microphoneActive.current) {
+      // Explicit Stop accepts this utterance's buffered final; teardown discards it.
+      stopListening({ signal: owned.signal });
+      return;
+    }
+    discardMicrophone();
+    const controller = new AbortController();
+    microphone.current = controller;
+    microphoneActive.current = true;
+    setMicNote(null);
+    stopVoice();
+    const current = () => alive.current && microphone.current === controller && !controller.signal.aborted;
+    const started = startListening({
+      signal: controller.signal,
+      onStart: () => { if (current() && listenAllowed.current) setHearing(true); },
+      onEnd: () => {
+        if (!current()) return;
+        // Retain ownership so the primitive's following onError can still be displayed.
+        microphoneActive.current = false;
+        setHearing(false);
+      },
+      onError: (message) => { if (current() && listenAllowed.current) setMicNote(message); },
+      onTranscript: (text) => {
+        if (!current() || !listenAllowed.current || inFlight.current) return;
+        setQuestion(text.slice(0, 2000));
+        if (text.length > 2000) setMicNote("The voice draft was limited to 2,000 characters. Review it before sending.");
+        // Final speech is still a draft. Only the existing form's Send submits it.
+      },
+    });
+    if (!started && current()) {
+      microphoneActive.current = false;
+      setHearing(false);
+    }
+  };
 
   return (
     <section className={`min-w-0 space-y-3 ${className}`} aria-labelledby={labelledBy} aria-label={labelledBy ? undefined : "Company workspace conversation"} data-testid="company-case-panel">
@@ -228,7 +322,7 @@ const OwnerCompanyCasePanel = forwardRef<CompanyCasePanelHandle, CompanyCasePane
         </div>
       ) : null}
       {state.status === "reading" ? <p role="status" className="inline-flex items-center gap-2 text-sm text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin motion-reduce:animate-none" aria-hidden="true" /> Reading this authorized case’s storage and review status…</p> : null}
-      {(state.status === "saved" || state.status === "awaiting_review") && connected && state.value.ownerSubject === subject ? <CompanyCaseResult value={state.value} busy={busy} onRead={() => void readCase(state.value.caseId)} /> : null}
+      {(state.status === "saved" || state.status === "awaiting_review") && connected && state.value.ownerSubject === subject ? <CompanyCaseResult value={state.value} busy={busy} onRead={() => void readCase(state.value.caseId, state.value.requestId)} /> : null}
       {state.status === "saved" && connected && subject !== undefined && !invalidCase && state.value.ownerSubject === subject ? (
         <ResultFollowUp
           key={JSON.stringify([subject, state.value.caseId, state.value.requestId, state.value.result.id, state.value.result.sha256, state.value.receipt.id, state.value.receipt.sha256, state.value.persistence.nativeCommitId])}
@@ -251,10 +345,22 @@ const OwnerCompanyCasePanel = forwardRef<CompanyCasePanelHandle, CompanyCasePane
         <form className="flex items-end gap-2 pt-2" onSubmit={(event) => { event.preventDefault(); void submit(question); }}>
           <label htmlFor="talk-input" className="sr-only">Your company library request</label>
           <input id="talk-input" value={question} onChange={(event) => setQuestion(event.target.value)} maxLength={2000} disabled={!connected || invalidCase || busy || blockedUnknownSave} placeholder="Ask your company library and save the report" autoComplete="off" className={`min-h-11 min-w-0 flex-1 rounded-xl border border-border bg-background px-3 text-base text-foreground placeholder:text-muted-foreground disabled:opacity-60 sm:text-sm ${FOCUS}`} />
+          {listen && isListenSupported() ? (
+            <button type="button" onClick={mic} disabled={!canListen} aria-pressed={hearing} aria-label={hearing ? "Stop listening" : "Dictate your company request"} aria-describedby={micNoteId} className={`inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-border bg-card text-foreground hover:bg-muted disabled:opacity-50 ${FOCUS}`} data-testid="company-case-mic">
+              {hearing ? <MicOff className="h-4 w-4" aria-hidden="true" /> : <Mic className="h-4 w-4" aria-hidden="true" />}
+            </button>
+          ) : null}
           <button type="submit" disabled={!connected || invalidCase || busy || blockedUnknownSave || !question.trim()} aria-label="Ask company workspace" className={`inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-800 text-white hover:bg-emerald-900 disabled:opacity-50 ${FOCUS}`}>
             {busy ? <Loader2 className="h-4 w-4 animate-spin motion-reduce:animate-none" aria-hidden="true" /> : <ArrowUp className="h-4 w-4" aria-hidden="true" />}
           </button>
         </form>
+      ) : null}
+      {listen && variant === "standalone" ? (
+        <p id={micNoteId} className="text-xs text-muted-foreground" data-testid="company-case-mic-note">
+          {micNote ? <span role="status" className="font-semibold text-foreground">{micNote} </span> : null}
+          {isListenSupported() ? LISTEN_PRIVACY_NOTE : "This browser has no speech recognition; typing still works."}
+          {" "}Dictation stays in the draft until you send it.
+        </p>
       ) : null}
       <p className="text-xs text-muted-foreground">Reports awaiting review are marked saved only after a verified merge.</p>
     </section>

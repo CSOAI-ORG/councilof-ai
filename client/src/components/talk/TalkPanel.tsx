@@ -16,7 +16,7 @@
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { ArrowUp, Loader2, Mic, MicOff, ShieldAlert, Eye } from "lucide-react";
 import { useSearch } from "wouter";
-import CompanyCasePanel from "./CompanyCasePanel";
+import CompanyCasePanel, { type CompanyCaseVerifiedCallback } from "./CompanyCasePanel";
 import ConnectedCompanyCasePanel from "./ConnectedCompanyCasePanel";
 import { companyWorkspaceSelection, type CompanyCaseConnection } from "./companyCaseModel";
 import ResultCard from "@/components/talk/ResultCard";
@@ -25,6 +25,7 @@ import Inline from "@/components/talk/TalkInline";
 import { answerSections, checkedLine, chipFor, firstSentence, plainAnswer, statTiles, toolTitle, verifyLink } from "@/lib/resultCard";
 import type { PageContext } from "../../../../functions/_lib/uiTools";
 import { LISTEN_PRIVACY_NOTE, isListenSupported, startListening, stopListening } from "@/lib/councilListen";
+import { stopVoice } from "@/lib/councilVoice";
 import {
   argsOf,
   challengeOf,
@@ -391,6 +392,7 @@ type Props = {
   hideSuggestions?: boolean;
   /** Injected owner-authenticated company adapter; never a public-lookup fallback. */
   company?: CompanyCaseConnection;
+  onCaseVerified?: CompanyCaseVerifiedCallback;
 };
 
 const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPanel(
@@ -406,9 +408,27 @@ const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPa
   const busy = runs.some((r) => r.status === "streaming");
   const [hearing, setHearing] = useState(false);
   const [micNote, setMicNote] = useState<string | null>(null);
+  const micRef = useRef<AbortController | null>(null);
+  const micActive = useRef(false);
+  const micAllowed = useRef(listen === true);
+  micAllowed.current = listen === true;
   const opts = useRef({ page, declareUi, watch, onRunDone });
   opts.current = { page, declareUi, watch, onRunDone };
-  useEffect(() => () => stopListening(), []);
+  useEffect(() => {
+    if (!listen) {
+      const microphone = micRef.current;
+      micRef.current = null;
+      micActive.current = false;
+      microphone?.abort();
+      setHearing(false);
+    }
+    return () => {
+      const microphone = micRef.current;
+      micRef.current = null;
+      micActive.current = false;
+      microphone?.abort();
+    };
+  }, [listen]);
 
   useEffect(() => () => abortRef.current?.abort(), []);
 
@@ -420,6 +440,11 @@ const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPa
     (question: string, confirmTool?: string[], threadId?: string) => {
       const text = question.trim();
       if (!text) return;
+      const microphone = micRef.current;
+      micRef.current = null;
+      micActive.current = false;
+      microphone?.abort();
+      setHearing(false);
       abortRef.current?.abort();
       const ctl = new AbortController();
       abortRef.current = ctl;
@@ -474,23 +499,30 @@ const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPa
   useImperativeHandle(ref, () => ({ ask: (question: string) => start(question) }), [start]);
 
   const mic = () => {
-    if (hearing) {
-      stopListening();
+    if (!micAllowed.current) return;
+    if (micRef.current && micActive.current) {
+      stopListening({ signal: micRef.current.signal });
       return;
     }
+    micRef.current?.abort();
+    const controller = new AbortController();
+    micRef.current = controller;
+    micActive.current = true;
+    const owned = () => micAllowed.current && micRef.current === controller && !controller.signal.aborted;
     setMicNote(null);
-    startListening({
-      onStart: () => setHearing(true),
-      onEnd: () => setHearing(false),
-      onError: (m) => setMicNote(m),
-      onTranscript: (t, isFinal) => {
-        setQ(t);
-        if (isFinal && t.trim()) {
-          setQ("");
-          start(t);
-        }
+    stopVoice();
+    const started = startListening({
+      signal: controller.signal,
+      onStart: () => { if (owned()) setHearing(true); },
+      onEnd: () => { if (owned()) { micActive.current = false; setHearing(false); } },
+      onError: message => { if (owned()) setMicNote(message); },
+      onTranscript: (text, isFinal) => {
+        if (!owned()) return;
+        setQ(text);
+        if (isFinal) setAnnounce("Voice draft ready. Review it before sending. Nothing has been sent.");
       },
     });
+    if (!started && owned()) { micActive.current = false; setHearing(false); }
   };
 
   // Bring the newest question to the top of the view when it is asked, so its tool cards and
@@ -608,7 +640,7 @@ const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPa
       {listen && variant === "standalone" ? (
         <p id="talk-mic-note" className="mt-2 text-xs text-muted-foreground" data-testid="talk-mic-note">
           {micNote ? <span className="font-semibold text-foreground">{micNote} </span> : null}
-          {isListenSupported() ? LISTEN_PRIVACY_NOTE : "This browser has no speech recognition; typing works everywhere."}
+          {isListenSupported() ? LISTEN_PRIVACY_NOTE : "This browser has no speech recognition; typing works everywhere."} Your speech stays in the text field until you send it.
         </p>
       ) : null}
       <p
@@ -633,6 +665,8 @@ const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel(props, r
       variant: props.variant,
       labelledBy: props.labelledBy,
       className: props.className,
+      listen: props.listen,
+      onCaseVerified: props.onCaseVerified,
     };
     return props.company
       ? <CompanyCasePanel {...companyProps} ref={ref} connection={props.company} />

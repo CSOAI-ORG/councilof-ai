@@ -24,6 +24,8 @@ import { useLocation, useSearch } from "wouter";
 import { menuTrail } from "@/components/lobby/tabs";
 import { CheckCircle2, Circle, CircleSlash, Hand, Loader2, OctagonX, PauseCircle, Undo2, X, XCircle } from "lucide-react";
 import TalkPanel, { type TalkPanelHandle } from "@/components/talk/TalkPanel";
+import type { CompanyCaseVerifiedCallback } from "@/components/talk/CompanyCasePanel";
+import { CSOAI_STAFF_PROFILE, getCompanyCaseSpeech } from "@/lib/csoaiStaffProfile";
 import OwmFreshness from "@/components/ask/OwmFreshness";
 import { streamRun, type TalkRun, type UiStepCall } from "@/lib/aguiTalk";
 import {
@@ -145,6 +147,15 @@ export default function AskPane({ open, onClose, question }: { open: boolean; on
   const [watchIntent, setWatchIntent] = useState<string>("");
   const [running, setRunning] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+  const voiceActive = open && tab === "ask" && !collapsed && prefs.voice;
+  const voiceWasActive = useRef(false);
+  const companySpeech = useRef<{ ownerSubject: string; key: string } | null>(null);
+  useEffect(() => {
+    if (voiceWasActive.current && !voiceActive) stopVoice();
+    voiceWasActive.current = voiceActive;
+  }, [voiceActive]);
+  useEffect(() => () => { if (voiceWasActive.current) stopVoice(); }, []);
+
   const [narration, setNarration] = useState("");
   const [log, setLog] = useState<LogEntry[]>(() => readLog());
   const [undoable, setUndoable] = useState(false);
@@ -185,9 +196,9 @@ export default function AskPane({ open, onClose, question }: { open: boolean; on
   const say = useCallback(
     (text: string) => {
       setNarration(text);
-      if (prefs.voice && text) speakVoice(prepSpeech(text));
+      if (voiceActive && text) speakVoice(prepSpeech(text));
     },
-    [prefs.voice],
+    [voiceActive],
   );
 
   const patch = (id: string, p: Partial<WatchStep>) => setSteps((all) => all.map((s) => (s.id === id ? { ...s, ...p } : s)));
@@ -267,14 +278,25 @@ export default function AskPane({ open, onClose, question }: { open: boolean; on
 
   const onRunDone = useCallback(
     (run: TalkRun) => {
-      if (prefs.voice && run.text) {
+      if (voiceActive && run.text) {
         const first = run.text.split(/\n{2,}/).slice(0, 2).join(". ");
         speakVoice(prepSpeech(first).slice(0, 600));
       }
       if (prefs.watch && run.ui.length) void runWatch(run);
     },
-    [prefs.voice, prefs.watch, runWatch],
+    [voiceActive, prefs.watch, runWatch],
   );
+
+  const onCaseVerified = useCallback<CompanyCaseVerifiedCallback>((value, reason, expected) => {
+    const previousKey = companySpeech.current?.ownerSubject === expected.ownerSubject ? companySpeech.current.key : undefined;
+    const presentation = getCompanyCaseSpeech({
+      status: value.persistence.merged ? "saved" : "awaiting_review",
+      value,
+    }, { expected, reason, previousKey });
+    if (!presentation) return;
+    companySpeech.current = { ownerSubject: expected.ownerSubject, key: presentation.key };
+    if (voiceActive && presentation.text) speakVoice(prepSpeech(presentation.text));
+  }, [voiceActive]);
 
   const enableWatchAndAsk = (run: TalkRun) => {
     setPrefs((p) => ({ ...p, watch: true }));
@@ -353,9 +375,9 @@ export default function AskPane({ open, onClose, question }: { open: boolean; on
 
       <div className={`min-h-0 flex-1 overflow-y-auto px-4 py-3 ${collapsed ? "hidden" : ""}`}>
         <p className="mb-3 text-sm leading-relaxed text-foreground" data-testid="ask-introduction">
-          <strong>Hi, this is Council of AI. How can I help?</strong>{" "}
-          Ask about the board, a test, a published card or a server. I use Council’s published tools and records.
-          Private staff workspaces and saved customer cases are not connected here.
+          <strong>{CSOAI_STAFF_PROFILE.greeting}</strong>{" "}
+          {CSOAI_STAFF_PROFILE.disclosure} I can read Council’s published tools and records.
+          Company requests need a verified company connection; saved status is shown only after its checks succeed.
         </p>
         <p className="rounded-lg border border-border bg-muted px-3 py-2 text-sm text-foreground" data-testid="ask-rule-based">
           Answers come only from our published records, by fixed rules, never from an AI model.{" "}
@@ -434,7 +456,8 @@ export default function AskPane({ open, onClose, question }: { open: boolean; on
             watch={prefs.watch}
             onRunDone={onRunDone}
             onEnableWatch={enableWatchAndAsk}
-            listen={prefs.voice}
+            listen={voiceActive}
+            onCaseVerified={onCaseVerified}
           />
         </div>
 
