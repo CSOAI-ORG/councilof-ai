@@ -69,7 +69,11 @@ def cyclonedx(lin: dict) -> dict:
     bom = {
         "bomFormat": "CycloneDX",
         "specVersion": "1.6",
-        "serialNumber": "urn:uuid:" + hashlib.sha256((model + AS_OF).encode()).hexdigest()[:32],
+        # RFC 4122 textual form: 8-4-4-4-12. The old value was 32 bare hex characters, which the CycloneDX 1.6
+        # schema rejects ('does not match ^urn:uuid:...$').
+        "serialNumber": "urn:uuid:" + "-".join(
+            (h[:8], h[8:12], h[12:16], h[16:20], h[20:32])
+        ) if (h := hashlib.sha256((model + AS_OF).encode()).hexdigest()) else None,
         "version": 1,
         "metadata": {
             "timestamp": AS_OF,
@@ -110,15 +114,18 @@ def cyclonedx(lin: dict) -> dict:
                 "description": "deterministic behaviour-class judge; UNMEASURED never 0",
             },
         ],
-        "x_csoai": {
-            "kind": "csoai.aibom/0.1",
-            "writes_board": False,
-            "measured_evidence": [m["card_sha256"] for m in lin["measurements"]],
-            "unmeasured": unmeasured,
-            "honesty": "Assembled from the signed cards only. Does NOT stamp MEASURED; the evidence is the signed cards it references. Not a GSPC score.",
-        },
+        # CycloneDX 1.6 has no root extension point: a sibling "x_csoai" key is rejected
+        # ('Additional properties are not allowed'). Namespaced entries in `properties` are the supported place.
+        "properties": [
+            {"name": "csoai:kind", "value": "csoai.aibom/0.1"},
+            {"name": "csoai:writes_board", "value": "false"},
+            {"name": "csoai:measured_evidence", "value": ",".join(m["card_sha256"] for m in lin["measurements"])},
+            {"name": "csoai:unmeasured", "value": ",".join(str(u) for u in unmeasured)},
+            {"name": "csoai:honesty", "value": "Assembled from the signed cards only. Does NOT stamp MEASURED; the evidence is the signed cards it references. Not a GSPC score."},
+        ],
     }
-    bom["x_csoai"]["bom_sha256"] = hashlib.sha256(canonical(bom)).hexdigest()
+    # The digest covers every property except the digest itself, so a reader can recompute it.
+    bom["properties"].append({"name": "csoai:bom_sha256", "value": hashlib.sha256(canonical(bom)).hexdigest()})
     return bom
 
 
@@ -193,7 +200,8 @@ def main() -> int:
     lin = lineage(args.model)
     bom = cyclonedx(lin)
     spdx = spdx3(lin)
-    card = queued_card(lin, bom["x_csoai"]["bom_sha256"], spdx["spdx_sha256"])
+    props = {p["name"]: p["value"] for p in bom["properties"]}
+    card = queued_card(lin, props["csoai:bom_sha256"], spdx["spdx_sha256"])
 
     if args.write:
         OUT.mkdir(parents=True, exist_ok=True)
@@ -203,9 +211,9 @@ def main() -> int:
         if len(raw.encode()) > 3072:
             raise SystemExit(f"HALT aibom card {len(raw.encode())}B > 3KB")
         (OUT / "aibom-card.json").write_text(raw)
-        print(f"wrote {OUT.relative_to(ROOT)}/ · bom_sha256={bom['x_csoai']['bom_sha256'][:16]} card_sha={card['sha256'][:16]}")
+        print(f"wrote {OUT.relative_to(ROOT)}/ · bom_sha256={props['csoai:bom_sha256'][:16]} card_sha={card['sha256'][:16]}")
     else:
-        json.dump({"bom_sha256": bom["x_csoai"]["bom_sha256"], "spdx_sha256": spdx["spdx_sha256"], "card": card}, sys.stdout, indent=2)
+        json.dump({"bom_sha256": props["csoai:bom_sha256"], "spdx_sha256": spdx["spdx_sha256"], "card": card}, sys.stdout, indent=2)
         sys.stdout.write("\n")
     return 0
 
