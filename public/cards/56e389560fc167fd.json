@@ -1,0 +1,82 @@
+{
+  "card": {
+    "as_of": "2026-10-25T03:05:35Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": null,
+      "holders": null,
+      "issuer": null,
+      "issuer_address": "rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": null,
+      "symbol": "USDB",
+      "verified_domain": null,
+      "verified_via": null
+    },
+    "product": {
+      "sku": "xrpl-asset-state",
+      "tier": "free",
+      "free_fields": [
+        "issuer",
+        "currency",
+        "holders",
+        "supply",
+        "trust_lines"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "56e389560fc167fd60e720625437154f1274cfdb54d501c7bb0c9e459132f317",
+    "sig_ed25519": "586479d945d560f3e02e73311b038e1214dad0a9e7d98e05894614b30f63cfcfedab1bd7720b916519ec98532f7e026d11266504716317357a6ab835ad656608",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL USDB public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [
+      "xrpl.fi_row",
+      "holders",
+      "supply",
+      "verified_via"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "30c1f762056331a9c972c791c3897ed6441650ffa6faeb37a5c6fe98a990a6de",
+    "aec00964d391b2ed2ba6675185b02aa54a1296c4deae142f6139c6d1f09f995d",
+    "6f76a48a0f8b9fbdb8395d2bf32a082777c894bf2cef8ff92013415296aa69d3",
+    "a02d2c21eeee6a98902df4d1b45bca347ceefb203369ba0fec796477fa5fab2f",
+    "42bead95c24b1083352b01cd495fd9ab7ea2d695dce9a216d80f44f21aeb49f0",
+    "60ee1bf09223c4bc30c9be140182334a6cf9aa1f37f157c4e0c3a72f717f2470",
+    "07d3d60b103d10ec865a50030051f2310c32e2808c6ae2e4f7ffc475491706b7",
+    "c4d118625b091c47f6ec18eca5e0882d9e6bbcb69b5a2ed6ffbd57451d93a82b",
+    "5e7404008adfc2c3c09d78122e8eaea9c098c1e3552fb401b864f96bcfc533e4"
+  ]
+}

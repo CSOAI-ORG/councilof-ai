@@ -1,0 +1,82 @@
+{
+  "card": {
+    "as_of": "2026-10-25T03:05:36Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": null,
+      "holders": null,
+      "issuer": null,
+      "issuer_address": "rUNaS5sqRuxZz6V7rBGhoSaZiVYA3ut4UL",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": null,
+      "symbol": "EURCV",
+      "verified_domain": null,
+      "verified_via": null
+    },
+    "product": {
+      "sku": "xrpl-asset-state",
+      "tier": "free",
+      "free_fields": [
+        "issuer",
+        "currency",
+        "holders",
+        "supply",
+        "trust_lines"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "c05f8afafea58ff9fc26d07f913cab303178557f1cda9b6fd8bb20bf4d30624b",
+    "sig_ed25519": "ec6e4759d31ffdd9716eba7bdc261d5a6da7bb0ccd2319f70839c9f737555e40a47813a5dfaed0b32dbb07183b5f8fbf2d0fb9846d12f34bd454fc2b0dbedd07",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL EURCV public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [
+      "xrpl.fi_row",
+      "holders",
+      "supply",
+      "verified_via"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "c2da6de67f659faf9908e80d420558425077677a8f3f1b2948465ff740e1ee53",
+    "5a9a2a3e7f4d64e97078bf9ac4ce14a2968b2aebd893cffdd04f6a243179f53f",
+    "97172f6287c1605af66af17e521c4d761a912fda1923c5be7f76def862f6308b",
+    "a02d2c21eeee6a98902df4d1b45bca347ceefb203369ba0fec796477fa5fab2f",
+    "42bead95c24b1083352b01cd495fd9ab7ea2d695dce9a216d80f44f21aeb49f0",
+    "60ee1bf09223c4bc30c9be140182334a6cf9aa1f37f157c4e0c3a72f717f2470",
+    "07d3d60b103d10ec865a50030051f2310c32e2808c6ae2e4f7ffc475491706b7",
+    "c4d118625b091c47f6ec18eca5e0882d9e6bbcb69b5a2ed6ffbd57451d93a82b",
+    "5e7404008adfc2c3c09d78122e8eaea9c098c1e3552fb401b864f96bcfc533e4"
+  ]
+}
