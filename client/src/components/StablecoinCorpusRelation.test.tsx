@@ -64,9 +64,18 @@ describe("StablecoinCorpusRelation, loaded from the real files", () => {
     expect(v).toContain(`${s.assets_read} of ${s.universe_assets} assets, read once on ${s.as_of.slice(0, 10)}`);
     for (const t of p.states) expect(v).toContain(`${t.n} ${t.state}`);
     expect(v).toContain(`Of ${p.assets} assets in the record dated ${p.date}`);
-    // no card carries a combination of two figures
-    expect(v).not.toContain(String(r.measured_assets + s.assets_read));
-    expect(v).not.toContain(String(s.assets_read + p.assets));
+    // No card carries another card's figure. Asserted per card, because a bare substring check on the sum
+    // collides with ordinary numbers once the artifact's counts move (2026-10-24: the sum became "302").
+    const card = (id: string) => {
+      const at = loaded.indexOf(`data-corpus="${id}"`);
+      if (at < 0) return "";
+      const next = loaded.indexOf('data-corpus="', at + 1);
+      return text(loaded.slice(at, next < 0 ? undefined : next));
+    };
+    expect(card("readiness")).toContain(`${r.measured_assets} of ${r.indexed_assets} indexed assets`);
+    expect(card("readiness")).not.toContain(`${s.assets_read} of ${s.universe_assets}`);
+    expect(card("supply")).toContain(`${s.assets_read} of ${s.universe_assets}`);
+    expect(card("supply")).not.toContain(`${r.measured_assets} of ${r.indexed_assets}`);
   });
 
   it("the cross-ledger section shows the record's own counts, evidence kinds and the not-read rows", () => {
