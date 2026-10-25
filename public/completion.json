@@ -1,0 +1,92 @@
+{
+ "schema": "csoai.completion-ledger/1",
+ "generated_at": "2026-10-25T04:45:00Z",
+ "note": "Verified completions with their receipts. A line is only here if a live read, a validator run or a merged PR backs it. Blockers are listed, not hidden. Nothing here is a customer, a sale or a valuation.",
+ "verified": [
+  {
+   "item": "Corpus tests no longer pin the root candidate's own artefacts",
+   "receipt": "PR #3440 merged",
+   "at": "2026-10-25T02:10:00Z"
+  },
+  {
+   "item": "Root-upgrade pipeline fixed (llms reconcile, esbuild, mirror exemption, gated-run approval)",
+   "receipt": "PRs #3444 #3445 #3447 #3448 merged",
+   "at": "2026-10-25T02:51:00Z"
+  },
+  {
+   "item": "Native Inspect ingester + NeMo missing-decision fix",
+   "receipt": "PR #3458 merged; 6 tests; event.validate() == []",
+   "at": "2026-10-25T03:25:49Z"
+  },
+  {
+   "item": "CycloneDX 1.6 document now schema-valid (0 errors)",
+   "receipt": "PR #3460 merged; validated against bom-1.6.schema.json",
+   "at": "2026-10-25T03:35:20Z"
+  },
+  {
+   "item": "x402 free door's preview answers 200, not 402",
+   "receipt": "PR #3465 merged",
+   "at": "2026-10-25T04:08:32Z"
+  },
+  {
+   "item": "Real Inspect .eval archive ingested end to end (letter grades C/I/P/N mapped)",
+   "receipt": "PR #3468 merged; real log, state CONSISTENT, 0 validator errors",
+   "at": "2026-10-25T04:19:54Z"
+  },
+  {
+   "item": "Board is live and honest",
+   "receipt": "GET /api/gspc: 33 axes \u00b7 23 measured \u00b7 0 of 14 separated (7 TIE, 7 UNTESTED)",
+   "at": "2026-10-25T04:19:36Z"
+  },
+  {
+   "item": "MCP surface",
+   "receipt": "POST /mcp tools/list: 19 tools (14 free, 5 metered)",
+   "at": "2026-10-25T04:19:36Z"
+  },
+  {
+   "item": "x402 catalogue",
+   "receipt": "GET /api/x402: 29 resources, schema csoai.x402-catalog/0.3, rail live",
+   "at": "2026-10-25T04:19:36Z"
+  },
+  {
+   "item": "Registry audit of our own estate",
+   "receipt": "12 servers / 56 records; 2 live remotes; 18 dead at api.meok.ai (404)",
+   "at": "2026-10-25T04:12:00Z"
+  },
+  {
+   "item": "Real dependency-change detection on the MCP registry",
+   "receipt": "3,423 records updated since 2026-10-24; 317 comparable on (name,version); 0 differences",
+   "at": "2026-10-25T04:40:00Z"
+  },
+  {
+   "item": "Entity binding read (GLEIF, CC0)",
+   "receipt": "4 LEIs for one legal name, 2 LAPSED; state PARTIAL; negative control 0 rows",
+   "at": "2026-10-25T03:30:00Z"
+  },
+  {
+   "item": "Staff pack",
+   "receipt": "11 roles with receipts and stop conditions",
+   "at": "2026-10-25T04:00:00Z"
+  }
+ ],
+ "blockers": [
+  {
+   "blocker": "Public root stale",
+   "detail": "root.json as_of 2026-10-13T03:31:42Z, 317 leaves; candidate drops 94 master leaves including asset-measurement cards",
+   "decision": "append-only Merkle log vs deduplicated current-state set"
+  },
+  {
+   "blocker": "M4 maintenance cycle",
+   "detail": "storage_guard BLOCKED: 506 MB available, 100% capacity, below 10 GB floor",
+   "decision": "recover headroom under existing retention rules; no protected paths deleted"
+  }
+ ],
+ "not_claimed": [
+  "a customer",
+  "a sale",
+  "a valuation",
+  "a partnership",
+  "a certification",
+  "any unicorn status"
+ ]
+}

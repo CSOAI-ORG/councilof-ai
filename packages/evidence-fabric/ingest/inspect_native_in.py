@@ -40,9 +40,17 @@ def _first_scorer(doc: Dict[str, Any]) -> Optional[str]:
     return None
 
 
+# Inspect's built-in scorers return letter grades, not numbers: C correct, I incorrect, P partial, N unanswered.
+# Reading only numbers made a real log unreadable (UNCHECKABLE) — found by running the adapter against an actual
+# .eval file produced by inspect_ai 0.3.259.
+_LETTERS = {"C": 1.0, "I": 0.0, "P": 0.5, "N": 0.0}
+
+
 def _value(entry: Any) -> Optional[float]:
     if isinstance(entry, dict):
         entry = entry.get("value")
+    if isinstance(entry, str):
+        return _LETTERS.get(entry.strip().upper())
     if isinstance(entry, bool):
         return 1.0 if entry else 0.0
     if isinstance(entry, (int, float)):
@@ -84,6 +92,27 @@ def flip_one(samples: List[Any], scorer: str) -> List[Any]:
             scores[scorer] = flipped
         return out
     return out
+
+
+def load_eval_log(path: str) -> Dict[str, Any]:
+    """Read a real Inspect .eval archive into the native document shape this module ingests.
+
+    Inspect writes a zip: header.json (status, eval, results), samples/*.json (per-sample scores). Nothing is
+    reinterpreted here — scores are passed through as the scorer wrote them.
+    """
+    import zipfile
+    with zipfile.ZipFile(path) as z:
+        header = json.loads(z.read("header.json"))
+        samples = []
+        for name in sorted(n for n in z.namelist() if n.startswith("samples/") and n.endswith(".json")):
+            samples.append(json.loads(z.read(name)))
+    return {
+        "version": header.get("version"),
+        "status": header.get("status"),
+        "eval": header.get("eval") or {},
+        "results": header.get("results") or {},
+        "samples": samples,
+    }
 
 
 def ingest(raw: bytes, *, read_at: Optional[str] = None, source_url: Optional[str] = None) -> List[Dict[str, Any]]:
@@ -139,11 +168,16 @@ def ingest(raw: bytes, *, read_at: Optional[str] = None, source_url: Optional[st
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument("log")
+    ap.add_argument("log", help="a .eval archive or a JSON document")
     ap.add_argument("--source-url")
     ap.add_argument("--read-at")
     a = ap.parse_args(argv)
-    for ev in ingest(open(a.log, "rb").read(), read_at=a.read_at, source_url=a.source_url):
+    if a.log.endswith(".eval"):
+        doc = load_eval_log(a.log)
+        events = ingest(json.dumps(doc).encode(), read_at=a.read_at, source_url=a.source_url)
+    else:
+        events = ingest(open(a.log, "rb").read(), read_at=a.read_at, source_url=a.source_url)
+    for ev in events:
         sys.stdout.write(json.dumps(ev, ensure_ascii=False, sort_keys=True) + "\n")
 
 
