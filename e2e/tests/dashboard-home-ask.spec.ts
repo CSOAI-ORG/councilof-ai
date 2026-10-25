@@ -606,7 +606,7 @@ test("root, Council OS home and plugin tools keep Ask closed until explicitly op
     ask_tool_call_or_payment_allowed: false,
   }, null, 2));
   await info.attach("published-source-route-opening-posts", { path: postPath, contentType: "application/json" });
-  expect(unexpected, "Only exact read-only MCP discovery may POST while routes open; no Ask, tools/call, payment or voice dispatch").toEqual([]);
+  expect(unexpected.map(request => { const url = new URL(request.url()); return { origin: url.origin, path: url.pathname, method: request.method() }; }), "Only exact read-only MCP discovery may POST while routes open; no Ask, tools/call, payment or voice dispatch").toEqual([]);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(1);
 });
@@ -934,7 +934,7 @@ for (const vp of VIEWPORTS) {
     await expect(run.getByTestId("talk-run-evidence")).not.toContainText("superseded_by:");
     await expect(run.getByTestId("talk-run-evidence")).not.toContainText("correction_of:");
     await expect(run.getByTestId("talk-run-evidence")).not.toContainText("1999-12-31T00:00");
-    await expect(run.getByTestId("talk-run-evidence")).not.toContainText("2000-01-01");
+    await expect(run.getByTestId("talk-run-evidence").getByText(/^Observation time:/)).toHaveText("Observation time: 1999-12-31 (day precision)");
     await expect(run.getByTestId("talk-run-evidence")).toContainText("relevant-retest");
     await expect(run.getByRole("link", { name: "Receipt", exact: true })).toHaveAttribute("href", "/signed/local-receipt.json");
     await expect(run.getByRole("link", { name: "Verify", exact: true }).last()).toHaveAttribute("href", "/gspc-verify?fixture=local");
