@@ -111,6 +111,16 @@ jobs:
           # A real content conflict fails the workflow closed. Never choose a
           # side automatically for root, proof, or witness bytes.
           git merge --no-edit origin/master
+          # The merge keeps the candidate's regenerated OTS manifest and takes master's older
+          # llms.txt, which quotes that manifest — so the two drift and pr-gates' llms check fails.
+          # The generator (scripts/llms-txt.mjs) imports a module that needs esbuild, which this job
+          # does not install: running it here fails with ERR_MODULE_NOT_FOUND (run 40153527846).
+          # The candidate generated its own llms.txt when it was minted, consistent with its manifest,
+          # so restore that first-parent copy instead of rebuilding it.
+          if git rev-parse HEAD^1 >/dev/null 2>&1 && ! git diff --quiet HEAD^1 -- public/llms.txt public/llms-full.txt; then
+            git checkout HEAD^1 -- public/llms.txt public/llms-full.txt
+            git commit -m "reconcile: keep the candidate's llms.txt, which quotes its own OTS manifest"
+          fi
           after=$(git rev-parse HEAD)
           if [ "$before" != "$after" ]; then
             git push origin "HEAD:public-root/pending"
