@@ -1,13 +1,8 @@
 ---
 name: gspc-verify
 description: Verify a CSOAI / GSPC evidence artifact (csoai.evidence-event/0.1, csoai.signed-run/0.1 batch, csoai.safe-evidence-pack/0.1 pack, or csoai.route-evidence/0.1) using the deterministic offline verifier. Preserves original artifact digests, state vocabulary, and limitations without asking the language model to guess cryptographic validity.
-compatibility:
-  agentskills_spec: "0.1"
-  python: ">=3.9"
-  network: "none (offline deterministic check)"
-allowed-tools:
-  - "Bash(python3 packages/evidence-fabric/portable_skill_verify.py:*)"
-  - "Read"
+compatibility: "agentskills 0.1; Python >=3.9; offline, no network"
+allowed-tools: "Bash(python3 packages/evidence-fabric/portable_skill_verify.py:*) Read"
 ---
 
 # GSPC & OSAIA SAFE Portable Verification Procedure (`gspc-verify`)
@@ -16,7 +11,7 @@ allowed-tools:
 
 Given an existing CSOAI evidence artifact, identify the matching deterministic verification procedure, execute the supported offline checks via `packages/evidence-fabric/portable_skill_verify.py`, report the exact verifier state and reason, and preserve the original artifact digest and `limits[]`.
 
-**Hard Rule:** Never ask a language model to decide whether an Ed25519 signature, SHA-256 digest, or Merkle proof "looks valid." Always invoke the deterministic verifier and quote its returned `verdict_state` and `artifact_sha256` verbatim.
+**Hard Rule:** Never ask a language model to decide whether an Ed25519 signature, SHA-256 digest, or Merkle proof "looks valid." Always invoke the deterministic verifier and quote its returned `verdict_state` and `artifact.sha256` verbatim.
 
 ## Supported Artifact Kinds
 
