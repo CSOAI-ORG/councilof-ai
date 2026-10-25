@@ -7,12 +7,14 @@ import type { CompanyCaseVerifiedCallback } from "../talk/CompanyCasePanel";
 import type { CommittedCompanyCase, PendingCompanyCase } from "../talk/companyCaseModel";
 import { CSOAI_STAFF_PROFILE } from "@/lib/csoaiStaffProfile";
 import * as voice from "@/lib/councilVoice";
+import * as input from "@/lib/councilListen";
+import { newRun, type TalkRun } from "@/lib/aguiTalk";
 import AskPane from "./AskPane";
 
-const child = vi.hoisted(() => ({ props: null as null | { listen?: boolean; onCaseVerified?: CompanyCaseVerifiedCallback } }));
+const child = vi.hoisted(() => ({ props: null as null | { listen?: boolean; onCaseVerified?: CompanyCaseVerifiedCallback; onRunDone?: (run: TalkRun) => void } }));
 vi.mock("@/components/talk/TalkPanel", async () => {
   const { createElement, forwardRef, useImperativeHandle } = await import("react");
-  return { default: forwardRef(function MockTalk(props: { listen?: boolean; onCaseVerified?: CompanyCaseVerifiedCallback }, ref) {
+  return { default: forwardRef(function MockTalk(props: { listen?: boolean; onCaseVerified?: CompanyCaseVerifiedCallback; onRunDone?: (run: TalkRun) => void }, ref) {
     child.props = props;
     useImperativeHandle(ref, () => ({ ask() {} }), []);
     return createElement("div", { "data-testid": "voice-child", "data-listen": String(props.listen) });
@@ -108,6 +110,14 @@ describe("Cody voice receiving boundary", () => {
     expect(vi.mocked(voice.speakVoice).mock.calls[0][0]).not.toContain("Private result text");
     await act(async () => child.props?.onCaseVerified?.(committed(), "read", expected));
     expect(voice.speakVoice).toHaveBeenCalledTimes(1);
+  });
+  it("does not start an answer or saved-result voice while a microphone already owns input", async () => {
+    await render(true);
+    vi.spyOn(input, "isListening").mockReturnValue(true);
+    await act(async () => child.props?.onRunDone?.({ ...newRun("question", "run"), status: "done", text: "Published answer" }));
+    await act(async () => child.props?.onCaseVerified?.(committed(), "submitted", expected));
+    expect(voice.speakVoice).not.toHaveBeenCalled();
+    expect(fetch).not.toHaveBeenCalled();
   });
   it("does not narrate a crossed-owner case or a result delivered while hidden", async () => {
     await render(true);

@@ -43,7 +43,7 @@ import {
   type LogEntry,
 } from "@/lib/uiActions";
 import { prepSpeech, speakVoice, stopVoice } from "@/lib/councilVoice";
-import { LISTEN_PRIVACY_NOTE, isListenSupported } from "@/lib/councilListen";
+import { LISTEN_PRIVACY_NOTE, isListenSupported, isListening } from "@/lib/councilListen";
 import { crumbFor } from "@/components/ask/paletteIndex";
 
 const FOCUS = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
@@ -196,7 +196,7 @@ export default function AskPane({ open, onClose, question }: { open: boolean; on
   const say = useCallback(
     (text: string) => {
       setNarration(text);
-      if (voiceActive && text) speakVoice(prepSpeech(text));
+      if (voiceActive && !isListening() && text) speakVoice(prepSpeech(text));
     },
     [voiceActive],
   );
@@ -278,7 +278,7 @@ export default function AskPane({ open, onClose, question }: { open: boolean; on
 
   const onRunDone = useCallback(
     (run: TalkRun) => {
-      if (voiceActive && run.text) {
+      if (voiceActive && !isListening() && run.text) {
         const first = run.text.split(/\n{2,}/).slice(0, 2).join(". ");
         speakVoice(prepSpeech(first).slice(0, 600));
       }
@@ -295,7 +295,7 @@ export default function AskPane({ open, onClose, question }: { open: boolean; on
     }, { expected, reason, previousKey });
     if (!presentation) return;
     companySpeech.current = { ownerSubject: expected.ownerSubject, key: presentation.key };
-    if (voiceActive && presentation.text) speakVoice(prepSpeech(presentation.text));
+    if (voiceActive && !isListening() && presentation.text) speakVoice(prepSpeech(presentation.text));
   }, [voiceActive]);
 
   const enableWatchAndAsk = (run: TalkRun) => {
