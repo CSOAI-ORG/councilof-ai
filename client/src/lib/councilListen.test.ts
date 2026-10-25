@@ -304,4 +304,94 @@ describe("push-to-talk session ownership", () => {
     expect(h.onEnd).toHaveBeenCalledOnce();
     expect(isListening()).toBe(false);
   });
+
+  it("discards an utterance through its own abort signal", () => {
+    const h = hooks();
+    const owner = new AbortController();
+    startListening({ ...h, signal: owner.signal });
+    const r = latest();
+    owner.abort();
+    r.result("cancelled question");
+    r.emit("end");
+    expect(r.abort).toHaveBeenCalledOnce();
+    expect(h.onEnd).toHaveBeenCalledOnce();
+    expect(h.onTranscript).not.toHaveBeenCalled();
+    expect(isListening()).toBe(false);
+  });
+
+  it("cannot cancel a newer panel through an old owner's signal", () => {
+    const oldOwner = new AbortController();
+    const old = hooks();
+    startListening({ ...old, signal: oldOwner.signal });
+    const oldRecognition = latest();
+    const owner = new AbortController();
+    const current = hooks();
+    startListening({ ...current, signal: owner.signal });
+    const currentRecognition = latest();
+    oldOwner.abort();
+    oldRecognition.emit("end");
+    oldRecognition.result("stale");
+    expect(currentRecognition.abort).not.toHaveBeenCalled();
+    expect(current.onEnd).not.toHaveBeenCalled();
+    expect(old.onEnd).toHaveBeenCalledOnce();
+    expect(isListening()).toBe(true);
+    currentRecognition.result("current");
+    expect(current.onTranscript).toHaveBeenCalledWith("current", true);
+  });
+
+  it("ignores a normal stop requested by a stale owner", () => {
+    const oldOwner = new AbortController();
+    startListening({ ...hooks(), signal: oldOwner.signal });
+    const owner = new AbortController();
+    const h = hooks();
+    startListening({ ...h, signal: owner.signal });
+    const r = latest();
+    stopListening({ signal: oldOwner.signal });
+    expect(r.stop).not.toHaveBeenCalled();
+    expect(r.abort).not.toHaveBeenCalled();
+    expect(isListening()).toBe(true);
+    r.result("current");
+    expect(h.onTranscript).toHaveBeenCalledWith("current", true);
+  });
+
+  it("allows the current owner's normal stop to finalize buffered speech", () => {
+    const owner = new AbortController();
+    const h = hooks();
+    startListening({ ...h, signal: owner.signal });
+    const r = latest();
+    stopListening({ signal: owner.signal });
+    expect(r.stop).toHaveBeenCalledOnce();
+    expect(r.abort).not.toHaveBeenCalled();
+    r.result("buffered");
+    r.emit("end");
+    expect(h.onTranscript).toHaveBeenCalledWith("buffered", true);
+    expect(h.onEnd).toHaveBeenCalledOnce();
+  });
+
+  it("does not replace the active mic for a caller whose signal was already aborted", () => {
+    const current = hooks();
+    startListening(current);
+    const r = latest();
+    const stale = new AbortController();
+    stale.abort();
+    expect(startListening({ ...hooks(), signal: stale.signal })).toBe(false);
+    expect(latest()).toBe(r);
+    expect(r.abort).not.toHaveBeenCalled();
+    expect(current.onEnd).not.toHaveBeenCalled();
+    expect(isListening()).toBe(true);
+  });
+
+  it("ignores an old owner's cleanup after its natural end and a new start", () => {
+    const oldOwner = new AbortController();
+    startListening({ ...hooks(), signal: oldOwner.signal });
+    latest().emit("end");
+    const current = hooks();
+    startListening(current);
+    const r = latest();
+    oldOwner.abort();
+    stopListening({ signal: oldOwner.signal, discard: true });
+    expect(r.abort).not.toHaveBeenCalled();
+    expect(current.onEnd).not.toHaveBeenCalled();
+    expect(isListening()).toBe(true);
+  });
 });

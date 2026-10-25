@@ -45,6 +45,8 @@ export function isListenSupported(): boolean {
 }
 
 export type ListenHooks = {
+  /** Aborting this signal discards only this utterance, even after another panel takes the mic. */
+  signal?: AbortSignal;
   /** Interim text while speaking (isFinal false), then the final utterance (isFinal true). */
   onTranscript: (text: string, isFinal: boolean) => void;
   onStart?: () => void;
@@ -54,6 +56,7 @@ export type ListenHooks = {
 
 type ListenSession = {
   recognition: Recognition;
+  signal?: AbortSignal;
   stopping: boolean;
   finish: (discard?: boolean) => void;
 };
@@ -62,6 +65,8 @@ let active: ListenSession | null = null;
 
 /** Start one push-to-talk utterance. Returns false (and calls onError) when unavailable. */
 export function startListening(hooks: ListenHooks, lang?: string): boolean {
+  // A cancelled caller must not retire a different panel\'s active microphone.
+  if (hooks.signal?.aborted) return false;
   // Replacement always discards the prior utterance. stop() alone may return
   // buffered speech after it returns, which must not become a new question.
   stopListening({ discard: true });
@@ -86,11 +91,13 @@ export function startListening(hooks: ListenHooks, lang?: string): boolean {
   let finalDelivered = false;
   const session: ListenSession = {
     recognition: r,
+    signal: hooks.signal,
     stopping: false,
     finish: (discard = false) => {
       if (ended) return;
       ended = true;
       if (active === session) active = null;
+      hooks.signal?.removeEventListener("abort", discardOwned);
       // Invalidate ownership before abort: browsers may dispatch events
       // synchronously as well as after this call.
       if (discard) {
@@ -100,6 +107,9 @@ export function startListening(hooks: ListenHooks, lang?: string): boolean {
     },
   };
   const ownsSession = () => active === session && !ended;
+  const discardOwned = () => {
+    if (ownsSession()) session.finish(true);
+  };
   r.addEventListener("start", () => {
     if (!ownsSession() || started || session.stopping) return;
     started = true;
@@ -139,6 +149,11 @@ export function startListening(hooks: ListenHooks, lang?: string): boolean {
     if (ownsSession()) session.finish();
   });
   active = session;
+  hooks.signal?.addEventListener("abort", discardOwned, { once: true });
+  if (hooks.signal?.aborted) {
+    session.finish(true);
+    return false;
+  }
   try {
     r.start();
   } catch (e) {
@@ -154,11 +169,13 @@ export function startListening(hooks: ListenHooks, lang?: string): boolean {
 /**
  * Finish the current utterance by default, accepting its one buffered final.
  * Teardown, unmount and cancellation must pass { discard: true }; replacement
- * does this internally. Discarded sessions cannot deliver further callbacks.
+ * does this internally. Pass the caller\'s signal to stop only its own utterance;
+ * aborting that signal is the owner-targeted teardown path. Discarded sessions
+ * cannot deliver further callbacks.
  */
-export function stopListening(options: { discard?: boolean } = {}): void {
+export function stopListening(options: { discard?: boolean; signal?: AbortSignal } = {}): void {
   const session = active;
-  if (!session) return;
+  if (!session || (options.signal && options.signal !== session.signal)) return;
   if (options.discard) {
     session.finish(true);
     return;
