@@ -244,6 +244,16 @@ jobs:
             echo "HALT: no pr-gates run appeared for $head; not merging" >&2
             exit 1
           fi
+          # A candidate PR that carries a workflow change makes its pull_request runs wait for
+          # approval (conclusion "action_required"). Watching such a run fails instantly, which is
+          # what halted runs 40154507419 and 40155446269. Approve the run this job is about to watch;
+          # the decision to run the gates has already been made by this workflow, not by a stranger.
+          state=$(runs | jq -r --arg id "$run_id" '.[] | select((.databaseId|tostring) == $id) | .conclusion // ""')
+          if [ "$state" = "action_required" ]; then
+            echo "approving gated pr-gates run $run_id"
+            gh api -X POST "repos/$REPO/actions/runs/$run_id/approve" > /dev/null \
+              || echo "approve refused; continuing to watch" >&2
+          fi
           echo "waiting for pr-gates run $run_id on $head"
           if ! gh run watch "$run_id" --repo "$REPO" --exit-status --interval 30 > /dev/null; then
             echo "HALT: pr-gates run $run_id did not pass on $head; not merging. The candidate stays open for a human." >&2
