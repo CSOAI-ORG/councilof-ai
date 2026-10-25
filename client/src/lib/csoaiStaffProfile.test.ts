@@ -143,7 +143,13 @@ describe("Cody staff presentation", () => {
   it("does not collide across proposal changes, any record reference or native commits", () => {
     const baseline = getCompanyCaseSpeech(pendingState(), options())!.key;
     const revised = proposed(); revised.persistence.changeRequestId = "review-b";
-    expect(getCompanyCaseSpeech({ status: "awaiting_review", value: revised }, options())?.key).not.toBe(baseline);
+    const revisedSpeech = getCompanyCaseSpeech({ status: "awaiting_review", value: revised }, options());
+    expect(revisedSpeech).toMatchObject({ status: "awaiting_review" });
+    expect(revisedSpeech!.key).not.toBe(baseline);
+    const reviewed = proposed(); reviewed.persistence.reviewStatus = "changes_requested";
+    const reviewedSpeech = getCompanyCaseSpeech({ status: "awaiting_review", value: reviewed }, options());
+    expect(reviewedSpeech).toMatchObject({ status: "awaiting_review" });
+    expect(reviewedSpeech!.key).not.toBe(baseline);
     for (const role of ["case", "result", "receipt"] as const) {
       for (const field of ["operationId", "headCommitId", "payloadSha256"] as const) {
         const value = proposed();
@@ -153,12 +159,15 @@ describe("Cody staff presentation", () => {
           value.receipt.resultId = value.result.id;
         }
         if (field === "headCommitId" && role === "receipt") value.receipt.id = value.persistence.proposedRecords.receipt.headCommitId;
-        expect(getCompanyCaseSpeech({ status: "awaiting_review", value }, options())?.key).not.toBe(baseline);
+        const speech = getCompanyCaseSpeech({ status: "awaiting_review", value }, options());
+        expect(speech).toMatchObject({ status: "awaiting_review" });
+        expect(speech!.key).not.toBe(baseline);
       }
     }
     const value = committed(); value.persistence.nativeCommitId = "commit-b";
-    expect(getCompanyCaseSpeech({ status: "saved", value }, options())?.key)
-      .not.toBe(getCompanyCaseSpeech(savedState(), options())?.key);
+    const changedCommit = getCompanyCaseSpeech({ status: "saved", value }, options());
+    expect(changedCommit).toMatchObject({ status: "saved" });
+    expect(changedCommit!.key).not.toBe(getCompanyCaseSpeech(savedState(), options())!.key);
   });
 
   it("never reads private result instructions aloud or includes them in the dedupe key", () => {
