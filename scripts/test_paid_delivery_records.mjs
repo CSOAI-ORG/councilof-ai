@@ -362,17 +362,58 @@ await test('full paid proof records exact bundle with one mock settlement',async
  const out=await proof.namespace.onRequestGet({request:new Request('https://example.test/api/proof?bundle=1',{headers:{'x-payment':'fixture'}}),env:{REVENUE_KV:kv}});
  const b=await bytes(out),row=JSON.parse(kv.map.get(h.deliveryTxKey('tx-fixture')));
  assert.equal(row.response_sha256,digest(b));assert.equal(row.response_bytes,b.length);
- assert.equal(JSON.parse(b).kind,'bundle');assert.equal(kv.puts,1);assert.equal(settlements,1);
+ assert.equal(b.toString('utf8'),JSON.stringify({schema:'csoai.public-root-proof/0.1',kind:'bundle',as_of:null,merkle_root:sha,n:1,proofs:[{sha256:sha,index:0,proof:[],merkle_root:sha,card_count:1}],note:'Paid bundle of inclusion proofs for the last published root. Not a grade.'},null,2));
+ assert.equal(out.status,200);assert.equal(out.headers.get(STATE),'WRITTEN');
+ assert.equal(out.headers.get('x-payment-response'),'opaque-echo');assert.equal(out.headers.get('x-csoai-delivery-state'),null);
+ assert.equal(kv.puts,1);assert.equal(settlements,1);
 });
-await test('full paid proof root failure creates no success row',async()=>{
- const kv=new Kv();settlements=0;cx.fetch=async()=>new Response(JSON.stringify({card_count:2,card_sha256:['a'.repeat(64)]}));
- const out=await proof.namespace.onRequestGet({request:new Request('https://example.test/api/proof?bundle=1',{headers:{'x-payment':'fixture'}}),env:{REVENUE_KV:kv}});
- assert.equal(out.status,503);assert.equal(kv.puts,0);assert.equal(settlements,1);
+const proofRefusals=[
+ {name:'root HTTP failure',mode:'root-http',status:404,reads:['/root.json'],body:{schema:'csoai.public-root-proof/0.1',error:'not_found',path:'/api/proof',unmeasured:['root.json'],reason:'static /root.json HTTP 503'}},
+ {name:'root count mismatch',mode:'root-count',status:503,reads:['/root.json'],body:{schema:'csoai.public-root-proof/0.1',error:'root_count_mismatch',path:'/api/proof',card_count:2,leaves:1,reason:'The published root declares 2 cards but ships 1 leaves. The signed count is what makes this tree unambiguous, so no inclusion proof is issued.'}},
+ {name:'cards bundle HTTP failure',mode:'bundle-http',status:404,reads:['/root.json','/cards-bundle.json'],body:{schema:'csoai.public-root-proof/0.1',error:'not_found',path:'/api/proof',unmeasured:['cards-bundle.json'],reason:'static /cards-bundle.json HTTP 502'}}
+];
+function proofRefusalFetch(mode,calls){
+ return async u=>{
+  const path=new URL(String(u)).pathname;calls.push(path);
+  if(path==='/root.json')return mode==='root-http'?new Response('unavailable',{status:503}):new Response(JSON.stringify({card_count:mode==='root-count'?2:1,card_sha256:['a'.repeat(64)],merkle_root:'a'.repeat(64)}));
+  if(path==='/cards-bundle.json'&&mode==='bundle-http')return new Response('unavailable',{status:502});
+  throw Error('unexpected proof fixture read '+path);
+ };
+}
+for(const c of proofRefusals){
+ await test('full paid proof '+c.name+' preserves failure and settlement without success row',async()=>{
+  const kv=new Kv(),calls=[];settlements=0;paymentAllowed=true;cx.fetch=proofRefusalFetch(c.mode,calls);
+  const out=await proof.namespace.onRequestGet({request:new Request('https://example.test/api/proof?bundle=1',{headers:{'x-payment':'fixture'}}),env:{REVENUE_KV:kv}});
+  assert.equal(out.status,c.status);assert.equal(await out.text(),JSON.stringify(c.body,null,2));assert.deepEqual(calls,c.reads);
+  assert.equal(out.headers.get(STATE),'NOT_DELIVERED');assert.equal(out.headers.get('x-csoai-delivery-state'),'PAID_NOT_DELIVERED');
+  assert.equal(out.headers.get('x-payment-response'),'opaque-echo');
+  const exposed=(out.headers.get('access-control-expose-headers')||'').toLowerCase().split(',').map(v=>v.trim());
+  assert.ok(exposed.includes(STATE));assert.ok(exposed.includes('x-payment-response'));
+  assert.equal(out.headers.get('content-type'),'application/json; charset=utf-8');assert.equal(out.headers.get('cache-control'),'no-store');assert.equal(out.headers.get('access-control-allow-origin'),'*');
+  assert.equal(kv.gets,0);assert.equal(kv.puts,0);assert.equal(kv.map.size,0);assert.equal(settlements,1);
+ });
+}
+for(const c of proofRefusals.filter(c=>c.mode!=='bundle-http')){
+ await test('full free proof '+c.name+' remains unchanged and never settles',async()=>{
+  const kv=new Kv(),calls=[];settlements=0;paymentAllowed=true;cx.fetch=proofRefusalFetch(c.mode,calls);
+  const out=await proof.namespace.onRequestGet({request:new Request('https://example.test/api/proof?sha=invalid'),env:{REVENUE_KV:kv}});
+  assert.equal(out.status,c.status);assert.equal(await out.text(),JSON.stringify(c.body,null,2));assert.deepEqual(calls,c.reads);
+  assert.equal(out.headers.get(STATE),null);assert.equal(out.headers.get('x-csoai-delivery-state'),null);assert.equal(out.headers.get('x-payment-response'),null);assert.equal(out.headers.get('access-control-expose-headers'),null);
+  assert.equal(out.headers.get('content-type'),'application/json; charset=utf-8');assert.equal(out.headers.get('cache-control'),'no-store');assert.equal(out.headers.get('access-control-allow-origin'),'*');
+  assert.equal(kv.gets,0);assert.equal(kv.puts,0);assert.equal(settlements,0);
+ });
+}
+await test('full unpaid proof bundle remains a challenge without source reads or delivery',async()=>{
+ const kv=new Kv(),calls=[];settlements=0;paymentAllowed=true;cx.fetch=proofRefusalFetch('root-http',calls);
+ const out=await proof.namespace.onRequestGet({request:new Request('https://example.test/api/proof?bundle=1'),env:{REVENUE_KV:kv}});
+ assert.equal(out.status,402);assert.deepEqual(calls,[]);assert.equal(kv.gets,0);assert.equal(kv.puts,0);assert.equal(settlements,0);
+ assert.equal(out.headers.get(STATE),null);assert.equal(out.headers.get('x-csoai-delivery-state'),null);assert.equal(out.headers.get('x-payment-response'),null);
 });
 await test('full free proof branch never settles or records',async()=>{
  const kv=new Kv();settlements=0;cx.fetch=async()=>new Response(JSON.stringify({card_count:0,card_sha256:[]}));
  const out=await proof.namespace.onRequestGet({request:new Request('https://example.test/api/proof?sha=invalid'),env:{REVENUE_KV:kv}});
  assert.equal(out.status,400);assert.equal(kv.puts,0);assert.equal(settlements,0);
+ assert.equal(out.headers.get(STATE),null);assert.equal(out.headers.get('x-csoai-delivery-state'),null);assert.equal(out.headers.get('x-payment-response'),null);
 });
 const providerPath='functions/api/feeds/provider-diff.ts';
 const providerImports={
