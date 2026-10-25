@@ -249,8 +249,11 @@ describe("one total deadline and no replay", () => {
     const response = await pending;
     expect(response.status).toBe(503);
     expect(await response.json()).toMatchObject({ saved: false, outcome_unknown: true, retry_post: false });
-    resolve(reply('{"schema":"meok.library-case/1","saved":true}', 200));
+    const cancel = vi.fn(() => new Promise<void>(() => {}));
+    const lateBody = new ReadableStream<Uint8Array>({ cancel }, { highWaterMark: 0 });
+    resolve(new Response(lateBody, { status: 200, headers: { "content-type": "application/json" } }));
     await vi.advanceTimersByTimeAsync(1);
+    expect(cancel).toHaveBeenCalledTimes(1);
     expect(response.status).toBe(503);
     expect(fetcher).toHaveBeenCalledTimes(1);
   });
@@ -304,4 +307,4 @@ describe("one total deadline and no replay", () => {
   });
 });
 // Node fetch mocks establish transport invariants, not production wire acceptance.
-// Receiver qualification must exercise the real edge/Tunnel before its origin is installed.
+// Incoming production disconnect propagation also needs enable_request_signal.\n// Receiver qualification must exercise the real edge/Tunnel before its origin is installed.

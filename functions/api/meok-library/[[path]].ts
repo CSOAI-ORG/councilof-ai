@@ -77,6 +77,9 @@ export async function relayCompanyCase(request: Request, env: Env): Promise<Resp
     rejectStop(new RelayError(503, "private_library_connection_unavailable"));
   };
   const timer = setTimeout(halt, TOTAL_MS);
+  // Incoming disconnect events additionally require Cloudflare's
+  // enable_request_signal compatibility flag. The total timer does not depend
+  // on it; Node abort tests do not qualify the production disconnect behavior.
   request.signal.addEventListener("abort", halt, { once: true });
   const active = () => {
     if (stopped) throw new RelayError(503, "private_library_connection_unavailable");
@@ -171,6 +174,14 @@ export async function relayCompanyCase(request: Request, env: Env): Promise<Resp
       // A fixed TypedArray lets Workers calculate Content-Length. Do not stream
       // an unknown-length body to the canonical receiver's strict HTTP parser.
       ...(body ? { body } : {}),
+    }).then(response => {
+      if (stopped) {
+        // An uncooperative fetch may return after the deadline. Do not retain
+        // its body, consume it, return success or trigger another request.
+        void response.body?.cancel().catch(() => {});
+        active();
+      }
+      return response;
     }));
     if (upstream.redirected || !([200, 202].includes(upstream.status) || ERROR_STATUSES.has(upstream.status)) ||
         !jsonType(upstream.headers)) {
