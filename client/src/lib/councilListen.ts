@@ -62,14 +62,19 @@ type ListenSession = {
 };
 
 let active: ListenSession | null = null;
+let startRequest = 0;
 
-/** Start one push-to-talk utterance. Returns false (and calls onError) when unavailable. */
+/** Start one utterance. Returns false if unavailable, cancelled or superseded during setup. */
 export function startListening(hooks: ListenHooks, lang?: string): boolean {
   // A cancelled caller must not retire a different panel\'s active microphone.
   if (hooks.signal?.aborted) return false;
+  const request = ++startRequest;
   // Replacement always discards the prior utterance. stop() alone may return
   // buffered speech after it returns, which must not become a new question.
   stopListening({ discard: true });
+  // The retired owner's onEnd may synchronously start a newer utterance.
+  // That newer request wins; never overwrite its owner or leave its mic live.
+  if (request !== startRequest) return false;
   const C = ctor();
   if (!C) {
     hooks.onError?.("This browser has no speech recognition. Type your question instead.");

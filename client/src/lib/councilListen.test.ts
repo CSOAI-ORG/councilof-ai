@@ -394,4 +394,40 @@ describe("push-to-talk session ownership", () => {
     expect(current.onEnd).not.toHaveBeenCalled();
     expect(isListening()).toBe(true);
   });
+
+  it("keeps the newer request when a retired owner's onEnd starts another utterance", () => {
+    const oldOwner = new AbortController();
+    const nextOwner = new AbortController();
+    const old = hooks();
+    const newest = hooks();
+    old.onEnd.mockImplementation(() => startListening({ ...newest, signal: nextOwner.signal }));
+    startListening({ ...old, signal: oldOwner.signal });
+    const first = latest();
+    const superseded = hooks();
+    expect(startListening(superseded)).toBe(false);
+    const current = latest();
+    // B never starts: retiring A synchronously starts C, which must stay owned.
+    expect(FakeRecognition.all).toHaveLength(2);
+    expect(first.abort).toHaveBeenCalledOnce();
+    expect(current).not.toBe(first);
+    expect(current.start).toHaveBeenCalledOnce();
+    expect(current.abort).not.toHaveBeenCalled();
+    expect(superseded.onStart).not.toHaveBeenCalled();
+    expect(superseded.onEnd).not.toHaveBeenCalled();
+    first.emit("start");
+    first.result("stale A");
+    first.emit("end");
+    oldOwner.abort();
+    expect(old.onEnd).toHaveBeenCalledOnce();
+    expect(newest.onEnd).not.toHaveBeenCalled();
+    expect(isListening()).toBe(true);
+    current.result("owned C");
+    expect(newest.onTranscript).toHaveBeenCalledWith("owned C", true);
+    // C's owner still has control; there is no unowned live recognizer.
+    nextOwner.abort();
+    expect(current.abort).toHaveBeenCalledOnce();
+    expect(newest.onEnd).toHaveBeenCalledOnce();
+    expect(isListening()).toBe(false);
+    expect(FakeRecognition.all.every((r) => r.abort.mock.calls.length === 1)).toBe(true);
+  });
 });
