@@ -57,17 +57,23 @@ export function getCompanyCaseSpeech(
     if ((state.status === "saved") !== value.persistence.merged) return null;
 
     const persistence = value.persistence;
-    const persistenceKey = persistence.merged
-      ? ["committed", persistence.nativeCommitId]
-      : [
+    let persistenceKey: unknown[];
+    if (persistence.merged === true) {
+      persistenceKey = ["committed", persistence.nativeCommitId];
+    } else if (persistence.merged === false) {
+      const proposals = persistence.proposedRecords;
+      persistenceKey = [
         "proposal",
         persistence.changeRequestId,
         persistence.reviewStatus,
         ...(["case", "result", "receipt"] as const).map((role) => {
-          const proposal = persistence.proposedRecords[role];
+          const proposal = proposals[role];
           return [role, proposal.operationId, proposal.headCommitId, proposal.payloadSha256];
         }),
       ];
+    } else {
+      return null;
+    }
     const key = JSON.stringify([
       value.ownerSubject, value.caseId, value.requestId,
       value.result.id, value.result.sha256,
