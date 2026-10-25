@@ -9,6 +9,7 @@
  */
 import manifest from "../../public/agent-plugin/manifest.json";
 import matrix from "../../public/agent-plugin/platform-matrix.json";
+import { headFromGet } from "./_head";
 
 const json = (body: unknown) =>
   new Response(JSON.stringify(body, null, 2), {
@@ -40,3 +41,7 @@ export const onRequestGet: PagesFunction = async () => {
     framing: "Measurement, never certification. Anyone can re-check at https://councilof.ai/verify",
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

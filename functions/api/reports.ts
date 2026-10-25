@@ -17,6 +17,7 @@ import { MEASURED_ON } from "./_gspc_types";
 import type { AxisScore } from "./_gspc_types";
 import reports from "../../public/agent-plugin/reports.json";
 import matrix from "../../public/agent-plugin/platform-matrix.json";
+import { headFromGet } from "./_head";
 
 const AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN, ...AXES_D];
 
@@ -74,3 +75,7 @@ export const onRequestGet: PagesFunction = async () => {
     framing: "Anyone can re-check at https://councilof.ai/verify",
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);
