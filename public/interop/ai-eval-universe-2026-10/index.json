@@ -1,0 +1,911 @@
+{
+ "schema": "csoai.ai-eval-universe/0.1",
+ "issued_at": "2026-10-26T03:33:59Z",
+ "title": "AI-evaluation market-universe gap map",
+ "what_this_is": "A measured directory of the public AI-evaluation universe, with what CSOAI has actually MEASURED alongside it. Repository stars are a popularity signal, not a capability measurement. Upstream listings are INDEXED, not measured by us.",
+ "what_this_does_not_establish": "That any competitor is good or bad, or that CSOAI is better than any of them. That the task counts are complete: a task that is not vendored in a repository is not counted, and a repository that is private is invisible here. That any star count says anything about measurement quality.",
+ "counting_rule": "Every count here is measured from the repository TREE at its default branch, with the SHA-256 of the API response recorded beside it. A count that could not be read is null, never 0.",
+ "candidate_readers": [
+  {
+   "reader": "helm",
+   "role": "MULTI_SUITE_SCENARIO_HARNESS_AND_LEADERBOARD",
+   "access": "PUBLIC_OPEN_SOURCE",
+   "families": [
+    "scenario_suite_authoring",
+    "multi_metric_reporting",
+    "contamination_notes"
+   ],
+   "repo": "stanford-crfm/helm",
+   "count": 290,
+   "csoai_gap": "HELM carries 290 scenario definition modules; CSOAI's board declares 33 axis slots, of which 23 carry a run. The units differ — one frozen bank per axis against 290 scenario modules — so the numbers are not a scoreboard. The difference is depth per axis, not slot count.",
+   "api_source": "https://api.github.com/repos/stanford-crfm/helm",
+   "api_response_sha256": "b3d75eb0bab3c22f1e0bb755fe1e4a2c9c605ed0bf25edf8e42c5a9e1d94eb35",
+   "state": "OBSERVED",
+   "source": "https://github.com/stanford-crfm/helm",
+   "stars_observed": 2958,
+   "forks_observed": 427,
+   "license_observed": "Apache-2.0",
+   "pushed_at_observed": "2026-09-01T01:33:19Z",
+   "archived": false,
+   "description_observed": "Holistic Evaluation of Language Models (HELM) is an open source Python framework created by the Center for Research on Foundation Models (CRFM) at Stanford for holistic, reproducible and transparent e",
+   "tree_source": "https://api.github.com/repos/stanford-crfm/helm/git/trees/main?recursive=1",
+   "tree_response_sha256": "544d285c2917efe3848052926c0bfa259ffe3c44402810cf10dfbd288fdf85e5",
+   "count_state": "MEASURED",
+   "count_label": "scenario_definition_modules",
+   "count_basis": "blob count over the repository tree at main"
+  },
+  {
+   "reader": "inspect_ai",
+   "role": "EVAL_HARNESS_AND_LOG_ARTIFACT_FORMAT",
+   "access": "PUBLIC_OPEN_SOURCE",
+   "families": [
+    "harness_execution",
+    "log_artifact_formats",
+    "solver_sandboxes"
+   ],
+   "repo": "UKGovernmentBEIS/inspect_ai",
+   "count": null,
+   "count_note": "A harness, not a task set. Its measured quantity is the log format, not a task count.",
+   "csoai_gap": "Inspect's portable log artifact is the closest thing in this universe to a replayable measurement record. CSOAI publishes no comparable per-run log schema: its 9 deterministic-fact run artifacts are content-addressed, and 7 of them are unsigned.",
+   "api_source": "https://api.github.com/repos/UKGovernmentBEIS/inspect_ai",
+   "api_response_sha256": "8b97dc656c3a063930564a08c44120b4afeea601c1a51a927439accb3075bd07",
+   "state": "OBSERVED",
+   "source": "https://github.com/UKGovernmentBEIS/inspect_ai",
+   "stars_observed": 3094,
+   "forks_observed": 862,
+   "license_observed": "MIT",
+   "pushed_at_observed": "2026-10-26T00:33:11Z",
+   "archived": false,
+   "description_observed": "Inspect: A framework for large language model evaluations"
+  },
+  {
+   "reader": "inspect_evals",
+   "role": "PUBLISHED_EVAL_SUITE",
+   "access": "PUBLIC_OPEN_SOURCE",
+   "families": [
+    "task_suites",
+    "capability_evals",
+    "sandboxed_agentic_evals"
+   ],
+   "repo": "UKGovernmentBEIS/inspect_evals",
+   "count": 55,
+   "csoai_gap": "55 registered evals against 33 declared axis slots. Different units again: a registered eval is a task suite, an axis is a measured behavioural family.",
+   "api_source": "https://api.github.com/repos/UKGovernmentBEIS/inspect_evals",
+   "api_response_sha256": "24ed5efb4ffcadbe8b1d86ad171eb2c2f5576ae1cdedfa3d181e9e8ffbb4c676",
+   "state": "OBSERVED",
+   "source": "https://github.com/UKGovernmentBEIS/inspect_evals",
+   "stars_observed": 718,
+   "forks_observed": 468,
+   "license_observed": "MIT",
+   "pushed_at_observed": "2026-10-23T08:53:56Z",
+   "archived": false,
+   "description_observed": "Collection of evals for Inspect AI",
+   "tree_source": "https://api.github.com/repos/UKGovernmentBEIS/inspect_evals/git/trees/main?recursive=1",
+   "tree_response_sha256": "78e17f504e31d4c190afc552ce4b105eb4b07d647c4568826796fde5ce8d7484",
+   "count_state": "MEASURED",
+   "count_label": "registered_evals",
+   "count_basis": "blob count over the repository tree at main"
+  },
+  {
+   "reader": "control_arena",
+   "role": "CONTROL_EVAL_SUITE",
+   "access": "PUBLIC_OPEN_SOURCE",
+   "families": [
+    "agentic_control_evals"
+   ],
+   "repo": "UKGovernmentBEIS/control-arena",
+   "count": 27,
+   "csoai_gap": "27 control-task definition files. CSOAI has no control-task suite: its swarm and cross-reality axes are behavioural fleet measurements over a frozen bank, not agentic control tasks.",
+   "api_source": "https://api.github.com/repos/UKGovernmentBEIS/control-arena",
+   "api_response_sha256": "7686e54480bc6ddb149be00da781ffe6b7b6ff5e74d5fa375963f77530467a59",
+   "state": "OBSERVED",
+   "source": "https://github.com/UKGovernmentBEIS/control-arena",
+   "stars_observed": 260,
+   "forks_observed": 155,
+   "license_observed": "MIT",
+   "pushed_at_observed": "2026-10-22T15:58:13Z",
+   "archived": false,
+   "description_observed": "ControlArena is a collection of settings, model organisms and protocols - for running control experiments.",
+   "tree_source": "https://api.github.com/repos/UKGovernmentBEIS/control-arena/git/trees/main?recursive=1",
+   "tree_response_sha256": "726cb999a63435e9bbb29fa889a5480d5423a452fc74a56b9f8fa45b886e6b72",
+   "count_state": "MEASURED",
+   "count_label": "task_definition_files",
+   "count_basis": "blob count over the repository tree at main"
+  },
+  {
+   "reader": "livebench",
+   "role": "CONTAMINATION_RESISTANT_LIVE_QUESTION_SET",
+   "access": "PUBLIC_OPEN_SOURCE",
+   "families": [
+    "live_question_sets",
+    "contamination_resistance"
+   ],
+   "repo": "LiveBench/LiveBench",
+   "count": null,
+   "count_note": "UNMEASURED here: the question set is not vendored in the repository. livebench/download_questions.py fetches it at run time, and the dataset API answered HTTP 401 from this environment. A count with no source is null.",
+   "csoai_gap": "LiveBench's contamination-resistant live question set is not vendored, so its size is UNMEASURED here. CSOAI's banks are frozen and sha-pinned, which is the opposite trade: reproducibility against contamination. Neither is wrong; they answer different questions.",
+   "api_source": "https://api.github.com/repos/LiveBench/LiveBench",
+   "api_response_sha256": "6a76ef0a84ac1beb3222a621ab49161ad7438012d46e8bb8d407a488f910d5e0",
+   "state": "OBSERVED",
+   "source": "https://github.com/LiveBench/LiveBench",
+   "stars_observed": 1346,
+   "forks_observed": 127,
+   "license_observed": "NOASSERTION",
+   "pushed_at_observed": "2026-10-18T01:48:44Z",
+   "archived": false,
+   "description_observed": "LiveBench: A Challenging, Contamination-Free LLM Benchmark"
+  },
+  {
+   "reader": "fastchat_lmarena",
+   "role": "ARENA_PAIRWISE_PREFERENCE_ELO",
+   "access": "PUBLIC_OPEN_SOURCE",
+   "families": [
+    "pairwise_preference_elo",
+    "human_preference_leaderboards"
+   ],
+   "repo": "lm-sys/FastChat",
+   "count": null,
+   "count_note": "A serving and leaderboard stack, not a task set. Its measured quantity is the live Elo on lm-sys.github.io, which is not a pinned artefact.",
+   "csoai_gap": "The arena separates models on live human preference. CSOAI separates nothing: 0 of 14 model-comparison axes separated a leader, 7 are TIE and 7 UNTESTED. A pairwise human-preference signal and a frozen deterministic bank are not interchangeable.",
+   "api_source": "https://api.github.com/repos/lm-sys/FastChat",
+   "api_response_sha256": "8e7e25dc44d39f00fe0a4541d57602942918af46df5aecb31b6d6d3d379194c9",
+   "state": "OBSERVED",
+   "source": "https://github.com/lm-sys/FastChat",
+   "stars_observed": 39552,
+   "forks_observed": 4777,
+   "license_observed": "Apache-2.0",
+   "pushed_at_observed": "2026-05-01T00:25:53Z",
+   "archived": false,
+   "description_observed": "An open platform for training, serving, and evaluating large language models. Release repo for Vicuna and Chatbot Arena."
+  },
+  {
+   "reader": "arena_hard_auto",
+   "role": "ARENA_DERIVED_HARD_SUBSET_WITH_AUTOMATIC_JUDGE",
+   "access": "PUBLIC_OPEN_SOURCE",
+   "families": [
+    "arena_prompts",
+    "automatic_judging"
+   ],
+   "repo": "lmarena/arena-hard-auto",
+   "count": null,
+   "count_note": "A prompt subset with an automatic judge, not a task suite with a frozen bank. Its size is not counted here.",
+   "csoai_gap": "1,084 stars, last pushed 2025-06-21 — a hard subset of arena prompts with an automatic judge. CSOAI publishes no arena-derived prompt subset and no automatic judge: its grader is a deterministic behaviour-class judge over a frozen bank.",
+   "api_source": "https://api.github.com/repos/lmarena/arena-hard-auto",
+   "api_response_sha256": "70d0b756dec80f2fce95fdb6598ace8a1c41de40deca498fa2d4565c6776b43e",
+   "state": "OBSERVED",
+   "source": "https://github.com/lmarena/arena-hard-auto",
+   "stars_observed": 1084,
+   "forks_observed": 163,
+   "license_observed": "Apache-2.0",
+   "pushed_at_observed": "2025-06-21T04:44:12Z",
+   "archived": false,
+   "description_observed": "Arena-Hard-Auto: An automatic LLM benchmark. "
+  },
+  {
+   "reader": "metr_public_tasks",
+   "role": "PUBLISHED_AGENTIC_TASK_SET",
+   "access": "PUBLIC_OPEN_SOURCE",
+   "families": [
+    "agentic_task_sets",
+    "long_horizon_tasks"
+   ],
+   "repo": "METR/public-tasks",
+   "count": 11,
+   "csoai_gap": "11 published agentic task directories. CSOAI publishes no open task set; its agentic work is a behavioural fleet measurement over a frozen bank, plus a signed card corpus.",
+   "api_source": "https://api.github.com/repos/METR/public-tasks",
+   "api_response_sha256": "09f940e9b1ebb3f9c958a47ea47ee542f36731597a33b5879396d1bc01cc09f5",
+   "state": "OBSERVED",
+   "source": "https://github.com/METR/public-tasks",
+   "stars_observed": 137,
+   "forks_observed": 22,
+   "license_observed": "NOASSERTION",
+   "pushed_at_observed": "2026-10-20T15:38:37Z",
+   "archived": true,
+   "description_observed": "",
+   "tree_source": "https://api.github.com/repos/METR/public-tasks/git/trees/main?recursive=1",
+   "tree_response_sha256": "23dac4aa154df407f4533c16d348b55c222ddbccb97a327a61fcc2fb2ad1fb60",
+   "count_state": "MEASURED",
+   "count_label": "task_directories",
+   "count_basis": "tree count over the repository tree at main"
+  },
+  {
+   "reader": "metr_task_standard",
+   "role": "AGENTIC_TASK_SPECIFICATION_STANDARD",
+   "access": "PUBLIC_OPEN_SOURCE",
+   "families": [
+    "task_specification_standard",
+    "driver_interfaces"
+   ],
+   "repo": "METR/task-standard",
+   "count": null,
+   "count_note": "A specification (STANDARD.md plus drivers/), not a task set. It defines the shape of a task; it holds no tasks.",
+   "csoai_gap": "A task-specification standard for agentic evaluation. CSOAI publishes no comparable standard: its task definition is a frozen, sha-pinned bank, not a specification third parties can implement.",
+   "api_source": "https://api.github.com/repos/METR/task-standard",
+   "api_response_sha256": "92dc1e2e18121cfcf86d60acc357e5be23af1e6e969abc6006db2bdf1298656c",
+   "state": "OBSERVED",
+   "source": "https://github.com/METR/task-standard",
+   "stars_observed": 198,
+   "forks_observed": 40,
+   "license_observed": "MIT",
+   "pushed_at_observed": "2026-10-07T14:04:00Z",
+   "archived": true,
+   "description_observed": "METR Task Standard"
+  },
+  {
+   "reader": "metr_hawk",
+   "role": "AGENTIC_EVAL_HARNESS",
+   "access": "PUBLIC_OPEN_SOURCE",
+   "families": [
+    "harness_execution"
+   ],
+   "repo": "METR/hawk",
+   "count": null,
+   "count_note": "A harness, not a task set.",
+   "csoai_gap": "An agentic evaluation harness. CSOAI's harness appears in the AIBOM as a named application component, but it is not published as a harness others can run.",
+   "api_source": "https://api.github.com/repos/METR/hawk",
+   "api_response_sha256": "6bf55a3953e9d32a7723957cb029097be10a05094dfccfd786912d2b032e3166",
+   "state": "OBSERVED",
+   "source": "https://github.com/METR/hawk",
+   "stars_observed": 97,
+   "forks_observed": 59,
+   "license_observed": "MIT",
+   "pushed_at_observed": "2026-10-26T03:25:48Z",
+   "archived": false,
+   "description_observed": "Run Inspect AI evals in the cloud"
+  },
+  {
+   "reader": "metr_rebench",
+   "role": "REPEATED_RUN_EVAL_PROTOCOL",
+   "access": "PUBLIC_OPEN_SOURCE",
+   "families": [
+    "variance_control",
+    "repeated_runs"
+   ],
+   "repo": "METR/RE-Bench",
+   "count": null,
+   "count_note": "A protocol for repeated runs, not a task set.",
+   "csoai_gap": "A protocol for repeated runs to control variance. CSOAI's separation rule is the board's own; there is no published repeated-run protocol for third parties to reproduce it with.",
+   "api_source": "https://api.github.com/repos/METR/RE-Bench",
+   "api_response_sha256": "082c15e70088e49f7efef1f3662e4535f5040be832271d3c5a76534bf04fe9e4",
+   "state": "OBSERVED",
+   "source": "https://github.com/METR/RE-Bench",
+   "stars_observed": 171,
+   "forks_observed": 26,
+   "license_observed": "NOASSERTION",
+   "pushed_at_observed": "2026-10-20T16:25:18Z",
+   "archived": true,
+   "description_observed": ""
+  },
+  {
+   "reader": "lm_eval_harness",
+   "role": "TASK_ADAPTER_LIBRARY",
+   "access": "PUBLIC_OPEN_SOURCE",
+   "families": [
+    "task_adapters",
+    "harness_execution"
+   ],
+   "repo": "EleutherAI/lm-evaluation-harness",
+   "count": 221,
+   "csoai_gap": "221 task directories against 33 declared axis slots. A task adapter library and a behavioural axis are different objects; the counts are not comparable and are not offered as a comparison.",
+   "api_source": "https://api.github.com/repos/EleutherAI/lm-evaluation-harness",
+   "api_response_sha256": "cdc7ddd948636e3bbb06647c005279b672c933ca44fee2c67b06027eab17a5c6",
+   "state": "OBSERVED",
+   "source": "https://github.com/EleutherAI/lm-evaluation-harness",
+   "stars_observed": 14316,
+   "forks_observed": 3725,
+   "license_observed": "MIT",
+   "pushed_at_observed": "2026-09-14T10:51:06Z",
+   "archived": false,
+   "description_observed": "A framework for few-shot evaluation of language models.",
+   "tree_source": "https://api.github.com/repos/EleutherAI/lm-evaluation-harness/git/trees/main?recursive=1",
+   "tree_response_sha256": "d25e9c3d13d7f435fa18fc1a28b8537783dc6bac053ba60c974966953cabe68d",
+   "count_state": "MEASURED",
+   "count_label": "task_directories",
+   "count_basis": "tree count over the repository tree at main"
+  },
+  {
+   "reader": "deepeval",
+   "role": "COMMERCIAL_EVAL_HARNESS_AND_REPORTING",
+   "access": "PUBLIC_OPEN_SOURCE",
+   "families": [
+    "harness_execution",
+    "reporting"
+   ],
+   "repo": "confident-ai/deepeval",
+   "count": null,
+   "count_note": "A harness and reporting product, not a published task set.",
+   "csoai_gap": "A commercial harness with reporting. CSOAI's board is free forever and publishes no reporting product — the door charges for nothing.",
+   "api_source": "https://api.github.com/repos/confident-ai/deepeval",
+   "api_response_sha256": "30b2df40ca5257106f30c110bf5a3a45634274683f048434f8d70ecc61bbb02a",
+   "state": "OBSERVED",
+   "source": "https://github.com/confident-ai/deepeval",
+   "stars_observed": 19102,
+   "forks_observed": 2132,
+   "license_observed": "Apache-2.0",
+   "pushed_at_observed": "2026-10-23T11:41:01Z",
+   "archived": false,
+   "description_observed": "The LLM Evaluation Framework"
+  },
+  {
+   "reader": "openai_evals",
+   "role": "PUBLISHED_EVAL_CATALOGUE",
+   "access": "PUBLIC_OPEN_SOURCE",
+   "families": [
+    "capability_evals"
+   ],
+   "repo": "openai/evals",
+   "count": null,
+   "count_note": "A catalogue of small eval suites.",
+   "csoai_gap": "A catalogue of small eval suites. CSOAI's board is one frozen method per axis with n_valid >= 30, not a catalogue of many small suites.",
+   "api_source": "https://api.github.com/repos/openai/evals",
+   "api_response_sha256": "8d92a3d0753cd1c80c2881bf1a5ac62f513fa85679d720254c3f412dc54afcfc",
+   "state": "OBSERVED",
+   "source": "https://github.com/openai/evals",
+   "stars_observed": 19653,
+   "forks_observed": 3121,
+   "license_observed": "NOASSERTION",
+   "pushed_at_observed": "2026-04-14T15:29:57Z",
+   "archived": false,
+   "description_observed": "Evals is a framework for evaluating LLMs and LLM systems, and an open-source registry of benchmarks."
+  },
+  {
+   "reader": "simple_evals",
+   "role": "PUBLISHED_EVAL_CATALOGUE",
+   "access": "PUBLIC_OPEN_SOURCE",
+   "families": [
+    "capability_evals"
+   ],
+   "repo": "openai/simple-evals",
+   "count": null,
+   "count_note": "A catalogue of small eval suites.",
+   "csoai_gap": "A catalogue of small eval suites, same shape as above.",
+   "api_source": "https://api.github.com/repos/openai/simple-evals",
+   "api_response_sha256": "2b8d74d729074b1562db5e58f631dbea149d836f736ebaf6e5a536ab24807070",
+   "state": "OBSERVED",
+   "source": "https://github.com/openai/simple-evals",
+   "stars_observed": 4673,
+   "forks_observed": 517,
+   "license_observed": "MIT",
+   "pushed_at_observed": "2026-04-22T22:16:18Z",
+   "archived": false,
+   "description_observed": ""
+  },
+  {
+   "reader": "big_bench",
+   "role": "TASK_CATALOGUE",
+   "access": "PUBLIC_OPEN_SOURCE",
+   "families": [
+    "task_catalogue",
+    "hard_task_curation"
+   ],
+   "repo": "google/BIG-bench",
+   "count": null,
+   "count_note": "A task catalogue (3,245 stars, last pushed 2024-07-19).",
+   "csoai_gap": "A large task catalogue. CSOAI's banks are frozen and sha-pinned but not published as an open catalogue of task definitions a third party can extend.",
+   "api_source": "https://api.github.com/repos/google/BIG-bench",
+   "api_response_sha256": "06e05067dfe92d60ac1a5e20bc4c1160802a84cea14978384d4e9fb54a29df23",
+   "state": "OBSERVED",
+   "source": "https://github.com/google/BIG-bench",
+   "stars_observed": 3245,
+   "forks_observed": 617,
+   "license_observed": "Apache-2.0",
+   "pushed_at_observed": "2024-07-19T11:57:37Z",
+   "archived": true,
+   "description_observed": "Beyond the Imitation Game collaborative benchmark for measuring and extrapolating the capabilities of language models"
+  },
+  {
+   "reader": "big_bench_hard",
+   "role": "HARD_TASK_SUBSET",
+   "access": "PUBLIC_OPEN_SOURCE",
+   "families": [
+    "hard_task_curation"
+   ],
+   "repo": "suzgunmirac/BIG-Bench-Hard",
+   "count": null,
+   "count_note": "A hard subset of BIG-bench (579 stars, last pushed 2024-06-25).",
+   "csoai_gap": "A hard subset of BIG-bench, last pushed 2024-06-25. Nothing corresponding is published by CSOAI.",
+   "api_source": "https://api.github.com/repos/suzgunmirac/BIG-Bench-Hard",
+   "api_response_sha256": "aa1f63b6c2c4116871d2fb562cb4c03a6272ecfcaffffc85c68481faa7a161ee",
+   "state": "OBSERVED",
+   "source": "https://github.com/suzgunmirac/BIG-Bench-Hard",
+   "stars_observed": 579,
+   "forks_observed": 32,
+   "license_observed": "MIT",
+   "pushed_at_observed": "2024-06-25T20:16:12Z",
+   "archived": false,
+   "description_observed": "Challenging BIG-Bench Tasks and Whether Chain-of-Thought Can Solve Them"
+  },
+  {
+   "reader": "mlcommons_modelbench",
+   "role": "SAFETY_BENCHMARK_RUNNER",
+   "access": "PUBLIC_OPEN_SOURCE",
+   "families": [
+    "safety_benchmarks",
+    "model_risk_reporting"
+   ],
+   "repo": "mlcommons/modelbench",
+   "count": null,
+   "count_note": "A runner and report generator for safety benchmarks.",
+   "csoai_gap": "A runner and report generator over safety benchmarks. CSOAI's safety axis is one frozen behavioural bank, not a runner that executes third-party benchmark suites.",
+   "api_source": "https://api.github.com/repos/mlcommons/modelbench",
+   "api_response_sha256": "8feb80f03ac2c22f1e8f815e8e34f5afa091f28da5e3f44042f5abcf9a794ca3",
+   "state": "OBSERVED",
+   "source": "https://github.com/mlcommons/modelbench",
+   "stars_observed": 137,
+   "forks_observed": 39,
+   "license_observed": "Apache-2.0",
+   "pushed_at_observed": "2026-10-23T19:13:41Z",
+   "archived": false,
+   "description_observed": "Run safety benchmarks against AI models and view detailed reports showing how well they performed."
+  },
+  {
+   "reader": "mlcommons_ailuminate",
+   "role": "AI_RISK_ASSESSMENT_SUITE",
+   "access": "PUBLIC_OPEN_SOURCE",
+   "families": [
+    "risk_assessment",
+    "safety_benchmarks"
+   ],
+   "repo": "mlcommons/ailuminate",
+   "count": null,
+   "count_note": "The AILuminate v1.1 risk-assessment suite.",
+   "csoai_gap": "An AI risk-assessment suite with its own scoring. CSOAI's regulatory-framework axis measures regime FACTS and carries no risk score — a measurement, not a risk assessment.",
+   "api_source": "https://api.github.com/repos/mlcommons/ailuminate",
+   "api_response_sha256": "42611a7f29a50d3786dbd03a1bc157850cb70949ea864448edc55e8c964248b4",
+   "state": "OBSERVED",
+   "source": "https://github.com/mlcommons/ailuminate",
+   "stars_observed": 85,
+   "forks_observed": 22,
+   "license_observed": "Apache-2.0",
+   "pushed_at_observed": "2025-06-11T19:55:09Z",
+   "archived": false,
+   "description_observed": "The AILuminate v1.1 benchmark suite is an AI risk assessment benchmark developed with broad involvement from leading AI companies, academia, and civil society."
+  }
+ ],
+ "readers_not_located": [
+  {
+   "reader": "epoch_research",
+   "role": "FRONTIER_EVAL_RESEARCH",
+   "access": "PUBLIC_OPEN_SOURCE",
+   "families": [
+    "frontier_evals",
+    "difficulty_targeting"
+   ],
+   "state": "NOT_LOCATED",
+   "queried": [
+    "https://api.github.com/orgs/epoch-research/repos",
+    "https://api.github.com/repos/epoch-research/ftm",
+    "https://api.github.com/repos/epoch-research/SWE-bench"
+   ],
+   "finding": "The org's public repositories were listed. The two candidates that look like evaluation suites are not: epoch-research/ftm (25 stars) describes itself as 'Work in progress! I don't recommend looking at the code right now.', and epoch-research/SWE-bench (20 stars) is a 'Docker image registry for SWE-bench'. No published, countable evaluation suite was found."
+  },
+  {
+   "reader": "safe",
+   "role": "FACTUALITY_EVAL_SUITE",
+   "access": "PUBLIC_OPEN_SOURCE",
+   "families": [
+    "factuality",
+    "hallucination_detection"
+   ],
+   "state": "NOT_LOCATED",
+   "queried": [
+    "https://api.github.com/repos/holistic-eval/SAFE",
+    "https://api.github.com/repos/stanfordnlp/SAFE",
+    "https://api.github.com/repos/stanfordnlp/SAFER",
+    "https://api.github.com/repos/TIGER-AI-Lab/SAFE",
+    "https://api.github.com/repos/google-research/safe",
+    "https://api.github.com/repos/sahoojag/SAFE",
+    "https://api.github.com/orgs/holistic-eval/repos",
+    "https://api.github.com/search/repositories?q=SAFE+in:name+org:holistic-eval"
+   ],
+   "finding": "Every candidate path answered HTTP 404, and the organisation endpoint answered HTTP 422 (the org does not exist). The repository for this suite was not located from this environment. A null, not a zero."
+  },
+  {
+   "reader": "lmarena_github_org",
+   "role": "ARENA_ORGANISATION_REPOSITORIES",
+   "access": "PUBLIC_OPEN_SOURCE",
+   "families": [
+    "pairwise_preference_elo"
+   ],
+   "state": "NOT_LOCATED",
+   "queried": [
+    "https://api.github.com/orgs/lmarena-ai/repos",
+    "https://api.github.com/users/lmarena-ai/repos"
+   ],
+   "finding": "Both the organisation and the user endpoints answered HTTP 404. The arena's code on GitHub is lm-sys/FastChat, which is listed above. The absence of a separate organisation is a measurement, not a zero."
+  }
+ ],
+ "csoai_gaps": [
+  {
+   "gap": "The whole subject axis family is declared and unmeasured: lab practice, company practice, measurer integrity, harness fidelity, interop conformance, humanoid deployment, regulator transparency, interpretability/reproducibility, claim maintenance and serving fidelity.",
+   "state": "MEASURED=0",
+   "field_path": "/api/gspc totals.by_family.subject.measured",
+   "value": 0,
+   "declared": 10,
+   "note": "The subject axes (2026-10-16): each applies to ONE subject type (applies_to). Declared slots, UNMEASURED until a frozen sha-pinned bank with n_valid >= 30 passes the gate. Census checks are a DISCOVERED check grid, never scores here. No aggregate score and no overall rank."
+  },
+  {
+   "gap": "No model-comparison axis separates a leader, so the board states TIE and UNTESTED rather than a ranking.",
+   "state": "SEPARATED_LEADS=0",
+   "field_path": "/api/gspc totals.separated_leads",
+   "value": 0,
+   "ties": 7,
+   "untested_separations": 7
+  },
+  {
+   "gap": "Most deterministic-fact run artifacts are content-addressed but unsigned, so the evidence chain for those axes rests on identity of bytes, not on a signer.",
+   "state": "PARTIALLY_SIGNED",
+   "field_path": "/api/gspc totals.financial_run_attestations.ed25519_signed",
+   "value": 2,
+   "run_artifacts": 9,
+   "content_addressed_unsigned": 7
+  },
+  {
+   "gap": "Three measured axes carry no public leader, because the named leader holds no signed per-model card in the public card index. The axis stays MEASURED; the unverifiable leader claim is dropped rather than invented.",
+   "state": "LEADER_DROPPED",
+   "field_path": "/api/gspc totals.uncarded_leaders_dropped",
+   "value": 3,
+   "axes": [
+    "machinery-conformity",
+    "cross-reality",
+    "detector-interop"
+   ]
+  },
+  {
+   "gap": "Our own specialist models are excluded from public leader attribution on eight axes, so the public board reports external leaders only. This is a governance rule, not a measurement gap, and it is stated rather than hidden.",
+   "state": "OWN_MODELS_EXCLUDED",
+   "field_path": "/api/gspc totals.own_leaders_excluded",
+   "value": 8,
+   "axes": [
+    "governance",
+    "provenance",
+    "continuity",
+    "conformance",
+    "openness",
+    "care",
+    "art5-safeguard",
+    "affect"
+   ]
+  },
+  {
+   "gap": "The board's scale is declared slots, not a published catalogue of task definitions. Readers here that publish task directories are not comparable to us by count; the comparison is in what is published, not how many rows there are.",
+   "state": "DECLARED_SLOTS",
+   "field_path": "/api/gspc totals.axes",
+   "value": 33,
+   "measured_axes": 23,
+   "unmeasured_axes": 10
+  }
+ ],
+ "current_csoai_coverage": {
+  "source": "https://councilof.ai/api/gspc",
+  "state": "OBSERVED",
+  "totals": {
+   "axes": 33,
+   "measured_axes": 23,
+   "unmeasured_axes": 10,
+   "quotable_axes": 23,
+   "public_count": "33 axes · 23 measured",
+   "separation_public_count": "0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED",
+   "separation_public_count_note": "Read with public_count, never instead of it. measured_axes counts axes with a RUN behind them; it is not a count of axes with a separated result. SEPARATED, TIE and UNTESTED are three states and none is folded into another. Derived from the axis array, never typed. The same three numbers appear below as separated_leads / ties / untested_separations and in limitations[0]; there is one derivation.",
+   "model_fleets": 14,
+   "model_fleets_note": "Counts model-comparison AXES (one fleet per axis), not models. The number of distinct models measured is a different quantity, derived from the signed cards: /interop/models-measured.json (list at /models-measured/).",
+   "fact_runs": 9,
+   "count_grammar": "33 axes are on the board; 23 of them carry a measurement and 10 are declared slots with no run behind them. The larger number counts slots, the smaller counts measurements — quote both or quote the smaller. A published slot exists so the gap is visible; it is not evidence of anything having been measured. A measurement is not a separated leader either: 0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED.",
+   "by_family": {
+    "gspc": {
+     "axes": 15,
+     "measured": 15,
+     "note": "The 14 behavioural axes: a model fleet answers a frozen bank, graded deterministically. Plus effect-binding (ADR-002), a deterministic-facts probe of tool-call SERVERS, not a fleet: n counts servers probed, it has no leader, no accuracy and no separation, and it joins no mean."
+    },
+    "subject": {
+     "axes": 10,
+     "measured": 0,
+     "note": "The subject axes (2026-10-16): each applies to ONE subject type (applies_to). Declared slots, UNMEASURED until a frozen sha-pinned bank with n_valid >= 30 passes the gate. Census checks are a DISCOVERED check grid, never scores here. No aggregate score and no overall rank."
+    },
+    "financial": {
+     "axes": 8,
+     "measured": 8,
+     "as_of": "2026-09-17T12:58:11Z",
+     "reader_state": "REACHABLE",
+     "reader_as_of": "2026-09-15T07:13:43Z",
+     "source": "/interop/financial-facts-as-of.json",
+     "risk_verdict": "UNMEASURED",
+     "note": "The 8 financial/domain axes (ADR-001), all MEASURED as deterministic-facts runs — issuer-account flags read off the public ledger (financial n=16 on the live XRPL reader; provenance-controls n=6) and public statistical series, graded by rule with no model, no fleet and no judgement. None of the eight is a model comparison, so none has a leader, an accuracy or a separation determination, and none contributes to any mean below — measured is not the same as scored. The two former index slots are measured as component facts (ai-adoption-components, labour-components), never restored to the retired MEASURED-INDEX-v0.1 sticker (C-2026-0826-05). as_of is the producer run (scripts/grade_financial_ledgers.py), never a typed 2026-08-25."
+    }
+   },
+   "sweep_note": "Swept 2026-08-26 under ADR-001. The 8 financial/domain axes were ruled in on 2026-08-24 but were absent from this payload until the sweep, so this endpoint reported 14 — the un-swept state. All 8 now carry published deterministic-facts run artifacts. Today 23 of 33 axes on the board carry a run behind them: 14 model-comparison and 9 deterministic-fact axes. The fact axes carry no accuracy and no leader — measured is not the same as scored. 2 run artifacts carry an Ed25519 signature; 7 are content-addressed but unsigned. No signature is inferred from a content_id.",
+   "financial_run_attestations": {
+    "run_artifacts": 9,
+    "ed25519_signed": 2,
+    "content_addressed_unsigned": 7,
+    "signed_axes": [
+     "effect-binding",
+     "provenance-controls"
+    ],
+    "unsigned_axes": [
+     "reserve-attestation",
+     "regulatory-framework",
+     "distribution-integrity",
+     "custody-disclosure",
+     "ai-adoption-components",
+     "labour-components",
+     "humanoid-labour-index"
+    ],
+    "note": "Derived from each deterministic-facts axis's run_attestation field, in BOTH families since 2026-09-22 (effect-binding is a gspc-family fact run). A content_id proves identity of bytes, not signer authorization."
+   },
+   "license": "CC-BY-4.0",
+   "license_note": "Board data is CC-BY-4.0 (attribute: Council of AI, CSOAI Ltd 16939677, councilof.ai). Our own valve-2 bench-card flagged the payload's missing licence field — fixed same day.",
+   "items": 1230,
+   "items_note": "items sums each axis's n. Financial-axis n values count issuer accounts, public series, or frozen vendor URLs as declared on each row — not bank items. Unmeasured slots contribute 0 because nothing was measured. Read items as 'rows behind the board', not as a single comparable sample.",
+   "comparison_axes": 14,
+   "separated_leads": 0,
+   "ties": 7,
+   "untested_separations": 7,
+   "separation_scope_note": "Separation asks whether a leader's lead over a fleet is statistically real, so it applies only to the model-comparison axes. The financial axes have no fleet and no leader: they are not counted as untested, because no separation test is applicable to them.",
+   "externally_led_axes": 9,
+   "public_leader_count": 9,
+   "lid": "23 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 9 fact runs · TIE is TIE · not a certificate.",
+   "own_leaders_excluded": 8,
+   "own_leaders_excluded_axes": [
+    "governance",
+    "provenance",
+    "continuity",
+    "conformance",
+    "openness",
+    "care",
+    "art5-safeguard",
+    "affect"
+   ],
+   "own_model_exclusion_note": "Own council-specialist models were removed from the public per-axis leaders on 8 of the 14 model-comparison axes (governance, provenance, continuity, conformance, openness, care, art5-safeguard, affect); 9 axes carry an external public leader. A neutral measurement body does not compare its own models against the vendors it measures. This changes leader attribution and the separation/mean tallies (which are over externally-led axes only), NOT measured_axes: every axis still carries a measurement, so the measured count is unchanged. The excluded models' signed cards are untouched — measurement happened; it is simply not published as a public comparison of our own model. The excluded models are system-prompt overlays on stock base models, not trained weights (C-2026-0930-11).",
+   "uncarded_leaders_dropped": 3,
+   "uncarded_leaders_dropped_axes": [
+    "machinery-conformity",
+    "cross-reality",
+    "detector-interop"
+   ],
+   "uncarded_leader_note": "The public per-axis leader was removed on 3 of the 14 model-comparison axes (machinery-conformity, cross-reality, detector-interop) whose named leader was an external model carrying NO signed per-model card in the public card index (/signed/card_index.json). The board's promise is that every named leader links to the Ed25519 card behind it; where no such card exists, no leader or accuracy is asserted rather than invented. Each of these axes stays MEASURED — the fleet aggregate (fleet_mean) is a real measurement — so measured_axes is unchanged; only the unverifiable leader claim is dropped. public_leader_state=NO_SIGNED_CARD on each. This changes leader attribution and the separation/mean tallies (over carded, externally-led axes only), NOT the measured count.",
+   "mean_macro_f1": 0.944,
+   "mean_accuracy": 0.6505,
+   "mean_fleet_mean": 0.5447,
+   "mean_harm": 0.4877,
+   "mean_unparsed_rate": 0.0541,
+   "mean_note": "Means are over MEASURED MODEL-COMPARISON axes that carry the field. mean_accuracy averages the per-axis LEADERS; mean_fleet_mean averages each axis's measured fleet — the difference is selection, not skill. mean_harm is the severity-weighted failure mass the mean accuracy hides; it exists only for the measured board-v2 axes. No financial axis enters any of these means: an axis with no accuracy contributes nothing rather than a zero."
+  },
+  "axes": [
+   {
+    "axis": "governance",
+    "family": "gspc",
+    "status": "MEASURED",
+    "separation": "TIE",
+    "bench": "GovBench"
+   },
+   {
+    "axis": "safety",
+    "family": "gspc",
+    "status": "MEASURED",
+    "separation": "TIE",
+    "bench": "DefBench"
+   },
+   {
+    "axis": "provenance",
+    "family": "gspc",
+    "status": "MEASURED",
+    "separation": "TIE",
+    "bench": "ProvBench"
+   },
+   {
+    "axis": "continuity",
+    "family": "gspc",
+    "status": "MEASURED",
+    "separation": "TIE",
+    "bench": "PQCBench"
+   },
+   {
+    "axis": "conformance",
+    "family": "gspc",
+    "status": "MEASURED",
+    "separation": "TIE",
+    "bench": "MCPBench"
+   },
+   {
+    "axis": "openness",
+    "family": "gspc",
+    "status": "MEASURED",
+    "separation": "TIE",
+    "bench": "OSSBench"
+   },
+   {
+    "axis": "machinery-conformity",
+    "family": "gspc",
+    "status": "MEASURED",
+    "separation": "UNTESTED",
+    "bench": "MachBench"
+   },
+   {
+    "axis": "care",
+    "family": "gspc",
+    "status": "MEASURED",
+    "separation": "TIE",
+    "bench": "CareBench"
+   },
+   {
+    "axis": "cross-reality",
+    "family": "gspc",
+    "status": "MEASURED",
+    "separation": "UNTESTED",
+    "bench": "XRAIV"
+   },
+   {
+    "axis": "detector-interop",
+    "family": "gspc",
+    "status": "MEASURED",
+    "separation": "UNTESTED",
+    "bench": "DetBench"
+   },
+   {
+    "axis": "art5-safeguard",
+    "family": "gspc",
+    "status": "MEASURED",
+    "separation": "UNTESTED",
+    "bench": "Art5Bench"
+   },
+   {
+    "axis": "swarm",
+    "family": "gspc",
+    "status": "MEASURED",
+    "separation": "UNTESTED",
+    "bench": "SwarmBench v2b"
+   },
+   {
+    "axis": "affect",
+    "family": "gspc",
+    "status": "MEASURED",
+    "separation": "UNTESTED",
+    "bench": "AffectBench"
+   },
+   {
+    "axis": "jail",
+    "family": "gspc",
+    "status": "MEASURED",
+    "separation": "UNTESTED",
+    "bench": "GoldBank-Detector"
+   },
+   {
+    "axis": "effect-binding",
+    "family": "gspc",
+    "status": "MEASURED",
+    "separation": null,
+    "bench": "EffectBench v0.1 (server probe)"
+   },
+   {
+    "axis": "provenance-controls",
+    "family": "financial",
+    "status": "MEASURED",
+    "separation": null,
+    "bench": "ChainFacts"
+   },
+   {
+    "axis": "reserve-attestation",
+    "family": "financial",
+    "status": "MEASURED",
+    "separation": null,
+    "bench": "ReserveFacts"
+   },
+   {
+    "axis": "regulatory-framework",
+    "family": "financial",
+    "status": "MEASURED",
+    "separation": null,
+    "bench": "RegimeFacts"
+   },
+   {
+    "axis": "distribution-integrity",
+    "family": "financial",
+    "status": "MEASURED",
+    "separation": null,
+    "bench": "DistributionFacts"
+   },
+   {
+    "axis": "custody-disclosure",
+    "family": "financial",
+    "status": "MEASURED",
+    "separation": null,
+    "bench": "CustodyFacts"
+   },
+   {
+    "axis": "ai-adoption-components",
+    "family": "financial",
+    "status": "MEASURED",
+    "separation": null,
+    "bench": "Eurostat"
+   },
+   {
+    "axis": "labour-components",
+    "family": "financial",
+    "status": "MEASURED",
+    "separation": null,
+    "bench": "Eurostat"
+   },
+   {
+    "axis": "humanoid-labour-index",
+    "family": "financial",
+    "status": "MEASURED",
+    "separation": null,
+    "bench": "Disclosure"
+   },
+   {
+    "axis": "lab-practice",
+    "family": "subject",
+    "status": "UNMEASURED",
+    "separation": null,
+    "bench": "pending frozen bank"
+   },
+   {
+    "axis": "company-practice",
+    "family": "subject",
+    "status": "UNMEASURED",
+    "separation": null,
+    "bench": "pending frozen bank"
+   },
+   {
+    "axis": "measurer-integrity",
+    "family": "subject",
+    "status": "UNMEASURED",
+    "separation": null,
+    "bench": "pending frozen bank"
+   },
+   {
+    "axis": "harness-fidelity",
+    "family": "subject",
+    "status": "UNMEASURED",
+    "separation": null,
+    "bench": "pending frozen method"
+   },
+   {
+    "axis": "interop-conformance",
+    "family": "subject",
+    "status": "UNMEASURED",
+    "separation": null,
+    "bench": "pending frozen bank"
+   },
+   {
+    "axis": "humanoid-deployment",
+    "family": "subject",
+    "status": "UNMEASURED",
+    "separation": null,
+    "bench": "pending frozen registry"
+   },
+   {
+    "axis": "regulator-transparency",
+    "family": "subject",
+    "status": "UNMEASURED",
+    "separation": null,
+    "bench": "pending frozen check bank"
+   },
+   {
+    "axis": "interpretability-reproducibility",
+    "family": "subject",
+    "status": "UNMEASURED",
+    "separation": null,
+    "bench": "pending frozen bank"
+   },
+   {
+    "axis": "claim-maintenance",
+    "family": "subject",
+    "status": "UNMEASURED",
+    "separation": null,
+    "bench": "pending gated re-read wave (>=30 claims)"
+   },
+   {
+    "axis": "serving-fidelity",
+    "family": "subject",
+    "status": "UNMEASURED",
+    "separation": null,
+    "bench": "pending frozen bank"
+   }
+  ],
+  "response_sha256": "67c0f69ecefb89053bfd5ef72487de07be52c0592e127334d2eb62e178194b72",
+  "note": "Quoted from the live board by field name. The board declares 33 axis slots; 23 are MEASURED, 10 are declared with no run behind them. An unmeasured axis is a visible gap, not a zero, and never a fail."
+ },
+ "snapshot_sha256": "24a941e35ee3a938dcb8d9e0c5cea6d0e8af9b5d34fee8115af42531be15c038"
+}
