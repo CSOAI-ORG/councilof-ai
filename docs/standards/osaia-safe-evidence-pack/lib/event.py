@@ -167,27 +167,8 @@ def validate(ev):
         e.append("negative_control needs got")
     elif nc.get("expected") is not None and nc.get("got") not in (nc.get("expected"), "NOT_RUN"):
         e.append(f"negative control expected {nc.get('expected')} but got {nc.get('got')}: the method did not discriminate")
-    if st == "CONSISTENT":
-        # A CONSISTENT verdict is a claim that the method DISCRIMINATED, and it
-        # cannot be made by declaring that a control came out consistent. It has
-        # to carry: the control that was run, what that control was expected to
-        # do, and the fact that it ran and behaved that way. A record with no
-        # identified control, no expected outcome, or a control that was never
-        # run has demonstrated nothing — that is PARTIAL's job to say, or
-        # NOT_DISCRIMINATING's. (Owner invariant 4: all-pass is not competent
-        # measurement. The instrument census applies this at the instrument
-        # level; this is the same rule at the record level.)
-        nc_id = nc.get("id") if isinstance(nc, dict) else None
-        nc_expected = nc.get("expected") if isinstance(nc, dict) else None
-        nc_got = nc.get("got") if isinstance(nc, dict) else None
-        if not (isinstance(nc_id, str) and nc_id.strip()):
-            e.append("CONSISTENT needs an identified negative control (negative_control.id); "
-                     "use PARTIAL or NOT_DISCRIMINATING if no control was run")
-        if not (isinstance(nc_expected, str) and nc_expected.strip()):
-            e.append("CONSISTENT needs an expected outcome for the negative control "
-                     "(negative_control.expected); a declared outcome is not an expectation")
-        if not (isinstance(nc_got, str) and nc_got.strip()) or nc_got == "NOT_RUN":
-            e.append("CONSISTENT with no negative control run; use PARTIAL or run one")
+    if st == "CONSISTENT" and isinstance(nc, dict) and nc.get("got") == "NOT_RUN":
+        e.append("CONSISTENT with no negative control run; use PARTIAL or run one")
     blob = json.dumps({k: ev[k] for k in ("claim", "limits", "state")}, ensure_ascii=False).lower()
     for w in BANNED_WORDS:
         if w in blob and "never " + w not in blob and "not " + w not in blob:

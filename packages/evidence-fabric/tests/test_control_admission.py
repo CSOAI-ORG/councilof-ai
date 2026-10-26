@@ -35,7 +35,7 @@ def _load(name, path):
 
     Two copies of event.py exist and both are under test, so neither is
     imported by bare name: an import that resolved to the wrong copy would
-    make the drift test prove nothing.
+    make the freeze test prove nothing.
     """
     spec = importlib.util.spec_from_file_location(name, path)
     mod = importlib.util.module_from_spec(spec)
@@ -172,25 +172,96 @@ class TestTheJsonSchemaLayerAgrees:
         assert list(self._validator().iter_errors(ev)) == []
 
 
-class TestBothCopiesOfTheRuleStayInStep:
-    """Two copies of the validator exist. A fix in one and not the other is drift.
+class TestTheFrozenCopyStaysFrozen:
+    """The SAFE pack is a SIGNED, FROZEN artifact — not a second implementation to keep in step.
 
-    The SAFE evidence pack ships its own copy of event.py so the standard can be
-    read without the package. They have to enforce the same admission rule, or
-    a record rejected by the standard is accepted by the implementation.
+    An earlier draft of this file asserted that the two copies of event.py enforce
+    the same admission rule. That assertion was wrong, and the only way to satisfy
+    it was to edit a board-signed, OpenTimestamps-anchored artifact, which the pack's
+    own doctrine forbids: *"a new pack is a new FREEZE, never an edit."*
+
+    The freeze is the anti-drift mechanism, and it is a stronger one than a copied
+    rule: SHA256SUMS pins every byte of the pack, FREEZE.json pins SHA256SUMS, and
+    the board signature pins FREEZE.json. So the invariants that actually matter are
+    these two, and they are what this class checks:
+
+      1. the frozen copy has not moved — the freeze still binds the bytes on disk;
+      2. the live rule is stricter without retroactively changing what was signed —
+         every published event still satisfies the live rule.
+
+    Check (2) is the one that matters in practice: it says the tightened rule is a
+    forward-looking admission change, not a rewriting of history.
     """
 
-    @staticmethod
-    def _safe_event_module():
-        return _load("safe_evidence_event", os.path.join(SAFE_LIB, "event.py"))
+    PACK = os.path.join(REPO, "docs", "standards", "osaia-safe-evidence-pack")
 
-    def test_the_safe_copy_rejects_the_same_record(self):
-        safe = self._safe_event_module()
-        ev = _build(negative_control=DISCRIMINATING_CONTROL)
-        ev["negative_control"] = UNDECLARED_CONTROL
-        errs = safe.validate(ev)
-        assert errs, "the SAFE pack copy of the rule must reject an undeclared control"
-        assert any("identified negative control" in e for e in errs)
+    @staticmethod
+    def _sha(path):
+        import hashlib
+        with open(path, "rb") as fh:
+            return hashlib.sha256(fh.read()).hexdigest()
+
+    def test_the_frozen_pack_matches_its_own_checksums(self):
+        """Every file the freeze lists must still have the digest the freeze names."""
+        sums = os.path.join(self.PACK, "SHA256SUMS")
+        listed = 0
+        with open(sums, encoding="utf-8") as fh:
+            for line in fh:
+                line = line.strip()
+                if not line:
+                    continue
+                digest, relative = line.split(None, 1)
+                relative = relative.strip()
+                target = os.path.join(self.PACK, relative)
+                assert os.path.isfile(target), f"{relative} is listed by SHA256SUMS but missing"
+                assert self._sha(target) == digest, (
+                    f"{relative} has moved since the freeze; a frozen pack is never edited "
+                    f"in place — publish a new FREEZE instead")
+                listed += 1
+        assert listed >= 30, f"SHA256SUMS listed only {listed} files; the freeze is too small to be real"
+
+    def test_the_freeze_binds_its_checksums_and_the_board_binds_the_freeze(self):
+        """FREEZE.json pins SHA256SUMS; the board signature pins FREEZE.json."""
+        freeze_path = os.path.join(self.PACK, "FREEZE.json")
+        with open(freeze_path, encoding="utf-8") as fh:
+            freeze = json.load(fh)
+        assert freeze["sha256sums_sha256"] == self._sha(os.path.join(self.PACK, "SHA256SUMS")), \
+            "FREEZE.json does not bind the SHA256SUMS bytes on disk"
+        with open(os.path.join(self.PACK, "FREEZE.signed.json"), encoding="utf-8") as fh:
+            signed = json.load(fh)
+        assert signed["payload"]["artifact"]["sha256"] == self._sha(freeze_path), \
+            "the board signature does not bind the FREEZE.json bytes on disk"
+
+    def test_the_frozen_copy_still_validates_the_published_events(self):
+        """The frozen reader still re-derives what was signed."""
+        safe = _load("safe_evidence_event", os.path.join(SAFE_LIB, "event.py"))
+        for ev in self._published_events():
+            assert safe.validate(ev) == [], ev.get("event_id")
+
+    def test_the_published_events_still_satisfy_the_live_rule(self):
+        """The cross-boundary proof: tightening the live rule breaks no published record.
+
+        All ten published events carry a real discriminating control
+        (`designed_to_fail`, expected DIVERGENT, got DIVERGENT), so the stricter
+        admission rule admits every one of them. If a future event does not, that
+        is the rule working, and this test says so rather than hiding it.
+        """
+        for ev in self._published_events():
+            assert E.validate(ev) == [], (
+                f"{ev.get('event_id')} was signed under the older rule and does not satisfy "
+                f"the live rule: {E.validate(ev)}")
+
+    @classmethod
+    def _published_events(cls):
+        path = os.path.join(cls.PACK, "events", "events.jsonl")
+        events = []
+        with open(path, encoding="utf-8") as fh:
+            for line in fh:
+                line = line.strip()
+                if line:
+                    events.append(json.loads(line))
+        assert events, "no published events found in the frozen pack"
+        return events
 
 
 class TestTheExistingCorpusIsUnaffected:
@@ -205,16 +276,31 @@ class TestTheExistingCorpusIsUnaffected:
                     continue
                 assert E.validate(json.loads(line)) == [], line[:120]
 
-    def test_the_safe_pack_records_still_validate(self):
-        rec_dir = os.path.join(os.path.dirname(SAFE_LIB), "records")
+    def test_the_safe_pack_records_still_validate_against_the_pack_schema(self):
+        """The re-verification records in the pack still satisfy the schema the pack freezes.
+
+        An earlier version of this test filtered the records directory for evidence
+        events and matched zero of them, so it asserted nothing at all — a passing
+        test that could not fail. The records there are safe-reverification records;
+        they are checked against the schema the pack itself freezes.
+        """
+        from jsonschema import Draft7Validator
+        pack = os.path.dirname(SAFE_LIB)
+        rec_dir = os.path.join(pack, "records")
         if not os.path.isdir(rec_dir):
             pytest.skip("no SAFE pack records in this checkout")
-        safe = _load("safe_evidence_event_records", os.path.join(SAFE_LIB, "event.py"))
+        with open(os.path.join(pack, "schema", "safe-reverification-record-v0.1.schema.json"),
+                  encoding="utf-8") as fh:
+            validator = Draft7Validator(json.load(fh))
+        checked = 0
         for name in sorted(os.listdir(rec_dir)):
-            if not name.endswith(".json"):
+            if not name.endswith(".json") or name == "index.json":
                 continue
             with open(os.path.join(rec_dir, name), encoding="utf-8") as fh:
                 doc = json.load(fh)
             for rec in (doc if isinstance(doc, list) else [doc]):
-                if isinstance(rec, dict) and rec.get("schema") == E.SCHEMA:
-                    assert safe.validate(rec) == [], f"{name}: {safe.validate(rec)}"
+                if isinstance(rec, dict) and "record_id" in rec:
+                    errors = list(validator.iter_errors(rec))
+                    assert not errors, f"{name}: {errors[0].message}"
+                    checked += 1
+        assert checked >= 10, f"only {checked} records were checked; this test would pass vacuously"
