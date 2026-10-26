@@ -89,6 +89,65 @@ describe("/api/receipts/batch — input", () => {
 });
 
 describe("/api/receipts/batch — free preview", () => {
+  it.each([
+    ["2026-09-01T04:00:14.952Z", "2026-09-01T04:00:14.952Z", 1],
+    ["2026-09-01T04:00:14.951Z", "2026-09-01T04:00:14.952Z", 1],
+    ["2026-09-01T04:00:14.952Z", "2026-09-01T04:00:14.953Z", 1],
+    ["2026-09-01T04:00:14.953Z", "2026-09-01T04:00:14.954Z", 0],
+    ["2026-09-01T04:00:14.950Z", "2026-09-01T04:00:14.951Z", 0],
+  ] as const)("keeps the fractional inclusive preview window %s to %s", async (from, to, count) => {
+    stubStatic();
+    const query = new URLSearchParams({ from, to, preview: "1" });
+    const r = await batch(ctx(`/api/receipts/batch?${query}`));
+    expect(r.status).toBe(200);
+    const b = await r.json();
+    expect(b.window).toEqual({ from, to });
+    expect(b.count).toBe(count);
+    expect(b.matched).toBe(count);
+    expect(b.span).toEqual(count ? {
+      first_as_of: "2026-09-01T04:00:14.952Z",
+      last_as_of: "2026-09-01T04:00:14.952Z",
+    } : null);
+  });
+
+  it("reproduces a fractional preview through its advertised buy URL, challenge and paid delivery", async () => {
+    const from = "2026-09-01T04:00:14.951Z";
+    const to = "2026-09-01T04:00:14.953Z";
+    stubStatic();
+    const query = new URLSearchParams({ from, to, preview: "1" });
+    const preview = await (await batch(ctx(`/api/receipts/batch?${query}`))).json();
+    const resource = new URL(preview.buy.resource);
+    expect(resource.searchParams.get("from")).toBe(from);
+    expect(resource.searchParams.get("to")).toBe(to);
+    expect(resource.searchParams.has("preview")).toBe(false);
+    const path = resource.pathname + resource.search;
+    const replay = await (await batch(ctx(path + "&preview=1"))).json();
+    expect(replay.window).toEqual({ from, to });
+    expect(replay.count).toBe(1);
+    expect(replay.batch_sha256).toBe(preview.batch_sha256);
+    expect(replay.batch_bytes).toBe(preview.batch_bytes);
+
+    const challenge = await batch(ctx(path));
+    expect(challenge.status).toBe(402);
+    const offer = await challenge.json();
+    expect(offer.resource.url).toBe(preview.buy.resource);
+    expect(offer.csoai.preview.window).toEqual({ from, to });
+    expect(offer.csoai.preview.count).toBe(1);
+    expect(offer.csoai.preview.batch_sha256).toBe(preview.batch_sha256);
+    expect(offer.csoai.preview.batch_bytes).toBe(preview.batch_bytes);
+
+    stubStatic(settles);
+    const delivered = await batch(ctx(path, { X402_FACILITATOR_URL: "https://f.example" }, { "x-payment": paidReceipt() }));
+    expect(delivered.status).toBe(200);
+    const body = await delivered.json();
+    expect(body.batch.window).toEqual({ from, to });
+    expect(body.batch.items.map((item: { sha256: string }) => item.sha256)).toEqual([H("2")]);
+    expect(body.batch_sha256).toBe(preview.batch_sha256);
+    expect(await sha256Hex(canonicalBytes(body.batch))).toBe(preview.batch_sha256);
+    expect(canonicalBytes(body.batch).byteLength).toBe(preview.batch_bytes);
+    expect(body.manifest_card.payload).toMatchObject({ batch_sha256: preview.batch_sha256, batch_bytes: preview.batch_bytes });
+  });
+
   it("returns count, span, roots and the batch sha256 — and no leaves", async () => {
     stubStatic();
     const r = await batch(ctx(`/api/receipts/batch?${WINDOW}&preview=1`));
@@ -104,7 +163,8 @@ describe("/api/receipts/batch — free preview", () => {
     expect(b.items).toBeUndefined();
     expect(JSON.stringify(b)).not.toMatch(/"proof"/);
     // Honest about what a receipt is on this estate.
-    expect(b.sources.settlement_receipts).toMatch(/NONE published/);
+    expect(b.sources.settlement_receipts).toContain("aggregate-only receipt-store state");
+    expect(JSON.stringify(b)).not.toMatch(/UNPUBLISHED|NONE published|none are published/);
     expect(JSON.stringify(b)).not.toMatch(/[£$€]\s?\d|"amount"/);
   });
 
@@ -137,7 +197,7 @@ describe("/api/receipts/batch — 402 shape", () => {
     expect(b.extensions.bazaar.schema.properties.input.properties.queryParams.required).toEqual(["from"]);
     expect(b.csoai.preview.batch_sha256).toMatch(/^[0-9a-f]{64}$/);
     expect(b.csoai.rail.mode).toBe("challenge-only");
-    expect(b.csoai.never.join(" ")).toMatch(/settlement or payment receipts — none are published/);
+    expect(b.csoai.never.join(" ")).toMatch(/settlement or payment receipts — this batch contains measurement leaves only/);
     expect(JSON.stringify(b)).not.toMatch(/"proof":\s*\[/);
     expect(JSON.stringify(b)).not.toMatch(/\bsafe\b|certified/i);
   });

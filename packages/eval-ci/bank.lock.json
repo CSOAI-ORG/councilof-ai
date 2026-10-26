@@ -7,6 +7,13 @@
       "path": "public/datasets/gspc-axis-v0.1.0/gspc-axis.jsonl",
       "sha256": "a1caaafcdbf2967cf391c647e774506cdbf4dd2492d77c6a73ae24db0e0ef9b0",
       "lines": 10226
+    },
+    {
+      "axis": "third-party-evaluation-results",
+      "path": "packages/eval-ci/third_party/candidates.jsonl",
+      "sha256": "1ee6cc5237b6e75a4c1d5341b281613baa6279918519d3252405963fdf7e9aed",
+      "lines": 601,
+      "note": "Third-party published evaluation results converted into EvaluationResult/v1. Pinned so a silent edit to the corpus fails the PR. The corpus is a set of candidates: n_valid of them carry every required pin, the rest are recorded with the pins their publisher does not publish. Nothing in it is signed and nothing in it is a grade."
     }
   ],
   "graders": [
