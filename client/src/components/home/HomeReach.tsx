@@ -63,7 +63,7 @@ export function corpusLines(read: ReadState<StatePayload>): CorpusLine[] | { unr
   if (leaves !== null)
     lines.push({
       figure: String(leaves),
-      headline: "records sealed under the one signed root",
+      headline: "records counted in the public root's dated list",
       qualifier: "kind: catalogued — counted on the root, a different set from the one above",
     });
   if (overlap !== null)
@@ -97,13 +97,12 @@ export default function HomeReach({ state }: { state: ReadState<StatePayload> })
       <div className="section-shell">
         <p className="t-kicker text-emerald-700 dark:text-emerald-300">Where the work has got to</p>
         <h2 id="reach-h" className="t-band mt-4 max-w-3xl text-foreground">
-          The work travels, and it holds up when you check it.
+          Reach and verification evidence, shown separately.
         </h2>
         <p className="t-lede measure mt-5 text-muted-foreground">
-          Two different questions, and mixing them is how every adoption number you have ever read
-          became meaningless. How far the packages and listings have reached is one measurement.
-          Whether the evidence itself survives a re-check is another, and it is the one that
-          matters.
+          Package distribution, listings and commercial use are different observations.
+          Keep each reported population and its stated date separate. An integrity check does
+          not establish adoption, buyer acceptance, freshness or revenue.
         </p>
 
         {/*
@@ -129,8 +128,7 @@ export default function HomeReach({ state }: { state: ReadState<StatePayload> })
               href="/reach"
               className="font-bold text-emerald-700 underline underline-offset-4 dark:text-emerald-300"
             >
-              The whole funnel — all seven stages, including the four we cannot measure and what
-              each of them would need
+              The full reported funnel, with each stage's stated status and the evidence it needs
             </Link>
             .
           </p>

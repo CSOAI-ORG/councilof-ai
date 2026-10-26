@@ -851,6 +851,17 @@ const HANDLERS = {
   route: (a) => doorTool("route", a),
 };
 
+// The axis family: one free tool per GSPC board axis, named for the axis it answers
+// (axis_<axis-id>). Each returns the live board row for that axis — the same payload get_axis
+// returns, with the axis fixed by the tool's own name, so there is nothing to pass and nothing
+// to get wrong. The names are read from gspc-tools.json, the same file tools/list serves, so
+// the two surfaces cannot drift.
+for (const t of FREE_TOOLS) {
+  if (!t.name.startsWith("axis_")) continue;
+  const axis = t.name.slice("axis_".length);
+  HANDLERS[t.name] = () => getAxis({ axis });
+}
+
 /* ----------------------------------------------------------------- transport */
 
 // Oldest first; the LAST entry is the latest this server speaks. An unknown requested version is
