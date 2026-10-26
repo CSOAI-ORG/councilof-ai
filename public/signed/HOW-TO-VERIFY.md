@@ -45,6 +45,25 @@ curl -s https://councilof.ai/.well-known/did.json \
 
 Every published card MUST carry that exact `pubkey`. If one does not, stop.
 
+### 1a. Two card keys — which cards use which
+
+Cards are signed under one of two keys in our DID document. Pin the key the card names:
+
+| Key id | Public key (hex) | Cards |
+|---|---|---|
+| `did:web:csoai.org#card-attestation-1` | `d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38` | the cards listed in `/signed/card_index.json` |
+| `did:web:csoai.org#board-attestation-1` | `9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170` | measurement cards under `/interop/mill-cards-signed/`, including the GSPC-G2 group (14 Oct 2026); each names this key in its `did` field |
+
+To pin the second key, run the command above with `#board-attestation-1` in place of `#card-attestation-1`.
+The id rule and preimage rule in section 2 are the same for both. The fast-path script in section 0
+reads only `card_index.json`, so it does not check `/interop/mill-cards-signed/` cards.
+
+**Known gap:** the repository's `gspc-verify.mjs` currently stops on the GSPC-G2 cards with
+`OUT_OF_PROFILE_DOMAIN`. That is a gap in the verifier's profile, not a fault in the cards. Until it is
+fixed, check these cards with the GSPC `verify_card` tool, or by hand: recompute the id as the
+SHA-256 of the canonical body (section 2) and check the Ed25519 signature against the
+`#board-attestation-1` key read from `/.well-known/did.json`. GSPC-G2 cards are not yet in any card root.
+
 ## 2. The rule
 
     id        == sha256(preimage).hexdigest()
@@ -173,6 +192,28 @@ binary64**. After JSON parse there is no memory that a field was a Python float.
   canonicalisation an artefact was signed under, and it is checkable from the bytes alone. The 335
   measurement cards in `signed/card_index.json` carry `id` and no `content_id`; the three board
   artefacts above carry `content_id`.
+
+  **The `id`/`content_id` shortcut stops at the signed index — it does not cover the mill.**
+  Added 2026-10-07 (TUI-3) after the heuristic was applied to the wider estate. The signed GSPC
+  mill cards in `public/interop/mill-cards-signed/` — **2,868 signed cards**, including the 36
+  staged by PR #1888 — also carry `id` and no `content_id`, yet they are **signed under the Rule B
+  form**: each declares `preimage_rule: "sha256(canonical body)"`, which is the JavaScript
+  canonicalisation (integral floats below 1e21 as integers, unescaped non-ASCII, sorted keys). So
+  `id` alone does **not** imply Rule A across the estate.
+
+  **The only reliable discriminator is the declared rule, not the field name:**
+
+  | `preimage_rule` | Apply | Seen on |
+  |---|---|---|
+  | `sha256(canonical body)` | Rule B (JS / JCS form) | 2,868 signed mill cards + 36 PR#1888 + 2,041 unsigned mill |
+  | `json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=True)` | Rule A | 313 of the 335 signed-index cards |
+  | absent / null | Rule A (by default) | the other 22 signed-index cards, which declare `preimage` instead |
+
+  `harness/gspc-top100/verify_card.py` already selects on exactly this (`canonical_js_body_bytes`
+  when the rule matches, else `canonical_body_bytes`), which is why the full estate verifies
+  **3,203/3,203 VALID** (2,868 mill + 335 index) while a name-based shortcut would not. Verifying a
+  mill card with Rule A fails any card whose body holds an integral float — the same failure mode,
+  the same "broken chain that is intact", just on a different corpus.
 
   **Applying the wrong rule fails loudly and misleadingly.** `canon.py` against a Rule A card fails
   every card carrying an integral float — **117 of 335** — and a plain `JSON.stringify` verifier
