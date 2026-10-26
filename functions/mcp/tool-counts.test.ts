@@ -4,9 +4,11 @@
  *
  * #19. /connect-gspc/ said "Seven free read-only tools" and "13 tools", the home page 16,
  * /connect/claude/ 12 and npm 0.2.2 "eight free readers" — for two doors. Every surface that states
- * a count now either derives it from the files tools/list serves or carries the one sentence:
- *   "14 free tools at /mcp/free; 19 at /mcp (14 free + 5 metered). The npm package is versioned separately."
- * with every number an array length.
+ * a count now either derives it from the files tools/list serves or carries the one sentence,
+ * with every number an array length. (The sentence as it read then was "14 free tools at
+ * /mcp/free; 19 at /mcp (14 free + 5 metered)". The npm package is versioned separately.
+ * Neither number is written down here now: the sentence is computed from the lock, and the lock
+ * is rendered from council-os/capabilities.json.)
  *
  * #24. /.well-known/mcp/server-card.json had no tools[] and no version and named four axes;
  * /.well-known/mcp.json carried registry.version 1.4.2 (the registry's latest is 1.4.3), an internal

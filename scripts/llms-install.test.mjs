@@ -55,6 +55,32 @@ test("llms install guide matches the canonical MCP identity and tool catalog", a
   assert.equal(catalog.free.length, 47);
   assert.equal(catalog.x402_metered.length, 5);
 
+  // The prose count and the prose wording are held to the catalogue, so neither can drift.
+  // "the same N names" must be N = free + x402-metered, and the free-tool sentence must not
+  // name a hand-counted number: a published sentence that reads "all eight read/verification
+  // tools" while the door serves 47 free tools is a false claim, not a style question.
+  // BOTH copies are held: llms-install.md and public/llms-install.md are hand-maintained
+  // separately, and the published one is the one a reader opens.
+  const catalogTotal = catalog.free.length + catalog.x402_metered.length;
+  for (const [label, text] of [
+    ["llms-install.md", guide],
+    ["public/llms-install.md", await readFile(new URL("public/llms-install.md", root), "utf8")],
+  ]) {
+    const proseCount = text.match(/returns the same (\d+) names/);
+    assert.ok(proseCount, `${label} must state how many names the remote should return`);
+    assert.equal(
+      Number(proseCount[1]),
+      catalogTotal,
+      `${label}'s prose count must equal the catalogue it publishes`,
+    );
+    assert.doesNotMatch(
+      text,
+      /using all \w+ read\/verification tools is free/,
+      `${label}'s free-tool sentence must not name a hand-counted number`,
+    );
+    assert.match(text, /using every free read\/verification tool is free/);
+  }
+
   // The version the guide names is the source package's, read from package.json, never typed here.
   const v = packageJson.version.replace(/\./g, "\\.");
   assert.match(guide, /Every release published to npm so far is marked deprecated on npm/);
