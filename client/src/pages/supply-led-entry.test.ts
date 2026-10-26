@@ -32,7 +32,11 @@ const hierarchy = [
 describe("public entry surfaces use the supply-led evidence hierarchy", () => {
   for (const [name, text] of surfaces) {
     it(`${name}: measurements → changes → verification → feeds`, () => {
-      const positions = hierarchy.map((label) => text.indexOf(label));
+      // Services uses plain-language labels for the same four ordered destinations.
+      const labels = name === "services"
+        ? ["Explore measurements", "See what changed", "Check a record", "Browse the catalogue"]
+        : hierarchy;
+      const positions = labels.map((label) => text.indexOf(label));
       expect(positions.every((position) => position >= 0)).toBe(true);
       expect(positions).toEqual([...positions].sort((a, b) => a - b));
     });
