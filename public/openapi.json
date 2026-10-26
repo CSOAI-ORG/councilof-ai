@@ -3825,6 +3825,38 @@
         "summary": "KV namespace for PAL memory. Optional: without it, PALs have no memory and say so."
       }
     },
+    "/api/plugin": {
+      "get": {
+        "description": "GET /api/plugin \u2014 the Council of AI agent plugin: what it is, how to install it, where it lives.",
+        "operationId": "get__api_plugin",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/plugin \u2014 the Council of AI agent plugin: what it is, how to install it, where it lives."
+      }
+    },
+    "/api/plugin/platforms": {
+      "get": {
+        "description": "GET /api/plugin/platforms \u2014 every AI platform family the Council of AI plugin ships for.",
+        "operationId": "get__api_plugin_platforms",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/plugin/platforms \u2014 every AI platform family the Council of AI plugin ships for."
+      }
+    },
     "/api/pop/a2a": {
       "get": {
         "description": "A2A registry population slice: the agents enumerable without a credential from the public A2A registry frame. Counted within that frame, with the estate's own directory-listing state beside it; a frame count, not a global count. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
@@ -8123,6 +8155,22 @@
         "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       }
     },
+    "/api/reports": {
+      "get": {
+        "description": "GET /api/reports \u2014 the public report index, derived from the live board.",
+        "operationId": "get__api_reports",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/reports \u2014 the public report index, derived from the live board."
+      }
+    },
     "/api/request-attestation": {
       "get": {
         "description": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Without that key: sig_ed25519:null, unsigned_reason. Check csoai.signer before paying. Paid reserve: up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The interop root in the free preview is not included in the paid reserve. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.",
@@ -10713,7 +10761,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 124,
+    "public_operations": 127,
     "quarantined": [
       {
         "buyable": false,

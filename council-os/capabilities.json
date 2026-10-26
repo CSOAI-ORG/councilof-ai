@@ -5469,6 +5469,87 @@
       "source": "functions/api/sign.ts"
     },
     {
+      "audience": "both",
+      "description": "GET /api/plugin — the Council of AI agent plugin: what it is, how to install it on any AI platform family, and where it lives. Free, forever, for everyone. Not a certification and not a badge.",
+      "description_state": "DOCUMENTED",
+      "id": "api-plugin",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "method": "GET",
+      "name": "Agent plugin",
+      "path": "/api/plugin",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/plugin",
+        "safe": true
+      },
+      "schema_refs": [],
+      "source": "functions/api/plugin.ts",
+      "surfaces": [
+        "openapi",
+        "llms",
+        "nav"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "GET /api/plugin/platforms — every AI platform family the Council of AI plugin ships for, with its adapter, its install target and its state. A platform with no target is CATALOGUED, not LIVE; absence is an answer.",
+      "description_state": "DOCUMENTED",
+      "id": "api-plugin-platforms",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "method": "GET",
+      "name": "Agent plugin platforms",
+      "path": "/api/plugin/platforms",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/plugin/platforms",
+        "safe": true
+      },
+      "schema_refs": [],
+      "source": "functions/api/plugin/platforms.ts",
+      "surfaces": [
+        "openapi",
+        "llms",
+        "nav"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "GET /api/reports — the public report index, derived from the live board at request time so it auto-updates and cannot fall out of step. Carries the board's own measured_on provenance. Asserts no measurement of its own.",
+      "description_state": "DOCUMENTED",
+      "id": "api-reports",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "method": "GET",
+      "name": "Public reports",
+      "path": "/api/reports",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/reports",
+        "safe": true
+      },
+      "schema_refs": [],
+      "source": "functions/api/reports.ts",
+      "surfaces": [
+        "openapi",
+        "llms",
+        "nav"
+      ]
+    },
+    {
       "audience": "agent",
       "description": "Signed derivative data feed: the signed streams already on the public root, assembled into one document per request. Carries the signals index, the first-fine watch feed, the root and the card index, each block with its own signature and key id and its as_of read from the file. States: each stream as signed, or UNCHECKABLE where its signature cannot be checked. Data only; verification is free and every stream is public at its own URL.",
       "description_state": "DOCUMENTED",
