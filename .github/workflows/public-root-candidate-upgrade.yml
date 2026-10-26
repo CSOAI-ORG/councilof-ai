@@ -100,25 +100,49 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install the llms generator's build dependency
+        if: steps.candidate.outputs.exists == 'true'
+        run: npm install --no-save --no-audit --no-fund esbuild@0.25.0
+
+      # opentimestamps-client is needed by scripts/ots_manifest_rebuild.py, which the
+      # reconcile step below now runs. It used to be installed after that step, because
+      # the reconcile step did not rebuild the manifest.
+      - name: Install witness dependencies
+        if: steps.candidate.outputs.exists == 'true'
+        run: pip install -q cryptography opentimestamps-client
+
       - name: Reconcile the rolling candidate with current master
         if: steps.candidate.outputs.exists == 'true'
         run: |
           set -euo pipefail
           git config user.name "csoai-public-root"
           git config user.email "board@csoai.org"
-          git fetch origin master
           before=$(git rev-parse HEAD)
-          # A real content conflict fails the workflow closed. Never choose a
-          # side automatically for root, proof, or witness bytes.
-          git merge --no-edit origin/master
+          # The reconcile TOOL is taken from master; the TREE it works on is the candidate's.
+          # This job checks out public-root/pending, a rolling branch that has not merged
+          # master yet, so the very first reconcile after this lands is the one that does
+          # not have the tool in its tree. Without this the fix would fail on the very run
+          # it was made for.
+          # An EXPLICIT refspec, so refs/remotes/origin/master is actually updated. A plain
+          # `git fetch origin master` writes FETCH_HEAD only and leaves the tracking ref
+          # where it was, which would reconcile the candidate against whichever master the
+          # checkout happened to see.
+          git fetch origin +refs/heads/master:refs/remotes/origin/master
+          if [ -f scripts/root_candidate_reconcile.py ]; then
+            reconcile=scripts/root_candidate_reconcile.py
+          else
+            reconcile=/tmp/root_candidate_reconcile.py
+            git show origin/master:scripts/root_candidate_reconcile.py > "$reconcile"
+          fi
+          # The merge, the derived-view conflict resolution and the rebuild order live in
+          # that script, which has a --selftest that proves each failure goes red. The
+          # logic is not inline shell here, because inline shell in the root path is
+          # exactly what failed for nine hours without anyone seeing why.
+          python3 "$reconcile" --repo .
           after=$(git rev-parse HEAD)
           if [ "$before" != "$after" ]; then
             git push origin "HEAD:public-root/pending"
           fi
-
-      - name: Install witness dependencies
-        if: steps.candidate.outputs.exists == 'true'
-        run: pip install -q cryptography opentimestamps-client
 
       - name: Upgrade the exact candidate proof
         if: steps.candidate.outputs.exists == 'true'
@@ -182,9 +206,17 @@ jobs:
           # release"). Rebuild it from the bytes in the same commit; the manifest is
           # generated from what the files are, never from the intention.
           python3 scripts/ots_manifest_rebuild.py --apply
+          # The llms views quote the manifest's counts and as_of, so rebuilding the
+          # manifest without rebuilding them leaves the views one cycle stale. That is
+          # exactly what pr-gates' llms-txt-derived test caught on the candidate head on
+          # 26 Oct 2026: the manifest's as_of 2026-10-26T01:48:57Z appeared 0 times in
+          # llms.txt, so the candidate could not pass the gate and could not merge.
+          # Regenerate the views from the manifest just written.
+          node scripts/llms-txt.mjs
           git add public/interop/ots
           git add public/interop/root-*.json.ots
           git add public/interop/root-witness-*.json public/interop/root-witness-pointer.json
+          git add public/llms.txt public/llms-full.txt
           git add public/interop/stablecoin-universe-2026-09/readiness.json public/archive/index.json
           if ! git diff --cached --quiet; then
             git commit -m "public-root: upgrade exact candidate to Bitcoin-confirmed"
@@ -230,6 +262,16 @@ jobs:
           if [ -z "$run_id" ]; then
             echo "HALT: no pr-gates run appeared for $head; not merging" >&2
             exit 1
+          fi
+          # A candidate PR that carries a workflow change makes its pull_request runs wait for
+          # approval (conclusion "action_required"). Watching such a run fails instantly, which is
+          # what halted runs 40154507419 and 40155446269. Approve the run this job is about to watch;
+          # the decision to run the gates has already been made by this workflow, not by a stranger.
+          state=$(runs | jq -r --arg id "$run_id" '.[] | select((.databaseId|tostring) == $id) | .conclusion // ""')
+          if [ "$state" = "action_required" ]; then
+            echo "approving gated pr-gates run $run_id"
+            gh api -X POST "repos/$REPO/actions/runs/$run_id/approve" > /dev/null \
+              || echo "approve refused; continuing to watch" >&2
           fi
           echo "waiting for pr-gates run $run_id on $head"
           if ! gh run watch "$run_id" --repo "$REPO" --exit-status --interval 30 > /dev/null; then

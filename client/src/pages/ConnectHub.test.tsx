@@ -60,8 +60,8 @@ describe("/connect is the connector hub, not a withdrawal notice", () => {
     expect(block).toContain("Add to VS Code");
     expect(block).toContain('aria-label="Copy: VS Code (GitHub Copilot agent mode)"');
     expect(block).toContain(row.snippet.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#x27;"));
-    expect(PLATFORMS.filter((c) => c.id !== "vscode").every((c) => c.install_action === undefined)).toBe(true);
-    expect(html.match(/data-testid="connect-install-/g)).toHaveLength(1);
+    expect(PLATFORMS.filter((c) => c.id !== "vscode" && c.id !== "cursor").every((c) => c.install_action === undefined)).toBe(true);
+    expect(html.match(/data-testid="connect-install-/g)).toHaveLength(2);
   });
 
   it("keeps the ChatGPT custom MCP instructions on the current official plugin path", () => {
