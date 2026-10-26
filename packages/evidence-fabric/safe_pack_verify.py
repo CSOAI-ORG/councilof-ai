@@ -19,8 +19,23 @@ import argparse, copy, errno, hashlib, io, json, os, stat, subprocess, sys, cont
 SOURCE_DIR = os.path.dirname(os.path.abspath(__file__))
 HERE = SOURCE_DIR
 sys.path.insert(0, SOURCE_DIR)
+# The reader-side implementations this verifier is willing to run, pinned by digest.
+# The pin is not a formality: it is the only thing that makes "re-derived byte-identical"
+# mean something, because the re-derivation runs the code in this tree.
+#
+# It moves when the reviewed bytes legitimately change, and the review is the point:
+# the CONSISTENT admission rule tightened on 26 Oct 2026 (a CONSISTENT verdict must
+# carry the control that made it CONSISTENT), which changed event.py. It was re-read
+# line by line before this digest was moved.
+#
+# RECORD_SCHEMA_SHA256 is a different file and did NOT move: it pins the pack's
+# safe-reverification RECORD schema, which this change did not touch. It stays.
+#
+# Note also what was NOT done: the frozen, board-signed copy of the same modules under
+# docs/standards/osaia-safe-evidence-pack/ is a signed artifact and was left at its
+# frozen bytes, because a new pack is a new FREEZE, never an edit.
 RECORD_SCHEMA_SHA256 = '4ae3befcf78b027f9f72e99c71602b4310de64f9fb299674f3621984007ff94d'
-READER_CODE_SHA256 = {'safe_pack.py': '7fc46f2bfe0d5c08390058d1c9e3a98f4a18120a284c7d2bf539c747ea24bd72', 'event.py': 'ea62aecba02fe25ebcfed5da774695318bedeaca810428872f41f0d08b622849', 'ingest/__init__.py': '1b6a0e1d1bb588ed344515b762d5a37ae429e31793998d7c6c58e6313e967459', 'ingest/safe_in.py': '8e6c98bcd17f114fe17d54176477a45b910e3e595d52bb7f5841b7ca34f6343b', 'render/__init__.py': '3268a50b4874018ad982b81db643a9f67ed7378d4ee08227698feeec592d2e03', 'render/ocsf.py': '98b767e9a2be9ee3df6083580c2dccc47c55ebf42abfb1af3c3d4f5159c1d20f', 'render/otel.py': 'b69cece4bbeae61e84a8b2af597f44757c767925020a32c80874cd94c2a52cce', 'render/sarif.py': 'be8d00f7e792a3ac2a021bee51c440ad4ed31e0e23a6e3178cf7b95748f4b375', 'render/intoto.py': 'e85c9dcbc2e0bc44b3d361ff642446704c1e16167b345a4f1cc65efde6a0a65a', 'render/ecs_hec.py': '5be743d87653447a45c949e07fce5a0a9d6731962795e7e089cfaea42952f839'}
+READER_CODE_SHA256 = {'safe_pack.py': '7fc46f2bfe0d5c08390058d1c9e3a98f4a18120a284c7d2bf539c747ea24bd72', 'event.py': '144c6a36d462e21283ab9b34a6469bb32c75021da56133813d5a848412270533', 'ingest/__init__.py': '1b6a0e1d1bb588ed344515b762d5a37ae429e31793998d7c6c58e6313e967459', 'ingest/safe_in.py': '8e6c98bcd17f114fe17d54176477a45b910e3e595d52bb7f5841b7ca34f6343b', 'render/__init__.py': '66855801848b76ee79469355b5aea9915fb41f3d1d6afc57ba448e800b975c55', 'render/ocsf.py': '98b767e9a2be9ee3df6083580c2dccc47c55ebf42abfb1af3c3d4f5159c1d20f', 'render/otel.py': '2f65c9419b29137bb2f904153e2b40f5ec2caad39abda10536a2eec49b33c384', 'render/sarif.py': 'be8d00f7e792a3ac2a021bee51c440ad4ed31e0e23a6e3178cf7b95748f4b375', 'render/intoto.py': 'e85c9dcbc2e0bc44b3d361ff642446704c1e16167b345a4f1cc65efde6a0a65a', 'render/ecs_hec.py': '5be743d87653447a45c949e07fce5a0a9d6731962795e7e089cfaea42952f839'}
 
 UNKNOWN_ERRORS = (OSError, ImportError, ValueError, TypeError, KeyError, RecursionError)
 

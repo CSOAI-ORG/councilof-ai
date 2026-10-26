@@ -85,7 +85,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     data_only: true,
     streams,
     free_for: ["regulators", "the public", "anyone verifying"],
-    sold: "assembly + cadence of the feed (one document, every block carrying its published signature) — never the facts, which stay free",
+    sold: "Assembly of source data into one feed document; this response does not establish recurring cadence or verify source signatures. The underlying facts remain free.",
     never: ["scores as a product", "ranking", "rating", "certificate"],
   };
 
@@ -154,7 +154,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     kind: "feed",
     lane: "commercial-data",
     data_only: true,
-    note: "Each block is the published bytes with its own signature/kid; verify every block offline. Nothing here is a score product.",
+    note: "Blocks are parsed source JSON. Any supplied signature/kid fields are preserved as data and require independent verification. Assembly does not verify source truth, signatures or freshness, and creates no new measurement or score.",
     blocks: feedBlocks(reads),
     delivery_manifest: manifest,
     request_record: targetRecord,
