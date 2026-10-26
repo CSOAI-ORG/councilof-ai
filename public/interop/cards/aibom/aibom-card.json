@@ -2,7 +2,7 @@
  "schema": "https://councilof.ai/schema/card-v0.json",
  "surface": "aibom.document",
  "subject": "AIBOM / clan-csoai-plain:latest",
- "as_of": "2026-09-01T05:44:16Z",
+ "as_of": "2026-10-26T03:19:26Z",
  "source_urls": [
   "https://councilof.ai/signed/card_index.json",
   "https://councilof.ai/signed/cards/acf6bf0356123632758bf6c98c83d81c7a8392c3b111b311317c516cc65133a4.json",
@@ -11,16 +11,25 @@
  "payload": {
   "model": "clan-csoai-plain:latest",
   "aibom_format": "CycloneDX-1.6+SPDX-3.0.1",
-  "bom_sha256": "d445a88f2f5ab0349854c382d397ed7c55216417ea008409c2e3def687cc7fb3",
-  "spdx_sha256": "040e7b7efaf0376fcd16b0ea888db94c23971b2c9de636a33e7cabc577844af2",
+  "bom_sha256": "b7b848ef2371be92536f20ba301bbc9cff22824e47e6bdbb982e411e3d81efcf",
+  "spdx_sha256": "59dcd932957b82dce2ad0fd5720e273e6029b87a6ab79ad056b4ed8cb7245ed7",
   "measured_card_shas": [
    "acf6bf0356123632758bf6c98c83d81c7a8392c3b111b311317c516cc65133a4",
    "82994353b8f94337746ddf73700b0edc425d695d43910dbfeb53d118d5a09a1c"
   ],
   "signing_pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
-  "unmeasured": []
+  "unmeasured": [],
+  "card_verification": {
+   "verified": 2,
+   "invalid": 0,
+   "uncheckable": 0,
+   "key_id": "did:web:csoai.org#card-attestation-1",
+   "method": "card id recomputed from the canonical body bytes; Ed25519 verified under the pinned key"
+  },
+  "unverified_cards": [],
+  "evidence_corpus": "signed-card index (public/signed/card_index.json); 335 cards catalogued; packaged_at 2026-08-28T15:39:25.229647+00:00. The public-root leaf corpus and the mill-card corpus are separate corpora; they are not used here and are not merged into this one."
  },
- "sha256": "a357d71ef260d641e0d61971ea1168105106c477c8c36873954b9f4291adff5b",
+ "sha256": "6bdb5423d76efe286cc28a29c84905965c231d8271869552ae6434864aba066b",
  "sig_ed25519": null,
  "unmeasured": [],
  "signing": "QUEUED for GHA under did:web:csoai.org#card-attestation-1. NO_LAPTOP_SIGN."

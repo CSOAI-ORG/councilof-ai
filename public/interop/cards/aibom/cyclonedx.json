@@ -1,16 +1,16 @@
 {
  "bomFormat": "CycloneDX",
  "specVersion": "1.6",
- "serialNumber": "urn:uuid:96f1b0dfe0f80c2a08446d5c95e9c75f",
+ "serialNumber": "urn:uuid:1465d2bf-4bf3-7014-7dd5-d0bb8a81dcc8",
  "version": 1,
  "metadata": {
-  "timestamp": "2026-09-01T05:44:16Z",
+  "timestamp": "2026-10-26T03:19:26Z",
   "tools": {
    "components": [
     {
      "type": "application",
      "name": "csoai-aibom",
-     "version": "0.1.0"
+     "version": "0.2.0"
     }
    ]
   },
@@ -46,7 +46,8 @@
     "considerations": {
      "technicalLimitations": [
       "Metrics are per-axis accuracy on the frozen GSPC bank ONLY, not a general property.",
-      "A signature is an integrity claim, not a truth claim; see the signed cards."
+      "A signature is an integrity claim, not a truth claim; see the signed cards.",
+      "Only cards that this exporter re-verified appear as metrics; an unverified card would be listed under csoai:unverified_cards, never as a measurement."
      ]
     }
    },
@@ -76,19 +77,50 @@
   {
    "type": "application",
    "bom-ref": "harness:owem-card-pipeline",
-   "name": "csoai card_pipeline",
+   "name": "csoai-owem card_pipeline",
    "description": "deterministic behaviour-class judge; UNMEASURED never 0"
   }
  ],
- "x_csoai": {
-  "kind": "csoai.aibom/0.1",
-  "writes_board": false,
-  "measured_evidence": [
-   "acf6bf0356123632758bf6c98c83d81c7a8392c3b111b311317c516cc65133a4",
-   "82994353b8f94337746ddf73700b0edc425d695d43910dbfeb53d118d5a09a1c"
-  ],
-  "unmeasured": [],
-  "honesty": "Assembled from the signed cards only. Does NOT stamp MEASURED; the evidence is the signed cards it references. Not a GSPC score.",
-  "bom_sha256": "d445a88f2f5ab0349854c382d397ed7c55216417ea008409c2e3def687cc7fb3"
- }
+ "properties": [
+  {
+   "name": "csoai:kind",
+   "value": "csoai.aibom/0.1"
+  },
+  {
+   "name": "csoai:writes_board",
+   "value": "false"
+  },
+  {
+   "name": "csoai:measured_evidence",
+   "value": "acf6bf0356123632758bf6c98c83d81c7a8392c3b111b311317c516cc65133a4,82994353b8f94337746ddf73700b0edc425d695d43910dbfeb53d118d5a09a1c"
+  },
+  {
+   "name": "csoai:unmeasured",
+   "value": ""
+  },
+  {
+   "name": "csoai:card_verification",
+   "value": "VALID=2; INVALID=0; UNCHECKABLE=0"
+  },
+  {
+   "name": "csoai:card_verification_method",
+   "value": "Each referenced card id recomputed from its canonical body bytes and its Ed25519 signature verified under the pinned key did:web:csoai.org#card-attestation-1, read from public/signed/verify-card.mjs. A card carrying its own key is not authentic; only a pinned key is."
+  },
+  {
+   "name": "csoai:unverified_cards",
+   "value": ""
+  },
+  {
+   "name": "csoai:evidence_corpus",
+   "value": "signed-card index (public/signed/card_index.json); 335 cards catalogued; packaged_at 2026-08-28T15:39:25.229647+00:00. The public-root leaf corpus and the mill-card corpus are separate corpora; they are not used here and are not merged into this one."
+  },
+  {
+   "name": "csoai:honesty",
+   "value": "Assembled from the signed-card index only, and every referenced card was independently re-verified by this exporter. Does NOT stamp MEASURED; the evidence is the signed cards it references. A signature is an integrity claim, not a truth claim. Not a GSPC score."
+  },
+  {
+   "name": "csoai:bom_sha256",
+   "value": "b7b848ef2371be92536f20ba301bbc9cff22824e47e6bdbb982e411e3d81efcf"
+  }
+ ]
 }
