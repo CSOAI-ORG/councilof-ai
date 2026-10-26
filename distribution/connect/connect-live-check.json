@@ -1,9 +1,9 @@
 {
   "schema": "csoai.connect-live-check/1",
   "generated_by": "scripts/harness-x/connect-live.mjs",
-  "checked_at": "2026-10-15T04:07:06.997Z",
+  "checked_at": "2026-10-26T10:51:22.358Z",
   "scope": "live: the doors were contacted at https://councilof.ai",
-  "matrix_sha256": "ef9e8cede87274078257d14369b17771a02594dc3e052b9e78679e1895157b04",
+  "matrix_sha256": "680f409125e9857302b617fe342250fc75972dc36c657126cc4c838540b62929",
   "doors": {
     "https://councilof.ai/mcp/free": {
       "state": "PASS",
@@ -13,33 +13,7 @@
         "version": "1.4.4"
       },
       "protocol": "2025-06-18",
-      "tools": 14,
-      "names": [
-        "board_totals",
-        "get_axis",
-        "verify_card",
-        "list_cards",
-        "get_root",
-        "get_card",
-        "verify_inclusion",
-        "x402_trust",
-        "mcp_trust",
-        "measurement_index",
-        "verify_capsule",
-        "server_evidence",
-        "evidence_bundle_preview",
-        "route"
-      ]
-    },
-    "https://councilof.ai/mcp": {
-      "state": "PASS",
-      "contacted": "https://councilof.ai/mcp",
-      "server": {
-        "name": "csoai-gspc-mcp",
-        "version": "1.4.4"
-      },
-      "protocol": "2025-06-18",
-      "tools": 19,
+      "tools": 47,
       "names": [
         "board_totals",
         "get_axis",
@@ -55,6 +29,98 @@
         "server_evidence",
         "evidence_bundle_preview",
         "route",
+        "axis_governance",
+        "axis_safety",
+        "axis_provenance",
+        "axis_continuity",
+        "axis_conformance",
+        "axis_openness",
+        "axis_machinery-conformity",
+        "axis_care",
+        "axis_cross-reality",
+        "axis_detector-interop",
+        "axis_art5-safeguard",
+        "axis_swarm",
+        "axis_affect",
+        "axis_jail",
+        "axis_effect-binding",
+        "axis_provenance-controls",
+        "axis_reserve-attestation",
+        "axis_regulatory-framework",
+        "axis_distribution-integrity",
+        "axis_custody-disclosure",
+        "axis_ai-adoption-components",
+        "axis_labour-components",
+        "axis_humanoid-labour-index",
+        "axis_lab-practice",
+        "axis_company-practice",
+        "axis_measurer-integrity",
+        "axis_harness-fidelity",
+        "axis_interop-conformance",
+        "axis_humanoid-deployment",
+        "axis_regulator-transparency",
+        "axis_interpretability-reproducibility",
+        "axis_claim-maintenance",
+        "axis_serving-fidelity"
+      ]
+    },
+    "https://councilof.ai/mcp": {
+      "state": "PASS",
+      "contacted": "https://councilof.ai/mcp",
+      "server": {
+        "name": "csoai-gspc-mcp",
+        "version": "1.4.4"
+      },
+      "protocol": "2025-06-18",
+      "tools": 52,
+      "names": [
+        "board_totals",
+        "get_axis",
+        "verify_card",
+        "list_cards",
+        "get_root",
+        "get_card",
+        "verify_inclusion",
+        "x402_trust",
+        "mcp_trust",
+        "measurement_index",
+        "verify_capsule",
+        "server_evidence",
+        "evidence_bundle_preview",
+        "route",
+        "axis_governance",
+        "axis_safety",
+        "axis_provenance",
+        "axis_continuity",
+        "axis_conformance",
+        "axis_openness",
+        "axis_machinery-conformity",
+        "axis_care",
+        "axis_cross-reality",
+        "axis_detector-interop",
+        "axis_art5-safeguard",
+        "axis_swarm",
+        "axis_affect",
+        "axis_jail",
+        "axis_effect-binding",
+        "axis_provenance-controls",
+        "axis_reserve-attestation",
+        "axis_regulatory-framework",
+        "axis_distribution-integrity",
+        "axis_custody-disclosure",
+        "axis_ai-adoption-components",
+        "axis_labour-components",
+        "axis_humanoid-labour-index",
+        "axis_lab-practice",
+        "axis_company-practice",
+        "axis_measurer-integrity",
+        "axis_harness-fidelity",
+        "axis_interop-conformance",
+        "axis_humanoid-deployment",
+        "axis_regulator-transparency",
+        "axis_interpretability-reproducibility",
+        "axis_claim-maintenance",
+        "axis_serving-fidelity",
         "commission_card",
         "art50_marking_evidence",
         "rwa_evidence",
@@ -73,7 +139,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "shell syntax (bash -n)",
@@ -93,7 +159,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "text block (form values): no syntax to check",
@@ -113,7 +179,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "text block (form values): no syntax to check",
@@ -133,7 +199,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "text block (form values): no syntax to check",
@@ -153,7 +219,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "text block (form values): no syntax to check",
@@ -173,7 +239,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -193,7 +259,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -213,7 +279,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -233,7 +299,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -253,7 +319,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -265,6 +331,226 @@
       "docs": "https://geminicli.com/docs/tools/mcp-server/"
     },
     {
+      "id": "antigravity",
+      "platform": "Google Antigravity",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "47 tools, server 1.4.4"
+        },
+        {
+          "check": "json parses",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://antigravity.google/docs/mcp"
+    },
+    {
+      "id": "minimax",
+      "platform": "MiniMax (Agent / Coding CLI)",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "47 tools, server 1.4.4"
+        },
+        {
+          "check": "json parses",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://platform.minimaxi.com/document/mcp"
+    },
+    {
+      "id": "deepseek",
+      "platform": "DeepSeek (CLI / Agent Harness)",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "47 tools, server 1.4.4"
+        },
+        {
+          "check": "json parses",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://api-docs.deepseek.com/"
+    },
+    {
+      "id": "kimi-code",
+      "platform": "Kimi Code (Moonshot AI)",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "47 tools, server 1.4.4"
+        },
+        {
+          "check": "json parses",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://platform.moonshot.ai/docs"
+    },
+    {
+      "id": "qwen-cli",
+      "platform": "Qwen Code / Qwen-Agent",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "47 tools, server 1.4.4"
+        },
+        {
+          "check": "json parses",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://github.com/QwenLM/qwen-code"
+    },
+    {
+      "id": "openclaw-hermes",
+      "platform": "OpenClaw / Hermes Agent",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "47 tools, server 1.4.4"
+        },
+        {
+          "check": "json parses",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://github.com/NousResearch/hermes-agent"
+    },
+    {
+      "id": "opencode",
+      "platform": "OpenCode",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "47 tools, server 1.4.4"
+        },
+        {
+          "check": "json parses",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://opencode.ai/docs/mcp-servers/"
+    },
+    {
+      "id": "trae",
+      "platform": "ByteDance Trae IDE",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "47 tools, server 1.4.4"
+        },
+        {
+          "check": "json parses",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://docs.trae.ai/ide/model-context-protocol"
+    },
+    {
+      "id": "cline",
+      "platform": "Cline / Roo Code (VS Code Open-Source Agent)",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "47 tools, server 1.4.4"
+        },
+        {
+          "check": "json parses",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://docs.cline.bot/mcp/configuring-mcp-servers"
+    },
+    {
+      "id": "continue-dev",
+      "platform": "Continue.dev (Open-Source IDE Agent)",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "47 tools, server 1.4.4"
+        },
+        {
+          "check": "json parses",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://docs.continue.dev/customize/deep-dives/mcp"
+    },
+    {
+      "id": "goose",
+      "platform": "Block Goose (AAIF / Linux Foundation Open-Source Agent)",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "47 tools, server 1.4.4"
+        },
+        {
+          "check": "json parses",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://block.github.io/goose/docs/getting-started/using-extensions"
+    },
+    {
       "id": "codex",
       "platform": "OpenAI Codex CLI",
       "door": "free",
@@ -273,7 +559,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "toml is [table] + key = \"value\" lines",
@@ -293,7 +579,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -313,7 +599,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -333,7 +619,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -353,7 +639,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp",
           "ok": true,
-          "detail": "19 tools, server 1.4.4"
+          "detail": "52 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -373,7 +659,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "python parses (ast)",
@@ -385,6 +671,186 @@
       "docs": "https://docs.x.ai/docs/guides/tools/remote-mcp-tools"
     },
     {
+      "id": "nvidia-nat",
+      "platform": "NVIDIA NeMo Agent Toolkit (NAT / AgentIQ)",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "47 tools, server 1.4.4"
+        },
+        {
+          "check": "json parses",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://docs.nvidia.com/nemo/agent-toolkit/latest/workflows/mcp/mcp-client.html"
+    },
+    {
+      "id": "nvidia-nim-guardrails",
+      "platform": "NVIDIA NeMo Guardrails (MCP Actions)",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "47 tools, server 1.4.4"
+        },
+        {
+          "check": "json parses",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://docs.nvidia.com/nemo/guardrails/latest/index.html"
+    },
+    {
+      "id": "zhipu-glm",
+      "platform": "Zhipu AI (GLM-4 / AutoGLM / BigModel)",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "47 tools, server 1.4.4"
+        },
+        {
+          "check": "json parses",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://open.bigmodel.cn/dev/howuse/mcp"
+    },
+    {
+      "id": "modelscope-qwen-agent",
+      "platform": "Alibaba ModelScope / Qwen-Agent (Python SDK)",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "47 tools, server 1.4.4"
+        },
+        {
+          "check": "python parses (ast)",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://github.com/QwenLM/Qwen-Agent"
+    },
+    {
+      "id": "baidu-qianfan",
+      "platform": "Baidu ERNIE / Qianfan AppBuilder",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "47 tools, server 1.4.4"
+        },
+        {
+          "check": "python parses (ast)",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://github.com/baidubce/app-builder"
+    },
+    {
+      "id": "hf-smolagents",
+      "platform": "Hugging Face smolagents",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "47 tools, server 1.4.4"
+        },
+        {
+          "check": "python parses (ast)",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://huggingface.co/docs/smolagents/reference/tools"
+    },
+    {
+      "id": "llama-stack",
+      "platform": "Meta Llama Stack",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "47 tools, server 1.4.4"
+        },
+        {
+          "check": "python parses (ast)",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://llama-stack.readthedocs.io/en/latest/building_applications/tools.html"
+    },
+    {
+      "id": "pydantic-ai",
+      "platform": "PydanticAI",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "47 tools, server 1.4.4"
+        },
+        {
+          "check": "python parses (ast)",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://ai.pydantic.dev/mcp/client/"
+    },
+    {
+      "id": "litellm",
+      "platform": "LiteLLM Proxy / Universal MCP Gateway",
+      "door": "free",
+      "state": "PASS",
+      "checks": [
+        {
+          "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
+          "ok": true,
+          "detail": "47 tools, server 1.4.4"
+        },
+        {
+          "check": "json parses",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "client_steps": "not exercised: the client's own UI or CLI was not run on this host; the steps follow the vendor documentation linked in docs",
+      "docs": "https://docs.litellm.ai/docs/mcp"
+    },
+    {
       "id": "google-adk-free",
       "platform": "Google ADK (Vertex AI Agent Builder, free door)",
       "door": "free",
@@ -393,7 +859,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "python parses (ast)",
@@ -413,7 +879,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp",
           "ok": true,
-          "detail": "19 tools, server 1.4.4"
+          "detail": "52 tools, server 1.4.4"
         },
         {
           "check": "python parses (ast)",
@@ -433,7 +899,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "python parses (ast)",
@@ -453,7 +919,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp",
           "ok": true,
-          "detail": "19 tools, server 1.4.4"
+          "detail": "52 tools, server 1.4.4"
         },
         {
           "check": "python parses (ast)",
@@ -473,7 +939,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "text block (form values): no syntax to check",
@@ -493,7 +959,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "text block (form values): no syntax to check",
@@ -513,7 +979,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "text block (form values): no syntax to check",
@@ -533,7 +999,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "shell syntax (bash -n)",
@@ -553,7 +1019,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "text block (form values): no syntax to check",
@@ -573,7 +1039,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "text block (form values): no syntax to check",
@@ -593,7 +1059,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "text block (form values): no syntax to check",
@@ -613,7 +1079,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "text block (form values): no syntax to check",
@@ -633,7 +1099,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "text block (form values): no syntax to check",
@@ -653,12 +1119,12 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "curl block executed: tools/list answered",
           "ok": true,
-          "detail": "14 tools"
+          "detail": "47 tools"
         }
       ],
       "client_steps": "executed here",
@@ -666,8 +1132,8 @@
     }
   ],
   "totals": {
-    "clients": 30,
-    "pass": 30,
+    "clients": 50,
+    "pass": 50,
     "fail": 0
   },
   "doctrine": "measurement, not certification"
