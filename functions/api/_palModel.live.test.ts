@@ -34,7 +34,9 @@ const ENV = {
 };
 
 const CONFIGURED = modelConfigured(ENV);
-const pals = housePals((s) => `did:key:z${s.padEnd(44, "7").slice(0, 44)}`, "2026-10-26T00:00:00Z");
+// No DID: no keypair is provisioned for the house staff, and the registry refuses to build
+// a record carrying a DID that is not a real ed25519 public key.
+const pals = housePals(() => "", "2026-10-26T00:00:00Z");
 const measure = pals.find((p) => p.slug === "measure")!;
 
 describe.skipIf(!CONFIGURED)("the model, live", () => {
