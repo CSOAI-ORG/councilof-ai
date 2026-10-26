@@ -425,6 +425,27 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         run: PYTHONPATH=scripts python3 -m unittest scripts/test_publish_public_root.py
 
+      # The OTS upgrader used to print only the exception class. On 2026-10-26 the
+      # root's proof was already in Bitcoin block 973216 with two calendars holding
+      # the transaction, and the log could only say "CommitmentNotFoundError" four
+      # times - which reads like a dead calendar and sent the search after the wrong
+      # cause. This step pins that the calendar's OWN reason reaches the operator,
+      # and that the calendar is asked with the message of the node carrying the
+      # pending attestation (a nested proof's commitment is an intermediate digest).
+      - name: OTS upgrader — the calendar's own reason reaches the operator
+        if: steps.scope.outputs.gated == 'true'
+        run: python3 -m unittest scripts/test_ots_upgrade.py
+
+      # The public-root promotion gate used to read the pull request's headRefOid, which LAGS
+      # the branch by seconds after the job pushes the upgraded proof. On 2026-10-26 it read
+      # the PREVIOUS commit, watched the gates for those older bytes, and halted the promotion
+      # of a candidate whose proof was already CONFIRMED_BITCOIN. The gate now lives in a tool
+      # that reads the branch ref, re-reads it every cycle, and refuses to merge bytes whose
+      # gates did not run. This step pins those rules, and the rules can go red.
+      - name: Public-root promotion gate — merge only the bytes whose gates ran
+        if: steps.scope.outputs.gated == 'true'
+        run: python3 -m unittest scripts/test_public_root_promotion_gate.py
+
       - name: Mill receipt readiness — crypto, lifecycle and regulation stay separate
         if: steps.scope.outputs.gated == 'true'
         run: npm run guard:mill-receipt-readiness
