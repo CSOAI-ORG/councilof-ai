@@ -39,18 +39,48 @@ def attestations(t):
     return out
 
 
-def upgrade(t) -> bool:
+def calendar_reason(exc) -> str:
+    """The calendar's OWN words about why it cannot complete this proof yet.
+
+    CommitmentNotFoundError carries the calendar's HTTP 404 body in .reason:
+    "Timestamped by transaction <txid>; waiting for 6 confirmations", or
+    "Pending confirmation in Bitcoin blockchain". That body is the only statement
+    of the proof's true state, and it is the difference between "we do not know"
+    and "Bitcoin already holds this commitment and N confirmations remain".
+
+    Printing only the exception class threw it away. On 2026-10-26 the root's
+    proof was already committed in Bitcoin block 973216 and the estate's log could
+    show only "CommitmentNotFoundError" four times - which reads exactly like
+    "the calendar never got it" and sent the investigation after the wrong cause
+    for nine hours. The class name is a category; the reason is the evidence.
+    """
+    reason = getattr(exc, "reason", None)
+    if isinstance(reason, str) and reason.strip():
+        return reason.strip()
+    text = str(exc).strip()
+    return text or "no reason given"
+
+
+def upgrade(t, reasons=None) -> bool:
     changed = False
     for att in list(t.attestations):
         if isinstance(att, PendingAttestation):
             uri = att.uri.decode() if isinstance(att.uri, bytes) else att.uri
             try:
+                # The key is the message of the node that CARRIES this pending
+                # attestation, not the top-level message: a calendar indexes the
+                # commitment it issued, and in a nested proof that commitment is
+                # an intermediate digest. The reference client (otsclient) asks
+                # the same way, per sub-stamp.
                 t.merge(RemoteCalendar(uri).get_timestamp(t.msg))
                 changed = True
             except Exception as exc:  # reported, never swallowed
-                print(f"    {uri}: {type(exc).__name__}")
+                state = f"{type(exc).__name__}: {calendar_reason(exc)}"
+                print(f"    {uri}: {state}")
+                if reasons is not None:
+                    reasons.setdefault(uri, state)
     for sub in t.ops.values():
-        changed |= upgrade(sub)
+        changed |= upgrade(sub, reasons)
     return changed
 
 
@@ -75,7 +105,8 @@ def main(paths: list[str]) -> int:
             print(f"  {path.name}: NOT A TIMESTAMP ({type(exc).__name__}) — skipped, never a proof")
             unreadable += 1
             continue
-        upgrade(dtf.timestamp)
+        reasons: dict = {}
+        upgrade(dtf.timestamp, reasons)
         after = attestations(dtf.timestamp)
         blocks = sorted(
             a.height for a in after if isinstance(a, BitcoinBlockHeaderAttestation)
@@ -87,7 +118,12 @@ def main(paths: list[str]) -> int:
             print(f"  {path.name}: BITCOIN blocks {blocks}")
             any_btc = True
         else:
-            print(f"  {path.name}: still pending — not rewritten")
+            # The reason the calendar gave is the state of this proof. Saying only
+            # "still pending" is what made 2026-10-26 look like a dead calendar.
+            detail = ""
+            if reasons:
+                detail = " — " + "; ".join(sorted(set(reasons.values())))
+            print(f"  {path.name}: still pending — not rewritten{detail}")
     if unreadable:
         print(f"\n  {unreadable} file(s) are not timestamps at all. They are not stamps and never")
         print("  proofs; re-stamp them from source with scripts/badger/ots_stamp.py.")
