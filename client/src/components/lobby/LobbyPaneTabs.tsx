@@ -12,7 +12,7 @@ import { FOCUS } from "./glass";
  */
 
 export const PANEL_ID = "coai-lobby-panel";
-export const NAV_ID = "navigation";
+export const NAV_ID = "coai-workspace-navigation";
 export const tabDomId = (id: LobbyTabId) => `coai-lobby-tab-${id}`;
 
 export default function LobbyPaneTabs({
