@@ -2,8 +2,9 @@
 
 **Status: DRAFT. Not sent. Do not send without the step named at the end.**
 
-Prepared 26 October 2026 by a CSOAI lane agent. Nothing has been emailed, submitted, or signed up
-for. The feedback channel is rolling and open — NIST states it will "release resources and review
+Prepared 26 October 2026 by a CSOAI lane agent. The message was built and every figure in it was
+re-read from the live source on the day; the send itself is blocked on the house mail credential,
+which the server rejects. Nothing has been emailed, submitted, or signed up for. The feedback channel is rolling and open — NIST states it will "release resources and review
 feedback on a rolling basis" rather than run a fixed comment period — so there is no closing date to
 work back from.
 
@@ -51,7 +52,7 @@ something a party other than the implementer can check?**
 
 ### Who is commenting
 
-CSOAI Ltd (Council of AI), Companies House 16939667, 3rd Floor, 86-90 Paul Street, London EC2A 4NE,
+CSOAI Ltd (Council of AI), 3rd Floor, 86-90 Paul Street, London EC2A 4NE,
 United Kingdom.
 
 We are an independent measurement body. We publish signed, publicly re-checkable measurements of how
@@ -228,15 +229,29 @@ are saying so because we are the ones who published the failure that motivates i
    is to inform the draft project description rather than react to it. That argues for sending
    before the draft appears, not after.
 4. **Decide the name and contact line.** The hub asks for Name (optional), Contact Email (optional)
-   and Organization (optional). Organization is `CSOAI Ltd (Council of AI), Companies House 16939667`.
+   and Organization (optional). Organization is `CSOAI Ltd (Council of AI)`, the name we are listed under in the bodies we take part in, and the contact email is `nicholas@csoai.org`.
    The comment is drafted in the first person plural and for publication under FOIA, so whether a
    personal name is attached is the owner's decision.
-5. **Send it, and keep the receipt.** The house identity is the CSOAI domain address, and the local
-   sender is already configured for it (`msmtp`, account `csoai`, from `nicholas@csoai.org`, TLS 1.3
-   to `mail.privateemail.com:587`).
+5. **Send it, and keep the receipt.** The house identity is `nicholas@csoai.org`, and the message is
+   built and ready. **The send is blocked on the mail credential, not on the message.**
 
-   Build the message from this file. This extracts the comment body only — the drafting notes,
-   the "what we could not read" section and this checklist stay out of the email:
+   *Delivery state measured on 26 October 2026.* The local sender (`msmtp`, account `csoai`,
+   `mail.privateemail.com:587`) completes TLS 1.3 and reaches the server, and the server offers
+   `AUTH PLAIN LOGIN` — but the stored Proton app password is rejected with
+   `535 5.7.8 Error: authentication failed`. The credential is present in the macOS keychain
+   (`PRIVATEMAIL_PASSWORD`, service `meok-keystone`) and is retrievable, so what is stale is the
+   credential itself, not the configuration. The same 535 appears in `~/.msmtp.log` for **every**
+   outbound attempt since 13 September 2026, so this route has not worked since then. The other two
+   routes are closed as well: the Proton web session has expired, and the stored Resend key returns
+   `401 API key is invalid`.
+
+   Two one-minute owner actions clear it:
+   - regenerate the Proton app password for `nicholas@csoai.org` and replace the keychain item
+     `PRIVATEMAIL_PASSWORD` (service `meok-keystone`), then run the send below; or
+   - paste the prepared message into the Proton web client, which the owner already has a session in.
+
+   Build the message from this file. This extracts the comment body only — the drafting notes, the
+   "what we could not read" section and this checklist stay out of the email:
 
    ```bash
    cd measurement/filings/2026-10
@@ -244,9 +259,10 @@ are saying so because we are the ones who published the failure that motivates i
    import re
    src = open('NIST-NCCoE-agentic-SI-identity-comment-DRAFT.md', encoding='utf-8').read()
    body = re.search(r'^## The comment\n(.*?)^## Before this is sent', src, re.S | re.M).group(1).strip()
-   print('From: nicholas@csoai.org')
+   print('From: CSOAI Ltd (Council of AI) <nicholas@csoai.org>')
+   print('Reply-To: nicholas@csoai.org')
    print('To: AI-Identity@nist.gov')
-   print('Subject: Comment on the Software and AI Agent Identity and Authorization project (rolling feedback)')
+   print('Subject: Comment on the Software and AI Agent Identity and Authorization project')
    print('MIME-Version: 1.0')
    print('Content-Type: text/plain; charset=utf-8')
    print()
@@ -263,9 +279,10 @@ are saying so because we are the ones who published the failure that motivates i
 
    Save the sent copy and the delivery receipt beside this file. Nothing in this repository has been
    sent; the owner sends.
-6. **Register for the 28 October webinar** — one click path prepared, and it is the day before the
-   closing of the NIST comment window this comment belongs to. The registration is under the owner's
-   identity, because the house rule is that we do not create accounts as the agent.
+6. **The 28 October webinar — not registered.** The owner was asked and declined on 26 October 2026,
+   so no registration was made and no account was created. The path is recorded below and remains one
+   click away if that changes. The registration is under the owner's identity, because the house rule
+   is that we do not create accounts as the agent.
    - Webinar: *DevSecOps and the Impact of Agentic SI*, Wednesday 28 October 2026, 1:00–3:00pm EDT.
      Attendance limited to 500 participants; no fee; a post-event recording will be made available.
      <https://www.nccoe.nist.gov/get-involved/attend-events/devsecops-and-impact-agentic-si>
