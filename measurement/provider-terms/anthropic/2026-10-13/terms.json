@@ -1,0 +1,66 @@
+{
+  "schema": "csoai.provider-terms-archive/0.1",
+  "provider": "Anthropic",
+  "fetched_at": "2026-10-13T06:11:59Z",
+  "fetched_from": "RunPod pod fb4156fe923e (curl, UA 'Mozilla/5.0 (CSOAI archive)')",
+  "quote_rule": "verbatim substrings of the tag-stripped, whitespace-collapsed HTML bytes whose sha256 is given; no conclusion is drawn here",
+  "raw_bytes_location": "/workspace/provider-terms/anthropic/2026-10-13/ on the measurement pod (not republished)",
+  "documents": [
+    {
+      "name": "commercial-terms",
+      "url": "https://www.anthropic.com/legal/commercial-terms",
+      "http_status": 200,
+      "bytes": 169253,
+      "sha256": "5097dd3ea1f4367e7978b324e9e5fa210089415359f7a9c375854bd3419ab918",
+      "quotes": {
+        "effective": "Effective June 17, 2025",
+        "B_outputs": "As between the parties and to the extent permitted by applicable law, Anthropic agrees that Customer (a) retains all rights to its Inputs, and (b) owns its Outputs.",
+        "D4_use_restrictions": "D.4. Use Restrictions. Customer may not and must not attempt to (a) access the Services to build a competing product or service, including to train competing AI models or resell the Services except as expressly approved by Anthropic; (b) reverse engineer or duplicate the Services; or (c) support any third party’s attempt at any of the conduct restricted in this sentence.",
+        "I3a_suspension": "I.3.a. Anthropic may suspend Customer’s access to any portion or all of the Services if: (a) Anthropic reasonably believes or determines that (i) there is a risk to or attack on any of the Services; (ii) Customer or any User is using the Services in violation of Sections D.1 (Compliance), D.2 (Policies and Service Terms) or D.4 (Use Restrictions); or (iii) Anthropic’s provision of the Services to Customer is prohibited by applicable law or would result in a material increase in the cost of providing the Services; or (b) any vendor suspends or terminates Anthropic’s use of any third-party services or products required to enable Customer to access the Services (each, a “ Service Suspension ”)."
+      }
+    },
+    {
+      "name": "aup-2025-09-15",
+      "url": "https://www.anthropic.com/legal/archive/22742366-2ef0-4c7a-a833-6523f10d3944",
+      "http_status": 200,
+      "bytes": 569032,
+      "sha256": "36a80b75b47718c15c2fd415fd1dce1150b9411eac2570d5e109caa618fd6b66",
+      "quotes": {
+        "effective": "Effective September 15, 2025",
+        "enforcement": "If we learn that you have violated our Usage Policy, we may throttle, suspend, or terminate your access to our products and services.",
+        "jailbreak": "Intentionally bypass capabilities, restrictions, or guardrails established within our products for the purposes of instructing the model to produce harmful outputs (e.g., jailbreaking or prompt injection) without prior authorization from Anthropic",
+        "training": "Utilization of inputs and outputs to train an AI model (e.g., “model scraping” or “model distillation”) without prior authorization from Anthropic"
+      }
+    },
+    {
+      "name": "aup-posted",
+      "url": "https://www.anthropic.com/legal/aup",
+      "http_status": 200,
+      "bytes": 889128,
+      "sha256": "1623ee5d6ccef7ddec86c157174f0085d019bba35d95f7421bf529f669eadc9f",
+      "quotes": {
+        "effective": "Effective November 12, 2026",
+        "safeguard_block": "Our products also include real-time safeguards that may block or limit certain outputs, but encountering a block does not by itself indicate a violation of the Usage Policy.",
+        "jailbreak": "Intentionally bypass or interfere with capabilities, restrictions, or guardrails established within our products, including by circumvention of the account sign-up or log-in process or by instructing the model to produce harmful outputs (e.g., jailbreaking or prompt injection), without prior authorization from Anthropic",
+        "training": "Use outputs to train an AI model (e.g., “model scraping” or “model distillation”) without prior authorization from Anthropic"
+      }
+    },
+    {
+      "name": "credit-terms",
+      "url": "https://www.anthropic.com/legal/credit-terms",
+      "http_status": 200,
+      "bytes": 95082,
+      "sha256": "18eac9c70650095a381b226816f6863270b7f9938d5710e0f867098fb8fb6527",
+      "quotes": {
+        "effective": "Effective March 4, 2024",
+        "B1_expiry": "Promotional Credits expire at the time indicated when issued (or otherwise one calendar year from when issued if no time is specified).",
+        "B2_no_transfer": "No Transfer. Customer may not transfer or sell Credits, whether paid for or provided as part of a promotion, to any other person or entity, and Credits may only be used by the holder of the Anthropic account to which the Credits are associated."
+      }
+    }
+  ],
+  "not_found": {
+    "commercial-terms": "no clause containing 'benchmark' (case-insensitive) in the tag-stripped text",
+    "aup-2025-09-15": "no clause containing 'benchmark'",
+    "aup-posted": "no clause containing 'benchmark'"
+  }
+}

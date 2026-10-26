@@ -208,6 +208,14 @@ print(len(errs)); [print(e) for e in errs[:5]]; sys.exit(1 if errs else 0)`);
     cu.name === cp.name && cu.version === cp.version && cu.description === cp.description && cu.mcpServers === cp.mcpServers, `${cu.name}@${cu.version}`);
   rec("grok-plugin", "marketplace lists the same plugin, local source ./",
     gk.plugins.length === 1 && gk.plugins[0].name === cp.name && gk.plugins[0].source?.path === "./" && gk.metadata.version === WANT_VERSION, gk.plugins[0].name);
+  const ag = readJson("distribution/plugin/plugin.json");
+  const agMcp = readJson("distribution/plugin/mcp_config.json");
+  const verifySkill = frontMatter(read("distribution/plugin/skills/gspc-verify/SKILL.md"));
+  rec("antigravity-plugin", "plugin.json: matches Claude name/version, mcp_config.json + skills + rules resolve",
+    ag.name === cp.name && ag.id === cp.name && ag.version === WANT_VERSION &&
+    existsSync(join(REPO, "distribution/plugin", ag.mcpServers)) &&
+    Object.values(agMcp.mcpServers).every((s) => s.serverUrl === DOOR) &&
+    !!verifySkill?.name && !!verifySkill?.description, `${ag.name}@${ag.version}`);
 }
 
 // ── 4. form-value targets (Claude connector, OpenAI app) ────────────────────────────────────
@@ -362,6 +370,17 @@ assert a["state"]=="LIVE" and b["state"]=="ABSENT" and a["doctrine_sha256"]=="${
 
 // ── 11. brand-gate, certif, price — over EVERY output ───────────────────────────────────────
 const allOutputs = manifest.files.map((f) => f.path).concat(["distribution/MANIFEST.json"]).filter((p) => !BINARY.test(p));
+// A byte copy of a file the site already serves (the GCP kit's agent card) is scanned by the site's own gates and by
+// the doctrine lint below; its chain id "eip155:8453, USDC" is not a price, and its embedded JSON notes are not HTML/txt page copy.
+const SERVED_COPIES = new Set(["distribution/gcp-marketplace/agent-card.json"]);
+const stripServedCardCopy = (p, t) => {
+  if (p === "public/oasf/ai.councilof.measurement-agent.oasf.json") {
+    const d = JSON.parse(t);
+    for (const m of d.modules || []) if (m.data && "card_data" in m.data) m.data.card_data = "(served card: /.well-known/agent-card.json)";
+    return JSON.stringify(d, null, 2);
+  }
+  return t;
+};
 {
   // (a) brand-gate on the distribution dir as-is
   const a = spawnSync(process.execPath, [join(REPO, "scripts/brand-gate.mjs"), join(REPO, "distribution")], { encoding: "utf8" });
@@ -370,10 +389,10 @@ const allOutputs = manifest.files.map((f) => f.path).concat(["distribution/MANIF
   //     containing "mcp-", so every output is re-presented as NNN.txt (and JSON also as NNN.json).
   const tmp = mkdtempSync(join(tmpdir(), "hx-gate-"));
   allOutputs.forEach((p, i) => {
-    const t = read(p);
+    const raw = read(p);
     const n = String(i).padStart(3, "0");
-    writeFileSync(join(tmp, `f${n}.txt`), t);
-    if (p.endsWith(".json")) writeFileSync(join(tmp, `f${n}.json`), t);
+    if (!SERVED_COPIES.has(p)) writeFileSync(join(tmp, `f${n}.txt`), stripServedCardCopy(p, raw));
+    if (p.endsWith(".json")) writeFileSync(join(tmp, `f${n}.json`), raw);
   });
   const b = spawnSync(process.execPath, [join(REPO, "scripts/brand-gate.mjs"), tmp], { encoding: "utf8" });
   let detail = (b.stdout + b.stderr).trim().split("\n").pop();
@@ -419,18 +438,8 @@ const allOutputs = manifest.files.map((f) => f.path).concat(["distribution/MANIF
     if (Array.isArray(node)) return node.forEach((v) => walkJson(p, v, underNegKey));
     if (node && typeof node === "object") for (const [k, v] of Object.entries(node)) { scanText(p, k, underNegKey); walkJson(p, v, underNegKey || NEG_KEYS.test(k)); }
   };
-  // A byte copy of a file the site already serves (the GCP kit's agent card) is scanned by the site's own gates and by
-  // the doctrine lint below; its chain id "eip155:8453, USDC" is not a price.
-  const SERVED_COPIES = new Set(["distribution/gcp-marketplace/agent-card.json"]);
   for (const p of allOutputs.filter((x) => !SERVED_COPIES.has(x))) {
-    let t = read(p);
-    // The OASF A2A record embeds the served card as modules[integration/a2a].data.card_data; that copy is checked
-    // above to equal the served card byte-for-byte, so it is scanned as the served card is (not here).
-    if (p === "public/oasf/ai.councilof.measurement-agent.oasf.json") {
-      const d = JSON.parse(t);
-      for (const m of d.modules || []) if (m.data && "card_data" in m.data) m.data.card_data = "(served card: /.well-known/agent-card.json)";
-      t = JSON.stringify(d, null, 2);
-    }
+    const t = stripServedCardCopy(p, read(p));
     if (p.endsWith(".json")) walkJson(p, JSON.parse(t), false); else scanText(p, t, false);
     for (const m of t.matchAll(/(?:[$£€]\s?\d[\d,.]*|\b(?:USD|GBP|EUR)\s?\d[\d,.]*|\d[\d,.]*\s?(?:USD|GBP|EUR|USDC)\b)/g)) prices.push(`${p}: ${m[0]}`);
   }
@@ -440,7 +449,7 @@ const allOutputs = manifest.files.map((f) => f.path).concat(["distribution/MANIF
 
   // (e) every README-like output points at the data, the corrections ledger and free verification
   const I = dist.identity;
-  const readmes = allOutputs.filter((p) => /(README|readme|SKILL|GEMINI)\.md$/.test(p));
+  const readmes = allOutputs.filter((p) => /(README|readme|SKILL|GEMINI|AGENTS)\.md$/.test(p));
   const noLinks = readmes.filter((p) => { const t = read(p); return ![I.board, I.corrections, I.verify_page].every((u) => t.includes(u)); });
   rec("*", "every README carries data + corrections ledger + verify links", readmes.length > 0 && noLinks.length === 0,
     noLinks.join(", ") || `${readmes.length} README-like files`);
