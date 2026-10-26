@@ -1,0 +1,189 @@
+# GSPC benchmark tasks for OpenAI Evals.
+#
+# One task per published GSPC bank. Every task points at the frozen bytes on the Hugging Face Hub
+# and states the bank's sha256, so a run can be checked against what was actually read.
+#
+# Generated from the published banks by scripts/surface/build-bench-suite.mjs. No number here is typed.
+#
+# The grading rule is read_label() from harness/gspc-top100/mill_hub_queue.py — deterministic and
+# lexical. A model never judges another model.
+
+# ── affect ─────────────────────────────────────────────
+- task: gspc_affect
+  dataset_path: csoai/gspc-affect
+  dataset_name: default
+  split: train
+  test_split: train
+  # 42 items; bank sha256 5ce11c084a6e968cc49314cfec2898725fb7b01513dc117f869be17b4a263bc7
+  # Label menu: DISCLOSE | NULL | PERMITTED | PROHIBITED
+  # Prompt template and grader: see https://councilof.ai/bench/axes.json
+  # Run with: python3 harness/bench/run_bench.py --axis affect --model YOUR_MODEL --base-url YOUR_ENDPOINT
+  metric_list:
+    - metric: exact_match
+      aggregation: mean
+      higher_is_better: true
+
+# ── art5-safeguard ─────────────────────────────────────────────
+- task: gspc_art5_safeguard
+  dataset_path: csoai/gspc-art5
+  dataset_name: default
+  split: train
+  test_split: train
+  # 36 items; bank sha256 60f08ca251d3afb6e085e66cb3e15a5c79b2f4e5422f16221c1fbf026748d672
+  # Label menu: PERMITTED | PROHIBITED
+  # Prompt template and grader: see https://councilof.ai/bench/axes.json
+  # Run with: python3 harness/bench/run_bench.py --axis art5-safeguard --model YOUR_MODEL --base-url YOUR_ENDPOINT
+  metric_list:
+    - metric: exact_match
+      aggregation: mean
+      higher_is_better: true
+
+# ── care ─────────────────────────────────────────────
+- task: gspc_care
+  dataset_path: csoai/gspc-care
+  dataset_name: default
+  split: train
+  test_split: train
+  # 200 items; bank sha256 3cf9c16dbb6bf5b4b64e342fb3481c1d0d6ceee09c5a1a2e6936b0d4775f2aad
+  # Label menu: 0 | 1
+  # Prompt template and grader: see https://councilof.ai/bench/axes.json
+  # Run with: python3 harness/bench/run_bench.py --axis care --model YOUR_MODEL --base-url YOUR_ENDPOINT
+  metric_list:
+    - metric: exact_match
+      aggregation: mean
+      higher_is_better: true
+
+# ── conformance ─────────────────────────────────────────────
+- task: gspc_conformance
+  dataset_path: csoai/gspc-mcp
+  dataset_name: default
+  split: train
+  test_split: train
+  # 35 items; bank sha256 9955a9c145640d693773d6cfdbef9554eb8025332b5247da9bc2b9f250908f0b
+  # Label menu: CONFORMS | VIOLATES
+  # Prompt template and grader: see https://councilof.ai/bench/axes.json
+  # Run with: python3 harness/bench/run_bench.py --axis conformance --model YOUR_MODEL --base-url YOUR_ENDPOINT
+  metric_list:
+    - metric: exact_match
+      aggregation: mean
+      higher_is_better: true
+
+# ── continuity ─────────────────────────────────────────────
+- task: gspc_continuity
+  dataset_path: csoai/gspc-asi
+  dataset_name: default
+  split: train
+  test_split: train
+  # 33 items; bank sha256 a3ff4e3158a538a90ce7c26c2a402af6d078d66334bf48a93607e26fea689850
+  # Label menu: NOT_APPLICABLE | QUANTUM_SAFE | QUANTUM_VULNERABLE
+  # Prompt template and grader: see https://councilof.ai/bench/axes.json
+  # Run with: python3 harness/bench/run_bench.py --axis continuity --model YOUR_MODEL --base-url YOUR_ENDPOINT
+  metric_list:
+    - metric: exact_match
+      aggregation: mean
+      higher_is_better: true
+
+# ── cross-reality ─────────────────────────────────────────────
+- task: gspc_cross_reality
+  dataset_path: csoai/gspc-xr
+  dataset_name: default
+  split: train
+  test_split: train
+  # 32 items; bank sha256 9877a2b2f9752f37e00bcc400732ade99ec9f4f8d4f9b066907c588f142fc446
+  # Label menu: CONFIRM | PROCEED | REFUSE
+  # Prompt template and grader: see https://councilof.ai/bench/axes.json
+  # Run with: python3 harness/bench/run_bench.py --axis cross-reality --model YOUR_MODEL --base-url YOUR_ENDPOINT
+  metric_list:
+    - metric: exact_match
+      aggregation: mean
+      higher_is_better: true
+
+# ── detector-interop ─────────────────────────────────────────────
+- task: gspc_detector_interop
+  dataset_path: csoai/gspc-det
+  dataset_name: default
+  split: train
+  test_split: train
+  # 33 items; bank sha256 73a30d6d32f4012b11a7ba2138abe8017f74f06faf40ac3f32e0094fe87ba36c
+  # Label menu: DIVERGENT | INTEROPERABLE
+  # Prompt template and grader: see https://councilof.ai/bench/axes.json
+  # Run with: python3 harness/bench/run_bench.py --axis detector-interop --model YOUR_MODEL --base-url YOUR_ENDPOINT
+  metric_list:
+    - metric: exact_match
+      aggregation: mean
+      higher_is_better: true
+
+# ── governance ─────────────────────────────────────────────
+- task: gspc_governance
+  dataset_path: csoai/gspc-gov
+  dataset_name: default
+  split: train
+  test_split: train
+  # 237 items; bank sha256 9c9de457cdded0d8e176067d684b3dab0074cc0a8d14e497c7c0b6f7aa3b61b5
+  # Label menu: HIGH_RISK | LIMITED_RISK | MINIMAL_RISK | PROHIBITED
+  # Prompt template and grader: see https://councilof.ai/bench/axes.json
+  # Run with: python3 harness/bench/run_bench.py --axis governance --model YOUR_MODEL --base-url YOUR_ENDPOINT
+  metric_list:
+    - metric: exact_match
+      aggregation: mean
+      higher_is_better: true
+
+# ── machinery-conformity ─────────────────────────────────────────────
+- task: gspc_machinery_conformity
+  dataset_path: csoai/gspc-mach
+  dataset_name: default
+  split: train
+  test_split: train
+  # 33 items; bank sha256 fdbe463c3f0268600ebf9e70372db1f27ac5668b30276323e247de86adbbc51c
+  # Label menu: NOT_SAFETY_FUNCTION | OUT_OF_SCOPE | PART_A
+  # Prompt template and grader: see https://councilof.ai/bench/axes.json
+  # Run with: python3 harness/bench/run_bench.py --axis machinery-conformity --model YOUR_MODEL --base-url YOUR_ENDPOINT
+  metric_list:
+    - metric: exact_match
+      aggregation: mean
+      higher_is_better: true
+
+# ── openness ─────────────────────────────────────────────
+- task: gspc_openness
+  dataset_path: csoai/gspc-oss
+  dataset_name: default
+  split: train
+  test_split: train
+  # 32 items; bank sha256 3fc33a13be287fbed8b8f850828194291ae37d1250158e743a6c87d775af6a4f
+  # Label menu: PERMITTED | RESTRICTED
+  # Prompt template and grader: see https://councilof.ai/bench/axes.json
+  # Run with: python3 harness/bench/run_bench.py --axis openness --model YOUR_MODEL --base-url YOUR_ENDPOINT
+  metric_list:
+    - metric: exact_match
+      aggregation: mean
+      higher_is_better: true
+
+# ── provenance ─────────────────────────────────────────────
+- task: gspc_provenance
+  dataset_path: csoai/gspc-prv
+  dataset_name: default
+  split: train
+  test_split: train
+  # 32 items; bank sha256 79711366e29e237a56249f1573ae6bdb5a0f1b3ab78728232c5f25ceebb08c2e
+  # Label menu: DESTROYED | SURVIVES
+  # Prompt template and grader: see https://councilof.ai/bench/axes.json
+  # Run with: python3 harness/bench/run_bench.py --axis provenance --model YOUR_MODEL --base-url YOUR_ENDPOINT
+  metric_list:
+    - metric: exact_match
+      aggregation: mean
+      higher_is_better: true
+
+# ── safety ─────────────────────────────────────────────
+- task: gspc_safety
+  dataset_path: csoai/gspc-agi
+  dataset_name: default
+  split: train
+  test_split: train
+  # 36 items; bank sha256 702e01db54194f2b464871d883304063a6dd57878418572ee3c5b4e10b307e99
+  # Label menu: COMPLY | REFUSE
+  # Prompt template and grader: see https://councilof.ai/bench/axes.json
+  # Run with: python3 harness/bench/run_bench.py --axis safety --model YOUR_MODEL --base-url YOUR_ENDPOINT
+  metric_list:
+    - metric: exact_match
+      aggregation: mean
+      higher_is_better: true
