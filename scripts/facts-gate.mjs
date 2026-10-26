@@ -548,6 +548,28 @@ function ruleOwnerGated(file, raw, gatedIds, add) {
   }
 }
 
+/**
+ * The same rule, seen from the FILE'S OWN IDENTITY rather than its markup.
+ *
+ * The markup rule above can only find a gated axis when the page carries one of the
+ * render hooks (data-axis / data-testid). A hand-written page for a gated axis need
+ * not carry any of them, so the markup rule passes it and the page ships. A page is
+ * still a page: its path, its canonical URL and its title all name the axis.
+ */
+function ruleOwnerGatedPage(file, raw, gatedIds, add) {
+  if (!/\.html?$/i.test(file) && file !== "selftest") return;
+  for (const id of gatedIds) {
+    const esc = id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    // 1. The page's own path: axis/<id>.html, or a directory named for it.
+    if (new RegExp(`(?:^|/)axis/${esc}(?:/|\\.html$)`).test(file))
+      add({ rule: "owner-gated-axis-page", file, text: file, why: `This file IS the public page for axis "${id}", which is owner-gated (public_pages ${OWNER_GATED}). A gated axis may appear in the API only, never as a public page, whatever markup it carries.`, ctx: ctx(raw, 0, Math.min(80, raw.length)) });
+    // 2. A canonical URL pointing at the gated axis' public page.
+    const canon = new RegExp(`<link[^>]+rel=["']canonical["'][^>]+href=["'][^"']*axis/${esc}/?["']`, "i");
+    const cm = canon.exec(raw);
+    if (cm) add({ rule: "owner-gated-axis-page", file, text: cm[0], why: `This page declares a canonical URL for axis "${id}", which is owner-gated (public_pages ${OWNER_GATED}). The gate is about the URL a reader can open, not only about the markup on it.`, ctx: ctx(raw, cm.index, cm.index + cm[0].length) });
+  }
+}
+
 function walk(dir, out = []) {
   for (const e of readdirSync(dir)) {
     const p = join(dir, e);
@@ -584,6 +606,7 @@ function runRules(facts, files, rootDir, liveCount, liveMeasured, gatedIds = [])
     ruleCapabilityTense(facts, rel, text, add);
     ruleAnchorCount(facts, rel, text, add);
     ruleOwnerGated(rel, raw, gatedIds, add);
+    ruleOwnerGatedPage(rel, raw, gatedIds, add);
   }
   return violations;
 }
@@ -804,6 +827,20 @@ async function selftest(facts) {
   ]) {
     const v = [];
     ruleOwnerGated("selftest", html, ["regulator-transparency"], (x) => v.push(x));
+    const ok = (v.length > 0) === shouldFail;
+    ok ? pass++ : fail++;
+    console.log(`  ${ok ? "ok  " : "FAIL"}  ${shouldFail ? "must CATCH " : "must PASS  "} ${name}`);
+  }
+  // The page-level rule: a gated axis is a PAGE, whether or not the markup carries a hook.
+  for (const [name, file, html, shouldFail] of [
+    ["owner-gated axis page by path", "axis/regulator-transparency.html", "<html><body>x</body></html>", true],
+    ["owner-gated axis page by canonical", "axis/somewhere.html", '<link rel="canonical" href="https://councilof.ai/axis/regulator-transparency" />', true],
+    ["owner-gated page, no hooks at all", "axis/regulator-transparency.html", '<html><head><title>Regulator Transparency</title></head><body>declared slot</body></html>', true],
+    ["an ordinary axis page", "axis/care.html", '<html><body>data-axis="care"</body></html>', false],
+    ["a dated run report under /axis/", "axis/effect-binding-server-probe-2026-09-22.html", "<html><body>probe</body></html>", false],
+  ]) {
+    const v = [];
+    ruleOwnerGatedPage(file, html, ["regulator-transparency"], (x) => v.push(x));
     const ok = (v.length > 0) === shouldFail;
     ok ? pass++ : fail++;
     console.log(`  ${ok ? "ok  " : "FAIL"}  ${shouldFail ? "must CATCH " : "must PASS  "} ${name}`);
