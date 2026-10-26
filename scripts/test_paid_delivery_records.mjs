@@ -534,7 +534,7 @@ await test('unreadable MCP without authorization or echo stays NOT_REQUESTED',as
 });
 await test('paid MCP authorization refuses automatic redirects',async()=>{
  const built=paidModule.namespace.buildPaidRequest(feedTool.name,{subject:'fixture-subject',x_payment:'fixture-payment'},'https://example.test');
- assert.equal(built.req.redirect,'error');assert.equal(built.req.headers.get('x-payment'),'fixture-payment');assert.equal(new URL(built.req.url).origin,'https://example.test');
+ assert.equal(built.req.redirect,'manual');assert.equal(built.req.headers.get('x-payment'),'fixture-payment');assert.equal(new URL(built.req.url).origin,'https://example.test');
 });
 const testedPaths=new Set([...Object.keys(FROZEN_SEAMS),'functions/api/_x402_delivery_record.ts','functions/mcp/_paid.ts','scripts/test_paid_delivery_records.mjs','scripts/fixtures/paid_delivery_seams.json']);
 const source_sha256=Object.fromEntries([...testedPaths].sort().map(p=>[p,digest(Buffer.from(current(p)))]));
