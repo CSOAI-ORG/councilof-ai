@@ -112,6 +112,24 @@ export type BoardAxis = {
   source_sha256: string | null;
 };
 
-export type BoardRead =
+export type BoardProvenance = {
+  artifact_sha256: string | null;
+  artifact_bytes: number | null;
+  schema: string | null;
+  version: string | null;
+  /** The board's valid declared instant only; never the router's read time. */
+  as_of: string | null;
+  as_of_field: "as_of" | "asOf" | "as_of+asOf" | null;
+};
+
+export type BoardSummary = {
+  state: string;
+  source: string | null;
+  board_separation: string | null;
+  provenance: BoardProvenance;
+};
+
+export type BoardRead = (
   | { state: "LIVE"; axis: BoardAxis | null; source: string }
-  | { state: "UNREACHABLE" | "NOT_REQUESTED"; axis: null; source: string | null };
+  | { state: "UNREACHABLE" | "NOT_REQUESTED"; axis: null; source: string | null }
+) & { provenance: BoardProvenance };
