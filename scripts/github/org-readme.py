@@ -343,7 +343,7 @@ def derive() -> dict:
          "read_back": (f"as_of `{dig(gm, 'as_of')}` · merkle `{short(dig(gm, 'merkle_root'), 12)}` · {n_or_unc(dig(gm, 'card_count'))} leaves" if gm else UNCHECKABLE),
          "as_of": dig(gm, "as_of"), "current": cur(dig(gm, "as_of"))},
         {"surface": "Zenodo", "id": ZENODO_SNAPSHOT_CONCEPT, "url": f"https://doi.org/{ZENODO_SNAPSHOT_CONCEPT}",
-         "lands": f"a new version under the concept DOI, `isDerivedFrom` the methodology record {ZENODO_METHOD_CONCEPT}",
+         "lands": "a new version under the concept DOI, `isDerivedFrom` the [methodology](https://councilof.ai/methodology/)",
          "read_back": (f"{n_or_unc(zs['total_versions'])} versions · latest `{zs['doi']}` = as_of `{zs['version']}` ({zs['date']})" if zs["doi"] != UNCHECKABLE else UNCHECKABLE),
          "as_of": zs["version"] if zs["version"] != UNCHECKABLE else None, "current": cur(zs["version"])},
         {"surface": "PyPI", "id": "csoai-gspc", "url": "https://pypi.org/project/csoai-gspc/",
@@ -378,7 +378,9 @@ def badge_row(f: dict) -> str:
         # publish links one as available. Each prints the identifier, this notice, and the
         # artifact's other live copy where one exists." The identifier stays in the alt text;
         # the link now lands on the dated notice, which carries the appeal state and the mirror.
-        f"[![DOI {ZENODO_METHOD_CONCEPT} — record unavailable, see notice](https://zenodo.org/badge/DOI/{ZENODO_METHOD_CONCEPT}.svg)](https://councilof.ai/interop/zenodo-status.json)",
+        # 2026-10-14: the dead methodology DOI badge is removed from the row (mirrors such as
+        # mcpservers.org copied it as a live link); the methodology now links to its live page.
+        f"[![Methodology](https://img.shields.io/badge/methodology-councilof.ai-{GREEN}?style=flat-square)](https://councilof.ai/methodology/)",
         f"[![License MIT](https://img.shields.io/badge/license-MIT-{GREEN}?style=flat-square)](https://huggingface.co/datasets/csoai/councilof-ai-source/blob/main/source/LICENSE)",
     ])
 
@@ -473,10 +475,10 @@ def integrity_table(f: dict) -> str:
 def revenue_line(f: dict) -> str:
     o = f["one_number"]
     if not o["present"]:
-        return f"**Buyers:** {UNCHECKABLE} — `/api/revenue` did not answer at derive time."
-    return (f"**Buyers (the one number):** `{o['id']}` = **{n_or_unc(o['all_time'])}** all-time · {n_or_unc(o['last_30d'])} in 30 d · "
-            f"{n_or_unc(o['settlements'])} settlements · status {o['status']} — read from [`/api/revenue`](https://councilof.ai/api/revenue). "
-            "Published because a measurement body that hides its own zero has no standing to publish anyone else's.")
+        return f"**Non-self payers:** {UNCHECKABLE} — `/api/revenue` did not answer at derive time."
+    return (f"**Non-self payers (publisher metric):** `{o['id']}` = **{n_or_unc(o['all_time'])}** all-time · {n_or_unc(o['last_30d'])} in 30 d · "
+            f"{n_or_unc(o['settlements'])} settlements · publisher status {o['status']} — read from [`/api/revenue`](https://councilof.ai/api/revenue). "
+            "Payment principals do not establish independent customers, delivery, buyer acceptance or repeat use.")
 
 
 def surfaces_table(f: dict) -> str:
@@ -505,10 +507,18 @@ curl -s https://csoai.org/.well-known/did.json | python3 -c 'import sys,json,bas
 pipx run --spec 'csoai-gspc[verify]' csoai-gspc verify "$(curl -s https://councilof.ai/signed/card_index.json | python3 -c 'import sys,json; print(json.load(sys.stdin)["cards"][0]["card"])')"
 ```"""
 
+LEAD_LINE = (
+    "**Check a supported signed measurement card free at [councilof.ai/gspc-verify](https://councilof.ai/gspc-verify/). "
+    "Try [one historical sample and return your result](https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/public/independent-verifier-trial.md). "
+    "Machine-readable catalogue: [councilof.ai/catalog.json](https://councilof.ai/catalog.json).**"
+)
+
 WHO_WE_ARE = (
-    f"**{WORDMARK} — Council of AI (CSOAI Ltd) — is an independent AI-measurement body: we run AI systems against frozen, "
-    "published instruments, grade them deterministically, and sign every result with Ed25519 so anyone can check it without an account.** "
-    "We publish what we cannot yet measure as UNMEASURED, keep a public corrections ledger, and do not certify, sell a rank, or take money from anything we rank."
+    f"**{WORDMARK} — Council of AI — is the public measurement service operated by CSOAI Ltd, "
+    "a company incorporated in England and Wales on 2 January 2026 (Companies House 16939677), founded by Nicholas Templeman.** "
+    "We run AI systems and digital rails against published instruments, grade deterministically where the method permits it, "
+    "publish signed evidence and corrections, and keep unmeasured or uncheckable states visible. Verification is free. "
+    "We measure; we do not certify, accredit, issue legal-compliance determinations, sell a rank, or take money from anything we rank."
 )
 
 
@@ -627,6 +637,14 @@ def councilof_top(f: dict, product_index: Path | None) -> str:
         BEGIN,
         f"# {WORDMARK} — Council of AI",
         "",
+        LEAD_LINE,
+        "",
+        WHO_WE_ARE,
+        "",
+        "**How to read the board:** measurement coverage and model-ranking separation are different determinations. "
+        "TIE means the evidence does not justify a hierarchy; UNTESTED means no separation test is published yet; "
+        "deterministic-fact axes have no model leader by design.",
+        "",
         f"> **{f['lid']}**",
         "",
         board_image_row(f),
@@ -662,8 +680,9 @@ def councilof_top(f: dict, product_index: Path | None) -> str:
         "",
         "```bash",
         f"pip install csoai-gspc          # {f['pypi']['version']} — board, axis, verify, root, snapshot",
-        f"npx csoai-gspc-mcp              # {f['npm']['version']} — stdio MCP server over the same endpoints",
         "```",
+        "",
+        "**MCP:** use the hosted [free-reader endpoint](https://councilof.ai/mcp/free). [Client setup, current tool list and examples](https://councilof.ai/connect/claude/).",
         "",
         "## Products",
         "",

@@ -7,3 +7,4 @@ export { buildCandidates } from "../../functions/_lib/route/candidates";
 export { ardListingSource, ARD_LISTINGS } from "../../functions/_lib/route/discovery";
 export { callerPolicy, renderCedar, cedarEntity, CEDAR_SCHEMA, FLOOR_CEDAR } from "../../functions/_lib/route/policy";
 export { computeEventId } from "../../functions/_lib/route/evidence";
+export { MAX_BOARD_BYTES, BOARD_READ_TIMEOUT_MS } from "../../functions/_lib/route/board";

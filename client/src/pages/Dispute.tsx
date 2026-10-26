@@ -86,7 +86,9 @@ export default function Dispute() {
           including the power of the measurer. If you contest a card, a board cell, or an
           instrument run, this is the path. It costs nothing, it is open to anyone with
           standing, and the answer is always a re-measurement or a re-reading of the source,
-          never a defence.
+          never a defence. Re-measurement is arranged run by run today rather than scheduled
+          automatically, so a contest asks for a dated measurement — it does not enrol you in
+          a monitoring service.
         </p>
 
         <div className="mt-8 rounded-xl border border-emerald-200 bg-emerald-50 p-5 text-sm text-emerald-900">

@@ -26,7 +26,7 @@ export interface FaqSection {
 export const FAQ_ITEMS: FaqItem[] = [
   {
     q: "What is Council of AI?",
-    a: "Council of AI is an independent measurement body for AI behaviour. We run AI systems against frozen, published tests drawn from real statute, grade the answers with deterministic code, sign the result with an Ed25519 key, and publish it — including the parts we could not measure.",
+    a: "Council of AI is an independent measurement body for AI behaviour. We run AI systems against frozen, published tests drawn from real statute, grade the answers with deterministic code, and publish the result with its attestation state — including the parts we could not measure.",
     url: "/about",
   },
   {
@@ -51,7 +51,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   },
   {
     q: "What is the difference between MEASURED, UNMEASURED and REPORTED?",
-    a: "MEASURED means we ran it on frozen instruments and signed it — the only state on the board. UNMEASURED means the cell is honestly empty. REPORTED means a figure from elsewhere, cited and unsigned. A REPORTED number never enters the board.",
+    a: "MEASURED means a completed run under a published method; read its separate attestation state. UNMEASURED means the cell is honestly empty. REPORTED means a figure from elsewhere, cited and unsigned. A REPORTED number never enters the board.",
     url: "/methodology",
   },
   {
