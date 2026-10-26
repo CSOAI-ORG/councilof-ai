@@ -236,7 +236,8 @@ def slug(value: str) -> str:
 
 
 def build_configs(
-    args: argparse.Namespace, tags: dict[str, str] | None = None
+    args: argparse.Namespace, tags: dict[str, str] | None = None,
+    axes: tuple[tuple[str, str], ...] | None = None,
 ) -> list[tuple[Path, dict[str, Any]]]:
     workspace_root = args.workspace_root.resolve()
     for label, candidate in (
@@ -262,7 +263,7 @@ def build_configs(
         manifest_digest = sha256_file(manifest)
         if manifest_digest != advertised_digest:
             raise GenerationError(f"manifest drift for {model}")
-        for axis, bank_name in AXES:
+        for axis, bank_name in (axes if axes is not None else AXES):
             bank = args.bank_dir / bank_name
             if bank.is_symlink():
                 raise GenerationError(f"bank is a symlink: {bank_name}")
@@ -332,6 +333,10 @@ def parser() -> argparse.ArgumentParser:
     # and are not silently pooled.
     result.add_argument("--max-tokens", type=int, default=64)
     result.add_argument("--keyword-max-tokens", type=int, default=KEYWORD_MAX_TOKENS)
+    result.add_argument(
+        "--axes",
+        help="Comma-separated list of axis names to generate configs for (default: all)",
+    )
     return result
 
 
@@ -346,8 +351,14 @@ def main(argv: list[str] | None = None) -> int:
     ):
         if getattr(args, name) < 1:
             raise SystemExit(f"HALT: {name} must be positive")
+    axes_filter: tuple[tuple[str, str], ...] | None = None
+    if args.axes:
+        allowed = set(args.axes.split(","))
+        axes_filter = tuple((ax, bank) for ax, bank in AXES if ax in allowed)
+        if not axes_filter:
+            raise SystemExit("HALT: --axes matched no known axes")
     try:
-        jobs = build_configs(args)
+        jobs = build_configs(args, axes=axes_filter)
         collisions = [str(path) for path, _ in jobs if path.exists()]
         if collisions:
             raise GenerationError(
