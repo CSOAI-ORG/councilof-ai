@@ -37,7 +37,8 @@ describe("homepage films and understand lists", () => {
   });
 
   it("desk demo and product tiles teach with ticks, not invented counts", () => {
-    expect(understand).toContain("only here");
+    expect(understand).toContain("key point");
+    expect(understand).not.toMatch(/only here/i);
     expect(stack).toContain("ticks:");
     expect(stack).toContain("Why these nine, and not a catalogue");
     expect(stack).toContain("Three states only: VALID · INVALID · UNCHECKABLE.");
