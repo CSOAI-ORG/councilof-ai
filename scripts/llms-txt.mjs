@@ -75,8 +75,21 @@ const p = (...a) => path.join(REPO, ...a);
 const readJSON = (f) => JSON.parse(fs.readFileSync(p(f), "utf8"));
 
 // The door's own tool definitions — the same two files functions/mcp/[[path]].ts serves from.
-const WORDS = ["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen","twenty"];
-const numWord = (n) => WORDS[n] ?? String(n);
+// The number word for a count the published prose carries. It was a 21-entry array and the
+// fleet grew past it: the array ran out and the generator fell back to digits, so a sentence
+// that read "fourteen free readers" silently became "47 free readers". Same words, no ceiling.
+const WORD_ONES = ["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen"];
+const WORD_TENS = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+const numWord = (n) => {
+  if (n < 0 || !Number.isInteger(n)) return String(n);
+  if (n < 20) return WORD_ONES[n];
+  if (n < 100) {
+    const t = WORD_TENS[Math.floor(n / 10)];
+    const o = n % 10;
+    return o ? `${t}-${WORD_ONES[o]}` : t;
+  }
+  return String(n);
+};
 const mcpCounts = () => {
   const free = readJSON("functions/mcp/gspc-tools.json").tools.length;
   const paid = readJSON("functions/mcp/paid-tools.json").tools.length;
