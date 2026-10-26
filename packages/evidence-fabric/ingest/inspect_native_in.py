@@ -40,9 +40,17 @@ def _first_scorer(doc: Dict[str, Any]) -> Optional[str]:
     return None
 
 
+# Inspect's built-in scorers return letter grades, not numbers: C correct, I incorrect, P partial, N unanswered.
+# Reading only numbers made a real log unreadable (UNCHECKABLE) — found by running the adapter against an actual
+# .eval file produced by inspect_ai 0.3.259.
+_LETTERS = {"C": 1.0, "I": 0.0, "P": 0.5, "N": 0.0}
+
+
 def _value(entry: Any) -> Optional[float]:
     if isinstance(entry, dict):
         entry = entry.get("value")
+    if isinstance(entry, str):
+        return _LETTERS.get(entry.strip().upper())
     if isinstance(entry, bool):
         return 1.0 if entry else 0.0
     if isinstance(entry, (int, float)):
@@ -84,6 +92,55 @@ def flip_one(samples: List[Any], scorer: str) -> List[Any]:
             scores[scorer] = flipped
         return out
     return out
+
+
+def load_eval_log(path: str) -> Dict[str, Any]:
+    """Read a real Inspect .eval archive into the native document shape this module ingests.
+
+    Inspect writes a zip: header.json (status, eval, results), samples/*.json (per-sample scores). Nothing is
+    reinterpreted here — scores are passed through as the scorer wrote them.
+    """
+    # Upstream guidance is explicit: use the Log File API rather than reading the archive by hand
+    # (inspect.aisi.org.uk/eval-logs.html). The zip reader stays as a dependency-free fallback; the API is preferred
+    # whenever inspect_ai is importable.
+    try:
+        from inspect_ai.log import read_eval_log  # type: ignore
+
+        log = read_eval_log(path)
+        results = getattr(log, "results", None)
+        scores = []
+        for sc in (getattr(results, "scores", None) or []):
+            acc = (getattr(sc, "metrics", None) or {}).get("accuracy")
+            scores.append({"name": getattr(sc, "name", None),
+                           "metrics": {"accuracy": {"value": getattr(acc, "value", None)}}})
+        samples = []
+        for smp in (getattr(log, "samples", None) or []):
+            samples.append({"id": getattr(smp, "id", None),
+                            "scores": {k: {"value": getattr(v, "value", None)}
+                                       for k, v in (getattr(smp, "scores", None) or {}).items()}})
+        ev = getattr(log, "eval", None)
+        return {
+            "version": getattr(log, "version", None),
+            "status": getattr(log, "status", None),
+            "eval": {"task": getattr(ev, "task", None), "model": getattr(ev, "model", None)},
+            "results": {"total_samples": getattr(results, "total_samples", None), "scores": scores},
+            "samples": samples,
+        }
+    except Exception:
+        pass
+    import zipfile
+    with zipfile.ZipFile(path) as z:
+        header = json.loads(z.read("header.json"))
+        samples = []
+        for name in sorted(n for n in z.namelist() if n.startswith("samples/") and n.endswith(".json")):
+            samples.append(json.loads(z.read(name)))
+    return {
+        "version": header.get("version"),
+        "status": header.get("status"),
+        "eval": header.get("eval") or {},
+        "results": header.get("results") or {},
+        "samples": samples,
+    }
 
 
 def ingest(raw: bytes, *, read_at: Optional[str] = None, source_url: Optional[str] = None) -> List[Dict[str, Any]]:
@@ -139,11 +196,16 @@ def ingest(raw: bytes, *, read_at: Optional[str] = None, source_url: Optional[st
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument("log")
+    ap.add_argument("log", help="a .eval archive or a JSON document")
     ap.add_argument("--source-url")
     ap.add_argument("--read-at")
     a = ap.parse_args(argv)
-    for ev in ingest(open(a.log, "rb").read(), read_at=a.read_at, source_url=a.source_url):
+    if a.log.endswith(".eval"):
+        doc = load_eval_log(a.log)
+        events = ingest(json.dumps(doc).encode(), read_at=a.read_at, source_url=a.source_url)
+    else:
+        events = ingest(open(a.log, "rb").read(), read_at=a.read_at, source_url=a.source_url)
+    for ev in events:
         sys.stdout.write(json.dumps(ev, ensure_ascii=False, sort_keys=True) + "\n")
 
 
