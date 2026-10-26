@@ -139,9 +139,21 @@ function TileItem({ t }: { t: Tile }) {
       data-state={t.state}
     >
       <span className="block min-w-0">
-        <span className="block truncate text-[13px] font-bold leading-tight text-foreground" title={t.axis}>
+        {/* DEEP LINK, CONTEXT PRESERVED. Grafana's rule: linked views must carry the
+            reader's context with them — "if a click forces re-picking variables, the
+            dashboard set has a hole". The tile used to be inert: a reader who saw
+            "governance · Tie · n 237" on the front door had no way to reach that axis's
+            own view, and the board's only exit was "Open the full board", which drops
+            the reader back into the whole board and makes them find the row again.
+            The axis name now links straight to that axis, keeping the axis with it. */}
+        <a
+          href={`/gspc/${encodeURIComponent(t.axis)}/`}
+          className="block truncate text-[13px] font-bold leading-tight text-foreground underline-offset-2 hover:underline"
+          title={t.axis}
+          data-axis-link={t.axis}
+        >
           {t.axis}
-        </span>
+        </a>
         {t.bench ? <span className="mt-0.5 block truncate text-xs leading-tight text-muted-foreground">{t.bench}</span> : null}
       </span>
       <span className="flex items-center justify-between gap-2">

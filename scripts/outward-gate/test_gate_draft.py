@@ -46,5 +46,81 @@ class GateDraft(unittest.TestCase):
         self.assertEqual(r["doctrine"].get("doctrine.no_lf_membership_label"), "FAIL")
 
 
+# A cited document's title is not the drafter's claim. The exemption is narrow on purpose,
+# and every limit below is a must-fail control: if the exemption ever grows, one of these goes
+# red.
+ID_HEAD = ('<?xml version="1.0" encoding="utf-8"?>\n'
+           '<rfc xmlns:xi="http://www.w3.org/2001/XInclude" ipr="trust200902"'
+           ' docName="draft-templeman-scitt-measurement-capsule-01" category="exp"'
+           ' submissionType="IETF" tocDepth="1">\n')
+ID_WITH_RFC9162 = (ID_HEAD +
+                   "<references>\n"
+                   '<reference anchor="RFC9162">\n  <front>\n'
+                   "    <title>Certificate Transparency Version 2.0</title>\n"
+                   "    <author fullname=\"B. Laurie\"/>\n"
+                   '    <seriesInfo name="RFC" value="9162"/>\n'
+                   "  </front>\n"
+                   "</reference>\n"
+                   "</references>\n")
+ID_V3_HEAD = ('<?xml version="1.0" encoding="utf-8"?>\n'
+              '<rfc xmlns="http://www.ietf.org/xml/rfc" version="3">\n')
+
+
+class CitedTitleIsNotAClaim(unittest.TestCase):
+    def test_a_cited_rfc_title_is_not_read_as_a_certification_claim(self):
+        r = gd.gate_text(ID_WITH_RFC9162)
+        self.assertEqual(r["notice_banned"], [], r)
+        self.assertTrue(r["at_100"], r)
+
+    def test_the_same_exemption_holds_in_xml2rfc_v3(self):
+        v3 = (ID_V3_HEAD + "<references>\n"
+              '<reference anchor="RFC9162">\n  <front>\n'
+              "    <title>Certificate Transparency Version 2.0</title>\n"
+              "  </front>\n</reference>\n</references>\n")
+        r = gd.gate_text(v3)
+        self.assertEqual(r["notice_banned"], [], r)
+        self.assertTrue(r["at_100"], r)
+
+    def test_must_fail_the_same_word_in_the_body(self):
+        r = gd.gate_text(ID_WITH_RFC9162 + "<section><title>Certificate of operation</title>\n"
+                         "<t>This service is certified.</t></section>\n")
+        self.assertFalse(r["at_100"])
+        self.assertTrue(r["notice_banned"])
+
+    def test_must_fail_a_reference_that_anchors_no_rfc(self):
+        # Only a real RFC's own title is exempt. A title on any other reference is still read
+        # as text, so a smuggled claim cannot hide behind a reference element.
+        fake = ('<rfc xmlns="http://www.ietf.org/xml/rfc">\n<references>\n'
+                '<reference anchor="internal">\n  <front>\n'
+                "    <title>Certificate of Excellence</title>\n"
+                "  </front>\n</reference>\n</references>\n")
+        r = gd.gate_text(fake)
+        self.assertFalse(r["at_100"])
+        self.assertTrue(r["notice_banned"])
+
+    def test_must_fail_the_same_block_outside_an_internet_draft(self):
+        # Without the IETF namespace the file is not an Internet-Draft, so the block is text.
+        not_a_draft = ('<reference anchor="RFC9162">\n  <front>\n'
+                       "    <title>Certificate Transparency Version 2.0</title>\n"
+                       "  </front>\n</reference>\n")
+        r = gd.gate_text(not_a_draft)
+        self.assertFalse(r["at_100"])
+        self.assertTrue(r["notice_banned"])
+
+    def test_the_real_measurement_capsule_draft_reaches_100(self):
+        # The draft this exemption exists for: the only banned word in it is the word
+        # "Certificate" inside RFC 9162's own title.
+        here = os.path.dirname(os.path.abspath(__file__))
+        draft = os.path.join(here, "..", "..", "docs", "ietf", "measurement-capsule-01",
+                             "draft-templeman-scitt-measurement-capsule-01.xml")
+        if not os.path.exists(draft):
+            self.skipTest("measurement-capsule draft is not in this checkout")
+        with open(draft, encoding="utf-8") as f:
+            text = f.read()
+        r = gd.gate_text(text, draft)
+        self.assertEqual(r["notice_banned"], [], r)
+        self.assertTrue(r["at_100"], r)
+
+
 if __name__ == "__main__":
     unittest.main()
