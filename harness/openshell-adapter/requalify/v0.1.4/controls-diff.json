@@ -1,0 +1,91 @@
+{
+ "schema": "csoai.openshell.requalify/0.1",
+ "subject": "OpenShell interfaces read by harness/openshell-adapter",
+ "repository": "https://github.com/NVIDIA/OpenShell",
+ "from": {
+  "release": "v0.1.2",
+  "tag_commit": "6648bd0c290efbc41ba131ee9831ee45cd431f94"
+ },
+ "to": {
+  "release": "v0.1.4",
+  "tag_commit": "5a7728c304b5528e954e9ae900cf21f84e1a12b1"
+ },
+ "read": {
+  "at": "2026-10-15",
+  "how": "anonymous blobless git clone of the public repository"
+ },
+ "qualified_scope": "adapter input paths only",
+ "files_the_adapter_reads": [
+  {
+   "path": "crates/openshell-supervisor-network/data/sandbox-policy.rego",
+   "v0.1.2_sha256": "4a17fe93b7bb7e7f8abbdda25dbfb76a2e43b48c5dc8fa6e5f063619bb6def41",
+   "v0.1.4_sha256": "f60349dcfe8f42ff6c6957fd860cbfc1aef536c6f22740025c6771745f637c38",
+   "changed": true
+  },
+  {
+   "path": "docs/how-it-works/policies/schema.mdx",
+   "v0.1.2_sha256": "c886c43d705ef8fed8ef198015452cbf84cd6e84c9ccc2cadcbc7d7ee8d9427d",
+   "v0.1.4_sha256": "17df087066e91053028494bd50ea656f554856491abe7d1ce73c93d982bcaf6d",
+   "changed": true
+  },
+  {
+   "path": "docs/how-it-works/policies/network-rules.mdx",
+   "v0.1.2_sha256": "01964b20cf9633a9524212b5ad9ced06780d5878b026bdad5a552f15e9dde527",
+   "v0.1.4_sha256": "ff4483b18298f08255aa26c815cae94dfe8d23c19d93b872273cc2121da48b14",
+   "changed": true
+  },
+  {
+   "path": "docs/observability/logging.mdx",
+   "v0.1.2_sha256": "8e363df7e48b449c29f648b0374d34ee7193d75997330096bddd9d263d716b7c",
+   "v0.1.4_sha256": "d1cc68be2693650adabe6ba225256f473f66b44fbea16b6b31a61817d757d0b1",
+   "changed": true
+  },
+  {
+   "path": "docs/how-it-works/policies/default-policy.mdx",
+   "v0.1.2_sha256": "ebc2494b29c0e263e233ce5a59117fb24e499fcd3429ac1ea92aeff4b3b62734",
+   "v0.1.4_sha256": "97b9d0c9c34720fe137e4e18a1efc23dd2c2170016d5981095662730fb554c90",
+   "changed": true
+  },
+  {
+   "path": "docs/how-it-works/policies/prover.mdx",
+   "v0.1.2_sha256": "c8b1d8ebd46aa6420b68192ae30e0b8c5434acdd033316caa25c080526f56ab6",
+   "v0.1.4_sha256": "6b728309185dd214c05c28106bf9af7a1fc552e65f256e0532b58aa24f64ef6c",
+   "changed": true
+  },
+  {
+   "path": "docs/security/best-practices.mdx",
+   "v0.1.2_sha256": "c4b90de89fc0b6fece6bbca905ff10c815c9ce754f99972b37aed3eb6640871f",
+   "v0.1.4_sha256": "01cfc55cf71ef1839890e6c573c07ff19a017d37a35a1429a91da912129e75c3",
+   "changed": true
+  },
+  {
+   "path": "docs/observability/ocsf-json-export.mdx",
+   "v0.1.2_sha256": "cb7caf2c4b22dc761fb8baf8b17bdfcd6d0ff84673b9fa57361ad4fb0dae98ae",
+   "v0.1.4_sha256": "3dd4e867bf7d6a9b4f456b25e354f7e546ce3532ecd2d5aefc4f08a469fa485f",
+   "changed": true
+  },
+  {
+   "path": "crates/openshell-prover-cli/README.md",
+   "v0.1.2_sha256": "4a1bd7124429a5e69f64890f2e1fe2ca732e16f92763806cb7691ecef90aee73",
+   "v0.1.4_sha256": "4a1bd7124429a5e69f64890f2e1fe2ca732e16f92763806cb7691ecef90aee73",
+   "changed": false
+  },
+  {
+   "path": "crates/openshell-prover-cli/src/main.rs",
+   "v0.1.2_sha256": "064a077a6e0d8879e19fa183466f081cd898fac50f408124e595ad153fcd5981",
+   "v0.1.4_sha256": "064a077a6e0d8879e19fa183466f081cd898fac50f408124e595ad153fcd5981",
+   "changed": false
+  }
+ ],
+ "breaks_fixed": [
+  {
+   "what": "console OCSF-JSON lines `<UTC ts> OCSF-JSON {json}` were not parsed",
+   "source": "crates/openshell-ocsf/src/tracing_layers/jsonl_layer.rs with_console_format",
+   "fixture": "fixtures/console-ocsf-json-v014"
+  }
+ ],
+ "not_run": [
+  "openshell-prover 0.1.4 binary",
+  "live v0.1.4 capture"
+ ]
+}

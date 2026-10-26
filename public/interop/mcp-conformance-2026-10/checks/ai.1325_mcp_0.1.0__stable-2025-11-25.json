@@ -1,0 +1,679 @@
+{
+ "checks_sha256": "5eb5c77f55b19ebde17172ba97b13d261b6290a925628e128fd43f8d1f8b9812",
+ "deviation_checks": [
+  "CompletionComplete",
+  "DNSRebindingRejected",
+  "LocalhostHostAccepted",
+  "ElicitationSEP1034General",
+  "ElicitationSEP1330General",
+  "LoggingSetLevel",
+  "Ping",
+  "PromptsGetEmbeddedResource",
+  "PromptsGetSimple",
+  "PromptsGetWithArgs",
+  "PromptsGetWithImage",
+  "PromptsList",
+  "ResourcesList",
+  "ResourcesReadBinary",
+  "ResourcesReadText",
+  "ResourcesSubscribe",
+  "ResourcesTemplateRead",
+  "ResourcesUnsubscribe",
+  "ServerInitialize",
+  "ServerSSEMultipleStreamsTest",
+  "ToolsCallAudio",
+  "ToolsCallElicitation",
+  "ToolsCallEmbeddedResource",
+  "ToolsCallError",
+  "ToolsCallImage",
+  "ToolsCallMixedContent",
+  "ToolsCallSampling",
+  "ToolsCallSimpleText",
+  "ToolsCallWithLogging",
+  "ToolsCallWithProgress",
+  "ToolsList"
+ ],
+ "generated_at": "2026-10-26T02:12:31Z",
+ "instrument": "stable-2025-11-25",
+ "instrument_channel": "stable",
+ "not_a_grade": true,
+ "note": "",
+ "scenarios": [
+  {
+   "checks": [
+    {
+     "check": "CompletionComplete",
+     "description": "Server responds to completion requests",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"error\":\"unauthorized\"}",
+     "id": "completion-complete",
+     "specReferences": [
+      {
+       "id": "MCP-Completion",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/completion"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "02c1656a7ae5cbab916eb4ee9b5ab147ed5d0f5c75d5f96bedce20235dacbf65",
+   "scenario": "completion-complete",
+   "scenario_run_id": "server-completion-complete-2026-10-26T02-13-29-659Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "DNSRebindingRejected",
+     "description": "Server rejects requests with non-localhost Host/Origin headers",
+     "details": {
+      "reason": "non-localhost-url",
+      "serverUrl": "https://agoclnqfyinwjxdmjnns.supabase.co/functions/v1/mcp"
+     },
+     "errorMessage": "DNS rebinding tests require a localhost server URL (localhost, 127.0.0.1, or [::1])",
+     "id": "localhost-host-rebinding-rejected",
+     "specReferences": [
+      {
+       "id": "MCP-DNS-Rebinding-Protection",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/security_best_practices#local-mcp-server-compromise"
+      },
+      {
+       "id": "MCP-Transport-Security",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/transports#security-warning"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "LocalhostHostAccepted",
+     "description": "Server accepts requests with valid localhost Host/Origin headers",
+     "details": {
+      "reason": "non-localhost-url",
+      "serverUrl": "https://agoclnqfyinwjxdmjnns.supabase.co/functions/v1/mcp"
+     },
+     "errorMessage": "DNS rebinding tests require a localhost server URL (localhost, 127.0.0.1, or [::1])",
+     "id": "localhost-host-valid-accepted",
+     "specReferences": [
+      {
+       "id": "MCP-DNS-Rebinding-Protection",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/security_best_practices#local-mcp-server-compromise"
+      },
+      {
+       "id": "MCP-Transport-Security",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/transports#security-warning"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "8767b32b3a5195649e59a98012edbe3bee8cf18667f455487a3df024a4c6f882",
+   "scenario": "dns-rebinding-protection",
+   "scenario_run_id": "server-dns-rebinding-protection-2026-10-26T02-14-01-806Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ElicitationSEP1034General",
+     "description": "Server requests elicitation with default values",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"error\":\"unauthorized\"}",
+     "id": "elicitation-sep1034-general",
+     "specReferences": [
+      {
+       "id": "SEP-1034",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/issues/1034"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "70cb4f2ff762fa53041a9541e07d93a43f46768803c546142bab332d303eba7f",
+   "scenario": "elicitation-sep1034-defaults",
+   "scenario_run_id": "server-elicitation-sep1034-defaults-2026-10-26T02-13-45-389Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ElicitationSEP1330General",
+     "description": "Server requests elicitation with enum schemas",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"error\":\"unauthorized\"}",
+     "id": "elicitation-sep1330-general",
+     "specReferences": [
+      {
+       "id": "SEP-1330",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/issues/1330"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "4ef50d2b4c45ed5014c9cc980b69b87d2603e984f15dc243c001176bccf195b2",
+   "scenario": "elicitation-sep1330-enums",
+   "scenario_run_id": "server-elicitation-sep1330-enums-2026-10-26T02-13-47-714Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "LoggingSetLevel",
+     "description": "Server accepts logging level setting",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"error\":\"unauthorized\"}",
+     "id": "logging-set-level",
+     "specReferences": [
+      {
+       "id": "MCP-Logging",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/logging"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "9f357de4747024f18638221fecb2f830d87099c8a2ba283703244de26a0a09b2",
+   "scenario": "logging-set-level",
+   "scenario_run_id": "server-logging-set-level-2026-10-26T02-13-26-950Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "Ping",
+     "description": "Server responds to ping requests",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"error\":\"unauthorized\"}",
+     "id": "ping",
+     "specReferences": [
+      {
+       "id": "MCP-Ping",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/utilities/ping"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "2da1ff25d0767dbd757af85c5effa07bf1996609892e6533224fc2a1badebe01",
+   "scenario": "ping",
+   "scenario_run_id": "server-ping-2026-10-26T02-13-28-321Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetEmbeddedResource",
+     "description": "Get prompt with embedded resource",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"error\":\"unauthorized\"}",
+     "id": "prompts-get-embedded-resource",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Embedded-Resources",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#embedded-resources"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "40384944c7fdedb47c6da2a08db409076eb29089e1c8bd484f923c9434f03c44",
+   "scenario": "prompts-get-embedded-resource",
+   "scenario_run_id": "server-prompts-get-embedded-resource-2026-10-26T02-13-59-103Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetSimple",
+     "description": "Get simple prompt successfully",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"error\":\"unauthorized\"}",
+     "id": "prompts-get-simple",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Get",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#getting-prompts"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "cc0965708275c88a004b4b021710eb3dbf56904ce46e9d8175887c45a74a9a8a",
+   "scenario": "prompts-get-simple",
+   "scenario_run_id": "server-prompts-get-simple-2026-10-26T02-13-57-705Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetWithArgs",
+     "description": "Get parameterized prompt with argument substitution",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"error\":\"unauthorized\"}",
+     "id": "prompts-get-with-args",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Get",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#getting-prompts"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "5f81735d5faa51b79494f8a6cf5c0effb6aaf0ff58ed2bb8e34074c3f7b857e1",
+   "scenario": "prompts-get-with-args",
+   "scenario_run_id": "server-prompts-get-with-args-2026-10-26T02-13-57-760Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetWithImage",
+     "description": "Get prompt with image content",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"error\":\"unauthorized\"}",
+     "id": "prompts-get-with-image",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Image",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#image-content"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "eee327f328eb880da62942d508c966d51f5716d5c93335f670ea33ec1d5dc3f2",
+   "scenario": "prompts-get-with-image",
+   "scenario_run_id": "server-prompts-get-with-image-2026-10-26T02-14-00-727Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsList",
+     "description": "Server lists available prompts with valid structure",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"error\":\"unauthorized\"}",
+     "id": "prompts-list",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-List",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#listing-prompts"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "beaeb806f07bd47e40fd3715fca9b0695f68d7b8f7df0e69b4d0ddbffd812c22",
+   "scenario": "prompts-list",
+   "scenario_run_id": "server-prompts-list-2026-10-26T02-13-56-547Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesList",
+     "description": "Server lists available resources with valid structure",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"error\":\"unauthorized\"}",
+     "id": "resources-list",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-List",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#listing-resources"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "c5e0747d1aa8cc50e12b818a55804c69ff73762c7f419d02b4928272b7311dee",
+   "scenario": "resources-list",
+   "scenario_run_id": "server-resources-list-2026-10-26T02-13-49-034Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesReadBinary",
+     "description": "Read binary resource successfully",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"error\":\"unauthorized\"}",
+     "id": "resources-read-binary",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Read",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#reading-resources"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "f4644bb993dfdd68780ea07453fe38ddf5f3c43d0b5219497a1b2e9625615ea2",
+   "scenario": "resources-read-binary",
+   "scenario_run_id": "server-resources-read-binary-2026-10-26T02-13-51-575Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesReadText",
+     "description": "Read text resource successfully",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"error\":\"unauthorized\"}",
+     "id": "resources-read-text",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Read",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#reading-resources"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "d0fa73ec9aefa842306e24ea6b33963ba240751709b1ed11d0987376a1b08c2f",
+   "scenario": "resources-read-text",
+   "scenario_run_id": "server-resources-read-text-2026-10-26T02-13-50-350Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesSubscribe",
+     "description": "Subscribe to resource successfully",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"error\":\"unauthorized\"}",
+     "id": "resources-subscribe",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Subscribe",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#resource-subscriptions"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "972fbe83753466957656bfa936ebeca70a18e6d973c73d2657699f79d173eb0b",
+   "scenario": "resources-subscribe",
+   "scenario_run_id": "server-resources-subscribe-2026-10-26T02-13-53-999Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesTemplateRead",
+     "description": "Read resource from template with parameter substitution",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"error\":\"unauthorized\"}",
+     "id": "resources-templates-read",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Templates",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#resource-templates"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "39a9ef22744826660f93fb9441aab4dc694a8f3b8ae42c3c01310c1c2fd51b61",
+   "scenario": "resources-templates-read",
+   "scenario_run_id": "server-resources-templates-read-2026-10-26T02-13-52-845Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesUnsubscribe",
+     "description": "Unsubscribe from resource successfully",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"error\":\"unauthorized\"}",
+     "id": "resources-unsubscribe",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Subscribe",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#resource-subscriptions"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "0c2395a102b0366afa6db3542edec17ef86db3f559b384aea2839691762f3c59",
+   "scenario": "resources-unsubscribe",
+   "scenario_run_id": "server-resources-unsubscribe-2026-10-26T02-13-55-151Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ServerInitialize",
+     "description": "Server responds to initialize request with valid structure",
+     "errorMessage": "Failed to initialize: Streamable HTTP error: Error POSTing to endpoint: {\"error\":\"unauthorized\"}",
+     "id": "server-initialize",
+     "specReferences": [
+      {
+       "id": "MCP-Initialize",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle#initialization"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "0cdb3adb16f9530c3888e7309374d769ded5b52f9334b2d1dac7044f7d90b839",
+   "scenario": "server-initialize",
+   "scenario_run_id": "server-server-initialize-2026-10-26T02-13-25-554Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ServerSSEMultipleStreamsTest",
+     "description": "Test server multiple SSE streams behavior",
+     "errorMessage": "Error: Streamable HTTP error: Error POSTing to endpoint: {\"error\":\"unauthorized\"}",
+     "id": "server-sse-multiple-streams-error",
+     "specReferences": [
+      {
+       "id": "SEP-1699",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/issues/1699"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "ca0dc9bac87fd71967f0321736d1640a5a51e8f5fa3b320ee6a3081c9fc0e1c5",
+   "scenario": "server-sse-multiple-streams",
+   "scenario_run_id": "server-server-sse-multiple-streams-2026-10-26T02-13-46-566Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallAudio",
+     "description": "Tool returns audio content",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"error\":\"unauthorized\"}",
+     "id": "tools-call-audio",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "8b3afbc4a0088d0cd33de75445cf74ec4d0b944b9b480b6489ff041e26b44c19",
+   "scenario": "tools-call-audio",
+   "scenario_run_id": "server-tools-call-audio-2026-10-26T02-13-34-997Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallElicitation",
+     "description": "Tool requests user input from client",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"error\":\"unauthorized\"}",
+     "id": "tools-call-elicitation",
+     "specReferences": [
+      {
+       "id": "MCP-Elicitation",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/elicitation"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "ef245169960567228ff08ab0ce1f56627859f876d65f953e8ca3c32da822a936",
+   "scenario": "tools-call-elicitation",
+   "scenario_run_id": "server-tools-call-elicitation-2026-10-26T02-13-44-090Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallEmbeddedResource",
+     "description": "Tool returns embedded resource content",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"error\":\"unauthorized\"}",
+     "id": "tools-call-embedded-resource",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "2691f5b20d565fe9a454b8f12d8640bb42f66cef5f789354567d40d69ae52652",
+   "scenario": "tools-call-embedded-resource",
+   "scenario_run_id": "server-tools-call-embedded-resource-2026-10-26T02-13-36-270Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallError",
+     "description": "Tool returns error correctly",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"error\":\"unauthorized\"}",
+     "id": "tools-call-error",
+     "specReferences": [
+      {
+       "id": "MCP-Error-Handling",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "fe6718da3f9b1a557968c856a3c6a8aacc78143a4f0e569a6782c726be539367",
+   "scenario": "tools-call-error",
+   "scenario_run_id": "server-tools-call-error-2026-10-26T02-13-40-318Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallImage",
+     "description": "Tool returns image content",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"error\":\"unauthorized\"}",
+     "id": "tools-call-image",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "6c988f4cdcceb412b4993943581694a7441f86092e01fb9773a1aca1deeae279",
+   "scenario": "tools-call-image",
+   "scenario_run_id": "server-tools-call-image-2026-10-26T02-13-33-531Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallMixedContent",
+     "description": "Tool returns multiple content types",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"error\":\"unauthorized\"}",
+     "id": "tools-call-mixed-content",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "71c6d618641dcca5550510692cce66f4901aa2b8414db231278b0495b7942442",
+   "scenario": "tools-call-mixed-content",
+   "scenario_run_id": "server-tools-call-mixed-content-2026-10-26T02-13-37-715Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallSampling",
+     "description": "Tool requests LLM sampling from client",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"error\":\"unauthorized\"}",
+     "id": "tools-call-sampling",
+     "specReferences": [
+      {
+       "id": "MCP-Sampling",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/sampling"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "370a40247f1f7a96d28d27bb7b65bb4e085da87eb2e7895d5117913a1c0c0a91",
+   "scenario": "tools-call-sampling",
+   "scenario_run_id": "server-tools-call-sampling-2026-10-26T02-13-42-802Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallSimpleText",
+     "description": "Tool returns simple text content",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"error\":\"unauthorized\"}",
+     "id": "tools-call-simple-text",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "4c4981f1cc158a56435301b87dbf7050322b11636ba5dfba45cda668cc5270af",
+   "scenario": "tools-call-simple-text",
+   "scenario_run_id": "server-tools-call-simple-text-2026-10-26T02-13-32-278Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallWithLogging",
+     "description": "Tool sends log messages during execution",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"error\":\"unauthorized\"}",
+     "id": "tools-call-with-logging",
+     "specReferences": [
+      {
+       "id": "MCP-Logging",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/logging"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "3819733da88305e8b636ffa9d4f7376b114ef844216092f31b49c6c7a8319a48",
+   "scenario": "tools-call-with-logging",
+   "scenario_run_id": "server-tools-call-with-logging-2026-10-26T02-13-39-017Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallWithProgress",
+     "description": "Tool reports progress notifications",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"error\":\"unauthorized\"}",
+     "id": "tools-call-with-progress",
+     "specReferences": [
+      {
+       "id": "MCP-Progress",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/progress"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "3ddf28f0ed06b0cebebdac92604c29e6de8af2c5ba173a0aaae65b8a0f042292",
+   "scenario": "tools-call-with-progress",
+   "scenario_run_id": "server-tools-call-with-progress-2026-10-26T02-13-41-455Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsList",
+     "description": "Server lists available tools with valid structure",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"error\":\"unauthorized\"}",
+     "id": "tools-list",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-List",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#listing-tools"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "7ef8032fbd03f090868787d88cbaf37499189389faefd2cda2d15897b5549cae",
+   "scenario": "tools-list",
+   "scenario_run_id": "server-tools-list-2026-10-26T02-13-30-962Z"
+  }
+ ],
+ "schema": "csoai.mcp-conformance-run/0.1",
+ "source": "mcp-registry",
+ "spec_version": "2025-11-25",
+ "subject_id": "ai.1325/mcp@0.1.0",
+ "subject_record_url": "https://agoclnqfyinwjxdmjnns.supabase.co/functions/v1/mcp",
+ "subject_url": "https://agoclnqfyinwjxdmjnns.supabase.co/functions/v1/mcp",
+ "suite_version": "0.1.16"
+}

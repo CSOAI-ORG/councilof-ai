@@ -138,7 +138,10 @@ function validate(
   }
 
   const assets = inventory?.crosswalk_assets ?? [];
-  expect(assets.length === 25, `crosswalk asset manifest has ${assets.length}, expected 25`);
+  // 25 -> 26 with the tool-parity statement: the card corpus grew an axis, so the
+  // inventory carries one more crosswalk asset. The count moves only with a new
+  // dated inventory and its own proof — stamped bytes are never edited.
+  expect(assets.length === 26, `crosswalk asset manifest has ${assets.length}, expected 26`);
   expect(inventory?.counts?.crosswalk_assets === assets.length, "crosswalk counter does not derive from manifest");
   expect(new Set(assets.map((row) => row.id)).size === assets.length, "crosswalk asset ids must be unique");
   expect(new Set(assets.map((row) => row.path)).size === assets.length, "crosswalk asset paths must be unique");
@@ -147,7 +150,8 @@ function validate(
   }
 
   const derived = assets.filter((row) => row.asset_type === "DERIVED_MEASUREMENT_STATEMENT");
-  expect(derived.length === 14, `measurement-derived statement count is ${derived.length}, expected 14`);
+  // 14 -> 15: one derived measurement statement per axis, and tool-parity is the fifteenth.
+  expect(derived.length === 15, `measurement-derived statement count is ${derived.length}, expected 15`);
   const indexedFiles = new Set((intotoIndex?.statements ?? []).map((row) => row.file));
   for (const row of derived) {
     expect(indexedFiles.has(path.basename(row.path)), `${row.id}: statement is absent from the in-toto index`);
@@ -228,5 +232,5 @@ if (process.argv.includes("--selftest")) {
     for (const error of errors) console.error(`regulatory-inventory-gate: ${error}`);
     process.exit(1);
   }
-  console.log(`regulatory-inventory-gate: PASS (${current.name}, proof commits to its bytes) — 417 provision hashes + reproducible root · 17 authority adapters · 25 crosswalk assets · 22 GSPC axes · 4 published regimes`);
+  console.log(`regulatory-inventory-gate: PASS (${current.name}, proof commits to its bytes) — 417 provision hashes + reproducible root · 17 authority adapters · 26 crosswalk assets · 22 GSPC axes · 4 published regimes`);
 }
