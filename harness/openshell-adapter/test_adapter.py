@@ -43,6 +43,7 @@ CASES = {
     "fixtures/must-fail-file-syscall": ("policy.yaml", ["enforcer.log"], "witness.jsonl"),
     "fixtures/must-fail-landlock-degraded": ("policy.yaml", ["enforcer.log"], "witness.jsonl"),
     "capture-2026-09-28": ("policy.yaml", ["enforcer.log"], "witness.jsonl"),
+    "fixtures/console-ocsf-json-v014": ("policy.yaml", ["enforcer.console.txt"], "witness.jsonl"),
 }
 
 
@@ -98,6 +99,10 @@ class Fixtures(unittest.TestCase):
 
     def test_must_fail_deny_declared_egress(self):
         self.check("fixtures/must-fail-deny-declared-egress")
+
+    def test_console_ocsf_json_v014(self):
+        """v0.1.4 console sink: `<UTC ts> OCSF-JSON {json}` lines must parse like the JSONL file (all 3 records)."""
+        self.check("fixtures/console-ocsf-json-v014")
 
     def test_control_is_consistent(self):
         self.check("fixtures/control-deny-held")
@@ -247,8 +252,8 @@ class Requalify012(unittest.TestCase):
     off the policy path. A loopback attempt with no enforcer record is not compared; with a record it is."""
 
     def test_pin(self):
-        self.assertEqual(A.OPENSHELL_PIN["release"], "v0.1.2")
-        self.assertTrue(A.OPENSHELL_PIN["tag_commit"].startswith("6648bd0"))
+        self.assertEqual(A.OPENSHELL_PIN["release"], "v0.1.4")
+        self.assertTrue(A.OPENSHELL_PIN["tag_commit"].startswith("5a7728c"))
 
     def test_loopback_without_record_is_unmodelled(self):
         w = [{"kind": "egress", "host": "127.0.0.1", "port": 8080, "left": True, "_line": 1, "_sha256": "0" * 64}]

@@ -1,0 +1,757 @@
+{
+ "checks_sha256": "d3b2f8cb4b57f1b9112dcc7c8e567a98cb24117d88f9111145e7471f6042d26a",
+ "deviation_checks": [
+  "CompletionComplete",
+  "DNSRebindingRejected",
+  "LocalhostHostAccepted",
+  "PromptsGetEmbeddedResource",
+  "PromptsGetSimple",
+  "PromptsGetWithArgs",
+  "PromptsGetWithImage",
+  "PromptsList",
+  "ResourcesList",
+  "ResourcesReadBinary",
+  "ResourcesReadText",
+  "ResourcesTemplateRead",
+  "ServerSSEMultipleStreamsTest",
+  "ToolsCallAudio",
+  "ToolsCallEmbeddedResource",
+  "ToolsCallError",
+  "ToolsCallImage",
+  "ToolsCallMixedContent",
+  "ToolsCallSimpleText",
+  "ToolsCallWithProgress",
+  "ToolsList"
+ ],
+ "generated_at": "2026-10-26T02:12:31Z",
+ "instrument": "alpha-2026-07-28",
+ "instrument_channel": "alpha",
+ "not_a_grade": true,
+ "note": "declared endpoint is a loopback address; any reachability observed is a property of the measuring host, not of the published record",
+ "scenarios": [
+  {
+   "checks": [
+    {
+     "check": "CompletionComplete",
+     "description": "Server responds to completion requests",
+     "errorMessage": "Failed: fetch failed",
+     "id": "completion-complete",
+     "specReferences": [
+      {
+       "id": "MCP-Completion",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/completion"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 1,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "8041d51be752230d64cda54a99c9cbfc2dc08db70a829fce872f68ebdc232850",
+   "scenario": "completion-complete",
+   "scenario_run_id": "server-completion-complete-2026-10-26T02-14-46-982Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "DNSRebindingRejected",
+     "description": "Server rejects requests with non-localhost Host/Origin headers",
+     "details": {
+      "hostHeader": "evil.example.com",
+      "originHeader": "http://evil.example.com"
+     },
+     "errorMessage": "Request failed: ",
+     "id": "localhost-host-rebinding-rejected",
+     "specReferences": [
+      {
+       "id": "MCP-DNS-Rebinding-Protection",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/security_best_practices#local-mcp-server-compromise"
+      },
+      {
+       "id": "MCP-Transport-Security",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/transports#security-warning"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "LocalhostHostAccepted",
+     "description": "Server accepts requests with valid localhost Host/Origin headers",
+     "details": {
+      "hostHeader": "localhost:8080",
+      "originHeader": "http://localhost:8080"
+     },
+     "errorMessage": "Request failed: ",
+     "id": "localhost-host-valid-accepted",
+     "specReferences": [
+      {
+       "id": "MCP-DNS-Rebinding-Protection",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/security_best_practices#local-mcp-server-compromise"
+      },
+      {
+       "id": "MCP-Transport-Security",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/transports#security-warning"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "a8a3770614f507b2810365932c72a0b807198047ee5061190958e77737eb8c4a",
+   "scenario": "dns-rebinding-protection",
+   "scenario_run_id": "server-dns-rebinding-protection-2026-10-26T02-14-47-193Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetEmbeddedResource",
+     "description": "Get prompt with embedded resource",
+     "errorMessage": "Failed: fetch failed",
+     "id": "prompts-get-embedded-resource",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Embedded-Resources",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#embedded-resources"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 1,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "ff73a85b8998895c5f06bae3e4709d72611e385149fad1545bfd97a1741a4cd7",
+   "scenario": "prompts-get-embedded-resource",
+   "scenario_run_id": "server-prompts-get-embedded-resource-2026-10-26T02-14-47-190Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetSimple",
+     "description": "Get simple prompt successfully",
+     "errorMessage": "Failed: fetch failed",
+     "id": "prompts-get-simple",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Get",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#getting-prompts"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 1,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "5930e3e0c8a1394f8783652b6558879f84f18a32eb373a53304a10372bbeba4c",
+   "scenario": "prompts-get-simple",
+   "scenario_run_id": "server-prompts-get-simple-2026-10-26T02-14-47-183Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetWithArgs",
+     "description": "Get parameterized prompt with argument substitution",
+     "errorMessage": "Failed: fetch failed",
+     "id": "prompts-get-with-args",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Get",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#getting-prompts"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 1,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "7148108f6eb4118577e45ffded660942dbae66754ac95398833c21a336193417",
+   "scenario": "prompts-get-with-args",
+   "scenario_run_id": "server-prompts-get-with-args-2026-10-26T02-14-47-189Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetWithImage",
+     "description": "Get prompt with image content",
+     "errorMessage": "Failed: fetch failed",
+     "id": "prompts-get-with-image",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Image",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#image-content"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 1,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "bbbb3e42e2bfc3e4fbd5d313975c2c7962da03b832e600aeb1f2cbfc677bd04f",
+   "scenario": "prompts-get-with-image",
+   "scenario_run_id": "server-prompts-get-with-image-2026-10-26T02-14-47-192Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsList",
+     "description": "Server lists available prompts with valid structure",
+     "errorMessage": "Failed: fetch failed",
+     "id": "prompts-list",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-List",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#listing-prompts"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 1,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "e194c65eaf63a4ad4dd2be8d9a9b83f6a792c316aeef2b1a424d8e61a13aee03",
+   "scenario": "prompts-list",
+   "scenario_run_id": "server-prompts-list-2026-10-26T02-14-47-180Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesList",
+     "description": "Server lists available resources with valid structure",
+     "errorMessage": "Failed: fetch failed",
+     "id": "resources-list",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-List",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#listing-resources"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 1,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "eab31a9ed2f6d69336d8d3af8859c443e5b3c834ff0ee71682966ebc9cf83fc8",
+   "scenario": "resources-list",
+   "scenario_run_id": "server-resources-list-2026-10-26T02-14-47-157Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesReadBinary",
+     "description": "Read binary resource successfully",
+     "errorMessage": "Failed: fetch failed",
+     "id": "resources-read-binary",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Read",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#reading-resources"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 1,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "d441888cb24281be85b4e01df2d5d023f45cf76be31d5402d44c2fa0fb8fa825",
+   "scenario": "resources-read-binary",
+   "scenario_run_id": "server-resources-read-binary-2026-10-26T02-14-47-174Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesReadText",
+     "description": "Read text resource successfully",
+     "errorMessage": "Failed: fetch failed",
+     "id": "resources-read-text",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Read",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#reading-resources"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 1,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "c11d71cdf2e2e5d681274e6eabfff9c9a35cd251aaa8f40c1ebcc694062532e1",
+   "scenario": "resources-read-text",
+   "scenario_run_id": "server-resources-read-text-2026-10-26T02-14-47-164Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesTemplateRead",
+     "description": "Read resource from template with parameter substitution",
+     "errorMessage": "Failed: fetch failed",
+     "id": "resources-templates-read",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Templates",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#resource-templates"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 1,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "7d247e7e0d04a79e5ccf0672c5d1a4bf677a8ca5807e4c8108393565fa589bdd",
+   "scenario": "resources-templates-read",
+   "scenario_run_id": "server-resources-templates-read-2026-10-26T02-14-47-179Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ServerSSEMultipleStreamsTest",
+     "description": "Test server multiple SSE streams behavior",
+     "errorMessage": "Error: fetch failed",
+     "id": "server-sse-multiple-streams-error",
+     "specReferences": [
+      {
+       "id": "SEP-1699",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/issues/1699"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "bfe73194375a8abd8ea0d0d6ae0bbd292c7a464313d9c3121e13253c52bb0d38",
+   "scenario": "server-sse-multiple-streams",
+   "scenario_run_id": "server-server-sse-multiple-streams-2026-10-26T02-14-47-148Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallAudio",
+     "description": "Tool returns audio content",
+     "errorMessage": "Failed: fetch failed",
+     "id": "tools-call-audio",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 1,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "15c00e7e16393dc436a7488362f944e0253f3f898a303f4d5cefc329530666a4",
+   "scenario": "tools-call-audio",
+   "scenario_run_id": "server-tools-call-audio-2026-10-26T02-14-47-127Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallEmbeddedResource",
+     "description": "Tool returns embedded resource content",
+     "errorMessage": "Failed: fetch failed",
+     "id": "tools-call-embedded-resource",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 1,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "460b0a79db46cab387d47442d23fdc70da602b016678796370698e0ad2580d85",
+   "scenario": "tools-call-embedded-resource",
+   "scenario_run_id": "server-tools-call-embedded-resource-2026-10-26T02-14-47-132Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallError",
+     "description": "Tool returns error correctly",
+     "errorMessage": "Failed: fetch failed",
+     "id": "tools-call-error",
+     "specReferences": [
+      {
+       "id": "MCP-Error-Handling",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 1,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "cf1f14ec92db537e3677856683dda141f77ebf7662366aab3282851ed97162c0",
+   "scenario": "tools-call-error",
+   "scenario_run_id": "server-tools-call-error-2026-10-26T02-14-47-138Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallImage",
+     "description": "Tool returns image content",
+     "errorMessage": "Failed: fetch failed",
+     "id": "tools-call-image",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 1,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "142ba1043fdbc36ba8f21ddc305f25e00c05cd313d0f2f88e919e4ae5591f37c",
+   "scenario": "tools-call-image",
+   "scenario_run_id": "server-tools-call-image-2026-10-26T02-14-47-124Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallMixedContent",
+     "description": "Tool returns multiple content types",
+     "errorMessage": "Failed: fetch failed",
+     "id": "tools-call-mixed-content",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 1,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "aaa831362998a0d0bc929615d4597941a6ccf4bfdadf3b33a544bc4e5c8a27ce",
+   "scenario": "tools-call-mixed-content",
+   "scenario_run_id": "server-tools-call-mixed-content-2026-10-26T02-14-47-135Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallSimpleText",
+     "description": "Tool returns simple text content",
+     "errorMessage": "Failed: fetch failed",
+     "id": "tools-call-simple-text",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 1,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "dc9fc89f6008ea35e899748c77ee7196fd90c2f76fd66553cfe6e6893f0816cb",
+   "scenario": "tools-call-simple-text",
+   "scenario_run_id": "server-tools-call-simple-text-2026-10-26T02-14-47-096Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallWithProgress",
+     "description": "Tool reports progress notifications",
+     "errorMessage": "Failed: fetch failed",
+     "id": "tools-call-with-progress",
+     "specReferences": [
+      {
+       "id": "MCP-Progress",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/progress"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 1,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "3fcc591f69cd27a5283b611227b7346721e7cd2a282a90c51e8bab07adb915d8",
+   "scenario": "tools-call-with-progress",
+   "scenario_run_id": "server-tools-call-with-progress-2026-10-26T02-14-47-142Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsList",
+     "description": "Server lists available tools with valid structure",
+     "errorMessage": "Failed: fetch failed",
+     "id": "tools-list",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-List",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#listing-tools"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 1,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "4a6613b845d65b0ccfcd1d867d55ba719219a2f9c787d5660569d61270fe26a8",
+   "scenario": "tools-list",
+   "scenario_run_id": "server-tools-list-2026-10-26T02-14-47-091Z"
+  }
+ ],
+ "schema": "csoai.mcp-conformance-run/0.1",
+ "source": "agntcy-directory",
+ "spec_version": "2026-07-28",
+ "subject_id": "agntcy:a2a-helloworld",
+ "subject_record_url": "https://ai-catalog.outshift.io/v1/agents",
+ "subject_url": "http://localhost:8080",
+ "suite_version": "0.2.0-alpha.12"
+}

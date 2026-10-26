@@ -4,32 +4,39 @@
  * tools/call actually runs — every free tool and every x402-metered one.
  * A listed tool that does not run, or a running tool that is not listed, fails here.
  * Spawns index.mjs — not a reimplementation.
+ *
+ * THE EXPECTED LIST IS DERIVED, NOT TYPED. This file used to carry its own
+ * hardcoded copy of the names (fourteen free and five metered, when the fleet
+ * was nineteen). When the 33 named axis tools joined, the copy went stale and
+ * the npm release failed at "Verify package and live contract" — a release gate
+ * blocked on a list nobody maintained. The names now come from the two
+ * manifests the server itself reads, in the same order index.mjs builds TOOLS
+ * from. What still survives is the assertion worth having: the tools the server
+ * serves are exactly the tools the published manifests declare, in the published
+ * order. A tool declared and not served, or served and not declared, or served
+ * twice, still fails here.
  */
 import { spawn } from "node:child_process";
 import { createServer } from "node:http";
 import { createInterface } from "node:readline";
 import { fileURLToPath } from "node:url";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 
-const FREE = [
-  "board_totals",
-  "get_axis",
-  "verify_card",
-  "list_cards",
-  "get_root",
-  "get_card",
-  "verify_inclusion",
-  "x402_trust",
-  "mcp_trust",
-  "measurement_index",
-  "verify_capsule",
-  "server_evidence",
-];
-const PAID = [
-  "commission_card",
-  "art50_marking_evidence",
-  "rwa_evidence",
-  "receipts_batch",
-];
+const here = fileURLToPath(new URL(".", import.meta.url));
+const readManifest = (name) => {
+  try {
+    return JSON.parse(readFileSync(resolve(here, name), "utf8")).tools.map((t) => t.name);
+  } catch {
+    return null;
+  }
+};
+const FREE = readManifest("gspc-tools.json");
+const PAID = readManifest("paid-tools.json");
+if (!FREE || !PAID) {
+  console.log("FAIL  the tool manifests are not readable — cannot derive the canonical tool list");
+  process.exit(1);
+}
 const ALL = [...FREE, ...PAID];
 
 const routeReceipt = Buffer.from(
@@ -169,7 +176,9 @@ const freeCalls = {
 };
 const freeResults = new Map();
 for (const name of FREE) {
-  const r = await rpc("tools/call", { name, arguments: freeCalls[name] });
+  // An axis tool takes no argument, and a free reader with no required argument
+  // gets none here; {} is the honest empty argument object either way.
+  const r = await rpc("tools/call", { name, arguments: freeCalls[name] ?? {} });
   freeResults.set(name, r);
   check(`${name} has a callable handler`, !r.error && Boolean(r.result?.structuredContent));
 }
