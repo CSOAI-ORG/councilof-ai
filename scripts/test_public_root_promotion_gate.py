@@ -47,8 +47,13 @@ HEAD_NEW = "d43b1a6059289f2ca18be16d67abb5a13aa683fa"
 HEAD_MOVED = "c0ffee1111111111111111111111111111111111"
 
 
+ALL_GREEN = {"gates": "success", "build": "success", "stamped-bytes": "success",
+             "hold-guard": "success"}
+REQUIRED = ["gates", "build", "stamped-bytes", "hold-guard"]
+
+
 class FakeGitHub:
-    def __init__(self, heads, runs, watch_results=None):
+    def __init__(self, heads, runs, watch_results=None, contexts=None, required=None):
         self.heads = list(heads)          # consumed one per branch_head() call
         self.run_rows = runs              # list of run dicts
         self.watch_results = list(watch_results or [True])
@@ -56,12 +61,21 @@ class FakeGitHub:
         self.approved = []
         self.merged = []
         self.watched = []
+        # The status-check contexts the repo requires, and their conclusions on the head.
+        self.required = list(required if required is not None else REQUIRED)
+        self.contexts = dict(contexts if contexts is not None else ALL_GREEN)
 
     def branch_head(self, repo, branch):
         return self.heads.pop(0) if len(self.heads) > 1 else self.heads[0]
 
     def runs(self, repo, workflow, branch):
         return self.run_rows
+
+    def required_contexts(self, repo, branch="master"):
+        return list(self.required)
+
+    def context_conclusions(self, repo, head):
+        return dict(self.contexts)
 
     def dispatch(self, repo, workflow, ref):
         self.dispatched.append(ref)
@@ -158,6 +172,77 @@ class PromotionGateTest(unittest.TestCase):
         verdict = run_promote(fake)
         self.assertTrue(verdict.startswith("merged"))
         self.assertEqual(fake.merged, [HEAD_NEW])
+
+    # ---- the required-contexts rule -------------------------------------------
+    def test_a_required_context_that_is_skipped_blocks_the_merge(self):
+        """`hold-guard` is declared `if: github.event_name == 'pull_request'`, so a
+        workflow_dispatch run reports it SKIPPED, and a skipped required check does not
+        satisfy branch protection. The merge must not happen on a green run that skipped
+        a context the repo requires."""
+        fake = FakeGitHub(
+            heads=[HEAD_NEW],
+            runs=[{"databaseId": 21, "headSha": HEAD_NEW, "status": "completed",
+                   "conclusion": "success", "event": "workflow_dispatch"}],
+            contexts={**ALL_GREEN, "hold-guard": "skipped"},
+        )
+        verdict = run_promote(fake, max_cycles=3)
+        self.assertEqual(fake.merged, [])
+        self.assertIn("HALT", verdict)
+
+    def test_a_required_context_that_is_cancelled_blocks_the_merge(self):
+        """A context that was green and was then re-run and cancelled is not satisfied:
+        branch protection reads the LATEST check run for each context."""
+        fake = FakeGitHub(
+            heads=[HEAD_NEW],
+            runs=[{"databaseId": 22, "headSha": HEAD_NEW, "status": "completed",
+                   "conclusion": "success", "event": "pull_request"}],
+            contexts={**ALL_GREEN, "stamped-bytes": "cancelled"},
+        )
+        verdict = run_promote(fake, max_cycles=3)
+        self.assertEqual(fake.merged, [])
+        self.assertIn("HALT", verdict)
+
+    def test_the_merge_waits_for_the_contexts_and_happens_once_they_are_green(self):
+        """The gate may watch a run that turns the contexts green, and then merge."""
+        fake = FakeGitHub(
+            heads=[HEAD_NEW],
+            runs=[{"databaseId": 23, "headSha": HEAD_NEW, "status": "queued",
+                   "conclusion": None, "event": "pull_request"}],
+            contexts={**ALL_GREEN, "hold-guard": "skipped"},
+        )
+
+        # The first cycle sees the skipped context and watches the run; the second sees green.
+        original = fake.context_conclusions
+        calls = {"n": 0}
+
+        def conclusions(repo, head):
+            calls["n"] += 1
+            if calls["n"] == 1:
+                return {**ALL_GREEN, "hold-guard": "skipped"}
+            return dict(ALL_GREEN)
+
+        fake.context_conclusions = conclusions
+        verdict = run_promote(fake, max_cycles=4)
+        # The run is watched on the cycle where the contexts are not yet green and again on the
+        # cycle where they are; what matters is that the merge happened, and only after they were.
+        self.assertTrue(fake.watched)
+        self.assertTrue(all(w == 23 for w in fake.watched))
+        self.assertEqual(fake.merged, [HEAD_NEW])
+        self.assertTrue(verdict.startswith("merged"))
+
+    def test_a_pull_request_run_is_preferred_over_a_dispatched_one(self):
+        """Only a pull_request run produces the hold-guard context, so the gate must not
+        watch a workflow_dispatch run when a pull_request run exists for the same bytes."""
+        fake = FakeGitHub(
+            heads=[HEAD_NEW],
+            runs=[{"databaseId": 31, "headSha": HEAD_NEW, "status": "queued",
+                   "conclusion": None, "event": "workflow_dispatch"},
+                  {"databaseId": 32, "headSha": HEAD_NEW, "status": "queued",
+                   "conclusion": None, "event": "pull_request"}],
+        )
+        run_promote(fake)
+        self.assertEqual(fake.watched, [32])
+        self.assertNotIn(31, fake.watched)
 
 
 if __name__ == "__main__":
