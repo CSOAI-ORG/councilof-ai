@@ -1,3 +1,4 @@
+import { recordPaidResponse } from "../_x402_delivery_record";
 /**
  * /api/art50/marking-evidence — the Article 50 marking-evidence pack.
  *
@@ -575,7 +576,7 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
     }
   }
 
-  return json(
+  return recordPaidResponse(json(
     {
       schema: KIND,
       mode: payment.mode,
@@ -614,7 +615,7 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
     },
     200,
     paymentResponseHeader ? { "x-payment-response": paymentResponseHeader } : {},
-  );
+  ), { kv: env.REVENUE_KV, transaction: typeof payment.transaction === "string" ? payment.transaction : null, resource: resourceUrl, confirmedPaid: payment.mode === "x402", successfulOutput: true });
 };
 
 export const onRequestGet = handle;

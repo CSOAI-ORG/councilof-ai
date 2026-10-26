@@ -1,3 +1,4 @@
+import { recordPaidResponse, markPaidUndeliveredResponse } from "./_x402_delivery_record";
 /**
  * GET /api/evidence-bundle — Tier 2: an evidence bundle mapped to ONE regulatory obligation.
  *
@@ -7,7 +8,7 @@
  *   402    &bundle=1                            → x402 challenge (amount lives ONLY here).
  *   paid   &bundle=1 + settled X-PAYMENT        → OSCAL 1.1.0 assessment-results assembled from the
  *                                                already-signed public/cards leaves (full card bytes
- *                                                + inclusion proof each), plus ONE manifest card-v0
+ *                                                + any retained inclusion proofs), plus ONE manifest card-v0
  *                                                (surface evidence.bundle, ≤3KB) signed when the Pages
  *                                                key is present, else sig_ed25519:null.
  *
@@ -56,16 +57,19 @@ async function uuidFrom(name: string): Promise<string> {
   return `${s.slice(0, 8)}-${s.slice(8, 12)}-${s.slice(12, 16)}-${s.slice(16, 20)}-${s.slice(20, 32)}`;
 }
 
-async function loadCards(origin: string): Promise<{ wrappers: Record<string, Wrapper>; merkle_root: string | null; as_of: string | null; source: string }> {
+async function loadCards(origin: string): Promise<{ wrappers: Record<string, Wrapper>; merkle_root: string | null; as_of: string | null; source: string; read_ok: boolean }> {
   const src = new URL("/cards-bundle.json", origin).toString();
   const r = await fetch(src);
-  if (!r.ok) return { wrappers: {}, merkle_root: null, as_of: null, source: `${src} HTTP ${r.status}` };
+  if (!r.ok) return { wrappers: {}, merkle_root: null, as_of: null, source: `${src} HTTP ${r.status}`, read_ok: false };
   const b = (await r.json()) as { cards?: Record<string, Wrapper>; merkle_root?: string; as_of?: string };
+  // The canonical producer always owns a cards object; missing/array values establish no absence.
+  const read_ok = Object.prototype.hasOwnProperty.call(b, "cards") &&
+    b.cards !== null && typeof b.cards === "object" && !Array.isArray(b.cards);
   const wrappers: Record<string, Wrapper> = {};
   for (const [sha, w] of Object.entries(b.cards || {})) {
     if (w && w.card && w.card.sha256 && w.card.sig_ed25519) wrappers[sha] = w; // only real signed cards
   }
-  return { wrappers, merkle_root: b.merkle_root || null, as_of: b.as_of || null, source: src };
+  return { wrappers, merkle_root: b.merkle_root || null, as_of: b.as_of || null, source: src, read_ok };
 }
 
 function lite(sha: string, w: Wrapper): CardLite {
@@ -92,7 +96,7 @@ async function oscal(ob: Obligation, subject: string, selected: { sha: string; w
       types: ["signed-measurement-card"],
       collected: l.as_of,
       subjects: [{ type: "component", title: l.subject }],
-      relevant_evidence: [{ href: `${origin}/cards/${sha.slice(0, 16)}.json`, description: "card-v0 leaf + Merkle inclusion proof (verify free at /gspc-verify)" }],
+      relevant_evidence: [{ href: `${origin}/cards/${sha.slice(0, 16)}.json`, description: "card-v0 leaf with any retained Merkle inclusion proof (verify supported cards free at /gspc-verify)" }],
       props: [
         { name: "sha256", value: sha },
         { name: "sig_ed25519", value: String(w.card.sig_ed25519) },
@@ -212,6 +216,67 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     free_verify: `${origin}/gspc-verify`,
   };
 
+  // FREE PROCUREMENT VIEW (format=procurement). One route, no new SKU, signer or price: the EU AI
+  // Act Article 50 pack (/packs/eu-article-50) is folded into the GPAI pack (/gpai-evidence,
+  // obligation article-53) as rows of the SAME preview, built from the SAME signed corpus with the
+  // SAME relevance rule. Plain-text answer blocks a buyer can paste into a procurement form.
+  // Measured, never certified: CSOAI is not a notified body and this is not a conformity assessment.
+  if ((url.searchParams.get("format") || "").toLowerCase() === "procurement") {
+    if (bundle) {
+      return json({ schema: "csoai.evidence-bundle/0.1", error: "procurement_view_is_free", reason: "format=procurement is the free preview view; drop bundle=1 (the paid OSCAL bundle is unchanged)" }, 400);
+    }
+    if (ob.regulator !== "eu-ai-act") {
+      return json({ schema: "csoai.evidence-bundle/0.1", error: "procurement_view_scope", reason: "format=procurement covers the EU AI Act GPAI pack (article-53, with article-50 folded in)", obligations: ["article-53", "article-50"] }, 400);
+    }
+    // A failed corpus read establishes no zero-card observation. Keep this free view's HTTP
+    // response contract; the explicit state and unknown count carry the retrieval limitation.
+    if (!corpus.read_ok) {
+      return json({
+        schema: "csoai.evidence-bundle/0.1", kind: "procurement", format: "procurement",
+        status: "UNCHECKABLE", error: "corpus_unavailable", subject: subject || null, rows: [],
+        corpus: { ...preview.corpus, signed_cards_total: null, read_state: "UNCHECKABLE" },
+        reason: "The measurement corpus was unavailable or did not provide a cards object. No conclusion about the presence of relevant measurements was established.",
+        relation: preview.relation, free_verify: preview.free_verify, price: null,
+        statement: "Measurement, not certification.",
+      });
+    }
+    const rowFor = (o: Obligation) => {
+      const sel = Object.entries(corpus.wrappers)
+        .map(([sha, w]) => ({ sha, l: lite(sha, w) }))
+        .filter(({ l }) => isRelevant(l, subject, o))
+        .sort((a, b) => a.sha.localeCompare(b.sha));
+      const urls = sel.slice(0, 40).map(({ sha }) => `${origin}/cards/${sha.slice(0, 16)}.json`);
+      const status = sel.length ? "MEASURED" : "UNMEASURED";
+      const text = [
+        `${o.title}.`,
+        sel.length
+          ? `Measured: ${sel.length} signed measurement card(s) are relevant to this obligation${subject ? ` for subject "${subject}"` : ""} (public root ${corpus.merkle_root || "unavailable"}, as of ${corpus.as_of || "unknown"}).`
+          : `UNMEASURED: no signed measurement card is relevant to this obligation${subject ? ` for subject "${subject}"` : ""} in the current public root.`,
+        sel.length ? `Card IDs (sha256): ${sel.slice(0, 40).map((s) => s.sha).join(", ")}${sel.length > 40 ? ` (+${sel.length - 40} more)` : ""}.` : null,
+        `Verify each card free at ${origin}/gspc-verify.`,
+        o.counsel_confirmed ? null : "Obligation mapping not yet confirmed by counsel.",
+        "Relevant-to only; never a determination. This is independent measurement, not a conformity assessment and not certification. CSOAI is not a notified body.",
+      ].filter(Boolean).join(" ");
+      return { obligation_id: o.id, control_id: o.control_id, title: o.title, status, relevant_signed_cards: sel.length, card_urls: urls, existing_pack: o.existing_pack ? `${origin}${o.existing_pack}` : null, counsel_confirmed: o.counsel_confirmed, honesty: o.honesty, answer_text: text };
+    };
+    const gpai = OBLIGATIONS["article-53"];
+    const art50 = OBLIGATIONS["article-50"];
+    return json({
+      schema: "csoai.evidence-bundle/0.1",
+      kind: "procurement",
+      format: "procurement",
+      pack: { id: "gpai", href: `${origin}${gpai.existing_pack}`, folded: [{ id: "eu-article-50", href: `${origin}${art50.existing_pack}` }] },
+      subject: subject || null,
+      rows: [rowFor(gpai), rowFor(art50)],
+      corpus: preview.corpus,
+      relation: "relevant-to — never a determination",
+      free_verify: `${origin}/gspc-verify`,
+      price: null,
+      statement: "Measured, not certified. CSOAI is not a notified body; nothing here is a conformity assessment, certificate, score or rank.",
+      never: ["conformity determination", "certificate", "score", "rank"],
+    });
+  }
+
   const resourceUrl = new URL(`/api/evidence-bundle?obligation=${ob.id}&bundle=1${subject ? `&subject=${encodeURIComponent(subject)}` : ""}`, origin).toString();
   const previewUrl = new URL(resourceUrl);
   previewUrl.searchParams.delete("bundle");
@@ -317,7 +382,17 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   // Paid path — assemble. Empty stays empty (and the preview already said so).
   const as_of = new Date().toISOString();
   const tx = payment.settlement?.transaction || null;
-  const body = await oscal(ob, subject || "(unspecified subject)", selected, corpus.merkle_root, origin);
+  const paidFailure = (reason: string) => markPaidUndeliveredResponse(json({
+    schema: "csoai.evidence-bundle/0.1", error: "uncheckable", state: "PAID_NOT_DELIVERED",
+    reason, settle: payment.settlement || null,
+    note: "Payment settled, but this output was not delivered. Preserve the settlement receipt and reconcile the transaction with CSOAI before any reissue; do not automatically retry or pay again.",
+  }, 500), payment.ok, payment.paymentResponse);
+  let body: Awaited<ReturnType<typeof oscal>>;
+  try {
+    body = await oscal(ob, subject || "(unspecified subject)", selected, corpus.merkle_root, origin);
+  } catch (e) {
+    return paidFailure(e instanceof Error ? e.message : String(e));
+  }
   const cards: Record<string, Wrapper> = {};
   for (const { sha, w } of selected) cards[sha] = w;
   const payload: Record<string, unknown> = {
@@ -338,7 +413,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   try {
     leaf = await signPayload(payload, env.BOARD_SIGN_KEY_PKCS8_B64);
   } catch (e) {
-    return json({ schema: "csoai.evidence-bundle/0.1", error: "uncheckable", reason: (e as Error).message }, 500);
+    return paidFailure(e instanceof Error ? e.message : String(e));
   }
   const manifest_card = cardV0({
     surface: "evidence.bundle",
@@ -360,7 +435,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     }
   }
 
-  return json(
+  return recordPaidResponse(json(
     {
       schema: "csoai.evidence-bundle/0.1",
       kind: "bundle",
@@ -377,7 +452,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     },
     200,
     payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {},
-  );
+  ), { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
 };
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */
