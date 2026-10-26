@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { LogIn, LogOut, Settings, UserRound, Wrench } from "lucide-react";
+import { LogOut, Settings, UserRound } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   DropdownMenu,
@@ -11,6 +11,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { readWorkspaceName } from "@/components/lobby/workspace";
 import { dashboardViewHref } from "@/lib/dashboardView";
+
+/**
+ * Tools audit, 6 Oct 2026: for a guest, "Settings" framed a login wall, "Sign in" offered an
+ * account nothing needs, and "MCP tools" meant nothing (it lives under For developers). A guest
+ * now reads one plain line; Settings and Sign out appear only for a signed-in user.
+ */
+export const GUEST_ACCOUNT_LINE =
+  "No account needed: your look-ups stay in this browser.";
 
 export default function DashboardAccountMenu() {
   const { user, logout } = useAuth();
@@ -38,36 +46,28 @@ export default function DashboardAccountMenu() {
           </span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link
-            href={dashboardViewHref("/settings", "Settings")}
-            className="flex cursor-pointer items-center gap-2"
-          >
-            <Settings className="h-4 w-4" /> Settings
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link
-            href="/dashboard?tab=tools"
-            className="flex cursor-pointer items-center gap-2"
-          >
-            <Wrench className="h-4 w-4" /> MCP tools
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
         {user ? (
-          <DropdownMenuItem onSelect={logout} className="gap-2">
-            <LogOut className="h-4 w-4" /> Sign out
-          </DropdownMenuItem>
+          <>
+            <DropdownMenuItem asChild>
+              <Link
+                href={dashboardViewHref("/settings", "Settings")}
+                className="flex cursor-pointer items-center gap-2"
+              >
+                <Settings className="h-4 w-4" /> Settings
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onSelect={logout} className="gap-2">
+              <LogOut className="h-4 w-4" /> Sign out
+            </DropdownMenuItem>
+          </>
         ) : (
-          <DropdownMenuItem asChild>
-            <Link
-              href="/login"
-              className="flex cursor-pointer items-center gap-2"
-            >
-              <LogIn className="h-4 w-4" /> Sign in
-            </Link>
-          </DropdownMenuItem>
+          <p
+            className="px-2 py-1.5 text-xs leading-relaxed text-muted-foreground"
+            data-testid="account-guest-line"
+          >
+            {GUEST_ACCOUNT_LINE}
+          </p>
         )}
       </DropdownMenuContent>
     </DropdownMenu>

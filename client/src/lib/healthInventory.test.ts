@@ -15,6 +15,7 @@ import {
 import { BOARD_COUNT_OBSERVED, BOARD_OBSERVATION } from "./boardCount";
 
 const products = readFileSync(resolve(__dirname, "../pages/Products.tsx"), "utf8");
+const internal = readFileSync(resolve(__dirname, "../pages/YieldInternal.tsx"), "utf8");
 
 describe("Health inventory — correct facts, not a score", () => {
   it("quotes N of M and refuses a fused health number", () => {
@@ -65,7 +66,9 @@ describe("Health inventory — correct facts, not a score", () => {
     expect(boardHealthLine()).not.toMatch(/corrections touching this digest \d/);
     const blob = JSON.stringify({ HEALTH_RULING, HEALTH_NEVER, HEALTH_FACTS, LIVE_HEALTH_PIN });
     expect(blob).not.toMatch(/£79|£499|rank for sale|22\/22|dorado|cibola|sovos/i);
-    expect(products).toContain("HealthInventory");
+    // Operator notes live on the noindex /status/internal page, never on /products (6 Oct 2026).
+    expect(internal).toContain("<HealthInventory ");
+    expect(products).not.toContain("<HealthInventory");
   });
 });
 

@@ -48,9 +48,42 @@ type Disclosure = {
   no_rule_matched: { cards: number; tags: Tag[] };
 };
 type Gspc = {
-  totals?: { own_leaders_excluded?: number; own_leaders_excluded_axes?: string[]; comparison_axes?: number };
-  axes?: { axis: string; kind?: string; leader?: string | null }[];
+  totals?: {
+    own_leaders_excluded?: number;
+    own_leaders_excluded_axes?: string[];
+    comparison_axes?: number;
+    public_leader_count?: number;
+  };
+  axes?: { axis: string; kind?: string; leader?: string | null; public_leader_state?: string; separation?: string }[];
 };
+
+/** How the board treats the axes where our own model held the point lead, partitioned from the
+ *  served payload. Nothing is typed: every count and name is read off /api/gspc. `reconciles` is
+ *  false when the parts do not add up to the comparison axes, and the page then says so instead
+ *  of printing a sentence it cannot stand behind. */
+export function exclusionPartition(g: Gspc | null | undefined) {
+  const t = g?.totals ?? {};
+  const cmp = (g?.axes ?? []).filter((a) => a.kind === "model-comparison");
+  const ownLed = new Set(t.own_leaders_excluded_axes ?? []);
+  const reranked = cmp.filter((a) => ownLed.has(a.axis) && a.leader);
+  const withheld = cmp.filter((a) => a.public_leader_state === "EXCLUDED_OWN_MODEL");
+  const noCard = cmp.filter((a) => a.public_leader_state === "NO_SIGNED_CARD");
+  const namedLeaders = cmp.filter((a) => a.leader);
+  const count = (xs: typeof cmp, s: string) => xs.filter((a) => (a.separation ?? "UNTESTED") === s).length;
+  const comparison = typeof t.comparison_axes === "number" ? t.comparison_axes : cmp.length;
+  return {
+    comparison,
+    ownLedCount: typeof t.own_leaders_excluded === "number" ? t.own_leaders_excluded : ownLed.size,
+    reranked,
+    withheld,
+    noCard,
+    namedLeaders,
+    rerankedSeparated: count(reranked, "SEPARATED"),
+    rerankedTie: count(reranked, "TIE"),
+    rerankedUntested: count(reranked, "UNTESTED"),
+    reconciles: namedLeaders.length + withheld.length + noCard.length === comparison,
+  };
+}
 type Corrections = { corrections?: { detected_by?: string }[]; signature_state?: string };
 type State = { card_chain?: { bodies_verified_valid?: { value?: number }; distinct_signing_keys?: { value?: number } } };
 type Did = { verificationMethod?: { id: string; type?: string; controller?: string; publicKeyJwk?: { crv?: string } }[] };
@@ -114,9 +147,9 @@ export default function Independence() {
   const did = useJson<Did>("/.well-known/did.json");
 
   const d = disc.state === "ok" && disc.data.header_agrees ? disc.data : null;
-  const t = gspc.state === "ok" ? gspc.data.totals : undefined;
   const namedLeaders = gspc.state === "ok" ? (gspc.data.axes || []).filter((a) => a.kind === "model-comparison" && a.leader) : [];
   const ownNamedLeaders = namedLeaders.filter((a) => ownByName(a.leader));
+  const part = gspc.state === "ok" ? exclusionPartition(gspc.data) : null;
   const entries = corr.state === "ok" ? corr.data.corrections || [] : null;
   const external = entries ? entries.filter((e) => e.detected_by === "external report").length : null;
   const chain = state.state === "ok" ? state.data.card_chain : undefined;
@@ -182,7 +215,8 @@ export default function Independence() {
             <ul className="list-disc space-y-2 pl-5">
               <li>
                 <strong>{d.rules[0].cards}</strong> cards, across {d.rules[0].model_tags} model tags, name a model whose tag
-                begins <code>sov</code> or <code>clan</code>. Our own fine-tunes are published under those two prefixes.
+                begins <code>sov</code> or <code>clan</code>. Our own models (prompt overlays and specialists built on stock
+                base models) are published under those two prefixes.
               </li>
               <li>
                 <strong>{d.rules[1].cards}</strong> cards name a model whose tag begins with the word <code>council</code> (
@@ -212,20 +246,44 @@ export default function Independence() {
 
           <h3 className="pt-4 text-xl font-semibold">How we keep it off the public board</h3>
           <p>
-            The public board does not name our own model as the leader. Where one of our models held the point lead, the
-            board shows no leader at all: it neither names our model nor promotes the runner-up without a fresh ranking. The
-            measurements and their signed cards stay on the record.
+            The public board never names our own model as the leader. Where one of our models held the point lead, it is
+            taken out of the comparison. Where the published per-item rows let us compare the base models again without it,
+            the board shows the best third-party model and says whether its lead separated. Where they do not, the board
+            shows no leader. The measurements of our models and their signed cards stay on the record.
           </p>
-          <p>
-            Read live: the board withholds the leader on{" "}
-            <strong>
-              {t?.own_leaders_excluded ?? <Pending l={gspc} err="board unavailable" />}
-            </strong>{" "}
-            of {t?.comparison_axes ?? "the"} model-comparison axes
-            {t?.own_leaders_excluded_axes?.length ? ` (${t.own_leaders_excluded_axes.join(", ")})` : ""}.{" "}
-            {gspc.state === "ok"
-              ? `Of the ${namedLeaders.length} leaders it does name, ${ownNamedLeaders.length} match any of our own-model name rules.`
-              : null}
+          <p data-testid="own-model-partition">
+            {gspc.state !== "ok" ? (
+              <Pending l={gspc} err="board unavailable" />
+            ) : !part || !part.reconciles ? (
+              "(counts do not reconcile; read /api/gspc)"
+            ) : (
+              <>
+                Read live: one of our models held the point lead on <strong>{part.ownLedCount}</strong> of{" "}
+                {part.comparison} model-comparison axes.{" "}
+                {part.reranked.length > 0 && (
+                  <>
+                    On {part.reranked.length} of them ({part.reranked.map((a) => a.axis).join(", ")}) the board compares
+                    the base models without ours and shows the best third-party model; {part.rerankedSeparated} of those
+                    leads separated
+                    {part.rerankedTie > 0 ? `, ${part.rerankedTie} ${part.rerankedTie === 1 ? "is a tie" : "are ties"} (top observed, not separated)` : ""}
+                    {part.rerankedUntested > 0 ? `, ${part.rerankedUntested} untested` : ""}.{" "}
+                  </>
+                )}
+                {part.withheld.length > 0 && (
+                  <>
+                    On {part.withheld.length} ({part.withheld.map((a) => a.axis).join(", ")}) it shows no leader.{" "}
+                  </>
+                )}
+                {part.noCard.length > 0 && (
+                  <>
+                    On {part.noCard.length} more ({part.noCard.map((a) => a.axis).join(", ")}) it shows no leader because
+                    that leader has no signed card.{" "}
+                  </>
+                )}
+                In all, the board names {part.namedLeaders.length} leaders on the {part.comparison} model-comparison axes, and{" "}
+                {ownNamedLeaders.length} of them match any of our own-model name rules.
+              </>
+            )}
           </p>
           <p>
             A gap we have not closed: the board&rsquo;s test only recognises names that begin with <code>council</code> or are
@@ -233,9 +291,10 @@ export default function Independence() {
             check above runs every rule against the named leaders so you can see it holds today.
           </p>
           <Src>
-            Source: <A href="/api/gspc">/api/gspc</A> → <code>totals.own_leaders_excluded</code> and{" "}
-            <code>axes[].public_leader_state = EXCLUDED_OWN_MODEL</code>. The rule is <code>isOwnCouncilModel</code> in{" "}
-            <code>functions/api/gspc.ts</code>.
+            Source: <A href="/api/gspc">/api/gspc</A> → <code>totals.own_leaders_excluded</code>,{" "}
+            <code>totals.own_leaders_excluded_axes</code>, <code>axes[].public_leader_state</code>,{" "}
+            <code>axes[].separation</code> and <code>axes[].historical_measurement_record.scope</code>. The rule is{" "}
+            <code>isOwnCouncilModel</code> in <code>functions/api/gspc.ts</code>.
           </Src>
           <p>
             <strong>Proposed, not built:</strong> each new card would carry a signed yes-or-no field saying whether it measures

@@ -7,6 +7,7 @@
  * with the endpoint to read directly). A placeholder number is never printed.
  */
 import { useEffect, useState } from "react";
+import { countsLine, readClaimChecks } from "./claimChecks";
 
 export type LiveRead<T> =
   | { state: "loading"; data: null; error: null }
@@ -89,22 +90,17 @@ export function correctionsFigure(state: unknown): Figure | null {
 }
 
 /** /api/state → ledgers.claim_maintenance.counts, each outcome named; never summed into one number. */
-export function claimMaintenanceFigure(state: unknown): Figure | null {
-  const cm = rec(rec(rec(state)?.ledgers)?.claim_maintenance);
-  const counts = rec(cm?.counts);
-  if (!counts) return null;
-  const words: Record<string, string> = {
-    CHANGED_CONFIRMED: "changed",
-    FETCH_FAILED: "not read",
-    NOT_YET_DUE: "not yet due",
-    UNCHANGED: "unchanged",
-    DUE_NOT_RUN: "due, not run",
+export function claimMaintenanceFigure(state: unknown, now: Date = new Date()): Figure | null {
+  // Counted from the check rows for TODAY (claimChecks.ts), never from the run-time counts: a row the
+  // last run wrote NOT_YET_DUE whose due date has since passed is overdue (7 Oct 2026 retest).
+  const r = readClaimChecks(state, now);
+  if (!r) return null;
+  return {
+    value: countsLine(r),
+    label: `scheduled re-checks, counted for ${r.today}`,
+    source: r.source,
+    as_of: r.runAt,
   };
-  const parts = Object.entries(counts)
-    .filter(([, v]) => int(v) !== null)
-    .map(([k, v]) => `${v} ${words[k] ?? k.toLowerCase().replace(/_/g, " ")}`);
-  if (!parts.length) return null;
-  return { value: parts.join(" · "), label: `re-check outcomes${str(cm?.state) ? ` (${str(cm?.state)})` : ""}`, source: "/api/state → ledgers.claim_maintenance.counts", as_of: str(cm?.run_at) };
 }
 
 /** /api/wrapper/index.json → counts.pairs (SovX roster pairs read). */

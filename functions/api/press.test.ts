@@ -115,7 +115,10 @@ describe("the FAQ is answered from artifacts", () => {
     expect(count).toContain(String(d.corrections_this_window.total));
     const newest = d.faq.find((f) => f.q.includes("most recent thing"))!.a;
     expect(newest).toMatch(/^C-\d{4}-\d{4}-\d{2}/);
-    expect(newest).toContain("The fix:");
+    // The remedy line carries the label its own field earns ("Fix" only where the entry has a
+    // fix; newer entries carry what_changed), and never prints "undefined".
+    expect(newest).toMatch(/ (?:Fix|What changed): \S/);
+    expect(newest).not.toMatch(/undefined/);
   });
 
   it("the not-measured answer refuses to turn absence into a zero", async () => {

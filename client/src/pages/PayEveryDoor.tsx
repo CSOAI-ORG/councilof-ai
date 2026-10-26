@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useSearch } from "wouter";
 import { setPageMetadata } from "@/lib/utils";
+import { downloadText, paidResult, saveMyResult, saveNote, seedChecker, signedRecordOf, VERIFY_SEED_HREF, type SaveOutcome } from "@/lib/myResults";
 import {
   chainIdFromNetwork,
   discoverEIP6963,
@@ -16,6 +17,7 @@ import {
   LISTING_PATH,
   MANIFEST_PATH,
   QUOTES_PATH,
+  MAYBE_SETTLED_LINE,
   THE_LINE,
   daysSince,
   delistRisk,
@@ -28,7 +30,7 @@ import {
   quoteDoor,
   relayedFetch,
   remainingDoors,
-  selectDoor,
+  doorForLink,
   settleFor,
   walkTally,
   type Door,
@@ -254,7 +256,7 @@ export function SettleCell({ settle, state, now }: { settle: SettleReading; stat
 }
 
 /** The three outcomes, plus the states on the way to them. */
-export function OutcomeLine({ state }: { state: DoorState }) {
+export function OutcomeLine({ state, saved }: { state: DoorState; saved?: SaveOutcome | null }) {
   switch (state.kind) {
     case "idle":
       return null;
@@ -306,6 +308,7 @@ export function OutcomeLine({ state }: { state: DoorState }) {
           <p className="mt-1 text-[11px] text-slate-600">
             The reference above is the facilitator's claim as the door relayed it, verified by nothing on this page.
           </p>
+          <DeliveredRecord body={state.body} saved={saved} />
         </div>
       );
     }
@@ -334,6 +337,30 @@ export function OutcomeLine({ state }: { state: DoorState }) {
           No EIP-6963 wallet announced itself. Install or unlock a browser wallet — this page cannot pay on your behalf.
         </p>
       );
+    case "maybe-settled": {
+      const tx = state.settlement?.transaction ?? null;
+      const explorer = explorerTxUrl(state.settlement?.network ?? null, tx);
+      return (
+        <div className="text-[12px] text-amber-900" data-testid="pay-state">
+          <p>
+            <span className="font-semibold">PAYMENT MAY HAVE SETTLED.</span> {MAYBE_SETTLED_LINE} The door said: {state.detail}.
+          </p>
+          {tx ? (
+            <p className="mt-1 break-all text-[11px]">
+              Transaction{" "}
+              {explorer ? (
+                <a href={explorer} target="_blank" rel="noreferrer" className="font-mono underline">
+                  {tx}
+                </a>
+              ) : (
+                <code className="font-mono">{tx}</code>
+              )}
+            </p>
+          ) : null}
+          {state.refund ? <p className="mt-1 text-[11px]">{state.refund}</p> : null}
+        </div>
+      );
+    }
     case "error":
       return (
         <p className="text-[12px] text-amber-800" data-testid="pay-state">
@@ -341,6 +368,56 @@ export function OutcomeLine({ state }: { state: DoorState }) {
         </p>
       );
   }
+}
+
+/**
+ * What the payer bought, kept (paid-route lane, 7 Oct 2026). The door's 200 body used to be dropped
+ * here, so a paid art50 pack was shown as DELIVERED with nothing to keep or check. Now: the signed
+ * record's id, a download of exactly what the door returned, the free check, and My results (where
+ * payOne has already saved it, in this browser only).
+ */
+export function DeliveredRecord({ body, saved }: { body: unknown; saved?: SaveOutcome | null }) {
+  // What My results actually holds, from the save outcome (never a claimed "saved" by default).
+  const note = saveNote(saved);
+  if (body === undefined) return null;
+  const rec = signedRecordOf(body);
+  const text = rec ? JSON.stringify(rec, null, 2) : null;
+  const name = `csoai-delivered-${rec ? rec.sha256.slice(0, 12) : "response"}.json`;
+  return (
+    <div className="mt-2 rounded-lg border border-emerald-700/25 bg-emerald-50 px-3 py-2 text-[12px] text-slate-800" data-testid="pay-delivered-record">
+      {rec ? (
+        <p>
+          <span className="font-semibold">What you bought:</span> a {rec.sig_ed25519 ? "signed" : "unsigned"} record, id{" "}
+          <code className="break-all font-mono">{rec.sha256}</code>.{" "}
+          <span data-testid="pay-save-note" data-saved={saved ? String(saved.saved && saved.recordKept) : undefined}>
+            {note ?? "Download it to keep it."}
+          </span>
+        </p>
+      ) : (
+        <p>
+          <span className="font-semibold">What you bought:</span> the door's answer, which carries no signed record to check. Download it to keep it.
+          {saved && !saved.saved ? (
+            <span className="block font-semibold text-amber-900" data-testid="pay-save-note" data-saved="false">
+              {note}
+            </span>
+          ) : null}
+        </p>
+      )}
+      <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1">
+        <button type="button" onClick={() => downloadText(JSON.stringify(body, null, 2), name)} className="min-h-11 font-semibold text-emerald-900 underline">
+          Download what was delivered (JSON)
+        </button>
+        {text ? (
+          <a href={VERIFY_SEED_HREF} onClick={() => seedChecker(text)} className="inline-flex min-h-11 items-center font-semibold text-emerald-900 underline" data-testid="pay-check-genuine">
+            Check it is genuine →
+          </a>
+        ) : null}
+        <a href="/dashboard?tab=mine" className="inline-flex min-h-11 items-center font-semibold text-emerald-900 underline">
+          Open My results
+        </a>
+      </div>
+    </div>
+  );
 }
 
 export function DoorCard({
@@ -353,6 +430,7 @@ export function DoorCard({
   now,
   busy,
   onPay,
+  saved,
 }: {
   door: Door;
   quote: QuoteOutcome | "reading" | undefined;
@@ -363,6 +441,7 @@ export function DoorCard({
   now: number;
   busy: boolean;
   onPay: () => void;
+  saved?: SaveOutcome | null;
 }) {
   const payable = quote !== undefined && quote !== "reading" && quote.kind === "challenge";
   const done = state.kind === "delivered";
@@ -382,6 +461,10 @@ export function DoorCard({
         <div className="shrink-0">
           {done ? (
             <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-emerald-800">settled through</span>
+          ) : state.kind === "maybe-settled" ? (
+            <span className="rounded-full bg-amber-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-amber-900" data-testid="pay-maybe-settled">
+              check wallet first
+            </span>
           ) : (
             <button
               type="button"
@@ -437,7 +520,7 @@ export function DoorCard({
       </div>
 
       <div className="mt-3">
-        <OutcomeLine state={state} />
+        <OutcomeLine state={state} saved={saved} />
       </div>
     </li>
   );
@@ -458,6 +541,8 @@ export default function PayEveryDoor() {
   const [walking, setWalking] = useState<{ at: number; of: number } | null>(null);
   const [walkQueue, setWalkQueue] = useState<string[]>([]);
   const [walkNote, setWalkNote] = useState<string | null>(null);
+  /** What My results actually stored for each delivered door, read back from storage. */
+  const [saves, setSaves] = useState<Record<string, SaveOutcome | undefined>>({});
   const busyRef = useRef(false);
   const walletRef = useRef<EIP6963ProviderDetail | null>(null);
   const mountedRef = useRef(true);
@@ -541,7 +626,23 @@ export default function PayEveryDoor() {
     };
   }, []);
 
-  const selected = doors ? selectDoor(doors, wanted) : null;
+  const selected = doors ? doorForLink(doors, wanted) : null;
+  const selectedUrl = selected?.url ?? null;
+
+  // A linked door with its own query (doorForLink) is not in the manifest's list, so the load above
+  // never read its 402: read it here, directly, like any door the relay could not read.
+  useEffect(() => {
+    if (!selected || !selectedUrl || quotes[selectedUrl] !== undefined) return;
+    let cancelled = false;
+    setQuotes((prev) => ({ ...prev, [selectedUrl]: "reading" }));
+    quoteDoor(selected).then((q) => {
+      if (!cancelled) setQuotes((prev) => ({ ...prev, [selectedUrl]: q }));
+    });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedUrl, doors]);
   const visible = doors ? (selected ? [selected] : doors) : [];
   const readingValue = reading === "reading" ? null : reading;
   const reading402Value = reading402 === "reading" ? null : reading402;
@@ -585,6 +686,10 @@ export default function PayEveryDoor() {
       walletName: detail.info?.name ?? "wallet",
       onPhase: (s) => setDoorState(door.url, s),
     });
+    if (final.kind === "delivered") {
+      const outcome = saveMyResult(paidResult({ doorUrl: door.url, body: final.body, transaction: final.settlement?.transaction ?? null }));
+      if (mountedRef.current) setSaves((prev) => ({ ...prev, [door.url]: outcome }));
+    }
     setDoorState(door.url, final);
     return final;
   }
@@ -698,6 +803,7 @@ export default function PayEveryDoor() {
       {walkQueue.length > 0 ? (
         <p className="mt-2 text-[12px] text-slate-700" data-testid="settle-all-tally">
           <span className="font-semibold">Settle all:</span> {tally.delivered} settled · {tally.unsettled} unsettled · {tally.rejected} declined ·{" "}
+          {tally.maybe_settled} may have settled (check the wallet) ·{" "}
           {tally.failed} failed · {tally.pending} pending · of {tally.queued} queued
         </p>
       ) : null}
@@ -756,6 +862,7 @@ export default function PayEveryDoor() {
             now={now}
             busy={walkingNow}
             onPay={() => void onPayOne(door)}
+            saved={saves[door.url]}
           />
         ))}
       </ul>

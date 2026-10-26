@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
-// Readiness - the 2 Aug 2026 transparency/GPAI countdown. Buy-before-the-cliff surface.
+// Readiness - the 2 Aug 2026 transparency/GPAI countdown. It states what applies and what we
+// measure; it offers no compliance passport, certificate or legal determination.
 const ITEMS = [
   { t: "Article 50 transparency", d: "Disclose AI interaction, label synthetic media, watermark generated content." },
   { t: "GPAI penalty powers", d: "General-purpose model obligations become enforceable with penalties." },
@@ -34,11 +35,11 @@ export default function Readiness() {
           ))}
         </div>
         <div className="mt-8 rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-sm text-emerald-900">
-          CSOAI issues Ed25519-signed compliance passports and C2PA watermark attestations for Article 50 - provable transparency you can show a regulator. Bring your system and the Council scopes exactly what you owe now - and by 2 Dec 2026.
+          CSOAI issues no compliance passports, certificates or compliance determinations. For Article 50 we offer a measurement: for one generative output, whether a machine-readable mark (a C2PA manifest, or IPTC digitalSourceType) can be detected in its bytes at a stated time, signed and timestamped. Watermarks with no public detector are reported UNCHECKABLE. Whether Article 50 applies to your system is a question for your legal counsel.
         </div>
         <div className="mt-6 flex flex-wrap gap-3">
-          <a href="/try" className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">Scope my obligations -&gt;</a>
-          <a href="/law" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">Law by jurisdiction -&gt;</a>
+          <a href="/dashboard?tab=art50" className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">Check one output for a mark -&gt;</a>
+          <a href="/article-50" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">The Article 50 checklist -&gt;</a>
         </div>
       </section>
     </div>

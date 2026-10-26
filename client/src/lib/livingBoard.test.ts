@@ -44,11 +44,19 @@ function boardFromFleet(over: Partial<Record<string, string>> = {}): BoardDoc {
 }
 
 describe("rank spread grouping", () => {
-  it("puts every model whose spread overlaps the leader's under no clear winner on a TIE axis", () => {
+  it("puts every model whose spread starts at first place in the top group on a TIE axis", () => {
     const g = groupAxis("TIE", [m("a", 0.5, 0.7, [1, 3]), m("b", 0.4, 0.6, [1, 3]), m("c", 0.1, 0.2, [4, 4])]);
     expect(g[0].label).toBe("no-clear-winner");
     expect(g[0].models.map((x) => x.model)).toEqual(["a", "b"]);
     expect(g[1].models.map((x) => x.model)).toEqual(["c"]);
+  });
+  it("on a TIE axis the top group is only the models that could still be first", () => {
+    // leader [1,4]; b [2,5] overlaps the leader's spread but cannot be first, so it is not on top.
+    const g = groupAxis("TIE", [m("a", 0.5, 0.8, [1, 4]), m("b", 0.4, 0.7, [2, 5]), m("c", 0.45, 0.75, [1, 5])]);
+    expect(g[0].label).toBe("no-clear-winner");
+    expect(g[0].models.map((x) => x.model)).toEqual(["a", "c"]);
+    expect(g[1].label).toBe("ordered");
+    expect(g[1].models.map((x) => x.model)).toEqual(["b"]);
   });
   it("never labels a SEPARATED axis a tie", () => {
     const g = groupAxis("SEPARATED", [m("a", 0.8, 0.9, [1, 1]), m("b", 0.4, 0.6, [2, 3])]);

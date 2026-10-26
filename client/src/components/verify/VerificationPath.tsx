@@ -57,6 +57,11 @@ function hopFor(r: (typeof RULES)[number], v: RecordVerdict | null, used: Set<nu
   }
 }
 
+/** True when at least one hop of the browser check passed or failed (ran), never for "not run". */
+export function lastVerifiedApplies(hops: Hop[]): boolean {
+  return hops.some((h) => h.mark === "pass" || h.mark === "fail");
+}
+
 const MARK: Record<Mark, { sym: string; word: string; cls: string }> = {
   pass: { sym: "✓", word: "passed", cls: "border-emerald-700 bg-emerald-50 text-emerald-950" },
   fail: { sym: "✗", word: "failed", cls: "border-rose-700 bg-rose-50 text-rose-950" },
@@ -88,8 +93,12 @@ export default function VerificationPath({
       .catch(() => setFacts({ as_of: null }));
   }, []);
 
+  const checkHops = hopsFrom(verdict);
+  // "Last verified" only when the browser check actually ran a hop. A pasted id or a malformed
+  // record ends UNCHECKABLE with every hop "not run"; printing a time beside that read as a pass.
+  const ranAny = lastVerifiedApplies(checkHops);
   const hops: Hop[] = [
-    ...hopsFrom(verdict),
+    ...checkHops,
     {
       key: "index",
       label: "Listed in the signed card index (corpus 3)",
@@ -135,16 +144,29 @@ export default function VerificationPath({
         ))}
       </ol>
       <dl className="mt-1 grid grid-cols-1 gap-x-3 gap-y-1 border-t border-slate-200 pt-3 text-xs text-slate-800 sm:grid-cols-[9rem_1fr]">
-        <dt className="font-semibold">Last verified</dt>
-        <dd>{checkedAt ? `${checkedAt.replace("T", " ").slice(0, 19)}Z, in this browser` : "Not yet in this tab."}</dd>
-        <dt className="font-semibold">Corpus-wide check</dt>
-        <dd>{facts?.as_of ? `Every body in the index last re-verified ${facts.as_of} (GET /api/state → card_chain)` : facts ? "The last corpus-wide run could not be read." : "Reading…"}</dd>
-        <dt className="font-semibold">Next re-check</dt>
-        <dd>
-          No published schedule re-derives the card index (its producer signs, so it runs by hand, never in CI). You can re-check this
-          card here at any time, free.{root ? ` The public root is rebuilt on its own schedule: ${root}.` : ""}
+        <dt className="font-semibold">{ranAny && checkedAt ? "Last verified" : "Checked"}</dt>
+        <dd data-testid="vpath-last-verified">
+          {ranAny && checkedAt
+            ? `${checkedAt.replace("T", " ").slice(0, 19)}Z, in this browser`
+            : checkedAt
+              ? "Not checked yet. The last attempt could not run any check on this text."
+              : "Not checked yet."}
         </dd>
       </dl>
+      {/* The corpus-wide and schedule lines name pipelines (the build pod, staged leaves): useful to
+          an auditor, noise to a first-time reader, so they sit behind a disclosure. */}
+      <details className="mt-1 text-xs text-slate-800" data-testid="verification-schedule">
+        <summary className="min-h-11 cursor-pointer py-3 text-sm font-semibold text-slate-800">How this check works: when it was last run</summary>
+        <dl className="grid grid-cols-1 gap-x-3 gap-y-1 pb-1 sm:grid-cols-[9rem_1fr]">
+          <dt className="font-semibold">Corpus-wide check</dt>
+          <dd>{facts?.as_of ? `Every body in the index last re-verified ${facts.as_of} (GET /api/state → card_chain)` : facts ? "The last corpus-wide run could not be read." : "Reading…"}</dd>
+          <dt className="font-semibold">Next re-check</dt>
+          <dd>
+            No published schedule re-derives the card index (its producer signs, so it runs by hand, never in CI). You can re-check this
+            card here at any time, free.{root ? ` The public root is rebuilt by ${root}.` : ""}
+          </dd>
+        </dl>
+      </details>
     </section>
   );
 }

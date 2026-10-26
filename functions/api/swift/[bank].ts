@@ -8,6 +8,7 @@
 // #1009 ("Could not resolve" in run 33472240842) — the whole estate stopped
 // shipping on it.
 import tape from "../../../public/interop/swift-census.json";
+import { headFromGet } from "../_head";
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body, null, 2), {
@@ -62,3 +63,7 @@ export const onRequestGet: PagesFunction = async (context) => {
     honesty: HONEST[row.status] ?? "Three-state census row. Not MEASURED. Not a client.",
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

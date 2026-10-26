@@ -21,15 +21,7 @@ export default function DashboardSwiftX402Pane() {
           frozen run lands. Board scores stay <code>GET /api/gspc</code> only.
         </p>
       </div>
-      <Suspense fallback={<div className="py-8 text-center text-sm text-slate-500">Loading master coverage…</div>}>
-        <GspcCoverageLedger />
-      </Suspense>
-      <Suspense fallback={<div className="py-8 text-center text-sm text-slate-500">Loading panels…</div>}>
-        <OsPanels />
-      </Suspense>
-      <Suspense fallback={<div className="py-8 text-center text-sm text-slate-500">Loading stablecoin readiness…</div>}>
-        <StablecoinReadinessView />
-      </Suspense>
+      {/* The x402 doors come first: the tab is named for them, and they sat below three lazy panels (T14, 6 Oct 2026). */}
       <section className="rounded-2xl border border-slate-200 bg-white p-4" data-testid="os-x402-doors">
         <h3 className="text-sm font-semibold text-slate-800">x402 — live Base · verify free</h3>
         <p className="mt-1 text-[13px] text-slate-600">
@@ -47,7 +39,19 @@ export default function DashboardSwiftX402Pane() {
           <a className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-semibold text-slate-800" href="/pay">/pay desk</a>
           <a className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-semibold text-slate-800" href="/interop/x402-challenge/">x402-challenge</a>
         </div>
+        <p className="mt-3 text-sm">
+          <a className="font-semibold text-emerald-800 underline" href="/pricing">How the free rail works →</a>
+        </p>
       </section>
+      <Suspense fallback={<div className="py-8 text-center text-sm text-slate-500">Loading master coverage…</div>}>
+        <GspcCoverageLedger />
+      </Suspense>
+      <Suspense fallback={<div className="py-8 text-center text-sm text-slate-500">Loading panels…</div>}>
+        <OsPanels />
+      </Suspense>
+      <Suspense fallback={<div className="py-8 text-center text-sm text-slate-500">Loading stablecoin readiness…</div>}>
+        <StablecoinReadinessView />
+      </Suspense>
       <section className="rounded-2xl border border-amber-200 bg-amber-50/60 p-4" data-testid="os-x402-metamask-next">
         <h3 className="text-sm font-semibold text-slate-800">MetaMask next — estate EDGE doors</h3>
         <p className="mt-1 text-[13px] text-slate-600">

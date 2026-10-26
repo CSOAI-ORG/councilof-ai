@@ -19,6 +19,7 @@ import mcpDirs from "../../public/interop/mcp-directories.json";
 import podHealth from "../../public/interop/pod-health.json";
 import pubHealth from "../../public/publisher-health.json";
 import { buildWorker } from "./worker";
+import { headFromGet } from "./_head";
 
 type Env = { RUNPOD_WORKER_HEALTH_URL?: string; WORKER_STATE_KV?: KVNamespace };
 
@@ -190,3 +191,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
     },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

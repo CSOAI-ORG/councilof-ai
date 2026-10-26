@@ -1,3 +1,13 @@
+> **WARNING SUPERSEDED - DO NOT QUOTE THESE FIGURES.**
+> Generated 2026-09-12T04:25:00Z. Every count below has since changed. This document is retained as a
+> dated historical record only; its figures are NOT live.
+> **Live authority:** `https://councilof.ai/api/state` (counts) - `https://councilof.ai/api/coverage-truth`
+> (coverage states) - `https://councilof.ai/api/gspc` (board) - `https://councilof.ai/api/revenue` (revenue).
+> Machine-readable pointer: `TUI-1-CANONICAL-STATE.json`. Dated observation record: `control/canonical-state-20261007.json`.
+> Known-stale examples here: Rekor logIndex 2,791,822,965 -> 3,012,420,819; public root 169 ->
+> 319 cards; board 22 -> 23 axes; OTS `STAMPED_PENDING_BITCOIN` -> `CONFIRMED_BITCOIN`.
+---
+
 # HERMES — Execution Ledger
 **Generated:** 2026-09-12T04:25:00Z
 **Master basis:** 4bb4c4446 (PR #1941)

@@ -1,5 +1,5 @@
 /**
- * GET /embed/verify — the self-contained, self-verifying card widget at a clean URL.
+ * GET /embed/verify — the embeddable signed-card widget at a clean URL.
  *
  * Third parties embed it as:
  *   <iframe src="https://councilof.ai/embed/verify?card=/signals/cross-border-card.signed.json"
@@ -8,7 +8,10 @@
  * The widget itself lives as a static asset at /embed/verify.html (single source of
  * truth). This function serves those exact bytes at the extension-less path so the
  * iframe URL reads cleanly and the query string is preserved by the client. It adds
- * nothing to the HTML: all verification is Ed25519 done in the visitor's browser.
+ * nothing to the HTML. The widget computes no verdict itself: it posts the card's bytes to
+ * POST /api/verify (the shared rule behind /gspc-verify) and links to /gspc-verify/?card=...
+ * so a visitor's own browser can repeat the check. Until 7 Oct 2026 the asset was only a
+ * withdrawal notice, so every embedding site showed its visitors "verifier withdrawn".
  *
  * WHY IT USES env.ASSETS AND NOT fetch() — found by operating it, 2026-08-26.
  * This handler used to do `fetch(new URL("/embed/verify.html", url.origin))`. Pages'
@@ -21,6 +24,7 @@
  * to third parties to paste into their own sites. Locally the same request simply never
  * returned. `env.ASSETS.fetch` reads the asset directly and cannot re-enter the router.
  */
+import { headFromGet } from "../api/_head";
 interface Env {
   ASSETS: { fetch: (req: Request | string) => Promise<Response> };
 }
@@ -56,3 +60,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

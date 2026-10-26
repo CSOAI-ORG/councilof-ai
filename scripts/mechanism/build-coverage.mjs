@@ -88,6 +88,29 @@ function capsuleBindings(dir, readBytes) {
   return { rec, n, withBinding, bound: [...bound].sort() };
 }
 
+/**
+ * The inventory an unsigned discovery pointer selects, read only as the exact bytes it names. A path
+ * that is not a pointer is read as-is. The stamped versions and their proofs are checked in full by
+ * scripts/regulatory-inventory-gate.mjs; here the bytes must at least be the ones the pointer names,
+ * and the proof's header must commit to them.
+ */
+export function readInventory(p, io) {
+  const doc = io.readJson(p);
+  if (doc?.schema !== "csoai.regulatory-inventory-pointer/1") return doc;
+  const name = typeof doc.index_url === "string" && /^\/interop\/regulatory-inventory(?:-\d{4}-\d{2}-\d{2}-[0-9a-f]{12})?\.json$/.test(doc.index_url)
+    ? doc.index_url.slice("/interop/".length) : fail(`${p} names a file outside the versioned inventory set`);
+  const file = `public/interop/${name}`;
+  const bytes = io.readBytes(file);
+  if (sha256(bytes) !== doc.index_sha256) fail(`${file} is not the bytes ${p} selects`);
+  const proof = io.readBytes(`${file}.ots`);
+  const header = Buffer.from("004f70656e54696d657374616d7073000050726f6f6600bf89e2e884e89294", "hex");
+  if (!proof.subarray(0, header.length).equals(header) || proof[header.length] !== 0x01 || proof[header.length + 1] !== 0x08 ||
+      proof.subarray(header.length + 2, header.length + 34).toString("hex") !== doc.index_sha256) {
+    fail(`${file}.ots does not commit to the bytes of ${file}`);
+  }
+  return JSON.parse(bytes.toString("utf8"));
+}
+
 export function derive(sourceBytes, io) {
   const { readJson, readBytes, readText, exists, listDirs } = io;
   const src = JSON.parse(sourceBytes.toString("utf8"));
@@ -105,7 +128,7 @@ export function derive(sourceBytes, io) {
   }
   const root = corpusRoot(anchors);
   if (root !== manifest.corpus_root) fail(`corpus_root does not recompute (${root})`);
-  const inv = readJson(S.inventory);
+  const inv = readInventory(S.inventory, io);
   if (inv.frozen_provisions.corpus_root !== root) fail("inventory corpus_root differs from the manifest");
   if (inv.frozen_provisions.evidence_sha256 !== sha256(manifestBytes)) fail("inventory evidence_sha256 does not pin the manifest bytes");
 

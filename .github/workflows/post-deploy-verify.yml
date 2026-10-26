@@ -28,6 +28,10 @@ jobs:
         env:
           HOSTS: "councilof.ai,csoai.org"
           ENDPOINTS: "/ /api/gspc /api/cards /root.json /feed /api/feed.xml /api/health /api/state /.well-known/agents/index.json /.well-known/mcp/server-card.json"
+          # Public data a stranger's script reads. Each is probed twice more below: with Python's DEFAULT
+          # urllib User-Agent (the CDN's Browser Integrity Check refused it with 403 1010 until 6 Oct 2026),
+          # and with HEAD (Pages answered 404 to HEAD on GET-only functions until the same day).
+          CLIENT_ENDPOINTS: "/api/gspc /api/state /api/corrections /signed/card_index.json /.well-known/did.json"
         run: |
           set -uo pipefail
           PASS=0
@@ -43,6 +47,28 @@ jobs:
               else
                 FAIL=$((FAIL+1))
                 REPORT="$REPORT\n❌ $HOST$EP → $CODE"
+              fi
+            done
+          done
+          # Standard HTTP clients. urllib keeps its DEFAULT User-Agent on purpose: adding one here, as the
+          # selftest workflows do, would hide exactly the refusal this probe exists to catch.
+          for HOST in $(echo "$HOSTS" | tr ',' ' '); do
+            for EP in $CLIENT_ENDPOINTS; do
+              URL="https://$HOST$EP"
+              if python3 -c "import urllib.request,sys;urllib.request.urlopen(sys.argv[1],timeout=20)" "$URL" 2>/dev/null; then
+                PASS=$((PASS+1))
+                REPORT="$REPORT\n✅ urllib $HOST$EP"
+              else
+                FAIL=$((FAIL+1))
+                REPORT="$REPORT\n❌ urllib (default User-Agent) $HOST$EP"
+              fi
+              HCODE=$(curl -s -o /dev/null -I -L -w '%{http_code}' --max-time 20 "$URL" 2>/dev/null || echo "000")
+              if [ "$HCODE" = "200" ]; then
+                PASS=$((PASS+1))
+                REPORT="$REPORT\n✅ HEAD $HOST$EP → $HCODE"
+              else
+                FAIL=$((FAIL+1))
+                REPORT="$REPORT\n❌ HEAD $HOST$EP → $HCODE"
               fi
             done
           done

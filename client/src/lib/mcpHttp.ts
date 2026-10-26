@@ -20,7 +20,12 @@ export type McpHttpOptions = {
   allowPublicCatalogFallback?: boolean;
   /** One deadline for the complete request, including any read-only catalog fallback. */
   timeoutMs?: number;
+  /** Which door to ask: "/mcp" (free + paid tools, the default) or "/mcp/free" (the free tools only). */
+  door?: McpDoor;
 };
+
+/** The two MCP doors this site serves. /mcp/free is the one /connect installs. */
+export type McpDoor = "/mcp" | "/mcp/free";
 
 /**
  * Only the read-only catalog may fall back from a local Vite preview to the
@@ -31,11 +36,12 @@ export function mcpRpcEndpoints(
   hostname?: string,
   method = "tools/list",
   allowPublicCatalogFallback = false,
+  door: McpDoor = "/mcp",
 ): string[] {
   const local = hostname === "localhost" || hostname === "127.0.0.1";
   return local && method === "tools/list" && allowPublicCatalogFallback
-    ? ["/mcp", "https://councilof.ai/mcp"]
-    : ["/mcp"];
+    ? [door, `https://councilof.ai${door}`]
+    : [door];
 }
 
 function object(value: unknown): value is JsonObject {
@@ -116,6 +122,7 @@ export async function mcpRpc(
     hostname,
     method,
     options.allowPublicCatalogFallback ?? false,
+    options.door ?? "/mcp",
   );
   const id = ++nextId;
   let lastError: Error = new Error("the MCP runtime did not answer");

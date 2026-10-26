@@ -12,6 +12,7 @@
  */
 
 import { MEASUREMENT_PREDICATE, toDsse, toInTotoStatement } from "./intoto";
+import { headFromGet } from "./_head";
 
 interface Env {
   BOARD_ATTESTATION_KEY_PKCS8_B64?: string;
@@ -59,3 +60,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
 
   return Response.json({ ...payload, receipt }, { headers: { "cache-control": "public, max-age=300" } });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

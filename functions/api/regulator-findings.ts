@@ -8,6 +8,7 @@
 // (the rounds.jsonl.js pattern).
 //
 // GET /api/regulator-findings?deployment=<desc>[&sector=insurance|bond|cobol]
+import { headFromGet } from "./_head";
 
 const AXIS_TO_OBLIGATION: Record<string, { obligation: string; tier: string }> = {
   governance: { obligation: "Article 5 prohibited practices", tier: "prohibited_practices" },
@@ -157,3 +158,7 @@ export async function onRequestGet({ request }) {
     headers: { "content-type": "application/json", "cache-control": "public, max-age=300", "access-control-allow-origin": "*" },
   });
 }
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

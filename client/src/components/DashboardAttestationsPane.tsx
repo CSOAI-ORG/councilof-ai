@@ -2,13 +2,16 @@ import { useEffect, useMemo, useState } from "react";
 import { anchorsFromDid, verifyCard as verifySignedCard, type Anchor } from "../../../functions/_lib/cardVerify";
 import {
   BOARD_KEY_ID,
+  caughtOf,
   classifyQuery,
   corpusBoundary,
   howToVerifyLinks,
   latestCorrections,
   latestSignedCards,
   ledgerSignatureState,
+  remedyOf,
   sha256Hex,
+  statusOf,
   verifyPublishedInclusion,
   verifyRootSignature,
   witnessRails,
@@ -537,12 +540,15 @@ export default function DashboardAttestationsPane() {
               <div className="flex flex-wrap items-center gap-2">
                 <Mono className="font-semibold">{c.id}</Mono>
                 <span className="text-xs text-muted-foreground">{c.date}</span>
-                <span className="text-xs">{c.status}</span>
+                <span className="text-xs">{statusOf(c)}</span>
               </div>
               <dl className="mt-2 space-y-1 text-xs">
                 <div><dt className="inline font-medium">What was wrong: </dt><dd className="inline text-muted-foreground">{c.what_was_wrong}</dd></div>
-                <div><dt className="inline font-medium">How it was caught: </dt><dd className="inline text-muted-foreground">{c.how_caught}</dd></div>
-                <div><dt className="inline font-medium">Fix: </dt><dd className="inline text-muted-foreground">{c.fix}</dd></div>
+                <div><dt className="inline font-medium">How it was caught: </dt><dd className="inline text-muted-foreground">{caughtOf(c)}</dd></div>
+                <div><dt className="inline font-medium">{remedyOf(c).label}: </dt><dd className="inline text-muted-foreground">{remedyOf(c).text}</dd></div>
+                {Array.isArray(c.open_items) && c.open_items.length > 0 ? (
+                  <div><dt className="inline font-medium">Still open: </dt><dd className="inline text-muted-foreground">{c.open_items.join(" · ")}</dd></div>
+                ) : null}
               </dl>
             </li>
           ))}

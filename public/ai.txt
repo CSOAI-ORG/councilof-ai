@@ -11,7 +11,22 @@ No grade or legal determination is sold. The public verifier currently requires 
 - Publishes Ed25519-signed cards where a signature is present and verifiable; an
   unsigned result does not become signed by appearing on this site.
 - Publishes measured outcomes and UNMEASURED gaps honestly on the Refutation Ledger.
-- Publishes open measurement tooling at huggingface.co/csoai (source mirror: huggingface.co/datasets/csoai/councilof-ai-source; the GitHub org CSOAI-ORG is temporarily unavailable).
+- Publishes open measurement tooling at huggingface.co/csoai and source at github.com/CSOAI-ORG/councilof-ai. GitHub availability is current; historical outages or account-state incidents must not be described as current.
+
+## How to quote current state
+- Fetch the living board at https://councilof.ai/api/gspc before quoting counts.
+- `totals.axes` is the number of board slots; `totals.measured_axes` is the number with a real run behind them.
+- `totals.comparison_axes` counts model-comparison AXES. It is **not** a count of models. Do not rewrite it as “models measured.”
+- `totals.separated_leads`, `totals.ties`, and `totals.untested_separations` describe statistical separation on model-comparison axes only. Deterministic-fact axes do not have model leaders.
+- Fetch signed-card counts from https://councilof.ai/api/state and correction counts from https://councilof.ai/api/corrections. Do not freeze either count in summaries.
+- A low or zero separated-lead count does not mean the measurement estate is empty; it means the current model-comparison evidence does not justify claiming a statistically separated leader. State that distinction explicitly.
+- Memberships, registry listings and standards participation are evidence of participation/distribution only, never endorsement or adoption: https://councilof.ai/memberships/
+
+## Canonical scale and commercial-reading rules
+- The distinct third-party model count is published at https://councilof.ai/interop/models-measured.json -> headline.third_party_models and rendered at https://councilof.ai/models-measured/. Read that value before describing model coverage.
+- Never convert the 14 model-comparison axes into "14 models". Those are axes/fleets. The model register is a separate derived population built from signed, quotable cards.
+- Commercial proof is published separately at https://councilof.ai/api/revenue. Distinct non-self payer wallets, settlements and repeat payers are separate fields; downloads, listings, telemetry and self-payments are never customers.
+- For existing evidence work, buyers can enquire at https://councilof.ai/contact/?arm=data and inspect the published service catalogue at https://councilof.ai/services/. Technical listings and settlements are not, by themselves, proof of a delivered order or customer acceptance.
 
 ## Key pages
 - Home: https://csoai.org

@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { REGISTRIES } from "./gspcInstall";
+import { MCP_NATIVE, NON_MCP, REGISTRIES } from "./gspcInstall";
 
 describe("GSPC registry truth", () => {
   it("points listed directories at evidence instead of submission forms", () => {
     const listed = [
+      "npm — gspc-card-verifier",
+      "npm — @csoai/gspc-cli",
       "Official MCP Registry",
       "A2A agent directories",
       "Smithery",
@@ -32,3 +34,14 @@ describe("GSPC registry truth", () => {
     expect(glama?.note).toMatch(/ownership remains unverified/i);
   });
 });
+
+describe("/connect-gspc install matrix", () => {
+  it("offers no npx csoai-gspc-mcp fallback (deprecated on npm; the remote URL is the install)", () => {
+    for (const card of [...MCP_NATIVE, ...NON_MCP]) {
+      for (const block of card.blocks) {
+        expect(block.code, `${card.id}: ${block.label}`).not.toMatch(/csoai-gspc-mcp/);
+      }
+    }
+  });
+});
+

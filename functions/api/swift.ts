@@ -5,6 +5,7 @@
  * Supersedes the swift-17 tape; 26 named banks sourced, 40+ universe cited.
  */
 import tape from "../../public/interop/swift-census.json";
+import { headFromGet } from "./_head";
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body, null, 2), {
@@ -124,3 +125,7 @@ export const onRequestGet: PagesFunction = async () => {
     rows: t.rows,
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

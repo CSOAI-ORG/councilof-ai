@@ -112,9 +112,13 @@ export function boardCardSurface(raw: unknown, surfaceId = sid("gspc_board")): B
   const source = str(j.source) ?? "https://councilof.ai/api/gspc";
   const asOf = rec(j.as_of);
   const measuredOn = str(asOf?.board_measured_on) ?? null;
-  const axes = Array.isArray(j.axes) ? (j.axes as Json[]) : [];
-  const tie = axes.filter((a) => a?.separation === "TIE").map((a) => String(a.axis));
-  const untested = axes.filter((a) => a?.kind === "model-comparison" && a?.separation !== "TIE" && a?.separation !== "SEPARATED").map((a) => String(a.axis));
+  // board_totals carries totals and the separation line but no axes array. The per-axis lists are
+  // then UNKNOWN (null), not empty: [] beside "7 TIE · 7 UNTESTED" said there were none (6 Oct 2026).
+  const axes = Array.isArray(j.axes) ? (j.axes as Json[]) : null;
+  const tie = axes ? axes.filter((a) => a?.separation === "TIE").map((a) => String(a.axis)) : null;
+  const untested = axes
+    ? axes.filter((a) => a?.kind === "model-comparison" && a?.separation !== "TIE" && a?.separation !== "SEPARATED").map((a) => String(a.axis))
+    : null;
   const components: Json[] = [
     { id: "root", component: "Card", child: "body" },
     { id: "body", component: "Column", children: ["title", "count", "separation", "divider", "limits", "source"] },

@@ -14,6 +14,7 @@
  * Served by a Function (not a static file) so the `servers` entry always names the
  * origin it was fetched from, and so the catch-all /api/[[path]] 404 does not shadow it.
  */
+import { headFromGet } from "./_head";
 
 export const OPENAPI_SPEC = {
   openapi: "3.1.0",
@@ -164,3 +165,7 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
     },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

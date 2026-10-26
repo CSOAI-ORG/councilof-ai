@@ -1,3 +1,4 @@
+import { headFromGet } from "./_head";
 const HEADERS = {
   "cache-control": "no-store",
   "access-control-allow-origin": "*",
@@ -42,3 +43,7 @@ export const onRequestPost: PagesFunction = async () => Response.json(
   { state: "METHOD_NOT_ALLOWED", accepted: false, note: "Trace is read-only. Use GET /api/trace?sha=<64-hex>." },
   { status: 405, headers: { ...HEADERS, allow: "GET" } },
 );
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

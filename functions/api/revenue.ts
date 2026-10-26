@@ -22,6 +22,7 @@
 import countersDoc from "../../counters.json";
 import { railMode } from "./_x402_config";
 import { selfWallets } from "./_x402";
+import { headFromGet } from "./_head";
 
 type CanonCounter = {
   value: string | number | null;
@@ -381,3 +382,7 @@ export const onRequestGet: PagesFunction<RevenueEnv> = async ({ request, env }) 
 
   return json(await buildRevenue(env));
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

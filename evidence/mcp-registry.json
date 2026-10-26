@@ -2,8 +2,9 @@
   "schema": "csoai.mcp-registry/1",
   "generated_by": "scripts/mcp-probe.mjs",
   "probe_method": "JSON-RPC 2.0 over HTTPS POST: initialize -> tools/list, MCP protocolVersion 2024-11-05. A server counts as reachable only if initialize returned a JSON-RPC result.",
-  "probe_host": "pod",
+  "probe_host": "workstation",
   "targets_file": "scripts/mcp-targets.json",
+  "probe_scope": "PRE-DEPLOY STAND-IN: every https://councilof.ai/* target was answered by http://127.0.0.1:8799 (this branch's build, served locally or as a Pages preview), NOT by the live door; see `contacted` on each such server. Re-run scripts/mcp-probe.mjs without --door-origin after the deploy and commit the live observation.",
   "honesty_contract": [
     "last_probed is written ONLY by a probe that returned. If nothing answered it is null. No code path synthesises it.",
     "tools_count is derived from the length of the probed tools array. A catalogue's asserted tool count is never used as tools_count.",
@@ -16,7 +17,7 @@
     "reachable_distinct_servers": 2,
     "unreachable_endpoints": 0,
     "catalogued_not_probed": 6,
-    "tools_probed": 38,
+    "tools_probed": 104,
     "tools_catalogued_not_probed": null,
     "external_catalogues_not_probed": [
       {
@@ -27,8 +28,8 @@
         "probe_state": "UNVERIFIABLE from any machine that has not checked out gspc-os. Probe with scripts/mcp-stdio-probe.py on a host where the repo exists; commit its output before citing any number from it."
       }
     ],
-    "started": "2026-09-30T17:20:48.135Z",
-    "finished": "2026-09-30T17:20:50.056Z"
+    "started": "2026-10-26T03:46:26.457Z",
+    "finished": "2026-10-26T03:46:26.819Z"
   },
   "servers": [
     {
@@ -39,11 +40,11 @@
       "role": "primary",
       "alias_of": null,
       "status": "reachable",
-      "last_probed": "2026-09-30T17:20:49.606Z",
+      "last_probed": "2026-10-26T03:46:26.487Z",
       "http_status": 200,
       "protocol_version": "2024-11-05",
       "server_version": "1.4.4",
-      "tools_count": 19,
+      "tools_count": 52,
       "tools": [
         {
           "name": "board_totals",
@@ -112,7 +113,7 @@
         },
         {
           "name": "server_evidence",
-          "description": "Trust per server, not totals: every published measurement capsule about ONE endpoint URL across all batches — MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A card-signature state, self-parity cells for CSOAI's own doors, and any later adapter (e.g. tool drift) — each with its measurement_state, observed_at, correction_pointer, limitations, batch Merkle root and an inclusion pointer (verify_capsule re-derives inclusion). Read from a static per-endpoint shard keyed by sha256 of the normalised URL. An endpoint with no capsule answers NOT_MEASURED with an empty list — never an error and never a clean bill. No verdict, score or ranking: measurement, not endorsement.",
+          "description": "Trust per server, not totals: every published measurement capsule about ONE endpoint URL across all batches — MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A card-signature state, self-parity cells for CSOAI's own doors, and any later adapter (e.g. tool drift) — each with its measurement_state, observed_at, correction_pointer, limitations, batch Merkle root and an inclusion pointer for independent verification. Read from a static per-endpoint shard keyed by sha256 of the normalised URL. An endpoint with no capsule answers NOT_MEASURED with an empty list — never an error and never a clean bill. No verdict, score or ranking: measurement, not endorsement.",
           "required_args": [
             "endpoint_url"
           ]
@@ -126,7 +127,172 @@
         },
         {
           "name": "route",
-          "description": "GSPC Route (free, decide-only). Applies YOUR policy and the fixed GSPC floor to a candidate set and returns the chosen candidate, the basis of the choice and an unsigned route record (csoai.evidence-event/0.1, profile csoai.route-evidence/0.1). Candidates are the GSPC MCP tools by default, or ones you declare: your models, your local GPU, MCP tools, A2A agents, x402 resources. Policy is Cedar: presets read-only, local-only, eu-only, no-unmeasured, plus forbid_providers and allow_kinds; anything the router does not understand grants nothing. For the quality axis you name it reads the live board (https://councilof.ai/api/gspc). Routing is not ranking: a choice is called a separated leader only when the board separated that comparison; otherwise it is TIE or UNTESTED and your tie_break decides. A candidate the board holds no number for is UNTESTED, never 0. Sponsor, bid and placement fields are ignored. The task text is hashed, never stored. Nothing is executed, called or charged; mode execute answers NOT_ENABLED. Measurement, not certification.",
+          "description": "GSPC Route (free, decide-only). Applies YOUR policy and the fixed GSPC floor to a candidate set and returns the chosen candidate, the basis of the choice and an unsigned route record (csoai.evidence-event/0.1, profile csoai.route-evidence/0.1). Candidates are the GSPC MCP tools by default, or ones you declare: your models, your local GPU, MCP tools, A2A agents, x402 resources. Policy is Cedar: presets read-only, local-only, eu-only, no-unmeasured, plus forbid_providers and allow_kinds; anything the router does not understand grants nothing. For the quality axis you name it reads the live board (https://councilof.ai/api/gspc). With no candidates declared, the GSPC tool whose purpose matches the task is chosen (basis task_match); when no tool's purpose matches, the answer is UNTESTED and nothing is chosen, never a pick by name. For candidates you declare, routing is not ranking: a choice is called a separated leader only when the board separated that comparison; otherwise it is TIE or UNTESTED and your tie_break decides. A candidate the board holds no number for is UNTESTED, never 0. Sponsor, bid and placement fields are ignored. The task text is hashed, never stored. Nothing is executed, called or charged; mode execute answers NOT_ENABLED. Measurement, not certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_governance",
+          "description": "The governance axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_safety",
+          "description": "The safety axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_provenance",
+          "description": "The provenance axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_continuity",
+          "description": "The continuity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_conformance",
+          "description": "The conformance axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_openness",
+          "description": "The openness axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_machinery-conformity",
+          "description": "The machinery-conformity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_care",
+          "description": "The care axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_cross-reality",
+          "description": "The cross-reality axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_detector-interop",
+          "description": "The detector-interop axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_art5-safeguard",
+          "description": "The art5-safeguard axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_swarm",
+          "description": "The swarm axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_affect",
+          "description": "The affect axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_jail",
+          "description": "The jail axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_effect-binding",
+          "description": "The effect-binding axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_provenance-controls",
+          "description": "The provenance-controls axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_reserve-attestation",
+          "description": "The reserve-attestation axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_regulatory-framework",
+          "description": "The regulatory-framework axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_distribution-integrity",
+          "description": "The distribution-integrity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_custody-disclosure",
+          "description": "The custody-disclosure axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_ai-adoption-components",
+          "description": "The ai-adoption-components axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_labour-components",
+          "description": "The labour-components axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_humanoid-labour-index",
+          "description": "The humanoid-labour-index axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_lab-practice",
+          "description": "The lab-practice axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_company-practice",
+          "description": "The company-practice axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_measurer-integrity",
+          "description": "The measurer-integrity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_harness-fidelity",
+          "description": "The harness-fidelity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_interop-conformance",
+          "description": "The interop-conformance axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_humanoid-deployment",
+          "description": "The humanoid-deployment axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_regulator-transparency",
+          "description": "The regulator-transparency axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_interpretability-reproducibility",
+          "description": "The interpretability-reproducibility axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_claim-maintenance",
+          "description": "The claim-maintenance axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_serving-fidelity",
+          "description": "The serving-fidelity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
           "required_args": []
         },
         {
@@ -138,7 +304,7 @@
         },
         {
           "name": "art50_marking_evidence",
-          "description": "PAID (x402 or CSOAI LTD invoice). Article 50 marking-evidence pack via https://councilof.ai/api/art50/marking-evidence: is a machine-readable mark DETECTABLE in these bytes right now (C2PA manifest store, assertion hashes, hard binding, claim signature; IPTC digitalSourceType), beside the verbatim Art 50(2) excerpt hash and the Art 99(4) ceiling. Watermarks are UNCHECKABLE where no public detector exists and the pack says so. Point-in-time detection — never a conformity opinion, never a compliance word of any kind. preview=true is free and returns the same measurement unsigned. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED rather than inventing a result.",
+          "description": "PAID (x402 or CSOAI LTD invoice). Article 50 marking-evidence pack via https://councilof.ai/api/art50/marking-evidence: which machine-readable marks the named methods DETECT in these bytes right now. Scope: C2PA and IPTC metadata only (C2PA manifest store, assertion hashes, hard binding, claim signature; IPTC digitalSourceType); no watermark, fingerprint or other kind of mark is read. NOT_DETECTED is not unmarked: Article 50(2) is technology-neutral, so a mark this pack cannot read may be present, and metadata is often stripped on re-save. Disclosure: CSOAI is a member of the C2PA, whose specification is one of the two methods read. The pack carries the verbatim Art 50(2) text hash and the dates it turns on. Point-in-time detection — never a conformity opinion, never a compliance word of any kind. preview=true is free and returns the same measurement unsigned. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED rather than inventing a result.",
           "required_args": []
         },
         {
@@ -150,14 +316,14 @@
         },
         {
           "name": "receipts_batch",
-          "description": "PAID (x402 or CSOAI LTD invoice). A historical batch of the estate's measurement receipts via https://councilof.ai/api/receipts/batch: every signed card-v0 leaf whose as_of falls in [from,to] (≤200), each with its Merkle inclusion path and the public root(s) that carried it, plus the root index for the window and one signed manifest card citing the batch sha256. preview=true is free and returns count, span, root count and the sha256 of the exact bytes the paid call returns. Recent leaves are free at /root.json, /cards/ and /api/proof?sha= — the batch sells assembly across history, never a conclusion. No settlement-receipt stream exists (/api/receipts/latest is UNPUBLISHED) and this tool never claims one. Without x_payment the tool returns the 402 challenge.",
+          "description": "PAID (x402 or CSOAI LTD invoice). A historical batch of the estate's measurement receipts via https://councilof.ai/api/receipts/batch: every signed card-v0 leaf whose as_of falls in [from,to] (≤200), each with its Merkle inclusion path and the public root(s) that carried it, plus the root index for the window and one manifest card citing the batch sha256. Manifest signing is conditional: a returned unsigned manifest declares manifest_card.sig_ed25519:null and unsigned_reason, with signature unmeasured. Manifest root inclusion remains unmeasured. If signing throws after settlement, the route returns PAID_NOT_DELIVERED with no batch or manifest delivered; preserve the settlement receipt and reconcile before reissue, without automatically retrying or paying again. preview=true is free and returns count, span, root count and the sha256 of the exact bytes the paid call returns. Recent leaves are free at /root.json, /cards/ and /api/proof?sha= — the batch sells assembly across history, never a conclusion. This tool returns historical measurement leaves, not payment receipts. /api/receipts/latest reports aggregate receipt-store state when available; its counts do not verify a particular payment, delivery or buyer acceptance. Without x_payment the tool returns the 402 challenge.",
           "required_args": [
             "from"
           ]
         },
         {
           "name": "evidence_bundle",
-          "description": "PAID (x402). An evidence bundle for ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject via https://councilof.ai/api/evidence-bundle: OSCAL 1.1.0 assessment-results assembled only from already-signed measurement cards (each with its card bytes and Merkle inclusion proof), plus one manifest card-v0, signed when the signing key is present. Observations are relevant-to the obligation, never satisfied or not satisfied; zero relevant cards ships as an empty bundle, and the free preview says so first (preview=true here, or the free tool evidence_bundle_preview). Article 53 output is evidence for review, not a legal determination. Evidence for obligation work — not a conformity assessment, certification, audit opinion or compliance determination; grants no status. Measurement, not certification. Without x_payment the tool returns the 402 challenge, which is the only place terms appear. Verification of any card is free at https://councilof.ai/gspc-verify.",
+          "description": "PAID (x402). For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject via https://councilof.ai/api/evidence-bundle: selected existing card objects with signature fields and any retained inclusion proofs, an OSCAL assessment-results wrapper and an assembly manifest. Assembly does not verify input-card signatures. A returned unsigned manifest reports its signing status and unsigned reason. If signing throws after settlement, the route returns PAID_NOT_DELIVERED without a delivered bundle or manifest; preserve the settlement receipt and reconcile before reissue, without automatically retrying or paying again. Zero selected cards stays an empty bundle; preview=true here, or the free evidence_bundle_preview tool, shows the count first. No new measurement, full OSCAL conformance or conformity determination is established. Article 53 output is evidence for review, not a legal determination; grants no status. Without x_payment the tool returns the actual 402 challenge; read its terms for each request. Supported-card verification is free at https://councilof.ai/gspc-verify. Measurement, not certification.",
           "required_args": [
             "obligation"
           ]
@@ -166,7 +332,9 @@
       "error": null,
       "declared_by": "/.well-known/mcp/server-card.json -> endpoints.mcp.primary",
       "catalogue_source": null,
-      "catalogue_claim": null
+      "catalogue_claim": null,
+      "contacted": "http://127.0.0.1:8799/mcp",
+      "stand_in_for": "https://councilof.ai/mcp"
     },
     {
       "id": "csoai-gspc-mcp-fallback",
@@ -176,7 +344,7 @@
       "role": "fallback",
       "alias_of": "csoai-gspc-mcp",
       "status": "reachable",
-      "last_probed": "2026-09-30T17:20:49.879Z",
+      "last_probed": "2026-10-26T03:46:26.770Z",
       "http_status": 200,
       "protocol_version": "2024-11-05",
       "server_version": "1.4.4",
@@ -249,7 +417,7 @@
         },
         {
           "name": "server_evidence",
-          "description": "Trust per server, not totals: every published measurement capsule about ONE endpoint URL across all batches — MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A card-signature state, self-parity cells for CSOAI's own doors, and any later adapter (e.g. tool drift) — each with its measurement_state, observed_at, correction_pointer, limitations, batch Merkle root and an inclusion pointer (verify_capsule re-derives inclusion). Read from a static per-endpoint shard keyed by sha256 of the normalised URL. An endpoint with no capsule answers NOT_MEASURED with an empty list — never an error and never a clean bill. No verdict, score or ranking: measurement, not endorsement.",
+          "description": "Trust per server, not totals: every published measurement capsule about ONE endpoint URL across all batches — MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A card-signature state, self-parity cells for CSOAI's own doors, and any later adapter (e.g. tool drift) — each with its measurement_state, observed_at, correction_pointer, limitations, batch Merkle root and an inclusion pointer for independent verification. Read from a static per-endpoint shard keyed by sha256 of the normalised URL. An endpoint with no capsule answers NOT_MEASURED with an empty list — never an error and never a clean bill. No verdict, score or ranking: measurement, not endorsement.",
           "required_args": [
             "endpoint_url"
           ]
@@ -263,7 +431,7 @@
         },
         {
           "name": "route",
-          "description": "GSPC Route (free, decide-only). Applies YOUR policy and the fixed GSPC floor to a candidate set and returns the chosen candidate, the basis of the choice and an unsigned route record (csoai.evidence-event/0.1, profile csoai.route-evidence/0.1). Candidates are the GSPC MCP tools by default, or ones you declare: your models, your local GPU, MCP tools, A2A agents, x402 resources. Policy is Cedar: presets read-only, local-only, eu-only, no-unmeasured, plus forbid_providers and allow_kinds; anything the router does not understand grants nothing. For the quality axis you name it reads the live board (https://councilof.ai/api/gspc). Routing is not ranking: a choice is called a separated leader only when the board separated that comparison; otherwise it is TIE or UNTESTED and your tie_break decides. A candidate the board holds no number for is UNTESTED, never 0. Sponsor, bid and placement fields are ignored. The task text is hashed, never stored. Nothing is executed, called or charged; mode execute answers NOT_ENABLED. Measurement, not certification.",
+          "description": "GSPC Route (free, decide-only). Applies YOUR policy and the fixed GSPC floor to a candidate set and returns the chosen candidate, the basis of the choice and an unsigned route record (csoai.evidence-event/0.1, profile csoai.route-evidence/0.1). Candidates are the GSPC MCP tools by default, or ones you declare: your models, your local GPU, MCP tools, A2A agents, x402 resources. Policy is Cedar: presets read-only, local-only, eu-only, no-unmeasured, plus forbid_providers and allow_kinds; anything the router does not understand grants nothing. For the quality axis you name it reads the live board (https://councilof.ai/api/gspc). With no candidates declared, the GSPC tool whose purpose matches the task is chosen (basis task_match); when no tool's purpose matches, the answer is UNTESTED and nothing is chosen, never a pick by name. For candidates you declare, routing is not ranking: a choice is called a separated leader only when the board separated that comparison; otherwise it is TIE or UNTESTED and your tie_break decides. A candidate the board holds no number for is UNTESTED, never 0. Sponsor, bid and placement fields are ignored. The task text is hashed, never stored. Nothing is executed, called or charged; mode execute answers NOT_ENABLED. Measurement, not certification.",
           "required_args": []
         },
         {
@@ -275,7 +443,7 @@
         },
         {
           "name": "art50_marking_evidence",
-          "description": "PAID (x402 or CSOAI LTD invoice). Article 50 marking-evidence pack via https://councilof.ai/api/art50/marking-evidence: is a machine-readable mark DETECTABLE in these bytes right now (C2PA manifest store, assertion hashes, hard binding, claim signature; IPTC digitalSourceType), beside the verbatim Art 50(2) excerpt hash and the Art 99(4) ceiling. Watermarks are UNCHECKABLE where no public detector exists and the pack says so. Point-in-time detection — never a conformity opinion, never a compliance word of any kind. preview=true is free and returns the same measurement unsigned. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED rather than inventing a result.",
+          "description": "PAID (x402 or CSOAI LTD invoice). Article 50 marking-evidence pack via https://councilof.ai/api/art50/marking-evidence: which machine-readable marks the named methods DETECT in these bytes right now. Scope: C2PA and IPTC metadata only (C2PA manifest store, assertion hashes, hard binding, claim signature; IPTC digitalSourceType); no watermark, fingerprint or other kind of mark is read. NOT_DETECTED is not unmarked: Article 50(2) is technology-neutral, so a mark this pack cannot read may be present, and metadata is often stripped on re-save. Disclosure: CSOAI is a member of the C2PA, whose specification is one of the two methods read. The pack carries the verbatim Art 50(2) text hash and the dates it turns on. Point-in-time detection — never a conformity opinion, never a compliance word of any kind. preview=true is free and returns the same measurement unsigned. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED rather than inventing a result.",
           "required_args": []
         },
         {
@@ -287,14 +455,14 @@
         },
         {
           "name": "receipts_batch",
-          "description": "PAID (x402 or CSOAI LTD invoice). A historical batch of the estate's measurement receipts via https://councilof.ai/api/receipts/batch: every signed card-v0 leaf whose as_of falls in [from,to] (≤200), each with its Merkle inclusion path and the public root(s) that carried it, plus the root index for the window and one signed manifest card citing the batch sha256. preview=true is free and returns count, span, root count and the sha256 of the exact bytes the paid call returns. Recent leaves are free at /root.json, /cards/ and /api/proof?sha= — the batch sells assembly across history, never a conclusion. No settlement-receipt stream exists (/api/receipts/latest is UNPUBLISHED) and this tool never claims one. Without x_payment the tool returns the 402 challenge.",
+          "description": "PAID (x402 or CSOAI LTD invoice). A historical batch of the estate's measurement receipts via https://councilof.ai/api/receipts/batch: every signed card-v0 leaf whose as_of falls in [from,to] (≤200), each with its Merkle inclusion path and the public root(s) that carried it, plus the root index for the window and one manifest card citing the batch sha256. Manifest signing is conditional: a returned unsigned manifest declares manifest_card.sig_ed25519:null and unsigned_reason, with signature unmeasured. Manifest root inclusion remains unmeasured. If signing throws after settlement, the route returns PAID_NOT_DELIVERED with no batch or manifest delivered; preserve the settlement receipt and reconcile before reissue, without automatically retrying or paying again. preview=true is free and returns count, span, root count and the sha256 of the exact bytes the paid call returns. Recent leaves are free at /root.json, /cards/ and /api/proof?sha= — the batch sells assembly across history, never a conclusion. This tool returns historical measurement leaves, not payment receipts. /api/receipts/latest reports aggregate receipt-store state when available; its counts do not verify a particular payment, delivery or buyer acceptance. Without x_payment the tool returns the 402 challenge.",
           "required_args": [
             "from"
           ]
         },
         {
           "name": "evidence_bundle",
-          "description": "PAID (x402). An evidence bundle for ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject via https://councilof.ai/api/evidence-bundle: OSCAL 1.1.0 assessment-results assembled only from already-signed measurement cards (each with its card bytes and Merkle inclusion proof), plus one manifest card-v0, signed when the signing key is present. Observations are relevant-to the obligation, never satisfied or not satisfied; zero relevant cards ships as an empty bundle, and the free preview says so first (preview=true here, or the free tool evidence_bundle_preview). Article 53 output is evidence for review, not a legal determination. Evidence for obligation work — not a conformity assessment, certification, audit opinion or compliance determination; grants no status. Measurement, not certification. Without x_payment the tool returns the 402 challenge, which is the only place terms appear. Verification of any card is free at https://councilof.ai/gspc-verify.",
+          "description": "PAID (x402). For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject via https://councilof.ai/api/evidence-bundle: selected existing card objects with signature fields and any retained inclusion proofs, an OSCAL assessment-results wrapper and an assembly manifest. Assembly does not verify input-card signatures. A returned unsigned manifest reports its signing status and unsigned reason. If signing throws after settlement, the route returns PAID_NOT_DELIVERED without a delivered bundle or manifest; preserve the settlement receipt and reconcile before reissue, without automatically retrying or paying again. Zero selected cards stays an empty bundle; preview=true here, or the free evidence_bundle_preview tool, shows the count first. No new measurement, full OSCAL conformance or conformity determination is established. Article 53 output is evidence for review, not a legal determination; grants no status. Without x_payment the tool returns the actual 402 challenge; read its terms for each request. Supported-card verification is free at https://councilof.ai/gspc-verify. Measurement, not certification.",
           "required_args": [
             "obligation"
           ]
@@ -313,11 +481,11 @@
       "role": "alias",
       "alias_of": "csoai-gspc-mcp",
       "status": "reachable",
-      "last_probed": "2026-09-30T17:20:49.998Z",
+      "last_probed": "2026-10-26T03:46:26.778Z",
       "http_status": 200,
       "protocol_version": "2024-11-05",
       "server_version": "1.4.4",
-      "tools_count": 19,
+      "tools_count": 52,
       "tools": [
         {
           "name": "board_totals",
@@ -386,7 +554,7 @@
         },
         {
           "name": "server_evidence",
-          "description": "Trust per server, not totals: every published measurement capsule about ONE endpoint URL across all batches — MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A card-signature state, self-parity cells for CSOAI's own doors, and any later adapter (e.g. tool drift) — each with its measurement_state, observed_at, correction_pointer, limitations, batch Merkle root and an inclusion pointer (verify_capsule re-derives inclusion). Read from a static per-endpoint shard keyed by sha256 of the normalised URL. An endpoint with no capsule answers NOT_MEASURED with an empty list — never an error and never a clean bill. No verdict, score or ranking: measurement, not endorsement.",
+          "description": "Trust per server, not totals: every published measurement capsule about ONE endpoint URL across all batches — MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A card-signature state, self-parity cells for CSOAI's own doors, and any later adapter (e.g. tool drift) — each with its measurement_state, observed_at, correction_pointer, limitations, batch Merkle root and an inclusion pointer for independent verification. Read from a static per-endpoint shard keyed by sha256 of the normalised URL. An endpoint with no capsule answers NOT_MEASURED with an empty list — never an error and never a clean bill. No verdict, score or ranking: measurement, not endorsement.",
           "required_args": [
             "endpoint_url"
           ]
@@ -400,7 +568,172 @@
         },
         {
           "name": "route",
-          "description": "GSPC Route (free, decide-only). Applies YOUR policy and the fixed GSPC floor to a candidate set and returns the chosen candidate, the basis of the choice and an unsigned route record (csoai.evidence-event/0.1, profile csoai.route-evidence/0.1). Candidates are the GSPC MCP tools by default, or ones you declare: your models, your local GPU, MCP tools, A2A agents, x402 resources. Policy is Cedar: presets read-only, local-only, eu-only, no-unmeasured, plus forbid_providers and allow_kinds; anything the router does not understand grants nothing. For the quality axis you name it reads the live board (https://councilof.ai/api/gspc). Routing is not ranking: a choice is called a separated leader only when the board separated that comparison; otherwise it is TIE or UNTESTED and your tie_break decides. A candidate the board holds no number for is UNTESTED, never 0. Sponsor, bid and placement fields are ignored. The task text is hashed, never stored. Nothing is executed, called or charged; mode execute answers NOT_ENABLED. Measurement, not certification.",
+          "description": "GSPC Route (free, decide-only). Applies YOUR policy and the fixed GSPC floor to a candidate set and returns the chosen candidate, the basis of the choice and an unsigned route record (csoai.evidence-event/0.1, profile csoai.route-evidence/0.1). Candidates are the GSPC MCP tools by default, or ones you declare: your models, your local GPU, MCP tools, A2A agents, x402 resources. Policy is Cedar: presets read-only, local-only, eu-only, no-unmeasured, plus forbid_providers and allow_kinds; anything the router does not understand grants nothing. For the quality axis you name it reads the live board (https://councilof.ai/api/gspc). With no candidates declared, the GSPC tool whose purpose matches the task is chosen (basis task_match); when no tool's purpose matches, the answer is UNTESTED and nothing is chosen, never a pick by name. For candidates you declare, routing is not ranking: a choice is called a separated leader only when the board separated that comparison; otherwise it is TIE or UNTESTED and your tie_break decides. A candidate the board holds no number for is UNTESTED, never 0. Sponsor, bid and placement fields are ignored. The task text is hashed, never stored. Nothing is executed, called or charged; mode execute answers NOT_ENABLED. Measurement, not certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_governance",
+          "description": "The governance axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_safety",
+          "description": "The safety axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_provenance",
+          "description": "The provenance axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_continuity",
+          "description": "The continuity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_conformance",
+          "description": "The conformance axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_openness",
+          "description": "The openness axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_machinery-conformity",
+          "description": "The machinery-conformity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_care",
+          "description": "The care axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_cross-reality",
+          "description": "The cross-reality axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_detector-interop",
+          "description": "The detector-interop axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_art5-safeguard",
+          "description": "The art5-safeguard axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_swarm",
+          "description": "The swarm axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_affect",
+          "description": "The affect axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_jail",
+          "description": "The jail axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_effect-binding",
+          "description": "The effect-binding axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_provenance-controls",
+          "description": "The provenance-controls axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_reserve-attestation",
+          "description": "The reserve-attestation axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_regulatory-framework",
+          "description": "The regulatory-framework axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_distribution-integrity",
+          "description": "The distribution-integrity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_custody-disclosure",
+          "description": "The custody-disclosure axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_ai-adoption-components",
+          "description": "The ai-adoption-components axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_labour-components",
+          "description": "The labour-components axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_humanoid-labour-index",
+          "description": "The humanoid-labour-index axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_lab-practice",
+          "description": "The lab-practice axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_company-practice",
+          "description": "The company-practice axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_measurer-integrity",
+          "description": "The measurer-integrity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_harness-fidelity",
+          "description": "The harness-fidelity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_interop-conformance",
+          "description": "The interop-conformance axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_humanoid-deployment",
+          "description": "The humanoid-deployment axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_regulator-transparency",
+          "description": "The regulator-transparency axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_interpretability-reproducibility",
+          "description": "The interpretability-reproducibility axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_claim-maintenance",
+          "description": "The claim-maintenance axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_serving-fidelity",
+          "description": "The serving-fidelity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
           "required_args": []
         },
         {
@@ -412,7 +745,7 @@
         },
         {
           "name": "art50_marking_evidence",
-          "description": "PAID (x402 or CSOAI LTD invoice). Article 50 marking-evidence pack via https://councilof.ai/api/art50/marking-evidence: is a machine-readable mark DETECTABLE in these bytes right now (C2PA manifest store, assertion hashes, hard binding, claim signature; IPTC digitalSourceType), beside the verbatim Art 50(2) excerpt hash and the Art 99(4) ceiling. Watermarks are UNCHECKABLE where no public detector exists and the pack says so. Point-in-time detection — never a conformity opinion, never a compliance word of any kind. preview=true is free and returns the same measurement unsigned. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED rather than inventing a result.",
+          "description": "PAID (x402 or CSOAI LTD invoice). Article 50 marking-evidence pack via https://councilof.ai/api/art50/marking-evidence: which machine-readable marks the named methods DETECT in these bytes right now. Scope: C2PA and IPTC metadata only (C2PA manifest store, assertion hashes, hard binding, claim signature; IPTC digitalSourceType); no watermark, fingerprint or other kind of mark is read. NOT_DETECTED is not unmarked: Article 50(2) is technology-neutral, so a mark this pack cannot read may be present, and metadata is often stripped on re-save. Disclosure: CSOAI is a member of the C2PA, whose specification is one of the two methods read. The pack carries the verbatim Art 50(2) text hash and the dates it turns on. Point-in-time detection — never a conformity opinion, never a compliance word of any kind. preview=true is free and returns the same measurement unsigned. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED rather than inventing a result.",
           "required_args": []
         },
         {
@@ -424,14 +757,14 @@
         },
         {
           "name": "receipts_batch",
-          "description": "PAID (x402 or CSOAI LTD invoice). A historical batch of the estate's measurement receipts via https://councilof.ai/api/receipts/batch: every signed card-v0 leaf whose as_of falls in [from,to] (≤200), each with its Merkle inclusion path and the public root(s) that carried it, plus the root index for the window and one signed manifest card citing the batch sha256. preview=true is free and returns count, span, root count and the sha256 of the exact bytes the paid call returns. Recent leaves are free at /root.json, /cards/ and /api/proof?sha= — the batch sells assembly across history, never a conclusion. No settlement-receipt stream exists (/api/receipts/latest is UNPUBLISHED) and this tool never claims one. Without x_payment the tool returns the 402 challenge.",
+          "description": "PAID (x402 or CSOAI LTD invoice). A historical batch of the estate's measurement receipts via https://councilof.ai/api/receipts/batch: every signed card-v0 leaf whose as_of falls in [from,to] (≤200), each with its Merkle inclusion path and the public root(s) that carried it, plus the root index for the window and one manifest card citing the batch sha256. Manifest signing is conditional: a returned unsigned manifest declares manifest_card.sig_ed25519:null and unsigned_reason, with signature unmeasured. Manifest root inclusion remains unmeasured. If signing throws after settlement, the route returns PAID_NOT_DELIVERED with no batch or manifest delivered; preserve the settlement receipt and reconcile before reissue, without automatically retrying or paying again. preview=true is free and returns count, span, root count and the sha256 of the exact bytes the paid call returns. Recent leaves are free at /root.json, /cards/ and /api/proof?sha= — the batch sells assembly across history, never a conclusion. This tool returns historical measurement leaves, not payment receipts. /api/receipts/latest reports aggregate receipt-store state when available; its counts do not verify a particular payment, delivery or buyer acceptance. Without x_payment the tool returns the 402 challenge.",
           "required_args": [
             "from"
           ]
         },
         {
           "name": "evidence_bundle",
-          "description": "PAID (x402). An evidence bundle for ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject via https://councilof.ai/api/evidence-bundle: OSCAL 1.1.0 assessment-results assembled only from already-signed measurement cards (each with its card bytes and Merkle inclusion proof), plus one manifest card-v0, signed when the signing key is present. Observations are relevant-to the obligation, never satisfied or not satisfied; zero relevant cards ships as an empty bundle, and the free preview says so first (preview=true here, or the free tool evidence_bundle_preview). Article 53 output is evidence for review, not a legal determination. Evidence for obligation work — not a conformity assessment, certification, audit opinion or compliance determination; grants no status. Measurement, not certification. Without x_payment the tool returns the 402 challenge, which is the only place terms appear. Verification of any card is free at https://councilof.ai/gspc-verify.",
+          "description": "PAID (x402). For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject via https://councilof.ai/api/evidence-bundle: selected existing card objects with signature fields and any retained inclusion proofs, an OSCAL assessment-results wrapper and an assembly manifest. Assembly does not verify input-card signatures. A returned unsigned manifest reports its signing status and unsigned reason. If signing throws after settlement, the route returns PAID_NOT_DELIVERED without a delivered bundle or manifest; preserve the settlement receipt and reconcile before reissue, without automatically retrying or paying again. Zero selected cards stays an empty bundle; preview=true here, or the free evidence_bundle_preview tool, shows the count first. No new measurement, full OSCAL conformance or conformity determination is established. Article 53 output is evidence for review, not a legal determination; grants no status. Without x_payment the tool returns the actual 402 challenge; read its terms for each request. Supported-card verification is free at https://councilof.ai/gspc-verify. Measurement, not certification.",
           "required_args": [
             "obligation"
           ]
@@ -440,7 +773,9 @@
       "error": null,
       "declared_by": "/.well-known/mcp/server-card.json -> endpoints.mcp.current",
       "catalogue_source": null,
-      "catalogue_claim": null
+      "catalogue_claim": null,
+      "contacted": "http://127.0.0.1:8799/mcp",
+      "stand_in_for": "https://councilof.ai/mcp"
     },
     {
       "id": "csoai-gspc-mcp-stdio",
@@ -450,11 +785,11 @@
       "role": "stdio",
       "alias_of": null,
       "status": "reachable",
-      "last_probed": "2026-09-30T17:20:50.056Z",
+      "last_probed": "2026-10-26T03:46:26.819Z",
       "http_status": null,
       "protocol_version": "2024-11-05",
-      "server_version": "0.2.2",
-      "tools_count": 19,
+      "server_version": "0.2.3",
+      "tools_count": 52,
       "tools": [
         {
           "name": "board_totals",
@@ -523,7 +858,7 @@
         },
         {
           "name": "server_evidence",
-          "description": "Trust per server, not totals: every published measurement capsule about ONE endpoint URL across all batches — MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A card-signature state, self-parity cells for CSOAI's own doors, and any later adapter (e.g. tool drift) — each with its measurement_state, observed_at, correction_pointer, limitations, batch Merkle root and an inclusion pointer (verify_capsule re-derives inclusion). Read from a static per-endpoint shard keyed by sha256 of the normalised URL. An endpoint with no capsule answers NOT_MEASURED with an empty list — never an error and never a clean bill. No verdict, score or ranking: measurement, not endorsement.",
+          "description": "Trust per server, not totals: every published measurement capsule about ONE endpoint URL across all batches — MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A card-signature state, self-parity cells for CSOAI's own doors, and any later adapter (e.g. tool drift) — each with its measurement_state, observed_at, correction_pointer, limitations, batch Merkle root and an inclusion pointer for independent verification. Read from a static per-endpoint shard keyed by sha256 of the normalised URL. An endpoint with no capsule answers NOT_MEASURED with an empty list — never an error and never a clean bill. No verdict, score or ranking: measurement, not endorsement.",
           "required_args": [
             "endpoint_url"
           ]
@@ -537,7 +872,172 @@
         },
         {
           "name": "route",
-          "description": "GSPC Route (free, decide-only). Applies YOUR policy and the fixed GSPC floor to a candidate set and returns the chosen candidate, the basis of the choice and an unsigned route record (csoai.evidence-event/0.1, profile csoai.route-evidence/0.1). Candidates are the GSPC MCP tools by default, or ones you declare: your models, your local GPU, MCP tools, A2A agents, x402 resources. Policy is Cedar: presets read-only, local-only, eu-only, no-unmeasured, plus forbid_providers and allow_kinds; anything the router does not understand grants nothing. For the quality axis you name it reads the live board (https://councilof.ai/api/gspc). Routing is not ranking: a choice is called a separated leader only when the board separated that comparison; otherwise it is TIE or UNTESTED and your tie_break decides. A candidate the board holds no number for is UNTESTED, never 0. Sponsor, bid and placement fields are ignored. The task text is hashed, never stored. Nothing is executed, called or charged; mode execute answers NOT_ENABLED. Measurement, not certification.",
+          "description": "GSPC Route (free, decide-only). Applies YOUR policy and the fixed GSPC floor to a candidate set and returns the chosen candidate, the basis of the choice and an unsigned route record (csoai.evidence-event/0.1, profile csoai.route-evidence/0.1). Candidates are the GSPC MCP tools by default, or ones you declare: your models, your local GPU, MCP tools, A2A agents, x402 resources. Policy is Cedar: presets read-only, local-only, eu-only, no-unmeasured, plus forbid_providers and allow_kinds; anything the router does not understand grants nothing. For the quality axis you name it reads the live board (https://councilof.ai/api/gspc). With no candidates declared, the GSPC tool whose purpose matches the task is chosen (basis task_match); when no tool's purpose matches, the answer is UNTESTED and nothing is chosen, never a pick by name. For candidates you declare, routing is not ranking: a choice is called a separated leader only when the board separated that comparison; otherwise it is TIE or UNTESTED and your tie_break decides. A candidate the board holds no number for is UNTESTED, never 0. Sponsor, bid and placement fields are ignored. The task text is hashed, never stored. Nothing is executed, called or charged; mode execute answers NOT_ENABLED. Measurement, not certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_governance",
+          "description": "The governance axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_safety",
+          "description": "The safety axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_provenance",
+          "description": "The provenance axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_continuity",
+          "description": "The continuity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_conformance",
+          "description": "The conformance axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_openness",
+          "description": "The openness axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_machinery-conformity",
+          "description": "The machinery-conformity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_care",
+          "description": "The care axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_cross-reality",
+          "description": "The cross-reality axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_detector-interop",
+          "description": "The detector-interop axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_art5-safeguard",
+          "description": "The art5-safeguard axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_swarm",
+          "description": "The swarm axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_affect",
+          "description": "The affect axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_jail",
+          "description": "The jail axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_effect-binding",
+          "description": "The effect-binding axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_provenance-controls",
+          "description": "The provenance-controls axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_reserve-attestation",
+          "description": "The reserve-attestation axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_regulatory-framework",
+          "description": "The regulatory-framework axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_distribution-integrity",
+          "description": "The distribution-integrity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_custody-disclosure",
+          "description": "The custody-disclosure axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_ai-adoption-components",
+          "description": "The ai-adoption-components axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_labour-components",
+          "description": "The labour-components axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_humanoid-labour-index",
+          "description": "The humanoid-labour-index axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_lab-practice",
+          "description": "The lab-practice axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_company-practice",
+          "description": "The company-practice axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_measurer-integrity",
+          "description": "The measurer-integrity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_harness-fidelity",
+          "description": "The harness-fidelity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_interop-conformance",
+          "description": "The interop-conformance axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_humanoid-deployment",
+          "description": "The humanoid-deployment axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_regulator-transparency",
+          "description": "The regulator-transparency axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_interpretability-reproducibility",
+          "description": "The interpretability-reproducibility axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_claim-maintenance",
+          "description": "The claim-maintenance axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_serving-fidelity",
+          "description": "The serving-fidelity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
           "required_args": []
         },
         {
@@ -549,7 +1049,7 @@
         },
         {
           "name": "art50_marking_evidence",
-          "description": "PAID (x402 or CSOAI LTD invoice). Article 50 marking-evidence pack via https://councilof.ai/api/art50/marking-evidence: is a machine-readable mark DETECTABLE in these bytes right now (C2PA manifest store, assertion hashes, hard binding, claim signature; IPTC digitalSourceType), beside the verbatim Art 50(2) excerpt hash and the Art 99(4) ceiling. Watermarks are UNCHECKABLE where no public detector exists and the pack says so. Point-in-time detection — never a conformity opinion, never a compliance word of any kind. preview=true is free and returns the same measurement unsigned. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED rather than inventing a result.",
+          "description": "PAID (x402 or CSOAI LTD invoice). Article 50 marking-evidence pack via https://councilof.ai/api/art50/marking-evidence: which machine-readable marks the named methods DETECT in these bytes right now. Scope: C2PA and IPTC metadata only (C2PA manifest store, assertion hashes, hard binding, claim signature; IPTC digitalSourceType); no watermark, fingerprint or other kind of mark is read. NOT_DETECTED is not unmarked: Article 50(2) is technology-neutral, so a mark this pack cannot read may be present, and metadata is often stripped on re-save. Disclosure: CSOAI is a member of the C2PA, whose specification is one of the two methods read. The pack carries the verbatim Art 50(2) text hash and the dates it turns on. Point-in-time detection — never a conformity opinion, never a compliance word of any kind. preview=true is free and returns the same measurement unsigned. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED rather than inventing a result.",
           "required_args": []
         },
         {
@@ -561,14 +1061,14 @@
         },
         {
           "name": "receipts_batch",
-          "description": "PAID (x402 or CSOAI LTD invoice). A historical batch of the estate's measurement receipts via https://councilof.ai/api/receipts/batch: every signed card-v0 leaf whose as_of falls in [from,to] (≤200), each with its Merkle inclusion path and the public root(s) that carried it, plus the root index for the window and one signed manifest card citing the batch sha256. preview=true is free and returns count, span, root count and the sha256 of the exact bytes the paid call returns. Recent leaves are free at /root.json, /cards/ and /api/proof?sha= — the batch sells assembly across history, never a conclusion. No settlement-receipt stream exists (/api/receipts/latest is UNPUBLISHED) and this tool never claims one. Without x_payment the tool returns the 402 challenge.",
+          "description": "PAID (x402 or CSOAI LTD invoice). A historical batch of the estate's measurement receipts via https://councilof.ai/api/receipts/batch: every signed card-v0 leaf whose as_of falls in [from,to] (≤200), each with its Merkle inclusion path and the public root(s) that carried it, plus the root index for the window and one manifest card citing the batch sha256. Manifest signing is conditional: a returned unsigned manifest declares manifest_card.sig_ed25519:null and unsigned_reason, with signature unmeasured. Manifest root inclusion remains unmeasured. If signing throws after settlement, the route returns PAID_NOT_DELIVERED with no batch or manifest delivered; preserve the settlement receipt and reconcile before reissue, without automatically retrying or paying again. preview=true is free and returns count, span, root count and the sha256 of the exact bytes the paid call returns. Recent leaves are free at /root.json, /cards/ and /api/proof?sha= — the batch sells assembly across history, never a conclusion. This tool returns historical measurement leaves, not payment receipts. /api/receipts/latest reports aggregate receipt-store state when available; its counts do not verify a particular payment, delivery or buyer acceptance. Without x_payment the tool returns the 402 challenge.",
           "required_args": [
             "from"
           ]
         },
         {
           "name": "evidence_bundle",
-          "description": "PAID (x402). An evidence bundle for ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject via https://councilof.ai/api/evidence-bundle: OSCAL 1.1.0 assessment-results assembled only from already-signed measurement cards (each with its card bytes and Merkle inclusion proof), plus one manifest card-v0, signed when the signing key is present. Observations are relevant-to the obligation, never satisfied or not satisfied; zero relevant cards ships as an empty bundle, and the free preview says so first (preview=true here, or the free tool evidence_bundle_preview). Article 53 output is evidence for review, not a legal determination. Evidence for obligation work — not a conformity assessment, certification, audit opinion or compliance determination; grants no status. Measurement, not certification. Without x_payment the tool returns the 402 challenge, which is the only place terms appear. Verification of any card is free at https://councilof.ai/gspc-verify.",
+          "description": "PAID (x402). For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject via https://councilof.ai/api/evidence-bundle: selected existing card objects with signature fields and any retained inclusion proofs, an OSCAL assessment-results wrapper and an assembly manifest. Assembly does not verify input-card signatures. A returned unsigned manifest reports its signing status and unsigned reason. If signing throws after settlement, the route returns PAID_NOT_DELIVERED without a delivered bundle or manifest; preserve the settlement receipt and reconcile before reissue, without automatically retrying or paying again. Zero selected cards stays an empty bundle; preview=true here, or the free evidence_bundle_preview tool, shows the count first. No new measurement, full OSCAL conformance or conformity determination is established. Article 53 output is evidence for review, not a legal determination; grants no status. Without x_payment the tool returns the actual 402 challenge; read its terms for each request. Supported-card verification is free at https://councilof.ai/gspc-verify. Measurement, not certification.",
           "required_args": [
             "obligation"
           ]

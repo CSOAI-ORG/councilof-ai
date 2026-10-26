@@ -7,6 +7,7 @@
  * / VC 2.0 profile: public/schemas/csoai-completion-record-0.1.schema.json. The old schema file
  * stays published as a historical document so anything that cites it still resolves.
  */
+import { headFromGet } from "./_head";
 
 const BODY = {
   schema: "csoai.retired-endpoint/0.1",
@@ -32,3 +33,7 @@ export const onRequestGet: PagesFunction = async () =>
       "access-control-allow-origin": "*",
     },
   });
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

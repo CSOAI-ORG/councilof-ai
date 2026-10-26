@@ -11,6 +11,7 @@
 // POST stays a 501 capability-state facade: nothing here persists a correction report.
 // @openapi-post-not-implemented
 import { unavailable } from "./_unavailable";
+import { headFromGet } from "./_head";
 
 type Env = { ASSETS?: { fetch: (r: Request) => Promise<Response> } };
 
@@ -82,3 +83,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
 export const onRequestPost: PagesFunction = async () =>
   unavailable("/api/report", "Persist a correction report and return its durable reference");
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

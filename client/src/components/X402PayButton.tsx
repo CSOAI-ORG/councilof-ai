@@ -98,8 +98,8 @@ export default function X402PayButton({
   const resource = challenge.resourceInfo?.url || challenge.resource;
   const reserveSummary = reservePreview
     ? reservePreview.signedCardsOnFile === 0
-      ? "No signed measurement cards are on file for this subject in the paid reserve. Payment delivers a signed commission receipt, not a new measurement."
-      : `${reservePreview.signedCardsOnFile} signed measurement cards are on file in the paid reserve. Payment delivers a signed commission receipt and may include those existing cards; it does not trigger a new measurement.`
+      ? "None of this subject's signed results are in the paid pack (a dated snapshot). Results published elsewhere stay free to read and check. Payment delivers a signed commission receipt, not a new measurement."
+      : `${reservePreview.signedCardsOnFile} signed measurement cards are on file in the paid pack. Payment delivers a signed commission receipt and may include those existing cards; it does not trigger a new measurement.`
     : null;
   const reserveDate = reservePreview?.corpusAsOf?.slice(0, 10) || null;
   let chain: number | null = null;

@@ -38,9 +38,12 @@ function ProgressPanel({ data }: { data?: any }) {
 
   // Fail closed: absent honesty / no time series → UNCHECKABLE. Never invent a delta or seal.
   const status = drift?.status || "UNCHECKABLE";
+  // UNCHECKABLE renders a plain sentence for people; the honesty file's own note is written for
+  // agents ("do not invent…") and stays in the file for them (persona sweep 6 Oct 2026).
   const note =
-    drift?.note ||
-    "No published board time series for N→N+1 drift. Empty stays empty — do not invent drift numbers or a Merkle seal. Cite GET /root.json and GET /api/gspc for the living snapshot only.";
+    status === "UNCHECKABLE" || !drift?.note
+      ? "No published board time series for N→N+1 drift, so no drift figure or Merkle seal is shown. Empty stays empty. Cite GET /root.json and GET /api/gspc for the living snapshot only."
+      : drift.note;
 
   return (
     <div className="space-y-4 p-4">

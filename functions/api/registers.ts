@@ -4,6 +4,7 @@
  * This handler publishes hard-coded summary values. It does not load or verify
  * source records, signatures, receipts, or cryptographic proofs.
  */
+import { headFromGet } from "./_head";
 // @openapi-unsigned-static
 export const onRequestGet: PagesFunction = async () => {
   const rows = [
@@ -43,3 +44,7 @@ export const onRequestGet: PagesFunction = async () => {
     },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

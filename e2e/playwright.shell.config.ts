@@ -20,7 +20,7 @@ const local = !process.env.BASE_URL;
 
 export default defineConfig({
   testDir: "./tests",
-  testMatch: /dashboard-shell\.spec\.ts/,
+  testMatch: /(dashboard-shell|dashboard-home-ask|watchdog-journey)\.spec\.ts/,
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
@@ -29,7 +29,7 @@ export default defineConfig({
   timeout: 45_000,
   use: {
     baseURL: base,
-    trace: "on-first-retry",
+    trace: "retain-on-failure",
     screenshot: "only-on-failure",
   },
   webServer: local

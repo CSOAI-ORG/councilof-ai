@@ -46,14 +46,18 @@
  * This endpoint has no state of its own — edit the artifact, commit, deploy.
  */
 
-import regulatoryInventory from "../../public/interop/regulatory-inventory.json";
+// The stamped inventory version public/interop/regulatory-inventory-latest.json selects, bound at
+// build time (scripts/build-regulatory-inventory.mjs); regulatory-inventory-gate.mjs checks the binding.
+import regulatoryInventory, { REGULATORY_INVENTORY_PATH } from "./_regulatory_inventory";
 import type { AxisScore } from "./_gspc_types";
 import { AXES_A } from "./_gspc_axes_a";
 import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
 import { AXES_C } from "./_gspc_axes_c";
+import { AXES_D } from "./_gspc_axes_d";
 import { crosscheckBoardSnapshot } from "./_board_snapshot";
 import { AXES as REGISTER_ROWS, AXIS_REGISTER_SOURCE } from "./_axis_register";
+import { headFromGet } from "./_head";
 
 /** How a number was obtained. Never inferred from the value, never collapsed. */
 type Kind = "measured" | "declared" | "catalogued" | "unmeasured";
@@ -97,7 +101,7 @@ const counter = (
 
 // ── sources, named once ──────────────────────────────────────────────────────
 const SRC_AXES = "functions/api/_gspc_axes_{a,b,c,fin}.ts (the arrays /api/gspc derives from)";
-const SRC_REGULATORY_INVENTORY = "public/interop/regulatory-inventory.json";
+const SRC_REGULATORY_INVENTORY = REGULATORY_INVENTORY_PATH;
 
 // ── the board's own date-of-record ───────────────────────────────────────────
 // Read from the NEWEST signed freeze (functions/api/_board_snapshot.ts). Its honest
@@ -109,7 +113,7 @@ const SRC_REGULATORY_INVENTORY = "public/interop/regulatory-inventory.json";
 // a snapshot of that computation. Both are computed here and compared, so that if they
 // ever disagree the disagreement is visible instead of depending on which surface a
 // reader happened to open.
-const LIVE_AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN];
+const LIVE_AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN, ...AXES_D];
 const liveAxisSlots = LIVE_AXES.length;
 const liveMeasuredAxes = LIVE_AXES.filter((a) => a.status === "MEASURED").length;
 // Same comparison /api/state publishes — one implementation, so the two cannot disagree.
@@ -317,3 +321,7 @@ export const onRequestGet: PagesFunction = async () => {
     },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

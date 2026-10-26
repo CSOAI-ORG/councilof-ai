@@ -10,7 +10,6 @@ import {
   TEST_LINE,
   MCP_URL,
   MCP_METERED_URL,
-  STDIO_CMD,
   OPENAPI_URL,
   type PlatformCard,
   type ConfigBlock,
@@ -140,7 +139,7 @@ function CopyBlock({ block }: { block: ConfigBlock }) {
           {copied ? "Copied" : "Copy"}
         </button>
       </div>
-      <pre className="text-xs bg-slate-900 text-slate-100 rounded-lg p-3 overflow-x-auto leading-relaxed">
+      <pre className="max-w-full whitespace-pre-wrap break-all text-xs bg-slate-900 text-slate-100 rounded-lg p-3 leading-relaxed">
         <code>{block.code}</code>
       </pre>
     </div>
@@ -218,9 +217,9 @@ export default function ConnectGSPC() {
           </p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Connect GSPC to your AI</h1>
           <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">
-            The Council of AI GSPC board is a standard MCP server, so it already works on every MCP client —
-            and a plain OpenAPI/function tool covers the rest. Add it in about 30 seconds. Your AI can then
-            read the live governance board and verify signed measurement cards on demand.
+            Connect the free GSPC MCP endpoint to a compatible AI client to read the live board and verify signed
+            measurement cards. Choose your platform below; where remote MCP is unavailable, use a documented stdio
+            or OpenAPI route. The client register shows which connections we have actually tested.
           </p>
           <p className="mt-3 max-w-2xl text-sm text-emerald-100/70">
             We <strong className="text-white">measure</strong>; we never certify. No conformity mark, no fee,
@@ -305,8 +304,7 @@ export default function ConnectGSPC() {
       <section className="max-w-6xl mx-auto px-6 py-12">
         <h2 className="text-2xl font-bold">MCP-native clients</h2>
         <p className="text-sm text-gray-600 mt-1">
-          The server speaks streamable-HTTP at <code className="font-mono">{MCP_URL}</code>, with a stdio fallback
-          (<code className="font-mono">{STDIO_CMD}</code>). Every config below was checked against the client's current docs;
+          The server speaks streamable-HTTP at <code className="font-mono">{MCP_URL}</code>; paste the URL. Every config below was checked against the client's current docs;
           that is not a client test. Which clients were actually run is recorded in the client test register below.
         </p>
         <div className="grid md:grid-cols-2 gap-5 mt-6">

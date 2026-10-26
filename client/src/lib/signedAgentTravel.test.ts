@@ -12,6 +12,7 @@ import {
 } from "./signedAgentTravel";
 
 const tools = readFileSync(resolve(__dirname, "../pages/ToolsPage.tsx"), "utf8");
+const internal = readFileSync(resolve(__dirname, "../pages/YieldInternal.tsx"), "utf8");
 
 describe("Signed agent travel", () => {
   it("agrees our agent travels without per-site permission, and census stays DISCOVERED", () => {
@@ -40,6 +41,8 @@ describe("Signed agent travel", () => {
       TRAVEL_LANES,
     });
     expect(blob).not.toMatch(/£79|£499|rank for sale|22\/22|dorado|cibola|sovos/i);
-    expect(tools).toContain("SignedAgentTravel");
+    // Internal strategy notes live on the noindex /status/internal page, never on /tools (6 Oct 2026).
+    expect(internal).toContain("<SignedAgentTravel />");
+    expect(tools).not.toContain("<SignedAgentTravel");
   });
 });

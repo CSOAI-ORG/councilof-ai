@@ -420,7 +420,7 @@ export default function MembershipStrip({ variant = "home" }: { variant?: "home"
       ))}
       <p className="mt-4 text-xs text-slate-600" data-testid="membership-strip-honesty">
         {HONESTY_LINE}{" "}
-        <span className="text-slate-600">Manifest as of <time dateTime={MEMBERSHIPS.as_of}>{MEMBERSHIPS.as_of}</time>, unsigned; re-checked by scripts/memberships-check.mjs.</span>
+        <span className="text-slate-600">Manifest as of <time dateTime={MEMBERSHIPS.as_of}>{MEMBERSHIPS.as_of}</time>, unsigned; statuses are declared in the manifest. Check each linked record and its scope.</span>
       </p>
     </section>
   );

@@ -5,23 +5,30 @@
 // was checked against. `verified: false` marks a shape we could not confirm against
 // official docs — it is shown clearly labelled "unverified", never as a promise.
 //
-// The asset (already live, a STANDARD MCP server so it works on every MCP client):
+// The asset (already live; client compatibility is recorded separately, not assumed):
 //   remote HTTP MCP : https://councilof.ai/mcp/free   (streamable-http, no auth, the free readers)
 //                     https://councilof.ai/mcp        (the same free readers + the x402-metered tools)
-//   stdio (npm)     : npx -y csoai-gspc-mcp
 //   universal REST  : GET https://councilof.ai/api/gspc  (+ ?axis=), GET /api/cards
 //   OpenAPI 3.1     : https://councilof.ai/openapi/gspc.json
 //   function tools  : https://councilof.ai/openapi/gspc-function-tools.json
 //
 // We MEASURE; we never certify. The test line proves the connection with a real call.
 
+import CONNECT_MATRIX from "../../../distribution/connect/connect-matrix.json";
+
 // Every snippet on /connect-gspc defaults to the FREE door (audit 2026-09-28 #10): a developer who
 // pastes the first config they see should get the tools that cost nothing, not a door whose
 // metered tools answer with a payment challenge. /mcp is still named, with what it adds.
 export const MCP_FREE_URL = "https://councilof.ai/mcp/free";
+
+// The one claude.ai / Claude Desktop connector path, read from the connect matrix's claude-app row
+// (council-os/distribution.json → distribution/connect/connect-matrix.json), the same words
+// /connect/claude and the Council OS Connect pane give. Never typed here a second time.
+export const CLAUDE_APP_WHERE: string =
+  (CONNECT_MATRIX as { clients: { id: string; where: string }[] }).clients.find((c) => c.id === "claude-app")?.where ??
+  "Customize → Connectors → Add custom connector";
 export const MCP_METERED_URL = "https://councilof.ai/mcp";
 export const MCP_URL = MCP_FREE_URL;
-export const STDIO_CMD = "npx -y csoai-gspc-mcp";
 export const OPENAPI_URL = "https://councilof.ai/openapi/gspc.json";
 export const FN_TOOLS_URL = "https://councilof.ai/openapi/gspc-function-tools.json";
 
@@ -62,7 +69,6 @@ export const MCP_NATIVE: PlatformCard[] = [
     docUrl: "https://code.claude.com/docs/en/mcp",
     blocks: [
       { label: "Remote (recommended)", lang: "bash", code: `claude mcp add --transport http csoai-gspc ${MCP_URL}` },
-      { label: "stdio fallback", lang: "bash", code: "claude mcp add --transport stdio csoai-gspc -- npx -y csoai-gspc-mcp" },
       { label: "Project .mcp.json", lang: "json", code: `{
   "mcpServers": {
     "csoai-gspc": { "type": "http", "url": "${MCP_URL}" }
@@ -80,6 +86,8 @@ export const MCP_NATIVE: PlatformCard[] = [
     tagline: "Paid plans: paste the URL in Connectors. Free: use the mcp-remote bridge.",
     docUrl: "https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp",
     blocks: [
+      // The one thing a claude.ai or Claude Desktop user pastes, at the matrix's claude-app path.
+      { label: `Connector URL (claude.ai or Claude Desktop: ${CLAUDE_APP_WHERE})`, lang: "text", code: MCP_FREE_URL },
       { label: "claude_desktop_config.json (bridge)", lang: "json", code: `{
   "mcpServers": {
     "csoai-gspc": {
@@ -88,13 +96,8 @@ export const MCP_NATIVE: PlatformCard[] = [
     }
   }
 }` },
-      { label: "Pure stdio (no bridge)", lang: "json", code: `{
-  "mcpServers": {
-    "csoai-gspc": { "command": "npx", "args": ["-y", "csoai-gspc-mcp"] }
-  }
-}` },
     ],
-    note: "The JSON config file is stdio-only, so remote needs the mcp-remote bridge. On Pro/Max/Team/Enterprise you can instead add the URL natively under Settings → Connectors → Add custom connector.",
+    note: `The JSON config file is stdio-only, so remote needs the mcp-remote bridge. On Pro/Max/Team/Enterprise you can instead add the URL natively: ${CLAUDE_APP_WHERE}.`,
   },
   {
     id: "cursor",
@@ -108,11 +111,6 @@ export const MCP_NATIVE: PlatformCard[] = [
       { label: "Remote", lang: "json", code: `{
   "mcpServers": {
     "csoai-gspc": { "url": "${MCP_URL}" }
-  }
-}` },
-      { label: "stdio", lang: "json", code: `{
-  "mcpServers": {
-    "csoai-gspc": { "type": "stdio", "command": "npx", "args": ["-y", "csoai-gspc-mcp"] }
   }
 }` },
     ],
@@ -130,11 +128,6 @@ export const MCP_NATIVE: PlatformCard[] = [
       { label: "Remote", lang: "json", code: `{
   "mcpServers": {
     "csoai-gspc": { "serverUrl": "${MCP_URL}" }
-  }
-}` },
-      { label: "stdio", lang: "json", code: `{
-  "mcpServers": {
-    "csoai-gspc": { "command": "npx", "args": ["-y", "csoai-gspc-mcp"] }
   }
 }` },
     ],
@@ -159,11 +152,6 @@ export const MCP_NATIVE: PlatformCard[] = [
     }
   }
 }` },
-      { label: "stdio", lang: "json", code: `{
-  "mcpServers": {
-    "csoai-gspc": { "command": "npx", "args": ["-y", "csoai-gspc-mcp"], "disabled": false, "autoApprove": [] }
-  }
-}` },
     ],
     note: 'The type MUST be "streamableHttp" (camelCase, no hyphen) or Cline falls back to SSE.',
   },
@@ -179,11 +167,6 @@ export const MCP_NATIVE: PlatformCard[] = [
       { label: "Remote", lang: "json", code: `{
   "context_servers": {
     "csoai-gspc": { "url": "${MCP_URL}" }
-  }
-}` },
-      { label: "stdio", lang: "json", code: `{
-  "context_servers": {
-    "csoai-gspc": { "command": "npx", "args": ["-y", "csoai-gspc-mcp"], "env": {} }
   }
 }` },
     ],
@@ -202,13 +185,6 @@ export const MCP_NATIVE: PlatformCard[] = [
   - name: csoai-gspc
     type: streamable-http
     url: ${MCP_URL}` },
-      { label: "stdio", lang: "yaml", code: `mcpServers:
-  - name: csoai-gspc
-    type: stdio
-    command: npx
-    args:
-      - "-y"
-      - "csoai-gspc-mcp"` },
     ],
     note: "Continue's mcpServers is an array of objects with a name field; remote type is hyphenated streamable-http.",
   },
@@ -224,11 +200,6 @@ export const MCP_NATIVE: PlatformCard[] = [
       { label: "Remote", lang: "json", code: `{
   "mcpServers": {
     "councilof": { "httpUrl": "${MCP_URL}" }
-  }
-}` },
-      { label: "stdio", lang: "json", code: `{
-  "mcpServers": {
-    "councilof": { "command": "npx", "args": ["-y", "csoai-gspc-mcp"] }
   }
 }` },
     ],
@@ -381,6 +352,8 @@ export interface RegistryRow {
 // merged upstream PR evidence. A live row must link to its public evidence, never back
 // to a submission form: that distinction prevents duplicate outward submissions.
 export const REGISTRIES: RegistryRow[] = [
+  { name: "npm — gspc-card-verifier", status: "listed", permissionless: true, where: "https://www.npmjs.com/package/gspc-card-verifier", note: "Version 1.0.0 is live. Offline zero-dependency verifier; registry presence is distribution, not adoption." },
+  { name: "npm — @csoai/gspc-cli", status: "listed", permissionless: true, where: "https://www.npmjs.com/package/@csoai/gspc-cli", note: "Version 0.2.1 is live and declares gspc-card-verifier 1.0.0. Installability is not usage." },
   { name: "Official MCP Registry", status: "listed", permissionless: true, where: "ai.councilof/gspc", note: "Live registry entry pointing to https://councilof.ai/mcp; io.github.CSOAI-ORG/gspc is its deprecated alias. Downstream aggregators ingest from here." },
   { name: "A2A agent directories", status: "listed", permissionless: true, where: "https://a2aregistry.org", note: "Council of AI — Measurement Agent is registered and the public record reports healthy and conformant." },
   { name: "Smithery", status: "listed", permissionless: true, where: "https://smithery.ai/servers/csoai/gspc-mcp", note: "The current csoai/gspc-mcp entry is live. A stale csoai/gspc duplicate should be corrected or retired; do not submit another entry." },

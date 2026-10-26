@@ -12,6 +12,7 @@
  */
 import root from "../../public/root.json";
 import { rss, FEED_HEADERS, type Entry } from "./_xml";
+import { headFromGet } from "../api/_head";
 
 interface Root { merkle_root?: string; card_count?: number; as_of?: string; schema?: string; sig_ed25519?: string | null; did_intended?: string }
 
@@ -41,3 +42,7 @@ export const onRequestGet: PagesFunction = async () =>
     "The current signed public root: merkle_root, leaf count and as_of, derived from root.json. One item by design — there is no root-history artifact, and a back-history invented from one snapshot would be fabricated dates.",
     entries(),
   ), { headers: FEED_HEADERS });
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

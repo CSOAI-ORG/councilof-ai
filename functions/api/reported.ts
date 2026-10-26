@@ -23,6 +23,7 @@
  * which the page already renders as "An empty REPORTED set is the honest answer, not a
  * missing section." An empty array is a kept promise; a missing key is a broken one.
  */
+import { headFromGet } from "./_head";
 // @openapi-post-not-implemented
 
 const json = (body: unknown, status = 200) =>
@@ -67,3 +68,7 @@ export const onRequestPost: PagesFunction = async () => {
     note: "No submission store or triage queue exists. Nothing was accepted or published.",
   }, 501);
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

@@ -60,7 +60,9 @@ export function nText(a: GspcAxis): string {
  * has no fleet, so no test applies — that is a different fact from UNTESTED.
  */
 export function separationText(a: GspcAxis): string {
-  if (a.kind === "deterministic-facts") return "no fleet · not applicable";
+  // Same compound wording as the board terminal and /axis pages: a fact axis has no fleet, so no
+  // separation test applies — said in words, never with a fourth separation "state".
+  if (a.kind === "deterministic-facts") return "facts · no separation test";
   return typeof a.separation === "string" && a.separation.trim() ? a.separation.trim() : "not published";
 }
 

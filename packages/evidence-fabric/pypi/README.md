@@ -38,8 +38,22 @@ csoai-evidence verify batch.json batch.signed.json events.jsonl --did did.json -
 
 ## What a VALID verification shows
 
-`verify` checks the Ed25519 signature of `did:web:csoai.org#board-attestation-1` over the batch record and the sha256 of the events file, and with `--tamper-control` it also proves that three one-byte edits are rejected. VALID shows who signed these bytes. It does not show that any claim inside is true.
+`verify` checks the Ed25519 signature of `did:web:csoai.org#board-attestation-1` over the batch record and the sha256 of the events file, and with `--tamper-control` it also proves that three one-byte edits are rejected. VALID reports signature consistency under the supplied key and the covered event bytes. It does not independently authenticate the issuer or show that any claim inside is true.
 
 **Not measured.** Live ingestion into a SIEM, collector or tenant was not run. Each carrier output is checked only against that carrier's published schema or registry, pinned in `vendor/`.
 
 Install notes and the other connectors: https://councilof.ai/connect/
+
+## SAFE freeze signature consumer (version 2)
+
+The version 0.1.1 source adds an external consumer for the retained SAFE pack. It leaves the original 37-file pack unchanged and does not run its bundled verifier.
+
+```sh
+csoai-evidence verify-safe-freeze FREEZE.json --signed FREEZE.signed.json --did did.json
+```
+
+This command supports the retained `csoai.safe-evidence-pack/0.1` freeze and its `csoai.signed-run/0.1` / `csoai.signed-artifact/0.1` envelope. It binds the supported signer in the signed payload to one full DID verification-method ID, its controller and assertion authorization, then verifies the Ed25519 signature over the payload and exact freeze bytes. Unsupported families and ambiguous methods are rejected.
+
+The JSON result keeps `signature_valid` separate from `issuer_authenticated`, which remains `null`. A positive result is `SELF_CONSISTENT_UNAUTHENTICATED_KEY`: it proves consistency under the supplied public key, not the issuer's identity or the truth of a claim. No network DID resolution occurs. Authenticate or pin the key independently for any stronger trust conclusion.
+
+Exit codes are 0 for supplied-key consistency, 1 for rejected inputs/signatures, 2 for usage or unavailable required inputs, and 3 for absent signature/DID or unavailable cryptography. Missing evidence remains `null`, never a valid signature. This command checks only the freeze signature; it does not check the pack's sums, event schemas, derivations, Bitcoin OTS, admission or certification.

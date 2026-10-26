@@ -10,6 +10,7 @@ import {
   index402For,
   settleFor,
   walkTally,
+  MAYBE_SETTLED_LINE,
   type DoorSettlesReading,
   type Index402Reading,
   doorFromSearch,
@@ -24,6 +25,7 @@ import {
   sameResource,
   routeKey,
   selectDoor,
+  doorForLink,
   unsettledReason,
   type Door,
   type ListingReading,
@@ -217,6 +219,14 @@ describe("three outcomes and no fourth", () => {
     }
   });
 
+  it("DELIVERED keeps what was bought: the door's 200 body rides on the outcome (it used to be dropped)", async () => {
+    const pack = { schema: "csoai.art50.marking-evidence/0.1", card: { payload: { kind: "k" }, sha256: "ab".repeat(32), sig_ed25519: "cd".repeat(64) } };
+    const fetchImpl = vi.fn(async () => jsonResponse(200, pack)) as unknown as typeof fetch;
+    const s = await payDoor({ door: door(), challenge: challengeFromPaymentRequired(PAYMENT_REQUIRED)!, provider: provider(), walletName: "w", fetchImpl });
+    expect(s.kind).toBe("delivered");
+    if (s.kind === "delivered") expect(s.body).toEqual(pack);
+  });
+
   it("DELIVERED without a receipt header keeps settlement null — delivery is not proof of settlement", async () => {
     const out = await retryDoorWithPayment(door(), "hdr", vi.fn(async () => jsonResponse(200, {})) as unknown as typeof fetch);
     expect(out.kind).toBe("delivered");
@@ -225,6 +235,34 @@ describe("three outcomes and no fourth", () => {
       expect(out.settlement).toBeNull();
     }
     expect(decodeSettlement("not base64 json")).toBeNull();
+  });
+
+  it("MAYBE-SETTLED, never 'not paid', when the paid retry answers 5xx: the door may have settled before it failed", async () => {
+    const receipt = { success: true, transaction: `0x${"ef".repeat(32)}`, network: "eip155:8453", payer: SIGNER };
+    const body = { error: "paid_not_delivered", refund: { how: "Email nicholas@csoai.org with the transaction below." } };
+    const fetchImpl = vi.fn(async () => jsonResponse(500, body, { "x-payment-response": btoa(JSON.stringify(receipt)) })) as unknown as typeof fetch;
+    const s = await payDoor({ door: door(), challenge: challengeFromPaymentRequired(PAYMENT_REQUIRED)!, provider: provider(), walletName: "w", fetchImpl });
+    expect(s.kind).toBe("maybe-settled");
+    if (s.kind === "maybe-settled") {
+      expect(s.detail).toBe("the paid retry answered HTTP 500: paid_not_delivered");
+      expect(s.settlement?.transaction).toBe(receipt.transaction);
+      expect(s.refund).toBe(body.refund.how);
+    }
+    expect(MAYBE_SETTLED_LINE).toMatch(/may have settled/);
+    expect(MAYBE_SETTLED_LINE).not.toMatch(/not paid/i);
+    // and a door in that state is never walked (paid) again by "settle all"
+    const d = door();
+    const quotes = { [d.url]: { kind: "challenge", http: 402, challenge: challengeFromPaymentRequired(PAYMENT_REQUIRED)!, body: {} } } as never;
+    expect(remainingDoors([d], quotes, { [d.url]: s })).toEqual([]);
+  });
+
+  it("MAYBE-SETTLED when the connection drops after the signed payment was sent", async () => {
+    const fetchImpl = vi.fn(async () => {
+      throw new TypeError("Failed to fetch");
+    }) as unknown as typeof fetch;
+    const s = await payDoor({ door: door(), challenge: challengeFromPaymentRequired(PAYMENT_REQUIRED)!, provider: provider(), walletName: "w", fetchImpl });
+    expect(s.kind).toBe("maybe-settled");
+    if (s.kind === "maybe-settled") expect(s.detail).toMatch(/did not complete \(Failed to fetch\)/);
   });
 
   it("UNSETTLED when the door answers 402 again, with the facilitator's reason verbatim", async () => {
@@ -275,6 +313,18 @@ describe("deep link and walk order", () => {
     expect(selectDoor(doors, `${ORIGIN}/api/nothing`)).toBeNull();
     expect(doorFromSearch("")).toBeNull();
     expect(routeKey("nonsense")).toBe("nonsense");
+  });
+
+  it("a link to a declared route with its own query pays THAT resource (fresh-capsule needs endpoint= and dimension=)", () => {
+    const doors = doorsFromManifest(MANIFEST);
+    const own = `${ORIGIN}/api/rwa/evidence?asset=XRP`;
+    expect(doorForLink(doors, own)).toMatchObject({ url: own, routeKey: doors[2].routeKey, method: doors[2].method });
+    // the manifest's own spelling, a bare path, or the same query in another order: the manifest door, unchanged
+    expect(doorForLink(doors, doors[2].url)).toBe(doors[2]);
+    expect(doorForLink(doors, "/api/free-door")).toBe(doors[0]);
+    // a route the manifest does not declare selects nothing, whatever its query
+    expect(doorForLink(doors, `${ORIGIN}/api/nothing?x=1`)).toBeNull();
+    expect(doorForLink(doors, null)).toBeNull();
   });
 
   it("pay-all walks only doors with a live challenge that have not been delivered", () => {
@@ -439,7 +489,9 @@ describe("the Settle-all tally reads the door states and counts each door once",
       e: { kind: "signing", wallet: "MetaMask" },
       z: { kind: "delivered", paymentResponse: null, settlement: null }, // not in the queue: not counted
     });
-    expect(tally).toEqual({ queued: 6, delivered: 1, unsettled: 1, rejected: 1, failed: 1, pending: 2 });
-    expect(walkTally([], {})).toEqual({ queued: 0, delivered: 0, unsettled: 0, rejected: 0, failed: 0, pending: 0 });
+    expect(tally).toEqual({ queued: 6, delivered: 1, unsettled: 1, maybe_settled: 0, rejected: 1, failed: 1, pending: 2 });
+    expect(walkTally([], {})).toEqual({ queued: 0, delivered: 0, unsettled: 0, maybe_settled: 0, rejected: 0, failed: 0, pending: 0 });
+    // a door that may have settled is its own count, never "pending" (pending reads as "still to pay")
+    expect(walkTally(["m"], { m: { kind: "maybe-settled", detail: "the paid retry answered HTTP 500", settlement: null, refund: null } }).maybe_settled).toBe(1);
   });
 });

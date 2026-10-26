@@ -10,8 +10,16 @@ const fs = require('fs');
 const path = require('path');
 
 // === CONFIG ===
-const PRIVATE_KEY = '0xf3730e2b4c9b9a59ee94956f0e64a5fe310c4d4daf88ebd62c5ccdad89447f62';
-const PAYER_ADDRESS = '0x6ea00613c15f2463bC10c7188215c4FA6f4943C6';
+// The signing key comes from the environment and is never committed. Revision 27ac2d551 hardcoded
+// the key of burner 0x6ea00613…43c6 here. Git history still holds it, so that wallet is permanently
+// compromised; see KEY-COMPROMISED.md. This script refuses to sign as it. A fresh burner must have
+// its address in X402_SELF_WALLETS before it pays, or its settlement is counted as a buyer.
+const COMPROMISED_PAYERS = new Set(['0x6ea00613c15f2463bc10c7188215c4fa6f4943c6']);
+const PRIVATE_KEY = (process.env.TUI4_BURNER_KEY || '').trim();
+if (!/^0x[0-9a-fA-F]{64}$/.test(PRIVATE_KEY)) {
+  console.error('[x402-signer] REFUSED: TUI4_BURNER_KEY is unset or not a 0x-prefixed 32-byte hex key. Nothing was signed.');
+  process.exit(2);
+}
 const USDC_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
 const PAY_TO = '0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31';
 const CHAIN_ID = 8453;
@@ -20,7 +28,18 @@ const RESOURCE_URL = 'https://councilof.ai/api/request-attestation';
 const SUBJECT = 'llama3.2:3b';
 const AXIS = 'governance';
 
-const wallet = new ethers.Wallet(PRIVATE_KEY);
+let wallet;
+try {
+  wallet = new ethers.Wallet(PRIVATE_KEY);
+} catch {
+  console.error('[x402-signer] REFUSED: TUI4_BURNER_KEY is not a valid secp256k1 key. Nothing was signed.');
+  process.exit(2);
+}
+const PAYER_ADDRESS = wallet.address;
+if (COMPROMISED_PAYERS.has(PAYER_ADDRESS.toLowerCase())) {
+  console.error(`[x402-signer] REFUSED: ${PAYER_ADDRESS} is compromised (its key is in git history). Never fund it; use a fresh burner. Nothing was signed.`);
+  process.exit(2);
+}
 console.log(`[x402-signer] Wallet: ${wallet.address}`);
 console.log(`[x402-signer] PayTo: ${PAY_TO}`);
 console.log(`[x402-signer] Amount: ${AMOUNT_ATOMIC} atomic (${Number(AMOUNT_ATOMIC) / 1e6} USDC)`);

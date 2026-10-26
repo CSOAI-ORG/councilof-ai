@@ -47,7 +47,12 @@ function Result({ c, axis }: { c: ModelCell; axis: BoardAxis | undefined }) {
             Possible position {formatSpread(c.m.rank_spread)}
             <span className="text-gray-600">
               {" "}
-              · board: {c.determination === "TIE" ? "no clear winner (tie)" : c.determination.toLowerCase()}
+              ·{" "}
+              {c.determination === "TIE"
+                ? c.m.rank_spread[0] === 1
+                  ? "could still be first · board: leader and runner-up not separated"
+                  : "cannot be first on 95% ranges"
+                : `board: ${c.determination.toLowerCase()}`}
             </span>
           </p>
         </div>

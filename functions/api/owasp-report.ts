@@ -25,6 +25,7 @@ import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
 import { AXES_C } from "./_gspc_axes_c";
 import type { AxisScore } from "./_gspc_types";
+import { headFromGet } from "./_head";
 
 const AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN];
 
@@ -96,3 +97,7 @@ export const onRequestGet: PagesFunction = async () => {
     verify: "GET /api/gspc for the per-axis board rows this report derives from.",
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

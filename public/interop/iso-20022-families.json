@@ -1,0 +1,116 @@
+{
+  "schema": "csoai.iso-20022-families/0.1",
+  "kind": "interop.iso20022.families",
+  "subject": "iso20022-message-families",
+  "source": {
+    "repository": "(withheld \u2014 internal codename; not publishable on a served JSON surface)",
+    "repository_note": "Content is identified without the repository name: sha256 + blob id + commit id below are sufficient to re-derive these exact bytes from within the estate. The name is withheld because it is an internal codename, which scripts/brand-gate.mjs rejects on any served surface.",
+    "path": "councilof-ai/measurement/iso20022-families.json",
+    "commit": "d72149ea4698",
+    "blob_sha": "b98cd3d778498736f06556bdb242233de86b6d2f",
+    "bytes": 2549,
+    "sha256": "f9f273f35506b8e3c16894c82402ad351d793555b29368ba111d833c7003b4a5",
+    "retrieved": "2026-10-07",
+    "retrieval_note": "Harvested by TUI-1 on 2026-10-07 from a signed-content sibling repository of this monorepo family.",
+    "repository_verification": "commit d72149ea4698 resolves in the source repository (committed 2026-09-13T04:31:53Z) and returns HTTP 422 'No commit found' from CSOAI-ORG/councilof-ai. Do not attempt to fetch it from this repository. Earlier revisions of this file named the source repository directly, then cited this repository as the source; both were wrong and were corrected 2026-10-07."
+  },
+  "measurement_state": "CATALOGUED",
+  "signature_state": "UNSIGNED",
+  "sig_ed25519": null,
+  "pubkey": null,
+  "did": null,
+  "merkle_root_inclusion": "NOT_IN_PUBLIC_ROOT",
+  "anchors": {
+    "rekor": "NOT_WITNESSED",
+    "ots": "NOT_SUBMITTED",
+    "base_eas": "NOT_SUBMITTED",
+    "xrpl_memo": "NOT_SUBMITTED"
+  },
+  "provenance_note": "Harvested verbatim from an internal sibling repository of this estate on 2026-10-07 by TUI-1. The source card is UNSIGNED: it carries no Ed25519 signature, no pubkey and no DID, so it is CATALOGUED \u2014 never MEASURED, never anchored, never in any public root. Do not quote a family count as a measurement.",
+  "families": [
+    {
+      "id": "pacs",
+      "name": "Payment Clearing and Settlement",
+      "messages": [
+        "pacs.008",
+        "pacs.009",
+        "pacs.002",
+        "pacs.004"
+      ],
+      "status": "identified",
+      "relevance": "Core payment messages \u2014 every bank-to-bank transfer uses these"
+    },
+    {
+      "id": "pain",
+      "name": "Payment Initiation",
+      "messages": [
+        "pain.001",
+        "pain.002",
+        "pain.008",
+        "pain.013"
+      ],
+      "status": "identified",
+      "relevance": "Customer-initiated payments \u2014 the front door"
+    },
+    {
+      "id": "camt",
+      "name": "Cash Management",
+      "messages": [
+        "camt.052",
+        "camt.053",
+        "camt.054"
+      ],
+      "status": "identified",
+      "relevance": "Account statements and balances \u2014 reconciliation layer"
+    },
+    {
+      "id": "sese",
+      "name": "Securities Settlement",
+      "messages": [
+        "sese.023",
+        "sese.024",
+        "sese.025"
+      ],
+      "status": "identified",
+      "relevance": "Tokenized securities settlement \u2014 BENJI/T-REX/ERC-3643 bridge"
+    },
+    {
+      "id": "seev",
+      "name": "Securities Events",
+      "messages": [
+        "seev.031",
+        "seev.032",
+        "seev.033",
+        "seev.034"
+      ],
+      "status": "identified",
+      "relevance": "Corporate actions \u2014 dividends, splits, redemptions"
+    },
+    {
+      "id": "reda",
+      "name": "Reference Data",
+      "messages": [
+        "reda.004",
+        "reda.008"
+      ],
+      "status": "identified",
+      "relevance": "Instrument/party reference data \u2014 the naming layer"
+    },
+    {
+      "id": "auth",
+      "name": "Authorization",
+      "messages": [
+        "auth.030",
+        "auth.031"
+      ],
+      "status": "identified",
+      "relevance": "Pre-authorization of payment instructions \u2014 the guard layer"
+    }
+  ],
+  "total_families": 7,
+  "total_message_types": 25,
+  "implemented": 0,
+  "honest_sentence": "7 ISO 20022 message families identified (25 message types). Zero implemented yet. SWIFT migration deadline already passed (Mar 2025) \u2014 compliance is the product.",
+  "measurement_not_certification": true,
+  "as_of": "2026-09-11T08:04:08.664628+00:00"
+}

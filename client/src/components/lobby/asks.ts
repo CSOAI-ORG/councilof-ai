@@ -10,11 +10,16 @@
  * LobbyComposer.tsx; no other call site knows about it.
  *
  * GRAMMAR (binding, inherited from client/src/lib/lobbyLink.ts). Every question
- * here is a request for PUBLISHED material — "what does the board publish",
- * "which axis carry no number" — never a prompt that implies a live expert is
- * standing by, and never a request for a compliance verdict. The lobby's chat
- * bar is deterministic-first and refuses rather than improvises; the questions it
- * suggests have to be answerable in that world.
+ * here is a request for PUBLISHED material — never a prompt that implies a live
+ * expert is standing by, and never a request for a compliance verdict.
+ *
+ * ANSWERABLE, OR NOT OFFERED (tools audit, 6 Oct 2026). Every suggestion must be
+ * one the deterministic router (functions/_lib/talkRouter.ts routeIntent) maps
+ * onto a tool, in plain words. Most of the old ones ("which EU AI Act provisions
+ * are crosswalked…", "how many axis are measured of the quotable set…") answered
+ * "I could not match that question to a tool". None may start with a pane command
+ * ("show …", "open …"), or the composer opens a pane instead of asking.
+ * asks.test.ts runs every suggestion through routeIntent and the pane matcher.
  *
  * CONSENT LOCK. Nothing in this file sends anything. A selected question is
  * typed into the input and focused. The send is always the user's.
@@ -45,63 +50,49 @@ export const DEFAULT_AUDIENCE = "public";
 
 /** Base questions per audience — asked anywhere on the site. ASK_COUNT below is
  *  derived from this object and the route table; no total is typed here, because
- *  the last one said "4 × 7 = 28" beside a list that had already grown past it. */
+ *  the last one said "4 × 7 = 28" beside a list that had already grown past it.
+ *  The comment after each names the tool routeIntent answers it with. */
+const Q = {
+  measure: "What does Council of AI measure?", // board_totals
+  boardNow: "What does the board say right now?", // board_totals
+  howMany: "How many tests on the board have results right now?", // board_totals
+  which: "Which tests on the board have results?", // board_totals
+  ties: "Which tests on the board ended in a tie?", // board_totals (separation line)
+  wrong: "What has Council of AI got wrong so far? List the corrections.", // corrections_summary
+  claims: "Which claims are under claim maintenance?", // claim_maintenance_register
+  cards: "List the latest signed cards.", // list_cards
+  root: "What does the signed public root contain?", // get_root
+  index: "How many results are in the measurement index?", // measurement_index
+  ourServer: "What is measured about councilof.ai/mcp?", // server_evidence
+  github: "What is measured about github.com?", // server_evidence
+  mcpCensus: "How many MCP servers answered a handshake?", // mcp_trust
+  x402: "How many paid endpoints answered the x402 census?", // x402_trust
+  art50: "What signed evidence is there for Article 50?", // evidence_bundle_preview
+  art53: "What signed evidence is there for Article 53?", // evidence_bundle_preview
+  dora: "What signed evidence is there for DORA?", // evidence_bundle_preview
+  cra: "What signed evidence is there for the Cyber Resilience Act?", // evidence_bundle_preview
+  safety: "How did the safety test measure?", // get_axis
+  governance: "How did the governance test measure?", // get_axis
+  conformance: "How did the conformance test measure?", // get_axis
+  jail: "How did the jail (jailbreak) test measure?", // get_axis
+  swarm: "How did the swarm test measure?", // get_axis
+  reserve: "How did the reserve attestation test measure?", // get_axis
+  custody: "How did the custody disclosure test measure?", // get_axis
+} as const;
+
 const BY_AUDIENCE: Record<string, string[]> = {
-  public: [
-    "In plain words, what does the Council of AI actually measure?",
-    "What does it mean when an axis is published with no number at all?",
-    "Who checks the Council's own numbers, and what happens when one is wrong?",
-    "What is the difference between measuring a system and certifying it?",
-  ],
-  builder: [
-    "Which endpoints can my system call to read the published board, and what shape do they return?",
-    "How is a measurement card signed, and how do I verify one without trusting you?",
-    "What does the assessment actually run, and what does it explicitly not claim?",
-    "Which axis have a published bank I can reproduce, and where do the items live?",
-    "What models are published on the living board, and which cells are still empty?",
-  ],
-  compliance: [
-    "Which EU AI Act provisions are crosswalked, and what is the frozen text they were measured against?",
-    "What does the published regulation feed say is in force today versus deferred?",
-    "Which axis are measured today, and which carry no number at all?",
-    "What is the difference between measuring a system and certifying it?",
-  ],
-  procurement: [
-    "Walk me through the board — which axis carry a measured figure?",
-    "How would I check a supplier's claim against the published board myself?",
-    "What is published about the method — deterministic grading, gold labels, minimum n?",
-    "Which figures are the Council's own measurement and which are reported third-party context?",
-  ],
-  board: [
-    "What is the one-paragraph summary of what is measured and what is not?",
-    "Where is the corrections ledger, and what has the Council got wrong so far?",
-    "How many axis are measured of the quotable set right now?",
-    "How do we get measured, and what does the result actually say?",
-  ],
-  researcher: [
-    "Why is nothing quoted below n >= 30, and what happens under it?",
-    "What does a TIE mean on the board, and how is separation tested?",
-    "How are unparseable responses counted, and why are they not dropped?",
-    "Which axis banks are public, and under what licence?",
-  ],
-  press: [
-    "Which figures on the board are safe to quote today, and which are not?",
-    "Where is the corrections ledger, and what has the Council got wrong so far?",
-    "What is the difference between measuring a system and certifying it?",
-    "In plain words, who measures these numbers, and what do they refuse to decide?",
-  ],
-  insurer: [
-    "Which board figures are safe to underwrite on today, and which cells are explicitly empty?",
-    "How is a measurement card signed, and how do I verify one offline?",
-    "What does the Council publish about bias, explainability, and oversight evidence?",
-    "What is reported third-party context versus the Council's own measurement?",
-  ],
-  regulator: [
-    "Which frameworks are crosswalked to frozen statute, and where is the text published?",
-    "What does a published measurement card attest, and what does it explicitly not decide?",
-    "What is in the corrections ledger, and how are refutations handled?",
-    "What is the difference between measuring and certifying, for supervisory readers?",
-  ],
+  public: [Q.measure, Q.howMany, Q.ties, Q.wrong],
+  builder: [Q.ourServer, Q.cards, Q.conformance, Q.mcpCensus, Q.x402],
+  compliance: [Q.art50, Q.dora, Q.cra, Q.governance],
+  procurement: [Q.which, Q.github, Q.cards, Q.claims],
+  board: [Q.boardNow, Q.wrong, Q.howMany, Q.claims],
+  researcher: [Q.safety, Q.ties, Q.index, Q.jail],
+  press: [Q.boardNow, Q.wrong, Q.ties, Q.root],
+  // Underwriting AI risk: jailbreak and safety results first, then the financial-sector evidence
+  // (tools audit retest, 6 Oct 2026: "Which tests have results?" was the same generic opener as
+  // every other audience).
+  insurer: [Q.jail, Q.safety, Q.dora, Q.reserve],
+  regulator: [Q.art50, Q.governance, Q.wrong, Q.root],
 };
 
 /**
@@ -115,183 +106,40 @@ const BY_AUDIENCE: Record<string, string[]> = {
  * instead of "for this sector".
  */
 const BY_ROUTE: { test: RegExp; asks: string[] | ((path: string) => string[]) }[] = [
-  {
-    test: /^\/(gspc-scoreboard|gspc|board)/,
-    asks: [
-      "Walk me through this board: which axis carry a measured figure and which carry none?",
-      "What does a TIE mean on this board, and why is a point lead not an advantage?",
-      "When was this board last measured, and what is the signature attached to it?",
-    ],
-  },
-  {
-    test: /^\/gspc-verify/,
-    asks: [
-      "Take me through verifying a card — recompute the hash, then check the Ed25519 signature.",
-      "Where is the public key published, and how do I fetch it without trusting this page?",
-    ],
-  },
-  {
-    test: /^\/gspc-arena|^\/coliseum/,
-    asks: [
-      "How is a round in Council Space graded — what exactly is deterministic about it?",
-      "What is published about the rounds so far, and what is not yet deployed?",
-    ],
-  },
-  {
-    test: /^\/(assess|readiness-assessment)/,
-    asks: [
-      "What does the assessment actually run, and what does the result attest?",
-      "What does a completed assessment explicitly NOT say about my system?",
-    ],
-  },
-  {
-    test: /^\/(watchdog|report)/,
-    asks: ["What happens to a watchdog incident after it is reported, and who sees it?"],
-  },
-  {
-    test: /^\/models/,
-    asks: [
-      "Which axis are measured on the live board, and who leads where?",
-      "How many axis are measured of the quotable set right now?",
-    ],
-  },
-  {
-    test: /^\/tools/,
-    asks: [
-      "What MCP servers are in the published fleet, and what is not a marketplace listing?",
-      "How do I connect a published tool without treating it as a certificate?",
-    ],
-  },
-  {
-    test: /^\/dashboard/,
-    asks: [
-      "How many axis are measured of the quotable set right now?",
-      "Where do these dashboard numbers come from — what does GET /api/gspc publish?",
-    ],
-  },
-  {
-    test: /^\/compare/,
-    asks: [
-      "What is the difference between measurement and certification on this page?",
-      "What can procurement rely on in a published measurement, and what is out of scope?",
-    ],
-  },
-  {
-    test: /^\/layer0/,
-    asks: [
-      "How is Layer 0 signed and verified — what is the public key and hash chain?",
-      "What does Layer 0 publish that downstream measurement depends on?",
-    ],
-  },
+  { test: /^\/(gspc-scoreboard|gspc|board)/, asks: ["Which tests on this board have results, and which ended in a tie?", Q.boardNow] },
+  { test: /^\/gspc-verify/, asks: [Q.cards, Q.root] },
+  { test: /^\/gspc-arena|^\/coliseum/, asks: [Q.ties, Q.swarm] },
+  { test: /^\/(assess|readiness-assessment)/, asks: [Q.ourServer, Q.which] },
+  { test: /^\/(watchdog|report)/, asks: [Q.wrong] },
+  { test: /^\/models/, asks: [Q.howMany, Q.safety] },
+  { test: /^\/tools/, asks: [Q.mcpCensus, Q.ourServer] },
+  { test: /^\/dashboard/, asks: [Q.howMany, Q.boardNow] },
+  { test: /^\/compare/, asks: ["Which tests on the board have a measurement right now?", Q.cards] },
+  { test: /^\/layer0/, asks: [Q.root, Q.cards] },
   {
     // /for/:persona is a real route (App.tsx -> PersonaRouter) covering regulator,
-    // enterprise, finance, healthcare, startup and sec-filer. It used to answer with
-    // one generic pair calling every one of them "this sector" — a regulator is not a
-    // sector — and neither question mentioned measurement, which is the only thing
-    // the deterministic chat lane can actually answer from. asks.test.ts has been red
-    // on master over exactly that. The persona is read off the path instead.
+    // enterprise, finance, healthcare, startup and sec-filer. The persona is read off
+    // the path, so a regulator is not called "this sector".
     test: /^\/for\//,
     asks: (path) => {
       const seg = path.split("/").filter(Boolean)[1] ?? "";
       const who = seg ? seg.replace(/[-_]+/g, " ") : "this reader";
-      return [
-        `What is measured and published for ${who} — which axis carry a figure, and which are published with none?`,
-        `What does the Council refuse to claim for ${who}: no certification, no badge, no conformity verdict?`,
-        `Which of this page's frameworks map onto frozen provisions, and which cells stay empty?`,
-      ];
+      return [`What is measured on the board for ${who}?`, Q.art50, Q.wrong];
     },
   },
-  {
-    test: /^\/pricing|^\/plans/,
-    asks: [
-      "What is published about plans and pricing — what is measured, what is free?",
-      "What is explicitly not promised in the published pricing material?",
-    ],
-  },
-  {
-    test: /^\/honesty/,
-    asks: [
-      "What does the honesty page publish about corrections and refusals?",
-      "What has the Council got wrong so far, and where is it recorded?",
-    ],
-  },
-  {
-    test: /^\/library/,
-    asks: [
-      "What is published in the library about the measurement method and reproducibility?",
-      "Which materials are under an open licence I can cite?",
-    ],
-  },
-  {
-    test: /^\/regulators/,
-    asks: [
-      "What is published for regulators — crosswalks and frozen provisions?",
-      "What does the Council refuse to certify or decide for supervisory readers?",
-    ],
-  },
-  {
-    test: /^\/insurers/,
-    asks: [
-      "What on the live board is safe for an insurer to rely on today?",
-      "Which cells are explicitly empty and must not be underwritten?",
-    ],
-  },
-  {
-    test: /^\/benchmarks/,
-    asks: [
-      "Which measured results on this page name a published artefact, and which are empty?",
-      "What does a loss on this page mean, and where is it recorded?",
-    ],
-  },
-  {
-    test: /^\/instrument/,
-    asks: [
-      "What do the four lenses actually run, and what stays out of the verdict path?",
-      "How does the instrument differ from the living board?",
-    ],
-  },
-  {
-    test: /^\/workbench/,
-    asks: [
-      "What can the workbench run today, and what does it explicitly not certify?",
-      "Which artefacts on this desk are signed, and how do I verify one?",
-    ],
-  },
-  {
-    test: /^\/dashboard\?tab=cards/,
-    asks: [
-      "Which published card families can the verifier check, and what remains UNCHECKABLE?",
-      "How do I verify a supported card against its pinned family key?",
-    ],
-  },
-  {
-    test: /^\/dashboard\?tab=standards/,
-    asks: [
-      "What does GET /api/regulation say moved, and what is its source?",
-      "Which recorded deltas are in force versus deferred?",
-    ],
-  },
-  {
-    test: /^\/crosswalk/,
-    asks: [
-      "What does this crosswalk map, and why is it not a signed score?",
-      "Which frameworks are named here, and which cells stay empty?",
-    ],
-  },
-  {
-    test: /^\/(dashboard\?tab=tools|mcp$)/,
-    asks: [
-      "What MCP servers are published here, and how do I connect one without treating it as a certificate?",
-      "Which entries are only catalogued and which runtimes have actually been observed?",
-    ],
-  },
-  {
-    test: /^\/(start|enterprise)/,
-    asks: [
-      "What does enterprise measurement actually run, and what does the result attest?",
-      "What does a completed assessment explicitly NOT say about our system?",
-    ],
-  },
+  { test: /^\/pricing|^\/plans/, asks: [Q.x402, Q.ourServer] },
+  { test: /^\/honesty/, asks: [Q.wrong, Q.claims] },
+  { test: /^\/library/, asks: [Q.index, Q.cards] },
+  { test: /^\/regulators/, asks: [Q.art50, Q.art53] },
+  { test: /^\/insurers/, asks: [Q.which, Q.reserve] },
+  { test: /^\/benchmarks/, asks: [Q.which, Q.ties] },
+  { test: /^\/instrument/, asks: [Q.index, Q.boardNow] },
+  { test: /^\/workbench/, asks: [Q.cards, Q.ourServer] },
+  { test: /^\/dashboard\?tab=cards/, asks: [Q.cards, Q.root] },
+  { test: /^\/dashboard\?tab=standards/, asks: [Q.dora, Q.cra] },
+  { test: /^\/crosswalk/, asks: [Q.art50, Q.governance] },
+  { test: /^\/(dashboard\?tab=tools|mcp$)/, asks: [Q.mcpCensus, Q.ourServer] },
+  { test: /^\/(start|enterprise)/, asks: [Q.ourServer, Q.which] },
 ];
 
 /**
@@ -328,11 +176,26 @@ export function asksFor(pathname: string, audience: string, limit = 4): string[]
  * audience gets a link (an unmapped audience renders no door, not a dead one).
  */
 export const AUDIENCE_DOORS: Record<string, { href: string; label: string }> = {
-  regulator: { href: "/for/regulator", label: "Open the regulator door" },
-  insurer: { href: "/insurers", label: "Open the insurer rail" },
+  regulator: { href: "/for/regulator", label: "Open the page for regulators" },
+  insurer: { href: "/insurers", label: "See what insurers can rely on" },
 };
 
 /** Total questions in the registry — quoted in the UI, computed, never typed. */
 export const ASK_COUNT =
   Object.values(BY_AUDIENCE).reduce((n, a) => n + a.length, 0) +
   BY_ROUTE.reduce((n, r) => n + (typeof r.asks === "function" ? r.asks("/for/regulator").length : r.asks.length), 0);
+
+/** Every question the registry can suggest (persona doors expanded for each published persona),
+ *  de-duplicated. asks.test.ts runs each through the router. */
+export function allAsks(): string[] {
+  const out = new Set<string>();
+  for (const list of Object.values(BY_AUDIENCE)) list.forEach((q) => out.add(q));
+  for (const r of BY_ROUTE) {
+    const lists =
+      typeof r.asks === "function"
+        ? ["regulator", "enterprise", "finance", "healthcare", "startup", "sec-filer"].map((p) => (r.asks as (path: string) => string[])(`/for/${p}`))
+        : [r.asks];
+    for (const list of lists) list.forEach((q) => out.add(q));
+  }
+  return [...out];
+}

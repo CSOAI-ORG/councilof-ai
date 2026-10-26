@@ -4,6 +4,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { Router } from "wouter";
 import { describe, expect, it } from "vitest";
 import PayEveryDoor, { DoorCard, Index402Cell, OutcomeLine, SettleCell } from "./PayEveryDoor";
+import { WalletState } from "@/components/lobby/LobbyArt50Pane";
 import {
   DELIST_RISK_DAYS,
   THE_LINE,
@@ -191,6 +192,26 @@ describe("every outcome renders as itself", () => {
     expect(withReceipt).not.toContain('data-testid="pay-with-wallet"');
     const without = card({ kind: "delivered", paymentResponse: null, settlement: null });
     expect(without).toContain("Delivery is not proof of settlement");
+  });
+
+  it("DELIVERED keeps what was bought: the signed record's id, a download, the free check and My results", () => {
+    const sha = "ab".repeat(32);
+    const html = card({
+      kind: "delivered",
+      paymentResponse: null,
+      settlement: null,
+      body: { schema: "csoai.art50.marking-evidence/0.1", card: { payload: { kind: "k" }, sha256: sha, sig_ed25519: "cd".repeat(64) } },
+    });
+    expect(html).toContain('data-testid="pay-delivered-record"');
+    expect(html).toContain("a signed record, id");
+    expect(html).toContain(sha);
+    expect(html).toContain("Download what was delivered (JSON)");
+    expect(html).toContain('href="/gspc-verify?seed=mine"');
+    expect(html).toContain('href="/dashboard?tab=mine"');
+    // a body with no signed record says so instead of inventing one
+    const plain = card({ kind: "delivered", paymentResponse: null, settlement: null, body: { totals: {} } });
+    expect(plain).toContain("carries no signed record to check");
+    expect(plain).not.toContain("gspc-verify?seed=mine");
   });
 
   it("WRONG NETWORK names the chain the challenge requires", () => {
@@ -400,8 +421,33 @@ describe("/pay-all is wired like every other current page", () => {
     // Effects do not run in a static render, so the manifest is unread here; the page must not
     // claim the door is missing before it has read the list.
     expect(one).not.toContain('data-testid="pay-deep-link"');
-    expect(strip(pageSource)).toContain("selectDoor(doors, wanted)");
+    // doorForLink (lib/payEveryDoor) is selectDoor plus "a declared route with its own query pays that
+    // resource"; a route the manifest does not declare still selects nothing (payEveryDoor.test.ts).
+    expect(strip(pageSource)).toContain("doorForLink(doors, wanted)");
     expect(strip(pageSource)).toContain("Show every door");
     expect(strip(pageSource)).toContain("the manifest does not declare");
+  });
+});
+
+describe("a paid retry that fails after sending reads 'may have settled', never 'not paid' (7 Oct 2026)", () => {
+  const state = {
+    kind: "maybe-settled" as const,
+    detail: "the paid retry answered HTTP 500: paid_not_delivered",
+    settlement: { transaction: `0x${"ab".repeat(32)}`, network: "eip155:8453", payer: null, success: true },
+    refund: "Email nicholas@csoai.org with the transaction or reference below.",
+  };
+  it("/pay-all: PAYMENT MAY HAVE SETTLED, the transaction and the refund path; no NOT SETTLED", () => {
+    const html = renderToStaticMarkup(<OutcomeLine state={state} />);
+    expect(html).toContain("PAYMENT MAY HAVE SETTLED.");
+    expect(html).toContain("Check your wallet");
+    expect(html).toContain(state.settlement.transaction);
+    expect(html).toContain(state.refund);
+    expect(html).not.toMatch(/NOT SETTLED|Not paid/);
+  });
+  it("the art50 wallet pane says the same, never 'Not paid'", () => {
+    const html = renderToStaticMarkup(<WalletState state={state} />);
+    expect(html).toMatch(/Payment may have settled/);
+    expect(html).toContain(state.refund);
+    expect(html).not.toMatch(/Not paid/);
   });
 });

@@ -1,0 +1,604 @@
+{
+  "schema": "csoai.correction-watch/0.1",
+  "kind": "watcher-receipt",
+  "generated_at": "2026-09-17T14:28:37.515625+00:00",
+  "rule": "Correction propagation is standing. Each correction is scanned for stale_days and known citers. Denominators are named; ratios without denominator are not quoted.",
+  "corrections_total": 58,
+  "signature_state": "STALE",
+  "fix_requires_note": "estate signing key (not in repo)",
+  "oldest_stale_days": 4,
+  "scans": [
+    {
+      "id": "C-2026-0917-01",
+      "first_observed_at": "2026-09-17T04:30Z",
+      "stale_days": 0,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "public/interop/ots/manifest.json claimed 566 OpenTimestamps proofs, every row asserting state PENDING_BITCOIN_CONFIRMATION. Checked by deserialising each file it named, NONE of the 566 was a proof: each was a calendar response fragment saved under the .ots extension. A row asserting that a stamp exi",
+      "why_it_was_wrong": "The manifest was generated from a list of files something intended to stamp rather than from the bytes on disk. Nothing read the files back. An .ots extension is itself a claim that the bytes are a timestamp, and the manifest repeated that claim 566 times without checking it once.",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0917-02",
+      "first_observed_at": "2026-09-17T04:50Z",
+      "stale_days": 0,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "Every public surface councilof.ai serves answers HTTP 403 to a plain standard-library HTTP client while answering normally to a browser. Measured 17 September 2026: 21 of 21 published URLs, including /.well-known/did.json, /.well-known/agent-card.json, /.well-known/x402.json, robots.txt and llms.txt",
+      "why_it_was_wrong": "A Cloudflare Browser Integrity Check at the zone level rejects requests by client signature, returning error 1010. It was enabled for the website and silently covered the API and the well-known paths beneath it. An earlier check of ours missed it because we tested user-agent strings through curl rat",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0916-03",
+      "first_observed_at": "2026-09-16T12:38Z",
+      "stale_days": 1,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "/interop/swift-measure.json published a per-bank page_state for seventeen banks \u2014 six OK, eight HTTP_404, three HTTP_403 \u2014 in a file whose card was titled around the banks being measured. Eleven of those seventeen URLs are newsroom index pages we chose ourselves (anz.com.au/newsroom/media-releases/2",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0916-02",
+      "first_observed_at": "2026-09-16T10:42Z",
+      "stale_days": 1,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "Three files published at /interop/ots/ as OpenTimestamps proofs were not OpenTimestamps proofs. swift-measure.ots, cobol-measure.ots and stablecoins-extended.ots carried no .ots magic header and python-opentimestamps rejects each with BadMagicError. The manifest beside them (csoai.ots-manifest/0.1) ",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0916-01",
+      "first_observed_at": "2026-09-16T09:47Z",
+      "stale_days": 1,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "Two outbound emails on 16 September (to DBTA and Nieman Lab, 05:35-05:36Z) corrected an earlier figure for the supersession ledger from 953 to 841 rows and asked the recipients to use 841. At that moment the live file https://councilof.ai/interop/mill-cards-signed/SUPERSEDED.jsonl did read 841 lines",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0915-01",
+      "first_observed_at": "2026-09-15T07:30Z",
+      "stale_days": 2,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "On GET /api/gspc, the governance axis's historical_measurement_record.note said the tuned governance specialist \"leads AND the lead is separated (McNemar p=0.0086 vs best base mistral:7b) \u2014 one of only 4 separated leads on the board\". The same payload read governance.separation UNTESTED, totals.sepa",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0914-03",
+      "first_observed_at": "2026-09-14T10:54Z",
+      "stale_days": 3,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "The wrapper-parity roster pointed usdt0:arbitrum and usdt0:optimism at 0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627 and usdt0:ethereum at 0x48C04ed50508680b93561a5800E97e24C05e639F. None of these is a USDT0 token contract. Three public.notice cards signed under did:web:csoai.org#board-attestation-1 an",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0914-02",
+      "first_observed_at": "2026-09-14T10:37Z",
+      "stale_days": 3,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "On GET /api/gspc, the reserve-attestation axis note said '1 PASS, 6 FAIL, 9 UNCHECKABLE'. The evidence file it cites, /interop/financial-measure-run-reserve-attestation.json (as_of 2026-09-07T11:30:35Z), tallies 3 PASS, 4 FAIL, 9 UNCHECKABLE; 1/6/9 is the custody-disclosure tally. The regulatory-fra",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0914-01",
+      "first_observed_at": "2026-09-14",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "44 signed third-party Hub measurement cards on the swarm axis (#2321, merged 2026-09-14T08:29Z, and #2330, 09:41Z; runs gha-34818995409 and gha-34824895140) were graded by a prompt that could not be answered wrongly. The frozen bank csoai/gspc-swarm (revision e8a4ec1e, sha256 ab318986\u2026) is keyword-g",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0913-01",
+      "first_observed_at": "2026-09-12T16:35Z",
+      "stale_days": 4,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "scripts/erc8004_census.py (merged in #2020, 2026-09-12T15:38Z) reported 8 ERC-8004 Identity Registry registrations on Ethereum. The true count at the same floor-to-head range is 50,783. Cause: rpc.flashbots.net serves a silently incomplete historical log index \u2014 it returned well-formed empty results",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0912-01",
+      "first_observed_at": "2026-09-12",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "The live SwarmBench v2b row claimed a statistically separated qwen2.5:7b leader by comparing a stated 0.384 lower bound with a 0.372 upper bound for mistral:7b. The signed candidate cards show qwen3:4b at 0.4070 and qwen2.5:1.5b at 0.4000, both ahead of mistral:7b at 0.1481, so mistral was not the r",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0905-02",
+      "first_observed_at": "2026-09-05",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "26 SWIFT rail cards were published under public/interop/swift-signed-2026-09/ as signed-swift-<bank>.json with a populated sig_ed25519 field and signed_at timestamp. The field held base64(sha256(card)), not a signature; sig_algo said SHA256-placeholder and the index said the same. A relying party re",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0905-03",
+      "first_observed_at": "2026-09-05",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "Three public endpoints turned a source they could not read into a number, and two of them published a figure that was wrong while they did it. (1) /api/hub-cards fans out to four Hub index files and totalled whatever came back. Two of the four were answering nothing to the Worker, and both held ONLY",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0905-04",
+      "first_observed_at": "2026-09-05",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "Six public manifests under /interop advertised 36 endpoint references that do not exist: custom-gpt-bridge.json told Custom GPTs to POST /api/measure, /api/verify and /api/xrpl/evidence; chatgpt-features-finish.json listed 14 'features' (/api/voice, /api/vision, /api/calendar, /api/email, ...) each ",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0905-05",
+      "first_observed_at": "2026-09-05",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "A merged commit and its PR (#1321) stated that a confirmed x402 settlement never reached the revenue ledger: \"a real payment settled and the ledger never saw it\". That is false. The settlement WAS recorded. The reading behind the claim was taken 6 seconds after the settle, and Cloudflare KV list ope",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0906-01",
+      "first_observed_at": "2026-09-06",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "CSOAI-ORG/proofof-ai-mcp shipped detect_deepfake_image with a substring-blacklist path check ('/etc/', '/var/', '..'). A blacklist is not a boundary: any path outside the list, and any symlink into a listed directory, was readable \u2014 a Local File Inclusion. A security researcher reported it on 2026-0",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0905-01",
+      "first_observed_at": "2026-09-05",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "The ONE root (public/root.json) is documented as republished hourly. Between 2026-09-02T04:14Z (last successful public-root run) and 2026-09-03T06:20Z (first successful run after GitHub reinstated Actions on the CSOAI-ORG account) it was not republished at all: the hourly runs from 05:14Z to 19:58Z ",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0903-01",
+      "first_observed_at": "2026-09-03",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "The Layer-0 ceremony artifact (/interop/layer0-ceremony-2026-09-03.json, v0.2) listed /api/intoto as one of 15 machine rails, recorded it as returning 404, and explained the 404 as 'the handler exists in master but is inside an undeployed window'. There is no handler. functions/api/intoto.ts exports",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0902-09",
+      "first_observed_at": "2026-09-02",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "After C-2026-0902-08, live GET /api/gspc and /api/state headlines were 22 axis \u00b7 22 measured, but public/signed/gspc-board.signed.json was still the earlier 22/15/7 freeze, so signed_snapshot_agrees stayed false and the snapshot was labelled do-not-file.",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0902-08",
+      "first_observed_at": "2026-09-02",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "/api/state quoted public/signed/gspc-board.signed.json totals (22 slots \u00b7 15 measured \u00b7 7 empty) as the number to file, and said that when that snapshot disagreed with live /api/gspc neither figure was quotable. Live GET /api/gspc (and the committed axis arrays it derives from) is 22 axis \u00b7 22 measu",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0902-10",
+      "first_observed_at": "2026-09-02",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "The published verification rule (/signed/HOW-TO-VERIFY.md and HOW-TO-VERIFY-ROOT.md) did not state that a verifying signature says nothing about whether the signing key is still valid. A reader verifying with yesterday's trust anchor would get the same VALID verdict after a revocation this morning, ",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0902-07",
+      "first_observed_at": "2026-09-02",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "On 2026-08-28 a commit edited the text of a signed card in place (public/signals/cross-border-card.signed.json, field measured_axes: the 18 Aug count was replaced with a pointer to the live count) without re-signing. The content_id no longer derived and the Ed25519 signature no longer verified \u2014 a s",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0902-01",
+      "first_observed_at": "2026-09-02",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "The Switchboard research brief recorded OUSG's XRPL domain check as unverified (directory only) while GET /api/xrpl showed it bidirectional with a signature.",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0902-02",
+      "first_observed_at": "2026-09-02",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "A secondary planning state file attributed USDB to Bitstamp. USDB is issued by Braza Bank (issuer address rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc).",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0902-03",
+      "first_observed_at": "2026-09-02",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "The OpenAI incident post-mortem was cited as 37 pages by one source and 38 by an internal state file.",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0902-04",
+      "first_observed_at": "2026-09-02",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "GPAI Code of Practice signatory counts differed: 26 per the Commission's 1 Aug 2025 list versus '28 frozen' in secondary sources.",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0902-05",
+      "first_observed_at": "2026-09-02",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "One playbook stated 2 Feb 2027 as the Article 50 detector-interoperability date as fact; a market-map brief records it as unsettled.",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0902-06",
+      "first_observed_at": "2026-09-02",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "councilof.ai states a \u00a35M professional-indemnity policy while the Series A pack's infrastructure-gaps sheet says insurance is unknown. One of them is wrong in a data room.",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0826-12",
+      "first_observed_at": "2026-08-26",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "The board attestation's sig_input was ambiguous, and the ambiguity was live rather than theoretical. It read \"canonical JSON (recursively sorted keys, no whitespace) of this payload with the site_attestation field removed\" \u2014 six words that do not pin a preimage. The natural first reading in a Python",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0826-11",
+      "first_observed_at": "2026-08-26",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "The public MCP `measure` tool returned ok:true for every subject, including subjects that do not exist. Passing a nonsense model name produced {\"ok\":true,\"claim\":\"measurement\",\"subject\":\"<the nonsense name>\"} with a note explaining that nothing had actually been measured. No measurement ran, no axes",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0826-10",
+      "first_observed_at": "2026-08-26",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "The jail axis published a dataset_url that is not a URL, directly beneath a note asserting that every such URL is fetchable. The axis's `dataset` field \u2014 an identifier field, resolved to a link by string concatenation against https://huggingface.co/datasets/ \u2014 held a prose sentence: \"published: csoa",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0826-09",
+      "first_observed_at": "2026-08-26",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "We published recall: null for council-inhouse-ft on the jail axis where the measured value is 0.0. That model has tp=0 and fn=38, so recall = tp/(tp+fn) = 0/38 = 0.0 \u2014 defined, measured, and the single most damaging number on the axis: our own fine-tune detected zero of 38 escapes. null reads as NOT",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0826-08b",
+      "first_observed_at": "2026-08-26",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "The living_stamp was presented as a valid attestation and cannot be checked by anyone. It shipped signed: true and a sig_input recipe, rendering exactly like the two attestations on this site that do verify. It does not verify. Three faults compound: TWO different signatures are published for one st",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0826-07b",
+      "first_observed_at": "2026-08-26",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "The claims register described bytes that do not exist. CR-002 gave as its evidence \"Cards declare timestamp_authority: 'none'\". Zero of the 150 published cards contain that field; the string \"timestamp\" appears in no card, not in card_index.json and not in the cross-border card. The substance was ho",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0826-06b",
+      "first_observed_at": "2026-08-26",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "/claims-register announced \"20 claims\" and rendered 19, immediately beneath its own sentence \"This page renders that exact file \u2014 there is no second copy to drift.\" The header printed claims.length while the sections were built from a hardcoded four-status order \u2014 live, devnet, planned, retired \u2014 an",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0826-08",
+      "first_observed_at": "2026-08-26",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "For twelve days the verify page told strangers to pin a signing key that does not exist. The page's authorship note named a published key by an eight-character fingerprint beginning f4b4278d. That fingerprint matches none of the four keys in our DID document, not the card-attestation key the 150 boa",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0826-07",
+      "first_observed_at": "2026-08-26",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "Our own published verifiers rejected our own genuine cards, and our tamper detector rendered its failure in green. Three separate defects on the one surface whose entire purpose is that a stranger does not have to take our word for anything. First, the single-record verifier on the verify page hashe",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0826-06",
+      "first_observed_at": "2026-08-26",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "We repeated a human-versus-machine benchmark contrast without checking whether both sides were scored under the same rule. The metrology deck cites the ARC Prize project's ARC-AGI-3 result \u2014 a human panel solving essentially all environments while frontier systems average well under one percent. The",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0826-05",
+      "first_observed_at": "2026-08-26",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "Two published index artifacts claimed a measurement they did not have. /interop/ai-economy-index.v0.1.json and /interop/human-labour-index.v0.1.json each carry a status label of MEASURED-INDEX-v0.1, while each also states in its own body that half its input components are bank gaps and that no index",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0826-04",
+      "first_observed_at": "2026-08-26",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "The public board contradicted the estate's own ruling for two days. An owner ruling of 2026-08-24 set the canonical axis count at 22 (14 behavioural + 8 financial/domain), but GET /api/gspc kept reporting '14 measured of 14 quotable' because the 8 financial axes existed only in the ruling and in a s",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0826-03",
+      "first_observed_at": "2026-08-26",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "Our own published MCP fleet was silently paywalled and self-scoring. A monetization layer injected into 318 of 363 vendored servers capped the ENTIRE fleet at 10 anonymous tool calls per day from one shared counter; past that, every tool returned a purchase link instead of a result. The injected cod",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0826-02",
+      "first_observed_at": "2026-08-26",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "Five sector pages asserted, in present tense, that our measurement 'is recognised under mutual recognition agreements with' CISA, NCSC, ANSSI, BSI, BEREC, ENISA, national transport authorities and others \u2014 named public bodies, implying an endorsement we do not hold. It shipped in the deployed bundle",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0826-01",
+      "first_observed_at": "2026-08-26",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "Our own prerender verification could not observe failure. prerender-report.json records a failed route in a field named 'err', but every check in the repository read 'errored' \u2014 a field that has never existed. A run in which the browser died on 515 of 581 routes reported '0 errored' and looked clean",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0819-01",
+      "first_observed_at": "2026-08-19",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "Three public surfaces stated three different item counts at once (llms.txt 819, agent card 890, live API 966). The banks grew under the hardcoded numbers.",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0819-02",
+      "first_observed_at": "2026-08-19",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "The public board API payload carried internal specialist identifiers \u2014 an internal specialist-id prefix \u2014 a banned-vocabulary string inside a machine contract, not just a human page. (The prefix itself is redacted here: naming it would re-leak the string this entry records as removed.)",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0819-03",
+      "first_observed_at": "2026-08-19",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "The single-record verifier initially checked only one content_id envelope; the carder signs a second (signature-included) generation, so valid carder cards could have read as MISMATCH.",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0819-04",
+      "first_observed_at": "2026-08-19",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "Two open-source repos (carder, codabench-gspc) shipped with no LICENSE file, and the board API payload stated no licence \u2014 while the estate claims openness.",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0819-05",
+      "first_observed_at": "2026-08-19",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "The did:web trust root at csoai.org intermittently served an orphan key document because two repositories deployed the same Cloudflare Pages project with no owner of record.",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0819-06",
+      "first_observed_at": "2026-08-19",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "An hourly API guard asserted endpoints (/api/tools, /api/mcp) that never existed in the repository's functions tree \u2014 a ghost from an older deployment \u2014 so it failed forever.",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0819-07",
+      "first_observed_at": "2026-08-19",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "A banned brand token shipped live on /library as a CamelCase concatenation of the token with 'Training', because a word-boundary regex anchored on the bare token missed the concatenation. Two priced strings ($0.005/card, a per-hour range) also shipped, against the no-pricing rule. (The token itself ",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0819-08",
+      "first_observed_at": "2026-08-19",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "Estate pages described EU AI Act high-risk obligations as in force from 2 August 2026. The Digital Omnibus (Reg (EU) 2026/1744) deferred them to 2 December 2027 (Annex III) and 2 August 2028 (Annex I). Serving the dead date would be our own credibility wound.",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0819-09",
+      "first_observed_at": "2026-08-19",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "Two internally-named datasets remained publicly visible on Kaggle under a banned naming class.",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0819-10",
+      "first_observed_at": "2026-08-19",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "The estate's own date-correction fix (C-08) initially ALSO mis-stated the GPAI date \u2014 a follow-on error that moved GPAI duties from 2 Aug 2025 to 2026 while correcting the high-risk date. A correction that introduces a new error is the worst kind.",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0819-11",
+      "first_observed_at": "2026-08-19",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "mcp.json advertised three server URLs on csoai.org/api/* \u2014 every one returned 404 because the API is served from councilof.ai, and one route (corpus-watch) pointed at a non-existent path.",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0819-12",
+      "first_observed_at": "2026-08-19",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "A measurement wave was queued with sample=24, below the harness's 30-usable-item threshold \u2014 all 8 jobs returned UNMEASURED (honestly, but wasted a full wave).",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0819-13",
+      "first_observed_at": "2026-08-19",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "Two measure-chain daemons ran simultaneously after a restart race, double-logging jobs; the restart script's pkill pattern matched its own command line and killed its own launch.",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0820-01",
+      "first_observed_at": "2026-08-20",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "Multiple live public surfaces (index.html JSON-LD, GSPCVerify, Insurers, AgentRegistry, Methodology, Agents, ProvBench, measure.html, and the provbench pack) stated measurement cards are 'anchored with OpenTimestamps' / RFC-3161 / 'Bitcoin block 954857, independently verifiable' as a present capabil",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    },
+    {
+      "id": "C-2026-0822-01",
+      "first_observed_at": "2026-08-22",
+      "stale_days": null,
+      "fix_requires_count": 0,
+      "fix_requires": [],
+      "what_was_wrong": "The homepage industry grid still said '15-slot instrument' while the scoreboard, API and canon say '14-slot board, 13 measured of 14' (16 GSPC axes, 13 quotable + jail floor per the GSPC ruling). A crawler reading the grid would see 15 slots \u2014 the exact internal-count inconsistency the count-gating ",
+      "why_it_was_wrong": "",
+      "cite_count": 0
+    }
+  ],
+  "verdict": {
+    "all_corrections_scanned": true,
+    "denominator_honest": true,
+    "open_defect_signature_state": true
+  },
+  "disclaimers": [
+    "MEASUREMENT, not CERTIFICATION.",
+    "Audit only. No edits, no signing, no dispatch.",
+    "Propagation re-check across citers requires outbound HTTP. The current watcher records intent per the brief; the next iteration adds the re-check loop."
+  ],
+  "sha256": "dd396c05a4469fc738260bc479b2fa54dbab72d4d1a354023619e17c852644f9",
+  "byte_size": 26650
+}

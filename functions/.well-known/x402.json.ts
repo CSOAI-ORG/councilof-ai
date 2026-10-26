@@ -45,6 +45,7 @@ import FREE_TOOLS from "../mcp/gspc-tools.json";
 import PAID_TOOLS from "../mcp/paid-tools.json";
 import { freshCapsulePaymentRequired, PATH as FRESH_CAPSULE_PATH } from "../api/measurement/fresh-capsule";
 import { FREE_DOOR_PRODUCT_ID, FREE_DOOR_SKU } from "../api/free-door";
+import { headFromGet } from "../api/_head";
 
 /** The SKU tier each door passes to x402Accepts — keyed by the path the door serves. */
 // pathScoped: the door charges its PATH, not the concrete example URL, so a buyer's target never
@@ -198,6 +199,7 @@ export const onRequestGet: PagesFunction<X402Env> = async ({ request, env }) => 
       // endpoint does return the valid list in its 404 body, so the buyer can recover — but a
       // placeholder that names what it wants costs nothing and spends no round trip.
       { method: "GET", url: `${origin}/api/evidence-bundle?obligation=article-50&bundle=1`, paid_for: "assembly",
+        free_preview: `${origin}/api/evidence-bundle?obligation=article-50`,
         description: EVIDENCE_BUNDLE_DESCRIPTION,
         ...req(`${origin}/api/evidence-bundle?obligation=article-50&bundle=1`, EVIDENCE_BUNDLE_DESCRIPTION)  },
       { method: "GET", url: `${origin}/api/signed-data-feed?feed=1`, paid_for: "assembly",
@@ -301,8 +303,10 @@ export const onRequestGet: PagesFunction<X402Env> = async ({ request, env }) => 
     // RAS doors without paying: verifying any receipt, and the daily conformance index. They are
     // not in resources[] because they never answer 402; they carry no accepts[] and no amount.
     free_doors: [
-      { method: "GET", url: `${origin}/api/verify?record_url=https://councilof.ai/signed/card_index.json`, free: true,
-        description: "Verify a published CSOAI record — re-fetches a councilof.ai / csoai.org record, recomputes its sha256 and checks its signature under the pinned board keys. Free forever; POST a RAS receipt to verify it.",
+      // Immutable, supported example from the published signed corpus. The index is a discovery
+      // envelope, not a measurement card; handing it to /api/verify returns UNCHECKABLE.
+      { method: "GET", url: `${origin}/api/verify?record_url=https://councilof.ai/signed/cards/66856aca4a1f9390f0f51d89b8b96d984ab902852ed77b0254730758260ad1da.json`, free: true,
+        description: "Verify a published CSOAI record — this URL verifies a historical measurement-card example dated 2026-08-19. Re-fetches a councilof.ai / csoai.org record, recomputes its sha256 and checks its signature under the pinned keys. Free forever; POST a RAS receipt to verify it.",
         outputSchema: RAS_OUTPUT_SCHEMAS.verify },
       { method: "GET", url: `${origin}/api/x402/index`, free: true,
         description: "Daily x402 conformance index — serves the latest SIGNED daily run when one exists; until then says INDEX_PENDING and points at the latest unsigned census run, never an invented list. Free.",
@@ -343,3 +347,7 @@ export const onRequestGet: PagesFunction<X402Env> = async ({ request, env }) => 
     headers: { "content-type": "application/json; charset=utf-8", "cache-control": "public, max-age=300", "access-control-allow-origin": "*" },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

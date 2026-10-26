@@ -61,7 +61,6 @@ const PAGES = [
   "/trust-center/",
   "/network/",
   "/distribution/",
-  "/intel/",
   "/hive/",
   "/methodology/",
   "/honesty/",

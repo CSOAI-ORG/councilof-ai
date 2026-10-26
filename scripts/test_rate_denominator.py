@@ -27,8 +27,17 @@ import json, pathlib, sys
 from typing import Any
 
 # Keys that look like "rates" — these need a sibling denominator.
+# Word-boundary semantics (fixed 2026-10-07): the brief says "*_rate". A bare
+# substring match false-positived on "operate_" (we_operate_a_ts contains
+# "rate_"). A rate key now requires 'rate' as a whole underscore-token:
+# accuracy_rate ✓ rate_foo ✓ we_operate_a_ts ✗.
 RATE_KEY_PATTERNS = ("_rate", "rate_")
 COUNT_KEY_PATTERNS = ("_n", "count", "denominator", "graded_n", "graded", "n=", "attempts", "item_count")
+
+
+def _is_rate_key(kl: str) -> bool:
+    """True iff 'rate' appears as a whole token in the underscore-split key."""
+    return "rate" in kl.split("_")
 
 
 def find_rate_keys(d: dict, path: str = "") -> list[str]:
@@ -37,10 +46,17 @@ def find_rate_keys(d: dict, path: str = "") -> list[str]:
         return
     for k, v in d.items():
         kl = k.lower() if isinstance(k, str) else ""
-        if any(p in kl for p in RATE_KEY_PATTERNS) and isinstance(v, (int, float)):
+        if _is_rate_key(kl) and isinstance(v, (int, float)):
             yield (f"{path}.{k}" if path else k)
         elif isinstance(v, dict):
             yield from find_rate_keys(v, f"{path}.{k}" if path else k)
+        elif isinstance(v, list):
+            # Walk list items too (fixed 2026-10-07: the FAIL-nested-without-count
+            # control never fired because configs [...] is a list — a guard that
+            # cannot fire is decoration).
+            for i, item in enumerate(v):
+                if isinstance(item, dict):
+                    yield from find_rate_keys(item, f"{path}.{k}[{i}]" if path else f"{k}[{i}]")
 
 
 def has_sibling_count(d: dict, key: str) -> bool:
@@ -56,15 +72,35 @@ def has_sibling_count(d: dict, key: str) -> bool:
 
 
 def find_parent(path: str, root: dict) -> dict | None:
-    """Walk the path from root to the dict containing the rate key."""
+    """Walk the path from root to the dict containing the rate key.
+    Handles list-index segments like configs[0] (fixed 2026-10-07)."""
     parts = path.split(".")
     cur = root
     for p in parts[:-1]:
+        # A segment may carry list indices: key[0][1]
+        while "[" in p:
+            k, rest = p.split("[", 1)
+            idx_s, rest = rest.split("]", 1)
+            if k:
+                if isinstance(cur, dict) and k in cur:
+                    cur = cur[k]
+                else:
+                    return None
+            if isinstance(cur, list):
+                try:
+                    cur = cur[int(idx_s)]
+                except Exception:
+                    return None
+            else:
+                return None
+            p = rest
+        if not p:
+            continue
         if isinstance(cur, dict) and p in cur:
             cur = cur[p]
         else:
             return None
-    return cur
+    return cur if isinstance(cur, dict) else None
 
 
 def check(artifact: dict) -> list[dict]:
@@ -152,7 +188,8 @@ def main() -> int:
     tests.append(test_6_real_artifact_paired_arm())
 
     n_pass = sum(1 for _, ok in tests if ok)
-    n_defect_finding = sum(1 for n, ok in tests if "FAIL" in n and not ok)  # intentional defect-finding tests
+    # A defect-finding test (scenario name starts FAIL-) PASSES when the checker fires.
+    n_defect_finding = sum(1 for n, ok in tests if n.startswith("FAIL") and ok)
     n_real_pass = sum(1 for n, ok in tests if n.startswith("real-") and ok)
 
     print("=== test_rate_denominator — DONE WHEN C proof ===")

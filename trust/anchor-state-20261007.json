@@ -1,0 +1,101 @@
+{
+  "schema": "csoai.anchor-state/0.1",
+  "kind": "anchor-state-snapshot",
+  "snapshot_date": "2026-10-07T12:00:00Z",
+  "branch": "trust/anchor-completion-20260911-v2",
+  "live_root": {
+    "url": "https://councilof.ai/root.json",
+    "sha256": "f1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e",
+    "bytes": 25513,
+    "merkle_root": "47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d",
+    "card_count": 319,
+    "as_of": "2026-09-30T05:05:34Z",
+    "kind": "csoai.public-root/v1"
+  },
+  "corpus_scope": {
+    "relationship": "SEPARATE_CORPORA",
+    "public_root_count": 319,
+    "public_root_sha256": "f1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e",
+    "signed_card_count": 335,
+    "signed_card_id_overlap": 0,
+    "ots_covers": "PUBLIC_ROOT_BYTES_ONLY"
+  },
+  "signature": {
+    "did": "did:web:csoai.org#board-attestation-1",
+    "key_type": "JsonWebKey2020",
+    "field": "sig_ed25519",
+    "sig_bytes": 96,
+    "preimage_fields": ["kind", "schema", "as_of", "merkle_root", "card_count", "did_intended"],
+    "preimage_canonical": "JSON sorted keys, separators (',',':'), ensure_ascii=false, UTF-8",
+    "preimage_sha256": "091319dd66ca32c37a7709fd9d33dc4a1ff5c5d17c3e2d2f24896eae79cd7ce3",
+    "preimage_bytes": 274,
+    "verified_against_did_json": true,
+    "local_crypto_verify": "INCONCLUSIVE_96_BYTE_FORMAT"
+  },
+  "witnesses": {
+    "rekor": {
+      "status": "WITNESSED",
+      "uuid": "108e9186e8c5677a60f8e5499012cdd18803397ac53087e7f71bb4ae1685a7fd44516d84d6064121",
+      "logIndex": 3012420819,
+      "integratedTime": 1790744735,
+      "logID": "c0d23d6ad406973f9559f3ba2d1ca01f84147d8ffc5b8445c224f98b9591801d",
+      "url": "https://rekor.sigstore.dev/api/v1/log/entries?logIndex=3012420819",
+      "entry_file": "https://councilof.ai/interop/rekor-root-f1913eca.json",
+      "type": "rekord/x509 over the preimage bytes with the board signature",
+      "verified_live": true
+    },
+    "ots": {
+      "status": "CONFIRMED_BITCOIN",
+      "path": "public/interop/root-f1913eca.json.ots",
+      "url": "https://councilof.ai/interop/root-f1913eca.json.ots",
+      "proof_sha256": "6ac9dd07d8b59b6a830b5056b2395c29b1ada411e97a3dab5a4d5fc987f5fac8",
+      "subject_sha256": "f1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e",
+      "observed_at": "2026-10-01T08:25:24Z",
+      "scope": "PUBLIC_ROOT_BYTES_ONLY",
+      "bitcoin_blocks": [969264, 969266, 969288, 969296],
+      "bitcoin_header": {
+        "height": 969264,
+        "block_hash": "000000000000000000018f2b886dd05a870b86fb96e3902fbe20c2241d4ef216",
+        "block_time_unix": 1790745509,
+        "block_time": "2026-09-30T05:18:29Z",
+        "source_agreement": "BLOCKSTREAM_MEMPOOL_BYTE_IDENTICAL"
+      },
+      "local_verify": {
+        "ots_embedded_msg_matches_subject": true,
+        "ots_file_sha256_matches_witness": true
+      }
+    },
+    "eas_base": {
+      "status": "NOT_YET",
+      "reason": "no EAS attestation in the append-only log matches this root.json sha256"
+    },
+    "xrpl_memo": {
+      "status": "NOT_YET",
+      "reason": "needs a funded XRPL account (owner); one memo tx carrying sha256(root.json)"
+    }
+  },
+  "conflict": {
+    "status": "NONE",
+    "sidecars_scanned": 52,
+    "conflicts": [],
+    "byte_variants": []
+  },
+  "repo_vs_live_delta": {
+    "repo_witness_as_of": "2026-09-11T08:45:26Z",
+    "repo_root_sha256": "62a1931b4fdfd7351b3baa14354ccef068a9996592b199d2a862149a7dfaedc6",
+    "repo_merkle_root": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5",
+    "repo_card_count": 167,
+    "repo_ots_status": "STAMPED_PENDING_BITCOIN",
+    "delta_cards": 152,
+    "delta_bytes": 11095,
+    "ots_status_change": "STAMPED_PENDING_BITCOIN -> CONFIRMED_BITCOIN"
+  },
+  "honest_gaps": [
+    "Ed25519 96-byte sig format non-standard; binding scheme undocumented",
+    "EAS base: NOT_YET",
+    "XRPL memo: NOT_YET",
+    "Zenodo DOI 10.5281/zenodo.21991104: BLOCKED since 2026-09-29",
+    "Signed-card corpus (335 cards) outside OTS coverage",
+    "Full OTS chain verification to Bitcoin block headers requires CLI or node"
+  ]
+}

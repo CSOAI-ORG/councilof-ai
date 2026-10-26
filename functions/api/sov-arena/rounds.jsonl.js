@@ -8,6 +8,7 @@
 //
 // Honesty discipline: 503 + plain statement when empty/unbound — a design-lab
 // serves "no live state", never a fabricated round. Records carry DESIGN work.
+import { headFromGet } from "../_head";
 
 export async function onRequestGet({ env }) {
   if (!env.SOV_ARENA_STATE) {
@@ -39,3 +40,7 @@ export async function onRequestGet({ env }) {
     },
   });
 }
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

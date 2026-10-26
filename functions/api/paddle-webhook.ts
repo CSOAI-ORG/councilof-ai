@@ -13,6 +13,7 @@
  * stored or issued, and no secret is read. Paddle retries non-2xx deliveries, so the webhook
  * destination should also be disabled in the Paddle dashboard (owner action).
  */
+import { headFromGet } from "./_head";
 
 const BODY = {
   schema: "csoai.retired-endpoint/0.1",
@@ -40,3 +41,7 @@ const retired = () =>
 
 export const onRequestGet: PagesFunction = async () => retired();
 export const onRequestPost: PagesFunction = async () => retired();
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

@@ -32,7 +32,7 @@ const PAGE_LD = {
   step: [
     { "@type": "HowToStep", name: "Explore measurements", text: "GET /api/gspc — read the current public measurement board and its honest empty states." },
     { "@type": "HowToStep", name: "See what changed", text: "GET /api/feed.xml — follow published measurement, correction and regulation-change events." },
-    { "@type": "HowToStep", name: "Verify evidence", text: "Verify the Ed25519 signature offline and the card's inclusion in the public Merkle root." },
+    { "@type": "HowToStep", name: "Verify evidence", text: "For a signed measurement card, check its signature; verify inclusion only when a proof is supplied. Other artifact types require their own checks." },
     { "@type": "HowToStep", name: "Access supported feeds", text: "Read /.well-known/x402.json for supported doors and use the canonical MCP endpoint for tool discovery." },
     { "@type": "HowToStep", name: "Commission an output", text: "Optionally: discover → request → 402 → settle (non-self wallet) → receive → verify. Self-settlements and zero-value settlements are recorded but never counted as buyers (/api/revenue settled_usdc.excludes_self)." },
     { "@type": "HowToStep", name: "Correct", text: "If a read is wrong, the correction path is public and the correction is published beside the record." },
@@ -124,16 +124,6 @@ export default function Quickstart() {
   return (
     <section className="min-h-screen bg-slate-50 text-slate-950">
       <Helmet>
-        <title>Agent quickstart — measurements, changes, verification and feeds | Council of AI</title>
-        <meta name="description" content={PAGE_DESCRIPTION} />
-        <meta name="robots" content="index,follow" />
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="Agent quickstart | Council of AI" />
-        <meta property="og:description" content={PAGE_DESCRIPTION} />
-        <meta property="og:url" content={CANONICAL} />
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content="Agent quickstart | Council of AI" />
-        <meta name="twitter:description" content={PAGE_DESCRIPTION} />
         <script type="application/ld+json">{JSON.stringify(PAGE_LD)}</script>
       </Helmet>
 
@@ -184,9 +174,11 @@ export default function Quickstart() {
       <section aria-labelledby="s3" className="mx-auto max-w-4xl px-5 py-10">
         <h2 id="s3" className="text-2xl font-bold">3 · Verify evidence — signature, then inclusion</h2>
         <p className="mt-3 leading-7 text-slate-700">
-          Every deliverable is a card: Ed25519-signed under the published DID key, and either already a leaf of the public Merkle
-          root or staged for the next one. Verify the signature offline, then the leaf against the root the site publishes. A
-          signature proves who signed the bytes; it does not make the read correct — that is what the correction path is for.
+          Start with the artifact type. For a signed measurement card, check its Ed25519 signature with the published DID key.
+          If it has a Merkle inclusion proof, verify that proof against a published root that contains it; a staged card is not
+          yet included. Other deliverables have their own receipts and checks. A valid signature or root protects the record,
+          not the truth of a measurement, so read its evidence and correction history too. An OTS calendar receipt is not a
+          Bitcoin confirmation.
         </p>
         <Code>{`curl -s https://councilof.ai/root.json | jq '{card_count, merkle_root, as_of}'
 curl -s https://councilof.ai/interop/root-witness-pointer.json | jq '.witnesses'   # OTS (Bitcoin) + Rekor`}</Code>
@@ -229,18 +221,24 @@ curl -s -H 'Content-Type: application/json' -H 'Accept: application/json, text/e
         <h2 id="s5" className="text-2xl font-bold">5 · Optional: commission an output</h2>
         <p className="mt-3 leading-7 text-slate-700">
           The whole paid path, in six steps: discover → request → 402 → settle → receive → verify. One worked door is used
-          so every command copy-pastes; any other door in the manifest follows the same steps. Response shapes below come
+          so its commands form one example, not a universal delivery contract. Other doors have product-specific outputs, receipts and retrieval paths. Response shapes below come
           from live calls on 2026-09-14 and are truncated. Amounts and counts are shown as placeholders: the 402 you
-          receive is the only authority on an amount. A settlement of zero is not a purchase.
+          receive is the only authority on an amount, and the amount can change between calls, so read accepts[] each
+          time. A settlement of zero is not a purchase.
         </p>
         <p className="mt-3 rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm leading-6 text-emerald-950">
           Payments from the operator's own wallets are recorded as self-tests and never counted as revenue
           (<code className="font-mono">settled_usdc.excludes_self=true</code> on{" "}
           <a href="/api/revenue" className="underline decoration-emerald-600 underline-offset-4">/api/revenue</a>
           ). The count of outside payers, with self-settlements listed separately, is on that same contract.
-          After settle, fulfillment state is also listed at{" "}
+          Use{" "}
           <a href="/api/commissions" className="underline decoration-emerald-600 underline-offset-4">/api/commissions</a>
-          {" "}(<code className="font-mono">RETRIEVABLE</code> + <code className="font-mono">CARDS_PUBLISHED</code>).
+          {" "}for request-attestation records only; it is not a ledger of all paid products.
+          For other products, retain the response bytes and follow that product's retrieval instructions.
+          An empty or unreadable lookup does not prove failed delivery.
+          Do not make another payment solely because a lookup is empty.
+          Recorded fulfillment states such as <code className="font-mono">RETRIEVABLE</code> or{" "}
+          <code className="font-mono">CARDS_PUBLISHED</code> are not buyer acceptance.
           Machine-readable version of these steps:{" "}
           <a href="/quickstart.json" className="underline decoration-emerald-600 underline-offset-4">/quickstart.json</a>.
         </p>

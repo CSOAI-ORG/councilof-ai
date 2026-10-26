@@ -1,0 +1,118 @@
+{
+  "schema": "csoai.model-measurement/1.0",
+  "generated_at": "2026-10-07T09:00:00Z",
+  "branch": "models/verified-expansion-20260911",
+  "commit": "a0626495",
+  "previous_report": "TUI-3-MODEL-VERIFICATION.md",
+
+  "gspc_board": {
+    "measured_axes": 23,
+    "indexed_only_axes": 0,
+    "total_provisions": 1198,
+    "axes": [
+      { "name": "governance", "provisions": 237, "status": "MEASURED" },
+      { "name": "safety", "provisions": 36, "status": "MEASURED" },
+      { "name": "provenance", "provisions": 32, "status": "MEASURED" },
+      { "name": "continuity", "provisions": 33, "status": "MEASURED" },
+      { "name": "conformance", "provisions": 35, "status": "MEASURED" },
+      { "name": "openness", "provisions": 32, "status": "MEASURED" },
+      { "name": "machinery-conformity", "provisions": 33, "status": "MEASURED" },
+      { "name": "care", "provisions": 199, "status": "MEASURED" },
+      { "name": "cross-reality", "provisions": 32, "status": "MEASURED" },
+      { "name": "detector-interop", "provisions": 33, "status": "MEASURED" },
+      { "name": "art5-safeguard", "provisions": 36, "status": "MEASURED" },
+      { "name": "swarm", "provisions": 37, "status": "MEASURED" },
+      { "name": "affect", "provisions": 41, "status": "MEASURED" },
+      { "name": "jail", "provisions": 71, "status": "MEASURED" },
+      { "name": "effect-binding", "provisions": 261, "status": "MEASURED" },
+      { "name": "provenance-controls", "provisions": 6, "status": "MEASURED" },
+      { "name": "reserve-attestation", "provisions": 16, "status": "MEASURED" },
+      { "name": "regulatory-framework", "provisions": 16, "status": "MEASURED" },
+      { "name": "distribution-integrity", "provisions": 16, "status": "MEASURED" },
+      { "name": "custody-disclosure", "provisions": 16, "status": "MEASURED" },
+      { "name": "ai-adoption-components", "provisions": 2, "status": "MEASURED" },
+      { "name": "labour-components", "provisions": 2, "status": "MEASURED" },
+      { "name": "humanoid-labour-index", "provisions": 8, "status": "MEASURED" }
+    ]
+  },
+
+  "card_corpora": {
+    "mill_signed": { "count": 2872, "signed": "Ed25519", "status": "LIVE" },
+    "public_root": { "count": 319, "signed": "Ed25519", "merkle": true, "status": "LIVE" },
+    "historical_chain": { "count": 335, "signed": "Ed25519", "in_chain": true, "status": "VERIFIED" },
+    "total": 3207,
+    "overlap": 0
+  },
+
+  "on_disk_snapshot": {
+    "chain_positions": 335,
+    "published_bodies": 313,
+    "withheld_bodies": 22,
+    "public_root_cards": 169,
+    "public_root_merkle": "94e99db52a67931aa38ca6b0aa4574c28a600204107b26ad3beef9b9e366e292",
+    "mill_signed_on_disk": 1449,
+    "public_cards": 1725,
+    "crosswalk_intoto_statements": 14,
+    "note": "Branch snapshot numbers; live API numbers differ"
+  },
+
+  "chain_verification": {
+    "algorithm": "Ed25519",
+    "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+    "chain_id": "f154f67cd2db8b2800adf4bb3722c7780c009324d6c87cd277cac030c5ecc2bb",
+    "head": "66856aca4a1f9390f0f51d89b8b96d984ab902852ed77b0254730758260ad1da",
+    "genesis_prev": "GSPC-CARD-FACTORY-GENESIS",
+    "kind": "gspc.card-chain",
+    "valid": 335,
+    "invalid": 0,
+    "state": "VERIFIED"
+  },
+
+  "regulatory_crosswalk": {
+    "frozen_provisions": 417,
+    "published_regimes": 4,
+    "instruments": {
+      "EU AI Act": { "provisions": 126, "authority": "European Commission / NCAs", "binding": "BINDING_LAW" },
+      "GDPR": { "provisions": 99, "authority": "National DPAs / EDPB", "binding": "BINDING_LAW" },
+      "NIS2": { "provisions": 46, "authority": "National cybersecurity authorities", "binding": "BINDING_LAW" },
+      "DORA": { "provisions": 64, "authority": "Financial supervisory authorities", "binding": "BINDING_LAW" },
+      "Cyber Resilience Act": { "provisions": 71, "authority": "Market surveillance authorities", "binding": "BINDING_LAW" },
+      "CSRD": { "provisions": 11, "authority": "National accounting authorities", "binding": "BINDING_LAW" }
+    },
+    "nist_rmf_functions": {
+      "GOVERN": { "axes": ["governance", "art5-safeguard", "openness"], "status": "MEASURED" },
+      "MAP": { "axes": ["provenance", "cross-reality", "detector-interop"], "status": "MEASURED" },
+      "MEASURE": { "axes": ["safety", "care", "affect", "jail"], "status": "MEASURED" },
+      "MANAGE": { "axes": ["conformance", "continuity", "machinery-conformity", "swarm"], "status": "MEASURED" }
+    },
+    "unmapped_new_axes": [
+      "effect-binding", "provenance-controls", "reserve-attestation",
+      "regulatory-framework", "distribution-integrity", "custody-disclosure",
+      "ai-adoption-components", "labour-components", "humanoid-labour-index"
+    ]
+  },
+
+  "trust_chain": {
+    "card_signature": "VERIFIED",
+    "merkle_root": "VERIFIED",
+    "rekor_witness": "WITNESSED",
+    "rekor_log_index": 2791822965,
+    "ots_submission": "STAMPED_PENDING_BITCOIN",
+    "bitcoin_confirmation": "NOT_YET"
+  },
+
+  "corrections_ledger": {
+    "status": "ACTIVE",
+    "feed": "public/interop/corrections-feed.json",
+    "feed_entries": 10,
+    "badger_queue_entries": 309,
+    "latest_entries": "2026-10-06"
+  },
+
+  "blockers": [
+    "OTS → Bitcoin: STAMPED_PENDING_BITCOIN, no Bitcoin confirmation yet",
+    "NIST submission: prepared but NOT submitted, owner approval gate required",
+    "9 new axes not yet mapped to NIST AI RMF functions",
+    "9 new axes missing in-toto crosswalk attestation statements"
+  ]
+}

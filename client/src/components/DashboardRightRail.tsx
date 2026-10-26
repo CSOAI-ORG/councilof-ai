@@ -6,9 +6,17 @@ import type { LobbyChat } from "@/components/lobby/useLobbyChat";
 import { readWorkspaceName, useActivity } from "@/components/lobby/workspace";
 import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useSearch } from "wouter";
+import { Link, useSearch } from "wouter";
+import type { ActivityEntry } from "@/components/lobby/workspace";
 
 type RailTab = "workspace" | "tasks" | "chats";
+
+/** Plain words for each activity kind (the raw kind ids were printed here before). */
+const ACTIVITY_WORD: Record<ActivityEntry["kind"], string> = {
+  ask: "Asked",
+  pane: "Opened",
+  route: "Opened page",
+};
 type ChatView = "conversation" | "history";
 
 /**
@@ -179,26 +187,39 @@ export default function DashboardRightRail({
                 Activity
               </p>
               {activity.length ? (
-                <ol className="mt-2 space-y-2">
+                <ol className="mt-2 space-y-2" data-testid="rail-activity">
                   {activity.slice(0, 10).map((entry) => (
                     <li
-                      key={`${entry.at}-${entry.label}`}
+                      key={`${entry.at}-${entry.kind}-${entry.label}`}
                       className="rounded-lg border border-border p-2.5"
+                      data-activity-kind={entry.kind}
                     >
-                      <p className="text-sm font-medium">{entry.label}</p>
-                      <p className="mt-0.5 text-xs text-muted-foreground">
-                        {entry.kind} ·{" "}
-                        {new Date(entry.at).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
+                      <p className="text-sm font-medium [overflow-wrap:anywhere]">
+                        {entry.label}
+                      </p>
+                      <p className="mt-0.5 flex flex-wrap items-center gap-x-2 text-xs text-muted-foreground">
+                        <span>
+                          {ACTIVITY_WORD[entry.kind] ?? entry.kind} ·{" "}
+                          {new Date(entry.at).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </span>
+                        {entry.kind === "ask" ? (
+                          <Link
+                            href={`/dashboard?ask=${encodeURIComponent(entry.label)}`}
+                            className="font-semibold text-emerald-800 underline underline-offset-2 hover:text-emerald-900"
+                          >
+                            Ask again
+                          </Link>
+                        ) : null}
                       </p>
                     </li>
                   ))}
                 </ol>
               ) : (
                 <p className="mt-2 rounded-lg border border-dashed border-border p-3 text-xs text-muted-foreground">
-                  Open a pane or start a task and it will appear here.
+                  Ask a question, open a pane or start a task and it will appear here.
                 </p>
               )}
             </div>

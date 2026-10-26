@@ -15,6 +15,7 @@
 //    leg contingent on a real cited source; it is not fabricated here.
 //
 // CC-BY-4.0. Council of AI (CSOAI Ltd, UK Companies House 16939677).
+import { headFromGet } from "./_head";
 
 // axis → the governing instrument (real correspondences, cited to the article).
 const AXIS_LAW: Record<string, { obligation: string; instrument: string }> = {
@@ -124,3 +125,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
     headers: { "content-type": "application/json", "cache-control": "public, max-age=300", "access-control-allow-origin": "*" },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

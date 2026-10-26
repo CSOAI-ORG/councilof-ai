@@ -276,6 +276,23 @@ describe("/api/witness — rail: fail-closed queue, dedupe, paid path", () => {
     expect(calls).toContain("freetsa.org/tsr");
   });
 
+  it("paid, a nonce drawn with a leading zero byte: still TIMESTAMPED (DER drops the 0x00; the token is still ours)", async () => {
+    stub({ tsa: "ok" });
+    // the 1-in-128 draw that used to fail: first byte 0x00
+    const spy = vi.spyOn(crypto, "getRandomValues").mockImplementation(((a: Uint8Array) => {
+      a.fill(0);
+      a[a.length - 1] = 7;
+      return a;
+    }) as typeof crypto.getRandomValues);
+    try {
+      const kv = fakeKv();
+      const b = await (await witnessGet(ctx(`/api/witness?sha256=${SHA}`, { WITNESS_KV: kv, X402_FACILITATOR_URL: "https://f.example" }, { "x-payment": receipt }))).json();
+      expect(b).toMatchObject({ status: "queued", rfc3161: { status: "TIMESTAMPED", reason: null } });
+    } finally {
+      spy.mockRestore();
+    }
+  });
+
   it("paid, TSA down or refusing: still queued, rfc3161 UNCHECKABLE with the reason", async () => {
     stub({ tsa: 500 });
     let kv = fakeKv();

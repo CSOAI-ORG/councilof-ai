@@ -13,7 +13,8 @@ import type { LobbyTabId } from "./tabs";
  * sitting at the keyboard. No sign-in button, no OAuth theatre.
  *
  * THE ACTIVITY LOG IS SESSION-ONLY, BY DESIGN. It records what the OS itself
- * did in this tab — panes opened, routes framed — in memory. Nothing is
+ * did in this tab — panes opened, routes framed, questions asked on the home
+ * composer — in memory. Nothing is
  * persisted, nothing is transmitted, and the pane that shows it says so.
  */
 
@@ -69,7 +70,9 @@ export function forgetOsPreferences(): readonly string[] {
 
 export type ActivityEntry = {
   at: number;
-  kind: "pane" | "route";
+  /** pane / route: something the OS opened. ask: a question typed on the home composer, which
+   *  the Answers panel took (it is not a chat turn, so it is kept here for History). */
+  kind: "pane" | "route" | "ask";
   label: string;
   path?: string;
   tabId?: LobbyTabId;

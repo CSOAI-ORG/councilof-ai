@@ -1,7 +1,8 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { Link, useSearch } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
-import MillReceiptReadinessPanel from "@/components/MillReceiptReadinessPanel";
+import { modelHref } from "@/lib/livingBoard";
+import ModelCountKey from "@/components/ModelCountKey";
 
 /**
  * /board/models — every model we have measured, every axis it was measured on,
@@ -24,12 +25,24 @@ import MillReceiptReadinessPanel from "@/components/MillReceiptReadinessPanel";
  * ── NO COUNT IS TYPED ────────────────────────────────────────────────────────
  * Every number renders from /signed/card-matrix.json, which is itself derived at
  * build time by reading the card files. Counts here are array lengths.
+ *
+ * ── OUR OWN MODELS ARE LISTED APART, NEVER RANKED AMONG THIRD-PARTY ONES ─────
+ * Ownership is read from models[].kind, which the producer classifies on the raw
+ * card name (scripts/build-own-model-disclosure.mjs rules). It is never guessed
+ * here from a name prefix: if the index carries no kind, the page shows the
+ * "did not load" box rather than a list it cannot group. There is no "best
+ * average" or "best single score" sort: averages over different axis subsets
+ * cannot be compared, and a ranking sort with a "not a ranking" label only
+ * guards the phrase.
  */
 
+type ZeroFlag = "AXIS_FLOOR" | "MODEL_FLOOR";
 interface Cell {
   model: string;
   axis: string;
   accuracy: number | null;
+  /** A zero that points at the scoring rather than the model (see Matrix.zero_flag_rule). */
+  zero_flag?: ZeroFlag;
   created: string | null;
   card: string;
   card_url: string;
@@ -37,8 +50,18 @@ interface Cell {
   alg: string | null;
   pubkey: string | null;
 }
+type ModelKind = "third_party" | "own" | "own_unconfirmed";
+const KINDS: ModelKind[] = ["third_party", "own", "own_unconfirmed"];
+/** Group order and headings — the same three groups, in the same order, as /models-measured/. */
+const KIND_LABEL: Record<ModelKind, string> = {
+  third_party: "Third-party models",
+  own: "Our own models — listed apart, never compared",
+  own_unconfirmed: "Names that suggest a model we derived, unconfirmed",
+};
 interface ModelRow {
   id: string;
+  kind: ModelKind;
+  zero_not_quotable?: number;
   name_published: boolean;
   cards: number;
   axes: string[];
@@ -50,6 +73,9 @@ interface AxisRow {
   id: string;
   cards: number;
   models: number;
+  /** build-card-matrix rule 7: mean/best below are over these third-party rows only. */
+  models_third_party?: number;
+  zero_not_quotable?: number;
   mean_accuracy: number | null;
   best_accuracy: number | null;
   as_of: string | null;
@@ -61,6 +87,7 @@ interface Matrix {
   what_a_cell_is: string;
   what_this_does_not_establish: string;
   display_name_policy: { rule: string; withheld_names: number; where_the_name_still_lives: string };
+  zero_flag_rule?: Record<string, string>;
   counts: Record<string, number | string>;
   axes: AxisRow[];
   models: ModelRow[];
@@ -69,6 +96,28 @@ interface Matrix {
 
 const pct = (v: number | null) => (v === null ? "—" : `${(v * 100).toFixed(1)}%`);
 
+/** A summary figure that is null because every cell behind it was a flagged zero. */
+const pctOrNotQuotable = (v: number | null, flagged: number | undefined) =>
+  v === null && (flagged ?? 0) > 0 ? "not quotable" : pct(v);
+
+/** Plain words for why a zero is not quoted. */
+const ZERO_REASON: Record<ZeroFlag, string> = {
+  AXIS_FLOOR:
+    "every model scored exactly zero on this bank, so the zero points at the scoring rather than the model",
+  MODEL_FLOOR:
+    "this model scored exactly zero on every bank it was run on while other models scored above zero, so the zero points at the scoring rather than the model",
+};
+
+function ScoreCell({ c }: { c: Cell }) {
+  if (c.zero_flag)
+    return (
+      <span data-testid="zero-not-quotable" title={ZERO_REASON[c.zero_flag]}>
+        {pct(c.accuracy)} · not quotable
+        <span className="block font-sans text-[11px] text-amber-800">{ZERO_REASON[c.zero_flag]}</span>
+      </span>
+    );
+  return <>{pct(c.accuracy)}</>;
+}
 /** A model indexed under a neutral key carries a retired internal brand in its
  *  recorded name. The measured work is kept and counted; only the label is
  *  withheld, and the page says so rather than quietly dropping the row. */
@@ -82,7 +131,16 @@ function useMatrix() {
     let cancelled = false;
     fetch("/signed/card-matrix.json")
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
-      .then((d) => !cancelled && setM(d))
+      .then((d) => {
+        if (cancelled) return;
+        // Ownership is the producer's to declare. An index without it cannot be grouped, and
+        // guessing it from a name prefix here is exactly what the producer exists to prevent.
+        const ok =
+          d && Array.isArray(d.models) && d.models.every((m: any) => KINDS.includes(m?.kind)) &&
+          typeof d.counts?.models_third_party === "number";
+        if (!ok) setErr("the index does not say which models are our own, so it cannot be listed safely");
+        else setM(d);
+      })
       .catch((e) => !cancelled && setErr(String(e?.message ?? e)));
     return () => {
       cancelled = true;
@@ -94,6 +152,18 @@ function useMatrix() {
 // ───────────────────────────────────────────────────────────── shared bits
 
 function CellLink({ c }: { c: Cell }) {
+  if (c.zero_flag)
+    return (
+      <a
+        href={c.card_url}
+        data-testid="cell-card"
+        title={`${c.axis} · scored ${pct(c.accuracy)} · not quotable: ${ZERO_REASON[c.zero_flag]} · opens the signed record`}
+        className="inline-block whitespace-nowrap rounded border border-amber-400 bg-amber-50 px-1.5 py-0.5 font-mono text-[10px] leading-none text-amber-900 hover:border-amber-700"
+      >
+        0<span aria-hidden="true">⚠</span>
+        <span className="sr-only">per cent, not quotable, signed record</span>
+      </a>
+    );
   return (
     <a
       href={c.card_url}
@@ -105,6 +175,22 @@ function CellLink({ c }: { c: Cell }) {
       <span aria-hidden="true">·</span>
       <span className="sr-only">per cent, signed record</span>
     </a>
+  );
+}
+
+/** The own-model label a single-model or single-axis view carries. */
+function OwnLabel({ kind }: { kind: ModelKind }) {
+  if (kind === "third_party") return null;
+  return (
+    <p className="mt-2 rounded-xl border border-gray-300 bg-gray-50 p-3 text-sm text-gray-800" data-testid="own-model-label">
+      {kind === "own"
+        ? "One of our own models (a prompt overlay or specialist on a stock base model). It is listed apart and never compared with third-party models; the public board removes our own models before any comparison."
+        : "This name suggests a model we derived, and the owner has not confirmed it either way. It is listed apart and never compared with third-party models."}{" "}
+      <a href="/independence/" className="underline">
+        How we handle our own models
+      </a>
+      .
+    </p>
   );
 }
 
@@ -135,7 +221,7 @@ export default function MeasuredModels() {
   const [view, setView] = useState<"models" | "axis" | "matrix">("models");
   const [query, setQuery] = useState("");
   const [axisFilter, setAxisFilter] = useState<string>("all");
-  const [sortKey, setSortKey] = useState<"cards" | "name" | "best" | "mean">("cards");
+  const [sortKey, setSortKey] = useState<"cards" | "name">("cards");
 
   useEffect(() => {
     document.title = "Measured models — the signed card set | Council of AI";
@@ -163,11 +249,20 @@ export default function MeasuredModels() {
     }
     return [...out].sort((a, b) => {
       if (sortKey === "name") return displayModel(a).localeCompare(displayModel(b));
-      if (sortKey === "best") return (b.best_accuracy ?? -1) - (a.best_accuracy ?? -1);
-      if (sortKey === "mean") return (b.mean_accuracy ?? -1) - (a.mean_accuracy ?? -1);
       return b.cards - a.cards || displayModel(a).localeCompare(displayModel(b));
     });
   }, [matrix, axisFilter, query, sortKey]);
+
+  /** The same rows, split into the three ownership groups, in the fixed group order. Search and
+   *  the axis filter apply within each group. */
+  const grouped = useMemo(
+    () => KINDS.map((k) => ({ kind: k, rows: models.filter((m) => m.kind === k) })),
+    [models],
+  );
+  const allGrouped = useMemo(
+    () => KINDS.map((k) => ({ kind: k, rows: (matrix?.models ?? []).filter((m) => m.kind === k) })),
+    [matrix],
+  );
 
   if (error)
     return (
@@ -222,13 +317,27 @@ export default function MeasuredModels() {
             {matrix.display_name_policy.rule} {matrix.display_name_policy.where_the_name_still_lives}
           </p>
         )}
+        <OwnLabel kind={m.kind} />
         <p className="mt-3 font-mono text-sm text-gray-600">
           {m.cards} signed records · measured on {m.axes.length} of the card set's axes · last
           measured {m.as_of?.slice(0, 10) ?? "no date"}
         </p>
         <div className="mt-4">
-          <SetWarning what="These are the axis this model was actually run against." />
+          <SetWarning what="These are the axes this model was actually run against." />
         </div>
+        {m.kind === "third_party" && m.axes.some((ax) => ax === "gov" || ax === "care") && (
+          <p className="mt-3 rounded-xl border border-gray-300 bg-white p-3 text-sm text-gray-800" data-testid="board-instrument-note">
+            The public board measured this model on{" "}
+            {m.axes.includes("gov") && m.axes.includes("care") ? "governance and care" : m.axes.includes("gov") ? "governance" : "care"}{" "}
+            with a different instrument (GovBench / CareBench, scored from published per-item rows).
+            The card here and the board's figure are separate records and are never substituted for
+            each other:{" "}
+            <a href={modelHref(m.id)} className="font-semibold underline">
+              see this model on the public board
+            </a>
+            .
+          </p>
+        )}
 
         <div className="mt-6 overflow-x-auto rounded-xl border border-gray-200 bg-white">
           <table className="w-full min-w-[600px] text-left text-sm">
@@ -251,7 +360,9 @@ export default function MeasuredModels() {
                       {cell.axis}
                     </Link>
                   </td>
-                  <td className="px-4 py-2 text-right font-mono">{pct(cell.accuracy)}</td>
+                  <td className="px-4 py-2 text-right font-mono">
+                    <ScoreCell c={cell} />
+                  </td>
                   <td className="px-4 py-2 font-mono text-xs text-gray-600">
                     {cell.created?.slice(0, 10) ?? "—"}
                   </td>
@@ -278,7 +389,7 @@ export default function MeasuredModels() {
     );
   }
 
-  // ── a single axis, ranked ─────────────────────────────────────────────────
+  // ── a single axis: third-party cells first, our own apart, nothing numbered ──
   if (focusAxis) {
     const a = matrix.axes.find((x) => x.id === focusAxis);
     const cells = (cellsBy.byAxis[focusAxis] ?? []).sort(
@@ -310,53 +421,68 @@ export default function MeasuredModels() {
           <SetWarning what="This is one axis of the card set, with every model that was run against it." />
         </div>
 
-        <div className="mt-6 overflow-x-auto rounded-xl border border-gray-200 bg-white">
-          <table className="w-full min-w-[600px] text-left text-sm">
-            <thead className="border-b border-gray-200 bg-gray-50 text-xs uppercase tracking-wide text-gray-600">
-              <tr>
-                <th className="px-4 py-2 font-semibold">#</th>
-                <th className="px-4 py-2 font-semibold">Model</th>
-                <th className="px-4 py-2 text-right font-semibold">Score</th>
-                <th className="px-4 py-2 font-semibold">Measured</th>
-                <th className="px-4 py-2 font-semibold">The signed record</th>
-              </tr>
-            </thead>
-            <tbody>
-              {cells.map((cell, i) => {
-                const mr = matrix.models.find((x) => x.id === cell.model);
-                return (
-                  <tr key={cell.card} className="border-b border-gray-100">
-                    <td className="px-4 py-2 font-mono text-xs text-gray-500">{i + 1}</td>
-                    <td className="px-4 py-2">
-                      <Link
-                        href={`/board/models?model=${encodeURIComponent(cell.model)}`}
-                        className="font-semibold text-emerald-700 underline"
-                      >
-                        {mr ? displayModel(mr) : cell.model}
-                      </Link>
-                    </td>
-                    <td className="px-4 py-2 text-right font-mono">{pct(cell.accuracy)}</td>
-                    <td className="px-4 py-2 font-mono text-xs text-gray-600">
-                      {cell.created?.slice(0, 10) ?? "—"}
-                    </td>
-                    <td className="px-4 py-2">
-                      <a
-                        href={cell.card_url}
-                        data-testid="axis-card-link"
-                        className="font-mono text-xs text-emerald-700 underline"
-                      >
-                        {cell.card.slice(0, 16)}…
-                      </a>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        {KINDS.map((kind) => {
+          const group = cells.filter((cell) => matrix.models.find((x) => x.id === cell.model)?.kind === kind);
+          if (!group.length) return null;
+          return (
+            <section key={kind} className="mt-6" data-testid={`axis-group-${kind}`}>
+              <h2 className="text-lg font-bold text-gray-900">
+                {KIND_LABEL[kind]} ({group.length})
+              </h2>
+              <div className="mt-2 overflow-x-auto rounded-xl border border-gray-200 bg-white">
+                <table className="w-full min-w-[600px] text-left text-sm">
+                  <thead className="border-b border-gray-200 bg-gray-50 text-xs uppercase tracking-wide text-gray-600">
+                    <tr>
+                      <th className="px-4 py-2 font-semibold">Model</th>
+                      <th className="px-4 py-2 text-right font-semibold">Score</th>
+                      <th className="px-4 py-2 font-semibold">Measured</th>
+                      <th className="px-4 py-2 font-semibold">The signed record</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {group.map((cell) => {
+                      const mr = matrix.models.find((x) => x.id === cell.model);
+                      return (
+                        <tr key={cell.card} className="border-b border-gray-100">
+                          <td className="px-4 py-2">
+                            <Link
+                              href={`/board/models?model=${encodeURIComponent(cell.model)}`}
+                              className="font-semibold text-emerald-700 underline"
+                            >
+                              {mr ? displayModel(mr) : cell.model}
+                            </Link>
+                          </td>
+                          <td className="px-4 py-2 text-right font-mono">
+                            <ScoreCell c={cell} />
+                          </td>
+                          <td className="px-4 py-2 font-mono text-xs text-gray-600">
+                            {cell.created?.slice(0, 10) ?? "—"}
+                          </td>
+                          <td className="px-4 py-2">
+                            <a
+                              href={cell.card_url}
+                              data-testid="axis-card-link"
+                              className="font-mono text-xs text-emerald-700 underline"
+                            >
+                              {cell.card.slice(0, 16)}…
+                            </a>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          );
+        })}
+        <p className="mt-3 text-xs text-gray-600">
+          No position is numbered and no leader is named: these are single scores on one small bank,
+          with no separation test behind them. Our own models are listed apart and never compared.
+        </p>
 
         <p className="mt-4 rounded-xl border border-rose-300 bg-rose-50/60 p-4 text-sm text-rose-950">
-          <strong>What this ranking does not establish.</strong>{" "}
+          <strong>What these scores do not establish.</strong>{" "}
           {matrix.what_this_does_not_establish}
         </p>
       </div>
@@ -396,7 +522,9 @@ export default function MeasuredModels() {
       {/* sizes before you click */}
       <dl className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
         {[
-          ["Models measured", c.models, "each run against at least one axis"],
+          // Third-party only (scripts/build-card-matrix.mjs splits the set, 6 Oct 2026): the bare
+          // total counted our own model tags in with everyone else's. Ours are listed apart below.
+          ["Models measured", c.models_third_party, `third-party; our own ${c.models_own} (+${c.models_own_unconfirmed} unconfirmed) are in this set and listed apart, never compared`],
           ["Axes in this set", c.axes, "benchmark axis, not board axis"],
           ["Cells filled", c.cells, `of ${c.possible_cells} possible pairs`],
           ["Cells with a signature", c.signed_cells, "each re-checkable offline"],
@@ -415,14 +543,14 @@ export default function MeasuredModels() {
         map below.
       </p>
 
-      <MillReceiptReadinessPanel />
+      <ModelCountKey className="mt-3 max-w-3xl" />
 
       {/* view switcher */}
       <div className="mt-6 flex flex-wrap items-center gap-2">
         <div className="flex rounded-lg border border-gray-300" role="group" aria-label="View">
           {(
             [
-              ["models", `Models · ${c.models}`],
+              ["models", "Models"],
               ["axis", `Axes · ${c.axes}`],
               ["matrix", `Coverage map · ${c.cells}/${c.possible_cells}`],
             ] as const
@@ -473,62 +601,89 @@ export default function MeasuredModels() {
               className="rounded-lg border border-gray-300 px-3 py-2 text-sm"
             >
               <option value="cards">Most measured</option>
-              <option value="best">Best single score</option>
-              <option value="mean">Best average</option>
               <option value="name">Name A–Z</option>
             </select>
           </>
         )}
       </div>
 
-      {view === "models" && (
-        <div className="mt-4 overflow-x-auto rounded-xl border border-gray-200 bg-white">
-          <table className="w-full min-w-[720px] text-left text-sm" data-testid="models-table">
-            <thead className="border-b border-gray-200 bg-gray-50 text-xs uppercase tracking-wide text-gray-600">
-              <tr>
-                <th className="px-4 py-2 font-semibold">Model</th>
-                <th className="px-4 py-2 text-right font-semibold">Axes measured</th>
-                <th className="px-4 py-2 text-right font-semibold">Best score</th>
-                <th className="px-4 py-2 text-right font-semibold">Average</th>
-                <th className="px-4 py-2 font-semibold">Which axis</th>
-              </tr>
-            </thead>
-            <tbody>
-              {models.map((m) => (
-                <tr key={m.id} className="border-b border-gray-100 align-top">
-                  <td className="px-4 py-2">
-                    <Link
-                      href={`/board/models?model=${encodeURIComponent(m.id)}`}
-                      data-testid={`model-row-${m.id}`}
-                      className="font-semibold text-emerald-700 underline"
-                    >
-                      {displayModel(m)}
-                    </Link>
-                  </td>
-                  <td className="px-4 py-2 text-right font-mono">
-                    {m.axes.length}
-                    <span className="block text-[10px] text-gray-500">of {c.axes}</span>
-                  </td>
-                  <td className="px-4 py-2 text-right font-mono">{pct(m.best_accuracy)}</td>
-                  <td className="px-4 py-2 text-right font-mono">{pct(m.mean_accuracy)}</td>
-                  <td className="px-4 py-2">
-                    <div className="flex flex-wrap gap-1">
-                      {m.axes.map((ax) => (
-                        <Link
-                          key={ax}
-                          href={`/board/models?axis=${encodeURIComponent(ax)}`}
-                          className="rounded border border-gray-300 px-1.5 py-0.5 font-mono text-[10px] text-gray-700 hover:border-gray-600"
-                        >
-                          {ax}
-                        </Link>
+      {view === "models" &&
+        grouped.map(({ kind, rows }) => {
+          const total = allGrouped.find((g) => g.kind === kind)?.rows.length ?? 0;
+          return (
+            <section key={kind} className="mt-6" data-testid={`models-group-${kind}`}>
+              <h2 className="text-lg font-bold text-gray-900">
+                {KIND_LABEL[kind]} ({total})
+                {rows.length !== total && (
+                  <span className="ml-2 text-sm font-normal text-gray-600">· {rows.length} match the filter</span>
+                )}
+              </h2>
+              {kind !== "third_party" && (
+                <p className="mt-1 text-sm text-gray-700">
+                  {kind === "own"
+                    ? "Prompt overlays and specialists we built on stock base models. Listed so the work is visible; the public board removes them before any comparison."
+                    : "Names that suggest a model we derived. The owner has not confirmed them either way, so they are kept out of the third-party list."}
+                </p>
+              )}
+              {rows.length === 0 ? (
+                <p className="mt-2 text-sm text-gray-600">No model in this group matches the filter.</p>
+              ) : (
+                <div className="mt-2 overflow-x-auto rounded-xl border border-gray-200 bg-white">
+                  <table className="w-full min-w-[720px] text-left text-sm" data-testid={`models-table-${kind}`}>
+                    <thead className="border-b border-gray-200 bg-gray-50 text-xs uppercase tracking-wide text-gray-600">
+                      <tr>
+                        <th className="px-4 py-2 font-semibold">Model</th>
+                        <th className="px-4 py-2 text-right font-semibold">Axes measured</th>
+                        <th className="px-4 py-2 text-right font-semibold">Best score</th>
+                        <th className="px-4 py-2 text-right font-semibold">Average</th>
+                        <th className="px-4 py-2 font-semibold">Which axis</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {rows.map((m) => (
+                        <tr key={m.id} className="border-b border-gray-100 align-top">
+                          <td className="px-4 py-2">
+                            <Link
+                              href={`/board/models?model=${encodeURIComponent(m.id)}`}
+                              data-testid={`model-row-${m.id}`}
+                              className="font-semibold text-emerald-700 underline"
+                            >
+                              {displayModel(m)}
+                            </Link>
+                          </td>
+                          <td className="px-4 py-2 text-right font-mono">
+                            {m.axes.length}
+                            <span className="block text-[10px] text-gray-500">of {c.axes}</span>
+                          </td>
+                          <td className="px-4 py-2 text-right font-mono">{pctOrNotQuotable(m.best_accuracy, m.zero_not_quotable)}</td>
+                          <td className="px-4 py-2 text-right font-mono">{pctOrNotQuotable(m.mean_accuracy, m.zero_not_quotable)}</td>
+                          <td className="px-4 py-2">
+                            <div className="flex flex-wrap gap-1">
+                              {m.axes.map((ax) => (
+                                <Link
+                                  key={ax}
+                                  href={`/board/models?axis=${encodeURIComponent(ax)}`}
+                                  className="rounded border border-gray-300 px-1.5 py-0.5 font-mono text-[10px] text-gray-700 hover:border-gray-600"
+                                >
+                                  {ax}
+                                </Link>
+                              ))}
+                            </div>
+                          </td>
+                        </tr>
                       ))}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </section>
+          );
+        })}
+      {view === "models" && (
+        <p className="mt-3 text-xs text-gray-600">
+          Best score and average are each model's own figures over the axes it happens to have, so
+          they cannot be compared across models and the list is not sorted by them.
+        </p>
       )}
 
       {view === "axis" && (
@@ -538,8 +693,8 @@ export default function MeasuredModels() {
               <tr>
                 <th className="px-4 py-2 font-semibold">Axis (card set)</th>
                 <th className="px-4 py-2 text-right font-semibold">Models run</th>
-                <th className="px-4 py-2 text-right font-semibold">Best score</th>
-                <th className="px-4 py-2 text-right font-semibold">Average</th>
+                <th className="px-4 py-2 text-right font-semibold">Best third-party score</th>
+                <th className="px-4 py-2 text-right font-semibold">Third-party average</th>
                 <th className="px-4 py-2 font-semibold">Last measured</th>
               </tr>
             </thead>
@@ -557,9 +712,14 @@ export default function MeasuredModels() {
                         {a.id}
                       </Link>
                     </td>
-                    <td className="px-4 py-2 text-right font-mono">{a.models}</td>
-                    <td className="px-4 py-2 text-right font-mono">{pct(a.best_accuracy)}</td>
-                    <td className="px-4 py-2 text-right font-mono">{pct(a.mean_accuracy)}</td>
+                    <td className="px-4 py-2 text-right font-mono">
+                      {a.models}
+                      {typeof a.models_third_party === "number" && (
+                        <span className="block text-[10px] text-gray-500">{a.models_third_party} third-party</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-2 text-right font-mono">{a.models_third_party === 0 ? "no third-party model" : pctOrNotQuotable(a.best_accuracy, a.zero_not_quotable)}</td>
+                    <td className="px-4 py-2 text-right font-mono">{a.models_third_party === 0 ? "no third-party model" : pctOrNotQuotable(a.mean_accuracy, a.zero_not_quotable)}</td>
                     <td className="px-4 py-2 font-mono text-xs text-gray-600">
                       {a.as_of?.slice(0, 10) ?? "—"}
                     </td>
@@ -576,7 +736,10 @@ export default function MeasuredModels() {
             One column per axis, one row per model. Each filled cell shows the score as a whole
             percentage and links to its signed record; hover a cell for the exact figure and date.
             An empty cell means that pair was never measured — it is <strong>not</strong> a score of
-            zero, and a measured zero appears as <span className="font-mono">0·</span>.
+            zero. A zero that other models beat on the same bank appears as{" "}
+            <span className="font-mono">0·</span>; a zero flagged as a likely scoring failure appears
+            as <span className="font-mono">0⚠</span> and is not quoted. Our own models are listed
+            apart, below the third-party rows.
           </p>
           <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white">
             {/* Opts OUT of the base-layer whole-word table sizing (styles/index.css): this matrix has a
@@ -595,7 +758,16 @@ export default function MeasuredModels() {
                 </tr>
               </thead>
               <tbody>
-                {models.map((m) => (
+                {grouped.map(({ kind, rows }) => (
+                  <Fragment key={kind}>
+                    {rows.length > 0 && (
+                      <tr className="border-b border-gray-200 bg-gray-100" data-testid={`matrix-group-${kind}`}>
+                        <td colSpan={matrix.axes.length + 1} className="sticky left-0 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-gray-700">
+                          {KIND_LABEL[kind]} ({rows.length})
+                        </td>
+                      </tr>
+                    )}
+                {rows.map((m) => (
                   <tr key={m.id} className="border-b border-gray-100">
                     <td className="sticky left-0 z-10 bg-white px-3 py-1.5 font-semibold">
                       <Link
@@ -623,6 +795,8 @@ export default function MeasuredModels() {
                       );
                     })}
                   </tr>
+                ))}
+                  </Fragment>
                 ))}
               </tbody>
             </table>

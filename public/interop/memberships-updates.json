@@ -1,6 +1,6 @@
 {
   "schema": "csoai.memberships-updates/0.1",
-  "as_of": "2026-09-29",
+  "as_of": "2026-10-07",
   "signed": false,
   "purpose": "The dated record of what changed in public/interop/memberships.json and why. One entry per change, newest first. Every entry names the manifest row it touches (or null when it touches the manifest as a whole) and carries the same kind of evidence the rows do: a public URL a stranger can open, or a dated mailbox record when the only evidence is private. This file exists so a reader can see that a row moved, when, and on what basis — a table that only ever shows its current state cannot be audited. scripts/memberships-check.mjs validates it and fails when an entry names a row that does not exist.",
   "honesty_line": "An update is a record of a change, not an announcement of an achievement. Nothing here upgrades a row; the rows say what they prove.",
@@ -201,6 +201,24 @@
       "headline": "Zenodo DOI row: VERIFIED -> UNVERIFIED; the record answers HTTP 410",
       "detail": "At 15:47Z on 29 Sep 2026 Zenodo blocked the account that held the deposit, after a bulk publish by one of our own automated lanes, and every record on it began answering HTTP 410 ('User was blocked'), including 10.5281/zenodo.21991104 (record 21991105). The row no longer says the record resolves. The DOI is kept as its permanent name. The owner is appealing; the outcome is unknown. Corrections ledger: C-2026-0929-09.",
       "evidence": "curl -sIL https://doi.org/10.5281/zenodo.21991104  # final hop: HTTP 410 (read 2026-09-29)",
+      "evidence_kind": "command"
+    },
+    {
+      "date": "2026-10-07",
+      "kind": "added",
+      "row": "sail-awesome-ai-leaderboard",
+      "headline": "Awesome AI Leaderboard (SAILResearch) row added: GovBench and the GSPC Governance Leaderboard are in its Safety section",
+      "detail": "The list's README on main carries two lines CSOAI submitted: GovBench (commit 9fe9d882, 2026-07-23) and the GSPC Governance Leaderboard with the board API and DOI links, closing with upstream's own words that this is measurement, not a conformity claim (commit 34fc3ac6, 2026-08-26). Raw README read 2026-10-07T10:11:56Z. Catalogue inclusion: not a reproduction, ranking, award or endorsement.",
+      "evidence": "https://github.com/SAILResearch/awesome-ai-leaderboard#safety",
+      "evidence_kind": "public_url"
+    },
+    {
+      "date": "2026-10-07",
+      "kind": "added",
+      "row": "claude-connector-directory",
+      "headline": "Claude connector directory row added as UNVERIFIED: the page could not be read from the build sandbox",
+      "detail": "Council of AI is recorded as a community connector in the Claude connector directory (endpoint https://councilof.ai/mcp/free). Two fetchers from the build sandbox received HTTP 403 and a Cloudflare challenge page on 2026-10-07, so the row is UNVERIFIED (read: UNVERIFIED_FROM_SANDBOX) with the source URL kept, and flips only after a person reads the page or a dated mailbox record confirms it. A directory listing is not verification or endorsement by Anthropic, and not adoption.",
+      "evidence": "curl -sS -A Mozilla/5.0 https://claude.ai/directory/councilof-ai  # HTTP 403, Cloudflare challenge page (read 2026-10-07T10:12:03Z)",
       "evidence_kind": "command"
     }
   ]

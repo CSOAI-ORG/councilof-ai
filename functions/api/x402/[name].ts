@@ -26,6 +26,7 @@
  */
 import { isCardV0, verifyCardV0 } from "../verify";
 import { sha256Hex } from "../../_lib/cardSign";
+import { headFromGet } from "../_head";
 
 type Env = { X402_INDEX_SIGNED_URL?: string };
 
@@ -128,3 +129,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env, params })
       : { verify_free: `${origin}/api/verify`, verify_how: "POST the leaf at `source` to /api/verify" }),
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

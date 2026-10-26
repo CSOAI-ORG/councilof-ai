@@ -1,3 +1,5 @@
+import { CONTACT_MAILBOX } from "@/lib/buying";
+
 /**
  * MomentumMethodNote — the short methodology note every "how these are measured" link points at
  * (/methodology/#how-momentum-is-measured). It names each figure's source and rule. It carries no
@@ -13,7 +15,7 @@ const ROWS: { name: string; how: string; href: string }[] = [
   {
     name: "Public corrections, all dated",
     how: "GET /api/corrections → the number of ledger entries. Shown only when every entry carries a date; “this week” counts entries dated in the last seven days.",
-    href: "/api/corrections",
+    href: "/corrections/",
   },
   {
     name: "Measurement capsules",
@@ -80,8 +82,8 @@ export default function MomentumMethodNote() {
         endorsement. <strong className="text-emerald-50">Snapshots.</strong> When the page is built, the same producer
         writes a snapshot so the page is readable without JavaScript; it is labelled as a snapshot with the time it was
         taken, and the live read replaces it when it answers. To dispute a figure, email{" "}
-        <a href="mailto:contact@csoai.org" className="text-emerald-300 underline underline-offset-2">
-          contact@csoai.org
+        <a href={`mailto:${CONTACT_MAILBOX}`} className="text-emerald-300 underline underline-offset-2">
+          {CONTACT_MAILBOX}
         </a>
         ; corrections are dated in the{" "}
         <a href="/corrections/" className="text-emerald-300 underline underline-offset-2">

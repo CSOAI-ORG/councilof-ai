@@ -19,7 +19,7 @@ const USPS: { t: string; d: string }[] = [
   { t: "Verify is free", d: "Anyone can verify a signed artefact at /gspc-verify. A grade is never sold." },
   { t: "Enterprise is a lobby door", d: "/enterprise opens the measured lobby. It is not a pricing page and not a certification desk." },
   { t: "Signed evidence", d: "Inbound systems become Ed25519 artefacts. Text-only classifier. We do not fetch or probe. We do not remediate." },
-  { t: "Living board", d: "Counts come from GET /api/gspc. Ties are ties. Do not invent missing cards." },
+  { t: "Living board", d: "Counts come from GET /api/gspc. Ties are ties. Missing cards are never invented." },
 ];
 
 import TrustMarquee from "../components/TrustMarquee";

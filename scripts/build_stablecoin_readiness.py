@@ -96,10 +96,15 @@ def rooted_xrpl_asset_measurements(
 
     Qualification is deliberately conservative: the card must be signed, included in
     the current root, describe an XRPL Stablecoin asset state, and its symbol must map
-    to exactly one frozen-index row that explicitly lists XRPL. Ambiguous symbols,
-    XRPL cards absent from the frozen 425, and same-symbol rows with no XRPL deployment
-    remain UNMEASURED. When several qualifying cards exist for one asset, the latest
-    recorded card wins without changing the signed historical bytes.
+    to EXACTLY ONE frozen-index row overall (global symbol uniqueness — twin symbols
+    are ambiguous and stay UNMEASURED even when only one twin lists XRPL) and that row
+    must explicitly list XRPL. Ambiguous symbols, XRPL cards absent from the frozen 425,
+    and same-symbol rows with no XRPL deployment remain UNMEASURED. This is the same
+    invariant validate() asserts for every measured row (symbol unique across all 425,
+    match_rule UNIQUE_FROZEN_SYMBOL_WITH_XRPL_DEPLOYMENT) — run 37723104404 failed the
+    public-root publish when an XRPL-unique-but-globally-twin'd symbol reached validate.
+    When several qualifying cards exist for one asset, the latest recorded card wins
+    without changing the signed historical bytes.
     """
     by_symbol: dict[str, list[dict[str, Any]]] = {}
     for row in index_assets:
@@ -122,10 +127,16 @@ def rooted_xrpl_asset_measurements(
             or not symbol
         ):
             continue
-        matches = [row for row in by_symbol.get(symbol, []) if "XRPL" in (row.get("chains") or [])]
-        if len(matches) != 1:
+        rows_for_symbol = by_symbol.get(symbol, [])
+        if len(rows_for_symbol) != 1:
+            # Global symbol uniqueness, as validate() asserts: a symbol that appears
+            # on more than one frozen-index row cannot identify a single asset from a
+            # symbol-bearing card, so it stays UNMEASURED even if only one twin lists
+            # XRPL (the 2026-10-08 publish crash, run 37723104404).
             continue
-        asset_id = str(matches[0]["id"])
+        if "XRPL" not in (rows_for_symbol[0].get("chains") or []):
+            continue
+        asset_id = str(rows_for_symbol[0]["id"])
         candidates.setdefault(asset_id, []).append((str(body.get("as_of") or ""), path, body))
 
     qualified: dict[str, tuple[Path, dict[str, Any]]] = {}

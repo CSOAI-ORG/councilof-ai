@@ -27,6 +27,7 @@
 import { parseJws, publicKeyFromVerificationMethod, b64urlDecode } from "../_x402_jws";
 import { verifyOffer, OFFER_RECEIPT_SPEC_SHA, OFFER_RECEIPT_SPEC_URL } from "../_x402_offer";
 import { verifyReceipt } from "../_x402_receipt";
+import { headFromGet } from "../_head";
 
 /** The one DID document that speaks for this estate. */
 export const DID_DOC_URL = "https://csoai.org/.well-known/did.json";
@@ -240,3 +241,7 @@ export const onRequestGet: PagesFunction = async ({ request }) =>
 
 // Re-exported so the test can build a tampered payload without importing the JWS module twice.
 export { b64urlDecode };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

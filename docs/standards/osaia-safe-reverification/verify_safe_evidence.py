@@ -66,6 +66,88 @@ def did_web_key(did_url):
     raise SystemExit(f"key {did_url} not in DID document")
 
 
+def check_approval_dependency(record, dep_id, actual_uri, approval_bytes):
+    """Check one retained SHA-256 approval link; no authority or truth verdict.
+
+    The caller supplies already-read bytes and their declared retrieval URI.
+    This function performs no I/O. It does not replace either record's schema
+    validation, authenticate a key/principal, validate approval semantics,
+    establish transport origin or change a claim state. Local support limits
+    are 128 dependencies and 128 KiB of approval bytes; exceeding them means
+    unsupported by this check, not schema-invalid or a claim-state change.
+    Supported input encoding is UTF-8 without a byte-order mark.
+    """
+    safe_fields = {
+        "profile", "record_id", "issuer", "issued_at", "supersedes", "finding",
+        "claim", "dependencies", "test", "negative_control", "result",
+        "remediation", "signature", "watch", "limits",
+    }
+    safe_required = {
+        "profile", "record_id", "issuer", "issued_at", "finding", "claim",
+        "dependencies", "test", "negative_control", "result", "watch", "limits",
+    }
+    if (type(record) is not dict or set(record) - safe_fields
+            or safe_required - set(record)
+            or record.get("profile") != "safe-reverification/0.1-draft"):
+        raise ValueError("unsupported SAFE record body")
+    if (type(dep_id) is not str or not dep_id.strip()
+            or type(actual_uri) is not str or not actual_uri.strip()
+            or type(approval_bytes) is not bytes
+            or not 0 < len(approval_bytes) <= 131072):
+        raise ValueError("dependency id, retrieval URI and bounded retained bytes required")
+    dependencies = record["dependencies"]
+    if (type(dependencies) is not list or len(dependencies) > 128
+            or any(type(d) is not dict for d in dependencies)):
+        raise ValueError("bounded dependencies must be record objects")
+    matching = [d for d in dependencies if d.get("dep_id") == dep_id]
+    if len(matching) != 1:
+        raise ValueError("one unambiguous approval dependency required")
+    dependency = matching[0]
+    dep_fields = {"dep_id", "kind", "state", "name", "version", "digest", "uri",
+                  "observed_at", "otel"}
+    if (set(dependency) - dep_fields or dependency.get("kind") != "approval"
+            or dependency.get("state") != "PINNED"
+            or type(dependency.get("uri")) is not str
+            or dependency["uri"] != actual_uri):
+        raise ValueError("approval dependency is unpinned or URI differs")
+    expected = dependency.get("digest")
+    if (type(expected) is not dict or set(expected) != {"alg", "value"}
+            or expected["alg"] != "sha256" or type(expected["value"]) is not str
+            or len(expected["value"]) != 64
+            or any(c not in "0123456789abcdef" for c in expected["value"])):
+        raise ValueError("strict SHA-256 approval digest required")
+    if sha(approval_bytes) != expected["value"]:
+        raise ValueError("approval bytes differ from the dependency digest")
+
+    def unique(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError("duplicate approval JSON key")
+            result[key] = value
+        return result
+
+    def finite(_):
+        raise ValueError("non-finite approval JSON")
+    approval = json.loads(approval_bytes.decode("utf-8"),
+                          object_pairs_hook=unique, parse_constant=finite)
+    hitl_fields = {"profile", "record_id", "issued_at", "request", "authority",
+                   "invocation", "effect", "verification", "claim_maintenance",
+                   "provenance", "limits"}
+    hitl_required = {"profile", "record_id", "issued_at", "request", "authority",
+                     "invocation", "effect", "verification", "limits"}
+    if (type(approval) is not dict or set(approval) - hitl_fields
+            or hitl_required - set(approval)
+            or approval.get("profile") != "csoai.hitl-authority-effect/0.1"
+            or any(type(approval[key]) is not dict for key in
+                   ("request", "authority", "invocation", "effect", "verification"))
+            or any(type(approval[key]) is not str or not approval[key].strip()
+                   for key in ("record_id", "issued_at"))
+            or type(approval["limits"]) is not list or not approval["limits"]
+            or any(type(limit) is not str or not limit.strip() for limit in approval["limits"])):
+        raise ValueError("unsupported retained HITL record body")
+    return "BYTE_INTEGRITY_MATCH"
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("base")

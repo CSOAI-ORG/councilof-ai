@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Mail, MapPin, Clock, Send } from 'lucide-react';
 import PlainEmail, { CONTACT_MAILBOX } from '@/components/PlainEmail';
 import { enquiryPreset, prepareContactEmail } from '@/lib/pilotEnquiry';
+import { BUYING_LINES } from '@/lib/buying';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -13,6 +14,8 @@ export default function Contact() {
     subject: '',
     message: '',
   });
+  const [copyFeedback, setCopyFeedback] = useState("");
+  const copyRevision = useRef(0);
 
   useEffect(() => {
     document.title = 'Contact — Council of AI';
@@ -36,9 +39,23 @@ export default function Contact() {
     if (emailDraft.mailto) window.location.href = emailDraft.mailto;
   };
 
+  const copyEnquiry = async () => {
+    const revision = ++copyRevision.current;
+    try {
+      await navigator.clipboard.writeText(emailDraft.copyText);
+      if (revision !== copyRevision.current) return;
+      setCopyFeedback("Enquiry copied. Paste it into an email to nicholas@csoai.org. Nothing has been sent.");
+    } catch {
+      if (revision !== copyRevision.current) return;
+      setCopyFeedback("Clipboard access is unavailable. Use the selectable enquiry text below to copy manually.");
+    }
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    ++copyRevision.current;
     setFormData(prev => ({ ...prev, [name]: value }));
+    setCopyFeedback("");
   };
 
   const contactInfo = [
@@ -48,7 +65,6 @@ export default function Contact() {
       icon: MapPin,
       title: 'Address',
       value: '86-90 Paul Street, London, EC2A 4NE, UK',
-      link: '#',
     },
     {
       icon: Clock,
@@ -56,7 +72,6 @@ export default function Contact() {
       // Europe/London named explicitly: the window follows UK local time (GMT in winter,
       // BST in summer), so a reader in New York or Singapore can convert it.
       value: 'Mon–Fri, 09:00–18:00 Europe/London (UK local time: GMT in winter, BST in summer)',
-      link: '#',
     },
   ];
 
@@ -78,7 +93,7 @@ export default function Contact() {
           </h1>
           <p className="text-xl text-muted-foreground">
             One mailbox for measurement requests, evidence questions, disputes and press:{' '}
-            <PlainEmail className="font-semibold text-green-700 underline" />. Say what you want
+            <PlainEmail className="font-semibold text-green-900 underline" />. Say what you want
             measured or checked, and link the record if there is one.
           </p>
         </div>
@@ -95,24 +110,30 @@ export default function Contact() {
               <h3 className="text-lg font-bold text-gray-900 mb-2">Email</h3>
               <p className="text-gray-600"><PlainEmail /></p>
             </Card>
-            {contactInfo.map((info, index) => (
-              <motion.a
-                key={info.title}
-                href={info.link}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-              >
-                <Card className="h-full hover:shadow-lg transition-shadow p-6 text-center">
+            {/* Information, not links: these were <a href="#"> that went nowhere (persona sweep
+                6 Oct 2026). Plain markup so the address is in the prerendered HTML too. */}
+            {contactInfo.map((info) => (
+              <div key={info.title}>
+                <Card className="h-full p-6 text-center">
                   <div className="bg-green-100 w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-4">
                     <info.icon className="h-6 w-6 text-green-600" />
                   </div>
                   <h3 className="text-lg font-bold text-gray-900 mb-2">{info.title}</h3>
                   <p className="text-gray-600">{info.value}</p>
                 </Card>
-              </motion.a>
+              </div>
             ))}
           </div>
+
+          {/* How to buy — the one statement (lib/buying.ts), the same words as /faq/#buying. */}
+          <section aria-labelledby="contact-buying-h" className="mb-20 rounded-2xl border border-gray-200 bg-white p-6" data-testid="contact-buying">
+            <h2 id="contact-buying-h" className="text-lg font-bold text-gray-900">How to buy, and how invoices work</h2>
+            <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-gray-700">
+              {BUYING_LINES.map((line) => (
+                <li key={line}>{line}</li>
+              ))}
+            </ul>
+          </section>
 
           {/* Contact Form */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -184,6 +205,12 @@ export default function Contact() {
                   <Send className="h-4 w-4 mr-2" />
                   {emailDraft.mailto ? "Open email draft" : "Copy draft below"}
                 </Button>
+                <div className="flex flex-wrap items-center gap-3">
+                  <Button type="button" variant="outline" onClick={() => void copyEnquiry()} data-testid="contact-copy-button">
+                    Copy enquiry text
+                  </Button>
+                  {copyFeedback ? <p role="status" aria-live="polite" className="text-sm text-muted-foreground">{copyFeedback}</p> : null}
+                </div>
                 <p className="text-xs text-muted-foreground">
                   This form opens your email client when the draft fits safely in an email link. There is no silent backend, and nothing you type here is stored by this site.
                 </p>
@@ -211,7 +238,7 @@ export default function Contact() {
                     Enterprise and demo inquiries go straight to{' '}
                     <a
                       href={`mailto:${CONTACT_MAILBOX}?subject=Demo%20request%20%E2%80%94%20CSOAI%20master%20walkthrough`}
-                      className="text-green-700 hover:text-green-600 font-semibold"
+                      className="text-green-900 hover:text-green-600 font-semibold"
                     >
                       {CONTACT_MAILBOX}
                     </a>{' '}

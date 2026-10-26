@@ -36,6 +36,22 @@ describe("reachable measurement copy keeps evidence boundaries explicit", () => 
     expect(`${rail}\n${attestations}`).not.toMatch(/Appended, never edited|Appended, never edited or deleted/);
   });
 
+  it("no navigation, FAQ or rail label calls the corrections ledger append-only (T12, 2026-10-06)", () => {
+    // The ledger is source-maintained; GET /api/corrections claims no append-only storage. The
+    // nav ("Append-only. Corrections are published, never silently edited"), the verify rail
+    // ("the appended-only ledger") and the home FAQ ("appended and never deleted") said otherwise.
+    // Follow-up: the deck worlds (evidenceRail.ts:75, livingLedger.ts:144, predicateCompiler.ts:140,
+    // verifiableTrust.ts:129-131) make the same claim and need their own PR.
+    const nav = component("HeaderNav.tsx");
+    const lib = readFileSync(resolve(__dirname, "../lib/attestations.ts"), "utf8");
+    const faq = readFileSync(resolve(__dirname, "../data/home-faq.ts"), "utf8");
+    for (const [name, src] of [["HeaderNav.tsx", nav], ["lib/attestations.ts", lib], ["data/home-faq.ts", faq]] as const) {
+      for (const line of src.split("\n").filter((l) => /correction/i.test(l))) {
+        expect(line, name).not.toMatch(/append-only|appended-only|appended and never deleted/i);
+      }
+    }
+  });
+
   it("keeps assistant, verifier, and claims-register labels within their evidence", () => {
     const council = page("CouncilSpace.tsx");
     expect(council).toMatch(/Grounded assistant response/);

@@ -82,17 +82,26 @@ Every grant application in this directory cites these verifiable artefacts:
 
 | Artefact | Current value | Source file | Live endpoint |
 |---|---|---|---|
-| Public Merkle root | `e4cc26d16e9b6827dacdc88c0a527676831ad106151b5acff33659636c6cc03d` | `public/root.json` | `GET /root.json` |
-| Root.json SHA256 | `74797e30d6d98267e5ab4c8e275b135235fdf1afc6eee6b5c1f00537c41b751b` | Computed | `shasum -a 256 public/root.json` |
-| Cards under root | 303 | `public/root.json` → `card_count` | `GET /root.json` |
-| Signed chain length | 335 | `public/signed/chain.json` → `length` | `GET /signed/chain.json` |
-| Board | 22 axes / 22 measured | `canon.json` | `GET /api/gspc` |
-| Rekor logIndex | 2,791,822,965 | `TUI-1-CANONICAL-STATE.json` | — |
-| OTS state | STAMPED_PENDING_BITCOIN | `TUI-1-CANONICAL-STATE.json` | — |
-| Revenue | $0.00 external | `TUI-1-CANONICAL-STATE.json` | `GET /api/revenue` |
-| MCP registry servers | 354 | `TUI-1-CANONICAL-STATE.json` | `registry.modelcontextprotocol.io` |
+| Public Merkle root | `47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d` | `public/root.json` → `merkle_root` | `GET /root.json` |
+| Root.json SHA256 | `f1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e` | Computed over served bytes | `shasum -a 256 public/root.json` |
+| Cards under root | 319 | `public/root.json` → `card_count` | `GET /root.json` |
+| Signed card corpus | 335 | `public/signed/card_index.json` → `n_cards` | `GET /api/state` → `signed_cards` |
+| Corpus relation | SEPARATE_CORPORA, identifier overlap 0 | `public/root.json` + `public/signed/card_index.json` | `GET /api/state` → `signed_cards.corpus_relation` |
+| Board | 23 axes / 23 measured | — | `GET /api/gspc` → `totals.public_count` |
+| Rekor logIndex | 3,012,420,819 | `public/interop/rekor-root-f1913eca.json` | `GET https://rekor.sigstore.dev/api/v1/log/entries?logIndex=3012420819` |
+| OTS state | CONFIRMED_BITCOIN (blocks 969264, 969266, 969288, 969296) | `public/interop/root-f1913eca.json.ots` | `GET /interop/root-f1913eca.json.ots` |
+| Revenue (external only) | $0.03 USDC from 2 distinct non-self payers | — | `GET /api/revenue` → `one_number` |
 | Company | CSOAI Ltd, UK 16939677 | `counters.json` | Companies House |
-| DID | `did:web:csoai.org#board-attestation-1` | `public/root.json` | `GET /.well-known/did.json` |
+| DID | `did:web:csoai.org#board-attestation-1` | `public/root.json` → `did_intended` | `GET /.well-known/did.json` |
+
+> **Corrected 2026-10-07.** Two rows were removed and must not be reinstated without a live source:
+> (a) `Signed chain length = 335 | public/signed/chain.json → length` — that file is a single signed
+> envelope with **no `length` field**; the citation was wrong (335 is `card_index.json → n_cards`).
+> (b) `MCP registry servers = 354` — a count of *someone else's* registry, which `/api/state` does
+> not establish and which could not be re-verified live; an external registry total is not ours to quote.
+> `Rekor logIndex`, `OTS state` and `Revenue` previously cited `TUI-1-CANONICAL-STATE.json`, which
+> went stale — they now cite the artefact/endpoint that produces them.
+> All values are point-in-time **2026-10-07**; re-read the endpoint before submitting any application.
 
 ---
 
@@ -109,4 +118,4 @@ Every grant application in this directory cites these verifiable artefacts:
 
 ---
 
-_Last updated: 2026-09-15_
+_Last updated: 2026-10-07 (stale artefact table corrected; two unsourced rows removed)_

@@ -18,6 +18,7 @@
 // HONESTY inherited from the index and never softened here: findings are DISCOVERED behind verified
 // cards; mappings are 'relevant-to' pointers, never determinations; fines are the tier's statutory
 // maximum, cited, never asserted as owed. This handler adds NO new claim.
+import { headFromGet } from "./_head";
 
 interface Env { [k: string]: unknown }
 
@@ -149,3 +150,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request }) => {
     findings: index.findings,
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

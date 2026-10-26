@@ -5,6 +5,7 @@
  * 16 xrpl.asset.state leaves whose sha256 sit on that root. Else keep 404
  * honest. Not a mill. Not 377. Does not write /api/gspc.
  */
+import { headFromGet } from "./_head";
 
 type RootDoc = {
   merkle_root?: string;
@@ -134,3 +135,7 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
     })),
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

@@ -20,6 +20,7 @@ import {
   type SovTool,
   type ToolResult,
 } from "../lib/sovTools";
+import { stateMeaning } from "@/lib/resultCard";
 
 export type JsonSchema = {
   type?:
@@ -412,6 +413,49 @@ export function resultOutcome(result: RunnerToolResult): string | null {
   return typeof status === "string" && status.trim() ? status.trim() : null;
 }
 
+export type OutputHeader = {
+  /** The state word printed at the top of the result. */
+  word: string;
+  tone: "ok" | "payment" | "unreachable" | "problem";
+  /** One plain sentence under the word, when there is one. */
+  meaning: string | null;
+};
+
+/**
+ * The result header. A paid tool called without x_payment answers with its 402 challenge: that is
+ * an answer (the terms), not a failure, and nothing has been charged. It was printed as
+ * "UNCHECKABLE" in rose, which read as a broken tool (tools audit, 6 Oct 2026).
+ */
+export function outputHeader(result: RunnerToolResult): OutputHeader {
+  if (resultOutcome(result) === "PAYMENT_REQUIRED")
+    return {
+      word: "PAYMENT REQUIRED: nothing has been charged",
+      tone: "payment",
+      meaning: stateMeaning("PAYMENT_REQUIRED"),
+    };
+  if (result.ok) return { word: "RUNTIME_OBSERVED", tone: "ok", meaning: null };
+  if (result.state === "unreachable")
+    return { word: "UNREACHABLE", tone: "unreachable", meaning: stateMeaning("UNREACHABLE") };
+  return { word: "UNCHECKABLE", tone: "problem", meaning: null };
+}
+
+const HEADER_TONE: Record<OutputHeader["tone"], { border: string; bg: string }> = {
+  ok: { border: "border-emerald-700/25", bg: "bg-emerald-50" },
+  payment: { border: "border-amber-700/30", bg: "bg-amber-50" },
+  unreachable: { border: "border-amber-700/25", bg: "bg-amber-50" },
+  problem: { border: "border-rose-700/20", bg: "bg-rose-50" },
+};
+
+/** The tool the runner opens on: the one asked for, else board_totals, else the first listed. */
+function firstTool(tools: RunnerTool[], initialToolName?: string): RunnerTool | null {
+  return (
+    tools.find((tool) => tool.name === initialToolName) ||
+    tools.find((tool) => tool.name === "board_totals") ||
+    tools[0] ||
+    null
+  );
+}
+
 function fieldPlaceholder(name: string, kind: FieldKind): string {
   if (kind === "object") return '{\n  "key": "value"\n}';
   if (kind === "array") return '[\n  "value"\n]';
@@ -451,17 +495,26 @@ function StateBadge({
 export default function ToolRunner({
   initialToolName,
   initialArguments,
+  catalogue,
 }: {
   initialToolName?: string;
   initialArguments?: Record<string, string | boolean>;
+  /** A tools/list result the host already holds (server rendering, tests). When given, the runner
+   *  shows it instead of calling tools/list again. Nothing is invented: it is that list or none. */
+  catalogue?: RunnerTool[];
 }) {
-  const [tools, setTools] = useState<RunnerTool[]>([]);
+  const [tools, setTools] = useState<RunnerTool[]>(catalogue ?? []);
   const [listState, setListState] = useState<
     "loading" | "catalogued" | "unreachable"
-  >("loading");
+  >(catalogue ? "catalogued" : "loading");
   const [listReason, setListReason] = useState("");
-  const [active, setActive] = useState<RunnerTool | null>(null);
-  const [draft, setDraft] = useState<ToolDraft>({});
+  const [active, setActive] = useState<RunnerTool | null>(() =>
+    catalogue ? firstTool(catalogue, initialToolName) : null,
+  );
+  const [draft, setDraft] = useState<ToolDraft>(() => {
+    const first = catalogue ? firstTool(catalogue, initialToolName) : null;
+    return first ? prefillToolDraft(first, initialArguments) : {};
+  });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [output, setOutput] = useState<{
     result: RunnerToolResult;
@@ -487,6 +540,10 @@ export default function ToolRunner({
   }, []);
 
   useEffect(() => {
+    if (catalogue) {
+      activeNameRef.current = active?.name ?? null;
+      return;
+    }
     let cancelled = false;
     setListState("loading");
     setListReason("");
@@ -506,11 +563,7 @@ export default function ToolRunner({
       setListState("catalogued");
       const advertisedTools = reply.tools as RunnerTool[];
       setTools(advertisedTools);
-      const first =
-        advertisedTools.find((tool) => tool.name === initialToolName) ||
-        advertisedTools.find((tool) => tool.name === "board_totals") ||
-        advertisedTools[0] ||
-        null;
+      const first = firstTool(advertisedTools, initialToolName);
       activeNameRef.current = first?.name ?? null;
       draftVersionRef.current += 1;
       paymentContextRef.current = null;
@@ -521,7 +574,8 @@ export default function ToolRunner({
     return () => {
       cancelled = true;
     };
-  }, [initialArguments, initialToolName, reloadKey]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [catalogue, initialArguments, initialToolName, reloadKey]);
 
   const groups = useMemo(
     () => [
@@ -903,6 +957,10 @@ export default function ToolRunner({
                   void run();
                 }}
                 noValidate
+                // Watch mode (functions/_lib/uiTools.ts) fills form[data-ui-form='request'] and
+                // points at [data-ui-action='request-submit']; neither existed, so "Typing … as the
+                // subject" typed nothing (tools audit, 6 Oct 2026).
+                data-ui-form={active.name === "commission_card" ? "request" : active.name}
               >
                 {Object.keys(properties).length ? (
                   <div className="grid gap-4 xl:grid-cols-2">
@@ -977,6 +1035,7 @@ export default function ToolRunner({
                           {textarea ? (
                             <textarea
                               id={id}
+                              data-ui-field={name}
                               rows={
                                 kind === "object" || kind === "json-or-string"
                                   ? 5
@@ -997,16 +1056,27 @@ export default function ToolRunner({
                           ) : schema.enum?.length ? (
                             <select
                               id={id}
+                              data-ui-field={name}
                               value={String(draft[name] || "")}
                               onChange={(event) =>
                                 setField(name, event.target.value)
                               }
                               aria-invalid={Boolean(error)}
+                              aria-describedby={
+                                error ? `${id}-error` : undefined
+                              }
                               className={commonClass}
                             >
+                              {/* A required enum starts unchosen. Without this option the browser
+                                  SHOWED the first value while the form held "", and Run answered
+                                  "Required." beside a field that looked filled. */}
                               {!required.has(name) ? (
                                 <option value="">Not set</option>
-                              ) : null}
+                              ) : (
+                                <option value="" disabled>
+                                  Choose…
+                                </option>
+                              )}
                               {schema.enum.map((option) => (
                                 <option
                                   key={String(option)}
@@ -1019,6 +1089,7 @@ export default function ToolRunner({
                           ) : (
                             <input
                               id={id}
+                              data-ui-field={name}
                               type={
                                 name === "x_payment"
                                   ? "password"
@@ -1070,6 +1141,7 @@ export default function ToolRunner({
                 <button
                   type="submit"
                   disabled={busy}
+                  data-ui-action={isPaidTool(active) ? "request-submit" : "run-tool"}
                   className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#04624a] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#03513e] disabled:cursor-wait disabled:opacity-60"
                 >
                   {busy ? (
@@ -1090,18 +1162,27 @@ export default function ToolRunner({
                 </button>
               </form>
 
-              {output ? (
+              {output ? (() => {
+                const head = outputHeader(output.result);
+                return (
                 <section
-                  className={`mt-6 overflow-hidden rounded-xl border ${output.result.ok ? "border-emerald-700/25" : output.result.state === "unreachable" ? "border-amber-700/25" : "border-rose-700/20"}`}
+                  className={`mt-6 overflow-hidden rounded-xl border ${HEADER_TONE[head.tone].border}`}
                   aria-live="polite"
+                  data-testid="tool-runner-output"
+                  data-state={head.tone}
                 >
                   <header
-                    className={`flex flex-wrap items-start justify-between gap-3 px-4 py-3 ${output.result.ok ? "bg-emerald-50" : output.result.state === "unreachable" ? "bg-amber-50" : "bg-rose-50"}`}
+                    className={`flex flex-wrap items-start justify-between gap-3 px-4 py-3 ${HEADER_TONE[head.tone].bg}`}
                   >
                     <div className="flex items-start gap-2.5">
-                      {output.result.ok ? (
+                      {head.tone === "ok" ? (
                         <CheckCircle2
                           className="mt-0.5 h-4 w-4 text-emerald-800"
+                          aria-hidden="true"
+                        />
+                      ) : head.tone === "payment" ? (
+                        <LockKeyhole
+                          className="mt-0.5 h-4 w-4 text-amber-800"
                           aria-hidden="true"
                         />
                       ) : (
@@ -1112,12 +1193,13 @@ export default function ToolRunner({
                       )}
                       <div>
                         <p className="text-xs font-bold uppercase tracking-[0.12em] text-slate-900">
-                          {output.result.ok
-                            ? "RUNTIME_OBSERVED"
-                            : output.result.state === "unreachable"
-                              ? "UNREACHABLE"
-                              : "UNCHECKABLE"}
+                          {head.word}
                         </p>
+                        {head.meaning ? (
+                          <p className="mt-0.5 max-w-xl text-[11px] leading-relaxed text-slate-700">
+                            {head.meaning}
+                          </p>
+                        ) : null}
                         <p className="mt-0.5 text-[10px] text-slate-600">
                           {active.name} · {output.observedAt}
                           {resultOutcome(output.result)
@@ -1164,7 +1246,8 @@ export default function ToolRunner({
                     independently says so.
                   </footer>
                 </section>
-              ) : null}
+                );
+              })() : null}
             </div>
           ) : (
             <div className="p-6" role="status">

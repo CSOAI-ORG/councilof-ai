@@ -5,6 +5,7 @@ import { PLAYBOOK_CLAIMS, PLAYBOOK_PITCH, PLAYBOOK_RULING, playbookByVerdict } f
 import { CENSUS_SITES, EMPTY_SLOT_RULING, EMPTY_SLOTS } from "./emptySlots";
 
 const products = readFileSync(resolve(__dirname, "../pages/Products.tsx"), "utf8");
+const internal = readFileSync(resolve(__dirname, "../pages/YieldInternal.tsx"), "utf8");
 
 describe("domination playbook audit", () => {
   it("keeps demand; empty-names stale vs 22·22·0; refuses week-to-MEASURED", () => {
@@ -34,7 +35,9 @@ describe("domination playbook audit", () => {
   it("does not publish seat prices or a sold rank", () => {
     const blob = JSON.stringify({ PLAYBOOK_CLAIMS, PLAYBOOK_PITCH, EMPTY_SLOTS, CENSUS_SITES });
     expect(blob).not.toMatch(/£79|£499|rank for sale|22\/22|dorado|cibola|sovos/i);
-    expect(products).toContain("PlaybookAudit");
+    // Operator notes live on the noindex /status/internal page, never on /products (6 Oct 2026).
+    expect(internal).toContain("<PlaybookAudit ");
+    expect(products).not.toContain("<PlaybookAudit");
     expect(products).toContain("EmptySlots");
   });
 });

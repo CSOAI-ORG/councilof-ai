@@ -1,5 +1,6 @@
 // GET /api/wave-dashboard — live Wave 0–5 aggregates from public APIs (unsigned runtime view).
 // Signed canonical: /signals/wave-dashboard.signed.json (POD-signed, emit_wave_dashboard.py).
+import { headFromGet } from "./_head";
 export const onRequestGet: PagesFunction = async (context) => {
   const origin = new URL(context.request.url).origin;
   const hdrs = { "user-agent": "csoai-wave-dashboard/0.1" };
@@ -59,3 +60,7 @@ export const onRequestGet: PagesFunction = async (context) => {
     { headers: { "content-type": "application/json", "cache-control": "public, max-age=120" } },
   );
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

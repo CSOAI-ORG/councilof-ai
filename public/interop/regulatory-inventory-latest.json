@@ -1,0 +1,37 @@
+{
+  "schema": "csoai.regulatory-inventory-pointer/1",
+  "kind": "DISCOVERY_POINTER_ONLY",
+  "versioned_at": "2026-10-26T03:37:48.681Z",
+  "index_url": "/interop/regulatory-inventory-2026-10-26-7bc985bfc7c2.json",
+  "index_sha256": "ac5c2e73bbabaa2059b4ff4eb88c23d674bee04de94b77b3ef74fae957b144cd",
+  "content_sha256": "7bc985bfc7c2d4cab82c5b9d7600d1beb1fcd2abd34f89082b3c05d40d42b062",
+  "crosswalk_assets": 26,
+  "ots_url": "/interop/regulatory-inventory-2026-10-26-7bc985bfc7c2.json.ots",
+  "versions": [
+    {
+      "index_url": "/interop/regulatory-inventory.json",
+      "index_sha256": "5b0d3847bc19b4da074bf13113625e749edbb7c54658096d1d48e7e4f3e66561",
+      "ots_url": "/interop/regulatory-inventory.json.ots",
+      "content_sha256": "2d15e4c68c4eaeac8e06c07bb9112d53adda022bccd812a7f124acd372c24683",
+      "crosswalk_assets": 25,
+      "versioned_at": null
+    },
+    {
+      "index_url": "/interop/regulatory-inventory-2026-10-07-019dca73240b.json",
+      "index_sha256": "d8e4b380a2d1319eafa9f971e644509f4ab9ae8b7ee896698e36a0cdf86048f9",
+      "ots_url": "/interop/regulatory-inventory-2026-10-07-019dca73240b.json.ots",
+      "content_sha256": "019dca73240bab7fa9b86e45b21704a4cd53c7e542e9bf93dea3807ef60eb154",
+      "crosswalk_assets": 25,
+      "versioned_at": "2026-10-07T09:47:57.481Z"
+    },
+    {
+      "index_url": "/interop/regulatory-inventory-2026-10-26-7bc985bfc7c2.json",
+      "index_sha256": "ac5c2e73bbabaa2059b4ff4eb88c23d674bee04de94b77b3ef74fae957b144cd",
+      "ots_url": "/interop/regulatory-inventory-2026-10-26-7bc985bfc7c2.json.ots",
+      "content_sha256": "7bc985bfc7c2d4cab82c5b9d7600d1beb1fcd2abd34f89082b3c05d40d42b062",
+      "crosswalk_assets": 26,
+      "versioned_at": "2026-10-26T03:37:48.681Z"
+    }
+  ],
+  "scope": "This unsigned pointer selects the stamped regulatory inventory whose derived-statement rows match the in-toto crosswalk index (public/interop/crosswalk/intoto/index.json) on this commit; scripts/build-regulatory-inventory.mjs derives it and scripts/regulatory-inventory-gate.mjs checks it in every build. Every listed file is immutable and has its own OpenTimestamps proof; earlier versions stay published as history and are not current. A proof file's existence is not a Bitcoin anchor: read its verified state. The inventory's own truth_boundaries still apply: 26 heterogeneous crosswalk assets are not 26 signed legal crosswalks."
+}

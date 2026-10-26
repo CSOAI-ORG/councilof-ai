@@ -14,7 +14,6 @@ import {
   AlertTriangle,
   TrendingUp,
   TrendingDown,
-  FileText,
   Scale,
   Globe2,
   Activity,
@@ -484,16 +483,8 @@ export default function GovernmentDashboard() {
                 A layout prototype for scoped evidence, jurisdiction views and accountable review.
                 It does not monitor national AI registries, enforce compliance, or exercise public authority.
               </p>
-              <div className="flex flex-wrap gap-4">
-                <a href="/government-portal" className="bg-white text-emerald-900 hover:bg-emerald-50">
-                  <Eye className="mr-2 h-5 w-5" />
-                  Access Dashboard
-                </a>
-                <a href="/contact" className="bg-transparent border-white/30 text-white hover:bg-white/10">
-                  <FileText className="mr-2 h-5 w-5" />
-                  Request Access
-                </a>
-              </div>
+              {/* Tools audit, 6 Oct 2026: "Access Dashboard" opened /government-portal (a content-review
+                  notice) and "Request Access" offered access to a prototype that grants none. Removed. */}
             </div>
 
             <div className="grid grid-cols-2 gap-4">

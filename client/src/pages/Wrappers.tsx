@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "wouter";
+import { wrapperEnquiryHref } from "@/lib/pilotEnquiry";
 
 const CANONICAL = "https://councilof.ai/wrappers/";
 const LEDGER = "/interop/wrapped-asset-parity-latest.json";
@@ -8,6 +9,8 @@ const ROOT_KINDS = "/interop/root-kinds.json";
 const HF_DATASET = "https://huggingface.co/datasets/csoai/wrapped-asset-parity";
 const DOOR = "/api/wrapper?id=";
 const KIND = "csoai.wrapper.parity/0.1";
+const METHOD = "https://github.com/CSOAI-ORG/councilof-ai/blob/35492d5947d08b0d96cdd671b1f35aa652a95732/measurement/wrapped-asset-ledger-spec.md";
+const ENQUIRY = "/contact/?arm=ledger";
 
 const PAGE_DESCRIPTION =
   "Wrapped and bridged stablecoin pairs read from public RPC at pinned finalized blocks: wrapped supply against the origin-chain escrow where one exists. A read is not a measurement; native issuance and custodial wrappers are indexed, with no claim about backing either way.";
@@ -111,11 +114,11 @@ export default function Wrappers() {
         <meta name="description" content={PAGE_DESCRIPTION} />
         <meta name="robots" content="index,follow" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="Wrappers | Council of AI" />
+        <meta property="og:title" content="SovX — wrapped-asset parity reads | Council of AI" />
         <meta property="og:description" content={PAGE_DESCRIPTION} />
         <meta property="og:url" content={CANONICAL} />
         <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content="Wrappers | Council of AI" />
+        <meta name="twitter:title" content="SovX — wrapped-asset parity reads | Council of AI" />
         <meta name="twitter:description" content={PAGE_DESCRIPTION} />
         <script type="application/ld+json">{JSON.stringify(PAGE_LD)}</script>
       </Helmet>
@@ -129,7 +132,7 @@ export default function Wrappers() {
             <span aria-hidden="true" className="px-2">/</span>
             <span>Wrappers</span>
           </nav>
-          <p className="mt-8 font-mono text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">Wrapper economy · read, not rated</p>
+          <p className="mt-8 font-mono text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">SovX · wrapped-asset reads</p>
           <h1 className="mt-3 max-w-4xl text-4xl font-black tracking-tight sm:text-5xl">
             Wrapped supply against the escrow that backs it — at named blocks, from public RPC.
           </h1>
@@ -146,6 +149,8 @@ export default function Wrappers() {
             <a className="rounded-lg bg-emerald-400 px-4 py-2.5 text-slate-950 hover:bg-emerald-300" href="#pairs">See the pairs</a>
             <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href={LEDGER}>Ledger JSON</a>
             <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href={HF_DATASET}>Hugging Face dataset</a>
+            <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href={METHOD}>Read the dated method</a>
+            <Link className="rounded-lg border border-emerald-400 px-4 py-2.5 text-emerald-300 hover:bg-emerald-950" href={ENQUIRY}>Discuss an evidence task</Link>
           </div>
         </div>
       </header>
@@ -172,6 +177,36 @@ export default function Wrappers() {
           {" "}· ledger as of <span className="font-mono">{ledger?.as_of ?? "—"}</span>
           {" "}· buy one signed card per pair at <code className="font-mono">GET {DOOR}&lt;pair&gt;</code> (free preview with <code className="font-mono">&amp;preview=1</code>; the amount is quoted only in the 402 challenge).
         </p>
+      </section>
+
+
+      <section aria-labelledby="start-heading" className="mx-auto max-w-7xl px-5 pb-10">
+        <div className="rounded-2xl border border-emerald-200 bg-white p-6 shadow-sm">
+          <h2 id="start-heading" className="text-2xl font-black">Start with one pair</h2>
+          <ol className="mt-4 grid gap-5 text-sm leading-6 text-slate-700 md:grid-cols-3">
+            <li><strong className="block text-slate-950">1. Open the published record</strong>
+              Choose a pair below and open its record. Keep the record id, observation date and named blocks with any figures you use.
+              The table is a dated snapshot; loading this page does not refresh it.
+            </li>
+            <li><strong className="block text-slate-950">2. Compare a free live preview</strong>
+              The pair&apos;s live preview attempts a new chain read. It is unsigned; check its own date, state and blocks.
+              A failed read stays UNMEASURED. The developer lookup maps asset ids to existing records at <a className="text-emerald-700 underline" href="/api/wrapper/index.json">the free index</a>.
+            </li>
+            <li><strong className="block text-slate-950">3. Define the evidence you need</strong>
+              For an existing signed pack, inspect the x402 terms before paying. For a business task, tell us the asset, chain,
+              dates, intended use and required output. We agree the available scope and delivery terms by email.
+            </li>
+          </ol>
+          <p className="mt-4 text-sm leading-6 text-slate-600">
+            Preview JSON is not a signed card. <Link className="text-emerald-700 underline" href="/gspc-verify/">Checking a signed result is free</Link>;
+            a signature checks origin and integrity, not reserve adequacy.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-3 text-sm font-semibold">
+            <Link className="rounded-lg bg-emerald-800 px-4 py-2.5 text-white hover:bg-emerald-900" href={ENQUIRY}>Prepare an evidence enquiry</Link>
+            <a className="rounded-lg border border-slate-300 px-4 py-2.5 text-slate-700 hover:border-emerald-600" href="/api/x402">Existing paid resources</a>
+          </div>
+          <p className="mt-3 text-xs leading-5 text-slate-500">Preparing an enquiry sends nothing, books nothing and makes no payment.</p>
+        </div>
       </section>
 
       <section id="pairs" aria-labelledby="pairs-heading" className="mx-auto max-w-7xl px-5 pb-16">
@@ -221,7 +256,11 @@ export default function Wrappers() {
                     <td className="px-3 py-2 font-mono tabular-nums">{r.escrow_over_wrapped ?? "—"}</td>
                     <td className="px-3 py-2"><span className="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-semibold">{STATE_LABEL[r.state] ?? r.state}</span>{r.note ? <div className="mt-1 max-w-xs text-xs text-slate-500">{r.note}</div> : null}{r.error ? <div className="mt-1 text-xs text-amber-800">{r.error}</div> : null}</td>
                     <td className="px-3 py-2 font-mono text-xs text-slate-600">{r.wrapped.block?.number ?? "—"}{r.canonical?.block?.number ? ` / ${r.canonical.block.number}` : ""}</td>
-                    <td className="px-3 py-2"><a className="text-emerald-700 underline underline-offset-4" href={`${DOOR}${encodeURIComponent(r.id)}&preview=1`}>preview</a></td>
+                    <td className="px-3 py-2">
+                      <a className="block text-emerald-700 underline underline-offset-4" href={`/w/${encodeURIComponent(r.id)}`}>Published record</a>
+                      <a className="mt-1 block text-emerald-700 underline underline-offset-4" href={`${DOOR}${encodeURIComponent(r.id)}&preview=1`}>Free live preview</a>
+                      <Link className="mt-1 block text-emerald-700 underline underline-offset-4" href={wrapperEnquiryHref(r.id, ledger.as_of)}>Enquire about this pair</Link>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -268,7 +307,7 @@ export default function Wrappers() {
           A ratio above 1 means more sat in the escrow than the wrapped supply at those two heights; heights on two chains are never
           simultaneous, so every record names both blocks. The roster grows only with a wrapped contract, a canonical contract and a
           named, sourced escrow — or a native or custodial note. Corrections: <a className="underline" href="/api/corrections">/api/corrections</a>.
-          Method: <code>measurement/wrapped-asset-ledger-spec.md</code> (not publicly hosted; the ledger itself is public at <a className="underline" href="/interop/wrapped-asset-parity-2026-09-14.json">/interop/wrapped-asset-parity-2026-09-14.json</a>).
+          Method: <a className="text-emerald-700 underline" href={METHOD}>dated ledger method and its limitations</a>. The original snapshot remains available at <a className="underline" href="/interop/wrapped-asset-parity-2026-09-14.json">/interop/wrapped-asset-parity-2026-09-14.json</a>.
         </p>
       </section>
     </section>

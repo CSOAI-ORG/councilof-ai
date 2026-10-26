@@ -101,9 +101,7 @@ function sharedToolSummary(
       }`;
     }
     case "get_axis":
-      return payload.state === "NOT_ON_BOARD"
-        ? `NOT ON BOARD — "${payload.axis}" is not a row the live board carries.`
-        : `${payload.status ?? "?"} — axis "${payload.axis}" (${payload.measured ? "a real run stands behind this row" : "declared slot, no run behind it"}).`;
+      return axisSummary(payload);
     case "verify_card":
       return `${payload.state}${payload.reason ? " — " + payload.reason : ""}${payload.state === "VALID" ? ` — ${String(payload.id).slice(0, 16)}… verifies under the published key.` : ""}`;
     case "list_cards": {
@@ -111,7 +109,11 @@ function sharedToolSummary(
         string,
         unknown
       > | null;
-      return `index declares ${idx?.n_cards_declared ?? "?"} card rows; the store's count endpoint reports ${store?.count ?? "?"}. Two labelled numbers, not reconciled here.`;
+      const xb =
+        store?.includes_cross_border_card === true
+          ? " By its own definition that count includes the cross-border East-West card (a separate schema)."
+          : "";
+      return `index declares ${idx?.n_cards_declared ?? "?"} card rows; the store's count endpoint reports ${store?.count ?? "?"}.${xb} Two labelled numbers, not reconciled here.`;
     }
     case "get_root":
       return `${payload.state ?? "?"} — public-root merkle ${String(payload.merkle_root || "").slice(0, 16) || "none"}. Not GSPC.`;
@@ -138,13 +140,40 @@ export const SHARED_TOOL_NAMES = new Set(
   (GSPC_TOOLS as { tools: { name: string }[] }).tools.map((t) => t.name),
 );
 
+/**
+ * The axis family: one free tool per GSPC board axis, named for the axis it answers
+ * (axis_<axis-id>). Each returns the live board row for that axis — the same payload
+ * get_axis returns, with the axis fixed by the tool's own name. The axis id is read off the
+ * tool name, so there is nothing for a caller to pass and nothing for it to get wrong.
+ *
+ * ONE source of the axis list: functions/mcp/axis-aliases.json, pinned to the board's own
+ * declared slots. The generator that writes the definitions is scripts/build_axis_mcp_tools.mjs.
+ */
+export const AXIS_TOOL_PREFIX = "axis_";
+
+/** The board axis a generated axis tool answers for, or null when the name is not one. */
+export function axisToolAxis(name: string): string | null {
+  if (!name.startsWith(AXIS_TOOL_PREFIX)) return null;
+  return name.slice(AXIS_TOOL_PREFIX.length) || null;
+}
+
+/** The get_axis summary, shared by get_axis and every generated axis tool. */
+function axisSummary(payload: Record<string, unknown>): string {
+  return payload.state === "NOT_ON_BOARD"
+    ? `NOT ON BOARD — "${payload.axis}" is not a row the live board carries.`
+    : `${payload.status ?? "?"} — axis "${payload.axis}" (${payload.measured ? "a real run stands behind this row" : "declared slot, no run behind it"}).`;
+}
+
 export async function sharedToolResult(
   name: string,
   args: Record<string, unknown>,
   origin: string,
 ): Promise<McpToolResult> {
+  const axis = axisToolAxis(name);
   const payload =
-    name === "board_totals"
+    axis !== null
+      ? await getAxisTool(origin, { axis })
+      : name === "board_totals"
       ? await boardTotalsTool(origin, args)
       : name === "get_axis"
         ? await getAxisTool(origin, args)

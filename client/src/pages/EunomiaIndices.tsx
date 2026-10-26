@@ -2,8 +2,10 @@ import { EUNOMIA_AXES } from "@/data/eunomia";
 import { useBoardCount } from "@/lib/boardCount";
 
 /**
- * Financial-axis indices — the three aspirational index axes, UNMEASURED on GET /api/gspc.
- * C-2026-0826-05: MEASURED-INDEX-v0.1 was an over-claim. Do not restore that sticker.
+ * Financial-axis indices — three proposed index measures, none a signed result.
+ * The living board (GET /api/gspc) carries cited component facts in their place
+ * (ai-adoption-components, labour-components, humanoid-labour-index), each "not an index";
+ * this page does not type their state. C-2026-0826-05: the MEASURED-INDEX-v0.1 sticker stays withdrawn.
  * A n=10 harness gold set exists as reference input only — not a living-board MEASURED stamp.
  * Measurement, not certification. Empty stays empty until a NEW signed card exists.
  */
@@ -16,16 +18,18 @@ export default function EunomiaIndices() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
-      <h1 className="text-2xl font-bold">Financial-axis indices — UNMEASURED</h1>
+      <h1 className="text-2xl font-bold">Financial-axis indices — UNMEASURED as indices</h1>
       <p className="mt-1 text-sm text-emerald-300/80">
-        The three aspirational index axis · living board GET /api/gspc is authority · {board.public_count}
+        Three proposed index measures · living board GET /api/gspc is authority · {board.public_count}
         {!board.live && " (last recorded observation — the endpoint wins)"}
       </p>
       <p className="mt-2 text-xs text-slate-400">
-        Each index slot on the living board is UNMEASURED (ai-economy-index, human-labour-index, humanoid-labour-index).
-        C-2026-0826-05 stands: MEASURED-INDEX-v0.1 was an over-claim. A n=10 harness gold set exists as a
-        reference input only. It is not a signed board cell. Do not restore the v0.1 sticker. Empty stays empty
-        until missing series + formula are published and a NEW signed card exists.
+        None of these three is measured as an index, and none is a signed result. The living board does
+        not carry them as indices: in their place it carries cited component facts (ai-adoption-components,
+        labour-components, humanoid-labour-index), each stated on its row as not an index. Read those rows&apos;
+        current state on GET /api/gspc. C-2026-0826-05 stands: MEASURED-INDEX-v0.1 was an over-claim, and the
+        v0.1 sticker stays withdrawn. A n=10 harness gold set exists as a reference input only. Empty stays
+        empty until missing series + formula are published and a NEW signed card exists.
       </p>
 
       <div className="mt-6 grid gap-3 sm:grid-cols-1">
@@ -56,12 +60,12 @@ export default function EunomiaIndices() {
       <h2 className="mt-8 text-lg font-semibold">Honest reading</h2>
       <div className="mt-3 rounded-xl border border-slate-600/40 bg-[#0d241b] p-4 text-xs text-slate-400">
         <p className="mt-1">
-          • Living board authority is GET /api/gspc. These three slots are UNMEASURED. A harness n=10 run does
-          not write MEASURED. Cite the board, not this page, for axis status.
+          • Living board authority is GET /api/gspc. It carries component facts, not these indices. A harness
+          n=10 run does not write MEASURED. Cite the board, not this page, for row status.
         </p>
         <p className="mt-1">
-          • C-2026-0826-05: do not restore MEASURED-INDEX-v0.1. Eurostat / labour reference components are
-          inputs, not an index.
+          • C-2026-0826-05: the MEASURED-INDEX-v0.1 sticker stays withdrawn. Eurostat / labour reference
+          components are inputs, not an index.
         </p>
         <p className="mt-1">
           • Item counts n=10 are the harness gold set. Wilson half-width is wide. None of these numbers is a

@@ -188,10 +188,21 @@ export type X402Accept = {
   };
 };
 
+/**
+ * The launch amount on existing-data doors (PROMO_EXISTING_DATA below).
+ *
+ * EXTENDED (7 Oct 2026, owner ruling #16, applied by agent under the owner's delegation): ends_at
+ * moved from 2026-10-11T00:00:00Z to 2027-01-11T00:00:00Z. Why: 0-1 independent payers so far, so
+ * letting the standard amounts apply would raise the Art 50 door about 2,500-fold and the evidence
+ * bundle about 25,000-fold before the paid route had been proven with a single stranger. No amount
+ * changed. The id keeps its original "30d" spelling on purpose: it names the campaign that started
+ * on 2026-09-11 and is already carried by challenges, receipts and ledger rows, so renaming it would
+ * split one campaign into two. Its length is starts_at..ends_at, not the id.
+ */
 export const X402_LAUNCH_CAMPAIGN = {
   id: "csoai-launch-30d-20260911",
   starts_at: "2026-09-11T00:00:00Z",
-  ends_at: "2026-10-11T00:00:00Z",
+  ends_at: "2027-01-11T00:00:00Z",
   amount_atomic: "10000", // 0.01 USDC
 } as const;
 
@@ -338,6 +349,13 @@ export const KNOWN_INTERNAL_X402_WALLETS = [
   // was an unsourced attribution and false. The single non-self payer counted today,
   // 0x7e6b6556… (0xc16ecc85…, 2026-09-08, 20000 atomic), is an external wallet: nonce 0,
   // relayed, holding ~3.09 USDC, paying five services in twelve seconds. It stays counted.
+  //
+  // COMPROMISED (2026-10-07): commit 27ac2d551 put this wallet's private key in a public file, and git
+  // history still holds it. A third-party sweeper drained it on 2026-09-22. The address is kept ONLY for
+  // historical classification: its one settlement (2026-09-12, tx 0xeaaafb8a…, nonce matched in the
+  // committed tui4 evidence) must stay self, never revenue. Anyone can sign as it now, so "self" for any
+  // later settlement from it cannot be verified. The classification fails toward undercounting revenue.
+  // Never fund it. See tui4-x402-test/KEY-COMPROMISED.md.
   "0x6ea00613c15f2463bc10c7188215c4fa6f4943c6",
 ] as const;
 
@@ -946,6 +964,43 @@ export function challengeAccept(
   };
 }
 
+/**
+ * pricingTerms — one plain sentence for a 402 whose amount is dated, or null when it is not.
+ *
+ * WHY (6 Oct 2026, T11). The launch amount on existing-data doors ends at X402_LAUNCH_CAMPAIGN.ends_at
+ * and the standard amount is far higher, but only the machine fields (csoai_pricing.ends_at and
+ * normal_amount_atomic) said so; no sentence a person or an agent's summary would read did. The
+ * sentence is BUILT from the accepts entries, so it disappears by itself once no entry carries an
+ * end date. It names fields, never an amount: the amount lives only in accepts[].
+ *
+ * 7 Oct 2026 (owner ruling #16): the end moved to 2027-01-11T00:00:00Z (see X402_LAUNCH_CAMPAIGN).
+ * Nothing here changed: the sentence reads ends_at from the accepts entries, so it names the new end.
+ */
+export function pricingTerms(accepts: X402Accept[]): string | null {
+  const ends = accepts
+    .map((a) => a.csoaiPricing?.ends_at)
+    .filter((e): e is string => typeof e === "string" && !Number.isNaN(Date.parse(e)))
+    .sort();
+  if (!ends.length) return null;
+  const end = ends[0];
+  const lastDay = new Date(Date.parse(end) - 86_400_000).toISOString().slice(0, 10);
+  return (
+    `accepts[] carries a launch amount until ${end} (end of ${lastDay} UTC). From then this request asks its ` +
+    "standard amount, the one in csoai_pricing.normal_amount_atomic. Read accepts[] on every call; your wallet " +
+    "signs exactly the amount shown and nothing more."
+  );
+}
+
+/**
+ * Optional bazaar `resource.iconUrl` (specs/extensions/bazaar.md, "Service Metadata on
+ * `resource`"). Facilitators use serviceName + tags + iconUrl to enrich Bazaar search
+ * results "without any out-of-band admin step", so an indexed door without one renders
+ * as an unbranded row. Spec rules this URL must satisfy: absolute http(s), <=2048 chars,
+ * no data:/file: scheme, no userinfo, host not an IP literal / loopback / hex or
+ * all-digit literal, no control characters. apple-touch-icon.png answers 200 image/png.
+ */
+const CSOAI_ICON_URL = "https://councilof.ai/apple-touch-icon.png";
+
 /** Build an x402 v2 PaymentRequired object (the 402 BODY; the header carries headerPaymentRequired() of it). */
 export function buildPaymentRequiredV2(
   opts: PaymentRequiredV2Opts,
@@ -953,6 +1008,9 @@ export function buildPaymentRequiredV2(
   const accepts = opts.accepts.map((a) =>
     challengeAccept(a, opts.resourceUrl, opts.description),
   );
+  // Body-only sidecar (headerPaymentRequired never copies `csoai`), so the header budget is unaffected.
+  const terms = pricingTerms(opts.accepts);
+  const csoai = opts.csoai || terms ? { ...(opts.csoai || {}), ...(terms ? { pricing_terms: terms } : {}) } : null;
   return {
     x402Version: 2,
     error: "Payment required",
@@ -964,6 +1022,7 @@ export function buildPaymentRequiredV2(
       ...(opts.tags && opts.tags.length
         ? { tags: opts.tags.slice(0, 5).map((t) => t.slice(0, 32)) }
         : {}),
+      iconUrl: CSOAI_ICON_URL,
     },
     accepts,
     extensions: {
@@ -971,7 +1030,7 @@ export function buildPaymentRequiredV2(
       // Do NOT add `discoverable: true` here — that field is not in the bazaar spec.
       bazaar: opts.bazaar,
     },
-    ...(opts.csoai ? { csoai: opts.csoai } : {}),
+    ...(csoai ? { csoai } : {}),
   };
 }
 

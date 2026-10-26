@@ -15,8 +15,14 @@
  */
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { ArrowUp, Loader2, Mic, MicOff, ShieldAlert, Eye } from "lucide-react";
+import { useSearch } from "wouter";
+import CompanyCasePanel from "./CompanyCasePanel";
+import ConnectedCompanyCasePanel from "./ConnectedCompanyCasePanel";
+import { companyWorkspaceSelection, type CompanyCaseConnection } from "./companyCaseModel";
 import ResultCard from "@/components/talk/ResultCard";
-import { statTiles, toolTitle, verifyHref } from "@/lib/resultCard";
+import ResultFollowUp from "@/components/talk/ResultFollowUp";
+import Inline from "@/components/talk/TalkInline";
+import { answerSections, checkedLine, chipFor, firstSentence, plainAnswer, statTiles, toolTitle, verifyLink } from "@/lib/resultCard";
 import type { PageContext } from "../../../../functions/_lib/uiTools";
 import { LISTEN_PRIVACY_NOTE, isListenSupported, startListening, stopListening } from "@/lib/councilListen";
 import {
@@ -53,28 +59,6 @@ function StateLabel({ label }: { label?: string }) {
     >
       {label}
     </span>
-  );
-}
-
-/** Inline **bold**, `code` and _emphasis_, rendered as elements (never as HTML). */
-function Inline({ text }: { text: string }) {
-  const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`|\b_[^_]+_\b)/g).filter(Boolean);
-  return (
-    <>
-      {parts.map((p, i) =>
-        p.startsWith("**") && p.endsWith("**") ? (
-          <strong key={i}>{p.slice(2, -2)}</strong>
-        ) : p.startsWith("`") && p.endsWith("`") ? (
-          <code key={i} className="rounded bg-muted px-1 font-mono text-[0.85em] break-all">
-            {p.slice(1, -1)}
-          </code>
-        ) : p.startsWith("_") && p.endsWith("_") && p.length > 2 ? (
-          <em key={i}>{p.slice(1, -1)}</em>
-        ) : (
-          <span key={i}>{p}</span>
-        ),
-      )}
-    </>
   );
 }
 
@@ -141,20 +125,24 @@ function ChallengeDetails({ output }: { output: unknown }) {
   );
 }
 
-function ToolCard({ card }: { card: TalkToolCard }) {
+function ToolCard({ card, answer }: { card: TalkToolCard; answer?: string }) {
   const args = argsOf(card);
   const argText = typeof args === "string" ? args : Object.keys(args).length ? JSON.stringify(args) : "no arguments";
   const cit = card.citation;
+  const { chip, toolWord } = chipFor(card.name, card.label);
   return (
     <ResultCard
       title={toolTitle(card.name)}
       tool={card.name}
-      label={card.label}
+      label={chip}
+      toolWord={toolWord}
       running={card.status === "running"}
-      tiles={statTiles(card.output)}
-      verifyUrl={verifyHref(cit?.url)}
+      tiles={statTiles(card.output, 4, card.name)}
+      checked={checkedLine(card.name, card.output)}
+      verifyUrl={verifyLink(card.name, card.output, cit?.record_id, cit?.url)}
       recordId={cit?.record_id ?? null}
       summary={card.summary}
+      answer={answer ? <AnswerText text={answer} /> : undefined}
       args={argText}
       raw={card.output ?? undefined}
     >
@@ -163,16 +151,43 @@ function ToolCard({ card }: { card: TalkToolCard }) {
   );
 }
 
+/** This card's part of the streamed answer (its own "**tool** →" block plus the shared lines). */
+function sectionFor(run: TalkRun, tool: string, index: number): string | undefined {
+  if (!run.text) return undefined;
+  const { byTool, shared } = answerSections(run.text);
+  const own = byTool[tool];
+  if (own) return shared ? `${own}\n\n${shared}` : own;
+  // An answer with no per-tool blocks belongs to the first card only, never repeated.
+  return index === 0 && !Object.keys(byTool).length ? run.text : undefined;
+}
+
+/**
+ * The one sentence under a run's cards. A tool with a plain sentence (resultCard.plainAnswer) gets
+ * it, built from the same fields as its tiles, so the sentence and the tiles agree (tools audit
+ * retest, 6 Oct 2026: the x402 card printed 15 in a tile and 16 in this line). Otherwise the
+ * answer's own first sentence.
+ */
+export function faceSentence(run: Pick<TalkRun, "text" | "tools">): string {
+  const plain = run.tools
+    .filter((t) => t.status !== "running")
+    .map((t) => plainAnswer(t.name, t.output))
+    .filter((x): x is string => Boolean(x));
+  if (plain.length) return plain.slice(0, 2).join(" ");
+  return firstSentence(run.text) || (run.tools.length ? "See the card above." : run.text);
+}
+
 function RunView({
   run,
   onConfirm,
   onCancel,
   onEnableWatch,
+  onEdit,
 }: {
   run: TalkRun;
   onConfirm: (run: TalkRun) => void;
   onCancel: (run: TalkRun) => void;
   onEnableWatch?: (run: TalkRun) => void;
+  onEdit?: (question: string) => void;
 }) {
   return (
     <article id={`talk-${run.id}`} className="scroll-mt-4 space-y-3" aria-label={`Question: ${run.question}`} data-testid="talk-run">
@@ -181,8 +196,8 @@ function RunView({
       </p>
       {run.tools.length ? (
         <ul className="space-y-2" aria-label="Tools called">
-          {run.tools.map((t) => (
-            <ToolCard key={t.id} card={t} />
+          {run.tools.map((t, i) => (
+            <ToolCard key={t.id} card={t} answer={sectionFor(run, t.name, i)} />
           ))}
         </ul>
       ) : null}
@@ -214,26 +229,39 @@ function RunView({
       ) : null}
       {run.status === "cancelled" ? <p className="text-sm text-muted-foreground">Cancelled. Nothing was called.</p> : null}
       {run.consentRequired && onEnableWatch ? (
-        <div className="rounded-xl border border-border bg-muted p-3 text-sm text-foreground" data-testid="talk-consent" role="group" aria-label="Watch mode is off">
+        <div className="rounded-xl border border-border bg-muted p-3 text-sm text-foreground" data-testid="talk-consent" role="group" aria-label="Moving the page is switched off">
           <p className="flex items-center gap-2 font-semibold">
             <Eye className="h-4 w-4 shrink-0" aria-hidden="true" /> I can show you this on the page ({run.consentRequired.steps} step
-            {run.consentRequired.steps === 1 ? "" : "s"}), but watch mode is off.
+            {run.consentRequired.steps === 1 ? "" : "s"}), but moving the page is switched off.
           </p>
-          <p className="mt-1 text-xs text-muted-foreground">Nothing on the page moved. Turn watch on to let Ask GSPC move it; you can stop or undo any step.</p>
+          <p className="mt-1 text-xs text-muted-foreground">Nothing on the page moved. Switch on &ldquo;Let it move the page for me&rdquo; and it will; you can stop or undo any step.</p>
           <button type="button" onClick={() => onEnableWatch(run)} className={`mt-2 min-h-11 rounded-lg border border-emerald-800/40 bg-card px-4 text-sm font-semibold text-emerald-900 hover:bg-emerald-50 dark:text-emerald-100 dark:hover:bg-emerald-950 ${FOCUS}`}>
-            Turn watch on and show me
+            Switch it on and show me
           </button>
         </div>
       ) : null}
       {run.text ? (
+        // The face keeps one sentence. Every field of the answer is inside each card's
+        // "Details and raw output" expander (owner brief: no field dump after an answer).
         <div className="rounded-xl border border-border bg-card p-3" data-testid="talk-answer">
-          <AnswerText text={run.text} />
+          <p className="text-sm leading-relaxed text-foreground [overflow-wrap:anywhere]">
+            {faceSentence(run)}
+          </p>
+          {run.tools.length ? null : (
+            <details className="mt-2 text-sm">
+              <summary className={`min-h-11 cursor-pointer list-none py-2 font-medium text-muted-foreground hover:text-foreground ${FOCUS}`}>
+                Full answer
+              </summary>
+              <AnswerText text={run.text} />
+            </details>
+          )}
         </div>
       ) : run.status === "streaming" ? (
         <p className="inline-flex items-center gap-2 text-sm text-muted-foreground">
           <Loader2 className="h-4 w-4 animate-spin motion-reduce:animate-none" aria-hidden="true" /> Asking the tools…
         </p>
       ) : null}
+      {run.status === "done" && run.tools.length > 0 && run.tools.every((tool) => tool.status === "done") && onEdit ? <ResultFollowUp run={run} onEdit={onEdit} /> : null}
       {run.status === "error" ? (
         <p className="rounded-lg border border-rose-700/30 bg-rose-50 p-3 text-sm text-rose-900 dark:border-rose-400/40 dark:bg-rose-950 dark:text-rose-100" role="alert">
           No answer: {run.error}. No number is shown in its place.
@@ -263,9 +291,11 @@ type Props = {
   listen?: boolean;
   /** Hide the built-in suggestions (the host shows its own). */
   hideSuggestions?: boolean;
+  /** Injected owner-authenticated company adapter; never a public-lookup fallback. */
+  company?: CompanyCaseConnection;
 };
 
-const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel(
+const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPanel(
   { variant = "standalone", labelledBy, className = "", page, declareUi, watch, onRunDone, onEnableWatch, listen, hideSuggestions },
   ref,
 ) {
@@ -385,7 +415,11 @@ const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel(
       {runs.length ? (
         <div className="space-y-6" data-testid="talk-transcript">
           {runs.map((r) => (
-            <RunView key={r.id} run={r} onConfirm={confirm} onCancel={cancel} onEnableWatch={onEnableWatch} />
+            <RunView key={r.id} run={r} onConfirm={confirm} onCancel={cancel} onEnableWatch={onEnableWatch} onEdit={variant === "standalone" ? (question) => {
+              setQ(question);
+              setAnnounce("Question ready to edit. Nothing has been run.");
+              window.setTimeout(() => document.getElementById("talk-input")?.focus(), 0);
+            } : undefined} />
           ))}
         </div>
       ) : null}
@@ -466,12 +500,34 @@ const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel(
           {isListenSupported() ? LISTEN_PRIVACY_NOTE : "This browser has no speech recognition; typing works everywhere."}
         </p>
       ) : null}
-      <p className="mt-3 text-xs text-muted-foreground">
-        Answers are fields of the named tools&apos; output, the same tools POST /mcp serves. No model writes them. Measurement, not
-        certification; paid tools never run without your click, and never pay.
+      <p
+        className="mt-3 text-xs text-muted-foreground"
+        title="Each answer quotes fields of the named tool's output: the same tools POST /mcp serves to agents."
+      >
+        Every answer quotes a published record or a live read, and names its source. No AI writes them. A measurement, not a certificate;
+        nothing paid runs without your click, and this panel never pays.
       </p>
     </section>
   );
+});
+
+/** The explicit company workspace selects a separate authorized request path and one composer. */
+const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel(props, ref) {
+  const search = useSearch();
+  const company = companyWorkspaceSelection(search);
+  if (company.enabled) {
+    const companyProps = {
+      caseId: company.caseId,
+      invalidCase: company.invalidCase,
+      variant: props.variant,
+      labelledBy: props.labelledBy,
+      className: props.className,
+    };
+    return props.company
+      ? <CompanyCasePanel {...companyProps} ref={ref} connection={props.company} />
+      : <ConnectedCompanyCasePanel {...companyProps} ref={ref} />;
+  }
+  return <PublicTalkPanel {...props} ref={ref} />;
 });
 
 export default TalkPanel;

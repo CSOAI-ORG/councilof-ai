@@ -9,6 +9,7 @@
  * Host names belong HERE (the owner's own row). They never appear in
  * /interop/x402-trust/latest.json counts.
  */
+import { headFromGet } from "./_head";
 const HOST_RE = /^[A-Za-z0-9][A-Za-z0-9.-]{0,253}$/;
 
 export const PAID_TOOL = "commission_card";
@@ -54,3 +55,7 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
     },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

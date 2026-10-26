@@ -9,6 +9,7 @@
 import hubCensus from "../../public/signed/hub-census-baseline.json";
 import FREE_MCP_TOOLS from "../mcp/gspc-tools.json";
 import PAID_MCP_TOOLS from "../mcp/paid-tools.json";
+import { headFromGet } from "./_head";
 
 interface Env {
   AGUI_WIRE_URL?: string;
@@ -119,3 +120,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
     },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

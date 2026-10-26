@@ -9,6 +9,7 @@
 // The layers remain distinct. A board measurement is not silently called published evidence,
 // a published measurement is not silently called independent admission or a regulatory determination, and regulation
 // context is not a finding. No write, training, repair, or board-promotion path exists here.
+import { headFromGet } from "./_head";
 
 type JsonObject = Record<string, unknown>;
 
@@ -613,3 +614,7 @@ export async function onRequestGet({ request }: { request: Request }) {
 // Exported for the cardinality tests. The outage it guards against was invisible to every
 // test that built a board with the blessed number of rows.
 export const boardAxesForTest = boardAxes;
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

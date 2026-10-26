@@ -1,6 +1,7 @@
 /**
  * /api/router — the bounded discovery + interop + packages router.
  */
+import { headFromGet } from "./_head";
 
 const ROUTES = {
   "discover": "/.well-known/{slug}.json",
@@ -54,3 +55,7 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
     total_routes: Object.keys(ROUTES).length,
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

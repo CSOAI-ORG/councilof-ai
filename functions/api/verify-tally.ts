@@ -6,6 +6,7 @@
 // counters. No record content, no identifiers, no IP retention.
 // GRAMMAR: the tally is a SELF-REPORTED, OPT-IN signal — it is not a MEASURED
 // number and every surface that shows it must say so.
+import { headFromGet } from "./_head";
 
 interface Env { SOV_ARENA_STATE: KVNamespace }
 
@@ -23,9 +24,18 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
   });
 };
 
+// Only two numbers are stored, so clicks made before 2026-10-06 (including our own
+// test traffic, and `{}` bodies that the old Boolean() coercion counted as a
+// fail) cannot be separated from real clicks. The counters are left as they are;
+// any reset needs a corrections-ledger entry, never a silent overwrite.
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   let ok: boolean | null = null;
-  try { ok = Boolean((await request.json() as any).ok); } catch { /* fallthrough */ }
+  try {
+    const body = (await request.json()) as any;
+    // A strict boolean only. `{}`, `{"ok":"yes"}` or `{"ok":1}` is a malformed
+    // request, not a "did not match" outcome.
+    if (body && typeof body === "object" && typeof body.ok === "boolean") ok = body.ok;
+  } catch { /* fallthrough */ }
   if (ok === null) return new Response('{"error":"body must be {\\"ok\\": true|false}"}', { status: 400 });
   const t = JSON.parse((await env.SOV_ARENA_STATE.get(KEY)) || '{"ok":0,"fail":0}');
   ok ? t.ok++ : t.fail++;
@@ -34,3 +44,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     headers: { "content-type": "application/json", "access-control-allow-origin": "*" },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

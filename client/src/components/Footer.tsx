@@ -8,6 +8,7 @@
 import { Link } from 'wouter';
 import { BookOpen, Linkedin, Mail } from 'lucide-react';
 import EmailOff from './EmailOff';
+import { CONTACT_MAILBOX } from '@/lib/buying';
 import FooterVerifyStrip from './FooterVerifyStrip';
 import FooterStats from './momentum/FooterStats';
 import MembershipStrip from './MembershipStrip';
@@ -32,13 +33,15 @@ export function Footer() {
     {
       title: 'Product',
       links: [
-        { name: 'Verify a card', href: '/gspc-verify/' },
-        { name: 'Request attestation', href: '/assess/' },
+        { name: 'Check a record', href: '/gspc-verify/' },
+        { name: 'Measurement enquiries', href: '/assess/' },
         { name: 'Board', href: '/dashboard/?tab=board' },
-        { name: 'Tools — plugin snippet', href: '/tools/' },
+        { name: 'Connect tools to your AI', href: '/tools/' },
         { name: 'Ask about a measured run', href: '/contact/?arm=run' },
-        { name: 'Ledger', href: '/contact/?arm=ledger' },
-        { name: 'Data', href: '/contact/?arm=data' },
+        { name: 'Evidence feed enquiries', href: '/contact/?arm=ledger' },
+        // A licensing enquiry, not a download: the label says so, and the free download sits beside it.
+        { name: 'Data licensing (enquiry)', href: '/contact/?arm=data' },
+        { name: 'Download the board data', href: '/board/#board-download' },
         { name: 'Library', href: '/library/' },
       ],
     },
@@ -48,12 +51,12 @@ export function Footer() {
     // They were reachable only from inside the home page before, so a reader arriving on any
     // other route could not find them at all.
     {
-      title: 'For machines',
+      title: 'Developer reference',
       links: [
         { name: 'Board JSON — /api/gspc', href: '/api/gspc', external: true },
         { name: 'Tool surface — /mcp', href: '/mcp', external: true },
         { name: 'Agent card', href: '/.well-known/agent.json', external: true },
-        { name: 'Metered doors + free previews', href: '/.well-known/x402.json', external: true },
+        { name: 'Paid services and free previews', href: '/.well-known/x402.json', external: true },
         { name: 'Our public keys', href: '/.well-known/did.json', external: true },
         { name: 'Signed evidence root', href: '/root.json', external: true },
         { name: 'OpenAPI description', href: '/openapi.json', external: true },
@@ -62,10 +65,10 @@ export function Footer() {
     {
       title: 'Evidence',
       links: [
-        { name: 'GSPC JSON', href: '/api/gspc', external: true },
+        { name: 'Measurement data (JSON)', href: '/api/gspc', external: true },
         { name: 'Evidence files (cards, proofs)', href: 'https://huggingface.co/datasets/csoai/councilof-ai-evidence', external: true },
         { name: 'Methodology', href: '/methodology/' },
-        { name: 'Honesty gate', href: '/honesty/' },
+        { name: 'What we cannot measure yet', href: '/honesty/' },
         // The readable ledger page (renders /api/corrections), not raw JSON.
         { name: 'Corrections', href: '/corrections/' },
         { name: 'How far this reaches', href: '/reach/' },
@@ -78,11 +81,11 @@ export function Footer() {
     // alone, so a crawler that follows links never met them and an answer engine had no path in.
     // Each href answered 200 on 2026-09-28. They are Pages Functions or static files, hence native.
     {
-      title: 'Records',
+      title: 'Technical records',
       links: [
         { name: 'MCP servers — declared vs observed', href: '/mcp-servers/', native: true },
         { name: 'A2A agent cards — listed vs served', href: '/agent-cards/', native: true },
-        { name: 'x402 doors and hosts', href: '/x402/', native: true },
+        { name: 'Payment-service records (x402)', href: '/x402/', native: true },
         { name: 'Tokenised-asset deployments', href: '/stablecoins/deployments/', native: true },
         { name: 'Daily measurement notes', href: '/notes/daily/', native: true },
         { name: 'GSPC axes, one page each', href: '/axes', native: true },
@@ -98,7 +101,6 @@ export function Footer() {
         { name: 'Independence and conflicts', href: '/independence/' },
         { name: 'Contact', href: '/contact/' },
         { name: 'Where we take part', href: '/memberships/' },
-        { name: 'Blog', href: '/blog/' },
         { name: 'FAQ', href: '/faq/' },
         { name: 'Careers', href: '/careers/' },
       ],
@@ -109,7 +111,6 @@ export function Footer() {
         { name: 'Disclaimers', href: '/disclaimers/' },
         { name: 'Privacy', href: '/privacy-policy/' },
         { name: 'Terms', href: '/terms-of-service/' },
-        { name: 'GDPR / DPA', href: '/dpa/' },
       ],
     },
   ];
@@ -117,7 +118,7 @@ export function Footer() {
   const socialLinks = [
     { name: 'Source snapshot (archived)', icon: BookOpen, href: 'https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/CSOAI-ORG/councilof-ai' },
     { name: 'LinkedIn', icon: Linkedin, href: 'https://linkedin.com/company/csoai' },
-    { name: 'Email', icon: Mail, href: 'mailto:contact@csoai.org' },
+    { name: 'Email', icon: Mail, href: `mailto:${CONTACT_MAILBOX}` },
   ];
 
   return (
@@ -161,7 +162,7 @@ export function Footer() {
             <span className="text-xl font-bold">CSOAI</span>
           </Link>
           <p className="text-muted-foreground text-sm max-w-md">
-            Independent measurement body. Signed attestation and transparent measurement — never certification.
+            We measure AI behaviour and publish records you can check. Measurement is not certification.
           </p>
           <div className="-mx-2.5 flex gap-1 sm:ml-auto">
             {socialLinks.map((social) => (
@@ -374,7 +375,7 @@ export function Footer() {
               { href: '/.well-known/security.txt', label: 'Security contact', hint: 'how to report a vulnerability to us' },
               { href: '/llms.txt', label: 'llms.txt', hint: 'what this site is, written for machines' },
               { href: 'https://find-and-update.company-information.service.gov.uk/company/16939677', label: 'Companies House 16939677', hint: 'CSOAI Ltd on the public register' },
-              { href: '/api/corrections', label: 'Corrections ledger', hint: 'everything we have published and had to correct' },
+              { href: '/corrections/', label: 'Corrections ledger', hint: 'everything we have published and had to correct' },
             ].map((l) => (
               <li key={l.href}>
                 <a
@@ -393,13 +394,17 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-border pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-muted-foreground text-xs">
-            © {currentYear} CSOAI Ltd · Registered in England & Wales No. 16939677 · 3rd Floor, 86–90 Paul Street, London EC2A 4NE · <EmailOff text="contact@csoai.org" />
+            © {currentYear} CSOAI Ltd · Registered in England & Wales No. 16939677 · 3rd Floor, 86–90 Paul Street, London EC2A 4NE · <EmailOff text={CONTACT_MAILBOX} />
           </p>
           <p className="text-muted-foreground text-xs">
-            To object to, dispute or request a correction of anything we publish: <a href="/dispute/" className="underline">/dispute</a> or <a href="mailto:contact@csoai.org" className="underline">contact@csoai.org</a>. Corrections are dated in the <a href="/corrections/" className="underline">ledger</a>.
+            To object to, dispute or request a correction of anything we publish: <a href="/dispute/" className="underline">/dispute</a> or <a href={`mailto:${CONTACT_MAILBOX}`} className="underline">{CONTACT_MAILBOX}</a>. Corrections are dated in the <a href="/corrections/" className="underline">ledger</a>.
           </p>
           <p className="text-muted-foreground text-xs text-center md:text-right max-w-md">
-            Independent. No financial ties to OpenAI, Anthropic, Google, Microsoft, Meta, or any AI vendor.
+            Who runs and funds us, and where we have an interest:{" "}
+            <a href="/independence/" className="underline">
+              independence and conflicts
+            </a>
+            .
           </p>
         </div>
       </div>

@@ -39,7 +39,11 @@ type Atom = { as_of: string; sha256: string; source_urls: string[]; payload: Jso
 
 export const LEDGER_HEADS_DIR = "public/interop/ledger-heads-2026-09";
 const READER = "scripts/readers/ledger_heads_reader.py";
-const ROOT_JOB = "the daily public-root job (build pod root-daily, 05:00Z) via scripts/adapters/staged_leaves.py";
+// The producer, never a promise about its schedule: the build-pod root-daily job named here until
+// 6 Oct 2026 was switched off when GitHub Actions became the only production writer, and a schedule
+// claim in a static string outlives the schedule. The root's real date is root.json as_of.
+const ROOT_JOB =
+  "the public-root workflow on GitHub Actions (.github/workflows/public-root.yml) via scripts/adapters/staged_leaves.py; the root's own date is root.json as_of";
 
 /** Static description of each ledger: who produces it, how it is signed, where it lives. Counts never live here. */
 export const LEDGER_META: Record<string, { name: string; authority_for: string; producer: string; signing: string; anchoring_own: string; page: string | null; atom: Atom }> = {

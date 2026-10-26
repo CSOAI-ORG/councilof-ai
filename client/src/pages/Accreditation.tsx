@@ -146,12 +146,13 @@ export default function Accreditation() {
             <Card className="border-2 border-blue-100">
               <CardHeader>
                 <Shield className="h-12 w-12 text-blue-600 mb-4" />
-                <CardTitle>100% Independent</CardTitle>
+                <CardTitle>Independence, stated where it can be checked</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  No financial ties to OpenAI, Google, Microsoft, Anthropic, or any AI vendor.
-                  Our only incentive is public safety.
+                  Who runs and funds us, any in-kind support, and where we have an interest are set
+                  out on <a href="/independence/" className="underline">/independence/</a>; where a
+                  fact is not yet published there, that page says so.
                 </p>
               </CardContent>
             </Card>

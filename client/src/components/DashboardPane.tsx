@@ -100,7 +100,7 @@ const PANES: Record<string, React.LazyExoticComponent<any>> = {
   learn: DashboardLearningPane,
   // software: signed-in dashboard at /dashboard, the layout redirects there
   play: LobbyPlay, // gold local-play gallery (local kind)
-  art50: LobbyArt50Pane, // Article 50 marking evidence — native workflow pane, no standalone URL
+  art50: LobbyArt50Pane, // Article 50(2) marking check — native pane in Get results; linked as /dashboard/?tab=art50
   connect: ConnectPane, // Connect → Install: /connect data (ConnectClaude TOOLS, ConnectHub PLATFORMS)
   route: RoutePane, // Connect → Route: the free decide-only MCP tool `route`
   corrections: CorrectionsPane, // Corrections ledger, live GET /api/corrections

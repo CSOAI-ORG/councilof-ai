@@ -4,6 +4,7 @@
  * themselves; until now the path didn't exist. Returns the Ed25519 public key derived from the
  * same secret the signer uses — or an honest 404 when no key is provisioned, never a made-up key.
  */
+import { headFromGet } from "../_head";
 interface Env { ASSESS_SIGNING_KEY_PKCS8_B64?: string }
 
 export const onRequestGet: PagesFunction<Env> = async (ctx) => {
@@ -28,3 +29,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
     { headers: { "cache-control": "public, max-age=3600" } }
   );
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

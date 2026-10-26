@@ -627,7 +627,11 @@ def determination(axis, res, cards):
 
 
 def sentence(ext):
-    n = ext["leader"]["n"]
+    # n is the number of PAIRED items the McNemar test ran on, not the leader's row count: the
+    # frozen rows can repeat an item (care: 200 rows over 199 distinct paired items), and the test
+    # pairs items, not rows (persona audit T07 G, 2026-10-06). The signed 2026-08-12 record is not
+    # rewritten by this; the next regeneration of the board module picks it up.
+    n = ext.get("paired_items", ext["leader"]["n"])
     if ext["verdict"] == "TIE":
         return (f"No model separated from the next best on this axis (exact McNemar, p≥0.05, n={n}; "
                 f"p={ext['mcnemar_p']}).")

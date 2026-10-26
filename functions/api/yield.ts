@@ -28,6 +28,7 @@
 /// <reference types="@cloudflare/workers-types" />
 
 import { selfWallets } from "./_x402";
+import { headFromGet } from "./_head";
 
 type YieldEnv = {
   REVENUE_KV?: KVNamespace;
@@ -272,3 +273,7 @@ export const onRequestGet: PagesFunction<YieldEnv> = async ({ request, env }) =>
 
   return json(await buildYield(env, family, period));
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

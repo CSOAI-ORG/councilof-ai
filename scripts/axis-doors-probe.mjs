@@ -74,8 +74,10 @@ const getAxisTool = toolList?.find((t) => t.name === "get_axis") || null;
 const llmsLive = await probe(`${SITE}/llms.txt`);
 const llmsRepo = fs.existsSync(path.join(REPO, "public", "llms.txt")) ? fs.readFileSync(path.join(REPO, "public", "llms.txt"), "utf8") : "";
 const a2a = await probe(`${SITE}/api/a2a`, {
-  method: "POST", headers: { "content-type": "application/json" },
-  body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "SendMessage", params: { message: { messageId: `axis-doors-${Date.now()}`, role: "user", parts: [{ data: { skill: "gspc-board", input: {} } }] } } }),
+  // SendMessage is the A2A 1.0 name, so the request declares 1.0. Without the header (= 0.3) the
+  // door answers -32009 and the probe recorded that refusal as the A2A door's answer.
+  method: "POST", headers: { "content-type": "application/json", "a2a-version": "1.0" },
+  body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "SendMessage", params: { message: { messageId: `axis-doors-${Date.now()}`, role: "ROLE_USER", parts: [{ data: { skill: "gspc-board", input: {} } }] } } }),
 });
 // The latest door-demand record is what PayAI's bazaar reports about OUR doors; it lists doors, never axes.
 const demandFiles = fs.readdirSync(path.join(REPO, "public", "interop")).filter((f) => /^door-demand-payai-\d{4}-\d{2}-\d{2}\.json$/.test(f)).sort();

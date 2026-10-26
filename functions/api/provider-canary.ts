@@ -7,6 +7,7 @@
  * timeout, and fallback policy are server-controlled. Results are UNMEASURED
  * operational receipts and never write the GSPC board.
  */
+import { headFromGet } from "./_head";
 
 export type CanaryProvider = "huggingface" | "runpod";
 
@@ -618,3 +619,7 @@ export const onRequestPost: PagesFunction<ProviderCanaryEnv> = async (ctx) => {
   const receipt = await runProviderCanary(ctx.env, invocation.provider);
   return json(receipt, receipt.configured ? 200 : 424);
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

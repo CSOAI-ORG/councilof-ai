@@ -12,6 +12,7 @@ import {
 } from "./twoSpeed";
 
 const tools = readFileSync(resolve(__dirname, "../pages/ToolsPage.tsx"), "utf8");
+const internal = readFileSync(resolve(__dirname, "../pages/YieldInternal.tsx"), "utf8");
 
 describe("Two-speed GSPC", () => {
   it("censuses without weights and runs only unique lineages", () => {
@@ -38,6 +39,8 @@ describe("Two-speed GSPC", () => {
     expect(joinedPins().every((p) => p.write === "never-measured")).toBe(true);
     const blob = JSON.stringify({ TWO_SPEED_RULING, ATTACH_ROWS, REG_OBSERVE });
     expect(blob).not.toMatch(/£79|£499|rank for sale|22\/22|dorado|cibola|sovos/i);
-    expect(tools).toContain("TwoSpeed");
+    // Internal strategy notes live on the noindex /status/internal page, never on /tools (6 Oct 2026).
+    expect(internal).toContain("<TwoSpeed />");
+    expect(tools).not.toContain("<TwoSpeed");
   });
 });

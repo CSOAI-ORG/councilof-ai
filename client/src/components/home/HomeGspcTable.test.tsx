@@ -53,7 +53,7 @@ describe("homeGspcTable readers", () => {
     expect(statusText(axes[0])).toBe("MEASURED");
     expect(statusText(axes[5])).toBe("UNMEASURED");
     expect(separationText(axes[1])).toBe("TIE");
-    expect(separationText(axes[4])).toBe("no fleet · not applicable");
+    expect(separationText(axes[4])).toBe("facts · no separation test");
     expect(separationText(axes[5])).toBe("not published");
   });
 

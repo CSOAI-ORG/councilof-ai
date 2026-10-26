@@ -1,7 +1,11 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 
-import { FRONTEND_TOOLS, MAX_STEPS, planUi, readPageContext, withPageSubject } from "./uiTools";
+import { FRONTEND_TOOLS, MAX_STEPS, planUi, readPageContext, scrollArgs, withPageSubject } from "./uiTools";
 import { serveAguiRun } from "./aguiRun";
+import PAID_TOOLS from "../mcp/paid-tools.json";
+import ToolRunner, { type RunnerTool } from "../../client/src/components/ToolRunner";
 
 const HEX = "cd".repeat(32);
 const ORIGIN = "https://councilof.ai";
@@ -75,6 +79,78 @@ describe("planUi — deterministic page moves, never a number", () => {
     expect(withPageSubject("verify this", { subject: HEX })).toBe(`verify this ${HEX}`);
     expect(withPageSubject("what does the board say", { subject: HEX })).toBe("what does the board say");
   });
+  // Tools audit, 6 Oct 2026: the paid-ask plan named form[data-ui-form='request'] and
+  // [data-ui-action='request-submit'], and neither existed in the client, so watch mode said
+  // "Typing … as the subject" and typed nothing. Render the real runner for commission_card (its
+  // schema from paid-tools.json, as tools/list serves it) and look for every selector the plan names.
+  it("every selector the paid-ask plan names exists on the rendered request form", () => {
+    const tool = (PAID_TOOLS as { tools: RunnerTool[] }).tools.find((t) => t.name === "commission_card")!;
+    expect(tool).toBeDefined();
+    const html = renderToStaticMarkup(
+      createElement(ToolRunner, { catalogue: [tool], initialToolName: "commission_card", initialArguments: { subject: "https://example.com/mcp" } }),
+    );
+    const p = planUi("commission a card for https://example.com/mcp")!;
+    const selectors = p.steps.map((s) => s.args.selector).filter((x): x is string => typeof x === "string");
+    expect(selectors.length).toBeGreaterThanOrEqual(2);
+    for (const sel of selectors) {
+      for (const [, attr, value] of sel.matchAll(/\[([a-z-]+)='([^']+)'\]/g)) expect(html, sel).toContain(`${attr}="${value}"`);
+      if (sel.startsWith("form")) expect(html).toMatch(/<form[^>]*data-ui-form="request"/);
+    }
+    const fill = p.steps.find((s) => s.tool === "fillForm")!;
+    for (const name of Object.keys(fill.args.values as Record<string, unknown>)) expect(html).toContain(`data-ui-field="${name}"`);
+    // The highlighted control is the submit button itself, and nothing here submits it.
+    expect(html).toMatch(/<button type="submit"[^>]*data-ui-action="request-submit"/);
+  });
+
+  // Re-test 7 Oct 2026: `scroll` was advertised in FRONTEND_TOOLS but planUi never chose it, so
+  // "scroll to the bottom" in watch mode did nothing. Every advertised tool must be reachable.
+  it("asking to scroll plans one scroll step, with or without watch mode", () => {
+    for (const [q, args] of [
+      ["scroll to the bottom", { to: "bottom" }],
+      ["please scroll all the way down to the end", { to: "bottom" }],
+      ["scroll to the top", { to: "top" }],
+      ["scroll up", { to: "up" }],
+      ["scroll down", { to: "down" }],
+      ["scroll to the methodology section", { section: "methodology" }],
+    ] as const) {
+      for (const watch of [false, true]) {
+        const p = planUi(q, {}, { watch })!;
+        expect(p, q).not.toBeNull();
+        expect(p.steps.map((s) => s.tool), q).toEqual(["scroll"]);
+        expect(p.steps[0].args, q).toEqual(args);
+        expect(p.steps[0]).toMatchObject({ effect: "view", confirm: false });
+      }
+    }
+  });
+  it("'scroll to safety' scrolls to the axis on the page; it does not navigate away", () => {
+    const p = planUi("scroll to safety", { tab: "board" }, { axis: "safety", watch: true })!;
+    expect(p.steps.map((s) => s.tool)).toEqual(["scroll"]);
+    expect(p.steps[0].args).toEqual({ section: "safety" });
+    expect(scrollArgs("scroll down to the safety axis", "safety")).toEqual({ section: "safety" });
+  });
+  it("every tool FRONTEND_TOOLS advertises is one planUi can emit", () => {
+    const asks = [
+      "take me to connect",
+      "show me safety",
+      `open ${HEX}`,
+      "commission a card for https://example.com/mcp",
+      "walk me through it",
+      "scroll to the bottom",
+    ];
+    const emitted = new Set<string>();
+    for (const q of asks) for (const s of planUi(q, {}, { axis: /safety/.test(q) ? "safety" : null })?.steps ?? []) emitted.add(s.tool);
+    for (const t of FRONTEND_TOOLS) expect(emitted, t.name).toContain(t.name);
+  });
+  it("the scroll tool's declared schema accepts what the planner sends", () => {
+    const def = FRONTEND_TOOLS.find((t) => t.name === "scroll")!;
+    const props = (def.parameters as { properties: Record<string, { enum?: string[] }> }).properties;
+    expect(props.to.enum).toEqual(["top", "bottom", "up", "down"]);
+    for (const q of ["scroll to the bottom", "scroll up", "scroll to the methodology section"]) {
+      const args = planUi(q)!.steps[0].args;
+      for (const k of Object.keys(args)) expect(Object.keys(props)).toContain(k);
+    }
+  });
+
   it("readPageContext bounds and type-checks", () => {
     expect(readPageContext({ path: "/x", subjectKind: "bogus", headings: [1, "a"] })).toMatchObject({ path: "/x", subjectKind: null, headings: ["a"] });
   });
@@ -110,6 +186,14 @@ describe("AG-UI watch mode — frontend tools, consent, STATE_SNAPSHOT / STATE_D
     const names = ev.filter((e) => e.type === "TOOL_CALL_START").map((e) => e.toolCallName);
     expect(names).toEqual(["openPanel", "setFilter", "highlight", "get_axis"]);
     expect(ev.at(-1)).toMatchObject({ type: "RUN_FINISHED", result: { grounded: true, answered_by: "tool:get_axis" } });
+  });
+  it("watch mode: 'scroll to the bottom' calls the scroll tool", async () => {
+    stubOrigin();
+    const ev = await run({ messages: [{ role: "user", content: "scroll to the bottom" }], tools: ALL_TOOLS, forwardedProps: { consent: { watch: true }, mode: "watch" } });
+    const start = ev.find((e) => e.type === "TOOL_CALL_START");
+    expect(start).toMatchObject({ toolCallName: "scroll" });
+    const args = ev.filter((e) => e.type === "TOOL_CALL_ARGS" && e.toolCallId === (start as { toolCallId: string }).toolCallId).map((e) => e.delta).join("");
+    expect(JSON.parse(args)).toMatchObject({ to: "bottom" });
   });
   it("frontend results come back as tool messages and are recorded, nothing else is called", async () => {
     stubOrigin();

@@ -196,8 +196,16 @@ export async function onRequest(context) {
     ? context.params.path.join("/")
     : "";
   const request = context.request;
-  if (request.method === "GET" && p === "root") return aliasRoot(request);
-  if (request.method === "GET" && p === "proof") return proofGet(request);
+  // HEAD on an alias answers what its GET answers, with no body (RFC 9110 §9.3.2). Until 6 Oct 2026
+  // a HEAD fell to the 404 below, so link checkers recorded the live root/proof aliases as missing.
+  const isHead = request.method === "HEAD";
+  const asGet = isHead ? new Request(request.url, { method: "GET", headers: request.headers }) : request;
+  const bodiless = (res) =>
+    new Response(null, { status: res.status, statusText: res.statusText, headers: res.headers });
+  if ((request.method === "GET" || isHead) && (p === "root" || p === "proof")) {
+    const res = await (p === "root" ? aliasRoot(asGet) : proofGet(asGet));
+    return isHead ? bodiless(res) : res;
+  }
   return json(
     {
       error: "not_found",

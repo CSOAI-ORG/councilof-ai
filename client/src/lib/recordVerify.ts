@@ -19,6 +19,7 @@
  */
 
 import { verifyCard, anchorsFromDid, type Anchor, type CardState, type CardVerdict } from "../../../functions/_lib/cardVerify";
+import { isCardV0, verifyCardV0 } from "../../../functions/_lib/cardV0Verify";
 
 export interface RecordVerdict {
   lines: { label: string; ok: boolean | null; detail: string; code: string }[];
@@ -50,16 +51,22 @@ export async function lookupRecordUseStatus(raw: string): Promise<RecordUseStatu
   if (record?.did !== "did:web:csoai.org#board-attestation-1") {
     return { state: "NOT_APPLICABLE", detail: "Withdrawal lookup applies to board-signed cards." };
   }
-  if (typeof record?.id !== "string" || !record.id) {
+  // A card-v0/v1 leaf (an art50 pack's card, a receipt, an archive card) carries no `id`: it is
+  // named by its sha256. It used to read "Card id is missing" (UNCHECKABLE) under a VALID verdict,
+  // on the very record a paid pack sends its buyer to check (paid-route lane, 7 Oct 2026). The
+  // ledger is searched by that sha256 instead; absence is NOT_ESTABLISHED, as for any card.
+  const leafId = isCardV0(record) && /^[0-9a-f]{64}$/i.test(record.sha256) ? record.sha256.toLowerCase() : null;
+  if ((typeof record?.id !== "string" || !record.id) && !leafId) {
     return { state: "UNCHECKABLE", detail: "Card id is missing; use status cannot be checked." };
   }
+  const recordId: string = typeof record?.id === "string" && record.id ? record.id : (leafId as string);
   const ledger = "/interop/mill-cards-signed/WITHDRAWN.jsonl";
   try {
     const response = await fetch(ledger, { headers: { accept: "application/jsonl" }, cache: "no-store" });
     if (!response.ok) throw new Error("HTTP " + response.status);
     const rows = (await response.text()).split(/\r?\n/).filter(Boolean).map((line) => JSON.parse(line));
     if (rows.some((row) => typeof row?.withdrawn_id !== "string")) throw new Error("Malformed withdrawal ledger");
-    const match = rows.find((row) => row.withdrawn_id === record.id);
+    const match = rows.find((row) => row.withdrawn_id === recordId || (leafId !== null && row.signed_sha256 === leafId));
     if (!match) return {
       state: "NOT_ESTABLISHED",
       detail: "No withdrawal entry was found for this id. This check does not establish GSPC admission or quotability.",
@@ -114,6 +121,28 @@ export async function verifyRecord(raw: string): Promise<RecordVerdict> {
       reasons: ["parse_error"],
       family: "unknown",
       lines: [{ label: "Parse", ok: false, code: "parse_error", detail: "Not valid JSON — nothing was checked." }],
+    };
+  }
+
+  // card-v0 leaves (an art50 pack, a RAS receipt, a population-door or wrapper card) are judged by
+  // the same module POST /api/verify uses. Until 2026-10-07 this page sent them to cardVerify, which
+  // does not know the shape, so the record a paid pack told its buyer to check here came back
+  // UNCHECKABLE/unrecognised_family. Pinned anchors decide; nothing is fetched.
+  // A buyer often pastes the whole delivered pack ({ scope, card, law, … }); the signed record is its
+  // `card`, so that is what is judged, and the page says so.
+  const inner = !isCardV0(rec) && rec && typeof rec === "object" ? (rec as { card?: unknown }).card : undefined;
+  const leaf = isCardV0(rec) ? rec : isCardV0(inner) ? inner : null;
+  if (leaf) {
+    const v = await verifyCardV0(leaf, raw);
+    return {
+      valid: v.state === "VALID",
+      state: v.state,
+      reasons: v.reasons,
+      family: v.family,
+      lines: [
+        { label: "Parse", ok: true, code: "parse_ok", detail: leaf === rec ? "Valid JSON." : "Valid JSON: a delivered pack; its `card` is the signed record checked below." },
+        ...v.checks.map((c) => ({ label: c.check, ok: c.ok, detail: c.detail, code: c.code })),
+      ],
     };
   }
 

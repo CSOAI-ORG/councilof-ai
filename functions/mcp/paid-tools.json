@@ -19,14 +19,14 @@
         "required": ["subject"],
         "additionalProperties": false
       },
-      "csoai": { "paid": true, "rail": "x402", "route": "/api/request-attestation", "sku": "request_attestation", "free_preview": "the 402 body (csoai.preview)", "deliverable": "one card-v0 leaf, surface ras.commission, Ed25519 when the Pages key is present" }
+      "csoai": { "paid": true, "rail": "x402", "route": "/api/request-attestation", "sku": "request_attestation", "sells": "issuance", "free_preview": "the 402 body (csoai.preview)", "deliverable": "one card-v0 leaf, surface ras.commission, Ed25519 when the Pages key is present" }
     },
     {
       "name": "art50_marking_evidence",
       "title": "Article 50 marking evidence (paid, x402; preview free)",
       "annotations": {"title": "Article 50 marking evidence (paid, x402; preview free)", "readOnlyHint": false, "destructiveHint": false, "idempotentHint": false, "openWorldHint": true},
       "outputSchema": {"type": "object", "description": "The wrapper's status fields. On PAYMENT_REQUIRED (isError:true) the route's x402 PaymentRequired object (x402Version, resource, accepts, extensions) is spread at the top level too, per the x402 MCP transport.", "properties": {"status": {"type": "string", "description": "PAYMENT_REQUIRED, DELIVERED, NOT_DEPLOYED, UNREACHABLE, UNREADABLE_RESPONSE, BAD_ARGUMENTS or HTTP_<code>"}, "tool": {"type": "string"}, "route": {"type": "string"}, "http_status": {"type": "integer"}, "payment_presented": {"type": "boolean"}, "delivery_state": {"type": "string"}, "settlement_state": {"type": "string"}, "x402Version": {"type": "integer"}, "accepts": {"type": "array"}, "resource": {"type": "object"}, "deliverable": {}, "not_a_certification": {"type": "boolean"}}, "required": ["status"]},
-      "description": "PAID (x402 or CSOAI LTD invoice). Article 50 marking-evidence pack via https://councilof.ai/api/art50/marking-evidence: is a machine-readable mark DETECTABLE in these bytes right now (C2PA manifest store, assertion hashes, hard binding, claim signature; IPTC digitalSourceType), beside the verbatim Art 50(2) excerpt hash and the Art 99(4) ceiling. Watermarks are UNCHECKABLE where no public detector exists and the pack says so. Point-in-time detection — never a conformity opinion, never a compliance word of any kind. preview=true is free and returns the same measurement unsigned. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED rather than inventing a result.",
+      "description": "PAID (x402 or CSOAI LTD invoice). Article 50 marking-evidence pack via https://councilof.ai/api/art50/marking-evidence: which machine-readable marks the named methods DETECT in these bytes right now. Scope: C2PA and IPTC metadata only (C2PA manifest store, assertion hashes, hard binding, claim signature; IPTC digitalSourceType); no watermark, fingerprint or other kind of mark is read. NOT_DETECTED is not unmarked: Article 50(2) is technology-neutral, so a mark this pack cannot read may be present, and metadata is often stripped on re-save. Disclosure: CSOAI is a member of the C2PA, whose specification is one of the two methods read. The pack carries the verbatim Art 50(2) text hash and the dates it turns on. Point-in-time detection — never a conformity opinion, never a compliance word of any kind. preview=true is free and returns the same measurement unsigned. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED rather than inventing a result.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -38,7 +38,7 @@
         },
         "additionalProperties": false
       },
-      "csoai": { "paid": true, "rail": "x402-or-invoice", "route": "/api/art50/marking-evidence", "sku": "art50_marking_evidence", "free_preview": "preview=true", "deliverable": "one card-v0 leaf, surface art50.marking-evidence, kind csoai.art50.marking-evidence/0.1", "deployed_by": "live on councilof.ai (verified 2026-09-03)" }
+      "csoai": { "paid": true, "rail": "x402-or-invoice", "route": "/api/art50/marking-evidence", "sku": "art50_marking_evidence", "sells": "issuance", "free_preview": "preview=true", "deliverable": "one card-v0 leaf, surface art50.marking-evidence, kind csoai.art50.marking-evidence/0.1", "deployed_by": "live on councilof.ai (verified 2026-09-03)" }
     },
     {
       "name": "rwa_evidence",
@@ -56,14 +56,14 @@
         "required": ["asset"],
         "additionalProperties": false
       },
-      "csoai": { "paid": true, "rail": "x402", "route": "/api/rwa/evidence", "sku": "rwa_evidence", "free_preview": "preview=true", "deliverable": "one card-v0 leaf, surface public.notice, kind csoai.eater.xrpl-issuer/0.1", "deployed_by": "live on councilof.ai (verified 2026-09-03)" }
+      "csoai": { "paid": true, "rail": "x402", "route": "/api/rwa/evidence", "sku": "rwa_evidence", "sells": "issuance", "free_preview": "preview=true", "deliverable": "one card-v0 leaf, surface public.notice, kind csoai.eater.xrpl-issuer/0.1", "deployed_by": "live on councilof.ai (verified 2026-09-03)" }
     },
     {
       "name": "receipts_batch",
       "title": "Receipts batch (paid, x402; preview free)",
       "annotations": {"title": "Receipts batch (paid, x402; preview free)", "readOnlyHint": false, "destructiveHint": false, "idempotentHint": false, "openWorldHint": true},
       "outputSchema": {"type": "object", "description": "The wrapper's status fields. On PAYMENT_REQUIRED (isError:true) the route's x402 PaymentRequired object (x402Version, resource, accepts, extensions) is spread at the top level too, per the x402 MCP transport.", "properties": {"status": {"type": "string", "description": "PAYMENT_REQUIRED, DELIVERED, NOT_DEPLOYED, UNREACHABLE, UNREADABLE_RESPONSE, BAD_ARGUMENTS or HTTP_<code>"}, "tool": {"type": "string"}, "route": {"type": "string"}, "http_status": {"type": "integer"}, "payment_presented": {"type": "boolean"}, "delivery_state": {"type": "string"}, "settlement_state": {"type": "string"}, "x402Version": {"type": "integer"}, "accepts": {"type": "array"}, "resource": {"type": "object"}, "deliverable": {}, "not_a_certification": {"type": "boolean"}}, "required": ["status"]},
-      "description": "PAID (x402 or CSOAI LTD invoice). A historical batch of the estate's measurement receipts via https://councilof.ai/api/receipts/batch: every signed card-v0 leaf whose as_of falls in [from,to] (≤200), each with its Merkle inclusion path and the public root(s) that carried it, plus the root index for the window and one signed manifest card citing the batch sha256. preview=true is free and returns count, span, root count and the sha256 of the exact bytes the paid call returns. Recent leaves are free at /root.json, /cards/ and /api/proof?sha= — the batch sells assembly across history, never a conclusion. No settlement-receipt stream exists (/api/receipts/latest is UNPUBLISHED) and this tool never claims one. Without x_payment the tool returns the 402 challenge.",
+      "description": "PAID (x402 or CSOAI LTD invoice). A historical batch of the estate's measurement receipts via https://councilof.ai/api/receipts/batch: every signed card-v0 leaf whose as_of falls in [from,to] (≤200), each with its Merkle inclusion path and the public root(s) that carried it, plus the root index for the window and one manifest card citing the batch sha256. Manifest signing is conditional: a returned unsigned manifest declares manifest_card.sig_ed25519:null and unsigned_reason, with signature unmeasured. Manifest root inclusion remains unmeasured. If signing throws after settlement, the route returns PAID_NOT_DELIVERED with no batch or manifest delivered; preserve the settlement receipt and reconcile before reissue, without automatically retrying or paying again. preview=true is free and returns count, span, root count and the sha256 of the exact bytes the paid call returns. Recent leaves are free at /root.json, /cards/ and /api/proof?sha= — the batch sells assembly across history, never a conclusion. This tool returns historical measurement leaves, not payment receipts. /api/receipts/latest reports aggregate receipt-store state when available; its counts do not verify a particular payment, delivery or buyer acceptance. Without x_payment the tool returns the 402 challenge.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -75,7 +75,7 @@
         "required": ["from"],
         "additionalProperties": false
       },
-      "csoai": { "paid": true, "rail": "x402-or-invoice", "route": "/api/receipts/batch", "sku": "receipts_batch", "free_preview": "preview=true", "deliverable": "csoai.receipts.batch/0.1 + one signed manifest card-v0 (surface receipts.batch)" }
+      "csoai": { "paid": true, "rail": "x402-or-invoice", "route": "/api/receipts/batch", "sku": "receipts_batch", "sells": "assembly", "free_preview": "preview=true", "deliverable": "on delivery, csoai.receipts.batch/0.1 + one manifest card-v0 (surface receipts.batch); a returned unsigned manifest declares manifest_card.sig_ed25519:null and unsigned_reason, with signature unmeasured; manifest root inclusion remains unmeasured; a thrown signing failure returns PAID_NOT_DELIVERED without a delivered batch or manifest; reconcile the settlement before reissue and do not automatically retry or pay again" }
     },
     {
       "name": "evidence_bundle",
@@ -131,7 +131,7 @@
           "status"
         ]
       },
-      "description": "PAID (x402). An evidence bundle for ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject via https://councilof.ai/api/evidence-bundle: OSCAL 1.1.0 assessment-results assembled only from already-signed measurement cards (each with its card bytes and Merkle inclusion proof), plus one manifest card-v0, signed when the signing key is present. Observations are relevant-to the obligation, never satisfied or not satisfied; zero relevant cards ships as an empty bundle, and the free preview says so first (preview=true here, or the free tool evidence_bundle_preview). Article 53 output is evidence for review, not a legal determination. Evidence for obligation work \u2014 not a conformity assessment, certification, audit opinion or compliance determination; grants no status. Measurement, not certification. Without x_payment the tool returns the 402 challenge, which is the only place terms appear. Verification of any card is free at https://councilof.ai/gspc-verify.",
+      "description": "PAID (x402). For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject via https://councilof.ai/api/evidence-bundle: selected existing card objects with signature fields and any retained inclusion proofs, an OSCAL assessment-results wrapper and an assembly manifest. Assembly does not verify input-card signatures. A returned unsigned manifest reports its signing status and unsigned reason. If signing throws after settlement, the route returns PAID_NOT_DELIVERED without a delivered bundle or manifest; preserve the settlement receipt and reconcile before reissue, without automatically retrying or paying again. Zero selected cards stays an empty bundle; preview=true here, or the free evidence_bundle_preview tool, shows the count first. No new measurement, full OSCAL conformance or conformity determination is established. Article 53 output is evidence for review, not a legal determination; grants no status. Without x_payment the tool returns the actual 402 challenge; read its terms for each request. Supported-card verification is free at https://councilof.ai/gspc-verify. Measurement, not certification.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -169,8 +169,9 @@
         "rail": "x402",
         "route": "/api/evidence-bundle",
         "sku": "evidence_bundle",
+        "sells": "assembly",
         "free_preview": "preview=true, or the free tool evidence_bundle_preview",
-        "deliverable": "OSCAL 1.1.0 assessment-results over already-signed cards (with inclusion proofs) plus one manifest card-v0, surface evidence.bundle",
+        "deliverable": "selected existing card objects for this subject and obligation, the OSCAL assessment-results wrapper, and an assembly manifest; assembly does not verify input-card signatures; a delivered response reports manifest signing status and any unsigned reason; a thrown signing failure returns PAID_NOT_DELIVERED with no delivered bundle or manifest, requiring settlement reconciliation before reissue and no automatic retry or repayment; zero selected cards stays zero; any existing_pack link is separate; no new measurement or conformity determination",
         "deployed_by": "live on councilof.ai (402 on ?obligation=article-53&bundle=1, read 2026-09-30)"
       }
     }

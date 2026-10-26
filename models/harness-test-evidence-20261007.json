@@ -1,0 +1,114 @@
+{
+  "schema": "csoai.tui3-harness-test-evidence/0.1",
+  "observed_at": "2026-10-07",
+  "repository": "https://github.com/CSOAI-ORG/councilof-ai",
+  "checkout": "full clone of master (36,656 files), no sparse-checkout",
+  "environment": {
+    "python": "3.14 (macOS)",
+    "deps": "pytest, cryptography, pyarrow 25.0.1, huggingface_hub, opentimestamps-client \u2014 same set as .github/workflows/pr-gates.yml:355",
+    "env_corrections": [
+      "SSL_CERT_FILE=certifi/cacert.pem \u2014 system Python 3.14 ships no CA bundle; without this, 5 network tests fail with CERTIFICATE_VERIFY_FAILED",
+      "pyarrow installed \u2014 required by evidence-bundle/parquet tests",
+      "First run used a sparse checkout that omitted .github/, locks/, functions/ \u2014 that produced 5 spurious FileNotFoundError failures. Re-run on a full clone."
+    ]
+  },
+  "run_1_ci_exact_subset": {
+    "command": "python3 -m pytest -q scripts/spray/test_gspc_parity.py scripts/spray/test_gspc_spray_skip.py harness/gspc-top100/test_priority_pick.py harness/gspc-top100/test_inflight_cells.py harness/gspc-top100/test_one_option_menu.py",
+    "passed": 56,
+    "failed": 0,
+    "result": "PASS",
+    "interpretation": "Reproduces the green CI signal locally. Confirms the environment is capable of passing the gated tests."
+  },
+  "run_2_full_harness_dir": {
+    "command": "python3 -m pytest harness/gspc-top100/ -q --no-header",
+    "passed": 81,
+    "failed": 13,
+    "result": "FAIL",
+    "total": 94,
+    "environment_causes_eliminated": [
+      "missing CA bundle (fixed)",
+      "sparse checkout gaps (fixed)",
+      "missing pyarrow/huggingface_hub/opentimestamps-client (installed)"
+    ]
+  },
+  "ci_gating_analysis": {
+    "workflow": ".github/workflows/pr-gates.yml",
+    "tests_ci_actually_runs_in_harness": [
+      "harness/gspc-top100/test_priority_pick.py",
+      "harness/gspc-top100/test_inflight_cells.py",
+      "harness/gspc-top100/test_one_option_menu.py",
+      "harness/gspc-top100/test_mill_honesty.py -k sign_mill_skips_already_signed"
+    ],
+    "files_in_that_dir_never_executed_by_ci": [
+      "test_fleet_locks.py",
+      "test_stdio_pack_matches_canonical.py",
+      "test_verify_card.py",
+      "test_join_top100.py",
+      "test_check_board_totals.py",
+      "test_read_label.py",
+      "test_mill_window.py",
+      "test_fleet_locks.py"
+    ],
+    "other_workflow": "csoai-verify-selftest.yml is workflow_dispatch only \u2014 no push/schedule trigger",
+    "honest_claim": "The 13 failures were observed locally on a clean master clone with CI-equivalent deps. TUI-3 did NOT run GitHub Actions and does not claim CI is red."
+  },
+  "failures": [
+    {
+      "file": "test_stdio_pack_matches_canonical.py",
+      "test": "test_packed_stdio_files_match_canonical",
+      "cause": "byte drift: functions/mcp/gspc-tools.json (40,373 B) != mcp/gspc-server/gspc-tools.json (40,235 B)",
+      "precise_diff": "tool 'server_evidence' inputSchema: canonical HTTP copy carries format:uri + pattern:^https?:// + maxLength:2048; packed stdio/Docker/Glama copy carries only type:string + description. 14/14 tool names identical, no top-level key differences.",
+      "severity": "MEDIUM \u2014 MCP contract-parity drift between HTTP and stdio surfaces",
+      "lane": "TUI-4 (agent discovery / MCP manifest) \u2014 reported, not fixed by TUI-3",
+      "ci_gated": false
+    },
+    {
+      "file": "test_fleet_locks.py",
+      "test": "7 tests",
+      "cause": "lock-field integrity assertions",
+      "examples": [
+        "test_hf2200_lock_is_a_real_queue: n_measured=0 but 405 models carry status 'practice-mill' (assert 0 == 405)",
+        "test_apply_mill_persists_route_kind...: KeyError 'route_kind'",
+        "test_restore_original_membership_drops_injected_slugs: assert 0 == 1"
+      ],
+      "severity": "MEDIUM \u2014 n_measured is the field the honesty doctrine says must be read, never hardcoded",
+      "lane": "TUI-3 (measurement integrity)",
+      "ci_gated": false
+    },
+    {
+      "file": "test_mill_honesty.py",
+      "test": "5 tests",
+      "tests": [
+        "test_mill_script_does_not_slice_prefix (expects 'router_names = [slug]' in FLEET-B mill script)",
+        "test_flip_hub_queue_only_valid_n30_cells (assert 0 == 0 and 0 == 1)",
+        "test_index_row_mirrors_body_status_issue_1155 (schema 'csoai.mill-item-evidence/0.3' != expected '0.2')",
+        "test_sign_mill_emits_measured_at_n30_and_supersedes_never_overwrites (SystemExit 2 from argparse)",
+        "test_mill_grading_writes_item_evidence_bundle (expected 2 cells written, got 0)"
+      ],
+      "severity": "MEDIUM-HIGH \u2014 these are the estate's own honesty guards over mill output",
+      "lane": "TUI-3 (measurement integrity)",
+      "ci_gated": "partially \u2014 only '-k sign_mill_skips_already_signed' runs in CI, and that one passes"
+    }
+  ],
+  "what_passed": {
+    "test_verify_card.py": "PASS \u2014 including test_live_did_and_repo_card_is_valid (live DID + repo card)",
+    "test_inflight_cells.py": "PASS (CI-gated)",
+    "test_priority_pick.py": "PASS (CI-gated)",
+    "test_one_option_menu.py": "PASS (CI-gated)",
+    "interpretation": "Card cryptographic verification is green. The failures are in mill/fleet bookkeeping and manifest packing, not in signature verification."
+  },
+  "card_verification_tests": {
+    "estate_verifier": "harness/gspc-top100/verify_card.py",
+    "index": "335/335 VALID",
+    "mill_signed": "2868/2868 VALID",
+    "pr1888": "36/36 VALID",
+    "distinct_valid": 3203,
+    "sha256_mismatches": 0
+  },
+  "costs": {
+    "actual_spend_usd": 0.0,
+    "revenue_usd": 0.0,
+    "classification": "INTERNAL_SELF_FUNDED"
+  },
+  "not_a_certification": true
+}

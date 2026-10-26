@@ -76,6 +76,20 @@ const EXISTING = [
   // row on /memberships, which is what the page was reached for.
   "/alliance-map          /memberships         308",
   "/alliance-map/         /memberships         308",
+  // Withdrawn 6 Oct 2026 for breaking standing doctrine. /authority handed out embeddable
+  // "Council-Verified" badges: a conformity mark, and we measure, we never certify. A reader who
+  // wanted to show a status lands on the free verifier the badges pointed at. /intel was an
+  // internal sales-target board (named organisations scored as "gaps"); internal material is
+  // never listed publicly, and it has no public successor, so it goes to the home page.
+  "/authority            /gspc-verify/        308",
+  "/authority/           /gspc-verify/        308",
+  "/intel                /                    308",
+  "/intel/               /                    308",
+  // /brief?id=<account> was the per-account sales brief /intel linked to: a named organisation,
+  // its "play" and the pitch to lead with. Internal sales material, unlisted and unlinked once
+  // /intel went, but still served; withdrawn the same day, to the home page for the same reason.
+  "/brief                /                    308",
+  "/brief/               /                    308",
   // The noindex GitHub PR train is retired: its API returns 404 and the live
   // lazy chunk is missing. Send old bookmarks to the indexed explanation of
   // the live measurement workflow rather than advertise a frozen PR queue.
@@ -330,6 +344,12 @@ const EXISTING = [
   "/interop/effect-binding-server-probe-2026-09-30.json  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/interop/effect-binding-server-probe-2026-09-30.json  302",
   "/proofs/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/proofs/:splat  302",
   "/cards/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/cards/:splat  302",
+  // 2026-10-18: bulk interop directories excluded from Pages bundle (20,000-file cap).
+  // Protected by hf-mirror-gate.mjs which verifies HF has the files before this PR can merge.
+  "/interop/mill-cards-signed/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/interop/mill-cards-signed/:splat  302",
+  "/interop/mill-cards-unsigned/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/interop/mill-cards-unsigned/:splat  302",
+  "/interop/mill-evidence/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/interop/mill-evidence/:splat  302",
+  "/interop/ots/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/interop/ots/:splat  302",
 ];
 
 const STOREFRONT = [
@@ -346,7 +366,7 @@ const PERSONA_SLASH = [
   "east-west", "challenge",
   "refutation-ledger",
   "benchmarks", "benchmark-index", "benchmark-quality", "watchdog-map",
-  "mcps", "trust-center", "network", "hive", "intel",
+  "mcps", "trust-center", "network", "hive",
 ];
 const PERSONA_FOR_SLASH = [
   "finance", "healthcare", "startup", "enterprise", "regulator", "sec-filer",

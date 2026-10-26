@@ -1,0 +1,177 @@
+{
+ "_about": "Three estate-signed leaves copied verbatim (as parsed JSON) from committed public bytes, so the shared card-v0/v1 verdict (functions/_lib/cardV0Verify.ts) is tested on real signatures under the pinned did:web:csoai.org#board-attestation-1 key, not only on throwaway keys. Copied 2026-10-07 by the paid-route lane.",
+ "_sources": {
+  "card_v0_signed": "public/archive/xrpl-rlusd/2026-09.jsonl line 1 (.card)",
+  "card_v1_signed": "public/archive/evm-acred-ethereum/2026-09.jsonl line 1 (.card)",
+  "card_v1_unsigned": "public/archive/xrpl-eurcv/2026-09.jsonl line 47 (.card)"
+ },
+ "card_v0_signed": {
+  "as_of": "2026-08-28T09:06:28.399Z",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "payload": {
+   "asset_class": "Stablecoin",
+   "holders": 41200,
+   "issuer": "Ripple",
+   "issuer_address": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+   "kind": "distributed",
+   "source": "xrpl.fi/api/metrics",
+   "supply": 676949657,
+   "symbol": "RLUSD",
+   "verified_domain": "ripple.com",
+   "verified_via": "Bidirectional domain match"
+  },
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "sha256": "b61bb14419b555c9db79612f091e465c6bb2cc66ea49aca7bceb4a285541d60b",
+  "sig_ed25519": "b70375d122f7283335a41ff768d14b76f3726a074738ae429d4208c44de7ddbaa78e2e6881d3c254f26f18401ab76bf9f77d89b35babeca1e49526b311c27a06",
+  "source_urls": [
+   "https://xrpl.fi/api/metrics"
+  ],
+  "subject": "XRPL RLUSD public state",
+  "surface": "xrpl.asset.state",
+  "tags": [
+   "reg.tag:public-ledger",
+   "framework:xrpl",
+   "jurisdiction:permissionless"
+  ],
+  "unmeasured": []
+ },
+ "card_v1_signed": {
+  "as_of": "2026-09-03T06:20:47Z",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+  "payload": {
+   "absent": [
+    "paused()",
+    "getRoleMemberCount(bytes32=0x00)",
+    "blocklist()",
+    "allowlist()",
+    "sanctionsList()",
+    "allowList()",
+    "allowListV2()",
+    "accessControl()",
+    "hook()",
+    "kycManager()",
+    "pauser()",
+    "terms()",
+    "eip1967_admin (slot zero)"
+   ],
+   "address": "0x17418038ecf73ba4026c4f428547bf099706f27b",
+   "attests": "historical permission state at block 25894950 on ethereum, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+   "block": 25894950,
+   "block_hash": "0x675ea642448309b89263863aa2e7be25f091106dbfd5a9462687e41372702710",
+   "block_time": "2026-09-03T06:20:47Z",
+   "chain": "ethereum",
+   "chain_id": 1,
+   "checked": {
+    "decimals": 6,
+    "eip1967_implementation": "0xfc8a9000c161e3c6e073e967107ce926a44a06e2",
+    "isPaused": false,
+    "name": "Apollo Diversified Credit Securitize Fund",
+    "owner": "0x59c1eacec450c57dcb9b8725d0f96635c2b676ee",
+    "symbol": "ACRED",
+    "totalSupply": 25971059372
+   },
+   "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md",
+   "product": "Apollo Diversified Credit Securitize Fund",
+   "proof": {
+    "account": {
+     "codeHash": "0xee8a105971995661291a9f284262a87abf2381b3cdc93b2c8fbeffe4cd636dd9",
+     "nodes": 8,
+     "nonce": "0x1",
+     "storageHash": "0xfe6f1e1c53ba20f1894236b12e7a47d33e7ae33e124a00e2fa320d42acd9e0d4"
+    },
+    "bytes": 11189,
+    "kind": "eip1186",
+    "rpc": "eth.drpc.org",
+    "sha256": "4f6f082bcbbfc20a53265ce01e24cb5df3baea13a2019d52442b5632e5b25c47",
+    "slots": [
+     {
+      "key": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+      "label": "eip1967_implementation",
+      "nodes": 4,
+      "value": "0xfc8a9000c161e3c6e073e967107ce926a44a06e2"
+     },
+     {
+      "key": "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103",
+      "label": "eip1967_admin",
+      "nodes": 3,
+      "value": "0x0"
+     }
+    ],
+    "url": "/archive/proofs/eip1186/4f6f082bcbbfc20a.json",
+    "verifies_against": "block_hash -> header.stateRoot (EIP-1186)"
+   },
+   "rpc": "ethereum-rpc.publicnode.com",
+   "schema": "csoai.evm.permission-state/0.1",
+   "subject": "evm:ACRED:ethereum",
+   "symbol": "ACRED",
+   "unmeasured": [
+    "allowlist/blocklist membership of any holder address",
+    "off-chain transfer-agent or KYC registry contents",
+    "issuer NAV, AUM and share-class terms (not on-chain)",
+    "source verification of bytecode against a published repository",
+    "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+   ]
+  },
+  "schema": "https://councilof.ai/schema/card-v1.json",
+  "sha256": "d2cd7014d1b1750ed3888598d676e08090d0a670ff02c39ab0cf898c4392f517",
+  "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+  "sig_ed25519": "b66258a2be07f360fe8e6236e35817e28ed9e7dc168a38552252235193285fbe3b0bcb04e74cc915b83497c629a7a6e08a2a3083df03bce796ff964b5527a407",
+  "source_urls": [
+   "https://ethereum-rpc.publicnode.com",
+   "https://etherscan.io/token/0x17418038ecF73BA4026c4f428547BF099706F27B",
+   "https://eth.drpc.org"
+  ],
+  "subject": "evm:ACRED:ethereum permission state at block 25894950",
+  "surface": "public.notice",
+  "tags": [
+   "framework:evm",
+   "reg.tag:public-ledger",
+   "chain:ethereum",
+   "coverage:permission-state",
+   "subject:ACRED"
+  ],
+  "unmeasured": [
+   "allowlist/blocklist membership of any holder address",
+   "off-chain transfer-agent or KYC registry contents",
+   "issuer NAV, AUM and share-class terms (not on-chain)",
+   "source verification of bytecode against a published repository",
+   "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+  ]
+ },
+ "card_v1_unsigned": {
+  "as_of": "2026-09-11T08:39:20.724Z",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+  "payload": {
+   "asset_class": "Stablecoin",
+   "holders": 1,
+   "issuer": "Société Générale-FORGE",
+   "issuer_address": "rUNaS5sqRuxZz6V7rBGhoSaZiVYA3ut4UL",
+   "kind": "distributed",
+   "source": "xrpl.fi/api/metrics",
+   "supply": 10000000,
+   "symbol": "EURCV",
+   "verified_domain": null,
+   "verified_via": "XRPScan well-known directory"
+  },
+  "schema": "https://councilof.ai/schema/card-v1.json",
+  "sha256": "ec2433fc440cb4971f0715ed463feed3cbe151752fba6d3a86716cf856fd584c",
+  "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+  "sig_ed25519": null,
+  "source_urls": [
+   "https://xrpl.fi/api/metrics"
+  ],
+  "subject": "XRPL EURCV public state",
+  "surface": "xrpl.asset.state",
+  "tags": [
+   "reg.tag:public-ledger",
+   "framework:xrpl",
+   "jurisdiction:permissionless"
+  ],
+  "unmeasured": [
+   "strict_two_way_toml",
+   "sig_ed25519 against #board-attestation-1 (NO_LAPTOP_SIGN)"
+  ]
+ }
+}

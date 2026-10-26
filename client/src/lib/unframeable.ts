@@ -48,3 +48,26 @@ export function withoutEmbed(href: string, base = "https://councilof.ai"): strin
     return href;
   }
 }
+
+/**
+ * Where a framed page actually landed, when that is a place Council OS must not frame.
+ *
+ * Withdrawn pages (/watchdog-hub, /jobs, /early-access, …) are 308'd by Pages Functions to
+ * /os?lobby=home, and /enterprise to /dashboard. The redirect drops `embed=1`, so the child never
+ * breaks out and Council OS rendered inside its own centre pane. The parent reads the landed
+ * location after load (same origin, so it can) and replaces the frame when it is unframeable.
+ * Returns null when the frame is fine, empty, or cannot be read (cross-origin throws).
+ */
+export function unframeableLanding(
+  frame: { contentWindow?: { location?: { pathname?: string; search?: string; hash?: string } } | null } | null,
+): { path: string; href: string } | null {
+  try {
+    const loc = frame?.contentWindow?.location;
+    const path = loc?.pathname;
+    if (!path || path === "blank" || path === "srcdoc") return null;
+    if (!isUnframeable(path)) return null;
+    return { path: pathBare(path), href: withoutEmbed(`${path}${loc?.search ?? ""}${loc?.hash ?? ""}`) };
+  } catch {
+    return null;
+  }
+}

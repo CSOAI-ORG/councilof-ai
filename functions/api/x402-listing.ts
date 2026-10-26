@@ -21,6 +21,7 @@
  * asks for the largest page the index serves and refuses (UNCHECKABLE) rather than walk past
  * MAX_PAGES. Cached 5 minutes at the edge; the index itself moves slower than that.
  */
+import { headFromGet } from "./_head";
 
 export const PAYAI_DISCOVERY_URL = "https://facilitator.payai.network/discovery/resources";
 export const OUR_HOSTS = ["councilof.ai", "csoai.org"] as const;
@@ -265,3 +266,7 @@ export const onRequestGet: PagesFunction = async () => {
     },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

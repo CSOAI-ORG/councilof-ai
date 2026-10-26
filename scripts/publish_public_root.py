@@ -39,6 +39,7 @@ from adapters import (  # noqa: E402
     # only fin7_coverage.collect() is called. The dead names raised
     # ImportError at module load, so this publisher could not run AT ALL.
     art50_census,
+    art50_recheck_schedule,
     benji,
     evm_permission_events,
     evm_permissions,
@@ -592,6 +593,137 @@ def load_committed() -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+# ---------------------------------------------------------------------------
+# A source that cannot be reached does not retract a published measurement.
+#
+# The defect this exists for (measured 2026-10-26): the candidate root built on
+# 2026-10-25 ran while xrpl.fi was unreachable, so all 16 locked-16 asset leaves came
+# out as honest placeholders (asset_class None, holders None) and REPLACED the 16
+# measured leaves the published root carried. The derived readiness view then said
+# "425 indexed assets, 0 measured" and the stablecoin gate failed closed on it.
+#
+# Each placeholder is honest about itself — it lists what it could not read — and the
+# root is a coverage SNAPSHOT, not an append-only log (scripts/build-root-leaf-union.mjs
+# says exactly that, and the union artefact is how a reader sees what an earlier root
+# committed to). But a snapshot that drops a measurement a reader can already see is a
+# retraction, and the locked-16 basket is a STANDING measurement set: an XRPL asset
+# state does not become un-measured because one poll failed. So the last published
+# measured leaf for an asset is carried forward verbatim — same bytes, same digest,
+# same signature, same inclusion proof — until a newer MEASURED leaf replaces it.
+#
+# The rule is deliberately narrow. It never replaces a leaf that IS measured, it never
+# invents a measurement, and it never touches a leaf that was never measured. It only
+# refuses to let an unreachable source silently un-measure something already published.
+# ---------------------------------------------------------------------------
+
+ASSET_SURFACE = "xrpl.asset.state"
+
+
+def asset_identity(card: dict) -> tuple[str, str]:
+    """(symbol, issuer address) — the identity of an XRPL asset, not its date or price."""
+    payload = card.get("payload") or {}
+    return (
+        str(payload.get("symbol") or "").upper(),
+        str(payload.get("issuer_address") or ""),
+    )
+
+
+def asset_leaf_is_measured(card: dict) -> bool:
+    """True when the leaf carries a real classification, i.e. its source answered.
+
+    The adapter writes asset_class=None when the source could not be reached and lists
+    that fact in the leaf's own `unmeasured`. Such a leaf is honest; it is also not a
+    measurement, and it must not stand in for one.
+    """
+    if card.get("surface") != ASSET_SURFACE:
+        return False
+    payload = card.get("payload") or {}
+    return payload.get("asset_class") is not None
+
+
+def load_committed_asset_leaves(committed: dict, repo_root: Path) -> dict[tuple[str, str], dict]:
+    """Measured asset leaves the COMMITTED root carries, keyed by asset identity.
+
+    Only leaves the committed root actually includes count, and only leaves that are
+    measured (asset_class present). Each one is re-read from public/cards/ and matched
+    with the same digest rule validate_committed() uses: v0 leaves key on the payload
+    digest, v1 leaves on the whole card.
+    """
+    committed_hashes = set(committed.get("card_sha256") or [])
+    if not committed_hashes:
+        return {}
+    out: dict[tuple[str, str], dict] = {}
+    for path in sorted((repo_root / "public" / "cards").glob("*.json")):
+        try:
+            wrapped = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        card = wrapped.get("card") if isinstance(wrapped, dict) else None
+        if not isinstance(card, dict) or card.get("surface") != ASSET_SURFACE:
+            continue
+        shas = {card.get("sha256")}
+        try:
+            shas.add(payload_sha256(card.get("payload") or {}))
+        except ValueError:
+            pass
+        if not (shas & committed_hashes):
+            continue
+        if not asset_leaf_is_measured(card):
+            continue
+        out[asset_identity(card)] = card
+    return out
+
+
+def carry_forward_measured_asset_leaves(
+    cards: list[dict], committed_leaves: dict[tuple[str, str], dict]
+) -> tuple[list[dict], list[tuple[str, str]], set[str]]:
+    """Replace an unmeasured fresh asset leaf with the published measured leaf for that asset.
+
+    Returns (cards, carried_identities, replaced_shas). A fresh leaf that IS measured is
+    never replaced — a newer real measurement always wins. A fresh leaf for an asset that
+    was never measured keeps its honest placeholder.
+    """
+    carried: list[tuple[str, str]] = []
+    replaced: set[str] = set()
+    out: list[dict] = []
+    for card in cards:
+        if card.get("surface") == ASSET_SURFACE and not asset_leaf_is_measured(card):
+            identity = asset_identity(card)
+            published = committed_leaves.get(identity)
+            if published is not None:
+                replaced.add(str(card.get("sha256")))
+                carried.append(identity)
+                out.append(published)
+                continue
+        out.append(card)
+    return out, carried, replaced
+
+
+def assert_no_measurement_retraction(
+    cards: list[dict], committed_leaves: dict[tuple[str, str], dict]
+) -> None:
+    """Fail closed when this root would drop a measurement the published root carries.
+
+    The carry-forward above normally makes this impossible; this is the backstop for the
+    case it cannot cover — a published measurement whose asset is not in this build at
+    all. Publishing that would retract a measurement nobody was told about, so the build
+    stops instead and names what was lost.
+    """
+    kept = {
+        asset_identity(c)
+        for c in cards
+        if c.get("surface") == ASSET_SURFACE and asset_leaf_is_measured(c)
+    }
+    lost = sorted(set(committed_leaves) - kept)
+    if lost:
+        raise SystemExit(
+            "HALT-ON-MEASUREMENT-RETRACTION: this root would drop "
+            f"{len(lost)} published asset measurement(s): "
+            + ", ".join(f"{sym}@{issuer}" for sym, issuer in lost)
+            + ". A source that cannot be reached does not un-measure an asset."
+        )
+
+
 def halt_on_split(committed: dict) -> int | None:
     code, live = fetch_json(LIVE_ROOT)
     if code != 200 or not isinstance(live, dict) or not live.get("merkle_root"):
@@ -715,6 +847,137 @@ def kinds_index(cards: list[dict], *, as_of: str, merkle_root: str) -> dict:
         ),
     }
 
+# ---------------------------------------------------------------------------
+# /data/v1 versioned feed (additive, 2026-10-14). Runs AFTER root.json is on disk.
+# Byte-copies only: never re-serialises, never touches root math, never touches
+# public/signed/card_index.json or any signed manifest. CHANGELOG is add-only and
+# enforced here: a changed or removed prior entry raises and fails the run.
+# ---------------------------------------------------------------------------
+DATA_V1 = ROOT / "public" / "data" / "v1"
+DATA_V1_BASE_URL = "https://councilof.ai/data/v1"
+# (snapshot file name, source path relative to ROOT). Missing sources are skipped and listed.
+DATA_V1_SOURCES = (
+    ("root.json", "public/root.json"),
+    ("root-kinds.json", "public/interop/root-kinds.json"),
+    ("models-measured.json", "public/interop/models-measured.json"),
+    ("catalog.json", "public/catalog.json"),
+)
+DATA_V1_FORBIDDEN = ("public/signed/",)
+
+
+def _canon(obj: Any) -> str:
+    return json.dumps(obj, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+
+
+def assert_changelog_append_only(prior: list, new: list) -> None:
+    """Raise ValueError unless `new` keeps every prior entry byte-identical, in order."""
+    if len(new) < len(prior):
+        raise ValueError(f"data/v1 CHANGELOG: {len(prior) - len(new)} prior entr(y/ies) removed — add-only")
+    for i, (a, b) in enumerate(zip(prior, new)):
+        if _canon(a) != _canon(b):
+            raise ValueError(f"data/v1 CHANGELOG: prior entry {i} rewritten — add-only")
+
+
+def write_data_v1_snapshot(repo_root: Path | None = None) -> dict | None:
+    """Snapshot the committed root/index/manifest under public/data/v1/snapshots/<date>/.
+
+    Returns the new CHANGELOG entry, or None when this merkle_root is already recorded.
+    """
+    base = repo_root or ROOT
+    out = base / "public" / "data" / "v1"
+    root_bytes = (base / "public" / "root.json").read_bytes()
+    root = json.loads(root_bytes)
+    merkle, as_of, count = root["merkle_root"], root["as_of"], root["card_count"]
+
+    cl_path = out / "CHANGELOG.json"
+    prior_doc = json.loads(cl_path.read_text(encoding="utf-8")) if cl_path.exists() else None
+    prior = list(prior_doc["entries"]) if prior_doc else []
+    if any(e.get("merkle_root") == merkle for e in prior):
+        return None
+
+    date = as_of[:10]
+    version = date
+    n = 2
+    while (out / "snapshots" / version).exists():
+        version = f"{date}.{n}"
+        n += 1
+    snap = out / "snapshots" / version
+    snap.mkdir(parents=True)
+
+    files, skipped = [], []
+    for name, rel in DATA_V1_SOURCES:
+        assert not any(rel.startswith(f) for f in DATA_V1_FORBIDDEN), rel
+        src = base / rel
+        if not src.exists():
+            skipped.append(rel)
+            continue
+        data = src.read_bytes()
+        (snap / name).write_bytes(data)  # byte-copy, no re-serialisation
+        files.append({"name": name, "source": rel, "bytes": len(data), "sha256": sha256_hex(data),
+                      "url": f"{DATA_V1_BASE_URL}/snapshots/{version}/{name}"})
+
+    # Every published URL names a FILE that is served. A bare directory URL (".../<version>/") has no
+    # index document on Pages and fails scripts/link-gate.mjs, so the snapshot is addressed by its manifest.
+    snap_base = f"{DATA_V1_BASE_URL}/snapshots/{version}/"
+    url = snap_base + "manifest.json"
+    citation = {
+        "schema": "csoai.data-v1-citation/0.1",
+        "title": f"GSPC public root snapshot {version}",
+        "author": "CSOAI (Council of AI)",
+        "version": version,
+        "date_released": date,
+        "as_of": as_of,
+        "merkle_root": merkle,
+        "card_count": count,
+        "url": url,
+        "doi": None,  # no DOI exists; never invent one (Zenodo record returns 410)
+        "license_data": "CC-BY-4.0",
+        "preferred_citation": f"CSOAI. GSPC public root snapshot {version} (merkle_root {merkle}, "
+                              f"{count} cards, as_of {as_of}). {url}",
+        "note": "Measured, not certified. CSOAI is not a notified body.",
+    }
+    manifest = {"schema": "csoai.data-v1-snapshot/0.1", "version": version, "as_of": as_of,
+                "merkle_root": merkle, "card_count": count, "files": files, "skipped": skipped,
+                "note": "Files are byte-copies of the committed sources; sha256 is over the exact bytes."}
+    write_pretty(snap / "citation.json", citation)
+    write_pretty(snap / "manifest.json", manifest)
+    man_sha = sha256_hex((snap / "manifest.json").read_bytes())
+
+    entry = {"version": version, "as_of": as_of, "merkle_root": merkle, "card_count": count,
+             "card_count_delta": count - prior[-1]["card_count"] if prior else None,
+             "snapshot_url": url, "manifest_sha256": man_sha,
+             "citation": citation["preferred_citation"]}
+    new = prior + [entry]
+    assert_changelog_append_only(prior, new)
+    write_pretty(cl_path, {"schema": "csoai.data-v1-changelog/0.1",
+                           "rule": "add-only: entries are appended, never rewritten or removed",
+                           "entries": new})
+    write_pretty(out / "latest.json", {"schema": "csoai.data-v1-latest/0.1", "version": version,
+                                       "as_of": as_of, "merkle_root": merkle, "card_count": count,
+                                       "snapshot_url": url, "manifest_url": url,
+                                       "manifest_sha256": man_sha, "citation_url": snap_base + "citation.json",
+                                       "changelog_url": f"{DATA_V1_BASE_URL}/CHANGELOG.json"})
+    return entry
+
+
+def check_data_v1_changelog_against(ref: str) -> int:
+    """CI guard: the working CHANGELOG must be add-only relative to `ref` (e.g. origin/master)."""
+    import subprocess
+    rel = "public/data/v1/CHANGELOG.json"
+    try:
+        old = subprocess.run(["git", "show", f"{ref}:{rel}"], cwd=ROOT, capture_output=True, check=True).stdout
+    except subprocess.CalledProcessError:
+        print(f"data/v1 CHANGELOG: absent at {ref}; nothing to compare")
+        return EXIT_OK
+    cur = (ROOT / rel)
+    if not cur.exists():
+        print("data/v1 CHANGELOG removed", file=sys.stderr)
+        return EXIT_BAD
+    assert_changelog_append_only(json.loads(old)["entries"], json.loads(cur.read_text(encoding="utf-8"))["entries"])
+    print(f"data/v1 CHANGELOG: add-only vs {ref} OK")
+    return EXIT_OK
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="One writer for csoai.public-root/v1")
     ap.add_argument("--dry-run", action="store_true", help="run adapters + halts; do not write")
@@ -729,7 +992,17 @@ def main() -> int:
         action="store_true",
         help="only verify the committed tree + split check",
     )
+    ap.add_argument("--data-v1-snapshot", action="store_true",
+                    help="only snapshot the committed public/root.json into public/data/v1 (no adapters, no signing)")
+    ap.add_argument("--check-data-v1-changelog", metavar="REF", default=None,
+                    help="fail if public/data/v1/CHANGELOG.json is not add-only relative to git REF")
     args = ap.parse_args()
+    if args.check_data_v1_changelog:
+        return check_data_v1_changelog_against(args.check_data_v1_changelog)
+    if args.data_v1_snapshot:
+        e = write_data_v1_snapshot()
+        print(f"data/v1: {'new snapshot ' + e['version'] if e else 'merkle_root already recorded; no change'}")
+        return EXIT_OK
 
     # Never print the secret. Presence only.
     print(
@@ -784,6 +1057,7 @@ def main() -> int:
     rwa_reconciliation_out = rwa_reconciliation.collect(ROOT)
     stablecoin_deep_out = stablecoin_deep.collect(ROOT)
     art50_census_out = art50_census.collect(ROOT)
+    art50_recheck_schedule_out = art50_recheck_schedule.collect(ROOT)
 
     leaves: list[dict] = []
     leaves.extend(xrpl_out["leaves"])
@@ -816,6 +1090,7 @@ def main() -> int:
     leaves.extend(rwa_reconciliation_out["leaves"])
     leaves.extend(stablecoin_deep_out["leaves"])
     leaves.extend(art50_census_out["leaves"])
+    leaves.extend(art50_recheck_schedule_out["leaves"])
 
     have_pkcs8 = key_present()
     have_key = signer_available()
@@ -835,7 +1110,18 @@ def main() -> int:
         legacy_digest = payload_sha256(leaf["payload"])
         legacy_digests.append(legacy_digest)
         is_new = legacy_digest not in LAST_UNSIGNED_SET
-        will_sign = is_new and have_key
+        # Attempt a signature for EVERY leaf whenever a signer is available — not
+        # only for post-07:38Z leaves. The 07:38Z set may stay unsigned (it is a
+        # grandfather, and the is_new halt below still guards the NEW-leaf rule),
+        # but when the relay answers, signing it closes the NO_LAPTOP_SIGN gap the
+        # XRPL-16-16 ops doc tracks (docs/operations/XRPL-16-16-NEEDS-A-SIGNER-TARGET.md):
+        # USDQ/EURQ/PSC carry the tag only because this used to skip them.
+        # sig_ed25519 is excluded from card_sha256, so a successful signature never
+        # moves an existing leaf by itself; make_card(will_sign=True) drops the
+        # NO_LAPTOP_SIGN tag from unmeasured, which DOES change the whole-card
+        # digest — that is a new leaf id by design, signed, never a silent edit.
+        # Sign failure rebuilds will_sign=False and lands exactly on today's bytes.
+        will_sign = have_key
 
         card = make_card(leaf, None, will_sign=will_sign)
         sig = None
@@ -860,6 +1146,24 @@ def main() -> int:
     # leaf while its original whole-card digest remains in every subsequent root.
     cards = preserve_sticky_cards(cards, load_sticky_cards(ROOT))
 
+    # A source that cannot be reached does not retract a published measurement: carry the
+    # last published measured leaf for each asset forward until a newer MEASURED leaf
+    # replaces it. Measured 2026-10-26: the 2026-10-25 candidate root was built while
+    # xrpl.fi was unreachable, so all 16 locked-16 asset leaves were honest placeholders
+    # and the derived readiness view dropped from 4 measured assets to 0 — which failed
+    # the stablecoin gate closed on the candidate.
+    committed_asset_leaves = load_committed_asset_leaves(committed, ROOT)
+    cards, carried_asset_leaves, replaced_asset_shas = carry_forward_measured_asset_leaves(
+        cards, committed_asset_leaves
+    )
+    if carried_asset_leaves:
+        print(
+            f"carried forward {len(carried_asset_leaves)} published asset measurement(s): "
+            + ", ".join(f"{sym}@{issuer}" for sym, issuer in carried_asset_leaves)
+        )
+        # A leaf that is no longer in THIS root cannot be an unsigned leaf of this root.
+        new_unsigned = [s for s in new_unsigned if s not in replaced_asset_shas]
+
     asset_cards = [c for c in cards if c["surface"] == "xrpl.asset.state"]
     if len(asset_cards) != 16:
         print(f"HALT: locked 16 produced {len(asset_cards)} xrpl.asset.state leaves", file=sys.stderr)
@@ -871,6 +1175,10 @@ def main() -> int:
             dry_run=args.dry_run,
         )
         return EXIT_BAD
+    # The carry-forward above normally makes a retraction impossible; this is the backstop
+    # for the case it cannot cover — a published measurement whose asset is not in this
+    # build at all. Naming what was lost is better than publishing it silently.
+    assert_no_measurement_retraction(cards, committed_asset_leaves)
     basket_hex = merkle_root([c["sha256"] for c in asset_cards])
 
     # Optional signed basket card — only when we can sign, so we never add a
@@ -924,6 +1232,7 @@ def main() -> int:
                 "rwa_reconciliation": {"status": "halt-before-write", **rwa_reconciliation_out["sidecar"]},
                 "stablecoin_deep": {"status": "halt-before-write", **stablecoin_deep_out["sidecar"]},
                 "art50_census": {"status": "halt-before-write", **art50_census_out["sidecar"]},
+                "art50_recheck_schedule": {"status": "halt-before-write", **art50_recheck_schedule_out["sidecar"]},
             },
         }
         if not have_key:
@@ -1073,8 +1382,14 @@ def main() -> int:
         "rwa_reconciliation": rwa_reconciliation_out.get("sidecar") or {},
         "stablecoin_deep": stablecoin_deep_out.get("sidecar") or {},
         "art50_census": art50_census_out.get("sidecar") or {},
+        "art50_recheck_schedule": art50_recheck_schedule_out.get("sidecar") or {},
         "card_count": len(shas),
         "xrpl_asset_state_count": len(asset_cards),
+        # What this run carried forward from the published root, so a reader can see WHY
+        # an asset leaf is dated earlier than this run. Empty on a run whose source answered.
+        "carried_forward_published_measurements": [
+            {"symbol": sym, "issuer_address": issuer} for sym, issuer in carried_asset_leaves
+        ],
         "note": (
             "hub.census.digest and gspc.board.cite live here, not on card-v0. "
             "Never MEASURED. Never certify. Never partnered with SWIFT. "
@@ -1126,6 +1441,8 @@ def main() -> int:
     # the leaves point at (content-addressed) and the event-indexer cursor, which
     # advances ONLY once the root carrying its leaves is on disk.
     n_proofs = len(evm_permissions.write_proof_blobs(ROOT, evm_out.get("proof_blobs") or {}))
+    v1 = write_data_v1_snapshot()
+    print(f"data/v1: {'snapshot ' + v1['version'] if v1 else 'unchanged root; no snapshot'}")
     state_path = evm_permission_events.save_state(ROOT, evm_events_out["state"]) if evm_events_out.get("state") else None
     print(
         "wrote public/root.json public/cards/ public/proofs/ public/publisher-health.json "

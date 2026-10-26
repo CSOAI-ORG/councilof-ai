@@ -8,8 +8,10 @@
 import { isSeparated } from "../leaderLabel";
 import { buildCandidates } from "./candidates";
 import { applyCensus } from "./census";
+import { readBoardSource, unknownBoardProvenance } from "./board";
 import { ARD_LISTINGS, MAX_DISCOVERED, type CandidateSource, type DiscoveryResult } from "./discovery";
 import { decide, type Decision } from "./decide";
+import { matchTask, type TaskMatch } from "./taskMatch";
 import type { CensusRead } from "./census";
 import type { CallerPolicy } from "./policy";
 import { buildRouteRecord, sha256Hex } from "./evidence";
@@ -20,6 +22,7 @@ import {
   TIE_BREAK_RULES,
   type BoardAxis,
   type BoardRead,
+  type BoardSummary,
   type Candidate,
   type Task,
   type DataClass,
@@ -41,7 +44,7 @@ export const NOT_ENABLED = {
 export const BANNED_ROUTE_WORDS = /\b(best|safest|recommended|compliant|certified)\b/i;
 
 export type RouteDeps = {
-  /** Reads /api/gspc; injected so tests and the pod service supply their own board. */
+  /** One /api/gspc Response or exact byte buffer. Legacy parsed objects retain an unknown byte digest. */
   fetchBoard: () => Promise<unknown>;
   /** Reads the effect-binding census index (census.ts). Absent => every candidate stays UNMEASURED (NOT_WIRED). */
   fetchCensus?: () => Promise<unknown>;
@@ -120,7 +123,7 @@ export type RouteInternals = {
   policy: CallerPolicy;
   task: Task;
   objective: Objective;
-  board: { state: string; source: string | null; board_separation: string | null };
+  board: BoardSummary;
   census: CensusRead;
   locator: string;
   readAt: string;
@@ -184,18 +187,23 @@ export async function routeCore(
     allow_divergent_effect_binding: policy.allow_divergent_effect_binding,
   };
 
-  let board: BoardRead = { state: "NOT_REQUESTED", axis: null, source: null };
+  let board: BoardRead = { state: "NOT_REQUESTED", axis: null, source: null, provenance: unknownBoardProvenance() };
   if (objective.quality_axis) {
     try {
-      const b = await deps.fetchBoard();
-      board = { state: "LIVE", axis: boardAxis(b, objective.quality_axis), source: "/api/gspc" };
+      const b = await readBoardSource(await deps.fetchBoard());
+      board = { state: "LIVE", axis: boardAxis(b.value, objective.quality_axis), source: "/api/gspc", provenance: b.provenance };
     } catch {
       // UNREACHABLE: every candidate is UNTESTED on the axis. No cached number is substituted.
-      board = { state: "UNREACHABLE", axis: null, source: "/api/gspc" };
+      board = { state: "UNREACHABLE", axis: null, source: "/api/gspc", provenance: unknownBoardProvenance() };
     }
   }
   const census = await applyCensus(candidates, deps.fetchCensus);
-  const decision = decide(candidates, policy, ctx, objective, board.axis);
+  // The default candidate set (no caller candidates, no discovery) is the GSPC tool fleet: there the
+  // request's text picks the tool whose purpose it names (taskMatch.ts), never the A-Z tie-break.
+  // Caller-declared candidates keep the caller's tie_break exactly as before.
+  const fleetDefault = (args.candidates === undefined || args.candidates === null) && args.discover === undefined;
+  const relevance = fleetDefault ? (taskText !== null ? matchTask(taskText, candidates) : new Map<string, number>()) : null;
+  const decision = decide(candidates, policy, ctx, objective, board.axis, relevance, taskText !== null);
   const readAt = (deps.now ?? (() => new Date()))().toISOString();
   const uuid = (deps.uuid ?? (() => crypto.randomUUID()))();
   const task: Task = { sha256: taskSha, data_class, needs_write: args.needs_write === true, content_retained: false };
@@ -203,6 +211,7 @@ export async function routeCore(
     state: board.state === "LIVE" && !board.axis ? "AXIS_NOT_ON_BOARD" : board.state,
     source: board.source,
     board_separation: board.axis?.separation ?? null,
+    provenance: board.provenance,
   };
   const locator = `urn:gspc:route:${uuid}`;
   const record = await buildRouteRecord({
@@ -229,7 +238,11 @@ export async function routeCore(
     readAt,
   };
   const result: RouteResult = {
-    state: decision.chosen ? "ROUTED" : "NO_PERMITTED_CANDIDATE",
+    state: decision.chosen
+      ? "ROUTED"
+      : decision.task_match?.state === "UNTESTED" && decision.permitted.length > 0
+        ? "UNTESTED"
+        : "NO_PERMITTED_CANDIDATE",
     mode: "decide_only",
     preview: true,
     signed: false,
@@ -241,10 +254,14 @@ export async function routeCore(
     forbidden: decision.considered
       .filter((x) => !x.verdict.permit)
       .map((x) => ({ id: x.candidate.id, forbid_policy: x.verdict.forbid_policy })),
+    ...(decision.task_match ? { task_match: decision.task_match } : {}),
     record,
-    note:
-      "Routing is not ranking: the caller's policy applied to published measurements. TIE and UNTESTED are " +
-      "stated as they are. Unsigned decide-only preview; nothing was executed or charged.",
+    note: decision.task_match
+      ? "The candidates are the GSPC tools (none were declared). The choice is the permitted tool whose purpose " +
+        "matches the request; when none matches the answer is UNTESTED, never a pick by name. This is not a quality " +
+        "ranking. Unsigned decide-only preview; nothing was executed or charged."
+      : "Routing is not ranking: the caller's policy applied to published measurements. TIE and UNTESTED are " +
+        "stated as they are. Unsigned decide-only preview; nothing was executed or charged.",
   };
   return { result, internals };
 }
@@ -254,6 +271,22 @@ export function routeSummary(r: RouteResult): string {
   if (r.state === "NOT_ENABLED") return "NOT_ENABLED (501): the route tool is decide-only; execution is POST /api/route/execute.";
   if (r.state === "BAD_ARGUMENTS") return `BAD_ARGUMENTS: ${(r.errors as string[]).join("; ")}`;
   const chosen = r.chosen as { id: string; choice_basis: string } | null;
+  const tm = r.task_match as TaskMatch | undefined;
+  if (tm) {
+    const of = `${r.permitted} of ${r.considered} tools permitted`;
+    if (chosen)
+      return `ROUTED to ${chosen.id}: its purpose matches the request (basis ${chosen.choice_basis}; ${of}). Unsigned decide-only preview; nothing was called or charged.`;
+    if (tm.state === "MATCHED_FORBIDDEN") {
+      const m = tm.matched[0];
+      if (tm.paid?.forbidden_by?.length)
+        return `NO_PERMITTED_CANDIDATE: the request matches ${m.id}, which your policy forbids (${tm.paid.forbidden_by.join(", ")}), and it is a paid check (x402) that runs only from your own wallet (policy.caller_wallet: true; ${m.forbid_policy}). Nothing was called or charged. Next step: ${tm.paid.next_step} Page: https://councilof.ai${tm.paid.door}`;
+      if (tm.paid)
+        return `NO_PERMITTED_CANDIDATE: the request matches ${m.id}, a paid check (x402) that runs only from your own wallet (policy.caller_wallet: true; ${m.forbid_policy}). Nothing was called or charged. Free next step: ${tm.paid.free_step} Page: https://councilof.ai${tm.paid.door}`;
+      return `NO_PERMITTED_CANDIDATE: the request matches ${m.id}, which the policy forbids (${m.forbid_policy}). Nothing was called or charged.`;
+    }
+    if (r.state === "UNTESTED")
+      return `UNTESTED: ${tm.reason} (${of}.) Ask about a signed card, a board axis, a server or the board totals, or pass your own candidates.`;
+  }
   const sep = String(r.separation);
   const tail = `${r.permitted} of ${r.considered} candidates permitted; separation ${sep}${
     r.label ? ` (${r.label})` : ""

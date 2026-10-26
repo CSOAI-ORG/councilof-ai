@@ -8,6 +8,7 @@ import LobbyComposer, {
   type ComposerTool,
 } from "@/components/lobby/LobbyComposer";
 import LobbyThread from "@/components/lobby/LobbyThread";
+import { openAsk } from "@/components/ask/askBus";
 import TalkPanel, { type TalkPanelHandle } from "@/components/talk/TalkPanel";
 import GspcWorkspaceHome from "@/components/gspc/GspcWorkspaceHome";
 import {
@@ -35,10 +36,42 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-type ToolPhase = "loading" | "ready" | "failed";
-
 export function paneForTool(name: string): string {
   return "tools";
+}
+
+/**
+ * The home composer's question goes to the AG-UI TalkPanel, which answers it on the start screen.
+ *
+ * 6 Oct 2026: askTalk used to record the question as a lobby chat turn first. That flipped
+ * hasConversation, which swapped the home canvas (and the TalkPanel in it) for LobbyThread, and
+ * TalkPanel's unmount effect aborted the POST /api/agui/run it had just started: the first question
+ * typed on the start screen never got an answer. Two fixes met here and both are kept:
+ * - #2834 (master): the question is still recorded in session history (`keepInChat`), but
+ *   DashboardWorkspace sets talkOwnsHome before it does, so the turn never swaps the canvas.
+ * - tools audit: the question is also kept in the workspace History as an "ask" activity entry.
+ *
+ * Returns true when the TalkPanel took the question; false sends it on to the lobby chat.
+ */
+export function askOnHome(
+  text: string,
+  ctx: {
+    activePane: boolean;
+    hasConversation: boolean;
+    talk: { ask: (question: string) => void } | null;
+    record?: typeof recordActivity;
+    /** Records the question in session history; runs before the TalkPanel is asked. */
+    keepInChat?: (question: string) => void;
+  },
+): boolean {
+  if (ctx.activePane || ctx.hasConversation || !ctx.talk) return false;
+  if (isExplicitNavigationCommand(text) && (matchTab(text) || matchRoute(text))) return false;
+  const question = text.trim();
+  if (!question) return false;
+  (ctx.record ?? recordActivity)({ kind: "ask", label: question });
+  ctx.keepInChat?.(question);
+  ctx.talk.ask(question);
+  return true;
 }
 
 function shortDescription(description: string): string {
@@ -51,6 +84,14 @@ function shortDescription(description: string): string {
 
 /** DashboardLayout's section bar exposes this slot for workspace-level actions. */
 export const SECTION_ACTIONS_ID = "coai-section-actions";
+
+/**
+ * Tools audit, 6 Oct 2026: the candidate-evidence tray offered a receipt that went nowhere,
+ * because network intake is not live in this release (CandidateEvidenceTray says so itself).
+ * It is not drawn until intake exists; the quest bridge script still posts observations, and the
+ * tray returns by flipping this one constant once an intake endpoint is published.
+ */
+export const CANDIDATE_INTAKE_LIVE = false;
 
 export default function DashboardWorkspace({
   activePane,
@@ -68,7 +109,6 @@ export default function DashboardWorkspace({
   const chat = useLobbyChat();
   const threadEndRef = useRef<HTMLDivElement>(null);
   const [tools, setTools] = useState<ComposerTool[]>([]);
-  const [toolPhase, setToolPhase] = useState<ToolPhase>("loading");
   const [candidate, setCandidate] = useState<CandidateObservation | null>(null);
   const intentParams = useMemo(
     () =>
@@ -83,7 +123,6 @@ export default function DashboardWorkspace({
       if (cancelled) return;
       if (reply.state !== "ok") {
         setTools([]);
-        setToolPhase("failed");
         return;
       }
       setTools(
@@ -92,7 +131,6 @@ export default function DashboardWorkspace({
           description: shortDescription(tool.description),
         })),
       );
-      setToolPhase("ready");
     });
     return () => {
       cancelled = true;
@@ -154,9 +192,12 @@ export default function DashboardWorkspace({
         return;
       }
       recordActivity({ kind: "route", label, path });
-      setLocation(dashboardViewHref(path, label));
+      // A Council OS pane (/dashboard?tab=…) opens as itself. dashboardViewHref refuses to frame
+      // /dashboard and falls back to Everything A–Z, which is where "show the system card" and
+      // "show the regulation feed" used to land (tools audit, 6 Oct 2026).
+      setLocation(path.startsWith("/dashboard?") ? path : dashboardViewHref(path, label));
     },
-    [navigate],
+    [navigate, setLocation],
   );
 
   const selectTool = useCallback(
@@ -167,19 +208,31 @@ export default function DashboardWorkspace({
     [setLocation],
   );
 
-  const hasConversation = Boolean(chat.active?.turns.length);
+  // A question asked on the Get results home is answered by the home TalkPanel. It is still
+  // recorded in session history (so History/Chats can reach it), but it must not swap the home
+  // canvas for LobbyThread: that unmounted the TalkPanel and aborted its /api/agui/run ~8 ms
+  // after sending (6 Oct 2026, the first question never got an answer).
+  const [talkOwnsHome, setTalkOwnsHome] = useState(false);
+  const hasConversation = Boolean(chat.active?.turns.length) && !talkOwnsHome;
   const talkRef = useRef<TalkPanelHandle>(null);
   // On the home surface a typed question goes to the AG-UI TalkPanel (tool cards + citations).
   // An explicit pane command ("show the board") still navigates through the lobby chat.
-  // Record the user's question in session history so chat history remains accessible.
+  // The question is kept in History twice (see askOnHome): as an "ask" activity entry, and as a
+  // session-history turn that talkOwnsHome keeps from swapping the canvas and aborting the run.
   const askTalk = useCallback(
-    (text: string) => {
-      if (activePane || hasConversation || !talkRef.current) return false;
-      if (isExplicitNavigationCommand(text) && (matchTab(text) || matchRoute(text))) return false;
-      chat.recordUserMessage(text);
-      talkRef.current.ask(text);
-      return true;
-    },
+    (text: string) =>
+      askOnHome(text, {
+        activePane: Boolean(activePane),
+        hasConversation,
+        talk: talkRef.current,
+        // #2834: the question is also a turn in session history (Chats › History). talkOwnsHome is
+        // set first, in the same batch, so that turn never flips hasConversation and the home
+        // canvas (and the TalkPanel's run) stays mounted.
+        keepInChat: (question) => {
+          setTalkOwnsHome(true);
+          chat.recordUserMessage(question);
+        },
+      }),
     [activePane, hasConversation, chat],
   );
   const activity = useActivity();
@@ -187,6 +240,22 @@ export default function DashboardWorkspace({
   // continues beside a tool pane. An empty "Open a pane or start a task" column cost
   // ~320px on every visit and said nothing.
   const railHasContent = Boolean(activePane) && chat.turnCount > 0;
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const seenTurns = useRef(chat.turnCount);
+  useEffect(() => {
+    const hasNewTurn = chat.turnCount > seenTurns.current;
+    seenTurns.current = chat.turnCount;
+    if (!hasNewTurn || !activePane || !window.matchMedia("(max-width: 1279px)").matches) return;
+
+    const turns = chat.active?.turns ?? [];
+    const latest = turns[turns.length - 1];
+    const question = [...turns].reverse().find((turn) => turn.role === "user")?.text ?? "";
+    // Pane-navigation commands should leave the newly opened pane in view.
+    if (latest?.role !== "council" || (isExplicitNavigationCommand(question) && (matchTab(question) || matchRoute(question)))) return;
+    // The desktop rail shows this answer already; on smaller screens its only
+    // home is the closed History drawer. Open that drawer when the answer lands.
+    setHistoryOpen(true);
+  }, [activePane, chat.active, chat.turnCount]);
   const [actionsSlot, setActionsSlot] = useState<HTMLElement | null>(null);
   useEffect(() => {
     setActionsSlot(document.getElementById(SECTION_ACTIONS_ID));
@@ -206,7 +275,7 @@ export default function DashboardWorkspace({
         {historyAvailable
           ? (() => {
               const trigger = (
-                <Dialog>
+                <Dialog open={historyOpen} onOpenChange={setHistoryOpen}>
                   <DialogTrigger asChild>
                     <button
                       type="button"
@@ -248,19 +317,18 @@ export default function DashboardWorkspace({
           ) : (
             <GspcWorkspaceHome
               onAsk={(q) => talkRef.current?.ask(q)}
-              toolCount={toolPhase === "ready" ? tools.length : null}
-              toolState={toolPhase}
-              talk={
+              talk={({ onRunDone }) => (
                 <TalkPanel
                   ref={talkRef}
                   variant="dock"
+                  onRunDone={onRunDone}
                   className="mt-4 rounded-3xl border border-emerald-950/10 bg-card p-4 shadow-[0_1px_2px_rgba(6,21,15,0.04)] sm:p-5"
                 />
-              }
+              )}
             />
           )}
         </div>
-        {candidate ? (
+        {CANDIDATE_INTAKE_LIVE && candidate ? (
           <CandidateEvidenceTray
             observation={candidate}
             onDismiss={() => setCandidate(null)}
@@ -277,6 +345,16 @@ export default function DashboardWorkspace({
           seedPrompt={seedPrompt}
           seedNonce={search.length}
           onAsk={askTalk}
+          // On a pane (not the start screen), a free question is answered in the Ask side panel as a
+          // result card, beside the pane, instead of as raw text in the chat thread.
+          onFreeQuestion={
+            activePane
+              ? (q) => {
+                  openAsk(q);
+                  return true;
+                }
+              : undefined
+          }
         />
       </section>
       {railHasContent ? (

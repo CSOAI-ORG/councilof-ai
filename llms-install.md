@@ -28,38 +28,24 @@ is the canonical service; it is also suitable for MCP clients that support remot
 Streamable HTTP configuration. This is not a claim of support for every AI platform
 or client.
 
-## Optional local stdio package
+## Optional local stdio package (deprecated on npm)
 
 The package identity is `csoai-gspc-mcp` (not the stale scoped name previously
-shown here). The npm release last publicly verified here on 2026-09-09 is
-`0.2.1`:
+shown here). Every release published to npm so far is marked deprecated on npm and
+carries fewer tools than the remote, so this guide no longer gives a local
+configuration: use the remote above, or the free read-only door
+https://councilof.ai/mcp/free. Read the deprecation yourself with
+`npm view csoai-gspc-mcp@latest deprecated`.
 
-```sh
-npx -y csoai-gspc-mcp@0.2.1
-```
-
-```json
-{
-  "mcpServers": {
-    "csoai-gspc": {
-      "command": "npx",
-      "args": ["-y", "csoai-gspc-mcp@0.2.1"]
-    }
-  }
-}
-```
-
-The published `0.2.1` package predates the reviewed `0.2.2` conformance repair;
-its existence does not prove that the exact reviewed 13-tool runtime has shipped
-to npm. The repository currently prepares `0.2.2`, but that source version is
-**not a published npm release** until `npm view csoai-gspc-mcp@0.2.2 version`
-confirms that exact version. Do not install or advertise `0.2.2` from npm before
-that independent check.
+The repository currently prepares `0.2.3`, but that source version is **not a
+published npm release** until `npm view csoai-gspc-mcp@0.2.3 version` confirms that
+exact version and `npm view csoai-gspc-mcp@latest deprecated` prints nothing. Do not
+install or advertise `0.2.3` from npm before that independent check.
 
 ## Exact reviewed tool catalog
 
 This list describes the reviewed source contract at this commit. Confirm that the
-deployed remote returns the same 12 names before treating it as the live contract.
+deployed remote returns the same 52 names before treating it as the live contract.
 Listing the catalog and using every free read/verification tool is free. In
 particular, `verify_card` checks a Council-issued signed measurement card without a
 payment. Its three possible verdict classes are `VALID`, `INVALID`, and
@@ -82,7 +68,40 @@ payment. Its three possible verdict classes are `VALID`, `INVALID`, and
     "verify_capsule",
     "server_evidence",
     "evidence_bundle_preview",
-    "route"
+    "route",
+    "axis_governance",
+    "axis_safety",
+    "axis_provenance",
+    "axis_continuity",
+    "axis_conformance",
+    "axis_openness",
+    "axis_machinery-conformity",
+    "axis_care",
+    "axis_cross-reality",
+    "axis_detector-interop",
+    "axis_art5-safeguard",
+    "axis_swarm",
+    "axis_affect",
+    "axis_jail",
+    "axis_effect-binding",
+    "axis_provenance-controls",
+    "axis_reserve-attestation",
+    "axis_regulatory-framework",
+    "axis_distribution-integrity",
+    "axis_custody-disclosure",
+    "axis_ai-adoption-components",
+    "axis_labour-components",
+    "axis_humanoid-labour-index",
+    "axis_lab-practice",
+    "axis_company-practice",
+    "axis_measurer-integrity",
+    "axis_harness-fidelity",
+    "axis_interop-conformance",
+    "axis_humanoid-deployment",
+    "axis_regulator-transparency",
+    "axis_interpretability-reproducibility",
+    "axis_claim-maintenance",
+    "axis_serving-fidelity"
   ],
   "x402_metered": [
     "commission_card",

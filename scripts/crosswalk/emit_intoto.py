@@ -36,10 +36,24 @@ No clock, no network, no randomness, no signing key. Byte-identical on every run
 can be gated in CI (`--check`). The mill-card bodies carry no timestamp, so nothing here can drift
 with the wall clock.
 
-SELECTION
+SELECTION (stable; SELECTION_RULE below is the exact wording the index publishes)
 ---------
-One statement per axis: the lexicographically smallest card id whose body says MEASURED. That is a
-representative handful (13-14 files) rather than 973, chosen by a rule a stranger can re-apply.
+One statement per axis, chosen by a rule a stranger can re-apply, and which does NOT churn when the
+mill lands new cards:
+
+  1. Eligible: body.status == MEASURED, and the id is neither superseded (a `superseded_id` in
+     mill-cards-signed/SUPERSEDED.jsonl) nor withdrawn (a `withdrawn_id` in WITHDRAWN.jsonl).
+  2. Keep: the axis's previous pick, read from the committed index.json, is followed through
+     SUPERSEDED.jsonl to its terminal replacement. If that card is eligible on the same axis it is
+     the pick, so a pick that is still current stays the pick.
+  3. Choose anew only when there is no previous pick, or its terminal replacement is not eligible
+     (UNMEASURED, withdrawn, missing, or on another axis): the smallest eligible card id.
+
+Until 7 Oct 2026 the rule was "the smallest MEASURED card id", applied afresh on every run. Every
+mill PR that landed a smaller id moved the pick and renamed a statement that the OTS-stamped
+regulatory inventory pins by path, so the PR could not go green (#2888); the old rule also picked
+superseded cards. The rule above is a fixed point: re-running it on its own output selects the same
+cards, so --check stays green until a pick is superseded or withdrawn.
 
 USAGE
 -----
@@ -227,17 +241,101 @@ def load_cards() -> list[dict]:
     return cards
 
 
-def select(cards: list[dict]) -> list[dict]:
-    """One MEASURED card per axis: the smallest card id. A rule, not a hand-picked list."""
-    best: dict[str, dict] = {}
+SELECTION_RULE = (
+    "One statement per axis. Eligible: body.status is MEASURED and the card id is neither superseded "
+    "(a superseded_id in mill-cards-signed/SUPERSEDED.jsonl) nor withdrawn (a withdrawn_id in "
+    "WITHDRAWN.jsonl). The previous pick for the axis, read from this committed index, is followed "
+    "through SUPERSEDED.jsonl to its terminal replacement and kept if that card is eligible on the "
+    "same axis. Only when there is no previous pick, or its terminal replacement is not eligible, is "
+    "the lexicographically smallest eligible card id chosen. A newly landed card therefore never "
+    "moves a pick that is still current."
+)
+
+
+def load_ledgers(src: Path = SRC) -> tuple[dict[str, str], set[str]]:
+    """SUPERSEDED.jsonl as {superseded_id: by_id} and WITHDRAWN.jsonl as a set of ids.
+
+    Both are append-only ledgers the mill writes beside the cards. A missing ledger is an empty one;
+    a line that does not parse is a HALT, because a selection that silently skipped a supersession
+    would publish a statement over a card the estate has replaced.
+    """
+    replacements: dict[str, str] = {}
+    withdrawn: set[str] = set()
+    for name, key in (("SUPERSEDED.jsonl", "superseded_id"), ("WITHDRAWN.jsonl", "withdrawn_id")):
+        path = src / name
+        if not path.is_file():
+            continue
+        for lineno, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            if not line.strip():
+                continue
+            try:
+                row = json.loads(line)
+            except json.JSONDecodeError as exc:
+                raise SystemExit(f"HALT {name}:{lineno}: not JSON ({exc})")
+            old = row.get(key)
+            if not isinstance(old, str):
+                continue
+            if key == "withdrawn_id":
+                withdrawn.add(old)
+            elif isinstance(row.get("by_id"), str) and row["by_id"] != old:
+                replacements[old] = row["by_id"]
+    return replacements, withdrawn
+
+
+def load_prior(dst: Path = DST) -> dict[str, str]:
+    """{axis: card_id} from the committed index.json: the previous run's picks. Absent is empty."""
+    path = dst / "index.json"
+    if not path.is_file():
+        return {}
+    index = json.loads(path.read_text(encoding="utf-8"))
+    prior: dict[str, str] = {}
+    for row in index.get("statements") or []:
+        if isinstance(row, dict) and isinstance(row.get("axis"), str) and isinstance(row.get("card_id"), str):
+            prior[row["axis"]] = row["card_id"]
+    return prior
+
+
+def terminal(card_id: str, replacements: dict[str, str]) -> str:
+    """Follow SUPERSEDED.jsonl from card_id to the card that replaces it last. HALT on a cycle."""
+    seen: set[str] = set()
+    current = card_id
+    while current in replacements:
+        if current in seen:
+            raise SystemExit(f"HALT: supersession cycle at {current[:16]} in SUPERSEDED.jsonl")
+        seen.add(current)
+        current = replacements[current]
+    return current
+
+
+def select(
+    cards: list[dict],
+    prior: dict[str, str] | None = None,
+    replacements: dict[str, str] | None = None,
+    withdrawn: set[str] | None = None,
+) -> list[dict]:
+    """One eligible MEASURED card per axis, by SELECTION_RULE. A rule, not a hand-picked list.
+
+    With no prior picks and empty ledgers this reduces to the smallest MEASURED id per axis, which is
+    the right answer for a corpus with no history.
+    """
+    prior = prior or {}
+    replacements = replacements or {}
+    withdrawn = withdrawn or set()
+    eligible: dict[str, dict[str, dict]] = {}
     for card in cards:
         body = card["body"]
         if body.get("status") != "MEASURED":
             continue
+        if card["id"] in replacements or card["id"] in withdrawn:
+            continue
         axis = str(body.get("axis") or "")
-        if axis and (axis not in best or card["id"] < best[axis]["id"]):
-            best[axis] = card
-    return [best[a] for a in sorted(best)]
+        if axis:
+            eligible.setdefault(axis, {})[card["id"]] = card
+    chosen: dict[str, dict] = {}
+    for axis, pool in eligible.items():
+        pick = pool.get(terminal(prior[axis], replacements)) if axis in prior else None
+        chosen[axis] = pick if pick is not None else pool[min(pool)]
+    return [chosen[a] for a in sorted(chosen)]
 
 
 def render(cards: list[dict]) -> dict[str, str]:
@@ -265,14 +363,16 @@ def render(cards: list[dict]) -> dict[str, str]:
         "schema": "csoai.intoto-crosswalk-index/0.1",
         "what_this_is": (
             "in-toto Statement v1 attestations DERIVED from Ed25519-signed GSPC measurement cards. "
-            "One statement per axis, selected by rule: the lexicographically smallest card id whose "
-            "body says MEASURED."
+            "One statement per axis, selected by the rule in `selection_rule`: a pick is kept while it "
+            "stays current and MEASURED, follows SUPERSEDED.jsonl when it is replaced, and is chosen anew "
+            "(smallest eligible card id) only when neither holds."
         ),
+        "selection_rule": SELECTION_RULE,
         "what_this_is_not": [
             "Not a DSSE envelope — these Statements are unsigned, because this producer holds no key.",
             "Not a certification, accreditation, endorsement or conformity assessment.",
             "Not a new claim: every value in predicate.figure is copied from the signed card body.",
-            "Not a complete corpus: 973 signed cards exist; this is one representative card per axis.",
+            "Not a complete corpus: this is one representative card per axis, never a superseded or withdrawn one.",
         ],
         "statement_type": IN_TOTO_STATEMENT_TYPE,
         "predicate_type": MEASUREMENT_PREDICATE,
@@ -320,7 +420,8 @@ def main() -> int:
         return 1
 
     cards = load_cards()
-    chosen = select(cards)
+    replacements, withdrawn = load_ledgers()
+    chosen = select(cards, load_prior(), replacements, withdrawn)
     if not chosen:
         print("HALT: no MEASURED card in the corpus", file=sys.stderr)
         return 1

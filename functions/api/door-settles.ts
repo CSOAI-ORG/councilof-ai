@@ -21,6 +21,7 @@
  */
 import { listSettlementRecords, type RevenueEnv, type StoredSettlement } from "./revenue";
 import { routeKey } from "./x402-listing";
+import { headFromGet } from "./_head";
 
 export const DOOR_SETTLES_SCHEMA = "csoai.door-settles/0.1";
 
@@ -146,3 +147,7 @@ export const onRequestGet: PagesFunction<RevenueEnv> = async ({ env }) => {
     },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

@@ -181,13 +181,41 @@ export function corpusBoundary(root: PublicRoot | null, index: CardIndexDoc | nu
   };
 }
 
+/** One ledger entry as /api/corrections serves it. Older entries carry `fix`; newer ones carry
+ *  `what_changed` (and often `open_items`), and some omit how_caught or status. Every optional field
+ *  is optional here, so no surface can print `undefined` — read them through remedyOf / caughtOf. */
 export interface Correction {
   id: string;
   date: string;
   what_was_wrong: string;
-  how_caught: string;
-  fix: string;
-  status: string;
+  how_caught?: string;
+  fix?: string;
+  what_changed?: string;
+  status?: string;
+  detected_by?: string;
+  open_items?: string[];
+}
+
+const nonEmpty = (v: unknown): v is string => typeof v === "string" && v.trim().length > 0;
+
+/** The remedy line of an entry, under the label its own field earns. `what_changed` is never
+ *  printed under "Fix": an entry can be IN_PROGRESS or carry open items, and "Fix" would claim
+ *  more than the entry does. */
+export function remedyOf(c: Pick<Correction, "fix" | "what_changed">): { label: "Fix" | "What changed"; text: string } {
+  if (nonEmpty(c.fix)) return { label: "Fix", text: c.fix };
+  if (nonEmpty(c.what_changed)) return { label: "What changed", text: c.what_changed };
+  return { label: "What changed", text: "not recorded in this entry" };
+}
+
+/** How an entry was caught, or a plain statement that the entry does not say. */
+export function caughtOf(c: Pick<Correction, "how_caught" | "detected_by">): string {
+  if (nonEmpty(c.how_caught)) return c.how_caught;
+  return `not recorded in this entry (detected by: ${nonEmpty(c.detected_by) ? c.detected_by : "UNRECORDED"})`;
+}
+
+/** The entry's status verbatim, or a plain statement that it has none. */
+export function statusOf(c: Pick<Correction, "status">): string {
+  return nonEmpty(c.status) ? c.status : "status not recorded";
 }
 
 export interface CorrectionsDoc {
@@ -595,7 +623,7 @@ export const HOW_TO_VERIFY: RailLink[] = [
   { href: "/interop/root-witness-pointer.json", label: "root-witness-pointer.json — drift: witnessed bytes vs live bytes" },
   // Bare `?sha=` answers 400 — see howToVerifyLinks(), which fills a leaf read from the live root.
   { href: "/api/proof?sha=", label: "GET /api/proof?sha=<64-hex> — one free inclusion proof" },
-  { href: "/api/corrections", label: "GET /api/corrections — the appended-only ledger" },
+  { href: "/api/corrections", label: "GET /api/corrections — the corrections ledger as JSON" },
   { href: "/.well-known/did.json", label: "did.json — the published keys" },
 ];
 

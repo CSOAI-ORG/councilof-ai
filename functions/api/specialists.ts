@@ -29,6 +29,7 @@
  * NO SERVE-TIME CLOCK: every timestamp in the response is the estate's own as_of,
  * carried in the signed bytes. This endpoint stamps nothing.
  */
+import { headFromGet } from "./_head";
 
 const SOVEREIGN_FEED = "https://csoai-sovereign.pages.dev/api/specialists.json";
 
@@ -89,3 +90,7 @@ export const onRequestGet: PagesFunction = async () => {
     headers: { ...JSON_HEADERS, "x-csoai-source": "embedded-signed-snapshot" },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

@@ -1,6 +1,6 @@
 # llama-index-tools-csoai
 
-LlamaIndex tool spec for the Council of AI GSPC board — a thin wrapper over [`csoai-gspc`](https://pypi.org/project/csoai-gspc/) (0.2.20260930.1+), the
+LlamaIndex tool spec for the Council of AI GSPC board — a thin wrapper over [`csoai-gspc`](https://pypi.org/project/csoai-gspc/) (0.2.20261007.1+), the
 reader for Council of AI's live GSPC board (https://councilof.ai/api/gspc). Two tools: `gspc_board` (the live board) and
 `verify_card` (free signed-card verification — VALID / INVALID / UNCHECKABLE).
 

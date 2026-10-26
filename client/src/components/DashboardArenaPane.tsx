@@ -802,6 +802,10 @@ export default function DashboardArenaPane({
             availability, or compliance. Different n values remain visible.
           </p>
 
+          {/* Tools audit, 6 Oct 2026: an empty "Live prompt battle" box read as a broken tool. It is
+              drawn only once a published endpoint exists; DASHBOARD_ARENA_CONTRACT still records the
+              boundary (UNCHECKABLE, endpoint null) for anyone reading the contract. */}
+          {DASHBOARD_ARENA_CONTRACT.livePromptBattle.endpoint !== null && (
           <section
             aria-labelledby="live-battle-boundary"
             className="mt-6 rounded-2xl border border-dashed border-amber-400 bg-amber-50/60 p-4"
@@ -825,6 +829,7 @@ export default function DashboardArenaPane({
               call it a battle.
             </p>
           </section>
+          )}
 
           <footer className="mt-5 flex flex-wrap items-center gap-3 text-xs">
             <a
@@ -836,22 +841,6 @@ export default function DashboardArenaPane({
               Read source{" "}
               <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
             </a>
-            <a
-              href="/api/arena/rounds"
-              target="_blank"
-              rel="noreferrer"
-              className="font-semibold text-emerald-800 hover:underline"
-            >
-              Round feed
-            </a>
-            <a
-              href="/api/arena/scoreboard?verify=1"
-              target="_blank"
-              rel="noreferrer"
-              className="font-semibold text-emerald-800 hover:underline"
-            >
-              Recompute content id
-            </a>
             <span className="text-muted-foreground">
               {formatStamp(board.asOf)}
               {board.nRounds !== null
@@ -859,6 +848,29 @@ export default function DashboardArenaPane({
                 : ""}
             </span>
           </footer>
+          <details className="mt-3 text-xs" data-testid="arena-raw-links">
+            <summary className="cursor-pointer font-semibold text-muted-foreground hover:text-foreground">
+              Raw data (for developers)
+            </summary>
+            <div className="mt-2 flex flex-wrap items-center gap-3">
+              <a
+                href="/api/arena/rounds"
+                target="_blank"
+                rel="noreferrer"
+                className="font-semibold text-emerald-800 hover:underline"
+              >
+                Round feed
+              </a>
+              <a
+                href="/api/arena/scoreboard?verify=1"
+                target="_blank"
+                rel="noreferrer"
+                className="font-semibold text-emerald-800 hover:underline"
+              >
+                Recompute content id
+              </a>
+            </div>
+          </details>
         </>
       )}
     </div>

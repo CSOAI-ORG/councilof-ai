@@ -18,6 +18,7 @@
  * files + 303 proof checks; subsequent requests (any query combination) read
  * from the cached full list. Cache-control: public, max-age=300 on responses.
  */
+import { headFromGet } from "./api/_head";
 
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
@@ -289,3 +290,7 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
     },
   );
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

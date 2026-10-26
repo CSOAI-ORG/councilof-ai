@@ -1,0 +1,36 @@
+{
+  "jsonrpc": "2.0",
+  "method": "tools/list",
+  "readback": "MCP stdio",
+  "result": {
+    "tools": [
+      {
+        "description": "List board-signed measurement evidence objects (measurement credentials, not certifications).",
+        "inputSchema": {
+          "properties": {},
+          "type": "object"
+        },
+        "name": "list_measurements"
+      },
+      {
+        "description": "Fetch one measurement evidence object by sha256 and re-derive its digest.",
+        "example_args": {
+          "sha256": "d2196fe478ec37d1833a3b4526a6cd893c366bc44e29a8ec590aa5a1c8d84dac"
+        },
+        "inputSchema": {
+          "properties": {
+            "sha256": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "sha256"
+          ],
+          "type": "object"
+        },
+        "name": "verify_measurement"
+      }
+    ]
+  },
+  "surface": "mcp-tool-schema"
+}

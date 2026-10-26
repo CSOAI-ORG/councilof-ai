@@ -32,6 +32,12 @@ describe("/quickstart — the public evidence path before an optional commission
     expect(page).not.toMatch(/rel=["']canonical["']/);
   });
 
+  it("keeps one route title/meta producer while retaining its HowTo JSON-LD", () => {
+    expect(page).not.toContain("<title>");
+    expect(page).not.toMatch(/<meta\s+(?:name|property)=/);
+    expect(page).toContain('<script type="application/ld+json">');
+  });
+
   it("reads doors, tool names and the verify route from the live manifest — none are typed", () => {
     expect(page).toContain('const MANIFEST = "/.well-known/x402.json"');
     expect(page).toContain("manifest?.mcp?.free_tools");
@@ -52,7 +58,8 @@ describe("/quickstart — the public evidence path before an optional commission
     for (const s of ["1 · Explore measurements", "2 · See what changed", "3 · Verify evidence", "4 · Access supported feeds", "5 · Optional: commission an output", "6 · Correct"]) expect(page).toContain(s);
     expect(page.indexOf("4 · Access supported feeds")).toBeLessThan(page.indexOf("5 · Optional: commission an output"));
     expect(page).toContain("A settlement of zero is not a purchase");
-    expect(page).toContain("does not make the read correct");
+    // A signature or root protects the record, never the truth of the measurement.
+    expect(page).toContain("not the truth of a measurement");
     expect(page).toContain("Measurement, never certification");
   });
 });

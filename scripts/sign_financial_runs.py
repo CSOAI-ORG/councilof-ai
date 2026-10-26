@@ -96,6 +96,16 @@ def sign_via_oidc(payload: dict) -> str:
 def main() -> int:
     compact = json.loads(COMPACT.read_text(encoding="utf-8"))
     for axis, payload in compact.items():
+        # DONE WHEN A gate (2026-10-07): a count without its denominator is not
+        # a finding — refuse to sign a payload carrying n with no declared
+        # semantics. This guard FIRES on the stale 2026-09-01 compact.
+        if "n" in payload and not payload.get("n_semantics"):
+            print(
+                f"HALT {axis}: n={payload.get('n')} carries no n_semantics — "
+                f"a count without its denominator is not signable",
+                file=sys.stderr,
+            )
+            return 4
         raw = canonical_bytes(payload)
         if len(raw) > 3072:
             print(f"HALT {axis} {len(raw)}B", file=sys.stderr)

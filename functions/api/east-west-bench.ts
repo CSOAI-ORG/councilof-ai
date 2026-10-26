@@ -15,6 +15,7 @@
 // East-vs-West evidence is the CX-3 cross-lab run (signed chain): BLUE (Western)
 // block_rate 0.0% CI[0,11.4] vs RED (Chinese) block_rate 23.3% CI[11.8,40.9] on
 // guarded Art-5 scenarios — n=38 usable, CIs stated, quotable per CX-5 doctrine.
+import { headFromGet } from "./_head";
 interface Env {
   KV?: unknown;
 }
@@ -106,3 +107,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request }) => {
     headers: { "content-type": "application/json", "cache-control": "public, max-age=300", "access-control-allow-origin": "*" },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

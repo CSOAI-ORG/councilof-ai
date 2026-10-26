@@ -13,6 +13,7 @@
  * local/candidate state: it is not written to the training corpus and it never
  * becomes a signed measurement without admission, review and the real writer.
  */
+import { headFromGet } from "./_head";
 
 const BODY = {
   schema: "csoai.learn-loop/0.2",
@@ -48,3 +49,7 @@ function unavailable(): Response {
 
 export const onRequestGet: PagesFunction = async () => unavailable();
 export const onRequestPost: PagesFunction = async () => unavailable();
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

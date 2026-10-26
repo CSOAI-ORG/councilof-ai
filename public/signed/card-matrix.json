@@ -7,7 +7,15 @@
   "as_of_field": "the newest body.created stamp across the cards — when the last card was measured, never when this file was generated",
   "not_the_board": "THESE ARE NOT THE PUBLIC BOARD'S AXES. The cards carry benchmark axes; the public board carries governance axes measured by a different instrument. The two sets are different, their counts are different on purpose, and they are never added together. The board's count authority is GET /api/gspc.",
   "what_a_cell_is": "One model measured on one axis on one date, recorded in a card whose signature covers its own body. An empty cell means that pair was never measured — it is not a zero.",
-  "what_this_does_not_establish": "That a model is good, or better than another. A cell is one score on one small bank on one date. Several of these banks are small enough that a single item moves the number visibly, most cells in the matrix are empty, and a score of zero is a measured zero rather than a missing measurement.",
+  "what_this_does_not_establish": "That a model is good, or better than another. A cell is one score on one small bank on one date. Several of these banks are small enough that a single item moves the number visibly, and most cells in the matrix are empty. A zero is quoted only where other models scored above zero on the same bank. Where every model scored exactly zero on a bank, or one model scored exactly zero on every bank, the zero points at the scoring rather than the model, and it is shown as not quotable. These cards record accuracy only, with no item count and no raw answers, so the cause cannot be checked from the card.",
+  "zero_flag_rule": {
+    "AXIS_FLOOR": "every model on this cell's axis scored exactly 0",
+    "MODEL_FLOOR": "this cell's model scored exactly 0 on every axis it has, while another model scored above 0 on at least one of them",
+    "effect": "flagged cells stay in cells[] (they are signed evidence) but are left out of mean_accuracy and best_accuracy, and are counted under counts.zero_not_quotable"
+  },
+  "own_model_rule": "scripts/build-own-model-disclosure.mjs R1 (sov*, clan*), R2 (council*) and UNCONFIRMED_TAGS, imported",
+  "kind_note": "models[].kind is third_party, own (our own prompt overlays and specialists, classified on the raw card name before any name is withheld) or own_unconfirmed (names that suggest a model we derived; the owner has not confirmed them). Our own models are listed apart and never compared with third-party ones.",
+  "axis_stats_rule": "axes[].mean_accuracy and axes[].best_accuracy are computed over third-party models only (kind third_party), and are null where no third-party model was measured on the axis. Our own models (own, own_unconfirmed) never set or join an axis average or best. axes[].models counts every model on the axis; models_third_party and models_own split it.",
   "display_name_policy": {
     "rule": "A model whose recorded name carries a retired internal brand is indexed under a neutral key. Its measured work is kept and counted; only the label is withheld.",
     "withheld_names": 4,
@@ -17,146 +25,201 @@
     "cards_read": 335,
     "cells": 335,
     "models": 64,
+    "models_third_party": 13,
+    "models_own": 48,
+    "models_own_unconfirmed": 3,
+    "cells_third_party": 100,
+    "zero_not_quotable": 62,
     "axes": 16,
     "signed_cells": 335,
     "possible_cells": 1024,
     "skipped_cards": 0,
     "coverage_note": "cells out of possible_cells. Most pairs were never measured, and the empty ones are the honest part of the picture — they are shown, not hidden."
   },
+  "models_split_rule": "counts.models_own = R1 (name starts sov/clan) or R2 (starts with the word council, or carries (council specialist)); counts.models_own_unconfirmed = the owner-unconfirmed tags; counts.models_third_party = everything else. Same rule as /independence/own-model-disclosure.json. The three add up to counts.models.",
   "skipped": [],
   "axes": [
     {
       "id": "arc-30",
       "cards": 23,
       "models": 23,
-      "mean_accuracy": 0.6942,
+      "models_third_party": 10,
+      "models_own": 13,
+      "mean_accuracy": 0.8333,
       "best_accuracy": 1,
+      "zero_not_quotable": 4,
       "as_of": "2026-08-19T09:24:39.174108+00:00"
     },
     {
       "id": "care",
       "cards": 23,
       "models": 23,
-      "mean_accuracy": 0,
-      "best_accuracy": 0,
+      "models_third_party": 10,
+      "models_own": 13,
+      "mean_accuracy": null,
+      "best_accuracy": null,
+      "zero_not_quotable": 23,
       "as_of": "2026-08-19T09:24:39.174167+00:00"
     },
     {
       "id": "care-refusal-help",
       "cards": 27,
       "models": 27,
-      "mean_accuracy": 0.9709,
+      "models_third_party": 3,
+      "models_own": 24,
+      "mean_accuracy": 0.9524,
       "best_accuracy": 1,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.167557+00:00"
     },
     {
       "id": "care-refusal-protect",
       "cards": 27,
       "models": 27,
-      "mean_accuracy": 0.3226,
-      "best_accuracy": 0.7742,
+      "models_third_party": 3,
+      "models_own": 24,
+      "mean_accuracy": 0.2581,
+      "best_accuracy": 0.4516,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.167509+00:00"
     },
     {
       "id": "gov",
       "cards": 23,
       "models": 23,
-      "mean_accuracy": 0,
-      "best_accuracy": 0,
+      "models_third_party": 10,
+      "models_own": 13,
+      "mean_accuracy": null,
+      "best_accuracy": null,
+      "zero_not_quotable": 23,
       "as_of": "2026-08-19T09:24:39.174226+00:00"
     },
     {
       "id": "gsm8k-30",
       "cards": 23,
       "models": 23,
-      "mean_accuracy": 0.5319,
+      "models_third_party": 10,
+      "models_own": 13,
+      "mean_accuracy": 0.6,
       "best_accuracy": 0.9,
+      "zero_not_quotable": 4,
       "as_of": "2026-08-19T09:24:39.173991+00:00"
     },
     {
       "id": "gspc-conformance",
       "cards": 21,
       "models": 21,
-      "mean_accuracy": 0.448,
+      "models_third_party": 4,
+      "models_own": 17,
+      "mean_accuracy": 0.4772,
       "best_accuracy": 0.6364,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.167771+00:00"
     },
     {
       "id": "gspc-continuity",
       "cards": 21,
       "models": 21,
-      "mean_accuracy": 0.3623,
+      "models_third_party": 4,
+      "models_own": 17,
+      "mean_accuracy": 0.3654,
       "best_accuracy": 0.4615,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.167919+00:00"
     },
     {
       "id": "gspc-governance",
       "cards": 21,
       "models": 21,
-      "mean_accuracy": 0.2442,
-      "best_accuracy": 0.65,
+      "models_third_party": 4,
+      "models_own": 17,
+      "mean_accuracy": 0.2739,
+      "best_accuracy": 0.3684,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.167611+00:00"
     },
     {
       "id": "gspc-openness",
       "cards": 21,
       "models": 21,
-      "mean_accuracy": 0.5531,
+      "models_third_party": 4,
+      "models_own": 17,
+      "mean_accuracy": 0.6154,
       "best_accuracy": 0.6923,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.167857+00:00"
     },
     {
       "id": "gspc-provenance",
       "cards": 21,
       "models": 21,
-      "mean_accuracy": 0.5969,
-      "best_accuracy": 0.8571,
+      "models_third_party": 4,
+      "models_own": 17,
+      "mean_accuracy": 0.6985,
+      "best_accuracy": 0.8,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.167692+00:00"
     },
     {
       "id": "gspc-safety",
       "cards": 21,
       "models": 21,
-      "mean_accuracy": 0.5984,
+      "models_third_party": 4,
+      "models_own": 17,
+      "mean_accuracy": 0.75,
       "best_accuracy": 1,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.167654+00:00"
     },
     {
       "id": "jail-escape-detection",
       "cards": 8,
       "models": 8,
-      "mean_accuracy": 0.5053,
+      "models_third_party": 5,
+      "models_own": 3,
+      "mean_accuracy": 0.5268,
       "best_accuracy": 0.5634,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.162739+00:00"
     },
     {
       "id": "mmlu-30",
       "cards": 23,
       "models": 23,
-      "mean_accuracy": 0.687,
+      "models_third_party": 10,
+      "models_own": 13,
+      "mean_accuracy": 0.8,
       "best_accuracy": 0.9667,
+      "zero_not_quotable": 4,
       "as_of": "2026-08-19T09:24:39.173932+00:00"
     },
     {
       "id": "swag-30",
       "cards": 25,
       "models": 25,
-      "mean_accuracy": 0.1347,
+      "models_third_party": 10,
+      "models_own": 15,
+      "mean_accuracy": 0.263,
       "best_accuracy": 1,
+      "zero_not_quotable": 4,
       "as_of": "2026-08-19T09:24:39.174050+00:00"
     },
     {
       "id": "swarm-candidates",
       "cards": 7,
       "models": 7,
-      "mean_accuracy": 0.2211,
+      "models_third_party": 5,
+      "models_own": 2,
+      "mean_accuracy": 0.3095,
       "best_accuracy": 0.4444,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.162677+00:00"
     }
   ],
   "models": [
     {
       "id": "clan-csoai-plain:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 2,
       "axes": [
@@ -165,10 +228,12 @@
       ],
       "mean_accuracy": 0.5484,
       "best_accuracy": 1,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.152824+00:00"
     },
     {
       "id": "clan-csoai-precise:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 2,
       "axes": [
@@ -177,10 +242,12 @@
       ],
       "mean_accuracy": 0.5645,
       "best_accuracy": 1,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.152957+00:00"
     },
     {
       "id": "clan-csoai-refusing:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 2,
       "axes": [
@@ -189,10 +256,12 @@
       ],
       "mean_accuracy": 0.742,
       "best_accuracy": 1,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.153039+00:00"
     },
     {
       "id": "clan-defoneos-plain:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 2,
       "axes": [
@@ -201,10 +270,12 @@
       ],
       "mean_accuracy": 0.5484,
       "best_accuracy": 1,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.153119+00:00"
     },
     {
       "id": "clan-defoneos-refusing:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 2,
       "axes": [
@@ -213,10 +284,12 @@
       ],
       "mean_accuracy": 0.7258,
       "best_accuracy": 1,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.153214+00:00"
     },
     {
       "id": "clan-law-cited:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 2,
       "axes": [
@@ -225,10 +298,12 @@
       ],
       "mean_accuracy": 0.6452,
       "best_accuracy": 1,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.153291+00:00"
     },
     {
       "id": "clan-law-plain:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 8,
       "axes": [
@@ -243,10 +318,12 @@
       ],
       "mean_accuracy": 0.4736,
       "best_accuracy": 1,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.153657+00:00"
     },
     {
       "id": "clan-law-refusing:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 8,
       "axes": [
@@ -261,10 +338,12 @@
       ],
       "mean_accuracy": 0.497,
       "best_accuracy": 1,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.154790+00:00"
     },
     {
       "id": "clan-meok-plain:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 2,
       "axes": [
@@ -273,10 +352,12 @@
       ],
       "mean_accuracy": 0.5645,
       "best_accuracy": 1,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.154990+00:00"
     },
     {
       "id": "clan-meok-refusing:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 2,
       "axes": [
@@ -285,10 +366,12 @@
       ],
       "mean_accuracy": 0.6901,
       "best_accuracy": 0.9286,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.155171+00:00"
     },
     {
       "id": "clan-meok-scoped:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 2,
       "axes": [
@@ -297,10 +380,12 @@
       ],
       "mean_accuracy": 0.5807,
       "best_accuracy": 1,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.155303+00:00"
     },
     {
       "id": "clan-redress-evidential:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 2,
       "axes": [
@@ -309,10 +394,12 @@
       ],
       "mean_accuracy": 0.6291,
       "best_accuracy": 1,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.155425+00:00"
     },
     {
       "id": "clan-redress-plain:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 2,
       "axes": [
@@ -321,10 +408,12 @@
       ],
       "mean_accuracy": 0.6129,
       "best_accuracy": 1,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.155545+00:00"
     },
     {
       "id": "clan-redress-refusing:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 2,
       "axes": [
@@ -333,10 +422,12 @@
       ],
       "mean_accuracy": 0.7097,
       "best_accuracy": 1,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.155666+00:00"
     },
     {
       "id": "clan-sovereignty-plain:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 2,
       "axes": [
@@ -345,10 +436,12 @@
       ],
       "mean_accuracy": 0.5484,
       "best_accuracy": 1,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.155856+00:00"
     },
     {
       "id": "clan-sovereignty-refusing:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 2,
       "axes": [
@@ -357,10 +450,12 @@
       ],
       "mean_accuracy": 0.742,
       "best_accuracy": 1,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.156014+00:00"
     },
     {
       "id": "council-oowm:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 3,
       "axes": [
@@ -370,10 +465,12 @@
       ],
       "mean_accuracy": 0.1549,
       "best_accuracy": 0.4648,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.156277+00:00"
     },
     {
       "id": "council-safe:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 3,
       "axes": [
@@ -383,10 +480,12 @@
       ],
       "mean_accuracy": 0.493,
       "best_accuracy": 1,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.156487+00:00"
     },
     {
       "id": "deepseek-r1:8b",
+      "kind": "third_party",
       "name_published": true,
       "cards": 6,
       "axes": [
@@ -397,12 +496,14 @@
         "mmlu-30",
         "swag-30"
       ],
-      "mean_accuracy": 0,
-      "best_accuracy": 0,
+      "mean_accuracy": null,
+      "best_accuracy": null,
+      "zero_not_quotable": 6,
       "as_of": "2026-08-19T09:24:39.156830+00:00"
     },
     {
       "id": "eat-unsloth-050b:2026-08-02",
+      "kind": "own_unconfirmed",
       "name_published": true,
       "cards": 2,
       "axes": [
@@ -411,10 +512,12 @@
       ],
       "mean_accuracy": 0.8514,
       "best_accuracy": 0.9286,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.156968+00:00"
     },
     {
       "id": "falcon3:7b",
+      "kind": "third_party",
       "name_published": true,
       "cards": 6,
       "axes": [
@@ -427,10 +530,12 @@
       ],
       "mean_accuracy": 0.4839,
       "best_accuracy": 0.7273,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.157347+00:00"
     },
     {
       "id": "gemma3:12b",
+      "kind": "third_party",
       "name_published": true,
       "cards": 6,
       "axes": [
@@ -441,12 +546,14 @@
         "mmlu-30",
         "swag-30"
       ],
-      "mean_accuracy": 0.4778,
+      "mean_accuracy": 0.7167,
       "best_accuracy": 1,
+      "zero_not_quotable": 2,
       "as_of": "2026-08-19T09:24:39.157782+00:00"
     },
     {
       "id": "llama3.2:3b",
+      "kind": "third_party",
       "name_published": true,
       "cards": 14,
       "axes": [
@@ -465,12 +572,14 @@
         "mmlu-30",
         "swag-30"
       ],
-      "mean_accuracy": 0.5162,
+      "mean_accuracy": 0.6022,
       "best_accuracy": 1,
+      "zero_not_quotable": 2,
       "as_of": "2026-08-19T09:24:39.158664+00:00"
     },
     {
       "id": "mistral:7b",
+      "kind": "third_party",
       "name_published": true,
       "cards": 8,
       "axes": [
@@ -483,12 +592,14 @@
         "swag-30",
         "swarm-candidates"
       ],
-      "mean_accuracy": 0.4628,
+      "mean_accuracy": 0.6171,
       "best_accuracy": 1,
+      "zero_not_quotable": 2,
       "as_of": "2026-08-19T09:24:39.159179+00:00"
     },
     {
       "id": "muse-glimmer:latest",
+      "kind": "own_unconfirmed",
       "name_published": true,
       "cards": 1,
       "axes": [
@@ -496,10 +607,12 @@
       ],
       "mean_accuracy": 0.4648,
       "best_accuracy": 0.4648,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.159220+00:00"
     },
     {
       "id": "phi4:14b",
+      "kind": "third_party",
       "name_published": true,
       "cards": 6,
       "axes": [
@@ -510,12 +623,14 @@
         "mmlu-30",
         "swag-30"
       ],
-      "mean_accuracy": 0.4556,
+      "mean_accuracy": 0.6834,
       "best_accuracy": 0.9667,
+      "zero_not_quotable": 2,
       "as_of": "2026-08-19T09:24:39.159566+00:00"
     },
     {
       "id": "qwen2.5-0.5b-mined:latest",
+      "kind": "own_unconfirmed",
       "name_published": true,
       "cards": 2,
       "axes": [
@@ -524,10 +639,12 @@
       ],
       "mean_accuracy": 0.7097,
       "best_accuracy": 1,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.159657+00:00"
     },
     {
       "id": "qwen2.5:0.5b",
+      "kind": "third_party",
       "name_published": true,
       "cards": 8,
       "axes": [
@@ -542,10 +659,12 @@
       ],
       "mean_accuracy": 0.5378,
       "best_accuracy": 0.9286,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.160009+00:00"
     },
     {
       "id": "qwen2.5:0.5b-instruct",
+      "kind": "third_party",
       "name_published": true,
       "cards": 8,
       "axes": [
@@ -558,12 +677,14 @@
         "swag-30",
         "swarm-candidates"
       ],
-      "mean_accuracy": 0.4229,
+      "mean_accuracy": 0.5639,
       "best_accuracy": 1,
+      "zero_not_quotable": 2,
       "as_of": "2026-08-19T09:24:39.160314+00:00"
     },
     {
       "id": "qwen2.5:1.5b",
+      "kind": "third_party",
       "name_published": true,
       "cards": 14,
       "axes": [
@@ -582,12 +703,14 @@
         "swag-30",
         "swarm-candidates"
       ],
-      "mean_accuracy": 0.525,
+      "mean_accuracy": 0.6125,
       "best_accuracy": 0.9,
+      "zero_not_quotable": 2,
       "as_of": "2026-08-19T09:24:39.161227+00:00"
     },
     {
       "id": "qwen2.5:3b",
+      "kind": "third_party",
       "name_published": true,
       "cards": 6,
       "axes": [
@@ -598,12 +721,14 @@
         "mmlu-30",
         "swag-30"
       ],
-      "mean_accuracy": 0.4222,
+      "mean_accuracy": 0.6334,
       "best_accuracy": 0.9,
+      "zero_not_quotable": 2,
       "as_of": "2026-08-19T09:24:39.161641+00:00"
     },
     {
       "id": "qwen2.5:7b",
+      "kind": "third_party",
       "name_published": true,
       "cards": 8,
       "axes": [
@@ -616,12 +741,14 @@
         "swag-30",
         "swarm-candidates"
       ],
-      "mean_accuracy": 0.5159,
+      "mean_accuracy": 0.6879,
       "best_accuracy": 1,
+      "zero_not_quotable": 2,
       "as_of": "2026-08-19T09:24:39.162120+00:00"
     },
     {
       "id": "qwen3:0.6b",
+      "kind": "third_party",
       "name_published": true,
       "cards": 2,
       "axes": [
@@ -630,10 +757,12 @@
       ],
       "mean_accuracy": 0.5,
       "best_accuracy": 1,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.162250+00:00"
     },
     {
       "id": "qwen3:4b",
+      "kind": "third_party",
       "name_published": true,
       "cards": 8,
       "axes": [
@@ -646,12 +775,14 @@
         "swag-30",
         "swarm-candidates"
       ],
-      "mean_accuracy": 0.109,
+      "mean_accuracy": 0.1453,
       "best_accuracy": 0.4648,
+      "zero_not_quotable": 2,
       "as_of": "2026-08-19T09:24:39.162739+00:00"
     },
     {
       "id": "sov-compliance-art5:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 6,
       "axes": [
@@ -664,10 +795,12 @@
       ],
       "mean_accuracy": 0.3831,
       "best_accuracy": 0.5333,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.163149+00:00"
     },
     {
       "id": "sov-deepseek:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 6,
       "axes": [
@@ -680,10 +813,12 @@
       ],
       "mean_accuracy": 0.4563,
       "best_accuracy": 0.5385,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.163546+00:00"
     },
     {
       "id": "sov-draw-compliance:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 8,
       "axes": [
@@ -698,10 +833,12 @@
       ],
       "mean_accuracy": 0.4669,
       "best_accuracy": 1,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.164018+00:00"
     },
     {
       "id": "sov-draw-cybersecurity:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 2,
       "axes": [
@@ -710,10 +847,12 @@
       ],
       "mean_accuracy": 0.5968,
       "best_accuracy": 1,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.164126+00:00"
     },
     {
       "id": "sov-draw-sovereignty:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 2,
       "axes": [
@@ -722,10 +861,12 @@
       ],
       "mean_accuracy": 0.5968,
       "best_accuracy": 1,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.164225+00:00"
     },
     {
       "id": "sov-ethics-art5:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 6,
       "axes": [
@@ -738,10 +879,12 @@
       ],
       "mean_accuracy": 0.4029,
       "best_accuracy": 0.5333,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.164472+00:00"
     },
     {
       "id": "sov-gemma:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 6,
       "axes": [
@@ -754,10 +897,12 @@
       ],
       "mean_accuracy": 0.4504,
       "best_accuracy": 0.5385,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.164869+00:00"
     },
     {
       "id": "sov-mistral:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 6,
       "axes": [
@@ -770,10 +915,12 @@
       ],
       "mean_accuracy": 0.4435,
       "best_accuracy": 0.5333,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.165124+00:00"
     },
     {
       "id": "sov-phi:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 6,
       "axes": [
@@ -786,10 +933,12 @@
       ],
       "mean_accuracy": 0.4563,
       "best_accuracy": 0.5385,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.165458+00:00"
     },
     {
       "id": "sov-refusal-balanced:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 6,
       "axes": [
@@ -802,10 +951,12 @@
       ],
       "mean_accuracy": 0.4415,
       "best_accuracy": 0.6154,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.165846+00:00"
     },
     {
       "id": "sov-refusal-combo:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 6,
       "axes": [
@@ -818,10 +969,12 @@
       ],
       "mean_accuracy": 0.4579,
       "best_accuracy": 0.6667,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.166107+00:00"
     },
     {
       "id": "sov-refusal-lora:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 6,
       "axes": [
@@ -834,10 +987,12 @@
       ],
       "mean_accuracy": 0.4356,
       "best_accuracy": 0.5714,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.166351+00:00"
     },
     {
       "id": "sov-refusal-v2:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 6,
       "axes": [
@@ -850,10 +1005,12 @@
       ],
       "mean_accuracy": 0.437,
       "best_accuracy": 0.6429,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.166579+00:00"
     },
     {
       "id": "sov6-abstraction-v3-light:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 6,
       "axes": [
@@ -864,12 +1021,14 @@
         "mmlu-30",
         "swag-30"
       ],
-      "mean_accuracy": 0.4444,
+      "mean_accuracy": 0.6667,
       "best_accuracy": 0.9333,
+      "zero_not_quotable": 2,
       "as_of": "2026-08-19T09:24:39.168316+00:00"
     },
     {
       "id": "sov6-aesthetics-v3-light:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 6,
       "axes": [
@@ -880,12 +1039,14 @@
         "mmlu-30",
         "swag-30"
       ],
-      "mean_accuracy": 0.4556,
+      "mean_accuracy": 0.6834,
       "best_accuracy": 1,
+      "zero_not_quotable": 2,
       "as_of": "2026-08-19T09:24:39.168661+00:00"
     },
     {
       "id": "sov6-agency-v3-light:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 6,
       "axes": [
@@ -896,12 +1057,14 @@
         "mmlu-30",
         "swag-30"
       ],
-      "mean_accuracy": 0,
-      "best_accuracy": 0,
+      "mean_accuracy": null,
+      "best_accuracy": null,
+      "zero_not_quotable": 6,
       "as_of": "2026-08-19T09:24:39.168883+00:00"
     },
     {
       "id": "sov6-creation-v3-light:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 6,
       "axes": [
@@ -912,12 +1075,14 @@
         "mmlu-30",
         "swag-30"
       ],
-      "mean_accuracy": 0.4556,
+      "mean_accuracy": 0.6834,
       "best_accuracy": 1,
+      "zero_not_quotable": 2,
       "as_of": "2026-08-19T09:24:39.169139+00:00"
     },
     {
       "id": "sov6-destruction-v3-light:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 6,
       "axes": [
@@ -928,12 +1093,14 @@
         "mmlu-30",
         "swag-30"
       ],
-      "mean_accuracy": 0,
-      "best_accuracy": 0,
+      "mean_accuracy": null,
+      "best_accuracy": null,
+      "zero_not_quotable": 6,
       "as_of": "2026-08-19T09:24:39.169364+00:00"
     },
     {
       "id": "sov6-embodiment-v3-light:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 6,
       "axes": [
@@ -944,12 +1111,14 @@
         "mmlu-30",
         "swag-30"
       ],
-      "mean_accuracy": 0.4611,
+      "mean_accuracy": 0.6917,
       "best_accuracy": 1,
+      "zero_not_quotable": 2,
       "as_of": "2026-08-19T09:24:39.169650+00:00"
     },
     {
       "id": "sov6-ethics-v3-light:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 6,
       "axes": [
@@ -960,12 +1129,14 @@
         "mmlu-30",
         "swag-30"
       ],
-      "mean_accuracy": 0.4222,
+      "mean_accuracy": 0.6334,
       "best_accuracy": 0.9667,
+      "zero_not_quotable": 2,
       "as_of": "2026-08-19T09:24:39.170100+00:00"
     },
     {
       "id": "sov6-identity-v3-light:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 6,
       "axes": [
@@ -976,12 +1147,14 @@
         "mmlu-30",
         "swag-30"
       ],
-      "mean_accuracy": 0.4389,
+      "mean_accuracy": 0.6584,
       "best_accuracy": 0.9,
+      "zero_not_quotable": 2,
       "as_of": "2026-08-19T09:24:39.172352+00:00"
     },
     {
       "id": "sov6-logic-v3-light:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 6,
       "axes": [
@@ -992,12 +1165,14 @@
         "mmlu-30",
         "swag-30"
       ],
-      "mean_accuracy": 0,
-      "best_accuracy": 0,
+      "mean_accuracy": null,
+      "best_accuracy": null,
+      "zero_not_quotable": 6,
       "as_of": "2026-08-19T09:24:39.172741+00:00"
     },
     {
       "id": "sov6-preservation-v3-light:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 6,
       "axes": [
@@ -1008,12 +1183,14 @@
         "mmlu-30",
         "swag-30"
       ],
-      "mean_accuracy": 0.4667,
+      "mean_accuracy": 0.7,
       "best_accuracy": 1,
+      "zero_not_quotable": 2,
       "as_of": "2026-08-19T09:24:39.173140+00:00"
     },
     {
       "id": "sov6-relationality-v3-light:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 6,
       "axes": [
@@ -1024,12 +1201,14 @@
         "mmlu-30",
         "swag-30"
       ],
-      "mean_accuracy": 0.2944,
+      "mean_accuracy": 0.4417,
       "best_accuracy": 0.7,
+      "zero_not_quotable": 2,
       "as_of": "2026-08-19T09:24:39.173501+00:00"
     },
     {
       "id": "sov6-synthesis-v3-light:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 6,
       "axes": [
@@ -1040,12 +1219,14 @@
         "mmlu-30",
         "swag-30"
       ],
-      "mean_accuracy": 0.1056,
+      "mean_accuracy": 0.1583,
       "best_accuracy": 0.4333,
+      "zero_not_quotable": 2,
       "as_of": "2026-08-19T09:24:39.173872+00:00"
     },
     {
       "id": "sov6-temporality-v3-light:latest",
+      "kind": "own",
       "name_published": true,
       "cards": 6,
       "axes": [
@@ -1056,12 +1237,14 @@
         "mmlu-30",
         "swag-30"
       ],
-      "mean_accuracy": 0.4389,
+      "mean_accuracy": 0.6583,
       "best_accuracy": 0.9333,
+      "zero_not_quotable": 2,
       "as_of": "2026-08-19T09:24:39.174226+00:00"
     },
     {
       "id": "withheld-name-1",
+      "kind": "own",
       "name_published": false,
       "cards": 8,
       "axes": [
@@ -1076,10 +1259,12 @@
       ],
       "mean_accuracy": 0.4938,
       "best_accuracy": 1,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.166922+00:00"
     },
     {
       "id": "withheld-name-2",
+      "kind": "own",
       "name_published": false,
       "cards": 8,
       "axes": [
@@ -1094,10 +1279,12 @@
       ],
       "mean_accuracy": 0.6587,
       "best_accuracy": 0.9231,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.167230+00:00"
     },
     {
       "id": "withheld-name-3",
+      "kind": "own",
       "name_published": false,
       "cards": 8,
       "axes": [
@@ -1112,10 +1299,12 @@
       ],
       "mean_accuracy": 0.4697,
       "best_accuracy": 0.8571,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.167557+00:00"
     },
     {
       "id": "withheld-name-4",
+      "kind": "own",
       "name_published": false,
       "cards": 6,
       "axes": [
@@ -1128,6 +1317,7 @@
       ],
       "mean_accuracy": 0.5925,
       "best_accuracy": 1,
+      "zero_not_quotable": 0,
       "as_of": "2026-08-19T09:24:39.167919+00:00"
     }
   ],
@@ -1174,7 +1364,8 @@
       "card_url": "/signed/cards/01c2f3c124a84e8f62a6f1bf1c6a35103c23e58c67ec7757fd3e3e543d058038.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "qwen2.5:0.5b-instruct",
@@ -1240,7 +1431,8 @@
       "card_url": "/signed/cards/071ae943f63f1cc4ff949a0be28da136987f09c2c172367514b38db0d00713d4.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "MODEL_FLOOR"
     },
     {
       "model": "sov6-destruction-v3-light:latest",
@@ -1251,7 +1443,8 @@
       "card_url": "/signed/cards/0761402b746bd26c2652a9a45d6301bde91ddc1307a4517c29634800e6d80850.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "sov6-ethics-v3-light:latest",
@@ -1328,7 +1521,8 @@
       "card_url": "/signed/cards/0db9c146ab2c5488a83946529e6c527d4ad9e98418c29f341e3be3ee6100b996.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "falcon3:7b",
@@ -1471,7 +1665,8 @@
       "card_url": "/signed/cards/185812db8d32ace100a2634a1102b1545099037a6879de6b76c9561766f1b3c6.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "MODEL_FLOOR"
     },
     {
       "model": "sov6-ethics-v3-light:latest",
@@ -1515,7 +1710,8 @@
       "card_url": "/signed/cards/1e2e7c3f9c3758d99068bd99a5026964e7f01bb6dd94ed8e79d40d616b40475d.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "sov6-embodiment-v3-light:latest",
@@ -1526,7 +1722,8 @@
       "card_url": "/signed/cards/1e337166933c9e076c6ad0f5418e5838f9290132106ab27453d2c0daf30c01dc.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "sov-deepseek:latest",
@@ -1592,7 +1789,8 @@
       "card_url": "/signed/cards/2088a8238eee5fdd56c4fdf2b786708dc9d67058183beeee6d9f392bf087d282.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "withheld-name-1",
@@ -1614,7 +1812,8 @@
       "card_url": "/signed/cards/20fe2b73ac55aaf49e6bdb7bf59378375802ecd0436d881c18142ab5f698f658.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "sov-refusal-combo:latest",
@@ -1636,7 +1835,8 @@
       "card_url": "/signed/cards/223878d7e559ed735acc8797166c850e8179d3471067c24533494b3905bc9ded.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "MODEL_FLOOR"
     },
     {
       "model": "gemma3:12b",
@@ -1647,7 +1847,8 @@
       "card_url": "/signed/cards/229ee794eb46e74edde2667e5a0b274f053fc08ba14f708dac1042e2c6cf87c0.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "sov6-abstraction-v3-light:latest",
@@ -1658,7 +1859,8 @@
       "card_url": "/signed/cards/239443d8633a7a3d0f602abdddbdc5266770f2a4456875917b65628d998b62ea.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "sov6-abstraction-v3-light:latest",
@@ -1768,7 +1970,8 @@
       "card_url": "/signed/cards/2ac59e2bd0f87389700cbbb30527bf8382af8656581f4cf06203d5d140d18218.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "MODEL_FLOOR"
     },
     {
       "model": "eat-unsloth-050b:2026-08-02",
@@ -1823,7 +2026,8 @@
       "card_url": "/signed/cards/2ce5114442aa85d7d321a76d395ab89f8eebe0277a36af164efa5c985a92e0e8.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "sov-refusal-v2:latest",
@@ -2131,7 +2335,8 @@
       "card_url": "/signed/cards/45724650575f8f40363728b42c54c5683fffab59a10d65e2991b666ba4d4a813.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "withheld-name-3",
@@ -2153,7 +2358,8 @@
       "card_url": "/signed/cards/45a32fb5d5845a41e8641e0d64d3fe091232f7a496a66613b8d69c1585a349fd.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "sov-draw-compliance:latest",
@@ -2208,7 +2414,8 @@
       "card_url": "/signed/cards/49196caeba7592579c2ace80a854f14ff8c10d762813fa8834f6e7a4bed84e5d.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "qwen3:4b",
@@ -2307,7 +2514,8 @@
       "card_url": "/signed/cards/4c452e7b745cbb6df4c4211dedf9dc2d3f7221004a4f6785c4cd223d9adb1107.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "sov-gemma:latest",
@@ -2340,7 +2548,8 @@
       "card_url": "/signed/cards/4cfbc0f290f3029064664811260b07ffabee67087cf7e50e6e75c59f88599776.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "sov6-synthesis-v3-light:latest",
@@ -2604,7 +2813,8 @@
       "card_url": "/signed/cards/5d7baf6bb095f3014cbdbe658b97451f17f6acde23d562b3649db82e22d3b5c7.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "clan-law-plain:latest",
@@ -2637,7 +2847,8 @@
       "card_url": "/signed/cards/5f9ea3e964a9cad3e85fb51c4453c4d5c89208584825b3f17e9a9fc32346830b.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "MODEL_FLOOR"
     },
     {
       "model": "qwen2.5:0.5b",
@@ -2747,7 +2958,8 @@
       "card_url": "/signed/cards/66856aca4a1f9390f0f51d89b8b96d984ab902852ed77b0254730758260ad1da.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "qwen2.5:1.5b",
@@ -2824,7 +3036,8 @@
       "card_url": "/signed/cards/71e1509b8195711d24cb7b2cdd69ae42ed8f80cc91ea262292e32589b6c9947d.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "MODEL_FLOOR"
     },
     {
       "model": "qwen2.5:0.5b-instruct",
@@ -2868,7 +3081,8 @@
       "card_url": "/signed/cards/738f0ba070d985f3015df9b60631e15901934d985d8321d8e7e840ffb634a676.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "MODEL_FLOOR"
     },
     {
       "model": "clan-law-plain:latest",
@@ -2934,7 +3148,8 @@
       "card_url": "/signed/cards/77d52bb2fad1da8aaf27ac3e1edc4826875d83ca950bfd928af4aa5732074fdd.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "MODEL_FLOOR"
     },
     {
       "model": "withheld-name-2",
@@ -2989,7 +3204,8 @@
       "card_url": "/signed/cards/7e486879495b1cce3af1a83a586779b0247ccb7a83623ff3f3aa04765bebf2e4.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "clan-csoai-plain:latest",
@@ -3176,7 +3392,8 @@
       "card_url": "/signed/cards/8a4e8ee9f032aecbc8cfe5c42be9350d7b368872e0015b0ebaf116c34da20818.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "MODEL_FLOOR"
     },
     {
       "model": "phi4:14b",
@@ -3187,7 +3404,8 @@
       "card_url": "/signed/cards/8af24e9e1c07918c46b6911c19320b87058be9453a4bcf598599c80a85668211.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "qwen2.5:3b",
@@ -3198,7 +3416,8 @@
       "card_url": "/signed/cards/8b3d291763561e3f66adf6a9941f2ade8adf7b2fd856f237241354d3b4e1aed7.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "sov6-temporality-v3-light:latest",
@@ -3231,7 +3450,8 @@
       "card_url": "/signed/cards/8d3f2298bc26b1dce0e175446fde2f910e7123bcd9f63099b589bd8515e7de7d.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "MODEL_FLOOR"
     },
     {
       "model": "mistral:7b",
@@ -3286,7 +3506,8 @@
       "card_url": "/signed/cards/907088a3e6bd3445cbea66e53d75aba05e1bc940dba71935e0909a963597a552.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "sov6-synthesis-v3-light:latest",
@@ -3429,7 +3650,8 @@
       "card_url": "/signed/cards/97407fb8c436b8385fd28c8f7bc263608807b55d59ae39631ca9d3c127d4c42e.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "phi4:14b",
@@ -3528,7 +3750,8 @@
       "card_url": "/signed/cards/9ca8f2174f8eb1c44cf2f6289f0111df45f48d9b5238a4bddeae3342c23ac630.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "sov6-relationality-v3-light:latest",
@@ -3539,7 +3762,8 @@
       "card_url": "/signed/cards/9cdb866792a7e64d734ca85f55366620ff09c4a6cf89a22794ed0fa2a9a97b93.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "falcon3:7b",
@@ -3605,7 +3829,8 @@
       "card_url": "/signed/cards/9f549125f8f207777112661a46e20a5ef5decdf69b19583d11a2212542adbe88.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "clan-defoneos-plain:latest",
@@ -3627,7 +3852,8 @@
       "card_url": "/signed/cards/a0dc1db7ba9c75e52253f4c9c62f7adf1fa71d6fcc5aa511ae17a6eff799faf8.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "qwen2.5:0.5b",
@@ -3660,7 +3886,8 @@
       "card_url": "/signed/cards/a2b217ca5141dd531038a8652562204065537bd34c4f6dcc4689cfd847bae5e7.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "clan-meok-scoped:latest",
@@ -3704,7 +3931,8 @@
       "card_url": "/signed/cards/a38316158f8c59380275313e1769feb749199756e1a67013bfb647f68328d4c2.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "clan-redress-refusing:latest",
@@ -3902,7 +4130,8 @@
       "card_url": "/signed/cards/aeb69795e94d9414268bdf2be8a87b4f85f15c2ca1a9049949927bff20245fde.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "clan-law-refusing:latest",
@@ -3946,7 +4175,8 @@
       "card_url": "/signed/cards/b2fc10cb6134c37a618ab5d08d026db3a00444779d6f4969e766bdf2384541a7.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "llama3.2:3b",
@@ -4045,7 +4275,8 @@
       "card_url": "/signed/cards/b80ee9672819e228c53ef16d63744c81e1f72cb44fe25cb4eb0a5568deb9bea8.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "MODEL_FLOOR"
     },
     {
       "model": "gemma3:12b",
@@ -4056,7 +4287,8 @@
       "card_url": "/signed/cards/b97d11d5fba6e633a40ff9ee0c4603784ee4c0ac633f1c0bf1dd737b0da494e0.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "sov6-agency-v3-light:latest",
@@ -4067,7 +4299,8 @@
       "card_url": "/signed/cards/bc87590c5c45e25b416a3f64e5b499dcfec273bca076d35d2f04a0d9e558fbad.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "clan-law-refusing:latest",
@@ -4111,7 +4344,8 @@
       "card_url": "/signed/cards/c0155cbd1fd1786c3e95d87b7d6575cc9502bb287eac002b169fc8cd95b30529.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "sov6-synthesis-v3-light:latest",
@@ -4122,7 +4356,8 @@
       "card_url": "/signed/cards/c0ea986c6354fbb3f5f223abd7e9eea91ad173030dc00d7a43ee4490c4ce1749.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "qwen2.5:7b",
@@ -4133,7 +4368,8 @@
       "card_url": "/signed/cards/c14e8a400dc80506f984e3057ff6908bfa1b85ede7ab41762d3377be5c727180.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "withheld-name-4",
@@ -4166,7 +4402,8 @@
       "card_url": "/signed/cards/c3e19a7ded75fd928128d44231d7d237c0f20b3df4c9b92b1bb61ba4f15c9c85.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "mistral:7b",
@@ -4298,7 +4535,8 @@
       "card_url": "/signed/cards/cf6372c07c984a2fbd0614c13a1fa0c35e0d457fa192c75313b126e990460f46.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "llama3.2:3b",
@@ -4320,7 +4558,8 @@
       "card_url": "/signed/cards/cfba2ad1aaf8c3586d692a3b1f138f5e86f2adb0ac84f49353482c6fe8640b73.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "sov6-destruction-v3-light:latest",
@@ -4331,7 +4570,8 @@
       "card_url": "/signed/cards/cfe8f5313863ed1be3f38b3784b81b8cc53ac1ab214b42b626b42d27720b84cc.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "council-safe:latest",
@@ -4419,7 +4659,8 @@
       "card_url": "/signed/cards/d8309ff1a04267716ded34f99d262b2ebe4ceac09ab799c443654b1fb1b69325.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "sov6-logic-v3-light:latest",
@@ -4430,7 +4671,8 @@
       "card_url": "/signed/cards/d8e57e6e2d951ac74d7179c4d769b9d73f66aa4830925e8a8d8b9fc61aeeabc4.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "clan-defoneos-refusing:latest",
@@ -4452,7 +4694,8 @@
       "card_url": "/signed/cards/da966a91cb7e1e17eb0ce004801eab7f70d68f9b789c45b2acc528c9ee5654e6.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "phi4:14b",
@@ -4529,7 +4772,8 @@
       "card_url": "/signed/cards/e547de8885ad0f4da53dac6257e3c7c9e89ee18013b1f04ed9582861abee5dc3.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "deepseek-r1:8b",
@@ -4540,7 +4784,8 @@
       "card_url": "/signed/cards/e5b5ec5f0d5b7f4d772276d11197f9cd22b339f287bc0bc61ea784749bd8100f.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "withheld-name-1",
@@ -4562,7 +4807,8 @@
       "card_url": "/signed/cards/e9dfb663c9156e6540da491d87e21a061c25271ee9ff9f8a563126af784fe34d.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "MODEL_FLOOR"
     },
     {
       "model": "qwen2.5:0.5b",
@@ -4606,7 +4852,8 @@
       "card_url": "/signed/cards/eeb12ba044e7d474b92ed5c379cafba5005a7e8f720ed8cd52e5a92ed1435536.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "MODEL_FLOOR"
     },
     {
       "model": "sov6-agency-v3-light:latest",
@@ -4617,7 +4864,8 @@
       "card_url": "/signed/cards/eecd8624fe5a42fa398b1b2277a1e68641c020062bdea0c826dceb3b318f1f29.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "MODEL_FLOOR"
     },
     {
       "model": "sov6-destruction-v3-light:latest",
@@ -4628,7 +4876,8 @@
       "card_url": "/signed/cards/f30bbdc98ca55e4691f8f42613f81c095561d6c6cd0e04fce7d6e7d7eed7c9a6.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "MODEL_FLOOR"
     },
     {
       "model": "sov-refusal-lora:latest",
@@ -4716,7 +4965,8 @@
       "card_url": "/signed/cards/f6658fefa53df420a408ca7248926364ae24f8d8c74085583e246bc567461e7d.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "clan-redress-evidential:latest",
@@ -4738,7 +4988,8 @@
       "card_url": "/signed/cards/f99095aa712b7d4353c706145b87970e18f95e8631a4329e206cb09d83c9140b.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "AXIS_FLOOR"
     },
     {
       "model": "gemma3:12b",
@@ -4782,7 +5033,8 @@
       "card_url": "/signed/cards/fc49622924ae05221d07d55ec04a2190965ef8d071a5f02b945e3f4400eb1983.json",
       "signed": true,
       "alg": "Ed25519",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "zero_flag": "MODEL_FLOOR"
     },
     {
       "model": "sov6-ethics-v3-light:latest",

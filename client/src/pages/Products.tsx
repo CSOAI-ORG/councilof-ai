@@ -1,13 +1,8 @@
 import { Link } from "wouter";
 import { toolSummary } from "@/lib/mcpTools";
 import EmptySlots from "@/components/EmptySlots";
-import GovernanceTerminal from "@/components/GovernanceTerminal";
-import HealthInventory from "@/components/HealthInventory";
 import HealthTerms from "@/components/HealthTerms";
-import PermissionlessRevenue from "@/components/PermissionlessRevenue";
-import PlaybookAudit from "@/components/PlaybookAudit";
 import ProductFill from "@/components/ProductFill";
-import SovExternalAudit from "@/components/SovExternalAudit";
 import { useBoardCount } from "@/lib/boardCount";
 
 /**
@@ -96,7 +91,7 @@ const MODULES = [
     name: "White-label embed",
     href: "/embed",
     tag: "Verify module",
-    what: "A self-verifying badge: WebCrypto checks the Ed25519 signature in the reader's own browser. Green only when the bytes are true.",
+    what: "A self-verifying badge: WebCrypto checks the Ed25519 signature in the reader's own browser. Check integrity and signature status separately. A valid result does not establish truth, freshness or compliance.",
   },
   {
     name: "Distribution integrity",
@@ -108,7 +103,7 @@ const MODULES = [
     name: "Legacy on-ramp",
     href: "/cobolbridge",
     tag: "In build",
-    what: "COBOL lineage into signed evidence — in build. Apex 522. Pathway UNMEASURED until a signed card exists.",
+    what: "COBOL lineage into signed evidence — in development. UNMEASURED until a signed card exists.",
   },
   {
     name: "Council Academy",
@@ -207,13 +202,11 @@ export default function Products() {
         </ul>
       </section>
 
+      {/* Operator notes (health inventory, governance terminal, revenue funnels, external audit,
+          playbook audit) moved to the noindex /status/internal page on 6 Oct 2026: they were
+          agent instructions and strategy notes, not product copy a buyer can act on. */}
       <ProductFill tone="dark" />
-      <HealthInventory tone="dark" />
       <HealthTerms tone="dark" />
-      <GovernanceTerminal tone="dark" />
-      <PermissionlessRevenue tone="dark" />
-      <SovExternalAudit tone="dark" />
-      <PlaybookAudit tone="dark" />
       <EmptySlots tone="dark" />
 
       <section aria-labelledby="engine-h" className="mt-12">
@@ -229,6 +222,11 @@ export default function Products() {
         <p className="mt-4 text-sm leading-relaxed text-slate-400">
           The board this rail publishes today:{" "}
           <span className="font-semibold text-emerald-300">{board.public_count}</span>{" "}
+          {board.live && board.measured_on ? (
+            <span className="text-slate-300" data-testid="products-board-measured-on">
+              (measured on {board.measured_on}){" "}
+            </span>
+          ) : null}
           {board.live ? (
             <span className="text-slate-500">— read from GET /api/gspc as this page loaded.</span>
           ) : (
@@ -308,7 +306,7 @@ export default function Products() {
         <ul className="mt-3 space-y-1.5 text-sm leading-relaxed text-slate-300">
           <li>We measure. We do not certify, and nothing here is a conformity assessment or a conformity mark.</li>
           <li>UNMEASURED is a first-class answer — it appears on this page and on the board wherever it is true.</li>
-          <li>No public prices, here or anywhere: verification is free forever, and a grade is never sold.</li>
+          <li>Paid x402 operations disclose their terms in the payment challenge. Verification is free; a grade is never sold.</li>
           <li>Determinations of legal compliance remain with the competent authorities, always.</li>
           <li>
             We measure against regulation; we do not enforce it. We cannot approve, ban, fine or

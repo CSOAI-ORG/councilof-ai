@@ -13,6 +13,12 @@
  * shown as empty, never as a zero. The board audits itself in a panel at the
  * bottom. Lead by example.
  *
+ * OUR OWN MODELS ARE LISTED APART, NEVER RANKED (6 Oct 2026). Rows carry the producer's
+ * `kind`. Only third-party rows are ever ordered by a score, averaged into a composite,
+ * compared head-to-head or summarised in a column header; our own rows (and the
+ * owner-unconfirmed ones) sit in separately labelled groups, always A→Z. Before this the
+ * pane listed our own overlays first, at 100%, under "best" headers.
+ *
  * Data core: client/src/lib/gspcFleet.ts (reads /signed/card-matrix.json). Counts
  * are derived from the arrays there, never typed here. The governance board
  * (/api/gspc) is a DIFFERENT instrument: it is linked for context, never used as
@@ -34,6 +40,8 @@ import {
   wilson,
   pct,
   shortSha,
+  kindOf,
+  thirdPartyIds,
   fetchCardByUrl,
   fetchPinnedCardKey,
   verifyCard,
@@ -42,6 +50,7 @@ import {
   type MatrixCell,
   type MatrixModel,
   type CardVerdict,
+  type ModelKind,
 } from "@/lib/gspcFleet";
 import {
   axisMeta,
@@ -176,11 +185,14 @@ function Board({ matrix, board, pinnedKey }: { matrix: FleetMatrix; board: impor
   );
   const compositeByModel = useMemo(() => new Map(composite.map((r) => [r.model, r])), [composite]);
 
-  // The rows: models, filtered by query, ordered by the chosen sort. Ordering is
-  // presentation — never a separation claim (see the note under the grid).
-  const rows = useMemo(() => {
+  // The rows: models, filtered by query, split by kind. Only the third-party group is ever
+  // ordered by a score; our own groups stay A→Z. Ordering is presentation — never a
+  // separation claim (see the note under the grid).
+  const groups = useMemo(() => {
     const q = query.trim().toLowerCase();
-    let list: MatrixModel[] = matrix.models.filter((m) => !q || m.id.toLowerCase().includes(q));
+    const matching = matrix.models.filter((m) => !q || m.id.toLowerCase().includes(q));
+    const az = (xs: MatrixModel[]) => [...xs].sort((a, b) => a.id.localeCompare(b.id));
+    let list: MatrixModel[] = matching.filter((m) => kindOf(m) === "third_party");
     if (sort.type === "model") {
       list = [...list].sort((a, b) => a.id.localeCompare(b.id));
     } else if (sort.type === "axis") {
@@ -200,13 +212,20 @@ function Board({ matrix, board, pinnedKey }: { matrix: FleetMatrix; board: impor
         return cb - ca;
       });
     }
-    return list;
+    return GROUP_ORDER.map((kind) => ({
+      kind,
+      rows: kind === "third_party" ? list : az(matching.filter((m) => kindOf(m) === kind)),
+      total: matrix.models.filter((m) => kindOf(m) === kind).length,
+    }));
   }, [matrix.models, query, sort, grid, compositeByModel]);
 
+  // Head-to-head is a comparison, so only third-party rows can enter it.
+  const comparable = useMemo(() => thirdPartyIds(matrix), [matrix]);
   const toggleCompare = (id: string) =>
     setCompare((prev) => {
       const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
+      if (next.has(id)) next.delete(id);
+      else if (comparable.has(id)) next.add(id);
       return next;
     });
 
@@ -216,7 +235,7 @@ function Board({ matrix, board, pinnedKey }: { matrix: FleetMatrix; board: impor
 
       {/* CONTROLS */}
       <div className="mt-6 flex flex-wrap items-end gap-3 rounded-xl border border-emerald-500/15 bg-emerald-500/[0.03] p-4">
-        <Control label="Rank by axis">
+        <Control label="Order third-party rows by axis">
           <select
             value={sort.type === "axis" ? sort.axis : ""}
             onChange={(e) => {
@@ -288,7 +307,7 @@ function Board({ matrix, board, pinnedKey }: { matrix: FleetMatrix; board: impor
       <MatrixGrid
         matrix={matrix}
         grid={grid}
-        rows={rows}
+        groups={groups}
         shownAxes={shownAxes}
         sort={sort}
         onSortAxis={(ax) => { setCompositeOn(false); setSort({ type: "axis", axis: ax }); }}
@@ -341,7 +360,11 @@ function CountStrip({ counts, matrix, board }: { counts: ReturnType<typeof deriv
   const cov = counts.coverage;
   return (
     <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-6">
-      <Stat n={counts.models} label="models (rows)" />
+      <Stat
+        n={counts.thirdParty}
+        label="third-party models"
+        sub={`our own ${counts.own}${counts.ownUnconfirmed ? ` (+${counts.ownUnconfirmed} unconfirmed)` : ""} are in this set and listed apart, never compared`}
+      />
       <Stat n={counts.axes} label="signed axes (columns)" />
       <Stat n={counts.measuredCells} label="measured cells" />
       <Stat n={counts.possibleCells} label="possible cells" sub={cov !== null ? `${(cov * 100).toFixed(0)}% covered` : undefined} />
@@ -393,10 +416,24 @@ function accColour(p: number): string {
   return "text-slate-300";
 }
 
+const GROUP_ORDER: ModelKind[] = ["third_party", "own", "own_unconfirmed"];
+const GROUP_LABEL: Record<ModelKind, string> = {
+  third_party: "Third-party models",
+  own: "Our own models — listed apart, never compared",
+  own_unconfirmed: "Possibly our own (owner has not confirmed) — listed apart, never compared",
+};
+const GROUP_NOTE: Record<ModelKind, string> = {
+  third_party: "The only rows that are ordered by an axis, averaged into the composite or summarised in a column header.",
+  own: "Prompt overlays and specialists we built on stock base models. Shown so the work is visible; always A→Z, never ordered by a score and never set a column figure.",
+  own_unconfirmed: "Names that suggest a model we derived. Kept out of the third-party group until the owner confirms them either way.",
+};
+
+type RowGroup = { kind: ModelKind; rows: MatrixModel[]; total: number };
+
 function MatrixGrid(props: {
   matrix: FleetMatrix;
   grid: FleetGrid;
-  rows: MatrixModel[];
+  groups: RowGroup[];
   shownAxes: FleetMatrix["axes"];
   sort: SortKey;
   onSortAxis: (axis: string) => void;
@@ -408,7 +445,9 @@ function MatrixGrid(props: {
   onOpenProfile: (id: string) => void;
   onVerifyCell: (cell: MatrixCell) => void;
 }) {
-  const { grid, rows, shownAxes, sort, onSortAxis, compositeOn, compositeByModel, compare, onToggleCompare, onOpenProfile, onVerifyCell, boardAxisByName } = props;
+  const { grid, groups, shownAxes, sort, onSortAxis, compositeOn, compositeByModel, compare, onToggleCompare, onOpenProfile, onVerifyCell, boardAxisByName } = props;
+  const colSpan = 1 + (compositeOn ? 1 : 0) + shownAxes.length;
+  const anyRows = groups.some((g) => g.rows.length > 0);
 
   return (
     <div className="mt-5 overflow-x-auto rounded-xl border border-emerald-500/15">
@@ -432,7 +471,7 @@ function MatrixGrid(props: {
                   key={a.id}
                   className={`min-w-[92px] cursor-pointer border-l border-emerald-500/10 px-2 py-2 text-center align-bottom transition-colors hover:bg-emerald-500/10 ${active ? "bg-emerald-500/15" : ""}`}
                   onClick={() => onSortAxis(a.id)}
-                  title={`${meta.blurb}\n\nClick to rank the fleet by this axis.${twin ? `\nRelated governance axis: ${twin.axis}. Its cohort statistics are not transferred.` : ""}`}
+                  title={`${meta.blurb}\n\nClick to order the third-party rows by this axis. Our own models stay in their own group, A→Z.${twin ? `\nRelated governance axis: ${twin.axis}. Its cohort statistics are not transferred.` : ""}`}
                 >
                   <div className={`font-bold leading-tight ${active ? "text-emerald-200" : "text-emerald-100/85"}`}>{meta.label}</div>
                   <AxisStat axisId={a.id} matrix={props.matrix} twin={twin} />
@@ -442,31 +481,44 @@ function MatrixGrid(props: {
           </tr>
         </thead>
         <tbody>
-          {rows.length === 0 && (
+          {!anyRows && (
             <tr>
               <td
-                colSpan={1 + (compositeOn ? 1 : 0) + shownAxes.length}
+                colSpan={colSpan}
                 className="px-4 py-10 text-center text-[12px] text-emerald-200/55"
               >
                 No model matches that filter. Clear the search to see every measured row.
               </td>
             </tr>
           )}
-          {rows.map((m, i) => {
-            const comp = compositeByModel.get(m.id);
+          {anyRows && groups.filter((g) => g.total > 0).map((g) => [
+            <tr key={`group-${g.kind}`} data-testid={`leaderboard-group-${g.kind}`} className="border-t-2 border-emerald-500/25 bg-[#062419]">
+              <th colSpan={colSpan} className="sticky left-0 px-3 py-2 text-left font-normal">
+                <span className="text-[12px] font-bold text-emerald-100">{GROUP_LABEL[g.kind]} ({g.total})</span>
+                {g.rows.length !== g.total && <span className="ml-2 text-[11px] text-emerald-200/55">· {g.rows.length} match the filter</span>}
+                <span className="mt-0.5 block text-[11px] text-emerald-200/55">{GROUP_NOTE[g.kind]}</span>
+              </th>
+            </tr>,
+            ...g.rows.map((m, i) => {
+            const thirdParty = g.kind === "third_party";
+            const comp = thirdParty ? compositeByModel.get(m.id) : undefined;
             const selected = compare.has(m.id);
             return (
               <tr key={m.id} className={`border-t border-emerald-500/8 ${i % 2 ? "bg-white/[0.012]" : ""} ${selected ? "bg-emerald-500/[0.07]" : ""} hover:bg-emerald-500/[0.05]`}>
                 <th className={`sticky left-0 z-10 min-w-[220px] px-3 py-1.5 text-left font-normal ${selected ? "bg-[#08251a]" : "bg-[#04140d]"}`}>
                   <div className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      checked={selected}
-                      onChange={() => onToggleCompare(m.id)}
-                      title="Add to head-to-head compare"
-                      aria-label={`Add ${m.id} to head-to-head compare`}
-                      className="shrink-0"
-                    />
+                    {thirdParty ? (
+                      <input
+                        type="checkbox"
+                        checked={selected}
+                        onChange={() => onToggleCompare(m.id)}
+                        title="Add to head-to-head compare"
+                        aria-label={`Add ${m.id} to head-to-head compare`}
+                        className="shrink-0"
+                      />
+                    ) : (
+                      <span className="w-[13px] shrink-0" aria-hidden="true" />
+                    )}
                     <button
                       onClick={() => onOpenProfile(m.id)}
                       className="truncate text-left font-mono text-[12px] text-emerald-100 hover:text-emerald-300 hover:underline"
@@ -484,7 +536,7 @@ function MatrixGrid(props: {
 
                 {compositeOn && (
                   <td className="border-l border-emerald-500/10 px-2 py-1.5 text-center">
-                    {comp ? (
+                    {comp && thirdParty ? (
                       <div>
                         <span className="font-mono font-bold tabular-nums text-amber-200">{pct(comp.mean)}</span>
                         <div className="text-[9px] text-amber-200/50">{comp.measuredOn}/{comp.outOf} axes</div>
@@ -516,13 +568,15 @@ function MatrixGrid(props: {
                 })}
               </tr>
             );
-          })}
+            }),
+          ])}
         </tbody>
       </table>
       <p className="border-t border-emerald-500/10 bg-[#04140d] px-3 py-2 text-[11px] text-emerald-200/55">
         ◈ = a signed cell; click it to recompute its Ed25519 card in your browser. Row order is presentation, not a
         separation claim — two adjacent rows may be statistically indistinguishable. Whether a lead is real is the
-        governance board&rsquo;s separation test, below, not a column sort.
+        governance board&rsquo;s separation test, below, not a column sort. Our own models are listed apart: they are
+        never ordered by a score, never in the composite or the head-to-head, and never set a column&rsquo;s figure.
       </p>
     </div>
   );
@@ -536,10 +590,13 @@ function MatrixGrid(props: {
 export function axisStatEvidence(axisId: string, matrix: FleetMatrix, twin?: GspcAxis) {
   const axis = matrix.axes.find((a) => a.id === axisId);
   if (!axis) return null;
+  // The header summarises third-party models only (build-card-matrix rule 7), so its
+  // interval belongs to the top third-party cell — never to one of our own rows.
+  const third = thirdPartyIds(matrix);
   const leader = matrix.cells
-    .filter((cell) => cell.axis === axisId && Number.isFinite(cell.accuracy))
+    .filter((cell) => cell.axis === axisId && third.has(cell.model) && Number.isFinite(cell.accuracy))
     .sort((a, b) => b.accuracy - a.accuracy)[0];
-  if (!leader || leader.accuracy !== axis.best_accuracy) return null;
+  if (!leader || axis.best_accuracy === null || leader.accuracy !== axis.best_accuracy) return null;
 
   const twinEvidenceUrl = typeof twin?.evidence_url === "string"
     ? twin.evidence_url
@@ -583,8 +640,8 @@ function AxisStat({ axisId, matrix, twin }: { axisId: string; matrix: FleetMatri
   const w = axisStatEvidence(axisId, matrix, twin);
   return (
     <div className="mt-1 space-y-0.5">
-      <div className="text-[9px] text-emerald-300/50" title="Best measured figure on this axis across the fleet.">
-        best {pct(axis.best_accuracy)}
+      <div className="text-[9px] text-emerald-300/50" title="Highest measured figure on this axis among third-party models. Our own models never set it.">
+        {axis.best_accuracy === null ? "no quotable third-party cell" : <>top third-party {pct(axis.best_accuracy)}</>}
       </div>
       {w ? (
         <div className="text-[9px] text-emerald-300/40" title={`Wilson 95% interval on the leader, n=${w.n} (${w.nSource}).`}>
@@ -595,7 +652,11 @@ function AxisStat({ axisId, matrix, twin }: { axisId: string; matrix: FleetMatri
           interval unavailable
         </div>
       )}
-      <div className="text-[9px] text-emerald-300/30">{axis.models} models</div>
+      <div className="text-[9px] text-emerald-300/30">
+        {typeof axis.models_third_party === "number"
+          ? `${axis.models_third_party} third-party${typeof axis.models_own === "number" && axis.models_own ? ` · ${axis.models_own} own` : ""}`
+          : `${axis.models} models`}
+      </div>
     </div>
   );
 }

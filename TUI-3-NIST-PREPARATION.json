@@ -1,0 +1,65 @@
+{
+  "schema": "csoai.nist-submission-prep/1.0",
+  "generated_at": "2026-09-11T15:00:00Z",
+  "deadline": "2026-09-16",
+  "status": "PREPARED_NOT_SUBMITTED",
+  "gate": "Final communication gate required before submission. Do NOT submit without owner approval.",
+
+  "nist_ai_rmf_crosswalk": {
+    "source": "public/interop/nist-airmf-gspc-crosswalk.json",
+    "function_mappings": [
+      {
+        "nist_function": "GOVERN",
+        "outcome": "Policies, accountability, and oversight structures for AI risk are in place and enforced.",
+        "gspc_axes": ["governance", "art5-safeguard", "openness"],
+        "measurement_method": "Deterministic fact-based measurement against frozen provision bank",
+        "status": "MEASURED"
+      },
+      {
+        "nist_function": "MAP",
+        "outcome": "Context and risk factors for AI systems are identified and documented.",
+        "gspc_axes": ["provenance", "cross-reality", "detector-interop"],
+        "measurement_method": "Model fleet answers frozen bank, graded deterministically",
+        "status": "MEASURED"
+      },
+      {
+        "nist_function": "MEASURE",
+        "outcome": "AI risks and impacts are identified, analyzed, and tracked.",
+        "gspc_axes": ["safety", "care", "affect", "jail"],
+        "measurement_method": "Model fleet answers frozen bank, graded deterministically",
+        "status": "MEASURED"
+      },
+      {
+        "nist_function": "MANAGE",
+        "outcome": "AI risks are prioritized and acted upon based on planned response.",
+        "gspc_axes": ["conformance", "continuity", "machinery-conformity", "swarm"],
+        "measurement_method": "Model fleet answers frozen bank, graded deterministically",
+        "status": "MEASURED"
+      }
+    ]
+  },
+
+  "evidence_artifacts": {
+    "signed_cards": { "count": 335, "location": "public/signed/chain.json", "state": "VERIFIED" },
+    "public_root": { "count": 167, "location": "public/root.json", "state": "VERIFIED" },
+    "rekor_witness": { "log_index": 2791822965, "state": "WITNESSED" },
+    "ots_submission": { "state": "STAMPED_PENDING_BITCOIN" },
+    "provision_bank": { "count": 417, "location": "public/interop/regulatory-inventory.json", "state": "FROZEN" },
+    "crosswalk_regimes": { "count": 4, "state": "PUBLISHED" }
+  },
+
+  "submission_material": {
+    "format": "Evidence-led crosswalk with signed measurement cards",
+    "scope": "NIST AI RMF 1.0 → GSPC 22-axis measurement",
+    "key_points": [
+      "22 axes measured (14 behavioural + 8 financial/domain)",
+      "335 signed Ed25519 measurement cards",
+      "167 cards in public Merkle root, Rekor witnessed",
+      "Deterministic grading: no model judges another model",
+      "Measurement, not certification",
+      "417 frozen provision identifiers with SHA-256 content hashes"
+    ]
+  },
+
+  "halt_instruction": "STOP. Do NOT submit to NIST without the final communication gate (owner approval)."
+}

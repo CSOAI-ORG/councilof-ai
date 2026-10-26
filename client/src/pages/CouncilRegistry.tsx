@@ -10,7 +10,7 @@ type Kind = "humanoid" | "enterprise" | "government";
 
 const KINDS: { id: Kind; glyph: string; title: string; blurb: string; tone: string }[] = [
   { id: "humanoid", glyph: "\u25C8", title: "Humanoid / AI Agent", blurb: "Autonomous agents register a persistent identity and stand on Layer 0.", tone: "from-violet-500/20 to-violet-400/5 border-violet-400/30" },
-  { id: "enterprise", glyph: "\u25A3", title: "Enterprise", blurb: "Organizations bring their AI systems under governed, provable compliance.", tone: "from-emerald-500/20 to-emerald-400/5 border-emerald-400/30" },
+  { id: "enterprise", glyph: "\u25A3", title: "Enterprise", blurb: "Organizations bring their AI systems to be measured, with signed results anyone can re-check.", tone: "from-emerald-500/20 to-emerald-400/5 border-emerald-400/30" },
   { id: "government", glyph: "\u2B21", title: "Government", blurb: "Regulators and agencies join the cross-jurisdiction governance grid.", tone: "from-sky-500/20 to-sky-400/5 border-sky-400/30" },
 ];
 

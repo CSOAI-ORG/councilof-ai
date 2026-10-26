@@ -20,7 +20,7 @@ import GSPC_TOOLS from "./gspc-tools.json";
 import STDIO_PACKAGE from "../../mcp/gspc-server/package.json";
 import { sharedToolResult, verifyToolResult } from "./_handlers";
 import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, paidToolResult } from "./_paid";
-import { toolSpan, withTraceHeader } from "./_otel";
+import { withToolSpan, withTraceHeader } from "./_otel";
 import { MEASUREMENT_TOOL_NAMES, measurementToolResult } from "./_measurement";
 import { EVIDENCE_TOOL_NAMES, evidenceToolResult } from "./_evidence";
 import { ROUTE_TOOL_NAMES, routeToolResult } from "./_route";
@@ -62,7 +62,8 @@ export function fullDoorInstall(origin: string): Record<string, string> {
   return {
     default: `claude mcp add --transport http council-of-ai ${origin}/mcp/free`,
     this_door: `claude mcp add --transport http council-of-ai-metered ${origin}/mcp (the ${FREE_TOOL_COUNT} free tools plus ${PAID_TOOL_COUNT} x402 tools)`,
-    stdio_lite: `npx -y csoai-gspc-mcp (stdio-lite ${STDIO_LITE_LINE}: fewer tools, versioned separately; ask it for its tools/list)`,
+    // Every published npm release is marked deprecated on npm (T14, 6 Oct 2026); say so first.
+    stdio_lite: `deprecated on npm; npx -y csoai-gspc-mcp (stdio-lite ${STDIO_LITE_LINE}: fewer tools, versioned separately; ask it for its tools/list)`,
     no_install_at_all: "curl -s https://councilof.ai/api/gspc",
     python: 'pip install "csoai-gspc[verify]" && csoai-gspc check',
   };
@@ -563,10 +564,11 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
     const tool = typeof params.name === "string" && KNOWN_TOOL_NAMES.has(params.name) ? params.name : "not-a-tool";
     recordUsage({ request, env, waitUntil }, "mcp_tool", tool);
   }
-  const traceId =
-    call.method === "tools/call" && typeof params.name === "string"
-      ? toolSpan((env ?? {}) as Record<string, unknown>, params.name)
-      : null;
+  // OTel (opt-in): the span WRAPS the proxied call, so its duration and status are observed
+  // rather than assumed. See functions/mcp/_otel.ts for what the span does and does not
+  // observe (the tool's SSE result is not read at the edge; the span says so).
+  const spanToolName =
+    call.method === "tools/call" && typeof params.name === "string" ? params.name : null;
   try {
     const boundedRequest = new Request(request.url, {
       method: "POST",
@@ -574,14 +576,12 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
       body,
       signal: request.signal,
     });
-    return withTraceHeader(
-      withHeaders(
-        await (door === "free" ? mcpFree : mcp).fetch(
-          boundedRequest,
-        ),
-      ),
-      traceId,
+    const { traceId, response } = await withToolSpan(
+      (env ?? {}) as Record<string, unknown>,
+      spanToolName,
+      () => (door === "free" ? mcpFree : mcp).fetch(boundedRequest),
     );
+    return withTraceHeader(withHeaders(response), traceId);
   } catch {
     return jsonError(
       500,

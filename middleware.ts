@@ -27,7 +27,6 @@ const META: Record<string, { t: string; d: string }> = {
   "/compare": { t: "CSOAI vs Vanta vs Drata vs Credo AI vs OneTrust", d: "Agentic-native, verifiable Ed25519 proof, published-framework crosswalk — and no per-seat rent." },
   "/pricing": { t: "CSOAI pricing — open, accessible AI governance", d: "Governance shouldn't cost more than the AI it governs. Open-source core, free to start." },
   "/report": { t: "Report an AI incident — Global AI Watchdog", d: "File an incident, get a real Ed25519 Layer-0 receipt. Public, verifiable accountability." },
-  "/intel": { t: "The market is nameable — CSOAI Distribution Hive", d: "Governments, regulators, Fortune 500 — under 10,000 public accounts, one living dataset." },
   "/us-ai-regulation": { t: "US federal AI policy", d: "No omnibus law — executive-led, state-led. The current US AI picture, verified." },
   "/south-korea-ai-act": { t: "South Korea Basic AI Act", d: "In force Jan 2026, extraterritorial. Duties for high-impact and generative AI." },
   "/vulnerability-disclosure": { t: "Coordinated vulnerability disclosure — CSOAI", d: "An AI-governance company should be the safest system you run." },

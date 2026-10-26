@@ -33,6 +33,7 @@
  */
 import { onRequestGet as gspcGet } from "../api/gspc";
 import { axisCountLine } from "../api/_boardCounts";
+import { headFromGet } from "../api/_head";
 
 type Ctx = { request: Request; env: unknown; waitUntil: (p: Promise<unknown>) => void };
 export type BoardSource = (ctx: Ctx) => Promise<Response>;
@@ -93,7 +94,9 @@ export const readBoard = async (src: BoardSource, ctx: Ctx): Promise<{ board: Bo
   const rows: Row[] = axes.map((a) => {
     const r = (a ?? {}) as Record<string, unknown>;
     return {
-      axis: String(r.axis ?? "—"),
+      // A row marked public_pages HIDDEN_PENDING_OWNER_GO is counted (the slot exists in the API) but its
+      // name is never painted on a public surface until the owner's go.
+      axis: r.public_pages === "HIDDEN_PENDING_OWNER_GO" ? "held slot (owner-gated)" : String(r.axis ?? "—"),
       family: String(r.family ?? "—"),
       kind: typeof r.kind === "string" ? r.kind : undefined,
       status: typeof r.status === "string" ? r.status : "—",
@@ -261,3 +264,7 @@ export const handle = async (ctx: Ctx, src: BoardSource = inProcess, now: () => 
 
 export const onRequestGet: PagesFunction = async (context) =>
   handle({ request: context.request, env: context.env, waitUntil: (p) => context.waitUntil(p) });
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

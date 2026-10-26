@@ -18,6 +18,8 @@ import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { useGspcBoard, type GspcAxis, type GspcPayload } from "../board/useGspcBoard";
 import { boardRunDates } from "@/lib/boardRunDates";
+import ModelCountKey from "@/components/ModelCountKey";
+import { isOwnerGated } from "@/lib/ownerGated";
 
 export interface SeparationRead {
   comparison: number;
@@ -52,7 +54,7 @@ export interface Tile {
 export function boardTiles(data: GspcPayload | null): Tile[] {
   const axes: GspcAxis[] = Array.isArray(data?.axes) ? (data!.axes as GspcAxis[]) : [];
   return axes
-    .filter((a) => typeof a?.axis === "string" && a.axis)
+    .filter((a) => typeof a?.axis === "string" && a.axis && !isOwnerGated(a))
     .map((a) => {
       const comparison = a.kind === "model-comparison";
       const measured = a.status === "MEASURED";
@@ -67,7 +69,7 @@ export function boardTiles(data: GspcPayload | null): Tile[] {
         bench: typeof a.bench === "string" && a.bench ? a.bench : null,
         group: comparison ? "comparison" : "facts",
         state,
-        n: typeof a.n === "number" && Number.isFinite(a.n) ? a.n : null,
+        n: measured && typeof a.n === "number" && Number.isFinite(a.n) ? a.n : null,
       };
     });
 }
@@ -137,9 +139,21 @@ function TileItem({ t }: { t: Tile }) {
       data-state={t.state}
     >
       <span className="block min-w-0">
-        <span className="block truncate text-[13px] font-bold leading-tight text-foreground" title={t.axis}>
+        {/* DEEP LINK, CONTEXT PRESERVED. Grafana's rule: linked views must carry the
+            reader's context with them — "if a click forces re-picking variables, the
+            dashboard set has a hole". The tile used to be inert: a reader who saw
+            "governance · Tie · n 237" on the front door had no way to reach that axis's
+            own view, and the board's only exit was "Open the full board", which drops
+            the reader back into the whole board and makes them find the row again.
+            The axis name now links straight to that axis, keeping the axis with it. */}
+        <a
+          href={`/gspc/${encodeURIComponent(t.axis)}/`}
+          className="block truncate text-[13px] font-bold leading-tight text-foreground underline-offset-2 hover:underline"
+          title={t.axis}
+          data-axis-link={t.axis}
+        >
           {t.axis}
-        </span>
+        </a>
         {t.bench ? <span className="mt-0.5 block truncate text-xs leading-tight text-muted-foreground">{t.bench}</span> : null}
       </span>
       <span className="flex items-center justify-between gap-2">
@@ -170,8 +184,9 @@ export default function LiveBoardGlance({
   const sep = separationRead(data);
   const count = typeof data?.totals?.public_count === "string" ? data.totals.public_count : null;
   const stamp = boardRunDates(data as Parameters<typeof boardRunDates>[0]);
-  const comparison = tiles.filter((t) => t.group === "comparison");
-  const facts = tiles.filter((t) => t.group === "facts");
+  const comparison = tiles.filter((t) => t.group === "comparison" && t.state !== "UNMEASURED");
+  const facts = tiles.filter((t) => t.state === "FACT_RUN");
+  const unmeasured = tiles.filter((t) => t.state === "UNMEASURED");
 
   return (
     <section
@@ -208,6 +223,11 @@ export default function LiveBoardGlance({
                 <dd className="order-first min-h-[1.2em] font-mono text-2xl font-black tracking-tight text-foreground sm:text-3xl" data-testid="board-public-count">
                   {count ?? "—"}
                 </dd>
+                {count && stamp ? (
+                  <dd className="text-[13px] text-muted-foreground" data-testid="board-public-count-measured-on">
+                    measured on {stamp}
+                  </dd>
+                ) : null}
               </div>
               <div className="flex flex-col">
                 <dt className="text-[13px] font-semibold text-muted-foreground">
@@ -254,7 +274,20 @@ export default function LiveBoardGlance({
                 </ul>
               </>
             ) : null}
+            {unmeasured.length > 0 ? (
+              <>
+                <h3 className="mt-7 text-sm font-bold text-foreground">
+                  Unmeasured slots <span className="font-normal text-muted-foreground">· {unmeasured.length} · no published run yet</span>
+                </h3>
+                <ul className="mt-3 grid list-none grid-cols-2 gap-2 p-0 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7" aria-label="Unmeasured axes awaiting a run">
+                  {unmeasured.map((t) => (
+                    <TileItem key={t.axis} t={t} />
+                  ))}
+                </ul>
+              </>
+            ) : null}
             {tiles.length === 0 ? <div role="status" className="mt-8 min-h-[52rem] sm:min-h-[34rem] lg:min-h-[17rem]" aria-busy="true" aria-label="Loading the board" /> : null}
+            <ModelCountKey className="mt-6 max-w-xl" />
 
             <p className="mt-6 max-w-4xl text-[13px] leading-relaxed text-muted-foreground">
               A tie stays a tie and an untested axis stays untested; neither is rounded up into a ranking, and an

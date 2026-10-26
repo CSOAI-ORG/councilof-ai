@@ -274,8 +274,10 @@ with no domain-separation prefix, where RFC 9162 prefixes `0x00` for leaves and 
 
 in-toto Statement v1 attestations derived from the Ed25519-signed measurement cards in
 `public/interop/mill-cards-signed/` (973 cards; 973 have `id == sha256(canonical(body))`; 973 verify under
-`did:web:csoai.org#board-attestation-1`). One statement per axis, selected by rule: the lexicographically
-smallest card id whose body says `MEASURED`.
+`did:web:csoai.org#board-attestation-1`). One statement per axis, selected by a stable rule: a pick is kept while it stays
+`MEASURED` and current, follows `SUPERSEDED.jsonl` to its replacement when it is superseded, and only
+otherwise falls to the lexicographically smallest eligible (MEASURED, not superseded, not withdrawn)
+card id. A newly landed card never moves a current pick (`selection_rule` in the index).
 
 Each statement uses **our own** predicate type,
 `https://councilof.ai/attestations/measurement/v1` — the same constant

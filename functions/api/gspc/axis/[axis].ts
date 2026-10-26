@@ -7,6 +7,7 @@
 // ?format=cite is passed through, so /api/gspc/axis/:axis?format=cite works too.
 // An unknown axis answers the board's own 404 (with the list of known axes).
 import { onRequestGet as gspcGet } from "../../gspc";
+import { headFromGet } from "../../_head";
 
 export const onRequestGet: PagesFunction = async (context) => {
   const axis = String((context.params as Record<string, unknown>).axis ?? "");
@@ -20,3 +21,7 @@ export const onRequestGet: PagesFunction = async (context) => {
     request: new Request(target.toString(), { method: "GET", headers: context.request.headers }) as typeof context.request,
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

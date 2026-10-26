@@ -53,6 +53,8 @@ import {
 import WRAPPER_ASSET_DOORS from "./_wrapper_asset_doors.json";
 import { POPULATIONS } from "./_population";
 import FREE_TOOLS from "../mcp/gspc-tools.json";
+import PAID_TOOLS from "../mcp/paid-tools.json";
+import { headFromGet } from "./_head";
 
 export const onRequestGet: PagesFunction<{
   X402_PAY_TO?: string;
@@ -101,7 +103,10 @@ export const onRequestGet: PagesFunction<{
         id: "free_door",
         name: "Free board + public-root discovery door",
         resource: u("/api/free-door"),
-        free_preview: u("/api/free-door"),
+        // A preview must answer 200. This pointed at the 402 door itself, so a client doing the obvious
+        // fetch(entry.free_preview) was handed a payment challenge — the opposite of a preview. The door's own
+        // `free_equivalents` already name /api/gspc and /root.json for the same bytes.
+        free_preview: u("/api/gspc"),
         deliverable: FREE_DOOR_DESCRIPTION,
         never: ["a paid artefact", "a grade", "a rank", "a certificate"],
       },
@@ -236,7 +241,7 @@ export const onRequestGet: PagesFunction<{
         free_preview_note: "count, span, root count and the sha256 of the exact batch bytes — no leaves",
         deliverable: RECEIPTS_BATCH_DESCRIPTION,
         recent_free: [u("/root.json"), u("/cards/<sha16>.json"), u("/api/proof?sha=<64-hex>"), u("/receipts/root-history.json")],
-        honesty: "no settlement-receipt stream exists (/api/receipts/latest is UNPUBLISHED); these are measurement leaves, not payment receipts",
+        honesty: "these are historical measurement leaves, not payment receipts; /api/receipts/latest reports aggregate receipt-store state when available; aggregate counts do not verify a particular payment, delivery or buyer acceptance",
         never: ["a conclusion about any leaf", "a grade", "a certificate", "a settlement-receipt claim"],
       },
       // Self-serve RAS doors — fresh computation. A computation that has not run cannot be previewed, so
@@ -305,12 +310,14 @@ export const onRequestGet: PagesFunction<{
     mcp: {
       url: u("/mcp"),
       free_tools: FREE_TOOLS.tools.map((t) => t.name),
-      paid_tools: [
-        { name: "commission_card", route: u("/api/request-attestation"), sells: "issuance" },
-        { name: "art50_marking_evidence", route: u("/api/art50/marking-evidence"), sells: "issuance", note: "deployed; the tool still answers NOT_DEPLOYED on any origin where the route 404s" },
-        { name: "rwa_evidence", route: u("/api/rwa/evidence"), sells: "issuance", note: "deployed; the tool still answers NOT_DEPLOYED on any origin where the route 404s" },
-        { name: "receipts_batch", route: u("/api/receipts/batch"), sells: "assembly" },
-      ],
+      // Derived from the file /mcp serves (T14, 6 Oct 2026). The typed list here had four tools while
+      // tools/list served five (evidence_bundle was missing), so the catalog and the door disagreed.
+      paid_tools: (PAID_TOOLS.tools as { name: string; csoai: { route: string; sells: string; note?: string } }[]).map((t) => ({
+        name: t.name,
+        route: u(t.csoai.route),
+        sells: t.csoai.sells,
+        ...(t.csoai.note ? { note: t.csoai.note } : {}),
+      })),
       // The last clause used to read "stdio (npm csoai-gspc-mcp) stays free-only", echoing a
       // REASON given in functions/mcp/paid-tools.json that is simply wrong: "stdio has no
       // payment header". Payment does not travel as a transport header at all — x_payment is a
@@ -336,3 +343,7 @@ export const onRequestGet: PagesFunction<{
     headers: { "content-type": "application/json; charset=utf-8", "cache-control": "public, max-age=300", "access-control-allow-origin": "*" },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

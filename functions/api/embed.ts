@@ -2,6 +2,7 @@
  * GET /api/embed — machine contract for the white-label kit.
  * Counts are not typed here. The badge and embed.js read GET /api/gspc.
  */
+import { headFromGet } from "./_head";
 export const onRequestGet: PagesFunction = async () => {
   const body = {
     schema: "csoai.embed-kit/1",
@@ -38,3 +39,7 @@ export const onRequestGet: PagesFunction = async () => {
     },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

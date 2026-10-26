@@ -8,7 +8,6 @@ const LINKS = [
   { href: "/gspc-arena", label: "◈ Council Space", alt: "/simulate", view: "" },
   { href: "/gspc-arena?view=arena", label: "🏟 Arena", view: "arena" },
   { href: "/gspc-arena?view=towns", label: "Towns · review", view: "towns" },
-  { href: "/intel", label: "⬡ Distribution Hive", view: null },
   { href: "/try", label: "▶ Council demo", view: null },
 ];
 

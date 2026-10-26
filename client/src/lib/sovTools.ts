@@ -11,7 +11,7 @@
 //
 // listTools() now distinguishes "no tools" from "could not ask", so the caller can say which.
 
-import { mcpRpc, mcpRpcEndpoints } from "./mcpHttp";
+import { mcpRpc, mcpRpcEndpoints, type McpDoor } from "./mcpHttp";
 
 export { mcpRpcEndpoints };
 
@@ -38,12 +38,16 @@ export type ToolListing =
   | { state: "ok"; tools: SovTool[] }
   | { state: "unreachable"; reason: string };
 
-export async function listTools(): Promise<ToolListing> {
+/**
+ * tools/list on one door. The default is /mcp (the free tools plus the paid ones); "/mcp/free" is
+ * the door /connect installs, so a count shown next to an install line is read from that door.
+ */
+export async function listTools(door: McpDoor = "/mcp"): Promise<ToolListing> {
   try {
     const d = await mcpRpc(
       "tools/list",
       {},
-      { allowPublicCatalogFallback: true },
+      { allowPublicCatalogFallback: true, door },
     );
     if (d && d.error) return { state: "unreachable", reason: String(d.error.message || "the server returned an error") };
     const tools = d && d.result && d.result.tools;

@@ -1,8 +1,13 @@
-# CSOAI 30-Day Introductory Offer
+# CSOAI Introductory Offer (launched 2026-09-11 for 30 days; extended to 2027-01-11)
 
 **Generated:** 2026-09-12
-**Valid through:** 2026-10-12
-**Rule:** Existing-data x402 offer is 0.01 USDC through 11 October 2026. Free door remains zero.
+**Valid until:** 2027-01-11T00:00:00Z (the end of 2027-01-10 UTC)
+**Extended:** 7 Oct 2026, owner ruling #16 (applied by agent under the owner's delegation). The end was
+2026-10-11T00:00:00Z. Reason: 0-1 independent payers so far; letting the standard amounts apply would raise
+the Art 50 door about 2,500-fold and the evidence bundle about 25,000-fold before the paid route had been
+proven with a single stranger. No amount changed. Source of truth: `X402_LAUNCH_CAMPAIGN` in
+`functions/api/_x402.ts`; every live 402 carries it as `csoai_pricing.ends_at`.
+**Rule:** Existing-data x402 offer is 0.01 USDC until 2027-01-11T00:00:00Z. Free door remains zero.
 
 ---
 
@@ -11,7 +16,7 @@
 | Tier | Resource | Price | Duration | Attribution |
 |------|----------|-------|----------|-------------|
 | Free | Board, verify, root, cards, llms.txt | $0 | Forever | OFFER-FREE |
-| Intro | Existing evidence (request_attestation) | 0.01 USDC | Through 2026-10-11 | OFFER-004 |
+| Intro | Existing evidence (request_attestation) | 0.01 USDC | Until 2027-01-11T00:00:00Z | OFFER-004 |
 | Standard | New evidence (commission_card) | Per challenge | Ongoing | OFFER-004 |
 | Bundle | Evidence bundle (evidence_bundle) | Per challenge | Ongoing | OFFER-005 |
 | Feed | Correction/data feed | Per challenge | Ongoing | OFFER-001/006 |
@@ -24,7 +29,7 @@
 - **Network:** Base mainnet (eip155:8453)
 - **Asset:** USDC (0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913)
 - **PayTo:** 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31
-- **Valid through:** 2026-10-11
+- **Valid until:** 2027-01-11T00:00:00Z (was 2026-10-11T00:00:00Z; extended 7 Oct 2026)
 - **What you get:** A signed card-v0 commission receipt for one named subject, plus every already-signed measurement card on file for it.
 - **What you don't get:** A grade, certification, compliance determination, or safety rating.
 

@@ -41,3 +41,25 @@ test("the derived file is current, self-consistent, and publishes no codename", 
   const ids = new Set(doc.models.map((m) => m.id));
   assert.equal(ids.size, doc.models.length, "a model is listed twice");
 });
+
+test("first_signed_card names a card in the signed index for that model, and never for a withheld name", () => {
+  const doc = derive();
+  const index = JSON.parse(readFileSync(join(ROOT, "public/signed/card_index.json"), "utf8"));
+  const inIndex = new Set((index.cards ?? []).map((c) => c.card));
+  let linked = 0;
+  for (const m of doc.models) {
+    if (!m.name_published) {
+      assert.equal(m.first_signed_card, null, `withheld row ${m.id} must carry no card id`);
+      continue;
+    }
+    if (m.first_signed_card === null) {
+      assert.ok(!m.sources.includes("signed-card-index"), `${m.id} has index cards but no first_signed_card`);
+      continue;
+    }
+    linked += 1;
+    assert.ok(inIndex.has(m.first_signed_card), `${m.id}: ${m.first_signed_card} is not in the signed card index`);
+    const card = JSON.parse(readFileSync(join(ROOT, "public/signed/cards", `${m.first_signed_card}.json`), "utf8"));
+    assert.equal(normalise(card.body.model), m.id, `${m.first_signed_card} is not a card for ${m.id}`);
+  }
+  assert.ok(linked > 0, "at least one model links to its first signed card");
+});

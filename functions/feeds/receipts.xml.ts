@@ -14,6 +14,7 @@
  * real transaction, and it is not a buyer. Each entry says which it is, in the title, so a reader
  * skimming the feed cannot mistake our own money for demand.
  */
+import { headFromGet } from "../api/_head";
 interface Env {
   REVENUE_KV?: KVNamespace;
 }
@@ -110,3 +111,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
     },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

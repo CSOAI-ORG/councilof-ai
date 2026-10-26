@@ -1,5 +1,5 @@
 /**
- * HomeWaysIn — Ask, Connect, Verify, and a line for each of the four readers who arrive here.
+ * HomeWaysIn — Ask, Connect, Verify, and a line for each of the five readers who arrive here.
  *
  * Moved out of the hero on 30 Sep 2026 so the first screen says one thing. Each door is a real,
  * working surface today: the chat on /dashboard, the connector hub at /connect/ (free MCP door,
@@ -35,9 +35,15 @@ export const WAYS_IN: { testid: string; href: string; verb: string; title: strin
 export const READERS: { who: string; line: string; href: string; cta: string; external?: boolean }[] = [
   {
     who: "Buying or deploying AI",
-    line: "See how the models you are choosing between did, axis by axis, on the same frozen questions, each result signed.",
+    line: "Compare dated results on the same frozen questions. Each record shows its attestation state; a tie does not establish a winner.",
     href: "/board/models",
     cta: "Models, axis by axis",
+  },
+  {
+    who: "Publishing AI-generated content",
+    line: "Check an image, video, audio file or PDF for a machine-readable mark. Open the evidence and its limits in the free preview.",
+    href: "/dashboard/?tab=art50",
+    cta: "Check an output for a mark",
   },
   {
     who: "Building with AI",
@@ -47,7 +53,7 @@ export const READERS: { who: string; line: string; href: string; cta: string; ex
   },
   {
     who: "Regulating or auditing",
-    line: "Every result names its test, its date and its signature, and what we could not measure is listed as such.",
+    line: "Inspect the test, measurement date, source and attestation state behind a result. Gaps and corrections stay visible.",
     href: "/regulators",
     cta: "For regulators",
   },
@@ -94,7 +100,7 @@ export default function HomeWaysIn() {
         </ul>
 
         <h3 className="mt-14 text-lg font-black tracking-tight text-foreground">Who it is for</h3>
-        <ul className="mt-4 grid list-none gap-x-8 gap-y-6 p-0 sm:grid-cols-2 lg:grid-cols-4" data-testid="home-readers">
+        <ul className="mt-4 grid list-none gap-x-8 gap-y-6 p-0 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5" data-testid="home-readers">
           {READERS.map((r) => (
             <li key={r.who} className="border-t border-border pt-4">
               <p className="text-[15px] font-bold text-foreground">{r.who}</p>

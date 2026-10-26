@@ -1,7 +1,24 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { axisRunEvidence } from "./runEvidence";
+import {
+  leaderCardState,
+  measuredOn,
+  mdeSentence,
+  peritemSha,
+  separationP,
+  separationSentence,
+} from "./axisMethod";
 import { accuracyCell } from "@/lib/axisCells";
 export { axisRunEvidence } from "./runEvidence";
+export {
+  axisMde,
+  leaderCardState,
+  measuredOn,
+  mdeSentence,
+  peritemSha,
+  separationP,
+  separationSentence,
+} from "./axisMethod";
 
 /**
  * GspcTerminal — the interactive GSPC board, the one dashboard centrepiece.
@@ -19,7 +36,9 @@ export { axisRunEvidence } from "./runEvidence";
 const GSPC_URL = "/api/gspc";
 const ELO_URL = "/arena/elo_reference.json";
 const CARD_INDEX_URL = "/signed/card_index.json";
-const NPX_LINE = "npx -y csoai-gspc-mcp";
+// The free MCP door, not the npm package: every published npm release is marked deprecated on npm and
+// carries fewer tools (T14, 6 Oct 2026).
+const MCP_LINE = "MCP (free, no key): https://councilof.ai/mcp/free";
 
 /** Board axis id → per-axis Elo key. Only these board axes carry a per-model ranking. */
 const AXIS_TO_ELO: Record<string, string> = {
@@ -56,6 +75,8 @@ type Axis = {
   leader?: string;
   separation?: string;
   separation_p?: number;
+  separation_sentence?: string;
+  separation_method?: string;
   interval?: number[];
   fleet_mean?: number;
   status?: string;
@@ -63,9 +84,17 @@ type Axis = {
   dataset_url?: string;
   run_attestation?: "ED25519_SIGNED" | "CONTENT_ADDRESSED_UNSIGNED";
   evidence_url?: string;
+  /** The axis's minimum detectable effect — the smallest lead its own test could see. */
+  mde?: unknown;
+  /** When the run behind the axis was made, at the precision the source published. */
+  measurement_time?: unknown;
+  /** Whether the leader's signed card backs the number shown on the row. */
+  leader_card_state?: string;
+  /** The per-item rows file the number was computed from. */
+  peritem_file_sha256?: string;
 };
 
-type Totals = { public_count?: string; count_grammar?: string; axes?: number; measured_axes?: number };
+type Totals = { public_count?: string; count_grammar?: string; axes?: number; measured_axes?: number; separation_public_count?: string };
 type Board = { axes?: Axis[]; totals?: Totals };
 
 type EloRow = { model: string; elo: number; winrate: number; ci?: number[]; games: number; axis?: string };
@@ -145,9 +174,19 @@ const isMeasuredModelAxis = (a: Axis): boolean =>
 const isFacts = (a: Axis): boolean =>
   a.status === "MEASURED" && a.kind !== "model-comparison";
 
+/** One compound label for every row: the run state and, on a model-comparison axis, the board's
+ *  separation word — MEASURED · TIE, MEASURED · UNTESTED. A measured row with no public leader
+ *  score still carries its separation (it was keyed on a numeric accuracy before, so those rows
+ *  read a bare "MEASURED" and hid their UNTESTED). Fact rows have no separation test. */
+export function statusLabel(a: Pick<Axis, "status" | "kind" | "separation">): string {
+  if (a.status === "MEASURED" && a.kind === "model-comparison") return `MEASURED · ${a.separation ?? "UNTESTED"}`;
+  if (a.status === "MEASURED") return "MEASURED · facts";
+  return a.status || "UNMEASURED";
+}
+
 function StatusChip({ a }: { a: Axis }) {
   const sep = a.separation;
-  if (isMeasuredModelAxis(a)) {
+  if (a.status === "MEASURED" && a.kind === "model-comparison") {
     const tone =
       sep === "SEPARATED"
         ? "bg-emerald-100 text-emerald-800"
@@ -155,21 +194,21 @@ function StatusChip({ a }: { a: Axis }) {
           ? "bg-slate-100 text-slate-600"
           : "bg-amber-100 text-amber-800";
     return (
-      <span className={`rounded px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide ${tone}`}>
-        {sep === "SEPARATED" ? "SEPARATED" : sep === "TIE" ? "TIE" : sep || "MEASURED"}
+      <span className={`whitespace-nowrap rounded px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide ${tone}`}>
+        {statusLabel(a)}
       </span>
     );
   }
   if (isFacts(a)) {
     return (
-      <span className="rounded bg-sky-100 px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide text-sky-800">
-        FACTS
+      <span className="whitespace-nowrap rounded bg-sky-100 px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide text-sky-800">
+        {statusLabel(a)}
       </span>
     );
   }
   return (
     <span className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide text-slate-700">
-      {a.status || "UNMEASURED"}
+      {statusLabel(a)}
     </span>
   );
 }
@@ -260,6 +299,87 @@ function ModelRankings({
   );
 }
 
+/**
+ * MethodFacts — how this row's number was made, sitting beside the number.
+ *
+ * MINED PATTERNS, ADOPTED. Grafana's dashboard rules warn that an aggregate with no
+ * comparison signal is a "service-engine-soon" light: it tells a reader the value and
+ * nothing about why it should be believed. The comparison signal for a measured axis is
+ * its own resolution — the smallest lead the axis's test could have detected — and its
+ * reliability — the separation p and the card state behind the figure. OpenTelemetry's
+ * GenAI conventions say the thing that carries a figure carries its own attributes; here
+ * the method metadata travels with the row instead of living on a page the reader must
+ * navigate to.
+ *
+ * EVERY FIELD IS READ OFF THE PAYLOAD. Absent is a labelled absence. A missing MDE is
+ * "not published", never 0; a missing card state is silence, never a clean bill.
+ */
+function MethodFacts({ a }: { a: Axis }) {
+  const resolution = mdeSentence(a);
+  const separation = separationSentence(a);
+  const p = separationP(a);
+  const when = measuredOn(a);
+  const card = leaderCardState(a);
+  const sha = peritemSha(a);
+
+  if (!resolution && !separation && p === null && !when && !card && !sha) return null;
+
+  return (
+    <div className="mb-3 rounded-lg border border-slate-200 bg-white px-3 py-2.5" data-testid="axis-method">
+      <p className="font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-slate-500">
+        How this number was made
+      </p>
+      <dl className="mt-1.5 grid gap-x-6 gap-y-1.5 text-[11px] sm:grid-cols-2">
+        {resolution ? (
+          <div>
+            <dt className="font-mono uppercase tracking-wide text-slate-500">Resolution</dt>
+            <dd className="leading-relaxed text-slate-700">{resolution}</dd>
+          </div>
+        ) : null}
+        {separation || p !== null ? (
+          <div>
+            <dt className="font-mono uppercase tracking-wide text-slate-500">Separation</dt>
+            <dd className="leading-relaxed text-slate-700">
+              {separation ?? (
+                <>
+                  p<span className="font-mono tabular-nums">={p}</span> — the board published no sentence for this axis.
+                </>
+              )}
+            </dd>
+          </div>
+        ) : null}
+        {when ? (
+          <div>
+            <dt className="font-mono uppercase tracking-wide text-slate-500">Measured on</dt>
+            <dd className="leading-relaxed text-slate-700">
+              <span className="font-mono tabular-nums">{when.observedOn}</span>
+              {when.precision ? <span className="text-slate-600"> · {when.precision} precision</span> : null}
+              {when.note ? <span className="block text-slate-500">{when.note}</span> : null}
+            </dd>
+          </div>
+        ) : null}
+        {card ? (
+          <div>
+            <dt className="font-mono uppercase tracking-wide text-slate-500">Leader card</dt>
+            <dd className="leading-relaxed text-slate-700">{card}.</dd>
+          </div>
+        ) : null}
+        {sha ? (
+          <div>
+            <dt className="font-mono uppercase tracking-wide text-slate-500">Per-item rows</dt>
+            <dd className="leading-relaxed text-slate-700">
+              <span className="font-mono text-[10px]" title={sha}>
+                {sha.slice(0, 16)}…
+              </span>
+              <span className="block text-slate-500">the rows file this number was computed from</span>
+            </dd>
+          </div>
+        ) : null}
+      </dl>
+    </div>
+  );
+}
+
 export function AxisDrilldown({
   a,
   elo,
@@ -316,6 +436,9 @@ export function AxisDrilldown({
           </div>
         )}
       </div>
+
+      {/* The number's own method metadata — beside the number, not on another page. */}
+      <MethodFacts a={a} />
 
       {a.note && <p className="mb-3 text-[11px] leading-relaxed text-slate-600">{a.note}</p>}
 
@@ -377,6 +500,40 @@ export function AxisDrilldown({
   );
 }
 
+/**
+ * TerminalHeadLines — the terminal's fold.
+ *
+ * Grafana's rule: the first thing a reader meets must answer "is anything separated?".
+ * "33 axes · 23 measured" alone is the aggregate-without-a-comparison-signal failure —
+ * a run behind a slot is not a measured advantage — so the separation line sits directly
+ * under the count, quoted verbatim from totals. Never derived here, never typed.
+ */
+export function TerminalHeadLines({
+  state,
+  totals,
+}: {
+  state: "loading" | "ok" | "error";
+  totals?: Totals;
+}) {
+  return (
+    <>
+      <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-400">
+        GSPC terminal · one board
+      </p>
+      <p className="mt-1 font-mono text-[12px] text-slate-300">
+        {state === "loading" && "Reading GET /api/gspc…"}
+        {state === "error" && "GET /api/gspc UNREACHABLE — the board is not shown rather than shown stale."}
+        {state === "ok" && (totals?.public_count || "Live from GET /api/gspc")}
+      </p>
+      {state === "ok" && totals?.separation_public_count ? (
+        <p className="mt-1 font-mono text-[11px] text-slate-400" data-testid="terminal-separation-line">
+          {totals.separation_public_count}
+        </p>
+      ) : null}
+    </>
+  );
+}
+
 export default function GspcTerminal({ className }: { className?: string }) {
   const board = useJson<Board>(GSPC_URL);
   const elo = useJson<Elo>(ELO_URL);
@@ -410,19 +567,12 @@ export default function GspcTerminal({ className }: { className?: string }) {
       {/* Terminal header */}
       <div className="flex flex-wrap items-start justify-between gap-3 border-b border-slate-200 bg-slate-900 px-4 py-3 text-white rounded-t-2xl">
         <div>
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-400">
-            GSPC terminal · one board
-          </p>
-          <p className="mt-1 font-mono text-[12px] text-slate-300">
-            {board.state === "loading" && "Reading GET /api/gspc…"}
-            {board.state === "error" && "GET /api/gspc UNREACHABLE — the board is not shown rather than shown stale."}
-            {board.state === "ok" && (totals?.public_count || "Live from GET /api/gspc")}
-          </p>
+          <TerminalHeadLines state={board.state} totals={totals} />
         </div>
         <div className="flex flex-col items-end gap-1.5">
           {/* Dynamic, live badge — the count is the endpoint's, never typed */}
           <img src="/api/badge" alt="GSPC live badge" height={20} className="h-5" />
-          <code className="rounded bg-black/40 px-2 py-1 font-mono text-[10px] text-emerald-300">{NPX_LINE}</code>
+          <code className="rounded bg-black/40 px-2 py-1 font-mono text-[10px] text-emerald-300">{MCP_LINE}</code>
         </div>
       </div>
 
@@ -459,7 +609,7 @@ export default function GspcTerminal({ className }: { className?: string }) {
                 <th className="hidden px-2 py-2 font-medium sm:table-cell">Bench</th>
                 <th className="px-2 py-2 text-right font-medium">Figure</th>
                 <th className="px-2 py-2 text-right font-medium">n</th>
-                <th className="px-2 py-2 font-medium">Status</th>
+                <th className="px-2 py-2 font-medium">Status · separation</th>
                 <th className="py-2 pl-1 pr-3 text-right font-medium sm:px-4" aria-hidden />
               </tr>
             </thead>

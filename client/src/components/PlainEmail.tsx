@@ -7,7 +7,10 @@
  * <!--/email_off--> alone, so the link is emitted inside those comments. React cannot render an
  * HTML comment as JSX, so the markup is set as inner HTML; the address is a constant, never input.
  */
-export const CONTACT_MAILBOX = "nicholas@csoai.org";
+import { CONTACT_MAILBOX } from "@/lib/buying";
+
+// One mailbox constant for the whole client (lib/buying.ts); re-exported for existing importers.
+export { CONTACT_MAILBOX };
 
 export default function PlainEmail({ className, subject }: { className?: string; subject?: string }) {
   const href = `mailto:${CONTACT_MAILBOX}${subject ? `?subject=${encodeURIComponent(subject)}` : ""}`;

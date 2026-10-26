@@ -2,7 +2,8 @@
  * HomeHero — the first screen (rebuilt 30 Sep 2026 on the owner's review of the live page).
  *
  * WHAT IT DOES NOW: says what the business is in one plain sentence, with one image, and offers
- * two ways forward (see the live board, check a record). That is all.
+ * ONE primary way forward (Live board, the /board route) and Verify as the outlined secondary
+ * (surface inspection, 12 Oct 2026). The agent door below is a text link, not a button.
  *
  * WHAT LEFT IT, AND WHERE IT WENT. The owner found the first screen confusing and repetitive:
  *  - the "Live now" figure block moved into LiveBoardGlance, directly below, so the board and its
@@ -68,28 +69,31 @@ export default function HomeHero() {
           We measure how AI systems behave, and publish the evidence so you can check it yourself.
         </h1>
         <p className="mt-5 max-w-2xl text-base leading-relaxed text-emerald-50/90 sm:text-lg" data-testid="hero-what-we-do">
-          We test AI models, agents and the endpoints they call on frozen, published questions, graded by fixed rules,
-          never by another AI. Every result is signed, free to check, re-checked on a schedule and corrected in public.
+          We test AI models, agents and the endpoints they call on published tasks, graded by fixed rules,
+          never by another AI. The board distinguishes signed cards, unsigned evidence and untested work.
+          Verification is free, and corrections stay public.
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-          <a
-            href="#board"
+          <Link
+            href="/board"
             data-testid="hero-cta-board"
+            data-cta="primary"
             className="inline-flex min-h-12 items-center justify-center rounded-xl bg-emerald-400 px-6 text-base font-black text-[#03110b] transition hover:bg-emerald-300"
           >
-            See the live board ↓
-          </a>
+            Live board
+          </Link>
           <Link
             href="/gspc-verify"
             data-testid="hero-cta-check"
+            data-cta="secondary"
             className="inline-flex min-h-12 items-center justify-center rounded-xl border border-emerald-300/50 px-6 text-base font-bold text-emerald-50 transition hover:border-emerald-300 hover:bg-emerald-400/10"
           >
-            Check a record yourself
+            Verify a record
           </Link>
         </div>
         <p className="mt-5">
           <a
-            href="/how-we-work#machine-surface"
+            href="/how-we-work/#machine-surface"
             data-testid="hero-cta-agents"
             className="inline-flex min-h-11 items-center font-mono text-[13px] font-semibold text-emerald-300 underline decoration-dotted underline-offset-4 hover:text-emerald-200"
           >

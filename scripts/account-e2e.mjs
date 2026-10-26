@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 // account-e2e.mjs — per-account EXPERIENCE verification (M2 lane; complements M4's data recon).
 // For each account, walk the LIVE platform AS that end-user and score whether we serve the
-// demographic: region-localized homepage, tailored /brief, /crosswalk pre-framed to their
-// frameworks, Sovereign answering their region+sector question, classifier. Flags gaps to polish.
+// demographic: region-localized homepage, /crosswalk pre-framed to their frameworks, Sovereign
+// answering their region+sector question, classifier. Flags gaps to polish. (The tailored /brief
+// step went with the page: /brief was withdrawn on 6 Oct 2026 as internal sales material and
+// 308s to the home page, so walking it would only score a redirect.)
 //
 // Reads accounts read-only from client/src/data/ecosystem.ts (M4's data — never edited here).
 // Sample: curated default spanning regions×sectors×plays, or ACCOUNTS=id1,id2 to target.
@@ -64,16 +66,7 @@ for (const a of sample) {
     pass.regionHome = /detected ·/i.test(ht) && (REGIME[a.region] ? REGIME[a.region].test(ht) : true);
     if (!pass.regionHome) gaps.push("homepage not localized to " + a.region + " regime");
     await hp.close();
-    // 2. tailored brief
-    const bp = await ctx.newPage(); await bp.goto(SITE + "/brief?id=" + a.id, { waitUntil: "domcontentloaded" }); await bp.waitForTimeout(2200);
-    const bd = await bp.evaluate(() => ({ txt: document.body.innerText, globe: !!document.querySelector('iframe[src^="/globe3d.html?region="]') }));
-    const bt = bd.txt;
-    pass.brief = bt.includes(a.name) && !!(a.frameworks || []).find((f) => bt.includes(f));
-    if (!pass.brief) gaps.push("brief missing name or frameworks");
-    // brief DEPTH: play + 'lead with' USPs (or alignment) + region-flown globe
-    pass.briefDepth = /\b(align|integrate|displace)\b/i.test(bt) && /lead the demo with|Alignment/i.test(bt) && bd.globe;
-    if (!pass.briefDepth) gaps.push("brief depth (play/USPs/region-globe) incomplete");
-    await bp.close();
+    // 2. tailored brief: RETIRED with /brief (withdrawn 6 Oct 2026; see the header).
     // 3. crosswalk pre-framed — enterprise-adoption feature; regulators author frameworks, they don't crosswalk to them, so only assert it for adopters
     if (a.type !== "regulator" && a.type !== "government") {
       const cp = await ctx.newPage(); await cp.goto(SITE + "/crosswalk?fw=" + encodeURIComponent((a.frameworks || []).join(",")), { waitUntil: "domcontentloaded" }); await cp.waitForTimeout(2000);
@@ -102,7 +95,7 @@ await b.close();
 const allGaps = {};
 reports.forEach((r) => r.gaps.forEach((g) => { const k = g.replace(/ [A-Z].*$| for .*$| to .*$/, ""); allGaps[k] = (allGaps[k] || 0) + 1; }));
 let md = `# Account Experience Report — ${new Date().toISOString().slice(0, 10)}\n\n`;
-md += `> Per-account experience walk (region homepage · brief · crosswalk · Sovereign). ${reports.length} accounts sampled. M2 lane — polish backlog.\n\n`;
+md += `> Per-account experience walk (region homepage · crosswalk · Sovereign). ${reports.length} accounts sampled. M2 lane — polish backlog.\n\n`;
 md += `## Scores\n| Account | Region | Sector | Play | Score | Gaps |\n|---|---|---|---|---|---|\n`;
 reports.forEach((r) => { md += `| ${r.name} | ${r.region} | ${r.sector} | ${r.play} | ${r.score}/${r.of} | ${r.gaps.join("; ") || "—"} |\n`; });
 md += `\n## Gap themes (polish backlog)\n` + (Object.keys(allGaps).length ? Object.entries(allGaps).sort((a, b) => b[1] - a[1]).map(([g, n]) => `- (${n}×) ${g}`).join("\n") : "- none — all sampled demographics served") + "\n";

@@ -1,5 +1,12 @@
 import { Helmet } from "react-helmet-async";
 import { Link } from "wouter";
+import GovernanceTerminal from "@/components/GovernanceTerminal";
+import HealthInventory from "@/components/HealthInventory";
+import PermissionlessRevenue from "@/components/PermissionlessRevenue";
+import PlaybookAudit from "@/components/PlaybookAudit";
+import SignedAgentTravel from "@/components/SignedAgentTravel";
+import SovExternalAudit from "@/components/SovExternalAudit";
+import TwoSpeed from "@/components/TwoSpeed";
 
 /**
  * Weekly scorecard template (EPIC PLAYS Part 5). No typed yield numbers.
@@ -61,6 +68,21 @@ export default function YieldInternal() {
             /status
           </Link>
         </p>
+      </section>
+
+      {/* Operator notes, moved off /products and /tools on 6 Oct 2026. They carry agent
+          instructions and strategy notes, which are not public copy; this page is noindex. */}
+      <section className="mx-auto mt-16 max-w-5xl" aria-labelledby="operator-notes-h" data-testid="operator-notes">
+        <h2 id="operator-notes-h" className="text-2xl font-black">Operator notes (internal)</h2>
+        <HealthInventory tone="dark" />
+        <GovernanceTerminal tone="dark" />
+        <PermissionlessRevenue tone="dark" />
+        <SovExternalAudit tone="dark" />
+        <PlaybookAudit tone="dark" />
+        <div className="mt-12 rounded-2xl bg-white p-6 text-slate-900">
+          <SignedAgentTravel />
+          <TwoSpeed />
+        </div>
       </section>
     </section>
   );

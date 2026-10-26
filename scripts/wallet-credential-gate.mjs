@@ -11,6 +11,15 @@ const CREDENTIAL_PATTERNS = [
     name: "BURNER_KEY assignment",
     regex: /\bBURNER_KEY\s*=\s*["']?0x[0-9a-f]{64}\b/giu,
   },
+  // The two patterns above need a quoted field name or the literal BURNER_KEY, so a plain code
+  // assignment slipped past: `const PRIVATE_KEY = '0x…'` sat in tui4-x402-test/sign-payment.cjs from
+  // 27ac2d551 (2026-09-12) to #2879 (2026-10-07), and that wallet was swept on 2026-09-22. This covers
+  // any identifier ending in private/wallet/burner key, an optional type annotation, `=` or `:`, and
+  // a quoted or bare (.env) 64-hex value. `key` must end the identifier, so private_key_sha256 passes.
+  {
+    name: "EVM private-key assignment",
+    regex: /\b\w*(?:private|wallet|burner)[_-]?key\b(?:\s*:\s*[\w.<>\[\]|]+)?\s*[:=]\s*["'`]?0x[0-9a-f]{64}\b/giu,
+  },
 ];
 
 function findingsFor(text) {
@@ -27,11 +36,20 @@ function selftest() {
   const unsafe = [
     `{"private_key":"${credential}"}`,
     `BURNER_KEY='${credential}'`,
+    `const PRIVATE_KEY = '${credential}';`,
+    `const PRIVATE_KEY: string = "${credential}";`,
+    `privateKey: \`${credential}\`,`,
+    `SIGNER_PRIVATE_KEY=${credential}`,
+    `self.wallet_key = "${credential}"`,
   ];
   const safe = [
     `{"private_key":null}`,
     `BURNER_KEY=0x...`,
     `address=0x${"b".repeat(40)}`,
+    `const PRIVATE_KEY = (process.env.TUI4_BURNER_KEY || '').trim();`,
+    `private_key_sha256 = "${credential}"`,
+    `privateKey: "0x" + "a".repeat(64),`,
+    `PRIVATE_KEY = "0x${"c".repeat(130)}"`,
   ];
   if (unsafe.some((value) => findingsFor(value).length === 0)) return 1;
   if (safe.some((value) => findingsFor(value).length !== 0)) return 1;

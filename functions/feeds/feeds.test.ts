@@ -4,19 +4,36 @@ import { entries as cards } from "./cards.xml";
 import { entries as roots } from "./roots.xml";
 import { rss, atom, esc } from "./_xml";
 
+/** A field line whose whole value is the word undefined: what an unread optional field prints. */
+const FIELD_UNDEFINED = /(?:^|\n)(?:WHAT WAS WRONG|HOW IT WAS CAUGHT|FIX|WHAT CHANGED|STATUS|STILL OPEN): (?:undefined|null)?\s*(?:\n|$)/;
+
 describe("feeds are DERIVED, not typed", () => {
   it("corrections come from the ledger and are newest-first by the entry's own date", () => {
     const e = corrections();
     expect(e.length).toBeGreaterThan(20);
     const dates = e.map((x) => x.iso);
     expect([...dates].sort().reverse()).toEqual(dates);
-    expect(e[0].id).toMatch(/^https:\/\/councilof\.ai\/api\/corrections#C-/);
-    // every entry carries the three things a correction IS
+    // Each item links the readable page, anchored to the entry; /corrections/#<id> opens it.
+    expect(e[0].id).toMatch(/^https:\/\/councilof\.ai\/corrections\/#C-/);
+    expect(e[0].link).toBe(e[0].id);
+    // every entry carries the three things a correction IS, under the label its fields earn
     for (const x of e) {
       expect(x.body).toContain("WHAT WAS WRONG:");
       expect(x.body).toContain("HOW IT WAS CAUGHT:");
-      expect(x.body).toContain("FIX:");
+      expect(x.body).toMatch(/(?:^|\n)(?:FIX|WHAT CHANGED): \S/);
+      expect(x.body).toContain("STATUS:");
+      // T12 (2026-10-06): the 34 newest entries printed "FIX: undefined". The guard is on the
+      // field VALUE: ledger prose may legitimately quote the word (C-2026-0920-01 quotes a
+      // "leader: undefined" JavaScript bug), so the test reads field lines, not substrings.
+      expect(x.body).not.toMatch(FIELD_UNDEFINED);
     }
+  });
+
+  it("no rendered corrections feed (RSS or Atom) prints an undefined field", () => {
+    expect(atomBody()).not.toMatch(FIELD_UNDEFINED);
+    expect(rss("t", "https://councilof.ai/feeds/corrections.xml", "d", corrections())).not.toMatch(FIELD_UNDEFINED);
+    // and the guard can go red
+    expect("WHAT WAS WRONG: x\n\nFIX: undefined\n\nSTATUS: y").toMatch(FIELD_UNDEFINED);
   });
 
   it("cards feed is a window on the newest signed cards, each individually verifiable", () => {

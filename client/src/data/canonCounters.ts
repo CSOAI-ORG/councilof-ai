@@ -52,21 +52,21 @@ export const CANON = {
   /** Frozen counter: 126 AI Act + 99 GDPR + 71 CRA + 64 DORA + 46 NIS2 + 11 CSRD. */
   FROZEN_PROVISIONS: {
     value: 417,
-    source: "public/interop/regulatory-inventory.json · frozen_provisions",
+    source: "public/interop/regulatory-inventory-latest.json (current stamped version) · frozen_provisions",
     measuredAt: "2026-08-03",
     note: "Verified frozen counter. The public repository does not yet expose 417 addressable provision rows; do not call it a complete inspectable corpus.",
   },
   /** Source-and-routing records. This is not a count of live regulator APIs. */
   REGULATOR_AUTHORITY_ADAPTERS: {
     value: 17,
-    source: "public/interop/regulatory-inventory.json · authority_adapters.length",
+    source: "public/interop/regulatory-inventory-latest.json (current stamped version) · authority_adapters.length",
     measuredAt: "2026-09-10",
     note: "Regulators, authority networks, framework owners and a treaty body are typed separately in the manifest.",
   },
   /** Heterogeneous crosswalk estate: statements, mappings, catalog, producer and views. */
   CROSSWALK_ASSETS: {
     value: 25,
-    source: "public/interop/regulatory-inventory.json · crosswalk_assets.length",
+    source: "public/interop/regulatory-inventory-latest.json (current stamped version) · crosswalk_assets.length",
     measuredAt: "2026-09-10",
     note: "Not 25 equivalent signed legal crosswalks. See each asset_type and evidence_state in the manifest.",
   },
@@ -100,7 +100,7 @@ export const CANON = {
     value: 4,
     source: "public/crosswalk/east-west-v1.json · jurisdictions.length",
     measuredAt: "2026-08-29",
-    note: "EU · UK · US-IL · CN. The separate 25 count is an inventory of heterogeneous crosswalk assets, not 25 crosswalked legal regimes."
+    note: "EU · UK · US-IL · CN. The separate 26 count is an inventory of heterogeneous crosswalk assets, not 26 crosswalked legal regimes."
   },
   // ── camelCase entries for direct CANON.x.value access (NewHome-v2 FAQ,
   // TrustMarquee). Adding these fixed the 2026-08-01 P0: CANON.councilAgents

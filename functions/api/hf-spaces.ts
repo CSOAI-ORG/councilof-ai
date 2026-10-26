@@ -8,6 +8,7 @@
 // indistinguishable from the truth. Same defect as /api/hub-cards: a fan-out
 // totalling whatever came back. A count is now null unless its listing answered,
 // and listings_unread names the ones that did not.
+import { headFromGet } from "./_head";
 
 /// <reference types="@cloudflare/workers-types" />
 
@@ -123,3 +124,7 @@ export const onRequestGet: PagesFunction = async (ctx) => {
     );
   }
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

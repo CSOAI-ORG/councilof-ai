@@ -66,9 +66,11 @@ describe("tabForPath", () => {
   });
 
   it("does not let a pane path swallow a longer sibling route", () => {
-    // The evidence-only watchdog hub owns the pane. /report is withdrawn while
-    // its write endpoint is unavailable, and /reports is a separate live page.
-    expect(tabForPath("/watchdog-hub")?.id).toBe("watchdog");
+    // No pane owns /watchdog-hub any more: functions/watchdog-hub.ts 308s it to /os, so the
+    // old Watchdog pane framed the app inside itself; ?tab=watchdog now opens Corrections
+    // (tools audit, 6 Oct 2026). /report is withdrawn while its write endpoint is
+    // unavailable, and /reports is a separate live page.
+    expect(tabForPath("/watchdog-hub")).toBeNull();
     expect(tabForPath("/report")).toBeNull();
     expect(tabForPath("/reports")).toBeNull();
     // /watchdog and /watchdog-map are live pages that no pane owns.

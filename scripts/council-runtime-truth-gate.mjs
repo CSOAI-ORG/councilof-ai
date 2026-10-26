@@ -228,7 +228,34 @@ function findUnreviewedPublicHtmlAppRoutes(
   return collisions.filter((route) => !reviewedRoutes.has(route));
 }
 
+// 12 Oct 2026: two reviewed posts are restored by EXACT route (client/src/data/blog-published.json).
+// blog-content.ts may enter the routed graph only when every App.tsx use of BlogPost is an exact
+// /blog/<slug> route whose fixed slug prop is in that allowlist. A generic /blog/:slug route, a
+// component={BlogPost} route, or any unlisted slug fails. /blog and /blog/:slug stay withdrawn below.
+function reviewedBlogRouteViolations(app, publishedSlugs) {
+  const problems = [];
+  if (/component=\{BlogPost\}/.test(app)) problems.push("component={BlogPost} (generic route)");
+  const uses = [...app.matchAll(/<BlogPost\b[^>]*\/>/g)];
+  const exact = [...app.matchAll(/<Route path="\/blog\/([a-z0-9-]+)\/?">\{\(\) => <BlogPost slug="([a-z0-9-]+)" \/>\}<\/Route>/g)];
+  if (uses.length !== exact.length) problems.push("BlogPost rendered outside an exact /blog/<slug> route");
+  for (const [, path, slug] of exact) {
+    if (path !== slug) problems.push(`/blog/${path} renders slug ${slug}`);
+    if (!publishedSlugs.has(slug)) problems.push(`/blog/${slug} is not in blog-published.json`);
+  }
+  return problems;
+}
+
 if (process.argv.includes("--selftest")) {
+  {
+    const pub = new Set(["how-to-verify-an-ai-measurement", "keeping-ai-claims-current"]);
+    const ok =
+      '<Route path="/blog/how-to-verify-an-ai-measurement">{() => <BlogPost slug="how-to-verify-an-ai-measurement" />}</Route>\n' +
+      '<Route path="/blog/keeping-ai-claims-current">{() => <BlogPost slug="keeping-ai-claims-current" />}</Route>';
+    assert.deepEqual(reviewedBlogRouteViolations(ok, pub), [], "the two reviewed exact routes pass");
+    assert.ok(reviewedBlogRouteViolations('<Route path="/blog/:slug" component={BlogPost} />', pub).length, "generic /blog/:slug fails");
+    assert.ok(reviewedBlogRouteViolations(ok + '\n<Route path="/blog/old-post">{() => <BlogPost slug="old-post" />}</Route>', pub).length, "an unreviewed historic slug fails");
+    assert.ok(reviewedBlogRouteViolations(ok + '\n<Route path="/blog/:slug">{() => <BlogPost />}</Route>', pub).length, "a slugless BlogPost route fails");
+  }
   const fixtureDir = "scripts/fixtures/council-runtime-truth";
   const safe = readFileSync(join(fixtureDir, "safe.txt"), "utf8");
   assert.deepEqual(detectUiTruthViolations(safe), []);
@@ -598,11 +625,21 @@ assert.equal(
   false,
   "unreviewed generated sector claims must stay outside the routed public graph",
 );
-assert.equal(
-  activeClientSources.has("client/src/data/blog-content.ts"),
-  false,
-  "unreviewed historic blog claims must stay outside the routed public graph",
-);
+{
+  const publishedBlogSlugs = new Set(
+    JSON.parse(readFileSync("client/src/data/blog-published.json", "utf8")).published.map((p) => p.slug),
+  );
+  const blogRouteProblems = reviewedBlogRouteViolations(appSource, publishedBlogSlugs);
+  assert.deepEqual(blogRouteProblems, [], "blog-content.ts may be routed only through reviewed exact /blog/<slug> routes");
+  const blogContentImporters = [...activeClientSources].filter((f) =>
+    /from\s+["'](?:@\/data|\.\.\/data|\.)\/blog-content["']/.test(readFileSync(f, "utf8")),
+  );
+  assert.deepEqual(
+    blogContentImporters.filter((f) => f !== "client/src/pages/BlogPost.tsx"),
+    [],
+    "unreviewed historic blog claims must stay outside the routed public graph (only BlogPost, on reviewed exact routes, may import blog-content.ts)",
+  );
+}
 assert.equal(
   activeClientSources.has("client/src/data/industries-content.ts"),
   false,
@@ -1324,6 +1361,12 @@ assert.ok(
 assert.match(benchmarkSource, /fetch\("\/api\/gspc"/);
 assert.match(benchmarkSource, /a\.accuracy\.toFixed\(3\)/);
 assert.match(benchmarkSource, /a\.leader\|\|a\.public_leader_state/);
+// Persona sweep 6 Oct 2026 (T05): leader states render as plain English, never as a raw enum,
+// and the operator note "Slot 15 / human-vs-ai stay in-lane only." stays off the page.
+assert.match(benchmarkSource, /NO_SIGNED_CARD:\["No public leader/);
+assert.match(benchmarkSource, /EXCLUDED_OWN_MODEL:\["No public leader/);
+assert.match(benchmarkSource, /\/\^\[A-Z\]\[A-Z_\]\{5,\}\$\/\.test\(value\)/);
+assert.doesNotMatch(benchmarkSource, /in-lane only/i);
 assert.doesNotMatch(benchmarkSource, /\bcouncil specialist\b/i);
 assert.doesNotMatch(
   benchmarkRows[1],

@@ -105,12 +105,15 @@ function readJsonl(p, key) {
 export function derive() {
   const models = new Map(); // normalised id -> { id, kind, sources:Set, cards, axes:Set, raw:Set }
   const hash = createHash("sha256");
-  const add = (raw, source, axis, admitted = false) => {
+  const add = (raw, source, axis, admitted = false, cardId = null) => {
     const id = normalise(raw);
     if (!id) return;
     const kind = kindOf(raw);
-    const row = models.get(id) ?? { id, kind, sources: new Set(), cards: 0, axes: new Set(), raw: new Set(), admitted: false };
+    const row = models.get(id) ?? { id, kind, sources: new Set(), cards: 0, axes: new Set(), raw: new Set(), admitted: false, firstCard: null };
     if (admitted) row.admitted = true;
+    // The first signed-card-index card for this model, in index order: a card the browser
+    // verifier can load by id (/signed/cards/<id>.json). Mill cards live elsewhere, so they never set it.
+    if (cardId && !row.firstCard) row.firstCard = cardId;
     // A kind can only move towards "own": if any recorded form of the name is ours, the row is ours.
     if (kind === "own" || (kind === "own_unconfirmed" && row.kind === "third_party")) row.kind = kind;
     row.sources.add(source);
@@ -128,7 +131,7 @@ export function derive() {
   for (const c of index.cards ?? []) {
     const rec = JSON.parse(readFileSync(join(ROOT, "public", c.card_url), "utf8"));
     if (rec?.id !== c.card) continue;
-    add(rec?.body?.model, "signed-card-index", rec?.body?.axis);
+    add(rec?.body?.model, "signed-card-index", rec?.body?.axis, false, c.card);
     aRead += 1;
   }
 
@@ -183,6 +186,9 @@ export function derive() {
       axes: r.axes.size,
       sources: [...r.sources].sort(),
       admission_receipt: r.admitted,
+      // Withheld names get no card id: the signed card keeps the real id, and linking it would
+      // publish the name the row withholds.
+      first_signed_card: shown.has(r.id) ? null : r.firstCard,
       recorded_as: shown.has(r.id) ? [] : [...r.raw].sort(),
     }))
     .sort((a, b) => a.kind.localeCompare(b.kind) || b.cards - a.cards || a.id.localeCompare(b.id));

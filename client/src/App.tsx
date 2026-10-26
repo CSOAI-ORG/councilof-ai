@@ -110,6 +110,7 @@ const MarketingHome = lazy(() => import("./pages/MarketingHome"));
 const Standards = lazy(() => import("./pages/Standards"));
 const Resources = lazy(() => import("./pages/Resources"));
 const About = lazy(() => import("./pages/About"));
+const Team = lazy(() => import("./pages/Team"));
 const FirstFineWatch = lazy(() => import("./pages/FirstFineWatch"));
 const EunomiaData = lazy(() => import("./pages/EunomiaData"));
 const Eunomia = lazy(() => import("./pages/Eunomia"));
@@ -265,6 +266,7 @@ const Quickstart = lazy(() => import("./pages/Quickstart"));
 // reader who never leaves the home page should not pay for LivingStages or the film band.
 const HowWeWork = lazy(() => import("./pages/HowWeWork"));
 const ClaimMaintenance = lazy(() => import("./pages/ClaimMaintenance"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
 const GamesRuler = lazy(() => import("./pages/GamesRuler"));
 const Insurers = lazy(() => import("./pages/Insurers"));
 const Coliseum = lazy(() => import("./pages/Coliseum"));
@@ -373,8 +375,6 @@ const AgentGovernance = lazy(() => import("./pages/AgentGovernance"));
 const Cra = lazy(() => import("./pages/Cra"));
 const Nis2 = lazy(() => import("./pages/Nis2"));
 const VulnerabilityDisclosure = lazy(() => import("./pages/VulnerabilityDisclosure"));
-const Intel = lazy(() => import("./pages/Intel"));
-const AccountBrief = lazy(() => import("./pages/AccountBrief"));
 const Article50 = lazy(() => import("./pages/Article50"));
 const VerifyLeaderboard = lazy(() => import("./pages/VerifyLeaderboard"));
 const GovernanceLayer = lazy(() => import("./pages/GovernanceLayer"));
@@ -382,7 +382,6 @@ const Dora = lazy(() => import("./pages/Dora"));
 const DemoOS = lazy(() => import("./pages/DemoOS"));
 const PocShowcase = lazy(() => import("./pages/PocShowcase"));
 const CouncilSpace = lazy(() => import("./pages/CouncilSpace"));
-const BadgesPage = lazy(() => import("./pages/BadgesPage"));
 const EmbedPage = lazy(() => import("./pages/EmbedPage"));
 const BadgeKit = lazy(() => import("./pages/BadgeKit"));
 const GetListed = lazy(() => import("./pages/GetListed"));
@@ -409,7 +408,39 @@ import CookieConsent from "./components/CookieConsent";
 function ScrollToTop() {
   const [location] = useLocation();
   useEffect(() => {
+    // A link with a fragment (/how-we-work/#machine-surface) lands on that section. Until 6 Oct 2026
+    // this effect always scrolled to the top, so it undid the browser's own jump to the anchor and
+    // every deep link opened at the page head. Lazy pages mount after this effect runs, so the
+    // target is looked for on each frame for about a second before giving up.
+    const hash = window.location.hash;
+    if (!hash || hash.length < 2) {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      return;
+    }
+    let id = hash.slice(1);
+    try {
+      id = decodeURIComponent(id);
+    } catch {
+      /* keep the raw fragment */
+    }
+    const found = document.getElementById(id);
+    if (found) {
+      found.scrollIntoView({ block: 'start' });
+      return;
+    }
     window.scrollTo({ top: 0, behavior: 'instant' });
+    let frames = 0;
+    let raf = 0;
+    const seek = () => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ block: 'start' });
+        return;
+      }
+      if (++frames < 60) raf = requestAnimationFrame(seek);
+    };
+    raf = requestAnimationFrame(seek);
+    return () => cancelAnimationFrame(raf);
   }, [location]);
   return null;
 }
@@ -735,6 +766,7 @@ function AppShell() {
                   <Route path="/financial-axes" component={FinancialAxes} />
                   <Route path="/stablecoins" component={Stablecoins} />
                   <Route path="/wrappers" component={Wrappers} />
+                  <Route path="/sovx" component={Wrappers} />
                   <Route path="/quickstart" component={Quickstart} />
                   <Route path="/how-we-work" component={HowWeWork} />
                   <Route path="/claim-maintenance" component={ClaimMaintenance} />
@@ -819,6 +851,7 @@ function AppShell() {
                   <Route path="/resources" component={Resources} />
                   <Route path="/payg" component={Payg} />
                   <Route path="/about" component={About} />
+                  <Route path="/team" component={Team} />
                   <Route path="/first-fine-watch" component={FirstFineWatch} />
                   <Route path="/eunomia-data" component={EunomiaData} />
                   <Route path="/eunomia" component={Eunomia} />
@@ -852,6 +885,11 @@ function AppShell() {
                   <Route path="/frameworks/:slug" component={ContentReviewNotice} />
                   <Route path="/sectors/:slug" component={ContentReviewNotice} />
                   <Route path="/industries/:slug" component={ContentReviewNotice} />
+                  {/* Two reviewed posts restored 2026-10-12 (client/src/data/blog-published.json).
+                      Exact paths placed BEFORE /blog/:slug: every other slug and /blog itself stay withdrawn. */}
+                  <Route path="/blog/how-to-verify-an-ai-measurement">{() => <BlogPost slug="how-to-verify-an-ai-measurement" />}</Route>
+                  <Route path="/blog/keeping-ai-claims-current">{() => <BlogPost slug="keeping-ai-claims-current" />}</Route>
+                  <Route path="/blog/gspc-g2-comparison-group-2026-10-14">{() => <BlogPost slug="gspc-g2-comparison-group-2026-10-14" />}</Route>
                   <Route path="/blog/:slug" component={ContentReviewNotice} />
                   <Route path="/models" component={ModelRegistry} />
                   <Route path="/framework-catalog" component={FrameworkCatalog} />
@@ -1125,8 +1163,6 @@ function AppShell() {
                   <Route path="/cra" component={Cra} />
                   <Route path="/nis2" component={Nis2} />
                   <Route path="/vulnerability-disclosure" component={VulnerabilityDisclosure} />
-                  <Route path="/intel" component={Intel} />
-                  <Route path="/brief" component={AccountBrief} />
                   <Route path="/article-50" component={Article50} />
                   <Route path="/verify-leaderboard" component={VerifyLeaderboard} />
                   <Route path="/packs/eu-article-50" component={Article50Pack} />
@@ -1142,10 +1178,10 @@ function AppShell() {
                   <Route path="/sovereign-space">{() => <Redirect to="/gspc-arena" />}</Route>
                   <Route path="/stripe-checkout.js" component={Gone} />
                   <Route path="/simulate">{() => <Redirect to="/gspc-arena" />}</Route>
-                  {/* A second route for the same path stood here and was UNREACHABLE: wouter's
-                      Switch takes the first match, and the redirect above already owns that path
-                      (public/_redirects agrees with it). BadgesPage stays reachable at /authority. */}
-                  <Route path="/authority" component={BadgesPage} />
+                  {/* /authority (embeddable verified-status badges, a conformity mark), /intel
+                      (an internal sales-target board) and /brief (its per-account sales brief)
+                      were withdrawn on 6 Oct 2026: all three 308 from
+                      scripts/generate-redirects.mjs EXISTING. Do not re-add any of these routes. */}
                   <Route path="/world-3d" component={RealWorldMap} />
                   <Route path="/real-world" component={RealWorldMap} />
                   <Route path="/plans">{() => <Redirect to="/dashboard?tab=measured&task=pricing-overview" />}</Route>

@@ -1,5 +1,6 @@
 import {resolveBoardReference,finishBoardReference} from './surface/render-board-reference.mjs';
 import {commitBoard} from './surface/commit-board.mjs';
+import {commitFabric} from './surface/commit-fabric.mjs';
 import {guardRenderedBoard} from './surface/board-render-guard.mjs';
 import { parseRenderRequest, validateOfflineOrigin, allowOfflineRequest, snapshotFailure } from "./surface/prerender-io.mjs";
 /* prerender.mjs — turn a Vite SPA build into real HTML files, one per route.
@@ -193,7 +194,7 @@ function discover() {
     "/industries/energy",
     "/library/axes",
     "/verify", "/os", "/assess", "/academy", "/compare", "/layer0",
-    "/trust-center", "/network", "/intel", "/hive", "/methodology", "/honesty",
+    "/trust-center", "/network", "/hive", "/methodology", "/honesty",
     "/dashboard", "/login", "/start", "/about", "/insurers",
     "/privacy-policy", "/firewall-charter", "/gspc-verify", "/gspc-arena",
     "/embed", "/white-label",
@@ -300,6 +301,9 @@ function discover() {
     // AEO regulatory-explainer seed pages (22) — regulator/procurement citation surface.
     // Absent from heuristic discovery (blog deep links are only reachable via /blog/:slug),
     // so each needs an explicit snapshot or the static host serves an honest-404.
+    "/blog/how-to-verify-an-ai-measurement", // restored 2026-10-12 (blog-published.json)
+    "/blog/keeping-ai-claims-current", // restored 2026-10-12 (blog-published.json)
+    "/blog/gspc-g2-comparison-group-2026-10-14", // restored 2026-10-14 (blog-published.json)
     "/blog/ai-insurance-verified-measurement",
     "/blog/ai-audit-best-practices", // listed on /blog but 404 live (Pages serves 404.html for non-prerendered paths); brand-gate-checked
     "/blog/ai-risk-register",
@@ -594,6 +598,14 @@ const srv = http.createServer((q, r) => {
     }).catch(()=>{r.writeHead(502);r.end();});
     return;
   }
+  // /api/fabric reads /api/gspc. When the live origin serves a different board, build it from this
+  // commit against the frozen board, or the old deployment's count is baked in (deploy 38857703670).
+  if(p==='/api/fabric'&&boardFromCommit) {
+    commitFabric(REPO_ROOT,DATA_ORIGIN,frozenBoard).then(({status,contentType,raw})=>{
+      r.writeHead(status,{'content-type':contentType,'cache-control':'no-store'});r.end(q.method==='HEAD'?undefined:raw);
+    }).catch(e=>{dataMiss.push(`commit /api/fabric (${e?.message||e})`);r.writeHead(502);r.end();});
+    return;
+  }
   const f = join(DIST, p);
   try {
     if (existsSync(f) && statSync(f).isFile()) {
@@ -726,6 +738,9 @@ async function worker(id) {
   const openPage = async () => {
     gen = browserGen;
     const pg = await browser.newPage({ viewport: { width: 1280, height: 900 }, serviceWorkers: 'block' });
+    // Keep first-load controls inert in saved HTML; on the served site this init
+    // script is absent and hydration enables them once handlers are attached.
+    await pg.addInitScript(() => { window.__CSOAI_PRERENDER__ = true; });
     if (OFFLINE_REVIEW) await pg.route('**/*', route => allowOfflineRequest(route.request().url(),route.request().method(),`http://localhost:${PORT}`) ? route.continue() : route.abort());
     pg.on("pageerror", e => errs.push(e.message.slice(0, 100)));
     return pg;

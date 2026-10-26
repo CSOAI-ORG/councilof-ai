@@ -18,6 +18,7 @@
  * types no count of its own, so it cannot outlive the artefact it describes.
  */
 import index from "../../../public/interop/x402-census/index.json";
+import { headFromGet } from "../../api/_head";
 
 const SITE = "https://councilof.ai";
 const HF = "https://huggingface.co/datasets/csoai/x402-settlement-census";
@@ -186,3 +187,7 @@ curl -s ${SITE}/interop/x402-census/rounds/${esc(rounds[0]?.round_id ?? "&lt;rou
 
   return new Response(html, { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=300" } });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

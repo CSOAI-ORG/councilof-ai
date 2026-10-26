@@ -40,6 +40,7 @@
 import packages from "../../public/interop/footprint-packages.json";
 import distribution from "../../public/interop/distribution-latest.json";
 import registryLatest from "../../public/interop/mcp-registry-latest.json";
+import { headFromGet } from "./_head";
 
 export const SCHEMA = "csoai.footprint/0.1";
 export const TTL_SECONDS = 3600;
@@ -337,9 +338,9 @@ export function grossDistribution(nowIso: string, art: DistributionArtifact = di
 }
 
 // ── same-origin rows ──────────────────────────────────────────────────────────
-export async function economicUse(deps: Deps): Promise<Row> {
+export async function economicUse(deps: Deps, revenue?: Fetched): Promise<Row> {
   const url = new URL("/api/revenue", deps.origin).toString();
-  const got = await fetchJson(deps, url);
+  const got = revenue ?? await fetchJson(deps, url);
   const base = {
     unit: "distinct non-self x402 payer wallets, all time",
     kind: "measured (settlement records)",
@@ -362,13 +363,37 @@ export async function economicUse(deps: Deps): Promise<Row> {
   };
 }
 
-export async function repeatPayers(deps: Deps): Promise<Row> {
+export async function repeatPayers(deps: Deps, revenue?: Fetched): Promise<Row> {
   const url = new URL("/api/revenue", deps.origin).toString();
-  return unmeasured(
-    "/api/revenue publishes distinct payers and settlement totals, not per-wallet settlement counts; " +
-      "a repeat payer cannot be derived from what it exposes, and nothing else records one.",
-    { unit: "wallets that paid more than once", source_url: url },
-  );
+  const got = revenue ?? await fetchJson(deps, url);
+  const base = {
+    unit: "distinct non-self repeat payer wallets, all time",
+    kind: "measured (settlement records)",
+    source_url: url,
+    source_field: "one_number.repeat_nonself_payers",
+    last_30d: null,
+  };
+  if (!got.ok) return uncheckable(`/api/revenue: ${got.reason}`, base);
+  const one = (got.body as { one_number?: Record<string, unknown> } | null)?.one_number;
+  if (!one || typeof one !== "object" || Array.isArray(one) || one.status !== "MEASURED") {
+    return uncheckable("/api/revenue carries no measured one_number repeat count", base);
+  }
+  const repeat = one.repeat_nonself_payers as Record<string, unknown> | undefined;
+  const count = (v: unknown): v is number => typeof v === "number" && Number.isSafeInteger(v) && v >= 0;
+  if (!repeat || typeof repeat !== "object" || Array.isArray(repeat) ||
+      !count(repeat.all_time) || !count(repeat.last_30d) || repeat.last_30d > repeat.all_time ||
+      typeof repeat.definition !== "string" || !repeat.definition.trim()) {
+    return uncheckable("/api/revenue carries malformed or unmeasured repeat_nonself_payers", base);
+  }
+  return {
+    ...base,
+    state: "READ",
+    value: repeat.all_time,
+    last_30d: repeat.last_30d,
+    definition: repeat.definition,
+    as_of: deps.now(),
+    as_of_field: "read time (upstream carries no count measurement timestamp)",
+  };
 }
 
 export async function board(deps: Deps): Promise<Row> {
@@ -437,8 +462,14 @@ export const FUNNEL_ORDER = [
 export async function buildFootprint(deps: Deps) {
   const nowIso = deps.now();
   const registry_listings = registryListings(nowIso);
+  // Both settlement rows use one read so they describe the same upstream snapshot.
+  const revenue = fetchJson(deps, new URL("/api/revenue", deps.origin).toString());
   const [economic_use, repeat_payers, boardRow, signed_cards, github_stars] =
-    await Promise.all([economicUse(deps), repeatPayers(deps), board(deps), signedCards(deps), githubStars(deps)]);
+    await Promise.all([
+      revenue.then((got) => economicUse(deps, got)),
+      revenue.then((got) => repeatPayers(deps, got)),
+      board(deps), signedCards(deps), githubStars(deps),
+    ]);
   // No network: the 832 per-package counters were measured on the pod, once, into the artifact.
   const gross_distribution = grossDistribution(nowIso);
 
@@ -528,3 +559,7 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
     },
   });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

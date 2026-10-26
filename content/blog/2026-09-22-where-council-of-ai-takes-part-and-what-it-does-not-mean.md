@@ -2,9 +2,9 @@
 title: "Where Council of AI takes part, and what each listing does not mean"
 slug: where-council-of-ai-takes-part-and-what-it-does-not-mean
 date: 2026-09-22
-updated: 2026-09-29
+updated: 2026-10-07
 canonical: https://councilof.ai/memberships
-source: public/interop/memberships.json (schema csoai.memberships/0.1, as_of 2026-09-29, signed: false)
+source: public/interop/memberships.json (schema csoai.memberships/0.1, as_of 2026-10-07, signed: false)
 generated_by: scripts/memberships-post.mjs — do not hand-edit; edit the manifest and re-run
 description: "Every standards body, registry, scholarly identifier and regulator filing Council of AI takes part in, each with its evidence link, its date, what it proves and what it does not. Participation is not endorsement; a listing is not adoption."
 ---
@@ -56,6 +56,14 @@ Not yet. A comment on Treasury's GENIUS Act rule, Federal Register document 2026
 ## Is Council of AI a member of the Open Invention Network?
 
 Yes. CSOAI LTD signed the OIN 2.0 License Agreement on 2026-08-15 and is named on Open Invention Network's public list of licensees at https://openinventionnetwork.com/community-of-licensees/. That is a royalty-free patent cross-licence covering the Linux System definition — a patent non-aggression arrangement, not a standards body and not an endorsement of anything Council of AI measures or publishes.
+
+## Is Council of AI on the SAILResearch Awesome AI Leaderboard list?
+
+Yes, as two lines in the Safety section of https://github.com/SAILResearch/awesome-ai-leaderboard#safety: GovBench and the GSPC Governance Leaderboard, both submitted by CSOAI; the repository's git history dates them 2026-07-23 and 2026-08-26. Being in a curated list is catalogue inclusion: it is not a reproduction, a ranking, an award or an endorsement, and the numbers in the upstream line are upstream's text at the time, not the live board.
+
+## Is Council of AI in the Claude connector directory?
+
+It is listed at https://claude.ai/directory/councilof-ai as a community connector (endpoint https://councilof.ai/mcp/free), as far as we can say: the page answers HTTP 403 to automated readers, so this row is UNVERIFIED until a person reads it. A directory listing is not verification or endorsement by Anthropic, and it is not adoption.
 
 ## Every entry, with what it proves and what it does not
 
@@ -164,6 +172,16 @@ Yes. CSOAI LTD signed the OIN 2.0 License Agreement on 2026-08-15 and is named o
   - Date basis: The directory shows no listing date; the date given is when this check verified it.
   - What it proves: The gspc server has a page in the Smithery directory.
   - What it does not prove: A directory page is a listing. Any score the directory shows is the directory's, not a measurement of ours, and a listing is not adoption.
+- **Awesome AI Leaderboard (SAILResearch, Software Analysis and Intelligence Lab, Queen's University) — Safety section: GovBench and the GSPC Governance Leaderboard** — listed in this body, since 2026-07-23; state VERIFIED.
+  - Evidence: <https://github.com/SAILResearch/awesome-ai-leaderboard#safety>
+  - Date basis: Committer dates of the two commits on the repository's main branch that added the lines, read from a clone of the repository on 2026-10-07: GovBench in 9fe9d882cc8439a31e9a4ef57c94919a97c8cb89 (2026-07-23T07:11:11Z); the GSPC Governance Leaderboard in 34fc3ac636d13798f285eca9e648173031976499 (2026-08-26T01:27:04Z). Both commits are authored under CSOAI's own identity and have one parent each; the history shows no separate maintainer merge commit, so the git record proves presence on main, not a review.
+  - What it proves: Two lines CSOAI submitted are in the Safety table of the list's README on its main branch (raw README read 2026-10-07T10:11:56Z): GovBench, and the GSPC Governance Leaderboard with links to the live board API at councilof.ai/api/gspc and its DOI, closing with upstream's own words that this is measurement, not a conformity claim. This is inclusion in a curated catalogue.
+  - What it does not prove: Catalogue inclusion is not an independent reproduction, a ranking, an award or an endorsement by the lab, and the list reviews nothing we measure. The figure the upstream line carries ("14 measured of 14 quotable") is upstream's text as committed on 2026-08-26, not the current board; read the board live at councilof.ai/api/gspc.
+- **Claude connector directory (claude.ai/directory) — "Council of AI", community connector, MCP endpoint https://councilof.ai/mcp/free** — listed in this body, since 2026-10-07; state UNVERIFIED.
+  - Evidence: <https://claude.ai/directory/councilof-ai>
+  - Date basis: No listing date is known. The date given is the day this row was written. The directory page could not be read from the build sandbox (HTTP 403, Cloudflare challenge page, read 2026-10-07T10:12:03Z), so neither the listing date nor the page text has been checked by this lane. The repository's own operations note public/interop/owner-asks-2026-10-07.md records the listing as existing and due an update.
+  - What it proves: If the page reads as recorded, Council of AI is listed in the Claude connector directory as a community connector pointing at https://councilof.ai/mcp/free. This lane could not read the page, so the row proves only that the listing is claimed and where to check it.
+  - What it does not prove: A directory listing is not verification, review or endorsement by Anthropic, and it is not adoption: it says nothing about whether anyone has connected the server or about any measurement we publish. Community connectors are submitted by their operators.
 
 ### Scholarly identifiers
 

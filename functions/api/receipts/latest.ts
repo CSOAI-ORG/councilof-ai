@@ -2,6 +2,7 @@
 /// <reference types="@cloudflare/workers-types" />
 import { readRecentReceipts } from "../_x402_receipt";
 import { selfWallets } from "../_x402";
+import { headFromGet } from "../_head";
 
 export interface Env {
   REVENUE_KV?: KVNamespace;
@@ -52,3 +53,7 @@ export async function handle(env: Env = {}): Promise<Response> {
 }
 
 export const onRequestGet: PagesFunction<Env> = async ({ env }) => handle(env);
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

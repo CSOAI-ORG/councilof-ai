@@ -1,11 +1,10 @@
 import MomentumStrip from "@/components/momentum/MomentumStrip";
 import { useEffect, useState } from "react";
 import { ArrowRight, CheckCircle2, Copy, PlugZap, ShieldCheck, Terminal } from "lucide-react";
-import SignedAgentTravel from "@/components/SignedAgentTravel";
-import TwoSpeed from "@/components/TwoSpeed";
 import WatchlistPane from "@/components/WatchlistPane";
 import { ALL_TOOL_NAMES, FREE_TOOL_NAMES, PAID_TOOL_NAMES } from "@/lib/mcpTools";
 import { setMetaDescription } from "@/lib/utils";
+import PypiLiveBadge from "@/components/momentum/PypiLiveBadge";
 import EXTENSION_MANIFEST from "../../../extensions/chrome-gspc-verify/manifest.json";
 
 // The free door is the default everywhere a config is offered (audit 2026-09-28 #10): the first
@@ -18,7 +17,7 @@ const MCP_METERED_URL = "https://councilof.ai/mcp";
 const EXTENSION_ZIP = `/downloads/gspc-verify-${EXTENSION_MANIFEST.version}.zip`;
 const MCP_SNIPPET = `{
   "mcpServers": {
-    "gspc": {
+    "council-of-ai": {
       "url": "${MCP_URL}"
     }
   }
@@ -59,7 +58,7 @@ Live board: https://councilof.ai/api/gspc
 Measurement, not certification.`;
 
 const HOSTS = [
-  { name: "Claude", how: "Add gspc → paste the JSON below, or the URL." },
+  { name: "Claude", how: "Customize → Connectors → + Add → Add custom connector, then paste the URL https://councilof.ai/mcp/free. No JSON, no key." },
   { name: "Cursor", how: "Paste the JSON into ~/.cursor/mcp.json" },
   { name: "Kimi", how: "MCP settings → same JSON / URL." },
   { name: "Grok", how: "Same URL, as a remote (Streamable HTTP) MCP server." },
@@ -82,14 +81,14 @@ export default function ToolsPage() {
           <div className="min-w-0 p-6 sm:p-8 lg:p-10">
             <div className="inline-flex items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-200">
               <PlugZap className="h-3.5 w-3.5" />
-              Agent tools · MCP endpoint
+              Connect tools to your AI
             </div>
             <h1 className="mt-5 max-w-3xl text-4xl font-black tracking-tight text-white sm:text-5xl">
-              Give your AI a verifiable evidence layer.
+              Read AI measurements and check records in your AI application.
             </h1>
             <p className="mt-4 max-w-2xl text-base leading-7 text-emerald-100/72">
-              Connect Council of AI to Claude, Cursor, Kimi, or Grok. Read the board, inspect evidence,
-              and verify signed records without turning a directory listing into a trust claim.
+              Use the connection settings below with a supported AI application.
+              Read published measurements, inspect evidence and check supported records.
             </p>
             <div className="mt-6 flex flex-wrap gap-2 text-sm">
               {/* Both counts are read from the manifests the /mcp door serves
@@ -106,7 +105,7 @@ export default function ToolsPage() {
               </span>
               <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-emerald-100">
                 <ShieldCheck className="h-4 w-4 text-emerald-300" aria-hidden="true" />
-                {PAID_TOOL_NAMES.length} metered (x402)
+                {PAID_TOOL_NAMES.length} paid per request (x402)
               </span>
             </div>
             <p className="mt-3 text-xs leading-5 text-emerald-100/75">
@@ -145,18 +144,18 @@ export default function ToolsPage() {
             </div>
           </div>
           <div className="min-w-0 border-t border-white/10 bg-black/10 p-5 sm:p-7 lg:border-l lg:border-t-0">
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-300/70">Connection config</p>
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-300/70">Connection settings</p>
             <p className="mt-2 break-all font-mono text-xs text-emerald-100/65">{MCP_URL}</p>
             <p className="mt-1 text-xs leading-5 text-emerald-100/65" data-testid="tools-door-split">
               {FREE_TOOL_NAMES.length} free tools, no payment. <span className="font-mono">{MCP_METERED_URL}</span> serves{" "}
-              {ALL_TOOL_NAMES.length}: {FREE_TOOL_NAMES.length} free + {PAID_TOOL_NAMES.length} metered.
+              {ALL_TOOL_NAMES.length}: {FREE_TOOL_NAMES.length} free + {PAID_TOOL_NAMES.length} paid per request.
             </p>
             <pre tabIndex={0} className="mt-4 overflow-x-auto rounded-2xl border border-white/10 bg-[#020a06] p-5 text-[13px] leading-6 text-emerald-100 shadow-inner">
               <code>{MCP_SNIPPET}</code>
             </pre>
             <p className="mt-4 text-xs leading-5 text-emerald-100/55">
-              A package, registry listing, or successful connection proves discoverability only. It does not prove settlement,
-              delivery, or the truth of an underlying claim.
+              Being listed or connected does not prove that a payment settled, a service delivered a result,
+              or an underlying claim is correct.
             </p>
           </div>
         </div>
@@ -175,8 +174,8 @@ export default function ToolsPage() {
       </div>
 
       <div className="mt-8 rounded-2xl border border-emerald-200 bg-emerald-50/70 p-5 text-sm leading-6 text-emerald-950">
-        <strong>Trust boundary:</strong> a third party verifying a signed record is meaningful evidence. Connecting an MCP server is not.
-        The browser verifier stays free and recomputes Ed25519 locally.
+        <strong>What verification checks:</strong> supported checks compare a record's bytes, hash and, where applicable, signature.
+        A valid signature does not establish that the underlying claim is correct. Browser verification is free.
       </div>
       <section id="extension" aria-labelledby="extension-h" className="mt-8 rounded-2xl border border-slate-200 bg-white p-5" data-testid="tools-extension">
         <h2 id="extension-h" className="text-base font-bold text-slate-900">Browser extension (Chrome, load unpacked)</h2>
@@ -283,10 +282,10 @@ export default function ToolsPage() {
       <MomentumStrip
         variant="panel"
         title="The tools, and how far they travel"
-        ids={["mcp_tools", "x402_doors", "pypi_csoai_all_time", "hf_downloads_30d_other"]}
+        ids={["mcp_tools", "x402_doors", "hf_downloads_30d_other"]}
       />
-      <SignedAgentTravel />
-      <TwoSpeed />
+      <PypiLiveBadge className="mt-4" />
+      {/* SignedAgentTravel and TwoSpeed (internal strategy notes) moved to /status/internal, 6 Oct 2026. */}
       <WatchlistPane />
     </section>
   );

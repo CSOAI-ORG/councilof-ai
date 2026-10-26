@@ -24,6 +24,8 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { vscodeInstallAction } from "./vscode-install.mjs";
+import { cursorInstallAction } from "./cursor-install.mjs";
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const args = process.argv.slice(2);
@@ -67,6 +69,13 @@ const REMOTE_VERSION = mcpServer.version;
 const npmPkg = (mcpServer.packages || []).find((p) => p.registryType === "npm");
 const NPM_ID = npmPkg.identifier;
 const NPM_VERSION = npmPkg.version;
+// T14 (6 Oct 2026): every published csoai-gspc-mcp release (0.1.1-0.2.2) is marked deprecated on npm
+// and carries fewer tools than the HTTP door, so the one-command stdio install led a developer to a
+// deprecated package with a different tool set. Until a non-deprecated release carries the SERVED tool
+// set, no discovery document advertises the stdio pin; each names the free door instead. Flip this to
+// true only after `npm view csoai-gspc-mcp@latest deprecated` prints nothing AND that release's
+// tools/list equals SERVED (scripts/harness-x/parity_live.py checks the second).
+const NPM_STDIO_ADVERTISED = false;
 const pyClientVersion = /^version\s*=\s*"([^"]+)"/m.exec(read("scripts/spray/pypi/csoai-gspc/pyproject.toml"))[1];
 const APACHE = read("scripts/spray/pypi/csoai-gspc/LICENSE");
 const layer0Version = readJson("packages/layer0-js/package.json").version;
@@ -118,7 +127,9 @@ emit("distribution/mcp-registry/io.github.CSOAI-ORG-gspc/server.json", j({
   version: REMOTE_VERSION,
   websiteUrl: ID.website,
   remotes: [{ type: "streamable-http", url: ID.door }],
-  packages: [{ registryType: "npm", identifier: NPM_ID, version: NPM_VERSION, transport: { type: "stdio" } }],
+  ...(NPM_STDIO_ADVERTISED
+    ? { packages: [{ registryType: "npm", identifier: NPM_ID, version: NPM_VERSION, transport: { type: "stdio" } }] }
+    : {}),
   _meta: regMeta,
 }));
 // The domain name's remote is the door with a trailing slash: the bare URL is registered under the
@@ -160,6 +171,11 @@ emit("distribution/plugin/.claude-plugin/marketplace.json", claudeMarketplace);
 // Its plugin source is "./", which resolves only when the marketplace is added from a git host;
 // until a public one carries distribution/plugin, the working install is the free MCP door.
 emit("public/.claude-plugin/marketplace.json", claudeMarketplace);
+// The plugin manifest itself, same bytes, served at https://councilof.ai/.claude-plugin/plugin.json.
+// It was hand-typed, and on 2026-10-26 it still said "16 tools (12 free, 4 x402-metered)" at
+// version 1.4.3 while the door served 52 at 1.4.4 — a false claim on a live published surface,
+// frozen in a file the renderer did not own. Rendered from pluginCore so it cannot drift again.
+emit("public/.claude-plugin/plugin.json", j({ ...pluginCore, mcpServers: "./.mcp.json" }));
 emit("distribution/plugin/.cursor-plugin/plugin.json", j({
   ...pluginCore,
   mcpServers: "./.mcp.json",
@@ -173,9 +189,29 @@ emit("distribution/plugin/.grok-plugin/marketplace.json", j({
   metadata: { doctrine: DOCTRINE, version: REMOTE_VERSION },
   plugins: [{ name: PLUGIN, description: pluginCore.description, source: { type: "local", path: "./" }, homepage: ID.website, keywords: pluginCore.keywords }],
 }));
+emit("distribution/plugin/mcp_config.json", j({ mcpServers: { [PLUGIN]: { serverUrl: ID.door } } }));
+emit("distribution/plugin/plugin.json", j({
+  ...pluginCore,
+  id: PLUGIN,
+  mcpServers: "./mcp_config.json",
+  skills: "./skills",
+  rules: "./rules",
+  "x-csoai-doctrine": DOCTRINE,
+}));
 const toolLines = (list) => list.map((t) => `- \`${t.id}\` — ${firstSentence(t.description)}`).join("\n");
 const doctrineFooter = (indent = "") =>
   `${indent}Doctrine: \`${DOCTRINE.source}\` sha256 \`${DOCTRINE.sha256}\` (human page ${DOCTRINE.human_page}).`;
+emit("distribution/plugin/rules/AGENTS.md", `# Council of AI GSPC — Agent Measurement Rules
+
+1. **Measurement only**: Quote \`totals.public_count\` from \`board_totals\` verbatim. Never add, re-derive or round a count.
+2. **Three verification states**: Card and capsule verification return \`VALID\`, \`INVALID\`, or \`UNCHECKABLE\`. "Could not check" is never "forged".
+3. **Honest absences**: \`UNMEASURED\` and \`UNREACHABLE\` are first-class answers, not errors. Never fill an empty cell.
+4. ${STANCE}
+
+${LINKS}
+
+${doctrineFooter()}
+`);
 emit("distribution/plugin/skills/gspc/SKILL.md", `---
 name: gspc
 description: Read the Council of AI GSPC board and verify signed measurement cards through the gspc MCP server. Use when asked about GSPC, Council of AI, a measurement card, or an AI-governance measurement.
@@ -201,18 +237,75 @@ ${LINKS}
 
 ${doctrineFooter()}
 `);
-emit("distribution/plugin/README.md", `# ${PLUGIN} — Council of AI plugin (Claude Code, Cursor, Grok)
+emit("distribution/plugin/skills/gspc-verify/SKILL.md", `---
+name: gspc-verify
+description: Verify a CSOAI / GSPC evidence artifact (csoai.evidence-event/0.1, csoai.signed-run/0.1 batch, csoai.safe-evidence-pack/0.1 pack, or csoai.route-evidence/0.1) using the deterministic offline verifier. Preserves original artifact digests, state vocabulary, and limitations without asking the language model to guess cryptographic validity.
+compatibility:
+  agentskills_spec: "0.1"
+  python: ">=3.9"
+  network: "none (offline deterministic check)"
+allowed-tools:
+  - "Bash(python3 packages/evidence-fabric/portable_skill_verify.py:*)"
+  - "Read"
+---
 
-One plugin, three manifests, generated by \`scripts/harness-x/render.mjs\` from \`council-os/distribution.json\`:
+# GSPC & OSAIA SAFE Portable Verification Procedure (\`gspc-verify\`)
 
-| Platform | Manifest |
+## Purpose and Scope
+
+Given an existing CSOAI evidence artifact, identify the matching deterministic verification procedure, execute the supported offline checks via \`packages/evidence-fabric/portable_skill_verify.py\`, report the exact verifier state and reason, and preserve the original artifact digest and \`limits[]\`.
+
+**Hard Rule:** Never ask a language model to decide whether an Ed25519 signature, SHA-256 digest, or Merkle proof "looks valid." Always invoke the deterministic verifier and quote its returned \`verdict_state\` and \`artifact_sha256\` verbatim.
+
+## Supported Artifact Kinds
+
+1. **OSAIA SAFE Evidence Pack Directory (\`csoai.safe-evidence-pack/0.1\`)**
+   - Contains \`FREEZE.json\`, \`SHA256SUMS\`, \`records/\`, \`events/\`, \`render/\`.
+   - Checked via \`safe_pack_verify.py --offline --pack <DIR>\`.
+2. **Signed Evidence Batch (\`csoai.signed-run/0.1\` + \`csoai.evidence-batch/0.1\`)**
+   - Checked via \`verify.py <BATCH.json> <BATCH.signed.json> <EVENTS.jsonl> --did <DID.json>\`.
+3. **Standalone Evidence Event or Route Profile (\`csoai.evidence-event/0.1\`, \`csoai.route-evidence/0.1\`)**
+   - Checked via \`verify.py --structure <RECORD.json|EVENTS.jsonl>\`.
+
+## Procedure
+
+Run the deterministic portable skill verifier:
+
+\`\`\`bash
+python3 packages/evidence-fabric/portable_skill_verify.py --artifact <PATH> [--did <DID.json>] [--signed <BATCH.signed.json>] [--events <EVENTS.jsonl>]
+\`\`\`
+
+## Preserved State Vocabulary
+
+- **Batch / Signature Verdicts:** \`VALID\`, \`INVALID\`, \`UNVERIFIABLE_KEY\`, \`UNCHECKABLE\`
+- **SAFE Pack Readback Verdicts:** \`SELF_CONSISTENT_UNAUTHENTICATED_KEY\`, \`INVALID\`, \`UNCHECKABLE\`
+- **Structure-Only Verdicts:** \`STRUCTURE_VALID\`, \`INVALID\` (always reports \`"signed": false\`)
+- **Six Evidence Event States:** \`CONSISTENT\`, \`DIVERGENT\`, \`PARTIAL\`, \`UNMEASURED\`, \`UNCHECKABLE\`, \`NOT_DISCRIMINATING\`
+
+## Permission Boundary Note (\`allowed-tools\`)
+
+The Agent Skills \`allowed-tools\` frontmatter field is an experimental client declaration and **not** an execution grant. When running cross-client portability evaluations, pass \`--client-boundary-observation <STATE>\` (\`ENFORCED\`, \`PROMPTED_FOR_APPROVAL\`, \`REJECTED_ACTION\`, \`IGNORED_EXPERIMENTAL_DECLARATION\`, or \`UNMEASURED\`) to record how the host client treated the declared tool boundary.
+
+${STANCE}
+
+${LINKS}
+
+${doctrineFooter()}
+`);
+emit("distribution/plugin/README.md", `# ${PLUGIN} — Council of AI plugin (Google Antigravity, Claude Code, Cursor, Grok, Agent Skills)
+
+One plugin, four native manifests plus portable Agent Skills (\`agentskills.io\`), generated by \`scripts/harness-x/render.mjs\` from \`council-os/distribution.json\`:
+
+| Platform | Manifest / Entry |
 |---|---|
-| Claude Code | \`.claude-plugin/plugin.json\` + \`.claude-plugin/marketplace.json\` |
-| Cursor | \`.cursor-plugin/plugin.json\` |
+| Google Antigravity | \`plugin.json\` + \`mcp_config.json\` + \`rules/AGENTS.md\` + \`skills/\` |
+| Claude Code | \`.claude-plugin/plugin.json\` + \`.claude-plugin/marketplace.json\` + \`.mcp.json\` |
+| Cursor | \`.cursor-plugin/plugin.json\` + \`.mcp.json\` |
 | Grok | \`.grok-plugin/marketplace.json\` |
+| Portable Agent Skills (Gemini CLI, MiniMax, DeepSeek, Kimi Code, Qwen CLI, OpenClaw/Hermes, OpenCode, Codex) | \`skills/gspc/SKILL.md\` + \`skills/gspc-verify/SKILL.md\` |
 
-All three point at the same remote MCP server (\`.mcp.json\` → ${ID.door}, streamable HTTP, no key)
-and ship the same skill (\`skills/gspc/SKILL.md\`). Server version ${REMOTE_VERSION}; ${FLEET}.
+All manifests point at the same remote MCP server (\`.mcp.json\` / \`mcp_config.json\` → ${ID.door}, streamable HTTP, no key)
+and ship the same skills (\`skills/gspc/SKILL.md\` and \`skills/gspc-verify/SKILL.md\`). Server version ${REMOTE_VERSION}; ${FLEET}.
 
 ${STANCE}
 
@@ -930,7 +1023,9 @@ if (HTTP_VERSION !== REMOTE_VERSION) {
   process.exit(2);
 }
 const SERVER_NAME = "csoai-gspc-mcp"; // serverInfo.name, as initialize answers it
-const stdio = `npx -y ${NPM_ID}@${NPM_VERSION}`;
+const stdio = NPM_STDIO_ADVERTISED ? `npx -y ${NPM_ID}@${NPM_VERSION}` : null;
+const STDIO_NOTE = `npm ${NPM_ID}: published releases are deprecated on npm and carry fewer tools; use the free door ${FREE_DOOR}`;
+const stdioFields = NPM_STDIO_ADVERTISED ? { stdio } : { stdio, stdio_note: STDIO_NOTE };
 const fleetProse = `${word(free.length)} free readers plus ${word(paid.length)} x402-metered evidence tools`;
 // The one tool-count sentence the site, /mcp and these documents share (fix #19). Array lengths.
 const TOOL_COUNTS = `${SERVED_FREE.length} free tools at /mcp/free; ${SERVED.length} at /mcp ` +
@@ -957,7 +1052,7 @@ emit("public/.well-known/mcp/server-card.json", j({
     mcp: {
       primary: ID.door,
       current: ID.door,
-      stdio,
+      ...stdioFields,
       note: `Live door is ${ID.door} (GET 200). HTTP tools/list is ${word(SERVED.length)}: ${fleetProse}. witness_hash is quarantined and not advertised. Registry server ${REMOTE_VERSION}.`,
       free: FREE_DOOR,
       free_note:
@@ -1014,7 +1109,7 @@ emit("public/.well-known/mcp.json", j({
       display_name: "GSPC Measurement Tools",
       url: ID.door,
       version: REMOTE_VERSION,
-      stdio,
+      ...stdioFields,
       auth_required: false,
       registry: {
         name: dist.registry_names.canonical,
@@ -1471,7 +1566,11 @@ class GspcProvider(ToolProvider):
     tool_counts: { free: freeDefs.length, full: freeDefs.length + paidDefs.length, note: "array lengths of functions/mcp/gspc-tools.json and paid-tools.json at render time" },
     live_check: "distribution/connect/connect-live-check.json (scripts/harness-x/connect-live.mjs)",
     doctrine: DOCTRINE,
-    clients: cm.clients.map((c) => ({ ...c, url: c.door === "full" ? ID.door : FREE_URL, snippet: fill(c.snippet) })),
+    clients: cm.clients.map((c) => {
+      const row = { ...c, url: c.door === "full" ? ID.door : FREE_URL, snippet: fill(c.snippet) };
+      const install_action = row.installer === "cursor" ? cursorInstallAction(row, FREE_URL) : vscodeInstallAction(row, FREE_URL);
+      return install_action ? { ...row, install_action } : row;
+    }),
   }));
 }
 
@@ -1498,6 +1597,7 @@ const STEPS = {
   ],
   "cursor-plugin": ["Same repo as claude-plugin; submit it through Cursor's marketplace publisher flow (Cursor account login)."],
   "grok-plugin": ["Same repo as claude-plugin; the marketplace file sits at .grok-plugin/marketplace.json with source `./`."],
+  "antigravity-plugin": ["Same repo as claude-plugin; or copy distribution/plugin/ to ~/.gemini/config/plugins/csoai-gspc/ in Google Antigravity."],
   "claude-connector": [
     "SUBMITTED 2026-09-28 (the free door, /mcp/free); review pending in the directory portal. Nothing further to submit.",
     "Every tool on both doors carries MCP annotations (title, readOnlyHint, destructiveHint, idempotentHint, openWorldHint); check.mjs holds that. The directory listing names the free door only (Software Directory Policy 4.A).",

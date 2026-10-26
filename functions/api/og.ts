@@ -7,6 +7,7 @@
 // workers-og is the Workers-native port of @vercel/og: same satori engine, ImageResponse API,
 // but runs on Cloudflare. Uses an HTML-string template (no JSX build config needed in Pages).
 import { ImageResponse } from "workers-og";
+import { headFromGet } from "./_head";
 
 export const onRequestGet: PagesFunction = async (context) => {
   const url = new URL(context.request.url);
@@ -39,3 +40,7 @@ export const onRequestGet: PagesFunction = async (context) => {
 
   return new ImageResponse(html, { width: 1200, height: 630 });
 };
+
+// HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
+// through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
+export const onRequestHead = headFromGet(onRequestGet);

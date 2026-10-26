@@ -1,0 +1,229 @@
+{
+  "schema": "csoai.finance-axis-disagreement-audit/0.1",
+  "kind": "audit-receipt",
+  "generated_at": "2026-10-07T03:59:34.838202+00:00",
+  "rule": "Producer audit: every financial axis on /api/gspc must agree with its own financial-measure-card on (n, values, status, risk_verdict).",
+  "board_source": "https://councilof.ai/api/gspc (anonymous, Mozilla UA)",
+  "axes_audited": [
+    "provenance-controls",
+    "reserve-attestation",
+    "regulatory-framework",
+    "distribution-integrity",
+    "custody-disclosure",
+    "ai-adoption-components",
+    "labour-components",
+    "humanoid-labour-index"
+  ],
+  "findings": [
+    {
+      "axis": "provenance-controls",
+      "disagreement": true,
+      "checks": {
+        "n_disagreement": false,
+        "value_presence": {
+          "card_values": [],
+          "board_numeric_values": [
+            6,
+            43
+          ],
+          "any_card_value_in_board_values": false
+        },
+        "status_disagreement": true,
+        "risk_disagreement": false
+      },
+      "board_n": 6,
+      "board_status": "MEASURED",
+      "board_as_of": null,
+      "card_n": null,
+      "card_status": null,
+      "card_as_of": null,
+      "card_risk_verdict": null
+    },
+    {
+      "axis": "reserve-attestation",
+      "disagreement": true,
+      "checks": {
+        "n_disagreement": false,
+        "value_presence": {
+          "card_values": [],
+          "board_numeric_values": [
+            16,
+            43
+          ],
+          "any_card_value_in_board_values": false
+        },
+        "status_disagreement": false,
+        "risk_disagreement": true
+      },
+      "board_n": 16,
+      "board_status": "MEASURED",
+      "board_as_of": null,
+      "card_n": 16,
+      "card_status": "MEASURED",
+      "card_as_of": "2026-09-01T04:44:08Z",
+      "card_risk_verdict": "UNMEASURED"
+    },
+    {
+      "axis": "regulatory-framework",
+      "disagreement": true,
+      "checks": {
+        "n_disagreement": false,
+        "value_presence": {
+          "card_values": [],
+          "board_numeric_values": [
+            16,
+            43
+          ],
+          "any_card_value_in_board_values": false
+        },
+        "status_disagreement": false,
+        "risk_disagreement": true
+      },
+      "board_n": 16,
+      "board_status": "MEASURED",
+      "board_as_of": null,
+      "card_n": 16,
+      "card_status": "MEASURED",
+      "card_as_of": "2026-09-01T04:44:08Z",
+      "card_risk_verdict": "UNMEASURED"
+    },
+    {
+      "axis": "distribution-integrity",
+      "disagreement": true,
+      "checks": {
+        "n_disagreement": false,
+        "value_presence": {
+          "card_values": [],
+          "board_numeric_values": [
+            16,
+            43
+          ],
+          "any_card_value_in_board_values": false
+        },
+        "status_disagreement": false,
+        "risk_disagreement": true
+      },
+      "board_n": 16,
+      "board_status": "MEASURED",
+      "board_as_of": null,
+      "card_n": 16,
+      "card_status": "MEASURED",
+      "card_as_of": "2026-09-01T04:44:08Z",
+      "card_risk_verdict": "UNMEASURED"
+    },
+    {
+      "axis": "custody-disclosure",
+      "disagreement": true,
+      "checks": {
+        "n_disagreement": false,
+        "value_presence": {
+          "card_values": [],
+          "board_numeric_values": [
+            16,
+            43
+          ],
+          "any_card_value_in_board_values": false
+        },
+        "status_disagreement": false,
+        "risk_disagreement": true
+      },
+      "board_n": 16,
+      "board_status": "MEASURED",
+      "board_as_of": null,
+      "card_n": 16,
+      "card_status": "MEASURED",
+      "card_as_of": "2026-09-01T04:44:08Z",
+      "card_risk_verdict": "UNMEASURED"
+    },
+    {
+      "axis": "ai-adoption-components",
+      "disagreement": true,
+      "checks": {
+        "n_disagreement": false,
+        "value_presence": {
+          "card_values": [
+            13.48,
+            41.17
+          ],
+          "board_numeric_values": [
+            2,
+            43
+          ],
+          "any_card_value_in_board_values": false
+        },
+        "status_disagreement": false,
+        "risk_disagreement": true
+      },
+      "board_n": 2,
+      "board_status": "MEASURED",
+      "board_as_of": null,
+      "card_n": 2,
+      "card_status": "MEASURED",
+      "card_as_of": "2026-09-01T04:12:34Z",
+      "card_risk_verdict": "UNMEASURED"
+    },
+    {
+      "axis": "labour-components",
+      "disagreement": true,
+      "checks": {
+        "n_disagreement": false,
+        "value_presence": {
+          "card_values": [
+            57.58,
+            5.92
+          ],
+          "board_numeric_values": [
+            2,
+            43
+          ],
+          "any_card_value_in_board_values": false
+        },
+        "status_disagreement": false,
+        "risk_disagreement": true
+      },
+      "board_n": 2,
+      "board_status": "MEASURED",
+      "board_as_of": null,
+      "card_n": 2,
+      "card_status": "MEASURED",
+      "card_as_of": "2026-09-01T04:12:34Z",
+      "card_risk_verdict": "UNMEASURED"
+    },
+    {
+      "axis": "humanoid-labour-index",
+      "disagreement": true,
+      "checks": {
+        "n_disagreement": false,
+        "value_presence": {
+          "card_values": [],
+          "board_numeric_values": [
+            8,
+            43
+          ],
+          "any_card_value_in_board_values": false
+        },
+        "status_disagreement": false,
+        "risk_disagreement": true
+      },
+      "board_n": 8,
+      "board_status": "MEASURED",
+      "board_as_of": null,
+      "card_n": 8,
+      "card_status": "MEASURED",
+      "card_as_of": "2026-09-01T04:12:34Z",
+      "card_risk_verdict": "UNMEASURED"
+    }
+  ],
+  "verdict": {
+    "before_pass": false,
+    "after_pass": false,
+    "open_defect": "Producer fix required. Per the brief: fix the producer, not the row. The board is system of record; the card is its own signed descendant. The disagreement pattern must close at the source (the producer that writes the axes array), not by editing the card or the row."
+  },
+  "disclaimers": [
+    "MEASUREMENT, not CERTIFICATION.",
+    "Audit only. This script does not edit, push, merge, sign, or dispatch.",
+    "The card bytes are signed; they are NOT edited. Any fix must regenerate the card via the producer."
+  ],
+  "sha256": "76b0f8fc31c3feb8c984ce50773ac000f21b7195506d53f5c531ccd4b370d00f",
+  "byte_size": 4363
+}

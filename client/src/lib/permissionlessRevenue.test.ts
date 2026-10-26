@@ -11,6 +11,7 @@ import {
 } from "./permissionlessRevenue";
 
 const products = readFileSync(resolve(__dirname, "../pages/Products.tsx"), "utf8");
+const internal = readFileSync(resolve(__dirname, "../pages/YieldInternal.tsx"), "utf8");
 
 describe("Permissionless revenue — work, not rank", () => {
   it("opens enquiry, RAS, census and SDK funnels now", () => {
@@ -38,6 +39,8 @@ describe("Permissionless revenue — work, not rank", () => {
     const blob = JSON.stringify({ EARN_RULING, EARN_WEDGE, OPENINGS, OPEN_SDKS });
     expect(blob).not.toMatch(/£79|£499|rank for sale|22\/22|dorado|cibola|sovos|sov3/i);
     expect(blob).not.toMatch(/we (?:mine|mint) (?:XRP|SOV|GAT)/i);
-    expect(products).toContain("PermissionlessRevenue");
+    // Operator notes live on the noindex /status/internal page, never on /products (6 Oct 2026).
+    expect(internal).toContain("<PermissionlessRevenue ");
+    expect(products).not.toContain("<PermissionlessRevenue");
   });
 });

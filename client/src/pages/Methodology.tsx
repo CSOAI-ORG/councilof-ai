@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ANCHORING_CLAIM } from "../data/anchoringClaim";
 import { Link } from "wouter";
 import { SpectrumView } from "@/components/gspc/SpectrumView";
@@ -6,6 +6,73 @@ import { setMetaDescription } from "@/lib/utils";
 import MomentumStrip from "@/components/momentum/MomentumStrip";
 import MomentumMethodNote from "@/components/momentum/MomentumMethodNote";
 import DocMeta from "@/components/docs/DocMeta";
+
+interface SepRow {
+  axis: string;
+  kind?: string;
+  separation?: string;
+  separation_method?: string;
+  separation_p?: number;
+}
+
+/** Every model-comparison axis's separation, its method and p, read from GET /api/gspc at render
+ *  time. Nothing here is typed: a failed read says so and draws no rows. */
+function SeparationTable() {
+  const [rows, setRows] = useState<SepRow[] | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+  useEffect(() => {
+    let live = true;
+    fetch("/api/gspc", { headers: { accept: "application/json" } })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
+      .then((d) => {
+        if (!live) return;
+        const axes: SepRow[] = Array.isArray(d?.axes) ? d.axes : [];
+        setRows(axes.filter((a) => a && a.kind === "model-comparison"));
+      })
+      .catch((e) => live && setErr(String(e?.message ?? e)));
+    return () => {
+      live = false;
+    };
+  }, []);
+  return (
+    <div className="mt-4" data-testid="methodology-separation-table">
+      <p className="text-[12px] text-emerald-100/60">
+        Read live from <a href="/api/gspc" className="underline">GET /api/gspc</a>; the method column is
+        each row&apos;s own <code>separation_method</code>, verbatim.
+      </p>
+      {err && (
+        <p className="mt-2 text-[13px] text-amber-300" role="status">
+          The board did not load here ({err}), so no rows are drawn.
+        </p>
+      )}
+      {!err && !rows && <p className="mt-2 text-[13px] text-emerald-100/60">Reading the board…</p>}
+      {rows && (
+        <div className="mt-2 overflow-x-auto">
+          <table className="w-full min-w-[36rem] text-left text-[12px] text-emerald-100/80">
+            <thead className="text-[10px] uppercase tracking-wide text-emerald-100/50">
+              <tr>
+                <th className="py-1 pr-3">Axis</th>
+                <th className="py-1 pr-3">Separation</th>
+                <th className="py-1 pr-3">Method (verbatim)</th>
+                <th className="py-1 text-right">p</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr key={r.axis} className="border-t border-emerald-500/10 align-top">
+                  <td className="py-1.5 pr-3 font-mono">{r.axis}</td>
+                  <td className="py-1.5 pr-3 font-mono font-semibold">{r.separation ?? "UNTESTED"}</td>
+                  <td className="py-1.5 pr-3">{r.separation_method ?? "no method published on this row"}</td>
+                  <td className="py-1.5 text-right font-mono">{typeof r.separation_p === "number" ? r.separation_p : "—"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}
 
 /**
  * /methodology — how the instrument works.
@@ -50,7 +117,7 @@ const PREDICATES = [
 
 export default function Methodology() {
   useEffect(() => {
-    document.title = "Methodology — deterministic predicates, no LLM-as-judge | CSOAI";
+    document.title = "How we measure AI systems | Council of AI";
     setMetaDescription("Council of AI methodology: deterministic predicates, no LLM-as-judge, row-declared methods and evidence boundaries. Model comparisons and deterministic facts use different sample rules; some aggregates remain uncarded.");
   }, []);
 
@@ -60,23 +127,20 @@ export default function Methodology() {
       <section className="border-b border-emerald-500/15">
         <div className="mx-auto max-w-4xl px-6 pt-14 pb-10">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">
-            Methodology · deterministic predicates · hedges propagate
+            Our methods · tests, evidence and limits
           </p>
           <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">
-            How the instrument{" "}
+            How we{" "}
             <span className="bg-gradient-to-r from-emerald-300 to-amber-300 bg-clip-text text-transparent">
-              measures.
+              measure.
             </span>
           </h1>
           <div className="max-w-3xl"><DocMeta updated="2026-09-27" slug="methodology" /></div>
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
-            Each result reports what a published test found. The record identifies the subject,
-            method, test material and limits. Deterministic grading applies the rule consistently
-            — <strong className="text-emerald-50">no model decides, no LLM-as-judge, ever</strong> — and
-            the rule and reference labels still require review. A published result must trace to a
-            verifiable record you can recompute yourself, and every hedge (sample size, lower bound,
-            INCOMPLETE) is carried to the surface instead of being averaged away. A test result under
-            a published predicate is not a legal determination.
+            Each published result identifies what was tested, the test material, the grading rule and its limits.{" "}
+            <strong className="text-emerald-50">The published rule grades the result; another AI model does not act as judge.</strong>{" "}
+            The rules and reference answers still need review. Results retain their sample sizes, uncertainty
+            and incomplete status so you can see what the evidence supports. A test result is not a legal determination.
           </p>
         </div>
       </section>
@@ -84,18 +148,17 @@ export default function Methodology() {
       <div className="mx-auto max-w-4xl px-6 py-12 space-y-16">
         {/* THE FIVE PREDICATES */}
         <section>
-          <h2 className="text-2xl font-bold text-emerald-50">The five deterministic predicates</h2>
+          <h2 className="text-2xl font-bold text-emerald-50">The five published test rules</h2>
           <p className="mt-1 text-[13px] text-emerald-100/60">
-            Every published result is produced by one of these five predicates. No model
-            decides — the predicate inspects the trace, and each PASS names the exact test passed. Three are in use on the measured
-            behavioural axis today; two describe checks whose rails are not yet built, and the
-            table says which is which rather than presenting all five as live.
+            These rules check recorded evidence and identify the exact condition required for a PASS.
+            Three are used on the measured behavioural axis; two describe checks that are not yet available.
+            The table distinguishes them. The rules and reference answers remain open to review.
           </p>
           <div
             className="mt-4 overflow-x-auto rounded-2xl border border-emerald-500/20 bg-[#05140d] focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
             tabIndex={0}
             role="region"
-            aria-label="The five deterministic predicates (scrolls sideways)"
+            aria-label="The five published test rules (scrolls sideways)"
           >
             {/* min-w so the overflow-x-auto wrapper scrolls on a phone instead
                 of crushing "PREDICATE" to one character per line. tabIndex + a named
@@ -153,28 +216,21 @@ export default function Methodology() {
                 <em>JASA</em> 22(158).
               </p>
             </div>
-            <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5">
-              <h3 className="text-[15px] font-bold text-emerald-50">Separation — a deliberately conservative rule</h3>
+            <div id="separation" className="scroll-mt-24 rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5">
+              <h3 className="text-[15px] font-bold text-emerald-50">Separation — one fixed test, and the rows it could not decide</h3>
               <p className="mt-2 text-[13px] text-emerald-100/70 leading-relaxed">
-                There is no single separation rule silently applied to every axis. Each board row
-                declares the evidence it actually has through <code>separation_p</code>,{" "}
-                <code>separation_basis</code>, or <code>separation_method</code>. Paired comparisons
-                may use a <strong className="text-emerald-50">McNemar test at p&lt;0.05</strong> when
-                item-level disagreements exist. Other published rows may use a stated Wilson-bound
-                screen, including comparison with a fleet mean, and say when paired McNemar remains
-                pending. A row is called <strong className="text-amber-300">TIE</strong> only under
-                the method named on that row; it is never promoted to a win by a universal rule we
-                did not run. The current methods and states are in GET /api/gspc.
+                Model-comparison axes: exact <strong className="text-emerald-50">McNemar</strong> on the
+                discordant items, leader vs the best base model, own models removed first, rule fixed
+                2026-08-13; p&lt;0.05 is <strong className="text-emerald-50">SEPARATED</strong>, anything
+                else is <strong className="text-amber-300">TIE</strong>. Wilson 95% intervals are
+                annotation only. Jail used a different published rule (TIE iff the leader&apos;s Wilson
+                95% interval contains the fleet mean); since 2026-09-29 (C-2026-0929-02) its published
+                counts cannot decide it, so it reads <strong className="text-amber-300">UNTESTED</strong>.
+                Axes whose rows tie but carry no signed card read UNTESTED. The test compares the leader
+                with the runner-up only; it says nothing about the order of the rest of the fleet
+                (Miller, <em>Adding Error Bars to Evals</em>, arXiv:2411.00640).
               </p>
-            </div>
-            <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5">
-              <h3 className="text-[15px] font-bold text-emerald-50">Head-to-head — paired McNemar</h3>
-              <p className="mt-2 text-[13px] text-emerald-100/70 leading-relaxed">
-                For a specific "does A beat B" claim, we use a paired <strong className="text-emerald-50">McNemar
-                test</strong> on question-level differences at α=0.05 — the field standard
-                (Miller, <em>Adding Error Bars to Evals</em>, arXiv:2411.00640), complementing the
-                conservative fleet-mean rule rather than replacing it.
-              </p>
+              <SeparationTable />
             </div>
             <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5">
               <h3 className="text-[15px] font-bold text-emerald-50">What we have and have not measured about other raters</h3>
@@ -239,10 +295,10 @@ export default function Methodology() {
 
         {/* HOW TO READ THE LEDGER */}
         <section>
-          <h2 className="text-2xl font-bold text-emerald-50">How to read the ledger</h2>
+          <h2 className="text-2xl font-bold text-emerald-50">How to read the research history</h2>
           <p className="mt-1 text-[13px] text-emerald-100/60">
-            Each refutation is a claim we published, then tested, then published the result —
-            including when it killed our own bet.
+            This history links our earlier claims to the tests and results that followed,
+            including results that challenged our assumptions.
           </p>
           <ol className="mt-4 list-decimal space-y-2 pl-5 text-[13px] text-emerald-100/80 leading-relaxed">
             <li><strong className="text-emerald-50">Read the claim.</strong> What did we assert?</li>
@@ -250,34 +306,39 @@ export default function Methodology() {
             <li>
               <strong className="text-emerald-50">Check a signed card when one is linked.</strong>{" "}
               <Link href="/gspc-verify" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
-                Verify exact card bytes
+                Check the linked record
               </Link>{" "}
               against the published key. A refutation row without linked card bytes and signature
               remains unverified through this path; its label alone is not cryptographic proof.
             </li>
-            <li><strong className="text-emerald-50">Check the n.</strong> Every n&lt;20 is labelled lower bound.</li>
+            <li><strong className="text-emerald-50">Check the sample size (n).</strong> Every n&lt;20 is labelled lower bound.</li>
             <li>
               <strong className="text-emerald-50">Check the tag.</strong> [MEASURED] means we ran
-              it. [REFUTED] means it killed our bet.
+              it. [REFUTED] marks a claim withdrawn after tests or review. Read the linked entry for the evidence and its limits.
             </li>
           </ol>
           <p className="mt-4 text-[13px]">
             <Link href="/refutation-ledger" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
-              Read the full refutation ledger →
+              Read the full research history →
             </Link>
           </p>
         </section>
 
-        {/* WHITEPAPER */}
+        {/* CURRENT METHOD AND ARCHIVE */}
         <section className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6">
-          <h2 className="text-2xl font-bold text-emerald-50">Whitepaper</h2>
+          <h2 className="text-2xl font-bold text-emerald-50">Method documentation</h2>
           <p className="mt-2 text-[13px] text-emerald-100/70 leading-relaxed">
-            The full measured findings, the refutations, and the knowledge-base paradox are
-            documented in the whitepaper.
+            Read the current mechanism and coverage alongside the rules on this page.
+            The earlier workbench architecture paper is retained as an archive.
+          </p>
+          <p className="mt-3 text-[13px]">
+            <Link href="/mechanism" className="text-amber-300 hover:underline">
+              Read the open measurement mechanism and coverage →
+            </Link>
           </p>
           <p className="mt-3 text-[13px]">
             <Link href="/workbench-paper" className="text-amber-300 hover:underline">
-              Read the whitepaper: &ldquo;Measuring What AI Actually Does Under the Law&rdquo; →
+              Archive: &ldquo;Growth by Accretion&rdquo; · 12 July 2026 →
             </Link>
           </p>
         </section>
@@ -331,6 +392,9 @@ export default function Methodology() {
           </Link>
           <Link href="/mechanism/" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
             The open measurement mechanism and its coverage →
+          </Link>
+          <Link href="/blog/how-to-verify-an-ai-measurement/" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
+            How to verify an AI measurement without confusing it with certification →
           </Link>
         </div>
       </div>

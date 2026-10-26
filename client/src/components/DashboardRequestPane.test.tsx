@@ -4,6 +4,7 @@ import { Router } from "wouter";
 import DashboardRequestPane, {
   REQUEST_ATTESTATION_CONTRACT,
   buildActualJobs,
+  networkName,
 } from "./DashboardRequestPane";
 
 const catalog = {
@@ -74,6 +75,42 @@ describe("request-attestation dashboard pane", () => {
     expect(html).toContain("POST /api/assess");
     expect(html).toContain("does not fetch the system");
     expect(html).not.toContain("Coming — Paddle");
+  });
+
+  it("leads with the plain request card; the contract sits behind For developers", () => {
+    const html = renderToStaticMarkup(
+      <Router ssrPath="/dashboard" ssrSearch="tab=measured&subject=qwen3%3A8b">
+        <DashboardRequestPane />
+      </Router>,
+    );
+    expect(html).toContain(">Request a commission receipt</h1>");
+    expect(html).not.toContain("Never mistake it for a fresh measurement");
+    expect(html).toContain("Commission a receipt for cards already on file.");
+    expect(html).not.toContain("run a new test on demand");
+    // Still no fresh-run promise.
+    expect(html).toContain("A fresh run remains UNMEASURED until a published measurement exists; no run date is promised.");
+    expect(html).toContain("nothing is charged by asking");
+    expect(html).toContain("never a result");
+    // The plain card comes before the developer details, and carries the three tiles.
+    const card = html.indexOf('data-testid="fresh-run-card"');
+    const dev = html.indexOf('data-testid="fresh-run-developers"');
+    expect(card).toBeGreaterThan(-1);
+    expect(dev).toBeGreaterThan(card);
+    const cardHtml = html.slice(card, dev);
+    expect(cardHtml).toContain('data-state="PAYMENT_REQUIRED"');
+    expect(cardHtml).toContain("Subject");
+    expect(cardHtml).toContain("qwen3:8b");
+    expect(cardHtml).toContain("What you get");
+    expect(cardHtml).toContain("Nothing yet");
+    expect(cardHtml).toContain("See the terms (no payment)");
+    expect(cardHtml).toContain("Check existing results (free)");
+    // Protocol words live only behind the developer disclosure.
+    expect(cardHtml).not.toContain("Canonical contract");
+    expect(cardHtml).not.toContain("POST /api/assess");
+    expect(html.slice(dev)).toContain("Canonical contract");
+    expect(html.slice(dev)).toContain("POST /api/assess");
+    expect(html.slice(dev)).toContain('id="request-attestation-runner"');
+    expect(html).not.toMatch(/[£$€]\s?\d/);
   });
 
   it("honours the pricing-overview deep link without selling a grade or measurement", () => {
@@ -159,5 +196,47 @@ describe("request-attestation dashboard pane", () => {
     };
     const jobs = buildActualJobs(foreign);
     expect(jobs.some((job) => ["verify", "article50", "provider-history"].includes(job.id))).toBe(false);
+  });
+});
+
+// Tools audit retest, 6 Oct 2026: the terms card showed "eip155:8453" on its face.
+describe("the fresh-run terms name the network in words", () => {
+  it("names Base for its chain id and short name, and nothing for an unknown id", () => {
+    expect(networkName("eip155:8453")).toBe("Base");
+    expect(networkName("base")).toBe("Base");
+    expect(networkName("eip155:999999")).toBeNull();
+    expect(networkName(null)).toBeNull();
+  });
+
+  it("puts no chain id and no amount on the card face before the terms are read", () => {
+    const html = renderToStaticMarkup(
+      <Router ssrPath="/dashboard" ssrSearch="tab=measured&subject=qwen3:8b">
+        <DashboardRequestPane />
+      </Router>,
+    );
+    const face = html.slice(html.indexOf('data-testid="fresh-run-card"'), html.indexOf("fresh-run-terms\""));
+    expect(face).not.toMatch(/eip155:/);
+    expect(face).not.toMatch(/smallest unit/);
+  });
+});
+
+describe("RAS booking CTA on the measured pane (/assess doors here)", () => {
+  const render = (q: string) =>
+    renderToStaticMarkup(
+      <Router ssrPath="/dashboard" ssrSearch={q}>
+        <DashboardRequestPane />
+      </Router>,
+    );
+  it("renders the booking link with the enquiry mailto; CTA and caption carry no price or stripe", () => {
+    const html = render("tab=measured");
+    expect(html).toContain('data-testid="ras-booking-cta"');
+    expect(html).toContain("mailto:nicholas@csoai.org?subject=RAS%20booking%20request%20(ras-booking)");
+    const start = html.lastIndexOf("<div", html.indexOf('data-testid="ras-booking-cta"'));
+    const block = html.slice(start, html.indexOf("</div>", start));
+    expect(block).toContain("Measurement only, not certification");
+    expect(block).not.toMatch(/[£$]|stripe/i);
+  });
+  it("is absent on the pricing overview", () => {
+    expect(render("tab=measured&task=pricing-overview")).not.toContain('data-testid="ras-booking-cta"');
   });
 });
