@@ -31,7 +31,7 @@ const TOOL_TITLES: Record<string, string> = {
   measurement_index: "Measurement index",
   corrections_summary: "Corrections",
   claim_maintenance_register: "Claims we keep re-checking",
-  commission_card: "Fresh run request",
+  commission_card: "Commission receipt",
   art50_marking_evidence: "AI-content marking evidence",
   rwa_evidence: "Real-world asset evidence",
   receipts_batch: "Receipts",
@@ -54,7 +54,7 @@ export function stateMeaning(label: string | undefined): string {
     return "Nothing is published about this yet. That is not a finding either way; you can request a fresh run.";
   if (l.startsWith("UNCHECKABLE")) return "It could not be checked, usually because the record was not found. Nothing passed or failed.";
   if (l.startsWith("NEEDS_INPUT")) return "The tool needs one more detail before it can answer.";
-  if (l.startsWith("PAYMENT_REQUIRED")) return "This is a paid run. Nothing has been paid; you would pay from your own wallet, or arrange an invoice by email.";
+  if (l.startsWith("PAYMENT_REQUIRED")) return "This is a paid request. Nothing has been paid; you would pay from your own wallet, or arrange an invoice by email.";
   if (l.startsWith("INVALID")) return "The check failed: the bytes or the signature do not match.";
   if (l.startsWith("UNREACHABLE") || l.startsWith("ERROR") || l.startsWith("FAILED")) return "The source could not be reached just now. No result is shown in its place.";
   if (l.startsWith("VALID")) return "The check passed: the record matches its published signature or source.";
@@ -611,11 +611,11 @@ export function verifyHref(citationUrl: string | null | undefined): string | nul
 }
 
 /**
- * The one sentence about a fresh run, shared by Get results (step 2) and the Request a fresh run
- * pane: asking is free, and paying never buys a result.
+ * Commission-receipt terms used by the Get results card. Asking does not charge anything;
+ * payment does not buy a fresh measurement or a place in a measurement queue.
  */
 export const FRESH_RUN_DOCTRINE =
-  "We can't run a new test on demand. You can ask for one: you see the terms first and nothing is charged by asking. Paying buys a signed receipt and a place in the queue, never a result; a result appears only once it is measured.";
+  "Review a commission receipt for a named subject before deciding whether to pay. Payment buys a commission receipt and references to existing measurement cards where available. Signing is conditional; verify the returned signature. A fresh measurement is an email enquiry, and no run date is promised.";
 
 /**
  * What a stranger typed: a signed record id, a server/web address, a question in words, or
