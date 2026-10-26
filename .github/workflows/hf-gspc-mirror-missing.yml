@@ -1,0 +1,51 @@
+name: hf-gspc-mirror-missing
+# Mirrors public GSPC artifacts that have no HF dataset yet into csoai/gspc-<family>-<subject>.
+# Owner-dispatched only; dry_run defaults to true. Uses the HF_TOKEN Actions secret. Never touches card_index.
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run: {type: boolean, default: true, description: "Fetch + verify only, do not publish"}
+permissions: {contents: read}
+concurrency: {group: hf-gspc-mirror-missing, cancel-in-progress: false}
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        include:
+          - repo: csoai/gspc-axis-effect-binding
+            src: https://councilof.ai/interop/effect-binding-server-probe-2026-09-22.signed.json
+          # gspc-cards-mill: add once the public URL of the 12 Oct mill Merkle root is confirmed (1,479 signed mill cards).
+    steps:
+      - name: Fetch public artifact
+        run: |
+          set -euo pipefail
+          mkdir out && cd out
+          curl -fsSL "${{ matrix.src }}" -o "$(basename '${{ matrix.src }}')"
+          sha256sum * > SHA256SUMS
+          cat > README.md <<'MD'
+          ---
+          license: cc-by-4.0
+          pretty_name: gspc-axis-effect-binding
+          tags: [gspc, measurement, council-of-ai]
+          ---
+          # 🧭 GSPC · Axis: effect-binding — Council of AI
+          Independent measurement of tool-call servers (deterministic facts; no fleet, no leader). Not a certification.
+          - Verify free: https://councilof.ai/gspc-verify/ · Catalog: https://councilof.ai/catalog.json · Methodology: https://councilof.ai/methodology/
+          - Live row: https://councilof.ai/api/gspc?axis=effect-binding (counts are read live, never typed here)
+          - Source: ${{ matrix.src }} (bytes copied exactly; see SHA256SUMS)
+          - Kaggle mirror: https://www.kaggle.com/datasets/nicktempleman/csoai-gspc-axis-effect-binding
+          MD
+      - name: Publish
+        if: ${{ !inputs.dry_run }}
+        env: {HF_TOKEN: "${{ secrets.HF_TOKEN }}"}
+        run: |
+          pip install -q "huggingface_hub>=0.30"
+          python - <<'PY'
+          import os
+          from huggingface_hub import HfApi
+          a=HfApi(token=os.environ["HF_TOKEN"]); r="${{ matrix.repo }}"
+          a.create_repo(r,repo_type="dataset",exist_ok=True,private=False)
+          a.upload_folder(repo_id=r,repo_type="dataset",folder_path="out",commit_message="mirror public GSPC artifact (exact bytes)")
+          PY

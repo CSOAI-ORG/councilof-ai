@@ -32,6 +32,12 @@ describe("/quickstart — the public evidence path before an optional commission
     expect(page).not.toMatch(/rel=["']canonical["']/);
   });
 
+  it("keeps one route title/meta producer while retaining its HowTo JSON-LD", () => {
+    expect(page).not.toContain("<title>");
+    expect(page).not.toMatch(/<meta\s+(?:name|property)=/);
+    expect(page).toContain('<script type="application/ld+json">');
+  });
+
   it("reads doors, tool names and the verify route from the live manifest — none are typed", () => {
     expect(page).toContain('const MANIFEST = "/.well-known/x402.json"');
     expect(page).toContain("manifest?.mcp?.free_tools");
