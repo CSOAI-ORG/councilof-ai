@@ -1,0 +1,679 @@
+{
+ "checks_sha256": "b4b522325a7f7a40692fe3951b647a98ae06ff8dedb9cef7f44f761dc1344498",
+ "deviation_checks": [
+  "CompletionComplete",
+  "DNSRebindingRejected",
+  "LocalhostHostAccepted",
+  "ElicitationSEP1034General",
+  "ElicitationSEP1330General",
+  "LoggingSetLevel",
+  "Ping",
+  "PromptsGetEmbeddedResource",
+  "PromptsGetSimple",
+  "PromptsGetWithArgs",
+  "PromptsGetWithImage",
+  "PromptsList",
+  "ResourcesList",
+  "ResourcesReadBinary",
+  "ResourcesReadText",
+  "ResourcesSubscribe",
+  "ResourcesTemplateRead",
+  "ResourcesUnsubscribe",
+  "ServerInitialize",
+  "ServerSSEMultipleStreamsTest",
+  "ToolsCallAudio",
+  "ToolsCallElicitation",
+  "ToolsCallEmbeddedResource",
+  "ToolsCallError",
+  "ToolsCallImage",
+  "ToolsCallMixedContent",
+  "ToolsCallSampling",
+  "ToolsCallSimpleText",
+  "ToolsCallWithLogging",
+  "ToolsCallWithProgress",
+  "ToolsList"
+ ],
+ "generated_at": "2026-10-26T02:12:31Z",
+ "instrument": "stable-2025-11-25",
+ "instrument_channel": "stable",
+ "not_a_grade": true,
+ "note": "declared endpoint is a loopback address; any reachability observed is a property of the measuring host, not of the published record",
+ "scenarios": [
+  {
+   "checks": [
+    {
+     "check": "CompletionComplete",
+     "description": "Server responds to completion requests",
+     "errorMessage": "Failed: fetch failed",
+     "id": "completion-complete",
+     "specReferences": [
+      {
+       "id": "MCP-Completion",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/completion"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "cf1da2a73c3d6d7af38b4844574a3adef420941f72553775bcf18f0a8a9a1428",
+   "scenario": "completion-complete",
+   "scenario_run_id": "server-completion-complete-2026-10-26T02-14-40-476Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "DNSRebindingRejected",
+     "description": "Server rejects requests with non-localhost Host/Origin headers",
+     "details": {
+      "hostHeader": "evil.example.com",
+      "originHeader": "http://evil.example.com"
+     },
+     "errorMessage": "Request failed: ",
+     "id": "localhost-host-rebinding-rejected",
+     "specReferences": [
+      {
+       "id": "MCP-DNS-Rebinding-Protection",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/security_best_practices#local-mcp-server-compromise"
+      },
+      {
+       "id": "MCP-Transport-Security",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/transports#security-warning"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "LocalhostHostAccepted",
+     "description": "Server accepts requests with valid localhost Host/Origin headers",
+     "details": {
+      "hostHeader": "localhost:9999",
+      "originHeader": "http://localhost:9999"
+     },
+     "errorMessage": "Request failed: ",
+     "id": "localhost-host-valid-accepted",
+     "specReferences": [
+      {
+       "id": "MCP-DNS-Rebinding-Protection",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/security_best_practices#local-mcp-server-compromise"
+      },
+      {
+       "id": "MCP-Transport-Security",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/transports#security-warning"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "982249539c748b135eac274ccdc2158986f854ff2d0c249878be528e6ad6a3d0",
+   "scenario": "dns-rebinding-protection",
+   "scenario_run_id": "server-dns-rebinding-protection-2026-10-26T02-14-40-551Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ElicitationSEP1034General",
+     "description": "Server requests elicitation with default values",
+     "errorMessage": "Failed: fetch failed",
+     "id": "elicitation-sep1034-general",
+     "specReferences": [
+      {
+       "id": "SEP-1034",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/issues/1034"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "c20888b10c5752426f0434b66566350a129ef5db86fcb4c875588cb5c5ee6d44",
+   "scenario": "elicitation-sep1034-defaults",
+   "scenario_run_id": "server-elicitation-sep1034-defaults-2026-10-26T02-14-40-515Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ElicitationSEP1330General",
+     "description": "Server requests elicitation with enum schemas",
+     "errorMessage": "Failed: fetch failed",
+     "id": "elicitation-sep1330-general",
+     "specReferences": [
+      {
+       "id": "SEP-1330",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/issues/1330"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "bc0c49cf2a31b97dd0bd01a390ce54d8b987092c05608237c9cd565467fbf69b",
+   "scenario": "elicitation-sep1330-enums",
+   "scenario_run_id": "server-elicitation-sep1330-enums-2026-10-26T02-14-40-520Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "LoggingSetLevel",
+     "description": "Server accepts logging level setting",
+     "errorMessage": "Failed: fetch failed",
+     "id": "logging-set-level",
+     "specReferences": [
+      {
+       "id": "MCP-Logging",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/logging"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "913c72b7bef257458cf7f2a4154cd3a246e9e72575f6e4a9f5cee62fbc3a1a11",
+   "scenario": "logging-set-level",
+   "scenario_run_id": "server-logging-set-level-2026-10-26T02-14-40-467Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "Ping",
+     "description": "Server responds to ping requests",
+     "errorMessage": "Failed: fetch failed",
+     "id": "ping",
+     "specReferences": [
+      {
+       "id": "MCP-Ping",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/utilities/ping"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "cf078182f6399bbc7bf5e8805ce1d1c0adf01e25ccba711fd56b3f9ddef1f382",
+   "scenario": "ping",
+   "scenario_run_id": "server-ping-2026-10-26T02-14-40-471Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetEmbeddedResource",
+     "description": "Get prompt with embedded resource",
+     "errorMessage": "Failed: fetch failed",
+     "id": "prompts-get-embedded-resource",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Embedded-Resources",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#embedded-resources"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "a6f8d612c49acbde5e0de8d6244c37cdefa9ee8fbe4c64955dd79bfbd8e8ef8b",
+   "scenario": "prompts-get-embedded-resource",
+   "scenario_run_id": "server-prompts-get-embedded-resource-2026-10-26T02-14-40-546Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetSimple",
+     "description": "Get simple prompt successfully",
+     "errorMessage": "Failed: fetch failed",
+     "id": "prompts-get-simple",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Get",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#getting-prompts"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "87d80771334d41883172e02885c93c73e28c6d73afda6be8bbd54dccf644fd2f",
+   "scenario": "prompts-get-simple",
+   "scenario_run_id": "server-prompts-get-simple-2026-10-26T02-14-40-541Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetWithArgs",
+     "description": "Get parameterized prompt with argument substitution",
+     "errorMessage": "Failed: fetch failed",
+     "id": "prompts-get-with-args",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Get",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#getting-prompts"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "ca364ae35202e5f7cdd70b61122cebea2621def1f084c5be296f972faae99e0f",
+   "scenario": "prompts-get-with-args",
+   "scenario_run_id": "server-prompts-get-with-args-2026-10-26T02-14-40-544Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetWithImage",
+     "description": "Get prompt with image content",
+     "errorMessage": "Failed: fetch failed",
+     "id": "prompts-get-with-image",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Image",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#image-content"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "6dc59153a9b81072c3070f3a56677f243bbfc93209e30f766b4ab47d683b7961",
+   "scenario": "prompts-get-with-image",
+   "scenario_run_id": "server-prompts-get-with-image-2026-10-26T02-14-40-548Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsList",
+     "description": "Server lists available prompts with valid structure",
+     "errorMessage": "Failed: fetch failed",
+     "id": "prompts-list",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-List",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#listing-prompts"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "8114b3a12e76ab93c64cde85afdf3dd98651a0bc1c3b8895d077a06c46853918",
+   "scenario": "prompts-list",
+   "scenario_run_id": "server-prompts-list-2026-10-26T02-14-40-537Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesList",
+     "description": "Server lists available resources with valid structure",
+     "errorMessage": "Failed: fetch failed",
+     "id": "resources-list",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-List",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#listing-resources"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "88eace0f8f0233f7c7f4fff3a84cabb7c58be4728185fc9f7e4ae78b8ccc2bb2",
+   "scenario": "resources-list",
+   "scenario_run_id": "server-resources-list-2026-10-26T02-14-40-522Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesReadBinary",
+     "description": "Read binary resource successfully",
+     "errorMessage": "Failed: fetch failed",
+     "id": "resources-read-binary",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Read",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#reading-resources"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "ca247cc8127acaa9ae4d65ba5e81ffbf24db1aca06eed0c18f14e06fae278208",
+   "scenario": "resources-read-binary",
+   "scenario_run_id": "server-resources-read-binary-2026-10-26T02-14-40-527Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesReadText",
+     "description": "Read text resource successfully",
+     "errorMessage": "Failed: fetch failed",
+     "id": "resources-read-text",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Read",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#reading-resources"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "feec08e5207f61e5a8d4c4812a3afc2716de3fb4aac091f2b461b90e93cd82d5",
+   "scenario": "resources-read-text",
+   "scenario_run_id": "server-resources-read-text-2026-10-26T02-14-40-524Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesSubscribe",
+     "description": "Subscribe to resource successfully",
+     "errorMessage": "Failed: fetch failed",
+     "id": "resources-subscribe",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Subscribe",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#resource-subscriptions"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "b48054c117976c270b257ad583b5f3ac579b62615cdd451c2b0f9c88cfd7f750",
+   "scenario": "resources-subscribe",
+   "scenario_run_id": "server-resources-subscribe-2026-10-26T02-14-40-533Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesTemplateRead",
+     "description": "Read resource from template with parameter substitution",
+     "errorMessage": "Failed: fetch failed",
+     "id": "resources-templates-read",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Templates",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#resource-templates"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "228ef44d33f57de8ea0b8579ab33a6533817bcb32c19893dc1015b1b8a8db61f",
+   "scenario": "resources-templates-read",
+   "scenario_run_id": "server-resources-templates-read-2026-10-26T02-14-40-530Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesUnsubscribe",
+     "description": "Unsubscribe from resource successfully",
+     "errorMessage": "Failed: fetch failed",
+     "id": "resources-unsubscribe",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Subscribe",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#resource-subscriptions"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "307318a676c091424eb72516c0e40c883df2a2ce77ff27653f740f5ffd4788b2",
+   "scenario": "resources-unsubscribe",
+   "scenario_run_id": "server-resources-unsubscribe-2026-10-26T02-14-40-534Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ServerInitialize",
+     "description": "Server responds to initialize request with valid structure",
+     "errorMessage": "Failed to initialize: fetch failed",
+     "id": "server-initialize",
+     "specReferences": [
+      {
+       "id": "MCP-Initialize",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle#initialization"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "93ad66bfb2017f44baab34275c24adf49557f68ec739195e0a4d7a7a3e67c1d9",
+   "scenario": "server-initialize",
+   "scenario_run_id": "server-server-initialize-2026-10-26T02-14-40-444Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ServerSSEMultipleStreamsTest",
+     "description": "Test server multiple SSE streams behavior",
+     "errorMessage": "Error: fetch failed",
+     "id": "server-sse-multiple-streams-error",
+     "specReferences": [
+      {
+       "id": "SEP-1699",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/issues/1699"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "0ae6b5f95815db1fdbc6308e363f22cbf64748b11c857beef0a82282769568c4",
+   "scenario": "server-sse-multiple-streams",
+   "scenario_run_id": "server-server-sse-multiple-streams-2026-10-26T02-14-40-518Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallAudio",
+     "description": "Tool returns audio content",
+     "errorMessage": "Failed: fetch failed",
+     "id": "tools-call-audio",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "2be9d6e686307d9cb0a4d940e62eb155237e35905cd96d94dd52ee21ef062c00",
+   "scenario": "tools-call-audio",
+   "scenario_run_id": "server-tools-call-audio-2026-10-26T02-14-40-490Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallElicitation",
+     "description": "Tool requests user input from client",
+     "errorMessage": "Failed: fetch failed",
+     "id": "tools-call-elicitation",
+     "specReferences": [
+      {
+       "id": "MCP-Elicitation",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/elicitation"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "94026dba3a70ed58d4c1bafe53f565ba0ca55ded329c5cda6a20c102ca17a877",
+   "scenario": "tools-call-elicitation",
+   "scenario_run_id": "server-tools-call-elicitation-2026-10-26T02-14-40-513Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallEmbeddedResource",
+     "description": "Tool returns embedded resource content",
+     "errorMessage": "Failed: fetch failed",
+     "id": "tools-call-embedded-resource",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "c54d8a6f7f8fac18694bfb03e32fd9f17bf0c506b1a724e6f90d88f02efe3bf0",
+   "scenario": "tools-call-embedded-resource",
+   "scenario_run_id": "server-tools-call-embedded-resource-2026-10-26T02-14-40-494Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallError",
+     "description": "Tool returns error correctly",
+     "errorMessage": "Failed: fetch failed",
+     "id": "tools-call-error",
+     "specReferences": [
+      {
+       "id": "MCP-Error-Handling",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "79c609d0b65328a3e3f59f83ef6840f931d47c374e409f39b06656fe34614d64",
+   "scenario": "tools-call-error",
+   "scenario_run_id": "server-tools-call-error-2026-10-26T02-14-40-507Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallImage",
+     "description": "Tool returns image content",
+     "errorMessage": "Failed: fetch failed",
+     "id": "tools-call-image",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "2484c803db16895d0ac4796b9768d0bee989394ea6ae7d61db2eba8adc048dd9",
+   "scenario": "tools-call-image",
+   "scenario_run_id": "server-tools-call-image-2026-10-26T02-14-40-484Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallMixedContent",
+     "description": "Tool returns multiple content types",
+     "errorMessage": "Failed: fetch failed",
+     "id": "tools-call-mixed-content",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "5d79bff3b7c8e0672cb69e8b21ece676480b091cf0da76324c2cbf54773826c8",
+   "scenario": "tools-call-mixed-content",
+   "scenario_run_id": "server-tools-call-mixed-content-2026-10-26T02-14-40-501Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallSampling",
+     "description": "Tool requests LLM sampling from client",
+     "errorMessage": "Failed: fetch failed",
+     "id": "tools-call-sampling",
+     "specReferences": [
+      {
+       "id": "MCP-Sampling",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/sampling"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "11ebb8b2ccc23d5706db13b9bf43740121c214d4892875c245c8117d4dd1582c",
+   "scenario": "tools-call-sampling",
+   "scenario_run_id": "server-tools-call-sampling-2026-10-26T02-14-40-510Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallSimpleText",
+     "description": "Tool returns simple text content",
+     "errorMessage": "Failed: fetch failed",
+     "id": "tools-call-simple-text",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "24522856319e6be455b0567017e11aae2764eeba7ea397b338884f89ec56b1a9",
+   "scenario": "tools-call-simple-text",
+   "scenario_run_id": "server-tools-call-simple-text-2026-10-26T02-14-40-481Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallWithLogging",
+     "description": "Tool sends log messages during execution",
+     "errorMessage": "Failed: fetch failed",
+     "id": "tools-call-with-logging",
+     "specReferences": [
+      {
+       "id": "MCP-Logging",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/logging"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "d790a7a080f1c9999853fba102fc85b81571f9dbb1bbb0d0dfffb7db0ab6256b",
+   "scenario": "tools-call-with-logging",
+   "scenario_run_id": "server-tools-call-with-logging-2026-10-26T02-14-40-505Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallWithProgress",
+     "description": "Tool reports progress notifications",
+     "errorMessage": "Failed: fetch failed",
+     "id": "tools-call-with-progress",
+     "specReferences": [
+      {
+       "id": "MCP-Progress",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/progress"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "0340ec8f5d6337f97e3aa451aae10794dafcb9be8b937cdb74f187097b42f6ea",
+   "scenario": "tools-call-with-progress",
+   "scenario_run_id": "server-tools-call-with-progress-2026-10-26T02-14-40-509Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsList",
+     "description": "Server lists available tools with valid structure",
+     "errorMessage": "Failed: fetch failed",
+     "id": "tools-list",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-List",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#listing-tools"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "2ecb03853ce20558f3161cb48a4dd3027dfa169c2fab5d63170c83fc08514c8d",
+   "scenario": "tools-list",
+   "scenario_run_id": "server-tools-list-2026-10-26T02-14-40-478Z"
+  }
+ ],
+ "schema": "csoai.mcp-conformance-run/0.1",
+ "source": "agntcy-directory",
+ "spec_version": "2025-11-25",
+ "subject_id": "agntcy:Hello World Agent",
+ "subject_record_url": "https://ai-catalog.outshift.io/v1/agents",
+ "subject_url": "http://localhost:9999/",
+ "suite_version": "0.1.16"
+}

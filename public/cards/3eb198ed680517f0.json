@@ -1,0 +1,94 @@
+{
+  "card": {
+    "as_of": "2026-10-08T07:55:46Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-scan/0.1",
+      "subject": "evm-events:scan:polygon",
+      "chain": "polygon",
+      "chain_id": 137,
+      "head": {
+        "block": 95160627,
+        "block_hash": "0xd3b8ec11f5071d4f54df3222e497cd051935af0d02613d5ec74c1210ec99dd36",
+        "block_time": "2026-10-08T07:55:46Z"
+      },
+      "n_contracts": 1,
+      "coverage": [
+        {
+          "subject": "evm-events:BUIDL:polygon",
+          "from": 93363704,
+          "to": 93375703,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 93100835,
+          "rpc": "polygon-bor-rpc.publicnode.com"
+        }
+      ],
+      "unmeasured": [
+        "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+      ],
+      "attests": "the block ranges of each roster contract on polygon that this run read with eth_getLogs for the listed permission events, and how many it found; absence in a range is stated only for that range",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "3eb198ed680517f086a661d776f4ce42e298f8c88b541bfa4628d174b707a3b4",
+    "sig_ed25519": "13666c6f5ac01e289465e322cba0d8f31457a87fd219f2ab3e4778afec9cf7022d9b50391b631d7209679b2fa1051cef39b490a4f295c7d49350990f585f5d0d",
+    "source_urls": [
+      "https://polygon-bor-rpc.publicnode.com"
+    ],
+    "subject": "evm-events:scan:polygon coverage at block 95160627",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:polygon",
+      "coverage:permission-events"
+    ],
+    "unmeasured": [
+      "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "f68e330632661ec2c2f6ec61ca82b8b120cbd5850c47693503c64e964ec9fc3b",
+    "1a09ff05e55cabc988f546864ec7f2633ded2dfd38aa52f8b6a4f87823ee4afe",
+    "64586098579792bd4542b86e4ce5e4fe6d3d8723a9085f912c3b6a7580c9c24c",
+    "c17384099771c644b2499900733f9c3ac40b5d8032108f4d86026a66a5a35e19",
+    "28d5dd3632027f888a5c3213194121b7a9d227b2ca678abf3617c34782106176",
+    "01d5bc4de7890d8e460c81f522cc3e150a09adeefa722276a3a0b79d1c551b69",
+    "b021ac9a042fe516fc06a35ac38055debfd248341255e1e8695a297e6d1aa1c6",
+    "5dcdd2196c1f28b169b5fa7ae43f9bdfdcc806e1452e70ca3d1732f3ced9ec26",
+    "80651afb14ef96899140edc62606d686f121224274eed2d2cf280b50f42713ef"
+  ]
+}

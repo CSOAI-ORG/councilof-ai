@@ -1,0 +1,25 @@
+{
+ "what": "Same inputs as must-fail-deny-declared-egress, with each enforcer record in the OpenShell v0.1.4 console form `<UTC ts> OCSF-JSON {json}`. Before the fix these lines were dropped (0 records parsed). Must return DIVERGENT with the same rows and codes.",
+ "result": "DIVERGENT",
+ "exit": 1,
+ "enforcer_records_parsed": 3,
+ "rows": [
+  {
+   "row": 1,
+   "attempt_host": "pypi.example",
+   "comparison": "HELD"
+  },
+  {
+   "row": 2,
+   "attempt_host": "exfil.example",
+   "comparison": "DIVERGED",
+   "code": "ENFORCER_RECORD_CONTRADICTED_BY_WITNESS"
+  },
+  {
+   "row": 3,
+   "attempt_host": "198.51.100.7",
+   "comparison": "DIVERGED",
+   "code": "EGRESS_WITHOUT_ENFORCER_RECORD"
+  }
+ ]
+}

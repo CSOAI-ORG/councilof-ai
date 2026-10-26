@@ -12,6 +12,26 @@ export const PALETTE_OPEN = "council:palette-open";
 
 export type AskOpenDetail = { question?: string };
 
+/**
+ * Below this width the Ask pane is a bottom sheet over the page (AskPane's own `sm` breakpoint,
+ * the same query it uses to collapse while Watch runs). 12 Oct 2026: on these widths the entry
+ * routes no longer open Ask by themselves; the hero shows first and a launcher opens it on tap.
+ */
+export const ASK_MOBILE_QUERY = "(max-width: 640px)";
+
+/** The human entry routes (#3057): /, /tools and the Council OS home tab. */
+export function isAskEntryRoute(location: string, search: string): boolean {
+  const path = location.replace(/\/+$/, "") || "/";
+  const params = new URLSearchParams(search.startsWith("?") ? search.slice(1) : search);
+  const home = path === "/dashboard" && !params.has("view") && (!params.get("tab") || params.get("tab") === "home");
+  return path === "/" || path === "/tools" || home;
+}
+
+/** Entry routes open Ask after hydration on wider screens only; on mobile opening is user-initiated. */
+export function shouldAutoOpenAsk(location: string, search: string, mobile: boolean): boolean {
+  return !mobile && isAskEntryRoute(location, search);
+}
+
 export function openAsk(question?: string): void {
   window.dispatchEvent(new CustomEvent<AskOpenDetail>(ASK_OPEN, { detail: { question } }));
 }
