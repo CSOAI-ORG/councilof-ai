@@ -27,10 +27,19 @@ export const BUYING_FAQ_URL = "/faq/#buying";
 
 export const BUYING_LINES: readonly string[] = [
   "Checking a result is free, always.",
-  "Pay per call from your own wallet (x402): live at the paid doors listed at GET /api/x402. You see the terms before anything is paid.",
+  "Article 50 pack: a dated record of marking checks on a public output. Evidence bundle: the published evidence for a named subject. Provider-diff feed: provider changes and signed history where available.",
   `A GBP invoice from CSOAI LTD can be arranged by email for the Article 50 pack, the evidence bundle and the provider-diff feed. The site records nothing when you ask, so email the reference you are given to ${CONTACT_MAILBOX}.`,
+  "Ask for a written scope before ordering: name the product, link the public output or subject, and say which dates or history you need. Scope, delivery and invoice terms are agreed by email.",
+  "Pay per call from your own wallet (x402): live at the paid doors listed at GET /api/x402. You see the terms before anything is paid.",
   "Scoped fresh measurement runs: booking is not live. You can ask about one by email.",
 ];
+
+/** Existing invoice products only; each link prepares an enquiry, never an order. */
+export const BUYING_ENQUIRIES = [
+  { product: "art50", label: "Article 50 pack", href: "/contact/?arm=invoice&product=art50" },
+  { product: "evidence-bundle", label: "Evidence bundle", href: "/contact/?arm=invoice&product=evidence-bundle" },
+  { product: "provider-diff", label: "Provider-diff feed", href: "/contact/?arm=invoice&product=provider-diff" },
+] as const;
 
 /** The same statement as one paragraph, for chat answers and the FAQ. */
 export const BUYING_STATEMENT = BUYING_LINES.join(" ");

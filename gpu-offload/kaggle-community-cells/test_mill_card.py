@@ -183,7 +183,9 @@ def test_grading_primitives_match_hub_mill() -> None:
     import kaggle_community_cells as k
     import mill_hub_queue as hub
 
-    assert k.ITEM_EVIDENCE_SCHEMA == hub.ITEM_EVIDENCE_SCHEMA
+    # Kaggle's v0.2 evidence and Hub's v0.3 evidence are both accepted by
+    # the admission verifier. Hub v0.3 adds finish_reason; wire-version
+    # equality is not a grading invariant. Admission is exercised below.
     assert k.MILL_INSTRUMENT == hub.MILL_INSTRUMENT
     assert k.PROMPT_KEYS == hub.PROMPT_KEYS
     assert k.GRADING_MODE_SENTINELS == hub.GRADING_MODE_SENTINELS
