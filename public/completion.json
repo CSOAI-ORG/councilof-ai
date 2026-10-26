@@ -1,6 +1,6 @@
 {
  "schema": "csoai.completion-ledger/1",
- "generated_at": "2026-10-26T05:30:00Z",
+ "generated_at": "2026-10-26T07:40:00Z",
  "note": "Verified completions with their receipts. A line is only here if a live read, a validator run or a merged PR backs it. Blockers are listed, not hidden. Nothing here is a customer, a sale or a valuation.",
  "verified": [
   {
@@ -95,17 +95,17 @@
   },
   {
    "item": "A CONSISTENT verdict can no longer be declared without the control that made it",
-   "receipt": "packages/evidence-fabric/event.py + docs/standards/osaia-safe-evidence-pack/lib/event.py + both evidence-event JSON Schemas; 17 new tests; suite 33 failed/178 passed before and 33 failed/195 passed after (the 33 are pre-existing on master)",
+   "receipt": "packages/evidence-fabric/event.py + packages/evidence-fabric/schema/evidence-event-0.1.schema.json only; 20 tests in packages/evidence-fabric/tests/test_control_admission.py; the suite reads 237 passed / 0 failed (the '33 pre-existing failures' recorded earlier were this machine's /tmp being a symlink, not the code). The rule requires an identified control, an expected outcome, the fact it ran and the fact it discriminated; anything less is PARTIAL or NOT_DISCRIMINATING",
    "at": "2026-10-26T03:05:00Z"
   },
   {
    "item": "That admission change breaks no published record",
-   "receipt": "39 evidence-event records scanned repo-wide, 16 CONSISTENT, 0 fail the stricter rule; the SAFE pack's own verifier still answers 10 VALID / 9 REJECTED and exits 0",
+   "receipt": "the frozen pack's own verifier (docs/standards/osaia-safe-evidence-pack/verify.py --offline): 37 files match, 10 events and 5 renders re-derived byte-identical, VERIFIED, exit 0; all 10 published events carry a discriminating control (designed_to_fail, expected DIVERGENT, got DIVERGENT) so every one of them satisfies the stricter live rule; 39 evidence-event records scanned repo-wide, 16 CONSISTENT, 0 fail it",
    "at": "2026-10-26T03:05:00Z"
   },
   {
    "item": "Disclosure-consistency audit, executed against the estate's live surfaces",
-   "receipt": "scripts/claimguard-estate-sweep.py --json: 17 surfaces, 2 errors, 2 warnings. The re-measurement contradiction ('the answer is always a re-measurement' on /dispute vs 'scheduled re-attestation is not yet available' on /about) is fixed at source in client/src/pages/Dispute.tsx and Challenge.tsx; the sweep goes green on deploy, not before",
+   "receipt": "scripts/claimguard-estate-sweep.py --json: 17 surfaces, 2 errors, 2 warnings. The rule was rebuilt so it can tell precision from contradiction: the promise rule reads the scoping qualifier in a window around the promise rather than across the whole page, and the denial rule requires 'not yet available' about re-attestation or automatic re-measurement, so /pricing's claims table ('3 not yet due') is no longer read as a denial of anything. The selftest is pinned with the estate's real page text and runs on every PR (pr-gates job claimguard-sweep-rules). The /dispute vs /about contradiction is fixed at source in client/src/pages/Dispute.tsx and Challenge.tsx and goes green on deploy, not before",
    "at": "2026-10-26T06:05:00Z"
   },
   {
@@ -167,13 +167,28 @@
    "item": "MCP registry footprint of our own estate",
    "receipt": "5 records / 2 names under ai.councilof (gspc at 3 versions, advertised tools 13 to 19); 100+ records / 18 names under io.github.CSOAI-ORG",
    "at": "2026-10-25T12:00:00Z"
+  },
+  {
+   "item": "A signed artefact I had broken is repaired, and the freeze is now asserted",
+   "receipt": "the CONSISTENT change had also been applied to the frozen, board-signed copy under docs/standards/osaia-safe-evidence-pack/, and that pack's own verifier then answered 'FAIL sums: lib/event.py: sha256 differs from SHA256SUMS', state INVALID, exit 1. The frozen copy is back at its frozen bytes and the pack verifies again; the stricter rule lives only in the live package, where it governs records produced from now on. The test now asserts the freeze chain (SHA256SUMS -> FREEZE.json -> the board signature) and the published events' validity, instead of a behavioural match that could only have been satisfied by editing a signed artefact",
+   "at": "2026-10-26T07:10:00Z"
+  },
+  {
+   "item": "The root publish blockage diagnosed to its cause",
+   "receipt": "the pending candidate's OTS manifest as_of 2026-10-26T01:48:57Z appears 0 times in its own llms.txt: the upgrade step rebuilds the manifest AFTER the llms views are generated, so the views are one cycle stale and pr-gates' llms-txt-derived test fails on the candidate head ('expected ... to contain 2026-10-26T01:48:57Z'). The reconcile step separately dies on a content conflict in the three derived views (public/interop/ots/manifest.json, public/llms.txt, public/llms-full.txt), although all three are generated from the tree rather than authored",
+   "at": "2026-10-26T07:25:00Z"
+  },
+  {
+   "item": "The conformance atoms are admitted by the root's own adapter",
+   "receipt": "scripts/adapters/staged_leaves.py collects 120 leaves with 0 skipped, 18 of them the conformance atoms, so they ride the next root build as unsigned leaves and are signed by GHA under did:web:csoai.org#board-attestation-1. Nothing local signs; the adapter produces coverage, not clients",
+   "at": "2026-10-26T07:30:00Z"
   }
  ],
  "blockers": [
   {
    "blocker": "Public root stale",
-   "detail": "root.json as_of 2026-10-13T03:31:42Z, 317 leaves; the candidate drops 94 master leaves including asset-measurement cards",
-   "decision": "RESOLVED — append-only Merkle log. Evidence: prod-canary min_count = ceil(317 x 0.95) = 302, the deduplicated candidate holds 223, and append-only preserves inclusion proofs for cards already issued without touching MAX_ROOT_DROP_PCT. Not yet republished; a current-state view may sit beside the root but never becomes a second root."
+   "detail": "root.json as_of 2026-10-13T03:31:42Z, 317 leaves; the candidate drops 94 master leaves including asset-measurement cards. The publish is additionally stuck on two faults in the candidate maintainer, both now diagnosed: the reconcile merge conflicts on the three derived views and dies, and the upgrade step rebuilds the OTS manifest after the llms views, leaving the views a cycle stale so pr-gates fails on the candidate head",
+   "decision": "RESOLVED — append-only Merkle log. Evidence: prod-canary min_count = ceil(317 x 0.95) = 302, the deduplicated candidate holds 223, and append-only preserves inclusion proofs for cards already issued without touching MAX_ROOT_DROP_PCT. Not yet republished; a current-state view may sit beside the root but never becomes a second root. The two candidate-maintainer faults are fixed in the maintainer workflow, resolving the derived views from the merged tree and failing closed on any conflict in root, proof or witness bytes"
   },
   {
    "blocker": "M4 maintenance cycle — CLEARED, with thin margin",
