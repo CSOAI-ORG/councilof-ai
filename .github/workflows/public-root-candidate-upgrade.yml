@@ -104,34 +104,29 @@ jobs:
         if: steps.candidate.outputs.exists == 'true'
         run: npm install --no-save --no-audit --no-fund esbuild@0.25.0
 
+      # opentimestamps-client is needed by scripts/ots_manifest_rebuild.py, which the
+      # reconcile step below now runs. It used to be installed after that step, because
+      # the reconcile step did not rebuild the manifest.
+      - name: Install witness dependencies
+        if: steps.candidate.outputs.exists == 'true'
+        run: pip install -q cryptography opentimestamps-client
+
       - name: Reconcile the rolling candidate with current master
         if: steps.candidate.outputs.exists == 'true'
         run: |
           set -euo pipefail
           git config user.name "csoai-public-root"
           git config user.email "board@csoai.org"
-          git fetch origin master
           before=$(git rev-parse HEAD)
-          # A real content conflict fails the workflow closed. Never choose a
-          # side automatically for root, proof, or witness bytes.
-          git merge --no-edit origin/master
-          # The merge keeps the candidate's regenerated OTS manifest and takes master's older
-          # llms.txt, which quotes that manifest — so the two drift and pr-gates' llms check fails.
-          # The generator imports esbuild through scripts/surface/commit-board.mjs; the step above
-          # installs exactly that package, because the full node deps are not installed in this job.
-          node scripts/llms-txt.mjs
-          if ! git diff --quiet -- public/llms.txt public/llms-full.txt; then
-            git add public/llms.txt public/llms-full.txt
-            git commit -m "reconcile: regenerate llms.txt from the merged OTS manifest"
-          fi
+          # The merge, the derived-view conflict resolution and the rebuild order live in
+          # scripts/root_candidate_reconcile.py, which has a --selftest that proves each
+          # failure goes red. The logic is not inline shell here, because inline shell in the
+          # root path is exactly what failed for nine hours without anyone seeing why.
+          python3 scripts/root_candidate_reconcile.py
           after=$(git rev-parse HEAD)
           if [ "$before" != "$after" ]; then
             git push origin "HEAD:public-root/pending"
           fi
-
-      - name: Install witness dependencies
-        if: steps.candidate.outputs.exists == 'true'
-        run: pip install -q cryptography opentimestamps-client
 
       - name: Upgrade the exact candidate proof
         if: steps.candidate.outputs.exists == 'true'
@@ -195,9 +190,17 @@ jobs:
           # release"). Rebuild it from the bytes in the same commit; the manifest is
           # generated from what the files are, never from the intention.
           python3 scripts/ots_manifest_rebuild.py --apply
+          # The llms views quote the manifest's counts and as_of, so rebuilding the
+          # manifest without rebuilding them leaves the views one cycle stale. That is
+          # exactly what pr-gates' llms-txt-derived test caught on the candidate head on
+          # 26 Oct 2026: the manifest's as_of 2026-10-26T01:48:57Z appeared 0 times in
+          # llms.txt, so the candidate could not pass the gate and could not merge.
+          # Regenerate the views from the manifest just written.
+          node scripts/llms-txt.mjs
           git add public/interop/ots
           git add public/interop/root-*.json.ots
           git add public/interop/root-witness-*.json public/interop/root-witness-pointer.json
+          git add public/llms.txt public/llms-full.txt
           git add public/interop/stablecoin-universe-2026-09/readiness.json public/archive/index.json
           if ! git diff --cached --quiet; then
             git commit -m "public-root: upgrade exact candidate to Bitcoin-confirmed"
