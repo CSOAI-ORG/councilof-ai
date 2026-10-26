@@ -436,6 +436,16 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         run: python3 -m unittest scripts/test_ots_upgrade.py
 
+      # The public-root promotion gate used to read the pull request's headRefOid, which LAGS
+      # the branch by seconds after the job pushes the upgraded proof. On 2026-10-26 it read
+      # the PREVIOUS commit, watched the gates for those older bytes, and halted the promotion
+      # of a candidate whose proof was already CONFIRMED_BITCOIN. The gate now lives in a tool
+      # that reads the branch ref, re-reads it every cycle, and refuses to merge bytes whose
+      # gates did not run. This step pins those rules, and the rules can go red.
+      - name: Public-root promotion gate — merge only the bytes whose gates ran
+        if: steps.scope.outputs.gated == 'true'
+        run: python3 -m unittest scripts/test_public_root_promotion_gate.py
+
       - name: Mill receipt readiness — crypto, lifecycle and regulation stay separate
         if: steps.scope.outputs.gated == 'true'
         run: npm run guard:mill-receipt-readiness
