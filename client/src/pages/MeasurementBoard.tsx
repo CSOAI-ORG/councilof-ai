@@ -64,7 +64,7 @@ const GLOSSARY: TermDef[] = [
   {
     term: "axis",
     short:
-      "One thing we try to measure — a single question asked over and over, like “can this model tell which risk tier a system falls into?”. Every axis has its own set of questions and its own score.",
+      "A named area we aim to measure. Read its subject, scope and status before comparing results.",
   },
   {
     term: "measured",
@@ -74,7 +74,7 @@ const GLOSSARY: TermDef[] = [
   {
     term: "unmeasured",
     short:
-      "The slot is published, and nothing has been run against it. It appears on purpose so the gap is visible. It is never evidence that anything was measured.",
+      "An axis or slot is declared, but no qualifying measurement is published for it. Plans and supporting work do not count as a measured result.",
   },
   {
     term: "n",
@@ -84,12 +84,12 @@ const GLOSSARY: TermDef[] = [
   {
     term: "confidence range",
     short:
-      "The band the true score is likely to sit in, given how few things were measured. A wide band means the headline number could easily move on a re-run. Two models whose bands overlap are not separated by the measurement.",
+      "An interval describing uncertainty around a run's estimated score under its stated method. Interval overlap alone does not decide a comparison; read the published comparison result.",
   },
   {
     term: "separated",
     short:
-      "The leader's advantage over the rest of the field is large enough that it is unlikely to be chance. When it is not separated we call it a tie and refuse to publish an ordering.",
+      "The published comparison found evidence of a difference under its stated test. TIE does not establish a difference or prove equality. UNTESTED establishes no eligible comparison. Neither supplies a winner.",
   },
   {
     term: "signed card",
@@ -134,9 +134,9 @@ const STATUS_STYLE: Record<string, string> = {
 };
 
 const SEPARATION_PLAIN: Record<string, string> = {
-  SEPARATED: "The leader's advantage is unlikely to be chance.",
-  TIE: "Too close to call — we refuse to publish an ordering.",
-  UNTESTED: "No separation test has been run on this set of questions yet.",
+  SEPARATED: "The published test supports a difference for the compared models.",
+  TIE: "This comparison did not establish a difference. It does not prove the models are equal.",
+  UNTESTED: "No eligible comparison is established for this published result.",
 };
 
 // ──────────────────────────────────────────────────────────────── the loader
@@ -810,7 +810,7 @@ function CustodyPanel() {
   return (
     <section className="mt-10 rounded-2xl border border-gray-200 bg-white p-6">
       <h2 className="text-lg font-bold text-gray-900">
-        Where a number turns into something you can check
+        Inspect the evidence behind the results
       </h2>
       <p className="mt-2 max-w-3xl text-sm text-gray-700">
         Every measured row above names a published evidence or run artifact. Where a{" "}
@@ -1049,7 +1049,7 @@ function NoRoutePanel() {
   return (
     <section className="mt-10 rounded-2xl border border-amber-300 bg-amber-50/50 p-6">
       <h2 className="text-lg font-bold text-gray-900">
-        Published, and until now unreachable from the board
+        Explore supporting records and methods
       </h2>
       <p className="mt-2 max-w-3xl text-sm text-gray-800">
         These surfaces exist and are public. None of them had a route from the board, which means a
@@ -1074,7 +1074,7 @@ function NoRoutePanel() {
             <tr>
               <th className="px-4 py-2 font-semibold">Surface</th>
               <th className="px-4 py-2 font-semibold">What it measures</th>
-              <th className="px-4 py-2 font-semibold">Why it was hard to find</th>
+              <th className="px-4 py-2 font-semibold">About this record</th>
               <th className="px-4 py-2 font-semibold">Honest state</th>
             </tr>
           </thead>
@@ -1232,8 +1232,8 @@ export default function MeasurementBoard() {
             <div className="font-mono text-xs text-gray-600">
               {data ? (
                 <>
-                  {data.rows.length} rows · {measuredCount} carry a measurement ·{" "}
-                  {unmeasuredCount} published with nothing behind them
+                  {data.rows.length} visible rows in this set · {measuredCount} with published results ·{" "}
+                  {unmeasuredCount} awaiting a qualifying measurement
                 </>
               ) : (
                 "loading…"
@@ -1252,7 +1252,7 @@ export default function MeasurementBoard() {
             </div>
             <div className="rounded-xl border border-gray-200 p-3">
               <dt className="text-[11px] font-bold uppercase tracking-wide text-gray-500">
-                What is on the other end
+                Who or what it covers
               </dt>
               <dd className="mt-1 text-sm text-gray-800">{active.subject}</dd>
             </div>

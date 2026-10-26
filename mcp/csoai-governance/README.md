@@ -23,9 +23,22 @@ council-governed** — the missing governance floor under an AI workbench.
 | `csoai_catalog` | Search the published governed CSOAI tools / MCPs |
 
 No API key required for the public governance surface. Override the backend with
-`CSOAI_GATEWAY` (default `https://os.meok.ai/api`).
+`CSOAI_GATEWAY` (default `https://councilof.ai/api` from 0.1.1).
 
-> **Gateway state (verified 2026-09-14 01:25 UTC):** the default gateway answers every path (`/`, `/catalog`, `/sign`, `/verify`, `/health`) with `200 text/html` — a web page, not a JSON API — so all four tools return an explicit error. This package does not fake a seal. Until a JSON gateway is live, run your own and set `CSOAI_GATEWAY`; the GSPC MCP at `https://councilof.ai/mcp` (12 tools) is the one that works today.
+> **Gateway state (read 2026-10-15 05:20 UTC).** The npm release `csoai-governance-mcp@0.1.0`
+> (the one `npx -y csoai-governance-mcp` installs) still defaults to `https://os.meok.ai/api`.
+> That host now returns 404/405 on every path, so on 0.1.0 all four tools error
+> (`catalog gateway unreachable (status 404)`, `signing gateway unreachable (status 405)`).
+> The source here (0.1.1, not yet published) defaults to `https://councilof.ai/api`.
+> Until 0.1.1 is on npm, set `CSOAI_GATEWAY=https://councilof.ai/api` as in the snippets below.
+>
+> What answers on `https://councilof.ai/api` today:
+> - `csoai_catalog` → `GET /api/tools?q=` (200; probes the published GSPC MCP tools, 38 entries; a query with no match returns an empty list).
+> - `csoai_verify` → `POST /api/verify` (200; returns a `csoai.verify/0.1` verdict).
+> - `csoai_govern` → `POST /api/chat` (200; the councilof.ai concierge answers, which routes to measurement tools rather than giving free-form compliance advice; 0.1.0 reads the wrong reply field and always reports the Sovereign unavailable).
+> - `csoai_sign` → `POST /api/sign` is **not deployed** (404, not in `/openapi.json`); sealing returns an explicit error and never a fake seal.
+>
+> The GSPC MCP at `https://councilof.ai/mcp` (free door `https://councilof.ai/mcp/free`) is the distributed Council OS plugin and works today.
 
 ## Install
 
@@ -33,7 +46,7 @@ Published on npm — **one command, no clone, no build:**
 
 ### Claude Code
 ```bash
-claude mcp add csoai-governance -- npx -y csoai-governance-mcp
+claude mcp add csoai-governance -e CSOAI_GATEWAY=https://councilof.ai/api -- npx -y csoai-governance-mcp
 ```
 
 ### Claude Desktop / Claude Science (config JSON)
@@ -42,18 +55,19 @@ claude mcp add csoai-governance -- npx -y csoai-governance-mcp
   "mcpServers": {
     "csoai-governance": {
       "command": "npx",
-      "args": ["-y", "csoai-governance-mcp"]
+      "args": ["-y", "csoai-governance-mcp"],
+      "env": { "CSOAI_GATEWAY": "https://councilof.ai/api" }
     }
   }
 }
 ```
 
 ### Cursor / other MCP clients
-Point the client at `npx -y csoai-governance-mcp` (stdio transport).
+Point the client at `npx -y csoai-governance-mcp` (stdio transport) with `CSOAI_GATEWAY=https://councilof.ai/api` in its env.
 
 ### Run directly / smoke-test
 ```bash
-npx -y csoai-governance-mcp   # starts the stdio MCP server
+CSOAI_GATEWAY=https://councilof.ai/api npx -y csoai-governance-mcp   # starts the stdio MCP server
 ```
 
 <details>
