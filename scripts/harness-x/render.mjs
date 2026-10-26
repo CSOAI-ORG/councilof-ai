@@ -198,6 +198,110 @@ emit("distribution/plugin/plugin.json", j({
   rules: "./rules",
   "x-csoai-doctrine": DOCTRINE,
 }));
+
+// ── Kimi Code CLI + Kimi desktop: the same door and the same two skills, in Kimi's shape ──────
+// Kimi reads a plugin from <root>/kimi.plugin.json (or <root>/.kimi-plugin/plugin.json), with its
+// skills at a "./" path inside the root and its MCP servers declared inline. The plugin root here
+// IS distribution/plugin/, so the two skills already rendered for the other platforms are the two
+// Kimi ships: one source, four flavours, no second copy of the doctrine to drift.
+//
+// The MCP entry is {"url": ...} and nothing else, on purpose. Kimi treats a url with no transport as
+// HTTP, and the desktop validator strips out-of-spec keys — the neighbouring .mcp.json says
+// "type": "http", which Kimi does not recognise, so this flavour does not reuse that file's shape.
+const KIMI_SKILL_OVERRIDES = {
+  gspc: {
+    displayName: "Council of AI GSPC",
+    description: "Read the live GSPC board and verify signed measurement cards through the free Council of AI MCP door.",
+  },
+  "gspc-verify": {
+    displayName: "GSPC & SAFE evidence verification",
+    description: "Verify a signed card, a measurement capsule or a SAFE evidence pack deterministically, offline or over the free verifier.",
+  },
+};
+const KIMI_MCP_OVERRIDES = {
+  [PLUGIN]: {
+    displayName: "Council of AI GSPC",
+    description: "The free Council of AI MCP door: the live board, signed-card verification, and the public measurement corpus.",
+  },
+};
+const KIMI_TRY_PROMPTS = [
+  "Read the live GSPC board totals and tell me how many axes are measured.",
+  "Verify this measurement card and give me the state: VALID, INVALID or UNCHECKABLE.",
+  "Show me the governance axis row with its n, accuracy and separation state.",
+];
+const KIMI_INTERFACE = {
+  displayName: "Council of AI GSPC",
+  shortDescription: "The live GSPC board and signed-card verification, over MCP.",
+  longDescription: pluginCore.description,
+  developerName: ID.publisher,
+  websiteURL: ID.website,
+  iconUrl: ID.icon,
+  category: "DEVELOPER",
+  hostKind: "local",
+  platforms: ["macos", "linux", "windows"],
+  defaultLocale: "en-US",
+  locales: "./locales/",
+  tryPrompts: KIMI_TRY_PROMPTS,
+  skillOverrides: KIMI_SKILL_OVERRIDES,
+  mcpOverrides: KIMI_MCP_OVERRIDES,
+};
+emit("distribution/plugin/kimi.plugin.json", j({
+  $schema: "https://catalog.msh.team/misc/kimi.plugin.schema.json",
+  name: PLUGIN,
+  version: REMOTE_VERSION,
+  description: pluginCore.description,
+  keywords: pluginCore.keywords,
+  author: ID.publisher,
+  homepage: ID.website,
+  license: "Apache-2.0",
+  skillInstructions: `${STANCE} ${LINKS}`,
+  interface: KIMI_INTERFACE,
+  skills: "./skills/",
+  mcpServers: { [PLUGIN]: { url: ID.door } },
+  // The doctrine pin travels with the manifest, as it does with every other flavour. Kimi ignores
+  // unknown top-level fields (its own validator warns only on id/permissions/tools/apps/…), so the
+  // pin is inert to the client and load-bearing to the estate's distribution check.
+  "x-csoai-doctrine": DOCTRINE,
+}));
+// The platform requires locales/ to cover zh-CN and en-US together with defaultLocale. The base copy
+// is English (the request language); the zh-CN file is a real translation, not the base copied over.
+const localeDoc = (o) => ({
+  displayName: o.displayName,
+  shortDescription: o.shortDescription,
+  longDescription: o.longDescription,
+  developerName: o.developerName,
+  tryPrompts: o.tryPrompts,
+  mcpOverrides: o.mcpOverrides,
+  skillOverrides: o.skillOverrides,
+});
+emit("distribution/plugin/locales/en-US.json", j(localeDoc(KIMI_INTERFACE)));
+emit("distribution/plugin/locales/zh-CN.json", j({
+  displayName: "Council of AI GSPC",
+  shortDescription: "通过 MCP 读取实时 GSPC 榜单并验证签名测量卡。",
+  longDescription: `Council of AI GSPC over MCP：${FLEET}。读取实时榜单，验证签名测量卡（VALID / INVALID / UNCHECKABLE）。仅供测量，不构成认证。`,
+  developerName: ID.publisher,
+  tryPrompts: [
+    "读取实时 GSPC 榜单总数，并告诉我有多少个轴已被测量。",
+    "验证这张测量卡，并给出状态：VALID、INVALID 还是 UNCHECKABLE。",
+    "展示 governance 轴的行，包括 n、准确率与分离状态。",
+  ],
+  mcpOverrides: {
+    [PLUGIN]: {
+      displayName: "Council of AI GSPC",
+      description: "Council of AI 的免费 MCP 入口：实时榜单、签名卡验证与公开测量语料。",
+    },
+  },
+  skillOverrides: {
+    gspc: {
+      displayName: "Council of AI GSPC",
+      description: "通过 Council of AI 免费 MCP 入口读取实时 GSPC 榜单并验证签名测量卡。",
+    },
+    "gspc-verify": {
+      displayName: "GSPC 与 SAFE 证据验证",
+      description: "以确定性的方式，离线或通过免费验证器，验证签名卡、测量胶囊或 SAFE 证据包。",
+    },
+  },
+}));
 const toolLines = (list) => list.map((t) => `- \`${t.id}\` — ${firstSentence(t.description)}`).join("\n");
 const doctrineFooter = (indent = "") =>
   `${indent}Doctrine: \`${DOCTRINE.source}\` sha256 \`${DOCTRINE.sha256}\` (human page ${DOCTRINE.human_page}).`;
@@ -1598,6 +1702,12 @@ const STEPS = {
   "cursor-plugin": ["Same repo as claude-plugin; submit it through Cursor's marketplace publisher flow (Cursor account login)."],
   "grok-plugin": ["Same repo as claude-plugin; the marketplace file sits at .grok-plugin/marketplace.json with source `./`."],
   "antigravity-plugin": ["Same repo as claude-plugin; or copy distribution/plugin/ to ~/.gemini/config/plugins/csoai-gspc/ in Google Antigravity."],
+  "kimi-plugin": [
+    "Kimi Code CLI (terminal): `/plugins install <path>` with this directory as the path, then `/reload` or a new session. The CLI copies a local install to `$KIMI_CODE_HOME/plugins/managed/gspc/` and runs from that copy.",
+    "Kimi Code CLI from a repo: the same directory at the root of a public repo, then `/plugins install https://github.com/<owner>/<repo>`.",
+    "Kimi desktop: register the directory into the personal market (`kimi-daimon kimi-plugin register-personal <dir>`), then install it from the Personal tab of the Plugins page. The daemon hot-reloads active sessions; no restart.",
+    `No key is needed: the MCP entry points at the free door ${ID.door} over HTTP.`,
+  ],
   "claude-connector": [
     "SUBMITTED 2026-09-28 (the free door, /mcp/free); review pending in the directory portal. Nothing further to submit.",
     "Every tool on both doors carries MCP annotations (title, readOnlyHint, destructiveHint, idempotentHint, openWorldHint); check.mjs holds that. The directory listing names the free door only (Software Directory Policy 4.A).",
