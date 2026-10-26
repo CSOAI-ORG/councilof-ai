@@ -20,6 +20,13 @@ on:
         description: "runpod-intake run id whose runpod-signing artifact to land"
         required: true
         type: string
+      supersede_scope:
+        description: "model-axis (default) or comparison-group — use comparison-group when landing a new comparison group so the run of record is never retired"
+        type: choice
+        options:
+          - model-axis
+          - comparison-group
+        default: model-axis
 
 permissions:
   contents: write
@@ -38,6 +45,7 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       RUN_ID: ${{ github.event.inputs.intake_run_id || github.event.workflow_run.id }}
+      SUPERSEDE_SCOPE: ${{ github.event.inputs.supersede_scope || 'model-axis' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -90,6 +98,7 @@ jobs:
           # the numeric intake run id, and it accepts no branch but runpod/land-<that id>.
           # The script writes signer_mode and signer_after for the wait step.
           python3 scripts/sign_land_branch.py dispatch --target runpod --land-branch "$BR" --run-id "${RUN_ID}" \
+            --supersede-scope "${SUPERSEDE_SCOPE}" \
             --github-output "$GITHUB_OUTPUT"
 
       # The run is on master, so it is found by its run-name ("sign runpod <branch>") among runs

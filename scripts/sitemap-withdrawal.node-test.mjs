@@ -8,8 +8,8 @@ const loop = source.slice(source.indexOf('let blogSkipped = 0;'), source.indexOf
 assert.ok(loop.includes('for (const slug of blogSlugs)'));
 // Built exactly as generate-sitemap.mjs builds it (#3070): the reviewed publication manifest.
 const publishedBlog = new Set((JSON.parse(readFileSync(new URL('../client/src/data/blog-published.json', import.meta.url), 'utf8')).published || []).map((p) => p && p.slug).filter(Boolean));
-test('only the two reviewed slugs are published', () => {
-  assert.deepEqual([...publishedBlog].sort(), ['how-to-verify-an-ai-measurement', 'keeping-ai-claims-current']);
+test('only the three reviewed slugs are published', () => {
+  assert.deepEqual([...publishedBlog].sort(), ['gspc-g2-comparison-group-2026-10-14', 'how-to-verify-an-ai-measurement', 'keeping-ai-claims-current']);
 });
 function enumerate(withdrawn, published = publishedBlog) {
   const state = {

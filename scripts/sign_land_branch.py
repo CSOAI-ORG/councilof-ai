@@ -353,12 +353,15 @@ def newest_run_id(run: Runner) -> int:
     return 0
 
 
-def dispatch_command(target: str, land_branch: str, run_value: str, mode: str) -> List[str]:
+def dispatch_command(target: str, land_branch: str, run_value: str, mode: str,
+                     supersede_scope: str = "") -> List[str]:
     key = "intake_run_id" if target == "runpod" else "mill_run_id"
     cmd = ["gh", "workflow", "run", WORKFLOW, "--ref", "master" if mode == "master" else land_branch,
            "-f", f"target={target}", "-f", f"{key}={run_value}"]
     if mode == "master":
         cmd += ["-f", f"land_branch={land_branch}"]
+    if supersede_scope:
+        cmd += ["-f", f"supersede_scope={supersede_scope}"]
     return cmd
 
 
@@ -375,7 +378,8 @@ def loud(message: str) -> None:
             pass
 
 
-def dispatch(target: str, land_branch: str, run_value: str, run: Runner = _run) -> dict:
+def dispatch(target: str, land_branch: str, run_value: str, run: Runner = _run,
+             supersede_scope: str = "") -> dict:
     """Start the signer on master with the landing branch as an input. If the branch name is not
     one master mode takes, or GitHub refuses the master dispatch, start the old branch dispatch
     instead and say so loudly: no landing is lost while master mode is being proven."""
@@ -386,7 +390,7 @@ def dispatch(target: str, land_branch: str, run_value: str, run: Runner = _run) 
         reason = str(error)
     after = newest_run_id(run)
     if not reason:
-        r = run(dispatch_command(target, land_branch, run_value, "master"))
+        r = run(dispatch_command(target, land_branch, run_value, "master", supersede_scope))
         if r.returncode == 0:
             print(f"dispatched {WORKFLOW} on master: target={target} run={run_value} land_branch={land_branch} "
                   f"(master's code signs; the branch is data)")
@@ -450,7 +454,7 @@ def failed_steps(run: Runner, run_id: int) -> str:
 
 def wait(target: str, land_branch: str, run_value: str, mode: str, after: int, tries: int, interval: float,
          initial_sleep: float, run: Runner = _run, sleep: Callable[[float], None] = time.sleep,
-         fallback: bool = True) -> dict:
+         fallback: bool = True, supersede_scope: str = "") -> dict:
     """Wait for the signer run. A master-mode run that completes without success is followed by
     one branch-mode dispatch. A run that never completes is not: two signers on one branch
     would only race."""
@@ -464,7 +468,7 @@ def wait(target: str, land_branch: str, run_value: str, mode: str, after: int, t
              f"Dispatching the old branch mode once so the landing is not lost. If it fails at the same step, "
              f"the refusal is about the data, not the mode.")
         mark = max(newest_run_id(run), int(found["databaseId"]))
-        r = run(dispatch_command(target, land_branch, run_value, "branch"))
+        r = run(dispatch_command(target, land_branch, run_value, "branch", supersede_scope))
         if r.returncode == 0:
             final_mode = "branch-fallback"
             sleep(initial_sleep)
@@ -529,6 +533,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     p.add_argument("--target", required=True, choices=CARD_TARGETS)
     p.add_argument("--land-branch", required=True)
     p.add_argument("--run-id", required=True, help="intake_run_id (runpod) or mill_run_id (mill)")
+    p.add_argument("--supersede-scope", default="", help="forwarded to the signer as supersede_scope")
     p.add_argument("--github-output")
 
     p = sub.add_parser("wait", help="lander: wait for the signer run; fall back to branch mode once if it failed")
@@ -542,6 +547,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     p.add_argument("--initial-sleep", type=float, default=20)
     p.add_argument("--no-fallback", action="store_true")
     p.add_argument("--require-success", action="store_true")
+    p.add_argument("--supersede-scope", default="", help="the scope the fallback dispatch must use")
     p.add_argument("--github-output")
 
     args = parser.parse_args(argv)
@@ -564,12 +570,13 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                                         intake_run_id=args.intake_run_id or None)
             write_outputs(args.github_output, {"pushed": "true" if result["pushed"] else "false"})
         elif args.cmd == "dispatch":
-            write_outputs(args.github_output, dispatch(args.target, args.land_branch, args.run_id))
+            write_outputs(args.github_output, dispatch(args.target, args.land_branch, args.run_id,
+                                                      supersede_scope=args.supersede_scope))
         elif args.cmd == "wait":
             mode = args.mode if args.mode in ("master", "branch") else "master"
             after = int(args.after) if str(args.after).isdigit() else 0
             result = wait(args.target, args.land_branch, args.run_id, mode, after, args.tries, args.interval,
-                          args.initial_sleep, fallback=not args.no_fallback)
+                          args.initial_sleep, fallback=not args.no_fallback, supersede_scope=args.supersede_scope)
             write_outputs(args.github_output, result)
             print(f"signer: {result['conclusion']} (mode {result['signer_mode']}, run {result['signer_run_id'] or '?'})")
             if args.require_success and result["conclusion"] != "success":
