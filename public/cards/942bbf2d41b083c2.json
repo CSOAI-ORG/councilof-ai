@@ -1,0 +1,112 @@
+{
+  "card": {
+    "as_of": "2026-10-26T02:12:31Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "check_counts": {
+        "FAILURE": 20,
+        "INFO": 1,
+        "SUCCESS": 21
+      },
+      "checks": "https://councilof.ai/interop/mcp-conformance-2026-10/checks/ad.inside_inside-ads_1.0.0__alpha-2026-07-28.json",
+      "checks_sha256": "6e223801d13db13965782033eeeeb6fa3c8cca4fd27a74758a29951339a86d0c",
+      "deviation_checks": [
+        "CompletionComplete",
+        "DNSRebindingRejected",
+        "LocalhostHostAccepted",
+        "PromptsGetEmbeddedResource",
+        "PromptsGetSimple",
+        "PromptsGetWithArgs",
+        "PromptsGetWithImage",
+        "PromptsList",
+        "ResourcesList",
+        "ResourcesReadBinary",
+        "ResourcesReadText",
+        "ResourcesTemplateRead",
+        "ToolsCallAudio",
+        "ToolsCallEmbeddedResource",
+        "ToolsCallError",
+        "ToolsCallImage",
+        "ToolsCallMixedContent",
+        "ToolsCallSimpleText",
+        "ToolsCallWithProgress",
+        "WireSchemaValid"
+      ],
+      "instrument": "alpha-2026-07-28",
+      "instrument_channel": "alpha",
+      "kind": "csoai.mcp-conformance/0.1",
+      "not_a_grade": true,
+      "report": "https://councilof.ai/interop/mcp-conformance-2026-10/report.json",
+      "run_state": "RUN_DEVIATIONS",
+      "scenarios": 20,
+      "spec_version": "2026-07-28",
+      "state": "PROBED",
+      "subject_id": "ad.inside/inside-ads@1.0.0",
+      "suite_version": "0.2.0-alpha.12"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "942bbf2d41b083c27a4bea63cc87b3b622e00e25dbc4558a4387d33858531cb1",
+    "sig_ed25519": "c164066a540e1353edf4a8d97287a1cd6c25215e139b7f4f8386bb817c317aba7358e15c72165856d9c68f60d54c294dad9def0c3dd357c6ed297166e7188501",
+    "source_urls": [
+      "https://app.inside.ad/api/mcp",
+      "https://councilof.ai/interop/mcp-conformance-2026-10/checks/ad.inside_inside-ads_1.0.0__alpha-2026-07-28.json",
+      "https://councilof.ai/interop/mcp-conformance-2026-10/report.json"
+    ],
+    "subject": "MCP conformance run alpha-2026-07-28 for ad.inside/inside-ads@1.0.0",
+    "surface": "public.notice",
+    "tags": [
+      "mcp",
+      "conformance",
+      "probe",
+      "mcp-conformance-2026-10"
+    ],
+    "unmeasured": [
+      "behaviour under load",
+      "scenarios outside the frozen spec version",
+      "subjects outside the pinned set"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "6b7d7c69aa447f09c8dc414e8d64ba6932f97bd44e88a975a6888a8a1714a97b",
+    "102769720a5c5c159941045abefad7d040f05045459e5545ace07768667cf196",
+    "55039646c2d137381ca6052b4b0e53dbab3ccddc177691ca1811cbe7e1eee8b8",
+    "5416936c76e9bc05bce3af56fc478fccbcbefe150097291414b8821e1d8fa893",
+    "ff88c72bdc44db503c957163111ade5b936fb43c4e2b8ebc2c67f04896f0c5ba",
+    "bb0eef1e7419df7a2b39c3d258ce4d8cdb9181e4ad64740b38818659cb9e2a74",
+    "6bf88414a620ffbad458c4d652aaa41b4da3bc7527d8f928b1b1184fdd4d4278",
+    "656e1809784ac103fe74af6789a2c6a222e139bdf2e4eb7eab1d472ddef73813",
+    "9b57379f6cafad2b83e92e4daf65fc7e890d0cea13cd1a7f59b1aac56c4fcdd6"
+  ]
+}
