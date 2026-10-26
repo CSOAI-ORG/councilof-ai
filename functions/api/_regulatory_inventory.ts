@@ -5,9 +5,9 @@
 // bound here at build time. scripts/regulatory-inventory-gate.mjs (inside build:client) fails
 // when this module names any file or digest other than the pointer's, and checks that the
 // file's OpenTimestamps proof commits to exactly those bytes.
-import inventory from "../../public/interop/regulatory-inventory-2026-10-07-019dca73240b.json";
+import inventory from "../../public/interop/regulatory-inventory-2026-10-26-7bc985bfc7c2.json";
 
-export const REGULATORY_INVENTORY_PATH = "public/interop/regulatory-inventory-2026-10-07-019dca73240b.json";
-export const REGULATORY_INVENTORY_SHA256 = "d8e4b380a2d1319eafa9f971e644509f4ab9ae8b7ee896698e36a0cdf86048f9";
+export const REGULATORY_INVENTORY_PATH = "public/interop/regulatory-inventory-2026-10-26-7bc985bfc7c2.json";
+export const REGULATORY_INVENTORY_SHA256 = "ac5c2e73bbabaa2059b4ff4eb88c23d674bee04de94b77b3ef74fae957b144cd";
 export const REGULATORY_INVENTORY_POINTER = "public/interop/regulatory-inventory-latest.json";
 export default inventory;

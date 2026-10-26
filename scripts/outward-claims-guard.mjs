@@ -163,34 +163,145 @@ async function checkToolCounts() {
   }
 }
 
-/** 3. A published axis count must equal the live board's. */
-async function checkAxisCounts() {
-  const board = await j(`${SITE}/api/gspc`);
-  const axes = board.body?.axes?.length;
-  if (!axes) return bad("board", "no axes array");
-  ok("board axes", `${axes} on the live board`);
-  // The census's axis claim lives in the ROWS, not in a summary. manifest.jsonl used to open
-  // with a summary object carrying `axis_count`; on 2026-09-05 it became a per-file listing
-  // (file/bytes/sha256/url), and this check read `undefined` off line 1 and called it a wrong
-  // number. It was an ABSENT field, and absent is not zero and not wrong — the published claim
-  // was correct throughout (README: "22-axis canon"; every row: unmeasured_axes 22).
-  //
-  // So it now reads the claim a consumer actually consumes: the first row of models.jsonl,
-  // fetched with a Range header because the file is 14.7 MB and no check needs all of it. A
-  // shape it cannot parse is a SKIP with the reason, never a FAIL.
-  const CENSUS = "https://huggingface.co/datasets/csoai/gspc-hf-model-census/resolve/main/models.jsonl";
-  const census = await fetch(CENSUS, { headers: { ...UA, Range: "bytes=0-4000" } });
-  if (!census.ok && census.status !== 206) return skip("hf census", `HTTP ${census.status}`);
-  let row;
-  try { row = JSON.parse((await census.text()).split("\n")[0]); } catch { row = null; }
-  const claimed = row && (row.measured_axes ?? 0) + (row.unmeasured_axes ?? NaN);
-  if (!row || !Number.isFinite(claimed)) {
-    skip("hf census axes", "models.jsonl row carries no measured/unmeasured axis counts to compare");
-  } else if (claimed === axes) {
-    ok("hf census axes", `${row.measured_axes} measured + ${row.unmeasured_axes} unmeasured = ${axes}, matches the board`);
-  } else {
-    bad("hf census axes", `rows account for ${claimed} axes (${row.measured_axes} measured + ${row.unmeasured_axes} unmeasured); the board has ${axes}`);
+/**
+ * 3. Compare like scopes. This declaration comes from the owner's corrected README at
+ * https://huggingface.co/datasets/csoai/gspc-hf-model-census/blob/449e38a3241819dd0df98efd1eb402f1c2d6d40d/README.md
+ * (25 September correction, independently read 23 October). It describes one frozen file,
+ * not today's roster. Bind the exception to that immutable revision, date and saved scope;
+ * an old as_of by itself never exempts a current count mismatch.
+ */
+const HF_CENSUS = "https://huggingface.co/datasets/csoai/gspc-hf-model-census";
+const FROZEN_CENSUS = {
+  revision: "449e38a3241819dd0df98efd1eb402f1c2d6d40d",
+  asOf: "2026-09-05T05:34:58Z",
+  axes: [
+    "governance", "safety", "provenance", "continuity", "conformance", "openness",
+    "machinery-conformity", "care", "cross-reality", "detector-interop",
+    "art5-safeguard", "swarm", "affect", "jail", "provenance-controls",
+    "reserve-attestation", "regulatory-framework", "distribution-integrity",
+    "custody-disclosure", "ai-adoption-components", "labour-components", "humanoid-labour-index",
+  ],
+};
+
+function validCensusDate(value, now) {
+  if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/.test(value)) return false;
+  const time = Date.parse(value);
+  const canonical = value.includes(".") ? value : value.replace("Z", ".000Z");
+  return Number.isFinite(time) && time <= now && new Date(time).toISOString() === canonical;
+}
+
+function censusAxisVerdicts(row, axes, revision, now) {
+  const result = (state, claim, detail) => ({ state, claim, detail });
+  const unqualified = (detail) => [result("SKIP", "hf census axes", detail)];
+  if (!row || typeof row !== "object" || Array.isArray(row) ||
+      !Number.isSafeInteger(row.measured_axes) || row.measured_axes < 0 ||
+      !Number.isSafeInteger(row.unmeasured_axes) || row.unmeasured_axes < 0) {
+    return unqualified("first row has no qualified nonnegative integer measured/unmeasured counts; missing is not zero");
   }
+  const claimed = row.measured_axes + row.unmeasured_axes;
+  if (!Number.isSafeInteger(claimed) || claimed < 1) return unqualified("first-row total is not a positive safe integer");
+  if (!Array.isArray(row.axes) || row.axes.length !== claimed ||
+      row.axes.some((axis) => typeof axis !== "string" || !axis.trim()) ||
+      new Set(row.axes).size !== claimed) {
+    return [result("FAIL", "hf census axes", "first-row saved axis list does not support its measured/unmeasured counts")];
+  }
+  const dateQualified = validCensusDate(row.as_of, now);
+  const diagnostics = dateQualified ? [] : [
+    result("SKIP", "hf census date", "first-row as_of is missing, malformed, impossible or future; observation date is unqualified"),
+  ];
+  // A positive current claim is always compared, even if an old date or a known historical
+  // revision is attached. Never let archive treatment hide an explicit current mismatch.
+  if (revision === FROZEN_CENSUS.revision && row.scope !== "current") {
+    if (!dateQualified) return [...diagnostics, ...unqualified("historical binding is unqualified; no current-coverage verdict")];
+    const matches = row.as_of === FROZEN_CENSUS.asOf &&
+      row.schema === "csoai.gspc-axes/0.5" && row.status === "UNMEASURED" &&
+      row.board === "https://councilof.ai/api/gspc" &&
+      row.measured_axes === 0 && row.unmeasured_axes === FROZEN_CENSUS.axes.length &&
+      (row.scope === undefined || row.scope === "frozen") &&
+      row.axes.every((axis, i) => axis === FROZEN_CENSUS.axes[i]);
+    if (!matches) return [result("FAIL", "hf census scope",
+      "first row contradicts the pinned frozen revision/date/saved-axis declaration; historical exception refused")];
+    return [result("SKIP", "hf census axes",
+      "historical first-row scope: " + claimed + " axes (0 measured + " + row.unmeasured_axes +
+      " unmeasured), as_of " + row.as_of + ", revision " + revision +
+      "; live board has " + axes + ". Not current coverage; other rows and historical-board correctness were not checked")];
+  }
+  if (revision === FROZEN_CENSUS.revision && row.scope === "current") diagnostics.push(result("FAIL", "hf census scope",
+    "the pinned frozen revision is also presented as current; archive declaration and current claim conflict"));
+  if (row.scope !== "current") diagnostics.push(result("SKIP", "hf census scope",
+    "no qualified frozen declaration for revision " + revision +
+    "; first-row count comparison only, not archive or whole-file acceptance"));
+  if (claimed !== axes) return [...diagnostics, result("FAIL", "hf census axes",
+    "first row accounts for " + claimed + " axes (" + row.measured_axes + " measured + " +
+    row.unmeasured_axes + " unmeasured); live board has " + axes +
+    "; an old or unqualified date does not excuse a current count mismatch")];
+  if (!dateQualified || (row.scope !== undefined && row.scope !== "current")) {
+    return [...diagnostics, ...unqualified("first-row total equals the live count, but date or scope remains unqualified")];
+  }
+  return [...diagnostics, result("OK", "hf census axes",
+    "first-row counts: " + row.measured_axes + " measured + " + row.unmeasured_axes +
+    " unmeasured = " + axes + ", matches the live count only; not freshness, model measurement or whole-file coverage")];
+}
+
+// Stop after the first line or 4,001 bytes even if a server ignores Range. Never read all
+// 20,000 rows merely to check one published count. This does not verify the rest of the file.
+async function firstCensusRow(response) {
+  const reader = response.body?.getReader();
+  if (!reader) return null;
+  const decoder = new TextDecoder("utf-8", { fatal: true });
+  let text = "", bytes = 0, reachedEof = false;
+  try {
+    // Even a newline-terminated JSON object is not FIRST-row evidence when a 206
+    // response starts elsewhere. Require a supported, internally valid zero-start range.
+    const range = /^bytes 0-(\d+)\/(\d+|\*)$/.exec(response.headers.get("content-range") ?? "");
+    const end = range ? Number(range[1]) : NaN;
+    const total = range && range[2] !== "*" ? Number(range[2]) : NaN;
+    if (response.status === 206 && (!range || !Number.isSafeInteger(end) || end < 0 ||
+        (range[2] !== "*" && (!Number.isSafeInteger(total) || total <= end)))) return null;
+    while (bytes < 4001 && !text.includes("\n")) {
+      const { value, done } = await reader.read();
+      if (done) { reachedEof = true; break; }
+      const part = value.subarray(0, 4001 - bytes);
+      const newline = part.indexOf(10);
+      const linePart = newline < 0 ? part : part.subarray(0, newline + 1);
+      bytes += linePart.length;
+      text += decoder.decode(linePart, { stream: true });
+    }
+    if (response.status === 206 && bytes > end + 1) return null;
+    if (!text.includes("\n")) {
+      // EOF of a partial 206 response is not EOF of models.jsonl. A newline-free
+      // final row needs a whole 200 response or an exact, fully consumed 0..total-1 range.
+      const wholeRange = response.status === 206 && Number.isSafeInteger(total) &&
+        total > 0 && end === total - 1 && bytes === total;
+      if (!reachedEof || (response.status !== 200 && !wholeRange)) return null;
+    }
+    if (reachedEof) text += decoder.decode();
+    return JSON.parse(text.split("\n")[0]);
+  } catch {
+    return null;
+  } finally {
+    await reader.cancel();
+  }
+}
+
+async function checkAxisCounts() {
+  const observedAt = Date.now();
+  const board = await j(SITE + "/api/gspc");
+  if (!Array.isArray(board.body?.axes) || !board.body.axes.length) return bad("board", "no axes array");
+  const axes = board.body.axes.length;
+  ok("board axes", axes + " on the live board");
+  // Resolve main once, then read immutable bytes. A README revision and a moving main row
+  // must not be silently combined; missing revision metadata leaves the scope unqualified.
+  const metadata = await j("https://huggingface.co/api/datasets/csoai/gspc-hf-model-census");
+  const revision = metadata.body?.sha;
+  if (metadata.status !== 200 || typeof revision !== "string" || !/^[a-f0-9]{40}$/.test(revision)) {
+    return skip("hf census scope", "current immutable revision unavailable (HTTP " + metadata.status + "); no historical exception or current acceptance");
+  }
+  const census = await fetch(HF_CENSUS + "/resolve/" + revision + "/models.jsonl",
+    { headers: { ...UA, Range: "bytes=0-4000" } });
+  if (!census.ok) return skip("hf census", "HTTP " + census.status + "; first-row scope unqualified");
+  const row = await firstCensusRow(census);
+  results.push(...censusAxisVerdicts(row, axes, revision, observedAt));
 }
 
 /**
@@ -1034,6 +1145,157 @@ async function main() {
       const got = c.claimed === c.served ? "OK" : "FAIL";
       if (got !== c.want) { console.error(`selftest FAIL: ${c.name} -> ${got}, wanted ${c.want}`); bad++; }
     }
+
+    // Offline integration fixtures: run the REAL collector + scope decisions. The retained
+    // first row was read from immutable HF revision 449e38a on 23 October (4,001-byte range).
+    // It is one-row evidence, never a claim about every row in the 20,000-model file.
+    const frozenRow = {"as_of":"2026-09-05T05:34:58Z","axes":["governance","safety","provenance","continuity","conformance","openness","machinery-conformity","care","cross-reality","detector-interop","art5-safeguard","swarm","affect","jail","provenance-controls","reserve-attestation","regulatory-framework","distribution-integrity","custody-disclosure","ai-adoption-components","labour-components","humanoid-labour-index"],"board":"https://councilof.ai/api/gspc","hub":"huggingface","issuer":"did:web:csoai.org#card-attestation-1","measured_axes":0,"model_id":"sentence-transformers/all-MiniLM-L6-v2","schema":"csoai.gspc-axes/0.5","status":"UNMEASURED","unmeasured_axes":22,"verify":"https://councilof.ai/gspc-verify"};
+    const otherRevision = "f".repeat(40);
+    const currentRow = { ...frozenRow, scope: "current", as_of: "2026-10-23T00:00:00Z",
+      unmeasured_axes: 33, axes: Array.from({ length: 33 }, (_, i) => "axis-" + i) };
+    const axisCases = [
+      { name: "pinned historical22 vs live33 stays visible SKIP", want: "SKIP", historical: true },
+      { name: "pinned historical22 vs live22 still is not current OK", boardCount: 22, want: "SKIP", historical: true },
+      { name: "explicit frozen label matches pinned declaration", patch: { scope: "frozen" }, want: "SKIP", historical: true },
+      { name: "old date cannot excuse explicit current mismatch", patch: { scope: "current" }, want: "FAIL" },
+      { name: "old date at another revision cannot imply frozen", revision: otherRevision, want: "FAIL", diagnostic: "hf census scope" },
+      { name: "explicit current22 vs live33 fails at new revision", revision: otherRevision, patch: { scope: "current" }, want: "FAIL" },
+      { name: "current33 vs live33 passes count only", revision: otherRevision, row: currentRow, want: "OK" },
+      { name: "matching count without qualified scope stays diagnosed", revision: otherRevision, row: { ...currentRow, scope: undefined }, want: "OK", diagnostic: "hf census scope" },
+      { name: "new frozen declaration is not silently admitted", revision: otherRevision, row: { ...currentRow, scope: "frozen" }, want: "SKIP", diagnostic: "hf census scope" },
+      { name: "current mismatch and missing date retain FAIL", revision: otherRevision, patch: { scope: "current", as_of: undefined }, want: "FAIL", diagnostic: "hf census date" },
+      { name: "equal count with missing date is unqualified", revision: otherRevision, row: { ...currentRow, as_of: undefined }, want: "SKIP", diagnostic: "hf census date" },
+      { name: "frozen missing date cannot pass", patch: { as_of: undefined }, want: "SKIP", diagnostic: "hf census date" },
+      { name: "frozen null date cannot pass", patch: { as_of: null }, want: "SKIP", diagnostic: "hf census date" },
+      { name: "ambiguous date cannot pass", patch: { as_of: "September 5, 2026" }, want: "SKIP", diagnostic: "hf census date" },
+      { name: "impossible date cannot normalize to acceptance", patch: { as_of: "2026-02-30T00:00:00Z" }, want: "SKIP", diagnostic: "hf census date" },
+      { name: "future date cannot pass", patch: { as_of: "2099-01-01T00:00:00Z" }, want: "SKIP", diagnostic: "hf census date" },
+      { name: "mismatched valid snapshot date fails binding", patch: { as_of: "2026-09-06T05:34:58Z" }, want: "FAIL", claim: "hf census scope" },
+      { name: "changed saved axis fails pinned binding", patch: { axes: frozenRow.axes.map((x, i) => i ? x : "changed-axis") }, want: "FAIL", claim: "hf census scope" },
+      { name: "same count with duplicate axis fails", patch: { axes: frozenRow.axes.map((x, i) => i ? x : frozenRow.axes[1]) }, want: "FAIL" },
+      { name: "count disagrees with saved list fails", patch: { unmeasured_axes: 21 }, want: "FAIL" },
+      { name: "changed status fails pinned binding", patch: { status: "MEASURED" }, want: "FAIL", claim: "hf census scope" },
+      { name: "wrong board fails pinned binding", patch: { board: "https://example.invalid/api/gspc" }, want: "FAIL", claim: "hf census scope" },
+      { name: "string count cannot coerce", patch: { measured_axes: "0" }, want: "SKIP" },
+      { name: "missing measured count is not zero", patch: { measured_axes: undefined }, want: "SKIP" },
+      { name: "null count is not zero", patch: { measured_axes: null }, want: "SKIP" },
+      { name: "boolean count is not zero", patch: { measured_axes: false }, want: "SKIP" },
+      { name: "negative count cannot pass", patch: { measured_axes: -1 }, want: "SKIP" },
+      { name: "fractional count cannot pass", patch: { measured_axes: 0.5 }, want: "SKIP" },
+      { name: "missing immutable revision stays unqualified", revision: null, want: "SKIP", claim: "hf census scope" },
+      { name: "malformed immutable revision stays unqualified", revision: "main", want: "SKIP", claim: "hf census scope" },
+      { name: "metadata failure does not fetch moving main", metadataStatus: 503, want: "SKIP", claim: "hf census scope" },
+      { name: "row refusal remains unqualified without retry", rowStatus: 403, want: "SKIP", claim: "hf census" },
+      { name: "malformed first row remains unqualified", raw: "{bad json}\n", want: "SKIP" },
+      { name: "ignored Range is cancelled after first row", stream: true, rowStatus: 200, want: "SKIP", historical: true },
+      { name: "oversized first line is bounded and unqualified", raw: "x".repeat(8000), stream: true, want: "SKIP" },
+      { name: "valid JSON prefix before unseen invalid suffix cannot pass", revision: otherRevision,
+        raw: JSON.stringify(currentRow) + " ".repeat(5000) + "invalid-suffix\n", stream: true, want: "SKIP" },
+      { name: "complete last row with confirmed EOF needs no newline", revision: otherRevision,
+        raw: JSON.stringify(currentRow), rowStatus: 200, want: "OK" },
+      { name: "incomplete UTF-8 at genuine EOF cannot hide after JSON", revision: otherRevision,
+        rawBytes: new Uint8Array([...new TextEncoder().encode(JSON.stringify(currentRow)), 0xE2]), rowStatus: 200, want: "SKIP" },
+      { name: "newline ends the first row before malformed later bytes",
+        rawBytes: new Uint8Array([...new TextEncoder().encode(JSON.stringify(frozenRow) + "\n"), 0xFF]), want: "SKIP", historical: true },
+      { name: "current first-row mismatch survives malformed second row", revision: otherRevision,
+        rawBytes: new Uint8Array([...new TextEncoder().encode(JSON.stringify({ ...frozenRow, scope: "current" }) + "\n"), 0xFF]), want: "FAIL" },
+      { name: "newline-free complete object in proven whole206 passes", revision: otherRevision,
+        raw: JSON.stringify(currentRow), rangeKind: "whole", want: "OK" },
+      { name: "short partial206 EOF is not object EOF", revision: otherRevision,
+        raw: JSON.stringify(currentRow) + " ".repeat(100), rangeKind: "partial", want: "SKIP" },
+      { name: "missing206 range cannot prove final row", revision: otherRevision,
+        raw: JSON.stringify(currentRow), rangeKind: "missing", want: "SKIP" },
+      { name: "wildcard206 total cannot prove final row", revision: otherRevision,
+        raw: JSON.stringify(currentRow), rangeKind: "wildcard", want: "SKIP" },
+      { name: "nonzero-start206 cannot prove first row", revision: otherRevision,
+        raw: JSON.stringify(currentRow), rangeKind: "nonzero", want: "SKIP" },
+      { name: "claimed whole206 size must equal received bytes", revision: otherRevision,
+        raw: JSON.stringify(currentRow), rangeKind: "wrong-size", want: "SKIP" },
+      { name: "nonzero-start206 with newline cannot supply first row", revision: otherRevision,
+        row: currentRow, rangeKind: "nonzero", want: "SKIP" },
+      { name: "missing206 origin with newline stays unqualified", revision: otherRevision,
+        row: currentRow, rangeKind: "missing", want: "SKIP" },
+      { name: "malformed206 origin with newline stays unqualified", revision: otherRevision,
+        row: currentRow, rangeKind: "malformed", want: "SKIP" },
+      { name: "unsupported206 range unit stays unqualified", revision: otherRevision,
+        row: currentRow, rangeKind: "wrong-unit", want: "SKIP" },
+      { name: "first row must fit the declared206 range", revision: otherRevision,
+        row: currentRow, rangeKind: "too-short", want: "SKIP" },
+      { name: "206 range cannot end beyond total", revision: otherRevision,
+        row: currentRow, rangeKind: "bad-total", want: "SKIP" },
+      { name: "zero-start wildcard206 with complete newline qualifies count", revision: otherRevision,
+        row: currentRow, rangeKind: "wildcard", want: "OK" },
+
+
+    ];
+    for (const c of axisCases) {
+      const originalFetch = globalThis.fetch;
+      const savedResults = results.splice(0);
+      const calls = [];
+      const revision = Object.hasOwn(c, "revision") ? c.revision : FROZEN_CENSUS.revision;
+      const row = c.row ?? { ...frozenRow, ...c.patch };
+      const raw = c.rawBytes ?? c.raw ?? JSON.stringify(row) + "\n";
+      let cancelled = false;
+      try {
+        globalThis.fetch = async (url, init = {}) => {
+          const requested = String(url);
+          calls.push({ url: requested, init });
+          if (calls.length === 1 && requested === SITE + "/api/gspc") {
+            return new Response(JSON.stringify({ axes: Array.from({ length: c.boardCount ?? 33 }, () => ({})) }));
+          }
+          if (calls.length === 2 && requested === "https://huggingface.co/api/datasets/csoai/gspc-hf-model-census") {
+            return new Response(JSON.stringify({ sha: revision }), { status: c.metadataStatus ?? 200 });
+          }
+          if (calls.length === 3 && requested === HF_CENSUS + "/resolve/" + revision + "/models.jsonl") {
+            const body = c.stream ? new ReadableStream({
+              start(controller) { controller.enqueue(new TextEncoder().encode(raw + "x".repeat(10000))); },
+              cancel() { cancelled = true; },
+            }) : raw;
+            const size = typeof raw === "string" ? new TextEncoder().encode(raw).length : raw.length;
+            const ranges = {
+              whole: "bytes 0-" + (size - 1) + "/" + size,
+              partial: "bytes 0-" + (size - 1) + "/" + (size + 1000),
+              wildcard: "bytes 0-" + (size - 1) + "/*",
+              nonzero: "bytes 1-" + size + "/" + (size + 1),
+              "wrong-size": "bytes 0-" + size + "/" + (size + 1),
+              malformed: "bytes not-a-range",
+              "wrong-unit": "items 0-" + (size - 1) + "/" + size,
+              "too-short": "bytes 0-10/" + size,
+              "bad-total": "bytes 0-" + size + "/" + size,
+            };
+            return new Response(body, { status: c.rowStatus ?? 206,
+              headers: c.rangeKind === "missing" ? {} :
+                { "content-range": ranges[c.rangeKind ?? "partial"] } });
+          }
+          throw new Error("unexpected offline census request: " + requested);
+        };
+        await checkAxisCounts();
+        const observed = results.find((r) => r.claim === (c.claim ?? "hf census axes"));
+        const expectsRow = (c.metadataStatus ?? 200) === 200 &&
+          typeof revision === "string" && /^[a-f0-9]{40}$/.test(revision);
+        const requestIdentity = calls.length === (expectsRow ? 3 : 2) &&
+          calls.every(({ init }) => (init.method ?? "GET") === "GET" && init.body === undefined &&
+            Object.keys(init.headers ?? {}).every((name) => ["user-agent", "accept", "range"].includes(name.toLowerCase()))) &&
+          (!expectsRow || calls[2].init.headers.Range === "bytes=0-4000") &&
+          calls.every(({ url }) => !url.includes("/resolve/main/"));
+        if (!requestIdentity || observed?.state !== c.want ||
+            (c.want !== "FAIL" && results.some((r) => r.state === "FAIL")) ||
+            (c.diagnostic && !results.some((r) => r.claim === c.diagnostic && r.state === "SKIP")) ||
+            (c.historical && (!observed.detail.includes("historical first-row scope") ||
+              !observed.detail.includes("Not current coverage") || !observed.detail.includes("other rows"))) ||
+            (c.stream && !cancelled)) {
+          console.error("selftest FAIL: census " + c.name + " -> " + JSON.stringify(results) + ", wanted " + c.want);
+          bad++;
+        }
+      } catch (error) {
+        console.error("selftest FAIL: census " + c.name + " threw " + String(error));
+        bad++;
+      } finally {
+        globalThis.fetch = originalFetch;
+        results.splice(0, results.length, ...savedResults);
+      }
+    }
+
     // and the probe rule: a 402 answer is a pass even when the argument was nonsense
     const probeVerdict = (status, hasChallenge) => (status === 402 && hasChallenge ? "OK" : "JUDGE_LATER");
     if (probeVerdict(402, true) !== "OK") { console.error("selftest FAIL: 402 probe must pass"); bad++; }
@@ -1832,7 +2094,7 @@ async function main() {
       }
     }
 
-    console.log(bad ? `selftest: ${bad} case(s) wrong` : ("selftest OK — 38 existing decision cases + " + manifestCases.length + " manifest controls, all correct"));
+    console.log(bad ? `selftest: ${bad} case(s) wrong` : ("selftest OK — 38 existing decision cases + " + manifestCases.length + " manifest controls + " + axisCases.length + " census scope fixtures, all correct"));
     process.exit(bad ? 1 : 0);
   }
   await checkManifest();
