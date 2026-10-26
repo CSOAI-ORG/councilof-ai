@@ -470,6 +470,12 @@ function ruleAnchorCount(facts, file, text, add) {
 }
 
 function ruleCapabilityTense(facts, file, text, add) {
+  // Captured third-party pages under interop/…/mirrors/ are quotation, not our claims. The gate's own
+  // doctrine is that a quoted sentence is evidence of what the source served, not a statement we make.
+  // Case that exposed it (25 Oct 2026): a Flare FAssets paragraph captured in
+  // interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-6600.json contains "mainnet", and the gate
+  // read it as CSOAI describing a planned rail as live.
+  if (/(^|\/)mirrors\//.test(file)) return;
   const rails = (facts.rails || []).filter(
     (r) => r.status === "planned" || r.status === "devnet"
   );
@@ -524,6 +530,46 @@ function ruleCapabilityTense(facts, file, text, add) {
 }
 
 // ---------------------------------------------------------------- driver
+// Owner-gated axes (public_pages HIDDEN_PENDING_OWNER_GO) are in GET /api/gspc and its counts,
+// but no public page may render them as a tile or a board row until the owner's go.
+// Ids come from the SAME board reference the count rules use; markers are the exact render hooks.
+export const OWNER_GATED = "HIDDEN_PENDING_OWNER_GO";
+export function ownerGatedIds(boardRaw) {
+  const b = JSON.parse(Buffer.isBuffer(boardRaw) ? boardRaw.toString("utf8") : String(boardRaw));
+  return (Array.isArray(b?.axes) ? b.axes : []).filter((a) => a?.public_pages === OWNER_GATED && typeof a.axis === "string").map((a) => a.axis);
+}
+function ruleOwnerGated(file, raw, gatedIds, add) {
+  if (!/\.html?$/i.test(file) && file !== "selftest") return;
+  for (const id of gatedIds) {
+    const esc = id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const re = new RegExp(`data-axis=["']${esc}["']|data-testid=["'][a-z-]*row-[a-z-]*-${esc}["']|data-testid=["']row-board-${esc}["']`, "g");
+    let m;
+    while ((m = re.exec(raw))) add({ rule: "owner-gated-axis", file, text: m[0], why: `Axis "${id}" is owner-gated (public_pages ${OWNER_GATED}); it may appear in the API only, never as a public tile or row.`, ctx: ctx(raw, m.index, m.index + m[0].length) });
+  }
+}
+
+/**
+ * The same rule, seen from the FILE'S OWN IDENTITY rather than its markup.
+ *
+ * The markup rule above can only find a gated axis when the page carries one of the
+ * render hooks (data-axis / data-testid). A hand-written page for a gated axis need
+ * not carry any of them, so the markup rule passes it and the page ships. A page is
+ * still a page: its path, its canonical URL and its title all name the axis.
+ */
+function ruleOwnerGatedPage(file, raw, gatedIds, add) {
+  if (!/\.html?$/i.test(file) && file !== "selftest") return;
+  for (const id of gatedIds) {
+    const esc = id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    // 1. The page's own path: axis/<id>.html, or a directory named for it.
+    if (new RegExp(`(?:^|/)axis/${esc}(?:/|\\.html$)`).test(file))
+      add({ rule: "owner-gated-axis-page", file, text: file, why: `This file IS the public page for axis "${id}", which is owner-gated (public_pages ${OWNER_GATED}). A gated axis may appear in the API only, never as a public page, whatever markup it carries.`, ctx: ctx(raw, 0, Math.min(80, raw.length)) });
+    // 2. A canonical URL pointing at the gated axis' public page.
+    const canon = new RegExp(`<link[^>]+rel=["']canonical["'][^>]+href=["'][^"']*axis/${esc}/?["']`, "i");
+    const cm = canon.exec(raw);
+    if (cm) add({ rule: "owner-gated-axis-page", file, text: cm[0], why: `This page declares a canonical URL for axis "${id}", which is owner-gated (public_pages ${OWNER_GATED}). The gate is about the URL a reader can open, not only about the markup on it.`, ctx: ctx(raw, cm.index, cm.index + cm[0].length) });
+  }
+}
+
 function walk(dir, out = []) {
   for (const e of readdirSync(dir)) {
     const p = join(dir, e);
@@ -545,7 +591,7 @@ function pick(obj, path) {
   return String(path || "").split(".").reduce((o, k) => (o == null ? o : o[k]), obj);
 }
 
-function runRules(facts, files, rootDir, liveCount, liveMeasured) {
+function runRules(facts, files, rootDir, liveCount, liveMeasured, gatedIds = []) {
   const violations = [];
   const add = (v) => violations.push(v);
   for (const f of files) {
@@ -559,6 +605,8 @@ function runRules(facts, files, rootDir, liveCount, liveMeasured) {
     ruleMeasuredOverclaim(facts, rel, text, add, liveMeasured);
     ruleCapabilityTense(facts, rel, text, add);
     ruleAnchorCount(facts, rel, text, add);
+    ruleOwnerGated(rel, raw, gatedIds, add);
+    ruleOwnerGatedPage(rel, raw, gatedIds, add);
   }
   return violations;
 }
@@ -771,6 +819,37 @@ async function selftest(facts) {
       console.log(`  ${threw ? "ok  " : "FAIL"}  must REFUSE exemption entry ${JSON.stringify(bad[0].path)}${bad[0].date ? "" : " (no date)"}`);
     }
   }
+  for (const [name, html, shouldFail] of [
+    ["owner-gated homepage tile", '<li data-axis="regulator-transparency">x</li>', true],
+    ["owner-gated board row", '<tr data-testid="row-board-regulator-transparency">x</tr>', true],
+    ["owner-gated id in prose only", '<p>regulator-transparency is held</p>', false],
+    ["public axis tile", '<li data-axis="care">x</li>', false],
+  ]) {
+    const v = [];
+    ruleOwnerGated("selftest", html, ["regulator-transparency"], (x) => v.push(x));
+    const ok = (v.length > 0) === shouldFail;
+    ok ? pass++ : fail++;
+    console.log(`  ${ok ? "ok  " : "FAIL"}  ${shouldFail ? "must CATCH " : "must PASS  "} ${name}`);
+  }
+  // The page-level rule: a gated axis is a PAGE, whether or not the markup carries a hook.
+  for (const [name, file, html, shouldFail] of [
+    ["owner-gated axis page by path", "axis/regulator-transparency.html", "<html><body>x</body></html>", true],
+    ["owner-gated axis page by canonical", "axis/somewhere.html", '<link rel="canonical" href="https://councilof.ai/axis/regulator-transparency" />', true],
+    ["owner-gated page, no hooks at all", "axis/regulator-transparency.html", '<html><head><title>Regulator Transparency</title></head><body>declared slot</body></html>', true],
+    ["an ordinary axis page", "axis/care.html", '<html><body>data-axis="care"</body></html>', false],
+    ["a dated run report under /axis/", "axis/effect-binding-server-probe-2026-09-22.html", "<html><body>probe</body></html>", false],
+  ]) {
+    const v = [];
+    ruleOwnerGatedPage(file, html, ["regulator-transparency"], (x) => v.push(x));
+    const ok = (v.length > 0) === shouldFail;
+    ok ? pass++ : fail++;
+    console.log(`  ${ok ? "ok  " : "FAIL"}  ${shouldFail ? "must CATCH " : "must PASS  "} ${name}`);
+  }
+  {
+    const ids = ownerGatedIds(JSON.stringify({ axes: [{ axis: "a", public_pages: OWNER_GATED }, { axis: "b" }] }));
+    const ok = ids.length === 1 && ids[0] === "a"; ok ? pass++ : fail++;
+    console.log(`  ${ok ? "ok  " : "FAIL"}  owner-gated ids read from the board reference`);
+  }
   console.log(`\n  ${pass} passed, ${fail} failed`);
   if (fail) {
     console.error("\nfacts-gate SELFTEST FAILED — the gate does not behave as specified.");
@@ -801,24 +880,25 @@ if (!root || !existsSync(root)) {
 
 const referenceFlag=args.indexOf('--board-reference');
 const referenceFile=referenceFlag<0?null:args[referenceFlag+1];
-let counts,referenceScope;
+let counts,referenceScope,gatedIds;
 if(referenceFlag>=0){
   if(!referenceFile)throw new Error('Explicit board-reference path required');
-  const reference=verifyBoardReference(referenceFile,root);counts=reference.counts;referenceScope=reference.scope+' '+reference.board_sha256;
+  const reference=verifyBoardReference(referenceFile,root);counts=reference.counts;referenceScope=reference.scope+' '+reference.board_sha256;gatedIds=ownerGatedIds(Buffer.from(JSON.parse(readFileSync(referenceFile,'utf8')).board_base64,'base64'));
 }else{
   // A live-only invocation requires one successful response, never a stale recorded count.
   if(process.env.FACTS_GATE_OFFLINE==='1')throw new Error('Offline facts check requires an exact --board-reference from the completed render');
   const ep=facts.counts?.axis_count?.endpoint;if(!ep)throw new Error('Board endpoint missing');
   const response=await fetch(ep,{signal:AbortSignal.timeout(20000),redirect:'error'});
   if(!response.ok||!response.headers.get('content-type')?.includes('application/json'))throw new Error('Board reference unavailable; no historical fallback');
-  const raw=Buffer.from(await response.arrayBuffer());counts=boardCounts(raw);referenceScope='ONE_CURRENT_RESPONSE_NOT_RENDER_BOUND';
+  const raw=Buffer.from(await response.arrayBuffer());counts=boardCounts(raw);gatedIds=ownerGatedIds(raw);referenceScope='ONE_CURRENT_RESPONSE_NOT_RENDER_BOUND';
 }
 const liveCount=counts.axes,liveMeasured=counts.measured_axes;
 console.log('facts-gate reference scope:',referenceScope);
 const files = walk(root);
 console.log(`facts-gate: scanning ${files.length} prerendered files in ${root} (reference axis count = ${liveCount})`);
 
-const violations = runRules(facts, files, root, liveCount, liveMeasured);
+console.log(`facts-gate: owner-gated axes from the reference: ${gatedIds.join(', ') || 'none'}`);
+const violations = runRules(facts, files, root, liveCount, liveMeasured, gatedIds);
 report(violations);
 
 if (violations.length) {

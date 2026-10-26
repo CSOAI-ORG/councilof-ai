@@ -33,11 +33,32 @@ edge file-export is UNCHECKABLE by design: the span is logged to the Workers tai
 sink there) and the trace id rides back on an `x-otel-trace-id` header. No-op unless the
 `CSOAI_OTEL` var is set.
 
+**The edge span observes the DOOR, not the tool.** It wraps the proxied call: it starts
+before the call, ends after the call settles, and its duration is the wall-clock time the
+call actually took. Its status is derived from what the door observed — an exception that
+escaped the call, or an upstream HTTP status outside 2xx — and is never a constant.
+
+The tool's own JSON-RPC result arrives as an SSE frame the edge does not consume, so a
+tool-level error inside a 200 response is **not observed** here and is **not asserted** either
+way. Every span carries `csoai.mcp.outcome.scope = "door"`, which says exactly that: OK means
+"the door's call settled without an observable failure", not "the tool succeeded".
+
+> An earlier version emitted the span *before* the call with `status: { code: 1 }` hard-coded
+> and `endTimeUnixNano` taken at construction time. Every call was therefore logged as OK
+> with a ~0 ms duration — including calls that threw. A measurement body cannot ship a span
+> that asserts a success nobody observed. Fixed 2026-10-25.
+
 ## Tests
 
 `python3 packages/otel/test_genai_spans.py` — proves disabled is a no-op with absent fields,
 enabled exports OTLP whose sha256 matches the two card fields, and a `None` attribute is
 dropped (absent, never zero).
+
+`npx vitest run functions/mcp/_otel.test.ts` — proves the edge span records what happened:
+disabled is a pure passthrough (no span, no header); enabled records a real duration; a call
+that throws is recorded as ERROR with `error.type` and re-thrown; a non-2xx upstream is
+recorded as ERROR with `http.response.status_code`; and the observation scope is stated on
+every span.
 
 ## Permissionless Route Receipt adapter
 

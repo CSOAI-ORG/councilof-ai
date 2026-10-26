@@ -38,12 +38,10 @@ on:
         description: "Push CARD_CANDIDATE_UNSIGNED runs to csoai/runpod-gspc-intake"
         type: boolean
         default: true
-  # One-time G3-Kaggle run after the weekly GPU reset (Sat 00:00 UTC). The job
-  # refuses to act on any date other than 2026-10-17. Remove after the batch.
-  schedule:
-    - cron: "5 0 17 10 *"    # shard a, 01:05 BST
-    - cron: "35 4 17 10 *"   # shard b, 05:35 BST
-    - cron: "5 9 17 10 *"    # shard c, 10:05 BST
+      diagnostic:
+        description: "DIAGNOSTIC MODE: run 3 models with item_limit=2, skip intake, never run of record"
+        type: boolean
+        default: false
 
 concurrency:
   group: kaggle-gspc-batch
@@ -68,35 +66,26 @@ jobs:
       - name: resolve run parameters
         id: p
         env:
-          EV: ${{ github.event_name }}
-          SCHED: ${{ github.event.schedule }}
           IN_BATCH: ${{ inputs.batch_id }}
           IN_SHARD: ${{ inputs.shard }}
           IN_MODE: ${{ inputs.mode }}
           IN_DRY: ${{ inputs.dry_run }}
           IN_PUSH: ${{ inputs.push_intake }}
+          IN_DIAG: ${{ inputs.diagnostic }}
         run: |
           set -euo pipefail
-          if [ "$EV" = "schedule" ]; then
-            today=$(date -u +%F)
-            if [ "$today" != "2026-10-17" ]; then
-              echo "one-time schedule: $today is not 2026-10-17, nothing to do"
-              echo "skip=true" >> "$GITHUB_OUTPUT"; exit 0
-            fi
-            case "$SCHED" in
-              "5 0 17 10 *") shard=a ;; "35 4 17 10 *") shard=b ;; "5 9 17 10 *") shard=c ;;
-              *) echo "unknown schedule $SCHED"; exit 1 ;;
-            esac
-            batch=G3-Kaggle; mode=push; dry=false; push=true
-          else
-            batch="$IN_BATCH"; shard="$IN_SHARD"; mode="$IN_MODE"; dry="$IN_DRY"; push="$IN_PUSH"
-          fi
+          batch="$IN_BATCH"; shard="$IN_SHARD"; mode="$IN_MODE"; dry="$IN_DRY"; push="$IN_PUSH"; diag="$IN_DIAG"
           case "$batch" in *[!A-Za-z0-9._-]*|"") echo "bad batch id"; exit 1 ;; esac
           test -f "$KDIR/batches/$batch.tsv" || { echo "no such batch $batch"; exit 1; }
           slug=$(echo "csoai-gspc-$batch-$shard" | tr 'A-Z' 'a-z')
+          # Diagnostic mode: always force push=false (code-enforced, not input-dependent)
+          if [ "$diag" = "true" ]; then
+            push="false"
+            slug="${slug}-diag"
+          fi
           { echo "skip=false"; echo "batch=$batch"; echo "shard=$shard"; echo "mode=$mode"
-            echo "dry=$dry"; echo "push=$push"; echo "kernel=nicktempleman/$slug"; } >> "$GITHUB_OUTPUT"
-          echo "batch=$batch shard=$shard mode=$mode dry=$dry push_intake=$push kernel=nicktempleman/$slug"
+            echo "dry=$dry"; echo "push=$push"; echo "diag=$diag"; echo "kernel=nicktempleman/$slug"; } >> "$GITHUB_OUTPUT"
+          echo "batch=$batch shard=$shard mode=$mode dry=$dry push_intake=$push diagnostic=$diag kernel=nicktempleman/$slug"
 
       - name: dedup guard + pin tests (no tokens)
         if: steps.p.outputs.skip != 'true'
@@ -108,8 +97,12 @@ jobs:
       - name: build kernel
         if: steps.p.outputs.skip != 'true'
         run: |
+          diag_flag=""
+          if [ "${{ steps.p.outputs.diag }}" = "true" ]; then
+            diag_flag="--diagnostic --item-limit 2"
+          fi
           python3 "$KDIR/build_kernel.py" --batch "${{ steps.p.outputs.batch }}" \
-            --shard "${{ steps.p.outputs.shard }}" --out "$RUNNER_TEMP/kernel"
+            --shard "${{ steps.p.outputs.shard }}" --out "$RUNNER_TEMP/kernel" $diag_flag
           cat "$RUNNER_TEMP/kernel/kernel-metadata.json"
 
       - name: kaggle auth from GHA secrets (never print values)
@@ -182,12 +175,15 @@ jobs:
           sha256sum -c intake-bundle.tgz.sha256
           tar -xzf intake-bundle.tgz
           python3 - <<'PY'
-          import json
+          import json, sys
           r = json.load(open("out/RECEIPT.json"))
           assert r["signed"] is False and r["writes_board"] is False
           c = r["cells"]
           print(f"cells={len(c)} candidates={sum(x['intake_candidate'] for x in c)} skipped={len(r['skipped'])} finished={r.get('finished')}")
           for s in r["skipped"]: print("SKIPPED", s)
+          if len(c) == 0:
+              print("FATAL: 0 cells recorded — kernel produced no valid runs", file=sys.stderr)
+              sys.exit(1)
           PY
           # Stage only gate-passing, unsigned candidate runs for intake.
           mkdir -p "$RUNNER_TEMP/intake"
@@ -211,8 +207,18 @@ jobs:
           if-no-files-found: ignore
           retention-days: 30
 
+      - uses: actions/upload-artifact@v4
+        if: always() && steps.p.outputs.skip != 'true' && steps.p.outputs.diag == 'true'
+        with:
+          name: kaggle-gspc-diag-logs-${{ steps.p.outputs.batch }}-${{ steps.p.outputs.shard }}-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/kaggle-out/out/logs
+            ${{ runner.temp }}/kaggle-out/ollama.log
+          if-no-files-found: ignore
+          retention-days: 30
+
       - name: push unsigned candidates to private intake
-        if: steps.p.outputs.skip != 'true' && steps.p.outputs.dry != 'true' && steps.p.outputs.push == 'true' && steps.poll.outputs.state == 'complete'
+        if: steps.p.outputs.skip != 'true' && steps.p.outputs.dry != 'true' && steps.p.outputs.push == 'true' && steps.p.outputs.diag != 'true' && steps.poll.outputs.state == 'complete'
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |

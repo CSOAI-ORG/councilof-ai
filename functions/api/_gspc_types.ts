@@ -37,7 +37,8 @@ export interface AxisScore {
   applies_to?: string;
   // Live axes only (Measure ruling 2026-10-16): "meets-rule" (frozen sha-pinned bank/method, n_valid >= 30)
   // or "legacy: <exact gap>". Does not change status or the measured count.
-  method_status?: "meets-rule" | `legacy: ${string}`;        // subject-family axes: the one subject type the axis measures
+  method_status?: "meets-rule" | `legacy: ${string}` | "no-method: declared slot" | "reviewed, not run";        // subject-family axes: the one subject type the axis measures
+  method?: string; method_sha?: string; // declared-slot method reference (not a measurement)
   public_pages?: "HIDDEN_PENDING_OWNER_GO"; // present in the API, hidden from public pages until the owner's go
   kind: "model-comparison" | "deterministic-facts" | "declared-slot";
 
