@@ -1,0 +1,13 @@
+identity:
+  name: axis_effect-binding
+  author: csoai
+  label:
+    en_US: "effect-binding axis (live GSPC board)"
+description:
+  human:
+    en_US: "The effect-binding axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates."
+  llm: "The effect-binding axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification."
+parameters: []
+extra:
+  python:
+    source: tools/axis_effect-binding.py

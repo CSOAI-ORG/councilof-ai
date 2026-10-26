@@ -12,7 +12,6 @@
  */
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
-
 /** Compliance-status words: each names a status a measurement body cannot grant. */
 export const BANNED = [
   ["compliant", /\b(?:non-)?compliant\b/gi],
@@ -31,6 +30,34 @@ const NEGATOR =
   /\b(?:not|never|no|nor|nothing|without|neither|none|isn't|aren't|doesn't|don't|won't|cannot|non)\b|n't\b|\bnot_an?_|explicitly_not/i;
 /** Third-party fixed strings that contain a listed word but make no claim of ours (PyPI trove classifiers). */
 const THIRD_PARTY = [/License :: OSI Approved :: /g];
+
+/**
+ * The board's OWN axis ids, exempted for the same reason as the PyPI classifiers above: they
+ * are fixed strings that make no claim of ours.
+ *
+ * `machinery-conformity` is the name the live board gives that axis, and we publish it at
+ * councilof.ai/gspc/machinery-conformity/ and in /api/gspc. A tool named for the axis is a
+ * reference to a published identifier, not a conformity claim about a subject — the same
+ * distinction the house already drew for display copy ("code identifiers are exempt").
+ *
+ * ONE source: functions/mcp/axis-aliases.json, the table pinned to the board's declared slots.
+ * Not typed here — a typed copy would drift from the board.
+ *
+ * NARROW ON PURPOSE. Only the ids that would otherwise trip the lint are exempted, and only
+ * the id itself is blanked. A claim beside the id still trips: "this axis is
+ * machinery-conformity, so it certifies you" still fails on `certifies`.
+ */
+const AXIS_ID_EXEMPTIONS = (() => {
+  try {
+    const p = new URL("../../functions/mcp/axis-aliases.json", import.meta.url);
+    const doc = JSON.parse(readFileSync(p, "utf8"));
+    return Object.keys(doc.axes ?? {}).filter((id) =>
+      BANNED.some(([, re]) => new RegExp(re.source, "i").test(id)),
+    );
+  } catch {
+    return [];
+  }
+})();
 /** JSON keys whose string values are negations by construction. */
 export const NEGATION_KEYS =
   /^(?:explicitly_not|never|not_claimed|does_not_establish|claim_boundary|not_a_certification|what_this_is_not|is_not)$/;
@@ -44,7 +71,11 @@ function clauseNegated(text, index) {
 
 /** Every affirmative compliance-status word in one piece of text: [{where, word, context}]. */
 export function doctrineViolations(raw, where = "text") {
-  const text = THIRD_PARTY.reduce((t, re) => t.replace(re, (m) => " ".repeat(m.length)), raw);
+  let text = THIRD_PARTY.reduce((t, re) => t.replace(re, (m) => " ".repeat(m.length)), raw);
+  for (const id of AXIS_ID_EXEMPTIONS) {
+    if (!id) continue;
+    text = text.split(id).join(" ".repeat(id.length));
+  }
   const out = [];
   for (const [word, re] of BANNED) {
     for (const m of text.matchAll(re)) {
