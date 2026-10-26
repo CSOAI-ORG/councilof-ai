@@ -3,7 +3,7 @@ name: Build + deploy site (gated production branch)
 on:
   push:
     branches: [master]
-    paths: ['client/**', 'public/**', 'functions/**', 'scripts/**', 'package.json', 'wrangler.jsonc', '.github/workflows/deploy.yml']
+    paths: ['client/**', 'e2e/**', 'public/**', 'functions/**', 'scripts/**', 'package.json', 'wrangler.jsonc', '.github/workflows/deploy.yml']
   workflow_dispatch:
     inputs:
       check_registry:
@@ -27,6 +27,8 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # Keep canonical SBOM generation-time input commits available.
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
 
@@ -310,6 +312,11 @@ jobs:
           node --test scripts/retired-proof-archive.node-test.mjs
           test -f 'dist/client/functions/interop/[[path]].ts'
           node scripts/retired-proof-archive.mjs --dir dist/client
+
+      - name: HF mirror gate — verify HF has excluded files before dropping from dist
+        run: |
+          node scripts/hf-mirror-gate.mjs --selftest
+          node scripts/hf-mirror-gate.mjs
 
       - name: Drop exclusions from dist (served via HF redirects)
         run: node scripts/drop-proofs-from-dist.mjs dist/client

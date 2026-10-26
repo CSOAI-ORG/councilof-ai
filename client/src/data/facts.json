@@ -31,17 +31,17 @@
         "totals.quotable_axes"
       ],
       "observed": {
-        "value": "23 axis · 23 measured",
-        "axes": 23,
+        "value": "33 axes · 23 measured",
+        "axes": 33,
         "measured_axes": 23,
-        "unmeasured_axes": 0,
+        "unmeasured_axes": 10,
         "quotable_axes": 23,
-        "public_leader_count": 3,
+        "public_leader_count": 9,
         "model_fleets": 14,
         "fact_runs": 9,
         "items": 1230,
-        "lid": "23 axes measured · 14 model fleets · 0 separated leaders · 3 public leader scores · 9 fact runs · TIE is TIE · not a certificate.",
-        "observed_at": "2026-09-23",
+        "lid": "23 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 9 fact runs · TIE is TIE · not a certificate.",
+        "observed_at": "2026-10-16",
         "binding": false,
         "producer": "scripts/refresh-board-observation.mjs — every field is copied verbatim from the endpoint's totals; never hand-edited.",
         "note": "Observation only, recorded so a surface that has not yet fetched the board can render the last observed state, dated, and so the gate can detect drift. If this disagrees with the endpoint, the ENDPOINT wins and this block is stale: run `node scripts/refresh-board-observation.mjs` (or `--check` to fail on drift). The slot count and the measured count are different kinds and travel together; quote `value` (totals.public_count) or `lid`, never one integer alone."
@@ -209,6 +209,96 @@
       ],
       "excluded": "Bitcoin OpenTimestamps — stamped, not anchored. See rail ots_atom_anchor.",
       "note": "The number of INDEPENDENT anchors the estate actually holds. Copy claiming more than this is an overclaim however it is phrased — 'the 4-anchor machine' asserts it as a noun with no verb the tense rule can see, which is exactly how it survived on proofs.councilof.ai in the JSON-LD a crawler quotes."
+    },
+    "historical_count_exemptions": {
+      "ruling": "Measure, #3266, 16 Oct 2026",
+      "rule": "Explicit list only: exact prerendered paths, no glob, no date rule. A listed file is exempt from the axis-count rule ONLY for the count it historically records (historical_axes); any other count in it is still checked, and every other rule still applies. Listed files are never edited to satisfy the gate; signed ones stay byte-identical. Any file not listed, including every live surface, still fails on a stale count.",
+      "files": [
+        {
+          "path": "claims/claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "date": "2026-09-23",
+          "historical_axes": 23,
+          "reason": "Dated claim register (rev1) of 2026-09-23. Historical record: states the board as it was on its date (23 axes); never edited, a dated record is not current copy."
+        },
+        {
+          "path": "claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "date": "2026-09-23",
+          "historical_axes": 23,
+          "reason": "Dated claim register (rev2) of 2026-09-23. Historical record: states the board as it was on its date (23 axes); never edited, a dated record is not current copy."
+        },
+        {
+          "path": "interop/auto-eat/card-autoeat-gspc-board-state-unsigned.json",
+          "date": "2026-09-16",
+          "historical_axes": 23,
+          "reason": "Unsigned auto-eat board-state card, as_of 2026-09-16T11:35Z. Historical record: states the board as it was on its date (23 axes); never edited, a dated record is not current copy."
+        },
+        {
+          "path": "interop/ledger-card-autoeat-gspc-board-state-unsigned.json",
+          "date": "2026-09-16",
+          "historical_axes": 23,
+          "reason": "Unsigned ledger copy of the auto-eat board-state card, as_of 2026-09-16T11:35Z. Historical record: states the board as it was on its date (23 axes); never edited, a dated record is not current copy."
+        },
+        {
+          "path": "interop/ledger-card-gspc-board-state-2026-09-16-unsigned.json",
+          "date": "2026-09-16",
+          "historical_axes": 23,
+          "reason": "Unsigned ledger board-state card, as_of 2026-09-16T11:35Z. Historical record: states the board as it was on its date (23 axes); never edited, a dated record is not current copy."
+        },
+        {
+          "path": "interop/canonical-23-axis-index-v0.1.json",
+          "date": "2026-09-17",
+          "historical_axes": 23,
+          "reason": "Versioned v0.1 canonical index of the 23-axis board (its name is the count it indexed). Historical record: states the board as it was on its date (23 axes); never edited, a dated record is not current copy."
+        },
+        {
+          "path": "interop/live-roster-snapshot-2026-09-17.json",
+          "date": "2026-09-17",
+          "historical_axes": 23,
+          "reason": "Dated live-roster snapshot of 2026-09-17. Historical record: states the board as it was on its date (23 axes); never edited, a dated record is not current copy."
+        },
+        {
+          "path": "interop/master-harness-index-v0.2.json",
+          "date": "2026-09-17",
+          "historical_axes": 23,
+          "reason": "Versioned master harness index v0.2, generated_at 2026-09-17T04:32Z. Historical record: states the board as it was on its date (23 axes); never edited, a dated record is not current copy."
+        },
+        {
+          "path": "interop/master-harness-index-v0.3.json",
+          "date": "2026-09-17",
+          "historical_axes": 23,
+          "reason": "Versioned master harness index v0.3, generated_at 2026-09-17T04:33Z. Historical record: states the board as it was on its date (23 axes); never edited, a dated record is not current copy."
+        },
+        {
+          "path": "interop/master-harness-index-v0.4.json",
+          "date": "2026-09-17",
+          "historical_axes": 23,
+          "reason": "Versioned master harness index v0.4, generated_at 2026-09-17T04:34Z. Historical record: states the board as it was on its date (23 axes); never edited, a dated record is not current copy."
+        },
+        {
+          "path": "interop/three-loops/measurement-x402_challenge_check-x402_payai_cdp-20260917T052406Z.json",
+          "date": "2026-09-17",
+          "historical_axes": 23,
+          "reason": "Three-loops measurement record, generated_at 2026-09-17T05:24Z. Historical record: states the board as it was on its date (23 axes); never edited, a dated record is not current copy."
+        },
+        {
+          "path": "interop/three-loops/measurement-x402_challenge_check-x402_payai_cdp-94408b57.json",
+          "date": "2026-09-17",
+          "historical_axes": 23,
+          "reason": "Three-loops measurement record, generated_at 2026-09-17T05:21Z. Historical record: states the board as it was on its date (23 axes); never edited, a dated record is not current copy."
+        },
+        {
+          "path": "signed/gspc-board.2026-09-25.signed.json",
+          "date": "2026-09-25",
+          "historical_axes": 23,
+          "reason": "Signed board freeze: byte-identical forever; its 23 is the board it signed."
+        },
+        {
+          "path": "signed/gspc-board.2026-09-29.signed.json",
+          "date": "2026-09-29",
+          "historical_axes": 23,
+          "reason": "Signed board freeze: byte-identical forever; its 23 is the board it signed."
+        }
+      ]
     }
   },
   "methods": [

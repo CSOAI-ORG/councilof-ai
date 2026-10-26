@@ -7,13 +7,16 @@
 import { fetchOriginJson } from "./_board";
 import { route, routeSummary, type RouteResult } from "../_lib/route/route";
 import { CENSUS_PATH } from "../_lib/route/census";
+import { BOARD_READ_TIMEOUT_MS } from "../_lib/route/board";
 import type { McpToolResult } from "./_handlers";
 
 export const ROUTE_TOOL_NAMES = new Set(["route"]);
 
 export async function routeResult(args: Record<string, unknown>, origin: string): Promise<RouteResult> {
   return route(args, {
-    fetchBoard: () => fetchOriginJson(origin, "/api/gspc"),
+    fetchBoard: () => fetch(origin + "/api/gspc", {
+      headers: { accept: "application/json" }, signal: AbortSignal.timeout(BOARD_READ_TIMEOUT_MS),
+    }),
     // The signed effect-binding census feeds the floor's DIVERGENT rule (functions/_lib/route/census.ts).
     fetchCensus: () => fetchOriginJson(origin, CENSUS_PATH),
   });
