@@ -23,8 +23,8 @@
   },
   "mill_cards_signed": {
    "path": "/interop/mill-cards-signed/",
-   "files_read": 3154,
-   "cards_counted": 1221,
+   "files_read": 3193,
+   "cards_counted": 1253,
    "cards_counted_with_admission_receipt": 269,
    "cards_not_counted": {
     "signature_not_valid": 0,
@@ -33,12 +33,12 @@
     "under_30": 0,
     "unsigned": 36,
     "withdrawn": 39,
-    "superseded": 1064
+    "superseded": 1071
    },
    "rule": "Ed25519 signature verifies under the did:web:csoai.org key it names, id == sha256(canonical body), status MEASURED, quotable, n >= 30, not STAGED_UNSIGNED, not withdrawn, not superseded"
   }
  },
- "inputs_sha256": "6de5e867aae39770f6a07a5c2da0b625c83e447f7d67cca815adda6c319ef1e2",
+ "inputs_sha256": "3d08e661b6f0b218ae7943c922f42e090873c0b54bb7ef7635bd582a301f9476",
  "models": [
   {
    "id": "clan-law-plain",
@@ -798,6 +798,40 @@
    ]
   },
   {
+   "id": "qwen2.5:7b",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 32,
+   "axes": 20,
+   "sources": [
+    "mill-cards-signed",
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "first_signed_card": "aae2fa76ee7b7a20421e33f394edc223d7ffe12f308539a4843f2f35fb1d9fe6",
+   "recorded_as": [
+    "ollama:qwen2.5:7b@sha256:845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "qwen2.5:7b"
+   ]
+  },
+  {
+   "id": "llama3.2:3b",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 30,
+   "axes": 23,
+   "sources": [
+    "mill-cards-signed",
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "first_signed_card": "b42c8f0331cbc213726791dad2bc193bcc9d7b31eac3baf48b4a19cfc37f28b5",
+   "recorded_as": [
+    "llama3.2:3b",
+    "ollama:llama3.2:3b@sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+   ]
+  },
+  {
    "id": "qwen2.5:1.5b",
    "name_published": true,
    "kind": "third_party",
@@ -815,37 +849,21 @@
    ]
   },
   {
-   "id": "llama3.2:3b",
+   "id": "gemma3:12b",
    "name_published": true,
    "kind": "third_party",
-   "cards": 27,
-   "axes": 23,
+   "cards": 24,
+   "axes": 18,
    "sources": [
     "mill-cards-signed",
     "signed-card-index"
    ],
    "admission_receipt": false,
-   "first_signed_card": "b42c8f0331cbc213726791dad2bc193bcc9d7b31eac3baf48b4a19cfc37f28b5",
+   "first_signed_card": "f9c87505f0780c54360038081f4330a4fe0aec5dc6eeb5f0384eef28cf8b14d6",
    "recorded_as": [
-    "llama3.2:3b",
-    "ollama:llama3.2:3b@sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
-   ]
-  },
-  {
-   "id": "qwen2.5:7b",
-   "name_published": true,
-   "kind": "third_party",
-   "cards": 26,
-   "axes": 20,
-   "sources": [
-    "mill-cards-signed",
-    "signed-card-index"
-   ],
-   "admission_receipt": false,
-   "first_signed_card": "aae2fa76ee7b7a20421e33f394edc223d7ffe12f308539a4843f2f35fb1d9fe6",
-   "recorded_as": [
-    "ollama:qwen2.5:7b@sha256:845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
-    "qwen2.5:7b"
+    "gemma3:12b",
+    "ollama:gemma3:12b@sha256:b92b218582c521ba287f38f1d6057dcd3c6cbff036f13cac97b5d861f5e58ec3",
+    "ollama:gemma3:12b@sha256:f4031aab637d1ffa37b42570452ae0e4fad0314754d17ded67322e4b95836f8a"
    ]
   },
   {
@@ -883,20 +901,18 @@
    ]
   },
   {
-   "id": "gemma3:12b",
+   "id": "qwen3:8b",
    "name_published": true,
    "kind": "third_party",
    "cards": 19,
-   "axes": 18,
+   "axes": 13,
    "sources": [
-    "mill-cards-signed",
-    "signed-card-index"
+    "mill-cards-signed"
    ],
    "admission_receipt": false,
-   "first_signed_card": "f9c87505f0780c54360038081f4330a4fe0aec5dc6eeb5f0384eef28cf8b14d6",
+   "first_signed_card": null,
    "recorded_as": [
-    "gemma3:12b",
-    "ollama:gemma3:12b@sha256:f4031aab637d1ffa37b42570452ae0e4fad0314754d17ded67322e4b95836f8a"
+    "ollama:qwen3:8b@sha256:500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41"
    ]
   },
   {
@@ -933,7 +949,7 @@
    "id": "mistral:7b",
    "name_published": true,
    "kind": "third_party",
-   "cards": 14,
+   "cards": 15,
    "axes": 12,
    "sources": [
     "mill-cards-signed",
@@ -944,6 +960,23 @@
    "recorded_as": [
     "mistral:7b",
     "ollama:mistral:7b@sha256:6577803aa9a036369e481d648a2baebb381ebc6e897f2bb9a766a2aa7bfbc1cf"
+   ]
+  },
+  {
+   "id": "qwen2.5:0.5b",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 14,
+   "axes": 14,
+   "sources": [
+    "mill-cards-signed",
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "first_signed_card": "a14dfc583db23cc6ef6ab50b269c5dcd4f7aaf7fd25441c8b64ca7f59bb12068",
+   "recorded_as": [
+    "ollama:qwen2.5:0.5b@sha256:a8b0c51577010a279d933d14c2a8ab4b268079d44c5c8830c0a93900f1827c67",
+    "qwen2.5:0.5b"
    ]
   },
   {
@@ -1274,21 +1307,6 @@
    "first_signed_card": null,
    "recorded_as": [
     "Qwen/Qwen3-Next-80B-A3B-Instruct"
-   ]
-  },
-  {
-   "id": "qwen3:8b",
-   "name_published": true,
-   "kind": "third_party",
-   "cards": 13,
-   "axes": 13,
-   "sources": [
-    "mill-cards-signed"
-   ],
-   "admission_receipt": false,
-   "first_signed_card": null,
-   "recorded_as": [
-    "ollama:qwen3:8b@sha256:500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41"
    ]
   },
   {
@@ -1892,6 +1910,23 @@
    ]
   },
   {
+   "id": "qwen2.5:3b",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 10,
+   "axes": 10,
+   "sources": [
+    "mill-cards-signed",
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "first_signed_card": "2c364e51cedbcecb6adff5b0faf8307886170babe7274ce500b007d6a92d382f",
+   "recorded_as": [
+    "ollama:qwen2.5:3b@sha256:357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b",
+    "qwen2.5:3b"
+   ]
+  },
+  {
    "id": "TrevorJS/gemma-4-31B-it-uncensored",
    "name_published": true,
    "kind": "third_party",
@@ -2084,21 +2119,6 @@
    "first_signed_card": null,
    "recorded_as": [
     "Qwen/Qwen2.5-7B"
-   ]
-  },
-  {
-   "id": "qwen2.5:0.5b",
-   "name_published": true,
-   "kind": "third_party",
-   "cards": 8,
-   "axes": 8,
-   "sources": [
-    "signed-card-index"
-   ],
-   "admission_receipt": false,
-   "first_signed_card": "a14dfc583db23cc6ef6ab50b269c5dcd4f7aaf7fd25441c8b64ca7f59bb12068",
-   "recorded_as": [
-    "qwen2.5:0.5b"
    ]
   },
   {
@@ -2371,21 +2391,6 @@
    "first_signed_card": null,
    "recorded_as": [
     "Qwen/Qwen3-14B"
-   ]
-  },
-  {
-   "id": "qwen2.5:3b",
-   "name_published": true,
-   "kind": "third_party",
-   "cards": 6,
-   "axes": 6,
-   "sources": [
-    "signed-card-index"
-   ],
-   "admission_receipt": false,
-   "first_signed_card": "2c364e51cedbcecb6adff5b0faf8307886170babe7274ce500b007d6a92d382f",
-   "recorded_as": [
-    "qwen2.5:3b"
    ]
   },
   {

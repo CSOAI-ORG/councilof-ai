@@ -1,0 +1,58 @@
+name: RunPod GSPC intake push (supervised bundle)
+
+# Supervised, dispatch-only transport of an unsigned run bundle into the private
+# intake dataset csoai/runpod-gspc-intake. It does NOT verify measurement, sign,
+# or publish: runpod-intake.yml / runpod-land.yml own that. The pushing script is
+# taken from the default branch; only bundle bytes come from bundle_ref.
+
+on:
+  workflow_dispatch:
+    inputs:
+      bundle_ref:
+        description: "Branch holding bundle/gspc-24x7 and bundle/SHA256SUMS"
+        required: true
+        type: string
+
+concurrency: { group: runpod-intake-push, cancel-in-progress: false }
+
+permissions:
+  contents: read
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch bundle bytes only
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.bundle_ref }}
+          path: bundle-src
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+
+      - name: Install the hub client only
+        run: pip install --quiet "huggingface_hub>=0.25"
+
+      - name: Verify bundle sha256 manifest
+        working-directory: bundle-src/bundle
+        run: |
+          test -s SHA256SUMS
+          sha256sum --strict -c SHA256SUMS
+          listed=$(wc -l < SHA256SUMS)
+          actual=$(find gspc-24x7 -type f | wc -l)
+          echo "listed=$listed actual=$actual"
+          test "$listed" = "$actual"
+
+      - name: Push to private intake dataset
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          test -n "$HF_TOKEN" || { echo "HF_TOKEN absent"; exit 1; }
+          python3 scripts/runpod_gspc_push_to_hf.py \
+            --root bundle-src/bundle/gspc-24x7 \
+            --repo csoai/runpod-gspc-intake

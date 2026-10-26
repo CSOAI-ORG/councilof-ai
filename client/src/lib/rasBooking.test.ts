@@ -69,8 +69,12 @@ describe("RAS booking button on /assess", () => {
   });
 
   it("price comes only from catalog fields; the helper hardcodes none", () => {
-    const p = catalog[KEY].find((i: any) => i.id === "ras-booking").payment;
-    expect(rasPriceFromCatalog(catalog)).toEqual({ intro: p.price_intro, intro_period: p.price_intro_period, ongoing: p.price_ongoing });
+    // The shipped catalog carries no price: the standing owner ruling is no public prices, so a
+    // quote is given privately. The helper must then return null, and it reads fields only when present.
+    expect(rasPriceFromCatalog(catalog)).toBeNull();
+    expect(JSON.stringify(catalog)).not.toMatch(/[$£€]\s?\d/);
+    const priced = withRas((r) => { r.payment.price_intro = "A"; r.payment.price_intro_period = "B"; r.payment.price_ongoing = "C"; });
+    expect(rasPriceFromCatalog(priced)).toEqual({ intro: "A", intro_period: "B", ongoing: "C" });
     expect(rasPriceFromCatalog(withRas((r) => { delete r.payment.price_intro; }))).toBeNull();
     expect(src).not.toMatch(/[$£€]\s?\d/);
   });
