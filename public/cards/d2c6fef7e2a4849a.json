@@ -1,0 +1,119 @@
+{
+  "card": {
+    "as_of": "2026-10-08T17:51:59Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:USTBL:arbitrum",
+      "symbol": "USTBL",
+      "product": "Spiko US T-Bills Money Market Fund",
+      "chain": "arbitrum",
+      "chain_id": 42161,
+      "address": "0x021289588cd81dc1ac87ea91e91607eef68303f5",
+      "block": 512955833,
+      "block_hash": "0x7e229051c2f24229e2ed26e6b2da3ced59c439c3bf09570eb3df96843b66ff36",
+      "block_time": "2026-10-08T17:51:59Z",
+      "rpc": "arb1.arbitrum.io",
+      "checked": {
+        "name": "Spiko US T-Bills Money Market Fund",
+        "symbol": "USTBL",
+        "decimals": 5,
+        "totalSupply": 2269349272700,
+        "paused": false,
+        "owner": "0x0000000000000000000000000000000000000000",
+        "eip1967_implementation": "0xa0769f7a8fc65e47de93797b4e21c073c117fc80"
+      },
+      "absent": [
+        "isPaused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()",
+        "pauser()",
+        "terms()",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": null,
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "EIP-1186 proof (no endpoint answered eth_getProof at this block)"
+      ],
+      "attests": "historical permission state at block 512955833 on arbitrum, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "d2c6fef7e2a4849ae1546cc273f61d8ec841f577a525853d617cbab83daf9250",
+    "sig_ed25519": "ef66b134d333e1d07b019b3f3a39ed590c9947ca978d92f3f162261093b8c391fc5599143300d50e8dd6deae2c88a509db31ecf065b38ff0eac60bde4ed1df03",
+    "source_urls": [
+      "https://arb1.arbitrum.io/rpc",
+      "https://arbiscan.io/token/0x021289588cd81dC1AC87ea91e91607eEF68303F5"
+    ],
+    "subject": "evm:USTBL:arbitrum permission state at block 512955833",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:arbitrum",
+      "coverage:permission-state",
+      "subject:USTBL"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "EIP-1186 proof (no endpoint answered eth_getProof at this block)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "d43c8c53e5e37c58f6da29e6195a7af5257b0a9e787929a697aa49464d74adea",
+    "95bc4ec53e3ad35bd5ceb7dff3c547141ef376f1c9e843f9af7a25142f31c53f",
+    "e92f965ca97e37326cb8284079283a6aab7cb4dfa56948e285c199f4fa3b7b90",
+    "3413dde6b3e469b2d2b72763a6b8bf62e60b1265e5ba8f406c09864a0cd6d627",
+    "d194cd1a8517f25533c53340d6a21449f152a4e0cbaa291a671513686d13b748",
+    "e5899ecc68c0db61f047c88916b35e2e75bb27da4ff99bbcad44bc99038ea15b",
+    "3a83b3c0790391654fe11fc52b7152ddbda124a8c5fdacfb6076d4a87cddaccb",
+    "8fa2445d1ee38a48011f5c3af753f60308ca7fd26be573ca00bc4e7f055fb3c5",
+    "81435f8a73cee551ea0b5c5790ad982c5f3bd4a85538cd51623416401b052e1a"
+  ]
+}

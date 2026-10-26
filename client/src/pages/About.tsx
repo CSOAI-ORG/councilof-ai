@@ -60,6 +60,31 @@ function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: str
   );
 }
 
+function LiveModelCount() {
+  const [count, setCount] = useState<number | null>(null);
+  useEffect(() => {
+    fetchWithRetry("/interop/models-measured.json")
+      .then((r) => r.json())
+      .then((d) => {
+        const n = d?.headline?.third_party_models;
+        setCount(typeof n === "number" && Number.isFinite(n) ? n : null);
+      })
+      .catch(() => setCount(null));
+  }, []);
+  return (
+    <div className="rounded-2xl border border-emerald-400/30 bg-emerald-950/30 p-5" data-testid="about-model-count-boundary">
+      <p className="text-sm font-bold uppercase tracking-wider text-emerald-300">Do not confuse axes with models</p>
+      <p className="mt-2 text-lg leading-relaxed text-gray-200">
+        {count !== null ? <><strong className="text-white">{count.toLocaleString()} third-party models</strong> currently have at least one signed, quotable measurement on a frozen bank.</> : <>The distinct model count is derived from signed cards and published separately.</>}{" "}
+        The <strong className="text-white">14</strong> on the GSPC board is the number of model-comparison <em>axes</em> — one fleet per axis — not the number of models measured.
+      </p>
+      <Link href="/models-measured/" className="mt-3 inline-block text-sm font-bold text-emerald-300 underline">
+        Open the derived model register →
+      </Link>
+    </div>
+  );
+}
+
 function LiveBoardCount() {
   const [label, setLabel] = useState("…");
   useEffect(() => {
@@ -149,7 +174,7 @@ export default function About() {
     document.title = "About the Council of AI — a UK measurement body | Council of AI";
     let m = document.querySelector('meta[name="description"]') as HTMLMetaElement | null;
     if (!m) { m = document.createElement("meta"); m.name = "description"; document.head.appendChild(m); }
-    m.content = "The Council of AI (CSOAI LTD, UK Companies House 16939677) is an independent AI measurement body: deterministic measurement, Ed25519-signed records, no certification and no accreditation chain. Live board counts: GET /api/gspc.";
+    m.content = "Council of AI (CSOAI Ltd, UK Companies House 16939677) publishes independent AI measurements: frozen banks, deterministic grading, signed evidence, a derived third-party model register, public corrections and free verification. Measurement, not certification.";
   }, []);
   return (
     <div className="min-h-screen bg-white">
@@ -158,7 +183,7 @@ export default function About() {
         <div className="container max-w-4xl">
           <Badge className="mb-6 bg-emerald-500/20 text-emerald-300 border-emerald-500/30">Our Story</Badge>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-8 leading-tight">
-            We measure AI systems, sign the result, and publish what we could not measure
+            AI measurements you can inspect and challenge
           </h1>
           <p className="text-lg text-gray-300 leading-relaxed mb-8" data-testid="about-accountable-entity">
             Council of AI is operated by <strong className="text-white">CSOAI Ltd</strong>, UK Companies House{" "}
@@ -169,20 +194,48 @@ export default function About() {
             >
               16939677
             </a>
-            , founded by Nicholas Templeman. The company is accountable for everything published on this site.
+            , founded by Nicholas Templeman. The company is accountable for everything published on this site.{" "}
+            <Link href="/team" className="text-emerald-300 underline">Meet the team and the AI agents</Link>.
+          </p>
+          <p className="text-xl text-gray-300 leading-relaxed mb-6">
+            The problem predates the company. <strong className="text-white">CSOAI Ltd was incorporated in England and Wales on 2 January 2026</strong> to make AI behaviour checkable by someone other than the vendor: frozen test banks, deterministic grading, signed evidence, public corrections and dated re-measurement.
           </p>
           <p className="text-xl text-gray-300 leading-relaxed mb-8">
-            In 2024, as artificial intelligence began transforming every industry, a critical question emerged:
-            <span className="text-emerald-300 font-semibold"> Who watches the watchmen?</span> Governments scrambled to regulate.
-            Companies rushed to comply. But one thing was missing: <span className="font-semibold">trained professionals who could actually monitor AI systems for safety.</span>
+            Training is a separate, free programme. The commercial product is evidence work performed on request — never a better grade, never a place on the board, and never a certificate.
           </p>
-          <p className="text-xl text-gray-300 leading-relaxed">
-            That's when CSOAI was born—not as another AI company, but as <span className="text-emerald-300 font-semibold">the solution to two problems at once</span>:
-            making AI behaviour checkable by people who are not the vendor, and training the people who will have to do the checking.
-          </p>
+          <LiveModelCount />
           <HeroStatsBar />
         </div>
       </div>
+
+      <section className="bg-white py-16 sm:py-20" aria-labelledby="about-evidence-maintenance">
+        <div className="container max-w-4xl">
+          <h2 id="about-evidence-maintenance" className="text-3xl sm:text-4xl font-bold mb-6">
+            CSOAI: keeping AI evidence useful as systems change
+          </h2>
+          <p className="text-lg text-gray-600 leading-relaxed mb-6">
+            CSOAI develops and maintains GSPC, software for inspecting evidence about AI systems and reviewing claims when systems change. The practical question is simple: what was checked, what changed, and what does the evidence still support?
+          </p>
+          <p className="text-lg text-gray-600 leading-relaxed mb-6">
+            Two dated milestones show this work in practice.
+          </p>
+          <p className="text-lg text-gray-600 leading-relaxed mb-6">
+            On 18 October 2026, the author of a SAFE candidate evidence template{" "}
+            <a href="https://github.com/OpenSecureAIAlliance/wg-safe/pull/60#issuecomment-6251270225" className="text-emerald-700 underline">publicly credited CSOAI Ltd</a>{" "}
+            for independently reproducing it. The candidate identifies the reproduced versions and remains under review.
+          </p>
+          <p className="text-lg text-gray-600 leading-relaxed mb-6">
+            On 14 October 2026, CSOAI{" "}
+            <a href="https://github.com/CSOAI-ORG/councilof-ai/pull/3207" className="text-emerald-700 underline">merged a repair to its SAFE-pack verifier</a>, strengthening the checks that connect an original finding to a later retest. An unrelated passing result should not close the wrong finding. This is a source-code milestone; it does not establish a new production run.
+          </p>
+          <p className="text-lg text-gray-600 leading-relaxed">
+            Explore the public methods and{" "}
+            <a href="https://councilof.ai/quickstart/" className="text-emerald-700 underline">existing quickstart</a>, or read{" "}
+            <a href="https://councilof.ai/how-we-work/" className="text-emerald-700 underline">how we work</a>{" "}
+            to discuss a defined evidence-review need. We measure; we do not certify.
+          </p>
+        </div>
+      </section>
 
       {/* The numbers, in full: everything that left the front door on 2026-09-30 (AboutNumbers). */}
       <AboutNumbers />
@@ -228,11 +281,11 @@ export default function About() {
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-1 flex-shrink-0" />
-                  <span>Every published finding links to a signed, recomputable record</span>
+                  <span>Published findings identify their supporting records and signing status. Inspect each finding’s stated verification limits.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-1 flex-shrink-0" />
-                  <span>Free training, and completion records that say what they are</span>
+                  <span>Free practice exercises and clearly stated evidence limits</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-1 flex-shrink-0" />
@@ -253,14 +306,12 @@ export default function About() {
         <div className="container max-w-4xl">
           <div className="text-center mb-16">
             <Badge className="mb-4 bg-emerald-50 text-emerald-700 border-emerald-200">Our Mission</Badge>
-            <h2 className="text-4xl font-bold mb-6">Protecting Humanity While Creating Careers</h2>
+            <h2 className="text-4xl font-bold mb-6">Learning resources for AI governance and evidence review</h2>
             <p className="text-xl text-gray-600 leading-relaxed">
-              We are not a certification body and never will be — we measure, sign and publish
-              evidence, and the competent authorities decide. What we are building is the
-              infrastructure for a role we think the law is about to require:
-              <span className="font-semibold text-emerald-700"> the AI Safety Analyst</span>. That
-              this becomes a large profession is our bet, not a measurement — we have no forecast to
-              cite and we are not going to invent one.
+              We are developing training and tools for people who review AI behaviour and evidence.
+              Our published measurements and methods are open to inspection and challenge.
+              Training completion records are not accreditation, do not give regulatory authority
+              and do not guarantee employment.
             </p>
           </div>
 
@@ -281,9 +332,9 @@ export default function About() {
               </div>
               <h3 className="text-xl font-bold mb-3">Complete</h3>
               <p className="text-gray-600">
-                Finish the assessment and the Academy issues a completion record: a signed statement
-                that you demonstrated the material on a date. It is not a certification, not an
-                accreditation, and confers no regulatory status of any kind — we issue no conformity
+                Use the Academy exercises to practise and check the material. Completion-record
+                issuance is not currently open. The learning resources are not a certification or
+                accreditation and give no regulatory status — we issue no conformity
                 marks to anyone, ourselves included.
               </p>
             </Card>
@@ -450,7 +501,7 @@ export default function About() {
                 <Card className="p-8 flex-1 bg-white">
                   <h3 className="text-2xl font-bold mb-4">💼 Free training, and an honest account of where it leads</h3>
                   <p className="text-gray-600 leading-relaxed mb-4">
-                    Council Academy training is free and its completion records are free. What we have
+                    Council Academy learning resources are free. Completion-record issuance is not currently open. What we have
                     not measured, and will not assert: how many people this puts into work, what they
                     earn, or how our focus compares with other organisations&apos; — we have measured
                     one rating organisation on one criterion and that is the whole of our comparative
@@ -666,9 +717,9 @@ export default function About() {
                 The exam is 50 questions in 90 minutes with a 70% passing threshold, and you can
                 retake it as often as you need. We have not published completion times or a
                 first-attempt pass rate, so we are not going to quote either — there is no cohort
-                record behind those figures. What you get on passing is a completion record: a
-                statement that you demonstrated the material on a date. Not a certification, not an
-                accreditation, and no regulatory status.
+                record behind those figures. Use the Academy exercises to practise and check the
+                material. Completion-record issuance is not currently open. Learning progress is
+                not a certification or accreditation and gives no regulatory status.
               </p>
             </Card>
 
@@ -691,8 +742,8 @@ export default function About() {
                 There are no analyst engagements to offer today. A paid analyst programme is{" "}
                 <strong>not yet available</strong> — no roster, no matching, no published terms and
                 no cohort — and we are not going to describe rates, hours or a body of working
-                analysts before any of that exists. What is available now is free: the training, the
-                completion records, the banks, the grading code and the right to challenge any
+                analysts before any of that exists. What is available now is free: the learning resources,
+                the test banks, the grading code and the right to challenge any
                 published measurement.
               </p>
             </Card>
@@ -704,10 +755,12 @@ export default function About() {
                 council delivers decorrelated, unbiased review. The earlier DR-0007 experiment caused
                 us to withdraw that guarantee; the{" "}
                 <a href="/interop/council-independence.json" className="text-emerald-700 underline">latest point experiment measured rho=1 and n_eff=1 across three nominal legs</a>.
-                Trust us on the things
-                you can check instead: no model judges a model — every verdict is deterministic code
-                against pre-written gold labels; every published card verifies offline against a key
-                in our DID document, with no account and no permission; nobody we measure pays for
+                Inspect the instrument, inputs and limits for each result. A supported signed card
+                can be checked against its named key; unsigned or unsupported records are not
+                signature-verified. The browser verifier may fetch public key metadata. Offline
+                signature verification needs the original bytes and an appropriate pinned public key.
+                Integrity checks do not establish truth or freshness. Public evidence requires no
+                account or permission. Nobody we measure pays for
                 their place on the board, their score, or their removal from either; and what we got
                 wrong is appended in public at /api/corrections and never edited.
               </p>
@@ -737,22 +790,24 @@ export default function About() {
       <div className="bg-white py-20">
         <div className="container max-w-4xl">
           <Card className="p-12 border-[var(--ink-border)] bg-[var(--ink)] text-white text-center">
-            <h2 className="text-4xl font-bold mb-6">Start with the free rail</h2>
+            <h2 className="text-4xl font-bold mb-6">Verify free. Pay only for work we do on request.</h2>
             <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-              Training is free and the whole verification rail is free forever. A grade is never
-              sold, we do not certify anyone, and we cannot determine anyone's compliance — that
-              stays with the competent authorities. What we can do is measure, sign, and publish
-              what we could not measure.
+              Checking our evidence is free forever. Existing paid work is issuance and evidence assembly — including Article 50 marking evidence, evidence bundles and supported feeds — never a better grade, a ranking position or a certificate.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/academy">
+              <Link href="/contact/?arm=invoice&product=evidence-bundle">
                 <Button size="lg" className="bg-emerald-700 hover:bg-emerald-800 text-white">
-                  Start Free Training
+                  Enquire about an evidence bundle
                 </Button>
               </Link>
-              <Link href="/dashboard?task=enterprise-start&tab=measured">
+              <Link href="/services/">
                 <Button size="lg" variant="outline" className="border-white bg-transparent text-white hover:bg-white/10 hover:text-white">
-                  Enterprise lobby
+                  Browse supported evidence doors
+                </Button>
+              </Link>
+              <Link href="/gspc-verify">
+                <Button size="lg" variant="outline" className="border-white bg-transparent text-white hover:bg-white/10 hover:text-white">
+                  Verify free
                 </Button>
               </Link>
             </div>
