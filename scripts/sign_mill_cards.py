@@ -143,10 +143,35 @@ def freeze_body(body: dict) -> dict:
     return body
 
 
-def prior_cards(model: str, axis: str, digest: str) -> list[dict]:
+SUPERSEDE_SCOPES = ("model-axis", "comparison-group")
+
+
+def comparison_group(body: dict) -> tuple[str, str] | None:
+    """(bank_sha256, instrument_sha256) of a card's compute evidence, or None when the
+    card carries no complete pair. Two runs with different banks or instruments are
+    different comparison groups: neither is a corrected copy of the other."""
+    ce = body.get("compute_evidence")
+    if not isinstance(ce, dict):
+        return None
+    bank, instrument = ce.get("bank_sha256"), ce.get("instrument_sha256")
+    if not (isinstance(bank, str) and bank and isinstance(instrument, str) and instrument):
+        return None
+    return bank, instrument
+
+
+def prior_cards(model: str, axis: str, digest: str, group: tuple[str, str] | None = None,
+                scope: str = "model-axis") -> list[dict]:
     """Signed cards for the same (model, axis) that this one replaces. Superseded
     cards stay on disk and keep resolving — a card_id already published must not
-    404 — but the ledger records that they are no longer the live card."""
+    404 — but the ledger records that they are no longer the live card.
+
+    scope="model-axis" (default, historical behaviour) replaces every prior card for
+    the pair. scope="comparison-group" replaces only cards in the SAME comparison group
+    (same bank + instrument); a card from another group — e.g. the original run of
+    record when a new comparison group lands — is never displaced, and neither is a
+    card whose group cannot be established on either side (fail safe: keep)."""
+    if scope not in SUPERSEDE_SCOPES:
+        raise ValueError(f"unknown supersede scope {scope!r}")
     out = []
     for f in sorted(DST.glob("signed-*.json")):
         try:
@@ -155,6 +180,8 @@ def prior_cards(model: str, axis: str, digest: str) -> list[dict]:
             continue
         b = w.get("body") if isinstance(w.get("body"), dict) else {}
         if b.get("model") == model and b.get("axis") == axis and w.get("id") != digest and w.get("signature"):
+            if scope == "comparison-group" and (group is None or comparison_group(b) != group):
+                continue
             out.append({"file": f.name, "id": w.get("id")})
     return out
 
@@ -293,6 +320,11 @@ def main(argv: list[str] | None = None) -> int:
                              "(0600; never printed). Fails closed when absent or empty. --key-env wins if both are given.")
     parser.add_argument("--did", default=DID,
                         help=f"DID verification method recorded on each signed card (default {DID})")
+    parser.add_argument("--supersede-scope", choices=SUPERSEDE_SCOPES, default="model-axis",
+                        help="model-axis (default): a new card supersedes every prior signed card for its "
+                             "(model, axis). comparison-group: only prior cards with the same compute_evidence "
+                             "bank_sha256+instrument_sha256 — use when landing a new comparison group so the "
+                             "run of record is never displaced")
     args = parser.parse_args(argv)
     if args.dest_dir is not None:
         DST = args.dest_dir
@@ -417,7 +449,8 @@ def main(argv: list[str] | None = None) -> int:
                 )
                 failures += 1
                 continue
-        replaces = prior_cards(str(body.get("model") or ""), str(body.get("axis") or ""), digest)
+        replaces = prior_cards(str(body.get("model") or ""), str(body.get("axis") or ""), digest,
+                               comparison_group(body), args.supersede_scope)
         out = {
             "alg": "Ed25519",
             "body": body,
@@ -461,7 +494,7 @@ def main(argv: list[str] | None = None) -> int:
                     )
                     print("SUPERSEDES", prev["file"], prev["id"][:16], "->", dest.name)
                     superseding += 1
-    print(f"mill-sign signed={signed} failures={failures} superseded={superseding}")
+    print(f"mill-sign signed={signed} failures={failures} superseded={superseding} scope={args.supersede_scope}")
     return 1 if failures else 0
 
 

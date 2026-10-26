@@ -1,0 +1,4639 @@
+{
+  "schema": "csoai.coverage-matrix-canon/0.1",
+  "tui": 3,
+  "produced_at": "2026-10-07T10:22:45Z",
+  "builder": "scripts/build_coverage_matrix.py",
+  "state_vocabulary": {
+    "MEASURED": "a signed card in the measured state backs the cell",
+    "UNMEASURED": "NOT measured \u2014 no signed card; may be unaffordable, missing, or never run",
+    "INDEXED": "discovered in a corpus; NOT measured",
+    "STAGED": "landed and signed but not committed to a root; NOT measured"
+  },
+  "note": "model-behaviour coverage only. This is NOT a safety certification and NOT a regulatory verdict.",
+  "canonical_axes": {
+    "resolved_via": "mcp/gspc-server/axis-aliases.json",
+    "canonical_ids": [
+      "affect",
+      "ai-adoption-components",
+      "art5-safeguard",
+      "care",
+      "conformance",
+      "continuity",
+      "cross-reality",
+      "custody-disclosure",
+      "detector-interop",
+      "distribution-integrity",
+      "effect-binding",
+      "governance",
+      "humanoid-labour-index",
+      "jail",
+      "labour-components",
+      "machinery-conformity",
+      "openness",
+      "provenance",
+      "provenance-controls",
+      "regulatory-framework",
+      "reserve-attestation",
+      "safety",
+      "swarm"
+    ],
+    "index_axes_unresolved": [
+      "arc-30",
+      "care-refusal-help",
+      "care-refusal-protect",
+      "gsm8k-30",
+      "jail-escape-detection",
+      "mmlu-30",
+      "swag-30",
+      "swarm-candidates"
+    ]
+  },
+  "populations": {
+    "index": {
+      "population": "index-frozen-2026-08-19",
+      "source": "https://councilof.ai/signed/card_index.json + /signed/cards/<sha>.json",
+      "models": 64,
+      "axes": 16,
+      "cells": 1024,
+      "measured": 335,
+      "unmeasured": 689,
+      "coverage_pct": 32.71,
+      "matrix": {
+        "clan-csoai-plain:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "MEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "MEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "clan-csoai-precise:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "MEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "MEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "clan-csoai-refusing:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "MEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "MEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "clan-defoneos-plain:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "MEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "MEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "clan-defoneos-refusing:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "MEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "MEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "clan-law-cited:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "MEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "MEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "clan-law-plain:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "MEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "MEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "MEASURED"
+          },
+          "gspc-continuity": {
+            "state": "MEASURED"
+          },
+          "gspc-governance": {
+            "state": "MEASURED"
+          },
+          "gspc-openness": {
+            "state": "MEASURED"
+          },
+          "gspc-provenance": {
+            "state": "MEASURED"
+          },
+          "gspc-safety": {
+            "state": "MEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "clan-law-refusing:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "MEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "MEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "MEASURED"
+          },
+          "gspc-continuity": {
+            "state": "MEASURED"
+          },
+          "gspc-governance": {
+            "state": "MEASURED"
+          },
+          "gspc-openness": {
+            "state": "MEASURED"
+          },
+          "gspc-provenance": {
+            "state": "MEASURED"
+          },
+          "gspc-safety": {
+            "state": "MEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "clan-meok-plain:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "MEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "MEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "clan-meok-refusing:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "MEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "MEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "clan-meok-scoped:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "MEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "MEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "clan-redress-evidential:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "MEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "MEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "clan-redress-plain:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "MEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "MEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "clan-redress-refusing:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "MEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "MEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "clan-sovereignty-plain:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "MEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "MEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "clan-sovereignty-refusing:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "MEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "MEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "council-oowm:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "MEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "MEASURED"
+          },
+          "swarm-candidates": {
+            "state": "MEASURED"
+          }
+        },
+        "council-safe:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "MEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "MEASURED"
+          },
+          "swarm-candidates": {
+            "state": "MEASURED"
+          }
+        },
+        "deepseek-r1:8b": {
+          "arc-30": {
+            "state": "MEASURED"
+          },
+          "care": {
+            "state": "MEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "MEASURED"
+          },
+          "gsm8k-30": {
+            "state": "MEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "MEASURED"
+          },
+          "swag-30": {
+            "state": "MEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "eat-unsloth-050b:2026-08-02": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "MEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "MEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "falcon3:7b": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "MEASURED"
+          },
+          "gspc-continuity": {
+            "state": "MEASURED"
+          },
+          "gspc-governance": {
+            "state": "MEASURED"
+          },
+          "gspc-openness": {
+            "state": "MEASURED"
+          },
+          "gspc-provenance": {
+            "state": "MEASURED"
+          },
+          "gspc-safety": {
+            "state": "MEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "gemma3:12b": {
+          "arc-30": {
+            "state": "MEASURED"
+          },
+          "care": {
+            "state": "MEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "MEASURED"
+          },
+          "gsm8k-30": {
+            "state": "MEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "MEASURED"
+          },
+          "swag-30": {
+            "state": "MEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "llama3.2:3b": {
+          "arc-30": {
+            "state": "MEASURED"
+          },
+          "care": {
+            "state": "MEASURED"
+          },
+          "care-refusal-help": {
+            "state": "MEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "MEASURED"
+          },
+          "gov": {
+            "state": "MEASURED"
+          },
+          "gsm8k-30": {
+            "state": "MEASURED"
+          },
+          "gspc-conformance": {
+            "state": "MEASURED"
+          },
+          "gspc-continuity": {
+            "state": "MEASURED"
+          },
+          "gspc-governance": {
+            "state": "MEASURED"
+          },
+          "gspc-openness": {
+            "state": "MEASURED"
+          },
+          "gspc-provenance": {
+            "state": "MEASURED"
+          },
+          "gspc-safety": {
+            "state": "MEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "MEASURED"
+          },
+          "swag-30": {
+            "state": "MEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "mistral:7b": {
+          "arc-30": {
+            "state": "MEASURED"
+          },
+          "care": {
+            "state": "MEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "MEASURED"
+          },
+          "gsm8k-30": {
+            "state": "MEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "MEASURED"
+          },
+          "mmlu-30": {
+            "state": "MEASURED"
+          },
+          "swag-30": {
+            "state": "MEASURED"
+          },
+          "swarm-candidates": {
+            "state": "MEASURED"
+          }
+        },
+        "muse-glimmer:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "MEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "phi4:14b": {
+          "arc-30": {
+            "state": "MEASURED"
+          },
+          "care": {
+            "state": "MEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "MEASURED"
+          },
+          "gsm8k-30": {
+            "state": "MEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "MEASURED"
+          },
+          "swag-30": {
+            "state": "MEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "qwen2.5-0.5b-mined:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "MEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "MEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "qwen2.5:0.5b": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "MEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "MEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "MEASURED"
+          },
+          "gspc-continuity": {
+            "state": "MEASURED"
+          },
+          "gspc-governance": {
+            "state": "MEASURED"
+          },
+          "gspc-openness": {
+            "state": "MEASURED"
+          },
+          "gspc-provenance": {
+            "state": "MEASURED"
+          },
+          "gspc-safety": {
+            "state": "MEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "qwen2.5:0.5b-instruct": {
+          "arc-30": {
+            "state": "MEASURED"
+          },
+          "care": {
+            "state": "MEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "MEASURED"
+          },
+          "gsm8k-30": {
+            "state": "MEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "MEASURED"
+          },
+          "mmlu-30": {
+            "state": "MEASURED"
+          },
+          "swag-30": {
+            "state": "MEASURED"
+          },
+          "swarm-candidates": {
+            "state": "MEASURED"
+          }
+        },
+        "qwen2.5:1.5b": {
+          "arc-30": {
+            "state": "MEASURED"
+          },
+          "care": {
+            "state": "MEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "MEASURED"
+          },
+          "gsm8k-30": {
+            "state": "MEASURED"
+          },
+          "gspc-conformance": {
+            "state": "MEASURED"
+          },
+          "gspc-continuity": {
+            "state": "MEASURED"
+          },
+          "gspc-governance": {
+            "state": "MEASURED"
+          },
+          "gspc-openness": {
+            "state": "MEASURED"
+          },
+          "gspc-provenance": {
+            "state": "MEASURED"
+          },
+          "gspc-safety": {
+            "state": "MEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "MEASURED"
+          },
+          "mmlu-30": {
+            "state": "MEASURED"
+          },
+          "swag-30": {
+            "state": "MEASURED"
+          },
+          "swarm-candidates": {
+            "state": "MEASURED"
+          }
+        },
+        "qwen2.5:3b": {
+          "arc-30": {
+            "state": "MEASURED"
+          },
+          "care": {
+            "state": "MEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "MEASURED"
+          },
+          "gsm8k-30": {
+            "state": "MEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "MEASURED"
+          },
+          "swag-30": {
+            "state": "MEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "qwen2.5:7b": {
+          "arc-30": {
+            "state": "MEASURED"
+          },
+          "care": {
+            "state": "MEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "MEASURED"
+          },
+          "gsm8k-30": {
+            "state": "MEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "MEASURED"
+          },
+          "mmlu-30": {
+            "state": "MEASURED"
+          },
+          "swag-30": {
+            "state": "MEASURED"
+          },
+          "swarm-candidates": {
+            "state": "MEASURED"
+          }
+        },
+        "qwen3:0.6b": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "MEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "MEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "qwen3:4b": {
+          "arc-30": {
+            "state": "MEASURED"
+          },
+          "care": {
+            "state": "MEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "MEASURED"
+          },
+          "gsm8k-30": {
+            "state": "MEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "MEASURED"
+          },
+          "mmlu-30": {
+            "state": "MEASURED"
+          },
+          "swag-30": {
+            "state": "MEASURED"
+          },
+          "swarm-candidates": {
+            "state": "MEASURED"
+          }
+        },
+        "sov-compliance-art5:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "MEASURED"
+          },
+          "gspc-continuity": {
+            "state": "MEASURED"
+          },
+          "gspc-governance": {
+            "state": "MEASURED"
+          },
+          "gspc-openness": {
+            "state": "MEASURED"
+          },
+          "gspc-provenance": {
+            "state": "MEASURED"
+          },
+          "gspc-safety": {
+            "state": "MEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "sov-deepseek:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "MEASURED"
+          },
+          "gspc-continuity": {
+            "state": "MEASURED"
+          },
+          "gspc-governance": {
+            "state": "MEASURED"
+          },
+          "gspc-openness": {
+            "state": "MEASURED"
+          },
+          "gspc-provenance": {
+            "state": "MEASURED"
+          },
+          "gspc-safety": {
+            "state": "MEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "sov-draw-compliance:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "MEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "MEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "MEASURED"
+          },
+          "gspc-continuity": {
+            "state": "MEASURED"
+          },
+          "gspc-governance": {
+            "state": "MEASURED"
+          },
+          "gspc-openness": {
+            "state": "MEASURED"
+          },
+          "gspc-provenance": {
+            "state": "MEASURED"
+          },
+          "gspc-safety": {
+            "state": "MEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "sov-draw-cybersecurity:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "MEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "MEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "sov-draw-sovereignty:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "MEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "MEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "sov-ethics-art5:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "MEASURED"
+          },
+          "gspc-continuity": {
+            "state": "MEASURED"
+          },
+          "gspc-governance": {
+            "state": "MEASURED"
+          },
+          "gspc-openness": {
+            "state": "MEASURED"
+          },
+          "gspc-provenance": {
+            "state": "MEASURED"
+          },
+          "gspc-safety": {
+            "state": "MEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "sov-gemma:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "MEASURED"
+          },
+          "gspc-continuity": {
+            "state": "MEASURED"
+          },
+          "gspc-governance": {
+            "state": "MEASURED"
+          },
+          "gspc-openness": {
+            "state": "MEASURED"
+          },
+          "gspc-provenance": {
+            "state": "MEASURED"
+          },
+          "gspc-safety": {
+            "state": "MEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "sov-mistral:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "MEASURED"
+          },
+          "gspc-continuity": {
+            "state": "MEASURED"
+          },
+          "gspc-governance": {
+            "state": "MEASURED"
+          },
+          "gspc-openness": {
+            "state": "MEASURED"
+          },
+          "gspc-provenance": {
+            "state": "MEASURED"
+          },
+          "gspc-safety": {
+            "state": "MEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "sov-phi:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "MEASURED"
+          },
+          "gspc-continuity": {
+            "state": "MEASURED"
+          },
+          "gspc-governance": {
+            "state": "MEASURED"
+          },
+          "gspc-openness": {
+            "state": "MEASURED"
+          },
+          "gspc-provenance": {
+            "state": "MEASURED"
+          },
+          "gspc-safety": {
+            "state": "MEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "sov-refusal-balanced:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "MEASURED"
+          },
+          "gspc-continuity": {
+            "state": "MEASURED"
+          },
+          "gspc-governance": {
+            "state": "MEASURED"
+          },
+          "gspc-openness": {
+            "state": "MEASURED"
+          },
+          "gspc-provenance": {
+            "state": "MEASURED"
+          },
+          "gspc-safety": {
+            "state": "MEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "sov-refusal-combo:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "MEASURED"
+          },
+          "gspc-continuity": {
+            "state": "MEASURED"
+          },
+          "gspc-governance": {
+            "state": "MEASURED"
+          },
+          "gspc-openness": {
+            "state": "MEASURED"
+          },
+          "gspc-provenance": {
+            "state": "MEASURED"
+          },
+          "gspc-safety": {
+            "state": "MEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "sov-refusal-lora:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "MEASURED"
+          },
+          "gspc-continuity": {
+            "state": "MEASURED"
+          },
+          "gspc-governance": {
+            "state": "MEASURED"
+          },
+          "gspc-openness": {
+            "state": "MEASURED"
+          },
+          "gspc-provenance": {
+            "state": "MEASURED"
+          },
+          "gspc-safety": {
+            "state": "MEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "sov-refusal-v2:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "MEASURED"
+          },
+          "gspc-continuity": {
+            "state": "MEASURED"
+          },
+          "gspc-governance": {
+            "state": "MEASURED"
+          },
+          "gspc-openness": {
+            "state": "MEASURED"
+          },
+          "gspc-provenance": {
+            "state": "MEASURED"
+          },
+          "gspc-safety": {
+            "state": "MEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "sov-sovereign-v4:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "MEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "MEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "MEASURED"
+          },
+          "gspc-continuity": {
+            "state": "MEASURED"
+          },
+          "gspc-governance": {
+            "state": "MEASURED"
+          },
+          "gspc-openness": {
+            "state": "MEASURED"
+          },
+          "gspc-provenance": {
+            "state": "MEASURED"
+          },
+          "gspc-safety": {
+            "state": "MEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "sov33-unified:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "MEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "MEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "MEASURED"
+          },
+          "gspc-continuity": {
+            "state": "MEASURED"
+          },
+          "gspc-governance": {
+            "state": "MEASURED"
+          },
+          "gspc-openness": {
+            "state": "MEASURED"
+          },
+          "gspc-provenance": {
+            "state": "MEASURED"
+          },
+          "gspc-safety": {
+            "state": "MEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "sov33-v7:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "MEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "MEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "MEASURED"
+          },
+          "gspc-continuity": {
+            "state": "MEASURED"
+          },
+          "gspc-governance": {
+            "state": "MEASURED"
+          },
+          "gspc-openness": {
+            "state": "MEASURED"
+          },
+          "gspc-provenance": {
+            "state": "MEASURED"
+          },
+          "gspc-safety": {
+            "state": "MEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "sov34:latest": {
+          "arc-30": {
+            "state": "UNMEASURED"
+          },
+          "care": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "UNMEASURED"
+          },
+          "gsm8k-30": {
+            "state": "UNMEASURED"
+          },
+          "gspc-conformance": {
+            "state": "MEASURED"
+          },
+          "gspc-continuity": {
+            "state": "MEASURED"
+          },
+          "gspc-governance": {
+            "state": "MEASURED"
+          },
+          "gspc-openness": {
+            "state": "MEASURED"
+          },
+          "gspc-provenance": {
+            "state": "MEASURED"
+          },
+          "gspc-safety": {
+            "state": "MEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "UNMEASURED"
+          },
+          "swag-30": {
+            "state": "UNMEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "sov6-abstraction-v3-light:latest": {
+          "arc-30": {
+            "state": "MEASURED"
+          },
+          "care": {
+            "state": "MEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "MEASURED"
+          },
+          "gsm8k-30": {
+            "state": "MEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "MEASURED"
+          },
+          "swag-30": {
+            "state": "MEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "sov6-aesthetics-v3-light:latest": {
+          "arc-30": {
+            "state": "MEASURED"
+          },
+          "care": {
+            "state": "MEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "MEASURED"
+          },
+          "gsm8k-30": {
+            "state": "MEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "MEASURED"
+          },
+          "swag-30": {
+            "state": "MEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "sov6-agency-v3-light:latest": {
+          "arc-30": {
+            "state": "MEASURED"
+          },
+          "care": {
+            "state": "MEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "MEASURED"
+          },
+          "gsm8k-30": {
+            "state": "MEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "MEASURED"
+          },
+          "swag-30": {
+            "state": "MEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "sov6-creation-v3-light:latest": {
+          "arc-30": {
+            "state": "MEASURED"
+          },
+          "care": {
+            "state": "MEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "MEASURED"
+          },
+          "gsm8k-30": {
+            "state": "MEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "MEASURED"
+          },
+          "swag-30": {
+            "state": "MEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "sov6-destruction-v3-light:latest": {
+          "arc-30": {
+            "state": "MEASURED"
+          },
+          "care": {
+            "state": "MEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "MEASURED"
+          },
+          "gsm8k-30": {
+            "state": "MEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "MEASURED"
+          },
+          "swag-30": {
+            "state": "MEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "sov6-embodiment-v3-light:latest": {
+          "arc-30": {
+            "state": "MEASURED"
+          },
+          "care": {
+            "state": "MEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "MEASURED"
+          },
+          "gsm8k-30": {
+            "state": "MEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "MEASURED"
+          },
+          "swag-30": {
+            "state": "MEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "sov6-ethics-v3-light:latest": {
+          "arc-30": {
+            "state": "MEASURED"
+          },
+          "care": {
+            "state": "MEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "MEASURED"
+          },
+          "gsm8k-30": {
+            "state": "MEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "MEASURED"
+          },
+          "swag-30": {
+            "state": "MEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "sov6-identity-v3-light:latest": {
+          "arc-30": {
+            "state": "MEASURED"
+          },
+          "care": {
+            "state": "MEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "MEASURED"
+          },
+          "gsm8k-30": {
+            "state": "MEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "MEASURED"
+          },
+          "swag-30": {
+            "state": "MEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "sov6-logic-v3-light:latest": {
+          "arc-30": {
+            "state": "MEASURED"
+          },
+          "care": {
+            "state": "MEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "MEASURED"
+          },
+          "gsm8k-30": {
+            "state": "MEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "MEASURED"
+          },
+          "swag-30": {
+            "state": "MEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "sov6-preservation-v3-light:latest": {
+          "arc-30": {
+            "state": "MEASURED"
+          },
+          "care": {
+            "state": "MEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "MEASURED"
+          },
+          "gsm8k-30": {
+            "state": "MEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "MEASURED"
+          },
+          "swag-30": {
+            "state": "MEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "sov6-relationality-v3-light:latest": {
+          "arc-30": {
+            "state": "MEASURED"
+          },
+          "care": {
+            "state": "MEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "MEASURED"
+          },
+          "gsm8k-30": {
+            "state": "MEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "MEASURED"
+          },
+          "swag-30": {
+            "state": "MEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "sov6-synthesis-v3-light:latest": {
+          "arc-30": {
+            "state": "MEASURED"
+          },
+          "care": {
+            "state": "MEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "MEASURED"
+          },
+          "gsm8k-30": {
+            "state": "MEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "MEASURED"
+          },
+          "swag-30": {
+            "state": "MEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        },
+        "sov6-temporality-v3-light:latest": {
+          "arc-30": {
+            "state": "MEASURED"
+          },
+          "care": {
+            "state": "MEASURED"
+          },
+          "care-refusal-help": {
+            "state": "UNMEASURED"
+          },
+          "care-refusal-protect": {
+            "state": "UNMEASURED"
+          },
+          "gov": {
+            "state": "MEASURED"
+          },
+          "gsm8k-30": {
+            "state": "MEASURED"
+          },
+          "gspc-conformance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-continuity": {
+            "state": "UNMEASURED"
+          },
+          "gspc-governance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-openness": {
+            "state": "UNMEASURED"
+          },
+          "gspc-provenance": {
+            "state": "UNMEASURED"
+          },
+          "gspc-safety": {
+            "state": "UNMEASURED"
+          },
+          "jail-escape-detection": {
+            "state": "UNMEASURED"
+          },
+          "mmlu-30": {
+            "state": "MEASURED"
+          },
+          "swag-30": {
+            "state": "MEASURED"
+          },
+          "swarm-candidates": {
+            "state": "UNMEASURED"
+          }
+        }
+      }
+    },
+    "mill": {
+      "population": "mill-live-leaves",
+      "source": "public/interop/card-root-2026-10-01-35544212115c.json",
+      "as_of": "2026-10-01T06:51:30Z",
+      "merkle_root": "35544212115c8dad442dad0c146cc241354e9aa569dce22b56501cabb5d10512",
+      "models": 166,
+      "axes": 14,
+      "cells": 2324,
+      "covered": 1427,
+      "empty": 897,
+      "measured": 1427,
+      "coverage_pct": 61.4,
+      "live_leaves": 1466,
+      "superseded_excluded": 1402,
+      "duplicate_cells": {
+        "count": 39,
+        "value_conflicts": 0,
+        "identical_values": 39,
+        "redundant_leaves": 39,
+        "cells": [
+          {
+            "model": "NousResearch/Hermes-3-Llama-3.1-8B",
+            "axis": "conformance",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-conforma-dc422ebf0c6c.json",
+                "id": "dc422ebf0c6c63acfee9d66703aef4a4b78ff3dc1822bdf3d5982fad5f74dd8b",
+                "leaf": "6076716c92b85b26f0694d9984fde9fdd8a5157e985bd04067c934022e1b5f03",
+                "status": "MEASURED",
+                "n": 30,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-conforma-a9fce0a8c334.json",
+                "id": "a9fce0a8c3345665cdbd0265fe2d40c81e1058a553eb583fce4083100ac9f4e3",
+                "leaf": "a873f0aefbd318ea37188513103388c80ac9b1a9a62528684f31091b212e5474",
+                "status": "MEASURED",
+                "n": 30,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "OBLITERATUS/Qwen3.8-27B-OBLITERATED",
+            "axis": "provenance",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-provenan-38628ad57825.json",
+                "id": "38628ad57825beb850d8c8867d4be820c113538dfafdc5d1bcf5186be05361a2",
+                "leaf": "477af2ce53727ccdf359b6dabe0ad3e400af3ac59d918e0ecb681b51f91ce229",
+                "status": "MEASURED",
+                "n": 30,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-provenan-418158d5ac25.json",
+                "id": "418158d5ac25ccb75382af1601f895e99fad99b6e9bd4882f3a030b160028d52",
+                "leaf": "656bb0794229fd55cfa69a07324224bfaed18b998257686f5685a939b6d313c7",
+                "status": "MEASURED",
+                "n": 30,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "Qwen/Qwen2.5-0.5B-Instruct",
+            "axis": "care",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-care-b14288469282.json",
+                "id": "b14288469282c1c69d02e2991c681cfcc334575966e5037d544a4bf28e043363",
+                "leaf": "7639876a41890bd14516cfd842aaaabba86c5c36162ad5d1831af60aef9d89d2",
+                "status": "MEASURED",
+                "n": 30,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-care-1a5aba983079.json",
+                "id": "1a5aba98307935959a6da226e5ce29a332de69fce93d4c93de4ba9d428307758",
+                "leaf": "c2a0c94f4097434c744140e890c471bf38003572bd0ebb38f2ec6f74b777a0a1",
+                "status": "MEASURED",
+                "n": 30,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "Qwen/Qwen2.5-Coder-7B",
+            "axis": "conformance",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-conforma-bd41b5aac0bf.json",
+                "id": "bd41b5aac0bff2058708f18bd6313d7de8e4fb046fd3347b8142e09799836ebd",
+                "leaf": "0a4daf0e9cce151172b040c893fc0cd6d910a857c495e0ba38b8ce2ebfcd6860",
+                "status": "MEASURED",
+                "n": 30,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-conforma-5b9da6a217e1.json",
+                "id": "5b9da6a217e1bc128e20377caea5bf2384845656769c126f773b4004216855e7",
+                "leaf": "d54929322d3bc352b01110e9adeeae5437ff6c408f2a07df412e3fd95158ba01",
+                "status": "MEASURED",
+                "n": 30,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+            "axis": "care",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-care-6739cdfb3767.json",
+                "id": "6739cdfb3767279ff3faea8b31f1d2185ce5d61e1ed391297ae70fe4c874cfa8",
+                "leaf": "2823e821a2fe6c816ee02834b98800d01e933cedad1fe5eaae69d68752659515",
+                "status": "MEASURED",
+                "n": 30,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-care-ddf2f6d14119.json",
+                "id": "ddf2f6d14119820f5d70b1dcd56146856d17aebae055e37988fb6dd2e090de6d",
+                "leaf": "c8909bcf0bd90568c852bfdee2f5fdac35dc964fdb8c6b5ad8743baff755f016",
+                "status": "MEASURED",
+                "n": 30,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "farbodtavakkoli/OTel-LLM-27B-IT",
+            "axis": "conformance",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-conforma-18677bd85920.json",
+                "id": "18677bd85920f29aeea70b8052e3cea1556411cdf234eba7a60872c76e8d7d57",
+                "leaf": "707a8de44e46108a008f6ab19e0b599bf2a12011a9c5f1684cbd4edc1bc84a7f",
+                "status": "MEASURED",
+                "n": 30,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-conforma-47dbd8db534f.json",
+                "id": "47dbd8db534f1509a906d52db050039492560f3c485e26ea051b8da5f458464d",
+                "leaf": "a4345504da995beda4b673b51f0f419f940423436f72e028cedf0879b51f6d28",
+                "status": "MEASURED",
+                "n": 30,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "microsoft/Phi-3-mini-4k-instruct",
+            "axis": "care",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-care-02f981b99498.json",
+                "id": "02f981b99498961d421cbc3eee43879a687f6f582209deb0306eabe0a035cf1b",
+                "leaf": "68a38ba5539f4d2df4d7ea898e8e33d19e1e8642c00754bf158dbf0870a5f1a7",
+                "status": "MEASURED",
+                "n": 30,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-care-53ab1114f5d9.json",
+                "id": "53ab1114f5d99324e65a19ffabda8e753d526eac0081f9e34d012c5a0cde5923",
+                "leaf": "e956a5044a8292ea929b128bf8e258e275e2ec309956125b7f329ee11ed0f0ad",
+                "status": "MEASURED",
+                "n": 30,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "microsoft/Phi-4-mini-instruct",
+            "axis": "care",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-care-98f6388d0c56.json",
+                "id": "98f6388d0c56f859537bcd49dccd2fb932a7f5bd339717a689cf488ab88f2669",
+                "leaf": "4a2d3051dcc9974fe3cc9ddf2f734e6b29c3b1210e2bb50c060126be19eccb2d",
+                "status": "MEASURED",
+                "n": 30,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-care-1ae9fdbd47ba.json",
+                "id": "1ae9fdbd47ba9520ca9363cab7f11cbf02be6ab24b6eae613a55d10c7a266de8",
+                "leaf": "e96fcf91a7511da8f872ef2e603b4aba6c76b7591339dbae6491c535a7d7b940",
+                "status": "MEASURED",
+                "n": 30,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "microsoft/Phi-4-mini-instruct",
+            "axis": "provenance",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-provenan-e0adba6ad5fc.json",
+                "id": "e0adba6ad5fc980f356dbc40defe2f4c79e891b7235790bfcac0260d609d97e9",
+                "leaf": "5a731cf5c31d2bf8258d573414f692c573012c7149d1b6ff73e54c7738f29138",
+                "status": "MEASURED",
+                "n": 30,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-provenan-40a706e544d9.json",
+                "id": "40a706e544d9665253459b485904dae2082ee8724f12eb3621b7c0cfc43536f8",
+                "leaf": "e02593eec6736419a828a7eb202bc46d524d3698e1e8f75b466839cd11dfa881",
+                "status": "MEASURED",
+                "n": 30,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+            "axis": "provenance",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-provenan-7cad4857967c.json",
+                "id": "7cad4857967cb91e69449d0d903b135b468ba516b363d1f5bb8ebc9530f3c6c3",
+                "leaf": "86cc98afdc9fd049f1204e5a7aea77fed3cbcc2b6ab1632e90796878adc02967",
+                "status": "MEASURED",
+                "n": 30,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-provenan-04734bea73d5.json",
+                "id": "04734bea73d5138a0988aaf6871cb057329202f252344553f8dd2dcfe0a0e623",
+                "leaf": "e44689f2f486cc027e20cc66eceaf41eee91d16a4e8fb3a32ff31d215ab8fff5",
+                "status": "MEASURED",
+                "n": 30,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "ollama:gemma3:4b@sha256:a2af6cc3eb7fa8be8504abaf9b04e88f17a119ec3f04a3addf55f92841195f5a",
+            "axis": "conformance",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-conforma-2a5f1f756b73.json",
+                "id": "2a5f1f756b73447b53673d4ceb12b352b36f89d09bcec0eab4eb8f926d1b82f2",
+                "leaf": "8aa6e29faca9651099c6cd597c93def6ac3a2d7195790dd7ed4ccb12634c8d17",
+                "status": "MEASURED",
+                "n": 35,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-conforma-0bec2fe3d146.json",
+                "id": "0bec2fe3d146b8ebd7174cad18caac0acc3fd5dcf9597e7e12cc80f635e95813",
+                "leaf": "cc1078eef729b0d686753dc77299da46576c33d223fa2c28f92fc91f5eac180f",
+                "status": "MEASURED",
+                "n": 35,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "ollama:gemma3:4b@sha256:a2af6cc3eb7fa8be8504abaf9b04e88f17a119ec3f04a3addf55f92841195f5a",
+            "axis": "jail",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-jail-0378db93b5e7.json",
+                "id": "0378db93b5e7ee2b03306c0e703c3bde6ba1c398dc1c72b3934b72d8bd68cccf",
+                "leaf": "550f28412906fe0ca630f1b268ac29fe4cdb462f909ae0bc99687492386749bf",
+                "status": "MEASURED",
+                "n": 71,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-jail-61971e7fd2a9.json",
+                "id": "61971e7fd2a901b26b92171af9f9481aee9d42e814e7ae4cb85376ac959df0f8",
+                "leaf": "5a8a2bc8b2a66b3006fd74873570dbcaf907096336b78739e4709d229c477377",
+                "status": "MEASURED",
+                "n": 71,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "ollama:gemma3:4b@sha256:a2af6cc3eb7fa8be8504abaf9b04e88f17a119ec3f04a3addf55f92841195f5a",
+            "axis": "machinery-conformity",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-machiner-764f605e0c4c.json",
+                "id": "764f605e0c4c4c5ca155b709fba185de8fedf9a7623baade4d6f52d811cc7657",
+                "leaf": "defc0b4067f3856873362042b6844bf5b0e615af73aaee53b32667448d338f39",
+                "status": "MEASURED",
+                "n": 33,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-machiner-0c9b09423e4f.json",
+                "id": "0c9b09423e4ffff90c8c95227f80ee9907302806a1bfc81951a04c9c776e851f",
+                "leaf": "efcb766b47ee10035150f6b5dc05191534affadedfa0b4087fadd365565f9356",
+                "status": "MEASURED",
+                "n": 33,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "ollama:gemma3:4b@sha256:a2af6cc3eb7fa8be8504abaf9b04e88f17a119ec3f04a3addf55f92841195f5a",
+            "axis": "openness",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-openness-0ea2edf929ba.json",
+                "id": "0ea2edf929ba7cd0aa2b4ef0378a41250a354dab4bd4b51d81cec5a48b5cfb66",
+                "leaf": "1e9f7b9d91d142d802ff793a2935684d8a76ca5a492c2a30887ab101d41cab5f",
+                "status": "MEASURED",
+                "n": 32,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-openness-3b1e5e9cc048.json",
+                "id": "3b1e5e9cc048b1c259c17f7bce2c1d8e4f5cef431eb58145ab69b71810a3a81e",
+                "leaf": "a93ef74313406b9918224eaf5672ee170b38f1707eeb2e99b4f108771d331440",
+                "status": "MEASURED",
+                "n": 32,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "ollama:gemma3:4b@sha256:a2af6cc3eb7fa8be8504abaf9b04e88f17a119ec3f04a3addf55f92841195f5a",
+            "axis": "provenance",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-provenan-e10ec0cbc001.json",
+                "id": "e10ec0cbc0010f233c6dbbeaed263bd6e8de34d8fa211c9dab176ece59ad9527",
+                "leaf": "92e4a4ea46a3f41f6766d9e27d9400eb91ab500788c22774c18d9a1329e418a3",
+                "status": "MEASURED",
+                "n": 31,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-provenan-cbc94ab614a5.json",
+                "id": "cbc94ab614a5816e9058bfae55b9041af87c2cdd2c5ed777d0349af20062488f",
+                "leaf": "ae6dde604ce33f2c41236e3f957fcd2a92e7f217628298d5c016ae3c38f3ee36",
+                "status": "MEASURED",
+                "n": 31,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "ollama:gemma3:4b@sha256:a2af6cc3eb7fa8be8504abaf9b04e88f17a119ec3f04a3addf55f92841195f5a",
+            "axis": "safety",
+            "cards": 2,
+            "statuses": [
+              "UNMEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-safety-839b9174a768.json",
+                "id": "839b9174a768b23476e1ece65d1bc18a0e2de9ad1b1d88ffec9597e3ccf5ce02",
+                "leaf": "42531011abd7a2721cc9daa1de68cc734f74853830425d16ff04cf546bde54d8",
+                "status": "UNMEASURED",
+                "n": 27,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-safety-5fe4b6961d43.json",
+                "id": "5fe4b6961d437b6dba3d3fb3ea7c15733384276112e1c141c3acf8b5c99cc5cc",
+                "leaf": "47762e62054a3c83964203fb84808d04dcf6b7c9956b90a1aa7121e293272fd2",
+                "status": "UNMEASURED",
+                "n": 27,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "ollama:llama3.2:3b@sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+            "axis": "art5-safeguard",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-art5-saf-d7f6b8f22997.json",
+                "id": "d7f6b8f22997c858d6a28a52838ec9b32aca80f476e07dd02101db6d46789653",
+                "leaf": "717fac91adac3646a24d8f879a09f001c3915d994fb56b1d1b6005b5919ae73f",
+                "status": "MEASURED",
+                "n": 32,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-art5-saf-7012fb52f5bc.json",
+                "id": "7012fb52f5bcb371cfa1c31fb32563e011714aa5a4af16c4afedfa0822fe182c",
+                "leaf": "c16541f2ef082376e89c4073eaac70f3c859911e7186e51a9a463e49a2f39259",
+                "status": "MEASURED",
+                "n": 33,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "ollama:llama3.2:3b@sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+            "axis": "conformance",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-conforma-54c6289d7141.json",
+                "id": "54c6289d71419f31453f74bf602b04734c9b811710518f8ed143b43945195156",
+                "leaf": "f10ef87685b76be8bf39f0da1f1d196bffc738b0120cafb219b0dd7acdc9a1f6",
+                "status": "MEASURED",
+                "n": 35,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-conforma-0ce5a02c3ac8.json",
+                "id": "0ce5a02c3ac82a1675f09da9d3bd6f0d110de2f467c1f868ab00b61a753444ba",
+                "leaf": "f6ee837a85be7e9f1e5bb82ab29d066df1b4c8468d72ae78eecbc7caf119ded7",
+                "status": "MEASURED",
+                "n": 35,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "ollama:llama3.2:3b@sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+            "axis": "jail",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-jail-b8bcedf8fe71.json",
+                "id": "b8bcedf8fe7164369f160148f56cb322d3a684be91c6373d4c82e5a1a806bd75",
+                "leaf": "25204e82dcaee6b74c4b464256ad4e3912bb0830ec6c048092357d8ae076c4d8",
+                "status": "MEASURED",
+                "n": 66,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-jail-52673eb7789c.json",
+                "id": "52673eb7789cef1cf6d7641e2146b1a53b9c36db64ba190dc4e4e886ce402b58",
+                "leaf": "7cb2986bdf217b8c6871e79bd02ae1214415a9413cdfa1579878837caa24460b",
+                "status": "MEASURED",
+                "n": 66,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "ollama:llama3.2:3b@sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+            "axis": "provenance",
+            "cards": 2,
+            "statuses": [
+              "UNMEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-provenan-529f9d28c550.json",
+                "id": "529f9d28c5500ffe26a415b978ca917d18bf03512c6cc7d741cb4045d8556f14",
+                "leaf": "2c9d8a3744773a5feb34f690307772053c52ede8682ac38d90b01897ee873120",
+                "status": "UNMEASURED",
+                "n": 9,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-provenan-779297e80b51.json",
+                "id": "779297e80b517f8f81f1fc026e9f32dd56f36550457aa3c0b3bcdfe403f76bf3",
+                "leaf": "8d776e4b0998d1e18ffea4029a307995bf1c65ff0ec0e15b9ebe88ba21e2aa38",
+                "status": "UNMEASURED",
+                "n": 10,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "ollama:mistral-nemo:12b@sha256:e7e06d107c6c86ed0cf45445f1790720b5092149c4c95f4d965844e9afbfdc89",
+            "axis": "art5-safeguard",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-art5-saf-3e3f5c557ec2.json",
+                "id": "3e3f5c557ec2d99e084f457a35a611c741540c73be1acd8b1b2af9c3620bad35",
+                "leaf": "371d662fff425fd748004db1e69ffd1ae146c10d7ba378a751b7676ad339b34e",
+                "status": "MEASURED",
+                "n": 36,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-art5-saf-c505b8c7b002.json",
+                "id": "c505b8c7b002f9212889ad6a4f67681060cac1534f6806905ac8195ba6c2793c",
+                "leaf": "3da3a4ada36ca29aba67c8d864d09b8914e90bc43d42479158dbd7bfe24ccfd7",
+                "status": "MEASURED",
+                "n": 36,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "ollama:mistral-nemo:12b@sha256:e7e06d107c6c86ed0cf45445f1790720b5092149c4c95f4d965844e9afbfdc89",
+            "axis": "conformance",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-conforma-e27f8c9de044.json",
+                "id": "e27f8c9de0445819a0a1e05cef1369b4efe5f36144f4850cf2ab51f09d4df7f9",
+                "leaf": "4ca9b4de7f5d6e2445e5ada66693e0707ba74a9490e7f44037b072171b884a73",
+                "status": "MEASURED",
+                "n": 35,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-conforma-3515e39bbd0f.json",
+                "id": "3515e39bbd0fcc94cf18d1304a6bb5b9009a7ebb6661aa8fefafea06595617ba",
+                "leaf": "ead7418e48d36a7d0b014466e0bdac03555a8cb9a9031cf53a52d0636ef7232c",
+                "status": "MEASURED",
+                "n": 35,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "ollama:mistral-nemo:12b@sha256:e7e06d107c6c86ed0cf45445f1790720b5092149c4c95f4d965844e9afbfdc89",
+            "axis": "continuity",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-continui-7570ad8c99ec.json",
+                "id": "7570ad8c99ec62b73ad5fd4717ad4bddcf03ec172f81ca01c9ed089a6105d251",
+                "leaf": "2b4e3b8b1c99f00daf43268634f10aa597d95131862445708eaf73c310a45ed4",
+                "status": "MEASURED",
+                "n": 33,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-continui-808337549ca1.json",
+                "id": "808337549ca1efba14cb6d078e65e7287cd3ca5a78f5589bae964c7a6b370cf2",
+                "leaf": "efa18dc4360cfa211d744bc3fd785114987395ac47487dd29ee293ad370be94e",
+                "status": "MEASURED",
+                "n": 33,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "ollama:mistral-nemo:12b@sha256:e7e06d107c6c86ed0cf45445f1790720b5092149c4c95f4d965844e9afbfdc89",
+            "axis": "cross-reality",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-cross-re-5e64218052bf.json",
+                "id": "5e64218052bf690f868ab5a25be3197495f609f89adab877755bf30acff606b4",
+                "leaf": "a68e7869647298a9f7ef2edc69ca0d12a88b2645393f704f8654804271cd7406",
+                "status": "MEASURED",
+                "n": 32,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-cross-re-bc981c2b6069.json",
+                "id": "bc981c2b60692f1bdd54e22c614b057ea49effe25e0052c35221526dbf5f0e72",
+                "leaf": "c16ffccaca3fb91334448ad82b31de178bfc80194da684c1337d1e62f7bde012",
+                "status": "MEASURED",
+                "n": 32,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "ollama:mistral-nemo:12b@sha256:e7e06d107c6c86ed0cf45445f1790720b5092149c4c95f4d965844e9afbfdc89",
+            "axis": "governance",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-governan-00a682b2cf10.json",
+                "id": "00a682b2cf10ed6dda2abc16c438f61700714a5dd6c1cc9b6fb40b26671eb57d",
+                "leaf": "1a19743be78fce2e72baabeec48b16c62e57ae3727850bd5f32d6b23dcd6d298",
+                "status": "MEASURED",
+                "n": 237,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-governan-094eeb5b0c8d.json",
+                "id": "094eeb5b0c8d700747f99a646f9c27e1cb2da43b8e7fa670c7bff181b4e379d5",
+                "leaf": "5bf4861181676d977998cdcff0606a832394bc4ad2cbce3f2ddce4f50a253590",
+                "status": "MEASURED",
+                "n": 237,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "ollama:mistral-nemo:12b@sha256:e7e06d107c6c86ed0cf45445f1790720b5092149c4c95f4d965844e9afbfdc89",
+            "axis": "jail",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-jail-01dabbf0d5d5.json",
+                "id": "01dabbf0d5d54379a7908e5e226768b02700e8371e86027728e8cc115c76a7d3",
+                "leaf": "5c5f859fe6aba385f7d7954a04b7a7e834715e5c1d1c724e70ace93aff19e104",
+                "status": "MEASURED",
+                "n": 71,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-jail-9d5c03a416f5.json",
+                "id": "9d5c03a416f5811ed169848f4ccd4be085a681de3d625dd49070086c6cfbfa4d",
+                "leaf": "6ff9c4f5661430e6753a51d62b1bd75aa0e422183b85cdca5b7845d47c7f810e",
+                "status": "MEASURED",
+                "n": 71,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "ollama:mistral-nemo:12b@sha256:e7e06d107c6c86ed0cf45445f1790720b5092149c4c95f4d965844e9afbfdc89",
+            "axis": "openness",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-openness-d4f65bd16960.json",
+                "id": "d4f65bd16960cc0527569012404ab1b1cb8f3b1cdcbd10f658b2e874cfb8c917",
+                "leaf": "08bee49a68d1507f2cdbcdb0102727485b01e9215e4dd6241f9b99dc461243ef",
+                "status": "MEASURED",
+                "n": 32,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-openness-c1d3f37ff6cc.json",
+                "id": "c1d3f37ff6cc5c0ac40adbda7e08a8ddc354f06b5253af9a1b03e759d83695ee",
+                "leaf": "81c6473c4871f21cf08f02fef933ed9d349b275452595c09ee182980998b2e24",
+                "status": "MEASURED",
+                "n": 32,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "ollama:mistral-nemo:12b@sha256:e7e06d107c6c86ed0cf45445f1790720b5092149c4c95f4d965844e9afbfdc89",
+            "axis": "safety",
+            "cards": 2,
+            "statuses": [
+              "UNMEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-safety-63ef33eb61ab.json",
+                "id": "63ef33eb61abd26e6d14035db43161a31eda9c89990c18ddfc6688706a586188",
+                "leaf": "01bc094219e995fd37d53ce2a3bca264e92f8add93fb157747cabc0c6f3453a6",
+                "status": "UNMEASURED",
+                "n": 29,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-safety-67576004625a.json",
+                "id": "67576004625a129f7c46e3dd2bbdc971ea9e244417a37483a3274e84573c5c2e",
+                "leaf": "bb875969dcef02288badb80cd9c9a37e0059e7728c9aa9e2d90e8bea9d1fa187",
+                "status": "UNMEASURED",
+                "n": 29,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "ollama:mistral:7b@sha256:6577803aa9a036369e481d648a2baebb381ebc6e897f2bb9a766a2aa7bfbc1cf",
+            "axis": "affect",
+            "cards": 2,
+            "statuses": [
+              "UNMEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-affect-4e629c7ee75a.json",
+                "id": "4e629c7ee75a4393553335ac48494584d01076fcd5c09343584ec4e95e33d205",
+                "leaf": "26bf99a265bc5155ba0a22756ce30d2e53b57be2b4fe84d3433b69722c3759cc",
+                "status": "UNMEASURED",
+                "n": 5,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-affect-46cc0f32491a.json",
+                "id": "46cc0f32491a87fbd015026c1859b3ad3f13af11218eb70900e79e0f850ec83d",
+                "leaf": "ef0729e4512d5053acfb8448c636d7176c4592c8f4aa942bb3cb21cebecf92ff",
+                "status": "UNMEASURED",
+                "n": 5,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "ollama:mistral:7b@sha256:6577803aa9a036369e481d648a2baebb381ebc6e897f2bb9a766a2aa7bfbc1cf",
+            "axis": "conformance",
+            "cards": 2,
+            "statuses": [
+              "UNMEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-conforma-e0424b267490.json",
+                "id": "e0424b267490c74462d16f4095372b8fe9fd00e881001e28d6ce4845a6044f05",
+                "leaf": "371baa66baa9ff1088b0f34029b037af058b9b7ee665b1363cb23bdd26568e28",
+                "status": "UNMEASURED",
+                "n": 26,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-conforma-62409f76c572.json",
+                "id": "62409f76c572f88686bec9b53d6ba6363106d0603d79d28298a19bf9f1f008f1",
+                "leaf": "82231995888cb128bb013dc31054516b72f3151bcc03cb19c2eb2d8a0cb7ab82",
+                "status": "UNMEASURED",
+                "n": 26,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "ollama:mistral:7b@sha256:6577803aa9a036369e481d648a2baebb381ebc6e897f2bb9a766a2aa7bfbc1cf",
+            "axis": "detector-interop",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-detector-a514b29cebcc.json",
+                "id": "a514b29cebcc5b5697ffcadb61e8b5b0b6a0b67fb07501f8a777ee09d176e7a1",
+                "leaf": "5fcf01152c55648e8d0e79ea3fa516ca73b97c6d14fcb093873c1222195314c0",
+                "status": "MEASURED",
+                "n": 33,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-detector-cd1f6b3ed84a.json",
+                "id": "cd1f6b3ed84ac5cdc06b86ea48d30665b92fced81ad67f2d5d365b17bcaff002",
+                "leaf": "ae164814aae5a54c4bf4e2723e9a6f3dc3f8e19bd2f72e0590abfd08ad9b7cfb",
+                "status": "MEASURED",
+                "n": 33,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "ollama:mistral:7b@sha256:6577803aa9a036369e481d648a2baebb381ebc6e897f2bb9a766a2aa7bfbc1cf",
+            "axis": "jail",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-jail-217f3a57e06c.json",
+                "id": "217f3a57e06c51f41c1ad9849b2277616c022f3e11fefa5b7d940bd3d4114c90",
+                "leaf": "67d0c274e3b4ae696e82d159700cd6a399b705d11d4c77fda43088f9e78b0b1a",
+                "status": "MEASURED",
+                "n": 68,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-jail-f97e3e8e6362.json",
+                "id": "f97e3e8e6362dc21855d70f7c3f036b79ca2b34fe0f7e4169150de447d347efc",
+                "leaf": "6eb06f497d5764242e4e6b66c007bc2e0038029b725d258dce024b642a8a4de4",
+                "status": "MEASURED",
+                "n": 67,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "ollama:phi3.5:3.8b@sha256:61819fb370a3c1a9be6694869331e5f85f867a079e9271d66cb223acb81d04ba",
+            "axis": "provenance",
+            "cards": 2,
+            "statuses": [
+              "UNMEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-provenan-f11f84ac71cb.json",
+                "id": "f11f84ac71cbfc8bcd640c6b3770b7270b5629eba0c21c5ea9d35e89802d5b04",
+                "leaf": "d4af0049cf04186cb0cce9eea83b06d51ca56bf81a7e18738306d8fa8e48b341",
+                "status": "UNMEASURED",
+                "n": 22,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-provenan-d99b63dc724a.json",
+                "id": "d99b63dc724a7f1193de51513b90400a7c2eda4740387fec1d023fb29df617a9",
+                "leaf": "f928337ed197e2f072036f9b4d54d412571a1a22609251d8b892eac85a37d695",
+                "status": "UNMEASURED",
+                "n": 23,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "ollama:qwen2.5:7b@sha256:845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+            "axis": "continuity",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-continui-a07a07fc2206.json",
+                "id": "a07a07fc22062de972781ba3ac1ee3927c7311563542e96eb173f73fee8790d8",
+                "leaf": "4a8b249ff9d038ed0345c88ddc65c22894c691aa1518502b4fa08297ecd1b8ca",
+                "status": "MEASURED",
+                "n": 33,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-continui-2fce227a61bd.json",
+                "id": "2fce227a61bd3d75c5634a186ee278ebfb4ac540a526795a7bc551e28249632c",
+                "leaf": "5673737be1cfd41ed94da9ed1f8cf849badc0e56ed479b75127a00a0d17ca480",
+                "status": "MEASURED",
+                "n": 33,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "ollama:qwen2.5:7b@sha256:845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+            "axis": "cross-reality",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-cross-re-850c299a32b3.json",
+                "id": "850c299a32b38f2f50d4d5003d51363d06bbbcbb187d05c614ef791431a741d6",
+                "leaf": "b920a88d289598743afc9e2afd58426ff1c6a8280f89a85411316ecdc3de2723",
+                "status": "MEASURED",
+                "n": 31,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-cross-re-a1fbb1b9f31b.json",
+                "id": "a1fbb1b9f31b482c735a1b70cf1bea026936390622ac02ea74e113303322be82",
+                "leaf": "d39f642a387ec2d1d620755a9109239a026247cea8dd048c5798ac97e9299e38",
+                "status": "MEASURED",
+                "n": 31,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "ollama:qwen2.5:7b@sha256:845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+            "axis": "detector-interop",
+            "cards": 2,
+            "statuses": [
+              "UNMEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-detector-545206fe9c00.json",
+                "id": "545206fe9c0096d9203657eed1982b9d0bf0fc4a0cd7f75f5657dd8a037a084e",
+                "leaf": "1d6ea30a94092d9bdc3044731f698abd99b1c5f859465449e25d0caa2e2c15ad",
+                "status": "UNMEASURED",
+                "n": 15,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-detector-a7d867689178.json",
+                "id": "a7d8676891782be5e2960f3573415bc9d30a799929783743a47d4f1ee26877b6",
+                "leaf": "d671958a03801b8a548c86863f321fde3adaf061daffe714ff1cea41ed53cc17",
+                "status": "UNMEASURED",
+                "n": 15,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "ollama:qwen2.5:7b@sha256:845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+            "axis": "machinery-conformity",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-machiner-fc20a0203d25.json",
+                "id": "fc20a0203d25850c865ed4bff2da9c143e31657811bae39f09b956ccbe7c6183",
+                "leaf": "4de3160c172f16d0f56c7fdf709f0155f2202fa9045c4deb93021e71bbfe9074",
+                "status": "MEASURED",
+                "n": 32,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-machiner-f556495c6fa1.json",
+                "id": "f556495c6fa127432c274852d9819e701563aa7eda5a7fc4c788b242b8458a1f",
+                "leaf": "65cded81be1fb0b41ddf4fff664894a4ca7438ce1054eb35c38ac632a58e7f23",
+                "status": "MEASURED",
+                "n": 32,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "ollama:qwen2.5:7b@sha256:845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+            "axis": "openness",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-openness-980441522f59.json",
+                "id": "980441522f5997714719e21a0dac059cbd3dae653e8162545d6a273398a27e79",
+                "leaf": "9ccc2e23cfdf1c04f2c8919f9803a9ed97ce56a020fb652a6abbbb3d8ea7f026",
+                "status": "MEASURED",
+                "n": 32,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-openness-c58c22c3b8e2.json",
+                "id": "c58c22c3b8e2b8aec26befe148317079286776b753dfcde41f612f7d4b8bee29",
+                "leaf": "ae931c00adc8d0e1350ca69055d8f22e32b2d8c8e0f78b010e05a4f08061a208",
+                "status": "MEASURED",
+                "n": 32,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          },
+          {
+            "model": "ollama:qwen2.5:7b@sha256:845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+            "axis": "safety",
+            "cards": 2,
+            "statuses": [
+              "MEASURED"
+            ],
+            "values_identical": true,
+            "entries": [
+              {
+                "card": "signed-safety-883f9f319c08.json",
+                "id": "883f9f319c0831004f6ce431923ce3f674597adf3295f39bc741b0fd0c15f4f3",
+                "leaf": "417bb239ea693ff2b9de6b08ffbc84491d1ddb77e849d7716d18181a5978323e",
+                "status": "MEASURED",
+                "n": 35,
+                "value": null,
+                "superseded_by_ledger": false
+              },
+              {
+                "card": "signed-safety-91ae2837d96b.json",
+                "id": "91ae2837d96bb07470a223a6ab76abf32fc5d48825686141ed906c7e85fc1ef1",
+                "leaf": "c6dd4f58f2c927516e4e198c66b1fee00556e555c4b66e4ea4496410f4bd9994",
+                "status": "MEASURED",
+                "n": 35,
+                "value": null,
+                "superseded_by_ledger": false
+              }
+            ]
+          }
+        ]
+      },
+      "axis_ids": [
+        "affect",
+        "art5-safeguard",
+        "care",
+        "conformance",
+        "continuity",
+        "cross-reality",
+        "detector-interop",
+        "governance",
+        "jail",
+        "machinery-conformity",
+        "openness",
+        "provenance",
+        "safety",
+        "swarm"
+      ],
+      "model_ids": [
+        "DreamFast/gemma-3-12b-it-heretic-v2",
+        "Efficient-Large-Model/gemma-2-2b-it",
+        "Equall/Saul-7B-Instruct-v1",
+        "Goedel-LM/Goedel-Prover-V2-32B",
+        "HuggingFaceH4/zephyr-7b-beta",
+        "IlyaGusev/saiga_llama3_8b",
+        "InternScience/Agents-A1-4B",
+        "MiniMaxAI/MiniMax-M2.7",
+        "NousResearch/Hermes-3-Llama-3.1-8B",
+        "NousResearch/Meta-Llama-3-8B-Instruct",
+        "NousResearch/Meta-Llama-3.1-8B-Instruct",
+        "OBLITERATUS/Qwen3.8-27B-OBLITERATED",
+        "OBLITERATUS/gemma-4-E4B-it-OBLITERATED",
+        "QCRI/Fanar-1-9B-Instruct",
+        "Qwen/Qwen1.5-0.5B-Chat",
+        "Qwen/Qwen1.5-4B",
+        "Qwen/Qwen2-0.5B",
+        "Qwen/Qwen2-0.5B-Instruct",
+        "Qwen/Qwen2-1.5B",
+        "Qwen/Qwen2-1.5B-Instruct",
+        "Qwen/Qwen2-72B-Instruct",
+        "Qwen/Qwen2-7B",
+        "Qwen/Qwen2-7B-Instruct",
+        "Qwen/Qwen2.5-0.5B",
+        "Qwen/Qwen2.5-0.5B-Instruct",
+        "Qwen/Qwen2.5-1.5B",
+        "Qwen/Qwen2.5-1.5B-Instruct",
+        "Qwen/Qwen2.5-14B",
+        "Qwen/Qwen2.5-14B-Instruct",
+        "Qwen/Qwen2.5-14B-Instruct-1M",
+        "Qwen/Qwen2.5-32B-Instruct",
+        "Qwen/Qwen2.5-3B",
+        "Qwen/Qwen2.5-3B-Instruct",
+        "Qwen/Qwen2.5-72B-Instruct",
+        "Qwen/Qwen2.5-7B",
+        "Qwen/Qwen2.5-7B-Instruct",
+        "Qwen/Qwen2.5-7B-Instruct-1M",
+        "Qwen/Qwen2.5-Coder-0.5B-Instruct",
+        "Qwen/Qwen2.5-Coder-1.5B",
+        "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+        "Qwen/Qwen2.5-Coder-14B",
+        "Qwen/Qwen2.5-Coder-14B-Instruct",
+        "Qwen/Qwen2.5-Coder-32B-Instruct",
+        "Qwen/Qwen2.5-Coder-3B-Instruct",
+        "Qwen/Qwen2.5-Coder-7B",
+        "Qwen/Qwen2.5-Coder-7B-Instruct",
+        "Qwen/Qwen2.5-Math-1.5B",
+        "Qwen/Qwen2.5-Math-1.5B-Instruct",
+        "Qwen/Qwen3-0.6B",
+        "Qwen/Qwen3-0.6B-Base",
+        "Qwen/Qwen3-1.7B",
+        "Qwen/Qwen3-1.7B-Base",
+        "Qwen/Qwen3-14B",
+        "Qwen/Qwen3-14B-Base",
+        "Qwen/Qwen3-235B-A22B",
+        "Qwen/Qwen3-235B-A22B-Instruct-2507",
+        "Qwen/Qwen3-30B-A3B",
+        "Qwen/Qwen3-30B-A3B-Instruct-2507",
+        "Qwen/Qwen3-32B",
+        "Qwen/Qwen3-4B",
+        "Qwen/Qwen3-4B-Base",
+        "Qwen/Qwen3-4B-Instruct-2507",
+        "Qwen/Qwen3-4B-Thinking-2507",
+        "Qwen/Qwen3-8B",
+        "Qwen/Qwen3-8B-Base",
+        "Qwen/Qwen3-Coder-30B-A3B-Instruct",
+        "Qwen/Qwen3-Coder-480B-A35B-Instruct",
+        "Qwen/Qwen3-Coder-Next",
+        "Qwen/Qwen3-Next-80B-A3B-Instruct",
+        "Qwen/Qwen3.5-122B-A10B",
+        "Qwen/Qwen3.8-2.4T-A95B",
+        "Qwen/Qwen3Guard-Gen-0.6B",
+        "Qwen/Qwen3Guard-Gen-4B",
+        "SentientAGI/Dobby-Mini-Unhinged-Llama-3.1-8B",
+        "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+        "TrevorJS/gemma-4-31B-it-uncensored",
+        "TsinghuaC3I/Llama-3-8B-UltraMedical",
+        "Vikhrmodels/Vikhr-Nemo-12B-Instruct-R-21-09-24",
+        "XiaomiMiMo/MiMo-V2.5",
+        "XiaomiMiMo/MiMo-V2.5-Pro",
+        "deepseek-ai/DeepSeek-R1",
+        "deepseek-ai/DeepSeek-R1-0528",
+        "deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
+        "deepseek-ai/DeepSeek-V3",
+        "deepseek-ai/DeepSeek-V3-0324",
+        "deepseek-ai/DeepSeek-V3.1",
+        "deepseek-ai/DeepSeek-V3.2",
+        "deepseek-ai/DeepSeek-V3.2-Exp",
+        "deepseek-ai/DeepSeek-V4-Flash",
+        "deepseek-ai/DeepSeek-V4-Flash-0731",
+        "deepseek-ai/DeepSeek-V4-Pro",
+        "deepseek-ai/DeepSeek-V4-Pro-0813",
+        "empero-ai/Qwythos-9B-Claude-Mythos-5-1M",
+        "farbodtavakkoli/OTel-2.0-LLM-31B-IT",
+        "farbodtavakkoli/OTel-LLM-27B-IT",
+        "fdtn-ai/Foundation-Sec-1.1-8B-Instruct",
+        "google/gemma-2-27b-it",
+        "google/gemma-2-2b-it",
+        "google/gemma-2-9b-it",
+        "google/gemma-3-1b-it",
+        "google/gemma-3-4b-it",
+        "google/medgemma-27b-text-it",
+        "latam-gpt/Llama-3.1-70B-LatamGPT-SFT-1.0",
+        "meta-llama/Llama-2-13b-chat-hf",
+        "meta-llama/Llama-3.1-70B-Instruct",
+        "meta-llama/Llama-3.1-8B-Instruct",
+        "meta-llama/Llama-3.2-1B-Instruct",
+        "meta-llama/Llama-3.2-3B-Instruct",
+        "meta-llama/Llama-3.3-70B-Instruct",
+        "meta-llama/Llama-Guard-3-8B",
+        "meta-llama/Meta-Llama-3-70B-Instruct",
+        "meta-llama/Meta-Llama-3-8B-Instruct",
+        "microsoft/Phi-3-mini-4k-instruct",
+        "microsoft/Phi-4-mini-instruct",
+        "microsoft/phi-4",
+        "mistralai/Mistral-7B-Instruct-v0.1",
+        "mistralai/Mistral-7B-Instruct-v0.2",
+        "moonshotai/Kimi-K2-Instruct",
+        "moonshotai/Kimi-K2-Instruct-0905",
+        "moonshotai/Kimi-Linear-48B-A3B-Instruct",
+        "nvidia/Llama-3.1-Nemotron-Nano-8B-v1",
+        "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+        "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16",
+        "nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16",
+        "ollama:deepseek-r1:8b@sha256:6995872bfe4c521a67b32da386cd21d5c6e819b6e0d62f79f64ec83be99f5763",
+        "ollama:gemma3:12b@sha256:f4031aab637d1ffa37b42570452ae0e4fad0314754d17ded67322e4b95836f8a",
+        "ollama:gemma3:4b@sha256:a2af6cc3eb7fa8be8504abaf9b04e88f17a119ec3f04a3addf55f92841195f5a",
+        "ollama:hf.co/ggml-org/MiMo-V2.6-Distill-Qwen-9B-GGUF:Q8_0@sha256:dbdd4bb7a97bae9e7cd9750e599aa1ac88996a4408dbe00f3e4d4e64c23685ff",
+        "ollama:hf.co/openbmb/MiniCPM5-2B-GGUF:Q8_0@sha256:c7e50c7ffebc34187452ed4946b57622e7a820bed89ef49a19c52c0b3a9698e0",
+        "ollama:llama3.1:8b@sha256:46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e",
+        "ollama:llama3.2:3b@sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+        "ollama:mistral-nemo:12b@sha256:e7e06d107c6c86ed0cf45445f1790720b5092149c4c95f4d965844e9afbfdc89",
+        "ollama:mistral:7b@sha256:6577803aa9a036369e481d648a2baebb381ebc6e897f2bb9a766a2aa7bfbc1cf",
+        "ollama:phi3.5:3.8b@sha256:61819fb370a3c1a9be6694869331e5f85f867a079e9271d66cb223acb81d04ba",
+        "ollama:qwen2.5:0.5b-instruct@sha256:a8b0c51577010a279d933d14c2a8ab4b268079d44c5c8830c0a93900f1827c67",
+        "ollama:qwen2.5:1.5b@sha256:65ec06548149b04c096a120e4a6da9d4017ea809c91734ea5631e89f96ddc57b",
+        "ollama:qwen2.5:7b@sha256:845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+        "ollama:qwen3:4b@sha256:359d7dd4bcdab3d86b87d73ac27966f4dbb9f5efdfcc75d34a8764a09474fae7",
+        "ollama:qwen3:8b@sha256:500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+        "ornith-ai/Ornith-1.0-9B",
+        "ornith-ai/Ornith-1.5-9B",
+        "prism-ml/Ternary-Bonsai-27B-gguf",
+        "swiss-ai/Apertus-70B-Instruct-2509",
+        "swiss-ai/Apertus-8B-Instruct-2509",
+        "t-tech/T-lite-it-2.1",
+        "t4:Qwen/Qwen2.5-0.5B-Instruct",
+        "tokyotech-llm/Llama-3.1-Swallow-8B-Instruct-v0.5",
+        "unsloth/Llama-3.1-8B-Instruct",
+        "unsloth/Meta-Llama-3.1-8B-Instruct",
+        "unsloth/Qwen2.5-14B-Instruct",
+        "unsloth/Qwen2.5-7B-Instruct",
+        "unsloth/Qwen2.5-Coder-7B-Instruct",
+        "unsloth/gemma-3-1b-it",
+        "unsloth/llama-3-8b-Instruct",
+        "upstage/SOLAR-10.7B-Instruct-v1.0",
+        "win10/EVE-27b-XENO-HAT-DeepSeek-V4-Flash",
+        "yentinglin/Llama-3-Taiwan-8B-Instruct",
+        "zai-org/GLM-4.5",
+        "zai-org/GLM-4.5-Air",
+        "zai-org/GLM-4.7",
+        "zai-org/GLM-4.7-Flash",
+        "zai-org/GLM-5",
+        "zai-org/GLM-5.1",
+        "zai-org/GLM-5.2",
+        "zai-org/GLM-5.3",
+        "zai-org/GLM-5.3-Flash"
+      ]
+    }
+  },
+  "combined": {
+    "models": 230,
+    "cells": 3348,
+    "measured": 1762,
+    "unmeasured": 1586,
+    "coverage_pct": 52.63,
+    "caveat": "Two disjoint populations on different axis vocabularies. The sum is reported for coverage arithmetic only; the two must never be presented as one homogeneous matrix."
+  },
+  "integrity_findings": [
+    {
+      "id": "TUI3-DUP-01",
+      "finding": "39 cells carry 78 live cards instead of 1 (39 redundant leaves).",
+      "value_conflicts": 0,
+      "identical_values": 39,
+      "severity": "benign-dedup",
+      "meaning": "Two live cards for one cell only becomes a truth problem when their values differ. Today they never do, so no incompatible claim is being published.",
+      "fix_owner": "card_root.py / SUPERSEDED.jsonl dedup \u2014 TUI-5 lane (signing & roots)."
+    },
+    {
+      "id": "TUI3-COVERAGE-01",
+      "finding": "The estate figure was quoted as '689 UNMEASURED of 1024'. That counts the frozen index population only and omits the 2,868-card mill population.",
+      "corrected": "1762 of 3348 cells covered across both populations (52.63%).",
+      "severity": "CORRECTED"
+    }
+  ],
+  "claims_not_made": [
+    "No cell is reported MEASURED without a signed card in that state.",
+    "No index/discovered/staged value is promoted to measured.",
+    "OTS/Rekor/Base/XRPL anchor states are outside this artifact (TUI-5).",
+    "Coverage here is model-behaviour coverage, never a safety or compliance certification."
+  ],
+  "costs": {
+    "actual_spend_usd": 0.0,
+    "revenue_usd": 0.0,
+    "classification": "INTERNAL_SELF_FUNDED"
+  }
+}
