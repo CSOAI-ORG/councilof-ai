@@ -104,6 +104,11 @@
    "at": "2026-10-26T03:05:00Z"
   },
   {
+   "item": "Disclosure-consistency audit, executed against the estate's live surfaces",
+   "receipt": "scripts/claimguard-estate-sweep.py --json: 17 surfaces, 2 errors, 2 warnings. The re-measurement contradiction ('the answer is always a re-measurement' on /dispute vs 'scheduled re-attestation is not yet available' on /about) is fixed at source in client/src/pages/Dispute.tsx and Challenge.tsx; the sweep goes green on deploy, not before",
+   "at": "2026-10-26T06:05:00Z"
+  },
+  {
    "item": "Art 50 marking detection re-check schedule",
    "receipt": "public/interop/art50-recheck-schedule-2026-10/schedule.json + scripts/adapters/art50_recheck_schedule.py, wired into publish_public_root.py; 5 dated points, 2 triggers, 8 adapter tests; the schedule pins the census digest and reports inputs_changed when the census bytes move under it",
    "at": "2026-10-26T03:45:00Z"
@@ -174,6 +179,11 @@
    "blocker": "M4 maintenance cycle — CLEARED, with thin margin",
    "detail": "storage_guard now reads 10.63 GB free, 95.34% used, healthy=true, warning=null, and generation_allowed() returns True against the 10 GB floor. The headroom came from the host reclaiming its own swap and caches as volume pressure eased, plus an npm cache clean; no protected path was deleted and no guard was weakened. The margin is 0.63 GB, so a large run can put it back under the floor: generation_allowed(reserve_bytes=1 GiB) is still False.",
    "decision": "no owner decision needed. Re-read the guard before a heavy run rather than assuming the headroom is still there."
+  },
+  {
+   "blocker": "Two disclosure contradictions live outside this repository",
+   "detail": "The estate sweep found cobolbridge.ai's llms.txt says 'COBOL translator' while its own homepage says 'does not remediate COBOL' (error), and meok.ai's homepage carries 6 different price points (warning). Neither site is built from councilof-ai, so neither can be fixed here.",
+   "decision": "reported, not fixed. The cobolbridge wording is a product-positioning call and the meok.ai prices are a business decision; choosing either would be the estate asserting something it has no measurement for. Both need the owner."
   },
   {
    "blocker": "The house pre-push content gates — CLEARED",
