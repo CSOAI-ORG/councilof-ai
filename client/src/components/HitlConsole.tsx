@@ -42,6 +42,8 @@ export type HitlChallengeView = {
   source?: string | null;
   facts?: string | null;
   required_module?: string | null;
+  /** PENDING or DECIDED, as the queue publishes it. */
+  state?: string;
 };
 
 export type HitlModuleView = {
