@@ -6,6 +6,7 @@ import json
 import sys
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 from typing import Any
 
@@ -598,3 +599,457 @@ class IntakeTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+BRIDGE_SPEC = importlib.util.spec_from_file_location(
+    "runpod_gspc_bridge_for_intake_test", HERE / "runpod_gspc_bridge_to_mill.py"
+)
+assert BRIDGE_SPEC and BRIDGE_SPEC.loader
+bridge = importlib.util.module_from_spec(BRIDGE_SPEC)
+sys.modules[BRIDGE_SPEC.name] = bridge
+BRIDGE_SPEC.loader.exec_module(bridge)
+
+
+class SerialOptionalFieldTests(unittest.TestCase):
+    """runpod_gspc_worker_serial.py records num_parallel / num_ctx / ollama_version."""
+
+    def setUp(self) -> None:
+        self.temporary = tempfile.TemporaryDirectory()
+        self.root = Path(self.temporary.name).resolve()
+        self.fixture = Fixture(self.root)
+
+    def tearDown(self) -> None:
+        self.temporary.cleanup()
+
+    def verify(self):
+        return intake.verify_to_quarantine(
+            self.fixture.source, self.fixture.allowlist, self.fixture.quarantine
+        )
+
+    def assert_rejects(self, code: str) -> None:
+        with self.assertRaises(intake.IntakeError) as caught:
+            self.verify()
+        self.assertEqual(caught.exception.code, code)
+
+    def set_serial(self, run_np: Any, instrument_np: Any = "same") -> None:
+        if instrument_np == "same":
+            instrument_np = run_np
+        if instrument_np is not None:
+            self.fixture.instrument["num_parallel"] = instrument_np
+        self.fixture.instrument_sha = intake.sha256_bytes(
+            intake.canonical_json_bytes(self.fixture.instrument)
+        )
+        for row in self.fixture.rows:
+            row["instrument_sha256"] = self.fixture.instrument_sha
+        self.fixture.rebuild()
+        self.fixture.run["num_parallel"] = run_np
+        self.fixture.run["num_ctx"] = 8192
+        self.fixture.run["ollama_version"] = "0.35.0"
+        self.fixture.write_run()
+
+    def test_serial_worker_field_set_verifies(self) -> None:
+        self.set_serial(1)
+        _, verification = self.verify()
+        self.assertEqual(verification["state"], "VERIFIED_QUARANTINE")
+
+    def test_null_serial_records_verify(self) -> None:
+        self.fixture.run.update(num_parallel=None, num_ctx=None, ollama_version=None)
+        self.fixture.write_run()
+        self.verify()
+
+    def test_num_parallel_two_is_not_serial(self) -> None:
+        self.set_serial(2)
+        self.assert_rejects("NOT_SERIAL")
+
+    def test_boolean_num_parallel_is_not_serial(self) -> None:
+        self.set_serial(True)
+        self.assert_rejects("NOT_SERIAL")
+
+    def test_run_and_instrument_num_parallel_must_agree(self) -> None:
+        self.set_serial(None, instrument_np=1)
+        self.assert_rejects("NOT_SERIAL")
+
+    def test_instrument_num_parallel_without_run_record_is_not_serial(self) -> None:
+        self.set_serial(1)
+        del self.fixture.run["num_parallel"]
+        self.fixture.write_run()
+        self.assert_rejects("NOT_SERIAL")
+
+    def test_bad_num_ctx_and_version_are_rejected(self) -> None:
+        self.set_serial(1)
+        self.fixture.run["num_ctx"] = "8192"
+        self.fixture.write_run()
+        self.assert_rejects("BAD_RUN")
+        self.fixture.run["num_ctx"] = 8192
+        self.fixture.run["ollama_version"] = "0.35.0; rm -rf /"
+        self.fixture.write_run()
+        self.assert_rejects("BAD_RUN")
+
+    def test_execution_policy_is_still_unexpected(self) -> None:
+        self.fixture.run["execution_policy"] = {"profile": "bounded-transport-v1"}
+        self.fixture.write_run()
+        self.assert_rejects("UNEXPECTED_FIELDS")
+
+    def test_unknown_instrument_key_is_still_unexpected(self) -> None:
+        self.fixture.instrument["num_ctx"] = 8192
+        self.fixture.instrument_sha = intake.sha256_bytes(
+            intake.canonical_json_bytes(self.fixture.instrument)
+        )
+        for row in self.fixture.rows:
+            row["instrument_sha256"] = self.fixture.instrument_sha
+        self.fixture.rebuild()
+        self.assert_rejects("UNEXPECTED_FIELDS")
+
+    def test_staged_card_is_byte_identical_with_or_without_run_extras(self) -> None:
+        """The bridge reads candidate.json only: run.json extras never reach a card."""
+        staged_bytes = []
+        for extras in (False, True):
+            if extras:
+                self.fixture.run.update(num_parallel=None, num_ctx=8192, ollama_version="0.35.0")
+                self.fixture.write_run()
+            quarantine = self.root / f"q-{extras}"
+            intake.verify_to_quarantine(self.fixture.source, self.fixture.allowlist, quarantine)
+            # Byte-transport check only; house gates (exact 0/1, unparsed, held) are
+            # covered in test_runpod_gspc_bridge_to_mill.py and would set this tiny fixture aside.
+            with mock.patch.object(bridge, "run_gate", lambda *_a: None), \
+                    mock.patch.object(bridge, "is_exact_0_1", lambda *_a: False), \
+                    mock.patch.object(bridge, "RULED_INSTRUMENT_IDS", bridge.RULED_INSTRUMENT_IDS | {None}):
+                staged, _, problems = bridge.collect(quarantine, set())
+            self.assertEqual(problems, [])
+            out = self.root / f"out-{extras}"
+            written, oversize = bridge.write(staged, out)
+            self.assertEqual((written, oversize), (1, []))
+            staged_bytes.append({p.name: p.read_bytes() for p in sorted(out.iterdir())})
+        self.assertEqual(staged_bytes[0], staged_bytes[1])
+        self.assertNotIn(b"ollama_version", b"".join(staged_bytes[1].values()))
+        self.assertNotIn(b"num_ctx", b"".join(staged_bytes[1].values()))
+
+
+class ReadLabelInstrumentTests(unittest.TestCase):
+    """Serial-pass runs made with --label-parser read-label (read-label-v1 @ a74df318)."""
+
+    T2048 = "gspc-read-label-v1-t2048"
+
+    def setUp(self) -> None:
+        self.temporary = tempfile.TemporaryDirectory()
+        self.root = Path(self.temporary.name).resolve()
+        self.fixture = Fixture(self.root)
+        self.make_read_label()
+
+    def tearDown(self) -> None:
+        self.temporary.cleanup()
+
+    def make_read_label(
+        self,
+        outputs: tuple[str, ...] = ("<think>weigh it</think>\nAnswer: yes", "YES | NO"),
+        instrument_id: str = T2048,
+        max_tokens: int = 2048,
+        num_ctx: int | None = 3072,
+    ) -> None:
+        f = self.fixture
+        f.instrument["decode"]["max_tokens"] = max_tokens
+        f.instrument["label_parser"] = dict(intake.READ_LABEL_INSTRUMENT_PARSER)
+        f.instrument_sha = intake.sha256_bytes(intake.canonical_json_bytes(f.instrument))
+        template = dict(f.rows[0])
+        f.rows = []
+        for index, raw in enumerate(outputs, start=1):
+            row = dict(template)
+            row.update(
+                schema=intake.ITEM_SCHEMA_PARSED_BY,
+                sequence=index,
+                item_id=f"gov-{index:03d}",
+                instrument_sha256=f.instrument_sha,
+                decode={"temperature": 0, "seed": 0, "max_tokens": max_tokens},
+                raw_output=raw,
+                raw_output_sha256=intake.sha256_bytes(raw.encode("utf-8")),
+            )
+            label, reason = intake.read_label_v1(raw, ["YES", "NO"])
+            row.update(
+                parsed_label=label,
+                grade=(label == row["expected"]) if label is not None else False,
+                label_parser="read-label-v1",
+                parse_reason=reason,
+                parse_confidence=None,
+            )
+            f.rows.append(row)
+        f.rebuild()  # rebuild ignores parse_errors for read-label; fix up below
+        self.finish(instrument_id, num_ctx)
+
+    def finish(self, instrument_id: str | None, num_ctx: int | None) -> None:
+        f = self.fixture
+        parse_errors = sum(r["parsed_label"] is None for r in f.rows)
+        correct = sum(r["grade"] is True for r in f.rows)
+        n = len(f.rows) - parse_errors
+        f.body["n"] = n
+        f.body["accuracy"] = intake._expected_accuracy(correct, n) if n else None
+        f.body["compute_evidence"]["parse_errors_excluded"] = parse_errors
+        f.body["compute_evidence"]["label_parser"] = "read-label-v1"
+        f.card["id"] = intake.sha256_bytes(intake.canonical_json_bytes(f.body))
+        f.run["counts"].update(parse_errors_excluded=parse_errors, graded_n=n, correct=correct)
+        f.run["label_parser"] = dict(intake.READ_LABEL_RUN_DESCRIPTOR)
+        f.run.update(num_parallel=None, num_ctx=num_ctx, ollama_version="0.35.0")
+        if instrument_id is not None:
+            _, basis, sha = intake.PINNED_INSTRUMENTS[instrument_id]
+            f.run.update(
+                instrument_id=instrument_id,
+                instrument_hash="sha256:" + sha,
+                instrument_hash_basis=dict(basis),
+            )
+        f.write_card()
+
+    def verify(self):
+        return intake.verify_to_quarantine(
+            self.fixture.source, self.fixture.allowlist, self.fixture.quarantine
+        )
+
+    def assert_rejects(self, code: str) -> None:
+        with self.assertRaises(intake.IntakeError) as caught:
+            self.verify()
+        self.assertEqual(caught.exception.code, code)
+
+    def test_read_label_run_verifies_and_rescores(self) -> None:
+        _, verification = self.verify()
+        self.assertEqual(verification["state"], "VERIFIED_QUARANTINE")
+        self.assertEqual(self.fixture.body["n"], 1)  # the menu echo left n
+
+    def test_parsed_label_tamper_is_rejected(self) -> None:
+        row = self.fixture.rows[1]
+        row.update(parsed_label="YES", grade=True, parse_reason="LAST_LINE")
+        self.fixture.rebuild()
+        self.finish(self.T2048, 3072)
+        self.assert_rejects("GRADE_MISMATCH")
+
+    def test_parse_reason_tamper_is_rejected(self) -> None:
+        self.fixture.rows[1]["parse_reason"] = "NO_MATCH"
+        self.fixture.rebuild()
+        self.finish(self.T2048, 3072)
+        self.assert_rejects("GRADE_MISMATCH")
+
+    def test_parse_confidence_must_be_null(self) -> None:
+        self.fixture.rows[0]["parse_confidence"] = 0.9
+        self.fixture.rebuild()
+        self.finish(self.T2048, 3072)
+        self.assert_rejects("BAD_LABEL_PARSER")
+
+    def test_count_tamper_is_rejected(self) -> None:
+        self.fixture.run["counts"]["parse_errors_excluded"] = 0
+        self.fixture.run["counts"]["graded_n"] = 2
+        self.fixture.write_run()
+        self.assert_rejects("COUNT_MISMATCH")
+
+    def test_parser_off_allowlist_is_rejected(self) -> None:
+        self.fixture.instrument["label_parser"] = {"id": "ollama-schema", "options": []}
+        self.fixture.instrument_sha = intake.sha256_bytes(
+            intake.canonical_json_bytes(self.fixture.instrument)
+        )
+        for row in self.fixture.rows:
+            row["instrument_sha256"] = self.fixture.instrument_sha
+        self.fixture.rebuild()
+        self.finish(self.T2048, 3072)
+        self.assert_rejects("BAD_LABEL_PARSER")
+
+    def test_run_descriptor_must_name_pinned_reader(self) -> None:
+        self.fixture.run["label_parser"]["rule"] = "something-looser"
+        self.fixture.write_run()
+        self.assert_rejects("BAD_LABEL_PARSER")
+
+    def test_read_label_requires_instrument_id(self) -> None:
+        for key in ("instrument_id", "instrument_hash", "instrument_hash_basis"):
+            del self.fixture.run[key]
+        self.fixture.write_run()
+        self.assert_rejects("BAD_INSTRUMENT_ID")
+
+    def test_unknown_instrument_id_is_rejected(self) -> None:
+        self.fixture.run["instrument_id"] = "gspc-read-label-v1-t9999"
+        self.fixture.write_run()
+        self.assert_rejects("BAD_INSTRUMENT_ID")
+
+    def test_basis_that_does_not_recompute_is_rejected(self) -> None:
+        self.fixture.run["instrument_hash_basis"]["reader_commit"] = "0" * 40
+        self.fixture.write_run()
+        self.assert_rejects("INSTRUMENT_ID_MISMATCH")
+        self.fixture.run["instrument_hash_basis"]["reader_commit"] = intake.READER_COMMIT
+        self.fixture.run["instrument_hash"] = "sha256:" + "e" * 64
+        self.fixture.write_run()
+        self.assert_rejects("INSTRUMENT_ID_MISMATCH")
+
+    def test_basis_max_tokens_must_match_decode(self) -> None:
+        self.make_read_label(max_tokens=1024)
+        self.assert_rejects("INSTRUMENT_ID_MISMATCH")
+
+    def test_c8192_requires_num_ctx_8192(self) -> None:
+        self.make_read_label(
+            instrument_id="gspc-read-label-v1-t4096-c8192", max_tokens=4096, num_ctx=3072
+        )
+        self.assert_rejects("INSTRUMENT_ID_MISMATCH")
+        self.make_read_label(
+            instrument_id="gspc-read-label-v1-t4096-c8192", max_tokens=4096, num_ctx=8192
+        )
+        self.verify()
+
+    def test_superseded_3072_instruments_are_rejected(self) -> None:
+        for sha in intake.SUPERSEDED_INSTRUMENT_SHAS:
+            self.fixture.run["instrument_hash"] = "sha256:" + sha
+            self.fixture.write_run()
+            self.assert_rejects("SUPERSEDED_INSTRUMENT")
+        self.fixture.run["instrument_hash"] = "sha256:" + intake.PINNED_INSTRUMENTS[self.T2048][2]
+        self.fixture.run["instrument_id"] = "gspc-read-label-v1-t4096"
+        self.fixture.write_run()
+        self.assert_rejects("SUPERSEDED_INSTRUMENT")
+
+    def test_keyword_id_cannot_label_a_read_label_run(self) -> None:
+        _, basis, sha = intake.PINNED_INSTRUMENTS["exact-keyword-t2048"]
+        self.fixture.run.update(
+            instrument_id="exact-keyword-t2048",
+            instrument_hash="sha256:" + sha,
+            instrument_hash_basis=dict(basis),
+        )
+        self.fixture.write_run()
+        self.assert_rejects("INSTRUMENT_ID_MISMATCH")
+
+    def test_card_must_name_the_reader(self) -> None:
+        del self.fixture.body["compute_evidence"]["label_parser"]
+        self.fixture.card["id"] = intake.sha256_bytes(
+            intake.canonical_json_bytes(self.fixture.body)
+        )
+        self.fixture.write_card()
+        self.assert_rejects("EVIDENCE_PIN_MISMATCH")
+
+    def test_pinned_shas_recompute_from_their_bases(self) -> None:
+        for _, basis, sha in intake.PINNED_INSTRUMENTS.values():
+            self.assertEqual(intake.sha256_bytes(intake.canonical_json_bytes(basis)), sha)
+
+    def test_staged_card_bytes_equal_the_worker_card(self) -> None:
+        source_body = json.loads((self.fixture.source / "card-unsigned.json").read_text())["body"]
+        self.verify()
+        # Byte-transport check only; house gates are covered in test_runpod_gspc_bridge_to_mill.py.
+        with mock.patch.object(bridge, "run_gate", lambda *_a: None), \
+                    mock.patch.object(bridge, "is_exact_0_1", lambda *_a: False), \
+                    mock.patch.object(bridge, "RULED_INSTRUMENT_IDS", bridge.RULED_INSTRUMENT_IDS | {None}):
+            staged, _, problems = bridge.collect(self.fixture.quarantine, set())
+        self.assertEqual(problems, [])
+        out = self.root / "out"
+        bridge.write(staged, out)
+        (payload_file,) = out.iterdir()
+        payload = json.loads(payload_file.read_text())
+        self.assertEqual(
+            intake.canonical_json_bytes(payload["body"]),
+            intake.canonical_json_bytes(source_body),
+        )
+        self.assertNotIn("instrument_hash", payload_file.read_text())
+
+
+class ExactLabelT128Tests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.temporary = tempfile.TemporaryDirectory()
+        self.fixture = Fixture(Path(self.temporary.name).resolve())
+
+    def tearDown(self) -> None:
+        self.temporary.cleanup()
+
+    def test_t128_id_requires_128_tokens(self) -> None:
+        self.fixture.run["instrument_id"] = "exact-label-t128"
+        self.fixture.write_run()
+        with self.assertRaises(intake.IntakeError) as caught:
+            intake.verify_to_quarantine(
+                self.fixture.source, self.fixture.allowlist, self.fixture.quarantine
+            )
+        self.assertEqual(caught.exception.code, "BAD_INSTRUMENT_ID")
+
+    def test_t128_id_verifies_at_128_tokens(self) -> None:
+        f = self.fixture
+        f.instrument["decode"]["max_tokens"] = 128
+        f.instrument_sha = intake.sha256_bytes(intake.canonical_json_bytes(f.instrument))
+        f.rows[0]["instrument_sha256"] = f.instrument_sha
+        f.rows[0]["decode"]["max_tokens"] = 128
+        f.rebuild()
+        f.run["instrument_id"] = "exact-label-t128"
+        f.write_run()
+        intake.verify_to_quarantine(f.source, f.allowlist, f.quarantine)
+
+
+    def _legacy_receipt(self, max_tokens: int, *, seed: int = 0, instrument_id=None):
+        f = self.fixture
+        f.instrument["decode"]["max_tokens"] = max_tokens
+        f.instrument["decode"]["seed"] = seed
+        f.instrument_sha = intake.sha256_bytes(intake.canonical_json_bytes(f.instrument))
+        for row in f.rows:
+            row["instrument_sha256"] = f.instrument_sha
+            row["decode"]["max_tokens"] = max_tokens
+            row["decode"]["seed"] = seed
+        f.rebuild()
+        if instrument_id is not None:
+            f.run["instrument_id"] = instrument_id
+        else:
+            f.run.pop("instrument_id", None)
+        f.write_run()
+        _path, receipt = intake.verify_to_quarantine(f.source, f.allowlist, f.quarantine)
+        return receipt
+
+    def test_receipt_names_ruled_t128_id(self) -> None:
+        self.assertEqual(self._legacy_receipt(128, instrument_id="exact-label-t128")["instrument_id"],
+                         "exact-label-t128")
+
+    def test_legacy_t128_without_id_is_ruled_t128(self) -> None:
+        self.assertEqual(self._legacy_receipt(128)["instrument_id"], "exact-label-t128")
+
+    def test_legacy_t64_is_unruled(self) -> None:
+        """gemma3:12b cross-reality (80ef7439) ran at max_tokens 64: not citable."""
+        self.assertIsNone(self._legacy_receipt(64)["instrument_id"])
+
+    def test_legacy_t128_nonstandard_decode_is_unruled(self) -> None:
+        self.assertIsNone(self._legacy_receipt(128, seed=7)["instrument_id"])
+
+
+class RealRunInstrumentIdTests(unittest.TestCase):
+    """Regression for intake 38217331403: metadata copied from real gspc-24x7 run.json files."""
+
+    def setUp(self) -> None:
+        self.runs = json.loads((HERE / "fixtures" / "runpod_real_run_instrument_meta.json").read_text())
+
+    def ruled(self, name: str):
+        run = self.runs[name]["run"]
+        return intake._ruled_instrument_id(run, run["instrument"], "exact")
+
+    def test_real_serial_t128_with_num_ctx_3072_is_exact_label_t128(self) -> None:
+        self.assertEqual(self.ruled("t128_serial_num_ctx_3072"), "exact-label-t128")
+
+    def test_real_t64_gemma3_12b_cross_reality_is_unruled(self) -> None:
+        self.assertIsNone(self.ruled("t64_gemma3_12b_cross_reality"))
+
+    def test_real_t16_legacy_is_unruled(self) -> None:
+        self.assertIsNone(self.ruled("t16_legacy"))
+
+    def test_real_t128_nonstandard_decode_is_unruled(self) -> None:
+        run = json.loads(json.dumps(self.runs["t128_serial_num_ctx_3072"]["run"]))
+        run["instrument"]["decode"]["temperature"] = 1
+        self.assertIsNone(intake._ruled_instrument_id(run, run["instrument"], "exact"))
+
+    def test_real_t128_read_label_reader_is_not_legacy_t128(self) -> None:
+        run = self.runs["t128_serial_num_ctx_3072"]["run"]
+        self.assertIsNone(intake._ruled_instrument_id(run, run["instrument"], "read-label"))
+
+
+class ReadLabelPortParityTests(unittest.TestCase):
+    """The verifier's read-label-v1 must equal the harness reader, case by case."""
+
+    def test_port_matches_harness_reader(self) -> None:
+        sys.path.insert(0, str(HERE.parent))
+        try:
+            from harness.typed_output.deterministic import ReadLabelParser
+        except ImportError:
+            self.skipTest("harness not on path")
+        parser = ReadLabelParser()
+        label_sets = (["YES", "NO"], ["0", "1"], ["HIGH_RISK", "LIMITED_RISK", "MINIMAL_RISK", "PROHIBITED"], [])
+        texts = (
+            None, "", "  ", "YES", "yes", " Yes. ", "Answer: NO", "label - 1", "<think>YES</think>NO",
+            "<THINK>a\nb</THINK>\n\nI think\nPROHIBITED", "YES | NO", "0 | 1", "Reply with: 0 or 1",
+            "not PERMITTED, this is PROHIBITED", "**HIGH_RISK**", "high_risk", "The answer is YES",
+            "YES\nNO", "NO\n\nYES.", "Output:`1`", "1/0", "MINIMAL_RISK vs HIGH_RISK", "\u2014 YES",
+            "Answer:\nLIMITED_RISK", "(1)", "1\u20140",
+        )
+        for labels in label_sets:
+            for text in texts:
+                got = intake.read_label_v1(text, labels)
+                want = parser.extract_label(text, labels)
+                self.assertEqual(got, (want.label, want.reason), (text, labels))

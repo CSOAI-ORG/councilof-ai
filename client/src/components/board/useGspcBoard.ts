@@ -2,8 +2,8 @@
  * useGspcBoard — the single live read of GET /api/gspc for every board surface.
  *
  * WHY A SHARED HOOK. LiveLeaderboard and HumanVsAiPanel both need the board, and
- * both may sit on the same page. One module-level promise means one request, one
- * failure mode, one truth on screen. There is no fallback payload and no seeded
+ * both may sit on the same page. One shared feed means one refresh each minute,
+ * one failure mode, one truth on screen. There is no fallback payload and no seeded
  * sample: if the endpoint does not answer, `error` is set and the components say
  * so in words. A placeholder number is a lie with a nice font.
  *
@@ -106,7 +106,8 @@ export const GSPC_ENDPOINT = "/api/gspc";
 /** Live origin used only when the relative fetch returns HTML (prerender on localhost). */
 const LIVE_GSPC = "https://councilof.ai/api/gspc";
 
-let inflight: Promise<GspcPayload> | null = null;
+export const GSPC_REFRESH_MS = 60_000;
+const REQUEST_TIMEOUT_MS = 20_000;
 
 function isLocalPreview(): boolean {
   if (typeof window === "undefined") return false;
@@ -114,58 +115,104 @@ function isLocalPreview(): boolean {
 }
 
 async function fetchGspcPayload(url: string): Promise<GspcPayload> {
-  const r = await fetch(url, { headers: { accept: "application/json" } });
-  if (!r.ok) throw new Error(`${url} answered HTTP ${r.status}`);
-  const text = await r.text();
-  const trimmed = text.replace(/^\uFEFF/, "").trim();
-  // Prerender serves dist/ from localhost. /api/gspc is a Pages Function, so the
-  // SPA fallback returns "<!doctype html>". Parsing that as JSON bakes
-  // "The board could not be read" into every crawler snapshot even though the
-  // live function answers JSON. Do not treat HTML as a board.
-  if (!trimmed || trimmed.startsWith("<")) {
-    throw new Error(`${url} returned HTML, not JSON`);
-  }
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
   try {
-    return JSON.parse(trimmed) as GspcPayload;
-  } catch (e) {
-    throw new Error(`${url} was not JSON — ${e instanceof Error ? e.message : String(e)}`);
+    const r = await fetch(url, { headers: { accept: "application/json" }, cache: "no-store", signal: controller.signal });
+    if (!r.ok) throw new Error(`${url} answered HTTP ${r.status}`);
+    const text = await r.text();
+    const trimmed = text.replace(/^\uFEFF/, "").trim();
+    // Preview servers can return the SPA shell for this Pages Function. Never
+    // parse HTML as a board or replace it with a bundled result.
+    if (!trimmed || trimmed.startsWith("<")) throw new Error(`${url} returned HTML, not JSON`);
+    let payload: GspcPayload;
+    try {
+      payload = JSON.parse(trimmed) as GspcPayload;
+    } catch (error) {
+      throw new Error(`${url} was not JSON — ${error instanceof Error ? error.message : String(error)}`);
+    }
+    if (!payload || typeof payload !== "object" || !Array.isArray(payload.axes)) {
+      throw new Error(`${url} is not a GSPC payload`);
+    }
+    return payload;
+  } catch (error) {
+    if (controller.signal.aborted) throw new Error(`${url} timed out`);
+    throw error;
+  } finally {
+    clearTimeout(timeout);
   }
 }
 
-/** One fetch per page load, shared by every board component. */
-export function loadGspcBoard(): Promise<GspcPayload> {
-  if (!inflight) {
-    inflight = fetchGspcPayload(GSPC_ENDPOINT)
-      .catch((e) => {
-        const msg = String((e as Error)?.message ?? e);
-        // Vite returns 404 for Pages Functions while a prerender server may return
-        // the SPA HTML. Both are preview-only transport failures; the live board
-        // remains the authority, so localhost may read it rather than render an
-        // invented empty state.
-        if (isLocalPreview() || /HTML|not JSON|Unexpected token/i.test(msg)) {
-          return fetchGspcPayload(LIVE_GSPC);
-        }
-        throw e;
-      })
-      .catch((e) => {
-        inflight = null; // let a remount retry rather than cache a failure forever
-        throw e;
-      });
-  }
-  return inflight;
+/** One request, cache and viewing lifecycle, following the existing Hub-feed pattern. */
+export function createGspcBoardFeed(request: () => Promise<GspcPayload>) {
+  let state: GspcBoardState = { data: null, error: null, loading: true };
+  let nextReadAt = 0;
+  let inflight: Promise<GspcPayload> | null = null;
+  let timer: ReturnType<typeof setInterval> | null = null;
+  const listeners = new Set<(state: GspcBoardState) => void>();
+  const emit = () => { for (const listener of listeners) listener(state); };
+  const load = (): Promise<GspcPayload> => {
+    if (inflight) return inflight;
+    if (Date.now() < nextReadAt) {
+      if (state.error) return Promise.reject(new Error(state.error));
+      if (state.data) return Promise.resolve(state.data);
+    }
+    // Start-time expiry preserves the minute cadence even when a response is slow.
+    // A pending request is always reused, so no timer or focus event overlaps it.
+    nextReadAt = Date.now() + GSPC_REFRESH_MS;
+    state = { ...state, loading: state.data === null };
+    inflight = Promise.resolve().then(request).then(data => {
+      state = { data, error: null, loading: false };
+      return data;
+    }).catch((error: unknown) => {
+      const reason = error instanceof Error ? error.message : String(error);
+      state = { ...state, error: state.data ? `Refresh failed; previous board retained: ${reason}` : reason, loading: false };
+      throw error;
+    }).finally(() => { inflight = null; emit(); });
+    // Set the promise before notifying subscribers, including reentrant loaders.
+    emit();
+    return inflight;
+  };
+  const refresh = () => {
+    if (typeof document !== "undefined" && document.visibilityState === "hidden") return;
+    void load().catch(() => { /* the shared state retains the failure */ });
+  };
+  const subscribe = (listener: (state: GspcBoardState) => void) => {
+    listeners.add(listener);
+    listener(state);
+    if (listeners.size === 1) {
+      timer = setInterval(refresh, GSPC_REFRESH_MS);
+      if (typeof window !== "undefined") window.addEventListener("focus", refresh);
+      if (typeof document !== "undefined") document.addEventListener("visibilitychange", refresh);
+    }
+    refresh();
+    return () => {
+      listeners.delete(listener);
+      if (listeners.size === 0) {
+        if (timer !== null) clearInterval(timer);
+        timer = null;
+        if (typeof window !== "undefined") window.removeEventListener("focus", refresh);
+        if (typeof document !== "undefined") document.removeEventListener("visibilitychange", refresh);
+      }
+    };
+  };
+  return { load, subscribe, getState: () => state };
 }
+
+const boardFeed = createGspcBoardFeed(() => fetchGspcPayload(GSPC_ENDPOINT).catch((error) => {
+  const msg = String(error?.message ?? error);
+  // Preview servers do not serve Pages Functions. Keep the canonical live origin
+  // as the existing transport fallback; never use a bundled fixture as a result.
+  if (isLocalPreview() || /HTML|not JSON|Unexpected token/i.test(msg)) return fetchGspcPayload(LIVE_GSPC);
+  throw error;
+}));
+
+/** TTL-checked one-off reads use the same cache and request as mounted readers. */
+export function loadGspcBoard(): Promise<GspcPayload> { return boardFeed.load(); }
 
 export function useGspcBoard(): GspcBoardState {
-  const [state, setState] = useState<GspcBoardState>({ data: null, error: null, loading: true });
-
-  useEffect(() => {
-    let live = true;
-    loadGspcBoard()
-      .then((d) => { if (live) setState({ data: d, error: null, loading: false }); })
-      .catch((e) => { if (live) setState({ data: null, error: String(e?.message ?? e), loading: false }); });
-    return () => { live = false; };
-  }, []);
-
+  const [state, setState] = useState<GspcBoardState>(boardFeed.getState);
+  useEffect(() => boardFeed.subscribe(setState), []);
   return state;
 }
 

@@ -1,0 +1,979 @@
+{
+ "schema": "csoai.claims-index/0",
+ "title": "AI Claims Index v0",
+ "edition": "2026-10-14",
+ "status": "measured, not certified",
+ "fetch_date": "2026-10-14",
+ "rubric_axes": [
+  "specificity",
+  "reproducibility",
+  "disclosure",
+  "claim_vs_evidence",
+  "correction_record"
+ ],
+ "method": "/claims-index/METHOD.md",
+ "verify": "https://councilof.ai/gspc-verify",
+ "corrections": "https://councilof.ai/api/corrections",
+ "order": "alphabetical by vendor; no ranking",
+ "totals_note": "Totals have different maxima where axes are UNTESTED or not assessed, so totals are not comparable across rows and the table is not a ranking.",
+ "vendors": [
+  {
+   "key": "alibaba",
+   "vendor": "Alibaba (Qwen)",
+   "model_card": "Qwen/Qwen3-8B",
+   "model_card_url": "https://huggingface.co/Qwen/Qwen3-8B",
+   "axes": {
+    "specificity": {
+     "score": 1,
+     "quote": "For more details, including benchmark evaluation, hardware requirements, and inference performance, please refer to our [blog](https://qwenlm.github.io/blog/qwen3/)",
+     "source_url": "https://huggingface.co/Qwen/Qwen3-8B",
+     "fetch_date": "2026-10-14",
+     "source_file": "Qwen_Qwen3-8B.md",
+     "note": "No numeric scores on the card itself.",
+     "source_sha256": "0f36caaff9c2516411a7738db384606263ba653c1e63e61d72f511606164d5a6"
+    },
+    "reproducibility": {
+     "score": 1,
+     "quote": "license: apache-2.0",
+     "source_url": "https://huggingface.co/Qwen/Qwen3-8B",
+     "fetch_date": "2026-10-14",
+     "source_file": "Qwen_Qwen3-8B.md",
+     "note": "Open weights; sampling settings given are deployment advice, not evaluation configs.",
+     "source_sha256": "0f36caaff9c2516411a7738db384606263ba653c1e63e61d72f511606164d5a6"
+    },
+    "disclosure": {
+     "score": 0,
+     "quote": "- Training Stage: Pretraining & Post-training",
+     "source_url": "https://huggingface.co/Qwen/Qwen3-8B",
+     "fetch_date": "2026-10-14",
+     "source_file": "Qwen_Qwen3-8B.md",
+     "note": "No training-data size/composition and no limitations section found on the card.",
+     "source_sha256": "0f36caaff9c2516411a7738db384606263ba653c1e63e61d72f511606164d5a6"
+    },
+    "correction_record": {
+     "score": 0,
+     "quote": "18 public commit titles on main; none labelled as a fix or correction",
+     "source_url": "https://huggingface.co/api/models/Qwen/Qwen3-8B/commits/main",
+     "fetch_date": "2026-10-14",
+     "source_file": "Qwen_Qwen3-8B.commits.json",
+     "note": "Scope: model card + public commit titles. Absence in scope only; 'Update README.md' commits are not read as corrections.",
+     "source_sha256": "d8c9494ec5f0b68f82f21b1aa3a28ed814de8ebce3379be1197182da7e829210"
+    },
+    "claim_vs_evidence": {
+     "score": null,
+     "state": "UNTESTED",
+     "note": "No published vendor claim is comparable to one of our signed cells (vendors report public benchmarks; our cells use GSPC banks). Excluded from the total, not scored as zero."
+    }
+   },
+   "signed_evidence": {
+    "model": "Qwen/Qwen3-8B",
+    "citable_cards": 9,
+    "cards_total": 31,
+    "citable_axes": [
+     "art5-safeguard",
+     "conformance",
+     "continuity",
+     "cross-reality",
+     "governance",
+     "machinery-conformity",
+     "openness",
+     "provenance",
+     "safety"
+    ],
+    "g2_cards": 0,
+    "locks_applied": [
+     "CARE_COMPARISON_CITABLE_FALSE",
+     "DET_NEVER_CITABLE"
+    ],
+    "examples": [
+     {
+      "file": "signed-art5-saf-21e35ddd93df.json",
+      "axis": "art5-safeguard",
+      "n": 30,
+      "accuracy": 0.9,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-art5-saf-21e35ddd93df.json",
+      "live": "200"
+     },
+     {
+      "file": "signed-conforma-4f91ddf8d78b.json",
+      "axis": "conformance",
+      "n": 30,
+      "accuracy": 0.8,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-conforma-4f91ddf8d78b.json",
+      "live": "200"
+     },
+     {
+      "file": "signed-continui-d1aadf2b0d6c.json",
+      "axis": "continuity",
+      "n": 30,
+      "accuracy": 0.6667,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-continui-d1aadf2b0d6c.json",
+      "live": "200"
+     }
+    ]
+   },
+   "total": 2,
+   "scored_max": 8
+  },
+  {
+   "key": "deepseek",
+   "vendor": "DeepSeek",
+   "model_card": "deepseek-ai/DeepSeek-V3.2",
+   "model_card_url": "https://huggingface.co/deepseek-ai/DeepSeek-V3.2",
+   "axes": {
+    "specificity": {
+     "score": 1,
+     "quote": "**Gold-medal performance** in the 2025 International Mathematical Olympiad (IMO)",
+     "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V3.2",
+     "fetch_date": "2026-10-14",
+     "source_file": "deepseek-ai_DeepSeek-V3.2.md",
+     "note": "Benchmark table is an image (assets/benchmark.png) plus a linked technical report.",
+     "source_sha256": "22b9f57e1ece2df27f9de0e71377e19481f7a6892eca8bc23e73fcdffe1d845c"
+    },
+    "reproducibility": {
+     "score": 1,
+     "quote": "license: mit",
+     "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V3.2",
+     "fetch_date": "2026-10-14",
+     "source_file": "deepseek-ai_DeepSeek-V3.2.md",
+     "note": "Open weights; competition submissions released; no evaluation settings on the card.",
+     "source_sha256": "22b9f57e1ece2df27f9de0e71377e19481f7a6892eca8bc23e73fcdffe1d845c"
+    },
+    "disclosure": {
+     "score": 0,
+     "quote": "we developed a novel synthesis pipeline that systematically generates training data at scale",
+     "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V3.2",
+     "fetch_date": "2026-10-14",
+     "source_file": "deepseek-ai_DeepSeek-V3.2.md",
+     "note": "No data size/composition and no limitations section found on the card.",
+     "source_sha256": "22b9f57e1ece2df27f9de0e71377e19481f7a6892eca8bc23e73fcdffe1d845c"
+    },
+    "correction_record": {
+     "score": 0,
+     "quote": "7 public commit titles on main; none labelled as a fix or correction",
+     "source_url": "https://huggingface.co/api/models/deepseek-ai/DeepSeek-V3.2/commits/main",
+     "fetch_date": "2026-10-14",
+     "source_file": "deepseek-ai_DeepSeek-V3.2.commits.json",
+     "note": "Scope: model card + public commit titles. Absence in scope only; 'Update README.md' commits are not read as corrections.",
+     "source_sha256": "505bfb27f6741d4264f6de4651d6206a7ee6350297b3cb9a312b54c15175a96f"
+    },
+    "claim_vs_evidence": {
+     "score": null,
+     "state": "UNTESTED",
+     "note": "No published vendor claim is comparable to one of our signed cells (vendors report public benchmarks; our cells use GSPC banks). Excluded from the total, not scored as zero."
+    }
+   },
+   "signed_evidence": {
+    "model": "deepseek-ai/DeepSeek-V3.2",
+    "citable_cards": 7,
+    "cards_total": 25,
+    "citable_axes": [
+     "conformance",
+     "continuity",
+     "cross-reality",
+     "governance",
+     "machinery-conformity",
+     "openness",
+     "provenance"
+    ],
+    "g2_cards": 0,
+    "locks_applied": [
+     "CARE_COMPARISON_CITABLE_FALSE",
+     "DET_NEVER_CITABLE"
+    ],
+    "examples": [
+     {
+      "file": "signed-conforma-e1e76966d5d8.json",
+      "axis": "conformance",
+      "n": 30,
+      "accuracy": 0.7667,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-conforma-e1e76966d5d8.json",
+      "live": "200"
+     },
+     {
+      "file": "signed-continui-e875a599f574.json",
+      "axis": "continuity",
+      "n": 30,
+      "accuracy": 0.6333,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-continui-e875a599f574.json",
+      "live": "200"
+     },
+     {
+      "file": "signed-cross-re-53a4c9e59a3a.json",
+      "axis": "cross-reality",
+      "n": 30,
+      "accuracy": 0.5333,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-cross-re-53a4c9e59a3a.json",
+      "live": "200"
+     }
+    ]
+   },
+   "total": 2,
+   "scored_max": 8
+  },
+  {
+   "key": "google",
+   "vendor": "Google (Gemma)",
+   "model_card": "google/gemma-3-4b-it",
+   "model_card_url": "https://huggingface.co/google/gemma-3-4b-it",
+   "axes": {
+    "specificity": {
+     "score": 2,
+     "quote": "HellaSwag 10-shot 62.3 77.2 84.2 85.6",
+     "source_url": "https://huggingface.co/google/gemma-3-4b-it",
+     "fetch_date": "2026-10-14",
+     "source_file": "google_gemma-3-4b-it.md",
+     "note": "",
+     "source_sha256": "363cc2a1ed663bb2ba211fe2f7e282e061de8cb05e385ffb686d11111a9cb257"
+    },
+    "reproducibility": {
+     "score": 2,
+     "quote": "HellaSwag 10-shot 62.3",
+     "source_url": "https://huggingface.co/google/gemma-3-4b-it",
+     "fetch_date": "2026-10-14",
+     "source_file": "google_gemma-3-4b-it.md",
+     "note": "Shot count stated per benchmark; weights downloadable after accepting the Gemma terms (gated).",
+     "source_sha256": "363cc2a1ed663bb2ba211fe2f7e282e061de8cb05e385ffb686d11111a9cb257"
+    },
+    "disclosure": {
+     "score": 2,
+     "quote": "4B model was trained with 4 trillion tokens",
+     "source_url": "https://huggingface.co/google/gemma-3-4b-it",
+     "fetch_date": "2026-10-14",
+     "source_file": "google_gemma-3-4b-it.md",
+     "note": "Also: 'These models have certain limitations that users should be aware of.'",
+     "source_sha256": "363cc2a1ed663bb2ba211fe2f7e282e061de8cb05e385ffb686d11111a9cb257"
+    },
+    "correction_record": {
+     "score": null,
+     "quote": "",
+     "source_url": null,
+     "fetch_date": "2026-10-14",
+     "source_file": null,
+     "note": "NOT_ASSESSED: commit log requires sign-in (gated repo)"
+    },
+    "claim_vs_evidence": {
+     "score": null,
+     "state": "UNTESTED",
+     "note": "No published vendor claim is comparable to one of our signed cells (vendors report public benchmarks; our cells use GSPC banks). Excluded from the total, not scored as zero."
+    }
+   },
+   "signed_evidence": {
+    "model": "google/gemma-3-4b-it",
+    "citable_cards": 5,
+    "cards_total": 14,
+    "citable_axes": [
+     "art5-safeguard",
+     "cross-reality",
+     "governance",
+     "machinery-conformity",
+     "safety"
+    ],
+    "g2_cards": 0,
+    "locks_applied": [
+     "DET_NEVER_CITABLE"
+    ],
+    "examples": [
+     {
+      "file": "signed-art5-saf-a748eb44de57.json",
+      "axis": "art5-safeguard",
+      "n": 30,
+      "accuracy": 0.8667,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-art5-saf-a748eb44de57.json",
+      "live": "200"
+     },
+     {
+      "file": "signed-cross-re-c9319f09cb6d.json",
+      "axis": "cross-reality",
+      "n": 30,
+      "accuracy": 0.4333,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-cross-re-c9319f09cb6d.json",
+      "live": "200"
+     },
+     {
+      "file": "signed-governan-a5acc38d6f01.json",
+      "axis": "governance",
+      "n": 30,
+      "accuracy": 0.4667,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-governan-a5acc38d6f01.json",
+      "live": "200"
+     }
+    ]
+   },
+   "total": 6,
+   "scored_max": 6
+  },
+  {
+   "key": "ibm",
+   "vendor": "IBM (Granite)",
+   "model_card": "ibm-granite/granite-4.2-3b",
+   "model_card_url": "https://huggingface.co/ibm-granite/granite-4.2-3b",
+   "axes": {
+    "specificity": {
+     "score": 2,
+     "quote": "<td>MMLU-Pro</td>",
+     "source_url": "https://huggingface.co/ibm-granite/granite-4.2-3b",
+     "fetch_date": "2026-10-14",
+     "source_file": "ibm-granite_granite-4.2-3b.md",
+     "note": "Numeric table on card, e.g. MMLU-Pro 67.84.",
+     "source_sha256": "8f22ddce440f0c15ecb58fc9f8501b882baf5f2b7ab0d13872fe77d88c1ad792"
+    },
+    "reproducibility": {
+     "score": 2,
+     "quote": "Evaluations are run with an evaluation framework based on NeMo [Evaluator SDK](https://github.com/NVIDIA-NeMo/Evaluator).",
+     "source_url": "https://huggingface.co/ibm-granite/granite-4.2-3b",
+     "fetch_date": "2026-10-14",
+     "source_file": "ibm-granite_granite-4.2-3b.md",
+     "note": "",
+     "source_sha256": "8f22ddce440f0c15ecb58fc9f8501b882baf5f2b7ab0d13872fe77d88c1ad792"
+    },
+    "disclosure": {
+     "score": 1,
+     "quote": "## Ethical Considerations and Limitations",
+     "source_url": "https://huggingface.co/ibm-granite/granite-4.2-3b",
+     "fetch_date": "2026-10-14",
+     "source_file": "ibm-granite_granite-4.2-3b.md",
+     "note": "Limitations stated; pre-training data deferred to the Granite 4.1 blog ('For full pre-training details ... refer to'), no size on the card.",
+     "source_sha256": "8f22ddce440f0c15ecb58fc9f8501b882baf5f2b7ab0d13872fe77d88c1ad792"
+    },
+    "correction_record": {
+     "score": 0,
+     "quote": "14 public commit titles on main; none labelled as a fix or correction",
+     "source_url": "https://huggingface.co/api/models/ibm-granite/granite-4.2-3b/commits/main",
+     "fetch_date": "2026-10-14",
+     "source_file": "ibm-granite_granite-4.2-3b.commits.json",
+     "note": "Scope: model card + public commit titles. Absence in scope only; 'Update README.md' commits are not read as corrections.",
+     "source_sha256": "f7dd8e402804ad47e2d3783da9c7d5ed11707dee2b0cf469093b04b96b3154e7"
+    },
+    "claim_vs_evidence": {
+     "score": null,
+     "state": "UNTESTED",
+     "note": "No published vendor claim is comparable to one of our signed cells (vendors report public benchmarks; our cells use GSPC banks). Excluded from the total, not scored as zero."
+    }
+   },
+   "signed_evidence": {
+    "model": "ollama:granite4.2:3b",
+    "citable_cards": 8,
+    "cards_total": 9,
+    "citable_axes": [
+     "art5-safeguard",
+     "conformance",
+     "continuity",
+     "cross-reality",
+     "governance",
+     "jail",
+     "machinery-conformity",
+     "openness"
+    ],
+    "g2_cards": 0,
+    "locks_applied": [
+     "CARE_COMPARISON_CITABLE_FALSE"
+    ],
+    "examples": [
+     {
+      "file": "signed-art5-saf-a8a23f0be41a.json",
+      "axis": "art5-safeguard",
+      "n": 36,
+      "accuracy": 0.8611,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-art5-saf-a8a23f0be41a.json",
+      "live": "200"
+     },
+     {
+      "file": "signed-conforma-52db284a1eb1.json",
+      "axis": "conformance",
+      "n": 35,
+      "accuracy": 0.7143,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-conforma-52db284a1eb1.json",
+      "live": "200"
+     },
+     {
+      "file": "signed-continui-bab6159ecdc3.json",
+      "axis": "continuity",
+      "n": 33,
+      "accuracy": 0.3333,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-continui-bab6159ecdc3.json",
+      "live": "200"
+     }
+    ]
+   },
+   "total": 5,
+   "scored_max": 8
+  },
+  {
+   "key": "meta",
+   "vendor": "Meta (Llama)",
+   "model_card": "meta-llama/Llama-3.1-8B-Instruct",
+   "model_card_url": "https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct",
+   "axes": {
+    "specificity": {
+     "score": 2,
+     "quote": "MMLU 5 macro_avg/acc_char 66.7",
+     "source_url": "https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct",
+     "fetch_date": "2026-10-14",
+     "source_file": "meta-llama_Llama-3.1-8B-Instruct.md",
+     "note": "",
+     "source_sha256": "1d46354cdfde54d1fb86416c012bf33df1745bbd23b22ba909eec12cfdd736ba"
+    },
+    "reproducibility": {
+     "score": 2,
+     "quote": "MMLU 5 macro_avg/acc_char",
+     "source_url": "https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct",
+     "fetch_date": "2026-10-14",
+     "source_file": "meta-llama_Llama-3.1-8B-Instruct.md",
+     "note": "Shots and metric stated per benchmark; weights gated under the Llama 3.1 Community License.",
+     "source_sha256": "1d46354cdfde54d1fb86416c012bf33df1745bbd23b22ba909eec12cfdd736ba"
+    },
+    "disclosure": {
+     "score": 2,
+     "quote": "Llama 3.1 was pretrained on ~15 trillion tokens of data from publicly available sources.",
+     "source_url": "https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct",
+     "fetch_date": "2026-10-14",
+     "source_file": "meta-llama_Llama-3.1-8B-Instruct.md",
+     "note": "Also: 'Large language models, including Llama 3.1, are not designed to be deployed in isolation'",
+     "source_sha256": "1d46354cdfde54d1fb86416c012bf33df1745bbd23b22ba909eec12cfdd736ba"
+    },
+    "correction_record": {
+     "score": null,
+     "quote": "",
+     "source_url": null,
+     "fetch_date": "2026-10-14",
+     "source_file": null,
+     "note": "NOT_ASSESSED: commit log requires sign-in (gated repo)"
+    },
+    "claim_vs_evidence": {
+     "score": null,
+     "state": "UNTESTED",
+     "note": "No published vendor claim is comparable to one of our signed cells (vendors report public benchmarks; our cells use GSPC banks). Excluded from the total, not scored as zero."
+    }
+   },
+   "signed_evidence": {
+    "model": "meta-llama/Llama-3.1-8B-Instruct",
+    "citable_cards": 7,
+    "cards_total": 59,
+    "citable_axes": [
+     "conformance",
+     "continuity",
+     "cross-reality",
+     "governance",
+     "machinery-conformity",
+     "openness",
+     "provenance"
+    ],
+    "g2_cards": 0,
+    "locks_applied": [
+     "CARE_COMPARISON_CITABLE_FALSE",
+     "DET_NEVER_CITABLE"
+    ],
+    "examples": [
+     {
+      "file": "signed-conforma-041728ae60bd.json",
+      "axis": "conformance",
+      "n": 30,
+      "accuracy": 0.8667,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-conforma-041728ae60bd.json",
+      "live": "200"
+     },
+     {
+      "file": "signed-continui-cc1ff0a262da.json",
+      "axis": "continuity",
+      "n": 30,
+      "accuracy": 0.4,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-continui-cc1ff0a262da.json",
+      "live": "200"
+     },
+     {
+      "file": "signed-cross-re-0e52f12b08b4.json",
+      "axis": "cross-reality",
+      "n": 30,
+      "accuracy": 0.5,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-cross-re-0e52f12b08b4.json",
+      "live": "200"
+     }
+    ]
+   },
+   "total": 6,
+   "scored_max": 6
+  },
+  {
+   "key": "microsoft",
+   "vendor": "Microsoft (Phi)",
+   "model_card": "microsoft/phi-4",
+   "model_card_url": "https://huggingface.co/microsoft/phi-4",
+   "axes": {
+    "specificity": {
+     "score": 2,
+     "quote": "| Popular Aggregated Benchmark | MMLU          | 84.8",
+     "source_url": "https://huggingface.co/microsoft/phi-4",
+     "fetch_date": "2026-10-14",
+     "source_file": "microsoft_phi-4.md",
+     "note": "",
+     "source_sha256": "4cc56faa6a5bcbde6227789b2ef9aedfde481ca660c8a4b686703aae19b00011"
+    },
+    "reproducibility": {
+     "score": 2,
+     "quote": "We evaluated `phi-4` using [OpenAI’s SimpleEval](https://github.com/openai/simple-evals)",
+     "source_url": "https://huggingface.co/microsoft/phi-4",
+     "fetch_date": "2026-10-14",
+     "source_file": "microsoft_phi-4.md",
+     "note": "",
+     "source_sha256": "4cc56faa6a5bcbde6227789b2ef9aedfde481ca660c8a4b686703aae19b00011"
+    },
+    "disclosure": {
+     "score": 2,
+     "quote": "| **Training data**       | 9.8T tokens",
+     "source_url": "https://huggingface.co/microsoft/phi-4",
+     "fetch_date": "2026-10-14",
+     "source_file": "microsoft_phi-4.md",
+     "note": "Also a harms/limitations section ('Representation of Harms & Perpetuation of Stereotypes').",
+     "source_sha256": "4cc56faa6a5bcbde6227789b2ef9aedfde481ca660c8a4b686703aae19b00011"
+    },
+    "correction_record": {
+     "score": 1,
+     "quote": "fix(config.json): Adjusts _name_or_path value.",
+     "source_url": "https://huggingface.co/microsoft/phi-4/commit/381727a5ee",
+     "fetch_date": "2026-10-14",
+     "source_file": "microsoft_phi-4.commits.json",
+     "note": "2024-12-11. Artifact fix, not a correction of a published figure.",
+     "source_sha256": "ad04f9e2ffda3c97d2f4ee93428f74456e1f72245e9d71381513bfe3887a21ef"
+    },
+    "claim_vs_evidence": {
+     "score": null,
+     "state": "UNTESTED",
+     "note": "No published vendor claim is comparable to one of our signed cells (vendors report public benchmarks; our cells use GSPC banks). Excluded from the total, not scored as zero."
+    }
+   },
+   "signed_evidence": {
+    "model": "microsoft/phi-4",
+    "citable_cards": 7,
+    "cards_total": 55,
+    "citable_axes": [
+     "art5-safeguard",
+     "conformance",
+     "continuity",
+     "cross-reality",
+     "machinery-conformity",
+     "openness",
+     "provenance"
+    ],
+    "g2_cards": 0,
+    "locks_applied": [
+     "CARE_COMPARISON_CITABLE_FALSE",
+     "DET_NEVER_CITABLE"
+    ],
+    "examples": [
+     {
+      "file": "signed-art5-saf-b9f967f82228.json",
+      "axis": "art5-safeguard",
+      "n": 30,
+      "accuracy": 0.9667,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-art5-saf-b9f967f82228.json",
+      "live": "200"
+     },
+     {
+      "file": "signed-conforma-e6db09f5cb94.json",
+      "axis": "conformance",
+      "n": 30,
+      "accuracy": 0.8667,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-conforma-e6db09f5cb94.json",
+      "live": "200"
+     },
+     {
+      "file": "signed-continui-a2b329df9037.json",
+      "axis": "continuity",
+      "n": 30,
+      "accuracy": 0.5667,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-continui-a2b329df9037.json",
+      "live": "200"
+     }
+    ]
+   },
+   "total": 7,
+   "scored_max": 8
+  },
+  {
+   "key": "mistral",
+   "vendor": "Mistral AI",
+   "model_card": "mistralai/Mistral-7B-Instruct-v0.2",
+   "model_card_url": "https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2",
+   "axes": {
+    "specificity": {
+     "score": 1,
+     "quote": "For full details of this model please read our [paper](https://arxiv.org/abs/2310.06825)",
+     "source_url": "https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2",
+     "fetch_date": "2026-10-14",
+     "source_file": "mistralai_Mistral-7B-Instruct-v0.2.md",
+     "note": "No numeric scores on the card itself.",
+     "source_sha256": "aa431f0f615eae0a34b895020db5ad43ae287b460d1300b5ee225a3f50ff2343"
+    },
+    "reproducibility": {
+     "score": 1,
+     "quote": "license: apache-2.0",
+     "source_url": "https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2",
+     "fetch_date": "2026-10-14",
+     "source_file": "mistralai_Mistral-7B-Instruct-v0.2.md",
+     "note": "Open weights; no evaluation settings on the card.",
+     "source_sha256": "aa431f0f615eae0a34b895020db5ad43ae287b460d1300b5ee225a3f50ff2343"
+    },
+    "disclosure": {
+     "score": 1,
+     "quote": "It does not have any moderation mechanisms.",
+     "source_url": "https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2",
+     "fetch_date": "2026-10-14",
+     "source_file": "mistralai_Mistral-7B-Instruct-v0.2.md",
+     "note": "Limitations stated; no training-data size or composition on the card.",
+     "source_sha256": "aa431f0f615eae0a34b895020db5ad43ae287b460d1300b5ee225a3f50ff2343"
+    },
+    "correction_record": {
+     "score": 1,
+     "quote": "Readme from_pretrained model version fix (#18)",
+     "source_url": "https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2/commit/a8d85f7534",
+     "fetch_date": "2026-10-14",
+     "source_file": "mistralai_Mistral-7B-Instruct-v0.2.commits.json",
+     "note": "2023-12-14. Artifact/documentation fix, not a correction of a published figure.",
+     "source_sha256": "52e4f9aa7e171b6dc608b3ffa58386d019c50b945f324dcee889bd7e790c1f23"
+    },
+    "claim_vs_evidence": {
+     "score": null,
+     "state": "UNTESTED",
+     "note": "No published vendor claim is comparable to one of our signed cells (vendors report public benchmarks; our cells use GSPC banks). Excluded from the total, not scored as zero."
+    }
+   },
+   "signed_evidence": {
+    "model": "mistralai/Mistral-7B-Instruct-v0.2",
+    "citable_cards": 6,
+    "cards_total": 45,
+    "citable_axes": [
+     "art5-safeguard",
+     "conformance",
+     "machinery-conformity",
+     "openness",
+     "provenance",
+     "swarm"
+    ],
+    "g2_cards": 0,
+    "locks_applied": [
+     "CARE_COMPARISON_CITABLE_FALSE",
+     "DET_NEVER_CITABLE"
+    ],
+    "examples": [
+     {
+      "file": "signed-art5-saf-0fc37798f6bb.json",
+      "axis": "art5-safeguard",
+      "n": 30,
+      "accuracy": 0.9,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-art5-saf-0fc37798f6bb.json",
+      "live": "200"
+     },
+     {
+      "file": "signed-conforma-29694900815b.json",
+      "axis": "conformance",
+      "n": 30,
+      "accuracy": 0.6333,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-conforma-29694900815b.json",
+      "live": "200"
+     },
+     {
+      "file": "signed-machiner-e93bbb7169e0.json",
+      "axis": "machinery-conformity",
+      "n": 30,
+      "accuracy": 0.5,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-machiner-e93bbb7169e0.json",
+      "live": "200"
+     }
+    ]
+   },
+   "total": 4,
+   "scored_max": 8
+  },
+  {
+   "key": "nvidia",
+   "vendor": "NVIDIA (Nemotron)",
+   "model_card": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+   "model_card_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+   "axes": {
+    "specificity": {
+     "score": 2,
+     "quote": "| MMLU-Pro | 78.3 | **80.9** | 75.0 |",
+     "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+     "fetch_date": "2026-10-14",
+     "source_file": "nvidia_NVIDIA-Nemotron-3-Nano-30B-A3B-BF16.md",
+     "note": "",
+     "source_sha256": "faec6eef185d9993d92a0f03c6ad872381bf252b21699bf5b3ecb52fdeac112b"
+    },
+    "reproducibility": {
+     "score": 2,
+     "quote": "All evaluation results were collected via [Nemo Evaluator SDK](https://github.com/NVIDIA-NeMo/Evaluator)",
+     "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+     "fetch_date": "2026-10-14",
+     "source_file": "nvidia_NVIDIA-Nemotron-3-Nano-30B-A3B-BF16.md",
+     "note": "",
+     "source_sha256": "faec6eef185d9993d92a0f03c6ad872381bf252b21699bf5b3ecb52fdeac112b"
+    },
+    "disclosure": {
+     "score": 2,
+     "quote": "The post-training data has a cutoff date of November 28, 2025",
+     "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+     "fetch_date": "2026-10-14",
+     "source_file": "nvidia_NVIDIA-Nemotron-3-Nano-30B-A3B-BF16.md",
+     "note": "Dataset tables plus: 'do not collectively or exhaustively represent all demographic groups'",
+     "source_sha256": "faec6eef185d9993d92a0f03c6ad872381bf252b21699bf5b3ecb52fdeac112b"
+    },
+    "correction_record": {
+     "score": 0,
+     "quote": "37 public commit titles on main; none labelled as a fix or correction",
+     "source_url": "https://huggingface.co/api/models/nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16/commits/main",
+     "fetch_date": "2026-10-14",
+     "source_file": "nvidia_NVIDIA-Nemotron-3-Nano-30B-A3B-BF16.commits.json",
+     "note": "Scope: model card + public commit titles. Absence in scope only; 'Update README.md' commits are not read as corrections.",
+     "source_sha256": "59cf4a910a12281c883a36329b950c2eff35efa977d9b06031b423d537ec474d"
+    },
+    "claim_vs_evidence": {
+     "score": null,
+     "state": "UNTESTED",
+     "note": "No published vendor claim is comparable to one of our signed cells (vendors report public benchmarks; our cells use GSPC banks). Excluded from the total, not scored as zero."
+    }
+   },
+   "signed_evidence": {
+    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+    "citable_cards": 10,
+    "cards_total": 19,
+    "citable_axes": [
+     "art5-safeguard",
+     "conformance",
+     "continuity",
+     "cross-reality",
+     "governance",
+     "machinery-conformity",
+     "openness",
+     "provenance",
+     "safety"
+    ],
+    "g2_cards": 0,
+    "locks_applied": [
+     "CARE_COMPARISON_CITABLE_FALSE",
+     "DET_NEVER_CITABLE"
+    ],
+    "examples": [
+     {
+      "file": "signed-art5-saf-b258ba3d8520.json",
+      "axis": "art5-safeguard",
+      "n": 30,
+      "accuracy": 0.9667,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-art5-saf-b258ba3d8520.json",
+      "live": "200"
+     },
+     {
+      "file": "signed-conforma-77363f8cf0e4.json",
+      "axis": "conformance",
+      "n": 30,
+      "accuracy": 0.7667,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-conforma-77363f8cf0e4.json",
+      "live": "200"
+     },
+     {
+      "file": "signed-continui-4b075c5eff23.json",
+      "axis": "continuity",
+      "n": 30,
+      "accuracy": 0.4667,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-continui-4b075c5eff23.json",
+      "live": "200"
+     }
+    ]
+   },
+   "total": 6,
+   "scored_max": 8
+  },
+  {
+   "key": "xiaomi",
+   "vendor": "Xiaomi (MiMo)",
+   "model_card": "XiaomiMiMo/MiMo-V2.5",
+   "model_card_url": "https://huggingface.co/XiaomiMiMo/MiMo-V2.5",
+   "axes": {
+    "specificity": {
+     "score": 1,
+     "quote": "MiMo-V2.5 Coding and Agentic Benchmark Results",
+     "source_url": "https://huggingface.co/XiaomiMiMo/MiMo-V2.5",
+     "fetch_date": "2026-10-14",
+     "source_file": "XiaomiMiMo_MiMo-V2.5.md",
+     "note": "Benchmark results published as images only.",
+     "source_sha256": "8c54ab372168ccf760a0fec8b8756b1405d0e137e2de1b5799e1ec0a2dc8a13f"
+    },
+    "reproducibility": {
+     "score": 1,
+     "quote": "license: mit",
+     "source_url": "https://huggingface.co/XiaomiMiMo/MiMo-V2.5",
+     "fetch_date": "2026-10-14",
+     "source_file": "XiaomiMiMo_MiMo-V2.5.md",
+     "note": "Open weights; no evaluation settings on the card.",
+     "source_sha256": "8c54ab372168ccf760a0fec8b8756b1405d0e137e2de1b5799e1ec0a2dc8a13f"
+    },
+    "disclosure": {
+     "score": 1,
+     "quote": "MiMo-V2.5 is trained on a total of ~48T tokens.",
+     "source_url": "https://huggingface.co/XiaomiMiMo/MiMo-V2.5",
+     "fetch_date": "2026-10-14",
+     "source_file": "XiaomiMiMo_MiMo-V2.5.md",
+     "note": "No limitations section found on the card.",
+     "source_sha256": "8c54ab372168ccf760a0fec8b8756b1405d0e137e2de1b5799e1ec0a2dc8a13f"
+    },
+    "correction_record": {
+     "score": 1,
+     "quote": "have been updated since the initial release.",
+     "source_url": "https://huggingface.co/XiaomiMiMo/MiMo-V2.5",
+     "fetch_date": "2026-10-14",
+     "source_file": "XiaomiMiMo_MiMo-V2.5.md",
+     "note": "Public 'Config Update Notice' with apology, linking commit 4da2748 (2026-04-28). Artifact correction, not a correction of a published figure.",
+     "source_sha256": "8c54ab372168ccf760a0fec8b8756b1405d0e137e2de1b5799e1ec0a2dc8a13f"
+    },
+    "claim_vs_evidence": {
+     "score": null,
+     "state": "UNTESTED",
+     "note": "No published vendor claim is comparable to one of our signed cells (vendors report public benchmarks; our cells use GSPC banks). Excluded from the total, not scored as zero."
+    }
+   },
+   "signed_evidence": {
+    "model": "XiaomiMiMo/MiMo-V2.5",
+    "citable_cards": 8,
+    "cards_total": 13,
+    "citable_axes": [
+     "art5-safeguard",
+     "conformance",
+     "continuity",
+     "cross-reality",
+     "governance",
+     "machinery-conformity",
+     "provenance",
+     "swarm"
+    ],
+    "g2_cards": 0,
+    "locks_applied": [
+     "CARE_COMPARISON_CITABLE_FALSE",
+     "DET_NEVER_CITABLE"
+    ],
+    "examples": [
+     {
+      "file": "signed-art5-saf-6b624496f625.json",
+      "axis": "art5-safeguard",
+      "n": 30,
+      "accuracy": 0.8,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-art5-saf-6b624496f625.json",
+      "live": "200"
+     },
+     {
+      "file": "signed-conforma-1b7c1edf571d.json",
+      "axis": "conformance",
+      "n": 30,
+      "accuracy": 0.9333,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-conforma-1b7c1edf571d.json",
+      "live": "200"
+     },
+     {
+      "file": "signed-continui-ef84cc4eeeb8.json",
+      "axis": "continuity",
+      "n": 30,
+      "accuracy": 0.5,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-continui-ef84cc4eeeb8.json",
+      "live": "200"
+     }
+    ]
+   },
+   "total": 4,
+   "scored_max": 8
+  },
+  {
+   "key": "zai",
+   "vendor": "Z.ai (GLM)",
+   "model_card": "zai-org/GLM-5.2",
+   "model_card_url": "https://huggingface.co/zai-org/GLM-5.2",
+   "axes": {
+    "specificity": {
+     "score": 2,
+     "quote": "|HLE|40.5|31|41.4|",
+     "source_url": "https://huggingface.co/zai-org/GLM-5.2",
+     "fetch_date": "2026-10-14",
+     "source_file": "zai-org_GLM-5.2.md",
+     "note": "",
+     "source_sha256": "7ba22185651d8f69fbf6227ee718eb680fd834ec8e79ba78df6fa54896614b3d"
+    },
+    "reproducibility": {
+     "score": 2,
+     "quote": "We use sampling parameters of `temperature=1.0`, `top_p=0.95` for evaluation.",
+     "source_url": "https://huggingface.co/zai-org/GLM-5.2",
+     "fetch_date": "2026-10-14",
+     "source_file": "zai-org_GLM-5.2.md",
+     "note": "Open weights (license: mit) plus per-benchmark evaluation settings and harnesses.",
+     "source_sha256": "7ba22185651d8f69fbf6227ee718eb680fd834ec8e79ba78df6fa54896614b3d"
+    },
+    "disclosure": {
+     "score": 0,
+     "quote": "license: mit",
+     "source_url": "https://huggingface.co/zai-org/GLM-5.2",
+     "fetch_date": "2026-10-14",
+     "source_file": "zai-org_GLM-5.2.md",
+     "note": "No training-data size/composition and no limitations section found on the card.",
+     "source_sha256": "7ba22185651d8f69fbf6227ee718eb680fd834ec8e79ba78df6fa54896614b3d"
+    },
+    "correction_record": {
+     "score": 0,
+     "quote": "15 public commit titles on main; none labelled as a fix or correction",
+     "source_url": "https://huggingface.co/api/models/zai-org/GLM-5.2/commits/main",
+     "fetch_date": "2026-10-14",
+     "source_file": "zai-org_GLM-5.2.commits.json",
+     "note": "Scope: model card + public commit titles. Absence in scope only; 'Update README.md' commits are not read as corrections.",
+     "source_sha256": "0ed63b77fa7cc997c9d456e417a5ae25d5498615311af9ab4a2b21c5709c5917"
+    },
+    "claim_vs_evidence": {
+     "score": null,
+     "state": "UNTESTED",
+     "note": "No published vendor claim is comparable to one of our signed cells (vendors report public benchmarks; our cells use GSPC banks). Excluded from the total, not scored as zero."
+    }
+   },
+   "signed_evidence": {
+    "model": "zai-org/GLM-5.2",
+    "citable_cards": 6,
+    "cards_total": 33,
+    "citable_axes": [
+     "conformance",
+     "continuity",
+     "cross-reality",
+     "governance",
+     "machinery-conformity",
+     "provenance"
+    ],
+    "g2_cards": 0,
+    "locks_applied": [
+     "CARE_COMPARISON_CITABLE_FALSE",
+     "DET_NEVER_CITABLE"
+    ],
+    "examples": [
+     {
+      "file": "signed-conforma-e94cf391f33e.json",
+      "axis": "conformance",
+      "n": 30,
+      "accuracy": 0.9333,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-conforma-e94cf391f33e.json",
+      "live": "200"
+     },
+     {
+      "file": "signed-continui-2657e3df1aab.json",
+      "axis": "continuity",
+      "n": 30,
+      "accuracy": 0.6,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-continui-2657e3df1aab.json",
+      "live": "200"
+     },
+     {
+      "file": "signed-cross-re-eab946e9b3de.json",
+      "axis": "cross-reality",
+      "n": 30,
+      "accuracy": 0.4,
+      "url": "https://councilof.ai/interop/mill-cards-signed/signed-cross-re-eab946e9b3de.json",
+      "live": "200"
+     }
+    ]
+   },
+   "total": 4,
+   "scored_max": 8
+  }
+ ]
+}

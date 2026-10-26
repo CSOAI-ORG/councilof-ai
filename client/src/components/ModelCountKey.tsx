@@ -8,6 +8,8 @@ import { MODEL_COUNT_SOURCES, ROW_BUILDERS, type CountRow } from "@/lib/modelCou
  * opens the key (nothing is fetched until then), shows "not read" when its fetch fails, and is
  * never summed with another row. See lib/modelCountKey.ts.
  */
+const INITIAL_ROWS: CountRow[] = ROW_BUILDERS.map(([, build]) => build(null));
+
 export default function ModelCountKey({ tone = "light", className = "" }: { tone?: "light" | "dark"; className?: string }) {
   const [open, setOpen] = useState(false);
   const [rows, setRows] = useState<CountRow[] | null>(null);
@@ -31,6 +33,7 @@ export default function ModelCountKey({ tone = "light", className = "" }: { tone
   const dark = tone === "dark";
   const box = dark ? "border-white/15 text-emerald-50/85" : "border-border text-muted-foreground";
   const strong = dark ? "text-white" : "text-foreground";
+  const displayRows = rows ?? INITIAL_ROWS;
   return (
     <details
       className={`group rounded-xl border px-3 ${box} ${className}`}
@@ -42,22 +45,19 @@ export default function ModelCountKey({ tone = "light", className = "" }: { tone
       </summary>
       <div className="pb-3 text-[13px] leading-relaxed">
         <p>Each figure below reads its own file and counts a different thing. They are never added together.</p>
-        {rows === null ? (
-          <p className="mt-2" role="status">Reading the five files…</p>
-        ) : (
-          <ul className="mt-2 space-y-2">
-            {rows.map((r) => (
-              <li key={r.id} data-testid={`model-count-${r.id}`}>
-                <span className={`font-mono font-bold ${strong}`}>{r.value === null ? "not read" : r.value}</span>{" "}
-                <a href={r.href} className="underline underline-offset-2">
-                  {r.label}
-                </a>
-                {r.detail ? <span>: {r.detail}</span> : null}
-                <span className="block font-mono text-[11px] opacity-75">{r.source}</span>
-              </li>
-            ))}
-          </ul>
-        )}
+        {open && rows === null ? <p className="mt-2" role="status">Reading the five files…</p> : null}
+        <ul className="mt-2 space-y-2">
+          {displayRows.map((r) => (
+            <li key={r.id} data-testid={`model-count-${r.id}`}>
+              <span className={`font-mono font-bold ${strong}`}>{r.value === null ? (rows === null ? "open to read" : "not read") : r.value}</span>{" "}
+              <a href={r.href} className="underline underline-offset-2">
+                {r.label}
+              </a>
+              {r.detail ? <span>: {r.detail}</span> : null}
+              <span className="block font-mono text-[11px] opacity-75">{r.source}</span>
+            </li>
+          ))}
+        </ul>
       </div>
     </details>
   );
