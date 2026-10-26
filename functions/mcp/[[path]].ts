@@ -211,6 +211,21 @@ function jsonError(
   );
 }
 
+/** Collapse a single-message SSE answer into application/json for clients that did not ask for SSE. */
+export async function sseToJson(response: Response): Promise<Response> {
+  if (!(response.headers.get("content-type") ?? "").includes("text/event-stream")) return response;
+  const text = await response.text();
+  const messages = text
+    .split(/\r?\n\r?\n/)
+    .map((ev) => ev.split(/\r?\n/).filter((l) => l.startsWith("data:")).map((l) => l.slice(5).trimStart()).join("\n"))
+    .filter((d) => d.length > 0);
+  const headers = new Headers(response.headers);
+  headers.set("content-type", "application/json");
+  headers.delete("content-length");
+  const out = messages.length === 1 ? messages[0] : `[${messages.join(",")}]`;
+  return new Response(out, { status: response.status, statusText: response.statusText, headers });
+}
+
 function withHeaders(response: Response): Response {
   const headers = new Headers(response.headers);
   for (const [key, value] of Object.entries(CORS)) headers.set(key, value);
@@ -574,23 +589,25 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
         )
       : null;
   try {
+    // Lenient Accept (MCP streamable HTTP): a client that sends only application/json, or no
+    // Accept at all, gets a plain JSON answer instead of the SDK's 406. SSE stays when asked for.
+    const wantsSse = (request.headers.get("accept") ?? "").includes("text/event-stream");
+    const forwardHeaders = new Headers(request.headers);
+    if (!wantsSse) forwardHeaders.set("accept", "application/json, text/event-stream");
     const boundedRequest = new Request(request.url, {
       method: "POST",
-      headers: request.headers,
+      headers: forwardHeaders,
       body,
       signal: request.signal,
     });
+    const upstream = await (door === "free" ? mcpFree : mcp).fetch(boundedRequest);
     const response = withTraceHeader(
-      withHeaders(
-        await (door === "free" ? mcpFree : mcp).fetch(
-          boundedRequest,
-        ),
-      ),
+      withHeaders(wantsSse ? upstream : await sseToJson(upstream)),
       trace?.traceId ?? null,
     );
     // fetch resolves at response headers. A 200, including an SSE response or
     // JSON-RPC tool error, does not establish tool completion or an external effect.
-    trace?.responseHeaders(response.status);
+    trace?.responseHeaders(upstream.status);
     return response;
   } catch {
     trace?.transportError();
