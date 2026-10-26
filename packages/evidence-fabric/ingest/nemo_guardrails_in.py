@@ -43,7 +43,12 @@ def recount_turn(turn: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         if not isinstance(r, dict):
             continue
         name = str(r.get("name") or r.get("rail") or "unnamed-rail")
-        decision = str(r.get("decision") or r.get("status") or "allow").lower()
+        # A rail with no recorded decision is NOT permission. Defaulting to "allow" turned missing evidence
+        # into a clean result; the turn is now unreadable, which the caller maps to UNMEASURED.
+        raw_decision = r.get("decision") if r.get("decision") is not None else r.get("status")
+        if raw_decision is None:
+            return None
+        decision = str(raw_decision).lower()
         triggered.append(f"{name}:{decision}")
         if decision in BLOCKING_DECISIONS:
             blocking += 1
