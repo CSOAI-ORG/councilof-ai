@@ -115,6 +115,26 @@ jobs:
           THIRD_PARTY_GUARD_IDS: ${{ secrets.THIRD_PARTY_GUARD_IDS }}
         run: python3 scripts/privacy/test_third_party_identifiers.py -v
 
+  # 26 Oct 2026: the pending public-root candidate could not be reconciled with master and every
+  # run of public-root-candidate-upgrade.yml failed there, so the ONE public root had not advanced
+  # for over nine hours. Two faults, both in the reconcile step: the merge died on a content
+  # conflict in the three DERIVED views (the OTS manifest, generated from the .ots files in the tree,
+  # and the two llms views that quote it), and the llms views were generated BEFORE the manifest was
+  # rebuilt, so they were always one cycle stale — which is what pr-gates' llms-txt-derived test
+  # caught on the candidate head. The reconcile logic now lives in scripts/root_candidate_reconcile.py
+  # with a --selftest that proves each failure goes red, and it runs here so the logic cannot rot
+  # silently. A real conflict outside the derived views still fails closed.
+  root-candidate-reconcile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Public-root candidate reconcile - selftest
+        run: python3 scripts/root_candidate_reconcile.py --selftest
+
   # 7 Oct 2026: PR #2871 edited public/interop/iso-20022.json, whose sibling .ots commits to the
   # previous bytes. Every PR check was green, because the only proof-vs-target comparison
   # (scripts/root-witness-release-gate.py) ran in deploy.yml after the merge, and every master deploy
@@ -136,6 +156,27 @@ jobs:
           python3 -m pip install -q opentimestamps-client
           python3 scripts/stamped-bytes-gate.py --selftest
           python3 scripts/stamped-bytes-gate.py --base HEAD^1 --head HEAD
+
+  # 26 Oct 2026: the estate-wide disclosure sweep had two rules that could not tell the estate's
+  # own careful language from a contradiction. The promise rule asked whether the words "always"
+  # and "re-measurement" appeared anywhere on a page, so it read "/dispute: the answer is always a
+  # re-measurement" as promising what "/about: scheduled automatic re-attestation is not yet
+  # available" denies — two statements that coexist and are both true. The denial rule matched a
+  # bare "not yet", so /pricing's claims-workflow table ("3 not yet due") was read as denying
+  # automatic re-measurement; that page never mentions it. A rule that misfires trains readers to
+  # ignore the sweep, which is worse than no sweep. This job runs the sweep's selftest on EVERY PR,
+  # without network, and the selftest is pinned with the estate's REAL page text and proves the rule
+  # can still go red — a rule that has never fired proves nothing about the tree it passes.
+  claimguard-sweep-rules:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Disclosure sweep rules - selftest
+        run: python3 scripts/claimguard-estate-sweep.py --selftest
 
   # A PR marked "do not merge" must not show green. Lanes self-merge with the shared token and a
   # hold lived only in prose, so this makes the marker a failing check. Reads the event payload
@@ -176,7 +217,7 @@ jobs:
             exit 0
           fi
           changed=$(gh api --paginate "repos/$REPO/pulls/$PR/files" --jq '.[].filename')
-          gated=$(printf '%s\n' "$changed" | grep -E '^(client/|public/|functions/|scripts/|harness/x402-census/|docs/operations/PRODUCERS\.json$|package\.json$|package-lock\.json$|vitest\.config\.ts$|wrangler\.jsonc$|\.github/workflows/pr-gates\.yml$)' || true)
+          gated=$(printf '%s\n' "$changed" | grep -E '^(client/|e2e/|public/|functions/|scripts/|harness/x402-census/|docs/operations/PRODUCERS\.json$|package\.json$|package-lock\.json$|vitest\.config\.ts$|wrangler\.jsonc$|\.github/workflows/pr-gates\.yml$)' || true)
           if [ -n "$gated" ]; then
             echo "gated=true" >> "$GITHUB_OUTPUT"
             echo "gated paths in this PR:"; printf '  %s\n' $gated
@@ -189,10 +230,14 @@ jobs:
       - uses: actions/checkout@v4
         if: steps.scope.outputs.gated == 'true'
         with:
-          fetch-depth: 2   # HEAD^1 = the base this PR merges into, for the stamped-bytes step
+          fetch-depth: 0   # Canonical SBOM generation history; HEAD^1 remains this PR merge base.
       - uses: actions/setup-node@v4
         if: steps.scope.outputs.gated == 'true'
         with: { node-version: 20 }
+
+      - name: Outward claims — offline manifest contract selftest
+        if: steps.scope.outputs.gated == 'true'
+        run: node scripts/outward-claims-guard.mjs --selftest
 
       # Runs before `npm ci` so a stamped-byte edit fails in seconds. See the stamped-bytes job above
       # for why (#2871 / deploy run 37590160574). Verified to fail: the selftest goes red when any one
@@ -212,7 +257,7 @@ jobs:
         # it the gate died on ImportError in 0.25 s and the unit step went red on every PR.
         run: |
           npm ci --no-audit --no-fund
-          python3 -m pip install -q cryptography opentimestamps-client
+          python3 -m pip install -q cryptography opentimestamps-client jsonschema==4.26.0
 
       # This used to run only after merge in deploy.yml. PR #1847 passed every hosted
       # PR check and then the master deployment stopped because TypeScript errors had
@@ -274,6 +319,35 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         run: npm run build:client
 
+      - name: HF mirror gate — excluded dirs must exist on HF before merge
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/hf-mirror-gate.mjs --selftest
+          node scripts/hf-mirror-gate.mjs
+
+      - name: Prepare Council OS first-question browser check
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          npx playwright install --with-deps chromium
+          npm run prerender:dashboard
+
+      - name: Council OS first question — desktop and mobile
+        id: council_os_first_question
+        if: steps.scope.outputs.gated == 'true'
+        run: npm run test:e2e:shell -- e2e/tests/dashboard-home-ask.spec.ts --grep 'the first question typed on the start screen gets an answer at (1440|375)px$'
+
+      - name: Retain Council OS first-question premerge evidence
+        if: ${{ always() && steps.scope.outputs.gated == 'true' && (steps.council_os_first_question.outcome == 'success' || steps.council_os_first_question.outcome == 'failure') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: council-os-first-question-premerge-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            test-results/**/trace.zip
+            test-results/**/agui-request-lifecycle.json
+            test-results/**/*.png
+          retention-days: 3
+          if-no-files-found: warn
+
       # --selftest first: a gate that has never been seen failing is decoration,
       # so it proves it can go red on every run before it is trusted on our bytes.
       - name: Brand gate — selftest, then the real dist
@@ -291,7 +365,19 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         run: |
           node scripts/facts-gate.mjs --selftest
-          node scripts/facts-gate.mjs dist/client
+          node scripts/facts-gate.mjs dist/client --board-reference prerender-board-reference.json
+
+      # Measure ruling on #3266 (16 Oct 2026): the facts-gate above now judges against the board
+      # THIS commit rendered (prerender-board-reference.json, written and bound by the
+      # `npm run prerender:dashboard` step above, the same prerender.mjs deploy uses; never
+      # committed, see .gitignore). This anchor keeps the measured part of that board pinned to
+      # PRODUCTION /api/gspc: measured_axes, the measured set, every measured n and score, and
+      # card_index are unchanged; only the count of unmeasured axes may grow.
+      - name: Board production anchor — measured axes and card_index unchanged from production
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/board-production-anchor.mjs --selftest
+          node scripts/board-production-anchor.mjs dist/client --board-reference prerender-board-reference.json
 
       # Persona audit T06 (2026-10-06): /axis/jail said TIE while the board said UNTESTED, /axes
       # disagreed with both, and /benchmarks repeated a corrected claim. facts-gate reads counts;
@@ -327,6 +413,18 @@ jobs:
       - name: Stablecoin readiness gate — indexed is never measured
         if: steps.scope.outputs.gated == 'true'
         run: npm run guard:stablecoin-readiness
+
+      # The publisher must never retract a published measurement: a source that cannot be
+      # reached does not un-measure an asset. Measured 2026-10-26 — the 2026-10-25 candidate
+      # root was built while xrpl.fi was unreachable, so all 16 locked-16 asset leaves were
+      # honest placeholders that REPLACED the published measured leaves. The derived
+      # readiness view dropped from 4 measured assets to 0 and the stablecoin gate above
+      # failed closed on the candidate, which is what kept the ONE public root from
+      # advancing. The publisher now carries the last published measured leaf forward until
+      # a newer MEASURED leaf replaces it, and fails closed if it would drop one anyway.
+      - name: Root publisher — a failed source never retracts a published measurement
+        if: steps.scope.outputs.gated == 'true'
+        run: PYTHONPATH=scripts python3 -m unittest scripts/test_publish_public_root.py
 
       - name: Mill receipt readiness — crypto, lifecycle and regulation stay separate
         if: steps.scope.outputs.gated == 'true'
@@ -474,6 +572,9 @@ jobs:
           # opentimestamps-client: test_ots_restamp_ledger.py builds detached proofs offline and runs
           # the release gate's own .ots check over them.
           python3 -m pip install -q pytest cryptography pyarrow huggingface_hub opentimestamps-client
+          # Canary privacy, safe capture retention and verified PR proposal (offline only).
+          python3 -B scripts/canary/test_canary.py
+          python3 -B scripts/canary/test_canary_delivery.py
           python3 -m pytest -q scripts/spray/test_gspc_parity.py scripts/spray/test_gspc_spray_skip.py
           python3 -m pytest -q scripts/test_public_root.py -k kinds_index
           python3 -m pytest -q harness/gspc-top100/test_priority_pick.py harness/gspc-top100/test_inflight_cells.py
@@ -499,6 +600,8 @@ jobs:
           # reasons and a step that is green only because nobody looks is the defect
           # this line exists to stop repeating.
           python3 -m pytest -q harness/gspc-top100/test_mill_honesty.py -k sign_mill_skips_already_signed
+          python3 scripts/watch/test_provider_watch.py
+          python3 scripts/watch/test_provider_watch_promotion.py
 
       # C-2026-0925-01: split-custody wording ("3-party", "2-of-3") may not return to a served or
       # producing surface without correction context or a PERFORMED ceremony record in

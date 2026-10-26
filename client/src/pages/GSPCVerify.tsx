@@ -8,6 +8,7 @@ import BoardAttestation from "@/components/board/BoardAttestation";
 import { CARD_PARAM_MAX_BYTES, resolveCardParam, verifyCardHref } from "@/lib/cardParam";
 import { GOVERNANCE_RETRIEVE, loadPublicCardExample } from "@/lib/publicCardExample";
 import { takeCheckerSeed } from "@/lib/myResults";
+import { artifactCitation } from "@/lib/artifactCite";
 
 /**
  * /gspc-verify — verify published card bytes yourself.
@@ -254,7 +255,7 @@ export default function GSPCVerify() {
             Free verification · no account
           </p>
           <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">
-            Paste a signed card. Recompute it here.
+            Check a signed measurement record.
           </h1>
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
             Paste a signed card or try a published example below. The check runs in your browser;
@@ -317,7 +318,7 @@ export default function GSPCVerify() {
                   : "border border-emerald-500/30 text-emerald-200 hover:bg-emerald-500/10"
               }`}
             >
-              Estate card
+              Check one record
             </button>
             <button
               type="button"
@@ -330,7 +331,7 @@ export default function GSPCVerify() {
                   : "border border-amber-400/30 text-amber-200 hover:bg-amber-500/10"
               }`}
             >
-              Public-root catalogue
+              Check collection membership
             </button>
           </div>
         </div>
@@ -339,10 +340,10 @@ export default function GSPCVerify() {
       <div className="mx-auto max-w-4xl px-6 py-12 space-y-16">
         {mode === "public-root" && (
           <section>
-            <h2 className="text-2xl font-bold text-amber-200">Public-root card + inclusion</h2>
+            <h2 className="text-2xl font-bold text-amber-200">Record and proof of collection membership</h2>
             <p className="mt-1 text-[13px] text-emerald-100/60">
-              The root envelope is signed and verified here. Its leaves may separately be signed
-              or unsigned; inclusion alone never changes that leaf state.
+              Check the collection's signature here and read the displayed result. Individual records
+              may be signed or unsigned; collection membership alone never changes their signing status.
             </p>
             <div className="mt-4">
               <PublicRootCatalogue variant="dark" />
@@ -352,7 +353,7 @@ export default function GSPCVerify() {
 
         {mode === "estate" && (
         <section>
-          <h2 className="text-2xl font-bold text-emerald-50">Verify a single estate record</h2>
+          <h2 className="text-2xl font-bold text-emerald-50">Check one measurement record</h2>
           <p className="mt-1 text-[13px] text-emerald-100/60">
             Paste any one estate record — hash and signature are recomputed here, in your browser,
             against the published keys. This page does not save pasted records or their results.
@@ -420,6 +421,13 @@ export default function GSPCVerify() {
                 </p>
               )}
               {linked.state === "loaded" && <LinkedCardActions href={linked.href} />}
+              {linked.state === "loaded" && (
+                <details className="mt-3" data-testid="linked-cite">
+                  <summary className="flex min-h-[44px] cursor-pointer items-center font-semibold">Cite this record</summary>
+                  <pre className="mt-1 whitespace-pre-wrap break-all font-mono text-[12px] text-emerald-100/90">{artifactCitation(linked, new Date())}</pre>
+                  <p className="mt-1 text-[12px] text-emerald-100/70">Built from <a className="underline" href="/CITATION.cff">CITATION.cff</a> and the bytes loaded here. A matching sha256 shows you hold the cited bytes, not that the result is good.</p>
+                </details>
+              )}
               {(linked.state === "refused" || linked.state === "failed") && (
                 <p className="mt-1">Reason: {linked.reason}. No VALID or INVALID result has been established. Paste still works.</p>
               )}
@@ -453,7 +461,7 @@ export default function GSPCVerify() {
         {/* LIVING ATTESTATION TABLES — from GET /api/gspc */}
         {boardData && (
           <section id="board-stamp" className="scroll-mt-24">
-            <h2 className="text-2xl font-bold text-emerald-50">Board stamp — living board, not your card</h2>
+            <h2 className="text-2xl font-bold text-emerald-50">The board's published signature</h2>
             <p className="mt-1 text-[13px] text-emerald-100/60">
               This is the published board stamp. It is not a stamp on a card you just pasted.
               Empty fields show exactly why they are empty.
@@ -502,13 +510,13 @@ export default function GSPCVerify() {
         {/* The paid door comes after the free verifier, never before it (audit 2026-09-28 #22). */}
         {mode === "estate" && (
         <section data-testid="governance-retrieve-raas">
-          <h2 className="text-2xl font-bold text-emerald-50">Optional: a commission receipt</h2>
+          <h2 className="text-2xl font-bold text-emerald-50">Optional paid service: a receipt for existing evidence</h2>
           <div className="mt-4 rounded-2xl border border-emerald-400/25 bg-emerald-500/[0.05] p-4 space-y-3">
             <p className="text-[13px] text-emerald-100/80 leading-relaxed">
-              Everything above is free and stays free. The metered commission door issues a receipt
-              for a named subject and re-serves signed cards already on file;
-              it does not run a new measurement. Before paying, check the 402 challenge for the
-              signer state, corpus date and cards available for your subject.
+              Everything above is free and stays free. This paid service issues a receipt
+              for a named subject and provides signed records already on file;
+              it does not run a new measurement. Before paying, check the payment challenge for the
+              signing status, evidence collection date and records available for your subject.
             </p>
             <p className="text-[13px] text-emerald-100/70 leading-relaxed">
               The governance card the free button loads is{" "}
@@ -575,6 +583,24 @@ export default function GSPCVerify() {
             </li>
           </ul>
         </details>
+        {/* CARD INVENTORY SNAPSHOT — dated, not live; see evidence/card-inventory-2026-10-14.md */}
+        <section data-testid="card-inventory-snapshot">
+          <h2 className="text-2xl font-bold text-emerald-50">Card inventory (14 Oct 2026)</h2>
+          <p className="mt-2 text-[13px] leading-relaxed text-emerald-100/75">
+            Dated snapshot, not a live count. A one-off scan of 8 of 9 storage locations on
+            14 Oct 2026 found <strong className="text-emerald-50">11,929</strong> unique signed
+            measurement cards, <strong className="text-emerald-50">7,994</strong> with a VALID
+            signature, and <strong className="text-emerald-50">335</strong> live and verifiable
+            here. The live count is always <code>/signed/card_index.json</code>.{" "}
+            <a
+              href="https://github.com/CSOAI-ORG/councilof-ai/blob/master/evidence/card-inventory-2026-10-14.md"
+              className="text-emerald-300 underline decoration-emerald-500/40 hover:decoration-emerald-300"
+            >
+              Method and scope →
+            </a>
+          </p>
+        </section>
+
 
         {/* LINKS */}
         <div className="flex flex-wrap gap-x-4 gap-y-1 pb-4 text-[13px]">
