@@ -20,19 +20,49 @@
  */
 
 const LBTC_ASSET = "6f0279e9ed041c3d710a9f57d0c02928416460c4b722ae3457a11eec381c526d";
-const SUPPLY_URL = `https://blockstream.info/liquid/api/asset/${LBTC_ASSET}/supply`;
-const RESERVES_URL = "https://liquid.network/api/v1/liquid/reserves";
+
+// The two source URLs are overridable so the TEST can serve them from a local http server
+// instead of the internet. That is the same shape as stellar-asset-reader.mjs
+// (STELLAR_HORIZON) and xrpl-trustline-reader.mjs, and it is exactly why those two reader
+// tests cannot flake. This reader's test used to hit blockstream.info and liquid.network
+// for real: on 2026-10-26 the GitHub runner could not connect to them
+// (AggregateError [ETIMEDOUT]) and the gate reported a broken chain for a network that was
+// fine. A gate that reddens on a network flake teaches everybody to ignore the gate.
+const SUPPLY_URL =
+  process.env.LBTC_SUPPLY_URL ||
+  `https://blockstream.info/liquid/api/asset/${LBTC_ASSET}/supply`;
+const RESERVES_URL =
+  process.env.LBTC_RESERVES_URL || "https://liquid.network/api/v1/liquid/reserves";
 
 const out = process.argv.includes("--out")
   ? process.argv[process.argv.indexOf("--out") + 1]
   : null;
 
+/**
+ * A source that could not be read is NOT a broken measurement.
+ *
+ * The estate's rule, from scripts/verify-estate.mjs: "An unreachable host exits CANNOT-RUN
+ * (0 under CI) rather than FAIL: a network flake is not a broken chain, and reporting it as
+ * one teaches everybody to ignore the gate." This class marks exactly that case: the
+ * observation could not be taken, so nothing was checked.
+ *
+ * It is deliberately NOT used for a source that answered with something unusable. A body that
+ * will not parse is a real failure of the chain, not a reachability problem, and it must stay
+ * red.
+ */
+class CannotRun extends Error {}
+
 async function fetchText(url) {
-  const res = await fetch(url, {
-    headers: { "user-agent": "csoai-lbtc-backing-reader/0.1" },
-    signal: AbortSignal.timeout(15_000),
-  });
-  if (!res.ok) throw new Error(`${url} → ${res.status}`);
+  let res;
+  try {
+    res = await fetch(url, {
+      headers: { "user-agent": "csoai-lbtc-backing-reader/0.1" },
+      signal: AbortSignal.timeout(15_000),
+    });
+  } catch (e) {
+    throw new CannotRun(`${url} is unreachable (${e.message})`);
+  }
+  if (!res.ok) throw new CannotRun(`${url} answered ${res.status}`);
   return res.text();
 }
 
@@ -102,6 +132,16 @@ async function main() {
 }
 
 main().catch((e) => {
+  if (e instanceof CannotRun) {
+    // Nothing was checked, and no card is written: a card with no observation in it is not a
+    // card. The exit code follows the estate convention - 0 under CI so a network flake does
+    // not paint the chain red, 2 otherwise so a person running it by hand sees it.
+    console.error(`CANNOT-RUN: ${e.message}.`);
+    console.error(
+      "This is a reachability problem, not a verification failure. Nothing was checked.",
+    );
+    process.exit(process.env.CI ? 0 : 2);
+  }
   console.error(e);
   process.exit(1);
 });

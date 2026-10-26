@@ -1,0 +1,43 @@
+{
+  "schema": "csoai.estate-root-pointer/1",
+  "kind": "DISCOVERY_POINTER_ONLY",
+  "created_utc": "2026-10-13T04:30:00Z",
+  "as_of": "2026-10-13T04:30:00Z",
+  "summary": "1,479 signed cards + 10,737 batch-signed capsules",
+  "scope": "This pointer names two existing published commitments by their exact bytes. It adds no measurement and is not a grade, ranking or endorsement of anything named. The two corpora are separate: card count here is the mill card-root leaf count, separate from /signed/card_index.json, /root.json and /api/gspc.",
+  "card_root": {
+    "url": "https://councilof.ai/interop/card-root-2026-10-12.json",
+    "path": "public/interop/card-root-2026-10-12.json",
+    "sha256": "6338a5dbd8ea0f4632696383b232dad2c238f63aae51820831bb0683f1663010",
+    "kind": "csoai.card-root/1",
+    "as_of": "2026-10-12T15:39:10Z",
+    "n_leaves": 1479,
+    "merkle_root": "78425ec497d4270bbcba82d28bcb9ef98183ccf79ceca3cabaaae816e2a3c83d",
+    "ots_url": "https://councilof.ai/interop/card-root-2026-10-12.json.ots",
+    "leaf_rule": "leaf = sha256 of canonical JSON (sort_keys, separators=(',',':'), ensure_ascii=False) of the whole signed card in /interop/mill-cards-signed/",
+    "tree_rule": "leaves in published index order (ascending leaf hex); node = sha256(left || right), no domain prefix; an odd last node is paired with itself (scripts/publish_public_root.py merkle_root)"
+  },
+  "capsule_index": {
+    "url": "https://councilof.ai/measurement-capsules/v0.2/index.signed.json",
+    "sha256": "9cf1485f42c9c81fabefed3439c1689e9eec2eba100e21cc0074e8913ca1ec48",
+    "index_url": "https://councilof.ai/measurement-capsules/v0.2/index.json",
+    "index_sha256": "657ec68566de144fb22dc7bc8e9f7c8f74808ba718ac3d8c48450cfafa8d6851",
+    "index_as_of": "2026-10-01T08:11:31Z",
+    "n_batches": 10,
+    "n_capsules_total": 10737,
+    "index_root": "9631cc00b91ce9d1e37e517851eab126be6ca1a4dc6b66a26d86352aada5b562",
+    "signed_payload_sha256": "933a383963faf21207a21743785b5ec6aa1422631a3ed0b9bd8520314460e2f0",
+    "rule": "RFC 6962 Merkle Tree Hash over the 32-byte capsule_id leaves sorted ascending: leaf = SHA-256(0x00 || capsule_id), node = SHA-256(0x01 || left || right), split at the largest power of two smaller than n; no leaf promoted or duplicated. index_root = same rule over the union of capsule_ids of all batches"
+  },
+  "reproduced": {
+    "by": "GSPC measurement desk, 2026-10-13, from live public bytes",
+    "card_root": "1479/1479 leaves recomputed from live card bytes; merkle_root 78425ec4... reproduced exactly",
+    "capsule_index": "10/10 batch merkle_roots reproduced from each batch leaves.json, capsule_id sets equal to capsules.jsonl.gz, capsules_sha256 matches; index_root 9631cc00... reproduced over 10737 unique ids",
+    "contract_parity": "9148 leaves -> 70403984d857b7b167d0010608f79c5407bc8642435eb72e7644c83918b1a788 (the earlier 2562d107 rebuild did not use the RFC 6962 domain prefixes / split)"
+  },
+  "signature": {
+    "state": "PENDING",
+    "path": "scripts/sign_interop_artifact.py -> public/interop/estate-root-latest.signed.json",
+    "why": "the normal signer needs the pod caller token (BOARD_SIGN_POD_TOKEN or /workspace/secrets/board-sign-pod-token); none was available to this run, so nothing was signed"
+  }
+}
