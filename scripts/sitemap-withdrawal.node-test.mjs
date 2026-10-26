@@ -6,12 +6,18 @@ import vm from 'node:vm';
 const source = readFileSync(new URL('./generate-sitemap.mjs', import.meta.url), 'utf8');
 const loop = source.slice(source.indexOf('let blogSkipped = 0;'), source.indexOf('// The AEO answer explainers.'));
 assert.ok(loop.includes('for (const slug of blogSlugs)'));
-function enumerate(withdrawn) {
+// Built exactly as generate-sitemap.mjs builds it (#3070): the reviewed publication manifest.
+const publishedBlog = new Set((JSON.parse(readFileSync(new URL('../client/src/data/blog-published.json', import.meta.url), 'utf8')).published || []).map((p) => p && p.slug).filter(Boolean));
+test('only the three reviewed slugs are published', () => {
+  assert.deepEqual([...publishedBlog].sort(), ['gspc-g2-comparison-group-2026-10-14', 'how-to-verify-an-ai-measurement', 'keeping-ai-claims-current']);
+});
+function enumerate(withdrawn, published = publishedBlog) {
   const state = {
     blogSlugs: ['built', 'redirected', 'unbuilt'],
     builtBlog: new Set(['built', 'redirected']),
     redirectRules: new Map([['/blog/redirected', '/blog/']]),
     reviewNoticePaths: new Set(withdrawn ? ['/blog/:slug'] : []),
+    publishedBlog: published,
     seen: new Set(['/services/']), paths: ['/services/'],
   };
   vm.runInNewContext(loop, state);
@@ -22,6 +28,9 @@ test('withdrawn dynamic articles stay out even when their snapshots exist', () =
 });
 test('restored articles regain canonical discovery without unbuilt or redirected slugs', () => {
   assert.deepEqual([...enumerate(false)], ['/services/', '/blog/built/']);
+});
+test('while withdrawn, only a slug in the published manifest is listed (never unbuilt or redirected)', () => {
+  assert.deepEqual([...enumerate(true, new Set(['built', 'redirected', 'unbuilt']))], ['/services/', '/blog/built/']);
 });
 
 // 2026-09-14: the sitemap reconciles against public/_redirects, so the redirects generator has to

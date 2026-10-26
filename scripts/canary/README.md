@@ -43,6 +43,69 @@ This is measurement, not certification.
 - Artifacts: `public/interop/silent-route-canary-2026-09/baseline.jsonl`
   (one row per endpoint-day) and `drift-dryrun.jsonl` (drift dry-run records).
 
+## Error records
+
+Provider failures retain the existing status labels and a fixed diagnostic
+category in `error.category`. HTTP failures may also carry a validated integer
+`error.http_status`. Error response bodies, URLs, headers, exception messages
+and dynamic exception names are discarded before either JSONL persistence or
+console output. There is no raw-detail fallback.
+
+Failed or unavailable calls keep `daily_digest: null` and never enter drift
+comparisons as completed measurements. A partial run may retain hashes for
+completed prompts, but its status remains an error. Successful hashes and
+daily digest calculations are unchanged.
+
+The regression suite uses synthetic errors, temporary output paths and a
+blocked default network transport. It covers both stored rows and printed
+output, including malformed JSON and credential-like text in provider errors:
+
+```bash
+python3 -B scripts/canary/test_canary.py
+```
+
+## Safe capture retention and PR proposal
+
+The daily workflow retains a separate receipt from only the current invocation's
+in-memory rows. Its explicit projection keeps configured endpoint/prompt IDs,
+typed status/timing fields and validated hashes. It excludes model labels,
+notes, bodies, URLs, headers and arbitrary error messages. Historical baseline
+rows are never copied into this receipt.
+
+Counts distinguish all endpoints hashed, partial capture and no hashed
+endpoints. These are unsigned THIN observations. A retained file does not mean
+successful measurement, publication, a protected merge or deployment.
+
+The workflow uploads that single file for seven days before proposing the data.
+Collector failure, missing output, failed upload or absent artifact ID blocks
+the proposal step. The safe receipt survives a later drift-analysis or
+publication failure without changing that failure into a successful job.
+
+The delivery helper uses the existing normal branch push and one pull request.
+It checks the configured remote and staged file scope; no force push is used.
+Command output is private on failure: only a static stage and integer exit code
+are retained. A rejected push stops before PR creation. A PR creation failure
+fails the job. An existing PR must match repository, base, head branch and
+exact commit, remain open, and have no automatic merge enabled.
+The workflow also retains the safe delivery status for seven days.
+
+This does not promise automatic recovery of a workflow rerun. A fresh checkout
+can create a different commit for the same run branch; its normal push may
+then reject non-fast-forward history. That remains an explicit failure with
+a retained safe capture. Existing-PR tests qualify matching pushed-head
+readback, not a real-Git rerun experiment. Existing work is never force-replaced.
+
+The regression uses synthetic errors corresponding to the 23 October push
+rejection, plus missing-retention and failed-publication controls. It does not
+read failed provider logs/artifacts, use real credentials, rewrite historical
+baseline data or bypass GitHub secret protection. Historical exposure review
+remains with the credential owner.
+
+Offline checks:
+
+    python3 -B scripts/canary/test_canary.py
+    python3 -B scripts/canary/test_canary_delivery.py
+
 ## Run
 
 ```bash
@@ -54,11 +117,7 @@ python3 scripts/canary/canary_run.py
 python3 scripts/canary/canary_run.py --dry-run
 ```
 
-Daily cron one-liner:
-
-```cron
-17 6 * * * cd /path/to/councilof-ai && /usr/bin/python3 scripts/canary/canary_run.py >> public/interop/silent-route-canary-2026-09/cron.log 2>&1
-```
+The existing `canary-daily.yml` schedule remains daily at 03:17 UTC.
 
 ## Prompt design note
 
