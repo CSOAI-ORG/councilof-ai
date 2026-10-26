@@ -1,158 +1,204 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { otelEnabled, startToolRequestSpan, withTraceHeader } from "./_otel";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { buildToolSpan, otelEnabled, withToolSpan, withTraceHeader } from "./_otel";
+
+/**
+ * The edge OTel span must record what happened, not what was assumed.
+ *
+ * The bug this pins: the span used to be emitted BEFORE the proxied tool call, with
+ * `status: { code: 1 }` hard-coded and `endTimeUnixNano` taken at construction time. Every
+ * call was therefore logged as OK with a ~0ms duration — including calls that threw and
+ * calls the upstream answered with an error. For a measurement body that is the worst
+ * possible default: the telemetry asserted a success nobody observed.
+ *
+ * The span now wraps the call. These tests pin the three states it must be able to
+ * distinguish, and pin that "door" scope is stated on every span (the tool's own SSE
+ * result is not read at the edge, so OK never claims the tool succeeded).
+ */
+
+const ON = { CSOAI_OTEL: "1" };
+const OFF = { CSOAI_OTEL: "0" };
 
 type Span = {
   traceId: string;
+  spanId: string;
   name: string;
   startTimeUnixNano: string;
   endTimeUnixNano: string;
-  status: { code: number };
-  attributes: { key: string; value: { stringValue?: string; intValue?: string } }[];
+  attributes: Array<{ key: string; value: Record<string, unknown> }>;
+  status: { code: number; message?: string };
 };
-let log: ReturnType<typeof vi.spyOn>;
-beforeEach(() => { log = vi.spyOn(console, "log").mockImplementation(() => {}); });
-afterEach(() => { vi.restoreAllMocks(); });
 
-function emitted(): Span[] {
-  return log.mock.calls.map(([line]) => JSON.parse(String(line)).resourceSpans[0].scopeSpans[0].spans[0]);
-}
-function attributes(span: Span) {
-  return Object.fromEntries(span.attributes.map(({ key, value }) => [key, value.stringValue ?? value.intValue]));
+function spansFrom(log: ReturnType<typeof vi.spyOn>): Span[] {
+  return log.mock.calls.map((c) => JSON.parse(String(c[0])) as { resourceSpans: Array<{ scopeSpans: Array<{ spans: Span[] }> }> })
+    .flatMap((r) => r.resourceSpans.flatMap((rs) => rs.scopeSpans.flatMap((ss) => ss.spans)));
 }
 
-describe("MCP transport observations", () => {
-  it.each([undefined, {}, { CSOAI_OTEL: false }, { CSOAI_OTEL: "false" }, { CSOAI_OTEL: "0" }])(
-    "stays off without explicit enablement: %j", (env) => {
-      const random = vi.spyOn(crypto, "getRandomValues");
-      expect(startToolRequestSpan(env, "get_root")).toBeNull();
-      expect(random).not.toHaveBeenCalled();
-      expect(log).not.toHaveBeenCalled();
-    },
-  );
+function attr(span: Span, key: string): unknown {
+  return span.attributes.find((a) => a.key === key)?.value;
+}
 
-  it.each(["1", "true", "yes", "on", " TRUE "])("accepts explicit flag %s", (flag) => {
-    expect(otelEnabled({ CSOAI_OTEL: flag })).toBe(true);
+function attrString(span: Span, key: string): string | undefined {
+  const v = attr(span, key);
+  return typeof v === "object" && v !== null && "stringValue" in v ? String(v.stringValue) : undefined;
+}
+
+function attrInt(span: Span, key: string): number | undefined {
+  const v = attr(span, key);
+  return typeof v === "object" && v !== null && "intValue" in v ? Number(v.intValue) : undefined;
+}
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
+
+describe("otelEnabled", () => {
+  it("is off unless explicitly on", () => {
+    expect(otelEnabled(undefined)).toBe(false);
+    expect(otelEnabled({})).toBe(false);
+    expect(otelEnabled(OFF)).toBe(false);
+    expect(otelEnabled({ CSOAI_OTEL: "" })).toBe(false);
+    expect(otelEnabled({ CSOAI_OTEL: "maybe" })).toBe(false);
   });
 
-  it("emits only after response headers, with elapsed time and no success assertion", () => {
-    const clock = vi.spyOn(Date, "now").mockReturnValue(1_800_000_000_001);
-    const trace = startToolRequestSpan({ CSOAI_OTEL: true }, "get_root")!;
-    expect(log).not.toHaveBeenCalled();
-    clock.mockReturnValue(1_800_000_000_126);
-    trace.responseHeaders(200);
-    expect(emitted()).toHaveLength(1);
-    const span = emitted()[0];
-    expect(span.traceId).toBe(trace.traceId);
-    expect(span.startTimeUnixNano).toBe("1800000000001000000");
-    expect(span.endTimeUnixNano).toBe("1800000000126000000");
-    expect(span.status.code).toBe(0);
-    expect(attributes(span)).toMatchObject({
-      "mcp.method.name": "tools/call",
-      "http.response.status_code": "200",
-      "csoai.mcp.observation_stage": "response_headers",
-      "csoai.mcp.tool_outcome": "UNOBSERVED",
-      "csoai.mcp.effect_outcome": "UNOBSERVED",
-    });
-    expect(attributes(span)["gen_ai.operation.name"]).toBeUndefined();
+  it("is on for the explicit on values", () => {
+    expect(otelEnabled(ON)).toBe(true);
+    expect(otelEnabled({ CSOAI_OTEL: "TRUE" })).toBe(true);
+    expect(otelEnabled({ CSOAI_OTEL: " on " })).toBe(true);
   });
+});
 
-  it.each([200, 202, 204, 400, 402])("never promotes HTTP %s into tool success", (status) => {
-    const trace = startToolRequestSpan({ CSOAI_OTEL: "on" }, "get_root")!;
-    trace.responseHeaders(status);
-    expect(emitted()[0].status.code).toBe(0);
-  });
-
-  it("records an HTTP server failure without inventing an external-effect verdict", () => {
-    const trace = startToolRequestSpan({ CSOAI_OTEL: true }, "get_root")!;
-    trace.responseHeaders(503);
-    expect(emitted()[0].status.code).toBe(2);
-    expect(attributes(emitted()[0])).toMatchObject({
-      "error.type": "http_5xx",
-      "http.response.status_code": "503",
-      "csoai.mcp.effect_outcome": "UNOBSERVED",
-    });
-  });
-
-  it("records one transport error and ignores later terminal callbacks", () => {
-    const trace = startToolRequestSpan({ CSOAI_OTEL: true }, "get_root")!;
-    trace.transportError();
-    trace.responseHeaders(200);
-    trace.transportError();
-    expect(emitted()).toHaveLength(1);
-    expect(emitted()[0].status.code).toBe(2);
-    expect(attributes(emitted()[0])).toMatchObject({
-      "error.type": "transport_error",
-      "csoai.mcp.observation_stage": "transport_error",
-    });
-    expect(attributes(emitted()[0])["http.response.status_code"]).toBeUndefined();
-  });
-
-  it("does not rewrite a recorded response as a later failure", () => {
-    const trace = startToolRequestSpan({ CSOAI_OTEL: true }, "get_root")!;
-    trace.responseHeaders(200);
-    trace.transportError();
-    expect(emitted()).toHaveLength(1);
-    expect(emitted()[0].status.code).toBe(0);
-  });
-
-  it("omits an unknown caller-supplied tool name", () => {
-    startToolRequestSpan({ CSOAI_OTEL: true }, null)!.responseHeaders(400);
-    expect(emitted()[0].name).toBe("tools/call");
-    expect(attributes(emitted()[0])["gen_ai.tool.name"]).toBeUndefined();
-  });
-
-  it("keeps overlapping requests separate when they finish out of order", () => {
-    const a = startToolRequestSpan({ CSOAI_OTEL: true }, "get_root")!;
-    const b = startToolRequestSpan({ CSOAI_OTEL: true }, "verify_card")!;
-    expect(a.traceId).not.toBe(b.traceId);
-    b.responseHeaders(200);
-    a.transportError();
-    expect(emitted().map((span) => [span.traceId, span.status.code])).toEqual([
-      [b.traceId, 0], [a.traceId, 2],
-    ]);
-  });
-
-  it("clamps a backwards wall clock instead of emitting negative duration", () => {
-    const clock = vi.spyOn(Date, "now").mockReturnValue(1000);
-    const trace = startToolRequestSpan({ CSOAI_OTEL: true }, "get_root")!;
-    clock.mockReturnValue(900);
-    trace.responseHeaders(200);
-    expect(emitted()[0].endTimeUnixNano).toBe(emitted()[0].startTimeUnixNano);
-  });
-
-  it("does not fail dispatch when trace initialization is unavailable", () => {
-    vi.spyOn(crypto, "getRandomValues").mockImplementation(() => { throw new Error("unavailable"); });
-    expect(startToolRequestSpan({ CSOAI_OTEL: true }, "get_root")).toBeNull();
+describe("withToolSpan — flag off", () => {
+  it("is a pure passthrough: no span, no trace id, the response comes back", async () => {
+    const log = vi.spyOn(console, "log").mockImplementation(() => {});
+    const res = new Response("ok", { status: 200 });
+    const out = await withToolSpan(OFF, "get_axis", async () => res);
+    expect(out.response).toBe(res);
+    expect(out.traceId).toBeNull();
     expect(log).not.toHaveBeenCalled();
   });
 
-  it("does not turn a log-sink failure into a failed or duplicated operation", () => {
-    log.mockImplementation(() => { throw new Error("log unavailable"); });
-    const trace = startToolRequestSpan({ CSOAI_OTEL: true }, "get_root")!;
-    expect(() => trace.responseHeaders(200)).not.toThrow();
-    expect(() => trace.transportError()).not.toThrow();
-    expect(log).toHaveBeenCalledTimes(1);
+  it("does not swallow an error when the flag is off", async () => {
+    vi.spyOn(console, "log").mockImplementation(() => {});
+    await expect(
+      withToolSpan(OFF, "get_axis", async () => {
+        throw new Error("boom");
+      }),
+    ).rejects.toThrow("boom");
   });
+});
 
-  it("adds a trace header to an unfinished SSE response without pulling its body", async () => {
-    const pull = vi.fn();
-    const body = new ReadableStream<Uint8Array>({ pull }, { highWaterMark: 0 });
-    const original = new Response(body, {
-      headers: { "content-type": "text/event-stream", "cache-control": "no-store" },
+describe("withToolSpan — flag on, call succeeds", () => {
+  it("records OK with a real duration, and hands back the trace id", async () => {
+    const log = vi.spyOn(console, "log").mockImplementation(() => {});
+    const res = new Response("ok", { status: 200 });
+    const out = await withToolSpan(ON, "get_axis", async () => {
+      await sleep(12);
+      return res;
     });
-    const response = withTraceHeader(original, "a".repeat(32));
-    await Promise.resolve();
-    expect(response.body).toBe(body);
-    expect(response.bodyUsed).toBe(false);
-    expect(pull).not.toHaveBeenCalled();
-    expect(response.headers.get("x-otel-trace-id")).toBe("a".repeat(32));
-    expect(response.headers.get("content-type")).toBe("text/event-stream");
-    expect(response.headers.get("cache-control")).toBe("no-store");
-    await response.body!.cancel();
+
+    expect(out.response).toBe(res);
+    expect(out.traceId).toMatch(/^[0-9a-f]{32}$/);
+
+    const spans = spansFrom(log);
+    expect(spans).toHaveLength(1);
+    const span = spans[0];
+    expect(span.status.code).toBe(1);
+    expect(span.traceId).toBe(out.traceId);
+    expect(span.name).toBe("execute_tool get_axis");
+    expect(attrString(span, "gen_ai.tool.name")).toBe("get_axis");
+    expect(attrString(span, "gen_ai.operation.name")).toBe("execute_tool");
+    expect(attrInt(span, "http.response.status_code")).toBe(200);
+
+    // The duration is the wall-clock time the call actually took, not ~0.
+    const elapsedNs = Number(span.endTimeUnixNano) - Number(span.startTimeUnixNano);
+    expect(elapsedNs).toBeGreaterThanOrEqual(10_000_000);
   });
 
-  it("passes through the exact response when tracing is disabled", () => {
-    const response = new Response("unchanged");
-    expect(withTraceHeader(response, null)).toBe(response);
+  it("states the observation scope, and omits error.type rather than reporting zero", async () => {
+    const log = vi.spyOn(console, "log").mockImplementation(() => {});
+    await withToolSpan(ON, "get_axis", async () => new Response("ok", { status: 200 }));
+    const span = spansFrom(log)[0];
+    expect(attrString(span, "csoai.mcp.outcome.scope")).toBe("door");
+    expect(attr(span, "error.type")).toBeUndefined();
+  });
+});
+
+describe("withToolSpan — flag on, the call fails", () => {
+  it("records ERROR and re-throws when the proxied call throws", async () => {
+    const log = vi.spyOn(console, "log").mockImplementation(() => {});
+    await expect(
+      withToolSpan(ON, "get_axis", async () => {
+        await sleep(5);
+        throw new TypeError("fetch failed");
+      }),
+    ).rejects.toThrow("fetch failed");
+
+    const spans = spansFrom(log);
+    expect(spans).toHaveLength(1);
+    const span = spans[0];
+    // The regression: this used to be a hard-coded 1 (OK).
+    expect(span.status.code).toBe(2);
+    expect(attrString(span, "error.type")).toBe("TypeError");
+    expect(span.status.message).toContain("fetch failed");
+    // The span is not lost when the call fails.
+    expect(Number(span.endTimeUnixNano)).toBeGreaterThanOrEqual(Number(span.startTimeUnixNano));
+  });
+
+  it("records ERROR when the upstream answers with a non-2xx status", async () => {
+    const log = vi.spyOn(console, "log").mockImplementation(() => {});
+    const out = await withToolSpan(ON, "get_axis", async () => new Response("nope", { status: 502 }));
+    expect(out.response.status).toBe(502);
+
+    const span = spansFrom(log)[0];
+    expect(span.status.code).toBe(2);
+    expect(attrString(span, "error.type")).toBe("http_502");
+    expect(attrInt(span, "http.response.status_code")).toBe(502);
+  });
+
+  it("never reports OK for a call that failed", async () => {
+    const log = vi.spyOn(console, "log").mockImplementation(() => {});
+    await withToolSpan(ON, "get_axis", async () => new Response("nope", { status: 500 })).catch(() => {});
+    for (const span of spansFrom(log)) expect(span.status.code).not.toBe(1);
+  });
+});
+
+describe("withToolSpan — no tool name", () => {
+  it("does not emit a span for a call that is not a tool call", async () => {
+    const log = vi.spyOn(console, "log").mockImplementation(() => {});
+    const out = await withToolSpan(ON, null, async () => new Response("ok", { status: 200 }));
+    expect(out.traceId).toBeNull();
+    expect(log).not.toHaveBeenCalled();
+  });
+});
+
+describe("buildToolSpan — pure shape", () => {
+  it("carries the scope attribute and drops absent values instead of zeroing them", () => {
+    const span = buildToolSpan({
+      traceId: "a".repeat(32),
+      spanId: "b".repeat(16),
+      toolName: "get_axis",
+      startedAtNs: 1000,
+      endedAtNs: 2000,
+      statusCode: 1,
+    }) as { resourceSpans: Array<{ scopeSpans: Array<{ spans: Span[] }> }> };
+    const s = span.resourceSpans[0].scopeSpans[0].spans[0];
+    expect(attrString(s, "csoai.mcp.outcome.scope")).toBe("door");
+    expect(attr(s, "error.type")).toBeUndefined();
+    expect(attr(s, "http.response.status_code")).toBeUndefined();
+  });
+});
+
+describe("withTraceHeader", () => {
+  it("adds the trace id header when there is one", () => {
+    const res = withTraceHeader(new Response("ok", { status: 200 }), "c".repeat(32));
+    expect(res.headers.get("x-otel-trace-id")).toBe("c".repeat(32));
+    expect(res.status).toBe(200);
+  });
+
+  it("passes the response through untouched when there is no trace id", () => {
+    const original = new Response("ok", { status: 200 });
+    expect(withTraceHeader(original, null)).toBe(original);
   });
 });

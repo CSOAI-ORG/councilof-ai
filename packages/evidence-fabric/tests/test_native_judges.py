@@ -72,3 +72,35 @@ def test_recorded_rail_decisions_still_recount():
     blocked = nemo_guardrails_in.ingest(_nemo("block"), read_at="2026-10-25T00:00:00Z")[0]
     assert allowed["state"] == "CONSISTENT"
     assert blocked["state"] == "DIVERGENT"
+
+
+def _letters(values, accuracy):
+    return json.dumps({
+        "version": "0.3.259", "status": "success",
+        "eval": {"task": "mini", "model": "mockllm/model"},
+        "results": {"scores": [{"name": "match", "metrics": {"accuracy": {"value": accuracy}}}],
+                    "total_samples": len(values)},
+        "samples": [{"id": i, "scores": {"match": {"value": v}}} for i, v in enumerate(values)],
+    }).encode()
+
+
+def test_letter_grades_from_real_inspect_scorers():
+    """Inspect's match scorer returns C/I/P/N, not numbers. Found on a real .eval log from inspect_ai 0.3.259."""
+    ev = inspect_native_in.ingest(_letters(["C", "I", "C", "I"], 0.5), read_at="2026-10-25T00:00:00Z")[0]
+    assert ev["state"] == "CONSISTENT"
+    assert ev["observed"]["passed"] == 2 and ev["observed"]["failed"] == 2
+    assert E.validate(ev) == []
+
+
+def test_eval_archive_loader_reads_header_and_samples(tmp_path):
+    """The .eval file is a zip; the loader must read status, eval and every sample without reinterpreting scores."""
+    import zipfile
+    p = tmp_path / "run.eval"
+    with zipfile.ZipFile(p, "w") as z:
+        z.writestr("header.json", json.dumps({"version": "0.3.259", "status": "success",
+                                              "eval": {"task": "mini", "model": "mockllm/model"},
+                                              "results": {"total_samples": 2}}))
+        z.writestr("samples/1_epoch_1.json", json.dumps({"id": 1, "scores": {"match": {"value": "C"}}}))
+        z.writestr("samples/2_epoch_1.json", json.dumps({"id": 2, "scores": {"match": {"value": "I"}}}))
+    doc = inspect_native_in.load_eval_log(str(p))
+    assert doc["status"] == "success" and doc["eval"]["task"] == "mini" and len(doc["samples"]) == 2
