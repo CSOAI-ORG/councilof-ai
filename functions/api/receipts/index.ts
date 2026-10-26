@@ -96,7 +96,7 @@ export async function readReceipts(
       zero_value: r.zero_value,
       self: r.self,
       record_schema: r.schema,
-      delivery: deliveryRecord
+      delivery: deliveryRecord && deliveryRecord.resource === r.resource
         ? {
             schema: deliveryRecord.schema,
             response_sha256: deliveryRecord.response_sha256,
