@@ -1,21 +1,21 @@
 import { useEffect } from "react";
 import { setMetaDescription } from "@/lib/utils";
 
-// /start (and /onboard) — measure-and-verify activation.
-// No persona triage, no assistant setup, no price gate. One clear path: describe
-// your AI, we measure it on a frozen published instrument, you get a 3KB
-// Ed25519-signed, hash-chained measurement card. Verify stays free.
+// /start (and /onboard) — inspect published evidence, then request scoped work.
+// This public page must not promise instant model inference, new measurement,
+// mandatory signing or a delivered artifact before source/contract verification.
+// Verification of existing published signed cards stays free.
 
 const STEPS: { n: string; t: string; d: string }[] = [
-  { n: "1", t: "Describe your AI", d: "One short form — what the system is and what it does. No account, no card details." },
-  { n: "2", t: "We measure it", d: "Your system is graded on our own frozen, published instruments. Deterministic scoring, no model in the verdict path." },
-  { n: "3", t: "Get your signed card", d: "A 3KB measurement card, Ed25519-signed and hash-chained. Verify it yourself — no need to ask us." },
+  { n: "1", t: "Find an existing record", d: "Explore the public GSPC board and select a dated result, subject or evidence card." },
+  { n: "2", t: "Inspect and verify", d: "Read the measurement date, instrument, coverage and limitations. Verify a signed card for free; unsigned results remain labelled." },
+  { n: "3", t: "Request scoped evidence", d: "For an existing Article 50 or evidence service, agree the named subject, scope and delivery before purchase. A receipt is not a fresh measurement." },
 ];
 
 export default function OnboardOS() {
   useEffect(() => {
-    document.title = "Get a signed measurement card | Council of AI";
-    setMetaDescription("Get an Ed25519-signed AI measurement card from the Council of AI (CSOAI LTD, UK 16939677). Measure against the GSPC board. Verify stays free. Measurement, not certification.");
+    document.title = "Explore verifiable AI evidence | Council of AI";
+    setMetaDescription("Explore dated GSPC measurements and evidence from CSOAI Ltd. Verify existing signed cards free; request scoped evidence separately. Measurement, not certification.");
   }, []);
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
@@ -23,20 +23,24 @@ export default function OnboardOS() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(800px 380px at 50% -10%, rgba(16,185,129,.20), transparent 60%)" }} />
         <p className="relative font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Council of AI — start here</p>
         <h1 className="relative mt-3 text-4xl sm:text-5xl font-black tracking-tight">
-          Get a signed<br />
-          <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">measurement card.</span>
+          Start with evidence<br />
+          <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">you can verify.</span>
         </h1>
         <p className="relative mt-4 mx-auto max-w-2xl text-emerald-100/80">
-          Describe your AI system and we measure how it behaves on our own published instruments. You get a
-          3KB card — Ed25519-signed and hash-chained — that anyone can verify without asking us.
-          Verify stays free. No account, no card details, no price gate. A grade is never sold.
+          Read an existing, dated measurement and its limitations. Verify signed cards free in your browser;
+          not every published record is signed. For a named subject or AI-generated output, explore
+          existing evidence services and request a written scope. Paying for a receipt does not
+          create a new measured result or guarantee a fresh AI run. A grade is never sold.
         </p>
         <div className="relative mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-          <a href="/assess" className="rounded-xl bg-emerald-500 px-7 py-3.5 text-base font-bold text-[#03110b] hover:bg-emerald-400">
-            Get measured →
+          <a href="/gspc-verify" className="rounded-xl bg-emerald-500 px-7 py-3.5 text-base font-bold text-[#03110b] hover:bg-emerald-400">
+            Verify a published card →
           </a>
-          <a href="/gspc-verify" className="rounded-xl border border-emerald-400/40 px-7 py-3.5 text-base font-bold text-emerald-100 hover:bg-white/5">
-            Verify a card
+          <a href="/assess" className="rounded-xl border border-emerald-400/40 px-7 py-3.5 text-base font-bold text-emerald-100 hover:bg-white/5">
+            Inspect evidence services
+          </a>
+          <a href="/contact/?arm=data" className="rounded-xl border border-emerald-400/40 px-7 py-3.5 text-base font-bold text-emerald-100 hover:bg-white/5">
+            Request a scoped quote
           </a>
         </div>
       </section>
@@ -53,8 +57,9 @@ export default function OnboardOS() {
         </div>
 
         <div className="mt-8 rounded-2xl border border-emerald-500/15 bg-black/20 p-5 text-sm text-emerald-100/75">
-          Council of AI is a measurement body — we measure and sign, we do not certify. Verify stays free
-          and loginless. A grade is never sold. <a href="/gspc-verify" className="font-semibold text-emerald-300 underline hover:text-emerald-200">Verify a card →</a>
+          Council of AI publishes measurements, not certifications. Published signed cards can be
+          checked for integrity, while unsigned or unmeasured records remain explicitly labelled.
+          Verification stays free and loginless. A grade is never sold. <a href="/gspc-verify" className="font-semibold text-emerald-300 underline hover:text-emerald-200">Verify a card →</a>
           {" "}Preparing for EU AI Act Article 50 marking? <a href="/art50" className="font-semibold text-emerald-300 underline hover:text-emerald-200">Verification services →</a>
         </div>
 
@@ -85,7 +90,7 @@ export default function OnboardOS() {
               { href: "/owasp-asi", label: "OWASP mapping", desc: "Board axes → OWASP AI Exchange categories" },
               { href: "/evaluator-access", label: "Evaluator access", desc: "Conditions for independent evaluation" },
               { href: "/press", label: "Press", desc: "Corrections, root, signed index, FAQs" },
-              { href: "/products", label: "Products", desc: "4 SKUs — free verify, scoped commission, enquiry" },
+              { href: "/products", label: "Products", desc: "Existing verification, evidence services and enquiry routes" },
               { href: "/methodology", label: "Methodology", desc: "The frozen rules every number is computed under" },
             ].map((link) => (
               <a
