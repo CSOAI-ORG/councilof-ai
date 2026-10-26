@@ -39,7 +39,7 @@ const CONTENTS = [
   },
   {
     t: "Deterministic, reproducible grading",
-    d: "Grading is deterministic code over recorded transcripts — no model scores another model. Re-run the harness on the same inputs and you get the same card, byte for byte.",
+    d: "Grading is deterministic code over recorded transcripts — no model scores another model. Review reproducibility against the recorded transcripts, instrument version and grading method; a new run is not guaranteed to produce identical card bytes.",
   },
   {
     t: "The published methodology",
@@ -65,7 +65,7 @@ const CONTENTS = [
 const FAQ = [
   {
     q: "What changed on 2 August 2026 for GPAI providers?",
-    a: "The EU AI Office's supervision and enforcement powers over general-purpose AI models went live. From that date it can request documentation, conduct or require model evaluations, request mitigations, restrict or withdraw a model from the EU market, and fine GPAI providers up to €15,000,000 or 3% of total worldwide annual turnover — enforcing obligations that have applied since August 2025.",
+    a: "The EU AI Office's supervision and enforcement powers over general-purpose AI models went live. From that date it can request documentation, conduct or require model evaluations, request mitigations, restrict or withdraw a model from the EU market, and fine GPAI providers up to €15,000,000 or 3% of total worldwide annual turnover. The existing-model transition is separate: providers of general-purpose AI models placed on the market before 2 August 2025 must comply with the applicable obligations by 2 August 2027 under Article 111(3).",
   },
   {
     q: "What is the GPAI Evidence Pack?",
@@ -137,9 +137,10 @@ export default function GpaiEvidencePack() {
           <h2 className="text-xl font-semibold mb-2">The enforcement reality</h2>
           <p className="text-zinc-400 text-sm leading-relaxed mb-4">
             On <strong className="text-zinc-200">2 August 2026</strong> the EU AI Office&rsquo;s
-            supervision and enforcement powers over general-purpose AI (GPAI) models went live — and
-            they reach back to the GPAI obligations that have applied since August 2025. From that
-            date the AI Office can:
+            supervision and enforcement powers over general-purpose AI (GPAI) models went live.
+            For GPAI models placed on the market before 2 August 2025, Article 111(3) gives providers
+            until 2 August 2027 to comply with the applicable obligations. The AI Office&rsquo;s
+            powers include:
           </p>
           <div className="grid sm:grid-cols-2 gap-3">
             {POWERS.map((p) => (
@@ -179,37 +180,38 @@ export default function GpaiEvidencePack() {
           </div>
         </section>
 
-        {/* Section: why independent beats self-attested */}
+        {/* Section: assess independence and evidence quality */}
         <section className="mb-10 rounded-xl border border-zinc-800 bg-zinc-900/40 p-6">
-          <h2 className="text-xl font-semibold mb-2">Why independent beats self-attested</h2>
+          <h2 className="text-xl font-semibold mb-2">Assess independence and evidence quality</h2>
           <p className="text-zinc-400 text-sm leading-relaxed mb-3">
-            Self-assessment has a structural problem: the party with the strongest interest in the
-            answer is the party producing it. That is not an accusation of bad faith — it is why
-            audited accounts exist, and why a regulator reading a self-attestation must discount it.
+            A provider&apos;s role and interests are relevant context. Assess who produced the
+            evidence and its methods, recorded inputs, signatures and correction history separately.
+            Neither self-assessment nor third-party authorship guarantees those properties or
+            determines regulatory acceptance.
           </p>
           <ul className="space-y-2 text-sm text-zinc-400">
             <li className="flex gap-2">
               <span className="text-emerald-400 shrink-0">·</span>
               <span>
-                <strong className="text-zinc-300">Self-attested:</strong> unsigned prose, produced by
-                the provider, method undisclosed, unrepeatable, silently revisable.
+                <strong className="text-zinc-300">Provider-produced evidence:</strong> can be signed,
+                method-disclosed and reproducible. Check the actual records and conflicts rather
+                than inferring those properties from the label.
               </span>
             </li>
             <li className="flex gap-2">
               <span className="text-emerald-400 shrink-0">·</span>
               <span>
-                <strong className="text-zinc-300">Independently measured:</strong> signed cards,
-                produced by a third party with a published method, deterministic and re-runnable,
-                corrected in public when wrong — and verifiable by the regulator without trusting
-                either of us.
+                <strong className="text-zinc-300">Third-party measurement:</strong> inspect the
+                publisher&apos;s identity, conflicts, methods, inputs and verification path. A valid
+                signature does not itself establish independence or measurement truth.
               </span>
             </li>
             <li className="flex gap-2">
               <span className="text-emerald-400 shrink-0">·</span>
               <span>
-                <strong className="text-zinc-300">Honest about limits:</strong> what we have not
-                measured is stamped UNMEASURED. A pack that admits its gaps is worth more to a
-                supervisor than one that claims completeness.
+                <strong className="text-zinc-300">Coverage limits:</strong> identify the measured and
+                UNMEASURED scope. The reviewer decides whether the evidence is sufficient for its
+                purpose.
               </span>
             </li>
           </ul>
