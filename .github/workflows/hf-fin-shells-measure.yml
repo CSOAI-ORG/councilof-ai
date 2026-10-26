@@ -20,6 +20,14 @@ on:
         description: "Successful RunPod intake run ID (required only for runpod)"
         type: string
         required: false
+      supersede_scope:
+        description: "runpod only: model-axis (default) or comparison-group (never retire a card from another bank/instrument group)"
+        type: choice
+        options:
+          - model-axis
+          - comparison-group
+        default: model-axis
+        required: false
       mill_run_id:
         description: "Exact body.run_id to sign when target=mill; required to avoid signing the whole legacy inbox"
         type: string
@@ -49,6 +57,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install Node dependencies (esbuild required by commit-board.mjs via llms-txt.mjs)
+        run: npm ci --no-audit --no-fund
       - name: Prepare only the verified RunPod artifact
         if: inputs.target == 'runpod'
         env:
@@ -108,6 +121,7 @@ jobs:
       - name: sign compact runs
         env:
           SIGN_TARGET: ${{ inputs.target || 'financial' }}
+          SUPERSEDE_SCOPE: ${{ inputs.supersede_scope || 'model-axis' }}
         run: |
           set -euo pipefail
           T="$SIGN_TARGET"
@@ -117,7 +131,8 @@ jobs:
             python3 scripts/sign_mill_cards.py --source-dir "$RUNNER_TEMP/mill-run-selected" \
               --evidence-dir "$GITHUB_WORKSPACE/public/interop/mill-evidence" --require-hub-admission
           elif [ "$T" = "runpod" ]; then
-            python3 scripts/sign_mill_cards.py --source-dir "$RUNNER_TEMP/runpod-signing-approved/cards"
+            python3 scripts/sign_mill_cards.py --source-dir "$RUNNER_TEMP/runpod-signing-approved/cards" \
+              --supersede-scope "$SUPERSEDE_SCOPE"
           else
             python3 scripts/sign_financial_runs.py
           fi

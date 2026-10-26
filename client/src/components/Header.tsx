@@ -17,7 +17,6 @@ import {
 // 30 Sep 2026 (council-os-watch): the old header search (a model call) is retired. ⌘K / Ctrl-K opens the palette
 // (components/ask/CommandPalette.tsx, loaded on first use) whose search falls through to Ask GSPC.
 import { openAsk, openPalette } from '@/components/ask/askBus';
-import CorpusChip from '@/components/CorpusChip';
 import { BOOK_MEASUREMENT_LINK, PRIMARY_LINKS, navigation } from '@/components/HeaderNav';
 export { HOME_NAV, ARCHIVE_NAV } from '@/components/HeaderNav';
 
@@ -212,7 +211,6 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
 
           <div className="hidden md:flex flex-nowrap items-center gap-2 2xl:gap-3">
             <Button asChild variant="ghost" size="sm" className="hidden rounded-xl font-semibold text-emerald-800 hover:bg-emerald-50 lg:inline-flex"><Link href="/dashboard?tab=verify">Verify</Link></Button>
-            <CorpusChip />
             <button
               type="button"
               onClick={() => openAsk()}
