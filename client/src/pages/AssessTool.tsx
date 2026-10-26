@@ -24,7 +24,8 @@
  * assessment IS published as a door, the test reds and this copy must change.
  */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { rasBookingFromCatalog, RAS_BOOKING_MAILTO } from "@/lib/rasBooking";
 import { motion } from "framer-motion";
 import { ShieldCheck, SearchCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -62,6 +63,14 @@ export default function AssessTool() {
   const [lead, setLead] = useState({ email: "", name: "" });
   const [leadSent, setLeadSent] = useState(false);
   const [leadError, setLeadError] = useState<string | null>(null);
+  const [ras, setRas] = useState({ href: RAS_BOOKING_MAILTO, live: false });
+
+  useEffect(() => {
+    let on = true;
+    fetch("/catalog.json").then((r) => (r.ok ? r.json() : null)).catch(() => null)
+      .then((c) => { if (on) setRas(rasBookingFromCatalog(c)); });
+    return () => { on = false; };
+  }, []);
 
   async function sendLead() {
     setLeadError(null);
@@ -116,6 +125,16 @@ export default function AssessTool() {
           </a>
           <span> — enquiry for a signed pack. Never a bought rank.</span>
         </p>
+
+        <div className="mb-8">
+          <a href={ras.href} data-testid="ras-booking-cta"
+            className="inline-flex items-center rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-800">
+            {ras.live ? "Book a RAS measurement" : "Request a RAS measurement booking by email"}
+          </a>
+          <p className="mt-2 text-xs text-muted-foreground">
+            Measurement only, not certification. Terms are in <a href="/catalog.json" className="underline">/catalog.json</a> (ras-booking).
+          </p>
+        </div>
 
         <Card className="mb-6">
           <CardHeader><CardTitle>Describe your AI system</CardTitle></CardHeader>

@@ -100,25 +100,49 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install the llms generator's build dependency
+        if: steps.candidate.outputs.exists == 'true'
+        run: npm install --no-save --no-audit --no-fund esbuild@0.25.0
+
+      # opentimestamps-client is needed by scripts/ots_manifest_rebuild.py, which the
+      # reconcile step below now runs. It used to be installed after that step, because
+      # the reconcile step did not rebuild the manifest.
+      - name: Install witness dependencies
+        if: steps.candidate.outputs.exists == 'true'
+        run: pip install -q cryptography opentimestamps-client
+
       - name: Reconcile the rolling candidate with current master
         if: steps.candidate.outputs.exists == 'true'
         run: |
           set -euo pipefail
           git config user.name "csoai-public-root"
           git config user.email "board@csoai.org"
-          git fetch origin master
           before=$(git rev-parse HEAD)
-          # A real content conflict fails the workflow closed. Never choose a
-          # side automatically for root, proof, or witness bytes.
-          git merge --no-edit origin/master
+          # The reconcile TOOL is taken from master; the TREE it works on is the candidate's.
+          # This job checks out public-root/pending, a rolling branch that has not merged
+          # master yet, so the very first reconcile after this lands is the one that does
+          # not have the tool in its tree. Without this the fix would fail on the very run
+          # it was made for.
+          # An EXPLICIT refspec, so refs/remotes/origin/master is actually updated. A plain
+          # `git fetch origin master` writes FETCH_HEAD only and leaves the tracking ref
+          # where it was, which would reconcile the candidate against whichever master the
+          # checkout happened to see.
+          git fetch origin +refs/heads/master:refs/remotes/origin/master
+          if [ -f scripts/root_candidate_reconcile.py ]; then
+            reconcile=scripts/root_candidate_reconcile.py
+          else
+            reconcile=/tmp/root_candidate_reconcile.py
+            git show origin/master:scripts/root_candidate_reconcile.py > "$reconcile"
+          fi
+          # The merge, the derived-view conflict resolution and the rebuild order live in
+          # that script, which has a --selftest that proves each failure goes red. The
+          # logic is not inline shell here, because inline shell in the root path is
+          # exactly what failed for nine hours without anyone seeing why.
+          python3 "$reconcile" --repo .
           after=$(git rev-parse HEAD)
           if [ "$before" != "$after" ]; then
             git push origin "HEAD:public-root/pending"
           fi
-
-      - name: Install witness dependencies
-        if: steps.candidate.outputs.exists == 'true'
-        run: pip install -q cryptography opentimestamps-client
 
       - name: Upgrade the exact candidate proof
         if: steps.candidate.outputs.exists == 'true'
@@ -186,6 +210,12 @@ jobs:
           # pr-gates' llms-txt-derived test fails closed when they lag (hit 2026-10-12: #2967
           # halted on "expected llms.txt to contain '2026-10-12T09:03:17Z'"). Regenerate them
           # from their producer in the same commit, exactly as public-root.yml's re-stamp does.
+          # The llms views quote the manifest's counts and as_of, so rebuilding the
+          # manifest without rebuilding them leaves the views one cycle stale. That is
+          # exactly what pr-gates' llms-txt-derived test caught on the candidate head on
+          # 26 Oct 2026: the manifest's as_of 2026-10-26T01:48:57Z appeared 0 times in
+          # llms.txt, so the candidate could not pass the gate and could not merge.
+          # Regenerate the views from the manifest just written.
           node scripts/llms-txt.mjs
           git add public/interop/ots
           git add -- public/llms.txt public/llms-full.txt
@@ -213,34 +243,27 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
           URL: ${{ steps.candidate.outputs.url }}
+          BRANCH: public-root/pending
         run: |
           set -euo pipefail
-          head=$(gh pr view "$URL" --repo "$REPO" --json headRefOid --jq .headRefOid)
-          runs() {
-            gh run list --repo "$REPO" --workflow pr-gates.yml --branch public-root/pending --limit 50 \
-              --json databaseId,headSha,status,conclusion,createdAt
-          }
-          # Reuse a run on this exact commit that passed or is still going; a failed one is retried.
-          run_id=$(runs | jq -r --arg sha "$head" \
-            '[.[] | select(.headSha == $sha and (.status != "completed" or .conclusion == "success"))] | .[0].databaseId // ""')
-          if [ -z "$run_id" ]; then
-            since=$(date -u -d '1 minute ago' +%Y-%m-%dT%H:%M:%SZ)
-            gh workflow run pr-gates.yml --repo "$REPO" --ref public-root/pending
-            for _ in $(seq 1 30); do
-              sleep 10
-              run_id=$(runs | jq -r --arg sha "$head" --arg since "$since" \
-                '[.[] | select(.headSha == $sha and .createdAt >= $since)] | .[0].databaseId // ""')
-              [ -n "$run_id" ] && break
-            done
+          # The gate's LOGIC lives in scripts/public_root_promotion_gate.py, not inline shell
+          # here: inline shell in the root path is exactly what failed on 2026-10-26 without
+          # anyone seeing why. The shell read the pull request's headRefOid, which LAGS the
+          # branch by seconds after this job pushes the upgraded proof, so it read the PREVIOUS
+          # commit (9e6f0cc70) while the branch had already moved to d43b1a605 - and watched the
+          # gates for those older bytes. The promotion halted with "HALT: pr-gates run
+          # 40301090584 did not pass on 9e6f0cc70" even though the proof was CONFIRMED_BITCOIN
+          # and the candidate's gates were queued on the exact head. The tool reads the BRANCH
+          # REF, re-reads it every cycle, and refuses to merge bytes whose gates did not run.
+          # It ships with its own selftest, proven able to go red.
+          #
+          # The TOOL is taken from master; the TREE it works on is the candidate's. This job
+          # checks out public-root/pending, a rolling branch that has not merged master yet.
+          git fetch origin +refs/heads/master:refs/remotes/origin/master
+          if [ -f scripts/public_root_promotion_gate.py ]; then
+            gate=scripts/public_root_promotion_gate.py
+          else
+            gate=/tmp/public_root_promotion_gate.py
+            git show origin/master:scripts/public_root_promotion_gate.py > "$gate"
           fi
-          if [ -z "$run_id" ]; then
-            echo "HALT: no pr-gates run appeared for $head; not merging" >&2
-            exit 1
-          fi
-          echo "waiting for pr-gates run $run_id on $head"
-          if ! gh run watch "$run_id" --repo "$REPO" --exit-status --interval 30 > /dev/null; then
-            echo "HALT: pr-gates run $run_id did not pass on $head; not merging. The candidate stays open for a human." >&2
-            exit 1
-          fi
-          echo "pr-gates run $run_id passed on $head; merging exactly that commit"
-          gh pr merge "$URL" --repo "$REPO" --squash --match-head-commit "$head"
+          python3 "$gate" --repo "$REPO" --branch "$BRANCH" --pr "$URL"
