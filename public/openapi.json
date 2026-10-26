@@ -1,6 +1,228 @@
 {
   "components": {
     "schemas": {
+      "CSOAIVerificationInput": {
+        "anyOf": [
+          {
+            "type": "object"
+          },
+          {
+            "type": "string"
+          }
+        ],
+        "description": "A supported record object, its JSON string, or an allowed HTTPS record URL. Objects may wrap the input in card, record, json, url or input (first non-null field in that order). Unreadable input returns UNCHECKABLE, never an invented verdict."
+      },
+      "CSOAIVerificationInstructions": {
+        "not": {
+          "required": [
+            "state"
+          ]
+        },
+        "properties": {
+          "also_reads": {
+            "type": "string"
+          },
+          "card_v0": {
+            "type": "string"
+          },
+          "endpoint": {
+            "const": "/api/verify"
+          },
+          "free": {
+            "const": true
+          },
+          "how": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "const": true
+          },
+          "note": {
+            "type": "string"
+          },
+          "pinned_keys": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "record_url": {
+            "description": "Instructions for the optional query parameter, not a fetched record URL.",
+            "type": "string"
+          },
+          "rule": {
+            "type": "string"
+          },
+          "schema": {
+            "const": "csoai.verify/0.1"
+          },
+          "states": {
+            "properties": {
+              "INVALID": {
+                "type": "string"
+              },
+              "UNCHECKABLE": {
+                "type": "string"
+              },
+              "VALID": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "VALID",
+              "INVALID",
+              "UNCHECKABLE"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "schema",
+          "endpoint",
+          "states",
+          "free",
+          "not_a_certification"
+        ],
+        "type": "object"
+      },
+      "CSOAIVerificationResult": {
+        "properties": {
+          "artifact": {
+            "description": "Artifact metadata copied from a POST signed-run payload, without validating its fields or retained artifact bytes.",
+            "type": [
+              "object",
+              "array",
+              "null"
+            ]
+          },
+          "checks": {
+            "items": {
+              "properties": {
+                "check": {
+                  "type": "string"
+                },
+                "code": {
+                  "type": "string"
+                },
+                "detail": {
+                  "type": "string"
+                },
+                "ok": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "check",
+                "ok",
+                "code",
+                "detail"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "did": {
+            "description": "Signer declared by a POST signed-run record; an unpinned or malformed declaration can be echoed.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "family": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "fetched": {
+            "description": "Exact served-byte digest when read. Null on URL refusal or fetch failure; redirect refusal supplies only HTTP status and final URL.",
+            "properties": {
+              "bytes": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "final_url": {
+                "type": "string"
+              },
+              "http_status": {
+                "type": "integer"
+              },
+              "sha256": {
+                "pattern": "^[0-9a-f]{64}$",
+                "type": "string"
+              }
+            },
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "free": {
+            "const": true
+          },
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "not_a_certification": {
+            "const": true
+          },
+          "note": {
+            "type": "string"
+          },
+          "payload_sha256": {
+            "description": "Digest computed for a POST signed-run payload when that check is reached.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reasons": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "record_url": {
+            "type": "string"
+          },
+          "rule": {
+            "type": "string"
+          },
+          "schema": {
+            "const": "csoai.verify/0.1"
+          },
+          "state": {
+            "description": "VALID authenticates the supported record under pinned keys; INVALID names a failure of its rule; UNCHECKABLE means the check could not be completed. No state certifies a system or proves claims inside the record.",
+            "enum": [
+              "VALID",
+              "INVALID",
+              "UNCHECKABLE"
+            ],
+            "type": "string"
+          },
+          "trust_anchor": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "schema",
+          "state",
+          "not_a_certification"
+        ],
+        "type": "object"
+      },
       "X402Accept": {
         "properties": {
           "amount": {
@@ -176,8 +398,8 @@
       "url": "https://creativecommons.org/licenses/by/4.0/"
     },
     "title": "Council of AI \u2014 Public API",
-    "version": "0.3+4a141228c8ec",
-    "x-guidance": "Free board: GET /api/gspc \u2014 quote totals.lid verbatim, never compose a count. Paid doors are the operations carrying x-payment-info: GET without payment answers HTTP 402 with the x402 v2 challenge (accepts[0]: scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31); pay it and retry with the X-PAYMENT header. Required query parameters carry an example that reaches the 402. Free previews are named per door under x-csoai.free_preview. Catalog: https://councilof.ai/.well-known/x402.json and https://councilof.ai/api/x402. Verify is free: https://councilof.ai/gspc-verify. Offer & Receipt emission is conditional: a 402 carries server-signed offers only when the Pages signing key is available; a settled 200 carries a signed receipt only when settlement exposes the required payer and transaction evidence and that key is available. The extension uses JWS/EdDSA, kid did:web:csoai.org#board-attestation-1, published at https://csoai.org/.well-known/did.json. Check either without trusting this document: POST it to /api/receipts/verify, or download https://councilof.ai/verifier/verify_receipt.py; default mode reads the public DID document, and a retained key document allows offline replay. 23 axes measured \u00b7 14 model fleets \u00b7 0 separated leaders \u00b7 9 public leader scores \u00b7 9 fact runs \u00b7 TIE is TIE \u00b7 not a certificate."
+    "version": "0.3+0627e989beb4",
+    "x-guidance": "Free board: GET /api/gspc \u2014 quote totals.lid verbatim, never compose a count. Operations carrying x-payment-info have a paid mode: request their x-csoai.door URL to select it. Without payment, that mode answers HTTP 402 with the x402 v2 challenge (accepts[0]: scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31); pay it and retry with the X-PAYMENT header. Required query parameters alone may select a free view on mixed-mode operations. Free previews are named per door under x-csoai.free_preview. Catalog: https://councilof.ai/.well-known/x402.json and https://councilof.ai/api/x402. Verify is free: https://councilof.ai/gspc-verify. Offer & Receipt emission is conditional: a 402 carries server-signed offers only when the Pages signing key is available; a settled 200 carries a signed receipt only when settlement exposes the required payer and transaction evidence and that key is available. The extension uses JWS/EdDSA, kid did:web:csoai.org#board-attestation-1, published at https://csoai.org/.well-known/did.json. Check either without trusting this document: POST it to /api/receipts/verify, or download https://councilof.ai/verifier/verify_receipt.py; default mode reads the public DID document, and a retained key document allows offline replay. 23 axes measured \u00b7 14 model fleets \u00b7 0 separated leaders \u00b7 9 public leader scores \u00b7 9 fact runs \u00b7 TIE is TIE \u00b7 not a certificate."
   },
   "openapi": "3.1.0",
   "paths": {
@@ -1791,17 +2013,16 @@
     },
     "/api/evidence-bundle": {
       "get": {
-        "description": "OSCAL evidence bundle for one obligation: EU AI Act Article 50/53, DORA or EU-CRA. Returns selected card objects with signature fields, any retained inclusion proofs, an OSCAL wrapper and assembly manifest. Does not verify input-card signatures. Reports manifest signing status and any unsigned reason. States: ASSEMBLED or ASSEMBLED-EMPTY; zero selected cards stays zero. Supported-card verification is free at /gspc-verify. No new measurement or conformity determination. Preview = obligation(+subject) without bundle=1. Paid tier requires obligation + bundle=1 (HTTP 402). Incomplete bundle alone stays HTTP 400.",
+        "description": "OSCAL evidence bundle for one obligation: EU AI Act Article 50/53, DORA or EU-CRA. Returns selected card objects with signature fields, any retained inclusion proofs, an OSCAL wrapper and assembly manifest. Does not verify input-card signatures. Reports manifest signing status and any unsigned reason. States: ASSEMBLED or ASSEMBLED-EMPTY; zero selected cards stays zero. Supported-card verification is free at /gspc-verify. No new measurement or conformity determination. A recognized obligation without bundle=1 selects the free preview. Paid OSCAL assembly requires a recognized obligation + bundle=1 (HTTP 402 without payment). Missing or unknown obligations without a payment header return a 402 discovery listing, not an assembled bundle; with a payment header they return 400 or 404 respectively before settlement. For EU obligations, format=procurement is a separate free view returning Article 53 and Article 50 rows together; it rejects bundle=1 and non-EU obligations with HTTP 400. This combined free view does not change the single-obligation paid assembly contract.",
         "operationId": "x402_evidence_bundle",
         "parameters": [
           {
-            "description": "Obligation the evidence bundle maps to (required with bundle=1 for the paid tier). Incomplete probes (bundle alone) stay HTTP 400.",
+            "description": "Required recognized obligation for the documented preview and assembly modes. format=procurement supports article-50 and article-53 only.",
             "example": "article-50",
             "in": "query",
             "name": "obligation",
             "required": true,
             "schema": {
-              "const": "article-50",
               "enum": [
                 "article-50",
                 "article-53",
@@ -1812,11 +2033,11 @@
             }
           },
           {
-            "description": "Paid-tier gate. Must be the string 1 together with the other required params to request the paid artefact (HTTP 402). Without bundle=1 the door stays on free preview / validation.",
+            "description": "Optional paid-mode selector. Set to 1 with obligation to request paid OSCAL assembly (HTTP 402 before payment). Omit for the free preview and for format=procurement; procurement with bundle=1 returns HTTP 400.",
             "example": "1",
             "in": "query",
             "name": "bundle",
-            "required": true,
+            "required": false,
             "schema": {
               "const": "1",
               "type": "string"
@@ -1830,6 +2051,18 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "description": "Optional free EU procurement view. Use procurement only with obligation=article-50 or article-53 and omit bundle=1. Returns Article 53 and Article 50 rows together. Incompatible combinations return HTTP 400; these cross-parameter rules are not expressible by the individual parameter schemas.",
+            "in": "query",
+            "name": "format",
+            "required": false,
+            "schema": {
+              "enum": [
+                "procurement"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1837,12 +2070,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "OSCAL evidence bundle for one obligation: EU AI Act Article 50/53, DORA or EU-CRA. Returns selected card objects with signature fields, any retained inclusion proofs, an OSCAL wrapper and assembly manifest. Does not verify input-card signatures. Reports manifest signing status and any unsigned reason. States: ASSEMBLED or ASSEMBLED-EMPTY; zero selected cards stays zero. Supported-card verification is free at /gspc-verify. No new measurement or conformity determination.",
+                  "description": "Successful free preview or EU procurement view, or paid OSCAL assembly after settlement. The query selects the mode; format=procurement does not request paid assembly. Paid assembly: OSCAL evidence bundle for one obligation: EU AI Act Article 50/53, DORA or EU-CRA. Returns selected card objects with signature fields, any retained inclusion proofs, an OSCAL wrapper and assembly manifest. Does not verify input-card signatures. Reports manifest signing status and any unsigned reason. States: ASSEMBLED or ASSEMBLED-EMPTY; zero selected cards stays zero. Supported-card verification is free at /gspc-verify. No new measurement or conformity determination.",
                   "type": "object"
                 }
               }
             },
-            "description": "OSCAL evidence bundle for one obligation: EU AI Act Article 50/53, DORA or EU-CRA. Returns selected card objects with signature fields, any retained inclusion proofs, an OSCAL wrapper and assembly manifest. Does not verify input-card signatures. Reports manifest signing status and any unsigned reason. States: ASSEMBLED or ASSEMBLED-EMPTY; zero selected cards stays zero. Supported-card verification is free at /gspc-verify. No new measurement or conformity determination."
+            "description": "Successful free preview or EU procurement view, or paid OSCAL assembly after settlement. The query selects the mode; format=procurement does not request paid assembly. Paid assembly: OSCAL evidence bundle for one obligation: EU AI Act Article 50/53, DORA or EU-CRA. Returns selected card objects with signature fields, any retained inclusion proofs, an OSCAL wrapper and assembly manifest. Does not verify input-card signatures. Reports manifest signing status and any unsigned reason. States: ASSEMBLED or ASSEMBLED-EMPTY; zero selected cards stays zero. Supported-card verification is free at /gspc-verify. No new measurement or conformity determination."
+          },
+          "400": {
+            "description": "Free format=procurement rejects bundle=1 and non-EU obligations; no paid assembly is performed by this view."
           },
           "402": {
             "content": {
@@ -2066,6 +2302,7 @@
           },
           "door": "https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1",
           "free_preview": "https://councilof.ai/api/evidence-bundle?obligation=article-50",
+          "free_procurement": "https://councilof.ai/api/evidence-bundle?obligation=article-53&format=procurement",
           "never": [
             "a conformity determination",
             "satisfied/not-satisfied findings",
@@ -8891,32 +9128,204 @@
     },
     "/api/verify": {
       "get": {
-        "description": "POST /api/verify \u2014 verify a posted measurement card. GET explains how.",
+        "description": "Without record_url, returns instructions without judging a record. With record_url, re-fetches the exact served bytes and verifies a supported Council record, including measurement cards and card-v0/v1 receipts, under pinned keys. Only HTTPS councilof.ai, csoai.org and www.csoai.org URLs are fetched; off-origin redirects are refused. Signed-run evidence records are supported by POST. Verification is free and is never certification.",
         "operationId": "get__api_verify",
+        "parameters": [
+          {
+            "description": "Published record to fetch and verify. The example is the historical measurement card advertised by the discovery manifest, not a claim about current board freshness. Omit this parameter to read instructions.",
+            "example": "https://councilof.ai/signed/cards/66856aca4a1f9390f0f51d89b8b96d984ab902852ed77b0254730758260ad1da.json",
+            "in": "query",
+            "name": "record_url",
+            "required": false,
+            "schema": {
+              "format": "uri",
+              "pattern": "^https://(councilof\\.ai|csoai\\.org|www\\.csoai\\.org)/",
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/CSOAIVerificationInstructions"
+                    },
+                    {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/CSOAIVerificationResult"
+                        },
+                        {
+                          "required": [
+                            "free",
+                            "record_url",
+                            "fetched"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
             },
-            "description": "OK"
+            "description": "Instructions when record_url is absent; otherwise VALID, INVALID or UNCHECKABLE. An upstream non-200 response, oversized record or non-JSON record also returns UNCHECKABLE at HTTP 200."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/CSOAIVerificationResult"
+                        },
+                        {
+                          "required": [
+                            "free",
+                            "record_url",
+                            "fetched"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "properties": {
+                        "reason": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "const": "UNCHECKABLE"
+                        }
+                      },
+                      "required": [
+                        "reason"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Record URL or final redirect is outside the allowed HTTPS origins; no record body is read."
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/CSOAIVerificationResult"
+                        },
+                        {
+                          "required": [
+                            "free",
+                            "record_url",
+                            "fetched"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "properties": {
+                        "reason": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "const": "UNCHECKABLE"
+                        }
+                      },
+                      "required": [
+                        "reason"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "The record could not be fetched, including timeout; state is UNCHECKABLE and fetched is null."
           }
         },
         "security": [],
-        "summary": "POST /api/verify \u2014 verify a posted measurement card. GET explains how."
+        "summary": "Verify a published record for free, or read verifier instructions",
+        "x-csoai-lifecycle": "LIVE"
       },
       "post": {
-        "description": "POST /api/verify \u2014 verify a posted measurement card. GET explains how.",
+        "description": "POST a supported record object or JSON string, directly or in a supported wrapper. Allowed HTTPS record URLs are also accepted. Supported families include measurement cards, card-v0/v1 receipts and csoai.signed-run/0.1 records, each using its existing pinned-key rule. For signed runs, compare retained record bytes with artifact.sha256 yourself; this endpoint checks the payload signature. Unsupported shapes are UNCHECKABLE. No payment or account is required; verification certifies nothing.",
         "operationId": "post__api_verify",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "examples": {
+                "published_record_url": {
+                  "summary": "Verify the manifest's published historical measurement-card example",
+                  "value": {
+                    "card": "https://councilof.ai/signed/cards/66856aca4a1f9390f0f51d89b8b96d984ab902852ed77b0254730758260ad1da.json"
+                  }
+                }
+              },
+              "schema": {
+                "$ref": "#/components/schemas/CSOAIVerificationInput"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/CSOAIVerificationResult"
+                    },
+                    {
+                      "required": [
+                        "free"
+                      ]
+                    }
+                  ]
+                }
+              }
             },
-            "description": "OK"
+            "description": "The record's three-state verdict under its existing verification rule; verification remains free."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/CSOAIVerificationResult"
+                    },
+                    {
+                      "properties": {
+                        "reason": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "const": "UNCHECKABLE"
+                        }
+                      },
+                      "required": [
+                        "reason"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Malformed or unreadable input, disallowed URL, or a record URL that could not be read; state is UNCHECKABLE. This early error does not carry a free field."
           }
         },
         "security": [],
-        "summary": "POST /api/verify \u2014 verify a posted measurement card. GET explains how."
+        "summary": "Verify a posted measurement or signed evidence record for free",
+        "x-csoai-lifecycle": "LIVE"
       }
     },
     "/api/verify-batch": {
