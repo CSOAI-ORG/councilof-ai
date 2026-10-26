@@ -90,7 +90,7 @@ export function machineProof(root: ReadState<RootPayload>): Proof {
   if (root.kind === "loading") return PENDING;
   const r = rootSummary(root.payload);
   if (!r) return { text: "the root published no timestamp — nothing is shown in its place", live: false };
-  return { text: `the root on this page was rebuilt and re-signed at ${r.asOf}`, live: true };
+  return { text: `the root on this page reports a rebuild time of ${r.asOf}; inspect its stated signature status`, live: true };
 }
 
 interface Card {
@@ -156,7 +156,7 @@ export function strengthCards({
   return [
     {
       n: "01",
-      title: "Nobody we measure is paying us",
+      title: "Nobody can buy a place or a score",
       body:
         "We are an independent measurement body. The tests are frozen and published before a run, the grading is done by a rule rather than by another AI, and no vendor can buy a place on the board, lift a score or have one taken down. Re-checking any result costs nothing and always will.",
       proof: independenceProof(),
@@ -166,11 +166,11 @@ export function strengthCards({
       n: "02",
       title: "Our bad results are on the board too",
       body:
-        "The easy thing is to publish the wins. A measurement body is only worth reading if the weak scores are there beside them — including the ones our own models earned. They are, with the same signature and the same test behind them.",
+        "We publish weak results alongside stronger ones, including results from our own models. Read each result with its named instrument, signing status and stated verification limits.",
       proof: {
         // Counted across all 335 signed bodies, not asserted: the set runs from 0.0 upward, and
         // our own models are in the low end of it. No superlative, because nobody can check one.
-        text: "our own models are published at single-digit scores and at zero, signed exactly like every other result",
+        text: "Inspect own-model results, their attestation state and stated verification limits",
         live: true,
       },
       link: { href: "#weak-score", label: "See one of our own low scores, checked in your browser" },
@@ -185,11 +185,11 @@ export function strengthCards({
     },
     {
       n: "04",
-      title: "The history cannot be quietly rewritten",
+      title: "Retained hashes expose changes to covered bytes",
       body:
-        "Published records are hashed into a tree whose root is signed. Change a covered record and the root stops matching. Separately, artifacts are submitted to OpenTimestamps. The public manifest distinguishes proofs carrying Bitcoin block-header attestations from calendar-pending submissions; independent verification must also check the block header and the named subject file.",
+        "A signed root can bind the hashes of covered records. Preserve the original bytes and verify the signature and inclusion proof for the relevant record. Check the stated signing status; signature presence alone is not verification. Separately, the OpenTimestamps manifest distinguishes Bitcoin block-header attestations from calendar-pending submissions. Independent proof verification must also check the block header and named subject file.",
       proof: anchorProof(root, ots),
-      link: { href: "/root.json", label: "Open the signed root", external: true },
+      link: { href: "/root.json", label: "Open the public root", external: true },
     },
     {
       n: "05",
@@ -203,7 +203,7 @@ export function strengthCards({
       n: "06",
       title: "It is a machine, not a report someone writes",
       body:
-        "The board re-measures, the evidence tree is rebuilt, the root is re-signed and the ledgers are re-read on a schedule, without anyone typing a number. That is why the figures on this page are read from the endpoints as you load it rather than written into it.",
+        "This page reads board, root and ledger data from their endpoints. Read each source with its stated date, method and signing status. A successful read or a newer timestamp alone does not establish a new measurement, verified signature or current evidence.",
       proof: machineProof(root),
       link: { href: "#machine-surface", label: "Every door this machine serves" },
     },
@@ -255,13 +255,14 @@ export default function HomeStrengths({
         >
           <div>
             <p className="text-2xl font-black leading-tight tracking-tight text-foreground sm:text-[1.75rem]">
-              Re-checking any of this costs nothing, needs no account, and always will.
+              Free verification, with each record's limits visible.
             </p>
             <p className="measure mt-3 text-[15px] leading-relaxed text-muted-foreground">
-              Not a trial, not a tier and not a limit we can quietly lower later. The tests, the
-              grader, the records and the key are all published, so the check runs on your machine
-              whether we are still here or not. What we charge for is work we do on request — never
-              a score, never a place on the board, and never permission to look.
+              Keep the original record bytes and a previously pinned issuer key for offline
+              integrity checks on supported signed formats. The browser path may fetch public key
+              metadata. Unsigned, unsupported or unavailable evidence can remain UNCHECKABLE;
+              integrity does not establish truth or freshness. We charge for work on request —
+              never a favourable score or a place on the board.
             </p>
           </div>
           <ul className="flex shrink-0 flex-col gap-2.5 text-sm font-bold lg:w-64">
@@ -275,7 +276,7 @@ export default function HomeStrengths({
             </li>
             <li>
               <a href="/signed/HOW-TO-VERIFY.md" className="text-emerald-800 underline underline-offset-4 dark:text-emerald-300">
-                Do it offline, without our code
+                Read the offline verification method
               </a>
             </li>
             <li>
