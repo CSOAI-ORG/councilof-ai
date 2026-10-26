@@ -255,7 +255,7 @@ export default function GSPCVerify() {
             Free verification · no account
           </p>
           <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">
-            Paste a signed card. Recompute it here.
+            Check a signed measurement record.
           </h1>
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
             Paste a signed card or try a published example below. The check runs in your browser;
@@ -318,7 +318,7 @@ export default function GSPCVerify() {
                   : "border border-emerald-500/30 text-emerald-200 hover:bg-emerald-500/10"
               }`}
             >
-              Estate card
+              Check one record
             </button>
             <button
               type="button"
@@ -331,7 +331,7 @@ export default function GSPCVerify() {
                   : "border border-amber-400/30 text-amber-200 hover:bg-amber-500/10"
               }`}
             >
-              Public-root catalogue
+              Check collection membership
             </button>
           </div>
         </div>
@@ -340,10 +340,10 @@ export default function GSPCVerify() {
       <div className="mx-auto max-w-4xl px-6 py-12 space-y-16">
         {mode === "public-root" && (
           <section>
-            <h2 className="text-2xl font-bold text-amber-200">Public-root card + inclusion</h2>
+            <h2 className="text-2xl font-bold text-amber-200">Record and proof of collection membership</h2>
             <p className="mt-1 text-[13px] text-emerald-100/60">
-              The root envelope is signed and verified here. Its leaves may separately be signed
-              or unsigned; inclusion alone never changes that leaf state.
+              Check the collection's signature here and read the displayed result. Individual records
+              may be signed or unsigned; collection membership alone never changes their signing status.
             </p>
             <div className="mt-4">
               <PublicRootCatalogue variant="dark" />
@@ -353,7 +353,7 @@ export default function GSPCVerify() {
 
         {mode === "estate" && (
         <section>
-          <h2 className="text-2xl font-bold text-emerald-50">Verify a single estate record</h2>
+          <h2 className="text-2xl font-bold text-emerald-50">Check one measurement record</h2>
           <p className="mt-1 text-[13px] text-emerald-100/60">
             Paste any one estate record — hash and signature are recomputed here, in your browser,
             against the published keys. This page does not save pasted records or their results.
@@ -461,7 +461,7 @@ export default function GSPCVerify() {
         {/* LIVING ATTESTATION TABLES — from GET /api/gspc */}
         {boardData && (
           <section id="board-stamp" className="scroll-mt-24">
-            <h2 className="text-2xl font-bold text-emerald-50">Board stamp — living board, not your card</h2>
+            <h2 className="text-2xl font-bold text-emerald-50">The board's published signature</h2>
             <p className="mt-1 text-[13px] text-emerald-100/60">
               This is the published board stamp. It is not a stamp on a card you just pasted.
               Empty fields show exactly why they are empty.
@@ -510,13 +510,13 @@ export default function GSPCVerify() {
         {/* The paid door comes after the free verifier, never before it (audit 2026-09-28 #22). */}
         {mode === "estate" && (
         <section data-testid="governance-retrieve-raas">
-          <h2 className="text-2xl font-bold text-emerald-50">Optional: a commission receipt</h2>
+          <h2 className="text-2xl font-bold text-emerald-50">Optional paid service: a receipt for existing evidence</h2>
           <div className="mt-4 rounded-2xl border border-emerald-400/25 bg-emerald-500/[0.05] p-4 space-y-3">
             <p className="text-[13px] text-emerald-100/80 leading-relaxed">
-              Everything above is free and stays free. The metered commission door issues a receipt
-              for a named subject and re-serves signed cards already on file;
-              it does not run a new measurement. Before paying, check the 402 challenge for the
-              signer state, corpus date and cards available for your subject.
+              Everything above is free and stays free. This paid service issues a receipt
+              for a named subject and provides signed records already on file;
+              it does not run a new measurement. Before paying, check the payment challenge for the
+              signing status, evidence collection date and records available for your subject.
             </p>
             <p className="text-[13px] text-emerald-100/70 leading-relaxed">
               The governance card the free button loads is{" "}

@@ -1,4 +1,4 @@
-# serving-fidelity-worker-v0.2
+# serving-fidelity-worker-v0.3
 
 Built to Measure's ruling of 16 Oct 2026. UNSIGNED, never writes the board. Not merged until Measure reviews.
 
@@ -9,3 +9,10 @@ Built to Measure's ruling of 16 Oct 2026. UNSIGNED, never writes the board. Not 
 - Every row records `raw_response_sha256`, `parse_status` (ok/unparsed/truncated/transport), `method_sha256` (sha of the worker file), `bank_sha256`, `model_digest`, and `worker_version`.
 - `--limit` is a dry run only and can never be a run of record.
 - v0.2 (Measure rulings on #3286): the schema mapping dict→object, float→number, tuple→array is recorded in the method (`BFCL_SCHEMA_MAPPING`) and in run.json. BFCL max_tokens 512 approved. Every row carries bank_sha256 (43a6c708…), gold_sha256 (2ccaded3…), bfcl_upstream_commit f7cf7359 and licence Apache-2.0. The gold stays private.
+- v0.3 (Measure rulings of 17 Oct 2026 on SF-V02-FULL-20261017). New worker sha; applies to new runs only and is never mixed with v0.2 rows or counts.
+  (a) `done_reason=length` is TRUNCATED regardless of content, for both GSM8K and BFCL.
+  (b) GSM8K: before matching, each line has markdown emphasis (`*`, `_`) and backticks stripped, then leading whitespace; lines containing `End with a line:` (prompt echo) are ignored.
+  (c) GSM8K: the last line starting `ANSWER:` must hold exactly ONE number (optional `$`, commas, `%`); trailing text without digits is allowed; any second number = UNPARSED. Leading text before the number = UNPARSED. The `\boxed{...}` fallback (only when there is no ANSWER line) is unchanged.
+  (d) max_tokens 2048, uniform across models and both sub-banks.
+  (e) BFCL otherwise unchanged.
+  Selftest: `scripts/test_serving_fidelity_worker_v03.py` with verbatim raws in `scripts/fixtures/sf_v03_selftest_raws.jsonl` (no gold values).
