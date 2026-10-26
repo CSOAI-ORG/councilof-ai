@@ -13,8 +13,9 @@
  *    a made-up name). Deterministic-facts axes have no fleet, so no leader accuracy.
  *  - a table view of the same rows.
  *
- * The board read is the repo's shared hook (../board/useGspcBoard): one request per
- * page, no seeded fallback payload. If it fails, the strip says so in words.
+ * The board read is the repo's shared hook (../board/useGspcBoard): one shared
+ * minute refresh, no seeded fallback payload. A failed refresh retains and labels
+ * the previous read, without changing its measurement dates.
  *
  * Hugging Face remains a public distribution surface, not a second authority.
  */
@@ -574,7 +575,7 @@ export default function HomeGspcBoard({
   const separated = typeof totals.separated_leads === "number" ? totals.separated_leads : axes.filter((a) => a.separation === "SEPARATED").length;
   const ties = typeof totals.ties === "number" ? totals.ties : axes.filter((a) => a.separation === "TIE").length;
   // Read, not loaded-with-nothing: no payload or an empty axis array means the tiles have no source.
-  const unread = !loading && (!!error || axes.length === 0);
+  const unread = !loading && axes.length === 0;
   // The tiles' as_of is the payload's own measurement stamp (measured_on.date) — never the clock.
   const rawMeasuredOn = (data?.measured_on as { date?: unknown } | undefined)?.date;
   const measuredOn = typeof rawMeasuredOn === "string" && rawMeasuredOn.trim() ? rawMeasuredOn.trim() : null;
@@ -599,12 +600,17 @@ export default function HomeGspcBoard({
             GSPC board
           </h1>
           <p className="mt-1 text-sm font-semibold text-emerald-800 dark:text-emerald-300" data-testid="gspc-public-count" data-ui-region="board-totals">
-            {error
+            {error && !data
               ? "Board is unreachable right now. Empty stays empty."
               : loading
                 ? "Reading the board…"
                 : (count ?? "The board did not publish a count line. Empty stays empty.")}
           </p>
+          {error && data ? (
+            <p role="alert" className="mt-2 text-sm text-amber-800 dark:text-amber-200" data-testid="gspc-refresh-error">
+              The latest board refresh failed. Showing the last successful read with its original measurement dates. {error}
+            </p>
+          ) : null}
         {/* Blueprint 2 Sep §2.3/§6 lid — DERIVED from the live axes (prefers totals.public_leader_count), never typed. */}
         <p className="mt-1 text-sm text-slate-600 dark:text-emerald-100/70" data-testid="gspc-lid">
           {(() => {
@@ -664,7 +670,7 @@ export default function HomeGspcBoard({
             {modelRange ? "Models last tested" : "Last measured"}
           </p>
           <p className="mt-1 text-xl font-black tracking-tight text-slate-950 dark:text-emerald-50">
-            {error ? "UNREACHABLE" : loading ? "…" : range ? range.newest : "UNCHECKABLE"}
+            {error && !data ? "UNREACHABLE" : loading ? "…" : range ? range.newest : "UNCHECKABLE"}
             {range && newestStale ? <StaleChip day={range.newest} /> : null}
           </p>
           <p className="mt-0.5 text-xs text-slate-500 dark:text-emerald-100/55">
@@ -710,7 +716,7 @@ export default function HomeGspcBoard({
       {/* The /api/gspc data is the source of truth and renders directly below;
           the Hugging Face surface remains a distribution mirror. */}
       <div className="mt-4">
-        {error ? (
+        {error && !data ? (
           <p className="text-sm text-slate-600 dark:text-emerald-100/70">The axis strip needs GET /api/gspc and it did not answer. Empty stays empty.</p>
         ) : loading ? (
           <p className="text-sm text-slate-600 dark:text-emerald-100/70">Reading the axes…</p>

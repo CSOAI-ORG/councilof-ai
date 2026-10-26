@@ -69,7 +69,7 @@ const HONESTY_FAQ = [
   },
   {
     q: "What is the difference between MEASURED, UNMEASURED, and REPORTED?",
-    a: "MEASURED is a graded run on our frozen instruments, signed. UNMEASURED is honestly empty, published so the gap is visible. REPORTED is a figure published by someone else, cited and dated, carried for context and left unsigned. A REPORTED number never enters our board and is never averaged with a MEASURED one. Machine-readable set: GET /api/reported.",
+    a: "MEASURED means a completed run under a published method; read its separate attestation state. UNMEASURED is honestly empty, published so the gap is visible. REPORTED is a figure published by someone else, cited and dated, carried for context and left unsigned. A REPORTED number never enters our board and is never averaged with a MEASURED one. Machine-readable set: GET /api/reported.",
   },
 ] as const;
 
@@ -338,8 +338,8 @@ export default function Honesty() {
         {/* ── 5. REPORTED ───────────────────────────────────────────── */}
         <h2 className="mt-12 text-xl font-bold">5. REPORTED — figures by others, never mixed with ours</h2>
         <p className="mt-3 leading-relaxed text-slate-700">
-          Three data states run this estate. <strong>MEASURED</strong> — a graded run on our frozen
-          instruments, signed. <strong>UNMEASURED</strong> — honestly empty, published so the gap is
+          Three data states run this estate. <strong>MEASURED</strong> — a completed run under a published method;
+          read its separate attestation state. <strong>UNMEASURED</strong> — honestly empty, published so the gap is
           visible. <strong>REPORTED</strong> — a figure published by someone else, cited and dated,
           carried for context and left unsigned. A REPORTED number never enters our board and is
           never averaged with a MEASURED one; the human-performance baselines beside our AI figures

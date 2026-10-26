@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ServicePreview } from "@/components/ServicePreview";
-import { Helmet } from "react-helmet-async";
 import { buildCatalogue, type Catalogue } from "@/lib/servicesCatalogue";
+import { BUYING_ENQUIRIES } from "@/lib/buying";
 
 /**
  * /services — the doors the rail actually publishes, read at run time.
@@ -38,7 +38,6 @@ export default function Services() {
   const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
-    document.title = "Supported feeds and evidence doors — Council of AI";
     let alive = true;
     void fetch(MANIFEST, { headers: { accept: "application/json" }, cache: "no-store" })
       .then((r) => {
@@ -61,37 +60,29 @@ export default function Services() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
-      <Helmet>
-        <title>Supported feeds and evidence doors | Council of AI</title>
-        <meta
-          name="description"
-          content="Start with public measurements, the change record and free verification, then read every supported machine feed and evidence door from the live manifest."
-        />
-      </Helmet>
-
       <section className="border-b border-slate-800 px-6 py-14">
         <div className="mx-auto max-w-6xl">
           <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-300">
-            Services · read from {MANIFEST}
+            Services · public data and evidence
           </p>
           <h1 className="mt-3 text-4xl font-black tracking-tight">
-            Access the supported feeds and evidence doors.
+            Explore our evidence services and public data.
           </h1>
           <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-300">
-            Start with the public measurements, see their change record and verify the signed evidence.
-            The catalogue below then reads the supported machine doors from the rail's own manifest.
-            Commissioned outputs remain secondary. Verification stays free.
+            Start with public measurements, the correction record and free verification.
+            The catalogue below lists data feeds and evidence services from the published technical catalogue.
+            Check each entry for its scope, preview and payment requirements.
           </p>
           <nav aria-label="Published evidence path" className="mt-6 grid gap-2 sm:grid-cols-2 lg:grid-cols-4" data-testid="services-supply-led-entry">
             <a href="/dashboard?tab=board" className="rounded-lg bg-emerald-400 px-3 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-300">1 · Explore measurements</a>
             <a href="/press" className="rounded-lg border border-slate-700 px-3 py-2 text-sm font-semibold hover:border-emerald-400">2 · See what changed</a>
-            <a href="/gspc-verify" className="rounded-lg border border-slate-700 px-3 py-2 text-sm font-semibold hover:border-emerald-400">3 · Verify evidence</a>
-            <a href="#supported-feeds" className="rounded-lg border border-slate-700 px-3 py-2 text-sm font-semibold hover:border-emerald-400">4 · Access supported feeds</a>
-            <a href="/quickstart" className="rounded-lg border border-slate-700 px-3 py-2 text-sm font-semibold hover:border-emerald-400">5 · Quickstart</a>
+            <a href="/gspc-verify" className="rounded-lg border border-slate-700 px-3 py-2 text-sm font-semibold hover:border-emerald-400">3 · Check a record</a>
+            <a href="#supported-feeds" className="rounded-lg border border-slate-700 px-3 py-2 text-sm font-semibold hover:border-emerald-400">4 · Browse the catalogue</a>
+            <a href="/quickstart" className="rounded-lg border border-slate-700 px-3 py-2 text-sm font-semibold hover:border-emerald-400">5 · Get started</a>
           </nav>
           {cat ? (
             <p className="mt-4 font-mono text-[12px] text-slate-400" data-testid="services-source">
-              {cat.total} door{cat.total === 1 ? "" : "s"} · manifest mode{" "}
+              {cat.total} service{cat.total === 1 ? "" : "s"} · catalogue mode{" "}
               <span className="text-emerald-300">{cat.mode ?? "unstated"}</span> ·{" "}
               <a href={MANIFEST} className="underline">
                 {cat.source}
@@ -101,33 +92,56 @@ export default function Services() {
         </div>
       </section>
 
+      <section aria-labelledby="services-human-buyer" className="mx-auto max-w-6xl px-6 pt-10">
+        <div className="rounded-2xl border border-emerald-400/30 bg-emerald-950/30 p-6 sm:p-8">
+          <p className="font-mono text-xs uppercase tracking-widest text-emerald-300">For organisations and procurement teams</p>
+          <h2 id="services-human-buyer" className="mt-3 text-2xl font-bold">Need a written scope and a human invoice?</h2>
+          <p className="mt-3 max-w-3xl leading-7 text-slate-300">
+            CSOAI can discuss a GBP invoice for an existing Article 50 evidence pack, evidence bundle
+            or provider-diff feed. Describe the named subject, the evidence you need and the desired
+            delivery date. Availability, scope and terms must be confirmed before any order.
+          </p>
+          <div className="mt-5 flex flex-wrap gap-3">
+            {BUYING_ENQUIRIES.map((product) => (
+              <a key={product.product} href={product.href} className="inline-flex min-h-11 items-center rounded-lg bg-emerald-400 px-5 py-2 font-semibold text-slate-950 hover:bg-emerald-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300">
+                Enquire about {product.label}
+              </a>
+            ))}
+            <a href="/gspc-verify/" className="inline-flex min-h-11 items-center rounded-lg border border-slate-600 px-5 py-2 font-semibold text-slate-100 hover:border-emerald-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300">
+              Check a record free
+            </a>
+          </div>
+          <p className="mt-4 text-sm leading-6 text-slate-400">
+            This is an enquiry, not checkout or a reservation. The current contact page opens an
+            email draft or lets you copy an enquiry; it does not silently submit or store your details.
+            For paid services, the service itself provides its x402 price before payment.
+          </p>
+        </div>
+      </section>
+
       <section id="supported-feeds" className="mx-auto max-w-6xl scroll-mt-24 px-6 py-12">
         {load.state === "loading" ? (
-          <p role="status" className="text-slate-400">Reading the manifest…</p>
+          <p role="status" className="text-slate-400">Loading the service catalogue…</p>
         ) : load.state === "unread" ? (
           <div
             data-testid="services-unread"
             role="status"
             className="rounded-2xl border border-amber-300/30 bg-amber-950/20 p-6"
           >
-            <p className="font-mono text-xs uppercase tracking-widest text-amber-300">Unread</p>
+            <p className="font-mono text-xs uppercase tracking-widest text-amber-300">Catalogue unavailable</p>
             {load.reason === NOT_JSON ? (
               <p className="mt-2 leading-7 text-slate-300">
-                This copy of the page was rendered without the live manifest. The doors are listed
-                in the machine-readable manifest at{" "}
+                The service catalogue has not loaded in this view. Its technical source is available at{" "}
                 <a href={MANIFEST} className="text-slate-200 underline">{MANIFEST}</a>, which this
-                page reads when it loads in a browser. No door is listed here, because listing a door
-                we did not read would be inventing one.
+                page reads when it loads in a browser. Services are shown only after the catalogue is read.
               </p>
             ) : (
               <p className="mt-2 leading-7 text-slate-300">
-                The rail's manifest at <code className="text-slate-200">{MANIFEST}</code> could not be
-                read on this load ({load.reason}). No doors are listed, because
-                listing a door we could not read would be inventing one. This is not a claim that the
-                rail is down.
+                The service catalogue at <code className="text-slate-200">{MANIFEST}</code> could not be
+                loaded ({load.reason}). Please try again. This does not establish whether the services themselves are available.
               </p>
             )}
-            <button type="button" onClick={() => setAttempt((n) => n + 1)} className="mt-4 min-h-11 rounded border border-amber-300 px-4 py-2 font-semibold focus-visible:outline focus-visible:outline-2">Retry manifest read</button>
+            <button type="button" onClick={() => setAttempt((n) => n + 1)} className="mt-4 min-h-11 rounded border border-amber-300 px-4 py-2 font-semibold focus-visible:outline focus-visible:outline-2">Reload catalogue</button>
           </div>
         ) : (
           <div className="space-y-12">
@@ -138,8 +152,7 @@ export default function Services() {
 
                 {cards.length === 0 ? (
                   <p className="mt-4 rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-sm text-slate-400">
-                    No door in this group is published on the rail today. The group is shown empty
-                    rather than hidden — an empty group is a fact, not an embarrassment.
+                    No services in this group are listed in the published catalogue.
                   </p>
                 ) : (
                   <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -166,7 +179,7 @@ export default function Services() {
                           <ServicePreview template={c.freePreview} />
                         ) : (
                           <p className="mt-3 text-[12px] text-slate-400">
-                            No free preview is published for this door.
+                            No separate free preview is listed for this service.
                           </p>
                         )}
                       </article>
@@ -182,12 +195,10 @@ export default function Services() {
                 className="rounded-2xl border border-amber-300/30 bg-amber-950/20 p-5"
               >
                 <h2 className="text-lg font-bold text-amber-200">
-                  Published on the rail, not yet grouped here
+                  Other services in the published catalogue
                 </h2>
                 <p className="mt-1 text-sm text-slate-300">
-                  These doors answer today but this page does not know where to file them. They are
-                  named rather than dropped, because a door nobody can find is the failure this
-                  section exists to prevent.
+                  These services are listed in the published catalogue but have not yet been assigned to a group on this page.
                 </p>
                 <ul className="mt-3 font-mono text-sm text-amber-100">
                   {load.catalogue.ungrouped.map((p) => (
@@ -203,9 +214,9 @@ export default function Services() {
       <section className="mx-auto max-w-6xl px-6 pb-16">
         <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
           <p className="leading-7 text-slate-300">
-            Verification is free and always will be. A grade is never sold, and a measurement is
-            never a certification. Where a door is paid, it is paid at the 402 itself — there is no
-            checkout on this page and no price on this site.
+            Record verification is free. A score or rank cannot be bought, and measurement is not certification.
+            Paid services use x402: check the service's price and terms before authorising payment.
+            This catalogue is not a checkout.
           </p>
         </div>
       </section>

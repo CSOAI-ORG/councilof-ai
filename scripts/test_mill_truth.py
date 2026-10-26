@@ -31,9 +31,26 @@ class MillTruthTests(unittest.TestCase):
     @patch("mill_hf_inference.urllib.request.urlopen")
     def test_empty_http_200_is_uncheckable(self, mocked):
         mocked.return_value = _Response({"choices": [{"message": {"content": ""}}]})
-        status, reason = mill_hf_inference.chat("token", "org/model", "prompt")
+        prices = {"org/model": {"groq": (0.1, 0.1)}}
+        with patch.object(mill_hf_inference, "METER", mill_hf_inference.ledger.ShardMeter(prices, 1.0)):
+            status, reason = mill_hf_inference.chat("token", "org/model", "prompt")
         self.assertEqual(status, "UNCHECKABLE")
         self.assertEqual(reason, "HTTP 200 empty completion")
+
+    @patch("mill_hf_inference.urllib.request.urlopen")
+    def test_no_ledger_meter_sends_nothing(self, mocked):
+        status, reason = mill_hf_inference.chat("token", "org/model", "prompt")
+        self.assertEqual(status, "UNCHECKABLE")
+        self.assertEqual(reason, "LEDGER_ABSENT no billed call")
+        mocked.assert_not_called()
+
+    @patch("mill_hf_inference.urllib.request.urlopen")
+    def test_unknown_price_sends_nothing(self, mocked):
+        prices = {"org/model": {"featherless-ai": None}}
+        with patch.object(mill_hf_inference, "METER", mill_hf_inference.ledger.ShardMeter(prices, 1.0)):
+            status, reason = mill_hf_inference.chat("token", "org/model", "prompt")
+        self.assertEqual(reason, "PRICE_UNKNOWN")
+        mocked.assert_not_called()
 
     def test_practice_probe_does_not_increment_measured(self):
         lock = {"models": [{"slug": "org/model", "status": "UNMEASURED"}]}

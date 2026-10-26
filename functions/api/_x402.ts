@@ -1024,6 +1024,16 @@ export function pricingTerms(accepts: X402Accept[]): string | null {
   );
 }
 
+/**
+ * Optional bazaar `resource.iconUrl` (specs/extensions/bazaar.md, "Service Metadata on
+ * `resource`"). Facilitators use serviceName + tags + iconUrl to enrich Bazaar search
+ * results "without any out-of-band admin step", so an indexed door without one renders
+ * as an unbranded row. Spec rules this URL must satisfy: absolute http(s), <=2048 chars,
+ * no data:/file: scheme, no userinfo, host not an IP literal / loopback / hex or
+ * all-digit literal, no control characters. apple-touch-icon.png answers 200 image/png.
+ */
+const CSOAI_ICON_URL = "https://councilof.ai/apple-touch-icon.png";
+
 /** Build an x402 v2 PaymentRequired object (the 402 BODY; the header carries headerPaymentRequired() of it). */
 export function buildPaymentRequiredV2(
   opts: PaymentRequiredV2Opts,
@@ -1045,6 +1055,7 @@ export function buildPaymentRequiredV2(
       ...(opts.tags && opts.tags.length
         ? { tags: opts.tags.slice(0, 5).map((t) => t.slice(0, 32)) }
         : {}),
+      iconUrl: CSOAI_ICON_URL,
     },
     accepts,
     extensions: {

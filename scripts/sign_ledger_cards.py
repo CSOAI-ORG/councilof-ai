@@ -37,8 +37,35 @@ def slug(surface: str) -> str:
     return surface.replace(".", "-")
 
 
+MAX_IDS = 25
+
+
+def explicit_ids(argv: list[str]) -> list[str] | None:
+    """--ids-file PATH: sign ONLY these exact surface ids (one per line, capped, no globs).
+
+    Measure's G2 ruling (2026-10-16): the signer is handed an explicit capped
+    list produced by scripts/auto-eat/g2_gate.py, never a glob. Without the
+    flag behaviour is unchanged.
+    """
+    if "--ids-file" not in argv:
+        return None
+    path = Path(argv[argv.index("--ids-file") + 1])
+    ids = [ln.strip() for ln in path.read_text(encoding="utf-8").splitlines() if ln.strip()]
+    if any(ch in i for i in ids for ch in "*?[]"):
+        raise SystemExit("REFUSE: glob character in --ids-file; explicit ids only")
+    if len(ids) > MAX_IDS:
+        raise SystemExit(f"REFUSE: {len(ids)} ids > cap {MAX_IDS}")
+    return ids
+
+
 def main() -> int:
     compact = json.loads(COMPACT.read_text(encoding="utf-8"))
+    ids = explicit_ids(sys.argv[1:])
+    if ids is not None:
+        missing = [i for i in ids if i not in compact]
+        if missing:
+            raise SystemExit(f"REFUSE: ids not in compact: {missing[:5]}")
+        compact = {i: compact[i] for i in ids}
     failures = 0
     for surface, payload in compact.items():
         atom_path = INTEROP / f"ledger-card-{slug(surface)}-unsigned.json"
