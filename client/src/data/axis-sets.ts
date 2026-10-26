@@ -28,6 +28,7 @@
  * borrowing a neighbour's date would assert a freshness nobody established.
  */
 
+import { isOwnerGated } from "@/lib/ownerGated";
 import facts from "./facts.json";
 import { EUNOMIA_AXES, EUNOMIA_MEASURED_ON } from "./eunomia";
 
@@ -312,7 +313,7 @@ const BANK_HOST = "https://huggingface.co/datasets/";
 
 export function loadBoard(raw: unknown, provenance = "Live from the board endpoint."): LoadedSet {
   const d = (raw ?? {}) as any;
-  const axes: any[] = Array.isArray(d.axes) ? d.axes : [];
+  const axes: any[] = Array.isArray(d.axes) ? d.axes.filter((a: any) => !isOwnerGated(a)) : []; // owner-gated rows: API only, no public row
   const measuredOnDate =
     typeof d.measured_on === "string" ? d.measured_on : d.measured_on?.date ?? null;
 
