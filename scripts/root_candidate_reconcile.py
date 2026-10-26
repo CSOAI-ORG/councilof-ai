@@ -109,7 +109,13 @@ def reconcile(
     if not generator_supplied and not (repo / VIEW_GENERATOR).is_file():
         raise Uncheckable(f"the candidate tree has no {VIEW_GENERATOR}")
 
-    git(repo, "fetch", remote, branch)
+    # Fetch with an EXPLICIT refspec that force-updates the remote-tracking ref. A plain
+    # `git fetch origin master` writes FETCH_HEAD only and leaves refs/remotes/origin/master
+    # where it was (Git 2.20 removed the opportunistic update), so the merge below would
+    # reconcile the candidate against whichever master the checkout happened to see, not
+    # against the master this run fetched. That is a silent wrong answer, so the refspec
+    # names the destination.
+    git(repo, "fetch", remote, f"+refs/heads/{branch}:refs/remotes/{remote}/{branch}")
     merge = git(repo, "merge", "--no-edit", f"{remote}/{branch}", check=False)
     if merge.returncode != 0:
         # A merge that failed without leaving MERGE_HEAD did not conflict; something else is
@@ -262,21 +268,45 @@ def run_selftest() -> int:
         failures += not ok
 
     # 4. The candidate tree is reconciled with master and ends up containing master's bytes
-    #    for a file neither side derived.
+    #    for a file neither side derived. The remote's master moves from a SECOND clone, so
+    #    this repo's refs/remotes/origin/master is STALE when the reconcile runs. That is the
+    #    real situation — another lane pushed to master — and it is exactly what a plain
+    #    `git fetch origin master` does not fix, because that writes FETCH_HEAD only and
+    #    leaves the tracking ref where it was (Git 2.20 removed the opportunistic update).
     with tempfile.TemporaryDirectory() as tmp:
         repo = _make_repo(Path(tmp), master_changes_root=False, candidate_changes_root=False)
         log = Path(tmp) / "order.log"
         builder, generator = _stubs(repo, log)
-        git(repo, "checkout", "-q", "master")
-        _write(repo / "plain.txt", "from master\n")
-        git(repo, "add", "-A")
-        git(repo, "commit", "-q", "-m", "master adds a plain file")
-        git(repo, "push", "-q", "origin", "master")
+        remote_url = git(repo, "remote", "get-url", "origin").stdout.strip()
+        other = Path(tmp) / "other"
+        subprocess.run(["git", "clone", "-q", remote_url, str(other)], check=True)
+        empty_hooks = other / ".no-hooks"
+        empty_hooks.mkdir(exist_ok=True)
+        git(other, "config", "core.hooksPath", str(empty_hooks))
+        git(other, "config", "user.email", "root@csoai.org")
+        git(other, "config", "user.name", "csoai-public-root")
+        git(other, "checkout", "-q", "master")
+        _write(other / "plain.txt", "from master\n")
+        git(other, "add", "-A")
+        git(other, "commit", "-q", "-m", "master adds a plain file")
+        git(other, "push", "-q", "origin", "master")
         git(repo, "checkout", "-q", "candidate")
+        # Narrow the remote's refspec, the way a checkout that tracks one branch has it.
+        # With a narrow refspec a plain `git fetch origin master` writes FETCH_HEAD and
+        # leaves refs/remotes/origin/master stale, so the merge would reconcile against an
+        # OLD master and say so with a clean exit code. The fetch names its destination, so
+        # the refspec cannot decide the answer.
+        git(repo, "config", "remote.origin.fetch", "+refs/heads/other:refs/remotes/origin/other")
+        stale = git(repo, "rev-parse", "refs/remotes/origin/master").stdout.strip()
         reconcile(repo, builder=builder, generator=generator)
-        merged = git(repo, "cat-file", "-p", "HEAD:plain.txt").stdout.strip()
-        ok = merged == "from master"
-        print(f"  {'ok ' if ok else 'BAD'} master's non-derived bytes come across: {merged!r}")
+        try:
+            merged = git(repo, "cat-file", "-p", "HEAD:plain.txt").stdout.strip()
+        except Uncheckable:
+            merged = "<master's file never arrived>"
+        fresh = git(repo, "rev-parse", "refs/remotes/origin/master").stdout.strip()
+        ok = merged == "from master" and stale != fresh
+        print(f"  {'ok ' if ok else 'BAD'} master moves under a narrow refspec and still comes "
+              f"across: {merged!r} | tracking ref {'was stale, now refreshed' if stale != fresh else 'was NOT stale'}")
         failures += not ok
 
     # 5. A missing generator is UNCHECKABLE, not a silent pass.

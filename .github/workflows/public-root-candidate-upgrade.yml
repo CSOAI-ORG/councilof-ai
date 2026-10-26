@@ -123,7 +123,11 @@ jobs:
           # master yet, so the very first reconcile after this lands is the one that does
           # not have the tool in its tree. Without this the fix would fail on the very run
           # it was made for.
-          git fetch origin master
+          # An EXPLICIT refspec, so refs/remotes/origin/master is actually updated. A plain
+          # `git fetch origin master` writes FETCH_HEAD only and leaves the tracking ref
+          # where it was, which would reconcile the candidate against whichever master the
+          # checkout happened to see.
+          git fetch origin +refs/heads/master:refs/remotes/origin/master
           if [ -f scripts/root_candidate_reconcile.py ]; then
             reconcile=scripts/root_candidate_reconcile.py
           else
