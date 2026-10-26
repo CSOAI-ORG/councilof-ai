@@ -1,4 +1,4 @@
-// Child of scripts/momentum-snapshot.mjs; runs under --experimental-strip-types.
+// Child of scripts/momentum-snapshot.mjs; runs with the declared tsx loader.
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 

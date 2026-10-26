@@ -313,6 +313,11 @@ jobs:
           test -f 'dist/client/functions/interop/[[path]].ts'
           node scripts/retired-proof-archive.mjs --dir dist/client
 
+      - name: HF mirror gate — verify HF has excluded files before dropping from dist
+        run: |
+          node scripts/hf-mirror-gate.mjs --selftest
+          node scripts/hf-mirror-gate.mjs
+
       - name: Drop exclusions from dist (served via HF redirects)
         run: node scripts/drop-proofs-from-dist.mjs dist/client
 
