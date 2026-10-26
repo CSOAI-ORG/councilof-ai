@@ -54,6 +54,7 @@ import { AXES_A } from "./_gspc_axes_a";
 import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
 import { AXES_C } from "./_gspc_axes_c";
+import { AXES_D } from "./_gspc_axes_d";
 import { crosscheckBoardSnapshot } from "./_board_snapshot";
 import { AXES as REGISTER_ROWS, AXIS_REGISTER_SOURCE } from "./_axis_register";
 import { headFromGet } from "./_head";
@@ -112,7 +113,7 @@ const SRC_REGULATORY_INVENTORY = REGULATORY_INVENTORY_PATH;
 // a snapshot of that computation. Both are computed here and compared, so that if they
 // ever disagree the disagreement is visible instead of depending on which surface a
 // reader happened to open.
-const LIVE_AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN];
+const LIVE_AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN, ...AXES_D];
 const liveAxisSlots = LIVE_AXES.length;
 const liveMeasuredAxes = LIVE_AXES.filter((a) => a.status === "MEASURED").length;
 // Same comparison /api/state publishes — one implementation, so the two cannot disagree.
