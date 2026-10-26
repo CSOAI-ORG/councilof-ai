@@ -20,7 +20,17 @@ const CORS: Record<string, string> = {
 export const onRequestOptions: PagesFunction = async () =>
   new Response(null, { status: 204, headers: CORS });
 
-async function grounded(q: string, origin: string): Promise<string | null> {
+/**
+ * The deterministic answerer: published records only, no model.
+ *
+ * EXPORTED (2026-10-26) so the PAL runtime can use it as its FIRST step. Before this, the only
+ * way to reach it was POST /api/chat, which meant a PAL could not consult the records without
+ * going through the chat surface's own framing. The answerer is unchanged; it is now callable.
+ *
+ * It returns null when no record answers — that is the signal for the caller to try the next
+ * step, not an error.
+ */
+export async function grounded(q: string, origin: string): Promise<string | null> {
   const t = q.toLowerCase().trim();
 
   const door = lobbyGround(q);
