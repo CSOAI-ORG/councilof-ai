@@ -656,6 +656,32 @@
       "payment": "free"
     },
     {
+      "id": "api-hitl",
+      "protocols": [
+        "http"
+      ],
+      "title": "Human in the loop",
+      "description": "GET /api/hitl — the human-in-the-loop state. The policy line, whether a decision can be taken at all (an operator token must be configured for that), whether a decision would be signed (the board attestation key), whether decisions are persisted (a store binding), the queue waiting for a human, and the competency curriculum. The curriculum is DERIVED from the live board’s axis list on every request, so it cannot drift from what the Council publishes. Also serves GET /api/hitl/modules, GET /api/hitl/modules/<id>, GET /api/hitl/challenges and GET /api/hitl/record.",
+      "endpoint": "/api/hitl",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "both",
+      "payment": "free"
+    },
+    {
+      "id": "api-hitl-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "Human in the loop (POST)",
+      "description": "POST /api/hitl — the write door, described rather than 404’d. POST /api/hitl/challenge raises a challenge for a human to decide. POST /api/hitl/modules answers a competency module, and the answer is checked against the live published record. POST /api/hitl/decision records a decision — APPROVED, HOLD or REJECTED — and is refused unless an operator token is configured, because an approval endpoint anyone can call is not a human in the loop. The receipt it returns uses the schema csoai.hitl-oversight-receipt/0.1, the same one the MEOK H.I.M. issues.",
+      "endpoint": "/api/hitl",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "both",
+      "payment": "free"
+    },
+    {
       "id": "api-checkout-post",
       "protocols": [
         "http"

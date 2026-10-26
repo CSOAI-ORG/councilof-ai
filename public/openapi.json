@@ -3042,6 +3042,36 @@
         "summary": ""
       }
     },
+    "/api/hitl": {
+      "get": {
+        "description": "The operator token, from the header.",
+        "operationId": "get__api_hitl",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "The operator token, from the header."
+      },
+      "post": {
+        "description": "The operator token, from the header.",
+        "operationId": "post__api_hitl",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "The operator token, from the header."
+      }
+    },
     "/api/hub-cards": {
       "get": {
         "description": "An index either answered or it did not. `ok: true` with zero cells is a real, empty index \u2014 it has been read. Only `ok: false` is unread, and it always carries the reason, because \"we could not read it\" and \"it holds nothing\" are different facts and only one of them is ours to assert.",
@@ -10683,7 +10713,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 122,
+    "public_operations": 124,
     "quarantined": [
       {
         "buyable": false,

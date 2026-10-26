@@ -1500,6 +1500,68 @@
       ]
     },
     {
+      "audience": "both",
+      "description": "GET /api/hitl \u2014 the human-in-the-loop state. The policy line, whether a decision can be taken at all (an operator token must be configured for that), whether a decision would be signed (the board attestation key), whether decisions are persisted (a store binding), the queue waiting for a human, and the competency curriculum. The curriculum is DERIVED from the live board\u2019s axis list on every request, so it cannot drift from what the Council publishes. Also serves GET /api/hitl/modules, GET /api/hitl/modules/<id>, GET /api/hitl/challenges and GET /api/hitl/record.",
+      "description_state": "DOCUMENTED",
+      "id": "api-hitl",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "method": "GET",
+      "name": "Human in the loop",
+      "path": "/api/hitl",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/hitl",
+        "safe": true
+      },
+      "schema_refs": [
+        "csoai.hitl-companion-state/0.1",
+        "csoai.hitl-challenge/0.1",
+        "csoai.hitl-oversight-receipt/0.1"
+      ],
+      "source": "functions/api/hitl.ts",
+      "surfaces": [
+        "openapi",
+        "llms",
+        "nav"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "POST /api/hitl \u2014 the write door, described rather than 404\u2019d. POST /api/hitl/challenge raises a challenge for a human to decide. POST /api/hitl/modules answers a competency module, and the answer is checked against the live published record. POST /api/hitl/decision records a decision \u2014 APPROVED, HOLD or REJECTED \u2014 and is refused unless an operator token is configured, because an approval endpoint anyone can call is not a human in the loop. The receipt it returns uses the schema csoai.hitl-oversight-receipt/0.1, the same one the MEOK H.I.M. issues.",
+      "description_state": "DOCUMENTED",
+      "id": "api-hitl-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "method": "POST",
+      "name": "Human in the loop (POST)",
+      "path": "/api/hitl",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/hitl",
+        "safe": false,
+        "unsafe_reason": "the door\u2019s sub-paths write \u2014 a challenge, a module answer and a signed decision; the daily loop reads only"
+      },
+      "schema_refs": [
+        "csoai.hitl-oversight-receipt/0.1",
+        "csoai.hitl-challenge/0.1"
+      ],
+      "source": "functions/api/hitl.ts",
+      "surfaces": [
+        "openapi",
+        "llms",
+        "nav"
+      ]
+    },
+    {
       "audience": "agent",
       "description": "POST /api/checkout \u2014 public door is closed.",
       "description_state": "DOCUMENTED",
