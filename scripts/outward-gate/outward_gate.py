@@ -258,6 +258,109 @@ def parse_mcp(r):
 _BRAND = None
 
 
+_LOOKBEHIND = re.compile(r"\(\?<[=!]")
+
+
+def _group_end(src, start):
+    """Index of the ')' that closes the group opening at src[start]."""
+    depth, i, in_class = 0, start, False
+    while i < len(src):
+        c = src[i]
+        if c == "\\":
+            i += 2
+            continue
+        if in_class:
+            in_class = c != "]"
+        elif c == "[":
+            in_class = True
+        elif c == "(":
+            depth += 1
+        elif c == ")":
+            depth -= 1
+            if depth == 0:
+                return i
+        i += 1
+    raise ValueError("unbalanced group in pattern")
+
+
+def _split_top(src):
+    """Split on '|' at nesting depth 0, leaving escapes, groups and character classes whole."""
+    parts, cur, depth, i, in_class = [], [], 0, 0, False
+    while i < len(src):
+        c = src[i]
+        if c == "\\" and i + 1 < len(src):
+            cur.append(src[i:i + 2])
+            i += 2
+            continue
+        if in_class:
+            in_class = c != "]"
+        elif c == "[":
+            in_class = True
+        elif c == "(":
+            depth += 1
+        elif c == ")":
+            depth -= 1
+        elif c == "|" and depth == 0:
+            parts.append("".join(cur))
+            cur = []
+            i += 1
+            continue
+        cur.append(c)
+        i += 1
+    parts.append("".join(cur))
+    return parts
+
+
+def _expand_alternatives(body, limit=64):
+    """Every fixed string of alternatives a look-behind body can take: `a(?:x|yy)b` -> [`axb`, `ayyb`]."""
+    out = []
+    for alt in _split_top(body):
+        i = alt.find("(?:")
+        while i > 0 and alt[i - 1] == "\\":
+            i = alt.find("(?:", i + 1)
+        if i < 0:
+            out.append(alt)
+            continue
+        end = _group_end(alt, i)
+        if alt[end + 1:end + 2] in ("?", "*", "+", "{"):
+            out.append(alt)  # a quantified group has no fixed expansion; left for re.compile to refuse
+            continue
+        for inner in _expand_alternatives(alt[i + 3:end], limit):
+            out.extend(_expand_alternatives(alt[:i] + inner + alt[end + 1:], limit))
+        if len(out) > limit:
+            raise ValueError("look-behind expands to too many alternatives")
+    return out
+
+
+def js_to_py_regex(src):
+    """JavaScript accepts a look-behind whose alternatives differ in width; Python's re does not.
+
+    `(?<!A(?:x|yy)B)` becomes `(?<!AxB)(?<!AyyB)` and `(?<=A(?:x|yy)B)` becomes `(?:(?<=AxB)|(?<=AyyB))`.
+    The meaning is unchanged. A look-behind this cannot make fixed-width still fails to compile, and the
+    gate then fails closed as before."""
+    out, i = [], 0
+    while True:
+        m = _LOOKBEHIND.search(src, i)
+        if not m:
+            out.append(src[i:])
+            return "".join(out)
+        end = _group_end(src, m.start())
+        alts = _expand_alternatives(src[m.end():end])
+        out.append(src[i:m.start()])
+        if src[m.start() + 3] == "!":
+            out.append("".join("(?<!%s)" % a for a in alts))
+        else:
+            out.append("(?:" + "|".join("(?<=%s)" % a for a in alts) + ")")
+        i = end + 1
+
+
+def _compile_js(src, flags):
+    try:
+        return re.compile(src, flags)
+    except re.error:
+        return re.compile(js_to_py_regex(src), flags)
+
+
 def load_brand_rules(repo=REPO):
     """The banned display strings come from the repo's scripts/brand-gate.mjs, never a copy of it."""
     global _BRAND
@@ -272,15 +375,18 @@ def load_brand_rules(repo=REPO):
     try:
         out = subprocess.run(["node", "-e", js, p], capture_output=True, text=True, timeout=30)
         rules = json.loads(out.stdout)
-        comp = []
+        comp, rid = [], None
         for r in rules:
+            rid = r["id"]
             fl = re.I if "i" in r["f"] else 0
-            comp.append({"id": r["id"], "re": re.compile(r["p"], fl),
-                         "allowOn": re.compile(r["allowOn"], re.I) if r["allowOn"] else None,
-                         "nearAllow": re.compile(r["nearAllow"], re.I) if r["nearAllow"] else None})
+            comp.append({"id": rid, "re": _compile_js(r["p"], fl),
+                         "allowOn": _compile_js(r["allowOn"], re.I) if r["allowOn"] else None,
+                         "nearAllow": _compile_js(r["nearAllow"], re.I) if r["nearAllow"] else None})
         _BRAND = comp if comp else False
     except Exception as e:
-        sys.stderr.write(f"brand-gate rules not loadable: {e}\n")
+        # One rule Python cannot read used to take every rule down with no name attached: from the day
+        # brand-gate.mjs gained a variable-width look-behind, no artifact could score 100%.
+        sys.stderr.write(f"brand-gate rules not loadable (rule {rid}): {e}\n")
         _BRAND = False
     return _BRAND
 

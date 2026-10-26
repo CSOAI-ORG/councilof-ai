@@ -457,7 +457,7 @@ follows this notice should carry the same one-line honest note). Privacy lane: t
 guarded list is yours; the owner-ask names the exact settings path.
 
 **2. Directory wave (M4) — CSOAI GSPC connector status.** Live endpoint
-`councilof.ai/mcp` serves 19 tools (14 free + 5 paid x402), `csoai-gspc-mcp v1.4.4`.
+`councilof.ai/mcp` serves 52 tools (47 free + 5 paid x402), `csoai-gspc-mcp v1.4.4`.
 CONFIRMED_LISTED: Claude directory (stale text: claims 12 tools — update door at
 claude.ai/directory/manage), mcp.so (`/servers/csoai-gspc-measurement`), Glama connector
 (`ai.councilof/mcp`), PayAPI Market. SUBMITTED: punkpeye/awesome-remote-mcp-servers#1313.
