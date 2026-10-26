@@ -26,7 +26,7 @@ const slot = (
 ): AxisScore => ({
   axis, family: "subject", kind: "declared-slot", applies_to,
   bench, task, n: 0, status: "UNMEASURED",
-  colour: `hsl(${hue} 10% 55%)`, hue, note: SLOT_NOTE, ...extra,
+  colour: `hsl(${hue} 10% 55%)`, hue, note: SLOT_NOTE, method_status: "no-method: declared slot", ...extra,
 });
 
 export const AXES_D: AxisScore[] = [
@@ -53,5 +53,5 @@ export const AXES_D: AxisScore[] = [
     290, { n_note: "Reported DISCOVERED-style as counts per subject class, never a ranking." }),
   slot("serving-fidelity", "inference-endpoints-and-routers", "pending frozen bank",
     "does an endpoint or serving configuration claiming model M behave like M's reference serving on a frozen bank",
-    300, { n_note: "HELD for spend: free credit only." }),
+    300, { n_note: "HELD for spend: free credit only.", method_status: "reviewed, not run", method: "serving-fidelity v0.2", method_sha: "18206f71" }),
 ];
