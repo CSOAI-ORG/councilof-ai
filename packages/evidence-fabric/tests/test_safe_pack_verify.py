@@ -525,5 +525,11 @@ class PackCodeBoundary(unittest.TestCase):
                          "default reader imported the selected pack's lib/safe_pack.py")
 
 
+TESTS_DIR = Path(__file__).resolve().parent
+if str(TESTS_DIR) not in sys.path:
+    sys.path.insert(0, str(TESTS_DIR))
+from test_aaif_portability_suite import AaifPortabilitySuiteTest  # noqa: E402,F401
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

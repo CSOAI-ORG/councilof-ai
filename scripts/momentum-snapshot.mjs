@@ -8,7 +8,7 @@
  *   node scripts/momentum-snapshot.mjs dist/client [--origin https://councilof.ai]
  *
  * It never fails the build. If the producer cannot run (no network, a Node without
- * --experimental-strip-types) or returns no figure, NO snapshot is written and the surfaces
+ * the declared TypeScript loader) or returns no figure, NO snapshot is written and the surfaces
  * render nothing without JavaScript — an absent figure, never an invented one.
  */
 import { spawnSync } from "node:child_process";
@@ -22,7 +22,7 @@ const oi = args.indexOf("--origin");
 const origin = oi >= 0 ? args[oi + 1] : "https://councilof.ai";
 const r = spawnSync(
   process.execPath,
-  ["--experimental-strip-types", "--no-warnings", join(here, "momentum-snapshot-run.mjs"), dist, origin],
+  ["--import", "tsx", "--no-warnings", join(here, "momentum-snapshot-run.mjs"), dist, origin],
   { stdio: "inherit", timeout: 90_000 },
 );
 if (r.status !== 0) console.log(`momentum-snapshot: producer did not complete (status ${r.status ?? r.signal}); no snapshot written, build continues`);

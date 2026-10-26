@@ -14,19 +14,19 @@ export type RotatingTitle = { before?: string; words: string[]; after?: string }
 
 export const SECTION_TITLES: Record<string, RotatingTitle> = {
   problem: {
-    before: "A PDF cannot prove your AI to",
+    before: "Evidence for your AI should be reviewable by",
     words: ["a regulator", "an insurer", "procurement", "your board", "a customer"],
-    after: "— it cannot be recomputed.",
+    after: "— with linked methods, results and limits.",
   },
   card: {
     before: "One signed card",
-    words: ["anyone can verify", "no login can gate", "no vendor can edit", "outlives us"],
+    words: ["anyone can verify", "no login can gate", "can be checked for changes", "can be retained independently"],
     after: "",
   },
   board: {
     before: "The open board",
     words: ["anyone can inspect", "engineers can query", "researchers can compare", "citizens can check"],
-    after: "— live, and recomputable.",
+    after: "— read each row's evidence and limits.",
   },
   arena: {
     before: "Model versus model —",
@@ -35,7 +35,7 @@ export const SECTION_TITLES: Record<string, RotatingTitle> = {
   },
   humanBaseline: {
     before: "Measured against",
-    words: ["the same tasks humans sat", "other models", "the law it must meet"],
+    words: ["the same tasks humans sat", "other models", "published test criteria"],
     after: "— not against a vibe.",
   },
   independence: {
