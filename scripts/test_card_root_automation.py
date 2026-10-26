@@ -172,6 +172,63 @@ class CardRootAutomationTests(unittest.TestCase):
             maintain([made["root_path"]], output, fetcher=changed, public_dir=self.public)
         self.assertFalse(output.exists())
 
+    def test_default_root_selection_excludes_the_pointer_and_the_header_audit(self):
+        """Only real card roots may enter the OTS maintainer.
+
+        ``public/interop`` also holds an unsigned discovery pointer
+        (``card-root-latest.json``) and a per-root OpenTimestamps header-audit
+        sidecar (``card-root-<stamp>-<hash>.header-audit.json``). Both names
+        begin with ``card-root-`` and end with ``.json``, but neither document
+        is a card root. The maintainer fed both to ``_safe_root``, which
+        correctly refused them, so the entire scheduled run failed closed: the
+        24 Oct 2026 ``card-root-ots-upgrade`` run reported
+        ``FAILED_CLOSED ... unexpected card-root path: ...header-audit.json``
+        and the signed public root went unminted for days afterwards.
+
+        The exclusion is proven in BOTH directions. The selection must skip
+        these files, and ``_safe_root`` must STILL refuse either one when it is
+        supplied directly - so the fix cannot have weakened fail-closed
+        behaviour to make the run pass.
+        """
+        from maintain_card_root_ots import _safe_root, root_files
+
+        excluded = (
+            "card-root-latest.json",
+            "card-root-2026-09-24-2eb8f4992a13.header-audit.json",
+        )
+        for name in excluded:
+            path = self.public / name
+            path.write_text(json.dumps({"kind": "csoai.card-root-pointer/1"}))
+            # The guard still refuses it when it is supplied directly.
+            with self.assertRaises(ValueError):
+                _safe_root(path, self.public)
+            # And the default selection never offers it to the maintainer.
+            self.assertNotIn(path, root_files(self.public))
+
+        # A real root is selected, and it is the only thing selected.
+        real = self.public / "card-root-2026-09-14.json"
+        real.write_text(json.dumps({"kind": "csoai.card-root/1"}))
+        self.assertEqual(root_files(self.public), [real])
+
+    def test_default_root_selection_never_raises_on_a_public_directory_of_mixed_documents(self):
+        """The whole selection must survive a directory that holds both kinds.
+
+        This is the exact shape that stopped the scheduled run: 56 files named
+        ``card-root-*.json`` of which two were not roots. The selection must
+        return the 54 roots and skip the two, without raising.
+        """
+        from maintain_card_root_ots import root_files
+
+        for index in range(54):
+            (self.public / f"card-root-2026-09-{index % 28 + 1:02d}-{index:012x}.json").write_text("{}")
+        (self.public / "card-root-latest.json").write_text("{}")
+        (self.public / "card-root-2026-09-24-2eb8f4992a13.header-audit.json").write_text("{}")
+
+        selected = root_files(self.public)
+        self.assertEqual(len(selected), 54)
+        self.assertNotIn(self.public / "card-root-latest.json", selected)
+        self.assertNotIn(self.public / "card-root-2026-09-24-2eb8f4992a13.header-audit.json", selected)
+
 
 if __name__ == "__main__":
     unittest.main()
