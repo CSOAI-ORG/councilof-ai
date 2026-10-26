@@ -115,6 +115,26 @@ jobs:
           THIRD_PARTY_GUARD_IDS: ${{ secrets.THIRD_PARTY_GUARD_IDS }}
         run: python3 scripts/privacy/test_third_party_identifiers.py -v
 
+  # 26 Oct 2026: the pending public-root candidate could not be reconciled with master and every
+  # run of public-root-candidate-upgrade.yml failed there, so the ONE public root had not advanced
+  # for over nine hours. Two faults, both in the reconcile step: the merge died on a content
+  # conflict in the three DERIVED views (the OTS manifest, generated from the .ots files in the tree,
+  # and the two llms views that quote it), and the llms views were generated BEFORE the manifest was
+  # rebuilt, so they were always one cycle stale — which is what pr-gates' llms-txt-derived test
+  # caught on the candidate head. The reconcile logic now lives in scripts/root_candidate_reconcile.py
+  # with a --selftest that proves each failure goes red, and it runs here so the logic cannot rot
+  # silently. A real conflict outside the derived views still fails closed.
+  root-candidate-reconcile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Public-root candidate reconcile - selftest
+        run: python3 scripts/root_candidate_reconcile.py --selftest
+
   # 7 Oct 2026: PR #2871 edited public/interop/iso-20022.json, whose sibling .ots commits to the
   # previous bytes. Every PR check was green, because the only proof-vs-target comparison
   # (scripts/root-witness-release-gate.py) ran in deploy.yml after the merge, and every master deploy
