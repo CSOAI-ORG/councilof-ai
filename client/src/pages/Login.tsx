@@ -3,29 +3,37 @@
  * Form-based authentication with CSOAI branding
  */
 
-import { useState, useEffect } from 'react';
-import { useLocation } from 'wouter';
+import { useState, useEffect, useRef } from 'react';
+import { useLocation, useSearch } from 'wouter';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Shield, ArrowRight, CheckCircle2, Loader2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { councilLoginDestination, councilLoginReturnFromSearch } from '@/lib/councilLoginReturn';
 import { toast } from 'sonner';
 
 export default function Login() {
   const [, setLocation] = useLocation();
+  const returnTo = councilLoginReturnFromSearch(useSearch());
   const { user, login, loading } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const mounted = useRef(false);
+
+  useEffect(() => {
+    mounted.current = true;
+    return () => { mounted.current = false; };
+  }, []);
 
   // Redirect if already logged in
   useEffect(() => {
-    if (user) {
-      setLocation('/dashboard');
+    if (!loading && user) {
+      setLocation(councilLoginDestination(returnTo, user.email));
     }
-  }, [user, setLocation]);
+  }, [user, loading, returnTo, setLocation]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,26 +46,14 @@ export default function Login() {
     setIsSubmitting(true);
     try {
       await login(email, password);
+      if (!mounted.current) return;
       toast.success('Welcome back!');
-      setLocation('/dashboard');
+      setLocation(councilLoginDestination(returnTo, email));
     } catch (error) {
+      if (!mounted.current || (error instanceof Error && error.name === 'AbortError')) return;
       toast.error('Login failed. Please try again.');
     } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  // Demo login for testing
-  const handleDemoLogin = async () => {
-    setIsSubmitting(true);
-    try {
-      await login('demo@csoai.com', 'demo123');
-      toast.success('Welcome to the demo!');
-      setLocation('/dashboard');
-    } catch (error) {
-      toast.error('Demo login failed');
-    } finally {
-      setIsSubmitting(false);
+      if (mounted.current) setIsSubmitting(false);
     }
   };
 
@@ -140,6 +136,8 @@ export default function Login() {
                 <Input
                   id="email"
                   type="email"
+                  name="email"
+                  autoComplete="username"
                   placeholder="you@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -152,6 +150,8 @@ export default function Login() {
                 <Input
                   id="password"
                   type="password"
+                  name="password"
+                  autoComplete="current-password"
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -184,18 +184,12 @@ export default function Login() {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-white text-gray-500">Or try the demo</span>
+                <span className="px-4 bg-white text-gray-500">Browse without signing in</span>
               </div>
             </div>
 
-            <Button
-              variant="outline"
-              size="lg"
-              className="w-full"
-              onClick={handleDemoLogin}
-              disabled={isSubmitting}
-            >
-              Demo Login (No Password Required)
+            <Button variant="outline" size="lg" className="w-full" asChild>
+              <a href="/dashboard">Browse public results</a>
             </Button>
 
             <div className="relative">
