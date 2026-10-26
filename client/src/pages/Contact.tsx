@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -15,6 +15,7 @@ export default function Contact() {
     message: '',
   });
   const [copyFeedback, setCopyFeedback] = useState("");
+  const copyRevision = useRef(0);
 
   useEffect(() => {
     document.title = 'Contact — Council of AI';
@@ -39,16 +40,20 @@ export default function Contact() {
   };
 
   const copyEnquiry = async () => {
+    const revision = ++copyRevision.current;
     try {
       await navigator.clipboard.writeText(emailDraft.copyText);
+      if (revision !== copyRevision.current) return;
       setCopyFeedback("Enquiry copied. Paste it into an email to nicholas@csoai.org. Nothing has been sent.");
     } catch {
+      if (revision !== copyRevision.current) return;
       setCopyFeedback("Clipboard access is unavailable. Use the selectable enquiry text below to copy manually.");
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    ++copyRevision.current;
     setFormData(prev => ({ ...prev, [name]: value }));
     setCopyFeedback("");
   };
