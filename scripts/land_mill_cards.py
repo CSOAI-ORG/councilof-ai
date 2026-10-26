@@ -367,6 +367,42 @@ def land(staged: Path, inbox: Path, signed_dir: Path, run_id: str,
     }
 
 
+MAX_PR_BODY = 60000  # GitHub rejects PR bodies over 65,536 chars (mill-jobs-land run 39032449478)
+
+
+def write_manifest(rep: dict, run_id: str, path: Path) -> str:
+    """Full per-card landing manifest (what the PR body used to list). Returns its sha256."""
+    doc = {"run_id": run_id, "staged_files": rep["staged_files"], "landed": rep["landed"],
+           "skipped": rep["skipped"], "axes": rep["axes"], "signed_here": False, "writes_board": False}
+    data = (json.dumps(doc, indent=1, sort_keys=True) + "\n").encode("utf-8")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(data)
+    return hashlib.sha256(data).hexdigest()
+
+
+def short_pr_body(rep: dict, run_id: str, manifest_path: str, manifest_sha: str) -> str:
+    per_axis = Counter(r["axis"] for r in rep["landed"])
+    quotable = sum(1 for r in rep["landed"] if r.get("quotable"))
+    lines = [
+        f"Lands **{len(rep['landed'])}** UNSIGNED mill cards from run `{run_id}` "
+        f"(staged {rep['staged_files']}, skipped {len(rep['skipped'])}; quotable n>=30: {quotable}).",
+        "",
+        "Per axis: " + ", ".join(f"{a} {n}" for a, n in sorted(per_axis.items())),
+        "",
+        f"Full per-card manifest (model, axis, n, accuracy, skips): `{manifest_path}` sha256 `{manifest_sha}`.",
+        "",
+        "Nothing here is MEASURED until a signed card verifies VALID under the live DID with n>=30 and a current "
+        "v0.2 admission receipt. Human merge is the only gate.",
+    ]
+    return "\n".join(lines) + "\n"
+
+
+def cap_body(body: str) -> str:
+    if len(body) <= MAX_PR_BODY:
+        return body
+    return body[:MAX_PR_BODY] + "\n\n_(truncated to fit GitHub's PR body limit; see land-report.json)_\n"
+
+
 def pr_body(rep: dict, mill_report: dict | None, run_id: str) -> str:
     lines = [
         f"Lands **{len(rep['landed'])}** UNSIGNED mill cards from `hub-queue-mill` run `{run_id}` into "
@@ -410,6 +446,7 @@ def main() -> int:
     ap.add_argument("--signed", default=str(SIGNED))
     ap.add_argument("--run-id", default="")
     ap.add_argument("--pr-body", default="", help="write the PR body markdown here")
+    ap.add_argument("--manifest", default="", help="write the full landing manifest here and keep the PR body short")
     ap.add_argument("--github-output", default="", help="append landed=/axis= lines here")
     ap.add_argument("--evidence", default=str(EVIDENCE), help="where item-evidence bundles land")
     ap.add_argument("--require-evidence", action="store_true",
@@ -430,7 +467,12 @@ def main() -> int:
             mill_report = None
     (staged / "land-report.json").write_text(json.dumps(rep, indent=2) + "\n", encoding="utf-8")
     if args.pr_body:
-        Path(args.pr_body).write_text(pr_body(rep, mill_report, args.run_id), encoding="utf-8")
+        if args.manifest:
+            msha = write_manifest(rep, args.run_id, Path(args.manifest))
+            body = short_pr_body(rep, args.run_id, args.manifest, msha)
+        else:
+            body = pr_body(rep, mill_report, args.run_id)
+        Path(args.pr_body).write_text(cap_body(body), encoding="utf-8")
     axis = rep["axes"][0] if len(rep["axes"]) == 1 else ("multi" if rep["axes"] else "none")
     if args.github_output:
         with open(args.github_output, "a", encoding="utf-8") as fh:

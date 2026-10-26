@@ -151,7 +151,40 @@
       "verify_capsule",
       "server_evidence",
       "evidence_bundle_preview",
-      "route"
+      "route",
+      "axis_governance",
+      "axis_safety",
+      "axis_provenance",
+      "axis_continuity",
+      "axis_conformance",
+      "axis_openness",
+      "axis_machinery-conformity",
+      "axis_care",
+      "axis_cross-reality",
+      "axis_detector-interop",
+      "axis_art5-safeguard",
+      "axis_swarm",
+      "axis_affect",
+      "axis_jail",
+      "axis_effect-binding",
+      "axis_provenance-controls",
+      "axis_reserve-attestation",
+      "axis_regulatory-framework",
+      "axis_distribution-integrity",
+      "axis_custody-disclosure",
+      "axis_ai-adoption-components",
+      "axis_labour-components",
+      "axis_humanoid-labour-index",
+      "axis_lab-practice",
+      "axis_company-practice",
+      "axis_measurer-integrity",
+      "axis_harness-fidelity",
+      "axis_interop-conformance",
+      "axis_humanoid-deployment",
+      "axis_regulator-transparency",
+      "axis_interpretability-reproducibility",
+      "axis_claim-maintenance",
+      "axis_serving-fidelity"
     ],
     "how": "tools/call without x_payment returns the route's 402 challenge per the x402 MCP transport: isError:true, the PaymentRequired object in structuredContent and as JSON in content[0].text; pay, then call again with x_payment",
     "paid_tools": [
@@ -491,7 +524,7 @@
             "sku_id": "evidence_bundle",
             "starts_at": "2026-09-11T00:00:00Z"
           },
-          "description": "Signed evidence bundle for one obligation: EU AI Act Article 50 or 53, DORA or EU-CRA, as OSCAL results. Built only from already-signed measurement cards, each with its full bytes and Merkle inclusion proof, plus one signed manifest card. States: ASSEMBLED, or zero relevant cards stated as zero; never a finding that an obligation is met. Verification is free at /gspc-verify.",
+          "description": "OSCAL evidence bundle for one obligation: EU AI Act Article 50/53, DORA or EU-CRA. Returns selected card objects with signature fields, any retained inclusion proofs, an OSCAL wrapper and assembly manifest. Does not verify input-card signatures. Reports manifest signing status and any unsigned reason. States: ASSEMBLED or ASSEMBLED-EMPTY; zero selected cards stays zero. Supported-card verification is free at /gspc-verify. No new measurement or conformity determination.",
           "extra": {
             "decimals": 6,
             "name": "USD Coin",
@@ -510,7 +543,7 @@
       "accepts_v1": [
         {
           "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
-          "description": "Signed evidence bundle for one obligation: EU AI Act Article 50 or 53, DORA or EU-CRA, as OSCAL results. Built only from already-signed measurement cards, each with its full bytes and Merkle inclusion proof, plus one signed manifest card. States: ASSEMBLED, or zero relevant cards stated as zero; never a finding that an obligation is met. Verification is free at /gspc-verify.",
+          "description": "OSCAL evidence bundle for one obligation: EU AI Act Article 50/53, DORA or EU-CRA. Returns selected card objects with signature fields, any retained inclusion proofs, an OSCAL wrapper and assembly manifest. Does not verify input-card signatures. Reports manifest signing status and any unsigned reason. States: ASSEMBLED or ASSEMBLED-EMPTY; zero selected cards stays zero. Supported-card verification is free at /gspc-verify. No new measurement or conformity determination.",
           "extra": {
             "name": "USD Coin",
             "version": "2"
@@ -527,7 +560,7 @@
           "scheme": "exact"
         }
       ],
-      "description": "Signed evidence bundle for one obligation: EU AI Act Article 50 or 53, DORA or EU-CRA, as OSCAL results. Built only from already-signed measurement cards, each with its full bytes and Merkle inclusion proof, plus one signed manifest card. States: ASSEMBLED, or zero relevant cards stated as zero; never a finding that an obligation is met. Verification is free at /gspc-verify.",
+      "description": "OSCAL evidence bundle for one obligation: EU AI Act Article 50/53, DORA or EU-CRA. Returns selected card objects with signature fields, any retained inclusion proofs, an OSCAL wrapper and assembly manifest. Does not verify input-card signatures. Reports manifest signing status and any unsigned reason. States: ASSEMBLED or ASSEMBLED-EMPTY; zero selected cards stays zero. Supported-card verification is free at /gspc-verify. No new measurement or conformity determination.",
       "free_preview": "https://councilof.ai/api/evidence-bundle?obligation=article-50",
       "method": "GET",
       "paid_for": "assembly",
