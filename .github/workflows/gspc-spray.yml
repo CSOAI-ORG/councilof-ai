@@ -51,6 +51,10 @@ on:
         description: "Read live truth, build the snapshot, decide — push nothing"
         type: boolean
         default: false
+      kaggle_approved_licence_change:
+        description: "OWNER approval to repair the Kaggle licence label, as two SPDX ids: FROM_SPDX TO_SPDX (e.g. 'CC0-1.0 CC-BY-4.0'). Empty = refuse, which is the default. This only relabels an existing dataset to the licence the board already declares; it does not establish rights."
+        type: string
+        default: ""
 
 concurrency:
   group: gspc-spray
@@ -166,10 +170,24 @@ jobs:
           PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
           FORCE: ${{ inputs.force == true && '--force' || '' }}
           DRY: ${{ inputs.dry_run == true && '--dry-run' || '' }}
+          KAGGLE_LICENCE_CHANGE: ${{ inputs.kaggle_approved_licence_change }}
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/spray"
+          # The owner's licence approval is passed only when it is actually given, and only as two
+          # SPDX ids. Empty input means no approval, and the script refuses the label change — the
+          # refusal is recorded per surface, and the other surfaces still publish.
+          LICENCE_ARGS=()
+          if [ -n "${KAGGLE_LICENCE_CHANGE:-}" ]; then
+            set -- ${KAGGLE_LICENCE_CHANGE}
+            if [ "$#" -ne 2 ]; then
+              echo "::error title=gspc-spray::kaggle_approved_licence_change must be exactly two SPDX ids separated by a space"; exit 2
+            fi
+            LICENCE_ARGS=(--kaggle-approved-licence-change "$1" "$2")
+            echo "::notice title=gspc-spray::owner-approved Kaggle licence repair ${1} -> ${2}"
+          fi
           python3 scripts/spray/gspc-spray.py ${{ steps.choose.outputs.flags }} $FORCE $DRY \
+            "${LICENCE_ARGS[@]+"${LICENCE_ARGS[@]}"}" \
             --out "$RUNNER_TEMP/spray/snapshot" --report "$RUNNER_TEMP/spray/spray-report.json"
 
       - name: report

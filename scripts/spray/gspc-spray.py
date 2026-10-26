@@ -1838,6 +1838,27 @@ SURFACES = {"hf": spray_hf, "kaggle": spray_kaggle, "github": spray_github, "zen
             "pypi": spray_pypi, "npm": spray_npm}
 
 
+def publish_surfaces(chosen: list[str], tr: dict, snap, options: dict) -> list[dict]:
+    """Push the one snapshot to each chosen surface, and let each failure stay where it happened.
+
+    Refused is a SystemExit, which is a BaseException and NOT an Exception: a plain
+    `except Exception` let one surface's refusal escape the loop and abort the WHOLE spray, so a
+    Kaggle licence conflict took GitHub, Zenodo, PyPI and npm down with it. 19 consecutive runs died
+    that way. Catch the refusal HERE, name it in that surface's row, and let the others publish.
+    """
+    results: list[dict] = []
+    for s in chosen:
+        try:
+            surface_options = dict(options)
+            if s != "kaggle":
+                surface_options.pop("metadata_only", None)
+                surface_options.pop("approved_licence_change", None)
+            results.extend(SURFACES[s](tr, snap, **surface_options))
+        except (Exception, Refused) as e:  # noqa: BLE001 — one surface failing must not hide the others
+            results.append(result(s, "FAILED", detail=f"{type(e).__name__}: {e}"))
+    return results
+
+
 # -------------------------------------------------------------------------------------------------- main
 
 def main(argv: list[str] | None = None) -> int:
@@ -1870,15 +1891,11 @@ def main(argv: list[str] | None = None) -> int:
     results: list[dict] = []
     if not args.build_only:
         refuse_newer_remote(chosen, tr)
-        for s in chosen:
-            try:
-                options = {"dry_run": args.dry_run, "force": args.force}
-                if s == "kaggle":
-                    options.update(metadata_only=args.kaggle_metadata_only,
-                                   approved_licence_change=tuple(args.kaggle_approved_licence_change) if args.kaggle_approved_licence_change else None)
-                results.extend(SURFACES[s](tr, snap, **options))
-            except Exception as e:  # noqa: BLE001 — one surface failing must not hide the others
-                results.append(result(s, "FAILED", detail=f"{type(e).__name__}: {e}"))
+        results.extend(publish_surfaces(chosen, tr, snap, {
+            "dry_run": args.dry_run, "force": args.force,
+            "metadata_only": args.kaggle_metadata_only,
+            "approved_licence_change": tuple(args.kaggle_approved_licence_change) if args.kaggle_approved_licence_change else None,
+        }))
 
     report = {"kind": "csoai.gspc-spray-report/1", "run_at": utc_now(), "as_of": tr["as_of"], "lid": tr["lid"],
               "fingerprint": tr["fingerprint"], "snapshot_dir": str(snap), "results": results}
