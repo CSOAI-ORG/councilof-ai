@@ -39,6 +39,7 @@ from adapters import (  # noqa: E402
     # only fin7_coverage.collect() is called. The dead names raised
     # ImportError at module load, so this publisher could not run AT ALL.
     art50_census,
+    art50_recheck_schedule,
     benji,
     evm_permission_events,
     evm_permissions,
@@ -925,6 +926,7 @@ def main() -> int:
     rwa_reconciliation_out = rwa_reconciliation.collect(ROOT)
     stablecoin_deep_out = stablecoin_deep.collect(ROOT)
     art50_census_out = art50_census.collect(ROOT)
+    art50_recheck_schedule_out = art50_recheck_schedule.collect(ROOT)
 
     leaves: list[dict] = []
     leaves.extend(xrpl_out["leaves"])
@@ -957,6 +959,7 @@ def main() -> int:
     leaves.extend(rwa_reconciliation_out["leaves"])
     leaves.extend(stablecoin_deep_out["leaves"])
     leaves.extend(art50_census_out["leaves"])
+    leaves.extend(art50_recheck_schedule_out["leaves"])
 
     have_pkcs8 = key_present()
     have_key = signer_available()
@@ -1076,6 +1079,7 @@ def main() -> int:
                 "rwa_reconciliation": {"status": "halt-before-write", **rwa_reconciliation_out["sidecar"]},
                 "stablecoin_deep": {"status": "halt-before-write", **stablecoin_deep_out["sidecar"]},
                 "art50_census": {"status": "halt-before-write", **art50_census_out["sidecar"]},
+                "art50_recheck_schedule": {"status": "halt-before-write", **art50_recheck_schedule_out["sidecar"]},
             },
         }
         if not have_key:
@@ -1225,6 +1229,7 @@ def main() -> int:
         "rwa_reconciliation": rwa_reconciliation_out.get("sidecar") or {},
         "stablecoin_deep": stablecoin_deep_out.get("sidecar") or {},
         "art50_census": art50_census_out.get("sidecar") or {},
+        "art50_recheck_schedule": art50_recheck_schedule_out.get("sidecar") or {},
         "card_count": len(shas),
         "xrpl_asset_state_count": len(asset_cards),
         "note": (

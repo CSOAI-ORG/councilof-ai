@@ -104,6 +104,21 @@
    "at": "2026-10-26T03:05:00Z"
   },
   {
+   "item": "Art 50 marking detection re-check schedule",
+   "receipt": "public/interop/art50-recheck-schedule-2026-10/schedule.json + scripts/adapters/art50_recheck_schedule.py, wired into publish_public_root.py; 5 dated points, 2 triggers, 8 adapter tests; the schedule pins the census digest and reports inputs_changed when the census bytes move under it",
+   "at": "2026-10-26T03:45:00Z"
+  },
+  {
+   "item": "The Art 50 dates come from the estate's own law facts, not recollection",
+   "receipt": "functions/_lib/art50Law.ts — Regulation (EU) 2024/1689 applies from 2026-08-02 (Art 113); systems placed on the market before that date must comply with Art 50(2) by 2026-12-02 (Art 111(4), added by Reg (EU) 2026/1744 Art 1(39)(b))",
+   "at": "2026-10-26T03:45:00Z"
+  },
+  {
+   "item": "Storage guard is green again",
+   "receipt": "scripts/gspc_storage_guard.py reads 10.63 GB free, healthy=true, warning=null; generation_allowed() is True; no protected path deleted and no floor lowered",
+   "at": "2026-10-26T03:50:00Z"
+  },
+  {
    "item": "The converted corpus meets the board's own stated admission condition",
    "receipt": "the live board's note on every declared slot reads 'Becomes MEASURED only with a frozen sha-pinned bank or method, n_valid >= 30, passing the gate'; the corpus is sha-pinned in bank.lock.json with n_valid 303",
    "at": "2026-10-26T03:20:00Z"
@@ -156,9 +171,9 @@
    "decision": "RESOLVED — append-only Merkle log. Evidence: prod-canary min_count = ceil(317 x 0.95) = 302, the deduplicated candidate holds 223, and append-only preserves inclusion proofs for cards already issued without touching MAX_ROOT_DROP_PCT. Not yet republished; a current-state view may sit beside the root but never becomes a second root."
   },
   {
-   "blocker": "M4 maintenance cycle",
-   "detail": "storage_guard reads 1.58 GB free, 99.31% used, execution=maintenance_only, warning=m4_disk_headroom_below_10gb. The data volume is at 100% with no local snapshots; macOS Trash holds no reclaimable space because it relocates within the same volume, and the bulk of the volume is not CSOAI's to reclaim.",
-   "decision": "recover headroom under existing retention rules; no protected paths deleted. Needs the owner's decision on what else may live on the host — /Applications alone is 58 GB."
+   "blocker": "M4 maintenance cycle — CLEARED, with thin margin",
+   "detail": "storage_guard now reads 10.63 GB free, 95.34% used, healthy=true, warning=null, and generation_allowed() returns True against the 10 GB floor. The headroom came from the host reclaiming its own swap and caches as volume pressure eased, plus an npm cache clean; no protected path was deleted and no guard was weakened. The margin is 0.63 GB, so a large run can put it back under the floor: generation_allowed(reserve_bytes=1 GiB) is still False.",
+   "decision": "no owner decision needed. Re-read the guard before a heavy run rather than assuming the headroom is still there."
   },
   {
    "blocker": "The house pre-push content gates cannot run in this worktree",
