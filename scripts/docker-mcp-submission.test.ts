@@ -31,11 +31,14 @@ describe("Docker MCP submission draft", () => {
     for (const name of [...free, ...paid]) {
       expect(readme, name).toContain(`\`${name}\``);
     }
-    expect(readme).toContain("Fifteen free tools");
+    expect(readme).toContain("Forty-eight free tools");
+    expect(readme).toContain("Forty-eight free tools");
     expect(readme).toContain("Five optional x402-metered evidence tools");
     expect(readme).toContain("A schema-valid unpaid call returns\n`PAYMENT_REQUIRED`");
     expect(readme).toContain("it is not settlement, delivery or revenue");
     expect(readme).toContain("No tool determines legal compliance or supplies legal advice");
-    expect(readme).not.toMatch(/Seven free|seven free|11 tools|eleven tools/);
+    // The stale-word guard. "Forty-seven free tools" CONTAINS "seven free", so the old
+    // counts are matched with a boundary that the new count cannot trip.
+    expect(readme).not.toMatch(/(?<!Forty-)\b[Ss]even free\b|\b11 tools\b|\beleven tools\b/);
   });
 });

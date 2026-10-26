@@ -26,6 +26,16 @@ export const TOOLS = (FREE_TOOLS as { tools: ToolDef[] }).tools;
 
 /** One line per tool, in plain words. Keyed by name; the test holds the keys to the served list. */
 export const ONE_LINE: Record<string, string> = {
+  // The axis family: one tool per board axis, named for the axis it answers. The line is
+  // derived from the axis id the tool carries, so the 33 lines cannot drift from the 33 tools.
+  ...Object.fromEntries(
+    (FREE_TOOLS as { tools: ToolDef[] }).tools
+      .filter((t) => t.name.startsWith("axis_"))
+      .map((t) => [
+        t.name,
+        `The ${t.name.slice("axis_".length)} axis on the live GSPC board: status, sample size, accuracy, interval, and the run behind it.`,
+      ]),
+  ),
   board_totals: "How many axes the GSPC board carries and how many have a measurement behind them, with the board's dates.",
   get_axis: "One board axis: status, sample size, accuracy and interval where they exist, and a link to the run behind it.",
   verify_card: "Checks a signed measurement card against the published key: VALID, INVALID with the reason, or UNCHECKABLE.",
@@ -140,7 +150,7 @@ export default function ConnectClaude() {
         </div>
 
         <Section id="add" title="Add it to Claude">
-          <h3 className="text-lg font-semibold text-slate-950">Claude on the web and Claude Desktop</h3>
+          <h3 className="text-lg font-semibold text-slate-950">Claude on the web and Claude Desktop: individual accounts</h3>
           <ol className="list-decimal space-y-2 pl-6">
             <li>
               Open <strong>Customize</strong>, then <strong>Connectors</strong>, and choose{" "}
@@ -150,9 +160,36 @@ export default function ConnectClaude() {
               Give it a name, for example <em>Council of AI</em>, and paste <code className="font-mono">{FREE_DOOR}</code>{" "}
               as the URL.
             </li>
-            <li>Leave authentication off. There is nothing to sign in to.</li>
+            <li>Under Authentication, choose <strong>No sign in</strong>. There is nothing to sign in to.</li>
             <li>Start a new chat with the connector turned on, and ask one of the questions below.</li>
           </ol>
+          <h3 className="pt-3 text-lg font-semibold text-slate-950">Team and Enterprise accounts</h3>
+          <p>
+            Your organization must add the connector before members can use it. On Team, this means an Owner or
+            Primary Owner. On Enterprise, it can also be someone with a custom role allowed to manage access to Libraries.
+          </p>
+          <ol className="list-decimal space-y-2 pl-6">
+            <li>
+              The owner or authorized person opens <strong>Organization settings</strong>, then <strong>Connectors</strong>, chooses{" "}
+              <strong>Add</strong>, then <strong>Custom</strong> and <strong>Web</strong>.
+            </li>
+            <li>
+              Enter a name and the same connector URL above. Continue to the authentication settings, choose{" "}
+              <strong>No sign in</strong>, and finish adding the connector.
+            </li>
+            <li>
+              Members find the owner-added connector under <strong>Customize</strong>, then <strong>Connectors</strong>,
+              and choose <strong>Connect</strong>. Enable it for a conversation using the <strong>+</strong> button,
+              then <strong>Connectors</strong>.
+            </li>
+          </ol>
+          <p>
+            If you cannot see the option to add it, ask your organization owner or someone with the permission above.
+            These are Claude account permissions; Council of AI still needs no account or key. See{" "}
+            <A href="https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp">
+              Claude&apos;s current setup instructions
+            </A>.
+          </p>
           <h3 className="pt-3 text-lg font-semibold text-slate-950">Claude Code</h3>
           <Code text={CLAUDE_CODE_CMD} label="Claude Code command" />
           <h3 className="pt-3 text-lg font-semibold text-slate-950">Cursor</h3>

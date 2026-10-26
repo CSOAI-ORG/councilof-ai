@@ -24,7 +24,40 @@
       "server_evidence",
       "evidence_bundle_preview",
       "route",
-      "quote_dataset_version"
+      "quote_dataset_version",
+      "axis_governance",
+      "axis_safety",
+      "axis_provenance",
+      "axis_continuity",
+      "axis_conformance",
+      "axis_openness",
+      "axis_machinery-conformity",
+      "axis_care",
+      "axis_cross-reality",
+      "axis_detector-interop",
+      "axis_art5-safeguard",
+      "axis_swarm",
+      "axis_affect",
+      "axis_jail",
+      "axis_effect-binding",
+      "axis_provenance-controls",
+      "axis_reserve-attestation",
+      "axis_regulatory-framework",
+      "axis_distribution-integrity",
+      "axis_custody-disclosure",
+      "axis_ai-adoption-components",
+      "axis_labour-components",
+      "axis_humanoid-labour-index",
+      "axis_lab-practice",
+      "axis_company-practice",
+      "axis_measurer-integrity",
+      "axis_harness-fidelity",
+      "axis_interop-conformance",
+      "axis_humanoid-deployment",
+      "axis_regulator-transparency",
+      "axis_interpretability-reproducibility",
+      "axis_claim-maintenance",
+      "axis_serving-fidelity"
     ],
     "paid": [
       "commission_card",
@@ -59,6 +92,7 @@
         "distribution/plugin/.claude-plugin/plugin.json",
         "distribution/plugin/.claude-plugin/marketplace.json",
         "public/.claude-plugin/marketplace.json",
+        "public/.claude-plugin/plugin.json",
         "distribution/plugin/.mcp.json",
         "distribution/plugin/skills/gspc/SKILL.md",
         "distribution/plugin/README.md"
@@ -84,6 +118,20 @@
       ],
       "doctrine_carriers": [
         "distribution/plugin/.grok-plugin/marketplace.json"
+      ]
+    },
+    {
+      "id": "antigravity-plugin",
+      "output": [
+        "distribution/plugin/plugin.json",
+        "distribution/plugin/mcp_config.json",
+        "distribution/plugin/rules/AGENTS.md",
+        "distribution/plugin/skills/gspc-verify/SKILL.md"
+      ],
+      "doctrine_carriers": [
+        "distribution/plugin/plugin.json",
+        "distribution/plugin/rules/AGENTS.md",
+        "distribution/plugin/skills/gspc-verify/SKILL.md"
       ]
     },
     {
@@ -300,6 +348,72 @@
         "distribution/dify/gspc/tools/route.py",
         "distribution/dify/gspc/tools/quote_dataset_version.yaml",
         "distribution/dify/gspc/tools/quote_dataset_version.py",
+        "distribution/dify/gspc/tools/axis_governance.yaml",
+        "distribution/dify/gspc/tools/axis_governance.py",
+        "distribution/dify/gspc/tools/axis_safety.yaml",
+        "distribution/dify/gspc/tools/axis_safety.py",
+        "distribution/dify/gspc/tools/axis_provenance.yaml",
+        "distribution/dify/gspc/tools/axis_provenance.py",
+        "distribution/dify/gspc/tools/axis_continuity.yaml",
+        "distribution/dify/gspc/tools/axis_continuity.py",
+        "distribution/dify/gspc/tools/axis_conformance.yaml",
+        "distribution/dify/gspc/tools/axis_conformance.py",
+        "distribution/dify/gspc/tools/axis_openness.yaml",
+        "distribution/dify/gspc/tools/axis_openness.py",
+        "distribution/dify/gspc/tools/axis_machinery-conformity.yaml",
+        "distribution/dify/gspc/tools/axis_machinery-conformity.py",
+        "distribution/dify/gspc/tools/axis_care.yaml",
+        "distribution/dify/gspc/tools/axis_care.py",
+        "distribution/dify/gspc/tools/axis_cross-reality.yaml",
+        "distribution/dify/gspc/tools/axis_cross-reality.py",
+        "distribution/dify/gspc/tools/axis_detector-interop.yaml",
+        "distribution/dify/gspc/tools/axis_detector-interop.py",
+        "distribution/dify/gspc/tools/axis_art5-safeguard.yaml",
+        "distribution/dify/gspc/tools/axis_art5-safeguard.py",
+        "distribution/dify/gspc/tools/axis_swarm.yaml",
+        "distribution/dify/gspc/tools/axis_swarm.py",
+        "distribution/dify/gspc/tools/axis_affect.yaml",
+        "distribution/dify/gspc/tools/axis_affect.py",
+        "distribution/dify/gspc/tools/axis_jail.yaml",
+        "distribution/dify/gspc/tools/axis_jail.py",
+        "distribution/dify/gspc/tools/axis_effect-binding.yaml",
+        "distribution/dify/gspc/tools/axis_effect-binding.py",
+        "distribution/dify/gspc/tools/axis_provenance-controls.yaml",
+        "distribution/dify/gspc/tools/axis_provenance-controls.py",
+        "distribution/dify/gspc/tools/axis_reserve-attestation.yaml",
+        "distribution/dify/gspc/tools/axis_reserve-attestation.py",
+        "distribution/dify/gspc/tools/axis_regulatory-framework.yaml",
+        "distribution/dify/gspc/tools/axis_regulatory-framework.py",
+        "distribution/dify/gspc/tools/axis_distribution-integrity.yaml",
+        "distribution/dify/gspc/tools/axis_distribution-integrity.py",
+        "distribution/dify/gspc/tools/axis_custody-disclosure.yaml",
+        "distribution/dify/gspc/tools/axis_custody-disclosure.py",
+        "distribution/dify/gspc/tools/axis_ai-adoption-components.yaml",
+        "distribution/dify/gspc/tools/axis_ai-adoption-components.py",
+        "distribution/dify/gspc/tools/axis_labour-components.yaml",
+        "distribution/dify/gspc/tools/axis_labour-components.py",
+        "distribution/dify/gspc/tools/axis_humanoid-labour-index.yaml",
+        "distribution/dify/gspc/tools/axis_humanoid-labour-index.py",
+        "distribution/dify/gspc/tools/axis_lab-practice.yaml",
+        "distribution/dify/gspc/tools/axis_lab-practice.py",
+        "distribution/dify/gspc/tools/axis_company-practice.yaml",
+        "distribution/dify/gspc/tools/axis_company-practice.py",
+        "distribution/dify/gspc/tools/axis_measurer-integrity.yaml",
+        "distribution/dify/gspc/tools/axis_measurer-integrity.py",
+        "distribution/dify/gspc/tools/axis_harness-fidelity.yaml",
+        "distribution/dify/gspc/tools/axis_harness-fidelity.py",
+        "distribution/dify/gspc/tools/axis_interop-conformance.yaml",
+        "distribution/dify/gspc/tools/axis_interop-conformance.py",
+        "distribution/dify/gspc/tools/axis_humanoid-deployment.yaml",
+        "distribution/dify/gspc/tools/axis_humanoid-deployment.py",
+        "distribution/dify/gspc/tools/axis_regulator-transparency.yaml",
+        "distribution/dify/gspc/tools/axis_regulator-transparency.py",
+        "distribution/dify/gspc/tools/axis_interpretability-reproducibility.yaml",
+        "distribution/dify/gspc/tools/axis_interpretability-reproducibility.py",
+        "distribution/dify/gspc/tools/axis_claim-maintenance.yaml",
+        "distribution/dify/gspc/tools/axis_claim-maintenance.py",
+        "distribution/dify/gspc/tools/axis_serving-fidelity.yaml",
+        "distribution/dify/gspc/tools/axis_serving-fidelity.py",
         "distribution/packages/gspc.difypkg"
       ],
       "doctrine_carriers": [
@@ -332,7 +446,7 @@
   "files": [
     {
       "path": "distribution/SUBMIT.md",
-      "sha256": "1f1ebfeddac07f2771897f8b960ee33f34da2e763b7df4d455b77cd043deb150"
+      "sha256": "ca8748adacc9bd023cc7aec1ce0b4d7f1e96577dfa4f79184b11d5a98da60a07"
     },
     {
       "path": "distribution/agntcy/README.md",
@@ -340,15 +454,15 @@
     },
     {
       "path": "distribution/claude/connector.json",
-      "sha256": "89bb63f0641dfdb6bc11e8435c385d80c2298b3453e2c12f1a05486aef4f938f"
+      "sha256": "943d91c6d8ae9cf6b5bb56013be8a42dd84abaf07203dadaa993d6437ae94f96"
     },
     {
       "path": "distribution/connect/connect-matrix.json",
-      "sha256": "962f9b1d0548cdf053bdd700ccb08c0a888bfa01cc932a2eb6d47750275a3264"
+      "sha256": "493aaacfbf0ad951fc85c8d4d9d008504a6eaa9367524cf21fc0a18596ce1779"
     },
     {
       "path": "distribution/copilot-studio/apiDefinition.swagger.json",
-      "sha256": "9c60be4e8674cac93a88d82128121dcbcf05f5612742a6efa21e940586408948"
+      "sha256": "58b1dae5b2d5368c5085a8842b9064dbe6555606cf38535c5543bc5770d27e72"
     },
     {
       "path": "distribution/copilot-studio/apiProperties.json",
@@ -360,7 +474,7 @@
     },
     {
       "path": "distribution/copilot-studio/intro.md",
-      "sha256": "2aca66a6a9d799cc38c8f7821a4cf52d97cfbcc81a6c98d51d5cb1ac9843be83"
+      "sha256": "db60dd1939538dbbe8f119488512374fc9e6fcd411c03e8120a356f027eead7e"
     },
     {
       "path": "distribution/dify/gspc/PRIVACY.md",
@@ -368,7 +482,7 @@
     },
     {
       "path": "distribution/dify/gspc/README.md",
-      "sha256": "abbbcb26cd9324bcd268137dd40dac080204a430eafb50137a6c75c4486fe775"
+      "sha256": "b2ca5fc61c7689437ad79ff987094b3c8f89c1eec7104e675cf4e0660f1f5b1c"
     },
     {
       "path": "distribution/dify/gspc/_assets/icon.svg",
@@ -388,11 +502,275 @@
     },
     {
       "path": "distribution/dify/gspc/provider/gspc.yaml",
-      "sha256": "4988ad23a58c768cc3c34ea3174591691af8e42241147b6baa7a7dda28bf80b1"
+      "sha256": "69c5e20c34eb5b9736d0bb315c651dcd2679bc12ae00172ebe9506daadf0e889"
     },
     {
       "path": "distribution/dify/gspc/requirements.txt",
       "sha256": "2969271600093f59e478baec93244b47435c3e823841cecbaa90ff1c4c1cdd30"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_affect.py",
+      "sha256": "cccd32a8a9699c44cc8f587668c9b9888be4a0010e5343bd1daf2774135ccc02"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_affect.yaml",
+      "sha256": "07713fdc7812ca90cc6632db9d9d6ac5f393ede1c40959f719cc03db960131c4"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_ai-adoption-components.py",
+      "sha256": "3b3d1d2b449f2f47ea45e1816477c252dba57f5e37625491e55ef65927d4de6c"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_ai-adoption-components.yaml",
+      "sha256": "6874f57c045b609dd533e29d6a0e44aeb283ef8d1c83574bad049ad416557531"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_art5-safeguard.py",
+      "sha256": "91fa6216fcff755b5e581200081976df00f5df42e8d98713acfd4f9003ab6bac"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_art5-safeguard.yaml",
+      "sha256": "88ad33f7170deebc77bb59f7f4ccc2226f0fb52ecb1d9b92f269717c98bbfe80"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_care.py",
+      "sha256": "243acba336e9898f3a4fed5fe32a438989ed6979bad42459095c274dc8564e38"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_care.yaml",
+      "sha256": "c7a4de8206c5baf34fccf13306677d1dadcfc95a13d4d51729f2bbe50e1a1954"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_claim-maintenance.py",
+      "sha256": "a4d56ebbbd71d389f95c87f76e9537e3b7442a2bffb8dde081d502fc6d23a788"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_claim-maintenance.yaml",
+      "sha256": "55c473d67131f510aeb96a1abec4e45b6ae23c02cbf807a047b007c2ef0170f8"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_company-practice.py",
+      "sha256": "e5fcfaeca73d392f25e96a9b9b83ca91acf3588247fc7005954b5b737da9e9d4"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_company-practice.yaml",
+      "sha256": "fb9b129eba8da5f6daba302ea21ec5cc8cdc4193e8d97280e8c8068f83314f0a"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_conformance.py",
+      "sha256": "165599d865bfba9b99b44ee4c48294f4811bba9f08a4a958da9909f2fde59bdf"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_conformance.yaml",
+      "sha256": "1734d8ebd21cb95db460610eb3e92f91c968ed2696b760452ffb98809f08a6cd"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_continuity.py",
+      "sha256": "23b5b75bcb0868ec6e77e5e15ac50012829fc4fe17507f771c6f042c0dd2ab6e"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_continuity.yaml",
+      "sha256": "92a86e747c39184362e752181e6b6d161dcd0c92ac63a817ec435c2839aa085b"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_cross-reality.py",
+      "sha256": "b33f0013a69a15b8a9457e5c0bf68ed4da47ca0d496cc83d1f2de5689158335b"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_cross-reality.yaml",
+      "sha256": "682adbed6948adbf25e618529d6f59a85a9d98893eafc112109573a2c37cd4a6"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_custody-disclosure.py",
+      "sha256": "663b6a948a13d6401964e65d028bf62abd9b4a6881fb8efe16aadd36351dde00"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_custody-disclosure.yaml",
+      "sha256": "b7afecb2dff711c431e6916dfda57e2cdfee096a955e5ffac2d2ac7941233e60"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_detector-interop.py",
+      "sha256": "e52d66c7cd4ea39ccf3e8d8cf08ff780afcb64f349046c2d68e68711683fc8af"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_detector-interop.yaml",
+      "sha256": "7d5cd5d28ad814969a7e6a6998cdda63b722f6d79ff18415f5a11693bc2133b9"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_distribution-integrity.py",
+      "sha256": "7ea650631238e138eb1809fe38862878459d52502e47775c3d998133a683f8c6"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_distribution-integrity.yaml",
+      "sha256": "0f2bdd142023655a24786321562c22d9e76f5081423e92b13b6228644b563547"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_effect-binding.py",
+      "sha256": "f02d77cb307eb9a296345714be92e5320b0d9add0d8a735afb00c01e55922ef0"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_effect-binding.yaml",
+      "sha256": "dd62bab4f6d5847238146751c2b41123d00a563188291b58796a100ee7c4881c"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_governance.py",
+      "sha256": "9bc34c1eb7bb19f1f5786709fecd26843dee7aca1d37861ee78bc7625756ff3c"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_governance.yaml",
+      "sha256": "e0c865005b53e0ebc4d064344f8ac22c44d03979a8a74ed4af725c781348f8e2"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_harness-fidelity.py",
+      "sha256": "053051aeee59de2b17ef0c2623d908bdd99b00b9e23c32244ef1709c8016f4e7"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_harness-fidelity.yaml",
+      "sha256": "43fcfc245e2ecfdcb6989d516a20b33b7d05b801d1b97c14410ff109ac6bd5c0"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_humanoid-deployment.py",
+      "sha256": "5175a042fc0671cc2d86909267919c5ecc64d2d683fc0ace13dc51cae73f8ecc"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_humanoid-deployment.yaml",
+      "sha256": "af63ce220c9c5a56f247779fa81261fb3322fd2ae42995d8255681fa5fb81420"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_humanoid-labour-index.py",
+      "sha256": "aa788b133c8e80b80fa7680708c71e3ed6df67779b853dd9f4613762db4eb060"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_humanoid-labour-index.yaml",
+      "sha256": "5b597b80a4b2b6d7d8b24907a97e53dc3941841cc84adf0a8436843716f269c4"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_interop-conformance.py",
+      "sha256": "03f778776cac118f1ae1f4dab897e72c2a71e7a54154096e7c7488ca8c4be704"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_interop-conformance.yaml",
+      "sha256": "7a9398dc1bd7c550d10391fdc7e4cfb1ba33f6efd954a33f50d9739e37aaf30a"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_interpretability-reproducibility.py",
+      "sha256": "96c18bc29402901172fe5daf19646a5cbf8dabe3cf93b0a82b2ad3ace90b039e"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_interpretability-reproducibility.yaml",
+      "sha256": "b8cd15ed384dc4a4419c131419cd8a0eaae47a19d382d0bf47e2ddb4d2871bfc"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_jail.py",
+      "sha256": "f8de0d1bd2c01ec308beb071783e46a015f871357e5471c9852c9d1dc7faac3a"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_jail.yaml",
+      "sha256": "cc2829641c4ded6b862db2072f63ce0044d87f161c875a4e28fce509539e5d1d"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_lab-practice.py",
+      "sha256": "f1c1ac7d759a6b37a7e7e048d1a466e4e08f34992459cc092e2e93de28f7f91b"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_lab-practice.yaml",
+      "sha256": "ecbd938c6461a1eba48082084a2add051c3261b195460afe689c0688d6e6f587"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_labour-components.py",
+      "sha256": "97f2d4c0e28dfe8ea3f348b9a76286800ee988322e770bd3f54013f484026c39"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_labour-components.yaml",
+      "sha256": "fbde780eb482c873df057d91aaea1f528f57a810058eaeca6381390c51d20d8d"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_machinery-conformity.py",
+      "sha256": "7935dbe0ec8c80579c3954029076857149fe7387d8c5e037a501f4198a9f99a5"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_machinery-conformity.yaml",
+      "sha256": "748a3418a45d3dab600acd30aedcf105039c71931da55034bd6e03637c72763e"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_measurer-integrity.py",
+      "sha256": "3538907b6bea5db4943cc8de476f0f172e3ec5738f3a4e86dea3bb7a9d5bff94"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_measurer-integrity.yaml",
+      "sha256": "ff2a689dde1f01886d13b344fba8028a8dd472a81604e4d4a4459462eb74d935"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_openness.py",
+      "sha256": "fab09b524dad5510dd81b244ceae5f15c8b7bb7afc176a87b1e0332a274b7219"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_openness.yaml",
+      "sha256": "db1f810652d8cd195b8b6ed5a42c209a97a9e84aa37f42623abec3745b36ad68"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_provenance-controls.py",
+      "sha256": "67dac473324a84bf97220069457d355d7260b913bedbbf99519042b961ae0fe1"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_provenance-controls.yaml",
+      "sha256": "09dfa8341ea0a7ee2c5afc529d0e15bb936614a072f399b7b007634f87817c6a"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_provenance.py",
+      "sha256": "3c614a77fce8f309d79b41a648692b4562f4879eaf92bdb5e83ed52787ba6a64"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_provenance.yaml",
+      "sha256": "71b4f6ed501b9ce10655ba4e377a737eea6c119adcba497659bf98a5309129d6"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_regulator-transparency.py",
+      "sha256": "7c3ecc37190e57b0e010b8d8a9116e2c8a8a08137b9bde474ef866f57e1d479d"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_regulator-transparency.yaml",
+      "sha256": "4f2dc583cb412808cde25851b44164863339a5383bdfa3d70958696bf8ff3abd"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_regulatory-framework.py",
+      "sha256": "70486f8dde6d7c30d57623697b6566a9574ef2687bad5fc8e0a3d913ebc46e89"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_regulatory-framework.yaml",
+      "sha256": "89f93054934749d8c29e0d95f479ea93dfe4ba6c4ef7cf9b476c76558db2adfc"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_reserve-attestation.py",
+      "sha256": "83246fdf0365602f50efef4d759e3b50cce2a403ac5eac0b2267182d5fd2d721"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_reserve-attestation.yaml",
+      "sha256": "821016eed3c49e9e433f22301c94e6a52b59b51913f3efa7a732a9343479ddb1"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_safety.py",
+      "sha256": "d72fb2b495e344d866ce11fedfee7463217f444f291a4927af26131a00ba70b9"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_safety.yaml",
+      "sha256": "91496319d5b7719e83922eef5bfb5a697a355266218f979666b732ea23b6d31a"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_serving-fidelity.py",
+      "sha256": "c8c2045b645259c046d03ce0e1c444b123d15c50bd9fbb0222c4e453bd2e4d24"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_serving-fidelity.yaml",
+      "sha256": "820b857b94d9331446717d107c2b775b0836ffdbaeacd71494503bfe7c3ebe35"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_swarm.py",
+      "sha256": "ce21e22df0a13c083b115f6d24c2489480e527ec828e1d90de71da5c5d9b695b"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_swarm.yaml",
+      "sha256": "8390d4d754e8e511124c1178dc41a32554926d5c11899013566b7cad3512f6d2"
     },
     {
       "path": "distribution/dify/gspc/tools/board_totals.py",
@@ -516,15 +894,15 @@
     },
     {
       "path": "distribution/docker/servers/csoai-gspc/readme.md",
-      "sha256": "deb9ed7fd99e7af258ddd3f89a156d50ccb651e6c197b2a671f5f0b090b4a800"
+      "sha256": "745ff486ad9bc0cd7865eb88ff7f044a8f2e3eafe033da758e6bdca2644cd86b"
     },
     {
       "path": "distribution/docker/servers/csoai-gspc/server.yaml",
-      "sha256": "4677296fccf34c380b9a4e58127b926e45ad5bbb1993f6216219d974e8bab1e3"
+      "sha256": "fa59d60b249b489c00b3a66c1e031f6bf189b5370d4b656d867058faef144d7e"
     },
     {
       "path": "distribution/docker/servers/csoai-gspc/tools.json",
-      "sha256": "3e4ea9941ba32a43c7f1d5fcb27345a081b89d2fc4d138e5d5469e7d4ab1c9b1"
+      "sha256": "c1997ec5b6019b6ac391f195c06a026bc4055f853acf7feb9ac51f0e460e0615"
     },
     {
       "path": "distribution/gcp-marketplace/LISTING.md",
@@ -536,15 +914,15 @@
     },
     {
       "path": "distribution/gemini/GEMINI.md",
-      "sha256": "7d42248bdcc5fd766886d549e2e5be3a96b1b1c6de003232503a39b447a62218"
+      "sha256": "4d036cf144c9b71e10eaf5610cd7a3d2b96afcc4b45e0b728ac971101ca84a49"
     },
     {
       "path": "distribution/gemini/gemini-extension.json",
-      "sha256": "9ddd8056771a4a9288cd6d64a0173e1c2868521fa05e83aefd69d46120a428c3"
+      "sha256": "584509f328261e97a3b4ae2d36f8d9b36fe0f559e4a67548945ce6ed428a43fe"
     },
     {
       "path": "distribution/hf-space/csoai-gspc-mcp/README.md",
-      "sha256": "b014c3492ef759b865e677e10c1c651072159ffbda47bbf339743c971c1c5acd"
+      "sha256": "ecdaea482ef1a9f0d77917c64075555ee77582a26d63a4f167dee0ccc4bbcbf0"
     },
     {
       "path": "distribution/hf-space/csoai-gspc-mcp/app.py",
@@ -556,11 +934,11 @@
     },
     {
       "path": "distribution/mcp-registry/ai.councilof-gspc/server.json",
-      "sha256": "ede9aae35cf20b8f88d621bba03cb4a304f8bd5592fb10c255528d668ce947b4"
+      "sha256": "c6c710434edb83662ad41e95129d83fcb05ffca9e6600c92ecfbdd035db4a36f"
     },
     {
       "path": "distribution/mcp-registry/io.github.CSOAI-ORG-gspc/server.json",
-      "sha256": "dec71e8ea36b39df5f9369d266b7d816ae9f5a95152cc4a4f01e8667c7818574"
+      "sha256": "2378833bec6e06e13351ee37fb3b630d76005abf6fec85f34bd859bf88aa6c63"
     },
     {
       "path": "distribution/npm/ai-sdk-gspc/LICENSE",
@@ -568,11 +946,11 @@
     },
     {
       "path": "distribution/npm/ai-sdk-gspc/README.md",
-      "sha256": "06f381365b04806f80504c949b3d5fae8e9cb66c07e279b91934fe88adc2e180"
+      "sha256": "19d0d4c68a01b56a38c897d1ad44f7f537d8d8802f52ddaae97374b3cf374560"
     },
     {
       "path": "distribution/npm/ai-sdk-gspc/gspc-client.js",
-      "sha256": "21d2c478e6f31b9b9cba20d49d86687f320f7593de8b27b6d2baa3dd9ecf9b36"
+      "sha256": "6849e09b13a285c2239ec0d87d24ef6b8cd5ef3606e1228db09adfb48f30bc63"
     },
     {
       "path": "distribution/npm/ai-sdk-gspc/index.d.ts",
@@ -592,11 +970,11 @@
     },
     {
       "path": "distribution/npm/mastra-gspc/README.md",
-      "sha256": "1fd7192a5c9585aa6f96375f0d6d7030d6873a88d2fe24cef64e1b794f318e68"
+      "sha256": "eec8088fab539e67f64f50b56352c9f18b020341649d247ed0b257ba9be39739"
     },
     {
       "path": "distribution/npm/mastra-gspc/gspc-client.js",
-      "sha256": "21d2c478e6f31b9b9cba20d49d86687f320f7593de8b27b6d2baa3dd9ecf9b36"
+      "sha256": "6849e09b13a285c2239ec0d87d24ef6b8cd5ef3606e1228db09adfb48f30bc63"
     },
     {
       "path": "distribution/npm/mastra-gspc/index.d.ts",
@@ -620,39 +998,39 @@
     },
     {
       "path": "distribution/openai-plugin/plugin.json",
-      "sha256": "6579160cfbfa01aed217f5c7200699d7ebc442090eb6914e0592a0b7c0e1cd1e"
+      "sha256": "4a0728105600f196dafb12bdeeb4be6b2835cfc7ad80d5cbac17d47b023e6d0e"
     },
     {
       "path": "distribution/openai-plugin/skills/get-started/SKILL.md",
-      "sha256": "7db26ff58eeb8bb5740febfd25c6a4c9baca9cd3be0c0a26a461b305cadb29d8"
+      "sha256": "c78edaa556b7b617a8321e13097b36a7f5d7bfd8f0061469e92ae1bc8019eca6"
     },
     {
       "path": "distribution/openai/app.json",
-      "sha256": "c7408e325804bc00112c0d1ee870ee9440a0a7bb595536cf52f952d6cd7648aa"
+      "sha256": "c89d71324a5967eda5dcbb1c8e66d9f71ffc1634a1c1af62956fb3d13dfb607e"
     },
     {
       "path": "distribution/packages/gspc-openai-plugin.zip",
-      "sha256": "cd9d8928099ebd53e8d0a6f59e8aca09bf59c0d34d8e5f2e3a98a250d904210b"
+      "sha256": "81ab37671ff2e1c2c29e238ca670354ef8ae1fa4f11268e7f2f4dd08a8a946cc"
     },
     {
       "path": "distribution/packages/gspc.difypkg",
-      "sha256": "6796b0141f827427ae8f2bb356432b74715b6c679b89ca82313a810c6721b053"
+      "sha256": "f07e1577be394e0300feb85be46370edf98fe8e75b7d13beec22911fd4ed06b7"
     },
     {
       "path": "distribution/plugin/.claude-plugin/marketplace.json",
-      "sha256": "e3808e80d0b314e7d785f643d71979b81b1a556ebf1d6a0d9acfd12094b0a93e"
+      "sha256": "2d31be0bebe7f2e541ee7b9c912cbc532a3c7317cfe7c1e095d9489396b85a6a"
     },
     {
       "path": "distribution/plugin/.claude-plugin/plugin.json",
-      "sha256": "34cb34bedae63be039c42344a90ead5a0628edc15a903bc282ebc016b807f5ef"
+      "sha256": "7eec25d0878821d4ae5f6d2fc21b63181a6c8516d53d9992e5a6cb65f79f8807"
     },
     {
       "path": "distribution/plugin/.cursor-plugin/plugin.json",
-      "sha256": "53027bdbe21dfbbc07dd854b2fd90c366d728e241f9f783032c54632e0554f1c"
+      "sha256": "73f00341a76b12513cf71f9afbd0804f2a7b6531a1be06b7d1a33ce99c4b3fc9"
     },
     {
       "path": "distribution/plugin/.grok-plugin/marketplace.json",
-      "sha256": "599af46409296073ba32a5910829b65499940bc15fa897292dbc5bd425a1d5b1"
+      "sha256": "631495ff0d12c510f50ce811f704a33a05a17148b1ed1f3466d46e3cf9e4acb7"
     },
     {
       "path": "distribution/plugin/.mcp.json",
@@ -660,11 +1038,27 @@
     },
     {
       "path": "distribution/plugin/README.md",
-      "sha256": "e30e0d27bd53d856f4abad6df7b049bdd8ca910a86cfa6034e519404f3dffd2e"
+      "sha256": "cefb0e82d22fecc22827b5911aa633630e743a49e30efbb1f94ab5a093cedb83"
+    },
+    {
+      "path": "distribution/plugin/mcp_config.json",
+      "sha256": "a4290f964e3800b9c33b5252d10bafde52ceca0328de213a75f7c9c92907c92a"
+    },
+    {
+      "path": "distribution/plugin/plugin.json",
+      "sha256": "34ac4a15e87debbb150bb6a2467d7b0999999e8f609778c40f1a9eecb71ef2e7"
+    },
+    {
+      "path": "distribution/plugin/rules/AGENTS.md",
+      "sha256": "549d9181247a2c924cd26f2339bfd4e7e7c1f53526e97e607e230a2eb022d3c6"
+    },
+    {
+      "path": "distribution/plugin/skills/gspc-verify/SKILL.md",
+      "sha256": "78576404cce7ff16b9e130836402fa8698336fe80ac9ad9e3302cf5e7f37c20b"
     },
     {
       "path": "distribution/plugin/skills/gspc/SKILL.md",
-      "sha256": "62698b0a6bbf3e647103ea081df4cb18361ffda512fbfb02628891a3f8aa5526"
+      "sha256": "39ca5e014ce41521a27a8e1b6841a1739bfc272eb512df9c11e10bf47a1a7784"
     },
     {
       "path": "distribution/python/crewai-csoai/LICENSE",
@@ -740,15 +1134,19 @@
     },
     {
       "path": "public/.claude-plugin/marketplace.json",
-      "sha256": "e3808e80d0b314e7d785f643d71979b81b1a556ebf1d6a0d9acfd12094b0a93e"
+      "sha256": "2d31be0bebe7f2e541ee7b9c912cbc532a3c7317cfe7c1e095d9489396b85a6a"
+    },
+    {
+      "path": "public/.claude-plugin/plugin.json",
+      "sha256": "7eec25d0878821d4ae5f6d2fc21b63181a6c8516d53d9992e5a6cb65f79f8807"
     },
     {
       "path": "public/.well-known/mcp.json",
-      "sha256": "bdfbc1298936ef5d5594b14eb3a46120a2647afe11aa178324b1a72b488ca8f8"
+      "sha256": "edeebb482a0f198b8ef43f2305b08514b46ffb525356c3e6f2302b5f82793e7f"
     },
     {
       "path": "public/.well-known/mcp/server-card.json",
-      "sha256": "3357685d0c0684a3e9af5b47a5c5e52c0a252fb4fa5a7881715446272ebad508"
+      "sha256": "9922fdde47814f6b4f1e91ddbcd35ca1f60ccb3339b5ff60e5213cb146b6d807"
     },
     {
       "path": "public/oasf/ai.councilof.gspc.oasf.json",

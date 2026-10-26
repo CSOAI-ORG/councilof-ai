@@ -8,7 +8,7 @@
     "title": "Council of AI — GSPC Measurement Tools",
     "version": "1.4.4"
   },
-  "description": "Independent AI-governance measurement body. Publishes the GSPC measurement board: quote totals.public_count from GET /api/gspc, never a typed count. Frozen item banks and published scoring code. Measurement only: not certification, not accreditation, no conformity assessment. MCP registry ai.councilof/gspc server 1.4.4 (io.github.CSOAI-ORG/gspc is its deprecated alias). 15 free tools at /mcp/free; 20 at /mcp (15 free + 5 metered). The npm package is versioned separately.",
+  "description": "Independent AI-governance measurement body. Publishes the GSPC measurement board: quote totals.public_count from GET /api/gspc, never a typed count. Frozen item banks and published scoring code. Measurement only: not certification, not accreditation, no conformity assessment. MCP registry ai.councilof/gspc server 1.4.4 (io.github.CSOAI-ORG/gspc is its deprecated alias). 48 free tools at /mcp/free; 53 at /mcp (48 free + 5 metered). The npm package is versioned separately.",
   "icon_url": "https://councilof.ai/csoai-icon.svg",
   "provider": {
     "name": "CSOAI Ltd",
@@ -26,9 +26,9 @@
       "current": "https://councilof.ai/mcp",
       "stdio": null,
       "stdio_note": "npm csoai-gspc-mcp: published releases are deprecated on npm and carry fewer tools; use the free door https://councilof.ai/mcp/free",
-      "note": "Live door is https://councilof.ai/mcp (GET 200). HTTP tools/list is twenty: fifteen free readers plus five x402-metered evidence tools. witness_hash is quarantined and not advertised. Registry server 1.4.4.",
+      "note": "Live door is https://councilof.ai/mcp (GET 200). HTTP tools/list is 53: 48 free readers plus five x402-metered evidence tools. witness_hash is quarantined and not advertised. Registry server 1.4.4.",
       "free": "https://councilof.ai/mcp/free",
-      "free_note": "https://councilof.ai/mcp/free serves the fifteen free readers only, from the same definitions and handlers as https://councilof.ai/mcp: no payment tool and no payment text. It is the address for chat clients and directories that list no payment software."
+      "free_note": "https://councilof.ai/mcp/free serves the 48 free readers only, from the same definitions and handlers as https://councilof.ai/mcp: no payment tool and no payment text. It is the address for chat clients and directories that list no payment software."
     },
     "gspc_board": {
       "url": "https://councilof.ai/api/gspc",
@@ -53,19 +53,52 @@
       "evidence_bundle_preview",
       "route",
       "quote_dataset_version",
+      "axis_governance",
+      "axis_safety",
+      "axis_provenance",
+      "axis_continuity",
+      "axis_conformance",
+      "axis_openness",
+      "axis_machinery-conformity",
+      "axis_care",
+      "axis_cross-reality",
+      "axis_detector-interop",
+      "axis_art5-safeguard",
+      "axis_swarm",
+      "axis_affect",
+      "axis_jail",
+      "axis_effect-binding",
+      "axis_provenance-controls",
+      "axis_reserve-attestation",
+      "axis_regulatory-framework",
+      "axis_distribution-integrity",
+      "axis_custody-disclosure",
+      "axis_ai-adoption-components",
+      "axis_labour-components",
+      "axis_humanoid-labour-index",
+      "axis_lab-practice",
+      "axis_company-practice",
+      "axis_measurer-integrity",
+      "axis_harness-fidelity",
+      "axis_interop-conformance",
+      "axis_humanoid-deployment",
+      "axis_regulator-transparency",
+      "axis_interpretability-reproducibility",
+      "axis_claim-maintenance",
+      "axis_serving-fidelity",
       "commission_card",
       "art50_marking_evidence",
       "rwa_evidence",
       "receipts_batch",
       "evidence_bundle"
     ],
-    "total_tools": 20,
-    "free_tools": 15,
+    "total_tools": 53,
+    "free_tools": 48,
     "metered_tools": 5,
-    "tool_counts": "15 free tools at /mcp/free; 20 at /mcp (15 free + 5 metered). The npm package is versioned separately.",
+    "tool_counts": "48 free tools at /mcp/free; 53 at /mcp (48 free + 5 metered). The npm package is versioned separately.",
     "streaming": false,
     "auth_required": false,
-    "tool_names_sha256": "629b4b5d71560fd4a964c13153a12d09515a4b5fb226aaf3cc8447e92e4e86af",
+    "tool_names_sha256": "37817e41c3572167e4c35515d2e6831e789a9119fa5e2f24108db3ff91ef6644",
     "free_door_tool_names": [
       "board_totals",
       "get_axis",
@@ -81,9 +114,42 @@
       "server_evidence",
       "evidence_bundle_preview",
       "route",
-      "quote_dataset_version"
+      "quote_dataset_version",
+      "axis_governance",
+      "axis_safety",
+      "axis_provenance",
+      "axis_continuity",
+      "axis_conformance",
+      "axis_openness",
+      "axis_machinery-conformity",
+      "axis_care",
+      "axis_cross-reality",
+      "axis_detector-interop",
+      "axis_art5-safeguard",
+      "axis_swarm",
+      "axis_affect",
+      "axis_jail",
+      "axis_effect-binding",
+      "axis_provenance-controls",
+      "axis_reserve-attestation",
+      "axis_regulatory-framework",
+      "axis_distribution-integrity",
+      "axis_custody-disclosure",
+      "axis_ai-adoption-components",
+      "axis_labour-components",
+      "axis_humanoid-labour-index",
+      "axis_lab-practice",
+      "axis_company-practice",
+      "axis_measurer-integrity",
+      "axis_harness-fidelity",
+      "axis_interop-conformance",
+      "axis_humanoid-deployment",
+      "axis_regulator-transparency",
+      "axis_interpretability-reproducibility",
+      "axis_claim-maintenance",
+      "axis_serving-fidelity"
     ],
-    "free_door_tool_names_sha256": "acd410c9d09f28e2918a798a3cde2a4c4dae736610db5ddfb04761eb245a9980",
+    "free_door_tool_names_sha256": "e22e5b17dd2d62b71c1aa4acabe015cf2ae8a21e75af1c561ae733b2e2a69ab2",
     "tool_names_sha256_rule": "sha256 of the tool names from tools/list, sorted, joined by \"\\n\" (UTF-8)",
     "derived_from": "tools/list of https://councilof.ai/mcp (functions/mcp/gspc-tools.json + paid-tools.json) and of https://councilof.ai/mcp/free (gspc-tools.json)"
   },
@@ -1385,6 +1451,1887 @@
         "required": [
           "state"
         ]
+      }
+    },
+    {
+      "name": "axis_governance",
+      "title": "governance axis (live GSPC board)",
+      "description": "The governance axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "governance axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_safety",
+      "title": "safety axis (live GSPC board)",
+      "description": "The safety axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "safety axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_provenance",
+      "title": "provenance axis (live GSPC board)",
+      "description": "The provenance axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "provenance axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_continuity",
+      "title": "continuity axis (live GSPC board)",
+      "description": "The continuity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "continuity axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_conformance",
+      "title": "conformance axis (live GSPC board)",
+      "description": "The conformance axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "conformance axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_openness",
+      "title": "openness axis (live GSPC board)",
+      "description": "The openness axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "openness axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_machinery-conformity",
+      "title": "machinery-conformity axis (live GSPC board)",
+      "description": "The machinery-conformity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "machinery-conformity axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_care",
+      "title": "care axis (live GSPC board)",
+      "description": "The care axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "care axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_cross-reality",
+      "title": "cross-reality axis (live GSPC board)",
+      "description": "The cross-reality axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "cross-reality axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_detector-interop",
+      "title": "detector-interop axis (live GSPC board)",
+      "description": "The detector-interop axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "detector-interop axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_art5-safeguard",
+      "title": "art5-safeguard axis (live GSPC board)",
+      "description": "The art5-safeguard axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "art5-safeguard axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_swarm",
+      "title": "swarm axis (live GSPC board)",
+      "description": "The swarm axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "swarm axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_affect",
+      "title": "affect axis (live GSPC board)",
+      "description": "The affect axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "affect axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_jail",
+      "title": "jail axis (live GSPC board)",
+      "description": "The jail axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "jail axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_effect-binding",
+      "title": "effect-binding axis (live GSPC board)",
+      "description": "The effect-binding axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "effect-binding axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_provenance-controls",
+      "title": "provenance-controls axis (live GSPC board)",
+      "description": "The provenance-controls axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "provenance-controls axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_reserve-attestation",
+      "title": "reserve-attestation axis (live GSPC board)",
+      "description": "The reserve-attestation axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "reserve-attestation axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_regulatory-framework",
+      "title": "regulatory-framework axis (live GSPC board)",
+      "description": "The regulatory-framework axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "regulatory-framework axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_distribution-integrity",
+      "title": "distribution-integrity axis (live GSPC board)",
+      "description": "The distribution-integrity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "distribution-integrity axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_custody-disclosure",
+      "title": "custody-disclosure axis (live GSPC board)",
+      "description": "The custody-disclosure axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "custody-disclosure axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_ai-adoption-components",
+      "title": "ai-adoption-components axis (live GSPC board)",
+      "description": "The ai-adoption-components axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "ai-adoption-components axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_labour-components",
+      "title": "labour-components axis (live GSPC board)",
+      "description": "The labour-components axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "labour-components axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_humanoid-labour-index",
+      "title": "humanoid-labour-index axis (live GSPC board)",
+      "description": "The humanoid-labour-index axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "humanoid-labour-index axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_lab-practice",
+      "title": "lab-practice axis (live GSPC board)",
+      "description": "The lab-practice axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "lab-practice axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_company-practice",
+      "title": "company-practice axis (live GSPC board)",
+      "description": "The company-practice axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "company-practice axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_measurer-integrity",
+      "title": "measurer-integrity axis (live GSPC board)",
+      "description": "The measurer-integrity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "measurer-integrity axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_harness-fidelity",
+      "title": "harness-fidelity axis (live GSPC board)",
+      "description": "The harness-fidelity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "harness-fidelity axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_interop-conformance",
+      "title": "interop-conformance axis (live GSPC board)",
+      "description": "The interop-conformance axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "interop-conformance axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_humanoid-deployment",
+      "title": "humanoid-deployment axis (live GSPC board)",
+      "description": "The humanoid-deployment axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "humanoid-deployment axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_regulator-transparency",
+      "title": "regulator-transparency axis (live GSPC board)",
+      "description": "The regulator-transparency axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "regulator-transparency axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_interpretability-reproducibility",
+      "title": "interpretability-reproducibility axis (live GSPC board)",
+      "description": "The interpretability-reproducibility axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "interpretability-reproducibility axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_claim-maintenance",
+      "title": "claim-maintenance axis (live GSPC board)",
+      "description": "The claim-maintenance axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "claim-maintenance axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "axis_serving-fidelity",
+      "title": "serving-fidelity axis (live GSPC board)",
+      "description": "The serving-fidelity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "serving-fidelity axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
       }
     },
     {

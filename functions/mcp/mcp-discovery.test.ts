@@ -125,7 +125,8 @@ describe("MCP discovery keeps implementation identities truthful", () => {
     const paidCount = (PAID as { tools: unknown[] }).tools.length;
 
     expect(listed.result.tools).toHaveLength(freeCount + paidCount);
-    expect([freeCount, paidCount]).toEqual([15, 5]);
+    expect([freeCount, paidCount]).toEqual([48, 5]);
+    expect([freeCount, paidCount]).toEqual([48, 5]);
     expect(REGISTRY_DESCRIPTOR.description).toContain(
       `${freeCount + paidCount} HTTP tools (${freeCount} free, ${paidCount} x402)`,
     );

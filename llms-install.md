@@ -45,7 +45,7 @@ install or advertise `0.2.3` from npm before that independent check.
 ## Exact reviewed tool catalog
 
 This list describes the reviewed source contract at this commit. Confirm that the
-deployed remote returns the same 12 names before treating it as the live contract.
+deployed remote returns the same 52 names before treating it as the live contract.
 Listing the catalog and using every free read/verification tool is free. In
 particular, `verify_card` checks a Council-issued signed measurement card without a
 payment. Its three possible verdict classes are `VALID`, `INVALID`, and
@@ -70,6 +70,39 @@ payment. Its three possible verdict classes are `VALID`, `INVALID`, and
     "evidence_bundle_preview",
     "route",
     "quote_dataset_version"
+    "axis_governance",
+    "axis_safety",
+    "axis_provenance",
+    "axis_continuity",
+    "axis_conformance",
+    "axis_openness",
+    "axis_machinery-conformity",
+    "axis_care",
+    "axis_cross-reality",
+    "axis_detector-interop",
+    "axis_art5-safeguard",
+    "axis_swarm",
+    "axis_affect",
+    "axis_jail",
+    "axis_effect-binding",
+    "axis_provenance-controls",
+    "axis_reserve-attestation",
+    "axis_regulatory-framework",
+    "axis_distribution-integrity",
+    "axis_custody-disclosure",
+    "axis_ai-adoption-components",
+    "axis_labour-components",
+    "axis_humanoid-labour-index",
+    "axis_lab-practice",
+    "axis_company-practice",
+    "axis_measurer-integrity",
+    "axis_harness-fidelity",
+    "axis_interop-conformance",
+    "axis_humanoid-deployment",
+    "axis_regulator-transparency",
+    "axis_interpretability-reproducibility",
+    "axis_claim-maintenance",
+    "axis_serving-fidelity"
   ],
   "x402_metered": [
     "commission_card",
