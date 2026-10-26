@@ -20,7 +20,7 @@ import { DESKS, deskDisclosure, type DeskId } from "../../../functions/api/_chat
  * rather than being quietly replaced by something that sounds fine.
  */
 
-export type PalState = "grounded" | "model" | "ungrounded" | "refused";
+export type PalState = "grounded" | "model" | "ungrounded" | "refused" | "escalated";
 
 export type PalTurn = {
   who: "you" | "agent";
@@ -29,6 +29,8 @@ export type PalTurn = {
   source?: string | null;
   model?: string | null;
   guardrail?: string | null;
+  /** The challenge raised, when the question was escalated to a human. */
+  challenge?: { id: string; axis?: string | null } | null;
 };
 
 /** What the runtime reported, in the reader's words. */
@@ -37,6 +39,7 @@ const STATE_NOTE: Record<PalState, string> = {
   model: "answered by the language model, on the records",
   ungrounded: "no published record answers that",
   refused: "that reply was withheld",
+  escalated: "escalated to a human — it will not act on its own",
 };
 
 const STATE_CLASS: Record<PalState, string> = {
@@ -44,9 +47,19 @@ const STATE_CLASS: Record<PalState, string> = {
   model: "border-sky-400/50 text-sky-200",
   ungrounded: "border-amber-400/50 text-amber-200",
   refused: "border-rose-400/50 text-rose-200",
+  escalated: "border-amber-400/60 text-amber-100",
 };
 
-export default function PalAskPanel({ desk, onClose }: { desk: DeskId; onClose: () => void }) {
+export default function PalAskPanel({
+  desk,
+  onClose,
+  onEscalation,
+}: {
+  desk: DeskId;
+  onClose: () => void;
+  /** Called when the staff member escalates a consequential act to a human. */
+  onEscalation?: (challenge: unknown) => void;
+}) {
   const d = DESKS[desk];
   const [q, setQ] = useState("");
   const [turns, setTurns] = useState<PalTurn[]>([]);
@@ -89,8 +102,12 @@ export default function PalAskPanel({ desk, onClose }: { desk: DeskId; onClose: 
           source: j?.source ?? null,
           model: j?.model?.model ?? null,
           guardrail: j?.guardrail ?? null,
+          challenge: j?.challenge ?? null,
         },
       ]);
+      // An escalation is not an answer. It is a challenge for a human, and the surface that
+      // shows the human has to hear about it — so it is handed up, not left in the transcript.
+      if (j?.state === "escalated" && j?.challenge) onEscalation?.(j.challenge);
     } catch {
       setTurns((t) => [
         ...t,
@@ -126,6 +143,12 @@ export default function PalAskPanel({ desk, onClose }: { desk: DeskId; onClose: 
                   {t.source ? <> · record: <span className="text-emerald-100/90">{t.source}</span></> : null}
                   {t.model ? <> · model: <span className="text-emerald-100/90">{t.model}</span></> : null}
                   {t.guardrail ? <> · withheld: <span className="text-rose-200">{t.guardrail}</span></> : null}
+                  {t.challenge ? (
+                    <>
+                      {" "}
+                      · challenge: <span className="text-amber-100">{t.challenge.id}</span>
+                    </>
+                  ) : null}
                 </p>
               ) : null}
             </div>

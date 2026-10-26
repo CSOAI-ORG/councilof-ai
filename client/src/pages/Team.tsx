@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import AISystemNotice from "@/components/AISystemNotice";
 import PalAskPanel from "@/components/PalAskPanel";
+import HitlConsole from "@/components/HitlConsole";
 import { DESKS, DESK_IDS, deskDisclosure, type DeskId } from "../../../functions/api/_chatDesks";
 
 /**
@@ -27,6 +28,9 @@ export default function Team() {
   const [open, setOpen] = useState<DeskId | null>(null);
   const [registry, setRegistry] = useState<Record<string, PalRecord>>({});
   const [modelConfigured, setModelConfigured] = useState<boolean | null>(null);
+  // A consequential act a staff member would not perform on its own arrives here as a challenge
+  // and waits for a human. It is not a chat message; it is a decision.
+  const [challenge, setChallenge] = useState<any>(null);
 
   // The registry, not a second copy of it. The cards already read DESKS; this adds each staff
   // member's identity — the did:key its answers can be signed with — and whether a language
@@ -119,7 +123,9 @@ export default function Team() {
           })}
         </div>
       </section>
-      {open && <PalAskPanel desk={open} onClose={() => setOpen(null)} />}
+      {open && <PalAskPanel desk={open} onClose={() => setOpen(null)} onEscalation={setChallenge} />}
+
+      <HitlConsole challenge={challenge} />
     </div>
   );
 }

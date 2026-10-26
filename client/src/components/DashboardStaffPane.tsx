@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import PalAskPanel from "@/components/PalAskPanel";
+import HitlConsole from "@/components/HitlConsole";
 import { DESKS, DESK_IDS, deskDisclosure, type DeskId } from "../../../functions/api/_chatDesks";
 
 /**
@@ -32,6 +33,8 @@ export default function DashboardStaffPane() {
   const [modelConfigured, setModelConfigured] = useState<boolean | null>(null);
   const [modelActive, setModelActive] = useState<string | null>(null);
   const [loaded, setLoaded] = useState(false);
+  // The challenge a staff member raised instead of performing the act itself.
+  const [challenge, setChallenge] = useState<any>(null);
 
   useEffect(() => {
     let live = true;
@@ -112,7 +115,9 @@ export default function DashboardStaffPane() {
       </div>
 
       {!loaded ? <p className="mt-4 text-xs text-emerald-100/50">Reading the registry…</p> : null}
-      {open && <PalAskPanel desk={open} onClose={() => setOpen(null)} />}
+      {open && <PalAskPanel desk={open} onClose={() => setOpen(null)} onEscalation={setChallenge} />}
+
+      <HitlConsole challenge={challenge} />
     </div>
   );
 }

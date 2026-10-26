@@ -30,6 +30,37 @@ const REGISTRY = {
   ],
 };
 
+
+/**
+ * A fresh Response per call, routed by URL.
+ *
+ * The pane mounts the human-in-the-loop console, so more than one request is made — and a
+ * Response body can only be read once. A single shared Response made the console consume the
+ * registry, which left the pane reading an empty registry and silently falling back to the
+ * local desk list. Each URL gets its own Response here, exactly as the real deployment does.
+ */
+function routeFetch(pals: unknown) {
+  return vi.spyOn(globalThis, "fetch").mockImplementation(async (input: any) => {
+    const url = String(input);
+    const json = (body: unknown) =>
+      new Response(JSON.stringify(body), { status: 200, headers: { "content-type": "application/json" } });
+    if (url.endsWith("/api/pals")) return json(pals);
+    if (url.endsWith("/api/hitl")) {
+      return json({
+        schema: "csoai.hitl-companion-state/0.1",
+        policy: "Measurement and Human-in-the-Loop Oversight — Never Certification",
+        decisions: ["APPROVED", "HOLD", "REJECTED"],
+        decision_path: "open",
+        signing_key_configured: true,
+        store_bound: true,
+        modules: [],
+      });
+    }
+    if (url.endsWith("/api/hitl/challenges")) return json({ challenges: [] });
+    throw new Error(`unexpected fetch: ${url}`);
+  });
+}
+
 describe("the Council OS staff pane", () => {
   let root: Root | undefined;
   let container: HTMLDivElement | undefined;
@@ -57,9 +88,7 @@ describe("the Council OS staff pane", () => {
   });
 
   it("lists the staff from the registry and says which model is configured", async () => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValue(
-      new Response(JSON.stringify(REGISTRY), { status: 200, headers: { "content-type": "application/json" } }),
-    );
+    routeFetch(REGISTRY);
     const c = await mount();
 
     expect(c.querySelector('[data-testid="os-agent-measure"]')).not.toBeNull();
@@ -67,10 +96,17 @@ describe("the Council OS staff pane", () => {
     expect(c.textContent).toContain("meok-fluid-v1");
   });
 
-  it("says plainly that a staff member with no keypair cannot be signed for", async () => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValue(
-      new Response(JSON.stringify(REGISTRY), { status: 200, headers: { "content-type": "application/json" } }),
+  it("carries the human-in-the-loop console, so a decision has a surface", async () => {
+    routeFetch(REGISTRY);
+    const c = await mount();
+    expect(c.querySelector('[data-testid="hitl-console"]')).not.toBeNull();
+    expect(c.querySelector('[data-testid="hitl-policy"]')?.textContent).toContain(
+      "Measurement and Human-in-the-Loop Oversight",
     );
+  });
+
+  it("says plainly that a staff member with no keypair cannot be signed for", async () => {
+    routeFetch(REGISTRY);
     const c = await mount();
     // The honest state, not a DID-shaped string with no key behind it.
     expect(c.textContent).toContain("No signing key yet");
@@ -82,9 +118,7 @@ describe("the Council OS staff pane", () => {
       ...REGISTRY,
       staff: [{ ...REGISTRY.staff[0], did: REAL_DID, signed: true }],
     };
-    vi.spyOn(globalThis, "fetch").mockResolvedValue(
-      new Response(JSON.stringify(signedRegistry), { status: 200, headers: { "content-type": "application/json" } }),
-    );
+    routeFetch(signedRegistry);
     const c = await mount();
     // The staff member WITH a keypair shows its DID. The others have none provisioned and say
     // so, which is why the negative assertion is not made here.
@@ -92,12 +126,7 @@ describe("the Council OS staff pane", () => {
   });
 
   it("says so plainly when no model is configured, rather than implying one is there", async () => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValue(
-      new Response(JSON.stringify({ ...REGISTRY, model_configured: false, model_active: null }), {
-        status: 200,
-        headers: { "content-type": "application/json" },
-      }),
-    );
+    routeFetch({ ...REGISTRY, model_configured: false, model_active: null });
     const c = await mount();
     expect(c.textContent).toContain("No language model is configured");
     expect(c.textContent).not.toContain("meok-fluid-v1");
@@ -108,6 +137,18 @@ describe("the Council OS staff pane", () => {
       const url = String(input);
       if (url.endsWith("/api/pals")) {
         return new Response(JSON.stringify(REGISTRY), {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        });
+      }
+      if (url.endsWith("/api/hitl")) {
+        return new Response(JSON.stringify({ policy: "Measurement and Human-in-the-Loop Oversight — Never Certification", decision_path: "open", modules: [] }), {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        });
+      }
+      if (url.endsWith("/api/hitl/challenges")) {
+        return new Response(JSON.stringify({ challenges: [] }), {
           status: 200,
           headers: { "content-type": "application/json" },
         });
