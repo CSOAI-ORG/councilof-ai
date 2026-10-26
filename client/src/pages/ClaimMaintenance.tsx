@@ -320,9 +320,17 @@ export default function ClaimMaintenance() {
             <p className="mt-4 text-sm leading-6 text-slate-600">
               <code className="font-mono text-xs">UNSCHEDULED</code> means this registry has no next read currently scheduled. It does not mean a read failed, and being listed here does not mean a monitoring service was commissioned.
             </p>
-            <div role="region" aria-label="Subjects under claim maintenance" tabIndex={0} className="mt-4 overflow-x-auto rounded-lg border border-slate-200">
+            <div
+              role="region"
+              aria-labelledby="claim-maintenance-table-caption"
+              tabIndex={0}
+              className="mt-4 overflow-x-auto rounded-lg border border-slate-200"
+            >
             <table className="w-full text-left text-sm">
-              <thead className="bg-slate-100 text-xs uppercase tracking-wide text-slate-600">
+              <caption id="claim-maintenance-table-caption" className="sr-only">
+                Subjects under claim maintenance and their latest recorded checks
+              </caption>
+              <thead className="sticky top-0 z-10 bg-slate-100 text-xs uppercase tracking-wide text-slate-600">
                 <tr>
                   <th scope="col" className="px-4 py-3">Subject</th>
                   <th scope="col" className="px-4 py-3">Claims</th>
@@ -336,7 +344,7 @@ export default function ClaimMaintenance() {
               <tbody className="divide-y divide-slate-200">
                 {subjects.map((s) => (
                   <tr key={s.identifier + s.subject}>
-                    <td className="px-4 py-3 font-medium text-slate-900">{s.subject}</td>
+                    <th scope="row" className="sticky left-0 bg-white px-4 py-3 font-medium text-slate-900">{s.subject}</th>
                     <td className="px-4 py-3 tabular-nums">{s.claim_count}</td>
                     <td className="px-4 py-3 font-mono text-xs text-slate-600">
                       {Object.entries(s.states)
