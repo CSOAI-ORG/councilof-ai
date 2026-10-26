@@ -331,7 +331,7 @@
       </div>
       <div class="pillar">
         <h3>MCP server</h3>
-        <p>The public MCP route describes <code>board_totals</code>, <code>get_axis</code>, <code>verify_card</code>, and <code>list_cards</code>. Confirm the current route response and each returned artefact before relying on a tool.</p>
+        <p>The public MCP route publishes its own tool list: read <code>POST https://councilof.ai/mcp</code> with <code>tools/list</code> for the full set, and <code>https://councilof.ai/mcp/free</code> for the free readers only. This entry once named four tools (<code>board_totals</code>, <code>get_axis</code>, <code>verify_card</code>, <code>list_cards</code>); that list is superseded by the live route. Confirm the current route response and each returned artefact before relying on a tool.</p>
       </div>
       <div class="pillar">
         <h3>Plugin + extension</h3>
