@@ -9,6 +9,8 @@
       "api-arena-scoreboard",
       "api-art50-marking-evidence-post",
       "api-board-sign-post",
+      "api-pals",
+      "api-pals-post",
       "api-commissions",
       "api-signed-data-feed-post",
       "api-evidence-bundle-post",
@@ -85,6 +87,28 @@
       "lifecycle": "LIVE",
       "payment": "free",
       "path": "/api/board-sign",
+      "method": "POST"
+    },
+    {
+      "id": "api-pals",
+      "kind": "http",
+      "name": "Staff registry (PALs)",
+      "description": "GET /api/pals — the staff registry. Every Council of AI staff member as a PAL record: identity (did:key), memory namespace, scope, objectives, guardrails, voice, model preference and face adapter. The house staff are the desks on /team expressed as PALs, and the desk definitions are DERIVED rather than copied, so this registry and the page cannot describe different people. Also serves GET /api/pals/<id> for one staff member, and states whether a language model is configured for this deployment, so a reader is never left guessing which of the two they are talking to.",
+      "audience": "both",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "path": "/api/pals",
+      "method": "GET"
+    },
+    {
+      "id": "api-pals-post",
+      "kind": "http",
+      "name": "Staff registry (PALs, POST)",
+      "description": "POST /api/pals — the write door, described rather than 404'd. POST /api/pals/provision builds a staff member, and is refused rather than pretended when the PAL_MEMORY_KV store is unbound. POST /api/pals/<id>/chat asks one a question. Every reply carries its provenance: grounded when the published records answered and the model was never consulted, model when the model spoke on the records, ungrounded when no record answers, refused when a reply broke a standing rule.",
+      "audience": "both",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "path": "/api/pals",
       "method": "POST"
     },
     {

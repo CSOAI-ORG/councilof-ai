@@ -31,6 +31,12 @@
 //   PAL_MODEL_URL + PAL_MODEL_TOKEN + PAL_MODEL_ID   -> OpenAI-compatible, preferred
 //   SOV_GATE_URL  + SOV_GATE_TOKEN                    -> the estate's existing gate, fallback
 //
+// These are Cloudflare Pages environment variables (Settings -> Environment variables ->
+// Production), set by the owner. There is no key in this repo and none in any receipt. The
+// endpoint must be reachable from Cloudflare's edge: a private address on a LAN is not
+// reachable from a Worker, so pointing PAL_MODEL_URL at one proves the code path locally and
+// not in production.
+//
 // The gate's routing id is PRIVATE ("sov6-ethics-v3-light" in _chatGrounded.ts) and is never
 // returned to a public client: the gate route reports "council-routing-default", the same
 // public id the chat surface already uses.

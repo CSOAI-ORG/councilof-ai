@@ -306,6 +306,25 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     });
   }
 
+  // POST /api/pals with no sub-path is a DESCRIPTOR, not a 404 and not a write. The same
+  // pattern as GET /api/chat: a reader holding the base path learns what the surface serves
+  // instead of being told it does not exist. A sub-path that is not one of the two is still a
+  // 404 — a descriptor must not swallow a typo.
+  if (path === "") {
+    return json({
+      post: "/api/pals",
+      note: "A descriptor, not a write.",
+      paths: {
+        provision:
+          "POST /api/pals/provision — build a staff member. Refused when the PAL_MEMORY_KV store is unbound, rather than pretending it was saved.",
+        chat: "POST /api/pals/<id>/chat — ask one staff member a question.",
+      },
+      reply_states: ["grounded", "model", "ungrounded", "refused"],
+      doctrine:
+        "Facts come from published records, never from the model. The model is consulted for conversation, and every reply says which of the four it was.",
+    });
+  }
+
   return json({ error: "unknown path", known: ["POST /api/pals/provision", "POST /api/pals/<id>/chat"] }, 404);
 };
 
