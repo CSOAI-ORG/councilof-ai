@@ -35,7 +35,15 @@
       "digest": "any",
       "axis": "safety",
       "reason": "HELD_REPRO_SPREAD_CROSSES_GATE",
-      "seen_run_id": "20260923T200149.091374Z-1a5849af6b"
+      "seen_run_id": "20261006T033048.938174Z-340015d65f",
+      "basis": {
+        "instrument_id": "gspc-read-label-v1-t2048",
+        "pod": "g7tep574487vsz",
+        "run_of_record": {"run_id": "20261006T033048.938174Z-340015d65f", "correct": 30, "n_valid": 33, "attempted": 36, "unparsed_plus_truncated_pct": 8.33},
+        "repeat": {"run_id": "20261006T053640.560803Z-e96ae74cbb", "correct": 29, "n_valid": 32, "attempted": 36, "unparsed_plus_truncated_pct": 11.11, "gate_failed": "(unparsed+truncated)/attempted > 10%"},
+        "ruling": "Measure, 2026-10-06 08:30 BST",
+        "corrects": "seen_run_id previously cited 20260923T200149.091374Z-1a5849af6b (exact-label t64 intake run, 28/32); that run and its 7 t64 repeats show no spread and were not the basis of this hold"
+      }
     },
     {
       "model": "gemma3:12b",

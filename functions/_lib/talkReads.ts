@@ -7,7 +7,7 @@
  * uncommitted edits in ~/clawd/wt-talk-claims-grounded-20260930 (talkRouter.ts, talkRouter.test.ts,
  * mcp/_handlers.ts, mcp/gspc-tools.json). It is applied here with one change: the two reads stay
  * router-internal instead of joining the public /mcp fleet, because the fleet is locked by name
- * (functions/mcp/tool-fleet.lock.json, K-1: 19 tools) and every registry listing and discovery file
+ * (functions/mcp/tool-fleet.lock.json, K-1) and every registry listing and discovery file
  * renders from that lock. Growing the fleet is its own change with its own discovery re-render.
  *
  * Both read served JSON from this origin and quote fields. Neither re-verifies a signature (the
