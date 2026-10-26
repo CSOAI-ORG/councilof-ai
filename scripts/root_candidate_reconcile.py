@@ -199,11 +199,18 @@ def _make_repo(tmp: Path, *, master_changes_root: bool, candidate_changes_root: 
 
 
 def _stubs(repo: Path, log: Path) -> tuple[list[str], list[str]]:
-    """Stub generators that record the order they ran in."""
+    """Real, runnable stand-ins for the two generators.
+
+    They record the order they ran in, which is what the second fault was about: the
+    manifest is generated from the tree, the views are generated from the manifest, and
+    the views must never be generated first.
+    """
     _write(repo / "scripts/ots_manifest_rebuild.py",
            f"open({str(log)!r}, 'a').write('manifest\\n')\n")
-    _write(repo / "scripts/llms-txt.mjs", "")
-    return [sys.executable, "scripts/ots_manifest_rebuild.py"], ["node", "-e", ""]
+    _write(repo / "scripts/llms-txt.mjs",
+           f"import {{ appendFileSync }} from 'node:fs';\n"
+           f"appendFileSync({str(log)!r}, 'views\\n');\n")
+    return [sys.executable, "scripts/ots_manifest_rebuild.py"], ["node", "scripts/llms-txt.mjs"]
 
 
 def run_selftest() -> int:
@@ -249,7 +256,7 @@ def run_selftest() -> int:
         builder, generator = _stubs(repo, log)
         reconcile(repo, builder=builder, generator=generator)
         order = log.read_text(encoding="utf-8").split()
-        ok = order[:1] == ["manifest"]
+        ok = order == ["manifest", "views"]
         print(f"  {'ok ' if ok else 'BAD'} the manifest is rebuilt before the views that quote it: "
               f"{order}")
         failures += not ok
@@ -286,10 +293,31 @@ def run_selftest() -> int:
         print(f"  {'ok ' if ok else 'BAD'} a missing generator is UNCHECKABLE: {detail}")
         failures += not ok
 
+    # 6. The tool works when it is NOT in the tree it reconciles. This is not hypothetical:
+    # the workflow checks out the rolling candidate branch, which does not have this file
+    # until it merges master, so the tool is run from a copy fetched out of master while it
+    # works on the candidate's tree. Run it the way the workflow runs it.
+    with tempfile.TemporaryDirectory() as tmp:
+        repo = _make_repo(Path(tmp), master_changes_root=False, candidate_changes_root=False)
+        log = Path(tmp) / "order.log"
+        _stubs(repo, log)
+        outside = Path(tmp) / "tool" / "root_candidate_reconcile.py"
+        outside.parent.mkdir(parents=True, exist_ok=True)
+        outside.write_text(Path(__file__).read_text(encoding="utf-8"), encoding="utf-8")
+        result = subprocess.run(
+            [sys.executable, str(outside), "--repo", str(repo)],
+            capture_output=True, text=True, cwd=str(Path(tmp)))
+        order = log.read_text(encoding="utf-8").split() if log.exists() else []
+        ok = result.returncode == 0 and order == ["manifest", "views"]
+        detail = (result.stdout.strip().splitlines() or [result.stderr.strip()])[-1][:90]
+        print(f"  {'ok ' if ok else 'BAD'} the tool works from outside the tree it reconciles: "
+              f"{detail} | order {order}")
+        failures += not ok
+
     if failures:
         print(f"root-candidate-reconcile selftest: FAIL ({failures} case(s))", file=sys.stderr)
         return 1
-    print("root-candidate-reconcile selftest: PASS (5 cases)")
+    print("root-candidate-reconcile selftest: PASS (6 cases)")
     return 0
 
 
