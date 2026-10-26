@@ -56,6 +56,11 @@ jobs:
               'packages/evidence-fabric/render/intoto.py',
               'packages/evidence-fabric/render/ecs_hec.py',
               'docs/standards/osaia-safe-reverification/safe-reverification-record-v0.1.schema.json',
+              'docs/standards/osaia-safe-reverification/safe-review-outcome-v0.1.schema.json',
+              'docs/standards/osaia-safe-reverification/safe-discriminating-power-v0.1.schema.json',
+              'docs/standards/osaia-safe-reverification/validate_examples.py',
+              'docs/standards/osaia-safe-reverification/test_discriminating_power.py',
+              'docs/standards/osaia-safe-reverification/examples/example-stale-signed-board-freeze.json',
               'docs/standards/osaia-safe-evidence-pack/records/C-2026-0928-01.post-fix.safe-rv.json',
               'docs/standards/osaia-safe-evidence-pack/records/C-2026-0928-01.pre-fix.safe-rv.json',
           ):
@@ -88,6 +93,11 @@ jobs:
                   or result.skipped or result.expectedFailures or result.unexpectedSuccesses):
               raise SystemExit('Approval control coverage incomplete or unsuccessful')
           PY
+      - name: SAFE profile examples and discriminating-power controls
+        working-directory: docs/standards/osaia-safe-reverification
+        run: |
+          python validate_examples.py
+          python test_discriminating_power.py
       - name: SAFE whole-pack reader regression controls
         run: |
           python -I -B - <<'PY'
