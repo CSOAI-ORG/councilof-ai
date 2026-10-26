@@ -35,13 +35,19 @@ export default function CouncilLicensingLanding() {
         </p>
 
         <ul className="mt-8 space-y-3 text-sm leading-relaxed text-slate-300">
-          <li>Insurers and procurement pay. Ranked vendors do not.</li>
+          <li>Intended payer model: insurers and procurement; ranked vendors excluded.</li>
           <li>Four columns, never blended: regulation · measured-AI · human baseline · market.</li>
           <li>UNMEASURED stays empty. A gap is not a zero.</li>
-          <li>Verification of any card stays free, in the reader’s browser.</li>
+          <li>Use the free browser verifier for supported card formats; check its stated limits.</li>
         </ul>
 
         <div className="mt-10 flex flex-wrap gap-3">
+          <Link
+            href="/gspc-verify"
+            className="rounded-xl border border-slate-100/20 px-6 py-3 font-semibold hover:border-emerald-400/50"
+          >
+            Verify a supported card free
+          </Link>
           <Link
             href="/licensing-agreement"
             className="rounded-xl bg-emerald-500 px-6 py-3 font-semibold text-emerald-950 hover:bg-emerald-400"
@@ -58,7 +64,7 @@ export default function CouncilLicensingLanding() {
             href="/products"
             className="rounded-xl border border-slate-100/20 px-6 py-3 font-semibold hover:border-emerald-400/50"
           >
-            All four SKUs
+            Browse products
           </Link>
         </div>
       </section>
