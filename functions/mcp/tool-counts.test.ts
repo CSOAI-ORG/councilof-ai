@@ -109,3 +109,61 @@ describe("#24 discovery files: rendered whole from one source", () => {
     expect(out).toMatch(/match/);
   });
 });
+
+/**
+ * #3502. The last four surfaces that still carried a hand-written fleet size.
+ *
+ * The fleet count has been copied by hand into six places so far, and each copy went stale
+ * in its own way: smoke.mjs, wired-tools.test.mjs, the published prose in llms-install.md,
+ * the published Claude plugin manifest at public/.claude-plugin/plugin.json (which said
+ * "16 tools (12 free, 4 x402-metered)" at version 1.4.3 while the door served 52 at 1.4.4),
+ * the public page public/what-is-new.html (which said the route describes four tools), and
+ * the staged mcp.so submission (which named 12 tools and npm 0.2.2).
+ *
+ * Two of them are now DERIVED at build time — the plugin manifest is emitted by
+ * scripts/harness-x/render.mjs from pluginCore — and this test holds the two that are still
+ * prose to the same numbers. A fleet change turns it red instead of leaving a stale claim
+ * on a live page.
+ */
+describe("#3502 the last hand-written fleet sizes are held to the manifests", () => {
+  const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
+  const FLEET = `${nFree + nPaid} tools (${nFree} free, ${nPaid} x402-metered)`;
+
+  it("the published Claude plugin manifest carries the derived fleet and the live version", () => {
+    const plugin = JSON.parse(read("public/.claude-plugin/plugin.json"));
+    expect(plugin.description).toContain(FLEET);
+    expect(plugin.version).toBe(REGISTRY_DESCRIPTOR.version);
+    // and it is rendered, not typed: the renderer owns it, so it cannot drift from pluginCore
+    expect(read("scripts/harness-x/render.mjs")).toContain('emit("public/.claude-plugin/plugin.json"');
+    expect(read("council-os/distribution.json")).toContain("public/.claude-plugin/plugin.json");
+  });
+
+  it("the public what-is-new page names no frozen tool list and no frozen count", () => {
+    const page = read("public/what-is-new.html");
+    // the old claim: "The public MCP route describes board_totals, get_axis, verify_card, and list_cards."
+    expect(page).not.toMatch(/describes <code>board_totals<\/code>/);
+    for (const stale of [/19 tools/, /16 tools/, /12 tools/, /8 free readers/, /Twelve MCP tools/]) {
+      expect(page).not.toMatch(stale);
+    }
+    // it points at the live source instead of freezing a number here
+    expect(page).toContain("tools/list");
+  });
+
+  it("the staged mcp.so submission names the derived fleet, every paid tool, and the published version", () => {
+    const doc = read("docs/operations/submissions/mcp-so-submission.md");
+    expect(doc).toContain(`${nFree + nPaid} MCP tools`);
+    expect(doc).toContain(`${nFree} free readers`);
+    expect(doc).toContain(`${nPaid} x402-metered`);
+    for (const t of PAID.tools.map((t: { name: string }) => t.name)) {
+      expect(doc).toContain(`\`${t}\``);
+    }
+    // the stdio line installs one exact version, and that version is the package's
+    const version = (JSON.parse(read("mcp/gspc-server/package.json")) as { version: string }).version;
+    expect(doc).toContain(`csoai-gspc-mcp (v${version})`);
+    expect(doc).toContain(`npx -y csoai-gspc-mcp@${version}`);
+  });
+
+  it("no working document still says the fleet was 19 tools", () => {
+    expect(read("council-os/ADR-005-DRAFT-capability-router-layers.md")).not.toMatch(/The 19 MCP tools stay/);
+  });
+});

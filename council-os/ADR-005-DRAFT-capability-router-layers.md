@@ -112,7 +112,7 @@ Traffic-weighted outputs are published only as counts, never as a ranking.
 
 ### D7 — Verbs are a facade over the existing tools, not new tools
 
-The 19 MCP tools stay. Proposed verb mapping for AG-UI and A2A:
+The 52 MCP tools stay. Proposed verb mapping for AG-UI and A2A:
 
 | Verb | Existing tools | Gap |
 |---|---|---|
