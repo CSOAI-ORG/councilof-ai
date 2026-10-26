@@ -22,7 +22,7 @@
  *   node scripts/surface/build-axis-pages.mjs --check         # fails if the committed pages are stale
  *   node scripts/surface/build-axis-pages.mjs --payload board.json
  */
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { headerHtml, SHELL_CSS } from "./static-shell.mjs";
@@ -48,17 +48,34 @@ export function isFacts(row) {
   return row?.kind === "deterministic-facts";
 }
 
+/**
+ * Does a separation test apply to this axis at all?
+ *
+ * Only a model-comparison axis is answered by a fleet of models on a frozen bank, so
+ * only a model-comparison axis can be SEPARATED, TIE or UNTESTED. A deterministic-fact
+ * axis reads named public sources; a declared slot has no run behind it yet. Both are
+ * measured by rules that never compare two models, so neither can be separated.
+ *
+ * This used to be asked as "is this a fact?", which made every declared slot inherit
+ * the separation glossary and the separation link. A slot that cannot be separated
+ * should not be offered the vocabulary of separation.
+ */
+export function hasSeparation(row) {
+  return row?.kind === "model-comparison";
+}
+
 /** The compound state a reader sees: MEASURED · TIE, or MEASURED · facts, no separation test. */
 export function stateLabel(row) {
   const status = row?.status ?? "UNMEASURED";
   if (isFacts(row)) return `${status} · facts, no separation test`;
+  if (!hasSeparation(row)) return status;
   if (status !== "MEASURED") return status;
   return `${status} · ${row?.separation ?? "UNTESTED"}`;
 }
 
-/** The separation value the page asserts: "" for a fact axis (no test applies). */
+/** The separation value the page asserts: "" when no separation test applies. */
 export function separationOf(row) {
-  if (isFacts(row)) return "";
+  if (!hasSeparation(row)) return "";
   return row?.status === "MEASURED" ? row?.separation ?? "UNTESTED" : "";
 }
 
@@ -157,7 +174,7 @@ export function renderAxisPage(row, board) {
   add("n", typeof row.n === "number" ? `${row.n} ${esc(nUnit)}${row.n_note ? `<br /><span class="muted">${esc(row.n_note)}</span>` : ""}` : "nothing measured");
   if (typeof row.distinct_items === "number")
     add("Distinct items", `${row.distinct_items}${row.distinct_items_source ? ` <span class="muted">— ${esc(row.distinct_items_source)}</span>` : ""}`);
-  if (!facts) {
+  if (hasSeparation(row)) {
     if (row.leader)
       add(
         "Point leader",
@@ -176,17 +193,17 @@ export function renderAxisPage(row, board) {
     `<a href="/api/gspc?axis=${encodeURIComponent(name)}">this row on the live board (JSON)</a>`,
     row.evidence_url ? `<a href="${esc(row.evidence_url)}">the run evidence</a>` : null,
     row.dataset_url ? `<a href="${esc(row.dataset_url)}">the frozen bank</a>` : null,
-    facts ? null : `<a href="/methodology/#separation">how separation is decided</a>`,
+    facts ? null : hasSeparation(row) ? `<a href="/methodology/#separation">how separation is decided</a>` : null,
     `<a href="/corrections/">corrections ledger</a>`,
   ].filter(Boolean);
 
-  const glossary = facts
-    ? ""
-    : `
+  const glossary = hasSeparation(row)
+    ? `
   <h2>What the separation words mean</h2>
   <dl data-glossary="separation">
 ${enumSep.map((w) => `    <dt>${esc(w)}</dt><dd>${esc(SEPARATION_MEANS[w] ?? "see GET /api/gspc state_enum")}</dd>`).join("\n")}
-  </dl>`;
+  </dl>`
+    : "";
 
   const body = `  <p class="lid">${esc(lid(board))}</p>
   <h1>${esc(name)}</h1>
@@ -222,22 +239,32 @@ ${glossary}
 
 export function renderAxesIndex(board) {
   const axes = Array.isArray(board?.axes) ? board.axes : [];
-  const cmp = axes.filter((a) => !isFacts(a));
+  // Bucket by the board's OWN `kind`, not by "is it a fact?". A declared subject slot
+  // (lab-practice, regulator-transparency, ...) is not a model comparison: no model
+  // fleet answers it and no separation test applies to it. Filing those slots under
+  // "model-comparison axes" made this page say 23 where the board says 14 — two live
+  // lids on one page, both about the same set.
+  const cmp = axes.filter((a) => a?.kind === "model-comparison");
   const facts = axes.filter(isFacts);
-  const tr = (a) => {
-    const lead = isFacts(a)
+  const slots = axes.filter((a) => a?.kind === "declared-slot");
+  // Any axis whose kind the board did not name is shown, but never counted into a
+  // group whose prose would misdescribe it.
+  const unclassified = axes.filter((a) => !cmp.includes(a) && !facts.includes(a) && !slots.includes(a));
+  const tr = (a, leadCol) => {
+    const lead = !hasSeparation(a)
       ? "—"
       : a.leader
         ? `${esc(a.leader)}${typeof a.accuracy === "number" ? ` · ${esc(pct(a.accuracy))}` : ""}`
         : a.public_leader_state
           ? `none shown — <code>${esc(a.public_leader_state)}</code>`
           : "—";
-    return `      <tr ${stateAttrs(a)}><td><a href="/axis/${encodeURIComponent(a.axis)}">${esc(a.axis)}</a></td><td>${esc(stateLabel(a))}</td><td>${typeof a.n === "number" ? a.n : "—"}${a.n_unit ? ` <span class="muted">${esc(a.n_unit)}</span>` : ""}</td><td>${lead}</td></tr>`;
+    const leadCell = leadCol ? `<td>${lead}</td>` : "";
+    return `      <tr ${stateAttrs(a)}><td><a href="/axis/${encodeURIComponent(a.axis)}">${esc(a.axis)}</a></td><td>${esc(stateLabel(a))}</td><td>${typeof a.n === "number" ? a.n : "—"}${a.n_unit ? ` <span class="muted">${esc(a.n_unit)}</span>` : ""}</td>${leadCell}</tr>`;
   };
-  const table = (list) => `  <div class="scroll"><table>
-    <thead><tr><th>Axis</th><th>State</th><th>n</th><th>Point leader</th></tr></thead>
+  const table = (list, leadCol = true) => `  <div class="scroll"><table>
+    <thead><tr><th>Axis</th><th>State</th><th>n</th>${leadCol ? "<th>Point leader</th>" : ""}</tr></thead>
     <tbody>
-${list.map(tr).join("\n")}
+${list.map((a) => tr(a, leadCol)).join("\n")}
     </tbody>
   </table></div>`;
   const body = `  <p class="lid">${esc(lid(board))}</p>
@@ -251,7 +278,13 @@ ${table(cmp)}
   <h2>${facts.length} deterministic-fact axes</h2>
   <p class="muted">A rule with no model and no judgement, reading named public sources. None is a model score, and no separation test applies.</p>
 ${table(facts)}
-
+${slots.length ? `
+  <h2>${slots.length} declared subject slots</h2>
+  <p class="muted">A declared slot with no run behind it yet. No model fleet answers it, so no separation test applies to it either: n 0 is the literal truth, never a score. It becomes MEASURED only with a frozen sha-pinned bank, n_valid at least 30, passing the gate.</p>
+${table(slots, false)}` : ""}${unclassified.length ? `
+  <h2>${unclassified.length} axes of an unnamed kind</h2>
+  <p class="muted">The board does not name a kind for these, so this page does not guess what they measure. It shows the state the board serves and nothing more.</p>
+${table(unclassified, false)}` : ""}
   <p class="muted">Rendered from the board this site's build serves (GET /api/gspc), not typed by hand. <a href="/api/gspc">The board as JSON</a> · <a href="/methodology/#separation">how separation is decided</a>.</p>`;
   return shell({
     title: "GSPC axes — what each one measures | Council of AI",
@@ -272,6 +305,41 @@ export function renderAll(boardIn) {
     out[`axis/${row.axis}.html`] = renderAxisPage(row, board);
   }
   out["axes.html"] = renderAxesIndex(board);
+  return out;
+}
+
+/**
+ * Files under the axis directory that this generator OWNS but no longer renders.
+ *
+ * The generator writes public/axis/<axis>.html for every axis the board serves that is not
+ * owner-gated. It never removed a page for an axis that later became owner-gated, so the
+ * stale file stayed in public/, was copied verbatim into dist/client by the vite publicDir,
+ * and shipped as a live public page for a slot the owner was still holding. A committed
+ * page is not inert: it is a URL a reader can open.
+ *
+ * `rendered` is the map renderAll() produced for this board. A page on disk that is not in
+ * that map is a page this generator would no longer write — it must not survive the build.
+ *
+ * Dated run reports under /axis/ (e.g. effect-binding-server-probe-2026-09-22.html) are
+ * NOT axis pages and are never ours to delete, so only <axis>.html whose id is a slug on
+ * the board can be pruned.
+ */
+export function staleOwnedFiles(boardIn, outDir, rendered = {}) {
+  const boardAxes = (Array.isArray(boardIn?.axes) ? boardIn.axes : [])
+    .map((a) => a?.axis)
+    .filter((id) => typeof id === "string" && /^[a-z0-9-]+$/.test(id));
+  const dir = join(outDir, "axis");
+  if (!existsSync(dir)) return [];
+  const owned = new Set(boardAxes.map((id) => `${id}.html`));
+  const out = [];
+  for (const name of readdirSync(dir)) {
+    if (!name.endsWith(".html")) continue;
+    // Only a page named for a board axis id is a page this generator could have written.
+    if (!owned.has(name)) continue;
+    const rel = join("axis", name);
+    if (Object.prototype.hasOwnProperty.call(rendered, rel)) continue;
+    out.push(join(dir, name));
+  }
   return out;
 }
 
@@ -307,6 +375,14 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
       mkdirSync(dirname(p), { recursive: true });
       writeFileSync(p, html);
     }
+  }
+  // A page for an axis this generator no longer renders (owner-gated, or gone from the
+  // board) must not survive into dist. Removing it here is the only place that can: the
+  // vite publicDir copies public/ into dist/client wholesale.
+  const orphans = staleOwnedFiles(board, outDir, files);
+  for (const p of orphans) {
+    if (check) stale.push(relative(ROOT, p));
+    else rmSync(p, { force: true });
   }
   if (check && stale.length) {
     console.error(`✖ axis pages are stale against this commit's /api/gspc — run node scripts/surface/build-axis-pages.mjs\n  ${stale.join("\n  ")}`);
