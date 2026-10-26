@@ -1,4 +1,4 @@
-import { recordPaidResponse } from "../_x402_delivery_record";
+import { recordPaidResponse, markPaidUndeliveredResponse } from "../_x402_delivery_record";
 /**
  * GET /api/rwa/evidence?asset=<symbol|issuer_address> — per-request signed evidence card of ONE
  * XRPL asset's deterministic on-ledger state. Sold to machines over the existing x402 rail
@@ -367,7 +367,19 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     return json({ schema: "csoai.rwa-evidence/0.1", error: "not_found", reason: `asset ${asset} is not in the public reader`, known_symbols: resolved.known, read_from: resolved.source, note: "Buyer-led: only assets the free reader already lists are evidenced. No payment was taken for a 404." }, 404);
   }
 
-  const built = await buildPayload(origin, resolved.row, resolved.reader_as_of, resolved.source.startsWith("http") ? resolved.source : `${origin}/api/xrpl`);
+  const settled = payment.ok ? payment.settlement || null : null;
+  const paidFailure = (reason: string, error = "uncheckable") => markPaidUndeliveredResponse(json({
+    schema: "csoai.rwa-evidence/0.1", error, state: "PAID_NOT_DELIVERED",
+    reason, settle: settled,
+    note: "Payment settled, but this output was not delivered. Preserve the settlement receipt and reconcile the transaction with CSOAI before any reissue; do not automatically retry or pay again.",
+  }, 500), payment.ok, payment.ok ? payment.paymentResponse : undefined);
+  let built: Awaited<ReturnType<typeof buildPayload>>;
+  try {
+    built = await buildPayload(origin, resolved.row, resolved.reader_as_of, resolved.source.startsWith("http") ? resolved.source : `${origin}/api/xrpl`);
+  } catch (e) {
+    if (preview) throw e;
+    return paidFailure(e instanceof Error ? e.message : String(e));
+  }
   const sym = String(resolved.row.symbol);
   const envelope = (payload: Record<string, unknown>) => ({
     schema: SCHEMA,
@@ -399,7 +411,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   try {
     leaf = await signPayload(payload, env.BOARD_SIGN_KEY_PKCS8_B64);
   } catch (e) {
-    return json({ schema: "csoai.rwa-evidence/0.1", error: "uncheckable", reason: (e as Error).message }, 500);
+    return paidFailure(e instanceof Error ? e.message : String(e));
   }
   const unmeasured = [...(payload.unmeasured as string[])];
   if (!leaf.sig_ed25519) unmeasured.push(/absent/.test(leaf.unsigned_reason || "") ? "sig_ed25519 (no Pages key)" : "sig_ed25519 (sign failed)");
@@ -409,10 +421,10 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const bytes = canonicalBytes(card);
   const text = new TextDecoder().decode(bytes);
   if (VERDICT_RE.test(text)) {
-    return json({ schema: "csoai.rwa-evidence/0.1", error: "refused", reason: `card carries a verdict word: ${text.match(VERDICT_RE)![0]}` }, 500);
+    return paidFailure(`card carries a verdict word: ${text.match(VERDICT_RE)![0]}`, "refused");
   }
   if (bytes.byteLength > PAYLOAD_CAP_BYTES) {
-    return json({ schema: "csoai.rwa-evidence/0.1", error: "uncheckable", reason: `card ${bytes.byteLength}B > ${PAYLOAD_CAP_BYTES}B cap` }, 500);
+    return paidFailure(`card ${bytes.byteLength}B > ${PAYLOAD_CAP_BYTES}B cap`);
   }
 
   if (env.REVENUE_KV) {

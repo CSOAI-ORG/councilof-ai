@@ -9,6 +9,13 @@ on:
         description: "Exact package version to publish (must match package.json)"
         required: true
         type: string
+  # After every successful production deploy, publish the package version in
+  # package.json if (and only if) it is not on npm yet. Already published = no-op.
+  workflow_run:
+    # "+" is a glob operator in workflow_run filters; escape it so the name matches.
+    workflows: ['Build \+ deploy site (gated production branch)']
+    types: [completed]
+    branches: [master]
 
 permissions:
   contents: read
@@ -18,7 +25,10 @@ jobs:
     # workflow_dispatch allows an operator to select any ref. npm's trusted
     # publisher binds the workflow filename, not this repository branch, so a
     # non-master run must never start a job capable of obtaining an OIDC token.
-    if: ${{ github.ref == 'refs/heads/master' }}
+    if: >-
+      ${{ github.ref == 'refs/heads/master' &&
+          (github.event_name == 'workflow_dispatch' ||
+           (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'master')) }}
     permissions:
       contents: read
       id-token: write
@@ -26,6 +36,8 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
 
       - uses: actions/setup-node@v6
         with:
@@ -34,19 +46,27 @@ jobs:
           package-manager-cache: false
 
       - name: Confirm version is exact and unused
+        id: ver
         working-directory: mcp/gspc-server
         env:
           EXPECTED_VERSION: ${{ inputs.version }}
+          EVENT: ${{ github.event_name }}
         run: |
           set -euo pipefail
           actual="$(node -p "require('./package.json').version")"
-          test "$actual" = "$EXPECTED_VERSION"
+          if [ "$EVENT" = "workflow_dispatch" ]; then test "$actual" = "$EXPECTED_VERSION"; fi
           if npm view "csoai-gspc-mcp@$actual" version >/dev/null 2>&1; then
+            if [ "$EVENT" = "workflow_run" ]; then
+              echo "csoai-gspc-mcp@$actual already on npm; nothing to publish after this deploy"
+              echo "skip=true" >> "$GITHUB_OUTPUT"; exit 0
+            fi
             echo "csoai-gspc-mcp@$actual already exists; refusing to overwrite an immutable release"
             exit 1
           fi
+          echo "skip=false" >> "$GITHUB_OUTPUT"
 
       - name: Verify package and live contract
+        if: steps.ver.outputs.skip != 'true'
         working-directory: mcp/gspc-server
         run: |
           npm run prepack
@@ -55,5 +75,6 @@ jobs:
           npm pack --dry-run
 
       - name: Publish through trusted OIDC with automatic provenance
+        if: steps.ver.outputs.skip != 'true'
         working-directory: mcp/gspc-server
         run: npm publish --access public
