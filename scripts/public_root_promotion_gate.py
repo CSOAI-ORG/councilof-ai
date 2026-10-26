@@ -53,6 +53,11 @@ GATE_WORKFLOW = "pr-gates.yml"
 # it when it is readable, and neither can weaken the other.
 REQUIRED_CONTEXTS = ("gates", "build", "stamped-bytes", "hold-guard")
 
+# How many times the gate may re-run the pull_request workflow to replace poisoned check runs.
+# Bounded: a re-run is a request to re-gate the same bytes, and a gate that can re-run forever
+# is a gate that never answers.
+MAX_RERUNS = 3
+
 
 class GitHub:
     """The four GitHub calls this gate makes. Injectable so the rules can be tested offline."""
@@ -169,6 +174,22 @@ class GitHub:
         )
         return rc == 0
 
+    def rerun(self, repo: str, run_id) -> bool:
+        """Run a workflow again on the SAME commit.
+
+        Re-running is how a poisoned check is replaced. Cancelling a run does not remove the
+        check runs it produced: it produces NEW ones with HIGHER ids and a cancelled
+        conclusion, and branch protection reads the newest check run per context. So a
+        workflow_dispatch run that was cancelled after the pull_request run passed leaves
+        `hold-guard` reading as cancelled, and the gate can never see a green context again
+        for those bytes. A re-run of the pull_request run creates fresh check runs with the
+        highest ids, and the same bytes are re-gated - not re-decided.
+        """
+        rc, _out, _err = self._runner(
+            ["gh", "api", "-X", "POST", f"repos/{repo}/actions/runs/{run_id}/rerun"]
+        )
+        return rc == 0
+
     def watch(self, repo: str, run_id) -> bool:
         """Block until the run finishes. True = it passed."""
         rc, _out, _err = self._runner([
@@ -227,6 +248,7 @@ def promote(gh, repo, branch, url, workflow: str = GATE_WORKFLOW,
     declared `if: github.event_name == 'pull_request'`).
     """
     required = None
+    reruns = 0
     for cycle in range(1, max_cycles + 1):
         head = gh.branch_head(repo, branch)
         # Approve EVERY gated run for these bytes, not only the gate's own run. The required
@@ -277,6 +299,21 @@ def promote(gh, repo, branch, url, workflow: str = GATE_WORKFLOW,
             log(f"cycle {cycle}: pr-gates passed on {head[:9]} but the required contexts are not "
                 f"all green on it ({detail}); a context that is skipped or cancelled does not "
                 f"satisfy branch protection, so the merge is not attempted")
+            # The contexts can be poisoned by a LATER run on the same bytes: cancelling a run
+            # leaves behind newer check runs that read as cancelled, and the newest check run
+            # per context is the one branch protection reads. When the pull_request run for
+            # these bytes has passed, re-run it so its fresh check runs carry the highest ids.
+            # Same bytes, re-gated - not a different decision.
+            if reruns < MAX_RERUNS:
+                passed = [r for r in gh.runs(repo, workflow, branch)
+                          if r.get("headSha") == head and r.get("event") == "pull_request"
+                          and r.get("conclusion") == "success"]
+                if passed:
+                    reruns += 1
+                    rid = passed[0]["databaseId"]
+                    log(f"cycle {cycle}: re-running the pull_request run {rid} so its check runs "
+                        f"are the newest for these bytes (attempt {reruns} of {MAX_RERUNS})")
+                    gh.rerun(repo, rid)
             sleep(pause)
             continue
         rc, _out, err = gh.merge(repo, url, head)

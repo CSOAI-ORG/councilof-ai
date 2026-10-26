@@ -72,6 +72,7 @@ class FakeGitHub:
         self.watch_results = list(watch_results or [True])
         self.dispatched = []
         self.approved = []
+        self.reran = []
         self.merged = []
         self.watched = []
         # The status-check contexts the repo requires, and their conclusions on the head.
@@ -102,6 +103,10 @@ class FakeGitHub:
 
     def approve(self, repo, run_id):
         self.approved.append(run_id)
+        return True
+
+    def rerun(self, repo, run_id):
+        self.reran.append(run_id)
         return True
 
     def watch(self, repo, run_id):
@@ -402,6 +407,51 @@ class PromotionGateTest(unittest.TestCase):
         self.assertTrue(verdict.startswith("merged"))
         self.assertEqual(fake.merged, [HEAD_NEW])
         self.assertIn(56, fake.approved)
+
+    # ---- a cancelled run poisons the contexts, and only a re-run replaces them ----
+    #
+    # THE DEFECT THESE CASES SHIP WITH. Cancelling a workflow run does not remove the check
+    # runs it produced: it produces NEW ones with HIGHER ids and a cancelled conclusion, and
+    # branch protection reads the NEWEST check run per context. So a workflow_dispatch run
+    # that was cancelled after the pull_request run passed leaves `hold-guard` reading as
+    # cancelled, and no amount of waiting brings it back. Measured 2026-10-26 on PR #3511:
+    # three cancelled suites sat above the passing one, and the gate could not see a green
+    # context for bytes whose gates had all passed.
+
+    def test_a_poisoned_context_triggers_a_rerun_of_the_passing_pull_request_run(self):
+        fake = FakeGitHub(
+            heads=[HEAD_NEW],
+            runs=[{"databaseId": 61, "headSha": HEAD_NEW, "status": "completed",
+                   "conclusion": "success", "event": "pull_request"}],
+            contexts={**ALL_GREEN, "hold-guard": "cancelled"},
+        )
+        verdict = run_promote(fake, max_cycles=3)
+        self.assertTrue(fake.reran)
+        self.assertEqual(set(fake.reran), {61})
+        self.assertEqual(fake.merged, [])
+
+    def test_the_rerun_is_bounded(self):
+        """A gate that can re-run forever is a gate that never answers."""
+        fake = FakeGitHub(
+            heads=[HEAD_NEW],
+            runs=[{"databaseId": 62, "headSha": HEAD_NEW, "status": "completed",
+                   "conclusion": "success", "event": "pull_request"}],
+            contexts={**ALL_GREEN, "hold-guard": "cancelled"},
+        )
+        run_promote(fake, max_cycles=12)
+        self.assertLessEqual(len(fake.reran), gate.MAX_RERUNS)
+
+    def test_no_rerun_when_there_is_no_passing_pull_request_run(self):
+        """Only a run that PASSED can be re-run to replace poisoned check runs. Re-running a
+        run that did not pass would be re-gating bytes that never passed."""
+        fake = FakeGitHub(
+            heads=[HEAD_NEW],
+            runs=[{"databaseId": 63, "headSha": HEAD_NEW, "status": "completed",
+                   "conclusion": "success", "event": "workflow_dispatch"}],
+            contexts={**ALL_GREEN, "hold-guard": "cancelled"},
+        )
+        run_promote(fake, max_cycles=3)
+        self.assertEqual(fake.reran, [])
 
 
 if __name__ == "__main__":
