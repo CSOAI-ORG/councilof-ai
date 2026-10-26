@@ -56,17 +56,31 @@ describe("public-root.yml never writes master", () => {
   // master requires a pull request but no status check (repo settings, 6 Oct 2026), so
   // `gh pr merge --auto` merged without waiting for pr-gates. The maintainer must wait for a
   // pr-gates pass on the exact head and merge only that commit.
+  //
+  // The gate's LOGIC moved out of inline shell on 26 Oct 2026: the shell read the pull
+  // request's headRefOid, which LAGS the branch after a push, so on 2026-10-26 it watched the
+  // gates for the PREVIOUS commit and halted the promotion with "HALT: pr-gates run 40301090584
+  // did not pass on 9e6f0cc70" - while the proof was CONFIRMED_BITCOIN and the candidate's gates
+  // were queued on the exact head. The tool reads the branch ref, re-reads it every cycle, and
+  // refuses to merge bytes whose gates did not run; it has its own selftest, proven able to go red.
   it("the candidate maintainer merges only the exact head commit pr-gates passed on", () => {
     const up = code(read(".github/workflows/public-root-candidate-upgrade.yml"));
     expect(up).not.toMatch(/gh pr merge[^\n]*--auto/);
-    expect(up).toMatch(/gh run watch "\$run_id" --repo "\$REPO" --exit-status/);
-    expect(up).toMatch(/gh pr merge "\$URL" --repo "\$REPO" --squash --match-head-commit "\$head"/);
-    const watch = up.indexOf("gh run watch");
-    const merge = up.indexOf("gh pr merge");
+    expect(up).toContain("scripts/public_root_promotion_gate.py");
+    expect(up).toMatch(/python3 "\$gate" --repo "\$REPO" --branch "\$BRANCH" --pr "\$URL"/);
+    const tool = read("scripts/public_root_promotion_gate.py");
+    expect(tool).toMatch(/"gh", "run", "watch"[\s\S]*--exit-status/);
+    expect(tool).toMatch(/"gh", "pr", "merge"[\s\S]*--match-head-commit/);
+    expect(tool).not.toMatch(/--auto/);
+    // the head is the BRANCH ref, never the pull request's lagging view of it
+    expect(tool).toMatch(/git\/ref\/heads/);
+    expect(tool).not.toMatch(/--json[^\n]*headRefOid/);
+    // a failed gate stops the merge (the watch is guarded and the merge follows it)
+    const watch = tool.indexOf("if not gh.watch");
+    const merge = tool.indexOf("gh.merge(");
     expect(watch).toBeGreaterThan(0);
     expect(merge).toBeGreaterThan(watch);
-    // a failed gate stops the merge (the watch sits in an `if !` that exits 1 before the merge)
-    expect(up.slice(watch - 10, merge)).toMatch(/if ! gh run watch[\s\S]*exit 1[\s\S]*fi/);
+    expect(tool.slice(watch, merge)).toMatch(/return \(f?"HALT/);
   });
 
   it("keeps halt health with the run (summary + artifact) and never commits or pushes it", () => {
