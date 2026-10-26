@@ -2,6 +2,13 @@
 //
 // THE ORDER OF OPERATIONS, WHICH IS THE WHOLE DESIGN
 //
+//   0. THE HUMAN IN THE LOOP, FIRST. A question that asks the staff member to PERFORM a
+//      consequential act — publish, release, send, deploy, approve — is not answered at all. It
+//      is escalated: the staff member raises a challenge and hands it to a human. This happens
+//      BEFORE the records and BEFORE the model, because the one thing that must never happen is
+//      a language model being asked whether it may publish something. A refusal to disclose a
+//      credential is answered the same way: deterministically, before the model is consulted.
+//
 //   1. THE RECORDS FIRST. The published records are consulted BEFORE anything else. If they
 //      answer the question, that answer is returned and the model is never consulted. This is
 //      the same deterministic answerer POST /api/chat uses (functions/api/_chatGrounded.ts), so
@@ -37,17 +44,31 @@ import {
   type PalModelEnv,
 } from "./_palModel";
 import { suggestPal, type Pal } from "./_palRegistry";
+import {
+  asksForSecret,
+  buildChallenge,
+  detectOversightAction,
+  handlesSensitiveData,
+  matchAxes,
+  putChallenge,
+  requestsSensitiveData,
+  type HitlChallenge,
+} from "./_hitl";
 
 export interface PalChatEnv extends PalModelEnv {
   /** Optional: a shared secret required to talk to a provisioned (non-house) PAL. */
   PAL_CHAT_TOKEN?: string;
+  /** Optional: the store that keeps raised challenges. Absent = stateless, and it says so. */
+  HITL_KV?: KVNamespace;
+  /** Optional: fallback store for raised challenges. */
+  PAL_MEMORY_KV?: KVNamespace;
 }
 
 export interface PalChatResult {
   /** The reply text. */
   answer: string;
   /** Where the reply came from. Never hidden from the caller. */
-  state: "grounded" | "model" | "ungrounded" | "refused";
+  state: "grounded" | "model" | "ungrounded" | "refused" | "escalated";
   /** The PAL that answered. */
   pal: { id: string; name: string; did: string; owner: string };
   /** What the records said, when they said something. */
@@ -62,6 +83,8 @@ export interface PalChatResult {
   guardrail: string | null;
   /** Whether a model is configured at all. Lets a surface say so honestly. */
   model_configured: boolean;
+  /** The challenge, when the question was escalated to a human. */
+  challenge: HitlChallenge | null;
 }
 
 /**
@@ -82,12 +105,10 @@ export function buildFacts(board: Awaited<ReturnType<typeof loadBoard>>, questio
 
   const q = String(question ?? "").toLowerCase();
   // An axis is "named" when the question contains its id. Longest first so "effect-binding" is
-  // matched before "effect" if both ever appear.
-  const named = axes
-    .filter((a: any) => typeof a?.axis === "string" && a.axis.length > 3)
-    .sort((a: any, b: any) => String(b.axis).length - String(a.axis).length)
-    .filter((a: any) => q.includes(String(a.axis).toLowerCase()))
-    .slice(0, 3);
+  // matched before "effect" if both ever appear. The matcher is shared with the oversight
+  // module (functions/api/_hitl.ts) so the facts a PAL reads and the module a human is tested
+  // on can never be about different axes.
+  const named = matchAxes(axes, q).slice(0, 3);
 
   const parts: string[] = [];
   // The board's own count string. Not our paraphrase of it.
@@ -279,12 +300,88 @@ export async function talkToPal(
       model: null,
       suggested_pal: null,
       guardrail: "revoked",
+      challenge: null,
+    };
+  }
+
+  // 0a. A CREDENTIAL IS NEVER DISCLOSED. Deterministic, before any model is consulted.
+  const secret = asksForSecret(args.question);
+  if (secret) {
+    return {
+      ...base,
+      answer:
+        "I do not hold credentials for you and I will not publish one. " +
+        "The Council of AI publishes measurements and the records behind them; secrets are not " +
+        "among them, and neither am I.",
+      state: "refused",
+      facts: null,
+      source: null,
+      model: null,
+      suggested_pal: null,
+      guardrail: "secret-request",
+      challenge: null,
+    };
+  }
+
+  // 0b. THE BOARD, read live. Needed for the facts AND for the axis an escalation concerns.
+  const board = await loadBoard(args.origin);
+
+  // 0c. THE ESCALATION. Asked to PERFORM a consequential act, the staff member does not comply
+  //     and does not ask a model whether it may. It raises a challenge for a human.
+  const oversight = detectOversightAction(args.question);
+  if (oversight) {
+    // A challenge is a PUBLISHED record. It must not carry a credential into it, so a request
+    // that would is refused here rather than escalated.
+    const sensitive = requestsSensitiveData(args.question) ?? handlesSensitiveData(args.question);
+    if (sensitive) {
+      return {
+        ...base,
+        answer:
+          "I will not act on that, and I will not write it down. A challenge is a published " +
+          "record, and a published record carries no password, API key, token or card.",
+        state: "refused",
+        facts: null,
+        source: null,
+        model: null,
+        suggested_pal: null,
+        guardrail: `sensitive data: ${sensitive}`,
+        challenge: null,
+      };
+    }
+    const { facts } = buildFacts(board, args.question);
+    const named = matchAxes(board.axes ?? [], args.question);
+    const axisId = named.length ? String(named[0].axis) : null;
+    const challenge = await buildChallenge({
+      at: new Date().toISOString(),
+      axis: axisId,
+      subject: `${oversight.action} — ${axisId ? `the ${axisId} axis` : "an unclassified subject"}`,
+      proposed_action: String(args.question ?? "").slice(0, 1200),
+      raised_by: `${pal.name} (${pal.id})`,
+      source: `POST /api/pals/${pal.id}/chat`,
+      facts,
+      required_module: axisId ? `GSPC-${axisId}` : null,
+    });
+    await putChallenge(env.HITL_KV ?? env.PAL_MEMORY_KV ?? null, challenge);
+    return {
+      ...base,
+      answer:
+        "I am not the one who decides this, and I will not do it on my own. " +
+        "A measurement says what was observed; it never says what should happen. " +
+        "I have raised this as a challenge for a human who is competent to decide it" +
+        (axisId ? `, and who has read the published record for "${axisId}".` : ".") +
+        " The challenge id is on this reply.",
+      state: "escalated",
+      facts,
+      source: facts ? "GET /api/gspc → totals" : null,
+      model: null,
+      suggested_pal: null,
+      guardrail: null,
+      challenge,
     };
   }
 
   // 1. FACTS. The board, read live. These are what the model is handed, and what the guard
   //    measures the reply against.
-  const board = await loadBoard(args.origin);
   const { facts, source } = buildFacts(board, args.question);
 
   // 2. A better-placed PAL, if one exists. Suggestion only.
@@ -313,6 +410,7 @@ export async function talkToPal(
       model: null,
       suggested_pal: suggested ? { id: suggested.id, name: suggested.name } : null,
       guardrail: null,
+      challenge: null,
     };
   }
 
@@ -359,12 +457,16 @@ export async function talkToPal(
       model: null,
       suggested_pal: suggested ? { id: suggested.id, name: suggested.name } : null,
       guardrail: null,
+      challenge: null,
     };
   }
 
   // 5. THE GUARD. Always last.
   const violation =
     replyViolatesGuardrails(result.content, pal) ??
+    (requestsSensitiveData(result.content)
+      ? `asks for sensitive data: ${requestsSensitiveData(result.content)}`
+      : null) ??
     contradictsFacts(result.content, facts) ??
     (numbersNotInFacts(result.content, facts).length
       ? `number not in facts: ${numbersNotInFacts(result.content, facts).join(", ")}`
@@ -381,6 +483,7 @@ export async function talkToPal(
       model: null,
       suggested_pal: suggested ? { id: suggested.id, name: suggested.name } : null,
       guardrail: violation,
+      challenge: null,
     };
   }
 
@@ -393,5 +496,6 @@ export async function talkToPal(
     model: { provider: result.provider, model: result.model },
     suggested_pal: suggested ? { id: suggested.id, name: suggested.name } : null,
     guardrail: null,
+    challenge: null,
   };
 }
