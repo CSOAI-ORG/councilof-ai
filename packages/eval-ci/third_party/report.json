@@ -1,0 +1,18 @@
+{
+ "generated_at": "2026-10-26T02:09:23Z",
+ "limitations": [
+  "a converted record is a candidate, not an attestation: nothing here is signed",
+  "a truncated commit prefix is resolved against the declared harness repository and verified against the prefix; an unresolvable prefix is treated as a missing pin",
+  "the harness version is read from the harness repository at the pinned commit",
+  "heldOut is absent, which means unknown and not false: no publisher in this corpus states whether its item set was sequestered from the system under test",
+  "contamination is absent, which means the question was not asked",
+  "the Wilson interval is computed only for metrics that are means of 0/1 indicators and only when at least two instances were scored; a metric outside that set carries no interval rather than a borrowed one",
+  "an item set that was subsampled records the original and the effective count",
+  "the direction of each metric is recorded outside the predicate, because EvaluationResult/v1 has no field for it; that gap is the subject of the OTel crosswalk at docs/OTEL-GENAI-EVALUATION-CROSSWALK.md"
+ ],
+ "n_candidates": 601,
+ "n_valid": 303,
+ "not_a_grade": true,
+ "publishers": 3,
+ "schema": "csoai.third-party-conversion-report/0.1"
+}

@@ -300,10 +300,15 @@ export default function HomeGspcTable({
           </ol>
 
           {/* ── sm and up: the table ─────────────────────────────────────── */}
-          <div className="mt-6 hidden overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm sm:block">
+          <div
+            tabIndex={0}
+            role="region"
+            aria-labelledby="home-board-caption"
+            className="mt-6 hidden overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm sm:block"
+          >
             <table className="w-full min-w-[44rem]" data-testid="home-board-table">
-              <caption className="sr-only">The GSPC board from GET /api/gspc, in board order. Board order is layout, not rank. A TIE is not a win.</caption>
-              <thead className="border-b border-slate-200 bg-emerald-50/60">
+              <caption id="home-board-caption" className="sr-only">The GSPC board from GET /api/gspc, in board order. Board order is layout, not rank. A TIE is not a win.</caption>
+              <thead className="sticky top-0 z-10 border-b border-slate-200 bg-emerald-50">
                 <tr>
                   <th scope="col" className={th}>Axis</th>
                   <th scope="col" className={th}>Family</th>
@@ -324,9 +329,9 @@ export default function HomeGspcTable({
                       onClick={() => choose(a.axis)}
                       className={`cursor-pointer border-b border-slate-100 ${active ? "bg-emerald-50" : "hover:bg-emerald-50/40"}`}
                     >
-                      <td className={td}>
+                      <th scope="row" className={`${td} sticky left-0 bg-inherit font-normal text-left`}>
                         <AxisName a={a} />
-                      </td>
+                      </th>
                       <td className={`${td} whitespace-nowrap font-mono text-xs text-slate-700`}>{familyText(a)}</td>
                       <td className={td}>
                         <StatusWord status={statusText(a)} />
