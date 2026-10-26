@@ -34,6 +34,29 @@ ROOT_NAME = re.compile(r"card-root-[0-9]{4}-[0-9]{2}-[0-9]{2}(?:-[a-f0-9]{12})?\
 HEX = re.compile(r"[a-f0-9]{64}\Z")
 
 
+def root_files(public_dir: Path = PUBLIC) -> list[Path]:
+    """Select only real card roots from a public directory.
+
+    ``public/interop`` also holds two other documents whose names begin with
+    ``card-root-``: the unsigned discovery pointer (``card-root-latest.json``)
+    and a per-root OpenTimestamps header-audit sidecar
+    (``card-root-<stamp>-<hash>.header-audit.json``). Neither is a card root.
+    Neither carries ``kind: csoai.card-root/1``, and neither is OTS-stamped.
+
+    The maintainer fed both to ``_safe_root``, which correctly refused them,
+    so the whole scheduled run failed closed - the 24 Oct 2026
+    ``card-root-ots-upgrade`` run reported
+    ``FAILED_CLOSED ... unexpected card-root path: ...header-audit.json`` and
+    the signed public root went unminted for days afterwards.
+
+    The selection is by file NAME, not by content, so no document's bytes can
+    steer it, and ``_safe_root`` still re-checks the name and the parent
+    directory for every file that reaches it. This narrows what the maintainer
+    looks at; it does not weaken the guard.
+    """
+    return sorted(p for p in Path(public_dir).glob("card-root-*.json") if ROOT_NAME.fullmatch(p.name))
+
+
 def _safe_root(path: Path, public_dir: Path) -> Path:
     path = path.absolute()
     if not ROOT_NAME.fullmatch(path.name) or path.parent.resolve() != public_dir.resolve():
@@ -203,7 +226,7 @@ def main(argv=None) -> int:
     parser.add_argument("--max-requests", type=int, default=8)
     parser.add_argument("--timeout", type=int, default=10)
     args = parser.parse_args(argv)
-    roots = args.roots or sorted(PUBLIC.glob("card-root-*.json"))
+    roots = args.roots or root_files(PUBLIC)
     try:
         report = maintain(roots, args.output_dir, max_requests=args.max_requests, timeout=args.timeout)
     except Exception as exc:
