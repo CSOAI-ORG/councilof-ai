@@ -413,6 +413,18 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         run: npm run guard:stablecoin-readiness
 
+      # The publisher must never retract a published measurement: a source that cannot be
+      # reached does not un-measure an asset. Measured 2026-10-26 — the 2026-10-25 candidate
+      # root was built while xrpl.fi was unreachable, so all 16 locked-16 asset leaves were
+      # honest placeholders that REPLACED the published measured leaves. The derived
+      # readiness view dropped from 4 measured assets to 0 and the stablecoin gate above
+      # failed closed on the candidate, which is what kept the ONE public root from
+      # advancing. The publisher now carries the last published measured leaf forward until
+      # a newer MEASURED leaf replaces it, and fails closed if it would drop one anyway.
+      - name: Root publisher — a failed source never retracts a published measurement
+        if: steps.scope.outputs.gated == 'true'
+        run: PYTHONPATH=scripts python3 -m unittest scripts/test_publish_public_root.py
+
       - name: Mill receipt readiness — crypto, lifecycle and regulation stay separate
         if: steps.scope.outputs.gated == 'true'
         run: npm run guard:mill-receipt-readiness

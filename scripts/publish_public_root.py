@@ -593,6 +593,137 @@ def load_committed() -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+# ---------------------------------------------------------------------------
+# A source that cannot be reached does not retract a published measurement.
+#
+# The defect this exists for (measured 2026-10-26): the candidate root built on
+# 2026-10-25 ran while xrpl.fi was unreachable, so all 16 locked-16 asset leaves came
+# out as honest placeholders (asset_class None, holders None) and REPLACED the 16
+# measured leaves the published root carried. The derived readiness view then said
+# "425 indexed assets, 0 measured" and the stablecoin gate failed closed on it.
+#
+# Each placeholder is honest about itself — it lists what it could not read — and the
+# root is a coverage SNAPSHOT, not an append-only log (scripts/build-root-leaf-union.mjs
+# says exactly that, and the union artefact is how a reader sees what an earlier root
+# committed to). But a snapshot that drops a measurement a reader can already see is a
+# retraction, and the locked-16 basket is a STANDING measurement set: an XRPL asset
+# state does not become un-measured because one poll failed. So the last published
+# measured leaf for an asset is carried forward verbatim — same bytes, same digest,
+# same signature, same inclusion proof — until a newer MEASURED leaf replaces it.
+#
+# The rule is deliberately narrow. It never replaces a leaf that IS measured, it never
+# invents a measurement, and it never touches a leaf that was never measured. It only
+# refuses to let an unreachable source silently un-measure something already published.
+# ---------------------------------------------------------------------------
+
+ASSET_SURFACE = "xrpl.asset.state"
+
+
+def asset_identity(card: dict) -> tuple[str, str]:
+    """(symbol, issuer address) — the identity of an XRPL asset, not its date or price."""
+    payload = card.get("payload") or {}
+    return (
+        str(payload.get("symbol") or "").upper(),
+        str(payload.get("issuer_address") or ""),
+    )
+
+
+def asset_leaf_is_measured(card: dict) -> bool:
+    """True when the leaf carries a real classification, i.e. its source answered.
+
+    The adapter writes asset_class=None when the source could not be reached and lists
+    that fact in the leaf's own `unmeasured`. Such a leaf is honest; it is also not a
+    measurement, and it must not stand in for one.
+    """
+    if card.get("surface") != ASSET_SURFACE:
+        return False
+    payload = card.get("payload") or {}
+    return payload.get("asset_class") is not None
+
+
+def load_committed_asset_leaves(committed: dict, repo_root: Path) -> dict[tuple[str, str], dict]:
+    """Measured asset leaves the COMMITTED root carries, keyed by asset identity.
+
+    Only leaves the committed root actually includes count, and only leaves that are
+    measured (asset_class present). Each one is re-read from public/cards/ and matched
+    with the same digest rule validate_committed() uses: v0 leaves key on the payload
+    digest, v1 leaves on the whole card.
+    """
+    committed_hashes = set(committed.get("card_sha256") or [])
+    if not committed_hashes:
+        return {}
+    out: dict[tuple[str, str], dict] = {}
+    for path in sorted((repo_root / "public" / "cards").glob("*.json")):
+        try:
+            wrapped = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        card = wrapped.get("card") if isinstance(wrapped, dict) else None
+        if not isinstance(card, dict) or card.get("surface") != ASSET_SURFACE:
+            continue
+        shas = {card.get("sha256")}
+        try:
+            shas.add(payload_sha256(card.get("payload") or {}))
+        except ValueError:
+            pass
+        if not (shas & committed_hashes):
+            continue
+        if not asset_leaf_is_measured(card):
+            continue
+        out[asset_identity(card)] = card
+    return out
+
+
+def carry_forward_measured_asset_leaves(
+    cards: list[dict], committed_leaves: dict[tuple[str, str], dict]
+) -> tuple[list[dict], list[tuple[str, str]], set[str]]:
+    """Replace an unmeasured fresh asset leaf with the published measured leaf for that asset.
+
+    Returns (cards, carried_identities, replaced_shas). A fresh leaf that IS measured is
+    never replaced — a newer real measurement always wins. A fresh leaf for an asset that
+    was never measured keeps its honest placeholder.
+    """
+    carried: list[tuple[str, str]] = []
+    replaced: set[str] = set()
+    out: list[dict] = []
+    for card in cards:
+        if card.get("surface") == ASSET_SURFACE and not asset_leaf_is_measured(card):
+            identity = asset_identity(card)
+            published = committed_leaves.get(identity)
+            if published is not None:
+                replaced.add(str(card.get("sha256")))
+                carried.append(identity)
+                out.append(published)
+                continue
+        out.append(card)
+    return out, carried, replaced
+
+
+def assert_no_measurement_retraction(
+    cards: list[dict], committed_leaves: dict[tuple[str, str], dict]
+) -> None:
+    """Fail closed when this root would drop a measurement the published root carries.
+
+    The carry-forward above normally makes this impossible; this is the backstop for the
+    case it cannot cover — a published measurement whose asset is not in this build at
+    all. Publishing that would retract a measurement nobody was told about, so the build
+    stops instead and names what was lost.
+    """
+    kept = {
+        asset_identity(c)
+        for c in cards
+        if c.get("surface") == ASSET_SURFACE and asset_leaf_is_measured(c)
+    }
+    lost = sorted(set(committed_leaves) - kept)
+    if lost:
+        raise SystemExit(
+            "HALT-ON-MEASUREMENT-RETRACTION: this root would drop "
+            f"{len(lost)} published asset measurement(s): "
+            + ", ".join(f"{sym}@{issuer}" for sym, issuer in lost)
+            + ". A source that cannot be reached does not un-measure an asset."
+        )
+
+
 def halt_on_split(committed: dict) -> int | None:
     code, live = fetch_json(LIVE_ROOT)
     if code != 200 or not isinstance(live, dict) or not live.get("merkle_root"):
@@ -1015,6 +1146,24 @@ def main() -> int:
     # leaf while its original whole-card digest remains in every subsequent root.
     cards = preserve_sticky_cards(cards, load_sticky_cards(ROOT))
 
+    # A source that cannot be reached does not retract a published measurement: carry the
+    # last published measured leaf for each asset forward until a newer MEASURED leaf
+    # replaces it. Measured 2026-10-26: the 2026-10-25 candidate root was built while
+    # xrpl.fi was unreachable, so all 16 locked-16 asset leaves were honest placeholders
+    # and the derived readiness view dropped from 4 measured assets to 0 — which failed
+    # the stablecoin gate closed on the candidate.
+    committed_asset_leaves = load_committed_asset_leaves(committed, ROOT)
+    cards, carried_asset_leaves, replaced_asset_shas = carry_forward_measured_asset_leaves(
+        cards, committed_asset_leaves
+    )
+    if carried_asset_leaves:
+        print(
+            f"carried forward {len(carried_asset_leaves)} published asset measurement(s): "
+            + ", ".join(f"{sym}@{issuer}" for sym, issuer in carried_asset_leaves)
+        )
+        # A leaf that is no longer in THIS root cannot be an unsigned leaf of this root.
+        new_unsigned = [s for s in new_unsigned if s not in replaced_asset_shas]
+
     asset_cards = [c for c in cards if c["surface"] == "xrpl.asset.state"]
     if len(asset_cards) != 16:
         print(f"HALT: locked 16 produced {len(asset_cards)} xrpl.asset.state leaves", file=sys.stderr)
@@ -1026,6 +1175,10 @@ def main() -> int:
             dry_run=args.dry_run,
         )
         return EXIT_BAD
+    # The carry-forward above normally makes a retraction impossible; this is the backstop
+    # for the case it cannot cover — a published measurement whose asset is not in this
+    # build at all. Naming what was lost is better than publishing it silently.
+    assert_no_measurement_retraction(cards, committed_asset_leaves)
     basket_hex = merkle_root([c["sha256"] for c in asset_cards])
 
     # Optional signed basket card — only when we can sign, so we never add a
@@ -1232,6 +1385,11 @@ def main() -> int:
         "art50_recheck_schedule": art50_recheck_schedule_out.get("sidecar") or {},
         "card_count": len(shas),
         "xrpl_asset_state_count": len(asset_cards),
+        # What this run carried forward from the published root, so a reader can see WHY
+        # an asset leaf is dated earlier than this run. Empty on a run whose source answered.
+        "carried_forward_published_measurements": [
+            {"symbol": sym, "issuer_address": issuer} for sym, issuer in carried_asset_leaves
+        ],
         "note": (
             "hub.census.digest and gspc.board.cite live here, not on card-v0. "
             "Never MEASURED. Never certify. Never partnered with SWIFT. "
