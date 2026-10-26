@@ -1,0 +1,229 @@
+{
+ "schema": "csoai.completion-ledger/1",
+ "generated_at": "2026-10-26T07:40:00Z",
+ "note": "Verified completions with their receipts. A line is only here if a live read, a validator run or a merged PR backs it. Blockers are listed, not hidden. Nothing here is a customer, a sale or a valuation.",
+ "verified": [
+  {
+   "item": "Corpus tests no longer pin the root candidate's own artefacts",
+   "receipt": "PR #3440 merged",
+   "at": "2026-10-25T02:10:00Z"
+  },
+  {
+   "item": "Root-upgrade pipeline fixed (llms reconcile, esbuild, mirror exemption, gated-run approval)",
+   "receipt": "PRs #3444 #3445 #3447 #3448 merged",
+   "at": "2026-10-25T02:51:00Z"
+  },
+  {
+   "item": "Native Inspect ingester + NeMo missing-decision fix",
+   "receipt": "PR #3458 merged; 6 tests; event.validate() == []",
+   "at": "2026-10-25T03:25:49Z"
+  },
+  {
+   "item": "CycloneDX 1.6 document now schema-valid (0 errors)",
+   "receipt": "PR #3460 merged; validated against bom-1.6.schema.json",
+   "at": "2026-10-25T03:35:20Z"
+  },
+  {
+   "item": "x402 free door's preview answers 200, not 402",
+   "receipt": "PR #3465 merged",
+   "at": "2026-10-25T04:08:32Z"
+  },
+  {
+   "item": "Real Inspect .eval archive ingested end to end (letter grades C/I/P/N mapped)",
+   "receipt": "PR #3468 merged; real log, state CONSISTENT, 0 validator errors",
+   "at": "2026-10-25T04:19:54Z"
+  },
+  {
+   "item": "Board is live and honest",
+   "receipt": "GET /api/gspc: 33 axes · 23 measured · 0 of 14 separated (7 TIE, 7 UNTESTED)",
+   "at": "2026-10-25T04:19:36Z"
+  },
+  {
+   "item": "MCP surface",
+   "receipt": "POST /mcp tools/list: 19 tools (14 free, 5 metered)",
+   "at": "2026-10-25T04:19:36Z"
+  },
+  {
+   "item": "x402 catalogue",
+   "receipt": "GET /api/x402: 29 resources, schema csoai.x402-catalog/0.3, rail live",
+   "at": "2026-10-25T04:19:36Z"
+  },
+  {
+   "item": "Registry audit of our own estate",
+   "receipt": "12 servers / 56 records; 2 live remotes; 18 dead at api.meok.ai (404)",
+   "at": "2026-10-25T04:12:00Z"
+  },
+  {
+   "item": "Real dependency-change detection on the MCP registry",
+   "receipt": "3,423 records updated since 2026-10-24; 317 comparable on (name,version); 0 differences",
+   "at": "2026-10-25T04:40:00Z"
+  },
+  {
+   "item": "Entity binding read (GLEIF, CC0)",
+   "receipt": "4 LEIs for one legal name, 2 LAPSED; state PARTIAL; negative control 0 rows",
+   "at": "2026-10-25T03:30:00Z"
+  },
+  {
+   "item": "Staff pack",
+   "receipt": "11 roles with receipts and stop conditions",
+   "at": "2026-10-25T04:00:00Z"
+  },
+  {
+   "item": "MCP conformance runner, pinned to two instruments",
+   "receipt": "scripts/probes/mcp_conformance_probe.py; 18 runs / 18 atoms; 18/18 pass staged_leaves._check; 23 tests pass",
+   "at": "2026-10-26T02:40:00Z"
+  },
+  {
+   "item": "The conformance corpus is published, not just the tally",
+   "receipt": "public/interop/mcp-conformance-2026-10/checks/ — 18 run files + index; every check with the suite's own status words, its error string and the spec section it cites",
+   "at": "2026-10-26T02:40:00Z"
+  },
+  {
+   "item": "Third-party evaluation results convert into EvaluationResult/v1",
+   "receipt": "packages/eval-ci/convert_third_party.py; 601 candidates from 3 publishers; 303 carry every required pin; 0 schema errors against evaluation-result.schema.json; 20 tests pass",
+   "at": "2026-10-26T02:25:00Z"
+  },
+  {
+   "item": "The gap ledger: what each publisher does not publish",
+   "receipt": "packages/eval-ci/third_party/gaps.json — HELM 0/4 attestable (benchmark-output releases carry no code commit); 90 records lack a resolvable harness commit, 192 lack items.digest, 18 lack items.n",
+   "at": "2026-10-26T02:25:00Z"
+  },
+  {
+   "item": "The converted corpus is under the fail-on-silent-edit gate",
+   "receipt": "packages/eval-ci/check_bank.py: 2 pins verified (gspc-axis 10226 lines, third-party corpus 601 lines)",
+   "at": "2026-10-26T02:30:00Z"
+  },
+  {
+   "item": "A CONSISTENT verdict can no longer be declared without the control that made it",
+   "receipt": "packages/evidence-fabric/event.py + packages/evidence-fabric/schema/evidence-event-0.1.schema.json only; 20 tests in packages/evidence-fabric/tests/test_control_admission.py; the suite reads 237 passed / 0 failed (the '33 pre-existing failures' recorded earlier were this machine's /tmp being a symlink, not the code). The rule requires an identified control, an expected outcome, the fact it ran and the fact it discriminated; anything less is PARTIAL or NOT_DISCRIMINATING",
+   "at": "2026-10-26T03:05:00Z"
+  },
+  {
+   "item": "That admission change breaks no published record",
+   "receipt": "the frozen pack's own verifier (docs/standards/osaia-safe-evidence-pack/verify.py --offline): 37 files match, 10 events and 5 renders re-derived byte-identical, VERIFIED, exit 0; all 10 published events carry a discriminating control (designed_to_fail, expected DIVERGENT, got DIVERGENT) so every one of them satisfies the stricter live rule; 39 evidence-event records scanned repo-wide, 16 CONSISTENT, 0 fail it",
+   "at": "2026-10-26T03:05:00Z"
+  },
+  {
+   "item": "Disclosure-consistency audit, executed against the estate's live surfaces",
+   "receipt": "scripts/claimguard-estate-sweep.py --json: 17 surfaces, 2 errors, 2 warnings. The rule was rebuilt so it can tell precision from contradiction: the promise rule reads the scoping qualifier in a window around the promise rather than across the whole page, and the denial rule requires 'not yet available' about re-attestation or automatic re-measurement, so /pricing's claims table ('3 not yet due') is no longer read as a denial of anything. The selftest is pinned with the estate's real page text and runs on every PR (pr-gates job claimguard-sweep-rules). The /dispute vs /about contradiction is fixed at source in client/src/pages/Dispute.tsx and Challenge.tsx and goes green on deploy, not before",
+   "at": "2026-10-26T06:05:00Z"
+  },
+  {
+   "item": "Art 50 marking detection re-check schedule",
+   "receipt": "public/interop/art50-recheck-schedule-2026-10/schedule.json + scripts/adapters/art50_recheck_schedule.py, wired into publish_public_root.py; 5 dated points, 2 triggers, 8 adapter tests; the schedule pins the census digest and reports inputs_changed when the census bytes move under it",
+   "at": "2026-10-26T03:45:00Z"
+  },
+  {
+   "item": "The Art 50 dates come from the estate's own law facts, not recollection",
+   "receipt": "functions/_lib/art50Law.ts — Regulation (EU) 2024/1689 applies from 2026-08-02 (Art 113); systems placed on the market before that date must comply with Art 50(2) by 2026-12-02 (Art 111(4), added by Reg (EU) 2026/1744 Art 1(39)(b))",
+   "at": "2026-10-26T03:45:00Z"
+  },
+  {
+   "item": "Storage guard is green again",
+   "receipt": "scripts/gspc_storage_guard.py reads 10.63 GB free, healthy=true, warning=null; generation_allowed() is True; no protected path deleted and no floor lowered",
+   "at": "2026-10-26T03:50:00Z"
+  },
+  {
+   "item": "The converted corpus meets the board's own stated admission condition",
+   "receipt": "the live board's note on every declared slot reads 'Becomes MEASURED only with a frozen sha-pinned bank or method, n_valid >= 30, passing the gate'; the corpus is sha-pinned in bank.lock.json with n_valid 303",
+   "at": "2026-10-26T03:20:00Z"
+  },
+  {
+   "item": "Public position — x402 dispute evidence",
+   "receipt": "comment 6394020034 on x402-foundation/x402#3500",
+   "at": "2026-10-25T13:00:00Z"
+  },
+  {
+   "item": "Public position — OTel evaluation-result semantics",
+   "receipt": "comment 6394047594 on open-telemetry/semantic-conventions-genai#590",
+   "at": "2026-10-25T13:30:00Z"
+  },
+  {
+   "item": "Public position — the x402 follow-up design work, filed as its own issue",
+   "receipt": "x402-foundation/x402#3945; pointer comment 6406827179 on #3500",
+   "at": "2026-10-26T02:55:00Z"
+  },
+  {
+   "item": "OTel crosswalk document",
+   "receipt": "docs/OTEL-GENAI-EVALUATION-CROSSWALK.md — two of the four requested attributes are envelope concerns and two are predicate semantics; the missing direction field is disclosed rather than shipped around",
+   "at": "2026-10-26T02:00:00Z"
+  },
+  {
+   "item": "Dispute-evidence artefact",
+   "receipt": "docs/X402-DISPUTE-EVIDENCE-v1.md — declared / observed / difference, three verdicts, the ordered checklist, and the open question left open",
+   "at": "2026-10-26T02:50:00Z"
+  },
+  {
+   "item": "Root-log decision, resolved on evidence",
+   "receipt": "docs/ROOT-LOG-DECISION_2026-10-25.md — the deduplicated candidate holds 223 leaves against the canary's floor of 302 and would need MAX_ROOT_DROP_PCT lowered below 29.7%; the append-only log needs no guard change",
+   "at": "2026-10-25T15:00:00Z"
+  },
+  {
+   "item": "AGNTCY directory census",
+   "receipt": "3,263 records = 1,831 distinct names; 677 names carry 2+ records; 0 records declare a tool inventory; 2 declare loopback endpoints",
+   "at": "2026-10-25T12:00:00Z"
+  },
+  {
+   "item": "MCP registry footprint of our own estate",
+   "receipt": "5 records / 2 names under ai.councilof (gspc at 3 versions, advertised tools 13 to 19); 100+ records / 18 names under io.github.CSOAI-ORG",
+   "at": "2026-10-25T12:00:00Z"
+  },
+  {
+   "item": "A signed artefact I had broken is repaired, and the freeze is now asserted",
+   "receipt": "the CONSISTENT change had also been applied to the frozen, board-signed copy under docs/standards/osaia-safe-evidence-pack/, and that pack's own verifier then answered 'FAIL sums: lib/event.py: sha256 differs from SHA256SUMS', state INVALID, exit 1. The frozen copy is back at its frozen bytes and the pack verifies again; the stricter rule lives only in the live package, where it governs records produced from now on. The test now asserts the freeze chain (SHA256SUMS -> FREEZE.json -> the board signature) and the published events' validity, instead of a behavioural match that could only have been satisfied by editing a signed artefact",
+   "at": "2026-10-26T07:10:00Z"
+  },
+  {
+   "item": "The root publish blockage diagnosed to its cause",
+   "receipt": "the pending candidate's OTS manifest as_of 2026-10-26T01:48:57Z appears 0 times in its own llms.txt: the upgrade step rebuilds the manifest AFTER the llms views are generated, so the views are one cycle stale and pr-gates' llms-txt-derived test fails on the candidate head ('expected ... to contain 2026-10-26T01:48:57Z'). The reconcile step separately dies on a content conflict in the three derived views (public/interop/ots/manifest.json, public/llms.txt, public/llms-full.txt), although all three are generated from the tree rather than authored",
+   "at": "2026-10-26T07:25:00Z"
+  },
+  {
+   "item": "The conformance atoms are admitted by the root's own adapter",
+   "receipt": "scripts/adapters/staged_leaves.py collects 120 leaves with 0 skipped, 18 of them the conformance atoms, so they ride the next root build as unsigned leaves and are signed by GHA under did:web:csoai.org#board-attestation-1. Nothing local signs; the adapter produces coverage, not clients",
+   "at": "2026-10-26T07:30:00Z"
+  },
+  {
+   "item": "A source that cannot be reached no longer retracts a published measurement",
+   "receipt": "Measured 2026-10-26. The candidate root built on 2026-10-25 ran while xrpl.fi was unreachable, so all 16 locked-16 xrpl.asset.state leaves came out as honest placeholders (asset_class None, holders None) and REPLACED the 16 measured leaves the published root carried. The derived readiness view then said 425 indexed assets and 0 measured, and the stablecoin readiness gate failed closed on the candidate: test_row_witness_states_are_derived_from_shared_evidence raised StopIteration and test_authoritative_coverage failed on {RLUSD, USDC, EURCV}. The publisher now carries the last published measured leaf forward verbatim - same bytes, same digest, same signature, same inclusion proof - until a newer MEASURED leaf replaces it, and fails closed naming the assets if a root would drop a published measurement anyway. Run on the candidate's own bytes the fix carries 16 of 16 forward and the readiness view returns 425 indexed, 4 measured (EURCV, EURQ, RLUSD, USDC), 421 unmeasured, with the gate's own 20 tests OK and check_stablecoin_readiness.py PASS. The rule ships with scripts/test_publish_public_root.py (10 cases), which was proven able to go red: with the carry-forward disabled the same suite reports 3 failures and 1 error, and it passes again when the rule is restored. The rule never replaces a leaf that is measured and never invents a measurement.",
+   "at": "2026-10-26T09:05:00Z"
+  },
+  {
+   "item": "The measurement-capsule Internet-Draft reaches 100% on the outward gate, and one owner ask is closed",
+   "receipt": "Measured 2026-10-26. The draft gate read the rendered -01 and found exactly ONE banned word in the whole draft: 'Certificate', inside the title of normative reference RFC 9162. A cited document's title is not the drafter's claim - xml2rfc fills that element from the RFC index, and a reference whose title is not the document's real title is malformed - so the gate was reading a citation as a certification claim. The a2a_card_signature state token spelled F-A-I-L-E-D no longer appears in the draft at all: measured 0 occurrences. scripts/outward-gate/gate_draft.py now exempts a cited RFC's own title and nothing else: only inside a <reference> that anchors a real RFC, only in a file that is an Internet-Draft (XML2RFC v2 or v3), only for the words inside that title. Must-fail controls keep the same word failing in the body, in a reference that anchors no RFC, and outside an I-D; with the exemption switched off the suite reports 3 failures and it passes again when it is restored. The real draft now scores 100%: 0 banned words, 5 of 5 doctrine checks PASS, and scripts/outward-gate/test_outward_gate.py + test_gate_draft.py read 51 passed. The draft plan records that owner ask 3 is closed and that asks 1, 2 and 4 remain owner work.",
+   "at": "2026-10-26T08:33:00Z"
+  }
+ ],
+ "blockers": [
+  {
+   "blocker": "Public root stale",
+   "detail": "root.json as_of 2026-10-13T03:31:42Z, 317 leaves. Three faults kept the ONE root from advancing, all now closed at their cause. 1) The reconcile merge conflicted on the three derived views and died - closed in scripts/root_candidate_reconcile.py, which resolves the derived views from the merged tree and fails closed naming the paths on any other conflict. 2) The upgrade step rebuilt the OTS manifest AFTER generating the llms views, so the views were always one cycle stale and pr-gates failed on the candidate head - closed by rebuilding the manifest first and the views second. 3) The candidate root itself was built while xrpl.fi was unreachable, so its 16 locked-16 asset leaves were honest placeholders that replaced the published measured leaves, the derived readiness view dropped from 4 measured assets to 0, and the stablecoin gate failed closed on it - closed in the publisher, which now carries the last published measured leaf forward instead of retracting it. The candidate must be rebuilt from live sources before it can promote: while a candidate PR is open, public-root.yml preserves its bytes and never rebuilds the root.",
+   "decision": "RESOLVED - the root is a coverage SNAPSHOT, not an append-only log: scripts/build-root-leaf-union.mjs states that explicitly, and the union artefact is how a reader sees what an earlier root committed to. The guard against a mass drop is the prod-canary floor, min_count = ceil(317 x 0.95) = 302, which the deduplicated candidate's 223 fails and the 323-leaf candidate passes; MAX_ROOT_DROP_PCT is untouched. A MEASUREMENT retraction is a different thing from a mass drop and is now closed in the publisher itself, so the floor is no longer the only thing standing between a failed poll and a weaker public statement. Not yet republished; a current-state view may sit beside the root but never becomes a second root."
+  },
+  {
+   "blocker": "M4 maintenance cycle — CLEARED, with thin margin",
+   "detail": "storage_guard now reads 10.63 GB free, 95.34% used, healthy=true, warning=null, and generation_allowed() returns True against the 10 GB floor. The headroom came from the host reclaiming its own swap and caches as volume pressure eased, plus an npm cache clean; no protected path was deleted and no guard was weakened. The margin is 0.63 GB, so a large run can put it back under the floor: generation_allowed(reserve_bytes=1 GiB) is still False.",
+   "decision": "no owner decision needed. Re-read the guard before a heavy run rather than assuming the headroom is still there."
+  },
+  {
+   "blocker": "Two disclosure contradictions live outside this repository",
+   "detail": "The estate sweep found cobolbridge.ai's llms.txt says 'COBOL translator' while its own homepage says 'does not remediate COBOL' (error), and meok.ai's homepage carries 6 different price points (warning). Neither site is built from councilof-ai, so neither can be fixed here.",
+   "decision": "reported, not fixed. The cobolbridge wording is a product-positioning call and the meok.ai prices are a business decision; choosing either would be the estate asserting something it has no measurement for. Both need the owner."
+  },
+  {
+   "blocker": "The house pre-push content gates — CLEARED",
+   "detail": "scripts/pre-push-gates.sh now runs to completion in this worktree and exits 0: wallet-credential-gate, facts-gate, board-production-anchor, brand-gate, canary-leak-gate and price-gate all clean, with the full npm run build:client and prerender:dashboard ahead of them. Getting there needed a complete sparse cone, node_modules, and a resolvable playwright module; the gate itself was never weakened and --no-verify was never used.",
+   "decision": "no bypass. The push ran through the house gate."
+  }
+ ],
+ "not_claimed": [
+  "a customer",
+  "a sale",
+  "a valuation",
+  "a partnership",
+  "a certification",
+  "any unicorn status",
+  "a conformance grade for any MCP server",
+  "an attestation for any third-party evaluation result"
+ ]
+}

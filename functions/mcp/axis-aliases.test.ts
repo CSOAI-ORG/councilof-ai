@@ -14,7 +14,14 @@ const ROOT = resolve(__dirname, "../..");
 const COPIES = ["mcp/gspc-server/axis-aliases.json", "scripts/spray/pypi/csoai-gspc/csoai_gspc/axis_aliases.json"];
 const TABLE = (ALIASES as { axes: Record<string, string[]> }).axes;
 
-async function boardAxes(): Promise<{ axis: string; dataset?: string | null }[]> {
+type BoardAxisRow = {
+  axis: string;
+  dataset?: string | null;
+  facts_as_of?: unknown;
+  measurement_time?: { state: string; [key: string]: unknown };
+};
+
+async function boardAxes(): Promise<BoardAxisRow[]> {
   // The handler serves through the Workers edge cache; give it an empty one.
   vi.stubGlobal("caches", { default: { match: async () => undefined, put: async () => undefined } });
   const r = await (board as unknown as (c: unknown) => Promise<Response>)({
@@ -23,7 +30,7 @@ async function boardAxes(): Promise<{ axis: string; dataset?: string | null }[]>
     params: {},
     waitUntil: () => undefined,
   });
-  return ((await r.json()) as { axes: { axis: string; dataset?: string | null }[] }).axes;
+  return ((await r.json()) as { axes: BoardAxisRow[] }).axes;
 }
 
 afterEach(() => vi.unstubAllGlobals());
@@ -107,5 +114,114 @@ describe("MCP tools accept canonical names and aliases", () => {
     expect(out.state).toBe("LIVE");
     expect(out.axis).toBe("governance");
     expect(out.resolved_from).toBe("GOV");
+  });
+});
+
+describe("get_axis preserves per-axis measurement-time provenance", () => {
+  const ORIGIN = "https://councilof.ai";
+  const BOARD_DATES = {
+    measured_on: { date: "2026-10-23", note: "mixed board dates, not an axis observation" },
+    generated_at: "2026-10-23T07:00:00Z",
+  };
+  const exact = {
+    state: "EXACT",
+    precision: "instant",
+    observed_at: "2026-09-22T05:43:05Z",
+    source: "/interop/effect-binding-server-probe-2026-09-22.signed.json",
+    source_field: "facts_as_of",
+    note: "Serve, build and deploy time do not refresh this observation.",
+  };
+  const fixtures = [
+    {
+      label: "EXACT keeps the published instant and facts_as_of",
+      asked: "effect-binding",
+      row: { axis: "effect-binding", status: "MEASURED", facts_as_of: exact.observed_at, measurement_time: exact },
+    },
+    {
+      label: "DAY keeps day precision through alias resolution",
+      asked: "GOV",
+      row: {
+        axis: "governance", status: "MEASURED",
+        measurement_time: {
+          state: "DAY", precision: "day", observed_on: "2026-08-12",
+          source: "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json", source_field: "measured",
+          note: "No midnight timestamp is invented.",
+        },
+      },
+    },
+    {
+      label: "NOT_AFTER remains an upper bound rather than an observed instant",
+      asked: "swarm",
+      row: {
+        axis: "swarm", status: "MEASURED",
+        measurement_time: {
+          state: "NOT_AFTER", precision: "instant-upper-bound", not_after: "2026-08-19T09:24:39.162060+00:00",
+          source: "/signed/cards/swarm.json", source_field: "body.created",
+          note: "This bounds the observation; it does not date the run exactly.",
+        },
+      },
+    },
+    {
+      label: "UNCHECKABLE keeps its missing-time reason",
+      asked: "company-practice",
+      row: {
+        axis: "company-practice", status: "UNMEASURED",
+        measurement_time: {
+          state: "UNCHECKABLE", precision: "unknown", source: "/api/gspc", source_field: "none",
+          note: "No structured measurement time is available.",
+        },
+      },
+    },
+  ];
+
+  function serve(rows: Record<string, unknown>[]) {
+    const fetchMock = vi.fn(async (_url: string) => Response.json({ ...BOARD_DATES, axes: rows }));
+    vi.stubGlobal("fetch", fetchMock);
+    return fetchMock;
+  }
+
+  it.each(fixtures)("$label", async ({ asked, row }) => {
+    const fetchMock = serve([row]);
+    const out = await getAxisTool(ORIGIN, { axis: asked });
+    expect(out).toMatchObject({
+      state: "LIVE", axis: row.axis, status: row.status,
+      facts_as_of: "facts_as_of" in row ? row.facts_as_of : null,
+      measurement_time: row.measurement_time,
+      as_of: { board_measured_on: BOARD_DATES.measured_on, fetched_at: expect.any(String) },
+    });
+    expect((out as Record<string, unknown>).measurement_time).toEqual(row.measurement_time);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock.mock.calls[0]?.[0]).toBe(ORIGIN + "/api/gspc");
+  });
+
+  it.each([
+    { label: "absent", row: { axis: "company-practice", status: "UNMEASURED" } },
+    { label: "explicit null", row: { axis: "company-practice", status: "UNMEASURED", facts_as_of: null, measurement_time: null } },
+  ])("$label timestamps never fall back to another axis or board/retrieval time", async ({ row }) => {
+    serve([fixtures[0].row, row]);
+    const out = await getAxisTool(ORIGIN, { axis: row.axis });
+    expect(out).toMatchObject({
+      state: "LIVE", axis: row.axis, measured: false,
+      facts_as_of: null, measurement_time: null,
+      as_of: { board_measured_on: BOARD_DATES.measured_on, fetched_at: expect.any(String) },
+    });
+  });
+
+  it("projects the actual board producer's fields for every axis without recomputing them", async () => {
+    const rows = await boardAxes();
+    expect(rows.length).toBeGreaterThan(0);
+    expect(new Set(rows.map((row) => row.measurement_time?.state))).toEqual(
+      new Set(["EXACT", "DAY", "NOT_AFTER", "UNCHECKABLE"]),
+    );
+    serve(rows);
+    for (const row of rows) {
+      const out = await getAxisTool(ORIGIN, { axis: row.axis });
+      expect(out).toMatchObject({
+        state: "LIVE", axis: row.axis,
+        facts_as_of: row.facts_as_of ?? null,
+        measurement_time: row.measurement_time,
+      });
+      expect((out as Record<string, unknown>).measurement_time).toEqual(row.measurement_time);
+    }
   });
 });
