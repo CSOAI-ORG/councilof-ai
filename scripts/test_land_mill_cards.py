@@ -9,7 +9,10 @@ from unittest import mock
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "harness" / "gspc-top100"))
 import mill_hub_queue as mill
-from land_mill_cards import bind_run_provenance, canonical_body_bytes, land, land_evidence
+from land_mill_cards import (
+    bind_run_provenance, canonical_body_bytes, land, land_evidence,
+    pr_body, short_pr_body, cap_body, write_manifest, MAX_PR_BODY,
+)
 
 
 class RunProvenanceTest(unittest.TestCase):
@@ -186,6 +189,77 @@ class EvidenceLandingTest(unittest.TestCase):
             rep = land(artifact, second_inbox, signed, "777", evidence_dir=evidence, require_evidence=True)
             self.assertEqual(rep["landed"], [])
             self.assertIn("already-signed", rep["skipped"][0]["reason"])
+
+
+class PRBodySizeLimitTest(unittest.TestCase):
+    """Test that PR bodies with many cards stay under GitHub's 65,536-char limit."""
+
+    def test_short_pr_body_with_1200_cards_under_github_limit(self):
+        """Body with ~1,200 cards must stay under 65,536 characters (run 39032449478)."""
+        landed = [
+            {
+                "file": f"unsigned-axis{i % 10}-{i:012x}.json",
+                "model": f"org/model-{i:04d}",
+                "axis": f"axis-{i % 10}",
+                "n": 30 + (i % 100),
+                "accuracy": round(0.3 + (i % 70) / 100, 4),
+                "quotable": (30 + (i % 100)) >= 30,
+            }
+            for i in range(1236)
+        ]
+        rep = {
+            "kind": "csoai.hub-queue-land/0.1",
+            "staged_files": 1500,
+            "landed": landed,
+            "skipped": [{"file": f"skip-{i}.json", "reason": "test skip"} for i in range(200)],
+            "axes": sorted({r["axis"] for r in landed}),
+            "writes_board": False,
+            "signed_here": False,
+        }
+        body = short_pr_body(rep, "39032449478", "public/interop/mill-land-manifests/land-39032449478.json", "a" * 64)
+        self.assertLess(len(body), 65536, f"short_pr_body is {len(body)} chars, must be under 65,536")
+        self.assertLess(len(body), MAX_PR_BODY + 1000, "short_pr_body should be well under the cap")
+
+    def test_full_pr_body_with_1200_cards_exceeds_limit_is_capped(self):
+        """The full pr_body with ~1,200 cards would exceed the limit; cap_body truncates it."""
+        landed = [
+            {
+                "file": f"unsigned-axis{i % 10}-{i:012x}.json",
+                "model": f"org/model-{i:04d}",
+                "axis": f"axis-{i % 10}",
+                "n": 30 + (i % 100),
+                "accuracy": round(0.3 + (i % 70) / 100, 4),
+                "quotable": (30 + (i % 100)) >= 30,
+            }
+            for i in range(1236)
+        ]
+        rep = {
+            "kind": "csoai.hub-queue-land/0.1",
+            "staged_files": 1500,
+            "landed": landed,
+            "skipped": [{"file": f"skip-{i}.json", "reason": "test skip"} for i in range(200)],
+            "axes": sorted({r["axis"] for r in landed}),
+            "writes_board": False,
+            "signed_here": False,
+        }
+        full_body = pr_body(rep, None, "39032449478")
+        self.assertGreater(len(full_body), 65536, "pr_body with 1,200+ cards should exceed GitHub limit")
+        capped = cap_body(full_body)
+        self.assertLessEqual(len(capped), MAX_PR_BODY + 100, "cap_body must enforce the limit")
+        self.assertIn("truncated", capped)
+
+    def test_cap_body_preserves_short_body(self):
+        short = "A short PR body.\n"
+        self.assertEqual(cap_body(short), short)
+
+    def test_write_manifest_returns_sha256(self):
+        with tempfile.TemporaryDirectory() as td:
+            rep = {"staged_files": 10, "landed": [], "skipped": [], "axes": []}
+            path = Path(td) / "manifests" / "test.json"
+            sha = write_manifest(rep, "12345", path)
+            self.assertTrue(path.is_file())
+            self.assertEqual(len(sha), 64)
+            self.assertEqual(sha, hashlib.sha256(path.read_bytes()).hexdigest())
 
 
 if __name__ == "__main__":

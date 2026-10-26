@@ -297,6 +297,10 @@ def size_category(rows: int) -> str:
 # registry said "16 tools" while /mcp served 19), so a scrubbed line never needs scrubbing again and no later
 # generator run has a number to overwrite. The BibTeX DOI gets the same availability note the rest of the card carries.
 LEGACY_LINE_RULES = [
+    (re.compile(r"^- Live board: `GET https://councilof\.ai/api/gspc` → \*\*\d+ axes · \d+ measured\*\* \(\*\*\d+·\d+·\d+\*\*\)\. Quote `totals\.public_count`\.$"),
+     "- Live board: `GET https://councilof.ai/api/gspc` — read `totals.public_count` and `totals.lid` at viewing time."),
+    (re.compile(r"^Live board: GET https://councilof\.ai/api/gspc → quote totals\.public_count / totals\.lid \(\d+·\d+·\d+ derived, never typed as a frozen paste\)$"),
+     "Live board: GET https://councilof.ai/api/gspc — read totals.public_count / totals.lid at viewing time"),
     (re.compile(r"^\*\*SUPERSEDED:\*\* typed Hub triples .*Hub cite = live GET only\.\s*$"), None),
     (re.compile(r"^- Hub cite: https://councilof\.ai/api/hub-cards — \*\*re-GET\*\*.*$"),
      "- Hub cards (read live): https://councilof.ai/api/hub-cards"),
@@ -307,7 +311,7 @@ LEGACY_LINE_RULES = [
 ]
 TYPED_LID = re.compile(r"^\*\*Lid:\*\* \d+ axes measured · .*$")
 TYPED_MCP_ROW = re.compile(r"^\| MCP endpoint — .*\d.*\| `POST https://councilof\.ai/mcp` \|$")
-LID_POINTER = "**Lid:** read `totals.lid` from https://councilof.ai/api/gspc at viewing time (never typed on this card)."
+LID_POINTER = "**Lid:** read `totals.lid` from https://councilof.ai/api/gspc at viewing time. TIE is TIE; UNTESTED is untested. Public leader scores do not establish a separated leader."
 MCP_POINTER = f"| MCP endpoint — read `tools/list` at viewing time (never typed on this card) | `POST {MCP}` |"
 BIB_DOI = re.compile(r"^(\s*)doi(\s*)= \{" + re.escape(DOI) + r"\},\s*$")
 
@@ -343,6 +347,31 @@ def scrub_legacy(text: str, lid: str | None, mcp_n: int | None, as_of: str) -> t
     return "\n".join(out), changes
 
 
+NORMALIZED_GUIDE = "<!-- csoai-capability-densify-2026-09-14-tui7 -->\n## Reuse the corpus\n\nUse these normalised records to inspect prompts and expected answers from several GSPC banks in one schema. Keep each row's `source` when comparing or adapting records so you can trace it to its bank.\n\n### Load a pinned snapshot\n\nWith the Hugging Face `datasets` package installed, this example loads the corpus at a fixed repository revision:\n\n```python\nfrom datasets import load_dataset\n\nrows = load_dataset(\n    \"csoai/gspc-normalized\",\n    name=\"default\",\n    split=\"train\",\n    revision=\"0d3e2a77f96d1b4cdb02ead4d01bb16a6900d203\",\n)\nprint(rows.column_names)\nprint(rows[0])\n```\n\nThe `default` configuration contains corpus rows. The separate `manifest` configuration describes files; its entries are file metadata. You can also [browse the files at this revision](https://huggingface.co/datasets/csoai/gspc-normalized/tree/0d3e2a77f96d1b4cdb02ead4d01bb16a6900d203).\n\n### Verify and improve\n\nRead the [live board](https://councilof.ai/api/gspc) for current measurement results. Use the [free verifier](https://councilof.ai/gspc-verify/) to check a signed measurement card. The records in this dataset describe corpus content.\n\nFound a missing field, an incorrect expected answer or a transformation that loses information? Follow the [corrections route below](#objections-contact-and-corrections), giving the repository revision, the affected row's `source`, `axis` and `anchor` where available, and what you think should change. Keep the licence and citation below with your reuse.\n<!-- /csoai-capability-densify-2026-09-14-tui7 -->"
+NORMALIZED_LEGACY_GUIDE = "<!-- csoai-capability-densify-2026-09-14-tui7 -->\n## Capability + living GET (TUI7 distribution 2026-09-14)\n\n\n```\nLive board: GET https://councilof.ai/api/gspc → quote totals.public_count / totals.lid (23·23·0 derived, never typed as a frozen paste)\nHub cards: GET https://councilof.ai/api/hub-cards → quote counts.cells / counts.measured / counts.unmeasured LIVE (no typed Hub triple)\nHub bank: https://huggingface.co/datasets/csoai/gspc-hub-cards\nFree verify: https://councilof.ai/gspc-verify\nDiscovery: GET https://councilof.ai/.well-known/x402.json (live · Base · USDC)\nOX discovery resources: councilof 0/60 honest — do not invent rows\nMeasurement, never certification.\n```\n\n[![GSPC board](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fcouncilof.ai%2Fapi%2Fgspc&query=%24.totals.public_count&label=GSPC%20board&color=0B1F33)](https://councilof.ai/api/gspc)\n[![Hub cells](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fcouncilof.ai%2Fapi%2Fhub-cards&query=%24.counts.cells&label=Hub%20cells&color=0B1F33)](https://councilof.ai/api/hub-cards)\n\n### Council of AI — GSPC + Hub printer\n- Living board: https://councilof.ai/api/gspc — quote `totals.public_count` / `totals.lid` (never invent MEASURED)\n- Hub cards (read live): https://councilof.ai/api/hub-cards\n- Hub dataset bank: https://huggingface.co/datasets/csoai/gspc-hub-cards\n- Verify free: https://councilof.ai/gspc-verify\n- x402 discovery: https://councilof.ai/.well-known/x402.json\n- Catalog: https://councilof.ai/api/x402\n- Free door (amount 0): https://councilof.ai/api/free-door\n- Jail goldbank: https://huggingface.co/datasets/csoai/gspc-jail-goldbank\n- Human: free + x402 PAYG · Coming—Paddle not live · never Stripe\n- Agents: payTo is merchant receive — never the signer\n- Self-settle proves the rail; stranger revenue is separate (do not invent buyers)\n- Measurement, not certification. Never sell a rank. Never certify.\n\nAny Hub `x402.json` in a CSOAI printer is a byte-mirror of the living well-known GET — **not a second authority**.\n<!-- /csoai-capability-densify-2026-09-14-tui7 -->"
+NORMALIZED_BLOCK = re.compile(r"<!-- csoai-capability-densify-2026-09-14-tui7 -->.*?<!-- /csoai-capability-densify-2026-09-14-tui7 -->", re.DOTALL)
+
+
+def clean_card(repo: str, kind: str, text: str) -> tuple[str, list[str]]:
+    """The normalized corpus gets a README-only guide repair; all other bytes remain unchanged."""
+    if (repo, kind) != ("csoai/gspc-normalized", "dataset"):
+        return scrub_legacy(text, None, None, "")
+    blocks = list(NORMALIZED_BLOCK.finditer(text))
+    if not blocks:
+        raise ValueError("normalized guide markers missing; do not append or replace unqualified content")
+    if any(b.group() not in (NORMALIZED_LEGACY_GUIDE, NORMALIZED_GUIDE) for b in blocks):
+        raise ValueError("normalized managed guide changed; existing owner must review its new bytes")
+    first = True
+    def replace(match):
+        nonlocal first
+        if first:
+            first = False
+            return NORMALIZED_GUIDE
+        return ""
+    new = NORMALIZED_BLOCK.sub(replace, text)
+    return new, ["consolidated normalized corpus guide; README only"] if new != text else []
+
+
 def scrub(repo: str, d: dict, push: bool, out: Path, kind: str = "dataset") -> None:
     """Download README.md, apply scrub_legacy, and (with --push) commit it against the revision read."""
     from huggingface_hub import HfApi, CommitOperationAdd
@@ -350,14 +379,13 @@ def scrub(repo: str, d: dict, push: bool, out: Path, kind: str = "dataset") -> N
     info = api.repo_info(repo, repo_type=kind)
     src = Path(api.hf_hub_download(repo, "README.md", repo_type=kind, revision=info.sha))
     text = src.read_text()
-    mcp_n, why = mcp_tool_count()
-    as_of = now_iso()
-    new, changes = scrub_legacy(text, d.get("lid") if d.get("state") == "DERIVED" else None, mcp_n, as_of)
+    # Copy-only maintenance uses source pointers; it needs no fresh numeric board/MCP fetch.
+    new, changes = clean_card(repo, kind, text)
     dest = out / "scrub" / repo.replace("/", "__") / "README.md"
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(new)
     print(json.dumps({"repo": repo, "parent": info.sha, "changes": len(changes), "detail": changes[:12],
-                      "mcp_tools": mcp_n, "mcp_reason": why, "stale_after": stale_hits(new)}, ensure_ascii=False))
+                      "stale_after": stale_hits(new)}, ensure_ascii=False))
     if push and new != text:
         c = api.create_commit(repo, [CommitOperationAdd(path_in_repo="README.md", path_or_fileobj=str(dest))],
                               repo_type=kind, parent_commit=info.sha,
@@ -657,7 +685,7 @@ def hubcard_block(repo: str, kind: str, d: dict, tree: list[dict], rows: dict[st
         "engine. If the fetch fails the honest answer is `UNCHECKABLE` — never a fabricated `0.000`.",
         "Status words: `LOADING` / `UNREACHABLE` / `UNMEASURED` / `UNCHECKABLE`.",
         "",
-        f"**Lid:** {d['lid']}" if d["state"] == "DERIVED" else f"**Lid:** UNCHECKABLE — `GET {API}` did not answer at {as_of}.",
+        LID_POINTER,
         "A public leader score is a published field, not proof of a separated leader; read each row's status and separation.",
         "",
         f"**This repository:** {ONE_LINERS.get(repo, GENERIC_ONE_LINER)}",
@@ -722,6 +750,8 @@ def hubcard_block(repo: str, kind: str, d: dict, tree: list[dict], rows: dict[st
         f"3rd Floor, 86–90 Paul Street, London EC2A 4NE. Card refreshed {as_of}.",
         HUB_CLOSE,
     ]
+    if (repo, kind) == ("csoai/gspc-normalized", "dataset"):
+        lines[-1:-1] = ["", NORMALIZED_GUIDE, ""]
     return "\n".join(lines) + "\n"
 
 
@@ -943,16 +973,23 @@ def main() -> int:
     ap.add_argument("--hubcard", nargs="*", default=None, metavar="REPO", help="refresh the 16-point block (+ front matter, manifest) on these datasets")
     ap.add_argument("--space-hubcard", nargs="*", default=None, metavar="SPACE", help="refresh the 16-point block on these Spaces")
     ap.add_argument("--scrub", nargs="*", default=None, metavar="REPO", help="remove legacy agent directives and typed lids/tool counts from these dataset cards")
+    ap.add_argument("--model-scrub", nargs="*", default=None, metavar="REPO", help="README-only legacy-pointer repair on these model cards; preserves no-weights and history")
     ap.add_argument("--no-spaces", action="store_true", help="skip the two Space READMEs")
     ap.add_argument("--out", default=str(Path(tempfile.gettempdir()) / "csoai-hf-org-card"), help="where derived files are written")
     args = ap.parse_args()
+    if args.model_scrub is not None and (not args.no_spaces or args.dataset_board or args.hubcard or args.space_hubcard):
+        ap.error("--model-scrub is README-only: combine with --no-spaces and no data/Space generation flags")
 
     if args.check:
         return check(args.public)
 
     fetched_at = now_iso()
-    board, reason = fetch_json(API)
-    d = derive(board, reason, fetched_at)
+    copy_only = args.no_spaces and not (args.dataset_board or args.hubcard or args.space_hubcard)
+    if copy_only:
+        d = {"state": "COPY_ONLY"}
+    else:
+        board, reason = fetch_json(API)
+        d = derive(board, reason, fetched_at)
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
 
@@ -977,9 +1014,11 @@ def main() -> int:
         hubcard(repo if "/" in repo else f"{ORG}/{repo}", d, args.push, out)
     for repo in args.scrub or []:
         scrub(repo if "/" in repo else f"{ORG}/{repo}", d, args.push, out)
+    for repo in args.model_scrub or []:
+        scrub(repo if "/" in repo else f"{ORG}/{repo}", d, args.push, out, kind="model")
     for repo in args.space_hubcard or []:
         hubcard(repo if "/" in repo else f"{ORG}/{repo}", d, args.push, out, kind="space")
-    return 0 if d["state"] == "DERIVED" else 2
+    return 0 if copy_only or d["state"] == "DERIVED" else 2
 
 
 if __name__ == "__main__":

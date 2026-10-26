@@ -45,6 +45,25 @@ curl -s https://councilof.ai/.well-known/did.json \
 
 Every published card MUST carry that exact `pubkey`. If one does not, stop.
 
+### 1a. Two card keys — which cards use which
+
+Cards are signed under one of two keys in our DID document. Pin the key the card names:
+
+| Key id | Public key (hex) | Cards |
+|---|---|---|
+| `did:web:csoai.org#card-attestation-1` | `d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38` | the cards listed in `/signed/card_index.json` |
+| `did:web:csoai.org#board-attestation-1` | `9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170` | measurement cards under `/interop/mill-cards-signed/`, including the GSPC-G2 group (14 Oct 2026); each names this key in its `did` field |
+
+To pin the second key, run the command above with `#board-attestation-1` in place of `#card-attestation-1`.
+The id rule and preimage rule in section 2 are the same for both. The fast-path script in section 0
+reads only `card_index.json`, so it does not check `/interop/mill-cards-signed/` cards.
+
+**Known gap:** the repository's `gspc-verify.mjs` currently stops on the GSPC-G2 cards with
+`OUT_OF_PROFILE_DOMAIN`. That is a gap in the verifier's profile, not a fault in the cards. Until it is
+fixed, check these cards with the GSPC `verify_card` tool, or by hand: recompute the id as the
+SHA-256 of the canonical body (section 2) and check the Ed25519 signature against the
+`#board-attestation-1` key read from `/.well-known/did.json`. GSPC-G2 cards are not yet in any card root.
+
 ## 2. The rule
 
     id        == sha256(preimage).hexdigest()

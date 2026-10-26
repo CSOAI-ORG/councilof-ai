@@ -26,7 +26,7 @@ jobs:
           python3 scripts/catalog-trust-round.py --out-dir public/interop/x402-trust
       - name: land the artefact (via PR — master is GH006-protected)
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.SNAPSHOT_PR_TOKEN || secrets.GITHUB_TOKEN }}  # SNAPSHOT_PR_TOKEN: a PR opened with it fires pull_request checks; GITHUB_TOKEN cannot
         run: |
           set -euo pipefail
           git config user.name "csoai-catalog-trust"
