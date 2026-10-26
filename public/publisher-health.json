@@ -56,10 +56,10 @@
       "source": "https://councilof.ai/api/gspc",
       "http": 200,
       "note": "Cited in publisher-health.json / status only. Not a card-v0 leaf. This writer does not write /api/gspc.",
-      "totals_axes": 23,
+      "totals_axes": 33,
       "totals_measured_axes": 23,
-      "totals_unmeasured_axes": 0,
-      "public_count": "23 axes · 23 measured",
+      "totals_unmeasured_axes": 10,
+      "public_count": "33 axes · 23 measured",
       "measured_on": {
         "model": "Behavioural (model-comparison) axis with published per-item rows: 13 of 14 (csoai/gspc-peritem-rows-2026-08-12). The rows hold a 19-model fleet: 6 base models, compared (deepseek-r1:8b, gemma3:12b, llama3.2:3b, mistral:7b, qwen2.5:0.5b-instruct, qwen2.5:3b), and 13 of our own models — prompt overlays on stock base models (system prompts, not trained weights; C-2026-0930-11) — excluded before comparison and never counted in a comparison; no other model is in the rows. Counted from the rows, not typed. swarm: the published rows are a retired bank; the served row states its own fleet on the axis. Not in the rows — jail: 7-model fleet, stated on the axis; never conflated with the rows fleet. Financial/domain axis (8): not a model comparison — measured as deterministic facts (issuer-account reads + public series), with no fleet, no leader and no accuracy.",
         "endpoint": "A100 · local Ollama (board v2) · 3090 pod (jail)",
@@ -315,7 +315,8 @@
           "tracked_as": "/api/corrections C-2026-0826-08"
         },
         "peritem_sha256": "0d8dacfbe7384a5d2f6a83e7455482ab75f935366bbb6e18da61cfdac8890dec"
-      }
+      },
+      "board_count_source": "derived from this commit's /api/gspc (functions/api/gspc.ts, computed offline by scripts/surface/commit-board.mjs; sha256 af9fecc5dd004cfba8e8da188f16a227613608dee6863a23f19b1c79c83adeaa) by scripts/surface/rebind-board-cites.mjs; the producer re-reads the live board on its next run"
     }
   },
   "swift": {

@@ -56,6 +56,11 @@ jobs:
               'packages/evidence-fabric/render/intoto.py',
               'packages/evidence-fabric/render/ecs_hec.py',
               'docs/standards/osaia-safe-reverification/safe-reverification-record-v0.1.schema.json',
+              'docs/standards/osaia-safe-reverification/safe-review-outcome-v0.1.schema.json',
+              'docs/standards/osaia-safe-reverification/safe-discriminating-power-v0.1.schema.json',
+              'docs/standards/osaia-safe-reverification/validate_examples.py',
+              'docs/standards/osaia-safe-reverification/test_discriminating_power.py',
+              'docs/standards/osaia-safe-reverification/examples/example-stale-signed-board-freeze.json',
               'docs/standards/osaia-safe-evidence-pack/records/C-2026-0928-01.post-fix.safe-rv.json',
               'docs/standards/osaia-safe-evidence-pack/records/C-2026-0928-01.pre-fix.safe-rv.json',
           ):
@@ -88,6 +93,11 @@ jobs:
                   or result.skipped or result.expectedFailures or result.unexpectedSuccesses):
               raise SystemExit('Approval control coverage incomplete or unsuccessful')
           PY
+      - name: SAFE profile examples and discriminating-power controls
+        working-directory: docs/standards/osaia-safe-reverification
+        run: |
+          python validate_examples.py
+          python test_discriminating_power.py
       - name: SAFE whole-pack reader regression controls
         run: |
           python -I -B - <<'PY'
@@ -114,3 +124,88 @@ jobs:
                   or result.skipped or result.expectedFailures or result.unexpectedSuccesses):
               raise SystemExit('Reader control coverage incomplete or unsuccessful')
           PY
+      - name: Read retained SAFE pack offline without authenticating its issuer
+        id: safe_readback
+        env:
+          CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          python -I -B - <<'PY'
+          import hashlib
+          import json
+          import os
+          import subprocess
+          import sys
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          output = Path(os.environ["RUNNER_TEMP"]) / "safe-pack-readback"
+          output.mkdir()
+          reader = Path("packages/evidence-fabric/safe_pack_verify.py")
+          pack = Path("docs/standards/osaia-safe-evidence-pack")
+          command = [sys.executable, "-I", "-B", str(reader), "--offline", "--pack", str(pack)]
+          receipt = {
+              "schema": "csoai.safe-pack-ci-readback/0.1",
+              "observed_at": datetime.now(timezone.utc).isoformat(),
+              "candidate_head": os.environ["CANDIDATE_HEAD"],
+              "checkout_sha": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
+              "run_id": os.environ["GITHUB_RUN_ID"],
+              "run_attempt": os.environ["GITHUB_RUN_ATTEMPT"],
+              "command": command,
+              "source_sha256": hashlib.sha256(reader.read_bytes()).hexdigest(),
+          }
+          try:
+              receipt["freeze_sha256"] = hashlib.sha256((pack / "FREEZE.json").read_bytes()).hexdigest()
+          except OSError as exc:
+              receipt["freeze_sha256"] = None
+              receipt["freeze_read_error"] = str(exc)
+          try:
+              completed = subprocess.run(command, capture_output=True, timeout=120)
+              stdout, stderr = completed.stdout, completed.stderr
+              receipt["exit_code"] = completed.returncode
+          except subprocess.TimeoutExpired as exc:
+              stdout, stderr = exc.stdout or b"", exc.stderr or b""
+              receipt.update(exit_code=None, error="reader_timeout")
+          (output / "stdout.txt").write_bytes(stdout)
+          (output / "stderr.txt").write_bytes(stderr)
+          receipt["stdout_sha256"] = hashlib.sha256(stdout).hexdigest()
+          receipt["stderr_sha256"] = hashlib.sha256(stderr).hexdigest()
+          summary = {}
+          try:
+              summary = json.loads(stdout.decode("utf-8").splitlines()[-1])
+              if not isinstance(summary, dict):
+                  raise ValueError("Reader summary is not an object")
+          except (ValueError, IndexError) as exc:
+              receipt["summary_error"] = str(exc)
+              summary = {}
+          receipt["summary"] = summary
+          checks = summary.get("checks")
+          passed = (
+              receipt["exit_code"] == 2
+              and summary.get("verifier_profile") == "csoai.safe-pack-readback/3"
+              and summary.get("state") == "SELF_CONSISTENT_UNAUTHENTICATED_KEY"
+              and summary.get("signature_valid") is True
+              and "issuer_authenticated" in summary
+              and summary["issuer_authenticated"] is None
+              and isinstance(checks, dict)
+              and set(checks) == {"sums", "validate", "derived", "signature"}
+              and all(isinstance(check, dict) and check.get("holds") is True
+                      for check in checks.values())
+          )
+          receipt["expected_qualified_result"] = passed
+          (output / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
+          print(json.dumps(receipt, sort_keys=True))
+          if not passed:
+              raise SystemExit("Retained SAFE pack did not reproduce the expected qualified result")
+          PY
+      - name: Retain SAFE pack readback including unavailable or failed results
+        if: >-
+          always() &&
+          (steps.safe_readback.outcome == 'success' ||
+           steps.safe_readback.outcome == 'failure' ||
+           steps.safe_readback.outcome == 'cancelled')
+        uses: actions/upload-artifact@v4
+        with:
+          name: safe-pack-readback-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/safe-pack-readback/
+          if-no-files-found: error
+          retention-days: 14
