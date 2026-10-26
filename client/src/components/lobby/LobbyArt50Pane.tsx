@@ -5,7 +5,7 @@ import { INVOICE_NEXT_STEP } from "@/lib/buying";
 import { ART50_SCOPE } from "../../../../functions/_lib/art50Scope";
 import { MAYBE_SETTLED_LINE, payDoor, quoteDoor, type Door, type DoorState } from "@/lib/payEveryDoor";
 import { discoverEIP6963, formatPaymentAmount, type X402Challenge } from "@/lib/x402Wallet";
-import { addMyResult, paidResult, seedChecker, signedRecordOf, VERIFY_SEED_HREF } from "@/lib/myResults";
+import { downloadText, paidResult, saveMyResult, saveNote, seedChecker, signedRecordOf, VERIFY_SEED_HREF, type SaveOutcome } from "@/lib/myResults";
 
 /**
  * LobbyArt50Pane — Article 50 marking evidence, NATIVE in Council OS.
@@ -150,6 +150,8 @@ export default function LobbyArt50Pane({ onOpenRoute }: { onOpenRoute?: (path: s
   const [pack, setPack] = useState<Pack | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [walletPay, setWalletPay] = useState<WalletPay>({ kind: "idle" });
+  /** What My results actually stored for the pack paid from the wallet (read back, not assumed). */
+  const [saveOutcome, setSaveOutcome] = useState<SaveOutcome | null>(null);
 
   const clean = url.trim();
   const urlOk = /^https?:\/\/\S+$/i.test(clean);
@@ -211,6 +213,7 @@ export default function LobbyArt50Pane({ onOpenRoute }: { onOpenRoute?: (path: s
   const walletPayNow = useCallback(async () => {
     if (walletPay.kind !== "terms") return;
     const { door, challenge } = walletPay;
+    setSaveOutcome(null);
     const detail = await discoverEIP6963();
     if (!detail?.provider) {
       setWalletPay({ kind: "paying", door, state: { kind: "no-wallet" } });
@@ -225,7 +228,7 @@ export default function LobbyArt50Pane({ onOpenRoute }: { onOpenRoute?: (path: s
     });
     setWalletPay({ kind: "paying", door, state: final });
     if (final.kind === "delivered") {
-      addMyResult(paidResult({ doorUrl: door.url, body: final.body, transaction: final.settlement?.transaction ?? null }));
+      setSaveOutcome(saveMyResult(paidResult({ doorUrl: door.url, body: final.body, transaction: final.settlement?.transaction ?? null })));
       if (final.body && typeof final.body === "object" && signedRecordOf(final.body)) setPack(final.body as Pack);
     }
   }, [walletPay]);
@@ -384,8 +387,26 @@ export default function LobbyArt50Pane({ onOpenRoute }: { onOpenRoute?: (path: s
             {pack.payment.commissioned_by ? `Commissioned by ${pack.payment.commissioned_by} · ` : ""}
             {pack.bytes} bytes of signed payload
             {!pack.signed && pack.unsigned_reason ? ` · unsigned: ${pack.unsigned_reason}` : ""}
-            {pack.payment.mode === "x402" ? " · saved to My results in this browser" : ""}
           </p>
+          {pack.payment.mode === "x402" && saveOutcome ? (
+            <p
+              className={`mt-1 text-[12px] ${saveOutcome.saved && saveOutcome.recordKept ? "text-slate-700" : "font-semibold text-amber-900"}`}
+              data-testid="art50-save-note"
+              data-saved={String(saveOutcome.saved && saveOutcome.recordKept)}
+            >
+              {saveNote(saveOutcome)}
+            </p>
+          ) : null}
+          {pack.payment.mode === "x402" && packRecord ? (
+            <button
+              type="button"
+              onClick={() => downloadText(JSON.stringify(packRecord, null, 2), `csoai-delivered-${packRecord.sha256.slice(0, 12)}.json`)}
+              className={`mt-2 min-h-11 text-[12.5px] font-semibold text-emerald-800 underline underline-offset-2 ${FOCUS}`}
+              data-testid="art50-download-record"
+            >
+              Download the signed record (JSON)
+            </button>
+          ) : null}
           {pack.scope ? <ScopeLines scope={pack.scope} testId="art50-pack-scope" /> : null}
           {pack.invoice?.you_must_send_this && (
             <div className="mt-3 rounded-lg border border-amber-600/35 bg-amber-50 px-3 py-2.5" data-testid="art50-invoice-handoff">

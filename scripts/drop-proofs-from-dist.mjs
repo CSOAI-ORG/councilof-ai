@@ -26,6 +26,11 @@ function covered(entry) {
 
 let fail = false;
 for (const e of manifest.entries) {
+  // mirror_only entries are synced to HF but NOT dropped from the Pages bundle yet
+  if (e.mirror_only) {
+    console.log(`· deploy-exclusions: ${e.path} is mirror_only — synced to HF but kept in bundle`);
+    continue;
+  }
   if (!covered(e)) {
     console.error(`✗ deploy-exclusions: refusing to drop ${e.path} — no mirror redirect for it in ${redirectsPath}`);
     fail = true;

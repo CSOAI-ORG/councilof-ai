@@ -12,7 +12,26 @@
  */
 import { ArrowUpRight, Anchor as AnchorIcon, ListChecks, CalendarClock } from "lucide-react";
 import type { ReactNode } from "react";
-import { fmtDay, isExternal, useMomentum, type MomentumRead } from "./momentum";
+import { fmtDay, isExternal, useMomentum, type MomentumRead, type MomentumAnchor } from "./momentum";
+
+/**
+ * Build the detail text for the bitcoin_block anchor locally.
+ *
+ * WHY: The API's pre-formatted `detail` field used to say "N anchors the chain head", which
+ * the facts gate reads as claiming N anchors (facts.json declares 3 live anchors; OTS is
+ * stamped, not anchored). Building the text here ensures the prerender doesn't depend on the
+ * live API's wording, breaking the deadlock where the deploy fails because the prerender
+ * fetches the old (incorrect) wording.
+ *
+ * The raw `as_of` field gives the head_date; the `value` field gives the block height. Any
+ * verification result suffix (e.g., "CHAIN_INTACT") is stripped from the API's detail and
+ * appended here, so no information is lost.
+ */
+function bitcoinBlockDetail(a: MomentumAnchor): string {
+  const headDate = a.as_of?.slice(0, 10) ?? "unknown";
+  const suffix = a.detail?.includes("·") ? a.detail.slice(a.detail.indexOf("·")) : "";
+  return `the chain head of ${headDate} is stamped in this block${suffix}`;
+}
 
 function ext(href: string) {
   return isExternal(href) ? { rel: "noopener noreferrer" } : {};
@@ -65,7 +84,11 @@ export default function HomeProof({ injected }: { injected?: MomentumRead }) {
                         </a>
                       ))}
                     </p>
-                    {a.detail && <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">{a.detail}</p>}
+                    {(a.id === "bitcoin_block" || a.detail) && (
+                      <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
+                        {a.id === "bitcoin_block" ? bitcoinBlockDetail(a) : a.detail}
+                      </p>
+                    )}
                   </li>
                 ))}
               </ul>
