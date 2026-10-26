@@ -1,0 +1,113 @@
+{
+  "card": {
+    "as_of": "2026-10-26T02:12:31Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "check_counts": {
+        "FAILURE": 21,
+        "SUCCESS": 18
+      },
+      "checks": "https://councilof.ai/interop/mcp-conformance-2026-10/checks/agntcy_Hello World Agent__alpha-2026-07-28.json",
+      "checks_sha256": "874fcfa1b4060319f49ce5039300c7f7c12e6c413964e4713fe2f5a1e95d55e8",
+      "deviation_checks": [
+        "CompletionComplete",
+        "DNSRebindingRejected",
+        "LocalhostHostAccepted",
+        "PromptsGetEmbeddedResource",
+        "PromptsGetSimple",
+        "PromptsGetWithArgs",
+        "PromptsGetWithImage",
+        "PromptsList",
+        "ResourcesList",
+        "ResourcesReadBinary",
+        "ResourcesReadText",
+        "ResourcesTemplateRead",
+        "ServerSSEMultipleStreamsTest",
+        "ToolsCallAudio",
+        "ToolsCallEmbeddedResource",
+        "ToolsCallError",
+        "ToolsCallImage",
+        "ToolsCallMixedContent",
+        "ToolsCallSimpleText",
+        "ToolsCallWithProgress",
+        "ToolsList"
+      ],
+      "instrument": "alpha-2026-07-28",
+      "instrument_channel": "alpha",
+      "kind": "csoai.mcp-conformance/0.1",
+      "not_a_grade": true,
+      "report": "https://councilof.ai/interop/mcp-conformance-2026-10/report.json",
+      "run_state": "RUN_DEVIATIONS",
+      "scenarios": 20,
+      "scope_note": "declared endpoint is a loopback address; any reachability observed is a property of the measuring host, not of the published record",
+      "spec_version": "2026-07-28",
+      "state": "PROBED",
+      "subject_id": "agntcy:Hello World Agent",
+      "suite_version": "0.2.0-alpha.12"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "1fc6b03f2ef4a7d631f1e646befc9458bf990e39177bbd8e7fccdf83926b2916",
+    "sig_ed25519": "59ea3defa87458060ee7f3eb26fc3e0850118b285f4c5a5d2c08da77975e0da71982cf58406521815a75693124ee7efb78474832fae52372da3d0cdf95226e02",
+    "source_urls": [
+      "https://ai-catalog.outshift.io/v1/agents",
+      "https://councilof.ai/interop/mcp-conformance-2026-10/checks/agntcy_Hello World Agent__alpha-2026-07-28.json",
+      "https://councilof.ai/interop/mcp-conformance-2026-10/report.json"
+    ],
+    "subject": "MCP conformance run alpha-2026-07-28 for agntcy:Hello World Agent",
+    "surface": "public.notice",
+    "tags": [
+      "mcp",
+      "conformance",
+      "probe",
+      "mcp-conformance-2026-10"
+    ],
+    "unmeasured": [
+      "behaviour under load",
+      "scenarios outside the frozen spec version",
+      "subjects outside the pinned set"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "44068559e20ed8dd45f4f16a6d977c4bf2154d5b01723a488bf9852eec07414f",
+    "7349bc4946e58c1e8df8f2b7cba4055dacf72bd5e87fae0776797c9bcc6385a3",
+    "de2c0817538eda99a92d2044eb6811442c3763062548a24a51cb31095de22f64",
+    "5416936c76e9bc05bce3af56fc478fccbcbefe150097291414b8821e1d8fa893",
+    "ff88c72bdc44db503c957163111ade5b936fb43c4e2b8ebc2c67f04896f0c5ba",
+    "bb0eef1e7419df7a2b39c3d258ce4d8cdb9181e4ad64740b38818659cb9e2a74",
+    "6bf88414a620ffbad458c4d652aaa41b4da3bc7527d8f928b1b1184fdd4d4278",
+    "656e1809784ac103fe74af6789a2c6a222e139bdf2e4eb7eab1d472ddef73813",
+    "9b57379f6cafad2b83e92e4daf65fc7e890d0cea13cd1a7f59b1aac56c4fcdd6"
+  ]
+}

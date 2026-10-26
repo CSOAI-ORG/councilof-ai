@@ -1,0 +1,137 @@
+{
+  "card": {
+    "as_of": "2026-10-26T03:40:00Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.art50-recheck-schedule/0.1",
+      "status": "PROBED",
+      "release_id": "art50-recheck-schedule-2026-10",
+      "schedule_generated_at": "2026-10-26T03:40:00Z",
+      "schedule_sha256": "9c32703c5f30d6b9ccbfc28590991b16d4e401dd1a88138f684b357f7341f42e",
+      "n_points": 5,
+      "points": [
+        {
+          "id": "first-detection-reading",
+          "due": "2026-10-30",
+          "note": "the census carries no detection reading yet; every detectable slot is UNMEASURED"
+        },
+        {
+          "id": "pre-existing-baseline",
+          "due": "2026-11-27",
+          "note": "a reading before the Article 111(4) date, so two readings exist either side of it"
+        },
+        {
+          "id": "article-111-4-date",
+          "due": "2026-12-02",
+          "note": "a reading dated 2026-12-02, the date Article 111(4) itself names"
+        },
+        {
+          "id": "post-date-re-read",
+          "due": "2026-12-09",
+          "note": "the same bytes one week later, so a change in detection is visible"
+        },
+        {
+          "id": "quarterly-refresh",
+          "due": "2027-03-02",
+          "note": "a reading every quarter; a detection reading decays as manifests expire",
+          "recurs": "quarterly"
+        }
+      ],
+      "n_triggers": 2,
+      "triggers": [
+        {
+          "id": "census-bytes-changed",
+          "rule": "A reading is due now if the sha256 of the census file differs from the pinned digest, whatever the calendar says."
+        },
+        {
+          "id": "detection-method-changed",
+          "rule": "A reading is due now if the version of any named detection method differs from the version recorded in the reading it supersedes."
+        }
+      ],
+      "inputs": {
+        "census_release_id": "art50-census-2026-09",
+        "census_sha256_pinned": "a6d95ad34c31862b7744c03af4948e5e89e50be4332ddf65f90f32f9291fc286",
+        "census_sha256_now": "a6d95ad34c31862b7744c03af4948e5e89e50be4332ddf65f90f32f9291fc286",
+        "inputs_changed": false
+      },
+      "law": {
+        "applies_from": "2026-08-02",
+        "pre_existing_systems_until": "2026-12-02",
+        "pre_existing_systems_basis": "Article 111(4) of Regulation (EU) 2024/1689, as added by Regulation (EU) 2026/1744 Article 1(39)(b) (OJ L, 24.7.2026; in force 27 July 2026)"
+      },
+      "first_reading_taken": false,
+      "not_a_compliance_calendar": true,
+      "endpoint": "/interop/art50-recheck-schedule-2026-10/schedule.json",
+      "unmeasured": [
+        "this is a schedule of readings, not a compliance calendar; due means due, not met and not unmet",
+        "the census this schedule pins carries no detection reading yet, so every detectable slot is UNMEASURED",
+        "DETECTED and NOT DETECTED describe what a named method can read in a given set of bytes at a given time; they say nothing about any other output, method or moment",
+        "the C2PA manifest store and IPTC metadata are the only mark kinds this pack reads; no watermark, fingerprint or other kind of mark is read",
+        "metadata is often stripped when a file is re-saved, so a NOT DETECTED reading is a fact about those bytes and not about the system that made them"
+      ]
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "6f2c382a3f9af93883b7813c0cfb967767c1f7a2035c37bec512fc3fd11745b9",
+    "sig_ed25519": "37e12eed4ec8709fcfd3abb638cdcf98d872364aa56f512111bf037665ccf6b8d7e160bc7001e1b9d56ea321e55ea13abe0497c04a4d8ac354b98617b5c13401",
+    "source_urls": [
+      "https://councilof.ai/interop/art50-recheck-schedule-2026-10/schedule.json"
+    ],
+    "subject": "Art 50 marking detection re-check schedule",
+    "surface": "public.notice",
+    "tags": [
+      "public-notice",
+      "art50",
+      "recheck-schedule"
+    ],
+    "unmeasured": [
+      "this is a schedule of readings, not a compliance calendar; due means due, not met and not unmet",
+      "the census this schedule pins carries no detection reading yet, so every detectable slot is UNMEASURED",
+      "DETECTED and NOT DETECTED describe what a named method can read in a given set of bytes at a given time; they say nothing about any other output, method or moment",
+      "the C2PA manifest store and IPTC metadata are the only mark kinds this pack reads; no watermark, fingerprint or other kind of mark is read",
+      "metadata is often stripped when a file is re-saved, so a NOT DETECTED reading is a fact about those bytes and not about the system that made them"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "6109d9dd03edf688f511bb106fb5a25ad5b2650c3c04e6116271a01c72d65111",
+    "53017889bbaf823bb54107b44d286714251ed10f23a7660656934a78ff360648",
+    "3c94a4e5a4a2b35f9288e604527e6b91e6274f82e1e062a20f7a91a3c6d490b8",
+    "7775a4a6752127e960be1eccbc17725927fe72ddd6d1e882808535d6192d7297",
+    "7caff9261c2a4e0fbfc0bdf70d2d7a26e8d9164f3e6bcf6a684d1122998f1220",
+    "a7fc8a754fb09b495faa1295b84c45fe9023eeafc287f618fda1e909331ff5ea",
+    "147f1891d9ba32bc52a741c325c8a6c654bd16774fde25045880140e3144f766",
+    "1f75a51edd8cf3bd33ed740016eb92e90d95e8a4e8ae02d858a3b0b48d9aba74",
+    "fe54157689b2db00bdd864c4f98c08ccf6f411aaecce9ca81c92adb4ca0dbe6e"
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "card": {
+    "as_of": "2026-10-26T02:12:31Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "check_counts": {
+        "FAILURE": 27,
+        "SUCCESS": 3,
+        "WARNING": 1
+      },
+      "checks": "https://councilof.ai/interop/mcp-conformance-2026-10/checks/councilof.ai_mcp_free__stable-2025-11-25.json",
+      "checks_sha256": "f01cb8de52e681540b90192f78aacd0cd85a065a55f3f4f066915215c8d65f5d",
+      "deviation_checks": [
+        "CompletionComplete",
+        "DNSRebindingRejected",
+        "LocalhostHostAccepted",
+        "ElicitationSEP1034General",
+        "ElicitationSEP1330General",
+        "LoggingSetLevel",
+        "PromptsGetEmbeddedResource",
+        "PromptsGetSimple",
+        "PromptsGetWithArgs",
+        "PromptsGetWithImage",
+        "PromptsList",
+        "ResourcesList",
+        "ResourcesReadBinary",
+        "ResourcesReadText",
+        "ResourcesSubscribe",
+        "ResourcesTemplateRead",
+        "ResourcesUnsubscribe",
+        "ToolsCallAudio",
+        "ToolsCallElicitation",
+        "ToolsCallEmbeddedResource",
+        "ToolsCallError",
+        "ToolsCallImage",
+        "ToolsCallMixedContent",
+        "ToolsCallSampling",
+        "ToolsCallSimpleText",
+        "ToolsCallWithLogging",
+        "ToolsCallWithProgress"
+      ],
+      "instrument": "stable-2025-11-25",
+      "instrument_channel": "stable",
+      "kind": "csoai.mcp-conformance/0.1",
+      "not_a_grade": true,
+      "report": "https://councilof.ai/interop/mcp-conformance-2026-10/report.json",
+      "run_state": "RUN_DEVIATIONS",
+      "scenarios": 30,
+      "spec_version": "2025-11-25",
+      "state": "PROBED",
+      "subject_id": "councilof.ai/mcp/free",
+      "suite_version": "0.1.16"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "637f718630fa085aed249c58934f41ccc93f5db6a801b84ea57874d7a963abea",
+    "sig_ed25519": "e23af03859c2bd5d142c3b3f80598552878d6920be61a180a678929e9c6ac78aa611fc91e1904e1f6952efb2d25776ba98323a8c70184e3b70e7189ca5fe5f0b",
+    "source_urls": [
+      "https://councilof.ai/mcp/free",
+      "https://councilof.ai/interop/mcp-conformance-2026-10/checks/councilof.ai_mcp_free__stable-2025-11-25.json",
+      "https://councilof.ai/interop/mcp-conformance-2026-10/report.json"
+    ],
+    "subject": "MCP conformance run stable-2025-11-25 for councilof.ai/mcp/free",
+    "surface": "public.notice",
+    "tags": [
+      "mcp",
+      "conformance",
+      "probe",
+      "mcp-conformance-2026-10"
+    ],
+    "unmeasured": [
+      "behaviour under load",
+      "scenarios outside the frozen spec version",
+      "subjects outside the pinned set"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "7be16189f61800c5cf917ff7f0f6b233a2896dd4f124c332b4574b73b35a688c",
+    "0792c63ca0b1c0686bae367982eddbc808c93d1d1e4cee05c01a66f91fcc10b9",
+    "21eb4e6d65db9f870dae45b99df6596038e6c8aaea265b699b35b7041bf2977e",
+    "48a1f0a8d8017a4029b3ca5d387675c773bd3351f32879e1f0b7c296d95c15dd",
+    "a2dffe019e8e5d832c42dab0b753eb2a758518095f7dbdc452759a10bac4eb01",
+    "5d21b804e9013e9507ca7eb85d1b5ab44dee49536c3cb63821f48fe835c10c19",
+    "6bf88414a620ffbad458c4d652aaa41b4da3bc7527d8f928b1b1184fdd4d4278",
+    "656e1809784ac103fe74af6789a2c6a222e139bdf2e4eb7eab1d472ddef73813",
+    "9b57379f6cafad2b83e92e4daf65fc7e890d0cea13cd1a7f59b1aac56c4fcdd6"
+  ]
+}

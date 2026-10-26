@@ -1,0 +1,122 @@
+{
+  "card": {
+    "as_of": "2026-10-26T02:12:31Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "check_counts": {
+        "FAILURE": 31
+      },
+      "checks": "https://councilof.ai/interop/mcp-conformance-2026-10/checks/agntcy_a2a-helloworld__stable-2025-11-25.json",
+      "checks_sha256": "8f8e3d9b827915c758d66514253545084691e9ca53e8e2be4aad9d58b1100ec3",
+      "deviation_checks": [
+        "CompletionComplete",
+        "DNSRebindingRejected",
+        "LocalhostHostAccepted",
+        "ElicitationSEP1034General",
+        "ElicitationSEP1330General",
+        "LoggingSetLevel",
+        "Ping",
+        "PromptsGetEmbeddedResource",
+        "PromptsGetSimple",
+        "PromptsGetWithArgs",
+        "PromptsGetWithImage",
+        "PromptsList",
+        "ResourcesList",
+        "ResourcesReadBinary",
+        "ResourcesReadText",
+        "ResourcesSubscribe",
+        "ResourcesTemplateRead",
+        "ResourcesUnsubscribe",
+        "ServerInitialize",
+        "ServerSSEMultipleStreamsTest",
+        "ToolsCallAudio",
+        "ToolsCallElicitation",
+        "ToolsCallEmbeddedResource",
+        "ToolsCallError",
+        "ToolsCallImage",
+        "ToolsCallMixedContent",
+        "ToolsCallSampling",
+        "ToolsCallSimpleText",
+        "ToolsCallWithLogging",
+        "ToolsCallWithProgress",
+        "ToolsList"
+      ],
+      "instrument": "stable-2025-11-25",
+      "instrument_channel": "stable",
+      "kind": "csoai.mcp-conformance/0.1",
+      "not_a_grade": true,
+      "report": "https://councilof.ai/interop/mcp-conformance-2026-10/report.json",
+      "run_state": "RUN_DEVIATIONS",
+      "scenarios": 30,
+      "scope_note": "declared endpoint is a loopback address; any reachability observed is a property of the measuring host, not of the published record",
+      "spec_version": "2025-11-25",
+      "state": "PROBED",
+      "subject_id": "agntcy:a2a-helloworld",
+      "suite_version": "0.1.16"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "9a7f2439870dec683fe9a18e4b103ac607814602c165d6f4a57575dce10c34a6",
+    "sig_ed25519": "0602f0fb47ad90756526cd1c3f13f79cc77e1563152c4c82d0d2440e6d44cc460f91f99489a0ef1550042604a221811eea5f13d4e03a6e483cde51caf428080b",
+    "source_urls": [
+      "https://ai-catalog.outshift.io/v1/agents",
+      "https://councilof.ai/interop/mcp-conformance-2026-10/checks/agntcy_a2a-helloworld__stable-2025-11-25.json",
+      "https://councilof.ai/interop/mcp-conformance-2026-10/report.json"
+    ],
+    "subject": "MCP conformance run stable-2025-11-25 for agntcy:a2a-helloworld",
+    "surface": "public.notice",
+    "tags": [
+      "mcp",
+      "conformance",
+      "probe",
+      "mcp-conformance-2026-10"
+    ],
+    "unmeasured": [
+      "behaviour under load",
+      "scenarios outside the frozen spec version",
+      "subjects outside the pinned set"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "e6df2953ce177c7541e1bb251d2b29828dcb59c0b87427c77f18312f35b4eb75",
+    "45d9b9709bb383d656d48464de7b1fdb17caecf4bcddafea4b86593a4e1324f8",
+    "d413413863da27bfa0e240782c9a9902def7d619a4069bb8185d254864cd40e6",
+    "ae1be034d3915f57da6aae9664e8d6988fceb1cafb73077bb90ac80168c2b0de",
+    "a2dffe019e8e5d832c42dab0b753eb2a758518095f7dbdc452759a10bac4eb01",
+    "5d21b804e9013e9507ca7eb85d1b5ab44dee49536c3cb63821f48fe835c10c19",
+    "6bf88414a620ffbad458c4d652aaa41b4da3bc7527d8f928b1b1184fdd4d4278",
+    "656e1809784ac103fe74af6789a2c6a222e139bdf2e4eb7eab1d472ddef73813",
+    "9b57379f6cafad2b83e92e4daf65fc7e890d0cea13cd1a7f59b1aac56c4fcdd6"
+  ]
+}
