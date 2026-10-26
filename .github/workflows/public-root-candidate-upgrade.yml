@@ -239,44 +239,27 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
           URL: ${{ steps.candidate.outputs.url }}
+          BRANCH: public-root/pending
         run: |
           set -euo pipefail
-          head=$(gh pr view "$URL" --repo "$REPO" --json headRefOid --jq .headRefOid)
-          runs() {
-            gh run list --repo "$REPO" --workflow pr-gates.yml --branch public-root/pending --limit 50 \
-              --json databaseId,headSha,status,conclusion,createdAt
-          }
-          # Reuse a run on this exact commit that passed or is still going; a failed one is retried.
-          run_id=$(runs | jq -r --arg sha "$head" \
-            '[.[] | select(.headSha == $sha and (.status != "completed" or .conclusion == "success"))] | .[0].databaseId // ""')
-          if [ -z "$run_id" ]; then
-            since=$(date -u -d '1 minute ago' +%Y-%m-%dT%H:%M:%SZ)
-            gh workflow run pr-gates.yml --repo "$REPO" --ref public-root/pending
-            for _ in $(seq 1 30); do
-              sleep 10
-              run_id=$(runs | jq -r --arg sha "$head" --arg since "$since" \
-                '[.[] | select(.headSha == $sha and .createdAt >= $since)] | .[0].databaseId // ""')
-              [ -n "$run_id" ] && break
-            done
+          # The gate's LOGIC lives in scripts/public_root_promotion_gate.py, not inline shell
+          # here: inline shell in the root path is exactly what failed on 2026-10-26 without
+          # anyone seeing why. The shell read the pull request's headRefOid, which LAGS the
+          # branch by seconds after this job pushes the upgraded proof, so it read the PREVIOUS
+          # commit (9e6f0cc70) while the branch had already moved to d43b1a605 - and watched the
+          # gates for those older bytes. The promotion halted with "HALT: pr-gates run
+          # 40301090584 did not pass on 9e6f0cc70" even though the proof was CONFIRMED_BITCOIN
+          # and the candidate's gates were queued on the exact head. The tool reads the BRANCH
+          # REF, re-reads it every cycle, and refuses to merge bytes whose gates did not run.
+          # It ships with its own selftest, proven able to go red.
+          #
+          # The TOOL is taken from master; the TREE it works on is the candidate's. This job
+          # checks out public-root/pending, a rolling branch that has not merged master yet.
+          git fetch origin +refs/heads/master:refs/remotes/origin/master
+          if [ -f scripts/public_root_promotion_gate.py ]; then
+            gate=scripts/public_root_promotion_gate.py
+          else
+            gate=/tmp/public_root_promotion_gate.py
+            git show origin/master:scripts/public_root_promotion_gate.py > "$gate"
           fi
-          if [ -z "$run_id" ]; then
-            echo "HALT: no pr-gates run appeared for $head; not merging" >&2
-            exit 1
-          fi
-          # A candidate PR that carries a workflow change makes its pull_request runs wait for
-          # approval (conclusion "action_required"). Watching such a run fails instantly, which is
-          # what halted runs 40154507419 and 40155446269. Approve the run this job is about to watch;
-          # the decision to run the gates has already been made by this workflow, not by a stranger.
-          state=$(runs | jq -r --arg id "$run_id" '.[] | select((.databaseId|tostring) == $id) | .conclusion // ""')
-          if [ "$state" = "action_required" ]; then
-            echo "approving gated pr-gates run $run_id"
-            gh api -X POST "repos/$REPO/actions/runs/$run_id/approve" > /dev/null \
-              || echo "approve refused; continuing to watch" >&2
-          fi
-          echo "waiting for pr-gates run $run_id on $head"
-          if ! gh run watch "$run_id" --repo "$REPO" --exit-status --interval 30 > /dev/null; then
-            echo "HALT: pr-gates run $run_id did not pass on $head; not merging. The candidate stays open for a human." >&2
-            exit 1
-          fi
-          echo "pr-gates run $run_id passed on $head; merging exactly that commit"
-          gh pr merge "$URL" --repo "$REPO" --squash --match-head-commit "$head"
+          python3 "$gate" --repo "$REPO" --branch "$BRANCH" --pr "$URL"
