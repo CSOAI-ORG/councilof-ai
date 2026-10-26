@@ -15,7 +15,12 @@
  */
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { ArrowUp, Loader2, Mic, MicOff, ShieldAlert, Eye } from "lucide-react";
+import { useSearch } from "wouter";
+import CompanyCasePanel from "./CompanyCasePanel";
+import ConnectedCompanyCasePanel from "./ConnectedCompanyCasePanel";
+import { companyWorkspaceSelection, type CompanyCaseConnection } from "./companyCaseModel";
 import ResultCard from "@/components/talk/ResultCard";
+import ResultFollowUp from "@/components/talk/ResultFollowUp";
 import Inline from "@/components/talk/TalkInline";
 import { answerSections, checkedLine, chipFor, firstSentence, plainAnswer, statTiles, toolTitle, verifyLink } from "@/lib/resultCard";
 import type { PageContext } from "../../../../functions/_lib/uiTools";
@@ -176,11 +181,13 @@ function RunView({
   onConfirm,
   onCancel,
   onEnableWatch,
+  onEdit,
 }: {
   run: TalkRun;
   onConfirm: (run: TalkRun) => void;
   onCancel: (run: TalkRun) => void;
   onEnableWatch?: (run: TalkRun) => void;
+  onEdit?: (question: string) => void;
 }) {
   return (
     <article id={`talk-${run.id}`} className="scroll-mt-4 space-y-3" aria-label={`Question: ${run.question}`} data-testid="talk-run">
@@ -254,6 +261,7 @@ function RunView({
           <Loader2 className="h-4 w-4 animate-spin motion-reduce:animate-none" aria-hidden="true" /> Asking the tools…
         </p>
       ) : null}
+      {run.status === "done" && run.tools.length > 0 && run.tools.every((tool) => tool.status === "done") && onEdit ? <ResultFollowUp run={run} onEdit={onEdit} /> : null}
       {run.status === "error" ? (
         <p className="rounded-lg border border-rose-700/30 bg-rose-50 p-3 text-sm text-rose-900 dark:border-rose-400/40 dark:bg-rose-950 dark:text-rose-100" role="alert">
           No answer: {run.error}. No number is shown in its place.
@@ -283,9 +291,11 @@ type Props = {
   listen?: boolean;
   /** Hide the built-in suggestions (the host shows its own). */
   hideSuggestions?: boolean;
+  /** Injected owner-authenticated company adapter; never a public-lookup fallback. */
+  company?: CompanyCaseConnection;
 };
 
-const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel(
+const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPanel(
   { variant = "standalone", labelledBy, className = "", page, declareUi, watch, onRunDone, onEnableWatch, listen, hideSuggestions },
   ref,
 ) {
@@ -405,7 +415,11 @@ const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel(
       {runs.length ? (
         <div className="space-y-6" data-testid="talk-transcript">
           {runs.map((r) => (
-            <RunView key={r.id} run={r} onConfirm={confirm} onCancel={cancel} onEnableWatch={onEnableWatch} />
+            <RunView key={r.id} run={r} onConfirm={confirm} onCancel={cancel} onEnableWatch={onEnableWatch} onEdit={variant === "standalone" ? (question) => {
+              setQ(question);
+              setAnnounce("Question ready to edit. Nothing has been run.");
+              window.setTimeout(() => document.getElementById("talk-input")?.focus(), 0);
+            } : undefined} />
           ))}
         </div>
       ) : null}
@@ -495,6 +509,25 @@ const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel(
       </p>
     </section>
   );
+});
+
+/** The explicit company workspace selects a separate authorized request path and one composer. */
+const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel(props, ref) {
+  const search = useSearch();
+  const company = companyWorkspaceSelection(search);
+  if (company.enabled) {
+    const companyProps = {
+      caseId: company.caseId,
+      invalidCase: company.invalidCase,
+      variant: props.variant,
+      labelledBy: props.labelledBy,
+      className: props.className,
+    };
+    return props.company
+      ? <CompanyCasePanel {...companyProps} ref={ref} connection={props.company} />
+      : <ConnectedCompanyCasePanel {...companyProps} ref={ref} />;
+  }
+  return <PublicTalkPanel {...props} ref={ref} />;
 });
 
 export default TalkPanel;

@@ -1,0 +1,34 @@
+name: hf-make-private
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Only read back visibility; change nothing"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  private:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+          persist-credentials: false
+          sparse-checkout: |
+            scripts/hf/make-private.py
+            scripts/hf/retire-private-list.txt
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install --quiet "huggingface_hub>=0.25,<2"
+      - name: make private (never delete) and read back
+        env:
+          DRY_RUN: ${{ inputs.dry_run }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: python scripts/hf/make-private.py

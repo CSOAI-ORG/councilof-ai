@@ -1,0 +1,450 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://councilof.ai/spec/safe-discriminating-power/v0.1/schema.json",
+  "title": "csoai.safe-discriminating-power/0.1",
+  "description": "A verification method's own evidence that it can produce the intended negative outcome. Two controls are mandatory: one that must PASS on a valid input, and one that must FAIL on a deliberately invalid input under the same configuration. If the must-fail control passes, the method is not discriminating, and any outcome it produced is UNVERIFIED rather than verified. This is the executable form of the proposal in SAFE issue 32. It is a CSOAI candidate profile, not an Open Secure AI Alliance standard, and not a certification.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "record_id",
+    "method",
+    "controls",
+    "outcome",
+    "claim",
+    "limits"
+  ],
+  "properties": {
+    "profile": {
+      "const": "csoai.safe-discriminating-power/0.1"
+    },
+    "record_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "issued_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "method": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method_id",
+        "procedure",
+        "controls_executed"
+      ],
+      "properties": {
+        "method_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "method_version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "procedure": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A command, script URI or document a stranger can follow."
+        },
+        "procedure_digest": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/digest"
+            }
+          ]
+        },
+        "reproduction": {
+          "enum": [
+            "replay_of_original",
+            "re_execution",
+            "independent_reimplementation",
+            "not_reproducible"
+          ]
+        },
+        "controls_executed": {
+          "type": "boolean",
+          "description": "False when the controls could not be executed at all. The outcome is then INSUFFICIENT_EVIDENCE, never a pass."
+        },
+        "declared_failure_modes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "noise_floor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "controls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "must_pass",
+        "must_fail"
+      ],
+      "properties": {
+        "must_pass": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "control_id",
+            "expectation",
+            "observed"
+          ],
+          "properties": {
+            "control_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "expectation": {
+              "enum": [
+                "PASS",
+                "FAIL"
+              ]
+            },
+            "observed": {
+              "enum": [
+                "PASS",
+                "FAIL",
+                "NOT_RUN"
+              ],
+              "description": "FAIL means the control failed as designed, so the instrument can discriminate. PASS on the must-fail control means the instrument accepted a case built to fail: it is not discriminating. NOT_RUN means discriminating power is unmeasured, and no outcome may be claimed from it."
+            },
+            "input_digest": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "$ref": "#/definitions/digest"
+                }
+              ]
+            },
+            "description": {
+              "type": "string"
+            }
+          }
+        },
+        "must_fail": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "control_id",
+            "expectation",
+            "observed"
+          ],
+          "properties": {
+            "control_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "expectation": {
+              "enum": [
+                "PASS",
+                "FAIL"
+              ]
+            },
+            "observed": {
+              "enum": [
+                "PASS",
+                "FAIL",
+                "NOT_RUN"
+              ],
+              "description": "FAIL means the control failed as designed, so the instrument can discriminate. PASS on the must-fail control means the instrument accepted a case built to fail: it is not discriminating. NOT_RUN means discriminating power is unmeasured, and no outcome may be claimed from it."
+            },
+            "input_digest": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "$ref": "#/definitions/digest"
+                }
+              ]
+            },
+            "description": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "outcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "verification_path",
+        "claimed_outcome",
+        "reason"
+      ],
+      "properties": {
+        "verification_path": {
+          "enum": [
+            "DISCRIMINATING",
+            "NOT_DISCRIMINATING",
+            "INSUFFICIENT_EVIDENCE"
+          ]
+        },
+        "claimed_outcome": {
+          "enum": [
+            "VERIFIED",
+            "UNVERIFIED",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "subject",
+        "scope"
+      ],
+      "properties": {
+        "subject": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "statement": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "limits": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "supersedes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "definitions": {
+    "digest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "alg",
+        "value"
+      ],
+      "properties": {
+        "alg": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "source": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "control": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "control_id",
+        "expectation",
+        "observed"
+      ],
+      "properties": {
+        "control_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "expectation": {
+          "enum": [
+            "PASS",
+            "FAIL"
+          ]
+        },
+        "observed": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "NOT_RUN"
+          ],
+          "description": "FAIL means the control failed as designed, so the instrument can discriminate. PASS on the must-fail control means the instrument accepted a case built to fail: it is not discriminating. NOT_RUN means discriminating power is unmeasured, and no outcome may be claimed from it."
+        },
+        "input_digest": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/digest"
+            }
+          ]
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "outcome": {
+            "properties": {
+              "verification_path": {
+                "const": "DISCRIMINATING"
+              }
+            }
+          }
+        },
+        "required": [
+          "outcome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "controls": {
+            "properties": {
+              "must_pass": {
+                "properties": {
+                  "observed": {
+                    "const": "PASS"
+                  }
+                },
+                "required": [
+                  "observed"
+                ]
+              },
+              "must_fail": {
+                "properties": {
+                  "observed": {
+                    "const": "FAIL"
+                  }
+                },
+                "required": [
+                  "observed"
+                ]
+              }
+            }
+          },
+          "outcome": {
+            "properties": {
+              "claimed_outcome": {
+                "const": "VERIFIED"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "outcome": {
+            "properties": {
+              "verification_path": {
+                "const": "NOT_DISCRIMINATING"
+              }
+            }
+          }
+        },
+        "required": [
+          "outcome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "controls": {
+            "properties": {
+              "must_pass": {
+                "properties": {
+                  "observed": {
+                    "const": "PASS"
+                  }
+                },
+                "required": [
+                  "observed"
+                ]
+              },
+              "must_fail": {
+                "properties": {
+                  "observed": {
+                    "const": "PASS"
+                  }
+                },
+                "required": [
+                  "observed"
+                ]
+              }
+            }
+          },
+          "outcome": {
+            "properties": {
+              "claimed_outcome": {
+                "const": "UNVERIFIED"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "outcome": {
+            "properties": {
+              "verification_path": {
+                "const": "INSUFFICIENT_EVIDENCE"
+              }
+            }
+          }
+        },
+        "required": [
+          "outcome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "outcome": {
+            "properties": {
+              "claimed_outcome": {
+                "const": "UNVERIFIED"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
