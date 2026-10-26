@@ -1,0 +1,63 @@
+{
+ "as_of": "2026-10-26T02:12:31Z",
+ "payload": {
+  "check_counts": {
+   "FAILURE": 20,
+   "INFO": 1,
+   "SUCCESS": 21
+  },
+  "checks": "https://councilof.ai/interop/mcp-conformance-2026-10/checks/agency.justidea_justidea-agency_1.1.0__alpha-2026-07-28.json",
+  "checks_sha256": "16a1461deb11de4f35df5f93ef707c2f0ff3cbd0c7a791489d87d1c03a4b53f4",
+  "deviation_checks": [
+   "CompletionComplete",
+   "DNSRebindingRejected",
+   "LocalhostHostAccepted",
+   "PromptsGetEmbeddedResource",
+   "PromptsGetSimple",
+   "PromptsGetWithArgs",
+   "PromptsGetWithImage",
+   "WireSchemaValid",
+   "ResourcesReadBinary",
+   "ResourcesReadText",
+   "ResourcesTemplateRead",
+   "ToolsCallAudio",
+   "ToolsCallEmbeddedResource",
+   "ToolsCallError",
+   "ToolsCallImage",
+   "ToolsCallMixedContent",
+   "ToolsCallSimpleText",
+   "ToolsCallWithProgress"
+  ],
+  "instrument": "alpha-2026-07-28",
+  "instrument_channel": "alpha",
+  "kind": "csoai.mcp-conformance/0.1",
+  "not_a_grade": true,
+  "report": "https://councilof.ai/interop/mcp-conformance-2026-10/report.json",
+  "run_state": "RUN_DEVIATIONS",
+  "scenarios": 20,
+  "spec_version": "2026-07-28",
+  "state": "PROBED",
+  "subject_id": "agency.justidea/justidea-agency@1.1.0",
+  "suite_version": "0.2.0-alpha.12"
+ },
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "sha256": "ef8c7bae50b3072c9b02fbf599a611292698aa6c599ee4128463c65a0d249672",
+ "source_urls": [
+  "https://justidea.agency/mcp",
+  "https://councilof.ai/interop/mcp-conformance-2026-10/checks/agency.justidea_justidea-agency_1.1.0__alpha-2026-07-28.json",
+  "https://councilof.ai/interop/mcp-conformance-2026-10/report.json"
+ ],
+ "subject": "MCP conformance run alpha-2026-07-28 for agency.justidea/justidea-agency@1.1.0",
+ "surface": "public.notice",
+ "tags": [
+  "mcp",
+  "conformance",
+  "probe",
+  "mcp-conformance-2026-10"
+ ],
+ "unmeasured": [
+  "behaviour under load",
+  "scenarios outside the frozen spec version",
+  "subjects outside the pinned set"
+ ]
+}
