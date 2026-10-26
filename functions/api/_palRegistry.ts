@@ -286,6 +286,16 @@ export function buildPal(input: {
   model?: Partial<PalModel>;
   face?: PalFace;
 }): Pal {
+  // A DID is an identity, and an identity is a public key. A string that looks like a did:key
+  // but is not one is a claim with no key behind it, so it is refused here rather than published.
+  // An EMPTY did is not a refusal: it is the honest state of a PAL whose keypair has not been
+  // provisioned yet, and the record says so.
+  if (input.did && !isWellFormedDid(input.did)) {
+    throw new Error(
+      "refusing to publish a malformed did:key: it does not decode to an ed25519 public key. " +
+        "A DID-shaped string is a claim, not an identity. Provision a real keypair, or leave the did empty.",
+    );
+  }
   const scope = input.scope;
   return {
     schema: PAL_SCHEMA,
@@ -362,9 +372,13 @@ export function suggestPal(pals: Pal[], question: string): { pal: Pal | null; sc
 /**
  * The public shape of a PAL. What a reader sees.
  *
- * The `did` IS included: it is the point. A PAL whose answers can be attributed and revoked is
- * worth trusting in a way an anonymous chatbot is not. The private key never leaves the key
- * store, so publishing a DID reveals nothing secret.
+ * The `did` IS included when there is one: it is the point. A PAL whose answers can be attributed
+ * and revoked is worth trusting in a way an anonymous chatbot is not. The private key never leaves
+ * the key store, so publishing a DID reveals nothing secret.
+ *
+ * `signed` says whether there IS one. A PAL with no DID is not broken — it is a PAL whose keypair
+ * has not been provisioned yet, and saying so is better than publishing a DID-shaped string that
+ * no key can sign with.
  */
 export function publicPal(p: Pal) {
   return {
@@ -376,6 +390,7 @@ export function publicPal(p: Pal) {
     owner: p.owner,
     status: p.status,
     did: p.did,
+    signed: Boolean(p.did),
     can: p.scope.can,
     cannot: p.scope.cannot,
     objectives: p.objectives,
@@ -385,4 +400,65 @@ export function publicPal(p: Pal) {
     face: p.face,
     disclosure: p.disclosure,
   };
+}
+
+// ─────────────────────────────────────────────────────── did:key validation
+
+const B58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+
+function base58Decode(s: string): Uint8Array | null {
+  // base58btc encodes a BYTE string: the characters are a numeral in base 58, and the byte
+  // string is that numeral written in base 256.
+  let n = 0n;
+  for (const ch of s) {
+    const i = B58.indexOf(ch);
+    if (i < 0) return null;
+    n = n * 58n + BigInt(i);
+  }
+  const bytes: number[] = [];
+  while (n > 0n) {
+    bytes.unshift(Number(n % 256n));
+    n /= 256n;
+  }
+  let pad = 0;
+  while (pad < s.length && s[pad] === "1") pad += 1;
+  return Uint8Array.from([...new Array<number>(pad).fill(0), ...bytes]);
+}
+
+function base58Encode(b: Uint8Array): string {
+  let n = 0n;
+  for (const byte of b) n = n * 256n + BigInt(byte);
+  let out = "";
+  while (n > 0n) {
+    out = B58[Number(n % 58n)] + out;
+    n /= 58n;
+  }
+  let pad = 0;
+  while (pad < b.length && b[pad] === 0) pad += 1;
+  return "1".repeat(pad) + out;
+}
+
+/**
+ * Is this a well-formed did:key for an ed25519 public key?
+ *
+ * WHY THIS EXISTS. A did:key is a multibase-encoded, multicodec-prefixed public key: base58btc
+ * ("z"), the 0xed 0x01 ed25519-pub prefix, then 32 bytes. A string that merely LOOKS like one
+ * — the right prefix, the right length, the right alphabet — is not an identity. Publishing
+ * that would be publishing a claim with no key behind it, which is the forgery the estate
+ * forbids, and it is the kind of thing that gets written by hand from a truncated listing.
+ *
+ * So the check is real: decode it, demand the right length and the right multicodec prefix, and
+ * demand that the published multibase re-encodes to exactly the bytes it decoded to. A DID that
+ * fails any of those is refused rather than published.
+ */
+export function isWellFormedDid(did: string): boolean {
+  if (typeof did !== "string") return false;
+  if (!did.startsWith("did:key:")) return false;
+  const rest = did.slice("did:key:".length);
+  if (!rest.startsWith("z")) return false; // base58btc multibase
+  const raw = base58Decode(rest.slice(1));
+  if (!raw) return false;
+  if (raw.length !== 34) return false; // 2 prefix bytes + 32 key bytes
+  if (raw[0] !== 0xed || raw[1] !== 0x01) return false; // multicodec ed25519-pub
+  return base58Encode(raw) === rest.slice(1); // canonical multibase
 }

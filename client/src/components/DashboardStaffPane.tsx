@@ -22,6 +22,7 @@ type PalRecord = {
   name: string;
   one_line: string;
   did: string;
+  signed: boolean;
   status: string;
 };
 
@@ -94,7 +95,11 @@ export default function DashboardStaffPane() {
               <p className="mb-3 break-all text-[11px] text-emerald-100/60">
                 did:key:{r.did.replace(/^did:key:/, "").slice(0, 16)}…
               </p>
-            ) : null}
+            ) : (
+              <p className="mb-3 text-[11px] text-emerald-100/60">
+                No signing key yet — these answers cannot be attributed to a key.
+              </p>
+            )}
             <button
               type="button"
               onClick={() => setOpen(r.id)}

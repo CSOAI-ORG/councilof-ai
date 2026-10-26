@@ -4,6 +4,7 @@ import {
   HOUSE_PAL_SLUGS,
   buildPal,
   housePals,
+  isWellFormedDid,
   palDisclosure,
   palTextViolations,
   publicPal,
@@ -11,9 +12,14 @@ import {
 } from "./_palRegistry";
 
 const PRICE = /[$£€]\s?\d|\b\d+(?:[.,]\d+)?\s?(?:usd|gbp|eur|dollars?|pounds?)\b|\bper\s+(?:month|year|minute)\b|\/mo\b/i;
-const DID = /^did:key:z[1-9A-HJ-NP-Za-km-z]{40,}$/;
+/**
+ * A REAL, well-formed ed25519 did:key — one the estate already publishes (the MEOK HIM's Ora).
+ * It is here because a DID that merely LOOKS like a did:key is a claim with no key behind it,
+ * and the registry has to be able to tell the difference.
+ */
+const REAL_DID = "did:key:z6MksvqVuqPXddC3h1BEJ3WNXVfhMMnr3tpGMwoXikcPNqZb";
 
-const didFor = (slug: string) => `did:key:z${slug.padEnd(44, "7").slice(0, 44)}`;
+const didFor = (slug: string) => (slug === "measure" ? REAL_DID : "");
 const pals = housePals(didFor, "2026-10-26T00:00:00Z");
 
 describe("the PAL registry is the desk list, not a second copy of it", () => {
@@ -71,14 +77,31 @@ describe("the PAL registry is the desk list, not a second copy of it", () => {
     });
   }
 
-  it("gives every staff member its own identity and memory namespace", () => {
-    const dids = pals.map((p) => p.did);
-    expect(new Set(dids).size).toBe(dids.length);
+  it("gives every staff member its own memory namespace", () => {
     for (const p of pals) {
-      expect(p.did).toMatch(DID);
       expect(p.memory_namespace).toBe(`pal:${p.id}`);
     }
     expect(new Set(pals.map((p) => p.memory_namespace)).size).toBe(pals.length);
+  });
+
+  it("carries no DID for a staff member with no keypair provisioned", () => {
+    // The house staff have no keypair yet. Publishing a DID-shaped string for them would be
+    // publishing an identity with no key behind it, so the record says none and the surface
+    // says so.
+    for (const p of pals) {
+      if (p.did === "") {
+        expect((publicPal(p) as { signed: boolean }).signed).toBe(false);
+      } else {
+        expect(isWellFormedDid(p.did)).toBe(true);
+      }
+    }
+    expect(pals.filter((p) => p.did === "").length).toBeGreaterThan(0);
+  });
+
+  it("publishes a DID that really is an ed25519 public key", () => {
+    const signed = pals.find((p) => p.did !== "")!;
+    expect(isWellFormedDid(signed.did)).toBe(true);
+    expect((publicPal(signed) as { signed: boolean }).signed).toBe(true);
   });
 
   it("publishes a record that carries no key material", () => {
@@ -89,8 +112,9 @@ describe("the PAL registry is the desk list, not a second copy of it", () => {
     expect(text).not.toMatch(/BEGIN [A-Z ]*PRIVATE KEY/);
     expect(text).not.toMatch(/private_key|privateKey|api_key|apiKey|secret_key|secretKey/);
     expect(Object.keys(pub)).not.toContain("private_key");
-    // The DID is a public key and IS published: that is the point of it.
-    expect(pub.did).toMatch(DID);
+    // A DID is a public key and IS published when there is one: that is the point of it.
+    if (pub.did) expect(isWellFormedDid(String(pub.did))).toBe(true);
+    expect(pub).toHaveProperty("signed");
   });
 
   it("refuses text that claims a certification or a price", () => {
@@ -111,5 +135,57 @@ describe("suggestion is a suggestion, never an answer", () => {
   it("returns nothing rather than guessing when no scope covers the question", () => {
     const s = suggestPal(pals, "zzz qqq xyzzy");
     expect(s.pal).toBeNull();
+  });
+});
+
+describe("a DID is a key, not a shape", () => {
+  it("accepts a real ed25519 did:key", () => {
+    expect(isWellFormedDid(REAL_DID)).toBe(true);
+  });
+
+  it("refuses one that decodes to the wrong length", () => {
+    // A truncated key is the failure mode that actually happened here: a DID copied from a
+    // listing that was cut short, with the tail filled in by hand.
+    expect(isWellFormedDid("did:key:z6MksvqVuqPXddC3h1BEJ3WNXVfhMMnr3tpGMwoXikcP")).toBe(false);
+  });
+
+  it("refuses one with the wrong multicodec prefix", () => {
+    expect(isWellFormedDid("did:key:z6MkssSJeZqoQxNz7wYXGPU4mSxKLVN9bQ1pJvHZt4rKvNf")).toBe(false);
+  });
+
+  it("refuses one that is not a did:key at all", () => {
+    expect(isWellFormedDid("")).toBe(false);
+    expect(isWellFormedDid("https://example.com/measure")).toBe(false);
+    expect(isWellFormedDid("did:web:csoai.org#measure")).toBe(false);
+  });
+
+  it("refuses to build a record carrying a malformed DID", () => {
+    expect(() =>
+      buildPal({
+        id: "forged-csoai",
+        slug: "forged",
+        name: "Forged",
+        one_line: "x",
+        owner: "csoai",
+        created_at: "2026-10-26T00:00:00Z",
+        did: "did:key:zNotARealKeyAtAll",
+        scope: { can: [], cannot: [], keywords: [], instructions: "x" },
+      }),
+    ).toThrow(/malformed did:key/);
+  });
+
+  it("builds a record with no DID, because none is provisioned", () => {
+    const p = buildPal({
+      id: "unsigned-csoai",
+      slug: "unsigned",
+      name: "Unsigned",
+      one_line: "x",
+      owner: "csoai",
+      created_at: "2026-10-26T00:00:00Z",
+      did: "",
+      scope: { can: [], cannot: [], keywords: [], instructions: "x" },
+    });
+    expect(p.did).toBe("");
+    expect((publicPal(p) as { signed: boolean }).signed).toBe(false);
   });
 });

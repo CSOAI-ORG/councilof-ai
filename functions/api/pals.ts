@@ -38,28 +38,32 @@ export const onRequestOptions: PagesFunction = async () =>
   new Response(null, { status: 204, headers: CORS });
 
 /**
- * The house staff's DIDs.
+ * The house staff's DIDs — of which there are NONE, yet.
  *
- * These are the published DID:keys of the Council's own agent identities. They are PUBLIC by
- * design — a DID is a public key, and publishing it is what makes a PAL's answers attributable
- * and revocable. If a key is rotated, the DID changes and the old one stops verifying.
+ * WHY EMPTY, AND WHY THAT IS THE HONEST STATE.
  *
- * The corresponding private keys live in the estate's key store and never appear in this repo.
+ * A did:key is a multibase-encoded ed25519 PUBLIC KEY. Publishing one says: "the holder of the
+ * matching private key signs these answers". A string that merely looks like a did:key says
+ * nothing, and publishing it would be publishing an identity with no key behind it — the forgery
+ * this estate forbids, and a violation of its own rule that an empty cell is an answer and a
+ * filled one must be true.
+ *
+ * The house staff have no keypair provisioned yet. So they carry no DID, and the published
+ * record says `signed: false`. The record will carry a DID the moment a real keypair is
+ * provisioned for a staff member; until then the answer to "can these answers be attributed to a
+ * key?" is no, and the surface says no.
+ *
+ * (The MEOK HIM on the M2 machine already does this properly: nine PALs, each with a real
+ * keypair, the public keys committed and the private keys kept out of git. That is the shape to
+ * copy when the Council provisions its own.)
  */
-const HOUSE_DIDS: Record<string, string> = {
-  measure: "did:key:z6MksvqVuqPXddC3h1BEJ3WNXVfhMMnr3tpGMwoXikcPNqZb",
-  press: "did:key:z6MkssSJeZqoQxNz7wYXGPU4mSxKLVN9bQ1pJvHZt4rKvNf",
-  revenue: "did:key:z6MkseWq4tRn7YgWj3bSx2hKd9pLcVvN5mQ8uYf2AaG7Hp",
-  watchdog: "did:key:z6MksuymmEPtvSS6RgP8kW3qLdZxH2nYtNcVbF5jQa1Mw",
-  academy: "did:key:z6MknsnH5XDMzLMoQ7rBv2KdT9xWpNcZeY4hJsG8FaQ3L",
-  verify: "did:key:z6MkjQqiKDxPNzj5XsRtW9vHm2NbQaLcY7dFgE4kUzJ8P",
-};
+const HOUSE_DIDS: Record<string, string> = {};
 
 const CREATED_AT = "2026-10-26T00:00:00.000Z";
 
 /** The house staff, built from the one registry module. */
 function houseStaff(): Pal[] {
-  return housePals((slug) => HOUSE_DIDS[slug] ?? `did:key:z6Mkhouse${slug}`, CREATED_AT);
+  return housePals((slug) => HOUSE_DIDS[slug] ?? "", CREATED_AT);
 }
 
 /**
@@ -150,6 +154,11 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
       can: p.scope.can,
       cannot: p.scope.cannot,
     })),
+    signing:
+      "A staff member with a DID can have its answers attributed to a key and revoked by " +
+      "rotating that key. One without a DID has no keypair provisioned, so its answers cannot " +
+      "be attributed to a key — and this surface says so rather than publishing a DID-shaped " +
+      "string that no key can sign with.",
     endpoints: {
       list: "GET /api/pals",
       one: "GET /api/pals/<id>",

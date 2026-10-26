@@ -21,7 +21,7 @@ import { DESKS, DESK_IDS, deskDisclosure, type DeskId } from "../../../functions
  * drift apart either.
  */
 
-type PalRecord = { id: string; slug: string; name: string; did: string };
+type PalRecord = { id: string; slug: string; name: string; did: string; signed: boolean };
 
 export default function Team() {
   const [open, setOpen] = useState<DeskId | null>(null);
@@ -106,7 +106,11 @@ export default function Team() {
                   <p className="mb-3 break-all text-[11px] text-emerald-100/60" data-testid={`agent-did-${id}`}>
                     did:key:{rec.did.replace(/^did:key:/, "").slice(0, 16)}…
                   </p>
-                ) : null}
+                ) : (
+                  <p className="mb-3 text-[11px] text-emerald-100/60" data-testid={`agent-unsigned-${id}`}>
+                    No signing key yet — these answers cannot be attributed to a key.
+                  </p>
+                )}
                 <button type="button" onClick={() => setOpen(id)} className="mt-auto rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold">
                   Ask {d.name}
                 </button>

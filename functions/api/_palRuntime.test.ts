@@ -66,7 +66,9 @@ import {
   talkToPal,
 } from "./_palRuntime";
 
-const pals = housePals((s) => `did:key:z${s.padEnd(44, "7").slice(0, 44)}`, "2026-10-26T00:00:00Z");
+// The house staff carry no DID: no keypair is provisioned for them yet, and publishing a
+// DID-shaped string with no key behind it would be a claim rather than an identity.
+const pals = housePals(() => "", "2026-10-26T00:00:00Z");
 const measure = pals.find((p) => p.slug === "measure")!;
 
 beforeEach(() => {

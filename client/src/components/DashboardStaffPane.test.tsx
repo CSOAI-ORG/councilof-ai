@@ -7,6 +7,9 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import DashboardStaffPane from "./DashboardStaffPane";
 import { hasPane } from "./DashboardPane";
 
+/** A REAL ed25519 did:key the estate already publishes (the MEOK HIM's Ora). */
+const REAL_DID = "did:key:z6MksvqVuqPXddC3h1BEJ3WNXVfhMMnr3tpGMwoXikcPNqZb";
+
 const REGISTRY = {
   schema: "csoai.pal/0.1",
   count: 6,
@@ -18,7 +21,10 @@ const REGISTRY = {
       slug: "measure",
       name: "Measure",
       one_line: "Board, axes and runs",
-      did: "did:key:z6Mkstub0000000000000000000000000000000000000000",
+      // The house staff have no keypair provisioned, so the registry publishes no DID and
+      // says so. A DID-shaped string with no key behind it is a claim, not an identity.
+      did: "",
+      signed: false,
       status: "active",
     },
   ],
@@ -57,10 +63,32 @@ describe("the Council OS staff pane", () => {
     const c = await mount();
 
     expect(c.querySelector('[data-testid="os-agent-measure"]')).not.toBeNull();
-    // The identity is the registry's, not a local copy.
-    expect(c.textContent).toContain("did:key:z6Mkstub");
     // The reader is told a model is configured, and which one.
     expect(c.textContent).toContain("meok-fluid-v1");
+  });
+
+  it("says plainly that a staff member with no keypair cannot be signed for", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify(REGISTRY), { status: 200, headers: { "content-type": "application/json" } }),
+    );
+    const c = await mount();
+    // The honest state, not a DID-shaped string with no key behind it.
+    expect(c.textContent).toContain("No signing key yet");
+    expect(c.textContent).not.toContain("did:key:z6Mkstub");
+  });
+
+  it("publishes the DID when a keypair HAS been provisioned", async () => {
+    const signedRegistry = {
+      ...REGISTRY,
+      staff: [{ ...REGISTRY.staff[0], did: REAL_DID, signed: true }],
+    };
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify(signedRegistry), { status: 200, headers: { "content-type": "application/json" } }),
+    );
+    const c = await mount();
+    // The staff member WITH a keypair shows its DID. The others have none provisioned and say
+    // so, which is why the negative assertion is not made here.
+    expect(c.textContent).toContain("did:key:z6MksvqVuqPXddC3");
   });
 
   it("says so plainly when no model is configured, rather than implying one is there", async () => {
