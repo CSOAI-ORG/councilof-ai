@@ -187,6 +187,23 @@ def test_card_is_queued_unsigned_and_folds_bom():
     print("ok: card is queued unsigned, folds bom_sha256, and carries the verification counts")
 
 
+def test_no_internal_codename_on_the_public_surface():
+    """The DISPLAY name must not carry an internal codename (brand-gate).
+
+    The published artefact was fixed to carry the safe name while the generator still
+    emitted the codename; regenerating the artefact from the generator put it back on the
+    public surface. The two must agree, and the generator is the one that has to change.
+    """
+    lin = aibom.lineage(MODEL)
+    bom = aibom.cyclonedx(lin)
+    for c in bom["components"]:
+        name = str(c.get("name", ""))
+        assert "owem" not in name.lower(), f"internal codename in a public display name: {name}"
+    names = [str(c.get("name", "")) for c in bom["components"]]
+    assert "csoai card_pipeline" in names, names
+    print("ok: no internal codename in any public display name")
+
+
 if __name__ == "__main__":
     test_lineage_is_read_not_invented()
     test_every_referenced_card_verifies()
@@ -202,4 +219,5 @@ if __name__ == "__main__":
     test_unverified_card_is_not_a_measurement()
     test_spdx3_ai_profile()
     test_card_is_queued_unsigned_and_folds_bom()
+    test_no_internal_codename_on_the_public_surface()
     print("ALL AIBOM TESTS PASSED")

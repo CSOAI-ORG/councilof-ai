@@ -348,8 +348,12 @@ def cyclonedx(lin: dict) -> dict:
             },
             {
                 "type": "application",
+                # The DISPLAY name carries no internal codename: brand-gate forbids an internal
+                # strategy codename on a public surface, and the published artefact already
+                # carried the safe form while this generator still emitted the codename. The
+                # generator and the artefact now agree.
                 "bom-ref": "harness:owem-card-pipeline",
-                "name": "csoai-owem card_pipeline",
+                "name": "csoai card_pipeline",
                 "description": "deterministic behaviour-class judge; UNMEASURED never 0",
             },
         ],
