@@ -4,6 +4,7 @@ import {
 } from "./_chatCanon";
 import { ART5, ART5_CUES, why } from "./_chatArt5";
 import { lobbyGround } from "./_chatLobby";
+import { recordsAnswer } from "./_chatRecords";
 import { executePlan, HELP_TEXT, routeIntent } from "../_lib/talkRouter";
 import { BUY_INTENT, buyingAnswer } from "./_buying";
 import { ACCEPTED_SHAPES, readAsk } from "../_lib/askInput";
@@ -24,6 +25,10 @@ async function grounded(q: string, origin: string): Promise<string | null> {
 
   const door = lobbyGround(q);
   if (door) return door;
+
+  // GSPC records (read-only MCP: search_records / get_record / get_report). Unmeasured stays UNMEASURED.
+  const rec = await recordsAnswer(q);
+  if (rec) return rec;
 
   for (const [k, rxs] of ART5_CUES) {
     if (rxs.every((rx) => rx.test(q))) {
