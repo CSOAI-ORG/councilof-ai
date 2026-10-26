@@ -5,9 +5,10 @@ import { Link } from "wouter";
 import RecordVerifyForm from "@/components/gspc/RecordVerifyForm";
 import { setMetaDescription } from "@/lib/utils";
 import BoardAttestation from "@/components/board/BoardAttestation";
-import { CARD_PARAM_MAX_BYTES, resolveCardParam } from "@/lib/cardParam";
+import { CARD_PARAM_MAX_BYTES, resolveCardParam, verifyCardHref } from "@/lib/cardParam";
 import { GOVERNANCE_RETRIEVE, loadPublicCardExample } from "@/lib/publicCardExample";
 import { takeCheckerSeed } from "@/lib/myResults";
+import { artifactCitation } from "@/lib/artifactCite";
 
 /**
  * /gspc-verify — verify published card bytes yourself.
@@ -52,6 +53,24 @@ async function pickPublishedCard(signal?: AbortSignal): Promise<PublishedRef> {
   const c = withUrl[Math.floor(Math.random() * withUrl.length)];
   const url = c.card_url || c.url;
   return { id: String(c.id || c.card || url), url };
+}
+
+/** Deep-link actions for a ?card= record: copy this page's link, download the exact bytes, re-run the check. */
+export function LinkedCardActions({ href }: { href: string }) {
+  const [copied, setCopied] = useState<"" | "ok" | "fail">("");
+  const btn = "inline-flex min-h-[44px] items-center rounded-lg border border-emerald-400/40 px-3 py-2 font-semibold text-emerald-100 hover:bg-white/5";
+  const name = href.split("/").pop() || "card.json";
+  return (
+    <div className="mt-3 flex flex-wrap gap-2" data-testid="linked-card-actions">
+      <button type="button" className={btn} data-testid="linked-copy" onClick={() => {
+        navigator.clipboard?.writeText(window.location.href).then(() => setCopied("ok"), () => setCopied("fail"));
+      }}>
+        {copied === "ok" ? "Link copied" : copied === "fail" ? "Copy failed: use the address bar" : "Copy link"}
+      </button>
+      <a className={btn} href={href} download={name} data-testid="linked-download">Download the record</a>
+      <a className={btn} href={verifyCardHref(href)} data-testid="linked-reverify">Verify again</a>
+    </div>
+  );
 }
 
 export default function GSPCVerify() {
@@ -236,7 +255,7 @@ export default function GSPCVerify() {
             Free verification · no account
           </p>
           <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">
-            Paste a signed card. Recompute it here.
+            Check a signed measurement record.
           </h1>
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
             Paste a signed card or try a published example below. The check runs in your browser;
@@ -244,10 +263,11 @@ export default function GSPCVerify() {
             A valid signature confirms the record's integrity. It does not certify a model's safety or compliance.
           </p>
           <p className="mt-3 max-w-3xl text-sm text-emerald-200/75 leading-relaxed">
-            Every check ends in one of three results: <strong>VALID</strong> (the signature and the
-            content match), <strong>INVALID</strong> (a check failed, and it says which), or{" "}
+            Every check ends in one of three results: <strong>VALID</strong> (the completed record
+            checks passed), <strong>INVALID</strong> (a check failed, and it says which), or{" "}
             <strong>UNCHECKABLE</strong> (the check could not be completed). Could-not-check is never
-            reported as a failure.
+            reported as a failure. Read the signature result separately: a hash-only VALID result is
+            labelled unsigned and does not prove who wrote the record.
           </p>
           <details className="mt-4 max-w-3xl rounded-xl border border-emerald-400/20 bg-white/[0.035] px-4 py-3">
             <summary className="cursor-pointer text-sm font-semibold text-emerald-200">
@@ -298,7 +318,7 @@ export default function GSPCVerify() {
                   : "border border-emerald-500/30 text-emerald-200 hover:bg-emerald-500/10"
               }`}
             >
-              Estate card
+              Check one record
             </button>
             <button
               type="button"
@@ -311,7 +331,7 @@ export default function GSPCVerify() {
                   : "border border-amber-400/30 text-amber-200 hover:bg-amber-500/10"
               }`}
             >
-              Public-root catalogue
+              Check collection membership
             </button>
           </div>
         </div>
@@ -320,10 +340,10 @@ export default function GSPCVerify() {
       <div className="mx-auto max-w-4xl px-6 py-12 space-y-16">
         {mode === "public-root" && (
           <section>
-            <h2 className="text-2xl font-bold text-amber-200">Public-root card + inclusion</h2>
+            <h2 className="text-2xl font-bold text-amber-200">Record and proof of collection membership</h2>
             <p className="mt-1 text-[13px] text-emerald-100/60">
-              The root envelope is signed and verified here. Its leaves may separately be signed
-              or unsigned; inclusion alone never changes that leaf state.
+              Check the collection's signature here and read the displayed result. Individual records
+              may be signed or unsigned; collection membership alone never changes their signing status.
             </p>
             <div className="mt-4">
               <PublicRootCatalogue variant="dark" />
@@ -333,7 +353,7 @@ export default function GSPCVerify() {
 
         {mode === "estate" && (
         <section>
-          <h2 className="text-2xl font-bold text-emerald-50">Verify a single estate record</h2>
+          <h2 className="text-2xl font-bold text-emerald-50">Check one measurement record</h2>
           <p className="mt-1 text-[13px] text-emerald-100/60">
             Paste any one estate record — hash and signature are recomputed here, in your browser,
             against the published keys. This page does not save pasted records or their results.
@@ -400,6 +420,14 @@ export default function GSPCVerify() {
                   {linked.bytes} bytes{linked.sha256 ? ` · sha256 ${linked.sha256}` : ""}
                 </p>
               )}
+              {linked.state === "loaded" && <LinkedCardActions href={linked.href} />}
+              {linked.state === "loaded" && (
+                <details className="mt-3" data-testid="linked-cite">
+                  <summary className="flex min-h-[44px] cursor-pointer items-center font-semibold">Cite this record</summary>
+                  <pre className="mt-1 whitespace-pre-wrap break-all font-mono text-[12px] text-emerald-100/90">{artifactCitation(linked, new Date())}</pre>
+                  <p className="mt-1 text-[12px] text-emerald-100/70">Built from <a className="underline" href="/CITATION.cff">CITATION.cff</a> and the bytes loaded here. A matching sha256 shows you hold the cited bytes, not that the result is good.</p>
+                </details>
+              )}
               {(linked.state === "refused" || linked.state === "failed") && (
                 <p className="mt-1">Reason: {linked.reason}. No VALID or INVALID result has been established. Paste still works.</p>
               )}
@@ -433,7 +461,7 @@ export default function GSPCVerify() {
         {/* LIVING ATTESTATION TABLES — from GET /api/gspc */}
         {boardData && (
           <section id="board-stamp" className="scroll-mt-24">
-            <h2 className="text-2xl font-bold text-emerald-50">Board stamp — living board, not your card</h2>
+            <h2 className="text-2xl font-bold text-emerald-50">The board's published signature</h2>
             <p className="mt-1 text-[13px] text-emerald-100/60">
               This is the published board stamp. It is not a stamp on a card you just pasted.
               Empty fields show exactly why they are empty.
@@ -482,13 +510,13 @@ export default function GSPCVerify() {
         {/* The paid door comes after the free verifier, never before it (audit 2026-09-28 #22). */}
         {mode === "estate" && (
         <section data-testid="governance-retrieve-raas">
-          <h2 className="text-2xl font-bold text-emerald-50">Optional: a commission receipt</h2>
+          <h2 className="text-2xl font-bold text-emerald-50">Optional paid service: a receipt for existing evidence</h2>
           <div className="mt-4 rounded-2xl border border-emerald-400/25 bg-emerald-500/[0.05] p-4 space-y-3">
             <p className="text-[13px] text-emerald-100/80 leading-relaxed">
-              Everything above is free and stays free. The metered commission door issues a receipt
-              for a named subject and re-serves signed cards already on file;
-              it does not run a new measurement. Before paying, check the 402 challenge for the
-              signer state, corpus date and cards available for your subject.
+              Everything above is free and stays free. This paid service issues a receipt
+              for a named subject and provides signed records already on file;
+              it does not run a new measurement. Before paying, check the payment challenge for the
+              signing status, evidence collection date and records available for your subject.
             </p>
             <p className="text-[13px] text-emerald-100/70 leading-relaxed">
               The governance card the free button loads is{" "}
@@ -555,6 +583,24 @@ export default function GSPCVerify() {
             </li>
           </ul>
         </details>
+        {/* CARD INVENTORY SNAPSHOT — dated, not live; see evidence/card-inventory-2026-10-14.md */}
+        <section data-testid="card-inventory-snapshot">
+          <h2 className="text-2xl font-bold text-emerald-50">Card inventory (14 Oct 2026)</h2>
+          <p className="mt-2 text-[13px] leading-relaxed text-emerald-100/75">
+            Dated snapshot, not a live count. A one-off scan of 8 of 9 storage locations on
+            14 Oct 2026 found <strong className="text-emerald-50">11,929</strong> unique signed
+            measurement cards, <strong className="text-emerald-50">7,994</strong> with a VALID
+            signature, and <strong className="text-emerald-50">335</strong> live and verifiable
+            here. The live count is always <code>/signed/card_index.json</code>.{" "}
+            <a
+              href="https://github.com/CSOAI-ORG/councilof-ai/blob/master/evidence/card-inventory-2026-10-14.md"
+              className="text-emerald-300 underline decoration-emerald-500/40 hover:decoration-emerald-300"
+            >
+              Method and scope →
+            </a>
+          </p>
+        </section>
+
 
         {/* LINKS */}
         <div className="flex flex-wrap gap-x-4 gap-y-1 pb-4 text-[13px]">
