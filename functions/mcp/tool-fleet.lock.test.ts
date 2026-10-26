@@ -17,6 +17,8 @@
  * a failure — a check that cannot reach its subject has not checked anything.
  */
 import { describe, expect, it } from "vitest";
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import FREE from "./gspc-tools.json";
 import PAID from "./paid-tools.json";
 import LOCK from "./tool-fleet.lock.json";
@@ -30,6 +32,7 @@ import { onRequest } from "./[[path]]";
 type Named = { name: string };
 const names = (doc: { tools: Named[] }) => doc.tools.map((t) => t.name);
 const sorted = (xs: readonly string[]) => [...xs].sort();
+const REPO = join(__dirname, "../..");
 
 const LOCK_FREE: string[] = LOCK.free;
 const LOCK_PAID: string[] = LOCK.paid;
@@ -143,6 +146,24 @@ describe("K-1 fleet-size lock: one list of names, every surface agrees", () => {
     expect(index.note).toContain(`${all} cards = the ${all} MCP tools`);
     expect(sorted(index.agents.map((a) => a.id))).toEqual(sorted(LOCK_ALL));
     expect(sorted(index.agents.filter((a) => a.paid).map((a) => a.id))).toEqual(sorted(LOCK_PAID));
+  });
+
+  it("every card the index names is a card we serve", () => {
+    // The index grew to 52 entries when the 33 axis tools joined the door, but the 33 card FILES
+    // were never written. The link gate caught it on 2026-10-26 — "33 NEW same-origin URL(s)
+    // published in a machine surface that we do not serve" — a week into the PR's life, and only
+    // in CI. A card index that names documents nobody serves is a broken index.
+    //
+    // This asserts it LOCALLY and fast: the index's own href must resolve to a card file, and
+    // that card must describe the tool the index names.
+    const index = AGENTS_INDEX as { agents: Array<{ id: string; href: string; paid: boolean }> };
+    for (const agent of index.agents) {
+      const path = join(REPO, "public", new URL(agent.href).pathname);
+      expect(existsSync(path), `the index names ${agent.href} but no card file serves it`).toBe(true);
+      const card = JSON.parse(readFileSync(path, "utf8"));
+      expect(card.mcp_tool, `${agent.href} describes a different tool`).toBe(agent.id);
+      expect(card.paid, `${agent.href} disagrees with the index on payment`).toBe(agent.paid);
+    }
   });
 
   it.skipIf(!process.env.FLEET_LOCK_LIVE)(
