@@ -137,6 +137,27 @@ jobs:
           python3 scripts/stamped-bytes-gate.py --selftest
           python3 scripts/stamped-bytes-gate.py --base HEAD^1 --head HEAD
 
+  # 26 Oct 2026: the estate-wide disclosure sweep had two rules that could not tell the estate's
+  # own careful language from a contradiction. The promise rule asked whether the words "always"
+  # and "re-measurement" appeared anywhere on a page, so it read "/dispute: the answer is always a
+  # re-measurement" as promising what "/about: scheduled automatic re-attestation is not yet
+  # available" denies — two statements that coexist and are both true. The denial rule matched a
+  # bare "not yet", so /pricing's claims-workflow table ("3 not yet due") was read as denying
+  # automatic re-measurement; that page never mentions it. A rule that misfires trains readers to
+  # ignore the sweep, which is worse than no sweep. This job runs the sweep's selftest on EVERY PR,
+  # without network, and the selftest is pinned with the estate's REAL page text and proves the rule
+  # can still go red — a rule that has never fired proves nothing about the tree it passes.
+  claimguard-sweep-rules:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Disclosure sweep rules - selftest
+        run: python3 scripts/claimguard-estate-sweep.py --selftest
+
   # A PR marked "do not merge" must not show green. Lanes self-merge with the shared token and a
   # hold lived only in prose, so this makes the marker a failing check. Reads the event payload
   # only (labels + title from GITHUB_EVENT_PATH): no token, no API, no network. Fails on a label
