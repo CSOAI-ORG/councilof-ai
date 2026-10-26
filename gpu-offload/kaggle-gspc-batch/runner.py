@@ -11,12 +11,12 @@ RECEIPT.json under OUT_ROOT.
 """
 from __future__ import annotations
 
-import datetime, glob, hashlib, json, os, shutil, subprocess, sys, time
+import datetime, glob, hashlib, json, os, shutil, subprocess, sys, time, urllib.request, urllib.error
 
 KIT = os.environ.get("GSPC_KIT", os.path.dirname(os.path.abspath(__file__)))
 WORKER_SHA = "ea59a9de4cb92b80910a4efddc7ab592c4d0bd2dc2a184eec811183f6b584491"
-GEN_SHA = "b8268c90e3f4f1574e2520138e038462db70ca21e5089a847e86a40f760ab929"
-OLLAMA_VERSION = "0.35.0"
+GEN_SHA = "132b85e4e938e0720d64e32a7bdaa9f23ceee55daebff09304bd04889a6468b5"
+OLLAMA_VERSION = "0.40.6"
 AXES = ["governance", "safety", "provenance", "continuity", "conformance", "openness", "care"]
 BANK_SHA = {
     "governance": "b93f9808f01416737a5944fec0ab8c3eda1dbba808daf7dda33a516b0cd61997",
@@ -116,38 +116,210 @@ def gate(rd: str, ctx: dict) -> dict:
     return out
 
 
+AXIS_TO_BANK = {
+    "governance": "gspc-gov.jsonl",
+    "safety": "gspc-agi.jsonl",
+    "provenance": "gspc-prv.jsonl",
+    "continuity": "gspc-asi.jsonl",
+    "conformance": "gspc-mcp.jsonl",
+    "openness": "gspc-oss.jsonl",
+    "care": "gspc-care.jsonl",
+}
+
+
 def preflight() -> None:
     assert sha(f"{KIT}/code/runpod_gspc_worker_serial.py") == WORKER_SHA, "WORKER_SHA_MISMATCH"
     assert sha(f"{KIT}/code/generate_runpod_gspc_playlist.py") == GEN_SHA, "GENERATOR_SHA_MISMATCH"
     sums = dict(reversed(l.split()) for l in open(f"{KIT}/banks/SHA256SUMS") if l.strip())
     for name, want in sums.items():
-        assert sha(f"{KIT}/banks/{name}") == want, f"BANK_SHA_MISMATCH {name}"
-    assert set(BANK_SHA.values()) <= set(sums.values()), "BANK_SET_MISMATCH"
+        bank_path = f"{KIT}/banks/{name}"
+        assert os.path.isfile(bank_path), f"BANK_SHA_MISMATCH {name}: file missing"
+        assert sha(bank_path) == want, f"BANK_SHA_MISMATCH {name}"
+    for axis in AXES:
+        bank_name = AXIS_TO_BANK[axis]
+        bank_path = f"{KIT}/banks/{bank_name}"
+        assert os.path.isfile(bank_path), f"SPEC_BANK_MISSING {bank_name}"
+        assert bank_name in sums, f"SPEC_BANK_NOT_IN_SHA256SUMS {bank_name}"
+        assert sums[bank_name] == BANK_SHA[axis], f"SPEC_BANK_SHA_MISMATCH {axis}"
+
+
+def smoke_generate(model: str, ollama_url: str = "http://127.0.0.1:11434", timeout: int = 120) -> dict:
+    """Verify model can generate text by running a one-prompt smoke test.
+
+    Returns dict with keys: passed, error, done_reason, response_length.
+    """
+    result = {"passed": False, "error": None, "done_reason": None, "response_length": 0}
+    payload = json.dumps({
+        "model": model,
+        "prompt": "Say hello.",
+        "stream": False,
+        "options": {"num_predict": 8},
+    }).encode("utf-8")
+    request = urllib.request.Request(
+        f"{ollama_url}/api/generate",
+        data=payload,
+        method="POST",
+        headers={"Content-Type": "application/json", "Accept": "application/json"},
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=timeout) as resp:
+            body = json.loads(resp.read(1024 * 1024))
+    except urllib.error.HTTPError as e:
+        result["error"] = f"HTTP {e.code}"
+        return result
+    except urllib.error.URLError as e:
+        result["error"] = f"URL error: {e.reason}"
+        return result
+    except (TimeoutError, OSError) as e:
+        result["error"] = f"Timeout/OS error: {e}"
+        return result
+    except json.JSONDecodeError:
+        result["error"] = "Invalid JSON response"
+        return result
+    result["done_reason"] = body.get("done_reason")
+    response_text = body.get("response", "")
+    result["response_length"] = len(response_text) if response_text else 0
+    if not response_text or not response_text.strip():
+        result["error"] = f"Empty response: done_reason={result['done_reason']}"
+        return result
+    result["passed"] = True
+    return result
+
+
+DIAG_MODELS = {"gemma3n:e4b", "gemma4:12b", "qwen3.5:4b"}
+
+PIN_FAILURE_PATTERNS = (
+    "MODEL_DIGEST_MISMATCH",
+    "MODEL_MANIFEST_FILE_MISMATCH",
+    "MODEL_MANIFEST_UNREADABLE",
+    "MODEL_MANIFEST_SYMLINK",
+    "MODEL_DIGEST_CHANGED_DURING_RUN",
+)
+
+
+def dump_pin_info(model: str, pinned_digest: str, models_dir: str, ollama: str, logs_dir: str, env_o: dict) -> None:
+    """Write pin-dump-<model>.json with diagnostic info for pin failures or NO_RUNJSON.
+    
+    Read-only: does not change how cells are scored or gated.
+    """
+    n_, t_ = (model.split(":", 1) + ["latest"])[:2]
+    mp = f"{models_dir}/manifests/registry.ollama.ai/library/{n_}/{t_}"
+    dump = {
+        "schema": "csoai.pin-dump/0.1",
+        "model": model,
+        "pinned_digest": pinned_digest,
+        "manifest_path": mp,
+        "manifest_sha256": None,
+        "manifest_layers": [],
+        "manifest_config": None,
+        "blob_shas": {},
+        "ollama_show": None,
+        "dumped_at": now(),
+    }
+    if os.path.isfile(mp):
+        dump["manifest_sha256"] = sha(mp)
+        try:
+            mj = json.load(open(mp))
+            if "layers" in mj:
+                dump["manifest_layers"] = [{"mediaType": l.get("mediaType"), "digest": l.get("digest"), "size": l.get("size")}
+                                           for l in mj.get("layers", []) if isinstance(l, dict)]
+            if "config" in mj and isinstance(mj["config"], dict):
+                dump["manifest_config"] = {"digest": mj["config"].get("digest"), "size": mj["config"].get("size")}
+            blobs_root = f"{models_dir}/blobs"
+            for layer in mj.get("layers", []):
+                if isinstance(layer, dict) and layer.get("digest"):
+                    d = layer["digest"]
+                    bp = f"{blobs_root}/{d.replace(':', '-')}"
+                    if os.path.isfile(bp):
+                        dump["blob_shas"][d] = sha(bp)
+                    else:
+                        dump["blob_shas"][d] = f"MISSING:{bp}"
+            if mj.get("config", {}).get("digest"):
+                cd = mj["config"]["digest"]
+                cp = f"{blobs_root}/{cd.replace(':', '-')}"
+                if os.path.isfile(cp):
+                    dump["blob_shas"][cd] = sha(cp)
+                else:
+                    dump["blob_shas"][cd] = f"MISSING:{cp}"
+        except (json.JSONDecodeError, OSError) as e:
+            dump["manifest_parse_error"] = str(e)
+    else:
+        dump["manifest_sha256"] = f"MISSING:{mp}"
+    try:
+        r = subprocess.run([ollama, "show", model], env=env_o, capture_output=True, text=True, timeout=30)
+        dump["ollama_show"] = r.stdout + r.stderr
+    except Exception as e:
+        dump["ollama_show"] = f"ERROR: {e}"
+    os.makedirs(logs_dir, exist_ok=True)
+    ajson(f"{logs_dir}/pin-dump-{slug(model)}.json", dump)
+    log(f"PIN_DUMP written to {logs_dir}/pin-dump-{slug(model)}.json")
 
 
 def main() -> int:
-    batch_id = os.environ["GSPC_BATCH"]
+    batch_id_raw = os.environ["GSPC_BATCH"]
     shard = os.environ.get("GSPC_SHARD", "all")
     shards = int(os.environ.get("GSPC_SHARDS", "3"))
     gpu = os.environ.get("GSPC_GPU", "kaggle-2xT4")
     out_root = os.environ.get("GSPC_OUT", "/kaggle/working/out")
     models_dir = os.environ.get("OLLAMA_MODELS", "/tmp/ollama-models")
     ollama = os.environ.get("GSPC_OLLAMA_BIN", "ollama")
+    ollama_tarball_sha256 = os.environ.get("GSPC_OLLAMA_TARBALL_SHA256")
+    diagnostic = os.environ.get("GSPC_DIAGNOSTIC", "").lower() == "true"
+    item_limit = int(os.environ.get("GSPC_ITEM_LIMIT", "0")) if diagnostic else 0
+    batch_id = f"{batch_id_raw}-DIAG" if diagnostic else batch_id_raw
+    run_of_record = not diagnostic
+    runtime_group = f"ollama-{OLLAMA_VERSION}"
     host = f"kaggle-{slug(batch_id).lower()}-{shard}"
+    if diagnostic:
+        log(f"DIAGNOSTIC_MODE batch={batch_id} item_limit={item_limit} run_of_record=false")
     preflight()
-    rows = read_batch(f"{KIT}/batches/{batch_id}.tsv", shard, shards)
+    log(f"PREFLIGHT_OK full_bank_shas verified against frozen BANK_SHA digests")
+    for axis in AXES:
+        log(f"FULL_BANK {axis}={BANK_SHA[axis][:16]}...")
+    bank_dir = f"{KIT}/banks"
+    diag_bank_shas = {}
+    if diagnostic and item_limit > 0:
+        diag_bank_dir = f"{out_root}/diag-banks"
+        os.makedirs(diag_bank_dir, exist_ok=True)
+        for axis in AXES:
+            src_bank = f"{bank_dir}/{AXIS_TO_BANK[axis]}"
+            dst_bank = f"{diag_bank_dir}/{AXIS_TO_BANK[axis]}"
+            with open(src_bank) as fin, open(dst_bank, "w") as fout:
+                for i, line in enumerate(fin):
+                    if i >= item_limit:
+                        break
+                    fout.write(line)
+            diag_bank_shas[AXIS_TO_BANK[axis]] = sha(dst_bank)
+            log(f"DIAG_BANK {axis}={diag_bank_shas[AXIS_TO_BANK[axis]][:16]}... (truncated to {item_limit} items)")
+        with open(f"{diag_bank_dir}/SHA256SUMS", "w") as f:
+            for name, h in sorted(diag_bank_shas.items()):
+                f.write(f"{h}  {name}\n")
+        log(f"DIAG_SHA256SUMS written to {diag_bank_dir}/SHA256SUMS")
+        bank_dir = diag_bank_dir
+    rows = read_batch(f"{KIT}/batches/{batch_id_raw}.tsv", shard, shards)
+    if diagnostic:
+        rows = [r for r in rows if r["tag"].split(":", 1)[-1].split(":", 1)[-1] in DIAG_MODELS or
+                r["tag"].split(":", 1)[-1] in DIAG_MODELS][:3]
+        log(f"DIAGNOSTIC_MODELS {[r['tag'] for r in rows]}")
+        if not rows:
+            log("DIAG_NO_MODELS: no diagnostic models found in batch after filtering")
+            return 1
     G = f"{out_root}/work"
     OUT = f"{out_root}/runs/{host}/gspc"
     for d in (G, OUT, f"{G}/logs", f"{G}/state", f"{G}/jobs"):
         os.makedirs(d, exist_ok=True)
     tsv = f"{out_root}/cells.tsv"
     with open(tsv, "w") as f:
-        f.write("cell\tmodel\taxis\trun_id\tgate\taccuracy\tvalid\tn_total\tunparsed_plus_trunc_pct\ttransport_pct\tseconds\tattempt\tdigest\trun_dir\n")
+        f.write("cell\tmodel\taxis\trun_id\tgate\taccuracy\tvalid\tn_total\tunparsed_plus_trunc_pct\ttransport_pct\tseconds\tattempt\tdigest\trun_dir\truntime_group\trun_of_record\n")
     rec = {"schema": "csoai.kaggle-gspc-batch-receipt/0.1", "label": LABEL, "batch": batch_id, "shard": shard,
            "host": host, "gpu": gpu, "started": now(), "worker_sha256": WORKER_SHA, "generator_sha256": GEN_SHA,
-           "ollama_version": OLLAMA_VERSION, "instrument": f"exact-label-t{MT}", "num_parallel": 1,
+           "ollama_version": OLLAMA_VERSION, "ollama_tarball_sha256": ollama_tarball_sha256,
+           "runtime_group": runtime_group, "instrument": f"exact-label-t{MT}", "num_parallel": 1,
            "max_loaded_models": 1, "temperature": 0, "seed": 0, "num_ctx": 3072, "think": False,
-           "signed": False, "writes_board": False, "models": [r["tag"] for r in rows], "cells": [], "skipped": []}
+           "signed": False, "writes_board": False, "models": [r["tag"] for r in rows], "cells": [], "skipped": [],
+           "smoke_results": [], "run_of_record": run_of_record,
+           "diagnostic": "DIAGNOSTIC_NOT_RUN_OF_RECORD" if diagnostic else None, "item_limit": item_limit if diagnostic else None,
+           "diag_bank_shas": diag_bank_shas if diagnostic else None}
     env_o = {**os.environ, "OLLAMA_HOST": "127.0.0.1:11434"}
     k = 0
     for r in rows:
@@ -160,27 +332,42 @@ def main() -> int:
         mp = f"{models_dir}/manifests/registry.ollama.ai/library/{n_}/{t_}"
         got = sha(mp)
         if got != want:
-            rec["skipped"].append({"model": m, "why": f"DIGEST_MOVED pinned {want} got {got}"})
-            log(f"DRIFT {m}: skipped")
+            rec["skipped"].append({"model": m, "why": "DIGEST_CHANGED", "pinned": want, "got": got})
+            log(f"DIGEST_CHANGED {m}: pinned={want[:12]} got={got[:12]}, skipped")
             subprocess.run([ollama, "rm", m], env=env_o)
             continue
+        log(f"SMOKE {m}")
+        smoke_result = smoke_generate(m)
+        smoke_record = {"model": m, "passed": smoke_result["passed"], "done_reason": smoke_result["done_reason"],
+                        "response_length": smoke_result["response_length"]}
+        if smoke_result["error"]:
+            smoke_record["error"] = smoke_result["error"]
+        rec["smoke_results"].append(smoke_record)
+        if not smoke_result["passed"]:
+            rec["skipped"].append({"model": m, "why": "SMOKE_FAIL", "error": smoke_result["error"]})
+            log(f"SMOKE_FAIL {m}: {smoke_result['error']}")
+            subprocess.run([ollama, "rm", m], env=env_o)
+            continue
+        log(f"SMOKE_OK {m}: done_reason={smoke_result['done_reason']} response_length={smoke_result['response_length']}")
         jd = f"{G}/jobs/{slug(m)}-{got[:12]}"
         shutil.rmtree(jd, ignore_errors=True)
-        g = subprocess.run([sys.executable, f"{KIT}/code/generate_runpod_gspc_playlist.py", "--bank-dir", f"{KIT}/banks",
+        g = subprocess.run([sys.executable, f"{KIT}/code/generate_runpod_gspc_playlist.py", "--bank-dir", bank_dir,
                             "--workspace-root", "/", "--model-manifest-root", f"{models_dir}/manifests", "--jobs-dir", jd,
                             "--output-root", OUT, "--ollama-url", "http://127.0.0.1:11434", "--models", m,
                             "--max-tokens", str(MT), "--keyword-max-tokens", str(KMT),
-                            "--request-timeout-seconds", str(TO)], capture_output=True, text=True)
+                            "--request-timeout-seconds", str(TO), "--axes", ",".join(AXES)], capture_output=True, text=True)
         if g.returncode:
             rec["skipped"].append({"model": m, "why": "GEN_FAIL", "tail": (g.stdout + g.stderr)[-400:]}); continue
         cfgs = {json.load(open(p))["axis"]: p for p in glob.glob(f"{jd}/*.json")}
+        expected_bank_sha = diag_bank_shas if diagnostic else BANK_SHA
         for ax in AXES:
             k += 1
             cell = f"{batch_id}-{shard}-{k:02d}-{slug(m)}-{ax}"
             if ax not in cfgs:
                 rec["skipped"].append({"cell": cell, "why": "NO_CONFIG"}); continue
             cj = json.load(open(cfgs[ax]))
-            if (cj["expected_bank_sha256"] != BANK_SHA[ax] or cj["expected_model_manifest_digest"] != "sha256:" + got
+            ax_bank_sha = expected_bank_sha.get(AXIS_TO_BANK[ax]) if diagnostic else BANK_SHA[ax]
+            if (cj["expected_bank_sha256"] != ax_bank_sha or cj["expected_model_manifest_digest"] != "sha256:" + got
                     or cj.get("max_tokens") != MT or cj.get("seed") != 0 or cj.get("temperature", 0) != 0):
                 rec["skipped"].append({"cell": cell, "why": "CONFIG_PIN_MISMATCH"}); continue
             for att in range(1, MAX_ATTEMPTS + 1):
@@ -195,29 +382,54 @@ def main() -> int:
                     rc = subprocess.call([sys.executable, f"{KIT}/code/runpod_gspc_worker_serial.py", "--config", cfgs[ax],
                                           "--state-dir", st, "--once"], cwd=f"{KIT}/code", stdout=lf, stderr=subprocess.STDOUT, env=env)
                 secs = round(time.time() - t0, 1)
+                worker_log_path = f"{G}/logs/worker-{cell}-a{att}.log"
+                pin_failure_in_log = False
+                try:
+                    wlog = open(worker_log_path).read()
+                    for pat in PIN_FAILURE_PATTERNS:
+                        if pat in wlog:
+                            pin_failure_in_log = True
+                            log(f"PIN_FAILURE_DETECTED {cell} pattern={pat}")
+                            break
+                except OSError:
+                    pass
                 new = sorted(set(glob.glob(f"{outdir}/runs/*/run.json")) - before, key=os.path.getmtime)
                 if not new:
                     with open(tsv, "a") as f:
-                        f.write(f"{cell}\t{m}\t{ax}\t-\tUNMEASURED_incomplete_run_NO_RUNJSON\t-\t-\t-\t-\t-\t{secs}\t{att}\t{got}\t-\n")
+                        f.write(f"{cell}\t{m}\t{ax}\t-\tUNMEASURED_incomplete_run_NO_RUNJSON\t-\t-\t-\t-\t-\t{secs}\t{att}\t{got}\t-\t{runtime_group}\t{run_of_record}\n")
+                    dump_pin_info(m, want, models_dir, ollama, f"{out_root}/logs", env_o)
                     time.sleep(20); continue
+                if pin_failure_in_log:
+                    dump_pin_info(m, want, models_dir, ollama, f"{out_root}/logs", env_o)
                 rd = os.path.dirname(new[-1])
                 ajson(f"{rd}/runtime.json", {"host": host, "gpu": gpu, "cell": cell, "attempt": att, "worker_sha256": WORKER_SHA,
                                              "rc": rc, "seconds": secs, "num_parallel": 1, "max_loaded_models": 1, "num_ctx": 3072,
-                                             "think": False, "label": LABEL, "batch": batch_id, "signed": False, "recorded_at": now()})
+                                             "think": False, "label": LABEL, "batch": batch_id, "signed": False, "recorded_at": now(),
+                                             "ollama_version": OLLAMA_VERSION, "ollama_tarball_sha256": ollama_tarball_sha256,
+                                             "runtime_group": runtime_group})
                 gj = gate(rd, {"batch": batch_id, "shard": shard, "host": host, "gpu": gpu})
                 with open(tsv, "a") as f:
                     f.write(f"{cell}\t{m}\t{ax}\t{gj['run_id']}\t{gj['gate']}\t{gj['accuracy']}\t{gj['valid']}\t{gj['n_total']}\t"
-                            f"{gj['unparsed_plus_truncated_pct']}\t{gj['transport_pct']}\t{secs}\t{att}\t{got}\t{os.path.relpath(rd, out_root)}\n")
+                            f"{gj['unparsed_plus_truncated_pct']}\t{gj['transport_pct']}\t{secs}\t{att}\t{got}\t{os.path.relpath(rd, out_root)}\t{runtime_group}\t{run_of_record}\n")
                 log(f"DONE {cell} gate={gj['gate']} acc={gj['accuracy']}")
                 if not gj["gate"].startswith("UNMEASURED_incomplete"):
-                    rec["cells"].append({"cell": cell, "run_dir": os.path.relpath(rd, out_root), "gate": gj["gate"],
-                                         "accuracy": gj["accuracy"], "valid": gj["valid"],
-                                         "intake_candidate": gj["gate"] == "CARD_CANDIDATE_UNSIGNED"})
+                    cell_record = {"cell": cell, "run_dir": os.path.relpath(rd, out_root), "gate": gj["gate"],
+                                   "accuracy": gj["accuracy"], "valid": gj["valid"],
+                                   "intake_candidate": gj["gate"] == "CARD_CANDIDATE_UNSIGNED" and run_of_record,
+                                   "runtime_group": runtime_group, "run_of_record": run_of_record}
+                    if diagnostic:
+                        cell_record["diagnostic"] = "DIAGNOSTIC_NOT_RUN_OF_RECORD"
+                    rec["cells"].append(cell_record)
                     break
         subprocess.run([ollama, "rm", m], env=env_o)  # free /tmp for the next model
         ajson(f"{out_root}/RECEIPT.json", rec)
     rec["finished"] = now()
     ajson(f"{out_root}/RECEIPT.json", rec)
+    logs_dst = f"{out_root}/logs"
+    os.makedirs(logs_dst, exist_ok=True)
+    for lf in glob.glob(f"{G}/logs/*.log"):
+        shutil.copy2(lf, logs_dst)
+    log(f"LOGS_COPIED {len(glob.glob(f'{logs_dst}/*.log'))} files to {logs_dst}")
     shutil.rmtree(G, ignore_errors=True)
     log(f"BATCH_DONE cells={len(rec['cells'])} skipped={len(rec['skipped'])}")
     return 0
