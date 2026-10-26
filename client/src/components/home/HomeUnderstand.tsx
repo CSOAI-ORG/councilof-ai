@@ -63,7 +63,7 @@ export default function HomeUnderstand({
               <span>
                 {kind === "usp" && (
                   <span className="mr-1.5 text-[10px] font-black uppercase tracking-wider text-amber-800">
-                    only here
+                    key point
                   </span>
                 )}
                 {item.text}

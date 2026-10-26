@@ -60,7 +60,11 @@ def apply_mill(lock: dict, mill: dict) -> dict:
             continue
         cur = m.get("status") or "UNMEASURED"
         st = row.get("status")
-        if cur == "MEASURED" or evidence_rank(st) <= evidence_rank(cur):
+        # Strict '<': a DOWNGRADE is skipped, but an equal-rank row must still be
+        # merged, otherwise route_kind / pipeline_tag / providers_live never land
+        # on a row that is already UNCHECKABLE — and millable retries embed them
+        # forever (test_apply_mill_persists_route_kind_so_nonchat_retry_is_once).
+        if cur == "MEASURED" or evidence_rank(st) < evidence_rank(cur):
             continue
         if st in ATTEMPTED_STATUSES:
             m["status"] = st
