@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "mcpServers": {
+    "gspc": {
+      "type": "streamable-http",
+      "url": "https://councilof.ai/mcp",
+      "description": "Council of AI GSPC measurement board: live axes, signed card index, three-state verification, free forever.",
+      "timeout": 30000
+    },
+    "csoai-governance": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "csoai-governance-mcp"],
+      "description": "CSOAI Layer-0 governance: seal bytes with Ed25519 and verify the seal. A receipt, never a certificate.",
+      "timeout": 30000
+    }
+  }
+}
