@@ -26,6 +26,16 @@ export const TOOLS = (FREE_TOOLS as { tools: ToolDef[] }).tools;
 
 /** One line per tool, in plain words. Keyed by name; the test holds the keys to the served list. */
 export const ONE_LINE: Record<string, string> = {
+  // The axis family: one tool per board axis, named for the axis it answers. The line is
+  // derived from the axis id the tool carries, so the 33 lines cannot drift from the 33 tools.
+  ...Object.fromEntries(
+    (FREE_TOOLS as { tools: ToolDef[] }).tools
+      .filter((t) => t.name.startsWith("axis_"))
+      .map((t) => [
+        t.name,
+        `The ${t.name.slice("axis_".length)} axis on the live GSPC board: status, sample size, accuracy, interval, and the run behind it.`,
+      ]),
+  ),
   board_totals: "How many axes the GSPC board carries and how many have a measurement behind them, with the board's dates.",
   get_axis: "One board axis: status, sample size, accuracy and interval where they exist, and a link to the run behind it.",
   verify_card: "Checks a signed measurement card against the published key: VALID, INVALID with the reason, or UNCHECKABLE.",

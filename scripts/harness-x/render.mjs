@@ -171,6 +171,11 @@ emit("distribution/plugin/.claude-plugin/marketplace.json", claudeMarketplace);
 // Its plugin source is "./", which resolves only when the marketplace is added from a git host;
 // until a public one carries distribution/plugin, the working install is the free MCP door.
 emit("public/.claude-plugin/marketplace.json", claudeMarketplace);
+// The plugin manifest itself, same bytes, served at https://councilof.ai/.claude-plugin/plugin.json.
+// It was hand-typed, and on 2026-10-26 it still said "16 tools (12 free, 4 x402-metered)" at
+// version 1.4.3 while the door served 52 at 1.4.4 — a false claim on a live published surface,
+// frozen in a file the renderer did not own. Rendered from pluginCore so it cannot drift again.
+emit("public/.claude-plugin/plugin.json", j({ ...pluginCore, mcpServers: "./.mcp.json" }));
 emit("distribution/plugin/.cursor-plugin/plugin.json", j({
   ...pluginCore,
   mcpServers: "./.mcp.json",
