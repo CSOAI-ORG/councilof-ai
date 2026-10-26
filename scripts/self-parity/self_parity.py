@@ -1440,6 +1440,7 @@ def ots_upgrade_previous(root, today, log):
     from opentimestamps.core.timestamp import DetachedTimestampFile
     from opentimestamps.core.serialize import BytesSerializationContext, BytesDeserializationContext
     res = {}
+    pending_reasons = {}
     for d in sorted(p for p in pathlib.Path(root).iterdir() if p.is_dir() and re.fullmatch(r"\d{4}-\d{2}-\d{2}", p.name) and p.name < today):
         pf = d / "record.json.ots"
         if not pf.exists() or (d / "record.json.bitcoin.ots").exists():
@@ -1455,13 +1456,21 @@ def ots_upgrade_previous(root, today, log):
                 for sub in ts.ops.values():
                     yield from walk(sub)
             got = False
+            reasons = {}
             for sub in list(walk(dt.timestamp)):
                 for att in list(sub.attestations):
                     if isinstance(att, PendingAttestation) and any(("." + (urllib.parse.urlparse(att.uri).hostname or "")).endswith(s) for s in CAL_OK):
                         try:
                             sub.merge(RemoteCalendar(att.uri).get_timestamp(sub.msg, timeout=20)); got = True
-                        except Exception:
-                            pass
+                        except Exception as e:
+                            # Keep the calendar's own words. "CommitmentNotFoundError" alone
+                            # reads like "the calendar never received it"; the reason says
+                            # whether Bitcoin already holds the commitment and how many
+                            # confirmations remain.
+                            reason = getattr(e, "reason", None)
+                            detail = reason.strip() if isinstance(reason, str) and reason.strip() else str(e).strip()
+                            reasons[att.uri] = f"{type(e).__name__}: {detail}" if detail else type(e).__name__
+            pending_reasons.update(reasons)
             btc = [(m, a) for m, a in dt.timestamp.all_attestations() if isinstance(a, BitcoinBlockHeaderAttestation)]
             if not btc:
                 res[d.name] = "STILL_PENDING"; continue
@@ -1477,6 +1486,9 @@ def ots_upgrade_previous(root, today, log):
         except Exception as e:
             res[d.name] = f"ERROR {type(e).__name__}: {str(e)[:80]}"
     log(f"ots upgrade of earlier days: {res}")
+    if pending_reasons:
+        # The calendars' own answers, so a pending proof is never a mystery.
+        log(f"ots calendar answers: {pending_reasons}")
     return res
 
 
