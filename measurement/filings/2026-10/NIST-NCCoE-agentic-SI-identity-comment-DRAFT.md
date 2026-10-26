@@ -152,7 +152,7 @@ observes the deployment from the outside, the way a client does.
   all of them: <https://councilof.ai/measurement-capsules/latest.json>
   (index <https://councilof.ai/measurement-capsules/v0.2/index.json>, as of 2026-10-01).
 - Verification is free and always will be: <https://councilof.ai/gspc-verify>
-- The MCP server that exposes this measures 19 tools, 14 free and 5 metered:
+- The MCP server that exposes this measures 52 tools, 47 free and 5 metered:
   <https://councilof.ai/mcp>
 
 The point of the design, for the NCCoE's purposes, is the separation of the two kinds of assertion.

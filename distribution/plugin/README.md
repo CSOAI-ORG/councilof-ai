@@ -11,7 +11,7 @@ One plugin, four native manifests plus portable Agent Skills (`agentskills.io`),
 | Portable Agent Skills (Gemini CLI, MiniMax, DeepSeek, Kimi Code, Qwen CLI, OpenClaw/Hermes, OpenCode, Codex) | `skills/gspc/SKILL.md` + `skills/gspc-verify/SKILL.md` |
 
 All manifests point at the same remote MCP server (`.mcp.json` / `mcp_config.json` → https://councilof.ai/mcp, streamable HTTP, no key)
-and ship the same skills (`skills/gspc/SKILL.md` and `skills/gspc-verify/SKILL.md`). Server version 1.4.4; 19 tools (14 free, 5 x402-metered).
+and ship the same skills (`skills/gspc/SKILL.md` and `skills/gspc-verify/SKILL.md`). Server version 1.4.4; 52 tools (47 free, 5 x402-metered).
 
 Measurement only: a card is evidence, never a grade, mark or endorsement. Verification is free.
 
