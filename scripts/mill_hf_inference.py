@@ -33,6 +33,16 @@ from mill_window import (  # noqa: E402
     route_kind,
     select_window,
 )
+import hf_spend_ledger as ledger  # noqa: E402
+
+# Set in main() from MILL_SHARD_BUDGET_USD. None = no meter = no billed call.
+METER: "ledger.ShardMeter | None" = None
+SPEND_FILE: Path | None = None
+
+
+def _flush_spend() -> None:
+    if METER is not None and SPEND_FILE is not None:
+        SPEND_FILE.write_text(json.dumps(METER.to_json(), indent=2) + "\n")
 
 UA = "CSOAI-HF-INF/0.1"
 ROUTER = "https://router.huggingface.co/v1/chat/completions"
@@ -108,11 +118,17 @@ def get_json(url: str, tok: str, timeout: int = 30):
         return json.loads(r.read())
 
 
-def chat(tok: str, model: str, prompt: str) -> tuple[str, str]:
+def chat(tok: str, model: str, prompt: str, max_tokens: int = 16) -> tuple[str, str]:
+    # Fail closed: no meter, unknown price or exhausted budget -> no call.
+    if METER is None:
+        return "UNCHECKABLE", "LEDGER_ABSENT no billed call"
+    price, why = METER.pre(model, prompt, max_tokens)
+    if price is None:
+        return "UNCHECKABLE", why
     payload = {
         "model": model,  # Hub slug, or slug:provider e.g. Qwen/Qwen2.5-1.5B-Instruct:featherless-ai
         "messages": [{"role": "user", "content": prompt}],
-        "max_tokens": 16,
+        "max_tokens": max_tokens,
         "temperature": 0,
     }
     body = json.dumps(payload).encode()
@@ -136,7 +152,12 @@ def chat(tok: str, model: str, prompt: str) -> tuple[str, str]:
         err = e.read()[:300].decode("utf-8", "replace")
         return "UNCHECKABLE", f"HTTP {e.code} {err[:180]}"
     except Exception as e:
+        # Timeout etc.: the provider may still bill. Charge the upper bound.
+        METER.post(price, prompt, max_tokens, None)
+        _flush_spend()
         return "UNCHECKABLE", f"{type(e).__name__}"
+    METER.post(price, prompt, max_tokens, d.get("usage"))
+    _flush_spend()
     ch = (d.get("choices") or [{}])[0]
     txt = ((ch.get("message") or {}).get("content") or ch.get("text") or "").strip()
     # A transport-level 200 with no answer is reachability failure, not a
@@ -159,6 +180,8 @@ def _bill_headers(tok: str) -> dict[str, str]:
 
 def embed(tok: str, model: str, text: str = "hello world") -> tuple[str, str]:
     """Inference Providers /v1/embeddings. HTTP 200 is reachability, not a grade."""
+    # Ledger: router lists no per-token price for this path -> fail closed.
+    return "UNCHECKABLE", "PRICE_UNKNOWN non-chat path"
     payload = {"model": model, "input": text}
     body = json.dumps(payload).encode()
     req = urllib.request.Request(
@@ -183,6 +206,8 @@ def embed(tok: str, model: str, text: str = "hello world") -> tuple[str, str]:
 
 def hf_infer(tok: str, slug: str, payload: dict) -> tuple[str, str]:
     """Legacy hf-inference provider path. Not the mill default."""
+    # Ledger: router lists no per-token price for this path -> fail closed.
+    return "UNCHECKABLE", "PRICE_UNKNOWN non-chat path"
     body = json.dumps(payload).encode()
     req = urllib.request.Request(
         HF_INFER + slug,
@@ -275,7 +300,11 @@ def parse_token(text: str) -> str | None:
 
 
 def main() -> int:
+    global METER, SPEND_FILE
     tok = token()
+    budget = os.environ.get("MILL_SHARD_BUDGET_USD")
+    if budget:
+        METER = ledger.ShardMeter(ledger.load_prices(), float(budget))
     lock_path = Path(
         os.environ.get("FLEET_LOCK")
         or next(
@@ -294,6 +323,9 @@ def main() -> int:
     lock = json.loads(lock_path.read_text())
     out_dir = Path(os.environ.get("MILL_OUT", str(lock_path.parent / "hf-inference")))
     out_dir.mkdir(parents=True, exist_ok=True)
+    if METER is not None:
+        SPEND_FILE = out_dir / f"spend_s{os.environ.get('MILL_SHARD', '0')}.json"
+        _flush_spend()
     lock_by = {m.get("slug"): m for m in (lock.get("models") or []) if m.get("slug")}
     lock_tags = {s: (m.get("pipeline_tag") or "") for s, m in lock_by.items()}
     lock_providers = {
@@ -478,6 +510,9 @@ def main() -> int:
         "window": window,
     }
     (out_dir / f"coverage_s{shard}.json").write_text(json.dumps(cov, indent=2) + "\n")
+    _flush_spend()
+    if METER is not None:
+        print("SPEND", json.dumps(METER.to_json()), flush=True)
     print("wrote", p, "n_ok", n_ok, "n_uncheckable", n_fail, flush=True)
     if n_ok == 0 and rows:
         print("MILL_ZERO_OK every slug UNCHECKABLE — visible, not a silent green mill", flush=True)
