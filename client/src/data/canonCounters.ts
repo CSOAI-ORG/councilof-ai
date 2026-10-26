@@ -100,7 +100,7 @@ export const CANON = {
     value: 4,
     source: "public/crosswalk/east-west-v1.json · jurisdictions.length",
     measuredAt: "2026-08-29",
-    note: "EU · UK · US-IL · CN. The separate 25 count is an inventory of heterogeneous crosswalk assets, not 25 crosswalked legal regimes."
+    note: "EU · UK · US-IL · CN. The separate 26 count is an inventory of heterogeneous crosswalk assets, not 26 crosswalked legal regimes."
   },
   // ── camelCase entries for direct CANON.x.value access (NewHome-v2 FAQ,
   // TrustMarquee). Adding these fixed the 2026-08-01 P0: CANON.councilAgents

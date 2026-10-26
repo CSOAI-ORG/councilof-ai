@@ -103,7 +103,10 @@ export const onRequestGet: PagesFunction<{
         id: "free_door",
         name: "Free board + public-root discovery door",
         resource: u("/api/free-door"),
-        free_preview: u("/api/free-door"),
+        // A preview must answer 200. This pointed at the 402 door itself, so a client doing the obvious
+        // fetch(entry.free_preview) was handed a payment challenge — the opposite of a preview. The door's own
+        // `free_equivalents` already name /api/gspc and /root.json for the same bytes.
+        free_preview: u("/api/gspc"),
         deliverable: FREE_DOOR_DESCRIPTION,
         never: ["a paid artefact", "a grade", "a rank", "a certificate"],
       },
