@@ -1,10 +1,10 @@
 {
  "schema": "csoai.ai-eval-universe/0.1",
- "issued_at": "2026-10-26T03:33:59Z",
+ "issued_at": "2026-10-26T05:32:10Z",
  "title": "AI-evaluation market-universe gap map",
  "what_this_is": "A measured directory of the public AI-evaluation universe, with what CSOAI has actually MEASURED alongside it. Repository stars are a popularity signal, not a capability measurement. Upstream listings are INDEXED, not measured by us.",
  "what_this_does_not_establish": "That any competitor is good or bad, or that CSOAI is better than any of them. That the task counts are complete: a task that is not vendored in a repository is not counted, and a repository that is private is invisible here. That any star count says anything about measurement quality.",
- "counting_rule": "Every count here is measured from the repository TREE at its default branch, with the SHA-256 of the API response recorded beside it. A count that could not be read is null, never 0.",
+ "counting_rule": "Every count here is measured from the repository at its default branch, with the SHA-256 of the API response recorded beside it. Most are TREE counts of task and scenario definitions. One — the LongFact prompt set — is an OBJECT count read from the file bytes of the same pinned branch, because a file count would answer a different question than a prompt count. A count that could not be read is null, never 0.",
  "candidate_readers": [
   {
    "reader": "helm",
@@ -48,7 +48,7 @@
    "count_note": "A harness, not a task set. Its measured quantity is the log format, not a task count.",
    "csoai_gap": "Inspect's portable log artifact is the closest thing in this universe to a replayable measurement record. CSOAI publishes no comparable per-run log schema: its 9 deterministic-fact run artifacts are content-addressed, and 7 of them are unsigned.",
    "api_source": "https://api.github.com/repos/UKGovernmentBEIS/inspect_ai",
-   "api_response_sha256": "8b97dc656c3a063930564a08c44120b4afeea601c1a51a927439accb3075bd07",
+   "api_response_sha256": "af8c96cee8bd3d19bc115f931e3f0e62503e8551db52fb24135703d6a7baf6cd",
    "state": "OBSERVED",
    "source": "https://github.com/UKGovernmentBEIS/inspect_ai",
    "stars_observed": 3094,
@@ -243,7 +243,7 @@
    "count_note": "A harness, not a task set.",
    "csoai_gap": "An agentic evaluation harness. CSOAI's harness appears in the AIBOM as a named application component, but it is not published as a harness others can run.",
    "api_source": "https://api.github.com/repos/METR/hawk",
-   "api_response_sha256": "6bf55a3953e9d32a7723957cb029097be10a05094dfccfd786912d2b032e3166",
+   "api_response_sha256": "44a8455be224e94ddfe54a9516802f0d1cd47b42016fdba4b03613a26b83fa04",
    "state": "OBSERVED",
    "source": "https://github.com/METR/hawk",
    "stars_observed": 97,
@@ -288,11 +288,11 @@
    "count": 221,
    "csoai_gap": "221 task directories against 33 declared axis slots. A task adapter library and a behavioural axis are different objects; the counts are not comparable and are not offered as a comparison.",
    "api_source": "https://api.github.com/repos/EleutherAI/lm-evaluation-harness",
-   "api_response_sha256": "cdc7ddd948636e3bbb06647c005279b672c933ca44fee2c67b06027eab17a5c6",
+   "api_response_sha256": "e72d52bf32f98635c4ada57c314a0ffb9688e9b134af655737b0ca6bb7aaec8a",
    "state": "OBSERVED",
    "source": "https://github.com/EleutherAI/lm-evaluation-harness",
    "stars_observed": 14316,
-   "forks_observed": 3725,
+   "forks_observed": 3726,
    "license_observed": "MIT",
    "pushed_at_observed": "2026-09-14T10:51:06Z",
    "archived": false,
@@ -302,6 +302,35 @@
    "count_state": "MEASURED",
    "count_label": "task_directories",
    "count_basis": "tree count over the repository tree at main"
+  },
+  {
+   "reader": "long_form_factuality",
+   "role": "LONGFORM_FACTUALITY_PROMPT_SUITE_AND_EVALUATOR",
+   "access": "PUBLIC_OPEN_SOURCE",
+   "families": [
+    "factuality",
+    "longform_hallucination_detection",
+    "factuality_evaluator"
+   ],
+   "repo": "google-deepmind/long-form-factuality",
+   "count": 2280,
+   "count_note": "The LongFact prompt set that the SAFE evaluator scores, published as per-topic JSONL files. Counted as JSON OBJECTS read from the file bytes at the pinned branch, not as a tree count of files — a file count would answer a different question. The upstream README states the size of this prompt set; the count recorded here is measured from the bytes, not copied from the README. The 3 third-party FactScore labelled_data files under third_party/ are not part of the LongFact set and are not counted.",
+   "csoai_gap": "A published long-form factuality prompt set, scored by the SAFE evaluator. CSOAI's board carries no long-form factuality prompt set and no per-topic prompt corpus a third party could run the same questions against.",
+   "api_source": "https://api.github.com/repos/google-deepmind/long-form-factuality",
+   "api_response_sha256": "ef8dc4cd93dcb99cf43326f7fdabf414ff50e8067c804db51f3a2304bf764957",
+   "state": "OBSERVED",
+   "source": "https://github.com/google-deepmind/long-form-factuality",
+   "stars_observed": 698,
+   "forks_observed": 86,
+   "license_observed": "NOASSERTION",
+   "pushed_at_observed": "2026-06-18T12:47:42Z",
+   "archived": false,
+   "description_observed": "Benchmarking long-form factuality in large language models. Original code for our paper \"Long-form factuality in large language models\".",
+   "tree_source": "https://api.github.com/repos/google-deepmind/long-form-factuality/git/trees/main?recursive=1",
+   "tree_response_sha256": "84e44479a9decf35e7a38b99d68d0c31638d5bcbda4d8340ceb74eadc1d7bb36",
+   "count_state": "MEASURED",
+   "count_label": "longfact_prompt_objects",
+   "count_basis": "JSON objects counted from the file bytes of 76 files at main"
   },
   {
    "reader": "deepeval",
@@ -316,10 +345,10 @@
    "count_note": "A harness and reporting product, not a published task set.",
    "csoai_gap": "A commercial harness with reporting. CSOAI's board is free forever and publishes no reporting product — the door charges for nothing.",
    "api_source": "https://api.github.com/repos/confident-ai/deepeval",
-   "api_response_sha256": "30b2df40ca5257106f30c110bf5a3a45634274683f048434f8d70ecc61bbb02a",
+   "api_response_sha256": "1b38551c90ac74e51930bd995b3f3d35fc74e429ebff8002257ae1a3d6f679d5",
    "state": "OBSERVED",
    "source": "https://github.com/confident-ai/deepeval",
-   "stars_observed": 19102,
+   "stars_observed": 19104,
    "forks_observed": 2132,
    "license_observed": "Apache-2.0",
    "pushed_at_observed": "2026-10-23T11:41:01Z",
@@ -338,10 +367,10 @@
    "count_note": "A catalogue of small eval suites.",
    "csoai_gap": "A catalogue of small eval suites. CSOAI's board is one frozen method per axis with n_valid >= 30, not a catalogue of many small suites.",
    "api_source": "https://api.github.com/repos/openai/evals",
-   "api_response_sha256": "8d92a3d0753cd1c80c2881bf1a5ac62f513fa85679d720254c3f412dc54afcfc",
+   "api_response_sha256": "e7aaf767c7b1ce04e8e5a4d8fca4b1dbf15fc95cf59c3c304a74279d08eb6453",
    "state": "OBSERVED",
    "source": "https://github.com/openai/evals",
-   "stars_observed": 19653,
+   "stars_observed": 19654,
    "forks_observed": 3121,
    "license_observed": "NOASSERTION",
    "pushed_at_observed": "2026-04-14T15:29:57Z",
@@ -478,27 +507,6 @@
     "https://api.github.com/repos/epoch-research/SWE-bench"
    ],
    "finding": "The org's public repositories were listed. The two candidates that look like evaluation suites are not: epoch-research/ftm (25 stars) describes itself as 'Work in progress! I don't recommend looking at the code right now.', and epoch-research/SWE-bench (20 stars) is a 'Docker image registry for SWE-bench'. No published, countable evaluation suite was found."
-  },
-  {
-   "reader": "safe",
-   "role": "FACTUALITY_EVAL_SUITE",
-   "access": "PUBLIC_OPEN_SOURCE",
-   "families": [
-    "factuality",
-    "hallucination_detection"
-   ],
-   "state": "NOT_LOCATED",
-   "queried": [
-    "https://api.github.com/repos/holistic-eval/SAFE",
-    "https://api.github.com/repos/stanfordnlp/SAFE",
-    "https://api.github.com/repos/stanfordnlp/SAFER",
-    "https://api.github.com/repos/TIGER-AI-Lab/SAFE",
-    "https://api.github.com/repos/google-research/safe",
-    "https://api.github.com/repos/sahoojag/SAFE",
-    "https://api.github.com/orgs/holistic-eval/repos",
-    "https://api.github.com/search/repositories?q=SAFE+in:name+org:holistic-eval"
-   ],
-   "finding": "Every candidate path answered HTTP 404, and the organisation endpoint answered HTTP 422 (the org does not exist). The repository for this suite was not located from this environment. A null, not a zero."
   },
   {
    "reader": "lmarena_github_org",
@@ -907,5 +915,5 @@
   "response_sha256": "67c0f69ecefb89053bfd5ef72487de07be52c0592e127334d2eb62e178194b72",
   "note": "Quoted from the live board by field name. The board declares 33 axis slots; 23 are MEASURED, 10 are declared with no run behind them. An unmeasured axis is a visible gap, not a zero, and never a fail."
  },
- "snapshot_sha256": "24a941e35ee3a938dcb8d9e0c5cea6d0e8af9b5d34fee8115af42531be15c038"
+ "snapshot_sha256": "00f4955bce36313c4b8db7371e384657022fcca3a686a0a0257190e14afd5f75"
 }

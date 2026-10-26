@@ -148,6 +148,22 @@ CANDIDATES = [
                   "label": "task_directories"},
     },
     {
+        "reader": "long_form_factuality",
+        "role": "LONGFORM_FACTUALITY_PROMPT_SUITE_AND_EVALUATOR",
+        "access": "PUBLIC_OPEN_SOURCE",
+        "families": ["factuality", "longform_hallucination_detection", "factuality_evaluator"],
+        "repo": "google-deepmind/long-form-factuality",
+        "count": {"kind": "jsonl_objects", "prefix": "longfact/", "suffix": ".jsonl",
+                  "label": "longfact_prompt_objects"},
+        "count_note": "The LongFact prompt set that the SAFE evaluator scores, published as "
+                      "per-topic JSONL files. Counted as JSON OBJECTS read from the file bytes at "
+                      "the pinned branch, not as a tree count of files — a file count would "
+                      "answer a different question. The upstream README states the size of this "
+                      "prompt set; the count recorded here is measured from the bytes, not "
+                      "copied from the README. The 3 third-party FactScore labelled_data files "
+                      "under third_party/ are not part of the LongFact set and are not counted.",
+    },
+    {
         "reader": "deepeval",
         "role": "COMMERCIAL_EVAL_HARNESS_AND_REPORTING",
         "access": "PUBLIC_OPEN_SOURCE",
@@ -231,26 +247,6 @@ NOT_LOCATED = [
                    "'Work in progress! I don't recommend looking at the code right now.', and "
                    "epoch-research/SWE-bench (20 stars) is a 'Docker image registry for SWE-bench'. "
                    "No published, countable evaluation suite was found.",
-    },
-    {
-        "reader": "safe",
-        "role": "FACTUALITY_EVAL_SUITE",
-        "access": "PUBLIC_OPEN_SOURCE",
-        "families": ["factuality", "hallucination_detection"],
-        "state": "NOT_LOCATED",
-        "queried": [
-            "https://api.github.com/repos/holistic-eval/SAFE",
-            "https://api.github.com/repos/stanfordnlp/SAFE",
-            "https://api.github.com/repos/stanfordnlp/SAFER",
-            "https://api.github.com/repos/TIGER-AI-Lab/SAFE",
-            "https://api.github.com/repos/google-research/safe",
-            "https://api.github.com/repos/sahoojag/SAFE",
-            "https://api.github.com/orgs/holistic-eval/repos",
-            "https://api.github.com/search/repositories?q=SAFE+in:name+org:holistic-eval",
-        ],
-        "finding": "Every candidate path answered HTTP 404, and the organisation endpoint "
-                   "answered HTTP 422 (the org does not exist). The repository for this suite was "
-                   "not located from this environment. A null, not a zero.",
     },
     {
         "reader": "lmarena_github_org",
@@ -368,6 +364,10 @@ READER_GAPS = {
     "lm_eval_harness": "221 task directories against 33 declared axis slots. A task adapter "
                        "library and a behavioural axis are different objects; the counts are "
                        "not comparable and are not offered as a comparison.",
+    "long_form_factuality": "A published long-form factuality prompt set, scored by the SAFE "
+                             "evaluator. CSOAI's board carries no long-form factuality prompt "
+                             "set and no per-topic prompt corpus a third party could run the "
+                             "same questions against.",
     "deepeval": "A commercial harness with reporting. CSOAI's board is free forever and "
                 "publishes no reporting product — the door charges for nothing.",
     "openai_evals": "A catalogue of small eval suites. CSOAI's board is one frozen method per "
@@ -384,6 +384,26 @@ READER_GAPS = {
                              "regulatory-framework axis measures regime FACTS and carries no "
                              "risk score — a measurement, not a risk assessment.",
 }
+
+
+def _count_jsonl_objects(repo: str, branch: str, paths: list[str]) -> tuple[int | None, str, str]:
+    """Count the JSON OBJECTS across the given JSONL files, from their bytes.
+
+    A file count would answer a different question: LongFact is a set of per-topic files, and
+    what a reader would compare with anything else is the number of PROMPTS. The tree tells us
+    which files; the bytes tell us how many objects each holds.
+
+    Returns (count, state, basis).
+    """
+    if not paths:
+        return None, "NO_MATCHING_FILES", ""
+    total = 0
+    for path in sorted(paths):
+        raw, st = _get(f"https://raw.githubusercontent.com/{repo}/{branch}/{path}")
+        if raw is None:
+            return None, f"UNREACHABLE ({st})", path
+        total += sum(1 for line in raw.decode("utf-8", "replace").splitlines() if line.startswith("{"))
+    return total, "MEASURED", f"{len(paths)} files at {branch}"
 
 
 def observe(candidate: dict) -> dict:
@@ -414,6 +434,24 @@ def observe(candidate: dict) -> dict:
     tree, tstatus, tdigest = _json(f"https://api.github.com/repos/{repo}/git/trees/{branch}?recursive=1")
     out["tree_source"] = f"https://api.github.com/repos/{repo}/git/trees/{branch}?recursive=1"
     out["tree_response_sha256"] = tdigest or None
+    if spec["kind"] == "jsonl_objects":
+        if tree is None:
+            out["count"] = None
+            out["count_state"] = f"UNREACHABLE ({tstatus})"
+            return out
+        paths = [
+            n.get("path", "")
+            for n in (tree.get("tree") or [])
+            if n.get("type") == "blob"
+            and n.get("path", "").startswith(spec.get("prefix", ""))
+            and n.get("path", "").endswith(spec.get("suffix", ".jsonl"))
+        ]
+        count, state, basis = _count_jsonl_objects(repo, branch, paths)
+        out["count"] = count
+        out["count_state"] = state
+        out["count_label"] = spec["label"]
+        out["count_basis"] = f"JSON objects counted from the file bytes of {basis}"
+        return out
     if tree is None:
         out["count"] = None
         out["count_state"] = f"UNREACHABLE ({tstatus})"
@@ -556,9 +594,12 @@ def main() -> int:
             "count says anything about measurement quality."
         ),
         "counting_rule": (
-            "Every count here is measured from the repository TREE at its default branch, with "
-            "the SHA-256 of the API response recorded beside it. A count that could not be read "
-            "is null, never 0."
+            "Every count here is measured from the repository at its default branch, with "
+            "the SHA-256 of the API response recorded beside it. Most are TREE counts of task "
+            "and scenario definitions. One — the LongFact prompt set — is an OBJECT count read "
+            "from the file bytes of the same pinned branch, because a file count would answer "
+            "a different question than a prompt count. A count that could not be read is null, "
+            "never 0."
         ),
         "candidate_readers": observed,
         "readers_not_located": NOT_LOCATED,
@@ -590,16 +631,20 @@ def main() -> int:
         "actually MEASURED.",
         "",
         "`index.json` was built by querying the GitHub API for each reader and counting task and",
-        "scenario definitions from the repository tree at its default branch. Each source entry",
-        "records the SHA-256 of the exact API response observed during the run, so every figure",
-        "can be re-fetched and compared.",
+        "scenario definitions from the repository tree at its default branch. One count — the",
+        "LongFact prompt set — is an object count read from the file bytes of that same pinned",
+        "branch, because a file count would answer a different question than a prompt count.",
+        "Each source entry records the SHA-256 of the exact API response observed during the run,",
+        "so every figure can be re-fetched and compared.",
         "",
         "## Reading the numbers",
         "",
         "- `stars_observed` is a **popularity signal, not a capability measurement**. It is recorded",
         "  because it is observable and cheap, not because it means anything about quality.",
-        "- `count` is a **measured** number: a tree count at a pinned branch, with the response",
-        "  digest beside it. A count that could not be read is null, never 0.",
+        "- `count` is a **measured** number: a tree count at a pinned branch, or a byte count of",
+        "  the objects inside the files, with the response digest beside it. A count that could not",
+        "  be read is null, never 0.",
+        "- `count_basis` says which of the two it was, per reader.",
         "- `readers_not_located` records readers that were looked for and not found, with the",
         "  endpoints queried and their HTTP status. The absence is a measurement.",
         "- Upstream listings are **INDEXED**, not measurements by us. Nothing here is signed, rooted,",

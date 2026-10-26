@@ -4,16 +4,20 @@ This release separates the size of the public AI-evaluation universe from what C
 actually MEASURED.
 
 `index.json` was built by querying the GitHub API for each reader and counting task and
-scenario definitions from the repository tree at its default branch. Each source entry
-records the SHA-256 of the exact API response observed during the run, so every figure
-can be re-fetched and compared.
+scenario definitions from the repository tree at its default branch. One count — the
+LongFact prompt set — is an object count read from the file bytes of that same pinned
+branch, because a file count would answer a different question than a prompt count.
+Each source entry records the SHA-256 of the exact API response observed during the run,
+so every figure can be re-fetched and compared.
 
 ## Reading the numbers
 
 - `stars_observed` is a **popularity signal, not a capability measurement**. It is recorded
   because it is observable and cheap, not because it means anything about quality.
-- `count` is a **measured** number: a tree count at a pinned branch, with the response
-  digest beside it. A count that could not be read is null, never 0.
+- `count` is a **measured** number: a tree count at a pinned branch, or a byte count of
+  the objects inside the files, with the response digest beside it. A count that could not
+  be read is null, never 0.
+- `count_basis` says which of the two it was, per reader.
 - `readers_not_located` records readers that were looked for and not found, with the
   endpoints queried and their HTTP status. The absence is a measurement.
 - Upstream listings are **INDEXED**, not measurements by us. Nothing here is signed, rooted,
