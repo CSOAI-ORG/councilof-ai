@@ -38,53 +38,132 @@ jobs:
   watch:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ secrets.SNAPSHOT_PR_TOKEN || secrets.GITHUB_TOKEN }}
+      PROVIDER_DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
+      PROVIDER_ONLY: ${{ inputs.only || '' }}
+      PYTHONUNBUFFERED: "1"
     steps:
+      - name: set retained capture path
+        shell: bash
+        run: |
+          printf 'PROVIDER_BUNDLE=%s/provider-watch-bundle\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
       - uses: actions/checkout@v4
         with:
           ref: master
+          fetch-depth: 0
+          token: ${{ env.GH_TOKEN }}
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
       - name: self-test (fixtures only, no network)
-        run: python3 scripts/watch/test_provider_watch.py
-      - name: capture
-        id: watch
-        continue-on-error: true   # exit 2 = fail-closed (no target OK); the honest state is still committed below
-        env:
-          PYTHONUNBUFFERED: "1"
         run: |
-          set -uo pipefail
-          ARGS=""
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.dry_run }}" = "true" ]; then ARGS="$ARGS --dry-run"; fi
-          if [ -n "${{ github.event.inputs.only }}" ]; then ARGS="$ARGS --only ${{ github.event.inputs.only }}"; fi
-          python3 scripts/watch/provider_watch.py $ARGS
-      - name: commit state + index + staged leaves (never signs; public-root.yml signs)
-        if: github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true'
-        env:
-          GH_TOKEN: ${{ secrets.SNAPSHOT_PR_TOKEN || secrets.GITHUB_TOKEN }}  # SNAPSHOT_PR_TOKEN: a PR opened with it fires pull_request checks; GITHUB_TOKEN cannot
+          python3 scripts/watch/test_provider_watch.py
+          python3 scripts/watch/test_provider_watch_promotion.py
+      - name: select and retain the pending capture baseline
+        id: prepare
+        shell: bash
         run: |
           set -euo pipefail
-          git config user.name "csoai-provider-watch"
-          git config user.email "nicholas@csoai.org"
-          git add public/feeds/provider-diff/state.json public/feeds/provider-diff/index.json public/feeds/provider-diff/leaves/
-          if git diff --cached --quiet; then
-            echo "no state change"
-            exit 0
+          args=(prepare --bundle "$PROVIDER_BUNDLE")
+          if [[ "$PROVIDER_DRY_RUN" == "true" ]]; then
+            args+=(--dry-run)
           fi
-          git commit -m "provider-watch: daily capture $(date -u +%Y-%m-%dT%H:%MZ) (hash-only; unsigned leaves staged)"
-          # Land via branch + PR (the census-delta.yml pattern). A direct push to
-          # master is GH006: the required "gates" check applies to pushes too, and
-          # a push creates a commit no check has run on yet (red since 2026-09-06).
-          # Until the PR merges, public-root.yml sees the previous master state —
-          # the staged leaves wait on master, they are not lost.
-          STAMP=$(date -u +%Y-%m-%dT%H%MZ)
-          BR="automation/provider-watch-${STAMP}"
-          git push origin "HEAD:$BR"
-          gh pr create --base master --head "$BR" \
-            --title "provider-watch: daily capture ${STAMP} (hash-only)" \
-            --body "Automated provider-watch capture: state + index + staged UNSIGNED leaves under \`public/feeds/provider-diff/\` (signing stays with public-root.yml). Opened as a PR because a direct push to master cannot satisfy the required \`gates\` check (GH006). Needs a human merge; until merged the provider-diff feed on master is stale."
-      - name: fail closed when no target was OK
-        if: steps.watch.outcome == 'failure'
+          python3 scripts/watch/provider_watch_promotion.py "${args[@]}"
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          receipt = json.loads(
+              (Path(os.environ["PROVIDER_BUNDLE"]) / "promotion.json").read_text()
+          )
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as out:
+              out.write(f"state={receipt['state']}\n")
+              result = receipt.get("capture_exit")
+              out.write(f"capture_exit={'' if result is None else result}\n")
+          PY
+      - name: capture
+        id: watch
+        if: steps.prepare.outputs.state == 'PREPARED'
+        continue-on-error: true
+        shell: bash
         run: |
-          echo "provider-watch: the capture step exited non-zero (no target OK, or a crash). State was committed if it changed; this run is NOT an all-clear." >&2
+          set -uo pipefail
+          args=(--state-dir "$PROVIDER_BUNDLE/capture")
+          if [[ "$PROVIDER_DRY_RUN" == "true" ]]; then
+            args+=(--dry-run)
+          fi
+          if [[ -n "$PROVIDER_ONLY" ]]; then
+            args+=(--only "$PROVIDER_ONLY")
+          fi
+          set +e
+          python3 scripts/watch/provider_watch.py "${args[@]}" \
+            2>&1 | tee "$PROVIDER_BUNDLE/capture.log"
+          result=${PIPESTATUS[0]}
+          printf 'exit_code=%s\n' "$result" >> "$GITHUB_OUTPUT"
+          exit "$result"
+      - name: qualify the completed capture without hiding its result
+        id: finalize
+        if: >-
+          always() &&
+          env.PROVIDER_DRY_RUN != 'true' &&
+          steps.prepare.outputs.state == 'PREPARED' &&
+          (steps.watch.outcome == 'success' || steps.watch.outcome == 'failure')
+        env:
+          CAPTURE_EXIT: ${{ steps.watch.outputs.exit_code }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/watch/provider_watch_promotion.py finalize \
+            --bundle "$PROVIDER_BUNDLE" \
+            --capture-exit "${CAPTURE_EXIT:--1}"
+      - name: retain capture bytes before any publication
+        id: retained
+        if: >-
+          always() &&
+          env.PROVIDER_DRY_RUN != 'true' &&
+          (steps.prepare.outcome == 'success' || steps.prepare.outcome == 'failure')
+        uses: actions/upload-artifact@v4
+        with:
+          name: provider-watch-capture-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ env.PROVIDER_BUNDLE }}/
+          if-no-files-found: error
+          retention-days: 14
+      - name: continue the existing review branch or recover its PR
+        id: promote
+        if: >-
+          always() &&
+          env.PROVIDER_DRY_RUN != 'true' &&
+          steps.retained.outcome == 'success' &&
+          (steps.finalize.outcome == 'success' ||
+           steps.prepare.outputs.state == 'RESUME_PUBLICATION')
+        env:
+          RETAINED_ARTIFACT_ID: ${{ steps.retained.outputs.artifact-id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/watch/provider_watch_promotion.py promote \
+            --bundle "$PROVIDER_BUNDLE" \
+            --artifact-id "$RETAINED_ARTIFACT_ID"
+      - name: retain publication result
+        if: >-
+          always() &&
+          env.PROVIDER_DRY_RUN != 'true' &&
+          (steps.promote.outcome == 'success' || steps.promote.outcome == 'failure')
+        uses: actions/upload-artifact@v4
+        with:
+          name: provider-watch-publication-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ env.PROVIDER_BUNDLE }}/promotion.json
+            ${{ env.PROVIDER_BUNDLE }}/*-error.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: preserve a failed capture result
+        if: >-
+          always() &&
+          (steps.watch.outcome == 'failure' ||
+           steps.prepare.outputs.capture_exit == '2')
+        run: |
+          echo "The retained capture includes failures; publication does not make the capture successful."
           exit 1
