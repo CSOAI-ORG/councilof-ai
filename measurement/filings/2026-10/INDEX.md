@@ -12,7 +12,7 @@ these drafts; each draft says so in its body.
 | O5 | NIST NCCoE, *Software and AI Agent Identity and Authorization* | **FOUND · OPEN · ROLLING** | Concept paper, Feb 2026 (comment period 5 Feb – 2 Apr 2026, now closed); news release 29 Sep 2026; *Summary of Comments on the Concept Paper*; next milestone a **draft project description** to be released for feedback | Email `AI-Identity@nist.gov` (Name, Contact Email, Organization all optional). <https://pages.nist.gov/nccoe-ai-identity/comments.html> | No registration, no fee, no form | None published — "rolling basis" | [NIST-NCCoE-agentic-SI-identity-comment-DRAFT.md](NIST-NCCoE-agentic-SI-identity-comment-DRAFT.md) |
 | O5b | NCCoE webinar, *DevSecOps and the Impact of Agentic SI* | **FOUND · OPEN · CAPPED** | Wed 28 Oct 2026, 1:00–3:00pm EDT; 14 technology collaborators; "example implementation 3" + Agentic SI; panel with NCCoE industry collaborators | <https://nist.zoomgov.com/webinar/register/WN_SA3zfqgFR9GtF4seLQ5JOQ> (via <https://www.nccoe.nist.gov/get-involved/attend-events/devsecops-and-impact-agentic-si>) | Registration form; owner account. **Limited to 500 participants. No fee.** Recording consent by registering | 28 Oct 2026, 1:00pm EDT | none needed — one-click path in the draft's step 6 |
 | O2 | Artificial Analysis **Cyber Index Alliance** | **FOUND · OPEN** | Launched 28 Sep 2026 with the Artificial Analysis Cyber Index. Partners: Collinear AI, IBM, NVIDIA, Vercel. Three evaluations: CWE-Bench-AA (Collinear AI), DeepsecBench-AA (Vercel), CyberGym-E2E-AA (Berkeley RDI). "All evaluations are conducted independently by Artificial Analysis" | Email `cyber@artificialanalysis.ai` — "Organizations interested in joining the Cyber Index Alliance can contact us at". <https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index> | No form, no fee. **Partner route only** — expert input on Index design; may contribute datasets and external research | None published | none — see "What this is" below |
-| O3 | Cloudflare **Monetization Gateway** closed beta | **FOUND · CLOSED TO US** | Blog 30 Sep 2026; docs updated 30 Sep 2026; uses the x402 protocol for payment authorisation inside the HTTP request flow | <https://dash.cloudflare.com/?to=/:account/monetize/monetization-gateway> (dashboard onboarding application) | Account required. **"The Monetization Gateway is available in closed beta to eligible U.S.-based sellers and buyers" — "Buyers and sellers must be based in the United States."** | None published | **none — CSOAI Ltd is a UK company (Companies House 16939667) and is therefore ineligible.** See "What this is" |
+| O3 | Cloudflare **Monetization Gateway** closed beta | **FOUND · CLOSED TO US** | Blog 30 Sep 2026; docs updated 30 Sep 2026; uses the x402 protocol for payment authorisation inside the HTTP request flow | <https://dash.cloudflare.com/?to=/:account/monetize/monetization-gateway> (dashboard onboarding application) | Account required. **"The Monetization Gateway is available in closed beta to eligible U.S.-based sellers and buyers" — "Buyers and sellers must be based in the United States."** | None published | **none — CSOAI Ltd is a UK company and the beta is US-only, so CSOAI is ineligible.** See "What this is" |
 | O1 | **White House Accord on Super Intelligence** | **FOUND · NO CHANNEL** | Signed 29 Sep 2026, "Joint Commitment on Frontier Responsibilities". Trump + Pichai, Amodei, Zuckerberg, Brockman, Musk, Huang. Companion EO 14434 "Inaugurating The Era Of Super Intelligence" | **None.** No mechanism for external submission is created by the accord, which carries no enforcement body, penalty, deadline, reporting requirement or definition of "independent" | — | — | none — the criterion gap is the finding. See [HONESTY-REGISTER-2026-10-26.md](HONESTY-REGISTER-2026-10-26.md) §1 |
 | O4 | BoE, **Bailey** — frontier AI standard-setting route | **FOUND · ONE OPEN CONSULTATION** | Bailey, *Frontier AI and the question of governance*, 30 Sep 2026; Bailey, *Growth and regulation*, Mansion House, 14 Jul 2026; FPC records Jul and Sep 2026 | **Live: PRA CP14/26** (SM&CR Phase 2), published 22 Oct 2026, responses by **22 Jan 2027**, `CP14_26@bankofengland.co.uk`. Also: Bank/PRA ICT & cyber consultation (planned H2 2026), Bank-FCA AI Consortium, CMORG, Frontier AI Information Sharing Forum, HMT forthcoming consultation on payments services for agentic payments | No fee. PRA publishes respondent names where consent is given | **22 Jan 2027** (CP14/26) | none — see below |
 
@@ -68,16 +68,34 @@ standard-setting route meet.
 
 ## Owner-only items
 
-1. **Send the NIST comment** — owner sends from `nicholas@csoai.org`; the prepared, tested command
-   is in the draft's "Before this is sent", step 5. Nothing has been sent.
-2. **Decide the name line** — the comment is written for publication and is subject to FOIA; whether
-   a personal name is attached is the owner's decision.
-3. **Register for the 28 October webinar** — registration is under the owner's identity, because the
-   house rule is that we do not create accounts as the agent. 500-participant cap; the panel is the
-   part worth attending.
-4. **Decide whether to reply to `cyber@artificialanalysis.ai`** — a partner conversation, from the
-   domain account, and it should say plainly what CSOAI would contribute and what it would not.
-5. **Do not apply to the Cloudflare beta** — ineligible on geography. If a US entity is wanted
-   later, that is a different decision for the owner.
+0. **Clear the house mail credential — this blocks both sends.** Outbound mail from this machine has
+   been broken since 13 September 2026 and nobody noticed because the failure is silent. The local
+   sender (`msmtp`, account `csoai`, `mail.privateemail.com:587`) reaches the server over TLS 1.3 and
+   the server offers `AUTH PLAIN LOGIN`, but the stored Proton app password is rejected with
+   `535 5.7.8 Error: authentication failed`. The credential is present in the keychain
+   (`PRIVATEMAIL_PASSWORD`, service `meok-keystone`) and retrievable, so it is the credential that is
+   stale, not the configuration. `~/.msmtp.log` shows the same 535 for **every** outbound attempt
+   since 13 September 2026 — including an `ai-coi@nist.gov` message that day, and outreach to
+   Armilla, GitHub Support, Coinbase x402, MLCommons, Munich Re and Anthropic in early October. The
+   Proton web session has since expired and the stored Resend key returns
+   `401 API key is invalid`. Fix: regenerate the Proton app password for `nicholas@csoai.org` and
+   replace the keychain item, or paste the prepared messages into the Proton web client. Either way,
+   **check the sent folder for what was believed to have gone out before 13 September 2026.**
+1. **Send the NIST comment** — owner sends from `nicholas@csoai.org`; the message is built at
+   `~/clawd/csoai-work/hunt/csoai-nist-comment.eml` and the command is in the draft's step 5. Nothing
+   has been sent.
+2. **The name line is settled.** The comment is signed `CSOAI Ltd (Council of AI)` — the name we are
+   listed under in the bodies we take part in — with the postal address and no registration number.
+   The owner may still attach a personal name; it is FOIA-releasable either way.
+3. **The 28 October webinar — the owner declined on 26 October 2026.** No registration was made and
+   no account was created. The one-click path stays in the NIST draft, step 6, if that changes.
+4. **Send the Artificial Analysis note** — drafted to the house format at
+   `ARTIFICIAL-ANALYSIS-cyber-index-alliance-contact-DRAFT.md` and built at
+   `~/clawd/csoai-work/hunt/csoai-cyber-index-alliance.eml`. It offers independent measurement of the
+   Index and asks one question. It asks for nothing else, and if the Alliance replies, what is proved
+   is that a conversation opened — not a membership, not a partnership, not a measurement included in
+   the Index.
+5. **Do not apply to the Cloudflare beta** — ineligible on geography. If a US entity is wanted later,
+   that is a different decision for the owner.
 6. **Decide whether to respond to PRA CP14/26** — closes 22 January 2027, so it is not urgent; the
    value is in having the independent measurement record ready before the deadline rather than after.
