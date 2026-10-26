@@ -9,8 +9,9 @@
       "api-arena-scoreboard",
       "api-art50-marking-evidence-post",
       "api-board-sign-post",
+      "api-claims-register",
+      "api-claims-watch-request-post",
       "api-commissions",
-      "api-signed-data-feed-post",
       "api-evidence-bundle-post",
       "api-feeds-provider-diff-post",
       "api-free-door-post",
@@ -22,12 +23,13 @@
       "api-receipts-verify",
       "api-receipts-verify-post",
       "api-request-attestation-post",
+      "api-route-execute-post",
       "api-rwa-evidence-post",
+      "api-signed-data-feed-post",
       "api-state",
+      "api-waitlist",
+      "api-waitlist-post",
       "api-wrapper-post",
-      "api-wrapper-asset-usdc-post",
-      "api-wrapper-asset-usdt-post",
-      "api-wrapper-asset-dai-post",
       "api-x402"
     ]
   },
@@ -58,7 +60,7 @@
       "id": "api-arena-scoreboard",
       "kind": "http",
       "name": "Arena scoreboard",
-      "description": "Historical arena artefact (signed 29 Aug 2026): per-axis pass rates, not Elo. Most axes read 0.0 because of a keyword-grader defect, so it is not a measurement of the models; kept for provenance. HEAD must not 404 when GET is 200 — probes and MCP hosts send HEAD first.",
+      "description": "HEAD must not 404 when GET is 200 — probes and MCP hosts send HEAD first.",
       "audience": "both",
       "lifecycle": "LIVE",
       "payment": "free",
@@ -88,6 +90,28 @@
       "method": "POST"
     },
     {
+      "id": "api-claims-register",
+      "kind": "http",
+      "name": "Claim maintenance register",
+      "description": "GET /api/claims/register — the register of every subject we maintain public claims on.",
+      "audience": "both",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "path": "/api/claims/register",
+      "method": "GET"
+    },
+    {
+      "id": "api-claims-watch-request-post",
+      "kind": "http",
+      "name": "Claim watch request (POST)",
+      "description": "POST /api/claims/watch-request — a person asks for a subject to be re-checked monthly.",
+      "audience": "both",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "path": "/api/claims/watch-request",
+      "method": "POST"
+    },
+    {
       "id": "api-commissions",
       "kind": "http",
       "name": "Commissions",
@@ -97,17 +121,6 @@
       "payment": "free",
       "path": "/api/commissions",
       "method": "GET"
-    },
-    {
-      "id": "api-signed-data-feed-post",
-      "kind": "http",
-      "name": "Signed data feed (POST)",
-      "description": "Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored.",
-      "audience": "both",
-      "lifecycle": "LIVE",
-      "payment": "free",
-      "path": "/api/signed-data-feed",
-      "method": "POST"
     },
     {
       "id": "api-evidence-bundle-post",
@@ -231,6 +244,17 @@
       "method": "POST"
     },
     {
+      "id": "api-route-execute-post",
+      "kind": "http",
+      "name": "GSPC Route execution (POST)",
+      "description": "POST /api/route/execute: GSPC Route execution (functions/_lib/route/execute.ts). GET describes the door.",
+      "audience": "both",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "path": "/api/route/execute",
+      "method": "POST"
+    },
+    {
       "id": "api-rwa-evidence-post",
       "kind": "http",
       "name": "Rwa evidence (POST)",
@@ -239,6 +263,17 @@
       "lifecycle": "LIVE",
       "payment": "free",
       "path": "/api/rwa/evidence",
+      "method": "POST"
+    },
+    {
+      "id": "api-signed-data-feed-post",
+      "kind": "http",
+      "name": "Signed data feed (POST)",
+      "description": "Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored.",
+      "audience": "both",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "path": "/api/signed-data-feed",
       "method": "POST"
     },
     {
@@ -253,6 +288,28 @@
       "method": "GET"
     },
     {
+      "id": "api-waitlist",
+      "kind": "http",
+      "name": "Waitlist",
+      "description": "POST /api/waitlist — join the waitlist for a product that is not on sale yet (RAS booking desk first). The entry is proposed into the Busabase `waitlist` base for review; nothing is sold, priced, charged or issued, and no price is shown. GET describes the door.",
+      "audience": "human",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "payment": "free",
+      "path": "/api/waitlist",
+      "method": "GET"
+    },
+    {
+      "id": "api-waitlist-post",
+      "kind": "http",
+      "name": "Waitlist (POST)",
+      "description": "POST /api/waitlist — join the waitlist for a product that is not on sale yet (RAS booking desk first). The entry is proposed into the Busabase `waitlist` base for review; nothing is sold, priced, charged or issued, and no price is shown. GET describes the door.",
+      "audience": "human",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "payment": "free",
+      "path": "/api/waitlist",
+      "method": "POST"
+    },
+    {
       "id": "api-wrapper-post",
       "kind": "http",
       "name": "Wrapper (POST)",
@@ -261,39 +318,6 @@
       "lifecycle": "LIVE",
       "payment": "free",
       "path": "/api/wrapper",
-      "method": "POST"
-    },
-    {
-      "id": "api-wrapper-asset-usdc-post",
-      "kind": "http",
-      "name": "Wrapper asset pack USDC (POST)",
-      "description": "POST alias of GET /api/wrapper/asset/usdc for gateways that POST {}; the body is ignored.",
-      "audience": "both",
-      "lifecycle": "LIVE",
-      "payment": "free",
-      "path": "/api/wrapper/asset/usdc",
-      "method": "POST"
-    },
-    {
-      "id": "api-wrapper-asset-usdt-post",
-      "kind": "http",
-      "name": "Wrapper asset pack USDT (POST)",
-      "description": "POST alias of GET /api/wrapper/asset/usdt for gateways that POST {}; the body is ignored.",
-      "audience": "both",
-      "lifecycle": "LIVE",
-      "payment": "free",
-      "path": "/api/wrapper/asset/usdt",
-      "method": "POST"
-    },
-    {
-      "id": "api-wrapper-asset-dai-post",
-      "kind": "http",
-      "name": "Wrapper asset pack DAI (POST)",
-      "description": "POST alias of GET /api/wrapper/asset/dai for gateways that POST {}; the body is ignored.",
-      "audience": "both",
-      "lifecycle": "LIVE",
-      "payment": "free",
-      "path": "/api/wrapper/asset/dai",
       "method": "POST"
     },
     {

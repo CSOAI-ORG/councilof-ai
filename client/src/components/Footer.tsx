@@ -33,12 +33,12 @@ export function Footer() {
     {
       title: 'Product',
       links: [
-        { name: 'Verify a card', href: '/gspc-verify/' },
-        { name: 'Request attestation', href: '/assess/' },
+        { name: 'Check a record', href: '/gspc-verify/' },
+        { name: 'Measurement enquiries', href: '/assess/' },
         { name: 'Board', href: '/dashboard/?tab=board' },
-        { name: 'Tools — plugin snippet', href: '/tools/' },
+        { name: 'Connect tools to your AI', href: '/tools/' },
         { name: 'Ask about a measured run', href: '/contact/?arm=run' },
-        { name: 'Ledger', href: '/contact/?arm=ledger' },
+        { name: 'Evidence feed enquiries', href: '/contact/?arm=ledger' },
         // A licensing enquiry, not a download: the label says so, and the free download sits beside it.
         { name: 'Data licensing (enquiry)', href: '/contact/?arm=data' },
         { name: 'Download the board data', href: '/board/#board-download' },
@@ -51,12 +51,12 @@ export function Footer() {
     // They were reachable only from inside the home page before, so a reader arriving on any
     // other route could not find them at all.
     {
-      title: 'For machines',
+      title: 'Developer reference',
       links: [
         { name: 'Board JSON — /api/gspc', href: '/api/gspc', external: true },
         { name: 'Tool surface — /mcp', href: '/mcp', external: true },
         { name: 'Agent card', href: '/.well-known/agent.json', external: true },
-        { name: 'Metered doors + free previews', href: '/.well-known/x402.json', external: true },
+        { name: 'Paid services and free previews', href: '/.well-known/x402.json', external: true },
         { name: 'Our public keys', href: '/.well-known/did.json', external: true },
         { name: 'Signed evidence root', href: '/root.json', external: true },
         { name: 'OpenAPI description', href: '/openapi.json', external: true },
@@ -65,10 +65,10 @@ export function Footer() {
     {
       title: 'Evidence',
       links: [
-        { name: 'GSPC JSON', href: '/api/gspc', external: true },
+        { name: 'Measurement data (JSON)', href: '/api/gspc', external: true },
         { name: 'Evidence files (cards, proofs)', href: 'https://huggingface.co/datasets/csoai/councilof-ai-evidence', external: true },
         { name: 'Methodology', href: '/methodology/' },
-        { name: 'Honesty gate', href: '/honesty/' },
+        { name: 'What we cannot measure yet', href: '/honesty/' },
         // The readable ledger page (renders /api/corrections), not raw JSON.
         { name: 'Corrections', href: '/corrections/' },
         { name: 'How far this reaches', href: '/reach/' },
@@ -81,11 +81,11 @@ export function Footer() {
     // alone, so a crawler that follows links never met them and an answer engine had no path in.
     // Each href answered 200 on 2026-09-28. They are Pages Functions or static files, hence native.
     {
-      title: 'Records',
+      title: 'Technical records',
       links: [
         { name: 'MCP servers — declared vs observed', href: '/mcp-servers/', native: true },
         { name: 'A2A agent cards — listed vs served', href: '/agent-cards/', native: true },
-        { name: 'x402 doors and hosts', href: '/x402/', native: true },
+        { name: 'Payment-service records (x402)', href: '/x402/', native: true },
         { name: 'Tokenised-asset deployments', href: '/stablecoins/deployments/', native: true },
         { name: 'Daily measurement notes', href: '/notes/daily/', native: true },
         { name: 'GSPC axes, one page each', href: '/axes', native: true },
@@ -162,7 +162,7 @@ export function Footer() {
             <span className="text-xl font-bold">CSOAI</span>
           </Link>
           <p className="text-muted-foreground text-sm max-w-md">
-            Independent measurement body. Signed attestation and transparent measurement — never certification.
+            We measure AI behaviour and publish records you can check. Measurement is not certification.
           </p>
           <div className="-mx-2.5 flex gap-1 sm:ml-auto">
             {socialLinks.map((social) => (
