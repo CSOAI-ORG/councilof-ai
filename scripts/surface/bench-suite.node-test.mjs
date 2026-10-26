@@ -26,13 +26,15 @@
  *
  * RUN
  * ───
- *   node scripts/surface/test-bench-suite.mjs
+ *   node --test scripts/surface/bench-suite.node-test.mjs
  */
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
+import test from "node:test";
+import assert from "node:assert/strict";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 
@@ -154,15 +156,12 @@ async function main() {
     checked++;
   }
 
-  if (failures.length) {
-    console.log(`✗ bench-suite parity: ${failures.length} failure(s) across ${checked} banks`);
-    for (const f of failures) console.log(`    ${f}`);
-    console.log("FAIL");
-    process.exit(1);
-  }
+  assert.equal(failures.length, 0, `bench-suite parity failed on ${failures.length} point(s):\n  ${failures.join("\n  ")}`);
+  assert.ok(checked >= 14, `expected at least 14 published banks, checked ${checked}`);
   console.log(`✓ bench-suite parity: ${checked} banks — menus, refusals and hashes agree with the mill`);
-  console.log("PASS");
 }
+
+test("the generated bench suite agrees with the mill on every published bank", main);
 
 main().catch((e) => {
   console.error(`test-bench-suite: ${e.message}`);
