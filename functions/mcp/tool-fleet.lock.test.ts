@@ -35,11 +35,27 @@ const LOCK_FREE: string[] = LOCK.free;
 const LOCK_PAID: string[] = LOCK.paid;
 const LOCK_ALL: string[] = [...LOCK_FREE, ...LOCK_PAID];
 
-const WORDS = [
+/**
+ * The number word for a tool count, so a descriptor's sentence can be checked without a
+ * hand-typed list that runs out. It was a 21-entry array; the fleet grew past it and the
+ * array had to grow with it. This is the same words, without the ceiling.
+ */
+const ONES = [
   "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
   "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen",
-  "nineteen", "twenty",
+  "nineteen",
 ];
+const TENS = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+
+function word(n: number): string {
+  if (n < 20) return ONES[n];
+  if (n < 100) {
+    const t = TENS[Math.floor(n / 10)];
+    const o = n % 10;
+    return o ? `${t}-${ONES[o]}` : t;
+  }
+  throw new Error(`no word for ${n}`);
+}
 
 type ToolsList = { result?: { tools?: Named[] }; error?: { code: number; message: string } };
 
@@ -119,7 +135,7 @@ describe("K-1 fleet-size lock: one list of names, every surface agrees", () => {
     expect(WELLKNOWN_SERVER.description).toContain(`${all} MCP tools: ${free} free + ${paid} x402`);
     expect(REGISTRY_DESCRIPTOR.description).toContain(`${all} HTTP tools (${free} free, ${paid} x402)`);
     expect(NPM_PACKAGE.description.toLowerCase()).toContain(
-      `${WORDS[all]} tools: ${WORDS[free]} free readers and ${WORDS[paid]} x402-metered`,
+      `${word(all)} tools: ${word(free)} free readers and ${word(paid)} x402-metered`,
     );
     const index = AGENTS_INDEX as { count: number; note: string; agents: Array<{ id: string; paid: boolean }> };
     expect(index.count).toBe(all);
