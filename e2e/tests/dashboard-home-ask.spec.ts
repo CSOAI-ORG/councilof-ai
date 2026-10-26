@@ -1,6 +1,7 @@
 import { test, expect, type Page, type Request } from "@playwright/test";
 import { writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
+import { qualifyLocalFirstAskCompletion } from "../../scripts/review/first-ask-completion.mjs";
 
 /**
  * The first question typed on the Council OS start screen gets an answer (tools audit, 6 Oct 2026).
@@ -67,11 +68,26 @@ function aguiStream(): string {
   return events.map((e) => `event: ${e.type}\ndata: ${JSON.stringify(e)}\n\n`).join("");
 }
 
-async function answerLocally(page: Page) {
-  if (process.env.BASE_URL) return;
-  await page.route("**/api/agui/run", (route) =>
-    route.fulfill({ status: 200, headers: { "content-type": "text/event-stream", "cache-control": "no-store" }, body: aguiStream() }),
-  );
+async function answerLocally(page: Page, origin: string) {
+  if (process.env.BASE_URL) return null;
+  const fixture = { count: 0, request: null as Request | null, url: "", requestBody: null as string | null,
+    body: aguiStream(), status: 200, contentType: "text/event-stream", dispose: () => {} };
+  // Freeze THIS attempt's exact bytes, then send them through the existing loopback HTTP server.
+  // APIRequestContext configures the fixture outside the page; the page still makes one real POST.
+  const configured = await page.request.put(origin + "/__e2e/first-ask-fixture", {
+    headers: { "content-type": fixture.contentType, "x-csoai-e2e-fixture": "first-ask" },
+    data: fixture.body,
+  });
+  expect(configured.status(), "One-use local HTTP fixture configured").toBe(204);
+  await configured.dispose();
+  const capture = (request: Request) => {
+    if (request.method() !== "POST" || request.url() !== origin + "/api/agui/run") return;
+    fixture.count += 1; fixture.request = request; fixture.url = request.url();
+    fixture.requestBody = request.postData();
+  };
+  page.on("request", capture);
+  fixture.dispose = () => { page.off("request", capture); };
+  return fixture;
 }
 
 const VIEWPORTS = [
@@ -83,11 +99,231 @@ test.beforeEach(async ({ context }) => {
   await context.route(/hf\.space/, (r) => r.abort());
 });
 
+/** Passive test diagnostics only: never clone, consume, cancel, or replace native transport. */
+async function observeRunTransport(page: Page) {
+  await page.addInitScript(() => {
+    type Run = {
+      nativeFetchId: number; signalId: number | null; method: string; url: string;
+      requestBody: string | null; requestBodyTruncated: boolean;
+      signalAbortedAtFetch: boolean | null; signalReasonAtFetch: unknown;
+      signalAbortedAtEOF: boolean | null; signalReasonAtEOF: unknown;
+      nativeReadCalls: number; nativeBytesObserved: number; nativeEOFObserved: boolean;
+      nativeBytesTruncated: boolean; nativeDigestState: string; nativeSHA256: string | null;
+    };
+    const diagnostics = {
+      schema: "csoai.agui-native-transport-diagnostic/0.2", eventLimit: 50, byteLimit: 512 * 1024,
+      eventsTruncated: false, faultsTruncated: false, events: [] as Record<string, unknown>[],
+      requests: [] as Run[], faults: [] as unknown[],
+    };
+    (window as Window & { __aguiNativeTransport?: unknown }).__aguiNativeTransport = diagnostics;
+    const reason = (value: unknown): unknown => {
+      try {
+        if (value instanceof DOMException || value instanceof Error)
+          return { name: value.name.slice(0, 80), message: value.message.slice(0, 512) };
+        if (value === null || value === undefined) return null;
+        if (typeof value === "string") return { type: "string", value: value.slice(0, 512) };
+        if (typeof value === "number" || typeof value === "boolean") return value;
+        return { type: typeof value };
+      } catch { return { type: "unreadable" }; }
+    };
+    const observe = (read: () => void) => {
+      try { read(); } catch (error) {
+        if (diagnostics.faults.length < 10) diagnostics.faults.push(reason(error));
+        else diagnostics.faultsTruncated = true;
+      }
+    };
+    const record = (run: Run, event: string, detail: Record<string, unknown> = {}) => observe(() => {
+      if (diagnostics.events.length >= diagnostics.eventLimit) {
+        diagnostics.eventsTruncated = true; return;
+      }
+      diagnostics.events.push({
+        nativeFetchId: run.nativeFetchId, signalId: run.signalId, event,
+        observedAt: new Date().toISOString(), monotonicMs: performance.now(), ...detail,
+      });
+    });
+    const signalIds = new WeakMap<AbortSignal, number>();
+    const signalRuns = new WeakMap<AbortSignal, Run[]>();
+    const controllerIds = new WeakMap<AbortController, number>();
+    const bodies = new WeakMap<object, Run>();
+    const readers = new WeakMap<object, Run>();
+    const signals = new WeakMap<Run, AbortSignal | null>();
+    const chunks = new WeakMap<Run, Uint8Array[]>();
+    let nextSignalId = 0, nextControllerId = 0;
+    const nativeFetch = window.fetch;
+    const nativeAbort = AbortController.prototype.abort;
+    const nativeGetReader = ReadableStream.prototype.getReader;
+    const nativeRead = ReadableStreamDefaultReader.prototype.read;
+    const nativeReaderCancel = ReadableStreamDefaultReader.prototype.cancel;
+    const nativeBodyCancel = ReadableStream.prototype.cancel;
+
+    observe(() => {
+      window.fetch = function (this: Window, ...args: Parameters<typeof fetch>) {
+        const promise = Reflect.apply(nativeFetch, this, args) as ReturnType<typeof fetch>;
+        observe(() => {
+          const [input, init] = args;
+          const request = input instanceof Request ? input : null;
+          const url = new URL(request ? request.url : String(input), location.href);
+          if ((init?.method ?? request?.method ?? "GET").toUpperCase() !== "POST" ||
+              url.origin !== location.origin || url.pathname !== "/api/agui/run") return;
+          if (diagnostics.requests.length >= diagnostics.eventLimit) {
+            diagnostics.eventsTruncated = true; return;
+          }
+          const signal = init && "signal" in init ? init.signal ?? null : request?.signal ?? null;
+          if (signal && !signalIds.has(signal)) signalIds.set(signal, ++nextSignalId);
+          const run: Run = {
+            nativeFetchId: diagnostics.requests.length + 1,
+            signalId: signal ? signalIds.get(signal)! : null, method: "POST", url: url.href,
+            requestBody: typeof init?.body === "string" ? init.body.slice(0, 4096) : null,
+            requestBodyTruncated: typeof init?.body === "string" && init.body.length > 4096,
+            signalAbortedAtFetch: signal?.aborted ?? null,
+            signalReasonAtFetch: signal ? reason(signal.reason) : null,
+            signalAbortedAtEOF: null, signalReasonAtEOF: null,
+            nativeReadCalls: 0, nativeBytesObserved: 0, nativeEOFObserved: false,
+            nativeBytesTruncated: false, nativeDigestState: "pending", nativeSHA256: null,
+          };
+          signals.set(run, signal); chunks.set(run, []);
+          diagnostics.requests.push(run);
+          record(run, "fetch", {
+            aborted: signal?.aborted ?? null, reason: run.signalReasonAtFetch,
+            stack: new Error("AGUI native fetch").stack?.slice(0, 8192) ?? null,
+            earlierAbortCallerUnavailable: signal?.aborted ?? false,
+          });
+          if (signal) {
+            signalRuns.set(signal, [...(signalRuns.get(signal) ?? []), run]);
+            signal.addEventListener("abort", () => observe(() => record(run, "signal.abort", {
+              aborted: signal.aborted, reason: reason(signal.reason),
+              stack: new Error("AGUI signal abort event").stack?.slice(0, 8192) ?? null,
+            })), { once: true });
+          }
+          void promise.then(
+            (response) => observe(() => {
+              if (response.body) bodies.set(response.body, run);
+              record(run, "fetch.resolved", { status: response.status, bodyPresent: response.body !== null,
+                 url: response.url, redirected: response.redirected, responseType: response.type,
+                 contentType: response.headers.get("content-type") });
+            }),
+            (error: unknown) => record(run, "fetch.rejected", { error: reason(error) }),
+          );
+        });
+        return promise;
+      };
+      AbortController.prototype.abort = function (this: AbortController, ...args: Parameters<typeof nativeAbort>) {
+        observe(() => {
+          const runs = signalRuns.get(this.signal);
+          if (!runs) return;
+          if (!controllerIds.has(this)) controllerIds.set(this, ++nextControllerId);
+          for (const run of runs) record(run, "controller.abort.call", {
+            controllerId: controllerIds.get(this), abortedBeforeCall: this.signal.aborted,
+            requestedReason: reason(args[0]), argumentCount: args.length,
+            stack: new Error("AGUI controller abort caller").stack?.slice(0, 8192) ?? null,
+          });
+        });
+        return Reflect.apply(nativeAbort, this, args);
+      };
+      Object.defineProperty(ReadableStream.prototype, "getReader", {
+        ...Object.getOwnPropertyDescriptor(ReadableStream.prototype, "getReader"),
+        value: function (this: ReadableStream<unknown>, ...args: unknown[]) {
+          const reader = Reflect.apply(nativeGetReader, this, args) as object;
+          observe(() => {
+            const run = bodies.get(this);
+            if (run) { readers.set(reader, run); record(run, "body.getReader"); }
+          });
+          return reader;
+        },
+      });
+      Object.defineProperty(ReadableStreamDefaultReader.prototype, "read", {
+        ...Object.getOwnPropertyDescriptor(ReadableStreamDefaultReader.prototype, "read"),
+        value: function (this: ReadableStreamDefaultReader<unknown>, ...args: unknown[]) {
+          const promise = Reflect.apply(nativeRead, this, args) as Promise<ReadableStreamReadResult<unknown>>;
+          observe(() => {
+            const run = readers.get(this);
+            if (!run) return;
+            run.nativeReadCalls += 1;
+            void promise.then(
+              (chunk) => observe(() => {
+                if (chunk.done === true) {
+                  const signal = signals.get(run);
+                  const observedAt = new Date().toISOString();
+                  run.nativeEOFObserved = true;
+                  run.signalAbortedAtEOF = signal?.aborted ?? null;
+                  run.signalReasonAtEOF = signal ? reason(signal.reason) : null;
+                  record(run, "body.nativeEOF", {
+                    observedAt, aborted: run.signalAbortedAtEOF, reason: run.signalReasonAtEOF,
+                  });
+                  // A single Node receipt sequence orders this observation and requestfailed.
+                  // Never await the binding or the hash; return the original native read promise.
+                  const notify = (window as Window & {
+                    __csoaiObserveRunDone?: (value: Record<string, unknown>) => Promise<unknown>;
+                  }).__csoaiObserveRunDone;
+                  if (!notify) throw new Error("Native read-done observer binding is missing.");
+                  void notify({ nativeFetchId: run.nativeFetchId, signalId: run.signalId, url: run.url,
+                    requestBody: run.requestBody, observedAt, aborted: run.signalAbortedAtEOF,
+                    reason: run.signalReasonAtEOF }).catch((error: unknown) => observe(() => { throw error; }));
+                  if (run.nativeBytesTruncated) { run.nativeDigestState = "too_large"; return; }
+                  const joined = new Uint8Array(run.nativeBytesObserved);
+                  let offset = 0;
+                  for (const value of chunks.get(run) ?? []) { joined.set(value, offset); offset += value.length; }
+                  chunks.delete(run);
+                  void crypto.subtle.digest("SHA-256", joined).then(
+                    (digest) => observe(() => {
+                      run.nativeSHA256 = Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+                      run.nativeDigestState = "complete";
+                      record(run, "body.nativeDigest", { bytes: joined.length, sha256: run.nativeSHA256 });
+                    }),
+                    (error: unknown) => observe(() => {
+                      run.nativeDigestState = "unavailable"; record(run, "body.nativeDigestRejected", { error: reason(error) });
+                    }),
+                  );
+                } else {
+                  const view = chunk.value;
+                  const bytes = ArrayBuffer.isView(view) ? view.byteLength : 0;
+                  run.nativeBytesObserved += bytes; record(run, "body.nativeChunk", { bytes });
+                  if (!ArrayBuffer.isView(view) || run.nativeBytesObserved > diagnostics.byteLimit) {
+                    run.nativeBytesTruncated = true; chunks.delete(run);
+                  } else if (!run.nativeBytesTruncated) {
+                    // Copy only bytes already delivered to the application's original reader.
+                    chunks.get(run)?.push(new Uint8Array(view.buffer, view.byteOffset, view.byteLength).slice());
+                  }
+                }
+              }),
+              (error: unknown) => record(run, "body.nativeReadRejected", { error: reason(error) }),
+            );
+          });
+          return promise;
+        },
+      });
+      Object.defineProperty(ReadableStreamDefaultReader.prototype, "cancel", {
+        ...Object.getOwnPropertyDescriptor(ReadableStreamDefaultReader.prototype, "cancel"),
+        value: function (this: ReadableStreamDefaultReader<unknown>, ...args: unknown[]) {
+          observe(() => {
+            const run = readers.get(this);
+            if (run) record(run, "reader.cancel.call", { reason: reason(args[0]),
+              stack: new Error("AGUI reader cancel caller").stack?.slice(0, 8192) ?? null });
+          });
+          return Reflect.apply(nativeReaderCancel, this, args);
+        },
+      });
+      Object.defineProperty(ReadableStream.prototype, "cancel", {
+        ...Object.getOwnPropertyDescriptor(ReadableStream.prototype, "cancel"),
+        value: function (this: ReadableStream<unknown>, ...args: unknown[]) {
+          observe(() => {
+            const run = bodies.get(this);
+            if (run) record(run, "body.cancel.call", { reason: reason(args[0]),
+              stack: new Error("AGUI body cancel caller").stack?.slice(0, 8192) ?? null });
+          });
+          return Reflect.apply(nativeBodyCancel, this, args);
+        },
+      });
+    });
+  });
+}
+
 for (const vp of VIEWPORTS) {
-  test(`the first question typed on the start screen gets an answer at ${vp.name}px`, async ({ page }, testInfo) => {
+  test(`the first question typed on the start screen gets an answer at ${vp.name}px`, async ({ page, baseURL }, testInfo) => {
     test.skip(testInfo.project.name !== vp.project, `${vp.name}px runs in the ${vp.project} project`);
     await page.setViewportSize(vp.size);
-    await answerLocally(page);
+    const origin = new URL(baseURL || "http://127.0.0.1:4180").origin;
+    const localFixture = await answerLocally(page, origin);
     const aborted: string[] = [];
     page.on("requestfailed", (r) => {
       if (r.url().includes("/api/agui/run")) aborted.push(r.failure()?.errorText ?? "failed");
@@ -96,12 +332,17 @@ for (const vp of VIEWPORTS) {
 
     const postRequests: Request[] = [];
     const completedPostRequests: Request[] = [];
+    const failedPostRequests: Request[] = [];
+    const eofReceipts: Record<string, unknown>[] = [];
+    let eofReceiptsTruncated = false;
+    let receiptSequence = 0;
+    let completionQualification: unknown = null;
     const requestIds = new Map<Request, number>();
     const events: Record<string, unknown>[] = [];
     const eventLimit = 50;
     let eventsTruncated = false;
     const isRunPost = (r: Request) =>
-      r.method() === "POST" && new URL(r.url()).pathname === "/api/agui/run";
+      r.method() === "POST" && new URL(r.url()).origin === origin && new URL(r.url()).pathname === "/api/agui/run";
     const record = (event: string, r: Request) => {
       if (!r.url().includes("/api/agui/run")) return;
       if (!requestIds.has(r)) requestIds.set(r, requestIds.size + 1);
@@ -110,19 +351,22 @@ for (const vp of VIEWPORTS) {
         return;
       }
       let frameUrl: string | null = null;
+      let mainFrame = false;
       try {
         frameUrl = r.frame().url();
+        mainFrame = r.frame() === page.mainFrame();
       } catch {
         // Service-worker requests may not expose a frame.
       }
       const body = r.postData();
       events.push({
         requestId: requestIds.get(r),
+        receiptSequence: ++receiptSequence,
         event,
         observedAt: new Date().toISOString(),
         method: r.method(),
         url: r.url(),
-        frameUrl,
+        frameUrl, mainFrame,
         body: body?.slice(0, 4096) ?? null,
         bodyTruncated: body !== null && body.length > 4096,
         failure: event === "requestfailed" ? r.failure()?.errorText ?? "failed" : null,
@@ -136,17 +380,28 @@ for (const vp of VIEWPORTS) {
       record("requestfinished", r);
       if (isRunPost(r)) completedPostRequests.push(r);
     };
-    const onFailed = (r: Request) => record("requestfailed", r);
+    const onFailed = (r: Request) => {
+      record("requestfailed", r);
+      if (isRunPost(r)) failedPostRequests.push(r);
+    };
     page.on("request", onRequest);
     page.on("requestfinished", onFinished);
     page.on("requestfailed", onFailed);
 
     try {
+      await page.exposeBinding("__csoaiObserveRunDone", (source, value: Record<string, unknown>) => {
+        if (eofReceipts.length >= eventLimit) { eofReceiptsTruncated = true; return; }
+        eofReceipts.push({ ...value, receiptSequence: ++receiptSequence,
+          mainFrame: source.frame === page.mainFrame(), samePage: source.page === page });
+      });
+      await observeRunTransport(page);
       await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
       await page.locator('[data-testid="dashboard-shell"]').waitFor({ state: "visible", timeout: 60_000 });
       // The original inline first-question regression remains covered after intentionally
       // closing the new default view of the existing Ask conversation.
       const entryAsk = page.getByTestId("ask-pane");
+      // 12 Oct 2026: on mobile the entry route keeps Ask closed; the launcher opens it on tap.
+      if (vp.project === "mobile") await openFromLauncher(page);
       await expect(entryAsk).toBeVisible({ timeout: 30_000 });
       await entryAsk.getByRole("button", { name: "Close Ask", exact: true }).click();
       await expect(entryAsk).toBeHidden();
@@ -157,19 +412,57 @@ for (const vp of VIEWPORTS) {
   
       const answered = page.getByTestId("talk-tool-card").or(page.getByTestId("talk-answer")).first();
       await expect(answered).toBeVisible({ timeout: 10_000 });
-      expect(aborted, "POST /api/agui/run was not aborted").toEqual([]);
+      await expect(page.getByTestId("gspc-workspace-home").getByTestId("talk-live")).toHaveText(/^Answer ready\./);
       // The answer stays on the start screen; the question did not swap the canvas to the chat log.
       await expect(page.getByTestId("gspc-workspace-home")).toBeVisible();
       await expect(page.getByRole("log", { name: "Council of AI conversation" })).toHaveCount(0);
       // One server question, one card: no census card about other hosts beside it.
       await expect(page.getByTestId("talk-tool-card")).toHaveCount(1);
       await expect(page.getByTestId("talk-tool-card").getByTestId("talk-state")).toHaveText(/NOT.MEASURED/);
-      // A visible partial card is not complete-run acceptance.
-      await expect.poll(() => completedPostRequests.length, "Question POST completed").toBe(1);
-      expect(postRequests, "Exactly one question POST").toHaveLength(1);
-      expect(completedPostRequests[0]).toBe(postRequests[0]);
-      expect(aborted, "POST /api/agui/run was not aborted").toEqual([]);
+      // A visible partial card or done:true alone is not complete-run acceptance.
+      expect(postRequests, "Exactly one same-origin question POST").toHaveLength(1);
+      if (localFixture) {
+        await expect(page.getByTestId("talk-answer")).toBeVisible();
+        await expect(page.getByTestId("talk-answer")).toHaveText("We have no published checks for https://github.com/mcp yet.");
+        // The full tool summary remains in the mounted details DOM; it need not be expanded.
+        await expect(page.getByTestId("talk-tool-card")).toContainText(RESULT.summary);
+        await expect.poll(() => completedPostRequests.length + failedPostRequests.length,
+          "Question POST has one browser terminal observation").toBe(1);
+        await expect.poll(() => eofReceipts.length, "Native read-done receipt arrived").toBe(1);
+        await expect.poll(() => page.evaluate(() => {
+          const native = (window as Window & { __aguiNativeTransport?: { requests?: { nativeDigestState?: string }[] } }).__aguiNativeTransport;
+          return native?.requests?.[0]?.nativeDigestState;
+        }), "Actual consumed-byte digest completed").toBe("complete");
+        expect(localFixture.request, "The served fixture is the exact question Request").toBe(postRequests[0]);
+        const request = postRequests[0], requestId = requestIds.get(request);
+        const nativeTransport = await page.evaluate(() =>
+          (window as Window & { __aguiNativeTransport?: unknown }).__aguiNativeTransport ?? null);
+        completionQualification = qualifyLocalFirstAskCompletion({
+          localFixture: true, orderingBasis: "one-node-receipt-sequence", origin, question: QUESTION,
+          fixture: { count: localFixture.count, requestId: requestIds.get(localFixture.request!),
+            url: localFixture.url, requestBody: localFixture.requestBody, body: localFixture.body,
+            status: localFixture.status, contentType: localFixture.contentType },
+          request: { count: postRequests.length, id: requestId, url: request.url(), method: request.method(),
+            frameUrl: request.frame().url(), mainFrame: request.frame() === page.mainFrame(),
+            body: request.postData(), bodyTruncated: false },
+          networkEvents: events, eventsTruncated,
+          nativeTransport, eofReceipts, eofReceiptsTruncated,
+          expectedReadyText: "Answer ready. " + RESULT.tool + ": " + RESULT.label,
+          readyText: await page.getByTestId("gspc-workspace-home").getByTestId("talk-live").textContent(),
+          answerFaceVisible: await page.getByTestId("talk-answer").isVisible(),
+          fullAnswerRetained: (await page.getByTestId("talk-tool-card").textContent() ?? "")
+            .replace(/\s+/g, " ").trim().includes(RESULT.summary.replace(/\s+/g, " ").trim()),
+        });
+        expect(completionQualification, "Complete finite local fixture; raw browser verdict remains separate")
+          .toMatchObject({ accepted: true });
+      } else {
+        // BASE_URL uses the real endpoint: no local-fixture browser-error exception.
+        await expect.poll(() => completedPostRequests.length, "Question POST completed").toBe(1);
+        expect(completedPostRequests[0]).toBe(postRequests[0]);
+        expect(aborted, "POST /api/agui/run was not aborted").toEqual([]);
+      }
     } finally {
+      localFixture?.dispose();
       page.off("request", onRequest);
       page.off("requestfinished", onFinished);
       page.off("requestfailed", onFailed);
@@ -180,11 +473,16 @@ for (const vp of VIEWPORTS) {
           retry: testInfo.retry,
           viewport: vp.size,
           localFixture: !process.env.BASE_URL,
+          completionQualification, eofReceipts, eofReceiptsTruncated,
+          rawBrowserFailures: aborted,
           postRequests: postRequests.length,
           completedPostRequests: completedPostRequests.length,
           eventLimit,
           eventsTruncated,
           events,
+          nativeTransport: await page.evaluate(() =>
+            (window as Window & { __aguiNativeTransport?: unknown }).__aguiNativeTransport ?? null,
+          ).catch((error: unknown) => ({ unavailable: true, error: String(error).slice(0, 1024) })),
         }, null, 2));
       await testInfo.attach("agui-request-lifecycle", {
         path: lifecyclePath,
@@ -206,11 +504,30 @@ async function navigateInApp(page: Page, href: string) {
   await expect(page).toHaveURL(new RegExp(href.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "$"));
 }
 
+/**
+ * 12 Oct 2026 (Nick, item 1): on mobile an entry route shows the page first, Ask stays closed and
+ * nothing is POSTed; the floating launcher opens the same pane on tap.
+ */
+async function openFromLauncher(page: Page) {
+  const fab = page.getByRole("button", { name: "Open Council of AI chat", exact: true });
+  await expect(fab).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByTestId("ask-pane")).toBeHidden();
+  await fab.click();
+  await expect(fab).toBeHidden();
+}
+
+/** Desktop entry routes open Ask by themselves; mobile ones need the launcher tap first. */
+async function enterAsk(page: Page, mobile: boolean) {
+  if (mobile) await openFromLauncher(page);
+  return readyAsk(page);
+}
+
 async function readyAsk(page: Page) {
   const pane = page.getByTestId("ask-pane");
   await expect(pane).toBeVisible({ timeout: 30_000 });
   await expect(pane.getByLabel("Your question", { exact: true })).toBeFocused({ timeout: 10_000 });
-  await expect(pane.getByTestId("ask-introduction")).toContainText("Hi, I’m MEOK. How can I help?");
+  await expect(pane.getByTestId("ask-introduction")).toContainText("Hi, this is Council of AI. How can I help?");
+  await expect(pane.getByTestId("ask-introduction")).not.toContainText("MEOK");
   await expect(pane.getByTestId("ask-introduction")).toContainText("saved customer cases are not connected here");
   await expect(pane.getByTestId("ask-rule-based")).toContainText("never from an AI model");
   await expect(pane.getByRole("switch", { name: "Let it move the page for me" })).toHaveAttribute("aria-checked", "false");
@@ -252,21 +569,28 @@ test("root, Council OS home and plugin tools open the existing Ask only after hy
   const posts: Request[] = [];
   const localOrigin = new URL(baseURL || "http://127.0.0.1:4180").origin;
   page.on("request", request => { if (request.method() === "POST") posts.push(request); });
+  const mobile = info.project.name === "mobile";
   await page.goto("/", { waitUntil: "domcontentloaded" });
-  let pane = await readyAsk(page);
+  if (mobile) {
+    // Hero first: no Ask overlay on a cold / at 375px, only the launcher.
+    await expect(page.getByRole("heading", { level: 1 }).first()).toBeInViewport({ timeout: 30_000 });
+    await expect(page.getByRole("button", { name: "Open Council of AI chat", exact: true })).toBeVisible();
+    await expect(page.getByTestId("ask-pane")).toHaveCount(0);
+  }
+  let pane = await enterAsk(page, mobile);
   await pane.getByLabel("Your question", { exact: true }).press("Escape");
   await expect(pane).toBeHidden();
   // A rerender/close must not reopen or send the previous question. Navigation opens once.
   await page.evaluate(() => window.dispatchEvent(new Event("resize")));
   await expect(pane).toBeHidden();
   await navigateInApp(page, "/dashboard?tab=home");
-  pane = await readyAsk(page);
+  pane = await enterAsk(page, mobile);
   await pane.getByRole("button", { name: "Close Ask", exact: true }).click();
   await expect(pane).toBeHidden();
   await navigateInApp(page, "/dashboard?tab=board");
   await expect(pane).toBeHidden();
   await navigateInApp(page, "/tools");
-  pane = await readyAsk(page);
+  pane = await enterAsk(page, mobile);
   await expect(page.getByTestId("tools-mcp")).toBeVisible();
   await expect(pane.getByTestId("talk-transcript")).toHaveCount(0);
   const discovery = posts.filter(request => isMcpDiscovery(request, localOrigin));
@@ -441,7 +765,7 @@ test("existing Ask renders one genuine free public AGUI answer and retains its c
   try {
     await page.goto("/dashboard?tab=home", { waitUntil: "domcontentloaded" });
     expect(new URL(page.url()).origin, "This case must actually exercise cross-origin browser CORS").not.toBe(new URL(PUBLIC_ASK).origin);
-    const pane = await readyAsk(page);
+    const pane = await enterAsk(page, info.project.name === "mobile");
     expect(requests).toHaveLength(0);
     const responsePending = page.waitForResponse(response => response.url() === PUBLIC_ASK && response.request().method() === "POST");
     await pane.getByLabel("Your question", { exact: true }).fill(BOARD_QUESTION);
