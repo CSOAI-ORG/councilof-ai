@@ -100,6 +100,34 @@ def load_eval_log(path: str) -> Dict[str, Any]:
     Inspect writes a zip: header.json (status, eval, results), samples/*.json (per-sample scores). Nothing is
     reinterpreted here — scores are passed through as the scorer wrote them.
     """
+    # Upstream guidance is explicit: use the Log File API rather than reading the archive by hand
+    # (inspect.aisi.org.uk/eval-logs.html). The zip reader stays as a dependency-free fallback; the API is preferred
+    # whenever inspect_ai is importable.
+    try:
+        from inspect_ai.log import read_eval_log  # type: ignore
+
+        log = read_eval_log(path)
+        results = getattr(log, "results", None)
+        scores = []
+        for sc in (getattr(results, "scores", None) or []):
+            acc = (getattr(sc, "metrics", None) or {}).get("accuracy")
+            scores.append({"name": getattr(sc, "name", None),
+                           "metrics": {"accuracy": {"value": getattr(acc, "value", None)}}})
+        samples = []
+        for smp in (getattr(log, "samples", None) or []):
+            samples.append({"id": getattr(smp, "id", None),
+                            "scores": {k: {"value": getattr(v, "value", None)}
+                                       for k, v in (getattr(smp, "scores", None) or {}).items()}})
+        ev = getattr(log, "eval", None)
+        return {
+            "version": getattr(log, "version", None),
+            "status": getattr(log, "status", None),
+            "eval": {"task": getattr(ev, "task", None), "model": getattr(ev, "model", None)},
+            "results": {"total_samples": getattr(results, "total_samples", None), "scores": scores},
+            "samples": samples,
+        }
+    except Exception:
+        pass
     import zipfile
     with zipfile.ZipFile(path) as z:
         header = json.loads(z.read("header.json"))

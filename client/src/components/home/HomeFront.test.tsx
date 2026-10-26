@@ -189,6 +189,17 @@ describe("LiveBoardGlance", () => {
     expect(separationRead({ totals: { comparison_axes: 2, ties: 1 } })).toBeNull();
   });
 
+  it("deep-links every tile to its own axis, carrying the axis with the reader", () => {
+    const html = render(<LiveBoardGlance data={boardWithAxes} models={models} />);
+    // Grafana: linked views must preserve context — a tile that leads nowhere is a hole.
+    for (const axis of ["mock-a", "mock-b", "mock-c", "mock-d"]) {
+      expect(html).toContain(`href="/gspc/${axis}/"`);
+      expect(html).toContain(`data-axis-link="${axis}"`);
+    }
+    // The owner-held axis is not on the page, so it gets no link either.
+    expect(html).not.toContain("regulator-transparency");
+  });
+
   it("prints the count line, the separation line and the model count off their sources", () => {
     const html = render(<LiveBoardGlance data={boardWithAxes} models={models} />);
     expect(html).toContain("4 axes · 3 measured (mock)");
