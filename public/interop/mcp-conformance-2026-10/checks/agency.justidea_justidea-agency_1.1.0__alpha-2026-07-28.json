@@ -1,0 +1,2243 @@
+{
+ "checks_sha256": "16a1461deb11de4f35df5f93ef707c2f0ff3cbd0c7a791489d87d1c03a4b53f4",
+ "deviation_checks": [
+  "CompletionComplete",
+  "DNSRebindingRejected",
+  "LocalhostHostAccepted",
+  "PromptsGetEmbeddedResource",
+  "PromptsGetSimple",
+  "PromptsGetWithArgs",
+  "PromptsGetWithImage",
+  "WireSchemaValid",
+  "ResourcesReadBinary",
+  "ResourcesReadText",
+  "ResourcesTemplateRead",
+  "ToolsCallAudio",
+  "ToolsCallEmbeddedResource",
+  "ToolsCallError",
+  "ToolsCallImage",
+  "ToolsCallMixedContent",
+  "ToolsCallSimpleText",
+  "ToolsCallWithProgress"
+ ],
+ "generated_at": "2026-10-26T02:12:31Z",
+ "instrument": "alpha-2026-07-28",
+ "instrument_channel": "alpha",
+ "not_a_grade": true,
+ "note": "",
+ "scenarios": [
+  {
+   "checks": [
+    {
+     "check": "CompletionComplete",
+     "description": "Server responds to completion requests",
+     "errorMessage": "Failed: Method not found: completion/complete",
+     "id": "completion-complete",
+     "specReferences": [
+      {
+       "id": "MCP-Completion",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/completion"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "26b15abd3c3a2066e92673ada302247f06ce220d698824cb011588f0963dcc79",
+   "scenario": "completion-complete",
+   "scenario_run_id": "server-completion-complete-2026-10-26T02-13-09-551Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "DNSRebindingRejected",
+     "description": "Server rejects requests with non-localhost Host/Origin headers",
+     "details": {
+      "reason": "non-localhost-url",
+      "serverUrl": "https://justidea.agency/mcp"
+     },
+     "errorMessage": "DNS rebinding tests require a localhost server URL (localhost, 127.0.0.1, or [::1])",
+     "id": "localhost-host-rebinding-rejected",
+     "specReferences": [
+      {
+       "id": "MCP-DNS-Rebinding-Protection",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/security_best_practices#local-mcp-server-compromise"
+      },
+      {
+       "id": "MCP-Transport-Security",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/transports#security-warning"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "LocalhostHostAccepted",
+     "description": "Server accepts requests with valid localhost Host/Origin headers",
+     "details": {
+      "reason": "non-localhost-url",
+      "serverUrl": "https://justidea.agency/mcp"
+     },
+     "errorMessage": "DNS rebinding tests require a localhost server URL (localhost, 127.0.0.1, or [::1])",
+     "id": "localhost-host-valid-accepted",
+     "specReferences": [
+      {
+       "id": "MCP-DNS-Rebinding-Protection",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/security_best_practices#local-mcp-server-compromise"
+      },
+      {
+       "id": "MCP-Transport-Security",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/transports#security-warning"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "70a01269b6464a13a4da51e7a2c28d2614570d5796fb7c4872c7f35f20f33d3c",
+   "scenario": "dns-rebinding-protection",
+   "scenario_run_id": "server-dns-rebinding-protection-2026-10-26T02-13-10-424Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetEmbeddedResource",
+     "description": "Get prompt with embedded resource",
+     "errorMessage": "Failed: Method not found: prompts/get",
+     "id": "prompts-get-embedded-resource",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Embedded-Resources",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#embedded-resources"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "a42752f7fa0621c2e12f9651dbae2577e56dab85949033c4bd30019cd427c69a",
+   "scenario": "prompts-get-embedded-resource",
+   "scenario_run_id": "server-prompts-get-embedded-resource-2026-10-26T02-13-10-374Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetSimple",
+     "description": "Get simple prompt successfully",
+     "errorMessage": "Failed: Method not found: prompts/get",
+     "id": "prompts-get-simple",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Get",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#getting-prompts"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "1ed1e38bf125ac00f055e7589f69001a99ad4d0c2d2e0e1c2004c35c21fa7b95",
+   "scenario": "prompts-get-simple",
+   "scenario_run_id": "server-prompts-get-simple-2026-10-26T02-13-10-319Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetWithArgs",
+     "description": "Get parameterized prompt with argument substitution",
+     "errorMessage": "Failed: Method not found: prompts/get",
+     "id": "prompts-get-with-args",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Get",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#getting-prompts"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "8a3bc4e87854df7039f93cad1fb205fd7b688dec7976d66526b9556c6044bbae",
+   "scenario": "prompts-get-with-args",
+   "scenario_run_id": "server-prompts-get-with-args-2026-10-26T02-13-10-350Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetWithImage",
+     "description": "Get prompt with image content",
+     "errorMessage": "Failed: Method not found: prompts/get",
+     "id": "prompts-get-with-image",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Image",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#image-content"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "cdd58da4c7ebdde7eae72fdd6a764c101678e8f110979508e78f8e789d101808",
+   "scenario": "prompts-get-with-image",
+   "scenario_run_id": "server-prompts-get-with-image-2026-10-26T02-13-10-400Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsList",
+     "description": "Server lists available prompts with valid structure",
+     "details": {
+      "promptCount": 0,
+      "prompts": []
+     },
+     "id": "prompts-list",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-List",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#listing-prompts"
+      }
+     ],
+     "status": "SUCCESS"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'prompts/list'",
+        "errors": [
+         "ListPromptsResult: must have required property 'cacheScope' (result of 'prompts/list')",
+         "ListPromptsResult: must have required property 'resultType' (result of 'prompts/list')",
+         "ListPromptsResult: must have required property 'ttlMs' (result of 'prompts/list')"
+        ],
+        "message": {
+         "id": 16,
+         "jsonrpc": "2.0",
+         "result": {
+          "prompts": []
+         }
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'prompts/list' (spec 2026-07-28): ListPromptsResult: must have required property 'cacheScope' (result of 'prompts/list'); ListPromptsResult: must have required property 'resultType' (result of 'prompts/list'); ListPromptsResult: must have required property 'ttlMs' (result of 'prompts/list') \u2014 message: {\"jsonrpc\":\"2.0\",\"id\":16,\"result\":{\"prompts\":[]}}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "c30f2764fb66c839ec29ebe3acfc5d9221284bb2abe00e7d0f5d99cea154d1a0",
+   "scenario": "prompts-list",
+   "scenario_run_id": "server-prompts-list-2026-10-26T02-13-10-290Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesList",
+     "description": "Server lists available resources with valid structure",
+     "details": {
+      "resourceCount": 2,
+      "resources": [
+       "https://justidea.agency/llms.txt",
+       "https://justidea.agency/pricing.md"
+      ]
+     },
+     "id": "resources-list",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-List",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#listing-resources"
+      }
+     ],
+     "status": "SUCCESS"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'resources/list'",
+        "errors": [
+         "ListResourcesResult: must have required property 'cacheScope' (result of 'resources/list')",
+         "ListResourcesResult: must have required property 'resultType' (result of 'resources/list')",
+         "ListResourcesResult: must have required property 'ttlMs' (result of 'resources/list')"
+        ],
+        "message": {
+         "id": 12,
+         "jsonrpc": "2.0",
+         "result": {
+          "resources": [
+           {
+            "description": "Every public page of justidea.agency (Polish and English) with a one-line description, grouped by section. Start here to find the right page.",
+            "mimeType": "text/plain",
+            "name": "llms.txt",
+            "title": "JustIdea Agency site map for language models",
+            "uri": "https://justidea.agency/llms.txt"
+           },
+           {
+            "description": "Net starting prices of every service published on the website, in PLN for Poland and EUR for other countries, with links to the pricing pages.",
+            "mimeType": "text/markdown",
+            "name": "pricing.md",
+            "title": "JustIdea Agency published starting prices",
+            "uri": "https://justidea.agency/pricing.md"
+           }
+          ]
+         }
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'resources/list' (spec 2026-07-28): ListResourcesResult: must have required property 'cacheScope' (result of 'resources/list'); ListResourcesResult: must have required property 'resultType' (result of 'resources/list'); ListResourcesResult: must have required property 'ttlMs' (result of 'resources/list') \u2014 message: {\"jsonrpc\":\"2.0\",\"id\":12,\"result\":{\"resources\":[{\"uri\"",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "dce3b92d911d212bae08cb518dce7cafeacd6dca161c0e17c7d57756fcb18c6f",
+   "scenario": "resources-list",
+   "scenario_run_id": "server-resources-list-2026-10-26T02-13-10-176Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesReadBinary",
+     "description": "Read binary resource successfully",
+     "errorMessage": "Failed: Resource not found. Available: https://justidea.agency/llms.txt, https://justidea.agency/pricing.md",
+     "id": "resources-read-binary",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Read",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#reading-resources"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "c280e4e96a01823a89b599ab4abc3929b936a383250a32263083e0398a1328ee",
+   "scenario": "resources-read-binary",
+   "scenario_run_id": "server-resources-read-binary-2026-10-26T02-13-10-241Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesReadText",
+     "description": "Read text resource successfully",
+     "errorMessage": "Failed: Resource not found. Available: https://justidea.agency/llms.txt, https://justidea.agency/pricing.md",
+     "id": "resources-read-text",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Read",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#reading-resources"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "11f97344f6514c232e8f5430ff41fa681f426bb23872ac62bbda9ef0ffbd786d",
+   "scenario": "resources-read-text",
+   "scenario_run_id": "server-resources-read-text-2026-10-26T02-13-10-214Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesTemplateRead",
+     "description": "Read resource from template with parameter substitution",
+     "errorMessage": "Failed: Resource not found. Available: https://justidea.agency/llms.txt, https://justidea.agency/pricing.md",
+     "id": "resources-templates-read",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Templates",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#resource-templates"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "ac73871cab309e41ea578697660dc4317364d284932eb44f3bcf3add7f4dd561",
+   "scenario": "resources-templates-read",
+   "scenario_run_id": "server-resources-templates-read-2026-10-26T02-13-10-265Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ServerAcceptsMultiplePostStreams",
+     "description": "Server allows multiple concurrent POST requests (each may return SSE or JSON)",
+     "details": {
+      "contentTypes": [
+       "application/json; charset=utf-8",
+       "application/json; charset=utf-8",
+       "application/json; charset=utf-8"
+      ],
+      "numSseStreams": 0,
+      "numStreamsAccepted": 3,
+      "numStreamsAttempted": 3,
+      "statuses": [
+       200,
+       200,
+       200
+      ]
+     },
+     "id": "server-accepts-multiple-post-streams",
+     "specReferences": [
+      {
+       "id": "SEP-1699",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/issues/1699"
+      }
+     ],
+     "status": "SUCCESS"
+    },
+    {
+     "check": "ServerSSEStreamsFunctional",
+     "description": "Server returned JSON responses (SSE streams optional)",
+     "details": {
+      "message": "Server returned JSON for all requests - SSE streaming is optional",
+      "numSseStreams": 0,
+      "results": [
+       {
+        "index": 0,
+        "skipped": true,
+        "type": "json"
+       },
+       {
+        "index": 1,
+        "skipped": true,
+        "type": "json"
+       },
+       {
+        "index": 2,
+        "skipped": true,
+        "type": "json"
+       }
+      ]
+     },
+     "id": "server-sse-streams-functional",
+     "specReferences": [
+      {
+       "id": "SEP-1699",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/issues/1699"
+      }
+     ],
+     "status": "INFO"
+    }
+   ],
+   "checks_sha256": "07bf2acc5eeb0a139b16cd42f468342cb8bafbab9a47a57fa867c7dd1a5c563b",
+   "scenario": "server-sse-multiple-streams",
+   "scenario_run_id": "server-server-sse-multiple-streams-2026-10-26T02-13-10-026Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallAudio",
+     "description": "Tool returns audio content",
+     "errorMessage": "Failed: Unknown tool: test_audio_content. Available tools: list_services, get_page, search_site, send_inquiry, scan_analytics, scan_ai_visibility, scan_google_visibility, get_scan_result.",
+     "id": "tools-call-audio",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "6389dde05d6064487927a7f55f4e3c7ad4562b2e31e657b5991803b84ce338f0",
+   "scenario": "tools-call-audio",
+   "scenario_run_id": "server-tools-call-audio-2026-10-26T02-13-09-878Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallEmbeddedResource",
+     "description": "Tool returns embedded resource content",
+     "errorMessage": "Failed: Unknown tool: test_embedded_resource. Available tools: list_services, get_page, search_site, send_inquiry, scan_analytics, scan_ai_visibility, scan_google_visibility, get_scan_result.",
+     "id": "tools-call-embedded-resource",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "103640dc5a49b4b893a74308a7fd14bea208b6ef44c10567403b427fcc2d0a04",
+   "scenario": "tools-call-embedded-resource",
+   "scenario_run_id": "server-tools-call-embedded-resource-2026-10-26T02-13-09-905Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallError",
+     "description": "Tool returns error correctly",
+     "errorMessage": "Failed: Unknown tool: test_error_handling. Available tools: list_services, get_page, search_site, send_inquiry, scan_analytics, scan_ai_visibility, scan_google_visibility, get_scan_result.",
+     "id": "tools-call-error",
+     "specReferences": [
+      {
+       "id": "MCP-Error-Handling",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "4bcc602706c938f5088c44106ec28cfc728de0aaa4f4ca1a21a0a4005ecb12a0",
+   "scenario": "tools-call-error",
+   "scenario_run_id": "server-tools-call-error-2026-10-26T02-13-09-975Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallImage",
+     "description": "Tool returns image content",
+     "errorMessage": "Failed: Unknown tool: test_image_content. Available tools: list_services, get_page, search_site, send_inquiry, scan_analytics, scan_ai_visibility, scan_google_visibility, get_scan_result.",
+     "id": "tools-call-image",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "2ca1c53f5f96c9a0721e067df6870b63360a1128f416082565be9997050c7c15",
+   "scenario": "tools-call-image",
+   "scenario_run_id": "server-tools-call-image-2026-10-26T02-13-09-853Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallMixedContent",
+     "description": "Tool returns multiple content types",
+     "errorMessage": "Failed: Unknown tool: test_multiple_content_types. Available tools: list_services, get_page, search_site, send_inquiry, scan_analytics, scan_ai_visibility, scan_google_visibility, get_scan_result.",
+     "id": "tools-call-mixed-content",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "8885bec1f9988dadc732524c4432f2602acd6f01c994bde5033383533273d946",
+   "scenario": "tools-call-mixed-content",
+   "scenario_run_id": "server-tools-call-mixed-content-2026-10-26T02-13-09-937Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallSimpleText",
+     "description": "Tool returns simple text content",
+     "errorMessage": "Failed: Unknown tool: test_simple_text. Available tools: list_services, get_page, search_site, send_inquiry, scan_analytics, scan_ai_visibility, scan_google_visibility, get_scan_result.",
+     "id": "tools-call-simple-text",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "65f4030c1ee5e224872913827b71c3235dce79b37bba3204a6b350c52100cddb",
+   "scenario": "tools-call-simple-text",
+   "scenario_run_id": "server-tools-call-simple-text-2026-10-26T02-13-09-801Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallWithProgress",
+     "description": "Tool reports progress notifications",
+     "errorMessage": "Failed: Unknown tool: test_tool_with_progress. Available tools: list_services, get_page, search_site, send_inquiry, scan_analytics, scan_ai_visibility, scan_google_visibility, get_scan_result.",
+     "id": "tools-call-with-progress",
+     "specReferences": [
+      {
+       "id": "MCP-Progress",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/progress"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "b5e0a9eb879eba201eb9a0af2b0acb31e122d6d8e0506cf87e415ae784f68a17",
+   "scenario": "tools-call-with-progress",
+   "scenario_run_id": "server-tools-call-with-progress-2026-10-26T02-13-10-001Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsList",
+     "description": "Server lists available tools with valid structure",
+     "details": {
+      "toolCount": 8,
+      "tools": [
+       "list_services",
+       "get_page",
+       "search_site",
+       "send_inquiry",
+       "scan_analytics",
+       "scan_ai_visibility",
+       "scan_google_visibility",
+       "get_scan_result"
+      ]
+     },
+     "id": "tools-list",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-List",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#listing-tools"
+      }
+     ],
+     "status": "SUCCESS"
+    },
+    {
+     "check": "ToolsNameFormat",
+     "description": "Tool names SHOULD be 1-128 characters and match ^[A-Za-z0-9_.-]+$",
+     "details": {
+      "results": {
+       "get_page": "valid",
+       "get_scan_result": "valid",
+       "list_services": "valid",
+       "scan_ai_visibility": "valid",
+       "scan_analytics": "valid",
+       "scan_google_visibility": "valid",
+       "search_site": "valid",
+       "send_inquiry": "valid"
+      },
+      "toolCount": 8
+     },
+     "id": "tools-name-format",
+     "specReferences": [
+      {
+       "id": "MCP-Tool-Names",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/server/tools#tool-names"
+      },
+      {
+       "id": "MCP-Tool-Names-Draft",
+       "url": "https://modelcontextprotocol.io/specification/draft/server/tools#tool-names"
+      },
+      {
+       "id": "SEP-986-History",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/issues/986"
+      },
+      {
+       "id": "SEP-986-Spec-Integration",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/pull/1603"
+      }
+     ],
+     "status": "SUCCESS"
+    },
+    {
+     "check": "ToolsListDeterministicOrder",
+     "description": "Consecutive tools/list requests return the same tools in the same order",
+     "details": {
+      "orders": [
+       [
+        "list_services",
+        "get_page",
+        "search_site",
+        "send_inquiry",
+        "scan_analytics",
+        "scan_ai_visibility",
+        "scan_google_visibility",
+        "get_scan_result"
+       ],
+       [
+        "list_services",
+        "get_page",
+        "search_site",
+        "send_inquiry",
+        "scan_analytics",
+        "scan_ai_visibility",
+        "scan_google_visibility",
+        "get_scan_result"
+       ],
+       [
+        "list_services",
+        "get_page",
+        "search_site",
+        "send_inquiry",
+        "scan_analytics",
+        "scan_ai_visibility",
+        "scan_google_visibility",
+        "get_scan_result"
+       ]
+      ],
+      "probes": 3,
+      "toolCount": 8
+     },
+     "id": "tools-list-deterministic-order",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Deterministic-Order",
+       "url": "https://modelcontextprotocol.io/specification/2026-07-28/server/tools#capabilities"
+      }
+     ],
+     "status": "SUCCESS"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 6,
+      "violations": [
+       {
+        "context": "response to 'tools/list'",
+        "errors": [
+         "ListToolsResult: must have required property 'cacheScope' (result of 'tools/list')",
+         "ListToolsResult: must have required property 'resultType' (result of 'tools/list')",
+         "ListToolsResult: must have required property 'ttlMs' (result of 'tools/list')"
+        ],
+        "message": {
+         "id": 2,
+         "jsonrpc": "2.0",
+         "result": {
+          "tools": [
+           {
+            "annotations": {
+             "openWorldHint": false,
+             "readOnlyHint": true,
+             "title": "Services and prices"
+            },
+            "description": "List JustIdea Agency services with the published starting (\"from\") prices and links. Returns the price list (12 service categories, each with its packages) and every service page with its short description. All prices are net (VAT excluded) and exactly as published on justidea.agency. Use get_page for the full scope of a service and search_site for city pages, case studies and articles.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "language": {
+               "default": "pl",
+               "description": "Site language: \"pl\" (prices in PLN) or \"en\" (prices in EUR for clients outside Poland).",
+               "enum": [
+                "pl",
+                "en"
+               ],
+               "type": "string"
+              }
+             },
+             "type": "object"
+            },
+            "name": "list_services",
+            "title": "Services and prices"
+           },
+           {
+            "annotations": {
+             "openWorldHint": false,
+             "readOnlyHint": true,
+             "title": "Read a page"
+            },
+            "description": "Full text of one justidea.agency page as Markdown: a service, a price list, the company profile, reviews, a blog article. Accepts a full URL or a path, e.g. \"/pl/cennik/sklepy-internetowe/\" or \"https://justidea.agency/en/pricing/online-stores/\". Only pages published on the site; use list_services or search_site to find the URL.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "url": {
+               "description": "Page URL or path on justidea.agency.",
+               "maxLength": 500,
+               "minLength": 1,
+               "type": "string"
+              }
+             },
+             "required": [
+              "url"
+             ],
+             "type": "object"
+            },
+            "name": "get_page",
+            "title": "Read a page"
+           },
+           {
+            "annotations": {
+             "openWorldHint": false,
+             "readOnlyHint": true,
+             "title": "Search the site"
+            },
+            "description": "Search justidea.agency pages by titles, descriptions and section headings. Polish and English queries both work. Returns titles, URLs and descriptions; read a result with get_page.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "kind": {
+               "description": "Limit to one kind of page.",
+               "enum": [
+                "services_index",
+                "service_area",
+                "service",
+                "city_page",
+                "pricing",
+                "case_studies",
+                "event",
+                "blog",
+                "company"
+               ],
+               "type": "string"
+              },
+              "language": {
+               "default": "any",
+               "description": "Limit to one site language.",
+               "enum": [
+                "pl",
+                "en",
+                "any"
+               ],
+               "type": "string"
+              },
+              "limit": {
+               "default": 8,
+               "maximum": 25,
+               "minimum": 1,
+               "type": "integer"
+              },
+              "query": {
+               "description": "What to look for, e.g. \"PrestaShop migration\", \"sklep internetowy Krak\u00f3w\", \"SEO price\".",
+               "maxLength": 200,
+               "minLength": 2,
+               "type": "string"
+              }
+             },
+             "required": [
+              "query"
+             ],
+             "type": "object"
+            },
+            "name": "search_site",
+            "title": "Search the site"
+           },
+           {
+            "annotations": {
+             "destructiveHint": false,
+             "idempotentHint": false,
+             "openWorldHint": true,
+             "readOnlyHint": false,
+             "title": "Send an inquiry to JustIdea"
+            },
+            "description": "Send a sales inquiry to JustIdea Agency (Krak\u00f3w, Poland) on behalf of the user. It goes to the agency CRM and the sales team, the sender gets a short confirmation e-mail, and a person replies within one business day. Use only details the user gave you. Never invent a name, e-mail or phone number. Before sending, show the user what will be sent and ask for consent to data processing under the privacy policy (https://justidea.agency/en/privacy-policy/); set zgoda to true only after they agree. Budgets are in PLN net (\"tys. z\u0142\" = thousand PLN). At most 2 inquiries per e-mail address per day. Urgent matters: phone +48 12 400 40 40.",
+            "inputSchema": {
+             "properties": {
+              "budzet": {
+               "description": "Budget range, exactly one of the listed values, and it must match the service. One-off projects (\"sklep\", \"strona\", \"audyt\", \"kreacja\", \"inne\") take a project budget: \"do 15 tys. z\u0142\", \"15-40 tys. z\u0142\", \"40-80 tys. z\u0142\", \"80-150 tys. z\u0142\", \"150-300 tys. z\u0142\", \"powy\u017cej 300 tys. z\u0142\", \"jeszcze nie wiem\". Monthly services (\"seo\", \"wizytowka\", \"kampanie\", \"marketing\", \"content\", \"opieka\") take a monthly budget: \"do 2 tys. z\u0142\", \"2-6 tys. z\u0142\", \"6-15 tys. z\u0142\", \"15-40 tys. z\u0142\", \"40-100 tys. z\u0142\", \"powy\u017cej 100 tys. z\u0142\", \"jeszcze nie wiem\". If the user does not know the budget, use \"jeszcze nie wiem\" instead of guessing.",
+               "enum": [
+                "do 15 tys. z\u0142",
+                "15-40 tys. z\u0142",
+                "40-80 tys. z\u0142",
+                "80-150 tys. z\u0142",
+                "150-300 tys. z\u0142",
+                "powy\u017cej 300 tys. z\u0142",
+                "jeszcze nie wiem",
+                "do 2 tys. z\u0142",
+                "2-6 tys. z\u0142",
+                "6-15 tys. z\u0142",
+                "40-100 tys. z\u0142",
+                "powy\u017cej 100 tys. z\u0142"
+               ],
+               "type": "string"
+              },
+              "email": {
+               "description": "Email address for the reply.",
+               "format": "email",
+               "maxLength": 200,
+               "type": "string"
+              },
+              "firma": {
+               "description": "Company name, optional.",
+               "maxLength": 200,
+               "type": "string"
+              },
+              "imie": {
+               "description": "Full name of the person sending the inquiry.",
+               "maxLength": 120,
+               "minLength": 2,
+               "type": "string"
+              },
+              "strona": {
+               "description": "Current website or online store address, optional.",
+               "maxLength": 300,
+               "type": "string"
+              },
+              "telefon": {
+               "description": "Phone number with at least 9 digits, country code welcome.",
+               "maxLength": 60,
+               "minLength": 9,
+               "type": "string"
+              },
+              "usluga": {
+               "description": "What the inquiry is about: \"sklep\" = Sklep internetowy; \"strona\" = Strona internetowa; \"seo\" = Pozycjonowanie SEO; \"wizytowka\" = Wizyt\u00f3wka Google i Bing; \"kampanie\" = Kampanie reklamowe; \"marketing\" = Marketing, pe\u0142ny zakres; \"content\" = Content marketing i tre\u015bci; \"opieka\" = Opieka i rozw\u00f3j serwisu; \"audyt\" = Audyt; \"kreacja\" = Identyfikacja i kreacja; \"inne\" = Co\u015b innego.",
+               "enum": [
+                "sklep",
+                "strona",
+                "seo",
+                "wizytowka",
+                "kampanie",
+                "marketing",
+                "content",
+                "opieka",
+                "audyt",
+                "kreacja",
+                "inne"
+               ],
+               "type": "string"
+              },
+              "wiadomosc": {
+               "description": "The request in the user's own language, at least two sentences: what they need, scope, deadline.",
+               "maxLength": 5000,
+               "minLength": 20,
+               "type": "string"
+              },
+              "zgoda": {
+               "const": true,
+               "description": "Must be true: the user agreed to the processing of the data in this inquiry under the privacy policy.",
+               "type": "boolean"
+              }
+             },
+             "required": [
+              "imie",
+              "email",
+              "telefon",
+              "usluga",
+              "budzet",
+              "wiadomosc",
+              "zgoda"
+             ],
+             "type": "object"
+            },
+            "name": "send_inquiry",
+            "title": "Send an inquiry to JustIdea"
+           },
+           {
+            "annotations": {
+             "destructiveHint": false,
+             "idempotentHint": false,
+             "openWorldHint": true,
+             "readOnlyHint": false,
+             "title": "Free analytics and tracking scan"
+            },
+            "description": "Free check of how a website or online store measures traffic and sales: Google Tag Manager, GA4 and e-commerce events, consent banner and Consent Mode v2, server-side tagging, Meta Pixel and Conversions API. A real browser visits the site (home, product page, cart) for up to 90 seconds. Returns the grade (A-F), the score and the list of problems, without fixes. The full report with step-by-step fixes and a PDF is sent by JustIdea Agency to the user's e-mail. Use only details the user gave you: never invent or guess an e-mail address. Before calling, tell the user the report goes to their e-mail and ask for consent under the privacy policy (https://justidea.agency/en/privacy-policy/); set zgoda to true only after they agree. At most 2 scans per e-mail address per day. If it returns status \"running\", call get_scan_result with the scan_id after 30-60 seconds.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "email": {
+               "description": "The user's own e-mail address. The full report with fixes is sent there, and only there.",
+               "format": "email",
+               "maxLength": 254,
+               "type": "string"
+              },
+              "language": {
+               "default": "pl",
+               "description": "Report language. Use \"pl\" for Polish-speaking users, \"en\" for everyone else.",
+               "enum": [
+                "pl",
+                "en"
+               ],
+               "type": "string"
+              },
+              "name": {
+               "description": "Optional. The user's first name, only if they gave it.",
+               "maxLength": 80,
+               "type": "string"
+              },
+              "phone": {
+               "description": "Optional. The user's phone number, only if they gave it and want a call about the results.",
+               "maxLength": 40,
+               "type": "string"
+              },
+              "url": {
+               "description": "The website to scan: a domain or URL, e.g. \"mystore.com\". Only the home domain is used.",
+               "maxLength": 300,
+               "minLength": 3,
+               "type": "string"
+              },
+              "zgoda": {
+               "const": true,
+               "description": "Must be true: the user agreed to receive the report by e-mail, to be contacted by JustIdea about the results, and to the processing of this data under the privacy policy.",
+               "type": "boolean"
+              }
+             },
+             "required": [
+              "url",
+              "email",
+              "zgoda"
+             ],
+             "type": "object"
+            },
+            "name": "scan_analytics",
+            "title": "Free analytics and tracking scan"
+           },
+           {
+            "annotations": {
+             "destructiveHint": false,
+             "idempotentHint": false,
+             "openWorldHint": true,
+             "readOnlyHint": false,
+             "title": "Free AI visibility scan"
+            },
+            "description": "Free check of how ready a website is for AI assistants and AI search (ChatGPT, Perplexity, Gemini, Claude): whether their crawlers get in (robots.txt, firewalls), whether the content is readable without JavaScript, structured data, llms.txt and the signals models use to cite a source. Takes about 10-30 seconds. Returns the grade (A-F), the score and the list of problems, without fixes. The full report with step-by-step fixes and a PDF is sent by JustIdea Agency to the user's e-mail. Use only details the user gave you: never invent or guess an e-mail address. Before calling, tell the user the report goes to their e-mail and ask for consent under the privacy policy (https://justidea.agency/en/privacy-policy/); set zgoda to true only after they agree. At most 2 scans per e-mail address per day. If it returns status \"running\", call get_scan_result with the scan_id after 30-60 seconds.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "email": {
+               "description": "The user's own e-mail address. The full report with fixes is sent there, and only there.",
+               "format": "email",
+               "maxLength": 254,
+               "type": "string"
+              },
+              "language": {
+               "default": "pl",
+               "description": "Report language. Use \"pl\" for Polish-speaking users, \"en\" for everyone else.",
+               "enum": [
+                "pl",
+                "en"
+               ],
+               "type": "string"
+              },
+              "name": {
+               "description": "Optional. The user's first name, only if they gave it.",
+               "maxLength": 80,
+               "type": "string"
+              },
+              "phone": {
+               "description": "Optional. The user's phone number, only if they gave it and want a call about the results.",
+               "maxLength": 40,
+               "type": "string"
+              },
+              "url": {
+               "description": "The website to scan: a domain or URL, e.g. \"mystore.com\". Only the home domain is used.",
+               "maxLength": 300,
+               "minLength": 3,
+               "type": "string"
+              },
+              "zgoda": {
+               "const": true,
+               "description": "Must be true: the user agreed to receive the report by e-mail, to be contacted by JustIdea about the results, and to the processing of this data under the privacy policy.",
+               "type": "boolean"
+              }
+             },
+             "required": [
+              "url",
+              "email",
+              "zgoda"
+             ],
+             "type": "object"
+            },
+            "name": "scan_ai_visibility",
+            "title": "Free AI visibility scan"
+           },
+           {
+            "annotations": {
+             "destructiveHint": false,
+             "idempotentHint": false,
+             "openWorldHint": true,
+             "readOnlyHint": false,
+             "title": "Free Google visibility scan"
+            },
+            "description": "Free check of whether Google can index a website well: Googlebot access in robots.txt and on the server, noindex, canonical, http-to-https and www redirects, the sitemap and whether its URLs answer 200, titles, meta descriptions, H1, structured data, mobile viewport, hreflang and Core Web Vitals from real Chrome users. Takes about 15-60 seconds. Returns the grade (A-F), the score and the list of problems, without fixes. When available, it also returns an Ahrefs estimate of the domain in Google (ranking keywords, monthly organic traffic, Domain Rating, referring domains). These numbers are estimates, not Search Console data, they do not affect the grade, and they are sometimes temporarily unavailable. The report is in Polish. The full report with step-by-step fixes and a PDF is sent by JustIdea Agency to the user's e-mail. Use only details the user gave you: never invent or guess an e-mail address. Before calling, tell the user the report goes to their e-mail and ask for consent under the privacy policy (https://justidea.agency/en/privacy-policy/); set zgoda to true only after they agree. At most 2 scans per e-mail address per day. If it returns status \"running\", call get_scan_result with the scan_id after 30-60 seconds.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "email": {
+               "description": "The user's own e-mail address. The full report with fixes is sent there, and only there.",
+               "format": "email",
+               "maxLength": 254,
+               "type": "string"
+              },
+              "language": {
+               "default": "pl",
+               "description": "Report language. Use \"pl\" for Polish-speaking users, \"en\" for everyone else.",
+               "enum": [
+                "pl",
+                "en"
+               ],
+               "type": "string"
+              },
+              "name": {
+               "description": "Optional. The user's first name, only if they gave it.",
+               "maxLength": 80,
+               "type": "string"
+              },
+              "phone": {
+               "description": "Optional. The user's phone number, only if they gave it and want a call about the results.",
+               "maxLength": 40,
+               "type": "string"
+              },
+              "url": {
+               "description": "The website to scan: a domain or URL, e.g. \"mystore.com\". Only the home domain is used.",
+               "maxLength": 300,
+               "minLength": 3,
+               "type": "string"
+              },
+              "zgoda": {
+               "const": true,
+               "description": "Must be true: the user agreed to receive the report by e-mail, to be contacted by JustIdea about the results, and to the processing of this data under the privacy policy.",
+               "type": "boolean"
+              }
+             },
+             "required": [
+              "url",
+              "email",
+              "zgoda"
+             ],
+             "type": "object"
+            },
+            "name": "scan_google_visibility",
+            "title": "Free Google visibility scan"
+           },
+           {
+            "annotations": {
+             "destructiveHint": false,
+             "idempotentHint": true,
+             "openWorldHint": true,
+             "readOnlyHint": false,
+             "title": "Result of a scan"
+            },
+            "description": "Result of a scan started with scan_analytics, scan_ai_visibility or scan_google_visibility that was still running. Returns the same grade and problem list; sends the full report by e-mail if it has not gone yet. Scan IDs expire after 2 days.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "scan_id": {
+               "description": "The scan_id returned by the scan tool.",
+               "pattern": "^[a-z0-9]{16}$",
+               "type": "string"
+              }
+             },
+             "required": [
+              "scan_id"
+             ],
+             "type": "object"
+            },
+            "name": "get_scan_result",
+            "title": "Result of a scan"
+           }
+          ]
+         }
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       },
+       {
+        "context": "response to 'tools/list'",
+        "errors": [
+         "ListToolsResult: must have required property 'cacheScope' (result of 'tools/list')",
+         "ListToolsResult: must have required property 'resultType' (result of 'tools/list')",
+         "ListToolsResult: must have required property 'ttlMs' (result of 'tools/list')"
+        ],
+        "message": {
+         "id": 3,
+         "jsonrpc": "2.0",
+         "result": {
+          "tools": [
+           {
+            "annotations": {
+             "openWorldHint": false,
+             "readOnlyHint": true,
+             "title": "Services and prices"
+            },
+            "description": "List JustIdea Agency services with the published starting (\"from\") prices and links. Returns the price list (12 service categories, each with its packages) and every service page with its short description. All prices are net (VAT excluded) and exactly as published on justidea.agency. Use get_page for the full scope of a service and search_site for city pages, case studies and articles.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "language": {
+               "default": "pl",
+               "description": "Site language: \"pl\" (prices in PLN) or \"en\" (prices in EUR for clients outside Poland).",
+               "enum": [
+                "pl",
+                "en"
+               ],
+               "type": "string"
+              }
+             },
+             "type": "object"
+            },
+            "name": "list_services",
+            "title": "Services and prices"
+           },
+           {
+            "annotations": {
+             "openWorldHint": false,
+             "readOnlyHint": true,
+             "title": "Read a page"
+            },
+            "description": "Full text of one justidea.agency page as Markdown: a service, a price list, the company profile, reviews, a blog article. Accepts a full URL or a path, e.g. \"/pl/cennik/sklepy-internetowe/\" or \"https://justidea.agency/en/pricing/online-stores/\". Only pages published on the site; use list_services or search_site to find the URL.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "url": {
+               "description": "Page URL or path on justidea.agency.",
+               "maxLength": 500,
+               "minLength": 1,
+               "type": "string"
+              }
+             },
+             "required": [
+              "url"
+             ],
+             "type": "object"
+            },
+            "name": "get_page",
+            "title": "Read a page"
+           },
+           {
+            "annotations": {
+             "openWorldHint": false,
+             "readOnlyHint": true,
+             "title": "Search the site"
+            },
+            "description": "Search justidea.agency pages by titles, descriptions and section headings. Polish and English queries both work. Returns titles, URLs and descriptions; read a result with get_page.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "kind": {
+               "description": "Limit to one kind of page.",
+               "enum": [
+                "services_index",
+                "service_area",
+                "service",
+                "city_page",
+                "pricing",
+                "case_studies",
+                "event",
+                "blog",
+                "company"
+               ],
+               "type": "string"
+              },
+              "language": {
+               "default": "any",
+               "description": "Limit to one site language.",
+               "enum": [
+                "pl",
+                "en",
+                "any"
+               ],
+               "type": "string"
+              },
+              "limit": {
+               "default": 8,
+               "maximum": 25,
+               "minimum": 1,
+               "type": "integer"
+              },
+              "query": {
+               "description": "What to look for, e.g. \"PrestaShop migration\", \"sklep internetowy Krak\u00f3w\", \"SEO price\".",
+               "maxLength": 200,
+               "minLength": 2,
+               "type": "string"
+              }
+             },
+             "required": [
+              "query"
+             ],
+             "type": "object"
+            },
+            "name": "search_site",
+            "title": "Search the site"
+           },
+           {
+            "annotations": {
+             "destructiveHint": false,
+             "idempotentHint": false,
+             "openWorldHint": true,
+             "readOnlyHint": false,
+             "title": "Send an inquiry to JustIdea"
+            },
+            "description": "Send a sales inquiry to JustIdea Agency (Krak\u00f3w, Poland) on behalf of the user. It goes to the agency CRM and the sales team, the sender gets a short confirmation e-mail, and a person replies within one business day. Use only details the user gave you. Never invent a name, e-mail or phone number. Before sending, show the user what will be sent and ask for consent to data processing under the privacy policy (https://justidea.agency/en/privacy-policy/); set zgoda to true only after they agree. Budgets are in PLN net (\"tys. z\u0142\" = thousand PLN). At most 2 inquiries per e-mail address per day. Urgent matters: phone +48 12 400 40 40.",
+            "inputSchema": {
+             "properties": {
+              "budzet": {
+               "description": "Budget range, exactly one of the listed values, and it must match the service. One-off projects (\"sklep\", \"strona\", \"audyt\", \"kreacja\", \"inne\") take a project budget: \"do 15 tys. z\u0142\", \"15-40 tys. z\u0142\", \"40-80 tys. z\u0142\", \"80-150 tys. z\u0142\", \"150-300 tys. z\u0142\", \"powy\u017cej 300 tys. z\u0142\", \"jeszcze nie wiem\". Monthly services (\"seo\", \"wizytowka\", \"kampanie\", \"marketing\", \"content\", \"opieka\") take a monthly budget: \"do 2 tys. z\u0142\", \"2-6 tys. z\u0142\", \"6-15 tys. z\u0142\", \"15-40 tys. z\u0142\", \"40-100 tys. z\u0142\", \"powy\u017cej 100 tys. z\u0142\", \"jeszcze nie wiem\". If the user does not know the budget, use \"jeszcze nie wiem\" instead of guessing.",
+               "enum": [
+                "do 15 tys. z\u0142",
+                "15-40 tys. z\u0142",
+                "40-80 tys. z\u0142",
+                "80-150 tys. z\u0142",
+                "150-300 tys. z\u0142",
+                "powy\u017cej 300 tys. z\u0142",
+                "jeszcze nie wiem",
+                "do 2 tys. z\u0142",
+                "2-6 tys. z\u0142",
+                "6-15 tys. z\u0142",
+                "40-100 tys. z\u0142",
+                "powy\u017cej 100 tys. z\u0142"
+               ],
+               "type": "string"
+              },
+              "email": {
+               "description": "Email address for the reply.",
+               "format": "email",
+               "maxLength": 200,
+               "type": "string"
+              },
+              "firma": {
+               "description": "Company name, optional.",
+               "maxLength": 200,
+               "type": "string"
+              },
+              "imie": {
+               "description": "Full name of the person sending the inquiry.",
+               "maxLength": 120,
+               "minLength": 2,
+               "type": "string"
+              },
+              "strona": {
+               "description": "Current website or online store address, optional.",
+               "maxLength": 300,
+               "type": "string"
+              },
+              "telefon": {
+               "description": "Phone number with at least 9 digits, country code welcome.",
+               "maxLength": 60,
+               "minLength": 9,
+               "type": "string"
+              },
+              "usluga": {
+               "description": "What the inquiry is about: \"sklep\" = Sklep internetowy; \"strona\" = Strona internetowa; \"seo\" = Pozycjonowanie SEO; \"wizytowka\" = Wizyt\u00f3wka Google i Bing; \"kampanie\" = Kampanie reklamowe; \"marketing\" = Marketing, pe\u0142ny zakres; \"content\" = Content marketing i tre\u015bci; \"opieka\" = Opieka i rozw\u00f3j serwisu; \"audyt\" = Audyt; \"kreacja\" = Identyfikacja i kreacja; \"inne\" = Co\u015b innego.",
+               "enum": [
+                "sklep",
+                "strona",
+                "seo",
+                "wizytowka",
+                "kampanie",
+                "marketing",
+                "content",
+                "opieka",
+                "audyt",
+                "kreacja",
+                "inne"
+               ],
+               "type": "string"
+              },
+              "wiadomosc": {
+               "description": "The request in the user's own language, at least two sentences: what they need, scope, deadline.",
+               "maxLength": 5000,
+               "minLength": 20,
+               "type": "string"
+              },
+              "zgoda": {
+               "const": true,
+               "description": "Must be true: the user agreed to the processing of the data in this inquiry under the privacy policy.",
+               "type": "boolean"
+              }
+             },
+             "required": [
+              "imie",
+              "email",
+              "telefon",
+              "usluga",
+              "budzet",
+              "wiadomosc",
+              "zgoda"
+             ],
+             "type": "object"
+            },
+            "name": "send_inquiry",
+            "title": "Send an inquiry to JustIdea"
+           },
+           {
+            "annotations": {
+             "destructiveHint": false,
+             "idempotentHint": false,
+             "openWorldHint": true,
+             "readOnlyHint": false,
+             "title": "Free analytics and tracking scan"
+            },
+            "description": "Free check of how a website or online store measures traffic and sales: Google Tag Manager, GA4 and e-commerce events, consent banner and Consent Mode v2, server-side tagging, Meta Pixel and Conversions API. A real browser visits the site (home, product page, cart) for up to 90 seconds. Returns the grade (A-F), the score and the list of problems, without fixes. The full report with step-by-step fixes and a PDF is sent by JustIdea Agency to the user's e-mail. Use only details the user gave you: never invent or guess an e-mail address. Before calling, tell the user the report goes to their e-mail and ask for consent under the privacy policy (https://justidea.agency/en/privacy-policy/); set zgoda to true only after they agree. At most 2 scans per e-mail address per day. If it returns status \"running\", call get_scan_result with the scan_id after 30-60 seconds.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "email": {
+               "description": "The user's own e-mail address. The full report with fixes is sent there, and only there.",
+               "format": "email",
+               "maxLength": 254,
+               "type": "string"
+              },
+              "language": {
+               "default": "pl",
+               "description": "Report language. Use \"pl\" for Polish-speaking users, \"en\" for everyone else.",
+               "enum": [
+                "pl",
+                "en"
+               ],
+               "type": "string"
+              },
+              "name": {
+               "description": "Optional. The user's first name, only if they gave it.",
+               "maxLength": 80,
+               "type": "string"
+              },
+              "phone": {
+               "description": "Optional. The user's phone number, only if they gave it and want a call about the results.",
+               "maxLength": 40,
+               "type": "string"
+              },
+              "url": {
+               "description": "The website to scan: a domain or URL, e.g. \"mystore.com\". Only the home domain is used.",
+               "maxLength": 300,
+               "minLength": 3,
+               "type": "string"
+              },
+              "zgoda": {
+               "const": true,
+               "description": "Must be true: the user agreed to receive the report by e-mail, to be contacted by JustIdea about the results, and to the processing of this data under the privacy policy.",
+               "type": "boolean"
+              }
+             },
+             "required": [
+              "url",
+              "email",
+              "zgoda"
+             ],
+             "type": "object"
+            },
+            "name": "scan_analytics",
+            "title": "Free analytics and tracking scan"
+           },
+           {
+            "annotations": {
+             "destructiveHint": false,
+             "idempotentHint": false,
+             "openWorldHint": true,
+             "readOnlyHint": false,
+             "title": "Free AI visibility scan"
+            },
+            "description": "Free check of how ready a website is for AI assistants and AI search (ChatGPT, Perplexity, Gemini, Claude): whether their crawlers get in (robots.txt, firewalls), whether the content is readable without JavaScript, structured data, llms.txt and the signals models use to cite a source. Takes about 10-30 seconds. Returns the grade (A-F), the score and the list of problems, without fixes. The full report with step-by-step fixes and a PDF is sent by JustIdea Agency to the user's e-mail. Use only details the user gave you: never invent or guess an e-mail address. Before calling, tell the user the report goes to their e-mail and ask for consent under the privacy policy (https://justidea.agency/en/privacy-policy/); set zgoda to true only after they agree. At most 2 scans per e-mail address per day. If it returns status \"running\", call get_scan_result with the scan_id after 30-60 seconds.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "email": {
+               "description": "The user's own e-mail address. The full report with fixes is sent there, and only there.",
+               "format": "email",
+               "maxLength": 254,
+               "type": "string"
+              },
+              "language": {
+               "default": "pl",
+               "description": "Report language. Use \"pl\" for Polish-speaking users, \"en\" for everyone else.",
+               "enum": [
+                "pl",
+                "en"
+               ],
+               "type": "string"
+              },
+              "name": {
+               "description": "Optional. The user's first name, only if they gave it.",
+               "maxLength": 80,
+               "type": "string"
+              },
+              "phone": {
+               "description": "Optional. The user's phone number, only if they gave it and want a call about the results.",
+               "maxLength": 40,
+               "type": "string"
+              },
+              "url": {
+               "description": "The website to scan: a domain or URL, e.g. \"mystore.com\". Only the home domain is used.",
+               "maxLength": 300,
+               "minLength": 3,
+               "type": "string"
+              },
+              "zgoda": {
+               "const": true,
+               "description": "Must be true: the user agreed to receive the report by e-mail, to be contacted by JustIdea about the results, and to the processing of this data under the privacy policy.",
+               "type": "boolean"
+              }
+             },
+             "required": [
+              "url",
+              "email",
+              "zgoda"
+             ],
+             "type": "object"
+            },
+            "name": "scan_ai_visibility",
+            "title": "Free AI visibility scan"
+           },
+           {
+            "annotations": {
+             "destructiveHint": false,
+             "idempotentHint": false,
+             "openWorldHint": true,
+             "readOnlyHint": false,
+             "title": "Free Google visibility scan"
+            },
+            "description": "Free check of whether Google can index a website well: Googlebot access in robots.txt and on the server, noindex, canonical, http-to-https and www redirects, the sitemap and whether its URLs answer 200, titles, meta descriptions, H1, structured data, mobile viewport, hreflang and Core Web Vitals from real Chrome users. Takes about 15-60 seconds. Returns the grade (A-F), the score and the list of problems, without fixes. When available, it also returns an Ahrefs estimate of the domain in Google (ranking keywords, monthly organic traffic, Domain Rating, referring domains). These numbers are estimates, not Search Console data, they do not affect the grade, and they are sometimes temporarily unavailable. The report is in Polish. The full report with step-by-step fixes and a PDF is sent by JustIdea Agency to the user's e-mail. Use only details the user gave you: never invent or guess an e-mail address. Before calling, tell the user the report goes to their e-mail and ask for consent under the privacy policy (https://justidea.agency/en/privacy-policy/); set zgoda to true only after they agree. At most 2 scans per e-mail address per day. If it returns status \"running\", call get_scan_result with the scan_id after 30-60 seconds.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "email": {
+               "description": "The user's own e-mail address. The full report with fixes is sent there, and only there.",
+               "format": "email",
+               "maxLength": 254,
+               "type": "string"
+              },
+              "language": {
+               "default": "pl",
+               "description": "Report language. Use \"pl\" for Polish-speaking users, \"en\" for everyone else.",
+               "enum": [
+                "pl",
+                "en"
+               ],
+               "type": "string"
+              },
+              "name": {
+               "description": "Optional. The user's first name, only if they gave it.",
+               "maxLength": 80,
+               "type": "string"
+              },
+              "phone": {
+               "description": "Optional. The user's phone number, only if they gave it and want a call about the results.",
+               "maxLength": 40,
+               "type": "string"
+              },
+              "url": {
+               "description": "The website to scan: a domain or URL, e.g. \"mystore.com\". Only the home domain is used.",
+               "maxLength": 300,
+               "minLength": 3,
+               "type": "string"
+              },
+              "zgoda": {
+               "const": true,
+               "description": "Must be true: the user agreed to receive the report by e-mail, to be contacted by JustIdea about the results, and to the processing of this data under the privacy policy.",
+               "type": "boolean"
+              }
+             },
+             "required": [
+              "url",
+              "email",
+              "zgoda"
+             ],
+             "type": "object"
+            },
+            "name": "scan_google_visibility",
+            "title": "Free Google visibility scan"
+           },
+           {
+            "annotations": {
+             "destructiveHint": false,
+             "idempotentHint": true,
+             "openWorldHint": true,
+             "readOnlyHint": false,
+             "title": "Result of a scan"
+            },
+            "description": "Result of a scan started with scan_analytics, scan_ai_visibility or scan_google_visibility that was still running. Returns the same grade and problem list; sends the full report by e-mail if it has not gone yet. Scan IDs expire after 2 days.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "scan_id": {
+               "description": "The scan_id returned by the scan tool.",
+               "pattern": "^[a-z0-9]{16}$",
+               "type": "string"
+              }
+             },
+             "required": [
+              "scan_id"
+             ],
+             "type": "object"
+            },
+            "name": "get_scan_result",
+            "title": "Result of a scan"
+           }
+          ]
+         }
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       },
+       {
+        "context": "response to 'tools/list'",
+        "errors": [
+         "ListToolsResult: must have required property 'cacheScope' (result of 'tools/list')",
+         "ListToolsResult: must have required property 'resultType' (result of 'tools/list')",
+         "ListToolsResult: must have required property 'ttlMs' (result of 'tools/list')"
+        ],
+        "message": {
+         "id": 4,
+         "jsonrpc": "2.0",
+         "result": {
+          "tools": [
+           {
+            "annotations": {
+             "openWorldHint": false,
+             "readOnlyHint": true,
+             "title": "Services and prices"
+            },
+            "description": "List JustIdea Agency services with the published starting (\"from\") prices and links. Returns the price list (12 service categories, each with its packages) and every service page with its short description. All prices are net (VAT excluded) and exactly as published on justidea.agency. Use get_page for the full scope of a service and search_site for city pages, case studies and articles.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "language": {
+               "default": "pl",
+               "description": "Site language: \"pl\" (prices in PLN) or \"en\" (prices in EUR for clients outside Poland).",
+               "enum": [
+                "pl",
+                "en"
+               ],
+               "type": "string"
+              }
+             },
+             "type": "object"
+            },
+            "name": "list_services",
+            "title": "Services and prices"
+           },
+           {
+            "annotations": {
+             "openWorldHint": false,
+             "readOnlyHint": true,
+             "title": "Read a page"
+            },
+            "description": "Full text of one justidea.agency page as Markdown: a service, a price list, the company profile, reviews, a blog article. Accepts a full URL or a path, e.g. \"/pl/cennik/sklepy-internetowe/\" or \"https://justidea.agency/en/pricing/online-stores/\". Only pages published on the site; use list_services or search_site to find the URL.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "url": {
+               "description": "Page URL or path on justidea.agency.",
+               "maxLength": 500,
+               "minLength": 1,
+               "type": "string"
+              }
+             },
+             "required": [
+              "url"
+             ],
+             "type": "object"
+            },
+            "name": "get_page",
+            "title": "Read a page"
+           },
+           {
+            "annotations": {
+             "openWorldHint": false,
+             "readOnlyHint": true,
+             "title": "Search the site"
+            },
+            "description": "Search justidea.agency pages by titles, descriptions and section headings. Polish and English queries both work. Returns titles, URLs and descriptions; read a result with get_page.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "kind": {
+               "description": "Limit to one kind of page.",
+               "enum": [
+                "services_index",
+                "service_area",
+                "service",
+                "city_page",
+                "pricing",
+                "case_studies",
+                "event",
+                "blog",
+                "company"
+               ],
+               "type": "string"
+              },
+              "language": {
+               "default": "any",
+               "description": "Limit to one site language.",
+               "enum": [
+                "pl",
+                "en",
+                "any"
+               ],
+               "type": "string"
+              },
+              "limit": {
+               "default": 8,
+               "maximum": 25,
+               "minimum": 1,
+               "type": "integer"
+              },
+              "query": {
+               "description": "What to look for, e.g. \"PrestaShop migration\", \"sklep internetowy Krak\u00f3w\", \"SEO price\".",
+               "maxLength": 200,
+               "minLength": 2,
+               "type": "string"
+              }
+             },
+             "required": [
+              "query"
+             ],
+             "type": "object"
+            },
+            "name": "search_site",
+            "title": "Search the site"
+           },
+           {
+            "annotations": {
+             "destructiveHint": false,
+             "idempotentHint": false,
+             "openWorldHint": true,
+             "readOnlyHint": false,
+             "title": "Send an inquiry to JustIdea"
+            },
+            "description": "Send a sales inquiry to JustIdea Agency (Krak\u00f3w, Poland) on behalf of the user. It goes to the agency CRM and the sales team, the sender gets a short confirmation e-mail, and a person replies within one business day. Use only details the user gave you. Never invent a name, e-mail or phone number. Before sending, show the user what will be sent and ask for consent to data processing under the privacy policy (https://justidea.agency/en/privacy-policy/); set zgoda to true only after they agree. Budgets are in PLN net (\"tys. z\u0142\" = thousand PLN). At most 2 inquiries per e-mail address per day. Urgent matters: phone +48 12 400 40 40.",
+            "inputSchema": {
+             "properties": {
+              "budzet": {
+               "description": "Budget range, exactly one of the listed values, and it must match the service. One-off projects (\"sklep\", \"strona\", \"audyt\", \"kreacja\", \"inne\") take a project budget: \"do 15 tys. z\u0142\", \"15-40 tys. z\u0142\", \"40-80 tys. z\u0142\", \"80-150 tys. z\u0142\", \"150-300 tys. z\u0142\", \"powy\u017cej 300 tys. z\u0142\", \"jeszcze nie wiem\". Monthly services (\"seo\", \"wizytowka\", \"kampanie\", \"marketing\", \"content\", \"opieka\") take a monthly budget: \"do 2 tys. z\u0142\", \"2-6 tys. z\u0142\", \"6-15 tys. z\u0142\", \"15-40 tys. z\u0142\", \"40-100 tys. z\u0142\", \"powy\u017cej 100 tys. z\u0142\", \"jeszcze nie wiem\". If the user does not know the budget, use \"jeszcze nie wiem\" instead of guessing.",
+               "enum": [
+                "do 15 tys. z\u0142",
+                "15-40 tys. z\u0142",
+                "40-80 tys. z\u0142",
+                "80-150 tys. z\u0142",
+                "150-300 tys. z\u0142",
+                "powy\u017cej 300 tys. z\u0142",
+                "jeszcze nie wiem",
+                "do 2 tys. z\u0142",
+                "2-6 tys. z\u0142",
+                "6-15 tys. z\u0142",
+                "40-100 tys. z\u0142",
+                "powy\u017cej 100 tys. z\u0142"
+               ],
+               "type": "string"
+              },
+              "email": {
+               "description": "Email address for the reply.",
+               "format": "email",
+               "maxLength": 200,
+               "type": "string"
+              },
+              "firma": {
+               "description": "Company name, optional.",
+               "maxLength": 200,
+               "type": "string"
+              },
+              "imie": {
+               "description": "Full name of the person sending the inquiry.",
+               "maxLength": 120,
+               "minLength": 2,
+               "type": "string"
+              },
+              "strona": {
+               "description": "Current website or online store address, optional.",
+               "maxLength": 300,
+               "type": "string"
+              },
+              "telefon": {
+               "description": "Phone number with at least 9 digits, country code welcome.",
+               "maxLength": 60,
+               "minLength": 9,
+               "type": "string"
+              },
+              "usluga": {
+               "description": "What the inquiry is about: \"sklep\" = Sklep internetowy; \"strona\" = Strona internetowa; \"seo\" = Pozycjonowanie SEO; \"wizytowka\" = Wizyt\u00f3wka Google i Bing; \"kampanie\" = Kampanie reklamowe; \"marketing\" = Marketing, pe\u0142ny zakres; \"content\" = Content marketing i tre\u015bci; \"opieka\" = Opieka i rozw\u00f3j serwisu; \"audyt\" = Audyt; \"kreacja\" = Identyfikacja i kreacja; \"inne\" = Co\u015b innego.",
+               "enum": [
+                "sklep",
+                "strona",
+                "seo",
+                "wizytowka",
+                "kampanie",
+                "marketing",
+                "content",
+                "opieka",
+                "audyt",
+                "kreacja",
+                "inne"
+               ],
+               "type": "string"
+              },
+              "wiadomosc": {
+               "description": "The request in the user's own language, at least two sentences: what they need, scope, deadline.",
+               "maxLength": 5000,
+               "minLength": 20,
+               "type": "string"
+              },
+              "zgoda": {
+               "const": true,
+               "description": "Must be true: the user agreed to the processing of the data in this inquiry under the privacy policy.",
+               "type": "boolean"
+              }
+             },
+             "required": [
+              "imie",
+              "email",
+              "telefon",
+              "usluga",
+              "budzet",
+              "wiadomosc",
+              "zgoda"
+             ],
+             "type": "object"
+            },
+            "name": "send_inquiry",
+            "title": "Send an inquiry to JustIdea"
+           },
+           {
+            "annotations": {
+             "destructiveHint": false,
+             "idempotentHint": false,
+             "openWorldHint": true,
+             "readOnlyHint": false,
+             "title": "Free analytics and tracking scan"
+            },
+            "description": "Free check of how a website or online store measures traffic and sales: Google Tag Manager, GA4 and e-commerce events, consent banner and Consent Mode v2, server-side tagging, Meta Pixel and Conversions API. A real browser visits the site (home, product page, cart) for up to 90 seconds. Returns the grade (A-F), the score and the list of problems, without fixes. The full report with step-by-step fixes and a PDF is sent by JustIdea Agency to the user's e-mail. Use only details the user gave you: never invent or guess an e-mail address. Before calling, tell the user the report goes to their e-mail and ask for consent under the privacy policy (https://justidea.agency/en/privacy-policy/); set zgoda to true only after they agree. At most 2 scans per e-mail address per day. If it returns status \"running\", call get_scan_result with the scan_id after 30-60 seconds.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "email": {
+               "description": "The user's own e-mail address. The full report with fixes is sent there, and only there.",
+               "format": "email",
+               "maxLength": 254,
+               "type": "string"
+              },
+              "language": {
+               "default": "pl",
+               "description": "Report language. Use \"pl\" for Polish-speaking users, \"en\" for everyone else.",
+               "enum": [
+                "pl",
+                "en"
+               ],
+               "type": "string"
+              },
+              "name": {
+               "description": "Optional. The user's first name, only if they gave it.",
+               "maxLength": 80,
+               "type": "string"
+              },
+              "phone": {
+               "description": "Optional. The user's phone number, only if they gave it and want a call about the results.",
+               "maxLength": 40,
+               "type": "string"
+              },
+              "url": {
+               "description": "The website to scan: a domain or URL, e.g. \"mystore.com\". Only the home domain is used.",
+               "maxLength": 300,
+               "minLength": 3,
+               "type": "string"
+              },
+              "zgoda": {
+               "const": true,
+               "description": "Must be true: the user agreed to receive the report by e-mail, to be contacted by JustIdea about the results, and to the processing of this data under the privacy policy.",
+               "type": "boolean"
+              }
+             },
+             "required": [
+              "url",
+              "email",
+              "zgoda"
+             ],
+             "type": "object"
+            },
+            "name": "scan_analytics",
+            "title": "Free analytics and tracking scan"
+           },
+           {
+            "annotations": {
+             "destructiveHint": false,
+             "idempotentHint": false,
+             "openWorldHint": true,
+             "readOnlyHint": false,
+             "title": "Free AI visibility scan"
+            },
+            "description": "Free check of how ready a website is for AI assistants and AI search (ChatGPT, Perplexity, Gemini, Claude): whether their crawlers get in (robots.txt, firewalls), whether the content is readable without JavaScript, structured data, llms.txt and the signals models use to cite a source. Takes about 10-30 seconds. Returns the grade (A-F), the score and the list of problems, without fixes. The full report with step-by-step fixes and a PDF is sent by JustIdea Agency to the user's e-mail. Use only details the user gave you: never invent or guess an e-mail address. Before calling, tell the user the report goes to their e-mail and ask for consent under the privacy policy (https://justidea.agency/en/privacy-policy/); set zgoda to true only after they agree. At most 2 scans per e-mail address per day. If it returns status \"running\", call get_scan_result with the scan_id after 30-60 seconds.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "email": {
+               "description": "The user's own e-mail address. The full report with fixes is sent there, and only there.",
+               "format": "email",
+               "maxLength": 254,
+               "type": "string"
+              },
+              "language": {
+               "default": "pl",
+               "description": "Report language. Use \"pl\" for Polish-speaking users, \"en\" for everyone else.",
+               "enum": [
+                "pl",
+                "en"
+               ],
+               "type": "string"
+              },
+              "name": {
+               "description": "Optional. The user's first name, only if they gave it.",
+               "maxLength": 80,
+               "type": "string"
+              },
+              "phone": {
+               "description": "Optional. The user's phone number, only if they gave it and want a call about the results.",
+               "maxLength": 40,
+               "type": "string"
+              },
+              "url": {
+               "description": "The website to scan: a domain or URL, e.g. \"mystore.com\". Only the home domain is used.",
+               "maxLength": 300,
+               "minLength": 3,
+               "type": "string"
+              },
+              "zgoda": {
+               "const": true,
+               "description": "Must be true: the user agreed to receive the report by e-mail, to be contacted by JustIdea about the results, and to the processing of this data under the privacy policy.",
+               "type": "boolean"
+              }
+             },
+             "required": [
+              "url",
+              "email",
+              "zgoda"
+             ],
+             "type": "object"
+            },
+            "name": "scan_ai_visibility",
+            "title": "Free AI visibility scan"
+           },
+           {
+            "annotations": {
+             "destructiveHint": false,
+             "idempotentHint": false,
+             "openWorldHint": true,
+             "readOnlyHint": false,
+             "title": "Free Google visibility scan"
+            },
+            "description": "Free check of whether Google can index a website well: Googlebot access in robots.txt and on the server, noindex, canonical, http-to-https and www redirects, the sitemap and whether its URLs answer 200, titles, meta descriptions, H1, structured data, mobile viewport, hreflang and Core Web Vitals from real Chrome users. Takes about 15-60 seconds. Returns the grade (A-F), the score and the list of problems, without fixes. When available, it also returns an Ahrefs estimate of the domain in Google (ranking keywords, monthly organic traffic, Domain Rating, referring domains). These numbers are estimates, not Search Console data, they do not affect the grade, and they are sometimes temporarily unavailable. The report is in Polish. The full report with step-by-step fixes and a PDF is sent by JustIdea Agency to the user's e-mail. Use only details the user gave you: never invent or guess an e-mail address. Before calling, tell the user the report goes to their e-mail and ask for consent under the privacy policy (https://justidea.agency/en/privacy-policy/); set zgoda to true only after they agree. At most 2 scans per e-mail address per day. If it returns status \"running\", call get_scan_result with the scan_id after 30-60 seconds.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "email": {
+               "description": "The user's own e-mail address. The full report with fixes is sent there, and only there.",
+               "format": "email",
+               "maxLength": 254,
+               "type": "string"
+              },
+              "language": {
+               "default": "pl",
+               "description": "Report language. Use \"pl\" for Polish-speaking users, \"en\" for everyone else.",
+               "enum": [
+                "pl",
+                "en"
+               ],
+               "type": "string"
+              },
+              "name": {
+               "description": "Optional. The user's first name, only if they gave it.",
+               "maxLength": 80,
+               "type": "string"
+              },
+              "phone": {
+               "description": "Optional. The user's phone number, only if they gave it and want a call about the results.",
+               "maxLength": 40,
+               "type": "string"
+              },
+              "url": {
+               "description": "The website to scan: a domain or URL, e.g. \"mystore.com\". Only the home domain is used.",
+               "maxLength": 300,
+               "minLength": 3,
+               "type": "string"
+              },
+              "zgoda": {
+               "const": true,
+               "description": "Must be true: the user agreed to receive the report by e-mail, to be contacted by JustIdea about the results, and to the processing of this data under the privacy policy.",
+               "type": "boolean"
+              }
+             },
+             "required": [
+              "url",
+              "email",
+              "zgoda"
+             ],
+             "type": "object"
+            },
+            "name": "scan_google_visibility",
+            "title": "Free Google visibility scan"
+           },
+           {
+            "annotations": {
+             "destructiveHint": false,
+             "idempotentHint": true,
+             "openWorldHint": true,
+             "readOnlyHint": false,
+             "title": "Result of a scan"
+            },
+            "description": "Result of a scan started with scan_analytics, scan_ai_visibility or scan_google_visibility that was still running. Returns the same grade and problem list; sends the full report by e-mail if it has not gone yet. Scan IDs expire after 2 days.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "scan_id": {
+               "description": "The scan_id returned by the scan tool.",
+               "pattern": "^[a-z0-9]{16}$",
+               "type": "string"
+              }
+             },
+             "required": [
+              "scan_id"
+             ],
+             "type": "object"
+            },
+            "name": "get_scan_result",
+            "title": "Result of a scan"
+           }
+          ]
+         }
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'tools/list' (spec 2026-07-28): ListToolsResult: must have required property 'cacheScope' (result of 'tools/list'); ListToolsResult: must have required property 'resultType' (result of 'tools/list'); ListToolsResult: must have required property 'ttlMs' (result of 'tools/list') \u2014 message: {\"jsonrpc\":\"2.0\",\"id\":2,\"result\":{\"tools\":[{\"name\":\"list_services\",\"title\":\"Servic",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "96fa54b48e5f497433157419983b2378e1456e0a5e1be19007cd2d4b190c72b6",
+   "scenario": "tools-list",
+   "scenario_run_id": "server-tools-list-2026-10-26T02-13-09-702Z"
+  }
+ ],
+ "schema": "csoai.mcp-conformance-run/0.1",
+ "source": "mcp-registry",
+ "spec_version": "2026-07-28",
+ "subject_id": "agency.justidea/justidea-agency@1.1.0",
+ "subject_record_url": "https://justidea.agency/mcp",
+ "subject_url": "https://justidea.agency/mcp",
+ "suite_version": "0.2.0-alpha.12"
+}
