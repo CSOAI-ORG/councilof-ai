@@ -1,0 +1,113 @@
+{
+  "card": {
+    "as_of": "2026-10-26T02:12:31Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "check_counts": {
+        "FAILURE": 39,
+        "INFO": 1
+      },
+      "checks": "https://councilof.ai/interop/mcp-conformance-2026-10/checks/ae.genosys_genosys_1.2.0__alpha-2026-07-28.json",
+      "checks_sha256": "da647f9e17190ef43479495f35ae4378955b8f6b60536d33966630abac3f4267",
+      "deviation_checks": [
+        "CompletionComplete",
+        "WireSchemaValid",
+        "DNSRebindingRejected",
+        "LocalhostHostAccepted",
+        "PromptsGetEmbeddedResource",
+        "PromptsGetSimple",
+        "PromptsGetWithArgs",
+        "PromptsGetWithImage",
+        "PromptsList",
+        "ResourcesList",
+        "ResourcesReadBinary",
+        "ResourcesReadText",
+        "ResourcesTemplateRead",
+        "ServerAcceptsMultiplePostStreams",
+        "ToolsCallAudio",
+        "ToolsCallEmbeddedResource",
+        "ToolsCallError",
+        "ToolsCallImage",
+        "ToolsCallMixedContent",
+        "ToolsCallSimpleText",
+        "ToolsCallWithProgress",
+        "ToolsList"
+      ],
+      "instrument": "alpha-2026-07-28",
+      "instrument_channel": "alpha",
+      "kind": "csoai.mcp-conformance/0.1",
+      "not_a_grade": true,
+      "report": "https://councilof.ai/interop/mcp-conformance-2026-10/report.json",
+      "run_state": "RUN_DEVIATIONS",
+      "scenarios": 20,
+      "spec_version": "2026-07-28",
+      "state": "PROBED",
+      "subject_id": "ae.genosys/genosys@1.2.0",
+      "suite_version": "0.2.0-alpha.12"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "f738518639e17705e07e711cb5676896a406cbaac8377d5d84d92b0bb8ab2897",
+    "sig_ed25519": "de1c98315249fd31816943b19ac2c72376acced0010ba1f4686e8ef72d9d16e7c58337280970d03d259763c6e1fb3b29c10e17ace5873f4348783dfcb6954906",
+    "source_urls": [
+      "https://genosys.ae/mcp",
+      "https://councilof.ai/interop/mcp-conformance-2026-10/checks/ae.genosys_genosys_1.2.0__alpha-2026-07-28.json",
+      "https://councilof.ai/interop/mcp-conformance-2026-10/report.json"
+    ],
+    "subject": "MCP conformance run alpha-2026-07-28 for ae.genosys/genosys@1.2.0",
+    "surface": "public.notice",
+    "tags": [
+      "mcp",
+      "conformance",
+      "probe",
+      "mcp-conformance-2026-10"
+    ],
+    "unmeasured": [
+      "behaviour under load",
+      "scenarios outside the frozen spec version",
+      "subjects outside the pinned set"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "29344f8870b837dc770524b65534da3e6fd37ebbf6f5d36497c7831c937abf37",
+    "d065c23f2db3ce0f4e8d495c8b8798643a196353b42d2ba3bee83cf25da13461",
+    "55039646c2d137381ca6052b4b0e53dbab3ccddc177691ca1811cbe7e1eee8b8",
+    "5416936c76e9bc05bce3af56fc478fccbcbefe150097291414b8821e1d8fa893",
+    "ff88c72bdc44db503c957163111ade5b936fb43c4e2b8ebc2c67f04896f0c5ba",
+    "bb0eef1e7419df7a2b39c3d258ce4d8cdb9181e4ad64740b38818659cb9e2a74",
+    "6bf88414a620ffbad458c4d652aaa41b4da3bc7527d8f928b1b1184fdd4d4278",
+    "656e1809784ac103fe74af6789a2c6a222e139bdf2e4eb7eab1d472ddef73813",
+    "9b57379f6cafad2b83e92e4daf65fc7e890d0cea13cd1a7f59b1aac56c4fcdd6"
+  ]
+}
