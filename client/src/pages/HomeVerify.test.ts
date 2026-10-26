@@ -77,7 +77,8 @@ describe("homepage is chat + GSPC list plus the estate", () => {
   });
 
   it("shows all nine product plates", () => {
-    expect(stack).toContain("Nine products");
+    expect(stack).toContain("Nine routes into the evidence.");
+    expect(stack.match(/^\s+id: "tool-[^"]+",$/gm)).toHaveLength(9);
     expect(stack).toContain("Council OS");
     expect(stack).toContain("The living board");
     expect(stack).toContain("Verify a card");
@@ -104,7 +105,7 @@ describe("homepage is chat + GSPC list plus the estate", () => {
 });
 
 describe("header restores master menu and Council OS", () => {
-  it("labels the sitewide attestation door and measured-run enquiry honestly", () => {
+  it("labels the sitewide measurement enquiry and measured-run enquiry honestly", () => {
     expect(header).toContain('name: "Verify"');
     // Owner, 1 Oct 2026: the header CTA reads "Council OS" and there is no doctrine pill in the header.
     expect(header).toContain('<Link href="/dashboard" data-testid="header-council-os">Council OS</Link>');
@@ -112,7 +113,7 @@ describe("header restores master menu and Council OS", () => {
     expect(header).not.toContain("measurement · not certification");
     expect(header).toContain("name: 'Request a fresh run', href: '/dashboard?tab=measured'");
     const footer = readFileSync(resolve(here, "../components/Footer.tsx"), "utf8");
-    expect(footer).toContain("{ name: 'Request attestation', href: '/assess/' }");
+    expect(footer).toContain("{ name: 'Measurement enquiries', href: '/assess/' }");
     expect(footer).toContain("{ name: 'Ask about a measured run', href: '/contact/?arm=run' }");
     expect(footer).not.toContain("{ name: 'Run / re-attest', href: '/assess' }");
     expect(header).toContain('name: "Board"');
@@ -145,7 +146,7 @@ describe("/tools is the plugin snippet", () => {
     expect(tools).toContain("mcpServers");
     // The 2026-09-28 redesign (#2686) replaced the "Ask: board totals" prompt with the sentence below;
     // what it must still tell a reader first is to read the board and verify signed records.
-    expect(tools).toMatch(/Read the board, inspect evidence,\s+and verify signed records/);
+    expect(tools).toMatch(/Read published measurements, inspect evidence and check supported records/);
     expect(tools).toContain("ALL_TOOL_NAMES");
     expect(tools).toContain("FREE_TOOL_NAMES");
     expect(tools).toContain("PAID_TOOL_NAMES");
