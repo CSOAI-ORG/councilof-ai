@@ -10,8 +10,11 @@ import {
   termsWeRefuse,
   termsWeUse,
 } from "./healthTerms";
+import { BOARD_COUNT_OBSERVED } from "./boardCount";
 
 const products = readFileSync(resolve(__dirname, "../pages/Products.tsx"), "utf8");
+// The leader count comes from the dated observation (scripts/refresh-board-observation.mjs), never a typed literal.
+const leaders = new RegExp(`${BOARD_COUNT_OBSERVED.public_leader_count} public leader scores`);
 
 describe("Health terms we can borrow", () => {
   it("uses chart language and refuses NEWS-style composites", () => {
@@ -27,9 +30,14 @@ describe("Health terms we can borrow", () => {
     });
     expect(liveVoice).toMatch(/22 of 22 systems examined/);
     expect(liveVoice).toMatch(/22 axis · 22 measured/);
-    expect(liveVoice).toMatch(/3 public leader scores/);
-    expect(HEALTH_VOICE).toMatch(/3 public leader scores/);
+    expect(liveVoice).toMatch(leaders);
+    expect(HEALTH_VOICE).toMatch(leaders);
     expect(liveVoice).toMatch(/No systems deferred/);
+    // Declared slots with no run are deferred, never counted as measured.
+    const withSlots = healthVoiceFromLive({ axes: 33, measured_axes: 23, unmeasured_axes: 10, public_count: "33 axes · 23 measured" });
+    expect(withSlots).toMatch(/23 of 33 systems examined/);
+    expect(withSlots).toMatch(/10 deferred/);
+    expect(withSlots).not.toMatch(/33 of 33|No systems deferred/);
     expect(liveVoice).not.toMatch(/Seven deferred|7 unmeasured|15 of 22/i);
     expect(GSPC_HEALTH_PITCH).toMatch(/open-source systems and AI models/);
     expect(GSPC_HEALTH_PITCH).toMatch(/never issue a clean bill of health/);

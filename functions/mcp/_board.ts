@@ -183,6 +183,9 @@ export async function getAxisTool(origin: string, args: Record<string, unknown>)
       ? `${origin}${row.evidence_url}` : (row.evidence_url ?? null),
     row_url: `${origin}/api/gspc?axis=${encodeURIComponent(String(row.axis))}`,
     note: row.note ?? null,
+    // Preserve per-axis measurement provenance; board/retrieval dates do not refresh it.
+    facts_as_of: row.facts_as_of ?? null,
+    measurement_time: row.measurement_time ?? null,
     as_of: { board_measured_on: d.measured_on ?? null, fetched_at: new Date().toISOString() },
     source: `${origin}/api/gspc`,
     not_a_certification: true,

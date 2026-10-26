@@ -424,18 +424,18 @@ for(const [name,query,paid,status] of [['free','',true,200],['invoice','invoice=
  });
 }
 const obligation={id:'fixture',control_id:'fixture',title:'fixture',counsel_confirmed:false,existing_pack:null,regulator:'fixture',obligation:'fixture',statutory_maximum:'fixture'};
-let failBundleSign=false;
+let failBundleSign=false,includeEvidenceFixture=false;
 const evidenceModule=await moduleFrom(current('functions/api/evidence-bundle.ts'),{
  './_head':headModule,'./_x402':x402,'./_x402_config':{railMode:()=> 'fixture'},
- './_obligations':{OBLIGATIONS:{fixture:obligation},resolveObligation:id=>id==='fixture'?obligation:null,isRelevant:()=>false},
+ './_obligations':{OBLIGATIONS:{fixture:obligation},resolveObligation:id=>id==='fixture'?obligation:null,isRelevant:()=>includeEvidenceFixture},
  './_invoice_handoff':{invoiceHandoff:()=>({state:'quotation-only'}),INVOICE_CONTACT:'fixture.invalid'},
  '../_lib/cardSign':{sha256Hex:cardSignModule.namespace.sha256Hex,cardV0:cardSignModule.namespace.cardV0,
   signPayload:async payload=>{if(failBundleSign)throw Error('fixture sign failure');return{sha256:digest(Buffer.from(JSON.stringify(payload))),bytes:100,sig_ed25519:null,unsigned_reason:'offline unsigned fixture',did:'did:fixture'};}},
  './_x402_descriptions':{EVIDENCE_BUNDLE_DESCRIPTION:'fixture'},'./_x402_delivery_record':helperModule
 });
-async function runEvidence(query,paid=true){
+async function runEvidence(query,paid=true,fixtureCards={}){
  const kv=new Kv();settlements=0;paymentAllowed=paid;
- cx.fetch=async()=>new Response(JSON.stringify({cards:{},merkle_root:'a'.repeat(64),as_of:'fixture-date'}));
+ cx.fetch=async()=>new Response(JSON.stringify({cards:fixtureCards,merkle_root:'a'.repeat(64),as_of:'fixture-date'}));
  const out=await evidenceModule.namespace.onRequestGet({request:new Request('https://example.test/api/evidence-bundle?'+query,{headers:paid?{'x-payment':'fixture'}:{}}),env:{REVENUE_KV:kv}});
  return{kv,out,settlements};
 }
@@ -444,6 +444,34 @@ await test('full valid ASSEMBLED-EMPTY records zero-selected bundle',async()=>{
  assert.deepEqual(body.cards,{});assert.equal(body.manifest_card.payload.status,'ASSEMBLED-EMPTY');assert.equal(body.manifest_card.payload.card_count,0);
  assert.equal(body.oscal['assessment-results'].results[0].observations.length,0);assert.equal(actual.settlements,1);
  const row=JSON.parse(actual.kv.map.get(h.deliveryTxKey('tx-fixture')));assert.equal(row.response_sha256,digest(raw));assert.equal(row.response_bytes,raw.length);
+});
+await test('full nonempty evidence bundle records revised observation UTF8 bytes and digest',async()=>{
+ failBundleSign=false;includeEvidenceFixture=true;
+ const sha='b'.repeat(64),card={schema:'fixture-card',sha256:sha,sig_ed25519:'synthetic-unverified-signature',
+  as_of:'2026-10-14T00:00:00Z',surface:'fixture.synthetic',subject:'café 雪',tags:['fixture'],payload:{text:'café 雪'},unmeasured:[]};
+ // No proof is supplied. Assembly preserves this absence and never verifies the synthetic signature.
+ try{
+  const actual=await runEvidence('obligation=fixture&bundle=1',true,{[sha]:{card}}),raw=await bytes(actual.out);
+  const text=raw.toString('utf8'),body=JSON.parse(text),observations=body.oscal['assessment-results'].results[0].observations;
+  assert.equal(actual.out.status,200);assert.equal(body.kind,'bundle');assert.equal(actual.settlements,1);
+  assert.equal(actual.out.headers.get(STATE),'WRITTEN');assert.equal(actual.out.headers.get('x-payment-response'),'opaque-echo');
+  assert.equal(body.manifest_card.payload.status,'ASSEMBLED');assert.equal(body.manifest_card.payload.card_count,1);
+  assert.equal(body.signed,false);assert.equal(body.manifest_card.sig_ed25519,null);assert.equal(body.unsigned_reason,'offline unsigned fixture');
+  assert.deepEqual(Object.keys(body.cards),[sha]);assert.equal(body.cards[sha].proof,undefined);
+  assert.equal(observations.length,1);
+  assert.equal(observations[0].subjects[0].title,'café 雪');
+  assert.deepEqual(observations[0].relevant_evidence,[{
+   href:'https://example.test/cards/'+sha.slice(0,16)+'.json',
+   description:'card-v0 leaf with any retained Merkle inclusion proof (verify supported cards free at /gspc-verify)'
+  }]);
+  const stored=actual.kv.map.get(h.deliveryTxKey('tx-fixture'));assert.equal(typeof stored,'string');
+  const row=JSON.parse(stored);
+  assert.equal(row.response_bytes,raw.byteLength);assert.equal(row.response_bytes,Buffer.byteLength(text,'utf8'));
+  assert.ok(raw.byteLength>text.length,'Unicode must distinguish UTF8 byte length from JS character length');
+  assert.equal(row.response_sha256,crypto.createHash('sha256').update(raw).digest('hex'));
+  assert.notEqual(row.response_sha256,sha,'the record hashes the delivered body, not its selected card identifier');
+  assert.deepEqual(Buffer.from(text,'utf8'),raw);
+ }finally{includeEvidenceFixture=false;failBundleSign=false;}
 });
 for(const [name,query,paid,status] of [['missing','bundle=1',true,400],['unknown','obligation=unknown&bundle=1',true,404],['preview','obligation=fixture',true,200],['invoice','obligation=fixture&invoice=gbp&commissioned_by=fixture',true,200],['decline','obligation=fixture&bundle=1',false,402]]){
  await test('full evidence '+name+' never creates success row',async()=>{
@@ -506,7 +534,7 @@ await test('unreadable MCP without authorization or echo stays NOT_REQUESTED',as
 });
 await test('paid MCP authorization refuses automatic redirects',async()=>{
  const built=paidModule.namespace.buildPaidRequest(feedTool.name,{subject:'fixture-subject',x_payment:'fixture-payment'},'https://example.test');
- assert.equal(built.req.redirect,'error');assert.equal(built.req.headers.get('x-payment'),'fixture-payment');assert.equal(new URL(built.req.url).origin,'https://example.test');
+ assert.equal(built.req.redirect,'manual');assert.equal(built.req.headers.get('x-payment'),'fixture-payment');assert.equal(new URL(built.req.url).origin,'https://example.test');
 });
 const testedPaths=new Set([...Object.keys(FROZEN_SEAMS),'functions/api/_x402_delivery_record.ts','functions/mcp/_paid.ts','scripts/test_paid_delivery_records.mjs','scripts/fixtures/paid_delivery_seams.json']);
 const source_sha256=Object.fromEntries([...testedPaths].sort().map(p=>[p,digest(Buffer.from(current(p)))]));

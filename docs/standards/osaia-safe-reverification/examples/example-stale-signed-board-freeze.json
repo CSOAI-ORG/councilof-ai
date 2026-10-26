@@ -1,0 +1,105 @@
+{
+  "profile": "safe-reverification/0.1-draft",
+  "record_id": "csoai:safe-rv:2026-10-26:gspc-board-freeze:currency",
+  "issuer": "https://councilof.ai",
+  "issued_at": "2026-10-26T06:30:00Z",
+  "finding": {
+    "kind": "measurement",
+    "finding_ref": "https://councilof.ai/interop/gspc-board-freeze-pointer.json",
+    "disclosure_tier": "public",
+    "summary": "Worked example of a maintained claim that has gone out of currency. The signed board freeze is a valid, independently verifiable snapshot of the board as of 2026-09-02 and states 23 axes and 23 measured. The living board now states 33 axes and 23 measured. The freeze is not the current authority, and the freeze's own pointer says so in a machine-readable field rather than leaving the reader to work it out."
+  },
+  "claim": {
+    "claim_id": "gspc-board-freeze/current-for-the-observed-baseline",
+    "claim_type": "artifact_integrity",
+    "statement": "The signed board freeze at https://councilof.ai/signed/gspc-board.signed.json is a valid snapshot of the board as of 2026-09-02 and states 23 axes and 23 measured. It is NOT the current authority for the board: the living board at https://councilof.ai/api/gspc states 33 axes and 23 measured. The freeze's relying_party_status is SUPERSEDED_KNOWN_CLAIM_DEFECT and names the living board as current_authority.",
+    "subject": {
+      "identifier": "https://councilof.ai/signed/gspc-board.signed.json",
+      "scheme": "https-url"
+    },
+    "scope": "Currency of the frozen snapshot against the current board baseline, and the integrity of the frozen bytes. NOT the correctness of the board, NOT the measured behaviour of any model or axis, and NOT a separation of any axis. The freeze separates no leader and never did; that is read from the living board, which reports 0 of 14 model-comparison axes separated a leader, 7 TIE and 7 UNTESTED."
+  },
+  "dependencies": [
+    {
+      "dep_id": "board-freeze",
+      "kind": "other",
+      "name": "Signed board freeze",
+      "version": "gspc-board-22axis-2026",
+      "digest": null,
+      "uri": "https://councilof.ai/signed/gspc-board.signed.json",
+      "observed_at": "2026-09-02T16:00:00Z",
+      "state": "PINNED"
+    },
+    {
+      "dep_id": "living-board",
+      "kind": "external_service",
+      "name": "Living GSPC board",
+      "version": null,
+      "digest": null,
+      "uri": "https://councilof.ai/api/gspc",
+      "observed_at": "2026-10-26T06:30:00Z",
+      "state": "UNPINNED"
+    }
+  ],
+  "test": {
+    "method_id": "gspc-board/compare-freeze-to-living-board",
+    "method_version": "0.1",
+    "procedure": "Compare totals.axes, totals.measured_axes and totals.public_count in the signed freeze with the same fields at https://councilof.ai/api/gspc, then read relying_party_status.state and relying_party_status.current_authority from https://councilof.ai/interop/gspc-board-freeze-pointer.json.",
+    "procedure_digest": null,
+    "reproduction": "re_execution",
+    "substitutions": [],
+    "declared_failure_modes": [
+      "The living board may change between the two reads; the record states the observation time of each read."
+    ],
+    "noise_floor": null
+  },
+  "negative_control": {
+    "kind": "designed_to_fail",
+    "expected": "FAIL",
+    "observed": "FAIL",
+    "description": "The same comparison run against a real document that is not the board must not report the board's figures. It does not, so the comparison can discriminate."
+  },
+  "result": {
+    "state": "PASS",
+    "measured_at": "2026-10-26T06:30:00Z",
+    "reason": "The frozen bytes verify as a snapshot and the comparison is unambiguous: the freeze states 23 axes and 23 measured, the living board states 33 axes and 23 measured, and the freeze's pointer declares SUPERSEDED_KNOWN_CLAIM_DEFECT with the living board as current_authority. The claim under maintenance is PASS as a statement about the freeze's currency and integrity, and the freeze itself is STALE as a claim about the board.",
+    "read_state": "EXHAUSTED",
+    "n": null,
+    "denominator": null,
+    "evidence": []
+  },
+  "remediation": {
+    "state": "NOT_STARTED",
+    "reference": null,
+    "retest_record_id": null
+  },
+  "watch": {
+    "triggers": [
+      {
+        "dep_id": "living-board",
+        "on": "digest_change"
+      },
+      {
+        "dep_id": "board-freeze",
+        "on": "digest_change"
+      },
+      {
+        "dep_id": "board-freeze",
+        "on": "becomes_unavailable"
+      }
+    ],
+    "retest_bound": {
+      "max_latency": "P1D",
+      "max_attempts": 3,
+      "on_exhausted": "MARK_STALE"
+    },
+    "state": "STALE",
+    "last_checked_at": "2026-10-26T06:30:00Z"
+  },
+  "limits": [
+    "A STALE claim is not a failed one. The frozen snapshot is intact and verifiable; it is simply no longer current for the board.",
+    "Evidence state is not authority state. Nothing here authorises any action, and no current measurement can authorise one.",
+    "The 23 and the 33 are two different boards at two different observation times, not a disagreement about one board.",
+    "This record is a public worked example. It names no subject, model or deployment, and it makes no claim about any axis's correctness."
+  ]
+}

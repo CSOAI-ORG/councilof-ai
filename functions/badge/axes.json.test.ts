@@ -4,6 +4,7 @@ import { AXES_A } from "../api/_gspc_axes_a";
 import { AXES_B } from "../api/_gspc_axes_b";
 import { AXES_FIN } from "../api/_gspc_axes_fin";
 import { AXES_C } from "../api/_gspc_axes_c";
+import { AXES_D } from "../api/_gspc_axes_d";
 
 const badge = async () => {
   const r = (await (onRequestGet as unknown as (c: unknown) => Promise<Response>)({
@@ -19,7 +20,7 @@ describe("/badge/axes.json — a badge that cannot drift from the board", () => 
   // most-copied claims we publish — it lands in READMEs we do not control — and nothing
   // regenerated it, so nothing could keep it current.
   it("counts the same axis set /api/gspc counts, derived not typed", async () => {
-    const axes = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN];
+    const axes = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN, ...AXES_D];
     const measured = axes.filter((a) => a.status === "MEASURED").length;
     const { status, body } = await badge();
     expect(status).toBe(200);
@@ -27,7 +28,7 @@ describe("/badge/axes.json — a badge that cannot drift from the board", () => 
   });
 
   it("never repeats a superseded figure, and its figure is the axis arrays' figure", async () => {
-    const axes = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN];
+    const axes = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN, ...AXES_D];
     const total = axes.length;
     const measured = axes.filter((a) => a.status === "MEASURED").length;
     const { body } = await badge();
@@ -42,7 +43,7 @@ describe("/badge/axes.json — a badge that cannot drift from the board", () => 
   });
 
   it("goes amber on its own if a slot ever ships without a run behind it", async () => {
-    const axes = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN];
+    const axes = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN, ...AXES_D];
     const allMeasured = axes.every((a) => a.status === "MEASURED");
     const unmeasured = axes.filter((a) => a.status !== "MEASURED").map((a) => a.axis);
     const { body } = await badge();
