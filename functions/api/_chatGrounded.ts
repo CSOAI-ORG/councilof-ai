@@ -300,14 +300,14 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
 
   if (env.SOV_GATE_URL && env.SOV_GATE_TOKEN) {
     try {
-      const r = await fetch(env.SOV_GATE_URL.replace(/\/+$/, "") + "/api/chat", {
+      const r = await fetch(env.SOV_GATE_URL.replace(/\/+$/, "") + "/v1/chat/completions", {
         method: "POST",
         headers: { "Content-Type": "application/json", "Authorization": "Bearer " + env.SOV_GATE_TOKEN },
         body: JSON.stringify({ model: runtimeModel, messages, stream: false, options: { temperature: 0, num_predict: 400 } }),
       });
       if (!r.ok) throw new Error("gate HTTP " + r.status);
       const data: any = await r.json();
-      const content = data?.message?.content ?? String(data?.response ?? "");
+      const content = String(data?.choices?.[0]?.message?.content ?? "");
       if (content.trim()) return reply(content, "upstream runtime response · unsigned", "model_response");
     } catch { /* fall through */ }
   }
