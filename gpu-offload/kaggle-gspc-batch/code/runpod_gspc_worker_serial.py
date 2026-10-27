@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# SERIAL COPY of runpod_gspc_worker.py (sha256 88409f5f3239c89a495dc236567d9874d7987648bf28f48888582363bbcf423a) made 2026-10-06 08:40 BST for Measure's serial rule: records num_parallel in the instrument descriptor and run.json. Otherwise identical.
+# SERIAL COPY of runpod_gspc_worker.py (sha256 c3f4095ee20775959ee78bf62c7d1e4f8b2be80b747db3a4e6bc4d048dc99c70) re-synced 2026-10-26 for the reasoning channel; originally made 2026-10-06 08:40 BST for Measure's serial rule: records num_parallel in the instrument descriptor and run.json. Otherwise identical.
 """Compute-only GSPC worker for a long-running RunPod GPU pod.
 
 The worker deliberately stops at an unsigned, UNMEASURED candidate.  It never
@@ -50,6 +50,22 @@ A default run therefore emits byte-identical rows, so items_sha256 and the
 card that carries it are unchanged for a run that behaves identically.
 Adding fields to a schema without moving its version is how a strict reader
 downstream breaks on bytes nobody meant to change."""
+ITEM_SCHEMA_REASONED = "csoai.runpod-gspc-item-evidence/0.3"
+"""Item rows gain one more key -- reasoning -- only when the reasoning channel
+was requested, and the schema string says so.
+
+Two independent facts fix the version, and only two: which reader read the
+labels, and whether the reasoning channel was measured. exact reader, no
+reasoning -> 0.1. Non-default reader, no reasoning -> 0.2. Either reader WITH
+reasoning -> 0.3. There is no fourth version for "reasoning plus a swapped
+parser": a row already carries label_parser, parse_reason and parse_confidence
+when the parser was swapped, so 0.3 says exactly one extra thing -- this row may
+carry a reasoning block.
+
+The reasoning block is MEASUREMENT, never source text: present, a length and a
+digest, never the prose. decode.think stays False in every descriptor, because
+it means "the graded text is never decoded out of a thinking stream" and it has
+to keep meaning that."""
 RUN_SCHEMA = "csoai.runpod-gspc-run/0.1"
 DEFAULT_LABEL_PARSER = "exact-label"
 """The parser behind every card signed before 2026-09-22 and the default here.
@@ -291,6 +307,11 @@ class WorkerConfig:
     # config already on disk keeps loading unchanged and byte-identical.
     label_parser: str = DEFAULT_LABEL_PARSER
     label_parser_options: tuple[tuple[str, str], ...] = ()
+    # Same rule, same reason: the reasoning channel is a measurement a caller
+    # asks for on the command line, not a fact a frozen config on disk may
+    # carry. A config that has never heard of it keeps loading and keeps
+    # producing the bytes it produced before the flag existed.
+    reasoning: bool = False
 
     @classmethod
     def load(cls, path: Path) -> "WorkerConfig":
@@ -506,6 +527,22 @@ class WorkerConfig:
                 "id": self.label_parser,
                 "options": [list(pair) for pair in self.label_parser_options],
             }
+        if self.reasoning:
+            # The reasoning channel is DECLARED at the top level of the
+            # descriptor, never inside `decode`. decode.think is pinned False by
+            # the intake gate and has to keep meaning what it means today: the
+            # graded text is never decoded out of a thinking stream. What was
+            # actually asked of Ollama is recorded here instead, next to where
+            # the answer comes back and next to the fact that it is not graded.
+            # Nothing here is a live value: the descriptor still has to be
+            # derivable from a job's pins alone, so instrument_sha256 stays
+            # recomputable without a call.
+            descriptor["reasoning"] = {
+                "channel": "ollama-think",
+                "request_think": True,
+                "response_field": "thinking",
+                "graded": False,
+            }
         return descriptor
 
 
@@ -716,6 +753,13 @@ class InferenceResult:
     load_duration_ns: int | None = None
     prompt_eval_count: int | None = None
     eval_count: int | None = None
+    # The reasoning channel, measured and never graded. `present` says the model
+    # said anything at all; `reasoning_sha256` and `reasoning_chars` say how
+    # much, without the prose ever being stored. All three are None/False on a
+    # run that never asked for the channel.
+    reasoning_present: bool = False
+    reasoning_sha256: str | None = None
+    reasoning_chars: int | None = None
 
 
 class InferenceClient(Protocol):
@@ -804,7 +848,10 @@ class OllamaClient:
             "model": model,
             "prompt": prompt,
             "stream": False,
-            "think": False,
+            # Ollama's reasoning toggle. Off, it serialises to exactly the False
+            # it always was, so a default run's request bytes do not move. On, it
+            # asks for the thinking stream, which is measured and never graded.
+            "think": bool(config.reasoning),
             "options": {
                 "temperature": 0,
                 "seed": config.seed,
@@ -839,6 +886,21 @@ class OllamaClient:
             return InferenceResult(
                 False, None, response_sha256, "OLLAMA_MISSING_OUTPUT"
             )
+        # The reasoning channel is read ONLY when it was asked for. The graded
+        # text is payload["response"] and nothing else, so a server that
+        # volunteers a thinking field on a default run cannot change what is
+        # graded -- and the channel is never merged into the answer, because the
+        # house rule (scripts/anthropic_gspc_worker.py) is that thinking is never
+        # graded and never stored. What crosses over is a digest and a length.
+        reasoning_present = False
+        reasoning_sha256: str | None = None
+        reasoning_chars: int | None = None
+        if config.reasoning:
+            thinking = payload.get("thinking")
+            if isinstance(thinking, str) and thinking:
+                reasoning_present = True
+                reasoning_sha256 = sha256_bytes(thinking.encode("utf-8"))
+                reasoning_chars = len(thinking)
         return InferenceResult(
             transport_ok=True,
             raw_output=output,
@@ -872,6 +934,9 @@ class OllamaClient:
                 if isinstance(payload.get("eval_count"), int)
                 else None
             ),
+            reasoning_present=reasoning_present,
+            reasoning_sha256=reasoning_sha256,
+            reasoning_chars=reasoning_chars,
         )
 
 
@@ -1375,12 +1440,20 @@ def run_once(
             else:
                 transport_errors += 1
 
+            # Two independent facts fix the row's schema, and only two: which
+            # reader read the labels, and whether the reasoning channel was
+            # measured. A default run with the default reader keeps 0.1, a
+            # default run with a swapped reader keeps 0.2, and a run that
+            # measured the channel says 0.3 whichever reader it used.
+            if config.reasoning:
+                item_schema = ITEM_SCHEMA_REASONED
+            elif config.label_parser == DEFAULT_LABEL_PARSER:
+                item_schema = ITEM_SCHEMA
+            else:
+                item_schema = ITEM_SCHEMA_PARSED_BY
+
             row = {
-                "schema": (
-                    ITEM_SCHEMA
-                    if config.label_parser == DEFAULT_LABEL_PARSER
-                    else ITEM_SCHEMA_PARSED_BY
-                ),
+                "schema": item_schema,
                 "run_id": run_id,
                 "sequence": sequence,
                 "item_id": item.item_id,
@@ -1430,6 +1503,18 @@ def run_once(
                 row["label_parser"] = label_parser_id
                 row["parse_reason"] = parse_reason
                 row["parse_confidence"] = parse_confidence
+            if config.reasoning:
+                # What the reasoning channel did on this item: was it there, how
+                # long was it, and what is its digest. The prose itself is NOT
+                # here and is not anywhere else -- it was read once, measured,
+                # and dropped, because thinking is never graded and never
+                # stored (scripts/anthropic_gspc_worker.py).
+                row["reasoning"] = {
+                    "present": result.reasoning_present,
+                    "sha256": result.reasoning_sha256,
+                    "chars": result.reasoning_chars,
+                    "field": "thinking",
+                }
             append_json_line(evidence_handle, row)
             health.update(
                 state="RUNNING",
@@ -1650,6 +1735,7 @@ def discover_playlist(
     *,
     label_parser: str = DEFAULT_LABEL_PARSER,
     label_parser_options: tuple[tuple[str, str], ...] = (),
+    reasoning: bool = False,
 ) -> tuple[list[PlaylistEntry], int]:
     """Load direct-child JSON jobs in stable order; quarantine invalid bytes."""
     entries: list[PlaylistEntry] = []
@@ -1675,6 +1761,7 @@ def discover_playlist(
                 config,
                 label_parser=label_parser,
                 label_parser_options=label_parser_options,
+                reasoning=reasoning,
             )
         except WorkerError as error:
             quarantine_invalid_config(state_dir, path, fingerprint, error.code)
@@ -1816,6 +1903,7 @@ def run_playlist(
     wall_clock: Callable[[], datetime] = lambda: datetime.now(timezone.utc),
     label_parser: str = DEFAULT_LABEL_PARSER,
     label_parser_options: tuple[tuple[str, str], ...] = (),
+    reasoning: bool = False,
 ) -> int:
     """Run due jobs one at a time; never overlap access to the single GPU.
 
@@ -1837,6 +1925,7 @@ def run_playlist(
             state_dir,
             label_parser=label_parser,
             label_parser_options=label_parser_options,
+            reasoning=reasoning,
         )
         if invalid:
             aggregate = _aggregate_exit_code(aggregate, 2)
@@ -1993,6 +2082,19 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         help="sanitized read-only status source served at GET /commission-dispatch",
     )
+    parser.add_argument(
+        "--reasoning",
+        action="store_true",
+        help=(
+            "ask Ollama for the model's reasoning stream and MEASURE it: each "
+            "item records whether the channel was present, how many characters "
+            "it held, and its sha256. OFF by default, so a default run keeps "
+            "the exact bytes it had before this flag existed. The reasoning "
+            "prose is never stored and never graded -- decode.think stays "
+            "false, because the graded text is never decoded out of a thinking "
+            "stream."
+        ),
+    )
     return parser
 
 
@@ -2026,6 +2128,7 @@ def main(argv: list[str] | None = None) -> int:
             config,
             label_parser=args.label_parser,
             label_parser_options=selected_parser_options,
+            reasoning=args.reasoning,
         )
         state_dir = (args.state_dir or config.output_dir).resolve()
     else:
@@ -2078,6 +2181,7 @@ def main(argv: list[str] | None = None) -> int:
                     stop_event=stop_event,
                     label_parser=args.label_parser,
                     label_parser_options=selected_parser_options,
+                    reasoning=args.reasoning,
                 )
 
             assert config is not None
