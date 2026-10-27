@@ -1,14 +1,15 @@
 {
   "schema": "csoai.east-west-crosswalk/1.0",
-  "version": "2026-08-24",
+  "version": "2026-10-26",
   "title": "East-West crosswalk canon v1",
   "determination": "Determination stays with authorities. This crosswalk maps obligations; it is not a conformity opinion, certificate, or legal verdict.",
   "measurement_not_certification": true,
-  "supersedes": null,
+  "supersedes": "2026-08-24",
   "jurisdictions": [
     {
       "regime": "EU",
       "instrument": "EU AI Act (Reg 2024/1689)",
+      "source": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
       "rows": [
         { "control": "Risk management system", "ref": "Art. 9", "mapped_to": "Risk management" },
         { "control": "Data and data governance", "ref": "Art. 10", "mapped_to": "Data governance" },
@@ -17,6 +18,84 @@
         { "control": "Transparency and provision of information", "ref": "Art. 13", "mapped_to": "Transparency & disclosure" },
         { "control": "Human oversight", "ref": "Art. 14", "mapped_to": "Human oversight" },
         { "control": "Accuracy, robustness and cybersecurity", "ref": "Art. 15", "mapped_to": "Security & resilience" }
+      ]
+    },
+    {
+      "regime": "EU",
+      "instrument": "GDPR (Reg 2016/679)",
+      "source": "https://eur-lex.europa.eu/eli/reg/2016/679/oj",
+      "rows": [
+        { "control": "Principles relating to processing of personal data", "ref": "Art. 5", "mapped_to": "Data governance" },
+        { "control": "Principles relating to processing of personal data (accountability, para 2)", "ref": "Art. 5", "mapped_to": "Documentation & records" },
+        { "control": "Information to be provided where personal data are collected from the data subject", "ref": "Art. 13", "mapped_to": "Transparency & disclosure" },
+        { "control": "Information to be provided where personal data have not been obtained from the data subject", "ref": "Art. 14", "mapped_to": "Transparency & disclosure" },
+        { "control": "Automated individual decision-making, including profiling", "ref": "Art. 22", "mapped_to": "Human oversight" },
+        { "control": "Automated individual decision-making, including profiling (fairness of the decision)", "ref": "Art. 22", "mapped_to": "Bias & fairness" },
+        { "control": "Responsibility of the controller", "ref": "Art. 24", "mapped_to": "Accountability & governance" },
+        { "control": "Data protection by design and by default", "ref": "Art. 25", "mapped_to": "Data governance" },
+        { "control": "Records of processing activities", "ref": "Art. 30", "mapped_to": "Documentation & records" },
+        { "control": "Security of processing", "ref": "Art. 32", "mapped_to": "Security & resilience" },
+        { "control": "Notification of a personal data breach to the supervisory authority", "ref": "Art. 33", "mapped_to": "Security & resilience" },
+        { "control": "Communication of a personal data breach to the data subject", "ref": "Art. 34", "mapped_to": "Transparency & disclosure" },
+        { "control": "Data protection impact assessment", "ref": "Art. 35", "mapped_to": "Risk management" }
+      ]
+    },
+    {
+      "regime": "EU",
+      "instrument": "Cyber Resilience Act (Reg 2024/2847)",
+      "source": "https://eur-lex.europa.eu/eli/reg/2024/2847/oj",
+      "rows": [
+        { "control": "Obligations of manufacturers", "ref": "Art. 13", "mapped_to": "Security & resilience" },
+        { "control": "Obligations of manufacturers (cybersecurity risk assessment)", "ref": "Art. 13", "mapped_to": "Risk management" },
+        { "control": "Reporting obligations of manufacturers", "ref": "Art. 14", "mapped_to": "Security & resilience" },
+        { "control": "Establishment of a single reporting platform", "ref": "Art. 16", "mapped_to": "Transparency & disclosure" },
+        { "control": "Obligations of importers", "ref": "Art. 19", "mapped_to": "Documentation & records" },
+        { "control": "EU declaration of conformity", "ref": "Art. 28", "mapped_to": "Documentation & records" },
+        { "control": "Technical documentation", "ref": "Art. 31", "mapped_to": "Documentation & records" },
+        { "control": "Conformity assessment procedures for products with digital elements", "ref": "Art. 32", "mapped_to": "Accountability & governance" }
+      ]
+    },
+    {
+      "regime": "EU",
+      "instrument": "DORA (Reg 2022/2554)",
+      "source": "https://eur-lex.europa.eu/eli/reg/2022/2554/oj",
+      "rows": [
+        { "control": "Governance and organisation", "ref": "Art. 5", "mapped_to": "Accountability & governance" },
+        { "control": "ICT risk management framework", "ref": "Art. 6", "mapped_to": "Risk management" },
+        { "control": "Identification", "ref": "Art. 8", "mapped_to": "Risk management" },
+        { "control": "Protection and prevention", "ref": "Art. 9", "mapped_to": "Security & resilience" },
+        { "control": "Detection", "ref": "Art. 10", "mapped_to": "Security & resilience" },
+        { "control": "Response and recovery", "ref": "Art. 11", "mapped_to": "Security & resilience" },
+        { "control": "Backup policies and procedures, restoration and recovery procedures and methods", "ref": "Art. 12", "mapped_to": "Security & resilience" },
+        { "control": "Communication", "ref": "Art. 14", "mapped_to": "Transparency & disclosure" },
+        { "control": "ICT-related incident management process", "ref": "Art. 17", "mapped_to": "Security & resilience" },
+        { "control": "Reporting of major ICT-related incidents and voluntary notification of significant cyber threats", "ref": "Art. 19", "mapped_to": "Security & resilience" },
+        { "control": "General requirements for the performance of digital operational resilience testing", "ref": "Art. 24", "mapped_to": "Risk management" },
+        { "control": "Testing of ICT tools and systems", "ref": "Art. 25", "mapped_to": "Security & resilience" },
+        { "control": "Key contractual provisions", "ref": "Art. 30", "mapped_to": "Documentation & records" }
+      ]
+    },
+    {
+      "regime": "EU",
+      "instrument": "NIS2 (Dir 2022/2555)",
+      "source": "https://eur-lex.europa.eu/eli/dir/2022/2555/oj",
+      "rows": [
+        { "control": "Coordinated vulnerability disclosure and a European vulnerability database", "ref": "Art. 12", "mapped_to": "Security & resilience" },
+        { "control": "Governance", "ref": "Art. 20", "mapped_to": "Accountability & governance" },
+        { "control": "Cybersecurity risk-management measures", "ref": "Art. 21", "mapped_to": "Risk management" },
+        { "control": "Cybersecurity risk-management measures", "ref": "Art. 21", "mapped_to": "Security & resilience" },
+        { "control": "Reporting obligations", "ref": "Art. 23", "mapped_to": "Security & resilience" },
+        { "control": "Registry of entities", "ref": "Art. 27", "mapped_to": "Documentation & records" }
+      ]
+    },
+    {
+      "regime": "EU",
+      "instrument": "CSRD (Dir 2022/2464)",
+      "source": "https://eur-lex.europa.eu/eli/dir/2022/2464/oj",
+      "rows": [
+        { "control": "Sustainability reporting — material impact assessment (double materiality) and sustainability statement, inserted into Directive 2013/34/EU as Art. 19a", "ref": "Art. 1", "mapped_to": "Documentation & records" },
+        { "control": "Sustainability reporting — material impact assessment (double materiality) and sustainability statement, inserted into Directive 2013/34/EU as Art. 19a", "ref": "Art. 1", "mapped_to": "Accountability & governance" },
+        { "control": "Statutory audit of sustainability reporting (amendments to Directive 2006/43/EC)", "ref": "Art. 3", "mapped_to": "Accountability & governance" }
       ]
     },
     {
