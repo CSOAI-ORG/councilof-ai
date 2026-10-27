@@ -16,8 +16,18 @@
 //
 // CC-BY-4.0. Council of AI (CSOAI Ltd, UK Companies House 16939677).
 import { headFromGet } from "./_head";
+import { axisSpellings } from "../mcp/_axis";
 
 // axis → the governing instrument (real correspondences, cited to the article).
+// KEYED BY THE BOARD'S OWN SHORT CODE. The live board (/api/gspc) spells each axis
+// with its canonical id ("governance", "art5-safeguard", "detector-interop", ...);
+// AXIS_LAW is keyed by the short code the board's own dataset uses ("gov", "art5",
+// "det", ...). A direct AXIS_LAW[a.axis] lookup therefore matched only the axes
+// whose two spellings coincide ("care", "affect", "swarm") and shipped the other
+// ten published mappings as "no single governing instrument mapped for this axis".
+// THE ONE alias table (functions/mcp/axis-aliases.json, resolved by
+// functions/mcp/_axis.ts) is what turns either spelling into the other, so the
+// lookup goes through it instead of a second table invented here.
 const AXIS_LAW: Record<string, { obligation: string; instrument: string }> = {
   gov:   { obligation: "high-risk classification + conformity (Annex III use-cases)", instrument: "EU AI Act Art 6 / Annex III" },
   art5:  { obligation: "prohibited-practice prohibition", instrument: "EU AI Act Art 5" },
@@ -36,6 +46,18 @@ const AXIS_LAW: Record<string, { obligation: string; instrument: string }> = {
 
 interface Env { [k: string]: unknown }
 
+// The published mapping for an axis, resolved through THE ONE alias table: every
+// spelling of the axis is tried against AXIS_LAW (canonical id first, then the
+// board's short code and the card index's own spellings). An axis with no
+// published mapping resolves to undefined and is reported as such — no guess.
+function lawForAxis(axis: unknown): { obligation: string; instrument: string } | undefined {
+  for (const spelling of axisSpellings(axis)) {
+    const law = AXIS_LAW[spelling];
+    if (law) return law;
+  }
+  return undefined;
+}
+
 export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   const origin = new URL(ctx.request.url).origin;
   const grab = async (p: string): Promise<Record<string, any> | null> => {
@@ -48,7 +70,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   for (const d of reg?.deadlines ?? []) regByInstr[d.instrument] = d;
 
   const rows = axes.map((a) => {
-    const law = AXIS_LAW[a.axis];
+    const law = lawForAxis(a.axis);
     // link the penalty via the EU-AI-Act record when the instrument is an Art of it
     const penalty = law?.instrument?.startsWith("EU AI Act")
       ? (reg?.penalty_tiers_eu_ai_act?.most_obligations_incl_art50_and_gpai ?? null)
