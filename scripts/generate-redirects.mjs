@@ -39,7 +39,7 @@ if (!existsSync(FUNCTIONS_DIR)) {
 
 const STATIC_DIRS = ["/benchmarks", "/vendor", "/assets",
                      "/.well-known", "/corpus-watch", "/flywheel", "/packs",
-                     "/datasets",
+                     "/datasets", "/my-results",
                      // /signed is the evidence tree IETF implementers are pointed at.
                      // Without this the SPA catch-all answers /signed/ with the app
                      // shell (soft 404) instead of the directory index.
@@ -108,6 +108,7 @@ const EXISTING = [
   // and it emits one file at public/publisher-health.json. A second copy under
   // /signed/ would drift. Redirect the signed path to the one writer.
   "/signed/publisher-health.json  /publisher-health.json  308",
+  "/signed/root.json              /root.json              308",
   // Guessed-URL aliases for the signed card index (2026-09-14): GET /card_index.json and
   // GET /cards/card_index.json were 404 while the one writer's output is served at
   // /signed/card_index.json. Redirected, never copied: a second copy of signed bytes drifts.
@@ -344,12 +345,6 @@ const EXISTING = [
   "/interop/effect-binding-server-probe-2026-09-30.json  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/interop/effect-binding-server-probe-2026-09-30.json  302",
   "/proofs/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/proofs/:splat  302",
   "/cards/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/cards/:splat  302",
-  // 2026-10-18: bulk interop directories excluded from Pages bundle (20,000-file cap).
-  // Protected by hf-mirror-gate.mjs which verifies HF has the files before this PR can merge.
-  "/interop/mill-cards-signed/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/interop/mill-cards-signed/:splat  302",
-  "/interop/mill-cards-unsigned/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/interop/mill-cards-unsigned/:splat  302",
-  "/interop/mill-evidence/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/interop/mill-evidence/:splat  302",
-  "/interop/ots/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/interop/ots/:splat  302",
 ];
 
 const STOREFRONT = [

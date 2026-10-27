@@ -5,7 +5,7 @@
 # ORDER IS LOAD-BEARING: every splat-free rule first (2000-rule static budget),
 # then every splat rule (100-rule dynamic budget), catch-all last. One splat placed
 # early makes Cloudflare count EVERY later rule as dynamic and stop parsing at 100 —
-# which is how the catch-all fell off the edge on 2026-08-26. Dynamic rules here: 19/100.
+# which is how the catch-all fell off the edge on 2026-08-26. Dynamic rules here: 16/100.
 # Enforced by scripts/redirects-guard.mjs.
 
 # --- hand-written consolidation redirects (preserved) ---
@@ -26,6 +26,7 @@
 /schema/gspc-measurement-card-0.1.json  /verifier/gspc-measurement-card.schema.json  308
 /schema/gspc-card-index-0.1.json        /verifier/gspc-card-index.schema.json        308
 /signed/publisher-health.json  /publisher-health.json  308
+/signed/root.json              /root.json              308
 /card_index.json        /signed/card_index.json  301
 /cards/card_index.json  /signed/card_index.json  301
 /world/observatory      /world/observatory/       308
@@ -248,7 +249,7 @@
 /for/regulator  /for/regulator/  308
 /for/sec-filer  /for/sec-filer/  308
 
-# --- every other concrete <Route> bare path → its prerendered trailing-slash (419) ---
+# --- every other concrete <Route> bare path → its prerendered trailing-slash (414) ---
 /a2ui  /a2ui/  308
 /ab-testing  /ab-testing/  308
 /accessibility  /accessibility/  308
@@ -286,9 +287,6 @@
 /badge  /badge/  308
 /battlecards  /battlecards/  308
 /blog  /blog/  308
-/blog/gspc-g2-comparison-group-2026-10-14  /blog/gspc-g2-comparison-group-2026-10-14/  308
-/blog/how-to-verify-an-ai-measurement  /blog/how-to-verify-an-ai-measurement/  308
-/blog/keeping-ai-claims-current  /blog/keeping-ai-claims-current/  308
 /board  /board/  308
 /board/model  /board/model/  308
 /board/models  /board/models/  308
@@ -544,7 +542,6 @@
 /postmortems/x402-settlement-reading  /postmortems/x402-settlement-reading/  308
 /press  /press/  308
 /pressroom  /pressroom/  308
-/pricing-free  /pricing-free/  308
 /privacy  /privacy/  308
 /products  /products/  308
 /proof-receipt  /proof-receipt/  308
@@ -627,7 +624,6 @@
 /system-status  /system-status/  308
 /systemcard  /systemcard/  308
 /tc260  /tc260/  308
-/team  /team/  308
 /technology  /technology/  308
 /temples  /temples/  308
 /terms  /terms/  308
@@ -724,10 +720,6 @@
 /widget/*               /dashboard?tab=learn         308
 /proofs/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/proofs/:splat  302
 /cards/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/cards/:splat  302
-/interop/mill-cards-signed/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/interop/mill-cards-signed/:splat  302
-/interop/mill-cards-unsigned/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/interop/mill-cards-unsigned/:splat  302
-/interop/mill-evidence/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/interop/mill-evidence/:splat  302
-/interop/ots/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/interop/ots/:splat  302
 /benchmarks/*  /benchmarks/:splat  200
 /vendor/*  /vendor/:splat  200
 /.well-known/*  /.well-known/:splat  200
@@ -735,6 +727,7 @@
 /flywheel/*  /flywheel/:splat  200
 /packs/*  /packs/:splat  200
 /datasets/*  /datasets/:splat  200
+/my-results/*  /my-results/:splat  200
 /signed/*  /signed/:splat  200
 /stack/*  /stack/:splat  200
 /world/observatory/*  /world/observatory/:splat  200

@@ -11,12 +11,25 @@
   <meta name="description" content="Buy already-public measurement evidence through an x402 door. Payment mints no new measurement and buys no score, grade, or certificate.">
   <style>
     body { font: 16px/1.5 system-ui, sans-serif; margin: 2rem auto; max-width: 42rem; padding: 0 1rem; color: #111; }
+    header { border-bottom: 1px solid #e5e5e5; padding-bottom: 0.75rem; margin-bottom: 1.5rem; font-size: 0.95rem; }
+    nav a { color: #047857; text-decoration: underline; text-underline-offset: 2px; }
     h1 { font-size: 1.5rem; }
     .never { border: 1px solid #ccc; padding: 1rem; margin: 1.5rem 0; }
     code { background: #f4f4f4; padding: 0.1em 0.3em; }
   </style>
 </head>
 <body>
+  <header>
+    <nav aria-label="Primary">
+      <a href="/">Council of AI</a> ·
+      <a href="/benchmarks">Benchmarks</a> ·
+      <a href="/my-results">My Results</a> ·
+      <a href="/verify">Verify</a> ·
+      <a href="/mcp">MCP</a> ·
+      <a href="/.well-known/x402.json">x402 manifest</a>
+    </nav>
+  </header>
+  <main>
   <h1>Pay for evidence</h1>
   <p>This is the buyer page. You settle an x402 door to receive an already-public evidence pack. Amounts appear only in the 402 challenge — never on this page.</p>
   <p>Discover doors via the <a href="/.well-known/x402.json">x402 discovery manifest</a>, or start from the <a href="/x402-buyer-guide.html">buyer guide</a>. Inspect the free preview before you pay.</p>
@@ -32,5 +45,6 @@
   </div>
   <p>Owner wallet tool (not this page): <code>/pay-all</code> — one settle per door from the estate wallet.</p>
   <p>Measurement, not certification.</p>
+  </main>
 </body>
 </html>

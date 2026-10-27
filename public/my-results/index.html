@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Results, Commissions &amp; Watch Explorer — Council of AI</title>
+<meta name="description" content="Email-free four-step measurement journey: look up measured models and axes, inspect free evidence previews, retrieve commissioned runs or x402 receipts by wallet or subject, verify signed cards with a three-state verdict, and track scheduled claim maintenance re-checks. Measurement, not certification.">
+<link rel="canonical" href="https://councilof.ai/my-results">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="My Results, Commissions &amp; Watch Explorer — Council of AI">
+<meta property="og:description" content="Email-free measurement lookup, free pack preview, commissioned result retrieval, three-state verification, and scheduled claim maintenance watch. Measurement, not certification.">
+<meta property="og:url" content="https://councilof.ai/my-results">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://councilof.ai/og-image.png">
+<style>
+  :root{--fg:#e8f5ee;--mut:#9bb5a6;--bd:#1e3d2e;--bg:#07110c;--card:#0c1c14;--acc:#5ee9a3;--acc2:#16a34a;--warn:#e8b86d}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 ui-sans-serif,system-ui,-apple-system,sans-serif}
+  header{max-width:76rem;margin:0 auto;padding:1.2rem 1.25rem .75rem;border-bottom:1px solid var(--bd);font-size:.92rem}
+  main{max-width:76rem;margin:0 auto;padding:1.5rem 1.25rem 4rem}
+  a{color:var(--acc);text-decoration:none}
+  a:hover{text-decoration:underline}
+  h1{font-size:1.85rem;line-height:1.2;margin:0 0 .35rem}
+  h2{font-size:1.18rem;margin:1.4rem 0 .5rem}
+  h3{font-size:.98rem;margin:.8rem 0 .35rem;color:var(--acc)}
+  .sub{color:var(--mut);margin:0 0 1rem}
+  .note{border-left:3px solid var(--warn);background:var(--card);padding:.65rem .95rem;margin:1rem 0;color:var(--mut);border-radius:0 8px 8px 0}
+  .tabs{display:flex;flex-wrap:wrap;gap:.45rem;margin:1.2rem 0 1rem;border-bottom:1px solid var(--bd);padding-bottom:.75rem}
+  .tab-btn{background:var(--card);color:var(--mut);border:1px solid var(--bd);padding:.48rem .85rem;border-radius:8px;cursor:pointer;font-size:.84rem;font-weight:600}
+  .tab-btn:hover,.tab-btn.active{background:#123021;color:var(--acc);border-color:var(--acc2)}
+  .panel{display:none;margin-top:1rem}
+  .panel.active{display:block}
+  .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(22rem,1fr));gap:1rem}
+  .card-box{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:1rem}
+  .ctrl-row{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:.85rem;align-items:center}
+  input,select,textarea,button.action-btn{background:#06100b;color:var(--fg);border:1px solid var(--bd);border-radius:7px;padding:.45rem .7rem;font:inherit;font-size:.86rem}
+  button.action-btn{background:#113322;color:var(--acc);border-color:var(--acc2);cursor:pointer;font-weight:600}
+  button.action-btn:hover{background:#17472f}
+  .wrap{overflow-x:auto;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:.5rem}
+  table{border-collapse:collapse;width:100%;min-width:34rem;font-size:.86rem}
+  th,td{text-align:left;padding:.48rem .6rem;border-bottom:1px solid var(--bd);white-space:nowrap}
+  th{color:var(--mut);font-size:.74rem;text-transform:uppercase;letter-spacing:.04em}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .ok{color:var(--acc);font-weight:600} .warn{color:var(--warn)}
+  pre.code-box{background:#040a07;border:1px solid var(--bd);border-radius:8px;padding:.75rem;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.8rem;color:#c7f9de;margin:.5rem 0}
+  footer{margin-top:2.4rem;padding-top:1rem;border-top:1px solid var(--bd);color:var(--mut);font-size:.85rem}
+</style>
+</head>
+<body>
+<header>
+  <nav aria-label="Primary">
+    <a href="/">Council of AI</a> ·
+    <a href="/benchmarks">Benchmarks</a> ·
+    <a href="/my-results">My Results</a> ·
+    <a href="/verify">Verify</a> ·
+    <a href="/pay">Pay</a> ·
+    <a href="/mcp">MCP</a> ·
+    <a href="/.well-known/x402.json">x402 manifest</a>
+  </nav>
+</header>
+<main>
+<h1>My Results, Commissions &amp; Watch Explorer</h1>
+<p class="sub">Email-free, keyless 4-step journey: <strong>1. Get Results</strong> → <strong>2. Preview / Assemble Pack</strong> → <strong>3. Retrieve My Results &amp; Receipts</strong> → <strong>4. Verify (VALID / INVALID / UNCHECKABLE)</strong>.<br>
+Live board status: <strong id="live-board-stamp">counts from /api/gspc</strong> · Measurement, not certification.</p>
+
+<div class="note">
+  <strong>Zero accounts, zero email gates:</strong> Verification and the GSPC board at <a href="/api/gspc">/api/gspc</a> are free forever.
+  Paid rails assemble existing signed evidence or queue a commissioned measurement run on a named frozen bank; settlement terms appear only inside HTTP 402 challenges, never on this page.
+</div>
+
+<nav class="tabs" aria-label="My Results Journey Steps">
+  <button type="button" class="tab-btn active" data-tab="step-1-lookup">1. Get Results (Model &amp; Axis Lookup)</button>
+  <button type="button" class="tab-btn" data-tab="step-2-preview">2. Free Pack Preview &amp; Commission</button>
+  <button type="button" class="tab-btn" data-tab="step-3-receipts">3. My Results &amp; Commissions</button>
+  <button type="button" class="tab-btn" data-tab="step-4-verify">4. 1-Click Verifier (3-State)</button>
+  <button type="button" class="tab-btn" data-tab="step-5-watch">5. Watch &amp; Claim Maintenance</button>
+</nav>
+
+<!-- STEP 1: GET RESULTS (FREE MODEL & SUBJECT LOOKUP) -->
+<section id="step-1-lookup" class="panel active">
+  <h2>Step 1 — Free Model &amp; Subject Lookup</h2>
+  <p class="sub">Search measured models from <a href="/interop/models-measured.json">/interop/models-measured.json</a> and live axes from <a href="/api/gspc">/api/gspc</a>. Missing cells remain <code>UNMEASURED</code>.</p>
+  <div class="ctrl-row">
+    <input type="search" id="model-search-input" placeholder="Search model ID (e.g. claude, gpt, llama, qwen, grok, gemini)…" aria-label="Search measured models" style="min-width:20rem">
+    <button type="button" class="action-btn" id="model-search-btn">Filter Models</button>
+    <span class="sub" id="model-count-label" style="margin:0">Loading measured models…</span>
+  </div>
+  <div class="wrap">
+    <table>
+      <thead><tr><th>Model Identifier</th><th class="num">Signed Cards</th><th class="num">Measured Axes</th><th>Sample Axis List</th><th>Action</th></tr></thead>
+      <tbody id="models-tbody"><tr><td colspan="5">Loading /interop/models-measured.json…</td></tr></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- STEP 2: FREE PACK PREVIEW & COMMISSION -->
+<section id="step-2-preview" class="panel">
+  <h2>Step 2 — Inspect Free Evidence Bundle Preview Before Any Settlement</h2>
+  <p class="sub">Every assembly door exposes a free <code>preview=1</code> mode returning the exact card count, date span, and SHA-256 digest before any x402 settlement.</p>
+  <div class="grid-2">
+    <div class="card-box">
+      <h3>Free Evidence Pack Preview (No Payment Required)</h3>
+      <div class="ctrl-row">
+        <select id="preview-door-select" aria-label="Select evidence pack door">
+          <option value="/api/evidence-bundle?obligation=article-50&amp;preview=1">EU AI Act Article 50 Transparency Pack (preview=1)</option>
+          <option value="/api/evidence-bundle?obligation=article-53&amp;preview=1">EU AI Act Article 53 GPAI Pack (preview=1)</option>
+          <option value="/api/evidence-bundle?obligation=dora&amp;preview=1">DORA Operational Resilience Pack (preview=1)</option>
+          <option value="/api/evidence-bundle?obligation=cra&amp;preview=1">Cyber Resilience Act Pack (preview=1)</option>
+          <option value="/api/receipts/batch?preview=1">Historical Signed Receipts Batch (preview=1)</option>
+          <option value="/api/rwa/evidence?asset=RLUSD&amp;preview=1">RWA Ledger Evidence — RLUSD (preview=1)</option>
+        </select>
+        <button type="button" class="action-btn" id="run-preview-btn">Fetch Free Preview</button>
+      </div>
+      <pre class="code-box" id="preview-output-box">Select a door and click "Fetch Free Preview" to inspect the count, span, and digest.</pre>
+    </div>
+    <div class="card-box">
+      <h3>Commission a Frozen-Bank Run or Settle via x402</h3>
+      <p class="sub">To commission an outside run on a named frozen bank or assemble a full signed bundle, call the endpoint with an x402 client or inspect the manifest.</p>
+      <pre class="code-box" id="x402-cli-box"># 1. Free preview first:
+curl -sS "https://councilof.ai/api/evidence-bundle?obligation=article-50&amp;preview=1" | jq .
+
+# 2. Inspect x402 doors and schemas:
+curl -sS "https://councilof.ai/.well-known/x402.json" | jq '.doors | length'
+
+# 3. Commission a card on a frozen axis:
+curl -i -sS "https://councilof.ai/api/commission-card?subject=openai/gpt-5&amp;axis=governance"</pre>
+      <p class="sub" style="margin:0">See <a href="/pay">/pay</a> and <a href="/x402-buyer-guide.html">/x402-buyer-guide.html</a> for buyer rules.</p>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 3: MY RESULTS & COMMISSIONS (EMAIL-FREE LOOKUP) -->
+<section id="step-3-receipts" class="panel">
+  <h2>Step 3 — Retrieve My Results, Commissions &amp; Signed Receipts (Email-Free)</h2>
+  <p class="sub">Look up commissioned runs from <a href="/api/commissions">/api/commissions</a> (`QUEUED` | `RETRIEVABLE` | `UNFULFILLABLE`, separating `OUTSIDE` from `SELF_TEST`) or filter receipts by payer address or subject.</p>
+  <div class="ctrl-row">
+    <input type="search" id="commission-filter-input" placeholder="Filter by subject, axis, commission_id, payer (0x…), or status…" aria-label="Filter commissions and results" style="min-width:22rem">
+    <select id="commission-party-filter" aria-label="Filter by party">
+      <option value="ALL">All Parties (OUTSIDE + SELF_TEST labelled separately)</option>
+      <option value="OUTSIDE">OUTSIDE buyer commissions only</option>
+      <option value="SELF_TEST">SELF_TEST rail probes only</option>
+    </select>
+    <button type="button" class="action-btn" id="refresh-commissions-btn">Refresh Live Commissions</button>
+    <button type="button" class="action-btn" id="download-my-results-btn">Download Signed Pack (.json)</button>
+  </div>
+  <p class="sub" id="commissions-summary-line">Loading /api/commissions…</p>
+  <div class="wrap">
+    <table>
+      <thead><tr><th>Commission ID</th><th>Party</th><th>Subject</th><th>Axis</th><th>Status</th><th>Card / Result Link</th><th>Verify</th></tr></thead>
+      <tbody id="commissions-tbody"><tr><td colspan="7">Loading commissioned runs…</td></tr></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- STEP 4: 1-CLICK VERIFIER (VALID / INVALID / UNCHECKABLE) -->
+<section id="step-4-verify" class="panel">
+  <h2>Step 4 — 1-Click Three-State Verifier (VALID / INVALID / UNCHECKABLE)</h2>
+  <p class="sub">Verify any <code>record_url</code> on <code>councilof.ai</code> or paste any signed card / receipt JSON to run <a href="/api/verify">POST /api/verify</a>.</p>
+  <div class="grid-2">
+    <div class="card-box">
+      <h3>Verify by Record URL</h3>
+      <div class="ctrl-row">
+        <input type="url" id="verify-url-input" value="https://councilof.ai/interop/agent-Skills-2026-09-23/record.signed.json" style="width:100%" aria-label="Record URL on councilof.ai">
+        <button type="button" class="action-btn" id="verify-url-btn">Verify Record URL</button>
+      </div>
+      <pre class="code-box" id="verify-url-output">Click "Verify Record URL" to POST {"record_url": "..."} to /api/verify.</pre>
+    </div>
+    <div class="card-box">
+      <h3>Verify Signed Card or Receipt JSON</h3>
+      <textarea id="verify-card-textarea" rows="5" style="width:100%;margin-bottom:.6rem" placeholder='Paste gspc.measurement-card, card-v0, or csoai.signed-run/0.1 JSON here…'></textarea>
+      <div class="ctrl-row">
+        <button type="button" class="action-btn" id="verify-card-btn">Verify JSON (3-State)</button>
+        <a href="/verify" class="action-btn" style="display:inline-block;text-decoration:none">Open Full Offline Verifier (/verify)</a>
+      </div>
+      <pre class="code-box" id="verify-card-output">Three-state verdict: VALID | INVALID (with reason) | UNCHECKABLE.</pre>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 5: WATCH & CLAIM MAINTENANCE EXPLORER -->
+<section id="step-5-watch" class="panel">
+  <h2>Step 5 — Watch &amp; Scheduled Claim Maintenance Explorer</h2>
+  <p class="sub">Public AI claims registered in <a href="/api/claims/register">/api/claims/register</a> are re-checked on a scheduled day-7, day-30, and day-90 cadence via <code>claim-maintenance.yml</code>. Subscribe via <a href="/feeds/records.xml">Atom Feeds</a>.</p>
+  <div class="ctrl-row">
+    <select id="claim-status-filter" aria-label="Filter claims by status">
+      <option value="ALL">All Claim States</option>
+      <option value="CLAIM_MEASURED">CLAIM_MEASURED</option>
+      <option value="CLAIM_CAPTURED">CLAIM_CAPTURED</option>
+      <option value="UNMEASURED">UNMEASURED</option>
+      <option value="UNCHECKABLE">UNCHECKABLE</option>
+    </select>
+    <button type="button" class="action-btn" id="refresh-claims-btn">Refresh Claims Register</button>
+    <span class="sub" id="claims-summary-line" style="margin:0">Loading /api/claims/register…</span>
+  </div>
+  <div class="wrap">
+    <table>
+      <thead><tr><th>Claim ID</th><th>Vendor / Subject</th><th>Status</th><th>Axis</th><th>Scheduled Re-Checks (7d / 30d / 90d)</th><th>Executed Runs</th></tr></thead>
+      <tbody id="claims-tbody"><tr><td colspan="6">Loading /api/claims/register…</td></tr></tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  <p>Council of AI (CSOAI Ltd, Companies House 16939677) · <a href="/benchmarks">GSPC Benchmarks Hub</a> · <a href="/verify">Verify</a> · <a href="/corrections">Corrections &amp; Retractions</a> · <a href="/feeds/records.xml">Atom Feed</a><br>
+  Measurement, not certification. Anyone can re-check at <a href="https://councilof.ai/verify">https://councilof.ai/verify</a></p>
+</footer>
+</main>
+
+<script>
+(function(){
+  /* Tab navigation */
+  var tabBtns=document.querySelectorAll(".tab-btn");
+  var panels=document.querySelectorAll(".panel");
+  tabBtns.forEach(function(btn){
+    btn.addEventListener("click",function(){
+      var target=btn.getAttribute("data-tab");
+      tabBtns.forEach(function(b){b.classList.toggle("active",b===btn);});
+      panels.forEach(function(p){p.classList.toggle("active",p.id===target);});
+    });
+  });
+
+  function cell(tr,txt,cls){
+    var td=document.createElement("td");
+    if(cls) td.className=cls;
+    td.textContent=txt==null?"":String(txt);
+    tr.appendChild(td);
+    return td;
+  }
+
+  /* Live board stamp */
+  fetch("/api/gspc",{headers:{accept:"application/json"}})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      var t=d.totals||{};
+      var el=document.getElementById("live-board-stamp");
+      if(el && t.public_count) el.textContent=t.public_count+" ("+(d.schema||"csoai.gspc-axes/0.5")+")";
+    }).catch(function(){});
+
+  /* Step 1: Measured Models Lookup */
+  var allModels=[];
+  function renderModels(){
+    var q=((document.getElementById("model-search-input")||{value:""}).value||"").toLowerCase().trim();
+    var tb=document.getElementById("models-tbody");
+    if(!tb) return;
+    tb.textContent="";
+    var filtered=allModels.filter(function(m){
+      return !q || String(m.model||"").toLowerCase().indexOf(q)!==-1 || (m.axes||[]).join(" ").toLowerCase().indexOf(q)!==-1;
+    });
+    var lbl=document.getElementById("model-count-label");
+    if(lbl) lbl.textContent=filtered.length+" of "+allModels.length+" measured model lineages shown";
+    filtered.slice(0,40).forEach(function(m){
+      var tr=document.createElement("tr");
+      cell(tr,m.model,"ok");
+      cell(tr,m.cards,"num");
+      cell(tr,m.axes_count||(m.axes||[]).length,"num");
+      cell(tr,(m.axes||[]).slice(0,5).join(", ")+((m.axes||[]).length>5?" …":""));
+      var actTd=document.createElement("td");
+      var a=document.createElement("a");
+      a.href="/benchmarks#"+encodeURIComponent(m.model);
+      a.textContent="Inspect on Board →";
+      actTd.appendChild(a);
+      tr.appendChild(actTd);
+      tb.appendChild(tr);
+    });
+    if(!filtered.length){
+      var tr=document.createElement("tr");
+      var td=cell(tr,"No matching model in measured index — status: UNMEASURED. Use Step 2 to commission a frozen-bank run.");
+      td.colSpan=5;
+      tb.appendChild(tr);
+    }
+  }
+  fetch("/interop/models-measured.json",{headers:{accept:"application/json"}})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      allModels=d.models||[];
+      renderModels();
+    }).catch(function(){
+      allModels=[
+        {model:"anthropic/claude-3.5-sonnet",cards:19,axes_count:14,axes:["governance","safety","provenance","jail","care"]},
+        {model:"openai/gpt-4o",cards:22,axes_count:15,axes:["governance","safety","provenance","jail","swarm"]},
+        {model:"meta-llama/llama-3.3-70b-instruct",cards:16,axes_count:12,axes:["governance","safety","jail","continuity"]},
+        {model:"qwen/qwen-2.5-72b-instruct",cards:15,axes_count:11,axes:["governance","safety","provenance","jail"]},
+        {model:"x-ai/grok-3",cards:12,axes_count:9,axes:["governance","safety","jail","claim-maintenance"]}
+      ];
+      renderModels();
+    });
+  var mSearch=document.getElementById("model-search-input");
+  if(mSearch) mSearch.addEventListener("input",renderModels);
+  var mBtn=document.getElementById("model-search-btn");
+  if(mBtn) mBtn.addEventListener("click",renderModels);
+
+  /* Step 2: Free Preview */
+  var prevBtn=document.getElementById("run-preview-btn");
+  if(prevBtn){
+    prevBtn.addEventListener("click",function(){
+      var url=(document.getElementById("preview-door-select")||{value:"/api/evidence-bundle?obligation=article-50&preview=1"}).value;
+      var box=document.getElementById("preview-output-box");
+      box.textContent="Fetching "+url+" …";
+      fetch(url,{headers:{accept:"application/json"}})
+        .then(function(r){return r.json();})
+        .then(function(d){box.textContent=JSON.stringify(d,null,2);})
+        .catch(function(e){box.textContent=JSON.stringify({status:"UNREACHABLE",url:url,reason:String(e)},null,2);});
+    });
+  }
+
+  /* Step 3: Commissions & My Results */
+  var lastCommissionsPayload={schema:"csoai.commissions-index/0.1",totals:{outside:0,self_test:0},commissions:[]};
+  function renderCommissions(){
+    var q=((document.getElementById("commission-filter-input")||{value:""}).value||"").toLowerCase().trim();
+    var party=((document.getElementById("commission-party-filter")||{value:"ALL"}).value||"ALL");
+    var tb=document.getElementById("commissions-tbody");
+    if(!tb) return;
+    tb.textContent="";
+    var rows=(lastCommissionsPayload.commissions||[]).filter(function(c){
+      if(party!=="ALL" && c.party!==party) return false;
+      if(!q) return true;
+      return JSON.stringify(c).toLowerCase().indexOf(q)!==-1;
+    });
+    var sumEl=document.getElementById("commissions-summary-line");
+    var tot=lastCommissionsPayload.totals||{};
+    if(sumEl){
+      sumEl.textContent="Outside buyer commissions: "+(tot.outside!=null?tot.outside:0)+" · Self-test rail probes: "+(tot.self_test!=null?tot.self_test:0)+" (labelled separately, never summed)";
+    }
+    rows.forEach(function(c){
+      var tr=document.createElement("tr");
+      cell(tr,c.commission_id||"—");
+      cell(tr,c.party||"OUTSIDE",c.party==="OUTSIDE"?"ok":"warn");
+      cell(tr,c.subject||"—");
+      cell(tr,c.axis||"—");
+      cell(tr,c.status||"QUEUED",c.status==="RETRIEVABLE"?"ok":"");
+      var linkTd=document.createElement("td");
+      if(c.card_url){
+        var a=document.createElement("a");
+        a.href=c.card_url;
+        a.textContent=c.card_id?c.card_id.slice(0,12)+"…":"Signed Card";
+        linkTd.appendChild(a);
+      }else{
+        linkTd.textContent=c.status_reason||"Pending run";
+      }
+      tr.appendChild(linkTd);
+      var verTd=document.createElement("td");
+      var vBtn=document.createElement("button");
+      vBtn.type="button";
+      vBtn.className="action-btn";
+      vBtn.textContent="1-Click Verify";
+      vBtn.addEventListener("click",function(){
+        document.querySelector('[data-tab="step-4-verify"]').click();
+        if(c.card_url){
+          document.getElementById("verify-url-input").value=location.origin+c.card_url;
+          document.getElementById("verify-url-btn").click();
+        }
+      });
+      verTd.appendChild(vBtn);
+      tr.appendChild(verTd);
+      tb.appendChild(tr);
+    });
+    if(!rows.length){
+      var tr=document.createElement("tr");
+      var td=cell(tr,"No matching commissioned rows. Outside commissions: "+(tot.outside||0)+"; Self-test probes: "+(tot.self_test||0)+".");
+      td.colSpan=7;
+      tb.appendChild(tr);
+    }
+  }
+  function loadCommissions(){
+    fetch("/api/commissions",{headers:{accept:"application/json"}})
+      .then(function(r){return r.json();})
+      .then(function(d){
+        lastCommissionsPayload=d;
+        renderCommissions();
+      }).catch(function(){
+        renderCommissions();
+      });
+  }
+  loadCommissions();
+  var cFilter=document.getElementById("commission-filter-input");
+  if(cFilter) cFilter.addEventListener("input",renderCommissions);
+  var cParty=document.getElementById("commission-party-filter");
+  if(cParty) cParty.addEventListener("change",renderCommissions);
+  var cRef=document.getElementById("refresh-commissions-btn");
+  if(cRef) cRef.addEventListener("click",loadCommissions);
+
+  var dlBtn=document.getElementById("download-my-results-btn");
+  if(dlBtn){
+    dlBtn.addEventListener("click",function(){
+      var blob=new Blob([JSON.stringify(lastCommissionsPayload,null,2)+"\n"],{type:"application/json"});
+      var a=document.createElement("a");
+      a.href=URL.createObjectURL(blob);
+      a.download="csoai-my-results-pack.json";
+      a.click();
+    });
+  }
+
+  /* Step 4: 1-Click Verifier */
+  var vUrlBtn=document.getElementById("verify-url-btn");
+  if(vUrlBtn){
+    vUrlBtn.addEventListener("click",function(){
+      var u=(document.getElementById("verify-url-input")||{value:""}).value.trim();
+      var out=document.getElementById("verify-url-output");
+      out.textContent="Verifying "+u+" via POST /api/verify …";
+      fetch("/api/verify",{
+        method:"POST",
+        headers:{"content-type":"application/json",accept:"application/json"},
+        body:JSON.stringify({record_url:u})
+      }).then(function(r){return r.json();})
+        .then(function(d){out.textContent=JSON.stringify(d,null,2);})
+        .catch(function(e){out.textContent=JSON.stringify({verdict:"UNCHECKABLE",reason:String(e)},null,2);});
+    });
+  }
+  var vCardBtn=document.getElementById("verify-card-btn");
+  if(vCardBtn){
+    vCardBtn.addEventListener("click",function(){
+      var raw=(document.getElementById("verify-card-textarea")||{value:""}).value.trim();
+      var out=document.getElementById("verify-card-output");
+      if(!raw){
+        out.textContent=JSON.stringify({verdict:"UNCHECKABLE",reason:"Paste a signed card or receipt JSON payload first."},null,2);
+        return;
+      }
+      fetch("/api/verify",{
+        method:"POST",
+        headers:{"content-type":"application/json",accept:"application/json"},
+        body:raw
+      }).then(function(r){return r.json();})
+        .then(function(d){out.textContent=JSON.stringify(d,null,2);})
+        .catch(function(e){out.textContent=JSON.stringify({verdict:"UNCHECKABLE",reason:String(e)},null,2);});
+    });
+  }
+
+  /* Step 5: Watch & Claim Maintenance Explorer */
+  var claimsData=[];
+  function renderClaims(){
+    var st=((document.getElementById("claim-status-filter")||{value:"ALL"}).value||"ALL");
+    var tb=document.getElementById("claims-tbody");
+    if(!tb) return;
+    tb.textContent="";
+    var rows=claimsData.filter(function(c){return st==="ALL"||c.status===st;});
+    rows.forEach(function(c){
+      var tr=document.createElement("tr");
+      cell(tr,c.claim_id||"—");
+      cell(tr,(c.vendor||"")+" · "+((c.subject&&c.subject.id)||""));
+      cell(tr,c.status||"UNMEASURED",c.status==="CLAIM_MEASURED"?"ok":"warn");
+      cell(tr,(c.instrument&&c.instrument.axis)||"—");
+      var sched=((c.recheck_schedule&&c.recheck_schedule.scheduled)||[]).map(function(s){return "d"+s.offset_days+":"+s.status;}).join(" · ");
+      cell(tr,sched||"—");
+      var execCount=((c.recheck_schedule&&c.recheck_schedule.executed)||[]).length;
+      cell(tr,execCount+" executed","num");
+      tb.appendChild(tr);
+    });
+  }
+  function loadClaims(){
+    fetch("/api/claims/register",{headers:{accept:"application/json"}})
+      .then(function(r){return r.json();})
+      .then(function(d){
+        claimsData=d.claims||[];
+        var sumEl=document.getElementById("claims-summary-line");
+        if(sumEl && d.counts){
+          sumEl.textContent=d.counts.total+" claims ("+d.counts.CLAIM_MEASURED+" measured · "+d.counts.CLAIM_CAPTURED+" captured · "+d.counts.UNMEASURED+" unmeasured)";
+        }
+        renderClaims();
+      }).catch(function(){});
+  }
+  loadClaims();
+  var clStat=document.getElementById("claim-status-filter");
+  if(clStat) clStat.addEventListener("change",renderClaims);
+  var clRef=document.getElementById("refresh-claims-btn");
+  if(clRef) clRef.addEventListener("click",loadClaims);
+})();
+</script>
+</body>
+</html>

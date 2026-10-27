@@ -36,7 +36,7 @@ export const STRANGER_DIRS = [
   "chat", "ag-ui", "agui", "rankings", "sov-os",
   "workbench", "instrument", "system-card", "feed", "mcp-fleet", "crosswalk",
   "east-west", "challenge",
-  "refutation-ledger", "mcps", "claimguard", "ras",
+  "refutation-ledger", "mcps", "claimguard", "ras", "my-results",
 ];
 
 export const LIBRARY_SECTORS = [
@@ -142,6 +142,14 @@ if (existsSync(scittSrc)) {
   mkdirSync(join(DIST, ".well-known"), { recursive: true });
   cpSync(scittSrc, scittDest);
   console.log("[aliases] placed .well-known/scitt.json");
+}
+
+const myResultsSrc = join(ROOT, "public/my-results/index.html");
+if (existsSync(myResultsSrc)) {
+  mkdirSync(join(DIST, "my-results"), { recursive: true });
+  cpSync(myResultsSrc, join(DIST, "my-results/index.html"));
+  cpSync(myResultsSrc, join(DIST, "my-results.html"));
+  console.log("[aliases] placed my-results/index.html and my-results.html");
 }
 
 try {
