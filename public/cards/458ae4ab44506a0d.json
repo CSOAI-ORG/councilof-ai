@@ -1,0 +1,120 @@
+{
+  "card": {
+    "as_of": "2026-10-26T02:12:31Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "check_counts": {
+        "FAILURE": 29,
+        "SUCCESS": 2
+      },
+      "checks": "https://councilof.ai/interop/mcp-conformance-2026-10/checks/ai.advisorsai_service-navigator_1.0.0__stable-2025-11-25.json",
+      "checks_sha256": "5953cbd2816c576058e13a6bdaa3af40a0d8d3457e7b648f85c1db1f4996b23c",
+      "deviation_checks": [
+        "CompletionComplete",
+        "DNSRebindingRejected",
+        "LocalhostHostAccepted",
+        "ElicitationSEP1034General",
+        "ElicitationSEP1330General",
+        "LoggingSetLevel",
+        "PromptsGetEmbeddedResource",
+        "PromptsGetSimple",
+        "PromptsGetWithArgs",
+        "PromptsGetWithImage",
+        "PromptsList",
+        "ResourcesList",
+        "ResourcesReadBinary",
+        "ResourcesReadText",
+        "ResourcesSubscribe",
+        "ResourcesTemplateRead",
+        "ResourcesUnsubscribe",
+        "ServerSSEMultipleStreamsTest",
+        "ToolsCallAudio",
+        "ToolsCallElicitation",
+        "ToolsCallEmbeddedResource",
+        "ToolsCallError",
+        "ToolsCallImage",
+        "ToolsCallMixedContent",
+        "ToolsCallSampling",
+        "ToolsCallSimpleText",
+        "ToolsCallWithLogging",
+        "ToolsCallWithProgress",
+        "ToolsList"
+      ],
+      "instrument": "stable-2025-11-25",
+      "instrument_channel": "stable",
+      "kind": "csoai.mcp-conformance/0.1",
+      "not_a_grade": true,
+      "report": "https://councilof.ai/interop/mcp-conformance-2026-10/report.json",
+      "run_state": "RUN_DEVIATIONS",
+      "scenarios": 30,
+      "spec_version": "2025-11-25",
+      "state": "PROBED",
+      "subject_id": "ai.advisorsai/service-navigator@1.0.0",
+      "suite_version": "0.1.16"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "458ae4ab44506a0d12ffcd3dbe8ecf604e6e24a90bdd3ba0ec8cb21b93b42b20",
+    "sig_ed25519": "e0b36a9ab922b3afb0f5fc2d430d6338625288d0f8347ee9b5d9019e2c0e4ce7f83341cc11a3e4ada214aa1534cef37ed877551e4d9fd96e56c83327fb4adf09",
+    "source_urls": [
+      "https://advisorsai.ai/mcp",
+      "https://councilof.ai/interop/mcp-conformance-2026-10/checks/ai.advisorsai_service-navigator_1.0.0__stable-2025-11-25.json",
+      "https://councilof.ai/interop/mcp-conformance-2026-10/report.json"
+    ],
+    "subject": "MCP conformance run stable-2025-11-25 for ai.advisorsai/service-navigator@1.0.0",
+    "surface": "public.notice",
+    "tags": [
+      "mcp",
+      "conformance",
+      "probe",
+      "mcp-conformance-2026-10"
+    ],
+    "unmeasured": [
+      "behaviour under load",
+      "scenarios outside the frozen spec version",
+      "subjects outside the pinned set"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "9122d7274a7086d7267c5141619971d898599f51f9e1ab189c173e9e5cefeee1",
+    "7889747285dee6b29b563b0b848bd38bcf9b9a169961efffb74a93a367fcbe12",
+    "15ebe1bef86404a631cd2de4d0360240ff7b798306c19d0319a819a0b4432db9",
+    "ae1be034d3915f57da6aae9664e8d6988fceb1cafb73077bb90ac80168c2b0de",
+    "a2dffe019e8e5d832c42dab0b753eb2a758518095f7dbdc452759a10bac4eb01",
+    "08d8067e4a8e52199bd7c5565ebc8d825684aeea2170225f0546cb31f74b8a66",
+    "5b19b6d145fad47608f84b30c68474e548a344bf31cf13c5d7034dc7641020a4",
+    "07a2f79fcd6644ad7e00c188b94c419263a2cf8a96f51fe3d807dc24be5b458f",
+    "3867468a40f741f2e3e23d960250751a9fdac00a10ffb9a33d60f8f516ae16ae"
+  ]
+}
