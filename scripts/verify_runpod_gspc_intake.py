@@ -101,7 +101,15 @@ RUN_OPTIONAL_FIELDS = frozenset(
         "label_parser",
     }
 )
-INSTRUMENT_OPTIONAL_FIELDS = frozenset({"num_parallel", "label_parser"})
+INSTRUMENT_OPTIONAL_FIELDS = frozenset(
+    {"num_parallel", "label_parser", "reasoning"}
+)
+# `reasoning` is optional on the instrument, exactly like `label_parser`: it
+# appears only when the reasoning channel was measured, and a run that never
+# measured it keeps an instrument descriptor that is byte-identical to the one
+# it had before the channel existed. It is a TOP-LEVEL key, never a key inside
+# `decode`: decode.think is pinned False because it means "the graded text is
+# never decoded out of a thinking stream", and it has to keep meaning that.
 
 # --- read-label-v1 -----------------------------------------------------------
 # Ported verbatim in behaviour from harness/typed_output/deterministic.py
@@ -109,7 +117,30 @@ INSTRUMENT_OPTIONAL_FIELDS = frozenset({"num_parallel", "label_parser"})
 # byte-identical to the reader at the pinned commit a74df318. The verifier keeps its
 # own copy so that a change to the harness can never loosen what intake accepts.
 ITEM_SCHEMA_PARSED_BY = "csoai.runpod-gspc-item-evidence/0.2"
+ITEM_SCHEMA_REASONED = "csoai.runpod-gspc-item-evidence/0.3"
+"""The row schema for a run that measured the reasoning channel.
+
+Three versions, keyed on two independent facts: which reader read the labels
+(exact vs read-label) and whether the reasoning channel was measured.
+exact+no -> 0.1. read-label+no -> 0.2. either+reasoning -> 0.3. There is no
+fourth version for "reasoning plus a swapped parser": a row already carries
+label_parser, parse_reason and parse_confidence when the parser was swapped,
+so 0.3 says exactly one extra thing -- this row may carry a reasoning block.
+"""
 ITEM_PARSER_FIELDS = frozenset({"label_parser", "parse_reason", "parse_confidence"})
+ITEM_REASONING_FIELDS = frozenset({"reasoning"})
+"""The row key a reasoning run adds. Absent from every row of a run that did
+not measure the channel, because the row key set is compared EXACTLY."""
+REASONING_DESCRIPTOR_FIELDS = frozenset(
+    {"channel", "request_think", "response_field", "graded"}
+)
+"""The instrument's reasoning declaration: what was asked of Ollama, where the
+answer comes back, and that it was not graded."""
+REASONING_ROW_FIELDS = frozenset({"present", "sha256", "chars", "field"})
+"""One item's measurement of the channel. A digest and a length, never the
+prose: thinking is never graded and never stored."""
+REASONING_CHANNEL = "ollama-think"
+REASONING_RESPONSE_FIELD = "thinking"
 READER_COMMIT = "a74df3185fcdfa10ac8a0a6e5ecca2aff9051470"
 READ_LABEL_PARSER_ID = "read-label-v1"
 READ_LABEL_RULE = "think-stripped-answer-prefix-last-line-exact-v1"
@@ -282,6 +313,15 @@ def _ruled_instrument_id(
     instrument_id = run.get("instrument_id")
     if instrument_id is not None:
         return instrument_id if instrument_id in RULED_INSTRUMENT_IDS else None
+    # A run that measured the reasoning channel has a DIFFERENT instrument from
+    # the one this legacy test recognises: the request asked Ollama for the
+    # thinking stream, so the bytes that were sent are not the bytes a plain
+    # run sent, and instrument_sha256 says so. Inferring the t128 identity from
+    # the decode alone would name an instrument nobody measured, so it is not
+    # done. No ruling covers a reasoning instrument yet; UNRULED_INSTRUMENT is
+    # the honest answer.
+    if "reasoning" in instrument:
+        return None
     decode = instrument.get("decode")
     if not isinstance(decode, dict):
         return None
@@ -298,6 +338,69 @@ def _ruled_instrument_id(
     return None
 
 
+def _check_reasoning_descriptor(value: Any) -> None:
+    """The instrument's reasoning declaration, pinned. Fails closed.
+
+    The declaration says what was asked of Ollama and where the answer comes
+    back. It may not claim the channel was requested when it was not, and it
+    may not claim the reasoning was graded: thinking is never graded and never
+    stored, so `graded` is False by construction and a descriptor that says
+    otherwise is a lie about how the run was made.
+    """
+    if not isinstance(value, dict) or set(value) != REASONING_DESCRIPTOR_FIELDS:
+        raise IntakeError(
+            "BAD_INSTRUMENT", "instrument reasoning declaration has the wrong shape"
+        )
+    if (
+        value.get("channel") != REASONING_CHANNEL
+        or value.get("response_field") != REASONING_RESPONSE_FIELD
+        or value.get("request_think") is not True
+        or value.get("graded") is not False
+    ):
+        raise IntakeError(
+            "BAD_INSTRUMENT", "instrument reasoning declaration is not the pinned channel"
+        )
+
+
+def _check_reasoning_record(value: Any) -> None:
+    """One item's measurement of the reasoning channel. Fails closed.
+
+    The record is a MEASUREMENT: was the channel there, how long, and what is
+    its digest. The prose was never stored, so the digest cannot be recomputed
+    from anything -- it is checked for shape, and for agreeing with the
+    instrument about which field the channel came back in.
+    """
+    if not isinstance(value, dict) or set(value) != REASONING_ROW_FIELDS:
+        raise IntakeError(
+            "BAD_REASONING", "item reasoning record is not the pinned shape"
+        )
+    present = value.get("present")
+    digest = value.get("sha256")
+    chars = value.get("chars")
+    if present is not True and present is not False:
+        raise IntakeError(
+            "BAD_REASONING", "item reasoning record present flag is not a boolean"
+        )
+    if present:
+        if not isinstance(digest, str) or not SHA256_RE.fullmatch(digest):
+            raise IntakeError(
+                "BAD_REASONING", "item reasoning digest is not a sha256"
+            )
+        if type(chars) is not int or chars < 0:
+            raise IntakeError(
+                "BAD_REASONING", "item reasoning length is not a character count"
+            )
+    elif digest is not None or chars is not None:
+        raise IntakeError(
+            "BAD_REASONING",
+            "an absent reasoning channel carries no digest and no length",
+        )
+    if value.get("field") != REASONING_RESPONSE_FIELD:
+        raise IntakeError(
+            "BAD_REASONING", "item reasoning record names another response field"
+        )
+
+
 def _check_instrument_identity(run: dict[str, Any], instrument: dict[str, Any]) -> str:
     """Return the label reader ("exact" or "read-label") after pinning identity.
 
@@ -309,6 +412,14 @@ def _check_instrument_identity(run: dict[str, Any], instrument: dict[str, Any]) 
     max_tokens = decode.get("max_tokens") if isinstance(decode, dict) else None
     if type(max_tokens) is not int:
         raise IntakeError("BAD_INSTRUMENT", "decode max_tokens is not an integer")
+
+    # The reasoning channel is read off the INSTRUMENT, because the instrument is
+    # what instrument_sha256 hashes: a run that measured the channel has a
+    # different instrument from a run that did not, and the gate has to be able
+    # to tell them apart from the bytes alone.
+    has_reasoning = "reasoning" in instrument
+    if has_reasoning:
+        _check_reasoning_descriptor(instrument.get("reasoning"))
 
     instrument_parser = instrument.get("label_parser", None)
     has_instrument_parser = "label_parser" in instrument
@@ -345,6 +456,16 @@ def _check_instrument_identity(run: dict[str, Any], instrument: dict[str, Any]) 
         if reader == "read-label":
             raise IntakeError(
                 "BAD_INSTRUMENT_ID", "a read-label run must carry its pinned instrument id"
+            )
+        if has_reasoning:
+            # The reasoning channel CHANGED the instrument: the request asked
+            # Ollama for the thinking stream, so the bytes that were sent are not
+            # the bytes a plain run sent. A run whose instrument differs from
+            # every pinned one must say which instrument it used, exactly like a
+            # read-label run does. Otherwise the receipt would claim an
+            # instrument identity that nobody pinned.
+            raise IntakeError(
+                "BAD_INSTRUMENT_ID", "a reasoning run must carry its pinned instrument id"
             )
         return reader
     if instrument_id == EXACT_LABEL_T128_ID:
@@ -793,6 +914,16 @@ def _parse_items(
     correct = 0
     parse_errors = 0
     seen_items: set[str] = set()
+    # Two independent facts fix a row's schema and its key set: which reader
+    # read the labels, and whether the reasoning channel was measured. A run
+    # that measured the channel says so on EVERY row, because "the channel was
+    # there" and "the channel was silent" are both measurements.
+    has_reasoning = "reasoning" in instrument
+    pinned_schema = (
+        ITEM_SCHEMA_REASONED
+        if has_reasoning
+        else (ITEM_SCHEMA if reader == "exact" else ITEM_SCHEMA_PARSED_BY)
+    )
     for index, line in enumerate(lines, 1):
         if not line.endswith(b"\n") or line == b"\n":
             raise IntakeError(
@@ -802,7 +933,13 @@ def _parse_items(
             parse_json_bytes(line, "BAD_ITEM_ROW"), "BAD_ITEM_ROW", "item row"
         )
         if reader == "read-label":
-            _require_exact_keys(row, ITEM_FIELDS | ITEM_PARSER_FIELDS, "item row")
+            expected_row_keys = ITEM_FIELDS | ITEM_PARSER_FIELDS
+        else:
+            expected_row_keys = set(ITEM_FIELDS)
+        if has_reasoning:
+            expected_row_keys = expected_row_keys | ITEM_REASONING_FIELDS
+        _require_exact_keys(row, expected_row_keys, "item row")
+        if reader == "read-label":
             if (
                 row.get("label_parser") != READ_LABEL_PARSER_ID
                 or row.get("parse_confidence") is not None
@@ -814,12 +951,12 @@ def _parse_items(
                 raise IntakeError(
                     "BAD_LABEL_PARSER", "item parser record is not read-label-v1"
                 )
-        else:
-            _require_exact_keys(row, ITEM_FIELDS, "item row")
+        if has_reasoning:
+            _check_reasoning_record(row.get("reasoning"))
         if canonical_json_bytes(row) + b"\n" != line:
             raise IntakeError("NON_CANONICAL_ITEM", "item row is not canonical JSON")
         pinned = {
-            "schema": ITEM_SCHEMA if reader == "exact" else ITEM_SCHEMA_PARSED_BY,
+            "schema": pinned_schema,
             "run_id": run_id,
             "sequence": index,
             "axis": axis,
