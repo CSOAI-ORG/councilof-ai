@@ -192,6 +192,11 @@
    "item": "MCP surface",
    "receipt": "POST https://councilof.ai/mcp tools/list: 52 tools (47 free, 5 metered), of which 33 are the board's named axes, one per declared slot. Measured LIVE on 2026-10-26, after the deploy of 8e9df9fc: scripts/mcp-probe.mjs with no --door-origin reached 4 endpoints across 2 distinct servers and probed 104 tools, 0 unreachable, 6 catalogued-not-probed, and tools_catalogued_not_probed null because a count with no source is null and never 0. The free door serves the 47 free readers only and no payment tool. The committed artefact carries no probe_scope, no contacted and no stand_in_for: those fields say a stand-in answered, and this reading is the live door.",
    "at": "2026-10-26T08:25:32Z"
+  },
+  {
+   "item": "The measurement-capsule Internet-Draft reaches 100% on the outward gate, and one owner ask is closed",
+   "receipt": "Measured 2026-10-26. The draft gate read the rendered -01 and found exactly ONE banned word in the whole draft: 'Certificate', inside the title of normative reference RFC 9162. A cited document's title is not the drafter's claim - xml2rfc fills that element from the RFC index, and a reference whose title is not the document's real title is malformed - so the gate was reading a citation as a certification claim. The a2a_card_signature state token spelled F-A-I-L-E-D no longer appears in the draft at all: measured 0 occurrences. scripts/outward-gate/gate_draft.py now exempts a cited RFC's own title and nothing else: only inside a <reference> that anchors a real RFC, only in a file that is an Internet-Draft (XML2RFC v2 or v3), only for the words inside that title. Must-fail controls keep the same word failing in the body, in a reference that anchors no RFC, and outside an I-D; with the exemption switched off the suite reports 3 failures and it passes again when it is restored. The real draft now scores 100%: 0 banned words, 5 of 5 doctrine checks PASS, and scripts/outward-gate/test_outward_gate.py + test_gate_draft.py read 51 passed. The draft plan records that owner ask 3 is closed and that asks 1, 2 and 4 remain owner work.",
+   "at": "2026-10-26T08:33:00Z"
   }
  ],
  "blockers": [
