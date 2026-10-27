@@ -1,19 +1,22 @@
 # SAFE v1.0 port — prepared contribution, 26 October 2026
 
-Status: **CSOAI working document.** Nothing here has been submitted to the Open Secure AI Alliance,
-and nothing here claims the Alliance has adopted anything. This is the successor to
-`SAFE-RFC-CLOSURE-MATRIX-20261007.md`, which was written against the RFC before the specification was
-approved.
+Status: **CSOAI working document.** No pull request has been submitted to the Open Secure AI
+Alliance, and nothing here claims the Alliance has adopted anything. Two issue comments have been
+posted to the Alliance's own tracker (issues #32 and #72, on 26 October 2026), and the citable form of
+this contribution is published on our own surface; neither is a submission of the patch and neither is
+adoption. This is the successor to `SAFE-RFC-CLOSURE-MATRIX-20261007.md`, which was written against
+the RFC before the specification was approved.
 
 ## What changed upstream, and what it means for our three open items
 
-Verified at source on 26 October 2026 against `github.com/OpenSecureAIAlliance/RFCs`:
+Verified at source on 26 October 2026 against `github.com/OpenSecureAIAlliance/RFCs` (which now
+redirects to `OpenSecureAIAlliance/wg-safe`):
 
 | Fact | Verified how |
 |---|---|
 | `SAFE.md` (20,094 bytes) now exists beside the superseded `rfc-safe-proposal.md` (7,773 bytes) | repository contents listing |
-| Issue **#32** (discriminating power) is open, filed by CSOAI-ORG on 2026-09-17, 2 comments | issue API |
-| Issue **#72** (continuous claim maintenance) is open, filed by CSOAI-ORG on 2026-10-07, 2 comments | issue API |
+| Issue **#32** (discriminating power) is open, filed by CSOAI-ORG on 2026-09-17; **3 comments** (2 ours, 2026-09-07 and 2026-10-26) | issue API, re-read 26 Oct |
+| Issue **#72** (continuous claim maintenance) is open, filed by CSOAI-ORG on 2026-10-07; **4 comments** (2 ours, 2026-10-26; one from the Alliance's QSAFP-Core, 2026-10-26) | issue API, re-read 26 Oct |
 | PR **#64** is open, not a draft, base `main`, 3 commits, **+24/-0**, one file: `rfc-safe-proposal.md` | pull request API |
 | The approved `SAFE.md` contains none of: `discriminat`, `negative control`, `insufficient_evidence`, `not_applicable`, `claim maintenance` | full-text read of the file |
 
@@ -30,7 +33,12 @@ failure, and it never requires a method to prove it can fail.
 Two of the three were further along than a reading of our public contributions would suggest, and
 one is further along than we have published anywhere.
 
-**Move 1 — port PR #64 to the approved specification.** Not started; this is the patch that does it.
+**Move 1 — port PR #64 to the approved specification.** The patch is written and verified:
+`SAFE-v1.0-port.patch` is based on the approved `SAFE.md` — not on the superseded draft — and
+`verify-patch-applies.sh` proves both halves of that claim (it applies to the approved file at a
+pinned upstream commit, and it is *rejected* by the superseded draft). What is **not** done is the
+upstream pull request: the text is ready, and opening it needs a co-author with a normal GitHub
+account, which is the owner's to choose.
 
 **Move 2 — an executable discriminating-power profile.** The *vocabulary* already existed and was
 already published: `NOT_DISCRIMINATING` is a first-class state in the OASF capability enumerations
@@ -107,6 +115,35 @@ authorise one.
 The patch is deliberately small. It is easier for a maintainer to review four paragraphs than a
 rewrite, and a rewrite of an approved specification is the wrong thing to ask for.
 
+## How the patch was verified against the approved specification
+
+A patch that "applies to SAFE.md" is a claim about bytes, so it is checked as bytes.
+`verify-patch-applies.sh` in this directory is the check, and it is runnable by a stranger:
+
+```
+bash docs/standards/osaia-safe-reverification/verify-patch-applies.sh
+```
+
+It fetches the upstream file at a pinned commit, checks the digest against a pinned value, and
+then runs `git apply --check`:
+
+| Pin | Value |
+|---|---|
+| repository | `OpenSecureAIAlliance/wg-safe` (the RFCs repository now redirects here) |
+| commit | `ba76bac74c251926cb3d14bc363e0443b5959007` — "Add SAFE.md", 2026-10-22T02:04:22Z |
+| git blob | `327805a8178a003a3d5112b612262ffab90627f2` |
+| bytes | 20,094 |
+| sha256 | `4b7c6e69e849d46f5aa990f50db45952f9262d70dd27397ee1315c77c4776c16` |
+
+The script carries a **negative control**, and the control is the point. It requires the same patch
+to be *rejected* against the superseded `rfc-safe-proposal.md` at the same commit. A check that can
+only pass proves nothing; this one fails in both directions — if the patch stops applying to the
+approved specification, or starts applying to the superseded draft, the script exits non-zero.
+
+Last run: **PASS** on 26 October 2026 — applies to `SAFE.md` at the pinned commit, rejected by the
+superseded draft. That is a statement about applicability at a time. It is not review, not
+acceptance, and not adoption; SAFE has adopted none of this.
+
 ## How this gets submitted, and what is owner-only
 
 CSOAI's GitHub account is restricted, so anything it opens is invisible to a logged-out reader.
@@ -120,10 +157,19 @@ Owner-only, and not done here:
 
 1. **Decide whether to submit the patch at all.** The four hunks are the owner's call.
 2. **Choose the co-author**, if any. This needs a person.
-3. **Publish the citable form.** The patch, the two schemas and the worked example are ready to be
-   published under `public/contributions/` so that a logged-out reader can check them, exactly as
-   the earlier discriminating-power contribution was.
-4. **Post the follow-ups on #32 and #72.** The text is prepared; the posting is the owner's.
+
+Done, and recorded here so the next reader does not have to guess:
+
+3. **The citable form is published** — `public/contributions/osaia-safe-v1.0-port-2026-10-26.md`,
+   carrying the full four-hunk patch, the executable discriminating-power profile and the worked
+   example, so a logged-out reader can check them on `councilof.ai` exactly as they can check the
+   earlier discriminating-power contribution.
+4. **The follow-ups on #32 and #72 are posted** — 26 October 2026, comment `6413473177` on #32 and
+   comment `6413473687` on #72, each linking the citable form and this pull request. They were
+   posted as comments, not as a patch submission, and they say so.
+
+Still outstanding, and owner-only: **the upstream pull request itself.** Nothing has been
+submitted to the Alliance for approval; #64 remains open against the superseded draft.
 
 ## What this is not
 
