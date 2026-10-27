@@ -91,7 +91,18 @@ jobs:
         # The same probe with the OAuth access_token as a Bearer returns HTTP 200 — which is
         # exactly why the Mac, holding a cached access_token, publishes fine. So: unpin, and
         # give the runner the token rather than the key.
-        run: pip install --quiet cryptography huggingface_hub pyarrow kaggle build twine
+        #
+        # The typed SDK IS pinned, to the pair the owner's metadata serializer was qualified
+        # against on 14 October 2026 (scripts/spray/gspc-spray.py KAGGLE_TYPED_READ_VERSIONS).
+        # An unpinned install drifts to kaggle 2.2.5 / kagglesdk 0.1.38, and the script then
+        # refuses with "metadata schema/serializer versions need owner qualification" — a
+        # refusal that costs a whole run, on a surface whose licence repair was already
+        # approved. Qualifying a new serializer is an owner act on its own evidence; pinning to
+        # the qualified pair is not, and it is what the publisher was actually tested against.
+        run: |
+          pip install --quiet cryptography huggingface_hub pyarrow build twine
+          pip install --quiet "kaggle==2.2.4" "kagglesdk==0.1.35"
+          python3 -c "import importlib.metadata as m; assert (m.version('kaggle'), m.version('kagglesdk')) == ('2.2.4','0.1.35'), 'the qualified Kaggle SDK pair is not what is installed'"
 
       # The kaggle CLI in the runner does not read KAGGLE_USERNAME/KAGGLE_KEY from the
       # environment (run 33971286898: it asked for `kaggle auth login` and the push FAILED
