@@ -7,7 +7,7 @@
   "edited": "2026-09-27",
   "generated_from": {
     "path": "scripts/mechanism/coverage.source.json",
-    "sha256": "a63aedd8c89bdbf016627384ed55a791cc04f0ce7babf6b4a249dc765109622c",
+    "sha256": "0ecd7cb974ea09affe32b08c4fb9b766872ddbf4a2051b8c556dfc0b991620bc",
     "producer": "scripts/mechanism/build-coverage.mjs"
   },
   "statements": [
@@ -112,8 +112,8 @@
   "totals": {
     "PREDICATE": 1,
     "RELATED_MEASURE": 12,
-    "CROSSWALK_ONLY": 0,
-    "HASH_ONLY": 404
+    "CROSSWALK_ONLY": 38,
+    "HASH_ONLY": 366
   },
   "instruments": [
     {
@@ -191,8 +191,8 @@
       "by_status": {
         "PREDICATE": 0,
         "RELATED_MEASURE": 0,
-        "CROSSWALK_ONLY": 0,
-        "HASH_ONLY": 99
+        "CROSSWALK_ONLY": 11,
+        "HASH_ONLY": 88
       },
       "levels": {
         "authority": {
@@ -222,8 +222,10 @@
           "state": "APPLICABILITY_REVIEW_REQUIRED"
         },
         "crosswalks": {
-          "rows": 0,
-          "sources": []
+          "rows": 13,
+          "sources": [
+            "public/crosswalk/east-west-v1.json"
+          ]
         },
         "evidence_requirement": {
           "n": 0
@@ -250,8 +252,8 @@
       "by_status": {
         "PREDICATE": 0,
         "RELATED_MEASURE": 0,
-        "CROSSWALK_ONLY": 0,
-        "HASH_ONLY": 71
+        "CROSSWALK_ONLY": 7,
+        "HASH_ONLY": 64
       },
       "levels": {
         "authority": {
@@ -278,8 +280,10 @@
           "state": "NO_RECORD"
         },
         "crosswalks": {
-          "rows": 0,
-          "sources": []
+          "rows": 8,
+          "sources": [
+            "public/crosswalk/east-west-v1.json"
+          ]
         },
         "evidence_requirement": {
           "n": 0
@@ -306,8 +310,8 @@
       "by_status": {
         "PREDICATE": 0,
         "RELATED_MEASURE": 0,
-        "CROSSWALK_ONLY": 0,
-        "HASH_ONLY": 64
+        "CROSSWALK_ONLY": 13,
+        "HASH_ONLY": 51
       },
       "levels": {
         "authority": {
@@ -334,8 +338,10 @@
           "state": "NO_RECORD"
         },
         "crosswalks": {
-          "rows": 0,
-          "sources": []
+          "rows": 13,
+          "sources": [
+            "public/crosswalk/east-west-v1.json"
+          ]
         },
         "evidence_requirement": {
           "n": 0
@@ -362,8 +368,8 @@
       "by_status": {
         "PREDICATE": 0,
         "RELATED_MEASURE": 0,
-        "CROSSWALK_ONLY": 0,
-        "HASH_ONLY": 46
+        "CROSSWALK_ONLY": 5,
+        "HASH_ONLY": 41
       },
       "levels": {
         "authority": {
@@ -390,8 +396,10 @@
           "state": "NO_RECORD"
         },
         "crosswalks": {
-          "rows": 0,
-          "sources": []
+          "rows": 6,
+          "sources": [
+            "public/crosswalk/east-west-v1.json"
+          ]
         },
         "evidence_requirement": {
           "n": 0
@@ -418,8 +426,8 @@
       "by_status": {
         "PREDICATE": 0,
         "RELATED_MEASURE": 0,
-        "CROSSWALK_ONLY": 0,
-        "HASH_ONLY": 11
+        "CROSSWALK_ONLY": 2,
+        "HASH_ONLY": 9
       },
       "levels": {
         "authority": {
@@ -446,8 +454,10 @@
           "state": "NO_RECORD"
         },
         "crosswalks": {
-          "rows": 0,
-          "sources": []
+          "rows": 3,
+          "sources": [
+            "public/crosswalk/east-west-v1.json"
+          ]
         },
         "evidence_requirement": {
           "n": 0
@@ -464,6 +474,553 @@
     }
   ],
   "provisions_touched": [
+    {
+      "provision_id": "32016R0679:5",
+      "provision_sha256": "9146bf1f7d211d46812204137b3715f1f295f3d6b7ece3ecd1774e1fb6cf4d60",
+      "instrument": "GDPR",
+      "article": "5",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 5",
+          "mapped_to": "Data governance"
+        },
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 5",
+          "mapped_to": "Documentation & records"
+        }
+      ]
+    },
+    {
+      "provision_id": "32016R0679:13",
+      "provision_sha256": "74a2bd09e39edcafc3f1f15bb238768799038a53f515d4838c143f432ba98dcd",
+      "instrument": "GDPR",
+      "article": "13",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 13",
+          "mapped_to": "Transparency & disclosure"
+        }
+      ]
+    },
+    {
+      "provision_id": "32016R0679:14",
+      "provision_sha256": "deed8e63347e1d75cdb863b8f7ccb7b35f95df934b51a25e5f9a1d725ecc1188",
+      "instrument": "GDPR",
+      "article": "14",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 14",
+          "mapped_to": "Transparency & disclosure"
+        }
+      ]
+    },
+    {
+      "provision_id": "32016R0679:22",
+      "provision_sha256": "365afa36b81c7ea869334dddb16994d3f8e793c15e882b545d082112952c253e",
+      "instrument": "GDPR",
+      "article": "22",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 22",
+          "mapped_to": "Human oversight"
+        },
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 22",
+          "mapped_to": "Bias & fairness"
+        }
+      ]
+    },
+    {
+      "provision_id": "32016R0679:24",
+      "provision_sha256": "05659f1e42e3e69aea97c0a7d8a5d4c09443db1962c63be52af78a83b8bca33e",
+      "instrument": "GDPR",
+      "article": "24",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 24",
+          "mapped_to": "Accountability & governance"
+        }
+      ]
+    },
+    {
+      "provision_id": "32016R0679:25",
+      "provision_sha256": "39040ee425b7b00f82041100d87a2fe04206908c5a12f262233d6a0ef6bccc0e",
+      "instrument": "GDPR",
+      "article": "25",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 25",
+          "mapped_to": "Data governance"
+        }
+      ]
+    },
+    {
+      "provision_id": "32016R0679:30",
+      "provision_sha256": "36c26f59ba659f871773aa43038fb5923be84e2222655c90996fca0ee32fda4b",
+      "instrument": "GDPR",
+      "article": "30",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 30",
+          "mapped_to": "Documentation & records"
+        }
+      ]
+    },
+    {
+      "provision_id": "32016R0679:32",
+      "provision_sha256": "acfc29f8d704aabcd17fe321fef3099c39a9eff29af660057c3d4285c6ad4613",
+      "instrument": "GDPR",
+      "article": "32",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 32",
+          "mapped_to": "Security & resilience"
+        }
+      ]
+    },
+    {
+      "provision_id": "32016R0679:33",
+      "provision_sha256": "cc7d81854ffbc4a027a9af53d1e8ac9ccf07361121cfcc9f988c624458ad8207",
+      "instrument": "GDPR",
+      "article": "33",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 33",
+          "mapped_to": "Security & resilience"
+        }
+      ]
+    },
+    {
+      "provision_id": "32016R0679:34",
+      "provision_sha256": "7acf21e56421fd8937d250bc9ea560edf22f3cfb03730b91697e10e1778a429e",
+      "instrument": "GDPR",
+      "article": "34",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 34",
+          "mapped_to": "Transparency & disclosure"
+        }
+      ]
+    },
+    {
+      "provision_id": "32016R0679:35",
+      "provision_sha256": "b9504459017880cac29ed9fbf25e20cbdb9a13f43db20555537240739d396e74",
+      "instrument": "GDPR",
+      "article": "35",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 35",
+          "mapped_to": "Risk management"
+        }
+      ]
+    },
+    {
+      "provision_id": "32022L2464:1",
+      "provision_sha256": "a90dfb74a73b27a1cec7f79ba7535a4099981d1a55b48660af4891f209ccf9e8",
+      "instrument": "CSRD",
+      "article": "1",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 1",
+          "mapped_to": "Documentation & records"
+        },
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 1",
+          "mapped_to": "Accountability & governance"
+        }
+      ]
+    },
+    {
+      "provision_id": "32022L2464:3",
+      "provision_sha256": "de65d99233507a364ed042754ad66599c02c52a262e5882ab4c0f2f2bd42a4fe",
+      "instrument": "CSRD",
+      "article": "3",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 3",
+          "mapped_to": "Accountability & governance"
+        }
+      ]
+    },
+    {
+      "provision_id": "32022L2555:12",
+      "provision_sha256": "d5f743a85ee77201f2e167d8c95cae990e6d57f8c859028d0dfff3d0934429cb",
+      "instrument": "NIS2",
+      "article": "12",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 12",
+          "mapped_to": "Security & resilience"
+        }
+      ]
+    },
+    {
+      "provision_id": "32022L2555:20",
+      "provision_sha256": "78567618e3e7ec8b7186eda413d1b87cd95e78309e825c07e83b11c5647c91bd",
+      "instrument": "NIS2",
+      "article": "20",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 20",
+          "mapped_to": "Accountability & governance"
+        }
+      ]
+    },
+    {
+      "provision_id": "32022L2555:21",
+      "provision_sha256": "ca4780ad36f041ac383755cd34a3636083c93defe6bf5056b889738eaa99c5b3",
+      "instrument": "NIS2",
+      "article": "21",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 21",
+          "mapped_to": "Risk management"
+        },
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 21",
+          "mapped_to": "Security & resilience"
+        }
+      ]
+    },
+    {
+      "provision_id": "32022L2555:23",
+      "provision_sha256": "ef7e351b7ad39ceffb8701f0e02b2b320a9b13f7490ceae356ceac33ecadaf2a",
+      "instrument": "NIS2",
+      "article": "23",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 23",
+          "mapped_to": "Security & resilience"
+        }
+      ]
+    },
+    {
+      "provision_id": "32022L2555:27",
+      "provision_sha256": "e48c1b8ee2d9f82f6f653c73b419ecbab17e54563be61050b26d9263efb647c0",
+      "instrument": "NIS2",
+      "article": "27",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 27",
+          "mapped_to": "Documentation & records"
+        }
+      ]
+    },
+    {
+      "provision_id": "32022R2554:5",
+      "provision_sha256": "1f4791f7c30fbfc9a17a646bbf8fb49dbb918d7f6df376ec061e5c60933e2323",
+      "instrument": "DORA",
+      "article": "5",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 5",
+          "mapped_to": "Accountability & governance"
+        }
+      ]
+    },
+    {
+      "provision_id": "32022R2554:6",
+      "provision_sha256": "eac65b18d652ec8ea689c49bb0dfa602c499259f47c7c422d822da07960fefa7",
+      "instrument": "DORA",
+      "article": "6",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 6",
+          "mapped_to": "Risk management"
+        }
+      ]
+    },
+    {
+      "provision_id": "32022R2554:8",
+      "provision_sha256": "89e17bdccceb7708707759699a396b489014b96e2d52ac42c317410e53c6bf48",
+      "instrument": "DORA",
+      "article": "8",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 8",
+          "mapped_to": "Risk management"
+        }
+      ]
+    },
+    {
+      "provision_id": "32022R2554:9",
+      "provision_sha256": "06d4b7e8d4262fba85c4dd9d83674f9a5e5d389d8c3a148f55a4393db85ca5f8",
+      "instrument": "DORA",
+      "article": "9",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 9",
+          "mapped_to": "Security & resilience"
+        }
+      ]
+    },
+    {
+      "provision_id": "32022R2554:10",
+      "provision_sha256": "2fcf7f038aadd346d8731b6c80b4ec7cf88d56ca5c47449c7ebd1d35c8c1a95c",
+      "instrument": "DORA",
+      "article": "10",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 10",
+          "mapped_to": "Security & resilience"
+        }
+      ]
+    },
+    {
+      "provision_id": "32022R2554:11",
+      "provision_sha256": "62e83e50c534da53004753b825bf07c0f6eebdcac946bf05a514ffa17ef8cf63",
+      "instrument": "DORA",
+      "article": "11",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 11",
+          "mapped_to": "Security & resilience"
+        }
+      ]
+    },
+    {
+      "provision_id": "32022R2554:12",
+      "provision_sha256": "105e62d0d204b7e9c9c3d105636cd582cb5bfa8ca662d926b41e72049d349b96",
+      "instrument": "DORA",
+      "article": "12",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 12",
+          "mapped_to": "Security & resilience"
+        }
+      ]
+    },
+    {
+      "provision_id": "32022R2554:14",
+      "provision_sha256": "d8edb26db3653b93684688596bdccc885e292e114296d071f89a7f9c35531540",
+      "instrument": "DORA",
+      "article": "14",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 14",
+          "mapped_to": "Transparency & disclosure"
+        }
+      ]
+    },
+    {
+      "provision_id": "32022R2554:17",
+      "provision_sha256": "904e03853cca5f4ff0b4d31e0aeda9dc5049d4d6ccc6b960fd930c8ac8d0f32a",
+      "instrument": "DORA",
+      "article": "17",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 17",
+          "mapped_to": "Security & resilience"
+        }
+      ]
+    },
+    {
+      "provision_id": "32022R2554:19",
+      "provision_sha256": "138ebca18d2877e5137d7690fbf07d058689838066c5c00e00a06d4d2fa957db",
+      "instrument": "DORA",
+      "article": "19",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 19",
+          "mapped_to": "Security & resilience"
+        }
+      ]
+    },
+    {
+      "provision_id": "32022R2554:24",
+      "provision_sha256": "b4928d69570e38bc292996d66ab61b8cbbe4b9cfe70f37a3d65867038e99f312",
+      "instrument": "DORA",
+      "article": "24",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 24",
+          "mapped_to": "Risk management"
+        }
+      ]
+    },
+    {
+      "provision_id": "32022R2554:25",
+      "provision_sha256": "69d9f65e72db2efbf83d7286409e777b98469451acc89b60cee417121d734362",
+      "instrument": "DORA",
+      "article": "25",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 25",
+          "mapped_to": "Security & resilience"
+        }
+      ]
+    },
+    {
+      "provision_id": "32022R2554:30",
+      "provision_sha256": "e80b45a26e640858d334b571a8e10ca02eefa0b97479b16f1aaf82c7c4886233",
+      "instrument": "DORA",
+      "article": "30",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 30",
+          "mapped_to": "Documentation & records"
+        }
+      ]
+    },
     {
       "provision_id": "32024R1689:5",
       "provision_sha256": "8433d9f8d20a038af749eea977e67dfe0cce05c64742369f9e96c9c3e67c69bb",
@@ -865,6 +1422,130 @@
         }
       ],
       "crosswalk_rows": []
+    },
+    {
+      "provision_id": "32024R2847:13",
+      "provision_sha256": "032086e0e391dd8c14e4892333dfb7a329e4cee429472ff1c1d9bb23145ac216",
+      "instrument": "Cyber Resilience Act",
+      "article": "13",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 13",
+          "mapped_to": "Security & resilience"
+        },
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 13",
+          "mapped_to": "Risk management"
+        }
+      ]
+    },
+    {
+      "provision_id": "32024R2847:14",
+      "provision_sha256": "cd5859fa8b781b78099488e0ad774235b03e92e77979a4f964af45ef145d3e93",
+      "instrument": "Cyber Resilience Act",
+      "article": "14",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 14",
+          "mapped_to": "Security & resilience"
+        }
+      ]
+    },
+    {
+      "provision_id": "32024R2847:16",
+      "provision_sha256": "4a7b06f441a51dcca7a9db9364f3e3a1f3c21813e80a81d28e92cc9480e4cf4f",
+      "instrument": "Cyber Resilience Act",
+      "article": "16",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 16",
+          "mapped_to": "Transparency & disclosure"
+        }
+      ]
+    },
+    {
+      "provision_id": "32024R2847:19",
+      "provision_sha256": "377ea7bab52b1338cd4e2a306b1003cd8b5139df480d68f13e867c92a3f420f8",
+      "instrument": "Cyber Resilience Act",
+      "article": "19",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 19",
+          "mapped_to": "Documentation & records"
+        }
+      ]
+    },
+    {
+      "provision_id": "32024R2847:28",
+      "provision_sha256": "0e249f348424d6852d5e88df055cd04b76a77964284814f77ebf2025ef36b07e",
+      "instrument": "Cyber Resilience Act",
+      "article": "28",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 28",
+          "mapped_to": "Documentation & records"
+        }
+      ]
+    },
+    {
+      "provision_id": "32024R2847:31",
+      "provision_sha256": "0a1c97ba47e5202b9c303eaccc9da53a647e4ab277f66a91d8f80ff1e5804f7b",
+      "instrument": "Cyber Resilience Act",
+      "article": "31",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 31",
+          "mapped_to": "Documentation & records"
+        }
+      ]
+    },
+    {
+      "provision_id": "32024R2847:32",
+      "provision_sha256": "04d3639c89761b5faa6170b2872a1b168d8ee0356754070ee9112b13fc34b635",
+      "instrument": "Cyber Resilience Act",
+      "article": "32",
+      "status": "CROSSWALK_ONLY",
+      "predicates": [],
+      "related_axes": [],
+      "related": [],
+      "crosswalk_rows": [
+        {
+          "source": "public/crosswalk/east-west-v1.json",
+          "ref": "Art. 32",
+          "mapped_to": "Accountability & governance"
+        }
+      ]
     }
   ],
   "unresolved_references": [
@@ -917,7 +1598,7 @@
           "output_mode": "APPLICABILITY_REVIEW_REQUIRED"
         }
       ],
-      "east_west_rows": 7,
+      "east_west_rows": 50,
       "prose_pages": [
         {
           "path": "/eu-ai-act/",
