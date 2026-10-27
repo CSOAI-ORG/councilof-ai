@@ -1,0 +1,119 @@
+{
+  "card": {
+    "as_of": "2026-10-26T02:12:31Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "check_counts": {
+        "FAILURE": 28,
+        "SUCCESS": 3
+      },
+      "checks": "https://councilof.ai/interop/mcp-conformance-2026-10/checks/academy.apexai_apex-ai-academy_1.0.1__stable-2025-11-25.json",
+      "checks_sha256": "f421adcdf442bac5a3c012c821170ab5e605f65b349a8f6fdc264f43df5fd802",
+      "deviation_checks": [
+        "CompletionComplete",
+        "DNSRebindingRejected",
+        "LocalhostHostAccepted",
+        "ElicitationSEP1034General",
+        "ElicitationSEP1330General",
+        "LoggingSetLevel",
+        "PromptsGetEmbeddedResource",
+        "PromptsGetSimple",
+        "PromptsGetWithArgs",
+        "PromptsGetWithImage",
+        "PromptsList",
+        "ResourcesList",
+        "ResourcesReadBinary",
+        "ResourcesReadText",
+        "ResourcesSubscribe",
+        "ResourcesTemplateRead",
+        "ResourcesUnsubscribe",
+        "ServerSSEMultipleStreamsTest",
+        "ToolsCallAudio",
+        "ToolsCallElicitation",
+        "ToolsCallEmbeddedResource",
+        "ToolsCallError",
+        "ToolsCallImage",
+        "ToolsCallMixedContent",
+        "ToolsCallSampling",
+        "ToolsCallSimpleText",
+        "ToolsCallWithLogging",
+        "ToolsCallWithProgress"
+      ],
+      "instrument": "stable-2025-11-25",
+      "instrument_channel": "stable",
+      "kind": "csoai.mcp-conformance/0.1",
+      "not_a_grade": true,
+      "report": "https://councilof.ai/interop/mcp-conformance-2026-10/report.json",
+      "run_state": "RUN_DEVIATIONS",
+      "scenarios": 30,
+      "spec_version": "2025-11-25",
+      "state": "PROBED",
+      "subject_id": "academy.apexai/apex-ai-academy@1.0.1",
+      "suite_version": "0.1.16"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "6b7d7c69aa447f09c8dc414e8d64ba6932f97bd44e88a975a6888a8a1714a97b",
+    "sig_ed25519": "63b77bed8110489e2ef5e2bac270038edfca148d5dae92fefe9342bf26c2675a9b1a4e29e2e8b532b5f717581375833874bfc82d589ef825c646fb64413b0702",
+    "source_urls": [
+      "https://apexai.academy/mcp",
+      "https://councilof.ai/interop/mcp-conformance-2026-10/checks/academy.apexai_apex-ai-academy_1.0.1__stable-2025-11-25.json",
+      "https://councilof.ai/interop/mcp-conformance-2026-10/report.json"
+    ],
+    "subject": "MCP conformance run stable-2025-11-25 for academy.apexai/apex-ai-academy@1.0.1",
+    "surface": "public.notice",
+    "tags": [
+      "mcp",
+      "conformance",
+      "probe",
+      "mcp-conformance-2026-10"
+    ],
+    "unmeasured": [
+      "behaviour under load",
+      "scenarios outside the frozen spec version",
+      "subjects outside the pinned set"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "942bbf2d41b083c27a4bea63cc87b3b622e00e25dbc4558a4387d33858531cb1",
+    "102769720a5c5c159941045abefad7d040f05045459e5545ace07768667cf196",
+    "55039646c2d137381ca6052b4b0e53dbab3ccddc177691ca1811cbe7e1eee8b8",
+    "5416936c76e9bc05bce3af56fc478fccbcbefe150097291414b8821e1d8fa893",
+    "5130589784d1ca5f9c0e6ae3e4adeceb4b589cf6dcc133ab8ce872251cd846da",
+    "bb0eef1e7419df7a2b39c3d258ce4d8cdb9181e4ad64740b38818659cb9e2a74",
+    "5b19b6d145fad47608f84b30c68474e548a344bf31cf13c5d7034dc7641020a4",
+    "07a2f79fcd6644ad7e00c188b94c419263a2cf8a96f51fe3d807dc24be5b458f",
+    "3867468a40f741f2e3e23d960250751a9fdac00a10ffb9a33d60f8f516ae16ae"
+  ]
+}
