@@ -50,11 +50,15 @@ names and published with status `UNCHECKABLE` rather than silently dropped. The 
 signed cards and the per-item rows are the resolvable artefacts.
 **Owner action**: appeal with Zenodo, or accept that only the HF DOIs are citable.
 
-## 5. npm — WebAuthn account, no publish path
+## 5. npm — WebAuthn account, no release path
 
-**State**: blocked by design of the account, not by a bug.
+**State**: the account cannot publish; the package itself is live and is a *tool*, not a snapshot
+mirror.
 **Evidence**: the publisher reports *"the npm account is WebAuthn (not TOTP): `npm publish --otp=`
-can never work and web login returns EOTP."*
+can never work and web login returns EOTP."* The published package `csoai-gspc-mcp` is at **0.2.3**
+(published 2026-10-26T07:21:23Z) and carries the MCP tool surface — `gspc-tools.json`,
+`axis-aliases.json`, `verify-card.mjs` — which reads the live board rather than shipping a
+snapshot of it, so it is not stale in the way a frozen mirror would be.
 **Owner action**: mint a granular access token with **Bypass 2FA** at npmjs.com → Access Tokens
 and store it as the `NPM_TOKEN` secret. The publisher does not attempt npm until then.
 
@@ -130,13 +134,17 @@ plugin is the one validated by Kimi's own validator.
 
 | Surface | State | Where |
 |---|---|---|
-| Live board | LIVE | <https://councilof.ai/api/gspc> |
-| Hugging Face dataset + Space | LIVE | `csoai/gspc-board` |
-| Kaggle | LIVE, licence **CC BY 4.0** | `nicktempleman/csoai-gspc-living-board` |
+| Live board | LIVE | <https://councilof.ai/api/gspc> — 23 measured of 33 axes |
+| Hugging Face dataset + Space | LIVE | `csoai/gspc-board` — `as_of 2026-10-26T19:19:22Z`, fingerprint `600cf3983c32ff45…` |
+| Kaggle | LIVE, licence **CC BY 4.0** | `nicktempleman/csoai-gspc-living-board` v62 |
 | PyPI | LIVE | `csoai-gspc` 0.2.20261026 |
-| GitHub mirror | LIVE | `CSOAI-ORG/gspc-board` |
+| GitHub mirror | LIVE | `CSOAI-ORG/gspc-board` — `as_of 2026-10-26T19:19:22Z`, fingerprint `600cf3983c32ff45…` |
+| npm | LIVE but not releasable (#5) | `csoai-gspc-mcp` 0.2.3 — the tool, not a frozen snapshot |
 | Zenodo | BLOCKED (#4) | 403 |
-| npm | BLOCKED (#5) | WebAuthn account |
-| EEE datastore | PR OPEN | <https://huggingface.co/datasets/evaleval/EEE_datastore/pull/241> |
+| EEE datastore | PR OPEN | <https://huggingface.co/datasets/evaleval/EEE_datastore/pull/241> — 132 files |
+
+The HF twin and the Kaggle copy are byte-identical: the estate's own `verify-gspc-parity.py`
+reports `EXTERNALLY_VERIFIED` with 8 of 8 files matching, and both carry the same
+`as_of 2026-10-26T19:19:22Z` and fingerprint `600cf3983c32ff45…`.
 
 **Until a blocker is resolved, the estate runs without it. Nothing is faked, no workaround obscures the wait.**
