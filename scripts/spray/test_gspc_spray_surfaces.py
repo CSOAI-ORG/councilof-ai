@@ -131,5 +131,81 @@ def test_non_kaggle_surfaces_are_not_given_kaggle_only_options(monkeypatch):
     assert seen["dry_run"] is True and seen["force"] is True
 
 
+def test_the_licence_name_written_is_the_one_kaggle_accepts():
+    """Kaggle's write endpoint does NOT take the SPDX string its read response reports.
+
+    Measured live 2026-10-27 against the owner's own dataset: a metadata payload carrying
+    {"name": "CC-BY-4.0"} is refused with "You've specified an invalid license", while
+    {"name": "CC BY 4.0"} is accepted and reads back as
+    "Attribution 4.0 International (CC BY 4.0)". The SPDX string is what the server refuses.
+    """
+    board = {"totals": {"license": "CC-BY-4.0"}}
+    info = {"licenseName": None, "licenses": [{"name": "CC0-1.0"}]}
+
+    out = spray.kaggle_licences(board, info, ("CC0-1.0", "CC-BY-4.0"))
+    assert out == [{"name": "CC BY 4.0"}], "the SPDX string is refused by Kaggle's write endpoint"
+    assert out[0]["name"] != "CC-BY-4.0"
+
+    # the display labels Kaggle itself reports must both be readable
+    assert spray.kaggle_licences({"totals": {"license": "CC0-1.0"}},
+                                  {"licenseName": "CC0: Public Domain", "licenses": None}) == [{"name": "CC0-1.0"}]
+    assert spray.kaggle_licences({"totals": {"license": "CC-BY-4.0"}},
+                                  {"licenseName": "Attribution 4.0 International (CC BY 4.0)",
+                                   "licenses": None}) == [{"name": "CC BY 4.0"}]
+
+
+def test_the_drift_check_compares_the_licence_canonically():
+    """A licence that is correct must not read as drift on every run.
+
+    Kaggle reports the licence under its display label; the approved metadata carries the
+    name Kaggle accepts on write. Comparing the strings directly reports drift that does
+    not exist and sends a repair every single run.
+    """
+    info = {"licenseName": None, "licenses": [{"name": "Attribution 4.0 International (CC BY 4.0)"}],
+            "subtitle": "sub", "description": "desc"}
+    desired = [{"name": "CC BY 4.0"}]
+    assert spray.kaggle_metadata_drift(info, "sub", "desc", desired) is None
+
+    # a genuinely different licence must still read as drift
+    info_cc0 = {"licenseName": None, "licenses": [{"name": "CC0-1.0"}],
+                "subtitle": "sub", "description": "desc"}
+    assert "licence differs" in (spray.kaggle_metadata_drift(info_cc0, "sub", "desc", desired) or "")
+
+
+def test_wait_for_retries_through_a_refused():
+    """The poll must survive a Refused, or a transient 404 kills the publish.
+
+    THE SECOND DEFECT
+    ----------------
+    ``wait_for`` is the spray's polling helper: it calls a predicate until the predicate
+    returns something true, and it treats a transient read failure as "not yet". But the
+    predicates it polls include ``kaggle_public_files()``, which raises ``Refused`` when
+    Kaggle's archive is not readable yet — and a Kaggle version that is still being created
+    answers 404 on its own archive for a while after the upload succeeds.
+
+    Because ``Refused`` is a SystemExit, ``except Exception`` never saw it: the poll died on
+    the first miss, the Refused escaped ``spray_kaggle``, and the run reported FAILED instead
+    of waiting for the version it had just created. Seen live 2026-10-27.
+    """
+    calls = {"n": 0}
+
+    def predicate():
+        calls["n"] += 1
+        if calls["n"] < 3:
+            raise spray.Refused("cannot read Kaggle's downloadable archive before publish (HTTP 404)")
+        return "landed"
+
+    assert spray.wait_for(predicate, tries=6, delay=0) == "landed"
+    assert calls["n"] == 3, "the poll did not retry past the refusal"
+
+
+def test_wait_for_gives_up_quietly_when_every_attempt_refuses():
+    """Exhausting the retries is not itself a refusal — it is a falsy result."""
+    def always_refuses():
+        raise spray.Refused("still not downloadable")
+
+    assert spray.wait_for(always_refuses, tries=2, delay=0) is None
+
+
 if __name__ == "__main__":
     raise SystemExit(pytest.main([__file__, "-q"]))
