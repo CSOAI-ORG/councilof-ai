@@ -476,6 +476,57 @@
       ]
     },
     {
+      "id": "evidence-delivery",
+      "kind": "a2a_skill",
+      "name": "Evidence Delivery: unsigned local draft with human review",
+      "description": "Accept one csoai.local-evidence-draft/1.2 declaration whose digest fields differ, whose negative control is DIVERGENT, and whose named MEOK H.I.M. reviewer, decision, notes and local-only boundaries are present. Return a Message containing the declaration and explicit non-claims. Envelope checks only: source bytes are not received or re-hashed. No GSPC measurement, independent verification, certification, signature, anchoring, payment, Task or durable adapter storage is created.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [
+        "csoai.local-evidence-draft/1.2",
+        "council-os.evidence-delivery-result/1.0"
+      ],
+      "surfaces": [
+        "a2a",
+        "llms"
+      ],
+      "probe": {
+        "method": "POST",
+        "request": "/api/a2a",
+        "expect_status": [
+          200
+        ],
+        "safe": false,
+        "unsafe_reason": "A2A SendMessage is a JSON-RPC POST; the loop probes GET /api/a2a, the published contract"
+      },
+      "tags": [
+        "evidence",
+        "human-in-the-loop",
+        "unsigned",
+        "local-draft"
+      ],
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"evidence-delivery\",\"input\":{\"draft\":<csoai.local-evidence-draft/1.2>}}"
+      ],
+      "inputModes": [
+        "application/json"
+      ],
+      "outputModes": [
+        "text/plain",
+        "application/json"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "SendMessage answers with the live board: totals.lid verbatim from GET /api/gspc and the derived axis rows (axis, family, kind, status, n, separation, leader state). Empty cells stay empty; a withheld leader is a state, not a zero; a fetch failure is UNCHECKABLE, never a fabricated number. Live JSON, recomputable from published rows.",
+      "description_state": "DOCUMENTED",
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"gspc-board\",\"input\":{}}",
+        "Legacy compatibility: one text Part containing exactly \"board\"",
+        "GET /api/gspc — the same board, outside A2A"
+      ],
       "id": "gspc-board",
       "kind": "a2a_skill",
       "name": "Signed GSPC Board",
@@ -8875,20 +8926,20 @@
         "method": "GET",
         "request": "/.well-known/x402",
         "expect_status": [
-          308
+          200
         ],
         "safe": true
       },
       "source": "functions/.well-known/x402.ts",
       "probe_override": {
-        "observed_at": "2026-09-22",
+        "observed_at": "2026-10-27",
         "observed_on": "https://councilof.ai",
         "probe": {
           "expect_status": [
-            308
+            200
           ]
         },
-        "why": "GET /.well-known/x402 is a redirect shim: 308 to /.well-known/x402.json, observed 2026-09-22 on https://councilof.ai. A door that moved is not a door that is gone."
+        "why": "GET /.well-known/x402 serves the canonical discovery manifest directly at 200, matching functions/.well-known/x402.ts and its alias-parity tests. Rechecked live on 2026-10-27; the former 308 declaration was stale."
       }
     },
     {
