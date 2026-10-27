@@ -1,9 +1,9 @@
 {
   "schema": "csoai.connect-live-check/1",
   "generated_by": "scripts/harness-x/connect-live.mjs",
-  "checked_at": "2026-10-24T05:56:32.214Z",
+  "checked_at": "2026-10-26T08:26:07.115Z",
   "scope": "live: the doors were contacted at https://councilof.ai",
-  "matrix_sha256": "e9f9ffa8ac62fe8a8f9e02ae4252da5e0a7dc772a527087ce7039c6bda9a9d09",
+  "matrix_sha256": "585442a40d6cff8d34efc11cee1102c6227258ce9fa6435d0f143e7db97ad2d2",
   "doors": {
     "https://councilof.ai/mcp/free": {
       "state": "PASS",
@@ -13,33 +13,7 @@
         "version": "1.4.4"
       },
       "protocol": "2025-06-18",
-      "tools": 14,
-      "names": [
-        "board_totals",
-        "get_axis",
-        "verify_card",
-        "list_cards",
-        "get_root",
-        "get_card",
-        "verify_inclusion",
-        "x402_trust",
-        "mcp_trust",
-        "measurement_index",
-        "verify_capsule",
-        "server_evidence",
-        "evidence_bundle_preview",
-        "route"
-      ]
-    },
-    "https://councilof.ai/mcp": {
-      "state": "PASS",
-      "contacted": "https://councilof.ai/mcp",
-      "server": {
-        "name": "csoai-gspc-mcp",
-        "version": "1.4.4"
-      },
-      "protocol": "2025-06-18",
-      "tools": 19,
+      "tools": 47,
       "names": [
         "board_totals",
         "get_axis",
@@ -55,6 +29,98 @@
         "server_evidence",
         "evidence_bundle_preview",
         "route",
+        "axis_governance",
+        "axis_safety",
+        "axis_provenance",
+        "axis_continuity",
+        "axis_conformance",
+        "axis_openness",
+        "axis_machinery-conformity",
+        "axis_care",
+        "axis_cross-reality",
+        "axis_detector-interop",
+        "axis_art5-safeguard",
+        "axis_swarm",
+        "axis_affect",
+        "axis_jail",
+        "axis_effect-binding",
+        "axis_provenance-controls",
+        "axis_reserve-attestation",
+        "axis_regulatory-framework",
+        "axis_distribution-integrity",
+        "axis_custody-disclosure",
+        "axis_ai-adoption-components",
+        "axis_labour-components",
+        "axis_humanoid-labour-index",
+        "axis_lab-practice",
+        "axis_company-practice",
+        "axis_measurer-integrity",
+        "axis_harness-fidelity",
+        "axis_interop-conformance",
+        "axis_humanoid-deployment",
+        "axis_regulator-transparency",
+        "axis_interpretability-reproducibility",
+        "axis_claim-maintenance",
+        "axis_serving-fidelity"
+      ]
+    },
+    "https://councilof.ai/mcp": {
+      "state": "PASS",
+      "contacted": "https://councilof.ai/mcp",
+      "server": {
+        "name": "csoai-gspc-mcp",
+        "version": "1.4.4"
+      },
+      "protocol": "2025-06-18",
+      "tools": 52,
+      "names": [
+        "board_totals",
+        "get_axis",
+        "verify_card",
+        "list_cards",
+        "get_root",
+        "get_card",
+        "verify_inclusion",
+        "x402_trust",
+        "mcp_trust",
+        "measurement_index",
+        "verify_capsule",
+        "server_evidence",
+        "evidence_bundle_preview",
+        "route",
+        "axis_governance",
+        "axis_safety",
+        "axis_provenance",
+        "axis_continuity",
+        "axis_conformance",
+        "axis_openness",
+        "axis_machinery-conformity",
+        "axis_care",
+        "axis_cross-reality",
+        "axis_detector-interop",
+        "axis_art5-safeguard",
+        "axis_swarm",
+        "axis_affect",
+        "axis_jail",
+        "axis_effect-binding",
+        "axis_provenance-controls",
+        "axis_reserve-attestation",
+        "axis_regulatory-framework",
+        "axis_distribution-integrity",
+        "axis_custody-disclosure",
+        "axis_ai-adoption-components",
+        "axis_labour-components",
+        "axis_humanoid-labour-index",
+        "axis_lab-practice",
+        "axis_company-practice",
+        "axis_measurer-integrity",
+        "axis_harness-fidelity",
+        "axis_interop-conformance",
+        "axis_humanoid-deployment",
+        "axis_regulator-transparency",
+        "axis_interpretability-reproducibility",
+        "axis_claim-maintenance",
+        "axis_serving-fidelity",
         "commission_card",
         "art50_marking_evidence",
         "rwa_evidence",
@@ -73,7 +139,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "shell syntax (bash -n)",
@@ -93,7 +159,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "text block (form values): no syntax to check",
@@ -113,7 +179,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "text block (form values): no syntax to check",
@@ -133,7 +199,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "text block (form values): no syntax to check",
@@ -153,7 +219,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "text block (form values): no syntax to check",
@@ -173,7 +239,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -193,7 +259,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -213,7 +279,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -233,7 +299,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -253,7 +319,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -273,7 +339,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -293,7 +359,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -313,7 +379,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -333,7 +399,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -353,7 +419,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -373,7 +439,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -393,7 +459,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -413,7 +479,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -433,7 +499,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -453,7 +519,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -473,7 +539,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -493,7 +559,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "toml is [table] + key = \"value\" lines",
@@ -513,7 +579,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -533,7 +599,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -553,7 +619,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -573,7 +639,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp",
           "ok": true,
-          "detail": "19 tools, server 1.4.4"
+          "detail": "52 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -593,7 +659,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "python parses (ast)",
@@ -613,7 +679,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -633,7 +699,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -653,7 +719,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -673,7 +739,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "python parses (ast)",
@@ -693,7 +759,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "python parses (ast)",
@@ -713,7 +779,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "python parses (ast)",
@@ -733,7 +799,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "python parses (ast)",
@@ -753,7 +819,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "python parses (ast)",
@@ -773,7 +839,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "json parses",
@@ -793,7 +859,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "python parses (ast)",
@@ -813,7 +879,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp",
           "ok": true,
-          "detail": "19 tools, server 1.4.4"
+          "detail": "52 tools, server 1.4.4"
         },
         {
           "check": "python parses (ast)",
@@ -833,7 +899,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "python parses (ast)",
@@ -853,7 +919,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp",
           "ok": true,
-          "detail": "19 tools, server 1.4.4"
+          "detail": "52 tools, server 1.4.4"
         },
         {
           "check": "python parses (ast)",
@@ -873,7 +939,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "text block (form values): no syntax to check",
@@ -893,7 +959,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "text block (form values): no syntax to check",
@@ -913,7 +979,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "text block (form values): no syntax to check",
@@ -933,7 +999,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "shell syntax (bash -n)",
@@ -953,7 +1019,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "text block (form values): no syntax to check",
@@ -973,7 +1039,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "text block (form values): no syntax to check",
@@ -993,7 +1059,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "text block (form values): no syntax to check",
@@ -1013,7 +1079,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "text block (form values): no syntax to check",
@@ -1033,7 +1099,7 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "text block (form values): no syntax to check",
@@ -1053,12 +1119,12 @@
         {
           "check": "door answers initialize + tools/list: https://councilof.ai/mcp/free",
           "ok": true,
-          "detail": "14 tools, server 1.4.4"
+          "detail": "47 tools, server 1.4.4"
         },
         {
           "check": "curl block executed: tools/list answered",
           "ok": true,
-          "detail": "14 tools"
+          "detail": "47 tools"
         }
       ],
       "client_steps": "executed here",
