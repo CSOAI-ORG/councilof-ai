@@ -565,6 +565,58 @@
       "payment": "free"
     },
     {
+      "id": "api-pals",
+      "protocols": [
+        "http"
+      ],
+      "title": "Staff registry (PALs)",
+      "description": "GET /api/pals — the staff registry. Every Council of AI staff member as a PAL record: identity (did:key), memory namespace, scope, objectives, guardrails, voice, model preference and face adapter. The house staff are the desks on /team expressed as PALs, and the desk definitions are DERIVED rather than copied, so this registry and the page cannot describe different people. Also serves GET /api/pals/<id> for one staff member, and states whether a language model is configured for this deployment, so a reader is never left guessing which of the two they are talking to.",
+      "endpoint": "/api/pals",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "both",
+      "payment": "free"
+    },
+    {
+      "id": "api-pals-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "Staff registry (PALs, POST)",
+      "description": "POST /api/pals — the write door, described rather than 404'd. POST /api/pals/provision builds a staff member, and is refused rather than pretended when the PAL_MEMORY_KV store is unbound. POST /api/pals/<id>/chat asks one a question. Every reply carries its provenance: grounded when the published records answered and the model was never consulted, model when the model spoke on the records, ungrounded when no record answers, refused when a reply broke a standing rule.",
+      "endpoint": "/api/pals",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "both",
+      "payment": "free"
+    },
+    {
+      "id": "api-hitl",
+      "protocols": [
+        "http"
+      ],
+      "title": "Human in the loop",
+      "description": "GET /api/hitl — the human-in-the-loop state. The policy line, whether a decision can be taken at all (an operator token must be configured for that), whether a decision would be signed (the board attestation key), whether decisions are persisted (a store binding), the queue waiting for a human, and the competency curriculum. The curriculum is DERIVED from the live board’s axis list on every request, so it cannot drift from what the Council publishes. Also serves GET /api/hitl/modules, GET /api/hitl/modules/<id>, GET /api/hitl/challenges and GET /api/hitl/record.",
+      "endpoint": "/api/hitl",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "both",
+      "payment": "free"
+    },
+    {
+      "id": "api-hitl-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "Human in the loop (POST)",
+      "description": "POST /api/hitl — the write door, described rather than 404’d. POST /api/hitl/challenge raises a challenge for a human to decide. POST /api/hitl/modules answers a competency module, and the answer is checked against the live published record. POST /api/hitl/decision records a decision — APPROVED, HOLD or REJECTED — and is refused unless an operator token is configured, because an approval endpoint anyone can call is not a human in the loop. The receipt it returns uses the schema csoai.hitl-oversight-receipt/0.1, the same one the MEOK H.I.M. issues.",
+      "endpoint": "/api/hitl",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "both",
+      "payment": "free"
+    },
+    {
       "id": "api-checkout-post",
       "protocols": [
         "http"
