@@ -764,6 +764,168 @@ class WorkerTests(unittest.TestCase):
                 with worker.single_instance(lock):
                     pass
 
+    # ------------------------------------------------ the reasoning channel
+
+    def _generate_against_stub_ollama(
+        self, response_payload: dict, *, reasoning: bool
+    ) -> tuple[dict, worker.InferenceResult]:
+        """One OllamaClient.generate() against a local stub Ollama.
+
+        Returns the request payload the worker actually sent and the result it
+        parsed. No network: the stub is a loopback HTTP server on an ephemeral
+        port, the same way the transport itself is restricted.
+        """
+        captured: dict = {}
+
+        class Handler(http.server.BaseHTTPRequestHandler):
+            def do_POST(self) -> None:  # noqa: N802
+                length = int(self.headers.get("Content-Length", "0"))
+                captured["path"] = self.path
+                captured["body"] = self.rfile.read(length)
+                body = json.dumps(response_payload).encode()
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+
+            def log_message(self, _format: str, *_args: object) -> None:
+                return
+
+        server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            client = worker.OllamaClient(f"http://127.0.0.1:{server.server_address[1]}")
+            config, _output = self.write_config(
+                [{"id": "a", "prompt": "Pick a label.", "expected": "YES"}],
+                labels=["YES", "NO"],
+            )
+            config = dataclasses.replace(config, reasoning=reasoning)
+            result = client.generate("unit/model:1", "Pick a label.", config)
+        finally:
+            server.shutdown()
+            server.server_close()
+            thread.join(timeout=2)
+        return json.loads(captured["body"]), result
+
+    def test_reasoning_off_sends_the_bytes_it_sent_before_the_flag_existed(self) -> None:
+        """The default request is unchanged, byte for byte.
+
+        The flag is OFF by default, so a run that never asks for the reasoning
+        channel must put exactly the same bytes on the wire as it did before
+        the flag existed. Frozen here from the pre-change worker, measured
+        2026-10-26.
+        """
+        payload, result = self._generate_against_stub_ollama(
+            {"done": True, "response": "YES", "model": "unit/model:1"},
+            reasoning=False,
+        )
+        self.assertEqual(
+            worker.canonical_json_bytes(payload),
+            b'{"model":"unit/model:1","options":{"num_predict":16,"seed":0,'
+            b'"temperature":0},"prompt":"Pick a label.","stream":false,"think":false}',
+        )
+        self.assertIs(payload["think"], False)
+        self.assertEqual(result.raw_output, "YES")
+        self.assertFalse(result.reasoning_present)
+        self.assertIsNone(result.reasoning_sha256)
+        self.assertIsNone(result.reasoning_chars)
+
+    def test_reasoning_off_ignores_a_thinking_field_the_server_volunteers(self) -> None:
+        """A default run never looks at the channel, so it cannot be moved by it.
+
+        Ollama only returns `thinking` when it was asked to, but the transport
+        does not trust that: on a default run the field is not read at all, so
+        the graded text is the response and nothing else.
+        """
+        payload, result = self._generate_against_stub_ollama(
+            {
+                "done": True,
+                "response": "YES",
+                "thinking": "the model thought about it",
+                "model": "unit/model:1",
+            },
+            reasoning=False,
+        )
+        self.assertIs(payload["think"], False)
+        self.assertEqual(result.raw_output, "YES")
+        self.assertNotIn("the model thought about it", result.raw_output)
+        self.assertFalse(result.reasoning_present)
+        self.assertIsNone(result.reasoning_sha256)
+        self.assertIsNone(result.reasoning_chars)
+
+    def test_reasoning_on_asks_for_the_channel_and_measures_it_without_grading_it(self) -> None:
+        """think: true goes on the wire; the channel comes back as a digest and a length.
+
+        The reasoning prose is never merged into raw_output and never stored.
+        The graded text stays payload["response"], so the reasoning can be
+        MEASURED without being able to influence a single grade.
+        """
+        thinking = "Step 1: weigh the options. Step 2: answer YES."
+        payload, result = self._generate_against_stub_ollama(
+            {
+                "done": True,
+                "response": "YES",
+                "thinking": thinking,
+                "model": "unit/model:1",
+            },
+            reasoning=True,
+        )
+        self.assertIs(payload["think"], True)
+        self.assertEqual(result.raw_output, "YES")
+        self.assertNotIn(thinking, result.raw_output)
+        self.assertTrue(result.reasoning_present)
+        self.assertEqual(
+            result.reasoning_sha256,
+            worker.sha256_bytes(thinking.encode("utf-8")),
+        )
+        self.assertEqual(result.reasoning_chars, len(thinking))
+
+    def test_reasoning_on_records_a_silent_channel_as_absent(self) -> None:
+        """A model that thought of nothing is a measurement too: present, false.
+
+        Absent is not zero. The row says the channel was not there, and it says
+        no length and no digest, because there was nothing to measure.
+        """
+        payload, result = self._generate_against_stub_ollama(
+            {"done": True, "response": "YES", "thinking": "", "model": "unit/model:1"},
+            reasoning=True,
+        )
+        self.assertIs(payload["think"], True)
+        self.assertFalse(result.reasoning_present)
+        self.assertIsNone(result.reasoning_sha256)
+        self.assertIsNone(result.reasoning_chars)
+        self.assertEqual(result.raw_output, "YES")
+
+    def test_the_reasoning_flag_is_a_command_line_choice_not_a_config_key(self) -> None:
+        """Every config already on disk keeps loading unchanged.
+
+        `WorkerConfig.load` rejects unknown config keys, so putting the flag in
+        the config file would break every config in the estate. It is a CLI
+        choice, exactly like --label-parser.
+        """
+        args = worker.build_parser().parse_args(["--config", "/dev/null"])
+        self.assertFalse(args.reasoning)
+        args = worker.build_parser().parse_args(
+            ["--config", "/dev/null", "--reasoning"]
+        )
+        self.assertTrue(args.reasoning)
+
+        config, _output = self.write_config(
+            [{"id": "a", "prompt": "Pick a label.", "expected": "YES"}],
+            labels=["YES", "NO"],
+        )
+        self.assertFalse(config.reasoning)
+        # A config that tries to carry the flag is rejected, not quietly honoured.
+        path = self.root / "config-with-reasoning.json"
+        raw = json.loads((self.root / "config.json").read_text(encoding="utf-8"))
+        raw["reasoning"] = True
+        path.write_text(json.dumps(raw), encoding="utf-8")
+        with self.assertRaises(worker.WorkerError) as caught:
+            worker.WorkerConfig.load(path)
+        self.assertEqual(caught.exception.code, "BAD_CONFIG")
+
 
 if __name__ == "__main__":
     unittest.main()

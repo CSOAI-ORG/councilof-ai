@@ -21,10 +21,12 @@ import AxisProof from "../components/AxisProof";
 //       dated corpus feed at /corpus-watch/status.json.
 //
 // WHAT WAS CUT, AND WHY IT MATTERS. These pages used to say CSOAI "maps one control set
-// across DORA, the EU AI Act, and NIST". The only published crosswalk maps the EU AI Act
-// against the UK DRCF principles, Illinois SB 315 and TC260 — four regimes. It contains NO
-// DORA rows and NO NIST rows. DORA is real here, but only as a hashed baseline instrument in
-// the corpus feed, which is a much smaller thing and is now described as the smaller thing.
+// across DORA, the EU AI Act, and NIST". The only published crosswalk maps four regimes:
+// the EU (the EU AI Act, and — since 2026-10-26 — GDPR, the Cyber Resilience Act, DORA,
+// NIS2 and CSRD, each with its own article-level rows), the UK DRCF principles, Illinois
+// SB 315 and TC260. It contains NO NIST rows and NO ISO rows. NIST and ISO are real here,
+// but only as hashed baseline instruments in the corpus feed, which are much smaller
+// things and are now described as the smaller things.
 // A capability sentence with no artifact behind it is the exact defect this estate measures
 // other people for. Do not reintroduce one; rewrite to what is true, or cut it.
 //
