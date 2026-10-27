@@ -1,7 +1,7 @@
 {
   "name": "Council of AI — Measurement Agent",
   "description": "Independent AI-governance MEASUREMENT body. Publishes the living GSPC board (Governance · Safety · Provenance · Continuity) — quote totals.lid and totals.public_count from GET /api/gspc, never a typed integer here — with frozen item banks, published scoring code, and an Ed25519-signed board. Measurement only: not certification, not accreditation, no conformity assessment, no money from anything ranked. A2A v1.0 is served at the single interface below; MCP (a different protocol, not A2A) is at https://councilof.ai/mcp.",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "provider": {
     "organization": "CSOAI Ltd",
     "url": "https://councilof.ai"
@@ -235,6 +235,27 @@
       "examples": [
         "SendMessage with Part.data {\"skill\":\"gspc-route\",\"input\":{\"task\":\"Summarise a public paragraph.\",\"objective\":{\"quality_axis\":\"governance\"},\"candidates\":[{\"id\":\"local:llama3.2-3b\",\"kind\":\"local_gpu\",\"model\":\"llama3.2:3b\",\"endpoint\":\"local:ollama/llama3.2:3b\",\"read_only\":true},{\"id\":\"local:mistral-7b\",\"kind\":\"local_gpu\",\"model\":\"mistral:7b\",\"endpoint\":\"local:ollama/mistral:7b\",\"read_only\":true}]}}"
       ]
+    },
+    {
+      "id": "evidence-delivery",
+      "name": "Evidence Delivery: unsigned local draft with human review",
+      "description": "Accept one csoai.local-evidence-draft/1.2 declaration whose digest fields differ, whose negative control is DIVERGENT, and whose named MEOK H.I.M. reviewer, decision, notes and local-only boundaries are present. Return a Message containing the declaration and explicit non-claims. Envelope checks only: source bytes are not received or re-hashed. No GSPC measurement, independent verification, certification, signature, anchoring, payment, Task or durable adapter storage is created.",
+      "tags": [
+        "evidence",
+        "human-in-the-loop",
+        "unsigned",
+        "local-draft"
+      ],
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"evidence-delivery\",\"input\":{\"draft\":<csoai.local-evidence-draft/1.2>}}"
+      ],
+      "inputModes": [
+        "application/json"
+      ],
+      "outputModes": [
+        "text/plain",
+        "application/json"
+      ]
     }
   ],
   "catalogUrl": "https://councilof.ai/interop/surface-catalog.json",
@@ -245,11 +266,5 @@
     "conformity-assessment",
     "legal-determination",
     "enforcement"
-  ],
-  "signatures": [
-    {
-      "protected": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2NhcmQtYXR0ZXN0YXRpb24tMiIsInR5cCI6IkpPU0UifQ",
-      "signature": "EEmnLz2PbJppVHOBXRpRC0lvKoWffwGjSwuRn8kbGLVSOdh4h3oVftHh40GOVWOnE3NICstoLwHDOjBKZZ-PDQ"
-    }
   ]
 }

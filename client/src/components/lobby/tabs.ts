@@ -53,6 +53,7 @@ export type LobbyTabId =
   | "archive"
   | "attestations"
   | "evidence"
+  | "evidence-delivery"
   | "embed"
   | "art50"
   | "standards"
@@ -356,6 +357,15 @@ export const LOBBY_TABS: LobbyTab[] = [
     path: "",
     kind: "native",
     cues: /\b(gpai evidence pack|evidence index|evidence pack|gpai evidence|gpai)\b/i,
+  },
+  {
+    id: "evidence-delivery",
+    label: "Evidence delivery",
+    blurb:
+      "Prepare a local evidence draft with MEOK H.I.M. review, then explicitly submit it for an unsigned Council A2A Message. No GSPC measurement, signature, anchor or durable storage.",
+    path: "",
+    kind: "native",
+    cues: /\b(evidence delivery|deliver evidence|local evidence|unsigned draft|a2a handoff)\b/i,
   },
   {
     id: "embed",
@@ -918,6 +928,7 @@ const DASHBOARD_NAV_DEFINITION: {
     tabs: [
       { id: "verify", label: "Check a result" },
       { id: "evidence", label: "Evidence pack" },
+      { id: "evidence-delivery", label: "Evidence delivery" },
     ],
   },
   {

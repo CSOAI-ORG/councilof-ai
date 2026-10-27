@@ -285,7 +285,7 @@ describe("Council OS tabs", () => {
       expect(g.description.length).toBeGreaterThan(20);
     }
     const verify = DASHBOARD_NAV_GROUPS.find((g) => g.id === "verify")!;
-    expect(verify.tabs.map((t) => t.id)).toEqual(["verify", "evidence"]);
+    expect(verify.tabs.map((t) => t.id)).toEqual(["verify", "evidence", "evidence-delivery"]);
 
     const ids = DASHBOARD_TABS.map((t) => t.id);
     expect(ids).toEqual([
@@ -296,6 +296,7 @@ describe("Council OS tabs", () => {
       "mine",
       "verify",
       "evidence",
+      "evidence-delivery",
       "board",
       "models",
       "matrix",
