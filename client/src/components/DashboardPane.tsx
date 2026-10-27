@@ -72,6 +72,7 @@ const ConnectPane = lazy(() => import("@/components/gspc/ConnectPane"));
 const RoutePane = lazy(() => import("@/components/gspc/RoutePane"));
 const CorrectionsPane = lazy(() => import("@/components/gspc/CorrectionsPane"));
 const MyResultsPane = lazy(() => import("@/components/gspc/MyResultsPane"));
+const DashboardStaffPane = lazy(() => import("@/components/DashboardStaffPane"));
 
 const PANES: Record<string, React.LazyExoticComponent<any>> = {
   // home: DashboardWorkspace owns the chat-first landing — no separate pane.
@@ -103,6 +104,7 @@ const PANES: Record<string, React.LazyExoticComponent<any>> = {
   art50: LobbyArt50Pane, // Article 50(2) marking check — native pane in Get results; linked as /dashboard/?tab=art50
   connect: ConnectPane, // Connect → Install: /connect data (ConnectClaude TOOLS, ConnectHub PLATFORMS)
   route: RoutePane, // Connect → Route: the free decide-only MCP tool `route`
+  staff: DashboardStaffPane, // the PAL staff: GET /api/pals, ask one, provenance on every reply
   corrections: CorrectionsPane, // Corrections ledger, live GET /api/corrections
   mine: MyResultsPane, // My results: GET /api/commissions lookup + this browser's own list
 };
