@@ -36,9 +36,28 @@ one is further along than we have published anywhere.
 **Move 1 — port PR #64 to the approved specification.** The patch is written and verified:
 `SAFE-v1.0-port.patch` is based on the approved `SAFE.md` — not on the superseded draft — and
 `verify-patch-applies.sh` proves both halves of that claim (it applies to the approved file at a
-pinned upstream commit, and it is *rejected* by the superseded draft). What is **not** done is the
+pinned upstream commit, and it is *rejected* against the superseded draft). What is **not** done is the
 upstream pull request: the text is ready, and opening it needs a co-author with a normal GitHub
 account, which is the owner's to choose.
+
+> **Stale wording — published 26 October 2026, quoted unchanged.** The paragraph above. On
+> 27 October 2026 its second half was found **not to have been established by the control that was
+> cited**, and the control was corrected. The claim itself is now established and established
+> properly; what was wrong was the instrument, not the patch.
+>
+> **What the control actually did.** It placed the superseded draft *beside* the approved file and
+> ran `git apply --check` in that directory. `git apply` resolves its file from the patch header
+> (`+++ b/SAFE.md`), so the control re-tested the **approved** file and passed for the wrong
+> reason: it was vacuous. The failure it produced was a finding about the control, not about the
+> patch.
+>
+> **What the control does now.** The draft's bytes are placed **under the patch's own target file
+> name**, where the patch is rejected. The superseded draft contains none of the patch's anchors —
+> no `## Review Framework`, no control-layer table, no `## The Compact` — which is *why* it is
+> rejected. A second control (one anchor line mutated ⇒ rejected) shows the check reads bytes
+> rather than a file name, and a corrupted-pin run exits non-zero, so the instrument can fail.
+> Run on 27 October 2026: **PASS** — applies to the approved file at the pinned commit, rejected
+> against the superseded draft, rejected against a mutated anchor.
 
 **Move 2 — an executable discriminating-power profile.** The *vocabulary* already existed and was
 already published: `NOT_DISCRIMINATING` is a first-class state in the OASF capability enumerations
@@ -135,14 +154,31 @@ then runs `git apply --check`:
 | bytes | 20,094 |
 | sha256 | `4b7c6e69e849d46f5aa990f50db45952f9262d70dd27397ee1315c77c4776c16` |
 
-The script carries a **negative control**, and the control is the point. It requires the same patch
-to be *rejected* against the superseded `rfc-safe-proposal.md` at the same commit. A check that can
-only pass proves nothing; this one fails in both directions — if the patch stops applying to the
-approved specification, or starts applying to the superseded draft, the script exits non-zero.
+The script carries **two negative controls**, and the controls are the point. A check that can
+only pass proves nothing; this one fails in both directions.
 
-Last run: **PASS** on 26 October 2026 — applies to `SAFE.md` at the pinned commit, rejected by the
-superseded draft. That is a statement about applicability at a time. It is not review, not
-acceptance, and not adoption; SAFE has adopted none of this.
+1. **The superseded draft.** The same patch, applied to the bytes of the superseded
+   `rfc-safe-proposal.md` at the same commit, must be **rejected**. The draft's bytes are placed
+   **under the patch's own target file name** — and that detail is the control. `git apply`
+   resolves its file from the patch header, so a check run in a directory that still holds the
+   approved `SAFE.md` re-tests the approved file and passes for the wrong reason.
+2. **A mutated anchor.** One context line of the approved file is changed and the patch must then
+   be **rejected**. This is the sensitivity control: the check reads the bytes at the anchor, not
+   merely the presence of a file with the right name.
+
+If the patch stops applying to the approved specification, starts applying to the superseded
+draft, or survives a changed anchor, the script exits non-zero. A corrupted-pin run also exits
+non-zero, which is how the instrument is shown to be able to fail.
+
+Last run: **PASS** on 27 October 2026 — applies to `SAFE.md` at the pinned commit, rejected against
+the superseded draft, rejected against a mutated anchor. That is a statement about applicability at
+a time. It is not review, not acceptance, and not adoption; SAFE has adopted none of this.
+
+> **Correction — 27 October 2026.** The 26 October 2026 version of this section described a single
+> negative control against the superseded draft and reported a passing run. That control was
+> **vacuous** (see the Move 1 correction above): it re-tested the approved file. The claim it was
+> cited for was true; the instrument that claimed it was not. The controls above are the corrected
+> ones, and the 26 October 2026 wording is superseded by them.
 
 ## How this gets submitted, and what is owner-only
 
