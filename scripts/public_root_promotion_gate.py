@@ -36,6 +36,28 @@ import time
 
 GATE_WORKFLOW = "pr-gates.yml"
 
+# The status-check contexts this repo's branch protection requires.
+#
+# Measured 2026-10-26 from
+#   gh api repos/CSOAI-ORG/councilof-ai/branches/master/protection/required_status_checks
+#     -> {"checks": [{"app_id": 15368, "context": "gates"}, ...],
+#         "contexts": ["gates", "build", "stamped-bytes", "hold-guard"],
+#         "strict": true}
+#
+# WHY THIS IS A CONSTANT AND ALSO READ LIVE. The live read is the truth about what protection
+# requires, but that endpoint needs ADMIN permission on the repository. Under the promotion
+# workflow's own GITHUB_TOKEN it answers "403 Resource not accessible by integration" -
+# measured on 2026-10-26 in run 40322739137, where the gate CRASHED at the exact moment the
+# candidate's gates had passed and it was ready to merge. A gate that dies when it cannot read
+# its own list is a gate that never merges. So this list is the FLOOR, the live read is added to
+# it when it is readable, and neither can weaken the other.
+REQUIRED_CONTEXTS = ("gates", "build", "stamped-bytes", "hold-guard")
+
+# How many times the gate may re-run the pull_request workflow to replace poisoned check runs.
+# Bounded: a re-run is a request to re-gate the same bytes, and a gate that can re-run forever
+# is a gate that never answers.
+MAX_RERUNS = 3
+
 
 class GitHub:
     """The four GitHub calls this gate makes. Injectable so the rules can be tested offline."""
@@ -68,16 +90,59 @@ class GitHub:
         ])
         return raw if isinstance(raw, list) else []
 
-    def required_contexts(self, repo: str, branch: str = "master") -> list:
-        """The status-check contexts this repo's branch protection actually requires.
+    def all_runs(self, repo: str, branch: str) -> list:
+        """Every workflow's run on this branch, not only the gate's own workflow.
 
-        Read from the repo, never hard-coded here: a gate that checks a list it wrote itself
-        is a gate that goes stale when the protection rules change.
+        Needed because the required contexts do not all come from one workflow: `gates`,
+        `stamped-bytes` and `hold-guard` are pr-gates jobs, and `build` is a CI job. A run
+        that has not been approved produces NO check run at all, so a context whose workflow
+        is still waiting for approval is invisible to the gate - it reads as absent, not as
+        failed, and the merge is refused with "the base branch policy prohibits the merge"
+        while every gate that did run is green.
         """
-        data = self._json([
-            "gh", "api", f"repos/{repo}/branches/{branch}/protection/required_status_checks",
+        raw = self._json([
+            "gh", "run", "list", "--repo", repo, "--branch", branch,
+            "--limit", "100",
+            "--json", "databaseId,headSha,status,conclusion,createdAt,event,name,workflowName",
         ])
-        return list(data.get("contexts") or [])
+        return raw if isinstance(raw, list) else []
+
+    def required_contexts(self, repo: str, branch: str = "master", log=None) -> list:
+        """The status-check contexts that must be green on the head before a merge is attempted.
+
+        The live branch-protection read is preferred, and it is ADDED to the recorded floor,
+        never substituted for it. Two reasons, both measured on 2026-10-26:
+
+        - the endpoint needs admin permission on the repository. Under the promotion
+          workflow's own GITHUB_TOKEN it answers 403 "Resource not accessible by
+          integration", so a gate that depends on it dies exactly when the gates have
+          passed and the candidate is ready to merge (run 40322739137).
+        - a protection rule that names a context in `checks` but not in `contexts` reads
+          back as an EMPTY list, and a gate that checks an empty list checks nothing.
+
+        A read that cannot be made is reported, never raised: the recorded floor still applies,
+        and the merge is still gated on it.
+        """
+        contexts = set(REQUIRED_CONTEXTS)
+        try:
+            data = self._json([
+                "gh", "api", f"repos/{repo}/branches/{branch}/protection/required_status_checks",
+            ])
+        except Exception as exc:  # reported, never swallowed into a wider list
+            if log:
+                log(f"branch protection is not readable with this token ({exc}); "
+                    f"using the recorded required contexts: {', '.join(sorted(contexts))}")
+            return sorted(contexts)
+        live = set(data.get("contexts") or [])
+        for check in data.get("checks") or []:
+            name = check.get("context")
+            if isinstance(name, str) and name:
+                live.add(name)
+        if live:
+            contexts |= live
+        elif log:
+            log("branch protection named no contexts; using the recorded required contexts")
+        return sorted(contexts)
 
     def context_conclusions(self, repo: str, head: str) -> dict:
         """The LATEST check-run conclusion per context on this head.
@@ -106,6 +171,22 @@ class GitHub:
     def approve(self, repo: str, run_id) -> bool:
         rc, _out, _err = self._runner(
             ["gh", "api", "-X", "POST", f"repos/{repo}/actions/runs/{run_id}/approve"]
+        )
+        return rc == 0
+
+    def rerun(self, repo: str, run_id) -> bool:
+        """Run a workflow again on the SAME commit.
+
+        Re-running is how a poisoned check is replaced. Cancelling a run does not remove the
+        check runs it produced: it produces NEW ones with HIGHER ids and a cancelled
+        conclusion, and branch protection reads the newest check run per context. So a
+        workflow_dispatch run that was cancelled after the pull_request run passed leaves
+        `hold-guard` reading as cancelled, and the gate can never see a green context again
+        for those bytes. A re-run of the pull_request run creates fresh check runs with the
+        highest ids, and the same bytes are re-gated - not re-decided.
+        """
+        rc, _out, _err = self._runner(
+            ["gh", "api", "-X", "POST", f"repos/{repo}/actions/runs/{run_id}/rerun"]
         )
         return rc == 0
 
@@ -167,8 +248,22 @@ def promote(gh, repo, branch, url, workflow: str = GATE_WORKFLOW,
     declared `if: github.event_name == 'pull_request'`).
     """
     required = None
+    reruns = 0
     for cycle in range(1, max_cycles + 1):
         head = gh.branch_head(repo, branch)
+        # Approve EVERY gated run for these bytes, not only the gate's own run. The required
+        # contexts do not come from one workflow - `build` is a CI job - and a run that is
+        # still waiting for approval produces no check run at all, so its context reads as
+        # absent and branch protection refuses the merge with "the base branch policy
+        # prohibits the merge" while every gate that did run is green. Measured 2026-10-26:
+        # PR #3501's CI run sat at action_required and the gate approved only the pr-gates
+        # run, so `build` never existed and the candidate could not merge.
+        for gated in gh.all_runs(repo, branch):
+            if gated.get("headSha") == head and needs_approval(gated):
+                which = gated.get("workflowName") or gated.get("name") or "a workflow"
+                log(f"cycle {cycle}: approving gated run {gated['databaseId']} ({which})")
+                if not gh.approve(repo, gated["databaseId"]):
+                    log(f"cycle {cycle}: approve of {gated['databaseId']} refused; continuing to watch")
         run = select_run(gh.runs(repo, workflow, branch), head)
         if run is None:
             log(f"cycle {cycle}: no gate run for {head[:9]} yet; dispatching one")
@@ -176,10 +271,6 @@ def promote(gh, repo, branch, url, workflow: str = GATE_WORKFLOW,
             sleep(pause)
             continue
         run_id = run["databaseId"]
-        if needs_approval(run):
-            log(f"cycle {cycle}: approving gated run {run_id}")
-            if not gh.approve(repo, run_id):
-                log(f"cycle {cycle}: approve refused; continuing to watch")
         log(f"cycle {cycle}: waiting for pr-gates run {run_id} on {head}")
         if not gh.watch(repo, run_id):
             return (f"HALT: pr-gates run {run_id} did not pass on {head}; the candidate stays open "
@@ -199,7 +290,7 @@ def promote(gh, repo, branch, url, workflow: str = GATE_WORKFLOW,
         # `if: github.event_name == 'pull_request'` and is therefore SKIPPED by a
         # workflow_dispatch run - and a skipped required check does not satisfy protection.
         if required is None:
-            required = gh.required_contexts(repo)
+            required = gh.required_contexts(repo, log=log)
         conclusions = gh.context_conclusions(repo, head)
         unsatisfied = {name: conclusions.get(name, "absent") for name in required
                        if conclusions.get(name) != "success"}
@@ -208,6 +299,21 @@ def promote(gh, repo, branch, url, workflow: str = GATE_WORKFLOW,
             log(f"cycle {cycle}: pr-gates passed on {head[:9]} but the required contexts are not "
                 f"all green on it ({detail}); a context that is skipped or cancelled does not "
                 f"satisfy branch protection, so the merge is not attempted")
+            # The contexts can be poisoned by a LATER run on the same bytes: cancelling a run
+            # leaves behind newer check runs that read as cancelled, and the newest check run
+            # per context is the one branch protection reads. When the pull_request run for
+            # these bytes has passed, re-run it so its fresh check runs carry the highest ids.
+            # Same bytes, re-gated - not a different decision.
+            if reruns < MAX_RERUNS:
+                passed = [r for r in gh.runs(repo, workflow, branch)
+                          if r.get("headSha") == head and r.get("event") == "pull_request"
+                          and r.get("conclusion") == "success"]
+                if passed:
+                    reruns += 1
+                    rid = passed[0]["databaseId"]
+                    log(f"cycle {cycle}: re-running the pull_request run {rid} so its check runs "
+                        f"are the newest for these bytes (attempt {reruns} of {MAX_RERUNS})")
+                    gh.rerun(repo, rid)
             sleep(pause)
             continue
         rc, _out, err = gh.merge(repo, url, head)
