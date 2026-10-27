@@ -1,7 +1,10 @@
 # DRAFT — comment on Regulation Crypto Assets, File No. S7-2026-27
 
 **Status: DRAFT. Not filed. Do not submit without the step named at the end.**
-Prepared 17 September 2026. Comments due 20 October 2026.
+Prepared 17 September 2026. Comments due 20 October 2026 — **that window closed on 20 October 2026,
+so this draft was not filed.** It is retained for the record and for the next equivalent window.
+Figures were re-read from the live endpoints and corrected on 26 October 2026; they are marked with
+the date they were read, and step 2 below still applies at the moment of any future filing.
 
 ---
 
@@ -23,7 +26,7 @@ at the end says so.
 
 ### Who is commenting
 
-CSOAI Ltd (Council of AI), Companies House 16939677, 3rd Floor, 86-90 Paul Street, London EC2A 4NE,
+CSOAI Ltd (Council of AI), 3rd Floor, 86-90 Paul Street, London EC2A 4NE,
 United Kingdom.
 
 We are an independent measurement body. We publish signed, publicly re-checkable measurements of
@@ -71,12 +74,15 @@ On 14 September 2026 we withdrew 44 of our own signed measurement results. Every
 signature verified. Every structural check passed. The identification of inputs described in
 section 1 was intact in every one of them. The results were nonetheless worthless: in one grading
 configuration each question offered a single permitted answer, so nothing could be marked wrong,
-and all 44 reported a perfect score. Twenty-six of them had been published as measurements.
+and all 44 reported a perfect score. Twenty-six of them had been signed as MEASURED results — and
+none of the 44 carried a public URL, so none of them had been published as a measurement anyone
+could have read. Signing is not publication, and the distinction is the one this comment is about.
 
 We publish that failure rather than having edited it away. The withdrawn records remain online,
 unedited, beside a ledger row naming each one, because we supersede or withdraw a signed record and
-never revise it. That record holds 953 supersessions and 44 withdrawals, and our published
-correction register holds 56 entries against ourselves.
+never revise it. That ledger now holds 58 withdrawal rows — the 44 of 14 September that this comment
+describes, and 14 from a later batch — and our published correction register holds 93 entries
+against ourselves. Both figures were read from the live endpoints on 26 October 2026.
 
 - Withdrawal ledger: https://councilof.ai/interop/mill-cards-signed/WITHDRAWN.jsonl
 - Correction register: https://councilof.ai/api/corrections
