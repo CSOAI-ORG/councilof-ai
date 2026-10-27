@@ -97,6 +97,19 @@
       "payment": "free"
     },
     {
+      "id": "evidence-delivery",
+      "protocols": [
+        "a2a"
+      ],
+      "title": "Evidence Delivery: unsigned local draft with human review",
+      "description": "Accept one csoai.local-evidence-draft/1.2 declaration whose digest fields differ, whose negative control is DIVERGENT, and whose named MEOK H.I.M. reviewer, decision, notes and local-only boundaries are present. Return a Message containing the declaration and explicit non-claims. Envelope checks only: source bytes are not received or re-hashed. No GSPC measurement, independent verification, certification, signature, anchoring, payment, Task or durable adapter storage is created.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
       "id": "gspc-board",
       "protocols": [
         "a2a"

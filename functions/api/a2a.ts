@@ -44,6 +44,7 @@ import { shapeLabel } from "../_lib/askInput";
 import { evidenceBundlePreview } from "../mcp/_evidence";
 import { routeResult } from "../mcp/_route";
 import { routeSummary } from "../_lib/route/route";
+import { evidenceDeliveryMessage, validateEvidenceDeliveryInput } from "../_lib/evidenceDelivery";
 import { headFromGet } from "./_head";
 
 type Json = Record<string, unknown>;
@@ -210,6 +211,7 @@ export const SKILL_IDS = [
   "server-evidence",
   "evidence-bundle",
   "gspc-route",
+  "evidence-delivery",
 ] as const;
 type SkillId = (typeof SKILL_IDS)[number];
 const SKILL_ID_SET = new Set<string>(SKILL_IDS);
@@ -522,6 +524,7 @@ function validateSkillInput(selection: SkillSelection): string | null {
     if (input.task === undefined && input.task_sha256 === undefined) return "gspc-route input requires task or task_sha256";
     return null;
   }
+  if (skill === "evidence-delivery") return validateEvidenceDeliveryInput(input);
   return "unsupported skill";
 }
 
@@ -844,6 +847,15 @@ async function sendMessage(id: unknown, params: unknown, origin: string): Promis
   if (invalidInput) {
     return rpcError(id, A2A_ERROR.INVALID_PARAMS, invalidInput, "INVALID_SKILL_INPUT", {
       skill: selection.skill,
+    });
+  }
+  if (selection.skill === "evidence-delivery") {
+    return reply(id, {
+      result: evidenceDeliveryMessage(
+        selection.input,
+        crypto.randomUUID(),
+        str(message.contextId) ?? crypto.randomUUID(),
+      ),
     });
   }
   let outcome: { text: string; data: unknown };
