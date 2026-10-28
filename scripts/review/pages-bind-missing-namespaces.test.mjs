@@ -1,7 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {planBindingAdditions,applyBindingAdditions,readNamedProject,readAccountNamespaceIds} from './pages-bind-missing-namespaces.mjs';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import {planBindingAdditions,applyBindingAdditions,readNamedProject,readAccountNamespaceIds,readProvenanceReceipt,checkProvenance} from './pages-bind-missing-namespaces.mjs';
 
 const id='a'.repeat(32),other='b'.repeat(32),third='c'.repeat(32),acct='0'.repeat(32),token='secret-token-value';
 
@@ -192,3 +195,98 @@ test('the bind step never uploads and never ignores a failure',()=>{
   assert.doesNotMatch(step,/wrangler pages deploy/,'the bind step must not upload');
   assert.doesNotMatch(step,/continue-on-error|\|\| true/,'a failure must not be ignored');
 });
+
+// ── The proof that a namespace id is real on this account ────────────────────
+// A live account-list read is the strongest proof. When no credential can make
+// that read, the committed receipt stands in for it — but only for THIS account,
+// only for ids it covers, and the output must say which proof was used.
+
+// The receipt as the script consumes it: the parsed shape readProvenanceReceipt returns.
+const receipt=(ids=[id,other,third])=>({accountId:acct,observedAt:'2026-10-28T15:36:04Z',ids});
+
+test('the live account-list read is preferred and is named in the output',async()=>{
+  const h=harness(['STORE'],{owned:[id,third]});
+  const r=await applyBindingAdditions({candidate:config(['STORE','HITL_KV']),project:h.read(),accountId:acct,token,fetcher:h.fetcher,provenance:receipt()});
+  assert.equal(r.state,'BOUND');
+  assert.equal(r.proof.tier,'live_account_list');
+  assert.ok(r.proof.source.includes('credential'));
+});
+
+test('a pinned receipt stands in when no credential can read the list, and says so',async()=>{
+  const h=harness(['STORE'],{namespaceListFails:true});
+  const r=await applyBindingAdditions({candidate:config(['STORE','HITL_KV']),project:h.read(),accountId:acct,token,fetcher:h.fetcher,provenance:receipt()});
+  assert.equal(r.state,'BOUND');
+  assert.equal(r.proof.tier,'pinned_provenance');
+  assert.equal(r.proof.observed_at,'2026-10-28T15:36:04Z','the receipt must carry the date of its observation');
+  assert.equal(r.readback,'VERIFIED','a bound binding is still read back from the live project');
+});
+
+test('an unreadable list with no receipt still fails closed and binds nothing',async()=>{
+  const h=harness(['STORE'],{namespaceListFails:true});
+  const r=await applyBindingAdditions({candidate:config(['STORE','HITL_KV']),project:h.read(),accountId:acct,token,fetcher:h.fetcher});
+  assert.equal(r.state,'UNCONFIRMED_NAMESPACE');
+  assert.deepEqual(r.refused,['HITL_KV']);
+  assert.equal(h.calls.filter(c=>c.method==='PATCH').length,0);
+  assert.ok(r.proof_attempts.some(a=>a.includes('credential_1')),'the refusal must name what was tried');
+});
+
+test('a receipt for another account never confirms an id',async()=>{
+  const h=harness(['STORE'],{namespaceListFails:true});
+  const p=receipt();p.accountId='f'.repeat(32);
+  const r=await applyBindingAdditions({candidate:config(['STORE','HITL_KV']),project:h.read(),accountId:acct,token,fetcher:h.fetcher,provenance:p});
+  assert.equal(r.state,'UNCONFIRMED_NAMESPACE');
+  assert.equal(h.calls.filter(c=>c.method==='PATCH').length,0);
+  assert.ok(r.proof_attempts.some(a=>a.includes('PROVENANCE_ACCOUNT_MISMATCH')));
+});
+
+test('a receipt that does not cover every declared id never confirms an id',async()=>{
+  const h=harness(['STORE'],{namespaceListFails:true});
+  const p=receipt([id,third]); // the candidate also declares LEADS; the receipt does not cover it
+  const r=await applyBindingAdditions({candidate:config(['STORE','LEADS','HITL_KV']),project:h.read(),accountId:acct,token,fetcher:h.fetcher,provenance:p});
+  assert.equal(r.state,'UNCONFIRMED_NAMESPACE');
+  assert.equal(h.calls.filter(c=>c.method==='PATCH').length,0);
+  assert.ok(r.proof_attempts.some(a=>a.includes('PROVENANCE_MISSING_NAMESPACE')));
+});
+
+test('a receipt never stands in for an id it does not cover',async()=>{
+  const h=harness(['STORE'],{namespaceListFails:true});
+  const p=receipt([id]); // the receipt says nothing about the id being bound
+  const r=await applyBindingAdditions({candidate:config(['STORE','HITL_KV']),project:h.read(),accountId:acct,token,fetcher:h.fetcher,provenance:p});
+  assert.equal(r.state,'UNCONFIRMED_NAMESPACE');
+  assert.deepEqual(r.refused,['HITL_KV']);
+  assert.equal(h.calls.filter(c=>c.method==='PATCH').length,0);
+  assert.ok(r.proof_attempts.some(a=>a.includes('PROVENANCE_MISSING_NAMESPACE')));
+});
+
+test('the proof never prints a namespace id',async()=>{
+  const h=harness(['STORE'],{namespaceListFails:true});
+  const r=await applyBindingAdditions({candidate:config(['STORE','HITL_KV']),project:h.read(),accountId:acct,token,fetcher:h.fetcher,provenance:receipt()});
+  const s=JSON.stringify(r);
+  assert.ok(!s.includes(id));
+  assert.ok(!s.includes(third));
+});
+
+test('the receipt file in the tree is well formed, names this account and covers every declared binding',async()=>{
+  const receipt=readProvenanceReceipt(new URL('./kv-namespace-provenance.json',import.meta.url).pathname);
+  assert.ok(receipt,'the committed receipt must parse');
+  const ts=await import('typescript');
+  const parsed=ts.readConfigFile(new URL('../../wrangler.jsonc',import.meta.url).pathname,ts.sys.readFile);
+  assert.ok(!parsed.error,'the candidate config must parse');
+  const declared=parsed.config.kv_namespaces.map(e=>e.id);
+  const checked=checkProvenance({provenance:receipt,accountId:receipt.accountId,wantedIds:declared});
+  assert.equal(checked.ok,true,'the committed receipt must cover every id the candidate declares');
+  assert.ok(receipt.observedAt,'the receipt must carry the date of its observation');
+});
+
+test('a malformed receipt is refused, never half-read',()=>{
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'provenance-'));
+  const bad=path.join(dir,'bad.json');
+  fs.writeFileSync(bad,JSON.stringify({schema:'csoai.kv-namespace-provenance/0.1',account_id:acct,namespaces:{STORE:{id:'not-hex'}}}));
+  assert.equal(readProvenanceReceipt(bad),null,'a receipt with a non-hex id is not a receipt');
+  const wrongSchema=path.join(dir,'schema.json');
+  fs.writeFileSync(wrongSchema,JSON.stringify({schema:'something-else',account_id:acct,namespaces:{}}));
+  assert.equal(readProvenanceReceipt(wrongSchema),null);
+  assert.equal(readProvenanceReceipt(path.join(dir,'missing.json')),null,'an absent receipt is not a receipt');
+});
+
+
