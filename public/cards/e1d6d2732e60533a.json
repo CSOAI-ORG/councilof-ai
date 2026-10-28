@@ -1,0 +1,119 @@
+{
+  "card": {
+    "as_of": "2026-10-28T01:16:59Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:BUIDL:optimism",
+      "symbol": "BUIDL",
+      "product": "BlackRock USD Institutional Digital Liquidity Fund",
+      "chain": "optimism",
+      "chain_id": 10,
+      "address": "0xa1cdab15bba75a80df4089cafba013e376957cf5",
+      "block": 158775721,
+      "block_hash": "0x3d6198579148090be9da984db127d8a0cdbc75f587ebd1dc796ca814ba74aa42",
+      "block_time": "2026-10-28T01:16:59Z",
+      "rpc": "optimism-rpc.publicnode.com",
+      "checked": {
+        "name": "BlackRock USD Institutional Digital Liquidity Fund",
+        "symbol": "BUIDL",
+        "decimals": 6,
+        "totalSupply": 26539732050000,
+        "isPaused": false,
+        "owner": "0xe01605f6b6dc593b7d2917f4a0940db2a625b09e",
+        "eip1967_implementation": "0xca91fa164b75da598e16b4d89fb2086b47140df3"
+      },
+      "absent": [
+        "paused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()",
+        "pauser()",
+        "terms()",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": null,
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "EIP-1186 proof (no endpoint answered eth_getProof at this block)"
+      ],
+      "attests": "historical permission state at block 158775721 on optimism, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "e1d6d2732e60533a9eca91fd78c79f15d35c5cbd44f437f48b80a8ef4865380d",
+    "sig_ed25519": "38340509fb0148a1cb9211ff1989ed58f181ed2fdc83c518c6684c6f321beab2f1b2b7f052958c15a573de07d29adcbd7616908650442e532ca346f60e96ea0d",
+    "source_urls": [
+      "https://optimism-rpc.publicnode.com",
+      "https://optimistic.etherscan.io/token/0xa1cdab15bba75a80df4089cafba013e376957cf5"
+    ],
+    "subject": "evm:BUIDL:optimism permission state at block 158775721",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:optimism",
+      "coverage:permission-state",
+      "subject:BUIDL"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "EIP-1186 proof (no endpoint answered eth_getProof at this block)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "c89ea6500e80d5d18b84b6bbe9b436da3ae930a7f4b11d59e0c2d277e51445e3",
+    "ecdc35624bab52b65fadff6f5b8d547a2bff32fca72c06fcaf5751213bd34a61",
+    "c54e95d64b27c64bb0338f326008dbcb893e5dc5c239aa94c2f32142852297b7",
+    "1c781450858310bc3b7daab78b4ece9ef20c7abbadc874816d988fedf4dc892e",
+    "a5bc6f25f0a95d28dc1e74a1feb390249ce3642addd19be603aab8e0691e0a96",
+    "49ddd69a884a7c24447e9e14cfba9255435467ef3c61f04e067a00a9c346ae8a",
+    "fd233ca0b24d003aa04d2ffbdaf577180c3ace0f4f43bfaa36752f6364440e49",
+    "e86182c3dff56c967e679b27ecc2b7dfa7a78f1dbd0e41336524545d25ec30a3",
+    "bf22cdf55fe99af88cd17a6a9133e55cbaf19409ac96209fed4dbd8ec92ed7ae"
+  ]
+}

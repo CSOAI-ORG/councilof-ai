@@ -1,20 +1,20 @@
 {
  "kind": "csoai.root-witness-pointer/v0",
- "as_of": "2026-10-27T23:47:31Z",
+ "as_of": "2026-10-28T01:22:41Z",
  "note": "Timestamped pointer for the witnessed root. Drift is an observation at checked_at, not a standing all-clear. Existence/time of bytes — not certification, not endorsement, not a rank sale. Never mint a token.",
  "live_root": {
   "url": "https://councilof.ai/root.json",
   "also": "https://councilof.ai/api/root",
-  "sha256": "e9fb00e240b11c1d31f138ad1248c8c211b56267360a092550d448903d9ce7ea",
+  "sha256": "7f6c175a211201df77e31e5159adde68729e11f3e53fa5baf89b98633791a847",
   "bytes": 25925,
-  "merkle_root": "a2620ac322c562b64f6b4935b283177d7cb7ada374eee100992f1b68c8539538",
+  "merkle_root": "2b32dbff20e7ae53294076f9721cfae0da8328575b9f4f29e71923bb396a9c1a",
   "card_count": 325,
-  "as_of": "2026-10-27T21:20:49Z"
+  "as_of": "2026-10-28T01:21:49Z"
  },
  "corpus_scope": {
   "relationship": "SEPARATE_CORPORA",
   "public_root_count": 325,
-  "public_root_sha256": "e9fb00e240b11c1d31f138ad1248c8c211b56267360a092550d448903d9ce7ea",
+  "public_root_sha256": "7f6c175a211201df77e31e5159adde68729e11f3e53fa5baf89b98633791a847",
   "signed_card_count": 335,
   "signed_card_id_overlap": 0,
   "ots_covers": "PUBLIC_ROOT_BYTES_ONLY",
@@ -24,25 +24,25 @@
   "url": "https://councilof.ai/interop/root-witness-latest.json",
   "path": "public/interop/root-witness-latest.json",
   "status": "PUBLISHED",
-  "dated_copy": "public/interop/root-witness-2026-10-27-e9fb00e2.json"
+  "dated_copy": "public/interop/root-witness-2026-10-28-7f6c175a.json"
  },
  "drift": {
   "status": "DRIFTED",
-  "checked_at": "2026-10-27T23:47:33Z",
+  "checked_at": "2026-10-28T01:22:42Z",
   "checked_against": "https://councilof.ai/root.json",
-  "witness_artifact_sha256": "e9fb00e240b11c1d31f138ad1248c8c211b56267360a092550d448903d9ce7ea",
-  "live_root_sha256": "3bab85baa5ef56f7d4ae72a826240a392d609e57ba314115cf0da0f65e0c8847",
-  "witness_artifact_merkle_root": "a2620ac322c562b64f6b4935b283177d7cb7ada374eee100992f1b68c8539538",
-  "live_root_merkle_root": "050b199f47958d56c450999aa9d1087fca18b528bad510176f2a8dad1863a4e0",
+  "witness_artifact_sha256": "7f6c175a211201df77e31e5159adde68729e11f3e53fa5baf89b98633791a847",
+  "live_root_sha256": "e9fb00e240b11c1d31f138ad1248c8c211b56267360a092550d448903d9ce7ea",
+  "witness_artifact_merkle_root": "2b32dbff20e7ae53294076f9721cfae0da8328575b9f4f29e71923bb396a9c1a",
+  "live_root_merkle_root": "a2620ac322c562b64f6b4935b283177d7cb7ada374eee100992f1b68c8539538",
   "live_root_bytes": 25925,
   "match_sha256": false,
   "match_merkle_root": false,
   "reason": "the live root differs from the witnessed bytes; this observation does not establish which is newer — publish the witnessed candidate or witness the live root before treating either as current"
  },
- "witness_status_observed_at": "2026-10-27T23:47:31Z",
+ "witness_status_observed_at": "2026-10-28T01:21:55Z",
  "witnesses": {
   "rekor": "WITNESSED",
-  "ots": "CONFIRMED_BITCOIN",
+  "ots": "STAMPED_PENDING_BITCOIN",
   "eas_base": "NOT_YET",
   "xrpl_memo": "NOT_YET"
  },
@@ -55,9 +55,9 @@
  "conflict": {
   "status": "NONE",
   "rule": "equal as_of + unequal merkle_root among this publisher's witnessed roots = CONFLICT; a reader must treat neither as current",
-  "as_of": "2026-10-27T21:20:49Z",
-  "merkle_root": "a2620ac322c562b64f6b4935b283177d7cb7ada374eee100992f1b68c8539538",
-  "sidecars_scanned": 67,
+  "as_of": "2026-10-28T01:21:49Z",
+  "merkle_root": "2b32dbff20e7ae53294076f9721cfae0da8328575b9f4f29e71923bb396a9c1a",
+  "sidecars_scanned": 68,
   "conflicts": [],
   "byte_variants": [],
   "limit": "sees only roots this publisher witnessed and kept; independent witnesses cover the hidden-root case"

@@ -1,0 +1,147 @@
+{
+  "card": {
+    "as_of": "2026-10-28T01:16:47Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:ACRED:ethereum",
+      "symbol": "ACRED",
+      "product": "Apollo Diversified Credit Securitize Fund",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x17418038ecf73ba4026c4f428547bf099706f27b",
+      "block": 26287879,
+      "block_hash": "0x9e2d8aa1081bb61aea4787ef9d311cc14fabc098f1b70015cde7742014c3d396",
+      "block_time": "2026-10-28T01:16:47Z",
+      "rpc": "ethereum-rpc.publicnode.com",
+      "checked": {
+        "name": "Apollo Diversified Credit Securitize Fund",
+        "symbol": "ACRED",
+        "decimals": 6,
+        "totalSupply": 26061347705,
+        "isPaused": false,
+        "owner": "0x59c1eacec450c57dcb9b8725d0f96635c2b676ee",
+        "eip1967_implementation": "0xfc8a9000c161e3c6e073e967107ce926a44a06e2"
+      },
+      "absent": [
+        "paused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()",
+        "pauser()",
+        "terms()",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": {
+        "kind": "eip1186",
+        "sha256": "d02af6710243d0de6a85153df760e7c227b0e7736b8474405f9e532aa50314ef",
+        "bytes": 10731,
+        "url": "/archive/proofs/eip1186/d02af6710243d0de.json",
+        "rpc": "eth.drpc.org",
+        "account": {
+          "nonce": "0x1",
+          "codeHash": "0xee8a105971995661291a9f284262a87abf2381b3cdc93b2c8fbeffe4cd636dd9",
+          "storageHash": "0x00de75597c527d7f608695309b6a17f1eb579e838548704d3d55be2aad4a99c0",
+          "nodes": 8
+        },
+        "slots": [
+          {
+            "label": "eip1967_implementation",
+            "key": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+            "value": "0xfc8a9000c161e3c6e073e967107ce926a44a06e2",
+            "nodes": 3
+          },
+          {
+            "label": "eip1967_admin",
+            "key": "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103",
+            "value": "0x0",
+            "nodes": 2
+          }
+        ],
+        "verifies_against": "block_hash -> header.stateRoot (EIP-1186)"
+      },
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+      ],
+      "attests": "historical permission state at block 26287879 on ethereum, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "7b205a552745210b9a2fee42e5a99a8335d20197b0e326304a372f9b2c1757a5",
+    "sig_ed25519": "76cf38a75f2a1616bc38f5f254769d71d794d86ca52bd92b2470a0ae0320ff1f6b6e1701c446d3574b76eb17a5257f22c1d3119e3395b0c79da2cb2e92e72106",
+    "source_urls": [
+      "https://ethereum-rpc.publicnode.com",
+      "https://etherscan.io/token/0x17418038ecF73BA4026c4f428547BF099706F27B",
+      "https://eth.drpc.org"
+    ],
+    "subject": "evm:ACRED:ethereum permission state at block 26287879",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:ethereum",
+      "coverage:permission-state",
+      "subject:ACRED"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "f49787b3256fdb037a5a0e6df74873c429d85f3ee487a88b55286f9b26564849",
+    "ab5b8bd547596d88e5b33df5dfa9a6801171a5a9b660a8fc50e8a26b5fc4a6fd",
+    "2b62d28d57dc3865367459e75de44815cb78eebbcc8c477077439f3a4bef64e1",
+    "13bf412d472b0072980ff04db000ac8daeae27b2cc1bfb38eecf3c829ebb0b7c",
+    "017c43cc5779d3b2b05b24de12fea06466b64bf901b3cdd512e646c65a4c77e7",
+    "91b60851d3bd45281f8e442aad66c22af66b2b5ffac7af2efaa9adffb02a6689",
+    "df777479f147b43ded38d92521edecb243eeff89eeae24ba5aa5c79703349be5",
+    "c50cb1a4ecf7b3cf6428017a9766c5022e020efbc891dc0b5399013be8aab3e1",
+    "f8516395ab4bffc011e225e7db346e29eb59dcdb15f7559977210abefe6f4658"
+  ]
+}

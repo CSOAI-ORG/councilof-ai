@@ -1,0 +1,121 @@
+{
+  "card": {
+    "as_of": "2026-10-28T01:16:57Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:USYC:bsc",
+      "symbol": "USYC",
+      "product": "US Yield Coin",
+      "chain": "bsc",
+      "chain_id": 56,
+      "address": "0x8d0fa28f221eb5735bc71d3a0da67ee5bc821311",
+      "block": 130191870,
+      "block_hash": "0x6d65dd2175a00f7dd243893d708fe0f3a879c34b629b2b8f9df68860fae4bb0a",
+      "block_time": "2026-10-28T01:16:57Z",
+      "rpc": "bsc-rpc.publicnode.com",
+      "checked": {
+        "name": "US Yield Coin",
+        "symbol": "USYC",
+        "decimals": 6,
+        "totalSupply": 2044937727947452,
+        "owner": "0xcd636d955a95385ec5e2776b167b92e89ef6f70e",
+        "eip1967_implementation": "0x191fb6f3ba332f1b8789caf67abbaba56147445b"
+      },
+      "absent": [
+        "paused()",
+        "isPaused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()",
+        "pauser()",
+        "terms()",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": null,
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "EIP-1186 proof (no endpoint answered eth_getProof at this block)",
+        "pause flag (no paused()/isPaused() answered at this block)"
+      ],
+      "attests": "historical permission state at block 130191870 on bsc, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "e8eb1027a57cee2e37f9d03dd550b2d14c2d0b52f440f479805690dc9315998f",
+    "sig_ed25519": "cb99d55c811d74a32319ac732b4315e34cb7780ef4fdc23301175a1eececcee607ae9a948a113fce994624a95845ce6d4858a799467cd8548b310544cf037005",
+    "source_urls": [
+      "https://bsc-rpc.publicnode.com",
+      "https://usyc.docs.hashnote.com/overview/smart-contracts"
+    ],
+    "subject": "evm:USYC:bsc permission state at block 130191870",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:bsc",
+      "coverage:permission-state",
+      "subject:USYC"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "EIP-1186 proof (no endpoint answered eth_getProof at this block)",
+      "pause flag (no paused()/isPaused() answered at this block)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "f1816743ffb0397066182a4bd48f27e1483cfbd7216dd3b4927fd365c82091fa",
+    "cccb9aa8d4a4083fea92a153ee8b4be2575f421a9dd4395fe7f8bb645e6469ca",
+    "357c901196ab8946d85b94a53b3d6f2628f3e513e14b81030622b4993c687339",
+    "1c781450858310bc3b7daab78b4ece9ef20c7abbadc874816d988fedf4dc892e",
+    "a5bc6f25f0a95d28dc1e74a1feb390249ce3642addd19be603aab8e0691e0a96",
+    "49ddd69a884a7c24447e9e14cfba9255435467ef3c61f04e067a00a9c346ae8a",
+    "fd233ca0b24d003aa04d2ffbdaf577180c3ace0f4f43bfaa36752f6364440e49",
+    "e86182c3dff56c967e679b27ecc2b7dfa7a78f1dbd0e41336524545d25ec30a3",
+    "bf22cdf55fe99af88cd17a6a9133e55cbaf19409ac96209fed4dbd8ec92ed7ae"
+  ]
+}
