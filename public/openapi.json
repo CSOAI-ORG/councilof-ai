@@ -960,6 +960,22 @@
         "summary": "GET /api/axis-register \u2014 the GSPC axis register (canonical scored rows)."
       }
     },
+    "/api/axis-specialists": {
+      "get": {
+        "description": "GET /api/axis-specialists \u2014 unsigned MEOK Hive audit index for every GSPC axis. Each specialist has an isolated logical cluster, distinct checks and proposals, and a MEOK H.I.M.-compatible HOLD gate. No apply operation or new measurement.",
+        "operationId": "get__api_axis-specialists",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/axis-specialists \u2014 unsigned MEOK Hive audit index for every GSPC axis. Each specialist has an isolated logical cluster, distinct checks and proposals, and a MEOK H.I.M.-compatible HOLD\u2026"
+      }
+    },
     "/api/badge": {
       "get": {
         "description": "",
