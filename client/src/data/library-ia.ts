@@ -371,6 +371,7 @@ const NOT_LIBRARIED =
  * keep working for external links; only the in-app listing is withdrawn.
  */
 export const WITHDRAWN_PATHS: ReadonlySet<string> = new Set<string>([
+  "/status/internal",
   "/jobs",
   "/features/watchdog-jobs",
   "/early-access",
