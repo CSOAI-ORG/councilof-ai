@@ -11,7 +11,7 @@ allowed-tools: "Bash(python3 packages/evidence-fabric/portable_skill_verify.py:*
 
 Given an existing CSOAI evidence artifact, identify the matching deterministic verification procedure, execute the supported offline checks via `packages/evidence-fabric/portable_skill_verify.py`, report the exact verifier state and reason, and preserve the original artifact digest and `limits[]`.
 
-**Hard Rule:** Never ask a language model to decide whether an Ed25519 signature, SHA-256 digest, or Merkle proof "looks valid." Always invoke the deterministic verifier and quote its returned `verdict_state` and `artifact_sha256` verbatim.
+**Hard Rule:** Never ask a language model to decide whether an Ed25519 signature, SHA-256 digest, or Merkle proof "looks valid." Always invoke the deterministic verifier and quote its returned `verdict_state` and `artifact.sha256` verbatim.
 
 ## Supported Artifact Kinds
 
