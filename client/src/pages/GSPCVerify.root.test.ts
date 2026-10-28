@@ -56,6 +56,17 @@ describe("/gspc-verify two modes — estate card + signed public root", () => {
     expect(page).toContain("trusted reference hashes");
   });
 
+  it("shows the worked verification without turning VALID into certification", () => {
+    expect(page).toContain('data-testid="worked-verification"');
+    expect(page).toContain("6/6 checks passed");
+    expect(page).toContain("Card ID reproduced");
+    expect(page).toContain("Published key matched");
+    expect(page).toContain("Signature verified");
+    expect(page).toContain("Historical example");
+    expect(page).toContain("It is not certification, not a fresh measurement");
+    expect(page).toContain("Current board admission, present quotability and chain replay are not claimed");
+  });
+
   it("describes the paid commission as a receipt over existing evidence, not a fresh run", () => {
     expect(commission).toContain('fresh_run: "UNMEASURED"');
     expect(commission).toContain("corpus_as_of: reserve.as_of");
