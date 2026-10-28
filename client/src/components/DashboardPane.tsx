@@ -79,6 +79,9 @@ const DashboardStaffPane = lazy(() => import("@/components/DashboardStaffPane"))
 const CouncilEvidenceDeliveryPane = lazy(
   () => import("@/components/gspc/CouncilEvidenceDeliveryPane"),
 );
+const CouncilAxisSpecialistPane = lazy(
+  () => import("@/components/gspc/CouncilAxisSpecialistPane"),
+);
 
 const PANES: Record<string, React.LazyExoticComponent<any>> = {
   // home: DashboardWorkspace owns the chat-first landing — no separate pane.
@@ -98,6 +101,7 @@ const PANES: Record<string, React.LazyExoticComponent<any>> = {
   cards: LobbyCardsPane, // signed-cards browser, native
   evidence: LobbyEvidencePane, // GPAI evidence pack, native
   "evidence-delivery": CouncilEvidenceDeliveryPane, // local draft + explicit unsigned A2A submission
+  "axis-specialists": CouncilAxisSpecialistPane, // 33 bounded audits, recommendation-only under H.I.M. HOLD
   embed: LobbyEmbedPane, // white-label badge / self-verifying card, native
   explore: DashboardCataloguePane,
   standards: DashboardStandardsPane,

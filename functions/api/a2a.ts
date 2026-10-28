@@ -45,6 +45,7 @@ import { evidenceBundlePreview } from "../mcp/_evidence";
 import { routeResult } from "../mcp/_route";
 import { routeSummary } from "../_lib/route/route";
 import { evidenceDeliveryMessage, validateEvidenceDeliveryInput } from "../_lib/evidenceDelivery";
+import { axisSpecialistResult, validateAxisSpecialistInput } from "../_lib/axisSpecialist";
 import { headFromGet } from "./_head";
 
 type Json = Record<string, unknown>;
@@ -212,6 +213,7 @@ export const SKILL_IDS = [
   "evidence-bundle",
   "gspc-route",
   "evidence-delivery",
+  "axis-specialist",
 ] as const;
 type SkillId = (typeof SKILL_IDS)[number];
 const SKILL_ID_SET = new Set<string>(SKILL_IDS);
@@ -525,6 +527,7 @@ function validateSkillInput(selection: SkillSelection): string | null {
     return null;
   }
   if (skill === "evidence-delivery") return validateEvidenceDeliveryInput(input);
+  if (skill === "axis-specialist") return validateAxisSpecialistInput(input);
   return "unsupported skill";
 }
 
@@ -692,6 +695,13 @@ async function invokeSkill(selection: SkillSelection, origin: string): Promise<{
         REGISTER,
       ].join("\n"),
       data: { state: payload.state, skill, as_of: new Date().toISOString(), doctrine: DOCTRINE, register: REGISTER, payload },
+    };
+  }
+  if (skill === "axis-specialist") {
+    const result = axisSpecialistResult(input);
+    return {
+      text: [result.text, "Every axis remains readable through its existing MCP axis tool. Proposals require MEOK H.I.M.-compatible human approval.", REGISTER].join("\n"),
+      data: { state: result.state, skill, register: REGISTER, payload: result.payload },
     };
   }
   if (skill === "gspc-board") {
