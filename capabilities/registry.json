@@ -2229,6 +2229,19 @@
       "payment": "free"
     },
     {
+      "id": "api-research-plan",
+      "protocols": [
+        "http"
+      ],
+      "title": "GSPC continuous research plan",
+      "description": "GET /api/research-plan — read-only continuous research plans joined to the live measured GSPC axes. Research candidates remain UNMEASURED and unsigned; human review is required. This endpoint never trains, fixes, signs, submits evidence, or promotes a board measurement.",
+      "endpoint": "/api/research-plan",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
       "id": "api-request-attestation",
       "protocols": [
         "http"
