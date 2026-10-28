@@ -1,0 +1,58 @@
+name: pages-bindings-sync
+
+# Report, and on request reconcile, the Cloudflare Pages production KV bindings against the
+# ones wrangler.jsonc declares.
+#
+# WHY (28 Oct 2026). PR #3528 added HITL_KV to wrangler.jsonc — the single source of truth for
+# this project's bindings — without binding it in the Cloudflare Pages project. The read-only
+# preflight (scripts/review/pages-release-target.mjs) compares the project's production KV
+# bindings with the declared set and refuses to deploy on a mismatch. That refusal is correct
+# and it stayed: every deploy on master failed from 07:13Z on 28 Oct 2026 until the drift was
+# closed. The drift had to be closed on the PRODUCTION side — the binding is the point of the
+# change, because /api/hitl keeps a raised challenge and the receipt that answers it only
+# while HITL_KV is bound.
+#
+# READ-ONLY BY DEFAULT. `apply` is false unless a human dispatches this with apply=true.
+# The report prints the declared set, the production set, and every KV namespace id on the
+# account, so the difference is visible before anyone writes.
+#
+# THE WRITE IS FAIL-CLOSED. It refuses when a declared namespace id does not exist on this
+# account (a typo, or a namespace from another account), and it refuses when production
+# carries a binding the repository does not declare (a human decides that, the script never
+# deletes). It never creates a namespace, never writes a secret value, and never touches the
+# preview configuration.
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: "Reconcile the production Pages KV bindings with wrangler.jsonc (report-only when false)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    env:
+      CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}'
+      CLOUDFLARE_ACCOUNT_ID: '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: The refusals must be reachable
+        run: node --test scripts/review/pages-bindings-sync.test.mjs
+      - name: Report (and only on request reconcile) the Pages KV bindings
+        env:
+          APPLY: '${{ inputs.apply }}'
+        run: |
+          set -euo pipefail
+          if [ "$APPLY" = "true" ]; then
+            node scripts/review/pages-bindings-sync.mjs --config wrangler.jsonc --apply
+          else
+            node scripts/review/pages-bindings-sync.mjs --config wrangler.jsonc
+          fi
